@@ -229,7 +229,16 @@ Fleet CLIs should call `scripts/typesafe/client.py` (`load_typesafe_api_key`, `s
 
 ---
 
-## 10. Related
+## 10. jevgrep (code discovery)
+
+jevgrep was adopted 2026-09-28 (#9134) and paused 2026-09-29 by operator decision
+("not going to use jevgrep for now. i dont see the benefit in this form. maybe it is
+for those who pay by api but not for me who is using sub[scriptions]"); re-adoption
+needs a measured cost/benefit trial.
+
+---
+
+## 11. Related
 
 - Skill suggestion: `scripts/typesafe/skill_suggestion.py` (#8201)
 - Skill + overlay: `agents_extensions/shared/skills/typesafe-ai/`

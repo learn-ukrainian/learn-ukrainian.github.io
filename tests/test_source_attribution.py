@@ -20,6 +20,7 @@ from scripts.lexicon.source_attribution import (
     WIKIDATA_LABEL,
     academic_label_for_slug,
     apply_entry_attribution,
+    cites_soviet_dictionary_outside_context,
     join_academic_source_labels,
     learner_facing_mirror_violations,
     learner_facing_unmapped_source_violations,
@@ -27,8 +28,156 @@ from scripts.lexicon.source_attribution import (
     official_url_for_slug,
     official_url_from_mirror,
     remap_mirror_source_string,
+    soviet_citation_learner_violation,
+    withhold_legacy_soviet_citations,
 )
 from scripts.wiki.slovnyk_me import SLOVNYK_ME_DICTS
+
+
+def test_soviet_citation_is_only_allowed_in_occupation_context() -> None:
+    marked = {
+        "heritage_status": {
+            "soviet_colonization_context": {"source": "СУМ-11", "red_flag": True, "sovietization_risk": 0}
+        }
+    }
+    unmarked = {"heritage_status": {"soviet_colonization_context": {"source": "СУМ-11"}}}
+    synonym = {"sections": {"synonyms": {"source": "СУМ-20 + СУМ-11", "items": ["абрикоса"]}}}
+    assert not cites_soviet_dictionary_outside_context(marked)
+    assert not cites_soviet_dictionary_outside_context(unmarked)
+    assert cites_soviet_dictionary_outside_context(synonym)
+    assert soviet_citation_learner_violation(marked) is None
+    assert soviet_citation_learner_violation(unmarked) == "missing russification marker"
+    assert soviet_citation_learner_violation(synonym) == "outside soviet_colonization_context"
+    assert soviet_citation_learner_violation({"sections": {"synonyms": {"source": "СУМ-20"}}}) is None
+
+
+def test_legacy_withholding_counts_sections_and_preserves_marked_context() -> None:
+    original = {
+        "lemma": "слово",
+        "sections": {"synonyms": {"items": ["назва"], "source": "СУМ-20 + СУМ-11"}},
+        "enrichment": {"sources": ["СУМ-20", "СУМ-11"]},
+        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": True},
+    }
+    projected, report = withhold_legacy_soviet_citations(original)
+    assert report == {
+        "entries_touched": 1,
+        "citations_withheld": 2,
+        "by_section": {"synonyms": 1, "enrichment.sources": 1},
+        "relation_sections_touched": 1,
+        "clauses_withheld": 2,
+        "items_withheld": 0,
+        "items_kept": 1,
+        "gate_notes_removed": 0,
+    }
+    assert original["sections"]["synonyms"]["source"] == "СУМ-20 + СУМ-11"
+    assert projected["sections"]["synonyms"] == {"items": ["назва"], "source": "СУМ-20"}
+    assert projected["enrichment"]["sources"] == ["СУМ-20"]
+    assert projected["soviet_colonization_context"] == original["soviet_colonization_context"]
+    assert projected["gate_provenance"]["enrichment.sources"] == "source-withdrawn-unverified"
+
+
+def test_relation_clauses_keep_only_items_with_allowed_support() -> None:
+    # Shapes observed in the reviewed абрикос, латиниця, розширити, відбігти entries.
+    for lemma, name, source, items, expected in (
+        ("абрикос", "synonyms", "Словник синонімів + СУМ-20: Те саме, що → абрикоса + "
+         "ВТС: → абрикоса + СУМ-11: → абрикоса", ["абрикоса", "жерделя", "мореля"],
+         ["абрикоса", "жерделя", "мореля"]),
+        ("латиниця", "synonyms", "СУМ-20: → латинка + СУМ-11: → латинка + СУМ-11: → абетка",
+         ["латинка", "абетка"], ["латинка"]),
+        ("розширити", "antonyms", "ВТС: протилежне → звузити + СУМ-11: → скоротити",
+         ["звузити", "скоротити"], ["звузити"]),
+        ("відбігти", "synonyms", "СУМ-20: → віддалитися + СУМ-11: → відскочити",
+         ["віддалитися", "відскочити"], ["віддалитися"]),
+    ):
+        projected, report = withhold_legacy_soviet_citations({
+            "lemma": lemma, "sections": {name: {"source": source, "items": items}}
+        })
+        assert projected["sections"][name]["items"] == expected
+        assert "СУМ-11" not in projected["sections"][name]["source"]
+        assert report["items_withheld"] == len(items) - len(expected)
+        assert report["items_kept"] == len(expected)
+        if len(expected) != len(items):
+            assert projected["gate_provenance"][name] == "source-withdrawn-unverified"
+
+
+def test_gate_diagnostic_note_is_removed_without_withholding_wordnet_item() -> None:
+    for lemma, item, gate in (
+        ("ера", "епоха", "СУМ-11/СУМ-11 stem=булий"),
+        ("броня", "кольчуга", "СУМ-20/СУМ-11 stem=воїн"),
+    ):
+        source = f"Ukrajinet WordNet: gated synset → {item} [gate: VESUM both valid; {gate}]"
+        projected, report = withhold_legacy_soviet_citations({
+            "lemma": lemma, "sections": {"synonyms": {"items": [item], "source": source}},
+            "enrichment": {"sources": [source]},
+        })
+        clean = f"Ukrajinet WordNet: gated synset → {item}"
+        assert projected["sections"]["synonyms"]["items"] == [item]
+        assert projected["sections"]["synonyms"]["source"] == clean
+        assert projected["enrichment"]["sources"] == [clean]
+        assert report["citations_withheld"] == 0
+        assert report["gate_notes_removed"] == 2
+
+
+def test_soviet_marker_must_be_explicit_on_each_direct_contrast_citation() -> None:
+    for unrelated in (
+        {"lemma": "русифікація"},
+        {"definition": "russif red_flag"},
+        {"sovietization_risk": 2},
+        {"red_flag": True},
+    ):
+        card = {**unrelated, "soviet_colonization_context": {"source": "СУМ-11", "sovietization_risk": 0}}
+        assert soviet_citation_learner_violation(card) == "missing russification marker"
+    assert soviet_citation_learner_violation({
+        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": "true"}
+    }) == "missing russification marker"
+    assert soviet_citation_learner_violation({
+        "soviet_colonization_context": {"source": "СУМ-11", "red_flag": True},
+        "heteronyms": [{"soviet_colonization_context": {"source": "SUM_11"}}],
+    }) == "missing russification marker"
+    assert soviet_citation_learner_violation({
+        "heteronyms": [{"soviet_colonization_context": {"source": "СУМ-11", "red_flag": True}}]
+    }) is None
+
+
+def test_nested_contrast_key_does_not_exempt_a_section_citation() -> None:
+    card = {"sections": {"synonyms": {"items": ["стяг"], "soviet_colonization_context": {
+        "source": "СУМ-11", "red_flag": True
+    }}}}
+    assert cites_soviet_dictionary_outside_context(card)
+    assert soviet_citation_learner_violation(card) == "outside soviet_colonization_context"
+
+
+def test_contrast_citation_requires_an_object() -> None:
+    for context in ("СУМ-11", ["СУМ-11"]):
+        assert soviet_citation_learner_violation({"soviet_colonization_context": context}) == (
+            "outside soviet_colonization_context"
+        )
+
+
+def test_soviet_label_variants_are_citations() -> None:
+    for label in (
+        "SUM_11",
+        "Словник української мови (1970–1980)",
+        "Словник української мови: В 11 томах",
+        "Словник української мови в 11 томах (1970 — 80)",
+        "https://sum.in.ua/s/word",
+        "https://slovnyk.me/dict/sum/word",
+    ):
+        assert soviet_citation_learner_violation({"source": label}) == "outside soviet_colonization_context"
+
+
+def test_literary_quote_mentions_dictionary_without_citing_it() -> None:
+    quote = "«Словник української мови» в 11 томах (1970 — 80)"
+    assert cites_soviet_dictionary_outside_context({"source": quote})
+    entry = {"lemma": "тлумачний", "enrichment": {"literary_attestation": {
+        "text": quote, "source": "2004 encyclopedia",
+    }}}
+    assert soviet_citation_learner_violation(entry) is None
+    projected, report = withhold_legacy_soviet_citations(entry)
+    assert projected["enrichment"]["literary_attestation"]["text"] == quote
+    assert report["citations_withheld"] == 0
+    entry["enrichment"]["literary_attestation"]["source"] = quote
+    assert soviet_citation_learner_violation(entry) == "outside soviet_colonization_context"
 
 
 def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:

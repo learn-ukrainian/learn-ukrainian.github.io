@@ -8,6 +8,8 @@ import LexiconPractice, {
   isMeaningMcEligible,
   paronymOptions,
   PracticeItem,
+  drillChoicePrompt,
+  synonymFeedbackFor,
 } from '@site/src/components/LexiconPractice';
 import { LexiconCustomDeckManager } from '@site/src/components/LexiconCustomDeckManager';
 import PracticeDailyDeck from '@site/src/components/PracticeDailyDeck';
@@ -30,6 +32,8 @@ import {
   loadState,
   saveState,
   selectNextPracticeItem,
+  isPracticeSessionResumable,
+  withoutDisabledPracticeModes,
   type PracticeDeckData,
   type PracticeClozeItem,
   type DailyPracticeDeckSnapshot,
@@ -54,6 +58,7 @@ import {
 } from '@site/src/lib/lexicon/custom-decks';
 import { dateSeed, type DailyWord } from '@site/src/lib/lexicon/daily';
 import { selectHeritagePracticePresentation } from '@site/src/lib/lexicon/practice-activity-adapters';
+import { buildFixturePayloads } from '../helpers/teacher-deck-fixture';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -995,6 +1000,10 @@ function synonymDeck(): PracticeDeckData {
   };
 }
 
+function synonymFixtureSelection(deck: PracticeDeckData): PracticeSelection {
+  return { mode: 'synonym', lemma: deck.lexemes[0], synonym: deck.synonym![0] } as PracticeSelection;
+}
+
 function antonymPolaritySynonymDeck(): PracticeDeckData {
   const entry = lexeme('svitlyi', 'світлий', 'light', {
     nominative: 'світлий',
@@ -1123,9 +1132,10 @@ describe('LexiconPractice', () => {
 
     await user.click(screen.getByRole('button', { name: 'A2' }));
     await waitFor(() => expect(dashboard.querySelector('[data-mode="stress"]')).toBeInTheDocument());
-    // 12 MODE_CARD_ORDER lexicon cards + 9 ZNO_PRACTICE_DECKS cards (#6620 added
+    // 11 available lexicon cards + 9 ZNO_PRACTICE_DECKS cards (#6620 added
     // morphology/syntax/phonetics to the prior 6) + 1 culture-error-correction card (#7961).
-    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(22);
+    expect(dashboard.querySelectorAll('[data-mode]').length).toBe(21);
+    expect(dashboard.querySelector('[data-mode="synonym"]')).not.toBeInTheDocument();
   });
 
   test('renders stress marks only on A1, while revealed daily sentence English stays available', () => {
@@ -2054,6 +2064,51 @@ describe('LexiconPractice', () => {
       expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(
         /1 до повторення/,
       ),
+    );
+  });
+
+  test('stale fetched synonym tags and due cards do not change the home tile (#8714)', async () => {
+    const state = loadState(localStorage, NOW);
+    for (let index = 0; index < 4; index += 1) {
+      state.cards.set(cardKey(`A1-${index}`, 'synonym'), {
+        due: NOW.getTime() - 60_000,
+        stability: 4,
+        difficulty: 4,
+        elapsed_days: 1,
+        scheduled_days: 1,
+        learning_steps: 0,
+        reps: 2,
+        lapses: 0,
+        state: 2,
+      });
+    }
+    saveState(state, localStorage, NOW.getTime());
+    const { fn } = mockShardFetch({ A1: 4 });
+    let staleIndex = false;
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+      const response = await fn(input);
+      if (!staleIndex || !String(input).includes('practice-index.A1.json')) return response;
+      const shard = await response.json();
+      return okJson({
+        ...shard,
+        items: shard.items.map((item: PracticeDeckData['index'][number]) => ({
+          ...item,
+          modes: [...item.modes, 'synonym'],
+        })),
+      });
+    });
+
+    const control = render(<LexiconPractice />);
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/0 до повторення \+ 8 нових/),
+    );
+    const controlTile = screen.getByTestId('practice-session-scope').textContent;
+    control.unmount();
+
+    staleIndex = true;
+    render(<LexiconPractice />);
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-session-scope').textContent).toBe(controlTile),
     );
   });
 
@@ -3425,11 +3480,13 @@ describe('LexiconPractice', () => {
     }
   });
 
-  test('a 5xx on practice-synonym surfaces the load error instead of an empty synonym session (#6768)', async () => {
+  test('withdrawn synonym shard is never fetched, even when its old URL fails (#8714)', async () => {
     const deck = sampleDeck();
     const user = userEvent.setup();
+    const requested: string[] = [];
     vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
       const url = String(input);
+      requested.push(url);
       if (url.includes('daily-pool.json')) return okJson([]);
       if (url.includes('practice-index.A1.json')) {
         return okJson({ deckVersion: deck.deckVersion, level: deck.level, items: deck.index });
@@ -3446,11 +3503,9 @@ describe('LexiconPractice', () => {
 
     render(<LexiconPractice />);
     await user.click(await screen.findByTestId('practice-start-session'));
-
-    expect(await screen.findByTestId('practice-fetch-error')).toHaveTextContent(
-      'Не вдалося завантажити практику.',
-    );
-    expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
+    expect(await screen.findByTestId('practice-session-progress')).toBeInTheDocument();
+    expect(requested.some((url) => url.includes('practice-synonym.'))).toBe(false);
+    expect(screen.queryByTestId('practice-synonym')).not.toBeInTheDocument();
   });
 
   test('a network failure on a drill shard surfaces the load error instead of an empty session (#6768)', async () => {
@@ -3747,15 +3802,43 @@ describe('LexiconPractice', () => {
     );
   });
 
-  test("synonyms empty catch-all is dual-language when chrome locale is en", async () => {
+  test("withdrawn synonym direct entry returns to the mode home without an empty session", async () => {
     document.documentElement.dataset.chromeLocale = "en";
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, "A2");
     const deck = sampleDeckWithOnlyMode("knyha", "synonym");
-    deck.synonym = [];
     render(<LexiconPractice initialDeck={deck} autoStart initialMode="synonym" />);
     await waitFor(() => {
-      expect(screen.getByText(/All cards are reviewed for now/)).toBeInTheDocument();
+      expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
     });
+    expect(screen.queryByTestId('practice-synonym')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('practice-mode-count-synonym')).not.toBeInTheDocument();
+  });
+
+  test('Mixed strips withdrawn cards from a stale supplied deck (#8714)', async () => {
+    const oldDeck = synonymDeck();
+    oldDeck.index[0]!.modes.push('flashcards');
+    const clean = withoutDisabledPracticeModes(oldDeck);
+    expect(clean.synonym).toEqual([]);
+    expect(clean.index[0]!.modes).toEqual(['flashcards']);
+    expect(selectNextPracticeItem(oldDeck, { modeFilter: 'synonym', now: NOW })).toBeNull();
+    expect(selectNextPracticeItem(oldDeck, { modeFilter: 'mixed', now: NOW })?.mode).toBe('flashcards');
+
+    render(<LexiconPractice initialDeck={oldDeck} autoStart initialMode="mixed" />);
+    expect(await screen.findByTestId('practice-session-progress')).toBeInTheDocument();
+    expect(screen.queryByTestId('practice-synonym')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('practice-mode-count-synonym')).not.toBeInTheDocument();
+  });
+
+  test('withdrawn direct and Mixed snapshots are not resumable (#8714)', () => {
+    const snapshot = {
+      sessionSeed: 1, history: [], budget: 20, completed: 0,
+      modeFilter: 'synonym', level: 'A1', deckId: 'all', dateSeed: dateSeed(NOW),
+      startedAt: NOW.getTime(), plannedTotal: 20,
+    } as Parameters<typeof isPracticeSessionResumable>[0];
+    expect(isPracticeSessionResumable(snapshot, NOW)).toBe(false);
+    expect(isPracticeSessionResumable({ ...snapshot!, modeFilter: 'mixed', history: [{ mode: 'synonym' }] } as typeof snapshot, NOW)).toBe(false);
+    expect(isPracticeSessionResumable({ ...snapshot!, modeFilter: 'mixed', unresolvedCardKeys: ['old::synonym'] }, NOW)).toBe(false);
   });
 
   test("cloze placeholder is pure EN when chrome locale is en", async () => {
@@ -5011,6 +5094,13 @@ describe('LexiconPractice', () => {
         <LexiconPractice initialDeck={deck} autoStart initialMode={mode as any} />,
       );
 
+      if (mode === 'synonym') {
+        expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
+        expect(screen.queryByTestId('practice-synonym')).not.toBeInTheDocument();
+        expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+        return;
+      }
+
       await answer(user, container);
 
       const advance = await screen.findByTestId('practice-advance-button');
@@ -5401,6 +5491,12 @@ describe('LexiconPractice', () => {
       const user = userEvent.setup();
       const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode={mode as any} />);
 
+      if (mode === 'synonym') {
+        expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
+        expect(screen.queryByTestId('practice-form-rail')).not.toBeInTheDocument();
+        return;
+      }
+
       await action(user, container);
 
       if (expectRail) {
@@ -5427,6 +5523,12 @@ describe('LexiconPractice', () => {
     ])('$mode: wrong pick is marked red, correct option is marked green', async ({ mode, deck, testId, wrongName, correctName }) => {
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={deck} autoStart initialMode={mode as any} />);
+
+      if (mode === 'synonym') {
+        expect(screen.queryByTestId('practice-synonym')).not.toBeInTheDocument();
+        expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
+        return;
+      }
 
       const scope = within(screen.getByTestId(testId));
       const wrongButton = scope.getByRole('button', { name: wrongName });
@@ -5828,31 +5930,28 @@ describe('LexiconPractice', () => {
       },
     );
 
-    test('synonym mode: wrong pick teaches the prompt ↔ correct-option pair, not the word↔gloss pair (#6816)', async () => {
-      // Before this fix, mode==='synonym' skipped choiceFeedbackFor (mode !== 'choice'/
-      // 'antonym'/'homonym') AND classifyFeedbackFor (selection.classify unset) — handleChoice
-      // set nextChoiceFeedback to null, so a miss showed the status line only, no red panel.
-      const user = userEvent.setup();
-      render(<LexiconPractice initialDeck={synonymDeck()} autoStart initialMode="synonym" />);
-      const scope = within(screen.getByTestId('practice-synonym'));
-
-      await user.click(scope.getByRole('button', { name: /школа/ }));
-
-      const feedback = screen.getByTestId('practice-synonym-feedback');
-      expect(feedback).toHaveTextContent('Неправильно. Синонім до «будинок» — «дім».');
-      expect(feedback).toHaveTextContent('Incorrect. Synonym for «будинок» — «дім».');
-      expect(screen.queryByTestId('practice-choice-feedback')).not.toBeInTheDocument();
+    test('retained synonym feedback names the correct pair on a wrong pick (#8984)', () => {
+      const feedback = synonymFeedbackFor(synonymFixtureSelection(synonymDeck()), { label: 'школа', correct: false }, 'A1');
+      expect(feedback?.textUk).toBe('Неправильно. Синонім до «будинок» — «дім».');
+      expect(feedback?.textEn).toBe('Incorrect. Synonym for «будинок» — «дім».');
     });
 
-    test('synonym mode: correct pick affirms the prompt ↔ answer pair (#6816)', async () => {
-      const user = userEvent.setup();
-      render(<LexiconPractice initialDeck={synonymDeck()} autoStart initialMode="synonym" />);
-      const scope = within(screen.getByTestId('practice-synonym'));
+    test('synonym mode: shows the ULIF sense the pair is admitted in (#8714)', () => {
+      const deck = synonymDeck();
+      deck.synonym = (deck.synonym ?? []).map((item) => ({
+        ...item,
+        source: 'ulif-synonyms',
+        sense: 'будівля, призначена для житла',
+      }));
+      const prompt = drillChoicePrompt(synonymFixtureSelection(deck), 'A1');
+      expect(`${prompt?.promptUk} — ${prompt?.subtitleUk}`).toBe(
+        'Оберіть синонім до «будинок» — у значенні «будівля, призначена для житла»',
+      );
+    });
 
-      await user.click(scope.getByRole('button', { name: /дім/ }));
-
-      const feedback = screen.getByTestId('practice-synonym-feedback');
-      expect(feedback).toHaveTextContent('Правильно! Синонім до «будинок» — «дім».');
+    test('retained synonym feedback affirms the correct pair (#8984)', () => {
+      const feedback = synonymFeedbackFor(synonymFixtureSelection(synonymDeck()), { label: 'дім', correct: true }, 'A1');
+      expect(feedback?.textUk).toBe('Правильно! Синонім до «будинок» — «дім».');
     });
 
     test('synonym mode: a selection without `.synonym` fails closed to practice-choice-empty and teaches nothing (#6821)', () => {
@@ -5863,10 +5962,7 @@ describe('LexiconPractice', () => {
       // let fall through to the word↔gloss meaning-choice surface (#6816 point 2) or invent
       // a teaching pair from.
       const deck = synonymDeck();
-      const base = selectNextPracticeItem(deck, { modeFilter: 'synonym', now: NOW });
-      expect(base?.mode).toBe('synonym');
-      expect(base?.synonym).toBeDefined();
-      const selection: PracticeSelection = { ...base!, synonym: undefined };
+      const selection: PracticeSelection = { ...synonymFixtureSelection(deck), synonym: undefined };
 
       render(
         <PracticeItem
@@ -5907,17 +6003,12 @@ describe('LexiconPractice', () => {
       expect(screen.queryByText(/Синонім до|Антонім до|Synonym for|Antonym for/)).not.toBeInTheDocument();
     });
 
-    test('synonym mode, antonym-polarity: «Оберіть антонім» miss teaches the antonym pair, not a synonym pair (#6816)', async () => {
-      const user = userEvent.setup();
-      render(<LexiconPractice initialDeck={antonymPolaritySynonymDeck()} autoStart initialMode="synonym" />);
-      expect(screen.getByText(/^Оберіть антонім до «світлий»/)).toBeTruthy();
-      const scope = within(screen.getByTestId('practice-synonym'));
-
-      await user.click(scope.getByRole('button', { name: /яскравий/ }));
-
-      const feedback = screen.getByTestId('practice-synonym-feedback');
-      expect(feedback).toHaveTextContent('Неправильно. Антонім до «світлий» — «темний».');
-      expect(feedback).toHaveTextContent('Incorrect. Antonym for «світлий» — «темний».');
+    test('retained antonym-polarity feedback names the pair (#8984)', () => {
+      const selection = synonymFixtureSelection(antonymPolaritySynonymDeck());
+      expect(drillChoicePrompt(selection, 'A1')?.promptUk).toBe('Оберіть антонім до «світлий»');
+      const feedback = synonymFeedbackFor(selection, { label: 'яскравий', correct: false }, 'A1');
+      expect(feedback?.textUk).toBe('Неправильно. Антонім до «світлий» — «темний».');
+      expect(feedback?.textEn).toBe('Incorrect. Antonym for «світлий» — «темний».');
     });
 
     test('choice ("Вибір"): correct pick affirms the pairing with EN subtitle', async () => {
@@ -6176,6 +6267,41 @@ describe('LexiconPractice', () => {
       );
     });
 
+    test("practises Dev's example deck from its own artifacts with the teacher's English (#8843)", async () => {
+      document.documentElement.dataset.chromeLocale = 'en';
+      const { deck, cloze } = buildFixturePayloads();
+      const requested: string[] = [];
+      vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        requested.push(url);
+        if (url.endsWith('/practice-deck.teacher.json')) return okJson(deck);
+        if (url.endsWith('/practice-cloze.teacher.json')) return okJson(cloze);
+        return notFoundResponse();
+      });
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+      expect(requested.some((url) => url.includes('.teacher.json'))).toBe(false);
+
+      await user.click(screen.getByTestId('practice-active-deck-chip'));
+      await user.click(screen.getByTestId('practice-deck-option-virtual_teacher_table'));
+
+      // Lazy: the teacher files load only once the deck is selected.
+      const start = await screen.findByTestId('teacher-deck-start');
+      expect(requested.filter((url) => url.includes('.teacher.json')).sort()).toEqual([
+        '/lexicon/practice-cloze.teacher.json',
+        '/lexicon/practice-deck.teacher.json',
+      ]);
+      // The CEFR dashboard (mode grid, CEFR start, key-as-meaning daily deck) is not offered.
+      expect(screen.queryByTestId('practice-start-session')).toBeNull();
+      expect(screen.queryByTestId('practice-dashboard-secondary')).toBeNull();
+      expect(screen.getByTestId('teacher-deck-session-size')).toHaveTextContent('0 due + 10 new');
+
+      await user.click(start);
+      const card = screen.getByTestId('teacher-deck-recognition-flashcard');
+      expect(card.querySelector('.flashcard-front .flashcard-word')).toHaveTextContent('Цілодобово');
+      expect(card.querySelector('.flashcard-back .flashcard-word')).toHaveTextContent('Around the clock');
+    });
+
     test.each([
       ['en', 'Private Curated Deck'],
       ['uk', 'Приватна відібрана добірка'],
@@ -6334,6 +6460,50 @@ describe('LexiconPractice', () => {
       expect(container.textContent).not.toContain('dictionary form');
       expect(container.textContent).not.toContain('undefined');
       expect(container.textContent).toContain('Контекст з документа');
+    });
+
+    test('case-free lexical_insertion cloze names no case or dictionary form in any feedback (#8726)', async () => {
+      const base = sampleDeck();
+      const insertion: PracticeClozeItem = {
+        clozeId: 'lexical_insertion_card',
+        lemmaId: 'knyha',
+        sentenceFrameId: 'lexical_insertion_frame',
+        sentence: 'Це _____.',
+        form: 'книга',
+        lemma: 'книга',
+        caseRule: { ruleId: 'lexical_insertion', trigger: 'lexical insertion' },
+        options: [
+          { optionId: 'li_ans', lemmaId: 'knyha', label: 'книга', kind: 'answer' },
+          { optionId: 'li_d1', lemmaId: 'misto', label: 'місто', kind: 'decoy-lemma' },
+          { optionId: 'li_d2', lemmaId: 'shkola', label: 'школа', kind: 'decoy-lemma' },
+          { optionId: 'li_d3', lemmaId: 'oselia', label: 'оселя', kind: 'decoy-lemma' },
+        ],
+      };
+      const initialDeck: PracticeDeckData = {
+        ...base,
+        cloze: [insertion],
+        index: base.index.map((entry) => ({
+          ...entry,
+          clozeIds: entry.lemmaId === 'knyha' ? ['lexical_insertion_card'] : [],
+        })),
+      };
+      const caseWording = /словникова форма|dictionary form|називний|nominative|відмінку/;
+
+      const user = userEvent.setup();
+      const first = render(<LexiconPractice initialDeck={initialDeck} autoStart={false} initialMode="cloze" />);
+      await user.click(first.container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!);
+      expect(first.container.textContent).not.toMatch(/не пройшли перевірку|failed validation/);
+      await user.type(screen.getByRole('textbox'), 'книга{Enter}');
+      expect(first.container.textContent).toContain('✓ книга');
+      expect(first.container.textContent).not.toMatch(caseWording);
+      expect(first.container.textContent).not.toContain('undefined');
+      first.unmount();
+
+      const second = render(<LexiconPractice initialDeck={initialDeck} autoStart={false} initialMode="cloze" />);
+      await user.click(second.container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!);
+      await user.type(screen.getByRole('textbox'), 'школа{Enter}');
+      expect(second.container.textContent).toContain('✗ Не те слово');
+      expect(second.container.textContent).not.toMatch(caseWording);
     });
 
     test('dashboard session estimate narrows to a 1-word custom deck, not the full level (PR #5837 fix-round-2)', async () => {
@@ -6552,12 +6722,9 @@ describe('LexiconPractice', () => {
         expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('1'),
       );
       // Selected-level honesty: A1 synonym is empty despite A2 synonym + A1 antonym inventory.
-      expect(screen.getByTestId('practice-mode-count-synonym')).toHaveTextContent('0');
+      expect(screen.queryByTestId('practice-mode-count-synonym')).not.toBeInTheDocument();
       const synonymCard = container.querySelector<HTMLButtonElement>('[data-mode="synonym"]');
-      expect(synonymCard).toHaveAttribute('data-mode-empty', 'true');
-      expect(synonymCard).toBeDisabled();
-
-      await user.click(synonymCard!);
+      expect(synonymCard).not.toBeInTheDocument();
       expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
       expect(screen.queryByText(/Оберіть антонім до/)).not.toBeInTheDocument();
       expect(screen.getByTestId('practice-dashboard-hero')).toBeInTheDocument();
@@ -6609,8 +6776,8 @@ describe('LexiconPractice', () => {
 
       render(<LexiconPractice initialDeck={a1Deck} autoStart initialMode="synonym" />);
 
-      expect(await screen.findByTestId('practice-all-caught-up')).toBeInTheDocument();
-      expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('0/0');
+      expect(await screen.findByTestId('practice-dashboard-hero')).toBeInTheDocument();
+      expect(screen.queryByTestId('practice-session-progress')).not.toBeInTheDocument();
       expect(screen.queryByText(/Оберіть антонім до/)).not.toBeInTheDocument();
       expect(screen.queryByRole('button', { name: /вихід/ })).not.toBeInTheDocument();
     });
@@ -7151,18 +7318,19 @@ describe('LexiconPractice', () => {
       expect(screen.getByRole('heading', { name: /Тематичні курси та ЗНО/i })).toBeInTheDocument();
     });
 
-    test('exposes all 12 modes across tracks and localizes track badges', async () => {
+    test('exposes the 11 available modes across tracks and localizes track badges', async () => {
       const { container, rerender } = render(<LexiconPractice initialDeck={sampleDeck()} />);
 
-      // All 12 modes must be present with data-mode
+      // The withdrawn synonym mode has no card; all remaining modes stay present.
       const expectedModes = [
         'mixed', 'flashcards', 'cloze', 'matching', 'choice',
-        'synonym', 'paronym', 'heritage',
+        'paronym', 'heritage',
         'paradigm', 'imperative', 'stress', 'classify',
       ];
       for (const mode of expectedModes) {
         expect(container.querySelector(`[data-mode="${mode}"]`)).toBeInTheDocument();
       }
+      expect(container.querySelector('[data-mode="synonym"]')).not.toBeInTheDocument();
 
       // Ukrainian track badges
       expect(screen.getByText('Трек 1')).toBeInTheDocument();

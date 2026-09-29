@@ -87,14 +87,12 @@ def test_builder_omits_unsourced_cards_and_keeps_ids(tmp_path, monkeypatch):
             ("вечір", "вечір", "noun", "noun:inanim:m:v_naz"),
         ])
     monkeypatch.setattr(builder, "INTAKE_JSON", intake)
-    public = tmp_path / "public.json"
     source = tmp_path / "source.json"
-    monkeypatch.setattr(builder, "OUTPUT_PUBLIC_JSON", public)
     monkeypatch.setattr(builder, "OUTPUT_SRC_JSON", source)
     monkeypatch.setattr("sys.argv", ["build", "--sources-db", str(sources), "--vesum-db", str(vesum)])
     builder.main()
-    cards = json.loads(public.read_text())["cloze"]
-    assert public.read_bytes() == source.read_bytes()
+    cards = json.loads(source.read_text())["cloze"]
+    assert not hasattr(builder, "OUTPUT_PUBLIC_JSON")  # the served file belongs to the teacher-deck refresh
     assert len(cards) == 1
     assert cards[0]["clozeId"] == "teacher_cloze_2"
     assert cards[0]["sentence"] == "Настав тихий _____."

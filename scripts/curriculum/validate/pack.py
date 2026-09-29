@@ -60,6 +60,10 @@ class WordRecord:
     id: str
     lemma: str
     form_tags: frozenset[str]
+    #: The surface text of every form the record lists (the lemma is not added).
+    form_texts: tuple[str, ...] = ()
+    #: The record's CEFR level as the store spells it ("A1"…"C2"); None when it carries none.
+    cefr_level: str | None = None
 
 
 @dataclass(frozen=True)
@@ -115,13 +119,24 @@ def load_words(words_path: Path) -> WordStore:
         ):
             raise PlanError(codes.WORDS_MALFORMED, f"{words_path}: a word record lacks id, lemma or forms: {entry!r}")
         tags: set[str] = set()
+        form_texts: list[str] = []
         for form in entry["forms"]:
             if not isinstance(form, dict) or not isinstance(form.get("tags"), str):
                 raise PlanError(
                     codes.WORDS_MALFORMED, f"{words_path}: a form of {entry['id']} has no string tags: {form!r}"
                 )
             tags.add(form["tags"])
+            if isinstance(form.get("form"), str):
+                form_texts.append(form["form"])
         if entry["id"] in records:
             raise PlanError(codes.DUPLICATE_WORD_ID, f"{words_path}: id {entry['id']} appears twice")
-        records[entry["id"]] = WordRecord(id=entry["id"], lemma=entry["lemma"], form_tags=frozenset(tags))
+        cefr = entry.get("cefr")
+        cefr_level = cefr.get("level") if isinstance(cefr, dict) and isinstance(cefr.get("level"), str) else None
+        records[entry["id"]] = WordRecord(
+            id=entry["id"],
+            lemma=entry["lemma"],
+            form_tags=frozenset(tags),
+            form_texts=tuple(form_texts),
+            cefr_level=cefr_level,
+        )
     return WordStore(path=words_path, records=records)

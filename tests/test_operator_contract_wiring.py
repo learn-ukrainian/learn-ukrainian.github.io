@@ -142,6 +142,26 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
     assert "simplest adequate solution" in out, "agy digest lost simplest adequate solution"
 
 
+def test_boot_digests_and_workflow_do_not_carry_jevgrep() -> None:
+    """Operator decision 2026-09-29: jevgrep removed from boot surfaces and workflow."""
+    import sys
+
+    sys.path.insert(0, str(REPO / "scripts"))
+    from scripts.ai_agent_bridge._prompts import build_agy_prompt
+
+    agy = build_agy_prompt({"from": "claude", "task_id": "t", "type": "query", "content": "x", "data": None})
+    surfaces = {
+        "CLAUDE.md": (REPO / "CLAUDE.md").read_text(encoding="utf-8"),
+        "AGENTS.md": (REPO / "AGENTS.md").read_text(encoding="utf-8"),
+        "GEMINI.md": (REPO / "GEMINI.md").read_text(encoding="utf-8"),
+        "workflow.md": (REPO / "agents_extensions/shared/rules/workflow.md").read_text(encoding="utf-8"),
+        "agy bridge prompt": agy,
+    }
+    for name, content in surfaces.items():
+        assert 'jg "' not in content, f"{name} contains jg instruction"
+        assert "skills/jevgrep" not in content, f"{name} contains skills/jevgrep path"
+
+
 def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:
     driver = (REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md").read_text(encoding="utf-8")
     cooperation = (REPO / "docs/best-practices/agent-cooperation.md").read_text(encoding="utf-8")

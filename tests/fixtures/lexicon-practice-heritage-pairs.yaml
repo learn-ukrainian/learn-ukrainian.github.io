@@ -11,6 +11,12 @@ pairs:
     rationale: fixture rationale with cited correction
     citations:
       - fixture:heritage
+    normativeSupport:
+      - locator: antonenko-davydovych-yak-my-hovorymo_p999
+        passage: Кажуть "читаю кнігу", а треба "читаю книгу".
+    currentNormSupport:
+      - locator: 5-klas-ukrmova-fixture-2000_s0003
+        passage: 'Неправильно: читаю кнігу. Правильно: читаю книгу.'
     sourceFamily: fixture
     cefrAvailability: a2
     severity: enrichment
@@ -19,3 +25,12 @@ pairs:
         answer_form: книгу
         calque_form: кнігу
         origin: fixture-frame
+        normativeJudgment:
+          locator: antonenko-davydovych-yak-my-hovorymo_p999
+          passageSha256: fee496794603747fc9bab31ea3ebd0255543d02caf2aadb4a1f3a90ce6fe74ad
+          sentenceSha256: 65c10da0f0c5695b28604def63a07dc0ea4c15e14f198a471732ecc6ea09256e
+          endorsedForm: книгу
+          rejectedForm: кнігу
+          sense: the object of reading a book
+          currentNormLocator: 5-klas-ukrmova-fixture-2000_s0003
+          currentNormPassageSha256: 914dcf8c0824ba59b7aa9202c2120e5df6eb5eb2499a52c74c0d0c7e177028ad

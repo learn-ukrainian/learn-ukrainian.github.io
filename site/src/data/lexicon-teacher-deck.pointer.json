@@ -1,0 +1,191 @@
+{
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-teacher-deck/lexicon-teacher-deck-teacher-v1-59e8fba1ea42fab4.json.gz",
+  "release_tag": "atlas-teacher-deck",
+  "deck_version": "teacher-v1-59e8fba1ea42fab4",
+  "package_schema_version": 1,
+  "gz_sha256": "9b265109e1f2731503cc509e2f10c1b617cc5381be69065d89434a0c8537bbd8",
+  "package_sha256": "2ba3c49a1efdbf302cf71792ed95116ebc57f0e92494c7b629858a95cfae67d7",
+  "gz_bytes": 1000012,
+  "package_bytes": 11740179,
+  "docx_sha256": "35da757f777f556383b5a2e7ace55c9d86ec785dd0c04ccad0a7987b642716c7",
+  "file_count": 4,
+  "files": [
+    {
+      "path": "practice-deck.teacher.json",
+      "schema": "atlas-practice-teacher-deck",
+      "schemaVersion": 1,
+      "published": true,
+      "bytes": 7265661,
+      "gzipBytes": 501841,
+      "gzipBudget": 600000,
+      "sha256": "1d21393df25ef98e40a9f972831345e39ec14c58e06517a171df599464098798"
+    },
+    {
+      "path": "practice-cloze.teacher.json",
+      "schema": "atlas-practice-teacher-cloze",
+      "schemaVersion": 1,
+      "published": true,
+      "bytes": 2670722,
+      "gzipBytes": 404225,
+      "gzipBudget": 560000,
+      "sha256": "fc7d318f4ff68c9a878161c9c4e6f0a126c344d75a2153c56d1f710ca20e16e4"
+    },
+    {
+      "path": "coverage.json",
+      "schema": "atlas-practice-teacher-coverage",
+      "schemaVersion": 1,
+      "published": false,
+      "bytes": 385707,
+      "gzipBytes": 63865,
+      "gzipBudget": null,
+      "sha256": "c3d193db47340c4c0510cd8cb223d055fb2d0817dbe4628c0879e55442cc3777"
+    },
+    {
+      "path": "frozen-keys.json",
+      "schema": "teacher-table-frozen-keys",
+      "schemaVersion": 1,
+      "published": false,
+      "bytes": 33960,
+      "gzipBytes": 8790,
+      "gzipBudget": null,
+      "sha256": "6f8e01fc56e412582c6947af19a659ac3d06ce7d232809717738ad4024c7cd31"
+    }
+  ],
+  "counts": {
+    "entries": 1125,
+    "singleWord": 804,
+    "multiword": 321,
+    "atlasJoined": 1094,
+    "withoutProduction": 215,
+    "aspectPartnerEntries": 231,
+    "verbAspect": {
+      "single": {
+        "agree": {
+          "dual": 1,
+          "imperf": 124,
+          "perf": 105
+        },
+        "vesum-only": {
+          "imperf": 35,
+          "perf": 37,
+          "unknown": 2
+        },
+        "conflict": {
+          "unknown": 4
+        },
+        "homograph": {
+          "unknown": 8
+        },
+        "none": {
+          "unknown": 2
+        }
+      },
+      "multiword": {
+        "agree": {
+          "dual": 1,
+          "imperf": 56,
+          "perf": 79
+        },
+        "vesum-only": {
+          "imperf": 25,
+          "perf": 23,
+          "unknown": 2
+        },
+        "conflict": {
+          "unknown": 7
+        },
+        "homograph": {
+          "unknown": 4
+        },
+        "none": {
+          "unknown": 1
+        }
+      }
+    },
+    "entriesByMode": {
+      "recognition-flashcard": {
+        "single": 804,
+        "multiword": 321
+      },
+      "recognition-choice": {
+        "single": 804,
+        "multiword": 321
+      },
+      "matching": {
+        "single": 804,
+        "multiword": 321
+      },
+      "production-flashcard": {
+        "single": 640,
+        "multiword": 270
+      },
+      "production-choice": {
+        "single": 640,
+        "multiword": 270
+      },
+      "cloze": {
+        "single": 648,
+        "multiword": 133
+      },
+      "stress": {
+        "single": 692,
+        "multiword": 0
+      },
+      "paradigm": {
+        "single": 394,
+        "multiword": 0
+      },
+      "classify": {
+        "single": 753,
+        "multiword": 0
+      },
+      "synonym": {
+        "single": 42,
+        "multiword": 0
+      },
+      "antonym": {
+        "single": 0,
+        "multiword": 0
+      }
+    },
+    "items": {
+      "cloze": 1912,
+      "clozeTeacherLesson": 1324,
+      "clozeTextbook": 588,
+      "stress": 692,
+      "paradigm": 4883,
+      "classify": 753,
+      "synonym": 56
+    }
+  },
+  "inputs": {
+    "atlas": {
+      "manifestVersion": "\"0.1\"",
+      "generatedAt": "\"2026-09-11T10:12:36+00:00\"",
+      "joinedArticlesSha256": "ae39a8f1dbacd82dfb5b86882110c1fec51a2e1c85f66c286ba2cc67516f1c68"
+    },
+    "sources": {
+      "teacherLessonUnits": 265,
+      "teacherLessonsSha256": "a56c8be8b8c5bd0ee9b516bf7402c0484b62f2e28ea532a017aa8ca4bf00832a",
+      "textbookRows": 51810,
+      "textbookSentencesSha256": "bc7c67b70c4f7299db230071b7b7656359dec74976bb7a90d4b6fcb99db26697"
+    },
+    "vesum": {
+      "canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
+      "compatibility_hidden_markers": "[\"bad\", \"obsc\", \"subst\"]",
+      "marker_policy_version": "v1",
+      "schema_version": "vesum-reingest-v1"
+    },
+    "ulifAspect": {
+      "checkedVerbRows": 402,
+      "checkedVerbRowsSha256": "461ee8e0c48b57103d5e7076aba9175e5f644471103bd343727dbecb59f08934"
+    },
+    "synonymVerdictsSha256": "6052fd175856483de6acc2f2687055e1a1d6a492a37a22c0d077e9d0a32faf96",
+    "sentenceReviews": {
+      "withheld": 277,
+      "kept": 875,
+      "sha256": "887f72de5122c58d02eb13a205c456cf0864ca0667fd96ae6ee8341e6cc0c8fd"
+    }
+  },
+  "note": "Pins the teacher-table deck release asset (#8843). Built by `teacher-deck refresh --publish`; the site build downloads it and re-checks hashes, schema versions and budgets."
+}

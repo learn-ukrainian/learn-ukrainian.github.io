@@ -110,7 +110,6 @@ def test_enrich_entry_attaches_heritage_status_with_fixture_classifier(monkeypat
         entry,
         sqlite3.connect(":memory:"),
         {},
-        has_sum11_flags=False,
     )
 
     assert attached is False
@@ -130,14 +129,13 @@ def test_generate_candidates_writes_expected_json_shape(tmp_path, monkeypatch) -
     monkeypatch.setattr(grow, "reconcile_content", lambda paths, *, manifest_path: result)
     monkeypatch.setattr(grow, "_source_connection", lambda path: nullcontext(object()))
     monkeypatch.setattr(grow.enrich_manifest, "_load_kaikki_lookup", lambda: {})
-    monkeypatch.setattr(grow.enrich_manifest, "_sum11_has_flag_columns", lambda conn: False)
     monkeypatch.setattr(
         grow,
         "build_skeleton_entry",
         lambda lemma: {"lemma": lemma, "pos": "noun"},
     )
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
+    def fake_enrich_entry(entry, conn, kaikki_lookup) -> bool:
         entry["heritage_status"] = {
             "classification": "standard",
             "is_russianism": False,
@@ -241,12 +239,11 @@ def test_kill_and_resume_preserves_completed_work_and_avoids_refetching(tmp_path
     monkeypatch.setattr(grow, "reconcile_content", lambda paths, *, manifest_path: result)
     monkeypatch.setattr(grow, "_source_connection", lambda path: nullcontext(object()))
     monkeypatch.setattr(grow.enrich_manifest, "_load_kaikki_lookup", lambda: {})
-    monkeypatch.setattr(grow.enrich_manifest, "_sum11_has_flag_columns", lambda conn: False)
     monkeypatch.setattr(grow, "build_skeleton_entry", lambda lemma: {"lemma": lemma, "pos": "noun"})
 
     enriched_lemmas: list[str] = []
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
+    def fake_enrich_entry(entry, conn, kaikki_lookup) -> bool:
         lemma = entry["lemma"]
         enriched_lemmas.append(lemma)
         entry["heritage_status"] = {
@@ -283,7 +280,7 @@ def test_kill_and_resume_preserves_completed_work_and_avoids_refetching(tmp_path
     fake_enrich_entry.run2 = True  # type: ignore[attr-defined]
     run2_enriched: list[str] = []
 
-    def fake_enrich_entry_run2(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
+    def fake_enrich_entry_run2(entry, conn, kaikki_lookup) -> bool:
         lemma = entry["lemma"]
         run2_enriched.append(lemma)
         entry["heritage_status"] = {
@@ -331,12 +328,11 @@ def test_no_resume_flag_starts_fresh_and_reenriches_all(tmp_path, monkeypatch) -
     monkeypatch.setattr(grow, "reconcile_content", lambda paths, *, manifest_path: result)
     monkeypatch.setattr(grow, "_source_connection", lambda path: nullcontext(object()))
     monkeypatch.setattr(grow.enrich_manifest, "_load_kaikki_lookup", lambda: {})
-    monkeypatch.setattr(grow.enrich_manifest, "_sum11_has_flag_columns", lambda conn: False)
     monkeypatch.setattr(grow, "build_skeleton_entry", lambda lemma: {"lemma": lemma, "pos": "noun"})
 
     enriched_lemmas: list[str] = []
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
+    def fake_enrich_entry(entry, conn, kaikki_lookup) -> bool:
         lemma = entry["lemma"]
         enriched_lemmas.append(lemma)
         entry["heritage_status"] = {"classification": "standard", "is_russianism": False, "russian_shadow": False}
@@ -360,7 +356,6 @@ def test_checkpoint_interval_saves_periodically(tmp_path, monkeypatch) -> None:
     monkeypatch.setattr(grow, "reconcile_content", lambda paths, *, manifest_path: result)
     monkeypatch.setattr(grow, "_source_connection", lambda path: nullcontext(object()))
     monkeypatch.setattr(grow.enrich_manifest, "_load_kaikki_lookup", lambda: {})
-    monkeypatch.setattr(grow.enrich_manifest, "_sum11_has_flag_columns", lambda conn: False)
     monkeypatch.setattr(grow, "build_skeleton_entry", lambda lemma: {"lemma": lemma, "pos": "noun"})
 
     checkpoints: list[int] = []
@@ -372,7 +367,7 @@ def test_checkpoint_interval_saves_periodically(tmp_path, monkeypatch) -> None:
 
     monkeypatch.setattr(grow, "write_checkpoint", tracking_write_checkpoint)
 
-    def fake_enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
+    def fake_enrich_entry(entry, conn, kaikki_lookup) -> bool:
         entry["heritage_status"] = {"classification": "standard", "is_russianism": False, "russian_shadow": False}
         entry["enrichment"] = {"meaning": {"definitions": [f"def {entry['lemma']}"]}}
         return True
@@ -423,7 +418,7 @@ def test_enrich_entry_exists_and_enrich_delegates_to_it() -> None:
     # Collapse whitespace so the assertion is robust to call formatting (single- vs
     # multi-line) and to appended kwargs such as pointer_synonym_relations (#4950).
     compact = "".join(enrich_source.split())
-    assert "enrich_entry(entry,conn,kaikki_lookup,has_sum11_flags=has_sum11_flags" in compact
+    assert "enrich_entry(entry,conn,kaikki_lookup" in compact
 
 
 def _patch_enrich_entry_heavy_helpers(monkeypatch) -> None:

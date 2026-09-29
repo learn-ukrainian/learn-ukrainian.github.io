@@ -90,9 +90,18 @@ def test_classify_oom_exitcodes() -> None:
 
     assert classify_oom_exit(-9) is True
     assert classify_oom_exit(137) is True
+    assert classify_oom_exit(-15) is False
+    assert classify_oom_exit(15) is False
     assert classify_oom_exit(1) is False
     assert classify_oom_exit(0) is False
+    assert classify_oom_exit(None) is False
     assert classify_oom_exit(0, memory_error=True) is True
+    # A readable oom_kill count overrides the returncode rule.
+    assert classify_oom_exit(-9, oom_kill=0) is False
+    assert classify_oom_exit(137, oom_kill=0) is False
+    assert classify_oom_exit(-9, oom_kill=1) is True
+    assert classify_oom_exit(1, oom_kill=None) is False
+    assert classify_oom_exit(-9, require_oom_record=True) is False
 
 
 @pytest.mark.skipif(
@@ -117,6 +126,549 @@ def test_injected_allocation_breach_classified_as_oom(tmp_path: Path) -> None:
     )
     assert result.error_code == ErrorCode.FAILED_OOM.value
     assert result.outcome == "failed_terminal"
+
+
+def test_slice_name_from_dispatch_cgroup() -> None:
+    from scripts.lexicon.runner.memory import MemoryPolicy, _scope_argv, slice_name_from_cgroup_relative
+
+    dispatch = (
+        "/user.slice/user-1000.slice/user@1000.service/lu.slice/"
+        "lu-dispatch.slice/lu-worker-fix.scope"
+    )
+    assert slice_name_from_cgroup_relative(dispatch) == "lu-dispatch.slice"
+    # No user@ segment: an ssh session or a system slice must not invent --slice.
+    assert slice_name_from_cgroup_relative("/user.slice/user-1000.slice/session-3.scope") is None
+    assert slice_name_from_cgroup_relative("/app.slice/run-p1.scope") is None
+    assert slice_name_from_cgroup_relative("/user.slice/user-1000.slice/user@1000.service") is None
+    omitted = _scope_argv(["/bin/true"], MemoryPolicy(), "lexicon-cap-x", None)
+    assert not any(part.startswith("--slice=") for part in omitted)
+    assert "OOMPolicy=continue" in omitted
+    placed = _scope_argv(["/bin/true"], MemoryPolicy(), "lexicon-cap-x", "lu-dispatch.slice")
+    assert "--slice=lu-dispatch.slice" in placed
+    timed = _scope_argv(["/bin/true"], MemoryPolicy(), "lexicon-cap-x", None, timeout_s=3)
+    assert "RuntimeMaxSec=3s" in timed
+
+
+@pytest.mark.parametrize(
+    ("cgroup", "expected"),
+    [
+        ("/user.slice/user-1000.slice/user@1000.service/lu-dispatch.slice/caller.scope", "lu-dispatch.slice"),
+        ("/user.slice/user-1000.slice/session-3.scope", None),
+    ],
+)
+def test_caller_slice_name_from_cgroup_path(
+    monkeypatch: pytest.MonkeyPatch, cgroup: str, expected: str | None
+) -> None:
+    from scripts.lexicon.runner import memory
+
+    monkeypatch.setattr(memory, "self_cgroup_relative", lambda: cgroup)
+    assert memory.caller_slice_name() == expected
+
+
+def test_scope_probe_retries_without_unsupported_oom_policy(monkeypatch: pytest.MonkeyPatch) -> None:
+    import subprocess
+
+    from scripts.lexicon.runner import memory
+
+    calls: list[list[str]] = []
+
+    def fake_run(argv: list[str], **kwargs):
+        calls.append(argv)
+        return subprocess.CompletedProcess(
+            argv, 1 if "OOMPolicy=continue" in argv else 0, "", "Unknown assignment: OOMPolicy=continue"
+        )
+
+    monkeypatch.setattr(memory, "_user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr(memory, "caller_slice_name", lambda: "lu-dispatch.slice")
+    monkeypatch.setattr(memory.subprocess, "run", fake_run)
+    policy = memory.MemoryPolicy(high_bytes=1000, max_bytes=2000)
+    assert memory._probe_systemd_user_scope(policy, 17) is False
+    assert len(calls) == 2
+    for argv in calls:
+        assert "MemoryHigh=1000" in argv
+        assert "MemoryMax=2000" in argv
+        assert "MemorySwapMax=0" in argv
+        assert "RuntimeMaxSec=17s" in argv
+        assert "--slice=lu-dispatch.slice" in argv
+    assert "OOMPolicy=continue" in calls[0]
+    assert "OOMPolicy=continue" not in calls[1]
+
+
+def _skip_without_user_scope() -> None:
+    import sys
+
+    from scripts.lexicon.runner.memory import _user_systemd_environ, systemd_user_scope_available
+
+    if not sys.platform.startswith("linux"):
+        pytest.skip("user systemd scope is Linux-only")
+    if _user_systemd_environ() is None:
+        pytest.skip("user systemd bus is absent; a dedicated cgroup cannot be created without root")
+    if not systemd_user_scope_available():
+        pytest.skip("user transient scope is not writable without root")
+
+
+def _lexicon_cap_units() -> list[str]:
+    import subprocess
+
+    from scripts.lexicon.runner.memory import _user_systemd_environ
+
+    env = _user_systemd_environ()
+    if env is None:
+        return []
+    completed = subprocess.run(
+        ["systemctl", "--user", "list-units", "lexicon-cap-*", "--no-legend", "--plain", "--all"],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+    return [line.strip() for line in completed.stdout.splitlines() if "lexicon-cap-" in line]
+
+
+def _wait_lexicon_cap_units(before: list[str]) -> list[str]:
+    import time
+
+    after = _lexicon_cap_units()
+    for _ in range(20):
+        if after == before:
+            return after
+        time.sleep(0.1)
+        after = _lexicon_cap_units()
+    return after
+
+
+def _enable_probe_jobs(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LEXICON_WORKER_PROBE_JOBS", "1")
+
+
+def test_failed_to_connect_stderr_runs_worker_once(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A worker that prints a scope-start marker and exits 1 runs exactly once."""
+    import sys
+
+    from scripts.lexicon.runner.memory import systemd_user_scope_available
+
+    _enable_probe_jobs(monkeypatch)
+    counter = tmp_path / "runs.txt"
+    result = run_capped_worker(
+        {
+            "job": "stderr_exit",
+            "chunk_id": "stderr-once",
+            "stderr_text": "Failed to connect to user scope bus via local transport",
+            "exit_code": 1,
+            "counter_path": str(counter),
+        },
+        result_path=tmp_path / "result.json",
+        timeout_s=30,
+    )
+    assert counter.read_text(encoding="utf-8").splitlines() == ["1"]
+    assert result.error_code == "worker_crash"
+    if sys.platform.startswith("linux"):
+        expected = "systemd_scope" if systemd_user_scope_available() else "rlimit_as"
+        assert result.memory_mechanism == expected
+
+
+def test_worker_scope_placement_follows_caller_slice(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import logging
+
+    from scripts.lexicon.runner import memory
+
+    _skip_without_user_scope()
+    _enable_probe_jobs(monkeypatch)
+    slice_name = memory.caller_slice_name()
+    parent = memory.self_cgroup_relative() or ""
+    launched: list[list[str]] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        argv = original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+        if unit.startswith("lexicon-cap-"):
+            launched.append(argv)
+        return argv
+
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    with caplog.at_level(logging.INFO, logger="scripts.lexicon.runner.memory"):
+        result = run_capped_worker(
+            {"job": "placement", "chunk_id": "placement"},
+            result_path=tmp_path / "placement.json",
+            timeout_s=30,
+        )
+    assert result.outcome == "done"
+    assert result.memory_mechanism == "systemd_scope"
+    assert any("mechanism=systemd_scope" in record.message for record in caplog.records)
+    child_parts = [part for part in result.message.split("/") if part]
+    parent_parts = [part for part in parent.split("/") if part]
+    assert child_parts[-1].startswith("lexicon-cap-")
+    assert child_parts[-1].endswith(".scope")
+    assert len(launched) == 1
+    if slice_name is None:
+        assert not any(arg.startswith("--slice=") for arg in launched[0])
+    else:
+        assert f"--slice={slice_name}" in launched[0]
+        assert child_parts[-2] == slice_name
+        assert child_parts[-1] != parent_parts[-1]
+
+
+def test_worker_scope_without_caller_slice(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.lexicon.runner import memory
+
+    _skip_without_user_scope()
+    _enable_probe_jobs(monkeypatch)
+    monkeypatch.setattr(memory, "self_cgroup_relative", lambda: "/user.slice/user-1000.slice/session-3.scope")
+    assert memory.caller_slice_name() is None
+    launched: list[list[str]] = []
+    original_scope_argv = memory._scope_argv
+
+    def capture_scope_argv(cmd, policy, unit, requested_slice, **kwargs):
+        argv = original_scope_argv(cmd, policy, unit, requested_slice, **kwargs)
+        if unit.startswith("lexicon-cap-"):
+            launched.append(argv)
+        return argv
+
+    monkeypatch.setattr(memory, "_scope_argv", capture_scope_argv)
+    result = run_capped_worker(
+        {"job": "placement", "chunk_id": "placement-no-slice"},
+        result_path=tmp_path / "placement-no-slice.json",
+        timeout_s=30,
+    )
+    assert result.outcome == "done"
+    assert result.memory_mechanism == "systemd_scope"
+    assert result.message.split("/")[-1].startswith("lexicon-cap-")
+    assert len(launched) == 1
+    assert not any(arg.startswith("--slice=") for arg in launched[0])
+
+
+@pytest.mark.parametrize("attempt", range(5))
+def test_scope_sigkill_classified_as_oom(tmp_path: Path, attempt: int) -> None:
+    _skip_without_user_scope()
+    cap = 128 * 1024 * 1024
+    result = run_capped_worker(
+        {
+            "job": "inject_oom",
+            "chunk_id": "scope-oom",
+            "memory_high_bytes": cap,
+            "memory_max_bytes": cap,
+        },
+        result_path=tmp_path / f"oom-{attempt}.json",
+        timeout_s=60,
+    )
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.outcome == "failed_terminal"
+    assert result.memory_mechanism == "systemd_scope"
+    assert result.oom_kill is not None and result.oom_kill >= 1
+    assert "returncode=-9" in result.message
+
+
+def test_timeout_stops_worker_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _skip_without_user_scope()
+    _enable_probe_jobs(monkeypatch)
+    before = _lexicon_cap_units()
+    result = run_capped_worker(
+        {"job": "sleep", "chunk_id": "timeout", "sleep_s": 30},
+        result_path=tmp_path / "sleep.json",
+        timeout_s=3,
+    )
+    assert result.error_code == "worker_timeout"
+    assert result.memory_mechanism == "systemd_scope"
+    assert _wait_lexicon_cap_units(before) == before
+
+
+def test_unavailable_scope_records_rlimit_as(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    import logging
+    import sys
+
+    if not sys.platform.startswith("linux"):
+        pytest.skip("RLIMIT_AS fallback is the Linux plain-child path")
+    _enable_probe_jobs(monkeypatch)
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: None)
+    with caplog.at_level(logging.INFO, logger="scripts.lexicon.runner.memory"):
+        result = run_capped_worker(
+            {"job": "placement", "chunk_id": "fallback"},
+            result_path=tmp_path / "fallback.json",
+            timeout_s=30,
+        )
+    assert result.outcome == "done"
+    assert result.memory_mechanism == "rlimit_as"
+    assert any("mechanism=rlimit_as" in record.message for record in caplog.records)
+
+
+def test_unknown_scope_property_falls_back_to_rlimit(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A rejected launch property must be caught by the identical probe."""
+    from scripts.lexicon.runner import memory
+
+    _skip_without_user_scope()
+    original = memory._scope_argv
+
+    def unknown_property(*args, **kwargs):
+        argv = original(*args, **kwargs)
+        index = argv.index("--")
+        argv[index:index] = ["-p", "BogusProp=1"]
+        return argv
+
+    monkeypatch.setattr(memory, "_scope_argv", unknown_property)
+    cap = 128 * 1024 * 1024
+    result = run_capped_worker(
+        {"job": "inject_oom", "chunk_id": "bad-property", "memory_high_bytes": cap, "memory_max_bytes": cap},
+        result_path=tmp_path / "bad-property.json", timeout_s=30,
+    )
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.memory_mechanism == "rlimit_as"
+
+
+def test_stray_oom_events_variable_cannot_disable_rlimit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: None)
+    monkeypatch.setenv("LEXICON_OOM_EVENTS_FILE", str(tmp_path / "stray"))
+    cap = 128 * 1024 * 1024
+    result = run_capped_worker(
+        {"job": "inject_oom", "chunk_id": "stray-env", "memory_high_bytes": cap, "memory_max_bytes": cap},
+        result_path=tmp_path / "stray.json", timeout_s=30,
+    )
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.memory_mechanism == "rlimit_as"
+
+
+def test_timeout_reports_actual_plain_launch(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from scripts.lexicon.runner import memory
+
+    _enable_probe_jobs(monkeypatch)
+    monkeypatch.setattr(memory, "_probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr(memory, "_user_systemd_environ", lambda: None)
+    result = run_capped_worker(
+        {"job": "sleep", "chunk_id": "bus-disappeared", "sleep_s": 30},
+        result_path=tmp_path / "bus-disappeared.json", timeout_s=0.2,
+    )
+    assert result.error_code == "worker_timeout"
+    assert result.memory_mechanism == "rlimit_as"
+
+
+def test_shared_cgroup_memory_max_unchanged_and_breach_is_oom(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A plain child must not lower a cgroup it shares with another process.
+
+    The scope probe is forced off so this goes through the plain-child path
+    and the ``cgroup.procs`` guard. ``RLIMIT_AS`` still classifies
+    ``failed_oom``, and ``memory.max`` stays unchanged.
+    """
+    import subprocess
+    import sys
+    import time
+    from pathlib import Path as FsPath
+
+    from scripts.lexicon.runner.memory import self_cgroup_relative
+
+    if not sys.platform.startswith("linux"):
+        pytest.skip("cgroup v2 shared-scope probe is Linux-only")
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: None)
+    relative = self_cgroup_relative()
+    if not relative:
+        pytest.skip("this process has no readable cgroup v2 path")
+    cgroup_dir = FsPath("/sys/fs/cgroup") / relative.lstrip("/")
+    max_path = cgroup_dir / "memory.max"
+    procs_path = cgroup_dir / "cgroup.procs"
+    try:
+        before = max_path.read_text(encoding="utf-8").strip()
+    except OSError:
+        pytest.skip("this process has no readable memory.max")
+    sleeper = subprocess.Popen(["/bin/sleep", "30"])
+    try:
+        time.sleep(0.2)
+        procs = [int(line) for line in procs_path.read_text(encoding="utf-8").split() if line.strip()]
+        if sleeper.pid not in procs or len(set(procs)) < 2:
+            pytest.fail(f"sleeper did not share the cgroup: procs={procs} sleeper={sleeper.pid}")
+        cap = 128 * 1024 * 1024
+        result = run_capped_worker(
+            {
+                "job": "inject_oom",
+                "chunk_id": "shared-cgroup",
+                "memory_high_bytes": cap,
+                "memory_max_bytes": cap,
+            },
+            result_path=tmp_path / "result.json",
+            timeout_s=60,
+        )
+        after = max_path.read_text(encoding="utf-8").strip()
+    finally:
+        sleeper.kill()
+        sleeper.wait(timeout=5)
+    assert after == before
+    assert result.error_code == ErrorCode.FAILED_OOM.value
+    assert result.outcome == "failed_terminal"
+    assert result.memory_mechanism == "rlimit_as"
+
+
+def test_production_payload_rejects_probe_only_jobs(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """stderr_exit, sleep, and placement are not reachable from a production payload."""
+    monkeypatch.delenv("LEXICON_WORKER_PROBE_JOBS", raising=False)
+    for job in ("stderr_exit", "sleep", "placement"):
+        result = run_capped_worker(
+            {"job": job, "chunk_id": f"prod-{job}"},
+            result_path=tmp_path / f"{job}.json",
+            timeout_s=30,
+        )
+        assert result.error_code == "unknown_job"
+        assert job in result.message
+
+
+def test_scope_start_failure_includes_stderr_tail(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A scope that fails after the probe passed keeps a stderr tail on worker_crash."""
+    import subprocess
+
+    head = "HEAD-MARKER"
+    tail = "TAIL-scope-unit-failed"
+    stderr = head + ("x" * 800) + tail
+
+    def fake_run(argv, **kwargs):
+        failed = bool(argv) and argv[0] == "systemd-run"
+        return subprocess.CompletedProcess(argv, 1 if failed else 0, "", stderr if failed else "")
+
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr("scripts.lexicon.runner.memory._user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr("scripts.lexicon.runner.memory.subprocess.run", fake_run)
+    result = run_capped_worker(
+        {"job": "enrich", "chunk_id": "scope-start"},
+        result_path=tmp_path / "scope-start.json",
+        timeout_s=30,
+    )
+    assert result.error_code == "worker_crash"
+    assert result.memory_mechanism == "systemd_scope"
+    assert "returncode=1" in result.message
+    assert tail in result.message
+    assert head not in result.message
+
+
+def test_recorded_oom_kill_zero_is_not_oom_when_stop_drops_the_record(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """oom_kill is consumed before stop. Stop tearing the record down must not fall back to SIGKILL."""
+    import subprocess
+
+    state: dict[str, object] = {"path": None, "stopped": False}
+
+    def fake_run(argv, **kwargs):
+        if argv and argv[0] == "systemd-run":
+            path = Path(kwargs["env"]["LEXICON_OOM_EVENTS_FILE"])
+            state["path"] = path
+            path.write_text("0\n", encoding="utf-8")
+            return subprocess.CompletedProcess(argv, -9, "", "")
+        if argv and argv[0] == "systemctl" and "stop" in argv:
+            path = state["path"]
+            assert isinstance(path, Path)
+            assert path.read_text(encoding="utf-8").strip() == "0"
+            path.unlink()
+            state["stopped"] = True
+            return subprocess.CompletedProcess(argv, 0, "", "")
+        return subprocess.CompletedProcess(argv, 1, "", "")
+
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr("scripts.lexicon.runner.memory._user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr("scripts.lexicon.runner.memory.subprocess.run", fake_run)
+    result = run_capped_worker(
+        {"job": "enrich", "chunk_id": "external-kill"},
+        result_path=tmp_path / "external.json",
+        timeout_s=30,
+    )
+    assert state["stopped"] is True
+    assert result.error_code == "worker_crash"
+    assert result.memory_mechanism == "systemd_scope"
+    assert result.oom_kill == 0
+
+
+def test_unreadable_scope_oom_events_do_not_claim_oom(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A missing scope record cannot distinguish external SIGKILL from OOM."""
+    import subprocess
+
+    def fake_run(argv, **kwargs):
+        if argv and argv[0] == "systemd-run":
+            return subprocess.CompletedProcess(argv, -9, "", "")
+        return subprocess.CompletedProcess(argv, 1, "", "")
+
+    monkeypatch.setattr("scripts.lexicon.runner.memory._probe_systemd_user_scope", lambda *args: True)
+    monkeypatch.setattr("scripts.lexicon.runner.memory._user_systemd_environ", lambda: {"PATH": "/usr/bin"})
+    monkeypatch.setattr("scripts.lexicon.runner.memory.subprocess.run", fake_run)
+    result = run_capped_worker(
+        {"job": "enrich", "chunk_id": "unreadable-oom"},
+        result_path=tmp_path / "unreadable.json",
+        timeout_s=30,
+    )
+    assert result.error_code == "worker_crash"
+    assert "returncode=-9" in result.message
+
+
+def _kill_new_scope(before: list[str]) -> tuple[bool, int | None]:
+    """SIGKILL every process in a newly launched lexicon scope."""
+    import os
+    import subprocess
+    import time
+
+    from scripts.lexicon.runner.memory import _user_systemd_environ
+
+    env = _user_systemd_environ()
+    if env is None:
+        return False, None
+    before_units = {line.split()[0] for line in before}
+    own_prefix = f"lexicon-cap-{os.getpid()}-"
+    for _ in range(80):
+        for line in _lexicon_cap_units():
+            unit = line.split()[0]
+            if unit in before_units or not unit.startswith(own_prefix) or not unit.endswith(".scope"):
+                continue
+            shown = subprocess.run(
+                ["systemctl", "--user", "show", "-p", "ControlGroup", "--value", unit],
+                env=env, capture_output=True, text=True, timeout=5, check=False,
+            )
+            relative = shown.stdout.strip()
+            if not relative.startswith("/"):
+                continue
+            events = Path("/sys/fs/cgroup") / relative.lstrip("/") / "memory.events"
+            try:
+                counts = dict(line.split() for line in events.read_text(encoding="utf-8").splitlines())
+                oom_kill = int(counts["oom_kill"])
+            except (OSError, KeyError, ValueError):
+                continue
+            killed = subprocess.run(
+                ["systemctl", "--user", "kill", "--signal=SIGKILL", unit],
+                env=env, capture_output=True, text=True, timeout=5, check=False,
+            )
+            return killed.returncode == 0, oom_kill
+        time.sleep(0.05)
+    return False, None
+
+
+def test_external_sigkill_is_not_recorded_as_oom(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A whole-scope SIGKILL cannot be mistaken for a memory OOM."""
+    import threading
+
+    _skip_without_user_scope()
+    _enable_probe_jobs(monkeypatch)
+    before = _lexicon_cap_units()
+    killed: dict[str, bool | int | None] = {"ok": False, "oom_kill": None}
+
+    def _kill() -> None:
+        killed["ok"], killed["oom_kill"] = _kill_new_scope(before)
+
+    thread = threading.Thread(target=_kill, daemon=True)
+    thread.start()
+    result = run_capped_worker(
+        {"job": "sleep", "chunk_id": "external-sigkill", "sleep_s": 30},
+        result_path=tmp_path / "external-sigkill.json",
+        timeout_s=20,
+    )
+    thread.join(timeout=5)
+    assert killed["ok"] is True
+    assert killed["oom_kill"] == 0
+    assert result.error_code == "worker_crash"
+    assert result.memory_mechanism == "systemd_scope"
+    assert result.oom_kill is None
+    assert _wait_lexicon_cap_units(before) == before
 
 
 def test_deterministic_oom_split_and_single_lemma_failed_oom() -> None:
@@ -473,8 +1025,8 @@ def test_relation_closure_matches_legacy_by_headword(
             lambda lemma: _cache_from_slice(conn, lemma),
         )
         manifest = {"entries": entries}
-        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest, has_sum11_flags=False)
-        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest, has_sum11_flags=False)
+        legacy_syn = em._definition_pointer_relations_by_headword(conn, manifest)
+        legacy_ant = em._definition_antonym_relations_by_headword(conn, manifest)
         headwords = em._manifest_headwords(manifest)
         extract_and_close_relations(
             entries=entries,
@@ -482,13 +1034,11 @@ def test_relation_closure_matches_legacy_by_headword(
                 "synonym": lambda entry: em._definition_pointer_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
             },
@@ -557,13 +1107,11 @@ def test_500_lemma_equivalence_cefr_and_relations(
                 "synonym": lambda entry: em._definition_pointer_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "antonym": lambda entry: em._definition_antonym_relations(
                     conn,
                     str(entry.get("lemma") or ""),
-                    has_sum11_flags=False,
                     cache=_cache_from_slice(conn, str(entry.get("lemma") or "")),
                 ),
                 "homonym": lambda entry: em._homonym_relations(conn, str(entry.get("lemma") or "")),

@@ -135,6 +135,10 @@ SCOPE_SIDECAR_STALE = "scope_sidecar_stale"
 TITLE_LETTER_ENUMERATION_MISMATCH = "title_letter_enumeration_mismatch"
 
 # --- notes (never fail the run) ---------------------------------------------
+# mechanical plan gates M1, M3, M5 (issue #9138) report here or as not_checked, never as failures
+STEP_LETTER_NOT_PRACTISED = "step_letter_not_practised"
+TOKEN_NOT_ALLOWED = "token_not_allowed"
+CORE_CEFR_ABOVE_MODULE = "core_cefr_above_module"
 CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
 
 # --- not_checked (never fail the run, always reported) ----------------------
@@ -146,6 +150,8 @@ TITLE_QUANTITIES_NOT_PARSED = "title_quantities_not_parsed"
 INTRODUCED_EARLIER_UNVERIFIED = "introduced_earlier_unverified"
 PENDING_PROMOTION = "pending_promotion"
 PLACEMENT_LEVEL_NOT_COVERED = "placement_level_not_covered"
+TOKEN_UNRESOLVED = "token_unresolved"
+MECHANICAL_RULE_NOT_CHECKED = "mechanical_rule_not_checked"
 
 DESCRIPTIONS = {
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
@@ -213,6 +219,9 @@ DESCRIPTIONS = {
     PLACEMENT_TABLE_UNAVAILABLE: "failure (issue #8889 r5 §B2): scripts/curriculum/validate/placement_table.yaml is missing or malformed",
     ACTIVITY_PLACEMENT_FORBIDDEN: "failure (issue #8889 r5 §B2): an activity's type is forbidden at this level by the generated placement table",
     ACTIVITY_PLACEMENT_NOT_ALLOWED: "failure (issue #8889 r5 §B2): an activity's placement (inline/workbook) is not the one the placement table allows for its type at this level",
+    STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
+    TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
+    CORE_CEFR_ABOVE_MODULE: "note (gate M5, #9138): a core lemma's word-store CEFR level is above the module's level; the plan sets no CEFR ceiling, so the plan review confirms it is intended (for example the module's own metalanguage)",
     CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW: "note (rule 1b): the teach + closes_with_recap closing shape is used; the plan review must confirm it",
     POSITION_CLAIMED_TWICE: "failure (rule 4): two plan files claim the same arc position",
     PRIOR_PLAN_UNREADABLE: "failure (rule 4): a sibling plan file cannot be read, so earlier introductions cannot be trusted",
@@ -248,10 +257,19 @@ DESCRIPTIONS = {
     TITLE_QUANTITIES_NOT_PARSED: "not_checked: digit quantities in the title/subtitle are not parsed; any ASCII digits found are quoted (§2a)",
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
+    TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
+    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 
-NOTE_CODES = frozenset({CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW})
+NOTE_CODES = frozenset(
+    {
+        CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW,
+        STEP_LETTER_NOT_PRACTISED,
+        TOKEN_NOT_ALLOWED,
+        CORE_CEFR_ABOVE_MODULE,
+    }
+)
 NOT_CHECKED_CODES = frozenset(
     {
         MINUTES_CONSTANTS_UNDEFINED,
@@ -262,6 +280,8 @@ NOT_CHECKED_CODES = frozenset(
         INTRODUCED_EARLIER_UNVERIFIED,
         PENDING_PROMOTION,
         PLACEMENT_LEVEL_NOT_COVERED,
+        TOKEN_UNRESOLVED,
+        MECHANICAL_RULE_NOT_CHECKED,
     }
 )
 

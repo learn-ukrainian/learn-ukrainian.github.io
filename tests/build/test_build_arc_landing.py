@@ -100,7 +100,8 @@ def test_real_arc_generates_55_planned_positions_and_is_current() -> None:
     assert gen.stale_files(files) == [], "run python -m scripts.build.build_arc_landing a1 --write"
     records = json.loads(files[roots.data_json])["positions"]
     assert [r["position"] for r in records] == list(range(1, 56))
-    assert {r["state"] for r in records} == {"planned"}
+    # Positions climb the ladder as plans are reviewed and lessons built; every state is a ladder state.
+    assert {r["state"] for r in records} <= {"planned", "plan_reviewed", "built", "reviewed"}
     assert all(r["previous_edition_href"] == f"/a1-v1/{r['slug']}/" for r in records)
     status = yaml.safe_load(roots.level_status.read_text(encoding="utf-8"))
     assert status["a1"]["planned"] == len(arc)

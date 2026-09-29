@@ -105,7 +105,19 @@ def test_acp_capacity_cli_selects_transport(monkeypatch, budget, capsys):
     monkeypatch.setattr(
         state_router, "probe_acp_health", lambda _cwd: {lane: _health(False) for lane in budget["agents"]}
     )
+    from scripts.fleet import usage
+
+    monkeypatch.setattr(
+        usage,
+        "read_budget",
+        lambda *, fresh=False, transport="dispatch": state_router.compute_routing_budget(transport=transport),
+    )
     monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda: {})
+    monkeypatch.setattr(
+        capacity_pick,
+        "admission_status",
+        lambda *_args, **_kwargs: {"admitted": None, "line": "admission (write dispatch): test stub"},
+    )
     assert capacity_pick.main(["--transport", "acp", "--strict", "--json"]) == 2
     assert '"transport": "acp"' in capsys.readouterr().out
 
@@ -118,14 +130,16 @@ def test_acp_routing_preserves_runtime_budget_evidence(monkeypatch, budget):
 
 
 def test_acp_preserves_verified_codex_reset_reserve(monkeypatch, budget):
-    budget["agents"]["codex"].update({
-        "status": "near_cap",
-        "eligible": True,
-        "freshness": "fresh",
-        "age_s": 5,
-        "codexbar": {"weekly_used_pct": 80, "windows": {"primary": {"remaining_pct": 20}}},
-        "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
-    })
+    budget["agents"]["codex"].update(
+        {
+            "status": "near_cap",
+            "eligible": True,
+            "freshness": "fresh",
+            "age_s": 5,
+            "codexbar": {"weekly_used_pct": 80, "windows": {"primary": {"remaining_pct": 20}}},
+            "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+        }
+    )
     budget["reset_reserve"] = {"available": True, "provider": "codex", "remaining_resets": 2}
     health = {lane: _health(True) for lane in budget["agents"]}
     monkeypatch.setattr(state_router, "probe_acp_health", lambda _cwd: deepcopy(health))

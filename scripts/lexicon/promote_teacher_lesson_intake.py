@@ -204,10 +204,17 @@ class IntakeRow:
     source_kind: str
 
 
-def _normalise(text: object) -> str:
+def _normalise(text: object, *, preserve_case: bool = False) -> str:
     value = strip_acute_stress(str(text or ""))
     value = value.replace("ʼ", "'").replace("’", "'").replace("`", "'")
-    return " ".join(value.split()).casefold()
+    value = " ".join(value.split())
+    return value if preserve_case else value.casefold()
+
+
+def _reviewed_proper_name(lemma: object, pos: object) -> bool:
+    """Only an explicitly reviewed, capitalised proper-name row keeps case."""
+    spelling = _normalise(lemma, preserve_case=True)
+    return str(pos or "").strip().casefold() == "proper noun" and spelling.istitle()
 
 
 def _is_expression(lemma: str) -> bool:
@@ -250,7 +257,10 @@ def _read_full_rows(path: Path) -> list[IntakeRow]:
         source = row.get("source_inventory")
         if not isinstance(source, Mapping):
             raise ValueError(f"{path}: approved decision lacks source_inventory")
-        lemma = _normalise(row.get("lemma"))
+        lemma = _normalise(
+            row.get("lemma"),
+            preserve_case=_reviewed_proper_name(row.get("lemma"), row.get("approved_pos")),
+        )
         locator = str(source.get("locator") or "").strip()
         if not lemma or not locator:
             raise ValueError(f"{path}: approved decision lacks lemma or locator")
@@ -276,7 +286,7 @@ def _read_curated_rows(path: Path) -> list[IntakeRow]:
                 raise ValueError(f"{path}: curated inventory entry lacks source locator")
             rows.append(
                 IntakeRow(
-                    lemma=_normalise(item.lemma),
+                    lemma=_normalise(item.lemma, preserve_case=_reviewed_proper_name(item.lemma, item.pos)),
                     pos=str(item.pos or "").strip(),
                     gloss=str(item.gloss or "").strip() or None,
                     locator=locator,
@@ -288,22 +298,31 @@ def _read_curated_rows(path: Path) -> list[IntakeRow]:
 
 def _vesum_analyses(lemmas: Iterable[str], vesum_db: Path) -> dict[str, list[dict[str, Any]]]:
     singles = sorted({lemma for lemma in lemmas if lemma and not _is_expression(lemma)})
-    analyses: dict[str, list[dict[str, Any]]] = {}
+    found: dict[str, list[dict[str, Any]]] = {}
     for start in range(0, len(singles), 500):
-        batch = singles[start : start + 500]
-        analyses.update(verify_words(batch, db_path=vesum_db))
+        found.update(verify_words(singles[start : start + 500], db_path=vesum_db))
+    # A reviewed proper name must have its own proper-only analysis. A common
+    # noun at the lowercase spelling cannot attest a missing name.
+    analyses = {}
+    for lemma in singles:
+        rows = found.get(lemma, [])
+        analyses[lemma] = (
+            rows if not lemma.istitle() or all(":prop:" in str(row.get("tags") or "") for row in rows) else []
+        )
     return analyses
 
 
-def _canonical_lemma(lemma: str, analyses: Sequence[Mapping[str, Any]]) -> str:
+def _canonical_lemma(lemma: str, analyses: Sequence[Mapping[str, Any]], *, preserve_case: bool = False) -> str:
     """Use a VESUM base only when its lexical identity is unambiguous."""
     if _is_expression(lemma):
         return lemma
-    bases = {_normalise(row.get("lemma")) for row in analyses if _normalise(row.get("lemma"))}
+    bases = {_normalise(row.get("lemma"), preserve_case=preserve_case) for row in analyses if row.get("lemma")}
     return next(iter(bases)) if len(bases) == 1 else lemma
 
 
-def _vesum_pos(analyses: Sequence[Mapping[str, Any]]) -> str | None:
+def _vesum_pos(analyses: Sequence[Mapping[str, Any]], *, reviewed_proper_name: bool = False) -> str | None:
+    if reviewed_proper_name and analyses and all(":prop:" in str(row.get("tags") or "") for row in analyses):
+        return "proper noun"
     mapped = sorted({_mapped_pos(row.get("pos")) for row in analyses if _mapped_pos(row.get("pos"))})
     return mapped[0] if len(mapped) == 1 else None
 
@@ -323,22 +342,19 @@ def _manifest_glosses(path: Path) -> dict[str, str]:
     return result
 
 
-def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple[dict[str, str], set[str]]:
-    """Return local Dmklinger English anchors and SUM-11 attestations.
+def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> dict[str, str]:
+    """Return local Dmklinger English anchors.
 
     Dmklinger is intentionally indexed in-process: the source table contains
     only about 30k rows, whereas normalised lookups must serve thousands of
-    VESUM-resolved lemmas.  SUM-11 is Ukrainian-only, so it supplies
-    dictionary-attestation evidence for enrichment but never masquerades as an
-    English learner gloss.
+    VESUM-resolved lemmas.
     """
     if sources_db is None or not sources_db.is_file():
-        return {}, set()
+        return {}
     wanted = {_dmklinger_key(lemma): _lemma_key(lemma) for lemma in lemmas if not _is_expression(lemma)}
     if not wanted:
-        return {}, set()
+        return {}
     anchors: dict[str, str] = {}
-    sum11_attested: set[str] = set()
     with sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True) as conn:
         for word, translations in conn.execute("SELECT word, translations FROM dmklinger_uk_en"):
             key = _dmklinger_key(str(word or ""))
@@ -348,25 +364,19 @@ def _dmklinger_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple[
             terms = _parse_translations(translations)
             if terms and _is_english(terms[0]):
                 anchors[target] = terms[0]
-        wanted_words = sorted({_normalise(lemma) for lemma in lemmas if not _is_expression(lemma)})
-        for start in range(0, len(wanted_words), 500):
-            batch = wanted_words[start : start + 500]
-            placeholders = ",".join("?" for _ in batch)
-            for (word,) in conn.execute(f"SELECT word FROM sum11 WHERE word IN ({placeholders}) COLLATE NOCASE", batch):
-                sum11_attested.add(_lemma_key(str(word)))
-    return anchors, sum11_attested
+    return anchors
 
 
-def _dictionary_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple[dict[str, str], set[str]]:
+def _dictionary_glosses(lemmas: Iterable[str], sources_db: Path | None) -> dict[str, str]:
     """Read local Kaikki and slovnyk fallbacks without network requests.
 
-    Dmklinger and SUM-11 are deliberately left to ``enrich_manifest`` when its
+    Dmklinger is deliberately left to ``enrich_manifest`` when its
     local sources database is available.  This promoter has no sources-db
     dependency, so it remains runnable in a sparse checkout while still using
     the two file-backed dictionary fallbacks available here.
     """
     lemma_list = sorted(set(lemmas))
-    dmklinger, sum11_attested = _dmklinger_glosses(lemma_list, sources_db)
+    dmklinger = _dmklinger_glosses(lemma_list, sources_db)
     kaikki = _load_kaikki_lookup()
     result: dict[str, str] = {}
     for lemma in lemma_list:
@@ -392,7 +402,7 @@ def _dictionary_glosses(lemmas: Iterable[str], sources_db: Path | None) -> tuple
         terms = translation.get("en") if isinstance(translation, Mapping) else None
         if isinstance(terms, list) and terms and _is_english(str(terms[0])):
             result.setdefault(key, str(terms[0]).strip())
-    return result, sum11_attested
+    return result
 
 
 def _private_english_glosses(path: Path = DEFAULT_PRIVATE_EN_DECISIONS) -> dict[str, str]:
@@ -427,12 +437,14 @@ def _build_rows(
     canonical_analyses: dict[str, list[dict[str, Any]]] = {}
     for row in source_rows:
         row_analyses = analyses.get(row.lemma, [])
-        canonical = _canonical_lemma(row.lemma, row_analyses)
+        canonical = _canonical_lemma(
+            row.lemma, row_analyses, preserve_case=_reviewed_proper_name(row.lemma, row.pos)
+        )
         canonical_rows[canonical].append(row)
         canonical_analyses.setdefault(canonical, row_analyses)
 
     manifest_glosses = _manifest_glosses(manifest)
-    dictionary_glosses, sum11_attested = _dictionary_glosses(canonical_rows, sources_db)
+    dictionary_glosses = _dictionary_glosses(canonical_rows, sources_db)
     private_en = _private_english_glosses()
     candidates: list[dict[str, Any]] = []
     decisions: list[dict[str, Any]] = []
@@ -444,7 +456,12 @@ def _build_rows(
         first = rows[0]
         analyses_for_lemma = canonical_analyses.get(lemma, [])
         pos = (
-            "phrase" if _is_expression(lemma) else (_vesum_pos(analyses_for_lemma) or _fallback_pos(lemma, first.gloss))
+            "phrase"
+            if _is_expression(lemma)
+            else (
+                _vesum_pos(analyses_for_lemma, reviewed_proper_name=_reviewed_proper_name(first.lemma, first.pos))
+                or _fallback_pos(lemma, first.gloss)
+            )
         )
         gloss = next((row.gloss for row in rows if _is_english(row.gloss)), None)
         if not gloss:
@@ -517,7 +534,6 @@ def _build_rows(
         "candidates_with_english_anchor": len(candidates),
         "held_without_english_anchor": len(canonical_rows) - len(candidates),
         "dictionary_or_manifest_gloss_fallbacks": gloss_fallbacks,
-        "sum11_attested_canonical_lemmas": len(sum11_attested),
     }
     return candidates, decisions, report
 
@@ -565,11 +581,10 @@ def _enrich_promoted_entries(
     enriched = 0
     kaikki_lookup = enrich_module._load_kaikki_lookup()
     with sqlite3.connect(f"file:{db_path}?mode=ro", uri=True) as conn:
-        has_sum11_flags = enrich_module._sum11_has_flag_columns(conn)
         for entry in entries:
             if _lemma_key(str(entry.get("lemma") or "")) not in promoted_lemma_keys:
                 continue
-            if enrich_module.enrich_entry(entry, conn, kaikki_lookup, has_sum11_flags=has_sum11_flags):
+            if enrich_module.enrich_entry(entry, conn, kaikki_lookup):
                 enriched += 1
     return enriched
 
@@ -900,11 +915,29 @@ def record_source_shape_checksum(
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--full-decisions", type=Path, default=DEFAULT_FULL_DECISIONS)
-    parser.add_argument("--curated-inventory", type=Path, default=DEFAULT_CURATED_INVENTORY)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
-    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Plan reviewed teacher-lesson Word Atlas candidates. "
+            "Use after source review; this does not review or admit new vocabulary by itself."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Example: /home/ops/learn-ukrainian/.venv/bin/python "
+            "scripts/lexicon/promote_teacher_lesson_intake.py "
+            "--vesum-db /tmp/vesum-shadow.db --apply --report\n"
+            "Outputs: candidate and decision files; --write also updates the manifest and fingerprint.\n"
+            "Exit codes: 0 on success; nonzero on missing inputs, held rows, or failed gates.\n"
+            "Related: #9151 reviewed teacher-lesson intake and promotion plan."
+        ),
+    )
+    parser.add_argument("--full-decisions", type=Path, default=DEFAULT_FULL_DECISIONS,
+                        help=f"Reviewed decision ledger (default: {DEFAULT_FULL_DECISIONS})")
+    parser.add_argument("--curated-inventory", type=Path, default=DEFAULT_CURATED_INVENTORY,
+                        help=f"Curated source inventory (default: {DEFAULT_CURATED_INVENTORY})")
+    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST,
+                        help=f"Atlas manifest (default: {DEFAULT_MANIFEST})")
+    parser.add_argument("--fingerprint", type=Path, default=DEFAULT_FINGERPRINT,
+                        help=f"Manifest fingerprint sidecar (default: {DEFAULT_FINGERPRINT})")
     parser.add_argument(
         "--vesum-db",
         type=Path,
@@ -913,10 +946,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--sources-db",
         type=Path,
-        help="Optional read-only local sources.db for Dmklinger and SUM-11 fallbacks",
+        help="Optional read-only local sources.db for the Dmklinger fallback",
     )
-    parser.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES)
-    parser.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS)
+    parser.add_argument("--candidates-out", type=Path, default=DEFAULT_CANDIDATES,
+                        help=f"Candidate JSON output (default: {DEFAULT_CANDIDATES})")
+    parser.add_argument("--decisions-out", type=Path, default=DEFAULT_DECISIONS,
+                        help=f"Decision YAML output (default: {DEFAULT_DECISIONS})")
     parser.add_argument("--apply", action="store_true", help="Build the promotion plan")
     parser.add_argument("--write", action="store_true", help="Apply the plan to the manifest")
     parser.add_argument(
@@ -931,7 +966,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "of re-applying the plan from scratch."
         ),
     )
-    parser.add_argument("--report", action="store_true")
+    parser.add_argument("--report", action="store_true", help="Print the plan or update summary as JSON")
     parser.add_argument(
         "--emit-membership",
         type=Path,
@@ -965,7 +1000,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "intake journal's audit trail. Requires --source-shape-batch-id."
         ),
     )
-    parser.add_argument("--source-shape-batch-id", help="Batch id this --record-source-shape checksum belongs to")
+    parser.add_argument("--source-shape-batch-id", help="Batch id for --record-source-shape, e.g. weekly-2026-09-29")
     parser.add_argument(
         "--source-shape-recorded-at",
         help="ISO date the checksum was recorded (defaults to today, UTC)",

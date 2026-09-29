@@ -259,7 +259,8 @@ EXPECTED_RULE_SNIPPET = (
     "when expected is present it is one contiguous substring copied character for character "
     "from the stored result of one named receipt the finding cites — the tool output the seat received, "
     "not the seat's memory of the source; never paraphrase, normalise, re-stress, translate or summarise it; "
-    "an unsupported_by_source finding carries no expected."
+    "an unsupported_by_source finding may carry expected too, and then the same rule applies: "
+    "it must be copied from the stored result of one of the search receipts that finding cites."
 )
 
 

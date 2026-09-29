@@ -5,6 +5,7 @@ import json
 import sqlite3
 import subprocess
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -21,6 +22,7 @@ from scripts.audit.generate_practice_deck import (
     read_paronym_pairs,
     write_shards,
 )
+from scripts.practice.ulif_synonym_groups import UlifSynonymGroups, group_from_payload, payload_from_row_html
 from scripts.practice_deck import publish as publish_module
 from scripts.practice_deck.publish import (
     ASSET_NAME,
@@ -186,6 +188,92 @@ def _write_practice_deck(practice_dir: Path, *, deck_version: str = "atlas-pract
             )
 
 
+@pytest.mark.parametrize("stale_kind", ["synonym", "index"])
+def test_publish_rejects_withdrawn_synonym_inventory_before_writing(
+    tmp_path: Path, stale_kind: str,
+) -> None:
+    from scripts.practice_deck.publish import expected_deck_version
+
+    input_paths = _write_publish_inputs(tmp_path / "inputs")
+    practice_dir = tmp_path / "lexicon"
+    _write_practice_deck(practice_dir, deck_version=expected_deck_version(**input_paths))
+    path = practice_dir / f"practice-{stale_kind}.B1.json"
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    if stale_kind == "synonym":
+        payload["synonym"] = [{"synonymId": "old-card"}]
+    else:
+        payload["items"] = [{"lemmaId": "old-card", "modes": ["synonym"]}]
+    _write_json(path, payload)
+
+    gzip_path = tmp_path / "deck.json.gz"
+    with pytest.raises(PracticeDeckPublishError, match="synonym mode disabled"):
+        publish_practice_deck(
+            practice_dir=practice_dir,
+            gzip_path=gzip_path,
+            dry_run=True,
+            **input_paths,
+        )
+    assert not gzip_path.exists()
+
+
+def test_withdrawal_repackages_only_pinned_source_and_removes_cards(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    from scripts.audit import generate_practice_deck as generator
+    from scripts.practice_deck.publish import (
+        build_package,
+        build_pointer,
+        collect_shards,
+        withdraw_synonyms_from_pinned_package,
+    )
+
+    source_dir = tmp_path / "source"
+    _write_practice_deck(source_dir)
+    old_index = source_dir / "practice-index.B1.json"
+    index_payload = json.loads(old_index.read_text(encoding="utf-8"))
+    index_payload["items"] = [{"lemmaId": "old", "modes": ["flashcards", "synonym"]}]
+    index_payload["counts"]["modeCounts"] = {"synonym": 1}
+    index_payload["counts"]["modeCoverage"] = {"synonym": 1.0}
+    _write_json(old_index, index_payload)
+    old_synonym = source_dir / "practice-synonym.B1.json"
+    synonym_payload = json.loads(old_synonym.read_text(encoding="utf-8"))
+    synonym_payload["synonym"] = [{"synonymId": "old-card"}]
+    _write_json(old_synonym, synonym_payload)
+    for path in (old_index, old_synonym):
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["sizeBudget"] = {"rawLimitBytes": 1_600_000, "gzipLimitBytes": 180_000}
+        _write_json(path, payload)
+    for path in source_dir.glob("practice-*.json"):
+        if path in (old_index, old_synonym):
+            continue
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload["sizeBudget"] = {"rawLimitBytes": 1_600_000, "gzipLimitBytes": 180_000}
+        _write_json(path, payload)
+
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
+    version, metadata, files = collect_shards(source_dir)
+    package = build_package(version, files)
+    compressed = gzip.compress(package, mtime=0)
+    source_gzip = tmp_path / "source.json.gz"
+    source_gzip.write_bytes(compressed)
+    pointer = build_pointer(deck_version=version, pointer_files=metadata, package_bytes=package, gzip_bytes=compressed)
+    monkeypatch.setattr(publish_module, "WITHDRAWAL_SOURCE_VERSION", version)
+    monkeypatch.setattr(publish_module, "WITHDRAWAL_SOURCE_GZ_SHA256", pointer["gz_sha256"])
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", False)
+
+    output_dir = tmp_path / "withdrawn"
+    withdrawn_version = withdraw_synonyms_from_pinned_package(source_gzip, pointer, output_dir)
+    assert withdrawn_version != version
+    assert collect_shards(output_dir)[0] == withdrawn_version
+    assert json.loads((output_dir / "practice-synonym.B1.json").read_text())["synonym"] == []
+    index = json.loads((output_dir / "practice-index.B1.json").read_text())
+    assert index["items"][0]["modes"] == ["flashcards"]
+    assert index["counts"]["modeCounts"]["synonym"] == 0
+
+    with pytest.raises(PracticeDeckPublishError, match="not the pinned"):
+        withdraw_synonyms_from_pinned_package(source_gzip, {**pointer, "deck_version": "wrong"}, tmp_path / "wrong")
+
+
 def test_publish_practice_deck_dry_run_builds_hash_pinned_package(tmp_path: Path) -> None:
     practice_dir = tmp_path / "lexicon"
     gzip_path = tmp_path / "lexicon-practice-deck.json.gz"
@@ -324,6 +412,62 @@ def test_publish_practice_deck_skips_existing_verified_versioned_asset(
     assert "--clobber" in upload_calls[0]
 
 
+def test_publish_refuses_synonym_verdicts_without_ulif_data(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    # Reviewer probe (cf-8714-r3-codex): a deck built while ULIF data was unavailable
+    # carries the "no ULIF groups" fingerprint, and the publish check recomputed the
+    # same fingerprint and accepted the empty synonym mode.
+    from scripts.audit import generate_practice_deck as generator
+    from scripts.practice_deck.publish import expected_deck_version
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
+
+    practice_dir = tmp_path / "lexicon"
+    input_paths = _write_publish_inputs(
+        tmp_path / "inputs",
+        synonym_verdicts={"approved": [{"a": "список", "b": "перелік", "polarity": "synonym"}], "rejected": []},
+    )
+    input_paths["ulif_db_path"] = tmp_path / "missing-sources.db"
+    with monkeypatch.context() as patch:
+        patch.setattr(generator, "read_ulif_synonym_groups", lambda *_args: None)
+        unavailable_version = expected_deck_version(**input_paths)
+    _write_practice_deck(practice_dir, deck_version=unavailable_version)
+
+    with pytest.raises(PracticeDeckPublishError, match="ULIF synonym groups"):
+        publish_practice_deck(
+            practice_dir=practice_dir,
+            gzip_path=tmp_path / "deck.json.gz",
+            dry_run=True,
+            **input_paths,
+        )
+
+
+def test_publish_rejects_stale_deck_after_ulif_register_change(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from scripts.audit import generate_practice_deck as generator
+    from scripts.practice_deck.publish import expected_deck_version
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
+
+    group = group_from_payload(payload_from_row_html("<b>TEST</b>, <b>OTHER</b>."))
+    assert group is not None
+    changed = replace(group, members=(group.members[0], replace(group.members[1], labels=("register",))))
+    input_paths = _write_publish_inputs(
+        tmp_path / "inputs",
+        synonym_verdicts={"approved": [{"a": "test", "b": "other", "polarity": "synonym"}], "rejected": []},
+    )
+    practice_dir = tmp_path / "lexicon"
+    monkeypatch.setattr(generator, "read_ulif_synonym_groups", lambda *_args: UlifSynonymGroups([group]))
+    _write_practice_deck(practice_dir, deck_version=expected_deck_version(**input_paths))
+    monkeypatch.setattr(generator, "read_ulif_synonym_groups", lambda *_args: UlifSynonymGroups([changed]))
+
+    with pytest.raises(PracticeDeckPublishError, match="does not match expected version"):
+        publish_practice_deck(
+            practice_dir=practice_dir,
+            gzip_path=tmp_path / "deck.json.gz",
+            dry_run=True,
+            **input_paths,
+        )
+
+
 def test_expected_deck_version_uses_public_atlas_db_projection(tmp_path: Path) -> None:
     entries = read_manifest(MANIFEST)
     public_only_paths = _write_publish_inputs(
@@ -410,9 +554,10 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         stale_antonym_pairs[0]["distinction_gloss_uk"] = "змінене розрізнення антонімів"
         _write_json(input_paths["antonym_pairs_path"], {"pairs": stale_antonym_pairs})
     elif stale_input == "synonym_verdicts":
+        # A new rejected verdict changes the input without needing ULIF groups.
         stale_synonym_verdicts = {
-            "approved": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
-            "rejected": [],
+            "approved": [],
+            "rejected": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
         }
         _write_json(input_paths["synonym_verdicts_path"], stale_synonym_verdicts)
     else:

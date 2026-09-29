@@ -123,7 +123,7 @@ def teach_lesson(
         }
     ]
     activities = [
-        {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Checks the step."},
+        {"id": "a1", "type": "quiz", "placement": "inline", "focus": " ".join(["Checks the step.", *letters])},
         {"id": "aw", "type": "quiz", "placement": "workbook", "focus": "Workbook check."},
     ]
     if uses_grammar or uses_vocab:
@@ -200,7 +200,22 @@ def make_plan(
     }
     if subtitle is not None:
         plan["subtitle"] = subtitle
+    _recycle_in_recap(plan)
     return plan
+
+
+def _recycle_in_recap(plan: dict) -> None:
+    """Let a closing recap lesson recycle every core word and use every grammar id the plan teaches."""
+    lessons = plan["lessons"]
+    recap = lessons[-1]
+    if recap["kind"] != "recap" or recap["inventory"]["vocabulary"]["recycled"]:
+        return
+    core = [entry["evidence"] for lesson in lessons[:-1] for entry in lesson["inventory"]["vocabulary"]["core"]]
+    grammar = [entry["id"] for lesson in lessons[:-1] for entry in lesson["inventory"].get("grammar") or []]
+    if not (core or grammar):
+        return
+    recap["inventory"]["vocabulary"]["recycled"] = core
+    recap["steps"][0]["uses"] = {"grammar": grammar, "vocabulary": core}
 
 
 def target_plan(
@@ -259,7 +274,12 @@ def base_pack(slug: str) -> dict:
 def base_words() -> dict:
     return {
         "words": [
-            {"id": f"W-{number:03d}", "lemma": f"lemma-{number:03d}", "forms": [{"tags": "tag-a"}, {"tags": "tag-b"}]}
+            {
+                "id": f"W-{number:03d}",
+                "lemma": f"lemma-{number:03d}",
+                "cefr": {"level": "A1"},
+                "forms": [{"tags": "tag-a"}, {"tags": "tag-b"}],
+            }
             for number in range(1, 41)
         ]
     }
@@ -544,7 +564,8 @@ REGISTRY_CASES = [
             registry_record("G-a1-001", 1, "lesson-one", superseded_by="G-a1-002"),
             registry_record("G-a1-002", 2, "lesson-two"),
         ],
-        expected=frozenset({codes.SUPERSEDED_GRAMMAR_INTRODUCED}),
+        # the closing recap reuses G-a1-001, so its use of the superseded id fails too
+        expected=frozenset({codes.SUPERSEDED_GRAMMAR_INTRODUCED, codes.SUPERSEDED_GRAMMAR_USED}),
     ),
     CrossCase(
         "registry_superseded_id_used",

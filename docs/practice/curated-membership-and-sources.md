@@ -6,7 +6,7 @@
 
 This document is the durable memory for **what belongs in the Curated / teacher Practice pool**, **how we expand without discarding existing work**, and **where content for each activity mode may come from** (not cloze alone). Agents must not invent a narrower “done” bar.
 
-After each 2×2 teacher-lesson cycle, an operator runs the local teacher-table sync command with the approved exact heading, reviews the reported count, and commits the public lemma-only set. In the picker, that set is **📋 Приклад розробника / Dev's example deck**: a shared example from the developer's classroom list.
+After each 2×2 teacher-lesson cycle, an operator runs `teacher-deck refresh` (see [teacher-deck artifacts](teacher-deck-artifacts.md)), reviews the reported delta and the newly public lesson sentences, reruns with `--publish`, and commits the updated pointer, frozen key list and lemma-only set. In the picker, that set is **📋 Приклад розробника / Dev's example deck**: a shared example from the developer's classroom list.
 
 ---
 
@@ -40,7 +40,7 @@ Practice is multi-mode. **Cloze is only one surface.** Coverage work must unlock
 | Stress | No | stress form (atlas / VESUM / stress dict) |
 | Classify | No | POS / semantic buckets from atlas |
 | Paradigm | No | morphology paradigm + VESUM verification |
-| Synonym | No | reviewed pairs (`registry/lexicon/synonym_pair_verdicts.yaml`) |
+| Synonym | No | reviewed pairs (`registry/lexicon/synonym_pair_verdicts.yaml`) nominate candidates; a synonym-polarity pair ships only when a checked ULIF synonym group (`sources.db`, `homonym_checked = 1`, `status = 'ok'`) lists one word as the row's dominant and the other as an unlabelled member of the dominant's own sense cluster with no note of its own (`scripts/practice/ulif_synonym_groups.py`); the card shows the dominant's note as its sense and records the group as `evidence`. Antonym-polarity pairs need a dictionary source on the verdict. Aspect pairs, reflexive and spelling variants, gender counterparts, motion-verb pairs and different-POS pairs never ship; distractors never share a ULIF group (any checked group listing the word, whatever headword it is filed under), recorded synonym link or English sense with the prompt or answer. With approved synonym verdicts and no readable ULIF groups, the build and the publish check fail instead of shipping an empty synonym mode. Every candidate direction that does not ship is listed once on stderr as `WITHHELD synonym direction … : <reason>` (#8714) |
 | Heritage | No | `registry/lexicon/heritage_pairs.yaml` |
 | Paronym | No | reviewed paronym sets in deck |
 | **Cloze** | **Yes** | Public / rights-clear sentences only (§4) |

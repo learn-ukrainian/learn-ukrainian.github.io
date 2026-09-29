@@ -66,6 +66,87 @@ def test_replay_records_and_search_rows_match_reference_loaders(edge_db: Path, f
             conn.close()
 
 
+def test_export_withholds_legacy_soviet_citation_in_shard(tmp_path: Path) -> None:
+    conn = sqlite3.connect(_make_source_db(tmp_path / "legacy.db"))
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT slug, payload_json FROM article_payloads WHERE is_public_route = 1 LIMIT 1").fetchone()
+    assert row is not None
+    payload = json.loads(row[1])
+    payload["sections"] = {"synonyms": {"items": ["слово"], "source": "СУМ-11"}}
+    conn.execute(
+        "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
+        (json.dumps(payload, ensure_ascii=False), row[0]),
+    )
+    conn.commit()
+    conn.close()
+    out = tmp_path / "out"
+    report = _export(tmp_path / "legacy.db", out)
+    assert report["sovietCitationWithholding"] == {
+        "stage": "export",
+        "entries_touched": 1,
+        "citations_withheld": 1,
+        "by_section": {"synonyms": 1},
+        "relation_sections_touched": 1,
+        "clauses_withheld": 1,
+        "items_withheld": 1,
+        "items_kept": 0,
+        "gate_notes_removed": 0,
+    }
+    version = out / "atlas" / "versions" / report["dataVersion"]
+    records = [
+        record
+        for path in (version / "entries").glob("*.json.gz")
+        for record in json.loads(gzip.decompress(path.read_bytes()))["records"]
+    ]
+    emitted = next(record["entry"] for record in records if record["slug"] == row[0])
+    assert "СУМ-11" not in json.dumps(emitted, ensure_ascii=False)
+    assert "synonyms" not in emitted.get("sections", {})
+    assert emitted["gate_provenance"]["synonyms"] == "source-withdrawn-unverified"
+
+
+def test_export_withholds_unmarked_contrast_citation(tmp_path: Path) -> None:
+    conn = sqlite3.connect(_make_source_db(tmp_path / "unmarked.db"))
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT slug, payload_json FROM article_payloads WHERE is_public_route = 1 LIMIT 1").fetchone()
+    assert row is not None
+    payload = json.loads(row[1])
+    payload["soviet_colonization_context"] = {
+        "source": "СУМ-11", "definition": "historical contrast", "sovietization_risk": 1
+    }
+    payload["red_flag"] = True  # An unrelated field cannot mark the cited context.
+    conn.execute(
+        "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
+        (json.dumps(payload, ensure_ascii=False), row[0]),
+    )
+    conn.commit()
+    record = EntryReplay(conn, practice_levels_by_slug={}).record_for_slug(row[0])
+    assert "soviet_colonization_context" not in record["entry"]
+    assert record["entry"]["gate_provenance"]["soviet_colonization_context"] == "source-withdrawn-unverified"
+    conn.close()
+
+
+def test_export_accepts_marked_contrast_citation(tmp_path: Path) -> None:
+    conn = sqlite3.connect(_make_source_db(tmp_path / "marked.db"))
+    conn.row_factory = sqlite3.Row
+    row = conn.execute("SELECT slug, payload_json FROM article_payloads WHERE is_public_route = 1 LIMIT 1").fetchone()
+    assert row is not None
+    payload = json.loads(row[1])
+    payload["soviet_colonization_context"] = {
+        "source": "СУМ-11",
+        "red_flag": True,
+        "sovietization_risk": 1,
+        "definition": "historical contrast",
+    }
+    conn.execute(
+        "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
+        (json.dumps(payload, ensure_ascii=False), row[0]),
+    )
+    conn.commit()
+    record = EntryReplay(conn, practice_levels_by_slug={}).record_for_slug(row[0])
+    assert record["slug"] == row[0]
+    conn.close()
+
+
 def test_search_alias_dedup_keeps_reference_survivors(edge_db: Path) -> None:
     conn = open_readonly_db(edge_db)
     try:

@@ -37,7 +37,6 @@ sources:
     monkeypatch.setattr(grow, "_source_connection", lambda path: nullcontext(object()))
     monkeypatch.setattr(grow, "_preserve_wiki_reference_cache", lambda: nullcontext())
     monkeypatch.setattr(grow.enrich_manifest, "_load_kaikki_lookup", lambda: {"fixture": True})
-    monkeypatch.setattr(grow.enrich_manifest, "_sum11_has_flag_columns", lambda conn: False)
     monkeypatch.setattr(
         grow,
         "build_skeleton_entry",
@@ -48,8 +47,6 @@ sources:
         entry: dict[str, Any],
         conn: object,
         kaikki_lookup: dict[str, bool],
-        *,
-        has_sum11_flags: bool,
     ) -> bool:
         seen.append(entry["lemma"])
         entry["heritage_status"] = {

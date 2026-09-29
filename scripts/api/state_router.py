@@ -1280,6 +1280,9 @@ def _compute_dispatch_routing_budget(
     if force_unknown:
         claude_status = "unknown"
         claude_burn = None
+        agentic_spent = None
+        agentic_burn = None
+        agentic_status = "unknown"
 
     agents["claude"] = {
         "interactive": {

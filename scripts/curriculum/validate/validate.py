@@ -11,6 +11,10 @@ waiver (--allow-missing-prior); --strict refuses every waiver flag and
 verifies the registry is append-only over git history, so a plan that needs a
 waiver can never be built or merged as buildable.
 
+The mechanical gates M1, M3 and M5 (mechanical.py, issue #9138) are structural checks over the
+plan, the arc and the word store that plan reviewers had to make by hand;
+what reads a proxy is reported as a note or not_checked, never as a failure.
+
 --provisional-pack is the plan-review mode (docs/epics/fresh-build-review-contracts.md
 "Contract 1"): the plan still points at a pack whose sha256 it does not carry yet,
 so the evidence_ref.sha256 comparison alone becomes the not_checked item
@@ -48,6 +52,7 @@ from .loader import (
     resolve_plan_path,
     sha256_of,
 )
+from .mechanical import check_mechanical
 from .pack import load_pack, load_words, lock_digest
 from .placement_table import PLACEMENT_TABLE_REL, PlacementTableError, load_placement_table
 from .registry import check_append_only, check_plan_against_registry, load_registry, registry_path_for
@@ -1149,7 +1154,11 @@ def _validate_plan_run(
         if position < plan["arc_ref"]["position"]
     ]
     check_rule4(report, plan, plan_path, allow_missing_prior=allow_missing_prior, level_plans=level_plans)
-    check_arc(report, level, plan, plan_path)
+    arc = check_arc(report, level, plan, plan_path)
+    if store is not None:
+        check_mechanical(
+            report, plan, level=level, store=store, arc=arc, level_plans=level_plans, words_path=words_path
+        )
     registry_path = registry_path_for(plan_path)
     registry_failures: list[Outcome] = []
     registry = load_registry(registry_path, level, registry_failures)

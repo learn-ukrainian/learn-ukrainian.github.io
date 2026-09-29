@@ -31,6 +31,7 @@ import {
   isCaseClozeDrill,
   isPracticeNewCard,
   isPracticeSessionResumable,
+  isPracticeModeEnabled,
   isPracticeStorageEphemeral,
   isWrongCaseAnswer,
   loadState,
@@ -49,6 +50,7 @@ import {
   lemmaFocusClozeContentKey,
   stripIdentityClozeForLemmaFocus,
   stripStressMarks,
+  withoutDisabledPracticeModes,
   uaPlural,
   validateClozeOptions,
   writeNewCardsDailyState,
@@ -104,6 +106,7 @@ import { dateSeed, deckSeed, pickDaily, reRollSeed, type DailyWord } from '../li
 import { pickDailyForLevel } from '../lib/lexicon/daily-card';
 import {
   filterTeacherClozeItems,
+  getArtifactPracticeDeck,
   getCachedLowercaseLemmaKeySet,
   getTeacherLessonVirtualDeck,
   getTeacherTableVirtualDeck,
@@ -124,6 +127,8 @@ import {
   isMissingShard,
 } from '../lib/lexicon/practice-shard-fetch';
 import { LexiconCustomDeckManager } from './LexiconCustomDeckManager';
+import TeacherDeckPractice from './practice/TeacherDeckPractice';
+import { loadTeacherDeck } from '../lib/lexicon/teacher-deck';
 import ZnoPractice, { ZNO_PRACTICE_DECK_META } from './ZnoPractice';
 import { useZnoPracticeOverlay, ZNO_MODE_META } from './useZnoPracticeOverlay';
 import ErrorCorrectionPractice from './ErrorCorrectionPractice';
@@ -1047,7 +1052,7 @@ function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
 
 function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[]): PracticeDeckData | null {
   if (!initialDeck) return null;
-  if (!Array.isArray(initialDeck)) return initialDeck;
+  if (!Array.isArray(initialDeck)) return withoutDisabledPracticeModes(initialDeck);
   const lexemes = initialDeck.map((entry) => {
     const legacy = entry as PracticeLexeme & { slug?: string; example?: string | null };
     const lemmaId = legacy.lemmaId ?? legacy.slug ?? legacy.lemma;
@@ -1346,7 +1351,7 @@ function classifyFeedbackFor(
  * actually asked about. Restate the attested prompt ↔ correct-option pair from
  * `selection.synonym` instead — same deck payload the option list and prompt already render.
  */
-function synonymFeedbackFor(
+export function synonymFeedbackFor(
   selection: PracticeSelection,
   option: ChoiceOption,
   learnerLevel: CefrLevel,
@@ -1587,7 +1592,7 @@ function imperativeFeedbackFor(item: PracticeImperativeItem, option: ChoiceOptio
   };
 }
 
-function drillChoicePrompt(
+export function drillChoicePrompt(
   selection: PracticeSelection,
   learnerLevel: CefrLevel,
 ): { promptUk: string; promptEn: string; subtitleUk: string; subtitleEn?: string } | null {
@@ -1628,6 +1633,8 @@ function drillChoicePrompt(
   }
   if (selection.synonym) {
     const isAntonym = selection.synonym.polarity === 'antonym';
+    // #8714: a ULIF-admitted pair is a synonym in one dictionary sense; show it.
+    const sense = selection.synonym.sense;
     return {
       promptUk: isAntonym
         ? `Оберіть антонім до «${selection.synonym.prompt}»`
@@ -1635,8 +1642,8 @@ function drillChoicePrompt(
       promptEn: isAntonym
         ? `Choose an antonym for «${selection.synonym.prompt}»`
         : `Choose a synonym for «${selection.synonym.prompt}»`,
-      subtitleUk: 'Оберіть правильну відповідь',
-      subtitleEn: 'Select the correct answer',
+      subtitleUk: sense ? `у значенні «${sense}»` : 'Оберіть правильну відповідь',
+      subtitleEn: sense ? `in the sense «${sense}»` : 'Select the correct answer',
     };
   }
   return null;
@@ -1660,8 +1667,11 @@ function sessionScopeIndexForMode(
   index: PracticeIndexItem[],
   modeFilter: PracticeModeFilter,
 ): PracticeIndexItem[] {
-  if (modeFilter === 'mixed') return index;
-  return index
+  const enabled = index
+    .map((item) => ({ ...item, modes: item.modes.filter(isPracticeModeEnabled) }))
+    .filter((item) => item.modes.length > 0);
+  if (modeFilter === 'mixed') return enabled;
+  return enabled
     .filter((item) => item.modes.includes(modeFilter))
     .map((item) => ({ ...item, modes: [modeFilter] }));
 }
@@ -2337,7 +2347,9 @@ function LexiconPracticeIsland({
     const normalized = normalizeInitialDeck(initialDeck);
     return hasLoadedDrillShards(normalized);
   });
-  const [sessionPhase, setSessionPhase] = useState<SessionPhase>(autoStart ? 'active' : 'idle');
+  const [sessionPhase, setSessionPhase] = useState<SessionPhase>(
+    autoStart && isPracticeModeEnabled(initialMode) ? 'active' : 'idle',
+  );
   const [sessionSeed, setSessionSeed] = useState(() => makePracticeSessionSeed());
   const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
   const [sessionBudget, setSessionBudget] = useState<SessionBudget>(20);
@@ -2657,6 +2669,16 @@ function LexiconPracticeIsland({
   // Deduping cache for shard JSON fetches (by full URL) so index shards fetched by the eager
   // due-count effect are not re-fetched by ensure, and no shard is fetched twice.
   const shardJsonCacheRef = useRef(new Map<string, Promise<unknown>>());
+  // #8843: a deck with its own served artifacts (the teacher deck) practises in
+  // `TeacherDeckPractice`, never through the CEFR shards or their key fallback.
+  const artifactDeck = useMemo(() => getArtifactPracticeDeck(selectedDeckFilter), [selectedDeckFilter]);
+  const [artifactSessionActive, setArtifactSessionActive] = useState(false);
+  const loadArtifactDeck = useCallback(() => {
+    if (!artifactDeck) return Promise.reject(new Error('no artifact deck selected'));
+    return loadTeacherDeck(artifactDeck.id, artifactDeck.practice, shardBaseUrl, (url) =>
+      getShardJson(url, shardJsonCacheRef.current),
+    );
+  }, [artifactDeck, shardBaseUrl]);
   const [chromeLocale, setChromeLocale] = useState<'en' | 'uk'>(() =>
     typeof document !== 'undefined'
       ? ((document.documentElement.dataset.chromeLocale as 'en' | 'uk') || 'en')
@@ -2998,6 +3020,12 @@ function LexiconPracticeIsland({
   // still produces a deterministic, testable draw, it just adds a third seed term.
   useEffect(() => {
     if (sessionPhase !== 'idle') return;
+    if (artifactDeck) {
+      // The artifact deck shows its own day plan; no CEFR daily picks for it.
+      setDailySnapshot(null);
+      setDailySnapshotLoading(false);
+      return;
+    }
 
     // #6146: defends against the midnight timer not having fired yet (e.g. this effect
     // re-runs from an unrelated dependency change in the first seconds of a new day) —
@@ -3223,9 +3251,11 @@ function LexiconPracticeIsland({
     selectedDeckFilter,
     customSets,
     dailyReRollCount,
+    artifactDeck,
   ]);
 
-  const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
+  // Cached index shards can predate #8714; never count withdrawn modes on the home.
+  const indexForStats = sessionScopeIndexForMode(deck?.index ?? dueIndex ?? [], 'mixed').filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
   );
 
@@ -3239,10 +3269,13 @@ function LexiconPracticeIsland({
       indexForModeCounts(indexForStats, learnerLevel),
       deckLemmaKeySet,
     );
-    const counts: Partial<Record<VisiblePracticeModeFilter, number>> = { mixed: filtered.length };
+    const counts: Partial<Record<VisiblePracticeModeFilter, number>> = {
+      mixed: filtered.filter((item) => item.modes.some(isPracticeModeEnabled)).length,
+    };
     for (const visibleMode of MODE_CARD_ORDER) {
       if (visibleMode === 'mixed') continue;
-      counts[visibleMode] = filtered.filter((item) => item.modes.includes(visibleMode)).length;
+      counts[visibleMode] = isPracticeModeEnabled(visibleMode)
+        ? filtered.filter((item) => item.modes.includes(visibleMode)).length : 0;
     }
     return counts;
   }, [deckLemmaKeySet, indexForStats, learnerLevel]);
@@ -3833,12 +3866,18 @@ function LexiconPracticeIsland({
     // reset, returning home with an empty history lets the selector reuse the previous
     // mode's card when the learner starts a different mode.
     committedSelectionRef.current = null;
+    const effectiveDeckFilter = overrides?.deckFilter ?? selectedDeckFilter;
+    if (getArtifactPracticeDeck(effectiveDeckFilter)) {
+      // Its sessions run in TeacherDeckPractice (#8843); a CEFR session would fall
+      // back to showing each table key as its own meaning.
+      setSessionPhase('idle');
+      return;
+    }
     setMode(nextMode);
     setSessionBudget(budget);
     setError(null);
     setFocusLookupMiss(false);
     const effectiveLevel = overrides?.level ?? learnerLevel;
-    const effectiveDeckFilter = overrides?.deckFilter ?? selectedDeckFilter;
     let loadedDeck = await ensureDeck(
       shouldLoadCloze(nextMode),
       overrides ? { level: overrides.level, deckFilter: overrides.deckFilter, force: true } : undefined,
@@ -3893,7 +3932,7 @@ function LexiconPracticeIsland({
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     // #6734: never open a 0/0 synonym (or any mode) session when the selected-level
     // scope is empty — even if background shards later bleed higher-level items in.
-    if (!resume && index.length === 0) {
+    if (index.length === 0) {
       setFeedback({
         uk: CHROME_STRINGS.uk['practice.modeNoExercises'],
         en: CHROME_STRINGS.en['practice.modeNoExercises'],
@@ -4380,9 +4419,11 @@ function LexiconPracticeIsland({
         labelUk = caseLabel;
         labelEn = translateGrammarTerm(caseLabel);
       } else {
+        // Identity inserts name the dictionary form only when the deck rule
+        // does; a case-free `lexical_insertion` card gets no label (#8726).
         const triggerLabel = 'triggerLabel' in rule && rule.triggerLabel ? rule.triggerLabel : '';
-        labelUk = triggerLabel || 'словникова форма';
-        labelEn = 'dictionary form';
+        labelUk = triggerLabel;
+        labelEn = triggerLabel ? 'dictionary form' : '';
       }
 
       setClozeFeedback({
@@ -4583,6 +4624,123 @@ function LexiconPracticeIsland({
     );
   }
 
+  // #6544 deck switcher; also shown on an artifact deck's own overview (#8843).
+  const activeDeckSwitcher = (
+    <div className="k3-active-deck" data-testid="practice-active-deck">
+      <span className="k3-session-label"><ChromeText k="practice.deckLabel" /></span>
+      <button
+        type="button"
+        className={`k3-active-deck-chip${deckPickerOpen ? ' open' : ''}`}
+        data-testid="practice-active-deck-chip"
+        aria-expanded={deckPickerOpen}
+        aria-controls="practice-active-deck-menu"
+        onClick={() => setDeckPickerOpen((open) => !open)}
+      >
+        <span aria-hidden="true">{activeDeckChipIcon}</span>
+        <span className="k3-active-deck-name">{activeDeckChipLabel}</span>
+        <span className="sr-only"><ChromeText k="practice.deckChange" /></span>
+      </button>
+      {deckPickerOpen ? (
+        <div
+          id="practice-active-deck-menu"
+          className="k3-active-deck-menu"
+          data-testid="practice-active-deck-menu"
+          role="listbox"
+          aria-label={CHROME_STRINGS[chromeLocale]['practice.deckChange']}
+        >
+          <button
+            type="button"
+            role="option"
+            aria-selected={selectedDeckFilter === 'all'}
+            className={selectedDeckFilter === 'all' ? 'active' : undefined}
+            data-testid="practice-deck-option-all"
+            onClick={() => requestDeckSwitch('all')}
+          >
+            {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐{' '}
+            {chromeLocale === 'uk'
+              ? `Всі слова (${learnerLevel})`
+              : `All Words (${learnerLevel})`}
+          </button>
+          <button
+            type="button"
+            role="option"
+            aria-selected={selectedDeckFilter === 'virtual_teacher_lesson'}
+            className={
+              selectedDeckFilter === 'virtual_teacher_lesson' ? 'active' : undefined
+            }
+            data-testid="practice-deck-option-virtual_teacher_lesson"
+            onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
+          >
+            {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓{' '}
+            <ChromeText k="practice.deckCurated" />
+          </button>
+          <button
+            type="button"
+            role="option"
+            aria-selected={selectedDeckFilter === 'virtual_teacher_table'}
+            className={
+              selectedDeckFilter === 'virtual_teacher_table' ? 'active' : undefined
+            }
+            data-testid="practice-deck-option-virtual_teacher_table"
+            onClick={() => requestDeckSwitch('virtual_teacher_table')}
+          >
+            {selectedDeckFilter === 'virtual_teacher_table' ? '✓ ' : ''}📋{' '}
+            {chromeLocale === 'uk'
+              ? getTeacherTableVirtualDeck().titleUk
+              : getTeacherTableVirtualDeck().title}
+          </button>
+          {customSets.map((set) => (
+            <button
+              key={set.id}
+              type="button"
+              role="option"
+              aria-selected={selectedDeckFilter === set.id}
+              className={selectedDeckFilter === set.id ? 'active' : undefined}
+              data-testid={`practice-deck-option-${set.id}`}
+              onClick={() => requestDeckSwitch(set.id)}
+            >
+              {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
+            </button>
+          ))}
+          <button
+            type="button"
+            className="k3-active-deck-manage"
+            data-testid="practice-deck-open-secondary"
+            onClick={openSecondaryToolsPanel}
+          >
+            <ChromeText k="practice.deckManageMore" />
+          </button>
+        </div>
+      ) : null}
+      {pendingDeckSwitch ? (
+        <div className="k3-switch-offer" data-testid="practice-switch-session-offer" role="status">
+          <span><ChromeText k="practice.switchSessionOffer" /></span>
+          <div className="k3-switch-offer-actions">
+            <button
+              ref={switchAcceptBtnRef}
+              type="button"
+              className="btn btn-sm btn-accent"
+              data-testid="practice-switch-session-accept"
+              onClick={() => {
+                void acceptDeckSwitch();
+              }}
+            >
+              <ChromeText k="practice.switchSessionAccept" />
+            </button>
+            <button
+              type="button"
+              className="btn btn-sm"
+              data-testid="practice-switch-session-decline"
+              onClick={declineDeckSwitch}
+            >
+              <ChromeText k="practice.switchSessionDecline" />
+            </button>
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
+
   return (
     <section className="lexicon-practice" aria-label={CHROME_STRINGS[chromeLocale]['practice.ariaLabel']}>
       <p className="lexicon-practice-status" aria-live="polite">
@@ -4659,8 +4817,12 @@ function LexiconPracticeIsland({
             </div>
           )}
 
-          <div className="k3-practice-dashboard">
-            <div className="k3-hero" data-testid="practice-dashboard-hero">
+          <div className={`k3-practice-dashboard${artifactDeck ? ' teacher-deck-dashboard' : ''}`}>
+            <div
+              className="k3-hero"
+              data-testid="practice-dashboard-hero"
+              style={artifactSessionActive ? { display: 'none' } : undefined}
+            >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
                 <div>
                   <h1><ChromeText k="practice.heroTitle" /></h1>
@@ -4695,6 +4857,8 @@ function LexiconPracticeIsland({
                 className="k3-levels"
                 role="group"
                 aria-label={CHROME_STRINGS[chromeLocale]['practice.level']}
+                // An artifact deck has no CEFR level scope.
+                style={artifactDeck ? { display: 'none' } : undefined}
               >
                 <span className="k3-levels-label"><ChromeText k="practice.level" /></span>
                 {CEFR_LEVELS.map((level) => {
@@ -4719,6 +4883,20 @@ function LexiconPracticeIsland({
               </div>
             </div>
 
+            {artifactDeck ? (
+              <TeacherDeckPractice
+                key={artifactDeck.id}
+                deckId={artifactDeck.id}
+                titleUk={artifactDeck.titleUk}
+                titleEn={artifactDeck.title}
+                config={artifactDeck.practice}
+                chromeLocale={chromeLocale}
+                loadDeck={loadArtifactDeck}
+                deckSwitcher={<div className="k3-session-overview">{activeDeckSwitcher}</div>}
+                onSessionActiveChange={setArtifactSessionActive}
+              />
+            ) : (
+            <>
             <div className="k3-stats" data-testid="practice-dashboard-stats" role="group" aria-label={CHROME_STRINGS[chromeLocale]['practice.stats']}>
               <div className="k3-stat">
                 <span className="k3-stat-value">{dashboardStats.due}</span>
@@ -4788,119 +4966,7 @@ function LexiconPracticeIsland({
                  * switcher. Full Drive sync + Manage/Import stay folded below
                  * the mode grid (HARD-1/HARD-2 fold gates from #6336).
                  */}
-                <div className="k3-active-deck" data-testid="practice-active-deck">
-                  <span className="k3-session-label"><ChromeText k="practice.deckLabel" /></span>
-                  <button
-                    type="button"
-                    className={`k3-active-deck-chip${deckPickerOpen ? ' open' : ''}`}
-                    data-testid="practice-active-deck-chip"
-                    aria-expanded={deckPickerOpen}
-                    aria-controls="practice-active-deck-menu"
-                    onClick={() => setDeckPickerOpen((open) => !open)}
-                  >
-                    <span aria-hidden="true">{activeDeckChipIcon}</span>
-                    <span className="k3-active-deck-name">{activeDeckChipLabel}</span>
-                    <span className="sr-only"><ChromeText k="practice.deckChange" /></span>
-                  </button>
-                  {deckPickerOpen ? (
-                    <div
-                      id="practice-active-deck-menu"
-                      className="k3-active-deck-menu"
-                      data-testid="practice-active-deck-menu"
-                      role="listbox"
-                      aria-label={CHROME_STRINGS[chromeLocale]['practice.deckChange']}
-                    >
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={selectedDeckFilter === 'all'}
-                        className={selectedDeckFilter === 'all' ? 'active' : undefined}
-                        data-testid="practice-deck-option-all"
-                        onClick={() => requestDeckSwitch('all')}
-                      >
-                        {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐{' '}
-                        {chromeLocale === 'uk'
-                          ? `Всі слова (${learnerLevel})`
-                          : `All Words (${learnerLevel})`}
-                      </button>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={selectedDeckFilter === 'virtual_teacher_lesson'}
-                        className={
-                          selectedDeckFilter === 'virtual_teacher_lesson' ? 'active' : undefined
-                        }
-                        data-testid="practice-deck-option-virtual_teacher_lesson"
-                        onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
-                      >
-                        {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓{' '}
-                        <ChromeText k="practice.deckCurated" />
-                      </button>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={selectedDeckFilter === 'virtual_teacher_table'}
-                        className={
-                          selectedDeckFilter === 'virtual_teacher_table' ? 'active' : undefined
-                        }
-                        data-testid="practice-deck-option-virtual_teacher_table"
-                        onClick={() => requestDeckSwitch('virtual_teacher_table')}
-                      >
-                        {selectedDeckFilter === 'virtual_teacher_table' ? '✓ ' : ''}📋{' '}
-                        {chromeLocale === 'uk'
-                          ? getTeacherTableVirtualDeck().titleUk
-                          : getTeacherTableVirtualDeck().title}
-                      </button>
-                      {customSets.map((set) => (
-                        <button
-                          key={set.id}
-                          type="button"
-                          role="option"
-                          aria-selected={selectedDeckFilter === set.id}
-                          className={selectedDeckFilter === set.id ? 'active' : undefined}
-                          data-testid={`practice-deck-option-${set.id}`}
-                          onClick={() => requestDeckSwitch(set.id)}
-                        >
-                          {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
-                        </button>
-                      ))}
-                      <button
-                        type="button"
-                        className="k3-active-deck-manage"
-                        data-testid="practice-deck-open-secondary"
-                        onClick={openSecondaryToolsPanel}
-                      >
-                        <ChromeText k="practice.deckManageMore" />
-                      </button>
-                    </div>
-                  ) : null}
-                  {pendingDeckSwitch ? (
-                    <div className="k3-switch-offer" data-testid="practice-switch-session-offer" role="status">
-                      <span><ChromeText k="practice.switchSessionOffer" /></span>
-                      <div className="k3-switch-offer-actions">
-                        <button
-                          ref={switchAcceptBtnRef}
-                          type="button"
-                          className="btn btn-sm btn-accent"
-                          data-testid="practice-switch-session-accept"
-                          onClick={() => {
-                            void acceptDeckSwitch();
-                          }}
-                        >
-                          <ChromeText k="practice.switchSessionAccept" />
-                        </button>
-                        <button
-                          type="button"
-                          className="btn btn-sm"
-                          data-testid="practice-switch-session-decline"
-                          onClick={declineDeckSwitch}
-                        >
-                          <ChromeText k="practice.switchSessionDecline" />
-                        </button>
-                      </div>
-                    </div>
-                  ) : null}
-                </div>
+                {activeDeckSwitcher}
                 <div
                   className="k3-session-size"
                   role="group"
@@ -5099,6 +5165,8 @@ function LexiconPracticeIsland({
               </div>
             </div>
             </div>
+            </>
+            )}
           </div>
 
           {/*

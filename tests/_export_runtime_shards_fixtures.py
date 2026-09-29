@@ -2,19 +2,28 @@
 
 from __future__ import annotations
 
+from collections.abc import Iterator
 from pathlib import Path
 
 import pytest
 
 from scripts.atlas.export_runtime_shards import export_runtime_shards
+from tests.fixtures.atlas.build_runtime_shards_fixture import sanitized_fixture_db
 
 FIXTURE_DB_PATH = Path(__file__).resolve().parent / "fixtures" / "atlas" / "runtime_shards_fixture.db"
 
 
 @pytest.fixture(scope="module")
-def fixture_db() -> Path:
+def fixture_db(tmp_path_factory: pytest.TempPathFactory) -> Iterator[Path]:
     assert FIXTURE_DB_PATH.is_file(), f"missing fixture DB: {FIXTURE_DB_PATH}"
-    return FIXTURE_DB_PATH
+    # The historical snapshot predates #M-6. Keep the transport fixture while
+    # withholding old learner sections that cite the Soviet dictionary.
+    destination = tmp_path_factory.mktemp("runtime-shards-source") / "source.db"
+    try:
+        yield sanitized_fixture_db(FIXTURE_DB_PATH, destination)
+    finally:
+        for path in (destination, Path(f"{destination}-wal"), Path(f"{destination}-shm")):
+            path.unlink(missing_ok=True)
 
 
 @pytest.fixture(scope="module")

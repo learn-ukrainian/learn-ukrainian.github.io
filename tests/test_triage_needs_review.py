@@ -33,7 +33,10 @@ def test_empty_input_returns_empty_records() -> None:
     assert f"`{triage.MACHINE_PROMOTE}`: 0" in summary
 
 
-def test_gloss_priority_order_sum11_over_dmklinger() -> None:
+def test_sum11_is_never_a_gloss_or_hit_source() -> None:
+    """Rule #M-6: a Soviet-era СУМ-11 hit neither wins the gloss nor counts as a hit."""
+    assert "sum11" not in triage.GLOSS_SOURCE_PRIORITY
+    assert "sum11" not in triage.SOURCE_HIT_KEYS
     lookups = {
         "sum11": lambda words: {
             "хата": [{"definition": "СУМ gloss", "word": "хата"}],
@@ -55,21 +58,20 @@ def test_gloss_priority_order_sum11_over_dmklinger() -> None:
     assert len(records) == 1
     rec = records[0]
     assert rec["best_gloss"] == {
-        "text": "СУМ gloss",
-        "source": "sum11",
+        "text": "house",
+        "source": "dmklinger",
         "lemma": "хата",
         "slug": "хата",
     }
     assert rec["machine_action"] == triage.MACHINE_PROMOTE
     assert rec["cefr"] == "A1"
     assert rec["vesum_valid"] is True
-    assert rec["sources_hit"]["sum11"] == 1
+    assert "sum11" not in rec["sources_hit"]
     assert rec["sources_hit"]["dmklinger"] == 1
 
 
 def test_gloss_priority_falls_through_to_dmklinger() -> None:
     lookups = {
-        "sum11": lambda words: {w: [] for w in words},
         "dmklinger": lambda words: {
             w: [{"translations": '["work", "job"]', "word": w}] for w in words
         },
@@ -113,11 +115,10 @@ def test_truly_missing_when_no_gloss_sources() -> None:
 
 def test_heritage_carve_out_regardless_of_hits() -> None:
     lookups = {
-        "sum11": lambda words: {
+        "dmklinger": lambda words: {w: [] for w in words},
+        "grinchenko": lambda words: {
             w: [{"definition": "still has a gloss", "word": w}] for w in words
         },
-        "dmklinger": lambda words: {w: [] for w in words},
-        "grinchenko": lambda words: {w: [] for w in words},
         "slovnyk_me": lambda words: {w: [] for w in words},
         "balla": lambda words: {w: [] for w in words},
         "esum": lambda words: {w: [] for w in words},
@@ -307,11 +308,10 @@ def test_run_triage_write_and_probe(tmp_path: Path) -> None:
     summary = tmp_path / "needs-review-triage-summary.md"
 
     lookups = {
-        "sum11": lambda words: {
+        "dmklinger": lambda words: {w: [] for w in words},
+        "grinchenko": lambda words: {
             w: ([{"definition": "gloss"}] if w == "alpha" else []) for w in words
         },
-        "dmklinger": lambda words: {w: [] for w in words},
-        "grinchenko": lambda words: {w: [] for w in words},
         "slovnyk_me": lambda words: {w: [] for w in words},
         "balla": lambda words: {w: [] for w in words},
         "esum": lambda words: {w: [] for w in words},

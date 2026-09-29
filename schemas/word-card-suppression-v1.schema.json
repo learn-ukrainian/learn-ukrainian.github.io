@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/word-card-suppression-v1.schema.json",
+  "title": "Word-card suppression selectors v1 (#8978 / #8980)",
+  "description": "Persistent suppression selectors (schema.md §12.1). A selector matches on a source, a persistent source-record identity (found in each snapshot by correspondence; an ambiguous or held correspondence suppresses every candidate), or assertion content pinned to a normaliser version, never on a local row id or a content-addressed assertion id alone, so it keeps applying across reharvest, re-normalisation, remapping and rollback.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^wc_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "sense_id": {
+      "type": "string",
+      "pattern": "^ws_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_id": {
+      "type": "string",
+      "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "source_record_id": {
+      "type": "string",
+      "pattern": "^sr_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_content_selector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "source_id",
+        "field",
+        "subject_spelling",
+        "normaliser_version"
+      ],
+      "properties": {
+        "kind": {
+          "const": "assertion_content"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subject_spelling": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_norm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "normaliser_version": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The normaliser version `value_norm` was written under. A build whose normaliser differs matches by re-normalising the assertion's raw value with THIS version (every version stays available in R), so the selector never silently stops matching; a selector whose match set becomes empty fails the build until it is re-pinned (schema.md §12.1)."
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "suppression_id",
+        "issue",
+        "date",
+        "selector",
+        "scope",
+        "applies_to"
+      ],
+      "properties": {
+        "suppression_id": {
+          "type": "string",
+          "pattern": "^sup-"
+        },
+        "issue": {
+          "type": "string",
+          "format": "uri",
+          "description": "The GitHub issue that requested removal (operator decision d3)."
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        },
+        "selector": {
+          "oneOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "source_id"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "source"
+                },
+                "source_id": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "source_id",
+                "source_record_id",
+                "on_ambiguous"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "source_record"
+                },
+                "source_id": {
+                  "type": "string"
+                },
+                "source_record_id": {
+                  "$ref": "#/$defs/source_record_id",
+                  "description": "Persistent record identity from the identity registry's source_records; located in every snapshot through the registry's correspondence, never by re-deriving a key."
+                },
+                "alias_at_creation": {
+                  "type": "string",
+                  "description": "The strongest alias when the selector was written (human-readable context only; matching goes through the registry)."
+                },
+                "on_ambiguous": {
+                  "const": "suppress_all_candidates",
+                  "description": "When the record's correspondence in a snapshot is an ambiguous or held hold (several consistent rows, conflicting alias evidence, or a row only the register position singles out), every candidate is suppressed until a language-lane overlay identity entry settles the correspondence (fail closed; historical inputs never resurrect withdrawn content)."
+                }
+              }
+            },
+            {
+              "$ref": "#/$defs/assertion_content_selector"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "kind",
+                "assertion_id",
+                "fallback"
+              ],
+              "properties": {
+                "kind": {
+                  "const": "assertion_id"
+                },
+                "assertion_id": {
+                  "$ref": "#/$defs/assertion_id"
+                },
+                "fallback": {
+                  "$ref": "#/$defs/assertion_content_selector",
+                  "description": "A complete assertion_content selector applied when the id no longer exists (re-normalisation, re-extraction). An empty or partial fallback is invalid."
+                }
+              }
+            }
+          ]
+        },
+        "scope": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "site",
+              "dataset",
+              "internal"
+            ]
+          }
+        },
+        "applies_to": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reharvest",
+            "rollback"
+          ],
+          "properties": {
+            "reharvest": {
+              "const": true
+            },
+            "rollback": {
+              "const": true
+            }
+          }
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

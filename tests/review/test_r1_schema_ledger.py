@@ -12,6 +12,7 @@ import hashlib
 import importlib.util
 import json
 import os
+import re
 import sqlite3
 import subprocess
 import sys
@@ -34,7 +35,7 @@ from scripts.review.receipts.ledger import (
     records,
     session_from_environ,
 )
-from scripts.review.receipts.outcomes import classify_outcome
+from scripts.review.receipts.outcomes import classify_outcome, search_outcome
 from scripts.review.validate import codes
 from scripts.review.validate.validate import fold_quote, main, validate_review
 
@@ -223,6 +224,15 @@ def _validate(paths: dict) -> object:
         lesson_path=paths["lesson"],
         ledger_path=paths["ledger"],
     )
+
+
+def _printed_receipt(text: str) -> tuple[str, str | None]:
+    """The receipt id and printed outcome of the final ``receipt: <id> (outcome: <value>)`` line."""
+    match = re.fullmatch(
+        r"receipt: (\S+)(?: \(outcome: (error|unavailable|no_hits|hits_but_no_support)\))?", text.splitlines()[-1]
+    )
+    assert match, text.splitlines()[-1]
+    return match.group(1), match.group(2)
 
 
 def _codes(result) -> set[str]:
@@ -878,8 +888,9 @@ def test_check_text_call_is_recorded_and_receipt_resolves(
 
     monkeypatch.setattr(server_module, "handle_check_text", fake)
     result = _run(server_module.call_tool("check_text", {"text": "Привіт."}))
-    receipt = result[0].text.splitlines()[-1].removeprefix("receipt: ")
-    assert result[0].text == payload + "\nreceipt: " + receipt
+    receipt, outcome = _printed_receipt(result[0].text)
+    assert outcome == "no_hits"
+    assert result[0].text == payload + f"\nreceipt: {receipt} (outcome: no_hits)"
     stored = lookup(ledger, receipt)
     assert stored["tool"] == "check_text"
     assert stored["status"] == "ok"
@@ -901,8 +912,9 @@ def test_server_records_full_result_and_refuses_other_tools(
 
     monkeypatch.setattr(server_module, "handle_verify_words", fake)
     result = _run(server_module.call_tool("verify_words", {"words": ["placeholder"]}))
-    receipt = result[0].text.splitlines()[-1].removeprefix("receipt: ")
-    assert result[0].text == payload + "\nreceipt: " + receipt
+    receipt, outcome = _printed_receipt(result[0].text)
+    assert outcome == "hits_but_no_support"
+    assert result[0].text == payload + f"\nreceipt: {receipt} (outcome: hits_but_no_support)"
     stored = lookup(ledger, receipt)
     assert stored["result"] == payload
     assert len(stored["result"]) == 600
@@ -953,7 +965,7 @@ def test_review_tool_error_is_recorded(server_module, tmp_path: Path, monkeypatc
     monkeypatch.setattr(server_module, "handle_verify_quote", boom)
     result = _run(server_module.call_tool("verify_quote", {"quote": "placeholder"}))
     assert "boom-marker" in result[0].text
-    assert result[0].text.splitlines()[-1].startswith("receipt: ")
+    assert _printed_receipt(result[0].text)[1] == "error"
     stored = records(ledger)[0]
     assert stored["status"] == "error"
     assert "boom-marker" in stored["result"]
@@ -1435,7 +1447,7 @@ def test_v4_and_review_both_record(server_module, tmp_path: Path, monkeypatch: p
 
     result = _run(server_module.call_tool("verify_words", {"words": ["слово"]}))
     assert any("receipt: " in t.text for t in result)
-    receipt = result[0].text.splitlines()[-1].removeprefix("receipt: ")
+    receipt, _outcome = _printed_receipt(result[0].text)
 
     stored = lookup(ledger, receipt)
     assert stored["tool"] == "verify_words"
@@ -1486,8 +1498,11 @@ def test_review_mode_receipt_in_both_wire_channels(
     res = _run(server_module._on_call_tool(None, params))
     assert res.is_error is False
     receipt = records(ledger)[-1]["receipt_id"]
-    assert res.structured_content == {**original, "receipt": receipt}
-    assert res.content[-1].text.endswith("\nreceipt: " + receipt)
+    printed_receipt, outcome = _printed_receipt(res.content[-1].text)
+    assert printed_receipt == receipt
+    assert outcome == "hits_but_no_support"
+    assert res.structured_content == {**original, "receipt": receipt, "receipt_outcome": outcome}
+    assert res.content[-1].text.endswith(f"\nreceipt: {receipt} (outcome: {outcome})")
     assert lookup(ledger, receipt)["tool"] == "verify_words"
 
 
@@ -1507,7 +1522,7 @@ def test_review_mode_without_typed_outcome_keeps_structured_content_empty(
     res = _run(server_module._on_call_tool(None, params))
     receipt = records(ledger)[-1]["receipt_id"]
     assert res.structured_content is None
-    assert res.content[-1].text == "plain-result\nreceipt: " + receipt
+    assert res.content[-1].text == f"plain-result\nreceipt: {receipt} (outcome: hits_but_no_support)"
 
 
 def test_review_receipt_does_not_leak_into_recorded_result_or_v4(
@@ -1530,3 +1545,78 @@ def test_review_receipt_does_not_leak_into_recorded_result_or_v4(
     assert typed["receipt"] == records(ledger)[-1]["receipt_id"]
     assert seen == [{"disposition": "found", "hits": 1}]
     assert records(ledger)[-1]["result"] == "body"
+
+
+# Each case is (label, tool, handler result text or an exception, status the ledger must store).
+_PRINTED_OUTCOME_CASES: list[tuple[str, str, str | Exception, str, str]] = [
+    (
+        "check_text_source_unavailable",
+        "check_text",
+        json.dumps({"status": "error", "error": "source_unavailable", "problems": []}),
+        "ok",
+        "unavailable",
+    ),
+    (
+        "check_text_invalid_input",
+        "check_text",
+        json.dumps({"status": "error", "error": "invalid_input", "message": "text is empty"}),
+        "ok",
+        "error",
+    ),
+    (
+        "non_check_text_invalid_input_text",
+        "verify_words",
+        "invalid_input: words must be a non-empty list",
+        "ok",
+        "hits_but_no_support",
+    ),
+    ("empty_result", "search_text", "No results found.", "ok", "no_hits"),
+    ("hits", "verify_words", "Batch verification: 1 words\nFound: 1/1\n- слово — FOUND", "ok", "hits_but_no_support"),
+    ("failed_call", "verify_quote", RuntimeError("boom-marker"), "error", "error"),
+]
+
+
+@pytest.mark.parametrize(
+    ("label", "tool", "handled", "status", "expected"),
+    _PRINTED_OUTCOME_CASES,
+    ids=[case[0] for case in _PRINTED_OUTCOME_CASES],
+)
+def test_printed_outcome_is_the_one_the_validator_accepts(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label, tool, handled, status, expected
+) -> None:
+    """The seat copies the printed outcome; the validator must show it for the stored record."""
+    from mcp.types import CallToolRequestParams, TextContent
+
+    from scripts.review.validate.validate import _outcome_shown
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+
+    async def fake(_arguments):
+        if isinstance(handled, Exception):
+            raise handled
+        return [TextContent(type="text", text=handled)]
+
+    monkeypatch.setattr(server_module, f"handle_{tool}", fake)
+    res = _run(server_module._on_call_tool(None, CallToolRequestParams(name=tool, arguments={"text": "x"})))
+
+    receipt, printed = _printed_receipt(res.content[-1].text)
+    record = lookup(ledger, receipt)
+    assert record["status"] == status
+    assert printed == expected
+    assert res.content[-1].text.endswith(f"\nreceipt: {receipt} (outcome: {printed})")
+    assert _outcome_shown(printed, record)
+    assert search_outcome(record["status"], record["outcome_facts"]) == printed
+
+
+def test_refused_call_prints_a_bare_receipt_line(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """No outcome name is shown for a refused call, so none is printed."""
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    refused = _run(server_module.call_tool("search_sources", {"query": "placeholder"}))
+    stored = records(ledger)[-1]
+    assert stored["status"] == "refused"
+    assert refused[-1].text.splitlines()[-1] == f"receipt: {stored['receipt_id']}"
+    assert search_outcome("refused", stored["outcome_facts"]) is None

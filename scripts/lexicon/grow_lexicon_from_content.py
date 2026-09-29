@@ -214,7 +214,6 @@ def generate_candidates(
     entries: list[dict[str, Any]] = []
     kaikki_lookup = enrich_manifest._load_kaikki_lookup()
     with _source_connection(enrich_manifest.SOURCES_DB) as conn, _preserve_wiki_reference_cache():
-        has_sum11_flags = enrich_manifest._sum11_has_flag_columns(conn)
         for idx, item in enumerate(delta, start=1):
             if resume and item.lemma in checkpointed:
                 entry = checkpointed[item.lemma]
@@ -233,7 +232,6 @@ def generate_candidates(
                     entry,
                     conn,
                     kaikki_lookup,
-                    has_sum11_flags=has_sum11_flags,
                 )
                 entries.append(entry)
                 newly_enriched_count += 1

@@ -3,6 +3,7 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { assertPointerFresh } from './hydrate-manifest.mjs';
+import { verifyTeacherDeckPointer } from './hydrate-teacher-deck.mjs';
 
 const scriptDir = resolve(fileURLToPath(new URL('.', import.meta.url)));
 const repoRoot = resolve(scriptDir, '../..');
@@ -79,6 +80,13 @@ function main() {
   const pointer = parseJson('site/src/data/lexicon-manifest.pointer.json');
   const fingerprint = parseJson('site/src/data/lexicon-manifest.fingerprint.json');
   assertPointerFresh(pointer, fingerprint);
+  // Required: the site never builds without the published teacher deck (#8843).
+  try {
+    verifyTeacherDeckPointer({ pointerPath: resolve(repoRoot, 'site/src/data/lexicon-teacher-deck.pointer.json') });
+  } catch (error) {
+    console.error(`Invalid teacher deck pointer: ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  }
   console.log('✓ committed Atlas artifacts verified (no regeneration performed)');
 }
 

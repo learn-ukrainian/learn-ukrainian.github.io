@@ -14,6 +14,13 @@ pairs:
   citations:
   - antonenko:Бажаючий
   - ua-gec:F/Calque n=1
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p099
+    passage: Узяти хоч би прикметник охочий – він цілком відповідає тому поняттю, що його намагались висловити автори оголошення
+      незграбним утвором бажаючий
+  currentNormSupport:
+  - locator: 11-klas-ukrajinska-mova-avramenko-2019_s0074
+    passage: 'прикметник: охочий, розвивальний (не бажаючий, не розвиваючий);'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -27,10 +34,28 @@ pairs:
     answer_form: охочі
     calque_form: бажаючі
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p099
+      passageSha256: c5f29f2633d151184c7fc2f62971054521d987e6cd2c62408a9aaa2eaa6c85d9
+      sentenceSha256: c95c10d621b0a11eaa9ff706baab0f26ce274d14770c7ab37215b3bc8946fff3
+      endorsedForm: охочі
+      rejectedForm: бажаючі
+      sense: people willing to participate
+      currentNormLocator: 11-klas-ukrajinska-mova-avramenko-2019_s0074
+      currentNormPassageSha256: 8f26730e983f4ec3878d0efe2cdce3be04f4e6a123fa3df4855ee1ef97473e01
   - sentence_with_slot: Кожен ___ може записатися на безплатний курс.
     answer_form: охочий
     calque_form: бажаючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p099
+      passageSha256: c5f29f2633d151184c7fc2f62971054521d987e6cd2c62408a9aaa2eaa6c85d9
+      sentenceSha256: c54aae8bfcc50d9fc57906257eca1402779e77ba5abd9783d3cffa55da8433e2
+      endorsedForm: охочий
+      rejectedForm: бажаючий
+      sense: people willing to participate
+      currentNormLocator: 11-klas-ukrajinska-mova-avramenko-2019_s0074
+      currentNormPassageSha256: 8f26730e983f4ec3878d0efe2cdce3be04f4e6a123fa3df4855ee1ef97473e01
 - calqueLabel: благополучний
   calqueSurfaces:
   - благополучний
@@ -169,6 +194,18 @@ pairs:
   citations:
   - antonenko:Вид, на виду, на видноті, вигляд, краєвид
   - ua-gec:F/Calque n=1
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p018
+    passage: Відповідниками російського слова "вид" у розумінні "пейзаж, ландшафт" в українській мові є "краєвид"
+  currentNormSupport:
+  - locator: 9-klas-ukrajinska-mova-avramenko-2017_s0113
+    passage: 'НЕПРАВИЛЬНО ПРАВИЛЬНО
+
+      на Україні в Україні
+
+      квартира з усіма зручностями квартира з усіма вигодами
+
+      гарний вид із вікна гарний краєвид із вікна'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -185,11 +222,29 @@ pairs:
     answer_form: краєвид
     calque_form: вид
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 269a813755b00132e551e9035ed1da7ae9be799977ff5adb40813feef7f74919
+      sentenceSha256: 61afd527a781b0bf605a9ad53e4895e7b39457014ad8403096011ff3e3ee5ae8
+      endorsedForm: краєвид
+      rejectedForm: вид
+      sense: a landscape seen from a place
+      currentNormLocator: 9-klas-ukrajinska-mova-avramenko-2017_s0113
+      currentNormPassageSha256: 601855e681a1f93c97ba73df262dade25624e3c6ee85244624b8491c5c96bded
     disambiguated: true
   - sentence_with_slot: З балкона ми побачили широкий ___ на річку.
     answer_form: краєвид
     calque_form: вид
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 269a813755b00132e551e9035ed1da7ae9be799977ff5adb40813feef7f74919
+      sentenceSha256: c281b55b684e7e2d9521e393d13389ffc86a29abe13433e8ecd90eb7cd32f710
+      endorsedForm: краєвид
+      rejectedForm: вид
+      sense: a landscape seen from a place
+      currentNormLocator: 9-klas-ukrajinska-mova-avramenko-2017_s0113
+      currentNormPassageSha256: 601855e681a1f93c97ba73df262dade25624e3c6ee85244624b8491c5c96bded
     disambiguated: true
 - calqueLabel: виключення
   calqueSurfaces:
@@ -236,6 +291,13 @@ pairs:
   citations:
   - antonenko:Виключно, винятково, тільки, суто
   - slovnyk:davydov
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p110
+    passage: Прислівник виключно штучно створене чи скальковане слово, яким надуживають наші науковці й публіцисти, хоч є ще
+      й інші, більш підхожі, природні слова. Крім наведеного вище тільки, є ще винятково ("З усіма він чемний і винятково ввічливий".
+      – Я. Баш), суто
+  currentNormWithheldReason: 'Withheld J5-J6: authenticSense «як виняток» was unsupported; current MON usage treats
+  «виключно» as ordinary, with no same-sense rejection.'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -244,7 +306,7 @@ pairs:
   severity: enrichment
   curator: fable-2026-07-06
   calqueSense: у значенні «тільки, суто» (рос. исключительно)
-  authenticSense: виключно = як виняток
+  authenticSense: null
   frames:
   - sentence_with_slot: Це ___ технічне питання.
     answer_form: суто
@@ -330,6 +392,29 @@ pairs:
   citations:
   - antonenko:Включати, умикати, виключати, вимикати
   - ua-gec:F/Calque n=1
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p075
+    passage: '"Треба включити електрику"; "Виключи струм", – кажуть неправильно, забуваючи, що по–українському слід казати:
+      умикнути (увімкнути), умикати електрику, вимикати струм.'
+  currentNormSupport:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0016
+    passage: 'ПРАВИЛЬНО НЕПРАВИЛЬНО
+
+      прочитати правильно
+
+      увімкнути світло
+
+      відчиняти ворота
+
+      розгорнути зошит
+
+      наступний урок
+
+      прочитати вірно
+
+      включити світло
+
+      відкривати ворота'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -345,11 +430,29 @@ pairs:
     answer_form: увімкни
     calque_form: включи
     origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p075
+      passageSha256: 9e5048fc8ce344c5e327c9cc9b2d832c914f5d46ff21dda38d9c5bfa343ec971
+      sentenceSha256: 3ca90538f42857bff668a904bd87da9b9bdc492d497c649e91d3f7184a4df109
+      endorsedForm: увімкни
+      rejectedForm: включи
+      sense: switching on electrical power
+      currentNormLocator: 5-klas-ukrmova-zabolotnyi-2023_s0016
+      currentNormPassageSha256: 5e9e53aff5819a8fb6a5b2b841c325cc464bfb0fcb53c2cbb1a7fa066c22a150
     disambiguated: true
   - sentence_with_slot: Я забув ___ ноутбук перед уроком.
     answer_form: увімкнути
     calque_form: включити
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p075
+      passageSha256: 9e5048fc8ce344c5e327c9cc9b2d832c914f5d46ff21dda38d9c5bfa343ec971
+      sentenceSha256: 7b5e181f6567df3ae88c882d36937bafc38c5db19592e0741cdad21a9b2699f8
+      endorsedForm: увімкнути
+      rejectedForm: включити
+      sense: switching on electrical power
+      currentNormLocator: 5-klas-ukrmova-zabolotnyi-2023_s0016
+      currentNormPassageSha256: 5e9e53aff5819a8fb6a5b2b841c325cc464bfb0fcb53c2cbb1a7fa066c22a150
     disambiguated: true
 - calqueLabel: відкривати
   calqueSurfaces:
@@ -368,6 +471,29 @@ pairs:
   citations:
   - antonenko:Відкривати, відчиняти, розгортати
   - ua-gec merged n=13 docs=13
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p074
+    passage: 'Часто слова відкривати й відчиняти вважають за синоніми, ніби вони означають одне й те ж, і кажуть: "Відкрий вікно"
+      – замість "відчини вікно"'
+  currentNormSupport:
+  - locator: 5-klas-ukrmova-zabolotnyi-2023_s0016
+    passage: 'ПРАВИЛЬНО НЕПРАВИЛЬНО
+
+      прочитати правильно
+
+      увімкнути світло
+
+      відчиняти ворота
+
+      розгорнути зошит
+
+      наступний урок
+
+      прочитати вірно
+
+      включити світло
+
+      відкривати ворота'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -382,11 +508,29 @@ pairs:
     answer_form: відчиняти
     calque_form: відкривати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p074
+      passageSha256: 78d8500720c4daebece256b7ba3b83fa195f573c06e83999ef58394e606e5015
+      sentenceSha256: aee7cdf0c0f4c0ba7bde56abd038945a2689fde88c1fb47bd8ce159beea16e70
+      endorsedForm: відчиняти
+      rejectedForm: відкривати
+      sense: physically opening a window or door
+      currentNormLocator: 5-klas-ukrmova-zabolotnyi-2023_s0016
+      currentNormPassageSha256: 5e9e53aff5819a8fb6a5b2b841c325cc464bfb0fcb53c2cbb1a7fa066c22a150
     disambiguated: true
   - sentence_with_slot: Оленка тихо ___ двері до класу.
     answer_form: відчиняє
     calque_form: відкриває
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p074
+      passageSha256: 78d8500720c4daebece256b7ba3b83fa195f573c06e83999ef58394e606e5015
+      sentenceSha256: 03cfeec5199a1de8918eba8d99a7bb540fc0e8d93fb05ebd669aa3ae4f7e25ca
+      endorsedForm: відчиняє
+      rejectedForm: відкриває
+      sense: physically opening a window or door
+      currentNormLocator: 5-klas-ukrmova-zabolotnyi-2023_s0016
+      currentNormPassageSha256: 5e9e53aff5819a8fb6a5b2b841c325cc464bfb0fcb53c2cbb1a7fa066c22a150
     disambiguated: true
 - calqueLabel: відносно
   calqueSurfaces:
@@ -401,6 +545,14 @@ pairs:
   citations:
   - antonenko:Порівняння, у порівнянні, порівняно
   - slovnyk:foreign_shtepa
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p018
+    passage: Відповідно до російських слів "отношение", "относительно часто" надуживають словами відношення, відносно, забуваючи
+      про інші, точніші, природніші слова:"Не можна допускати поверхового відношення до такої серйозної справи", – замість –
+      "поверхового ставлення" або – ще краще – "щоб поверхово ставились"; "Відносно цього не може бути двох думок", – замість
+      – "про це" ("щодо цього", "з приводу цього")
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -431,11 +583,21 @@ pairs:
   - ставлення
   - стосунки
   - відносини
-  rationale: 'Антоненко: «Відношення, взаємини, стосунок, відносини»'
+  rationale: 'Антоненко: «Відношення, взаємини, стосунок, відносно, щодо, стосовно, відносність»'
   citations:
   - antonenko:Відношення
   - slovnyk:davydov
   - ua-gec merged n=12 docs=8
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p018
+    passage: Відповідно до російських слів "отношение", "относительно часто" надуживають словами відношення, відносно, забуваючи
+      про інші, точніші, природніші слова:"Не можна допускати поверхового відношення до такої серйозної справи", – замість –
+      "поверхового ставлення" або – ще краще – "щоб поверхово ставились"
+  currentNormSupport:
+  - locator: 7-klas-ukrmova-avramenko-2024_s0053
+    passage: 'уживання слова в невластивому для нього значенні: вірна відповідь
+
+      (правильна відповідь), відношення до друзів (ставлення до друзів);'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -452,11 +614,29 @@ pairs:
     answer_form: ставлення
     calque_form: відношення
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 68c6d0cc1c219d2de7611499dbf571e85061bb55f4a0953fcafcabe1e7f3dc6f
+      sentenceSha256: cad3cb6a88e8716c7428dff8a95966b9237199ac43fd3086b8404207d7d2e495
+      endorsedForm: ставлення
+      rejectedForm: відношення
+      sense: attitude toward people
+      currentNormLocator: 7-klas-ukrmova-avramenko-2024_s0053
+      currentNormPassageSha256: 699683a99c27522e5942639221fe789e1de0171b2f5071502b83eb3fef6392af
     disambiguated: true
   - sentence_with_slot: Добре ___ до клієнтів важливе для кав’ярні.
     answer_form: ставлення
     calque_form: відношення
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p018
+      passageSha256: 68c6d0cc1c219d2de7611499dbf571e85061bb55f4a0953fcafcabe1e7f3dc6f
+      sentenceSha256: 75a21208d2a88f38454afa73bb580843e08452337139dcfb205f0c3491ea4f7b
+      endorsedForm: ставлення
+      rejectedForm: відношення
+      sense: attitude toward people
+      currentNormLocator: 7-klas-ukrmova-avramenko-2024_s0053
+      currentNormPassageSha256: 699683a99c27522e5942639221fe789e1de0171b2f5071502b83eb3fef6392af
     disambiguated: true
 - calqueLabel: відправити
   calqueSurfaces:
@@ -566,6 +746,16 @@ pairs:
   citations:
   - antonenko:Вірний, правдивий, правильний
   - ua-gec merged n=10 docs=10
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p051
+    passage: Прикметник вірний і прислівник вірно з якогось часу не тільки витискають з ужитку інші, відповідніші слова, а й
+      набирають невластивого їм значення. Не тільки в діловій мові, а й у сучасних художніх творах ми часто натрапляємо на ці
+      слова в значенні "правильний, певний"
+  currentNormSupport:
+  - locator: 5-klas-ukrmova-avramenko-2022_s0007
+    passage: 'Не вживайте слово вірний зі значенням правильний. Відповідь учня на
+
+      уроці не вірна, а правильна.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -580,11 +770,29 @@ pairs:
     answer_form: правильна
     calque_form: вірна
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p051
+      passageSha256: 7681f517cd8d874d759f1f87ffbf160ec97ca6e41e56f5608149bab852a6be63
+      sentenceSha256: 9cf8bccb17d6b7ab668a533dfc0bab5e217ddd987f5fc58a2de2cd7a88536a9e
+      endorsedForm: правильна
+      rejectedForm: вірна
+      sense: a correct answer or choice
+      currentNormLocator: 5-klas-ukrmova-avramenko-2022_s0007
+      currentNormPassageSha256: ac01e821aca0d9e8925ff4ffc6e273a8614287b7cd728d40947a1bc3820f1027
     disambiguated: true
   - sentence_with_slot: Оберіть ___ варіант у тесті.
     answer_form: правильний
     calque_form: вірний
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p051
+      passageSha256: 7681f517cd8d874d759f1f87ffbf160ec97ca6e41e56f5608149bab852a6be63
+      sentenceSha256: 9714264d185c0ce75291d42a75cc77afc440d3941950133e73b1eb81ad14383b
+      endorsedForm: правильний
+      rejectedForm: вірний
+      sense: a correct answer or choice
+      currentNormLocator: 5-klas-ukrmova-avramenko-2022_s0007
+      currentNormPassageSha256: ac01e821aca0d9e8925ff4ffc6e273a8614287b7cd728d40947a1bc3820f1027
     disambiguated: true
 - calqueLabel: говоритися
   calqueSurfaces:
@@ -736,22 +944,44 @@ pairs:
   kind: sense_restricted
   corrections:
   - інший
-  rationale: 'Антоненко: у сучасній мові другий — тільки порядковий числівник; для «other» — інший'
+  rationale: 'Послуговування порядковим числівником другий для позначення інакшості. Потрібно вживати означальний займенник інший: А ти візьми другий олівець. — А ти візьми інший олівець.'
   citations:
   - antonenko:200 Другий та інший
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p107
+    passage: Слово другий буває українською мовою порядковим числівником ("А в другий раз пройшла не глянувши на нього". – Леся
+      Українка) або, зрідка, синонімом займенника інший ("Сам він не знав, не міг сказати, а другі з нього сміялись", – М. Коцюбинський).
+      У сучасній українській мові повелося вживати цього слова тільки як порядкового числівника, користуючись для другого значення
+      займенником інший
+  currentNormSupport:
+  - locator: 6-klas-ukrmova-avramenko-2023_s0193
+    passage: 'Послуговування порядковим числівником другий для позначення
+
+      інакшості. Потрібно вживати означальний займенник інший: А ти
+
+      візьми другий олівець. — А ти візьми інший олівець.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
   cefrAvailability: a2
-  severity: russianism
+  severity: enrichment
   curator: fable-2026-07-06
-  calqueSense: у значенні «інший» (рос. другой)
+  calqueSense: для позначення інакшості
   authenticSense: порядковий числівник (другий раз, другий поверх)
   frames:
   - sentence_with_slot: Цей квиток не підходить, дайте ___.
     answer_form: інший
     calque_form: другий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p107
+      passageSha256: 1ac6b3a3e1555c67c6c06b87f89ff35eba329b65beef5bbdbe8152c88e7a5866
+      sentenceSha256: 80f5dd4137b80a509a0bb20e33313cde2ebba285a18fd1a2892febb12fad0678
+      endorsedForm: інший
+      rejectedForm: другий
+      sense: a different choice among alternatives
+      currentNormLocator: 6-klas-ukrmova-avramenko-2023_s0193
+      currentNormPassageSha256: a186607982bbe7e26548099562ae8b6f782c6e162899f51fc4ddf8da417fc924
     disambiguated: true
     distractors:
     - кожний
@@ -760,6 +990,15 @@ pairs:
     answer_form: інший
     calque_form: другий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p107
+      passageSha256: 1ac6b3a3e1555c67c6c06b87f89ff35eba329b65beef5bbdbe8152c88e7a5866
+      sentenceSha256: 72b8ae7db06c0c78fb5b36bd015e0ee5f8ebfa12d9391e49834a51dcac2e9044
+      endorsedForm: інший
+      rejectedForm: другий
+      sense: a different choice among alternatives
+      currentNormLocator: 6-klas-ukrmova-avramenko-2023_s0193
+      currentNormPassageSha256: a186607982bbe7e26548099562ae8b6f782c6e162899f51fc4ddf8da417fc924
     disambiguated: true
     distractors:
     - кожний
@@ -1031,6 +1270,12 @@ pairs:
   rationale: рос. любой ≠ укр. любий; для довільності — будь-який
   citations:
   - ua-gec:F/Calque n=1
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p058
+    passage: Прикметник любий означає не "будь–який", як у російській мові любой, із якого й скалькували ті, що не знають гаразд
+      української мови, нібито українське любий, а – "милий"
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: ua-gec
   sourceFamilies:
   - ua-gec
@@ -1099,6 +1344,17 @@ pairs:
   rationale: 'Антоненко: «мається вибір» недоречне — є/маємо великий вибір'
   citations:
   - antonenko:156 Матися, бути, траплятися, мати
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p086
+    passage: '"У нашому магазині мається великий вибір зимового одягу", – читаємо в оголошенні; "Такі явища маються ще в нашому
+      побуті, але з ними йде рішуча боротьба", – читаємо в районній газеті; "Усі скарги, що малися в нас, ми висловили", – чуємо
+      з уст промовця, і в усіх цих фразах дієслово матися виступає недоречно, його треба замінити іншими словами. Чому? Адже
+      це дієслово є в українській мові, наприклад: "Поборовся б і я, може, якби малось сили" (Т. Шевченко); "Якби так малось,
+      як не мається, так що б то було!" (М. Номис). Хоч дієслово матися є в сучасній українській мові, та його вживають рідше,
+      ніж у російській діловій мові иметься, на зразок висловів иметься в продаже, имеются случаи тощо. У таких випадках треба
+      вдаватись до дієслова бути: "У нашому магазині (чи крамниці) є великий вибір зимового одягу".'
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1391,6 +1647,16 @@ pairs:
   rationale: 'Антоненко: обслуга — не дія, а люди; дія — обслуговування'
   citations:
   - antonenko:49 Обслуга й обслуговування
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p033
+    passage: '"У місті відчувається погана поштова обслуга", – читаємо в одній газеті, й відразу впадає в очі помилкове використання
+      слова "обслуга", яке має інше значення, ніж те, що надала йому газета. Обслуга – це не дія, що задовольняє чиїсь потреби,
+      а група людей, призначених виконувати певну роботу, здебільшого в військовій справі. Російським відповідником до цього
+      слова буде "расчёт", "прислуга", як це бачимо в такій, наприклад, фразі: "Гармату викотили на платформу, а обслуга зайняла
+      теплушку" (В. Козаченко). Коли треба передати дію, спрямовану на виконання якогось завдання, тоді слід удаватись до слів
+      "обслуговування" або "обслужування".'
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1453,6 +1719,12 @@ pairs:
   rationale: 'Антоненко: між пануючий і панівний немає значеннєвої різниці — пануючий суперечить духові мови, завжди панівний'
   citations:
   - antonenko:190 Пануючий чи панівний
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p101
+    passage: Між цими двома словами нема ніякої значеннєвої різниці, слово пануючий суперечить духу нашої мови, тому слід, виходячи
+      з мовних традицій, завжди додержуватись тільки слова панівний
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1512,6 +1784,13 @@ pairs:
   citations:
   - antonenko:Пара й кілька
   - ua-gec:F/Calque n=18 docs=15
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p107
+    passage: '"Позич мені на пару днів гроші"; "Зустрінемося через пару днів", – чуємо інколи в розмовах, а зрідка читаємо й
+      на сторінках сучасних художніх творів. Так сказати по–українському не можна, а слід: "Позич мені на кілька день (днів)
+      (на два–три дні, на які два дні) гроші"; "Зустрінемось через кілька день (днів)(через два–три дні, через які два дні)'
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -1578,6 +1857,13 @@ pairs:
   rationale: 'Антоненко: обмін листами зветься листування; переписка — копіювання'
   citations:
   - antonenko:53 Переписка й листування
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p035
+    passage: '"Переписка", чи, краще, "переписування", означає по–українському не "обмін листами", не "кореспонденція", а "певний
+      процес копіювання з уже написаного": "Глузлива доля підсунула переписування в канцелярії якихось сухих, нікому не потрібних
+      паперів" (М. Коцюбинський). Писання листів та одержання на них відповідей зветься по–українському "листування"'
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1700,6 +1986,20 @@ pairs:
   rationale: 'Антоненко: рос. начинающий → початківець (початківець-письменник, початківець-художник)'
   citations:
   - antonenko:192 Початкуючий – початківець
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p101
+    passage: '"На вечорі виступили з читанням своїх творів початкуючі письменники", – надруковано в газетній замітці, автор
+      якої не знає, що відповідно до російського вислову начинающий писатель (художник, композитор тощо) в сучасній українській
+      літературній мові вживається слово початківець'
+  currentNormSupport:
+  - locator: 10-klas-ukrmova-karaman-2018_s0012
+    passage: 'ЯК ПРАВИЛЬНО? Початкуючий чи початківець? Слово початкуючий — це каль-
+
+      ка від російського начинающий. Треба говорити: початківець; по-
+
+      чатківець-художник; у цій справі
+
+      я початківець.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1711,10 +2011,28 @@ pairs:
     answer_form: початківець
     calque_form: початкуючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: aac4f6ddf362fb985887687675dbfc0dda68d333a5f04b050837beba932f0f4b
+      sentenceSha256: ba55e96fa7e3a025ada5712901bc3f270f4b5183b27c1bf245fb382c5c3142e5
+      endorsedForm: початківець
+      rejectedForm: початкуючий
+      sense: a person beginning an artistic activity
+      currentNormLocator: 10-klas-ukrmova-karaman-2018_s0012
+      currentNormPassageSha256: 2d767e356c03ab14ce35862f0ce46c05b17629bbf69f0d8ad359c5a23435729d
   - sentence_with_slot: На курс записався один ___.
     answer_form: початківець
     calque_form: початкуючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: aac4f6ddf362fb985887687675dbfc0dda68d333a5f04b050837beba932f0f4b
+      sentenceSha256: f86927fe4ec1d697b0a32d61cb972cfa0e1fd2f5f0362963acc64175b8a38533
+      endorsedForm: початківець
+      rejectedForm: початкуючий
+      sense: a person beginning an artistic activity
+      currentNormLocator: 10-klas-ukrmova-karaman-2018_s0012
+      currentNormPassageSha256: 2d767e356c03ab14ce35862f0ce46c05b17629bbf69f0d8ad359c5a23435729d
 - calqueLabel: працюючий
   calqueSurfaces:
   - працюючий
@@ -1728,6 +2046,21 @@ pairs:
   rationale: 'Антоненко (у статті 192): працюючий – що працює – трудящий, трудівник, працівник'
   citations:
   - antonenko:192 Початкуючий – початківець (кінцівка статті)
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p101
+    passage: Працюючий – що (котрий, який) працює – трудящий, трудівник, трудар, трудовик, працівник Слово працюючий трапляється
+      в значеннях активного дієприкметника ("Працюючий на новому верстаті робітник не був добре обізнаний із його властивостями"),
+      прикметника ("Велика увага приділяється навчанню працюючої молоді") та іменника ("Літо – найкраща пора для відпочинку
+      працюючих"). Але ні в першому, ні в другому, ні в третьому значеннях воно не дається до використання.
+  currentNormSupport:
+  - locator: 11-klas-ukrajinska-mova-glazova-2019_s0071
+    passage: 'Сучасній українській мові активні дієприкметники теперішнього часу не
+
+      властиві, тому їх заміщують:
+
+      іншими словами: замість бажаючий — охочий; замість працюючий — праців-
+
+      ник; замість завідуючий — завідувач;'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1740,10 +2073,28 @@ pairs:
     answer_form: працівник
     calque_form: працюючий
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: 83e3ec99206c593e4876e33858661d2ca49796392624047d83335197be498192
+      sentenceSha256: b1015a9541585c8eac5a094ad541b5073a435e5977ec52b1c8271570b52b12c1
+      endorsedForm: працівник
+      rejectedForm: працюючий
+      sense: an employed person
+      currentNormLocator: 11-klas-ukrajinska-mova-glazova-2019_s0071
+      currentNormPassageSha256: 835d06dac89557aa4588f81375fac0a3592ceeea248e798e5d9b1342047a528e
   - sentence_with_slot: У відділі бракує одного ___.
     answer_form: працівника
     calque_form: працюючого
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p101
+      passageSha256: 83e3ec99206c593e4876e33858661d2ca49796392624047d83335197be498192
+      sentenceSha256: cd12b008c400a3872c2edd46efa5ce296eefb9e2849102f7536fcca5abbf86a5
+      endorsedForm: працівника
+      rejectedForm: працюючого
+      sense: an employed person
+      currentNormLocator: 11-klas-ukrajinska-mova-glazova-2019_s0071
+      currentNormPassageSha256: 835d06dac89557aa4588f81375fac0a3592ceeea248e798e5d9b1342047a528e
 - calqueLabel: приймати
   calqueSurfaces:
   - приймати
@@ -1758,6 +2109,15 @@ pairs:
   - antonenko:Приймати участь – брати участь
   - slovnyk:davydov
   - ua-gec:F/Collocation n=1
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p165
+    passage: Принагідно звернімо увагу на хибний вислів "приймати участь", що раз у раз трапляється на письмі й у живому мовленні,
+      замість якого треба казати й писати "брати участь"
+  currentNormSupport:
+  - locator: 5-klas-ukrmova-avramenko-2022_s0015
+    passage: 'НЕПРАВИЛЬНО приймати участь ПРАВИЛЬНО
+
+      брати участь'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -1774,11 +2134,29 @@ pairs:
     answer_form: брати
     calque_form: приймати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p165
+      passageSha256: a52354dbc790d1241a3b4da99bb9231e21668458d169ac76344277e407fa0708
+      sentenceSha256: 62509dc713f3a0b376141b65279fa430e3cdb769c1a3573610397c9397bce931
+      endorsedForm: брати
+      rejectedForm: приймати
+      sense: taking part in an activity
+      currentNormLocator: 5-klas-ukrmova-avramenko-2022_s0015
+      currentNormPassageSha256: 4f9ab1ad65496eb54a3c1cdd8e4273f657105282ee7bf3e6952cefb62c8aa939
     disambiguated: true
   - sentence_with_slot: Учні будуть ___ участь у проєкті.
     answer_form: брати
     calque_form: приймати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p165
+      passageSha256: a52354dbc790d1241a3b4da99bb9231e21668458d169ac76344277e407fa0708
+      sentenceSha256: 56b4fc1c3725531c961def0a26ff739120dad5d831f66a88dbf3061e67839ea2
+      endorsedForm: брати
+      rejectedForm: приймати
+      sense: taking part in an activity
+      currentNormLocator: 5-klas-ukrmova-avramenko-2022_s0015
+      currentNormPassageSha256: 4f9ab1ad65496eb54a3c1cdd8e4273f657105282ee7bf3e6952cefb62c8aa939
     disambiguated: true
 - calqueLabel: присвоїти
   calqueSurfaces:
@@ -1792,6 +2170,14 @@ pairs:
   rationale: 'Антоненко: звання, ордени, права надають; присвоїти — привласнити'
   citations:
   - antonenko:173 Присвоїти й надати
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p092
+    passage: 'Дієслово присвоїти має в українській мові два значення: "привласнити" ("Такий захланний, він ще навіть за німців
+      присвоїв собі Ротову ниву під лісом". – П. Козланюк) і "прийняти до громади, товариства або визнати за свого" ("Ото ви
+      присвоїли собі цигана, а він у вашому селі і краде коні". – Словник Б. Грінченка). Коли мовиться про те, що комусь дано
+      звання, ордени чи якісь права, слід послугуватись дієсловом надати (надавати).'
+  currentNormWithheldReason: 'Withheld J37-J38: current MON textbooks use «присвоєно звання» (11-klas-istoriya-ukr-gisem-2024_s0320;
+  8-klas-ukrlit-avramenko-2025_s0191), contradicting the historical prescription.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1886,6 +2272,13 @@ pairs:
   rationale: 'Антоненко: газети передплачують; підписка — зобов''язання'
   citations:
   - antonenko:55 Підписка й передплата
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p035
+    passage: 'Слово "підписка" означає "затвердження підписом людини якогось зобов''язання додержуватись певних правил чи виконувати
+      якусь вимогу": "Однак, коли не помиляюся, видали йому підписку? Присяглися мовчати?" (Ю. Смолич). А коли хтось хоче одержувати
+      газети й журнали або збірку творів якогось письменника, за що треба наперед заплатити певну суму грошей, це зветься передплатою'
+  currentNormWithheldReason: 'Withheld: no current MON correction or checked ULIF usage label verified for this
+  same-sense contrast.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1917,6 +2310,26 @@ pairs:
   rationale: 'Антоненко: ідеї, чутки, вплив поширюють; розповсюджують примірники'
   citations:
   - antonenko:169 Поширювати й розповсюджувати
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p090
+    passage: 'Дієслова поширювати й розповсюджувати часто плутають і ставлять їх не там, де слід: "Із нового року в нас на тридцять
+      примірників більше поширили журнал "Жовтень"; "Досвід передовиків став швидко розповсюджуватися по всій області" . Дієслово
+      поширювати означає "збільшувати в обсязі, в масі чи просторі": "Хто відкриває прийдешність нашому почуттю, той поширює
+      межі вічності нашій душі" (Леся Українка); аналогічне значення має й зворотна форма цього дієслова – поширюватися: "Мабуть,
+      ніде доцільна думка, свіжа ініціатива не поширюється з такою блискавичною швидкістю, як на фронті" (О. Гончар). Дієслово
+      розповсюджувати (розповсюджуватися) означає "розподіляти (розподілятися) по багатьох місцях чи скрізь, але не суцільною
+      масою, а окремими предметами з маси": "Зараз будемо вивчати, як бур''яни розповсюджують своє насіння" (О. Донченко); "Ми
+      розповсюдили в нашому селі багато примірників Шевченкового "Кобзаря" (з живих уст). Отже, в перших двох фразах треба було
+      написати: "на тридцять примірників більше розповсюдили журнал", "Досвід передовиків став швидко поширюватись".'
+  currentNormSupport:
+  - locator: 10-klas-ukrajinska-mova-avramenko-2018_s0025
+    passage: 'Порушенням лексичної сполучуваності є поєднання
+
+      дієслова розповсюджувати з іменниками, що мають абстрактне значення: розповсюджу-
+
+      вати інформацію, новини, чутки. Ні, розповсюджують конкретні предмети, наприклад
+
+      листівки, літературу, а інформацію, новини й чутки поширюють.'
   sourceFamily: antonenko
   sourceFamilies:
   - antonenko
@@ -1930,11 +2343,29 @@ pairs:
     answer_form: поширювати
     calque_form: розповсюджувати
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p090
+      passageSha256: 02676d377eefca09c617b72366d3b9e0d227affb79f8f8952ea4e9e9329280db
+      sentenceSha256: 7f311b8428a2ae40b4c39427eb91d06e0c65f99432cdac616a7ce30ab589564d
+      endorsedForm: поширювати
+      rejectedForm: розповсюджувати
+      sense: ideas or rumours spreading through a group
+      currentNormLocator: 10-klas-ukrajinska-mova-avramenko-2018_s0025
+      currentNormPassageSha256: 9ed6b3f8f2c4c0c95239d2fe6338bf7ed08bd095d87702039a7c62a752d46bb4
     disambiguated: true
   - sentence_with_slot: Цей блог швидко ___ корисні ідеї.
     answer_form: поширює
     calque_form: розповсюджує
     origin: authored-codex-2026-07-06
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p090
+      passageSha256: 02676d377eefca09c617b72366d3b9e0d227affb79f8f8952ea4e9e9329280db
+      sentenceSha256: acced33565a0cbbd0ed6a42520c03ae2b051a7c4a59261823699b36937ddf226
+      endorsedForm: поширює
+      rejectedForm: розповсюджує
+      sense: ideas or rumours spreading through a group
+      currentNormLocator: 10-klas-ukrajinska-mova-avramenko-2018_s0025
+      currentNormPassageSha256: 9ed6b3f8f2c4c0c95239d2fe6338bf7ed08bd095d87702039a7c62a752d46bb4
     disambiguated: true
 - calqueLabel: слідуючий
   calqueSurfaces:
@@ -1979,6 +2410,12 @@ pairs:
   - antonenko:Справа, діло, річ
   - slovnyk:davydov
   - ua-gec n=16 docs=15
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p044
+    passage: 'Відповідно до російських висловів "В чем дело?", "Дело в том, что…" по–українському треба казати: "У чому річ?",
+      "Річ у тім, (тому), що…", а не "В чому справа?", "Справа в тім, що…".'
+  currentNormWithheldReason: 'Withheld J43-J44: historical p044 covers «В чому справа?» and «Справа в тім, що…»;
+  no current MON or checked ULIF correction located for these frames.'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -1986,7 +2423,7 @@ pairs:
   cefrAvailability: b1
   severity: enrichment
   curator: fable-2026-07-06
-  calqueSense: «в чому справа», «це не моя справа» (рос. дело)
+  calqueSense: '"В чому справа?", "Справа в тім, що…"'
   authenticSense: юридична/ділова справа
   notes: nuanced; frame MUST disambiguate
   frames:
@@ -2415,6 +2852,18 @@ pairs:
   rationale: У значенні емоційно зворушливий спогад точніше зворушливий, не хвилюючий.
   citations:
   - state-standard:glazova-11
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p103
+    passage: 'Це слово виступає раз у раз у значенні прикметника, що, хоч і створено його від дієслова хвилювати, втратив характер
+      дії: "Художник майстерно показав у своїй картині хвилюючий прояв материнської любові"; "Третя частина книжки – це хвилююча
+      розповідь про подвиг"; "Хвилююча краса тут сприймається серцем будівника". Не тільки з стилістичних міркувань, а й щоб
+      не набридати читачеві або слухачеві й не пантеличити їх цим незграбним словом, яке рябіє на сторінках журналів, газет,
+      а іноді й художніх творів, слід звертатись до природних прикметників: зворушливий'
+  currentNormSupport:
+  - locator: 11-klas-ukrajinska-mova-glazova-2019_s0071
+    passage: 'синонімами: зворушливий (а не хвилюючий) спогад; чинний (а не діючий) за-
+
+      кон, молоде (а не підростаюче) покоління;'
   sourceFamily: state-standard
   sourceFamilies:
   - state-standard
@@ -2427,6 +2876,15 @@ pairs:
     answer_form: зворушливу
     calque_form: хвилюючу
     origin: authored-codex-2026-08-03
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p103
+      passageSha256: 7f851fae71dbf4ad529d7656d22209c42957b14d303b7071ad25a0d4c279d640
+      sentenceSha256: 9c0b1fcb3ee95b34f15523c0a4dc4530f2911ece5be622ab7f83bbc35f3cb8ca
+      endorsedForm: зворушливу
+      rejectedForm: хвилюючу
+      sense: a story that moves its listener
+      currentNormLocator: 11-klas-ukrajinska-mova-glazova-2019_s0071
+      currentNormPassageSha256: 2e661eabe8325257dea7804aafb51539417f14657a404960fa7890fce07d3ba3
 - calqueLabel: діючий
   calqueSurfaces:
   - діючий
@@ -2659,8 +3117,44 @@ pairs:
   - захід
   rationale: Для організованої події вживаємо захід або заходи, не міроприємство.
   citations:
-  - antonenko:44 Міра, захід
+  - antonenko:Міроприємство
   - state-standard:glazova-10
+  normativeSupport:
+  - locator: antonenko-davydovych-yak-my-hovorymo_p031
+    passage: '"У нас провели такі міроприємства" і под. Такого слова не було й нема в українській мові, його наспіх склепали
+      ті, що не знали багатства нашої мови, але хотіли висловити свою думку по–українському. Відповідником до російських "мера",
+      "мероприятие" є "захід"'
+  currentNormSupport:
+  - locator: 11-klas-ukrajinska-mova-glazova-2019_s0263
+    passage: 'Неправильно Правильно
+
+      під відкритим небом
+
+      у процесі проведення екскурсії
+
+      кидатися в очі
+
+      експонати ХХ віку
+
+      міроприємство
+
+      підводити підсумки
+
+      збори шкільного гуртка
+
+      душі не чаяти
+
+      згідно до плану
+
+      просто неба
+
+      під час проведення екскурсії
+
+      впадати в око (у вічі)
+
+      експонати ХХ століття
+
+      захід'
   sourceFamily: mixed
   sourceFamilies:
   - antonenko
@@ -2674,6 +3168,15 @@ pairs:
     answer_form: захід
     calque_form: міроприємство
     origin: authored-codex-2026-08-03
+    normativeJudgment:
+      locator: antonenko-davydovych-yak-my-hovorymo_p031
+      passageSha256: 37cf1d56c84af3117a46e7e8c358c42bb0456ce8f1fb3234fe52e1705ab461a0
+      sentenceSha256: 1de736017d602fd418ddeb6aa429e8c6891f6ba5c00cc237366c5476dedbf303
+      endorsedForm: захід
+      rejectedForm: міроприємство
+      sense: an organized charitable event
+      currentNormLocator: 11-klas-ukrajinska-mova-glazova-2019_s0263
+      currentNormPassageSha256: 01945bd9577780f3597f544a1bdded7819eaee30b4309a9e5ed24e969c76157e
 - calqueLabel: уверх
   calqueSurfaces:
   - уверх

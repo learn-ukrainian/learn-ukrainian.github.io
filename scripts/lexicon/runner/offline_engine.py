@@ -128,20 +128,17 @@ def enrich_offline_slice(
         )
 
         headwords = em._manifest_headwords({"entries": entries})
-        has_sum11 = em._sum11_has_flag_columns(sources)
 
         def syn_extractor(entry: dict[str, Any]) -> list[dict[str, Any]]:
             return em._definition_pointer_relations(
                 sources,
                 str(entry.get("lemma") or ""),
-                has_sum11_flags=has_sum11,
             )
 
         def ant_extractor(entry: dict[str, Any]) -> list[dict[str, Any]]:
             return em._definition_antonym_relations(
                 sources,
                 str(entry.get("lemma") or ""),
-                has_sum11_flags=has_sum11,
             )
 
         def hom_extractor(entry: dict[str, Any]) -> list[dict[str, Any]]:
