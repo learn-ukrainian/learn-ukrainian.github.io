@@ -1,6 +1,6 @@
-"""Mechanical plan gates M1–M8 (issue #9138).
+"""Mechanical plan gates M1, M3–M7 (issue #9138).
 
-Eight structural plan defects that plan reviewers had to find by hand, each
+Six structural plan defects that plan reviewers had to find by hand, each
 decided from data the validator already reads — the plan, the level arc, the
 level word store, the module pack — never from a typed list of Ukrainian
 facts. The only Ukrainian inventories used are ones the code already owns:
@@ -8,8 +8,6 @@ the closed Cyrillic letter class (scope.CYRILLIC_LETTER_CLASS) and the vowel
 letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
 
   M1  a step introduces a letter that no activity in its practice names in its focus
-  M2  a step introduces a letter that no allowed word record contains, while its
-      practice includes a word-building activity (pick-syllables or divide-words)
   M3  a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to
       records outside the lesson's allowed set
   M4  a copy task's pack model text uses letters outside the taught-letter set
@@ -17,15 +15,11 @@ letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
   M6  a match-up, or a workbook word activity of a letter-stage module, binds fewer
       than three items (the plan binds none: not_checked)
   M7  a count-syllables item set has one distinct syllable count (not_checked, same reason)
-  M8  a core word or grammar id is never used or recycled by a later lesson
 
 Severity, per gate. No gate fails the run: each is reported for the plan reviewer,
 because the plan contract does not make any of it an invariant of a valid plan:
 
 - M1 (note): a focus can describe practising a letter without printing the glyph.
-- M2 (note): only pick-syllables and divide-words count as word building; a match-up
-  pairs or sorts, so it is never counted, whatever its focus names.
-
 - M3 (note): a token the plan quotes («…», "…", “…”, '…' or backticks; never unquoted prose) that resolves only to out-of-allowlist records. A token
   that resolves to no store record, or that is spelled like a syllable (one vowel,
   only letters the lesson has taught) and so may be the syllable the plan teaches
@@ -39,10 +33,13 @@ because the plan contract does not make any of it an invariant of a valid plan:
 - M6, M7 (not_checked): an activity's items are draft fields (plan schema §2b); the
   plan states type, focus, placement and model. Nothing in the plan binds an item
   set, so no item is counted from the focus prose or the vocabulary pool.
-- M8 (note): the plan contract does not require a core word or a grammar point to
-  recur in a later lesson.
 
-Letter gates (M1, M2, M4 and M6's letter-stage scope) apply to letter-stage
+Dropped under the #9138 residual policy (a rule with another false-positive class goes):
+M2 (a step letter with no allowed word record; word-completion practice is not a reliable
+signal) and M8 (core word or grammar never reused; practice.stress and other drills use words
+the plan does not bind).
+
+Letter gates (M1, M4 and M6's letter-stage scope) apply to letter-stage
 modules only: those whose arc position carries letters (the rule 5 definition).
 The taught-letter state at a lesson is the arc's letters of every earlier position
 plus the letters this plan introduces through that lesson.
@@ -65,7 +62,6 @@ from .report import Outcome, Report
 from .scope import CYRILLIC_LETTER_CLASS
 
 WORD_COMPLETION_TYPES = frozenset({"pick-syllables", "divide-words", "match-up"})
-WORD_BUILDING_TYPES = frozenset({"pick-syllables", "divide-words"})
 COPY_TASK_TYPES = frozenset({"letter-grid"})
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 
@@ -236,11 +232,7 @@ class _Gates:
     def word_records(self, ids: set[str]) -> list[WordRecord]:
         return [self.store.records[i] for i in sorted(ids) if i in self.store.records]
 
-    # -- M1, M2 ---------------------------------------------------------------
-
-    def _builds_words(self, activity: dict) -> bool:
-        """Whether activity builds words: only pick-syllables and divide-words do; a match-up never does."""
-        return activity["type"] in WORD_BUILDING_TYPES
+    # -- M1 ---------------------------------------------------------------
 
     def check_step_letters(self) -> None:
         introduced = [
@@ -249,9 +241,8 @@ class _Gates:
             for step in lesson["steps"]
             for letter in (step.get("introduces") or {}).get("letters") or []
         ]
-        if not introduced or self.letter_state_or_skip("M1/M2", True) is None:
+        if not introduced or self.letter_state_or_skip("M1", True) is None:
             return
-        lessons = self.plan["lessons"]
         for lesson, step, letter in introduced:
             activities: dict[str, dict] = {}
             for activity in lesson.get("activities") or []:
@@ -266,26 +257,6 @@ class _Gates:
                     f"step {step['id']} introduces the letter {letter}, but no activity in its practice "
                     f"({ids}) names {letter} in its focus; the focus may describe the practice without the glyph, "
                     "so the plan review confirms it (gate M1)",
-                    lesson["n"],
-                    step["id"],
-                )
-            completion = [a for a in practice if self._builds_words(a)]
-            if not completion:
-                continue
-            allowed = self.allowed_ids(lessons.index(lesson), "M2")
-            if allowed is None:
-                continue
-            wanted = letter.casefold()
-            if not any(
-                wanted in letters_of(" ".join((record.lemma, *record.form_texts)))
-                for record in self.word_records(allowed)
-            ):
-                self.note(
-                    codes.STEP_LETTER_NO_WORD_RECORD,
-                    f"step {step['id']} introduces the letter {letter} and practises it with "
-                    f"{', '.join(a['id'] + ' (' + a['type'] + ')' for a in completion)}, but no allowed word "
-                    f"record of lesson {lesson['n']} contains {letter}; the plan review confirms the practice can "
-                    "be built (gate M2)",
                     lesson["n"],
                     step["id"],
                 )
@@ -431,35 +402,6 @@ class _Gates:
                     "item count is checked at the draft",
                 )
 
-    # -- M8 -------------------------------------------------------------------
-
-    def check_reuse(self) -> None:
-        lessons = self.plan["lessons"]
-        for index, lesson in enumerate(lessons[:-1]):
-            later = lessons[index + 1 :]
-            used: dict[str, set[str]] = {"vocabulary": set(), "grammar": set()}
-            for other in later:
-                used["vocabulary"] |= set(other["inventory"]["vocabulary"]["recycled"])
-                for step in other["steps"]:
-                    uses = step.get("uses") or {}
-                    used["vocabulary"] |= set(uses.get("vocabulary") or [])
-                    used["grammar"] |= set(uses.get("grammar") or [])
-            for entry in lesson["inventory"]["vocabulary"]["core"]:
-                if entry["evidence"] not in used["vocabulary"]:
-                    self.note(
-                        codes.CORE_WORD_NOT_REUSED,
-                        f"core word {entry['evidence']} ({entry['lemma']!r}) is never used or recycled by "
-                        f"lessons {later[0]['n']}–{later[-1]['n']} (gate M8)",
-                        lesson["n"],
-                    )
-            for entry in lesson["inventory"].get("grammar") or []:
-                if entry["id"] not in used["grammar"]:
-                    self.note(
-                        codes.GRAMMAR_NOT_REUSED,
-                        f"grammar {entry['id']} is never used by lessons {later[0]['n']}–{later[-1]['n']} (gate M8)",
-                        lesson["n"],
-                    )
-
 
 def check_mechanical(
     report: Report,
@@ -472,11 +414,10 @@ def check_mechanical(
     level_plans: LevelPlans,
     words_path: Path,
 ) -> None:
-    """Run gates M1–M8 on a plan that already passed the schema."""
+    """Run gates M1, M3–M7 on a plan that already passed the schema."""
     gates = _Gates(report, plan, level, store, pack, arc, level_plans, words_path)
     gates.check_step_letters()
     gates.check_tokens()
     gates.check_copy_tasks()
     gates.check_cefr()
     gates.check_activity_sets()
-    gates.check_reuse()

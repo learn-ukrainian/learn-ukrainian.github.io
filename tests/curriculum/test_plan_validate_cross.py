@@ -205,8 +205,7 @@ def make_plan(
 
 
 def _recycle_in_recap(plan: dict) -> None:
-    """Let a closing recap lesson recycle every core word and use every grammar id the plan teaches,
-    so the fixtures stay neutral to the reuse gate (M8, #9138)."""
+    """Let a closing recap lesson recycle every core word and use every grammar id the plan teaches."""
     lessons = plan["lessons"]
     recap = lessons[-1]
     if recap["kind"] != "recap" or recap["inventory"]["vocabulary"]["recycled"]:
@@ -565,7 +564,7 @@ REGISTRY_CASES = [
             registry_record("G-a1-001", 1, "lesson-one", superseded_by="G-a1-002"),
             registry_record("G-a1-002", 2, "lesson-two"),
         ],
-        # the closing recap reuses G-a1-001 (gate M8), so its use of the superseded id fails too
+        # the closing recap reuses G-a1-001, so its use of the superseded id fails too
         expected=frozenset({codes.SUPERSEDED_GRAMMAR_INTRODUCED, codes.SUPERSEDED_GRAMMAR_USED}),
     ),
     CrossCase(

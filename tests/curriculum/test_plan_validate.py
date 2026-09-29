@@ -622,7 +622,6 @@ FAILING_CASES = [
             )
         ),
         expected=frozenset({codes.INTRODUCES_ON_NON_TEACH_STEP}),
-        notes=frozenset({codes.CORE_WORD_NOT_REUSED}),  # W-009 is a core word no later lesson reuses (gate M8)
     ),
     # inventory equals declared introductions
     Case(
@@ -640,7 +639,6 @@ FAILING_CASES = [
             )
         ),
         expected=frozenset({codes.INVENTORY_INTRODUCTION_MISMATCH}),
-        notes=frozenset({codes.CORE_WORD_NOT_REUSED}),  # W-007 is a core word no later lesson reuses (gate M8)
     ),
     # within-lesson order and recycled
     Case(

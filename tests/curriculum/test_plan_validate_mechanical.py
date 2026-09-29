@@ -1,4 +1,4 @@
-"""Tests for the mechanical plan gates M1–M8 (issue #9138).
+"""Tests for the mechanical plan gates M1, M3–M7 (issue #9138).
 
 One passing baseline and, per gate, at least one fixture built by a
 single mutation of that baseline. The fixture world is a letter-stage module at
@@ -50,11 +50,8 @@ MAMA, MANA, NONA, MAN, BASE_WORD, MOKA, MA, ON = (
 
 MECHANICAL_CODES = {
     codes.STEP_LETTER_NOT_PRACTISED,
-    codes.STEP_LETTER_NO_WORD_RECORD,
     codes.TOKEN_NOT_ALLOWED,
     codes.CORE_CEFR_ABOVE_MODULE,
-    codes.CORE_WORD_NOT_REUSED,
-    codes.GRAMMAR_NOT_REUSED,
     codes.COPY_MODEL_LETTER_NOT_TAUGHT,
     codes.TOKEN_UNRESOLVED,
     codes.MECHANICAL_RULE_NOT_CHECKED,
@@ -217,34 +214,12 @@ def _set_cefr(word_id: str, cefr: str | None) -> Mutate:
     return mutate
 
 
-def _m2_letter_without_word(plan: dict, pack: dict, words: dict) -> None:
-    """Lesson 1 also introduces К through a pick-syllables activity; no allowed record contains К."""
-    lesson = _lesson_of(plan, 1)
-    lesson["inventory"]["phonetics"]["letters"].append("К")
-    _step_of(plan, 1, "s1")["introduces"]["letters"].append("К")
-    _activity_of(plan, 1, "a1").update({"type": "pick-syllables", "focus": "Checks the letters М and К."})
-
-
 def _without_item_activities(plan: dict, pack: dict, words: dict) -> None:
     """Every match-up, workbook word activity and count-syllables becomes a quiz: no item set to check."""
     for lesson in plan["lessons"]:
         for activity in lesson["activities"]:
             if activity["type"] in ("match-up", "count-syllables") or activity["placement"] == "workbook":
                 activity["type"] = "quiz"
-
-
-def _m8_word_not_reused(plan: dict, pack: dict, words: dict) -> None:
-    _lesson_of(plan, 2)["inventory"]["vocabulary"]["recycled"].remove(MAN)
-    _lesson_of(plan, 3)["inventory"]["vocabulary"]["recycled"].remove(MAN)
-    for lesson_n in (2, 3):
-        uses = _lesson_of(plan, lesson_n)["steps"][-1]["uses"]["vocabulary"]
-        uses.remove(MAN)
-
-
-def _m8_grammar_not_reused(plan: dict, pack: dict, words: dict) -> None:
-    lesson = _lesson_of(plan, 1)
-    lesson["inventory"]["grammar"] = [{"id": "G-a1-001", "point": "A first point.", "evidence": ["T-001"]}]
-    _step_of(plan, 1, "s2")["introduces"]["grammar"] = ["G-a1-001"]
 
 
 def _drop_letters(plan: dict, pack: dict, words: dict) -> None:
@@ -283,36 +258,6 @@ CASES = [
         _set_focus(1, "a1", "Checks the first letter of the lesson."),
         notes=frozenset({codes.STEP_LETTER_NOT_PRACTISED}),
         says="step s1 introduces the letter М",
-    ),
-    # M2 -- a letter with a word-completion practice and no allowed word record containing it
-    Case(
-        "m2_letter_without_a_word_record",
-        _m2_letter_without_word,
-        notes=frozenset({codes.STEP_LETTER_NO_WORD_RECORD}),
-        says="no allowed word record of lesson 1 contains К",
-    ),
-    Case(
-        "m2_letter_to_sound_match_up_is_not_word_completion",
-        lambda plan, pack, words: (
-            _m2_letter_without_word(plan, pack, words),
-            _activity_of(plan, 1, "a1").update({"type": "match-up", "focus": "Match the letters М and К to sounds."}),
-        ),
-    ),
-    Case(
-        "m2_word_to_picture_match_up_is_not_word_building",
-        lambda plan, pack, words: (
-            _m2_letter_without_word(plan, pack, words),
-            _activity_of(plan, 1, "a1").update({"type": "match-up", "focus": "Match мама to pictures; find М and К."}),
-        ),
-    ),
-    Case(
-        "m2_divide_words_counts_as_word_building",
-        lambda plan, pack, words: (
-            _m2_letter_without_word(plan, pack, words),
-            _activity_of(plan, 1, "a1").update({"type": "divide-words"}),
-        ),
-        notes=frozenset({codes.STEP_LETTER_NO_WORD_RECORD}),
-        says="a1 (divide-words)",
     ),
     # M3 -- quoted tokens against the lesson's allowed set
     Case(
@@ -416,19 +361,6 @@ CASES = [
         _set_focus(1, "a4", "Count syllables in мама and мана."),
         says="gate M7 was not checked",
     ),
-    # M8 -- introduced and never reused
-    Case(
-        "m8_core_word_never_reused_is_a_note",
-        _m8_word_not_reused,
-        notes=frozenset({codes.CORE_WORD_NOT_REUSED}),
-        says="core word W-204 ('ман') is never used or recycled by lessons 2–3",
-    ),
-    Case(
-        "m8_grammar_never_reused_is_a_note",
-        _m8_grammar_not_reused,
-        notes=frozenset({codes.GRAMMAR_NOT_REUSED}),
-        says="grammar G-a1-001 is never used by lessons 2–3",
-    ),
     # letter gates apply to letter-stage modules only
     Case(
         "non_letter_stage_skips_the_letter_gates",
@@ -481,8 +413,8 @@ def test_missing_base_layer_reports_not_checked_instead_of_guessing(tmp_path: Pa
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert report.ok, report.render_text()
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M2", "M3", "M6", "M7"}
-    assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M2", "M3"})
+    assert {gate.message.split()[1] for gate in gates} == {"M3", "M6", "M7"}
+    assert all("base layer" in gate.message for gate in gates if gate.message.split()[1] in {"M3"})
 
 
 def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) -> None:
@@ -491,7 +423,7 @@ def test_missing_arc_reports_not_checked_for_the_letter_gates(tmp_path: Path) ->
     report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
     assert codes.ARC_UNAVAILABLE in {o.code for o in report.failures}
     gates = [o for o in report.not_checked if o.code == codes.MECHANICAL_RULE_NOT_CHECKED]
-    assert {gate.message.split()[1] for gate in gates} == {"M1/M2", "M4", "M6", "M7"}
+    assert {gate.message.split()[1] for gate in gates} == {"M1", "M4", "M6", "M7"}
 
 
 def produced_mechanical_codes(root: Path) -> set[str]:
@@ -508,6 +440,6 @@ def test_every_mechanical_code_is_produced(tmp_path: Path) -> None:
 def test_baseline_plan_is_untouched_by_mutations() -> None:
     plan = mechanical_plan()
     before = copy.deepcopy(plan)
-    _m8_word_not_reused(plan, mechanical_pack(), mechanical_words())
+    _drop_letters(plan, mechanical_pack(), mechanical_words())
     assert plan != before  # the mutation helpers mutate; the builder returns a fresh plan every call
     assert mechanical_plan() == before
