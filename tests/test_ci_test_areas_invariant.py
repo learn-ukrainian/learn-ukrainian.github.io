@@ -26,12 +26,15 @@ always run.
 from __future__ import annotations
 
 import ast
+import functools
+import gc
 import importlib.metadata
 import posixpath
 import subprocess
 import sys
 from collections import defaultdict
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
@@ -54,6 +57,59 @@ _AREA_MODULES = {
 _LITERAL_MODULE_HEADS = ("scripts", "tests", "learn_ukrainian_v4_runtime")
 _MODULE_CALLS = {"import_module", "__import__", "importorskip", "run_module"}
 _OS_PATH_MODULES = {"os.path", "posixpath", "path"}
+# Text a module must contain for ``caller_data`` to find a caller-controlled path.
+_CALLER_MARKERS = ("sparse_trees", "needs_artifact")
+# The only node kinds any pass below reads; ``_walk`` keeps just these.
+_KEPT = frozenset(
+    (
+        ast.Module,
+        ast.ClassDef,
+        ast.FunctionDef,
+        ast.AsyncFunctionDef,
+        ast.Import,
+        ast.ImportFrom,
+        ast.Call,
+        ast.Assign,
+        ast.AnnAssign,
+        ast.BinOp,
+        ast.Constant,
+    )
+)
+# Contexts and operators are childless and matter to no pass.
+_INERT = (ast.expr_context, ast.operator, ast.boolop, ast.unaryop, ast.cmpop)
+# Parser output uses exactly these classes: every node kind except the inert ones.
+_WALKED = frozenset(
+    kind
+    for kind in vars(ast).values()
+    if isinstance(kind, type) and issubclass(kind, ast.AST) and not issubclass(kind, _INERT)
+)
+# ``data`` acts only on loops, calls and ``/`` chains, so it never descends into leaves.
+_VISITED = _WALKED - {ast.Name, ast.Constant}
+_PATH_BUILDERS = {"Path", "PurePath", "PurePosixPath"}
+# Every call name ``_anchor`` and ``_computed`` react to; any other call is no path expression.
+_ANCHOR_CALLS = {
+    "resolve",
+    "absolute",
+    "expanduser",
+    "joinpath",
+    "with_name",
+    "dirname",
+    "abspath",
+    "realpath",
+    "join",
+    *_PATH_BUILDERS,
+}
+# Pure in the path, and asked about the same modules once per test per area.
+_denylisted = functools.cache(hits_shared_root_denylist)
+
+
+@functools.cache
+def _external_modules() -> frozenset[str]:
+    """Top-level names the interpreter or an installed distribution provides.
+
+    Scanning every installed distribution takes seconds and never changes within a run.
+    """
+    return frozenset(sys.stdlib_module_names) | frozenset(importlib.metadata.packages_distributions())
 
 
 def _tracked() -> set[str]:
@@ -120,14 +176,46 @@ def _parent(path: str | None, levels: int = 1) -> str | None:
     return path
 
 
-def _imports(source: str, path: str) -> tuple[set[str], set[str]]:
-    """Module names (exact) and loose string literals (resolved leniently) in one file."""
+def _walk(tree: ast.Module) -> tuple[list[ast.AST], dict[str, int]]:
+    """One breadth-first pass: the ``_KEPT`` nodes in ``ast.walk`` order, and how often each name is written.
+
+    ``ast.walk`` over every node of every module, once per pass, was the cost of this test.
+    """
+    kept: list[ast.AST] = []
+    writes: dict[str, int] = defaultdict(int)
+    pending: list[ast.AST] = [tree]
+    for node in pending:  # a list iterated while it grows is a queue
+        kind = type(node)
+        if kind is ast.Name:
+            if type(node.ctx) is ast.Store:
+                writes[node.id] += 1
+            continue
+        if kind is ast.Constant:
+            kept.append(node)
+            continue
+        if kind in _KEPT:
+            kept.append(node)
+        elif kind is ast.arg:
+            writes[node.arg] += 1
+        for name in kind._fields:
+            child = getattr(node, name, None)
+            if type(child) is list:
+                pending.extend([item for item in child if type(item) in _WALKED])
+            elif type(child) in _WALKED:
+                pending.append(child)
+    return kept, writes
+
+
+def _imports(source: str, path: str, nodes: list[ast.AST] | None = None) -> tuple[set[str], set[str]]:
+    """Module names (exact) and loose string literals (resolved leniently) in one file.
+
+    ``nodes`` is the breadth-first walk of ``source`` when the caller already has it."""
     names: set[str] = set()
     literals: set[str] = set()
     docstrings: set[int] = set()
     joined: set[int] = set()
     # ast.walk is breadth-first, so a docstring's owner is seen before it.
-    for node in ast.walk(ast.parse(source, filename=path)):
+    for node in nodes if nodes is not None else ast.walk(ast.parse(source, filename=path)):
         if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)) and node.body:
             first = node.body[0]
             if isinstance(first, ast.Expr) and isinstance(first.value, ast.Constant):
@@ -191,16 +279,25 @@ class _Graph:
         self.files = tracked
         self.dirs: dict[str, set[str]] = defaultdict(set)
         for path in tracked:
-            for parent in list(PurePosixPath(path).parents)[:-1]:
-                self.dirs[str(parent)].add(path)
-        self.read = read or (lambda path: (_REPO / path).read_text(encoding="utf-8"))
+            parent = posixpath.dirname(path)
+            while parent:
+                self.dirs[parent].add(path)
+                parent = posixpath.dirname(parent)
+        self._read = read or (lambda path: (_REPO / path).read_text(encoding="utf-8"))
+        self._sources: dict[str, str] = {}
+        self._resolved: dict[tuple[str, str], frozenset[str]] = {}
         self._refs: dict[str, tuple[set[str], set[str]]] = {}
         self._edges: dict[str, frozenset[str]] = {}
         self._trees: dict[str, ast.Module] = {}
+        self._walks: dict[str, tuple[list[ast.AST], dict[str, int]]] = {}
         self._consts: dict[str, dict[str, str]] = {}
         self._data: dict[str, frozenset[str]] = {}
         self.audited_sites: set[tuple[tuple[str, str], str]] = set()
         self._callers: dict[str, frozenset[str]] = {}
+        self._scopes: dict[str, _Scope] = {}
+        self._computing: set[str] = set()  # modules whose ``consts`` is being built
+        self._cycles = 0  # times ``consts`` was asked for a module still being built
+        self._reach: dict[tuple[tuple[str, ...], tuple[str, ...]], dict[str, frozenset[str]]] = {}
         self.by_top: dict[str, set[str]] = defaultdict(set)
         for path in self.modules:
             pure = PurePosixPath(path)
@@ -208,7 +305,7 @@ class _Graph:
                 self.by_top[pure.parent.name].add(str(pure.parent.parent))
             else:
                 self.by_top[pure.stem].add(str(pure.parent))
-        self.external = set(sys.stdlib_module_names) | set(importlib.metadata.packages_distributions())
+        self.external = _external_modules()
 
     def _at(self, base: str, name: str) -> set[str]:
         stem = (base.rstrip("/") + "/" if base not in ("", ".") else "") + name.replace(".", "/")
@@ -222,7 +319,19 @@ class _Graph:
             )
         return found
 
+    def read(self, path: str) -> str:
+        if path not in self._sources:
+            self._sources[path] = self._read(path)
+        return self._sources[path]
+
     def resolve(self, name: str, importer: str) -> set[str]:
+        # Only the importer's directory matters: its parents are the search bases.
+        key = (name, posixpath.dirname(importer))
+        if key not in self._resolved:
+            self._resolved[key] = frozenset(self._resolve(name, importer))
+        return set(self._resolved[key])
+
+    def _resolve(self, name: str, importer: str) -> set[str]:
         bases = [
             *_SEARCH_BASES,
             *(str(parent) + "/" for parent in PurePosixPath(importer).parents if str(parent) != "."),
@@ -256,6 +365,12 @@ class _Graph:
         if path not in self._trees:
             self._trees[path] = ast.parse(self.read(path), filename=path)
         return self._trees[path]
+
+    def _facts(self, path: str) -> tuple[list[ast.AST], dict[str, int]]:
+        """``_walk`` of ``path``, done once for every pass over it."""
+        if path not in self._walks:
+            self._walks[path] = _walk(self._tree(path))
+        return self._walks[path]
 
     def _module_file(self, name: str, importer: str) -> str | None:
         stem = name.replace(".", "/")
@@ -313,7 +428,7 @@ class _Graph:
             return self._anchor(node.args[0], scope)
         if os_path and name == "join" and node.args and None not in strings[1:]:
             return _join(self._anchor(node.args[0], scope), strings[1:])
-        if name in {"Path", "PurePath", "PurePosixPath"} and node.args and None not in strings[1:]:
+        if name in _PATH_BUILDERS and node.args and None not in strings[1:]:
             if (first := strings[0]) is not None:
                 # A relative string counts only where it names a tracked path.
                 return None if first.startswith("/") else _join("", [first, *strings[1:]])
@@ -332,8 +447,7 @@ class _Graph:
             base = node.func.value
             parts = node.args
         elif node.args and (
-            (method and ast.unparse(node.func.value) in _OS_PATH_MODULES and name == "join")
-            or name in {"Path", "PurePath", "PurePosixPath"}
+            (method and ast.unparse(node.func.value) in _OS_PATH_MODULES and name == "join") or name in _PATH_BUILDERS
         ):
             base = node.args[0]
             parts = node.args[1:]
@@ -344,16 +458,10 @@ class _Graph:
     def _scope(self, path: str) -> _Scope:
         """Module-local path names (assignments) and imported names/modules."""
         scope = _Scope({"__file__": path}, {}, {})
-        nodes = list(ast.walk(self._tree(path)))
+        nodes, writes = self._facts(path)
         # Only a single module-level literal binding is a static string. A
         # function local, parameter, or a name assigned twice is not a
         # dependable module constant at its use site.
-        writes: dict[str, int] = defaultdict(int)
-        for node in nodes:
-            if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Store):
-                writes[node.id] += 1
-            elif isinstance(node, ast.arg):
-                writes[node.arg] += 1
         bindings: dict[str, list[ast.AST]] = defaultdict(list)
         for stmt in self._tree(path).body:
             if isinstance(stmt, (ast.Assign, ast.AnnAssign)) and stmt.value is not None:
@@ -390,11 +498,30 @@ class _Graph:
                         scope.names.update((target.id, value) for target in targets if isinstance(target, ast.Name))
         return scope
 
+    def scope(self, path: str) -> _Scope:
+        """``_scope`` once per module."""
+        if path not in self._scopes:
+            self._scopes[path] = self._scope(path)
+        return self._scopes[path]
+
     def consts(self, path: str) -> dict[str, str]:
         """Names ``path`` binds to static repo paths (``REGISTRY_ROOT = ROOT / "registry"``)."""
-        if path not in self._consts:
-            self._consts[path] = {}  # an import cycle sees no names, not a loop
-            self._consts[path] = {name: value for name, value in self._scope(path).names.items() if name != "__file__"}
+        if path in self._consts:
+            if path in self._computing:
+                self._cycles += 1
+            return self._consts[path]
+        self._consts[path] = {}  # an import cycle sees no names, not a loop
+        self._computing.add(path)
+        cycles = self._cycles
+        try:
+            scope = self._scopes.get(path) or self._scope(path)
+        finally:
+            self._computing.discard(path)
+        if self._cycles == cycles:
+            # Nothing above saw a half-built module, so this is the scope any later
+            # call would compute: keep it instead of walking the module again.
+            self._scopes[path] = scope
+        self._consts[path] = {name: value for name, value in scope.names.items() if name != "__file__"}
         return self._consts[path]
 
     def _named(self, text: str, *, anchors: bool = False) -> set[str]:
@@ -409,6 +536,21 @@ class _Graph:
             return set()
         return {item for item in self.dirs.get(text, ()) if not item.endswith(".py")}
 
+    def _anchorless(self, path: str, scope: _Scope) -> bool:
+        """No name, module or ``Path(...)`` call to build a repo path from.
+
+        ``_anchor`` bottoms out in a name of ``scope`` (only ``__file__`` unless
+        something was assigned or imported), a module alias, or a ``Path`` call.
+        """
+        return (
+            set(scope.names) == {"__file__"}
+            and not scope.modules
+            and "__file__" not in self.read(path)
+            and not any(
+                isinstance(node, ast.Call) and _call_name(node) in _PATH_BUILDERS for node in self._facts(path)[0]
+            )
+        )
+
     def data(self, path: str) -> frozenset[str]:
         """Tracked non-Python files ``path`` names: root-relative literals and
         static ``Path`` expressions, including constants imported from other
@@ -420,7 +562,7 @@ class _Graph:
             text = literal.strip("'\"(),;:").removeprefix("./").rstrip("/")
             if "/" in text:
                 found |= self._named(text)
-        scope = self._scope(path)
+        scope = self.scope(path)
         audited_seen: set[tuple[tuple[str, str], str]] = set()
 
         def visit(node: ast.AST, active: _Scope, inner: set[int], owner: str = "") -> None:
@@ -440,7 +582,10 @@ class _Graph:
                     for stmt in node.orelse:
                         visit(stmt, active, inner, owner)
                     return
-            if id(node) not in inner and isinstance(node, (ast.BinOp, ast.Call)):
+            if id(node) not in inner and (
+                (isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div))
+                or (isinstance(node, ast.Call) and _call_name(node) in _ANCHOR_CALLS)
+            ):
                 if (value := self._anchor(node, active)) is not None:
                     found.update(self._named(value, anchors=True))
                     current = node
@@ -455,9 +600,19 @@ class _Graph:
                         audited_seen.add(audit)
                     else:
                         found.add(f"<computed repo path: {path}:{node.lineno} {expression}>")
-            for child in ast.iter_child_nodes(node):
-                visit(child, active, inner, owner)
+            for name in type(node)._fields:  # ``ast.iter_child_nodes`` order, without its generators
+                child = getattr(node, name, None)
+                if type(child) is list:
+                    for item in child:
+                        if type(item) in _VISITED:
+                            visit(item, active, inner, owner)
+                elif type(child) in _VISITED:
+                    visit(child, active, inner, owner)
 
+        if self._anchorless(path, scope):
+            # No expression in this module can denote a repo path, so the walk finds none.
+            self._data[path] = frozenset(found)
+            return self._data[path]
         visit(self._tree(path), scope, set())
         self.audited_sites.update(audited_seen)
         self._data[path] = frozenset(found)
@@ -467,12 +622,17 @@ class _Graph:
         """Resolve caller-controlled paths in the two audited shared helpers."""
         if path in self._callers:
             return self._callers[path]
-        tree = self._tree(path)
-        scope = self._scope(path)
+        if not any(marker in self.read(path) for marker in _CALLER_MARKERS):
+            # Every path this finds sits behind a ``tests.sparse_trees`` import or
+            # ``pytest.mark.needs_artifact``; without either name there is nothing to walk.
+            self._callers[path] = frozenset()
+            return self._callers[path]
+        nodes, _ = self._facts(path)
+        scope = self.scope(path)
         sparse_names: set[str] = set()
         sparse_modules: set[str] = set()
         marker_names: set[str] = set()
-        for node in ast.walk(tree):
+        for node in nodes:
             if isinstance(node, ast.ImportFrom) and node.module == "tests.sparse_trees":
                 sparse_names.update(
                     alias.asname or ("tree_absent" if alias.name == "*" else alias.name)
@@ -497,7 +657,7 @@ class _Graph:
                     if source == "pytest.mark.needs_artifact" or source in marker_names:
                         marker_names.add(target.id)
         found: set[str] = set()
-        for node in ast.walk(tree):
+        for node in nodes:
             if not isinstance(node, ast.Call):
                 continue
             func = node.func
@@ -526,7 +686,7 @@ class _Graph:
 
     def refs(self, path: str) -> tuple[set[str], set[str]]:
         if path not in self._refs:
-            self._refs[path] = _imports(self.read(path), path)
+            self._refs[path] = _imports(self.read(path), path, self._facts(path)[0])
         return self._refs[path]
 
     def edges(self, path: str) -> frozenset[str]:
@@ -564,22 +724,28 @@ class _Graph:
 
 
 def _escapes(area: dict[str, list[str]], graph: _Graph, test: str, *, first: bool = False) -> set[str]:
-    def outside(module: str) -> bool:
-        return not (
-            hits_shared_root_denylist(module)
-            or matches_root(module, area["roots"])
-            or matches_test(module, area["tests"])
-        )
+    key = (tuple(area["roots"]), tuple(area["tests"]))
+    # Area membership is fixed per module, and modules recur in every test's
+    # closure: decide each module (and the data it names) once per area.
+    escaping = graph._reach.setdefault(key, {})
+
+    def outside(item: str) -> bool:
+        return not (_denylisted(item) or matches_root(item, area["roots"]) or matches_test(item, area["tests"]))
+
+    def leaks(module: str) -> frozenset[str]:
+        # Data named by a module (a constant such as ``DEFAULT_VERDICTS =
+        # REGISTRY_ROOT / "lexicon/x.yaml"`` is a read) and its caller-controlled paths.
+        if module not in escaping:
+            escaping[module] = frozenset(
+                item for item in (*graph.data(module), *graph.caller_data(module)) if outside(item)
+            )
+        return escaping[module]
 
     reached = graph.closure(test, outside if first else None)
     found = {module for module in reached if outside(module)}
-    # Data named by the test or by any module it reaches (a constant such as
-    # ``DEFAULT_VERDICTS = REGISTRY_ROOT / "lexicon/x.yaml"`` is a read).
-    return (
-        found
-        | {item for module in (test, *reached) for item in graph.data(module) if outside(item)}
-        | {item for module in (test, *reached) for item in graph.caller_data(module) if outside(item)}
-    )
+    for module in (test, *reached):
+        found |= leaks(module)
+    return found
 
 
 def _is_test(path: str) -> bool:
@@ -606,6 +772,20 @@ def _violations(name: str, area: dict[str, list[str]], graph: _Graph) -> tuple[l
     return missing_tests, sorted(missing_roots)
 
 
+@contextmanager
+def _gc_paused() -> Iterator[None]:
+    """Parsing the whole reachable tree keeps millions of AST nodes alive; the
+    collector re-scans them on every generation-0 pass and costs more than the
+    parsing itself. Nothing here makes cycles worth collecting mid-run."""
+    was_enabled = gc.isenabled()
+    gc.disable()
+    try:
+        yield
+    finally:
+        if was_enabled:
+            gc.enable()
+
+
 @pytest.fixture(scope="module")
 def graph() -> _Graph:
     return _Graph(_tracked())
@@ -614,10 +794,38 @@ def graph() -> _Graph:
 def test_every_area_is_closed_and_complete(graph: _Graph) -> None:
     areas = load_areas()
     assert set(areas) == set(_AREA_MODULES)
-    for name, area in areas.items():
-        missing_tests, missing_roots = _violations(name, area, graph)
+    with _gc_paused():
+        found = {name: _violations(name, area, graph) for name, area in areas.items()}
+    for name, (missing_tests, missing_roots) in found.items():
         assert missing_roots == [], name
         assert missing_tests == [], name
+
+
+def test_shared_modules_are_parsed_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Every test's closure re-reaches the same modules: analysing each per test, not once, is what
+    made the real-repo run exceed the CI timeout (#8872)."""
+    sources = {
+        "tests/test_a.py": "from scripts.area import shared\n",
+        "tests/test_b.py": "from scripts.area import shared\n",
+        "scripts/area/shared.py": 'from scripts.area import leaf\nfrom scripts.storage.paths import ROOT\nDATA = ROOT / "registry"\n',
+        "scripts/area/leaf.py": "from scripts.storage import paths\n",
+        "scripts/storage/paths.py": "ROOT = Path(__file__).resolve().parents[2]\n",
+    }
+    parsed: list[str] = []
+    real_parse = ast.parse
+
+    def counting_parse(source: str, filename: str = "<unknown>", *args, **kwargs):
+        parsed.append(filename)
+        return real_parse(source, filename, *args, **kwargs)
+
+    monkeypatch.setattr(ast, "parse", counting_parse)
+    graph = _Graph(set(sources), read=lambda path: sources[path])
+    for roots in (["scripts/area/", "scripts/storage/"], ["scripts/area/"]):
+        area = {"tests": ["tests/test_*.py"], "roots": roots}
+        for test in ("tests/test_a.py", "tests/test_b.py"):
+            _escapes(area, graph, test)
+            _escapes(area, graph, test, first=True)
+    assert sorted(parsed) == sorted(sources)
 
 
 def test_incomplete_area_is_rejected() -> None:
