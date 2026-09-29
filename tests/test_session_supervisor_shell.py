@@ -94,10 +94,12 @@ def _build_fake_project(tmp_path: Path) -> tuple[Path, Path]:
     lib_dir = project / "scripts" / "lib"
     lib_dir.mkdir(parents=True)
 
-    (lib_dir / "session_supervisor.sh").write_text(
-        (_REPO_ROOT / "scripts" / "lib" / "session_supervisor.sh").read_text(encoding="utf-8"),
-        encoding="utf-8",
-    )
+    # session_supervisor.sh resolves its state root through project_interpreter.sh (#9121).
+    for name in ("session_supervisor.sh", "project_interpreter.sh"):
+        (lib_dir / name).write_text(
+            (_REPO_ROOT / "scripts" / "lib" / name).read_text(encoding="utf-8"),
+            encoding="utf-8",
+        )
 
     capture = tmp_path / "supervisor_capture.txt"
     _write_executable(venv_bin / "python", _supervisor_ok_body(capture))

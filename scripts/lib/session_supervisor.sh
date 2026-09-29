@@ -41,31 +41,21 @@ stream_id_for_epic() {
   fi
 }
 
-# _git_env
-# Print a sanitized environment block that ignores inherited Git redirection
-# variables, so commands run against the repo root the launcher is starting in.
-_git_env() {
-  env -u GIT_ALTERNATE_OBJECT_DIRECTORIES \
-      -u GIT_COMMON_DIR \
-      -u GIT_DIR \
-      -u GIT_INDEX_FILE \
-      -u GIT_OBJECT_DIRECTORY \
-      -u GIT_PREFIX \
-      -u GIT_WORK_TREE \
-      "$@"
-}
-
 # _canonical_state_root <repo-root>
-# Print the primary checkout path that owns shared .agent runtime state.
+# Print the primary checkout path that owns shared .agent runtime state and
+# the interpreter callers execute. Resolved by the shared project_interpreter.sh
+# gitfile check, never by git, so neither an inherited GIT_DIR nor a
+# worktree-controlled `commondir` can redirect it (#9121).
 _canonical_state_root() {
   local repo_root="${1:-$(pwd)}"
-  local common_dir
-  common_dir="$(_git_env git -C "$repo_root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)"
-  if [ -z "$common_dir" ] || [ "$(basename "$common_dir")" != ".git" ]; then
+  local primary
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$(dirname "${BASH_SOURCE[0]}")/project_interpreter.sh" || return 1
+  if ! primary="$(project_primary_root_resolve "$repo_root")" || [ ! -d "$primary/.git" ]; then
     echo "Error: cannot resolve canonical state root for ${repo_root}" >&2
     return 1
   fi
-  dirname "$common_dir"
+  printf '%s\n' "$primary"
 }
 
 # _iso_timestamp

@@ -95,6 +95,13 @@ launcher_codex_resolve_canonical_root() {
       exit 1
     fi
   fi
+  # Git follows a worktree-controlled `commondir`, so the checkout found above
+  # could belong to another repository; its .venv runs below. Accept it only
+  # when it resolves to the validated primary (#9121).
+  if [ "$(project_primary_root_resolve "$canonical_root" 2>/dev/null)" != "$LC_DURABLE_HELPER_ROOT" ]; then
+    launcher_error "canonical checkout $canonical_root does not belong to the validated primary $LC_DURABLE_HELPER_ROOT."
+    exit 1
+  fi
 
   LC_CODEX_CANONICAL_ROOT="$canonical_root"
   export CODEX_CANONICAL_REPO_ROOT="$LC_CODEX_CANONICAL_ROOT"
