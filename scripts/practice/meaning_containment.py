@@ -7,6 +7,7 @@ stress and other independent practice can remain available.
 
 from __future__ import annotations
 
+import json
 import re
 import sqlite3
 import unicodedata
@@ -61,6 +62,40 @@ _GRAMMAR_QUALIFIER = re.compile(r"\b(?:attributive|adjective|adverb|noun|verb|pl
 def _key(text: str) -> str:
     text = "".join(char for char in text if unicodedata.category(char) != "Mn")
     return re.sub(r"\s+", " ", text.casefold()).strip(" .,:;")
+
+
+def _stressed_case_key(text: str) -> str:
+    """Ignore stress marks, but never merge a common noun with a name."""
+    return "".join(char for char in text if unicodedata.category(char) != "Mn").strip()
+
+
+def _pos_key(text: str) -> str:
+    return {"adj": "adjective", "adv": "adverb", "n": "noun", "v": "verb",
+            "prep": "preposition", "num": "numeral"}.get(text.casefold().strip(), text.casefold().strip())
+
+
+def load_dmklinger_rows(words: set[str], path: Path) -> dict[str, list[dict[str, Any]]]:
+    """Keep source rows separate; an Atlas translation list has lost that boundary."""
+    wanted = {_key(word) for word in words}
+    rows: dict[str, list[dict[str, Any]]] = {word: [] for word in wanted}
+    if not wanted:
+        return rows
+    with closing(sqlite3.connect(f"file:{path}?mode=ro", uri=True)) as conn:
+        for row_id, word, pos, translations, source in conn.execute(
+            "SELECT id, word, pos, translations, source FROM dmklinger_uk_en"
+        ):
+            key = _key(word)
+            if key not in wanted:
+                continue
+            try:
+                candidates = json.loads(translations)
+            except (TypeError, ValueError):
+                continue
+            if not isinstance(candidates, list):
+                continue
+            rows[key].append({"id": row_id, "word": word, "pos": pos,
+                              "translations": candidates, "source": source})
+    return rows
 
 
 def _english_key(text: str) -> str:
@@ -206,111 +241,6 @@ def _balla_maps_lemma(definitions: list[str], lemma: str) -> bool:
                for definition in definitions for section in re.split(r"(?<!\w)\d+\)", definition))
 
 
-def _lemma_forms(entry: dict[str, Any]) -> set[str]:
-    forms = {str(entry.get("lemma") or "")}
-    enrichment = entry.get("enrichment")
-    if not isinstance(enrichment, dict):
-        return forms
-    morphology = enrichment.get("morphology")
-    if isinstance(morphology, dict) and isinstance(morphology.get("forms"), list):
-        forms.update(str(item.get("form") or "") for item in morphology["forms"] if isinstance(item, dict))
-    pedagogy = enrichment.get("verb_pedagogy")
-    partner = pedagogy.get("aspect_partner") if isinstance(pedagogy, dict) else None
-    if isinstance(partner, dict) and isinstance(partner.get("lemma"), str):
-        forms.add(partner["lemma"])
-    cards = enrichment.get("definition_cards")
-    if isinstance(cards, list):
-        for card in cards:
-            if not isinstance(card, dict) or str(card.get("id") or "").casefold() not in {"sum20", "vts"}:
-                continue
-            for definition in card.get("definitions") or []:
-                if not isinstance(definition, str):
-                    continue
-                match = re.search(r"\bдив\.\s+([А-Яа-яІіЇїЄєҐґ\u0301]+)", definition, re.I)
-                if match:
-                    forms.add(_key(match.group(1)))
-                lemma = str(entry.get("lemma") or "")
-                if lemma.startswith("про") and "док." in definition[:100]:
-                    forms.add(lemma[3:])
-    return {form for form in forms if form}
-
-
-def _balla_synonym_bridge(entry: dict[str, Any], definitions: list[str]) -> bool:
-    """Confirm an older reverse synonym in this lemma's own forward definition."""
-    enrichment = entry.get("enrichment")
-    cards = enrichment.get("definition_cards") if isinstance(enrichment, dict) else None
-    if not isinstance(cards, list):
-        return False
-    reverse_terms = {
-        _key(word) for item in definitions for word in re.findall(
-            r"[А-Яа-яІіЇїЄєҐґ\u0301]{6,}", item.split("~", 1)[0].split(" — ", 1)[0]
-        )
-    }
-    reverse_terms.discard(_key(str(entry.get("lemma") or "")))
-    for card in cards:
-        if not isinstance(card, dict) or str(card.get("id") or "").casefold() not in {"sum20", "vts"}:
-            continue
-        for definition in card.get("definitions") or []:
-            if not isinstance(definition, str):
-                continue
-            first_sense = re.split(r"\b2\s*[》.]", definition, maxsplit=1)[0]
-            if reverse_terms & {_key(word) for word in re.findall(r"[А-Яа-яІіЇїЄєҐґ\u0301]{6,}", first_sense)}:
-                return True
-    return False
-
-
-def independent_english_support(
-    entry: dict[str, Any], displayed: str, balla: dict[str, list[str]], sense: dict[str, Any] | None = None,
-) -> bool:
-    """Require same-lemma evidence, including explicit source variants and recorded forms."""
-    head = english_head(displayed)
-    lookup = _balla_head(head)
-    spellings = {lookup}
-    if "grey" in lookup:
-        spellings.add(lookup.replace("grey", "gray"))
-    if "gray" in lookup:
-        spellings.add(lookup.replace("gray", "grey"))
-    definitions = [item for spelling in spellings for item in balla.get(spelling, [])]
-    forms = _lemma_forms(entry)
-    balla_matches = any(_balla_maps_lemma(definitions, form) for form in forms)
-    enrichment = entry.get("enrichment")
-    enrichment = enrichment if isinstance(enrichment, dict) else {}
-    translation = enrichment.get("translation")
-    translation = translation if isinstance(translation, dict) else {}
-    source = str(translation.get("source") or "").casefold()
-    candidates = translation.get("en")
-    candidates = [candidates] if isinstance(candidates, str) else candidates
-    candidates = candidates if isinstance(candidates, list) else []
-    direct = any(token in source for token in ("dmklinger", "kaikki", "slovnyk.me")) and any(
-        isinstance(candidate, str) and (
-            _key(re.sub(r"^\s*\([^)]*\)\s*", "", candidate)) == _key(displayed)
-            or ("(" not in displayed and english_candidates_support_display([candidate], displayed))
-        ) for candidate in candidates
-    )
-    if sense is not None and any(token in str(sense.get("source") or "").casefold() for token in ("dmklinger", "kaikki")):
-        sense_candidates = sense.get("learner_en")
-        sense_candidates = [sense_candidates] if isinstance(sense_candidates, str) else sense_candidates
-        if isinstance(sense_candidates, list):
-            direct = direct or english_candidates_support_display(sense_candidates, displayed)
-    meaning = enrichment.get("meaning")
-    meaning = meaning if isinstance(meaning, dict) else {}
-    definitions_en = meaning.get("definitions")
-    if "kaikki" in str(meaning.get("source") or "").casefold() and isinstance(definitions_en, list):
-        direct = direct or english_candidates_support_display(definitions_en, displayed)
-    source_groups = [candidate for candidate in candidates if isinstance(candidate, str)]
-    if isinstance(definitions_en, list) and "kaikki" in str(meaning.get("source") or "").casefold():
-        source_groups.extend(item for item in definitions_en if isinstance(item, str))
-    related_balla = any(
-        english_candidates_support_display([candidate], displayed)
-        and any(_balla_maps_lemma(balla.get(_balla_head(english_head(part)), []), form)
-                for part in split_english_alternatives(candidate) for form in forms)
-        for candidate in source_groups
-    )
-    if definitions and not balla_matches and not related_balla and not _balla_synonym_bridge(entry, definitions):
-        return False
-    return bool(balla_matches or related_balla or direct)
-
-
 def _candidate_alternatives(candidate: str) -> set[str]:
     """Extract literal alternatives only; never synthesize a translation."""
     candidate = re.split(r"\s+Conjugation:", candidate, flags=re.I)[0]
@@ -357,14 +287,48 @@ def english_candidates_support_display(candidates: list[Any], display: str, *, a
     return False
 
 
-def _first_learner_head_supports(first: str, displayed: str) -> bool:
-    if english_candidates_support_display([first], displayed, allow_embedded=True):
-        return True
-    if any(_english_key(part) == _english_key(displayed) for part in re.findall(r"\[([^]]+)\]", first)):
-        return True
-    first_verb = re.match(r"^to ([a-z-]+)\b", english_head(first), re.I)
-    display_verb = re.match(r"^to ([a-z-]+)\b", english_head(displayed), re.I)
-    return bool(first_verb and display_verb and first_verb.group(1).casefold() == display_verb.group(1).casefold())
+def _source_candidate_matches(candidate: str, displayed: str) -> bool:
+    """Bind a display to one complete source alternative, retaining qualifiers."""
+    for part in split_english_alternatives(candidate):
+        part = part.strip().strip(" .")
+        if not part or any("CYRILLIC" in unicodedata.name(char, "") for char in part):
+            continue
+        if _english_key(part) == _english_key(displayed):
+            return True
+        # A proper-noun tag is source metadata, not itself a different sense.
+        if part.endswith(" (proper noun)") and _english_key(part[:-14]) == _english_key(displayed):
+            return True
+        # No removal of register, grammatical, sense, or valency notes.
+    return False
+
+
+def _source_partition(entry: dict[str, Any], rows: dict[str, list[dict[str, Any]]]) -> list[dict[str, Any]]:
+    """Source rows sharing the Atlas headword's case and POS once stress is ignored."""
+    lemma = str(entry.get("lemma") or "")
+    pos = _pos_key(str(entry.get("pos") or ""))
+    return [
+        row for row in rows.get(_key(lemma), [])
+        if _stressed_case_key(str(row.get("word") or "")) == _stressed_case_key(lemma)
+        and _pos_key(str(row.get("pos") or "")) == pos
+    ]
+
+
+def _bound_dmklinger_row(
+    entry: dict[str, Any], displayed: str, rows: dict[str, list[dict[str, Any]]],
+) -> tuple[dict[str, Any], str] | None:
+    partition = _source_partition(entry, rows)
+    # Several rows here are stress homographs (по́ра/пора́, ті́кати/тіка́ти).
+    # An unstressed Atlas headword cannot say which one it is, and Atlas's
+    # own stress field is a Kaikki copy, so the display cannot pick the row.
+    if len(partition) != 1:
+        return None
+    row = partition[0]
+    translations = row.get("translations") or []
+    if not translations or not isinstance(translations[0], str):
+        return None
+    if not _source_candidate_matches(translations[0], displayed):
+        return None
+    return row, translations[0]
 
 
 def meaning_problem(text: str, lemma: str, sum11: list[str] | None = None) -> str | None:
@@ -404,7 +368,8 @@ def source_bound_meaning(
     entry: dict[str, Any], displayed: str, clean: str, sense: dict[str, Any] | None,
     sum11: list[str] | None = None, level: str | None = None,
     balla: dict[str, list[str]] | None = None,
-) -> tuple[dict[str, str] | None, str | None]:
+    dmklinger_rows: dict[str, list[dict[str, Any]]] | None = None,
+) -> tuple[dict[str, Any] | None, str | None]:
     """Admit only existing display text bound to an attributed matching field."""
     lemma = str(entry.get("lemma") or "")
     for field in (displayed, clean):
@@ -413,82 +378,67 @@ def source_bound_meaning(
             return None, problem
     if english(displayed) != english(clean):
         return None, "field_language_mismatch"
-    if sense is not None:
-        source = str(sense.get("source") or "").strip()
-        if english(displayed) and any(token in source.casefold() for token in _REVERSE_SOURCE_MARKERS):
-            return None, "unsupported_english_source"
-        if english(displayed) and not independent_english_support(entry, displayed, balla or {}, sense):
-            return None, "unsupported_independent_head"
-        field = "learner_en" if english(displayed) else "learner_uk"
-        candidates = sense.get(field)
-        if isinstance(candidates, str):
-            candidates = [candidates]
-        matched = isinstance(candidates, list) and (
-            english_candidates_support_display(candidates, displayed)
-            if english(displayed)
-            else any(isinstance(candidate, str) and _key(displayed) == _key(candidate) for candidate in candidates)
-        )
-        if level == "A1" and english(displayed) and english(str(entry.get("gloss") or "")):
-            matched = matched and _english_key(displayed) == _english_key(
-                english_head(split_english_alternatives(str(entry["gloss"]))[0])
-            )
-        if source and matched and (english(displayed) or source.casefold() in {"sum20_vetted", "vts_vetted", "ulif_checked"}):
-            return {"source": source, "field": f"senses.{field}"}, None
-        return None, "unbound_sense"
+    if dmklinger_rows is None:
+        return None, "missing_independent_snapshot"
+    # The release path supplies independent row-level evidence. Atlas's
+    # flattened translations and copied Kaikki/slovnyk cards cannot bind
+    # a homonym or POS on their own.
+    if not english(displayed) or displayed != clean:
+        return None, "unsafe_display_fields"
+    original = str(entry.get("gloss") or "")
+    if not english(original):
+        return None, "unbound_original_sense"
+    parts = atlas_english_parts(original)
+    if level == "A1":
+        parts = parts[:1]
+    if not any(_english_key(displayed) == _english_key(atlas_part_display(part)) for part in parts):
+        return None, "unbound_english_sense"
     enrichment = entry.get("enrichment")
     enrichment = enrichment if isinstance(enrichment, dict) else {}
-    if not english(displayed):
-        # Legacy Ukrainian article text has no explicit sense ID. A verbatim,
-        # single-definition card is the only safe non-derived legacy binding.
-        cards = enrichment.get("definition_cards")
-        if isinstance(cards, list):
-            matches = [
-                card for card in cards if isinstance(card, dict)
-                and str(card.get("id") or "").casefold() in {"sum20", "vts"}
-                and card.get("definitions") == [displayed]
-            ]
-            if len(matches) == 1 and _key(displayed) == _key(str(entry.get("gloss") or "")):
-                return {"source": str(matches[0].get("source") or matches[0].get("id")),
-                        "field": "enrichment.definition_cards.definitions"}, None
-        return None, "unbound_ukrainian"
     translation = enrichment.get("translation")
     translation = translation if isinstance(translation, dict) else {}
-    source = str(translation.get("source") or "").strip()
+    source = str((sense.get("source") if sense is not None else translation.get("source")) or "").strip()
     if not source or any(token in source.casefold() for token in _REVERSE_SOURCE_MARKERS):
         return None, "unsupported_english_source"
-    if not independent_english_support(entry, displayed, balla or {}):
-        return None, "unsupported_independent_head"
-    # A dictionary's reverse candidates cannot bind a Ukrainian display to a
-    # sense. Existing English display text is the needed sense anchor.
-    original = str(entry.get("gloss") or "")
-    candidates = translation.get("en")
-    if isinstance(candidates, str):
-        candidates = [candidates]
-    if not isinstance(candidates, list) or not english_candidates_support_display(
-        candidates, displayed, allow_embedded=level not in {None, "A1"}
+    candidates = sense.get("learner_en") if sense is not None else translation.get("en")
+    candidates = [candidates] if isinstance(candidates, str) else candidates
+    if not isinstance(candidates, list) or not any(
+        isinstance(candidate, str) and _source_candidate_matches(candidate, displayed)
+        for candidate in candidates
     ):
         return None, "unattributed_english"
-    if english(original):
-        # A translation-list sub-sense cannot displace the Atlas lexeme head.
-        atlas_parts = atlas_english_parts(original)
-        if level == "A1":
-            atlas_parts = atlas_parts[:1]
-        atlas_heads = [atlas_part_display(part) for part in atlas_parts]
-        if not any(_english_key(displayed) == _english_key(head) for head in atlas_heads if head):
-            return None, "unbound_english_sense"
-        if source.casefold() == "learner_english_gloss" and candidates and not _first_learner_head_supports(
-            candidates[0], displayed
-        ):
-            return None, "unbound_english_sense"
+    if "learner_english_gloss" in source.casefold() and not (
+        candidates and isinstance(candidates[0], str)
+        and _source_candidate_matches(candidates[0], displayed)
+    ):
+        return None, "unbound_primary_learner_sense"
+    if len(_source_partition(entry, dmklinger_rows)) > 1:
+        return None, "unresolved_source_homograph"
+    bound = _bound_dmklinger_row(entry, displayed, dmklinger_rows)
+    if bound is None:
+        return None, "unbound_independent_row"
+    row, candidate = bound
+    head = _balla_head(english_head(displayed))
+    definitions = (balla or {}).get(head, [])
+    if definitions and not _balla_maps_lemma(definitions, str(entry.get("lemma") or "")):
+        return None, "reverse_source_conflict"
+    source_type = source.casefold()
+    if "dmklinger" in source_type:
+        mechanism = "dmklinger_row"
+    elif "learner_english_gloss" in source_type:
+        mechanism = "learner_dmklinger_corrob"
+    elif "kaikki" in source_type:
+        mechanism = "kaikki_dmklinger_corrob"
+    elif "slovnyk.me" in source_type:
+        mechanism = "slovnyk_dmklinger_corrob"
     else:
-        # A Ukrainian lexeme gloss provides no machine-readable English sense
-        # alignment. A single attributed translation head is the only safe
-        # legacy anchor at the beginner levels; multi-sense lists stay withheld.
-        heads = {_key(english_head(candidate)) for candidate in candidates if isinstance(candidate, str)}
-        heads.discard("")
-        if level not in {"A1", "A2"} or heads != {_key(displayed)}:
-            return None, "unbound_english_sense"
-    return {"source": source, "field": "enrichment.translation.en"}, None
+        mechanism = "other_dmklinger_corrob"
+    return {
+        "source": source, "field": "senses.learner_en" if sense is not None else "enrichment.translation.en",
+        "mechanism": mechanism, "supportRule": "unique_case_pos_primary_candidate_row",
+        "sourceTable": "dmklinger_uk_en", "sourceRowId": row["id"],
+        "sourceWord": row["word"], "sourcePos": row["pos"], "sourceCandidate": candidate,
+    }, None
 
 
 def load_sum11_definitions(words: set[str], path: Path) -> dict[str, list[str]]:

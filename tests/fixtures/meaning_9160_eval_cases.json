@@ -15,7 +15,18 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 11554,
+        "word": "безсо́ння",
+        "pos": "noun",
+        "translations": [
+          "insomnia (sleeping disorder)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "бирка",
@@ -33,7 +44,18 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 12405,
+        "word": "би́рка",
+        "pos": "noun",
+        "translations": [
+          "label (small ticket or sign giving information)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "бризнути",
@@ -51,7 +73,8 @@
         ],
         "source": "kaikki/Wiktionary (CC BY-SA 3.0)"
       }
-    }
+    },
+    "source_rows": []
   },
   {
     "lemma": "буквально",
@@ -71,7 +94,20 @@
         "source": "dmklinger",
         "pos": "adverb"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 2422,
+        "word": "буква́льно",
+        "pos": "adverb",
+        "translations": [
+          "literally (not metaphorically)",
+          "literally (word for word; not figuratively; not as an idiom or metaphor)",
+          "Used to intensify or dramatize non-figurative statements: literally"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "виконуватися",
@@ -89,7 +125,8 @@
         ],
         "source": "learner_english_gloss"
       }
-    }
+    },
+    "source_rows": []
   },
   {
     "lemma": "водночас",
@@ -108,7 +145,29 @@
         "source": "dmklinger",
         "pos": "adverb"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 371,
+        "word": "водно́час",
+        "pos": "adverb",
+        "translations": [
+          "simultaneously, at the same time",
+          "at the same time (on the other hand)"
+        ],
+        "source": "dmklinger UK→EN"
+      },
+      {
+        "id": 24842,
+        "word": "водно́ча́с",
+        "pos": "adverb",
+        "translations": [
+          "simultaneously, at the same time",
+          "at the same time (on the other hand)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "замітка",
@@ -130,7 +189,22 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 8601,
+        "word": "замі́тка",
+        "pos": "noun",
+        "translations": [
+          "note (memorandum)",
+          "note (brief piece of writing intended to assist the memory)",
+          "item (short article)",
+          "(journalism) short article, item",
+          "(dated) observation, remark, comment"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "зосереджуватися",
@@ -152,7 +226,21 @@
         "source": "learner_english_gloss",
         "pos": "verb"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 6418,
+        "word": "зосере́джуватися",
+        "pos": "verb",
+        "translations": [
+          "to concentrate (to approach or meet in a common center)",
+          "focus (intransitive: to concentrate one's attention)",
+          "to concentrate, to focus (on: на, + locative) (direct one's attention, efforts, thoughts, etc.)",
+          "concentrate (focus one's thought or attention)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "конфлікт",
@@ -171,7 +259,19 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 652,
+        "word": "конфлі́кт",
+        "pos": "noun",
+        "translations": [
+          "conflict (clash or disagreement)",
+          "strife (violent conflict)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "лиман",
@@ -194,7 +294,36 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 7531,
+        "word": "лима́н",
+        "pos": "noun",
+        "translations": [
+          "brackish lagoon or wide estuary"
+        ],
+        "source": "dmklinger UK→EN"
+      },
+      {
+        "id": 19927,
+        "word": "Лима́н",
+        "pos": "noun",
+        "translations": [
+          "Lyman (city in Donetsk Oblast, Ukraine) (proper noun)",
+          "Lyman (a lake in Donetsk Oblast, Ukraine) (proper noun)",
+          "Lyman (a city in Donetsk Oblast, Ukraine) (proper noun)",
+          "A few villages in Ukraine (proper noun)",
+          "A village in Pokrovsk Raion, Donetsk Oblast (proper noun)",
+          "A village in Alchevsk Raion, Luhansk Oblast (proper noun)",
+          "A village in Starobilsk Raion, Luhansk Oblast (proper noun)",
+          "A village in Dyviziia Hromada, Bilhorod-Dnistrovskyi Raion, Odesa Oblast (proper noun)",
+          "A village in Lyman Hromada, Bilhorod-Dnistrovskyi Raion, Odesa Oblast (proper noun)",
+          "A village in Vovchansk Hromada, Chuhuiv Raion, Kharkiv Oblast (proper noun)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "одягатися",
@@ -214,7 +343,20 @@
         "source": "learner_english_gloss",
         "pos": "verb"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 8068,
+        "word": "одяга́тися",
+        "pos": "verb",
+        "translations": [
+          "dress (to put on clothes)",
+          "(reflexive) to dress, to dress oneself, to clothe oneself, to get dressed",
+          "get dressed (to beclothe oneself, to put on clothes)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "перший",
@@ -235,7 +377,20 @@
         "source": "learner_english_gloss",
         "pos": "adjective"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 44,
+        "word": "пе́рший",
+        "pos": "adjective",
+        "translations": [
+          "numeral first",
+          "prime (first in time, order, or sequence)",
+          "former (first of aforementioned two items)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "потемнілий",
@@ -254,7 +409,8 @@
         "source": "slovnyk.me: Українсько-англійський словник",
         "source_url": "https://slovnyk.me/dict/ukreng/%D0%BF%D0%BE%D1%82%D0%B5%D0%BC%D0%BD%D1%96%D0%BB%D0%B8%D0%B9"
       }
-    }
+    },
+    "source_rows": []
   },
   {
     "lemma": "прем'єра",
@@ -272,7 +428,18 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 14718,
+        "word": "прем'є́ра",
+        "pos": "noun",
+        "translations": [
+          "premiere, first night (first showing of a film, play or other form of entertainment)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "приборкати",
@@ -291,7 +458,19 @@
         "source": "dmklinger",
         "pos": "verb"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 8227,
+        "word": "прибо́ркати",
+        "pos": "verb",
+        "translations": [
+          "harness (to control or put to use)",
+          "(transitive) to tame, to subdue, to bridle, to curb, to harness, to rein in, to restrain (bring under control: animal, emotion, force, instinct etc.)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "під'їзд",
@@ -312,7 +491,21 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 6038,
+        "word": "під'ї́зд",
+        "pos": "noun",
+        "translations": [
+          "approach (an act of drawing near)",
+          "entrance (to a building), entryway, porch",
+          "approach, access (avenue, passage, or way by which a building or place can be approached)",
+          "driveway"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "рік",
@@ -333,7 +526,23 @@
         "source": "learner_english_gloss",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 11,
+        "word": "рік",
+        "pos": "noun",
+        "translations": [
+          "year (time it takes for the Earth to complete one revolution around the Sun)",
+          "year (time it takes for the Earth to complete one revolution of the Sun)",
+          "a Julian year",
+          "a scheduled part of a calendar year spent in a specific activity",
+          "a period between set dates that mark a year",
+          "year (time it takes for any planetary body to make one revolution around another body)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "сила",
@@ -351,7 +560,27 @@
         "source": "learner_english_gloss",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 113,
+        "word": "си́ла",
+        "pos": "noun",
+        "translations": [
+          "force (anything that is able to make a big change in person or thing)",
+          "vigour (active strength or force of body or mind; capacity for exertion, physically, intellectually, or morally; force; energy)",
+          "strength, vigour",
+          "strength (positive attribute)",
+          "strength (strongest part of something)",
+          "strength (intensity of a force or power)",
+          "strength (quality of being strong)",
+          "force (law: legal validity)",
+          "force (ability to attack, control, or constrain)",
+          "force (physical quantity)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "словник",
@@ -374,7 +603,23 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 3617,
+        "word": "словни́к",
+        "pos": "noun",
+        "translations": [
+          "dictionary (publication that explains the meanings of an ordered list of words)",
+          "(countable) dictionary",
+          "associative array (An array-like data structure)",
+          "(uncountable) vocabulary",
+          "vocabulary (words of a language collectively)",
+          "vocabulary (set of words a person knows)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "спростувати",
@@ -394,7 +639,20 @@
         "source": "dmklinger",
         "pos": "verb"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 5105,
+        "word": "спростува́ти",
+        "pos": "verb",
+        "translations": [
+          "disprove (to refute)",
+          "to disprove, to refute (prove to be false)",
+          "to rebut (deny the truth of)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "стрічка",
@@ -417,7 +675,27 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 2724,
+        "word": "стрі́чка",
+        "pos": "noun",
+        "translations": [
+          "picture (informal: cinema)",
+          "ribbon, band",
+          "adhesive tape (medical tape)",
+          "(engineering) tape",
+          "video or audiocassette tape",
+          "(weaponry) belt",
+          "movie (motion picture)",
+          "(culture) film, movie",
+          "line (single horizontal row of text on a screen, printed paper, etc.)",
+          "(poetry, obsolete) line"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "успішно",
@@ -436,7 +714,19 @@
         "source": "dmklinger",
         "pos": "adverb"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 1395,
+        "word": "успі́шно",
+        "pos": "adverb",
+        "translations": [
+          "fortunately (in a fortunate manner)",
+          "successfully"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "щеплення",
@@ -457,7 +747,22 @@
         "source": "dmklinger",
         "pos": "noun"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 5557,
+        "word": "ще́плення",
+        "pos": "noun",
+        "translations": [
+          "grafting (act, art, or process of inserting grafts)",
+          "verbal noun of щепи́ти",
+          "vaccination (inoculation with a vaccine)",
+          "(horticulture) grafting",
+          "inoculation (introduction of substance into the body to produce immunity)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   },
   {
     "lemma": "як-от",
@@ -475,6 +780,81 @@
         "source": "dmklinger",
         "pos": "phrase"
       }
-    }
+    },
+    "source_rows": [
+      {
+        "id": 20649,
+        "word": "як-о́т",
+        "pos": "phrase",
+        "translations": [
+          "for example (as an example) (prepositional phrase)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
+  },
+  {
+    "lemma": "покуття",
+    "url_slug": "покуття",
+    "gloss": "Pokuttia, Pokuttya, Pokutia (a historic region in Ukraine, in contemporary south-east Ivano-Frankivs'k Oblast)",
+    "pos": "noun",
+    "cefr": "C1",
+    "enrichment": {
+      "translation": {
+        "en": [
+          "Pokuttia, Pokuttya, Pokutia (a historical region in Ukraine) (proper noun)"
+        ],
+        "source": "dmklinger",
+        "pos": "noun"
+      }
+    },
+    "source_rows": [
+      {
+        "id": 22035,
+        "word": "Поку́ття",
+        "pos": "noun",
+        "translations": [
+          "Pokuttia, Pokuttya, Pokutia (a historical region in Ukraine) (proper noun)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
+  },
+  {
+    "lemma": "лікарняний",
+    "url_slug": "лікарняний",
+    "gloss": "Relating to a hospital.",
+    "pos": "noun",
+    "cefr": "B1",
+    "enrichment": {
+      "translation": {
+        "en": [
+          "Relating to a hospital",
+          "sick day (day off due to sickness)"
+        ],
+        "source": "dmklinger",
+        "pos": "adjective"
+      }
+    },
+    "source_rows": [
+      {
+        "id": 4327,
+        "word": "лікарня́ний",
+        "pos": "adjective",
+        "translations": [
+          "Relating to a hospital"
+        ],
+        "source": "dmklinger UK→EN"
+      },
+      {
+        "id": 18067,
+        "word": "лікарня́ний",
+        "pos": "noun",
+        "translations": [
+          "sick day (day off due to sickness)"
+        ],
+        "source": "dmklinger UK→EN"
+      }
+    ]
   }
 ]

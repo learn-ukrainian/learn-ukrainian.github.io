@@ -64,6 +64,7 @@ from scripts.practice.meaning_containment import (
     english_candidates_support_display,
     english_head,
     load_balla_definitions,
+    load_dmklinger_rows,
     load_sum11_definitions,
     qualified_english_part,
     source_bound_meaning,
@@ -2134,6 +2135,7 @@ def validate_option_sets(cloze_items: list[dict[str, Any]]) -> list[str]:
 def _build_lexeme(
     entry: dict[str, Any], verifier: VesumVerifier, sum11_by_word: dict[str, list[str]] | None = None,
     balla_by_head: dict[str, list[str]] | None = None,
+    dmklinger_rows: dict[str, list[dict[str, Any]]] | None = None,
 ) -> dict[str, Any] | None:
     lemma = _clean_text(entry.get("lemma"))
     raw_gloss = _clean_text(entry.get("gloss"))
@@ -2159,7 +2161,8 @@ def _build_lexeme(
     else:
         gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense) if _is_english_learner_gloss(gloss) else gloss
         source, withheld_reason = source_bound_meaning(
-            entry, gloss, gloss_clean, sense, sum11_by_word.get(lemma, []), level, balla_by_head
+            entry, gloss, gloss_clean, sense, sum11_by_word.get(lemma, []), level, balla_by_head,
+            dmklinger_rows,
         )
         if source is None:
             gloss = ""
@@ -6257,12 +6260,17 @@ def _select_practice_lexemes(
     priority_lemma_keys: set[str] | None = None,
     sum11_by_word: dict[str, list[str]] | None = None,
     balla_by_head: dict[str, list[str]] | None = None,
+    dmklinger_rows: dict[str, list[dict[str, Any]]] | None = None,
 ) -> tuple[
     list[tuple[dict[str, Any], dict[str, Any]]],
     list[dict[str, Any]],
     dict[str, dict[str, Any]],
     dict[str, dict[str, Any]],
 ]:
+    if sum11_by_word is not None and dmklinger_rows is None:
+        # Source-backed builds must not silently fall back to entry-wide Atlas
+        # translations when the independent row snapshot was not provided.
+        dmklinger_rows = {}
     eligible = [entry for entry in entries if is_practice_eligible(entry)]
     # A practice seed is an explicit curriculum admission, not merely a source of
     # optional fill entries. Keep those entries ahead of ordinary course/fill
@@ -6307,7 +6315,7 @@ def _select_practice_lexemes(
 
     lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]] = []
     for entry in selected[: config.target]:
-        lexeme = _build_lexeme(entry, verifier, sum11_by_word, balla_by_head)
+        lexeme = _build_lexeme(entry, verifier, sum11_by_word, balla_by_head, dmklinger_rows)
         if lexeme:
             lexemes_by_entry.append((entry, lexeme))
 
@@ -6471,6 +6479,7 @@ def build_practice_shards(
     cloze_withheld: list[dict[str, str]] | None = None,
     sum11_by_word: dict[str, list[str]] | None = None,
     balla_by_head: dict[str, list[str]] | None = None,
+    dmklinger_rows: dict[str, list[dict[str, Any]]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     """Build every level shard.
 
@@ -6556,6 +6565,7 @@ def build_practice_shards(
         priority_lemma_keys,
         sum11_by_word,
         balla_by_head,
+        dmklinger_rows,
     )
     classify_lemmas = [str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if lexeme.get("cefr")]
     vesum_aspects = _vesum_aspect_by_lemma(classify_lemmas, verifier)
@@ -8581,6 +8591,9 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     balla_by_head = load_balla_definitions(
         candidate_balla_heads(entries), args.sources_db
     ) if args.sources_db and args.sources_db.is_file() else {}
+    dmklinger_rows = load_dmklinger_rows(
+        {str(entry.get("lemma")) for entry in entries if entry.get("lemma")}, args.sources_db
+    ) if args.sources_db and args.sources_db.is_file() else {}
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -8601,6 +8614,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         pos_residuals=pos_residuals,
         sum11_by_word=sum11_by_word,
         balla_by_head=balla_by_head,
+        dmklinger_rows=dmklinger_rows,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
