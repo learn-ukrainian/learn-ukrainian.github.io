@@ -48,6 +48,7 @@ from .loader import (
     resolve_plan_path,
     sha256_of,
 )
+from .mechanical import check_mechanical
 from .pack import load_pack, load_words, lock_digest
 from .placement_table import PLACEMENT_TABLE_REL, PlacementTableError, load_placement_table
 from .registry import check_append_only, check_plan_against_registry, load_registry, registry_path_for
@@ -1149,7 +1150,11 @@ def _validate_plan_run(
         if position < plan["arc_ref"]["position"]
     ]
     check_rule4(report, plan, plan_path, allow_missing_prior=allow_missing_prior, level_plans=level_plans)
-    check_arc(report, level, plan, plan_path)
+    arc = check_arc(report, level, plan, plan_path)
+    if store is not None:
+        check_mechanical(
+            report, plan, level=level, store=store, pack=pack, arc=arc, level_plans=level_plans, words_path=words_path
+        )
     registry_path = registry_path_for(plan_path)
     registry_failures: list[Outcome] = []
     registry = load_registry(registry_path, level, registry_failures)

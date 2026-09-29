@@ -124,12 +124,17 @@ def base_plan() -> dict:
                 ],
                 "consolidation": ["a3"],
                 "activities": [
-                    {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Checks the letters."},
+                    {
+                        "id": "a1",
+                        "type": "quiz",
+                        "placement": "inline",
+                        "focus": f"Checks the letters. {LETTER_A} {LETTER_O}",
+                    },
                     {
                         "id": "a2",
                         "type": "error-correction",
                         "placement": "workbook",
-                        "focus": "Fix the errors.",
+                        "focus": f"Fix the errors with {LETTER_A} and {LETTER_O}.",
                         "error_refs": ["E-001"],
                     },
                     {"id": "a3", "type": "match-up", "placement": "inline", "focus": "Match pairs.", "model": "X-001"},
@@ -158,8 +163,16 @@ def base_plan() -> dict:
                 "job": "Review the module.",
                 "rationale": "Closes the module.",
                 "word_target": 5,
-                "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": []}},
-                "steps": [{"id": "s1", "kind": "practice", "evidence": ["T-001"], "practice": ["a1"]}],
+                "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": ["W-001"]}},
+                "steps": [
+                    {
+                        "id": "s1",
+                        "kind": "practice",
+                        "uses": {"grammar": ["G-a1-001"], "vocabulary": ["W-001"]},
+                        "evidence": ["T-001"],
+                        "practice": ["a1"],
+                    }
+                ],
                 "activities": [
                     {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Review quiz."},
                     {"id": "a2", "type": "quiz", "placement": "workbook", "focus": "Review workbook quiz."},
@@ -184,7 +197,12 @@ def base_pack() -> dict:
 
 def base_words() -> dict:
     def record(number: int, lemma: str, tags: list[str]) -> dict:
-        return {"id": f"W-{number:03d}", "lemma": lemma, "forms": [{"tags": tag} for tag in tags]}
+        return {
+            "id": f"W-{number:03d}",
+            "lemma": lemma,
+            "cefr": {"level": "A1"},
+            "forms": [{"tags": tag} for tag in tags],
+        }
 
     return {
         "words": [
@@ -400,9 +418,15 @@ def _teach_close_lesson(n: int, slug: str) -> dict:
         "job": "The last new material.",
         "rationale": "Closes with a recap step.",
         "word_target": 5,
-        "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": []}},
+        "inventory": {"grammar": [], "vocabulary": {"core": [], "incidental": [], "recycled": ["W-001"]}},
         "steps": [
-            {"id": "s1", "kind": "practice", "evidence": ["T-002"], "practice": ["a1"]},
+            {
+                "id": "s1",
+                "kind": "practice",
+                "uses": {"grammar": ["G-a1-001"], "vocabulary": ["W-001"]},
+                "evidence": ["T-002"],
+                "practice": ["a1"],
+            },
             {"id": "s2", "kind": "recap", "evidence": ["T-001"], "practice": []},
         ],
         "activities": [
@@ -597,7 +621,8 @@ FAILING_CASES = [
                 ),
             )
         ),
-        expected=frozenset({codes.INTRODUCES_ON_NON_TEACH_STEP}),
+        # W-009 is a core word no later lesson reuses (gate M8)
+        expected=frozenset({codes.INTRODUCES_ON_NON_TEACH_STEP, codes.CORE_WORD_NOT_REUSED}),
     ),
     # inventory equals declared introductions
     Case(
@@ -614,7 +639,8 @@ FAILING_CASES = [
                 "core", [{"lemma": "lemma-seven", "evidence": "W-007", "forms": ["tag-a", "tag-b"]}]
             )
         ),
-        expected=frozenset({codes.INVENTORY_INTRODUCTION_MISMATCH}),
+        # W-007 is a core word no later lesson reuses (gate M8)
+        expected=frozenset({codes.INVENTORY_INTRODUCTION_MISMATCH, codes.CORE_WORD_NOT_REUSED}),
     ),
     # within-lesson order and recycled
     Case(
@@ -644,13 +670,17 @@ FAILING_CASES = [
     Case(
         "uses_not_recycled_in_recap_lesson",
         mutate=_mutate(
-            lambda p, pk, w: p["lessons"][1]["steps"][0].__setitem__("uses", {"grammar": [], "vocabulary": ["W-001"]})
+            lambda p, pk, w: p["lessons"][1]["steps"][0].__setitem__(
+                "uses", {"grammar": ["G-a1-001"], "vocabulary": ["W-001", "W-003"]}
+            )
         ),
         expected=frozenset({codes.USES_NOT_RECYCLED}),
     ),
     Case(
         "recycled_not_used_in_recap_lesson",
-        mutate=_mutate(lambda p, pk, w: p["lessons"][1]["inventory"]["vocabulary"].__setitem__("recycled", ["W-001"])),
+        mutate=_mutate(
+            lambda p, pk, w: p["lessons"][1]["inventory"]["vocabulary"].__setitem__("recycled", ["W-001", "W-003"])
+        ),
         expected=frozenset({codes.RECYCLED_NOT_USED}),
     ),
     # rule 3: evidence resolves and the pack is the locked one
@@ -1123,6 +1153,9 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.validate.test_workbook_and_placement import produced_workbook_and_placement_codes
 
     produced |= produced_workbook_and_placement_codes(tmp_path / "workbook-and-placement")
+    from tests.curriculum.test_plan_validate_mechanical import produced_mechanical_codes
+
+    produced |= produced_mechanical_codes(tmp_path / "mechanical")
     assert produced == set(codes.DESCRIPTIONS)
 
 

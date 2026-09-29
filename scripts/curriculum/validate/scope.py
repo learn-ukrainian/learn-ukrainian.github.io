@@ -44,6 +44,8 @@ SCOPE_SCHEMA_VERSION = 1
 #: words out of the definition).
 _UPPER = "А-ЯЄЇІҐ"
 _ANY_LETTER = "А-Яа-яЄєЇїІіҐґЬь"
+#: Public alias: the closed Cyrillic letter class other check modules reuse.
+CYRILLIC_LETTER_CLASS = _ANY_LETTER
 
 #: A run of enumerated single letters: two or more single uppercase Cyrillic
 #: letter tokens separated only by commas, semicolons or whitespace. The
