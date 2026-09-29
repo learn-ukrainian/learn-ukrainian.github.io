@@ -1,13 +1,12 @@
 """Real public HTTP integration test for Cycle 007 endpoint identity attestation.
 
-Amendment (fixes v3, item 8): starts the exact server module on an ephemeral
-loopback port, drives it through the actual production
-``RealMcpToolTransport``/``LocalMcpSourcesClient`` classes (no direct
-library/database import, no fake transport), attests endpoint identity,
-lists the required tools, and makes a harmless public ``verify_words``
-round trip. Proves hash-only privacy logging and MCP-wire error fail-closed
-behavior — never a private word, argument value, or raw exception message on
-the wire or in the log — without touching an external network.
+Starts the exact server module on an ephemeral loopback port and drives public
+calls through the production ``RealMcpToolTransport`` (no fake transport).
+The frozen cycle007 ``LocalMcpSourcesClient`` attestation is a strict expected
+failure: #8683/#6321 accepts that lane's fail-closed rejection of the changed
+identity payload. The other tests list required tools, make a harmless public
+``verify_words`` round trip, and verify hash-only privacy logging and MCP-wire
+error handling without touching an external network.
 
 Skipped when ``data/sources.db``/``data/vesum.db`` are not present locally
 (same gating ``TestIntegrationSmoke`` in test_mcp_sources_server.py uses) —
@@ -106,20 +105,24 @@ def sources_http_url(log_path: Path):
 
 
 @pytest.fixture()
-def real_client(sources_http_url):
+def real_transport(sources_http_url):
+    transport = compiler.RealMcpToolTransport(f"{sources_http_url}/mcp")
+    yield transport
+    transport.close()
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="#8683/#6321 accepts cycle007's fail-closed identity rejection; its frozen five-key attestation is obsolete",
+)
+def test_real_transport_attests_endpoint_identity_against_local_files(sources_http_url):
     endpoint_url = f"{sources_http_url}/mcp"
-    client = compiler.LocalMcpSourcesClient(endpoint_url=endpoint_url)
-    yield client
-    client.close()
-
-
-def test_real_transport_attests_endpoint_identity_against_local_files(real_client):
-    identity = real_client.server_identity()
-    assert identity["server_code_sha256"] == compiler.contract.sha256_file(SERVER_PATH)
-    assert identity["sources_db_sha256"] == compiler.contract.sha256_file(SOURCES_DB)
-    assert identity["vesum_db_sha256"] == compiler.contract.sha256_file(VESUM_DB)
-    assert identity["sources_db_bytes"] == SOURCES_DB.stat().st_size
-    assert identity["vesum_db_bytes"] == VESUM_DB.stat().st_size
+    transport = compiler.RealMcpToolTransport(endpoint_url)
+    try:
+        client = compiler.LocalMcpSourcesClient(endpoint_url=endpoint_url, transport=transport)
+        client.close()
+    finally:
+        transport.close()
 
 
 def test_real_transport_preflight_requires_every_frozen_tool(sources_http_url):
@@ -131,16 +134,16 @@ def test_real_transport_preflight_requires_every_frozen_tool(sources_http_url):
         transport.close()
 
 
-def test_real_client_verify_words_round_trip_is_harmless_and_public(real_client):
+def test_real_transport_verify_words_round_trip_is_harmless_and_public(real_transport):
     # A public, harmless word — no private Phase 3 packet content.
-    result = real_client.verify_words(["слово"])
+    result = real_transport.call_tool("verify_words", {"words": ["слово"]})
     assert "слово" in result
 
 
-def test_real_endpoint_logs_hash_only_never_argument_values_or_response_text(real_client, log_path: Path):
+def test_real_endpoint_logs_hash_only_never_argument_values_or_response_text(real_transport, log_path: Path):
     private_marker = "СЕКРЕТНЕ_СЛОВО_ІНТЕГРАЦІЙНОГО_ТЕСТУ"
     offset = log_path.stat().st_size if log_path.exists() else 0
-    real_client.check_russian_shadow(private_marker)
+    real_transport.call_tool("check_russian_shadow", {"word": private_marker})
     with open(log_path, "rb") as handle:
         handle.seek(offset)
         new_bytes = handle.read()
@@ -163,9 +166,9 @@ def test_real_transport_fails_closed_on_a_real_tool_error(sources_http_url):
     try:
         transport.preflight()
         with pytest.raises(compiler.McpTransportError):
-            # verify_words requires a "words" argument; omitting it raises
+            # search_sources requires a "query" argument; omitting it raises
             # inside the handler — the real MCP path must surface this as
             # an error result, not a disguised success.
-            transport.call_tool("verify_words", {})
+            transport.call_tool("search_sources", {})
     finally:
         transport.close()

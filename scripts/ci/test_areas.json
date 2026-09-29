@@ -29,6 +29,8 @@
       "packages/v4-runtime/",
       "data/projects/open_model_data/",
       "registry/projects/",
+      "scripts/curriculum/evidence/db_identity.py",
+      "scripts/curriculum/evidence/sources.py",
       "scripts/fleet_comms/__init__.py",
       "scripts/fleet_comms/artifacts.py",
       "scripts/fleet_comms/contracts.py",

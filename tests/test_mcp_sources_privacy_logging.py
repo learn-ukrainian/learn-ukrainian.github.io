@@ -16,6 +16,7 @@ the fixture (and the file) are shared across this module's tests.
 from __future__ import annotations
 
 import asyncio
+import hashlib
 import importlib.util
 import json
 import os
@@ -88,7 +89,9 @@ def test_privacy_mode_logs_no_argument_values(server, log_path):
 
 
 def test_privacy_mode_logs_no_response_text(server, log_path):
-    entry = _call_and_capture_log_entry(server, log_path, "check_russian_shadow", {"word": "тест", "_privacy_mode": True})
+    entry = _call_and_capture_log_entry(
+        server, log_path, "check_russian_shadow", {"word": "тест", "_privacy_mode": True}
+    )
     assert "response_text" not in entry
     assert "response" not in entry
     assert entry["response_sha256"] is None or len(entry["response_sha256"]) == 64
@@ -118,8 +121,8 @@ def test_privacy_mode_flag_is_stripped_before_dispatch(server):
 def test_query_ulif_cache_only_never_makes_a_live_call(server):
     result = asyncio.run(server.call_tool("query_ulif", {"word": "стіл", "cache_only": True}))
     payload = json.loads(result[0].text)
-    assert payload["status"] in {"attested", "not_found", "unavailable"}
-    assert "entry" in payload
+    assert payload["status"] in {"attested", "not_found", "unavailable", "ambiguous"}
+    assert "entry" in payload or (payload["status"] == "ambiguous" and isinstance(payload.get("entries"), list))
 
 
 def test_query_grac_cache_only_always_unavailable(server):
@@ -198,14 +201,29 @@ def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server):
     payload = json.loads(result.content[0].text)
     assert set(payload) == {
         "server_code_sha256",
-        "sources_db_sha256",
+        "sources_db_meta_identity",
         "sources_db_bytes",
         "vesum_db_sha256",
         "vesum_db_bytes",
     }
     assert len(payload["server_code_sha256"]) == 64
+    assert payload["sources_db_meta_identity"]["scheme"] == "file-meta-v1"
     # Public-safe: never a filesystem path in the response.
     assert "/" not in payload["server_code_sha256"]
+
+
+def test_on_call_tool_mcp_server_identity_explicitly_includes_content_hash(server, tmp_path, monkeypatch):
+    data = tmp_path / "data"
+    data.mkdir()
+    sources_db = data / "sources.db"
+    sources_db.write_bytes(b"wire-sources-db")
+    (data / "vesum.db").write_bytes(b"wire-vesum-db")
+    monkeypatch.setattr(server, "PROJECT_ROOT", tmp_path)
+
+    result = _call_on_call_tool(server, "mcp_server_identity", {"include_sources_db_sha256": True})
+    assert result.is_error is False
+    payload = json.loads(result.content[0].text)
+    assert payload["sources_db_sha256"] == hashlib.sha256(b"wire-sources-db").hexdigest()
 
 
 def test_call_tool_legacy_error_marker_never_appears_on_the_real_wire_path(server):

@@ -497,12 +497,13 @@ describe('lexicon SRS facade', () => {
       });
     }
 
-    for (const mode of ['paradigm', 'stress', 'classify', 'synonym', 'heritage'] as const) {
+    for (const mode of ['paradigm', 'stress', 'classify', 'heritage'] as const) {
       const selection = selectNextPracticeItem(modeDeck([{ id: `${mode}-alpha`, modes: [mode] }]), {
         now: NOW,
       });
       expect(selection?.mode).toBe(mode);
     }
+    expect(selectNextPracticeItem(modeDeck([{ id: 'synonym-alpha', modes: ['synonym'] }]), { now: NOW })).toBeNull();
     expect(selectNextPracticeItem(modeDeck([{ id: 'paronym-alpha', modes: ['paronym'] }]), { now: NOW })).toBeNull();
   });
 

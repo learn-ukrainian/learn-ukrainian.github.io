@@ -1,6 +1,8 @@
 """Unit tests for Practice Quality Gate (Issue #7944)."""
 
+import inspect
 import json
+import sys
 from pathlib import Path
 
 import pytest
@@ -14,6 +16,18 @@ from scripts.audit.practice_quality_gate import (
     audit_teacher_cloze_deck,
     run_all_practice_audits,
 )
+
+
+def _hide_sources_db(monkeypatch, tmp_path: Path) -> None:
+    """Simulate CI's absent gitignored database, even on a host that has it."""
+    from scripts.audit import practice_quality_gate
+
+    monkeypatch.setattr(practice_quality_gate, "DEFAULT_SOURCES_DB", tmp_path / "missing-sources.db")
+
+    def reject_sources(*_args, **_kwargs):
+        raise AssertionError("snapshot-only audit attempted to open sources.db")
+
+    monkeypatch.setattr(practice_quality_gate, "_SourceRows", reject_sources)
 
 
 def test_audit_teacher_cloze_validates_blank_count(tmp_path: Path):
@@ -90,6 +104,13 @@ def test_audit_error_correction_validates_contract(tmp_path: Path):
                 "correctForm": "брав участь",
                 "options": ["брав участь", "приймав участь"],
                 "explanation": "Калька з російської мови.",
+                "source": "Textbook Gr 10 (glazova)",
+                "sourceRef": {
+                    "rowId": "textbooks:1",
+                    "errorSpan": [0, 14],
+                    "correctSpan": [15, 26],
+                    "direction": "error_first",
+                },
             },
             {
                 "id": "drill_missing_target",
@@ -109,10 +130,7 @@ def test_audit_error_correction_validates_contract(tmp_path: Path):
             },
         ]
     }
-    deck_path = tmp_path / "ec.json"
-    deck_path.write_text(json.dumps(valid_deck, ensure_ascii=False), encoding="utf-8")
-
-    violations = audit_error_correction_deck(deck_path)
+    violations = _audit_error_corrections(tmp_path, valid_deck["drills"])
     assert any(v["type"] == "ERROR_TARGET_NOT_IN_SENTENCE" and v["item"] == "drill_missing_target" for v in violations)
     assert any(
         v["type"] == "CORRECT_TARGET_MISSING_IN_OPTIONS" and v["item"] == "drill_missing_in_options" for v in violations
@@ -138,6 +156,8 @@ def test_audit_sentence_inventory_intentional_errors(tmp_path: Path):
 def test_audit_error_correction_vesum_attestation(tmp_path: Path, monkeypatch):
     """Verify that unattested Ukrainian words in error-correction drills are flagged by VESUM."""
     from scripts.audit import practice_quality_gate
+
+    _hide_sources_db(monkeypatch, tmp_path)
 
     deck = {
         "drills": [
@@ -173,6 +193,468 @@ def test_audit_error_correction_vesum_attestation(tmp_path: Path, monkeypatch):
     assert any(v["type"] == "VESUM_UNATTESTED" and v["item"] == "drill_unattested" for v in violations), (
         f"Expected VESUM_UNATTESTED violation, got: {violations}"
     )
+
+
+def _error_correction_deck(tmp_path: Path, drills: list[dict], evidence: dict | None = None) -> Path:
+    """Write a deck and its evidence snapshot (by default: one matching entry per bound drill)."""
+    deck_path = tmp_path / "ec.json"
+    deck_path.write_text(json.dumps({"drills": drills}, ensure_ascii=False), encoding="utf-8")
+    if evidence is None:
+        evidence = {
+            d["id"]: {
+                "rowId": d["sourceRef"]["rowId"],
+                "rowSha256": "0" * 64,
+                "source": d.get("source"),
+                "error": d["errorWord"],
+                "correct": d["correctForm"],
+            }
+            for d in drills
+            if isinstance(d.get("sourceRef"), dict)
+        }
+    else:
+        evidence = {
+            item_id: {"source": next((d.get("source") for d in drills if d.get("id") == item_id), None), **entry}
+            for item_id, entry in evidence.items()
+        }
+    (tmp_path / "ec-evidence.json").write_text(json.dumps({"drills": evidence}, ensure_ascii=False), encoding="utf-8")
+    return deck_path
+
+
+def _audit_error_corrections(tmp_path: Path, drills: list[dict], evidence: dict | None = None, **kwargs):
+    """Audit ``drills`` against their snapshot; CI mode (no sources.db, no VESUM) unless overridden."""
+    kwargs.setdefault("vesum_db", None)
+    kwargs.setdefault("sources_db", None)
+    return audit_error_correction_deck(
+        _error_correction_deck(tmp_path, drills, evidence), evidence_path=tmp_path / "ec-evidence.json", **kwargs
+    )
+
+
+def _drill(item_id: str, error: str, correct: str, options: list[str] | None = None, **extra) -> dict:
+    """A drill bound to a one-line horizontal table row "<error> <correct>"."""
+    return {
+        "id": item_id,
+        "sentence": f"Уважно прочитайте: «{error}» — тут допущено помилку.",
+        "errorWord": error,
+        "correctForm": correct,
+        "options": options or sorted([correct, error]),
+        "explanation": f"Правильно вживати «{correct}» замість помилкового «{error}».",
+        "source": "Textbook Gr 10 (glazova)",
+        "sourceRef": {
+            "rowId": "textbooks:1",
+            "errorSpan": [0, len(error)],
+            "correctSpan": [len(error) + 1, len(error) + 1 + len(correct)],
+            "direction": "error_first",
+        },
+        **extra,
+    }
+
+
+def _fixture_vesum(tmp_path: Path, forms: list[tuple[str, str]], marked: tuple[str, ...] = ()) -> Path:
+    """Minimal VESUM file: (word form, part of speech); ``marked`` forms carry a ``bad`` marker."""
+    import sqlite3
+
+    vesum_path = tmp_path / "vesum.db"
+    conn = sqlite3.connect(vesum_path)
+    conn.execute(
+        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, word_form TEXT, lemma TEXT,"
+        " pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
+    )
+    conn.execute("CREATE TABLE form_markers (form_id INTEGER, marker TEXT, origin TEXT, marker_class TEXT)")
+    conn.execute("CREATE VIEW forms AS SELECT word_form, lemma, tags, pos FROM forms_all")
+    for form_id, (form, pos) in enumerate(forms, 1):
+        conn.execute(
+            "INSERT INTO forms_all (id, entry_id, word_form, lemma, pos, tags, source_location)"
+            " VALUES (?, 1, ?, ?, ?, ?, '')",
+            (form_id, form, form, pos, pos),
+        )
+        if form in marked:
+            conn.execute("INSERT INTO form_markers VALUES (?, 'bad', 'tag', 'invalid')", (form_id,))
+    conn.commit()
+    conn.close()
+    return vesum_path
+
+
+def _fixture_sources(tmp_path: Path, textbooks: list[tuple[int, str, str]]) -> Path:
+    """Minimal sources.db: (grade, author, text) textbook rows and an empty style guide."""
+    import sqlite3
+
+    sources_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(sources_path)
+    conn.execute("CREATE TABLE textbooks (id INTEGER PRIMARY KEY, grade INTEGER, author TEXT, title TEXT, text TEXT)")
+    conn.execute("CREATE TABLE style_guide (id INTEGER PRIMARY KEY, word TEXT, section TEXT, text TEXT)")
+    conn.executemany("INSERT INTO textbooks (grade, author, title, text) VALUES (?, ?, 'Сторінка 1', ?)", textbooks)
+    conn.commit()
+    conn.close()
+    return sources_path
+
+
+def test_audit_error_correction_flags_register_label_distractors(tmp_path: Path):
+    """#8723: the old builder padded every drill with "(розм.)"/"(застаріле)" copies."""
+    planted = _drill(
+        "err_labelled",
+        "природній",
+        "природний",
+        ["природний", "природний (застаріле)", "природній", "природній (розм.)"],
+    )
+    violations = _audit_error_corrections(tmp_path, [planted, _drill("err_clean", "природній", "природний")])
+    assert [(v["type"], v["item"]) for v in violations] == [("REGISTER_LABEL_DISTRACTOR", "err_labelled")]
+
+
+def test_audit_error_correction_flags_unevidenced_pairs(tmp_path: Path):
+    """#8723 err_0013/0021/0203/0001: pairs the source does not support fail the gate."""
+    vesum_path = _fixture_vesum(
+        tmp_path,
+        [
+            ("побудували", "verb"),
+            ("цегляний", "adj"),
+            ("україномовний", "adj"),
+            ("українськомовний", "adj"),
+            ("влучний", "adj"),
+            ("вираз", "noun"),
+            ("вислів", "noun"),
+        ],
+    )
+
+    drills = [
+        _drill("err_initial", "О.", "Теліга"),
+        _drill("err_names", "Петро Чайковський", "Марія Заньковецька"),
+        _drill("err_fragment", "побудували", "цегляний"),
+        _drill("err_contested", "україномовний", "українськомовний"),
+        _drill("err_good", "влучний вираз", "влучний вислів"),
+    ]
+    violations = _audit_error_corrections(tmp_path, drills, vesum_db=vesum_path)
+    flagged = {v["item"] for v in violations if v["type"] == "UNEVIDENCED_ERROR_CORRECTION_PAIR"}
+    assert flagged == {"err_initial", "err_names", "err_fragment", "err_contested"}
+    assert not any(v["item"] == "err_good" for v in violations)
+
+
+# Real VESUM (data/vesum.db, 2026-09-28): брати/купити/приймати/участь are standard;
+# «протирічить» carries a VESUM error marker.
+_PARTICIPATION_FORMS = [
+    ("брати", "verb"),
+    ("купити", "verb"),
+    ("приймати", "verb"),
+    ("участь", "noun"),
+    ("не", "part"),
+    ("протирічить", "verb"),
+    ("суперечить", "verb"),
+    ("суті", "noun"),
+]
+
+
+# ---------------------------------------------------------------------------
+# Review round 4 (#8723): every drill is bound to its exact source row
+# ---------------------------------------------------------------------------
+
+# Real sources.db row textbooks:72208 (Glazova, grade 10): a column-block
+# "Неправильно Правильно" table, the source of committed err_0003..err_0005.
+_GLAZOVA_TABLE = (
+    "Слідуючий оратор уже жде свого часу! (З Інтернету)\nПІДКАЗКА\nНеправильно Правильно\n"
+    "нетактична поведінка\nпроявляти недостатки\nпредставляти інтерес\n"
+    "нетактовна поведінка\nвиявляти недоліки\nстановити інтерес\n"
+)
+# Real VESUM (data/vesum.db, 2026-09-28): «недостатки» is a noun carrying the `bad`
+# error marker, «нетактична» is not in VESUM; the other words are standard.
+_GLAZOVA_FORMS = [
+    ("недостатки", "noun"),
+    ("проявляти", "verb"),
+    ("представляти", "verb"),
+    ("становити", "verb"),
+    ("виявляти", "verb"),
+    ("інтерес", "noun"),
+    ("недоліки", "noun"),
+    ("нетактовна", "adj"),
+    ("поведінка", "noun"),
+]
+
+
+def _extracted_glazova_deck(tmp_path: Path) -> tuple[dict, dict, Path, Path]:
+    """The extractor's deck and evidence snapshot for the Glazova table, with its fixture databases."""
+    import sqlite3
+
+    from scripts.practice.extract_textbook_error_corrections import (
+        VesumLookup,
+        build_evidence_snapshot,
+        extract_error_correction_deck,
+    )
+
+    vesum_path = _fixture_vesum(tmp_path, _GLAZOVA_FORMS, marked=("недостатки",))
+    sources_path = _fixture_sources(tmp_path, [(10, "glazova", _GLAZOVA_TABLE)])
+    conn = sqlite3.connect(sources_path)
+    deck = extract_error_correction_deck(conn, VesumLookup(vesum_path), log=lambda _msg: None)
+    evidence = build_evidence_snapshot(deck, conn)["drills"]
+    conn.close()
+    return deck, evidence, sources_path, vesum_path
+
+
+def _by_error(deck: dict) -> dict[str, dict]:
+    return {drill["errorWord"]: drill for drill in deck["drills"]}
+
+
+def _recombined(drill: dict, donor: dict, item_id: str) -> dict:
+    """``drill``'s error with ``donor``'s correction, the correction span taken from ``donor``."""
+    correct = donor["correctForm"]
+    return {
+        **drill,
+        "id": item_id,
+        "correctForm": correct,
+        "options": sorted([correct, drill["errorWord"]]),
+        "answers": [correct],
+        "explanation": f"Правильно вживати «{correct}» замість помилкового «{drill['errorWord']}».",
+        "sourceRef": {**drill["sourceRef"], "correctSpan": donor["sourceRef"]["correctSpan"]},
+    }
+
+
+def _forged_entry(drill: dict, evidence: dict, like: str) -> dict:
+    """A snapshot entry forged to agree with ``drill`` (row SHA-256 copied from a genuine entry)."""
+    return {**evidence[like], "error": drill["errorWord"], "correct": drill["correctForm"]}
+
+
+def test_extracted_drills_are_bound_to_their_source_row(tmp_path: Path):
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    assert [(d["errorWord"], d["correctForm"], d["sourceRef"]["rowId"]) for d in deck["drills"]] == [
+        ("нетактична поведінка", "нетактовна поведінка", "textbooks:1"),
+        ("проявляти недостатки", "виявляти недоліки", "textbooks:1"),
+        ("представляти інтерес", "становити інтерес", "textbooks:1"),
+    ]
+    assert _audit_error_corrections(tmp_path, deck["drills"], evidence) == []
+    assert (
+        _audit_error_corrections(tmp_path, deck["drills"], evidence, vesum_db=vesum_path, sources_db=sources_path) == []
+    )
+
+
+@pytest.mark.parametrize("database_mode", [False, True])
+def test_changed_visible_source_label_fails(tmp_path: Path, database_mode: bool):
+    """A drill's displayed badge must match the metadata of its bound row."""
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    drill = {**deck["drills"][2], "source": "Textbook Gr 1 (unrelated)"}
+    kwargs = {"vesum_db": vesum_path, "sources_db": sources_path} if database_mode else {}
+
+    violations = _audit_error_corrections(tmp_path, [drill], evidence, **kwargs)
+
+    assert [(v["item"], v["type"]) for v in violations] == [(drill["id"], "SOURCE_LABEL_MISMATCH")]
+
+
+def test_forged_snapshot_source_label_fails_with_sources_db(tmp_path: Path):
+    """The bound row remains authoritative when drill and snapshot labels agree falsely."""
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    drill = {**deck["drills"][2], "source": "Textbook Gr 1 (unrelated)"}
+    forged = {drill["id"]: {**evidence[drill["id"]], "source": drill["source"]}}
+
+    violations = _audit_error_corrections(
+        tmp_path, [drill], forged, vesum_db=vesum_path, sources_db=sources_path
+    )
+
+    assert [(v["item"], v["type"]) for v in violations] == [(drill["id"], "SOURCE_LABEL_MISMATCH")]
+
+
+@pytest.mark.parametrize("database_mode", [False, True])
+def test_reviewer_source_label_probe_on_committed_err_0005(
+    tmp_path: Path, database_mode: bool, request: pytest.FixtureRequest
+):
+    """The exact reviewed badge edit fails on the committed learner-facing drill."""
+    from scripts.audit.practice_quality_gate import PROJECT_ROOT
+    from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot
+
+    sources_db = request.getfixturevalue("requires_sources_db") if database_mode else None
+    deck = json.loads((PROJECT_ROOT / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
+    drill = next(d for d in deck["drills"] if d["id"] == "err_0005")
+    probe = {**drill, "source": "Textbook Gr 1 (unrelated)"}
+    kwargs = {"sources_db": sources_db} if database_mode else {}
+
+    violations = _audit_error_corrections(
+        tmp_path, [probe], {"err_0005": load_evidence_snapshot()["err_0005"]}, **kwargs
+    )
+
+    assert [(v["item"], v["type"]) for v in violations] == [("err_0005", "SOURCE_LABEL_MISMATCH")]
+
+
+@pytest.mark.parametrize("database_kind", ["missing", "wrong_schema", "missing_style_guide"])
+def test_supplied_invalid_sources_db_fails(tmp_path: Path, database_kind: str):
+    """Supplying an invalid DB must never select snapshot-only CI mode."""
+    import sqlite3
+
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    if database_kind == "missing":
+        invalid_path = tmp_path / "missing.db"
+    elif database_kind == "wrong_schema":
+        invalid_path = vesum_path
+    else:
+        conn = sqlite3.connect(sources_path)
+        conn.execute("DROP TABLE style_guide")
+        conn.close()
+        invalid_path = sources_path
+
+    violations = _audit_error_corrections(
+        tmp_path, deck["drills"], evidence, vesum_db=vesum_path, sources_db=invalid_path
+    )
+
+    assert [(v["item"], v["type"]) for v in violations] == [("sources_db", "SOURCE_DB_INVALID")]
+
+
+def test_default_error_correction_audit_uses_snapshot_with_no_sources_db(tmp_path: Path, monkeypatch):
+    """CI must audit the committed deck without resolving a local sources.db."""
+    from scripts.audit import practice_quality_gate
+
+    _hide_sources_db(monkeypatch, tmp_path)
+    assert inspect.signature(audit_error_correction_deck).parameters["sources_db"].default is None
+    assert audit_error_correction_deck(
+        practice_quality_gate.PROJECT_ROOT / "site/src/data/practice-error-corrections.json",
+        vesum_db=None,
+    ) == []
+
+
+def test_explicit_sources_db_flows_through_aggregate_and_cli(tmp_path: Path, monkeypatch, capsys):
+    """An invalid explicit path must fail both production entry points."""
+    from scripts.audit import practice_quality_gate
+
+    missing_sources = tmp_path / "missing-sources.db"
+    results = run_all_practice_audits(sources_db=missing_sources)
+    assert [(v["item"], v["type"]) for v in results["error_corrections"]] == [
+        ("sources_db", "SOURCE_DB_INVALID")
+    ]
+
+    monkeypatch.setattr(sys, "argv", ["practice_quality_gate.py", "--sources-db", str(missing_sources)])
+    assert practice_quality_gate.main() == 1
+    assert "[SOURCE_DB_INVALID] sources_db" in capsys.readouterr().out
+
+
+def test_one_rows_error_with_another_rows_correction_fails(tmp_path: Path):
+    """Round 4 probe 1: err_0005's error with err_0004's correction passed — both phrases occur in the source text."""
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    drills = _by_error(deck)
+    probe = _recombined(drills["представляти інтерес"], drills["проявляти недостатки"], "err_probe")
+
+    # CI mode: the committed snapshot binds each drill id to its own pair.
+    ci = _audit_error_corrections(tmp_path, [probe], {"err_probe": evidence["err_0003"]})
+    assert [(v["item"], v["type"]) for v in ci] == [("err_probe", "EVIDENCE_SNAPSHOT_MISMATCH")]
+
+    # Database mode: even a snapshot forged to agree, over real spans of the real row,
+    # fails — the extractor never pairs those two cells.
+    forged = {"err_probe": _forged_entry(probe, evidence, "err_0003")}
+    db = _audit_error_corrections(tmp_path, [probe], forged, vesum_db=vesum_path, sources_db=sources_path)
+    assert [(v["item"], v["type"]) for v in db] == [("err_probe", "SOURCE_PAIR_NOT_DERIVED")]
+
+
+def test_a_marked_error_word_does_not_license_an_unrelated_replacement(tmp_path: Path):
+    """Round 4 probe 2: «проявляти недостатки → становити інтерес» passed without a source row.
+
+    VESUM marks «недостатки» as an error, and that one word accepted the whole edit.
+    """
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    genuine = _by_error(deck)["проявляти недостатки"]
+    unbound = _drill("err_unbound", "проявляти недостатки", "становити інтерес")
+    del unbound["sourceRef"]
+    borrowed = {**unbound, "id": "err_borrowed", "sourceRef": genuine["sourceRef"]}
+    snapshot = {"err_borrowed": evidence["err_0002"]}
+
+    for mode in ({}, {"vesum_db": vesum_path, "sources_db": sources_path}):
+        violations = _audit_error_corrections(tmp_path, [unbound, borrowed], snapshot, **mode)
+        assert sorted((v["item"], v["type"]) for v in violations) == [
+            ("err_borrowed", "EVIDENCE_SNAPSHOT_MISMATCH"),
+            ("err_unbound", "MISSING_SOURCE_REF"),
+        ]
+
+    # A snapshot forged to agree: the row reads «виявляти недоліки» at the correction span.
+    forged = {"err_borrowed": _forged_entry(borrowed, evidence, "err_0002")}
+    violations = _audit_error_corrections(tmp_path, [borrowed], forged, vesum_db=vesum_path, sources_db=sources_path)
+    assert [(v["item"], v["type"]) for v in violations] == [("err_borrowed", "SOURCE_SPAN_MISMATCH")]
+
+
+def test_fabricated_source_binding_fails_without_sources_db(tmp_path: Path):
+    """Round 4 CI hole: a fabricated `sourceRow` passed when sources.db was absent."""
+    legacy = _drill("err_legacy_row", "брати участь", "купити участь", sourceRow="брати участь купити участь")
+    del legacy["sourceRef"]
+    fabricated = _drill("err_fabricated_ref", "брати участь", "купити участь")
+    fabricated["sourceRef"]["rowId"] = "textbooks:999999"
+    reversed_ref = _drill("err_reversed", "приймати участь", "брати участь")
+    reversed_ref["sourceRef"]["direction"] = "correct_first"
+    # The edit replaces one occurrence of the bound error span; a repeated error is ambiguous.
+    repeated = _drill("err_repeated", "приймати участь", "брати участь")
+    repeated["sentence"] = "«приймати участь» чи «приймати участь»?"
+    snapshot = {
+        "err_reversed": {"rowId": "textbooks:1", "error": "приймати участь", "correct": "брати участь"},
+        "err_repeated": {"rowId": "textbooks:1", "error": "приймати участь", "correct": "брати участь"},
+    }
+
+    violations = _audit_error_corrections(tmp_path, [legacy, fabricated, reversed_ref, repeated], snapshot)
+    assert sorted((v["item"], v["type"]) for v in violations) == [
+        ("err_fabricated_ref", "EVIDENCE_SNAPSHOT_MISSING"),
+        ("err_legacy_row", "MISSING_SOURCE_REF"),
+        ("err_repeated", "ERROR_TARGET_AMBIGUOUS"),
+        ("err_reversed", "MISSING_SOURCE_REF"),
+    ]
+
+
+def test_database_mode_reverifies_the_snapshot(tmp_path: Path):
+    """With sources.db a snapshot entry must name a real row whose text still hashes to it."""
+    deck, evidence, sources_path, vesum_path = _extracted_glazova_deck(tmp_path)
+    drill = _by_error(deck)["проявляти недостатки"]
+    missing_row = {**drill, "id": "err_missing_row", "sourceRef": {**drill["sourceRef"], "rowId": "textbooks:999"}}
+    changed = {**drill, "id": "err_changed"}
+    snapshot = {
+        "err_missing_row": {**evidence["err_0002"], "rowId": "textbooks:999"},
+        "err_changed": {**evidence["err_0002"], "rowSha256": "f" * 64},
+    }
+    violations = _audit_error_corrections(
+        tmp_path, [missing_row, changed], snapshot, vesum_db=vesum_path, sources_db=sources_path
+    )
+    assert sorted((v["item"], v["type"]) for v in violations) == [
+        ("err_changed", "SOURCE_ROW_CHANGED"),
+        ("err_missing_row", "SOURCE_ROW_MISSING"),
+    ]
+
+
+def test_reviewer_probe_on_the_committed_deck_and_real_sources_db(tmp_path: Path, requires_sources_db: Path):
+    """The exact round 4 probe: committed err_0005's error with err_0004's correction, snapshot forged to agree."""
+    from scripts.audit.practice_quality_gate import PROJECT_ROOT
+    from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot
+
+    deck = json.loads((PROJECT_ROOT / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
+    evidence = load_evidence_snapshot()
+    drills = {d["id"]: d for d in deck["drills"]}
+    assert (drills["err_0004"]["errorWord"], drills["err_0005"]["errorWord"]) == (
+        "проявляти недостатки",
+        "представляти інтерес",
+    )
+    probe = _recombined(drills["err_0005"], drills["err_0004"], "err_0005")
+    violations = _audit_error_corrections(
+        tmp_path, [probe], {"err_0005": _forged_entry(probe, evidence, "err_0005")}, sources_db=requires_sources_db
+    )
+    assert [(v["item"], v["type"]) for v in violations] == [("err_0005", "SOURCE_PAIR_NOT_DERIVED")]
+
+
+def test_audit_error_correction_checks_typed_answers(tmp_path: Path):
+    """#8723 round 3 probe: an error added to `answers` still passed; the site accepts every answer."""
+    vesum_path = _fixture_vesum(tmp_path, [*_PARTICIPATION_FORMS, ("узяти", "verb")])
+    good = ["брати (узяти) участь", "брати участь", "узяти участь"]
+    drills = [
+        _drill("err_accepts_error", "приймати участь", "брати участь", answers=["брати участь", "Приймати  участь."]),
+        _drill("err_omits_correction", "приймати участь", "брати участь", answers=["участь"]),
+        _drill("err_foreign_answer", "приймати участь", "брати участь", answers=["брати участь", "купити участь"]),
+        _drill("err_good", "приймати участь", "брати (узяти) участь", answers=good),
+        _drill("err_default", "приймати участь", "брати участь"),
+    ]
+    violations = _audit_error_corrections(tmp_path, drills, vesum_db=vesum_path)
+    assert sorted((v["item"], v["type"]) for v in violations) == [
+        ("err_accepts_error", "ANSWERS_ACCEPT_ERROR"),
+        ("err_accepts_error", "ANSWER_NOT_A_SOURCE_READING"),
+        ("err_foreign_answer", "ANSWER_NOT_A_SOURCE_READING"),
+        ("err_omits_correction", "ANSWERS_OMIT_CORRECTION"),
+        ("err_omits_correction", "ANSWER_NOT_A_SOURCE_READING"),
+    ]
+
+
+def test_production_culture_deck_passes_error_correction_gate(tmp_path: Path, monkeypatch):
+    """The bundled Culture-of-Speech deck is what learners play; audit it directly."""
+    from scripts.audit.practice_quality_gate import DEFAULT_VESUM_DB, PROJECT_ROOT
+
+    _hide_sources_db(monkeypatch, tmp_path)
+    vesum_db = DEFAULT_VESUM_DB if Path(DEFAULT_VESUM_DB).exists() else None
+    violations = audit_error_correction_deck(
+        PROJECT_ROOT / "site/src/data/practice-error-corrections.json", vesum_db=vesum_db
+    )
+    assert violations == []
 
 
 def test_audit_practice_shards_volume_thresholds(tmp_path: Path):
@@ -644,8 +1126,9 @@ def test_audit_practice_shards_empty_option_label_fails(tmp_path: Path):
     assert any(v["type"] == "EMPTY_OPTION_LABEL" and "p_empty_label" in v["item"] for v in violations)
 
 
-def test_production_practice_quality_gate_passes():
+def test_production_practice_quality_gate_passes(tmp_path: Path, monkeypatch):
     """Verify that current repository practice datasets pass with 0 violations."""
+    _hide_sources_db(monkeypatch, tmp_path)
     results = run_all_practice_audits()
     total_violations = sum(len(v) for v in results.values())
     assert total_violations == 0, f"Practice Quality Gate failed with violations: {results}"
@@ -665,3 +1148,13 @@ def test_production_practice_shards_all_modes_gate_passes():
     assert results.shard_counts.get("paronym", 0) >= VOLUME_THRESHOLDS["paronym"]
     assert results.shard_counts.get("homonym", 0) >= VOLUME_THRESHOLDS["homonym"]
     assert results.shard_counts.get("heritage", 0) >= VOLUME_THRESHOLDS["heritage"]
+
+
+def test_audit_error_correction_flags_reviewed_withheld_pairs(tmp_path: Path):
+    """#8723 language review: a withheld pair must not return with a regenerated deck."""
+    drills = [
+        _drill("err_contested", "відпочивати на морі", "відпочивати біля моря"),
+        _drill("err_good", "влучний вираз", "влучний вислів"),
+    ]
+    violations = _audit_error_corrections(tmp_path, drills)
+    assert [(v["type"], v["item"]) for v in violations] == [("REVIEWED_WITHHELD_PAIR", "err_contested")]

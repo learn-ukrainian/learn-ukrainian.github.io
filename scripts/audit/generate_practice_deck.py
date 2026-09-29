@@ -11,6 +11,7 @@ import argparse
 import gzip
 import hashlib
 import json
+import os
 import random
 import re
 import sqlite3
@@ -19,6 +20,7 @@ import unicodedata
 from collections import Counter
 from contextlib import closing
 from dataclasses import dataclass
+from dataclasses import field as dataclass_field
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Protocol
@@ -39,16 +41,27 @@ from lexeme_filter import (
     practice_ineligibility_reason,
 )
 from practice_linguistic import (
+    IDENTITY_RULE_IDS,
+    LEXICAL_INSERTION_RULE_ID,
     check_cloze_item,
+    check_inventory_prompt_level,
     check_stress_item,
+    check_unique_answer_evidence,
+    identity_blank_case,
     index_from_generator_candidates,
 )
+from practice_linguistic import plain as linguistic_plain
 
 from scripts.lexicon.curated_membership import (
     apply_membership,
     read_membership,
 )
 from scripts.practice.creation_review import CreationReview, heritage_source
+from scripts.practice.ulif_synonym_groups import (
+    ULIF_SYNONYMS_SOURCE,
+    UlifSynonymDataUnavailable,
+    UlifSynonymGroups,
+)
 from scripts.practice_deck.end_dictionaries import (
     coverage_intersection_report,
     load_inventory,
@@ -107,6 +120,7 @@ DEFAULT_PARONYM_PAIRS = REGISTRY_ROOT / "lexicon/paronym_pairs.yaml"
 DEFAULT_ANTONYM_PAIRS = REGISTRY_ROOT / "lexicon/antonym_pairs.yaml"
 DEFAULT_HOMONYM_PAIRS = REGISTRY_ROOT / "lexicon/homonym_pairs.yaml"
 DEFAULT_SYNONYM_VERDICTS = REGISTRY_ROOT / "lexicon/synonym_pair_verdicts.yaml"
+DEFAULT_ULIF_DB = Path("data/sources.db")
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
 DEFAULT_TARGET = 8500
@@ -118,6 +132,11 @@ DEFAULT_GZIP_LIMIT = 180_000
 # for the source-preserved inventory cards admitted by the identity-decoy gate.
 DEFAULT_CLOZE_RAW_LIMIT = 2_250_000
 DEFAULT_CLOZE_GZIP_LIMIT = 240_000
+# Teacher-table deck (#8843): its own budget and build gate, separate from the
+# CEFR shards above.  The files load only when that deck is selected; the site
+# hydrate step (site/scripts/hydrate-teacher-deck.mjs) enforces the same limits.
+TEACHER_DECK_GZIP_LIMIT = 600_000
+TEACHER_CLOZE_GZIP_LIMIT = 560_000
 SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
@@ -177,6 +196,8 @@ HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
 HERITAGE_SEVERITIES = frozenset({"russianism", "enrichment"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
 SYNONYM_DEFAULT_AVAILABILITY = "B1"
+# Advisor ruling A on #8714: withhold the mode until #8984 has per-card sense binding.
+SYNONYM_MODE_ENABLED = False
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
     r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
     re.IGNORECASE,
@@ -639,6 +660,174 @@ def _gloss_clean(gloss: str) -> str:
     return re.sub(r"\s+", " ", first_sense).strip()
 
 
+# Dictionary-article header labels (#8715): government words, grammar and
+# style abbreviations that precede the definition in СУМ-style articles.
+_UK_ARTICLE_LABEL_WORDS = frozenset(
+    {
+        "або",
+        "без",
+        "біля",
+        "в",
+        "від",
+        "для",
+        "до",
+        "додатка",
+        "з",
+        "за",
+        "й",
+        "і",
+        "із",
+        "ким",
+        "кого",
+        "коло",
+        "кому",
+        "на",
+        "над",
+        "означ",
+        "під",
+        "підсил",
+        "про",
+        "рідко",
+        "та",
+        "тільки",
+        "у",
+        "часто",
+        "чий",
+        "чим",
+        "чия",
+        "чиє",
+        "чиї",
+        "чого",
+        "чому",
+        "що",
+    }
+)
+# A header ending in one of these is grammar, never prose (#8715).
+_UK_ARTICLE_GRAMMAR_MARKERS = frozenset(
+    {"док.", "недок.", "перех.", "неперех.", "дод.", "дієсл.", "наказ.", "род.", "інфін.", "прикм.", "присл."}
+)
+_UK_ARTICLE_STUBS = frozenset({"той", "те", "та", "ті", "такий", "така", "таке", "такі", "те саме", "той самий"})
+_UK_DEFINITION_START = re.compile(r"(?<![\w'’ʼ\u0301])[А-ЯІЇЄҐ]")
+_UK_CAPS_HEADWORD = re.compile(r"^[А-ЯІЇЄҐ][А-ЯІЇЄҐ\u0301'’ʼ-]+(?![а-яіїєґ])")
+# The definition after a CAPS header starts with a capitalised word («Везучи»,
+# «З труднощами»), not another CAPS form of the headword.
+_UK_CAPS_DEFINITION_START = re.compile(r"(?<![\w'’ʼ\u0301])[А-ЯІЇЄҐ](?=\u0301?[а-яіїєґ'’ʼ]|\s+[а-яіїєґ])")
+_UK_REFERENCE_TARGET = re.compile(r"(?:^|\s)(?:до|що|див\.)\s+\S*\u0301")
+_UK_SENTENCE_END = re.compile(r"\.(?=\s+(?:[А-ЯІЇЄҐA-Z(«„\[—–]|//|‖)|\s*$)")
+
+
+def _is_uk_grammar_label(token: str) -> bool:
+    word = token.strip(",.;:()—–- ")
+    return (
+        not word
+        or word.isdigit()
+        or word.casefold() in _UK_ARTICLE_LABEL_WORDS
+        or (token.rstrip(",;").endswith(".") and len(word) <= 7)
+    )
+
+
+def _is_uk_article_label(token: str) -> bool:
+    """Header token: a grammar label, a one-letter ending or a stressed form."""
+    word = token.strip(",.;:()—–- ")
+    return _is_uk_grammar_label(token) or len(word) == 1 or STRESS_MARK in word
+
+
+def _is_uk_article_header(prefix: str) -> bool:
+    clean = prefix.strip()
+    if not clean.endswith("."):
+        return False
+    tokens = clean.split()
+    return all(_is_uk_article_label(token) for token in tokens) or any(
+        token.rstrip(",;") in _UK_ARTICLE_GRAMMAR_MARKERS for token in tokens
+    )
+
+
+def _is_uk_gloss_stub(label: str, lemma: str = "", verifier: VesumVerifier | None = None) -> bool:
+    """A cleaned Ukrainian gloss that carries no meaning (#8715).
+
+    Grammar labels, government words and bare correlatives («Той», «Те саме»)
+    name no meaning, and neither does a form of the headword itself («хіть» →
+    «хі́ті», checked in VESUM).  A single other word («довкіл» → «довко́ла») or
+    a derivational reference («Присл. до абстра́ктний») is the dictionary's
+    own cross-reference definition and stays.
+    """
+    clean = re.sub(r"[\d.,;:()]+", " ", label).strip()
+    clean = re.sub(r"\s+", " ", clean)
+    if not clean or clean.casefold() in _UK_ARTICLE_STUBS:
+        return True
+    tokens = label.split()
+    if all(_is_uk_grammar_label(token) for token in tokens) and not _UK_REFERENCE_TARGET.search(label):
+        return True
+    if len(tokens) != 1 or not lemma:
+        return False
+    form = _plain(_strip_stress(clean))
+    lemma_plain = _plain(lemma)
+    if form == lemma_plain:
+        return True
+    if verifier is None:
+        return False
+    return any(
+        _plain(str(match.get("lemma") or "")) == lemma_plain for match in verifier.verify_words([form]).get(form, [])
+    )
+
+
+def _ukrainian_definition_clean(gloss: str) -> str:
+    """First sense of a Ukrainian dictionary definition (#8715).
+
+    Cutting at the first comma leaves «Той» of «Той, хто …» or the label «ж.»
+    of «ж., заст. Те саме, що …».  Drop the article header (sense number,
+    grammar and style labels, a CAPS headword with its inflections), keep the
+    first definition sentence up to its first ``;`` and drop trailing sense
+    references («двір¹ 1, 5» → «двір»).
+    """
+    text = re.sub(r"\s+", " ", gloss).strip().lstrip("‖ ").strip()
+    text = re.sub(r"^\d+[.)]?\s+", "", text)
+    if _UK_CAPS_HEADWORD.match(text):
+        start = _UK_CAPS_DEFINITION_START.search(text)
+        text = text[start.start() :] if start else ""
+    else:
+        start = _UK_DEFINITION_START.search(text)
+        if start and start.start() and _is_uk_article_header(text[: start.start()]):
+            text = text[start.start() :]
+    end = _UK_SENTENCE_END.search(text)
+    first_sense = (text[: end.start()] if end else text).split(";", 1)[0]
+    first_sense = re.sub(r"[¹²³⁴⁵⁶⁷⁸⁹⁰]", "", first_sense)
+    first_sense = re.sub(r"(?<=[^\d\s])\s+\d+(?:\s*,\s*\d+)*\s*$", "", first_sense)
+    return first_sense.strip(" ,.:")
+
+
+def _practice_gloss_clean(
+    entry: dict[str, Any],
+    gloss: str,
+    verifier: VesumVerifier | None = None,
+    *,
+    sense: dict[str, Any] | None = None,
+) -> str:
+    """Short meaning label shown beside the lemma (#8715).
+
+    English glosses keep their first comma/semicolon segment.  A Ukrainian
+    dictionary definition keeps its first sense; when that carries no meaning,
+    a sourced Ukrainian definition and then an English source gloss stand in.
+    Returns ``""`` only when no source has a meaning.
+    """
+    if _is_english_learner_gloss(gloss):
+        return _gloss_clean(gloss)
+    lemma = _clean_text(entry.get("lemma")) or ""
+    enrichment = entry.get("enrichment")
+    meaning = enrichment.get("meaning") if isinstance(enrichment, dict) else None
+    definitions = meaning.get("definitions") if isinstance(meaning, dict) else None
+    for text in [gloss, *(definitions if isinstance(definitions, list) else [])]:
+        text = _clean_text(text)
+        if not text or _is_english_learner_gloss(text):
+            continue
+        clean = _ukrainian_definition_clean(text)
+        if not _is_uk_gloss_stub(clean, lemma, verifier):
+            return clean
+    english = _english_translation_gloss(entry, sense=sense)
+    # e2u rows can carry a bare grammar code («P vt») instead of a gloss.
+    return english if english and re.search(r"[a-z]{3,}", english) else ""
+
+
 def _meaning_label_word_count(label: str) -> int:
     return len(re.findall(r"[^\W_]+(?:[-'][^\W_]+)?", label, flags=re.UNICODE))
 
@@ -846,6 +1035,17 @@ def _cefr_level(entry: dict[str, Any]) -> str | None:
         if level:
             return level
     return None
+
+
+def _lemma_levels(entries: list[dict[str, Any]]) -> dict[str, str]:
+    """Map every levelled Atlas lemma to its lowest CEFR level (prompt level fit, #8724)."""
+    levels: dict[str, str] = {}
+    for entry in entries:
+        lemma = linguistic_plain(str(entry.get("lemma") or ""))
+        level = _cefr_level(entry)
+        if lemma and level and (lemma not in levels or CEFR_RANK[level] < CEFR_RANK[levels[lemma]]):
+            levels[lemma] = level
+    return levels
 
 
 def _ipa(entry: dict[str, Any]) -> str | None:
@@ -1165,6 +1365,10 @@ def _case_form(
 
 
 def _case_rule_payload(rule_id: str, lemma: str, form: str) -> dict[str, str] | None:
+    if rule_id == LEXICAL_INSERTION_RULE_ID:
+        # The answer is the dictionary spelling, but the slot's case is not
+        # decidable from it: name no case, trigger label, or feedback (#8726).
+        return {"ruleId": rule_id, "trigger": "lexical insertion"}
     rule = CASE_RULES.get(rule_id)
     if not rule:
         return None
@@ -1544,7 +1748,7 @@ def _make_no_pair_options(
         isinstance(provenance, dict)
         and provenance.get("status") == "sentence_inventory"
         and isinstance(case_rule, dict)
-        and case_rule.get("ruleId") == "nominative_identification"
+        and case_rule.get("ruleId") in IDENTITY_RULE_IDS
         and _plain(str(cloze.get("form") or "")) == _plain(str(cloze.get("lemma") or ""))
     )
     if is_inventory_identity:
@@ -1615,6 +1819,10 @@ def _make_no_pair_options(
                     option_pos,
                 )
             )
+        if not cloze.get("blankCase"):
+            # A case-free insertion names no case anywhere in its payload.
+            for option in options:
+                option.pop("case", None)
         rng.shuffle(options)
         return options
 
@@ -1663,7 +1871,7 @@ def _make_options(
     # distractor.  Use four distinct roots instead of constructing an invalid
     # option set that validation must discard.
     rule_id = cloze.get("caseRule", {}).get("ruleId") if isinstance(cloze.get("caseRule"), dict) else None
-    force_no_pair = rule_id == "nominative_identification"
+    force_no_pair = rule_id in IDENTITY_RULE_IDS
     strategy = "no-pair" if force_no_pair else _option_strategy_for_level(answer["cefr"], rng)
     options = (
         _make_no_pair_options(cloze, answer, lexemes, rng)
@@ -1807,7 +2015,11 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     gloss = _practice_display_gloss(entry, level, raw_gloss, sense=sense)
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
-    gloss_clean = _gloss_clean(gloss)
+    gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense)
+    if not gloss_clean:
+        # No source carries a meaning (#8715): showing the raw article head
+        # («МОТИВА́ТОР.») would teach nothing.
+        return None
     meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
     # Recognition (matching/choice/flashcard) needs only lemma+gloss, so an admitted
     # word stays in the deck even when CEFR is unknown. Prefer enrichment morphology;
@@ -1933,7 +2145,10 @@ def _build_cloze_items(
     *,
     source_index: Any | None = None,
     creation_review: CreationReview | None = None,
+    withheld: list[dict[str, str]] | None = None,
+    lemma_levels: dict[str, str] | None = None,
 ) -> list[dict[str, Any]]:
+    """Build a lexeme's cloze cards; ``lemma_levels`` enables the prompt level-fit gate."""
     items: list[dict[str, Any]] = []
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     for index, candidate in enumerate(cloze_rows):
@@ -1968,8 +2183,20 @@ def _build_cloze_items(
                 # The inventory is a source-backed example asset.  An exact
                 # dictionary form is an identity cloze, not an inferred case
                 # exercise; this remains valid for verbs, adverbs, proper
-                # nouns, and syncretic noun forms.
-                rule_id = "nominative_identification"
+                # nouns, and syncretic noun forms.  It names the nominative
+                # only when the sentence proves it; otherwise it is a
+                # case-free insertion (#8726: «до узбіччя» is genitive).
+                identity_case = identity_blank_case(
+                    _clean_text(candidate.get("sentence")) or "",
+                    curated_form,
+                    lexeme["lemmaPlain"],
+                    verifier,
+                )
+                if identity_case == "nominative":
+                    rule_id = "nominative_identification"
+                else:
+                    case_name = None
+                    rule_id = LEXICAL_INSERTION_RULE_ID
             else:
                 # Future inventory rows may carry an inflected target form.
                 # Use it only when VESUM gives one case/number and the
@@ -1993,12 +2220,13 @@ def _build_cloze_items(
             continue
         if rule_id == "nominative_identification" and (case_name != "nominative" or number != "singular"):
             continue
-        form = curated_form or _case_form(lexeme["paradigm"], case_name, number)
+        form = curated_form or (_case_form(lexeme["paradigm"], case_name, number) if case_name else None)
         if not form or (not inventory_candidate and _plain(form) == lexeme["lemmaPlain"]):
             continue
         inventory_identity = inventory_candidate and _plain(form) == lexeme["lemmaPlain"]
-        if not inventory_identity and not _verify_discriminative_form(
-            lexeme["lemmaPlain"], lexeme.get("pos"), form, case_name, verifier
+        if not inventory_identity and not (
+            case_name
+            and _verify_discriminative_form(lexeme["lemmaPlain"], lexeme.get("pos"), form, case_name, verifier)
         ):
             continue
         sentence = _clean_text(candidate.get("sentence"))
@@ -2030,7 +2258,7 @@ def _build_cloze_items(
             "lemmaId": lexeme["lemmaId"],
             "sentenceFrameId": sentence_frame_id,
             "sentence": sentence,
-            "blankCase": case_name,
+            **({"blankCase": case_name} if case_name else {}),
             "form": form,
             "number": number,
             "lemma": lexeme["lemma"],
@@ -2058,7 +2286,24 @@ def _build_cloze_items(
             # Agreement already enforced above via _cloze_blank_context_agrees.
             check_agreement=False,
         )
+        if lemma_levels is not None:
+            linguistic_findings.extend(
+                check_inventory_prompt_level(item, lexeme["cefr"], lemma_levels, verifier, item_id=cloze_id)
+            )
         if linguistic_findings:
+            if withheld is not None:
+                withheld.extend(
+                    {
+                        "clozeId": cloze_id,
+                        "lemma": lexeme["lemma"],
+                        "level": lexeme["cefr"],
+                        "mechanism": "lexical" if rule_id == LEXICAL_INSERTION_RULE_ID else "case-labelled",
+                        "rule": finding.rule_id,
+                        "reason": finding.message,
+                        "sentence": sentence,
+                    }
+                    for finding in linguistic_findings
+                )
             continue
         items.append(item)
     return items
@@ -2206,107 +2451,6 @@ def _pos_alias_matches(part: str, alias: str) -> bool:
     )
 
 
-_DEFINITION_POS_ALIASES: dict[str, tuple[str, ...]] = {
-    "noun": ("іменник", "noun"),
-    "adjective": ("прикметник", "adjective"),
-    "numeral": ("числівник", "numr", "numeral"),
-    "pronoun": ("займенник", "pronoun", "pron", "pron\\."),
-    "verb": ("дієслово", "verb"),
-    "adverb": ("прислівник", "присл\\.", "adverb"),
-    "preposition": (
-        "прийменник",
-        "приймен\\.",
-        "preposition",
-        "prep",
-        "prep\\.",
-    ),
-    "conjunction": (
-        "сполучник",
-        "спол\\.",
-        "conjunction",
-        "conj",
-        "conj\\.",
-    ),
-    "particle": (
-        "частка",
-        "particle",
-        "part",
-        "part\\.",
-    ),
-    "interjection": ("вигук", "interjection", "interj", "interj\\.", "intj", "intj\\."),
-}
-
-
-def _definition_pos_alias_pattern(alias: str) -> str:
-    """Keep generic ``part`` from matching prose like ``part of speech``."""
-    if alias == "part":
-        return r"part(?=$|[.,;:])"
-    return alias
-
-
-_DEFINITION_POS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
-    (
-        bucket,
-        re.compile(
-            rf"(?:^|[\n;]|\|\|)\s*(?:\d+\s*[.)》]\s*)?(?:{'|'.join(_definition_pos_alias_pattern(alias) for alias in aliases)})(?=$|[\s,;:])",
-            re.IGNORECASE,
-        ),
-    )
-    for bucket, aliases in _DEFINITION_POS_ALIASES.items()
-)
-
-
-def _definition_card_pos_buckets(enrichment: dict[str, Any] | None) -> list[str]:
-    if not isinstance(enrichment, dict):
-        return []
-    cards = enrichment.get("definition_cards")
-    if not isinstance(cards, list):
-        return []
-    buckets: list[str] = []
-    for card in cards:
-        if not isinstance(card, dict):
-            continue
-        definitions = card.get("definitions")
-        if isinstance(definitions, str):
-            definitions = [definitions]
-        if not isinstance(definitions, list):
-            continue
-        for definition in definitions:
-            text = _clean_text(definition)
-            if not text:
-                continue
-            for bucket, pattern in _DEFINITION_POS_PATTERNS:
-                if pattern.search(text):
-                    buckets.append(bucket)
-    return buckets
-
-
-def _entry_pos_buckets(entry: dict[str, Any], morphology: dict[str, Any] | None = None) -> list[str]:
-    """Collect distinct POS evidence in stable source precedence order."""
-    if morphology is None:
-        morphology = _morphology(entry)
-    enrichment = entry.get("enrichment")
-    enrichment_dict = enrichment if isinstance(enrichment, dict) else {}
-    signals: list[Any] = []
-    if isinstance(morphology, dict):
-        signals.append(morphology.get("pos"))
-    signals.append(entry.get("pos"))
-    for section in ("cefr", "translation"):
-        payload = enrichment_dict.get(section)
-        if isinstance(payload, dict):
-            signals.append(payload.get("pos"))
-
-    buckets: list[str] = []
-    for signal in signals:
-        for bucket in _normalize_pos_buckets(signal):
-            if bucket not in buckets:
-                buckets.append(bucket)
-    for bucket in _definition_card_pos_buckets(enrichment_dict):
-        if bucket not in buckets:
-            buckets.append(bucket)
-    return buckets
-
-
 def _morph_pos(entry: dict[str, Any], morphology: dict[str, Any] | None = None) -> str:
     raw = ""
     if morphology is not None:
@@ -2405,34 +2549,6 @@ def _explicit_aspect_category(labels: list[str]) -> str | None:
     return next(iter(aspects)) if len(aspects) == 1 else None
 
 
-def _aspect_category(labels: list[str]) -> str | None:
-    """Classify aspect from VESUM/Atlas evidence before a documented fallback.
-
-    VESUM ``perf``/``imperf`` tags and their decoded Atlas labels are explicit
-    aspect evidence, so they win over tense.  Tense is only a legacy fallback:
-    an untagged verb with both present and future labels is imperfective because
-    imperfectives have analytic future forms; a future-only untagged verb is
-    treated as perfective.  Contradictory explicit tags are left unclassified.
-    """
-    explicit = _explicit_aspect_category(labels)
-    if explicit:
-        return explicit
-    if any(
-        pattern.search(label)
-        for patterns in _EXPLICIT_ASPECT_PATTERNS.values()
-        for label in labels
-        for pattern in patterns
-    ):
-        return None
-    has_present = any("теперішній" in label for label in labels)
-    has_future = any("майбутній" in label for label in labels)
-    if has_present:
-        return "imperfective"
-    if has_future:
-        return "perfective"
-    return None
-
-
 def _vesum_aspect_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> dict[str, str]:
     """Read explicit aspect from VESUM tags for exact verb lemmas in batches.
 
@@ -2462,6 +2578,29 @@ def _vesum_aspect_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> dict[s
             if len(aspects) == 1:
                 aspects_by_lemma[lemma_plain] = next(iter(aspects))
     return aspects_by_lemma
+
+
+def _vesum_person_gender_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> dict[str, str]:
+    """``m``/``f`` for exact noun lemmas VESUM tags as animate with one gender (кравець → m)."""
+    genders_by_lemma: dict[str, str] = {}
+    unique_lemmas = list(dict.fromkeys(lemma for lemma in lemmas if lemma))
+    for start in range(0, len(unique_lemmas), 500):
+        batch = unique_lemmas[start : start + 500]
+        matches_by_form = verifier.verify_words(batch, "noun")
+        for lemma in batch:
+            lemma_plain = _plain(lemma)
+            genders: set[str] = set()
+            for match in matches_by_form.get(lemma, []):
+                if _plain(str(match.get("lemma") or "")) != lemma_plain:
+                    continue
+                tags = set(str(match.get("tags") or "").split(":"))
+                if "anim" in tags:
+                    genders.update(tags & {"m", "f", "n"})
+                else:
+                    genders.add("inanim")
+            if len(genders) == 1 and genders <= {"m", "f"}:
+                genders_by_lemma[lemma_plain] = next(iter(genders))
+    return genders_by_lemma
 
 
 def _declension_category(entry: dict[str, Any], labels: list[str], paradigm: dict[str, Any]) -> str | None:
@@ -2512,13 +2651,12 @@ def _category_set_payload(set_id: str, value: str, level: str) -> dict[str, Any]
 
 
 def _pos_category_set_payload(values: list[str], level: str) -> dict[str, Any] | None:
-    """Build a POS set with every source-attested school-category answer.
+    """Build a POS set with every VESUM-attested reading of the displayed POS.
 
-    The source signals have their own trust precedence, but the learner-facing
-    primary answer must remain deterministic in Ukrainian school-category
-    order.  A polyfunctional lemma therefore keeps that primary ``answer``
-    for older clients and adds ordered ``answers`` for clients that accept all
-    attested readings.
+    The learner-facing primary answer must remain deterministic in Ukrainian
+    school-category order.  A displayed POS that names several readings
+    (``adverb, preposition``) therefore keeps that primary ``answer`` for older
+    clients and adds ordered ``answers`` for clients that accept all of them.
     """
     answers = [value for value in CLASSIFY_LABELS["pos"] if value in values]
     if not answers:
@@ -2527,6 +2665,116 @@ def _pos_category_set_payload(values: list[str], level: str) -> dict[str, Any] |
     if len(answers) > 1:
         payload["answers"] = answers
     return payload
+
+
+_VESUM_POS_BUCKETS = {
+    "noun": "noun",
+    "adj": "adjective",
+    "numr": "numeral",
+    "verb": "verb",
+    "adv": "adverb",
+    "prep": "preposition",
+    "conj": "conjunction",
+    "part": "particle",
+    "intj": "interjection",
+}
+
+
+def _vesum_analysis_pos_buckets(match: dict[str, Any]) -> set[str]:
+    """School POS readings one VESUM analysis supports.
+
+    VESUM files pronouns under ``noun``/``adj``/``adv`` with a ``pron`` tag and
+    ordinals under ``adj`` with a ``numr`` tag, so those tags add a reading.
+    """
+    buckets: set[str] = set()
+    base = _VESUM_POS_BUCKETS.get(str(match.get("pos") or ""))
+    if base:
+        buckets.add(base)
+    tags = set(str(match.get("tags") or "").split(":"))
+    if "pron" in tags:
+        buckets.add("pronoun")
+    if "numr" in tags:
+        buckets.add("numeral")
+    return buckets
+
+
+_VESUM_GENDERS = {"m": "masculine", "f": "feminine", "n": "neuter"}
+
+
+@dataclass(frozen=True)
+class VesumLemmaEvidence:
+    """What VESUM attests for one exact lemma (#8729).
+
+    ``pos`` holds the school POS readings.  ``genders`` holds, per reading
+    that carries a lexical gender, every singular gender VESUM gives it:
+    plain nouns under ``noun`` and personal pronouns («він», «вона») under
+    ``pronoun``.  Other pronouns inflect for gender («цей», «хто») rather than
+    having one, so they contribute none.  Two genders under one reading mean
+    homographs or a common-gender noun («сирота»): the displayed sense cannot
+    be bound to either.
+    """
+
+    pos: frozenset[str] = frozenset()
+    genders: dict[str, frozenset[str]] = dataclass_field(default_factory=dict)
+
+
+def _vesum_analysis_gender(match: dict[str, Any]) -> tuple[str, str] | None:
+    """``(reading, gender)`` for an analysis that fixes a lexical gender."""
+    tags = str(match.get("tags") or "").split(":")
+    gender = next((_VESUM_GENDERS[tag] for tag in tags if tag in _VESUM_GENDERS), None)
+    if gender is None or match.get("pos") != "noun":
+        return None
+    if "pron" not in tags:
+        return ("noun", gender)
+    return ("pronoun", gender) if "pers" in tags else None
+
+
+def _vesum_lemma_evidence(lemmas: list[str], verifier: VesumVerifier) -> dict[str, VesumLemmaEvidence]:
+    """VESUM evidence for each exact lemma, batched (#8729).
+
+    Only analyses whose VESUM lemma equals the headword count: a form of
+    another lemma (``п'ята`` as the feminine of ``п'ятий``) is a different
+    lexeme and cannot vouch for this one.
+    """
+    evidence_by_lemma: dict[str, VesumLemmaEvidence] = {}
+    unique_lemmas = list(dict.fromkeys(lemma for lemma in lemmas if lemma))
+    for start in range(0, len(unique_lemmas), 500):
+        batch = unique_lemmas[start : start + 500]
+        matches_by_form = verifier.verify_words(
+            list(dict.fromkeys(variant for lemma in batch for variant in _surface_variants(lemma)))
+        )
+        for lemma in batch:
+            lemma_plain = _plain(lemma)
+            buckets: set[str] = set()
+            genders: dict[str, set[str]] = {}
+            for variant in _surface_variants(lemma):
+                for match in matches_by_form.get(variant, []):
+                    if _plain(str(match.get("lemma") or "")) != lemma_plain:
+                        continue
+                    buckets |= _vesum_analysis_pos_buckets(match)
+                    reading_gender = _vesum_analysis_gender(match)
+                    if reading_gender:
+                        genders.setdefault(reading_gender[0], set()).add(reading_gender[1])
+            if buckets:
+                evidence_by_lemma[lemma_plain] = VesumLemmaEvidence(
+                    frozenset(buckets), {reading: frozenset(values) for reading, values in genders.items()}
+                )
+    return evidence_by_lemma
+
+
+def _bound_gender(reading: str, labels: list[str], evidence: VesumLemmaEvidence) -> str | None:
+    """Gender of the displayed reading, or ``None`` when it cannot be bound (#8729).
+
+    VESUM must give the exact lemma one gender for that reading, and the
+    enrichment labels must name that same gender: labels that name none or
+    several (the noun and verb forms of «мати» merged) cannot confirm which
+    lexeme the card shows.
+    """
+    genders = evidence.genders.get(reading, frozenset())
+    if len(genders) != 1:
+        return None
+    gender = next(iter(genders))
+    return gender if _gender_category(labels) == gender else None
 
 
 def _is_aspect_residual_target(entry: dict[str, Any], lexeme: dict[str, Any]) -> bool:
@@ -2539,9 +2787,29 @@ def _build_classify_items(
     lexeme: dict[str, Any],
     *,
     vesum_aspect: str | None = None,
+    vesum_evidence: VesumLemmaEvidence | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
+    pos_residuals: list[dict[str, str]] | None = None,
 ) -> list[dict[str, Any]]:
+    """Grammar sets for the sense the learner sees (#8729).
+
+    The displayed lexeme's ``pos`` names that sense, and every key needs VESUM
+    to attest that reading for this exact lemma.  Gender and aspect come from
+    VESUM only when all of the lemma's analyses for that reading agree (same-POS
+    homographs or a common-gender noun leave the sense unbound).  Enrichment
+    morphology is one analysis of the surface form and can belong to a
+    homograph (the note «до» behind the preposition «до»), and the Atlas
+    ``pos`` alone can name the wrong reading («неминуче» filed as a noun,
+    glossed «inevitably»), so a grammar key also needs the enrichment analysis
+    to be of the displayed reading and to agree with VESUM.  The POS set keys
+    the displayed readings VESUM attests only when the enrichment analysis
+    agrees with a displayed reading.  No reliable key means no set; an
+    item with no sets is withheld.
+    """
     if not _normalize_cefr(lexeme.get("cefr")):
+        return []
+    displayed_pos = _normalize_pos_buckets(entry.get("pos"))
+    if not displayed_pos:
         return []
     morphology = _morphology(entry)
     if not morphology:
@@ -2554,23 +2822,42 @@ def _build_classify_items(
                     "reason": "missing_morphology",
                 }
             )
+        if pos_residuals is not None and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+            pos_residuals.append(
+                {
+                    "lemmaId": str(lexeme["lemmaId"]),
+                    "lemma": str(lexeme["lemma"]),
+                    "cefr": str(lexeme["cefr"]),
+                    "reason": "missing_morphology",
+                }
+            )
         return []
+    evidence = vesum_evidence or VesumLemmaEvidence()
     labels = _morph_labels(morphology)
-    pos = _morph_pos(entry, morphology)
-    pos_buckets = _entry_pos_buckets(entry, morphology)
+    pos_buckets = [bucket for bucket in displayed_pos if bucket in evidence.pos]
+    # The enrichment POS must be explicit: falling back to entry.pos would
+    # merely repeat the displayed claim instead of checking its analysis.
+    morph_pos = next(iter(_normalize_pos_buckets(morphology.get("pos"))), "")
+    pos_reading_matches = morph_pos in pos_buckets or (morph_pos == "noun" and "pronoun" in pos_buckets)
+    # Gender and aspect belong to one reading: a display naming several
+    # («adverb, preposition») has none to key.
+    reading = pos_buckets[0] if len(displayed_pos) == 1 and pos_buckets else ""
+    # VESUM files personal pronouns as nouns, so a noun analysis is the pronoun's own.
+    if morph_pos != reading and not (reading == "pronoun" and morph_pos == "noun"):
+        reading = ""
     sets: list[dict[str, Any]] = []
-    if pos == "noun":
-        gender = _gender_category(labels)
+    if reading in {"noun", "pronoun"}:
+        gender = _bound_gender(reading, labels, evidence)
         if gender:
             sets.append(_category_set_payload("gender", gender, lexeme["cefr"]))
-        declension = _declension_category(
-            entry, labels, morphology.get("paradigm") if isinstance(morphology.get("paradigm"), dict) else {}
-        )
-        if declension and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
-            sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
-    elif pos == "verb":
-        # Atlas form labels are primary. Direct VESUM lookup is only for
-        # manifests whose labels omitted aspect — never to override a conflict.
+        if reading == "noun" and gender and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
+            paradigm = morphology.get("paradigm")
+            declension = _declension_category(entry, labels, paradigm if isinstance(paradigm, dict) else {})
+            if declension:
+                sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
+    aspect_residual = "unbound_verb_reading"
+    if reading == "verb":
+        # VESUM keys aspect; explicit enrichment labels may only agree with it.
         explicit = _explicit_aspect_category(labels)
         has_any_explicit = any(
             pattern.search(label)
@@ -2578,24 +2865,37 @@ def _build_classify_items(
             for label in labels
             for pattern in patterns
         )
-        explicit_conflict = explicit is None and has_any_explicit
-        aspect = None if explicit_conflict else explicit or vesum_aspect or _aspect_category(labels)
+        explicit_conflict = (explicit is None and has_any_explicit) or bool(
+            explicit and vesum_aspect and explicit != vesum_aspect
+        )
+        aspect = None if explicit_conflict else vesum_aspect
+        aspect_residual = "conflicting_explicit_aspect" if explicit_conflict else "no_unambiguous_vesum_aspect"
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
-        elif aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
-            reason = "conflicting_explicit_aspect" if explicit_conflict else "no_explicit_aspect_or_tense_proxy"
-            aspect_residuals.append(
+            aspect_residual = ""
+    if aspect_residual and aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
+        aspect_residuals.append(
+            {
+                "lemmaId": str(lexeme["lemmaId"]),
+                "lemma": str(lexeme["lemma"]),
+                "cefr": str(lexeme["cefr"]),
+                "reason": aspect_residual,
+            }
+        )
+    if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+        if pos_reading_matches:
+            pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
+            if pos_set:
+                sets.append(pos_set)
+        elif pos_residuals is not None:
+            pos_residuals.append(
                 {
                     "lemmaId": str(lexeme["lemmaId"]),
                     "lemma": str(lexeme["lemma"]),
                     "cefr": str(lexeme["cefr"]),
-                    "reason": reason,
+                    "reason": "morphology_pos_mismatch" if pos_buckets else "vesum_displayed_pos_unattested",
                 }
             )
-    if CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
-        pos_set = _pos_category_set_payload(pos_buckets, lexeme["cefr"])
-        if pos_set:
-            sets.append(pos_set)
     if not sets:
         return []
     item: dict[str, Any] = {
@@ -3373,6 +3673,49 @@ def build_synonym_verdict_sets(
     return approved_set, rejected_set, a2_exception_set
 
 
+def _approved_synonym_lemmas(synonym_verdicts: dict[str, Any] | None) -> set[str]:
+    """Both legs of every approved synonym-polarity verdict: the pairs that need ULIF evidence."""
+    return {
+        str(record.get(leg) or "")
+        for record in (synonym_verdicts or {}).get("approved", [])
+        if isinstance(record, dict) and record.get("polarity") == "synonym"
+        for leg in ("a", "b")
+    } - {""}
+
+
+def read_ulif_synonym_groups(db_path: Path | None, synonym_verdicts: dict[str, Any] | None) -> UlifSynonymGroups | None:
+    """Checked ULIF synonym groups listing any lemma an approved verdict names.
+
+    While the mode is disabled, no ULIF read is needed. Once re-enabled, a
+    missing checked group raises instead of silently building an empty mode.
+    """
+    if not SYNONYM_MODE_ENABLED or not _approved_synonym_lemmas(synonym_verdicts):
+        return None
+    lemmas = {
+        str(record.get(leg) or "")
+        for record in (synonym_verdicts or {}).get("approved", [])
+        if isinstance(record, dict)
+        for leg in ("a", "b")
+    }
+    groups = UlifSynonymGroups.from_sources_db(db_path, lemmas) if db_path is not None else None
+    if groups is None:
+        raise UlifSynonymDataUnavailable(
+            f"approved synonym verdicts need checked ULIF synonym groups, but {db_path} has none "
+            "(missing file, missing ulif_dictua tables or no checked synonym group); pass --ulif-db"
+        )
+    return groups
+
+
+def ulif_synonym_evidence_payload(groups: UlifSynonymGroups | None) -> dict[str, Any]:
+    """Deck-version input for the synonym evidence: which ULIF groups were available."""
+    if groups is None:
+        return {"synonym_mode_enabled": SYNONYM_MODE_ENABLED, "ulif_synonyms": None}
+    return {
+        "synonym_mode_enabled": SYNONYM_MODE_ENABLED,
+        "ulif_synonyms": {"groups": len(groups), "fingerprint": groups.fingerprint()},
+    }
+
+
 def _synonym_option(
     label: str,
     lemma_id: str,
@@ -3381,12 +3724,309 @@ def _synonym_option(
     return {"label": label, "lemmaId": lemma_id, "kind": kind}
 
 
+# Synonym-pair emission gates (#8714).  An approved verdict came from an
+# auto-translated source and proves nothing about the displayed sense.  A
+# synonym-polarity pair ships only on ULIF synonym-dictionary evidence (see
+# scripts/practice/ulif_synonym_groups.py); an antonym-polarity pair still needs
+# a dictionary source on its verdict.  Both must share a part of speech and
+# must not be one word's aspects, reflexive/euphonic variants, gender
+# counterparts or motion-verb forms.  Every candidate direction that does not
+# ship is recorded once, with one reason, in the withheld ledger.
+_SYNONYM_DICTIONARY_SOURCES = frozenset({"synonyms", "synonyms_karavansky", "wiktionary", "sum20", "vts"})
+# Unidirectional / multidirectional motion verbs: нести/носити are not synonyms.
+_MOTION_VERB_PAIRS = (
+    ("нести", "носити"),
+    ("вести", "водити"),
+    ("везти", "возити"),
+    ("іти", "ходити"),
+    ("йти", "ходити"),
+    ("їхати", "їздити"),
+    ("бігти", "бігати"),
+    ("летіти", "літати"),
+    ("плисти", "плавати"),
+    ("пливти", "плавати"),
+    ("повзти", "повзати"),
+    ("лізти", "лазити"),
+    ("котити", "катати"),
+    ("гнати", "ганяти"),
+    ("брести", "бродити"),
+    ("тягти", "тягати"),
+    ("тягнути", "тягати"),
+)
+# Feminine person nouns derived from a masculine one: кравець/кравчиня, студент/студентка.
+_FEMININE_PERSON_SUFFIX = re.compile(r"(?:ка|иня|иця|ниця|еса|ша)$")
+_SYNONYM_SENSE_SPLIT = re.compile(r"[;,/]")
+_SYNONYM_SENSE_PREFIX = re.compile(r"^(?:\d+[).]\s*)?(?:(?:to|a|an|the)\s+)?")
+_SYNONYM_CYRILLIC = re.compile(r"[\u0400-\u04ff]")
+_SYNONYM_LATIN = re.compile(r"[a-z]")
+_SYNONYM_EUPHONIC_Z = frozenset({"з", "із", "зі", "зо"})
+
+
+def _english_sense_phrases(text: Any) -> list[str]:
+    """Split an English gloss into comparable sense phrases, in source order.
+
+    ``"depression (psychology: state of mind)"`` → ``["depression"]``;
+    ``"to throw; to abandon [to rush]"`` → ``["throw", "abandon"]``.
+    A Ukrainian dictionary definition yields nothing: it is not an English sense.
+    """
+    raw = _clean_text(text)
+    if not raw:
+        return []
+    stripped = re.sub(r"\([^)]*\)|\[[^\]]*\]", " ", raw)
+    phrases: dict[str, None] = {}
+    for part in _SYNONYM_SENSE_SPLIT.split(stripped):
+        phrase = re.sub(r"\s+", " ", part).strip().casefold()
+        phrase = _SYNONYM_SENSE_PREFIX.sub("", phrase).strip(" .!?")
+        if phrase and _SYNONYM_LATIN.search(phrase) and not _SYNONYM_CYRILLIC.search(phrase):
+            phrases[phrase] = None
+    return list(phrases)
+
+
+def _synonym_english_equivalents(entry: dict[str, Any]) -> set[str]:
+    """Every English equivalent recorded for one Atlas entry.
+
+    Used only to *exclude* distractors that may also be correct; it never
+    admits a pair, because these translations are not dictionary evidence.
+    """
+    phrases = set(_english_sense_phrases(entry.get("gloss")))
+    enrichment = entry.get("enrichment")
+    enrichment = enrichment if isinstance(enrichment, dict) else {}
+    translation = enrichment.get("translation")
+    if isinstance(translation, dict):
+        en = translation.get("en")
+        for raw in [en] if isinstance(en, str) else (en if isinstance(en, list) else []):
+            phrases.update(_english_sense_phrases(raw))
+    meaning = enrichment.get("meaning")
+    if isinstance(meaning, dict) and "wiktionary" in str(meaning.get("source") or "").casefold():
+        definitions = meaning.get("definitions")
+        for raw in definitions if isinstance(definitions, list) else []:
+            phrases.update(_english_sense_phrases(raw))
+    senses = entry.get("senses")
+    for sense in senses if isinstance(senses, list) else []:
+        if isinstance(sense, dict):
+            phrases.update(_english_sense_phrases(sense.get("learner_en")))
+    return phrases
+
+
+def _synonym_gloss_head(gloss: Any) -> str:
+    """First English sense word of a gloss (``"to read"`` → ``"read"``), else the legacy head."""
+    phrases = _english_sense_phrases(gloss)
+    if phrases:
+        return phrases[0].split()[0]
+    return _headword(str(gloss or ""))
+
+
+def _synonym_aspect_partner(entry: dict[str, Any]) -> str | None:
+    """Plain lemma of the entry's recorded aspect partner (Atlas verb pedagogy), if any."""
+    enrichment = entry.get("enrichment")
+    pedagogy = enrichment.get("verb_pedagogy") if isinstance(enrichment, dict) else None
+    partner = pedagogy.get("aspect_partner") if isinstance(pedagogy, dict) else None
+    lemma = _clean_text(partner.get("lemma")) if isinstance(partner, dict) else None
+    return _plain(lemma) if lemma else None
+
+
+def _synonym_verb_aspect(
+    lexeme: dict[str, Any],
+    entry: dict[str, Any],
+    vesum_aspects: dict[str, str] | None,
+) -> str | None:
+    """Aspect of a verb lexeme: VESUM ``perf``/``imperf`` first, then explicit Atlas labels."""
+    aspect = (vesum_aspects or {}).get(lexeme["lemmaPlain"])
+    if aspect:
+        return aspect
+    labels: list[str] = []
+    enrichment = entry.get("enrichment")
+    cefr = enrichment.get("cefr") if isinstance(enrichment, dict) else None
+    if isinstance(cefr, dict):
+        labels.append(str(cefr.get("pos") or ""))
+    morphology = _morphology(entry)
+    if morphology:
+        labels.extend(_morph_labels(morphology))
+    return _explicit_aspect_category(labels)
+
+
+def _synonym_reflexive_pair(a_plain: str, b_plain: str) -> bool:
+    """вітати / вітатися: the same verb with and without the reflexive postfix."""
+
+    def stem(word: str) -> str:
+        return word[:-2] if word.endswith(("ся", "сь")) else word
+
+    return a_plain != b_plain and stem(a_plain) == stem(b_plain)
+
+
+def _euphonic_variants(word: str) -> set[str]:
+    """Spellings of one word under the у/в, і/й and з/із/зі euphonic alternations."""
+    variants = {word}
+    head, tail = word[:1], word[1:]
+    if head == "у":
+        variants.add("в" + tail)
+    elif head == "в":
+        variants.add("у" + tail)
+    elif head == "і":
+        variants.update({"й" + tail, tail})
+    elif head == "й":
+        variants.add("і" + tail)
+    if word in _SYNONYM_EUPHONIC_Z:
+        variants.update(_SYNONYM_EUPHONIC_Z)
+    variants.discard("")
+    return variants
+
+
+def _synonym_spelling_variant(a_plain: str, b_plain: str) -> bool:
+    """учитель / вчитель, вже / уже, з / із: one word, two spellings, not two synonyms."""
+    return a_plain != b_plain and not _euphonic_variants(a_plain).isdisjoint(_euphonic_variants(b_plain))
+
+
+def _synonym_gender_counterpart(a_plain: str, b_plain: str, person_genders: dict[str, str] | None) -> bool:
+    """кравець / кравчиня, студент / студентка: a person noun and its feminine derivative.
+
+    VESUM must tag both as animate, one masculine and one feminine; the
+    feminine must carry a feminine person suffix on the masculine's stem.
+    """
+    genders = person_genders or {}
+    if {genders.get(a_plain), genders.get(b_plain)} != {"m", "f"}:
+        return False
+    masculine, feminine = (a_plain, b_plain) if genders[a_plain] == "m" else (b_plain, a_plain)
+    shared = len(os.path.commonprefix((masculine, feminine)))
+    return bool(_FEMININE_PERSON_SUFFIX.search(feminine)) and shared >= 4 and shared >= len(masculine) - 3
+
+
+def _synonym_motion_verb_pair(a_plain: str, b_plain: str) -> bool:
+    """нести / носити: the unidirectional and multidirectional verb of one motion.
+
+    Prefixed forms (принести / приносити) are aspect partners and are caught
+    by the aspect rule instead.
+    """
+    return any(
+        {a_plain, b_plain} == {one + suffix, other + suffix}
+        for one, other in _MOTION_VERB_PAIRS
+        for suffix in ("", "ся")
+    )
+
+
+def _synonym_pair_withhold_reason(
+    prompt: dict[str, Any],
+    target: dict[str, Any],
+    prompt_entry: dict[str, Any],
+    target_entry: dict[str, Any],
+    vesum_aspects: dict[str, str] | None,
+    person_genders: dict[str, str] | None = None,
+) -> str | None:
+    """Linguistic reason two words are never offered as a synonym/antonym pair, else ``None``."""
+    prompt_pos = _option_pos_bucket(prompt.get("pos"))
+    target_pos = _option_pos_bucket(target.get("pos"))
+    if not prompt_pos or not target_pos:
+        return "pos_unknown"
+    if prompt_pos != target_pos:
+        return "pos_mismatch"
+    prompt_plain = prompt["lemmaPlain"]
+    target_plain = target["lemmaPlain"]
+    if _synonym_reflexive_pair(prompt_plain, target_plain):
+        return "reflexive_pair"
+    if _synonym_spelling_variant(prompt_plain, target_plain):
+        return "spelling_variant"
+    if prompt_pos == "noun" and _synonym_gender_counterpart(prompt_plain, target_plain, person_genders):
+        return "gender_counterpart"
+    if prompt_pos == "verb":
+        if _synonym_motion_verb_pair(prompt_plain, target_plain):
+            return "motion_verb_pair"
+        recorded_partner = target_plain == _synonym_aspect_partner(prompt_entry)
+        if recorded_partner or prompt_plain == _synonym_aspect_partner(target_entry):
+            return "aspect_pair"
+        prompt_aspect = _synonym_verb_aspect(prompt, prompt_entry, vesum_aspects)
+        target_aspect = _synonym_verb_aspect(target, target_entry, vesum_aspects)
+        if not prompt_aspect or not target_aspect:
+            return "aspect_unknown"
+        if prompt_aspect != target_aspect:
+            return "aspect_pair"
+    return None
+
+
+def _synonym_evidence(
+    prompt: dict[str, Any],
+    target: dict[str, Any],
+    polarity: str,
+    verdict_sources: set[str],
+    ulif_groups: UlifSynonymGroups | None,
+) -> tuple[dict[str, Any] | None, str | None]:
+    """Source evidence that admits a pair, or the reason there is none.
+
+    Synonyms: ULIF must list the two words as the dominant and a plain member
+    of one sense cluster (``UlifSynonymGroups.core_pair``); the dominant's note
+    is the sense the card displays.  Antonyms: a dictionary source on the verdict.
+    """
+    if polarity == "synonym":
+        if ulif_groups is None:
+            raise UlifSynonymDataUnavailable("a synonym-polarity pair needs checked ULIF synonym groups")
+        pair = ulif_groups.core_pair(prompt["lemma"], target["lemma"])
+        if pair is None:
+            if ulif_groups.shares_group(prompt["lemma"], target["lemma"]):
+                return None, "ulif_not_core_pair"
+            return None, "not_in_ulif_group"
+        evidence: dict[str, Any] = pair.as_item_evidence()
+        if pair.sense:
+            evidence["sense"] = pair.sense
+        return evidence, None
+    dictionaries = sorted(verdict_sources & _SYNONYM_DICTIONARY_SOURCES)
+    if not dictionaries:
+        return None, "no_dictionary_source"
+    return {"source": "+".join(dictionaries)}, None
+
+
+def _synonym_distractor_context(
+    lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]],
+    approved_set: set[tuple[str, str, str]],
+    ulif_groups: UlifSynonymGroups | None = None,
+) -> dict[str, Any]:
+    """Index every recorded synonym link and English sense so no distractor is also correct.
+
+    Links come from approved verdicts, Atlas synonym sections, aspect partners
+    and every ULIF synonym group a word belongs to (any cluster or label).
+    """
+    partners: dict[str, set[str]] = {}
+
+    def link(a_plain: str, b_plain: str) -> None:
+        partners.setdefault(a_plain, set()).add(b_plain)
+        partners.setdefault(b_plain, set()).add(a_plain)
+
+    for a_plain, b_plain, polarity in approved_set:
+        if polarity == "synonym":
+            link(a_plain, b_plain)
+    english: dict[str, set[str]] = {}
+    for entry, lexeme in lexemes_by_entry:
+        english[lexeme["lemmaId"]] = _synonym_english_equivalents(entry)
+        for label in _section_items(entry, "synonyms"):
+            link(lexeme["lemmaPlain"], _plain(label))
+        partner = _synonym_aspect_partner(entry)
+        if partner:
+            link(lexeme["lemmaPlain"], partner)
+        if ulif_groups is not None:
+            for member in ulif_groups.co_members(lexeme["lemma"]):
+                link(lexeme["lemmaPlain"], member)
+    return {"partners": partners, "english": english}
+
+
 def _valid_synonym_distractors(
     answer: dict[str, Any],
     prompt: dict[str, Any],
     lexemes: list[dict[str, Any]],
+    context: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    blocked_heads = {_headword(prompt["gloss"]), _headword(answer["gloss"])}
+    """Same-POS candidates that no source records as a synonym of the prompt or answer.
+
+    A candidate whose first English gloss word matches the prompt's or the
+    answer's is excluded (``"to read"`` heads as ``read``, not ``to``).
+    ``context`` (see ``_synonym_distractor_context``) also excludes every
+    recorded synonym partner, every ULIF synonym-group co-member and every
+    lexeme sharing an English sense with the prompt or the answer.
+    """
+    blocked_heads = {_synonym_gloss_head(prompt["gloss"]), _synonym_gloss_head(answer["gloss"])}
+    ans_plain = _plain(answer["lemma"])
+    prompt_plain = _plain(prompt["lemma"])
+    partners: dict[str, set[str]] = context["partners"] if context else {}
+    english: dict[str, set[str]] = context["english"] if context else {}
+    blocked_plain = partners.get(prompt_plain, set()) | partners.get(ans_plain, set())
+    blocked_english = english.get(prompt["lemmaId"], set()) | english.get(answer["lemmaId"], set())
     candidates = []
     for lexeme in lexemes:
         if lexeme["lemmaId"] in {prompt["lemmaId"], answer["lemmaId"]}:
@@ -3395,11 +4035,9 @@ def _valid_synonym_distractors(
             continue
         if lexeme.get("pos") != answer.get("pos"):
             continue
-        if _headword(lexeme["gloss"]) in blocked_heads:
+        if _synonym_gloss_head(lexeme["gloss"]) in blocked_heads:
             continue
         cand_plain = _plain(lexeme["lemma"])
-        ans_plain = _plain(answer["lemma"])
-        prompt_plain = _plain(prompt["lemma"])
         if (
             cand_plain in {prompt_plain, ans_plain}
             or ans_plain in cand_plain
@@ -3407,6 +4045,10 @@ def _valid_synonym_distractors(
             or prompt_plain in cand_plain
             or cand_plain in prompt_plain
         ):
+            continue
+        if cand_plain in blocked_plain or not {prompt_plain, ans_plain}.isdisjoint(partners.get(cand_plain, set())):
+            continue
+        if not english.get(lexeme["lemmaId"], set()).isdisjoint(blocked_english):
             continue
         candidates.append(lexeme)
     answer_len = len(answer["lemma"])
@@ -3520,6 +4162,72 @@ def format_a2_synonym_nomination_report(rows: list[dict[str, Any]]) -> str:
     return "\n".join(lines) + "\n"
 
 
+@dataclass(frozen=True)
+class WithheldSynonymDirection:
+    """One candidate card direction that does not ship, with its single reason (#8714)."""
+
+    level: str
+    prompt: str
+    target: str
+    polarity: str
+    reason: str
+
+
+@dataclass
+class SynonymAccounting:
+    """Candidate directions carried through size trimming before publication."""
+
+    candidate_directions: int = 0
+    verdict_summary: str = ""
+    loaded: bool = False
+    emitted_by_id: dict[str, WithheldSynonymDirection] = dataclass_field(default_factory=dict)
+    withheld: list[WithheldSynonymDirection] = dataclass_field(default_factory=list)
+    finalized: bool = False
+
+
+def reconcile_synonym_accounting(
+    shards: dict[str, dict[str, dict[str, Any]]], accounting: SynonymAccounting
+) -> None:
+    """Account for every direction after all shard trimming, before writing."""
+    if accounting.finalized:
+        raise RuntimeError("synonym accounting was already finalized")
+    final_ids: set[str] = set()
+    final_count = 0
+    for level, level_shards in shards.items():
+        for item in level_shards["synonym"]["synonym"]:
+            item_id = item.get("synonymId")
+            if not isinstance(item_id, str) or item_id not in accounting.emitted_by_id:
+                raise RuntimeError(f"unaccounted synonym item in final {level} shard: {item_id!r}")
+            if item_id in final_ids:
+                raise RuntimeError(f"duplicate synonym item in final shards: {item_id}")
+            final_ids.add(item_id)
+            final_count += 1
+    if len(accounting.emitted_by_id) + len(accounting.withheld) != accounting.candidate_directions:
+        raise RuntimeError(
+            "synonym withheld ledger does not partition generated candidate directions: "
+            f"emitted={len(accounting.emitted_by_id)} + withheld={len(accounting.withheld)} "
+            f"!= candidates={accounting.candidate_directions}"
+        )
+    trimmed_ids = accounting.emitted_by_id.keys() - final_ids
+    for item_id in sorted(trimmed_ids):
+        row = accounting.emitted_by_id[item_id]
+        accounting.withheld.append(
+            WithheldSynonymDirection(row.level, row.prompt, row.target, row.polarity, "size_budget_trim")
+        )
+    emitted = accounting.candidate_directions - len(accounting.withheld)
+    if emitted != final_count:
+        raise RuntimeError(f"synonym ledger emitted={emitted} != final shard items={final_count}")
+    print(
+        f"{accounting.verdict_summary} emitted_items={emitted} withheld_directions={len(accounting.withheld)}",
+        file=sys.stderr,
+    )
+    if accounting.loaded:
+        _report_withheld_synonym_directions(
+            accounting.withheld, candidate_directions=accounting.candidate_directions, emitted=emitted
+        )
+    accounting.finalized = True
+
+
 def _build_synonym_items(
     lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]],
     by_plain_lemma: dict[str, dict[str, Any]],
@@ -3530,13 +4238,22 @@ def _build_synonym_items(
     a2_exception_set: set[tuple[str, str, str]],
     synonym_verdicts_loaded: bool,
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]],
+    *,
+    synonym_verdicts: dict[str, Any] | None = None,
+    vesum_aspects: dict[str, str] | None = None,
+    person_genders: dict[str, str] | None = None,
+    ulif_groups: UlifSynonymGroups | None = None,
+    withheld: list[WithheldSynonymDirection] | None = None,
 ) -> list[dict[str, Any]]:
     """Build cards from the approved verdict set, not relation-link discovery.
 
     Manifest relation sections remain useful for reporting unreviewed and
-    rejected candidates, but an approved verdict is the source of truth for
-    emission.  This also covers approved pairs whose two Atlas entries do not
-    link back to one another through the current relation sections.
+    rejected candidates; an approved verdict nominates a pair for emission.
+    Every approved pair whose two legs resolve to levelled Atlas lexemes is
+    two candidate directions.  Each direction either ships or is appended to
+    ``withheld`` exactly once with one reason: a pair-level reason
+    (``_synonym_pair_withhold_reason`` or missing ``_synonym_evidence``)
+    withholds both directions; ``insufficient_distractors`` withholds one.
     """
     for entry, lexeme in lexemes_by_entry:
         if not lexeme.get("cefr"):
@@ -3566,12 +4283,29 @@ def _build_synonym_items(
     if not synonym_verdicts_loaded:
         return []
 
+    ledger = withheld if withheld is not None else []
+    entry_by_lemma_id = {lexeme["lemmaId"]: entry for entry, lexeme in lexemes_by_entry}
+    sources_by_pair: dict[tuple[str, str, str], set[str]] = {}
+    for record in (synonym_verdicts or {}).get("approved", []):
+        if isinstance(record, dict) and not _synonym_core_errors(record):
+            key = _synonym_pair_key(str(record["a"]), str(record["b"]), str(record["polarity"]))
+            sources_by_pair.setdefault(key, set()).update(str(source) for source in record.get("sources") or [])
+    distractor_context = _synonym_distractor_context(lexemes_by_entry, approved_set, ulif_groups)
+
+    def withhold(level: str, prompt: dict[str, Any], target: dict[str, Any], polarity: str, reason: str) -> None:
+        ledger.append(WithheldSynonymDirection(level, prompt["lemma"], target["lemma"], polarity, reason))
+        encountered_pairs[level].setdefault("withheld", set()).add((prompt["lemma"], target["lemma"], polarity))
+
     items: list[dict[str, Any]] = []
     warned_a2_flags: set[tuple[str, str, str]] = set()
     for pair_key in sorted(approved_set):
         prompt_a = by_plain_lemma.get(pair_key[0])
         prompt_b = by_plain_lemma.get(pair_key[1])
         if not prompt_a or not prompt_b or not prompt_a.get("cefr") or not prompt_b.get("cefr"):
+            continue
+        entry_a = entry_by_lemma_id.get(prompt_a["lemmaId"])
+        entry_b = entry_by_lemma_id.get(prompt_b["lemmaId"])
+        if entry_a is None or entry_b is None:
             continue
 
         both_legs_a2 = prompt_a["cefr"] == "A2" and prompt_b["cefr"] == "A2"
@@ -3583,13 +4317,26 @@ def _build_synonym_items(
             warned_a2_flags.add(pair_key)
         level = _synonym_availability_level(prompt_a, prompt_b, pair_key, a2_exception_set)
         encountered_pairs[level]["approved"].add(pair_key)
+        polarity = pair_key[2]
+        evidence: dict[str, Any] | None = None
+        pair_reason = _synonym_pair_withhold_reason(prompt_a, prompt_b, entry_a, entry_b, vesum_aspects, person_genders)
+        if pair_reason is None:
+            evidence, pair_reason = _synonym_evidence(
+                prompt_a, prompt_b, polarity, sources_by_pair.get(pair_key, set()), ulif_groups
+            )
+        if pair_reason is not None:
+            for prompt, target in ((prompt_a, prompt_b), (prompt_b, prompt_a)):
+                withhold(level, prompt, target, polarity, pair_reason)
+            continue
+        assert evidence is not None
+        sense = evidence.pop("sense", None)
 
         for prompt, target in ((prompt_a, prompt_b), (prompt_b, prompt_a)):
-            distractors = _valid_synonym_distractors(target, prompt, all_lexemes)
+            distractors = _valid_synonym_distractors(target, prompt, all_lexemes, distractor_context)
             if len(distractors) < 3:
+                withhold(level, prompt, target, polarity, "insufficient_distractors")
                 continue
 
-            polarity = pair_key[2]
             key = "\x1f".join((deck_version, prompt["lemmaId"], target["lemmaId"], polarity))
             synonym_id = "syn_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
             options = [
@@ -3612,12 +4359,48 @@ def _build_synonym_items(
                 "level": level,
                 "promptLevel": prompt["cefr"],
                 "options": options,
-                "source": "ukrajinet-auto-translation",
+                "source": evidence["source"],
             }
+            if evidence.get("source") == ULIF_SYNONYMS_SOURCE:
+                synonym_item["evidence"] = dict(evidence)
+            if sense:
+                synonym_item["sense"] = sense
             if prompt.get("senseId"):
                 synonym_item["senseId"] = prompt["senseId"]
             items.append(synonym_item)
     return items
+
+
+def _report_withheld_synonym_directions(
+    withheld: list[WithheldSynonymDirection],
+    *,
+    candidate_directions: int,
+    emitted: int,
+) -> None:
+    """Print the withheld ledger and prove it partitions the candidate directions.
+
+    ``candidate_directions`` is every direction of every approved pair whose
+    legs resolve; each one is either emitted or withheld exactly once.
+    """
+    by_reason: dict[str, int] = {}
+    for row in withheld:
+        by_reason[row.reason] = by_reason.get(row.reason, 0) + 1
+    summary = " ".join(f"{reason}={count}" for reason, count in sorted(by_reason.items()))
+    print(
+        f"synonym directions (#8714): candidates={candidate_directions} emitted={emitted} "
+        f"withheld={len(withheld)} {summary}".rstrip(),
+        file=sys.stderr,
+    )
+    for row in withheld:
+        print(
+            f"WITHHELD synonym direction [{row.level}] {row.prompt} → {row.target} ({row.polarity}): {row.reason}",
+            file=sys.stderr,
+        )
+    if emitted + len(withheld) != candidate_directions:
+        raise RuntimeError(
+            "synonym withheld ledger does not partition the candidate directions: "
+            f"emitted={emitted} + withheld={len(withheld)} != candidates={candidate_directions}"
+        )
 
 
 def _clean_text_list(value: Any) -> list[str]:
@@ -4096,6 +4879,40 @@ def validate_synonym_item(item: dict[str, Any]) -> list[str]:
         if label and label != answer and (label in {answer, prompt} or answer in label or label in answer):
             errors.append("synonym distractor must not be a near-duplicate of prompt or answer")
             break
+    return errors
+
+
+def validate_synonym_option_sets(items: list[dict[str, Any]]) -> list[str]:
+    """Reject a distractor that the same deck accepts as an answer for the same prompt.
+
+    A learner choosing проте for але must not be marked wrong because the deck
+    happened to draw одначе for that card while another card accepts проте.
+    Answers are keyed by prompt and polarity: an antonym answer is not a
+    synonym answer.
+    """
+    answers_by_prompt: dict[tuple[str, str], set[str]] = {}
+    for item in items:
+        prompt = _plain(str(item.get("prompt") or ""))
+        polarity = str(item.get("polarity") or "synonym")
+        answer = _plain(str(item.get("answer") or ""))
+        if prompt and answer:
+            answers_by_prompt.setdefault((prompt, polarity), set()).add(answer)
+    errors: list[str] = []
+    for index, item in enumerate(items):
+        prompt = _plain(str(item.get("prompt") or ""))
+        polarity = str(item.get("polarity") or "synonym")
+        answer = _plain(str(item.get("answer") or ""))
+        accepted = answers_by_prompt.get((prompt, polarity), set()) - {answer}
+        options = item.get("options")
+        for option in options if isinstance(options, list) else []:
+            if not isinstance(option, dict) or option.get("kind") == "answer":
+                continue
+            label = _plain(str(option.get("label") or ""))
+            if label in accepted:
+                errors.append(
+                    f"synonym[{index}]: distractor {label!r} is an accepted {polarity} answer for prompt "
+                    f"{prompt!r} elsewhere in the deck (this card's answer: {answer!r})"
+                )
     return errors
 
 
@@ -4638,6 +5455,89 @@ def validate_imperative_item(item: dict[str, Any]) -> list[str]:
     return errors
 
 
+# A word keeps its apostrophes (', ’, ʼ) and combining marks such as the
+# stress accent U+0301, so «m'ясо» and «м'я́co» are each one mixed-script word
+# rather than a Latin fragment beside a Cyrillic one.
+_WORD_LETTER = r"[^\W\d_][\u0300-\u036f\u1ab0-\u1aff\u1dc0-\u1dff\u20d0-\u20ff\ufe20-\ufe2f]*"
+_CYRILLIC_LATIN_TOKEN = re.compile(rf"(?:{_WORD_LETTER})+(?:['’ʼ](?:{_WORD_LETTER})+)*", re.UNICODE)
+
+
+def _mixed_script_tokens(text: str) -> list[str]:
+    """Words that mix Cyrillic and Latin letters («вести cебе», «m'ясо»)."""
+    mixed = []
+    for token in _CYRILLIC_LATIN_TOKEN.findall(text):
+        scripts = {unicodedata.name(char, "").split(" ", 1)[0] for char in token}
+        if {"CYRILLIC", "LATIN"} <= scripts:
+            mixed.append(token)
+    return mixed
+
+
+_LATIN_TO_CYRILLIC_HOMOGLYPHS = str.maketrans("aceiopxyABCEHIKMOPTX", "асеіорхуАВСЕНІКМОРТХ")
+
+
+def _repair_homoglyphs(text: str) -> str:
+    """Replace Latin look-alikes inside Cyrillic words with Cyrillic (#8715).
+
+    Source typos («вести cебе», «вiзочку») mix scripts inside one word.  Only
+    a word that already mixes both scripts is touched, so English text and
+    whole Latin words stay as they are; a Latin letter without a Cyrillic
+    look-alike is left for :func:`validate_deck_text` to reject.
+    """
+    return _CYRILLIC_LATIN_TOKEN.sub(
+        lambda match: (
+            match.group().translate(_LATIN_TO_CYRILLIC_HOMOGLYPHS)
+            if _mixed_script_tokens(match.group())
+            else match.group()
+        ),
+        text,
+    )
+
+
+def _repair_deck_homoglyphs(value: Any) -> Any:
+    if isinstance(value, str):
+        return _repair_homoglyphs(value)
+    if isinstance(value, dict):
+        return {key: _repair_deck_homoglyphs(child) for key, child in value.items()}
+    if isinstance(value, list):
+        return [_repair_deck_homoglyphs(child) for child in value]
+    return value
+
+
+def validate_deck_text(
+    shards: dict[str, dict[str, dict[str, Any]]],
+    verifier: VesumVerifier | None = None,
+) -> list[str]:
+    """Deck-wide text gates (#8715).
+
+    Every string in every shard is free of mixed-script words, and every
+    Ukrainian ``glossClean`` names a meaning rather than a stub.
+    """
+    errors: list[str] = []
+
+    def walk(value: Any, path: str) -> None:
+        if isinstance(value, str):
+            for token in _mixed_script_tokens(value):
+                errors.append(f"{path}: mixed Cyrillic/Latin word {token!r}")
+        elif isinstance(value, dict):
+            for key, child in value.items():
+                walk(child, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                walk(child, f"{path}[{index}]")
+
+    for level, level_shards in shards.items():
+        for kind, payload in level_shards.items():
+            walk(payload, f"{kind}.{level}")
+        lexemes = level_shards.get("lexemes", {}).get("lexemes", [])
+        for lexeme in lexemes if isinstance(lexemes, list) else []:
+            label = str(lexeme.get("glossClean") or "")
+            if _is_english_learner_gloss(label):
+                continue
+            if _is_uk_gloss_stub(label, str(lexeme.get("lemma") or ""), verifier):
+                errors.append(f"lexemes.{level}: {lexeme.get('lemmaId')} glossClean is a stub {label!r}")
+    return errors
+
+
 def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     if mode == "classify":
@@ -4647,6 +5547,7 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     elif mode == "synonym":
         for index, item in enumerate(items):
             errors.extend(f"synonym[{index}]: {error}" for error in validate_synonym_item(item))
+        errors.extend(validate_synonym_option_sets(items))
     elif mode == "heritage":
         for index, item in enumerate(items):
             errors.extend(f"heritage[{index}]: {error}" for error in validate_heritage_item(item))
@@ -4962,7 +5863,11 @@ def build_practice_shards(
     antonym_pairs: list[dict[str, Any]] | None = None,
     homonym_pairs: list[dict[str, Any]] | None = None,
     aspect_residuals: list[dict[str, str]] | None = None,
+    pos_residuals: list[dict[str, str]] | None = None,
     creation_review: CreationReview | None = None,
+    ulif_synonym_groups: UlifSynonymGroups | None = None,
+    synonym_accounting: SynonymAccounting | None = None,
+    cloze_withheld: list[dict[str, str]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     creation_review = creation_review if creation_review is not None else CreationReview.from_path()
     if isinstance(cloze_sources, BuildConfig) and config is None:
@@ -4982,6 +5887,10 @@ def build_practice_shards(
     else:
         synonym_verdicts_loaded = True
     approved_set, rejected_set, a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
+    if SYNONYM_MODE_ENABLED and ulif_synonym_groups is None and any(
+        polarity == "synonym" for _a, _b, polarity in approved_set
+    ):
+        raise UlifSynonymDataUnavailable("approved synonym verdicts need checked ULIF synonym groups; none were loaded")
 
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]] = {
         level: {"approved": set(), "rejected": set(), "awaiting": set()} for level in CEFR_ORDER
@@ -4997,6 +5906,7 @@ def build_practice_shards(
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
         creation_review=creation_review.version_payload(),
+        synonym_evidence=ulif_synonym_evidence_payload(ulif_synonym_groups),
     )
     # Seed from the DATA-ONLY fingerprint, not deck_version: builder-version
     # bumps mint new asset names but must not reshuffle seeded content.
@@ -5036,10 +5946,9 @@ def build_practice_shards(
         config,
         priority_lemma_keys,
     )
-    verb_lemmas = [
-        str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if _is_aspect_residual_target(entry, lexeme)
-    ]
-    vesum_aspects = _vesum_aspect_by_lemma(verb_lemmas, verifier)
+    classify_lemmas = [str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if lexeme.get("cefr")]
+    vesum_aspects = _vesum_aspect_by_lemma(classify_lemmas, verifier)
+    vesum_evidence = _vesum_lemma_evidence(classify_lemmas, verifier)
     # Paronym emit resolves adjudicated pair slugs against the selected pool
     # (main's _select_practice_lexemes refactor supplies the pool; this map is
     # the branch's paronym-specific addition kept through the merge).
@@ -5058,6 +5967,7 @@ def build_practice_shards(
         target = cloze_by_lemma_id if key_type == "lemmaId" else cloze_by_lemma
         target.setdefault(key_value, []).append(row)
     cloze_source_index = index_from_generator_candidates(cloze_sources)
+    cloze_lemma_levels = _lemma_levels(entries)
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
     mode_by_level: dict[str, dict[str, list[dict[str, Any]]]] = {
@@ -5083,11 +5993,33 @@ def build_practice_shards(
             deck_version,
             source_index=cloze_source_index,
             creation_review=creation_review,
+            withheld=cloze_withheld,
+            lemma_levels=cloze_lemma_levels,
         )
         for item in items:
             item["options"] = _make_options(item, lexeme, all_lexemes, rng)
             option_errors = validate_option_set(item)
             if option_errors:
+                continue
+            uniqueness_findings = check_unique_answer_evidence(item, verifier, item_id=item["clozeId"])
+            if uniqueness_findings:
+                if cloze_withheld is not None:
+                    cloze_withheld.extend(
+                        {
+                            "clozeId": item["clozeId"],
+                            "lemma": lexeme["lemma"],
+                            "level": lexeme["cefr"],
+                            "mechanism": (
+                                "lexical"
+                                if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID
+                                else "case-labelled"
+                            ),
+                            "rule": finding.rule_id,
+                            "reason": finding.message,
+                            "sentence": item["sentence"],
+                        }
+                        for finding in uniqueness_findings
+                    )
                 continue
             cloze_by_level[lexeme["cefr"]].append(item)
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
@@ -5107,7 +6039,9 @@ def build_practice_shards(
             _entry,
             lexeme,
             vesum_aspect=vesum_aspects.get(lexeme["lemmaPlain"]),
+            vesum_evidence=vesum_evidence.get(lexeme["lemmaPlain"]),
             aspect_residuals=aspect_residuals,
+            pos_residuals=pos_residuals,
         )
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
         paradigm_items = _build_paradigm_items(lexeme)
@@ -5119,36 +6053,60 @@ def build_practice_shards(
             if level in PUBLISHED_LEVELS:
                 mode_by_level[level]["imperative"].extend(_build_imperative_items(lexeme, imperative_conn, level))
 
-    synonym_items = _build_synonym_items(
-        lexemes_by_entry,
-        by_plain_lemma,
-        all_lexemes,
-        deck_version,
-        approved_set - rejected_set,
-        rejected_set,
-        a2_exception_set,
-        synonym_verdicts_loaded,
-        encountered_pairs,
+    withheld_synonyms: list[WithheldSynonymDirection] = []
+    pair_nouns = [
+        lexeme["lemma"]
+        for key in approved_set
+        for lexeme in (by_plain_lemma.get(key[0]), by_plain_lemma.get(key[1]))
+        if lexeme and _option_pos_bucket(lexeme.get("pos")) == "noun"
+    ]
+    synonym_items = (
+        _build_synonym_items(
+            lexemes_by_entry,
+            by_plain_lemma,
+            all_lexemes,
+            deck_version,
+            approved_set - rejected_set,
+            rejected_set,
+            a2_exception_set,
+            synonym_verdicts_loaded,
+            encountered_pairs,
+            synonym_verdicts=synonym_verdicts,
+            vesum_aspects=vesum_aspects,
+            person_genders=_vesum_person_gender_by_lemma(pair_nouns, verifier),
+            ulif_groups=ulif_synonym_groups,
+            withheld=withheld_synonyms,
+        )
+        if SYNONYM_MODE_ENABLED
+        else []
     )
     for item in synonym_items:
         level = str(item.pop("level"))
         item.pop("promptLevel", None)
+        if synonym_accounting is not None:
+            item_id = str(item["synonymId"])
+            if item_id in synonym_accounting.emitted_by_id:
+                raise RuntimeError(f"duplicate generated synonym item: {item_id}")
+            synonym_accounting.emitted_by_id[item_id] = WithheldSynonymDirection(
+                level, str(item["prompt"]), str(item["answer"]), str(item["polarity"]), ""
+            )
         mode_by_level[level]["synonym"].append(item)
     resolved_approved_pairs = set().union(*(encountered_pairs[level]["approved"] for level in CEFR_ORDER))
-    emitted_synonym_items = [item for level in CEFR_ORDER for item in mode_by_level[level]["synonym"]]
-    emitted_synonym_pairs = {
-        _synonym_pair_key(item["prompt"], item["answer"], item["polarity"]) for item in emitted_synonym_items
-    }
     effective_approved_set = approved_set - rejected_set
-    print(
+    # Non-overlapping buckets: effective pairs = resolved + unresolved;
+    # resolved pairs x 2 directions = emitted items + withheld directions.
+    verdict_summary = (
         "synonym verdicts: "
-        f"approved={len(approved_set)} rejected={len(rejected_set)} "
-        f"resolved={len(resolved_approved_pairs)} "
-        f"emitted_pairs={len(emitted_synonym_pairs)} emitted_items={len(emitted_synonym_items)} "
-        f"unresolved={len(effective_approved_set - resolved_approved_pairs)} "
-        f"resolved_without_distractors={len(resolved_approved_pairs - emitted_synonym_pairs)}",
-        file=sys.stderr,
+        f"approved={len(approved_set)} rejected={len(rejected_set)} effective={len(effective_approved_set)} "
+        f"resolved_pairs={len(resolved_approved_pairs)} "
+        f"unresolved_pairs={len(effective_approved_set - resolved_approved_pairs)} "
+        f"candidate_directions={2 * len(resolved_approved_pairs)}"
     )
+    if synonym_accounting is not None:
+        synonym_accounting.candidate_directions = 2 * len(resolved_approved_pairs) if SYNONYM_MODE_ENABLED else 0
+        synonym_accounting.verdict_summary = verdict_summary
+        synonym_accounting.loaded = synonym_verdicts_loaded
+        synonym_accounting.withheld.extend(withheld_synonyms)
 
     heritage_frame_debt = 0
     for index, pair in enumerate(heritage_pairs or []):
@@ -5502,7 +6460,7 @@ def build_practice_shards(
                 f"({index_payload['counts']['modeCoverage'][mode]:.2%})"
                 for mode in ("cloze", *DRILL_MODES)
             )
-            + f" synonym_pairs:approved={len(encountered_pairs[level]['approved'])},rejected={len(encountered_pairs[level]['rejected'])},awaiting={len(encountered_pairs[level]['awaiting'])}"
+            + f" synonym_pairs:approved={len(encountered_pairs[level]['approved'])},rejected={len(encountered_pairs[level]['rejected'])},awaiting={len(encountered_pairs[level]['awaiting'])},withheld_directions={len(encountered_pairs[level].get('withheld', set()))}"
         )
         lexeme_payload = _level_payload(
             "atlas-practice-lexemes",
@@ -5551,6 +6509,10 @@ def build_practice_shards(
                         lemma = item.get("lemma") or item.get("lemmaId")
                         if lemma:
                             item["senseId"] = f"{lemma}_s1"
+    shards = _repair_deck_homoglyphs(shards)
+    text_errors = validate_deck_text(shards, verifier)
+    if text_errors:
+        raise ValueError(f"deck text gate failed ({len(text_errors)}): {text_errors[:10]}")
     return shards
 
 
@@ -6563,6 +7525,62 @@ def write_aspect_residual_report(path: Path, residuals: list[dict[str, str]]) ->
     path.write_bytes(_json_bytes(payload))
 
 
+def write_cloze_withheld_report(
+    path: Path,
+    withheld: list[dict[str, str]],
+    shards: dict[str, dict[str, dict[str, Any]]],
+) -> None:
+    """Write distinct candidate exclusions and emitted counts by mechanism."""
+    by_level_rule = Counter((row["level"], row["rule"]) for row in withheld)
+    excluded = {(row["level"], row["mechanism"], row["clozeId"]) for row in withheld}
+    withheld_counts = Counter((level, mechanism) for level, mechanism, _ in excluded)
+    admitted_counts = Counter(
+        (level, "lexical" if item["caseRule"]["ruleId"] == LEXICAL_INSERTION_RULE_ID else "case-labelled")
+        for level, level_shards in shards.items()
+        for item in level_shards["cloze"]["cloze"]
+    )
+    payload = {
+        "schema": "atlas-practice-cloze-withheld-v1",
+        "count": len(withheld),
+        "byLevelRule": {f"{level}:{rule}": count for (level, rule), count in sorted(by_level_rule.items())},
+        "byLevelMechanism": {
+            level: {
+                mechanism: {
+                    "admitted": admitted_counts[level, mechanism],
+                    "withheld": withheld_counts[level, mechanism],
+                }
+                for mechanism in ("case-labelled", "converted-form", "lexical")
+            }
+            for level in shards
+        },
+        "items": sorted(withheld, key=lambda row: (row["level"], row["rule"], row["clozeId"])),
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(_json_bytes(payload))
+
+
+def write_pos_residual_report(path: Path, residuals: list[dict[str, str]]) -> None:
+    """Write named source-gate reasons for withheld A2--C1 POS cards."""
+    payload = {
+        "schema": "atlas-practice-pos-residuals-v1",
+        "scope": "selected A2-C1 practice lexemes whose part-of-speech set failed a source gate",
+        "count": len(residuals),
+        "lexemes": sorted(residuals, key=lambda row: (row["cefr"], row["lemmaId"])),
+    }
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(_json_bytes(payload))
+
+
+def _emitted_lemma_ids(shards: dict[str, dict[str, dict[str, Any]]]) -> set[str]:
+    """Return IDs from the lexeme shard after size budgets are applied."""
+    return {
+        str(lexeme["lemmaId"])
+        for level_shards in shards.values()
+        for lexeme in level_shards.get("lexemes", {}).get("lexemes", [])
+        if isinstance(lexeme, dict) and _clean_text(lexeme.get("lemmaId"))
+    }
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Generate deterministic Word Atlas practice shards from admitted lexemes. "
@@ -6663,6 +7681,12 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         help="Use a JSON form-to-analysis fixture instead of production VESUM (default: none).",
     )
     parser.add_argument(
+        "--ulif-db",
+        type=Path,
+        default=DEFAULT_ULIF_DB,
+        help="sources.db holding checked ULIF synonym groups; synonym cards need it (default: data/sources.db).",
+    )
+    parser.add_argument(
         "--vesum-db",
         type=Path,
         help="Explicit VESUM database path, including a validated local shadow.",
@@ -6701,6 +7725,16 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         "--aspect-residual-report",
         type=Path,
         help="Write named A2-C1 practice verbs that still have no emitted aspect set.",
+    )
+    parser.add_argument(
+        "--cloze-withheld-report",
+        type=Path,
+        help="Write cloze candidates withheld by the linguistic/prompt-context gates, with reasons.",
+    )
+    parser.add_argument(
+        "--pos-residual-report",
+        type=Path,
+        help="Write named A2-C1 lexemes with no POS set (default: none; e.g. batch_state/pos-residuals.json).",
     )
     parser.add_argument(
         "--fixture-note", type=str, help="Attach a fixture-only explanatory note to output (default: none)."
@@ -6798,6 +7832,14 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_enabled=not args.disable_cloze,
     )
     aspect_residuals: list[dict[str, str]] = []
+    synonym_accounting = SynonymAccounting()
+    try:
+        ulif_synonym_groups = read_ulif_synonym_groups(args.ulif_db, synonym_verdicts)
+    except UlifSynonymDataUnavailable as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+    cloze_withheld: list[dict[str, str]] = []
+    pos_residuals: list[dict[str, str]] = []
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -6811,6 +7853,10 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         antonym_pairs=antonym_pairs,
         homonym_pairs=homonym_pairs,
         aspect_residuals=aspect_residuals,
+        ulif_synonym_groups=ulif_synonym_groups,
+        synonym_accounting=synonym_accounting,
+        cloze_withheld=cloze_withheld,
+        pos_residuals=pos_residuals,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
@@ -6862,25 +7908,32 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         cloze_raw_limit=config.cloze_raw_limit,
         cloze_gzip_limit=config.cloze_gzip_limit,
     )
-    if args.aspect_residual_report:
-        emitted_lemma_ids = {
-            str(item.get("lemmaId"))
-            for level_shards in shards.values()
-            for item in level_shards.get("lexemes", {}).get("items", [])
-            if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
-        }
-        aspect_residuals = [residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids]
-        write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
-        print(
-            "aspect residuals "
-            + json.dumps(
-                {
-                    "count": len(aspect_residuals),
-                    "report": str(args.aspect_residual_report),
-                },
-                ensure_ascii=False,
+    reconcile_synonym_accounting(shards, synonym_accounting)
+    if args.cloze_withheld_report:
+        write_cloze_withheld_report(args.cloze_withheld_report, cloze_withheld, shards)
+        print(f"cloze withheld {len(cloze_withheld)} findings -> {args.cloze_withheld_report}")
+    if args.aspect_residual_report or args.pos_residual_report:
+        emitted_lemma_ids = _emitted_lemma_ids(shards)
+        if args.aspect_residual_report:
+            aspect_residuals = [residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids]
+            write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
+            print(
+                "aspect residuals "
+                + json.dumps(
+                    {"count": len(aspect_residuals), "report": str(args.aspect_residual_report)},
+                    ensure_ascii=False,
+                )
             )
-        )
+        if args.pos_residual_report:
+            pos_residuals = [residual for residual in pos_residuals if residual["lemmaId"] in emitted_lemma_ids]
+            write_pos_residual_report(args.pos_residual_report, pos_residuals)
+            print(
+                "pos residuals "
+                + json.dumps(
+                    {"count": len(pos_residuals), "report": str(args.pos_residual_report)},
+                    ensure_ascii=False,
+                )
+            )
     written = write_shards(shards, args.out_dir)
     for path in written:
         print(path)

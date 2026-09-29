@@ -1,0 +1,19 @@
+{
+  "schema_version": "1",
+  "entries": [
+    {
+      "overlay_id": "ovl-2026-09-28-0001",
+      "kind": "split",
+      "card_id": "wc_0a1b2c3d4e5f",
+      "into": [
+        "wc_7k3m9q2xw4pd",
+        "wc_c2v8n5rt6yhq"
+      ],
+      "author": "human",
+      "lane": "language",
+      "date": "2026-09-28",
+      "evidence": "ulif:entry:76792 родовий за́мку vs ulif:entry:76793 родовий замка́; vesum:entry:128973 xp2 vs 128972 xp1; site/src/lib/lexicon/curated-heteronyms.ts замок (за́мок castle / замо́к lock)",
+      "record": "#8334 curated heteronym side file; identity.md §5 case A"
+    }
+  ]
+}

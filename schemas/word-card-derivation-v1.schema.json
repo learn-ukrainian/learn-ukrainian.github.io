@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/word-card-derivation-v1.schema.json",
+  "title": "Word-card derivation records v1 (#8978 / #8983 / #8980)",
+  "description": "Dependency records (schema.md §11): each derived item (exercise, distractor, gloss, generated assertion, dataset row, page, search doc, curriculum embed) names the assertions and card versions it read, the rules and configuration it ran under, and its own output identity. derived_id = wd_ + sha256(generator, generator_version, rules_version, configuration_sha256, inputs, output kind + key). A derivation whose output is an assertion is pointed back at by that assertion's producer.derived_id, so invalidation walks source -> generated assertion -> consumer.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "entries"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    }
+  },
+  "$defs": {
+    "card_id": {
+      "type": "string",
+      "pattern": "^wc_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "sense_id": {
+      "type": "string",
+      "pattern": "^ws_[0-9a-hjkmnp-tv-z]{12}$"
+    },
+    "assertion_id": {
+      "type": "string",
+      "pattern": "^wa_[0-9a-f]{24}$"
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "derived_id",
+        "kind",
+        "generator",
+        "generator_version",
+        "rules_version",
+        "configuration",
+        "build_id",
+        "inputs",
+        "output",
+        "status"
+      ],
+      "properties": {
+        "derived_id": {
+          "type": "string",
+          "pattern": "^wd_[0-9a-f]{24}$"
+        },
+        "kind": {
+          "enum": [
+            "exercise",
+            "distractor",
+            "gloss",
+            "generated_assertion",
+            "relation",
+            "dataset_row",
+            "atlas_page",
+            "search_doc",
+            "curriculum_embed"
+          ]
+        },
+        "generator": {
+          "type": "string"
+        },
+        "generator_version": {
+          "type": "string"
+        },
+        "rules_version": {
+          "type": "string"
+        },
+        "configuration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ref",
+            "sha256"
+          ],
+          "description": "The generator's settings the output was produced under (content digest + a human-readable reference); part of derived_id so two revisions of one output never collide.",
+          "properties": {
+            "ref": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "build_id": {
+          "type": "string"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "assertion_ids",
+            "card_ids",
+            "card_versions"
+          ],
+          "properties": {
+            "assertion_ids": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/assertion_id"
+              }
+            },
+            "card_ids": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/card_id"
+              }
+            },
+            "card_versions": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "string",
+                "pattern": "^cv_[0-9a-f]{24}$"
+              }
+            }
+          }
+        },
+        "output": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kind",
+            "key",
+            "content_sha256"
+          ],
+          "properties": {
+            "kind": {
+              "type": "string",
+              "description": "`assertion` when the output is a generated assertion (key = its assertion id); otherwise the artefact kind."
+            },
+            "key": {
+              "type": "string",
+              "description": "Output identity: route, item key, dataset row key, release + path, or the generated assertion id."
+            },
+            "content_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$",
+              "description": "Digest of what was produced (published, or drafted for a `draft` record). Never a placeholder."
+            }
+          }
+        },
+        "status": {
+          "enum": [
+            "active",
+            "draft",
+            "invalidated"
+          ],
+          "description": "`draft`: an unpublished illustrative record (the generator recorded what it would publish for a card that is not eligible); it still participates in invalidation."
+        },
+        "unpublished_reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "invalidated_by": {
+          "type": "string",
+          "description": "suppression_id or build_id that invalidated the output."
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "draft"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "unpublished_reason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "generated_assertion"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "output": {
+                "properties": {
+                  "kind": {
+                    "const": "assertion"
+                  },
+                  "key": {
+                    "$ref": "#/$defs/assertion_id"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

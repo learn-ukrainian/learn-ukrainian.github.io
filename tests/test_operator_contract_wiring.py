@@ -140,6 +140,34 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
     assert "NEW architecture" in out, "agy digest must scope item 12 to NEW decisions"
     assert "already-ordered" in out, "agy digest must keep item 10 for decided work"
     assert "simplest adequate solution" in out, "agy digest lost simplest adequate solution"
+    assert "agents_extensions/shared/skills/jevgrep/SKILL.md" in out, "agy digest lost the jg code-discovery rule"
+
+
+JEVGREP_SKILL_REL = "agents_extensions/shared/skills/jevgrep/SKILL.md"
+
+
+def test_boot_digests_carry_jevgrep_code_discovery_rule() -> None:
+    """#9134: each lane boots from a different tracked file and dispatch
+    worktrees hold no deployed skill mirrors, so the required-use sentence and
+    the TRACKED skill path must live in every boot digest verbatim."""
+    import sys
+
+    sys.path.insert(0, str(REPO / "scripts"))
+    from scripts.ai_agent_bridge._prompts import CODE_DISCOVERY_DIGEST, build_agy_prompt
+
+    assert JEVGREP_SKILL_REL in CODE_DISCOVERY_DIGEST
+    assert len(CODE_DISCOVERY_DIGEST.encode("utf-8")) <= 300
+    assert (REPO / JEVGREP_SKILL_REL).is_file()
+    agy = build_agy_prompt({"from": "claude", "task_id": "t", "type": "query", "content": "x", "data": None})
+    for name, body in (
+        ("AGENTS.md", (REPO / "AGENTS.md").read_text(encoding="utf-8")),
+        ("GEMINI.md", (REPO / "GEMINI.md").read_text(encoding="utf-8")),
+        ("CLAUDE.md", (REPO / "CLAUDE.md").read_text(encoding="utf-8")),
+        ("agy bridge prompt", agy),
+    ):
+        assert CODE_DISCOVERY_DIGEST in " ".join(body.split()), f"{name} lost the jg code-discovery sentence"
+        assert JEVGREP_SKILL_REL in body, f"{name} lost the tracked jevgrep skill path"
+    assert len((REPO / "AGENTS.md").read_bytes()) <= 9 * 1024
 
 
 def test_epic_driver_and_v2_template_keep_prompt_adequacy_gate() -> None:

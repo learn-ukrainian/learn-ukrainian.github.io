@@ -685,6 +685,7 @@ After `MERGED`, follow the numbered order below: reaper first, then branch delet
    a pull request head; the hygiene sweep deletes them when they have no open PR,
    and a later review round deletes the earlier round's branch. Do not leave those
    refs behind. Then run `git fetch --prune`.
+   Use `.venv/bin/python -m scripts.hygiene.branch_sweep --json` for the session branch sweep; add `--apply` only after reviewing its receipts.
 5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
 
 **Do not** treat merge alone as closeout. **Do not** run sealed formal CF.
