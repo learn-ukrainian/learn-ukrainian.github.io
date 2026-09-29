@@ -53,9 +53,6 @@ class Pack:
     path: Path
     ids: frozenset[str] = field(default_factory=frozenset)
     error_ids: frozenset[str] = field(default_factory=frozenset)
-    #: Exercise record id -> its text (`quote` and `items_sample`, newline-joined);
-    #: the model text a copy task's `model` names (mechanical rule 4).
-    exercise_text: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -75,14 +72,6 @@ class WordStore:
     records: dict[str, WordRecord] = field(default_factory=dict)
 
 
-def _exercise_text(record: dict) -> str:
-    """The exercise's model text: its verbatim quote and every sample item."""
-    parts = [record.get("quote")]
-    items = record.get("items_sample")
-    parts += items if isinstance(items, list) else [items]
-    return "\n".join(part for part in parts if isinstance(part, str))
-
-
 def load_pack(pack_path: Path) -> Pack:
     """Load the module pack, rejecting a words: list and duplicate ids."""
     data = _read_yaml(pack_path, codes.PACK_NOT_FOUND, codes.PACK_YAML_INVALID)
@@ -96,7 +85,6 @@ def load_pack(pack_path: Path) -> Pack:
         )
     ids: set[str] = set()
     error_ids: set[str] = set()
-    exercise_text: dict[str, str] = {}
     for list_name in PACK_LISTS:
         records = data.get(list_name, [])
         if records is None:
@@ -113,9 +101,7 @@ def load_pack(pack_path: Path) -> Pack:
             ids.add(record["id"])
             if list_name == "errors":
                 error_ids.add(record["id"])
-            if list_name == "exercises":
-                exercise_text[record["id"]] = _exercise_text(record)
-    return Pack(path=pack_path, ids=frozenset(ids), error_ids=frozenset(error_ids), exercise_text=exercise_text)
+    return Pack(path=pack_path, ids=frozenset(ids), error_ids=frozenset(error_ids))
 
 
 def load_words(words_path: Path) -> WordStore:
