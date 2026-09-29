@@ -54,8 +54,13 @@ class SweepError(RuntimeError):
 
 def _git(repo: Path, *args: str, timeout: int = 30) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        ["git", *args], cwd=repo, env=sanitized_git_env(),
-        capture_output=True, text=True, check=False, timeout=timeout,
+        ["git", *args],
+        cwd=repo,
+        env=sanitized_git_env(),
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
     )
 
 
@@ -69,8 +74,11 @@ def _checked(repo: Path, *args: str) -> str:
 def _refs(repo: Path) -> list[Branch]:
     # NUL separates fields; Git ref names cannot contain NUL or a line feed.
     output = _checked(
-        repo, "for-each-ref", "--format=%(refname)%00%(objectname)%00%(committerdate:unix)",
-        "refs/remotes/origin", "refs/heads",
+        repo,
+        "for-each-ref",
+        "--format=%(refname)%00%(objectname)%00%(committerdate:unix)",
+        "refs/remotes/origin",
+        "refs/heads",
     )
     by_name: dict[str, dict[str, object]] = {}
     for line in output.splitlines():
@@ -96,11 +104,7 @@ def _candidate(name: str) -> bool:
     parts = name.split("/")
     if len(parts) == 1:
         return name.startswith("pr-")
-    # A leading dash is still sent to the branch-name validator. It cannot be
-    # a Git ref, but keeping it here exercises that safety boundary.
-    return parts[0] in AGENTS or parts[0] == "rescue" or (
-        parts[0].startswith("-") and parts[-1].startswith("review-")
-    )
+    return parts[0] in AGENTS or parts[0] == "rescue"
 
 
 def _valid(name: str, repo: Path) -> bool:
@@ -155,8 +159,14 @@ def _age(branch: Branch) -> int | None:
 
 
 def _classify(
-    repo: Path, branch: Branch, *, worktree_branches: set[str], detached_heads: set[str],
-    active_tasks: set[str], protected_branches: set[str], pr_lookup: PrLookup,
+    repo: Path,
+    branch: Branch,
+    *,
+    worktree_branches: set[str],
+    detached_heads: set[str],
+    active_tasks: set[str],
+    protected_branches: set[str],
+    pr_lookup: PrLookup,
 ) -> Decision:
     name = branch.name
 
@@ -204,7 +214,10 @@ def _classify(
 
 
 def sweep(
-    repo: Path, *, apply: bool = False, pr_lookup: PrLookup = reaper._query_pr_states,
+    repo: Path,
+    *,
+    apply: bool = False,
+    pr_lookup: PrLookup = reaper._query_pr_states,
     protected_lookup: Callable[[Path], set[str]] = remote_protected_branches,
 ) -> list[Decision]:
     decisions: list[Decision] = []
@@ -222,25 +235,37 @@ def sweep(
         active = _active_tasks(repo)
         for branch in branches:
             if protection_error and _candidate(branch.name) and branch.name not in PROTECTED:
-                decisions.append(Decision(
-                    branch.name, "report-only", f"branch protection query unavailable: {protection_error}",
-                    branch.remote_sha, branch.local_sha, _age(branch),
-                ))
+                decisions.append(
+                    Decision(
+                        branch.name,
+                        "report-only",
+                        f"branch protection query unavailable: {protection_error}",
+                        branch.remote_sha,
+                        branch.local_sha,
+                        _age(branch),
+                    )
+                )
                 continue
             verdict = _classify(
-                repo, branch, worktree_branches=worktree_branches, detached_heads=detached_heads,
+                repo,
+                branch,
+                worktree_branches=worktree_branches,
+                detached_heads=detached_heads,
                 active_tasks=active,
-                protected_branches=protected, pr_lookup=pr_lookup,
+                protected_branches=protected,
+                pr_lookup=pr_lookup,
             )
             if apply and verdict.classification.startswith("delete-"):
                 # Recheck all volatile guards before each destructive call. In particular,
                 # stale origin tracking refs cannot authorize deletion of a moved head.
                 current_worktrees = reaper.list_git_worktrees(repo)
                 verdict = _classify(
-                    repo, branch,
+                    repo,
+                    branch,
                     worktree_branches={w.branch for w in current_worktrees if w.branch},
                     detached_heads={w.head for w in current_worktrees if w.detached and w.head},
-                    active_tasks=_active_tasks(repo), protected_branches=protected,
+                    active_tasks=_active_tasks(repo),
+                    protected_branches=protected,
                     pr_lookup=pr_lookup,
                 )
                 if verdict.classification.startswith("delete-"):
@@ -272,14 +297,20 @@ def _apply(repo: Path, branch: Branch, verdict: Decision) -> Decision:
                 if live != branch.remote_sha:
                     return replace(verdict, classification="skipped-moved", reason="origin head changed")
                 result = _git(
-                    repo, "push", "--porcelain",
+                    repo,
+                    "push",
+                    "--porcelain",
                     f"--force-with-lease=refs/heads/{name}:{branch.remote_sha}",
-                    "origin", f":refs/heads/{name}", timeout=60,
+                    "origin",
+                    f":refs/heads/{name}",
+                    timeout=60,
                 )
                 if result.returncode:
                     output = (result.stdout + "\n" + result.stderr).strip()
                     if "[rejected]" in output and "(stale info)" in output:
-                        return replace(verdict, classification="skipped-moved", reason="origin head changed during deletion")
+                        return replace(
+                            verdict, classification="skipped-moved", reason="origin head changed during deletion"
+                        )
                     return replace(verdict, classification="report-only", reason=f"remote deletion failed: {output}")
                 verdict = replace(verdict, remote_deleted=True)
                 if _origin_head(repo, name) is not None:
@@ -321,6 +352,10 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def _format_decision(item: Decision) -> str:
+    return f"{item.classification}: {item.branch} ({item.reason}; age_days={item.age_days})"
+
+
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
@@ -328,18 +363,26 @@ def main(argv: list[str] | None = None) -> int:
         decisions = sweep(repo, apply=args.apply)
     except (OSError, RuntimeError, subprocess.TimeoutExpired) as exc:
         if args.json:
-            print(json.dumps({
-                "ok": False, "error": str(exc),
-                "decisions": [asdict(d) for d in exc.decisions] if isinstance(exc, SweepError) else [],
-            }))
+            print(
+                json.dumps(
+                    {
+                        "ok": False,
+                        "error": str(exc),
+                        "decisions": [asdict(d) for d in exc.decisions] if isinstance(exc, SweepError) else [],
+                    }
+                )
+            )
         else:
+            if isinstance(exc, SweepError):
+                for item in exc.decisions:
+                    print(_format_decision(item))
             print(f"branch_sweep: {exc}", file=sys.stderr)
         return 1
     if args.json:
         print(json.dumps({"ok": True, "apply": args.apply, "decisions": [asdict(d) for d in decisions]}, indent=2))
     else:
         for item in decisions:
-            print(f"{item.classification}: {item.branch} ({item.reason}; age_days={item.age_days})")
+            print(_format_decision(item))
     return 0
 
 
