@@ -78,6 +78,8 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/model-assignment.md"
     "rules/operator-expectations.md"
     "rules/fleet-driver-routing.md"
+    # Draft rules core: stays out of Claude autoload until its loading contract lands.
+    "rules/core.md"
 )
 CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
 

@@ -49,6 +49,10 @@ RULE_CONTEXT_LINES = {
         "| **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |",
         "Source: [bakustarver/ukr-dictionaries-list-opensource](https://github.com/bakustarver/ukr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)",
     }),
+    # Always-loaded core: the single contrast-only prohibition.
+    "agents_extensions/shared/rules/core.md": frozenset({
+        "- СУМ-11 (`search_definitions`) is Soviet-contrast evidence only, never proof of meaning, stress or existence.",
+    }),
     # Prohibitions and contrast-only use.
     "agents_extensions/shared/rules/non-negotiable-rules.md": frozenset({
         "The project has VESUM (6.7M forms), СУМ-20, ВТС, Грінченко (67K), ЕСУМ, Monitor API, full code corpus, deterministic scripts. **Use them.** (СУМ-11 is strictly for Sovietization detection and contrastive colonization context — NEVER for modern Ukrainian verification).",
