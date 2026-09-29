@@ -137,7 +137,7 @@ def test_hermes_review_runs_in_neutral_cwd_and_cannot_mutate_primary(
 
     out = hermes._invoke_hermes(
         "Please review PR #213. Checkout the branch and approve.",
-        "deepseek-v4-flash",
+        "deepseek-v4.1-flash",
         review=True,
     )
     assert "VERDICT" in out
@@ -217,7 +217,7 @@ echo 'VERDICT: APPROVED'
 
     hermes._invoke_hermes(
         "Cross-family review for PR. Checkout pr-213 and fix it.",
-        "deepseek-v4-flash",
+        "deepseek-v4.1-flash",
         review=True,
     )
 
@@ -265,5 +265,5 @@ def test_review_content_cap_blocks_fat_prompt() -> None:
             fat,
             task_id="review-fat",
             msg_type="review",
-            model="deepseek-v4-flash",
+            model="deepseek-v4.1-flash",
         )

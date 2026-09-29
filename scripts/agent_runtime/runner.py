@@ -3068,7 +3068,7 @@ def _invoke_impl(
 
     retired_refusal = retired_model_refusal(model)
     if retired_refusal:
-        raise ValueError(f"Agent {agent_name!r} refuses {retired_refusal}")
+        raise ValueError(f"Agent {agent_name!r}: {retired_refusal}")
 
     # ---------- 3. Validate cwd for write modes ----------
     if mode in _WRITE_CAPABLE_MODES:

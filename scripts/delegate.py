@@ -9143,7 +9143,7 @@ def _dispatch(
     # A catalog-retired model is refused before any check can run a command.
     retired_refusal = retired_model_refusal(getattr(args, "model", None))
     if retired_refusal:
-        print(f"❌ {retired_refusal}; not a dispatch route", file=sys.stderr)
+        print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
         return 2
 
     # #8775: validate caller-supplied paths once, before the DoR check, PR

@@ -22,6 +22,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import select
 import subprocess
 import sys
@@ -1943,7 +1944,12 @@ def test_invoke_refuses_catalog_retired_model_on_every_adapter(tmp_path, agent_n
         patch("agent_runtime.runner.has_headroom") as mock_headroom,
         patch.object(type(adapter), "build_invocation") as mock_build,
         patch("agent_runtime.runner.subprocess.Popen") as mock_popen,
-        pytest.raises(ValueError, match=rf"{model}.*retired.*use gpt-6\.1-sol"),
+        pytest.raises(
+            ValueError,
+            match=re.escape(
+                f"Agent {agent_name!r}: model {model!r} is retired in the model catalog ({model}); use gpt-6.1-sol"
+            ),
+        ),
     ):
         invoke(agent_name, "hello", mode=mode, cwd=tmp_path, model=model)
     mock_headroom.assert_not_called()

@@ -1085,7 +1085,7 @@ def test_dispatch_rejects_catalog_retired_model_before_spawn(tmp_tasks_dir, caps
     )
     assert delegate.cmd_dispatch(args) == 2
     assert delegate._read_state(delegate._state_path("retired-model")) is None
-    assert "is retired in the model catalog" in capsys.readouterr().err
+    assert f"dispatch refused: model {model!r} is retired in the model catalog" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
@@ -6429,7 +6429,7 @@ def test_run_worker_forwards_output_schema_to_runtime(tmp_tasks_dir, tmp_path):
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "gpt-5.6-sol",
+            "model": "gpt-6.1-sol",
             "effort": "xhigh",
             "cli_version": "fixture",
         },
@@ -6442,7 +6442,7 @@ def test_run_worker_forwards_output_schema_to_runtime(tmp_tasks_dir, tmp_path):
             prompt="hi",
             mode="read-only",
             cwd_str=str(tmp_path),
-            model="gpt-5.6-sol",
+            model="gpt-6.1-sol",
             hard_timeout=60,
             effort="xhigh",
             output_schema_path=str(schema_path),
@@ -14560,7 +14560,7 @@ def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, tmp_path, monke
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "gpt-5.6-luna",
+            "model": "gpt-6-luna",
             "effort": "max",
             "cli_version": "1.0",
             "duration_s": 1.0,
@@ -14576,7 +14576,7 @@ def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, tmp_path, monke
             prompt="hello",
             mode="read-only",
             cwd_str=str(tmp_path),
-            model="gpt-5.6-luna",
+            model="gpt-6-luna",
             hard_timeout=60,
             run_nonce=None,
         )

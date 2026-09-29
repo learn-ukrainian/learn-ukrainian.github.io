@@ -142,7 +142,7 @@ class CursorAdapter:
             _logger.debug("cursor adapter ignoring effort=%s (not supported by CLI)", effort)
         refusal = retired_model_refusal(model)
         if refusal:
-            raise ValueError(f"Cursor {refusal}")
+            raise ValueError(f"Cursor adapter: {refusal}")
 
         # Resolve binary. shutil.which handles PATH lookup.
         # Prefer the UNAMBIGUOUS ``cursor-agent`` name. A generic ``agent`` on
