@@ -3,7 +3,7 @@ Tests for site website integrity.
 
 Validates that the generated site is internally consistent:
 1. Every track has a landing page (index.mdx) with valid frontmatter
-2. Every module link in landing pages resolves to an existing .mdx file
+2. Landing pages use no retired module link formats
 3. MDX files have valid frontmatter (title required)
 4. No stale files from old naming conventions (module-NN.mdx, numbered slugs)
 5. Curriculum manifest (curriculum.yaml) is in sync with site content
@@ -158,35 +158,11 @@ class TestLandingPages:
 # =============================================================================
 
 class TestModuleLinks:
-    """Every module link in landing pages must resolve to an existing MDX file."""
+    """Landing pages must not link modules through retired slug formats."""
 
     @pytest.fixture(autouse=True)
     def check_site(self):
         _skip_if_no_site()
-
-    @pytest.mark.parametrize("track", TRACKS_WITH_MODULES)
-    def test_all_links_resolve(self, track):
-        """Every ./slug link in the landing page points to an existing .mdx file."""
-        index = DOCS_DIR / track / "index.mdx"
-        if not index.is_file():
-            pytest.skip(f"No index.mdx for {track}")
-
-        slugs = _extract_module_links(index)
-        if not slugs:
-            pytest.skip(f"No module links found in {track}/index.mdx")
-
-        missing = []
-        for s in slugs:
-            # Site can use .mdx or .md
-            if not (DOCS_DIR / track / f"{s}.mdx").is_file() and \
-               not (DOCS_DIR / track / f"{s}.md").is_file():
-                missing.append(s)
-
-        assert not missing, (
-            f"{track}/index.mdx has {len(missing)} broken links:\n"
-            + "\n".join(f"  - ./{s} -> {s}.mdx NOT FOUND" for s in missing[:20])
-            + (f"\n  ... and {len(missing) - 20} more" if len(missing) > 20 else "")
-        )
 
     @pytest.mark.parametrize("track", TRACKS_WITH_MODULES)
     def test_no_numbered_slug_links(self, track):

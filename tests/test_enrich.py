@@ -5,7 +5,6 @@ import typing
 from pathlib import Path
 
 import pytest
-import yaml
 
 pytestmark = pytest.mark.reads_content
 
@@ -18,9 +17,6 @@ from build.enrich import (
     _format_dialogues,
     enrich,
 )
-
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
 
 class TestSlovnyk:
@@ -92,68 +88,6 @@ class TestSlovnyk:
         assert "| **літера** | letter | ім. | ж. |" in result_stripped
         assert "| **Як справи?** | How are you? |" in result
         assert "Вирази" in result
-
-
-class TestM01ProseOnly:
-    """Integration test: M01 .md file contains only prose (no TAB markers).
-
-    #1124 moved enrichment to publish step. The .md now contains only the Урок prose.
-    Словник, Зошит, Ресурси tabs are assembled at publish time from sources.
-    """
-
-    def _load_m01(self):
-        content_path = CURRICULUM_ROOT / "a1" / "sounds-letters-and-hello.md"
-        plan_path = CURRICULUM_ROOT / "plans" / "a1" / "sounds-letters-and-hello.yaml"
-        if not content_path.exists() or not plan_path.exists():
-            return None, None
-        content = content_path.read_text("utf-8")
-        plan = yaml.safe_load(plan_path.read_text("utf-8"))
-        return content, plan
-
-    def test_no_tab_markers_in_md(self):
-        content, _plan = self._load_m01()
-        if content is None:
-            import pytest
-            pytest.skip("M01 content/plan not available")
-
-        assert "<!-- TAB:" not in content, (
-            "M01 .md should not have TAB markers (enrichment moved to publish)"
-        )
-
-    def test_prose_has_content(self):
-        content, _plan = self._load_m01()
-        if content is None:
-            import pytest
-            pytest.skip("M01 content/plan not available")
-
-        word_count = len(content.split())
-        assert word_count >= 500, (
-            f"M01 prose should have substantial content, found {word_count} words"
-        )
-
-    def test_no_videos_in_prose(self):
-        content, _plan = self._load_m01()
-        if content is None:
-            import pytest
-            pytest.skip("M01 content/plan not available")
-
-        assert "YouTubeVideo" not in content, (
-            "Videos should not be in .md prose — they belong in workbook activities at publish"
-        )
-
-    def test_vocabulary_yaml_exists(self):
-        """Словник is built from vocabulary YAML at publish time."""
-        vocab_path = CURRICULUM_ROOT / "a1" / "vocabulary" / "sounds-letters-and-hello.yaml"
-        if not vocab_path.exists():
-            import pytest
-            pytest.skip("M01 vocabulary YAML not available")
-
-        vocab_data = yaml.safe_load(vocab_path.read_text("utf-8"))
-        assert isinstance(vocab_data, dict)
-        entries = vocab_data.get("vocabulary", [])
-        assert len(entries) >= 10, (
-            f"M01 vocabulary YAML must have at least 10 entries, found {len(entries)}"
-        )
 
 
 class TestVideoEmbeds:

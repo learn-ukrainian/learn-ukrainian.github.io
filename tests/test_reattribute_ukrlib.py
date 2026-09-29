@@ -1,9 +1,8 @@
-"""Tests for ukrlib quarantine reattribution.
+"""Tests for ukrlib quarantine reattribution (#807).
 
-Pre-execution tests verify the plan is correct before running the script.
-They are skipped once reattribution is complete (quarantine cleaned up).
-
-Post-execution tests verify the output after reattribution + ingestion.
+The reattribution ran once and its quarantine input is gone, so only the
+post-execution checks remain: they verify the output after reattribution +
+ingestion.
 """
 
 import json
@@ -16,112 +15,6 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from rag.config import LITERARY_DIR
-
-QUARANTINE_DIR = LITERARY_DIR / "_quarantine"
-
-# Skip all pre-tests if quarantine has been cleaned up (reattribution done)
-pre_requires_quarantine = pytest.mark.skipif(
-    not QUARANTINE_DIR.exists(),
-    reason="Quarantine directory already cleaned up — reattribution complete",
-)
-
-
-# ── Pre-execution tests ──────────────────────────────────────────────
-
-
-@pre_requires_quarantine
-class TestPreQuarantinedFilesExist:
-    """All 8 quarantined files must be present."""
-
-    EXPECTED_FILES: ClassVar[list[str]] = [
-        "ukrlib-kotlyarevsky.jsonl",
-        "ukrlib-kotsyubynsky.jsonl",
-        "ukrlib-kvitka.jsonl",
-        "ukrlib-myrny.jsonl",
-        "ukrlib-nechuy.jsonl",
-        "ukrlib-rylsky.jsonl",
-        "ukrlib-tychyna.jsonl",
-        "ukrlib-vynnychenko.jsonl",
-    ]
-
-    @pytest.mark.parametrize("filename", EXPECTED_FILES)
-    def test_pre_quarantined_file_exists(self, filename):
-        path = QUARANTINE_DIR / filename
-        assert path.exists(), f"Quarantined file missing: {path}"
-
-
-@pre_requires_quarantine
-class TestPreKnownWorksMatchRealAuthor:
-    """Spot-check canonical works against expected real authors."""
-
-    CANONICAL_CHECKS: ClassVar[list[tuple[str, str, str]]] = [
-        # (quarantined file, work title substring, expected real author prefix)
-        ("ukrlib-myrny.jsonl", "Енеїда", "Панас Мирний"),  # Real: Котляревський
-        ("ukrlib-kvitka.jsonl", "Fata Morgana", "Григорій Квітка-Основ'яненко"),  # Real: Коцюбинський
-        ("ukrlib-kvitka.jsonl", "Intermezzo", "Григорій Квітка-Основ'яненко"),  # Real: Коцюбинський
-        ("ukrlib-tychyna.jsonl", "Хіба ревуть воли", "Павло Тичина"),  # Real: Мирний
-        ("ukrlib-nechuy.jsonl", "Арфами, арфами", "Іван Нечуй-Левицький"),  # Real: Тичина
-        ("ukrlib-rylsky.jsonl", "Кайдашева сім'я", "Максим Рильський"),  # Real: Нечуй-Левицький
-        ("ukrlib-vynnychenko.jsonl", "Мартин Боруля", "Володимир Винниченко"),  # Real: Карпенко-Карий
-        ("ukrlib-kotlyarevsky.jsonl", "Кобзар", "Іван Котляревський"),  # Real: Шевченко
-        ("ukrlib-kotsyubynsky.jsonl", "Байки Харківські", "Михайло Коцюбинський"),  # Real: Сковорода
-    ]
-
-    @pytest.mark.parametrize("filename,work_substr,wrong_prefix", CANONICAL_CHECKS)
-    def test_pre_known_work_has_wrong_author(self, filename, work_substr, wrong_prefix):
-        """Verify the quarantined file has the WRONG author (confirming the bug)."""
-        path = QUARANTINE_DIR / filename
-        if not path.exists():
-            pytest.skip(f"Quarantined file not found: {path}")
-
-        found = False
-        with open(path, encoding="utf-8") as f:
-            for line in f:
-                chunk = json.loads(line)
-                if work_substr in chunk.get("work", ""):
-                    assert chunk["work"].startswith(wrong_prefix), (
-                        f"Expected work '{work_substr}' to have wrong prefix "
-                        f"'{wrong_prefix}' but got: {chunk['work']}"
-                    )
-                    found = True
-                    break
-
-        assert found, f"Work containing '{work_substr}' not found in {filename}"
-
-
-@pre_requires_quarantine
-class TestPreDuplicatesAlreadyExist:
-    """Correct files must exist for the 3 duplicates."""
-
-    DUPLICATE_TARGETS: ClassVar[list[str]] = [
-        "ukrlib-shevchenko.jsonl",
-        "ukrlib-skovoroda.jsonl",
-        "ukrlib-karpenko_karyi.jsonl",
-    ]
-
-    @pytest.mark.parametrize("filename", DUPLICATE_TARGETS)
-    def test_pre_duplicate_target_exists(self, filename):
-        path = LITERARY_DIR / filename
-        assert path.exists(), f"Correct file missing for duplicate: {path}"
-
-
-@pre_requires_quarantine
-class TestPreNoTargetFileCollision:
-    """The 5 new filenames must not already exist in data/literary_texts/."""
-
-    NEW_FILENAMES: ClassVar[list[str]] = [
-        "ukrlib-kotsyubynsky.jsonl",
-        "ukrlib-kotlyarevsky.jsonl",
-        "ukrlib-myrny.jsonl",
-        "ukrlib-tychyna.jsonl",
-        "ukrlib-nechuy.jsonl",
-    ]
-
-    @pytest.mark.parametrize("filename", NEW_FILENAMES)
-    def test_pre_no_collision(self, filename):
-        path = LITERARY_DIR / filename
-        assert not path.exists(), f"Target file already exists (would be overwritten): {path}"
-
 
 # ── Post-execution tests ─────────────────────────────────────────────
 
