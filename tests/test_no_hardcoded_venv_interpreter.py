@@ -6,48 +6,71 @@ running pytest (``tests.helpers.python.project_python``, which is
 worktree has no ``.venv`` by design, so such a spawn fails with
 ``FileNotFoundError``.
 
-This guard scans every ``tests/**/*.py`` for a *spawn argv* built from a
-``.venv/bin/python`` literal or a ``... / ".venv" / "bin" / "python"`` join (or
-``.joinpath`` / ``os.path.join`` equivalent). Text-only uses — asserting that a
-launcher/hook prints ``.venv/bin/python``, a ``tmp_path`` fixture stub, or a
-docstring — are not flagged. Any file that still builds such a spawn argv must
-be listed in ``ALLOWLIST`` with a reason.
+The guard scans every ``tests/**/*.py`` (no directory is skipped except caches
+and hidden directories) and flags:
 
-Detector limits (documented on purpose): it only catches the literal / join form
-*in the argv position of a spawn call*. A module-level ``PYTHON = ROOT /
-".venv" / "bin" / "python"`` that is later handed to ``subprocess`` is not
-followed (no dataflow analysis); those must use ``project_python()`` instead.
+* a *spawn* — ``subprocess.*``, ``os.exec*`` / ``os.spawn*`` / ``os.system`` /
+  ``os.popen``, ``asyncio.create_subprocess_*`` — whose argv (or command
+  string) is a ``.venv/bin/python`` expression, either inline or reached through
+  a name bound to one (``PY = ROOT / ".venv" / "bin" / "python"``,
+  ``f"{ROOT}/.venv/bin/python"``, ``os.path.join(...)``, ``.joinpath(...)``,
+  ``Path(..., ".venv", "bin", "python")``, a helper function or fixture that
+  returns one, ``cmd = [PY, ...]``), including through ``str()`` /
+  ``os.fspath()``;
+* the same rooted expression handed to a helper instead of a spawn: as a
+  keyword value (``executable=PY``), as the first element of an argv-shaped
+  list (``_run([str(PY), ...])``), or as a dict value (``{"X_PYTHON": PY}``);
+* an existence gate on such an expression (``.exists()`` / ``.is_file()`` /
+  ``os.path.exists`` / ``os.path.isfile`` / ``os.access``), which is how a
+  worktree run silently skips instead of failing.
+
+Text-only uses — asserting that a launcher prints ``.venv/bin/python``, the
+bare ``".venv/bin/python"`` string in expected-command data, a docstring, a
+fixture file body — are not flagged (a bare literal only counts as the argv of
+a spawn call), and neither is a path rooted in a temporary directory
+(``tmp_path / ".venv" / "bin" / "python"`` stubs).
+Any file that still needs the real thing must be listed in ``ALLOWLIST`` with a
+reason.
+
+Detector limits (documented on purpose): the analysis is one file at a time and
+flow-insensitive — a name counts as ``.venv/bin/python`` if *any* assignment in
+the file binds it to one, so a later rebinding to ``sys.executable`` does not
+clear it; a constant imported from another module is not followed (the module
+that defines it is scanned instead); only the first argv element is checked, so
+``["env", PY]`` is missed; an interpreter written into a generated shell
+script or passed positionally to a helper (not by keyword, not as an argv list)
+is missed; ``%`` / ``.format`` string building and tuple unpacking are not
+followed; and a temp-directory root is recognised by name (``*tmp*``), by
+``tempfile.*`` or by assignment from one — a repo built under ``tmp_path`` and
+passed around under another name needs an ``ALLOWLIST`` entry.
 """
 
 from __future__ import annotations
 
 import ast
 import os
+import re
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-_SCAN_SKIP = {
-    ".git",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    ".venv",
-    "__pycache__",
-    # Sparse-checkout trees are not always present; skip them like other scans.
-    "curriculum",
-    "data",
-    "wiki",
-}
+_SCAN_SKIP = {".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".venv", "__pycache__"}
 
 _INTERPRETER_TAILS = (
     (".venv", "bin", "python"),
     (".venv", "bin", "python3"),
 )
 
-_SUBPROCESS_FUNCS = {"run", "Popen", "call", "check_call", "check_output", "check_input"}
-_OS_EXEC_FUNCS = {"execv", "execve", "execl", "execle", "execlp", "execlpe", "execvp", "execvpe"}
+_SUBPROCESS_FUNCS = {"run", "Popen", "call", "check_call", "check_output", "getoutput", "getstatusoutput"}
 _OS_SPAWN_FUNCS = {
+    "execv",
+    "execve",
+    "execl",
+    "execle",
+    "execlp",
+    "execlpe",
+    "execvp",
+    "execvpe",
     "system",
     "popen",
     "posix_spawn",
@@ -61,209 +84,371 @@ _OS_SPAWN_FUNCS = {
     "spawnvp",
     "spawnvpe",
 }
+_ASYNCIO_SPAWN_FUNCS = {"create_subprocess_exec", "create_subprocess_shell"}
+_SPAWN_FUNCS_BY_MODULE = {
+    "subprocess": _SUBPROCESS_FUNCS,
+    "os": _OS_SPAWN_FUNCS,
+    "asyncio": _ASYNCIO_SPAWN_FUNCS,
+}
+_EXISTENCE_METHODS = {"exists", "is_file", "is_symlink"}
+_EXISTENCE_OS_PATH_FUNCS = {"exists", "isfile", "islink"}
 
-# Paths owned by other in-flight workers, or the guard itself; never scanned.
-_EXCLUDED = {
-    "tests/test_no_hardcoded_venv_interpreter.py",
-    "tests/test_delegate.py",
-    "tests/test_branch_sweep.py",
-    "tests/test_jevgrep_update.py",
+_PATH_CONSTRUCTORS = {"Path", "PurePath", "PosixPath", "PurePosixPath"}
+_PASSTHROUGH_FUNCS = {"str", "fspath", "abspath", "realpath", "normpath", "expanduser", "expandvars"}
+_PASSTHROUGH_METHODS = {"resolve", "absolute", "expanduser", "as_posix", "__fspath__", "__str__"}
+_PATH_MODULE_NAMES = {"posixpath", "ntpath"}
+
+_TEMP_MARKER = "\x01"
+_UNKNOWN_MARKER = "\x00"
+_COMMAND_INTERPRETER = re.compile(rf"(?:^|[\s;&|(])(?:[^\s{_TEMP_MARKER}]*/)?\.venv/bin/python3?(?=\s|$)")
+
+# Paths not scanned: the guard's own inline fixtures live in string literals, so
+# it scans itself; nothing is excluded.
+_EXCLUDED: frozenset[str] = frozenset()
+
+# path -> reason the file still names a ``.venv/bin/python`` spawn or gate.
+ALLOWLIST: dict[str, str] = {
+    "tests/helpers/python.py": ("require_repo_venv() is the sanctioned gate: it skips when the repo venv is absent"),
+    "tests/test_handoff_slot_registry.py": (
+        "_helper_root() only picks the checkout that holds the shared interpreter; it never spawns "
+        "it and falls back to sys.prefix when the checkout has no .venv"
+    ),
+    "tests/orchestration/test_thread_restart_e2e.py": (
+        "runs the handoff CLI inside a throwaway git repo built under tmp_path, whose .venv is a "
+        "symlink or shim to the primary interpreter; the repo root is not a checkout"
+    ),
+    "tests/test_lexicon_runner_pr1.py": (
+        "asserts the production main_checkout_root()/.venv interpreter resolution; the primary "
+        "checkout's venv always exists there, and no spawn uses the path"
+    ),
 }
 
-# path -> reason the spawn argv still names ``.venv/bin/python``.
-ALLOWLIST: dict[str, str] = {}
+# (constant path suffix, rooted-in-a-temp-directory)
+_Parts = tuple[tuple[str, ...], bool]
+_NO_PARTS: _Parts = ((), False)
 
 
-def _div_chain_strings(node: ast.AST) -> list[str] | None:
-    parts: list[str] = []
-    current = node
-    while isinstance(current, ast.BinOp) and isinstance(current.op, ast.Div):
-        right = current.right
-        if not isinstance(right, ast.Constant) or not isinstance(right.value, str):
-            return None
-        parts.append(right.value)
-        current = current.left
-    parts.reverse()
-    return parts
+def _split(value: str) -> tuple[str, ...]:
+    return tuple(piece for piece in value.split("/") if piece)
 
 
-def _flatten_parts(parts: list[str]) -> tuple[str, ...]:
-    flat: list[str] = []
-    for part in parts:
-        flat.extend(piece for piece in part.split("/") if piece)
-    return tuple(flat)
+def _is_interpreter(parts: _Parts) -> bool:
+    suffix, temp_rooted = parts
+    return not temp_rooted and suffix[-3:] in _INTERPRETER_TAILS
 
 
-def _ends_with_interpreter(parts: list[str]) -> bool:
-    flat = _flatten_parts(parts)
-    return len(flat) >= 3 and flat[-3:] in _INTERPRETER_TAILS
+class _Analyzer:
+    """Per-file facts: import aliases plus every name bound to a ``.venv`` path."""
 
+    def __init__(self, tree: ast.AST) -> None:
+        self.tree = tree
+        self.subprocess_modules: set[str] = set()
+        self.os_modules: set[str] = set()
+        self.asyncio_modules: set[str] = set()
+        self.spawn_names: set[str] = set()
+        self.path_modules: set[str] = set(_PATH_MODULE_NAMES)
+        self.join_funcs: set[str] = set()
+        self.tempfile_names: set[str] = {"tempfile"}
+        self.bound: dict[str, _Parts] = {}
+        self._collect_imports()
+        self._collect_bindings()
 
-def _is_interpreter_string(value: str) -> bool:
-    if value in (".venv/bin/python", ".venv/bin/python3") or value.endswith(
-        ("/.venv/bin/python", "/.venv/bin/python3")
-    ):
-        return True
-    # ``os.system``/``os.popen`` take a single command string (e.g.
-    # ``".venv/bin/python -m pytest"``), not a bare argv element.
-    return value.startswith((".venv/bin/python ", ".venv/bin/python3 "))
+    # -- imports -----------------------------------------------------------
+    def _collect_imports(self) -> None:
+        for node in ast.walk(self.tree):
+            if isinstance(node, ast.Import):
+                for alias in node.names:
+                    name = alias.asname or alias.name.split(".")[0]
+                    if alias.name == "subprocess":
+                        self.subprocess_modules.add(name)
+                    elif alias.name == "os":
+                        self.os_modules.add(name)
+                    elif alias.name == "asyncio":
+                        self.asyncio_modules.add(name)
+                    elif alias.name == "os.path" and alias.asname:
+                        self.path_modules.add(alias.asname)
+                    elif alias.name == "os.path":
+                        self.os_modules.add("os")
+                    elif alias.name == "tempfile":
+                        self.tempfile_names.add(name)
+            elif isinstance(node, ast.ImportFrom):
+                for alias in node.names:
+                    name = alias.asname or alias.name
+                    if alias.name in _SPAWN_FUNCS_BY_MODULE.get(node.module or "", ()):
+                        self.spawn_names.add(name)
+                    elif node.module == "os" and alias.name == "path":
+                        self.path_modules.add(name)
+                    elif node.module == "os.path" and alias.name == "join":
+                        self.join_funcs.add(name)
 
-
-def _trailing_string_args(call: ast.Call) -> list[str]:
-    args: list[str] = []
-    for arg in reversed(call.args):
-        if not isinstance(arg, ast.Constant) or not isinstance(arg.value, str):
-            break
-        args.append(arg.value)
-    args.reverse()
-    return args
-
-
-def _os_path_join_names(tree: ast.AST) -> tuple[set[str], set[str], set[str]]:
-    os_modules: set[str] = set()
-    path_modules: set[str] = set()
-    join_funcs: set[str] = set()
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            for alias in node.names:
-                if alias.name == "os":
-                    os_modules.add(alias.asname or "os")
-                elif alias.name == "os.path":
-                    if alias.asname:
-                        path_modules.add(alias.asname)
-                    else:
-                        os_modules.add("os")
-        elif isinstance(node, ast.ImportFrom) and node.module == "os":
-            for alias in node.names:
-                if alias.name == "path":
-                    path_modules.add(alias.asname or "path")
-        elif isinstance(node, ast.ImportFrom) and node.module == "os.path":
-            for alias in node.names:
-                if alias.name == "join":
-                    join_funcs.add(alias.asname or "join")
-    return os_modules, path_modules, join_funcs
-
-
-def _is_os_path_join(
-    func: ast.expr,
-    os_modules: set[str],
-    path_modules: set[str],
-    join_funcs: set[str],
-) -> bool:
-    if isinstance(func, ast.Name):
-        return func.id in join_funcs
-    if not isinstance(func, ast.Attribute) or func.attr != "join":
-        return False
-    value = func.value
-    if isinstance(value, ast.Name):
-        return value.id in path_modules
-    return (
-        isinstance(value, ast.Attribute)
-        and value.attr == "path"
-        and isinstance(value.value, ast.Name)
-        and value.value.id in os_modules
-    )
-
-
-_WRAPPER_FUNCS = {"str", "Path", "fspath", "os.fspath", "os.path.fspath"}
-
-
-def _is_wrapper_call(node: ast.Call) -> bool:
-    func = node.func
-    if isinstance(func, ast.Name) and func.id in {"str", "Path", "fspath"}:
-        return True
-    if isinstance(func, ast.Attribute) and func.attr == "fspath":
+    # -- path evaluation ---------------------------------------------------
+    def _is_os_path_join(self, func: ast.expr) -> bool:
+        if isinstance(func, ast.Name):
+            return func.id in self.join_funcs
+        if not isinstance(func, ast.Attribute) or func.attr != "join":
+            return False
         value = func.value
         if isinstance(value, ast.Name):
-            return value.id == "os"
-        if isinstance(value, ast.Attribute) and value.attr == "path":
-            return isinstance(value.value, ast.Name) and value.value.id == "os"
-    return False
+            return value.id in self.path_modules
+        return (
+            isinstance(value, ast.Attribute)
+            and value.attr == "path"
+            and isinstance(value.value, ast.Name)
+            and value.value.id in self.os_modules
+        )
 
+    def _is_tempfile_call(self, node: ast.Call) -> bool:
+        func = node.func
+        return (
+            isinstance(func, ast.Attribute)
+            and isinstance(func.value, ast.Name)
+            and func.value.id in self.tempfile_names
+        )
 
-def _is_venv_interpreter(
-    node: ast.expr,
-    os_modules: set[str],
-    path_modules: set[str],
-    join_funcs: set[str],
-) -> bool:
-    if isinstance(node, ast.Constant) and isinstance(node.value, str):
-        return _is_interpreter_string(node.value)
-    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
-        parts = _div_chain_strings(node)
-        return parts is not None and _ends_with_interpreter(parts)
-    if isinstance(node, ast.Call):
-        if _is_wrapper_call(node) and len(node.args) == 1:
-            return _is_venv_interpreter(node.args[0], os_modules, path_modules, join_funcs)
-        is_joinpath = isinstance(node.func, ast.Attribute) and node.func.attr == "joinpath"
-        if is_joinpath or _is_os_path_join(node.func, os_modules, path_modules, join_funcs):
-            return _ends_with_interpreter(_trailing_string_args(node))
-    return False
+    def _join(self, nodes: list[ast.expr]) -> _Parts:
+        if not nodes:
+            return _NO_PARTS
+        suffix, temp_rooted = self.parts(nodes[0])
+        for extra in nodes[1:]:
+            if isinstance(extra, ast.Constant) and isinstance(extra.value, str):
+                suffix = suffix + _split(extra.value)
+            else:
+                suffix = ()
+        return suffix, temp_rooted
 
+    def parts(self, node: ast.expr) -> _Parts:
+        """The constant path suffix of ``node`` and whether it is temp-dir rooted."""
+        if isinstance(node, ast.Constant):
+            return (_split(node.value), False) if isinstance(node.value, str) else _NO_PARTS
+        if isinstance(node, ast.Name):
+            if node.id in self.bound:
+                return self.bound[node.id]
+            return ((), "tmp" in node.id.lower())
+        if isinstance(node, ast.Attribute):
+            if node.attr in self.bound:
+                return self.bound[node.attr]
+            return ((), self.parts(node.value)[1])
+        if isinstance(node, ast.Starred):
+            return self.parts(node.value)
+        if isinstance(node, (ast.List, ast.Tuple)):
+            return self.parts(node.elts[0]) if node.elts else _NO_PARTS
+        if isinstance(node, ast.BinOp):
+            return self._binop_parts(node)
+        if isinstance(node, ast.JoinedStr):
+            return self._fstring_parts(node)
+        if isinstance(node, ast.Call):
+            return self._call_parts(node)
+        return _NO_PARTS
 
-def _spawn_module_names(tree: ast.AST) -> tuple[set[str], set[str], set[str], set[str]]:
-    """Names bound to ``subprocess``, ``os``, and their imported spawn funcs."""
-    subprocess_modules: set[str] = set()
-    os_modules: set[str] = set()
-    subprocess_funcs: set[str] = set()
-    os_funcs: set[str] = set()
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Import):
-            for alias in node.names:
-                if alias.name == "subprocess":
-                    subprocess_modules.add(alias.asname or "subprocess")
-                elif alias.name == "os":
-                    os_modules.add(alias.asname or "os")
-        elif isinstance(node, ast.ImportFrom) and node.module == "subprocess":
-            for alias in node.names:
-                subprocess_funcs.add(alias.asname or alias.name)
-        elif isinstance(node, ast.ImportFrom) and node.module == "os":
-            for alias in node.names:
-                os_funcs.add(alias.asname or alias.name)
-    return subprocess_modules, os_modules, subprocess_funcs, os_funcs
+    def _binop_parts(self, node: ast.BinOp) -> _Parts:
+        if not isinstance(node.op, (ast.Div, ast.Add)):
+            return _NO_PARTS
+        suffix, temp_rooted = self.parts(node.left)
+        right = node.right
+        if isinstance(right, ast.Constant) and isinstance(right.value, str):
+            return suffix + _split(right.value), temp_rooted
+        if isinstance(right, ast.Name) and right.id in self.bound and isinstance(node.op, ast.Div):
+            return suffix + self.bound[right.id][0], temp_rooted
+        if isinstance(node.op, ast.Add) and isinstance(right, (ast.List, ast.Tuple)):
+            return suffix, temp_rooted  # argv concatenation keeps the first element
+        return (), temp_rooted
 
+    def _fstring_parts(self, node: ast.JoinedStr) -> _Parts:
+        pieces: list[str] = []
+        temp_rooted = False
+        for index, value in enumerate(node.values):
+            if isinstance(value, ast.Constant) and isinstance(value.value, str):
+                pieces.append(value.value)
+                continue
+            inner = self.parts(value.value) if isinstance(value, ast.FormattedValue) else _NO_PARTS
+            if index == 0:
+                temp_rooted = inner[1]
+            pieces.append("/".join(inner[0]) if inner[0] else _UNKNOWN_MARKER)
+        return _split("".join(pieces)), temp_rooted
 
-def _is_spawn_call(
-    func: ast.expr,
-    subprocess_modules: set[str],
-    os_modules: set[str],
-    subprocess_funcs: set[str],
-    os_funcs: set[str],
-) -> bool:
-    if isinstance(func, ast.Name):
-        return func.id in subprocess_funcs or func.id in os_funcs
-    if not isinstance(func, ast.Attribute):
+    def _call_parts(self, node: ast.Call) -> _Parts:
+        func = node.func
+        if isinstance(func, ast.Attribute):
+            if func.attr == "joinpath":
+                return self._join([func.value, *node.args])
+            if func.attr in _PASSTHROUGH_METHODS and not node.args:
+                return self.parts(func.value)
+        if self._is_os_path_join(func) or (isinstance(func, ast.Name) and func.id in _PATH_CONSTRUCTORS):
+            return self._join(list(node.args))
+        name = func.id if isinstance(func, ast.Name) else func.attr if isinstance(func, ast.Attribute) else ""
+        if name in _PASSTHROUGH_FUNCS and len(node.args) == 1:
+            return self.parts(node.args[0])
+        if name in {"get", "getenv"} and len(node.args) == 2:
+            return self.parts(node.args[1])  # ``os.environ.get("X", ".venv/bin/python")``
+        if self._is_tempfile_call(node):
+            return ((), True)
+        if name in self.bound:
+            return self.bound[name]  # helper function / fixture returning a path
+        return _NO_PARTS
+
+    # -- bindings ----------------------------------------------------------
+    def _bind(self, key: str, value: _Parts) -> bool:
+        if not value[0] and not value[1]:
+            return False
+        old = self.bound.get(key)
+        if old == value:
+            return False
+        if old is not None:
+            better = ".venv" in value[0] and (".venv" not in old[0] or (old[1] and not value[1]))
+            if not better:
+                return False
+        self.bound[key] = value
+        return True
+
+    @staticmethod
+    def _target_key(target: ast.expr) -> str | None:
+        if isinstance(target, ast.Name):
+            return target.id
+        if isinstance(target, ast.Attribute):
+            return target.attr
+        return None
+
+    def _collect_bindings(self) -> None:
+        for _ in range(8):
+            changed = False
+            for node in ast.walk(self.tree):
+                if isinstance(node, ast.Assign):
+                    keys = [self._target_key(target) for target in node.targets]
+                    value = node.value
+                elif isinstance(node, ast.AnnAssign) and node.value is not None:
+                    keys = [self._target_key(node.target)]
+                    value = node.value
+                elif isinstance(node, ast.For):
+                    key = self._target_key(node.target)
+                    if key and self._bind(key, self.parts(node.iter)):
+                        changed = True
+                    continue
+                elif isinstance(node, ast.With):
+                    for item in node.items:
+                        key = self._target_key(item.optional_vars) if item.optional_vars else None
+                        if key and self._bind(key, self.parts(item.context_expr)):
+                            changed = True
+                    continue
+                elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    for child in ast.walk(node):
+                        if isinstance(child, ast.Return) and child.value is not None:
+                            changed |= self._bind(node.name, self.parts(child.value))
+                    continue
+                else:
+                    continue
+                parts = self.parts(value)
+                for key in keys:
+                    if key is not None:
+                        changed |= self._bind(key, parts)
+            if not changed:
+                return
+
+    # -- detection ---------------------------------------------------------
+    def _is_spawn_call(self, func: ast.expr) -> bool:
+        if isinstance(func, ast.Name):
+            return func.id in self.spawn_names
+        if not (isinstance(func, ast.Attribute) and isinstance(func.value, ast.Name)):
+            return False
+        module, attr = func.value.id, func.attr
+        return (
+            (module in self.subprocess_modules and attr in _SUBPROCESS_FUNCS)
+            or (module in self.os_modules and attr in _OS_SPAWN_FUNCS)
+            or (module in self.asyncio_modules and attr in _ASYNCIO_SPAWN_FUNCS)
+        )
+
+    def _is_existence_gate(self, node: ast.Call) -> bool:
+        func = node.func
+        if isinstance(func, ast.Attribute):
+            if func.attr in _EXISTENCE_METHODS and not node.args:
+                return _is_interpreter(self.parts(func.value))
+            if node.args and (
+                (func.attr in _EXISTENCE_OS_PATH_FUNCS and self._is_path_module(func.value))
+                or (func.attr == "access" and isinstance(func.value, ast.Name) and func.value.id in self.os_modules)
+            ):
+                return _is_interpreter(self.parts(node.args[0]))
         return False
-    value = func.value
-    if isinstance(value, ast.Name):
-        if value.id in subprocess_modules and func.attr in _SUBPROCESS_FUNCS:
-            return True
-        if value.id in os_modules and func.attr in (_OS_EXEC_FUNCS | _OS_SPAWN_FUNCS):
-            return True
-    return False
 
+    def _is_path_module(self, value: ast.expr) -> bool:
+        if isinstance(value, ast.Name):
+            return value.id in self.path_modules
+        return (
+            isinstance(value, ast.Attribute)
+            and value.attr == "path"
+            and isinstance(value.value, ast.Name)
+            and value.value.id in self.os_modules
+        )
 
-def _argv_first_element(node: ast.expr) -> ast.expr:
-    if isinstance(node, (ast.List, ast.Tuple)) and node.elts:
-        return node.elts[0]
-    return node
+    def _command_text(self, node: ast.expr) -> str:
+        """A shell command string with interpreter names spelled out, else ''."""
+        if isinstance(node, ast.Constant) and isinstance(node.value, str):
+            return node.value
+        if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Add):
+            return self._command_text(node.left) + self._command_text(node.right)
+        if not isinstance(node, ast.JoinedStr):
+            return ""
+        pieces: list[str] = []
+        for value in node.values:
+            if isinstance(value, ast.Constant) and isinstance(value.value, str):
+                pieces.append(value.value)
+                continue
+            inner = self.parts(value.value) if isinstance(value, ast.FormattedValue) else _NO_PARTS
+            if _is_interpreter(inner):
+                pieces.append(".venv/bin/python")
+            else:
+                pieces.append(_TEMP_MARKER if inner[1] else _UNKNOWN_MARKER)
+        return "".join(pieces)
+
+    def _spawn_arg_is_venv(self, node: ast.expr) -> bool:
+        if _is_interpreter(self.parts(node)):
+            return True
+        if isinstance(node, (ast.Constant, ast.JoinedStr, ast.BinOp)):
+            return bool(_COMMAND_INTERPRETER.search(self._command_text(node)))
+        return False
+
+    def _is_rooted_interpreter(self, node: ast.expr) -> bool:
+        leaf = node
+        while isinstance(leaf, (ast.List, ast.Tuple, ast.Starred)):
+            if isinstance(leaf, ast.Starred):
+                leaf = leaf.value
+            elif leaf.elts:
+                leaf = leaf.elts[0]
+            else:
+                return False
+        return not isinstance(leaf, ast.Constant) and _is_interpreter(self.parts(node))
+
+    def lines(self) -> list[int]:
+        found: set[int] = set()
+        for node in ast.walk(self.tree):
+            if isinstance(node, ast.Call):
+                if self._is_existence_gate(node):
+                    found.add(node.lineno)
+                elif self._is_spawn_call(node.func):
+                    args = [*node.args, *(kw.value for kw in node.keywords if kw.arg in {"args", "executable"})]
+                    if any(self._spawn_arg_is_venv(arg) for arg in args):
+                        found.add(node.lineno)
+                # An interpreter handed to a helper by keyword (``executable=``, ``delegate=``).
+                elif any(self._is_rooted_interpreter(kw.value) for kw in node.keywords if kw.arg):
+                    found.add(node.lineno)
+            elif (
+                isinstance(node, (ast.List, ast.Tuple))
+                and len(node.elts) > 1
+                and self._is_rooted_interpreter(node.elts[0])
+            ):
+                # An argv-shaped literal: a rooted interpreter path followed by its arguments. A bare
+                # ``".venv/bin/python"`` string is the production command text tests assert on, so
+                # only a spawn call (above) makes that one a hit.
+                found.add(node.lineno)
+            elif isinstance(node, ast.Dict) and any(
+                v is not None and self._is_rooted_interpreter(v) for v in node.values
+            ):
+                # An interpreter handed over by environment (``{"X_PYTHON": str(PY)}``).
+                found.add(node.lineno)
+        return sorted(found)
 
 
 def executing_venv_interpreter_lines(source: str) -> list[int]:
-    """Line numbers of spawn argv built from a ``.venv/bin/python`` literal/join."""
-    tree = ast.parse(source)
-    os_modules, path_modules, join_funcs = _os_path_join_names(tree)
-    subprocess_modules, subprocess_os_modules, subprocess_funcs, os_funcs = _spawn_module_names(tree)
-    lines: list[int] = []
-    for node in ast.walk(tree):
-        if not isinstance(node, ast.Call) or not node.args:
-            continue
-        if not _is_spawn_call(node.func, subprocess_modules, subprocess_os_modules, subprocess_funcs, os_funcs):
-            continue
-        argv = _argv_first_element(node.args[0])
-        if _is_venv_interpreter(argv, os_modules, path_modules, join_funcs):
-            lines.append(node.lineno)
-    return lines
+    """Line numbers of a spawn or existence gate on a ``.venv/bin/python`` expression."""
+    return _Analyzer(ast.parse(source)).lines()
 
 
 def _collect_hits() -> dict[str, int]:
@@ -292,7 +477,100 @@ def test_no_executing_hardcoded_venv_interpreter() -> None:
     unexpected = sorted(set(hits) - set(ALLOWLIST))
     stale = sorted(set(ALLOWLIST) - set(hits))
     assert unexpected == [], (
-        "new executing `.venv/bin/python` spawn argv — use tests.helpers.python.project_python():\n"
+        "new `.venv/bin/python` spawn or existence gate — use tests.helpers.python.project_python():\n"
         + "\n".join(unexpected)
     )
-    assert stale == [], "allowlist entry has no executing spawn:\n" + "\n".join(stale)
+    assert stale == [], "allowlist entry has no `.venv/bin/python` spawn or gate:\n" + "\n".join(stale)
+
+
+_PREAMBLE = "import asyncio, os, subprocess, tempfile\nfrom pathlib import Path\nROOT = Path('.')\n"
+
+_POSITIVE_CASES = {
+    "inline-join": 'subprocess.run([str(ROOT / ".venv" / "bin" / "python"), "-c", "1"])',
+    "inline-literal": 'subprocess.run([".venv/bin/python", "-c", "1"])',
+    "assigned-constant": 'PY = ROOT / ".venv" / "bin" / "python"\nsubprocess.run([PY, "-c", "1"])',
+    "assigned-str-wrapper": 'PY = ROOT / ".venv" / "bin" / "python"\nsubprocess.run([str(PY), "-c", "1"])',
+    "assigned-fspath": 'PY = ROOT / ".venv/bin/python"\nsubprocess.check_output([os.fspath(PY), "-c", "1"])',
+    "fstring": 'PY = f"{ROOT}/.venv/bin/python"\nsubprocess.Popen([PY, "-c", "1"])',
+    "os-path-join": 'PY = os.path.join(str(ROOT), ".venv", "bin", "python")\nsubprocess.call([PY])',
+    "joinpath": 'PY = ROOT.joinpath(".venv", "bin", "python")\nsubprocess.check_call([str(PY)])',
+    "path-constructor": 'PY = Path(ROOT, ".venv", "bin", "python")\nsubprocess.run([PY])',
+    "split-directory": 'VENV = ROOT / ".venv"\nPY = VENV / "bin" / "python"\nsubprocess.run([PY])',
+    "helper-return": (
+        'def _python():\n    return ROOT / ".venv" / "bin" / "python"\n\n'
+        'def test_x():\n    subprocess.run([str(_python()), "-c", "1"])'
+    ),
+    "fixture-parameter": (
+        'def venv_python():\n    return ROOT / ".venv" / "bin" / "python"\n\n'
+        "def test_x(venv_python):\n    subprocess.run([venv_python])"
+    ),
+    "argv-list-variable": 'PY = ROOT / ".venv" / "bin" / "python"\ncmd = [PY, "-m", "x"]\nsubprocess.run(cmd)',
+    "self-attribute": (
+        "class T:\n    def setup(self):\n"
+        '        self.python = ROOT / ".venv" / "bin" / "python"\n'
+        "    def run(self):\n        subprocess.run([self.python])"
+    ),
+    "argv-list-to-helper": '_run([ROOT / ".venv" / "bin" / "python", "-c", "1"])',
+    "keyword-handoff": 'PY = ROOT / ".venv" / "bin" / "python"\nRunner(executable=str(PY))',
+    "env-dict": 'PY = ROOT / ".venv" / "bin" / "python"\nenv = {"X_PYTHON": str(PY)}',
+    "env-default": (
+        'PY = Path(os.environ.get("X", ".venv/bin/python")).resolve()\nsubprocess.run([str(PY), "-c", "1"])'
+    ),
+    "loop-candidate": (
+        'def _find():\n    for candidate in [ROOT / ".venv" / "bin" / "python"]:\n        return candidate\n\n'
+        'subprocess.run([str(_find()), "-c", "1"])'
+    ),
+    "os-system-string": 'os.system(".venv/bin/python -m pytest")',
+    "os-system-fstring": 'PY = ROOT / ".venv" / "bin" / "python"\nos.system(f"{PY} -m pytest")',
+    "shell-string": 'subprocess.run("cd x && .venv/bin/python -m pytest", shell=True)',
+    "os-exec": 'PY = ROOT / ".venv" / "bin" / "python"\nos.execv(PY, [PY, "-c", "1"])',
+    "asyncio": 'PY = ROOT / ".venv" / "bin" / "python"\nasyncio.create_subprocess_exec(PY, "-c", "1")',
+    "from-import": 'from subprocess import run\nPY = ROOT / ".venv" / "bin" / "python"\nrun([PY])',
+    "skip-gate-method": 'PY = ROOT / ".venv" / "bin" / "python"\nskip = not PY.exists()',
+    "skip-gate-is-file": 'assert (ROOT / ".venv" / "bin" / "python").is_file()',
+    "skip-gate-os-path": 'PY = ROOT / ".venv" / "bin" / "python"\nos.path.isfile(PY)',
+}
+
+_NEGATIVE_CASES = {
+    "sys-executable": 'import sys\nsubprocess.run([sys.executable, "-c", "1"])',
+    "tmp-path-stub": (
+        "def test_x(tmp_path):\n"
+        '    python = tmp_path / ".venv" / "bin" / "python"\n'
+        "    python.parent.mkdir(parents=True)\n"
+        "    if python.exists():\n"
+        "        subprocess.run([str(python), '-c', '1'])"
+    ),
+    "tmp-derived-root": (
+        "def test_x(tmp_path):\n"
+        '    repo = tmp_path / "repo"\n'
+        '    python = repo / ".venv" / "bin" / "python"\n'
+        "    subprocess.run([python])"
+    ),
+    "tempfile-root": (
+        "def test_x():\n"
+        "    with tempfile.TemporaryDirectory() as d:\n"
+        '        py = Path(d) / ".venv" / "bin" / "python"\n'
+        "        subprocess.run([py])"
+    ),
+    "tmp-fstring": 'def test_x(tmp_path):\n    subprocess.run(f"{tmp_path}/.venv/bin/python -c 1", shell=True)',
+    "assertion-string": 'def test_x(out):\n    assert ".venv/bin/python" in out\n    assert out == ROOT / ".venv" / "bin" / "python"',
+    "text-fixture": 'def test_x(tmp_path):\n    (tmp_path / "hook.sh").write_text("exec .venv/bin/python run.py\\n")',
+    "docstring": 'def test_x():\n    """Runs .venv/bin/python -m pytest."""',
+    "venv-directory-only": 'subprocess.run(["ls", str(ROOT / ".venv" / "bin")])',
+    "parent-of-interpreter": 'PY = ROOT / ".venv" / "bin" / "python"\nsubprocess.run([PY.parent / "pip"])',
+    "expected-argv-data": 'assert command[:2] == [".venv/bin/python", "scripts/x.py"]',
+    "bare-literal-keyword": 'plan(argv=[".venv/bin/python", "scripts/x.py"])',
+    "bare-literal-dict": 'config = {"cmd": ".venv/bin/python"}',
+    "unrelated-spawn": 'subprocess.run(["git", "status"])',
+    "non-spawn-call": 'print(str(ROOT / ".venv" / "bin" / "python"))',
+    "other-name-exists": 'PY = ROOT / "bin" / "python"\nassert PY.exists()',
+}
+
+
+def test_detector_flags_exactly_the_positive_cases() -> None:
+    flagged = {name for name, body in _POSITIVE_CASES.items() if executing_venv_interpreter_lines(_PREAMBLE + body)}
+    assert flagged == set(_POSITIVE_CASES), sorted(set(_POSITIVE_CASES) - flagged)
+    wrongly_flagged = {
+        name for name, body in _NEGATIVE_CASES.items() if executing_venv_interpreter_lines(_PREAMBLE + body)
+    }
+    assert wrongly_flagged == set(), sorted(wrongly_flagged)
