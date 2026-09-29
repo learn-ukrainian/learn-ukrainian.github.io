@@ -4,6 +4,7 @@ Tests wiki_cache.py (SQLite cache) and new source_query.py functions
 (wikipedia_extract, wikipedia_section_text, _strip_wikitext).
 No network calls — all API responses are mocked.
 """
+
 from __future__ import annotations
 
 import sys
@@ -17,11 +18,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 # ── WikiCache unit tests ─────────────────────────────────────────
 
+
 class TestWikiCache:
     """Test SQLite cache operations."""
 
     def setup_method(self, method):
         from rag.wiki_cache import WikiCache
+
         # Use temp file for each test
         self.db_path = Path(f"/tmp/test_wiki_cache_{id(method)}.db")
         self.cache = WikiCache(db_path=self.db_path, ttl=3600)
@@ -40,6 +43,7 @@ class TestWikiCache:
 
     def test_expired_returns_none(self):
         from rag.wiki_cache import WikiCache
+
         # Create cache with 1-second TTL
         short_cache = WikiCache(db_path=self.db_path, ttl=1)
         short_cache.put("summary", "Test", "data")
@@ -53,6 +57,7 @@ class TestWikiCache:
 
     def test_negative_cache(self):
         from rag.wiki_cache import NEGATIVE_SENTINEL
+
         self.cache.put_negative("summary", "Fake Article")
         result = self.cache.get("summary", "Fake Article")
         assert result == NEGATIVE_SENTINEL
@@ -87,8 +92,7 @@ class TestWikiCache:
         self.cache.put("summary", "Fresh", "data")
         # Manually backdate one entry
         self.cache._conn.execute(
-            "INSERT OR REPLACE INTO wiki_cache (mode, title, section, response, fetched_at) "
-            "VALUES (?, ?, ?, ?, ?)",
+            "INSERT OR REPLACE INTO wiki_cache (mode, title, section, response, fetched_at) VALUES (?, ?, ?, ?, ?)",
             ("summary", "Old", "", "old data", int(time.time()) - 7200),
         )
         self.cache._conn.commit()
@@ -109,14 +113,44 @@ class TestWikiCache:
         self.cache.put("summary", "Київ", "new")
         assert self.cache.get("summary", "Київ") == "new"
 
+    def test_negative_cache_expires_after_negative_ttl(self):
+        """Negative entries expire after negative_ttl, while positive entries persist (#9016)."""
+        from rag.wiki_cache import NEGATIVE_SENTINEL, WikiCache
+
+        cache = WikiCache(db_path=self.db_path, ttl=30 * 86400, negative_ttl=10)
+        cache.put("summary", "Positive", "valid article")
+        cache.put_negative("summary", "Negative")
+
+        assert cache.get("summary", "Positive") == "valid article"
+        assert cache.get("summary", "Negative") == NEGATIVE_SENTINEL
+
+        # Backdate both by 60 seconds (> negative_ttl 10s, but << positive_ttl 30d)
+        cache._conn.execute(
+            "UPDATE wiki_cache SET fetched_at = ?",
+            (int(time.time()) - 60,),
+        )
+        cache._conn.commit()
+
+        # Negative entry is expired and returns None (triggers re-validation)
+        assert cache.get("summary", "Negative") is None
+        # Positive entry remains valid
+        assert cache.get("summary", "Positive") == "valid article"
+
+        # clear_expired deletes the stale negative entry but preserves the positive entry
+        deleted = cache.clear_expired()
+        assert deleted == 1
+        assert cache.get("summary", "Positive") == "valid article"
+
 
 # ── source_query new functions ───────────────────────────────────
+
 
 class TestStripWikitext:
     """Test wikitext → plaintext conversion."""
 
     def setup_method(self):
         from rag.source_query import _strip_wikitext
+
         self.strip_wt = _strip_wikitext
 
     def test_links(self):
@@ -151,6 +185,7 @@ class TestWikipediaExtract:
 
     def setup_method(self):
         from rag.source_query import wikipedia_extract
+
         self.extract = wikipedia_extract
 
     def test_returns_extract(self):
@@ -178,9 +213,7 @@ class TestWikipediaExtract:
     def test_not_found(self):
         mock_response = MagicMock()
         mock_response.status_code = 200
-        mock_response.json.return_value = {
-            "query": {"pages": {"-1": {"missing": ""}}}
-        }
+        mock_response.json.return_value = {"query": {"pages": {"-1": {"missing": ""}}}}
         mock_response.raise_for_status = MagicMock()
 
         with patch("rag.source_query._get", return_value=mock_response):
@@ -208,6 +241,7 @@ class TestWikipediaSectionText:
 
     def setup_method(self):
         from rag.source_query import wikipedia_section_text
+
         self.section_text = wikipedia_section_text
 
     def test_returns_section(self):

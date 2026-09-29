@@ -108,6 +108,21 @@ class TestSlovnykMeLookup:
         assert result["challenge"] is True
         assert result["http_status"] == 403
 
+    def test_cloudflare_200_challenge_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """An HTTP 200 Cloudflare page containing <h1> is detected as a challenge, not a found article (#9016)."""
+        html = (
+            "<html><head><title>Just a moment...</title></head>"
+            "<body><h1>Just a moment...</h1>"
+            "Checking your browser before accessing slovnyk.me. "
+            "cf-browser-verification cf-chl-widget</body></html>"
+        )
+        _patch_get(monkeypatch, DummyResponse(200, html))
+        result = slovnyk_me_lookup("хата", "vts")
+        assert result["status"] == "unavailable"
+        assert result["challenge"] is True
+        assert result["http_status"] == 200
+        assert "text" not in result
+
     def test_429_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(429, "Too Many Requests"))
         result = slovnyk_me_lookup("хата", "vts")

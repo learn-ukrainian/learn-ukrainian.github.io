@@ -15,6 +15,7 @@ Usage:
 
 Issue: #803
 """
+
 from __future__ import annotations
 
 import sqlite3
@@ -30,13 +31,22 @@ DEFAULT_TTL = 30 * 24 * 3600
 # Sentinel value stored in `response` column for negative cache entries (404s)
 NEGATIVE_SENTINEL = "__404__"
 
+# Short negative TTL (1 hour) so outages and misses do not persist for 30 days (#9016)
+DEFAULT_NEGATIVE_TTL = 3600
+
 
 class WikiCache:
     """Thread-safe SQLite cache for Wikipedia API responses."""
 
-    def __init__(self, db_path: Path | str | None = None, ttl: int = DEFAULT_TTL):
+    def __init__(
+        self,
+        db_path: Path | str | None = None,
+        ttl: int = DEFAULT_TTL,
+        negative_ttl: int | None = None,
+    ):
         self.db_path = Path(db_path) if db_path else _DEFAULT_DB
         self.ttl = ttl
+        self.negative_ttl = min(ttl, DEFAULT_NEGATIVE_TTL) if negative_ttl is None else negative_ttl
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self._conn = sqlite3.connect(
             str(self.db_path),
@@ -72,10 +82,14 @@ class WikiCache:
         Returns NEGATIVE_SENTINEL if a negative (404) entry exists.
         """
         norm_title = self._normalize_title(title)
-        cutoff = int(time.time()) - self.ttl
+        now = int(time.time())
+        neg_cutoff = now - self.negative_ttl
+        pos_cutoff = now - self.ttl
         row = self._conn.execute(
-            "SELECT response FROM wiki_cache WHERE mode=? AND title=? AND section=? AND fetched_at > ?",
-            (mode, norm_title, section, cutoff),
+            """SELECT response FROM wiki_cache
+            WHERE mode=? AND title=? AND section=?
+              AND fetched_at > CASE WHEN response = ? THEN ? ELSE ? END""",
+            (mode, norm_title, section, NEGATIVE_SENTINEL, neg_cutoff, pos_cutoff),
         ).fetchone()
         if row is None:
             return None
@@ -101,9 +115,13 @@ class WikiCache:
 
     def clear_expired(self) -> int:
         """Delete expired entries. Returns count of deleted rows."""
-        cutoff = int(time.time()) - self.ttl
+        now = int(time.time())
+        neg_cutoff = now - self.negative_ttl
+        pos_cutoff = now - self.ttl
         cursor = self._conn.execute(
-            "DELETE FROM wiki_cache WHERE fetched_at < ?", (cutoff,)
+            """DELETE FROM wiki_cache
+            WHERE fetched_at < CASE WHEN response = ? THEN ? ELSE ? END""",
+            (NEGATIVE_SENTINEL, neg_cutoff, pos_cutoff),
         )
         self._conn.commit()
         return cursor.rowcount
@@ -112,9 +130,7 @@ class WikiCache:
         """Return cache statistics."""
         row = self._conn.execute("SELECT COUNT(*) FROM wiki_cache").fetchone()
         total = row[0] if row else 0
-        neg = self._conn.execute(
-            "SELECT COUNT(*) FROM wiki_cache WHERE response = ?", (NEGATIVE_SENTINEL,)
-        ).fetchone()
+        neg = self._conn.execute("SELECT COUNT(*) FROM wiki_cache WHERE response = ?", (NEGATIVE_SENTINEL,)).fetchone()
         neg_count = neg[0] if neg else 0
         return {"total_entries": total, "negative_entries": neg_count}
 
