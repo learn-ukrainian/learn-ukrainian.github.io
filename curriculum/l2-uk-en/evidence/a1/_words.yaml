@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 465f9435992fb54e6dd69ffa9d6759eb283b230e
+  mcp_commit: 8523a2cd6a90b858281194bd95aa580dfec1b409
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: a46d6d55af83016f467b8eb2f7f6b69a62de06a1a3b501a8c5ae42e42794a1f3
+  sources_db: 4bcbe254f3ce5ddeaab6589307938a9f09da3aaacf0c2317711fda90296f160d
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: pending
@@ -8128,3 +8128,2243 @@ words:
     russian_shadow: false
     score: 0.0
   ulif: pending
+- cefr:
+    level: A1
+    row_id: 747
+    row_sha256: 4d9f954eeec63d669bd463f10df98cf0b27b43b60690f172e03f70fd43f38370
+    source: puls
+  entry:
+    entry_id: 382151
+    source: vesum
+  forms:
+  - form: татові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́тові
+    tags: noun:anim:m:v_dav
+  - form: тату
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́ту
+    tags: noun:anim:m:v_dav
+  - form: тату
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́ту
+    tags: noun:anim:m:v_kly
+  - form: тат
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: тат
+    tags: noun:anim:m:v_kly:short
+  - form: татові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́тові
+    tags: noun:anim:m:v_mis
+  - form: тату
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́ту
+    tags: noun:anim:m:v_mis
+  - form: таті
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́ті
+    tags: noun:anim:m:v_mis
+  - form: тато
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́то
+    tags: noun:anim:m:v_naz
+  - form: татом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́том
+    tags: noun:anim:m:v_oru
+  - form: тата
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́та
+    tags: noun:anim:m:v_rod
+  - form: тата
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́та
+    tags: noun:anim:m:v_zna
+  - form: татам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́там
+    tags: noun:anim:p:v_dav
+  - form: тати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́ти
+    tags: noun:anim:p:v_kly
+  - form: татах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́тах
+    tags: noun:anim:p:v_mis
+  - form: тати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́ти
+    tags: noun:anim:p:v_naz
+  - form: татами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́тами
+    tags: noun:anim:p:v_oru
+  - form: татів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: та́тів
+    tags: noun:anim:p:v_rod
+  - form: тат
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: тат
+    tags: noun:anim:p:v_rod:up92
+  - form: татів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: та́тів
+    tags: noun:anim:p:v_zna
+  - form: тати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: та́ти
+    tags: noun:anim:p:v_zna:rare
+  gloss_en: dad
+  gloss_source: kaikki_wiktionary
+  id: W-101
+  lemma: тато
+  note: 'Primer part 1 printed page 86: first Т word, printed by syllables.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - та́то
+    - 1
+    row_sha256: b4a842fe28505096959d5627d7c2f1739c184413a43eac925e67194633287772
+    source: ulif
+- entry:
+    entry_id: 107511
+    source: vesum
+  forms:
+  - form: Евеліні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́ні
+    tags: noun:anim:f:v_dav:prop:fname
+  - form: Евеліно
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́но
+    tags: noun:anim:f:v_kly:prop:fname
+  - form: Евеліні
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́ні
+    tags: noun:anim:f:v_mis:prop:fname
+  - form: Евеліна
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́на
+    tags: noun:anim:f:v_naz:prop:fname
+  - form: Евеліною
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́ною
+    tags: noun:anim:f:v_oru:prop:fname
+  - form: Евеліни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́ни
+    tags: noun:anim:f:v_rod:prop:fname
+  - form: Евеліну
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́ну
+    tags: noun:anim:f:v_zna:prop:fname
+  - form: Евелінам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́нам
+    tags: noun:anim:p:v_dav:prop:fname
+  - form: Евеліни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́ни
+    tags: noun:anim:p:v_kly:prop:fname
+  - form: Евелінах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́нах
+    tags: noun:anim:p:v_mis:prop:fname
+  - form: Евеліни
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́ни
+    tags: noun:anim:p:v_naz:prop:fname
+  - form: Евелінами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́нами
+    tags: noun:anim:p:v_oru:prop:fname
+  - form: Евелін
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́н
+    tags: noun:anim:p:v_rod:prop:fname
+  - form: Евелін
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: Евелі́н
+    tags: noun:anim:p:v_zna:prop:fname
+  id: W-102
+  lemma: Евеліна
+  note: Decodable personal name on primer part 1 printed page 93, incidental decoding material for Е.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: A2
+    row_id: 4838
+    row_sha256: b09706107b71d5ad05f640e19cb2fc5b6199039d98b20e7037a283b0c326194c
+    source: puls
+  entry:
+    entry_id: 88001
+    source: vesum
+  forms:
+  - form: дахові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: да́хові
+    tags: noun:inanim:m:v_dav
+  - form: даху
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: да́ху
+    tags: noun:inanim:m:v_dav
+  - form: даху
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: да́ху
+    tags: noun:inanim:m:v_kly
+  - form: дахові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: да́хові
+    tags: noun:inanim:m:v_mis
+  - form: даху
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: да́ху
+    tags: noun:inanim:m:v_mis
+  - form: дах
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: дах
+    tags: noun:inanim:m:v_naz
+  - form: дахом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: да́хом
+    tags: noun:inanim:m:v_oru
+  - form: даху
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: да́ху
+    tags: noun:inanim:m:v_rod
+  - form: дах
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: дах
+    tags: noun:inanim:m:v_zna
+  - form: дахам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: даха́м
+    tags: noun:inanim:p:v_dav
+  - form: дахи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дахи́
+    tags: noun:inanim:p:v_kly
+  - form: дахах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: даха́х
+    tags: noun:inanim:p:v_mis
+  - form: дахи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дахи́
+    tags: noun:inanim:p:v_naz
+  - form: дахами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: даха́ми
+    tags: noun:inanim:p:v_oru
+  - form: дахів
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дахі́в
+    tags: noun:inanim:p:v_rod
+  - form: дахи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дахи́
+    tags: noun:inanim:p:v_zna
+  gloss_en: roof (the cover at the top of a building)
+  gloss_ref:
+    id: 3029
+    row_sha256: 375d5574fbcca57069c35bd678ddb706bbb267af6b338910145ac2b29d2b0fd2
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-103
+  lemma: дах
+  note: Decodable Д word on primer part 1 printed page 94.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - дах
+    - 1
+    row_sha256: 04dc03fb67fbec89b1013b94e444ac80849856b04e37a63ae28f00b2ac041062
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 4145
+    row_sha256: 940f99e3180c26238ef685a8ce186799ca9b9045c786b33583474ebeb4bbc405
+    source: puls
+  entry:
+    entry_id: 144833
+    source: vesum
+  forms:
+  - form: зимі
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зимі́
+    tags: noun:inanim:f:v_dav
+  - form: зимо
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зимо́
+    tags: noun:inanim:f:v_kly
+  - form: зимі
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зимі́
+    tags: noun:inanim:f:v_mis
+  - form: зима
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зима́
+    tags: noun:inanim:f:v_naz
+  - form: зимою
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зимо́ю
+    tags: noun:inanim:f:v_oru
+  - form: зими
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зими́
+    tags: noun:inanim:f:v_rod
+  - form: зиму
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зиму́
+    tags: noun:inanim:f:v_zna
+  - form: зимам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зима́м
+    tags: noun:inanim:p:v_dav
+  - form: зими
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зими́
+    tags: noun:inanim:p:v_kly
+  - form: зимах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зима́х
+    tags: noun:inanim:p:v_mis
+  - form: зими
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зими́
+    tags: noun:inanim:p:v_naz
+  - form: зимами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зима́ми
+    tags: noun:inanim:p:v_oru
+  - form: зим
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: зим
+    tags: noun:inanim:p:v_rod
+  - form: зими
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: зими́
+    tags: noun:inanim:p:v_zna
+  gloss_en: winter
+  gloss_source: kaikki_wiktionary
+  id: W-104
+  lemma: зима
+  note: Decodable З word on primer part 1 printed page 98, printed by syllables.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 23913
+    source: vesum
+  forms:
+  - form: білці
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бі́лці
+    tags: noun:anim:f:v_dav
+  - form: білко
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бі́лко
+    tags: noun:anim:f:v_kly
+  - form: білці
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бі́лці
+    tags: noun:anim:f:v_mis
+  - form: білка
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бі́лка
+    tags: noun:anim:f:v_naz
+  - form: білкою
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бі́лкою
+    tags: noun:anim:f:v_oru
+  - form: білки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бі́лки
+    tags: noun:anim:f:v_rod
+  - form: білку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бі́лку
+    tags: noun:anim:f:v_zna
+  - form: білкам
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Dat
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лкам
+      unstressed_form: білкам
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Dat
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білка́м
+      unstressed_form: білкам
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:anim:p:v_dav
+  - form: білки
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:anim:p:v_kly
+  - form: білках
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Loc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лках
+      unstressed_form: білках
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Loc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білка́х
+      unstressed_form: білках
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:anim:p:v_mis
+  - form: білки
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:anim:p:v_naz
+  - form: білками
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Ins
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лками
+      unstressed_form: білками
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Ins
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білка́ми
+      unstressed_form: білками
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:anim:p:v_oru
+  - form: білок
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лок
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лок
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: біло́к
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: біло́к
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    stress_source: pending
+    tags: noun:anim:p:v_rod
+  - form: білки
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лки
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Voc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: білки́
+      unstressed_form: білки
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:anim:p:v_zna
+  - form: білок
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лок
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Fem
+      stressed_form: бі́лок
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 1
+      vowel_indices:
+      - 1
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: біло́к
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: біло́к
+      unstressed_form: білок
+      vesum: null
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    stress_source: pending
+    tags: noun:anim:p:v_zna
+  gloss_en: squirrel
+  gloss_source: kaikki_wiktionary
+  id: W-105
+  lemma: білка
+  note: Decodable Б word on primer part 1 printed page 106; animal sense.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: A2
+    row_id: 5035
+    row_sha256: f31c3be4a484b5f0e053135b8b08bd9d70e67c5e1399f72821b656bac4ee3795
+    source: puls
+  entry:
+    entry_id: 73256
+    source: vesum
+  forms:
+  - form: гарбузові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузо́ві
+    tags: noun:inanim:m:v_dav
+  - form: гарбузу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузу́
+    tags: noun:inanim:m:v_dav
+  - form: гарбузе
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбу́зе
+    tags: noun:inanim:m:v_kly
+  - form: гарбузові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузо́ві
+    tags: noun:inanim:m:v_mis
+  - form: гарбузу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузу́
+    tags: noun:inanim:m:v_mis
+  - form: гарбузі
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузі́
+    tags: noun:inanim:m:v_mis
+  - form: гарбуз
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбу́з
+    tags: noun:inanim:m:v_naz
+  - form: гарбузом
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузо́м
+    tags: noun:inanim:m:v_oru
+  - form: гарбуза
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбуза́
+    tags: noun:inanim:m:v_rod
+  - form: гарбуз
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбу́з
+    tags: noun:inanim:m:v_zna
+  - form: гарбуза
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбуза́
+    tags: noun:inanim:m:v_zna:var
+  - form: гарбузам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбуза́м
+    tags: noun:inanim:p:v_dav
+  - form: гарбузи
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузи́
+    tags: noun:inanim:p:v_kly
+  - form: гарбузах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбуза́х
+    tags: noun:inanim:p:v_mis
+  - form: гарбузи
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузи́
+    tags: noun:inanim:p:v_naz
+  - form: гарбузами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбуза́ми
+    tags: noun:inanim:p:v_oru
+  - form: гарбузів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузі́в
+    tags: noun:inanim:p:v_rod
+  - form: гарбузи
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гарбузи́
+    tags: noun:inanim:p:v_zna
+  gloss_en: pumpkin (plant and fruit)
+  gloss_source: kaikki_wiktionary
+  id: W-106
+  lemma: гарбуз
+  note: Decodable Г word on primer part 2 printed pages 4-5.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: C1
+    row_id: 5053
+    row_sha256: 5e7a7629e5934011e8b346f4d8f79a772c5ffec843fb5bb63672b95ad9b97998
+    source: puls
+  entry:
+    entry_id: 86426
+    source: vesum
+  forms:
+  - form: ґаві
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ві
+    tags: noun:anim:f:v_dav
+  - form: ґаво
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́во
+    tags: noun:anim:f:v_kly
+  - form: ґаві
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ві
+    tags: noun:anim:f:v_mis
+  - form: ґава
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ва
+    tags: noun:anim:f:v_naz
+  - form: ґавою
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́вою
+    tags: noun:anim:f:v_oru
+  - form: ґави
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ви
+    tags: noun:anim:f:v_rod
+  - form: ґаву
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ву
+    tags: noun:anim:f:v_zna
+  - form: ґавам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́вам
+    tags: noun:anim:p:v_dav
+  - form: ґави
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ви
+    tags: noun:anim:p:v_kly
+  - form: ґавах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́вах
+    tags: noun:anim:p:v_mis
+  - form: ґави
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ви
+    tags: noun:anim:p:v_naz
+  - form: ґавами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́вами
+    tags: noun:anim:p:v_oru
+  - form: ґав
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: ґав
+    tags: noun:anim:p:v_rod
+  - form: ґав
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: ґав
+    tags: noun:anim:p:v_zna
+  - form: ґави
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґа́ви
+    tags: noun:anim:p:v_zna
+  id: W-107
+  lemma: ґава
+  note: Decodable Ґ word on primer part 2 printed pages 8-9; unlike ґедзик, it has no дз.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - ґа́ва
+    - 1
+    row_sha256: f231b5694a12167856b6fb6e505f120bc7ef848dd247c75b89834fbb07ea316b
+    source: ulif
+- cefr:
+    level: A2
+    row_id: 195
+    row_sha256: 5194a4a4f291b2a2b5867b66535dbe4e7fe21e6f39c7743efad4d415a4e38e42
+    source: puls
+  entry:
+    entry_id: 420990
+    source: vesum
+  forms:
+  - form: чоботові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́ботові
+    tags: noun:inanim:m:v_dav
+  - form: чоботу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́боту
+    tags: noun:inanim:m:v_dav
+  - form: чоботе
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: чо́боте
+    tags: noun:inanim:m:v_kly
+  - form: чоботові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́ботові
+    tags: noun:inanim:m:v_mis
+  - form: чоботу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́боту
+    tags: noun:inanim:m:v_mis
+  - form: чоботі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́боті
+    tags: noun:inanim:m:v_mis
+  - form: чобіт
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́біт
+    tags: noun:inanim:m:v_naz
+  - form: чоботом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́ботом
+    tags: noun:inanim:m:v_oru
+  - form: чобота
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́бота
+    tags: noun:inanim:m:v_rod
+  - form: чобіт
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́біт
+    tags: noun:inanim:m:v_zna
+  - form: чоботам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́ботам
+    tags: noun:inanim:p:v_dav
+  - form: чоботям
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чобо́тям
+    tags: noun:inanim:p:v_dav
+  - form: чоботи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́боти
+    tags: noun:inanim:p:v_kly
+  - form: чоботах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́ботах
+    tags: noun:inanim:p:v_mis
+  - form: чоботях
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чобо́тях
+    tags: noun:inanim:p:v_mis
+  - form: чоботи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́боти
+    tags: noun:inanim:p:v_naz
+  - form: чоботами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́ботами
+    tags: noun:inanim:p:v_oru
+  - form: чоботями
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: noun:inanim:p:v_oru
+  - form: чобітьми
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чобітьми́
+    tags: noun:inanim:p:v_oru
+  - form: чобіт
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́біт
+    tags: noun:inanim:p:v_rod
+  - form: чоботів
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: noun:inanim:p:v_rod:up19
+  - form: чоботи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чо́боти
+    tags: noun:inanim:p:v_zna
+  gloss_en: boot; sturdy footwear covering the foot and extending above the ankle, often for outdoor or winter use.
+  gloss_source: kaikki_wiktionary
+  id: W-108
+  lemma: чобіт
+  note: Decodable Ч word; plural чоботи appears on primer part 2 printed page 12.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - чо́біт
+    - 1
+    row_sha256: d9d1ec93b8dc0a2bb67a780c4aa3adaaef76b90bbb9f403cbe51fa7ce3a6e000
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 259
+    row_sha256: ea64e155290abc71047b7d463881380693340dda5d5e168d4dccbbc12e431ef1
+    source: puls
+  entry:
+    entry_id: 418239
+    source: vesum
+  forms:
+  - form: чаю
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ча́ю
+    tags: noun:inanim:m:v_dav
+  - form: чаєві
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ча́єві
+    tags: noun:inanim:m:v_dav
+  - form: чаю
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ча́ю
+    tags: noun:inanim:m:v_kly
+  - form: чаю
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ча́ю
+    tags: noun:inanim:m:v_mis
+  - form: чаєві
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ча́єві
+    tags: noun:inanim:m:v_mis
+  - form: чаї
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чаї́
+    tags: noun:inanim:m:v_mis
+  - form: чай
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: чай
+    tags: noun:inanim:m:v_naz
+  - form: чаєм
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ча́єм
+    tags: noun:inanim:m:v_oru
+  - form: чаю
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ча́ю
+    tags: noun:inanim:m:v_rod
+  - form: чай
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: чай
+    tags: noun:inanim:m:v_zna
+  - form: чаям
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чая́м
+    tags: noun:inanim:p:v_dav
+  - form: чаї
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чаї́
+    tags: noun:inanim:p:v_kly
+  - form: чаях
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чая́х
+    tags: noun:inanim:p:v_mis
+  - form: чаї
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чаї́
+    tags: noun:inanim:p:v_naz
+  - form: чаями
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чая́ми
+    tags: noun:inanim:p:v_oru
+  - form: чаїв
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чаї́в
+    tags: noun:inanim:p:v_rod
+  - form: чаї
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: чаї́
+    tags: noun:inanim:p:v_zna
+  gloss_en: dried leaves of tea plant
+  gloss_ref:
+    id: 5698
+    row_sha256: 19d26315995d68a8a238cbfe5904343c07fd21d94781fd30a06fc9bd4daf0a04
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-109
+  lemma: чай
+  note: Decodable Й word on primer part 2 printed page 16.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - чай
+    - 1
+    row_sha256: 3198c0eb878b942991694eb71df4546235b7934689514e30088bca1afbc1d1fd
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 355
+    row_sha256: 084f8cdbf07962fde0c6eaeb90b0f105955449c66886751e22945efefff881ed
+    source: puls
+  entry:
+    entry_id: 412841
+    source: vesum
+  forms:
+  - form: хлібові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́бові
+    tags: noun:inanim:m:v_dav
+  - form: хлібу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́бу
+    tags: noun:inanim:m:v_dav
+  - form: хлібе
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́бе
+    tags: noun:inanim:m:v_kly
+  - form: хлібові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́бові
+    tags: noun:inanim:m:v_mis
+  - form: хлібу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́бу
+    tags: noun:inanim:m:v_mis
+  - form: хлібі
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́бі
+    tags: noun:inanim:m:v_mis
+  - form: хліб
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: хліб
+    tags: noun:inanim:m:v_naz
+  - form: хлібом
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́бом
+    tags: noun:inanim:m:v_oru
+  - form: хліба
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлі́ба
+    tags: noun:inanim:m:v_rod
+  - form: хліб
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: хліб
+    tags: noun:inanim:m:v_zna
+  - form: хлібам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хліба́м
+    tags: noun:inanim:p:v_dav
+  - form: хліби
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хліби́
+    tags: noun:inanim:p:v_kly
+  - form: хлібах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хліба́х
+    tags: noun:inanim:p:v_mis
+  - form: хліба
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: хліба́
+      unstressed_form: хліба
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: хлі́ба
+      unstressed_form: хліба
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: хліба́
+      unstressed_form: хліба
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_naz
+  - form: хліби
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хліби́
+    tags: noun:inanim:p:v_naz
+  - form: хлібами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хліба́ми
+    tags: noun:inanim:p:v_oru
+  - form: хлібів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хлібі́в
+    tags: noun:inanim:p:v_rod
+  - form: хліба
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Nom
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: хліба́
+      unstressed_form: хліба
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    - override_applied: false
+      required_tags:
+      - Number=Sing
+      - Case=Gen
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: хлі́ба
+      unstressed_form: хліба
+      vesum: null
+      vowel_index: 2
+      vowel_indices:
+      - 2
+    - override_applied: false
+      required_tags:
+      - Number=Plur
+      - Case=Acc
+      - upos=NOUN
+      - Gender=Masc
+      stressed_form: хліба́
+      unstressed_form: хліба
+      vesum: null
+      vowel_index: 4
+      vowel_indices:
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_zna
+  - form: хліби
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: хліби́
+    tags: noun:inanim:p:v_zna
+  gloss_en: bread (baked dough made from cereals)
+  gloss_ref:
+    id: 1805
+    row_sha256: 5d4ee6287d32a40cbd6c88e4fcc6a4e289f60e8309b86988718ac849eb452883
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-110
+  lemma: хліб
+  note: Decodable Х word on primer part 2 printed page 20.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 116453
+    source: vesum
+  forms:
+  - form: житу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́ту
+    tags: noun:inanim:n:v_dav
+  - form: жито
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́то
+    tags: noun:inanim:n:v_kly
+  - form: житу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́ту
+    tags: noun:inanim:n:v_mis
+  - form: житі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́ті
+    tags: noun:inanim:n:v_mis
+  - form: жито
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́то
+    tags: noun:inanim:n:v_naz
+  - form: житом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́том
+    tags: noun:inanim:n:v_oru
+  - form: жита
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́та
+    tags: noun:inanim:n:v_rod
+  - form: жито
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: жи́то
+    tags: noun:inanim:n:v_zna
+  gloss_en: rye
+  gloss_source: kaikki_wiktionary
+  id: W-111
+  lemma: жито
+  note: Decodable Ж word on primer part 2 printed page 24.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - жи́то
+    - 1
+    row_sha256: 27c24d1204ee2403aaf6a345d444ce0f1b9fa452ac2ffa0b6185115cd9d424a4
+    source: ulif
+- entry:
+    entry_id: 171618
+    source: vesum
+  forms:
+  - form: комишеві
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комише́ві
+    tags: noun:inanim:m:v_dav
+  - form: комишу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комишу́
+    tags: noun:inanim:m:v_dav
+  - form: комишу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: коми́шу
+    tags: noun:inanim:m:v_kly
+  - form: комишеві
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комише́ві
+    tags: noun:inanim:m:v_mis
+  - form: комишу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комишу́
+    tags: noun:inanim:m:v_mis
+  - form: комиші
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиші́
+    tags: noun:inanim:m:v_mis
+  - form: комиш
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: коми́ш
+    tags: noun:inanim:m:v_naz
+  - form: комишем
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комише́м
+    tags: noun:inanim:m:v_oru
+  - form: комишу
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комишу́
+    tags: noun:inanim:m:v_rod
+  - form: комиш
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: коми́ш
+    tags: noun:inanim:m:v_zna
+  - form: комишам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиша́м
+    tags: noun:inanim:p:v_dav
+  - form: комиші
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиші́
+    tags: noun:inanim:p:v_kly
+  - form: комишах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиша́х
+    tags: noun:inanim:p:v_mis
+  - form: комиші
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиші́
+    tags: noun:inanim:p:v_naz
+  - form: комишами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиша́ми
+    tags: noun:inanim:p:v_oru
+  - form: комишів
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиші́в
+    tags: noun:inanim:p:v_rod
+  - form: комиші
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: комиші́
+    tags: noun:inanim:p:v_zna
+  id: W-112
+  lemma: комиш
+  note: Decodable Ш word on primer part 2 printed pages 28-29; plural комиші appears in poem.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: B1
+    row_id: 1736
+    row_sha256: d9d8759f1ab7de582dd53c3e5cc3a3c98a5be639d67e68ecc2af1991776e824a
+    source: puls
+  entry:
+    entry_id: 312771
+    source: vesum
+  forms:
+  - form: прилетимо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилетимо́
+    tags: verb:perf:futr:p:1
+  - form: прилетим
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: ulif
+    stressed: прилети́м
+    tags: verb:perf:futr:p:1:subst
+  - form: прилетите
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилетите́
+    tags: verb:perf:futr:p:2
+  - form: прилетять
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилетя́ть
+    tags: verb:perf:futr:p:3
+  - form: прилечу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилечу́
+    tags: verb:perf:futr:s:1
+  - form: прилетиш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилети́ш
+    tags: verb:perf:futr:s:2
+  - form: прилетить
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилети́ть
+    tags: verb:perf:futr:s:3
+  - form: прилетім
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́м
+    tags: verb:perf:impr:p:1
+  - form: прилетімо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́мо
+    tags: verb:perf:impr:p:1
+  - form: прилетіть
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́ть
+    tags: verb:perf:impr:p:2
+  - form: прилети
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилети́
+    tags: verb:perf:impr:s:2
+  - form: прилетіти
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́ти
+    tags: verb:perf:inf
+  - form: прилетіть
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́ть
+    tags: verb:perf:inf:short
+  - form: прилетіла
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́ла
+    tags: verb:perf:past:f
+  - form: прилетів
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́в
+    tags: verb:perf:past:m
+  - form: прилетіло
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́ло
+    tags: verb:perf:past:n
+  - form: прилетіли
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: прилеті́ли
+    tags: verb:perf:past:p
+  gloss_en: to fly in (arrive by flying); to rush in, to come rushing in
+  gloss_source: kaikki_wiktionary
+  id: W-113
+  lemma: прилетіти
+  note: Incidental sentence word in whole sourced reading sentence on primer part 2 printed page 30.
+  pos: verb
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - прилетіти
+    - 1
+    row_sha256: 688081392132610c32135c0e6673e3a7ab067b845c5e49c562c9fc1683b7279c
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 4657
+    row_sha256: 9133740c7584ed95545adbce25565415153e6424c24b7bd8cd0c2b757514fa1c
+    source: puls
+  entry:
+    entry_id: 99875
+    source: vesum
+  forms:
+  - form: додому
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: додо́му
+    tags: adv
+  gloss_en: home, homewards
+  gloss_source: kaikki_wiktionary
+  id: W-114
+  lemma: додому
+  note: Incidental sentence word in whole sourced reading sentence on primer part 2 printed page 30.
+  pos: adv
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - додо́му
+    - 1
+    row_sha256: 2e64a678bf4f23b2a44d2d33a66abd570e661ab67149f128930fb8d964bebded
+    source: ulif
+- cefr:
+    level: B1
+    row_id: 4504
+    row_sha256: b11c62512e4682cbb63f35a7317ec24b5b9ef76cde973fd60a801e937a9e7944
+    source: puls
+  entry:
+    entry_id: 114845
+    source: vesum
+  forms:
+  - form: жабці
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бці
+    tags: noun:anim:f:v_dav
+  - form: жабко
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бко
+    tags: noun:anim:f:v_kly
+  - form: жабці
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бці
+    tags: noun:anim:f:v_mis
+  - form: жабка
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бка
+    tags: noun:anim:f:v_naz
+  - form: жабкою
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бкою
+    tags: noun:anim:f:v_oru
+  - form: жабки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бки
+    tags: noun:anim:f:v_rod
+  - form: жабку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бку
+    tags: noun:anim:f:v_zna
+  - form: жабкам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бкам
+    tags: noun:anim:p:v_dav
+  - form: жабки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бки
+    tags: noun:anim:p:v_kly
+  - form: жабках
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бках
+    tags: noun:anim:p:v_mis
+  - form: жабки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бки
+    tags: noun:anim:p:v_naz
+  - form: жабками
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бками
+    tags: noun:anim:p:v_oru
+  - form: жабок
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бок
+    tags: noun:anim:p:v_rod
+  - form: жабки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бки
+    tags: noun:anim:p:v_zna
+  - form: жабок
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: жа́бок
+    tags: noun:anim:p:v_zna
+  id: W-115
+  lemma: жабка
+  note: Animal sense in whole sourced reading question on primer part 2 printed page 30.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 105713
+    source: vesum
+  forms:
+  - form: дровам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дро́вам
+    tags: noun:inanim:p:v_dav:ns
+  - form: дрова
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дро́ва
+    tags: noun:inanim:p:v_kly:ns
+  - form: дровах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дро́вах
+    tags: noun:inanim:p:v_mis:ns
+  - form: дрова
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дро́ва
+    tags: noun:inanim:p:v_naz:ns
+  - form: дровами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дро́вами
+    tags: noun:inanim:p:v_oru:ns
+  - form: дров
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: дров
+    tags: noun:inanim:p:v_rod:ns
+  - form: дрів
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: none
+    stressed: дрів
+    tags: noun:inanim:p:v_rod:ns:subst
+  - form: дрова
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: дро́ва
+    tags: noun:inanim:p:v_zna:ns
+  gloss_en: firewood
+  gloss_source: kaikki_wiktionary
+  id: W-116
+  lemma: дрова
+  note: Decodable Д word on primer part 1 printed page 94; дах needs Х and is held until later in the module.
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - дро́ва
+    - 1
+    row_sha256: 61e93e052538d5c6052958d64a9838aa9465c67220ca2f297f7bc40228a3792a
+    source: ulif
