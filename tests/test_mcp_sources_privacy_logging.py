@@ -190,15 +190,14 @@ def test_on_call_tool_success_is_iserror_false(server):
     assert result.is_error is False
 
 
-_SOURCES_DB = Path(__file__).resolve().parents[1] / "data" / "sources.db"
-_VESUM_DB = Path(__file__).resolve().parents[1] / "data" / "vesum.db"
+def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server, tmp_path, monkeypatch):
+    sources_db = tmp_path / "sources.db"
+    vesum_db = tmp_path / "vesum.db"
+    sources_db.write_bytes(b"wire-sources-db")
+    vesum_db.write_bytes(b"wire-vesum-db")
+    monkeypatch.setenv("LU_SOURCES_DB", str(sources_db))
+    monkeypatch.setattr("scripts.rag.config.VESUM_DB_PATH", vesum_db)
 
-
-@pytest.mark.skipif(
-    not (_SOURCES_DB.exists() and _VESUM_DB.exists()),
-    reason="sources.db/vesum.db not present in this checkout — run locally for coverage",
-)
-def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server):
     result = _call_on_call_tool(server, "mcp_server_identity", {})
     assert result.is_error is False
     payload = json.loads(result.content[0].text)
@@ -211,6 +210,8 @@ def test_on_call_tool_mcp_server_identity_returns_public_safe_hashes(server):
     }
     assert len(payload["server_code_sha256"]) == 64
     assert payload["sources_db_meta_identity"]["scheme"] == "file-meta-v1"
+    assert payload["sources_db_bytes"] == len(b"wire-sources-db")
+    assert payload["vesum_db_sha256"] == hashlib.sha256(b"wire-vesum-db").hexdigest()
     # Public-safe: never a filesystem path in the response.
     assert "/" not in payload["server_code_sha256"]
 
@@ -220,8 +221,10 @@ def test_on_call_tool_mcp_server_identity_explicitly_includes_content_hash(serve
     data.mkdir()
     sources_db = data / "sources.db"
     sources_db.write_bytes(b"wire-sources-db")
-    (data / "vesum.db").write_bytes(b"wire-vesum-db")
+    vesum_db = data / "vesum.db"
+    vesum_db.write_bytes(b"wire-vesum-db")
     monkeypatch.setenv("LU_SOURCES_DB", str(sources_db))
+    monkeypatch.setattr("scripts.rag.config.VESUM_DB_PATH", vesum_db)
 
     result = _call_on_call_tool(server, "mcp_server_identity", {"include_sources_db_sha256": True})
     assert result.is_error is False
