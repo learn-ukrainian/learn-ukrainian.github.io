@@ -188,10 +188,15 @@ class _FakeStdin:
         pass
 
 
+def _dispatch_worktree(tasks: Path, name: str = "wt") -> Path:
+    """An explicit ``--worktree`` inside the fixture primary's codex dispatch subtree (#8775)."""
+    return tasks.parent / "primary" / ".worktrees" / "dispatch" / "codex" / name
+
+
 def _live_danger_args(tasks: Path, task_id: str):
     import argparse
 
-    (tasks / "wt").mkdir(parents=True, exist_ok=True)
+    _dispatch_worktree(tasks).mkdir(parents=True, exist_ok=True)
     return argparse.Namespace(
         agent="codex",
         task_id=task_id,
@@ -200,7 +205,7 @@ def _live_danger_args(tasks: Path, task_id: str):
         mode="danger",
         model=None,
         cwd=None,
-        worktree=str(tasks / "wt"),
+        worktree=str(_dispatch_worktree(tasks)),
         base="main",
         hard_timeout=3600,
     )
@@ -208,7 +213,11 @@ def _live_danger_args(tasks: Path, task_id: str):
 
 def _stub_worktree(monkeypatch, tasks: Path):
     """A prepared worktree without git: live-dispatch tests stop at the admission lock or at Popen."""
-    wt = tasks / "wt"
+    wt = _dispatch_worktree(tasks)
+    primary = tasks.parent / "primary"
+    (primary / ".git").mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary)
     monkeypatch.setattr(delegate, "_resolve_write_cwd_error", lambda **_kwargs: None)
     monkeypatch.setattr(
         delegate.subprocess,
@@ -315,7 +324,7 @@ def _load_rises_after_the_first_probe(monkeypatch) -> dict[str, int]:
 
 def test_refused_dispatch_leaves_no_worktree_registration_or_task_record(tasks_dir, tmp_path, monkeypatch, capsys):
     repo = _scratch_repo(tmp_path)
-    worktree = tmp_path / "wt-refused"
+    worktree = _dispatch_worktree(tasks_dir, "wt-refused")
     _stub_worktree(monkeypatch, tasks_dir)
 
     def real_worktree_add(**_kwargs):
@@ -354,7 +363,7 @@ def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(tasks_di
     def ensure_worktree(**kwargs):
         seen["record"] = delegate._read_state(delegate._state_path("adm-held"))
         seen["live"] = dispatch_admission.scan_task_records(tasks_dir).live_task_ids
-        return tasks_dir / "wt", "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}
+        return _dispatch_worktree(tasks_dir), "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}
 
     monkeypatch.setattr(delegate, "_ensure_worktree", ensure_worktree)
 

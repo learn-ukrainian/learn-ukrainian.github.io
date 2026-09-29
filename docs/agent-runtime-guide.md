@@ -634,13 +634,52 @@ local-only route guard.
 
 `delegate.py dispatch --worktree ...` creates the dispatched agent a
 private git worktree so its writes are isolated from the main checkout.
-Two layouts are currently supported:
 
 | Layout | Path | Status | Triggered by |
 | --- | --- | --- | --- |
-| **dispatch subtree** (new) | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path) |
-| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated, still accepted | `--worktree <explicit-path>` under `.worktrees/` |
-| custom | anywhere you point it | accepted | `--worktree <explicit-path>` anywhere |
+| **dispatch subtree** | `.worktrees/dispatch/{agent}/{task}/` | **default** for new dispatches | `--worktree` (bare, no path), or `--worktree <explicit-path>` inside `.worktrees/dispatch/{agent}/` |
+| flat (legacy) | `.worktrees/{agent}-{task}/` | deprecated | attach an existing one with `--cwd <that-worktree>` |
+| custom | anywhere else | not created by delegate | attach an existing added worktree with `--cwd <that-worktree>` |
+
+An explicit `--worktree <explicit-path>` must resolve, after following symlinks,
+inside `.worktrees/dispatch/{agent}/` of the target repository for the agent named
+by `--agent`. `.worktrees`, `.worktrees/dispatch` and `.worktrees/dispatch/{agent}`
+must each already exist as a real directory, not a symlink; bare `--worktree`
+creates them. Neither the `--worktree` or `--cwd` value nor the path it resolves
+to may contain a control character (Unicode category Cc), a format character
+(Cf, including the bidi marks, overrides and isolates U+200E/U+200F,
+U+202A–U+202E and U+2066–U+2069), a lone surrogate, or a line or paragraph
+separator (#8775).
+
+Dispatch validates both flags right after it resolves the target repository:
+before the DoR check, `--pr` resolution, or any other step that can run an
+external command. Only the per-task parent-record read, invocation attribution,
+and the `--repo` lookup run first, and none of them runs a command. Every later
+step (the worktree lock, git operations, provisioning, the task record, and the
+worker prompt) uses the resolved path from that validation, never the caller's
+string. The order after validation is:
+
+1. Read-only checks can run git with the validated path as its working
+   directory: the write-mode worktree check (`git rev-parse` and
+   `git worktree list`, for `--cwd` and an explicit `--worktree`), the cursor
+   review-attempt check for `--cwd`, and `git diff` under `--preflight-triage`.
+2. For `--cwd`, dispatch checks that the validated path still resolves to
+   itself, looks up the registered worktree that contains it, and takes the
+   worktree lock. For `--worktree`, it takes the lock.
+3. Under the lock, dispatch checks again that the validated path still resolves
+   to itself and refuses if a component has since been replaced by a symlink.
+4. The base-SHA and worktree-creation helpers then use that validated path as
+   given; they do not resolve it again.
+
+The prompt-injection vector (#8775) is closed by the character check on the raw
+and resolved paths and by JSON quoting: the worker prompt renders the worktree
+path as a JSON-quoted value, so a path is data, never an instruction. Path
+containment is checked on real directories and re-checked after the lock. A
+symlink swap in the gap that remains (after the step-3 check, while git or the
+filesystem follows the path) needs a process running as the same user with
+write access to `.worktrees/dispatch/`. Such a process already holds every
+capability the dispatcher has, so the race grants it nothing new; it is out of
+scope.
 
 Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
 subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into
