@@ -90,13 +90,14 @@ repos:
   - repo: local
     hooks:
       # Focused checks from CI's repo_wide leg; each receives no paths.
+      # These start pytest, so run them before push when their inputs change.
       - id: repo-wide-marker-invariant
         name: repo-wide pytest marker invariant
         entry: bash scripts/pre_commit/project_python.sh -m pytest tests/test_repo_wide_marker_invariant.py --override-ini addopts=-q
         language: system
         pass_filenames: false
         files: ^tests/.*\.py$
-        stages: [pre-commit]
+        stages: [pre-push]
 
       - id: task-store-resolver-guard
         name: task-store call-time resolver guard
@@ -104,7 +105,7 @@ repos:
         language: system
         pass_filenames: false
         files: ^(scripts|tests)/.*\.py$
-        stages: [pre-commit]
+        stages: [pre-push]
 
       - id: sparse-collection-guard
         name: sparse tree collection guard
@@ -112,7 +113,7 @@ repos:
         language: system
         pass_filenames: false
         files: ^tests/.*\.py$
-        stages: [pre-commit]
+        stages: [pre-push]
 
       # Prevent accidentally adding .yaml.bak / .yaml.orig files. Plan
       # history lives in git and the plan immutability hook enforces

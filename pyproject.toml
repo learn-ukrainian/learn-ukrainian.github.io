@@ -69,6 +69,12 @@ ignore = [
     "E741",    # ambiguous variable name — false positives with Ukrainian text vars
 ]
 
+[tool.ruff.lint.isort]
+# Tracked top-level Python package roots in the full checkout. Imports from
+# scripts/wiki, scripts/audit, and scripts/orchestration remain in their
+# established groups; those names are not top-level Python packages.
+known-first-party = ["agents_extensions", "packages", "scripts", "tests"]
+
 [tool.ruff.lint.per-file-ignores]
 "!scripts/api/**.py" = ["PLC0415"]  # advisory API import-hygiene scope
 "scripts/api/*.py" = ["B008"]  # function call in default arg (FastAPI Depends)

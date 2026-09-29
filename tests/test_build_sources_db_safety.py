@@ -85,9 +85,8 @@ def _make_populated_db(path: Path, *, with_wiki: bool = False) -> None:
 
 def _add_ulif_dictua_cache(path: Path) -> None:
     """Add a minimal valid official DictUA cache to an existing legacy DB."""
-    from wiki import sources_db as sdb
-
     from scripts.lexicon import ulif_raw_cache
+    from wiki import sources_db as sdb
 
     conn = sqlite3.connect(str(path))
     sdb.ensure_ulif_dictua_schema(conn)
