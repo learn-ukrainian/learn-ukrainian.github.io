@@ -299,13 +299,20 @@ CASES = [
         ),
     ),
     Case(
-        "m2_match_up_naming_word_records_counts_as_word_completion",
+        "m2_word_to_picture_match_up_is_not_word_building",
         lambda plan, pack, words: (
             _m2_letter_without_word(plan, pack, words),
             _activity_of(plan, 1, "a1").update({"type": "match-up", "focus": "Match мама to pictures; find М and К."}),
         ),
+    ),
+    Case(
+        "m2_divide_words_counts_as_word_building",
+        lambda plan, pack, words: (
+            _m2_letter_without_word(plan, pack, words),
+            _activity_of(plan, 1, "a1").update({"type": "divide-words"}),
+        ),
         notes=frozenset({codes.STEP_LETTER_NO_WORD_RECORD}),
-        says="a1 (match-up)",
+        says="a1 (divide-words)",
     ),
     # M3 -- quoted tokens against the lesson's allowed set
     Case(

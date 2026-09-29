@@ -9,8 +9,7 @@ letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
 
   M1  a step introduces a letter that no activity in its practice names in its focus
   M2  a step introduces a letter that no allowed word record contains, while its
-      practice includes an activity that completes or builds words (pick-syllables,
-      divide-words, or a match-up whose focus names word records)
+      practice includes a word-building activity (pick-syllables or divide-words)
   M3  a Ukrainian token in a step's teach text or an activity's focus resolves only to
       records outside the lesson's allowed set
   M4  a copy task's pack model text uses letters outside the taught-letter set
@@ -24,8 +23,8 @@ Severity, per gate. No gate fails the run: each is reported for the plan reviewe
 because the plan contract does not make any of it an invariant of a valid plan:
 
 - M1 (note): a focus can describe practising a letter without printing the glyph.
-- M2 (note): only activities that complete or build words count; a letter-to-sound
-  match-up is not word completion, so it is not counted.
+- M2 (note): only pick-syllables and divide-words count as word building; a match-up
+  pairs or sorts, so it is never counted, whatever its focus names.
 
 - M3 (note): a quoted token that resolves only to out-of-allowlist records. A token
   that resolves to no store record, or that is spelled like a syllable (one vowel,
@@ -231,10 +230,8 @@ class _Gates:
     # -- M1, M2 ---------------------------------------------------------------
 
     def _builds_words(self, activity: dict) -> bool:
-        """Whether activity completes or builds words: a match-up counts only when its focus names word records."""
-        if activity["type"] in WORD_BUILDING_TYPES:
-            return True
-        return activity["type"] == "match-up" and any(token in self.index for token in tokens_of(activity["focus"]))
+        """Whether activity builds words: only pick-syllables and divide-words do; a match-up never does."""
+        return activity["type"] in WORD_BUILDING_TYPES
 
     def check_step_letters(self) -> None:
         introduced = [
