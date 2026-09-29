@@ -58,6 +58,7 @@ from scripts.lexicon.curated_membership import (
 )
 from scripts.practice.creation_review import CreationReview, heritage_source
 from scripts.practice.meaning_containment import (
+    atlas_english_parts,
     atlas_part_display,
     candidate_balla_heads,
     english_candidates_support_display,
@@ -1021,7 +1022,7 @@ def _english_translation_gloss(
     if sense is not None:
         original = str(entry.get("gloss") or "")
         if level == "A1" and _is_english_learner_gloss(original):
-            head = atlas_part_display(re.split(r"[;,]", original)[0])
+            head = atlas_part_display(atlas_english_parts(original)[0])
             candidates = sense.get("learner_en")
             if isinstance(candidates, list) and head and english_candidates_support_display(candidates, head):
                 return head
@@ -1047,7 +1048,7 @@ def _english_translation_gloss(
     if _is_english_learner_gloss(original):
         # The Atlas head is the lexeme's intended sense. Another translation
         # list entry can be a sub-sense, a homograph, or a grammar label.
-        parts = re.split(r"[;,]", original)
+        parts = atlas_english_parts(original)
         if level == "A1":
             parts = parts[:1]
         elif str(entry.get("pos") or "") in {"adj", "adjective"}:

@@ -12,11 +12,14 @@ from scripts.audit.generate_practice_deck import JsonVesumVerifier, _build_lexem
 from scripts.audit.practice_quality_gate import audit_practice_shards
 from scripts.practice.meaning_containment import (
     REVIEWED_WRONG_LEMMAS,
+    _candidate_alternatives,
     candidate_balla_heads,
+    english_candidates_support_display,
     english_head,
     load_sum11_definitions,
     meaning_problem,
     source_bound_meaning,
+    split_english_alternatives,
 )
 
 _TEST_BALLA = {"test": ["тест"], "examination": ["тест"], "explanation": ["тест"]}
@@ -224,6 +227,112 @@ def test_qualified_head_requires_same_lemma_independent_support(
 ])
 def test_cross_reference_and_numbered_english_fragments_are_withheld(text: str) -> None:
     assert meaning_problem(text, "тест") == "dictionary_fragment"
+
+
+@pytest.mark.parametrize("raw", [
+    "intensified form of (superlative) найкра́ще (najkrášče)",
+    "form of інший", "alternative form of інший", "diminutive of інший",
+    "endearing form of інший", "female equivalent of інший",
+    "male equivalent of інший", "a specific spelling of інший",
+    "alternative letter-case form of інший", "dialectal form of інший",
+    "used as a friendly form of інший",
+])
+def test_cross_reference_source_vocabulary_cannot_become_a_head(raw: str) -> None:
+    assert english_head(raw) == ""
+    assert _candidate_alternatives(raw) == set()
+
+
+def test_mixed_script_fragment_is_rejected_before_qualifier_splitting() -> None:
+    raw = "intensified form of (superlative) найкра́ще (najkrášče)"
+    entry = {"lemma": "якнайкраще", "url_slug": "якнайкраще", "gloss": "прислівник до якнайкращий",
+             "pos": "adv", "cefr": "A2", "enrichment": {"translation": {"en": [raw], "source": "kaikki"}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {})
+    assert result is not None and result["gloss"] == ""
+
+
+@pytest.mark.parametrize("raw", ["intensified form of another word", "form of another word",
+                                "alternative form of another word", "diminutive of another word",
+                                "female equivalent of another word", "a specific spelling of another word"])
+def test_english_only_cross_reference_stubs_are_not_meanings(raw: str) -> None:
+    assert english_head(raw) == ""
+
+
+@pytest.mark.parametrize(("lemma", "gloss"), [
+    ("навколішки", "onto one's knees (get down, get up, fall, etc.)"),
+    ("інтелектуальний", "intellectual (pertaining to, or performed by, the intellect)"),
+    ("практикувати", "to practise (perform or observe in a habitual fashion; put into practice; apply in practice)"),
+    ("зіграти", "to play (to render (a musical title, compositional style, film title, etc.) using a musical instrument or device)"),
+])
+def test_qualifier_pieces_are_never_top_level_alternatives(lemma: str, gloss: str) -> None:
+    assert split_english_alternatives(gloss) == [gloss]
+    for piece in ("get up", "or performed by", "put into practice", "compositional style"):
+        assert not english_candidates_support_display([gloss], piece)
+    entry = {"lemma": lemma, "url_slug": lemma, "gloss": gloss, "pos": "verb", "cefr": "B1",
+             "enrichment": {"translation": {"en": [gloss], "source": "dmklinger"}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {})
+    assert result is not None and result["gloss"] == ""
+
+
+def test_top_level_slash_is_an_alternative() -> None:
+    assert split_english_alternatives("to call / be named") == ["to call", "be named"]
+    entry = {"lemma": "звати", "url_slug": "звати", "gloss": "to call / be named", "pos": "verb", "cefr": "A1",
+             "enrichment": {"translation": {"en": ["to call"], "source": "learner_english_gloss"}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {}, {"call": ["v звати"]})
+    assert result is not None and result["gloss"] == "to call"
+
+
+@pytest.mark.parametrize(("lemma", "gloss", "candidate", "balla", "extra", "expected"), [
+    ("очікувати", "to wait for", "to wait for, to await", {"await": ["v очікувати"]}, {}, "to wait for"),
+    ("снідати", "to have breakfast", "to have breakfast", {"breakfast": ["v снідати"]}, {}, "to have breakfast"),
+    ("збільшити", "to increase", "to increase", {"increase": ["v збільшувати"]},
+     {"verb_pedagogy": {"aspect_partner": {"lemma": "збільшувати"}}}, "to increase"),
+    ("сірий", "grey", "gray", {"grey": ["adj сірий"]}, {}, "grey"),
+    ("довкілля", "environment", "environment", {"environment": ["n середовище"]},
+     {"definition_cards": [{"id": "vts", "definitions": ["1》 Навколишнє середовище."]}]}, "environment"),
+    ("ремонт", "renovation", "renovation", {"renovation": ["n лагодження"]},
+     {"definition_cards": [{"id": "vts", "definitions": ["1》 Лагодження чого-небудь."]}]}, "renovation"),
+    ("ураження", "impression", "impression", {"impression": ["n враження"]},
+     {"definition_cards": [{"id": "vts", "definitions": ["1》 Дія за значенням уразити."]}]}, ""),
+])
+def test_independent_support_uses_same_sense_variants_and_forward_evidence(
+    lemma: str, gloss: str, candidate: str, balla: dict, extra: dict, expected: str,
+) -> None:
+    source = "dmklinger" if extra.get("definition_cards") else "learner_english_gloss"
+    entry = {"lemma": lemma, "url_slug": lemma, "gloss": gloss, "pos": "noun", "cefr": "A1",
+             "enrichment": {"translation": {"en": [candidate], "source": source}, **extra}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {}, balla)
+    assert result is not None and result["gloss"] == expected
+
+
+def test_learner_list_first_sense_must_fit_atlas_head() -> None:
+    entry = {"lemma": "впливати", "url_slug": "впливати", "gloss": "to swim in", "pos": "verb", "cefr": "B1",
+             "enrichment": {"translation": {"en": ["to influence, to affect", "to swim in"],
+                                            "source": "learner_english_gloss"}}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {}, {"swim in": ["v впливати"]})
+    assert result is not None and result["gloss"] == ""
+    assert result["meaningWithheldReason"] == "unbound_english_sense"
+
+
+@pytest.mark.parametrize(("lemma", "gloss", "candidate", "source", "balla", "extra", "expected"), [
+    ("перед", "in front of; before", "1) before something; 2) in front of", "learner_english_gloss",
+     {"before": ["prep перед"]}, {}, "in front of"),
+    ("змішати", "to mix", "to mix", "dmklinger", {"mix": ["v змішувати"]},
+     {"definition_cards": [{"id": "vts", "definitions": ["змішати I див. змішувати ."]}]}, "to mix"),
+    ("влаштувати", "to arrange, to establish", "to arrange, to establish", "learner_english_gloss",
+     {"arrange": ["v упорядковувати"], "establish": ["v влаштовувати"]},
+     {"verb_pedagogy": {"aspect_partner": {"lemma": "влаштовувати"}}}, "to arrange"),
+    ("проігнорувати", "to ignore", "to ignore", "dmklinger", {"ignore": ["v ігнорувати"]},
+     {"definition_cards": [{"id": "vts", "definitions": ["проігнорувати, док. 1》 Не помітити."]}]}, "to ignore"),
+    ("зазначати", "to state, note", "to mention, to note", "dmklinger",
+     {"note": ["v зазначати"]}, {}, "to note"),
+])
+def test_independent_support_handles_source_phrasing_and_recorded_aspect_links(
+    lemma: str, gloss: str, candidate: str, source: str, balla: dict, extra: dict, expected: str,
+) -> None:
+    entry = {"lemma": lemma, "url_slug": lemma, "gloss": gloss, "pos": "verb", "cefr": "B1",
+             "enrichment": {"translation": {"en": [candidate], "source": source}, **extra}}
+    result = _build_lexeme(entry, JsonVesumVerifier({}), {}, balla)
+    assert result is not None and result["gloss"] == expected
 
 
 def test_balla_example_is_not_a_headword_mapping() -> None:

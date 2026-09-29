@@ -45,7 +45,11 @@ _EN_FRAGMENT = re.compile(
     r"^(?:masculine|feminine|neuter|plural|comparative|superlative)\s+(?:possessive|form)\s+of\b"
     r"|^short form of\b|^with (?:pronoun|adverb)\b|^introducing (?:an? )?\w+ clause\b"
     r"|^indicating (?:time|place)\b|^used to (?:intensify|introduce|form)\b"
-    r"|^(?:synonym|initialism|abbreviation|inflection) of\b",
+    r"|^(?:(?:a |an |the )?(?:(?:intensified|alternative(?: letter-case)?|diminutive|endearing|"
+    r"dialectal|short|long|obsolete|archaic|rare|specific) )?|used as a friendly )form of\b"
+    r"|^(?:(?:female|male) )?equivalent of\b"
+    r"|^(?:(?:a |an )?specific )?spelling of\b"
+    r"|^(?:synonym|initialism|abbreviation|inflection|variant|diminutive) of\b",
     re.I,
 )
 _EN_LABEL = re.compile(r"^(?:(?:numeral|adjective|adverb|noun|verb|pronoun|particle|anatomy)\s*:\s*|numeral\s+)", re.I)
@@ -57,6 +61,15 @@ _GRAMMAR_QUALIFIER = re.compile(r"\b(?:attributive|adjective|adverb|noun|verb|pl
 def _key(text: str) -> str:
     text = "".join(char for char in text if unicodedata.category(char) != "Mn")
     return re.sub(r"\s+", " ", text.casefold()).strip(" .,:;")
+
+
+def _english_key(text: str) -> str:
+    key = _key(text)
+    for british, american in (("grey", "gray"), ("colour", "color"), ("centre", "center"),
+                              ("theatre", "theater"), ("metre", "meter"), ("organise", "organize"),
+                              ("realise", "realize"), ("practise", "practice")):
+        key = re.sub(rf"\b{british}\b", american, key)
+    return key
 
 
 def english(text: str) -> bool:
@@ -72,9 +85,12 @@ def english_head(text: str) -> str:
     cross-reference or grammatical instruction is not a learner meaning.
     """
     text = re.sub(r"\s+", " ", text).strip().strip("“”„\"'‘’")
+    text = re.split(r"\bConjugation\s*:", text, maxsplit=1, flags=re.I)[0].strip()
+    if any("CYRILLIC" in unicodedata.name(char, "") for char in text):
+        return ""
     text = re.sub(r"^\d+\s*[.)]\s*", "", text)
     text = re.sub(r"^\([^)]*\)\s*", "", text)
-    text = re.split(r"\bConjugation\s*:|[;,(\[]", text, maxsplit=1, flags=re.I)[0].strip()
+    text = re.split(r"[;,(\[]", text, maxsplit=1)[0].strip()
     text = _EN_LABEL.sub("", text).strip(" .:;,-")
     if re.fullmatch(r"to [a-z-]+ once", text, re.I):
         text = text.removesuffix(" once")
@@ -98,14 +114,48 @@ def atlas_part_display(part: str) -> str:
 
 
 def _balla_head(head: str) -> str:
-    return re.sub(r"^(?:to |be )", "", head.casefold()).strip()
+    head = re.sub(r"^(?:to |be )", "", head.casefold()).strip()
+    head = re.sub(r"^have (breakfast|lunch|dinner|supper)$", r"\1", head)
+    return re.sub(r" (?:something|someone|somebody)$", "", head)
+
+
+def split_english_alternatives(text: str) -> list[str]:
+    """Split separators only outside balanced round or square qualifiers."""
+    parts: list[str] = []
+    start = 0
+    stack: list[str] = []
+    for index, char in enumerate(text):
+        if char in "([":
+            stack.append(")" if char == "(" else "]")
+        elif char in ")]":
+            if char == ")" and not stack and index > 0 and text[index - 1].isdigit():
+                continue
+            if not stack or stack[-1] != char:
+                return [text]
+            stack.pop()
+        elif char in ",;/" and not stack:
+            parts.append(text[start:index].strip())
+            start = index + 1
+    if stack:
+        return [text]
+    parts.append(text[start:].strip())
+    return [part for part in parts if part]
+
+
+def atlas_english_parts(text: str) -> list[str]:
+    """Carry an Atlas infinitive marker over a bare verb alternative."""
+    parts = split_english_alternatives(text)
+    if parts and parts[0].casefold().startswith("to "):
+        return [parts[0], *("to " + part if re.fullmatch(r"[a-z-]+", part, re.I) else part
+                            for part in parts[1:])]
+    return parts
 
 
 def candidate_balla_heads(entries: list[dict[str, Any]]) -> set[str]:
     """Collect every head the builder might select, including Ukrainian-Atlas rows."""
     heads: set[str] = set()
     for entry in entries:
-        candidates: list[str] = re.split(r"[;,]", str(entry.get("gloss") or ""))
+        candidates: list[str] = atlas_english_parts(str(entry.get("gloss") or ""))
         enrichment = entry.get("enrichment")
         enrichment = enrichment if isinstance(enrichment, dict) else {}
         translation = enrichment.get("translation")
@@ -125,7 +175,13 @@ def candidate_balla_heads(entries: list[dict[str, Any]]) -> set[str]:
                     candidates.append(learner_en)
                 elif isinstance(learner_en, list):
                     candidates.extend(item for item in learner_en if isinstance(item, str))
-        heads.update(head for part in candidates if (head := english_head(part)) and english(head))
+        meaning = enrichment.get("meaning")
+        if isinstance(meaning, dict) and "kaikki" in str(meaning.get("source") or "").casefold():
+            definitions = meaning.get("definitions")
+            if isinstance(definitions, list):
+                candidates.extend(item for item in definitions if isinstance(item, str))
+        heads.update(head for candidate in candidates for part in split_english_alternatives(candidate)
+                     if (head := english_head(part)) and english(head))
     return heads
 
 
@@ -150,16 +206,73 @@ def _balla_maps_lemma(definitions: list[str], lemma: str) -> bool:
                for definition in definitions for section in re.split(r"(?<!\w)\d+\)", definition))
 
 
+def _lemma_forms(entry: dict[str, Any]) -> set[str]:
+    forms = {str(entry.get("lemma") or "")}
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return forms
+    morphology = enrichment.get("morphology")
+    if isinstance(morphology, dict) and isinstance(morphology.get("forms"), list):
+        forms.update(str(item.get("form") or "") for item in morphology["forms"] if isinstance(item, dict))
+    pedagogy = enrichment.get("verb_pedagogy")
+    partner = pedagogy.get("aspect_partner") if isinstance(pedagogy, dict) else None
+    if isinstance(partner, dict) and isinstance(partner.get("lemma"), str):
+        forms.add(partner["lemma"])
+    cards = enrichment.get("definition_cards")
+    if isinstance(cards, list):
+        for card in cards:
+            if not isinstance(card, dict) or str(card.get("id") or "").casefold() not in {"sum20", "vts"}:
+                continue
+            for definition in card.get("definitions") or []:
+                if not isinstance(definition, str):
+                    continue
+                match = re.search(r"\bдив\.\s+([А-Яа-яІіЇїЄєҐґ\u0301]+)", definition, re.I)
+                if match:
+                    forms.add(_key(match.group(1)))
+                lemma = str(entry.get("lemma") or "")
+                if lemma.startswith("про") and "док." in definition[:100]:
+                    forms.add(lemma[3:])
+    return {form for form in forms if form}
+
+
+def _balla_synonym_bridge(entry: dict[str, Any], definitions: list[str]) -> bool:
+    """Confirm an older reverse synonym in this lemma's own forward definition."""
+    enrichment = entry.get("enrichment")
+    cards = enrichment.get("definition_cards") if isinstance(enrichment, dict) else None
+    if not isinstance(cards, list):
+        return False
+    reverse_terms = {
+        _key(word) for item in definitions for word in re.findall(
+            r"[А-Яа-яІіЇїЄєҐґ\u0301]{6,}", item.split("~", 1)[0].split(" — ", 1)[0]
+        )
+    }
+    reverse_terms.discard(_key(str(entry.get("lemma") or "")))
+    for card in cards:
+        if not isinstance(card, dict) or str(card.get("id") or "").casefold() not in {"sum20", "vts"}:
+            continue
+        for definition in card.get("definitions") or []:
+            if not isinstance(definition, str):
+                continue
+            first_sense = re.split(r"\b2\s*[》.]", definition, maxsplit=1)[0]
+            if reverse_terms & {_key(word) for word in re.findall(r"[А-Яа-яІіЇїЄєҐґ\u0301]{6,}", first_sense)}:
+                return True
+    return False
+
+
 def independent_english_support(
     entry: dict[str, Any], displayed: str, balla: dict[str, list[str]], sense: dict[str, Any] | None = None,
 ) -> bool:
-    """Require a direct bilingual row for this lemma and reject contrary Balla mapping."""
-    lemma = str(entry.get("lemma") or "")
+    """Require same-lemma evidence, including explicit source variants and recorded forms."""
     head = english_head(displayed)
-    definitions = balla.get(_balla_head(head), [])
-    balla_matches = _balla_maps_lemma(definitions, lemma)
-    if definitions and not balla_matches:
-        return False
+    lookup = _balla_head(head)
+    spellings = {lookup}
+    if "grey" in lookup:
+        spellings.add(lookup.replace("grey", "gray"))
+    if "gray" in lookup:
+        spellings.add(lookup.replace("gray", "grey"))
+    definitions = [item for spelling in spellings for item in balla.get(spelling, [])]
+    forms = _lemma_forms(entry)
+    balla_matches = any(_balla_maps_lemma(definitions, form) for form in forms)
     enrichment = entry.get("enrichment")
     enrichment = enrichment if isinstance(enrichment, dict) else {}
     translation = enrichment.get("translation")
@@ -168,7 +281,7 @@ def independent_english_support(
     candidates = translation.get("en")
     candidates = [candidates] if isinstance(candidates, str) else candidates
     candidates = candidates if isinstance(candidates, list) else []
-    direct = ("dmklinger" in source or "kaikki" in source) and any(
+    direct = any(token in source for token in ("dmklinger", "kaikki", "slovnyk.me")) and any(
         isinstance(candidate, str) and (
             _key(re.sub(r"^\s*\([^)]*\)\s*", "", candidate)) == _key(displayed)
             or ("(" not in displayed and english_candidates_support_display([candidate], displayed))
@@ -182,25 +295,37 @@ def independent_english_support(
     meaning = enrichment.get("meaning")
     meaning = meaning if isinstance(meaning, dict) else {}
     definitions_en = meaning.get("definitions")
-    direct = direct or ("kaikki" in str(meaning.get("source") or "").casefold()
-                        and isinstance(definitions_en, list)
-                        and any(isinstance(item, str) and _key(item) == _key(displayed) for item in definitions_en))
-    return bool(balla_matches or direct)
+    if "kaikki" in str(meaning.get("source") or "").casefold() and isinstance(definitions_en, list):
+        direct = direct or english_candidates_support_display(definitions_en, displayed)
+    source_groups = [candidate for candidate in candidates if isinstance(candidate, str)]
+    if isinstance(definitions_en, list) and "kaikki" in str(meaning.get("source") or "").casefold():
+        source_groups.extend(item for item in definitions_en if isinstance(item, str))
+    related_balla = any(
+        english_candidates_support_display([candidate], displayed)
+        and any(_balla_maps_lemma(balla.get(_balla_head(english_head(part)), []), form)
+                for part in split_english_alternatives(candidate) for form in forms)
+        for candidate in source_groups
+    )
+    if definitions and not balla_matches and not related_balla and not _balla_synonym_bridge(entry, definitions):
+        return False
+    return bool(balla_matches or related_balla or direct)
 
 
 def _candidate_alternatives(candidate: str) -> set[str]:
     """Extract literal alternatives only; never synthesize a translation."""
     candidate = re.split(r"\s+Conjugation:", candidate, flags=re.I)[0]
     candidate = re.sub(r"^\s*\([^)]*\)\s*", "", candidate)
-    alternatives = [english_head(part) for part in re.split(r"[;,()\[\]]", candidate)]
-    return {_key(part) for part in alternatives if part and english(part)}
+    if any("CYRILLIC" in unicodedata.name(char, "") for char in candidate):
+        return set()
+    alternatives = [english_head(part) for part in split_english_alternatives(candidate)]
+    return {_english_key(part) for part in alternatives if part and english(part)}
 
 
 def english_candidates_support_display(candidates: list[Any], display: str, *, allow_embedded: bool = False) -> bool:
     """The displayed head must be supported by an attributed candidate."""
-    target = _key(display)
+    target = _english_key(display)
     if qualified_english_part(display) and any(
-        isinstance(candidate, str) and _key(re.sub(r"^\s*\([^)]*\)\s*", "", candidate)) == target
+        isinstance(candidate, str) and _english_key(re.sub(r"^\s*\([^)]*\)\s*", "", candidate)) == target
         for candidate in candidates
     ):
         return True
@@ -230,6 +355,16 @@ def english_candidates_support_display(candidates: list[Any], display: str, *, a
         if words <= all_words and words & head_words:
             return True
     return False
+
+
+def _first_learner_head_supports(first: str, displayed: str) -> bool:
+    if english_candidates_support_display([first], displayed, allow_embedded=True):
+        return True
+    if any(_english_key(part) == _english_key(displayed) for part in re.findall(r"\[([^]]+)\]", first)):
+        return True
+    first_verb = re.match(r"^to ([a-z-]+)\b", english_head(first), re.I)
+    display_verb = re.match(r"^to ([a-z-]+)\b", english_head(displayed), re.I)
+    return bool(first_verb and display_verb and first_verb.group(1).casefold() == display_verb.group(1).casefold())
 
 
 def meaning_problem(text: str, lemma: str, sum11: list[str] | None = None) -> str | None:
@@ -294,7 +429,9 @@ def source_bound_meaning(
             else any(isinstance(candidate, str) and _key(displayed) == _key(candidate) for candidate in candidates)
         )
         if level == "A1" and english(displayed) and english(str(entry.get("gloss") or "")):
-            matched = matched and _key(displayed) == _key(english_head(re.split(r"[;,]", str(entry["gloss"]))[0]))
+            matched = matched and _english_key(displayed) == _english_key(
+                english_head(split_english_alternatives(str(entry["gloss"]))[0])
+            )
         if source and matched and (english(displayed) or source.casefold() in {"sum20_vetted", "vts_vetted", "ulif_checked"}):
             return {"source": source, "field": f"senses.{field}"}, None
         return None, "unbound_sense"
@@ -333,11 +470,15 @@ def source_bound_meaning(
         return None, "unattributed_english"
     if english(original):
         # A translation-list sub-sense cannot displace the Atlas lexeme head.
-        atlas_parts = re.split(r"[;,]", original)
+        atlas_parts = atlas_english_parts(original)
         if level == "A1":
             atlas_parts = atlas_parts[:1]
         atlas_heads = [atlas_part_display(part) for part in atlas_parts]
-        if not any(_key(displayed) == _key(head) for head in atlas_heads if head):
+        if not any(_english_key(displayed) == _english_key(head) for head in atlas_heads if head):
+            return None, "unbound_english_sense"
+        if source.casefold() == "learner_english_gloss" and candidates and not _first_learner_head_supports(
+            candidates[0], displayed
+        ):
             return None, "unbound_english_sense"
     else:
         # A Ukrainian lexeme gloss provides no machine-readable English sense
