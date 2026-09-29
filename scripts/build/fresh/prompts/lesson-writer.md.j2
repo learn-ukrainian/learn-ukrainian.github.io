@@ -36,8 +36,10 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 {% if step.paradigm is defined and step.paradigm %}- paradigm: {{ step.paradigm.id }} (word: {{ step.paradigm.word }}, forms: {{ step.paradigm.forms | join(', ') }}){% endif %}
 {% endfor %}
 
+{% if plan_entry.consolidation is defined and plan_entry.consolidation %}
 ### Consolidation
 - activities: {{ plan_entry.consolidation | join(', ') }}
+{% endif %}
 
 {% if plan_entry.dialogue is defined and plan_entry.dialogue %}
 ### Dialogue Specification

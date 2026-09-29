@@ -1027,6 +1027,20 @@ def test_record_id_scan_matches_only_schema_id_shapes(sample_plan_entry, sample_
     assert _check(prompt, plan, sample_learner_state).errors == []
 
 
+def test_lesson_without_consolidation_renders(sample_plan_entry, sample_learner_state):
+    """A lesson plan entry may omit `consolidation` (module-plan-v2 does not require it for any lesson kind)."""
+    plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS).items() if k != "consolidation"}
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "### Consolidation" not in prompt
+    assert _check(prompt, plan, sample_learner_state).errors == []
+
+
+def test_lesson_with_consolidation_lists_its_activities(sample_plan_entry, sample_learner_state):
+    plan = _citing(sample_plan_entry, ALL_KINDS)
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "### Consolidation\n- activities: a1\n" in prompt
+
+
 def test_recap_without_consolidation_renders(sample_plan_entry, sample_learner_state):
     """A recap plan entry may omit `consolidation` (module-plan-v2 does not require it; A1 position 1 lesson 6)."""
     plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS, kind="recap").items() if k != "consolidation"}
