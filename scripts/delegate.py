@@ -61,6 +61,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "stderr_excerpt": str | null,
         "returncode": int | null,
         "returncode_reason": str | null,
+        "require_review_verdict": bool,  # opt-in bridge review completion gate
+        "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
         "launch_fallback_reason": str | null,
@@ -780,9 +782,34 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
     Concurrency: a per-task lock serializes worker and probe writes. Each
     writer also uses a PID-suffixed tmp filename before ``os.replace``.
     """
+    if state.get("require_review_verdict"):
+        state = {
+            **state,
+            "failure_reason": _review_task_failure_reason(state) if state.get("status") == "failed" else None,
+        }
     state = _detach_read_only_checkout_snapshots(state)
     with task_state_lock(path):
         write_state_unlocked(path, state)
+
+
+def _review_task_failure_reason(state: dict[str, Any]) -> str:
+    """Give every failed verdict-required review a stable, queryable cause."""
+    if state.get("last_error") == _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON:
+        return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
+    if state.get("read_only_mutation_paths"):
+        return "read_only_checkout_mutation"
+    if state.get("read_only_checkout_snapshot_error"):
+        return "read_only_checkout_snapshot_failed"
+    if state.get("returncode") is None:
+        if state.get("returncode_reason") in {
+            "worktree preparation failed", "forward configuration failed", "worker process was not started",
+            "scoped worker startup was ambiguous; not relaunched",
+        }:
+            return "review_worker_not_started"
+        return "review_worker_returncode_missing"
+    if state["returncode"] != 0:
+        return "review_worker_nonzero_exit"
+    return "review_worker_reported_failure"
 
 
 def _append_dispatch_event(event: str, **fields: Any) -> None:
@@ -4928,6 +4955,10 @@ _READ_ONLY_RUNTIME_STATE_SUFFIXES = (
     ".sqlite3-shm",
     ".sqlite3-wal",
 )
+_READ_ONLY_PACKAGE_BUILD_PREFIXES = (
+    "packages/v4-runtime/build",
+    "packages/v4-runtime/src/learn_ukrainian_v4_runtime.egg-info",
+)
 _READ_ONLY_UNTRACKED_OR_IGNORED_STATUSES = frozenset({"??", "!!"})
 # Dispatch sandboxes live at ``.worktrees/dispatch/<agent>/<task>/`` (layout A).
 # Concurrent ``git worktree add`` under that prefix must not false-fail a
@@ -4985,10 +5016,19 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
     if _is_read_only_runtime_telemetry_path(path):
         return True
     normalized = _normalize_read_only_relpath(path)
+    # `pip`/setuptools can regenerate these Git-ignored package outputs while
+    # a reviewer runs tests. They are build residue, not review edits (#9213).
+    if _is_read_only_package_build_path(normalized):
+        return True
     parts = tuple(part for part in normalized.split("/") if part and part != ".")
     if any(part in _READ_ONLY_RUNTIME_STATE_DIR_NAMES for part in parts):
         return True
     return any(normalized.endswith(suffix) for suffix in _READ_ONLY_RUNTIME_STATE_SUFFIXES)
+
+
+def _is_read_only_package_build_path(path: str) -> bool:
+    normalized = _normalize_read_only_relpath(path)
+    return any(normalized == prefix or normalized.startswith(f"{prefix}/") for prefix in _READ_ONLY_PACKAGE_BUILD_PREFIXES)
 
 
 def _read_only_dispatch_sandbox_root(path: str) -> str | None:
@@ -5045,6 +5085,14 @@ def _is_read_only_runtime_state_exemption(
     """Exempt harness runtime state only when it is not tracked at snapshot time."""
     if not _is_read_only_runtime_state_path(path):
         return False
+    if _is_read_only_package_build_path(path):
+        # The package exemption is for Git-ignored build products only. An
+        # ordinary untracked scratch file under this tree is still a leak.
+        return (
+            before_state in (None, "!!")
+            and after_state in (None, "!!")
+            and (before_state == "!!" or after_state == "!!")
+        )
     return _is_read_only_untracked_or_ignored_status(before_state) and _is_read_only_untracked_or_ignored_status(
         after_state
     )
@@ -7763,6 +7811,7 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        final_state["require_review_verdict"] = require_review_verdict
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
 
@@ -8012,8 +8061,11 @@ def _run_worker(
             and not needs_finalize
             and no_deliverable_reason is None
         ):
-            no_deliverable_reason = _review_verdict_failure_reason(response)
-            no_deliverable = no_deliverable_reason is not None
+            review_verdict_failure = _review_verdict_failure_reason(response)
+            if review_verdict_failure is not None:
+                final_status = "failed"
+                ok_outcome = False
+                stderr_excerpt = review_verdict_failure
 
         if pre_spawn_failure:
             needs_finalize = False
@@ -8387,6 +8439,7 @@ def _record_worktree_prep_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
+    require_review_verdict: bool = False,
     returncode_reason: str = "worktree preparation failed",
     worktree_prep_cleanup: dict[str, Any] | None = None,
     worktree_prep: dict[str, Any] | None = None,
@@ -8428,6 +8481,7 @@ def _record_worktree_prep_failure(
         "effort": start_telemetry.effort,
         "cli_version": start_telemetry.cli_version,
         "allow_merge": False,
+        "require_review_verdict": require_review_verdict,
         "mode": mode,
         "cwd": wt_path_str or str(_REPO_ROOT),
         "worktree_path": wt_path_str,
@@ -8510,6 +8564,7 @@ def _record_forward_failure(
     silence_timeout: float | None = None,
     initial_response_timeout: float | None = None,
     max_budget_usd: float | None = None,
+    require_review_verdict: bool = False,
     substitution: dict[str, Any] | None = None,
 ) -> bool:
     """Persist a terminal failed task record when VPS forward dispatch is refused."""
@@ -8537,6 +8592,7 @@ def _record_forward_failure(
         silence_timeout=silence_timeout,
         initial_response_timeout=initial_response_timeout,
         max_budget_usd=max_budget_usd,
+        require_review_verdict=require_review_verdict,
         returncode_reason="forward configuration failed",
         substitution=substitution,
     )
@@ -9464,6 +9520,7 @@ def _dispatch(
                             args, "initial_response_timeout", DEFAULT_INITIAL_RESPONSE_TIMEOUT_S
                         ),
                         max_budget_usd=getattr(args, "max_budget_usd", None),
+                        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
                         output_schema_path=getattr(args, "output_schema", None),
                         substitution=agent_substitution,
                     )
@@ -9574,6 +9631,7 @@ def _dispatch(
                     silence_timeout=silence_timeout,
                     initial_response_timeout=initial_response_timeout,
                     max_budget_usd=max_budget_usd,
+                    require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
                     substitution=agent_substitution,
                 )
             failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
@@ -9909,6 +9967,7 @@ def _dispatch(
                 silence_timeout=silence_timeout,
                 initial_response_timeout=initial_response_timeout,
                 max_budget_usd=max_budget_usd,
+                require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
                 substitution=agent_substitution,
                 worktree_prep_cleanup=exc.cleanup if isinstance(exc, WorktreeAddFailed) else None,
                 worktree_prep=exc.prep if isinstance(exc, WorktreeAddFailed) else None,
@@ -10027,6 +10086,7 @@ def _dispatch(
             silence_timeout=silence_timeout,
             initial_response_timeout=initial_response_timeout,
             max_budget_usd=max_budget_usd,
+            require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
             substitution=agent_substitution,
         )
         print(f"❌ failed to create runtime tmp lease for {task_id!r}: {exc}", file=sys.stderr)
@@ -10084,6 +10144,7 @@ def _dispatch(
             "effort": start_telemetry.effort,
             "cli_version": start_telemetry.cli_version,
             "allow_merge": bool(getattr(args, "allow_merge", False)),
+            "require_review_verdict": bool(getattr(args, "require_review_verdict", False)),
             "mode": args.mode,
             "cwd": cwd,
             "worktree_path": str(worktree_path) if worktree_path else None,
