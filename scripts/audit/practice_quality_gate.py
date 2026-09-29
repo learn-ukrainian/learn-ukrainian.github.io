@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -58,6 +59,8 @@ try:
     from scripts.audit.practice_linguistic import INTENTIONAL_ERROR_PATTERNS
 except ImportError:
     from practice_linguistic import INTENTIONAL_ERROR_PATTERNS
+
+from scripts.practice.meaning_containment import load_sum11_definitions, meaning_problem
 
 try:
     from scripts.practice.extract_textbook_error_corrections import (
@@ -709,6 +712,7 @@ def audit_practice_shards(
     check_volume: bool = True,
     verify_vesum: bool = True,
     modes: list[str] | tuple[str, ...] | None = None,
+    sources_db: Path | str | None = None,
 ) -> tuple[dict[str, int], list[dict[str, Any]]]:
     """Audit all practice shard files across levels for structural integrity and volume thresholds.
 
@@ -742,8 +746,44 @@ def audit_practice_shards(
 
     for sf in shard_files:
         name = sf.name
-        # Skip index and lexemes metadata shards
-        if "index" in name or "lexemes" in name:
+        if name.startswith("practice-lexemes."):
+            try:
+                payload = json.loads(sf.read_text(encoding="utf-8"))
+                rows = payload.get("lexemes", [])
+                if not isinstance(rows, list):
+                    raise ValueError("lexemes must be a list")
+                database = Path(sources_db) if sources_db is not None else DEFAULT_SOURCES_DB
+                definitions = load_sum11_definitions(
+                    {str(row.get("lemma") or "") for row in rows if isinstance(row, dict)}, database
+                ) if database.is_file() else {}
+                if sources_db is not None and not database.is_file():
+                    raise sqlite3.OperationalError("supplied sources database is missing")
+                for row in rows:
+                    if not isinstance(row, dict):
+                        continue
+                    item = f"{name}:{row.get('lemmaId')}"
+                    gloss = str(row.get("gloss") or "")
+                    clean = str(row.get("glossClean") or "")
+                    if bool(gloss) != bool(clean):
+                        violations.append({"type": "UNSAFE_PRACTICE_MEANING", "item": item,
+                                           "message": "gloss and glossClean must be removed together"})
+                    if gloss and not isinstance(row.get("meaningSource"), dict):
+                        violations.append({"type": "UNSAFE_PRACTICE_MEANING", "item": item,
+                                           "message": "meaning lacks source attribution"})
+                    for field, text in (("gloss", gloss), ("glossClean", clean)):
+                        if text:
+                            problem = meaning_problem(text, str(row.get("lemma") or ""),
+                                                      definitions.get(str(row.get("lemma") or ""), []))
+                            if problem:
+                                violations.append({"type": "UNSAFE_PRACTICE_MEANING", "item": item,
+                                                   "message": f"{field}: {problem}"})
+            except sqlite3.Error as exc:
+                violations.append({"type": "SOURCE_DB_INVALID", "item": name, "message": str(exc)})
+            except (OSError, ValueError, TypeError) as exc:
+                violations.append({"type": "JSON_PARSE_ERROR", "item": name, "message": str(exc)})
+            continue
+        # Skip index metadata shards.
+        if "index" in name:
             continue
         parts = name.split(".")
         if len(parts) < 3:
@@ -1215,6 +1255,7 @@ def run_all_practice_audits(
             vesum_db=vesum_db,
             check_volume=True,
             verify_vesum=verify_vesum,
+            sources_db=sources_db,
         )
         results["practice_shards"] = shard_violations
         results.shard_counts = counts

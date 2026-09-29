@@ -57,6 +57,7 @@ from scripts.lexicon.curated_membership import (
     read_membership,
 )
 from scripts.practice.creation_review import CreationReview, heritage_source
+from scripts.practice.meaning_containment import load_sum11_definitions, source_bound_meaning
 from scripts.practice.ulif_synonym_groups import (
     ULIF_SYNONYMS_SOURCE,
     UlifSynonymDataUnavailable,
@@ -2104,7 +2105,9 @@ def validate_option_sets(cloze_items: list[dict[str, Any]]) -> list[str]:
     return []
 
 
-def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, Any] | None:
+def _build_lexeme(
+    entry: dict[str, Any], verifier: VesumVerifier, sum11_by_word: dict[str, list[str]] | None = None
+) -> dict[str, Any] | None:
     lemma = _clean_text(entry.get("lemma"))
     raw_gloss = _clean_text(entry.get("gloss"))
     level = _cefr_level(entry)
@@ -2116,12 +2119,23 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
     gloss = _practice_display_gloss(entry, level, raw_gloss, sense=sense)
     lemma_plain = _plain(lemma)
     pos = _clean_text(entry.get("pos"))
-    gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense)
-    if not gloss_clean:
-        # No source carries a meaning (#8715): showing the raw article head
-        # («МОТИВА́ТОР.») would teach nothing.
-        return None
-    meaning_mc_eligible = _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
+    if sum11_by_word is None:
+        # Existing fixture/programmatic builds without a source snapshot keep
+        # their established contract. Production passes a snapshot explicitly.
+        gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense)
+        if not gloss_clean:
+            return None
+        source = None
+        withheld_reason = None
+    else:
+        gloss_clean = _practice_gloss_clean(entry, gloss, verifier, sense=sense) if _is_english_learner_gloss(gloss) else gloss
+        source, withheld_reason = source_bound_meaning(
+            entry, gloss, gloss_clean, sense, sum11_by_word.get(lemma, []), level
+        )
+        if source is None:
+            gloss = ""
+            gloss_clean = ""
+    meaning_mc_eligible = bool(gloss_clean) and _meaning_mc_eligible(gloss_clean, lemma_plain, pos)
     # Recognition (matching/choice/flashcard) needs only lemma+gloss, so an admitted
     # word stays in the deck even when CEFR is unknown. Prefer enrichment morphology;
     # when that is missing/unverified, **search VESUM by lemma** for real non-base
@@ -2137,6 +2151,8 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
         "ipa": _ipa(entry),
         "gloss": gloss,
         "glossClean": gloss_clean,
+        "meaningSource": source,
+        "meaningWithheldReason": withheld_reason,
         "meaningMcEligible": meaning_mc_eligible,
         "pos": pos,
         "cefr": level,
@@ -6082,6 +6098,8 @@ def validate_deck_text(
         lexemes = level_shards.get("lexemes", {}).get("lexemes", [])
         for lexeme in lexemes if isinstance(lexemes, list) else []:
             label = str(lexeme.get("glossClean") or "")
+            if not label and lexeme.get("meaningWithheldReason"):
+                continue
             if _is_english_learner_gloss(label):
                 continue
             if _is_uk_gloss_stub(label, str(lexeme.get("lemma") or ""), verifier):
@@ -6208,6 +6226,7 @@ def _select_practice_lexemes(
     verifier: VesumVerifier,
     config: BuildConfig,
     priority_lemma_keys: set[str] | None = None,
+    sum11_by_word: dict[str, list[str]] | None = None,
 ) -> tuple[
     list[tuple[dict[str, Any], dict[str, Any]]],
     list[dict[str, Any]],
@@ -6258,7 +6277,7 @@ def _select_practice_lexemes(
 
     lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]] = []
     for entry in selected[: config.target]:
-        lexeme = _build_lexeme(entry, verifier)
+        lexeme = _build_lexeme(entry, verifier, sum11_by_word)
         if lexeme:
             lexemes_by_entry.append((entry, lexeme))
 
@@ -6420,6 +6439,7 @@ def build_practice_shards(
     ulif_synonym_groups: UlifSynonymGroups | None = None,
     synonym_accounting: SynonymAccounting | None = None,
     cloze_withheld: list[dict[str, str]] | None = None,
+    sum11_by_word: dict[str, list[str]] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     """Build every level shard.
 
@@ -6503,6 +6523,7 @@ def build_practice_shards(
         verifier,
         config,
         priority_lemma_keys,
+        sum11_by_word,
     )
     classify_lemmas = [str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if lexeme.get("cefr")]
     vesum_aspects = _vesum_aspect_by_lemma(classify_lemmas, verifier)
@@ -6618,11 +6639,14 @@ def build_practice_shards(
         for lexeme in (by_plain_lemma.get(key[0]), by_plain_lemma.get(key[1]))
         if lexeme and _option_pos_bucket(lexeme.get("pos")) == "noun"
     ]
+    meaning_lexemes_by_entry = [(entry, lexeme) for entry, lexeme in lexemes_by_entry if lexeme["gloss"]]
+    meaning_lexemes = [lexeme for _, lexeme in meaning_lexemes_by_entry]
+    meaning_by_plain_lemma = {_plain(lexeme["lemma"]): lexeme for lexeme in meaning_lexemes}
     synonym_items = (
         _build_synonym_items(
-            lexemes_by_entry,
-            by_plain_lemma,
-            all_lexemes,
+            meaning_lexemes_by_entry,
+            meaning_by_plain_lemma,
+            meaning_lexemes,
             deck_version,
             approved_set - rejected_set,
             rejected_set,
@@ -7005,7 +7029,7 @@ def build_practice_shards(
         index_items = []
         for order, lexeme in enumerate(level_lexemes):
             cloze_ids = cloze_ids_by_lemma.get(lexeme["lemmaId"], [])
-            modes = ["flashcards"]
+            modes = ["flashcards"] if lexeme["gloss"] else []
             if lexeme.get("meaningMcEligible"):
                 modes.extend(["matching", "choice"])
             if cloze_ids:
@@ -8515,6 +8539,9 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         return 1
     cloze_withheld: list[dict[str, str]] = []
     pos_residuals: list[dict[str, str]] = []
+    sum11_by_word = load_sum11_definitions(
+        {str(entry.get("lemma")) for entry in entries if entry.get("lemma")}, args.sources_db
+    ) if args.sources_db and args.sources_db.is_file() else {}
     shards = build_practice_shards(
         entries,
         allowlist,
@@ -8533,6 +8560,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         synonym_accounting=synonym_accounting,
         cloze_withheld=cloze_withheld,
         pos_residuals=pos_residuals,
+        sum11_by_word=sum11_by_word,
     )
     if end_payload is not None:
         practice_by_level: dict[str, set[str]] = {}
