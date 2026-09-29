@@ -5991,3 +5991,159 @@ def test_foreign_scratch_root_never_covers_the_repository_or_its_root(
     assert rw._foreign_scratch_root(repo, Path("/home/someone/work/wt")) is None
     assert rw._foreign_scratch_root(repo, Path("/home/someone/scratchpad/wt")) == Path("/home/someone/scratchpad")
     assert rw._foreign_scratch_root(repo, Path("/home/someone/scratchpad")) is None
+
+
+# --- Review checkouts: exhaustive residue guard and locked re-proof (#9129) ------
+
+
+def _track_node_modules_file(repo: Path) -> None:
+    """Commit a tracked ``node_modules`` file to main, before any checkout exists."""
+    target = repo / "node_modules" / "pkg.js"
+    target.parent.mkdir(parents=True)
+    target.write_text("original\n", encoding="utf-8")
+    git(repo, "add", "-f", "node_modules/pkg.js")
+    git(repo, "commit", "-m", "track a node_modules file")
+    git(repo, "push", "origin", "main")
+
+
+def _review_class_worktree(
+    kind: str,
+    tmp_path: Path,
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> tuple[Path, float | None]:
+    """One qualifying checkout per new class, and the ``now`` that makes it qualify."""
+    if kind == "superseded":
+        worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+        return worktree, None
+    if kind == "unrecorded":
+        return _unrecorded_worktree(repo), time.time() + 3 * 3600
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+    return _foreign_worktree(tmp_path, repo), None
+
+
+_REVIEW_KINDS = ["superseded", "unrecorded", "foreign"]
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+@pytest.mark.parametrize("residue", ["venv_only_copy", "tracked_node_modules_change", "ignored_non_cache"])
+def test_review_checkout_classes_preserve_residue_the_detached_guard_preserves(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+    residue: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".git" / "info" / "exclude").write_text(".venv/\n*.log\n", encoding="utf-8")
+    if residue == "tracked_node_modules_change":
+        _track_node_modules_file(repo)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    target = {
+        "venv_only_copy": worktree / ".venv" / "notes.txt",
+        "tracked_node_modules_change": worktree / "node_modules" / "pkg.js",
+        "ignored_non_cache": worktree / "review-notes.log",
+    }[residue]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("only copy\n", encoding="utf-8")
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert target.read_text(encoding="utf-8") == "only copy\n"
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+def test_review_checkout_recheck_preserves_residue_that_appears_under_the_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".git" / "info" / "exclude").write_text(".venv/\n", encoding="utf-8")
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    original = rw._review_checkout_recheck
+    target = worktree / ".venv" / "notes.txt"
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("only copy\n", encoding="utf-8")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert "proof changed during cleanup" in result.reason
+    assert target.read_text(encoding="utf-8") == "only copy\n"
+
+
+def test_superseded_checkout_stays_when_the_pr_head_returns_to_it_before_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        monkeypatch.setattr(
+            rw,
+            "_query_pr_by_number",
+            lambda _repo, number: ([rw.PullRequestState(number, "OPEN", old)], None),
+        )
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert "proof changed during cleanup" in result.reason
+    assert worktree.exists()
+
+
+def test_superseded_checkout_stays_when_the_pr_head_is_unreadable_before_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _number: ([], "boom"))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert "PR guard unavailable during cleanup" in result.reason
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("kind", ["superseded", "unrecorded"])
+def test_detached_review_class_stays_when_a_branch_is_checked_out_at_the_same_sha(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        git(worktree, "checkout", "-b", "review/same-sha")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert "proof changed during cleanup" in result.reason
+    assert worktree.exists()
+    assert git(worktree, "branch", "--show-current") == "review/same-sha"

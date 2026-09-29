@@ -235,11 +235,14 @@ in `detached_unknown` / `dirty` / `unmerged` and is preserved. Reason string:
 
 Native `codex exec` reviews and agent scratchpads leave clean checkouts that
 no task record or branch ties to a settled task. Three further classes reap
-them. Every one requires a clean tree, HEAD contained in a
+them. Every one requires a tree holding only regenerable ignored caches (the
+detached-class residue guard: any `.venv` or `node_modules` entry, tracked
+change, or non-cache ignored file preserves it), HEAD contained in a
 `refs/remotes/origin/*` ref, no lock, no live process cwd inside, no
-unfinished task, and a known active-task probe; each is re-proved under the
-per-worktree lock before removal, and `--preserve-then-reap` keeps its rescue
-ref as for every other class.
+unfinished task, and a known active-task probe. Under the per-worktree lock
+each class is proved again from fresh state (residue, PR heads, age and task
+record, detached HEAD for the detached classes) before removal, and
+`--preserve-then-reap` keeps its rescue ref as for every other class.
 
 - **Superseded PR checkout.** Detached HEAD is a commit of an open PR (named by
   the `review-<N>` path or found by commit search) but not that PR's current

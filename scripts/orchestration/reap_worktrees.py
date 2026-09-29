@@ -2373,11 +2373,14 @@ def _review_checkout_gate(
     active_ids: set[str] | None,
     attention: list[str] | None,
     require_detached: bool,
+    timeout: float | None = None,
 ) -> bool:
     """Safety checks every review-checkout class shares.
 
-    Clean tree, HEAD on a remote ref, unlocked, and no task that is still
-    unfinished. Live process cwds and active tasks are refused earlier by
+    A tree holding only regenerable ignored caches (the same exhaustive guard
+    as the detached clean contained class: no tolerance for ``.venv`` or
+    ``node_modules`` entries, tracked changes, or non-cache ignored files),
+    HEAD on a remote ref, unlocked, and no task that is still unfinished. Live process cwds and active tasks are refused earlier by
     :func:`_activity_reason` and again at removal. An unavailable active-task
     probe fails closed, like the detached clean contained class.
     """
@@ -2398,9 +2401,45 @@ def _review_checkout_gate(
         status = _task_record_status(repo_root, task_id)
         if status is not None and status not in _TERMINAL_DISPATCH_STATUSES:
             return False
-    if _worktree_clean(info.path) is not True:
+    if not _tree_holds_only_disposable_residue(info.path, timeout=timeout):
         return False
     return _is_head_reachable_from_remote(info.path, info.head)
+
+
+def _review_pr_context(
+    repo_root: Path,
+    info: WorktreeInfo,
+) -> tuple[list[PullRequestState], list[PullRequestState], int | None, list[str]]:
+    """PR states naming a checkout: ``(all_states, commit_search_hits, review_number, errors)``.
+
+    A GraphQL "not a PullRequest" answer for the parsed review token means the
+    token is an issue number: absence, not an unreadable guard.
+    """
+    all_states: list[PullRequestState] = []
+    errors: list[str] = []
+    for cand_branch in _candidate_branches_for_worktree(repo_root, info):
+        states, err = _query_pr_states(repo_root, cand_branch)
+        if err:
+            errors.append(err)
+        all_states.extend(states)
+
+    review_number = _worktree_review_pr_number(repo_root, info)
+    if review_number is not None:
+        review_states, review_err = _query_pr_by_number(repo_root, review_number)
+        if review_err and not _is_not_a_pull_request_error(review_err):
+            errors.append(review_err)
+        all_states.extend(review_states)
+
+    # Follow-up CI branches carry a different branch name than the PR head they
+    # fix. Find the MERGED PR that introduced the worktree HEAD by SHA, but only
+    # when that commit is not already on origin/main -- otherwise a fresh branch
+    # sitting on a merged main tip would be mistaken for a squash-merged
+    # follow-up commit.
+    commit_prs: list[PullRequestState] = []
+    if info.head and not _is_ancestor_of_origin_main(info.path):
+        commit_prs = _query_prs_by_head_sha(repo_root, info.head)
+        all_states.extend(commit_prs)
+    return all_states, commit_prs, review_number, errors
 
 
 def _current_open_pr_heads(
@@ -2441,6 +2480,7 @@ def _review_checkout_reason(
     active_ids: set[str] | None,
     now: float | None,
     attention: list[str] | None = None,
+    timeout: float | None = None,
 ) -> str | None:
     """Reap classes for a detached review checkout the task-bound classes miss.
 
@@ -2454,6 +2494,7 @@ def _review_checkout_reason(
         active_ids=active_ids,
         attention=attention,
         require_detached=True,
+        timeout=timeout,
     ):
         return None
     heads, head_error = _current_open_pr_heads(repo_root, pr_states, commit_prs)
@@ -2489,6 +2530,7 @@ def _foreign_checkout_reason(
     info: WorktreeInfo,
     active_ids: set[str] | None,
     attention: list[str] | None = None,
+    timeout: float | None = None,
 ) -> str | None:
     """A registered scratch checkout outside ``.worktrees/`` under the same proof."""
     if not _review_checkout_gate(
@@ -2497,6 +2539,7 @@ def _foreign_checkout_reason(
         active_ids=active_ids,
         attention=attention,
         require_detached=False,
+        timeout=timeout,
     ):
         return None
     return _FOREIGN_CHECKOUT_REASON
@@ -2509,8 +2552,25 @@ def _is_review_checkout_reason(reason: str) -> bool:
     }
 
 
-def _review_checkout_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
-    """Re-prove a review-checkout class under delegate's lock; a skip reason or ``None``."""
+def _review_checkout_class(reason: str) -> str:
+    if reason.startswith(_SUPERSEDED_PR_REASON_PREFIX):
+        return "superseded"
+    return "foreign" if reason == _FOREIGN_CHECKOUT_REASON else "unrecorded"
+
+
+def _review_checkout_recheck(
+    repo_root: Path,
+    info: WorktreeInfo,
+    reason: str,
+    now: float | None = None,
+) -> str | None:
+    """Re-prove a review-checkout class under delegate's lock; a skip reason or ``None``.
+
+    The class is derived again from fresh state, not carried over from
+    qualification: the tree residue, the remote containment, the PR heads
+    (re-read; an unreadable or now-equal head keeps the checkout), the age and
+    task-record test, and detached HEAD for the detached classes.
+    """
     try:
         worktrees = list_git_worktrees(repo_root)
     except RuntimeError as exc:
@@ -2533,13 +2593,29 @@ def _review_checkout_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
     )
     if activity is not None:
         return activity
-    if not _review_checkout_gate(
-        repo_root=repo_root,
-        info=fresh,
-        active_ids=current_active_ids,
-        attention=None,
-        require_detached=False,
-    ):
+    klass = _review_checkout_class(reason)
+    if klass == "foreign":
+        fresh_reason = _foreign_checkout_reason(
+            repo_root=repo_root,
+            info=fresh,
+            active_ids=current_active_ids,
+            timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
+        )
+    else:
+        all_states, commit_prs, review_number, errors = _review_pr_context(repo_root, fresh)
+        if errors:
+            return f"PR guard unavailable during cleanup; {'; '.join(errors)}"
+        fresh_reason = _review_checkout_reason(
+            repo_root=repo_root,
+            info=fresh,
+            pr_states=all_states,
+            commit_prs=commit_prs,
+            review_number=review_number,
+            active_ids=current_active_ids,
+            now=now,
+            timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
+        )
+    if fresh_reason is None or _review_checkout_class(fresh_reason) != klass:
         return "review checkout proof changed during cleanup"
     return None
 
@@ -2963,6 +3039,7 @@ def _reap_qualified_worktree(
     prune_merged_branches: bool,
     require_terminal_dispatch_guards: bool,
     eligible_backlog: int | None = None,
+    now: float | None = None,
 ) -> ReapResult:
     expected_head = info.head
     if dirty is None:
@@ -3164,7 +3241,7 @@ def _reap_qualified_worktree(
                         error=f"worktree unlock failed: {_format_failure(unlock)}",
                     )
             elif _is_review_checkout_reason(reason):
-                recheck = _review_checkout_recheck(repo_root, info)
+                recheck = _review_checkout_recheck(repo_root, info, reason, now)
                 if recheck is not None:
                     return ReapResult(
                         path=str(info.path),
@@ -3650,37 +3727,9 @@ def reap_worktrees(
             dirty_state = _worktree_clean(info.path)
             dirty = None if dirty_state is None else not dirty_state
 
-            candidates = _candidate_branches_for_worktree(repo_root, info)
             pr_state = None
             pr_error = None
-            all_pr_states: list[PullRequestState] = []
-            commit_prs: list[PullRequestState] = []
-            errors: list[str] = []
-            if candidates:
-                for cand_branch in candidates:
-                    st, err = _query_pr_states(repo_root, cand_branch)
-                    if err:
-                        errors.append(err)
-                    all_pr_states.extend(st)
-
-            review_number = _worktree_review_pr_number(repo_root, info)
-            review_err = None
-            if review_number is not None:
-                review_states, review_err = _query_pr_by_number(repo_root, review_number)
-                # A GraphQL "not a PullRequest" answer means the parsed token
-                # is an issue number: absence, not an unreadable guard.
-                if review_err and not _is_not_a_pull_request_error(review_err):
-                    errors.append(review_err)
-                all_pr_states.extend(review_states)
-
-            # Follow-up CI branches carry a different branch name than the PR
-            # head they fix.  Find the MERGED PR that introduced the worktree
-            # HEAD by SHA, but only when that commit is not already on
-            # origin/main — otherwise a fresh branch sitting on a merged main
-            # tip would be mistaken for a squash-merged follow-up commit.
-            if info.head and not _is_ancestor_of_origin_main(info.path):
-                commit_prs = _query_prs_by_head_sha(repo_root, info.head)
-                all_pr_states.extend(commit_prs)
+            all_pr_states, commit_prs, review_number, errors = _review_pr_context(repo_root, info)
 
             # Any candidate-query error blocks qualification. A supplementary
             # SHA lookup finding *some* PR cannot redeem an unreadable
@@ -3854,6 +3903,7 @@ def reap_worktrees(
                     and reason.startswith("settled dispatch task-id=")
                 ),
                 eligible_backlog=eligible_backlog,
+                now=now,
             )
             if res.owner is None:
                 res = replace(res, owner=_dispatch_owner(repo_root, info))
