@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 0,
+    "exercises_count": 5,
+    "notes_count": 0,
+    "standard_count": 3,
+    "texts_count": 21,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 0,
+    "videos_count": 16
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
+    "sha256": "96b696344c3bb5ba94463718cafc55df5aecf13955f1e1d8c16d9a34709c5515"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock",
+    "sha256": "160e4aa600e8fd2f091ffd7d07aa5ab31a1daded4de56c162d286908b29c492c"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "sounds-letters-and-hello",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}

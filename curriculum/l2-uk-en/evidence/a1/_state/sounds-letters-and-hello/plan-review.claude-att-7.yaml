@@ -1,0 +1,55 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-sounds-letters-and-hello"
+  attempt_id: "claude-att-7"
+  manifest_sha256: "8591d48151704f4cf6443b52df56e47b4cc295f0975cd69ec69fedf83c3ccce8"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "claude-fable-5-1"
+  harness: "claude-code"
+  family: "anthropic"
+  prompt_sha256: "0918cbd9be2abb149bbf1fa9567f5ed4a068ad0cd28543583dad71a83cb2c182"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean
+  sequencing: clean
+  sizing: clean
+  inventory: [F-01]
+  activities: clean
+  evidence_fit: clean
+  standard_and_ulp: clean
+findings:
+  - id: F-01
+    status: active
+    locations: []
+    scope: { lesson: 2 }
+    dimension: plan_defect
+    severity: MINOR
+    claim: "Lessons 2-5 schedule no recycling of the lesson-1 core words: W-074 привіт, W-075 добрий and W-076 день appear in no recycled list until the lesson-6 recap, so the only communicative chunks the module teaches go unused for four consecutive literacy lessons and the writers of those lessons receive no cited record for them. ULP, the schedule the arc follows, reopens its later lessons with the same greeting (the dialogues of lessons 11, 26, 36 and 37 open with Привіт; receipt cited). This belongs to the inventory check (recycling brings back what the learner is about to forget). No new content is needed: add W-074, and W-075 plus W-076 where a formal frame fits, to the recycled lists of lessons 2-5 as a spoken lesson opening or a one-item quiz option, without letter work on their untaught letters."
+    evidence: { receipt: "rr-997505fb481bdcd40415" }
+    could_be_a_gate: "yes - a script can flag a core record introduced in lesson k that appears in no recycled list of lessons k+1 to n-1 before the recap"
+# Reviewer notes (YAML comments, not part of the return):
+# - Nine checks clean, one MINOR under inventory. No learner-facing falsehood found.
+# - quoted_forms: all 27 quoted forms (core, incidental, names, так, ні) are CLEAN in VESUM with
+#   no markers (receipt rr-bc233e3decdcc557a89e; batch verify rr-b1f1d8c7fc4ba0d447f0).
+# - title_quantities: subtitle says 13 letters; scope sidecar lists 13.
+# - evidence_fit: primer letter pages confirmed in order (О p.36, У p.40, И p.44, К p.72, П p.76
+#   chunk pages; receipt rr-ffde90bbd352d981e2fd); every decodable word and name uses only
+#   letters taught by its lesson. малина and слива are PULS A2 (rr-8e7784d38e829ed0a3f4,
+#   rr-3ed72db0417672708602) but are the primer's own decodable words and take nothing from a
+#   later arc position, so not flagged.
+# - activities, v1 comparison: the v1 module carries 10 workbook activities across 8 types
+#   (quiz x3, error-correction, fill-in, group-sort, match-up, translate, true-false,
+#   watch-and-repeat) and no lesson grain. The fresh plan carries 9 workbook activities across
+#   5 types plus 26 inline activities over six lessons (35 total). The one-activity drop in the
+#   workbook tab is offset by the inline practice each step now owns; item-level response
+#   opportunities are not available at plan stage (validate report), so no item totals are
+#   claimed. Workbook types rotate (quiz, odd-one-out, pick-syllables, divide-words, match-up)
+#   and the repeated sound-to-letter quiz (lesson 2 a5, lesson 4 a5) states its progression
+#   from vowels to consonants.
+# - closing_shape: five teach lessons plus a dedicated recap lesson is the normal D4 shape;
+#   shape (b) is not needed here.
