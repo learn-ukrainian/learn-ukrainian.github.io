@@ -134,11 +134,10 @@ SCOPE_SIDECAR_STALE = "scope_sidecar_stale"
 # --- module title check ------------------------------------------------------
 TITLE_LETTER_ENUMERATION_MISMATCH = "title_letter_enumeration_mismatch"
 
-# --- mechanical plan gates M1-M8 (issue #9138) -------------------------------
+# --- notes (never fail the run) ---------------------------------------------
+# mechanical plan gates M1-M8 (issue #9138) report here or as not_checked, never as failures
 STEP_LETTER_NOT_PRACTISED = "step_letter_not_practised"
 STEP_LETTER_NO_WORD_RECORD = "step_letter_no_word_record"
-
-# --- notes (never fail the run) ---------------------------------------------
 TOKEN_NOT_ALLOWED = "token_not_allowed"
 COPY_MODEL_LETTER_NOT_TAUGHT = "copy_model_letter_not_taught"
 CORE_CEFR_ABOVE_MODULE = "core_cefr_above_module"
@@ -224,8 +223,8 @@ DESCRIPTIONS = {
     PLACEMENT_TABLE_UNAVAILABLE: "failure (issue #8889 r5 §B2): scripts/curriculum/validate/placement_table.yaml is missing or malformed",
     ACTIVITY_PLACEMENT_FORBIDDEN: "failure (issue #8889 r5 §B2): an activity's type is forbidden at this level by the generated placement table",
     ACTIVITY_PLACEMENT_NOT_ALLOWED: "failure (issue #8889 r5 §B2): an activity's placement (inline/workbook) is not the one the placement table allows for its type at this level",
-    STEP_LETTER_NOT_PRACTISED: "failure (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus",
-    STEP_LETTER_NO_WORD_RECORD: "failure (gate M2, #9138): a step introduces a letter and practises it with pick-syllables, divide-words or match-up, but no allowed word record of the lesson contains the letter",
+    STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
+    STEP_LETTER_NO_WORD_RECORD: "note (gate M2, #9138): a step introduces a letter and practises it with pick-syllables, divide-words or a match-up naming word records, but no allowed word record of the lesson contains the letter; the plan review confirms it",
     TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
     COPY_MODEL_LETTER_NOT_TAUGHT: "note (gate M4, #9138): a copy task's pack model text contains letters not yet taught; the plan review confirms which text is copied",
     CORE_CEFR_ABOVE_MODULE: "note (gate M5, #9138): a core lemma's word-store CEFR level is above the module's level; the plan sets no CEFR ceiling, so the plan review confirms it is intended (for example the module's own metalanguage)",
@@ -274,6 +273,8 @@ DESCRIPTIONS = {
 NOTE_CODES = frozenset(
     {
         CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW,
+        STEP_LETTER_NOT_PRACTISED,
+        STEP_LETTER_NO_WORD_RECORD,
         TOKEN_NOT_ALLOWED,
         COPY_MODEL_LETTER_NOT_TAUGHT,
         CORE_CEFR_ABOVE_MODULE,

@@ -1,6 +1,6 @@
 """Tests for the mechanical plan gates M1–M8 (issue #9138).
 
-One passing baseline and, per gate, at least one failing fixture built by a
+One passing baseline and, per gate, at least one fixture built by a
 single mutation of that baseline. The fixture world is a letter-stage module at
 arc position 2 (its arc letters are derived from the plan, as in
 test_plan_validate.py) with a small Cyrillic word store.
@@ -275,15 +275,37 @@ CASES = [
     Case(
         "m1_letter_not_named_in_practice_focus",
         _set_focus(1, "a2", "Complete мама and ман."),
-        failures=frozenset({codes.STEP_LETTER_NOT_PRACTISED}),
+        notes=frozenset({codes.STEP_LETTER_NOT_PRACTISED}),
         says="step s2 introduces the letter А",
+    ),
+    Case(
+        "m1_focus_describing_the_letter_without_the_glyph_is_a_note",
+        _set_focus(1, "a1", "Checks the first letter of the lesson."),
+        notes=frozenset({codes.STEP_LETTER_NOT_PRACTISED}),
+        says="step s1 introduces the letter М",
     ),
     # M2 -- a letter with a word-completion practice and no allowed word record containing it
     Case(
         "m2_letter_without_a_word_record",
         _m2_letter_without_word,
-        failures=frozenset({codes.STEP_LETTER_NO_WORD_RECORD}),
+        notes=frozenset({codes.STEP_LETTER_NO_WORD_RECORD}),
         says="no allowed word record of lesson 1 contains К",
+    ),
+    Case(
+        "m2_letter_to_sound_match_up_is_not_word_completion",
+        lambda plan, pack, words: (
+            _m2_letter_without_word(plan, pack, words),
+            _activity_of(plan, 1, "a1").update({"type": "match-up", "focus": "Match the letters М and К to sounds."}),
+        ),
+    ),
+    Case(
+        "m2_match_up_naming_word_records_counts_as_word_completion",
+        lambda plan, pack, words: (
+            _m2_letter_without_word(plan, pack, words),
+            _activity_of(plan, 1, "a1").update({"type": "match-up", "focus": "Match мама to pictures; find М and К."}),
+        ),
+        notes=frozenset({codes.STEP_LETTER_NO_WORD_RECORD}),
+        says="a1 (match-up)",
     ),
     # M3 -- quoted tokens against the lesson's allowed set
     Case(
@@ -427,7 +449,7 @@ def test_case(tmp_path: Path, case: Case) -> None:
 
 def test_outcomes_name_lesson_and_step(tmp_path: Path) -> None:
     report, _world = run(tmp_path, CASES[1].mutate)
-    outcome = report.failures[0]
+    outcome = report.notes[0]
     assert (outcome.code, outcome.lesson, outcome.step) == (codes.STEP_LETTER_NOT_PRACTISED, 1, "s2")
     report, _world = run(tmp_path / "teach", next(c for c in CASES if c.name.startswith("m3_teach")).mutate)
     outcome = report.notes[0]

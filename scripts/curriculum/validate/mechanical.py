@@ -9,7 +9,8 @@ letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
 
   M1  a step introduces a letter that no activity in its practice names in its focus
   M2  a step introduces a letter that no allowed word record contains, while its
-      practice includes a word-completion activity (pick-syllables, divide-words, match-up)
+      practice includes an activity that completes or builds words (pick-syllables,
+      divide-words, or a match-up whose focus names word records)
   M3  a Ukrainian token in a step's teach text or an activity's focus resolves only to
       records outside the lesson's allowed set
   M4  a copy task's pack model text uses letters outside the taught-letter set
@@ -19,9 +20,12 @@ letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
   M7  a count-syllables item set has one distinct syllable count (not_checked, same reason)
   M8  a core word or grammar id is never used or recycled by a later lesson
 
-Severity, per gate. Only what the plan text and the store decide outright fails the
-run: M1 and M2. The rest is reported and never fails, because the plan contract
-does not make any of it an invariant of a valid plan:
+Severity, per gate. No gate fails the run: each is reported for the plan reviewer,
+because the plan contract does not make any of it an invariant of a valid plan:
+
+- M1 (note): a focus can describe practising a letter without printing the glyph.
+- M2 (note): only activities that complete or build words count; a letter-to-sound
+  match-up is not word completion, so it is not counted.
 
 - M3 (note): a quoted token that resolves only to out-of-allowlist records. A token
   that resolves to no store record, or that is spelled like a syllable (one vowel,
@@ -62,6 +66,7 @@ from .report import Outcome, Report
 from .scope import CYRILLIC_LETTER_CLASS
 
 WORD_COMPLETION_TYPES = frozenset({"pick-syllables", "divide-words", "match-up"})
+WORD_BUILDING_TYPES = frozenset({"pick-syllables", "divide-words"})
 COPY_TASK_TYPES = frozenset({"letter-grid"})
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 
@@ -200,9 +205,6 @@ class _Gates:
 
     # -- reporting ------------------------------------------------------------
 
-    def fail(self, code: str, message: str, lesson: int | None, step: str | None = None) -> None:
-        self.report.failures.append(Outcome(code, message, lesson, step))
-
     def note(self, code: str, message: str, lesson: int | None, step: str | None = None) -> None:
         self.report.notes.append(Outcome(code, message, lesson, step))
 
@@ -228,6 +230,12 @@ class _Gates:
 
     # -- M1, M2 ---------------------------------------------------------------
 
+    def _builds_words(self, activity: dict) -> bool:
+        """Whether activity completes or builds words: a match-up counts only when its focus names word records."""
+        if activity["type"] in WORD_BUILDING_TYPES:
+            return True
+        return activity["type"] == "match-up" and any(token in self.index for token in tokens_of(activity["focus"]))
+
     def check_step_letters(self) -> None:
         introduced = [
             (lesson, step, letter)
@@ -247,14 +255,15 @@ class _Gates:
                 continue  # teach_step_without_practice (rule 6) already fails a teach step with none
             if not any(_names_letter(activity["focus"], letter) for activity in practice):
                 ids = ", ".join(activity["id"] for activity in practice) or "none"
-                self.fail(
+                self.note(
                     codes.STEP_LETTER_NOT_PRACTISED,
                     f"step {step['id']} introduces the letter {letter}, but no activity in its practice "
-                    f"({ids}) names {letter} in its focus (gate M1)",
+                    f"({ids}) names {letter} in its focus; the focus may describe the practice without the glyph, "
+                    "so the plan review confirms it (gate M1)",
                     lesson["n"],
                     step["id"],
                 )
-            completion = [a for a in practice if a["type"] in WORD_COMPLETION_TYPES]
+            completion = [a for a in practice if self._builds_words(a)]
             if not completion:
                 continue
             allowed = self.allowed_ids(lessons.index(lesson), "M2")
@@ -265,11 +274,12 @@ class _Gates:
                 wanted in letters_of(" ".join((record.lemma, *record.form_texts)))
                 for record in self.word_records(allowed)
             ):
-                self.fail(
+                self.note(
                     codes.STEP_LETTER_NO_WORD_RECORD,
                     f"step {step['id']} introduces the letter {letter} and practises it with "
                     f"{', '.join(a['id'] + ' (' + a['type'] + ')' for a in completion)}, but no allowed word "
-                    f"record of lesson {lesson['n']} contains {letter} (gate M2)",
+                    f"record of lesson {lesson['n']} contains {letter}; the plan review confirms the practice can "
+                    "be built (gate M2)",
                     lesson["n"],
                     step["id"],
                 )
