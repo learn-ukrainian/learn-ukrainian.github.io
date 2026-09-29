@@ -330,6 +330,14 @@ _CONTENT_TREE_SNAPSHOT_KEY = "_content_tree_snapshot"
 # test rewrite tracked files under this tree.
 _LEXICON_FIXTURE_PATHSPEC = "tests/fixtures/lexicon/"
 _LEXICON_FIXTURE_SNAPSHOT_KEY = "_lexicon_fixture_snapshot"
+# Gitignored corpus databases (#9158). SQLite creates a missing file on a
+# read-write connect, so a reader without ``mode=ro`` leaves an empty
+# ``data/sources.db`` in a checkout that has no corpus (CI, sparse worktrees),
+# and later tests take the empty file for a real database. The audit hook
+# ``_checkout_corpus_db_create_hook`` refuses the creation in this process;
+# the session snapshot catches creators it cannot see (subprocesses).
+_CHECKOUT_CORPUS_DBS = ("data/sources.db", "data/vesum.db")
+_CHECKOUT_CORPUS_DB_SNAPSHOT_KEY = "_checkout_corpus_db_snapshot"
 
 
 def _git_pathspec_snapshot(root: Path, pathspecs: tuple[str, ...]) -> frozenset[str] | None:
@@ -375,10 +383,16 @@ def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] |
     return sorted(after - before), sorted(before - after)
 
 
+def _checkout_corpus_db_snapshot(root: Path) -> frozenset[str]:
+    """The corpus databases present in the checkout at ``root``."""
+    return frozenset(name for name in _CHECKOUT_CORPUS_DBS if (root / name).exists())
+
+
 def pytest_sessionstart(session: pytest.Session) -> None:
     config = session.config
     if hasattr(config, "workerinput"):
         return
+    setattr(config, _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY, _checkout_corpus_db_snapshot(_REPO_ROOT))
     setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
     setattr(
         config,
@@ -431,11 +445,31 @@ def _enforce_lexicon_fixture_seal(session: pytest.Session) -> None:
         session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
+def _enforce_no_checkout_corpus_db_created(session: pytest.Session) -> None:
+    """Fail the session if it created a corpus database in the checkout (#9158)."""
+    before = getattr(session.config, _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY, None)
+    if before is None:
+        return
+    created = sorted(_checkout_corpus_db_snapshot(_REPO_ROOT) - before)
+    if not created:
+        return
+    print(
+        "checkout corpus-db guard: the test session created "
+        f"{', '.join(created)} in {_REPO_ROOT}, which had none at session start. "
+        "A read-write sqlite3.connect creates a missing file: open corpus databases "
+        "read-only (file:...?mode=ro, uri=True) and point tests at tmp_path "
+        "(LU_SOURCES_DB). Delete the stray file before the next run (#9158)."
+    )
+    if session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     """Report this session's temp usage and optionally enforce a CI budget."""
     config = session.config
     if hasattr(config, "workerinput"):
         return
+    _enforce_no_checkout_corpus_db_created(session)
     _enforce_content_tree_clean(session)
     _enforce_lexicon_fixture_seal(session)
 
@@ -876,6 +910,36 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
 
 
 sys.addaudithook(_task_store_write_hook)
+
+
+def _checkout_corpus_db_create_hook(event: str, args: tuple[object, ...]) -> None:
+    """Fail a read-write sqlite connect that would create a corpus database in the checkout (#9158).
+
+    The audit event fires before SQLite touches the file, so the refusal
+    prevents the empty database instead of reporting it afterwards. It also
+    fires while modules are imported during collection, where a module-level
+    probe once created the file for every later test in the shard.
+    ``pytest.fail`` raises a ``BaseException``, so a caller's ``except
+    sqlite3.Error`` / ``except Exception`` cannot swallow the refusal.
+    Read-only URIs and connects to existing files pass.
+    """
+    if event != "sqlite3.connect" or not args:
+        return
+    path, read_only = _sqlite_database_path(args[0])
+    if path is None or read_only or path.exists():
+        return
+    if path not in {(_REPO_ROOT / name).resolve() for name in _CHECKOUT_CORPUS_DBS}:
+        return
+    node = os.environ.get("PYTEST_CURRENT_TEST") or "test collection or session setup"
+    pytest.fail(
+        f"{node} would create {path}: a read-write sqlite3.connect creates a missing "
+        "database. Open corpus databases read-only (file:...?mode=ro, uri=True) and point "
+        "tests at tmp_path via LU_SOURCES_DB (#9158)",
+        pytrace=False,
+    )
+
+
+sys.addaudithook(_checkout_corpus_db_create_hook)
 
 
 def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path) -> None:
