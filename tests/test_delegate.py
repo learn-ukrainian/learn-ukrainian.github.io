@@ -1143,7 +1143,14 @@ def test_dor_preflight_blocks_warn_issue_and_records_override(monkeypatch):
     assert "#8886: verify" in error
     assert record == {"issues": [8886], "warnings": {"8886": "verify"}}
     assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/8886"]
-    assert calls[1][-4:] == ["--issue", "8886", "--strict", "--json"]
+    assert calls[1][-6:] == [
+        "--issue",
+        "8886",
+        "--repo",
+        "learn-ukrainian/learn-ukrainian.github.io",
+        "--strict",
+        "--json",
+    ]
 
     error, record = delegate._run_dor_preflight("Implement issue #8886", "urgent repair")
     assert error is None
@@ -1206,11 +1213,115 @@ def test_dor_preflight_rejects_mismatched_issue_lookup(monkeypatch):
     assert record == {"issues": [8886], "warnings": {"8886": "checker_error"}}
 
 
+def test_dor_preflight_cross_repo_references_deduplicate_by_repo_and_number(monkeypatch):
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return CompletedProcess(command, 0, '{"number":690}', "")
+        return CompletedProcess(command, 0, '{"verdict":"PASS","missing":[]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    prompt = (
+        "https://github.com/acme/other/issues/690 and acme/other#690 and #690; "
+        "ignore path/acme/other#691 and ?q=acme/other#692 and ?q=#693"
+    )
+    error, record = delegate._run_dor_preflight(prompt, None)
+    assert error is None
+    assert record == {
+        "issues": [690, 690],
+        "warnings": {},
+        "issue_repositories": [{"issue": 690, "repo": "acme/other"}],
+    }
+    assert [call for call in calls if call[:2] == ["gh", "api"]] == [
+        ["gh", "api", "repos/acme/other/issues/690"],
+        ["gh", "api", "repos/learn-ukrainian/learn-ukrainian.github.io/issues/690"],
+    ]
+    assert [call[call.index("--repo") + 1] for call in calls if "--repo" in call] == [
+        "acme/other",
+        "learn-ukrainian/learn-ukrainian.github.io",
+    ]
+
+
+def test_dor_dispatch_private_repo_uses_mapped_issue_card(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    from subprocess import CompletedProcess
+
+    primary = tmp_path / "learn-ukrainian"
+    sibling = tmp_path / "learn-ukrainian-infra-private"
+    for checkout in (primary, sibling):
+        (checkout / ".git").mkdir(parents=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            return CompletedProcess(command, 0, '{"number":690}', "")
+        return CompletedProcess(command, 1, '{"verdict":"WARN","missing":["verify"]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: pytest.fail("WARN must block spawn"))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dor-private",
+            "--mode",
+            "danger",
+            "--repo",
+            "infra-private",
+            "--worktree",
+            "--prompt",
+            "Implement #690",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "learn-ukrainian/learn-ukrainian-infra-private#690: verify" in capsys.readouterr().err
+    assert calls[0] == ["gh", "api", "repos/learn-ukrainian/learn-ukrainian-infra-private/issues/690"]
+    assert calls[1][-6:] == [
+        "--issue",
+        "690",
+        "--repo",
+        "learn-ukrainian/learn-ukrainian-infra-private",
+        "--strict",
+        "--json",
+    ]
+    assert not (tmp_tasks_dir / "dor-private.json").exists()
+
+
+def test_dor_dispatch_unknown_repo_fails_before_issue_lookup(tmp_tasks_dir, monkeypatch, capsys):
+    monkeypatch.setattr(delegate.subprocess, "run", lambda *_args, **_kwargs: pytest.fail("no gh call"))
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "codex",
+            "--task-id",
+            "dor-unknown",
+            "--mode",
+            "danger",
+            "--repo",
+            "missing",
+            "--worktree",
+            "--prompt",
+            "Implement #690",
+        ]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert "unknown --repo 'missing'" in capsys.readouterr().err
+    assert not (tmp_tasks_dir / "dor-unknown.json").exists()
+
+
 def test_dor_dispatch_refuses_warn_before_worker_spawn(tmp_tasks_dir, monkeypatch, capsys):
     monkeypatch.setattr(
         delegate,
         "_run_dor_preflight",
-        lambda _prompt, _reason: ("❌ DoR issue card WARN (#8886: verify)", None),
+        lambda _prompt, _reason, _repo: ("❌ DoR issue card WARN (#8886: verify)", None),
     )
     monkeypatch.setattr(
         delegate.subprocess,
@@ -6424,7 +6535,7 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     monkeypatch.setattr(
         delegate,
         "_run_dor_preflight",
-        lambda prompt, reason: (
+        lambda prompt, reason, _repo: (
             None,
             {"issues": [1383], "warnings": {"1383": "verify"}, "allow_warn_reason": reason},
         ),
