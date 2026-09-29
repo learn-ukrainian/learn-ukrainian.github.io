@@ -33,6 +33,7 @@ Named Failure Reasons for Check 4:
 - answer_index_out_of_range: 0-based key index out of bounds
 - answer_not_in_options: key text not found in offered options/words
 - form_choice_options_invalid: form-choice options not unique, not in record, or answer tag mismatch
+- a1_case_contrast_under_negated_verb: A1 case-choice sentence contains не followed by a finite verb
 - select_correct_set_invalid: select activity has fewer correct options than required
 """
 
@@ -243,6 +244,59 @@ def _analyses(record: dict[str, Any] | None, surface: str) -> list[set[str]]:
         for form in record.get("forms") or []
         if learner_usable(form) and lookup_form(form["form"]) == lookup_form(surface)
     ]
+
+
+def a1_case_contrast_under_negated_verb(
+    item: dict[str, Any],
+    records: dict[str, dict[str, Any]],
+    activity_type: str,
+    *,
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+) -> bool:
+    """Refuse an A1 case contrast when any verb in the sentence is negated.
+
+    This is deliberately a whole-sentence A1 policy, not clause parsing.
+    """
+    options = item.get("options") or []
+    bindings = option_record_bindings(item, activity_type)
+    if len(bindings) != len(options) or len(options) < 2:
+        return False
+    case_sets = []
+    for record_id, option in zip(bindings, options, strict=True):
+        text = _choice_text(option)
+        analyses = _analyses(records.get(record_id), text) if isinstance(text, str) else []
+        case_sets.append(frozenset(atom for analysis in analyses for atom in analysis if atom.startswith("Case=")))
+    if len({cases for cases in case_sets if cases}) < 2:
+        return False
+
+    sentence = receipts.requirement_sentence(item)
+    tokens = tokenize(sentence)
+    successors = [
+        tokens[index + 1].lookup.casefold()
+        for index, token in enumerate(tokens[:-1])
+        if token.lookup.casefold() == "не"
+        and sentence[token.end : tokens[index + 1].start].isspace()
+    ]
+    if not successors:
+        return False
+    known_finite = {
+        surface
+        for surface in successors
+        if any("VerbForm=Fin" in analysis for record in records.values() for analysis in _analyses(record, surface))
+    }
+    if len(known_finite) == len(set(successors)):
+        return True
+    if vesum_lookup is None:
+        from scripts.verification.vesum import verify_words
+
+        vesum_lookup = verify_words
+    unresolved = sorted(set(successors) - known_finite)
+    found = vesum_lookup(unresolved)
+    return any(
+        "VerbForm=Fin" in to_oracle(analysis["tags"])
+        for surface in unresolved
+        for analysis in found.get(surface, [])
+    )
 
 
 def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:
@@ -523,6 +577,7 @@ def check_4_activities(
     pack: dict[str, Any],
     *,
     level: str | None = None,
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
 ) -> tuple[dict[str, Any], dict[tuple[str, int], list[dict[str, Any]]]]:
     mod_level = (
         (level or "").lower()
@@ -653,6 +708,17 @@ def check_4_activities(
                 and item.get("kind") == "form"
                 and ((typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"})
             ):
+                if a1_case_contrast_under_negated_verb(
+                    item, records, typ, vesum_lookup=vesum_lookup
+                ):
+                    return failure(
+                        4,
+                        "a1_case_contrast_under_negated_verb",
+                        "writer",
+                        code="a1_case_contrast_under_negated_verb",
+                        activity=aid,
+                        token=str(idx),
+                    ), {}
                 generated = item_candidates(item, words, typ)
                 offered = {(candidate["record"], candidate["form"]) for candidate in generated}
                 options = item.get("options") or []
