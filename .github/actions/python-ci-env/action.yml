@@ -45,7 +45,7 @@ runs:
           echo 'uv cache incomplete; retrying installation from the index'
           uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
         fi
-        .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
+        uv pip install --python .venv/bin/python --no-deps --no-build-isolation ./packages/v4-runtime
         # The seven known missing ML dependencies result from the CI wheel
         # filter. The fallback accepts only those exact omissions.
         check_exit=0
