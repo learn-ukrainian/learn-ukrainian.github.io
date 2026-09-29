@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import dataclasses
 import hashlib
 from pathlib import Path
 
@@ -513,7 +514,7 @@ def test_prompt_lists_every_letter_grammar_point_and_word(
     prompt = _render_state_prompt(sample_plan_entry, full_learner_state, sample_cited_records, recap=recap)
     block = _state_block(prompt)
 
-    assert "**Letters taught** (5, in taught order): А О Г І М" in block
+    assert "**Letters taught** (5, in taught order): О А І Г М" in block
     assert "  - `G-a1-001`: A sound and a letter are different units.\n  - `G-a1-002`: Vowels" in block
     assert "**Allowed words** (5; any form of each may be used)" in block
     assert "  - Base layer (2): `W-2` я, `W-10` і\n" in block
@@ -533,6 +534,23 @@ def test_prompt_lists_every_letter_grammar_point_and_word(
         **STATE_SOURCES,
     )
     assert check.errors == []
+
+
+@pytest.mark.parametrize("plan_order", [("О", "А"), ("А", "О")])
+def test_letters_of_one_lesson_render_in_the_plans_order(
+    sample_plan_entry, full_learner_state, sample_cited_records, plan_order
+):
+    """Letters introduced in the same lesson keep the plan's order in the writer block and the rebuilt block."""
+    letters = {letter: {"position": 1, "lesson": 2} for letter in plan_order}
+    state = dataclasses.replace(full_learner_state, letters=letters)
+    prompt = _render_state_prompt(sample_plan_entry, state, sample_cited_records)
+    block = _state_block(prompt)
+
+    assert f"**Letters taught** (2, in taught order): {' '.join(plan_order)}" in block
+    assert block == learner_state_block(state, STATE_WORD_STORE, STATE_GRAMMAR)
+    assert block == learner_state_block(state.to_dict(), STATE_WORD_STORE, STATE_GRAMMAR)
+    assert learner_state_view(state, STATE_WORD_STORE, STATE_GRAMMAR)["letters"] == list(plan_order)
+    assert _state_errors(prompt, sample_plan_entry, state, **STATE_SOURCES) == []
 
 
 def test_state_section_is_deterministic_and_matches_the_reviewer_document(
@@ -587,8 +605,8 @@ def test_state_block_is_the_block_the_state_renders(sample_plan_entry, full_lear
 @pytest.mark.parametrize(
     "old, new, line",
     [
-        pytest.param("in taught order): А О Г І М", "in taught order): А О Г І М Ф", "А О Г І М Ф", id="extra-letter"),
-        pytest.param("in taught order): А О Г І М", "in taught order): А О Г І", "А О Г І'", id="missing-letter"),
+        pytest.param("in taught order): О А І Г М", "in taught order): О А І Г М Ф", "О А І Г М Ф", id="extra-letter"),
+        pytest.param("in taught order): О А І Г М", "in taught order): О А І Г", "О А І Г'", id="missing-letter"),
         pytest.param(
             "different units.",
             "different sounds.",

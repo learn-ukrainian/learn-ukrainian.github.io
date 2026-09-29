@@ -79,9 +79,6 @@ LEARNER_STATE_BEGIN = "<!-- BEGIN LEARNER_STATE -->"
 LEARNER_STATE_END = "<!-- END LEARNER_STATE -->"
 LEARNER_STATE_TEMPLATE = "_learner-state.md.j2"
 
-#: Letter order inside one lesson of the taught-letters list.
-UKRAINIAN_ALPHABET = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
-
 # Forbidden v1 path patterns per review finding 5 and §8.1
 FORBIDDEN_V1_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"curriculum/l2-uk-en/(?:[a-c][1-2]|[a-z0-9]+)-v1/"),
@@ -265,15 +262,10 @@ def _id_key(identifier: str) -> tuple[str, int, str]:
     return (match.group(1), int(match.group(2)), identifier) if match else (identifier, -1, identifier)
 
 
-def _letter_key(item: tuple[str, dict[str, int]]) -> tuple[int, int, int, str]:
-    letter, introduced = item
-    index = UKRAINIAN_ALPHABET.find(letter.upper())
-    return (
-        int(introduced.get("position", 0)),
-        int(introduced.get("lesson", 0)),
-        index if index >= 0 else len(UKRAINIAN_ALPHABET),
-        letter,
-    )
+def _letter_key(item: tuple[str, dict[str, int]]) -> tuple[int, int]:
+    """Order by (position, lesson); the stable sort keeps the plans' introduction order within a lesson."""
+    _, introduced = item
+    return int(introduced.get("position", 0)), int(introduced.get("lesson", 0))
 
 
 def learner_state_view(
