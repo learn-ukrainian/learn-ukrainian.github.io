@@ -392,6 +392,40 @@ def test_stop_never_signals_a_job_that_changed_its_real_uid() -> None:
     assert "refused a signal" in (result.error or "")
 
 
+def test_stop_never_stops_a_scope_unit_holding_another_uids_member() -> None:
+    """Stopping the unit would signal the foreign member too (review-8991-r3)."""
+    fake = FakeProcs(
+        procs={JOB: FakeProc(), OTHER: FakeProc(uid=os.getuid() + 1)},
+        cgroups={SCOPE_CGROUP: [JOB, OTHER]},
+    )
+
+    result = wl.stop_leftovers(scope_of(launch_mode="scope"), reader=fake, **stop_kwargs(fake))
+
+    assert result.ok is False
+    assert result.unit_stopped is False
+    assert fake.stopped_units == []
+    assert fake.signals == []
+    assert result.unsignalled == [OTHER]
+    assert sorted(proc.pid for proc in result.survivors) == [JOB, OTHER]
+    assert "refused a signal" in (result.error or "")
+
+
+def test_stop_never_signals_a_member_that_changed_uid_while_its_pidfd_opened() -> None:
+    fake = FakeProcs(procs={JOB: FakeProc()}, cgroups={SCOPE_CGROUP: [os.getpid(), JOB]}, own=SCOPE_CGROUP)
+    original_open = fake.pidfd_open
+
+    def change_uid_then_open(pid: int) -> int:
+        fake.procs[JOB].uid = os.getuid() + 1
+        return original_open(pid)
+
+    fake.pidfd_open = change_uid_then_open  # type: ignore[method-assign]
+    result = wl.stop_leftovers(scope_of(launch_mode="scope"), reader=fake, **stop_kwargs(fake))
+
+    assert result.ok is False
+    assert fake.signals == []
+    assert result.unsignalled == [JOB]
+
+
 def test_stop_inside_the_scope_signals_members_but_never_stops_its_own_unit() -> None:
     fake = FakeProcs(procs={JOB: FakeProc()}, cgroups={SCOPE_CGROUP: [os.getpid(), JOB]}, own=SCOPE_CGROUP)
 

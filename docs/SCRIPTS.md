@@ -889,12 +889,15 @@ own scope. The recorded scope must match the task's launch record (task id, `run
 `launch_mode`, `launch_unit`); a scope unit must carry the name
 `dispatch_isolation.scope_unit_name` derives from that task id and nonce, and its cgroup
 must be that unit's scope under `lu-dispatch.slice` for this user. Anything else is refused
-and nothing is signalled. A scope the reaper is not inside is stopped with
-`systemctl --user stop`. Anything left gets SIGTERM, then SIGKILL, each sent through a pidfd
-opened on the process and re-verified (start time and scope membership) after opening, so
-a reused pid is never signalled. A process of another real uid is never signalled. Where
-pidfds are unavailable nothing is signalled. If any process survives or cannot be
-signalled, removal is refused.
+and nothing is signalled. If any process in the boundary has another real uid, nothing is
+stopped or signalled (not even the scope unit) and removal is refused. Otherwise a scope the
+reaper is not inside is stopped with `systemctl --user stop`. Anything left gets SIGTERM,
+then SIGKILL, each sent through a pidfd opened on the process and re-verified (start time,
+scope membership and real uid) after opening, so a reused pid, or a process that changed
+its uid before that re-check, is never signalled. Where pidfds are unavailable nothing is
+signalled. If any process survives or cannot be signalled, removal is refused. Out of
+scope: a process that changes its identity after the final re-check and before the signal
+lands; closing that needs a privileged helper inside the worker's own scope.
 
 **Auto-finalize owned paths (#8991):** auto-finalize commits only under the task's explicit
 `--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is

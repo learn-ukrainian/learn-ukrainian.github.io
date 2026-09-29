@@ -26,8 +26,16 @@ names them and stops them, and never looks outside the worker's own boundary:
 
 A scan that cannot read something it needs raises :class:`ScanUnknown`: an
 unreadable ``cgroup.procs`` or process environment is not proof that no job is
-alive. Individual processes are signalled only through a pidfd whose target is
-re-verified after it is opened; without pidfd support nothing is signalled.
+alive. When any process in the boundary has another real uid, nothing is
+stopped or signalled (not even the scope unit, whose stop would reach it) and
+the reap is refused. Individual processes are signalled only through a pidfd
+whose target (start time, boundary membership, real uid) is re-verified after
+it is opened; without pidfd support nothing is signalled.
+
+Out of scope: a process that changes its identity (uid, or its boundary
+membership) after that final re-check and before the signal is delivered.
+Closing that gap needs a privileged helper running inside the worker's own
+scope; an unprivileged reaper outside it cannot.
 The caller and its ancestors are never reported or signalled, and zombies are
 not processes that can still do work.
 """
@@ -631,33 +639,39 @@ def _systemctl_stop(unit: str) -> bool:
     return proc.returncode == 0
 
 
-def _still_same(scope: WorkerScope, reader: ProcessReader, proc: LeftoverProcess) -> bool:
-    """Whether ``proc.pid`` still names the scanned process, inside ``scope``."""
+def _identity(scope: WorkerScope, reader: ProcessReader, proc: LeftoverProcess) -> str:
+    """``same``, ``gone`` or ``refused`` for ``proc.pid`` right now; raises :class:`ScanUnknown`.
+
+    ``same`` means the pid still names the scanned process (same start time),
+    inside ``scope``, with this user's real uid.
+    """
     info = reader.stat(proc.pid)
     if info is None or info.start_ticks != proc.start_ticks or info.state == "Z":
-        return False
-    return _in_boundary(scope, reader, proc.pid, info)
+        return "gone"
+    if not _in_boundary(scope, reader, proc.pid, info):
+        return "gone"
+    uid = reader.real_uid(proc.pid)
+    if uid is None:
+        return "gone"
+    return "same" if uid == os.getuid() else "refused"
 
 
 def _signal_via_pidfd(scope: WorkerScope, reader: ProcessReader, proc: LeftoverProcess, sig: int, ops: PidfdOps) -> str:
     """Signal one process through a pidfd: ``signalled``, ``gone``, ``unavailable`` or ``refused``.
 
     A process of another real uid (a job that changed it) is refused: it may
-    not be ours to signal. The identity check runs again after the pidfd is open. From then on the
-    fd names one process: if the pid was reused before the open, the check
-    sees the newcomer and fails; if the process exits after the check, the
-    signal hits the dead pidfd (``ESRCH``), never the pid's next owner.
+    not be ours to signal. The whole identity check (start time, boundary
+    membership, real uid) runs again after the pidfd is open. From then on the
+    fd names one process: if the pid was reused, or the process changed its
+    uid, before that re-check, the re-check fails; if the process exits after
+    it, the signal hits the dead pidfd (``ESRCH``), never the pid's next owner.
     """
     if ops.open is None or ops.send is None:
         return "unavailable"
     try:
-        if not _still_same(scope, reader, proc):
-            return "gone"
-        uid = reader.real_uid(proc.pid)
-        if uid is None:
-            return "gone"
-        if uid != os.getuid():
-            return "refused"
+        identity = _identity(scope, reader, proc)
+        if identity != "same":
+            return identity
         fd = ops.open(proc.pid)
     except ProcessLookupError:
         return "gone"
@@ -666,8 +680,9 @@ def _signal_via_pidfd(scope: WorkerScope, reader: ProcessReader, proc: LeftoverP
     except OSError as exc:
         return "unavailable" if exc.errno == errno.ENOSYS else "refused"
     try:
-        if not _still_same(scope, reader, proc):
-            return "gone"
+        identity = _identity(scope, reader, proc)
+        if identity != "same":
+            return identity
         ops.send(fd, sig)
     except ProcessLookupError:
         return "gone"
@@ -691,8 +706,9 @@ def stop_leftovers(
 ) -> StopResult:
     """Stop every process inside ``scope``; ``ok`` only when none is left.
 
-    Nothing is touched unless ``scope`` passes :func:`scope_identity_error`.
-    A scope unit the caller is not inside is stopped as a unit, which also
+    Nothing is touched unless ``scope`` passes :func:`scope_identity_error`,
+    and nothing is touched while any member has another real uid: those
+    members are reported as unsignalled and the reap is refused. A scope unit the caller is not inside is stopped as a unit, which also
     takes anything forked mid-stop. Otherwise, and for whatever that leaves,
     each process gets SIGTERM, then SIGKILL after ``grace_s``, through a
     pidfd only; without pidfd support it is left alone and reported.
@@ -719,6 +735,20 @@ def stop_leftovers(
             unsignalled=unsignalled,
             unit_stopped=unit_stopped,
             error=f"worker scope unreadable: {exc}",
+        )
+
+    # A member of another real uid may not be ours to touch: stopping the unit
+    # would signal it too. Nothing is stopped or signalled, and the reap is refused.
+    try:
+        foreign = [proc for proc in leftovers if reader.real_uid(proc.pid) not in (None, os.getuid())]
+    except ScanUnknown as exc:
+        return unreadable(exc)
+    if foreign:
+        return StopResult(
+            ok=False,
+            survivors=leftovers,
+            unsignalled=[proc.pid for proc in foreign],
+            error=f"{len(foreign)} process(es) refused a signal (another uid); nothing stopped",
         )
 
     own = reader.own_cgroup()
