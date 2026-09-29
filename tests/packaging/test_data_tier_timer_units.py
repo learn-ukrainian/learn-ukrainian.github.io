@@ -18,6 +18,8 @@ def test_data_tier_service_and_timer_contract() -> None:
     assert "WorkingDirectory=@REPO_ROOT@" in service
     assert "@REPO_ROOT@/.venv/bin/python -m scripts.ci.data_tier run" in service
     assert "TimeoutStartSec=" in service
+    assert "TimeoutStopSec=900" in service
+    assert "After=network.target" not in service
     assert "OnCalendar=*-*-* 02:15:00 UTC" in timer
     assert "Persistent=true" in timer
     assert "Unit=learn-ukrainian-data-tier.service" in timer

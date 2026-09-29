@@ -19,24 +19,24 @@ import socket
 import sqlite3
 import subprocess
 import sys
+import time
 import uuid
 import xml.etree.ElementTree as ET
 from collections import Counter
 from pathlib import Path
 
-# The manual pre-merge smoke run executes this file from a checkout at main.
-# Import test/runtime helpers from that checkout without changing PYTHONPATH.
-sys.path.insert(0, str(Path.cwd()))
-
 import pytest
 
-from scripts.orchestration.dispatch_isolation import build_scope_argv
+from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
 
 SOURCE_ROOT = Path(__file__).resolve().parents[2]
 SELECTION = Path(__file__).with_name("data_tier_selection.json")
 BASELINE = Path(__file__).with_name("data_tier_known_failures.json")
 ISSUE_TITLE = "[infra][tests] Nightly data-tier failures"
 MIN_AVAILABLE_BYTES = 6 * 1024**3
+RUN_BUDGET_SECONDS = 7 * 3600
+HYDRATION_BUDGET_SECONDS = 3600
+ISSUE_BODY_LIMIT = 60000
 HOST_DATABASES = ("sources.db", "vesum.db", "atlas.db", "ulif_dump_all.db")
 ABSOLUTE_PATH = re.compile(r"(?<![A-Za-z0-9])/(?!/)[^\s\]\[),:;]+")
 NETWORK_ADDRESS = re.compile(r"https?://[^\s\]\[),:;]+|(?<!\d)(?:\d{1,3}\.){3}\d{1,3}(?!\d)")
@@ -79,7 +79,7 @@ def run_process_group(
     )
     try:
         return process.wait(timeout=timeout)
-    except subprocess.TimeoutExpired as error:
+    except BaseException as error:
         with contextlib.suppress(ProcessLookupError):
             os.killpg(process.pid, signal.SIGTERM)
         try:
@@ -88,7 +88,9 @@ def run_process_group(
             with contextlib.suppress(ProcessLookupError):
                 os.killpg(process.pid, signal.SIGKILL)
             process.wait(timeout=10)
-        raise DataTierError(f"command timed out after {timeout} seconds") from error
+        if isinstance(error, subprocess.TimeoutExpired):
+            raise DataTierError(f"command timed out after {timeout} seconds") from error
+        raise
 
 
 def primary_checkout() -> Path:
@@ -121,19 +123,64 @@ def require_memory() -> None:
     if available < MIN_AVAILABLE_BYTES:
         raise DataTierError(f"MemAvailable {available // 1024**2} MiB is below the 6 GiB floor")
     slice_state = command(
-        ["systemctl", "--user", "show", "-p", "LoadState,MemoryCurrent,MemoryMax", "lu-dispatch.slice"],
+        ["systemctl", "--user", "show", "-p", "LoadState,ActiveState,MemoryCurrent,MemoryMax", "lu-dispatch.slice"],
         cwd=SOURCE_ROOT,
     ).stdout
     properties = dict(line.split("=", 1) for line in slice_state.splitlines() if "=" in line)
     if properties.get("LoadState") != "loaded":
         raise DataTierError("lu-dispatch.slice is unavailable")
-    try:
-        current = int(properties["MemoryCurrent"])
-        maximum = int(properties["MemoryMax"])
-    except (KeyError, ValueError) as error:
-        raise DataTierError("lu-dispatch.slice memory headroom is unknown") from error
-    if maximum - current < 4 * 1024**3:
+    if properties.get("ActiveState") == "inactive":
+        return
+    current = _parse_bytes(properties.get("MemoryCurrent"))
+    maximum = _parse_bytes(properties.get("MemoryMax"))
+    if current is None or (maximum is None and properties.get("MemoryMax") != "infinity"):
+        raise DataTierError("lu-dispatch.slice memory headroom is unknown")
+    if maximum is not None and maximum - current < 4 * 1024**3:
         raise DataTierError("lu-dispatch.slice has less than 4 GiB headroom")
+
+
+def prune_stale_worktrees(primary: Path) -> None:
+    """Reap abandoned nightly checkouts only when no nightly scope is active."""
+    parent = primary / ".worktrees" / "data-tier"
+    if not parent.is_dir():
+        return
+    scopes = command(
+        ["systemctl", "--user", "list-units", "--type=scope", "--state=active", "--no-legend", "lu-data-tier-*"],
+        cwd=SOURCE_ROOT,
+    ).stdout
+    if scopes.strip():
+        raise DataTierError("a previous data-tier scope is still active; cleanup withheld")
+    for checkout in parent.glob("run-*"):
+        if checkout.is_symlink() or not checkout.is_dir() or not re.fullmatch(r"run-[0-9a-f]{32}", checkout.name):
+            continue
+        # Leave a concurrent or recently interrupted runner's checkout alone.
+        if time.time() - checkout.stat().st_mtime < 9 * 3600:
+            continue
+        remove_test_worktree(primary, checkout)
+
+
+def remove_test_worktree(primary: Path, checkout: Path) -> None:
+    command(
+        ["git", "--git-dir", str(primary / ".git"), "worktree", "remove", "--force", str(checkout)],
+        cwd=primary / ".worktrees" / "data-tier",
+        timeout=600,
+    )
+
+
+def stop_scope(unit: str) -> None:
+    result = subprocess.run(
+        ["systemctl", "--user", "show", "-p", "LoadState", unit],
+        cwd=SOURCE_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    if "LoadState=not-found" in result.stdout:
+        return
+    if result.returncode:
+        raise DataTierError(f"scope state unavailable: {safe_text(result.stderr)}")
+    command(["systemctl", "--user", "stop", unit], cwd=SOURCE_ROOT, timeout=60)
 
 
 def make_test_worktree(primary: Path) -> Path:
@@ -174,8 +221,8 @@ def snapshot_databases(primary: Path, checkout: Path, *, only: str | None) -> li
         # SQLite's online backup gives a consistent snapshot even if ingestion
         # has left a WAL beside the primary database. The source is read-only.
         with (
-            sqlite3.connect(source.as_uri() + "?mode=ro", uri=True, timeout=30) as reader,
-            sqlite3.connect(target) as writer,
+            contextlib.closing(sqlite3.connect(source.as_uri() + "?mode=ro", uri=True, timeout=30)) as reader,
+            contextlib.closing(sqlite3.connect(target)) as writer,
         ):
             reader.backup(writer, pages=1024, sleep=0.1)
     return missing
@@ -203,15 +250,24 @@ def provision_host_files(primary: Path, checkout: Path) -> None:
 
 def hydrate(checkout: Path, groups: list[str], project_python: Path) -> dict[str, str]:
     failures = {}
+    deadline = time.monotonic() + HYDRATION_BUDGET_SECONDS
     for group in groups:
-        result = subprocess.run(
-            [str(project_python), "-m", "scripts.storage.artifacts", "hydrate", "--group", group],
-            cwd=checkout,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=1800,
-        )
+        remaining = int(deadline - time.monotonic())
+        if remaining <= 0:
+            failures[group] = "hydration budget exhausted"
+            continue
+        try:
+            result = subprocess.run(
+                [str(project_python), "-m", "scripts.storage.artifacts", "hydrate", "--group", group],
+                cwd=checkout,
+                capture_output=True,
+                text=True,
+                check=False,
+                timeout=min(1800, remaining),
+            )
+        except subprocess.TimeoutExpired:
+            failures[group] = "hydration timed out"
+            continue
         if result.returncode:
             detail = (result.stderr or result.stdout).strip().splitlines()
             failures[group] = safe_text(detail[-1] if detail else f"hydrate exited {result.returncode}")
@@ -251,8 +307,11 @@ class SelectionPlugin:
         self.selected_nodeids: list[str] = []
         self.bulk_skipped: list[str] = []
         self.collection_skips: list[tuple[str, str]] = []
+        self.collection_errors: list[tuple[str, str]] = []
 
     def pytest_collectreport(self, report: pytest.CollectReport) -> None:
+        if report.failed:
+            self.collection_errors.append((report.nodeid, safe_text(str(report.longrepr))))
         if report.skipped and report.nodeid in self.selection["nodeids"]:
             detail = report.longrepr[2] if isinstance(report.longrepr, tuple) else str(report.longrepr)
             self.collection_skips.append((report.nodeid, safe_text(str(detail))))
@@ -286,10 +345,17 @@ def pytest_child(args: argparse.Namespace) -> int:
     selection = load_selection()
     plugin = SelectionPlugin(selection, args.only, args.bulk_reason, Path(args.collected))
     files = [args.only] if args.only else selection["files"]
-    collection_status = pytest.main(["--collect-only", "-q", *files], plugins=[plugin])
-    if collection_status not in (0, 5):
+    collection_status = pytest.main(
+        ["--collect-only", "--continue-on-collection-errors", "-q", *files], plugins=[plugin]
+    )
+    if collection_status not in (0, 1, 5) or (collection_status == 1 and not plugin.collection_errors):
         return int(collection_status)
-    if not plugin.selected_nodeids and not plugin.bulk_skipped and not plugin.collection_skips:
+    if (
+        not plugin.selected_nodeids
+        and not plugin.bulk_skipped
+        and not plugin.collection_skips
+        and not plugin.collection_errors
+    ):
         raise DataTierError("the audited selection collected no tests")
     if plugin.selected_nodeids:
         status = run_process_group(
@@ -312,7 +378,7 @@ def pytest_child(args: argparse.Namespace) -> int:
     else:
         ET.ElementTree(ET.Element("testsuite")).write(args.junit, encoding="utf-8", xml_declaration=True)
         status = 0
-    if plugin.bulk_skipped or plugin.collection_skips:
+    if plugin.bulk_skipped or plugin.collection_skips or plugin.collection_errors:
         tree = ET.parse(args.junit)
         suite = next(tree.iter("testsuite"))
         for nodeid in plugin.bulk_skipped:
@@ -321,13 +387,18 @@ def pytest_child(args: argparse.Namespace) -> int:
         for nodeid, reason in plugin.collection_skips:
             case = ET.SubElement(suite, "testcase", classname="data_tier", name=safe_text(nodeid))
             ET.SubElement(case, "skipped", message=reason)
-        added = len(plugin.bulk_skipped) + len(plugin.collection_skips)
+        for nodeid, reason in plugin.collection_errors:
+            case = ET.SubElement(suite, "testcase", classname="data_tier", name=safe_text(nodeid))
+            ET.SubElement(case, "error", message=reason)
+        skipped = len(plugin.bulk_skipped) + len(plugin.collection_skips)
+        added = skipped + len(plugin.collection_errors)
         for element in {tree.getroot(), suite}:
             if element.tag in {"testsuite", "testsuites"}:
                 element.set("tests", str(int(element.get("tests", "0")) + added))
-                element.set("skipped", str(int(element.get("skipped", "0")) + added))
+                element.set("skipped", str(int(element.get("skipped", "0")) + skipped))
+                element.set("errors", str(int(element.get("errors", "0")) + len(plugin.collection_errors)))
         tree.write(args.junit, encoding="utf-8", xml_declaration=True)
-    return status
+    return status or (1 if plugin.collection_errors else 0)
 
 
 def sanitize_junit(path: Path) -> None:
@@ -381,17 +452,42 @@ def issue_body(summary: dict, baseline: dict[str, int]) -> str:
     lines = [
         "Nightly data-tier run failed.",
         "",
-        f"Run: `{summary['run_key']}` at `{summary['main_sha']}`.",
+        f"Run: `{safe_text(summary['run_key'])}` at `{safe_text(summary['main_sha'])}`.",
         f"Ran {summary['ran']}; passed {summary['passed']}; failed {summary['failed']}; skipped {summary['skipped']}.",
-        "",
-        "Failing tests:",
     ]
+    lines.extend(["", f"Runner errors ({len(summary.get('runner_errors', []))}):"])
+    lines.extend(f"- {safe_text(reason)}" for reason in summary.get("runner_errors", []))
+    lines.extend(["", f"Hydration errors ({len(summary.get('hydration_errors', {}))}):"])
+    lines.extend(
+        f"- {safe_text(group)}: {safe_text(reason)}" for group, reason in summary.get("hydration_errors", {}).items()
+    )
+    lines.extend(["", f"Missing databases ({len(summary.get('missing_databases', []))}):"])
+    lines.extend(f"- {safe_text(name)}" for name in summary.get("missing_databases", []))
+    lines.extend(["", f"Failing tests ({len(summary['failing_tests'])} total):"])
     for nodeid in summary["failing_tests"]:
         issue = known_issue(nodeid, baseline)
         lines.append(f"- `{safe_text(nodeid)}`" + (f" — known issue #{issue}" if issue else " — new"))
     lines.extend(["", "Skipped by reason:"])
     lines.extend(f"- {count}: {safe_text(reason)}" for reason, count in summary["skip_reasons"].items())
-    return "\n".join(lines) + "\n"
+    footer = "\nFull details: local run JUnit, log and JSON summary (named by run key).\n"
+    body = ""
+    for index, line in enumerate(lines):
+        clipped = line[:1024] + (" … [detail truncated]" if len(line) > 1024 else "")
+        if len(body) + len(clipped) + len(footer) + 100 > ISSUE_BODY_LIMIT:
+            body += f"\n[Truncated: {len(lines) - index} remaining report lines; see local receipts.]\n"
+            break
+        body += clipped + "\n"
+    return body + footer
+
+
+def run_failed(summary: dict) -> bool:
+    return bool(
+        summary["failed"]
+        or summary.get("pytest_exit")
+        or summary.get("runner_errors")
+        or summary.get("hydration_errors")
+        or summary.get("missing_databases")
+    )
 
 
 def _gh(args: list[str], *, input_text: str | None = None) -> str:
@@ -422,7 +518,7 @@ def report(summary: dict, baseline: dict[str, int]) -> str:
     if len(matching) > 1:
         raise DataTierError("multiple data-tier failure issues have the stable title")
     issue = matching[0] if matching else None
-    if summary["failed"]:
+    if run_failed(summary):
         body = issue_body(summary, baseline)
         if issue:
             if issue["state"] != "OPEN":
@@ -433,7 +529,7 @@ def report(summary: dict, baseline: dict[str, int]) -> str:
             ["issue", "create", "--title", ISSUE_TITLE, "--label", "infra", "--body-file", "-"], input_text=body
         )
         return f"created {created.strip()}"
-    if issue:
+    if issue and issue["state"] == "OPEN":
         comments = json.loads(_gh(["issue", "view", str(issue["number"]), "--json", "comments"]))["comments"]
         marker = f"Data-tier clean run `{summary['run_key']}`"
         if not any(marker in comment["body"] for comment in comments):
@@ -446,40 +542,65 @@ def report(summary: dict, baseline: dict[str, int]) -> str:
                     marker + f": {summary['passed']} passed, {summary['skipped']} skipped.",
                 ]
             )
-            return f"commented once on issue #{issue['number']}"
+        _gh(["issue", "close", str(issue["number"])])
+        return f"closed issue #{issue['number']} after clean run"
     return "no issue change"
 
 
 def run(args: argparse.Namespace) -> int:
-    selection = load_selection()
-    if args.only and args.only not in selection["files"]:
-        raise DataTierError("--only must name a file in the audited selection")
-    if args.only and not args.no_report:
-        raise DataTierError("a subset requires --no-report")
-    require_memory()
-    primary = primary_checkout()
-    project_python = primary / ".venv" / "bin" / "python"
-    if not project_python.is_file():
-        raise DataTierError("shared project interpreter unavailable")
-    output_dir = primary / "batch_state" / "data-tier"
-    output_dir.mkdir(parents=True, exist_ok=True)
     started = dt.datetime.now(dt.UTC)
-    run_key = started.strftime("%Y%m%dT%H%M%SZ")
-    junit = output_dir / f"{run_key}.junit.xml"
-    collected = output_dir / f"{run_key}.collected.json"
-    log = output_dir / f"{run_key}.log"
-    checkout = make_test_worktree(primary)
+    run_key = started.strftime("%Y%m%dT%H%M%S") + f"-{uuid.uuid4().hex[:8]}Z"
+    deadline = time.monotonic() + RUN_BUDGET_SECONDS
+    summary = {
+        "run_key": run_key,
+        "main_sha": "unavailable",
+        "ran": 0,
+        "passed": 0,
+        "failed": 0,
+        "skipped": 0,
+        "collected": 0,
+        "pytest_exit": None,
+        "failing_tests": [],
+        "skip_reasons": {},
+        "runner_errors": [],
+        "hydration_errors": {},
+        "missing_databases": [],
+    }
+    baseline = {}
+    primary = checkout = output_dir = log = scope_unit = None
     try:
-        main_sha = command(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
-        missing_databases = snapshot_databases(primary, checkout, only=args.only)
+        baseline = json.loads(BASELINE.read_text(encoding="utf-8"))["known_failures"]
+        selection = load_selection()
+        if args.only and args.only not in selection["files"]:
+            raise DataTierError("--only must name a file in the audited selection")
+        if args.only and not args.no_report:
+            raise DataTierError("a subset requires --no-report")
+        primary = primary_checkout()
+        output_dir = primary / "batch_state" / "data-tier"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        junit = output_dir / f"{run_key}.junit.xml"
+        collected = output_dir / f"{run_key}.collected.json"
+        log = output_dir / f"{run_key}.log"
+        require_memory()
+        project_python = primary / ".venv" / "bin" / "python"
+        if not project_python.is_file():
+            raise DataTierError("shared project interpreter unavailable")
+        prune_stale_worktrees(primary)
+        checkout = make_test_worktree(primary)
+        summary["main_sha"] = command(["git", "rev-parse", "HEAD"], cwd=checkout).stdout.strip()
+        summary["missing_databases"] = snapshot_databases(primary, checkout, only=args.only)
         if not args.only:
             provision_host_files(primary, checkout)
-        hydration_errors = hydrate(checkout, selection["artifact_groups"], project_python) if not args.only else {}
+        summary["hydration_errors"] = (
+            hydrate(checkout, selection["artifact_groups"], project_python) if not args.only else {}
+        )
         bulk_root, bulk_reason = bulk_status(checkout, project_python)
+        summary["bulk_status"] = "available" if bulk_root else f"unavailable: {safe_text(bulk_reason)}"
         require_memory()
         child = [
             str(project_python),
-            str(Path(__file__).resolve()),
+            "-m",
+            "scripts.ci.data_tier",
             "pytest-child",
             "--junit",
             str(junit),
@@ -490,51 +611,79 @@ def run(args: argparse.Namespace) -> int:
             child.extend(["--only", args.only])
         if not bulk_root:
             child.extend(["--bulk-reason", bulk_reason])
-        scope = build_scope_argv(["nice", "-n", "10", *child], unit=f"lu-data-tier-{run_key}")
+        remaining = int(deadline - time.monotonic())
+        if remaining <= 0:
+            raise DataTierError("whole-run budget exhausted before pytest")
+        scope_unit = f"lu-data-tier-{run_key}.scope"
+        scope = build_scope_argv(["nice", "-n", "10", *child], unit=scope_unit)
         environment = os.environ.copy()
         if bulk_root:
             environment["LU_BULK_ROOT"] = bulk_root
         else:
             environment.pop("LU_BULK_ROOT", None)
         with log.open("w", encoding="utf-8") as stream:
-            pytest_exit = run_process_group(scope, cwd=checkout, env=environment, stdout=stream, timeout=25200)
-        log.write_text(safe_text(log.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")
+            pytest_exit = run_process_group(scope, cwd=checkout, env=environment, stdout=stream, timeout=remaining)
+        summary["pytest_exit"] = pytest_exit
         if not junit.exists():
             raise DataTierError(f"pytest produced no JUnit (exit {pytest_exit}); inspect local run log")
         sanitize_junit(junit)
-        summary = junit_summary(junit)
+        summary.update(junit_summary(junit))
         summary.update(
             {
                 "run_key": run_key,
-                "main_sha": main_sha,
                 "pytest_exit": pytest_exit,
                 "selection_cases": selection["class_c_merge_group"],
                 "collected": len(json.loads(collected.read_text())) if collected.exists() else 0,
-                "missing_databases": missing_databases,
-                "hydration_errors": hydration_errors,
-                "bulk_status": "available" if bulk_root else f"unavailable: {safe_text(bulk_reason)}",
             }
         )
         if pytest_exit and not summary["failed"]:
-            summary["runner_error"] = f"pytest exited {pytest_exit} without testcase failures"
-        (output_dir / f"{run_key}.summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
-        print(
-            json.dumps(
-                {key: summary[key] for key in ("ran", "passed", "failed", "skipped", "collected", "pytest_exit")}
-            )
-        )
-        if summary.get("runner_error"):
-            raise DataTierError(summary["runner_error"])
-        if not args.no_report:
-            baseline = json.loads(BASELINE.read_text(encoding="utf-8"))["known_failures"]
-            print(report(summary, baseline))
-        return 0 if not pytest_exit and not hydration_errors else 1
+            summary["runner_errors"].append(f"pytest exited {pytest_exit} without testcase failures")
+    except Exception as error:
+        summary["runner_errors"].append(safe_text(str(error)))
     finally:
-        command(
-            ["git", "--git-dir", str(primary / ".git"), "worktree", "remove", "--force", str(checkout)],
-            cwd=primary / ".worktrees" / "data-tier",
-            timeout=600,
-        )
+        # The scope is outside the service cgroup: stop it before removing its
+        # checkout, including when SIGTERM interrupts the waiting parent.
+        scope_stopped = True
+        if scope_unit:
+            try:
+                stop_scope(scope_unit)
+            except Exception as error:
+                scope_stopped = False
+                summary["runner_errors"].append(f"scope cleanup failed: {safe_text(str(error))}")
+        if checkout and scope_stopped:
+            try:
+                remove_test_worktree(primary, checkout)
+            except Exception as error:
+                summary["runner_errors"].append(f"checkout cleanup failed: {safe_text(str(error))}")
+        if log and log.exists():
+            try:
+                log.write_text(safe_text(log.read_text(encoding="utf-8", errors="replace")), encoding="utf-8")
+            except Exception as error:
+                summary["runner_errors"].append(f"log sanitization failed: {safe_text(str(error))}")
+
+    def persist() -> None:
+        if output_dir:
+            try:
+                (output_dir / f"{run_key}.summary.json").write_text(
+                    json.dumps(summary, indent=2, sort_keys=True) + "\n"
+                )
+            except Exception as error:
+                summary["runner_errors"].append(f"summary write failed: {safe_text(str(error))}")
+
+    persist()
+    if not args.no_report:
+        for _attempt in range(2):
+            if _attempt:
+                persist()
+            try:
+                print(report(summary, baseline))
+                break
+            except Exception as error:
+                summary["runner_errors"].append(f"GitHub reporting failed: {safe_text(str(error))}")
+        else:
+            persist()
+    print(json.dumps(summary, sort_keys=True))
+    return 1 if run_failed(summary) else 0
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -571,11 +720,19 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+
+    def interrupted(signum: int, _frame: object) -> None:
+        raise DataTierError(f"run interrupted by signal {signum}")
+
+    previous = {sig: signal.signal(sig, interrupted) for sig in (signal.SIGTERM, signal.SIGINT)}
     try:
         return pytest_child(args) if args.command == "pytest-child" else run(args)
     except (DataTierError, OSError, subprocess.TimeoutExpired, sqlite3.Error) as error:
         print(f"data-tier: {safe_text(str(error))}", file=sys.stderr)
         return 1
+    finally:
+        for sig, handler in previous.items():
+            signal.signal(sig, handler)
 
 
 if __name__ == "__main__":

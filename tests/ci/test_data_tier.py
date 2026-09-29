@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import os
 import stat
+import subprocess
 import sys
 from pathlib import Path
 from types import SimpleNamespace
@@ -149,7 +150,7 @@ def test_collection_time_data_skip_is_in_junit(tmp_path: Path, monkeypatch: pyte
     monkeypatch.setattr(data_tier, "load_selection", lambda: {"nodeids": [module], "files": [module]})
 
     def collect(_argv: list[str], *, plugins: list[data_tier.SelectionPlugin]) -> int:
-        report = SimpleNamespace(skipped=True, nodeid=module, longrepr=(module, 1, "sources.db absent"))
+        report = SimpleNamespace(failed=False, skipped=True, nodeid=module, longrepr=(module, 1, "sources.db absent"))
         plugins[0].pytest_collectreport(report)
         return 5
 
@@ -185,6 +186,10 @@ def test_failure_reporting_uses_one_fake_gh_issue_and_clean_comment_once(
         "    print(json.dumps({'comments': [{'body': body} for body in state['comments']]}))\n"
         "elif args[:2] == ['issue', 'comment']:\n"
         "    state['comments'].append(args[-1])\n"
+        "elif args[:2] == ['issue', 'close']:\n"
+        "    state['issue']['state'] = 'CLOSED'\n"
+        "elif args[:2] == ['issue', 'reopen']:\n"
+        "    state['issue']['state'] = 'OPEN'\n"
         "else:\n"
         "    sys.exit(4)\n"
         "path.write_text(json.dumps(state))\n",
@@ -210,10 +215,345 @@ def test_failure_reporting_uses_one_fake_gh_issue_and_clean_comment_once(
     assert data_tier.report(failed, baseline).startswith("created")
     assert data_tier.report(failed, baseline) == "updated issue #77"
     clean = {**failed, "failed": 0, "passed": 2, "failing_tests": []}
-    assert data_tier.report(clean, baseline) == "commented once on issue #77"
-    assert data_tier.report(clean, baseline) == "no issue change"
+    for errors in (
+        {"runner_errors": ["memory guard stopped the run"]},
+        {"hydration_errors": {"group": "hydrate failed"}},
+        {"missing_databases": ["sources.db"]},
+    ):
+        assert data_tier.report({**clean, **errors}, baseline) == "updated issue #77"
+        assert json.loads(state.read_text())["comments"] == []
+    assert data_tier.report(failed, baseline) == "updated issue #77"
+    assert data_tier.report(clean, baseline) == "closed issue #77 after clean run"
+    assert data_tier.report({**clean, "run_key": "run-2"}, baseline) == "no issue change"
     result = json.loads(state.read_text(encoding="utf-8"))
     assert "known issue #8403" in result["body"]
     assert len(result["comments"]) == 1
     assert result["calls"].count(["issue", "create"]) == 1
-    assert result["calls"].count(["issue", "edit"]) == 1
+    assert result["calls"].count(["issue", "edit"]) == 5
+    assert result["issue"]["state"] == "CLOSED"
+    assert result["calls"].count(["issue", "close"]) == 1
+    assert data_tier.report({**failed, "run_key": "run-3"}, baseline) == "updated issue #77"
+    assert data_tier.report({**clean, "run_key": "run-4"}, baseline) == "closed issue #77 after clean run"
+    result = json.loads(state.read_text())
+    assert len(result["comments"]) == 2
+    assert result["calls"].count(["issue", "create"]) == 1
+
+
+@pytest.mark.parametrize(
+    ("active", "current", "maximum", "error"),
+    [
+        ("inactive", "[not set]", "infinity", None),
+        ("active", "1024", "infinity", None),
+        ("active", "1024", str(8 * 1024**3), None),
+        ("active", "[not set]", "infinity", "unknown"),
+        ("active", "1024", "invalid", "unknown"),
+        ("active", str(8 * 1024**3), str(10 * 1024**3), "headroom"),
+    ],
+)
+def test_slice_memory_states(
+    monkeypatch: pytest.MonkeyPatch, active: str, current: str, maximum: str, error: str | None
+) -> None:
+    monkeypatch.setattr(data_tier, "available_memory", lambda: 10 * 1024**3)
+    monkeypatch.setattr(
+        data_tier,
+        "command",
+        lambda *args, **kwargs: SimpleNamespace(
+            stdout=f"LoadState=loaded\nActiveState={active}\nMemoryCurrent={current}\nMemoryMax={maximum}\n"
+        ),
+    )
+    if error:
+        with pytest.raises(data_tier.DataTierError, match=error):
+            data_tier.require_memory()
+    else:
+        data_tier.require_memory()
+
+
+def test_collection_error_keeps_healthy_selected_test_and_junit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "test_good.py").write_text("def test_ok():\n    assert True\n")
+    (tmp_path / "test_bad.py").write_text("raise ImportError('broken import')\n")
+    monkeypatch.setenv("PYTEST_DISABLE_PLUGIN_AUTOLOAD", "1")
+    monkeypatch.setattr(
+        data_tier,
+        "load_selection",
+        lambda: {
+            "nodeids": ["test_good.py::test_ok"],
+            "files": ["test_good.py", "test_bad.py"],
+        },
+    )
+    junit = tmp_path / "junit.xml"
+    calls = []
+
+    def execute(argv: list[str], *, timeout: int) -> int:
+        calls.append(argv)
+        junit.write_text('<testsuite tests="1"><testcase classname="test_good" name="test_ok"/></testsuite>')
+        return 0
+
+    monkeypatch.setattr(data_tier, "run_process_group", execute)
+    args = SimpleNamespace(junit=str(junit), collected=str(tmp_path / "collected.json"), only=None, bulk_reason=None)
+    assert data_tier.pytest_child(args) == 1
+    assert calls[0][-1] == "test_good.py::test_ok"
+    summary = data_tier.junit_summary(junit)
+    assert (summary["passed"], summary["failed"]) == (1, 1)
+    assert "test_bad.py" in summary["failing_tests"]
+
+
+@pytest.fixture
+def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
+    primary = tmp_path / "primary"
+    project_python = primary / ".venv" / "bin" / "python"
+    project_python.parent.mkdir(parents=True)
+    project_python.touch()
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    events = []
+    reports = []
+    monkeypatch.setattr(data_tier, "primary_checkout", lambda: primary)
+    monkeypatch.setattr(data_tier, "require_memory", lambda: None)
+    monkeypatch.setattr(data_tier, "prune_stale_worktrees", lambda _primary: None)
+    monkeypatch.setattr(data_tier, "make_test_worktree", lambda _primary: checkout)
+    monkeypatch.setattr(data_tier, "command", lambda *args, **kwargs: SimpleNamespace(stdout="a" * 40))
+    monkeypatch.setattr(data_tier, "snapshot_databases", lambda *args, **kwargs: [])
+    monkeypatch.setattr(data_tier, "provision_host_files", lambda *args: None)
+    monkeypatch.setattr(data_tier, "hydrate", lambda *args: {})
+    monkeypatch.setattr(data_tier, "bulk_status", lambda *args: (None, "unavailable"))
+    monkeypatch.setattr(data_tier, "stop_scope", lambda unit: events.append("stop"))
+    monkeypatch.setattr(data_tier, "remove_test_worktree", lambda *args: events.append("remove"))
+
+    def execute(argv: list[str], **kwargs: object) -> int:
+        assert kwargs["cwd"] == checkout
+        assert "scripts.ci.data_tier" in argv
+        assert "-m" in argv
+        assert 0 < kwargs["timeout"] <= data_tier.RUN_BUDGET_SECONDS
+        Path(argv[argv.index("--junit") + 1]).write_text('<testsuite><testcase name="test_ok"/></testsuite>')
+        return 0
+
+    monkeypatch.setattr(data_tier, "run_process_group", execute)
+
+    def report(summary: dict, baseline: dict) -> str:
+        reports.append(json.loads(json.dumps(summary)))
+        return "reported"
+
+    monkeypatch.setattr(data_tier, "report", report)
+    return SimpleNamespace(primary=primary, events=events, reports=reports, execute=execute)
+
+
+@pytest.mark.parametrize(
+    "failure",
+    [
+        "selection",
+        "memory",
+        "interpreter",
+        "worktree",
+        "snapshot",
+        "hydration",
+        "missing_database",
+        "bulk",
+        "second_memory",
+        "collection",
+        "runner_exit",
+        "timeout",
+        "malformed_junit",
+        "cleanup",
+        "scope_cleanup",
+        "signal",
+        "budget",
+    ],
+)
+def test_every_runner_failure_reaches_report(
+    nightly: SimpleNamespace, monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    def fail(*args: object, **kwargs: object) -> None:
+        raise data_tier.DataTierError("runner failed at /private/example.db")
+
+    if failure in {"selection", "memory", "worktree", "snapshot", "bulk", "cleanup", "scope_cleanup"}:
+        helper = {
+            "selection": "load_selection",
+            "memory": "require_memory",
+            "worktree": "make_test_worktree",
+            "snapshot": "snapshot_databases",
+            "bulk": "bulk_status",
+            "cleanup": "remove_test_worktree",
+            "scope_cleanup": "stop_scope",
+        }[failure]
+        monkeypatch.setattr(data_tier, helper, fail)
+    elif failure == "interpreter":
+        (nightly.primary / ".venv" / "bin" / "python").unlink()
+    elif failure == "hydration":
+        monkeypatch.setattr(data_tier, "hydrate", lambda *args: {"group": "missing /private/artifact"})
+    elif failure == "missing_database":
+        monkeypatch.setattr(data_tier, "snapshot_databases", lambda *args, **kwargs: ["sources.db"])
+    elif failure == "second_memory":
+        memory_calls = iter([None, "fail"])
+
+        def memory() -> None:
+            if next(memory_calls):
+                fail()
+
+        monkeypatch.setattr(data_tier, "require_memory", memory)
+    elif failure == "budget":
+        clock = iter([0, data_tier.RUN_BUDGET_SECONDS + 1])
+        monkeypatch.setattr(data_tier.time, "monotonic", lambda: next(clock))
+    else:
+
+        def execute(argv: list[str], **kwargs: object) -> int:
+            if failure == "timeout":
+                raise subprocess.TimeoutExpired("pytest", 1)
+            if failure == "signal":
+                os.kill(os.getpid(), data_tier.signal.SIGTERM)
+            if failure == "collection":
+                return 2
+            nightly.execute(argv, **kwargs)
+            if failure == "malformed_junit":
+                Path(argv[argv.index("--junit") + 1]).write_text("invalid xml")
+            return 3 if failure == "runner_exit" else 0
+
+        monkeypatch.setattr(data_tier, "run_process_group", execute)
+    assert data_tier.main(["run"]) == 1
+    assert len(nightly.reports) == 1
+    summary = nightly.reports[0]
+    assert data_tier.run_failed(summary)
+    body = data_tier.issue_body(summary, {})
+    assert "/private/" not in body
+    assert summary["run_key"] in body
+    assert summary["runner_errors"] or summary["hydration_errors"] or summary["missing_databases"]
+    receipts = list((nightly.primary / "batch_state" / "data-tier").glob("*.summary.json"))
+    if failure != "selection":
+        assert json.loads(receipts[0].read_text()) == summary
+    if "stop" in nightly.events and failure != "cleanup":
+        assert nightly.events == ["stop", "remove"]
+    if failure == "scope_cleanup":
+        assert nightly.events == []
+
+
+@pytest.mark.parametrize("persistent", [False, True])
+def test_github_failure_retried_and_persisted(
+    nightly: SimpleNamespace, monkeypatch: pytest.MonkeyPatch, persistent: bool
+) -> None:
+    calls = []
+
+    def report(summary: dict, baseline: dict) -> str:
+        calls.append(json.loads(json.dumps(summary)))
+        if persistent or len(calls) == 1:
+            raise data_tier.DataTierError("gh unavailable at /private/gh")
+        assert data_tier.run_failed(summary)
+        assert "GitHub reporting failed" in data_tier.issue_body(summary, {})
+        return "reported failure"
+
+    monkeypatch.setattr(data_tier, "report", report)
+    assert data_tier.run(SimpleNamespace(only=None, no_report=False)) == 1
+    assert len(calls) == 2
+    summary = json.loads(next((nightly.primary / "batch_state" / "data-tier").glob("*.summary.json")).read_text())
+    assert len(summary["runner_errors"]) == (2 if persistent else 1)
+    assert "/private/" not in json.dumps(summary)
+
+
+def test_clean_run_and_no_report(nightly: SimpleNamespace) -> None:
+    assert data_tier.run(SimpleNamespace(only=None, no_report=True)) == 0
+    assert nightly.reports == []
+    assert nightly.events == ["stop", "remove"]
+
+
+def test_issue_body_is_bounded_with_total_and_runner_errors() -> None:
+    summary = {
+        "run_key": "run-1",
+        "main_sha": "a" * 40,
+        "ran": 700,
+        "passed": 0,
+        "failed": 700,
+        "skipped": 0,
+        "failing_tests": [f"test_{i}" + "x" * 1000 for i in range(700)],
+        "skip_reasons": {},
+        "runner_errors": ["runner failed at /private/log"],
+        "hydration_errors": {"group": "hydrate failed"},
+        "missing_databases": ["sources.db"],
+    }
+    body = data_tier.issue_body(summary, {})
+    assert len(body) <= data_tier.ISSUE_BODY_LIMIT
+    assert "700 total" in body
+    assert "runner failed at <host-path>" in body
+    assert "hydrate failed" in body and "sources.db" in body
+    assert "Truncated" in body and "local run JUnit" in body
+
+
+def test_hydration_has_total_budget_and_records_timeouts(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    clock = iter([0, 0, data_tier.HYDRATION_BUDGET_SECONDS - 10, data_tier.HYDRATION_BUDGET_SECONDS + 1])
+    monkeypatch.setattr(data_tier.time, "monotonic", lambda: next(clock))
+    calls = []
+
+    def run(argv: list[str], **kwargs: object) -> None:
+        calls.append(kwargs["timeout"])
+        raise subprocess.TimeoutExpired(argv, kwargs["timeout"])
+
+    monkeypatch.setattr(data_tier.subprocess, "run", run)
+    errors = data_tier.hydrate(tmp_path, ["first", "second", "third"], Path(sys.executable))
+    assert calls == [1800, 10]
+    assert errors == {
+        "first": "hydration timed out",
+        "second": "hydration timed out",
+        "third": "hydration budget exhausted",
+    }
+
+
+def test_stale_worktrees_pruned_only_without_active_scopes(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    parent = tmp_path / ".worktrees" / "data-tier"
+    old = parent / ("run-" + "a" * 32)
+    recent = parent / ("run-" + "b" * 32)
+    unrelated = parent / "run-unrelated"
+    for path in (old, recent, unrelated):
+        path.mkdir(parents=True)
+    os.utime(old, (0, 0))
+    removed = []
+    monkeypatch.setattr(data_tier, "remove_test_worktree", lambda primary, checkout: removed.append(checkout))
+    monkeypatch.setattr(data_tier, "command", lambda *args, **kwargs: SimpleNamespace(stdout="active.scope"))
+    with pytest.raises(data_tier.DataTierError, match="still active"):
+        data_tier.prune_stale_worktrees(tmp_path)
+    assert removed == []
+    monkeypatch.setattr(data_tier, "command", lambda *args, **kwargs: SimpleNamespace(stdout=""))
+    data_tier.prune_stale_worktrees(tmp_path)
+    assert removed == [old]
+
+
+def test_scope_stop_handles_collected_and_loaded_units(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = []
+    state = "not-found"
+
+    def command(argv: list[str], **kwargs: object) -> SimpleNamespace:
+        calls.append(argv)
+        return SimpleNamespace(stdout=f"LoadState={state}\n", returncode=1 if state == "not-found" else 0, stderr="")
+
+    monkeypatch.setattr(data_tier, "command", command)
+    monkeypatch.setattr(data_tier.subprocess, "run", command)
+    data_tier.stop_scope("lu-data-tier-test.scope")
+    assert len(calls) == 1
+    state = "loaded"
+    data_tier.stop_scope("lu-data-tier-test.scope")
+    assert calls[-1] == ["systemctl", "--user", "stop", "lu-data-tier-test.scope"]
+
+
+@pytest.mark.parametrize("interrupted", [False, True])
+def test_process_group_stops_descendants_on_timeout_or_interruption(
+    monkeypatch: pytest.MonkeyPatch, interrupted: bool
+) -> None:
+    waits = []
+    signals = []
+
+    class Process:
+        pid = 123
+
+        def wait(self, *, timeout: int) -> int:
+            waits.append(timeout)
+            if len(waits) == 1 and interrupted:
+                raise data_tier.DataTierError("run interrupted")
+            if len(waits) < 3:
+                raise subprocess.TimeoutExpired("child", timeout)
+            return 0
+
+    monkeypatch.setattr(data_tier.subprocess, "Popen", lambda *args, **kwargs: Process())
+    monkeypatch.setattr(data_tier.os, "killpg", lambda pid, sig: signals.append(sig))
+    with pytest.raises(data_tier.DataTierError, match="interrupted" if interrupted else "timed out"):
+        data_tier.run_process_group([sys.executable, "-c", "pass"], timeout=2)
+    assert signals == [data_tier.signal.SIGTERM, data_tier.signal.SIGKILL]
+    assert waits == [2, 30, 10]
