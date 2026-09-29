@@ -56,6 +56,12 @@ _project_interpreter_normalize() {
 # Prints the primary checkout root for <root>; when the checkout's git metadata
 # is untrusted prints the reason instead and returns 1 (the caller captures
 # stdout, so a global would be lost in the subshell).
+#
+# A `.git` directory or no `.git` at all (release snapshot) resolves to <root>
+# itself and never to any other directory. So a worktree whose gitfile was
+# removed resolves to its own root: the launcher passes its own directory
+# (LC_ROOT), whose code it is already running, so that grants nothing new
+# (#9121; pinned by test_snapshot_resolves_only_to_the_launcher_root).
 _project_interpreter_primary_root() {
     local root="$1"
     local git_path="$root/.git"

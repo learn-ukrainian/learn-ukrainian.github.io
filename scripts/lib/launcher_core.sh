@@ -504,9 +504,19 @@ launcher_resolve_roots() {
 # on stderr why it is not one: it must share this worktree's Git common
 # directory, be that repository's primary (its git dir IS the common dir, so a
 # linked worktree does not qualify; nor does a directory that reaches another
-# checkout's `.git`) and have `main` checked out.
+# checkout's `.git`) and have `main` checked out. When the common directory
+# records `core.worktree`, the override must be that directory.
+#
+# Residual (#9121): a `--separate-git-dir` primary is a plain gitfile
+# (`gitdir: <common>`) and Git records no back-pointer to it, so a second
+# directory holding a copy of that gitfile is locally indistinguishable from
+# the primary unless `core.worktree` is set (Git does not set it by default).
+# This is the same class as the forged-fake-primary residual in
+# project_interpreter.sh. The override is operator-set environment, like PATH:
+# an operator who sets CODEX_CANONICAL_REPO_ROOT vouches for that directory.
+# Pinned by test_override_copied_separate_git_dir_gitfile_residual.
 launcher_canonical_override_root() {
-  local root common own_common own_git
+  local root common own_common own_git recorded
   root="$(cd -P "$1" 2>/dev/null && pwd)" || {
     launcher_error "CODEX_CANONICAL_REPO_ROOT is not a directory: $1"
     return 1
@@ -515,6 +525,18 @@ launcher_canonical_override_root() {
     && common="$(cd -P "$common" 2>/dev/null && pwd)" || common=""
   own_common="$(git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" \
     && own_common="$(cd -P "$own_common" 2>/dev/null && pwd)" || own_common=""
+  if [ -n "$common" ] && [ "$own_common" = "$common" ] \
+    && recorded="$(git --git-dir="$common" config --get core.worktree 2>/dev/null)"; then
+    # A relative core.worktree is relative to the Git directory.
+    case "$recorded" in
+      /*) ;;
+      *) recorded="$common/$recorded" ;;
+    esac
+    if [ "$(cd -P "$recorded" 2>/dev/null && pwd)" != "$root" ]; then
+      launcher_error "CODEX_CANONICAL_REPO_ROOT is not the core.worktree Git records ($recorded): $root"
+      return 1
+    fi
+  fi
   if [ -z "$common" ] || [ "$own_common" != "$common" ] \
     || [ "$(git -C "$root" rev-parse --show-toplevel 2>/dev/null)" != "$root" ]; then
     launcher_error "CODEX_CANONICAL_REPO_ROOT is not a checkout of this Git common directory."

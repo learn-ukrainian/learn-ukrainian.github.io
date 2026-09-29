@@ -472,6 +472,32 @@ def test_residual_fully_forged_primary_is_locally_indistinguishable(layout: Layo
     assert result.stdout.strip() == str(fake)
 
 
+@pytest.mark.parametrize("via", ["direct", "symlinked-path"])
+def test_snapshot_resolves_only_to_the_launcher_root(layout: Layout, via: str) -> None:
+    """Bounds the #9121 snapshot branch (see project_interpreter.sh).
+
+    A worktree whose gitfile was removed resolves as a release snapshot. That
+    resolution is ``LC_ROOT`` itself, the directory whose launcher code is
+    already running, and never the primary, the attacker or any other directory,
+    even with a hostile ambient ``GIT_DIR``.
+    """
+    _stub_python(layout.worktree, "SELF", layout.log)
+    (layout.worktree / ".git").unlink()
+    root = layout.worktree
+    if via == "symlinked-path":
+        root = layout.tmp / "alias"
+        root.symlink_to(layout.worktree)
+
+    result = _run_sites(layout, root=root, **_hostile_env(layout))
+    assert result.returncode == 0, result.stderr
+    assert f"resolved={layout.worktree}\n" in result.stdout
+    ran = [line for line in layout.lines() if not line.startswith("SITE ")]
+    assert ran, layout.lines()
+    assert all(line.startswith("SELF ") for line in ran), ran
+    assert str(layout.primary) not in "\n".join(ran)
+    assert str(layout.attacker) not in "\n".join(ran)
+
+
 # --- operator-set CODEX_CANONICAL_REPO_ROOT override --------------------------
 
 
@@ -613,6 +639,32 @@ def test_override_naming_a_lookalike_of_the_primary_is_refused(layout: Layout, b
         (fake / ".git").write_text(f"gitdir: {layout.primary}/.git\n", encoding="utf-8")
     _stub_python(fake, "EVIL", layout.log)
     _assert_override_refused(layout, _run_codex_sites(layout, fake), "borrows another checkout's .git")
+
+
+def test_override_copied_separate_git_dir_gitfile_residual(layout: Layout) -> None:
+    """Documented #9121 residual (see launcher_canonical_override_root).
+
+    Git keeps no back-pointer to a ``--separate-git-dir`` primary, so a copy of
+    its gitfile is accepted when the operator names the copy; once the common
+    directory records ``core.worktree`` (the real primary), the copy is refused.
+    """
+    sgd = _separate_git_dir_layout(layout)
+    copy = layout.tmp / "sgd-copy"
+    copy.mkdir()
+    shutil.copy2(sgd.primary / ".git", copy / ".git")
+    _place_helper_scripts(copy)
+    _stub_python(copy, "COPY", layout.log)
+
+    accepted = _run_codex_sites(sgd, copy)
+    assert accepted.returncode == 0, accepted.stderr
+    assert f"resolved={copy}" in accepted.stdout
+    layout.log.unlink()
+
+    _git(sgd.primary, "config", "core.worktree", str(sgd.primary))
+    _assert_override_refused(
+        sgd, _run_codex_sites(sgd, copy), f"is not the core.worktree Git records ({sgd.primary}): {copy}"
+    )
+    _assert_every_site_ran_the_primary(sgd, _run_codex_sites(sgd, sgd.primary), _CODEX_REACHABLE_SITES)
 
 
 def test_override_is_read_only_on_codex_launches(layout: Layout) -> None:
