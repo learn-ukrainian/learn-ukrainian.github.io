@@ -27,6 +27,7 @@ from scripts.pipeline.stress_annotator import (
     annotate_file,
     annotate_stress,
 )
+from tests.helpers.python import project_python
 
 
 class TestOraclePedagogy:
@@ -555,16 +556,9 @@ class TestAnnotateFileSafetyCheck:
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
-def _venv_python() -> Path:
-    """Return the local or parent workspace venv Python for subprocess tests."""
-    local = REPO_ROOT / ".venv/bin/python"
-    if local.exists():
-        return local
-    for parent in REPO_ROOT.parents:
-        candidate = parent / ".venv/bin/python"
-        if candidate.exists():
-            return candidate
-    return local
+def _venv_python() -> str:
+    """The interpreter running pytest, for subprocess tests."""
+    return project_python()
 
 
 # Each worker increments a shared counter via a non-atomic read-modify-write

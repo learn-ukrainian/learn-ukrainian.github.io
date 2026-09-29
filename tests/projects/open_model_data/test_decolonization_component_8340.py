@@ -108,6 +108,40 @@ def require_all_databases():
     return sources_db
 
 
+@pytest.fixture
+def hermetic_source_cursor():
+    """Provide only the case evidence needed by source-binding regression probes.
+
+    These rows exercise lookup and digest checks; they do not attest the sources.
+    """
+    from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+
+    conn = sqlite3.connect(":memory:")
+    conn.execute(
+        "CREATE TABLE external_articles (id INTEGER PRIMARY KEY, title TEXT, text TEXT, "
+        "speaker TEXT, source_file TEXT, decolonization_tag TEXT)"
+    )
+    conn.execute("CREATE TABLE style_guide (id INTEGER PRIMARY KEY, word TEXT, section TEXT, text TEXT)")
+    conn.execute("CREATE VIRTUAL TABLE textbooks_fts USING fts5(title, text)")
+    for case_id in ("decol_syn_032", "decol_lex_003", "decol_lex_004", "decol_lex_020", "decol_prep_020"):
+        evidence = EXPLICIT_SOURCE_EVIDENCE[case_id]
+        conn.execute(
+            "INSERT INTO external_articles (title, text, speaker, source_file, decolonization_tag) "
+            "VALUES (?, ?, ?, ?, ?)",
+            (
+                evidence["source"],
+                f"{evidence['supporting_passage']} {evidence['target_term']}",
+                evidence["authority"],
+                "fixture",
+                case_id,
+            ),
+        )
+    try:
+        yield conn.cursor()
+    finally:
+        conn.close()
+
+
 @pytest.mark.needs_artifact(
     "open_model_component_payload", "projects/open_model_data/components/decolonization/decolonization_train.jsonl"
 )
@@ -274,22 +308,19 @@ def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
         assert locus and isinstance(locus, str), f"Case {cid} missing locus"
 
 
-def test_adversarial_probes_and_fail_closed(require_local_databases):
+def test_adversarial_probes_and_fail_closed(require_vesum_db, hermetic_source_cursor):
     """Verify fail-closed behavior on adversarial probes and strict UA-GEC phrase alignment (CF-R6 Finding 1 & 3)."""
     import sqlite3
 
-    from scripts.projects.open_model_data.audit_dataset_acceptance import DEFAULT_SOURCES_DB, VESUM_DB_PATH
     from scripts.projects.open_model_data.build_decolonization_cases import (
         make_reviewer_confirmation,
         query_source_evidence,
         validate_ua_gec_phrase,
     )
 
-    v_conn = sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True)
+    v_conn = sqlite3.connect(f"file:{require_vesum_db}?mode=ro", uri=True)
     v_cur = v_conn.cursor()
-
-    s_conn = sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True)
-    s_cur = s_conn.cursor()
+    s_cur = hermetic_source_cursor
 
     # 1. validate_ua_gec_phrase must reject incompatible phrases
     assert not validate_ua_gec_phrase("змогу книга", "дає змогу", v_cur)
@@ -526,7 +557,7 @@ def test_adversarial_probes_and_fail_closed(require_local_databases):
     orig_locator = INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"]
     try:
         INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"] = (
-            "registry/projects/open_model_data/components/decolonization/reviews/nonexistent_dossier_999.json"
+            "data/projects/open_model_data/components/decolonization/reviews/nonexistent_dossier_999.json"
         )
         with pytest.raises(ValueError, match=r"Review dossier file not found at .*nonexistent_dossier_999.json"):
             make_reviewer_confirmation(syn_032, "calque_syntactic", v_cur, s_cur, [])
@@ -1316,7 +1347,7 @@ def test_cf_r12_remediations_regression(monkeypatch, require_local_databases):
     assert "охочий" in res["supporting_passage"].lower()
 
 
-def test_cf_r13_remediations_regression(require_local_databases) -> None:
+def test_cf_r13_remediations_regression(require_vesum_db, hermetic_source_cursor) -> None:
     """CF-R13 regression: verify strict author citation anchors and fail-closed behavior for unrelated books.
 
     Remediates:
@@ -1325,20 +1356,15 @@ def test_cf_r13_remediations_regression(require_local_databases) -> None:
     - Blocker 2: Another author's textbook (e.g. Avramenko textbook containing 'охочий') must fail closed
       and never substantiate an Antonenko-Davydovych citation.
     - Blocker 3: A record that lacks the supporting passage content must fail closed.
-    - Live authentic resolution for Ponomariv, Antonenko, and inflected forms (e.g. 'тло').
+    - Lookup and binding for Ponomariv, Antonenko, and inflected forms (e.g. 'тло')
+      against a controlled fixture. This does not verify source authenticity.
     """
     import sqlite3
 
-    from scripts.projects.open_model_data.build_decolonization_cases import (
-        PROJECT_ROOT,
-        _resolve_db_path,
-        query_source_evidence,
-    )
+    from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
 
-    vesum_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
-    sources_path = _resolve_db_path("sources.db", PROJECT_ROOT)
-    real_v_cur = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True).cursor()
-    real_s_cur = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True).cursor()
+    real_v_cur = sqlite3.connect(f"file:{require_vesum_db}?mode=ro", uri=True).cursor()
+    fixture_s_cur = hermetic_source_cursor
 
     # 1. TractorBookMockCursor: 'Книга про трактори' containing 'завдання' and 'граматика'
     class TractorBookMockCursor:
@@ -1421,14 +1447,14 @@ def test_cf_r13_remediations_regression(require_local_databases) -> None:
     ):
         make_reviewer_confirmation(lex_003_item, "calque_lexical", real_v_cur, TractorBookMockCursor(), [])
 
-    # 4. Live database resolution for authentic records
+    # 4. Controlled database resolution for the recorded citation metadata
     res_pon = query_source_evidence(
         case_id="decol_lex_003",
         term="завдання",
         copy="задача",
         auth="Олександр Пономарів «Культура слова»",
         cat_name="calque_lexical",
-        s_cur=real_s_cur,
+        s_cur=fixture_s_cur,
         v_cur=real_v_cur,
         style_guide_cache=[],
     )
@@ -1441,7 +1467,7 @@ def test_cf_r13_remediations_regression(require_local_databases) -> None:
         copy="бажаючий",
         auth="Борис Антоненко-Давидович «Як ми говоримо»",
         cat_name="calque_lexical",
-        s_cur=real_s_cur,
+        s_cur=fixture_s_cur,
         v_cur=real_v_cur,
         style_guide_cache=[],
     )
@@ -1453,7 +1479,7 @@ def test_cf_r13_remediations_regression(require_local_databases) -> None:
         copy="фон",
         auth="Олександр Пономарів «Культура слова»",
         cat_name="calque_lexical",
-        s_cur=real_s_cur,
+        s_cur=fixture_s_cur,
         v_cur=real_v_cur,
         style_guide_cache=[],
     )

@@ -518,7 +518,7 @@ def run_ask_review_dispatch(
         state["response"] = response
         # #8786: a read-only review has no branch deliverable by design, so a
         # completed run is judged by its verdict line. Only a terminal
-        # ``done`` (clean wait) or ``no_deliverable`` (the worker's
+        # ``done`` (clean wait) or legacy ``no_deliverable`` (the worker's
         # read-only "nothing pushed" outcome, which exits non-zero) can be
         # promoted, and only with a real verdict. ``timeout``, ``failed``,
         # ``crashed``, ``rate_limited``, ``cancelled`` etc. never become
@@ -535,8 +535,8 @@ def run_ask_review_dispatch(
         else:
             state["ok"] = False
             if completed:
-                state["status"] = _delegate._NO_DELIVERABLE_STATUS
-                state["no_deliverable_reason"] = verdict_failure
+                state["status"] = "failed"
+                state["failure_reason"] = verdict_failure
         if not state["ok"] and not state.get("stderr_excerpt"):
             state["stderr_excerpt"] = f"ask-{agent} review dispatch did not complete: status={state.get('status')!r}"
         return state

@@ -19,6 +19,32 @@ pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[2]
 SKILL = ROOT / "agents_extensions" / "shared" / "skills" / "post-build-review"
+
+_CHECKED_SCHEMAS: set[str] = set()
+_REAL_CHECK_SCHEMA = Draft202012Validator.check_schema
+
+
+def _check_schema_once(cls, schema, *args, **kwargs) -> None:
+    """Metaschema-check each distinct schema once per process.
+
+    ``check_schema`` is a pure function of the schema, and every finalize call
+    re-checks the same packet-bound provider schema. Only passing schemas are
+    remembered, so an invalid schema still raises on every call.
+    """
+    if args or kwargs:
+        return _REAL_CHECK_SCHEMA(schema, *args, **kwargs)
+    key = json.dumps(schema, sort_keys=True, ensure_ascii=False)
+    if key not in _CHECKED_SCHEMAS:
+        _REAL_CHECK_SCHEMA(schema)
+        _CHECKED_SCHEMAS.add(key)
+    return None
+
+
+@pytest.fixture(autouse=True)
+def check_each_schema_once(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(Draft202012Validator, "check_schema", classmethod(_check_schema_once))
+
+
 FIXTURES = ROOT / "tests" / "fixtures" / "post_build_review"
 BILASH_V1_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v1.json"
 BILASH_V2_GOLDEN = FIXTURES / "bio-oleksandr-bilash.result.v2.json"
@@ -584,29 +610,8 @@ def _artifact_snapshot() -> dict[str, tuple[int, int, str]]:
     }
 
 
-@pytest.fixture(scope="module")
-def bilash_packet() -> dict:
-    before_status = subprocess.run(
-        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
-        cwd=ROOT,
-        capture_output=True,
-        check=True,
-        text=True,
-        timeout=30,
-    ).stdout
-    before_artifacts = _artifact_snapshot()
-    packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
-    after_status = subprocess.run(
-        ["git", "status", "--porcelain=v1", "--untracked-files=all"],
-        cwd=ROOT,
-        capture_output=True,
-        check=True,
-        text=True,
-        timeout=30,
-    ).stdout
-    assert after_status == before_status
-    assert _artifact_snapshot() == before_artifacts
-    return packet
+# bilash_packet (the real end-to-end packet) lives in tests/audit/conftest.py so
+# this module and test_post_build_review_pipeline.py share one build per process.
 
 
 @pytest.fixture(scope="module")

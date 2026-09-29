@@ -1,8 +1,7 @@
-"""Compare every literal guard-test command with the pre-9102 hook baseline."""
+"""Compare the pre-9115 guard-test corpus with pinned baseline decisions."""
 
 from __future__ import annotations
 
-import ast
 import json
 import subprocess
 import sys
@@ -10,7 +9,6 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 HOOK_DIR = REPO / "agents_extensions/shared/hooks"
-BASELINE = "1d95d7616a18c64a7cf00d1338c3f46dba4241e8"
 GUARDS = (
     "admin_merge",
     "pr_merge",
@@ -18,7 +16,13 @@ GUARDS = (
     "secret_print",
     "primary_checkout_write",
 )
-HOOK_FILES = (*[f"guard-{name.replace('_', '-')}.py" for name in GUARDS], "shell_shlex.py")
+
+# CI checks out one commit, so the historical commit is unavailable there.
+# This fixture was generated from commit 28a4243544954335d0d6edafa6f727beb1a5981f:
+# its test-module string literals and the old hooks' decisions on those strings.
+BASELINE_FIXTURE = json.loads((REPO / "tests/fixtures/guard_9115_baseline.json").read_text(encoding="utf-8"))
+BASELINE_COMMANDS = BASELINE_FIXTURE["commands"]
+BASELINE_INDEX = {command: index for index, command in enumerate(BASELINE_COMMANDS)}
 
 BENIGN_COMMANDS = (
     "git status",
@@ -31,20 +35,33 @@ BENIGN_COMMANDS = (
     'for ((i=0;i<1<<1;i++)); do echo "$i"; done\ngit status',
 )
 
+# These literals were added after the baseline commit. Pin their allow decisions as well;
+# a later parser change must not turn harmless quoted/comment text into a block.
+HEAD_ONLY_BENIGN_COMMANDS = (
+    "echo $(printf '%s' '# gh pr merge 5 --admin')",
+    'echo $(printf "%s" "# gh pr merge 5 --admin")',
+    "echo $(printf '%s' $# ${#var} a#b)",
+    r"echo \`gh pr merge 5 --admin\`",
+    "echo 'literal `gh pr merge 5 --admin`'",
+    "echo `printf '%s' '# value'`",
+)
+
+
+EXPECTED_PROSE_FLIPS = {
+    (row["guard"], BASELINE_COMMANDS[row["command_index"]]): (row["before"], row["after"])
+    for row in BASELINE_FIXTURE["expected_prose_flips"]
+}
+
 
 def _literal_corpus() -> list[str]:
-    values = set(BENIGN_COMMANDS)
-    for name in GUARDS:
-        source = (REPO / f"tests/test_guard_{name}.py").read_text()
-        tree = ast.parse(source)
-        values.update(
-            node.value
-            for node in ast.walk(tree)
-            if isinstance(node, ast.Constant)
-            and isinstance(node.value, str)
-            and "{payload}" not in node.value  # A parameterized template is not a command.
-        )
-    return sorted(values)
+    return [command for command in BASELINE_COMMANDS if command not in HEAD_ONLY_BENIGN_COMMANDS]
+
+
+def _baseline_decisions(commands: list[str]) -> dict[str, list[bool]]:
+    return {
+        guard: [bits[BASELINE_INDEX[command]] == "1" for command in commands]
+        for guard, bits in BASELINE_FIXTURE["baseline_decisions"].items()
+    }
 
 
 def _probe(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:
@@ -60,32 +77,43 @@ def _probe(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:
     return json.loads(result.stdout)
 
 
-def _baseline_dir(tmp_path: Path) -> Path:
-    directory = tmp_path / "baseline_hooks"
-    directory.mkdir()
-    for name in HOOK_FILES:
-        source = subprocess.run(
-            ["git", "show", f"{BASELINE}:agents_extensions/shared/hooks/{name}"],
-            cwd=REPO,
-            capture_output=True,
-            check=True,
-            timeout=30,
-        ).stdout
-        (directory / name).write_bytes(source)
-    return directory
+def test_baseline_fixture_covers_all_guards_and_commands() -> None:
+    assert BASELINE_FIXTURE["baseline_commit"] == "28a4243544954335d0d6edafa6f727beb1a5981f"
+    assert len(BASELINE_COMMANDS) == 1498
+    assert len(_literal_corpus()) == 1492
+    assert sorted(set(BASELINE_COMMANDS)) == BASELINE_COMMANDS
+    assert set(BASELINE_FIXTURE["baseline_decisions"]) == set(GUARDS)
+    assert all(
+        len(bits) == len(BASELINE_COMMANDS) and set(bits) <= {"0", "1"}
+        for bits in BASELINE_FIXTURE["baseline_decisions"].values()
+    )
+    assert set(BENIGN_COMMANDS) | set(HEAD_ONLY_BENIGN_COMMANDS) <= set(BASELINE_COMMANDS)
 
 
-def test_all_literal_commands_have_no_new_guard_blocks(tmp_path: Path) -> None:
+def test_all_literal_commands_have_no_new_guard_blocks() -> None:
     commands = _literal_corpus()
-    baseline = _probe(_baseline_dir(tmp_path), commands)
+    baseline = _baseline_decisions(commands)
     head = _probe(HOOK_DIR, commands)
-    changed = [
-        (guard, command)
+    changed = {
+        (guard, command): (was_blocked, is_blocked)
         for guard in GUARDS
         for command, was_blocked, is_blocked in zip(commands, baseline[guard], head[guard], strict=True)
         if was_blocked != is_blocked
+    }
+    assert changed == EXPECTED_PROSE_FLIPS, f"{len(commands)} baseline literals; changed decisions: {changed!r}"
+
+
+def test_head_only_benign_literals_have_no_new_blocks() -> None:
+    commands = sorted(set(BENIGN_COMMANDS) | set(HEAD_ONLY_BENIGN_COMMANDS))
+    baseline = _baseline_decisions(commands)
+    head = _probe(HOOK_DIR, commands)
+    newly_blocked = [
+        (guard, command)
+        for guard in GUARDS
+        for command, was_blocked, is_blocked in zip(commands, baseline[guard], head[guard], strict=True)
+        if not was_blocked and is_blocked
     ]
-    assert not changed, f"{len(commands)} literal commands; changed decisions: {changed[:10]!r}"
+    assert not newly_blocked, f"head-only benign allow-to-block flips: {newly_blocked!r}"
 
 
 def _probe_child(hook_dir: Path, commands: list[str]) -> dict[str, list[bool]]:

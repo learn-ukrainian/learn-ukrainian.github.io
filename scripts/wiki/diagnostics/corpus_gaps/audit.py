@@ -20,12 +20,11 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[4]))
 
+from scripts.storage.artifacts import write_artifact
+from scripts.storage.paths import artifact_path
 from wiki.config import TRACK_WRITE_DOMAIN
 from wiki.diagnostics.retrieval_playback import normalize_text
 from wiki.sources_db import SOURCES_DB_PATH
-
-from scripts.storage.artifacts import write_artifact
-from scripts.storage.paths import artifact_path
 
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"

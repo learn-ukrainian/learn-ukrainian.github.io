@@ -1,6 +1,6 @@
 """#7483 pg transaction discipline (autocommit reads, savepoints, determinism).
 
-pg-marked tests run in CI's postgres service job; they skip without a DSN.
+pg-marked tests run in CI's pytest job against the apt-installed PostgreSQL 16; they skip without a DSN.
 """
 
 from __future__ import annotations

@@ -15,6 +15,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SCAN_SCRIPT = REPO_ROOT / "scripts" / "audit" / "sum11_sovietization_scan.py"
 MIGRATION_SQL = (
@@ -22,12 +24,10 @@ MIGRATION_SQL = (
     / "migrations"
     / "2026-05-04-1659-sum11-sovietization-flag.sql"
 )
-VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 
 
-def _venv_python() -> Path:
-    assert VENV_PYTHON.exists(), "Expected repo venv at .venv/bin/python"
-    return VENV_PYTHON
+def _venv_python() -> str:
+    return project_python()
 
 
 # Real-content samples lifted from a production DB scan on 2026-05-04.

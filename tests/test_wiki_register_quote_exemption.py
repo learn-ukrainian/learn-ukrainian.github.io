@@ -8,6 +8,7 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(_REPO_ROOT / "scripts"))
 
 import pytest
+
 from wiki.register_quote_exemption import find_attributed_verbatim_quote_spans
 from wiki.review import (
     Finding,

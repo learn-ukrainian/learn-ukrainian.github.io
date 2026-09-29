@@ -34,7 +34,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import preprocess_shell_command, skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+    from shell_shlex import (
+        ShellPreprocessLimit,
+        preprocess_shell_command,
+        skippable_heredoc_delimiters,
+        strip_skippable_heredoc_bodies,
+    )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -322,7 +327,12 @@ def main() -> int:
     # Fast path: only engage on `gh ... --admin` (leave every other command untouched).
     if not command or "--admin" not in command or "gh" not in command:
         return 0
-    for seg in _segments(command):
+    try:
+        segments = _segments(command)
+    except ShellPreprocessLimit:
+        sys.stderr.write(_block_msg("nested shell command could not be parsed safely"))
+        return 2
+    for seg in segments:
         args = _admin_merge_args(seg)
         if args is None:
             continue

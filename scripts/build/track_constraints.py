@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
 from build.module_memory import module_memory_path
 
 TRACK_CONSTRAINTS_FILENAME = "learned-constraints-track.yaml"

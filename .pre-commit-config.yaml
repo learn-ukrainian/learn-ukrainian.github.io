@@ -16,11 +16,6 @@
 # local means bad code never leaves the laptop. CI is slower and
 # more expensive than catching a ruff error on save.
 #
-# Pre-push stage runs the full GHA-replay pytest via Dagger (~2-3 min
-# warm) when scripts/, tests/, .dagger/, or any .py is changed. Bypass
-# with `git push --no-verify` if you know what you're doing (e.g.
-# docs-only pushes the path-filter caught wrong).
-#
 # Reference issue: #1081
 default_install_hook_types:
   - pre-commit
@@ -30,16 +25,14 @@ default_install_hook_types:
 repos:
 
   # --- Ruff: the primary linter (same rules as CI) ---
-  # Version pinned to match what scripts/api/requirements-dev.txt
-  # and the CI workflow install. Bump in lockstep.
+  # Match the requirements-lock.txt pin installed by CI.
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.5
+    rev: v0.15.21
     hooks:
       - id: ruff
         name: ruff (lint)
-        # CI runs `ruff check scripts/ tests/ agents_extensions/ dashboards/` — match that here.
-        args: [--config=pyproject.toml]
-        files: ^(scripts|tests|agents_extensions|dashboards)/.*\.py$
+        # CI checks these trees in full; locally check only staged files in them.
+        files: ^(?:scripts|tests|agents_extensions|dashboards)/
 
   # --- Gitleaks: prevent secrets from ever being committed ---
   # The repository already has a .gitleaks.toml allowlist for the

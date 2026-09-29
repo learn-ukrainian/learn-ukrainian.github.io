@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import json
 import os
-import subprocess
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -13,38 +12,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime.env_sanitize import build_agent_env
 from agent_runtime.result import ParseResult
 from agent_runtime.runner import _execute_invocation_plan
+from tests.helpers.python import project_python
 
-
-def _resolve_test_python() -> str:
-    checkout_venv = Path(__file__).resolve().parent.parent / ".venv" / "bin" / "python"
-    if checkout_venv.exists():
-        return str(checkout_venv)
-
-    try:
-        common_dir = subprocess.check_output(
-            ["git", "rev-parse", "--git-common-dir"],
-            cwd=Path(__file__).resolve().parent,
-            text=True,
-            stderr=subprocess.DEVNULL,
-            timeout=30,
-        ).strip()
-        if common_dir:
-            main_venv = (Path(common_dir) / ".." / ".venv" / "bin" / "python").resolve()
-            if main_venv.exists():
-                return str(main_venv)
-    except (subprocess.CalledProcessError, FileNotFoundError, OSError):
-        pass
-
-    active_venv = os.environ.get("VIRTUAL_ENV")
-    if active_venv:
-        candidate = Path(active_venv) / "bin" / "python"
-        if candidate.exists():
-            return str(candidate)
-
-    raise RuntimeError("No project virtualenv Python found")
-
-
-_TEST_PYTHON = _resolve_test_python()
+_TEST_PYTHON = project_python()
 
 
 def test_build_agent_env_passes_only_current_provider_credentials():

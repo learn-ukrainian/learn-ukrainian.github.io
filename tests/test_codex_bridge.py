@@ -23,7 +23,6 @@ from agent_runtime.adapters.codex import CodexAdapter
 from agent_runtime.errors import AgentStalledError, RateLimitedError
 from agent_runtime.result import Result
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
-
 from scripts.ai_agent_bridge._cli import _dispatch_command, _handle_ask_codex
 from scripts.ai_agent_bridge._codex import (
     _codex_bridge_runtime_mode,

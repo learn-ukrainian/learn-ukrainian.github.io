@@ -76,14 +76,17 @@ def test_replaced_db_changes_source_version(server_module, tmp_path, monkeypatch
     ) != immutable_evidence_identifier(namespace="vesum", source_version=second, typed_result=typed)
 
 
-def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources_db(server_module, tmp_path):
+def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources_db(server_module, tmp_path, monkeypatch):
     from scripts.curriculum.evidence.sources import Sources
 
     data = tmp_path / "data"
     data.mkdir()
     sources_db = data / "sources.db"
     sources_db.write_bytes(b"SQLite format 3\x00" + b"\x00" * (1024 * 1024 - 16))
-    (data / "vesum.db").write_bytes(b"vesum-db")
+    vesum_db = data / "vesum.db"
+    vesum_db.write_bytes(b"vesum-db")
+    monkeypatch.setenv("LU_SOURCES_DB", str(sources_db))
+    monkeypatch.setattr("scripts.rag.config.VESUM_DB_PATH", vesum_db)
     server_module._FILE_HASH_CACHE.clear()
     original_path_open = Path.open
     header_bytes_read = 0
@@ -101,7 +104,9 @@ def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources
 
         def read(self, size=-1):
             nonlocal header_bytes_read
-            assert size >= 0 and header_bytes_read + size <= 20, "sources.db body read exceeded the 20-byte header"
+            assert size >= 0 and size <= 20 and header_bytes_read + size <= 40, (
+                "sources.db body read exceeded the resolver and identity headers"
+            )
             result = self._stream.read(size)
             header_bytes_read += len(result)
             return result
@@ -112,19 +117,18 @@ def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources
             return HeaderOnlyReader(stream)
         return stream
 
-    with patch.object(server_module, "PROJECT_ROOT", tmp_path):
-        with (
-            patch.object(
-                server_module,
-                "_sha256_of_file_fresh",
-                side_effect=AssertionError("default must not read sources.db body"),
-            ),
-            patch.object(server_module, "_sha256_of_file", wraps=server_module._sha256_of_file) as cached_hash,
-            patch.object(Path, "open", new=guarded_path_open),
-        ):
-            result = _run(server_module.handle_mcp_server_identity({}))
+    with (
+        patch.object(
+            server_module,
+            "_sha256_of_file_fresh",
+            side_effect=AssertionError("default must not read sources.db body"),
+        ),
+        patch.object(server_module, "_sha256_of_file", wraps=server_module._sha256_of_file) as cached_hash,
+        patch.object(Path, "open", new=guarded_path_open),
+    ):
+        result = _run(server_module.handle_mcp_server_identity({}))
     assert sources_db not in [call.args[0] for call in cached_hash.call_args_list]
-    assert header_bytes_read == 20
+    assert header_bytes_read == 40
     payload = json.loads(result[0].text)
     assert "sources_db_sha256" not in payload
     assert payload["sources_db_meta_identity"]["scheme"] == "file-meta-v1"
@@ -134,28 +138,30 @@ def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources
     assert payload["vesum_db_sha256"] == hashlib.sha256(b"vesum-db").hexdigest()
 
 
-def test_mcp_server_identity_explicit_content_hash_is_fresh_after_restored_mtime(server_module, tmp_path):
+def test_mcp_server_identity_explicit_content_hash_is_fresh_after_restored_mtime(server_module, tmp_path, monkeypatch):
     data = tmp_path / "data"
     data.mkdir()
     sources_db = data / "sources.db"
     sources_db.write_bytes(b"sources-db-v1")
-    (data / "vesum.db").write_bytes(b"vesum-db")
+    vesum_db = data / "vesum.db"
+    vesum_db.write_bytes(b"vesum-db")
+    monkeypatch.setenv("LU_SOURCES_DB", str(sources_db))
+    monkeypatch.setattr("scripts.rag.config.VESUM_DB_PATH", vesum_db)
     original_mtime = sources_db.stat().st_mtime_ns
     server_module._FILE_HASH_CACHE.clear()
     source_key = sources_db.resolve()
     stat = sources_db.stat()
     poisoned_key = (str(source_key), stat.st_mtime_ns, stat.st_ctime_ns, stat.st_size, stat.st_ino)
     server_module._FILE_HASH_CACHE[poisoned_key] = "0" * 64
-    with patch.object(server_module, "PROJECT_ROOT", tmp_path):
-        try:
-            first = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
-            assert first["sources_db_sha256"] == hashlib.sha256(b"sources-db-v1").hexdigest()
-        finally:
-            server_module._FILE_HASH_CACHE.pop(poisoned_key, None)
-        assert not any(key[0] == str(source_key) for key in server_module._FILE_HASH_CACHE)
-        sources_db.write_bytes(b"sources-db-v2")
-        os.utime(sources_db, ns=(original_mtime, original_mtime))
-        second = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
+    try:
+        first = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
+        assert first["sources_db_sha256"] == hashlib.sha256(b"sources-db-v1").hexdigest()
+    finally:
+        server_module._FILE_HASH_CACHE.pop(poisoned_key, None)
+    assert not any(key[0] == str(source_key) for key in server_module._FILE_HASH_CACHE)
+    sources_db.write_bytes(b"sources-db-v2")
+    os.utime(sources_db, ns=(original_mtime, original_mtime))
+    second = json.loads(_run(server_module.handle_mcp_server_identity({"include_sources_db_sha256": True}))[0].text)
     assert not any(key[0] == str(source_key) for key in server_module._FILE_HASH_CACHE)
     assert second["sources_db_sha256"] == hashlib.sha256(b"sources-db-v2").hexdigest()
     assert first["sources_db_sha256"] != second["sources_db_sha256"]

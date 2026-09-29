@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
 from tests.test_launcher_contract import REPO, run_launcher
 
 _GLM_CREDENTIALS = {
@@ -17,32 +18,6 @@ _GLM_CREDENTIALS = {
     "ZHIPU_API_KEY": "",
     "GLM_API_KEY": "",
 }
-
-
-def _repo_python() -> Path:
-    """Resolve the project venv Python without hardcoding a machine path."""
-    candidate = REPO / ".venv" / "bin" / "python"
-    if candidate.is_file():
-        return candidate
-    common = subprocess.run(
-        [
-            "git",
-            "-C",
-            str(REPO),
-            "rev-parse",
-            "--path-format=absolute",
-            "--git-common-dir",
-        ],
-        text=True,
-        capture_output=True,
-        check=False,
-        timeout=30,
-    )
-    if common.returncode == 0:
-        primary = Path(common.stdout.strip()).parent / ".venv" / "bin" / "python"
-        if primary.is_file():
-            return primary
-    pytest.fail(f"project .venv python not found for {REPO}")
 
 
 def _stub_claude(tmp_path: Path) -> Path:
@@ -189,7 +164,7 @@ def test_claude_route_guard_checks_project_local_and_ignores_settings_path_decoy
 
     decoy = tmp_path / "decoy-clean.json"
     decoy.write_text("{}", encoding="utf-8")
-    python_bin = _repo_python()
+    python_bin = project_python()
 
     script = f"""
 set -euo pipefail
@@ -224,7 +199,7 @@ def test_claude_route_guard_refuses_provider_selector_pins(tmp_path: Path) -> No
         json.dumps({"env": {"CLAUDE_CODE_USE_BEDROCK": "1"}}),
         encoding="utf-8",
     )
-    python_bin = _repo_python()
+    python_bin = project_python()
     script = f"""
 set -euo pipefail
 source "{REPO}/scripts/lib/claude_route_guard.sh"
@@ -273,7 +248,7 @@ def test_claude_route_guard_checks_primary_checkout_settings_for_linked_worktree
     user_cfg = home / ".claude-glmcc"
     user_cfg.mkdir(parents=True)
     (user_cfg / "settings.json").write_text("{}", encoding="utf-8")
-    python_bin = _repo_python()
+    python_bin = project_python()
     script = f"""
 set -euo pipefail
 source "{REPO}/scripts/lib/claude_route_guard.sh"

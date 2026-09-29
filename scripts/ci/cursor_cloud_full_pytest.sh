@@ -20,7 +20,7 @@
 #   unprivileged-userns grant CI's bwrap smoke test relies on, libpq); never
 #   sudo-installs in the cloud sandbox -- fails with an actionable message.
 # - Requires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as `ci.yml`'s
-#   disposable Postgres service) when control-plane tests are in the
+#   disposable PostgreSQL 16 step) when control-plane tests are in the
 #   selection; fails closed instead of letting them silently self-skip.
 # - Asserts Node 22 (`node -v` is v22); runs `npm ci --ignore-scripts` only if
 #   ACP test is in shard.
@@ -269,7 +269,7 @@ fi
 
 # 10. Fail closed if the selection includes control-plane tests that require
 # LEARN_UKRAINIAN_CP_PG_DSN (same fixture creds as ci.yml's disposable
-# Postgres service: postgresql://postgres:postgres@localhost:5432/lu) but the
+# PostgreSQL 16 step: postgresql://postgres:postgres@localhost:5432/lu) but the
 # DSN is unset. Those tests self-skip (pytest.skip) rather than fail when the
 # DSN is absent, so silently omitting it would report a false-green pass for
 # a suite that never actually ran against Postgres.

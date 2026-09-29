@@ -14,10 +14,9 @@ pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from audit import config as audit_config
 from build import alignment_manifest
 from build.phases import wiki_compressor
-
-from audit import config as audit_config
 
 
 def _write_yaml(path: Path, payload: dict) -> None:

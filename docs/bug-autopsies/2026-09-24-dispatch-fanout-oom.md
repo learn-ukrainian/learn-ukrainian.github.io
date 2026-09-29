@@ -2,7 +2,7 @@
 
 Issue: #8645 (2026-09-24).
 
-## Timeline
+## Symptom
 
 On 2026-09-24 at 09:13:56Z the kernel OOM killer fired on this 15 GB host
 (`global_oom`). The victim was in the infra driver's tmux pane scope
@@ -55,23 +55,23 @@ Measured the same morning (2026-09-24 10:00–11:00Z): 5–7 concurrent workers,
 all using targeted tests with `-n 2`, kept `MemAvailable` between 11.1 and
 13.5 GB. The OOM needed full-suite `-n auto` runs.
 
-## Fix plan
+## Prevention
 
 Driver disposition (claude-infra), reconciling the Codex and Kimi design
 seats. Three PRs, in this order:
 
-1. **B — test fan-out cap** (`tests/conftest.py` / pytest hook): when the
-   dispatch env marker is set, clamp xdist to `--maxprocesses=2` (explicit
-   `-n`, `-n auto`, and `-n logical`) and make full-suite runs take one
-   host-wide lock, acquired before the session starts. Lands after #8641.
-2. **A — admission plus liveness** (`delegate.py dispatch`,
-   `scripts/config.py`): a static cap on live write workers (default 5,
-   configurable) plus a `MemAvailable` floor (default 3.5 GiB), both
+1. **Test fan-out cap (Part B, landed in PR #8673, follow-up PR #8688):** when the dispatch env
+   marker is set, clamp xdist to `--maxprocesses=2` (explicit `-n`, `-n auto`,
+   and `-n logical`) in `tests/conftest.py` / pytest hook, and make full-suite
+   runs take one host-wide lock acquired before the session starts.
+2. **Admission plus liveness (Part A, landed in PR #8702):** static cap on
+   live write workers (default 5, configurable) plus a `MemAvailable` floor
+   (default 3.5 GiB) in `delegate.py dispatch` / `scripts/config.py`, both
    reported in `capacity_pick`; per-worker peak RSS recorded in the task
-   record; a liveness sweep that marks a dead pid `crashed` within one
-   sweep interval. Lands after #8508.
-3. **C — isolation (landed):** a single `lu-dispatch.slice` for all workers
-   (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`; unit file
+   record; prompt liveness sweep (`learn-ukrainian-reconcile.timer` running
+   `reconcile_sweep --apply` every 5 minutes) marking dead pids `crashed`.
+3. **Isolation (Part C, landed in PR #8858):** a single `lu-dispatch.slice` for
+   all workers (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`; unit file
    `packaging/systemd/lu-dispatch.slice`), driver outside it. Each detached
    worker is `systemd-run --user --scope --expand-environment=no --slice=lu-dispatch.slice
    --unit=lu-worker-<task>-<nonce>-<8 hex> --collect`. `--scope` execs the
@@ -86,14 +86,18 @@ seats. Three PRs, in this order:
    process image is already the worker, that process is kept. A marker that
    arrives only as that process is stopped, or a `/proc` image that cannot be
    read, fails the dispatch instead of relaunching. Running without the slice
-   installed is supported. Per-worker limits stay out
-   until sibling starvation shows up.
+   installed is supported. Per-worker limits stay out until sibling starvation
+   shows up.
+4. **Admission and worktree preparation integration (landed in PR #8752, #8717):**
+   count live worktree preps, heal orphans (`worktree_prep.is_orphaned_prep_record`),
+   and refuse before creating the worktree to avoid losing slots during slow
+   preparation.
 
-Parts A and B have landed (admission, liveness, the pytest fan-out cap).
-Part C is in the launcher; the slice limits apply only after
-`packaging/systemd/lu-dispatch.slice` is installed in the user manager.
-Until that install, and whenever the probe falls back, keep the driver
-rule that survived the incident: targeted tests only, `-n 2` at most.
+Driver operational rule: targeted tests only, `-n 2` at most; full suite runs belong in CI.
+
+Open prevention work:
+- Sizing adjustment (cap-12 sizing for 32 GB) waits for host rescale in open issue #8860.
+- Tracking issue #8645 remains open under parent epic #8647.
 
 ## Detection and lessons
 

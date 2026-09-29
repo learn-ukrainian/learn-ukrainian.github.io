@@ -23,6 +23,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import yaml
+
 from common.text_utils import strip_ukrainian_stress
 
 # ---------------------------------------------------------------------------

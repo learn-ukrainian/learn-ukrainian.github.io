@@ -53,7 +53,12 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 # Don't write __pycache__ next to deployed hooks (#9108).
 sys.dont_write_bytecode = True
 try:
-    from shell_shlex import preprocess_shell_command, skippable_heredoc_delimiters, strip_skippable_heredoc_bodies
+    from shell_shlex import (
+        ShellPreprocessLimit,
+        preprocess_shell_command,
+        skippable_heredoc_delimiters,
+        strip_skippable_heredoc_bodies,
+    )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -120,11 +125,12 @@ def _is_advisory(name: str) -> bool:
     return any(m in low for m in ADVISORY_NAME_MARKERS)
 
 
-def _read_payload() -> dict:
+def _read_payload() -> dict | None:
     try:
-        return json.loads(sys.stdin.read() or "{}")
-    except json.JSONDecodeError:
-        return {}
+        payload = json.loads(sys.stdin.read() or "{}")
+    except (ValueError, RecursionError):
+        return None
+    return payload if isinstance(payload, dict) else None
 
 
 def _command(payload: dict) -> str:
@@ -1186,6 +1192,12 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
 
 def main() -> int:
     payload = _read_payload()
+    if payload is None or not isinstance(payload.get("tool_input", {}), dict):
+        sys.stderr.write(_block_msg("malformed hook payload", "Provide a Bash command object for review."))
+        return 2
+    if not isinstance(payload.get("tool_input", {}).get("command", ""), str):
+        sys.stderr.write(_block_msg("malformed hook command", "Provide a literal Bash command for review."))
+        return 2
     command = _command(payload)
     # Fast path: only engage on `gh ... pr ... merge` (leave every other command untouched).
     # Quote/backslash marks are dropped first, because the shell drops them BEFORE running
@@ -1204,7 +1216,17 @@ def main() -> int:
     # (false block, or worse: false allow off a same-numbered green PR). Scoping that cwd
     # to its own shell level is _judged_segments' job: it is the only reader that knows
     # where a subshell or `bash -c` payload begins and ends.
-    for seg in _judged_segments(command):
+    try:
+        segments = _judged_segments(command)
+    except ShellPreprocessLimit:
+        sys.stderr.write(
+            _block_msg(
+                "nested shell command could not be parsed safely",
+                "Use a simpler literal merge command so the guard can check its target PR.",
+            )
+        )
+        return 2
+    for seg in segments:
         args = _merge_args(seg.argv)
         if args is None:
             continue

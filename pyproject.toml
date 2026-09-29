@@ -40,6 +40,9 @@ markers = [
 [tool.ruff]
 line-length = 120
 target-version = "py312"
+# Imports resolve from the repository root and scripts/ in both full and
+# sparse checkouts. Declare both roots so isort never probes tree presence.
+src = [".", "scripts"]
 exclude = [
     ".venv/",
     "node_modules/",

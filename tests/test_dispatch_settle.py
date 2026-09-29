@@ -58,6 +58,41 @@ def test_heal_zombie_task_marks_failed_and_releases(tmp_path: Path) -> None:
     assert healed["exit_code"] == -9
 
 
+def test_heal_zombie_review_names_dead_worker_reason(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "dead-review"
+    path = task_dir / f"{task_id}.json"
+    path.write_text(
+        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999_999,
+                    "require_review_verdict": True, "failure_reason": None}),
+        encoding="utf-8",
+    )
+
+    assert "marked_failed_zombie_running" in ds.heal_zombie_task(task_dir, task_id)
+    healed = json.loads(path.read_text(encoding="utf-8"))
+    assert healed["status"] == "failed"
+    assert healed["failure_reason"] == "worker_process_dead"
+
+
+def test_settle_missing_worktree_review_names_reason(tmp_path: Path) -> None:
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    task_id = "missing-review"
+    path = task_dir / f"{task_id}.json"
+    path.write_text(
+        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999_999,
+                    "worktree_path": str(tmp_path / "missing"),
+                    "require_review_verdict": True, "failure_reason": None}),
+        encoding="utf-8",
+    )
+
+    assert "marked_failed_missing_worktree" in ds.settle_missing_worktree(task_dir, task_id)
+    healed = json.loads(path.read_text(encoding="utf-8"))
+    assert healed["status"] == "failed"
+    assert healed["failure_reason"] == "worktree_missing_at_settle"
+
+
 def test_settle_task_reports_closeout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     task_dir = tmp_path / "tasks"
     task_dir.mkdir()

@@ -124,7 +124,7 @@ def test_preflight_installs_python_like_the_shards() -> None:
         ), job
     steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
     install = next(step["run"] for step in steps if step.get("name") == "Install Python deps")
-    assert "python -m venv .venv" in install
+    assert "python -m venv --without-pip .venv" in install
     hydrate = next(
         step["run"] for step in steps if step.get("name") == "Hydrate Atlas lexicon manifest"
     )

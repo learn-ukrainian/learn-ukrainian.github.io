@@ -312,18 +312,6 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJSON(needs.changes.outputs.shards) }}
-    services:
-      postgres:
-        # Pinned to the multi-arch index digest (`docker buildx imagetools
-        # inspect postgres:16` / registry Docker-Content-Digest, 2026-09-28)
-        # so the gate cannot drift under a moving tag (#9062).
-        image: postgres:16@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: lu
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: "5"
@@ -332,6 +320,8 @@ jobs:
         with:
           persist-credentials: false
           # Historical parity tests read committed source from old SHAs.
+          # Full blobs, not a blobless clone: a lazy fetch inside Run pytest
+          # would let a GitHub interruption fail a test mid-run (#9062).
           fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
@@ -343,9 +333,25 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Install native mechanism test dependencies
         run: |
+          set -euo pipefail
           sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google* /var/lib/apt/lists/*chrome* /var/lib/apt/lists/*google*
-          sudo apt-get update -qq
-          sudo apt-get install -y bubblewrap postgresql-16 libpq-dev apparmor
+          # The runner image already carries PostgreSQL 16, libpq-dev and
+          # apparmor; only bubblewrap is missing. Install just what is absent
+          # from the image's package lists (no `apt-get update`, no needless
+          # upgrade of installed packages, ~11 s per shard, #9062). If the
+          # image's lists are stale and the fetch fails, refresh once and retry.
+          missing=()
+          for pkg in bubblewrap postgresql-16 libpq-dev apparmor; do
+            dpkg -s "$pkg" >/dev/null 2>&1 || missing+=("$pkg")
+          done
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Installing missing native packages: ${missing[*]}"
+            if ! sudo apt-get install -y --no-install-recommends "${missing[@]}"; then
+              echo 'apt install failed against the image package lists; refreshing and retrying'
+              sudo apt-get update -qq
+              sudo apt-get install -y --no-install-recommends "${missing[@]}"
+            fi
+          fi
           # Ubuntu-hosted runners require an application-specific userns grant.
           # This profile belongs only to the disposable CI VM.
           if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
@@ -359,6 +365,64 @@ jobs:
             sudo apparmor_parser -r "${RUNNER_TEMP}/v4-ci-bwrap.apparmor"
           fi
           bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true
+      - name: Start PostgreSQL 16
+        # The apt-installed server replaces the postgres:16 service container
+        # (~20-29 s of image pull + init per shard, #9062). Same credentials
+        # as LEARN_UKRAINIAN_CP_PG_DSN above. Fails the job if 16/main does not
+        # start, does not own port 5432, is not accepting connections within
+        # 60 s, or the DSN's server is not major version 16; the pg_skip_guard step after
+        # pytest catches a start that "worked" but left the tests skipping.
+        if: needs.changes.outputs.docs_only == 'false'
+        run: |
+          set -euo pipefail
+          if ! pg_lsclusters --no-header | grep -q '^16 main '; then
+            sudo pg_createcluster 16 main
+          fi
+          # Start errors are not suppressed; only an already-online cluster is skipped.
+          if ! pg_lsclusters --no-header | awk '$1 == "16" && $2 == "main" && $4 == "online" {found = 1} END {exit !found}'; then
+            sudo pg_ctlcluster 16 main start
+          fi
+          ready=""
+          for _ in $(seq 1 30); do
+            if pg_isready -h localhost -p 5432 -q; then ready=1; break; fi
+            sleep 2
+          done
+          if [ -z "$ready" ]; then
+            echo "::error::PostgreSQL 16 was not ready on localhost:5432 within 60 s" >&2
+            pg_lsclusters >&2 || true
+            sudo tail -n 40 /var/log/postgresql/postgresql-16-main.log >&2 || true
+            exit 1
+          fi
+          # 16/main must be the cluster that owns the DSN port (5432), not some
+          # other server already listening there.
+          cluster="$(pg_lsclusters --no-header | awk '$1 == "16" && $2 == "main" {print $3 " " $4}')"
+          if [ "$cluster" != "5432 online" ]; then
+            echo "::error::PostgreSQL cluster 16/main is '${cluster:-missing}', expected '5432 online'" >&2
+            pg_lsclusters >&2
+            exit 1
+          fi
+          sudo -u postgres psql -p 5432 -v ON_ERROR_STOP=1 -q <<'SQL'
+          ALTER ROLE postgres WITH PASSWORD 'postgres';
+          SELECT 'CREATE DATABASE lu' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'lu')\gexec
+          SQL
+          # The exact DSN the tests use must connect, not just the socket.
+          # The connected server must report major version 16.
+          version_num="$(PGPASSWORD=postgres psql "$LEARN_UKRAINIAN_CP_PG_DSN" -v ON_ERROR_STOP=1 -qtAc 'SHOW server_version_num')"
+          echo "PostgreSQL server_version_num=${version_num}"
+          if [ "${version_num:0:2}" != "16" ]; then
+            echo "::error::DSN server reports version ${version_num}, expected major 16" >&2
+            exit 1
+          fi
+          # ...and it must be cluster 16/main itself: the DSN's data_directory
+          # has to equal the 16/main data directory from pg_lsclusters.
+          expected_dir="$(pg_lsclusters --no-header | awk '$1 == "16" && $2 == "main" {print $6}')"
+          dsn_dir="$(PGPASSWORD=postgres psql "$LEARN_UKRAINIAN_CP_PG_DSN" -v ON_ERROR_STOP=1 -qtAc 'SHOW data_directory')"
+          echo "DSN data_directory=${dsn_dir} (16/main: ${expected_dir})"
+          if [ -z "$expected_dir" ] || [ "$dsn_dir" != "$expected_dir" ]; then
+            echo "::error::DSN server data_directory '${dsn_dir}' is not the 16/main data directory '${expected_dir:-missing}'" >&2
+            pg_lsclusters >&2
+            exit 1
+          fi
       # Composite Python env (#9062): uv, offline-first lockfile install,
       # v4-runtime, Atlas manifest check. npm stays after it (no dependency
       # either way).
@@ -513,6 +577,18 @@ jobs:
               --timeout-method=thread --override-ini addopts=-v \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}-repo-wide.xml"
           fi
+      - name: Fail if Postgres tests skipped
+        # The Postgres tests self-skip when the DSN is unusable, so a broken
+        # start would otherwise be a green run of skips. Reads the JUnit files
+        # Run pytest wrote; fails on any DSN skip or a Postgres test file with
+        # no passing test, and prints ran/skipped counts to the job summary.
+        if: needs.changes.outputs.docs_only == 'false'
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          .venv/bin/python -m scripts.ci.pg_skip_guard ci-artifacts/pytest-shard-*.xml \
+            --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: List failing tests in job summary
         # Reads the JUnit files the Run pytest step already wrote (#9063);
         # never re-runs tests and can never change the shard's result.
@@ -577,6 +653,9 @@ jobs:
           .venv/bin/python -m pytest --collect-only -m needs_artifact -q --strict-markers \
             --override-ini addopts= > ci-artifacts/needs-artifact-collected.txt || collection_status=$?
           if [ "${collection_status:-0}" -ne 0 ] && [ "$collection_status" -ne 5 ]; then
+            echo "::group::pytest needs_artifact collection failure"
+            tail -n 200 ci-artifacts/needs-artifact-collected.txt
+            echo "::endgroup::"
             exit "$collection_status"
           fi
           set +e
@@ -629,6 +708,15 @@ jobs:
               sys.exit(1)
           print(f"needs_artifact collected={len(collected)} skips={len(artifact_skips)} expected={len(expected)}")
           PY
+      - name: Upload audit artifacts on failure
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: needs-artifact-audit
+          path: ci-artifacts/
+          if-no-files-found: warn
+          retention-days: 7
+
 
   contracts:
     name: Contracts

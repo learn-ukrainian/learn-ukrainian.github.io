@@ -17,7 +17,6 @@ sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from manifest_utils import get_modules_for_level, load_manifest
-
 from scripts.build import linear_pipeline
 from scripts.common.repo_root import project_interpreter
 

@@ -103,6 +103,8 @@ class HostProbe:
     load1: float | None
     cpu_count: int | None
     proc_available: bool
+    cpu_steal_ticks: int | None = None
+    cpu_total_ticks: int | None = None
 
     @property
     def mem_available_gib(self) -> float | None:
@@ -191,6 +193,10 @@ class AdmissionDecision:
             "cpu_count": probe.cpu_count if probe else None,
             "load_per_cpu": round(load, 3) if load is not None else None,
             "max_load_per_cpu": limits.max_load_per_cpu if limits else None,
+            # /proc/stat counters are cumulative; compare two records' deltas
+            # to calculate steal share over their interval.
+            "cpu_steal_ticks": probe.cpu_steal_ticks if probe else None,
+            "cpu_total_ticks": probe.cpu_total_ticks if probe else None,
             "proc_available": probe.proc_available if probe else None,
             "swept_crashed": list(self.dead_task_ids) if self.swept else [],
         }
@@ -260,15 +266,38 @@ def _read_load1(loadavg: Path) -> float | None:
         return None
 
 
+def _read_cpu_ticks(stat: Path) -> tuple[int | None, int | None]:
+    """Read aggregate /proc/stat steal and total ticks for interval deltas."""
+    try:
+        with stat.open(encoding="ascii") as handle:
+            first_line = handle.readline()
+    except (OSError, UnicodeError):
+        return None, None
+    fields = first_line.split()
+    if not fields or fields[0] != "cpu" or len(fields) < 9:
+        return None, None
+    try:
+        ticks = [int(value) for value in fields[1:]]
+    except ValueError:
+        return None, None
+    if any(value < 0 for value in ticks):
+        return None, None
+    # guest and guest_nice are already included in user and nice by Linux.
+    return ticks[7], sum(ticks[:8])
+
+
 def read_host(proc_root: Path) -> HostProbe:
-    """Read ``MemAvailable`` and the 1-minute load average under ``proc_root``; ``None`` where unknown."""
+    """Read memory, load, and aggregate CPU counters; ``None`` where unknown."""
     if not proc_root.is_dir():
         return HostProbe(mem_available_bytes=None, load1=None, cpu_count=os.cpu_count(), proc_available=False)
+    steal_ticks, total_ticks = _read_cpu_ticks(proc_root / "stat")
     return HostProbe(
         mem_available_bytes=_read_mem_available_bytes(proc_root / "meminfo"),
         load1=_read_load1(proc_root / "loadavg"),
         cpu_count=os.cpu_count(),
         proc_available=True,
+        cpu_steal_ticks=steal_ticks,
+        cpu_total_ticks=total_ticks,
     )
 
 

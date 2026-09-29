@@ -201,7 +201,8 @@ def test_audit_priority_subset_of_pipeline_allowed(audit_key: str, pipeline_key:
 # bio, istorio, oes, ruth) where audit forbids quiz/fill-in/mark-the-words
 # but pipeline allows them as INLINE checks. That divergence is intentional
 # (seminar pedagogy at audit-time is stricter than at writer-time) and is
-# tracked separately — see docs/best-practices/audit-standards.md.
+# tracked separately — see docs/best-practices/audit-standards.md. These
+# levels are left out of the parametrization below rather than skipped.
 _KNOWN_DIVERGENT_LEVELS: set[str] = {
     "history",
     "biography",
@@ -213,13 +214,11 @@ _KNOWN_DIVERGENT_LEVELS: set[str] = {
 }
 
 
-@pytest.mark.parametrize("audit_key,pipeline_key", sorted(AUDIT_TO_PIPELINE_KEY.items()))
+@pytest.mark.parametrize(
+    "audit_key,pipeline_key",
+    sorted(item for item in AUDIT_TO_PIPELINE_KEY.items() if item[0] not in _KNOWN_DIVERGENT_LEVELS),
+)
 def test_audit_forbidden_disjoint_from_pipeline_allowed(audit_key: str, pipeline_key: str) -> None:
-    if audit_key in _KNOWN_DIVERGENT_LEVELS:
-        pytest.skip(
-            f"{audit_key}: seminar track — audit deliberately forbids inline "
-            "drill types that pipeline allows for inline checks."
-        )
     audit_cfg = LEVEL_CONFIG.get(audit_key, {})
     audit_forbidden = set(audit_cfg.get("forbidden_types", set()))
     if not audit_forbidden:

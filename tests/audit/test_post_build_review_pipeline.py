@@ -23,13 +23,11 @@ from tests.audit.test_post_build_review import (
     _provider_semantic,
     _raw,
     _reviewer,
+    check_each_schema_once,  # noqa: F401 - autouse fixture
 )
 from tests.helpers.archive_slug import pick_archive_only_slug
 
-
-@pytest.fixture(scope="module")
-def bilash_packet() -> dict:
-    return pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
+# bilash_packet is shared with test_post_build_review.py via tests/audit/conftest.py.
 
 
 @pytest.fixture(scope="module")
@@ -40,6 +38,19 @@ def malyshko_packet() -> dict:
 @pytest.fixture(scope="module")
 def a1_packet() -> dict:
     return pbr.prepare_review(f"a1/{pick_archive_only_slug()}", _reviewer())
+
+
+def _reuse_vocabulary_candidates(monkeypatch: pytest.MonkeyPatch, packet: dict) -> None:
+    """Reuse the real fixture's VESUM surface candidates for a rebuild of the same module.
+
+    They depend only on the target materials, which a policy-only rebuild does not
+    change; the fixtures above build them for real.
+    """
+    monkeypatch.setattr(
+        pbr,
+        "build_vocabulary_surface_candidates",
+        lambda *_args, **_kwargs: copy.deepcopy(packet["vocabulary_surface_candidates"]),
+    )
 
 
 def _runner_from_packet(packet: dict):
@@ -87,7 +98,9 @@ def test_effective_prompt_uses_common_plus_exactly_one_family(bilash_packet: dic
     assert pbr.sha256_text(changed) != bilash_packet["prompt_sha256"]
 
 
-def test_failed_deterministic_stage_renders_incomplete_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
+def test_failed_deterministic_stage_renders_incomplete_prompt(
+    bilash_packet: dict, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """A null result from a failed audit must remain evidence, not crash prompt assembly."""
     deterministic = {
         "track_audit": {
@@ -108,6 +121,7 @@ def test_failed_deterministic_stage_renders_incomplete_prompt(monkeypatch: pytes
         "run_existing_deterministic_audits",
         lambda *args, **kwargs: copy.deepcopy(deterministic),
     )
+    _reuse_vocabulary_candidates(monkeypatch, bilash_packet)
 
     packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer())
 
@@ -229,6 +243,7 @@ def test_packet_bound_contract_finalizes_short_supplied_finding(
         return findings
 
     monkeypatch.setattr(pbr, "evaluate_mechanical_track_policy", with_short_finding)
+    _reuse_vocabulary_candidates(monkeypatch, malyshko_packet)
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer(), runner=_runner_from_packet(malyshko_packet))
     content_path = packet["target"]["files"]["content"]
     supplied_finding = next(
@@ -346,6 +361,7 @@ def test_semantic_pass_cannot_override_mechanical_high(bilash_packet: dict, monk
         "evaluate_mechanical_track_policy",
         lambda *args, **kwargs: copy.deepcopy(policy_findings),
     )
+    _reuse_vocabulary_candidates(monkeypatch, bilash_packet)
     packet = pbr.prepare_review("bio/oleksandr-bilash", _reviewer(), runner=_runner_from_packet(bilash_packet))
     result = pbr.finalize_review(packet, _raw(_passing_semantic(packet)))
 
@@ -500,6 +516,7 @@ def test_quality_dimension_reuses_supplied_deterministic_finding_id(
         return findings
 
     monkeypatch.setattr(pbr, "evaluate_mechanical_track_policy", with_supplied_finding)
+    _reuse_vocabulary_candidates(monkeypatch, malyshko_packet)
     packet = pbr.prepare_review("bio/andrii-malyshko", _reviewer(), runner=_runner_from_packet(malyshko_packet))
     external = next(
         finding for finding in pbr._deterministic_findings(packet) if finding["id"] == "supplied-deterministic-finding"

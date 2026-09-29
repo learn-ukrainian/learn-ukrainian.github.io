@@ -121,8 +121,12 @@ grep -q 'thread_rollover_link.sh' "$REPO_ROOT/$codex_adapter" \
   || fail "$codex_adapter no longer sources the Codex checkout bootstrap"
 grep -q 'bootstrap_codex_checkout' "$REPO_ROOT/$codex_adapter" \
   || fail "$codex_adapter no longer bootstraps the target checkout"
-grep -q -- '--git-common-dir' "$REPO_ROOT/$codex_adapter" \
+grep -q 'git -C "$LC_SESSION_ROOT" worktree list' "$REPO_ROOT/$codex_adapter" \
   || fail "$codex_adapter no longer resolves the canonical checkout"
+# The CODEX_CANONICAL_REPO_ROOT override is validated where the helper root is
+# resolved (#9121).
+grep -q -- '--git-common-dir' "$REPO_ROOT/scripts/lib/launcher_core.sh" \
+  || fail "launcher_core.sh no longer validates the canonical checkout override"
 grep -q 'branch --show-current' "$REPO_ROOT/$codex_adapter" \
   || fail "$codex_adapter no longer requires canonical main"
 grep -q 'GIT_OPTIONAL_LOCKS=0' "$REPO_ROOT/$codex_adapter" \
