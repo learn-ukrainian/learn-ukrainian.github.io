@@ -55,13 +55,14 @@ def test_luna_is_absent_from_formal_review_candidates_and_ladders() -> None:
         assert "gpt-5.6-luna" not in rung_candidates
 
 
-def test_kimi_k3_remains_on_every_code_review_ladder() -> None:
+def test_kimi_k3_is_on_no_code_review_ladder() -> None:
+    """Kimi seats admit neutral coding only (formerly a rung on every ladder)."""
     ladders = load_model_catalog()["review_ladders"]
     assert set(ladders) == {"critical", "high", "medium", "low"}
 
     for ladder in ladders.values():
         rung_candidates = {candidate for rung in ladder for candidate in rung}
-        assert "kimi-k3" in rung_candidates
+        assert "kimi-k3" not in rung_candidates
         assert "glm-5.3" not in rung_candidates
 
 

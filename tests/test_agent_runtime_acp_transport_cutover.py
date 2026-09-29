@@ -432,14 +432,30 @@ def test_discussion_status_uses_durable_receipt_rounds(tmp_path, monkeypatch) ->
     assert payload["rounds_completed"] == 0
 
 
-@pytest.mark.parametrize("model", ["k3-256k", "kimi-k3-256k", "kimi-code/k3-256k"])
-def test_resolve_inter_agent_route_accepts_k3_256k_alias_for_kimi(model: str) -> None:
-    """ask-kimi --to-model k3-256k must validate through the catalog alias gate."""
-    route = runner.resolve_inter_agent_route("kimi", model=model)
-    assert route.participant == "kimi"
-    assert route.model == model
+@pytest.mark.parametrize("model", [None, "k3-256k", "kimi-k3-256k", "kimi-code/k3-256k", "k3-nonexistent"])
+@pytest.mark.parametrize("participant", ["kimi", "kimicc"])
+def test_resolve_inter_agent_route_refuses_every_kimi_participant(participant: str, model: str | None) -> None:
+    """ask-kimi and ACP consults were admitted with catalog aliases; Kimi now admits neutral coding only."""
+    with pytest.raises(runner.InterAgentTransportError, match="KIMI NEUTRAL-CODING-ONLY"):
+        runner.resolve_inter_agent_route(participant, model=model)
 
 
-def test_resolve_inter_agent_route_rejects_an_unknown_kimi_model() -> None:
-    with pytest.raises(runner.InterAgentTransportError, match="no enabled catalog route"):
-        runner.resolve_inter_agent_route("kimi", model="k3-nonexistent")
+def test_invoke_inter_agent_refuses_kimi_before_spawn(monkeypatch, tmp_path) -> None:
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
+    monkeypatch.setattr(runner, "_invoke_direct_only", lambda *_a, **_k: pytest.fail("refused call spawned"))
+    with pytest.raises(runner.InterAgentTransportError, match="KIMI NEUTRAL-CODING-ONLY"):
+        runner.invoke_inter_agent(
+            "kimi",
+            "consult on this design",
+            cwd=tmp_path,
+            task_id="task-kimi-consult",
+            correlation_id="corr-kimi-consult",
+            idempotency_key="idem-kimi-consult",
+            source="codex",
+        )
+
+
+@pytest.mark.parametrize("seat", ["acpx-kimi-shadow", "acpx-kimicc-shadow"])
+def test_direct_only_kimi_seats_are_refused(seat: str, tmp_path) -> None:
+    with pytest.raises(runner.AgentUnavailableError, match="KIMI NEUTRAL-CODING-ONLY"):
+        runner._invoke_direct_only(seat, "shadow", cwd=tmp_path, task_id="task-kimi-shadow", tool_config={})

@@ -101,8 +101,8 @@ UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
     "gemini": "Gemini has one global MCP config without per-invocation MCP config support",
     "grok": "not yet proven",
     "grok-build": "not yet proven",
-    "kimicc": "not yet supported",
-    "kimi": "Native Kimi Code reads global profile config and cannot take a per-attempt stdio config",
+    "kimicc": "Kimi seats admit neutral coding only; reviews are refused",
+    "kimi": "Kimi seats admit neutral coding only; reviews are refused",
     "grok-hermes": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
     "deepseek": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
     "qwen": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
@@ -506,9 +506,7 @@ class ReviewMcpPlan:
 def review_tools_allowed_csv(harness: str) -> str | None:
     """Return the Claude Code ``--allowedTools`` names for the sources server.
 
-    Only Claude Code understands these names. Kimi reviews use that same
-    grant on the kimicc read-only dispatch path, which calls this with
-    ``claude`` because the headless binary is Claude Code.
+    Only Claude Code understands these names.
     """
     if harness.lower().strip() != "claude":
         return None

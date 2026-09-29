@@ -27,7 +27,7 @@ import urllib.error
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -5622,19 +5622,12 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
-def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypatch):
-    """ask-kimi --review is dispatch parsing through to the kimicc argv."""
-    claude = tmp_path / "claude"
-    claude.write_text("#!/bin/sh\n", encoding="utf-8")
-    claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
-        lambda _: None,
-    )
-    from scripts.agent_runtime.adapters.kimicc import REVIEW_VERDICT_MARKER_KEY, KimiccHarness
-
-    dispatch = delegate.build_parser().parse_args(
+def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """ask-kimi --review (dispatch --agent kimi --harness kimicc --mode read-only --require-review-verdict)
+    formerly reached a sources grant; Kimi seats now admit neutral coding only."""
+    popen = MagicMock(side_effect=AssertionError("refused dispatch spawned a process"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", popen)
+    rc = delegate.main(
         [
             "dispatch",
             "--agent",
@@ -5650,179 +5643,46 @@ def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypa
             "--require-review-verdict",
         ]
     )
-    worker = delegate.build_parser().parse_args(
-        [
-            "_worker",
-            "--task-id",
-            dispatch.task_id,
-            "--agent",
-            dispatch.agent,
-            "--mode",
-            dispatch.mode,
-            "--cwd",
-            str(tmp_path),
-            *delegate._dispatch_worker_identity_flags(dispatch, dispatch.harness),
-        ]
-    )
-    grant = delegate._kimicc_read_only_review_grant(
-        harness=worker.harness,
-        mode=worker.mode,
-        require_review_verdict=worker.require_review_verdict,
-    )
-    plan = KimiccHarness().build_invocation(
-        prompt="Review the diff and call mcp__sources__verify_word once.",
-        mode=worker.mode,
-        cwd=tmp_path,
-        model="k3",
-        task_id=worker.task_id,
-        session_id=None,
-        tool_config={"harness": worker.harness, **grant},
-    )
-    allowed = plan.cmd[plan.cmd.index("--allowedTools") + 1]
-    assert "mcp__sources__verify_words" in allowed.split(",")
-    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(delegate._REPO_ROOT / ".mcp.json")
-    assert "--strict-mcp-config" in plan.cmd
-    assert grant[REVIEW_VERDICT_MARKER_KEY] is True
-    # The wrapper runs this profile in dontAsk, not plan mode, which refuses MCP calls (#8652).
-    assert "--read-only-review" in plan.cmd
-
-    plain = delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "kimi",
-            "--harness",
-            "kimicc",
-            "--mode",
-            "read-only",
-            "--task-id",
-            "kimi-not-a-review",
-            "--prompt",
-            "What does this function do?",
-        ]
-    )
-    assert (
-        delegate._kimicc_read_only_review_grant(
-            harness=plain.harness,
-            mode=plain.mode,
-            require_review_verdict=plain.require_review_verdict,
-        )
-        == {}
-    )
-    plain_plan = KimiccHarness().build_invocation(
-        prompt="What does this function do?",
-        mode=plain.mode,
-        cwd=tmp_path,
-        model="k3",
-        task_id=plain.task_id,
-        session_id=None,
-        tool_config={"harness": plain.harness},
-    )
-    assert "--read-only-review" not in plain_plan.cmd
-    write_review = delegate._kimicc_read_only_review_grant(
-        harness="kimicc",
-        mode="workspace-write",
-        require_review_verdict=True,
-    )
-    assert write_review == {}
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "KIMI NEUTRAL-CODING-ONLY" in err
+    assert "--mode read-only" in err
+    assert "review dispatches" in err
+    popen.assert_not_called()
+    assert not (tmp_tasks_dir / "kimi-review-sources.json").exists()
 
 
-def test_kimicc_read_only_review_grant_uses_trusted_mcp_not_worktree(tmp_path, monkeypatch):
-    """A dispatch worktree's .mcp.json never reaches the kimicc review argv."""
+def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monkeypatch):
+    """Formerly the review grant named the trusted .mcp.json; now no bare MCP grant is forwarded at all."""
     import json
 
     from scripts.agent_runtime.adapters.kimicc import KimiccHarness
-    from scripts.guardrails.worktree_containment import is_dispatch_worktree
 
-    # Throwaway repo: is_dispatch_worktree resolves the primary root from git,
-    # and the grant names delegate._REPO_ROOT / ".mcp.json". Both point here,
-    # never at the live checkout.
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_git_repo_for_test(repo, monkeypatch)
-    trusted = repo / ".mcp.json"
-    trusted.write_text(
-        json.dumps({"mcpServers": {"sources": {"command": "trusted-stdio"}}}),
-        encoding="utf-8",
-    )
-    worktree = repo / ".worktrees" / "dispatch" / "cursor" / "grant-fixture"
-    worktree.mkdir(parents=True)
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
     malicious = worktree / ".mcp.json"
-    malicious.write_text(
-        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio", "args": ["--forge"]}}}),
-        encoding="utf-8",
-    )
-    assert is_dispatch_worktree(worktree) is True
-    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-
-    grant = delegate._kimicc_read_only_review_grant(
-        harness="kimicc",
-        mode="read-only",
-        require_review_verdict=True,
-        cwd=worktree,
-    )
-    assert grant["mcp_config_path"] == str(trusted)
-    assert grant["mcp_config_path"] != str(malicious)
-    assert grant["strict_mcp_config"] is True
-
+    malicious.write_text(json.dumps({"mcpServers": {"sources": {"command": "evil-stdio"}}}), encoding="utf-8")
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
-        lambda _: None,
-    )
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
     plan = KimiccHarness().build_invocation(
-        prompt="Review the diff and call mcp__sources__verify_word once.",
+        prompt="What does this function do?",
         mode="read-only",
         cwd=worktree,
         model="k3",
-        task_id="kimi-review-trusted-mcp",
+        task_id="kimi-no-grant",
         session_id=None,
-        tool_config={"harness": "kimicc", **grant},
+        tool_config={"harness": "kimicc", "mcp_config_path": str(malicious), "allowed_tools": "mcp__sources__verify_word"},
     )
-    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(trusted)
+    assert "--mcp-config" not in plan.cmd
     assert str(malicious) not in plan.cmd
-    assert "--strict-mcp-config" in plan.cmd
-    # The adapter trusts only the primary .mcp.json; here the fixture repo stands in for it.
     assert "--read-only-review" not in plan.cmd
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc.trusted_mcp_config_path", lambda: trusted)
-    trusted_plan = KimiccHarness().build_invocation(
-        prompt="Review the diff and call mcp__sources__verify_word once.",
-        mode="read-only",
-        cwd=worktree,
-        model="k3",
-        task_id="kimi-review-trusted-mcp",
-        session_id=None,
-        tool_config={"harness": "kimicc", **grant},
-    )
-    assert "--read-only-review" in trusted_plan.cmd
-
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (outside / ".mcp.json").write_text(
-        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio"}}}),
-        encoding="utf-8",
-    )
-    outside_grant = delegate._kimicc_read_only_review_grant(
-        harness="kimicc",
-        mode="read-only",
-        require_review_verdict=True,
-        cwd=outside,
-    )
-    assert outside_grant["mcp_config_path"] == str(trusted)
 
 
-def test_kimicc_read_only_review_grant_refuses_missing_trusted_mcp(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
-    with pytest.raises(ValueError, match="trusted MCP config is missing"):
-        delegate._kimicc_read_only_review_grant(
-            harness="kimicc",
-            mode="read-only",
-            require_review_verdict=True,
-            cwd=tmp_path,
-        )
+def test_kimicc_read_only_review_grant_is_retired():
+    assert not hasattr(delegate, "_kimicc_read_only_review_grant")
 
 
 def _kimicc_worker_result(response: str):
@@ -5842,8 +5702,8 @@ def _kimicc_worker_result(response: str):
     )()
 
 
-def test_run_worker_kimicc_read_only_review_grants_sources(tmp_tasks_dir, tmp_path):
-    """The _run_worker update seam, not a hand-built grant, sets the sources tools."""
+def test_run_worker_kimicc_read_only_review_grants_nothing(tmp_tasks_dir, tmp_path):
+    """The _run_worker seam formerly added the sources grant; the retired grant adds nothing now."""
     task_id = "worker-kimicc-review-grant"
     delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
 
@@ -5865,9 +5725,10 @@ def test_run_worker_kimicc_read_only_review_grants_sources(tmp_tasks_dir, tmp_pa
 
     assert rc == 0
     tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert "mcp__sources__verify_words" in tool_config["allowed_tools"].split(",")
-    assert tool_config["mcp_config_path"] == str(delegate._REPO_ROOT / ".mcp.json")
-    assert tool_config["strict_mcp_config"] is True
+    assert "allowed_tools" not in tool_config
+    assert "mcp_config_path" not in tool_config
+    assert "strict_mcp_config" not in tool_config
+    assert "review_verdict_required" not in tool_config
 
 
 def test_run_worker_kimicc_review_attempt_keeps_sealed_mcp(tmp_tasks_dir, tmp_path):

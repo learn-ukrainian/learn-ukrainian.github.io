@@ -92,6 +92,7 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
+from .kimi_admission import acp_refusal
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
@@ -3484,6 +3485,9 @@ def resolve_inter_agent_route(
         raise InterAgentTransportError(
             f"ACP participant {participant!r} has an invalid enabled adapter route"
         )
+    kimi_refusal = acp_refusal(participant, target_agent=target_agent, model=pinned_model or model)
+    if kimi_refusal:
+        raise InterAgentTransportError(kimi_refusal)
     try:
         entry = get_agent_entry(seat)
     except KeyError as exc:
@@ -3677,6 +3681,9 @@ def _invoke_direct_only(
         )
     if entrypoint not in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}:
         raise ValueError("ACPX direct-only invocation entrypoint was altered")
+    kimi_refusal = acp_refusal(agent_name, model=model)
+    if kimi_refusal:
+        raise AgentUnavailableError(kimi_refusal)
     attribution_token = _INVOCATION_ATTRIBUTION.set(
         resolve_invocation_attribution(explicit=initiator, task_id=task_id)
     )

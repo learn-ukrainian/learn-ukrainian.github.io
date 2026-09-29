@@ -244,7 +244,7 @@ _DISPATCH_AGENT_CHOICES = (
     "grok",  # canonical native CLI seat
     "grok-build",  # permanent alias → grok
     "grok-hermes",  # demoted Hermes path
-    "kimi",  # managed native kimi-code CLI seat; no automatic fallback chain
+    "kimi",  # managed native kimi-code CLI seat; neutral coding only; no automatic fallback chain
     "deepseek",
     "agy",
     "cursor",
@@ -7655,8 +7655,8 @@ def _emit_terminal_dispatch_event(
 def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness: str | None) -> list[str]:
     """Flags ``cmd_dispatch`` copies onto the ``_worker`` argv.
 
-    ``--harness`` and ``--require-review-verdict`` are how a read-only kimi
-    review reaches ``_run_worker``. Review-attempt MCP flags stay on the
+    ``--harness`` selects the Kimi transport and ``--require-review-verdict``
+    carries the review completion gate. Review-attempt MCP flags stay on the
     ``review_plan`` branch and are not part of this list.
     """
     flags: list[str] = []
@@ -7665,53 +7665,6 @@ def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness:
     if bool(getattr(args, "require_review_verdict", False)):
         flags.append("--require-review-verdict")
     return flags
-
-
-def _kimicc_read_only_review_grant(
-    *,
-    harness: str | None,
-    mode: str,
-    require_review_verdict: bool,
-    cwd: Path | None = None,
-) -> dict[str, Any]:
-    """Sources MCP grant for ``ask-kimi --review``.
-
-    That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
-    --require-review-verdict``. The headless wrapper always passes ``--bare``,
-    and ``claude --bare`` does not load ``.mcp.json``. The config this grant
-    names is always the trusted primary checkout file ``_REPO_ROOT /
-    ".mcp.json"`` (``main``), never the ``.mcp.json`` in the worker cwd. A
-    dispatch worktree is the branch under review, so its config is untrusted:
-    a stdio entry would run the author's command, and a repointed sources URL
-    would forge verification results. ``cwd`` is accepted and ignored so
-    callers can keep passing the worker checkout. ``strict_mcp_config`` is set
-    so the kimicc adapter passes ``--strict-mcp-config`` (Claude Code: only
-    servers from ``--mcp-config``; no checkout auto-discovery). Write modes
-    and non-review read-only dispatches get nothing. A missing trusted file
-    refuses the grant instead of launching without the sources server.
-    """
-    del cwd  # untrusted; the reviewed checkout must not supply MCP config
-    if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
-        return {}
-    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
-
-    allowed = review_tools_allowed_csv("claude")
-    if not allowed:
-        return {}
-    mcp_config = _REPO_ROOT / ".mcp.json"
-    if not mcp_config.is_file():
-        raise ValueError(
-            "kimicc review grant refused: trusted MCP config is missing at "
-            f"{mcp_config}. Refusing to launch without it."
-        )
-    return {
-        "allowed_tools": allowed,
-        "mcp_config_path": str(mcp_config),
-        "strict_mcp_config": True,
-        # The adapter leaves plan mode only with this marker plus its own
-        # checks of the config path and the tool allowlist (#8652).
-        "review_verdict_required": True,
-    }
 
 
 def _run_worker(
@@ -7901,19 +7854,6 @@ def _run_worker(
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
             elif agent in {"claude", "grok", "grok-build"} and mode == "read-only":
                 tool_config["reviewer_tools"] = True
-            # ask-kimi --review is dispatch --agent kimi --harness kimicc
-            # --mode read-only --require-review-verdict, not --review-attempt.
-            # A sealed review attempt already set strict_mcp_config and its
-            # mcp_config_path; do not overwrite those keys.
-            if not tool_config.get("strict_mcp_config"):
-                tool_config.update(
-                    _kimicc_read_only_review_grant(
-                        harness=harness,
-                        mode=mode,
-                        require_review_verdict=require_review_verdict,
-                        cwd=cwd,
-                    )
-                )
             if (
                 strict_mcp_config
                 and review_id is not None
@@ -9140,6 +9080,18 @@ def _dispatch(
     from agent_runtime.routes import is_retired_gpt56_model
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
+    # Kimi seats admit neutral coding only; refuse before any check that can
+    # run an external command, write a record, or create a worktree.
+    kimi_refusal = _kimi_admission_refusal(
+        args,
+        agent=resolve_retired_agent_alias(args.agent) or args.agent,
+        repo_key=fleet_repo.key,
+        repo_role=fleet_repo.role,
+    )
+    if kimi_refusal:
+        print(f"❌ {kimi_refusal}", file=sys.stderr)
+        return 2
+
     # #8775: validate caller-supplied paths once, before the DoR check, PR
     # resolution, or anything else that can run an external command, and
     # before any use reaches a check, a subprocess cwd, a task record, or the
@@ -9716,6 +9668,14 @@ def _dispatch(
             f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini).",
             file=sys.stderr,
         )
+        return 2
+
+    # A budget substitution or --model can land on a Kimi seat after the early check.
+    kimi_refusal = _kimi_admission_refusal(
+        args, agent=dispatch_agent, repo_key=fleet_repo.key, repo_role=fleet_repo.role
+    )
+    if kimi_refusal:
+        print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 2
 
     if dispatch_agent == "agy" and getattr(args, "model", None):
@@ -11045,6 +11005,38 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     return False
 
 
+def _kimi_admission_refusal(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    repo_key: str | None = None,
+    repo_role: str | None = None,
+) -> str | None:
+    """Refusal message when ``agent`` is a Kimi seat and the dispatch is not neutral coding."""
+    from scripts.agent_runtime.kimi_admission import neutral_coding_refusal
+
+    owned = getattr(args, "research_owned_path", None) or []
+    if isinstance(owned, str):
+        owned = [owned]
+    return neutral_coding_refusal(
+        agent=agent,
+        model=getattr(args, "model", None),
+        mode=str(getattr(args, "mode", "") or ""),
+        repo_root=_REPO_ROOT,
+        review=bool(getattr(args, "review", False))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+        review_attempt=bool(getattr(args, "review_attempt", None)),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
+        review_profile=getattr(args, "review_profile", None),
+        language_lane=_dispatch_is_language_lane(args),
+        research_track=getattr(args, "research_track", None),
+        owned_paths=owned,
+        prompt_file=getattr(args, "prompt_file", None),
+        repo_key=repo_key,
+        repo_role=repo_role,
+    )
+
+
 def _discard_model_probe_output(plan: object) -> None:
     """Remove a temp file a successful model probe created. Leave repo paths alone."""
     output = getattr(plan, "output_file", None)
@@ -11681,12 +11673,19 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         # "gemini" excluded: it is a permanent retired-CLI alias (→ agy), so
         # it must never appear as a "idle capacity available in: gemini"
         # suggestion — that would just point drivers back at the dead CLI.
+        # "kimi" is suggested only when this dispatch is neutral coding that a
+        # Kimi seat would admit (default public repo, no refusal reason).
+        target_norm = normalize_agent_name(dispatch_agent) or target_norm
+        kimi_admissible = target_norm == "kimi" or (
+            args is not None
+            and getattr(args, "repo", None) is None
+            and _kimi_admission_refusal(args, agent="kimi") is None
+        )
         subscription_lanes = tuple(
             lane
             for lane in ("claude", "codex", "gemini", "grok", "cursor", "kimi")
-            if lane not in RETIRED_AGENT_ALIASES
+            if lane not in RETIRED_AGENT_ALIASES and (lane != "kimi" or kimi_admissible)
         )
-        target_norm = normalize_agent_name(dispatch_agent) or target_norm
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
         if tasks_dir().is_dir():
@@ -12225,7 +12224,9 @@ def build_parser() -> argparse.ArgumentParser:
         # guard still catches programmatic Namespace bypass.
         help="Agent to run for the task: codex, gemini (retired CLI — permanent "
         "alias to agy, do not install gemini), claude, grok "
-        "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi.",
+        "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi "
+        "(neutral coding only: workspace-write in code/test paths; reviews, consults, "
+        "and content are refused).",
     )
     d.add_argument(
         "--harness",

@@ -149,12 +149,29 @@ def test_luna_economics_use_model_specific_openai_sources() -> None:
     } <= sources
 
 
-def test_kimi_k3_remains_on_every_code_review_ladder() -> None:
-    """Kimi K3 must stay on every automatic ladder; glm is pin-only (retired)."""
-    for ladder in load_model_catalog()["review_ladders"].values():
+def test_kimi_is_absent_from_review_candidates_and_every_ladder() -> None:
+    """Kimi seats admit neutral coding only (formerly a rung on every ladder); glm is pin-only."""
+    catalog = load_model_catalog()
+    assert "kimi-k3" not in catalog["review_candidates"]
+    for ladder in catalog["review_ladders"].values():
         candidates = {candidate for rung in ladder for candidate in rung}
-        assert "kimi-k3" in candidates
+        assert "kimi-k3" not in candidates
         assert "glm-5.3" not in candidates
+
+
+def test_kimi_models_carry_coding_roles_only() -> None:
+    """No Kimi model carries a review, consult, advisor, or architecture role."""
+    catalog = load_model_catalog()
+    kimi_models = {mid: model for mid, model in catalog["models"].items() if "native_kimi" in model["transports"]}
+    assert kimi_models
+    for model_id, model in kimi_models.items():
+        roles = set(model["roles"])
+        assert roles, model_id
+        assert all(role.endswith(("_coding", "_implementation", "_debugging")) for role in roles), (model_id, roles)
+    for endpoint in ("kimi", "kimicc"):
+        scheduler = catalog["review_scheduler"]["endpoints"][endpoint]
+        assert scheduler["formal_review_eligible"] is False
+        assert "neutral coding only" in scheduler["formal_review_exclusion_reason"]
 
 
 def test_glm_is_absent_from_automatic_review_ladders() -> None:

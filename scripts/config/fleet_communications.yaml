@@ -95,9 +95,10 @@ endpoints:
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
-    # The fleet-facing Kimi endpoint resolves to the canonical kimicc K3 ACP
-    # participant, but cannot become a formal gate before an authenticated
-    # exact-head sealed MCP canary succeeds.
+    # Kimi seats admit neutral coding only (workspace-write dispatch in code/test
+    # paths). The seat stays live for that work, but requests addressed to it,
+    # ACP asks, consults, discussion panels, and reviews are refused before
+    # spawn (scripts/agent_runtime/kimi_admission.py).
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: cursor

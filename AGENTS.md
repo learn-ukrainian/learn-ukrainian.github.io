@@ -32,7 +32,7 @@ non-skippable:
    `X-Agent` attribution.
 4. Use the fleet; the review gate is an independent **cross-family** review,
    not discussion.
-5. Route by model × harness fit.
+5. Route by model × harness fit; Kimi seats take neutral coding only.
 6. Substitute a constrained lane and record that substitution.
 7. Make tool-backed claims only; outcome validity precedes paid execution:
    define semantic success and stop criteria; transport, shape, and cost are
