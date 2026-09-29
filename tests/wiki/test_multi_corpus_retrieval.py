@@ -307,6 +307,11 @@ def _configure_dense(monkeypatch: pytest.MonkeyPatch, manifest_path: Path) -> No
     )
     monkeypatch.setattr(
         sources_db,
+        "dense_rerank_enabled",
+        lambda corpus: dense_rerank.dense_rerank_enabled(corpus, manifest_db=manifest_path),
+    )
+    monkeypatch.setattr(
+        sources_db,
         "rerank_candidates",
         lambda query, candidates, *, corpus, limit=10: dense_rerank.rerank_candidates(
             query,

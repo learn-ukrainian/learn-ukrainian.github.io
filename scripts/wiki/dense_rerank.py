@@ -271,7 +271,8 @@ def _select_device() -> str:
 def _accelerator_available() -> bool:
     try:
         return _select_device() != "cpu"
-    except (ImportError, OSError):  # torch missing or its native libraries broken
+    # torch missing, its native libraries broken, or device/driver failure
+    except (ImportError, OSError, RuntimeError, MemoryError):
         return False
 
 
@@ -564,6 +565,20 @@ def load_corpus_index(
     with _INDEX_CACHE_LOCK:
         _INDEX_CACHE[cache_key] = index
     return index
+
+
+def dense_rerank_enabled(corpus: str, *, manifest_db: Path = DEFAULT_MANIFEST_DB) -> bool:
+    """Whether search for ``corpus`` reranks with dense vectors in this process.
+
+    Checked cheapest first — the opt-out switch, then the manifest index,
+    then device discovery — so a keyword-only search never imports torch.
+    """
+
+    if os.environ.get(NO_DENSE_ENV) == "1":
+        return False
+    if not load_corpus_index(corpus, manifest_db=manifest_db).unit_rows:
+        return False
+    return _dense_search_block_reason() is None
 
 
 def invalidate_corpus_index(corpus: str, *, manifest_db: Path = DEFAULT_MANIFEST_DB) -> None:

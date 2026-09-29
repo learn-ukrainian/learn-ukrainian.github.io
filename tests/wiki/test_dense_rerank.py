@@ -226,6 +226,43 @@ def test_rerank_candidates_is_keyword_only_on_cpu_without_opt_in(monkeypatch):
     assert {row["dense_score"] for row in results} == {0.0}
 
 
+@pytest.mark.parametrize(
+    "failure",
+    [RuntimeError("CUDA driver initialization failed"), MemoryError(), OSError("libcudart.so: cannot open")],
+)
+def test_accelerator_probe_failure_means_no_accelerator(monkeypatch, failure):
+    def failing_select_device():
+        raise failure
+
+    monkeypatch.setattr(dense_rerank, "_select_device", failing_select_device)
+    dense_rerank._accelerator_available.cache_clear()
+    try:
+        assert dense_rerank._accelerator_available() is False
+    finally:
+        dense_rerank._accelerator_available.cache_clear()
+
+
+def test_dense_rerank_enabled_checks_switch_and_index_before_device(monkeypatch, tmp_path):
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.delenv(dense_rerank.CPU_DENSE_ENV, raising=False)
+
+    def _must_not_probe():
+        raise AssertionError("device discovery must not run without an index or with dense switched off")
+
+    monkeypatch.setattr(dense_rerank, "_accelerator_available", _must_not_probe)
+    assert dense_rerank.dense_rerank_enabled("test_corpus", manifest_db=tmp_path / "missing.db") is False
+
+    _two_row_index(monkeypatch)
+    monkeypatch.setenv(dense_rerank.NO_DENSE_ENV, "1")
+    assert dense_rerank.dense_rerank_enabled("test_corpus") is False
+
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV)
+    monkeypatch.setattr(dense_rerank, "_accelerator_available", lambda: False)
+    assert dense_rerank.dense_rerank_enabled("test_corpus") is False
+    monkeypatch.setattr(dense_rerank, "_accelerator_available", lambda: True)
+    assert dense_rerank.dense_rerank_enabled("test_corpus") is True
+
+
 @pytest.mark.parametrize(("accelerator", "cpu_opt_in"), [(True, False), (False, True)])
 def test_rerank_candidates_uses_dense_on_accelerator_or_cpu_opt_in(monkeypatch, accelerator, cpu_opt_in):
     monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
