@@ -349,6 +349,21 @@ def test_lesson_review_prompt_rendered_from_real_fixture(tmp_path: Path, monkeyp
     assert check_res.passed, f"check failed: {check_res.errors}"
     assert check_res.prompt_sha256 == prompt_sha
 
+    # #9163: the sidecar records what the prompt was rendered against, and a review attempt run by this
+    # checkout's own sources server admits it.
+    from scripts.agent_runtime.review_mcp import check_review_contract
+    from scripts.review.prompts.render import REPO_ROOT
+    from scripts.review.render_contract import server_code_digest
+
+    record = json.loads(prompt_out.with_name(f"{prompt_out.name}.files_read.json").read_text())["render_contract"]
+    assert record["render_checkout"] == str(REPO_ROOT)
+    shipped = hashlib.sha256((_SHIPPED_PROMPTS / "lesson-review.md.j2").read_bytes()).hexdigest()
+    assert record["templates"] == {"lesson-review.md.j2": shipped}
+    assert record["server_digest"] == server_code_digest(REPO_ROOT)
+    assert record["prompt_sha256"] == prompt_sha
+    contract = check_review_contract(prompt_out, rendered, server_checkout=REPO_ROOT)
+    assert contract["render_server_digest"] == contract["server_digest"]
+
 
 def test_plan_review_prompt_rendered_from_real_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     manifest_path, _doc, _m_digest = _setup_plan_fixture(tmp_path, monkeypatch)
