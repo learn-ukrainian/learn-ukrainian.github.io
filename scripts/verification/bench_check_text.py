@@ -28,8 +28,6 @@ for p in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(p) not in sys.path:
         sys.path.insert(0, str(p))
 
-from wiki.sources_db import search_ua_gec_errors
-
 from scripts.curriculum.evidence.sources import _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import tokenize
@@ -37,6 +35,7 @@ from scripts.verification.check_ru_morph import is_russian_pattern
 from scripts.verification.check_text import check_text
 from scripts.verification.stress import STRESS_BATCH_CAP, verify_stresses
 from scripts.verification.vesum import verify_words
+from wiki.sources_db import search_ua_gec_errors
 
 DEFAULT_CHUNK_ID = "private-teacher-lessons-a_43833086dcbaea83555d"
 REDUCED_SAMPLE_TEXT = (

@@ -137,13 +137,21 @@ def test_balanced_canary_is_deterministic_category_balanced_and_track_covering()
     assert first["selection_sha256"] == hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(unsigned))
 
 
-def test_worker_prompt_and_parser_match_the_reviewed_local_runner() -> None:
-    from scripts.projects.ua_open_weight_eval import run_mlx_model
-
+def test_worker_prompt_and_parser_accept_one_json_object_only() -> None:
     source = "У записі сказано: «Текст»."
-    assert hf_jobs_worker.format_prompt(source) == run_mlx_model.format_prompt(source)
+    assert hf_jobs_worker.format_prompt(source) == (
+        "You are evaluating Ukrainian correction versus faithful preservation. "
+        "Return exactly one JSON object and no markdown or explanation. "
+        'The object must have the keys "action" and "output_text". '
+        '"action" must be "correct", "preserve", or "abstain". '
+        "Correct only a clearly warranted Ukrainian error. Preserve quotations, proper names, "
+        "historical or regional language, deliberate register, and genuinely acceptable text. "
+        "Use abstain when the evidence is insufficient. For preserve or abstain, copy the source "
+        'exactly as output_text. Source JSON string: "У записі сказано: «Текст»."'
+    )
     reply = '{"action":"preserve","output_text":"У записі сказано: «Текст»."}'
-    assert hf_jobs_worker.parse_model_reply(reply) == run_mlx_model.parse_model_reply(reply)
+    assert hf_jobs_worker.parse_model_reply(reply) == {"action": "preserve", "output_text": source}
+    assert hf_jobs_worker.parse_model_reply(f"```json\n{reply}\n```") == {"action": "preserve", "output_text": source}
     for corrupt in (
         reply[:-2] + "\x00" + reply[-2:],
         reply[:-2] + "\x01" + reply[-2:],

@@ -11,8 +11,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from build.alignment_manifest import manifest_hash, stamp_artifact
 
+from build.alignment_manifest import manifest_hash, stamp_artifact
 from scripts.storage.paths import artifact_path
 
 PLAN_LEVEL_ERROR_CLASSES = {

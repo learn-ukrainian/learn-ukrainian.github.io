@@ -187,6 +187,8 @@ def settle_missing_worktree(
 
     if status not in TERMINAL_TASK_STATUSES:
         data["status"] = "failed"
+        if data.get("require_review_verdict"):
+            data["failure_reason"] = "worktree_missing_at_settle"
         data["exit_code"] = data.get("exit_code") if data.get("exit_code") is not None else -9
         data["returncode"] = data.get("returncode") if data.get("returncode") is not None else -9
         data["last_error"] = (

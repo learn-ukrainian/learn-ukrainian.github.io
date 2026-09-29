@@ -605,7 +605,7 @@ def _reap_terminal_without_pr(
         }
 
     if apply:
-        live_cwds = reap_worktrees._live_cwd_paths(repo_root)
+        live_cwds = reap_worktrees.live_cwds_for_reap(repo_root, bound_path, reap_worktrees._live_cwd_paths(repo_root))
         if live_cwds is None:
             return {
                 "path": str(bound_path),

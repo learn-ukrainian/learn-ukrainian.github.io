@@ -15,6 +15,10 @@ This ADR follows the scaling argument in Andrej Karpathy's "Software in the era 
 
 ## Decision
 
+## Revision 2026-09-29 (#9228): MLX retired
+
+The operator retired MLX (Apple-only; the Linux host cannot run it). FlagEmbedding `BAAI/bge-m3` (CLS pooling, dense vectors stored as float16) is the single in-process encoder in `scripts/wiki/dense_rerank.py`, on `cuda:0`, `mps` or `cpu` (fp16 on GPU, fp32 on CPU). The MLX bridge, worker, flags and tests are removed. Existing shards stay valid: the stage (d) parity evidence below (cosine `1.00000`, top-5 overlap `100%` versus FlagEmbedding fp16) shows the vectors are interchangeable, so manifest rows stamped `bge-m3-mlx-fp16` are relabelled to `bge-m3-fp16` on open instead of being re-encoded. `SOURCES_MCP_NO_DENSE=1` keeps the encoder out of a process (FTS5-only fallback). Search-time reranking on a CPU-only host is opt-in via `SOURCES_MCP_DENSE=1`; indexing is unaffected. The framework statements in the stage (d) revision below are superseded; the rest of this ADR stands.
+
 ## Revision 2026-04-20 (stage d of #1348)
 
 Stage (d) of `#1348` revises the 2026-04-19 decision in place based on the shipped stage history and the 2026-04-19 smoke-test evidence.

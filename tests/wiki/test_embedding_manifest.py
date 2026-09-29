@@ -9,6 +9,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+from wiki import embedding_manifest
 from wiki.embedding_manifest import (
     LEGACY_SHIPPED_CONFIG,
     EmbeddingManifest,
@@ -20,10 +21,10 @@ from wiki.embedding_manifest import (
 from wiki.embedding_manifest_schema import (
     LEGACY_CHUNK_POLICY_VERSION,
     LEGACY_INDEX_MAX_LENGTH,
+    LEGACY_MODEL_IDS,
     LEGACY_POOLING_MODE,
+    MODEL_ID,
 )
-
-from wiki import embedding_manifest
 
 
 def _manifest_path(tmp_path: Path) -> Path:
@@ -126,6 +127,7 @@ def test_legacy_shipped_config_matches_schema_defaults() -> None:
     legacy rows as stale on first open and trigger a full re-encode.
     """
 
+    assert LEGACY_SHIPPED_CONFIG.model == MODEL_ID
     assert LEGACY_SHIPPED_CONFIG.index_max_length == LEGACY_INDEX_MAX_LENGTH
     assert LEGACY_SHIPPED_CONFIG.chunk_policy_version == LEGACY_CHUNK_POLICY_VERSION
     assert LEGACY_SHIPPED_CONFIG.pooling_mode == LEGACY_POOLING_MODE
@@ -234,8 +236,7 @@ def test_partial_v2_schema_migration_completes_missing_columns(tmp_path: Path) -
     )
     # Only add the FIRST v2 column (simulates partial migration).
     legacy_conn.execute(
-        f"ALTER TABLE embedding_units ADD COLUMN index_max_length "
-        f"INTEGER NOT NULL DEFAULT {LEGACY_INDEX_MAX_LENGTH}"
+        f"ALTER TABLE embedding_units ADD COLUMN index_max_length INTEGER NOT NULL DEFAULT {LEGACY_INDEX_MAX_LENGTH}"
     )
     legacy_conn.commit()
     legacy_conn.close()
@@ -246,11 +247,10 @@ def test_partial_v2_schema_migration_completes_missing_columns(tmp_path: Path) -
     try:
         # All v2 columns now exist, including the index.
         conn = sqlite3.connect(str(db_path))
-        column_names = {
-            row[1] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()
-        }
+        column_names = {row[1] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()}
         index_names = {
-            row[1] for row in conn.execute(
+            row[1]
+            for row in conn.execute(
                 "SELECT type, name FROM sqlite_master WHERE name = 'idx_embunits_config'"
             ).fetchall()
         }
@@ -337,9 +337,7 @@ def test_concurrent_migration_does_not_race(tmp_path: Path) -> None:
 
     # Verify final state: all 3 v2 columns present, manifest queryable.
     conn = sqlite3.connect(str(db_path))
-    column_names = {
-        row[1] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()
-    }
+    column_names = {row[1] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()}
     conn.close()
     assert {"index_max_length", "chunk_policy_version", "pooling_mode"} <= column_names
 
@@ -352,7 +350,8 @@ def test_v1_to_v2_migration_stamps_legacy_rows(tmp_path: Path) -> None:
     upgraded code, and asserts:
 
     1. The v2 columns now exist.
-    2. The legacy unit row inherits ``LEGACY_SHIPPED_CONFIG`` values.
+    2. The legacy unit row inherits ``LEGACY_SHIPPED_CONFIG`` values,
+       including the legacy model stamp relabelled to ``MODEL_ID``.
     3. ``filter_new_or_changed`` with the legacy config sees the row
        as up-to-date (not stale, not new) — no spurious re-encode.
     """
@@ -405,7 +404,7 @@ def test_v1_to_v2_migration_stamps_legacy_rows(tmp_path: Path) -> None:
             "textbook_sections",
             "ukrlit-grade-7",
             "sha-legacy",
-            "bge-m3-mlx-fp16",
+            LEGACY_MODEL_IDS[0],
             "2026-04-19T12:00:00Z",
         ),
     )
@@ -427,6 +426,7 @@ def test_v1_to_v2_migration_stamps_legacy_rows(tmp_path: Path) -> None:
 
         row = manifest.get_unit("textbook_sections:42")
         assert row is not None
+        assert row.model == MODEL_ID
         assert row.index_max_length == LEGACY_INDEX_MAX_LENGTH
         assert row.chunk_policy_version == LEGACY_CHUNK_POLICY_VERSION
         assert row.pooling_mode == LEGACY_POOLING_MODE
@@ -437,6 +437,44 @@ def test_v1_to_v2_migration_stamps_legacy_rows(tmp_path: Path) -> None:
     columns = {row[1] for row in conn.execute("PRAGMA table_info(embedding_units)").fetchall()}
     conn.close()
     assert {"index_max_length", "chunk_policy_version", "pooling_mode"} <= columns
+
+
+def test_legacy_model_stamp_is_relabelled_without_re_encode(tmp_path: Path) -> None:
+    """#9228: v2 rows stamped by the retired encoder are relabelled to
+    ``MODEL_ID`` on open, so they stay current instead of going stale."""
+
+    manifest = _make_manifest(tmp_path)
+    legacy_config = EncoderConfig(
+        model=LEGACY_MODEL_IDS[0],
+        index_max_length=LEGACY_SHIPPED_CONFIG.index_max_length,
+        chunk_policy_version=LEGACY_SHIPPED_CONFIG.chunk_policy_version,
+        pooling_mode=LEGACY_SHIPPED_CONFIG.pooling_mode,
+    )
+    append_shard(
+        manifest,
+        corpus="textbook_sections",
+        vectors=_vectors(3),
+        unit_specs=_unit_inputs(3, corpus="textbook_sections"),
+        encoder_config=legacy_config,
+    )
+    manifest.close()
+
+    for _ in range(2):  # second open must be a no-op
+        manifest = _make_manifest(tmp_path)
+        try:
+            rows = manifest.active_units_for_corpus("textbook_sections")
+            new_keys, stale_keys = filter_new_or_changed(
+                manifest,
+                corpus="textbook_sections",
+                candidates=[(row.unit_key, row.text_sha256) for row in rows],
+                expected_config=LEGACY_SHIPPED_CONFIG,
+            )
+        finally:
+            manifest.close()
+        assert {row.model for row in rows} == {MODEL_ID}
+        assert len(rows) == 3
+        assert new_keys == []
+        assert stale_keys == []
 
 
 def test_append_shard_writes_manifest_rows_and_npy_file(tmp_path: Path) -> None:
@@ -477,7 +515,7 @@ def test_append_shard_writes_manifest_rows_and_npy_file(tmp_path: Path) -> None:
 def test_append_shard_stamps_encoder_config_on_every_row(tmp_path: Path) -> None:
     manifest = _make_manifest(tmp_path)
     custom_config = EncoderConfig(
-        model="bge-m3-mlx-fp16",
+        model=MODEL_ID,
         index_max_length=2048,
         chunk_policy_version="textbook:v2-paragraph-aware",
         pooling_mode="cls",
@@ -607,8 +645,12 @@ def test_filter_marks_stale_when_any_config_field_differs(tmp_path: Path, config
     }
     different_config = EncoderConfig(
         model=overrides[config_field] if config_field == "model" else LEGACY_SHIPPED_CONFIG.model,
-        index_max_length=overrides[config_field] if config_field == "index_max_length" else LEGACY_SHIPPED_CONFIG.index_max_length,
-        chunk_policy_version=overrides[config_field] if config_field == "chunk_policy_version" else LEGACY_SHIPPED_CONFIG.chunk_policy_version,
+        index_max_length=overrides[config_field]
+        if config_field == "index_max_length"
+        else LEGACY_SHIPPED_CONFIG.index_max_length,
+        chunk_policy_version=overrides[config_field]
+        if config_field == "chunk_policy_version"
+        else LEGACY_SHIPPED_CONFIG.chunk_policy_version,
         pooling_mode=overrides[config_field] if config_field == "pooling_mode" else LEGACY_SHIPPED_CONFIG.pooling_mode,
     )
 

@@ -27,7 +27,8 @@ def _render(name: str) -> str:
 def test_backup_service_contract() -> None:
     service = _render("learn-ukrainian-backup.service")
     assert "Type=oneshot" in service
-    assert "EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env" in service
+    assert "EnvironmentFile=" not in service
+    assert "Environment=LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env" in service
     assert f"WorkingDirectory={RENDERED_ROOT}" in service
     assert f"LU_BACKUP_TMPDIR={RENDERED_ROOT}/data/.backup-staging" in service
     assert "Nice=15" in service
@@ -55,7 +56,8 @@ def test_retention_units_run_weekly_tag_scoped_forget() -> None:
     service = _render("learn-ukrainian-backup-retention.service")
     assert "Type=oneshot" in service
     assert "run_scheduled_backup.sh retention" in service
-    assert "EnvironmentFile=%h/.secrets/learn-ukrainian-backup.env" in service
+    assert "EnvironmentFile=" not in service
+    assert "Environment=LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env" in service
     assert "[Install]" not in service
     assert "After=network.target" not in service
     dropin = (PACKAGING / "dropins/learn-ukrainian-backup-retention.service.d/data-volume.conf").read_text(

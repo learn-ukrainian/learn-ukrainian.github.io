@@ -1,9 +1,12 @@
 from __future__ import annotations
 
+import os
 import sqlite3
+import subprocess
 import sys
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
@@ -181,3 +184,111 @@ def test_search_sources_archaic_strategy_is_reserved(tmp_path):
         results = sources_db.search_sources(discovery_path, track="ruth", strategy="archaic_metadata")
 
     assert results == [result]
+
+
+@pytest.mark.parametrize("env", [{"SOURCES_MCP_NO_DENSE": "1"}, {}])
+def test_search_sources_keyword_path_needs_no_model_assets(monkeypatch, tmp_path, env):
+    from wiki import dense_rerank
+
+    conn = _make_conn()
+    _seed_conn(conn)
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections",))
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.delenv(dense_rerank.CPU_DENSE_ENV, raising=False)
+    for name, value in env.items():
+        monkeypatch.setenv(name, value)
+    # No env → the CPU-host default, where dense rerank is opt-in.
+    monkeypatch.setattr(dense_rerank, "_accelerator_available", lambda: False)
+    monkeypatch.setattr(
+        dense_rerank,
+        "load_corpus_index",
+        lambda corpus, **_kwargs: dense_rerank.CorpusEmbeddingIndex(
+            corpus=corpus,
+            shards={0: np.zeros((1, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)},
+            unit_rows={"textbook_sections:101": (0, 0)},
+        ),
+    )
+
+    def missing_assets(*_args, **_kwargs):
+        raise OSError("Can't load tokenizer for 'BAAI/bge-m3'")
+
+    monkeypatch.setattr(sources_db, "_get_tokenizer", missing_assets)
+    monkeypatch.setattr(dense_rerank, "_get_tokenizer", missing_assets)
+    monkeypatch.setattr(dense_rerank, "_get_encoder", missing_assets)
+    monkeypatch.setattr(
+        sources_db,
+        "build_query_buckets",
+        lambda query, track: (['"апостроф і наголос"'], {"апостроф", "наголос"}),
+    )
+    discovery_path = tmp_path / "demo.yaml"
+    discovery_path.write_text("query_keywords: []\n", encoding="utf-8")
+
+    results = sources_db.search_sources(discovery_path, track="a1", limit=5)
+
+    assert [row["unit_key"] for row in results] == ["textbook_sections:101"]
+    assert results[0]["section_title"] == "Апостроф і наголос"
+    assert results[0]["dense_score"] == 0.0
+
+
+_NO_INDEX_SEARCH = """
+import functools, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from wiki import dense_rerank, sources_db
+
+db_path, manifest_db = Path(sys.argv[2]), Path(sys.argv[3])
+conn = sources_db._open_conn(db_path, read_only=True)
+sources_db._get_conn = lambda: conn
+sources_db._CORPORA = ("textbook_sections",)
+sources_db.dense_rerank_enabled = functools.partial(dense_rerank.dense_rerank_enabled, manifest_db=manifest_db)
+sources_db.rerank_candidates = functools.partial(dense_rerank.rerank_candidates, manifest_db=manifest_db)
+results = sources_db.search_sources("апостроф і наголос", track="a1", limit=5)
+assert results and results[0]["unit_key"] == "textbook_sections:101", results
+loaded = sorted(name for name in ("torch", "transformers") if name in sys.modules)
+assert not loaded, f"keyword-only search imported {loaded}"
+"""
+
+
+@pytest.mark.parametrize("no_dense", [True, False], ids=["no-dense-switch", "cpu-default"])
+def test_no_index_search_never_imports_torch_or_transformers(tmp_path, no_dense):
+    from wiki import dense_rerank
+
+    db_path = tmp_path / "sources.db"
+    seeded = _make_conn()
+    _seed_conn(seeded)
+    seeded.commit()
+    with sqlite3.connect(db_path) as target:
+        seeded.backup(target)
+    env = {
+        name: value
+        for name, value in os.environ.items()
+        if name not in {dense_rerank.NO_DENSE_ENV, dense_rerank.CPU_DENSE_ENV}
+    }
+    if no_dense:
+        env[dense_rerank.NO_DENSE_ENV] = "1"
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            _NO_INDEX_SEARCH,
+            str(Path(sources_db.__file__).resolve().parents[1]),
+            str(db_path),
+            str(tmp_path / "embeddings" / "manifest.db"),
+        ],
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=120,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+
+
+def test_candidate_pieces_keep_whole_unit_without_tokenizer():
+    pieces = sources_db._candidate_pieces("Ціла стаття.", corpus="wikipedia", tokenizer=None)
+
+    assert [(piece.chunk_index, piece.text, piece.extra_metadata) for piece in pieces] == [(0, "Ціла стаття.", {})]
+    assert sources_db._candidate_pieces("", corpus="wikipedia", tokenizer=None) == []

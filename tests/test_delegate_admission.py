@@ -19,7 +19,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate
-
 from scripts.fleet import capacity_pick
 from scripts.orchestration import dispatch_admission, job_host_exec
 
@@ -120,7 +119,7 @@ def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_dry_run_args(mode="danger")) == 3
 
     err = capsys.readouterr().err
-    assert "MemAvailable 1.0 GiB is below the floor of 3.5 GiB" in err
+    assert "MemAvailable 1.0 GiB is below the floor of 6 GiB" in err
     assert "load 2.50 per CPU" in err
 
 
@@ -189,10 +188,15 @@ class _FakeStdin:
         pass
 
 
+def _dispatch_worktree(tasks: Path, name: str = "wt") -> Path:
+    """An explicit ``--worktree`` inside the fixture primary's codex dispatch subtree (#8775)."""
+    return tasks.parent / "primary" / ".worktrees" / "dispatch" / "codex" / name
+
+
 def _live_danger_args(tasks: Path, task_id: str):
     import argparse
 
-    (tasks / "wt").mkdir(parents=True, exist_ok=True)
+    _dispatch_worktree(tasks).mkdir(parents=True, exist_ok=True)
     return argparse.Namespace(
         agent="codex",
         task_id=task_id,
@@ -201,7 +205,7 @@ def _live_danger_args(tasks: Path, task_id: str):
         mode="danger",
         model=None,
         cwd=None,
-        worktree=str(tasks / "wt"),
+        worktree=str(_dispatch_worktree(tasks)),
         base="main",
         hard_timeout=3600,
     )
@@ -209,7 +213,11 @@ def _live_danger_args(tasks: Path, task_id: str):
 
 def _stub_worktree(monkeypatch, tasks: Path):
     """A prepared worktree without git: live-dispatch tests stop at the admission lock or at Popen."""
-    wt = tasks / "wt"
+    wt = _dispatch_worktree(tasks)
+    primary = tasks.parent / "primary"
+    (primary / ".git").mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.chdir(primary)
     monkeypatch.setattr(delegate, "_resolve_write_cwd_error", lambda **_kwargs: None)
     monkeypatch.setattr(
         delegate.subprocess,
@@ -238,7 +246,7 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-live")) == 0
 
     assert len(spawned) == 1
-    assert "🚦 dispatch admission: admitted — live write workers 0/6" in capsys.readouterr().err
+    assert "🚦 dispatch admission: admitted — live write workers 0/12" in capsys.readouterr().err
     state = delegate._read_state(delegate._state_path("adm-live"))
     assert state is not None
     assert state["admission"]["admitted"] is True
@@ -316,7 +324,7 @@ def _load_rises_after_the_first_probe(monkeypatch) -> dict[str, int]:
 
 def test_refused_dispatch_leaves_no_worktree_registration_or_task_record(tasks_dir, tmp_path, monkeypatch, capsys):
     repo = _scratch_repo(tmp_path)
-    worktree = tmp_path / "wt-refused"
+    worktree = _dispatch_worktree(tasks_dir, "wt-refused")
     _stub_worktree(monkeypatch, tasks_dir)
 
     def real_worktree_add(**_kwargs):
@@ -355,7 +363,7 @@ def test_admitted_dispatch_holds_its_slot_while_the_worktree_is_created(tasks_di
     def ensure_worktree(**kwargs):
         seen["record"] = delegate._read_state(delegate._state_path("adm-held"))
         seen["live"] = dispatch_admission.scan_task_records(tasks_dir).live_task_ids
-        return tasks_dir / "wt", "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}
+        return _dispatch_worktree(tasks_dir), "codex/adm", {"base_sha": "abc1234", "layout": "dispatch"}
 
     monkeypatch.setattr(delegate, "_ensure_worktree", ensure_worktree)
 
@@ -510,8 +518,8 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1] == (
-        "admission (write dispatch): would admit now | live write workers 1/6, "
-        "MemAvailable 64.0 GiB (floor 3.5 GiB), load 0.00 per CPU (limit 1.50); "
+        "admission (write dispatch): would admit now | live write workers 1/12, "
+        "MemAvailable 64.0 GiB (floor 6 GiB), load 0.00 per CPU (limit 1.50); "
         "1 record(s) dead pid, not counted: gone"
     )
 

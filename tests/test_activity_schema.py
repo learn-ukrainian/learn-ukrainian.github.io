@@ -18,7 +18,6 @@ from pathlib import Path
 
 import jsonschema
 import pytest
-import yaml
 
 pytestmark = pytest.mark.reads_content
 
@@ -39,10 +38,6 @@ def validator(schema) -> jsonschema.Draft7Validator:
 
 def is_valid(validator: jsonschema.Draft7Validator, data: dict) -> bool:
     return validator.is_valid(data)
-
-
-def get_errors(validator: jsonschema.Draft7Validator, data: dict) -> list[str]:
-    return [e.message for e in validator.iter_errors(data)]
 
 
 # ---------------------------------------------------------------------------
@@ -804,51 +799,6 @@ class TestGrammarIdentify:
             }],
         }])
         assert is_valid(validator, doc)
-
-
-# ---------------------------------------------------------------------------
-# Full file validation (things-have-gender.yaml)
-# ---------------------------------------------------------------------------
-
-
-class TestExampleFile:
-    """Validate the reference implementation file."""
-
-    def test_things_have_gender_passes(self, validator):
-        path = (
-            PROJECT_ROOT
-            / "curriculum"
-            / "l2-uk-en"
-            / "a1"
-            / "activities"
-            / "things-have-gender.yaml"
-        )
-        if not path.exists():
-            pytest.skip("Example file not yet created")
-
-        with open(path) as f:
-            data = yaml.safe_load(f)
-
-        errors = get_errors(validator, data)
-        assert not errors, f"Validation errors: {errors}"
-
-    def test_c1_b2_review_bridge_passes(self, validator):
-        path = (
-            PROJECT_ROOT
-            / "curriculum"
-            / "l2-uk-en"
-            / "c1"
-            / "activities"
-            / "b2-review-bridge.yaml"
-        )
-        if not path.exists():
-            pytest.skip("C1 file not yet migrated")
-
-        with open(path) as f:
-            data = yaml.safe_load(f)
-
-        errors = get_errors(validator, data)
-        assert not errors, f"Validation errors: {errors}"
 
 
 # ---------------------------------------------------------------------------

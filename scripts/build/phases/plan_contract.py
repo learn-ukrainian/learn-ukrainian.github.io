@@ -5,6 +5,7 @@ from __future__ import annotations
 import re
 
 import yaml
+
 from build.phases.wiki_compressor import compress_wiki_packet
 
 

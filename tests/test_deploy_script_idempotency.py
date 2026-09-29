@@ -21,6 +21,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -111,33 +113,7 @@ raise SystemExit(pytest.main([
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-def _resolve_project_python() -> Path:
-    local = REPO_ROOT / ".venv" / "bin" / "python"
-    if local.exists():
-        return local
-
-    common_dir = subprocess.check_output(
-        [
-            "git",
-            "-C",
-            str(REPO_ROOT),
-            "rev-parse",
-            "--path-format=absolute",
-            "--git-common-dir",
-        ],
-        text=True,
-        timeout=30,
-    ).strip()
-    canonical = Path(common_dir).parent / ".venv" / "bin" / "python"
-    if canonical.exists():
-        return canonical
-
-    raise RuntimeError(
-        f"Project interpreter missing from this checkout and its canonical Git checkout: {local}, {canonical}"
-    )
-
-
-PROJECT_PYTHON = _resolve_project_python()
+PROJECT_PYTHON = Path(project_python())
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 DEPLOY_WORKFLOW = Path(".github/workflows/rules-deployment-check.yml")

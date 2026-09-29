@@ -331,7 +331,7 @@
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "d00cf620183bc3bc8a3688004c42ba69b7ccce1a02b9be55424e7b3735532d70"
+        "sha256": "c49d35371c07b829c0f43bfb136586a6de5c0b997d85bbcb822e5ee90d95a93b"
       },
       {
         "path": "scripts/lexicon/relation_pairs.py",

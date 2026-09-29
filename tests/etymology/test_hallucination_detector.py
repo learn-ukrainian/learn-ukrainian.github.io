@@ -6,21 +6,21 @@ import pytest
 from scripts.etymology.hallucination_detector import is_gemini_hallucination
 
 FIXTURES_DIR = Path("tests/fixtures/etymology/gemini-hallucinations")
+# vol5_p0469.md is the known semantic hallucination (fake cognates). Semantic
+# hallucinations need RAG verification, so the static detector cannot flag it.
+SEMANTIC_FIXTURES = {"vol5_p0469.md"}
 
 def get_positive_fixtures():
     # Only return .md files
     if not FIXTURES_DIR.exists():
         return []
-    return [p for p in sorted(FIXTURES_DIR.glob("*.md")) if p.name != "README.md"]
+    return [
+        p for p in sorted(FIXTURES_DIR.glob("*.md")) if p.name != "README.md" and p.name not in SEMANTIC_FIXTURES
+    ]
 
 @pytest.mark.parametrize("filepath", get_positive_fixtures(), ids=lambda p: p.name)
 def test_hallucination_detector_positive(filepath):
     text = filepath.read_text(encoding="utf-8")
-
-    # vol5_p0469.md is the known semantic hallucination fixture
-    # Semantic hallucinations require RAG verification, so the static detector misses it.
-    if filepath.name == "vol5_p0469.md":
-        pytest.skip(reason="needs RAG verification, see autopsy")
 
     flagged, reason = is_gemini_hallucination(text)
 

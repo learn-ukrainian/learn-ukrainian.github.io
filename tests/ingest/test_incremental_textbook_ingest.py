@@ -613,7 +613,6 @@ def test_tracked_university_policy_is_closed_and_default_deny():
 
 def test_tracked_v3_policy_separates_audience_from_content_fitness():
     from projects.open_model_data import university_source_policy as usp
-
     from scripts.projects.open_model_data.paths import resolve_open_model_path
 
     policy_path = resolve_open_model_path(

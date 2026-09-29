@@ -2062,10 +2062,21 @@ def test_finalize_reports_actual_free_delta_separately_from_forecast(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     state = _prepare_deletion_fixture(tmp_path, monkeypatch)
-    result = _execute_fixture_deletion(state)
+    forecast = int(state["finalized"]["auth"]["reclaimed_byte_forecast"])
+    # A live statvfs delta can equal the forecast on a quiet disk; inject fixed
+    # before/after readings that differ from the forecast by a known amount.
+    known_excess_bytes = 1_048_576
+    avail_before = 8 * 1024**3
+    avail_after = avail_before + forecast + known_excess_bytes
+    free_space = {"avail": avail_before}
+
+    def advance_free_space(_event: Any) -> None:
+        free_space["avail"] = avail_after
+
+    monkeypatch.setattr(storage, "available_bytes", lambda _path: free_space["avail"])
+    result = _execute_fixture_deletion(state, fault_hook=advance_free_space)
     before = result["unlinked_receipt"]["source_avail_before_bytes"]
     after = result["unlinked_receipt"]["source_avail_after_bytes"]
-    forecast = state["finalized"]["auth"]["reclaimed_byte_forecast"]
     post_response = deletion.workstation_deletion_custody_response_stage(
         state["primary"]["portable_export"],
         state["attested"]["attestation"],
@@ -2088,8 +2099,11 @@ def test_finalize_reports_actual_free_delta_separately_from_forecast(
         state["primary"]["pack_dir"],
     )
 
-    assert final["filesystem_avail_before_bytes"] == before
-    assert isinstance(after, int)
+    assert before == avail_before
+    assert after == avail_after
+    assert final["filesystem_avail_before_bytes"] == avail_before
+    assert final["filesystem_avail_at_completion_bytes"] == avail_after
+    assert final["actual_reclaimed_bytes"] == forecast + known_excess_bytes
     assert final["actual_reclaimed_bytes"] == (
         final["filesystem_avail_at_completion_bytes"] - final["filesystem_avail_before_bytes"]
     )

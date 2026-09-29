@@ -91,8 +91,7 @@ HETERONYM_TEST_CASES = [
     # плачу: пла́чу (I cry) vs плачу́ (I pay)
     ("Я плачу від радості.", "плачу", f"пла{STRESS}чу", "I cry"),
     ("Я плачу за квартиру.", "плачу", f"плачу{STRESS}", "I pay"),
-    # насипати: наси́пати (pf, to pour once) vs насипа́ти (impf, to pour repeatedly)
-    ("Насип цукру в чашку.", "насип", None, "pf-imperative"),  # single syl, skip
+    # насипати: насипа́ти (impf, to pour repeatedly)
     ("Мама любить насипати сіль.", "насипати", f"насипа{STRESS}ти", "impf"),
     # село: село́ (village) — unambiguous baseline
     ("Моє село дуже гарне.", "село", f"село{STRESS}", "village"),
@@ -113,11 +112,6 @@ class TestHeteronymSentenceContext:
         """Stressifier should resolve heteronym stress from sentence context."""
         result = stressifier(sentence)
         actual = _get_stressed_form(result, target)
-
-        if expected is None:
-            # We expect this word to be skipped (single syllable, etc.)
-            pytest.skip(f"Word '{target}' expected to be skipped")
-            return
 
         # Record whether it was resolved or skipped
         if actual is None:

@@ -34,7 +34,9 @@ def test_ci_install_blocks_use_the_same_cache_and_integrity_sequence() -> None:
     script = _action_step("Install Python deps")["run"]
     assert script.index("uv pip install --offline") < script.index(
         "uv pip install --python"
-    ) < script.index("scripts/audit/check_ci_dependencies.py")
+    ) < script.index("uv pip check --python .venv/bin/python") < script.index(
+        "scripts/audit/check_ci_dependencies.py"
+    )
     assert script.index("scripts/audit/check_ci_dependencies.py") < script.index(
         "build_assets.py"
     )
@@ -157,19 +159,18 @@ def test_ci_retry_settings_cover_uv_and_pip() -> None:
     } == workflow["env"]
 
 
-def test_only_exact_existing_conflict_is_allowed() -> None:
-    known = (
-        "marker-pdf 1.10.2 has requirement Pillow<11.0.0,>=10.1.0, "
-        "but you have pillow 12.3.0."
-    )
+def test_only_exact_filtered_ml_omission_is_allowed() -> None:
+    known = "accelerate 1.14.0 requires torch, which is not installed."
     skew = (
         "pydantic 2.13.5 has requirement pydantic-core==2.46.5, "
         "but you have pydantic-core 2.46.4."
     )
     assert unexpected_diagnostics(known) == []
     assert unexpected_diagnostics(known + "\n" + skew) == [skew]
-    changed_known_pair = known.replace("pillow 12.3.0", "pillow 12.4.0")
+    changed_known_pair = known.replace("accelerate 1.14.0", "accelerate 1.14.1")
     assert unexpected_diagnostics(changed_known_pair) == [changed_known_pair]
+    stale_conflict = "httpx2 2.12.0 has requirement httpcore2==2.12.0, but you have httpcore2 2.10.0."
+    assert unexpected_diagnostics(stale_conflict) == [stale_conflict]
     assert unexpected_diagnostics("unrecognized pip diagnostic") == [
         "unrecognized pip diagnostic"
     ]

@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 from jsonschema import Draft202012Validator
-from projects.open_model_data.freeze_phase3_p1_universe import build_manifest
 
+from projects.open_model_data.freeze_phase3_p1_universe import build_manifest
 from scripts.projects.open_model_data.paths import REGISTRY_OPEN_MODEL_DATA_DIR
 
 ROOT = Path(__file__).resolve().parents[1]

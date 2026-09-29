@@ -49,6 +49,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from level_config import base_level
 from manifest_utils import Module, get_modules_for_level, load_manifest
+from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
+from scripts.common.repo_root import project_interpreter
 from slug_utils import to_bare_slug
 
 # Re-export Activity for type annotations used by callers
@@ -56,9 +58,6 @@ from yaml_activities import (
     Activity,
     ActivityParser,
 )
-
-from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
-from scripts.common.repo_root import project_interpreter
 
 _VALIDATE_TIMEOUT_SECONDS = 60
 _TIMEOUT_RETURN_CODE = 124

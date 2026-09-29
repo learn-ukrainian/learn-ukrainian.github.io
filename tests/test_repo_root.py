@@ -96,10 +96,7 @@ def test_bridge_config_state_paths_resolve_to_primary_in_worktree(wt_layout):
     main_repo, worktree = wt_layout
 
     # Run subprocess to check DB_PATH and PID_DIR
-    script = (
-        "from scripts.ai_agent_bridge._config import DB_PATH, PID_DIR; "
-        "print(f'{DB_PATH};{PID_DIR}')"
-    )
+    script = "from scripts.ai_agent_bridge._config import DB_PATH, PID_DIR; print(f'{DB_PATH};{PID_DIR}')"
     env = os.environ.copy()
     env.pop("AB_DB_PATH", None)  # Exercise the default path, not the suite's isolated override.
     proc = subprocess.run(
@@ -234,6 +231,110 @@ def _symlink_checkout_venv_to_store(checkout: Path, store: Path, toolchain: Path
     assert not (store / "bin" / "python").exists()
     assert Path(os.path.realpath(executable.parent)).parent == store.resolve()
     return executable
+
+
+@pytest.mark.parametrize("shape", ["direct", "alias-to-venv", "venv-to-store", "alias-to-venv-to-store"])
+@pytest.mark.parametrize("own_venv", [False, True], ids=["foreign-refused", "own-accepted"])
+def test_project_interpreter_classifies_each_venv_symlink_shape(tmp_path, monkeypatch, shape, own_venv):
+    """Every intermediate .venv owner counts, including one hidden by a second hop."""
+    requested = tmp_path / "requested"
+    owner = requested if own_venv else tmp_path / "foreign"
+    toolchain = _toolchain_python(tmp_path)
+    if shape in {"venv-to-store", "alias-to-venv-to-store"}:
+        executable = _symlink_checkout_venv_to_store(owner, tmp_path / "store", toolchain)
+    else:
+        executable = _symlink_venv_python(owner, toolchain)
+    if shape in {"alias-to-venv", "alias-to-venv-to-store"}:
+        alias = tmp_path / "venv-alias"
+        alias.symlink_to(owner / ".venv")
+        executable = alias / "bin" / "python3.12"
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    if own_venv:
+        assert project_interpreter(requested) == executable
+    else:
+        with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+            project_interpreter(requested)
+
+
+def test_project_interpreter_refuses_directory_symlink_loop(tmp_path, monkeypatch):
+    """A loop cannot be mistaken for hosted Python, even without a named owner."""
+    alias_a = tmp_path / "alias-a"
+    alias_b = tmp_path / "alias-b"
+    alias_a.symlink_to(alias_b)
+    alias_b.symlink_to(alias_a)
+    monkeypatch.setattr(sys, "executable", str(alias_a / "bin" / "python3.12"))
+
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* is a symlink loop$"):
+        project_interpreter(tmp_path / "requested")
+
+
+def test_project_interpreter_refuses_an_unreadable_path_component(tmp_path, monkeypatch):
+    """A PermissionError in the walk reaches callers as FileNotFoundError (#9201)."""
+    blocked = tmp_path / "blocked"
+    executable = blocked / "bin" / "python3.12"
+    executable.parent.mkdir(parents=True)
+    executable.touch()
+    real_lstat = os.lstat
+
+    def lstat(path, *args, **kwargs):
+        if Path(path) == blocked:
+            raise PermissionError(13, "Permission denied", str(path))
+        return real_lstat(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "lstat", lstat)
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* cannot be inspected: ") as excinfo:
+        project_interpreter(tmp_path / "requested")
+    assert isinstance(excinfo.value.__cause__, PermissionError)
+
+
+def test_project_interpreter_refuses_a_final_link_that_vanishes_before_readlink(tmp_path, monkeypatch):
+    """A race on the final readlink fails closed instead of reading as hosted Python (#9201)."""
+    toolchain = _toolchain_python(tmp_path)
+    alias = tmp_path / "hosted" / "python3.12"
+    alias.parent.mkdir()
+    alias.symlink_to(toolchain)
+    real_readlink = os.readlink
+
+    def readlink(path, *args, **kwargs):
+        if Path(path) == alias:
+            raise FileNotFoundError(2, "No such file or directory", str(path))
+        return real_readlink(path, *args, **kwargs)
+
+    monkeypatch.setattr(os, "readlink", readlink)
+    monkeypatch.setattr(sys, "executable", str(alias))
+
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* cannot be inspected: "):
+        project_interpreter(tmp_path / "requested")
+
+
+def test_project_interpreter_refuses_a_final_path_that_vanishes_before_the_link_check(tmp_path, monkeypatch):
+    """A path gone before the link check is refused, not accepted as hosted Python (#9201)."""
+    vanished = tmp_path / "hosted" / "python3.12"
+    vanished.parent.mkdir()
+    vanished.symlink_to(_toolchain_python(tmp_path))
+    vanished.unlink()
+    monkeypatch.setattr(sys, "executable", str(vanished))
+
+    with pytest.raises(FileNotFoundError, match=r"^project interpreter not found: .* cannot be inspected: ") as excinfo:
+        project_interpreter(tmp_path / "requested")
+    assert isinstance(excinfo.value.__cause__, FileNotFoundError)
+
+
+def test_project_interpreter_refuses_foreign_owner_after_own_venv_hop(tmp_path, monkeypatch):
+    """An allowed first owner cannot hide a foreign owner later in the chain."""
+    requested = tmp_path / "requested"
+    foreign = tmp_path / "foreign"
+    _symlink_checkout_venv_to_store(foreign, tmp_path / "store", _toolchain_python(tmp_path))
+    requested.mkdir()
+    (requested / ".venv").symlink_to(foreign / ".venv")
+    executable = requested / ".venv" / "bin" / "python3.12"
+    monkeypatch.setattr(sys, "executable", str(executable))
+
+    with pytest.raises(FileNotFoundError, match="not the requested checkout"):
+        project_interpreter(requested)
 
 
 def test_project_interpreter_rejects_another_checkouts_versioned_python(tmp_path, monkeypatch):

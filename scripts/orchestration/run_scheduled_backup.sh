@@ -31,17 +31,103 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly SCRIPT_DIR
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd -P)"
 readonly REPO_ROOT
-readonly PROJECT_ROOT="${LU_BACKUP_PROJECT_ROOT:-$REPO_ROOT}"
-readonly BACKUP_SCRIPT="${LU_BACKUP_SCRIPT:-$REPO_ROOT/scripts/backup-data.sh}"
-readonly BACKUP_TAG="${LU_BACKUP_TAG:-learn-ukrainian-data}"
-readonly BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
+
+configure_backup() {
+  BACKUP_SCRIPT="${LU_BACKUP_SCRIPT:-$REPO_ROOT/scripts/backup-data.sh}"
+  BACKUP_TAG="${LU_BACKUP_TAG:-learn-ukrainian-data}"
+  BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
+}
+
+# Open once and validate the opened inode, so a path swap cannot replace the
+# checked file between validation and sourcing. Only the configured systemd
+# path is sourced; manual runs can continue using an already-populated env.
+load_backup_environment() {
+  [[ -n "${LU_BACKUP_ENV_FILE:-}" ]] || return 0
+  local fd mode parent parent_mode path_inode opened_inode source_status=0
+  if ! { exec {fd}< "$LU_BACKUP_ENV_FILE"; } 2>/dev/null; then
+    BACKUP_ENV_SOURCE_ERROR_REPORTED=1
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE is missing or unreadable" >&2
+    return 78
+  fi
+  parent="$(dirname -- "$LU_BACKUP_ENV_FILE")"
+  # Reject a link or path swap; only the service user may replace entries in
+  # the directory containing the file.
+  if [[ -L "$LU_BACKUP_ENV_FILE" || ! -d "$parent" || ! -O "$parent" ||
+        ! -f "/dev/fd/$fd" || ! -O "/dev/fd/$fd" ]] ||
+     ! path_inode="$(stat -c '%d:%i' -- "$LU_BACKUP_ENV_FILE" 2>/dev/null)" ||
+     ! opened_inode="$(stat -Lc '%d:%i' "/dev/fd/$fd" 2>/dev/null)" ||
+     [[ "$path_inode" != "$opened_inode" ]] ||
+     ! mode="$(stat -Lc '%a' "/dev/fd/$fd")" ||
+     ! parent_mode="$(stat -Lc '%a' -- "$parent" 2>/dev/null)" ||
+     (( (8#$mode & 0022) != 0 || (8#$parent_mode & 0022) != 0 )); then
+    exec {fd}<&-
+    BACKUP_ENV_SOURCE_ERROR_REPORTED=1
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE must be a non-symlink regular file owned by this user with an owner-only writable parent directory" >&2
+    return 78
+  fi
+  set +u
+  set -a
+  # shellcheck disable=SC1090  # validated, operator-owned shell-syntax file
+  # Bash can print an offending source line (including values) on parse errors.
+  # A fatal expansion or exit in a sourced file terminates a non-interactive
+  # shell. The run-mode EXIT guard invalidates both possible receipt paths.
+  {
+    . "/dev/fd/$fd" || source_status=$?
+    set +xv
+  } 2>/dev/null
+  if [[ "$source_status" -ne 0 ]]; then
+    set +a
+    set -u
+    exec {fd}<&-
+    BACKUP_ENV_SOURCE_ERROR_REPORTED=1
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced" >&2
+    return 78
+  fi
+  set +a
+  set -u
+  exec {fd}<&-
+}
+
+backup_env_source_failed() {
+  set +xv 2>/dev/null
+  trap - EXIT
+  local initial_output=$1 output started log
+  output="$(last_run_path)"
+  rm -f "$initial_output" "$output" || {
+    echo "scheduled-backup: could not invalidate last-run receipt" >&2
+    exit 78
+  }
+  started="$(utc_now)"
+  log="$(mktemp "${TMPDIR:-/tmp}/learn-ukrainian-backup-env.XXXXXX")" || exit 78
+  if ! write_last_run 78 "$started" "$started" "$log" "$output" skip-snapshots; then
+    echo "scheduled-backup: could not write the last-run receipt" >&2
+  fi
+  if [[ "$initial_output" != "$output" ]] &&
+     ! write_last_run 78 "$started" "$started" "$log" "$initial_output" skip-snapshots; then
+    echo "scheduled-backup: could not write the last-run receipt" >&2
+  fi
+  rm -f "$log"
+  if [[ "${BACKUP_ENV_SOURCE_ERROR_REPORTED:-0}" != 1 ]]; then
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced" >&$backup_env_error_fd
+  fi
+  exit 78
+}
+
+retention_env_source_failed() {
+  set +xv 2>/dev/null
+  trap - EXIT
+  if [[ "${BACKUP_ENV_SOURCE_ERROR_REPORTED:-0}" != 1 ]]; then
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced" >&$backup_env_error_fd
+  fi
+  exit 78
+}
 
 utc_now() {
   date -u '+%Y-%m-%dT%H:%M:%SZ'
 }
 
 default_last_run_path() {
-  printf '%s\n' "$PROJECT_ROOT/batch_state/backups/last-run.json"
+  printf '%s\n' "${LU_BACKUP_PROJECT_ROOT:-$REPO_ROOT}/batch_state/backups/last-run.json"
 }
 
 last_run_path() {
@@ -70,12 +156,15 @@ query_snapshot_count() {
 }
 
 write_last_run() {
-  local status=$1 started=$2 finished=$3 log=$4 output=$5
+  local status=$1 started=$2 finished=$3 log=$4 output=$5 skip_snapshots=${6:-}
   local run_id bytes_added snapshot_count temporary
 
   run_id="$(parse_run_id "$log")" || return 1
   bytes_added="$(parse_bytes_added "$log")" || return 1
-  snapshot_count="$(query_snapshot_count)" || return 1
+  snapshot_count=""
+  if [[ "$skip_snapshots" != skip-snapshots ]]; then
+    snapshot_count="$(query_snapshot_count)" || return 1
+  fi
 
   mkdir -p "$(dirname "$output")" || return 1
   temporary="$output.tmp.$$"
@@ -182,18 +271,31 @@ run_record() {
   finished=${finished:-$(utc_now)}
   output=${output:-$(last_run_path)}
 
+  configure_backup
   write_last_run "$status" "$started" "$finished" "$log" "$output"
   echo "last-run receipt written: $output (exit_status=$status)"
 }
 
 run_backup_and_record() {
-  local started finished log status redact_status tee_status exit_status output
+  local started finished log status redact_status tee_status exit_status output initial_output backup_env_error_fd
   local -a pipe_status
 
+  initial_output="$(last_run_path)"
+  BACKUP_ENV_SOURCE_ERROR_REPORTED=0
+  exec {backup_env_error_fd}>&2
+  # Keep the guard active until sourcing succeeds, including shell-level exit.
+  trap 'backup_env_source_failed "$initial_output"' EXIT
+  load_backup_environment || exit 78
+  trap - EXIT
+  exec {backup_env_error_fd}>&-
   # Remove the prior receipt before any preflight that can fail. A missing
   # receipt and a failed unit cannot be mistaken for a fresh success.
   output="$(last_run_path)"
-  rm -f "$output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
+  rm -f "$initial_output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
+  if [[ "$output" != "$initial_output" ]]; then
+    rm -f "$output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
+  fi
+  configure_backup
   command -v jq >/dev/null 2>&1 ||
     { echo "scheduled-backup: jq is required" >&2; exit 78; }
   [[ -f "$BACKUP_SCRIPT" ]] ||
@@ -242,7 +344,7 @@ run_backup_and_record() {
 }
 
 main() {
-  local command=${1:-run}
+  local command=${1:-run} backup_env_error_fd
   [[ $# -eq 0 ]] || shift
   case "$command" in
     run)
@@ -254,6 +356,13 @@ main() {
       ;;
     retention)
       [[ $# -eq 0 ]] || { echo "usage: run_scheduled_backup.sh retention" >&2; exit 2; }
+      BACKUP_ENV_SOURCE_ERROR_REPORTED=0
+      exec {backup_env_error_fd}>&2
+      trap 'retention_env_source_failed' EXIT
+      load_backup_environment || exit 78
+      trap - EXIT
+      exec {backup_env_error_fd}>&-
+      configure_backup
       run_redacted_retention
       ;;
     *)

@@ -33,9 +33,10 @@ from scripts.audit.layerb_label_union import (
     select_all_corpus,
 )
 from scripts.audit.layerb_shadow import ShadowRunner
+from tests.helpers.python import project_python
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
+VENV_PYTHON = project_python()
 SCHEMA = json.loads((REPO_ROOT / "schemas" / "qg-layer-b-labels.v2.schema.json").read_text(encoding="utf-8"))
 VALIDATOR = Draft202012Validator(SCHEMA)
 RAW_OUTPUT = "source evidence used for deterministic label checks"

@@ -36,19 +36,29 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        python -m venv .venv
-        # Lockfile is internally inconsistent (marker-pdf vs pillow; see
-        # requirements.txt). Documented CI install is `--no-deps`. Drop
-        # live-ML wheels — the unit suite does not import them and they
-        # blow the 15m budget.
-        grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+        # No ensurepip (~2 s): pip, setuptools and wheel are pinned in the lock
+        # and installed from it below.
+        python -m venv --without-pip .venv
+        # Drop live-ML wheels; the unit suite does not import them and they
+        # exceed the 15m budget. Check the installed dependency graph below.
+        # Also drop the local v4-runtime path: it is built once, without build
+        # isolation, after the lock install; leaving it in the lock builds the
+        # same package twice.
+        grep -viE -e '^(torch|torchvision|open_clip_torch|stanza)==' -e '^\./packages/v4-runtime$' requirements-lock.txt \
           > "${RUNNER_TEMP}/requirements-ci.txt"
         if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
           echo 'uv cache incomplete; retrying installation from the index'
           uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
         fi
-        .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
-        .venv/bin/python scripts/audit/check_ci_dependencies.py
+        uv pip install --python .venv/bin/python --no-deps --no-build-isolation ./packages/v4-runtime
+        # The seven known missing ML dependencies result from the CI wheel
+        # filter. The fallback accepts only those exact omissions.
+        check_exit=0
+        uv pip check --python .venv/bin/python || check_exit=$?
+        if (( check_exit != 0 )); then
+          if (( check_exit != 1 )); then exit "$check_exit"; fi
+          .venv/bin/python scripts/audit/check_ci_dependencies.py
+        fi
         .venv/bin/python packages/v4-runtime/build_assets.py
 
     - name: Hydrate Atlas lexicon manifest

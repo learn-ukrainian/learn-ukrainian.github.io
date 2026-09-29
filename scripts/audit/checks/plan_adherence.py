@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
+
 from common.text_utils import strip_ukrainian_stress
 
 # ---------------------------------------------------------------------------

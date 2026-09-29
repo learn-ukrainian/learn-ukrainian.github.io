@@ -2063,7 +2063,7 @@ def _lookup_textbook_reference_chunk(
         return None
 
     try:
-        with sqlite3.connect(str(TEXTBOOK_SOURCES_DB_PATH)) as conn:
+        with sqlite3.connect(f"{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro", uri=True) as conn:
             conn.row_factory = sqlite3.Row
             source_files = _source_files_for_textbook_reference(conn, author, grade)
             if source_files is None:
@@ -14968,7 +14968,7 @@ def _lookup_textbook_metadata(source_file: str) -> dict[str, str] | None:
     if not TEXTBOOK_SOURCES_DB_PATH.exists():
         return None
     try:
-        with sqlite3.connect(str(TEXTBOOK_SOURCES_DB_PATH)) as conn:
+        with sqlite3.connect(f"{TEXTBOOK_SOURCES_DB_PATH.resolve().as_uri()}?mode=ro", uri=True) as conn:
             row = conn.execute(
                 "SELECT author_uk, grade FROM textbooks WHERE source_file = ? LIMIT 1",
                 (source_file,),

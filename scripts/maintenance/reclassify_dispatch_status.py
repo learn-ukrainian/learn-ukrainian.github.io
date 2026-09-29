@@ -25,7 +25,6 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 import delegate
 from agent_runtime.runner import _load_adapter
-
 from scripts.common.task_store_paths import tasks_dir as default_tasks_dir
 from scripts.orchestration.task_record_store import iter_task_records
 

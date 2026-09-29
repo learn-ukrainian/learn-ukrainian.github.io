@@ -16,6 +16,7 @@ import sys
 from pathlib import Path
 
 import yaml
+
 from slug_utils import to_bare_slug
 
 _DIFF_TIMEOUT_SECONDS = 30

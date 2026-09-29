@@ -19,6 +19,13 @@ from scripts.lexicon.reenrich_thin_manifest_entries import (
 )
 
 
+def _empty_sources_db(tmp_path: Path) -> Path:
+    """An empty sources.db in ``tmp_path``; ``main`` opens it read-only (#9158)."""
+    path = tmp_path / "sources.db"
+    sqlite3.connect(path).close()
+    return path
+
+
 def test_reenrich_translation_only_preserves_existing_enrichment(monkeypatch) -> None:
     entry = {
         "lemma": "помішувати",
@@ -515,6 +522,8 @@ def test_reenrich_no_pointer_skips_pointer_write(tmp_path, monkeypatch) -> None:
             "--local",
             "--kaikki-lookup",
             str(kaikki_path),
+            "--sources-db",
+            str(_empty_sources_db(tmp_path)),
             "--write",
             "--no-pointer",
         ],
@@ -1256,6 +1265,8 @@ def test_poc_thin_target_cli_skips_canary(tmp_path: Path, monkeypatch: pytest.Mo
             str(manifest_path),
             "--kaikki-lookup",
             str(kaikki_path),
+            "--sources-db",
+            str(_empty_sources_db(tmp_path)),
             "--target",
             "poc-thin",
         ],

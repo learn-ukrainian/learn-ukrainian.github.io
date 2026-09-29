@@ -19,7 +19,6 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
-
 from scripts.common.scratch import ensure_scratch_root
 
 from ._ask_contract import (

@@ -71,9 +71,8 @@ def test_committed_golden_set_stores_hashes_not_dictionary_text() -> None:
 
 
 def test_sources_golden_set_matches_frozen_handlers() -> None:
-    from wiki.sources_db import SOURCES_DB_PATH
-
     from scripts.rag.config import VESUM_DB_PATH
+    from wiki.sources_db import SOURCES_DB_PATH
 
     if not SOURCES_DB_PATH.is_file() or not Path(VESUM_DB_PATH).is_file():
         pytest.skip("local data/sources.db or data/vesum.db is not in this checkout")

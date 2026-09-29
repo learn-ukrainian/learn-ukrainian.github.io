@@ -37,9 +37,9 @@ SIGINT; it is dead code for SIGTERM/SIGKILL. Any subsystem that locks or
 registers a durable resource and relies solely on a context manager to
 release it leaks on every hard termination.
 
-## Why the fix is load-bearing, not cosmetic
+## Prevention
 
-Three independent layers, each sufficient alone:
+Three independent layers, each sufficient alone (shipped in PR #8350, commit 642c902383):
 
 1. **Provable ownership** (`scripts/common/acp_runtime_lock.py`): the lock
    reason now carries `owner pid=<pid> start=<process start time>`, readable

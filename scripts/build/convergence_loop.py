@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any, Literal
 
 import yaml
+
 from build.alignment_manifest import compose_manifest
 from build.finding_normalizer import normalize_findings
 from build.finding_topology import classify_topology

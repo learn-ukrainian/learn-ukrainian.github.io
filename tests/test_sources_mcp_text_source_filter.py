@@ -27,6 +27,7 @@ def optional_dependency_stubs(monkeypatch):
 
     dense_rerank_stub = types.ModuleType("wiki.dense_rerank")
     dense_rerank_stub._get_tokenizer = lambda: None
+    dense_rerank_stub.dense_rerank_enabled = lambda *_args, **_kwargs: False
     dense_rerank_stub.rerank_candidates = lambda candidates, *_args, **_kwargs: candidates
     dense_rerank_stub.rerank_sections = lambda sections, *_args, **_kwargs: sections
     monkeypatch.setitem(sys.modules, "wiki.dense_rerank", dense_rerank_stub)

@@ -144,7 +144,9 @@ def _load_module_plan(roots: Roots, slug: str) -> dict[str, Any] | None:
         raise ValueError(f"cannot read plan {plan_path}: {error}") from error
     numbers = _lesson_numbers(plan)
     if not numbers or numbers != list(range(1, len(numbers) + 1)):
-        raise ValueError(f"plan {slug}: lesson numbers must be exactly 1..N (contiguous, no duplicates, non-empty); found {numbers}")
+        raise ValueError(
+            f"plan {slug}: lesson numbers must be exactly 1..N (contiguous, no duplicates, non-empty); found {numbers}"
+        )
     return plan
 
 
@@ -278,7 +280,7 @@ def render_landing(level: str, records: list[dict[str, Any]]) -> str:
 
 
 def render_module(level: str, record: dict[str, Any]) -> str:
-    title = record["title_uk"] or record["title_en"]
+    title = f"{record['title_uk']} · {record['title_en']}" if record["title_uk"] else record["title_en"]
     return (
         "---\n"
         f"# {GENERATED_NOTE}\n"
@@ -308,9 +310,7 @@ def generated_files(roots: Roots, arc: list[ArcPosition]) -> dict[Path, str]:
     files: dict[Path, str] = {
         roots.data_json: render_json(roots.level, records),
         roots.docs / "index.mdx": render_landing(roots.level, records),
-        roots.level_status: render_level_status(
-            roots.level_status.read_text(encoding="utf-8"), roots.level, len(arc)
-        ),
+        roots.level_status: render_level_status(roots.level_status.read_text(encoding="utf-8"), roots.level, len(arc)),
     }
     for record in records:
         files[roots.docs / record["slug"] / "index.mdx"] = render_module(roots.level, record)
@@ -325,9 +325,7 @@ def write_files(files: dict[Path, str]) -> None:
 
 def stale_files(files: dict[Path, str]) -> list[Path]:
     """Paths whose bytes on disk differ from the generated text (missing counts)."""
-    return [
-        path for path, text in files.items() if not path.is_file() or path.read_bytes() != text.encode("utf-8")
-    ]
+    return [path for path, text in files.items() if not path.is_file() or path.read_bytes() != text.encode("utf-8")]
 
 
 def orphan_pages(roots: Roots, arc: list[ArcPosition]) -> list[Path]:

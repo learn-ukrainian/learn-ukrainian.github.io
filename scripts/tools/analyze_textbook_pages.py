@@ -51,7 +51,6 @@ if str(_REPO_ROOT) not in sys.path:
     sys.path.append(str(_REPO_ROOT))
 
 from agent_runtime.json_parse import extract_json_object
-
 from scripts.wiki.config import TEXTBOOK_PDFS_DIR
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
