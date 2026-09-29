@@ -3,42 +3,47 @@
   "checkpoint_id": "662a64a29c80",
   "session_id": "b3ca0f33-1011-4b61-98b3-fc2d4103bfa8",
   "strategy": "manual-commit",
-  "created_at": "2026-09-29T21:52:40.641308817Z",
+  "created_at": "2026-09-29T21:52:55.90717508Z",
   "branch": "claude/impl-9230",
   "checkpoints_count": 1,
   "files_touched": [
-    "tests/test_agent_runtime.py"
+    "scripts/agent_runtime/adapters/cursor.py",
+    "scripts/agent_runtime/runner.py",
+    "scripts/delegate.py",
+    "tests/agent_runtime/adapters/test_cursor_adapter.py",
+    "tests/agent_runtime/adapters/test_hermes_deepseek_adapter.py",
+    "tests/agent_runtime/adapters/test_hermes_grok_adapter.py",
+    "tests/agent_runtime/test_runner_failover.py",
+    "tests/ai_agent_bridge/test_hermes_review_isolation.py",
+    "tests/ai_agent_bridge/test_openai_proxy_arg_max.py",
+    "tests/ai_agent_bridge/test_review_ask_caps.py",
+    "tests/test_agent_runtime.py",
+    "tests/test_ask_hermes.py",
+    "tests/test_delegate.py"
   ],
   "agent": "Claude Code",
   "model": "",
   "turn_id": "2a5a104d7c78",
-  "compact_transcript_start": 0,
+  "checkpoint_transcript_start": 248,
+  "transcript_lines_at_start": 248,
+  "compact_transcript_start": 33,
   "token_usage": {
-    "input_tokens": 60,
-    "cache_creation_tokens": 107062,
-    "cache_read_tokens": 2226999,
-    "output_tokens": 18112,
-    "api_call_count": 30
+    "input_tokens": 2,
+    "cache_creation_tokens": 1749,
+    "cache_read_tokens": 107062,
+    "output_tokens": 436,
+    "api_call_count": 1
   },
   "initial_attribution": {
-    "calculated_at": "2026-09-29T21:52:40.575450408Z",
-    "agent_lines": 7,
-    "agent_removed": 1,
-    "human_added": 37,
+    "calculated_at": "2026-09-29T21:52:55.824370164Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
     "human_modified": 0,
     "human_removed": 0,
-    "total_committed": 44,
-    "total_lines_changed": 82,
-    "agent_percentage": 9.75609756097561,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
     "metric_version": 2
-  },
-  "prompt_attributions": [
-    {
-      "checkpoint_number": 1,
-      "user_lines_added": 0,
-      "user_lines_removed": 0,
-      "agent_lines_added": 0,
-      "agent_lines_removed": 0
-    }
-  ]
+  }
 }
