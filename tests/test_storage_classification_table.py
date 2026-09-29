@@ -39,22 +39,29 @@ def prefetch_missing_blobs(repo: Path, blobs: list[str]) -> None:
     ).stdout
     missing = [line.split()[0] for line in checked.splitlines() if line.endswith(" missing")]
     if missing:
-        subprocess.run(
+        # The request Git's own lazy fetch makes, in one batch. Naming the blob
+        # ids as ordinary refspecs fails Git 2.55's connectivity check.
+        result = subprocess.run(
             [
                 "git",
                 "-C",
                 str(repo),
+                "-c",
+                "fetch.negotiationAlgorithm=noop",
                 "fetch",
+                "origin",
                 "--no-tags",
                 "--no-write-fetch-head",
+                "--recurse-submodules=no",
                 "--filter=blob:none",
-                "origin",
-                *missing,
+                "--stdin",
             ],
-            check=True,
             capture_output=True,
+            text=True,
+            input="".join(f"{blob}\n" for blob in missing),
             timeout=600,
         )
+        assert result.returncode == 0, result.stderr
 
 
 @pytest.fixture(scope="module", autouse=True)
