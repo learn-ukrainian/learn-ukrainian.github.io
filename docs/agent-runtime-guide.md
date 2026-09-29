@@ -671,15 +671,29 @@ string. The order after validation is:
 4. The base-SHA and worktree-creation helpers then use that validated path as
    given; they do not resolve it again.
 
+`--dry-run` takes no worktree lock, so steps 2 and 3 do not hold for it as
+written. A `--worktree` dry run still runs the step-3 re-check, without the
+lock, before the base-SHA helper, which does not rebase in a dry run. A
+detached read-only dry run resolves no worktree. A `--cwd` dry run looks up the
+registered worktree and reads its branch and HEAD with git, then returns before
+either re-check.
+
 The prompt-injection vector (#8775) is closed by the character check on the raw
 and resolved paths and by JSON quoting: the worker prompt renders the worktree
 path as a JSON-quoted value, so a path is data, never an instruction. Path
 containment is checked on real directories and re-checked after the lock. A
 symlink swap in the gap that remains (after the step-3 check, while git or the
-filesystem follows the path) needs a process running as the same user with
-write access to `.worktrees/dispatch/`. Such a process already holds every
-capability the dispatcher has, so the race grants it nothing new; it is out of
-scope.
+filesystem follows the path) needs write access to a directory on the validated
+path. For a worktree under `.worktrees/dispatch/`, that is a process running as
+the same user with write access to that subtree. Such a process already holds
+every capability the dispatcher has, so the race grants it nothing new; it is
+out of scope. `--cwd` also accepts a registered worktree outside
+`.worktrees/dispatch/`. There, write access to any parent directory of the
+worktree is enough to rename it and put a symlink in its place, without any
+access to the worktree itself. The out-of-scope argument holds only when every
+directory on that path is writable by the dispatching user alone; a custom
+worktree under a directory another user can write (for example group-writable,
+or world-writable without the sticky bit) is outside this guarantee.
 
 Read-only dispatches with neither `--cwd` nor `--worktree` also use the dispatch
 subtree, creating a detached worktree. Use `--cwd <primary-checkout>` to opt into

@@ -1000,10 +1000,17 @@ def _validated_path_changed_error(flag: str, validated: Path) -> str | None:
     check on the raw and resolved paths plus JSON quoting in the worker
     prompt. Path containment is checked on real directories and re-checked
     here, after the lock. A symlink swap in the remaining gap (after this
-    check, while git or the filesystem follows the path) needs a process
-    running as the same user with write access to ``.worktrees/dispatch/``.
-    Such a process already holds every capability the dispatcher has, so the
-    race grants it nothing new; it is out of scope.
+    check, while git or the filesystem follows the path) needs write access
+    to a directory on ``validated``. Under ``.worktrees/dispatch/`` that is a
+    process running as the same user, which already holds every capability
+    the dispatcher has, so the race grants it nothing new; it is out of
+    scope. ``--cwd`` also accepts registered worktrees elsewhere, where write
+    access to any parent directory is enough to swap the worktree without
+    access to it. The out-of-scope argument holds there only when every
+    directory on the path is writable by the dispatching user alone.
+
+    ``--dry-run`` takes no lock: a ``--worktree`` dry run still calls this
+    check, and a ``--cwd`` dry run returns before calling it.
     """
     try:
         current: Path | None = validated.resolve()
