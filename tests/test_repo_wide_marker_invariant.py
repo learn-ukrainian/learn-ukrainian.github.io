@@ -370,11 +370,11 @@ _SCAN_SOURCE_TOKENS = _WALK_ATTRS | {"walk", "scandir"} | _KNOWN_SCANNER_CALLS
 
 
 def _could_contain_scan(source: str) -> bool:
-    # The Git argv literal can be split or escaped across string tokens.
+    # A subprocess argv may be module-bound or split across string tokens.
     return (
         any(token in source for token in _SCAN_SOURCE_TOKENS)
         or ("ls" in source and ("files" in source or "tree" in source))
-        or ("subprocess" in source and "\\" in source)
+        or "subprocess" in source
     )
 
 
@@ -944,6 +944,34 @@ def test_heuristic_follows_named_argv_and_derived_repo_root_constants() -> None:
         """
     )
     assert "test_scan" in _implicated_test_functions(derived_root)
+
+
+def test_heuristic_prefilter_keeps_module_bound_git_argv() -> None:
+    source = textwrap.dedent(
+        """
+        import subprocess
+
+        GIT_CMD = ["git", "ls-files", "*.py"]
+
+        def test_scan():
+            subprocess.run(GIT_CMD, capture_output=True, check=True)
+        """
+    )
+    assert _could_contain_scan(source)
+    assert "test_scan" in _implicated_test_functions(ast.parse(source), source)
+
+
+def test_heuristic_prefilter_keeps_split_git_argv_literal() -> None:
+    source = textwrap.dedent(
+        """
+        import subprocess
+
+        def test_scan():
+            subprocess.run(["git", "ls-fi" "les", "*.py"], capture_output=True, check=True)
+        """
+    )
+    assert _could_contain_scan(source)
+    assert "test_scan" in _implicated_test_functions(ast.parse(source), source)
 
 
 def test_heuristic_roots_function_local_and_nested_bindings() -> None:

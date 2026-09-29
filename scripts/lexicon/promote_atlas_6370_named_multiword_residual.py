@@ -44,7 +44,6 @@ import argparse
 import json
 import sys
 import tempfile
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -111,12 +110,6 @@ ZABOJATYSJA_LEMMA = "забоятися"
 PRACTICE_ADMISSION = {"practice": True}
 
 
-@lru_cache(maxsize=4)
-def _parse_decision_ledger(source: str) -> dict[str, Any]:
-    """Cache an unchanged ledger; source text is the invalidating cache key."""
-    return yaml.load(source, Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader))
-
-
 def _build_candidate(lemma: str, inventory_path: Path, *, entry_type: str | None) -> dict[str, Any]:
     """Build one auto_merge candidate entry from an already-committed inventory row."""
     records = [
@@ -161,7 +154,7 @@ def _scratch_decision_subset(source_path: Path, lemmas: set[str], out_path: Path
     ``source_path``. ``surface_admission.practice=True`` is stamped here so the
     apply path matches teacher P1; historical ledgers stay browse-only.
     """
-    doc = _parse_decision_ledger(source_path.read_text(encoding="utf-8"))
+    doc = yaml.safe_load(source_path.read_text(encoding="utf-8"))
     rows = [row for row in doc["decisions"] if row.get("lemma") in lemmas]
     found = {row["lemma"] for row in rows}
     missing = lemmas - found

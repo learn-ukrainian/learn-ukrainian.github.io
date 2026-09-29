@@ -258,9 +258,9 @@ def _resolve_file(path: Path, roots: Sequence[Path]) -> Path:
 
 
 @lru_cache(maxsize=16)
-def _compile_schema(schema_bytes: bytes) -> Draft202012Validator:
+def _compile_schema(schema_text: str) -> Draft202012Validator:
     """Compile identical schema content once, independent of its path."""
-    schema_dict = json.loads(schema_bytes)
+    schema_dict = json.loads(schema_text)
     Draft202012Validator.check_schema(schema_dict)
     return Draft202012Validator(schema_dict)
 
@@ -269,7 +269,7 @@ def _load_schema(schema_path: Path, roots: Sequence[Path]) -> Draft202012Validat
     resolved = _resolve_file(schema_path, roots)
     if not resolved.is_file():
         raise CustodyAccessError(f"Missing schema contract: {resolved}")
-    return _compile_schema(resolved.read_bytes())
+    return _compile_schema(resolved.read_text(encoding="utf-8"))
 
 
 def _load_config(config_path: Path, roots: Sequence[Path]) -> tuple[dict[str, Any], Path]:

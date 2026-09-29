@@ -148,6 +148,13 @@ def test_schema_cache_reloads_changed_content_at_same_path(tmp_path: Path) -> No
     assert not list(updated.iter_errors({"second": 1}))
 
 
+def test_schema_cache_preserves_utf8_bom_rejection(tmp_path: Path) -> None:
+    schema_path = tmp_path / "schema.json"
+    schema_path.write_bytes(b'\xef\xbb\xbf{"type": "object"}')
+    with pytest.raises(json.JSONDecodeError):
+        custody._load_schema(schema_path, [tmp_path])
+
+
 @pytest.fixture
 def requires_textbook_chunks(requires_sources_db: Path) -> Path:
     candidate = Path("data/textbook_chunks")
