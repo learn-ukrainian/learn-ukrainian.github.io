@@ -3,7 +3,7 @@ Tests for site website integrity.
 
 Validates that the generated site is internally consistent:
 1. Every track has a landing page (index.mdx) with valid frontmatter
-2. Landing pages use no retired module link formats
+2. Every module link in landing pages resolves, and none uses a retired format
 3. MDX files have valid frontmatter (title required)
 4. No stale files from old naming conventions (module-NN.mdx, numbered slugs)
 5. Curriculum manifest (curriculum.yaml) is in sync with site content
@@ -96,6 +96,21 @@ def _extract_module_links(index_path: Path) -> list[str]:
     return links
 
 
+def _broken_landing_links(docs_dir: Path) -> list[str]:
+    """Return every ``./slug`` link in a landing page that resolves to no page.
+
+    Scans each ``<track>/index.mdx`` (or ``index.md``) under ``docs_dir``; a
+    link resolves when ``<track>/<slug>.mdx`` or ``<track>/<slug>.md`` exists.
+    """
+    broken = []
+    for index in sorted([*docs_dir.glob("*/index.mdx"), *docs_dir.glob("*/index.md")]):
+        track_dir = index.parent
+        for slug in _extract_module_links(index):
+            if not (track_dir / f"{slug}.mdx").is_file() and not (track_dir / f"{slug}.md").is_file():
+                broken.append(f"{track_dir.name}/{index.name} -> ./{slug}")
+    return broken
+
+
 def _load_manifest() -> dict:
     """Load curriculum.yaml manifest."""
     if not MANIFEST_PATH.is_file():
@@ -156,6 +171,37 @@ class TestLandingPages:
 # =============================================================================
 # 2. MODULE LINK INTEGRITY
 # =============================================================================
+
+
+def test_all_landing_links_resolve():
+    """Every ./slug link in any landing page points to an existing page.
+
+    Landings are LevelLanding/arc pages today and carry no such links, so this
+    usually checks zero links; it never skips, so a link added later is checked.
+    """
+    broken = _broken_landing_links(DOCS_DIR)
+    assert not broken, (
+        f"{len(broken)} broken landing-page links:\n"
+        + "\n".join(f"  - {b} NOT FOUND" for b in broken[:20])
+        + (f"\n  ... and {len(broken) - 20} more" if len(broken) > 20 else "")
+    )
+
+
+def test_broken_landing_link_fails_the_check(tmp_path, monkeypatch):
+    """A planted link to a missing page fails the check; a resolving one does not."""
+    track = tmp_path / "a2"
+    track.mkdir()
+    (track / "present.mdx").write_text("---\ntitle: Present\n---\n", encoding="utf-8")
+    (track / "index.mdx").write_text(
+        "---\ntitle: A2\n---\n[Present](./present/)\n[Missing](./missing)\n",
+        encoding="utf-8",
+    )
+
+    assert _broken_landing_links(tmp_path) == ["a2/index.mdx -> ./missing"]
+    monkeypatch.setattr(sys.modules[__name__], "DOCS_DIR", tmp_path)
+    with pytest.raises(AssertionError, match=r"a2/index\.mdx -> \./missing"):
+        test_all_landing_links_resolve()
+
 
 class TestModuleLinks:
     """Landing pages must not link modules through retired slug formats."""
