@@ -94,42 +94,12 @@ is_current_delegator() {
     [[ -f "$path" && -x "$path" && "$(cat "$path")" == "$(generate_delegator "$hook_name")" ]]
 }
 
-# Hook types .pre-commit-config.yaml asks to run: default_install_hook_types,
-# default_stages, and every hook's stages (flow `[a, b]` or block `- a` lists).
+# Hook types .pre-commit-config.yaml asks to run, from a real YAML parse
+# (default_install_hook_types, default_stages, and every hook's stages).
 declared_stages() {
     local config="$1"
-    awk '
-        function emit(value) {
-            gsub(/["\047[:space:]]/, "", value)
-            if (value == "commit") value = "pre-commit"
-            else if (value == "push") value = "pre-push"
-            else if (value == "merge-commit") value = "pre-merge-commit"
-            if (value != "" && value != "manual") print value
-        }
-        {
-            line = $0
-            sub(/[[:space:]]+#.*$/, "", line)
-        }
-        in_list {
-            if (line ~ /^[[:space:]]*$/) next
-            match(line, /^[[:space:]]*/)
-            lead = RLENGTH
-            if (line ~ /^[[:space:]]*-/ && line !~ /:/ && (list_indent < 0 || lead == list_indent)) {
-                list_indent = lead
-                sub(/^[[:space:]]*-/, "", line)
-                emit(line)
-                next
-            }
-            in_list = 0
-        }
-        match(line, /^[[:space:]]*(default_install_hook_types|default_stages|stages):/) {
-            rest = substr(line, RLENGTH + 1)
-            if (rest ~ /^[[:space:]]*$/) { in_list = 1; list_indent = -1; next }
-            gsub(/[][]/, "", rest)
-            count = split(rest, items, ",")
-            for (i = 1; i <= count; i++) emit(items[i])
-        }
-    ' "$config" | sort -u
+    (cd "$repo_root" && bash scripts/pre_commit/project_python.sh \
+        scripts/pre_commit/declared_hook_stages.py "$config")
 }
 
 run_check() {
@@ -141,7 +111,10 @@ run_check() {
     local hooks_dir
     hooks_dir="$(git rev-parse --path-format=absolute --git-path hooks)"
     local stages failures=0 stage wrapper pre_entire
-    stages="$(declared_stages "$config")"
+    if ! stages="$(declared_stages "$config")"; then
+        echo "check: cannot parse declared hook stages from $config; failing closed" >&2
+        return 1
+    fi
     if [[ -z "$stages" ]]; then
         echo "check: no hook stages declared in $config" >&2
         return 1

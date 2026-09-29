@@ -5,12 +5,17 @@ from __future__ import annotations
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 INSTALLER_SCRIPT = REPO_ROOT / "scripts/install_git_hooks.sh"
+CHECK_HELPERS = (
+    "scripts/pre_commit/project_python.sh",
+    "scripts/pre_commit/declared_hook_stages.py",
+)
 REQUIRED_HOOKS = (
     "pre-commit",
     "commit-msg",
@@ -100,6 +105,12 @@ def _fixture_repository(tmp_path: Path) -> tuple[Path, dict[str, str]]:
     (repo / "README.md").write_text("initial\n", encoding="utf-8")
     _git(repo, "add", ".")
     _git(repo, "commit", "-m", "initial commit", env=env)
+
+    # --check parses the config with the project interpreter; untracked, like a real .venv.
+    for helper in CHECK_HELPERS:
+        (repo / helper).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(REPO_ROOT / helper, repo / helper)
+    _write_executable(repo / ".venv/bin/python", f'#!/bin/sh\nexec "{sys.executable}" "$@"\n')
 
     return repo, env
 
@@ -379,6 +390,68 @@ def test_check_covers_every_stage_the_repository_config_declares(tmp_path: Path)
     check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env)
     reported = {line.split(":", 1)[0] for line in check.stdout.splitlines() if ": ok (" in line}
     assert reported == declared
+
+
+PRE_PUSH_DECLARATIONS = {
+    "multiline_flow_list": (
+        "default_install_hook_types: [pre-commit]\n"
+        "repos:\n"
+        "  - repo: local\n"
+        "    hooks:\n"
+        "      - id: gate\n"
+        "        stages: [\n"
+        "          pre-push,\n"
+        "        ]\n"
+    ),
+    "block_list": (
+        "repos:\n"
+        "  - repo: local\n"
+        "    hooks:\n"
+        "      - id: gate\n"
+        "        stages:\n"
+        "        - pre-commit\n"
+        "        -   'push'  # legacy name\n"
+    ),
+    "default_stages": ("default_stages: [pre-commit, push]\nrepos:\n  - repo: local\n    hooks:\n      - id: gate\n"),
+    "default_install_hook_types": ('default_install_hook_types:\n  - "pre-commit"\n  - >-\n    pre-push\nrepos: []\n'),
+}
+
+
+@pytest.mark.parametrize("config_text", PRE_PUSH_DECLARATIONS.values(), ids=PRE_PUSH_DECLARATIONS.keys())
+def test_check_fails_when_a_yaml_declared_stage_has_no_installed_hook(tmp_path: Path, config_text: str) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    _write_pre_commit_config(repo, config_text)
+    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+
+    installed = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env)
+    assert installed.stdout.splitlines() == ["pre-commit: ok (delegator)", "pre-push: ok (delegator)"]
+
+    (repo / ".git/hooks/pre-push").unlink()
+    missing = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    assert missing.returncode == 1
+    assert "pre-push: UNREACHABLE" in missing.stderr
+
+
+@pytest.mark.parametrize(
+    "config_text",
+    [
+        "repos:\n  - repo: local\n    hooks: [\n",
+        "repos:\n  - repo: local\n    hooks:\n      - id: gate\n        stages: pre-push\n",
+        "repos:\n  - repo: local\n    hooks:\n      - id: gate\n        stages: [pre-pushh]\n",
+        "default_stages: [pre-commit]\n",
+    ],
+    ids=["invalid_yaml", "stages_not_a_list", "unknown_stage", "no_repos"],
+)
+def test_check_fails_closed_when_the_config_cannot_be_parsed(tmp_path: Path, config_text: str) -> None:
+    repo, env = _fixture_repository(tmp_path)
+    _write_pre_commit_config(repo, config_text)
+    _run(["bash", "scripts/install_git_hooks.sh"], cwd=repo, env=env)
+
+    check = _run(["bash", "scripts/install_git_hooks.sh", "--check"], cwd=repo, env=env, check=False)
+    assert check.returncode == 1
+    assert "cannot determine declared hook stages" in check.stderr
+    assert "failing closed" in check.stderr
+    assert ": ok (" not in check.stdout
 
 
 def test_foreign_hook_is_preserved_and_skipped(tmp_path: Path) -> None:

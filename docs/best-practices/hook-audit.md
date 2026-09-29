@@ -31,7 +31,7 @@ To prevent dirty checkout drift while preserving Entire CLI functionality:
 - `scripts/install_git_hooks.sh` writes untracked delegator scripts into the Git common hooks directory (`$GIT_COMMON_DIR/hooks/`).
 - Each delegator dynamically resolves the current worktree root (`git rev-parse --show-toplevel`) and delegates to `$root/.githooks/<name>` if executable.
 - When Entire CLI is present, Entire installs its wrapper at `$GIT_COMMON_DIR/hooks/<name>`. Entire (0.8.42) adds its `# Chain: run pre-existing hook` block, which runs `<name>.pre-entire` as the wrapper's last command, only when `<name>.pre-entire` already exists as Entire writes the wrapper; Entire does not rewrite wrappers on later runs. The installer detects the `# Entire CLI hooks` marker, places the delegator at `$GIT_COMMON_DIR/hooks/<name>.pre-entire`, and appends Entire's chain block when the wrapper lacks it, so the repo hook's exit status decides the commit or push (#9195). An Entire reinstall regenerates the same bytes.
-- `scripts/install_git_hooks.sh --check` is read-only and fails when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory.
+- `scripts/install_git_hooks.sh --check` is read-only and fails when a stage declared in `.pre-commit-config.yaml` (`default_install_hook_types`, `default_stages`, or a hook's `stages`) has no reachable repo delegator in the effective hooks directory. It reads the stages with a YAML parse (`scripts/pre_commit/declared_hook_stages.py`, project interpreter) and fails closed when the config cannot be parsed or names an unknown stage.
 
 ## Keep / drop matrix
 
