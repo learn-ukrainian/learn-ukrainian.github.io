@@ -34,7 +34,7 @@ from pathlib import Path
 
 import yaml
 
-from ..arc.loader import ArcStaleError, load_arc
+from ..arc.loader import ArcPosition, ArcStaleError, load_arc
 from . import codes
 from .loader import evidence_root
 from .report import Outcome, Report
@@ -200,9 +200,13 @@ def check_rule4(
             earlier_lessons[kind].update(lesson_introduced[kind])
 
 
-def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> None:
+def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> list[ArcPosition] | None:
     """Rule 5: arc_ref exists in the arc, the slug matches, and the letters agree —
-    limited to what the arc carries as data (§2a)."""
+    limited to what the arc carries as data (§2a).
+
+    Returns the loaded arc (None when it is unavailable) so the mechanical
+    letter rules read the same arc rule 5 checked.
+    """
     arc_path = plan_path.parent / "_arc.yaml"
     if not arc_path.is_file():
         report.failures.append(
@@ -212,7 +216,7 @@ def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> None:
                 "(scripts/curriculum/arc/generate_arc.py --write)",
             )
         )
-        return
+        return None
     try:
         source_rel = (yaml.safe_load(arc_path.read_text(encoding="utf-8")) or {}).get("source", {}).get("path")
     except yaml.YAMLError:
@@ -223,7 +227,7 @@ def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> None:
         arc = load_arc(level, arc_path=arc_path, doc_path=doc_path)
     except (OSError, ValueError, ArcStaleError) as error:
         report.failures.append(Outcome(codes.ARC_UNAVAILABLE, f"{arc_path}: {error}"))
-        return
+        return None
 
     arc_ref = plan["arc_ref"]
     if arc_ref["level"] != level:
@@ -233,7 +237,7 @@ def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> None:
                 f"arc_ref.level is {arc_ref['level']!r} but the plan is validated as level {level!r} (rule 5)",
             )
         )
-        return
+        return arc
     record = next((entry for entry in arc if entry.position == arc_ref["position"]), None)
     if record is None:
         report.failures.append(
@@ -243,7 +247,7 @@ def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> None:
                 f"(the arc has positions 1..{max(e.position for e in arc)}) (rule 5)",
             )
         )
-        return
+        return arc
     if plan["slug"] != record.slug:
         report.failures.append(
             Outcome(
@@ -286,7 +290,7 @@ def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> None:
                     "introduces no letters; found " + "; ".join(detail) + " (rule 5)",
                 )
             )
-        return
+        return arc
 
     seen: dict[str, int] = {}
     for n, letters in letters_by_lesson:
@@ -321,3 +325,4 @@ def check_arc(report: Report, level: str, plan: dict, plan_path: Path) -> None:
                 f"{record.position} (extra): {' '.join(extra)} (rule 5)",
             )
         )
+    return arc
