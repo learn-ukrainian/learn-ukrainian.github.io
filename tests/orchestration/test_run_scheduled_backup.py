@@ -68,6 +68,107 @@ def _fake_restic(fake_bin: Path, body: str) -> None:
     _write_executable(fake_bin / "restic", body)
 
 
+def test_shell_env_file_is_expanded_and_exported_to_backup_tools(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    env_file = tmp_path / "backup.env"
+    env_file.write_text(
+        'export OTHER="rclone:fake:Projects/test"\n'
+        'export RESTIC_REPOSITORY="${OTHER}"\n'
+        'export LU_BACKUP_REPOSITORY="$RESTIC_REPOSITORY"\n'
+        'export RCLONE_CONFIG="$HOME/.config/rclone/rclone.conf"\n'
+        'export LU_BACKUP_LAST_RUN="${TEST_RECEIPT}"\n',
+        encoding="utf-8",
+    )
+    env_file.chmod(0o600)
+    stub_log = tmp_path / "stub.log"
+    backup = tmp_path / "backup.sh"
+    _write_executable(
+        backup,
+        '#!/bin/bash\nrestic backup\nrclone lsd\n'
+        "printf '%s\\n' '==> Linux backup run 20260926T033000Z-test complete;'\n",
+    )
+    _fake_restic(
+        fake_bin,
+        '#!/bin/bash\nprintf "restic:%s:%s\\n" "$RESTIC_REPOSITORY" "$RCLONE_CONFIG" >> "$STUB_LOG"\n'
+        'if [[ "$1" == snapshots ]]; then printf "[]\\n"; fi\n',
+    )
+    _write_executable(
+        fake_bin / "rclone",
+        '#!/bin/bash\nprintf "rclone:%s:%s\\n" "$RESTIC_REPOSITORY" "$RCLONE_CONFIG" >> "$STUB_LOG"\n',
+    )
+    environment.update({
+        "LU_BACKUP_ENV_FILE": str(env_file),
+        "LU_BACKUP_SCRIPT": str(backup),
+        "TEST_RECEIPT": str(tmp_path / "last-run.json"),
+        "STUB_LOG": str(stub_log),
+    })
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 0, result.stderr
+    lines = stub_log.read_text(encoding="utf-8").splitlines()
+    expected = f"rclone:fake:Projects/test:{environment['HOME']}/.config/rclone/rclone.conf"
+    assert f"restic:{expected}" in lines
+    assert f"rclone:{expected}" in lines
+    assert json.loads(Path(environment["TEST_RECEIPT"]).read_text(encoding="utf-8"))["exit_status"] == 0
+
+
+@pytest.mark.parametrize("unsafe", ["missing", "group_writable", "world_writable", "wrong_owner"])
+def test_unsafe_shell_env_file_fails_closed_and_records_failure(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path, unsafe: str
+) -> None:
+    environment, _project, fake_bin = writer_environment
+    if unsafe == "wrong_owner":
+        if os.geteuid() == 0:
+            pytest.skip("requires a non-root test user")
+        env_file = Path("/etc/hosts")  # regular, root-owned; never read by the test
+        if not env_file.is_file() or env_file.stat().st_uid == os.geteuid():
+            pytest.skip("no other-owned regular fixture")
+    else:
+        env_file = tmp_path / "backup.env"
+        if unsafe != "missing":
+            env_file.write_text('export LU_BACKUP_REPOSITORY="unsafe"\n', encoding="utf-8")
+            env_file.chmod(0o620 if unsafe == "group_writable" else 0o602)
+    sentinel = tmp_path / "backup-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    _fake_restic(fake_bin, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    receipt = tmp_path / "last-run.json"
+    receipt.write_text('{"exit_status":0}\n', encoding="utf-8")
+    environment.update({
+        "LU_BACKUP_ENV_FILE": str(env_file),
+        "LU_BACKUP_SCRIPT": str(backup),
+        "LU_BACKUP_LAST_RUN": str(receipt),
+    })
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 78
+    assert "LU_BACKUP_ENV_FILE" in result.stderr
+    assert len(result.stderr.splitlines()) == 1
+    assert not sentinel.exists()
+    assert json.loads(receipt.read_text(encoding="utf-8"))["exit_status"] == 78
+
+
+def test_retention_sources_shell_env_file(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, _project, _fake_bin = writer_environment
+    env_file = tmp_path / "backup.env"
+    env_file.write_text('export OTHER="retention-value"\nexport CHECK="$HOME/${OTHER}"\n', encoding="utf-8")
+    env_file.chmod(0o600)
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, '#!/bin/bash\nprintf "received:%s\\n" "$CHECK"\n')
+    environment.update({"LU_BACKUP_ENV_FILE": str(env_file), "LU_BACKUP_SCRIPT": str(backup)})
+
+    result = _run_wrapper(environment, "retention")
+
+    assert result.returncode == 0, result.stderr
+    assert f"received:{environment['HOME']}/retention-value" in result.stdout
+
+
 def test_record_writes_success_receipt(writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path) -> None:
     environment, project, fake_bin = writer_environment
     environment["LU_BACKUP_REPOSITORY"] = "rclone:testdrive:Projects/test-restic"

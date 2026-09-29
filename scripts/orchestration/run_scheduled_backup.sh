@@ -31,17 +31,51 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 readonly SCRIPT_DIR
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd -P)"
 readonly REPO_ROOT
-readonly PROJECT_ROOT="${LU_BACKUP_PROJECT_ROOT:-$REPO_ROOT}"
-readonly BACKUP_SCRIPT="${LU_BACKUP_SCRIPT:-$REPO_ROOT/scripts/backup-data.sh}"
-readonly BACKUP_TAG="${LU_BACKUP_TAG:-learn-ukrainian-data}"
-readonly BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
+
+configure_backup() {
+  BACKUP_SCRIPT="${LU_BACKUP_SCRIPT:-$REPO_ROOT/scripts/backup-data.sh}"
+  BACKUP_TAG="${LU_BACKUP_TAG:-learn-ukrainian-data}"
+  BACKUP_HOST="${LU_BACKUP_HOST:-learn-ukrainian}"
+}
+
+# Open once and validate the opened inode, so a path swap cannot replace the
+# checked file between validation and sourcing. Only the configured systemd
+# path is sourced; manual runs can continue using an already-populated env.
+load_backup_environment() {
+  [[ -n "${LU_BACKUP_ENV_FILE:-}" ]] || return 0
+  local fd mode
+  if ! { exec {fd}< "$LU_BACKUP_ENV_FILE"; } 2>/dev/null; then
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE is missing or unreadable" >&2
+    return 78
+  fi
+  if [[ ! -f "/dev/fd/$fd" || ! -O "/dev/fd/$fd" ]] ||
+     ! mode="$(stat -Lc '%a' "/dev/fd/$fd")" ||
+     (( (8#$mode & 0022) != 0 )); then
+    exec {fd}<&-
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE must be a regular file owned by this user and not group/world-writable" >&2
+    return 78
+  fi
+  set +u
+  set -a
+  # shellcheck disable=SC1090  # validated, operator-owned shell-syntax file
+  if ! . "/dev/fd/$fd"; then
+    set +a
+    set -u
+    exec {fd}<&-
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced" >&2
+    return 78
+  fi
+  set +a
+  set -u
+  exec {fd}<&-
+}
 
 utc_now() {
   date -u '+%Y-%m-%dT%H:%M:%SZ'
 }
 
 default_last_run_path() {
-  printf '%s\n' "$PROJECT_ROOT/batch_state/backups/last-run.json"
+  printf '%s\n' "${LU_BACKUP_PROJECT_ROOT:-$REPO_ROOT}/batch_state/backups/last-run.json"
 }
 
 last_run_path() {
@@ -70,12 +104,15 @@ query_snapshot_count() {
 }
 
 write_last_run() {
-  local status=$1 started=$2 finished=$3 log=$4 output=$5
+  local status=$1 started=$2 finished=$3 log=$4 output=$5 skip_snapshots=${6:-}
   local run_id bytes_added snapshot_count temporary
 
   run_id="$(parse_run_id "$log")" || return 1
   bytes_added="$(parse_bytes_added "$log")" || return 1
-  snapshot_count="$(query_snapshot_count)" || return 1
+  snapshot_count=""
+  if [[ "$skip_snapshots" != skip-snapshots ]]; then
+    snapshot_count="$(query_snapshot_count)" || return 1
+  fi
 
   mkdir -p "$(dirname "$output")" || return 1
   temporary="$output.tmp.$$"
@@ -182,18 +219,31 @@ run_record() {
   finished=${finished:-$(utc_now)}
   output=${output:-$(last_run_path)}
 
+  configure_backup
   write_last_run "$status" "$started" "$finished" "$log" "$output"
   echo "last-run receipt written: $output (exit_status=$status)"
 }
 
 run_backup_and_record() {
-  local started finished log status redact_status tee_status exit_status output
+  local started finished log status redact_status tee_status exit_status output env_ready
   local -a pipe_status
 
+  env_ready=1
+  load_backup_environment || env_ready=0
   # Remove the prior receipt before any preflight that can fail. A missing
   # receipt and a failed unit cannot be mistaken for a fresh success.
   output="$(last_run_path)"
   rm -f "$output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
+  if [[ "$env_ready" -eq 0 ]]; then
+    started="$(utc_now)"
+    log="$(mktemp "${TMPDIR:-/tmp}/learn-ukrainian-backup-env.XXXXXX")" || exit 78
+    if ! write_last_run 78 "$started" "$started" "$log" "$output" skip-snapshots; then
+      echo "scheduled-backup: could not write the last-run receipt" >&2
+    fi
+    rm -f "$log"
+    exit 78
+  fi
+  configure_backup
   command -v jq >/dev/null 2>&1 ||
     { echo "scheduled-backup: jq is required" >&2; exit 78; }
   [[ -f "$BACKUP_SCRIPT" ]] ||
@@ -254,6 +304,8 @@ main() {
       ;;
     retention)
       [[ $# -eq 0 ]] || { echo "usage: run_scheduled_backup.sh retention" >&2; exit 2; }
+      load_backup_environment || exit $?
+      configure_backup
       run_redacted_retention
       ;;
     *)
