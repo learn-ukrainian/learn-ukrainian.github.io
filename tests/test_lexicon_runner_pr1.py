@@ -226,15 +226,25 @@ def _lexicon_cap_units() -> list[str]:
     return [line.strip() for line in completed.stdout.splitlines() if "lexicon-cap-" in line]
 
 
+def _own_lexicon_cap_units() -> list[str]:
+    """Units launched by this process — ``run_bounded_command`` names scopes
+    ``lexicon-cap-{pid}-{uuid8}``. Parallel pytest workers and real lexicon
+    runs use other pids, so only this subset is this test's to watch."""
+    import os
+
+    prefix = f"lexicon-cap-{os.getpid()}-"
+    return [line for line in _lexicon_cap_units() if line.split()[0].startswith(prefix)]
+
+
 def _wait_lexicon_cap_units(before: list[str]) -> list[str]:
     import time
 
-    after = _lexicon_cap_units()
+    after = _own_lexicon_cap_units()
     for _ in range(20):
         if after == before:
             return after
         time.sleep(0.1)
-        after = _lexicon_cap_units()
+        after = _own_lexicon_cap_units()
     return after
 
 
@@ -364,7 +374,7 @@ def test_scope_sigkill_classified_as_oom(tmp_path: Path, attempt: int) -> None:
 def test_timeout_stops_worker_scope(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _skip_without_user_scope()
     _enable_probe_jobs(monkeypatch)
-    before = _lexicon_cap_units()
+    before = _own_lexicon_cap_units()
     result = run_capped_worker(
         {"job": "sleep", "chunk_id": "timeout", "sleep_s": 30},
         result_path=tmp_path / "sleep.json",
@@ -649,7 +659,7 @@ def test_external_sigkill_is_not_recorded_as_oom(tmp_path: Path, monkeypatch: py
 
     _skip_without_user_scope()
     _enable_probe_jobs(monkeypatch)
-    before = _lexicon_cap_units()
+    before = _own_lexicon_cap_units()
     killed: dict[str, bool | int | None] = {"ok": False, "oom_kill": None}
 
     def _kill() -> None:
