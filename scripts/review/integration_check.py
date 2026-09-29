@@ -212,6 +212,7 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
     validate_fixture_draft(draft)
     state = scratch / "state"
     state.mkdir(parents=True)
+    (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     (state / f"lesson-{n}.draft.yaml").write_bytes(lock.yaml_bytes(draft))
 
     def answer(batch: dict[str, Any], seat: str) -> dict[str, Any]:  # the question seat: the first candidate of each

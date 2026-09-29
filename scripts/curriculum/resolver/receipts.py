@@ -174,7 +174,6 @@ def check_receipts(path: Path) -> dict[str, Any]:
 # beside the resolution receipts with the same YAML + lock publication rule. Missing
 # receipts are an explicit completeness status; a present but broken receipt is invalid.
 _A1_REQUIREMENT_GROUPS = frozenset({"Gender", "Number", "Case", "Person", "VerbForm"})
-_LANGUAGE_FAMILIES = frozenset({"anthropic", "openai", "google"})
 _REQUIREMENT_FIELDS = frozenset(
     {
         "activity",
@@ -198,8 +197,12 @@ def canonical_text(value: str) -> str:
 
 
 def requirement_sentence(item: dict[str, Any]) -> str:
-    """The authored sentence or question that presents the form slot."""
-    return item.get("sentence") or item.get("question") or ""
+    """The sentence rendered for an activity item, in assembler precedence."""
+    for field in ("prompt", "sentence", "question", "cue", "statement"):
+        value = item.get(field)
+        if isinstance(value, str) and value.strip():
+            return value
+    return ""
 
 
 def requirement_payload_sha256(sentence: str, options: list[str], key_index: int, requires: dict[str, str]) -> str:
@@ -221,7 +224,7 @@ def requirement_inputs(resolution_inputs: dict[str, str], authored_draft: dict[s
             if item.get("kind") != "form":
                 continue
             item.pop("_resolved_key_index", None)
-            for field in ("sentence", "question"):
+            for field in ("prompt", "sentence", "question", "cue", "statement"):
                 if isinstance(item.get(field), str):
                     item[field] = canonical_text(item[field])
             for option in item.get("options") or []:
@@ -242,6 +245,25 @@ def requirement_receipt_path(state_dir: Path, lesson_n: int) -> Path:
 
 def _requirement_error(message: str) -> ResolverError:
     return ResolverError(codes.RECEIPT_INVALID, f"requirement receipt: {message}")
+
+
+def _seat_family(seat: str, *, what: str) -> str:
+    """Resolve both parts of a language seat and refuse contradictory identities."""
+    from scripts.review.reviewer_resolver import UNRESOLVED_AUTHOR_FAMILIES, resolve_author_family
+    from scripts.review.second_seat import IdentityError, concrete_family
+
+    _check_seat(seat)
+    lane, separator, model = seat.partition("@")
+    if not separator or not model:
+        raise _requirement_error(f"{what} seat must name a lane and model")
+    try:
+        lane_family = concrete_family(lane, what=f"{what} lane")
+        model_family = resolve_author_family(model)
+    except IdentityError as exc:
+        raise _requirement_error(f"{what} seat has unresolved family: {exc}") from exc
+    if model_family not in UNRESOLVED_AUTHOR_FAMILIES and lane_family != model_family:
+        raise _requirement_error(f"{what} seat and model family disagree")
+    return lane_family
 
 
 def validate_requirement_receipts(doc: Any) -> None:
@@ -331,8 +353,8 @@ def validate_requirement_receipts(doc: Any) -> None:
         for provenance in (writer, reviewer):
             _check_seat(provenance["seat"])
             _check_seat(provenance["family"])
-            if provenance["family"].casefold() not in _LANGUAGE_FAMILIES:
-                raise _requirement_error(f"item {index} uses a family outside the language lanes")
+            if provenance["family"].casefold() != _seat_family(provenance["seat"], what=f"item {index}"):
+                raise _requirement_error(f"item {index} seat and family disagree")
         if reviewer["lane"] != "language":
             raise _requirement_error(f"item {index} was not confirmed by a language lane")
         if writer["family"].casefold() == reviewer["family"].casefold():
@@ -364,6 +386,7 @@ def requirement_status(
     doc: dict[str, Any] | None,
     *,
     lesson: dict[str, Any],
+    state_dir: Path,
     inputs: dict[str, Any],
     activity: str,
     item: int,
@@ -376,11 +399,19 @@ def requirement_status(
     if doc is None:
         return "requires_receipt_missing"
     validate_requirement_receipts(doc)
+    from scripts.review.second_seat import IdentityError, writer_family
+
+    try:
+        actual_writer_family = writer_family(state_dir, lesson["n"])
+    except IdentityError:
+        return "requires_receipt_stale"
     for row in doc["items"]:
         if row["activity"] == activity and row["item"] == item:
             if (
                 doc["lesson"] != lesson
                 or doc["inputs"] != inputs
+                or row["writer"]["family"] != actual_writer_family
+                or row["reviewer"]["family"] == actual_writer_family
                 or row["payload_sha256"] != payload_sha256
                 or row["requires"] != requires
             ):

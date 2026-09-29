@@ -65,6 +65,7 @@ def _item(record: str, answer: str, tags: str, feature: str, requires: dict[str,
     return {
         "mode": "form-choice",
         "kind": "form",
+        "sentence": "___",
         "record": record,
         "answer": answer,
         "answer_tags": tags,
@@ -120,6 +121,7 @@ def test_verb_person_candidates_and_quiz_binding(words: dict) -> None:
     _assert_no_stress_leak(_surfaces(offered), words["words"])
     quiz = {
         "kind": "form",
+        "prompt": "___",
         "tests_feature": "Person",
         "requires": item["requires"],
         "correct": 1,
@@ -303,3 +305,15 @@ def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
     pending_bank = _render_form_candidates(plan, {"W-102": words["words"][1]})
     assert "`W-102`: `читати`" in pending_bank
     _assert_no_stress_leak([pending_bank], [words["words"][1]])
+
+
+@pytest.mark.parametrize("level", ["a2", "b1", "b2"])
+def test_non_a1_candidate_bank_keeps_main_wording(words: dict, level: str) -> None:
+    plan = {"activities": [{"type": "quiz"}]}
+    bank = _render_form_candidates(plan, {"W-102": words["words"][1]}, level=level)
+    assert (
+        "Use one form from its bound record per option. State the complete slot `requires`; "
+        "choose one admitted key and distractors that differ in `tests_feature`. "
+        "The engine generates the item-specific subset and checks every written option."
+    ) in bank
+    assert "partitive genitive" not in bank

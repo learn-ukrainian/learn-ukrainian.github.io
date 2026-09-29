@@ -130,11 +130,37 @@ def test_render_lesson_prompt_clean(sample_plan_entry, sample_learner_state, sam
     assert len(check_res.prompt_sha256) == 64
 
 
+@pytest.mark.parametrize("level", ["a2", "b1", "b2"])
+@pytest.mark.parametrize("recap", [False, True])
+def test_non_a1_rendered_prompts_keep_main_candidate_wording(
+    sample_plan_entry, sample_learner_state, sample_cited_records, level: str, recap: bool
+) -> None:
+    sample_cited_records["W-001"]["lemma"] = "книга"
+    sample_cited_records["W-001"]["forms"][0].update(
+        {"form": "книга", "tags": "noun:inanim:f:v_naz", "stressed": "кни́га", "learner": True}
+    )
+    sample_plan_entry["lesson"] = {"module": f"{level}/sounds-intro", "n": 2 if recap else 1}
+    common = dict(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=sample_learner_state,
+        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level=level,
+        slug="sounds-intro",
+        lesson_n=2 if recap else 1,
+    )
+    rendered = render_recap_prompt(built_lessons=[], **common) if recap else render_lesson_prompt(**common)
+    assert (
+        "Use one form from its bound record per option. State the complete slot `requires`; "
+        "choose one admitted key and distractors that differ in `tests_feature`. "
+        "The engine generates the item-specific subset and checks every written option."
+    ) in rendered
+    assert "partitive genitive after request" not in rendered
+
+
 def test_render_lesson_prompt_uncited_pending_form(sample_plan_entry, sample_learner_state, sample_cited_records):
     """A cited word can contain an uncited pending form without leaking a guessed stress."""
-    sample_cited_records["W-001"]["forms"].append(
-        {"form": "mamy", "tags": "tag-gen", "stress_source": "pending"}
-    )
+    sample_cited_records["W-001"]["forms"].append({"form": "mamy", "tags": "tag-gen", "stress_source": "pending"})
     rendered = render_lesson_prompt(
         plan_entry=sample_plan_entry,
         cited_records=sample_cited_records,
@@ -161,8 +187,14 @@ def test_render_recap_prompt(sample_plan_entry, sample_learner_state, sample_cit
     card_path = CARDS_DIR / "a1.md"
     recap_plan = dict(sample_plan_entry)
     recap_plan["lesson"] = {"module": "a1/sounds-intro", "n": 2}
-    built_lessons = [{"n": 1, "title": "Lesson 1", "content": "# Built lesson MDX",
-                      "sha256": hashlib.sha256(b"# Built lesson MDX").hexdigest()}]
+    built_lessons = [
+        {
+            "n": 1,
+            "title": "Lesson 1",
+            "content": "# Built lesson MDX",
+            "sha256": hashlib.sha256(b"# Built lesson MDX").hexdigest(),
+        }
+    ]
 
     rendered = render_recap_prompt(
         plan_entry=recap_plan,

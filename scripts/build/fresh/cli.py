@@ -357,7 +357,8 @@ def _build_parser() -> argparse.ArgumentParser:
             p_requires.add_argument("--writer-family", required=True, help="Author's model family")
 
     p_closure = subparsers.add_parser(
-        "closure", help="Recompute stale lesson manifest dependencies",
+        "closure",
+        help="Recompute stale lesson manifest dependencies",
         description=(
             "Recompute module dependency closure from immutable lesson manifests.\n"
             "Use after building lessons to find stale upstream dependencies before review."
@@ -377,8 +378,9 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     p_closure.add_argument("level", choices=LEVELS, help="Curriculum level (a1, a2, b1, or b2)")
     p_closure.add_argument("slug", help="Module slug, e.g. sounds-letters-and-hello")
-    p_closure.add_argument("--repo-root", type=Path, default=None,
-                           help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)")
+    p_closure.add_argument(
+        "--repo-root", type=Path, default=None, help="Repository root (default: detected or LEARN_UKRAINIAN_REPO_ROOT)"
+    )
 
     p_plan_manifest = subparsers.add_parser(
         "plan-manifest",
@@ -623,30 +625,46 @@ def _load_recap_built_lessons(
     module_state_dir = checked_existing_path(repo_root, state_dir / slug, "curriculum/l2-uk-en/evidence")
 
     for prior_n in range(1, lesson_n):
-        found = checked_path(repo_root, Path("site/src/content/docs") / level / slug / f"{prior_n}.mdx",
-                             "site/src/content/docs")
-        gates = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.gates.yaml",
-                                      "curriculum/l2-uk-en/evidence")
-        manifest = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.manifest.yaml",
-                                         "curriculum/l2-uk-en/evidence")
-        sidecar = checked_existing_path(repo_root, module_state_dir / f"lesson-{prior_n}.manifest.sha256",
-                                        "curriculum/l2-uk-en/evidence")
+        found = checked_path(
+            repo_root, Path("site/src/content/docs") / level / slug / f"{prior_n}.mdx", "site/src/content/docs"
+        )
+        gates = checked_existing_path(
+            repo_root, module_state_dir / f"lesson-{prior_n}.gates.yaml", "curriculum/l2-uk-en/evidence"
+        )
+        manifest = checked_existing_path(
+            repo_root, module_state_dir / f"lesson-{prior_n}.manifest.yaml", "curriculum/l2-uk-en/evidence"
+        )
+        sidecar = checked_existing_path(
+            repo_root, module_state_dir / f"lesson-{prior_n}.manifest.sha256", "curriculum/l2-uk-en/evidence"
+        )
         try:
             gate_doc = yaml.safe_load(gates.read_text(encoding="utf-8")) if gates.is_file() else None
             manifest_doc = yaml.safe_load(manifest.read_text(encoding="utf-8")) if manifest.is_file() else None
         except (OSError, UnicodeError, yaml.YAMLError) as err:
             raise ValueError(f"recap_inputs_not_built: lesson {prior_n}: {err}") from err
-        if (not found.is_file() or not gates.is_file() or not manifest.is_file() or not sidecar.is_file()
-                or not isinstance(gate_doc, dict) or gate_doc.get("passed") is not True
-                or hashlib.sha256(manifest.read_bytes()).hexdigest() != sidecar.read_text(encoding="ascii").strip()
-                or not isinstance(manifest_doc, dict)
-                or not isinstance(manifest_doc.get("inputs"), dict)
-                or not isinstance(manifest_doc["inputs"].get("lesson"), dict)
-                or manifest_doc["inputs"]["lesson"].get("sha256") != hashlib.sha256(found.read_bytes()).hexdigest()):
+        if (
+            not found.is_file()
+            or not gates.is_file()
+            or not manifest.is_file()
+            or not sidecar.is_file()
+            or not isinstance(gate_doc, dict)
+            or gate_doc.get("passed") is not True
+            or hashlib.sha256(manifest.read_bytes()).hexdigest() != sidecar.read_text(encoding="ascii").strip()
+            or not isinstance(manifest_doc, dict)
+            or not isinstance(manifest_doc.get("inputs"), dict)
+            or not isinstance(manifest_doc["inputs"].get("lesson"), dict)
+            or manifest_doc["inputs"]["lesson"].get("sha256") != hashlib.sha256(found.read_bytes()).hexdigest()
+        ):
             raise ValueError(f"recap_inputs_not_built: lesson {prior_n}: {found}")
         text = found.read_text(encoding="utf-8")
-        built.append({"n": prior_n, "title": f"Lesson {prior_n}", "content": text,
-                      "sha256": hashlib.sha256(found.read_bytes()).hexdigest()})
+        built.append(
+            {
+                "n": prior_n,
+                "title": f"Lesson {prior_n}",
+                "content": text,
+                "sha256": hashlib.sha256(found.read_bytes()).hexdigest(),
+            }
+        )
 
     return built
 
@@ -715,23 +733,28 @@ def main(argv: list[str] | None = None) -> int:
         registry = evidence / "_words.registry.yaml"
         state = evidence / "_state" / args.slug
         for rel, allowed in (
-            (plan_root / args.level, plan_root), (plan, plan_root),
-            (evidence, evidence_root), (pack, evidence_root), (words, evidence_root),
-            (registry, evidence_root), (state, evidence_root),
+            (plan_root / args.level, plan_root),
+            (plan, plan_root),
+            (evidence, evidence_root),
+            (pack, evidence_root),
+            (words, evidence_root),
+            (registry, evidence_root),
+            (state, evidence_root),
             (state / "lessons.lock.yaml", evidence_root),
             (state / "lessons.lock.yaml.lock", evidence_root),
             *[(Path(f"{item}.lock"), evidence_root) for item in (pack, words, registry)],
         ):
             checked_path(repo_root, rel, allowed)
         checked_path(repo_root, "docs/style-cards", "docs/style-cards")
-        checked_path(repo_root, Path("site/src/content/docs") / args.level / args.slug,
-                     "site/src/content/docs")
+        checked_path(repo_root, Path("site/src/content/docs") / args.level / args.slug, "site/src/content/docs")
         for option in ("output", "output_dir", "site_dir", "gap_report", "fake_seat", "answers"):
             value = getattr(args, option, None)
             if value is not None:
-                setattr(args, option, checked_existing_path(
-                    repo_root, value if value.is_absolute() else repo_root / value, "."
-                ))
+                setattr(
+                    args,
+                    option,
+                    checked_existing_path(repo_root, value if value.is_absolute() else repo_root / value, "."),
+                )
     except ValueError as err:
         print(f"{err}", file=sys.stderr)
         return 1
@@ -797,6 +820,7 @@ def main(argv: list[str] | None = None) -> int:
                     family=args.family,
                     writer_seat=args.writer_seat,
                     writer_family=args.writer_family,
+                    state_dir=state_dir,
                 )
                 receipt_path = receipts.requirement_receipt_path(state_dir, args.lesson)
                 receipts.write_requirement_receipts(receipt_path, doc)
@@ -808,13 +832,25 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "build":
         from scripts.build.fresh.module import build_module
+
         try:
-            report = build_module(args.level, args.slug, repo_root=repo_root, lesson_n=args.lesson,
-                                  writer_seat=args.writer_seat, question_seat=args.question_seat)
+            report = build_module(
+                args.level,
+                args.slug,
+                repo_root=repo_root,
+                lesson_n=args.lesson,
+                writer_seat=args.writer_seat,
+                question_seat=args.question_seat,
+            )
             stopped = report["lessons"][-1] if report["lessons"] else None
             if args.lesson is not None and stopped and stopped["stopping_check"] == 0:
-                print(json.dumps({"check": 0, "reason": stopped["reason"], "layer": stopped["layer"]},
-                                 ensure_ascii=False, sort_keys=True))
+                print(
+                    json.dumps(
+                        {"check": 0, "reason": stopped["reason"], "layer": stopped["layer"]},
+                        ensure_ascii=False,
+                        sort_keys=True,
+                    )
+                )
             else:
                 print(json.dumps(report, ensure_ascii=False, sort_keys=True))
             if args.module and report["complete"]:
@@ -833,10 +869,16 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.command == "closure":
         from scripts.build.fresh.closure import compute_closure
+
         try:
             plan, _, _, _, paths = _load_lesson_data(args.level, args.slug, 1, repo_root=repo_root)
-            report = compute_closure(args.level, args.slug, list(plan["lessons"]), repo_root=repo_root,
-                                     state_dir=paths["state_dir"] / args.slug)
+            report = compute_closure(
+                args.level,
+                args.slug,
+                list(plan["lessons"]),
+                repo_root=repo_root,
+                state_dir=paths["state_dir"] / args.slug,
+            )
             print(json.dumps(report, ensure_ascii=False, sort_keys=True))
             return 0
         except (OSError, ValueError, KeyError) as err:
@@ -1119,11 +1161,16 @@ def main(argv: list[str] | None = None) -> int:
 
         try:
             state = args.output_dir or (repo_root / "curriculum/l2-uk-en/evidence" / args.level / "_state" / args.slug)
-            checked_existing_path(repo_root, state / f"lesson-{args.lesson}.draft.yaml", "." if args.output_dir
-                                  else "curriculum/l2-uk-en/evidence")
-            checked_existing_path(repo_root,
-                                  (args.site_dir or repo_root / "site/src/content/docs" / args.level / args.slug)
-                                  / f"{args.lesson}.mdx", "." if args.site_dir else "site/src/content/docs")
+            checked_existing_path(
+                repo_root,
+                state / f"lesson-{args.lesson}.draft.yaml",
+                "." if args.output_dir else "curriculum/l2-uk-en/evidence",
+            )
+            checked_existing_path(
+                repo_root,
+                (args.site_dir or repo_root / "site/src/content/docs" / args.level / args.slug) / f"{args.lesson}.mdx",
+                "." if args.site_dir else "site/src/content/docs",
+            )
         except ValueError as err:
             print(f"{err}", file=sys.stderr)
             return 1

@@ -11,15 +11,10 @@ from jinja2 import Environment, FileSystemLoader, StrictUndefined
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import codes, receipts
 from scripts.curriculum.resolver.inputs import ResolverError
+from scripts.review.second_seat import IdentityError
+from scripts.review.second_seat import writer_family as lesson_writer_family
 
 PROMPTS_DIR = Path(__file__).parent / "prompts"
-LANGUAGE_FAMILIES = {
-    "claude": "anthropic",
-    "codex": "openai",
-    "gpt": "openai",
-    "agy": "google",
-    "gemini": "google",
-}
 
 
 def _bad(message: str) -> ResolverError:
@@ -46,7 +41,7 @@ def questions_from_draft(draft: dict[str, Any], lesson: dict[str, Any], inputs: 
             if any(not isinstance(option, str) for option in options) or key is None or not 0 <= key < len(options):
                 raise _bad(f"{aid}/{index}: invalid option or key")
             sentence, demand = receipts.requirement_sentence(item), item.get("requires")
-            if not isinstance(sentence, str) or not isinstance(demand, dict):
+            if not sentence or not isinstance(demand, dict):
                 raise _bad(f"{aid}/{index}: invalid sentence or requires")
             questions.append(
                 {
@@ -74,22 +69,28 @@ def write_questions(state_dir: Path, n: int, batch: dict[str, Any]) -> None:
 
 
 def record_answers(
-    batch: dict[str, Any], answers: Any, *, seat: str, family: str, writer_seat: str, writer_family: str
+    batch: dict[str, Any],
+    answers: Any,
+    *,
+    seat: str,
+    family: str,
+    writer_seat: str,
+    writer_family: str,
+    state_dir: Path,
 ) -> dict[str, Any]:
     """Reject incomplete, reordered, unsupported or internally inconsistent judgements."""
     for value in (seat, family, writer_seat, writer_family):
         receipts._check_seat(value)
-    reviewer_lane = seat.split("@", 1)[0].casefold()
-    writer_lane = writer_seat.split("@", 1)[0].casefold()
-    if reviewer_lane not in LANGUAGE_FAMILIES:
-        raise _bad("reviewer seat is not a language lane")
-    if writer_lane not in LANGUAGE_FAMILIES:
-        raise _bad("writer seat is not a language lane")
-    if (
-        family.casefold() != LANGUAGE_FAMILIES[reviewer_lane]
-        or writer_family.casefold() != LANGUAGE_FAMILIES[writer_lane]
-    ):
+    if family.casefold() != receipts._seat_family(
+        seat, what="reviewer"
+    ) or writer_family.casefold() != receipts._seat_family(writer_seat, what="writer"):
         raise _bad("seat and model family disagree")
+    try:
+        actual_writer_family = lesson_writer_family(state_dir, batch["lesson"]["n"])
+    except IdentityError as exc:
+        raise _bad(f"lesson writer family unavailable: {exc}") from exc
+    if writer_family.casefold() != actual_writer_family:
+        raise _bad("writer family disagrees with lesson writer record")
     if family.casefold() == writer_family.casefold():
         raise _bad("reviewer and writer share a model family")
     if not isinstance(answers, dict) or set(answers) != {"answers"} or not isinstance(answers["answers"], list):
@@ -138,8 +139,8 @@ def record_answers(
                 "reason": answer["reason"],
                 "requires_forced": answer["requires_forced"],
                 "options": options,
-                "writer": {"seat": writer_seat, "family": writer_family},
-                "reviewer": {"seat": seat, "family": family, "lane": "language"},
+                "writer": {"seat": writer_seat, "family": actual_writer_family},
+                "reviewer": {"seat": seat, "family": family.casefold(), "lane": "language"},
             }
         )
     if seen != set(by_locator):

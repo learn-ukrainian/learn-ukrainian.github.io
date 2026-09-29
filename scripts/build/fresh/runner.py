@@ -33,6 +33,7 @@ Named Failure Reasons for Check 4:
 - answer_index_out_of_range: 0-based key index out of bounds
 - answer_not_in_options: key text not found in offered options/words
 - form_choice_options_invalid: form-choice options not unique, not in record, or answer tag mismatch
+- form_sentence_missing: A1 form-choice item has no rendered sentence for its requirement receipt
 - a1_case_contrast_under_negated_verb: A1 case-choice sentence contains не followed by a finite verb
 - select_correct_set_invalid: select activity has fewer correct options than required
 """
@@ -44,6 +45,7 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import subprocess
 import sys
 import unicodedata
@@ -266,7 +268,7 @@ def a1_case_contrast_under_negated_verb(
         text = _choice_text(option)
         analyses = _analyses(records.get(record_id), text) if isinstance(text, str) else []
         case_sets.append(frozenset(atom for analysis in analyses for atom in analysis if atom.startswith("Case=")))
-    if len({cases for cases in case_sets if cases}) < 2:
+    if not all(case_sets) or set.intersection(*(set(cases) for cases in case_sets)):
         return False
 
     sentence = receipts.requirement_sentence(item)
@@ -288,8 +290,10 @@ def a1_case_contrast_under_negated_verb(
     if vesum_lookup is None:
         from scripts.verification.vesum import verify_words
 
-        vesum_lookup = verify_words
-    unresolved = sorted(set(successors) - known_finite)
+        def vesum_lookup(words: list[str]) -> dict[str, list[dict[str, Any]]]:
+            return verify_words(words, db_path=os.environ.get("VESUM_DB_PATH"))
+
+    unresolved = sorted(set(successors))
     found = vesum_lookup(unresolved)
     return any(
         "VerbForm=Fin" in to_oracle(analysis["tags"]) for surface in unresolved for analysis in found.get(surface, [])
@@ -435,15 +439,19 @@ def check_7_a1_choices(
                     return bad("form_option_missing_required_group", aid, index)
                 if [state == "admitted" for state in classifications] != [i == key for i in range(len(options))]:
                     return bad("form_not_unique_for_requires", aid, index)
+                sentence = receipts.requirement_sentence(item)
+                if not sentence and (
+                    (typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"}
+                ):
+                    return bad("form_sentence_missing", aid, index)
                 status = receipts.requirement_status(
                     receipt_doc,
                     lesson=stream.lesson,
+                    state_dir=state_dir,
                     inputs=requirement_inputs if requirement_inputs is not None else stream.inputs,
                     activity=aid,
                     item=index,
-                    payload_sha256=receipts.requirement_payload_sha256(
-                        receipts.requirement_sentence(item), texts, key, demand
-                    ),
+                    payload_sha256=receipts.requirement_payload_sha256(sentence, texts, key, demand),
                     options=texts,
                     key_index=key,
                     requires=demand,
@@ -700,7 +708,24 @@ def check_4_activities(
 
                 item["_resolved_key_index"] = next(iter(resolved_indices))
 
-            if mod_level == "a1" and a1_case_contrast_under_negated_verb(item, records, typ, vesum_lookup=vesum_lookup):
+            if (
+                mod_level == "a1"
+                and item.get("kind") == "form"
+                and ((typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"})
+                and not receipts.requirement_sentence(item)
+            ):
+                return failure(
+                    4, "form_sentence_missing", "writer", code="form_sentence_missing", activity=aid, token=str(idx)
+                ), {}
+            try:
+                negated_case = mod_level == "a1" and a1_case_contrast_under_negated_verb(
+                    item, records, typ, vesum_lookup=vesum_lookup
+                )
+            except (OSError, sqlite3.Error) as err:
+                return failure(
+                    4, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable"
+                ), {}
+            if negated_case:
                 return failure(
                     4,
                     "a1_case_contrast_under_negated_verb",

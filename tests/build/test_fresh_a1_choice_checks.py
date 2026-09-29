@@ -16,7 +16,7 @@ import yaml
 
 from scripts.build.fresh import cli
 from scripts.build.fresh.candidates import item_candidates
-from scripts.build.fresh.requires_confirm import record_answers
+from scripts.build.fresh.requires_confirm import questions_from_draft, record_answers
 from scripts.build.fresh.runner import check_4_activities, check_7_a1_choices
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
@@ -192,6 +192,7 @@ def _check(
 
 
 def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm") -> None:
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     options = item["options"]
     key = item.get("correct", 0)
     evidence_id = "vesum:" + VESUM_LOCATIONS[item["option_records"][0]]
@@ -225,6 +226,7 @@ def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm"
 def _form(options: list[str], record: dict, demand: dict[str, str], *, key: int = 0, taught: str = "Case") -> dict:
     return {
         "kind": "form",
+        "sentence": "___",
         "options": options,
         "correct": key,
         "option_records": [record["id"]] * len(options),
@@ -253,10 +255,13 @@ def _case_offer(
     kind: str = "form",
     level: str = "a1",
     extra_records: list[dict] | None = None,
+    sentence_field: str = "sentence",
 ) -> dict:
     item = _form(["подарунка", "подарунок", "подарунком"], GIFT, {"Case": "Gen"}, taught=feature)
     item["kind"] = kind
-    item["sentence"] = sentence
+    item[sentence_field] = sentence
+    if sentence_field != "sentence":
+        item.pop("sentence")
     draft = {"activities": [{"id": "a1", "items": [item]}]}
     lesson = {"level": level, "activities": [{"id": "a1", "type": "quiz"}]}
     # VESUM analyses for these surfaces were independently inspected for this regression.
@@ -281,6 +286,65 @@ def _case_offer(
 def test_a1_case_contrast_with_negated_finite_verb_stops_at_offer(sentence: str) -> None:
     row = _case_offer(sentence)
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+def test_prompt_sentence_is_used_by_offer_question_and_payload() -> None:
+    sentence = "Скоро мамине свято, а я ще ___ не маю."
+    assert _case_offer(sentence, sentence_field="prompt")["code"] == "a1_case_contrast_under_negated_verb"
+    item = _form(["подарунка", "подарунок", "подарунком"], GIFT, {"Case": "Gen"})
+    item.update({"prompt": sentence, "question": "different sentence ___"})
+    batch = questions_from_draft(
+        {"activities": [{"id": "a1", "type": "quiz", "items": [item]}]},
+        {"lesson": {"level": "a1", "slug": "sample", "n": 1}, "activities": [{"id": "a1", "type": "quiz"}]},
+        {"draft_sha256": "a" * 64},
+    )
+    question = batch["questions"][0]
+    assert question["sentence"] == sentence
+    assert question["payload_sha256"] == receipts.requirement_payload_sha256(
+        sentence, question["options"], question["key_index"], question["requires"]
+    )
+
+
+def test_form_with_empty_rendered_sentence_is_refused() -> None:
+    assert _case_offer("", sentence_field="prompt")["code"] == "form_sentence_missing"
+
+
+def test_shared_accusative_case_does_not_trigger_negation_rule() -> None:
+    coffee = _record(30, "кава", [("каву", "noun:inanim:f:v_zna")])
+    tea = _record(31, "чай", [("чай", "noun:inanim:m:v_naz"), ("чай", "noun:inanim:m:v_zna")])
+    water = _record(32, "вода", [("воду", "noun:inanim:f:v_zna")])
+    item = {
+        "kind": "vocabulary",
+        "prompt": "Вранці я не п'ю ___.",
+        "options": ["каву", "чай", "воду"],
+        "correct": 0,
+        "option_records": ["W-30", "W-31", "W-32"],
+        "target_record": "W-30",
+    }
+    lesson = {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]}
+    draft = {"activities": [{"id": "a1", "items": [item]}]}
+    row = check_4_activities(draft, lesson, {"words": [coffee, tea, water]}, {}, level="a1")[0]
+    assert row.get("code") != "a1_case_contrast_under_negated_verb"
+
+
+@pytest.mark.parametrize("unreadable", [False, True])
+def test_check_4_default_vesum_outage_is_named(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, unreadable: bool
+) -> None:
+    db_path = tmp_path / "vesum.db"
+    if unreadable:
+        db_path.write_text("not a database", encoding="utf-8")
+    monkeypatch.setenv("VESUM_DB_PATH", str(db_path))
+    item = _form(["подарунка", "подарунок", "подарунком"], GIFT, {"Case": "Gen"})
+    item["prompt"] = "Я не знаю ___."
+    row = check_4_activities(
+        {"activities": [{"id": "a1", "items": [item]}]},
+        {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
+        {"words": [GIFT]},
+        {},
+        level="a1",
+    )[0]
+    assert (row["check"], row["code"]) == (4, "a1_choice_source_unavailable")
 
 
 @pytest.mark.parametrize(
@@ -554,7 +618,7 @@ def test_requirement_confirmation_is_bound_to_demand_and_other_family(tmp_path: 
     assert _check(tmp_path, item, BROTHER)["details"]["requirement_receipts"][0]["requirement"] == "confirmed"
     item["sentence"] = "Changed ___"
     assert _check(tmp_path, item, BROTHER)["code"] == "requires_receipt_stale"
-    item.pop("sentence")
+    item["sentence"] = "___"
     path = receipts.requirement_receipt_path(tmp_path, 1)
     doc = receipts.read_requirement_receipts(path)
     doc["items"][0]["requires"] = {"Case": "Gen"}
@@ -623,7 +687,8 @@ def test_denied_partitive_item_fails_check_7(tmp_path: Path) -> None:
     assert _check(tmp_path, item, bread)["code"] == "requires_receipt_stale"
 
 
-def test_requires_record_rejects_invalid_answers() -> None:
+def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     question = {
         "activity": "a1",
         "item": 0,
@@ -654,10 +719,20 @@ def test_requires_record_rejects_invalid_answers() -> None:
 
     def record(candidate: dict, *, seat: str = "claude@sonnet", family: str = "anthropic") -> dict:
         return record_answers(
-            batch, {"answers": [candidate]}, seat=seat, family=family, writer_seat="codex@sol", writer_family="openai"
+            batch,
+            {"answers": [candidate]},
+            seat=seat,
+            family=family,
+            writer_seat="codex@sol",
+            writer_family="openai",
+            state_dir=tmp_path,
         )
 
     assert record(answer)["items"][0]["decision"] == "confirm"
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: claude-sonnet-4-5\n", encoding="utf-8")
+    with pytest.raises(ResolverError, match="writer family disagrees"):
+        record(answer)
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     for change in (
         {"options": [{**answer["options"][0], "evidence": []}, answer["options"][1]]},
         {"options": [{**answer["options"][0], "evidence": ["sum11:12"]}, answer["options"][1]]},
@@ -674,6 +749,7 @@ def test_requires_record_rejects_invalid_answers() -> None:
             family="anthropic",
             writer_seat="codex@sol",
             writer_family="openai",
+            state_dir=tmp_path,
         )
     with pytest.raises(ResolverError, match="duplicate"):
         record_answers(
@@ -683,13 +759,13 @@ def test_requires_record_rejects_invalid_answers() -> None:
             family="anthropic",
             writer_seat="codex@sol",
             writer_family="openai",
+            state_dir=tmp_path,
         )
     with pytest.raises(ResolverError, match="family"):
         record(answer, family="OpenAI")
-    with pytest.raises(ResolverError, match="language lane"):
+    with pytest.raises(ResolverError, match="family"):
         record(answer, seat="other@model")
-    with pytest.raises(ResolverError, match="language lane"):
-        record(answer, seat="grok@model")
+    assert record(answer, seat="grok@model", family="xai")["items"][0]["reviewer"]["family"] == "xai"
     with pytest.raises(ResolverError, match="family"):
         record(answer, family="xai")
     unresolved = {
@@ -711,6 +787,7 @@ def test_requires_record_rejects_invalid_answers() -> None:
 def test_requires_cli_writes_questions_prompt_and_denial(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     state = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/sample"
     state.mkdir(parents=True)
+    (state / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     item = _form(["хліб", "хліба"], _record(17, "хліб", []), {"Case": "Acc"})
     item["sentence"] = "Можна ___?"
     (state / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes({"activities": [{"id": "a1", "items": [item]}]}))

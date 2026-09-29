@@ -532,6 +532,7 @@ def _run_contract(
 
     state = tmp_path / "state"
     state.mkdir(exist_ok=True)
+    (state / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     (state / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes(draft))
     monkeypatch.setattr(runner, "write_manifest", manifest_writer or (lambda *a, **kw: ({"recap": False}, "a" * 64)))
     report = runner.run_lesson(

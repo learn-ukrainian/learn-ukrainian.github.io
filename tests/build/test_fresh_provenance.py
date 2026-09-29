@@ -84,6 +84,7 @@ def _run_with_fixture_receipts(
 
 
 def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path) -> None:
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     lesson = {"level": "a1", "slug": "sample", "n": 1}
     inputs = {"plan_sha256": "a" * 64, "words_lock": "b" * 64}
     demand = {"Case": "Acc", "Number": "Sing"}
@@ -99,8 +100,8 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
             {"text": "брата", "judgement": "valid", "evidence": ["vesum:487702-487719"]},
             {"text": "брату", "judgement": "invalid", "evidence": ["vesum:487702-487719"]},
         ],
-        "writer": {"seat": "writer@model", "family": "openai"},
-        "reviewer": {"seat": "reviewer@model", "family": "anthropic", "lane": "language"},
+        "writer": {"seat": "codex@sol", "family": "openai"},
+        "reviewer": {"seat": "claude@sonnet", "family": "anthropic", "lane": "language"},
     }
     doc = {"requirements_schema": 2, "lesson": lesson, "inputs": inputs, "items": [row]}
     path = receipts.requirement_receipt_path(tmp_path, 1)
@@ -109,6 +110,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.requirement_status(
             None,
             lesson=lesson,
+            state_dir=tmp_path,
             inputs=inputs,
             activity="quiz1",
             item=0,
@@ -122,10 +124,32 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
     receipts.write_requirement_receipts(path, doc)
     checked = receipts.read_requirement_receipts(path)
     assert checked == doc
+    forged = copy.deepcopy(doc)
+    forged["items"][0]["reviewer"]["seat"] = "codex@sol"
+    with pytest.raises(ResolverError, match="seat and family disagree"):
+        receipts.validate_requirement_receipts(forged)
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: claude-sonnet-4-5\n", encoding="utf-8")
     assert (
         receipts.requirement_status(
             checked,
             lesson=lesson,
+            state_dir=tmp_path,
+            inputs=inputs,
+            activity="quiz1",
+            item=0,
+            payload_sha256=row["payload_sha256"],
+            options=["брата", "брату"],
+            key_index=0,
+            requires=demand,
+        )
+        == "requires_receipt_stale"
+    )
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    assert (
+        receipts.requirement_status(
+            checked,
+            lesson=lesson,
+            state_dir=tmp_path,
             inputs=inputs,
             activity="quiz1",
             item=0,
@@ -140,6 +164,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.requirement_status(
             checked,
             lesson=lesson,
+            state_dir=tmp_path,
             inputs=inputs,
             activity="quiz1",
             item=0,
@@ -154,6 +179,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.requirement_status(
             checked,
             lesson=lesson,
+            state_dir=tmp_path,
             inputs={"plan_sha256": "c" * 64},
             activity="quiz1",
             item=0,
@@ -168,6 +194,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.requirement_status(
             checked,
             lesson=lesson,
+            state_dir=tmp_path,
             inputs=inputs,
             activity="quiz1",
             item=1,
@@ -186,6 +213,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.requirement_status(
             shortened,
             lesson=lesson,
+            state_dir=tmp_path,
             inputs=inputs,
             activity="quiz1",
             item=0,
@@ -214,7 +242,8 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
         receipts.read_requirement_receipts(path)
 
 
-def test_requirement_receipt_status_binds_each_payload_field() -> None:
+def test_requirement_receipt_status_binds_each_payload_field(tmp_path: Path) -> None:
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
     lesson = {"level": "a1", "slug": "sample", "n": 1}
     inputs = {"draft_semantic_sha256": "a" * 64}
     original = ("Можна ___?", ["хліб", "хліба"], 0, {"Case": "Acc", "Number": "Sing"})
@@ -252,6 +281,7 @@ def test_requirement_receipt_status_binds_each_payload_field() -> None:
             receipts.requirement_status(
                 doc,
                 lesson=lesson,
+                state_dir=tmp_path,
                 inputs=inputs,
                 activity="a1",
                 item=0,
@@ -266,6 +296,7 @@ def test_requirement_receipt_status_binds_each_payload_field() -> None:
         receipts.requirement_status(
             doc,
             lesson=lesson,
+            state_dir=tmp_path,
             inputs=inputs,
             activity="a1",
             item=0,
