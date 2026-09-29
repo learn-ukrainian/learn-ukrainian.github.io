@@ -14,6 +14,7 @@ import teacherTableData from '../../data/lexicon-teacher-table-deck.json';
 // separately, on demand, as the practice-cloze.teacher.json runtime shard.
 import defaultTeacherLemmasData from '../../data/lexicon-teacher-lesson-keys.json';
 import { filterTeacherClozeItems } from './teacher-cloze-filter';
+import type { ArtifactDeckPracticeConfig } from './teacher-deck';
 
 export { filterTeacherClozeItems };
 
@@ -32,6 +33,11 @@ export interface CustomSet {
 
 export interface VirtualSpecialSet extends CustomSet {
   titleUk: string;
+  /**
+   * Present when the set practises from its own served artifacts (#8843) instead of
+   * the CEFR practice shards: which files to fetch and the per-deck daily defaults.
+   */
+  practice?: ArtifactDeckPracticeConfig;
 }
 
 export const CUSTOM_SETS_STORAGE_KEY = 'learn_ukrainian_custom_sets_v1';
@@ -102,6 +108,14 @@ const defaultTeacherTableVirtualDeck: VirtualSpecialSet = {
   updated_at: '2026-08-11T00:00:00.000Z',
   device_id: 'system',
   revision: 1,
+  // Teacher-table artifacts (docs/practice/teacher-deck-artifacts.md), served by
+  // `npm run hydrate` next to the CEFR shards; defaults from the #8843 task card.
+  practice: {
+    deckFile: 'practice-deck.teacher.json',
+    clozeFile: 'practice-cloze.teacher.json',
+    newPerDay: 10,
+    reviewCap: 100,
+  },
 };
 
 /**
@@ -144,6 +158,17 @@ export function getTeacherLessonVirtualDeck(
  */
 export function getTeacherTableVirtualDeck(): VirtualSpecialSet {
   return defaultTeacherTableVirtualDeck;
+}
+
+/**
+ * The built-in special set with this id when it practises from its own served
+ * artifacts (see `VirtualSpecialSet.practice`), else null (CEFR-shard practice).
+ */
+export function getArtifactPracticeDeck(
+  deckId: string,
+): (VirtualSpecialSet & { practice: ArtifactDeckPracticeConfig }) | null {
+  const deck = deckId === defaultTeacherTableVirtualDeck.id ? defaultTeacherTableVirtualDeck : null;
+  return deck?.practice ? (deck as VirtualSpecialSet & { practice: ArtifactDeckPracticeConfig }) : null;
 }
 
 export function readLocalCustomSets(): CustomSet[] {

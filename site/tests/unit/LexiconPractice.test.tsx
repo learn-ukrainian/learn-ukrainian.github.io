@@ -54,6 +54,7 @@ import {
 } from '@site/src/lib/lexicon/custom-decks';
 import { dateSeed, type DailyWord } from '@site/src/lib/lexicon/daily';
 import { selectHeritagePracticePresentation } from '@site/src/lib/lexicon/practice-activity-adapters';
+import { buildFixturePayloads } from '../helpers/teacher-deck-fixture';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
 
@@ -6174,6 +6175,41 @@ describe('LexiconPractice', () => {
       expect(dailyTitle.querySelector('[data-loc="uk"]')).toHaveTextContent(
         `Слова дня — ${ukrainianTitle}`,
       );
+    });
+
+    test("practises Dev's example deck from its own artifacts with the teacher's English (#8843)", async () => {
+      document.documentElement.dataset.chromeLocale = 'en';
+      const { deck, cloze } = buildFixturePayloads();
+      const requested: string[] = [];
+      vi.spyOn(globalThis, 'fetch').mockImplementation(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        requested.push(url);
+        if (url.endsWith('/practice-deck.teacher.json')) return okJson(deck);
+        if (url.endsWith('/practice-cloze.teacher.json')) return okJson(cloze);
+        return notFoundResponse();
+      });
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+      expect(requested.some((url) => url.includes('.teacher.json'))).toBe(false);
+
+      await user.click(screen.getByTestId('practice-active-deck-chip'));
+      await user.click(screen.getByTestId('practice-deck-option-virtual_teacher_table'));
+
+      // Lazy: the teacher files load only once the deck is selected.
+      const start = await screen.findByTestId('teacher-deck-start');
+      expect(requested.filter((url) => url.includes('.teacher.json')).sort()).toEqual([
+        '/lexicon/practice-cloze.teacher.json',
+        '/lexicon/practice-deck.teacher.json',
+      ]);
+      // The CEFR dashboard (mode grid, CEFR start, key-as-meaning daily deck) is not offered.
+      expect(screen.queryByTestId('practice-start-session')).toBeNull();
+      expect(screen.queryByTestId('practice-dashboard-secondary')).toBeNull();
+      expect(screen.getByTestId('teacher-deck-session-size')).toHaveTextContent('0 due + 10 new');
+
+      await user.click(start);
+      const card = screen.getByTestId('teacher-deck-recognition-flashcard');
+      expect(card.querySelector('.flashcard-front .flashcard-word')).toHaveTextContent('Цілодобово');
+      expect(card.querySelector('.flashcard-back .flashcard-word')).toHaveTextContent('Around the clock');
     });
 
     test.each([

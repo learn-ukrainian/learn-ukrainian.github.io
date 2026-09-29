@@ -162,6 +162,38 @@ Cloze items are `PracticeClozeItem`-compatible (`sentence` with one `___`, `form
 `attribution`, optional `clozeEn` (the teacher's English line for a lesson sentence) and
 `atlasSense`. The existing Curated Deck (`virtual_teacher_lesson`) also reads this file.
 
+## Practice page (P2)
+
+`site/src/components/practice/TeacherDeckPractice.tsx` renders the deck when it is selected on
+`/practice/`; `LexiconPractice.tsx` switches to it because the special set carries a `practice`
+config (`getArtifactPracticeDeck` in `site/src/lib/lexicon/custom-decks.ts`: file names, default
+10 new words and 100 reviews per day). It fetches the two served files only then
+(`site/src/lib/lexicon/teacher-deck.ts` validates schema, deck id and matching `deckVersion`);
+a failed fetch shows an error with retry — there is no CEFR-shard fallback. Scheduling lives in
+`site/src/lib/lexicon/teacher-deck-srs.ts`:
+
+- **Store** `localStorage["lu-deck-progress:<deckId>"]` (never the CEFR store): settings, the
+  introduced set by entry id, FSRS state by card id, the review log (last 3,000 records; today's
+  are never dropped) and today's queue. FSRS parameters are the learner's practice settings.
+- **Day plan** (local midnight): due cards first, capped by the review cap (distinct cards
+  reviewed today as scheduled reviews count against it), then unseen entries by highest
+  `firstSeen`, up to new words per day (distinct entries first introduced today). A failed card
+  in a learning step comes back later the same day as a repeat, outside both limits.
+- **Unlock**: the first recognition rating other than *again* creates the entry's production,
+  cloze and grammar cards (those the loaded deck can serve), due the next local midnight.
+- **Presentations** rotate with the card's review count: recognition/production alternate
+  flashcard and choice (a first exposure is the flashcard; EN→UK needs a typed attempt or
+  "I don't know" before the answer shows); cloze rotates its sentences; grammar rotates its modes,
+  then items and classify sets. Objective items rate *good* when right, *again* when wrong.
+  Matching rounds use introduced entries, never group `conflicts`, and never touch FSRS.
+- **Continuity**: each answer is read-apply-written at once and applied at most once (the queue
+  slot id is the review id). The saved queue is restored only on the same local day; its pending
+  slots are dropped when the entry, card or shown content changed (a fingerprint per slot) or the
+  card is no longer due, then the plan is topped up. A new day rebuilds the queue.
+- **Migration** (once): an entry whose Atlas slug, key or table spelling has state in the CEFR
+  store (`lu-lexicon-srs`) counts as introduced (not against today's allowance); its most recent
+  flashcards/choice/matching state becomes the recognition card. The CEFR store is only read.
+
 ## Rules
 
 - **Verb aspect comes from the sources, never from the teacher's markers** (operator 2026-09-27).
