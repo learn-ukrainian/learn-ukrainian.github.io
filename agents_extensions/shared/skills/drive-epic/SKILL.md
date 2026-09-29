@@ -52,6 +52,11 @@ Per turn and at session end:
       `.venv/bin/python -m scripts.orchestration.reap_worktrees apply --terminal-dispatches --merged --preserve-then-reap`.
 - [ ] `.venv/bin/python -m scripts.hygiene.branch_sweep --json` reviewed and its
       proven-safe deletions applied (`--apply`), then `git fetch --prune`.
+- [ ] Every SKIPPED row from the reaper or `branch_sweep` gets a decision: remove it
+      safely or record a verified reason to keep it (a live process, a running task,
+      unpushed or unique work). Exit 0 with skips is not done. Never force removal.
+- [ ] Remove a review worktree as soon as its verdict is posted and the reviewer process
+      has exited; superseded review checkouts never wait for merge.
 - [ ] No issue in the lane has a merged PR and no disposition.
 - [ ] Every live worker has an armed wait, and no finished worker is waiting for the
       operator to ask about it.
@@ -97,9 +102,10 @@ not delivery proof for the live driver.
    `capacity_pick`, usage pace). Write a ROUTING_CARD_V1 before every implement dispatch;
    no card, no dispatch (§3-routing). Substantive phase or epic prompts first pass §3a
    pre-dispatch outcome adequacy: [routing-and-dispatch](references/routing-and-dispatch.md).
-7. **§4 Dispatch** only when the task card and dispatch preflight are both green; chat
+7. **§4a Inbox drain — immediately before dispatch.** Apply every message before the
+   launch.
+8. **§4 Dispatch** only when the task card and dispatch preflight are both green; chat
    "ready" is not DoR. Use `--check-budget`, research flags, and `--owned-path`.
-8. **§4a Inbox drain — immediately before dispatch.**
 9. **§5 Settle.** Arm `delegate.py wait <task-id>` (or the Monitor tool) in the same turn
    as the dispatch. State a worker's status only after `delegate.py status <task-id>` in
    this turn, and keep its task id, status, and branch head. When the wait returns, act on

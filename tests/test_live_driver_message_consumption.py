@@ -147,6 +147,8 @@ def test_drive_epic_skill_keeps_all_required_live_inbox_boundaries():
     assert core.index(required_steps[0]) < core.index(required_steps[1])
     assert core.index(required_steps[1]) < core.index(required_steps[2])
     assert core.index(required_steps[2]) < core.index(required_steps[3])
+    # Messages are applied before the launch: the §4a drain precedes the §4 dispatch step.
+    assert core.index(required_steps[1]) < core.index("**§4 Dispatch**") < core.index(required_steps[2])
 
     # The drain procedure is stated once, in the core, and names all four points.
     inbox_command = '.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"'
