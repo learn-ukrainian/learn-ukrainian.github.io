@@ -385,7 +385,12 @@ def test_enrich_entry_merges_pointer_synonym_relations(monkeypatch):
                 "pattern": "див.",
                 "vein": 1,
                 "direction": "reciprocal",
-            }
+            },
+            {"item": "mphdict-item", "source": "СУМ-11", "pattern": "див.", "vein": 1},
+            {"item": "дозволений-вказівник", "source": "СУМ-20", "pattern": "див.", "vein": 1},
+            {"item": "дозволений-змішаний", "source": "СУМ-20 + СУМ-11", "pattern": "див.", "vein": 1},
+            {"item": "дозволений-гейт", "source": "Ukrajinet WordNet", "pattern": "synset", "vein": 1,
+             "gate": {"co_attestation": {"dictionaries": ["СУМ-11"]}}},
         ],
         pointer_antonym_relations=[],
         pointer_homonym_relations=[],
@@ -393,4 +398,8 @@ def test_enrich_entry_merges_pointer_synonym_relations(monkeypatch):
     )
     items = entry["sections"]["synonyms"]["items"]
     assert "mphdict-item" in items
-    assert "синонім-вказівник" in items
+    assert "дозволений-вказівник" in items
+    assert "дозволений-змішаний" in items
+    assert "дозволений-гейт" in items
+    assert "синонім-вказівник" not in items
+    assert "СУМ-11" not in json.dumps(entry, ensure_ascii=False)

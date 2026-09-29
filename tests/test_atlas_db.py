@@ -92,7 +92,12 @@ def test_migration_withholds_legacy_soviet_citation(tmp_path):
     manifest.write_text(json.dumps(entries, ensure_ascii=False), encoding="utf-8")
     counts = atlas_db.migrate_manifest(manifest, db)
     report = counts["soviet_citation_withholding"]
-    assert report == {"entries_touched": 1, "citations_withheld": 1, "by_section": {"synonyms": 1}}
+    assert report == {
+        "stage": "migrate", "entries_touched": 1, "citations_withheld": 1,
+        "by_section": {"synonyms": 1}, "clauses_withheld": 1,
+        "items_withheld": 1, "items_kept": 0, "gate_notes_removed": 0,
+        "relation_sections_touched": 1,
+    }
     with sqlite3.connect(db) as conn:
         payload = json.loads(conn.execute(
             "SELECT payload_json FROM article_payloads WHERE slug='прапор'"
@@ -101,6 +106,8 @@ def test_migration_withholds_legacy_soviet_citation(tmp_path):
         assert payload["gate_provenance"]["synonyms"] == "source-withdrawn-unverified"
     out = tmp_path / "runtime"
     report = export_runtime_shards(db_path=db, out_dir=out, include_decks=False)
+    assert report["sovietCitationWithholding"]["stage"] == "export"
+    assert report["sovietCitationWithholding"]["citations_withheld"] == 0
     shard_dir = out / "atlas" / "versions" / report["dataVersion"] / "entries"
     records = [
         record

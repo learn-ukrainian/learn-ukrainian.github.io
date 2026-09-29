@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import re
+import unicodedata
 from typing import Any
 from urllib.parse import quote, unquote, urlparse
 
@@ -91,15 +92,73 @@ def soviet_citation_learner_violation(payload: object) -> str | None:
     return None
 
 
+_GATE_NOTE_RE = re.compile(r"\s*\[gate: [^\]]*\]")
+
+
+def _relation_item_key(item: object) -> str | None:
+    if isinstance(item, dict):
+        item = next((item[key] for key in ("word", "target", "lemma", "phrase", "text")
+                     if isinstance(item.get(key), str)), None)
+    if not isinstance(item, str):
+        return None
+    text = re.sub(r"\s+\([^)]*\)$", "", item).strip().casefold().replace("’", "'")
+    return unicodedata.normalize("NFD", text).replace("\u0301", "") or None
+
+
+def _project_relation_section(value: dict[str, Any]) -> tuple[dict[str, Any] | None, int, int, int, int, int]:
+    """Return section and (citations, clauses, items removed, items kept, notes removed).
+
+    A bare source label supports the section's items; a pointer clause supports
+    only its named target. An unparseable cited clause is never treated as
+    evidence for any item.
+    """
+    source = value.get("source")
+    items = value.get("items")
+    if not isinstance(source, str) or not isinstance(items, list):
+        raise ValueError("relation section has no attributable source and items")
+    clauses = [part.strip() for part in source.split(" + ") if part.strip()]
+    kept_clauses: list[str] = []
+    allowed_targets: set[str] = set()
+    allowed_all = False
+    withheld_citations = withheld_clauses = notes_removed = 0
+    for clause in clauses:
+        clean, notes = _GATE_NOTE_RE.subn("", clause)
+        notes_removed += notes
+        clean = clean.strip()
+        if SOVIET_DICTIONARY_CITATION_RE.search(clean):
+            withheld_clauses += 1
+            withheld_citations += len(SOVIET_DICTIONARY_CITATION_RE.findall(clean))
+            continue
+        kept_clauses.append(clean)
+        if " → " in clean:
+            target = clean.rsplit(" → ", 1)[1].removesuffix(" (reciprocal)")
+            key = _relation_item_key(target)
+            if key:
+                allowed_targets.add(key)
+        else:
+            allowed_all = True
+    kept_items = [item for item in items if allowed_all or _relation_item_key(item) in allowed_targets]
+    removed = len(items) - len(kept_items)
+    if not kept_items:
+        return None, withheld_citations, withheld_clauses, removed, 0, notes_removed
+    projected = dict(value)
+    projected["source"] = " + ".join(kept_clauses)
+    projected["items"] = kept_items
+    return projected, withheld_citations, withheld_clauses, removed, len(kept_items), notes_removed
+
+
 def withhold_legacy_soviet_citations(entry: dict[str, Any]) -> tuple[dict[str, Any], dict[str, Any]]:
     """Project a legacy entry without unsafe citations and count withdrawn evidence.
 
-    A cited section is withheld as a unit: its learner items cannot be assigned
-    independently to the remaining sources in a compound attribution string.
+    Relation clauses are projected per target; an item survives when an allowed
+    clause supports it. Bare allowed labels support all items in that section.
     The published manifest is never changed by this build-time projection.
     """
     projected = dict(entry)
     by_section: dict[str, int] = {}
+    clauses_withheld = items_withheld = items_kept = notes_removed = 0
+    relation_items_withheld: set[str] = set()
+    relation_sections_touched: set[str] = set()
 
     def withdraw(name: str, value: object) -> None:
         citations = len(SOVIET_DICTIONARY_CITATION_RE.findall(
@@ -118,11 +177,44 @@ def withhold_legacy_soviet_citations(entry: dict[str, Any]) -> tuple[dict[str, A
             if name == "sources" and isinstance(value, list):
                 kept = []
                 for source in value:
-                    if cites_soviet_dictionary(source):
+                    if isinstance(source, str):
+                        source_clauses = [part.strip() for part in source.split(" + ") if part.strip()]
+                        cleaned = [_GATE_NOTE_RE.subn("", part) for part in source_clauses]
+                        notes_removed += sum(count for _, count in cleaned)
+                        allowed = [part.strip() for part, _ in cleaned
+                                   if not cites_soviet_dictionary(part)]
+                        removed = len(source_clauses) - len(allowed)
+                        if removed:
+                            by_section[f"{container_name}.sources"] = (
+                                by_section.get(f"{container_name}.sources", 0)
+                                + sum(len(SOVIET_DICTIONARY_CITATION_RE.findall(part))
+                                      for part, _ in cleaned if cites_soviet_dictionary(part))
+                            )
+                            clauses_withheld += removed
+                        if allowed:
+                            kept.append(" + ".join(allowed))
+                    elif cites_soviet_dictionary(source):
                         withdraw(f"{container_name}.sources", source)
                     else:
                         kept.append(source)
                 clean[name] = kept
+            elif name in {"synonyms", "antonyms"} and isinstance(value, dict) and isinstance(value.get("source"), str):
+                source = value["source"]
+                if cites_soviet_dictionary(source) or "[gate: " in source:
+                    relation, citations, clauses, removed, kept, notes = _project_relation_section(value)
+                    relation_sections_touched.add(name)
+                    if citations:
+                        by_section[name] = by_section.get(name, 0) + citations
+                    clauses_withheld += clauses
+                    items_withheld += removed
+                    items_kept += kept
+                    notes_removed += notes
+                    if removed:
+                        relation_items_withheld.add(name)
+                    if relation is None:
+                        clean.pop(name, None)
+                    else:
+                        clean[name] = relation
             elif soviet_citation_learner_violation({"sections": {name: value}}):
                 withdraw(name, value)
                 clean.pop(name)
@@ -146,7 +238,8 @@ def withhold_legacy_soviet_citations(entry: dict[str, Any]) -> tuple[dict[str, A
     if by_section:
         provenance = dict(projected.get("gate_provenance") or {})
         for name in by_section:
-            provenance[name] = "source-withdrawn-unverified"
+            if name not in {"synonyms", "antonyms"} or name in relation_items_withheld:
+                provenance[name] = "source-withdrawn-unverified"
         projected["gate_provenance"] = provenance
     if soviet_citation_learner_violation(projected):
         raise ValueError("cannot compute a safe СУМ-11 citation withholding projection")
@@ -154,6 +247,11 @@ def withhold_legacy_soviet_citations(entry: dict[str, Any]) -> tuple[dict[str, A
         "entries_touched": int(bool(by_section)),
         "citations_withheld": sum(by_section.values()),
         "by_section": by_section,
+        "relation_sections_touched": len(relation_sections_touched),
+        "clauses_withheld": clauses_withheld,
+        "items_withheld": items_withheld,
+        "items_kept": items_kept,
+        "gate_notes_removed": notes_removed,
     }
 
 

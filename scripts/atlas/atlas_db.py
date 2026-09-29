@@ -385,12 +385,19 @@ def migrate_manifest(
     from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
 
     entries = []
-    withholding: dict[str, Any] = {"entries_touched": 0, "citations_withheld": 0, "by_section": {}}
+    withholding: dict[str, Any] = {
+        "stage": "migrate", "entries_touched": 0, "citations_withheld": 0, "by_section": {},
+        "clauses_withheld": 0, "items_withheld": 0, "items_kept": 0, "gate_notes_removed": 0,
+        "relation_sections_touched": 0,
+    }
     for entry in manifest.get("entries", []):
         projected, report = withhold_legacy_soviet_citations(entry)
         entries.append(projected)
         withholding["entries_touched"] += report["entries_touched"]
         withholding["citations_withheld"] += report["citations_withheld"]
+        for metric in ("clauses_withheld", "items_withheld", "items_kept", "gate_notes_removed",
+                       "relation_sections_touched"):
+            withholding[metric] += report[metric]
         for section, count in report["by_section"].items():
             by_section = withholding["by_section"]
             by_section[section] = by_section.get(section, 0) + count

@@ -6,7 +6,7 @@
 
 Denominator: `git grep -I -i -n -E '(СУМ|SUM)[-‐‑‒–— ]?11|search_definitions|sum11' -- scripts/lexicon`, excluding the exact #8964 heteronym files and `sum20_lookup.py`. Audited after the WIP removal. The classified matches within this denominator are contrast/exclusion code or documentation; they do not verify a lemma, sense, relation, stress, or gloss.
 
-Counts: verification **0**, contrast **74**, dead **0**. The WIP removed verification consumers including `anchor_curation_evidence.py` and the `sum11` headword fallback, plus uncalled `_synonyms_from_sum11`.
+Counts: verification **0**, contrast **77**, dead **0**. The WIP removed verification consumers including `anchor_curation_evidence.py` and the `sum11` headword fallback, plus uncalled `_synonyms_from_sum11`. The three added contrast lines below are exact diagnostic errors, not verification inputs.
 
 Readers outside `scripts/lexicon/**` have their own classification and remediation follow-up in [#9147](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9147).
 
@@ -29,6 +29,8 @@ Source SHA-256: `atlas.db` `fcf802bda35dd4cd99e95317da0f4a1fa9315024befc83e73673
 <!-- audit-counts:end -->
 
 A next build recomputes cited sections from allowed sources and withholds unsupported items. Atlas migration and runtime export reject a learner citation outside the direct `soviet_colonization_context` section or without that citation's explicit `red_flag: true` marker. A withdrawal without a replacement-source check remains `source-withdrawn-unverified` in gate provenance.
+
+Round 8 projection of the pinned 27,472-entry manifest touched 4,638 relation sections, including note-only cleanups, and withheld citations in 4,333 entries. It withheld 8,571 cited clauses and 1,775 unsupported relation items while retaining 18,197 items in touched sections; 1,813 diagnostic `[gate: …]` notes were stripped separately. No entry failed the projection. The migrate-stage report counts withdrawals from the source manifest; the export-stage report counts only residual withdrawals from its input database, so a zero export count after migration is expected.
 
 | Match | Class | Reason |
 | --- | --- | --- |
@@ -102,7 +104,10 @@ A next build recomputes cited sections from allowed sources and withholds unsupp
 | `scripts/lexicon/promote_grow_candidates.py:896` | contrast | Rejects a contaminated learner-English gloss or names that rejection. |
 | `scripts/lexicon/promote_grow_candidates.py:898` | contrast | Rejects a contaminated learner-English gloss or names that rejection. |
 | `scripts/lexicon/promote_grow_candidates.py:919` | contrast | Rejects a contaminated learner-English gloss or names that rejection. |
-| `scripts/lexicon/source_attribution.py:28` | contrast | Defines the citation quarantine, not a source lookup. |
+| `scripts/lexicon/source_attribution.py:29` | contrast | Defines the citation quarantine, not a source lookup. |
+| `scripts/lexicon/source_attribution.py:168` | contrast | Fails closed if a withheld citation cannot be counted. |
+| `scripts/lexicon/source_attribution.py:245` | contrast | Fails closed if an unsafe citation survives the projection. |
+| `scripts/lexicon/enrich_manifest.py:8315` | contrast | Fails closed on an unflagged citation in newly enriched output. |
 | `scripts/lexicon/thin_page_report.py:29` | contrast | Excludes historical definition cards from modern coverage counts. |
 | `scripts/lexicon/thin_page_report.py:35` | contrast | Excludes historical definition cards from modern coverage counts. |
 | `scripts/lexicon/triage_needs_review.py:43` | contrast | Documents or enforces the exclusion of Soviet dictionary evidence. |

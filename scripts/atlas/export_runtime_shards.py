@@ -459,7 +459,11 @@ class EntryReplay:
     ) -> None:
         self._conn = conn
         self._practice_levels_by_slug = practice_levels_by_slug
-        self.withholding: dict[str, Any] = {"entries_touched": 0, "citations_withheld": 0, "by_section": {}}
+        self.withholding: dict[str, Any] = {
+            "stage": "export", "entries_touched": 0, "citations_withheld": 0, "by_section": {},
+            "clauses_withheld": 0, "items_withheld": 0, "items_kept": 0, "gate_notes_removed": 0,
+            "relation_sections_touched": 0,
+        }
         self._component_targets = build_component_link_targets(
             conn.execute(
                 """SELECT display_head, slug
@@ -506,6 +510,9 @@ class EntryReplay:
             raise ExportError(f"СУМ-11 citation withholding failed for {row['slug']!r}: {exc}") from exc
         self.withholding["entries_touched"] += withdrawn["entries_touched"]
         self.withholding["citations_withheld"] += withdrawn["citations_withheld"]
+        for metric in ("clauses_withheld", "items_withheld", "items_kept", "gate_notes_removed",
+                       "relation_sections_touched"):
+            self.withholding[metric] += withdrawn[metric]
         for section, count in withdrawn["by_section"].items():
             by_section = self.withholding["by_section"]
             by_section[section] = by_section.get(section, 0) + count

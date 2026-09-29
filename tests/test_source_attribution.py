@@ -63,12 +63,59 @@ def test_legacy_withholding_counts_sections_and_preserves_marked_context() -> No
         "entries_touched": 1,
         "citations_withheld": 2,
         "by_section": {"synonyms": 1, "enrichment.sources": 1},
+        "relation_sections_touched": 1,
+        "clauses_withheld": 2,
+        "items_withheld": 0,
+        "items_kept": 1,
+        "gate_notes_removed": 0,
     }
     assert original["sections"]["synonyms"]["source"] == "СУМ-20 + СУМ-11"
-    assert projected["sections"] == {}
+    assert projected["sections"]["synonyms"] == {"items": ["назва"], "source": "СУМ-20"}
     assert projected["enrichment"]["sources"] == ["СУМ-20"]
     assert projected["soviet_colonization_context"] == original["soviet_colonization_context"]
-    assert projected["gate_provenance"]["synonyms"] == "source-withdrawn-unverified"
+    assert projected["gate_provenance"]["enrichment.sources"] == "source-withdrawn-unverified"
+
+
+def test_relation_clauses_keep_only_items_with_allowed_support() -> None:
+    # Shapes observed in the reviewed абрикос, латиниця, розширити, відбігти entries.
+    for lemma, name, source, items, expected in (
+        ("абрикос", "synonyms", "Словник синонімів + СУМ-20: Те саме, що → абрикоса + "
+         "ВТС: → абрикоса + СУМ-11: → абрикоса", ["абрикоса", "жерделя", "мореля"],
+         ["абрикоса", "жерделя", "мореля"]),
+        ("латиниця", "synonyms", "СУМ-20: → латинка + СУМ-11: → латинка + СУМ-11: → абетка",
+         ["латинка", "абетка"], ["латинка"]),
+        ("розширити", "antonyms", "ВТС: протилежне → звузити + СУМ-11: → скоротити",
+         ["звузити", "скоротити"], ["звузити"]),
+        ("відбігти", "synonyms", "СУМ-20: → віддалитися + СУМ-11: → відскочити",
+         ["віддалитися", "відскочити"], ["віддалитися"]),
+    ):
+        projected, report = withhold_legacy_soviet_citations({
+            "lemma": lemma, "sections": {name: {"source": source, "items": items}}
+        })
+        assert projected["sections"][name]["items"] == expected
+        assert "СУМ-11" not in projected["sections"][name]["source"]
+        assert report["items_withheld"] == len(items) - len(expected)
+        assert report["items_kept"] == len(expected)
+        if len(expected) != len(items):
+            assert projected["gate_provenance"][name] == "source-withdrawn-unverified"
+
+
+def test_gate_diagnostic_note_is_removed_without_withholding_wordnet_item() -> None:
+    for lemma, item, gate in (
+        ("ера", "епоха", "СУМ-11/СУМ-11 stem=булий"),
+        ("броня", "кольчуга", "СУМ-20/СУМ-11 stem=воїн"),
+    ):
+        source = f"Ukrajinet WordNet: gated synset → {item} [gate: VESUM both valid; {gate}]"
+        projected, report = withhold_legacy_soviet_citations({
+            "lemma": lemma, "sections": {"synonyms": {"items": [item], "source": source}},
+            "enrichment": {"sources": [source]},
+        })
+        clean = f"Ukrajinet WordNet: gated synset → {item}"
+        assert projected["sections"]["synonyms"]["items"] == [item]
+        assert projected["sections"]["synonyms"]["source"] == clean
+        assert projected["enrichment"]["sources"] == [clean]
+        assert report["citations_withheld"] == 0
+        assert report["gate_notes_removed"] == 2
 
 
 def test_soviet_marker_must_be_explicit_on_each_direct_contrast_citation() -> None:

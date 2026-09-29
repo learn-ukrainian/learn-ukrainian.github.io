@@ -116,6 +116,7 @@ from scripts.lexicon.source_attribution import (
     normalize_academic_label,
     remap_url_list,
     soviet_citation_learner_violation,
+    withhold_legacy_soviet_citations,
 )
 from scripts.mphdict import mphdict_etymology, mphdict_synonyms, mphdict_synonyms_available
 from scripts.storage.paths import artifact_path
@@ -5277,20 +5278,26 @@ def _relation_source_label(relation: dict[str, Any], item: str) -> str:
     label = f"{source}: {relation['pattern']} → {item}" if source else f"{relation['pattern']} → {item}"
     if relation.get("direction"):
         label += " (reciprocal)"
-    gate = relation.get("gate")
-    if not isinstance(gate, dict):
-        return label
-    co_attestation = gate.get("co_attestation")
-    if isinstance(co_attestation, dict):
-        if co_attestation.get("kind") == "definition_mention":
-            evidence = f"{co_attestation.get('dictionary')} {co_attestation.get('direction')}"
-        else:
-            dictionaries = "/".join(str(value) for value in co_attestation.get("dictionaries", []))
-            evidence = f"{dictionaries} stem={co_attestation.get('stem')}"
-        synset_id = str(gate.get("synset_id") or "")
-        synset_note = f"; synset={synset_id}" if synset_id else ""
-        label += f" [gate: VESUM both valid; {evidence}{synset_note}]"
+    # The internal verification diagnostic is not learner source evidence.
     return label
+
+
+def _safe_relation_for_merge(relation: dict[str, Any]) -> dict[str, Any] | None:
+    """Keep allowed source clauses of a pointer without publishing gate diagnostics."""
+    safe = {key: value for key, value in relation.items() if key != "gate"}
+    source = str(safe.get("source") or "")
+    if source:
+        clauses = [re.sub(r"\s*\[gate: [^\]]*\]", "", part).strip()
+                   for part in source.split(" + ")]
+        allowed = [part for part in clauses if part and not cites_soviet_dictionary_outside_context(part)]
+        if not allowed:
+            return None
+        safe["source"] = " + ".join(allowed)
+    if cites_soviet_dictionary_outside_context(safe.get("source_url")):
+        safe.pop("source_url", None)
+    if cites_soviet_dictionary_outside_context(safe):
+        return None
+    return safe
 
 
 def _append_relation_source_urls(
@@ -7978,6 +7985,10 @@ def enrich_entry(
     """Enrich a single manifest entry in place (dictionary-grounded).
     Returns True if any enrichment was attached. Extracted from enrich() so the
     same per-lemma enrichment runs on delta lemmas (#3675 P2)."""
+    published_sections = entry.get("sections") if isinstance(entry.get("sections"), dict) else {}
+    projected, legacy_withholding = withhold_legacy_soviet_citations(entry)
+    entry.clear()
+    entry.update(projected)
     normalized_lemma = strip_acute_stress(str(entry["lemma"]))
     if normalized_lemma != entry["lemma"]:
         entry["lemma"] = normalized_lemma
@@ -8046,13 +8057,10 @@ def enrich_entry(
     # BEFORE recomputing so a gate that did not run can restore its confirmed content
     # instead of silently overwriting it with an offline-empty recomputation.
     existing_sections = entry.get("sections")
-    published_sections = existing_sections if isinstance(existing_sections, dict) else {}
     # A published section that cites Soviet-era evidence is never a preserve baseline
     # (#8990, rule #M-6): the recompute wins, or the section stays held when it cannot run.
-    soviet_withheld = {
-        name for name, section in published_sections.items() if cites_soviet_dictionary_outside_context(section)
-    }
-    baseline_sections = {name: section for name, section in published_sections.items() if name not in soviet_withheld}
+    soviet_withheld = set(legacy_withholding["by_section"]) & set(published_sections)
+    baseline_sections = existing_sections if isinstance(existing_sections, dict) else {}
     # mphdict synonym groups are a local primary source.  A missing database is
     # the only did-not-run state; a present database with no matching set is an
     # authoritative empty result and may retract stale legacy chips.
@@ -8105,6 +8113,8 @@ def enrich_entry(
             cache=slovnyk_cache,
         )
     )
+    synonym_relations = [safe for relation in synonym_relations
+                         if (safe := _safe_relation_for_merge(relation)) is not None]
     synonyms = _merge_synonym_relations(synonyms, synonym_relations)
     _apply_section("synonyms", synonyms, gate_ran=synonyms_gate_ran)
     antonyms = _antonyms_ulif(conn, base, entry_pos=entry_pos)
@@ -8127,6 +8137,8 @@ def enrich_entry(
             cache=slovnyk_cache,
         )
     )
+    antonym_relations = [safe for relation in antonym_relations
+                         if (safe := _safe_relation_for_merge(relation)) is not None]
     antonyms = _merge_antonym_relations(antonyms, antonym_relations)
     # #5121: item membership is Вікісловник + local-db (offline-safe, gate always runs),
     # but the СУМ-20/ВТС pointer ANNOTATIONS ride the per-lemma slovnyk cache. When that
@@ -8153,6 +8165,8 @@ def enrich_entry(
             cache=slovnyk_cache,
         )
     )
+    homonym_relations = [safe for relation in homonym_relations
+                         if (safe := _safe_relation_for_merge(relation)) is not None]
     homonyms = _merge_homonym_relations(None, homonym_relations)
     # Homonyms come from СУМ numbering + approved corpus relation pairs (local db); the
     # gate always runs, so an offline run updates from local data (finding 2).
@@ -8160,6 +8174,8 @@ def enrich_entry(
     paronym_relations = (
         pointer_paronym_relations if pointer_paronym_relations is not None else _paronym_relations(conn, lemma)
     )
+    paronym_relations = [safe for relation in paronym_relations
+                         if (safe := _safe_relation_for_merge(relation)) is not None]
     paronyms = _merge_paronym_relations(None, paronym_relations)
     # Paronyms come from local ZNO/cache pairs only (no slovnyk.me), so their gate runs
     # fully offline — retractions here are always authoritative.
@@ -8366,6 +8382,7 @@ def enrich(
     conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
     enriched = 0
     entries: list[dict[str, Any]] = []
+    citation_violations: list[str] = []
     try:
         balla_art = build_balla_reverse_side_db(
             conn,
@@ -8436,34 +8453,42 @@ def enrich(
         for entry in entries:
             entry_key = _canonical_synonym_term(str(entry.get("lemma") or ""))
             corpus_for_entry = corpus_relations.get(entry_key or "", {})
-            if enrich_entry(
-                entry,
-                conn,
-                kaikki_lookup,
-                pointer_synonym_relations=[
-                    *pointer_synonym_relations.get(entry_key or "", []),
-                    *corpus_for_entry.get("synonym", []),
-                ],
-                pointer_antonym_relations=[
-                    *pointer_antonym_relations.get(entry_key or "", []),
-                    *corpus_for_entry.get("antonym", []),
-                ],
-                pointer_homonym_relations=[
-                    *pointer_homonym_relations.get(entry_key or "", []),
-                    *corpus_for_entry.get("homonym", []),
-                ],
-                pointer_paronym_relations=[
-                    *pointer_paronym_relations.get(entry_key or "", []),
-                    *corpus_for_entry.get("paronym", []),
-                ],
-                available_lemmas=available_lemmas,
-            ):
-                enriched += 1
+            try:
+                if enrich_entry(
+                    entry,
+                    conn,
+                    kaikki_lookup,
+                    pointer_synonym_relations=[
+                        *pointer_synonym_relations.get(entry_key or "", []),
+                        *corpus_for_entry.get("synonym", []),
+                    ],
+                    pointer_antonym_relations=[
+                        *pointer_antonym_relations.get(entry_key or "", []),
+                        *corpus_for_entry.get("antonym", []),
+                    ],
+                    pointer_homonym_relations=[
+                        *pointer_homonym_relations.get(entry_key or "", []),
+                        *corpus_for_entry.get("homonym", []),
+                    ],
+                    pointer_paronym_relations=[
+                        *pointer_paronym_relations.get(entry_key or "", []),
+                        *corpus_for_entry.get("paronym", []),
+                    ],
+                    available_lemmas=available_lemmas,
+                ):
+                    enriched += 1
+            except ValueError as exc:
+                if not str(exc).startswith("newly enriched entry "):
+                    raise
+                citation_violations.append(f"{entry['lemma']!r}: {exc}")
     finally:
         conn.close()
         _install_balla_side_db(None)
         _install_dmklinger_side_db(None)
         _BALLA_REVERSE_INDEX.clear()
+
+    if citation_violations:
+        raise ValueError("unflagged citations in enriched entries:\n" + "\n".join(citation_violations))
 
     fingerprint_payload = write_fingerprint(target_fingerprint, root=ROOT)
     with StreamingCandidateWriter(

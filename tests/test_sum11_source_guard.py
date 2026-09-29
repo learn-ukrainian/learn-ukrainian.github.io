@@ -102,6 +102,7 @@ LEXICON_CONTEXT_LINES = {
         'СУМ-20/ВТС gloss). СУМ-11 (Soviet-era) is banned, including as gloss fill',
     }),
     'scripts/lexicon/enrich_manifest.py': frozenset({
+        'raise ValueError(f"newly enriched entry {lemma!r} has an unflagged СУМ-11 citation: {violation}")',
         '# СУМ-11 (Soviet-era dictionary) is intentionally excluded — decolonization',
         '(СУМ-11, the Soviet-era dictionary, is excluded — decolonization decision',
         'already-excluded Soviet-era СУМ-11, which is at least Ukrainian-language. This',
@@ -164,6 +165,8 @@ LEXICON_CONTEXT_LINES = {
     }),
     'scripts/lexicon/source_attribution.py': frozenset({
         '# Soviet-era СУМ-11 is contrast-only (rule #M-6): published evidence citing it is',
+        'raise ValueError(f"cannot count withheld СУМ-11 citations in {name}")',
+        'raise ValueError("cannot compute a safe СУМ-11 citation withholding projection")',
     }),
     'scripts/lexicon/thin_page_report.py': frozenset({
         '``sum11`` is excluded (rendered pages drop SUM-11 definition cards) and',

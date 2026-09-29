@@ -44,7 +44,7 @@ from scripts.atlas.export_runtime_shards import (
     load_entry_records,
     open_readonly_db,
 )
-from scripts.lexicon.source_attribution import cites_soviet_dictionary_outside_context
+from scripts.lexicon.source_attribution import withhold_legacy_soviet_citations
 
 SRC_CANDIDATES: list[Path] = []
 if os.environ.get("ATLAS_SRC_DB"):
@@ -373,15 +373,7 @@ def sanitized_fixture_db(source: Path, destination: Path) -> Path:
     with contextlib.closing(sqlite3.connect(destination)) as target, target:
         for slug, raw in target.execute("SELECT slug, payload_json FROM article_payloads"):
             payload = json.loads(raw)
-            for bucket in ("sections", "enrichment"):
-                sections = payload.get(bucket)
-                if isinstance(sections, dict):
-                    payload[bucket] = {
-                        key: value for key, value in sections.items()
-                        if not cites_soviet_dictionary_outside_context(value)
-                    }
-            if cites_soviet_dictionary_outside_context(payload):
-                raise ValueError(f"historical fixture has unclassified citation: {slug}")
+            payload, _ = withhold_legacy_soviet_citations(payload)
             target.execute(
                 "UPDATE article_payloads SET payload_json = ? WHERE slug = ?",
                 (json.dumps(payload, ensure_ascii=False), slug),
