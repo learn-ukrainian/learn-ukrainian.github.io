@@ -198,6 +198,81 @@ def test_env_source_errors_never_echo_values(
     assert json.loads(receipt_text)["exit_status"] == 78
 
 
+@pytest.mark.parametrize("sets_last_run", [False, True])
+@pytest.mark.parametrize("bad_line", ['export X="${MISSING:?required}"', "exit 0"])
+def test_shell_exiting_env_file_replaces_success_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path, sets_last_run: bool, bad_line: str
+) -> None:
+    environment, project, _fake_bin = writer_environment
+    receipt = project / "batch_state" / "backups" / "last-run.json"
+    receipt.parent.mkdir(parents=True)
+    receipt.write_text('{"exit_status":0}\n', encoding="utf-8")
+    configured_receipt = tmp_path / "configured-last-run.json"
+    if sets_last_run:
+        configured_receipt.write_text('{"exit_status":0}\n', encoding="utf-8")
+    env_file = tmp_path / "backup.env"
+    env_file.write_text(
+        ('export LU_BACKUP_LAST_RUN="${TEST_RECEIPT}"\n' if sets_last_run else "")
+        + f"{bad_line}\n",
+        encoding="utf-8",
+    )
+    env_file.chmod(0o600)
+    sentinel = tmp_path / "backup-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    environment.update({
+        "LU_BACKUP_ENV_FILE": str(env_file),
+        "LU_BACKUP_SCRIPT": str(backup),
+        "TEST_RECEIPT": str(configured_receipt),
+    })
+    environment.pop("MISSING", None)
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 78
+    assert result.stdout == ""
+    assert result.stderr == "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced\n"
+    assert not sentinel.exists()
+    assert json.loads(receipt.read_text(encoding="utf-8"))["exit_status"] == 78
+    if sets_last_run:
+        assert json.loads(configured_receipt.read_text(encoding="utf-8"))["exit_status"] == 78
+
+
+def test_failed_real_source_invalidates_inherited_success_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, project, _fake_bin = writer_environment
+    old_receipt = project / "batch_state" / "backups" / "last-run.json"
+    old_receipt.parent.mkdir(parents=True)
+    old_receipt.write_text('{"exit_status":0}\n', encoding="utf-8")
+    configured_receipt = tmp_path / "configured-last-run.json"
+    configured_receipt.write_text('{"exit_status":0}\n', encoding="utf-8")
+    env_file = tmp_path / "backup.env"
+    env_file.write_text(
+        'export LU_BACKUP_LAST_RUN="${TEST_RECEIPT}"\n'
+        'if [[ "$BASHPID" == "$$" ]]; then return 1; fi\n',
+        encoding="utf-8",
+    )
+    env_file.chmod(0o600)
+    sentinel = tmp_path / "backup-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    environment.update({
+        "LU_BACKUP_ENV_FILE": str(env_file),
+        "LU_BACKUP_SCRIPT": str(backup),
+        "TEST_RECEIPT": str(configured_receipt),
+    })
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 78
+    assert result.stdout == ""
+    assert result.stderr == "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced\n"
+    assert not sentinel.exists()
+    assert not old_receipt.exists()
+    assert json.loads(configured_receipt.read_text(encoding="utf-8"))["exit_status"] == 78
+
+
 def test_retention_sources_shell_env_file(
     writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
 ) -> None:

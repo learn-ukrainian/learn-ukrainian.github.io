@@ -43,7 +43,7 @@ configure_backup() {
 # path is sourced; manual runs can continue using an already-populated env.
 load_backup_environment() {
   [[ -n "${LU_BACKUP_ENV_FILE:-}" ]] || return 0
-  local fd mode parent parent_mode path_inode opened_inode
+  local fd mode parent parent_mode path_inode opened_inode checked_last_run probe_status=0
   if ! { exec {fd}< "$LU_BACKUP_ENV_FILE"; } 2>/dev/null; then
     echo "scheduled-backup: LU_BACKUP_ENV_FILE is missing or unreadable" >&2
     return 78
@@ -67,6 +67,28 @@ load_backup_environment() {
   set -a
   # shellcheck disable=SC1090  # validated, operator-owned shell-syntax file
   # Bash can print an offending source line (including values) on parse errors.
+  # A fatal expansion or exit in a sourced file terminates a non-interactive
+  # shell. Probe the already-open fd in a subshell so that failure can still
+  # invalidate the receipt. Only the effective receipt path crosses back.
+  checked_last_run="$(
+    (
+      trap 'printf "%s%s." "${backup_env_probe_complete:-0}" "${LU_BACKUP_LAST_RUN:-${LU_BACKUP_PROJECT_ROOT:-$REPO_ROOT}/batch_state/backups/last-run.json}" >&3' EXIT
+      . "/dev/fd/$fd"
+      backup_env_probe_status=$?
+      backup_env_probe_complete=1
+      exit "$backup_env_probe_status"
+    ) 3>&1 >/dev/null 2>&1
+  )" || probe_status=$?
+  if [[ "$probe_status" -ne 0 || "${checked_last_run:0:1}" != 1 ]]; then
+    set +a
+    set -u
+    exec {fd}<&-
+    if [[ ${#checked_last_run} -ge 2 ]]; then
+      BACKUP_ENV_FAILED_LAST_RUN=${checked_last_run:1:${#checked_last_run}-2}
+    fi
+    echo "scheduled-backup: LU_BACKUP_ENV_FILE could not be sourced" >&2
+    return 78
+  fi
   if ! . "/dev/fd/$fd" 2>/dev/null; then
     set +a
     set -u
@@ -234,19 +256,31 @@ run_record() {
 }
 
 run_backup_and_record() {
-  local started finished log status redact_status tee_status exit_status output env_ready
+  local started finished log status redact_status tee_status exit_status output env_ready failed_output initial_output
   local -a pipe_status
 
+  initial_output="$(last_run_path)"
   env_ready=1
   load_backup_environment || env_ready=0
   # Remove the prior receipt before any preflight that can fail. A missing
   # receipt and a failed unit cannot be mistaken for a fresh success.
   output="$(last_run_path)"
-  rm -f "$output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
+  rm -f "$initial_output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
+  if [[ "$output" != "$initial_output" ]]; then
+    rm -f "$output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
+  fi
   if [[ "$env_ready" -eq 0 ]]; then
+    failed_output=${BACKUP_ENV_FAILED_LAST_RUN:-}
+    if [[ -n "$failed_output" && "$failed_output" != "$output" ]]; then
+      rm -f "$failed_output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 78; }
+    fi
     started="$(utc_now)"
     log="$(mktemp "${TMPDIR:-/tmp}/learn-ukrainian-backup-env.XXXXXX")" || exit 78
     if ! write_last_run 78 "$started" "$started" "$log" "$output" skip-snapshots; then
+      echo "scheduled-backup: could not write the last-run receipt" >&2
+    fi
+    if [[ -n "$failed_output" && "$failed_output" != "$output" ]] &&
+       ! write_last_run 78 "$started" "$started" "$log" "$failed_output" skip-snapshots; then
       echo "scheduled-backup: could not write the last-run receipt" >&2
     fi
     rm -f "$log"
