@@ -5,6 +5,12 @@ The CLI is intentionally safe by default: ``--dry-run`` is the default mode,
 only paths under the repository's ``.worktrees/`` directory are eligible, and
 dirty worktrees are preserved unless ``--preserve-then-reap`` is explicit.
 
+Finished review checkouts (#9129) are reaped under the same safety checks
+(clean tree, HEAD on a remote ref, no live process, no unfinished task): a
+detached checkout of a superseded open-PR head, a detached checkout with no
+task record and no change for 2 h, and a registered checkout under
+``/tmp`` or an agent ``scratchpad`` outside ``.worktrees/``.
+
 Suggested backstop:
 
     .venv/bin/python scripts/orchestration/reap_worktrees.py --apply
@@ -2311,6 +2317,233 @@ def _detached_clean_contained_recheck(repo_root: Path, info: WorktreeInfo) -> st
     return None
 
 
+# Review-checkout classes (#9129). Native ``codex exec`` reviews and agent
+# scratchpads register worktrees the task-bound classes never see; each class
+# below removes only a clean checkout whose HEAD is already on a remote ref.
+_SUPERSEDED_PR_REASON_PREFIX = "superseded PR #"
+_UNRECORDED_DETACHED_REASON = "unrecorded detached checkout"
+_FOREIGN_CHECKOUT_REASON = "foreign registered checkout"
+_UNRECORDED_DETACHED_MIN_AGE_HOURS = 2.0
+_FOREIGN_SCRATCH_DIR = "scratchpad"
+
+
+def _foreign_scratch_roots() -> tuple[Path, ...]:
+    """Roots under which a registered worktree outside ``.worktrees/`` is scratch."""
+    candidates = [Path("/tmp"), Path("/var/tmp")]
+    tmpdir = os.environ.get("TMPDIR")
+    if tmpdir:
+        candidates.append(Path(tmpdir))
+    roots: list[Path] = []
+    for candidate in candidates:
+        with contextlib.suppress(OSError):
+            resolved = candidate.resolve()
+            if resolved.parent != resolved and resolved not in roots:
+                roots.append(resolved)
+    return tuple(roots)
+
+
+def _foreign_scratch_root(repo_root: Path, path: Path) -> Path | None:
+    """The approved deletion root above a foreign scratch checkout, else ``None``.
+
+    A scratch checkout sits strictly below a temp root or below a directory
+    named ``scratchpad`` (Claude and agent session scratch space). Anything
+    inside the repository itself is never foreign.
+    """
+    try:
+        resolved = path.resolve()
+    except OSError:
+        return None
+    for owned in (repo_root.resolve(), primary_checkout_root(repo_root).resolve()):
+        if _path_contains(owned, resolved):
+            return None
+    for root in _foreign_scratch_roots():
+        if resolved != root and _path_contains(root, resolved):
+            return root
+    parts = resolved.parts
+    for index in range(len(parts) - 2, 0, -1):
+        if parts[index] == _FOREIGN_SCRATCH_DIR:
+            return Path(*parts[: index + 1])
+    return None
+
+
+def _review_checkout_gate(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    active_ids: set[str] | None,
+    attention: list[str] | None,
+    require_detached: bool,
+) -> bool:
+    """Safety checks every review-checkout class shares.
+
+    Clean tree, HEAD on a remote ref, unlocked, and no task that is still
+    unfinished. Live process cwds and active tasks are refused earlier by
+    :func:`_activity_reason` and again at removal. An unavailable active-task
+    probe fails closed, like the detached clean contained class.
+    """
+    if not info.head or info.locked_reason is not None:
+        return False
+    if require_detached and (not info.detached or info.branch is not None):
+        return False
+    if _is_acp_runtime_path(repo_root, info.path):
+        return False
+    if active_ids is None:
+        if attention is not None:
+            attention.append("active-task probe unavailable; review checkout preserved")
+        return False
+    task_id = _dispatch_task_id(repo_root, info)
+    if task_id is not None:
+        if task_id in active_ids:
+            return False
+        status = _task_record_status(repo_root, task_id)
+        if status is not None and status not in _TERMINAL_DISPATCH_STATUSES:
+            return False
+    if _worktree_clean(info.path) is not True:
+        return False
+    return _is_head_reachable_from_remote(info.path, info.head)
+
+
+def _current_open_pr_heads(
+    repo_root: Path,
+    pr_states: list[PullRequestState],
+    commit_prs: list[PullRequestState],
+) -> tuple[dict[int, str], str | None]:
+    """Current head of every open PR that names this checkout, or an error.
+
+    A commit-search hit carries the queried commit as its head, so the real
+    head is read by number. An unreadable head is an error, never a guess.
+    """
+    heads: dict[int, str] = {}
+    for state in pr_states:
+        if state.state != "OPEN" or state.number is None:
+            continue
+        if any(state is hit for hit in commit_prs):
+            fresh, error = _query_pr_by_number(repo_root, state.number)
+            fresh_open = next((pr for pr in fresh if pr.number == state.number), None)
+            if error is not None or fresh_open is None or not fresh_open.head_sha:
+                return {}, f"PR #{state.number} head unavailable: {error or 'no head'}"
+            if fresh_open.state == "OPEN":
+                heads[state.number] = fresh_open.head_sha
+        elif state.head_sha:
+            heads[state.number] = state.head_sha
+        else:
+            return {}, f"PR #{state.number} head unavailable"
+    return heads, None
+
+
+def _review_checkout_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    pr_states: list[PullRequestState],
+    commit_prs: list[PullRequestState],
+    review_number: int | None,
+    active_ids: set[str] | None,
+    now: float | None,
+    attention: list[str] | None = None,
+) -> str | None:
+    """Reap classes for a detached review checkout the task-bound classes miss.
+
+    * superseded PR checkout: HEAD is a commit of an open PR, but no longer
+      that PR's head. A checkout AT an open PR's current head is kept.
+    * unrecorded detached checkout: no task record and older than two hours.
+    """
+    if not _review_checkout_gate(
+        repo_root=repo_root,
+        info=info,
+        active_ids=active_ids,
+        attention=attention,
+        require_detached=True,
+    ):
+        return None
+    heads, head_error = _current_open_pr_heads(repo_root, pr_states, commit_prs)
+    if head_error is not None:
+        return None
+    if info.head in heads.values():
+        return None
+
+    related = {pr.number for pr in commit_prs if pr.number is not None}
+    if review_number is not None:
+        related.add(review_number)
+    superseded = sorted(related & heads.keys())
+    if superseded:
+        number = superseded[0]
+        return (
+            f"{_SUPERSEDED_PR_REASON_PREFIX}{number} head {info.head[:12]} "
+            f"(current {heads[number][:12]})"
+        )
+
+    task_id = _dispatch_task_id(repo_root, info)
+    if _task_record_status(repo_root, task_id) is None:
+        mtime = latest_workspace_mtime(info.path)
+        if mtime is not None:
+            age_hours = ((time.time() if now is None else now) - mtime) / 3600
+            if age_hours > _UNRECORDED_DETACHED_MIN_AGE_HOURS:
+                return _UNRECORDED_DETACHED_REASON
+    return None
+
+
+def _foreign_checkout_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    active_ids: set[str] | None,
+    attention: list[str] | None = None,
+) -> str | None:
+    """A registered scratch checkout outside ``.worktrees/`` under the same proof."""
+    if not _review_checkout_gate(
+        repo_root=repo_root,
+        info=info,
+        active_ids=active_ids,
+        attention=attention,
+        require_detached=False,
+    ):
+        return None
+    return _FOREIGN_CHECKOUT_REASON
+
+
+def _is_review_checkout_reason(reason: str) -> bool:
+    return reason.startswith(_SUPERSEDED_PR_REASON_PREFIX) or reason in {
+        _UNRECORDED_DETACHED_REASON,
+        _FOREIGN_CHECKOUT_REASON,
+    }
+
+
+def _review_checkout_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
+    """Re-prove a review-checkout class under delegate's lock; a skip reason or ``None``."""
+    try:
+        worktrees = list_git_worktrees(repo_root)
+    except RuntimeError as exc:
+        return f"worktree list unavailable during cleanup ({exc})"
+    fresh = next((wt for wt in worktrees if wt.path.resolve() == info.path.resolve()), None)
+    if fresh is None:
+        return "worktree unregistered during cleanup"
+    current_active_ids = _active_task_ids()
+    if current_active_ids is None:
+        return "active-task probe unavailable during cleanup"
+    current_live_cwds = _live_cwd_paths(repo_root)
+    if current_live_cwds is None:
+        return "process-CWD activity probe unavailable during cleanup"
+    activity = _activity_reason(
+        repo_root=repo_root,
+        info=fresh,
+        active_ids=current_active_ids,
+        live_cwds=current_live_cwds,
+        check_pending=False,
+    )
+    if activity is not None:
+        return activity
+    if not _review_checkout_gate(
+        repo_root=repo_root,
+        info=fresh,
+        active_ids=current_active_ids,
+        attention=None,
+        require_detached=False,
+    ):
+        return "review checkout proof changed during cleanup"
+    return None
+
+
 def _qualifying_reason(
     *,
     repo_root: Path,
@@ -2930,6 +3163,17 @@ def _reap_qualified_worktree(
                         pr=_pr_dict(pr_state),
                         error=f"worktree unlock failed: {_format_failure(unlock)}",
                     )
+            elif _is_review_checkout_reason(reason):
+                recheck = _review_checkout_recheck(repo_root, info)
+                if recheck is not None:
+                    return ReapResult(
+                        path=str(info.path),
+                        branch=info.branch,
+                        action="skipped",
+                        reason=f"{recheck}; originally qualified because {reason}",
+                        dirty=dirty,
+                        pr=_pr_dict(pr_state),
+                    )
             elif reason.startswith(_DETACHED_CLEAN_CONTAINED_PREFIX):
                 recheck = _detached_clean_contained_recheck(repo_root, info)
                 if recheck is not None:
@@ -3163,10 +3407,15 @@ def _reap_qualified_worktree(
         # (120s). A waiter that hits its 30s lock timeout retries.
         # ``_worktree_clean`` accepts disposable ignored residue such as a
         # worker's ``.venv``; git still counts it, so force is required.
+        foreign_root = (
+            None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
+        )
+        approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
         remove_error = worktree_claims.git_worktree_remove(
             repo_root,
             info.path,
             force=True,
+            **approval,
         )
         if remove_error is not None:
             return ReapResult(
@@ -3303,7 +3552,8 @@ def reap_worktrees(
                 )
                 continue
 
-            if not is_under_worktrees(repo_root, info.path):
+            foreign = not is_under_worktrees(repo_root, info.path)
+            if foreign and _foreign_scratch_root(repo_root, info.path) is None:
                 results.append(
                     ReapResult(
                         path=str(info.path),
@@ -3404,6 +3654,7 @@ def reap_worktrees(
             pr_state = None
             pr_error = None
             all_pr_states: list[PullRequestState] = []
+            commit_prs: list[PullRequestState] = []
             errors: list[str] = []
             if candidates:
                 for cand_branch in candidates:
@@ -3428,7 +3679,8 @@ def reap_worktrees(
             # origin/main — otherwise a fresh branch sitting on a merged main
             # tip would be mistaken for a squash-merged follow-up commit.
             if info.head and not _is_ancestor_of_origin_main(info.path):
-                all_pr_states.extend(_query_prs_by_head_sha(repo_root, info.head))
+                commit_prs = _query_prs_by_head_sha(repo_root, info.head)
+                all_pr_states.extend(commit_prs)
 
             # Any candidate-query error blocks qualification. A supplementary
             # SHA lookup finding *some* PR cannot redeem an unreadable
@@ -3460,25 +3712,36 @@ def reap_worktrees(
             # "PR #N MERGED" reason does not enable the cleanup-time re-query.
             pr_unknown = pr_error is not None
             attention: list[str] = []
-            reason = _qualifying_reason(
-                repo_root=repo_root,
-                info=info,
-                pr_state=None if pr_unknown else pr_state,
-                build_age_hours=build_age_hours,
-                now=now,
-                active_ids=active_ids,
-                safe_only=safe_only,
-                merged_pr_only=merged_pr_only,
-                include_terminal_dispatches=include_terminal_dispatches,
-                pr_unknown=pr_unknown,
-                attention=attention,
-            )
+            if foreign:
+                # A foreign scratch checkout is never a candidate for the
+                # PR- or task-bound classes, only for the one class below.
+                reason = _foreign_checkout_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    active_ids=active_ids,
+                    attention=attention,
+                )
+            else:
+                reason = _qualifying_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    pr_state=None if pr_unknown else pr_state,
+                    build_age_hours=build_age_hours,
+                    now=now,
+                    active_ids=active_ids,
+                    safe_only=safe_only,
+                    merged_pr_only=merged_pr_only,
+                    include_terminal_dispatches=include_terminal_dispatches,
+                    pr_unknown=pr_unknown,
+                    attention=attention,
+                )
             # Provably-safe class: a clean, pushed, detached dispatch checkout.
             # It never reads PR state for its own proof, but an open PR named
             # by the path still keeps the checkout mounted, like every other
             # class; the legacy classes above get first refusal.
             if (
-                reason is None
+                not foreign
+                and reason is None
                 and not attention
                 and not (pr_state is not None and pr_state.state == "OPEN")
             ):
@@ -3486,6 +3749,20 @@ def reap_worktrees(
                     repo_root=repo_root,
                     info=info,
                     active_ids=active_ids,
+                    attention=attention,
+                )
+            # Review checkouts the classes above cannot see (#9129): a
+            # superseded PR head, or a detached checkout with no task record.
+            # An unreadable PR guard forbids them, like every PR-dependent class.
+            if not foreign and reason is None and not attention and not pr_unknown:
+                reason = _review_checkout_reason(
+                    repo_root=repo_root,
+                    info=info,
+                    pr_states=all_pr_states,
+                    commit_prs=commit_prs,
+                    review_number=review_number,
+                    active_ids=active_ids,
+                    now=now,
                     attention=attention,
                 )
             if attention:
@@ -3820,7 +4097,9 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
             "Safely reap completed git worktrees under .worktrees/.\n"
-            "Use for completed-work cleanup; active or unverifiable worktrees are preserved."
+            "Use for completed-work cleanup; active or unverifiable worktrees are preserved.\n"
+            "Also reaps clean, pushed review checkouts: superseded open-PR heads, detached\n"
+            "checkouts with no task record older than 2h, and registered /tmp or scratchpad checkouts."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(

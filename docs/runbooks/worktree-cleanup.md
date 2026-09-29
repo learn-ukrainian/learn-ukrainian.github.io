@@ -231,6 +231,27 @@ re-proves the conditions under the lock before removal. Everything else stays
 in `detached_unknown` / `dirty` / `unmerged` and is preserved. Reason string:
 `detached clean contained: HEAD <sha12> is <an ancestor of origin/main | contained in an origin/* ref>`.
 
+### Review checkouts (#9129)
+
+Native `codex exec` reviews and agent scratchpads leave clean checkouts that
+no task record or branch ties to a settled task. Three further classes reap
+them. Every one requires a clean tree, HEAD contained in a
+`refs/remotes/origin/*` ref, no lock, no live process cwd inside, no
+unfinished task, and a known active-task probe; each is re-proved under the
+per-worktree lock before removal, and `--preserve-then-reap` keeps its rescue
+ref as for every other class.
+
+- **Superseded PR checkout.** Detached HEAD is a commit of an open PR (named by
+  the `review-<N>` path or found by commit search) but not that PR's current
+  head. Reason `superseded PR #N head <old12> (current <new12>)`. A checkout
+  AT an open PR's current head stays, and an unreadable PR head keeps it too.
+- **Unrecorded detached checkout.** Detached, no task record, and no file
+  changed in the last 2 h. Reason `unrecorded detached checkout`.
+- **Foreign registration.** A registered worktree of this repo outside
+  `.worktrees/`, strictly under `/tmp`, `/var/tmp`, `$TMPDIR` or a
+  `scratchpad` directory. Reason `foreign registered checkout`. Any other
+  outside path is still reported as `outside repo .worktrees/`.
+
 ### Interrupted `git worktree add` (#8663)
 
 `delegate.py` bounds `git worktree add` by `DELEGATE_WORKTREE_ADD_*` in
