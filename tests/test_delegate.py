@@ -3326,7 +3326,26 @@ def test_run_worker_review_without_verdict_fails_with_reason(
     assert state["status"] == "failed"
     assert state["needs_finalize"] is False
     assert state["failure_reason"] == "review_missing_verdict_line"
+    assert state["review_verdict_failure"] == "review_missing_verdict_line"
     assert state["last_error"] == state["failure_reason"]
+
+
+def test_review_verdict_failure_survives_appended_snapshot_error(tmp_tasks_dir):
+    state_path = delegate._state_path("review-verdict-with-snapshot-error")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "review-verdict-with-snapshot-error",
+            "status": "failed",
+            "require_review_verdict": True,
+            "returncode": 0,
+            "review_verdict_failure": "review_missing_verdict_line",
+            "last_error": "review_missing_verdict_line; task_records_snapshot_error: unavailable",
+        },
+    )
+    state = delegate._read_state(state_path)
+    assert state["last_error"].endswith("task_records_snapshot_error: unavailable")
+    assert state["failure_reason"] == "review_missing_verdict_line"
 
 
 @pytest.mark.parametrize(

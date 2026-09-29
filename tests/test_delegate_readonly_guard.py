@@ -11,6 +11,7 @@ dependencies from tests/test_delegate.py.
 from __future__ import annotations
 
 import contextlib
+import json
 import os
 import subprocess
 import sys
@@ -838,10 +839,10 @@ def test_read_only_snapshot_runtime_noise_still_passes(
         ("review-9204-r3", "VERDICT: APPROVE", "c82f37ad8226f28ce3bdd3f4618cc5539f752151"),
     ],
 )
-def test_review_9204_result_replay_ignores_package_build_outputs(
+def test_review_9204_result_opening_smoke_ignores_package_build_outputs(
     task_id, verdict_line, reviewed_head, tmp_tasks_dir, tmp_path, monkeypatch
 ):
-    """Replay the two real result openings and ignored output roots from #9213."""
+    """Exercise worker completion with the two observed verdict lines and heads."""
     checkout = (tmp_path / task_id).resolve()
     checkout.mkdir()
     _seed_read_only_checkout_fixture(checkout, monkeypatch)
@@ -895,6 +896,29 @@ def test_review_9204_result_replay_ignores_package_build_outputs(
     assert state["read_only_mutation_paths"] == []
     assert state["read_only_ignored_mutation_paths"] == list(output_paths)
     assert reviewed_head in state_path.with_suffix(".result").read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize(
+    ("task_id", "expected_ignored_count"),
+    [
+        ("review-9204-r2", 497),
+        ("review-9204-r3", 80),
+    ],
+)
+def test_review_9204_exact_snapshot_replay_ignores_package_build_outputs(
+    task_id, expected_ignored_count
+):
+    """Replay every ignored status from the real r2/r3 pre/post sidecars."""
+    fixture_path = Path(__file__).parent / "fixtures/review_9204_read_only_snapshots.json"
+    item = json.loads(fixture_path.read_text(encoding="utf-8"))[task_id]
+    before = {path: "!!" for path in item["pre_ignored"]}
+    after = {path: "!!" for path in item["post_ignored"]}
+    assert len(before) == 1 and len(after) - len(before) == expected_ignored_count
+    assert set(before).issubset(after)
+    assert delegate.parse_review_verdict(item["verdict_line"]) == "APPROVE"
+    assert len(item["reviewed_head"]) == 40
+    assert delegate._read_only_mutation_paths(before, after) == []
+    assert delegate._read_only_ignored_mutation_paths(before, after) == sorted(set(after) - set(before))
 
 
 def test_review_package_build_exemption_does_not_hide_tracked_edit(tmp_tasks_dir, tmp_path, monkeypatch):

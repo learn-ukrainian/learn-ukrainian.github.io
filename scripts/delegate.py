@@ -794,8 +794,8 @@ def _write_state_atomic(path: Path, state: dict[str, Any]) -> None:
 
 def _review_task_failure_reason(state: dict[str, Any]) -> str:
     """Give every failed verdict-required review a stable, queryable cause."""
-    if state.get("last_error") == _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON:
-        return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
+    if state.get("review_verdict_failure"):
+        return state["review_verdict_failure"]
     if state.get("read_only_mutation_paths"):
         return "read_only_checkout_mutation"
     if state.get("read_only_checkout_snapshot_error"):
@@ -7812,6 +7812,7 @@ def _run_worker(
 
         final_state = _read_state(state_path) or {}
         final_state["require_review_verdict"] = require_review_verdict
+        final_state["review_verdict_failure"] = None
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
 
@@ -8063,6 +8064,7 @@ def _run_worker(
         ):
             review_verdict_failure = _review_verdict_failure_reason(response)
             if review_verdict_failure is not None:
+                final_state["review_verdict_failure"] = review_verdict_failure
                 final_status = "failed"
                 ok_outcome = False
                 stderr_excerpt = review_verdict_failure
