@@ -60,7 +60,7 @@ all using targeted tests with `-n 2`, kept `MemAvailable` between 11.1 and
 Driver disposition (claude-infra), reconciling the Codex and Kimi design
 seats. Three PRs, in this order:
 
-1. **Test fan-out cap (Part B, landed in PR #8673):** when the dispatch env
+1. **Test fan-out cap (Part B, landed in PR #8673, follow-up PR #8688):** when the dispatch env
    marker is set, clamp xdist to `--maxprocesses=2` (explicit `-n`, `-n auto`,
    and `-n logical`) in `tests/conftest.py` / pytest hook, and make full-suite
    runs take one host-wide lock acquired before the session starts.
@@ -88,12 +88,14 @@ seats. Three PRs, in this order:
    read, fails the dispatch instead of relaunching. Running without the slice
    installed is supported. Per-worker limits stay out until sibling starvation
    shows up.
+4. **Admission and worktree preparation integration (landed in PR #8752, #8717):**
+   count live worktree preps, heal orphans (`worktree_prep.is_orphaned_prep_record`),
+   and refuse before creating the worktree to avoid losing slots during slow
+   preparation.
 
 Driver operational rule: targeted tests only, `-n 2` at most; full suite runs belong in CI.
 
 Open prevention work:
-- Admission and worktree preparation integration (`worktree_prep.is_orphaned_prep_record`
-  to avoid losing slots during slow preparation) is tracked in open issue #8717.
 - Sizing adjustment (cap-12 sizing for 32 GB) waits for host rescale in open issue #8860.
 - Tracking issue #8645 remains open under parent epic #8647.
 
