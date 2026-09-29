@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, test } from 'vitest';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { State } from 'ts-fsrs';
 import TeacherDeckPractice from '@site/src/components/practice/TeacherDeckPractice';
 import { buildTeacherDeck, type TeacherDeck } from '@site/src/lib/lexicon/teacher-deck';
@@ -154,12 +155,97 @@ describe('TeacherDeckPractice', () => {
     fireEvent.click(check);
     expect(within(stage).getByTestId('teacher-deck-answer')).toHaveTextContent('Справедливий');
     expect(within(stage).getByTestId('teacher-deck-attempt-result')).toHaveTextContent('✓');
-    fireEvent.click(within(stage).getByTestId('teacher-deck-rate-good'));
+    expect(document.activeElement).toBe(within(stage).getByTestId('teacher-deck-rate-again'));
+    fireEvent.keyDown(window, { key: '3' });
 
     const saved = storedProgress(storage);
     expect(saved.cards[`${id}:production`]!.reps).toBe(1);
     expect(saved.cards[`${id}:recognition`]).toEqual(recognition);
     expect(saved.reviews.map((review) => review.cardId)).toEqual([`${id}:production`]);
+  });
+
+  test('focus follows keyboard practice from a choice answer to Next and the next item', async () => {
+    const deck = fixtureDeck({ drillIndexes: [] });
+    const storage = memoryStorage();
+    const id = fixtureEntryId(0);
+    const progress = emptyDeckProgress(FIXTURE_DECK_ID, { newPerDay: 1, reviewCap: 100 });
+    progress.introduced[id] = { day: '2026-09-26', at: DAY1 - 86400000, source: 'practice' };
+    progress.cards[`${id}:recognition`] = {
+      due: DAY1,
+      stability: 1,
+      difficulty: 5,
+      elapsed_days: 1,
+      scheduled_days: 1,
+      learning_steps: 0,
+      reps: 1,
+      lapses: 0,
+      state: State.Review,
+      last_review: DAY1 - 86400000,
+    };
+    progress.migration = { at: DAY1, entries: 0, recognitionStates: 0 };
+    writeDeckProgress(storage, progress);
+    renderPanel(deck, storage, { now: DAY1 });
+    const user = userEvent.setup();
+
+    const start = await screen.findByTestId('teacher-deck-start');
+    start.focus();
+    await user.keyboard('{Enter}');
+    expect(document.activeElement).toBe(within(screen.getByTestId('teacher-deck-session')).getByRole('heading'));
+    const choice = screen.getByTestId('teacher-deck-recognition-choice');
+    const option = within(choice).getAllByRole('button')[0]!;
+    option.focus();
+    await user.keyboard('{Enter}');
+    const next = screen.getByTestId('teacher-deck-next');
+    expect(document.activeElement).toBe(next);
+    await user.tab({ shift: true });
+    await user.tab();
+    expect(document.activeElement).toBe(next);
+    await user.keyboard('{Enter}');
+    expect(screen.queryByTestId('teacher-deck-next')).toBeNull();
+    expect(document.activeElement).toBe(within(screen.getByTestId('teacher-deck-session')).getByRole('heading'));
+  });
+
+  test('production rating digits ignore the attempt input and work after reveal', async () => {
+    const deck = fixtureDeck();
+    const storage = memoryStorage();
+    const id = fixtureEntryId(0);
+    const progress = emptyDeckProgress(FIXTURE_DECK_ID, { newPerDay: 0, reviewCap: 100 });
+    progress.introduced[id] = { day: '2026-09-27', at: DAY1, source: 'practice' };
+    progress.cards[`${id}:recognition`] = {
+      due: DAY2 + 10 * 86400000,
+      stability: 10,
+      difficulty: 5,
+      elapsed_days: 0,
+      scheduled_days: 10,
+      learning_steps: 0,
+      reps: 2,
+      lapses: 0,
+      state: State.Review,
+      last_review: DAY1,
+    };
+    progress.cards[`${id}:production`] = {
+      due: DAY1,
+      stability: 0,
+      difficulty: 0,
+      elapsed_days: 0,
+      scheduled_days: 0,
+      learning_steps: 0,
+      reps: 0,
+      lapses: 0,
+      state: State.New,
+    };
+    progress.migration = { at: DAY1, entries: 0, recognitionStates: 0 };
+    writeDeckProgress(storage, progress);
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    const input = screen.getByTestId('teacher-deck-attempt');
+    input.focus();
+    fireEvent.keyDown(input, { key: '3' });
+    expect(storedProgress(storage).reviews).toHaveLength(0);
+    fireEvent.change(input, { target: { value: 'справедливий' } });
+    fireEvent.click(screen.getByTestId('teacher-deck-reveal'));
+    fireEvent.keyDown(window, { key: '3' });
+    expect(storedProgress(storage).reviews[0]).toMatchObject({ cardId: `${id}:production`, rating: 'good' });
   });
 
   test('daily settings are editable, persisted per deck, and zero new words is allowed', async () => {
@@ -177,6 +263,61 @@ describe('TeacherDeckPractice', () => {
     expect(screen.getByTestId('teacher-deck-session-size')).toHaveTextContent('0 due + 0 new');
     expect(screen.queryByTestId('teacher-deck-start')).toBeNull();
     expect(screen.getByTestId('teacher-deck-nothing-today')).toBeInTheDocument();
+  });
+
+  test('settings changes preserve reviews saved by another tab', async () => {
+    const deck = fixtureDeck();
+    const storage = memoryStorage();
+    renderPanel(deck, storage, { now: DAY1 });
+    await screen.findByTestId('teacher-deck-new-per-day');
+    const fromOtherTab = storedProgress(storage);
+    fromOtherTab.reviews.push({
+      reviewId: 'other-tab', cardId: `${fixtureEntryId(0)}:recognition`, entryId: fixtureEntryId(0),
+      kind: 'recognition', origin: 'review', rating: 'good', at: DAY1, day: '2026-09-27',
+      presentation: 'recognition-flashcard',
+    });
+    writeDeckProgress(storage, fromOtherTab);
+    fireEvent.change(screen.getByTestId('teacher-deck-new-per-day'), { target: { value: '3' } });
+    expect(storedProgress(storage).reviews).toEqual(fromOtherTab.reviews);
+    expect(storedProgress(storage).settings.newPerDay).toBe(3);
+  });
+
+  test('a refused storage write warns while keeping settings usable in memory', async () => {
+    const deck = fixtureDeck();
+    const storage = memoryStorage();
+    const failingStorage: StorageLike = {
+      getItem: storage.getItem,
+      removeItem: storage.removeItem,
+      setItem: () => { throw new Error('quota'); },
+    };
+    renderPanel(deck, failingStorage, { now: DAY1 });
+    expect(await screen.findByTestId('teacher-deck-storage-warning')).toHaveTextContent('Progress is not being saved');
+    fireEvent.change(screen.getByTestId('teacher-deck-new-per-day'), { target: { value: '3' } });
+    expect(screen.getByTestId('teacher-deck-new-per-day')).toHaveValue(3);
+    expect(screen.getByTestId('teacher-deck-session-size')).toHaveTextContent('0 due + 3 new');
+  });
+
+  test('matching uses introduced words without writing reviews and keeps focus on the new stage', async () => {
+    const deck = fixtureDeck();
+    const storage = memoryStorage();
+    const progress = emptyDeckProgress(FIXTURE_DECK_ID, { newPerDay: 0, reviewCap: 100 });
+    for (const index of [0, 5, 6]) {
+      progress.introduced[fixtureEntryId(index)] = { day: '2026-09-26', at: DAY1 - 86400000, source: 'practice' };
+    }
+    progress.migration = { at: DAY1, entries: 0, recognitionStates: 0 };
+    writeDeckProgress(storage, progress);
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-matching-start'));
+    const stage = screen.getByTestId('teacher-deck-matching');
+    expect(document.activeElement).toBe(within(stage).getByRole('heading', { name: /Matching/ }));
+    for (const left of within(stage).getAllByRole('button').filter((button) => button.matches('[data-activity="match-left-tile"]'))) {
+      const index = left.getAttribute('data-original-index');
+      fireEvent.click(left);
+      fireEvent.click(stage.querySelector(`[data-activity="match-right-tile"][data-original-index="${index}"]`)!);
+    }
+    expect(screen.getByTestId('teacher-deck-matching-again')).toBeInTheDocument();
+    expect(document.activeElement).toBe(screen.getByTestId('teacher-deck-matching-again'));
+    expect(storedProgress(storage).reviews).toHaveLength(0);
   });
 
   test('offers only card kinds that have items in this deck', async () => {

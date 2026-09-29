@@ -863,6 +863,15 @@ export function migrateLegacyPracticeState(
       cards[recognitionId] = { ...recognition.card };
       recognitionStates += 1;
     }
+    const recognized = cards[recognitionId];
+    if (recognized && recognized.reps > 0 && recognized.state !== State.New) {
+      const unlockDue = new Date(nextLocalMidnight(now));
+      for (const kind of schedulableKinds(deck, entry)) {
+        if (kind === 'recognition') continue;
+        const cardId = cardIdFor(entry, kind);
+        if (!cards[cardId]) cards[cardId] = stateFromFsrsCard(createEmptyCard(unlockDue));
+      }
+    }
   }
   return { ...progress, introduced, cards, migration: { at: now, entries, recognitionStates } };
 }

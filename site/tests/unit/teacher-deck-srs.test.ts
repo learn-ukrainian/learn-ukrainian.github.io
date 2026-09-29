@@ -363,6 +363,11 @@ describe('teacher deck migration of existing practice state', () => {
     expect(Object.keys(migrated.introduced).sort()).toEqual([fixtureEntryId(0), fixtureEntryId(5)].sort());
     expect(migrated.introduced[fixtureEntryId(0)]!.source).toBe('migration');
     expect(migrated.cards[`${fixtureEntryId(0)}:recognition`]).toMatchObject({ reps: 4, stability: 12, due: DAY3_9AM });
+    for (const kind of ['production', 'cloze', 'grammar']) {
+      expect(migrated.cards[`${fixtureEntryId(0)}:${kind}`]).toMatchObject({
+        reps: 0, state: State.New, due: nextLocalMidnight(DAY2_9AM),
+      });
+    }
     expect(migrated.cards[`${fixtureEntryId(5)}:recognition`]).toBeUndefined();
     expect(migrated.migration).toEqual({ at: DAY2_9AM, entries: 2, recognitionStates: 1 });
 
@@ -371,6 +376,9 @@ describe('teacher deck migration of existing practice state', () => {
     expect(plan.pending.some((slot) => slot.origin === 'new' && slot.entryId === fixtureEntryId(0))).toBe(false);
     expect(plan.stats.newDoneToday).toBe(0);
     expect(plan.stats.plannedNew).toBe(10);
+    expect(plan.pending.some((slot) => slot.entryId === fixtureEntryId(0) && slot.kind === 'production')).toBe(false);
+    const nextDay = planDeckDay(deck, migrated, DAY3_9AM);
+    expect(nextDay.pending.some((slot) => slot.entryId === fixtureEntryId(0) && slot.kind === 'production')).toBe(true);
     // The cloze-only word has no recognition state yet, so it is due as a review now.
     expect(plan.pending.find((slot) => slot.entryId === fixtureEntryId(5))).toMatchObject({
       kind: 'recognition',
@@ -379,6 +387,19 @@ describe('teacher deck migration of existing practice state', () => {
     // Runs once; the CEFR store is untouched.
     expect(migrateLegacyPracticeState(deck, migrated, legacy, DAY3_9AM)).toBe(migrated);
     expect(JSON.parse(storage.getItem('lu-lexicon-srs')!).cards['справедливий::flashcards']).toEqual(legacyCard);
+  });
+});
+
+describe('teacher deck storage recovery', () => {
+  test('saves a corrupt payload separately and returns an empty usable store', () => {
+    const storage = memoryStorage();
+    const key = deckProgressStorageKey(FIXTURE_DECK_ID);
+    storage.setItem(key, '{broken json');
+    const recovered = readDeckProgress(storage, FIXTURE_DECK_ID, DEFAULTS);
+    expect(recovered).toEqual(emptyDeckProgress(FIXTURE_DECK_ID, DEFAULTS));
+    expect(storage.getItem(`${key}.corrupt`)).toBe('{broken json');
+    expect(writeDeckProgress(storage, recovered)).toBe(true);
+    expect(readDeckProgress(storage, FIXTURE_DECK_ID, DEFAULTS)).toEqual(recovered);
   });
 });
 

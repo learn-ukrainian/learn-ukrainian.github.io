@@ -132,6 +132,10 @@ export default function TeacherDeckPractice({
   }, []);
   const [matchingSeed, setMatchingSeed] = useState(0);
   const [matchingComplete, setMatchingComplete] = useState(false);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const nextRef = useRef<HTMLButtonElement>(null);
+  const matchingAgainRef = useRef<HTMLButtonElement>(null);
+  const previousPhaseRef = useRef<Phase>('overview');
 
   useEffect(() => {
     let cancelled = false;
@@ -192,10 +196,15 @@ export default function TeacherDeckPractice({
     () => (deck && progress ? pickMatchingRound(deck, progress, matchingSeed) : []),
     [deck, matchingSeed, progress],
   );
+  const matchingTiles = useMemo(
+    () => matchingPairs.map((entry) => ({ left: entry.uk, right: entry.en })),
+    [matchingPairs],
+  );
 
   const updateSettings = (patch: Partial<DeckSettings>) => {
     if (!progress) return;
-    const next = { ...progress, settings: { ...progress.settings, ...patch } };
+    const latest = storageFailedRef.current ? progress : readDeckProgress(storage, deckId, defaults);
+    const next = { ...latest, settings: { ...latest.settings, ...patch } };
     const normalized = readSettingsInput(next.settings, defaults);
     const saved = { ...next, settings: normalized };
     if (!writeDeckProgress(storage, saved)) setStorageFailed(true);
@@ -230,8 +239,21 @@ export default function TeacherDeckPractice({
   const current: DeckQueueSlot | null = answer?.slot ?? plan?.pending[0] ?? null;
   const currentEntry = current && deck ? deck.entriesById.get(current.entryId) ?? null : null;
 
+  useEffect(() => {
+    if (phase === 'overview') {
+      if (previousPhaseRef.current !== 'overview') headingRef.current?.focus();
+    } else if (phase === 'matching' && matchingComplete) {
+      matchingAgainRef.current?.focus();
+    } else if (phase === 'session' && answer) {
+      nextRef.current?.focus();
+    } else {
+      headingRef.current?.focus();
+    }
+    previousPhaseRef.current = phase;
+  }, [phase, current?.slotId, answer, matchingComplete]);
+
   const title = (
-    <h2 data-testid="practice-daily-deck-title">
+    <h2 ref={headingRef} tabIndex={-1} data-testid="practice-daily-deck-title">
       <ChromeDual uk={`Слова дня — ${titleUk}`} en={`Words of the day — ${titleEn}`} />
     </h2>
   );
@@ -278,7 +300,7 @@ export default function TeacherDeckPractice({
           <button type="button" className="stage-back" onClick={() => setPhase('overview')}>
             <ChromeText k="practice.home" />
           </button>
-          <h2>
+          <h2 ref={headingRef} tabIndex={-1}>
             <ChromeDual uk="Пари: слово — значення" en="Matching: word — meaning" />
           </h2>
         </div>
@@ -290,7 +312,7 @@ export default function TeacherDeckPractice({
         </p>
         <MatchUp
           key={matchingSeed}
-          pairs={matchingPairs.map((entry) => ({ left: entry.uk, right: entry.en }))}
+          pairs={matchingTiles}
           isUkrainian={chromeLocale === 'uk'}
           onComplete={() => setMatchingComplete(true)}
         />
@@ -298,6 +320,7 @@ export default function TeacherDeckPractice({
           <div className="teacher-deck-actions">
             <button
               type="button"
+              ref={matchingAgainRef}
               className="btn btn-accent"
               data-testid="teacher-deck-matching-again"
               onClick={() => {
@@ -317,7 +340,7 @@ export default function TeacherDeckPractice({
     if (!current || !currentEntry) {
       return (
         <div className="teacher-deck" data-testid="teacher-deck-session-done">
-          <h2>
+          <h2 ref={headingRef} tabIndex={-1}>
             <ChromeText k="practice.sessionComplete" />
           </h2>
           {storageNotice}
@@ -356,7 +379,7 @@ export default function TeacherDeckPractice({
           <button type="button" className="stage-back" onClick={() => setPhase('overview')}>
             <ChromeText k="practice.home" />
           </button>
-          <h2>
+          <h2 ref={headingRef} tabIndex={-1}>
             <ChromeDual uk={titleUk} en={titleEn} />
           </h2>
           <span className="queue-pill" data-testid="teacher-deck-progress">
@@ -364,6 +387,7 @@ export default function TeacherDeckPractice({
           </span>
           <button
             type="button"
+            ref={nextRef}
             className="btn btn-accent queue-next-btn"
             data-testid={answer ? 'teacher-deck-next' : undefined}
             disabled={!answer}
@@ -835,7 +859,28 @@ function ProductionFlashcard({
   const [attempt, setAttempt] = useState('');
   const [revealed, setRevealed] = useState<{ attempt: string } | null>(null);
   const [rated, setRated] = useState(false);
+  const firstRatingRef = useRef<HTMLButtonElement>(null);
   const matches = revealed ? normalizeAttempt(revealed.attempt) === normalizeAttempt(entry.uk) : false;
+
+  useEffect(() => {
+    if (revealed) firstRatingRef.current?.focus();
+  }, [revealed]);
+
+  useEffect(() => {
+    if (!revealed || rated) return undefined;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.altKey || event.ctrlKey || event.metaKey) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest?.('input, textarea, select, [contenteditable="true"]')) return;
+      const index = Number(event.key) - 1;
+      if (!Number.isInteger(index) || index < 0 || index >= RATING_ORDER.length) return;
+      event.preventDefault();
+      setRated(true);
+      onRate(RATING_ORDER[index]!);
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [revealed, rated, onRate]);
 
   return (
     <div className="teacher-deck-production" data-testid="teacher-deck-production-flashcard">
@@ -894,9 +939,11 @@ function ProductionFlashcard({
               <button
                 key={rating}
                 type="button"
+                ref={index === 0 ? firstRatingRef : undefined}
                 className="rate-btn"
                 data-rate={rating}
                 data-testid={`teacher-deck-rate-${rating}`}
+                aria-keyshortcuts={String(index + 1)}
                 disabled={rated}
                 onClick={() => {
                   setRated(true);
