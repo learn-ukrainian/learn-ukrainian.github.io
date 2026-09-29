@@ -213,10 +213,23 @@ def test_plan_supplies_title_lessons_and_scope(root: gen.Roots) -> None:
     assert alpha["lesson_numbers"] == [1, 2, 3]
     assert alpha["lesson_titles"] == ["Урок 1", "Урок 2", "Урок 3"]
     assert alpha["scope"] == {"letters": 13, "grammar_points": 2, "core_lemmas": 30}
-    assert 'title: "Звуки і привіт"' in files[root.docs / "alpha" / "index.mdx"]
+    assert 'title: "Звуки і привіт · Alpha"' in files[root.docs / "alpha" / "index.mdx"]
     assert (beta["title_uk"], beta["lessons"], beta["scope"], beta["lesson_titles"]) == (None, None, None, [])
     assert beta["lesson_numbers"] == []
     assert 'title: "Beta"' in files[root.docs / "beta" / "index.mdx"]
+
+
+def test_module_frontmatter_uses_bilingual_title_with_plan_and_english_fallback_without_plan(
+    root: gen.Roots,
+) -> None:
+    _plan(root, "sounds-letters-and-hello", 1, title="Звуки і привіт")
+    files = gen.generated_files(root, _arc("sounds-letters-and-hello", "reading-ukrainian"))
+
+    planned = yaml.safe_load(files[root.docs / "sounds-letters-and-hello" / "index.mdx"].split("---\n")[1])
+    unplanned = yaml.safe_load(files[root.docs / "reading-ukrainian" / "index.mdx"].split("---\n")[1])
+
+    assert planned["title"] == "Звуки і привіт · Sounds letters and hello"
+    assert unplanned["title"] == "Reading ukrainian"
 
 
 def test_frontmatter_carries_arc_keys_and_an_empty_body(root: gen.Roots) -> None:
