@@ -2,7 +2,7 @@
  * Both SQLite and HTTP apply this to EntryRecords. The exporter applies the
  * equivalent source-clause rule before writing shards.
  */
-const CITATION = /(?:СУМ|SUM)[-_‐‑‒–— ]?11|sum\.in\.ua|slovnyk\.me\/dict\/sum\/|Словник української мови\s*(?:\(1970[–-]1980\)|:\s*[Вв]\s+11\s+томах)/i;
+const CITATION = /(?:СУМ|SUM)[-_‐‑‒–— ]?11|sum\.in\.ua|slovnyk\.me\/dict\/sum\/|Словник української мови»?\s*(?:\(1970[–-]1980\)|(?::\s*)?[Вв]\s+11\s+томах(?:\s*\(1970\s*[—–-]\s*80\))?)/i;
 const GATE_NOTE = /\s*\[gate: [^\]]*\]/g;
 
 function cites(value: unknown): boolean {
@@ -71,6 +71,14 @@ export function withholdLegacySovietCitations<T>(entry: T): T {
         if (section) clean[name] = section;
         else delete clean[name];
         if (lost && cites(value)) provenance[name] = "source-withdrawn-unverified";
+      } else if (containerName === "enrichment" && name === "literary_attestation" && value && typeof value === "object" && !Array.isArray(value)) {
+        // A corpus quote may mention the dictionary without citing it as evidence.
+        const attribution = { ...(value as Record<string, unknown>) };
+        delete attribution.text;
+        if (cites(attribution)) {
+          delete clean[name];
+          provenance[name] = "source-withdrawn-unverified";
+        }
       } else if (cites(value)) {
         delete clean[name];
         provenance[name] = "source-withdrawn-unverified";

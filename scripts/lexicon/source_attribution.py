@@ -30,7 +30,7 @@ MIRROR_URL_PATTERN = re.compile(
 # permitted only in a marked occupation-context citation, never as modern evidence.
 SOVIET_DICTIONARY_CITATION_RE = re.compile(
     r"(?:СУМ|SUM)[-_‐‑‒–— ]?11|sum\.in\.ua|slovnyk\.me/dict/sum/"
-    r"|Словник української мови\s*(?:\(1970[–-]1980\)|:\s*[Вв]\s+11\s+томах)",
+    r"|Словник української мови»?\s*(?:\(1970[–-]1980\)|(?::\s*)?[Вв]\s+11\s+томах(?:\s*\(1970\s*[—–-]\s*80\))?)",
     re.IGNORECASE,
 )
 
@@ -58,6 +58,7 @@ def _cites_outside_context(payload: object, *, path: tuple[str, ...]) -> bool:
             _cites_outside_context(value, path=(*path, key))
             for key, value in payload.items()
             if not ((*path, key) in _CONTEXT_PATHS and isinstance(value, dict))
+            and (*path, key) != ("enrichment", "literary_attestation", "text")
         )
     if isinstance(payload, (list, tuple)):
         return any(_cites_outside_context(value, path=(*path, "[]")) for value in payload)
@@ -215,7 +216,7 @@ def withhold_legacy_soviet_citations(entry: dict[str, Any]) -> tuple[dict[str, A
                         clean.pop(name, None)
                     else:
                         clean[name] = relation
-            elif soviet_citation_learner_violation({"sections": {name: value}}):
+            elif soviet_citation_learner_violation({container_name: {name: value}}):
                 withdraw(name, value)
                 clean.pop(name)
         projected[container_name] = clean

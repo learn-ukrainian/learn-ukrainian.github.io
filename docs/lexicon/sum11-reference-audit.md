@@ -32,6 +32,15 @@ A next build recomputes cited sections from allowed sources and withholds unsupp
 
 Round 8 projection of the pinned 27,472-entry manifest touched 4,638 relation sections, including note-only cleanups, and withheld citations in 4,333 entries. It withheld 8,571 cited clauses and 1,775 unsupported relation items while retaining 18,197 items in touched sections; 1,813 diagnostic `[gate: …]` notes were stripped separately. No entry failed the projection. The migrate-stage report counts withdrawals from the source manifest; the export-stage report counts only residual withdrawals from its input database, so a zero export count after migration is expected.
 
+Residual: the pinned manifest (`json_sha256` `81c695cdd5a5fdbd09fe2062884f663f891368b52a8de9f18340c2100a998801`) has **30 items in 28 relation sections** where only a СУМ-11 clause names the item, but another permitted bare source label supports the entire section. The review called these “30 sections”; recomputing at the section level gives 28. They remain kept under the documented bare-label rule, without a target-specific source check. The sections are:
+
+| Section | Lemmas |
+| --- | --- |
+| synonyms | бурштин, генератор, гладити, глей, гуд, доповнити, дурницею, жартом, зайнятися (2 items), закінчити, закінчувати, зволити, зелена, знову, зрізати (2 items), коза, козак, лис, насіння, плавання, право, ризик, свиня |
+| antonyms | лад, начало, схід, тяжкий, імпорт |
+
+This is an evidence residual for #8990: a source lookup was unavailable during review, so the bare labels have not been independently checked for those 30 item relations. The `тлумачний` literary attestation quotes a 2004 encyclopedia mentioning the 11-volume dictionary. Its `text` is a corpus quotation, while its `source` metadata identifies the work; the citation guard still rejects that wording when it appears as a source attribution.
+
 | Match | Class | Reason |
 | --- | --- | --- |
 | `scripts/lexicon/admit_fmu_boosters.py:8` | contrast | Documents or enforces the exclusion of Soviet dictionary evidence. |

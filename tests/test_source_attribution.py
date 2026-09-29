@@ -159,10 +159,25 @@ def test_soviet_label_variants_are_citations() -> None:
         "SUM_11",
         "Словник української мови (1970–1980)",
         "Словник української мови: В 11 томах",
+        "Словник української мови в 11 томах (1970 — 80)",
         "https://sum.in.ua/s/word",
         "https://slovnyk.me/dict/sum/word",
     ):
         assert soviet_citation_learner_violation({"source": label}) == "outside soviet_colonization_context"
+
+
+def test_literary_quote_mentions_dictionary_without_citing_it() -> None:
+    quote = "«Словник української мови» в 11 томах (1970 — 80)"
+    assert cites_soviet_dictionary_outside_context({"source": quote})
+    entry = {"lemma": "тлумачний", "enrichment": {"literary_attestation": {
+        "text": quote, "source": "2004 encyclopedia",
+    }}}
+    assert soviet_citation_learner_violation(entry) is None
+    projected, report = withhold_legacy_soviet_citations(entry)
+    assert projected["enrichment"]["literary_attestation"]["text"] == quote
+    assert report["citations_withheld"] == 0
+    entry["enrichment"]["literary_attestation"]["source"] = quote
+    assert soviet_citation_learner_violation(entry) == "outside soviet_colonization_context"
 
 
 def test_remap_mirror_source_string_strips_slovnyk_prefix() -> None:

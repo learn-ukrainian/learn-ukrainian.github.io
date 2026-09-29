@@ -82,7 +82,15 @@ def test_export_withholds_legacy_soviet_citation_in_shard(tmp_path: Path) -> Non
     out = tmp_path / "out"
     report = _export(tmp_path / "legacy.db", out)
     assert report["sovietCitationWithholding"] == {
-        "entries_touched": 1, "citations_withheld": 1, "by_section": {"synonyms": 1}
+        "stage": "export",
+        "entries_touched": 1,
+        "citations_withheld": 1,
+        "by_section": {"synonyms": 1},
+        "relation_sections_touched": 1,
+        "clauses_withheld": 1,
+        "items_withheld": 1,
+        "items_kept": 0,
+        "gate_notes_removed": 0,
     }
     version = out / "atlas" / "versions" / report["dataVersion"]
     records = [
