@@ -761,6 +761,22 @@ def test_heritage_pair_v51_validator_rejects_missing_senses_and_bad_frames() -> 
     assert any("exactly one ___ slot" in error for error in validate_heritage_pair(multi_slot))
 
 
+def test_heritage_pair_withheld_without_authentic_sense_never_builds() -> None:
+    pair = {
+        **_fixture_heritage_pair(),
+        "kind": "sense_restricted",
+        "calqueSense": "a sourced calque sense",
+        "authenticSense": None,
+        "currentNormWithheldReason": "No current same-sense rejection is sourced.",
+    }
+    pair.pop("currentNormSupport", None)
+    pair["frames"] = [{**frame, "disambiguated": True} for frame in pair["frames"]]
+    assert validate_heritage_pair(pair) == []
+    assert _build_heritage_items(pair, _fixture_lexemes()[0], _fixture_lexemes(), "deck-v1") == []
+    pair["currentNormSupport"] = [{"locator": "fixture", "passage": "fixture"}]
+    assert any("missing authenticSense" in error for error in validate_heritage_pair(pair))
+
+
 def test_heritage_builder_fails_closed_without_frames(capsys: pytest.CaptureFixture[str]) -> None:
     pair = _fixture_heritage_pair()
     pair.pop("frames")
@@ -5293,8 +5309,13 @@ def test_live_language_review_fixes_are_source_bound() -> None:
     assert all("normativeJudgment" not in frame for frame in affair["frames"])
 
     exclusively = reviewed["виключно"]
-    assert "як виняток" not in exclusively["authenticSense"]
+    assert exclusively["authenticSense"] is None
+    assert validate_heritage_pair(exclusively) == []
     assert all("normativeJudgment" not in frame for frame in exclusively["frames"])
+
+    event = reviewed["міроприємство"]
+    assert "antonenko:Міроприємство" in event["citations"]
+    assert "Міроприємство" in passages.chunk_text("antonenko-davydovych-yak-my-hovorymo_p031")
 
     relation = reviewed["відношення"]
     title = "Відношення, взаємини, стосунок, відносно, щодо, стосовно, відносність"
@@ -5309,7 +5330,10 @@ def test_live_language_review_fixes_are_source_bound() -> None:
         pair for pair in read_paronym_pairs(PARONYM_REGISTRY)
         if pair.get("slugA") == "лікарський" and pair.get("slugB") == "лікарняний"
     )
-    assert medical["distinction_gloss_uk"].casefold().count("лікарський —") == 2
+    assert "Лі́карський — який стосується лікаря" in medical["distinction_gloss_uk"]
+    assert "ліка́рський — який стосується ліків" in medical["distinction_gloss_uk"]
+    assert "лікарня́ний — який стосується лікарні" in medical["distinction_gloss_uk"]
+    assert medical["distinction_gloss_uk"].count("\u0301") == 3
     assert paronym_gloss_provenance_errors(medical, passages) == []
 
 

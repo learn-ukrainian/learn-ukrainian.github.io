@@ -5502,7 +5502,12 @@ def validate_heritage_pair(pair: dict[str, Any]) -> list[str]:
     if kind == "sense_restricted":
         if not _clean_text(pair.get("calqueSense")):
             errors.append("sense_restricted heritage_pair missing calqueSense")
-        if not _clean_text(pair.get("authenticSense")):
+        # A withheld pair may have no defensible distinct authentic sense.
+        # Keep that absence out of learner-facing fields; admitted pairs still
+        # require the sense before their items can be built.
+        if not _clean_text(pair.get("authenticSense")) and not (
+            _clean_text(pair.get("currentNormWithheldReason")) and not pair.get("currentNormSupport")
+        ):
             errors.append("sense_restricted heritage_pair missing authenticSense")
     availability = _clean_text(pair.get("cefrAvailability"))
     if availability and _normalize_cefr(availability) not in {"A1", "A2", "B1"}:
@@ -5570,7 +5575,9 @@ def paronym_gloss_provenance_errors(pair: dict[str, Any], passages: SourcePassag
     clause_heads: set[str] = set()
     # Clauses start at a contrasted word followed by a dash; a copied
     # definition may itself contain «;».
-    heads = "|".join(re.escape(slug) for slug in slugs)
+    # Stress marks belong in the displayed headword. Strip them only when
+    # comparing keys and source passages; accept them while finding clauses.
+    heads = "|".join("".join(re.escape(char) + "\u0301?" for char in slug) for slug in slugs)
     for clause in (part.strip() for part in re.split(rf";\s*(?=(?:{heads})\s+[—–-]\s)", gloss, flags=re.IGNORECASE)):
         if not clause:
             continue

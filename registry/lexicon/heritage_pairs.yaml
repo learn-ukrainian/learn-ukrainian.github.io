@@ -306,7 +306,7 @@ pairs:
   severity: enrichment
   curator: fable-2026-07-06
   calqueSense: у значенні «тільки, суто» (рос. исключительно)
-  authenticSense: 'Withheld: no sourced distinct authentic sense established.'
+  authenticSense: null
   frames:
   - sentence_with_slot: Це ___ технічне питання.
     answer_form: суто
@@ -3117,7 +3117,7 @@ pairs:
   - захід
   rationale: Для організованої події вживаємо захід або заходи, не міроприємство.
   citations:
-  - antonenko:44 Міра, захід
+  - antonenko:Міроприємство
   - state-standard:glazova-10
   normativeSupport:
   - locator: antonenko-davydovych-yak-my-hovorymo_p031
