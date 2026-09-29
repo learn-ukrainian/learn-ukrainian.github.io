@@ -74,6 +74,13 @@ def test_specified_russianisms_keep_standard_alternatives() -> None:
         )
 
 
+def test_withheld_vykliuchno_has_no_learner_facing_authentic_sense() -> None:
+    status = classify_surface_form("виключно", db_path=DB, vesum_db_path=VESUM_DB)
+    warning = status["calque_warning"]
+    assert warning["kind"] == "sense_restricted"
+    assert "authentic_sense" not in warning
+
+
 def test_atlas_heritage_labels_use_source_backed_evidence() -> None:
     expected = {
         "глагол": "authentic-archaism",

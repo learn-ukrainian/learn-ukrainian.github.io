@@ -16,6 +16,7 @@ from scripts.practice.creation_review import (
 from tests.test_generate_practice_deck import (
     ALLOWLIST,
     CLOZE_SOURCES,
+    FIXTURE_PASSAGES,
     VESUM,
     _fixture_heritage_pair,
     _fixture_lexemes,
@@ -32,7 +33,9 @@ def frame_case(request):
         args = ('heritage', frame['sentence_with_slot'], frame['answer_form'], frame['calque_form'])
         source = heritage_source(pair, frame)
         def emit(policy):
-            return factory._build_heritage_items(pair, lexemes[0], lexemes, 'fixture', creation_review=policy)
+            return factory._build_heritage_items(
+                pair, lexemes[0], lexemes, 'fixture', creation_review=policy, source_passages=FIXTURE_PASSAGES,
+            )
         def drift():
             frame['origin'] += '-changed'
     else:
