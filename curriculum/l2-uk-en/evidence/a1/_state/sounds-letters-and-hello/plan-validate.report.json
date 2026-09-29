@@ -1,0 +1,267 @@
+{
+  "activity_report": {
+    "explanation_coverage": "not_available_at_this_stage",
+    "lessons": [
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "quiz": 2,
+              "watch-and-repeat": 2
+            },
+            "total": 4
+          },
+          "workbook": {
+            "by_type": {
+              "quiz": 1
+            },
+            "total": 1
+          }
+        },
+        "distinct_types": [
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 1
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 1,
+              "observe": 1,
+              "quiz": 1,
+              "watch-and-repeat": 1
+            },
+            "total": 4
+          },
+          "workbook": {
+            "by_type": {
+              "odd-one-out": 1,
+              "quiz": 1
+            },
+            "total": 2
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "observe",
+          "odd-one-out",
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 2
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 2,
+              "quiz": 3,
+              "watch-and-repeat": 1
+            },
+            "total": 6
+          },
+          "workbook": {
+            "by_type": {
+              "odd-one-out": 1,
+              "pick-syllables": 1
+            },
+            "total": 2
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "odd-one-out",
+          "pick-syllables",
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 3
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 1,
+              "pick-syllables": 1,
+              "quiz": 1,
+              "watch-and-repeat": 1
+            },
+            "total": 4
+          },
+          "workbook": {
+            "by_type": {
+              "divide-words": 1,
+              "quiz": 1
+            },
+            "total": 2
+          }
+        },
+        "distinct_types": [
+          "divide-words",
+          "letter-grid",
+          "pick-syllables",
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 4
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 2,
+              "pick-syllables": 1,
+              "quiz": 1,
+              "watch-and-repeat": 1
+            },
+            "total": 5
+          },
+          "workbook": {
+            "by_type": {
+              "match-up": 1,
+              "pick-syllables": 1
+            },
+            "total": 2
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "match-up",
+          "pick-syllables",
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 5
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 1,
+              "observe": 1,
+              "quiz": 1
+            },
+            "total": 3
+          },
+          "workbook": {
+            "by_type": {},
+            "total": 0
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "observe",
+          "quiz"
+        ],
+        "has_workbook": false,
+        "is_recap": true,
+        "kind": "recap",
+        "n": 6
+      }
+    ],
+    "module": {
+      "all_distinct_types": [
+        "divide-words",
+        "letter-grid",
+        "match-up",
+        "observe",
+        "odd-one-out",
+        "pick-syllables",
+        "quiz",
+        "watch-and-repeat"
+      ],
+      "inline_activities": 26,
+      "largest_workbook_type": "quiz",
+      "largest_workbook_type_share": 0.3333333333333333,
+      "longest_same_type_workbook_run": 2,
+      "longest_same_type_workbook_run_type": "quiz",
+      "non_recap_lessons": 5,
+      "non_recap_lessons_with_workbook": 5,
+      "workbook_activities": 9,
+      "workbook_distinct_types": [
+        "divide-words",
+        "match-up",
+        "odd-one-out",
+        "pick-syllables",
+        "quiz"
+      ],
+      "workbook_presence_complete": true
+    },
+    "module_slug": "sounds-letters-and-hello",
+    "rendered": "not_available_at_this_stage",
+    "response_opportunities": "not_available_at_this_stage",
+    "stage": "plan"
+  },
+  "failures": [],
+  "inputs": {
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "a1fc185346cb212c89114a18e2e8c7f1c40b43bc98f4d14cdfdf7e886f408373",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2383b4a9044e1ef418db1e98ce93a8a4fb0768a674365314be9e601a63ebbb5b",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "96b696344c3bb5ba94463718cafc55df5aecf13955f1e1d8c16d9a34709c5515",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "160e4aa600e8fd2f091ffd7d07aa5ab31a1daded4de56c162d286908b29c492c",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "13b67ca757968e8037b112f54fddc96275414f1fbcebcf04653f24d763ad6004",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "812f5cfb2dae62b9feea54ab7ed96e7a24680dc37854637da4bd31ceec7f79f7",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "b33075d716373139104577b6318bb700064de97a1bbf180801e9775360bae3e4",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832",
+    "docs/epics/fresh-build-a1-arc.md": "5a1e7190500683fb9134642f993288f4a79dc2c6348440f1d94dec31f4f109b7",
+    "schemas/activities-a1.schema.json": "cc185c5286a7dbe6a4c65d1e0668fd9f2d53ed9d5032182edb4e2db7d98fc8aa",
+    "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
+    "schemas/module-plan-v2.schema.json": "587b90fe0f15bffd9187e9987cb44a5a94aea9196ca4cc71154386dc99d96fed",
+    "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
+  },
+  "level": "a1",
+  "mode": "provisional",
+  "not_checked": [
+    {
+      "code": "minutes_constants_undefined",
+      "lesson": null,
+      "message": "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
+      "step": null
+    },
+    {
+      "code": "word_target_not_calibrated",
+      "lesson": null,
+      "message": "not_checked: word_target presence and type are checked; the per-level minimum is not calibrated (§2a)",
+      "step": null
+    },
+    {
+      "code": "lesson_activity_minimums_not_calibrated",
+      "lesson": null,
+      "message": "not_checked: per-lesson inline/workbook activity minimums are not calibrated (§2a)",
+      "step": null
+    },
+    {
+      "code": "arc_has_no_structured_grammar_or_vocabulary",
+      "lesson": null,
+      "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+      "step": null
+    },
+    {
+      "code": "title_quantities_not_parsed",
+      "lesson": null,
+      "message": "subtitle digits: 1, 3; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    }
+  ],
+  "notes": [],
+  "slug": "sounds-letters-and-hello",
+  "status": "pass",
+  "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",
+  "waivers": []
+}
