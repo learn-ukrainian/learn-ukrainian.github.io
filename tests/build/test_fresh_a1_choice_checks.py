@@ -233,6 +233,82 @@ def _form(options: list[str], record: dict, demand: dict[str, str], *, key: int 
     }
 
 
+GIFT = _record(
+    18,
+    "подарунок",
+    [
+        ("подарунка", "noun:inanim:m:v_rod"),
+        ("подарунка", "noun:inanim:m:v_zna:var"),
+        ("подарунок", "noun:inanim:m:v_naz"),
+        ("подарунок", "noun:inanim:m:v_zna"),
+        ("подарунком", "noun:inanim:m:v_oru"),
+    ],
+)
+
+
+def _case_offer(
+    sentence: str,
+    *,
+    feature: str = "Case",
+    kind: str = "form",
+    level: str = "a1",
+    extra_records: list[dict] | None = None,
+) -> dict:
+    item = _form(["подарунка", "подарунок", "подарунком"], GIFT, {"Case": "Gen"}, taught=feature)
+    item["kind"] = kind
+    item["sentence"] = sentence
+    draft = {"activities": [{"id": "a1", "items": [item]}]}
+    lesson = {"level": level, "activities": [{"id": "a1", "type": "quiz"}]}
+    # VESUM analyses for these surfaces were independently inspected for this regression.
+    finite = {"маю": "verb:imperf:pres:s:1", "знаю": "verb:imperf:pres:s:1", "розумію": "verb:imperf:pres:s:1"}
+
+    def lookup(words: list[str]) -> dict:
+        return {word: [{"tags": finite[word]}] if word in finite else [] for word in words}
+
+    return check_4_activities(
+        draft, lesson, {"words": [GIFT, *(extra_records or [])]}, {}, level=level, vesum_lookup=lookup
+    )[0]
+
+
+@pytest.mark.parametrize(
+    "sentence",
+    [
+        "Скоро мамине свято, а я ще ___ не маю.",
+        "Я не знаю ___.",
+        "Я не розумію ___.",
+    ],
+)
+def test_a1_case_contrast_with_negated_finite_verb_stops_at_offer(sentence: str) -> None:
+    row = _case_offer(sentence)
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+@pytest.mark.parametrize(
+    "sentence",
+    ["Це не хліб, а ___", "Немає ___", "Ні, ___", "Без ___", "Ось ___"],
+)
+def test_a1_case_contrast_without_negated_finite_verb_reaches_existing_checks(sentence: str) -> None:
+    assert _case_offer(sentence).get("code") != "a1_case_contrast_under_negated_verb"
+
+
+def test_a1_case_contrast_cannot_bypass_by_declaring_another_feature() -> None:
+    assert _case_offer("Я не знаю ___", feature="Number")["code"] == "a1_case_contrast_under_negated_verb"
+
+
+def test_a1_case_contrast_cannot_bypass_by_declaring_another_kind() -> None:
+    assert _case_offer("Я не знаю ___", kind="vocabulary")["code"] == "a1_case_contrast_under_negated_verb"
+
+
+def test_a1_case_contrast_accepts_store_finite_analysis_without_vesum() -> None:
+    know = _record(19, "знати", [("знаю", "verb:imperf:pres:s:1")])
+    assert _case_offer("Я не знаю ___ і не хліб", extra_records=[know])["code"] == "a1_case_contrast_under_negated_verb"
+
+
+@pytest.mark.parametrize("level", ["a2", "b1"])
+def test_negated_case_contrast_does_not_apply_above_a1(level: str) -> None:
+    assert _case_offer("Я не знаю ___", level=level).get("code") != "a1_case_contrast_under_negated_verb"
+
+
 def test_brother_accusative_requires_receipt(tmp_path: Path) -> None:
     item = _form(["брата", "брату"], BROTHER, {"Case": "Acc"})
     assert _check(tmp_path, item, BROTHER, receipt=False)["code"] == "requires_receipt_missing"

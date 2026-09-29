@@ -274,8 +274,7 @@ def a1_case_contrast_under_negated_verb(
     successors = [
         tokens[index + 1].lookup.casefold()
         for index, token in enumerate(tokens[:-1])
-        if token.lookup.casefold() == "не"
-        and sentence[token.end : tokens[index + 1].start].isspace()
+        if token.lookup.casefold() == "не" and sentence[token.end : tokens[index + 1].start].isspace()
     ]
     if not successors:
         return False
@@ -284,7 +283,7 @@ def a1_case_contrast_under_negated_verb(
         for surface in successors
         if any("VerbForm=Fin" in analysis for record in records.values() for analysis in _analyses(record, surface))
     }
-    if len(known_finite) == len(set(successors)):
+    if known_finite:
         return True
     if vesum_lookup is None:
         from scripts.verification.vesum import verify_words
@@ -293,9 +292,7 @@ def a1_case_contrast_under_negated_verb(
     unresolved = sorted(set(successors) - known_finite)
     found = vesum_lookup(unresolved)
     return any(
-        "VerbForm=Fin" in to_oracle(analysis["tags"])
-        for surface in unresolved
-        for analysis in found.get(surface, [])
+        "VerbForm=Fin" in to_oracle(analysis["tags"]) for surface in unresolved for analysis in found.get(surface, [])
     )
 
 
@@ -703,22 +700,20 @@ def check_4_activities(
 
                 item["_resolved_key_index"] = next(iter(resolved_indices))
 
+            if mod_level == "a1" and a1_case_contrast_under_negated_verb(item, records, typ, vesum_lookup=vesum_lookup):
+                return failure(
+                    4,
+                    "a1_case_contrast_under_negated_verb",
+                    "writer",
+                    code="a1_case_contrast_under_negated_verb",
+                    activity=aid,
+                    token=str(idx),
+                ), {}
             if (
-                level == "a1"
+                mod_level == "a1"
                 and item.get("kind") == "form"
                 and ((typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"})
             ):
-                if a1_case_contrast_under_negated_verb(
-                    item, records, typ, vesum_lookup=vesum_lookup
-                ):
-                    return failure(
-                        4,
-                        "a1_case_contrast_under_negated_verb",
-                        "writer",
-                        code="a1_case_contrast_under_negated_verb",
-                        activity=aid,
-                        token=str(idx),
-                    ), {}
                 generated = item_candidates(item, words, typ)
                 offered = {(candidate["record"], candidate["form"]) for candidate in generated}
                 options = item.get("options") or []
