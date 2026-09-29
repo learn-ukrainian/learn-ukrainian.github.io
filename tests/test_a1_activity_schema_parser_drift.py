@@ -47,8 +47,6 @@ SENTINEL = re.compile(r"SENT\d+_\w+")
 KNOWN_DRIFT: dict[str, set[str]] = {}
 # Provenance metadata for the build engine, never rendered to the learner.
 INTERNAL_ONLY = {"error_ref"}
-# Types the parser rejects outright (loud, not silent); tracked separately.
-PARSER_REJECTS: dict[str, str] = {}
 
 
 def _schema_branch_paths(node, path: str = "") -> set[str]:
@@ -193,8 +191,7 @@ def test_generated_examples_are_schema_valid():
         assert VALIDATOR.is_valid([instance]), f"{name}: generated example is not schema-valid"
 
 
-PARSED_CASES = [c for c in CASES if c[0] not in PARSER_REJECTS]
-PARSED_IDS = [f"{c[0]}-{c[1]}" for c in PARSED_CASES]
+CASE_IDS = [f"{c[0]}-{c[1]}" for c in CASES]
 
 
 def _dropped(example: dict, *outputs: str) -> set[str]:
@@ -222,7 +219,7 @@ def test_every_a1_type_and_branch_is_generated():
     )
 
 
-@pytest.mark.parametrize(("activity_type", "index", "example"), PARSED_CASES, ids=PARSED_IDS)
+@pytest.mark.parametrize(("activity_type", "index", "example"), CASES, ids=CASE_IDS)
 def test_parser_keeps_every_required_field(activity_type, index, example):
     parser = ActivityParser()
     activity = parser._parse_activity(example)
@@ -234,7 +231,7 @@ def test_parser_keeps_every_required_field(activity_type, index, example):
     )
 
 
-@pytest.mark.parametrize(("activity_type", "index", "example"), CASES, ids=[f"{c[0]}-{c[1]}" for c in CASES])
+@pytest.mark.parametrize(("activity_type", "index", "example"), CASES, ids=CASE_IDS)
 def test_renderer_keeps_every_required_field(activity_type, index, example):
     jsx = render_activity_to_jsx(example)
     assert "Unknown activity type" not in jsx
@@ -243,13 +240,6 @@ def test_renderer_keeps_every_required_field(activity_type, index, example):
         f"{activity_type}: required fields dropped by activity_renderer = {sorted(dropped)}; "
         f"known drift = {sorted(KNOWN_DRIFT.get(activity_type, set()))}"
     )
-
-
-@pytest.mark.parametrize("activity_type", sorted(PARSER_REJECTS))
-def test_parser_rejections_stay_loud(activity_type):
-    example = next(inst for name, _, inst in CASES if name == activity_type)
-    with pytest.raises((ValueError, KeyError, TypeError)):
-        ActivityParser()._parse_activity(example)
 
 
 # ---------------------------------------------------------------------------
