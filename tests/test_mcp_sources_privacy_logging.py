@@ -122,7 +122,10 @@ def test_query_ulif_cache_only_never_makes_a_live_call(server):
     result = asyncio.run(server.call_tool("query_ulif", {"word": "стіл", "cache_only": True}))
     payload = json.loads(result[0].text)
     assert payload["status"] in {"attested", "not_found", "unavailable", "ambiguous"}
-    assert "entry" in payload or (payload["status"] == "ambiguous" and isinstance(payload.get("entries"), list))
+    assert "entry" in payload
+    if payload["status"] == "ambiguous":
+        assert payload["entry"] is None
+        assert isinstance(payload.get("entries"), list) and payload["entries"]
 
 
 def test_query_grac_cache_only_always_unavailable(server):

@@ -113,6 +113,8 @@ def real_transport(sources_http_url):
 
 @pytest.mark.xfail(
     strict=True,
+    raises=compiler.LocalMcpSourcesClientError,
+    match="malformed_json_response:mcp_server_identity",
     reason="#8683/#6321 accepts cycle007's fail-closed identity rejection; its frozen five-key attestation is obsolete",
 )
 def test_real_transport_attests_endpoint_identity_against_local_files(sources_http_url):
