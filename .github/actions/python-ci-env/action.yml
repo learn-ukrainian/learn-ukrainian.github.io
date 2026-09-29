@@ -37,10 +37,8 @@ runs:
       run: |
         set -euo pipefail
         python -m venv .venv
-        # Lockfile is internally inconsistent (marker-pdf vs pillow; see
-        # requirements.txt). Documented CI install is `--no-deps`. Drop
-        # live-ML wheels — the unit suite does not import them and they
-        # blow the 15m budget.
+        # Drop live-ML wheels; the unit suite does not import them and they
+        # exceed the 15m budget. Check the installed dependency graph below.
         grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
           > "${RUNNER_TEMP}/requirements-ci.txt"
         if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
@@ -48,7 +46,14 @@ runs:
           uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"
         fi
         .venv/bin/python -m pip install --no-deps --no-build-isolation ./packages/v4-runtime
-        .venv/bin/python scripts/audit/check_ci_dependencies.py
+        # The seven known missing ML dependencies result from the CI wheel
+        # filter. The fallback accepts only those exact omissions.
+        check_exit=0
+        uv pip check --python .venv/bin/python || check_exit=$?
+        if (( check_exit != 0 )); then
+          if (( check_exit != 1 )); then exit "$check_exit"; fi
+          .venv/bin/python scripts/audit/check_ci_dependencies.py
+        fi
         .venv/bin/python packages/v4-runtime/build_assets.py
 
     - name: Hydrate Atlas lexicon manifest

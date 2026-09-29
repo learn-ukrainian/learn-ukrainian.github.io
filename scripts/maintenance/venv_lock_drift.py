@@ -11,6 +11,7 @@ from pathlib import Path
 
 from packaging.requirements import InvalidRequirement, Requirement
 from packaging.utils import canonicalize_name
+from packaging.version import Version
 
 DEFAULT_LOCK = Path(__file__).resolve().parents[2] / "requirements-lock.txt"
 
@@ -54,6 +55,8 @@ def parse_lock(text: str, *, directory: Path) -> dict[str, str | None]:
                 requirement = Requirement(line)
             except InvalidRequirement as exc:
                 raise ValueError(f"lock line {number} is not a valid requirement") from exc
+            if requirement.marker is not None and not requirement.marker.evaluate():
+                continue
             name = requirement.name
             if requirement.url is not None and not requirement.specifier:
                 version = None
@@ -77,7 +80,15 @@ def compare(
     """Return missing, extra, and version-mismatched distribution names."""
     missing = sorted(locked.keys() - installed.keys())
     extra = sorted(installed.keys() - locked.keys())
-    changed = sorted(name for name in locked.keys() & installed.keys() if locked[name] and locked[name] != installed[name])
+    changed = []
+    for name in sorted(locked.keys() & installed.keys()):
+        pin = locked[name]
+        if pin is None:
+            continue
+        expected = Version(pin)
+        actual = Version(installed[name])
+        if expected != (actual if expected.local else Version(actual.public)):
+            changed.append(name)
     return missing, extra, changed
 
 
@@ -91,7 +102,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(
             "Compare installed Python distributions with requirements-lock.txt.\n"
-            "Run after host dependency changes or before a proposed venv resync."
+            "Run after host dependency changes or before a proposed venv resync; "
+            "do not use it to prove dependency consistency."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -100,7 +112,8 @@ def main(argv: list[str] | None = None) -> int:
             "--python /path/to/project/.venv/bin/python\n"
             "  /path/to/project/.venv/bin/python scripts/maintenance/venv_lock_drift.py "
             "--python /path/to/venv/bin/python --lock requirements-lock.txt\n\n"
-            "Outputs: Compact counts and sample distribution names; writes no files.\n"
+            "Outputs: Compact counts and sample distribution names; writes no files. "
+            "Requires uv on PATH. Run uv pip check separately for dependency consistency.\n"
             "Exit codes: 0 exact match, 1 drift, 2 invalid input or inspection failure.\n"
             "Related: #9204; URL requirements are checked by distribution name only."
         ),

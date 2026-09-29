@@ -31,6 +31,25 @@ def test_equal_fixture_handles_normalized_names(tmp_path: Path) -> None:
     assert venv_lock_drift.compare(freeze, lock) == ([], [], [])
 
 
+def test_equivalent_versions_and_optional_local_build(tmp_path: Path) -> None:
+    lock = venv_lock_drift.parse_lock("alpha==1.0\ntorch==2.13.0\n", directory=tmp_path)
+    freeze = venv_lock_drift.parse_freeze("alpha==1.0.0\ntorch==2.13.0+cpu\n")
+    assert venv_lock_drift.compare(freeze, lock) == ([], [], [])
+
+    lock = venv_lock_drift.parse_lock("torch==2.13.0+cpu\n", directory=tmp_path)
+    assert venv_lock_drift.compare(freeze, lock) == ([], ["alpha"], [])
+    assert venv_lock_drift.compare({"torch": "2.13.0+cu130"}, lock) == ([], [], ["torch"])
+
+
+def test_platform_markers_only_admit_applicable_pins(tmp_path: Path) -> None:
+    lock = venv_lock_drift.parse_lock(
+        'only-windows==1.0; sys_platform == "win32"\n'
+        'only-linux==1.0; sys_platform == "linux"\n',
+        directory=tmp_path,
+    )
+    assert lock == {"only-linux": "1.0"}
+
+
 @pytest.mark.parametrize("text", ["package>=1\n", "package==1\npackage==2\n", "broken line\n"])
 def test_invalid_lock_fails_closed(tmp_path: Path, text: str) -> None:
     with pytest.raises(ValueError):
