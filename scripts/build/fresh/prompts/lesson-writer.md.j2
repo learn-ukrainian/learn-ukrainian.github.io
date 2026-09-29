@@ -92,46 +92,7 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 
 ## 2. Cited Evidence Records
 
-{% if cited_records %}
-{% for record_id, record in cited_records.items() %}
-### Record `{{ record_id }}`
-{% if record.lemma is defined and record.lemma %}
-- Kind: word
-- Lemma: {{ record.lemma }}
-- Part of Speech: {{ record.pos }}
-{% if record.gloss is defined and record.gloss %}- Gloss: {{ record.gloss }}{% endif %}
-{% if record.forms is defined and record.forms %}
-- Forms:
-{% for f in record.forms %}
-  - form: {{ f.form }}, tags: {{ f.tags }}, stressed: {% if f.stress_source == 'pending' %}(pending — no confirmed stress; do not print this form){% else %}{{ f.stressed }}{% endif %}, stress_source: {{ f.stress_source }}
-{% endfor %}
-{% endif %}
-{% elif record.text is defined and record.text %}
-- Kind: text / quote
-- Source: {{ record.source }}
-- Text: {{ record.text }}
-{% elif record.example is defined and record.example %}
-- Kind: example
-- Source: {{ record.source }}
-- Text: {{ record.example }}
-{% if record.translation is defined and record.translation %}- Translation: {{ record.translation }}{% endif %}
-{% elif record.incorrect is defined and record.incorrect %}
-- Kind: error
-- Incorrect: {{ record.incorrect }}
-- Correct: {{ record.correct }}
-{% if record.explanation is defined and record.explanation %}- Explanation: {{ record.explanation }}{% endif %}
-{% elif record.url is defined and record.url %}
-- Kind: video
-- Title: {{ record.title }}
-- URL: {{ record.url }}
-{% if record.use is defined and record.use %}- Use: {{ record.use }}{% endif %}
-{% else %}
-- Raw: {{ record }}
-{% endif %}
-{% endfor %}
-{% else %}
-No external cited records required.
-{% endif %}
+{% include "_cited-records.md.j2" %}
 
 ---
 
