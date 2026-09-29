@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import dataclasses
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.build.fresh.immersion import compute_immersion_payload
-from scripts.build.fresh.manifest import learner_state_sha256
+from scripts.build.fresh.manifest import learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.prompt import (
     CARDS_DIR,
     LEARNER_STATE_BEGIN,
@@ -23,7 +25,9 @@ from scripts.build.fresh.prompt import (
     render_lesson_prompt,
     render_recap_prompt,
 )
+from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedState
+from scripts.review.prompts.render import ManifestReader, _learner_state_context
 
 pytestmark = pytest.mark.reads_content
 
@@ -551,6 +555,35 @@ def test_letters_of_one_lesson_render_in_the_plans_order(
     assert block == learner_state_block(state.to_dict(), STATE_WORD_STORE, STATE_GRAMMAR)
     assert learner_state_view(state, STATE_WORD_STORE, STATE_GRAMMAR)["letters"] == list(plan_order)
     assert _state_errors(prompt, sample_plan_entry, state, **STATE_SOURCES) == []
+
+
+@pytest.mark.parametrize("plan_order", [("Б", "А"), ("А", "Б")])
+def test_the_reviewer_reads_the_taught_order_the_writer_saw(
+    tmp_path, sample_plan_entry, full_learner_state, sample_cited_records, plan_order
+):
+    """The saved learner state keeps the letters' taught order; its identity hash stays canonical (#9182)."""
+    letters = {letter: {"position": 1, "lesson": 2} for letter in plan_order}
+    state = dataclasses.replace(full_learner_state, letters=letters)
+    writer_block = _state_block(_render_state_prompt(sample_plan_entry, state, sample_cited_records))
+
+    state_path = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/sample/lesson-3.learner-state.yaml"
+    identity = learner_state_sha256(state)
+    manifest = {
+        "kind": "module",
+        "inputs": {"learner_state": materialize_learner_state(state_path, learner_state_document(state), tmp_path)},
+        "learner_state": {"sha256": identity, "source": "planned_state"},
+    }
+    reviewed = _learner_state_context(ManifestReader(manifest, tmp_path), manifest)
+    reviewer_state = yaml.safe_load(reviewed["learner_state_yaml"])
+
+    assert list(reviewer_state["letters"]) == list(plan_order)
+    assert learner_state_block(reviewer_state, STATE_WORD_STORE, STATE_GRAMMAR) == writer_block
+    canonical = json.dumps(state.to_dict(), ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    assert reviewed["learner_state_sha256"] == identity == hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    sorted_letters = dataclasses.replace(state, letters=dict(sorted(letters.items())))
+    assert learner_state_sha256(sorted_letters) == identity  # the identity never depended on the order
+    if list(plan_order) == sorted(plan_order):  # a sorted state saves the same bytes as before the fix
+        assert state_path.read_bytes() == lock.yaml_bytes(learner_state_document(state))
 
 
 def test_state_section_is_deterministic_and_matches_the_reviewer_document(

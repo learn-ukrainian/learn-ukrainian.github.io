@@ -157,11 +157,30 @@ def learner_state_document(state: Any, immersion: Any | None = None) -> dict[str
     return document
 
 
+def _taught_order(value: Any, key: Any = None) -> Any:
+    """Mapping keys sorted, except ``letters``, whose order is the taught order (#9182)."""
+    if isinstance(value, dict):
+        items = value.items() if key == "letters" else sorted(value.items())
+        return {k: _taught_order(v, k) for k, v in items}
+    if isinstance(value, list):
+        return [_taught_order(item) for item in value]
+    return value
+
+
+def learner_state_yaml_bytes(document: dict[str, Any]) -> bytes:
+    """``lock.yaml_bytes`` except that ``letters`` keeps the taught order the writer block shows.
+
+    The reviewer reads this file, so sorting the letters would show it a different order than the
+    writer saw under the same ``learner_state_sha256``; that hash stays canonical (sorted JSON).
+    """
+    return yaml.safe_dump(_taught_order(document), allow_unicode=True, sort_keys=False, width=120).encode("utf-8")
+
+
 def materialize_learner_state(path: Path, document: dict[str, Any], repo_root: Path) -> dict[str, str]:
     """Write the document as deterministic YAML with its lock sidecar; return the manifest input entry."""
     root = repo_root.resolve()
     target = checked_path(root, path.resolve().relative_to(root), "curriculum/l2-uk-en/evidence")
-    lock.write(target, lock.yaml_bytes(document))
+    lock.write(target, learner_state_yaml_bytes(document))
     return _input(target, root)
 
 
