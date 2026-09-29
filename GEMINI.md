@@ -42,10 +42,6 @@ an attributed record fetch while the task is active. Registry delivery remains
 fail-open, but the classification duty is mandatory. Canonical contract and examples:
 `agents_extensions/shared/rules/workflow.md` § Project Research Registry.
 
-## Code Discovery (jevgrep; binding; #9134)
-
-Code discovery: for code you have not located, run `jg "<question>" <narrow subdir>` first (never `.`/repo root; `--max-source-bytes 24000`); exact symbols use `rg`; never install/upgrade jg or run `jg auth`; if jg fails, say so and continue; see `agents_extensions/shared/skills/jevgrep/SKILL.md`.
-
 ## Work Intake — Stream Epics (binding; #4708)
 
 Every open GH issue belongs to **exactly one stream epic** — registry:
