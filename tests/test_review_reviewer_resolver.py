@@ -218,6 +218,18 @@ def test_critical_uses_authority_while_routine_uses_practical_defaults():
         assert resolution.selected.name == "claude-sonnet-5-5", risk
 
 
+@pytest.mark.parametrize("author_model", ("gpt-6-sol", "grok-4.7"))
+@pytest.mark.parametrize("review_profile", ("code", "infra"))
+def test_critical_security_review_excludes_sonnet_5_5(author_model: str, review_profile: str) -> None:
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model=author_model, review_profile=review_profile, risk="critical")
+    )
+    assert resolution.selected is not None
+    assert resolution.selected.concrete_model != "claude-sonnet-5-5"
+    sonnet = next(entry for entry in resolution.trace if entry.name == "claude-sonnet-5-5")
+    assert sonnet.status == "excluded"
+
+
 def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
     resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="high"))
     assert resolution.selected is not None

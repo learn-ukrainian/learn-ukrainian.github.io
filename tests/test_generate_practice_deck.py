@@ -16,7 +16,7 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     RealVesumVerifier,
     ReviewedSourceAllowlist,
-    _aspect_category,
+    VesumLemmaEvidence,
     _build_antonym_items,
     _build_classify_items,
     _build_cloze_items,
@@ -28,6 +28,7 @@ from scripts.audit.generate_practice_deck import (
     _cloze_blank_context_agrees,
     _declension_category,
     _eligible_decoys,
+    _emitted_lemma_ids,
     _heritage_availability_level,
     _meaning_mc_eligible,
     _option_strategy_for_level,
@@ -62,6 +63,7 @@ from scripts.audit.generate_practice_deck import (
     validate_paronym_pair,
     validate_synonym_item,
     write_aspect_residual_report,
+    write_pos_residual_report,
     write_shards,
 )
 
@@ -908,27 +910,53 @@ def test_neuter_a_ya_nouns_can_reach_fourth_declension() -> None:
     assert _declension_category(entry, ["ім. сер."], paradigm) == "declension-4"
 
 
+VERB_EVIDENCE = VesumLemmaEvidence(frozenset({"verb"}))
+
+
+def _verb_classify_sets(
+    lemma: str, labels: list[str], vesum_aspect: str | None, residuals: list[dict[str, str]] | None = None
+) -> dict[str, str]:
+    entry = {
+        "lemma": lemma,
+        "pos": "verb",
+        "enrichment": {"morphology": {"pos": "verb", "forms": [{"label": label} for label in labels]}},
+    }
+    lexeme = {"lemmaId": lemma, "lemma": lemma, "cefr": "A2"}
+    items = _build_classify_items(
+        entry, lexeme, vesum_aspect=vesum_aspect, vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals
+    )
+    return {s["setId"]: s["answer"] for item in items for s in item["sets"]}
+
+
 @pytest.mark.parametrize(
-    ("lemma", "labels", "expected"),
+    ("lemma", "labels", "vesum_aspect"),
     [
         ("писати", ["verb:imperf:pres"], "imperfective"),
         ("написати", ["verb:perf:futr"], "perfective"),
+        ("писати", ["недок."], "imperfective"),
+        ("написати", ["док."], "perfective"),
+        ("написати", ["доконаний", "теперішній"], "perfective"),
     ],
 )
-def test_aspect_category_reads_explicit_vesum_tags(lemma: str, labels: list[str], expected: str) -> None:
-    assert _aspect_category(labels) == expected, lemma
+def test_classify_keys_aspect_when_explicit_labels_agree_with_vesum(
+    lemma: str, labels: list[str], vesum_aspect: str
+) -> None:
+    """Explicit VESUM tags and Ukrainian abbreviations agree with VESUM; a tense label never overrides them."""
+    assert _verb_classify_sets(lemma, labels, vesum_aspect)["aspect"] == vesum_aspect
 
 
-def test_aspect_category_reads_ukrainian_abbreviated_labels() -> None:
-    assert _aspect_category(["недок."]) == "imperfective"
-    assert _aspect_category(["док."]) == "perfective"
+@pytest.mark.parametrize(("labels", "vesum_aspect"), [(["недок."], "perfective"), (["док."], "imperfective")])
+def test_classify_withholds_aspect_when_an_abbreviated_label_contradicts_vesum(
+    labels: list[str], vesum_aspect: str
+) -> None:
+    residuals: list[dict[str, str]] = []
+
+    assert "aspect" not in _verb_classify_sets("писати", labels, vesum_aspect, residuals)
+    assert [residual["reason"] for residual in residuals] == ["conflicting_explicit_aspect"]
 
 
-def test_aspect_category_explicit_tag_wins_over_tense_proxy() -> None:
-    assert _aspect_category(["доконаний", "теперішній"]) == "perfective"
-
-
-def test_classify_prefers_explicit_morphology_aspect_over_vesum_or_tense() -> None:
+def test_classify_withholds_aspect_when_enrichment_disagrees_with_vesum() -> None:
+    """#8729: VESUM keys aspect; an enrichment label may only agree with it."""
     entry = {
         "lemma": "написати",
         "pos": "verb",
@@ -942,14 +970,42 @@ def test_classify_prefers_explicit_morphology_aspect_over_vesum_or_tense() -> No
     }
     lexeme = {"lemmaId": "napysaty", "lemma": "написати", "cefr": "A2"}
 
-    classify = _build_classify_items(entry, lexeme, vesum_aspect="imperfective")
+    residuals: list[dict[str, str]] = []
 
-    aspect_set = next(item for item in classify[0]["sets"] if item["setId"] == "aspect")
-    assert aspect_set["answer"] == "perfective"
+    classify = _build_classify_items(
+        entry, lexeme, vesum_aspect="imperfective", vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals
+    )
+    agreeing = _build_classify_items(entry, lexeme, vesum_aspect="perfective", vesum_evidence=VERB_EVIDENCE)
+
+    assert not any(s["setId"] == "aspect" for item in classify for s in item["sets"])
+    assert residuals[0]["reason"] == "conflicting_explicit_aspect"
+    assert next(s for s in agreeing[0]["sets"] if s["setId"] == "aspect")["answer"] == "perfective"
 
 
-def test_aspect_category_uses_imperfective_fallback_for_present_and_future() -> None:
-    assert _aspect_category(["теперішній", "майбутній"]) == "imperfective"
+def test_classify_keys_no_aspect_without_vesum_verb_evidence() -> None:
+    """#8729: a tense label alone never keys aspect, nor does an unattested verb reading."""
+    entry = {
+        "lemma": "писати",
+        "pos": "verb",
+        "enrichment": {"morphology": {"pos": "verb", "forms": [{"label": "теперішній"}]}},
+    }
+    lexeme = {"lemmaId": "pysaty", "lemma": "писати", "cefr": "A2"}
+    residuals: list[dict[str, str]] = []
+
+    unkeyed = _build_classify_items(entry, lexeme, vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals)
+    unattested = _build_classify_items(entry, lexeme, vesum_aspect="imperfective", aspect_residuals=residuals)
+
+    assert [s["setId"] for s in unkeyed[0]["sets"]] == ["pos"]
+    assert unattested == []
+    assert [residual["reason"] for residual in residuals] == ["no_unambiguous_vesum_aspect", "unbound_verb_reading"]
+
+
+def test_classify_keys_no_aspect_from_present_and_future_tense_labels() -> None:
+    """Tense is no aspect evidence: without a VESUM aspect the emitted item has no aspect set."""
+    residuals: list[dict[str, str]] = []
+
+    assert _verb_classify_sets("писати", ["теперішній", "майбутній"], None, residuals) == {"pos": "verb"}
+    assert [residual["reason"] for residual in residuals] == ["no_unambiguous_vesum_aspect"]
 
 
 def test_vesum_aspect_lookup_uses_only_an_unambiguous_exact_verb_lemma() -> None:
@@ -992,6 +1048,29 @@ def test_write_aspect_residual_report_is_named_and_deterministic(tmp_path: Path)
     }
 
 
+def test_pos_residual_filter_reads_emitted_lexemes_not_an_items_field() -> None:
+    """The shard payload stores `lexemes`, so an `items` lookup falsely reports zero residuals."""
+    shards = {"A2": {"lexemes": {"lexemes": [{"lemmaId": "святий"}, {"lemmaId": "вчений"}]}}}
+
+    assert _emitted_lemma_ids(shards) == {"святий", "вчений"}
+
+
+def test_write_pos_residual_report_names_morphology_mismatch(tmp_path: Path) -> None:
+    report = tmp_path / "pos-residuals.json"
+
+    write_pos_residual_report(
+        report,
+        [{"lemmaId": "святий", "lemma": "святий", "cefr": "A2", "reason": "morphology_pos_mismatch"}],
+    )
+
+    assert json.loads(report.read_text(encoding="utf-8")) == {
+        "schema": "atlas-practice-pos-residuals-v1",
+        "scope": "selected A2-C1 practice lexemes whose part-of-speech set failed a source gate",
+        "count": 1,
+        "lexemes": [{"lemmaId": "святий", "lemma": "святий", "cefr": "A2", "reason": "morphology_pos_mismatch"}],
+    }
+
+
 def test_vesum_aspect_lookup_drops_biaspectual_combined_tag() -> None:
     verifier = JsonVesumVerifier(
         {
@@ -1014,7 +1093,9 @@ def test_conflicting_explicit_labels_not_overridden_by_vesum_aspect() -> None:
     }
     lexeme = {"lemmaId": "omonym", "lemma": "омонім", "cefr": "A2"}
     residuals: list[dict[str, str]] = []
-    classify = _build_classify_items(entry, lexeme, vesum_aspect="imperfective", aspect_residuals=residuals)
+    classify = _build_classify_items(
+        entry, lexeme, vesum_aspect="imperfective", vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals
+    )
     assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
     assert residuals and residuals[0]["reason"] == "conflicting_explicit_aspect"
 
@@ -1051,7 +1132,7 @@ def test_build_classify_items_records_conflicting_explicit_aspect_residual() -> 
     lexeme = {"lemmaId": "omonym", "lemma": "омонім", "cefr": "A2"}
     residuals: list[dict[str, str]] = []
 
-    classify = _build_classify_items(entry, lexeme, aspect_residuals=residuals)
+    classify = _build_classify_items(entry, lexeme, vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals)
 
     assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
     assert residuals == [
@@ -1064,7 +1145,7 @@ def test_build_classify_items_records_conflicting_explicit_aspect_residual() -> 
     ]
 
 
-def test_build_classify_items_records_no_explicit_aspect_or_tense_proxy_residual() -> None:
+def test_build_classify_items_records_no_unambiguous_vesum_aspect_residual() -> None:
     entry = {
         "lemma": "абити",
         "pos": "verb",
@@ -1078,7 +1159,7 @@ def test_build_classify_items_records_no_explicit_aspect_or_tense_proxy_residual
     lexeme = {"lemmaId": "abyty", "lemma": "абити", "cefr": "A2"}
     residuals: list[dict[str, str]] = []
 
-    classify = _build_classify_items(entry, lexeme, aspect_residuals=residuals)
+    classify = _build_classify_items(entry, lexeme, vesum_evidence=VERB_EVIDENCE, aspect_residuals=residuals)
 
     assert not any(s.get("setId") == "aspect" for item in classify for s in item.get("sets", []))
     assert residuals == [
@@ -1086,9 +1167,12 @@ def test_build_classify_items_records_no_explicit_aspect_or_tense_proxy_residual
             "lemmaId": "abyty",
             "lemma": "абити",
             "cefr": "A2",
-            "reason": "no_explicit_aspect_or_tense_proxy",
+            "reason": "no_unambiguous_vesum_aspect",
         }
     ]
+
+
+KNYHA_EVIDENCE = VesumLemmaEvidence(frozenset({"noun"}), {"noun": frozenset({"feminine"})})
 
 
 def test_a2_classify_items_do_not_raise_english_labels() -> None:
@@ -1105,14 +1189,15 @@ def test_a2_classify_items_do_not_raise_english_labels() -> None:
     }
     lexeme = {"lemmaId": "knyha", "lemma": "книга", "cefr": "A2"}
 
-    classify = _build_classify_items(entry, lexeme)[0]
+    classify = _build_classify_items(entry, lexeme, vesum_evidence=KNYHA_EVIDENCE)[0]
 
     assert "setLabelEn" not in classify["sets"][0]
     assert "answerLabelEn" not in classify["sets"][0]
     assert all("labelEn" not in option for option in classify["sets"][0]["options"])
 
 
-def test_classify_emits_all_context_free_pos_answers_for_multi_pos_lemma() -> None:
+def test_classify_withholds_pos_when_enrichment_analysis_disagrees_with_displayed_reading() -> None:
+    """#8729: VESUM knows both readings of «проте»; morphology selects the other one."""
     entry = {
         "lemma": "проте",
         "pos": "conjunction",
@@ -1128,13 +1213,28 @@ def test_classify_emits_all_context_free_pos_answers_for_multi_pos_lemma() -> No
     }
     lexeme = {"lemmaId": "prote", "lemma": "проте", "cefr": "B1"}
 
-    classify = _build_classify_items(entry, lexeme)
+    classify = _build_classify_items(
+        entry, lexeme, vesum_evidence=VesumLemmaEvidence(frozenset({"adverb", "conjunction"}))
+    )
 
-    pos_sets = [item for item in classify[0]["sets"] if item["setId"] == "pos"]
-    assert len(pos_sets) == 1
-    assert pos_sets[0]["answer"] == "adverb"
-    assert pos_sets[0]["answers"] == ["adverb", "conjunction"]
-    assert pos_sets[0]["answerLabelUk"] == "прислівник"
+    assert classify == []
+
+
+def test_classify_emits_every_attested_reading_the_displayed_pos_names() -> None:
+    entry = {
+        "lemma": "після",
+        "pos": "adverb, preposition",
+        "enrichment": {"morphology": {"pos": "adverb", "forms": [{"label": "присл."}]}},
+    }
+    lexeme = {"lemmaId": "pislia", "lemma": "після", "cefr": "A2"}
+
+    classify = _build_classify_items(
+        entry, lexeme, vesum_evidence=VesumLemmaEvidence(frozenset({"adverb", "preposition"}))
+    )
+
+    pos_set = next(item for item in classify[0]["sets"] if item["setId"] == "pos")
+    assert pos_set["answer"] == "adverb"
+    assert pos_set["answers"] == ["adverb", "preposition"]
 
 
 def test_classify_validator_requires_ordered_multi_pos_answers() -> None:
@@ -1170,7 +1270,7 @@ def test_classify_keeps_pos_set_for_unambiguous_noun() -> None:
     }
     lexeme = {"lemmaId": "knyha", "lemma": "книга", "cefr": "A2"}
 
-    classify = _build_classify_items(entry, lexeme)[0]
+    classify = _build_classify_items(entry, lexeme, vesum_evidence=KNYHA_EVIDENCE)[0]
 
     pos_sets = [item for item in classify["sets"] if item["setId"] == "pos"]
     assert len(pos_sets) == 1
@@ -1200,10 +1300,6 @@ def test_classify_pos_aliases_normalize_to_distinct_closed_buckets(raw_pos: str,
 def test_classify_pos_generic_part_does_not_match_prose() -> None:
     assert generate_practice_deck._normalize_pos_buckets("part of speech") == []
     assert generate_practice_deck._normalize_pos_buckets("participle") == []
-    assert (
-        generate_practice_deck._definition_card_pos_buckets({"definition_cards": [{"definitions": ["part of speech"]}]})
-        == []
-    )
 
 
 def test_classify_pos_closed_set_uses_school_taxonomy() -> None:
@@ -1872,7 +1968,8 @@ def test_mode_cards_propagate_sense_id_from_lexeme() -> None:
         "enrichment": {"morphology": {"pos": "noun", "forms": [{"label": "ім. чол."}]}},
     }
 
-    classify = _build_classify_items(entry, lexeme)
+    evidence = VesumLemmaEvidence(frozenset({"noun"}), {"noun": frozenset({"masculine"})})
+    classify = _build_classify_items(entry, lexeme, vesum_evidence=evidence)
     assert classify and classify[0]["senseId"] == "test-lemma_sense1"
 
     paradigm = _build_paradigm_items(lexeme)
@@ -1880,7 +1977,7 @@ def test_mode_cards_propagate_sense_id_from_lexeme() -> None:
 
     # A lexeme with no senseId (legacy, not sense-first) must not gain one.
     legacy_lexeme = {k: v for k, v in lexeme.items() if k != "senseId"}
-    legacy_classify = _build_classify_items(entry, legacy_lexeme)
+    legacy_classify = _build_classify_items(entry, legacy_lexeme, vesum_evidence=evidence)
     assert legacy_classify and "senseId" not in legacy_classify[0]
 
 

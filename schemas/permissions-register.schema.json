@@ -1,0 +1,383 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/krisztiankoos/learn-ukrainian/schemas/permissions-register.schema.json",
+  "title": "Source citation and provenance register (#8979)",
+  "description": "Per source feeding word cards, the Word Atlas, practice and the open dataset: the rights holder, what we use, where it comes from, the terms as found, the citation we show and the removal route. A citation record, not a publication gate (operator decisions 2026-09-27). Human-readable twin: docs/sources/permissions-register.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "register_date",
+    "purpose",
+    "operator_decisions",
+    "removal_route",
+    "appears_in_values",
+    "legal_references",
+    "open_questions",
+    "sources"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 2
+    },
+    "register_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "purpose": {
+      "$ref": "#/$defs/nonEmpty"
+    },
+    "operator_decisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "date",
+          "decision",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/$defs/slug"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "decision": {
+            "$ref": "#/$defs/nonEmpty"
+          },
+          "url": {
+            "$ref": "#/$defs/url"
+          }
+        }
+      }
+    },
+    "removal_route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "how"
+      ],
+      "properties": {
+        "url": {
+          "$ref": "#/$defs/issuesUrl"
+        },
+        "how": {
+          "$ref": "#/$defs/nonEmpty"
+        }
+      }
+    },
+    "appears_in_values": {
+      "description": "Closed list: internal = private stores and tooling only; site = learner-facing pages and their public data files; dataset = the open dataset export.",
+      "const": [
+        "internal",
+        "site",
+        "dataset"
+      ]
+    },
+    "legal_references": {
+      "type": "array",
+      "description": "Statutory text quoted once and cited from sources via terms.legal_refs.",
+      "items": {
+        "$ref": "#/$defs/termsQuote"
+      }
+    },
+    "open_questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmpty"
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmpty": {
+      "type": "string",
+      "minLength": 1
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9_]+$"
+    },
+    "url": {
+      "type": "string",
+      "pattern": "^https?://"
+    },
+    "issuesUrl": {
+      "type": "string",
+      "pattern": "^https://github\\.com/[^/]+/[^/]+/issues$"
+    },
+    "termsQuote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "quote",
+        "url",
+        "read_on"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "quote": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "gloss_en": {
+          "type": "string"
+        },
+        "url": {
+          "$ref": "#/$defs/url"
+        },
+        "read_on": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "organisation",
+        "role",
+        "fields_used",
+        "appears_in",
+        "appears_note",
+        "stored_in",
+        "provenance",
+        "terms",
+        "citation",
+        "removal",
+        "open_questions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/slug"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "organisation": {
+          "description": "Rights holder / organisation behind the source.",
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "role": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "usage_restriction": {
+          "description": "A project rule limiting how the source may be used (e.g. rule #M-6 for СУМ-11). Not a licence status.",
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "fields_used": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/slug"
+          }
+        },
+        "appears_in": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "internal",
+              "site",
+              "dataset"
+            ]
+          }
+        },
+        "appears_note": {
+          "$ref": "#/$defs/nonEmpty"
+        },
+        "stored_in": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/nonEmpty"
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "urls",
+            "retrieved",
+            "retrieved_evidence"
+          ],
+          "properties": {
+            "urls": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/nonEmpty"
+              }
+            },
+            "retrieved": {
+              "description": "Latest retrieval date of the copy we hold; null when it was not recorded (retrieved_evidence then says so).",
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date"
+            },
+            "retrieved_evidence": {
+              "$ref": "#/$defs/nonEmpty"
+            }
+          }
+        },
+        "terms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "found",
+            "licence",
+            "conditions",
+            "quotes",
+            "searched"
+          ],
+          "properties": {
+            "found": {
+              "type": "boolean"
+            },
+            "licence": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "name",
+                "spdx",
+                "verbatim_quote"
+              ],
+              "properties": {
+                "name": {
+                  "$ref": "#/$defs/nonEmpty"
+                },
+                "spdx": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "verbatim_quote": {
+                  "description": "Id of the quote in terms.quotes that carries the licence text verbatim; null when no licence text exists.",
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/slug"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              }
+            },
+            "conditions": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "share_alike",
+                "non_commercial"
+              ],
+              "properties": {
+                "share_alike": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "non_commercial": {
+                  "type": [
+                    "boolean",
+                    "null"
+                  ]
+                },
+                "other": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/nonEmpty"
+                  }
+                }
+              }
+            },
+            "quotes": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/termsQuote"
+              }
+            },
+            "searched": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/nonEmpty"
+              }
+            },
+            "legal_refs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/slug"
+              }
+            }
+          }
+        },
+        "citation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "form",
+            "shown_label"
+          ],
+          "properties": {
+            "form": {
+              "description": "The citation / attribution form we use for this source.",
+              "$ref": "#/$defs/nonEmpty"
+            },
+            "shown_label": {
+              "description": "The label learner pages render, with its source constant where one exists; null when the source is not named on learner pages.",
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "removal": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "route",
+            "scope"
+          ],
+          "properties": {
+            "route": {
+              "$ref": "#/$defs/issuesUrl"
+            },
+            "scope": {
+              "$ref": "#/$defs/nonEmpty"
+            }
+          }
+        },
+        "open_questions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/nonEmpty"
+          }
+        }
+      }
+    }
+  }
+}

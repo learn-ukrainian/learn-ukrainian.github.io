@@ -24,6 +24,7 @@ _LAUNCHER_FILES = (
     Path("scripts/config/launcher_stream_aliases.tsv"),
     Path("scripts/lib/context_profiles.py"),
     Path("scripts/lib/deploy_extensions.sh"),
+    Path("scripts/lib/project_interpreter.sh"),
     Path("scripts/lib/fleet_comms_cold_start.sh"),
     Path("scripts/lib/handoff_identity.sh"),
     Path("scripts/lib/launcher_core.sh"),

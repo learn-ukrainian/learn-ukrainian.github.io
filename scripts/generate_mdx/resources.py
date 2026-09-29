@@ -533,13 +533,20 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
 
         # A pre-set atlas_href is resolved like a surface form (unique alias →
         # canonical entry; dead or ambiguous → no link). Absent key falls
-        # through to the lemma. None is dropped by the empty-value filter.
+        # through to the lemma. Either way the target must match the card's
+        # sense (#9002). None is dropped by the empty-value filter.
+        sense = {
+            "translation": translation,
+            "pos": str(item.get('pos') or ''),
+            "example": example,
+            "lesson_word": lemma,
+        }
         if "atlas_href" in item:
             raw_href = item.get("atlas_href")
             preset_slug = slug_from_atlas_href(raw_href) if isinstance(raw_href, str) else None
-            atlas_href = atlas_href_for(preset_slug) if preset_slug else None
+            atlas_href = atlas_href_for(preset_slug, **sense) if preset_slug else None
         else:
-            atlas_href = atlas_href_for(lemma)
+            atlas_href = atlas_href_for(lemma, **sense)
 
         entry = {
             "word": lemma,

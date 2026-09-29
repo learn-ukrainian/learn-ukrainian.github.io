@@ -31,14 +31,15 @@ from typing import Any
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.verification import stress, vesum
 
-from . import codes, config, tags
+from . import codes, config, db_identity, tags
 
 BATCH_SIZE = 500
 SOURCES_DB_SCHEME = "rows-v2"
-SOURCES_DB_META_SCHEME = "file-meta-v1"
+SOURCES_DB_META_SCHEME = db_identity.SOURCES_DB_META_SCHEME
 LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
+journal_mode_from_header = db_identity.journal_mode_from_header
 # VESUM uses noun/adj for pronouns; dmklinger uses pronoun (and particle for
 # determiners). Preserve the requested VESUM POS as the result key.
 GLOSS_POS = {
@@ -274,22 +275,6 @@ def open_snapshot(path: Path) -> sqlite3.Connection:
     return conn
 
 
-def journal_mode_from_header(path: Path) -> str | None:
-    """SQLite header bytes 18-19: 2,2 means WAL; 1,1 legacy (rollback) journal. None when unreadable."""
-    try:
-        with Path(path).open("rb") as stream:
-            header = stream.read(20)
-    except OSError:
-        return None
-    if len(header) < 20 or header[:16] != b"SQLite format 3\x00":
-        return None
-    if header[18] == 2 and header[19] == 2:
-        return "wal"
-    if header[18] == 1 and header[19] == 1:
-        return "delete"
-    return "unknown"
-
-
 class Sources:
     """Build-scoped source access. Caller owns batching progress and final reports."""
 
@@ -427,26 +412,10 @@ class Sources:
         receipt's full stored result (rows-v2). The digest is the sha256 of the
         canonical metadata JSON so readers expecting a 64-hex string stay valid.
         """
-        path = self.sources_db
         try:
-            stat = path.stat()
+            return db_identity.sources_db_meta_identity(self.sources_db, self.journal_mode)
         except OSError as exc:
-            raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(path)!r}") from exc
-        wal_bytes, wal_mtime_ns = 0, None
-        with suppress(OSError):
-            wal_stat = Path(f"{path}-wal").stat()
-            wal_bytes, wal_mtime_ns = wal_stat.st_size, wal_stat.st_mtime_ns
-        # Header bytes first (20 bytes); the pinned session's PRAGMA answer when the header is unreadable.
-        journal_mode = journal_mode_from_header(path) or self.journal_mode
-        metadata = {
-            "scheme": SOURCES_DB_META_SCHEME,
-            "size_bytes": stat.st_size,
-            "mtime_ns": stat.st_mtime_ns,
-            "journal_mode": journal_mode,
-            "wal_bytes": wal_bytes,
-            "wal_mtime_ns": wal_mtime_ns,
-        }
-        return hashlib.sha256(_canonical(metadata)).hexdigest(), metadata
+            raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(self.sources_db)!r}") from exc
 
     def _db(self) -> sqlite3.Connection:
         if self._conn is None:
