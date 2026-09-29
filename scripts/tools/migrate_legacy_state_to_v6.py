@@ -452,8 +452,9 @@ def _verify_dry_run(report: MigrationReport) -> None:
         _atomic_write_json(orch_dir / "state.json", report.v6_state)
         verify_v6_state(report.candidate.track, report.candidate.slug, orch_dir, report.v6_state)
 
-    from api.main import app
     from fastapi.testclient import TestClient
+
+    from api.main import app
 
     client = TestClient(app)
     track = report.candidate.track

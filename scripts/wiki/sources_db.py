@@ -25,6 +25,7 @@ Helpers:
 import contextvars
 import hashlib
 import json
+import os
 import sqlite3
 import sys
 from collections import defaultdict
@@ -58,8 +59,8 @@ if _SCRIPTS_DIR not in sys.path:
 
 from . import slovnyk_me
 from .channels import rank_external_hits
-from .chunking import chunk_text, policy_for
-from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections  # noqa: F401
+from .chunking import ChunkedPiece, chunk_text, policy_for
+from .dense_rerank import _get_tokenizer, dense_rerank_enabled, rerank_candidates, rerank_sections  # noqa: F401
 from .query_builder import build_query_buckets
 from .sources_schema import normalize_source_filename
 from .sum20_official import (
@@ -305,12 +306,12 @@ def _ulif_dictua_conn(
     migrates. ``create=True`` creates missing tables for a write and still
     does not migrate an existing table.
     """
-    path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
+    path = Path(db_path) if db_path is not None else _read_db_path()
     if not path.exists():
         if not create:
             return None
         path.parent.mkdir(parents=True, exist_ok=True)
-    conn = _open_conn(path)
+    conn = _open_conn(path, read_only=not create)
     if create:
         if _ulif_table_exists(conn, "ulif_dictua_entries") and not _ulif_dictua_schema_current(conn):
             conn.close()
@@ -515,7 +516,7 @@ def resolve_ulif_dictua_raw_response(
     db_path: str | Path | None = None,
 ) -> bytes | None:
     """Resolve a ``sha256:<digest>`` raw-response reference from the cache."""
-    path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
+    path = Path(db_path) if db_path is not None else _read_db_path()
     cache = ulif_raw_cache.cache_path(path) if path != PROJECT_ROOT / "data/sources.db" else ulif_raw_cache.cache_path()
     return ulif_raw_cache.resolve_ref(raw_response_ref, path=cache)
 
@@ -675,7 +676,7 @@ def extract_ulif_dictua_snapshot(
         return [], [], []
     conn: sqlite3.Connection | None = None
     try:
-        conn = _open_conn(path)
+        conn = _open_conn(path, read_only=True)
         raw_rows: list[tuple] = []  # Cache is independent of the sources.db rebuild.
         columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
         if "homonym_index" in columns and "sense_gloss" in columns:
@@ -862,8 +863,24 @@ def _load_track_priors() -> dict[str, dict[str, float]]:
 _TRACK_PRIORS = _load_track_priors()
 
 
-def _open_conn(db_path: Path) -> sqlite3.Connection:
-    conn = sqlite3.connect(str(db_path), check_same_thread=False)
+def _read_db_path() -> Path:
+    """Resolve the database used by lookups, including sparse worktrees."""
+    if SOURCES_DB_PATH != PROJECT_ROOT / "data" / "sources.db":
+        return SOURCES_DB_PATH.resolve()
+
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.storage.topology import require_local_active_sources_db
+
+    if os.environ.get("LU_SOURCES_DB"):
+        return require_local_active_sources_db(PROJECT_ROOT).resolve()
+    return require_local_active_sources_db(main_checkout_root(PROJECT_ROOT)).resolve()
+
+
+def _open_conn(db_path: Path, *, read_only: bool = False) -> sqlite3.Connection:
+    if read_only:
+        conn = sqlite3.connect(f"{db_path.resolve().as_uri()}?mode=ro", uri=True, check_same_thread=False)
+    else:
+        conn = sqlite3.connect(str(db_path), check_same_thread=False)
     conn.row_factory = sqlite3.Row
     # Concurrent readers must wait for a concurrent writer rather
     # than silently returning empty rowsets — see §race-condition
@@ -879,25 +896,24 @@ def _get_conn() -> sqlite3.Connection:
         return override
     global _conn
     if _conn is None:
-        if not SOURCES_DB_PATH.exists():
+        path = _read_db_path()
+        if not path.is_file() or not path.stat().st_size:
             raise FileNotFoundError(
-                f"Sources database not found at {SOURCES_DB_PATH}. "
-                "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+                f"Sources database not found at {path}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
             )
-        _conn = _open_conn(SOURCES_DB_PATH)
+        _conn = _open_conn(path, read_only=True)
     return _conn
 
 
 def _get_conn_for(db_path: str | Path | None = None) -> sqlite3.Connection:
     if db_path is None:
         return _get_conn()
-    source_db = Path(db_path)
-    if not source_db.exists():
+    source_db = Path(db_path).resolve()
+    if not source_db.is_file() or not source_db.stat().st_size:
         raise FileNotFoundError(
-            f"Sources database not found at {source_db}. "
-            "Run: .venv/bin/python scripts/wiki/build_sources_db.py"
+            f"Sources database not found at {source_db}. Run: .venv/bin/python scripts/wiki/build_sources_db.py"
         )
-    return _open_conn(source_db)
+    return _open_conn(source_db, read_only=True)
 
 
 def _close_if_temporary(conn: sqlite3.Connection, db_path: str | Path | None) -> None:
@@ -1293,12 +1309,11 @@ def _search_external_candidates(
     ).fetchall()
 
     candidates: list[dict] = []
-    policy = policy_for("external")
-    tokenizer = _get_tokenizer()
+    tokenizer = _candidate_tokenizer("external")
     for row in rows:
         parent_id = str(row["chunk_id"] or row["id"])
         full_text = str(row["text"] or "")
-        for piece in chunk_text(full_text, policy=policy, tokenizer=tokenizer):
+        for piece in _candidate_pieces(full_text, corpus="external", tokenizer=tokenizer):
             unit_key = (
                 f"external:{parent_id}:chunk_{piece.chunk_index}"
                 if piece.extra_metadata
@@ -1357,12 +1372,11 @@ def _search_wikipedia_candidates(
     ).fetchall()
 
     candidates: list[dict] = []
-    policy = policy_for("wikipedia")
-    tokenizer = _get_tokenizer()
+    tokenizer = _candidate_tokenizer("wikipedia")
     for row in rows:
         title = str(row["title"] or "")
         full_text = str(row["text"] or "")
-        for piece in chunk_text(full_text, policy=policy, tokenizer=tokenizer):
+        for piece in _candidate_pieces(full_text, corpus="wikipedia", tokenizer=tokenizer):
             unit_key = (
                 f"wikipedia:{title}:chunk_{piece.chunk_index}"
                 if piece.extra_metadata
@@ -1471,6 +1485,29 @@ def _search_ukrainian_wiki_candidates(
     ]
 
 
+def _candidate_tokenizer(corpus: str):
+    """The BGE-M3 tokenizer when ``corpus`` search reranks with dense vectors.
+
+    Chunking exists only to align candidates with index rows, so keyword-only
+    search (no index, dense switched off, or unavailable tokenizer assets)
+    returns ``None`` without loading transformers or torch; each hit then
+    stays one whole unit.
+    """
+
+    if not dense_rerank_enabled(corpus):
+        return None
+    try:
+        return _get_tokenizer()
+    except (ImportError, OSError, ValueError):
+        return None
+
+
+def _candidate_pieces(text: str, *, corpus: str, tokenizer) -> list[ChunkedPiece]:
+    if tokenizer is None:
+        return [ChunkedPiece(chunk_index=0, text=text)] if text else []
+    return list(chunk_text(text, policy=policy_for(corpus), tokenizer=tokenizer))
+
+
 def _expand_to_chunk_candidates(
     parent_candidates: list[dict],
     *,
@@ -1495,8 +1532,7 @@ def _expand_to_chunk_candidates(
     + zero score. This helper fixes that uniformly.
     """
 
-    policy = policy_for(corpus)
-    tokenizer = _get_tokenizer()
+    tokenizer = _candidate_tokenizer(corpus)
     expanded: list[dict] = []
     for parent in parent_candidates:
         parent_id_value = parent.get(parent_id_field)
@@ -1506,7 +1542,7 @@ def _expand_to_chunk_candidates(
         full_text = str(parent.get(text_field, "") or "")
         if not full_text:
             continue
-        pieces = list(chunk_text(full_text, policy=policy, tokenizer=tokenizer))
+        pieces = _candidate_pieces(full_text, corpus=corpus, tokenizer=tokenizer)
         if not pieces:
             continue
         for piece in pieces:
@@ -1655,13 +1691,7 @@ def _expand_wikipedia_neighbors(match: dict) -> dict:
     if row is None:
         return match
 
-    pieces = list(
-        chunk_text(
-            str(row["text"] or ""),
-            policy=policy_for("wikipedia"),
-            tokenizer=_get_tokenizer(),
-        )
-    )
+    pieces = _candidate_pieces(str(row["text"] or ""), corpus="wikipedia", tokenizer=_candidate_tokenizer("wikipedia"))
     chunk_index = int(match.get("chunk_index", 0))
     context = pieces[max(0, chunk_index - 1):chunk_index + 2]
     if not context:

@@ -22,6 +22,7 @@ from scripts.review.model_catalog import (
     model_aliases,
     resolve_glm_model,
     resolve_kimi_model,
+    retired_model_refusal,
     validate_catalog,
     validate_glm_alias_consumers,
     validate_kimi_alias_consumers,
@@ -40,8 +41,7 @@ def test_committed_catalog_is_structurally_valid_and_current():
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     models = load_model_catalog()["models"]
     required = {
-        "gpt-6-astra",
-        "gpt-6-sol",
+        "gpt-6.1-sol",
         "gpt-6-luna",
         "gpt-5.6-sol",
         "gpt-5.6-terra",
@@ -405,7 +405,7 @@ def test_fable_routes_native_claude_before_pinned_cursor_fallback():
 
 def test_formal_cf_defaults_pin_role_specific_efforts():
     defaults = load_model_catalog()["formal_cf_defaults"]
-    assert defaults["codex"]["model_id"] == "gpt-6-sol"
+    assert defaults["codex"]["model_id"] == "gpt-6.1-sol"
     assert defaults["codex"]["effort"] == "high"
     assert defaults["claude"]["model_id"] == "claude-sonnet-5-5"
     assert defaults["claude"]["effort"] == "high"
@@ -435,9 +435,9 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     # overhead), then re-added 2026-07-23 as the named harness/infra/devops alternate:
     # HydrationCapsuleV1's score-from-memory + ~100ms capsule hydrate changed that
     # calculus. It remains a formal-CF review seat + coding lane too.
-    assert seats["codex"]["model_id"] == "gpt-6-sol"
+    assert seats["codex"]["model_id"] == "gpt-6.1-sol"
     assert seats["codex"]["effort"] == "high"
-    assert seats["codex"]["escalate_model_id"] == "gpt-6-astra"
+    assert seats["codex"]["escalate_model_id"] == "gpt-6.1-sol"
     assert seats["agy"]["model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.8-flash-high"
@@ -447,7 +447,7 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["grok"]["fallback_model_id"] == "grok-4.7"
     assert seats["cursor"]["model_id"] == "auto"
     assert seats["cursor"]["effort"] == "high"
-    assert seats["cursor"]["escalate_model_id"] == "gpt-6-astra"
+    assert seats["cursor"]["escalate_model_id"] == "gpt-6.1-sol"
     assert seats["cursor"]["escalate_effort"] == "high"
     assert seats["cursor"]["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     assert seats["cursor"]["attestation_rule"] == "driver_of_record_requires_attested_resolved_model"
@@ -458,13 +458,13 @@ def test_orchestrator_seats_include_agy_flash_38_high():
 def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     """Each seat has default + escalate like AGY Flash, same-SKU escalation, operator 2026-09-22."""
     seats = load_model_catalog()["orchestrator_seats"]
-    assert seats["claude"]["escalate_model_id"] == "gpt-6-astra"
+    assert seats["claude"]["escalate_model_id"] == "gpt-6.1-sol"
     assert seats["claude"]["escalate_effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["escalate_effort"] == "high"
     # Codex reviewer escalation uses the same Astra high advisor pin.
     fc = load_model_catalog()["formal_cf_defaults"]
-    assert fc["codex"]["escalate_model_id"] == "gpt-6-astra"
+    assert fc["codex"]["escalate_model_id"] == "gpt-6.1-sol"
     assert fc["claude"]["escalate_model_id"] == "claude-fable-5"
 
 
@@ -749,7 +749,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     route = catalog["execution_routing"]["sol_advised_bounded"]
 
     advisor = route["advisor"]
-    assert advisor["model_id"] == "gpt-6-astra"
+    assert advisor["model_id"] == "gpt-6.1-sol"
     assert advisor["effort"] == "high"
     assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
     assert advisor["output_fields"] == [
@@ -772,7 +772,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     } <= set(catalog["models"][preferred["model_id"]]["roles"])
     assert preferred["requires"] == ["complete_advisory_envelope", "objective_scope_ceiling"]
     assert preferred["task_types"] == ["bounded_implementation", "bounded_investigation"]
-    assert preferred["escalate_to"] == "gpt-6-sol"
+    assert preferred["escalate_to"] == "gpt-6.1-sol"
     assert set(preferred["prohibited_decisions"]) == {
         "consequential_architecture",
         "security",
@@ -804,7 +804,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         ],
     }
     assert route["autonomous_fallback"] == {
-        "model_id": "gpt-6-sol",
+        "model_id": "gpt-6.1-sol",
         "effort": "high",
         "when": [
             "missing_objective_scope_ceiling",
@@ -898,25 +898,27 @@ def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
     """#8855: GPT-6 stays native Codex; the Opus cursor slug is the review-candidate invocation."""
     catalog = load_model_catalog()
     table = catalog["budget_substitution_models"]
-    assert "gpt-6-sol" not in table["cursor"]
+    assert "gpt-6.1-sol" not in table["cursor"]
     assert table["cursor"]["claude-opus-5-5"] == "claude-opus-5-5-high"
-    assert table["codex"]["gpt-6-sol"] == "gpt-6-sol"
+    assert table["codex"]["gpt-6.1-sol"] == "gpt-6.1-sol"
     broken = deepcopy(catalog)
-    broken["budget_substitution_models"]["cursor"]["gpt-6-sol"] = "gpt-6-sol"
-    with pytest.raises(ModelCatalogError, match="gpt-6-sol"):
+    broken["budget_substitution_models"]["cursor"]["gpt-6.1-sol"] = "gpt-6.1-sol"
+    with pytest.raises(ModelCatalogError, match=r"gpt-6\.1-sol"):
         validate_catalog(broken)
 
 
-def test_astra_advisor_and_sol_runtime_review_pins():
+def test_sol_holds_the_astra_advisor_seat_and_runtime_review_pins():
+    # Operator 2026-09-29 (#9230): GPT-6.1 Sol is the only Sol and took Astra's seat.
     catalog = load_model_catalog()
-    astra = catalog["models"]["gpt-6-astra"]
-    assert astra["family"] == "openai"
-    assert astra["tier"] == "frontier_authority"
-    assert {"architecture", "consequential_advisory", "bounded_advisory_envelope"} <= set(astra["roles"])
-    assert not {"implementation", "standard_review", "critical_review"} & set(astra["roles"])
-    assert AGENTS["codex"]["default_model"] == "gpt-6-sol"
+    sol = catalog["models"]["gpt-6.1-sol"]
+    assert sol["family"] == "openai"
+    assert sol["tier"] == "frontier_authority"
+    assert {"architecture", "consequential_advisory", "bounded_advisory_envelope"} <= set(sol["roles"])
+    assert {"implementation", "standard_review", "critical_review"} <= set(sol["roles"])
+    assert "https://developers.openai.com/api/docs/models/gpt-6.1-sol" in sol["sources"]
+    assert AGENTS["codex"]["default_model"] == "gpt-6.1-sol"
     assert AGENTS["codex"]["default_effort"] == "high"
-    assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6-sol --effort high")
+    assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6.1-sol --effort high")
     assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
     for risk in ("low", "medium", "high"):
         assert catalog["review_ladders"][risk][0] == ["openai_frontier"]
@@ -924,17 +926,16 @@ def test_astra_advisor_and_sol_runtime_review_pins():
 
 def test_active_codex_routes_are_gpt6_only():
     catalog = load_model_catalog()
-    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6-sol"]
-    assert not {"implementation", "standard_review", "critical_review"} & set(catalog["models"]["gpt-6-astra"]["roles"])
+    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6.1-sol"]
     native = {
         model_id
         for model_id, model in catalog["models"].items()
         if "native_codex" in model["transports"] and model["lifecycle"] == "active"
     }
-    assert native == {"gpt-6-astra", "gpt-6-luna", "gpt-6-sol"}
+    assert native == {"gpt-6-luna", "gpt-6.1-sol"}
     for candidate in catalog["review_candidates"].values():
         if candidate["route"] == "codex":
-            assert candidate["model_id"] == "gpt-6-sol"
+            assert candidate["model_id"] == "gpt-6.1-sol"
 
 
 def test_gpt56_routes_are_not_selected():
@@ -956,5 +957,55 @@ def test_gpt56_routes_are_not_selected():
     ):
         assert "gpt-5.6-" not in json.dumps(catalog[section], sort_keys=True), section
     assert not AGENTS["codex"]["default_model"].startswith("gpt-5.6-")
-    for model_id in ("gpt-6-sol", "gpt-6-luna", "gpt-6-astra"):
+    for model_id in ("gpt-6-luna", "gpt-6.1-sol"):
         assert models[model_id]["transports"] == ["native_codex"]
+
+
+def test_gpt6_sol_and_astra_are_retired_and_unroutable():
+    catalog = load_model_catalog()
+    for model_id in ("gpt-6-sol", "gpt-6-astra"):
+        assert catalog["models"][model_id]["lifecycle"] == "retired"
+        assert catalog["models"][model_id]["transports"] == []
+    for section in (
+        "execution_routing",
+        "review_candidates",
+        "review_scheduler",
+        "orchestrator_seats",
+        "formal_cf_defaults",
+        "review_ladders",
+        "budget_substitution_models",
+    ):
+        dumped = json.dumps(catalog[section], sort_keys=True)
+        assert "gpt-6-sol" not in dumped and "gpt-6-astra" not in dumped, section
+
+
+@pytest.mark.parametrize(
+    ("model", "retired_id"),
+    [
+        ("gpt-6-sol", "gpt-6-sol"),
+        ("gpt-6-astra", "gpt-6-astra"),
+        ("cursor:openai/GPT-6-Astra", "gpt-6-astra"),
+        ("gpt-6-sol-high", "gpt-6-sol"),
+    ],
+)
+def test_retired_model_refusal_names_id_and_replacement(model, retired_id):
+    refusal = retired_model_refusal(model)
+    assert refusal == f"model {model!r} is retired in the model catalog ({retired_id}); use gpt-6.1-sol"
+
+
+@pytest.mark.parametrize(
+    "model", [None, "", "gpt-6.1-sol", "gpt-6.1-sol-high", "gpt-6-luna", "kimi-code/k3", "composer-2.5", "auto"]
+)
+def test_retired_model_refusal_admits_non_retired_ids(model):
+    assert retired_model_refusal(model) is None
+
+
+def test_replaced_by_must_sit_on_retired_model_and_name_active_model():
+    broken = deepcopy(load_model_catalog())
+    broken["models"]["gpt-6-luna"]["replaced_by"] = "gpt-6.1-sol"
+    with pytest.raises(ModelCatalogError, match="replaced_by is only valid on retired models"):
+        validate_catalog(broken)
+    broken = deepcopy(load_model_catalog())
+    broken["models"]["gpt-6-sol"]["replaced_by"] = "gpt-6-astra"
+    with pytest.raises(ModelCatalogError, match="replaced_by must reference an active model"):
+        validate_catalog(broken)

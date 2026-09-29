@@ -4,6 +4,7 @@ import json
 import os
 import sqlite3
 import sys
+from pathlib import Path
 
 import pytest
 
@@ -12,6 +13,108 @@ pytestmark = pytest.mark.reads_content
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
 from wiki import sources_db
+
+
+def test_reader_missing_database_raises_without_creating_file(tmp_path: Path) -> None:
+    missing = tmp_path / "data" / "sources.db"
+    missing.parent.mkdir()
+
+    with pytest.raises(sqlite3.OperationalError, match="unable to open database file"):
+        sources_db._open_conn(missing, read_only=True)
+
+    assert not missing.exists()
+
+
+def test_missing_sources_override_fails_closed(tmp_path: Path, monkeypatch) -> None:
+    missing = tmp_path / "data" / "sources.db"
+    missing.parent.mkdir()
+    monkeypatch.setenv("LU_SOURCES_DB", str(missing))
+    monkeypatch.setattr(sources_db, "_conn", None)
+
+    with pytest.raises(FileNotFoundError, match="Sources database not found"):
+        sources_db._get_conn()
+
+    assert not missing.exists()
+
+
+def test_reader_resolves_primary_database_from_sparse_worktree(tmp_path: Path, monkeypatch) -> None:
+    primary = tmp_path / "primary"
+    worktree = primary / ".worktrees" / "dispatch" / "agy" / "review"
+    gitdir = primary / ".git" / "worktrees" / "review"
+    gitdir.mkdir(parents=True)
+    worktree.mkdir(parents=True)
+    (worktree / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
+    db = primary / "data" / "sources.db"
+    db.parent.mkdir()
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE proof (value TEXT)")
+        conn.execute("INSERT INTO proof VALUES ('primary')")
+    stale = worktree / "data" / "sources.db"
+    stale.parent.mkdir()
+    with sqlite3.connect(stale) as conn:
+        conn.execute("CREATE TABLE proof (value TEXT)")
+        conn.execute("INSERT INTO proof VALUES ('stale')")
+
+    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree / "data" / "sources.db")
+
+    assert sources_db._read_db_path() == db
+    with sources_db._open_conn(sources_db._read_db_path(), read_only=True) as conn:
+        assert conn.execute("SELECT value FROM proof").fetchone()[0] == "primary"
+        with pytest.raises(sqlite3.OperationalError, match="readonly"):
+            conn.execute("INSERT INTO proof VALUES ('mutation')")
+    with sqlite3.connect(stale) as conn:
+        assert conn.execute("SELECT value FROM proof").fetchone()[0] == "stale"
+
+
+def test_ulif_cache_uses_active_override_for_reads_writes_and_raw_response(tmp_path: Path, monkeypatch) -> None:
+    worktree = tmp_path / "worktree"
+    worktree_db = worktree / "data" / "sources.db"
+    active_db = tmp_path / "active" / "sources.db"
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree_db)
+    monkeypatch.setenv("LU_SOURCES_DB", str(active_db))
+
+    stored = sources_db.store_ulif_dictua_entry(
+        word="fixture-word",
+        canonical_headword="fixture-word",
+        sections={},
+        raw_responses={"paradigm": "fixture response"},
+        retrieved_at="2026-09-29T00:00:00+00:00",
+        parser_version="fixture-v1",
+        status="parse_error",
+    )
+
+    assert stored is not None
+    assert sources_db.get_ulif_dictua_entry("fixture-word") == stored
+    assert sources_db.resolve_ulif_dictua_raw_response(stored["raw_response_ref"])
+    assert active_db.is_file()
+    assert not worktree_db.exists()
+    assert not worktree_db.parent.exists()
+
+
+def test_network_sources_override_refused_without_creating_database(tmp_path: Path, monkeypatch) -> None:
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    worktree_db = tmp_path / "data" / "sources.db"
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree_db)
+    monkeypatch.setenv("LU_SOURCES_DB", "//unreachable/UkrainianData/sources.db")
+
+    with pytest.raises(ActiveDatabaseNetworkError):
+        sources_db.store_ulif_dictua_entry(
+            word="fixture-word",
+            canonical_headword="fixture-word",
+            sections={},
+            raw_responses={},
+            retrieved_at="2026-09-29T00:00:00+00:00",
+            parser_version="fixture-v1",
+            status="parse_error",
+        )
+
+    assert not worktree_db.exists()
+    assert not worktree_db.parent.exists()
 
 
 @pytest.fixture()

@@ -10,14 +10,13 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
+from wiki import dense_rerank, sources_db
 from wiki.embedding_manifest import (
     LEGACY_SHIPPED_CONFIG,
     EmbeddingManifest,
     UnitSpecInput,
     append_shard,
 )
-
-from wiki import dense_rerank, sources_db
 
 
 class FakeTokenizer:
@@ -299,10 +298,17 @@ def _configure_dense(monkeypatch: pytest.MonkeyPatch, manifest_path: Path) -> No
     fake_tokenizer = FakeTokenizer()
     monkeypatch.setattr(dense_rerank, "_TOKENIZER", fake_tokenizer)
     monkeypatch.setattr(dense_rerank, "_get_tokenizer", lambda: fake_tokenizer)
+    monkeypatch.delenv(dense_rerank.NO_DENSE_ENV, raising=False)
+    monkeypatch.setenv(dense_rerank.CPU_DENSE_ENV, "1")
     monkeypatch.setattr(
         dense_rerank,
         "encode_query",
         lambda query, encoder=None, max_length=dense_rerank.QUERY_MAX_LENGTH: np.array([1.0, 0.0, *([0.0] * (dense_rerank.EMBEDDING_DIMS - 2))], dtype=np.float32),
+    )
+    monkeypatch.setattr(
+        sources_db,
+        "dense_rerank_enabled",
+        lambda corpus: dense_rerank.dense_rerank_enabled(corpus, manifest_db=manifest_path),
     )
     monkeypatch.setattr(
         sources_db,

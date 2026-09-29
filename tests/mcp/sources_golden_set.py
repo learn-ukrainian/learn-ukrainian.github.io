@@ -189,9 +189,8 @@ def _require_style_guide_headword(probe: str, fingerprint: dict[str, Any]) -> No
 
 
 async def _capture(server: Any) -> dict[str, Any]:
-    from wiki.sources_db import SOURCES_DB_PATH, using_connection
-
     from scripts.rag.config import VESUM_DB_PATH
+    from wiki.sources_db import SOURCES_DB_PATH, using_connection
 
     if not SOURCES_DB_PATH.is_file():
         raise FileNotFoundError(SOURCES_DB_PATH)

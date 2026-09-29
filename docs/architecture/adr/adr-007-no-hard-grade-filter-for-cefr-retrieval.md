@@ -39,7 +39,7 @@ Hard SQL grade filters are not used in CEFR-track retrieval. Specifically:
 1. `_search_sections_fts5` and `search_textbooks` accept a `track` parameter for backward compatibility but no longer apply `WHERE grade IN (...)`.
 2. The `_TRACK_GRADE_RANGES` symbol is removed from `scripts/wiki/sources_db.py`. Tests assert it does not exist (guard against accidental reintroduction).
 3. Topic relevance is the responsibility of:
-   a. **Dense rerank** (#1348 `mlx_dense_rerank`) — primary mechanism.
+   a. **Dense rerank** (#1348, `scripts/wiki/dense_rerank.py`) — primary mechanism.
    b. **Per-track corpus priors** in `scripts/wiki/track_priors.yaml` — soft weighting at rerank time.
    c. **Diagnostic playback** (`scripts/wiki/diagnostics/retrieval_playback.py`) — empirical verification that the in-scope concepts for a target module are actually reachable.
 

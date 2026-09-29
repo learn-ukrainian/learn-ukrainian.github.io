@@ -56,8 +56,8 @@ def test_production_registry_separates_sol_capacity_values() -> None:
     assert profiles["native_codex"] == {
         "profile_id": "native_codex",
         "transport": "native_codex",
-        "main_model_id": "gpt-6-sol",
-        "model_id_patterns": [r"^gpt-6-(sol|luna|astra)$"],
+        "main_model_id": "gpt-6.1-sol",
+        "model_id_patterns": [r"^(gpt-6\.1-sol|gpt-6-luna)$"],
         "main_context_window_tokens": 272_000,
         "auto_compact_capacity_tokens": None,
         "cold_start_profile": "compact",
@@ -67,8 +67,8 @@ def test_production_registry_separates_sol_capacity_values() -> None:
     assert profiles["sol_lead"] == {
         "profile_id": "sol_lead",
         "transport": "claudex",
-        "main_model_id": "gpt-6-sol",
-        "model_id_patterns": [r"^gpt-6-sol$"],
+        "main_model_id": "gpt-6.1-sol",
+        "model_id_patterns": [r"^gpt-6\.1-sol$"],
         "main_context_window_tokens": 272_000,
         "auto_compact_capacity_tokens": 258_400,
         "cold_start_profile": "compact",
@@ -118,11 +118,11 @@ def test_no_context_profile_routes_to_retired_gpt56() -> None:
     for profile in load_registry(CONFIG_PATH)["profiles"].values():
         assert not profile["main_model_id"].startswith("gpt-5.6-")
         for pattern in profile["model_id_patterns"]:
-            for retired in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
+            for retired in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna", "gpt-6-sol", "gpt-6-astra"):
                 assert re.fullmatch(pattern, retired) is None
 
 
-@pytest.mark.parametrize("model", ["gpt-6-sol", "gpt-6-luna", "gpt-6-astra"])
+@pytest.mark.parametrize("model", ["gpt-6-luna", "gpt-6.1-sol"])
 def test_native_codex_profile_accepts_gpt6_and_rejects_other_models(model: str) -> None:
     trusted = resolve_profile("native_codex", model)
     mismatch = resolve_profile("native_codex", "gpt-5.6-terra")
@@ -228,7 +228,7 @@ def test_env0_output_is_exact_allow_list() -> None:
             "--profile",
             "sol_lead",
             "--model",
-            "gpt-6-sol",
+            "gpt-6.1-sol",
             "--format",
             "env0",
         ],
@@ -256,7 +256,7 @@ def test_shell_resolver_exports_only_project_private_fields() -> None:
         env | LC_ALL=C sort
         printf '%s\n' '__AFTER_PROFILE_RESOLUTION__'
         source {shlex.quote(os.fspath(SHELL_RESOLVER))}
-        resolve_context_profile sol_lead gpt-6-sol
+        resolve_context_profile sol_lead gpt-6.1-sol
         env | LC_ALL=C sort
     """
     result = subprocess.run(

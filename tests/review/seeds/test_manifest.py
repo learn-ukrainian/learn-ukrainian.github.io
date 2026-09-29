@@ -235,7 +235,7 @@ def test_the_recorded_writer_and_target_must_be_the_live_ones(env: Env) -> None:
 
 
 # --- the seeded-attempt identity check in record.py -----------------------------------------------------------------------
-# World: lessons written by gpt-6-astra (family openai); the default review seat is claude-sonnet-5 (anthropic).
+# World: lessons written by gpt-6.1-sol (family openai); the default review seat is claude-sonnet-5 (anthropic).
 
 
 def register(world: World, seed: sm.Seed) -> str:
@@ -275,7 +275,7 @@ def test_an_independent_seeded_attempt_is_recorded_with_its_identities(world: Wo
 @pytest.mark.parametrize(
     ("over", "task", "code"),
     [
-        ({"planter_model": "gpt-6-astra", "planter_family": "openai"}, "review-claude", sm.PLANTER_IS_WRITER),
+        ({"planter_model": "gpt-6.1-sol", "planter_family": "openai"}, "review-claude", sm.PLANTER_IS_WRITER),
         (
             {"planter_model": "claude-sonnet-5", "planter_family": "anthropic"},
             "review-claude",
@@ -296,7 +296,7 @@ def test_an_independent_seeded_attempt_is_recorded_with_its_identities(world: Wo
     ],
 )
 def test_each_violated_independence_rule_is_refused_with_its_named_code(world: World, over, task, code) -> None:
-    world.task("review-writer-seat", "codex", "gpt-6-astra")  # a reviewer of the writer's own family
+    world.task("review-writer-seat", "codex", "gpt-6.1-sol")  # a reviewer of the writer's own family
     register(world, ling("seed-7", **over))
     error = refused(world, "seed-7", task_id=task)
     assert error.code == code and code in str(error)
@@ -338,7 +338,7 @@ def test_a_clean_measurement_lesson_is_checked_and_has_no_seed_identity_row(worl
     [attempt] = world.db_rows("attempts")
     assert attempt["seed_id"] == "clean-7" and attempt["writer_family"] == "openai"
     assert world.db_rows("seed_identities") == [] and world.db_rows("budgets") == []
-    world.task("review-writer-seat", "codex", "gpt-6-astra")
+    world.task("review-writer-seat", "codex", "gpt-6.1-sol")
     world.db.unlink()
     assert refused(world, "clean-7", task_id="review-writer-seat").code == sm.REVIEWER_IS_WRITER
 

@@ -16,7 +16,7 @@ from scripts.ai_agent_bridge import _review_safety as safety
         (_codex.ask_codex, {"from_llm": "test"}),
         (_claude.ask_claude, {"from_llm": "test"}),
         (_opencode.ask_glm, {"from_llm": "test"}),
-        (_hermes.ask_hermes, {"model": "deepseek-v4-flash", "from_llm": "test"}),
+        (_hermes.ask_hermes, {"model": "deepseek-v4.1-flash", "from_llm": "test"}),
     ),
 )
 def test_named_transports_reject_fat_formal_review_body(ask, kwargs: dict[str, str]) -> None:
@@ -37,7 +37,7 @@ def test_named_transports_reject_fat_formal_review_body(ask, kwargs: dict[str, s
         (_codex.ask_codex, {"from_llm": "test"}),
         (_claude.ask_claude, {"from_llm": "test"}),
         (_opencode.ask_glm, {"from_llm": "test"}),
-        (_hermes.ask_hermes, {"model": "deepseek-v4-flash", "from_llm": "test"}),
+        (_hermes.ask_hermes, {"model": "deepseek-v4.1-flash", "from_llm": "test"}),
     ),
 )
 def test_named_transports_reject_fat_formal_review_attachment(

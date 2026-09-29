@@ -11,7 +11,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.errors import AgentTimeoutError
-
 from scripts.ai_agent_bridge import _channels, _db, _inbox
 from scripts.ai_agent_bridge._orphan_recovery import (
     RecoveryCandidate,
@@ -256,4 +255,3 @@ def test_recover_orphan_commit_handles_git_commit_timeout(tmp_path: Path):
 
     assert result.commit_sha is None
     assert result.reason == "pre-commit-failed"
-

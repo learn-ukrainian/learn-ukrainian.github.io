@@ -333,6 +333,7 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
     # 2. git add timeout
     with (
         patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
+        patch("scripts.delegate._auto_finalize_additions_deletions", return_value=((), ())),
         patch(
             "subprocess.run",
             side_effect=[
@@ -347,6 +348,7 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
             agent="agy",
             branch="feature",
             base_branch="main",
+            owned_paths=["file.py"],
         )
         assert res.ok is False
         assert "timed out" in str(res.error)
@@ -354,6 +356,7 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
     # 3. git commit failure with restore
     with (
         patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
+        patch("scripts.delegate._auto_finalize_additions_deletions", return_value=((), ())),
         patch(
             "subprocess.run",
             side_effect=[
@@ -370,9 +373,27 @@ def test_auto_finalize_dirty_worktree_timeouts(tmp_path: Path) -> None:
             agent="agy",
             branch="feature",
             base_branch="main",
+            owned_paths=["file.py"],
         )
         assert res.ok is False
         assert "git commit failed" in str(res.error)
+
+    # 4. no --owned-path declared: nothing is staged or committed (#8991)
+    with (
+        patch("scripts.delegate._auto_finalize_changed_files", return_value=("file.py",)),
+        patch("subprocess.run", side_effect=[_completed(stdout="true\n")]) as run_mock,
+    ):
+        res = _auto_finalize_dirty_worktree(
+            worktree=tmp_path,
+            task_id="task1",
+            agent="agy",
+            branch="feature",
+            base_branch="main",
+        )
+        assert res.ok is False
+        assert res.error == "no_owned_paths_declared"
+        assert res.skipped_paths == ("file.py",)
+        assert run_mock.call_count == 1
 
 
 def test_validate_existing_worktree_timeouts(tmp_path: Path) -> None:

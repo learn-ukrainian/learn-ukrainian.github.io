@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
+
 from pipeline.core import log
 
 # ---------------------------------------------------------------------------

@@ -12,6 +12,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_functional_roles as functional_roles
 from scripts.projects.open_model_data import phase3_rule_author_packets as packets
+from tests.helpers.python import project_python
 
 
 def _write(path: Path, value: object) -> None:
@@ -744,11 +745,10 @@ def test_schema_is_draft_2020_12_and_no_packet_output_may_escape_batch_state(tmp
 
 def test_cli_synthetic_build_and_verify_smoke(tmp_path: Path) -> None:
     paths = _fixture(tmp_path)
-    project_root = packets.ROOT if (packets.ROOT / ".venv" / "bin" / "python").is_file() else packets.ROOT.parents[3]
-    executable = project_root / ".venv" / "bin" / "python"
+    executable = project_python()
     build = subprocess.run(
         [
-            str(executable),
+            executable,
             "-m",
             "scripts.projects.open_model_data.phase3_rule_author_packets",
             "build",

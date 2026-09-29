@@ -44,15 +44,13 @@ DELEGATE_WORKTREE_ADD_MAX_S = 900.0
 # danger) when any check fails; read-only dispatches are exempt. An environment
 # variable with the same name overrides each default; `--force-admission
 # "<reason>"` overrides one dispatch and records the reason in its task record.
-# Basis (15 GB / 8-core host, 2026-09-24): 5-7 concurrent workers running
-# targeted `-n 2` tests kept MemAvailable at 11.1-13.5 GB; the 09:13Z OOM
-# needed full-suite `-n auto` runs. Tune from the per-worker `peak_rss_mib`
-# and the `admission` snapshot each task record now carries.
+# CX53 host (#8860): 16 vCPU, about 30 GiB usable RAM. Keep the host's
+# MemAvailable reserve while increasing writing capacity; task admission
+# snapshots carry memory, load, and CPU steal counters for measurement.
 # Live write workers (spawning/running, pid alive) at which a new one is refused.
-# Raised to 6 by operator decision 2026-09-26 (5 workers left 12.4 GB MemAvailable; worker peak RSS median 0.4 GB, p90 3.1 GB).
-DISPATCH_MAX_LIVE_WRITE_WORKERS = 6
+DISPATCH_MAX_LIVE_WRITE_WORKERS = 12
 # /proc/meminfo MemAvailable floor, in GiB.
-DISPATCH_MIN_MEM_AVAILABLE_GIB = 3.5
+DISPATCH_MIN_MEM_AVAILABLE_GIB = 6.0
 # 1-minute load average divided by os.cpu_count(); refused above this.
 DISPATCH_MAX_LOAD_PER_CPU = 1.5
 

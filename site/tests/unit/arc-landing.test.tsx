@@ -125,11 +125,15 @@ describe('ArcLanding', () => {
 
     const alpha = screen.getByRole('link', { name: /Звуки/ });
     expect(alpha.getAttribute('href')).toBe('/a1/alpha/');
+    expect(within(alpha).getByText('Звуки').getAttribute('lang')).toBe('uk');
+    expect(within(alpha).getByText('Alpha').getAttribute('lang')).toBe('en');
+    expect(within(alpha).getByText('Звуки').parentElement?.textContent).toBe('Звуки · Alpha');
     expect(within(alpha).getByText('3 lessons')).toBeTruthy();
     expect(alpha.querySelector('[data-state="plan_reviewed"]')).toBeTruthy();
 
     const beta = screen.getByRole('link', { name: /Beta path/ });
     expect(beta.getAttribute('href')).toBe('/a1/beta/');
+    expect(within(beta).getByText('Beta path').getAttribute('lang')).toBe('en');
     expect(beta.querySelector('[data-state="planned"]')).toBeTruthy();
     expect(within(beta).queryByText(/lesson/)).toBeNull();
     expect(container.querySelectorAll('a[href^="/a1/"]')).toHaveLength(3);
@@ -145,7 +149,10 @@ describe('ArcLanding', () => {
 describe('ArcModule', () => {
   it('shows the job and planned state for an unbuilt position, with no lessons', () => {
     const { container } = render(<ArcModule level="a1" position={position({})} />);
-    expect(screen.getByRole('heading', { level: 1 }).textContent).toBe('Alpha');
+    const heading = screen.getByRole('heading', { level: 1 });
+    expect(heading.textContent).toBe('Alpha');
+    expect(heading.querySelector('[lang="en"]')?.textContent).toBe('Alpha');
+    expect(heading.querySelector('[lang="uk"]')).toBeNull();
     expect(screen.getByText('Say hello')).toBeTruthy();
     expect(container.querySelector('[data-state="planned"]')).toBeTruthy();
     expect(container.querySelector('ol')).toBeNull();
@@ -167,6 +174,10 @@ describe('ArcModule', () => {
         })}
       />,
     );
+    const heading = screen.getByRole('heading', { level: 1 });
+    expect(heading.textContent).toBe('Звуки · Alpha');
+    expect(heading.querySelector('[lang="uk"]')?.textContent).toBe('Звуки');
+    expect(heading.querySelector('[lang="en"]')?.textContent).toBe('Alpha');
     expect(screen.getByRole('link', { name: 'Перший' }).getAttribute('href')).toBe('/a1/alpha/1/');
     expect(screen.queryByRole('link', { name: 'Другий' })).toBeNull();
     expect(screen.getByText('Другий')).toBeTruthy();

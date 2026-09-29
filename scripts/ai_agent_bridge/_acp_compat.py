@@ -789,7 +789,6 @@ def _run_single_acp_job(
     receipt carry the record.
     """
     from agent_runtime.runner import invoke_inter_agent
-
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     key = _idempotency_key(

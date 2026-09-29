@@ -333,10 +333,10 @@ For bounded implementation or investigation, read the machine-readable
 [`scripts/config/model_catalog.yaml`](../../scripts/config/model_catalog.yaml)
 before dispatching:
 
-1. Use `gpt-6-sol` at `high` for Codex coding and code review.
+1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
 2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
    recon with exact owned paths and an objective scope ceiling.
-3. Reserve `gpt-6-astra` at `high` for hard consequential advisory judgment.
+3. Reserve `gpt-6.1-sol` at `high` for hard consequential advisory judgment.
    When an advisory envelope is needed, include the task contract, exact owned
    paths, maximum changed-file and non-test-LOC ceilings, constraints, risk
    boundaries, acceptance evidence, and escalation triggers. Astra is an advisor,

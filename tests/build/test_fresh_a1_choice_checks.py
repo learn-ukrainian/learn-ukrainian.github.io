@@ -155,7 +155,7 @@ def test_header_agreement_examples_reject_swapped_key(
 @pytest.mark.parametrize(
     ("seat", "accepted"),
     [
-        ("codex@gpt-6-sol", False),
+        ("codex@gpt-6.1-sol", False),
         ("grok@grok-4.7", True),
         ("cursor@grok-4.7", False),
         ("codex@grok-4.7", False),
@@ -163,7 +163,7 @@ def test_header_agreement_examples_reject_swapped_key(
     ],
 )
 def test_ambiguous_group_entry_needs_other_family_language_seat(tmp_path: Path, seat: str, accepted: bool) -> None:
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     activity = {
         "id": "a1",
         "grouping_feature": "Case",

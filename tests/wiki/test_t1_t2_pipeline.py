@@ -10,9 +10,8 @@ pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from wiki.query_builder import build_query_buckets
-
 from wiki import sources_db
+from wiki.query_builder import build_query_buckets
 
 DISCOVERY_PATH = (
     Path(__file__).resolve().parents[2]

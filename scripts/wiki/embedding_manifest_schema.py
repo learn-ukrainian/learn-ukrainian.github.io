@@ -9,6 +9,9 @@ Schema versions:
               index. Pre-existing v1 rows are stamped at __init__-time
               with LEGACY_SHIPPED_CONFIG defaults so the upgrade is
               non-destructive.
+  model stamp (#9228): units encoded by the retired encoder carry a
+              legacy model id; ``EmbeddingManifest`` rewrites it to
+              ``MODEL_ID`` on open (vectors unchanged, no re-encode).
 """
 
 from __future__ import annotations
@@ -20,6 +23,15 @@ from __future__ import annotations
 LEGACY_INDEX_MAX_LENGTH = 512
 LEGACY_CHUNK_POLICY_VERSION = "legacy:v1-shipped-1348"
 LEGACY_POOLING_MODE = "cls"
+
+#: Model stamp for BGE-M3 dense vectors (CLS pooling, stored as float16).
+MODEL_ID = "bge-m3-fp16"
+
+#: Model stamps from the retired subprocess encoder (#1348, retired in #9228).
+#: ADR-006 measured cosine 1.00000 and 100% top-5 overlap against
+#: FlagEmbedding fp16 on the 100-text parity fixture, so these rows are
+#: relabelled to ``MODEL_ID`` rather than re-encoded.
+LEGACY_MODEL_IDS: tuple[str, ...] = ("bge-m3-mlx-fp16",)
 
 
 #: v1 schema (#1348) — base shape created on a fresh manifest. The

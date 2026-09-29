@@ -101,10 +101,14 @@ def _resolve_vesum_path(custom_path: Path | str | None = None) -> Path:
     """Resolve active VESUM database path across primary checkout and worktrees."""
     if custom_path is not None:
         return Path(custom_path)
-    candidates = [
-        PROJECT_ROOT / "data" / "vesum.db",
-        Path("/home/ops/learn-ukrainian/data/vesum.db"),
-    ]
+    candidates = [PROJECT_ROOT / "data" / "vesum.db"]
+    try:
+        from scripts.rag.config import VESUM_DB_PATH
+    except ImportError:  # run as a file without the repository root on sys.path
+        pass
+    else:
+        # A dispatch worktree has no data/; this resolves the primary checkout's copy.
+        candidates.append(Path(VESUM_DB_PATH))
     for c in candidates:
         if c.is_file() and c.stat().st_size > 1024:
             return c
@@ -161,7 +165,7 @@ class TypeSafeHomonymDisambiguator:
     def _get_vesum_conn(self) -> sqlite3.Connection | None:
         if self._vesum_conn is None and self.vesum_path.is_file():
             try:
-                self._vesum_conn = sqlite3.connect(str(self.vesum_path))
+                self._vesum_conn = sqlite3.connect(f"{self.vesum_path.resolve().as_uri()}?mode=ro", uri=True)
             except sqlite3.Error:
                 self._vesum_conn = None
         return self._vesum_conn

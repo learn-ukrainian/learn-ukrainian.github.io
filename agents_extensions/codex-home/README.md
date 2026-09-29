@@ -1,22 +1,23 @@
 # Reusable Codex home configuration
 
 This is the canonical portable source for Codex home defaults, orchestration
-guidance, and named profiles. The regular driver uses Sol high.
+guidance, and named profiles. The regular driver uses GPT-6.1 Sol high.
 
 | Profile | Model | Effort | Access |
 | --- | --- | --- | --- |
 | `luna_explorer_medium` | `gpt-6-luna` | medium | read-only |
 | `luna_explorer_high` | `gpt-6-luna` | high | read-only |
 | `luna_coder_high` | `gpt-6-luna` | high | workspace-write |
-| `sol_coder_high` | `gpt-6-sol` | high | workspace-write |
-| `sol_red_team_high` | `gpt-6-sol` | high | read-only |
-| `sol_ukrainian_content_high` | `gpt-6-sol` | high | workspace-write |
-| `astra_advisor_high` | `gpt-6-astra` | high | read-only |
+| `sol_coder_high` | `gpt-6.1-sol` | high | workspace-write |
+| `sol_red_team_high` | `gpt-6.1-sol` | high | read-only |
+| `sol_ukrainian_content_high` | `gpt-6.1-sol` | high | workspace-write |
+| `astra_advisor_high` | `gpt-6.1-sol` | high | read-only |
 
 The default spawned agent is Luna high. Use Luna medium explicitly for routine
 scouting and high for ambiguous investigations or bounded coding. Sol high
-handles broader coding and adversarial review. Astra high is the on-demand
-advisor for consequential design and difficult linguistic judgment. Sol high
+handles broader coding and adversarial review. `astra_advisor_high` keeps its
+name but runs GPT-6.1 Sol, which took the GPT-6 Astra advisor seat (#9230); it
+is the on-demand advisor for consequential design and difficult linguistic judgment. Sol high
 is the Ukrainian content authoring default, subject to VESUM, sources, and
 track immersion checks. This is a routing decision, not a comparative
 Ukrainian-quality benchmark.

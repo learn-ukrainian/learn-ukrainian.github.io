@@ -11,6 +11,16 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts" / "content"))
 
+from video_discovery_helpers import (
+    _SEMINAR_TRACKS,
+    build_discovery_keywords,
+    build_search_keywords,
+    cap_query,
+    extract_lemmas_from_hints,
+    format_blog_discovery,
+    format_rag_discovery,
+)
+
 from video_discovery import (
     DEFAULT_CHANNELS,
     DiscoveryResult,
@@ -25,15 +35,6 @@ from video_discovery import (
     search_channel,
     search_rag,
     write_discovery_yaml,
-)
-from video_discovery_helpers import (
-    _SEMINAR_TRACKS,
-    build_discovery_keywords,
-    build_search_keywords,
-    cap_query,
-    extract_lemmas_from_hints,
-    format_blog_discovery,
-    format_rag_discovery,
 )
 
 # ---------------------------------------------------------------------------

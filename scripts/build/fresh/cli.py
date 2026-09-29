@@ -25,11 +25,13 @@ import yaml
 
 from scripts.build.fresh.draft_schema import LEVELS
 from scripts.build.fresh.immersion import lesson_immersion_payload
+from scripts.build.fresh.manifest import learner_state_sha256
 from scripts.build.fresh.path_guard import checked_existing_path, checked_path, validate_module
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
     check_rendered_prompt,
     extract_plan_citations,
+    grammar_points,
     render_lesson_prompt,
     render_recap_prompt,
     style_card_info,
@@ -287,7 +289,7 @@ def _build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1\n"
-            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6-sol\n\n"
+            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6.1-sol\n\n"
             "Outputs:\n"
             "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n"
             "  --module also refuses completion (exit 1, stderr) when module-verdict.yaml already exists and\n"
@@ -310,7 +312,7 @@ def _build_parser() -> argparse.ArgumentParser:
         "--question-seat",
         default=None,
         help=(
-            "Explicit agent:model seat for open questions (e.g. codex:gpt-6-sol; no default). "
+            "Explicit agent:model seat for open questions (e.g. codex:gpt-6.1-sol; no default). "
             "If absent when the lesson has open questions, stops with question_seat_required"
         ),
     )
@@ -565,14 +567,13 @@ def _compute_input_hashes(
             "missing lesson lock is a preflight gap."
         )
 
-    learner_state_sha256 = hashlib.sha256(lock.yaml_bytes(p_state.to_dict())).hexdigest()
-
     return {
         "plan_sha256": plan_sha256,
         "pack_lock": pack_lock,
         "words_lock": words_lock,
         "lesson_lock_entry_sha256": lesson_lock_entry_sha256,
-        "learner_state_sha256": learner_state_sha256,
+        # The one learner-state identity the manifest records and the reviewer recomputes (#9182).
+        "learner_state_sha256": learner_state_sha256(p_state),
     }
 
 
@@ -762,6 +763,11 @@ def main(argv: list[str] | None = None) -> int:
 
         # Compute real input hashes (Finding 1)
         hashes = _compute_input_hashes(paths, args.lesson, p_state)
+        # What the learner-state block renders from; the check regenerates the block from the same (#9182)
+        state_sources = {
+            "word_store": words_dict,
+            "grammar_registry": grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
+        }
 
         is_recap = lesson_entry.get("kind") == "recap"
         if args.recap is not None and args.recap != is_recap:
@@ -794,8 +800,17 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                **state_sources,
             )
-            check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=True, built_lessons=built)
+            check_res = check_rendered_prompt(
+                rendered,
+                lesson_entry,
+                card_path,
+                is_recap=True,
+                built_lessons=built,
+                learner_state=p_state,
+                **state_sources,
+            )
         else:
             rendered = render_lesson_prompt(
                 lesson_entry,
@@ -811,8 +826,11 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                **state_sources,
             )
-            check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=False)
+            check_res = check_rendered_prompt(
+                rendered, lesson_entry, card_path, is_recap=False, learner_state=p_state, **state_sources
+            )
 
         if not check_res.passed:
             print("Rendered-prompt check FAILED:", file=sys.stderr)
@@ -930,6 +948,11 @@ def main(argv: list[str] | None = None) -> int:
         # 2. Render prompt with real cited records and hashes (Finding 1, MAJOR B)
         cited_records = _load_cited_records(lesson_entry, pack_dict, words_dict)
         hashes = _compute_input_hashes(paths, args.lesson, p_state)
+        # What the learner-state block renders from; the check regenerates the block from the same (#9182)
+        state_sources = {
+            "word_store": words_dict,
+            "grammar_registry": grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
+        }
 
         if is_recap:
             try:
@@ -953,9 +976,16 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                **state_sources,
             )
             check_res = check_rendered_prompt(
-                rendered_prompt, lesson_entry, card_path, is_recap=True, built_lessons=built
+                rendered_prompt,
+                lesson_entry,
+                card_path,
+                is_recap=True,
+                built_lessons=built,
+                learner_state=p_state,
+                **state_sources,
             )
         else:
             rendered_prompt = render_lesson_prompt(
@@ -972,8 +1002,11 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                **state_sources,
             )
-            check_res = check_rendered_prompt(rendered_prompt, lesson_entry, card_path, is_recap=False)
+            check_res = check_rendered_prompt(
+                rendered_prompt, lesson_entry, card_path, is_recap=False, learner_state=p_state, **state_sources
+            )
 
         if not check_res.passed:
             print("Rendered prompt check FAILED:", file=sys.stderr)

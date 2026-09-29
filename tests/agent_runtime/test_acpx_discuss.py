@@ -18,7 +18,7 @@ from scripts.fleet_comms import migrations
 from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.authority import AuthorityService
 from scripts.fleet_comms.message_plane import default_plane_root
-from scripts.guardrails.worktree_containment import resolve_main_root
+from tests.helpers.python import project_python
 
 
 def _result(agent: str, response: str, *, tokens: int = 5) -> Result:
@@ -928,7 +928,7 @@ def test_crashed_process_releases_repository_admission_lock(tmp_path):
     root = tmp_path / "plane"
     root.mkdir()
     repo_root = Path(__file__).resolve().parents[2]
-    python = resolve_main_root(repo_root) / ".venv" / "bin" / "python"
+    python = project_python()
     code = """
 import os
 import sys
@@ -938,7 +938,7 @@ with _discussion_admission(Path(sys.argv[1])):
     os._exit(17)
 """
     completed = subprocess.run(
-        [str(python), "-c", code, str(root)],
+        [python, "-c", code, str(root)],
         cwd=repo_root,
         check=False, timeout=30,
     )

@@ -18,9 +18,9 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
-import delegate
 import pytest
 
+import delegate
 from scripts.api.subscription_usage import compute_usage_pace, pace_is_deficit
 
 
@@ -447,7 +447,7 @@ def test_adapter_rejects_foreign_model_after_substitution(monkeypatch, tmp_path)
     monkeypatch.setenv("TMPDIR", str(tmp_path))
     monkeypatch.setattr(tempfile, "tempdir", str(tmp_path))
     assert delegate._adapter_rejects_model("codex", "claude-fable-5-1") is True
-    assert delegate._adapter_rejects_model("codex", "gpt-6-astra") is False
+    assert delegate._adapter_rejects_model("codex", "gpt-6.1-sol") is False
     assert not list(tmp_path.glob("codex-runtime-*.txt"))
 
 
@@ -470,7 +470,7 @@ def test_adapter_valueerror_before_spawn_is_failed(monkeypatch, tmp_path):
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path))
 
     def boom(*_args, **_kwargs):
-        raise ValueError("CodexAdapter: model='claude-fable-5-1' rejected; only 'gpt-6-astra' is approved")
+        raise ValueError("CodexAdapter: model='claude-fable-5-1' rejected; only 'gpt-6.1-sol' is approved")
 
     monkeypatch.setattr("agent_runtime.runner.invoke", boom)
     rc = delegate._run_worker(
@@ -1329,19 +1329,19 @@ def _worker_argv(commands: list[list[str]]) -> list[str]:
 
 
 def test_budget_sub_codex_gpt6_sol_spawns_cursor_default(monkeypatch, tmp_path, capsys):
-    """AC-01: codex → cursor with gpt-6-sol uses the cursor dispatch pin, on the line and in the task JSON."""
+    """AC-01: codex → cursor with gpt-6.1-sol uses the cursor dispatch pin, on the line and in the task JSON."""
     commands = _capture_worker_commands(monkeypatch, tmp_path)
 
-    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6.1-sol"))
 
     assert rc == 0
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE: --agent codex → cursor" in err
-    assert "--model grok-4.7 (catalog default; gpt-6-sol has no mapping)" in err
+    assert "--model grok-4.7 (catalog default; gpt-6.1-sol has no mapping)" in err
     argv = _worker_argv(commands)
     assert "--agent" in argv and argv[argv.index("--agent") + 1] == "cursor"
     assert "--model" in argv and argv[argv.index("--model") + 1] == "grok-4.7"
-    assert "gpt-6-sol" not in argv
+    assert "gpt-6.1-sol" not in argv
     state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
     assert state["agent"] == "cursor"
     assert state["substitution"] == {
@@ -1350,7 +1350,7 @@ def test_budget_sub_codex_gpt6_sol_spawns_cursor_default(monkeypatch, tmp_path, 
         "source": "budget-guard",
         "requested_agent": "codex",
         "actual_agent": "cursor",
-        "requested_model": "gpt-6-sol",
+        "requested_model": "gpt-6.1-sol",
         "actual_model": "grok-4.7",
         "actual_model_known": True,
         "model_resolution": "catalog-default",
@@ -1470,7 +1470,7 @@ def test_budget_sub_refuses_before_spawn_when_no_model_is_valid(monkeypatch, tmp
     commands = _capture_worker_commands(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate, "_lane_default_model", lambda _agent: "not-a-fleet-model")
 
-    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6.1-sol"))
 
     assert rc == 2
     err = capsys.readouterr().err
@@ -1486,14 +1486,14 @@ def test_dispatch_without_substitution_keeps_explicit_model(monkeypatch, tmp_pat
     commands = _capture_worker_commands(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="cool"))
 
-    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6-sol"))
+    rc = delegate.cmd_dispatch(_codex_dispatch("--model", "gpt-6.1-sol"))
 
     assert rc == 0
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE" not in err
     argv = _worker_argv(commands)
     assert argv[argv.index("--agent") + 1] == "codex"
-    assert argv[argv.index("--model") + 1] == "gpt-6-sol"
+    assert argv[argv.index("--model") + 1] == "gpt-6.1-sol"
     state = json.loads((tmp_path / "tasks" / "probe-8855.json").read_text(encoding="utf-8"))
     assert state["agent"] == "codex"
     assert state["substitution"] is None
@@ -1515,7 +1515,7 @@ def test_worker_keeps_budget_substitution_beside_runtime_attribution(monkeypatch
                 "source": "budget-guard",
                 "requested_agent": "codex",
                 "actual_agent": "cursor",
-                "requested_model": "gpt-6-sol",
+                "requested_model": "gpt-6.1-sol",
                 "actual_model": "grok-4.7",
                 "actual_model_known": True,
                 "model_resolution": "catalog-default",
@@ -1558,7 +1558,7 @@ def test_worker_keeps_budget_substitution_beside_runtime_attribution(monkeypatch
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["substitution"]["kind"] == "agent-substitution"
-    assert state["substitution"]["requested_model"] == "gpt-6-sol"
+    assert state["substitution"]["requested_model"] == "gpt-6.1-sol"
     assert state["substitution"]["actual_model"] == "grok-4.7"
     assert state["substitution"]["runtime_attribution"]["source"] == "cursor-stream-json"
     assert state["resolved_model"] == "grok-4.7"

@@ -20,6 +20,7 @@ from scripts.curriculum.validate.activity_report import (
     load_v1_activities,
     plan_report,
     rendered_report,
+    v1_totals,
 )
 
 
@@ -621,3 +622,37 @@ def test_response_unit_table_covers_every_a1_choice_type() -> None:
         "pick-syllables",
     ):
         assert activity_type in RESPONSE_UNIT_TABLE
+
+
+def test_v1_totals_counts_activities_and_items_by_placement_and_type() -> None:
+    """#9166: the plan-review manifest's v1 totals — activities and response opportunities by placement
+    and type, with an activity whose payload lacks its unit field counted as uncounted, never guessed."""
+    v1 = {
+        "inline": [
+            {"type": "quiz", "items": [{}, {}, {}]},
+            {"type": "watch-and-repeat", "items": [{}]},
+            {"type": "match-up", "pairs": [{}, {}]},
+        ],
+        "workbook": [
+            {"type": "quiz", "items": [{}, {}]},
+            {"type": "order", "items": [{}, {}, {}]},
+            {"type": "fill-in"},
+        ],
+    }
+    totals = v1_totals(v1)
+    assert totals["inline"] == {
+        "activities": {"total": 3, "by_type": {"match-up": 1, "quiz": 1, "watch-and-repeat": 1}},
+        "response_opportunities": {"total": 5, "by_type": {"match-up": 2, "quiz": 3, "watch-and-repeat": 0}},
+        "uncounted_activities": {"total": 0, "by_type": {}},
+    }
+    assert totals["workbook"] == {
+        "activities": {"total": 3, "by_type": {"fill-in": 1, "order": 1, "quiz": 1}},
+        "response_opportunities": {"total": 3, "by_type": {"order": 1, "quiz": 2}},
+        "uncounted_activities": {"total": 1, "by_type": {"fill-in": 1}},
+    }
+    assert totals["all"]["activities"] == {
+        "total": 6,
+        "by_type": {"fill-in": 1, "match-up": 1, "order": 1, "quiz": 2, "watch-and-repeat": 1},
+    }
+    assert totals["all"]["response_opportunities"]["total"] == 8
+    assert totals["all"]["uncounted_activities"] == {"total": 1, "by_type": {"fill-in": 1}}

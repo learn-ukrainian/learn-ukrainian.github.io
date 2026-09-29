@@ -87,6 +87,15 @@ def _cache_compiled_jsonschema_validators(monkeypatch: pytest.MonkeyPatch) -> No
     monkeypatch.setattr(jsonschema, "validate", cached_validate)
 
 
+def test_compiled_schema_cache_rechecks_changed_schema_content() -> None:
+    schema = {"type": "object", "required": ["first"]}
+    jsonschema.validate({"first": 1}, schema)
+    schema["required"] = ["second"]
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"first": 1}, schema)
+    jsonschema.validate({"second": 1}, schema)
+
+
 @pytest.mark.needs_artifact(
     "open_model_other_indexes",
     "projects/open_model_data/canary/pilot_canary_train_200.jsonl",

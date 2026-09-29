@@ -18,7 +18,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.result import Result
-
 from scripts.ai_agent_bridge import _agy
 from scripts.ai_agent_bridge._agy import _extract_target_model, ask_agy, process_for_agy
 from scripts.ai_agent_bridge._config import REPO_ROOT

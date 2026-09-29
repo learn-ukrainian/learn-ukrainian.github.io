@@ -238,7 +238,7 @@ def encode_ukrainian_wiki_corpus(
 
     Thin wrapper around :func:`wiki.dense_rerank.cold_encode_corpus` so that
     ingestion callers do not have to import the heavier dense-rerank module to
-    close the ingest→encode loop. Tests inject ``encoder`` to bypass MLX.
+    close the ingest→encode loop. Tests inject ``encoder`` to bypass BGE-M3.
     """
 
     from .dense_rerank import cold_encode_corpus

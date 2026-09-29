@@ -93,9 +93,8 @@ are opaque and do not expose internal category labels:
 
 Use `local_run_config.example.json`, `validate-run-config`, and `run-local` to
 create an offline local-run receipt. The command refuses network providers and
-does not download weights. The standalone `run_mlx_model.py` is a resumable MLX
-runner for a model that is already present locally; install and select the
-open-weight runtime separately under its own terms.
+does not download weights. Install and select the open-weight runtime
+separately under its own terms.
 
 ## Коротка інструкція українською
 

@@ -12,7 +12,6 @@ from typing import Any
 import pytest
 import yaml
 from jsonschema import Draft202012Validator
-from yaml_activities import ActivityParser
 
 from scripts.review import findings_db as db
 from scripts.review import settle
@@ -20,6 +19,7 @@ from scripts.review.prompts.check import check_prompt
 from scripts.review.prompts.eligibility import pin_refusals
 from scripts.review.receipts import ledger
 from tests.review.test_prompts import _setup_lesson_fixture
+from yaml_activities import ActivityParser
 
 pytestmark = pytest.mark.reads_content
 

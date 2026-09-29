@@ -7,9 +7,9 @@ export GIT_OPTIONAL_LOCKS=0
 
 launcher_adapter_validate() {
   case "$LC_MODEL" in
-    gpt-6-sol|gpt-6-luna|gpt-6-astra) ;;
+    gpt-6.1-sol|gpt-6-luna) ;;
     *)
-      launcher_error "Codex model $LC_MODEL rejected; approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol."
+      launcher_error "Codex model $LC_MODEL rejected; approved models are gpt-6-luna, gpt-6.1-sol."
       exit 2
       ;;
   esac
@@ -47,37 +47,32 @@ launcher_adapter_validate() {
 }
 
 launcher_codex_resolve_canonical_root() {
-  local git_common_dir requested_root current_worktree record canonical_root=""
-  git_common_dir="$(git -C "$LC_SESSION_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" || {
-    launcher_error "could not resolve the Codex Git common directory."
-    exit 1
-  }
-  requested_root="${CODEX_CANONICAL_REPO_ROOT:-}"
+  local current_worktree record canonical_root=""
 
-  if [ -n "$requested_root" ]; then
-    canonical_root="$(cd "$requested_root" 2>/dev/null && pwd)" || {
-      launcher_error "CODEX_CANONICAL_REPO_ROOT is not a directory: $requested_root"
-      exit 1
-    }
-    if [ "$(git -C "$canonical_root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" != "$git_common_dir" ] \
-      || [ "$(git -C "$canonical_root" rev-parse --show-toplevel 2>/dev/null)" != "$canonical_root" ]; then
-      launcher_error "CODEX_CANONICAL_REPO_ROOT is not a checkout of this Git common directory."
+  if [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+    # launcher_resolve_roots already validated the operator-set override and
+    # made it the helper root (#9121).
+    if [ "$(cd -P "$CODEX_CANONICAL_REPO_ROOT" 2>/dev/null && pwd)" != "$LC_DURABLE_HELPER_ROOT" ]; then
+      launcher_error "CODEX_CANONICAL_REPO_ROOT was not validated as the helper root $LC_DURABLE_HELPER_ROOT."
       exit 1
     fi
-  else
-    while IFS= read -r -d '' record; do
-      case "$record" in
-        worktree\ *) current_worktree="${record#worktree }" ;;
-        'branch refs/heads/main')
-          if [ -n "${current_worktree:-}" ] \
-            && [ "$(git -C "$current_worktree" rev-parse --show-toplevel 2>/dev/null)" = "$current_worktree" ]; then
-            canonical_root="$current_worktree"
-            break
-          fi
-          ;;
-      esac
-    done < <(git -C "$LC_SESSION_ROOT" worktree list --porcelain -z)
+    LC_CODEX_CANONICAL_ROOT="$LC_DURABLE_HELPER_ROOT"
+    export CODEX_CANONICAL_REPO_ROOT="$LC_CODEX_CANONICAL_ROOT"
+    return 0
   fi
+
+  while IFS= read -r -d '' record; do
+    case "$record" in
+      worktree\ *) current_worktree="${record#worktree }" ;;
+      'branch refs/heads/main')
+        if [ -n "${current_worktree:-}" ] \
+          && [ "$(git -C "$current_worktree" rev-parse --show-toplevel 2>/dev/null)" = "$current_worktree" ]; then
+          canonical_root="$current_worktree"
+          break
+        fi
+        ;;
+    esac
+  done < <(git -C "$LC_SESSION_ROOT" worktree list --porcelain -z)
 
   if [ -z "$canonical_root" ] \
     && [ "$(git -C "$LC_SESSION_ROOT" branch --show-current 2>/dev/null)" = main ]; then
@@ -94,6 +89,13 @@ launcher_codex_resolve_canonical_root() {
       launcher_error "could not resolve a canonical main checkout for Codex."
       exit 1
     fi
+  fi
+  # Git follows a worktree-controlled `commondir`, so the checkout found above
+  # could belong to another repository; its .venv runs below. Accept it only
+  # when it resolves to the validated primary (#9121).
+  if [ "$(project_primary_root_resolve "$canonical_root" 2>/dev/null)" != "$LC_DURABLE_HELPER_ROOT" ]; then
+    launcher_error "canonical checkout $canonical_root does not belong to the validated primary $LC_DURABLE_HELPER_ROOT."
+    exit 1
   fi
 
   LC_CODEX_CANONICAL_ROOT="$canonical_root"

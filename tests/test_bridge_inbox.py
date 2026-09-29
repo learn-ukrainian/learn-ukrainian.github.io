@@ -13,7 +13,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
 from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
-
 from scripts.ai_agent_bridge import _channels, _db, _inbox
 
 
