@@ -2,12 +2,13 @@
 
 VESUM source locations: брат 487702-487719, книга 2614480-2614493,
 бути 542216-542245, читати 6561736-6561760, великий 611137-611177,
-м'яч 3260520-3260537.
+м'яч 3260520-3260537. Particle entries (inspect_words): не 226767, ні 239112.
 """
 
 from __future__ import annotations
 
 import copy
+import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -17,10 +18,32 @@ import yaml
 from scripts.build.fresh import cli
 from scripts.build.fresh.candidates import item_candidates
 from scripts.build.fresh.requires_confirm import questions_from_draft, record_answers
-from scripts.build.fresh.runner import check_4_activities, check_7_a1_choices
+from scripts.build.fresh.runner import NEGATION_PARTICLE_ENTRY_ID, check_4_activities, check_7_a1_choices
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import ResolverError
+
+
+def _particle_vesum(path: Path, entries: list[tuple[int, str]]) -> Path:
+    conn = sqlite3.connect(path)
+    conn.execute(
+        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, word_form TEXT, lemma TEXT,"
+        " pos TEXT, tags TEXT, source_comment TEXT, source_location TEXT)"
+    )
+    conn.executemany(
+        "INSERT INTO forms_all (entry_id, word_form, lemma, pos, tags, source_location) VALUES (?, ?, ?, 'part', 'part', '')",
+        [(entry_id, form, form) for entry_id, form in entries],
+    )
+    conn.commit()
+    conn.close()
+    return path
+
+
+@pytest.fixture(autouse=True)
+def _vesum_particles(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """CI has no VESUM: serve the two particle entries Check 4 resolves by identity."""
+    db = _particle_vesum(tmp_path / "particles.db", [(NEGATION_PARTICLE_ENTRY_ID, "не"), (239112, "ні")])
+    monkeypatch.setenv("VESUM_DB_PATH", str(db))
 
 
 def _record(number: int, lemma: str, forms: list[tuple[str, str]]) -> dict:
@@ -345,6 +368,17 @@ def test_check_4_default_vesum_outage_is_named(
         level="a1",
     )[0]
     assert (row["check"], row["code"]) == (4, "a1_choice_source_unavailable")
+
+
+@pytest.mark.parametrize(
+    "entries", [[(239112, "ні")], [(NEGATION_PARTICLE_ENTRY_ID, "не"), (NEGATION_PARTICLE_ENTRY_ID, "ні")]]
+)
+def test_negation_particle_missing_from_vesum_is_named(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, entries: list[tuple[int, str]]
+) -> None:
+    monkeypatch.setenv("VESUM_DB_PATH", str(_particle_vesum(tmp_path / "no-particle.db", entries)))
+    row = _case_offer("Я не знаю ___.")
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_choice_source_unavailable", "pack")
 
 
 @pytest.mark.parametrize(

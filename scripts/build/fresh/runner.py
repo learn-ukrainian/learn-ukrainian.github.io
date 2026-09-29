@@ -34,13 +34,15 @@ Named Failure Reasons for Check 4:
 - answer_not_in_options: key text not found in offered options/words
 - form_choice_options_invalid: form-choice options not unique, not in record, or answer tag mismatch
 - form_sentence_missing: A1 form-choice item has no rendered sentence for its requirement receipt
-- a1_case_contrast_under_negated_verb: A1 case-choice sentence contains не followed by a finite verb
+- a1_case_contrast_under_negated_verb: A1 case-choice sentence contains the negation particle (VESUM entry 226767)
+  followed by a finite verb
 - select_correct_set_invalid: select activity has fewer correct options than required
 """
 
 from __future__ import annotations
 
 import copy
+import functools
 import hashlib
 import json
 import os
@@ -248,6 +250,41 @@ def _analyses(record: dict[str, Any] | None, surface: str) -> list[set[str]]:
     ]
 
 
+# The verbal negation particle, named by VESUM identity: its tags (`part`) do not
+# distinguish it from other particles, and the engine types no Ukrainian.
+NEGATION_PARTICLE_ENTRY_ID = 226767
+
+
+class NegationParticleUnavailable(LookupError):
+    """VESUM has no single particle form for NEGATION_PARTICLE_ENTRY_ID."""
+
+
+@functools.lru_cache(maxsize=4)
+def _particle_form(db_path: str, identity: tuple[int, int]) -> str:
+    """Resolve the particle once per VESUM file identity (the entry_id scan is unindexed)."""
+    from scripts.verification.vesum import get_vesum_connection
+
+    with get_vesum_connection(db_path) as conn:
+        rows = conn.execute(
+            "SELECT DISTINCT word_form FROM forms_all WHERE entry_id = ? AND pos = 'part'",
+            (NEGATION_PARTICLE_ENTRY_ID,),
+        ).fetchall()
+    if len(rows) != 1:
+        raise NegationParticleUnavailable(
+            f"VESUM entry {NEGATION_PARTICLE_ENTRY_ID} has {len(rows)} particle forms, expected 1"
+        )
+    return lookup_form(rows[0][0]).casefold()
+
+
+def negation_particle() -> str:
+    """Return the casefolded negation particle form from the VESUM that Check 4 reads."""
+    from scripts.verification.vesum import VESUM_DB_PATH
+
+    path = Path(os.environ.get("VESUM_DB_PATH") or VESUM_DB_PATH)
+    stat = path.stat()
+    return _particle_form(str(path), (stat.st_ino, stat.st_mtime_ns))
+
+
 def a1_case_contrast_under_negated_verb(
     item: dict[str, Any],
     records: dict[str, dict[str, Any]],
@@ -273,10 +310,13 @@ def a1_case_contrast_under_negated_verb(
 
     sentence = receipts.requirement_sentence(item)
     tokens = tokenize(sentence)
+    if len(tokens) < 2:
+        return False
+    particle = negation_particle()
     successors = [
         tokens[index + 1].lookup.casefold()
         for index, token in enumerate(tokens[:-1])
-        if token.lookup.casefold() == "не" and sentence[token.end : tokens[index + 1].start].isspace()
+        if token.lookup.casefold() == particle and sentence[token.end : tokens[index + 1].start].isspace()
     ]
     if not successors:
         return False
@@ -721,7 +761,7 @@ def check_4_activities(
                 negated_case = mod_level == "a1" and a1_case_contrast_under_negated_verb(
                     item, records, typ, vesum_lookup=vesum_lookup
                 )
-            except (OSError, sqlite3.Error) as err:
+            except (OSError, sqlite3.Error, NegationParticleUnavailable) as err:
                 return failure(
                     4, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable"
                 ), {}
