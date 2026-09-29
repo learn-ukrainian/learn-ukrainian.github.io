@@ -25,11 +25,8 @@ from scripts.curriculum.resolver.inputs import ResolverError
 
 ROOT = Path(__file__).resolve().parents[2]
 A1_STORE = ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml"
-NEGATION = next(
-    record
-    for record in yaml.safe_load(A1_STORE.read_text(encoding="utf-8"))["words"]
-    if record["id"] == NEGATION_PARTICLE_RECORD
-)
+STORE_WORDS = yaml.safe_load(A1_STORE.read_text(encoding="utf-8"))["words"]
+NEGATION = next(record for record in STORE_WORDS if record["id"] == NEGATION_PARTICLE_RECORD)
 
 
 def _record(number: int, lemma: str, forms: list[tuple[str, str]]) -> dict:
@@ -377,10 +374,31 @@ def test_negation_particle_record_is_bound_in_the_a1_store() -> None:
     assert (NEGATION["pos"], NEGATION["entry"]) == ("part", {"entry_id": 226767, "source": "vesum"})
 
 
-@pytest.mark.parametrize("particle", [None, {**NEGATION, "pos": "noun"}, {**NEGATION, "lemma": ""}])
+@pytest.mark.parametrize(
+    "particle",
+    [
+        None,
+        {**NEGATION, "pos": "noun"},
+        {**NEGATION, "lemma": ""},
+        {**NEGATION, "entry": None},
+        {**NEGATION, "entry": {"source": "manual", "entry_id": 226767}},
+    ],
+)
 def test_store_without_negation_particle_record_is_named(particle: dict | None) -> None:
     row = _case_offer("Я не знаю ___.", particle=particle)
     assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
+
+
+def test_negation_record_rebound_to_another_particle_is_refused() -> None:
+    # W-061 carrying another store particle's lemma and VESUM binding (the real W-062 record).
+    another = next(record for record in STORE_WORDS if record["id"] == "W-062")
+    other = {**NEGATION, "lemma": another["lemma"], "entry": another["entry"]}
+    row = _case_offer("Я не знаю ___.", particle=other)
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_negation_particle_record_invalid", "word_store")
+
+
+def test_real_a1_store_negation_particle_passes_identity_check() -> None:
+    assert _case_offer("Я не знаю ___.")["code"] == "a1_case_contrast_under_negated_verb"
 
 
 @pytest.mark.parametrize(
@@ -595,10 +613,26 @@ def test_header_agreement_examples_reject_swapped_key(
 
 
 @pytest.mark.parametrize(
+    ("seat", "family"),
+    [("claude@opus-5-5", "anthropic"), ("codex@gpt-6-sol", "openai"), ("agy@gemini-3-pro", "google")],
+)
+def test_language_lanes_admit_claude_codex_and_agy(seat: str, family: str) -> None:
+    assert receipts.language_seat_family(seat, what="test") == family
+
+
+def test_language_lanes_refuse_grok() -> None:
+    assert "grok" not in receipts.LANGUAGE_LANES
+    with pytest.raises(ResolverError, match="language lane"):
+        receipts.language_seat_family("grok@grok-4.7", what="test")
+
+
+@pytest.mark.parametrize(
     ("seat", "accepted"),
     [
         ("codex@gpt-6-sol", False),
-        ("grok@grok-4.7", True),
+        ("claude@opus-5-5", True),
+        ("agy@gemini-3-pro", True),
+        ("grok@grok-4.7", False),
         ("cursor@grok-4.7", False),
         ("codex@grok-4.7", False),
         ("grok@unknown", False),
@@ -805,15 +839,15 @@ def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
         ("kimi@kimi-k2", "moonshot"),
         ("deepseek@deepseek-v4", "deepseek"),
         ("qwen@qwen3", "qwen"),
+        ("grok@grok-4.7", "xai"),
     ):
         with pytest.raises(ResolverError, match="language lane"):
             record(answer, seat=seat, family=family)
-    for seat in ("grok@model", "claude@x"):
-        with pytest.raises(ResolverError, match="unresolved family"):
-            record(answer, seat=seat, family=receipts._seat_family(seat, what="test"))
-    assert record(answer, seat="grok@grok-4.7", family="xai")["items"][0]["reviewer"]["family"] == "xai"
+    with pytest.raises(ResolverError, match="unresolved family"):
+        record(answer, seat="claude@x", family="anthropic")
+    assert record(answer, seat="agy@gemini-3-pro", family="google")["items"][0]["reviewer"]["family"] == "google"
     with pytest.raises(ResolverError, match="family"):
-        record(answer, family="xai")
+        record(answer, family="google")
     unresolved = {
         **answer,
         "decision": "deny",

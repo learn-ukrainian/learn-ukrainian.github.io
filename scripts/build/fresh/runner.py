@@ -36,7 +36,8 @@ Named Failure Reasons for Check 4:
 - form_sentence_missing: A1 form-choice item has no rendered sentence for its requirement receipt
 - a1_case_contrast_under_negated_verb: A1 case-choice sentence contains the negation particle (A1 word-store
   record W-061) followed by a finite verb
-- a1_negation_particle_record_invalid: the A1 word store lacks W-061 or W-061 is not a particle (store defect)
+- a1_negation_particle_record_invalid: the A1 word store lacks W-061, or W-061 is not a particle bound to
+  VESUM entry 226767 (store defect)
 - select_correct_set_invalid: select activity has fewer correct options than required
 """
 
@@ -250,14 +251,18 @@ def _analyses(record: dict[str, Any] | None, surface: str) -> list[set[str]]:
     ]
 
 
-# The verbal negation particle, named by its A1 word-store id: the registry allocates W- ids
-# once and never reuses them, and words-verify re-checks each record's VESUM binding. Its
-# tags (`part`) do not distinguish it from other particles, and the engine types no Ukrainian.
+# The verbal negation particle, named by two identities because the engine types no Ukrainian
+# and its tags (`part`) do not distinguish it from other particles. The A1 word-store id is
+# stable within the store (the registry allocates W- ids once and never reuses them); the
+# record's own VESUM binding pins which particle it is, so a W-061 rebound to another
+# particle refuses instead of silently missing negation. words-verify re-checks that binding
+# against VESUM; this check reads only the store record.
 NEGATION_PARTICLE_RECORD = "W-061"
+NEGATION_PARTICLE_ENTRY = {"source": "vesum", "entry_id": 226767}
 
 
 class NegationParticleRecordInvalid(LookupError):
-    """The word store has no particle record NEGATION_PARTICLE_RECORD: a store defect."""
+    """The word store's NEGATION_PARTICLE_RECORD is missing or not the negation particle: a store defect."""
 
 
 def negation_particle(records: dict[str, dict[str, Any]]) -> str:
@@ -266,6 +271,11 @@ def negation_particle(records: dict[str, dict[str, Any]]) -> str:
     lemma = record.get("lemma") if isinstance(record, dict) else None
     if not isinstance(record, dict) or record.get("pos") != "part" or not isinstance(lemma, str) or not lemma.strip():
         raise NegationParticleRecordInvalid(f"word store record {NEGATION_PARTICLE_RECORD} is not a particle")
+    if record.get("entry") != NEGATION_PARTICLE_ENTRY:
+        raise NegationParticleRecordInvalid(
+            f"word store record {NEGATION_PARTICLE_RECORD} is not bound to VESUM entry "
+            f"{NEGATION_PARTICLE_ENTRY['entry_id']}"
+        )
     return lookup_form(lemma).casefold()
 
 

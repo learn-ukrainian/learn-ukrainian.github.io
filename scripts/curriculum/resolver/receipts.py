@@ -247,9 +247,10 @@ def _requirement_error(message: str) -> ResolverError:
     return ResolverError(codes.RECEIPT_INVALID, f"requirement receipt: {message}")
 
 
-# Lanes that may judge Ukrainian (the build program's LANGUAGE-LANES rule). Every
-# confirmation path (requirement receipts and group-sort question answers) reads this.
-LANGUAGE_LANES = frozenset({"agy", "claude", "codex", "grok"})
+# Lanes that may judge Ukrainian (the LANGUAGE-LANES rule in model-assignment.md): only
+# claude, codex and agy; Grok and every other family are excluded. Every confirmation path
+# (requirement receipts and group-sort question answers) reads this.
+LANGUAGE_LANES = frozenset({"agy", "claude", "codex"})
 
 
 def language_seat_family(seat: str, *, what: str) -> str:
