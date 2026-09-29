@@ -9,6 +9,7 @@ its tests share the same atomicity and pruning rules.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -37,6 +38,19 @@ LSOF_TIMEOUT_S = 10.0
 
 class ReleaseSnapshotError(RuntimeError):
     """Raised when a release cannot be safely built, validated, or published."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        failing_side: str | None = None,
+        git_status: int | None = None,
+        stderr: str | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.failing_side = failing_side
+        self.git_status = git_status
+        self.stderr = stderr
 
 
 @dataclass(frozen=True)
@@ -90,6 +104,44 @@ def _safe_archive_path(root: Path, name: str) -> Path:
     return target
 
 
+MAX_STDERR_CHARS = 2048
+GIT_ARCHIVE_TIMEOUT_S = 30.0
+GIT_WAIT_TIMEOUT_S = 5.0
+GIT_POLL_TIMEOUT_S = 0.05
+
+
+def _close_stream(stream: Any) -> None:
+    if stream is not None:
+        with contextlib.suppress(Exception):
+            stream.close()
+
+
+def _bound_stderr(stderr: str, limit: int = MAX_STDERR_CHARS) -> str:
+    cleaned = stderr.strip()
+    if len(cleaned) > limit:
+        return cleaned[:limit] + "... [truncated]"
+    return cleaned
+
+
+def _archive_failure_message(
+    sha: str,
+    failing_side: str,
+    git_status: int | None,
+    stderr: str,
+    reader_error: Exception | None = None,
+) -> str:
+    bounded = _bound_stderr(stderr)
+    parts = [
+        f"git archive failed for {sha}",
+        f"failing side: {failing_side}",
+        f"git exit status: {git_status if git_status is not None else 'unknown'}",
+        f"stderr: {bounded if bounded else '<empty>'}",
+    ]
+    if reader_error is not None:
+        parts.append(f"reader error: {reader_error}")
+    return " (".join([parts[0], ", ".join(parts[1:])]) + ")"
+
+
 def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
     """Extract the selected tracked code paths into a new staging directory."""
     command = [
@@ -108,6 +160,8 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
         stdout=subprocess.PIPE,
     )
     assert process.stdout is not None
+
+    reader_error: Exception | None = None
     try:
         with tarfile.open(fileobj=process.stdout, mode="r|") as archive:
             for member in archive:
@@ -133,12 +187,60 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
                     target.symlink_to(member.linkname)
                     continue
                 raise ReleaseSnapshotError(f"unsupported entry in git archive: {member.name!r}")
-    finally:
-        process.stdout.close()
+    except Exception as exc:
+        reader_error = exc
+
+    if reader_error is None:
+        try:
+            git_status = process.wait(timeout=GIT_ARCHIVE_TIMEOUT_S)
+        except subprocess.TimeoutExpired:
+            process.kill()
+            git_status = process.wait(timeout=GIT_WAIT_TIMEOUT_S)
+        stderr = process.stderr.read().decode("utf-8", errors="replace") if process.stderr else ""
+        _close_stream(process.stdout)
+        _close_stream(process.stderr)
+        if git_status != 0:
+            raise ReleaseSnapshotError(
+                _archive_failure_message(
+                    sha=sha,
+                    failing_side="git",
+                    git_status=git_status,
+                    stderr=stderr,
+                ),
+                failing_side="git",
+                git_status=git_status,
+                stderr=stderr,
+            )
+        return
+
+    # Reader encountered an exception.
+    # Determine which side failed first: did git already terminate with an error?
+    polled = process.poll()
+    failing_side = "git" if polled is not None and polled != 0 else "tar reader"
+
+    _close_stream(process.stdout)
+
+    try:
+        git_status = process.wait(timeout=GIT_WAIT_TIMEOUT_S)
+    except subprocess.TimeoutExpired:
+        process.kill()
+        git_status = process.wait(timeout=GIT_WAIT_TIMEOUT_S)
 
     stderr = process.stderr.read().decode("utf-8", errors="replace") if process.stderr else ""
-    if process.wait() != 0:
-        raise ReleaseSnapshotError(f"git archive failed for {sha}: {stderr.strip()}")
+    _close_stream(process.stderr)
+
+    raise ReleaseSnapshotError(
+        _archive_failure_message(
+            sha=sha,
+            failing_side=failing_side,
+            git_status=git_status,
+            stderr=stderr,
+            reader_error=reader_error,
+        ),
+        failing_side=failing_side,
+        git_status=git_status,
+        stderr=stderr,
+    ) from reader_error
 
 
 def _archive_files(release_dir: Path) -> Iterable[Path]:
