@@ -22,7 +22,10 @@ shared across all linked worktrees without a per-worktree install. It runs the
 configured pre-commit, commit-message, and pre-push gates; preserves the
 pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
 checkout or merge. The installer also materializes `.githooks` in existing sparse
-worktrees without broadening their checkout.
+worktrees without broadening their checkout. Where Entire CLI owns a hook, the
+delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
+chain to it. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook
+stage declared in `.pre-commit-config.yaml` has no reachable delegator.
 
 ---
 
