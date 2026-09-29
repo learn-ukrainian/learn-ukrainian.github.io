@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: 2f8b05917f9d09c6f0dc58e7ae233746a60fd73c
+  mcp_commit: 61ab0f55318ceb6d7f696f000a20320da9967936
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 5cc86cdb59fee1f79f70f29698bf397aa151c37677d8d7f1ee0fe6d942c66ac5
@@ -1175,6 +1175,9 @@ unsupported:
     textbook record describes these five sounds for an English speaker, so the plan teaches them by the native model and states
     no English comparison.
   id: U-001
+  resolved_by: 'Not taught as an English-comparison claim, because no source supports one. The five letters are taught from
+    the native audio models instead: Ж by V-012, Ш by V-013, Ч by V-010, Х by V-011 and Й by V-003 (Ukrainian Lessons "Ukrainian
+    Alphabet: How to pronounce <letter> in Ukrainian").'
   searches:
   - query: regex pleasure|measure|vision|shop|church|cheese|Bach|loch|boy|yes|like the English|pronounced like|sounds like
       near Ж Ш Ч Х Й Г
@@ -1193,7 +1196,10 @@ unsupported:
     tool: sqlite external_articles (ulp_youtube, ukrainianlessons.com, talkukrainian.com, opentext.ku.edu)
   - query: вимова звуків ж ш ч х й для англомовних
     tool: mcp sources search_sources
-  status: open
+  - query: text like %ronunciation% (Pronunciation Trainer sections cover only the sound и, soft consonants, rolled Р and
+      question words; none covers Ж, Ш, Ч, Х or Й)
+    tool: sqlite textbooks (source_file ulp-1..6-00-lesson-notes)
+  status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:
