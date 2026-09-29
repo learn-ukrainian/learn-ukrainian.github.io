@@ -44,6 +44,12 @@ All of these have to hold or dispatch will not use the slice:
 
 ### Install
 
+Immediately after merge, the driver installs the new slice from the updated
+checkout and runs `systemctl --user daemon-reload`, before dispatching more
+workers. `dispatch_isolation.py` checks that the installed `MemoryMax` equals
+the configured 20 GiB value; until the reload applies the new unit, dispatch
+falls back to plain `Popen` without the slice memory cap.
+
 Do not commit a machine path. From a checkout:
 
 ```bash
