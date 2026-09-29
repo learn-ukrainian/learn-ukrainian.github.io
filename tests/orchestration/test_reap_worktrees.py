@@ -5481,7 +5481,13 @@ _DEAD_WORKER_PID = 5_000_299
 
 
 def _settled_task_with_leftover_job(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, *, job_ignores: frozenset[int], foreign_holder: bool
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    job_ignores: frozenset[int],
+    foreign_holder: bool,
+    scan: str = "live",
+    **record_overrides: object,
 ):
     from tests.worker_leftovers_fakes import FakeProc, FakeProcs, patch_stop
 
@@ -5492,15 +5498,15 @@ def _settled_task_with_leftover_job(
     add_worktree(repo, branch, path=worktree)
     tasks_dir = repo / "batch_state" / "tasks"
     tasks_dir.mkdir(parents=True, exist_ok=True)
+    scope = {"task_id": task_id, "launch_mode": "popen-fallback", "run_nonce": "n0nce"}
     record = {
         "status": "done",
         "pid": _DEAD_WORKER_PID,
-        "background_jobs_alive_at_exit": {
-            "reason": "background_jobs_alive_at_exit",
-            "count": 1,
-            "processes": [{"pid": _BG_JOB, "cmdline": "python generate_practice_deck.py"}],
-            "scope": {"task_id": task_id, "launch_mode": "popen-fallback", "unit": None, "cgroup": None},
-        },
+        "run_nonce": "n0nce",
+        "launch_mode": "popen-fallback",
+        "leftovers_scan": scan,
+        "leftovers_scope": scope,
+        **record_overrides,
     }
     (tasks_dir / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")
     procs = {
@@ -5573,3 +5579,49 @@ def test_reap_kills_nothing_when_a_foreign_process_holds_the_worktree(
     assert result.reason.startswith("live process cwd=")
     assert worktree.exists()
     assert fake.signals == []
+
+
+def test_reap_stops_jobs_after_an_unknown_exit_scan_too(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """An exit scan that could not tell is not a clear one: reaping still stops the scope first."""
+    repo, worktree, fake, live_cwds = _settled_task_with_leftover_job(
+        tmp_path, monkeypatch, job_ignores=frozenset(), foreign_holder=False, scan="unknown"
+    )
+
+    result = result_for(_reap_terminal(repo, live_cwds), worktree)
+
+    assert result.action == "removed", result.reason
+    assert fake.signals == [(_BG_JOB, signal.SIGTERM)]
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"run_nonce": "another-run"},
+        {"launch_mode": "scope", "launch_unit": "lu-worker-bg-orphans-n0nce-0123abcd"},
+        {"leftovers_scope": {"task_id": "someone-else", "launch_mode": "popen-fallback", "run_nonce": "n0nce"}},
+        {
+            "launch_mode": "scope",
+            "launch_unit": "app-firefox-1234.scope",
+            "leftovers_scope": {
+                "task_id": "bg-orphans",
+                "launch_mode": "scope",
+                "run_nonce": "n0nce",
+                "unit": "app-firefox-1234.scope",
+            },
+        },
+        {"leftovers_scope": "not-a-scope"},
+    ],
+)
+def test_reap_refuses_and_signals_nothing_when_the_recorded_scope_is_not_the_launch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, overrides: dict
+) -> None:
+    repo, worktree, fake, live_cwds = _settled_task_with_leftover_job(
+        tmp_path, monkeypatch, job_ignores=frozenset(), foreign_holder=False, **overrides
+    )
+
+    result = result_for(_reap_terminal(repo, live_cwds), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert fake.signals == []
+    assert fake.stopped_units == []

@@ -1930,25 +1930,22 @@ def _process_reader() -> worker_leftovers.ProcessReader:
     return worker_leftovers.ProcFsReader()
 
 
-def _task_leftover_scope(repo_root: Path, path: Path) -> worker_leftovers.WorkerScope | None:
-    """The scope of a settled task's recorded background jobs (#8991), or None.
+def _task_leftover_scope(repo_root: Path, path: Path) -> tuple[worker_leftovers.WorkerScope | None, str | None]:
+    """The scope of a settled task's possibly live background jobs (#8991).
 
-    Only a record whose worker has exited and whose status is settled
-    qualifies; a live worker still owns its processes.
+    ``(scope, None)`` when its exit scan found jobs or could not tell;
+    ``(None, None)`` when there is nothing to stop, or the worker is still
+    running and owns its processes; ``(None, refusal)`` when the record says
+    jobs may be alive but its scope does not match the task's launch
+    identity (:func:`worker_leftovers.scope_from_record`).
     """
     task_id = _dispatch_task_id_for_path(repo_root, path)
     record = _task_record(repo_root, task_id)
-    if record is None:
-        return None
-    jobs = record.get(worker_leftovers.BACKGROUND_JOBS_REASON)
-    if not isinstance(jobs, dict):
-        return None
+    if record is None or task_id is None:
+        return None, None
     if str(record.get("status") or "") in _UNSETTLED_TASK_STATUSES or _task_pid_alive(record):
-        return None
-    scope = worker_leftovers.WorkerScope.from_state(jobs.get("scope"))
-    if scope is None or scope.task_id != task_id:
-        return None
-    return scope
+        return None, None
+    return worker_leftovers.scope_from_record(record, task_id=task_id)
 
 
 def live_cwds_for_reap(repo_root: Path, path: Path, live_cwds: set[Path] | None) -> set[Path] | None:
@@ -1962,7 +1959,7 @@ def live_cwds_for_reap(repo_root: Path, path: Path, live_cwds: set[Path] | None)
     """
     if live_cwds is None:
         return None
-    scope = _task_leftover_scope(repo_root, path)
+    scope, _refusal = _task_leftover_scope(repo_root, path)
     if scope is None or not worker_leftovers.only_leftovers_hold(path, scope, reader=_process_reader()):
         return live_cwds
     root = path.resolve()
@@ -1973,14 +1970,23 @@ def _stop_task_background_jobs(repo_root: Path, path: Path) -> str | None:
     """Stop a settled task's leftover jobs before its worktree goes; refusal reason or None.
 
     Only processes inside that worker's own scope unit, or on the Popen
-    fallback carrying its task marker, are signalled.
+    fallback carrying its task marker, are signalled. A record whose scope
+    does not match the task's launch identity is refused, never acted on.
     """
-    scope = _task_leftover_scope(repo_root, path)
+    scope, refusal = _task_leftover_scope(repo_root, path)
+    if refusal is not None:
+        task_id = _dispatch_task_id_for_path(repo_root, path)
+        return f"background jobs of task-id={task_id} may be alive but its recorded scope is refused ({refusal})"
     if scope is None:
         return None
-    stopped = worker_leftovers.stop_leftovers(scope, reader=_process_reader())
+    try:
+        stopped = worker_leftovers.stop_leftovers(scope, reader=_process_reader())
+    except Exception as exc:  # a failed stop must leave the worktree, never crash the sweep
+        return f"background jobs of task-id={scope.task_id} could not be stopped ({type(exc).__name__}: {exc})"
     if not stopped.ok:
         survivors = ", ".join(str(proc.pid) for proc in stopped.survivors) or "unknown"
+        if stopped.unsignalled:
+            survivors = f"{survivors}; not signalled {', '.join(map(str, stopped.unsignalled))}"
         return f"background jobs of task-id={scope.task_id} could not be stopped ({stopped.error}; pids {survivors})"
     live_cwds = _live_cwd_paths(repo_root)
     if live_cwds is None:

@@ -124,11 +124,44 @@ def scope_unit_name(task_id: str, run_nonce: str) -> str:
     still has registered. systemd appends ``.scope``; the full name stays
     within the 255-character limit from ``systemd.unit(5)``.
     """
-    token = secrets.token_hex(_UNIT_TOKEN_BYTES)
+    return f"{_unit_prefix(task_id, run_nonce)}{secrets.token_hex(_UNIT_TOKEN_BYTES)}"
+
+
+def scope_unit_matches(unit: str, *, task_id: str, run_nonce: str) -> bool:
+    """Whether ``unit`` is a name :func:`scope_unit_name` gives this launch.
+
+    Only the random token is free; the task and nonce pieces must be exactly
+    the ones derived from ``task_id`` and ``run_nonce`` (#8991).
+    """
+    prefix = _unit_prefix(task_id, run_nonce)
+    token = unit.removeprefix(prefix)
+    return (
+        unit.startswith(prefix)
+        and len(token) == 2 * _UNIT_TOKEN_BYTES
+        and all(ch in "0123456789abcdef" for ch in token)
+    )
+
+
+def slice_cgroup_path(slice_unit: str = SLICE_UNIT) -> str:
+    """The slice's cgroup path below the user manager.
+
+    systemd.slice(5): each ``-`` in a slice name is one level of nesting, so
+    ``lu-dispatch.slice`` lives at ``lu.slice/lu-dispatch.slice``.
+    """
+    parts = slice_unit.removesuffix(".slice").split("-")
+    return "/".join("-".join(parts[: depth + 1]) + ".slice" for depth in range(len(parts)))
+
+
+def scope_cgroup(unit: str, *, uid: int, slice_unit: str = SLICE_UNIT) -> str:
+    """The cgroup v2 path a ``systemd-run --user --scope --unit=<unit>`` worker runs in."""
+    return f"/user.slice/user-{uid}.slice/user@{uid}.service/{slice_cgroup_path(slice_unit)}/{unit}{_SCOPE_SUFFIX}"
+
+
+def _unit_prefix(task_id: str, run_nonce: str) -> str:
     nonce = _unit_piece(run_nonce, 32)
-    overhead = len("lu-worker-") + 1 + len(nonce) + 1 + len(token) + len(_SCOPE_SUFFIX)
+    overhead = len("lu-worker-") + 1 + len(nonce) + 1 + 2 * _UNIT_TOKEN_BYTES + len(_SCOPE_SUFFIX)
     task = _unit_piece(task_id, _UNIT_NAME_MAX - overhead)
-    return f"lu-worker-{task}-{nonce}-{token}"
+    return f"lu-worker-{task}-{nonce}-"
 
 
 def _unit_piece(value: str, limit: int) -> str:

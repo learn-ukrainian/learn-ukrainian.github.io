@@ -755,6 +755,29 @@ dispatch. `unknown` remains reserved for an unexpected resolution failure.
 Every terminal state records a concrete subprocess `returncode`, or a
 `returncode_reason` when no child process ever yielded one.
 
+### Auto-finalize scope and unfinished background jobs (#8991)
+
+**Pass `--owned-path` for every write dispatch whose dirty tree may be auto-finalized.**
+When a `danger` worker exits 0 with uncommitted work and no commits, delegate commits and
+pushes it only under the task's `--owned-path` values (repeatable; `dir/`, `dir/**`, a
+file, or a glob). They are recorded as `owned_paths`. `--research-owned-path` is research
+classification and is never used as commit authority. With no `--owned-path`, nothing is
+committed and the task ends `needs_finalize` (`no_owned_paths_declared`). Changes outside
+the owned paths, and both sides of a rename that crosses them, stay uncommitted and are
+listed in `finalize_skipped_paths`; the task then ends `needs_finalize`, not `done`.
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch --agent <lane> --worktree --mode danger \
+  --owned-path scripts/fleet/ --owned-path tests/fleet/test_x.py \
+  --research-owned-path scripts/fleet/ ...
+```
+
+A headless worker whose own background jobs are still running at CLI exit, or whose
+exit scan could not rule them out (`leftovers_scan: unknown`), ends `needs_finalize` in
+every mode, read-only included. Reapers stop those jobs only inside the scope that matches
+the task's recorded launch identity, and signal individual processes only through
+re-verified pidfds. Details: [`docs/SCRIPTS.md`](SCRIPTS.md) § Background jobs at exit.
+
 ### Worktree removal and sibling repositories (#8610, #8624)
 
 Every removal of a dispatch worktree (dispatch's own stale-holder and

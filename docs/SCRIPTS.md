@@ -871,25 +871,40 @@ line. `peak_rss_mib` is unchanged.
 background-task notification, so when its CLI exits the worker checks for its own
 processes that are still alive: the scope unit's `cgroup.procs` for `launch_mode: scope`,
 or, on `popen-fallback`, processes carrying its `LEARN_UKRAINIAN_DISPATCH_TASK_ID` plus its
-own session. Any survivor makes the run incomplete. The record gets
-`incomplete_run_reason: background_jobs_alive_at_exit` and a
-`background_jobs_alive_at_exit` entry (pids, truncated command lines, scope). A write run is
-then `needs_finalize`, never `done`, and is never auto-finalized. Detection does not kill
-anything. When that worktree is later removed (settle, `reap_worktrees.py`,
-`fleet/post_task_reap.py`), those processes are stopped first, and only those in the
-worker's own scope: a scope the reaper is not inside is stopped with
-`systemctl --user stop`, and anything left gets SIGTERM, then SIGKILL. If any survive,
-removal is refused.
+own session. The record's `leftovers_scan` is `clear`, `live` or `unknown`. `live` adds a
+`background_jobs_alive_at_exit` entry (pids, truncated command lines). `unknown` means the
+scan could not read something it needed (a `cgroup.procs` file, or the environment of a
+same-user process started after the worker) and adds `leftovers_scan_error`; it is not
+treated as clear. Both set `incomplete_run_reason` (`background_jobs_alive_at_exit` or
+`leftovers_scan_unknown`), record the worker's scope as `leftovers_scope`, and make the run
+`needs_finalize`, never `done`, in every mode, read-only included. Such a run is never
+auto-finalized. Detection does not kill anything.
 
-**Auto-finalize owned paths (#8991):** the owned-path list is the task's
-`--research-owned-path` values, recorded verbatim at dispatch as the record's
-`owned_paths` (the key is omitted when none were given). Auto-finalize stages and commits
-only changed files under those paths, using the write-path admission guard's reading of
-each claim: `dir/` and `dir/**` own the subtree, a plain path owns itself and anything
-below it, and other wildcards are globs. Every other changed file stays uncommitted and is
-listed in `finalize_skipped_paths`. When no change falls under the owned paths, the task
-stays `needs_finalize` (`no_changes_under_owned_paths`). A task with no owned paths keeps
-the whole-tree commit, and `auto_finalize.owned_paths_declared: false` records that.
+When that worktree is later removed (settle, `reap_worktrees.py`,
+`fleet/post_task_reap.py`), those processes are stopped first, and only inside the worker's
+own scope. The recorded scope must match the task's launch record (task id, `run_nonce`,
+`launch_mode`, `launch_unit`); a scope unit must carry the name
+`dispatch_isolation.scope_unit_name` derives from that task id and nonce, and its cgroup
+must be that unit's scope under `lu-dispatch.slice` for this user. Anything else is refused
+and nothing is signalled. A scope the reaper is not inside is stopped with
+`systemctl --user stop`. Anything left gets SIGTERM, then SIGKILL, each sent through a pidfd
+opened on the process and re-verified (start time and scope membership) after opening, so
+a reused pid is never signalled. Where pidfds are unavailable nothing is signalled. If any
+process survives or cannot be signalled, removal is refused.
+
+**Auto-finalize owned paths (#8991):** auto-finalize commits only under the task's explicit
+`--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
+never derived from `--research-owned-path`, which classifies research context. Claims are
+read like the write-path admission guard reads them: `dir/` and `dir/**` own the subtree,
+a plain path owns itself and anything below it, and other wildcards are globs. Dispatch
+refuses an empty, `.`, absolute or `..` value. Without any `--owned-path`, auto-finalize
+commits nothing and the task stays `needs_finalize` (`no_owned_paths_declared`). With them,
+only changed files under those paths are staged and committed. Every other changed file
+stays uncommitted and is listed in `finalize_skipped_paths`. A rename with one side outside
+the owned paths is never split: both sides are skipped and listed in
+`auto_finalize.cross_boundary_renames`. If any skipped change remains, the task ends
+`needs_finalize`, not `done`. When no change falls under the owned paths, nothing is
+committed (`no_changes_under_owned_paths`).
 
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
