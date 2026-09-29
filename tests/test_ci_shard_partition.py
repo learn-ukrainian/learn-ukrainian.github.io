@@ -107,9 +107,7 @@ def test_write_file_shard_plan_median_fallback_for_unknown_file(tmp_path: Path) 
 
 def test_write_file_shard_plan_reports_every_shard_weight(tmp_path: Path) -> None:
     output = tmp_path / "allowlist.txt"
-    weights = write_file_shard_plan(
-        paths=_SAMPLE_PATHS, shard_id=2, shard_count=4, durations={}, output=output
-    )
+    weights = write_file_shard_plan(paths=_SAMPLE_PATHS, shard_id=2, shard_count=4, durations={}, output=output)
     assert [entry["shard_id"] for entry in weights] == [1, 2, 3, 4]
     assert sum(entry["file_count"] for entry in weights) == len(_SAMPLE_PATHS)
 
@@ -139,7 +137,17 @@ def test_plan_files_cli_writes_sorted_allowlist_and_prints_all_weights(tmp_path,
     monkeypatch.setattr(sys, "stdin", io.StringIO("\n".join(reversed(_SAMPLE_PATHS)) + "\n"))
 
     exit_code = pytest_shards_main(
-        ["plan-files", "--shard-id", "1", "--shard-count", "4", "--durations", str(durations_path), "--output", str(output)]
+        [
+            "plan-files",
+            "--shard-id",
+            "1",
+            "--shard-count",
+            "4",
+            "--durations",
+            str(durations_path),
+            "--output",
+            str(output),
+        ]
     )
 
     assert exit_code == 0
@@ -205,9 +213,7 @@ def test_plan_files_missing_durations_file_uses_median_fallback(tmp_path, monkey
 
 def test_file_from_junit_id_strips_trailing_class_chain() -> None:
     assert _file_from_junit_id("tests.audit.test_config_invariants") == "tests/audit/test_config_invariants.py"
-    assert (
-        _file_from_junit_id("tests.foo.test_bar.TestSelectPrimaryMatch") == "tests/foo/test_bar.py"
-    )
+    assert _file_from_junit_id("tests.foo.test_bar.TestSelectPrimaryMatch") == "tests/foo/test_bar.py"
     assert _file_from_junit_id("tests.test_scrape_diasporiana") == "tests/test_scrape_diasporiana.py"
 
 
@@ -245,7 +251,9 @@ def test_aggregate_junit_file_durations_sums_per_file(tmp_path: Path) -> None:
 
 def test_aggregate_junit_file_durations_dedupes_reruns_by_max(tmp_path: Path) -> None:
     first = _write_junit(tmp_path / "shard-1.xml", ['<testcase classname="tests.test_a" name="test_x" time="1.0" />'])
-    second = _write_junit(tmp_path / "shard-1-retry.xml", ['<testcase classname="tests.test_a" name="test_x" time="9.0" />'])
+    second = _write_junit(
+        tmp_path / "shard-1-retry.xml", ['<testcase classname="tests.test_a" name="test_x" time="9.0" />']
+    )
     durations, unmapped = aggregate_junit_file_durations([first, second])
     assert durations == {"tests/test_a.py": 9.0}
     assert unmapped == 0
@@ -382,8 +390,12 @@ def test_pytest_ignore_collect_ignores_non_test_files(tmp_path, monkeypatch) -> 
 def test_planned_shard_collects_build_tests_through_directory(tmp_path) -> None:
     """The CI entry path must not let pytest's default `build` exclusion win."""
     tracked = subprocess.run(
-        ["git", "ls-files", "--", "tests"], cwd=_REPO_ROOT,
-        capture_output=True, text=True, check=True, timeout=30,
+        ["git", "ls-files", "--", "tests"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=30,
     ).stdout.splitlines()
     paths = [path for path in tracked if re.search(r"/test_[^/]+\.py$", path)]
     durations = load_durations(_REPO_ROOT / "scripts/ci/pytest-file-durations.json")
@@ -392,17 +404,34 @@ def test_planned_shard_collects_build_tests_through_directory(tmp_path) -> None:
     for shard_id in range(1, 5):
         allowlist = tmp_path / f"shard-{shard_id}.txt"
         write_file_shard_plan(
-            paths=paths, shard_id=shard_id, shard_count=4,
-            durations=durations, output=allowlist,
+            paths=paths,
+            shard_id=shard_id,
+            shard_count=4,
+            durations=durations,
+            output=allowlist,
         )
         if target in allowlist.read_text().splitlines():
             owners.append(allowlist)
     assert len(owners) == 1
     env = {**os.environ, LU_PYTEST_SHARD_FILES_ENV_VAR: str(owners[0])}
     collected = subprocess.run(
-        [sys.executable, "-m", "pytest", "tests", "--collect-only", "-q",
-         "-o", "addopts=", "-m", "not atlas_release and not slow"],
-        cwd=_REPO_ROOT, env=env, capture_output=True, text=True, timeout=90,
+        [
+            sys.executable,
+            "-m",
+            "pytest",
+            "tests",
+            "--collect-only",
+            "-q",
+            "-o",
+            "addopts=",
+            "-m",
+            "not atlas_release and not slow",
+        ],
+        cwd=_REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=90,
     )
     assert collected.returncode == 0, collected.stdout + collected.stderr
     assert any(line.startswith(target + "::") for line in collected.stdout.splitlines()), collected.stdout
@@ -495,13 +524,24 @@ def test_full_plan_filters_area_before_partition_and_reports_count() -> None:
 
 def test_area_filter_keeps_repo_wide_and_fails_open(tmp_path: Path) -> None:
     (tmp_path / "tests").mkdir()
-    # Two real area members, rewritten in tmp_path as ordinary and repo_wide.
+    # Synthetic members exercise the filter while the live areas admit none.
     ordinary = "tests/test_open_model_corpus_admission.py"
     repo_wide = "tests/test_open_model_view_exporter.py"
     (tmp_path / ordinary).write_text("def test_one(): pass\n", encoding="utf-8")
     (tmp_path / repo_wide).write_text("pytest.mark.repo_wide\n", encoding="utf-8")
     paths = [ordinary, repo_wide, "tests/test_unrelated.py"]
-    assert filter_paths(paths, ["open_model_data"], repo=tmp_path) == (paths[1:], 1)
+    manifest = tmp_path / "areas.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "open_model_data": {"tests": [ordinary, repo_wide], "roots": ["scripts/projects/open_model_data/"]},
+                "atlas": {"tests": [], "roots": ["scripts/atlas/"]},
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert filter_paths(paths, ["open_model_data"], manifest=manifest, repo=tmp_path) == (paths[1:], 1)
+    assert filter_paths(paths, ["open_model_data"], repo=tmp_path) == (paths, 0)
     assert filter_paths(paths, ["unknown"], repo=tmp_path) == (paths, 0)
     bad = tmp_path / "bad.json"
     bad.write_text("{}", encoding="utf-8")
@@ -512,9 +552,19 @@ def test_area_filter_drops_shared_test_only_when_every_owner_is_skipped(tmp_path
     (tmp_path / "tests").mkdir()
     shared = "tests/test_open_model_evidence_cache_canaries.py"
     (tmp_path / shared).write_text("def test_one(): pass\n", encoding="utf-8")
-    assert filter_paths([shared], ["atlas"], repo=tmp_path) == ([shared], 0)
-    assert filter_paths([shared], ["open_model_data"], repo=tmp_path) == ([shared], 0)
-    assert filter_paths([shared], ["open_model_data", "atlas"], repo=tmp_path) == ([], 1)
+    manifest = tmp_path / "areas.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "open_model_data": {"tests": [shared], "roots": ["scripts/projects/open_model_data/"]},
+                "atlas": {"tests": [shared], "roots": ["scripts/atlas/"]},
+            }
+        ),
+        encoding="utf-8",
+    )
+    assert filter_paths([shared], ["atlas"], manifest=manifest, repo=tmp_path) == ([shared], 0)
+    assert filter_paths([shared], ["open_model_data"], manifest=manifest, repo=tmp_path) == ([shared], 0)
+    assert filter_paths([shared], ["open_model_data", "atlas"], manifest=manifest, repo=tmp_path) == ([], 1)
 
 
 def test_content_lane_excludes_slow_partition_test() -> None:
@@ -739,10 +789,7 @@ def test_ci_yml_junit_upload_fails_loudly_outside_docs_only() -> None:
     silent no-op: only the docs_only lane (which skips the junitxml path
     entirely) may swallow a missing report."""
     ci_text = _ci_text()
-    assert (
-        "if-no-files-found: ${{ needs.changes.outputs.docs_only == 'true' && 'ignore' || 'error' }}"
-        in ci_text
-    )
+    assert "if-no-files-found: ${{ needs.changes.outputs.docs_only == 'true' && 'ignore' || 'error' }}" in ci_text
     assert "if-no-files-found: ignore\n" not in ci_text
 
 

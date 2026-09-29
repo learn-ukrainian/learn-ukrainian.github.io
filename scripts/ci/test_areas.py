@@ -23,7 +23,7 @@ def load_areas(path: Path = _MANIFEST) -> dict[str, dict[str, list[str]]]:
             raise ValueError("test area must declare tests and roots")
         for key in ("tests", "roots"):
             values = area[key]
-            if not isinstance(values, list) or not values or len(values) != len(set(values)):
+            if not isinstance(values, list) or (key == "roots" and not values) or len(values) != len(set(values)):
                 raise ValueError(f"invalid {key} list")
             if any(
                 not isinstance(value, str)
