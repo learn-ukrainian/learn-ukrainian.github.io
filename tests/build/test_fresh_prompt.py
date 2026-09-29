@@ -1030,6 +1030,34 @@ def test_record_id_scan_matches_only_schema_id_shapes(sample_plan_entry, sample_
     assert _check(prompt, plan, sample_learner_state).errors == []
 
 
+def _schema_id_prefixes():
+    """Every id prefix of the pack schema's ``<kind>_record`` definitions, plus the word store's ``W``."""
+    defs = json.loads(EVIDENCE_PACK_SCHEMA.read_text(encoding="utf-8"))["$defs"]
+    pack = {
+        spec["properties"]["id"]["pattern"].removeprefix("^").split("-", 1)[0]
+        for n, spec in defs.items()
+        if n.endswith("_record")
+    }
+    return sorted({*pack, "W"})
+
+
+@pytest.mark.parametrize("prefix", _schema_id_prefixes())
+def test_uncited_record_id_of_every_schema_kind_fails_the_check(sample_plan_entry, sample_learner_state, prefix):
+    """An uncited ``<prefix>-999`` fails for every record kind the pack schema defines; the plan's cited record
+    of that kind in the same place passes."""
+    plan = _citing(sample_plan_entry, ALL_KINDS)
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "First phonetics step." in prompt
+
+    uncited = prompt.replace("First phonetics step.", f"First phonetics step, see {prefix}-999.")
+    errors = _check(uncited, plan, sample_learner_state).errors
+    assert any(e.startswith(f"uncited_record_id: record '{prefix}-999'") for e in errors), errors
+
+    (cited_id,) = [rid for rid in ALL_KINDS if rid.split("-", 1)[0] == prefix]
+    cited = prompt.replace("First phonetics step.", f"First phonetics step, see {cited_id}.")
+    assert _check(cited, plan, sample_learner_state).errors == []
+
+
 def test_lesson_without_consolidation_renders(sample_plan_entry, sample_learner_state):
     """A lesson plan entry may omit `consolidation` (module-plan-v2 does not require it for any lesson kind)."""
     plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS).items() if k != "consolidation"}

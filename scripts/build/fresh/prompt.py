@@ -74,11 +74,6 @@ BAND_CARD_MAP = {
 #: {{gloss:W-...}}, {{uk:...}}, or {{<digits>}} for activity blanks.
 VALID_DOUBLE_BRACE_RE = re.compile(r"^\{\{(?:gloss:(?:W-[0-9]+|W-[.…]+)|uk:[^{}\u0300\u0301]+|[0-9]+)\}\}$")
 
-#: A record id in the shapes the schemas define: word ``W-<n>`` and paradigm ``P-<n>`` (module-plan-v2), pack
-#: ``<PREFIX>-<n>`` (evidence-pack-v1) and grammar ``G-<level>-<nnn>``. A token that only starts like one
-#: (``P-looking``, a video id ``W-1rCu0indE``) is not a record id (#9185).
-RECORD_ID_RE = re.compile(r"\b(?:(?:W|EX|T|E|V|P|X|S)-[0-9]+|G-[a-z0-9]+-[0-9]{3})\b")
-
 #: Prose references to a lesson number, and the ``lesson: {n: ...}`` shape of the schema exemplar.
 LESSON_PROSE_RES = (re.compile(r"\b[Ll]esson\s+#?(\d+)\b"), re.compile(r"\b[Ll]esson-(\d+)\b"))
 LESSON_NUMBER_RES = (*LESSON_PROSE_RES, re.compile(r"\blesson:\s*(?:\{[^}]*|\n[ ]*)n:\s*(\d+)"))
@@ -108,6 +103,15 @@ RECORD_KINDS = {
     "S": "standard",
     "U": "unsupported",
 }
+
+#: A record id in the shapes the schemas define: every ``RECORD_KINDS`` prefix (the pack kinds and ``W-<n>``) and
+#: paradigm ``P-<n>`` (module-plan-v2), and grammar ``G-<level>-<nnn>``. A token that only starts like one
+#: (``P-looking``, a video id ``W-1rCu0indE``) is not a record id (#9185).
+RECORD_ID_RE = re.compile(
+    r"\b(?:(?:"
+    + "|".join(sorted({*RECORD_KINDS, "P"}, key=lambda p: (-len(p), p)))
+    + r")-[0-9]+|G-[a-z0-9]+-[0-9]{3})\b"
+)
 
 #: Word-store fields the cited-records section reads (``gloss`` and ``forms`` are optional).
 WORD_RECORD_FIELDS = ("lemma", "pos")
