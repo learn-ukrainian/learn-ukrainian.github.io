@@ -73,7 +73,6 @@ _IGNORED_TESTS: tuple[str, ...] = (
     "tests/test_wiki_channels.py",
     "tests/test_wiki_enrichment.py",
     "tests/wiki/test_grade_filter.py",
-    "tests/wiki/test_mlx_fault_injection.py",
     "tests/wiki/test_t1_t2_pipeline.py",
 )
 

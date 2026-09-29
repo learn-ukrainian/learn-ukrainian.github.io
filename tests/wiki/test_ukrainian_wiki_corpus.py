@@ -690,7 +690,7 @@ def test_encode_flag_populates_manifest_units_matching_search_unit_keys(
     finally:
         manifest.close()
     assert active_before == [], (
-        "ingest alone must not encode — encode step is explicit so MLX is not "
+        "ingest alone must not encode — encode step is explicit so BGE-M3 is not "
         "triggered unintentionally"
     )
 

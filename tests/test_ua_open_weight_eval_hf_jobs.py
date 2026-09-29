@@ -137,13 +137,15 @@ def test_balanced_canary_is_deterministic_category_balanced_and_track_covering()
     assert first["selection_sha256"] == hf_jobs_baseline.sha256_text(hf_jobs_baseline.canonical_json(unsigned))
 
 
-def test_worker_prompt_and_parser_match_the_reviewed_local_runner() -> None:
-    from scripts.projects.ua_open_weight_eval import run_mlx_model
-
+def test_worker_prompt_and_parser_accept_one_json_object_only() -> None:
     source = "У записі сказано: «Текст»."
-    assert hf_jobs_worker.format_prompt(source) == run_mlx_model.format_prompt(source)
+    prompt = hf_jobs_worker.format_prompt(source)
+    assert prompt.endswith('Source JSON string: "У записі сказано: «Текст»."')
+    assert "correct_control" not in prompt
+    assert "uaw-request" not in prompt
     reply = '{"action":"preserve","output_text":"У записі сказано: «Текст»."}'
-    assert hf_jobs_worker.parse_model_reply(reply) == run_mlx_model.parse_model_reply(reply)
+    assert hf_jobs_worker.parse_model_reply(reply) == {"action": "preserve", "output_text": source}
+    assert hf_jobs_worker.parse_model_reply(f"```json\n{reply}\n```") == {"action": "preserve", "output_text": source}
     for corrupt in (
         reply[:-2] + "\x00" + reply[-2:],
         reply[:-2] + "\x01" + reply[-2:],
