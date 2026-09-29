@@ -132,20 +132,32 @@ def test_ack_all_flag_is_opt_in_and_asks_surfaces_consumption(capsys):
 
 def test_drive_epic_skill_keeps_all_required_live_inbox_boundaries():
     """The portable driver contract must not silently lose its inbox drain steps."""
-    text = DRIVE_EPIC_SKILL.read_text(encoding="utf-8")
-    required_headings = (
-        "### 0a. Required live-driver inbox drain — cycle start",
-        "### 4a. Required live-driver inbox drain — immediately before dispatch",
-        "### 5a. Required live-driver inbox drain — after settle",
-        "### 8a. Required live-driver inbox drain — before handoff",
+    core = DRIVE_EPIC_SKILL.read_text(encoding="utf-8")
+    references = sorted((DRIVE_EPIC_SKILL.parent / "references").glob("*.md"))
+    text = "\n".join([core, *(path.read_text(encoding="utf-8") for path in references)])
+    # The four drain points are loop steps in the core, which every driver reads in full.
+    required_steps = (
+        "**§0a Inbox drain — cycle start.**",
+        "**§4a Inbox drain — immediately before dispatch.**",
+        "**§5a Inbox drain — after settle.**",
+        "**§8a Inbox drain — before handoff.**",
     )
-    for heading in required_headings:
-        assert heading in text
+    for step in required_steps:
+        assert step in core
+    assert core.index(required_steps[0]) < core.index(required_steps[1])
+    assert core.index(required_steps[1]) < core.index(required_steps[2])
+    assert core.index(required_steps[2]) < core.index(required_steps[3])
 
+    # The drain procedure is stated once, in the core, and names all four points.
     inbox_command = '.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"'
     acknowledgement = ".venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver"
-    assert text.count(inbox_command) == 4
-    assert text.count(acknowledgement) == 4
+    assert core.count(inbox_command) == 1
+    assert core.count(acknowledgement) == 1
+    assert text.count(inbox_command) == 1
+    assert text.count(acknowledgement) == 1
+    assert "at §0a, §4a, §5a, and §8a" in core
+    assert "`unread`" in core and "`read-but-not-live-consumed`" in core
+    assert "Never use a plain `ack`" in core
     # Cross-family gate is direct ask-* only; sealed review-pr is retired.
     assert "ask-" in text and "RETIRED" in text
     assert "review-pr" in text  # named only as the retired path

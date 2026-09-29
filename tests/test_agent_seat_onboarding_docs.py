@@ -20,7 +20,7 @@ COOPERATION = REPO / "docs/best-practices/agent-cooperation.md"
 RUNTIME = REPO / "docs/agent-runtime-guide.md"
 ROSTER = REPO / "docs/runbooks/epic-orchestrator-roster.md"
 HANDOFF = REPO / "docs/runbooks/epic-stream-handoff.md"
-DRIVE_EPIC = REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md"
+DRIVE_EPIC = REPO / "agents_extensions/shared/skills/drive-epic"
 FLEET_COMMS = REPO / "agents_extensions/shared/rules/fleet-comms-coordination.md"
 OPEN_GAPS = REPO / "docs/runbooks/fleet-comms-open-gaps.md"
 
@@ -588,7 +588,8 @@ def test_acp_replay_section_allows_any_supported_two_seat_pair(onboarding: str) 
 
 
 def test_live_driver_diagnostics_never_claim_again() -> None:
-    body = " ".join(_read(DRIVE_EPIC).split())
+    skill = [DRIVE_EPIC / "SKILL.md", *sorted((DRIVE_EPIC / "references").glob("*.md"))]
+    body = " ".join(" ".join(_read(path) for path in skill).split())
     assert "Live-driver diagnostics use `session_streams handoff-status`" in body
     assert "Live drivers never run `handoff-claim`" in body
     assert "launcher has already claimed the lease" in body
