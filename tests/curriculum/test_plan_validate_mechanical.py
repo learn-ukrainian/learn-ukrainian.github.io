@@ -113,9 +113,9 @@ def mechanical_plan() -> dict:
     one["consolidation"] = ["a4"]
     one["activities"] = [
         _activity("a1", "quiz", "inline", "Checks the letter М."),
-        _activity("a2", "pick-syllables", "inline", "Complete мама and ман with А.", model="X-001"),
-        _activity("a3", "letter-grid", "inline", "Copy мама into a notebook.", model="X-001"),
-        _activity("a4", "count-syllables", "workbook", "Count syllables in мама and ман."),
+        _activity("a2", "pick-syllables", "inline", "Complete «мама» and «ман» with А.", model="X-001"),
+        _activity("a3", "letter-grid", "inline", "Copy «мама» into a notebook.", model="X-001"),
+        _activity("a4", "count-syllables", "workbook", "Count syllables in «мама» and «ман»."),
     ]
     one["practice"] = {"vocabulary": "core", "stress": [], "patterns": ["a1"]}
 
@@ -135,8 +135,8 @@ def mechanical_plan() -> dict:
     two["consolidation"] = ["b3"]
     two["activities"] = [
         _activity("b1", "quiz", "inline", "Checks the letter Н."),
-        _activity("b2", "match-up", "inline", "Match мама, мана and нона to pictures; find О."),
-        _activity("b3", "pick-syllables", "workbook", "Complete мама, мана and нона from syllables."),
+        _activity("b2", "match-up", "inline", "Match «мама», «мана» and «нона» to pictures; find О."),
+        _activity("b3", "pick-syllables", "workbook", "Complete «мама», «мана» and «нона» from syllables."),
     ]
     two["practice"] = {"vocabulary": "core", "stress": [], "patterns": ["b2"]}
 
@@ -317,35 +317,47 @@ CASES = [
     # M3 -- quoted tokens against the lesson's allowed set
     Case(
         "m3_focus_token_outside_the_lesson_is_a_note",
-        _set_focus(1, "a2", "Complete мама and нона with А."),
+        _set_focus(1, "a2", "Complete «мама» and «нона» with А."),
         notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
         says="activity a2 focus quotes 'нона'",
     ),
     Case(
         "m3_teach_token_outside_the_lesson_is_a_note",
-        lambda plan, pack, words: _step_of(plan, 1, "s1").__setitem__("teach", "The letter М in нона."),
+        lambda plan, pack, words: _step_of(plan, 1, "s1").__setitem__("teach", "The letter М in «нона»."),
         notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
         says="step s1 teach text quotes 'нона'",
     ),
     Case(
         "m3_base_layer_token_is_allowed",
-        _set_focus(1, "a2", "Complete мама and мам with А."),
+        _set_focus(1, "a2", "Complete «мама» and «мам» with А."),
     ),
     Case(
         "m3_token_without_a_record_is_not_checked",
-        _set_focus(1, "a2", "Complete мама and кум with А."),
+        _set_focus(1, "a2", "Complete «мама» and «кум» with А."),
         not_checked=frozenset({codes.TOKEN_UNRESOLVED}),
+    ),
+    # #9138 specifies quoted tokens: unquoted prose is never read
+    Case(
+        "m3_unquoted_token_in_focus_is_not_read",
+        _set_focus(1, "a2", "Complete мама and нона with слова and А."),
+    ),
+    Case(
+        "m3_quoted_token_is_read_in_every_quote_style",
+        _set_focus(1, "a2", 'Complete "нона", “кум”, \'мок\' and `бак` with А.'),
+        notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
+        not_checked=frozenset({codes.TOKEN_UNRESOLVED}),
+        says="quotes 'кум', 'мок', 'бак'",
     ),
     # a syllable of the taught letters that spells an out-of-allowlist word (ма, W-207) is not that word
     Case(
         "m3_syllable_colliding_with_a_word_record_is_not_a_violation",
-        _set_focus(1, "a2", "Complete мама and the syllable ма with А."),
+        _set_focus(1, "a2", "Complete «мама» and the syllable «ма» with А."),
         not_checked=frozenset({codes.TOKEN_UNRESOLVED}),
         says="'ма', spelled with letters lesson 1 has taught",
     ),
     Case(
         "m3_syllable_shaped_token_with_an_untaught_letter_is_a_note",
-        _set_focus(1, "a2", "Complete мама and the syllable он with А."),
+        _set_focus(1, "a2", "Complete «мама» and the syllable «он» with А."),
         notes=frozenset({codes.TOKEN_NOT_ALLOWED}),
         says="activity a2 focus quotes 'он'",
     ),
@@ -357,7 +369,7 @@ CASES = [
     ),
     Case(
         "m4_untaught_letters_in_copy_focus_prose_are_not_read",
-        _set_focus(1, "a3", "Copy кома into a notebook."),
+        _set_focus(1, "a3", "Copy «кома» into a notebook."),
         not_checked=frozenset({codes.TOKEN_UNRESOLVED}),  # кома is a placeholder no store record lists
     ),
     Case(
@@ -422,7 +434,7 @@ CASES = [
         "non_letter_stage_skips_the_letter_gates",
         lambda plan, pack, words: (
             _drop_letters(plan, pack, words),
-            _set_focus(1, "a3", "Copy кома into a notebook.")(plan, pack, words),
+            _set_focus(1, "a3", "Copy «кома» into a notebook.")(plan, pack, words),
         ),
         not_checked=frozenset({codes.TOKEN_UNRESOLVED}),
     ),

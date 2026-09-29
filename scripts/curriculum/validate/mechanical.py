@@ -10,7 +10,7 @@ letters of scripts.practice.euphony_stem_engine (M3's syllable-shaped tokens).
   M1  a step introduces a letter that no activity in its practice names in its focus
   M2  a step introduces a letter that no allowed word record contains, while its
       practice includes a word-building activity (pick-syllables or divide-words)
-  M3  a Ukrainian token in a step's teach text or an activity's focus resolves only to
+  M3  a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to
       records outside the lesson's allowed set
   M4  a copy task's pack model text uses letters outside the taught-letter set
   M5  a core lemma's word-record CEFR level is above the module's level
@@ -26,7 +26,7 @@ because the plan contract does not make any of it an invariant of a valid plan:
 - M2 (note): only pick-syllables and divide-words count as word building; a match-up
   pairs or sorts, so it is never counted, whatever its focus names.
 
-- M3 (note): a quoted token that resolves only to out-of-allowlist records. A token
+- M3 (note): a token the plan quotes («…», "…", “…”, '…' or backticks; never unquoted prose) that resolves only to out-of-allowlist records. A token
   that resolves to no store record, or that is spelled like a syllable (one vowel,
   only letters the lesson has taught) and so may be the syllable the plan teaches
   rather than the word it collides with, is not_checked.
@@ -71,6 +71,10 @@ CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 
 _LETTER = re.compile(f"[{CYRILLIC_LETTER_CLASS}]")
 _TOKEN = re.compile(f"[{CYRILLIC_LETTER_CLASS}]+(?:['’ʼ-][{CYRILLIC_LETTER_CLASS}]+)*")
+_QUOTED = re.compile(
+    rf"«([^»]*)»|\"([^\"]*)\"|“([^”]*)”|`([^`]*)`"
+    rf"|(?<![{CYRILLIC_LETTER_CLASS}])'([^']*)'(?![{CYRILLIC_LETTER_CLASS}])"
+)
 _COPY_WORD = re.compile(r"\bcop(?:y|ies|ying)\b", re.IGNORECASE)
 _APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'"})
 
@@ -81,12 +85,17 @@ def letters_of(text: str) -> set[str]:
 
 
 def tokens_of(text: str) -> list[str]:
-    """The Ukrainian tokens (two or more letters) of text, case-folded, in order, once each."""
+    """The quoted Ukrainian tokens (two or more letters) of text, case-folded, in order, once each.
+
+    Only spans in «…», "…", “…”, '…' or backticks are read; unquoted prose is never a token.
+    An apostrophe between letters is part of a word, not a quote mark."""
     seen: dict[str, None] = {}
-    for match in _TOKEN.finditer(text):
-        token = match.group(0).translate(_APOSTROPHES).casefold()
-        if len(_LETTER.findall(token)) >= 2:
-            seen.setdefault(token)
+    for quoted in _QUOTED.finditer(text):
+        span = next(group for group in quoted.groups() if group is not None)
+        for match in _TOKEN.finditer(span):
+            token = match.group(0).translate(_APOSTROPHES).casefold()
+            if len(_LETTER.findall(token)) >= 2:
+                seen.setdefault(token)
     return list(seen)
 
 
