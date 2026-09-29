@@ -50,6 +50,7 @@ DEFAULT_UV_GRACE_HOURS = 24.0
 # CLI version "-" language "-" commit sha.
 CODEQL_TRAP_RE = re.compile(r"^(codeql-trap-\d+-\d+\.\d+\.\d+(?:\+[0-9A-Za-z.]+)?-[a-z][a-z0-9_]*-)([0-9a-f]{40})$")
 SETUP_UV_RE = re.compile(r"^(setup-uv-.+-)([0-9a-f]{64})$")
+COMMIT_SHA_RE = re.compile(r"[0-9a-f]{40}")
 
 GhApi = Callable[[list[str]], str]
 
@@ -170,7 +171,9 @@ def open_pr_base_shas(repo: str, gh_api: GhApi = _gh_api) -> set[str]:
 
     CodeQL reads ``pull_request.base.sha`` from the event payload; GraphQL
     ``baseRefOid`` is the same field, and its cursor pagination plus
-    ``totalCount`` let the listing be checked for completeness.
+    ``totalCount`` let the listing be checked for completeness. Every open
+    pull request must yield a 40-hex base SHA: one without it would leave its
+    TRAP entry unprotected, so it fails the listing like a missing page.
     """
     owner, name = repo.split("/", 1)
     shas: set[str] = set()
@@ -184,9 +187,11 @@ def open_pr_base_shas(repo: str, gh_api: GhApi = _gh_api) -> set[str]:
         prs = json.loads(gh_api(args))["data"]["repository"]["pullRequests"]
         totals.add(int(prs["totalCount"]))
         for node in prs["nodes"]:
+            base = node["baseRefOid"]
+            if not isinstance(base, str) or not COMMIT_SHA_RE.fullmatch(base):
+                raise IncompleteListingError(f"open pull request #{node['number']} has no valid base SHA: {base!r}")
             numbers.add(int(node["number"]))
-            if node["baseRefOid"]:
-                shas.add(str(node["baseRefOid"]))
+            shas.add(base)
         if not prs["pageInfo"]["hasNextPage"]:
             break
         cursor = prs["pageInfo"]["endCursor"]

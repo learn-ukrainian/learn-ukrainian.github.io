@@ -223,7 +223,7 @@ def test_open_pr_base_shas_follows_cursors() -> None:
     pages = iter(
         [
             _pr_page(3, [1, 2], [_sha(1), _sha(1)], "c1"),
-            _pr_page(3, [3], [None], None),
+            _pr_page(3, [3], [_sha(2)], None),
         ]
     )
 
@@ -231,7 +231,7 @@ def test_open_pr_base_shas_follows_cursors() -> None:
         seen.append(args)
         return next(pages)
 
-    assert open_pr_base_shas("owner/repo", gh_api=fake_gh_api) == {_sha(1)}
+    assert open_pr_base_shas("owner/repo", gh_api=fake_gh_api) == {_sha(1), _sha(2)}
     assert "cursor=c1" not in seen[0]
     assert seen[1][-2:] == ["-f", "cursor=c1"]
     assert seen[0][3:7] == ["-f", "owner=owner", "-f", "name=repo"]
@@ -240,6 +240,31 @@ def test_open_pr_base_shas_follows_cursors() -> None:
 def test_open_pr_base_shas_rejects_a_short_listing() -> None:
     with pytest.raises(IncompleteListingError, match="1 pull requests"):
         open_pr_base_shas("owner/repo", gh_api=lambda _args: _pr_page(2, [1], [_sha(1)], None))
+
+
+@pytest.mark.parametrize("base", [None, "", "g" * 40, _sha(1)[:39], "A" * 40, 1])
+def test_open_pr_base_shas_rejects_a_pr_without_a_valid_base_sha(base: object) -> None:
+    with pytest.raises(IncompleteListingError, match="#2 has no valid base SHA"):
+        open_pr_base_shas("owner/repo", gh_api=lambda _args: _pr_page(2, [1, 2], [_sha(1), base], None))
+
+
+def test_main_aborts_when_an_open_pr_has_no_base_sha(monkeypatch: pytest.MonkeyPatch, tmp_path, capsys) -> None:
+    lock = tmp_path / "requirements-lock.txt"
+    lock.write_text("x\n")
+    entries = [_entry(1, TRAP_JS + _sha(1), hours_ago=5), _entry(2, TRAP_JS + _sha(2))]
+    monkeypatch.setattr(cache_hygiene, "list_caches", lambda _repo: entries)
+    monkeypatch.setattr(
+        cache_hygiene,
+        "open_pr_base_shas",
+        lambda repo: open_pr_base_shas(repo, gh_api=lambda _args: _pr_page(1, [7], [None], None)),
+    )
+    monkeypatch.setattr(cache_hygiene, "delete_entries", lambda *_a: pytest.fail("deleted without every PR base"))
+
+    assert cache_hygiene.main(["--repo", "owner/repo", "--lock-file", str(lock), "--apply"]) == 2
+    captured = capsys.readouterr()
+    assert "aborting, nothing deleted" in captured.err
+    assert "#7 has no valid base SHA: None" in captured.err
+    assert "DELETE" not in captured.out
 
 
 def test_lock_hash_matches_hashfiles(tmp_path) -> None:
