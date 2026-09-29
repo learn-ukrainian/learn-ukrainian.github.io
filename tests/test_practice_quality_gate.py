@@ -8,7 +8,6 @@ from pathlib import Path
 import pytest
 
 from scripts.audit.practice_quality_gate import (
-    DEFAULT_SOURCES_DB,
     VOLUME_THRESHOLDS,
     audit_card_ambiguity,
     audit_error_correction_deck,
@@ -450,17 +449,18 @@ def test_forged_snapshot_source_label_fails_with_sources_db(tmp_path: Path):
 
 
 @pytest.mark.parametrize("database_mode", [False, True])
-def test_reviewer_source_label_probe_on_committed_err_0005(tmp_path: Path, database_mode: bool):
+def test_reviewer_source_label_probe_on_committed_err_0005(
+    tmp_path: Path, database_mode: bool, request: pytest.FixtureRequest
+):
     """The exact reviewed badge edit fails on the committed learner-facing drill."""
     from scripts.audit.practice_quality_gate import PROJECT_ROOT
     from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot
 
-    if database_mode and not DEFAULT_SOURCES_DB.exists():
-        pytest.skip("Requires the local sources.db")
+    sources_db = request.getfixturevalue("requires_sources_db") if database_mode else None
     deck = json.loads((PROJECT_ROOT / "site/src/data/practice-error-corrections.json").read_text(encoding="utf-8"))
     drill = next(d for d in deck["drills"] if d["id"] == "err_0005")
     probe = {**drill, "source": "Textbook Gr 1 (unrelated)"}
-    kwargs = {"sources_db": DEFAULT_SOURCES_DB} if database_mode else {}
+    kwargs = {"sources_db": sources_db} if database_mode else {}
 
     violations = _audit_error_corrections(
         tmp_path, [probe], {"err_0005": load_evidence_snapshot()["err_0005"]}, **kwargs
@@ -605,8 +605,7 @@ def test_database_mode_reverifies_the_snapshot(tmp_path: Path):
     ]
 
 
-@pytest.mark.skipif(not DEFAULT_SOURCES_DB.exists(), reason="Requires the local sources.db")
-def test_reviewer_probe_on_the_committed_deck_and_real_sources_db(tmp_path: Path):
+def test_reviewer_probe_on_the_committed_deck_and_real_sources_db(tmp_path: Path, requires_sources_db: Path):
     """The exact round 4 probe: committed err_0005's error with err_0004's correction, snapshot forged to agree."""
     from scripts.audit.practice_quality_gate import PROJECT_ROOT
     from scripts.practice.extract_textbook_error_corrections import load_evidence_snapshot
@@ -620,7 +619,7 @@ def test_reviewer_probe_on_the_committed_deck_and_real_sources_db(tmp_path: Path
     )
     probe = _recombined(drills["err_0005"], drills["err_0004"], "err_0005")
     violations = _audit_error_corrections(
-        tmp_path, [probe], {"err_0005": _forged_entry(probe, evidence, "err_0005")}, sources_db=DEFAULT_SOURCES_DB
+        tmp_path, [probe], {"err_0005": _forged_entry(probe, evidence, "err_0005")}, sources_db=requires_sources_db
     )
     assert [(v["item"], v["type"]) for v in violations] == [("err_0005", "SOURCE_PAIR_NOT_DERIVED")]
 
