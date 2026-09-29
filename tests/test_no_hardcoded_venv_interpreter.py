@@ -33,8 +33,9 @@ a spawn call), and neither is a path rooted in a temporary directory
 A list, tuple or dict compared inside an ``assert`` is expected-command data and is
 not flagged (a spawn or existence gate inside an ``assert`` still is).
 Any file that still needs the real thing must be listed in ``ALLOWLIST`` with a
-reason *and* its exact hits (``<enclosing scope>:<shape>``): the file is not exempt,
-only those hits are, so a new violation in an allowlisted file fails.
+reason *and* its exact hits (``<enclosing scope>:<shape>`` with a count): the file is not
+exempt, only those hits are, so a new violation in an allowlisted file fails — including a
+second spawn on an already-pinned line.
 
 Detector limits (documented on purpose): a file without the text ``venv`` is not
 analysed; the analysis is one file at a time and
@@ -55,6 +56,7 @@ from __future__ import annotations
 import ast
 import os
 import re
+from collections import Counter
 from pathlib import Path
 from typing import NamedTuple
 
@@ -112,28 +114,28 @@ _COMMAND_INTERPRETER = re.compile(rf"(?:^|[\s;&|(])(?:[^\s{_TEMP_MARKER}]*/)?\.v
 # it scans itself; nothing is excluded.
 _EXCLUDED: frozenset[str] = frozenset()
 
-# path -> (reason, the exact hits the file may keep). A hit is ``<enclosing scope>:<shape>`` —
-# line-independent, so the pin survives edits but a new hit (or a second one in the same
-# function) in an allowlisted file fails the guard.
-ALLOWLIST: dict[str, tuple[str, tuple[str, ...]]] = {
+# path -> (reason, the exact hits the file may keep, each with its exact count). A hit is
+# ``<enclosing scope>:<shape>`` — line-independent, so the pin survives edits, but hits are
+# counted: a second hit of the same identity (same scope, even the same line) fails too.
+ALLOWLIST: dict[str, tuple[str, dict[str, int]]] = {
     "tests/helpers/python.py": (
         "require_repo_venv() is the sanctioned gate: it skips when the repo venv is absent",
-        ("require_repo_venv:gate",),
+        {"require_repo_venv:gate": 1},
     ),
     "tests/test_handoff_slot_registry.py": (
         "_helper_root() only picks the checkout that holds the shared interpreter; it never spawns "
         "it and falls back to sys.prefix when the checkout has no .venv",
-        ("_helper_root:gate",),
+        {"_helper_root:gate": 1},
     ),
     "tests/orchestration/test_thread_restart_e2e.py": (
         "runs the handoff CLI inside a throwaway git repo built under tmp_path, whose .venv is a "
         "symlink or shim to the primary interpreter; the repo root is not a checkout",
-        ("checkout_handoff_command:argv",),
+        {"checkout_handoff_command:argv": 1},
     ),
     "tests/test_lexicon_runner_pr1.py": (
         "asserts the production main_checkout_root()/.venv interpreter resolution; the primary "
         "checkout's venv always exists there, and no spawn uses the path",
-        ("test_runner_spawns_use_primary_project_interpreter:gate",),
+        {"test_runner_spawns_use_primary_project_interpreter:gate": 1},
     ),
 }
 
@@ -506,12 +508,12 @@ class _Analyzer:
     def hits(self) -> list[tuple[int, str]]:
         """``(line, "<enclosing scope>:<shape>")`` for every spawn, gate or handoff."""
         ignored = self._assertion_data_ids()
-        found: dict[int, str] = {}
+        found: list[tuple[int, str]] = []
         for node, scope in self._scoped_nodes():
             kind = self._hit_kind(node, ignored)
             if kind is not None:
-                found[getattr(node, "lineno", 0)] = f"{scope}:{kind}"
-        return sorted(found.items())
+                found.append((getattr(node, "lineno", 0), f"{scope}:{kind}"))
+        return sorted(found)
 
     def _hit_kind(self, node: ast.AST, ignored: set[int]) -> str | None:
         if isinstance(node, ast.Call):
@@ -542,13 +544,13 @@ def executing_venv_interpreter_lines(source: str) -> list[int]:
     return [line for line, _ in _Analyzer(ast.parse(source)).hits()]
 
 
-def executing_venv_interpreter_hits(source: str) -> list[str]:
-    """Line-independent identities (``scope:shape``) of those hits, sorted."""
-    return sorted(identity for _, identity in _Analyzer(ast.parse(source)).hits())
+def executing_venv_interpreter_hits(source: str) -> dict[str, int]:
+    """Line-independent identities (``scope:shape``) of those hits, with how many of each."""
+    return dict(sorted(Counter(identity for _, identity in _Analyzer(ast.parse(source)).hits()).items()))
 
 
-def _collect_hits() -> dict[str, list[str]]:
-    hits: dict[str, list[str]] = {}
+def _collect_hits() -> dict[str, dict[str, int]]:
+    hits: dict[str, dict[str, int]] = {}
     for dirpath, dirnames, filenames in os.walk(REPO_ROOT / "tests"):
         dirnames[:] = sorted(name for name in dirnames if name not in _SCAN_SKIP and not name.startswith("."))
         for name in filenames:
@@ -572,7 +574,7 @@ def _collect_hits() -> dict[str, list[str]]:
 
 def test_no_executing_hardcoded_venv_interpreter() -> None:
     hits = _collect_hits()
-    pinned = {path: sorted(expected) for path, (_, expected) in ALLOWLIST.items()}
+    pinned = {path: expected for path, (_, expected) in ALLOWLIST.items()}
     unexpected = sorted(f"{path}: {found}" for path, found in hits.items() if found != pinned.get(path))
     stale = sorted(path for path in pinned if path not in hits)
     assert unexpected == [], (
@@ -694,12 +696,41 @@ def test_detector_flags_exactly_the_positive_cases() -> None:
 
 
 def test_allowlisted_file_cannot_gain_a_hit() -> None:
-    """A second hit in a pinned scope, or one in a new scope, changes the identities."""
+    """A hit in a new scope, or of a new shape in a pinned scope, changes the counted identities."""
     pinned = 'def gate():\n    return (ROOT / ".venv" / "bin" / "python").exists()\n'
-    assert executing_venv_interpreter_hits(_PREAMBLE + pinned) == ["gate:gate"]
+    assert executing_venv_interpreter_hits(_PREAMBLE + pinned) == {"gate:gate": 1}
     second = pinned + '\ndef other():\n    subprocess.run([str(ROOT / ".venv" / "bin" / "python")])\n'
-    assert executing_venv_interpreter_hits(_PREAMBLE + second) == ["gate:gate", "other:spawn"]
+    assert executing_venv_interpreter_hits(_PREAMBLE + second) == {"gate:gate": 1, "other:spawn": 1}
     same_scope = pinned.replace("return", 'subprocess.run(".venv/bin/python -c 1", shell=True)\n    return')
-    assert executing_venv_interpreter_hits(_PREAMBLE + same_scope) == ["gate:gate", "gate:spawn"]
+    assert executing_venv_interpreter_hits(_PREAMBLE + same_scope) == {"gate:gate": 1, "gate:spawn": 1}
     moved = "\n\n\n" + pinned
-    assert executing_venv_interpreter_hits(_PREAMBLE + moved) == ["gate:gate"]
+    assert executing_venv_interpreter_hits(_PREAMBLE + moved) == {"gate:gate": 1}
+
+
+def test_allowlist_pins_count_duplicate_hits() -> None:
+    """A duplicate of an already-pinned identity fails: pins are counts, not sets."""
+    path = "tests/helpers/python.py"
+    helper = (REPO_ROOT / path).read_text(encoding="utf-8")
+    pin = ALLOWLIST[path][1]
+    assert executing_venv_interpreter_hits(helper) == pin  # the real file matches its pin
+
+    gate = "    if not venv.is_file():\n"
+    assert helper.count(gate) == 1
+    spawn = "subprocess.run([str(venv)])"
+    variants = {
+        # a second spawn on the very line of the pinned gate (different shape, same line)
+        "same-line-spawn": "import subprocess\n" + helper.replace(gate, f"    if not venv.is_file() or {spawn}:\n"),
+        # a second gate of the same shape on the pinned gate's own line
+        "same-line-gate": helper.replace(gate, "    if not venv.is_file() or not venv.exists():\n"),
+        # a second gate of the same shape elsewhere in the same scope
+        "same-scope-gate": helper.replace("    return venv\n", "    venv.exists()\n    return venv\n"),
+    }
+    for name, source in variants.items():
+        assert source != helper, name
+        assert executing_venv_interpreter_hits(source) != pin, name
+    assert executing_venv_interpreter_hits(variants["same-line-gate"]) == {"require_repo_venv:gate": 2}
+    assert executing_venv_interpreter_hits(variants["same-scope-gate"]) == {"require_repo_venv:gate": 2}
+    assert executing_venv_interpreter_hits(variants["same-line-spawn"]) == {
+        "require_repo_venv:gate": 1,
+        "require_repo_venv:spawn": 1,
+    }
