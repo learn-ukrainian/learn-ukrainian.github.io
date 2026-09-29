@@ -176,6 +176,35 @@ def _fixture_worktree_lock_dir(tmp_path, monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def dispatch_slice_probe(monkeypatch):
+    """Decouple these tests from the host's ``lu-dispatch.slice`` (#8891).
+
+    ``probe_isolation`` asks the host's systemd user manager whether the
+    dispatch slice can hold a worker. Where it can (and CI cannot),
+    ``cmd_dispatch`` takes the ``systemd-run --scope`` launch path, which
+    needs a real ``Popen`` surface (``poll()``, pipes, ``/proc``) that the
+    fake worker processes here do not provide. Default the probe to "not
+    ready" so every test takes the plain-``Popen`` path; a slice-path test
+    sets ``dispatch_slice_probe["ready"] = True`` instead. An ambient
+    ``LU_DISPATCH_ISOLATION=fallback`` would override even a "ready" probe,
+    so the fixture clears it; only the test that exercises the forced
+    fallback sets it again itself.
+    """
+    monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
+    state = {"ready": False, "reason": "test stub: host slice probe disabled"}
+
+    def _probe(env=None, **_kwargs):
+        source = os.environ if env is None else env
+        forced = delegate.dispatch_isolation._forced_fallback(source)
+        if forced is not None:
+            return forced
+        return delegate.dispatch_isolation.ProbeResult(ready=state["ready"], reason=state["reason"])
+
+    monkeypatch.setattr(delegate.dispatch_isolation, "probe_isolation", _probe)
+    return state
+
+
+@pytest.fixture(autouse=True)
 def _keep_delegate_unit_tests_local(monkeypatch):
     """Isolate delegate unit tests from a live checkout's VPS occupancy marker."""
     monkeypatch.setenv(job_host_exec.ENV_ALLOW_NOTEBOOK, "1")
@@ -1621,6 +1650,16 @@ def _fake_worker_popen():
     class _FakeProc:
         pid = 12345
         stdin = _FakeStdin()
+        returncode = None
+
+        def poll(self):
+            return self.returncode
+
+        def wait(self, timeout=None):
+            return self.returncode
+
+        def kill(self):
+            self.returncode = -9
 
     return _FakeProc()
 
@@ -1981,6 +2020,110 @@ def test_dispatch_records_forced_popen_fallback(tmp_tasks_dir, monkeypatch, caps
     kwargs = captured["kwargs"]
     assert isinstance(kwargs, dict)
     assert kwargs["start_new_session"] is True
+    assert "launching the worker with plain Popen" in capsys.readouterr().err
+
+
+def test_dispatch_launches_worker_in_slice_when_probe_is_ready(tmp_tasks_dir, dispatch_slice_probe):
+    """Probe ready → the worker goes through ``systemd-run --scope`` (#8891).
+
+    Forced explicitly so it runs on every host, slice or no slice. The fake
+    ``Popen`` plays the scope that exec'd the worker: it writes the one-byte
+    start marker on the inherited fd before returning, which is exactly what
+    the real marker wrapper does after ``systemd-run`` execs in place.
+    """
+    dispatch_slice_probe["ready"] = True
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", "slice-launch", "--prompt", "hi"]
+    )
+    args.cwd = str(delegate._REPO_ROOT)
+    captured: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 4321
+        stdin = _FakeStdin()
+        returncode = None
+
+        def poll(self):
+            return self.returncode
+
+    def fake_popen(cmd, **kwargs):
+        captured["cmd"] = cmd
+        for fd in kwargs.get("pass_fds", ()):
+            os.write(fd, b"1")
+        return _FakeProc()
+
+    with patch("delegate.subprocess.Popen", side_effect=fake_popen):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("slice-launch"))
+    assert state is not None
+    assert state["pid"] == 4321
+    assert state["launch_mode"] == "scope"
+    assert state["launch_unit"].startswith("lu-worker-slice-launch-")
+    assert "launch_fallback_reason" not in state
+    cmd = captured["cmd"]
+    assert isinstance(cmd, list)
+    assert cmd[0] == "systemd-run"
+    assert "--scope" in cmd
+    assert "--expand-environment=no" in cmd
+    assert f"--slice={delegate.dispatch_isolation.SLICE_UNIT}" in cmd
+
+
+def test_dispatch_uses_plain_popen_when_probe_reports_no_slice(tmp_tasks_dir, dispatch_slice_probe, capsys):
+    """Probe not ready → the worker is a plain ``Popen`` (#8891).
+
+    The mirror of the slice test above, forced to "no slice" the way CI
+    always is, so the fallback path is asserted on every host.
+    """
+    dispatch_slice_probe["ready"] = False
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", "no-slice-launch", "--prompt", "hi"]
+    )
+    args.cwd = str(delegate._REPO_ROOT)
+    captured: dict[str, object] = {}
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 5555
+        stdin = _FakeStdin()
+
+    def fake_popen(cmd, **kwargs):
+        captured["cmd"] = cmd
+        captured["kwargs"] = kwargs
+        return _FakeProc()
+
+    with patch("delegate.subprocess.Popen", side_effect=fake_popen):
+        rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("no-slice-launch"))
+    assert state is not None
+    assert state["pid"] == 5555
+    assert state["launch_mode"] == "popen-fallback"
+    assert state["launch_fallback_reason"] == "test stub: host slice probe disabled"
+    assert "launch_unit" not in state
+    cmd = captured["cmd"]
+    assert isinstance(cmd, list)
+    assert "_worker" in cmd
+    assert "systemd-run" not in cmd
+    kwargs = captured["kwargs"]
+    assert isinstance(kwargs, dict)
+    assert kwargs["start_new_session"] is True
+    assert "pass_fds" not in kwargs
     assert "launching the worker with plain Popen" in capsys.readouterr().err
 
 
