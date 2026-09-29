@@ -72,6 +72,26 @@ def test_practice_shard_audit_requires_source_db_for_ukrainian_meaning(tmp_path:
     assert any(v["type"] == "SOURCE_DB_MISSING" for v in violations)
 
 
+def test_practice_shard_audit_reports_empty_sources_db(tmp_path: Path, monkeypatch) -> None:
+    from scripts.audit import practice_quality_gate
+
+    source_db = tmp_path / "empty.db"
+    sqlite3.connect(source_db).close()
+    monkeypatch.setattr(practice_quality_gate, "DEFAULT_SOURCES_DB", source_db)
+    fixture = json.loads(Path("tests/fixtures/practice-meaning-sources-9160.json").read_text(encoding="utf-8"))
+    meaning = fixture["entries"][0]["enrichment"]["definition_cards"][1]["definitions"][0]
+    (tmp_path / "practice-lexemes.B1.json").write_text(json.dumps({"lexemes": [{
+        "lemmaId": "fixture", "lemma": fixture["entries"][0]["lemma"], "gloss": meaning, "glossClean": meaning,
+        "meaningSource": {"source": "СУМ-20", "field": "enrichment.definition_cards.definitions"},
+    }]}, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(tmp_path, check_volume=False, verify_vesum=False)
+
+    assert [(v["item"], v["type"]) for v in violations] == [
+        ("practice-lexemes.B1.json", "SOURCE_DB_INVALID")
+    ]
+
+
 def test_audit_teacher_cloze_validates_blank_count(tmp_path: Path):
     deck = {
         "cloze": [

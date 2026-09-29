@@ -45,7 +45,9 @@ def make_mock_manifest_entry(
         "pos": "noun",
         "primary_source": "course_vocab",
         "course_usage": [{"track": "b1", "slug": "some-slug"}],
-        "enrichment": {"cefr": {"level": "B1"}},
+        "enrichment": {"cefr": {"level": "B1"}, "translation": {
+            "en": [gloss], "source": "test fixture",
+        }},
     }
     if synonyms:
         entry["sections"] = {"synonyms": {"items": synonyms}}

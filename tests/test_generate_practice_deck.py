@@ -87,6 +87,24 @@ def synthetic_creation_baseline(monkeypatch: pytest.MonkeyPatch) -> None:
     generate_practice_deck._imperative_display.cache_clear()
     policy = CreationReview.from_path(FIXTURES / "lexicon-practice-creation-review.json")
     monkeypatch.setattr(CreationReview, "from_path", classmethod(lambda cls: policy))
+    original = generate_practice_deck._practice_meaning
+
+    def with_synthetic_translation(entry, verifier, sense, sum11_definitions):
+        # Historical fixture rows predate meaning attribution. Give their
+        # English fixture text an explicit fixture source so unrelated deck
+        # assembly tests still exercise a valid admitted lexeme.
+        gloss = str(entry.get("gloss") or "")
+        enrichment = entry.get("enrichment")
+        if (
+            generate_practice_deck._is_english_learner_gloss(gloss)
+            and "translation" not in (enrichment if isinstance(enrichment, dict) else {})
+        ):
+            entry = {**entry, "enrichment": {**(enrichment if isinstance(enrichment, dict) else {}), "translation": {
+                "en": [gloss], "source": "synthetic test fixture",
+            }}}
+        return original(entry, verifier, sense, sum11_definitions)
+
+    monkeypatch.setattr(generate_practice_deck, "_practice_meaning", with_synthetic_translation)
 
 
 def test_default_target_preserves_committed_practice_surface() -> None:
@@ -1839,8 +1857,7 @@ def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
     assert index_items["borshch"]["modes"] == ["flashcards"]
 
 
-def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> None:
-    """Wiktionary-style UK definitions are not A1/A2 learner glosses (e.g. «казка»)."""
+def test_a2_uses_single_attributed_english_fallback_without_ukrainian_card() -> None:
     verifier = JsonVesumVerifier({})
     entry = {
         "lemma": "казка",
@@ -1851,10 +1868,7 @@ def test_a2_replaces_ukrainian_dictionary_gloss_with_english_translation() -> No
         "cefr": "A2",
         "enrichment": {
             "translation": {
-                "en": [
-                    "fable (fictitious narration to enforce some useful truth or precept)",
-                    "fairy tale (folktale)",
-                ],
+                "en": ["fairy tale (folktale)"],
                 "source": "dmklinger",
             }
         },
@@ -1910,6 +1924,19 @@ def test_build_lexeme_emits_sense_id_and_prefers_sense_learner_en() -> None:
     assert "second" not in lexeme["gloss"].casefold()
 
 
+def test_a2_prefers_vetted_meaning_on_the_displayed_sense() -> None:
+    fixture = json.loads((FIXTURES / "atlas/sense_lint_sample.json").read_text(encoding="utf-8"))
+    entry = fixture["entries"][0]
+    entry = {**entry, "url_slug": entry["slug"], "gloss": entry["senses"][0]["learner_uk"], "cefr": "A2"}
+
+    lexeme = _build_lexeme(entry, JsonVesumVerifier({}))
+
+    assert lexeme is not None
+    assert lexeme["senseId"] == entry["senses"][0]["id"]
+    assert lexeme["gloss"] == entry["senses"][0]["learner_uk"]
+    assert lexeme["meaningSource"] == {"source": "СУМ-20", "field": "senses.learner_uk"}
+
+
 def test_build_lexeme_empty_learner_en_withholds_unsourced_uk_not_invented_en() -> None:
     """#6437 PR3: an empty sense learner_en[] must never invent an EN gloss.
 
@@ -1958,12 +1985,12 @@ def test_practice_meanings_use_definition_specific_sources_and_exclude_sum11_tex
     sum11 = fixture["sum11Definitions"][article["lemma"]]
     verifier = JsonVesumVerifier({})
 
-    english = _build_lexeme(article, verifier, sum11)
-    assert english is not None
-    assert english["gloss"] == english["glossClean"]
-    assert english["gloss"] != article["gloss"]
-    assert english["meaningSource"]["field"] == "enrichment.translation.en"
-    assert practice_meaning_errors(english, sum11) == []
+    modern_first = _build_lexeme(article, verifier, sum11)
+    assert modern_first is not None
+    assert modern_first["gloss"] == modern_first["glossClean"]
+    assert modern_first["gloss"] != article["gloss"]
+    assert modern_first["meaningSource"]["source"] == "СУМ-20"
+    assert practice_meaning_errors(modern_first, sum11) == []
 
     modern_entry = copy.deepcopy(article)
     modern_entry["enrichment"].pop("translation")
@@ -1983,6 +2010,91 @@ def test_practice_meanings_use_definition_specific_sources_and_exclude_sum11_tex
     assert english_lexeme is not None
     assert english_lexeme["meaningSource"]["field"] == "enrichment.translation.en"
     assert practice_meaning_errors(english_lexeme, []) == []
+
+
+@pytest.mark.parametrize("case", [
+    "up", "that_is", "turkish", "tour", "remain", "planned", "nightly", "as_if",
+    "as_if_variant", "kitty", "thin", "applicant", "all_right", "refusal", "praise", "shod",
+])
+def test_reviewed_meaning_is_one_clean_bound_sense_or_withheld(case: str) -> None:
+    """#9160: Fable's source-backed counterexamples, copied from Atlas cards."""
+    import copy
+
+    from scripts.audit.generate_practice_deck import _practice_meaning, practice_meaning_errors
+
+    fixture = json.loads((FIXTURES / "practice-meaning-review-9160.json").read_text(encoding="utf-8"))
+    entry = copy.deepcopy(fixture[case])
+    result = _practice_meaning(entry, JsonVesumVerifier({}), None, [])
+    if case in {"nightly", "all_right", "shod"}:
+        assert result is None
+        return
+    assert result is not None
+    meaning, source = result
+    if case in {"refusal", "praise"}:
+        assert source["field"] == "enrichment.translation.en"
+        assert meaning in {"refusal", "to give praise to"}
+    else:
+        assert source["source"] in {"СУМ-20", "ВТС", "ULIF"}
+        assert source["field"] == "enrichment.definition_cards.definitions"
+        assert meaning in " ".join(
+            definition
+            for card in entry["enrichment"]["definition_cards"]
+            for definition in card["definitions"]
+            if card.get("source_pill") == source["source"]
+        )
+    assert not any(mark in meaning for mark in ("》", "||", "◇", "(", ")"))
+    assert practice_meaning_errors({"gloss": meaning, "glossClean": meaning, "meaningSource": source}, []) == []
+    if case == "tour":
+        article = entry["enrichment"]["definition_cards"][0]["definitions"][0]
+        assert meaning in article.split("4》", 1)[1].split("5》", 1)[0]
+        assert meaning not in article.split("1》", 1)[1].split("2》", 1)[0]
+    if case == "as_if":
+        assert ";" in meaning  # Source synonyms are part of this definition.
+
+
+@pytest.mark.parametrize("case", ["up", "that_is", "as_if", "as_if_variant"])
+def test_short_attributed_english_meanings_survive_ukrainian_card_absence(case: str) -> None:
+    """Short genuine source glosses must remain usable as honest fallbacks."""
+    import copy
+
+    from scripts.audit.generate_practice_deck import _practice_meaning
+
+    fixture = json.loads((FIXTURES / "practice-meaning-review-9160.json").read_text(encoding="utf-8"))
+    entry = copy.deepcopy(fixture[case])
+    entry["enrichment"].pop("definition_cards", None)
+    translation = entry["enrichment"]["translation"]
+    translation["en"] = translation["en"][:1]
+    result = _practice_meaning(entry, JsonVesumVerifier({}), None, [])
+    assert result is not None
+    assert result[1] == {"source": translation["source"], "field": "enrichment.translation.en"}
+
+
+def test_explicit_sense_index_selects_that_dictionary_segment() -> None:
+    from scripts.audit.generate_practice_deck import _practice_meaning
+
+    fixture = json.loads((FIXTURES / "practice-meaning-review-9160.json").read_text(encoding="utf-8"))
+    entry = {**fixture["tour"], "gloss": "unrelated fixture gloss", "senseIndex": 4}
+    result = _practice_meaning(entry, JsonVesumVerifier({}), None, [])
+    article = entry["enrichment"]["definition_cards"][0]["definitions"][0]
+
+    assert result is not None
+    assert result[0] in article.split("4》", 1)[1].split("5》", 1)[0]
+
+
+def test_english_meaning_requires_real_attribution() -> None:
+    from scripts.audit.generate_practice_deck import practice_meaning_errors
+
+    assert "meaningSource requires non-empty source and field" in practice_meaning_errors(
+        {"gloss": "up", "glossClean": "up"}, []
+    )
+    assert "gloss lacks attributed English source" in practice_meaning_errors(
+        {"gloss": "up", "glossClean": "up", "meaningSource": {"source": "Atlas gloss", "field": "gloss"}}, []
+    )
+    assert "gloss has dated citation" in practice_meaning_errors(
+        {"gloss": "1957a", "glossClean": "1957a", "meaningSource": {
+            "source": "test fixture", "field": "enrichment.translation.en",
+        }}, []
+    )
 
 
 def test_mode_cards_propagate_sense_id_from_lexeme() -> None:

@@ -45,6 +45,8 @@ def _noun_forms(gender: str) -> list[dict[str, str]]:
 
 
 def _entry(lemma: str, pos: str, gloss: str, level: str, **enrichment: Any) -> dict[str, Any]:
+    if "translation" not in enrichment and generate_practice_deck._is_english_learner_gloss(gloss):
+        enrichment["translation"] = {"en": [gloss], "source": "test fixture"}
     return {
         "lemma": lemma,
         "url_slug": lemma,
@@ -492,7 +494,7 @@ def test_deck_text_gate_rejects_mixed_script_words_and_stub_glosses(monkeypatch:
             "lexemes": [
                 {"lemmaId": "абонент", "lemma": "абонент", "gloss": "Той", "glossClean": "Той", "meaningSource": {"source": "ВТС", "field": "enrichment.definition_cards.definitions"}},
                 {"lemmaId": "хіть", "lemma": "хіть", "gloss": "хі́ті", "glossClean": "хі́ті", "meaningSource": {"source": "ВТС", "field": "enrichment.definition_cards.definitions"}},
-                {"lemmaId": "книга", "lemma": "книга", "gloss": "book", "glossClean": "book"},
+                {"lemmaId": "книга", "lemma": "книга", "gloss": "book", "glossClean": "book", "meaningSource": {"source": "test fixture", "field": "enrichment.translation.en"}},
                 {"lemmaId": "довкіл", "lemma": "довкіл", "gloss": "довко́ла", "glossClean": "довко́ла", "meaningSource": {"source": "ВТС", "field": "enrichment.definition_cards.definitions"}},
             ]
         },

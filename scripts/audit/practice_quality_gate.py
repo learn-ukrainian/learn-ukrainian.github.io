@@ -31,6 +31,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -772,6 +773,8 @@ def audit_practice_shards(
                         })
             except FileNotFoundError as exc:
                 violations.append({"type": "SOURCE_DB_MISSING", "item": name, "message": str(exc)})
+            except sqlite3.Error as exc:
+                violations.append({"type": "SOURCE_DB_INVALID", "item": name, "message": str(exc)})
             except (OSError, ValueError, TypeError) as exc:
                 violations.append({"type": "JSON_PARSE_ERROR", "item": name, "message": str(exc)})
             continue
