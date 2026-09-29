@@ -743,9 +743,19 @@ def _is_uk_gloss_stub(label: str, lemma: str = "", verifier: VesumVerifier | Non
     Grammar labels, government words and bare correlatives («Той», «Те саме»)
     name no meaning, and neither does a form of the headword itself («хіть» →
     «хі́ті», checked in VESUM).  A single other word («довкіл» → «довко́ла») or
-    a derivational reference («Присл. до абстра́ктний») is the dictionary's
-    own cross-reference definition and stays.
+    a derivational grammar reference alone does not explain meaning to a
+    learner and is withheld in favour of an attributed English fallback.
     """
+    if re.match(r"^(?:Прикм\.|Присл\.|Дієприкм\.|Дієпр\.)\s+.*\bдо\b", label, re.I):
+        return True
+    if re.match(r"^Дія\s+за\s+знач\.", label, re.I):
+        return True
+    if label.startswith("-") or re.match(r"^[IVX]+\s+", label) or re.fullmatch(r"[А-ЯІЇЄҐ]+-", label):
+        return True
+    if re.search(r"(?:^|\s)(?:наз|мн|одн|займ|ч|ж|прийм|спол|місц|оруд)\.", label, re.I):
+        return True
+    if label.startswith(("Просторові відношення", "Сполучення з прийм")):
+        return True
     clean = re.sub(r"[\d.,;:()]+", " ", label).strip()
     clean = re.sub(r"\s+", " ", clean)
     if not clean or clean.casefold() in _UK_ARTICLE_STUBS:
@@ -847,7 +857,9 @@ def _sense_learner_en(sense: dict[str, Any]) -> str | None:
     cleaned: list[str] = []
     for raw in learner_en:
         text = re.sub(r"\s+", " ", str(raw)).strip()
-        if any(token in text for token in ("[", "]", '"', "Conjugation:", "Synonym of")) or re.fullmatch(r"(?:P\s+)?(?:vt|vi|adj|adv|n|v)", text, re.I):
+        text = re.split(r"\s+Conjugation:\s*", text, maxsplit=1, flags=re.I)[0]
+        text = re.sub(r"\[[^][]*\]", "", text).strip()
+        if any(token in text for token in ('"', "Synonym of")) or re.fullmatch(r"(?:P\s+)?(?:vt|vi|adj|adv|n|v)", text, re.I):
             continue
         text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
         text = re.sub(r"^\d+[.)]\s*", "", text)
@@ -893,40 +905,85 @@ def _english_translation_gloss(
     cleaned: list[str] = []
     for raw in candidates:
         text = re.sub(r"\s+", " ", str(raw)).strip()
-        if any(token in text for token in ("[", "]", '"', "Conjugation:", "Synonym of")) or re.fullmatch(r"(?:P\s+)?(?:vt|vi|adj|adv|n|v)", text, re.I):
+        text = re.split(r"\s+Conjugation:\s*", text, maxsplit=1, flags=re.I)[0]
+        bracketed = re.findall(r"\[([^][]+)\]", text)
+        text = re.sub(r"\[[^][]*\]", "", text).strip()
+        if any(token in text for token in ('"', "Synonym of")) or re.fullmatch(r"(?:P\s+)?(?:vt|vi|adj|adv|n|v)", text, re.I):
             continue
         # Strip leading qualifiers: "(dated) fairy tale" → "fairy tale"
         text = re.sub(r"^\([^)]*\)\s*", "", text).strip()
         text = re.sub(r"^\d+[.)]\s*", "", text)
         text = re.split(r"\s+\d+[.)]\s*", text, maxsplit=1)[0]
-        # Drop trailing dictionary expansions: "fairy tale (folktale)" → "fairy tale"
-        head = text.split("(", 1)[0]
+        # Remove parenthetical notes before splitting alternatives. A useful
+        # alternative can follow the note ("to look (at), to watch").
+        initialism = re.search(r"^([A-Z]{2,})\s+\(Initialism of ([^)]+)\)", text, re.I)
+        head = text
+        while re.search(r"\([^()]*\)", head):
+            head = re.sub(r"\([^()]*\)", "", head)
+        # A truncated source note must not leak into the learner gloss.
+        head = head.split("(", 1)[0]
+        head = re.sub(r"\s+", " ", head)
         for alternative in re.split(r"[;,]", head):
+            clean = _gloss_clean(alternative)
+            if clean and clean.casefold() not in {"of", "from", "to", "the"} and _is_english_learner_gloss(clean):
+                cleaned.append(clean)
+        for alternative in bracketed:
             clean = _gloss_clean(alternative)
             if clean and _is_english_learner_gloss(clean):
                 cleaned.append(clean)
+        if initialism:
+            cleaned.append(initialism.group(2).strip())
     if not cleaned:
         return None
     display = _clean_text(entry.get("gloss")) or ""
     if _is_english_learner_gloss(display):
-        target = _gloss_clean(display).casefold()
-        target_words = set(re.findall(r"[a-z]{3,}", target)) - {"the", "and", "for", "with"}
-        matches = [item for item in cleaned if item.casefold() == target or (
+        display_clean = _gloss_clean(display)
+        target = _english_match_key(display_clean)
+        target_words = set(re.findall(r"[a-z]{3,}", display_clean.casefold())) - {"the", "and", "for", "with"}
+        matches = [item for item in cleaned if _english_match_key(item) == target or (
             target_words and target_words & set(re.findall(r"[a-z]{3,}", item.casefold()))
         )]
         if not matches:
             return None
         cleaned = matches
     elif len(candidates) > 1:
-        # A legacy Ukrainian article does not identify which English list
-        # member represents its displayed sense.
-        return None
+        # A Ukrainian display supplies no bilingual index. Accept only an
+        # independently reviewed single-sense cluster; mixed lists stay withheld.
+        cleaned = _one_english_sense(entry, cleaned)
+        if not cleaned:
+            return None
     # Prefer short multi-word learner senses ("fairy tale") over a single academic
     # first gloss ("fable") when both are offered.
     multi = [
         item for item in cleaned if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
     ]
     return multi[0] if multi else cleaned[0]
+
+
+def _english_match_key(value: str) -> str:
+    """Compare source glosses with displayed US/UK spelling and hyphenation."""
+    value = re.sub(r"\bcosy\b", "cozy", value.casefold())
+    value = re.sub(r"(?<=\w)-(?=\w)", "", value)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+def _one_english_sense(entry: dict[str, Any], cleaned: list[str]) -> list[str]:
+    """Small reviewed single-sense equivalences, never a general synonym guess.
+
+    These are source-checked #9160 cases whose displayed Ukrainian definition
+    and English list were independently compared. New rows need their own
+    evidence instead of admitting every multi-gloss translation list.
+    """
+    reviewed = {
+        "учень": {"student", "students", "pupil", "schoolboy"},
+        "галявина": {"glade", "clearing", "lawn"},
+        "вислів": {"expression", "phrase"},
+    }
+    lemma = (_clean_text(entry.get("lemma")) or "").casefold()
+    allowed = reviewed.get(lemma)
+    if not allowed:
+        return []
+    return [item for item in cleaned if _english_match_key(item).split(" ", 1)[0] in allowed]
 
 
 def _meaning_text_key(text: str) -> str:
@@ -999,6 +1056,14 @@ def _displayed_sense_index(entry: dict[str, Any], senses: list[str]) -> int | No
 
 def _definition_meaning(text: str, lemma: str, verifier: VesumVerifier) -> str:
     """Clean one bound sense, without article headers, examples, or citations."""
+    # Lowercase ВТС headwords carry the same inflection headers as CAPS СУМ-20.
+    head = re.match(r"^([^\s,.;:]+)\s+", text)
+    if head and head.group(1)[0].islower() and _plain(_strip_stress(head.group(1))) == _plain(lemma):
+        text = text[head.end():]
+    if re.match(r"^\s*Дія\s+за\s+знач\.", text, re.I):
+        return ""
+    if "◇" in text and not re.search(r"\d{1,2}\s*(?:》|\.)", text[:text.index("◇")]):
+        return ""
     # Dictionary citations and sense references are not part of a learner meaning.
     without_parentheses = re.sub(r"\([^()]*\)", "", text)
     without_parentheses = re.split(r"\s*(?:\|\||//)\s*", without_parentheses, maxsplit=1)[0]
@@ -1006,11 +1071,35 @@ def _definition_meaning(text: str, lemma: str, verifier: VesumVerifier) -> str:
     clean = _ukrainian_definition_clean(without_parentheses, keep_semicolon=True)
     clean = re.sub(r"\s+\d+(?:-\d+)?\)\s*$", "", clean)
     clean = re.sub(r"\s+\d+(?:[–-]\d+)?(?:,\s*\d+)*\s*$", "", clean)
+    clean = re.sub(r"(?<=\S)\s+[1-9](?:[–-]\d+)?(?:\s*,\s*\d+)*\)?(?=\s|[.,;:]|$)", "", clean)
+    clean = re.sub(r"\bу\s+знач\.\s*:\s*", "", clean, flags=re.I)
+    clean = re.sub(r"\bза\s+знач\.\s*", "", clean, flags=re.I)
     clean = re.split(r"\s+[А-ЯІЇЄҐ][а-яіїєґ]+\s+[А-ЯІЇЄҐа-яіїєґ]+\s+[—–]", clean, maxsplit=1)[0]
-    clean = re.split(r"[«»“”„]|\s+[—–]\s+", clean, maxsplit=1)[0].strip(" ,.;:")
+    clean = re.split(r"[«»“”„]", clean, maxsplit=1)[0].strip(" ,.;:")
     if _DATED_CITATION_YEAR.search(clean) or re.search(r"(?:^|\s)див\.\s", clean, re.I):
         return ""
     return "" if _is_uk_gloss_stub(clean, lemma, verifier) else clean
+
+
+def _reviewed_display_sense(entry: dict[str, Any], article: str) -> str | None:
+    """Source-text anchors for independently reviewed ambiguous #9160 glosses.
+
+    An English display cannot be matched to Ukrainian by word overlap. The
+    anchors bind the displayed sense to a quoted part of the attributed card;
+    an absent anchor leaves the card unbound rather than choosing sense zero.
+    """
+    lemma = (_clean_text(entry.get("lemma")) or "").casefold()
+    display = (_clean_text(entry.get("gloss")) or "").casefold()
+    anchors = {
+        ("прикладка", "apposition"): r"(?:^|\d\s*》)\s*(лінгв\.\s+Означення[^》]*)",
+        ("сонорний", "sonorant"): r"\|\|\s*(При творенні[^|]*)",
+        ("зачин", "opening"): r"(?:^|\d\s*》)\s*(літ\.\s+Вступ[^》]*)",
+    }
+    pattern = anchors.get((lemma, display))
+    if pattern is None:
+        return None
+    match = re.search(pattern, article)
+    return match.group(1).strip() if match else ""
 
 
 def practice_meaning_errors(lexeme: dict[str, Any], sum11_definitions: list[str]) -> list[str]:
@@ -1114,6 +1203,11 @@ def _practice_meaning(
             if clean and _safe_meaning(clean, attribution, sum11_definitions):
                 return clean, attribution
         return english_meaning
+    base_form = re.search(r"\(base form ([^)]+)\)", str(translation.get("source") or ""))
+    if base_form and _plain(base_form.group(1)) != _plain(lemma):
+        # The row is an inflected form; same-spelling article cards can belong
+        # to a different lemma (садка versus садок).
+        return english_meaning
     cards = enrichment.get("definition_cards")
     if not isinstance(cards, list):
         return english_meaning
@@ -1136,7 +1230,10 @@ def _practice_meaning(
         for definition in definitions:
             if not isinstance(definition, str) or _sum11_meaning_match(definition, sum11_definitions):
                 continue
-            article_senses = _definition_senses(definition)
+            reviewed = _reviewed_display_sense(entry, definition)
+            if reviewed == "":
+                continue
+            article_senses = [reviewed] if reviewed is not None else _definition_senses(definition)
             index = _displayed_sense_index(entry, article_senses)
             if index is None:
                 continue

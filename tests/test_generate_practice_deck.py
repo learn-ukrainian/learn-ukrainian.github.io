@@ -2025,18 +2025,18 @@ def test_reviewed_meaning_is_one_clean_bound_sense_or_withheld(case: str) -> Non
     fixture = json.loads((FIXTURES / "practice-meaning-review-9160.json").read_text(encoding="utf-8"))
     entry = copy.deepcopy(fixture[case])
     result = _practice_meaning(entry, JsonVesumVerifier({}), None, [])
-    if case in {"nightly", "all_right", "shod"}:
+    if case in {"nightly", "all_right", "shod", "planned"}:
         assert result is None
         return
     assert result is not None
     meaning, source = result
-    if case in {"refusal", "praise"}:
+    if case in {"refusal", "praise", "turkish"}:
         assert source["field"] == "enrichment.translation.en"
-        assert meaning in {"refusal", "to give praise to"}
+        assert meaning in {"refusal", "to give praise to", "to praise", "from or pertaining to Turkey"}
     else:
         assert source["source"] in {"СУМ-20", "ВТС", "ULIF"}
         assert source["field"] == "enrichment.definition_cards.definitions"
-        assert meaning in " ".join(
+        assert meaning.split(",", 1)[0] in " ".join(
             definition
             for card in entry["enrichment"]["definition_cards"]
             for definition in card["definitions"]
@@ -2095,6 +2095,57 @@ def test_english_meaning_requires_real_attribution() -> None:
             "source": "test fixture", "field": "enrichment.translation.en",
         }}, []
     )
+
+
+@pytest.mark.parametrize("lemma, expected", [
+    ("дивитися", "to watch"), ("послухати", "to listen"),
+    ("переходити", "to cross"), ("створювати", "to create"),
+    ("лити", "to pour"), ("вчитися", "to study"),
+    ("затишний", "cosy"), ("кмітливий", "quickwitted"),
+    ("ООН", "United Nations"), ("учень", "student"),
+    ("галявина", "glade"), ("вислів", "expression"),
+    ("садка", "fish pond"), ("шумно", "noisily"),
+    ("розуміння", "comprehension"),
+    ("турецький", "from or pertaining to Turkey"),
+])
+def test_round_three_reviewed_english_source_survives_cleaning(lemma: str, expected: str) -> None:
+    """Reviewed Atlas snapshots retain a clean English meaning bound to the row."""
+    from scripts.audit.generate_practice_deck import _practice_meaning, practice_meaning_errors
+
+    fixture = json.loads((FIXTURES / "practice-meaning-review-r3-9160.json").read_text(encoding="utf-8"))
+    entry = fixture[lemma]
+    result = _practice_meaning(entry, JsonVesumVerifier({}), None, [])
+    assert result is not None
+    meaning, source = result
+    assert meaning == expected
+    assert source["field"] == "enrichment.translation.en"
+    assert practice_meaning_errors({"gloss": meaning, "glossClean": meaning, "meaningSource": source}, []) == []
+
+
+@pytest.mark.parametrize("lemma, segment", [
+    ("прикладка", 2), ("сонорний", 1), ("зачин", 1), ("тобто", 1),
+])
+def test_round_three_ukrainian_meaning_uses_reviewed_source_segment(lemma: str, segment: int) -> None:
+    from scripts.audit.generate_practice_deck import _practice_meaning
+
+    fixture = json.loads((FIXTURES / "practice-meaning-review-r3-9160.json").read_text(encoding="utf-8"))
+    entry = fixture[lemma]
+    result = _practice_meaning(entry, JsonVesumVerifier({}), None, [])
+    assert result is not None
+    meaning, source = result
+    assert source["source"] == "ВТС"
+    article = next(card for card in entry["enrichment"]["definition_cards"] if card["id"] == "vts")["definitions"][0]
+    parts = article.split("||") if lemma == "сонорний" else article.split("》")
+    assert meaning.split(",", 1)[0] in parts[segment]
+    assert "◇" not in meaning
+    assert "знач." not in meaning
+
+
+def test_round_three_bare_grammar_reference_is_withheld() -> None:
+    from scripts.audit.generate_practice_deck import _practice_meaning
+
+    fixture = json.loads((FIXTURES / "practice-meaning-review-r3-9160.json").read_text(encoding="utf-8"))
+    assert _practice_meaning(fixture["запланований"], JsonVesumVerifier({}), None, []) is None
 
 
 def test_mode_cards_propagate_sense_id_from_lexeme() -> None:
