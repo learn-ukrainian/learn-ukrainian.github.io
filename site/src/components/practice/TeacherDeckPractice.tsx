@@ -27,6 +27,7 @@ import {
   type TeacherDeck,
   type TeacherDeckEntry,
 } from '../../lib/lexicon/teacher-deck';
+import { teacherOptionDisplay } from '../../lib/lexicon/teacher-deck-options';
 import {
   applyDeckReview,
   migrateLegacyPracticeState,
@@ -197,7 +198,7 @@ export default function TeacherDeckPractice({
     [deck, matchingSeed, progress],
   );
   const matchingTiles = useMemo(
-    () => matchingPairs.map((entry) => ({ left: entry.uk, right: entry.en })),
+    () => matchingPairs.map((entry) => ({ left: entry.uk, right: teacherOptionDisplay(entry.en, 'en') })),
     [matchingPairs],
   );
 
@@ -566,6 +567,7 @@ interface TeacherSlotProps {
 interface Option {
   label: string;
   correct: boolean;
+  display?: string;
 }
 
 function TeacherSlot({ deck, entry, slot, card, now, answer, chromeLocale, onRate, onObjective }: TeacherSlotProps) {
@@ -596,6 +598,24 @@ function TeacherSlot({ deck, entry, slot, card, now, answer, chromeLocale, onRat
       ? entry.cards.recognition.choice
       : entry.cards.production?.choice;
     if (!choice) return null;
+    const optionLang = choice.direction === 'uk-en' ? 'en' : 'uk';
+    const options = choice.options.map((option) => ({
+      label: option.label,
+      display: teacherOptionDisplay(option.label, optionLang),
+      correct: option.kind === 'answer',
+    }));
+    // A shortened gloss must never make two answers look identical.
+    if (new Set(options.map((option) => option.display)).size !== options.length) {
+      return presentation.type === 'recognition-choice'
+        ? <PracticeFlashcard
+            card={{ front: entry.uk, pronunciationLemma: entry.multiword ? undefined : entry.uk, back: entry.en }}
+            ratingLabels={RATING_LABELS}
+            intervalPreviews={intervals}
+            onRate={onRate}
+            chromeLocale={chromeLocale}
+          />
+        : <ProductionFlashcard entry={entry} intervals={intervals} chromeLocale={chromeLocale} onRate={onRate} />;
+    }
     return (
       <ChoiceStage
         testId={`teacher-deck-${presentation.type}`}
@@ -605,8 +625,8 @@ function TeacherSlot({ deck, entry, slot, card, now, answer, chromeLocale, onRat
             ? <ChromeDual uk="Що означає це слово?" en="What does this mean?" />
             : <ChromeDual uk="Як це українською?" en="How do you say this in Ukrainian?" />
         }
-        options={choice.options.map((option) => ({ label: option.label, correct: option.kind === 'answer' }))}
-        optionLang={choice.direction === 'uk-en' ? 'en' : 'uk'}
+        options={options}
+        optionLang={optionLang}
         answer={locked ? answer : null}
         onChoose={onObjective}
         feedback={locked && answer ? (
@@ -822,7 +842,7 @@ function ChoiceStage({
                 onClick={() => onChoose(option.label, option.correct)}
               >
                 <span className="mc-key">{index + 1}</span>
-                <span lang={optionLang}>{option.label}</span>
+                <span lang={optionLang}>{option.display ?? teacherOptionDisplay(option.label, optionLang)}</span>
               </button>
             </li>
           );

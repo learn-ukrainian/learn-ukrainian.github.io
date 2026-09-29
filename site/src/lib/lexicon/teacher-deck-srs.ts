@@ -40,6 +40,7 @@ import {
   type TeacherDeckEntry,
   type TeacherGrammarMode,
 } from './teacher-deck';
+import { teacherOptionDisplay } from './teacher-deck-options';
 
 export const DECK_PROGRESS_VERSION = 1;
 export const DECK_PROGRESS_KEY_PREFIX = 'lu-deck-progress:';
@@ -899,8 +900,8 @@ export function pickMatchingRound(
   const labels = new Set<string>();
   for (const entry of pool) {
     if (picked.length >= size) break;
-    const uk = entry.uk.toLocaleLowerCase('uk');
-    const en = entry.en.toLocaleLowerCase('en');
+    const uk = teacherOptionDisplay(entry.uk, 'uk');
+    const en = teacherOptionDisplay(entry.en, 'en');
     if (labels.has(`uk:${uk}`) || labels.has(`en:${en}`)) continue;
     if (picked.some((other) => other.conflicts.includes(entry.entryId) || entry.conflicts.includes(other.entryId))) {
       continue;

@@ -75,6 +75,19 @@ describe('teacher deck artifacts', () => {
     expect(() => buildTeacherDeck('virtual_teacher_lesson', deck, cloze)).toThrow(/deck id/);
     expect(buildTeacherDeck(FIXTURE_DECK_ID, deck, cloze).entries).toHaveLength(FIXTURE_ROWS.length);
   });
+
+  test('matching excludes English glosses that collide after display normalization', () => {
+    const matchingDeck = loadFixture();
+    matchingDeck.entries[0]!.en = 'Fair, just';
+    matchingDeck.entries[5]!.en = 'FAIR; equitable';
+    const progress = progressWith({ newPerDay: 0 });
+    for (const index of [0, 5, 6, 7]) {
+      progress.introduced[fixtureEntryId(index)] = { day: '2026-09-26', at: DAY1_9AM - 86400000, source: 'practice' };
+    }
+    const round = pickMatchingRound(matchingDeck, progress, 0, 5, 3);
+    expect(round).toHaveLength(3);
+    expect(round.filter((entry) => [fixtureEntryId(0), fixtureEntryId(5)].includes(entry.entryId))).toHaveLength(1);
+  });
 });
 
 describe('teacher deck daily plan', () => {

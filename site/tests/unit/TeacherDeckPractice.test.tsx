@@ -3,7 +3,8 @@ import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-li
 import userEvent from '@testing-library/user-event';
 import { State } from 'ts-fsrs';
 import TeacherDeckPractice from '@site/src/components/practice/TeacherDeckPractice';
-import { buildTeacherDeck, type TeacherDeck } from '@site/src/lib/lexicon/teacher-deck';
+import { buildTeacherDeck, type TeacherDeck, type TeacherGrammarItem } from '@site/src/lib/lexicon/teacher-deck';
+import { teacherOptionDisplay } from '@site/src/lib/lexicon/teacher-deck-options';
 import {
   deckProgressStorageKey,
   emptyDeckProgress,
@@ -57,9 +58,174 @@ function storedProgress(storage: StorageLike): DeckProgress {
   return JSON.parse(storage.getItem(deckProgressStorageKey(FIXTURE_DECK_ID))!) as DeckProgress;
 }
 
+function dueReview(storage: StorageLike, kind: 'recognition' | 'production' | 'cloze' | 'grammar', reps = 1) {
+  const id = fixtureEntryId(0);
+  const progress = emptyDeckProgress(FIXTURE_DECK_ID, { newPerDay: 0, reviewCap: 100 });
+  const card = {
+    due: DAY1, stability: 1, difficulty: 5, elapsed_days: 1, scheduled_days: 1,
+    learning_steps: 0, reps, lapses: 0, state: State.Review, last_review: DAY1 - 86400000,
+  };
+  progress.introduced[id] = { day: '2026-09-26', at: DAY1 - 86400000, source: 'practice' };
+  progress.cards[`${id}:recognition`] = { ...card, due: kind === 'recognition' ? DAY1 : DAY2 + 86400000 };
+  if (kind !== 'recognition') progress.cards[`${id}:${kind}`] = card;
+  progress.migration = { at: DAY1, entries: 0, recognitionStates: 0 };
+  writeDeckProgress(storage, progress);
+}
+
+function shownOptions(testId: string): string[] {
+  return Array.from(screen.getByTestId(testId).querySelectorAll('.mc-opt span[lang]'), (node) => node.textContent ?? '');
+}
+
+function expectPlainOptions(labels: string[]) {
+  expect(labels).toHaveLength(4);
+  expect(new Set(labels).size).toBe(4);
+  expect(labels.every((label) => label === label.toLocaleLowerCase() && !/[.!?;:,\u0301]$/u.test(label))).toBe(true);
+}
+
 afterEach(() => cleanup());
 
 describe('TeacherDeckPractice', () => {
+  test('English source prefixes and aspect tags do not mark a choice', () => {
+    expect(teacherOptionDisplay('To wipe (impf.)', 'en')).toBe('wipe');
+    expect(teacherOptionDisplay('TO clean (perf.)!', 'en')).toBe('clean');
+    expect(teacherOptionDisplay('Location / Whereabouts', 'en')).toBe('location');
+    expect(teacherOptionDisplay('Father-in-law (wife’s father)', 'en')).toBe('father-in-law');
+  });
+
+  test('stress answer stays out of the accessible label until the learner selects', async () => {
+    const deck = fixtureDeck();
+    const storage = memoryStorage();
+    dueReview(storage, 'grammar', 0);
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    const word = screen.getByTestId('practice-stress').querySelector('.practice-stress-word')!;
+    expect(word.getAttribute('aria-label')).toBe('справедливий');
+    expect(word.querySelectorAll('.stress-vowel')).toHaveLength(4);
+    fireEvent.click(word.querySelector('[data-position="8"]')!);
+    expect(word.getAttribute('aria-label')).toBe('справедли́вий');
+  });
+
+  test('recognition renders the тісний mixed-source glosses without an answer-shape cue', async () => {
+    const deck = fixtureDeck();
+    const entry = deck.entries[0]!;
+    entry.uk = 'Тісний';
+    entry.en = 'tight-fitting, cramped';
+    entry.cards.recognition.choice!.prompt = entry.uk;
+    entry.cards.recognition.choice!.options = [
+      { entryId: fixtureEntryId(1), label: 'Mysterious', kind: 'distractor' },
+      { entryId: fixtureEntryId(2), label: 'Countless.', kind: 'distractor' },
+      { entryId: entry.entryId, label: entry.en, kind: 'answer' },
+      { entryId: fixtureEntryId(3), label: 'Exhausted!', kind: 'distractor' },
+    ];
+    const storage = memoryStorage();
+    dueReview(storage, 'recognition');
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    expect(shownOptions('teacher-deck-recognition-choice')).toEqual(['mysterious', 'countless', 'tight-fitting', 'exhausted']);
+    fireEvent.click(within(screen.getByTestId('teacher-deck-recognition-choice')).getByRole('button', { name: /tight-fitting/ }));
+    expect(screen.getByTestId('teacher-deck-feedback')).toHaveTextContent('tight-fitting, cramped');
+    expect(entry.cards.recognition.choice!.options[2]!.label).toBe('tight-fitting, cramped');
+  });
+
+  test('a choice that would have identical display labels uses a flashcard', async () => {
+    const deck = fixtureDeck();
+    deck.entries[0]!.cards.recognition.choice!.options[0]!.label = 'Fair, just';
+    deck.entries[0]!.cards.recognition.choice!.options[1]!.label = 'FAIR; equitable';
+    const storage = memoryStorage();
+    dueReview(storage, 'recognition');
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    expect(screen.queryByTestId('teacher-deck-recognition-choice')).toBeNull();
+    expect(screen.getByRole('button', { name: /Справедливий/ })).toBeInTheDocument();
+  });
+
+  test('production choice shows uniform Ukrainian case, punctuation, and stress shape', async () => {
+    const deck = fixtureDeck();
+    deck.entries[0]!.cards.production!.choice!.options = [
+      { entryId: fixtureEntryId(0), label: 'Справедли́вий.', kind: 'answer' },
+      { entryId: fixtureEntryId(1), label: 'Витирати', kind: 'distractor' },
+      { entryId: fixtureEntryId(2), label: 'витерти!', kind: 'distractor' },
+      { entryId: fixtureEntryId(5), label: 'Таємно,', kind: 'distractor' },
+    ];
+    const storage = memoryStorage();
+    dueReview(storage, 'production');
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    const labels = shownOptions('teacher-deck-production-choice');
+    expectPlainOptions(labels);
+    expect(labels).toEqual(['справедливий', 'витирати', 'витерти', 'таємно']);
+    expect(deck.entries[0]!.cards.production!.choice!.options[0]!.label).toBe('Справедли́вий.');
+  });
+
+  test('cloze renders mixed-source forms with the same visible shape', async () => {
+    const deck = fixtureDeck();
+    const item = deck.clozeById.get(`${fixtureEntryId(0)}:cloze:0`)!;
+    item.options[0]!.label = 'Справедли́вими.';
+    item.options[1]!.label = 'Низькими!';
+    item.options[2]!.label = 'прихованими,';
+    const storage = memoryStorage();
+    dueReview(storage, 'cloze', 0);
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    expectPlainOptions(shownOptions('teacher-deck-cloze'));
+    expect(shownOptions('teacher-deck-cloze')).toEqual(['справедливими', 'низькими', 'прихованими', 'розкішними']);
+  });
+
+  test('grammar classify renders mixed-source labels uniformly', async () => {
+    const deck = fixtureDeck();
+    const item = deck.grammarById.get(`${fixtureEntryId(0)}:classify`)!.item;
+    if (!('sets' in item)) throw new Error('expected classify fixture');
+    item.sets[0]!.options[0]!.labelUk = 'Іменник.';
+    item.sets[0]!.options[1]!.labelUk = 'При́кметник!';
+    const storage = memoryStorage();
+    dueReview(storage, 'grammar', 1);
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    const labels = shownOptions('teacher-deck-grammar-classify');
+    expect(labels).toEqual(['іменник', 'прикметник', 'дієслово']);
+  });
+
+  test('grammar paradigm renders mixed-source forms uniformly', async () => {
+    const deck = fixtureDeck();
+    const id = `${fixtureEntryId(0)}:paradigm`;
+    (deck.grammarById as Map<string, TeacherGrammarItem>).set(id, { mode: 'paradigm', item: {
+      paradigmId: id, entryId: fixtureEntryId(0), cardId: `${fixtureEntryId(0)}:grammar`,
+      lemmaId: 'справедливий', lemma: 'справедливий',
+      slot: { case: 'nominative', number: 'singular', labelUk: 'форма' }, form: 'справедливий',
+      options: [
+        { label: 'Справедли́вий.', kind: 'answer' }, { label: 'Низький!', kind: 'same-paradigm' },
+        { label: 'прихований,', kind: 'same-paradigm' }, { label: 'розкішний', kind: 'same-paradigm' },
+      ],
+    } });
+    deck.entries[0]!.cards.grammar!.items.push({ mode: 'paradigm', id });
+    const storage = memoryStorage();
+    dueReview(storage, 'grammar', 2);
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    expect(shownOptions('teacher-deck-grammar-paradigm')).toEqual(['справедливий', 'низький', 'прихований', 'розкішний']);
+  });
+
+  test.each(['synonym', 'antonym'] as const)('grammar %s renders mixed-source options uniformly', async (mode) => {
+    const deck = fixtureDeck();
+    const id = `${fixtureEntryId(0)}:${mode}`;
+    (deck.grammarById as Map<string, TeacherGrammarItem>).set(id, { mode, item: {
+      synonymId: id, entryId: fixtureEntryId(0), cardId: `${fixtureEntryId(0)}:grammar`,
+      lemmaId: 'справедливий', targetLemmaId: 'x', polarity: mode,
+      prompt: 'справедливий', answer: 'чесний', source: 'fixture',
+      options: [
+        { label: 'Че́сний.', lemmaId: 'a', kind: 'answer' },
+        { label: 'низький!', lemmaId: 'b', kind: 'distractor' },
+        { label: 'Розкішний,', lemmaId: 'c', kind: 'distractor' },
+        { label: 'прихований', lemmaId: 'd', kind: 'distractor' },
+      ],
+    } });
+    deck.entries[0]!.cards.grammar!.items.push({ mode, id });
+    const storage = memoryStorage();
+    dueReview(storage, 'grammar', 2);
+    renderPanel(deck, storage, { now: DAY1 });
+    fireEvent.click(await screen.findByTestId('teacher-deck-start'));
+    expect(shownOptions(`teacher-deck-grammar-${mode}`)).toEqual(['чесний', 'низький', 'розкішний', 'прихований']);
+  });
   test("shows the teacher's English (with the source aspect label) as the meaning", async () => {
     // Put a verb last so it is the newest entry and introduced first.
     const verb = FIXTURE_ROWS[1]!;
@@ -299,6 +465,9 @@ describe('TeacherDeckPractice', () => {
 
   test('matching uses introduced words without writing reviews and keeps focus on the new stage', async () => {
     const deck = fixtureDeck();
+    deck.entries[0]!.en = 'Fair, just.';
+    deck.entries[5]!.en = 'SECRETLY!';
+    deck.entries[6]!.en = 'Quarter; fourth';
     const storage = memoryStorage();
     const progress = emptyDeckProgress(FIXTURE_DECK_ID, { newPerDay: 0, reviewCap: 100 });
     for (const index of [0, 5, 6]) {
@@ -309,6 +478,8 @@ describe('TeacherDeckPractice', () => {
     renderPanel(deck, storage, { now: DAY1 });
     fireEvent.click(await screen.findByTestId('teacher-deck-matching-start'));
     const stage = screen.getByTestId('teacher-deck-matching');
+    const rightLabels = Array.from(stage.querySelectorAll('[data-activity="match-right-tile"]'), (node) => node.textContent ?? '');
+    expect(rightLabels.sort()).toEqual(['fair', 'quarter', 'secretly']);
     expect(document.activeElement).toBe(within(stage).getByRole('heading', { name: /Matching/ }));
     for (const left of within(stage).getAllByRole('button').filter((button) => button.matches('[data-activity="match-left-tile"]'))) {
       const index = left.getAttribute('data-original-index');
