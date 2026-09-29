@@ -3306,7 +3306,7 @@ def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
     assert state["last_error"] == state["no_deliverable_reason"]
 
 
-def test_run_worker_review_without_verdict_is_no_deliverable(
+def test_run_worker_review_without_verdict_fails_with_reason(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
@@ -3323,10 +3323,53 @@ def test_run_worker_review_without_verdict_is_no_deliverable(
     )
 
     assert rc == 1
-    assert state["status"] == "no_deliverable"
+    assert state["status"] == "failed"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == "review_missing_verdict_line"
-    assert state["last_error"] == state["no_deliverable_reason"]
+    assert state["failure_reason"] == "review_missing_verdict_line"
+    assert state["review_verdict_failure"] == "review_missing_verdict_line"
+    assert state["last_error"] == state["failure_reason"]
+
+
+def test_review_verdict_failure_survives_appended_snapshot_error(tmp_tasks_dir):
+    state_path = delegate._state_path("review-verdict-with-snapshot-error")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "review-verdict-with-snapshot-error",
+            "status": "failed",
+            "require_review_verdict": True,
+            "returncode": 0,
+            "review_verdict_failure": "review_missing_verdict_line",
+            "last_error": "review_missing_verdict_line; task_records_snapshot_error: unavailable",
+        },
+    )
+    state = delegate._read_state(state_path)
+    assert state["last_error"].endswith("task_records_snapshot_error: unavailable")
+    assert state["failure_reason"] == "review_missing_verdict_line"
+
+
+@pytest.mark.parametrize(
+    ("returncode", "returncode_reason", "expected"),
+    [
+        (None, "worktree preparation failed", "review_worker_not_started"),
+        (None, "runtime reported success without a terminal subprocess returncode", "review_worker_returncode_missing"),
+        (1, None, "review_worker_nonzero_exit"),
+        (0, None, "review_worker_reported_failure"),
+    ],
+)
+def test_failed_review_task_record_always_names_reason(tmp_tasks_dir, returncode, returncode_reason, expected):
+    state_path = delegate._state_path("review-failure-reason")
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "review-failure-reason",
+            "status": "failed",
+            "require_review_verdict": True,
+            "returncode": returncode,
+            "returncode_reason": returncode_reason,
+        },
+    )
+    assert delegate._read_state(state_path)["failure_reason"] == expected
 
 
 @pytest.mark.parametrize(
@@ -11762,7 +11805,7 @@ def test_read_only_failed_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path,
     assert _branch_ref_present(primary, branch)
 
 
-def test_read_only_no_deliverable_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+def test_read_only_missing_verdict_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
     """A clean read-only review with no verdict is still removed."""
     primary, worktree, branch, state = _run_settle_reap_worker(
         tmp_tasks_dir=tmp_tasks_dir,
@@ -11774,7 +11817,8 @@ def test_read_only_no_deliverable_clean_settle_removes_worktree(tmp_tasks_dir, t
         require_review_verdict=True,
     )
 
-    assert state["status"] == "no_deliverable"
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == "review_missing_verdict_line"
     assert state["worktree_reap"]["action"] == "removed"
     assert not worktree.exists()
     assert _branch_ref_present(primary, branch)
