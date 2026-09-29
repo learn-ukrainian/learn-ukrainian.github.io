@@ -24,4 +24,4 @@ grammar:
   - G-a1-002
   - G-a1-003
 vocabulary:
-  core_count: 24
+  core_count: 15

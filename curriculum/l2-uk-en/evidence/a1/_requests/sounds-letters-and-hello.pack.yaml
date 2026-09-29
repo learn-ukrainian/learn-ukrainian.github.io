@@ -7,8 +7,8 @@ texts:
     supports: 'Hear and say the initial sound before naming vowel and consonant classes; primer printed page 13.'
   - id: T-002
     source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w001}
-    span: {first_words: 'The basic informal “Hi!” in Ukrainian is:', last_words: 'close family, and people we work with without any'}
-    supports: 'Adult L2 informal greeting chunk and its familiar-peer use; learned by ear without parsing; ULP Season 1 lesson 1.'
+    span: {first_words: 'The basic informal “Hi!” in Ukrainian is:', last_words: 'to your boss or a cashier.'}
+    supports: 'Adult L2 informal greeting chunk and familiar-peer use versus formal boss/cashier situations; learned by ear without parsing; ULP Season 1 lesson 1.'
   - id: T-003
     source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
     span: {first_words: 'The most typical greeting that you can use at any', last_words: 'time of the day is: До́брий день!'}
@@ -84,7 +84,7 @@ texts:
   - id: T-021
     source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
     span: {first_words: 'Here is the most common way to say goodbye in', last_words: 'a formal situation (to your colleague, teacher, or in'}
-    supports: 'Adult L2 formal social situation (colleague, teacher); ULP Season 1 lesson 2.'
+    supports: 'Adult L2 formal social situation (teacher); ULP Season 1 lesson 2.'
 exercises:
   - id: X-001
     source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}

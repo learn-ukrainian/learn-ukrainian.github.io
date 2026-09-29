@@ -18,8 +18,9 @@ register: 'English scaffolding at A1; Ukrainian models first, then English gloss
 changelog:
   - 'Position-1 plan package updated after claude-att-4 review: added dedicated practice and step for letter N in lesson 3, expanded workbook decodable words and names, resolved lesson 1 match-up overlap, sustained vowel/consonant contrast through lessons 4-6, differentiated workbook activity pairs, added affirmative particle tak for recap questions, restricted recap copying to taught letters, moved rika to incidental, and dropped misplaced model X-002 in lesson 2.'
   - 'Position-1 plan package updated after claude-att-5 review: added decodable words and names (kosa, Pavlyk, Polina, Panas) for letters K and P in lesson 5, listed affirmative particle tak as lesson 6 incidental, recycled malyna, slyva, and Ivan in lesson 6 recap, changed lesson 3 a8 to odd-one-out to ensure distinct discriminating tasks, and added ULP lesson 2 pack records T-020 and T-021 for formal situations cited in lesson 1 a5.'
+  - 'Position-1 plan package updated after claude-att-6 review: framed formal greeting situations (boss, cashier from T-002; receptionist from T-020; teacher from T-021) dropping colleague in lesson 1 a5 and step s2; demoted kosa to incidental in lesson 5 and removed it from a7 gloss matching; dropped animal name Ava (W-095); demoted the seven proper names (Nina, Nonna, Ivan, Vova, Pavlyk, Polina, Panas) from core to incidental decoding material across lessons 3-5 and updated lesson 6 recap.'
 arc_ref: {level: a1, position: 1}
-evidence_ref: {path: evidence/a1/sounds-letters-and-hello.yaml, sha256: 9af2d7515d3a5038f04c1b05ea3df776fc1c942aa8c19cdcee65bc51cbfbe8a7}
+evidence_ref: {path: evidence/a1/sounds-letters-and-hello.yaml, sha256: 96b696344c3bb5ba94463718cafc55df5aecf13955f1e1d8c16d9a34709c5515}
 lessons:
   - n: 1
     slug: greetings-by-ear
@@ -51,7 +52,7 @@ lessons:
         teach: 'Contrast the formal greeting by social situation, then play and repeat it aloud as a whole D3 chunk; do not parse its words.'
         introduces: {letters: [], grammar: [], vocabulary: [W-075, W-076]}
         uses: {grammar: [], vocabulary: [W-074]}
-        evidence: [T-003, T-020, T-021, V-002, S-003]
+        evidence: [T-002, T-003, T-020, T-021, V-002, S-003]
         practice: [a3, a4]
         needs: [video]
     consolidation: [a5]
@@ -60,7 +61,7 @@ lessons:
       - {id: a2, type: quiz, placement: inline, focus: 'Select the greeting just heard in an informal exchange, using a source-hosted comprehension choice.', model: X-001}
       - {id: a3, type: watch-and-repeat, placement: inline, focus: 'Hear and say the formal greeting aloud in a new situation; practised offline — not machine-verified.', model: X-001}
       - {id: a4, type: quiz, placement: inline, focus: 'Select the greeting appropriate for a formal setting; keep the full phrase intact.'}
-      - {id: a5, type: quiz, placement: workbook, focus: 'Choose the appropriate whole greeting chunk across distinct sourced situations (meeting a friend or close family from T-002, speaking with a receptionist from T-020 or a colleague or teacher from T-021); requires independent communicative decisions without spelling.'}
+      - {id: a5, type: quiz, placement: workbook, focus: 'Choose the appropriate whole greeting chunk across distinct sourced situations (meeting a friend or close family from T-002, speaking with a boss or a cashier from T-002, a receptionist from T-020, or a teacher from T-021); requires independent communicative decisions without spelling.'}
     videos:
       - {evidence: V-001, use: 'Step s1 audio model before any printed response.'}
       - {evidence: V-002, use: 'Step s2 formal audio model before the situation choice.'}
@@ -134,9 +135,9 @@ lessons:
           - {lemma: приголосний, evidence: W-080, forms: ['noun:inanim:m:v_naz']}
           - {lemma: мама, evidence: W-081, forms: ['noun:anim:f:v_naz']}
           - {lemma: читати, evidence: W-088, forms: ['verb:imperf:inf']}
-          - {lemma: Ніна, evidence: W-091, forms: ['noun:anim:f:v_naz:prop:fname']}
-          - {lemma: Нонна, evidence: W-092, forms: ['noun:anim:f:v_naz:prop:fname']}
-        incidental: []
+        incidental:
+          - {lemma: Ніна, evidence: W-091}
+          - {lemma: Нонна, evidence: W-092}
         recycled: [W-077, W-078]
     steps:
       - id: s1
@@ -158,7 +159,7 @@ lessons:
       - id: s3
         kind: teach
         teach: 'Add Н, read first CV and VC syllables with Н alongside decodable names, check the Latin-looking Н shape against its Ukrainian [н] sound rather than English H, and name the second soft sound without explaining the later soft-consonant system.'
-        introduces: {letters: [Н], grammar: [], vocabulary: [W-091, W-092]}
+        introduces: {letters: [Н], grammar: [], vocabulary: []}
         uses: {grammar: [G-a1-001, G-a1-002], vocabulary: [W-081]}
         evidence: [T-012, T-019, X-003, V-010]
         practice: [a5, a6]
@@ -195,10 +196,9 @@ lessons:
           - {lemma: малина, evidence: W-082, forms: ['noun:inanim:f:v_naz']}
           - {lemma: слива, evidence: W-083, forms: ['noun:inanim:f:v_naz']}
           - {lemma: писати, evidence: W-089, forms: ['verb:imperf:inf']}
-          - {lemma: Іван, evidence: W-093, forms: ['noun:anim:m:v_naz:prop:fname']}
-          - {lemma: Вова, evidence: W-094, forms: ['noun:anim:m:v_naz:prop:fname']}
-          - {lemma: Ава, evidence: W-095, forms: ['noun:anim:f:v_naz:prop:fname']}
-        incidental: []
+        incidental:
+          - {lemma: Іван, evidence: W-093}
+          - {lemma: Вова, evidence: W-094}
         recycled: [W-079, W-080, W-081, W-088]
     steps:
       - id: s1
@@ -211,8 +211,8 @@ lessons:
         needs: [video]
       - id: s2
         kind: teach
-        teach: 'Add Л and С in order as consonants, naming the soft sound heard before І without explaining the formal palatalization system; move from CV to CVC and short words and names (малина, слива, Іван, Вова, Ава), teach the write infinitive as a lexical action label, then copy the printed models into a notebook without keyboard input.'
-        introduces: {letters: [Л, С], grammar: [], vocabulary: [W-082, W-083, W-089, W-093, W-094, W-095]}
+        teach: 'Add Л and С in order as consonants, naming the soft sound heard before І without explaining the formal palatalization system; move from CV to CVC and short words and names (малина, слива, Іван, Вова), teach the write infinitive as a lexical action label, then copy the printed models into a notebook without keyboard input.'
+        introduces: {letters: [Л, С], grammar: [], vocabulary: [W-082, W-083, W-089]}
         uses: {grammar: [G-a1-002], vocabulary: [W-081, W-088]}
         evidence: [T-014, T-015, T-019, X-003, X-005, V-012, V-013, S-002]
         practice: [a3, a4]
@@ -236,26 +236,26 @@ lessons:
     title: 'К, П, Р'
     kind: teach
     job: 'Read and copy the final three letters and short words, then copy a sourced model name from a written model into a notebook.'
-    rationale: 'The primer gives К, П, Р in this order and progresses from syllable grids to short connected text and notebook copying; Р/P is another Latin-shape trap (after Н and В), while К reads alike. The B1 noun ріка is included as an incidental minimal pair with core рука to contrast the vowel sounds [і] and [у] in an otherwise identical decodable frame. Workbook practice progresses from syllable division in the previous lesson to active syllable assembly and a cumulative match-up of all taught core decodable words. A 290-word target supports the final sound rows, short-word reading, and the separate offline name-copy instruction.'
+    rationale: 'The primer gives К, П, Р in this order and progresses from syllable grids to short connected text and notebook copying; Р/P is another Latin-shape trap (after Н and В), while К reads alike. The noun коса, the personal names Павлик, Поліна, Панас, and the B1 noun ріка (minimal pair with core рука) provide decodable reading material as incidental vocabulary, while рука is the core decodable noun taught for comprehension and gloss matching. Workbook practice progresses from syllable division in the previous lesson to active syllable assembly and a cumulative match-up of all taught core decodable words. A 290-word target supports the final sound rows, short-word reading, and the separate offline name-copy instruction.'
     word_target: 290
     inventory:
       phonetics: {letters: [К, П, Р], sounds: []}
       grammar: []
       vocabulary:
         core:
-          - {lemma: коса, evidence: W-097, forms: ['noun:inanim:f:v_naz']}
-          - {lemma: Павлик, evidence: W-098, forms: ['noun:anim:m:v_naz:prop:fname']}
-          - {lemma: Поліна, evidence: W-099, forms: ['noun:anim:f:v_naz:prop:fname']}
-          - {lemma: Панас, evidence: W-100, forms: ['noun:anim:m:v_naz:prop:fname']}
           - {lemma: рука, evidence: W-084, forms: ['noun:inanim:f:v_naz']}
         incidental:
+          - {lemma: коса, evidence: W-097}
+          - {lemma: Павлик, evidence: W-098}
+          - {lemma: Поліна, evidence: W-099}
+          - {lemma: Панас, evidence: W-100}
           - {lemma: ріка, evidence: W-085}
         recycled: [W-079, W-080, W-081, W-082, W-083, W-089]
     steps:
       - id: s1
         kind: teach
         teach: 'Add К and П in primer order, classifying them as consonants; hear and read new CV, VC, then CVC combinations and decodable words and names (коса, Павлик, Поліна, Панас), keeping the source words inside the taught inventory.'
-        introduces: {letters: [К, П], grammar: [], vocabulary: [W-097, W-098, W-099, W-100]}
+        introduces: {letters: [К, П], grammar: [], vocabulary: []}
         uses: {grammar: [G-a1-001, G-a1-002], vocabulary: [W-079, W-080]}
         evidence: [T-016, T-017, X-003, X-004, X-005, V-014, V-015]
         practice: [a1, a2]
@@ -276,7 +276,7 @@ lessons:
       - {id: a4, type: quiz, placement: inline, focus: 'Choose the Ukrainian sound for Р from the primer model, not the Latin-shape guess, and classify the sound as a consonant.'}
       - {id: a5, type: letter-grid, placement: inline, focus: 'Display model words and a sourced personal-name copying frame; copy both by hand, not into a keyboard; practised offline — not machine-verified.', model: X-005}
       - {id: a6, type: pick-syllables, placement: workbook, focus: 'Complete newly readable short words and names by selecting missing syllables formed with К, П, and Р (коса, Павлик, Поліна, рука); progresses from syllable division to active word completion.', model: X-004}
-      - {id: a7, type: match-up, placement: workbook, focus: 'Match taught core decodable word forms (мама, малина, слива, коса, рука) to English glosses using bound W records; drills only core decodable vocabulary.'}
+      - {id: a7, type: match-up, placement: workbook, focus: 'Match taught core decodable word forms (мама, малина, слива, рука) to English glosses using bound W records; drills only core decodable vocabulary.'}
     videos:
       - {evidence: V-014, use: 'Step s1 pronunciation model for consonant К.'}
       - {evidence: V-015, use: 'Step s1 pronunciation model for consonant П.'}
@@ -297,12 +297,13 @@ lessons:
         incidental:
           - {lemma: повторення, evidence: W-090}
           - {lemma: так, evidence: W-096}
-        recycled: [W-074, W-075, W-076, W-077, W-078, W-079, W-080, W-081, W-082, W-083, W-084, W-086, W-087, W-088, W-089, W-093]
+          - {lemma: Іван, evidence: W-093}
+        recycled: [W-074, W-075, W-076, W-077, W-078, W-079, W-080, W-081, W-082, W-083, W-084, W-086, W-087, W-088, W-089]
     steps:
       - id: s1
         kind: recap
         teach: 'Show a short first-person Ukrainian story beside aligned English about hearing greetings (both informal привіт and formal добрий день), distinguishing a sound (звук) from a letter (літера), distinguishing vowels (голосний) from consonants (приголосний), seeing and reading a taught word, and copying it; use only allowed W records, keep untaught verb forms as memorised forms, then ask Ukrainian-only questions about the story using known words and single letters in the form of selection choices between story words or letters, or polar intonation questions (answered with так or ні), before one offline production task: copy decodable lines written only with the 13 taught letters (e.g., with мама, малина, слива, рука) and a model personal name (e.g., Іван) in a notebook.'
-        uses: {grammar: [], vocabulary: [W-074, W-075, W-076, W-077, W-078, W-079, W-080, W-081, W-082, W-083, W-084, W-086, W-087, W-088, W-089, W-093]}
+        uses: {grammar: [], vocabulary: [W-074, W-075, W-076, W-077, W-078, W-079, W-080, W-081, W-082, W-083, W-084, W-086, W-087, W-088, W-089]}
         evidence: [T-005, T-002, X-005, S-001, S-002]
         practice: [a1, a2, a3]
     activities:
