@@ -13,7 +13,9 @@ The generated MCP configuration defines exclusively a `sources` server started
 over stdio from the primary checkout's virtual environment and server script,
 bypassing the shared streamable-HTTP daemon (127.0.0.1:8766). Because the prompt may be
 rendered in another checkout, ``check_review_contract`` refuses the attempt when the
-server code or templates its render recorded differ from what the seat would run (#9163).
+server code or templates its render recorded differ from what the seat would run, and
+``prepare_review_attempt`` digests the server again from the exact checkout and interpreter
+it writes into the configuration, refusing when that differs from what admission checked (#9163).
 
 Codex has no ``--mcp-config`` flag, and per-invocation ``-c mcp_servers.X`` overrides
 MERGE with the user's global ``~/.codex/config.toml``. A Codex attempt therefore also
@@ -91,7 +93,7 @@ from typing import Any
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review.receipts.ledger import REVIEW_TOOLS
-from scripts.review.render_contract import check_render_contract
+from scripts.review.render_contract import check_launch_contract, check_render_contract
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
@@ -664,6 +666,7 @@ def prepare_review_attempt(
     harness: str,
     *,
     receipts_root: Path | None = None,
+    review_contract: Mapping[str, Any] | None = None,
 ) -> ReviewMcpPlan:
     """Prepare the per-attempt stdio sources MCP config, empty ledger, and sidecar.
 
@@ -673,12 +676,16 @@ def prepare_review_attempt(
         manifest_path: Path to the review manifest YAML.
         harness: Agent harness name (e.g. 'claude', 'cursor').
         receipts_root: Optional override for the receipts base directory (used in tests).
+        review_contract: What admission checked (``check_review_contract``). When given, the sources server is
+            digested again from the checkout and interpreter this config launches, and a difference refuses
+            before any file is written (#9163).
 
     Returns:
         ReviewMcpPlan containing the written config path and adapter options.
 
     Raises:
-        ValueError: If tokens are invalid or harness is unsupported.
+        ValueError: If tokens are invalid or harness is unsupported, or (``ReviewContractError``) the server
+            differs from the one admission checked.
         FileExistsError: If ledger, sidecar, or config already exists.
         FileNotFoundError: If manifest_path does not exist.
     """
@@ -732,6 +739,10 @@ def prepare_review_attempt(
             f"AGY OAuth token not found for the scoped review home: no {_AGY_TOKEN_NAME} in the "
             "real AGY_APP_DATA_DIR (default ~/.gemini/antigravity-cli) (#8617)"
         )
+
+    if review_contract is not None:
+        # Admission checked the primary earlier in the dispatch; the seat launches what is on disk now (#9163).
+        check_launch_contract(review_contract, primary_root, python_bin)
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = {

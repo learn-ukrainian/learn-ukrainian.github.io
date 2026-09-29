@@ -9411,18 +9411,24 @@ class _GuardFakeProc:
     stdin = _GuardFakeStdin()
 
 
+def _real_popen_command(cmd) -> bool:
+    return bool(cmd) and (str(cmd[0]) == "git" or [str(part) for part in cmd[1:2]] == ["-c"])
+
+
 def _patch_worker_popen(monkeypatch):
     """Fake the worker spawn while letting real ``git`` still run.
 
     ``delegate.subprocess`` and ``worktree_containment.subprocess`` are the same
     module object, so a blanket ``Popen`` patch would also break the containment
     guard's git plumbing (``subprocess.run`` uses ``Popen`` internally). Route
-    ``git`` invocations to the real Popen and fake only the ``.venv`` worker.
+    ``git`` invocations and one-shot ``python -c`` probes (the review contract's
+    interpreter import-path query, #9163) to the real Popen and fake only the
+    ``.venv`` worker.
     """
     real_popen = delegate.subprocess.Popen
 
     def fake_popen(cmd, *a, **k):
-        if cmd and str(cmd[0]) == "git":
+        if _real_popen_command(cmd):
             return real_popen(cmd, *a, **k)
         return _GuardFakeProc()
 
@@ -14056,6 +14062,66 @@ def test_review_attempt_force_new_refusal_leaves_the_prior_record_and_result(
     assert delegate._read_state(path) == original
     assert result_path.read_text(encoding="utf-8") == "prior review evidence\n"
     assert list(tmp_tasks_dir.glob("review-again.*.archived.*")) == []
+
+
+def test_review_attempt_refuses_at_launch_when_the_primary_server_changes_after_admission(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """#9163 round 2: admission checks the primary once; the launch digests it again and refuses, spawning nothing."""
+    import scripts.agent_runtime.review_mcp as review_mcp
+
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", main)
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: main)
+    _review_code(main)
+    prompt_file = _rendered_attempt_prompt(main, tmp_path / "rendered" / "prompt.md")
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    admit = review_mcp.check_review_contract
+
+    def admit_then_update_the_primary(*args, **kwargs):
+        contract = admit(*args, **kwargs)
+        # A pull of the primary checkout lands after admission and before the seat's server launches.
+        _review_code(main, server="print('receipt: <id> (a newer outcome)')\n")
+        return contract
+
+    monkeypatch.setattr(review_mcp, "check_review_contract", admit_then_update_the_primary)
+    spawned: list[list[str]] = []
+    real_popen = delegate.subprocess.Popen
+
+    def fake_popen(cmd, *a, **k):
+        if _real_popen_command(cmd):
+            return real_popen(cmd, *a, **k)
+        spawned.append([str(part) for part in cmd])
+        return _GuardFakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+    rc = delegate.cmd_dispatch(
+        _write_args(
+            agent="claude",
+            task_id="review-launch-changed",
+            mode="read-only",
+            prompt=None,
+            prompt_file=str(prompt_file),
+            cwd=str(dispatch_wt),
+            review_attempt=str(manifest),
+            review_id="rev-test",
+            attempt_id="att-test",
+        )
+    )
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    print(err)
+    assert "review attempt refused: review_server_changed: the sources server this attempt would launch" in err
+    assert f"launching: {main} with " in err
+    assert "differing server components: repository: sha256:" in err
+    assert spawned == []
+    assert delegate._read_state(delegate._state_path("review-launch-changed")) is None
+    assert not (main / "batch_state" / "review-receipts" / "rev-test").exists()
 
 
 @pytest.mark.parametrize("prompt", [_MATCHING_ATTEMPT_PROMPT, "-"], ids=["literal", "stdin"])

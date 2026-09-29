@@ -55,7 +55,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
         "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
-        "review_contract": {render_checkout, server_checkout, render_server_digest, server_digest, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
+        "review_contract": {render_checkout, server_checkout, server_interpreter, render_server_digest, server_digest, server_components, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
@@ -10236,6 +10236,8 @@ def _dispatch(
                 attempt_id=attempt_id,
                 manifest_path=Path(review_attempt),
                 harness=effective_harness,
+                # Launch-time check (#9163): the primary may have changed since admission.
+                review_contract=review_contract,
             )
         except (ValueError, FileExistsError) as exc:
             print(f"❌ {exc}", file=sys.stderr)
