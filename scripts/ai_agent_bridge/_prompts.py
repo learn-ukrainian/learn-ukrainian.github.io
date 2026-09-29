@@ -317,13 +317,6 @@ dispatch preflight green (issue+ACs, driver, CF path; API/infra/disk/capacity;
 ≥2 non-orch workers); everyday ready means DoD not DoR; best practice + lightest
 elegant design, no over-engineering."""
 
-CODE_DISCOVERY_DIGEST = (
-    "Code discovery: for code you have not located, run `jg \"<question>\" <narrow subdir>` first "
-    "(never `.`/repo root; `--max-source-bytes 24000`); exact symbols use `rg`; never install/upgrade jg "
-    "or run `jg auth`; if jg fails, say so and continue; see "
-    "`agents_extensions/shared/skills/jevgrep/SKILL.md`."
-)
-
 
 def build_agy_prompt(
     msg: dict,
@@ -344,8 +337,6 @@ def build_agy_prompt(
     prompt = f"""You are Agy (Antigravity CLI, Gemini-3.6-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
 
 {OPERATOR_CONTRACT_DIGEST}
-
-{CODE_DISCOVERY_DIGEST}
 
 ---
 Task ID: {msg['task_id'] or 'none'}
