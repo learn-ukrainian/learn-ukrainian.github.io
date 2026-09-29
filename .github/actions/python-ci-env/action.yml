@@ -36,10 +36,15 @@ runs:
       shell: bash
       run: |
         set -euo pipefail
-        python -m venv .venv
+        # No ensurepip (~2 s): pip, setuptools and wheel are pinned in the lock
+        # and installed from it below.
+        python -m venv --without-pip .venv
         # Drop live-ML wheels; the unit suite does not import them and they
         # exceed the 15m budget. Check the installed dependency graph below.
-        grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt \
+        # Also drop the local v4-runtime path: it is built once, without build
+        # isolation, after the lock install; leaving it in the lock builds the
+        # same package twice.
+        grep -viE -e '^(torch|torchvision|open_clip_torch|stanza)==' -e '^\./packages/v4-runtime$' requirements-lock.txt \
           > "${RUNNER_TEMP}/requirements-ci.txt"
         if ! uv pip install --offline --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"; then
           echo 'uv cache incomplete; retrying installation from the index'
