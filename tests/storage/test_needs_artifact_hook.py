@@ -59,3 +59,54 @@ def test_ci_audits_collection_and_runtime_skips_from_all_configured_roots() -> N
     assert "git ls-files | grep -E" in audit
     assert "collected != expected" in audit
     assert "expected - artifact_skips" in audit and "artifact_skips - expected" in audit
+    assert "::group::" in audit
+    assert "tail -n 200 ci-artifacts/needs-artifact-collected.txt" in audit
+    assert "::endgroup::" in audit
+    assert "actions/upload-artifact" in audit
+    assert "if: failure()" in audit
+    assert "path: ci-artifacts/" in audit
+    assert "retention-days: 7" in audit
+
+
+@pytest.mark.parametrize(
+    ("collection_status", "expect_group", "expect_exit"),
+    [
+        (2, True, 2),
+        (1, True, 1),
+        (0, False, 0),
+        (5, False, 0),
+    ],
+)
+def test_ci_needs_artifact_collection_failure_branch_behavior(
+    tmp_path: Path, collection_status: int, expect_group: bool, expect_exit: int
+) -> None:
+    import subprocess
+
+    workflow = (Path(__file__).resolve().parents[2] / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    audit = workflow.split("  needs-artifact-audit:", 1)[1].split("  contracts:", 1)[0]
+    assert 'if [ "${collection_status:-0}" -ne 0 ] && [ "$collection_status" -ne 5 ]; then' in audit
+
+    artifacts_dir = tmp_path / "ci-artifacts"
+    artifacts_dir.mkdir()
+    collected = artifacts_dir / "needs-artifact-collected.txt"
+    collected.write_text("dummy error output from pytest\n", encoding="utf-8")
+
+    script = f"""
+    set -euo pipefail
+    collection_status={collection_status}
+    if [ "${{collection_status:-0}}" -ne 0 ] && [ "$collection_status" -ne 5 ]; then
+      echo "::group::pytest needs_artifact collection failure"
+      tail -n 200 ci-artifacts/needs-artifact-collected.txt
+      echo "::endgroup::"
+      exit "$collection_status"
+    fi
+    """
+    proc = subprocess.run(["bash", "-c", script], cwd=tmp_path, capture_output=True, text=True, timeout=30)
+    assert proc.returncode == expect_exit
+    if expect_group:
+        assert "::group::pytest needs_artifact collection failure" in proc.stdout
+        assert "dummy error output from pytest" in proc.stdout
+        assert "::endgroup::" in proc.stdout
+    else:
+        assert "::group::" not in proc.stdout
+        assert "dummy error output" not in proc.stdout
