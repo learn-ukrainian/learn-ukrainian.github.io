@@ -429,7 +429,9 @@ Then dispatch with a numbered brief
 (worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
 the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
 quoted raw evidence). Classify the task and pass the research flags
-(`--research-role/-task-family/-track/-owned-path`). Stagger same-lane spawns ~10s.
+(`--research-role/-task-family/-track/-owned-path`). For write dispatches also pass
+repeatable `--owned-path <path>` for the paths the worker may commit: auto-finalize commits
+only under them and commits nothing without them (#8991). Stagger same-lane spawns ~10s.
 The brief's test step names only the test files that cover the changed files,
 including tests of code that imports a changed shared helper; never
 collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`

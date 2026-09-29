@@ -769,6 +769,38 @@ dispatch. `unknown` remains reserved for an unexpected resolution failure.
 Every terminal state records a concrete subprocess `returncode`, or a
 `returncode_reason` when no child process ever yielded one.
 
+### Auto-finalize scope and unfinished background jobs (#8991)
+
+**Pass `--owned-path` for every write dispatch whose dirty tree may be auto-finalized.**
+When a `danger` worker exits 0 with uncommitted work and no commits, delegate commits and
+pushes it only under the task's `--owned-path` values (repeatable; `dir/`, `dir/**`, a
+file, or a glob). They are recorded as `owned_paths`. `--research-owned-path` is research
+classification and is never used as commit authority. With no `--owned-path`, nothing is
+committed and the task ends `needs_finalize` (`no_owned_paths_declared`). Changes outside
+the owned paths, and both sides of any possible move across them (an owned addition while
+an outside file is deleted, or the reverse), stay uncommitted and are
+listed in `finalize_skipped_paths`; the task then ends `needs_finalize`, not `done`.
+
+```bash
+.venv/bin/python scripts/delegate.py dispatch --agent <lane> --worktree --mode danger \
+  --owned-path scripts/fleet/ --owned-path tests/fleet/test_x.py \
+  --research-owned-path scripts/fleet/ ...
+```
+
+A headless worker whose own background jobs are still running at CLI exit, or whose
+exit scan could not rule them out (`leftovers_scan: unknown`), ends `needs_finalize` in
+every mode, read-only included. Reapers stop those jobs only inside the scope that matches
+the task's recorded launch identity, and signal individual processes only through
+pidfds whose start time, scope membership and user id are re-checked after opening. If
+any of those jobs now belongs to another user, the reaper stops nothing (not even the
+scope unit) and refuses the reap. Guaranteed: a job seen with another user id at scan
+time blocks both the scope unit stop and every signal, and each pidfd target's user id is
+re-checked after the pidfd opens. Not guaranteed (accepted residual, #8991): a job that
+changes its identity after the user-id scan and before the scope unit stop or the pidfd
+signal lands. A unit stop cannot be made atomic with the scan; closing that window would
+need a privileged helper inside the worker's own scope. Details: [`docs/SCRIPTS.md`](SCRIPTS.md) §
+Background jobs at exit.
+
 ### Worktree removal and sibling repositories (#8610, #8624)
 
 Every removal of a dispatch worktree (dispatch's own stale-holder and
