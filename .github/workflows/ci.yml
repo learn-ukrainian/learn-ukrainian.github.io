@@ -333,9 +333,25 @@ jobs:
           cache-dependency-path: package-lock.json
       - name: Install native mechanism test dependencies
         run: |
+          set -euo pipefail
           sudo rm -f /etc/apt/sources.list.d/*chrome* /etc/apt/sources.list.d/*google* /var/lib/apt/lists/*chrome* /var/lib/apt/lists/*google*
-          sudo apt-get update -qq
-          sudo apt-get install -y bubblewrap postgresql-16 libpq-dev apparmor
+          # The runner image already carries PostgreSQL 16, libpq-dev and
+          # apparmor; only bubblewrap is missing. Install just what is absent
+          # from the image's package lists (no `apt-get update`, no needless
+          # upgrade of installed packages, ~11 s per shard, #9062). If the
+          # image's lists are stale and the fetch fails, refresh once and retry.
+          missing=()
+          for pkg in bubblewrap postgresql-16 libpq-dev apparmor; do
+            dpkg -s "$pkg" >/dev/null 2>&1 || missing+=("$pkg")
+          done
+          if [ "${#missing[@]}" -gt 0 ]; then
+            echo "Installing missing native packages: ${missing[*]}"
+            if ! sudo apt-get install -y --no-install-recommends "${missing[@]}"; then
+              echo 'apt install failed against the image package lists; refreshing and retrying'
+              sudo apt-get update -qq
+              sudo apt-get install -y --no-install-recommends "${missing[@]}"
+            fi
+          fi
           # Ubuntu-hosted runners require an application-specific userns grant.
           # This profile belongs only to the disposable CI VM.
           if [ -f /proc/sys/kernel/apparmor_restrict_unprivileged_userns ]; then
