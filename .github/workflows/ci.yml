@@ -312,18 +312,6 @@ jobs:
       fail-fast: false
       matrix:
         shard: ${{ fromJSON(needs.changes.outputs.shards) }}
-    services:
-      postgres:
-        # Pinned to the multi-arch index digest (`docker buildx imagetools
-        # inspect postgres:16` / registry Docker-Content-Digest, 2026-09-28)
-        # so the gate cannot drift under a moving tag (#9062).
-        image: postgres:16@sha256:1a6ab3f5345eb6dbe04a1349529caabdb0ab09293a09590fad07b2246bfa4b54
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: lu
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     env:
       LEARN_UKRAINIAN_CP_PG_DSN: postgresql://postgres:postgres@localhost:5432/lu
       LU_PYTEST_TMP_BUDGET_GB: "5"
@@ -365,6 +353,36 @@ jobs:
             sudo apparmor_parser -r "${RUNNER_TEMP}/v4-ci-bwrap.apparmor"
           fi
           bwrap --unshare-user --unshare-pid --ro-bind / / -- /usr/bin/true
+      - name: Start PostgreSQL 16
+        # The apt-installed server replaces the postgres:16 service container
+        # (~20-29 s of image pull + init per shard, #9062). Same credentials
+        # as LEARN_UKRAINIAN_CP_PG_DSN above. Fails the job if the server is
+        # not accepting connections within 60 s; the pg_skip_guard step after
+        # pytest catches a start that "worked" but left the tests skipping.
+        if: needs.changes.outputs.docs_only == 'false'
+        run: |
+          set -euo pipefail
+          if ! pg_lsclusters --no-header | grep -q '^16 main '; then
+            sudo pg_createcluster 16 main
+          fi
+          sudo pg_ctlcluster 16 main start || true
+          ready=""
+          for _ in $(seq 1 30); do
+            if pg_isready -h localhost -p 5432 -q; then ready=1; break; fi
+            sleep 2
+          done
+          if [ -z "$ready" ]; then
+            echo "::error::PostgreSQL 16 was not ready on localhost:5432 within 60 s" >&2
+            pg_lsclusters >&2 || true
+            sudo tail -n 40 /var/log/postgresql/postgresql-16-main.log >&2 || true
+            exit 1
+          fi
+          sudo -u postgres psql -v ON_ERROR_STOP=1 -q <<'SQL'
+          ALTER ROLE postgres WITH PASSWORD 'postgres';
+          SELECT 'CREATE DATABASE lu' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'lu')\gexec
+          SQL
+          # The exact DSN the tests use must connect, not just the socket.
+          PGPASSWORD=postgres psql "$LEARN_UKRAINIAN_CP_PG_DSN" -v ON_ERROR_STOP=1 -qtAc 'SELECT version()'
       # Composite Python env (#9062): uv, offline-first lockfile install,
       # v4-runtime, Atlas manifest check. npm stays after it (no dependency
       # either way).
@@ -519,6 +537,18 @@ jobs:
               --timeout-method=thread --override-ini addopts=-v \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}-repo-wide.xml"
           fi
+      - name: Fail if Postgres tests skipped
+        # The Postgres tests self-skip when the DSN is unusable, so a broken
+        # start would otherwise be a green run of skips. Reads the JUnit files
+        # Run pytest wrote; fails on any DSN skip or a Postgres test file with
+        # no passing test, and prints ran/skipped counts to the job summary.
+        if: needs.changes.outputs.docs_only == 'false'
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          .venv/bin/python -m scripts.ci.pg_skip_guard ci-artifacts/pytest-shard-*.xml \
+            --title "pytest (${SHARD})" | tee -a "$GITHUB_STEP_SUMMARY"
       - name: List failing tests in job summary
         # Reads the JUnit files the Run pytest step already wrote (#9063);
         # never re-runs tests and can never change the shard's result.
