@@ -16,7 +16,13 @@ from scripts.build.fresh.immersion import lesson_immersion_payload
 from scripts.build.fresh.manifest import unlink_current
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.build.fresh.preflight import preflight_lesson
-from scripts.build.fresh.prompt import BAND_CARD_MAP, check_rendered_prompt, render_lesson_prompt, render_recap_prompt
+from scripts.build.fresh.prompt import (
+    BAND_CARD_MAP,
+    check_rendered_prompt,
+    grammar_points,
+    render_lesson_prompt,
+    render_recap_prompt,
+)
 from scripts.build.fresh.regeneration import load_ledger
 from scripts.build.fresh.runner import run_lesson
 from scripts.build.fresh.writer import dispatch_writer
@@ -80,6 +86,8 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
             built = (_load_recap_built_lessons(paths["state_dir"], level, slug, n, repo_root)
                      if entry.get("kind") == "recap" else [])
             common = dict(cited_records=_load_cited_records(entry, pack, words), learner_state=learner,
+                          word_store=words,
+                          grammar_registry=grammar_points(paths["plan"].parent / "_grammar.yaml", level),
                           immersion=lesson_immersion_payload(level, position, n, learner),
                           level=level, slug=slug, lesson_n=n, style_card_path=card_path,
                           **{key: expected[key] for key in ("plan_sha256", "pack_lock", "words_lock",
@@ -88,8 +96,8 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                 prompt = render_recap_prompt(entry, built_lessons=built, **common)
             else:
                 prompt = render_lesson_prompt(entry, **common)
-            checked = check_rendered_prompt(prompt, entry, card_path,
-                                             is_recap=entry.get("kind") == "recap", built_lessons=built)
+            checked = check_rendered_prompt(prompt, entry, card_path, is_recap=entry.get("kind") == "recap",
+                                             built_lessons=built, learner_state=learner)
             if not checked.passed:
                 raise ValueError(f"rendered_prompt_invalid: {checked.errors}")
             prompt_path = checked_existing_path(repo_root, state_dir / f"lesson-{n}.prompt.md",

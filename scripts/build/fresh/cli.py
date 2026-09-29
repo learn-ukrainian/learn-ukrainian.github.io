@@ -30,6 +30,7 @@ from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
     check_rendered_prompt,
     extract_plan_citations,
+    grammar_points,
     render_lesson_prompt,
     render_recap_prompt,
     style_card_info,
@@ -794,8 +795,12 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                word_store=words_dict,
+                grammar_registry=grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
             )
-            check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=True, built_lessons=built)
+            check_res = check_rendered_prompt(
+                rendered, lesson_entry, card_path, is_recap=True, built_lessons=built, learner_state=p_state
+            )
         else:
             rendered = render_lesson_prompt(
                 lesson_entry,
@@ -811,8 +816,10 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                word_store=words_dict,
+                grammar_registry=grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
             )
-            check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=False)
+            check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=False, learner_state=p_state)
 
         if not check_res.passed:
             print("Rendered-prompt check FAILED:", file=sys.stderr)
@@ -953,9 +960,11 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                word_store=words_dict,
+                grammar_registry=grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
             )
             check_res = check_rendered_prompt(
-                rendered_prompt, lesson_entry, card_path, is_recap=True, built_lessons=built
+                rendered_prompt, lesson_entry, card_path, is_recap=True, built_lessons=built, learner_state=p_state
             )
         else:
             rendered_prompt = render_lesson_prompt(
@@ -972,8 +981,12 @@ def main(argv: list[str] | None = None) -> int:
                 words_lock=hashes["words_lock"],
                 lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
                 learner_state_sha256=hashes["learner_state_sha256"],
+                word_store=words_dict,
+                grammar_registry=grammar_points(paths["plan"].parent / "_grammar.yaml", args.level),
             )
-            check_res = check_rendered_prompt(rendered_prompt, lesson_entry, card_path, is_recap=False)
+            check_res = check_rendered_prompt(
+                rendered_prompt, lesson_entry, card_path, is_recap=False, learner_state=p_state
+            )
 
         if not check_res.passed:
             print("Rendered prompt check FAILED:", file=sys.stderr)

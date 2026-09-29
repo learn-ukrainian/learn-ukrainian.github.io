@@ -13,6 +13,8 @@ The rendered-prompt check validates (#8431 §8.1):
 - uncited-id scan covers the WHOLE rendered prompt minus only the delimited schema exemplar
 - nothing from another lesson by id: no record id and no lesson number outside this lesson's
   plan entry (except the recap's declared built lessons 1..N-1)
+- the delimited learner-state block lists exactly the planned state's word and grammar ids and letters;
+  those ids are the only ones admitted outside the plan entry's citations (#9182)
 - the style card hash exists and matches disk
 - the prompt sha256 is computed and recorded
 """
@@ -21,6 +23,7 @@ from __future__ import annotations
 
 import hashlib
 import re
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -35,6 +38,7 @@ from scripts.build.fresh.draft_schema import (
 )
 from scripts.build.fresh.immersion import ImmersionPayload, compute_immersion_payload
 from scripts.curriculum.learner_state.planned import PlannedState
+from scripts.curriculum.validate.registry import load_registry
 
 __all__ = [
     "RenderedPromptCheckResult",
@@ -42,6 +46,8 @@ __all__ = [
     "compute_immersion_payload",
     "extract_plan_citations",
     "get_activity_item_shapes",
+    "grammar_points",
+    "learner_state_view",
     "render_lesson_prompt",
     "render_recap_prompt",
     "style_card_info",
@@ -66,6 +72,12 @@ RECORD_ID_RE = re.compile(r"\b(?:W|EX|T|E|V|P|G|X|S)-[0-9a-zA-Z_-]+\b")
 
 SCHEMA_EXEMPLAR_BEGIN = "<!-- BEGIN SCHEMA_SUMMARY_EXEMPLAR -->"
 SCHEMA_EXEMPLAR_END = "<!-- END SCHEMA_SUMMARY_EXEMPLAR -->"
+
+LEARNER_STATE_BEGIN = "<!-- BEGIN LEARNER_STATE -->"
+LEARNER_STATE_END = "<!-- END LEARNER_STATE -->"
+
+#: Letter order inside one lesson of the taught-letters list.
+UKRAINIAN_ALPHABET = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
 
 # Forbidden v1 path patterns per review finding 5 and §8.1
 FORBIDDEN_V1_PATTERNS: tuple[re.Pattern[str], ...] = (
@@ -231,6 +243,91 @@ def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str,
     return "\n".join(lines) + "\n"
 
 
+def grammar_points(registry_path: Path, level: str) -> dict[str, str]:
+    """Grammar id -> point text from the level registry (``lesson-plans/<level>/_grammar.yaml``); {} when absent."""
+    failures: list[Any] = []
+    loaded = load_registry(registry_path, level, failures)
+    if failures:
+        raise ValueError(f"grammar registry {registry_path} is invalid: {[str(f) for f in failures]}")
+    return {} if loaded is None else {record.id: record.point for record in loaded[0]}
+
+
+def _state_dict(learner_state: PlannedState | dict[str, Any]) -> dict[str, Any]:
+    return learner_state.to_dict() if isinstance(learner_state, PlannedState) else dict(learner_state)
+
+
+def _id_key(identifier: str) -> tuple[str, int, str]:
+    """Order W-2 before W-10 (numeric suffix), then by the full id."""
+    match = re.match(r"^(.*?)(\d+)$", identifier)
+    return (match.group(1), int(match.group(2)), identifier) if match else (identifier, -1, identifier)
+
+
+def _letter_key(item: tuple[str, dict[str, int]]) -> tuple[int, int, int, str]:
+    letter, introduced = item
+    index = UKRAINIAN_ALPHABET.find(letter.upper())
+    return (
+        int(introduced.get("position", 0)),
+        int(introduced.get("lesson", 0)),
+        index if index >= 0 else len(UKRAINIAN_ALPHABET),
+        letter,
+    )
+
+
+def learner_state_view(
+    learner_state: PlannedState | dict[str, Any],
+    word_store: Mapping[str, Any] | None,
+    points: Mapping[str, str] | None,
+) -> dict[str, Any]:
+    """The complete planned state before this lesson, as the writer reads it (#9182).
+
+    Built from the ``to_dict()`` document the lesson reviewer receives and ``learner_state_sha256``
+    hashes; it only adds each word's lemma from the word store and each grammar id's point from the
+    grammar registry. An id with no lemma or point fails the render: the writer must see the whole state.
+    """
+    state = _state_dict(learner_state)
+    lemmas = {
+        rec["id"]: rec.get("lemma")
+        for rec in (word_store or {}).get("words") or []
+        if isinstance(rec, dict) and "id" in rec
+    }
+    points = points or {}
+    base = set(state.get("base_ids") or [])
+    core = set(state.get("core_ids") or {}) - base
+    names = set(state.get("name_ids") or {}) - base - core
+    unresolved: list[str] = []
+
+    def words(ids: set[str]) -> list[dict[str, str]]:
+        rows = [{"id": wid, "lemma": lemmas.get(wid) or ""} for wid in sorted(ids, key=_id_key)]
+        unresolved.extend(row["id"] for row in rows if not row["lemma"])
+        return rows
+
+    view = {
+        "letters": [letter for letter, _ in sorted((state.get("letters") or {}).items(), key=_letter_key)],
+        "grammar": [
+            {"id": gid, "point": points.get(gid) or ""} for gid in sorted(state.get("grammar_ids") or {}, key=_id_key)
+        ],
+        "base": words(base),
+        "core": words(core),
+        "names": words(names),
+    }
+    unresolved.extend(row["id"] for row in view["grammar"] if not row["point"])
+    if unresolved:
+        raise ValueError(f"learner_state_unresolved: no lemma or grammar point for {unresolved}")
+    view["word_count"] = len(base) + len(core) + len(names)
+    return view
+
+
+def _learner_state_block_ids(learner_state: PlannedState | dict[str, Any]) -> set[str]:
+    """Every record id the learner-state block must list: allowed word ids and taught grammar ids."""
+    state = _state_dict(learner_state)
+    return (
+        set(state.get("base_ids") or [])
+        | set(state.get("core_ids") or {})
+        | set(state.get("name_ids") or {})
+        | set(state.get("grammar_ids") or {})
+    )
+
+
 def render_lesson_prompt(
     plan_entry: dict[str, Any],
     cited_records: dict[str, Any],
@@ -248,8 +345,14 @@ def render_lesson_prompt(
     lesson_lock_entry_sha256: str = "0" * 64,
     learner_state_sha256: str = "0" * 64,
     prompts_dir: Path | None = None,
+    word_store: Mapping[str, Any] | None = None,
+    grammar_registry: Mapping[str, str] | None = None,
 ) -> str:
-    """Render the lesson writer prompt for a standard lesson."""
+    """Render the lesson writer prompt for a standard lesson.
+
+    ``word_store`` (the loaded ``_words.yaml``) and ``grammar_registry`` (grammar id -> point, see
+    ``grammar_points``) resolve the lemmas and grammar points of the learner-state section.
+    """
     p_dir = prompts_dir or PROMPTS_DIR
     env = Environment(
         loader=FileSystemLoader(str(p_dir)),
@@ -272,7 +375,7 @@ def render_lesson_prompt(
 
     shapes = get_activity_item_shapes(level, schemas_dir)
 
-    l_state = learner_state.to_dict() if isinstance(learner_state, PlannedState) else dict(learner_state)
+    l_state = _state_dict(learner_state)
     l_state["allowed_ids_count"] = (
         len(learner_state.all_allowed_ids)
         if isinstance(learner_state, PlannedState)
@@ -291,6 +394,7 @@ def render_lesson_prompt(
         slug=slug,
         cited_records=cited_records,
         learner_state=l_state,
+        taught=learner_state_view(learner_state, word_store, grammar_registry),
         immersion=imm_dict,
         style_card_name=card_name,
         style_card_content=card_content,
@@ -324,8 +428,11 @@ def render_recap_prompt(
     lesson_lock_entry_sha256: str = "0" * 64,
     learner_state_sha256: str = "0" * 64,
     prompts_dir: Path | None = None,
+    word_store: Mapping[str, Any] | None = None,
+    grammar_registry: Mapping[str, str] | None = None,
 ) -> str:
-    """Render the recap lesson prompt receiving built lessons 1..N-1."""
+    """Render the recap lesson prompt receiving built lessons 1..N-1 (``word_store`` and
+    ``grammar_registry`` as in ``render_lesson_prompt``)."""
     p_dir = prompts_dir or PROMPTS_DIR
     env = Environment(
         loader=FileSystemLoader(str(p_dir)),
@@ -348,7 +455,7 @@ def render_recap_prompt(
 
     shapes = get_activity_item_shapes(level, schemas_dir)
 
-    l_state = learner_state.to_dict() if isinstance(learner_state, PlannedState) else dict(learner_state)
+    l_state = _state_dict(learner_state)
     l_state["allowed_ids_count"] = (
         len(learner_state.all_allowed_ids)
         if isinstance(learner_state, PlannedState)
@@ -368,6 +475,7 @@ def render_recap_prompt(
         built_lessons=built_lessons,
         cited_records=cited_records,
         learner_state=l_state,
+        taught=learner_state_view(learner_state, word_store, grammar_registry),
         immersion=imm_dict,
         style_card_name=card_name,
         style_card_content=card_content,
@@ -390,8 +498,13 @@ def check_rendered_prompt(
     *,
     is_recap: bool = False,
     built_lessons: list[dict[str, Any]] | None = None,
+    learner_state: PlannedState | dict[str, Any] | None = None,
 ) -> RenderedPromptCheckResult:
-    """Run deterministic check 0 on the rendered prompt (#8431 §8.1)."""
+    """Run deterministic check 0 on the rendered prompt (#8431 §8.1).
+
+    ``learner_state`` is the state the prompt was rendered from; the learner-state block must list
+    exactly its ids and letters (#9182).
+    """
     errors: list[str] = []
 
     # 1. No unresolved placeholders
@@ -429,6 +542,28 @@ def check_rendered_prompt(
         before, rest = rendered_prompt.split(SCHEMA_EXEMPLAR_BEGIN, 1)
         after = rest.split(SCHEMA_EXEMPLAR_END, 1)[1]
         prompt_for_id_scan = before + "\n" + after
+
+    # 3b. The learner-state block lists exactly the planned state; its ids are admitted only inside it (#9182)
+    if LEARNER_STATE_BEGIN not in prompt_for_id_scan or LEARNER_STATE_END not in prompt_for_id_scan:
+        errors.append("missing_learner_state_marker: learner-state block delimiters missing from prompt")
+    else:
+        before, rest = prompt_for_id_scan.split(LEARNER_STATE_BEGIN, 1)
+        block, after = rest.split(LEARNER_STATE_END, 1)
+        prompt_for_id_scan = before + "\n" + after
+        if learner_state is None:
+            errors.append("learner_state_unverified: the check needs the learner state the prompt was rendered from")
+        else:
+            expected = _learner_state_block_ids(learner_state)
+            listed = set(RECORD_ID_RE.findall(block))
+            for rid in sorted(expected - listed, key=_id_key):
+                errors.append(f"learner_state_incomplete: state id {rid!r} is missing from the learner-state block")
+            for rid in sorted(listed - expected, key=_id_key):
+                errors.append(f"learner_state_foreign_id: {rid!r} is in the learner-state block but not in the state")
+            letters_line = next((line for line in block.splitlines() if line.startswith("- **Letters taught**")), "")
+            listed_letters = set(letters_line.partition(":")[2].split())
+            for letter in _state_dict(learner_state).get("letters") or {}:
+                if letter not in listed_letters:
+                    errors.append(f"learner_state_incomplete: taught letter {letter!r} is missing from the block")
 
     plan_citations = extract_plan_citations(plan_entry)
     found_ids = set(RECORD_ID_RE.findall(prompt_for_id_scan))
