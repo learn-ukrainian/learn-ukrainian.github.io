@@ -13,6 +13,7 @@ import scripts.audit.generate_practice_deck as generate_practice_deck
 from scripts.audit.generate_practice_deck import (
     DEFAULT_TARGET,
     DRILL_MODES,
+    HERITAGE_CURRENT_SOURCES,
     HERITAGE_NORMATIVE_SOURCES,
     BuildConfig,
     JsonSourcePassages,
@@ -32,6 +33,7 @@ from scripts.audit.generate_practice_deck import (
     _declension_category,
     _eligible_decoys,
     _heritage_availability_level,
+    _heritage_current_support,
     _heritage_frame_calque_mismatch,
     _heritage_frame_support,
     _meaning_mc_eligible,
@@ -490,6 +492,8 @@ FIXTURE_PASSAGES = JsonSourcePassages(
     {
         "antonenko-davydovych-yak-my-hovorymo_p999": 'Фіктивна сторінка. Кажуть "читаю кнігу", а треба "читаю книгу".',
         "antonenko-davydovych-yak-my-hovorymo_p998": 'Фіктивна сторінка. Не "надо", а "треба".',
+        "5-klas-ukrmova-fixture-2000_s0003": "Неправильно: читаю кнігу. Правильно: читаю книгу.",
+        "5-klas-ukrmova-fixture-2000_s0004": "Неправильно: надо. Правильно: треба.",
         "5-klas-ukrmova-fixture-2000_s0001": (
             "Адресант — той, хто адресує, надсилає лист; адресат — той, хто отримує лист, посилку."
         ),
@@ -3601,6 +3605,7 @@ def test_heritage_curated_distractors_win() -> None:
         "rationale": "test rationale",
         "citations": ["test:heritage"],
         "normativeSupport": FIXTURE_HERITAGE_SUPPORT,
+        "currentNormSupport": _fixture_heritage_pair()["currentNormSupport"],
         "sourceFamily": "test",
         "cefrAvailability": "a2",
         "frames": [
@@ -3655,6 +3660,9 @@ def test_heritage_curated_distractors_allow_items_without_peers() -> None:
         "normativeSupport": [
             {"locator": "antonenko-davydovych-yak-my-hovorymo_p998", "passage": 'Не "надо", а "треба".'}
         ],
+        "currentNormSupport": [
+            {"locator": "5-klas-ukrmova-fixture-2000_s0004", "passage": "Неправильно: надо. Правильно: треба."}
+        ],
         "sourceFamily": "test",
         "cefrAvailability": "a2",
         "frames": [
@@ -3670,6 +3678,8 @@ def test_heritage_curated_distractors_allow_items_without_peers() -> None:
                     "endorsedForm": "треба",
                     "rejectedForm": "надо",
                     "sense": "the necessity to prepare something",
+                    "currentNormLocator": "5-klas-ukrmova-fixture-2000_s0004",
+                    "currentNormPassageSha256": "769965fa15e8b7fee0fee30c01b200cba7b334a83ee361c34dc2eaa0d32e9d2a",
                 },
                 "distractors": ["можна", "варто"],
             }
@@ -4914,7 +4924,7 @@ def test_normative_support_passage_must_be_verbatim_from_an_allowed_page() -> No
         FIXTURE_HERITAGE_SUPPORT, HERITAGE_NORMATIVE_SOURCES, FIXTURE_PASSAGES, field="normativeSupport"
     )
     assert problems == []
-    assert verified[0]["label"] == "Антоненко-Давидович Б. «Як ми говоримо» (вид. 1991), с. 999"
+    assert verified[0]["label"] == "Антоненко-Давидович Б. «Як ми говоримо», фрагмент p999"
     # whitespace, dashes and quote style are not a paraphrase
     assert errors([{"locator": page, "passage": "Кажуть «читаю  кнігу»,\nа треба «читаю книгу»."}]) == []
     assert errors([]) == ["no normativeSupport passage"]
@@ -4942,6 +4952,7 @@ def test_heritage_passage_must_name_this_frames_calque_and_correction(capsys: py
         {
             "antonenko-davydovych-yak-my-hovorymo_p998": "Кажуть «кніга» — так не можна.",
             "antonenko-davydovych-yak-my-hovorymo_p999": 'Фіктивна сторінка. Кажуть "читаю кнігу", а треба "читаю книгу".',
+            "5-klas-ukrmova-fixture-2000_s0003": "Неправильно: читаю кнігу. Правильно: читаю книгу.",
         }
     )
     calque_only = _book_pair(
@@ -4955,9 +4966,28 @@ def test_heritage_passage_must_name_this_frames_calque_and_correction(capsys: py
     supported = _book_pair(normativeSupport=FIXTURE_HERITAGE_SUPPORT)
     items = _build_heritage_items(supported, lexemes[0], lexemes, "deck-v1", source_passages=passages)
     assert len(items) == 1
-    # The learner sees the edition and page first, then the curator provenance.
-    assert items[0]["citations"] == ["Антоненко-Давидович Б. «Як ми говоримо» (вид. 1991), с. 999", "fixture:heritage"]
+    assert items[0]["citations"] == [
+        "Антоненко-Давидович Б. «Як ми говоримо», фрагмент p999",
+        "5-klas-ukrmova-fixture-2000, фрагмент s0003",
+        "fixture:heritage",
+    ]
     assert _heritage_frame_support(supported["frames"][0], [{"passage": "Кажуть «кнігу»."}], None) is None
+
+
+def test_heritage_historical_passage_alone_is_withheld(capsys: pytest.CaptureFixture[str]) -> None:
+    pair = _fixture_heritage_pair()
+    pair.pop("currentNormSupport")
+    lexemes = _fixture_lexemes()
+    assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES) == []
+    assert "withheld (no current-norm corroboration)" in capsys.readouterr().err
+
+
+def test_heritage_current_norm_must_bind_to_verified_chunk(capsys: pytest.CaptureFixture[str]) -> None:
+    pair = _fixture_heritage_pair()
+    pair["frames"][0]["normativeJudgment"]["currentNormPassageSha256"] = "0" * 64
+    lexemes = _fixture_lexemes()
+    assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1", source_passages=FIXTURE_PASSAGES) == []
+    assert "frame 1 withheld (no bound current-norm corroboration)" in capsys.readouterr().err
 
 
 def test_heritage_reversed_passage_cannot_key_the_form_it_rejects(capsys: pytest.CaptureFixture[str]) -> None:
@@ -4968,7 +4998,9 @@ def test_heritage_reversed_passage_cannot_key_the_form_it_rejects(capsys: pytest
         normativeSupport=[{"locator": locator, "passage": reversed_passage}],
         frames=[_fixture_heritage_pair()["frames"][0]],
     )
-    passages = JsonSourcePassages({locator: reversed_passage})
+    passages = JsonSourcePassages(
+        {locator: reversed_passage, "5-klas-ukrmova-fixture-2000_s0003": "Неправильно: читаю кнігу. Правильно: читаю книгу."}
+    )
 
     assert _build_heritage_items(pair, _fixture_lexemes()[0], _fixture_lexemes(), "deck-v1", source_passages=passages) == []
     assert "frame 1 withheld (passage does not support this correction)" in capsys.readouterr().err
@@ -5007,17 +5039,61 @@ def _live_source_checkers() -> tuple[Any, Any]:
 
 def test_live_heritage_normative_support_is_verbatim_and_names_every_frame() -> None:
     passages, verifier = _live_source_checkers()
-    supported = [pair for pair in read_heritage_pairs(HERITAGE_REGISTRY) if pair.get("normativeSupport")]
+    all_pairs = [pair for pair in read_heritage_pairs(HERITAGE_REGISTRY) if pair.get("normativeSupport")]
+    supported = [pair for pair in all_pairs if pair.get("currentNormSupport")]
     assert supported
+    assert all(not any("normativeJudgment" in frame for frame in pair["frames"]) for pair in all_pairs if pair not in supported)
     for pair in supported:
         verified, problems = verified_source_passages(
             pair["normativeSupport"], HERITAGE_NORMATIVE_SOURCES, passages, field="normativeSupport"
         )
         assert problems == [], pair["calqueLabel"]
+        current, current_problems = verified_source_passages(
+            pair["currentNormSupport"], HERITAGE_CURRENT_SOURCES, passages, field="currentNormSupport"
+        )
+        assert current_problems == [], pair["calqueLabel"]
         frames = _valid_heritage_frames(pair, verifier, report=False)
         assert frames, pair["calqueLabel"]
         for frame in frames:
             assert _heritage_frame_support(frame, verified, verifier) is not None, (pair["calqueLabel"], frame)
+            assert _heritage_current_support(frame, current, verifier) is not None, (pair["calqueLabel"], frame)
+
+
+def test_live_language_review_fixes_are_source_bound() -> None:
+    passages, _ = _live_source_checkers()
+    reviewed = {
+        pair["calqueLabel"]: pair
+        for pair in read_heritage_pairs(HERITAGE_REGISTRY)
+        if pair.get("normativeSupport")
+    }
+    assert "11-klas-istoriya-ukr-gisem-2024_s0320" in reviewed["присвоїти"]["currentNormWithheldReason"]
+    assert "присвоєно звання" in passages.chunk_text("11-klas-istoriya-ukr-gisem-2024_s0320")
+    assert all("normativeJudgment" not in frame for frame in reviewed["присвоїти"]["frames"])
+
+    affair = reviewed["справа"]
+    assert affair["calqueSense"] == '"В чому справа?", "Справа в тім, що…"'
+    assert "це не моя справа" not in affair["calqueSense"]
+    assert all("normativeJudgment" not in frame for frame in affair["frames"])
+
+    exclusively = reviewed["виключно"]
+    assert "як виняток" not in exclusively["authenticSense"]
+    assert all("normativeJudgment" not in frame for frame in exclusively["frames"])
+
+    relation = reviewed["відношення"]
+    title = "Відношення, взаємини, стосунок, відносно, щодо, стосовно, відносність"
+    assert title in relation["rationale"]
+    assert title in passages.chunk_text("antonenko-davydovych-yak-my-hovorymo_p018")
+
+    other = reviewed["другий"]
+    assert other["severity"] == "enrichment"
+    assert other["rationale"] in " ".join(passages.chunk_text("6-klas-ukrmova-avramenko-2023_s0193").split())
+
+    medical = next(
+        pair for pair in read_paronym_pairs(PARONYM_REGISTRY)
+        if pair.get("slugA") == "лікарський" and pair.get("slugB") == "лікарняний"
+    )
+    assert medical["distinction_gloss_uk"].casefold().count("лікарський —") == 2
+    assert paronym_gloss_provenance_errors(medical, passages) == []
 
 
 def _published_da_tak_pair() -> dict[str, Any]:

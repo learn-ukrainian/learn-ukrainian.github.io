@@ -179,15 +179,19 @@ HERITAGE_SEVERITIES = frozenset({"russianism", "enrichment"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
 # A calque judgment is a normative claim. Corpus correction counts (UA-GEC),
 # dictionary membership, synonymy and bare article titles are not evidence for
-# it (#8727; Astra stop-policy ruling 2026-09-28): a pair needs an exact
-# passage from a normative style guide, copied verbatim into
-# `normativeSupport` with the page chunk it comes from. Each admitted frame
-# also needs a `normativeJudgment` naming the endorsed and rejected forms, the
-# frame's sense, and digests of the reviewed passage and sentence. Map:
-# chunk-id pattern -> learner-facing source label (edition + page).
+# it (#8727): a pair needs an exact historical style-guide passage in
+# `normativeSupport`, plus an independently reviewed current-norm passage in
+# `currentNormSupport`. Each admitted frame's `normativeJudgment` binds both
+# passage digests, their locators, the direction, and the sentence. Map:
+# Chunk IDs are ingestion locators, not verified print pages or editions.
 HERITAGE_NORMATIVE_SOURCES: dict[str, str] = {
-    r"antonenko-davydovych-yak-my-hovorymo_p(?P<page>\d{3})": (
-        "Антоненко-Давидович Б. «Як ми говоримо» (вид. 1991), с. {page}"
+    r"antonenko-davydovych-yak-my-hovorymo_p(?P<chunk>\d{3})": (
+        "Антоненко-Давидович Б. «Як ми говоримо», фрагмент p{chunk}"
+    ),
+}
+HERITAGE_CURRENT_SOURCES: dict[str, str] = {
+    r"(?P<book>\d{1,2}-klas-(?:ukrmova|ukrajinska-mova|ukrayinska-mova)-[a-z0-9-]+)_s(?P<chunk>\d{4})": (
+        "{book}, фрагмент s{chunk}"
     ),
 }
 # Each paronym explanation needs a sourced definition for both contrasted
@@ -3880,7 +3884,7 @@ def verified_source_passages(
     """Return the entries whose passage is copied verbatim from an allowed source chunk, and the errors.
 
     Each entry is ``{locator: <sources.db chunk id>, passage: <exact text>}``.
-    The locator must match an allowed source pattern (edition + page or chunk)
+    The locator must match an allowed source pattern
     and the passage must occur in that chunk's text; a missing sources
     database fails closed.
     """
@@ -3986,6 +3990,31 @@ def _heritage_frame_support(
             continue
         if _passage_names_form(support["passage"], calque_form, verifier) and _passage_names_form(
             support["passage"], answer_form, verifier
+        ):
+            return support
+    return None
+
+
+def _heritage_current_support(
+    frame: dict[str, Any], supports: list[dict[str, str]], verifier: VesumVerifier | None
+) -> dict[str, str] | None:
+    """Require a separately verified modern contrast bound to this judgment."""
+    judgment = frame.get("normativeJudgment")
+    if not isinstance(judgment, dict):
+        return None
+    locator = _clean_text(judgment.get("currentNormLocator"))
+    digest = _clean_text(judgment.get("currentNormPassageSha256"))
+    endorsed = _clean_text(judgment.get("endorsedForm"))
+    rejected = _clean_text(judgment.get("rejectedForm"))
+    if not all((locator, digest, endorsed, rejected)):
+        return None
+    for support in supports:
+        if support["locator"] != locator:
+            continue
+        if hashlib.sha256(_normalize_source_text(support["passage"]).encode("utf-8")).hexdigest() != digest:
+            continue
+        if _passage_names_form(support["passage"], endorsed, verifier) and _passage_names_form(
+            support["passage"], rejected, verifier
         ):
             return support
     return None
@@ -4167,9 +4196,9 @@ def _build_heritage_items(
     if not frames:
         return []
     pair_label = _clean_text(pair.get("calqueLabel")) or lexeme["lemmaId"]
-    # A calque judgment ships only with an exact, page-located style-guide
-    # passage (#8727). Corpus counts, dictionary membership and article
-    # titles in `citations` are provenance notes, not support.
+    # A calque judgment ships only with a historical style-guide passage
+    # and an independent current MON correction (#8727). Corpus counts and
+    # article titles in `citations` are provenance notes, not support.
     supports, support_errors = verified_source_passages(
         pair.get("normativeSupport"), HERITAGE_NORMATIVE_SOURCES, source_passages, field="normativeSupport"
     )
@@ -4178,6 +4207,13 @@ def _build_heritage_items(
             f"WARN: heritage_pair {pair_label!r} withheld (no normative passage): {'; '.join(support_errors)}",
             file=sys.stderr,
         )
+        return []
+    current_supports, current_errors = verified_source_passages(
+        pair.get("currentNormSupport"), HERITAGE_CURRENT_SOURCES, source_passages, field="currentNormSupport"
+    )
+    if not current_supports:
+        reason = _clean_text(pair.get("currentNormWithheldReason")) or "; ".join(current_errors)
+        print(f"WARN: heritage_pair {pair_label!r} withheld (no current-norm corroboration): {reason}", file=sys.stderr)
         return []
     # Heritage SRS identity is the native lemma, and the static client reaches
     # drill items through the same-level index/lexeme shards — so the item must
@@ -4221,6 +4257,13 @@ def _build_heritage_items(
                 file=sys.stderr,
             )
             continue
+        current_support = _heritage_current_support(frame, current_supports, verifier)
+        if current_support is None:
+            print(
+                f"WARN: heritage_pair {pair_label!r} frame {index} withheld (no bound current-norm corroboration)",
+                file=sys.stderr,
+            )
+            continue
         distractors = _valid_heritage_distractors(lexeme, frame, pair, all_lexemes, level, verifier=verifier)
         if len(distractors) < 2:
             print(
@@ -4257,8 +4300,11 @@ def _build_heritage_items(
             "cefr": level,
             "options": _shuffle_heritage_options(heritage_id, options),
             "rationale": rationale,
-            # The supporting edition/page leads the learner-visible sources.
-            "citations": [support["label"], *(citation for citation in citations if citation != support["label"])],
+            "citations": [
+                support["label"],
+                current_support["label"],
+                *(citation for citation in citations if citation not in {support["label"], current_support["label"]}),
+            ],
             "corrections": _clean_text_list(pair.get("corrections")),
             "sourceFamily": _clean_text(pair.get("sourceFamily")) or "",
         }
@@ -7276,7 +7322,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         type=Path,
         default=DEFAULT_SOURCES_DB,
         help=(
-            "Sources SQLite (the `sources` MCP database) used to verify heritage normativeSupport and paronym "
+            "Sources SQLite (the `sources` MCP database) used to verify heritage normativeSupport/currentNormSupport and paronym "
             "glossSources passages; when missing, those modes fail closed (default: data/sources.db)."
         ),
     )
