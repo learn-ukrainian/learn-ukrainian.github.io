@@ -35,7 +35,7 @@ If a scorecard row conflicts with LANGUAGE-LANES, egress, or review-gate rules �
 | **Egress** | Where prompt/code data may leave (Western lab, China-route, local-only). |
 | **CF review** | Cross-**family** formal review of a change; discussion/panel alone does **not** satisfy the gate. |
 | **Consequential** | Work that can merge to `main`, change learner-facing Atlas/curriculum, alter security/CI gates, or spend non-trivial quota on multi-agent implementation. |
-| **Ceiling model** | Astra, Fable 5, and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. |
+| **Ceiling model** | Astra, Fable 5, and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. Since operator 2026-09-29 (#9230) the Astra seat is held by GPT-6.1 Sol (`gpt-6.1-sol`); `gpt-6-astra` is not routable. |
 | **Provisional / validated / deprecated** | Scorecard assignment confidence (see scorecard § evidence). |
 
 ---
@@ -89,8 +89,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 | Model | Effort |
 |---|---|
-| GPT-6 Astra (hard advisor) | **`high`** for consequential advisory judgment; raise effort only for a separately justified hard case |
-| GPT-6 Sol (coding and review) | **`high`** default for accountable driving, coding, and adversarial review |
+| GPT-6.1 Sol (coding, review, and the Astra advisory seat) | **`high`** default for accountable driving, coding, adversarial review, and consequential advisory judgment; raise effort only for a separately justified hard case |
 | GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling; never sole authority |
 | **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
 | **Sonnet 5.5** (provisional Claude practical seat) | Fleet dispatches **`high`** by default. Well-specified agentic coding may use `medium`; harder or longer coding and reviews use `high`. See subsection below. |
@@ -173,7 +172,7 @@ For work in the **repository review-gate scope** (consequential PRs that must pa
 2. Reviewer must be **qualified for the task family** (code/infra vs VESUM language vs folk).
 3. Use a qualified native toolful review lane and the review-worktree contract in `agents_extensions/shared/skills/local-code-review/SKILL.md`; sealed formal review is retired.
 4. Record provenance on the PR (implementer + reviewer model/family/harness; note advisor if material).
-5. **Conditional selection:** do not offer GPT-6 Sol as CF for OpenAI-authored PRs, or Sonnet as CF for Anthropic-authored PRs, etc.
+5. **Conditional selection:** do not offer GPT-6.1 Sol as CF for OpenAI-authored PRs, or Sonnet as CF for Anthropic-authored PRs, etc.
 
 Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine does not lower that floor.
 

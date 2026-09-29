@@ -13,7 +13,7 @@ CLI:
     # Fire a task. Returns immediately with the task-id.
     # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
-        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6-sol]
+        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6.1-sol]
         [--allow-merge] [--force-new]
 
     # Check status without blocking.
@@ -9137,8 +9137,14 @@ def _dispatch(
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
-    from agent_runtime.routes import is_retired_gpt56_model
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
+    from scripts.review.model_catalog import retired_model_refusal
+
+    # A catalog-retired model is refused before any check can run a command.
+    retired_refusal = retired_model_refusal(getattr(args, "model", None))
+    if retired_refusal:
+        print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
+        return 2
 
     # #8775: validate caller-supplied paths once, before the DoR check, PR
     # resolution, or anything else that can run an external command, and
@@ -9195,9 +9201,6 @@ def _dispatch(
             return 2
 
     task_id = args.task_id
-    if is_retired_gpt56_model(getattr(args, "model", None)):
-        print(f"❌ retired GPT-5.6 model {args.model!r} is not a dispatch route", file=sys.stderr)
-        return 2
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
     except ValueError as exc:
@@ -12295,7 +12298,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
-    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview.")
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6.1-sol or gemini-3.1-pro-preview.")
     d.add_argument(
         "--provider",
         default=None,

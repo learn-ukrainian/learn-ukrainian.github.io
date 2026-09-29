@@ -18,7 +18,7 @@ def test_codex_build_invocation_sends_prompt_via_stdin(tmp_path: Path, monkeypat
         prompt="write the module",
         mode="workspace-write",
         cwd=tmp_path,
-        model="gpt-6-astra",
+        model="gpt-6.1-sol",
         task_id=None,
         session_id=None,
         tool_config=None,
@@ -106,7 +106,7 @@ def test_codex_rollout_capture_includes_local_date_midnight_straddle(
     assert [call["name"] for call in result.tool_calls] == ["mcp__sources__verify_words"]
 
 
-@pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "", "auto"])
+@pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5", "gpt-6-sol", "gpt-6-astra", "", "auto"])
 def test_codex_rejects_unapproved_model_before_state_reset(tmp_path, monkeypatch, model):
     adapter = CodexAdapter()
 
@@ -120,7 +120,7 @@ def test_codex_rejects_unapproved_model_before_state_reset(tmp_path, monkeypatch
         )
 
 
-@pytest.mark.parametrize("model,expected_model", [(None, "gpt-6-sol"), ("gpt-6-astra", "gpt-6-astra")])
+@pytest.mark.parametrize("model,expected_model", [(None, "gpt-6.1-sol"), ("gpt-6-luna", "gpt-6-luna")])
 @pytest.mark.parametrize("effort,expected", [(None, "high"), ("xhigh", "xhigh")])
 def test_codex_pins_gpt6_and_preserves_effort(tmp_path, monkeypatch, model, expected_model, effort, expected):
     monkeypatch.setattr("scripts.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")

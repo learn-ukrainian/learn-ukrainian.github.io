@@ -432,11 +432,11 @@ def test_quota_substitution_drops_explicit_model_and_effort_overrides(
     )
 
     result = _acp_compat._run_compat_ask_impl(
-        "codex", "question", task_id="quota-sub-overrides", model="gpt-6-astra", effort="high"
+        "codex", "question", task_id="quota-sub-overrides", model="gpt-6.1-sol", effort="high"
     )
 
     assert result.ok is True
-    assert invoke.call_args_list[0].kwargs["model"] == "gpt-6-astra"
+    assert invoke.call_args_list[0].kwargs["model"] == "gpt-6.1-sol"
     assert invoke.call_args_list[0].kwargs["effort"] == "high"
     # Pins are per-seat: the substitute runs on its registered pin.
     assert invoke.call_args_list[1].kwargs["model"] is None
@@ -452,7 +452,7 @@ def test_rate_limited_exception_substitutes(
         monkeypatch,
         authority,
         {
-            "codex": RateLimitedError("codex", "gpt-6-astra", "usage limit reached"),
+            "codex": RateLimitedError("codex", "gpt-6.1-sol", "usage limit reached"),
             "cursor": _ok_result("cursor"),
         },
         tmp_path=tmp_path,
@@ -889,7 +889,7 @@ def test_seat_hop_preserves_provider_route_substitution(monkeypatch: pytest.Monk
         "substituted": True,
         "requested_provider": "openai",
         "actual_provider": "openai",
-        "requested_model": "gpt-6-astra",
+        "requested_model": "gpt-6.1-sol",
         "actual_model": "composer-2.5",
     }
     authority = _FakeAuthority()
@@ -1022,7 +1022,7 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
         monkeypatch,
         _DurableAuthority(store),
         {
-            "codex": RateLimitedError("codex", "gpt-6-astra", "usage limit reached"),
+            "codex": RateLimitedError("codex", "gpt-6.1-sol", "usage limit reached"),
             "cursor": _ok_result("cursor", "cursor answer"),
         },
         tmp_path=tmp_path,

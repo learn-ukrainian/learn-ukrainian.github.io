@@ -690,7 +690,7 @@ def build_parser() -> argparse.ArgumentParser:
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.review.seeds.adjudicate task seed-1 --review-id R --attempt-id A \\\n"
-            "    --lesson lesson-2.expanded.yaml --agent codex --model gpt-6-astra\n"
+            "    --lesson lesson-2.expanded.yaml --agent codex --model gpt-6.1-sol\n"
             "  .venv/bin/python -m scripts.review.seeds.adjudicate record seed-1 --review-id R --attempt-id A \\\n"
             "    --reply batch_state/tasks/adj-0123456789abcdef.result --task-id adj-0123456789abcdef\n"
             "\nOutputs: one JSON object on stdout. Exit codes: 0 done; 2 refused (error and its code on stderr)."

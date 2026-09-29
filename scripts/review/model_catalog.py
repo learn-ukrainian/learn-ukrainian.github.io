@@ -507,6 +507,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             if alias in models or alias in alias_owner:
                 raise ModelCatalogError(f"duplicate model alias {alias!r}")
             alias_owner[alias] = model_id
+        if "replaced_by" in model and lifecycle != "retired":
+            raise ModelCatalogError(f"models.{model_id}.replaced_by is only valid on retired models")
         if "native_kimi" in model["transports"]:
             routes = _require_mapping(model.get("kimi_routes"), f"models.{model_id}.kimi_routes")
             for field in KIMI_ROUTE_FIELDS:
@@ -523,6 +525,9 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(
                     f"models.{model_id}.glm_routes.glmcc_alias must be model id or listed in models.{model_id}.aliases"
                 )
+    for model_id, model in models.items():
+        if "replaced_by" in model:
+            _require_active_execution_model(models, model["replaced_by"], f"models.{model_id}.replaced_by")
 
     _validate_execution_routing(catalog.get("execution_routing"), models)
 
@@ -644,6 +649,51 @@ def model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
         aliases[model_id] = model_id
         aliases.update({alias: model_id for alias in model.get("aliases", [])})
     return aliases
+
+
+def _model_id_candidates(model: str) -> list[str]:
+    """Return ``model`` plus each harness-qualified suffix, most specific first.
+
+    ``cursor:openai/gpt-6-sol`` yields itself, ``openai/gpt-6-sol`` and
+    ``gpt-6-sol``; ``kimi-code/k3`` still matches its own catalog id first.
+    """
+    candidates = [model]
+    for index, char in enumerate(model):
+        if char in "/:" and model[index + 1 :]:
+            candidates.append(model[index + 1 :])
+    return candidates
+
+
+def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """Return a refusal message when ``model`` names a catalog-retired model.
+
+    This is the one dispatch-admission check for retirement: delegate, the
+    runner, and adapters with their own model guards all call it. Ids match
+    case-insensitively through catalog aliases and harness prefixes. A
+    provider variant such as ``gpt-6-sol-high`` resolves to the longest
+    catalog id it extends. Unknown ids return None; transport gates own them.
+    """
+    text = str(model or "").strip()
+    if not text:
+        return None
+    catalog = catalog or load_model_catalog()
+    models = catalog["models"]
+    lookup = {alias.casefold(): model_id for alias, model_id in model_aliases(catalog).items()}
+    candidates = [candidate.casefold() for candidate in _model_id_candidates(text)]
+    model_id = next((lookup[candidate] for candidate in candidates if candidate in lookup), None)
+    if model_id is None:
+        extended = [
+            (len(alias), owner)
+            for candidate in candidates
+            for alias, owner in lookup.items()
+            if candidate.startswith(f"{alias}-")
+        ]
+        model_id = max(extended)[1] if extended else None
+    if model_id is None or models[model_id]["lifecycle"] != "retired":
+        return None
+    replacement = models[model_id].get("replaced_by")
+    advice = f"use {replacement}" if replacement else "use an active catalog model"
+    return f"model {text!r} is retired in the model catalog ({model_id}); {advice}"
 
 
 def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:

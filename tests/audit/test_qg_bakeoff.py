@@ -1293,7 +1293,7 @@ def test_subscription_runtime_bare_artifact_identity_and_filename(tmp_path: Path
 
     run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
 
-    assert run.artifact_path.name == "gpt-6-astra__sample__bare__runtime-codex.json"
+    assert run.artifact_path.name == "gpt-6-1-sol__sample__bare__runtime-codex.json"
     assert route.input_usd_per_mtok == 0.0
     assert route.output_usd_per_mtok == 0.0
     model = run.artifact["model"]
@@ -2579,7 +2579,7 @@ def test_lenient_first_json_object_returns_none_without_object() -> None:
 
 
 def test_subscription_codex_command_rejects_old_pin():
-    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="only gpt-6-astra"):
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match=r"only gpt-6\.1-sol"):
         qg_bakeoff._runtime_bridge_command("codex", "gpt-5.5")
-    command = qg_bakeoff._runtime_bridge_command("codex", "gpt-6-astra")
-    assert command[command.index("--model") + 1] == "gpt-6-astra"
+    command = qg_bakeoff._runtime_bridge_command("codex", "gpt-6.1-sol")
+    assert command[command.index("--model") + 1] == "gpt-6.1-sol"

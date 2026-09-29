@@ -312,8 +312,8 @@ def build_native_command(cell: Cell, prompt: str) -> list[str]:
         return cmd
 
     if cell.family == "openai":
-        if cell.model != "gpt-6-astra":
-            raise ValueError(f"Codex model {cell.model!r} rejected; only gpt-6-astra is approved")
+        if cell.model != "gpt-6.1-sol":
+            raise ValueError(f"Codex model {cell.model!r} rejected; only gpt-6.1-sol is approved")
         cmd = [
             "codex",
             "exec",

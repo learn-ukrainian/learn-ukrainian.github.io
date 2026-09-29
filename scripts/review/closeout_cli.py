@@ -519,7 +519,7 @@ Examples:
   .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
     target --mode pr --pr 8946 --repo-root .
   .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
-    resolve-reviewer --author-model codex:gpt-6-sol --risk high --domain infra \\
+    resolve-reviewer --author-model codex:gpt-6.1-sol --risk high --domain infra \\
     --owned-path scripts/agent_runtime/adapters/grok_build.py
   .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\
     resolve-reviewer --author-model claude --subject-seat grok
@@ -658,7 +658,7 @@ def _build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model claude --risk high\n"
             "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
-            "    resolve-reviewer --author-model codex:gpt-6-sol --domain infra --risk high \\\n"
+            "    resolve-reviewer --author-model codex:gpt-6.1-sol --domain infra --risk high \\\n"
             "    --owned-path scripts/agent_runtime/adapters/grok_build.py\n"
             "  .venv/bin/python -m scripts.review.closeout_cli --state-file .agent/review.json \\\n"
             "    resolve-reviewer --author-model claude --subject-seat grok --subject-family xai\n"
@@ -793,7 +793,7 @@ def _build_parser() -> argparse.ArgumentParser:
     fr = finding_sub.add_parser("raise")
     fr.add_argument("--id", required=True, help="Finding id. Example: F1")
     fr.add_argument("--summary", required=True, help="One-line finding summary. Example: governed seat can self-review")
-    fr.add_argument("--source", required=True, help="Who raised it. Example: reviewer:gpt-6-sol")
+    fr.add_argument("--source", required=True, help="Who raised it. Example: reviewer:gpt-6.1-sol")
     fa = finding_sub.add_parser("adjudicate")
     fa.add_argument("--id", required=True, help="Finding id to adjudicate. Example: F1")
     fa.add_argument(

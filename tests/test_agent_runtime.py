@@ -22,6 +22,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import select
 import subprocess
 import sys
@@ -357,7 +358,7 @@ def test_codex_entry_has_bridge_only_resume_policy():
 def test_codex_desktop_entry_is_human_invoked():
     entry = get_agent_entry("codex-desktop")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.codex:CodexAdapter"
-    assert entry["default_model"] == "gpt-6-sol"
+    assert entry["default_model"] == "gpt-6.1-sol"
     assert entry["cost_tier"] == "high"
     assert entry["cli_available"] is False
     assert entry["resume_policy"] == "never"
@@ -389,7 +390,7 @@ def test_claude_entry_has_bridge_only_resume_policy():
 def test_load_adapter_codex():
     adapter = _load_adapter("codex")
     assert adapter.name == "codex"
-    assert adapter.default_model == "gpt-6-sol"
+    assert adapter.default_model == "gpt-6.1-sol"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -659,7 +660,7 @@ def test_codex_adapter_build_invocation_workspace_write(tmp_path):
         prompt="hello",
         mode="workspace-write",
         cwd=tmp_path,
-        model="gpt-6-astra",
+        model="gpt-6-luna",
         task_id=None,
         session_id=None,
         tool_config=None,
@@ -668,7 +669,7 @@ def test_codex_adapter_build_invocation_workspace_write(tmp_path):
     assert "--enable" in plan.cmd
     assert "multi_agent" in plan.cmd
     assert "--full-auto" not in plan.cmd  # legacy flag must not regress
-    assert "gpt-6-astra" in plan.cmd  # approved explicit model honored
+    assert "gpt-6-luna" in plan.cmd  # approved explicit model honored
 
 
 def test_codex_adapter_mcp_tool_config(tmp_path):
@@ -1931,6 +1932,38 @@ def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
 def test_invoke_rejects_unsupported_mode(tmp_path):
     with pytest.raises(ValueError, match="does not support mode"):
         invoke("codex", "hello", mode="invalid-mode", cwd=tmp_path)
+
+
+@pytest.mark.parametrize("model", ["gpt-6-sol", "gpt-6-astra"])
+@pytest.mark.parametrize("agent_name", available_agents())
+def test_invoke_refuses_catalog_retired_model_on_every_adapter(tmp_path, agent_name, model):
+    """#9230: admission refuses a retired model before headroom, planning, or spawn."""
+    adapter = _load_adapter(agent_name)
+    mode = "read-only" if "read-only" in adapter.supported_modes else sorted(adapter.supported_modes)[0]
+    with (
+        patch("agent_runtime.runner.has_headroom") as mock_headroom,
+        patch.object(type(adapter), "build_invocation") as mock_build,
+        patch("agent_runtime.runner.subprocess.Popen") as mock_popen,
+        pytest.raises(
+            ValueError,
+            match=re.escape(
+                f"Agent {agent_name!r}: model {model!r} is retired in the model catalog ({model}); use gpt-6.1-sol"
+            ),
+        ),
+    ):
+        invoke(agent_name, "hello", mode=mode, cwd=tmp_path, model=model)
+    mock_headroom.assert_not_called()
+    mock_build.assert_not_called()
+    mock_popen.assert_not_called()
+
+
+def test_invoke_admits_active_explicit_model_past_retirement_gate(tmp_path):
+    with (
+        patch("agent_runtime.runner.has_headroom", return_value=(False, "probe")),
+        patch("agent_runtime.runner.write_record"),
+        pytest.raises(RateLimitedError, match="probe"),
+    ):
+        invoke("cursor", "hello", mode="read-only", cwd=tmp_path, model="grok-4.7")
 
 
 def test_invoke_requires_cwd_for_write_mode():

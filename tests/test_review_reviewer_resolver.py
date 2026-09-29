@@ -60,7 +60,7 @@ def test_family_resolution_across_model_and_harness_aliases():
         "claude-fable-5": "anthropic",
         "codex": "openai",
         "codex-tools": "openai",
-        "gpt-6-astra": "openai",
+        "gpt-6.1-sol": "openai",
         "gpt-5.6-sol": "openai",
         "gpt-5.6-terra": "openai",
         "gpt-5.6-luna": "openai",
@@ -218,7 +218,7 @@ def test_critical_uses_authority_while_routine_uses_practical_defaults():
         assert resolution.selected.name == "claude-sonnet-5-5", risk
 
 
-@pytest.mark.parametrize("author_model", ("gpt-6-sol", "grok-4.7"))
+@pytest.mark.parametrize("author_model", ("gpt-6.1-sol", "grok-4.7"))
 @pytest.mark.parametrize("review_profile", ("code", "infra"))
 def test_critical_security_review_excludes_sonnet_5_5(author_model: str, review_profile: str) -> None:
     resolution = resolve_reviewer(
@@ -240,7 +240,7 @@ def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
 def test_critical_anthropic_author_gets_astra_as_formal_gate():
     resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="critical"))
     assert resolution.selected.name == "openai_frontier"
-    assert resolution.selected.concrete_model == "gpt-6-sol"
+    assert resolution.selected.concrete_model == "gpt-6.1-sol"
 
 
 def test_high_risk_openai_author_gets_sonnet_not_fable():
@@ -1045,7 +1045,7 @@ def test_medium_codex_author_falls_through_unavailable_opus_to_sonnet_5_5():
     # For an OpenAI author Sol is same-family; an unavailable Opus rung
     # must leave the practical Sonnet rung in the same position.
     without_opus = tuple(rung for rung in ladder if not rung[0].name.startswith("claude-opus-5-5"))
-    resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6-sol", risk="medium"), ladder=without_opus)
+    resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="medium"), ladder=without_opus)
     assert resolution.selected is not None
     assert resolution.selected.name == "claude-sonnet-5-5"
 
@@ -1056,7 +1056,7 @@ def test_old_sonnet_record_still_resolves_anthropic_family():
 
 
 def test_candidate_constants_preserve_expected_identity():
-    assert OPENAI_FRONTIER.concrete_model == "gpt-6-sol"
+    assert OPENAI_FRONTIER.concrete_model == "gpt-6.1-sol"
     assert KIMI_K3.concrete_model == "kimi-code/k3"
     assert KIMI_K3.transport == "native_kimi"
     assert POOL.concrete_model == "poolside/laguna-s-2.1"
@@ -1110,7 +1110,7 @@ def test_glm_egress_exclusion_reason_names_unlock_flag():
 
 def test_astra_authors_never_receive_openai_cross_family_review():
     for risk in ("low", "medium", "high", "critical"):
-        resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6-astra", risk=risk))
+        resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk=risk))
         assert resolution.selected is not None
         assert resolution.selected.family != "openai"
         for entry in resolution.trace:
@@ -1122,7 +1122,7 @@ def test_actual_catalog_resolver_imports_and_selects_approved_codex_model():
     assert "gpt-5.6-terra" not in REVIEW_CANDIDATES
     result = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium"))
     assert result.selected is not None
-    assert result.selected.concrete_model == "gpt-6-sol"
+    assert result.selected.concrete_model == "gpt-6.1-sol"
 
 
 def test_sealed_executable_catalog_and_resolver_parity():
@@ -1183,7 +1183,7 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
     """The #8912 shape: codex author, infra domain, high risk, Grok adapter."""
     without = resolve_reviewer(
         ResolverInputs(
-            author_model="codex:gpt-6-sol",
+            author_model="codex:gpt-6.1-sol",
             domain="infra",
             risk="high",
             routing_snapshot={"claude": "unhealthy"},
@@ -1194,7 +1194,7 @@ def test_resolve_reviewer_subject_seat_blocks_grok_when_claude_lane_is_unhealthy
 
     resolution = resolve_reviewer(
         ResolverInputs(
-            author_model="codex:gpt-6-sol",
+            author_model="codex:gpt-6.1-sol",
             domain="infra",
             risk="high",
             routing_snapshot={"claude": "unhealthy"},
@@ -1229,7 +1229,7 @@ def test_resolve_reviewer_without_subject_information_matches_empty_subject_fiel
         dict(author_model="claude", risk="medium"),
         dict(author_model="claude", risk="high"),
         dict(author_model="codex", risk="high"),
-        dict(author_model="codex:gpt-6-sol", risk="high", domain="infra"),
+        dict(author_model="codex:gpt-6.1-sol", risk="high", domain="infra"),
         dict(author_model="cursor:auto", risk="medium"),
         dict(author_model="kimi-code/k3", risk="critical"),
         dict(author_model="pool", risk="low"),

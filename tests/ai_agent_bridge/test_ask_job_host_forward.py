@@ -247,7 +247,7 @@ def test_forward_success_surfaces_seat_substitution(
         "notebook critic",
         task_id="8499-forward-sub",
         source="claude",
-        model="gpt-6-astra",
+        model="gpt-6.1-sol",
         effort="high",
         stdout_only=True,
     )

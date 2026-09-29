@@ -941,7 +941,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     if saved:
         shutil.copy2(state_dir / "module.build.yaml", saved / "writer-seat-required.build.yaml")
     no_recap = module.build_module(
-        level, slug, repo_root=tmp_path, lesson_n=3, writer_seat="codex:gpt-6-sol", runner=run_actual
+        level, slug, repo_root=tmp_path, lesson_n=3, writer_seat="codex:gpt-6.1-sol", runner=run_actual
     )
     assert not no_recap["complete"] and no_recap["lessons"][0]["reason"] == "recap_inputs_not_built"
     if saved:
@@ -961,9 +961,9 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
                     slug,
                     "--module",
                     "--writer-seat",
-                    "codex:gpt-6-sol",
+                    "codex:gpt-6.1-sol",
                     "--question-seat",
-                    "codex:gpt-6-sol",
+                    "codex:gpt-6.1-sol",
                     "--repo-root",
                     str(tmp_path),
                 ]
@@ -1025,8 +1025,8 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         level,
         slug,
         repo_root=tmp_path,
-        writer_seat="codex:gpt-6-sol",
-        question_seat="codex:gpt-6-sol",
+        writer_seat="codex:gpt-6.1-sol",
+        question_seat="codex:gpt-6.1-sol",
         writer_dispatch=writer_call,
         runner=run_actual,
     )
@@ -1040,8 +1040,8 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         level,
         slug,
         repo_root=tmp_path,
-        writer_seat="codex:gpt-6-sol",
-        question_seat="codex:gpt-6-sol",
+        writer_seat="codex:gpt-6.1-sol",
+        question_seat="codex:gpt-6.1-sol",
         writer_dispatch=writer_call,
         runner=run_actual,
     )
@@ -1058,8 +1058,8 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         slug,
         repo_root=tmp_path,
         lesson_n=1,
-        writer_seat="codex:gpt-6-sol",
-        question_seat="codex:gpt-6-sol",
+        writer_seat="codex:gpt-6.1-sol",
+        question_seat="codex:gpt-6.1-sol",
         writer_dispatch=writer_call,
         runner=run_actual,
     )
@@ -1073,7 +1073,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         shutil.copy2(state_dir / "lesson-1.manifest-error.yaml", saved / "lesson-1.manifest-error.yaml")
         shutil.copy2(state_dir / "module.build.yaml", saved / "mismatch-module.build.yaml")
     terminal = module.build_module(
-        level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:gpt-6-sol", runner=run_actual
+        level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:gpt-6.1-sol", runner=run_actual
     )
     assert terminal["lessons"][0]["terminal_layer"] == "driver"
     if evidence_path:
@@ -1095,7 +1095,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         repo_root=tmp_path,
         plans_dir=plan_dir,
         evidence_dir=evidence_dir,
-        question_seat="codex:gpt-6-sol",
+        question_seat="codex:gpt-6.1-sol",
         site_dir=page_dir,
     )
     assert report["passed_through"] == 12 and report["manifest_sha256"] is None

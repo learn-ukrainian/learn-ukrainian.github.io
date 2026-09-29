@@ -455,7 +455,7 @@ def test_the_rolling_set_may_be_partial_and_needs_no_lock(env: Env) -> None:
 def test_a_seed_planted_by_the_seats_own_family_is_not_in_its_pool_and_is_not_counted_as_missed(env: Env) -> None:
     fine = linguistic_seed("seed-l1", planter_model="gemini-3.1-pro-preview", planter_family="google")
     own = linguistic_seed(
-        "seed-l2", planter_model="gpt-6-astra", planter_family="openai", writer_family="anthropic"
+        "seed-l2", planter_model="gpt-6.1-sol", planter_family="openai", writer_family="anthropic"
     )  # planted by openai
     for unit in (fine, own):
         env.add(unit, "first")
@@ -493,7 +493,7 @@ def test_a_seat_with_attempts_under_two_models_must_name_one(env: Env) -> None:
     ids = env.attempt(unit, "codex", "REVISE", [finding("F-01")])
     env.seed_result("seed-a1", ids, True, True, {"F-01": "planted"})
     conn = env.connect()
-    conn.execute("UPDATE attempts SET reviewer_model = 'gpt-6-sol' WHERE attempt_id = ?", (ids[1],))
+    conn.execute("UPDATE attempts SET reviewer_model = 'gpt-6-luna' WHERE attempt_id = ?", (ids[1],))
     other = mechanical_seed("seed-a2")
     conn.close()
     env.add(other, "first")
@@ -504,7 +504,7 @@ def test_a_seat_with_attempts_under_two_models_must_name_one(env: Env) -> None:
     with pytest.raises(score.ScoreError) as caught:
         run(env)
     assert caught.value.code == score.MIXED_SEAT
-    assert run(env, model="gpt-6-astra", allow_partial=True).report["models"] == ["gpt-6-astra"]
+    assert run(env, model="gpt-6.1-sol", allow_partial=True).report["models"] == ["gpt-6.1-sol"]
 
 
 def test_a_seat_with_no_attempts_has_nothing_to_score(env: Env) -> None:
@@ -748,7 +748,7 @@ def test_agreement_is_reported_per_seat_pair_with_its_interval_and_the_blocking_
     # the same two seats pool whichever of them was first; 1 of 2 lessons agreed, Wilson 95 % for 1/2
     assert [(side["harness"], side["model"]) for side in entry["seats"]] == [
         ("agy", "gemini-3.1-pro-preview"),
-        ("codex", "gpt-6-astra"),
+        ("codex", "gpt-6.1-sol"),
     ]
     assert entry["lessons"] == 2 and entry["agreement"]["k"] == 1 and entry["blocking_disagreements"] == 1
     assert near(entry["agreement"]["point"], 0.5)
@@ -756,7 +756,7 @@ def test_agreement_is_reported_per_seat_pair_with_its_interval_and_the_blocking_
     text = score.render_report(result)
     assert "## Agreement per seat pair" in text
     assert (
-        "agy:gemini-3.1-pro-preview/codex:gpt-6-astra: 1/2 = 50.0 % [9.5 %, 90.5 %] lessons agreed; 1 disagreements"
+        "agy:gemini-3.1-pro-preview/codex:gpt-6.1-sol: 1/2 = 50.0 % [9.5 %, 90.5 %] lessons agreed; 1 disagreements"
         in text
     )
     assert "grok" not in text.split("## Agreement per seat pair")[1].split("## Reading the size")[0]
