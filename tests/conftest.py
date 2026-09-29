@@ -334,7 +334,7 @@ _LEXICON_FIXTURE_SNAPSHOT_KEY = "_lexicon_fixture_snapshot"
 # read-write connect, so a reader without ``mode=ro`` leaves an empty
 # ``data/sources.db`` in a checkout that has no corpus (CI, sparse worktrees),
 # and later tests take the empty file for a real database. The connect wrapper
-# ``_checkout_corpus_db_guarded_connect`` refuses the creation in this process;
+# ``_checkout_corpus_db_guarded_connect`` reports the creation in this process;
 # the session snapshot catches creators it cannot see (subprocesses).
 _CHECKOUT_CORPUS_DBS = ("data/sources.db", "data/vesum.db")
 _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY = "_checkout_corpus_db_snapshot"
@@ -920,33 +920,36 @@ def _checkout_corpus_db_guarded_connect(*args: object, **kwargs: object) -> sqli
     """Fail a sqlite connect that created a corpus database in the checkout (#9158).
 
     The guard judges the connect by its effect, not by its arguments: a corpus
-    database missing before the call and present after it was created by the
-    call, whatever the path form, URI ``mode`` or flags. The connection is
-    closed and the new empty file removed before the test fails, so later tests
-    never mistake it for a real corpus. Installed at conftest import, it also
-    covers module-level probes that run while test modules are collected.
-    ``pytest.fail`` raises a ``BaseException``, so a caller's ``except
-    sqlite3.Error`` / ``except Exception`` cannot swallow the refusal.
-    Existing databases and every other path pass untouched.
+    database path with no directory entry before the call and one after it
+    fails the test, whatever the path form, URI ``mode`` or flags, and even if
+    the connect raised. Another process may have created the entry meanwhile,
+    so the guard only reports: it never deletes or moves a file, and closes
+    only the connection this call opened. A dangling symlink counts as an
+    existing entry. Installed at conftest import, it also covers module-level
+    probes that run while test modules are collected. ``pytest.fail`` raises a
+    ``BaseException``, so a caller's ``except sqlite3.Error`` / ``except
+    Exception`` cannot swallow the report. Existing entries and every other
+    path pass untouched.
     """
     targets = [_REPO_ROOT / name for name in _CHECKOUT_CORPUS_DBS]
-    missing = [target for target in targets if not target.exists()]
-    connection = _REAL_SQLITE3_CONNECT(*args, **kwargs)
-    created = [target for target in missing if target.exists()]
-    if not created:
+    missing = [target for target in targets if not os.path.lexists(target)]
+    connection = None
+    try:
+        connection = _REAL_SQLITE3_CONNECT(*args, **kwargs)
         return connection
-    connection.close()
-    for target in created:
-        with contextlib.suppress(OSError):
-            if target.stat().st_size == 0:
-                target.unlink()
-    node = os.environ.get("PYTEST_CURRENT_TEST") or "test collection or session setup"
-    pytest.fail(
-        f"{node} created {', '.join(map(str, created))}: a file-creating sqlite3.connect "
-        "creates a missing database. Open corpus databases read-only (file:...?mode=ro, "
-        "uri=True) and point tests at tmp_path via LU_SOURCES_DB (#9158)",
-        pytrace=False,
-    )
+    finally:
+        created = [target for target in missing if os.path.lexists(target)]
+        if created:
+            if connection is not None:
+                connection.close()
+            node = os.environ.get("PYTEST_CURRENT_TEST") or "test collection or session setup"
+            pytest.fail(
+                f"{node}: {', '.join(map(str, created))} created during this sqlite3.connect call "
+                "(possibly by another process). A file-creating sqlite3.connect creates a missing "
+                "database. Open corpus databases read-only (file:...?mode=ro, uri=True) and point "
+                "tests at tmp_path via LU_SOURCES_DB (#9158)",
+                pytrace=False,
+            )
 
 
 sqlite3.connect = _checkout_corpus_db_guarded_connect

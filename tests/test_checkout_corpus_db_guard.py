@@ -36,18 +36,55 @@ def checkout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     [None, "?mode=rwc", "?mode=memory&mode=rwc", "?mode=rwc%00", "?mode=memory&mode=rwc%00"],
     ids=["plain-path", "uri-rwc", "uri-memory-then-rwc", "uri-rwc-nul", "uri-memory-then-rwc-nul"],
 )
-def test_connect_that_creates_a_corpus_db_fails_the_test_and_leaves_no_file(
+def test_connect_that_creates_a_corpus_db_fails_the_test_and_leaves_the_file(
     checkout: Path, name: str, uri_query: str | None
 ) -> None:
     target = checkout / name
 
-    with pytest.raises(pytest.fail.Exception, match="created"):
+    with pytest.raises(pytest.fail.Exception, match=r"created during this sqlite3\.connect call") as failure:
         if uri_query is None:
             sqlite3.connect(str(target))
         else:
             sqlite3.connect(f"{target.as_uri()}{uri_query}", uri=True)
 
-    assert not target.exists()
+    assert str(target) in str(failure.value)
+    assert "test_connect_that_creates_a_corpus_db" in str(failure.value)
+    assert target.exists()  # the guard reports; it never deletes
+    target.unlink()
+
+
+def test_connect_that_creates_the_db_and_then_raises_still_fails(
+    checkout: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    target = checkout / "data" / "sources.db"
+
+    def create_then_raise(*args: object, **kwargs: object) -> sqlite3.Connection:
+        target.write_bytes(b"")
+        raise sqlite3.OperationalError("disk I/O error")
+
+    monkeypatch.setattr(guard, "_REAL_SQLITE3_CONNECT", create_then_raise)
+
+    with pytest.raises(pytest.fail.Exception, match="possibly by another process"):
+        sqlite3.connect(str(target))
+
+    assert target.exists()
+    target.unlink()
+
+
+def test_dangling_symlink_counts_as_existing_and_is_left_alone(checkout: Path, tmp_path: Path) -> None:
+    target = checkout / "data" / "sources.db"
+    target.symlink_to(tmp_path / "elsewhere.db")
+
+    sqlite3.connect(str(target)).close()  # SQLite creates the symlink's target
+
+    assert target.is_symlink()
+    assert (tmp_path / "elsewhere.db").exists()
+
+
+def test_in_memory_connect_passes_without_a_corpus(checkout: Path) -> None:
+    sqlite3.connect(":memory:").close()
+
+    assert not any((checkout / name).exists() for name in guard._CHECKOUT_CORPUS_DBS)
 
 
 @pytest.mark.parametrize("query", ["?mode=ro", "?mode=rw"])
@@ -80,6 +117,7 @@ def test_refusal_is_not_swallowed_by_a_broad_except(checkout: Path) -> None:
 
     with pytest.raises(pytest.fail.Exception):
         reader()
+    (checkout / "data" / "sources.db").unlink()
 
 
 def test_read_write_connect_to_an_existing_db_and_to_other_paths_passes(checkout: Path, tmp_path: Path) -> None:
@@ -88,6 +126,8 @@ def test_read_write_connect_to_an_existing_db_and_to_other_paths_passes(checkout
     with contextlib.closing(sqlite3.connect(f"{existing.as_uri()}?mode=rw", uri=True)) as connection:
         connection.execute("CREATE TABLE t (x)")
     assert existing.stat().st_size > 0
+    sqlite3.connect(str(existing)).close()
+    assert existing.exists()
 
     elsewhere = tmp_path / "scratch" / "sources.db"
     elsewhere.parent.mkdir()
