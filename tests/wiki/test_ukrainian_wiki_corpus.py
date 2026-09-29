@@ -13,9 +13,8 @@ pytestmark = pytest.mark.reads_content
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from wiki.embedding_manifest import EmbeddingManifest
-
 from wiki import dense_rerank, sources_db, ukrainian_wiki_corpus
+from wiki.embedding_manifest import EmbeddingManifest
 
 
 class _FakeTokenizer:

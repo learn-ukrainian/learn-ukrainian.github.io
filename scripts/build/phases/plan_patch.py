@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
 from build.io_utils import write_text_atomic
 from build.prompt_literals import _format_prompt_literal_block, _strip_prompt_control_tags
 from common.repo_root import project_interpreter

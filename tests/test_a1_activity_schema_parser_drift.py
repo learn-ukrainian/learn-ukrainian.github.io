@@ -26,8 +26,6 @@ from jsonschema import Draft7Validator
 
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
-from yaml_activities import ActivityParser
-
 from scripts.build.activity_renderer import (
     GroupSortNameError,
     ImageToLetterShapeError,
@@ -37,6 +35,7 @@ from scripts.build.activity_renderer import (
     quiz_correct_indices,
     render_activity_to_jsx,
 )
+from yaml_activities import ActivityParser
 
 SCHEMA_PATH = Path(__file__).parent.parent / "schemas" / "activities-a1.schema.json"
 SCHEMA = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -417,6 +416,7 @@ def test_image_to_letter_needs_a_distractor_distinct_from_the_letter(options):
 
 def test_image_to_letter_validator_reports_bad_items_before_render(tmp_path):
     import yaml
+
     from build.activity_validator import validate_activities  # scripts/ is on sys.path
 
     path = tmp_path / "module.yaml"
@@ -697,6 +697,7 @@ def test_quiz_correct_index_list_is_a_claim_of_its_own_set():
 
 def _validate(tmp_path, *activities: dict):
     import yaml
+
     from build.activity_validator import validate_activities  # scripts/ is on sys.path
 
     path = tmp_path / "module.yaml"

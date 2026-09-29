@@ -214,6 +214,7 @@ def test_a1_config_requires_wiki_like_b2() -> None:
     promotes wiki + wiki_sources to required, mirroring B2; resources stays
     optional and optional_missing stays info-level."""
     import yaml
+
     from audit.track_deterministic_audit import DEFAULT_CONFIG, merged_track_config
 
     config = yaml.safe_load(DEFAULT_CONFIG.read_text(encoding="utf-8"))

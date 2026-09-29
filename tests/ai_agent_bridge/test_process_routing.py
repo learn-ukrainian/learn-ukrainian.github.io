@@ -21,7 +21,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.runner import InterAgentTransportError, resolve_inter_agent_route
-
 from scripts.ai_agent_bridge import _process
 from scripts.ai_agent_bridge._acp_compat import (
     registered_participant_model,
@@ -328,7 +327,6 @@ def test_converse_default_model_is_none_so_registry_pin_applies() -> None:
 def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     """Rotating the registry pin moves converse's default with it (#6929)."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-
     from scripts.ai_agent_bridge._gemini import converse_gemini
 
     monkeypatch.setitem(
@@ -362,9 +360,8 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
 
 def test_default_gemini_model_resolves_from_registry_and_tracks_rotation(monkeypatch) -> None:
     """#6959: default_gemini_model resolves from the live ACP registry pin."""
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-
     import scripts.ai_agent_bridge as bridge
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
     from scripts.ai_agent_bridge._config import default_gemini_model
 
     monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
@@ -393,7 +390,6 @@ def test_default_gemini_model_respects_env_override(monkeypatch) -> None:
 def test_default_gemini_model_missing_registry_pin_fails_loudly(monkeypatch) -> None:
     """#6959: missing registry pin fails loudly instead of falling back to stale literal."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-
     from scripts.ai_agent_bridge._config import default_gemini_model
 
     monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)
@@ -419,7 +415,6 @@ def test_ask_gemini_and_process_and_respond_signatures_default_to_none() -> None
 def test_ask_gemini_resolves_registry_pin_and_tracks_rotation(monkeypatch) -> None:
     """#6959: ask_gemini resolves default from registry and remaps legacy slugs."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-
     from scripts.ai_agent_bridge._gemini import ask_gemini
 
     monkeypatch.delenv("AB_GEMINI_MODEL", raising=False)

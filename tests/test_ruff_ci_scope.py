@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import re
 import shlex
+import tomllib
 from pathlib import Path
 
 import pytest
@@ -63,11 +64,22 @@ def test_pre_commit_ruff_version_matches_ci_lock() -> None:
 
 
 def test_pre_commit_ruff_checks_the_same_trees_as_ci() -> None:
-    """Pre-commit must lint the same full tree with the same config discovery."""
+    """Pre-commit must lint staged files in CI's trees with config discovery."""
     _, hook = _pre_commit_ruff()
     ci_argv = shlex.split(_ruff_check_invocation(_CI.read_text(encoding="utf-8")))
     assert ci_argv[:4] == ["python", "-m", "ruff", "check"]
-    assert hook["args"] == ci_argv[4:]
-    assert hook["pass_filenames"] is False
-    assert hook["always_run"] is True
-    assert "files" not in hook
+    assert "args" not in hook
+    assert hook.get("pass_filenames", True) is True
+    assert hook.get("always_run", False) is False
+    assert "stages" not in hook or "pre-commit" in hook["stages"]
+    allowed = re.compile(hook["files"])
+    for path in ci_argv[4:]:
+        assert allowed.search(f"{path}example.py")
+    assert not allowed.search("docs/example.md")
+
+
+def test_ruff_import_roots_are_checkout_independent() -> None:
+    """Ruff must classify imports without probing sparse tree presence."""
+    config = tomllib.loads((_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))
+    assert config["tool"]["ruff"]["src"] == [".", "scripts"]
+    assert "known-first-party" not in config["tool"]["ruff"].get("lint", {}).get("isort", {})

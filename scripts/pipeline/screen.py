@@ -188,6 +188,7 @@ def _fix_yaml_vocab(vocab_path: Path) -> int:
 def _fix_forbidden_activities(act_path: Path, content_path: Path) -> int:
     """Remove forbidden activities based on level/focus. Returns removal count."""
     import yaml as yaml_lib
+
     from audit.checks.yaml_schema_validation import remove_forbidden_activities
     from audit.core import detect_focus, detect_level, load_yaml_meta
 

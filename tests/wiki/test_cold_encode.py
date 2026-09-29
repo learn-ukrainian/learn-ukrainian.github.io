@@ -10,9 +10,8 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
-from wiki.embedding_manifest import EmbeddingManifest
-
 from wiki import cold_encode, dense_rerank
+from wiki.embedding_manifest import EmbeddingManifest
 
 
 class FakeTokenizer:
