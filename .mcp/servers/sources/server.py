@@ -299,15 +299,20 @@ async def list_tools() -> list[Tool]:
         _tool(
             name="mcp_server_identity",
             description=(
-                "Return public-safe exact identity hashes (SHA-256) for the running server.py, "
-                "its actual sources.db, and its actual vesum.db — never a path or content. "
-                "A client can compare these endpoint-reported hashes against the exact locally "
-                "reviewed files it expects to prove the endpoint is backed by the same reviewed "
-                "code/data, not merely files that happen to exist on the caller's own filesystem."
+                "Return public-safe identities for the running server.py, sources.db, and vesum.db. "
+                "By default sources_db_meta_identity is a file-meta-v1 state identity (size, "
+                "mtime, journal mode, and WAL metadata), not a content hash and never a database-body read. "
+                "Set include_sources_db_sha256=true to request a fresh full content hash of sources.db. "
+                "No filesystem paths are returned."
             ),
             inputSchema={
                 "type": "object",
-                "properties": {},
+                "properties": {
+                    "include_sources_db_sha256": {
+                        "type": "boolean",
+                        "description": "Compute and return a fresh full content hash for sources.db.",
+                    },
+                },
             },
         ),
         _tool(
@@ -1661,8 +1666,8 @@ def _review_result_text(content: list[TextContent]) -> str:
     return "\n".join(block.text for block in content) if content else ""
 
 
-def _with_receipt(content: list[TextContent], receipt_id: str) -> list[TextContent]:
-    line = f"receipt: {receipt_id}"
+def _with_receipt(content: list[TextContent], receipt_id: str, outcome: str | None = None) -> list[TextContent]:
+    line = f"receipt: {receipt_id}" if outcome is None else f"receipt: {receipt_id} (outcome: {outcome})"
     if not content:
         return [TextContent(type="text", text=line)]
     updated = list(content)
@@ -1674,28 +1679,38 @@ def _with_receipt(content: list[TextContent], receipt_id: str) -> list[TextConte
 
 def _review_record(
     recorder: Any, name: str, arguments: dict[str, Any], content: list[TextContent], *, status: str
-) -> tuple[list[TextContent], bool, str | None]:
-    """Append the full tool result and return (content, recording_error, receipt_id).
+) -> tuple[list[TextContent], bool, str | None, str | None]:
+    """Append the full tool result and return (content, recording_error, receipt_id, outcome).
 
-    ``receipt_id`` is None exactly when recording failed.
+    ``receipt_id`` is None exactly when recording failed. ``outcome`` is the
+    search-outcome name the validator accepts for the stored record; the facts
+    are classified once, stored, and mapped to that name, so the seat copies
+    it instead of deriving it. None when no outcome name applies (refused call).
     """
     from scripts.review.receipts.ledger import freeze_arguments
+    from scripts.review.receipts.outcomes import classify_outcome, search_outcome
 
     try:
+        result_text = _review_result_text(content)
+        facts = classify_outcome(name, status, result_text)
         receipt_id = recorder.record(
             tool=name,
             arguments=freeze_arguments(arguments),
             status=status,
-            result=_review_result_text(content),
+            result=result_text,
             server_version=_review_server_version(),
+            outcome_facts=facts,
         )
+        outcome = search_outcome(status, facts)
     except Exception as exc:
-        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")], True, None
-    return _with_receipt(content, receipt_id), False, receipt_id
+        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")], True, None, None
+    return _with_receipt(content, receipt_id, outcome), False, receipt_id, outcome
 
 
-def _outcome_with_receipt(typed_outcome: dict[str, Any] | None, receipt_id: str | None) -> dict[str, Any] | None:
-    """Copy the typed outcome with a top-level ``receipt`` so the structured channel carries it.
+def _outcome_with_receipt(
+    typed_outcome: dict[str, Any] | None, receipt_id: str | None, outcome: str | None = None
+) -> dict[str, Any] | None:
+    """Copy the typed outcome with a top-level ``receipt`` (and ``receipt_outcome``) so the structured channel carries them.
 
     MCP clients present ``structuredContent`` to the model when it is set, so
     the text-only ``receipt:`` line would never reach the seat. The recorded
@@ -1703,7 +1718,10 @@ def _outcome_with_receipt(typed_outcome: dict[str, Any] | None, receipt_id: str 
     """
     if typed_outcome is None or not isinstance(typed_outcome, dict) or receipt_id is None:
         return typed_outcome
-    return {**typed_outcome, "receipt": receipt_id}
+    carried = {"receipt": receipt_id}
+    if outcome is not None:
+        carried["receipt_outcome"] = outcome
+    return {**typed_outcome, **carried}
 
 
 def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool] | None:
@@ -1717,7 +1735,7 @@ def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) 
         return [TextContent(type="text", text=text)], True
     if name not in REVIEW_TOOLS:
         text = f"Tool {name} is not in the review tool list."
-        content, _rec_err, _receipt = _review_record(
+        content, _rec_err, _receipt, _outcome = _review_record(
             recorder, name, arguments, [TextContent(type="text", text=text)], status="refused"
         )
         return content, True
@@ -1815,17 +1833,21 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
         if recorder is not None and recorder.mode == "on":
-            result, rec_err, receipt_id = _review_record(recorder, name, review_arguments, result, status="ok")
+            result, rec_err, receipt_id, receipt_outcome = _review_record(
+                recorder, name, review_arguments, result, status="ok"
+            )
             if rec_err:
                 return result, True, None
-            typed_outcome = _outcome_with_receipt(typed_outcome, receipt_id)
+            typed_outcome = _outcome_with_receipt(typed_outcome, receipt_id, receipt_outcome)
         return result, False, typed_outcome
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
         content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
         if recorder is not None and recorder.mode == "on":
-            content, _rec_err, _receipt = _review_record(recorder, name, review_arguments, content, status="error")
+            content, _rec_err, _receipt, _outcome = _review_record(
+                recorder, name, review_arguments, content, status="error"
+            )
         return content, True, None
 
 
@@ -2134,9 +2156,8 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
 # Cache key: (resolved path, mtime_ns, ctime_ns, size, inode).
 # The required identity is (resolved path, st_size, st_mtime_ns); ctime and
 # inode are included so a same-size, same-mtime replace still recomputes.
-# ``mcp_server_identity`` hashes server code, sources.db, and vesum.db
-# through this same cache. The lock stops concurrent cold calls from
-# re-reading a multi-gigabyte file.
+# ``mcp_server_identity`` hashes server code and vesum.db through this cache.
+# The multi-gigabyte sources.db content hash is opt-in and always fresh.
 _FILE_HASH_CACHE: dict[tuple[str, int, int, int, int], str] = {}
 _FILE_HASH_LOCK = threading.Lock()
 
@@ -2183,27 +2204,50 @@ def _sha256_of_file(path: Path) -> str:
 async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
     """Endpoint identity attestation (Cycle 007 evidence-foundation fixes v3, item 1).
 
-    Public-safe exact identity hashes only — never a path or file content.
-    Callers (``LocalMcpSourcesClient.server_identity()``) compare these
-    endpoint-reported values against the exact locally reviewed files they
-    expect; this handler must never merely echo back whatever a client
-    claims — it hashes the server's own actual running files.
+    The default sources.db identity is file metadata, not content. A caller
+    must explicitly request its full content hash; that hash bypasses cache.
     """
+    if "include_sources_db_sha256" in args and not isinstance(args["include_sources_db_sha256"], bool):
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: include_sources_db_sha256 must be a boolean.",
+            "expected_arguments": ["include_sources_db_sha256"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
     server_path = Path(__file__).resolve()
     sources_db_path = PROJECT_ROOT / "data" / "sources.db"
     vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
 
     def _identity() -> dict[str, Any]:
+        from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
+
+        meta_digest, meta = sources_db_meta_identity(sources_db_path)
         return {
             "server_code_sha256": _sha256_of_file(server_path),
-            "sources_db_sha256": _sha256_of_file(sources_db_path),
+            "sources_db_meta_identity": {"scheme": meta["scheme"], "sha256": meta_digest},
             "sources_db_bytes": sources_db_path.stat().st_size,
             "vesum_db_sha256": _sha256_of_file(vesum_db_path),
             "vesum_db_bytes": vesum_db_path.stat().st_size,
+            **(
+                {"sources_db_sha256": _sha256_of_file_fresh(sources_db_path)}
+                if args.get("include_sources_db_sha256") is True
+                else {}
+            ),
         }
 
     payload = await asyncio.to_thread(_identity)
     return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+
+def _sha256_of_file_fresh(path: Path) -> str:
+    """Hash a file body without consulting or populating the shared hash cache."""
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for block in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def _is_archaic(tags):

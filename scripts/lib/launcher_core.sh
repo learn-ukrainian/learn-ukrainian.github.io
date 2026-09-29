@@ -124,6 +124,16 @@ launcher_error() {
   printf 'Error: %s\n' "$*" >&2
 }
 
+# Project interpreter for helper modules, resolved from LC_ROOT by the shared
+# resolver (primary checkout's .venv; never trusts a worktree gitfile, #9118).
+# LC_DURABLE_HELPER_ROOT is NOT used: it comes from an unhardened git
+# common-dir lookup. The resolver prints its own error; callers exit 3.
+launcher_project_python() {
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$LC_ROOT/scripts/lib/project_interpreter.sh"
+  project_interpreter_resolve "$LC_ROOT"
+}
+
 launcher_require_binary() {
   local binary="$1"
   local error_message="$2"

@@ -1859,7 +1859,7 @@ def build_slovnyk_entries(
 
         gloss = selected_senses.get(wid) or str(w_rec.get("sense_gloss") or w_rec.get("gloss_en") or "")
         try:
-            atlas_href = atlas_href_for(lemma)
+            atlas_href = atlas_href_for(lemma, translation=gloss, pos=str(w_rec.get("pos", "")))
         except Exception:
             atlas_href = None
 

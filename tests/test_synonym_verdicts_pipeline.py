@@ -8,6 +8,8 @@ from typing import Any
 import pytest
 import yaml
 
+import scripts.audit.generate_practice_deck as generator
+
 # Add project root to path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -25,11 +27,27 @@ from scripts.audit.generate_practice_deck import (
 )
 from scripts.lexicon.build_synonym_verdicts_yaml import main as run_converter
 from scripts.lexicon.verify_synonym_pairs import main as run_verify_script
+from scripts.practice.ulif_synonym_groups import UlifSynonymGroups, payload_from_row_html
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SYNONYM_VERDICTS_YAML = REPO_ROOT / "registry" / "lexicon" / "synonym_pair_verdicts.yaml"
 
+
+@pytest.fixture(autouse=True)
+def exercise_preserved_ulif_evidence_path(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(generator, "SYNONYM_MODE_ENABLED", True)
+
 FIXTURES = Path("tests/fixtures")
+# Synonym cards need ULIF evidence (#8714): fixture rows (not ULIF text) that make
+# each pair used below a dominant + plain member of one sense cluster.
+ULIF_FIXTURE = UlifSynonymGroups.from_payloads(
+    payload_from_row_html(row)
+    for row in (
+        "<b>СЛО́ВО</b> (fixture), <b>ТЕ́РМІН</b>.",
+        "<b>ДРУГ</b> (fixture), <b>ТОВА́РИШ</b>, <b>ПРИ́ЯТЕЛЬ</b>.",
+        "<b>КІТ</b> (fixture), <b>КИ́ЦЬКА</b>.",
+    )
+)
 MANIFEST = FIXTURES / "lexicon-practice-manifest.json"
 ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"
 VESUM = FIXTURES / "lexicon-practice-vesum.json"
@@ -93,7 +111,7 @@ def _a2_synonym_fixture_verifier() -> JsonVesumVerifier:
 def _a2_synonym_fixture_manifest() -> list[dict[str, Any]]:
     return [
         make_a2_mock_manifest_entry("друг", "druh", "friend", ["товариш"]),
-        make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade", ["друг"]),
+        make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade, friend", ["друг"]),
         make_a2_mock_manifest_entry("книга", "knyha", "book"),
         make_a2_mock_manifest_entry("том", "tom", "volume"),
         make_a2_mock_manifest_entry("зошит", "zoshyt", "notebook"),
@@ -175,7 +193,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
     # (Since synonyms are B1+ only and distractors must be >= 3)
     mock_manifest = [
         make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-        make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+        make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
         make_mock_manifest_entry("мова", "mova", "language"),
         make_mock_manifest_entry("книга", "knyha", "book"),
         make_mock_manifest_entry("звук", "zvuk", "sound"),
@@ -194,7 +212,13 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
 
     # CASE 1: Missing verdicts file (fail-closed)
     shards_missing = build_practice_shards(
-        mock_manifest, allowlist, verifier, cloze_sources=None, config=BuildConfig(target=10), synonym_verdicts=None
+        mock_manifest,
+        allowlist,
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=10),
+        synonym_verdicts=None,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     captured = capsys.readouterr()
     # Check that a WARN was printed and no synonym items were emitted
@@ -210,6 +234,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
         cloze_sources=None,
         config=BuildConfig(target=10),
         synonym_verdicts=empty_verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     assert shards_unverdicted["B1"]["synonym"]["synonym"] == []
     captured = capsys.readouterr()
@@ -227,6 +252,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
         cloze_sources=None,
         config=BuildConfig(target=10),
         synonym_verdicts=approved_verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     # The synonym item should be emitted!
     b1_synonyms = shards_approved["B1"]["synonym"]["synonym"]
@@ -246,6 +272,7 @@ def test_builder_gating_and_fail_closed(tmp_path: Path, capsys: pytest.CaptureFi
         cloze_sources=None,
         config=BuildConfig(target=10),
         synonym_verdicts=rejected_verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     assert shards_rejected["B1"]["synonym"]["synonym"] == []
 
@@ -259,7 +286,7 @@ def test_verify_script_new_pair_detection(tmp_path: Path) -> None:
     mock_manifest = {
         "entries": [
             make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-            make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+            make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
             make_mock_manifest_entry("мова", "mova", "language"),
             make_mock_manifest_entry("книга", "knyha", "book"),
             make_mock_manifest_entry("звук", "zvuk", "sound"),
@@ -285,6 +312,61 @@ def test_verify_script_new_pair_detection(tmp_path: Path) -> None:
     assert new_pair["a"] in ("слово", "термін")
     assert new_pair["b"] in ("слово", "термін")
     assert new_pair["polarity"] == "synonym"
+
+
+def _verb_entry(lemma: str, gloss: str, level: str, synonyms: list[str] | None = None) -> dict[str, Any]:
+    entry = make_mock_manifest_entry(lemma, lemma, gloss, synonyms)
+    entry["pos"] = "verb"
+    entry["course_usage"] = [{"track": level.lower(), "slug": f"{level.lower()}-verbs"}]
+    entry["enrichment"]["cefr"]["level"] = level
+    return entry
+
+
+def _verb_manifest(level: str) -> list[dict[str, Any]]:
+    # "to ..." glosses: the legacy gloss head was "to" for every verb, so no verb could
+    # ever be a distractor for another (#8714).  The head is now the first sense word;
+    # казати shares the head "speak" with the prompt and stays excluded.
+    return [
+        _verb_entry("говорити", "to speak", level, ["розмовляти"]),
+        _verb_entry("розмовляти", "to talk", level, ["говорити"]),
+        _verb_entry("читати", "to read", level),
+        _verb_entry("писати", "to write", level),
+        _verb_entry("спати", "to sleep", level),
+        _verb_entry("казати", "to speak, to say", level),
+    ]
+
+
+def test_verb_distractors_count_under_first_sense_word_head() -> None:
+    from scripts.audit.generate_practice_deck import _select_practice_lexemes, _valid_synonym_distractors
+
+    manifest = _verb_manifest("A2")
+    verifier = JsonVesumVerifier({entry["lemma"]: [{"lemma": entry["lemma"], "pos": "verb"}] for entry in manifest})
+    _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
+        manifest, verifier, BuildConfig(target=20)
+    )
+    distractors = _valid_synonym_distractors(by_plain_lemma["розмовляти"], by_plain_lemma["говорити"], all_lexemes)
+    assert {lexeme["lemma"] for lexeme in distractors} == {"читати", "писати", "спати"}
+
+    verdicts = {
+        "approved": [{"a": "говорити", "b": "розмовляти", "polarity": "synonym", "sources": ["synonyms"]}],
+        "rejected": [],
+    }
+    nominations = nominate_a2_synonym_pairs(manifest, verdicts, all_lexemes, by_plain_lemma)
+    assert [(row["a"], row["b"], row["distractors_ab"], row["distractors_ba"]) for row in nominations] == [
+        ("говорити", "розмовляти", 3, 3)
+    ]
+
+
+def test_verify_script_detects_verb_pair(tmp_path: Path) -> None:
+    manifest_path = tmp_path / "mock-manifest.json"
+    verdicts_path = tmp_path / "mock-verdicts.yaml"
+    out_path = tmp_path / "new_pairs.jsonl"
+    manifest_path.write_text(json.dumps({"entries": _verb_manifest("B1")}, ensure_ascii=False), encoding="utf-8")
+    yaml.dump({"approved": [], "rejected": []}, verdicts_path.open("w", encoding="utf-8"))
+    sys.argv = ["", "--manifest", str(manifest_path), "--verdicts", str(verdicts_path), "--out", str(out_path)]
+    assert run_verify_script() == 0
+    rows = [json.loads(line) for line in out_path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    assert [(row["a"], row["b"], row["polarity"]) for row in rows] == [("говорити", "розмовляти", "synonym")]
 
 
 def test_synonym_verdict_a2_exception_requires_curator() -> None:
@@ -316,6 +398,7 @@ def test_flagged_a2_synonym_pair_emits_at_a2() -> None:
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     a2_synonyms = shards["A2"]["synonym"]["synonym"]
     assert len(a2_synonyms) >= 1
@@ -350,6 +433,7 @@ def test_unflagged_both_leg_a2_synonym_pair_stays_at_default_b1_floor() -> None:
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     assert shards["A2"]["synonym"]["synonym"] == []
     b1_synonyms = shards["B1"]["synonym"]["synonym"]
@@ -360,7 +444,7 @@ def test_unflagged_both_leg_a2_synonym_pair_stays_at_default_b1_floor() -> None:
 def test_approved_verdict_emits_without_manifest_relation_links() -> None:
     words = [
         ("слово", "word"),
-        ("термін", "term"),
+        ("термін", "term, word"),
         ("мова", "language"),
         ("книга", "book"),
         ("звук", "sound"),
@@ -369,7 +453,7 @@ def test_approved_verdict_emits_without_manifest_relation_links() -> None:
     manifest = [make_mock_manifest_entry(lemma, lemma, gloss) for lemma, gloss in words]
     verifier = JsonVesumVerifier({lemma: [{"lemma": lemma, "pos": "noun"}] for lemma, _gloss in words})
     verdicts = {
-        "approved": [{"a": "слово", "b": "термін", "polarity": "synonym"}],
+        "approved": [{"a": "слово", "b": "термін", "polarity": "synonym", "sources": ["synonyms"]}],
         "rejected": [],
     }
 
@@ -380,6 +464,7 @@ def test_approved_verdict_emits_without_manifest_relation_links() -> None:
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
 
     items = shards["B1"]["synonym"]["synonym"]
@@ -392,7 +477,7 @@ def test_approved_verdict_emits_without_manifest_relation_links() -> None:
 def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
     words = [
         ("слово", "word"),
-        ("термін", "term"),
+        ("термін", "term, word"),
         ("мова", "language"),
         ("книга", "book"),
         ("звук", "sound"),
@@ -412,6 +497,7 @@ def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
 
     assert shards["B1"]["synonym"]["synonym"] == []
@@ -420,7 +506,7 @@ def test_rejected_verdict_without_manifest_relation_never_emits() -> None:
 def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> None:
     manifest = [
         make_a1_mock_manifest_entry("кіт", "kit", "cat"),
-        make_a1_mock_manifest_entry("кицька", "kytska", "kitty"),
+        make_a1_mock_manifest_entry("кицька", "kytska", "kitty, cat"),
         make_a1_mock_manifest_entry("пес", "pes", "dog"),
         make_a1_mock_manifest_entry("миша", "mysha", "mouse"),
         make_a1_mock_manifest_entry("риба", "ryba", "fish"),
@@ -436,9 +522,10 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts={
-            "approved": [{"a": "кіт", "b": "кицька", "polarity": "synonym"}],
+            "approved": [{"a": "кіт", "b": "кицька", "polarity": "synonym", "sources": ["synonyms"]}],
             "rejected": [],
         },
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     shards["B1"]["classify"]["classify"] = [
         {"classifyId": f"fixture-{index}", "lemmaId": "сад", "evidence": "x" * 10_000} for index in range(20)
@@ -456,7 +543,7 @@ def test_budget_refresh_does_not_advertise_cross_level_synonym_index_tag() -> No
 def test_b1_synonym_behavior_unchanged_with_a2_exception_mechanism() -> None:
     mock_manifest = [
         make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-        make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+        make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
         make_mock_manifest_entry("мова", "mova", "language"),
         make_mock_manifest_entry("книга", "knyha", "book"),
         make_mock_manifest_entry("звук", "zvuk", "sound"),
@@ -488,6 +575,7 @@ def test_b1_synonym_behavior_unchanged_with_a2_exception_mechanism() -> None:
         cloze_sources=None,
         config=BuildConfig(target=10),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     b1_synonyms = shards["B1"]["synonym"]["synonym"]
     assert len(b1_synonyms) >= 1
@@ -530,7 +618,7 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
     # A flagged pair whose legs are A1 must NOT be lowered to A1 (strict guard).
     manifest = [
         make_a1_mock_manifest_entry("кіт", "kit", "cat", ["кицька"]),
-        make_a1_mock_manifest_entry("кицька", "kytska", "kitty", ["кіт"]),
+        make_a1_mock_manifest_entry("кицька", "kytska", "kitty, cat", ["кіт"]),
         make_a1_mock_manifest_entry("пес", "pes", "dog"),
         make_a1_mock_manifest_entry("миша", "mysha", "mouse"),
         make_a1_mock_manifest_entry("риба", "ryba", "fish"),
@@ -566,6 +654,7 @@ def test_flagged_a1_leg_synonym_pair_never_emits_at_a1(
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     # Never available at A1; the invalid A2 flag is ignored and the approved pair
     # remains available at the default B1 floor.
@@ -582,8 +671,8 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
 ) -> None:
     # One leg B1, one leg A2, flagged: flag must be ignored (loudly) and pair stays B1+.
     manifest = [
-        make_mock_manifest_entry("слово", "slovo", "word", ["друг"]),
-        make_a2_mock_manifest_entry("друг", "druh", "friend", ["слово"]),
+        make_mock_manifest_entry("приятель", "pryiatel", "friend, pal", ["друг"]),
+        make_a2_mock_manifest_entry("друг", "druh", "friend", ["приятель"]),
         make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade"),
         make_a2_mock_manifest_entry("книга", "knyha", "book"),
         make_a2_mock_manifest_entry("зошит", "zoshyt", "notebook"),
@@ -591,7 +680,7 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
     ]
     verifier = JsonVesumVerifier(
         {
-            "слово": [{"lemma": "слово", "pos": "noun"}],
+            "приятель": [{"lemma": "приятель", "pos": "noun"}],
             "друг": [{"lemma": "друг", "pos": "noun"}],
             "товариш": [{"lemma": "товариш", "pos": "noun"}],
             "книга": [{"lemma": "книга", "pos": "noun"}],
@@ -602,7 +691,7 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
     verdicts = {
         "approved": [
             {
-                "a": "слово",
+                "a": "приятель",
                 "b": "друг",
                 "polarity": "synonym",
                 "sources": ["synonyms"],
@@ -619,10 +708,11 @@ def test_flagged_pair_with_non_a2_leg_warns_and_stays_b1(
         cloze_sources=None,
         config=BuildConfig(target=20),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     # Flag ignored → stays at B1+ floor (B1 prompt with its A2 target), never at A2.
     b1_synonyms = shards["B1"]["synonym"]["synonym"]
-    assert any(item["prompt"] == "слово" and item["answer"] == "друг" for item in b1_synonyms)
+    assert any(item["prompt"] == "приятель" and item["answer"] == "друг" for item in b1_synonyms)
     assert shards.get("A2", {}).get("synonym", {}).get("synonym", []) == []
     captured = capsys.readouterr()
     assert "a2Exception ignored" in captured.err
@@ -635,7 +725,7 @@ def test_invalid_exception_flag_drops_bit_but_keeps_pair_at_b1(
     # approved pair survives at the B1+ default rather than being suppressed.
     manifest = [
         make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
-        make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+        make_mock_manifest_entry("термін", "termin", "term, word", ["слово"]),
         make_mock_manifest_entry("мова", "mova", "language"),
         make_mock_manifest_entry("книга", "knyha", "book"),
         make_mock_manifest_entry("звук", "zvuk", "sound"),
@@ -668,6 +758,7 @@ def test_invalid_exception_flag_drops_bit_but_keeps_pair_at_b1(
         cloze_sources=None,
         config=BuildConfig(target=10),
         synonym_verdicts=verdicts,
+        ulif_synonym_groups=ULIF_FIXTURE,
     )
     b1_synonyms = shards["B1"]["synonym"]["synonym"]
     assert any(item["prompt"] == "слово" and item["answer"] == "термін" for item in b1_synonyms)
@@ -795,6 +886,8 @@ def test_real_synonym_verdicts_yaml_unique_lemma_floor() -> None:
     Fails closed if the approved corpus regresses below the post-grow floor —
     e.g. a revert of the attested-pair addition, or a bad merge that drops
     entries silently. Post-#6710 self-pair drop: approved floor is 1184.
+    #8714 moved 16 reviewed wrong pairs (and 12 legs no other pair uses) to
+    rejected: 2442 -> 2426 pairs, 2828 -> 2816 legs.
     """
     data = _load_real_synonym_verdicts()
     approved = data["approved"]
@@ -804,5 +897,5 @@ def test_real_synonym_verdicts_yaml_unique_lemma_floor() -> None:
         lemmas.add(item["a"])
         lemmas.add(item["b"])
 
-    assert len(approved) >= 2442
-    assert len(lemmas) >= 2828
+    assert len(approved) >= 2426
+    assert len(lemmas) >= 2816

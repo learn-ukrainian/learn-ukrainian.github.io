@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import type { PracticeModeFilter } from '../../lib/lexicon/srs';
+import { isPracticeModeEnabled, type PracticeModeFilter } from '../../lib/lexicon/srs';
 import type { WeakArea } from '../../lib/lexicon/weak-areas';
 
 export interface VocabularyTrackProps {
@@ -16,11 +16,11 @@ export const VOCAB_PRIMARY_MODES: PracticeModeFilter[] = [
   'matching',
   'choice',
 ];
-export const LEXICAL_RELATIONS_MODES: PracticeModeFilter[] = [
+export const LEXICAL_RELATIONS_MODES: PracticeModeFilter[] = ([
   'synonym',
   'paronym',
   'heritage',
-];
+] as PracticeModeFilter[]).filter(isPracticeModeEnabled);
 
 export default function VocabularyTrack({
   chromeLocale,
@@ -82,8 +82,8 @@ export default function VocabularyTrack({
         <summary style={{ cursor: 'pointer', userSelect: 'none', fontWeight: 600 }}>
           <span>
             {chromeLocale === 'uk'
-              ? '🔗 Лексичні зв’язки (синоніми, пароніми, омоніми, питома лексика)'
-              : '🔗 Lexical Relations (synonyms, paronyms, homonyms, heritage)'}
+              ? '🔗 Лексичні зв’язки (пароніми, питома лексика)'
+              : '🔗 Lexical Relations (paronyms, heritage)'}
           </span>
         </summary>
         <div

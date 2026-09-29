@@ -111,6 +111,8 @@ class TestListTools:
             f"unexpected tools: {extra}. Update the test expected set — "
             f"adding a tool to the server always requires a test update."
         )
+        identity_tool = next(tool for tool in tools if tool.name == "mcp_server_identity")
+        assert identity_tool.input_schema["properties"]["include_sources_db_sha256"]["type"] == "boolean"
 
     def test_all_tools_have_input_schema(self, server_module):
         tools = _run(server_module.list_tools())
