@@ -6,8 +6,11 @@ Description=Learn Ukrainian dispatch workers
 
 [Slice]
 # systemd.resource-control(5): MemoryHigh= is the throttling control;
-# MemoryMax= is the last line of defense. 10G sits just under 11G.
-# MemoryMax= does not cap swap (the 2026-09-24 scope used 6.3G of it).
-MemoryHigh=10G
-MemoryMax=11G
+# MemoryMax= is the last line of defense. On the CX53 host, about 30 GiB
+# usable RAM minus about 6 GiB for OS/services/drivers and the 6 GiB
+# MemAvailable floor leaves about 18 GiB for workers at MemoryHigh=.
+# MemoryMax= allows a 2 GiB burst; admission still checks MemAvailable.
+# MemoryMax= does not cap swap. Swap use was 0 GiB on 2026-09-29.
+MemoryHigh=18G
+MemoryMax=20G
 MemorySwapMax=1G

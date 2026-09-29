@@ -120,7 +120,7 @@ def test_dispatch_refuses_on_low_memory_and_high_load(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_dry_run_args(mode="danger")) == 3
 
     err = capsys.readouterr().err
-    assert "MemAvailable 1.0 GiB is below the floor of 3.5 GiB" in err
+    assert "MemAvailable 1.0 GiB is below the floor of 6 GiB" in err
     assert "load 2.50 per CPU" in err
 
 
@@ -238,7 +238,7 @@ def test_live_dispatch_records_the_admission_snapshot(tasks_dir, monkeypatch, ca
     assert delegate.cmd_dispatch(_live_danger_args(tasks_dir, "adm-live")) == 0
 
     assert len(spawned) == 1
-    assert "🚦 dispatch admission: admitted — live write workers 0/6" in capsys.readouterr().err
+    assert "🚦 dispatch admission: admitted — live write workers 0/12" in capsys.readouterr().err
     state = delegate._read_state(delegate._state_path("adm-live"))
     assert state is not None
     assert state["admission"]["admitted"] is True
@@ -510,8 +510,8 @@ def test_capacity_pick_prints_the_admission_line(tmp_path, monkeypatch, capsys):
 
     assert capacity_pick.main([]) == 0
     assert capsys.readouterr().out.splitlines()[-1] == (
-        "admission (write dispatch): would admit now | live write workers 1/6, "
-        "MemAvailable 64.0 GiB (floor 3.5 GiB), load 0.00 per CPU (limit 1.50); "
+        "admission (write dispatch): would admit now | live write workers 1/12, "
+        "MemAvailable 64.0 GiB (floor 6 GiB), load 0.00 per CPU (limit 1.50); "
         "1 record(s) dead pid, not counted: gone"
     )
 

@@ -16,7 +16,7 @@ cannot show which image it is, or the start marker arrives only as the process
 is stopped, the dispatch fails instead of starting a second worker. Isolation
 is never required for a dispatch to start.
 
-The byte values below match ``MemoryMax=11G`` and ``MemorySwapMax=1G`` in
+The byte values below match ``MemoryMax=20G`` and ``MemorySwapMax=1G`` in
 ``packaging/systemd/lu-dispatch.slice``. systemd parses the ``G`` suffix in
 base 1024 (``systemd.resource-control(5)``).
 """
@@ -40,9 +40,9 @@ from pathlib import Path
 from typing import Any
 
 SLICE_UNIT = "lu-dispatch.slice"
-MEMORY_MAX_BYTES = 11 * 1024**3
+MEMORY_MAX_BYTES = 20 * 1024**3
 MEMORY_SWAP_MAX_BYTES = 1 * 1024**3
-MEMORY_HIGH_BYTES = 10 * 1024**3
+MEMORY_HIGH_BYTES = 18 * 1024**3
 
 LAUNCH_SCOPE = "scope"
 LAUNCH_FALLBACK = "popen-fallback"
@@ -283,7 +283,7 @@ def slice_usage_clause(*, timeout_s: float = PROBE_TIMEOUT_S) -> str | None:
 
 
 def format_slice_show(text: str) -> str | None:
-    """Turn ``systemctl show`` text into ``lu-dispatch.slice 0.4/11.0 GiB``, or ``None``."""
+    """Turn ``systemctl show`` text into a slice memory usage clause, or ``None``."""
     props = _properties(text)
     if props.get("ActiveState") != "active":
         return None
