@@ -2104,7 +2104,7 @@ def test_issue_9309_repeated_dash_c_relative_to_previous(fleet, attached):
         f"-C{shlex.quote(str(primary))} -C../sibling" if attached else f"-C {shlex.quote(str(primary))} -C ../sibling"
     )
     result = _fleet_bash(primary, f"git {reverse} merge origin/main")
-    assert result.returncode == 0, result.stderr
+    assert result.returncode == (2 if attached else 0), result.stderr
 
 
 @pytest.mark.parametrize("target_primary", [False, True])
@@ -2124,25 +2124,27 @@ def test_issue_9309_explicit_repository_selectors(fleet, target_primary, selecto
     target = primary if target_primary else sibling
     command = selector.format(gitdir=shlex.quote(str(target / ".git")), tree=shlex.quote(str(target)))
     result = _fleet_bash(primary, f"{command} merge --ff-only origin/main", cwd=sibling if target_primary else primary)
-    assert result.returncode == (2 if target_primary else 0), result.stderr
+    assert result.returncode == 2, result.stderr
+    assert hook._literal_git_target(f"{command} merge --ff-only origin/main", str(primary)) is None
 
 
 @pytest.mark.parametrize(
-    "selector",
+    "selector, expected",
     [
-        'git --git-dir="$VAR"',
-        'git --work-tree="$VAR"',
-        'GIT_DIR="$VAR" git',
-        'GIT_WORK_TREE="$(pwd)" git',
-        'git -C "$(pwd)"',
-        'git --git-dir="$(pwd)/.git"',
-        'git --work-tree="`pwd`"',
+        ('git --git-dir="$VAR"', 2),
+        ('git --work-tree="$VAR"', 2),
+        ('GIT_DIR="$VAR" git', 2),
+        ('GIT_WORK_TREE="$(pwd)" git', 0),
+        ('git -C "$(pwd)"', 0),
+        ('git --git-dir="$(pwd)/.git"', 0),
+        ('git --work-tree="`pwd`"', 0),
     ],
 )
-def test_issue_9309_unresolvable_selectors_refused(fleet, selector):
+def test_issue_9309_unresolvable_selectors_match_main(fleet, selector, expected):
     primary, sibling = fleet
     result = _fleet_bash(primary, f"{selector} merge origin/main", cwd=sibling)
-    assert result.returncode == 2, result.stderr
+    assert result.returncode == expected, result.stderr
+    assert hook._literal_git_target(f"{selector} merge origin/main", str(sibling)) is None
 
 
 @pytest.mark.parametrize("swap", [False, True])
@@ -2199,7 +2201,7 @@ def test_issue_9309_probe_failure_refused(fleet, monkeypatch, failure):
     real_run = subprocess.run
 
     def probe_failure(argv, **kwargs):
-        if "--show-prefix" not in argv:
+        if "--absolute-git-dir" not in argv:
             return real_run(argv, **kwargs)
         if failure == "timeout":
             raise subprocess.TimeoutExpired(argv, 10)
@@ -2249,3 +2251,249 @@ def test_issue_9309_ambiguous_navigation_or_config_refused(fleet, template):
     command = template.format(primary=shlex.quote(str(primary)), sibling=shlex.quote(str(sibling)))
     result = _fleet_bash(primary, command)
     assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        pytest.param(
+            "export GIT_WORK_TREE={primary}; bash -c 'git -C {sibling} reset --hard'", id="blocking1-export-shell"
+        ),
+        pytest.param(
+            "GIT_DIR={primary}/.git GIT_WORK_TREE={primary} bash -c 'git -C {sibling} reset --hard'",
+            id="blocking1-prefix-shell",
+        ),
+        pytest.param(
+            "env GIT_DIR={primary}/.git GIT_WORK_TREE={primary} sh -c 'git reset --hard'", id="blocking1-env-shell"
+        ),
+        pytest.param("export GIT_WORK_TREE={primary}; eval 'git -C {sibling} reset --hard'", id="blocking1-eval"),
+        pytest.param("false && cd {sibling} && true; git reset --hard", id="blocking2-false-chain"),
+        pytest.param("true || cd {sibling} && true; git reset --hard", id="blocking2-or-chain"),
+        pytest.param("[ -d {missing} ] && cd {sibling} && git status; git reset --hard", id="blocking2-test-chain"),
+        pytest.param(". ./env.sh; git -C {sibling} reset --hard", id="blocking3-dot-env"),
+        pytest.param("cd {sibling}; . ./env.sh; git reset --hard", id="blocking3-dot-cwd"),
+        pytest.param("f() {{ cd {primary}; }}; cd {sibling}; f; git reset --hard", id="blocking4-function-cwd"),
+        pytest.param("cd() {{ builtin cd {primary}; }}; cd {sibling}; git reset --hard", id="blocking4-function-cd"),
+        pytest.param(
+            'git() {{ shift 2; command git -C {primary} "$@"; }}; git -C {sibling} reset --hard',
+            id="blocking4-function-git",
+        ),
+        pytest.param("GIT_INDEX_FILE={primary}/.git/index git -C {sibling} add -A", id="blocking5-index-add"),
+        pytest.param("GIT_INDEX_FILE={primary}/.git/index git -C {sibling} reset --hard", id="blocking5-index-reset"),
+        pytest.param(
+            "export GIT_INDEX_FILE={primary}/.git/index; git -C {sibling} reset --hard", id="blocking5-export-index"
+        ),
+    ],
+)
+def test_issue_9309_review_blocking_1_through_5_refused(fleet, template):
+    primary, sibling = fleet
+    command = template.format(primary=primary, sibling=sibling, missing=primary.parent / "missing")
+    (primary / "env.sh").write_text(f"export GIT_DIR={primary}/.git GIT_WORK_TREE={primary}\n", encoding="utf-8")
+    (sibling / "env.sh").write_text(f"cd {primary}\n", encoding="utf-8")
+    result = _fleet_bash(primary, command)
+    assert result.returncode == 2, (command, result.stderr)
+    assert hook._literal_git_target(command, str(primary)) is None
+
+
+@pytest.mark.parametrize("subcommand", ["add -A", "reset --hard"])
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "GIT_DIR={primary}/.git git",
+        "git --git-dir={primary}/.git --work-tree={worktree}",
+        "git --git-dir {primary}/.git --work-tree {worktree}",
+        "export GIT_DIR={primary}/.git; git",
+        "env GIT_DIR={primary}/.git git",
+        "git -C {primary} -C {worktree} --git-dir=../../../..//.git",
+    ],
+)
+def test_issue_9309_review_blocking_6_primary_gitdir_refused(fleet, selector, subcommand):
+    primary, _ = fleet
+    worktree = primary / ".worktrees/dispatch/claude/task-1"
+    command = selector.format(primary=primary, worktree=worktree) + " " + subcommand
+    result = _fleet_bash(primary, command, cwd=worktree)
+    assert result.returncode == 2, (command, result.stderr)
+    assert "primary_git_directory" in result.stderr
+
+
+# Main decisions independently captured from 855fd553b9f13125d14ad3d3acf994101db29524.
+# Keep fixed expectations; CI uses shallow clones and must not load old Git objects.
+@pytest.mark.parametrize(
+    "template, expected",
+    [
+        ("cd {sibling}; $(echo cd) {primary}; git reset --hard", 2),
+        ("cd {sibling}; $X {primary}; git reset --hard", 2),
+        ("cd {sibling}; shopt -s lastpipe; true | cd {primary}; git reset --hard", 2),
+        ("N=GIT_WORK_TREE; export $N={primary}; git -C {sibling} reset --hard", 2),
+        ("cd {sibling}; cd {primary}/L/..; git reset --hard", 2),
+        ("git -C {sibling} apply --unsafe-paths ../patch", 2),
+        ("git -C {sibling} config core.worktree {primary} && git -C {sibling} reset --hard", 2),
+        ("source X && git add -A", 0),
+        ("eval true; git add -A", 0),
+        ("unset GIT_DIR; git add -A", 0),
+        ("cd {worktree} || exit 1; git add -A", 0),
+        ("git clone https://example.test/repo D && cd D && git checkout -b x", 2),
+        ("env -C{primary} git reset --hard", 0),
+        ("git --attr-source X -C {primary} reset --hard", 0),
+        ("sh <<EOF\ngit -C {primary} reset --hard\nEOF", 0),
+        ("printf command | sh", 0),
+        ("echo reset --hard | xargs git", 0),
+        ("coproc git -C {primary} reset --hard", 0),
+        ("git-reset --hard", 0),
+    ],
+)
+def test_issue_9309_review_should_matches_main(fleet, template, expected):
+    primary, sibling = fleet
+    (sibling / "leaf").mkdir()
+    (primary / "L").symlink_to(sibling / "leaf", target_is_directory=True)
+    worktree = primary / ".worktrees/dispatch/claude/task-1"
+    command = template.format(primary=primary, sibling=sibling, worktree=worktree)
+    result = _fleet_bash(primary, command, cwd=worktree)
+    assert result.returncode == expected, (command, result.stderr)
+    assert hook._literal_git_target(command, str(worktree)) is None
+
+
+@pytest.mark.parametrize(
+    "shape", ["git -C {target} reset --hard", "cd {target} && git reset --hard", "cd {target};git reset --hard"]
+)
+@pytest.mark.parametrize("quote", ["plain", "single", "double"])
+@pytest.mark.parametrize("target_kind", ["sibling", "primary", "unlisted", "alias_primary", "core_worktree"])
+def test_issue_9309_literal_shapes_identity_matrix(fleet, tmp_path, shape, quote, target_kind):
+    primary, sibling = fleet
+    target = sibling
+    if target_kind == "primary":
+        target = primary
+    elif target_kind == "unlisted":
+        target = tmp_path / "unlisted"
+        target.mkdir()
+        _git(target, "init", "-q", "-b", "main")
+    elif target_kind == "alias_primary":
+        target = tmp_path / "primary-alias"
+        target.symlink_to(primary, target_is_directory=True)
+    elif target_kind == "core_worktree":
+        _git(sibling, "config", "core.worktree", str(primary))
+    raw = str(target)
+    if quote == "single":
+        raw = "'" + raw + "'"
+    elif quote == "double":
+        raw = '"' + raw + '"'
+    command = shape.format(target=raw)
+    result = _fleet_bash(primary, command)
+    assert result.returncode == (0 if target_kind == "sibling" else 2), (command, result.stderr)
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "git -C {sibling} reset --hard $ARG",
+        "git -C {sibling} reset --hard '$ARG'",
+        'git -C {sibling} reset --hard "$(true)"',
+        "git -C {sibling} reset --hard `true`",
+        "git -C {sibling} add *.md",
+        "git -C {sibling} add '{{a,b}}'",
+        "git -C {sibling} reset --hard prefix~suffix",
+        "git -C {sibling} reset --hard > output",
+        "git -C {sibling} reset --hard | cat",
+        "git -C {sibling} reset --hard || true",
+        "git -C {sibling} reset --hard; true",
+        "git -C {sibling} reset --hard\ntrue",
+        "git -C {sibling} reset --hard # comment",
+        "(git -C {sibling} reset --hard)",
+        "{{ git -C {sibling} reset --hard; }}",
+        "X=1 git -C {sibling} reset --hard",
+        "env git -C {sibling} reset --hard",
+        "git -C {sibling} -c advice.detachedHead=false reset --hard",
+        "git -C {sibling} --git-dir={sibling}/.git reset --hard",
+        "git -C {sibling} --work-tree={sibling} reset --hard",
+        "git -C {sibling} reset --hard GIT_INDEX_FILE",
+        "git -C{sibling} reset --hard",
+        "git -C {sibling} reset --hard \\value",
+        'git -C {sibling} reset --hard "a"b',
+    ],
+)
+def test_issue_9309_nonliteral_commands_receive_no_exemption(fleet, template):
+    primary, sibling = fleet
+    command = template.format(sibling=sibling)
+    assert hook._literal_git_target(command, str(primary)) is None
+    result = _fleet_bash(primary, command)
+    assert result.returncode == 2, (command, result.stderr)
+
+
+def test_issue_9309_logical_cd_through_symlink_refused(fleet):
+    primary, sibling = fleet
+    (sibling / "leaf").mkdir()
+    (primary / "L").symlink_to(sibling / "leaf", target_is_directory=True)
+    command = f"cd {primary}/L/.. && git reset --hard"
+    assert hook._literal_git_target(command, str(primary)) == primary
+    assert _fleet_bash(primary, command).returncode == 2
+
+
+def test_issue_9309_home_and_quoted_spaces_allowed(fleet, monkeypatch):
+    primary, sibling = fleet
+    monkeypatch.setenv("HOME", str(primary.parent))
+    for command in [
+        "git -C ~/sibling reset --hard",
+        "cd ~/sibling && git reset --hard",
+        f'git -C "{sibling}" commit -m "literal message"',
+    ]:
+        assert _fleet_bash(primary, command).returncode == 0
+
+
+def test_issue_9309_catalog_primary_and_gitdir_aliases_never_exempt(fleet, monkeypatch):
+    primary, sibling = fleet
+    monkeypatch.setattr(hook, "_fleet_checkout_roots", lambda root: {primary, sibling})
+    for target in (primary, primary / ".git"):
+        resolved = hook._effective_git_target(target)
+        assert resolved is None or not hook._literal_sibling_git_allowed(target, resolved, primary)
+    (sibling / ".git").rename(sibling / "old-git")
+    (sibling / ".git").symlink_to(primary / ".git", target_is_directory=True)
+    assert not hook._literal_sibling_git_allowed(sibling, hook._effective_git_target(sibling), primary)
+    assert _fleet_bash(primary, f"git -C {sibling} reset --hard").returncode == 2
+
+
+def test_issue_9309_sibling_subdirectory_is_not_exempt(fleet):
+    primary, sibling = fleet
+    child = sibling / "child"
+    child.mkdir()
+    assert not hook._literal_sibling_git_allowed(child, hook._effective_git_target(child), primary)
+
+
+def test_issue_9309_primary_gitdir_read_only_does_not_taint_dispatch(fleet):
+    primary, _ = fleet
+    worktree = primary / ".worktrees/dispatch/claude/task-1"
+    command = f"git --git-dir={primary}/.git status; git add -A"
+    assert _fleet_bash(primary, command, cwd=worktree).returncode == 0
+
+
+@pytest.mark.parametrize("name", ["GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_COMMON_DIR", "CDPATH"])
+def test_issue_9309_inherited_redirect_prevents_exemption(fleet, name):
+    primary, sibling = fleet
+    command = f"git -C {sibling} reset --hard"
+    result = _run(
+        primary, {"tool_name": "Bash", "cwd": str(primary), "tool_input": {"command": command}}, {name: str(primary)}
+    )
+    assert result.returncode == 2
+
+
+@pytest.mark.parametrize(
+    "command", ["git -C {sibling} add .", "cd . && git add -A", 'git -C {sibling} commit -m "literal # message"']
+)
+def test_issue_9309_literal_dot_and_hash_arguments_allowed(fleet, command):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, command.format(sibling=sibling), cwd=sibling)
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_9309_three_dash_c_operands_cannot_hide_primary(fleet):
+    primary, sibling = fleet
+    (primary / "child").mkdir()
+    command = f"git -C {sibling} -C ../main/child -C .. reset --hard"
+    result = _fleet_bash(primary, command)
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_literal_primary_dispatch_target_stays_allowed(fleet):
+    primary, _ = fleet
+    worktree = primary / ".worktrees/dispatch/claude/task-1"
+    result = _fleet_bash(primary, f"git -C {worktree} add -A")
+    assert result.returncode == 0, result.stderr

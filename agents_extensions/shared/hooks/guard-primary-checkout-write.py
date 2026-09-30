@@ -45,11 +45,18 @@ Covered write surfaces
   ``git checkout <ref> -- <path>``, ``git checkout <ref> <path>`` (no ``--``),
   ``git clean`` / destructive ``reset`` / ``read-tree -u`` / forced ``checkout``,
   and ``git restore --source=…`` when the effective git worktree (payload cwd
-  or directory selectors) is this repository's protected primary checkout.
-  Registered fleet siblings are outside this Git guard; unknown or unlisted
-  repository targets fail closed. Rescue clean forms
+  or ``git -C``) is the protected primary checkout. Rescue clean forms
   ``git checkout -- <path>`` and plain ``git restore <path>`` (no ``--source``)
   remain allowed so operators can discard accidental dirt.
+* Registered sibling fleet repositories (#9309) are exempt only for a whole
+  literal ``git -C PATH [-C PATH ...] SUBCOMMAND ARGS`` or
+  ``cd PATH && git SUBCOMMAND ARGS`` (also ``;``). No expansions, environment
+  prefixes, Git selectors/config options, compound commands or extra commands
+  are eligible. The top-level, common Git directory and absolute Git directory
+  must identify that sibling and remain outside the primary and its Git
+  directory. ``apply --unsafe-paths`` never receives this exemption. Other
+  command shapes retain the existing guard behavior. Selecting the primary's
+  main Git directory counts as a primary write even with another work tree.
 * Precise transfer parsing for rsync and git archive; conservative positional
   classification for long-tail writers (curl, wget, sort, SQLite, tar, unzip,
   patch, tee, truncate, split, csplit, ffmpeg, convert). Known short-option
@@ -754,8 +761,6 @@ class ShellSegment(list):
         self.scope = scope
         self.prev_op = prev_op
         self.next_op = next_op
-        self.git_env: dict[str, ShellWord] = {}
-        self.conditional = False
 
 
 Bindings = dict[str, Optional[str]]  # noqa: UP045 - Python 3.9 parser
@@ -856,7 +861,7 @@ class _Expander:
             self._opaque()
 
     def _opaque(self) -> None:
-        for name in {*self.bindings, "HOME", "GIT_DIR", "GIT_WORK_TREE"}:
+        for name in {*self.bindings, "HOME"}:
             self.bindings[name] = None
             self.tainted.add(name)
 
@@ -979,60 +984,28 @@ class _Expander:
         elif cmd in _CLOBBERERS:
             self._forget_leading_names(args)
 
-    def run(self, *, git_targets: bool = False) -> list[ShellSegment]:
+    def run(self) -> list[ShellSegment]:
         segments: list[ShellSegment] = []
         current: list[str] = []
         prev_op = ""
-        substitutions: dict[int, tuple[list[str], str]] = {}
-        just_closed_substitution = False
         for tok in [*self.tokens, ";"]:
-            # The Git view needs the enclosing argv as well as executable
-            # substitution bodies. Retain its unresolved '$' operand while
-            # the existing scope parser visits the body. The filesystem-write
-            # view keeps its established token/segment behavior.
-            if git_targets and tok == "(" and current and current[-1].endswith("$"):
-                self._operator(tok)
-                substitutions[self.paren_serial] = (current, prev_op)
-                current = []
-                prev_op = tok
-                continue
             if tok not in _CONTROL_OPS:
-                if not (git_targets and just_closed_substitution and tok == ""):
-                    current.append(tok)
-                just_closed_substitution = False
+                current.append(tok)
                 continue
             if current:
-                git_env = {
-                    name: ShellWord(value if value is not None else name, None if value is not None else 0)
-                    for name in ("GIT_DIR", "GIT_WORK_TREE")
-                    if name in self.bindings or name in os.environ
-                    for value in [self._lookup(name) if name in self.bindings else os.environ[name]]
-                }
                 words = self._segment(current, prev_op, tok)
                 if words:
                     scope = tuple(int(frame.split(":", 1)[1]) for frame in self.frames if frame.startswith("paren:"))
-                    segment = ShellSegment(words, scope, prev_op, tok)
-                    segment.git_env = git_env
-                    segment.conditional = self.poisoned or any(frame in {"compound", "case"} for frame in self.frames)
-                    segments.append(segment)
+                    segments.append(ShellSegment(words, scope, prev_op, tok))
                 current = []
             elif tok == "\n" and prev_op in _CONTINUING_OPS:
                 continue
-            closing = (
-                int(self.frames[-1].split(":", 1)[1])
-                if git_targets and tok == ")" and self.frames and self.frames[-1].startswith("paren:")
-                else None
-            )
             self._operator(tok)
-            if closing in substitutions:
-                current, prev_op = substitutions.pop(closing)
-                just_closed_substitution = True
-            else:
-                prev_op = tok
+            prev_op = tok
         return segments
 
 
-def _expanded_segments(command: str, *, git_targets: bool = False) -> list[ShellSegment]:
+def _expanded_segments(command: str) -> list[ShellSegment]:
     """Per-command segments of expanded words, in command order.
 
     Variable values come only from the command itself — earlier unconditional
@@ -1042,8 +1015,8 @@ def _expanded_segments(command: str, *, git_targets: bool = False) -> list[Shell
     """
     tokens = _tokenize(command)
     first = _Expander(tokens)
-    first.run(git_targets=git_targets)
-    return _Expander(tokens, first=first).run(git_targets=git_targets)
+    first.run()
+    return _Expander(tokens, first=first).run()
 
 
 def _redirect_targets(tokens: list[str]) -> list[str]:
@@ -1842,12 +1815,12 @@ def _cdpath_binding(segment: list[str]) -> bool | None:
     return None
 
 
-def _segments_with_cwd(command: str, cwd: str | None, *, git_targets: bool = False):
+def _segments_with_cwd(command: str, cwd: str | None):
     """Yield expanded segments with the cwd they execute from."""
     scope_cwds: dict[tuple[int, ...], str | None] = {(): cwd}
     scope_dirs: dict[tuple[int, ...], list[str | None]] = {(): []}
     scope_cdpath_empty: dict[tuple[int, ...], bool] = {(): False}
-    for segment in _expanded_segments(command, git_targets=git_targets):
+    for segment in _expanded_segments(command):
         scope = segment.scope
         if scope not in scope_cwds:
             scope_cwds[scope] = scope_cwds.get(scope[:-1], cwd)
@@ -1876,12 +1849,6 @@ def _segments_with_cwd(command: str, cwd: str | None, *, git_targets: bool = Fal
                 scope_cwds[scope] = None
             else:
                 scope_cwds[scope] = str(_resolve(path, effective_cwd or "/", expand_user=False).resolve())
-            if git_targets and (
-                segment.conditional
-                or segment.next_op == "||"
-                or (segment.prev_op in {"&&", "||"} and segment.next_op != "&&")
-            ):
-                scope_cwds[scope] = None
         elif cmd == "popd" and not isolated:
             popped = scope_dirs[scope].pop() if scope_dirs[scope] else None
             if not stack_only:
@@ -1964,53 +1931,24 @@ def bash_write_targets(
 
 def _git_global_prefix(
     args: list[str],
-    *,
-    target: dict[str, object] | None = None,
 ) -> tuple[Optional[str], list[str]]:  # noqa: UP045 - Python 3.9 parser
     """Strip git global options; return optional ``-C`` path and remaining args.
 
-    Retain ordered directory selectors in ``target`` for intent resolution.
-    Other global options retain the existing extraction behavior.
+    Handles ``-C <path>``, ``-C<path>``, and common no-arg globals (``-c`` is
+    two-token). Unknown long options with ``=`` are skipped; bare long options
+    that take a value are not fully modeled — fail-open if we cannot parse.
     """
     c_path: Optional[str] = None  # noqa: UP045 - Python 3.9 parser
     i = 0
     n = len(args)
     while i < n:
         tok = args[i]
-        if target is not None:
-            config = None
-            if tok in {"-c", "--config-env"} and i + 1 < n:
-                config = args[i + 1]
-            elif tok.startswith("-c") and len(tok) > 2:
-                config = tok[2:]
-            elif tok.startswith("--config-env="):
-                config = tok.split("=", 1)[1]
-            if config is not None and (
-                getattr(config, "unresolved_at", None) is not None
-                or str(config).split("=", 1)[0].lower() in {"core.worktree", "core.bare"}
-            ):
-                target["target_config"] = True
         if tok == "-C" and i + 1 < n:
             c_path = args[i + 1]
-            if target is not None:
-                target.setdefault("c_paths", []).append(c_path)
             i += 2
             continue
         if tok.startswith("-C") and len(tok) > 2:
             c_path = tok.tail(2) if isinstance(tok, ShellWord) else tok[2:]
-            if target is not None:
-                target.setdefault("c_paths", []).append(c_path)
-            i += 1
-            continue
-        if tok in {"--git-dir", "--work-tree"} and i + 1 < n:
-            if target is not None:
-                target[tok[2:].replace("-", "_")] = args[i + 1]
-            i += 2
-            continue
-        if tok.startswith(("--git-dir=", "--work-tree=")):
-            name, _, _value = tok.partition("=")
-            if target is not None:
-                target[name[2:].replace("-", "_")] = tok.tail(len(name) + 1)
             i += 1
             continue
         if (
@@ -2066,10 +2004,7 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
 
         {
           "kind": "apply"|"add"|"stash_apply"|"path_checkout"|"restore_source",
-          "c_path": str|None,          # last git -C (extraction compatibility)
-          "c_paths": list[str],        # all -C options in order
-          "git_dir"/"work_tree": str,  # explicit selectors, when present
-          "GIT_DIR"/"GIT_WORK_TREE": str, # shell environment selectors
+          "c_path": str|None,          # from git -C
           "segment_cwd": str|None,     # after literal cd/pushd
           "paths": list[str],          # pathspecs when known (may be empty)
           "summary": str,              # human-readable for the block message
@@ -2083,10 +2018,9 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
 
     def record(intent: dict[str, object]) -> None:
         intent["segment_cwd"] = effective_cwd
-        intent.update(target)
         intents.append(intent)
 
-    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd, git_targets=True):
+    for segment, effective_cwd, _shell_cwd in _segments_with_cwd(command, cwd):
         cmd, idx = _command_word(segment)
         if cmd == "eval" and depth < _MAX_SHELL_DEPTH:
             args = segment[idx + 1 :]
@@ -2100,21 +2034,8 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
             continue
         if not _is_git_binary(cmd):
             continue
-        target: dict[str, object] = dict(getattr(segment, "git_env", {}))
-        # Prefix assignments belong to this invocation, not the parent shell.
-        for word in segment[:idx]:
-            match = _ASSIGN_RE.match(word)
-            if match and match.group(1) in {"GIT_DIR", "GIT_WORK_TREE"}:
-                target[match.group(1)] = word.tail(match.end())
-        c_path, rest = _git_global_prefix(segment[idx + 1 :], target=target)
-        selectors = [
-            *target.get("c_paths", []),
-            *(target.get(key) for key in ("git_dir", "work_tree", "GIT_DIR", "GIT_WORK_TREE")),
-        ]
-        unresolved_selector = any(getattr(word, "unresolved_at", None) is not None for word in selectors)
+        c_path, rest = _git_global_prefix(segment[idx + 1 :])
         if not rest:
-            if unresolved_selector:
-                record({"kind": "unknown", "paths": [], "summary": "git with unresolved target", "allowlisted": False})
             continue
         sub = rest[0]
         sub_args = rest[1:]
@@ -2368,12 +2289,6 @@ def bash_git_write_intents(command: str, *, cwd: str | None = None, depth: int =
             )
             continue
 
-        # Expansion may split an option's suffix from its enclosing argv.
-        # Never interpret an unparsed command with an unknown repository
-        # selector as evidence that it cannot write the primary checkout.
-        if unresolved_selector:
-            record({"kind": "unknown", "paths": [], "summary": "git with unresolved target", "allowlisted": False})
-
     return intents
 
 
@@ -2394,36 +2309,94 @@ def _fleet_checkout_roots(primary: Path) -> set[Path]:
     }
 
 
-def _effective_git_target(intent: dict[str, object], payload_cwd: str) -> tuple[Path, Path, Path, Path] | None:
-    """Resolve cwd, common directory and working tree using read-only Git.
+def _literal_git_target(command: str, cwd: str) -> Path | None:
+    """Accept only one literal git -C command or one literal cd then git.
 
-    Only directory selectors reach Git, never user config options or a write
-    command. Unknown navigation/expansions and failed probes remain undecidable.
+    This is an exemption recognizer, not a shell interpreter. Everything else
+    retains the established guard behavior. Quotes cannot hide expansions.
     """
+    from scripts.common.git_context import GIT_REDIRECT_ENV_KEYS
+
+    if "GIT_" in command or any(name in os.environ for name in GIT_REDIRECT_ENV_KEYS):
+        return None
+    if os.environ.get("CDPATH"):
+        return None
+    # No escaping, concatenated quoted fragments, comments, newlines, shell
+    # syntax or expansion. Only a leading unquoted home shortcut is admitted.
+    word = r"(?:'[^'\\\n\r]*'|\"[^\"\\\n\r]*\"|[^\s'\"\\;&|<>()]+)"
+    token_re = re.compile(rf"{word}(?=[ \t;&]|$)|&&|;")
+    tokens: list[str] = []
+    offset = 0
+    while offset < len(command):
+        if command[offset] in " \t":
+            offset += 1
+            continue
+        match = token_re.match(command, offset)
+        if match is None:
+            return None
+        raw = match.group()
+        if raw in {"&&", ";"}:
+            tokens.append(raw)
+        else:
+            quoted = raw.startswith(("'", '"'))
+            value = raw[1:-1] if quoted else raw
+            if re.search(r"[$`*?\[\]{}]", value) or (not quoted and value.startswith("#")):
+                return None
+            if "~" in value:
+                if quoted or not (value == "~" or value.startswith("~/")) or "~" in value[1:]:
+                    return None
+                value = os.path.expanduser(value)
+            # Quoted separators are ordinary arguments, not command operators.
+            if quoted and value in {"&&", ";"}:
+                return None
+            if value.startswith(("--git-dir", "--work-tree", "--config-env")) or value.startswith("-c"):
+                return None
+            tokens.append(value)
+        offset = match.end()
+    target = Path(cwd).resolve()
+    if len(tokens) >= 5 and tokens[0] == "cd" and tokens[2] in {"&&", ";"} and tokens[3] == "git":
+        if not tokens[1] or tokens[1].startswith("-"):
+            return None
+        target = Path(os.path.abspath(os.path.join(cwd, tokens[1]))).resolve()
+        args = tokens[4:]
+    elif len(tokens) >= 4 and tokens[:2] == ["git", "-C"]:
+        index = 1
+        while index < len(tokens) and tokens[index] == "-C":
+            if index + 1 >= len(tokens):
+                return None
+            operand = tokens[index + 1]
+            if operand:
+                target = _resolve(operand, str(target), expand_user=False).resolve()
+            index += 2
+        args = tokens[index:]
+    else:
+        return None
+    if (
+        not args
+        or not args[0]
+        or args[0].startswith("-")
+        or any(t in {"&&", ";", "-C", "--unsafe-paths"} for t in args)
+    ):
+        return None
+    return target
+
+
+def _effective_git_target(target: Path) -> tuple[Path, Path, Path] | None:
+    """Read all three repository identities without inherited Git selectors."""
     from scripts.common.git_context import sanitized_git_env
 
-    if intent.get("target_config"):
-        return None
-    segment_cwd = intent.get("segment_cwd", payload_cwd)
-    if not isinstance(segment_cwd, str):
-        return None
-    git_cwd = Path(segment_cwd).resolve()
-    for path in intent.get("c_paths", []):
-        if getattr(path, "unresolved_at", None) is not None or re.search(r"[*?\[\]{}]", path):
-            return None
-        # Git's -C "" leaves the previous directory unchanged.
-        if path:
-            git_cwd = _resolve(path, str(git_cwd), expand_user=False).resolve()
-    argv = ["git", "-C", str(git_cwd)]
-    for option, variable in (("git-dir", "GIT_DIR"), ("work-tree", "GIT_WORK_TREE")):
-        value = intent.get(option.replace("-", "_"), intent.get(variable))
-        if value is not None:
-            if getattr(value, "unresolved_at", None) is not None or re.search(r"[*?\[\]{}]", value):
-                return None
-            argv.append(f"--{option}={value}")
     try:
         result = subprocess.run(
-            [*argv, "rev-parse", "--path-format=absolute", "--git-common-dir", "--show-toplevel", "--show-prefix"],
+            [
+                "git",
+                "-C",
+                str(target),
+                "rev-parse",
+                "--path-format=absolute",
+                "--show-toplevel",
+                "--git-common-dir",
+                "--absolute-git-dir",
+            ],
             capture_output=True,
             text=True,
             check=False,
@@ -2435,8 +2408,93 @@ def _effective_git_target(intent: dict[str, object], payload_cwd: str) -> tuple[
     lines = result.stdout.splitlines()
     if result.returncode or len(lines) != 3:
         return None
-    common, worktree = (Path(line).resolve() for line in lines[:2])
-    return git_cwd, common, worktree, (worktree / lines[2]).resolve()
+    return tuple(Path(line).resolve() for line in lines)
+
+
+def _literal_sibling_git_allowed(target: Path, resolved: tuple[Path, Path, Path], primary: Path) -> bool:
+    """Exempt only a registered sibling's literal top-level Git invocation."""
+    primary_git = (primary / ".git").resolve()
+    if any(path == root or root in path.parents for path in (target, *resolved) for root in (primary, primary_git)):
+        return False
+    top, common, git_dir = resolved
+    return target == top and any(
+        top == root.resolve() and common == git_dir == (root / ".git").resolve()
+        for root in _fleet_checkout_roots(primary)
+    )
+
+
+def _selects_primary_git_dir(command: str, cwd: str, primary: Path) -> bool:
+    """Close the existing primary-index bypass even with another work tree.
+
+    Use the established segment/word expansion for literal Git directory
+    selectors; this does not broaden the sibling exemption.
+    """
+    git_dir = os.environ.get("GIT_DIR")
+    for segment, effective_cwd, _ in _segments_with_cwd(command, cwd):
+        cmd, index = _command_word(segment)
+        if cmd in {"export", ""}:
+            for word in segment:
+                if word.startswith("GIT_DIR=") and getattr(word, "unresolved_at", None) is None:
+                    git_dir = word[len("GIT_DIR=") :]
+        if not _is_git_binary(cmd):
+            continue
+        selected = git_dir
+        for word in segment[:index]:
+            if word.startswith("GIT_DIR="):
+                selected = word.tail(len("GIT_DIR="))
+        args = segment[index + 1 :]
+        base = effective_cwd
+        if base is None:
+            continue
+        remaining: list[str] = []
+        i = 0
+        while i < len(args):
+            arg = args[i]
+            if arg in {"--git-dir", "--work-tree", "-C"} and i + 1 < len(args):
+                value = args[i + 1]
+                if arg == "--git-dir":
+                    selected = value
+                elif arg == "-C" and value and getattr(value, "unresolved_at", None) is None:
+                    base = str(_resolve(value, base, expand_user=False).resolve())
+                i += 2
+                continue
+            if arg.startswith("--git-dir="):
+                selected = arg.tail(len("--git-dir="))
+            elif arg.startswith("--work-tree="):
+                pass
+            elif arg.startswith("-C") and len(arg) > 2:
+                value = arg.tail(2)
+                if getattr(value, "unresolved_at", None) is None:
+                    base = str(_resolve(value, base, expand_user=False).resolve())
+            else:
+                remaining = args[i:]
+                break
+            i += 1
+        # Classify this invocation, not unrelated read-only Git commands in
+        # a chain containing a separate worktree mutation.
+        writes = bash_git_write_intents(shlex.join(["git", *remaining]), cwd=base)
+        if not any(not intent.get("allowlisted") for intent in writes):
+            continue
+        if (
+            selected is not None
+            and getattr(selected, "unresolved_at", None) is None
+            and _resolve(selected, base, expand_user=False).resolve() == (primary / ".git").resolve()
+        ):
+            return True
+    return False
+
+
+def _effective_git_cwd(intent: dict[str, object], payload_cwd: str) -> Path | None:
+    """Resolve a git intent's worktree, or return unknown after navigation."""
+    segment_cwd = intent.get("segment_cwd", payload_cwd)
+    c_path = intent.get("c_path")
+    if isinstance(c_path, str) and c_path:
+        if Path(c_path).is_absolute():
+            return Path(c_path).resolve()
+        if not isinstance(segment_cwd, str):
+            return None
+        return _resolve(c_path, segment_cwd, expand_user=False).resolve()
+    return Path(segment_cwd).resolve() if isinstance(segment_cwd, str) else None
 
 
 def _block_git_mediated(summary: str, main_root: Path, reason: str) -> int:
@@ -2636,52 +2694,62 @@ def main() -> int:
     allow_primary_git = os.environ.get("LEARN_UK_ALLOW_PRIMARY_GIT_WRITE", "") == "1"
     if tool_name == "Bash" and command and not allow_primary_git:
         try:
+            protected_root = _primary_checkout_root(wc)
+            mutators = [intent for intent in git_intents if not intent.get("allowlisted")]
+            if _selects_primary_git_dir(command, cwd, protected_root):
+                return _block_git_mediated("git write", protected_root, reason="primary_git_directory")
+            literal_target = _literal_git_target(command, cwd) if mutators else None
+            sibling_allowed = False
+            if literal_target is not None:
+                resolved = _effective_git_target(literal_target)
+                if resolved is None:
+                    return _block_git_mediated("git write", protected_root, reason="undecidable_git_target")
+                sibling_allowed = _literal_sibling_git_allowed(literal_target, resolved, protected_root)
+                top, common, git_dir = resolved
+                primary_git = (protected_root / ".git").resolve()
+                if not sibling_allowed and common != primary_git:
+                    return _block_git_mediated("git write", protected_root, reason="unlisted_git_repository")
+                if git_dir == primary_git and top != protected_root:
+                    return _block_git_mediated("git write", protected_root, reason="primary_git_directory")
             for intent in git_intents:
+                if sibling_allowed:
+                    continue
                 if intent.get("allowlisted"):
                     continue
                 summary = str(intent.get("summary") or "git write")
-                protected_root = _primary_checkout_root(wc)
-                resolved = _effective_git_target(intent, cwd)
-                if resolved is None:
-                    selectors = [
-                        *intent.get("c_paths", []),
-                        *(intent.get(key) for key in ("git_dir", "work_tree", "GIT_DIR", "GIT_WORK_TREE")),
-                    ]
-                    reason = (
-                        "unresolved_shell_variable"
-                        if any(getattr(word, "unresolved_at", None) is not None for word in selectors)
-                        else "undecidable_git_cwd_after_cd"
-                    )
-                    return _block_git_mediated(summary, protected_root, reason=reason)
-                git_cwd, common, worktree, path_cwd = resolved
-                primary_common = (protected_root / ".git").resolve()
-                if common != primary_common:
-                    sibling_roots = _fleet_checkout_roots(protected_root)
-                    # Both the object store and the working tree must belong
-                    # to a registered sibling. Mixed selectors cannot hide a
-                    # primary write behind another repository's object store.
-                    if any(
-                        common == (root / ".git").resolve() and wc.resolve_main_root(worktree) == root
-                        for root in sibling_roots
-                    ):
-                        continue
-                    return _block_git_mediated(summary, protected_root, reason="unlisted_git_repository")
-                intent_root = protected_root
-                if not wc.is_protected_branch(intent_root):
+                c_path = intent.get("c_path")
+                if getattr(c_path, "unresolved_at", None) is not None:
+                    if main_root is not None:
+                        return _block_git_mediated(summary, main_root, reason="unresolved_shell_variable")
                     continue
+                # The literal grammar has already resolved all ordered -C
+                # operands (or Bash's logical cd). Other commands retain the
+                # established intent parser and cwd decisions verbatim.
+                git_cwd = literal_target if literal_target is not None else _effective_git_cwd(intent, cwd)
+                if git_cwd is None:
+                    if main_root is not None:
+                        return _block_git_mediated(summary, main_root, reason="undecidable_git_cwd_after_cd")
+                    continue
+                intent_root = main_root
+                if intent_root is None:
+                    try:
+                        intent_root = wc.resolve_main_root(git_cwd)
+                        if not wc.is_protected_branch(intent_root):
+                            continue
+                    except Exception:
+                        continue
                 if intent.get("kind") == "worktree_remove":
                     for raw in intent.get("paths") or []:
                         decision = _bash_path_decision(raw, str(git_cwd), wc, intent_root)
                         if not decision.allowed:
                             return _block_git_mediated(summary, intent_root, reason=decision.reason)
                     continue
-                # Explicit --work-tree may point at primary even when cwd or
-                # the selected Git directory belongs to a dispatch worktree.
-                if worktree != intent_root:
-                    if wc.resolve_main_root(worktree) != intent_root or wc.is_primary_checkout(worktree):
-                        return _block_git_mediated(summary, intent_root, reason="undecidable_git_target")
+                # Only care when the effective git worktree *is* the primary.
+                try:
+                    if not wc.is_primary_checkout(git_cwd):
+                        continue
+                except Exception:
                     continue
-                git_cwd = path_cwd
                 paths = list(intent.get("paths") or [])
                 if not paths:
                     # Whole-tree mutator (apply / am / stash pop|apply / bare add).
