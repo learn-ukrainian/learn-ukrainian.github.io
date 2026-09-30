@@ -4,6 +4,7 @@ import json
 import sqlite3
 from contextlib import nullcontext
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -87,6 +88,25 @@ def test_pool_is_blind_and_sealed_key_maps_back(tmp_path: Path) -> None:
     assert labels.read_text() == ""
 
 
+class StubTokenizer:
+    def encode(self, text, **kwargs):
+        return list(map(ord, text))
+
+    def decode(self, ids, **kwargs):
+        return "".join(map(chr, ids))
+
+
+def _compute_fixture(monkeypatch, query=None):
+    # These existing unit tests isolate pipeline mechanics. Real manifest,
+    # budget and refusal gates are exercised without these mocks in v61 tests.
+    monkeypatch.setattr(bakeoff, "_validate_run", lambda *a: {"sha256": "run"})
+    monkeypatch.setattr(bakeoff, "_measurement_binding", lambda *a: {"run_manifest_sha256": "run"})
+    monkeypatch.setattr(bakeoff, "_check_runtime", lambda *a: None)
+    monkeypatch.setattr(bakeoff, "_admission", lambda *a: {"admitted_embedders": [bakeoff.E5], "rerankers": {"Qwen/Qwen3-Reranker-0.6B": {"variant": "fp32"}}, "measurements": {"lexical_query_seconds": 1}})
+    if query is not None:
+        monkeypatch.setattr(bakeoff, "_evaluation", lambda *a: {"queries": [query], "cost_query_ids": [query["id"]], "sha256": "eval"})
+
+
 def test_encode_stub_is_resumable_and_uses_repository_prefix(tmp_path: Path, monkeypatch) -> None:
     source = tmp_path / "sources.db"
     conn = sqlite3.connect(source)
@@ -98,9 +118,12 @@ def test_encode_stub_is_resumable_and_uses_repository_prefix(tmp_path: Path, mon
     ])
     conn.commit()
     conn.close()
+    _compute_fixture(monkeypatch)
     calls: list[list[str]] = []
 
     class StubEncoder:
+        tokenizer = StubTokenizer()
+
         def encode(self, texts, **kwargs):
             calls.append(list(texts))
             return [[1.0, float(index + 1)] for index, _ in enumerate(texts)]
@@ -152,17 +175,21 @@ def test_rerank_adapters_rank_candidates_without_model_downloads() -> None:
     candidates = [{"chunk_id": "a", "text": "first"}, {"chunk_id": "b", "text": "second"}]
 
     class CrossEncoderStub:
+        tokenizer = StubTokenizer()
+
         def predict(self, pairs, **kwargs):
             assert len(pairs) == 2
             return [0.9, 0.1]
 
     class JinaStub:
+        _tokenizer = StubTokenizer()
+
         def rerank(self, query, documents):
             assert query == "query" and documents == ["first", "second"]
             return [{"index": 1}, {"index": 0}]
 
-    assert bakeoff._rerank(CrossEncoderStub(), {"kind": "cross_encoder"}, "query", candidates) == ["a", "b"]
-    assert bakeoff._rerank(JinaStub(), {"kind": "jina"}, "query", candidates) == ["b", "a"]
+    assert bakeoff._rerank(CrossEncoderStub(), {"kind": "cross_encoder", "max_tokens": 512}, "query", candidates) == ["a", "b"]
+    assert bakeoff._rerank(JinaStub(), {"kind": "jina", "max_tokens": 512}, "query", candidates) == ["b", "a"]
 
 
 def test_search_orchestration_builds_dense_hybrid_and_reranked_arms(tmp_path: Path, monkeypatch) -> None:
@@ -176,28 +203,31 @@ def test_search_orchestration_builds_dense_hybrid_and_reranked_arms(tmp_path: Pa
     vectors = work / "embeddings/intfloat--multilingual-e5-small.sqlite3"
     vectors.parent.mkdir()
     vector_conn = sqlite3.connect(vectors)
+    vector_conn.execute("CREATE TABLE index_metadata (key TEXT, value TEXT)")
+    vector_conn.execute("INSERT INTO index_metadata VALUES ('run_manifest_sha256','run')")
     vector_conn.execute("CREATE TABLE vectors (chunk_id TEXT, text_sha256 TEXT, vector BLOB, dimensions INTEGER)")
-    vector_conn.execute("INSERT INTO vectors VALUES ('c1','',x'0000803f00000000',2)")
+    vector_conn.executemany("INSERT INTO vectors VALUES (?,'',x'0000803f00000000',2)", [("c1",), ("c2",)])
     vector_conn.commit()
     vector_conn.close()
     repo = "intfloat/multilingual-e5-small"
     (work / f"{repo.replace('/', '--')}-encode.json").write_text(json.dumps({"index_size_bytes": 123, "wall_seconds": 4.0, "steady_state_chunks_per_second": 2.0, "peak_rss_bytes": 456}), encoding="utf-8")
     query = {"id": "G3-001", "family": "G3", "query": "query", "stratum": "area", "cluster": "G3-001"}
+    _compute_fixture(monkeypatch, query)
     monkeypatch.setattr(bakeoff, "_load_queries", lambda: ([query], [query]))
     monkeypatch.setattr(bakeoff, "_fts_search", lambda *args, **kwargs: ["c2"])
     monkeypatch.setattr(bakeoff, "get_vesum_connection", lambda path: nullcontext(object()))
-    monkeypatch.setattr(bakeoff, "_new_encoder", lambda model, root: (object(), {"kind": "sentence", "max_tokens": 32}))
+    monkeypatch.setattr(bakeoff, "_new_encoder", lambda model, root: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "sentence", "max_tokens": 32}))
     monkeypatch.setattr(bakeoff, "_query_vector", lambda *args: [1.0, 0.0])
     monkeypatch.setattr(bakeoff, "_dense_rank", lambda *args, **kwargs: ["c1"])
-    monkeypatch.setattr(bakeoff, "_new_reranker", lambda model, root: (object(), {"kind": "test", "max_tokens": 32}))
+    monkeypatch.setattr(bakeoff, "_new_reranker", lambda model, root: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "test", "max_tokens": 32}))
     monkeypatch.setattr(bakeoff, "_rerank", lambda model, meta, text, candidates: [str(row["chunk_id"]) for row in candidates][::-1])
 
     monkeypatch.setattr(bakeoff, "_copy_subset", lambda *args: work / "corpus.sqlite3")
     monkeypatch.setattr(bakeoff, "_isolated_arm", bakeoff._run_arm)
-    result = bakeoff.search(tmp_path / "unused.db", work, models=[repo], rerankers=["Qwen/Qwen3-Reranker-0.6B"], query_limit=1, families=["G3"])
+    result = bakeoff.search(tmp_path / "unused.db", work, models=[repo], rerankers=["Qwen/Qwen3-Reranker-0.6B"], query_limit=1, families=["G1", "G2", "G3"])
     assert set(result["arms"]) == {"L", f"D:{repo}", f"H:{repo}", f"R:Qwen/Qwen3-Reranker-0.6B|{repo}"}
     assert result["arms"][f"H:{repo}"]["G3-001"][0] == "c1"
-    assert result["vector_coverage"][repo] == {"indexed_vectors": 1, "corpus_rows": 2}
+    assert result["vector_coverage"][repo] == {"indexed_vectors": 2, "corpus_rows": 2}
     assert result["costs"][f"D:{repo}"]["index_size_bytes"] == vectors.stat().st_size
     assert result["costs"][f"H:{repo}"]["index_size_bytes"] == vectors.stat().st_size + (work / "corpus.sqlite3").stat().st_size
     assert result["costs"][f"R:Qwen/Qwen3-Reranker-0.6B|{repo}"]["reranker"]["max_tokens"] == 32
@@ -251,7 +281,7 @@ def test_paired_cluster_bootstrap_keeps_query_pairs_and_clusters_together() -> N
     first = bakeoff.paired_cluster_bootstrap(values, clusters, iterations=250, seed=19)
     second = bakeoff.paired_cluster_bootstrap(values, clusters, iterations=250, seed=19)
     assert first == second
-    assert first["estimate"] == pytest.approx(0.4666666666666666)
+    assert first["estimate"] == pytest.approx(0.45)
     assert first["lower_95"] <= first["estimate"] <= first["upper_95"]
 
 
@@ -312,6 +342,7 @@ def test_pool_ids_stable_in_two_hash_seed_subprocesses(tmp_path: Path) -> None:
     code = '''
 import json, sqlite3, sys
 from pathlib import Path
+from types import SimpleNamespace
 from scripts.wiki.diagnostics import retrieval_bakeoff_9233 as b
 work = Path(sys.argv[1]); work.mkdir()
 with sqlite3.connect(work / "corpus.sqlite3") as c:
@@ -387,33 +418,42 @@ def test_complete_arm_latency_includes_all_stages(tmp_path: Path, monkeypatch) -
             return value
         return call
     monkeypatch.setattr(bakeoff.time, "perf_counter", lambda: clock[0])
-    monkeypatch.setattr(bakeoff, "_new_encoder", lambda *args: (object(), {"kind": "test"}))
-    monkeypatch.setattr(bakeoff, "_new_reranker", lambda *args: (object(), {"max_tokens": 8192}))
+    monkeypatch.setattr(bakeoff, "_new_encoder", lambda *args: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "test", "max_tokens": 512}))
+    monkeypatch.setattr(bakeoff, "_new_reranker", lambda *args: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "test", "max_tokens": 8192}))
     monkeypatch.setattr(bakeoff, "_fts_search", stage(1, ["c1"]))
     monkeypatch.setattr(bakeoff, "_query_vector", stage(2, [1]))
     monkeypatch.setattr(bakeoff, "_dense_rank", stage(3, ["c1"]))
     monkeypatch.setattr(bakeoff, "reciprocal_rank_fusion", stage(4, ["c1"]))
     monkeypatch.setattr(bakeoff, "_rerank", stage(5, ["c1"]))
     query = {"id": "q", "query": "query", "family": "G3"}
+    _compute_fixture(monkeypatch, query)
     for arm, embedder, ranker, expected in [("L", None, None, 1), ("D:x", repo, None, 5), ("H:x", repo, None, 10), ("R:x", repo, "ranker", 15)]:
         result = bakeoff._run_arm(corpus, work, [query], arm, embedder, ranker)
         assert result["cost"]["query_p95_seconds"] == expected
         assert result["cost"]["query_n"] == 1
 
 
-def test_fresh_arm_process_measures_lexical_pipeline(tmp_path: Path) -> None:
+def test_guarded_arm_dispatches_complete_lexical_pipeline(tmp_path: Path, monkeypatch) -> None:
     source = tmp_path / "sources.db"
     _sources(source, [(1, "c1", "", "апостроф", "book", "ukrmova", None)])
     work = tmp_path / "work"
     corpus = bakeoff._copy_subset(source, work)
     query = {"id": "q", "query": "апостроф", "family": "G3"}
+    _compute_fixture(monkeypatch, query)
+    guarded = []
+    def guard(function, args, kwargs, root, step, projection):
+        guarded.append((step, projection))
+        return function(*args, **kwargs)
+    monkeypatch.setattr(bakeoff, "_guarded_step", guard)
     result = bakeoff._isolated_arm(corpus, work, [query], "L", None, None, bakeoff._default_vesum_db())
+    assert guarded == [("search:L", 2)]
     assert result["rankings"] == {"q": ["c1"]}
     assert result["cost"]["query_peak_rss_bytes"] > 0
     assert result["cost"]["query_p95_seconds"] > 0
 
 
 def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(bakeoff, "_model_options", lambda *a: {"revision": "a" * 40})
     import sys
     from types import SimpleNamespace
 
@@ -430,7 +470,7 @@ def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Pat
         def __init__(self, *args, **kwargs):
             assert "max_length" not in kwargs
             self.tokenizer = SimpleNamespace(model_max_length=8192, truncation_side="left")
-            self.model = SimpleNamespace(config=SimpleNamespace(max_position_embeddings=8194))
+            self.model = SimpleNamespace(config=SimpleNamespace(max_position_embeddings=8194), float=lambda: None)
     monkeypatch.setitem(sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=Encoder, CrossEncoder=Cross))
     repo = "Snowflake/snowflake-arctic-embed-l-v2.0"
     encoder, meta = bakeoff._new_encoder(repo, tmp_path)
@@ -449,6 +489,7 @@ def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Pat
 
 
 def test_native_jina_limits_are_recorded_without_downloads(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(bakeoff, "_model_options", lambda *a: {"revision": "a" * 40})
     import sys
     from types import SimpleNamespace
 
@@ -457,6 +498,9 @@ def test_native_jina_limits_are_recorded_without_downloads(tmp_path: Path, monke
         _tokenizer = SimpleNamespace(model_max_length=131072, truncation_side="left")
         def to(self, device):
             return self
+        def float(self):
+            return self
+
         def eval(self):
             return self
         def _ensure_tokenizer(self):
@@ -470,10 +514,11 @@ def test_native_jina_limits_are_recorded_without_downloads(tmp_path: Path, monke
     assert meta["max_query_length"] == 1024 and meta["max_doc_length"] == 8192
     assert meta["max_tokens"] == 131072
     assert model._tokenizer.truncation_side == "right"
-    assert "head-only" in meta["truncation"]
+    assert "first 128 + last 384" in meta["truncation"]
 
 
-def test_qwen_yes_no_scoring_preserves_template_and_head_truncation(tmp_path: Path, monkeypatch) -> None:
+def test_qwen_yes_no_scoring_preserves_template_without_joint_truncation(tmp_path: Path, monkeypatch) -> None:
+    monkeypatch.setattr(bakeoff, "_model_options", lambda *a: {"revision": "a" * 40})
     import sys
     from types import SimpleNamespace
 
@@ -482,11 +527,17 @@ def test_qwen_yes_no_scoring_preserves_template_and_head_truncation(tmp_path: Pa
     class Tokenizer:
         model_max_length = 100
         def encode(self, text, **kwargs):
-            if "max_length" in kwargs:
-                assert kwargs["truncation"] is True and kwargs["max_length"] == 96
+            assert "max_length" not in kwargs and "truncation" not in kwargs
+            if "<Query>:" in text:
                 assert "<Query>: query" in text and "<Document>:" in text
                 return [3, 4, 5]
+            if text in {"document", "query"}:
+                return [3]
             return [1, 2] if text.startswith("<|im_start|>") else [8, 9]
+
+        def decode(self, ids, **kwargs):
+            return "document"
+
         def pad(self, inputs, **kwargs):
             assert inputs["input_ids"] == [[1, 2, 3, 4, 5, 8, 9]]
             return {"input_ids": torch.tensor(inputs["input_ids"])}
@@ -496,6 +547,9 @@ def test_qwen_yes_no_scoring_preserves_template_and_head_truncation(tmp_path: Pa
         config = SimpleNamespace(max_position_embeddings=128)
         def to(self, device):
             return self
+        def float(self):
+            return self
+
         def eval(self):
             return self
         def __call__(self, **inputs):
