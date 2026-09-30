@@ -500,10 +500,16 @@ def test_live_pidfd_signals_only_the_verified_child(provider: str) -> None:
     if ops is None or ops.open is None:
         pytest.skip("no pidfd on this host")
     child = subprocess.Popen(
-        [sys.executable, "-c", "import time; time.sleep(60)"],
+        [sys.executable, "-c", "import time; print('ready', flush=True); time.sleep(60)"],
         env={**os.environ, wl.DISPATCH_TASK_ENV: "live-pidfd-task"},
+        stdout=subprocess.PIPE,
+        text=True,
     )
     try:
+        # Popen returns while exec is still switching images, when /proc/<pid>/environ
+        # can read empty: only the child's own output proves its environment is in place.
+        assert child.stdout is not None
+        assert child.stdout.readline().strip() == "ready"
         reader = wl.ProcFsReader()
         info = reader.stat(child.pid)
         assert info is not None
@@ -522,3 +528,5 @@ def test_live_pidfd_signals_only_the_verified_child(provider: str) -> None:
         if child.poll() is None:
             child.kill()
             child.wait(timeout=10)
+        if child.stdout is not None:
+            child.stdout.close()
