@@ -1329,6 +1329,7 @@ class TestSearchSourcesHandler:
                 "title": "Голосні звуки",
                 "text": "Голосні звуки творяться без перешкод.",
                 "final_score": 0.91,
+                "ranking": "keyword_rrf",
             }
         ]
         with patch("wiki.sources_db.search_sources", return_value=mock_hits) as mock:
@@ -1341,6 +1342,8 @@ class TestSearchSourcesHandler:
             assert envelope["status"] == "ok"
             assert envelope["match_count"] == 1
             assert envelope["hits"][0]["chunk_id"] == "ukwiki:test-1"
+            assert envelope["hits"][0]["ranking"] == "keyword_rrf"
+            assert envelope["ranking"] == "keyword_rrf"
 
 
 class TestCheckRussianShadowHandler:
