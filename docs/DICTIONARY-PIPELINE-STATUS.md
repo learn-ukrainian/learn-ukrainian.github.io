@@ -46,8 +46,14 @@ normalizes stress accents, apostrophe variants and Unicode casefolding;
 whitespace and letters remain exact. Option lemmas come only from attested
 VESUM analyses, never suffix rules or guessed lemmas. Dictionary kinds
 (`vesum`, `sum20`, `ulif`, `grinchenko`, `vts`) require the row's
-headword/lemma or `word_form` to equal the option or one of those lemmas;
-definitions and metadata cannot bind. Text kinds (`pravopys`, `textbook`)
+real witness fields to equal the option or one of those lemmas: VESUM
+`word_form`/`lemma`, СУМ-20 `headword`/`stressed_headword`, Грінченко and VTS
+`word`, ULIF `canonical_headword`. Only ULIF rows with `status='ok'` bind,
+including for invalid options; a negative lookup is not a word witness.
+Definitions and metadata cannot bind. VESUM analyses and paradigms use indexed
+exact candidates (given, casefolded, upper, title and capitalised), followed
+by normalized filtering; mixed-case forms outside those candidates fail closed.
+Text kinds (`pravopys`, `textbook`)
 require a whole-word match of the option or any attested VESUM paradigm form
 of its lemmas. Case correctness is checked by the language judgement elsewhere.
 Other existing rows refuse with `evidence_form_mismatch`. Live Pravopys

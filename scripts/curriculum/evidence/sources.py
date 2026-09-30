@@ -577,7 +577,7 @@ class Sources:
                 self._receipt_evidence[eid] = []
                 continue
             if kind == "pravopys":
-                from scripts.rag.source_query import pravopys_section
+                from scripts.rag.source_query import PRAVOPYS_BASE, pravopys_section
 
                 if not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 2 or not 1 <= int(key) <= 61:
                     self._receipt_evidence[eid] = []
@@ -587,7 +587,7 @@ class Sources:
                     raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
                 self._receipt_evidence[eid] = [section] if section else []
                 self._receipt_identities["pravopys"] = {
-                    "scheme": "pravopys-live-section-v1", "origin": "https://2019.pravopys.net",
+                    "scheme": "pravopys-live-section-v1", "origin": PRAVOPYS_BASE,
                 }
                 continue
             if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
@@ -618,8 +618,10 @@ class Sources:
     ) -> SourceResult[dict[str, list[dict]]]:
         """Read attested analyses or paradigms using Unicode word identity.
 
-        SQLite NOCASE handles ASCII only. Compare with the same normalization
-        as citation witnesses; cache reads within the checked static identity.
+        SQLite NOCASE handles ASCII only. Use indexed exact lookups for the
+        given, casefolded, upper, title and capitalised candidates, then filter
+        with citation-witness normalization. Mixed-case VESUM forms missed by
+        these candidates fail closed. Cache within the checked static identity.
         """
         requested = list(dict.fromkeys(values))
         digest, metadata = self._vesum_identity()
@@ -628,17 +630,22 @@ class Sources:
         column = "lemma" if paradigm else "word_form"
         if pending:
             with closing(open_readonly(self.vesum_db)) as conn:
-                conn.create_function("receipt_word", 1, normalize_evidence_form, deterministic=True)
                 for start in range(0, len(pending), BATCH_SIZE):
                     batch = pending[start : start + BATCH_SIZE]
+                    candidates = sorted({
+                        candidate for value in batch
+                        for candidate in (value, value.casefold(), value.upper(), value.title(), value.capitalize())
+                    })
                     rows = conn.execute(
                         f"SELECT word_form, lemma, pos, tags FROM forms "
-                        f"WHERE receipt_word({column}) IN ({','.join('?' for _ in batch)}) "
-                        "ORDER BY word_form, lemma, pos, tags", batch,
+                        f"WHERE {column} IN ({','.join('?' for _ in candidates)}) "
+                        "ORDER BY word_form, lemma, pos, tags", candidates,
                     )
                     found = {value: [] for value in batch}
                     for row in rows:
-                        found[normalize_evidence_form(row[column])].append(dict(row))
+                        normalized = normalize_evidence_form(row[column])
+                        if normalized in found:
+                            found[normalized].append(dict(row))
                     cache.update(found)
         self._vesum_identity()
         return SourceResult({value: cache[value] for value in requested}, digest, metadata)
@@ -655,15 +662,16 @@ class Sources:
         its VESUM lemmas. Stress/apostrophe normalization also applies. No guessed
         lemmas, definition matches, or metadata witnesses. Binding establishes
         word identity, never correctness of the contextual language judgement.
+        Only ULIF rows with status='ok' provide witnesses, for both judgements.
         """
         fields = {
             "vesum": ("word_form", "lemma"),
             "pravopys": ("text",),
             "textbook": ("text",),
-            "grinchenko": ("word", "headword", "lemma", "word_form"),
-            "sum20": ("headword", "stressed_headword", "lemma", "word_form"),
-            "vts": ("word", "headword", "lemma", "word_form"),
-            "ulif": ("canonical_headword", "headword", "lemma", "word_form"),
+            "grinchenko": ("word",),
+            "sum20": ("headword", "stressed_headword"),
+            "vts": ("word",),
+            "ulif": ("canonical_headword",),
         }
         raw = {}
         pending = {}
@@ -672,7 +680,9 @@ class Sources:
             form = normalize_evidence_form(text)
             witnesses = [
                 normalize_evidence_form(row[field])
-                for row in resolved.raw[eid] for field in fields.get(kind, ())
+                for row in resolved.raw[eid]
+                if kind != "ulif" or row.get("status") == "ok"
+                for field in fields.get(kind, ())
                 if isinstance(row.get(field), str)
             ]
             is_text = kind in {"pravopys", "textbook"}

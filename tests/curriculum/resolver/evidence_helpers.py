@@ -22,6 +22,8 @@ def receipt_source_paths(root: Path, locations: Iterable[str] = (), *, records: 
             CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, source_location TEXT,
                 word_form TEXT, lemma TEXT, pos TEXT, tags TEXT);
             CREATE VIEW forms AS SELECT word_form, lemma, pos, tags FROM forms_all;
+            CREATE INDEX idx_forms_all_word_form ON forms_all(word_form);
+            CREATE INDEX idx_forms_all_lemma ON forms_all(lemma);
         """)
         spellings = {
             "487702-487719": {"one", "two", "брат", "брата", "брату"},
@@ -34,22 +36,26 @@ def receipt_source_paths(root: Path, locations: Iterable[str] = (), *, records: 
             if loc:
                 spellings.setdefault(loc, set()).update(form["form"] for form in record["forms"])
                 lemmas[loc] = record["lemma"]
+        # Both receipt options have the same attested lemma; dictionary fixtures
+        # bind the second option through VESUM rather than invented columns.
         for index, loc in enumerate(sorted(locations)):
             for offset, form in enumerate(sorted(spellings.get(loc, {"fixture"}))):
                 conn.execute("INSERT INTO forms_all VALUES (?, ?, ?, ?, ?, 'noun', 'noun')",
-                             (int(loc.split("-")[0]) + offset, index + 1, loc, form, lemmas.get(loc, "fixture-lemma")))
+                             (int(loc.split("-")[0]) + offset, index + 1, loc, form,
+                              "one" if form in {"one", "two"} else lemmas.get(loc, "fixture-lemma")))
     sources_db = root / "receipt-sources.db"
     with sqlite3.connect(sources_db) as conn:
         conn.executescript("""
             CREATE TABLE textbooks (id INTEGER PRIMARY KEY, chunk_id TEXT, text TEXT);
             INSERT INTO textbooks VALUES (1, 'real-chunk', 'one two fixture source bytes');
-            CREATE TABLE grinchenko (id INTEGER PRIMARY KEY, definition TEXT, word TEXT DEFAULT 'one', lemma TEXT DEFAULT 'two');
+            CREATE TABLE grinchenko (id INTEGER PRIMARY KEY, definition TEXT, word TEXT DEFAULT 'one');
             INSERT INTO grinchenko (id, definition) VALUES (11367, 'one two fixture source bytes');
-            CREATE TABLE sum20_articles (id INTEGER PRIMARY KEY, wordid INTEGER, article_text TEXT, headword TEXT DEFAULT 'one', lemma TEXT DEFAULT 'two');
+            CREATE TABLE sum20_articles (id INTEGER PRIMARY KEY, wordid INTEGER, article_text TEXT,
+                headword TEXT DEFAULT 'one', stressed_headword TEXT);
             INSERT INTO sum20_articles (id, wordid, article_text) VALUES (1, 2319, 'one two fixture source bytes');
-            CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, status TEXT, canonical_headword TEXT, lemma TEXT DEFAULT 'two');
+            CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, status TEXT, canonical_headword TEXT);
             INSERT INTO ulif_dictua_entries (id, status, canonical_headword) VALUES (18, 'ok', 'one');
-            CREATE TABLE slovnyk_me_entries (id INTEGER PRIMARY KEY, dictionary_slug TEXT, text TEXT, word TEXT DEFAULT 'one', lemma TEXT DEFAULT 'two');
+            CREATE TABLE slovnyk_me_entries (id INTEGER PRIMARY KEY, dictionary_slug TEXT, text TEXT, word TEXT DEFAULT 'one');
             INSERT INTO slovnyk_me_entries (id, dictionary_slug, text) VALUES (1, 'vts', 'one two fixture source bytes');
             INSERT INTO slovnyk_me_entries (id, dictionary_slug, text) VALUES (2, 'sum', 'wrong dictionary');
         """)

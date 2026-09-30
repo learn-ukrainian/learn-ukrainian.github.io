@@ -266,7 +266,7 @@ def test_stress_and_apostrophe_comparison_normalization(kind):
     with Sources() as api:
         eid = IDS[kind]
         field = {"vesum": "word_form", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "word" if kind == "vts" else "text")
-        resolved = SourceResult({eid: [{field: "м'яч"}]}, "a" * 64)
+        resolved = SourceResult({eid: [{field: "м'яч", "status": "ok"}]}, "a" * 64)
         result = api.bind_evidence_forms(resolved, [(eid, "м’я\u0301ч"), (eid, "мʼя\u0300ч")])
         assert all(result.raw.values())
 
@@ -282,7 +282,7 @@ def test_lemma_binding_comes_from_vesum_lookup(kind, request):
     eid = IDS[kind]
     field = {"vesum": "lemma", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "word" if kind == "vts" else "text")
     with Sources() as api:
-        result = api.bind_evidence_forms(SourceResult({eid: [{field: "lemma"}]}, "a" * 64), [(eid, "inflected")])
+        result = api.bind_evidence_forms(SourceResult({eid: [{field: "lemma", "status": "ok"}]}, "a" * 64), [(eid, "inflected")])
         assert result.raw[eid, "inflected"] is True
         assert "analyses_sha256" in result.metadata
 
@@ -417,3 +417,87 @@ def test_normalized_analysis_and_paradigm_reads_cache_and_detect_change(word_bin
             api._receipt_vesum_rows(["різдвом"])
         api.close()
         assert not api._receipt_words and not api._receipt_paradigms
+
+
+@pytest.mark.parametrize("judgement", ["valid", "invalid"])
+@pytest.mark.parametrize("ulif_status", ["not_found", "unavailable", None])
+def test_ulif_only_ok_rows_are_witnesses_at_every_entry_point(tmp_path, request, judgement, ulif_status):
+    sources_db, _ = request.getfixturevalue("receipt_sources")
+    with sqlite3.connect(sources_db) as writer:
+        writer.execute("UPDATE ulif_dictua_entries SET status=?", (ulif_status,))
+    doc = document(IDS["vesum"])
+    doc["items"][0]["options"][0 if judgement == "valid" else 1]["evidence"] = [IDS["ulif"]]
+    path = receipts.requirement_receipt_path(tmp_path, 1)
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n")
+    lock.write(path, lock.yaml_bytes(doc))
+    with Sources() as api:
+        assert api.resolve_evidence_ids([IDS["ulif"]]).raw[IDS["ulif"]]
+        for action in (
+            lambda: record(doc, tmp_path, api),
+            lambda: receipts.validate_requirement_receipts(doc, sources=api),
+            lambda: receipts.write_requirement_receipts(path, doc, sources=api),
+            lambda: receipts.read_requirement_receipts(path, sources=api),
+            lambda: status(doc, tmp_path, api),
+        ):
+            with pytest.raises(ResolverError) as caught:
+                action()
+            assert caught.value.code == codes.EVIDENCE_FORM_MISMATCH
+
+
+@pytest.mark.parametrize("kind,field", [
+    (kind, field)
+    for kind, fields in {
+        "grinchenko": ("headword", "lemma", "word_form"),
+        "sum20": ("lemma", "word_form"),
+        "vts": ("headword", "lemma", "word_form"),
+        "ulif": ("headword", "lemma", "word_form"),
+    }.items() for field in fields
+])
+def test_unrecognized_dictionary_fields_cannot_bind(kind, field):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    eid = IDS[kind]
+    row = {field: "one", "status": "ok"}
+    with Sources() as api:
+        assert api.bind_evidence_forms(SourceResult({eid: [row]}, "a" * 64), [(eid, "one")]).raw[eid, "one"] is False
+
+
+def test_sum20_stressed_headword_is_a_real_witness(request):
+    sources_db, _ = request.getfixturevalue("receipt_sources")
+    with sqlite3.connect(sources_db) as writer:
+        writer.execute("UPDATE sum20_articles SET headword='other', stressed_headword='o\u0301ne'")
+    with Sources() as api:
+        receipts.validate_requirement_receipts(document(IDS["sum20"]), sources=api)
+
+
+@pytest.mark.parametrize("paradigm", [False, True])
+def test_indexed_vesum_lookup_filters_candidates_and_fails_closed_on_mixed_case(request, monkeypatch, paradigm):
+    from scripts.curriculum.evidence import sources as module
+
+    _, db = request.getfixturevalue("receipt_sources")
+    # Uppercasing dotless ı produces I; normalized filtering must discard
+    # FIXTURE as a witness for fıxture, even though it is an SQL candidate.
+    with sqlite3.connect(db) as writer:
+        writer.executemany("INSERT INTO forms_all VALUES (?, ?, '999-1000', ?, ?, 'noun', 'noun')", [
+            (999, 999, "fıxture", "fıxture"), (1000, 1000, "FIXTURE", "FIXTURE"),
+            (1001, 1001, "MixedCase", "MixedCase"),
+        ])
+    queries = []
+    original = module.open_readonly
+
+    def traced(path):
+        conn = original(path)
+        conn.set_trace_callback(queries.append)
+        return conn
+
+    monkeypatch.setattr(module, "open_readonly", traced)
+    monkeypatch.setattr(module, "BATCH_SIZE", 1)
+    with Sources() as api:
+        rows = api._receipt_vesum_rows(["fıxture", "mixedcase"], paradigm=paradigm).raw
+        assert {row["word_form"] for row in rows["fıxture"]} == {"fıxture"}
+        assert rows["mixedcase"] == []
+        assert api._receipt_vesum_rows([], paradigm=paradigm).raw == {}
+    selects = [query for query in queries if query.startswith("SELECT word_form")]
+    assert len(selects) == 2
+    column = "lemma" if paradigm else "word_form"
+    assert all(f"WHERE {column} IN (" in query and "receipt_word" not in query for query in selects)
