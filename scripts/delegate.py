@@ -80,13 +80,18 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
         "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
-        "advisory_envelope": {requirement, advisor_task_id, advisor_model, advisor_run_nonce, result_path,
-                              result_sha256, envelope_sha256, dispatch_args_sha256, owned_paths,
-                              max_changed_files, max_non_test_loc} | absent,  # bounded-worker envelope (#9275)
+        "advisory_envelope": {requirement, advisory_args_sha256, prompt_sha256, repo_root, advisor_task_id,
+                              advisor_model, advisor_run_nonce, result_path, result_sha256, envelope_sha256,
+                              dispatch_args_sha256, owned_paths, max_changed_files, max_non_test_loc}
+                             | absent,  # bounded-worker admission; the worker re-verifies it (#9275)
+        "advisory_exemption": {model_id, task_family, review_profile, mode, classified_paths} | absent,
+                              # a Gemini Flash launch classified Ukrainian; the worker re-classifies it
         "advisory_ceiling_check": {measured, changed_files, non_test_loc, max_*, exceeded | error} | absent,
         "advisory_role": "bounded_advisory_envelope" | absent,  # the advisor run that issues an envelope (#9275)
         "advisory_route": str | absent,
-        "advisory_binding_sha256": str | absent     # the worker dispatch's advisory binding digest
+        "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
+        "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
+                              # advisor runs: the result as its worker wrote it, sealed at finish
     }
 
 Design notes:
@@ -338,8 +343,7 @@ def advisory_binding(args_sha256: str, prompt_sha256: str | None) -> str:
     prompt text (a ``--prompt-file`` is bound by content, not only by path), so
     an envelope issued for one dispatch admits no other.
     """
-    payload = {"dispatch_args_sha256": args_sha256, "prompt_sha256": prompt_sha256}
-    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+    return bounded_advisory.binding_digest(args_sha256, prompt_sha256)
 
 
 def _binding_prompt_sha256(args: argparse.Namespace, *, read_stdin: bool) -> str | None:
@@ -7951,6 +7955,20 @@ def _run_worker(
         return 1
     # The worker runs the admitted seat and model; nothing resolves them again.
     agent, model = worker_target.recipient, worker_target.model
+    # #9275: a bounded model runs only with the parent's advisory admission in
+    # the task record, re-verified here; nothing reaches the provider without it.
+    advisory_refusal = _advisory_worker_refusal(
+        task_id,
+        agent=agent,
+        model=model,
+        mode=mode,
+        prompt=prompt,
+        runtime_tmp_root=runtime_tmp_root,
+        runtime_tmp_namespace_root=runtime_tmp_namespace_root,
+    )
+    if advisory_refusal:
+        print(f"❌ {advisory_refusal}", file=sys.stderr)
+        return 1
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
@@ -8392,10 +8410,16 @@ def _run_worker(
         if response:
             result_path = state_path.with_suffix(".result")
             try:
-                result_path.write_text(response)
+                result_path.write_text(response, encoding="utf-8")
                 result_file = str(result_path)
             except OSError:
                 result_file = None
+            # #9275: an advisor's result is sealed as written, with the model this
+            # worker ran, so admission refuses a result replaced after finish.
+            if result_file is not None and final_state.get("advisory_role") is not None:
+                final_state[bounded_advisory.SEAL_FIELD] = bounded_advisory.seal_advisor_result(
+                    response, model=model, run_nonce=final_state.get("run_nonce")
+                )
 
         # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
         # worktree exited dirty so follow-up reviewers can see at a glance
@@ -11431,10 +11455,23 @@ class _AdvisoryAdmission:
     envelope: bounded_advisory.ValidatedEnvelope | None = None
     advisor_binding: str | None = None
     prompt_sha256: str | None = None  # the bounded worker's prompt text as bound at admission
+    args_sha256: str | None = None  # the argument half of the bounded worker's binding
+    repo_root: Path | None = None  # where the envelope's owned paths were validated
+    exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
 
     def state_fields(self) -> dict[str, Any]:
         if self.envelope is not None and self.requirement is not None:
-            return {"advisory_envelope": self.envelope.state_record(self.requirement)}
+            assert self.args_sha256 is not None and self.prompt_sha256 is not None and self.repo_root is not None
+            return {
+                "advisory_envelope": self.envelope.state_record(
+                    self.requirement,
+                    args_sha256=self.args_sha256,
+                    prompt_sha256=self.prompt_sha256,
+                    repo_root=self.repo_root,
+                )
+            }
+        if self.exemption is not None:
+            return {"advisory_exemption": dict(self.exemption)}
         if self.advisor_binding is not None:
             return {
                 "advisory_role": bounded_advisory.bounded_execution_policy().advisor_role,
@@ -11481,12 +11518,16 @@ def _admit_advisory(
         return _AdvisoryAdmission(advisor_binding=str(args.advisory_binding))
     declared = _declared_owned_paths(getattr(args, "owned_path", None)) or []
     research_paths = getattr(args, "research_owned_path", None) or []
+    classified_paths = [*declared, *research_paths]
+    mode = str(getattr(args, "mode", "") or "")
+    task_family = getattr(args, "research_task_family", None)
+    review_profile = getattr(args, "review_profile", None)
     requirement = bounded_advisory.bounded_requirement(
         model_id,
-        mode=str(getattr(args, "mode", "") or ""),
-        task_family=getattr(args, "research_task_family", None),
-        review_profile=getattr(args, "review_profile", None),
-        owned_paths=[*declared, *research_paths],
+        mode=mode,
+        task_family=task_family,
+        review_profile=review_profile,
+        owned_paths=classified_paths,
         policy=policy,
     )
     advisory_task = getattr(args, "advisory_task", None)
@@ -11496,6 +11537,17 @@ def _admit_advisory(
                 bounded_advisory.FLAG_CONFLICT,
                 f"--advisory-task applies only to a bounded-worker dispatch; the admitted route launches "
                 f"{dispatch_agent} {launch_model or model_id!r}",
+            )
+        if model_id == policy.bounded_fallback_model_id:
+            # The worker re-classifies from this record before it starts the model.
+            return _AdvisoryAdmission(
+                exemption={
+                    "model_id": model_id,
+                    "task_family": task_family,
+                    "review_profile": review_profile,
+                    "mode": mode,
+                    "classified_paths": [str(path) for path in classified_paths],
+                }
             )
         return _AdvisoryAdmission()
     if advisory_task is None:
@@ -11524,7 +11576,65 @@ def _admit_advisory(
         policy=policy,
     )
     bounded_advisory.require_owned_paths_match(envelope.owned_paths, declared)
-    return _AdvisoryAdmission(requirement=requirement, envelope=envelope, prompt_sha256=prompt_sha256)
+    return _AdvisoryAdmission(
+        requirement=requirement,
+        envelope=envelope,
+        prompt_sha256=prompt_sha256,
+        args_sha256=args_sha256,
+        repo_root=repo_root,
+    )
+
+
+def _advisory_worker_refusal(
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    prompt: str,
+    runtime_tmp_root: str | None,
+    runtime_tmp_namespace_root: str | None,
+) -> str | None:
+    """The worker-side #9275 backstop: a refusal when a bounded model lacks a valid parent admission.
+
+    Reads the worker's own task record (never creating it) and re-verifies the
+    admission ``_dispatch`` recorded (``bounded_advisory.verify_worker_admission``).
+    A refused worker with a task record marks it failed with the typed code; a
+    hand-built worker argv with no record gets the refusal only.
+    """
+    from scripts.agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import canonical_model_id
+
+    state_path = _state_path_no_create(task_id)
+    record = _read_state_json(state_path)
+    try:
+        bounded_advisory.verify_worker_admission(
+            record,
+            model_id=canonical_model_id(model or _default_model_for(agent)),
+            mode=mode,
+            prompt=prompt,
+            state_path_for=_state_path_no_create,
+            default_repo_root=_REPO_ROOT,
+        )
+    except bounded_advisory.AdvisoryRefused as exc:
+        refusal = f"worker refused before start: {exc}"
+        if record:
+            record.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "stderr_excerpt": refusal[:500],
+                    "returncode": None,
+                    "returncode_reason": "bounded model without a valid advisory admission; provider not started",
+                    "last_error": exc.code,
+                    "failure_reason": exc.code,
+                    "exit_code": None,
+                }
+            )
+            record.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _write_state_atomic(state_path, record)
+        return refusal
+    return None
 
 
 def _recheck_advisory(admission: _AdvisoryAdmission, *, repo_root: Path) -> None:

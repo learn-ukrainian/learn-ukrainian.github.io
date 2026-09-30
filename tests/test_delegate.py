@@ -228,6 +228,21 @@ def _tmp_dispatch_repo_root(root: Path, monkeypatch) -> Path:
     return root
 
 
+def _agy_ukrainian_exemption(mode: str, owned_paths: tuple[str, ...] = ()) -> dict:
+    """What dispatch records for a Gemini Flash Ukrainian task; its worker re-classifies it (#9275)."""
+    family = "ukrainian-review" if mode == "read-only" else "ukrainian-authoring"
+    return {
+        "mode": mode,
+        "advisory_exemption": {
+            "model_id": "gemini-3.8-flash-high",
+            "task_family": family,
+            "review_profile": None,
+            "mode": mode,
+            "classified_paths": list(owned_paths),
+        },
+    }
+
+
 def _sanitize_git_env_for_test(monkeypatch) -> None:
     for key in tuple(os.environ):
         if key.startswith(("GIT_", "PRE_COMMIT")):
@@ -5252,13 +5267,15 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
         state_path,
         {
             "task_id": "agy-auto-finalize-test",
+            **_agy_ukrainian_exemption("danger", ("curriculum/artifact.txt",)),
             "worktree_path": str(worktree),
             "worktree_branch": "agy/auto-finalize-test",
             "worktree_base": "main",
-            "owned_paths": ["artifact.txt"],
+            "owned_paths": ["curriculum/artifact.txt"],
         },
     )
-    (worktree / "artifact.txt").write_text("agy wrote this\n", encoding="utf-8")
+    (worktree / "curriculum").mkdir()
+    (worktree / "curriculum" / "artifact.txt").write_text("agy wrote this\n", encoding="utf-8")
 
     pushed: list[str] = []
     created_prs: list[dict[str, str]] = []
@@ -5322,7 +5339,7 @@ def test_run_worker_auto_finalizes_dirty_agy_worktree(
     assert state["worktree_dirty_on_exit"] is False
     assert state["commits_ahead"] == 1
     assert state["auto_finalize"]["ok"] is True
-    assert state["auto_finalize"]["changed_files"] == ["artifact.txt"]
+    assert state["auto_finalize"]["changed_files"] == ["curriculum/artifact.txt"]
     assert pushed == ["agy/auto-finalize-test"]
     assert created_prs == []
     assert state["auto_finalize"]["pr_url"] is None
@@ -5414,6 +5431,7 @@ def test_run_worker_never_finalizes_agy_run_cut_off_mid_work(
         state_path,
         {
             "task_id": "agy-cut-off-test",
+            **_agy_ukrainian_exemption("danger"),
             "worktree_path": str(worktree),
             "worktree_branch": branch,
             "worktree_base": "main",
@@ -5567,6 +5585,7 @@ def test_run_worker_refuses_junk_only_auto_finalize_without_git_mutations(
         state_path,
         {
             "task_id": "agy-junk-only-finalize-test",
+            **_agy_ukrainian_exemption("danger"),
             "worktree_path": str(worktree),
             "worktree_branch": "agy/junk-only-finalize-test",
             "worktree_base": "main",
@@ -6216,7 +6235,9 @@ def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
 
 
 def _run_agy_review_worker(task_id, tmp_path, plan):
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, **_agy_ukrainian_exemption("read-only")}
+    )
     return delegate._run_worker(
         task_id=task_id,
         agent="agy",
@@ -6384,7 +6405,9 @@ def test_run_worker_ordinary_agy_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, 
     fake.chmod(0o755)
     monkeypatch.setenv("PATH", f"{fake_bin}:{os.environ['PATH']}")
     task_id = "worker-agy-ordinary"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    delegate._write_state_atomic(
+        delegate._state_path(task_id), {"task_id": task_id, **_agy_ukrainian_exemption("read-only")}
+    )
 
     with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
         rc = delegate._run_worker(
@@ -14967,7 +14990,7 @@ def test_worker_consumes_lu_runtime_run_nonce_env(tmp_tasks_dir, tmp_path, monke
             prompt="hello",
             mode="read-only",
             cwd_str=str(tmp_path),
-            model="gpt-6-luna",
+            model="gpt-6.1-sol",
             hard_timeout=60,
             run_nonce=None,
         )
