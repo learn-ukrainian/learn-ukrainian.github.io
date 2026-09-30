@@ -1205,6 +1205,24 @@ launcher_bind_drive_epic() {
   fi
 }
 
+launcher_publication_path() {
+  local shim_path="$LC_ROOT/scripts/agent_runtime/shims" real_path="" entry
+  if [[ -z "${AGENT_REAL_GH:-}" ]]; then
+    IFS=':' read -r -a publication_paths <<< "${PATH:-}"
+    for entry in "${publication_paths[@]}"; do
+      [[ "$entry" == */scripts/agent_runtime/shims ]] && continue
+      if [[ -x "$entry/gh" ]]; then
+        real_path="$(cd "$entry" && pwd)/gh"
+        break
+      fi
+    done
+    export AGENT_REAL_GH="$real_path"
+  fi
+  export AGENT_ORIGINAL_PATH="${AGENT_ORIGINAL_PATH:-${PATH:-}}"
+  export PATH="$shim_path:${PATH:-}"
+  unset LU_OPSEC_OVERRIDE
+}
+
 launcher_main() {
   LC_PROVIDER="$1"
   LC_MODE="$2"
@@ -1230,6 +1248,7 @@ launcher_main() {
   # Provider adapters are sourced dynamically and consume these values.
   export LC_ENDPOINT LC_ISOLATE_CONFIG
   launcher_resolve_roots
+  launcher_publication_path
   # shellcheck source=scripts/lib/handoff_identity.sh
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode

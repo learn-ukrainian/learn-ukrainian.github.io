@@ -464,3 +464,9 @@ def test_settle_task_worktree_present_path_unchanged(tmp_path: Path, monkeypatch
     assert report.closeout["blocker"] == "none"
     state = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
     assert state["status"] == "done"
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

@@ -8,9 +8,15 @@ import gzip
 import hashlib
 import json
 import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
+
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from scripts.opsec.prepublish import checked_run
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"
@@ -142,7 +148,7 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
 
 def ensure_release(release_tag: str, repo: str) -> None:
     try:
-        existing = subprocess.run(
+        existing = checked_run(
             ["gh", "release", "view", release_tag, "--repo", repo],
             check=False,
             stdout=subprocess.DEVNULL,
@@ -154,7 +160,7 @@ def ensure_release(release_tag: str, repo: str) -> None:
     if existing.returncode == 0:
         return
     try:
-        subprocess.run(
+        checked_run(
             [
                 "gh",
                 "release",
@@ -222,12 +228,12 @@ def publish_open_dataset(
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT)
-    parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP)
-    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER)
-    parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
-    parser.add_argument("--repo", default=DEFAULT_REPO)
+    parser = argparse.ArgumentParser(description="Publish the open Word Atlas dataset as a release asset.\nUse --dry-run before publishing; not for practice decks.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/open_dataset/publish.py --dry-run\nOutputs and exit codes: Package and pointer files; release writes unless dry-run. 0: success; >=1: failed.\nRelated: #9297")
+    parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT, help="Dataset directory (default: %(default)s).")
+    parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP, help="Output package file (default: %(default)s).")
+    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER, help="Published pointer file (default: %(default)s).")
+    parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG, help="Release tag, e.g. atlas-open-dataset (default: %(default)s).")
+    parser.add_argument("--repo", default=DEFAULT_REPO, help="Destination OWNER/REPO (default: %(default)s).")
     parser.add_argument("--dry-run", action="store_true", help="Build package metadata without uploading/writing pointer")
     args = parser.parse_args()
     pointer = publish_open_dataset(

@@ -1,5 +1,9 @@
 """GitHub integration: posting reviews to issues."""
 
+try:
+    from scripts.opsec.prepublish import checked_run
+except ModuleNotFoundError:
+    from opsec.prepublish import checked_run
 import subprocess
 
 from secret_redactor import redact_text
@@ -38,7 +42,7 @@ def _split_content(content: str, limit: int = GH_CHAR_LIMIT) -> list[str]:
 def _gh_comment(issue_num: int, body: str) -> bool:
     """Post a comment on a GitHub issue. Returns True on success."""
     body = redact_text(body) or ""
-    result = subprocess.run(
+    result = checked_run(
         ["gh", "issue", "comment", str(issue_num), "-F", "-"],
         input=body, text=True, capture_output=True, timeout=15
     )

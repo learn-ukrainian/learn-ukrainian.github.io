@@ -4551,17 +4551,18 @@ def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
 
     env = mock_popen.call_args.kwargs["env"]
     assert env.get("AGENT_NO_MERGE") != "1"
-    assert env.get("PATH", "").split(":")[0] != str(runner_mod._SHIMS_DIR)
+    assert env.get("PATH", "").split(":")[0] == str(runner_mod._SHIMS_DIR)
 
 
-def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path, gh_shim_sandbox):
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "merge", "1234"],
+        [str(shim), "pr", "merge", "1234", "--subject", "clean", "--body", "clean"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4578,15 +4579,16 @@ def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path):
     assert "#1403" in proc.stderr
 
 
-def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path):
+def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path, gh_shim_sandbox):
     """#7472: AGENT_NO_MERGE still blocks native --approve; CF is via comment."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
         [str(shim), "pr", "review", "1234", "--approve"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4605,15 +4607,16 @@ def test_gh_shim_blocks_pr_review_approve_without_opt_in(tmp_path):
     assert "real-gh" not in proc.stdout
 
 
-def test_gh_shim_allows_pr_comment_under_no_merge(tmp_path):
+def test_gh_shim_allows_pr_comment_under_no_merge(tmp_path, gh_shim_sandbox):
     """#7472: CF of record posts as a comment while merge/--approve stay blocked."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
         [str(shim), "pr", "comment", "1234", "--body", "VERDICT: APPROVE"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4626,17 +4629,18 @@ def test_gh_shim_allows_pr_comment_under_no_merge(tmp_path):
     )
 
     assert proc.returncode == 0
-    assert proc.stdout.strip() == "real-gh pr comment 1234 --body VERDICT: APPROVE"
+    assert proc.stdout.strip() == "real-gh pr comment 1234 --body VERDICT: APPROVE --repo github.com/unit/public"
 
 
-def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox):
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     fake_gh.write_text("#!/usr/bin/env bash\nprintf 'real-gh %s\\n' \"$*\"\n")
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "merge", "1234"],
+        [str(shim), "pr", "merge", "1234", "--subject", "clean", "--body", "clean"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4649,12 +4653,12 @@ def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path):
     )
 
     assert proc.returncode == 0
-    assert proc.stdout.strip() == "real-gh pr merge 1234"
+    assert proc.stdout.strip() == "real-gh pr merge 1234 --subject clean --body clean --repo github.com/unit/public"
 
 
-def test_gh_shim_retries_mocked_secondary_rate_limit_warns_on_consumed_piped_stdin(tmp_path):
-    """Piped stdin consumed on attempt 1 cannot be replayed on retry; emits warning (#6869)."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_gh_shim_retries_mocked_secondary_rate_limit_replays_scanned_stdin(tmp_path, gh_shim_sandbox):
+    """Every retry delivers the original scanned stdin snapshot."""
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4679,6 +4683,7 @@ def test_gh_shim_retries_mocked_secondary_rate_limit_warns_on_consumed_piped_std
     proc = subprocess.run(
         [str(shim), "issue", "comment", "5146", "-F", "-"],
         input="preserved comment body\n",
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4694,20 +4699,17 @@ def test_gh_shim_retries_mocked_secondary_rate_limit_warns_on_consumed_piped_std
 
     assert proc.returncode == 0
     assert attempts.read_text(encoding="utf-8") == "2"
-    assert proc.stdout.strip() == "real-gh issue comment 5146 -F - stdin="
+    assert "stdin=preserved comment body" in proc.stdout
     assert "retry-output-should-not-leak" not in proc.stdout
     assert "You have exceeded a secondary rate limit" not in proc.stderr
     assert "GitHub HTTP 403 throttled; retrying gh in 0s (attempt 1/2)." in proc.stderr
-    assert (
-        "agent-gh-shim: warning: piped stdin was consumed on attempt 1 and cannot be replayed for retried command: gh issue comment 5146 -F -"
-        in proc.stderr
-    )
+    assert "piped stdin was consumed" not in proc.stderr
     assert "github_secondary_rate_limited" not in proc.stderr
 
 
-def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path):
+def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path, gh_shim_sandbox):
     """Intermediate secondary-limit output stays private until retries exhaust."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4726,7 +4728,8 @@ def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path)
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "issue", "comment", "5146"],
+        [str(shim), "issue", "comment", "5146", "--body", "clean"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4750,8 +4753,8 @@ def test_gh_shim_emits_only_final_attempt_output_and_exhaustion_marker(tmp_path)
     assert proc.stderr.count("github_secondary_rate_limited") == 1
 
 
-def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path, gh_shim_sandbox):
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     ready = tmp_path / "ready"
     temp_dir = tmp_path / "shim-temp"
@@ -4768,7 +4771,8 @@ def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
     fake_gh.chmod(0o755)
 
     proc = subprocess.Popen(
-        [str(shim), "issue", "comment", "5146"],
+        [str(shim), "issue", "comment", "5146", "--body", "clean"],
+        cwd=root,
         stdin=subprocess.DEVNULL,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -4801,8 +4805,8 @@ def test_gh_shim_cleans_retry_tempfiles_on_sigterm(tmp_path):
     assert list(temp_dir.iterdir()) == []
 
 
-def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_path):
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_path, gh_shim_sandbox):
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4819,7 +4823,8 @@ def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "create"],
+        [str(shim), "pr", "create", "--title", "clean", "--body", "clean"],
+        cwd=root,
         capture_output=True,
         text=True,
         env={
@@ -4838,9 +4843,9 @@ def test_gh_shim_requires_an_explicit_http_status_for_secondary_limit_retry(tmp_
     assert "throttled; retrying" not in proc.stderr
 
 
-def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path):
+def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path, gh_shim_sandbox):
     """Secondary rate-limit retries must complete bounded when stdin is closed (#6869)."""
-    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "gh"
+    root, shim, _tooling = gh_shim_sandbox
     fake_gh = tmp_path / "real-gh"
     attempts = tmp_path / "attempts"
     fake_gh.write_text(
@@ -4862,6 +4867,7 @@ def test_gh_shim_retries_with_closed_stdin_completes_bounded(tmp_path):
 
     proc = subprocess.run(
         ["bash", "-c", f'exec 0<&-; "{shim}" issue list'],
+        cwd=root,
         capture_output=True,
         text=True,
         env={

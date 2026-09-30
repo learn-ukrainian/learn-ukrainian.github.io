@@ -8,13 +8,18 @@ import json
 import os
 import re
 import subprocess
+import sys
 from collections import defaultdict
 from collections.abc import Mapping, Sequence
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.gh_merge_queue_status import extract_pr_number
+from scripts.opsec.prepublish import checked_run
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
 
 FLOOR = 500
@@ -39,7 +44,7 @@ class GitHub:
 
     def call(self, *args: str) -> str:
         try:
-            result = subprocess.run(
+            result = checked_run(
                 ["gh", *args], cwd=self.root, text=True, capture_output=True, timeout=60, check=False
             )
         except subprocess.TimeoutExpired as exc:

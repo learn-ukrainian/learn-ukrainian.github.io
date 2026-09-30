@@ -473,6 +473,7 @@ def build_agent_env(
         # ordinary dispatch.
         raw.pop("AGY_APP_DATA_DIR", None)
     raw.update(overrides or {})
+    raw.pop("LU_OPSEC_OVERRIDE", None)
 
     env: dict[str, str] = {}
     for name, value in raw.items():

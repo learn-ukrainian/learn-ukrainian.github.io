@@ -263,7 +263,7 @@ def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
     )
 
     assert env["VIRTUAL_ENV"] == str(project_venv)
-    assert env["PATH"] == os.pathsep.join((str(project_venv / "bin"), "/usr/local/bin", "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(project_venv / "bin"), "/usr/local/bin", "/usr/bin"))
     assert "PYTHONHOME" not in env
 
 
@@ -273,7 +273,7 @@ def test_pinned_worker_venv_env_uses_canonical_path_even_before_venv_exists(tmp_
     env = delegate._pinned_worker_venv_env({"PATH": "/usr/bin"})
 
     assert env["VIRTUAL_ENV"] == str(tmp_path / ".venv")
-    assert env["PATH"] == os.pathsep.join((str(tmp_path / ".venv" / "bin"), "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(tmp_path / ".venv" / "bin"), "/usr/bin"))
 
 
 # ---------------------------------------------------------------------------
@@ -7206,7 +7206,7 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
 
     env = recorded["env"]
     assert env["VIRTUAL_ENV"] == str(delegate._REPO_ROOT / ".venv")
-    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin"))
 
 
 def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
@@ -15999,3 +15999,9 @@ def test_dispatch_refuses_an_owned_path_that_could_never_own_a_file(tmp_tasks_di
     assert delegate.cmd_dispatch(args) == 2
     assert "--owned-path must be a repo-relative path" in capsys.readouterr().err
     assert delegate._read_state(delegate._state_path("owned-bad")) is None
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

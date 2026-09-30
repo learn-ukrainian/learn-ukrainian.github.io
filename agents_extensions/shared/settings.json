@@ -766,6 +766,11 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-primary-checkout-write.py",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/guard-public-github-text.py",
+            "timeout": 5
           }
         ]
       },

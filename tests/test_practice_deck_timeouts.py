@@ -152,3 +152,9 @@ def test_download_release_asset_timeout_maps_to_called_process_error(
 
     assert exc_info.value.returncode == 124
     assert calls[0]["timeout"] == publish_module.GH_RELEASE_ASSET_TIMEOUT_SECONDS
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

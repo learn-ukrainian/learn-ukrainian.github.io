@@ -9,13 +9,18 @@ import hashlib
 import json
 import re
 import subprocess
+import sys
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
+from scripts.opsec.prepublish import checked_run
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     SHA,
@@ -60,7 +65,7 @@ def normalize_verdict(reply: str) -> str:
 
 def _run_json(args: list[str], *, input_text: str | None = None) -> Any:
     try:
-        process = subprocess.run(args, input=input_text, capture_output=True, text=True, check=False, timeout=60)
+        process = checked_run(args, input=input_text, capture_output=True, text=True, check=False, timeout=60)
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise RecordError("GitHub lookup or publication unavailable") from exc
     if process.returncode:
@@ -363,7 +368,7 @@ def record(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Publish a completed exact-head cross-family verdict.\nUse after the reviewer exits; not to author or approve your own review.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\nOutputs and exit codes: Local publication receipt and GitHub review text/status. 0: recorded; 1: refused.\nRelated: #9297")
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
     args = parser.parse_args(argv)

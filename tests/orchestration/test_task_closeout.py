@@ -893,3 +893,9 @@ def test_cross_workflow_in_progress_is_not_green():
     assert ok is False
     assert waiting is True
     assert failed == []
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

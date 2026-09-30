@@ -29,6 +29,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from scripts.common.repo_root import project_interpreter
+from scripts.opsec.prepublish import checked_run
 
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 VENV_PYTHON = str(project_interpreter())
@@ -39,7 +40,7 @@ DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0
 
 def _run_gh(args: list[str], check: bool = True, timeout: float = DEFAULT_GH_TIMEOUT_SECONDS) -> str:
     """Run a gh CLI command and return stdout."""
-    result = subprocess.run(
+    result = checked_run(
         ["gh", *args],
         capture_output=True,
         text=True,
@@ -139,7 +140,7 @@ def _comment_issue(number: int, comment: str) -> None:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Audit open module review issues.\nUse --dry-run to inspect or --close to publish verified results.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/audit/check_review_issues.py --dry-run\nOutputs and exit codes: Report stdout; optional issue comments and close operations. 0: report complete; >=1: error.\nRelated: #9297")
     parser.add_argument("--close", action="store_true",
                         help="Actually close passing issues")
     parser.add_argument("--dry-run", action="store_true",

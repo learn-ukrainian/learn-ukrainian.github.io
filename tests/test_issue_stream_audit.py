@@ -2001,3 +2001,9 @@ def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_
     assert cache_file.exists()
     assert read_membership_index(3600, cache_path=cache_file) is None
     assert validate_membership_report(report, 3600) is None
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

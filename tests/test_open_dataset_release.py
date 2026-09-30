@@ -104,3 +104,9 @@ def test_open_dataset_gh_download_missing_binary_falls_back(monkeypatch: pytest.
     monkeypatch.setattr(subprocess, "run", missing_gh)
 
     assert _download_with_gh({"release_tag": "atlas-open-dataset"}, repo="example/repo") is None
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

@@ -559,3 +559,9 @@ def test_base_changed_before_mutation_cannot_merge_directly(tmp_path: Path, monk
     fake.fresh["baseRefName"] = "release-without-queue"
     run(fake, tmp_path / "state.json", monkeypatch)
     assert "enqueue" not in mutations(fake)
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

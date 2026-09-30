@@ -25,6 +25,10 @@ from pathlib import Path
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+from scripts.opsec.prepublish import checked_run
+
 DECISIONS_FILE = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
 
 BUDGET_WARN = 40
@@ -86,7 +90,7 @@ def _ensure_label_exists() -> None:
     """Create the stale decision label if it doesn't exist."""
     import contextlib
     with contextlib.suppress(subprocess.TimeoutExpired, FileNotFoundError):
-        subprocess.run(
+        checked_run(
             ["gh", "label", "create", STALE_LABEL,
              "--description", "Decision past expiry date — needs re-evaluation",
              "--color", "FBCA04"],
@@ -130,7 +134,7 @@ def create_issue(dec: dict) -> str | None:
 """
 
     try:
-        result = subprocess.run(
+        result = checked_run(
             ["gh", "issue", "create",
              "--title", title,
              "--body", body,
@@ -146,7 +150,7 @@ def create_issue(dec: dict) -> str | None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Check decision journal for staleness")
+    parser = argparse.ArgumentParser(description="Check decision journal for staleness.\nUse during decision audits; writes require --create-issues.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/audit/check_decisions.py --quiet\nOutputs and exit codes: Report stdout; optional issue and label writes. 0: no stale decisions; 1: stale decisions.\nRelated: #9297")
     parser.add_argument("--quiet", action="store_true", help="One-liner output for session-setup")
     parser.add_argument("--create-issues", action="store_true", help="Create GH issues for stale decisions")
     args = parser.parse_args()

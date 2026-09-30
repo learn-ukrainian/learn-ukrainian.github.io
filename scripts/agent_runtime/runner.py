@@ -807,12 +807,15 @@ def _merge_guard_enabled(*, mode: str, env: dict[str, str]) -> bool:
 
 def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
     """Prepend gh/git shims and stamp env vars when merge guard is active."""
+    from scripts.opsec.prepublish import publish_environment
+
     if not _merge_guard_enabled(mode=mode, env=env):
-        unguarded_env = dict(env)
+        unguarded_env = publish_environment(env)
         unguarded_env.pop("AGENT_NO_MERGE", None)
         return unguarded_env
 
     guarded_env = dict(env)
+    guarded_env.pop("LU_OPSEC_OVERRIDE", None)
     original_path = guarded_env.get("PATH", "")
     guarded_env["AGENT_NO_MERGE"] = "1"
     guarded_env["AGENT_ORIGINAL_PATH"] = original_path

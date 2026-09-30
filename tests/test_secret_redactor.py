@@ -345,3 +345,9 @@ def test_read_message_redacts_existing_unredacted_rows(msg_db):
     assert "ghp_" not in msg["data"]
     assert REDACTION in msg["content"]
     assert REDACTION in msg["data"]
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

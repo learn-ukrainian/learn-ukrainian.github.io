@@ -18,7 +18,11 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.github_check_rollup import collapse_status_rollup
+from scripts.opsec.prepublish import checked_run
 from scripts.orchestration import task_identity, task_lifecycle
 
 Runner = Callable[[list[str], str | None], str]
@@ -48,7 +52,7 @@ DEFAULT_COMMAND_TIMEOUT_SECONDS = 60.0
 def _default_runner(repo_root: Path) -> Runner:
     def run(args: list[str], stdin: str | None = None) -> str:
         try:
-            completed = subprocess.run(
+            completed = checked_run(
                 args,
                 cwd=repo_root,
                 input=stdin,
@@ -139,10 +143,15 @@ class GhGitHubAdapter:
 
     def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
         self.repo_root = repo_root.resolve()
+        self._custom_runner = runner
         self._run = runner or _default_runner(self.repo_root)
 
     def _json(self, args: list[str], stdin: str | None = None) -> Any:
-        raw = self._run(args, stdin)
+        def send(command, **kwargs):
+            return subprocess.CompletedProcess(command, 0, self._run(command, kwargs.get("input")), "")
+
+        raw = (checked_run(args, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
+               if self._custom_runner is not None else self._run(args, stdin))
         try:
             return json.loads(raw or "null")
         except json.JSONDecodeError as exc:
@@ -1039,7 +1048,7 @@ def cmd_carrier(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/orchestration/task_closeout.py --help\nOutputs and exit codes: Lifecycle observations and explicitly authorized mutations. 0: command succeeded; >=1: refused or failed.\nRelated: #9297")
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_file())
     sub = parser.add_subparsers(dest="command", required=True)
 

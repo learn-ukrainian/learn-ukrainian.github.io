@@ -36,7 +36,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 from pathlib import Path
 
@@ -45,6 +44,7 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.opsec.prepublish import checked_run
 from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
@@ -75,7 +75,7 @@ DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
 
 
 def _run(cmd: list[str], input_text: str | None = None) -> str:
-    return subprocess.run(
+    return checked_run(
         cmd,
         check=True,
         capture_output=True,

@@ -22,12 +22,16 @@ from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.fleet import idle_settle as idle_settle
 from scripts.guardrails.delegate_ownership import (
     TERMINAL_TASK_STATUSES,
     OwnershipLedger,
     default_ledger_path,
 )
+from scripts.opsec.prepublish import checked_run
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal
 
 
@@ -63,7 +67,7 @@ def _run(
     timeout: float = DEFAULT_COMMAND_TIMEOUT_SECONDS,
 ) -> subprocess.CompletedProcess[str]:
     try:
-        return subprocess.run(
+        return checked_run(
             args,
             cwd=str(cwd) if cwd is not None else None,
             capture_output=True,
@@ -519,7 +523,7 @@ def _cmd_release_stale(_args: argparse.Namespace) -> int:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Inspect and settle a dispatch task.\nUse only for the assigned task; PR creation remains opt-in.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/orchestration/dispatch_settle.py task --help\nOutputs and exit codes: Task disposition and optional branch push or PR creation. 0: settled; >=1: unresolved or failed.\nRelated: #9297")
     sub = parser.add_subparsers(dest="command", required=True)
 
     task = sub.add_parser("task", help="Heal/report/push-PR for one dispatch task id")

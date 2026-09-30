@@ -1,0 +1,4 @@
+{
+  "class6_block_ids": ["operator_quote", "operator_reported_speech", "operator_personal_detail"],
+  "class6_allow_ids": ["operator_decision_attribution"]
+}

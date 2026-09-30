@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+from scripts.opsec.prepublish import checked_run
 from scripts.storage.paths import REGISTRY_ROOT
 
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
@@ -336,7 +337,7 @@ def ensure_release(
     notes: str = "Release asset storage for generated Atlas practice deck shards.",
 ) -> None:
     try:
-        existing = subprocess.run(
+        existing = checked_run(
             ["gh", "release", "view", release_tag, "--repo", repo],
             check=False,
             stdout=subprocess.DEVNULL,
@@ -348,7 +349,7 @@ def ensure_release(
     if existing.returncode == 0:
         return
     try:
-        subprocess.run(
+        checked_run(
             [
                 "gh",
                 "release",

@@ -150,6 +150,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
+from scripts.opsec.prepublish import checked_run
 
 # Resolve repo root from this file's location so we work from any cwd —
 # then hop to the primary checkout so worktree copies behave identically.
@@ -4753,7 +4754,10 @@ def _pinned_worker_venv_env(source: dict[str, str]) -> dict[str, str]:
         for entry in inherited_path.split(os.pathsep)
         if entry and not _is_virtualenv_bin_path(entry) and os.path.normpath(entry) != inherited_venv_bin
     ]
+    from scripts.opsec.prepublish import publish_environment
+
     pinned["PATH"] = os.pathsep.join((str(venv_bin), *path_entries))
+    pinned = publish_environment(pinned, root=_REPO_ROOT)
     pinned["VIRTUAL_ENV"] = str(venv_root)
     # PYTHONHOME can override the interpreter's calculated prefix and make a
     # correctly pinned venv behave like an unrelated Python installation.
@@ -5618,7 +5622,7 @@ def _create_auto_finalize_pr(
     body: str,
 ) -> str | None:
     try:
-        proc = subprocess.run(
+        proc = checked_run(
             [
                 "gh",
                 "pr",

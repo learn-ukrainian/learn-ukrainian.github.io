@@ -374,3 +374,9 @@ def test_comment_truncation_retains_marker():
     assert len(body.encode()) <= recorder.MAX_COMMENT_BYTES
     assert "[Review reply truncated" in body
     assert recorder.parse_marker(body)["task"] == "review-one"
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

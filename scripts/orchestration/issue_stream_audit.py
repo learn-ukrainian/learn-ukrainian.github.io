@@ -47,7 +47,11 @@ from pathlib import Path
 
 import yaml
 
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
 from scripts.api.config import LIVE_REPO_ROOT
+from scripts.opsec.prepublish import checked_run
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
@@ -790,7 +794,7 @@ def milestone_warnings(
 
 
 def _gh_json(args: list[str], timeout_s: float = 30.0, *, cwd: Path = ROOT):
-    proc = subprocess.run(["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd)
+    proc = checked_run(["gh", *args], capture_output=True, text=True, timeout=timeout_s, cwd=cwd)
     if proc.returncode != 0:
         # gh api graphql exits 1 when GraphQL errors are present in the response
         # (e.g. NOT_FOUND for a deleted/transferred issue), even if valid partial
@@ -1761,7 +1765,7 @@ def human_summary(report: dict) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(description="Audit GitHub issue membership in registered streams.\nUse read-only reporting before any authorized repair.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/orchestration/issue_stream_audit.py --help\nOutputs and exit codes: Membership report and authorized repair receipts. 0: successful command; >=1: audit or runtime error.\nRelated: #9297")
     parser.add_argument("--json", action="store_true")
     parser.add_argument(
         "--check",

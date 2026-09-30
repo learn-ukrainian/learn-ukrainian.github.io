@@ -41,6 +41,7 @@ from scripts.fleet_comms.review_publication import (
     publication_idempotency_key,
     validate_review_gate_input,
 )
+from scripts.opsec.prepublish import checked_run
 
 Runner = Callable[..., subprocess.CompletedProcess[str]]
 
@@ -146,7 +147,7 @@ def post_pr_comment(
 ) -> str:
     """Post one PR comment; return the comment URL when gh prints it."""
     owner, repo = split_repository(repository)
-    completed = runner(
+    completed = checked_run(
         [
             "gh",
             "pr",
@@ -160,6 +161,7 @@ def post_pr_comment(
         capture_output=True,
         text=True,
         check=False,
+        runner=runner,
     )
     if completed.returncode != 0:
         stderr = (completed.stderr or "").strip()
@@ -183,7 +185,7 @@ def post_commit_status(
     owner, repo = split_repository(repository)
     if state not in {"success", "failure", "error", "pending"}:
         raise ReviewPublisherError(f"invalid_status_state: {state!r}")
-    completed = runner(
+    completed = checked_run(
         [
             "gh",
             "api",
@@ -198,6 +200,7 @@ def post_commit_status(
         capture_output=True,
         text=True,
         check=False,
+        runner=runner,
     )
     if completed.returncode != 0:
         stderr = (completed.stderr or "").strip()
