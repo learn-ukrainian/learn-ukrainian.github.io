@@ -2973,7 +2973,13 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     runtime_runner._ADAPTER_CACHE.pop("kimi", None)
 
     task_id = "kimi-instant-exit"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    # A Kimi workspace-write worker runs only in its dispatch worktree.
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, f"kimi/{task_id}")
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {"task_id": task_id, "worktree_path": str(worktree), "worktree_base": "main"},
+    )
     stderr_log = tmp_path / "kimi-instant-exit.stderr.log"
     with stderr_log.open("w", encoding="utf-8") as handle, contextlib.redirect_stderr(handle):
         rc = delegate._run_worker(
@@ -2981,7 +2987,7 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
             agent="kimi",
             prompt="Inspect the target.",
             mode="workspace-write",
-            cwd_str=str(tmp_path),
+            cwd_str=str(worktree),
             model=None,
             hard_timeout=60,
         )
@@ -2993,7 +2999,8 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     assert state["exit_code"] == 2
     assert state["last_error"] == "error: Cannot combine --prompt with --yolo."
     assert state["stderr_excerpt"] == state["last_error"]
-    assert stderr_log.read_text(encoding="utf-8") == ("error: Cannot combine --prompt with --yolo.\n")
+    # The CLI's own error is the first line of the log; the worktree summary line follows it.
+    assert stderr_log.read_text(encoding="utf-8").splitlines()[0] == "error: Cannot combine --prompt with --yolo."
 
 
 def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
@@ -15381,15 +15388,16 @@ def test_run_worker_without_owned_paths_never_auto_commits(tmp_tasks_dir, tmp_pa
     assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
 
 
-def _kimi_run(tmp_path, monkeypatch, task_id: str, text: str, *, committed: bool = False):
-    """A Kimi workspace-write worker that leaves ``text`` in an owned file, then exits 0."""
+def _kimi_run(tmp_path, monkeypatch, task_id: str, text: str, *, worker_git=None):
+    """A Kimi workspace-write worker that writes ``text`` into an owned file, then exits 0.
+
+    ``worker_git`` runs inside the worker, after the file is written, with the
+    worktree: it stands for git commands the worker itself attempts. Delegate's
+    own push goes to the real bare ``origin``.
+    """
     branch = f"kimi/{task_id}"
     worktree = _agy_dispatch_worktree(tmp_path, branch)
-    (worktree / "site" / "src" / "components").mkdir(parents=True)
-    (worktree / "site" / "src" / "components" / "Label.tsx").write_text(text, encoding="utf-8")
-    if committed:
-        for args in (["add", "-A"], ["commit", "-m", "worker commit"]):
-            subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+    label = worktree / "site" / "src" / "components" / "Label.tsx"
     state_path = delegate._state_path(task_id)
     delegate._write_state_atomic(
         state_path,
@@ -15403,10 +15411,20 @@ def _kimi_run(tmp_path, monkeypatch, task_id: str, text: str, *, committed: bool
             "keep_worktree": True,
         },
     )
-    pushed: list[str] = []
-    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda _wt, b: pushed.append(b))
+    worker_saw: dict[str, object] = {}
+
+    def worker(*_args, **_kwargs):
+        from scripts.agent_runtime import kimi_boundary
+
+        worker_saw["boundary"] = kimi_boundary.is_installed(worktree)
+        label.parent.mkdir(parents=True, exist_ok=True)
+        label.write_text(text, encoding="utf-8")
+        if worker_git is not None:
+            worker_git(worktree, worker_saw)
+        return _bg_mock_result("")
+
     monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_a: 0)
-    with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
+    with patch("agent_runtime.runner.invoke", side_effect=worker):
         rc = delegate._run_worker(
             task_id=task_id,
             agent="kimi",
@@ -15420,52 +15438,75 @@ def _kimi_run(tmp_path, monkeypatch, task_id: str, text: str, *, committed: bool
         )
     state = delegate._read_state(state_path)
     assert state is not None
-    return rc, state, worktree, pushed
+    return rc, state, worktree, worker_saw
+
+
+def _remote_branches(worktree: Path) -> list[str]:
+    return _git_out(worktree, "ls-remote", "--heads", "origin").split()[1::2]
 
 
 def test_run_worker_refuses_a_kimi_diff_that_adds_cyrillic_and_commits_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
     """Kimi takes no Ukrainian content: the finalize check refuses before auto-finalize stages anything."""
     _sanitize_git_env_for_test(monkeypatch)
 
-    rc, state, worktree, pushed = _kimi_run(tmp_path, monkeypatch, "kimi-cyrillic", "export const t = 'Урок';\n")
+    rc, state, worktree, worker_saw = _kimi_run(tmp_path, monkeypatch, "kimi-cyrillic", "export const t = 'Урок';\n")
 
+    assert worker_saw["boundary"] is True  # the boundary was in place while the worker ran
     assert rc == 1
     assert state["status"] == "failed"
     assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
     assert "site/src/components/Label.tsx" in state["kimi_content_refusal"]
     assert state["auto_finalize"] is None
-    assert pushed == []
+    assert _remote_branches(worktree) == ["refs/heads/main"]
     assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
     assert _git_out(worktree, "diff", "--cached", "--name-only") == ""
     assert (worktree / "site" / "src" / "components" / "Label.tsx").is_file()
 
 
-def test_run_worker_refuses_a_kimi_worker_commit_that_adds_cyrillic(tmp_tasks_dir, tmp_path, monkeypatch):
+def test_a_kimi_worker_cannot_commit_or_push_cyrillic_itself(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The worker's own commit is refused by the hook and its push fails; delegate then refuses the diff."""
     _sanitize_git_env_for_test(monkeypatch)
 
-    rc, state, _worktree, pushed = _kimi_run(
-        tmp_path, monkeypatch, "kimi-cyrillic-commit", "export const t = 'Урок';\n", committed=True
+    def worker_git(worktree: Path, saw: dict[str, object]) -> None:
+        subprocess.run(["git", "add", "-A"], cwd=worktree, check=True, capture_output=True, timeout=30)
+        commit = subprocess.run(
+            ["git", "commit", "-m", "worker commit"], cwd=worktree, capture_output=True, text=True, timeout=60
+        )
+        push = subprocess.run(
+            ["git", "push", "origin", "HEAD"], cwd=worktree, capture_output=True, text=True, timeout=60
+        )
+        saw.update(commit=commit, push=push)
+
+    rc, state, worktree, worker_saw = _kimi_run(
+        tmp_path, monkeypatch, "kimi-worker-git", "export const t = 'Урок';\n", worker_git=worker_git
     )
 
+    commit, push = worker_saw["commit"], worker_saw["push"]
+    assert commit.returncode != 0 and "commit refused by the Kimi worktree boundary" in commit.stderr
+    assert push.returncode != 0 and "kimi-push-disabled" in push.stderr
     assert rc == 1
-    assert state["status"] == "failed"
     assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
-    assert pushed == []
+    assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
+    assert _remote_branches(worktree) == ["refs/heads/main"]
 
 
 def test_run_worker_auto_finalizes_a_cyrillic_free_kimi_diff(tmp_tasks_dir, tmp_path, monkeypatch):
-    """Delegate commits Kimi's owned paths in workspace-write once the diff adds no Cyrillic text."""
+    """After its check passes, delegate's own commit and push go through: the boundary is taken down first."""
+    from scripts.agent_runtime import kimi_boundary
+
     _sanitize_git_env_for_test(monkeypatch)
 
-    rc, state, worktree, pushed = _kimi_run(tmp_path, monkeypatch, "kimi-clean", "export const t = 'Lesson';\n")
+    rc, state, worktree, worker_saw = _kimi_run(tmp_path, monkeypatch, "kimi-clean", "export const t = 'Lesson';\n")
 
+    assert worker_saw["boundary"] is True
     assert state.get("kimi_content_refusal") is None
     assert state["auto_finalize"]["ok"] is True, state["auto_finalize"]
     assert state["auto_finalize"]["changed_files"] == ["site/src/components/Label.tsx"]
     assert state["status"] == "done"
     assert rc == 0
-    assert pushed == ["kimi/kimi-clean"]
     assert _git_out(worktree, "show", "--name-only", "--format=", "HEAD").split() == ["site/src/components/Label.tsx"]
+    assert "refs/heads/kimi/kimi-clean" in _remote_branches(worktree)
+    assert not kimi_boundary.is_installed(worktree)
 
 
 def test_kimi_worktree_prompt_hands_the_commit_to_delegate():

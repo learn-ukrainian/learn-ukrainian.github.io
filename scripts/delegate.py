@@ -74,7 +74,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
-        "kimi_content_refusal": str | absent        # a Kimi diff added Cyrillic text; nothing was committed
+        "kimi_content_refusal": str | absent        # a Kimi diff added Cyrillic text or non-text content; nothing was committed
     }
 
 Design notes:
@@ -123,7 +123,6 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
-import fnmatch
 import functools
 import hashlib
 import json
@@ -5256,49 +5255,24 @@ def _declared_owned_paths(raw: object) -> tuple[str, ...] | None:
     return paths or None
 
 
-def _owned_path_matcher(raw: str) -> Callable[[str], bool] | None:
-    """How one ``--owned-path`` claim matches a repo-relative path; None when it owns nothing.
-
-    Claims are read the way the write-path admission guard reads them
-    (:func:`scripts.guardrails.delegate_ownership.normalize_claim`): a plain
-    path owns itself and everything below it, ``dir/`` and ``dir/**`` own the
-    subtree, and a claim with other wildcards is a case-sensitive glob. An
-    empty, ``.`` or absolute claim owns nothing, nor does one with a ``..``
-    segment anywhere (``scripts/../docs`` would own ``docs``). A glob must
-    start with a literal top-level name: ``fnmatch``'s ``*`` also matches
-    ``/``, so ``**``, ``./**``, ``*``, ``*/**`` or ``*.py`` would own the whole
-    repository or every top-level entry.
-    """
-    try:
-        from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim
-    except ImportError:  # pragma: no cover - flat script path
-        from guardrails.delegate_ownership import ClaimKind, normalize_claim  # type: ignore
-
-    if ".." in (raw or "").strip().replace("\\", "/").split("/"):
-        return None
-    claim = normalize_claim(raw)
-    if claim.kind is not ClaimKind.UNKNOWN:
-        norm = claim.norm
-        return lambda path: path == norm or path.startswith(norm + "/")
-    pattern = claim.norm
-    while pattern.startswith("./"):
-        pattern = pattern[2:]
-    segments = pattern.split("/")
-    if not any(ch in pattern for ch in "*?[") or any(segment in {"", "."} for segment in segments):
-        return None
-    if any(ch in segments[0] for ch in "*?["):
-        return None
-    return lambda path: fnmatch.fnmatchcase(path, pattern)
-
-
 def _owned_path_errors(values: Sequence[str] | None) -> list[str]:
     """``--owned-path`` values that could never own a file; dispatch refuses them."""
-    return [value for value in values or () if _owned_path_matcher(value) is None]
+    try:
+        from scripts.guardrails.delegate_ownership import owned_path_matcher
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import owned_path_matcher  # type: ignore
+
+    return [value for value in values or () if owned_path_matcher(value) is None]
 
 
 def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
-    """Whether a repo-relative changed ``path`` falls under a declared owned path."""
-    return any(matcher(path) for raw in owned_paths if (matcher := _owned_path_matcher(raw)) is not None)
+    """Whether a repo-relative changed ``path`` falls under a declared owned path (:func:`path_is_owned`)."""
+    try:
+        from scripts.guardrails.delegate_ownership import path_is_owned
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import path_is_owned  # type: ignore
+
+    return path_is_owned(path, owned_paths)
 
 
 def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()) -> str | None:
@@ -5380,16 +5354,74 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
     return tuple(added), tuple(deleted)
 
 
-def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
-    """The refusal when a Kimi worker's changes add Cyrillic text; None when they add none.
+def _kimi_worker_refusal(
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    cwd: Path,
+    review: bool,
+) -> str | None:
+    """The worker-side Kimi gate; installs the worktree boundary when it admits.
 
-    The diff runs from the merge base with ``base_ref`` to the working tree,
-    so it covers the worker's own commits and its uncommitted and untracked
-    files. Fails closed: a diff that cannot be read is a refusal.
+    A Kimi seat is refused unless its mode and review flags are admitted (read
+    first, from the argv alone), the task's owned paths pass admission read in
+    ``cwd`` — the tree the worker runs in — and ``cwd`` is the task's
+    worktree, where the boundary (hooks and push block, ``kimi_boundary``)
+    must install. For any other seat a boundary left in ``cwd`` by an earlier
+    Kimi run is taken down. Writes nothing but that worktree's git config and
+    hooks directory.
     """
-    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_cyrillic_diff
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.kimi_admission import (
+        KimiAdmissionRefused,
+        format_refusal,
+        is_kimi_seat,
+        refuse_kimi_if_disallowed,
+    )
 
-    unreadable = format_refusal(agent, ["the finalized diff could not be read for Ukrainian content"])
+    boundary_errors = (kimi_boundary.BoundaryError, OSError, subprocess.SubprocessError)
+    if not is_kimi_seat(agent, model=model):
+        if mode in _WRITE_CAPABLE_MODES and kimi_boundary.is_installed(cwd):
+            try:
+                kimi_boundary.remove(cwd, env=_sanitized_git_env())
+            except boundary_errors as exc:
+                return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}"
+        return None
+    try:
+        refuse_kimi_if_disallowed((agent,), (model,), mode=mode, review=review)
+        launch = _read_state(_state_path(task_id)) or {}
+        owned = _declared_owned_paths(launch.get("owned_paths")) or ()
+        refuse_kimi_if_disallowed(
+            (agent,), (model,), mode=mode, review=review, paths=owned, repo_root=_REPO_ROOT, execution_root=cwd
+        )
+    except KimiAdmissionRefused as exc:
+        return str(exc)
+    worktree = launch.get("worktree_path")
+    if not worktree or Path(worktree).resolve() != cwd.resolve():
+        return format_refusal(agent, [f"workspace-write outside the task's dispatch worktree (cwd {str(cwd)!r})"])
+    base_ref = _commit_count_base_ref(cwd, str(launch.get("worktree_base") or "main"))
+    try:
+        kimi_boundary.install(cwd, agent=agent, base_ref=base_ref, owned_paths=owned, env=_sanitized_git_env())
+    except boundary_errors as exc:
+        return format_refusal(agent, [f"the worktree boundary could not be installed ({exc})"])
+    return None
+
+
+def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
+    """The refusal when a Kimi worker's changes add Cyrillic text or unreadable content; None otherwise.
+
+    The changes run from the merge base with ``base_ref`` to the working tree,
+    so they cover the worker's own commits and its uncommitted and untracked
+    files. Each changed path's post-image is read in full, so git's binary
+    classification cannot hide text. Fails closed: changes that cannot be
+    read are a refusal.
+    """
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_kimi_changes
+
+    unreadable = format_refusal(agent, ["the finalized changes could not be read for Ukrainian content"])
     try:
         base_proc = subprocess.run(
             ["git", "merge-base", base_ref, "HEAD"],
@@ -5405,17 +5437,22 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
     merge_base = (base_proc.stdout or "").strip()
     if base_proc.returncode != 0 or not merge_base:
         return unreadable
-    diff = _worktree_diff_output(
-        worktree,
-        ["--no-color", "--no-ext-diff", "--no-renames", "-U0", merge_base, "--"],
-        git_options=("-c", "core.quotePath=false"),
-    )
-    if diff is None:
+    name_status = _worktree_diff_output(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
+    if name_status is None:
         return unreadable
     try:
-        refuse_cyrillic_diff(agent, diff)
+        changes = kimi_boundary.changes(
+            worktree,
+            kimi_boundary.parse_name_status(name_status),
+            before=merge_base,
+            after=None,
+            env=_sanitized_git_env(),
+        )
+        refuse_kimi_changes(agent, changes)
     except KimiAdmissionRefused as exc:
         return str(exc)
+    except (OSError, subprocess.SubprocessError):
+        return unreadable
     return None
 
 
@@ -7328,7 +7365,8 @@ def _augment_prompt_with_worktree(
             "\n[write-mode closeout]\n"
             "Do not commit or push. Leave your changes in this worktree, inside the owned paths.\n"
             "After you exit, delegate checks the diff and commits and pushes the owned paths; "
-            "a diff that adds any Cyrillic character is refused and nothing is committed.\n"
+            "a diff that adds any Cyrillic character, or content that is not text, is refused and "
+            "nothing is committed. This worktree's git hooks refuse the same commits, and it has no push access.\n"
             "Delete scratch files before you finish.\n"
         )
     elif mode in _WRITE_CAPABLE_MODES:
@@ -7770,19 +7808,21 @@ def _run_worker(
     """
     # The worker is a second entry point: a worker argv built by hand or a
     # stale parent must not invoke a Kimi seat outside web, UI and backend
-    # coding. The refusal goes to the caller only; no state is written.
-    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, is_kimi_seat, refuse_kimi_if_disallowed
-
-    try:
-        refuse_kimi_if_disallowed(
-            (agent,),
-            (model,),
-            mode=mode,
-            review=require_review_verdict or review_id is not None,
-        )
-    except KimiAdmissionRefused as exc:
-        print(f"❌ {exc}", file=sys.stderr)
+    # coding. It reads the task's owned paths in the tree it is about to run
+    # in, then installs the worktree boundary (hooks and push block), before
+    # any state write or invocation. A refusal goes to the caller only.
+    kimi_refusal = _kimi_worker_refusal(
+        task_id,
+        agent=agent,
+        model=model,
+        mode=mode,
+        cwd=Path(cwd_str),
+        review=require_review_verdict or review_id is not None,
+    )
+    if kimi_refusal:
+        print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 1
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
     # through the runtime's finally block (see handler docstring).
@@ -8330,6 +8370,12 @@ def _run_worker(
                     and kimi_content_refusal is None
                     and not run_incomplete
                 ):
+                    if kimi_worker:
+                        # The content check passed and the worker has exited: take the
+                        # boundary down so delegate's own commit and push go through.
+                        from scripts.agent_runtime import kimi_boundary
+
+                        kimi_boundary.remove(Path(worktree_path), env=_sanitized_git_env())
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
@@ -9310,7 +9356,13 @@ def _dispatch(
     # The single Kimi gate runs on the effective route — after --model, the retired-CLI
     # alias and any budget substitution resolve — and before any check that can run an
     # external command, write a record, sweep runtime tmp, archive a task or create a worktree.
-    kimi_refusal = _kimi_admission_refusal(args, agent=dispatch_agent, repo_role=fleet_repo.role)
+    # Owned paths are read in the checkout the worker will run in (a reused worktree as it is on disk).
+    kimi_refusal = _kimi_admission_refusal(
+        args,
+        agent=dispatch_agent,
+        repo_role=fleet_repo.role,
+        execution_root=_kimi_execution_root(args, agent=dispatch_agent, target_repo_root=target_repo_root),
+    )
     if kimi_refusal:
         print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 2
@@ -10434,6 +10486,24 @@ def _dispatch(
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
 
+    # The prepared worktree is the tree the Kimi worker runs in: read its owned
+    # paths before any task record, tmp lease or worker exists.
+    if is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)):
+        from scripts.agent_runtime.kimi_admission import format_refusal
+
+        kimi_refusal = (
+            _kimi_admission_refusal(
+                args, agent=dispatch_agent, repo_role=fleet_repo.role, execution_root=Path(worktree_path)
+            )
+            if worktree_path is not None
+            else format_refusal(dispatch_agent, ["workspace-write without a dispatch worktree"])
+        )
+        if kimi_refusal:
+            stdout_fd.close()
+            stderr_fd.close()
+            print(f"❌ {kimi_refusal}", file=sys.stderr)
+            return 2
+
     if review_plan is not None and worktree_path is not None:
         try:
             _mark_review_attempt_worktree(worktree_path, task_id)
@@ -11087,16 +11157,46 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     return False
 
 
+def _kimi_execution_root(args: argparse.Namespace, *, agent: str, target_repo_root: Path) -> Path:
+    """The checkout a Kimi worker will run in, as far as it exists before the worktree is prepared.
+
+    A reused worktree (an explicit ``--worktree PATH``, the auto path of this
+    task, or a ``--cwd`` worktree) is read as it is on disk. A worktree that
+    does not exist yet will be created from the base branch, so the target
+    checkout stands in for it; dispatch re-checks the prepared worktree before
+    it records or spawns anything, and the worker checks it again before it
+    runs. Reads the filesystem only.
+    """
+    worktree = getattr(args, "worktree", None)
+    if not worktree and getattr(args, "branch", None):
+        worktree = "auto"
+    try:
+        if worktree == "auto":
+            candidate = _auto_worktree_path(agent, str(args.task_id), repo_root=target_repo_root)
+        elif worktree:
+            candidate = _normalize_worktree_path(str(worktree), repo_root=target_repo_root)
+        elif getattr(args, "cwd", None):
+            candidate = _resolve_cwd_path(str(args.cwd))
+        else:
+            return target_repo_root
+    except (OSError, RuntimeError, ValueError):
+        # Path validation right after the gate refuses a path that cannot resolve.
+        return target_repo_root
+    return candidate if candidate.is_dir() else target_repo_root
+
+
 def _kimi_admission_refusal(
     args: argparse.Namespace,
     *,
     agent: str,
     repo_role: str | None = None,
+    execution_root: Path = _REPO_ROOT,
 ) -> str | None:
     """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted.
 
     ``--owned-path`` and ``--research-owned-path`` both declare task ownership,
-    so every path from either flag must be on the Kimi allowlist.
+    so every path from either flag must be on the Kimi allowlist and is read
+    for Ukrainian content in ``execution_root``, the checkout the worker runs in.
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_if_disallowed
 
@@ -11120,6 +11220,7 @@ def _kimi_admission_refusal(
             research_track=getattr(args, "research_track", None),
             prompt_file=getattr(args, "prompt_file", None),
             repo_root=_REPO_ROOT,
+            execution_root=execution_root,
         )
     except KimiAdmissionRefused as exc:
         return str(exc)

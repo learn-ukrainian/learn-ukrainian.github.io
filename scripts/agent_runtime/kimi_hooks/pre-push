@@ -1,0 +1,23 @@
+#!/bin/sh
+# Kimi worktree boundary (scripts/agent_runtime/kimi_boundary.py): refuse a
+# push whose commits add Cyrillic text, add content that is not text, or change
+# a path outside the task's owned paths; then run the repository's own hook.
+python=$(git config --worktree --get kimiguard.python) || python=
+root=$(git config --worktree --get kimiguard.root) || root=
+if [ -z "$python" ] || [ -z "$root" ]; then
+    echo "❌ push refused: the Kimi worktree boundary is incomplete (kimiguard.python or kimiguard.root unset)" >&2
+    exit 1
+fi
+refs=$(cat)
+forward_refs() {
+    if [ -n "$refs" ]; then
+        printf '%s\n' "$refs"
+    fi
+}
+forward_refs | "$python" -I "$root/scripts/agent_runtime/kimi_boundary.py" pre-push || exit 1
+chain=$(git config --worktree --get kimiguard.chainhooks) || chain=
+if [ -n "$chain" ] && [ -x "$chain/pre-push" ]; then
+    forward_refs | "$chain/pre-push" "$@"
+    exit $?
+fi
+exit 0

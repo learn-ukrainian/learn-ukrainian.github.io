@@ -59,6 +59,18 @@ _SAFE_NAME_PREFIXES = (
 
 _GIT_TIMEOUT_SECONDS = 30
 
+# Variables that could carry a push credential into a Kimi seat.
+_PUSH_CREDENTIAL_NAMES = (
+    "GH_TOKEN",
+    "GITHUB_TOKEN",
+    "GH_ENTERPRISE_TOKEN",
+    "GITHUB_ENTERPRISE_TOKEN",
+    "LU_AGENT_GITHUB_TOKEN",
+    "GIT_ASKPASS",
+    "SSH_ASKPASS",
+    "SSH_AUTH_SOCK",
+)
+
 # These are process-control paths, not credentials. A task id such as
 # ``task-4956`` contains the substring ``sk-`` and otherwise looks like an
 # OpenAI key to the generic value redactor, so keep the tmp lease controls
@@ -308,6 +320,8 @@ def _isolated_git_env(
     home: str | None,
     github_token: str | None,
     host_gh_config_dir: str | None = None,
+    *,
+    no_credentials: bool = False,
 ) -> dict[str, str]:
     """Git ``--global`` config isolation for spawned agent CLIs (issue #2842).
 
@@ -338,6 +352,10 @@ def _isolated_git_env(
     rejected so nested dispatches recover.  No token value is ever logged or
     copied; gh reads its own ``hosts.yml`` at call time.
 
+    ``no_credentials`` (Kimi seats) neutralizes credential helpers and points
+    ``GH_CONFIG_DIR`` at an empty sandbox like the token case, but installs no
+    ``GIT_ASKPASS``: the child has no GitHub credential at all.
+
     Never raises: isolation failure must not block spawning an agent.
     """
     try:
@@ -350,8 +368,9 @@ def _isolated_git_env(
             shutil.copyfile(real_global, sandbox_global)
         elif not sandbox_global.exists():
             sandbox_global.write_text("", encoding="utf-8")
+        strip_helpers = bool(github_token) or no_credentials
         keys_to_unset = ["http.https://github.com/.extraheader"]
-        if github_token:
+        if strip_helpers:
             keys_to_unset.insert(0, "credential.helper")
         for key in keys_to_unset:
             subprocess.run(
@@ -366,7 +385,7 @@ def _isolated_git_env(
             "GIT_TERMINAL_PROMPT": "0",
             "GH_PROMPT_DISABLED": "1",
         }
-        if github_token:
+        if strip_helpers:
             env.update(
                 {
                     "GIT_CONFIG_COUNT": "2",
@@ -378,6 +397,7 @@ def _isolated_git_env(
                 }
             )
             Path(env["GH_CONFIG_DIR"]).mkdir(mode=0o700)
+        if github_token:
             askpass = sandbox_dir / "git-askpass.sh"
             askpass.write_text(
                 "#!/bin/sh\n"
@@ -390,7 +410,7 @@ def _isolated_git_env(
             )
             askpass.chmod(0o700)
             env["GIT_ASKPASS"] = str(askpass)
-        else:
+        elif not no_credentials:
             # #7166 / #7472 no-token fallback: keep the host gh auth chain
             # readable. The extraheader stays blanked even in this mode — it is
             # a secret carrier, unlike the gh hosts.yml / credential-helper
@@ -476,20 +496,30 @@ def build_agent_env(
     # Git-config isolation (#2842) — applied last so it always wins; agents
     # cannot persist a repo-bricking core.bare write into system/global config.
     from .agent_github_identity import resolve_agent_github_identity
+    from .kimi_admission import is_kimi_seat
 
-    identity = resolve_agent_github_identity(environment=raw)
-    if identity.token:
-        env["GH_TOKEN"] = identity.token
+    # A Kimi seat never publishes: delegate commits and pushes its work after
+    # the content check (kimi_boundary). It gets no GitHub identity, no
+    # credential helper, an empty gh config, and every push URL rewritten below.
+    no_push = is_kimi_seat(provider)
+    identity = None if no_push else resolve_agent_github_identity(environment=raw)
+    token = identity.token if identity is not None else None
+    if identity is not None and token:
+        env["GH_TOKEN"] = token
         env["LU_AGENT_GITHUB_IDENTITY_SOURCE"] = identity.source or "legacy"
     else:
         env.pop("GH_TOKEN", None)
         env.pop("GITHUB_TOKEN", None)
+    if no_push:
+        for name in _PUSH_CREDENTIAL_NAMES:
+            env.pop(name, None)
 
     env.update(
         _isolated_git_env(
             env.get("HOME") or raw.get("HOME"),
-            identity.token,
-            host_gh_config_dir=usable_host_gh_config_dir(raw.get("GH_CONFIG_DIR")),
+            token,
+            host_gh_config_dir=None if no_push else usable_host_gh_config_dir(raw.get("GH_CONFIG_DIR")),
+            no_credentials=no_push,
         )
     )
 
@@ -507,12 +537,21 @@ def build_agent_env(
         and overrides
         and overrides.get("LU_CLAUDE_READ_ONLY_GIT_PUSH_BLOCK") == "1"
     ):
-        count = int(env.get("GIT_CONFIG_COUNT", "0"))
-        for prefix in ("https://", "http://", "ssh://", "git://", "git@", "file://", "/", "./", "../", "~"):
-            env[f"GIT_CONFIG_KEY_{count}"] = "url.file:///dev/null/claude-read-only/.pushInsteadOf"
-            env[f"GIT_CONFIG_VALUE_{count}"] = prefix
-            count += 1
-        env["GIT_CONFIG_COUNT"] = str(count)
-        env["GIT_TERMINAL_PROMPT"] = "0"
+        _append_push_rewrite(env, "file:///dev/null/claude-read-only/")
+    if no_push:
+        from .kimi_boundary import PUSH_BLOCK_URL
+
+        _append_push_rewrite(env, f"{PUSH_BLOCK_URL}/")
 
     return env
+
+
+def _append_push_rewrite(env: dict[str, str], target: str) -> None:
+    """Rewrite every push URL to ``target`` through process-scoped git config."""
+    count = int(env.get("GIT_CONFIG_COUNT", "0"))
+    for prefix in ("https://", "http://", "ssh://", "git://", "git@", "file://", "/", "./", "../", "~"):
+        env[f"GIT_CONFIG_KEY_{count}"] = f"url.{target}.pushInsteadOf"
+        env[f"GIT_CONFIG_VALUE_{count}"] = prefix
+        count += 1
+    env["GIT_CONFIG_COUNT"] = str(count)
+    env["GIT_TERMINAL_PROMPT"] = "0"

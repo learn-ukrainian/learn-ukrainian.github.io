@@ -123,6 +123,9 @@ REFUSED_PATHS = (
     "README.md",
     # Exclusions inside allowlisted roots.
     "scripts/agent_runtime/kimi_admission.py",
+    "scripts/agent_runtime/kimi_boundary.py",
+    "scripts/agent_runtime/kimi_hooks/pre-commit",
+    "scripts/agent_runtime/env_sanitize.py",
     "scripts/agent_runtime/adapters/kimi.py",
     "scripts/agent_runtime/profiles/acpx-grok-sealed-review.md",
     "scripts/api/hramatka_generator.py",
@@ -284,23 +287,54 @@ def test_owned_paths_fail_closed_without_a_repository_root():
     assert message and "cannot be checked for Ukrainian content" in message
 
 
+_CYRILLIC_LINE = "const label = 'Привіт';"
+
+
 @pytest.mark.parametrize(
-    ("diff", "added"),
+    ("before", "after", "added"),
     [
-        ("+++ b/site/src/x.tsx\n@@ -0,0 +1 @@\n+const label = 'Привіт';\n", True),
-        ("+++ b/scripts/x.py\n@@ -1 +1 @@\n-old = 'Привіт'\n+old = 'hello'\n", False),  # removing Cyrillic is fine
-        ("+++ b/site/src/Урок.tsx\n@@ -0,0 +1 @@\n+export {};\n", True),  # a Cyrillic file name
-        ("+++ b/site/src/x.tsx\n@@ -0,0 +1 @@\n+const a = 'ԑ';\n", True),  # Cyrillic Supplement
-        ("+++ b/site/src/x.tsx\n@@ -0,0 +1 @@\n+const a = 'hello';\n", False),
+        (None, f"{_CYRILLIC_LINE}\n".encode(), True),
+        (b"old = '\xd0\x9f\xd1\x80\xd0\xb8'\n", b"old = 'hello'\n", False),  # removing Cyrillic is fine
+        (None, "const a = 'ԑ';\n".encode(), True),  # Cyrillic Supplement
+        (None, b"const a = 'hello';\n", False),
+        # A NUL byte makes git call the file binary; the text is still read.
+        (None, f"{_CYRILLIC_LINE}\0\n".encode(), True),
+        # Wide encodings, with and without a byte-order mark.
+        (None, f"{_CYRILLIC_LINE}\n".encode("utf-16"), True),
+        (None, f"{_CYRILLIC_LINE}\n".encode("utf-16-le"), True),
+        (None, f"{_CYRILLIC_LINE}\n".encode("utf-32-be"), True),
+        # A line that already held Cyrillic text adds nothing when it stays or moves.
+        (f"{_CYRILLIC_LINE}\nx = 1\n".encode(), f"x = 2\n{_CYRILLIC_LINE}\n".encode(), False),
+        (f"{_CYRILLIC_LINE}\n".encode(), f"{_CYRILLIC_LINE}\n{_CYRILLIC_LINE}\n".encode(), True),
     ],
 )
-def test_a_diff_that_adds_cyrillic_text_is_refused(diff, added):
-    assert bool(kimi_admission.cyrillic_additions(diff)) is added
+def test_a_change_that_adds_cyrillic_text_is_refused(before, after, added):
+    change = kimi_admission.FileChange("site/src/x.tsx", before, after)
+    assert bool(kimi_admission.added_cyrillic_lines(before, after)) is added
     if added:
-        with pytest.raises(kimi_admission.KimiAdmissionRefused, match=_TOKEN):
-            kimi_admission.refuse_cyrillic_diff("kimi", diff)
+        with pytest.raises(kimi_admission.KimiAdmissionRefused, match="the changes add Ukrainian content"):
+            kimi_admission.refuse_kimi_changes("kimi", [change])
     else:
-        kimi_admission.refuse_cyrillic_diff("kimi", diff)
+        kimi_admission.refuse_kimi_changes("kimi", [change])
+
+
+def test_a_cyrillic_file_name_is_refused():
+    change = kimi_admission.FileChange("site/src/Урок.tsx", None, b"export {};\n")
+    assert kimi_admission.change_reasons([change]) == [
+        "the changes add Ukrainian content (Cyrillic text: site/src/Урок.tsx: (file name))"
+    ]
+
+
+@pytest.mark.parametrize("after", [b"\x89PNG\r\n\x1a\n\xff\xfe\xfd", None])
+def test_content_that_cannot_be_read_as_text_is_refused(after):
+    change = kimi_admission.FileChange("site/src/assets/logo.png", None, after)
+    with pytest.raises(kimi_admission.KimiAdmissionRefused, match="cannot be read as text"):
+        kimi_admission.refuse_kimi_changes("kimi", [change])
+
+
+def test_a_deletion_adds_nothing():
+    change = kimi_admission.FileChange("site/src/Урок.tsx", "Урок".encode(), None, deleted=True)
+    assert kimi_admission.change_reasons([change]) == []
 
 
 def _git(repo: Path, *args: str) -> str:
@@ -333,6 +367,25 @@ def test_finalize_refuses_a_kimi_diff_that_adds_cyrillic(kimi_worktree, committe
         _git(kimi_worktree, "commit", "-m", "worker commit")
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
     assert message and _TOKEN in message and "site/Label.tsx" in message
+
+
+@pytest.mark.parametrize("committed", [False, True])
+def test_finalize_refuses_cyrillic_that_git_classifies_as_binary(kimi_worktree, committed):
+    """UTF-8 Cyrillic plus a NUL byte: git reports a binary diff, and the text is still refused."""
+    label = kimi_worktree / "Label.tsx"
+    label.write_bytes("export const label = 'Урок';\0\n".encode())
+    _git(kimi_worktree, "add", "-A")
+    if committed:
+        _git(kimi_worktree, "commit", "-m", "worker commit")
+    assert "Binary files" in _git(kimi_worktree, "diff", "--cached" if not committed else "base", "--", "Label.tsx")
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert message and _TOKEN in message and "Label.tsx: export const label = 'Урок';" in message
+
+
+def test_finalize_refuses_an_undecodable_addition(kimi_worktree):
+    (kimi_worktree / "blob.bin").write_bytes(b"\x89PNG\r\n\x1a\n\xff\xfe\xfd")
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert message and "cannot be read as text" in message and "blob.bin" in message
 
 
 def test_finalize_admits_a_cyrillic_free_kimi_diff(kimi_worktree):
@@ -477,41 +530,56 @@ def no_spawn(tmp_path, monkeypatch):
 
 
 _LANGUAGE_LANES_RULE = "LANGUAGE-LANES RULE"
+_LANGUAGE_LANES_REASON = "--agent kimi cannot author, review, critique, settle, or judge Ukrainian language"
 
 
-def _assert_refused(no_spawn, capsys, argv, reason):
+def _assert_refused(no_spawn, capsys, argv, reason, *, policy=_TOKEN):
+    """Refused with exit 2 by exactly ``policy`` (the Kimi gate unless stated) for ``reason``, and nothing recorded."""
     rc = delegate.main(argv)
     err = capsys.readouterr().err
     assert rc == 2, err
-    # Ukrainian-language work reaches the language-lanes rule first, which refuses every
-    # seat outside claude, codex and agy — Kimi included — just as early.
-    assert _TOKEN in err or _LANGUAGE_LANES_RULE in err, err
-    assert reason in err or _LANGUAGE_LANES_RULE in err, err
+    assert policy in err, err
+    other = _LANGUAGE_LANES_RULE if policy == _TOKEN else _TOKEN
+    assert other not in err, err
+    assert reason in err, err
     assert not no_spawn.exists() or not any(no_spawn.iterdir())
 
 
 @pytest.mark.parametrize(
-    ("argv", "reason"),
+    ("argv", "policy", "reason"),
     [
-        (_dispatch(), "--mode read-only"),
-        (_dispatch("--mode", "danger", "--worktree"), "--mode danger"),
-        (_dispatch("--harness", "kimicc", "--require-review-verdict"), "review dispatches"),
-        (_dispatch(*_WRITE, "--review-profile", "code"), "review dispatches"),
-        (_dispatch(*_WRITE, "--language-lane"), _LANGUAGE_LANES_RULE),
-        (_dispatch(*_WRITE, "--research-track", "l2-uk-en"), _LANGUAGE_LANES_RULE),
-        (_dispatch(*_WRITE, "--research-track", "core"), "curriculum track"),
-        (_dispatch(*_WRITE, "--repo", "infra-private"), "private repository"),
-        (_dispatch(*_WRITE, "--repo", "hramatka"), "private repository"),
+        (_dispatch(), _TOKEN, "--mode read-only"),
+        (_dispatch("--mode", "danger", "--worktree"), _TOKEN, "--mode danger"),
+        (_dispatch("--harness", "kimicc", "--require-review-verdict"), _TOKEN, "review dispatches"),
+        (_dispatch(*_WRITE, "--review-profile", "code"), _TOKEN, "review dispatches"),
+        # Ukrainian-language work reaches the language-lanes rule first, which refuses
+        # every seat outside claude, codex and agy — Kimi included — just as early.
+        (_dispatch(*_WRITE, "--language-lane"), _LANGUAGE_LANES_RULE, _LANGUAGE_LANES_REASON),
+        (_dispatch(*_WRITE, "--research-track", "l2-uk-en"), _LANGUAGE_LANES_RULE, _LANGUAGE_LANES_REASON),
+        (_dispatch(*_WRITE, "--research-track", "core"), _TOKEN, "--research-track 'core' is a curriculum track"),
+        (_dispatch(*_WRITE, "--repo", "infra-private"), _TOKEN, "is a private repository"),
+        (_dispatch(*_WRITE, "--repo", "hramatka"), _TOKEN, "is a private repository"),
     ],
 )
-def test_dispatch_refuses_before_any_side_effect(no_spawn, capsys, argv, reason):
-    _assert_refused(no_spawn, capsys, argv, reason)
+def test_dispatch_refuses_before_any_side_effect(no_spawn, capsys, argv, policy, reason):
+    _assert_refused(no_spawn, capsys, argv, reason, policy=policy)
+
+
+def _is_language_lane_path(flag: str, path: str) -> bool:
+    """Only a --research-owned-path under curriculum/ marks a dispatch as Ukrainian-language work."""
+    return flag == "--research-owned-path" and path.startswith(("curriculum/", "scripts/curriculum/"))
 
 
 @pytest.mark.parametrize("flag", ["--owned-path", "--research-owned-path"])
 @pytest.mark.parametrize("path", REFUSED_PATHS)
 def test_dispatch_refuses_every_off_allowlist_path_through_either_ownership_flag(no_spawn, capsys, flag, path):
-    _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, flag, "scripts/ci/x.py", flag, path), "owned path")
+    argv = _dispatch(*_WRITE, flag, "scripts/ci/x.py", flag, path)
+    if _is_language_lane_path(flag, path):
+        _assert_refused(no_spawn, capsys, argv, _LANGUAGE_LANES_REASON, policy=_LANGUAGE_LANES_RULE)
+    else:
+        expected = kimi_admission.owned_path_reason(path)
+        assert expected
+        _assert_refused(no_spawn, capsys, argv, expected)
 
 
 @pytest.mark.parametrize(
@@ -539,6 +607,17 @@ def test_a_budget_substitution_onto_kimi_is_refused_before_cleanup_and_archiving
     argv = ["dispatch", "--agent", "codex", "--task-id", "kimi-substitute", "--prompt", "Implement it.", *extra]
     _assert_refused(no_spawn, capsys, argv, reason)
     assert substituted == ["codex"]
+
+
+def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, monkeypatch, tmp_path):
+    """A reused worktree holding Cyrillic text is refused even though the dispatcher's checkout is clean."""
+    path = "site/src/components/LiveStatus.tsx"
+    assert not kimi_admission.CYRILLIC.search((_REPO_ROOT / path).read_text(encoding="utf-8"))
+    reused = tmp_path / "reused"
+    (reused / path).parent.mkdir(parents=True)
+    (reused / path).write_text("export const label = 'Урок';\n", encoding="utf-8")
+    monkeypatch.setattr(delegate, "_auto_worktree_path", lambda *_a, **_k: reused)
+    _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path), f"Cyrillic text in {path!r}")
 
 
 def test_dispatch_refuses_a_kimi_model_on_another_seat(no_spawn, capsys):
@@ -622,6 +701,40 @@ def test_worker_refuses_with_zero_side_effects(tmp_path, monkeypatch, capsys, mo
     assert not tasks.exists()
 
 
+def test_worker_reads_owned_paths_in_the_tree_it_runs_in(tmp_path, monkeypatch, capsys):
+    """The worker scans its own worktree before any state write, boundary or invocation."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    path = "site/src/components/LiveStatus.tsx"
+    worktree = tmp_path / "wt"
+    (worktree / path).parent.mkdir(parents=True)
+    (worktree / path).write_text("export const label = 'Урок';\n", encoding="utf-8")
+    state_path = delegate._state_path("kimi-reused")
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": "kimi-reused", "worktree_path": str(worktree), "worktree_base": "main", "owned_paths": [path]},
+    )
+    before = state_path.read_bytes()
+    monkeypatch.setattr(delegate.signal, "signal", _fail)
+    monkeypatch.setattr(delegate, "_write_state_atomic", _fail)
+    monkeypatch.setattr("agent_runtime.runner.invoke", _fail)
+    monkeypatch.setattr("scripts.agent_runtime.kimi_boundary.install", _fail)
+
+    rc = delegate._run_worker(
+        task_id="kimi-reused",
+        agent="kimi",
+        prompt="Implement it.",
+        mode="workspace-write",
+        cwd_str=str(worktree),
+        model=None,
+        hard_timeout=60,
+    )
+
+    assert rc == 1
+    err = capsys.readouterr().err
+    assert _TOKEN in err and f"Cyrillic text in {path!r}" in err
+    assert state_path.read_bytes() == before
+
+
 # --- runtime boundary ----------------------------------------------------------------
 
 
@@ -691,6 +804,155 @@ def test_trail_isolation_refuses_kimi():
         prepare_trail_isolation(
             agent_name="kimi", mode="read-only", tool_config={"trail_isolation": True, "harness": "kimicc"}
         )
+
+
+# --- the worktree boundary: hooks, push block, no push credential ------------------------
+
+
+def _bounded_repo(tmp_path: Path, monkeypatch, repo_hooks: dict[str, str] | None = None) -> types.SimpleNamespace:
+    """A clone on a task branch with the Kimi boundary installed; ``origin`` is a bare repository.
+
+    ``repo_hooks`` are the repository's own hooks, installed before the boundary.
+    """
+    from scripts.agent_runtime import kimi_boundary
+
+    for key in tuple(os.environ):
+        if key.startswith(("GIT_", "PRE_COMMIT")):
+            monkeypatch.delenv(key, raising=False)
+    monkeypatch.delenv("AGENT_NO_MERGE", raising=False)  # the host push guard refuses pushes to main
+    origin = tmp_path / "origin.git"
+    repo = tmp_path / "repo"
+    _git(tmp_path, "init", "--bare", "--initial-branch=main", str(origin))
+    _git(tmp_path, "init", "--initial-branch=main", str(repo))
+    _git(repo, "config", "user.email", "test@example.com")
+    _git(repo, "config", "user.name", "test")
+    (repo / "README.md").write_text("base\n", encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-m", "base")
+    _git(repo, "remote", "add", "origin", str(origin))
+    _git(repo, "push", "-u", "origin", "main")
+    _git(repo, "checkout", "-b", "kimi/task")
+    for name, body in (repo_hooks or {}).items():
+        hook = repo / ".git" / "hooks" / name
+        hook.write_text(body, encoding="utf-8")
+        hook.chmod(0o755)
+    kimi_boundary.install(repo, agent="kimi", base_ref="origin/main", owned_paths=["site/src/components/"])
+    return types.SimpleNamespace(repo=repo, origin=origin)
+
+
+@pytest.fixture
+def bounded_repo(tmp_path, monkeypatch):
+    return _bounded_repo(tmp_path, monkeypatch)
+
+
+def _git_proc(repo: Path, *args: str, env=None, stdin: str | None = None) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", *args], cwd=repo, capture_output=True, text=True, check=False, timeout=60, env=env, input=stdin
+    )
+
+
+def _write_label(repo: Path, data: bytes) -> None:
+    label = repo / "site" / "src" / "components" / "Label.tsx"
+    label.parent.mkdir(parents=True, exist_ok=True)
+    label.write_bytes(data)
+
+
+@pytest.mark.parametrize(
+    "data",
+    [
+        "export const label = 'Урок';\n".encode(),
+        "export const label = 'Урок';\0\n".encode(),  # git calls this binary
+        "export const label = 'Урок';\n".encode("utf-16"),
+    ],
+)
+def test_the_pre_commit_hook_refuses_a_worker_commit_that_adds_cyrillic(bounded_repo, data):
+    repo = bounded_repo.repo
+    head = _git(repo, "rev-parse", "HEAD")
+    _write_label(repo, data)
+    _git(repo, "add", "-A")
+    proc = _git_proc(repo, "commit", "-m", "worker commit")
+    assert proc.returncode != 0
+    assert "commit refused by the Kimi worktree boundary" in proc.stderr and "Ukrainian content" in proc.stderr
+    assert _git(repo, "rev-parse", "HEAD") == head
+
+
+def test_the_pre_commit_hook_refuses_a_commit_outside_the_owned_paths(bounded_repo):
+    repo = bounded_repo.repo
+    (repo / "README.md").write_text("changed\n", encoding="utf-8")
+    proc = _git_proc(repo, "commit", "-am", "worker commit")
+    assert proc.returncode != 0
+    assert "changed paths outside the owned paths ('README.md')" in proc.stderr
+
+
+def test_the_pre_commit_hook_admits_a_clean_owned_commit_and_keeps_the_repository_hooks(tmp_path, monkeypatch):
+    """The repository's own hooks still run: its pre-commit after the Kimi check, and every other hook."""
+    ran = tmp_path / "ran"
+    hooks = {name: f"#!/bin/sh\necho {name} >> '{ran}'\n" for name in ("pre-commit", "commit-msg")}
+    repo = _bounded_repo(tmp_path, monkeypatch, repo_hooks=hooks).repo
+    _write_label(repo, b"export const label = 'Lesson';\n")
+    _git(repo, "add", "-A")
+    proc = _git_proc(repo, "commit", "-m", "worker commit")
+    assert proc.returncode == 0, proc.stderr
+    assert ran.read_text(encoding="utf-8").split() == ["pre-commit", "commit-msg"]
+
+
+def test_a_worker_push_fails_and_the_pre_push_hook_refuses_cyrillic(bounded_repo):
+    from scripts.agent_runtime import kimi_boundary
+
+    repo = bounded_repo.repo
+    _write_label(repo, "export const label = 'Урок';\n".encode())
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "--no-verify", "-m", "a commit that bypassed the pre-commit hook")
+    # The worktree's push URL is unusable.
+    proc = _git_proc(repo, "push", "origin", "HEAD")
+    assert proc.returncode != 0 and "kimi-push-disabled" in proc.stderr
+    # With the push URL restored by hand, the pre-push hook still refuses the commit.
+    _git(repo, "config", "--worktree", "--unset-all", "remote.origin.pushurl")
+    proc = _git_proc(repo, "push", "origin", "HEAD")
+    assert proc.returncode != 0 and "push refused by the Kimi worktree boundary" in proc.stderr
+    assert _git(bounded_repo.origin, "branch", "--list", "kimi/task") == ""
+    assert kimi_boundary.hook_reasons(repo, "pre-push", f"HEAD {_git(repo, 'rev-parse', 'HEAD').strip()} x y\n")
+
+
+def test_the_kimi_worker_environment_carries_no_push_credential(bounded_repo, monkeypatch):
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.env_sanitize import build_agent_env
+
+    for name in ("GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN", "GH_ENTERPRISE_TOKEN"):
+        monkeypatch.setenv(name, "ghp_" + "x" * 36)
+    monkeypatch.setenv("GIT_ASKPASS", "/usr/bin/askpass")
+    env = build_agent_env(provider="kimi")
+    for name in ("GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN", "GH_ENTERPRISE_TOKEN", "GIT_ASKPASS"):
+        assert name not in env, name
+    config = {env[f"GIT_CONFIG_KEY_{i}"]: env[f"GIT_CONFIG_VALUE_{i}"] for i in range(int(env["GIT_CONFIG_COUNT"]))}
+    assert config["credential.helper"] == ""
+    assert f"url.{kimi_boundary.PUSH_BLOCK_URL}/.pushInsteadOf" in config
+    assert list(Path(env["GH_CONFIG_DIR"]).iterdir()) == []
+
+    # Even with the worktree push block lifted, a clean push from the worker environment fails.
+    repo = bounded_repo.repo
+    kimi_boundary.remove(repo)
+    _write_label(repo, b"export const label = 'Lesson';\n")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-m", "clean worker commit")
+    proc = _git_proc(repo, "push", "origin", "HEAD", env=env)
+    assert proc.returncode != 0 and "kimi-push-disabled" in proc.stderr
+    assert _git(bounded_repo.origin, "branch", "--list", "kimi/task") == ""
+
+
+def test_remove_takes_the_boundary_down(bounded_repo):
+    from scripts.agent_runtime import kimi_boundary
+
+    repo = bounded_repo.repo
+    assert kimi_boundary.is_installed(repo)
+    kimi_boundary.remove(repo)
+    assert not kimi_boundary.is_installed(repo)
+    assert _git_proc(repo, "config", "--worktree", "--get", "core.hooksPath").returncode == 1
+    assert _git_proc(repo, "config", "--get-regexp", "^kimiguard\\.").stdout == ""
+    _write_label(repo, b"export const label = 'Lesson';\n")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-m", "delegate commit")
+    assert _git_proc(repo, "push", "origin", "HEAD").returncode == 0
 
 
 # --- ACP, bridge and fleet-comms entry points ------------------------------------------

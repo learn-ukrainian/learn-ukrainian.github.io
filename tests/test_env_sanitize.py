@@ -150,7 +150,7 @@ def test_gh_auth_chain_preserved_without_identity_token(tmp_path) -> None:
         },
         clear=True,
     ):
-        env = build_agent_env(provider="kimi")
+        env = build_agent_env(provider="codex")
 
     assert "GH_TOKEN" not in env
     assert "GITHUB_TOKEN" not in env
@@ -179,7 +179,7 @@ def test_gh_config_dir_defaults_to_home_without_identity_token() -> None:
         },
         clear=True,
     ):
-        env = build_agent_env(provider="kimi")
+        env = build_agent_env(provider="codex")
 
     assert "GH_CONFIG_DIR" not in env
     assert env["HOME"] == "/Users/example"
@@ -229,7 +229,7 @@ def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path
         {"PATH": "/usr/bin", "HOME": str(tmp_path), "USER": "example"},
         clear=True,
     ):
-        no_token_env = build_agent_env(provider="kimi")
+        no_token_env = build_agent_env(provider="codex")
         sandbox_no_token = Path(no_token_env["GIT_CONFIG_GLOBAL"]).read_text(
             encoding="utf-8"
         )
@@ -247,13 +247,48 @@ def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path
         },
         clear=True,
     ):
-        token_env = build_agent_env(provider="kimi")
+        token_env = build_agent_env(provider="codex")
         sandbox_token = Path(token_env["GIT_CONFIG_GLOBAL"]).read_text(
             encoding="utf-8"
         )
 
     assert "gh auth git-credential" not in sandbox_token
     assert token_env["GIT_ASKPASS"].endswith("git-askpass.sh")
+
+
+def test_kimi_seat_gets_no_push_credential(tmp_path) -> None:
+    """A Kimi seat never publishes: no identity token, no credential helper,
+    no host gh auth, no askpass, and every push URL rewritten to an unusable one.
+    Delegate commits and pushes its work after the content check."""
+    gh_config = tmp_path / "gh-config"
+    gh_config.mkdir()
+    (gh_config / "hosts.yml").write_text("github.com:\n    user: ops\n", encoding="utf-8")
+    (tmp_path / ".gitconfig").write_text("[credential]\n\thelper = !/usr/bin/gh auth git-credential\n", encoding="utf-8")
+
+    with patch.dict(
+        "os.environ",
+        {
+            "PATH": "/usr/bin",
+            "HOME": str(tmp_path),
+            "USER": "example",
+            "GH_CONFIG_DIR": str(gh_config),
+            "LU_AGENT_GITHUB_TOKEN": "ghp_agenttoken",
+            "GH_TOKEN": "ghp_legacy",
+            "SSH_AUTH_SOCK": "/tmp/agent.sock",
+        },
+        clear=True,
+    ):
+        env = build_agent_env(provider="kimi")
+
+    for name in ("GH_TOKEN", "GITHUB_TOKEN", "LU_AGENT_GITHUB_TOKEN", "GIT_ASKPASS", "SSH_AUTH_SOCK"):
+        assert name not in env, name
+    assert env["GH_CONFIG_DIR"] != str(gh_config)
+    assert list(Path(env["GH_CONFIG_DIR"]).iterdir()) == []
+    assert "gh auth git-credential" not in Path(env["GIT_CONFIG_GLOBAL"]).read_text(encoding="utf-8")
+    config = [(env[f"GIT_CONFIG_KEY_{i}"], env[f"GIT_CONFIG_VALUE_{i}"]) for i in range(int(env["GIT_CONFIG_COUNT"]))]
+    assert ("credential.helper", "") in config
+    rewrites = {value for key, value in config if key.startswith("url.kimi-push-disabled://")}
+    assert {"https://", "ssh://", "git@", "/"} <= rewrites
 
 
 def test_dispatch_markers_pass_through_for_every_dispatch_provider() -> None:

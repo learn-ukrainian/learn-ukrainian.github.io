@@ -16,15 +16,20 @@ write, artifact store or channel write. A refusal raises
 
 Ukrainian content is recognised by content, not by path: an owned file, or any
 file under an owned directory or glob, that contains a Cyrillic character is
-refused, and ``cyrillic_additions`` rejects a finalized Kimi diff that adds one.
+refused, and ``refuse_kimi_changes`` rejects a Kimi change set that adds one or
+adds content that cannot be read as text. The git hooks and push block around a
+Kimi worktree live in ``kimi_boundary``.
 """
 
 from __future__ import annotations
 
+import codecs
 import os
 import posixpath
 import re
+from collections import Counter
 from collections.abc import Iterable, Mapping
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -89,6 +94,9 @@ _SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
 # prefixes, so ``scripts/api/hramatka_`` covers every Hramatka module.
 KIMI_EXCLUDED_PATHS: dict[str, str] = {
     "scripts/agent_runtime/kimi_admission.py": "the Kimi admission gate is routing policy",
+    "scripts/agent_runtime/kimi_boundary.py": "the Kimi worktree boundary is routing policy",
+    "scripts/agent_runtime/kimi_hooks/": "the Kimi worktree boundary is routing policy",
+    "scripts/agent_runtime/env_sanitize.py": "the agent credential boundary, including Kimi's push block",
     "scripts/agent_runtime/adapters/kimi.py": "Kimi's own runtime refusal is routing policy",
     "scripts/agent_runtime/adapters/kimicc.py": "Kimi's own runtime refusal is routing policy",
     "scripts/agent_runtime/kimicc_headless.sh": "Kimi's own runtime refusal is routing policy",
@@ -230,11 +238,8 @@ def scope_files(normalized: str, *, repo_root: Path) -> tuple[bool, list[str]]:
 
 
 def _has_cyrillic(path: Path) -> bool:
-    try:
-        text = path.read_bytes().decode("utf-8")
-    except UnicodeDecodeError:  # a binary asset carries no text content
-        return False
-    return CYRILLIC.search(text) is not None
+    # A file that reads as no text (a binary asset) carries no text content.
+    return any(CYRILLIC.search(text) for text in text_readings(path.read_bytes()).values())
 
 
 def _sample(paths: list[str]) -> str:
@@ -274,33 +279,112 @@ def owned_scope_reasons(path: str, *, repo_root: Path | None) -> list[str]:
     return reasons
 
 
-def cyrillic_additions(diff_text: str) -> list[str]:
-    """``path: text`` samples of the lines a unified diff adds that contain a Cyrillic character.
+@dataclass(frozen=True)
+class FileChange:
+    """One changed path: its content before and after, as bytes.
 
-    A new file whose name is Cyrillic counts too. Read with
-    ``core.quotePath=false`` so names reach this check unescaped.
+    ``before`` is None for a new file. ``after`` is None for a deleted file
+    (``deleted``) or for a post-image that could not be read.
     """
-    samples: list[str] = []
-    current = "?"
-    for line in diff_text.splitlines():
-        if line.startswith("+++ "):
-            current = line[4:].removeprefix("b/")
-            if CYRILLIC.search(current):
-                samples.append(f"{current}: (file name)")
-        elif line.startswith("+") and CYRILLIC.search(line):
-            samples.append(f"{current}: {line[1:].strip()[:80]}")
-    return samples
+
+    path: str
+    before: bytes | None
+    after: bytes | None
+    deleted: bool = False
 
 
-def refuse_cyrillic_diff(agent: str, diff_text: str) -> None:
-    """Raise ``KimiAdmissionRefused`` when a Kimi worker's finalized diff adds Cyrillic text."""
-    samples = cyrillic_additions(diff_text)
-    if samples:
-        shown = "; ".join(samples[:_DIFF_SAMPLE_LIMIT])
-        more = f"; and {len(samples) - _DIFF_SAMPLE_LIMIT} more" if len(samples) > _DIFF_SAMPLE_LIMIT else ""
-        raise KimiAdmissionRefused(
-            format_refusal(agent, [f"the finalized diff adds Ukrainian content (Cyrillic text: {shown}{more})"])
+# Byte-order marks, longest first: the UTF-32-LE mark begins with the UTF-16-LE one.
+_BOM_ENCODINGS = (
+    (codecs.BOM_UTF32_LE, "utf-32"),
+    (codecs.BOM_UTF32_BE, "utf-32"),
+    (codecs.BOM_UTF8, "utf-8-sig"),
+    (codecs.BOM_UTF16_LE, "utf-16"),
+    (codecs.BOM_UTF16_BE, "utf-16"),
+)
+_WIDE_ENCODINGS = ("utf-16-le", "utf-16-be", "utf-32-le", "utf-32-be")
+
+
+def text_readings(data: bytes) -> dict[str, str]:
+    """Every way ``data`` reads as text, by encoding; empty when it reads as none.
+
+    A byte-order mark fixes the encoding. Without one the bytes are read as
+    UTF-8 and, when they hold a NUL, also as UTF-16 and UTF-32 in both byte
+    orders, so neither a NUL byte (which makes git call a file binary) nor a
+    wide encoding hides Cyrillic text.
+    """
+    for bom, encoding in _BOM_ENCODINGS:
+        if data.startswith(bom):
+            try:
+                return {encoding: data.decode(encoding)}
+            except UnicodeDecodeError:
+                return {}
+    readings: dict[str, str] = {}
+    candidates = ("utf-8", *_WIDE_ENCODINGS) if b"\0" in data else ("utf-8",)
+    for encoding in candidates:
+        try:
+            readings[encoding] = data.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return readings
+
+
+def added_cyrillic_lines(before: bytes | None, after: bytes) -> list[str] | None:
+    """The lines ``after`` adds over ``before`` that contain a Cyrillic character; None when ``after`` is not text.
+
+    Lines are compared per reading, as multisets, so moving a line that already
+    held Cyrillic text adds nothing and a second copy of it adds one.
+    """
+    readings = text_readings(after)
+    if not readings:
+        return None
+    previous = text_readings(before) if before is not None else {}
+    added: list[str] = []
+    for encoding, text in readings.items():
+        existing = Counter(previous.get(encoding, "").splitlines())
+        for line in text.splitlines():
+            if not CYRILLIC.search(line):
+                continue
+            if existing[line]:
+                existing[line] -= 1
+                continue
+            sample = line.strip()[:80]
+            if sample not in added:
+                added.append(sample)
+    return added
+
+
+def change_reasons(changes: Iterable[FileChange]) -> list[str]:
+    """Why a Kimi change set is refused: it adds Cyrillic text or a Cyrillic file name, or adds content that is not text."""
+    cyrillic: list[str] = []
+    unreadable: list[str] = []
+    for change in changes:
+        if change.deleted:
+            continue
+        if CYRILLIC.search(change.path):
+            cyrillic.append(f"{change.path}: (file name)")
+        lines = None if change.after is None else added_cyrillic_lines(change.before, change.after)
+        if lines is None:
+            unreadable.append(change.path)
+            continue
+        cyrillic.extend(f"{change.path}: {line}" for line in lines)
+    reasons: list[str] = []
+    if cyrillic:
+        shown = "; ".join(cyrillic[:_DIFF_SAMPLE_LIMIT])
+        more = f"; and {len(cyrillic) - _DIFF_SAMPLE_LIMIT} more" if len(cyrillic) > _DIFF_SAMPLE_LIMIT else ""
+        reasons.append(f"the changes add Ukrainian content (Cyrillic text: {shown}{more})")
+    if unreadable:
+        reasons.append(
+            f"the changes add content that cannot be read as text ({_sample(unreadable)}); "
+            "binary files cannot be checked for Ukrainian content"
         )
+    return reasons
+
+
+def refuse_kimi_changes(agent: str, changes: Iterable[FileChange]) -> None:
+    """Raise ``KimiAdmissionRefused`` when a Kimi worker's changes add Cyrillic text or unreadable content."""
+    reasons = change_reasons(changes)
+    if reasons:
+        raise KimiAdmissionRefused(format_refusal(agent, reasons))
 
 
 def _curriculum_level_keys(repo_root: Path) -> frozenset[str] | None:
@@ -361,6 +445,7 @@ def refuse_kimi_if_disallowed(
     research_track: str | None = None,
     prompt_file: str | None = None,
     repo_root: Path | None = None,
+    execution_root: Path | None = None,
 ) -> None:
     """Raise ``KimiAdmissionRefused`` when any effective seat or model is Kimi and the work is not admitted.
 
@@ -369,10 +454,11 @@ def refuse_kimi_if_disallowed(
     runtime mode (only ``workspace-write`` is admitted) or an activity label
     (``ACP_MODE``, ``REVIEW_MODE``). ``paths`` are the owned paths, each of
     which must be on the allowlist, free of Cyrillic text and, for a directory
-    or glob, free of excluded descendants (read under ``repo_root``). ``repo``
-    is the fleet repository role. It reads only the owned files and the
-    curriculum manifest (for ``research_track``) and never writes. Returns
-    None for every non-Kimi call.
+    or glob, free of excluded descendants, read in ``execution_root`` — the
+    checkout the worker runs in — or ``repo_root`` when it is not given.
+    ``repo`` is the fleet repository role. It reads only the owned files and
+    the curriculum manifest under ``repo_root`` (for ``research_track``) and
+    never writes. Returns None for every non-Kimi call.
     """
     seat = _kimi_seat_name(tuple(effective_participants), tuple(effective_models))
     if seat is None:
@@ -393,7 +479,7 @@ def refuse_kimi_if_disallowed(
         if path_reason:
             reasons.append(path_reason)
         else:
-            reasons.extend(owned_scope_reasons(path, repo_root=repo_root))
+            reasons.extend(owned_scope_reasons(path, repo_root=execution_root or repo_root))
     if prompt_file and _PRIVATE_STATE_COMPONENTS.intersection(Path(str(prompt_file)).expanduser().parts):
         reasons.append(f"--prompt-file {prompt_file!r} lives in agent-private state")
     if repo is not None and repo not in CODING_REPO_ROLES:
