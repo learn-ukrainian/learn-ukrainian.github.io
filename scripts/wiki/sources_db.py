@@ -2686,6 +2686,11 @@ def _search_archaic_metadata(
     ]
 
 
+def _is_textbook_section(match: dict) -> bool:
+    """Return whether a result satisfies the textbook-corpus guarantee."""
+    return match.get("corpus") == "textbook_sections"
+
+
 def search_sources(
     query: str | Path,
     *,
@@ -2751,21 +2756,16 @@ def search_sources(
         )
     expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
     capped = _apply_context_cap(track, expanded)
-    def is_textbook_section(match: dict) -> bool:
-        return match.get("corpus") == "textbook_sections" and (
-            "parent_section_id" not in match or match["parent_section_id"] is not None
-        )
-
     # The guarantee applies to what the caller receives, so check the
     # returned slice, not the longer capped list.
     if require_textbook_section and not any(
-        is_textbook_section(match) for match in capped[:limit]
+        _is_textbook_section(match) for match in capped[:limit]
     ):
         textbook_section = next(
             (
                 match
                 for match in [*capped, *expanded]
-                if is_textbook_section(match)
+                if _is_textbook_section(match)
             ),
             None,
         )
@@ -2774,7 +2774,7 @@ def search_sources(
                 (
                     match
                     for match in merged
-                    if is_textbook_section(match)
+                    if _is_textbook_section(match)
                 ),
                 None,
             )
@@ -2786,7 +2786,7 @@ def search_sources(
                 *[
                     match
                     for match in capped
-                    if not is_textbook_section(match)
+                    if not _is_textbook_section(match)
                     or match.get("unit_key") != textbook_section.get("unit_key")
                 ],
             ]

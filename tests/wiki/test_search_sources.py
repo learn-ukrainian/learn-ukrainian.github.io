@@ -265,6 +265,126 @@ def test_search_sources_uses_track_weighted_rrf_without_dense_index(monkeypatch)
     ]
 
 
+def test_textbook_section_guarantee_accepts_unsectioned_candidate(monkeypatch):
+    unsectioned = {
+        "corpus": "textbook_sections",
+        "unit_key": "textbook_sections:ulp-chunk",
+        "chunk_id": "ulp-chunk",
+        "parent_section_id": None,
+        "keyword_rank": 1,
+        "final_score": 1 / (sources_db.RRF_K + 1),
+    }
+    weak_section = {
+        "corpus": "textbook_sections",
+        "unit_key": "textbook_sections:14539",
+        "chunk_id": "S14539",
+        "section_id": 14539,
+        "parent_section_id": 14539,
+        "keyword_rank": 17,
+        "final_score": 1 / (sources_db.RRF_K + 17),
+    }
+    monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections",))
+    monkeypatch.setattr(sources_db, "_prepare_query", lambda query, track: ([], {"basic"}, "basic"))
+    monkeypatch.setattr(
+        sources_db,
+        "_dispatch_corpus_search",
+        lambda *args, **kwargs: [unsectioned, weak_section],
+    )
+    monkeypatch.setattr(sources_db, "_expand_neighbor_context", lambda hit: hit)
+    monkeypatch.setattr(sources_db, "_apply_context_cap", lambda track, rows: rows)
+
+    results = sources_db.search_sources(
+        "basic informal Hi Ukrainian",
+        track="a1",
+        strategy="modern_dense_section",
+        limit=1,
+    )
+
+    assert results == [unsectioned]
+    assert results[0]["parent_section_id"] is None
+    assert results[0]["keyword_rank"] < weak_section["keyword_rank"]
+
+
+def test_is_textbook_section_accepts_unsectioned_textbook_chunk():
+    assert sources_db._is_textbook_section(
+        {"corpus": "textbook_sections", "parent_section_id": None}
+    )
+    assert sources_db._is_textbook_section({"corpus": "textbook_sections"})
+    assert not sources_db._is_textbook_section({"corpus": "modern_literary"})
+
+
+def test_textbook_section_guarantee_swaps_in_section_when_none_is_returned(monkeypatch):
+    better_non_textbook_hit = {
+        "corpus": "modern_literary",
+        "unit_key": "modern_literary:hit",
+        "keyword_rank": 1,
+        "final_score": 0.02,
+    }
+    section = {
+        "corpus": "textbook_sections",
+        "unit_key": "textbook_sections:7",
+        "section_id": 7,
+        "keyword_rank": 2,
+        "final_score": 0.01,
+    }
+    monkeypatch.setattr(sources_db, "_CORPORA", ("modern_literary", "textbook_sections"))
+    monkeypatch.setattr(sources_db, "_prepare_query", lambda query, track: ([], {"basic"}, "basic"))
+    monkeypatch.setattr(
+        sources_db,
+        "_dispatch_corpus_search",
+        lambda corpus, **kwargs: [section] if corpus == "textbook_sections" else [better_non_textbook_hit],
+    )
+    monkeypatch.setattr(sources_db, "_expand_neighbor_context", lambda hit: hit)
+    monkeypatch.setattr(sources_db, "_apply_context_cap", lambda track, rows: rows)
+
+    results = sources_db.search_sources(
+        "query",
+        track="a1",
+        strategy="modern_dense_section",
+        limit=1,
+    )
+
+    assert results == [section]
+
+
+def test_dispatch_corpus_search_sends_unsectioned_textbook_to_dense_reranker(monkeypatch):
+    candidate = {
+        "chunk_id": "ulp-chunk",
+        "parent_section_id": None,
+        "unit_key": "textbook_sections:ulp-chunk",
+        "fts_score": -2.0,
+        "corpus": "textbook_sections",
+    }
+    captured = {}
+    monkeypatch.setattr(sources_db, "_search_sections_fts5", lambda *args, **kwargs: [candidate])
+    monkeypatch.setattr(
+        sources_db,
+        "_expand_to_chunk_candidates",
+        lambda *args, **kwargs: pytest.fail("unsectioned chunk must stay a direct candidate"),
+    )
+
+    def dense_rerank(query, candidates, *, corpus, limit):
+        captured.update(query=query, candidates=candidates, corpus=corpus, limit=limit)
+        return [{**candidates[0], "dense_score": 0.91, "ranking": "dense"}]
+
+    monkeypatch.setattr(sources_db, "rerank_candidates", dense_rerank)
+
+    results = sources_db._dispatch_corpus_search(
+        "textbook_sections",
+        bucket_a_phrases=[],
+        bucket_b_keywords={"basic"},
+        dense_query="basic",
+        track="a1",
+        candidate_k_per_corpus=1,
+    )
+
+    assert captured["candidates"] == [candidate]
+    assert captured["corpus"] == "textbook_sections"
+    assert results[0]["chunk_id"] == "ulp-chunk"
+    assert results[0]["dense_score"] == pytest.approx(0.91)
+    assert results[0]["ranking"] == "dense"
+
+
 def test_search_sources_archaic_strategy_is_reserved(tmp_path):
     discovery_path = tmp_path / "demo.yaml"
     discovery_path.write_text("query_keywords: []\n", encoding="utf-8")
