@@ -2,8 +2,9 @@
 
 Draft: `agents_extensions/shared/rules/core.md` (always loaded) and
 `agents_extensions/shared/rules/core-curriculum.md` (content-seat addendum). Round 3 restores every
-compound clause that consolidation had dropped and freezes the coverage denominator. Loading, slimming
-the entry files and migrating the sources stay in Phase C.
+compound clause that consolidation had dropped and freezes the coverage denominator. Round 4 applies the
+full audit's replacement wording for 67 lossy units. Loading, slimming the entry files and migrating the
+sources stay in Phase C.
 
 ## Coverage
 
@@ -89,32 +90,53 @@ units below. Each restoration sits at the unit's own anchor unless another ancho
 Duplicate groups whose wording widened to the union: O01, O04, O06, O08, O09, O11, O13, O14, O16, O17,
 O18, O25, O27, O29, O30, O31, O33, O37, C02, C23, C27, F03, F06, O03, U22, M04, M23, N02 and W04.
 
+## Full audit (round 4)
+
+A full audit of all 344 units at the round-3 head found 67 lossy units and gave replacement wording for
+each. Each replacement sits at its unit's anchor, merged with the anchor's other obligations; where
+units share an anchor, the rule states every unit's restored clause. Restored units:
+
+O02, O20, O23, O27, O33, C27, N14, N16, N17, N19, N21, N22, N23, N25, N29, N30, W03, W07, W14, W25,
+W30, W31, W39, W40, F07, F11, F20, F23, F24, F30, D04, M03, M04, M07, M12, M30, M31, M32, L03, L22,
+A18, G25, Y02, Y09, Y12, Y18, Y19, Y36, U01, U03, U05, U22, U25, Q08, Q16, Q17, I09, I10, Z07, E09,
+E13, E19, E23, Eh02, Eh10, Eo03, Ed19.
+
+- Y36 requires its testing clauses in the always-loaded core. Those clauses (every changed function
+  tested, 80% critical-path coverage, Ruff before CF) are stated in `core.md` at `r2-root`. `ca-proof`
+  states the rest of the unit and points there. The manifest still maps Y36 to `ca-proof`.
+- N16: the source writes `словнік`, which VESUM does not attest. The addendum writes `словник`, which it
+  does.
+- Two replacements repeat a rule stated at another anchor, because the audit anchors them that way:
+  O20's completion-report sentence (also W14 at `p0-report`) and Eo03's seat health path (also F20 at
+  `p7-health`).
+- Plan changes (N21, N22) need operator approval. Plan revision is no longer in the designated-approval
+  list.
+
 ## Budget
 
-`core.md` is **23,159 bytes**, 3,159 over the 20,000 budget. `tests/test_rules_core_budget.py::test_core_fits_the_byte_budget`
-therefore fails. Its budget is unchanged: raising it, or moving units out of the core, is a Phase C
-decision. Wording was tightened without dropping a clause. The restored clauses above cost more than
-the tightening saved, so the overflow is the price of stating every clause.
+`core.md` is **32,629 bytes**. The budget in `tests/test_rules_core_budget.py` is now 26,000 bytes
+(driver decision: completeness over the byte target). The core is 6,629 bytes over it, so
+`test_core_fits_the_byte_budget` fails. No clause was cut to fit. The round-4 replacements added
+9,470 bytes to `core.md`.
 
 | Section | Bytes |
 | --- | ---: |
 | Header | 200 |
-| P0 | 1,980 |
-| P1 | 2,376 |
-| P2 | 3,120 |
-| P3 | 1,544 |
-| P4 | 2,852 |
-| P5 | 1,368 |
-| P6 | 1,639 |
-| P7 | 848 |
+| P0 | 2,578 |
+| P1 | 2,703 |
+| P2 | 4,452 |
+| P3 | 1,878 |
+| P4 | 3,777 |
+| P5 | 2,370 |
+| P6 | 2,575 |
+| P7 | 1,511 |
 | P8 | 941 |
-| P9 | 1,101 |
-| Invariants | 4,243 |
+| P9 | 2,324 |
+| Invariants | 6,373 |
 | Load when | 947 |
 
-**Curriculum seats.** The content addendum is `core-curriculum.md` (1,926 bytes). A curriculum seat loads
-**25,085 bytes**, 5,085 over the 20,000 combined target. The addendum loads only for curriculum seats,
-so other seats carry `core.md` alone.
+**Curriculum seats.** The content addendum is `core-curriculum.md` (3,636 bytes). A curriculum seat loads
+**36,265 bytes**. The addendum loads only for curriculum seats, so other seats carry `core.md` alone.
 
 ## Policy applied in round 3
 
@@ -168,7 +190,8 @@ rows in `fleet-role-scorecard.md`; the `MEMORY.md` lines behind S32–S35.
    another allows direct Luna dispatch with exact paths and a scope ceiling. The catalog has both
    routes (`execution_routing` `preferred_worker` and `direct_worker`). The core's bounded-code row
    holds for both.
-4. **Budget.** Whether the 20,000-byte target holds for a core that states every clause (see Budget).
+4. **Budget.** The complete core is 32,629 bytes against the 26,000-byte budget: raise the budget again,
+   or move units out of the always-loaded core (see Budget).
 
 ## Spec-only statements (no inventory unit)
 
@@ -182,5 +205,8 @@ The operator role line, the loop, the infra lane's emergency authority (P6) and 
   that the deploy diff excludes would shadow. `core-manifest.yaml` and `core-expected-ids.txt` are not
   Markdown, so Claude does not autoload them.
 - `tests/test_rules_core_coverage.py` is renamed `tests/test_rules_core_structural_coverage.py`.
-- `tests/test_sum11_source_guard.py`: the pinned `core.md` line carries the renamed anchor.
-- Every P2 model id is still active in the catalog.
+- `tests/test_sum11_source_guard.py`: the pinned `core.md` line carries the renamed anchor. Round 4 pins
+  the two `core.md` lines that name СУМ-11 (`p5-soviet` and `p9-sources`), each as an exact line.
+- `tests/test_rules_core_budget.py`: the budget is 26,000 bytes. The model-id check reads the base id in
+  front of a launcher context suffix such as `[1m]`, and still requires that id to be active in the catalog.
+- Every P2 model id is still active in the catalog, including `composer-2.5`.

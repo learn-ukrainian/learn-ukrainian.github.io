@@ -11,9 +11,10 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 CORE = ROOT / "agents_extensions/shared/rules/core.md"
 CATALOG = ROOT / "scripts/config/model_catalog.yaml"
-CORE_BYTE_BUDGET = 20_000
+CORE_BYTE_BUDGET = 26_000
 PILLARS = tuple(f"P{n}" for n in range(10))
-MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s]*)`")
+# A launcher context-window suffix such as `[1m]` is not part of the model id; the base id is checked.
+MODEL_ID = re.compile(r"`((?:gpt|claude|gemini|grok|kimi|glm|deepseek|composer|poolside)[^`\s\[]*)(?:\[[^\]`\s]*\])?`")
 
 
 def _section(text: str, heading_prefix: str) -> str:

@@ -49,9 +49,10 @@ RULE_CONTEXT_LINES = {
         "| **СУМ-11** | 127K (7,152 flagged Sovietized — #1659) | Ukrainian explanatory (definitions, citations) | `data/sources.db` FTS5 |",
         "Source: [bakustarver/ukr-dictionaries-list-opensource](https://github.com/bakustarver/ukr-dictionaries-list-opensource) (СУМ-11, Балла, Фразеологічний)",
     }),
-    # Always-loaded core: the single contrast-only prohibition.
+    # Always-loaded core: the contrast-only prohibition and the historical-dictionaries context line.
     "agents_extensions/shared/rules/core.md": frozenset({
-        "- СУМ-11 (`search_definitions`) is Soviet-contrast context, never proof of meaning, stress or existence; missing modern meaning stays flagged unresolved, never an invented gloss. <!-- p5-soviet: U22 -->",
+        "- Use СУМ-11 (`search_definitions`) only for Sovietization detection and contrastive occupation context, never normative verification or proof of meaning, stress or existence. Preserve historical layers and surface СУМ-11 as `soviet_colonization_context` with `sovietization_risk`, `sovietization_keywords` and ideological markers, alongside modern standards and pre-Soviet witnesses. When `sovietization_risk > 0` or evaluating dictionary entries, never reproduce СУМ-11 definitions as modern standard Ukrainian; use modern authorities for definitions and Грінченко for pre-Soviet attestation. Missing modern meaning stays flagged unresolved, never an invented gloss. <!-- p5-soviet: U22 -->",
+        "- Exclude by source and role, not date: Russian-language sources and the Soviet normative dictionary (P5) never set meaning, norm or stress; modern norms follow P5; historical layers stay, in context; approved Ukrainian authorities of any era bind. Preserve and contextualize historical dictionaries: Грінченко as authentic pre-Soviet attestation produced under imperial bans; СУМ-11 as Soviet occupation, censorship and Russification, displayed under `soviet_colonization_context` with risk and markers; СУМ-20/ВТС/ULIF as the contemporary standard. <!-- p9-sources: Q16 -->",
     }),
     # Prohibitions and contrast-only use.
     "agents_extensions/shared/rules/non-negotiable-rules.md": frozenset({
