@@ -68,6 +68,7 @@ _FAILURE_CODES = frozenset(
         "non_evidentiary",
         "primary_cwd_rejected",
         "protocol_output_limit",
+        "provider_error",
         "provider_unavailable",
         "rate_limited",
         "result_invalid",

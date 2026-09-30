@@ -487,7 +487,7 @@ def _failure_metadata(*, error: BaseException | None = None, result: object | No
                 "code": "route_model_conflict",
                 "retryable": False,
             }
-        if "effort pin" in error_text or "registered effort" in error_text:
+        if "effort pin" in error_text or "registered effort" in error_text or "supported effort values" in error_text:
             return {
                 "phase": "admission",
                 "code": "route_effort_conflict",
@@ -525,6 +525,8 @@ def _failure_metadata(*, error: BaseException | None = None, result: object | No
         return {"phase": "transport", "code": code, "retryable": True}
     if code == "provider_unavailable":
         return {"phase": "provider", "code": code, "retryable": True}
+    if code == "provider_error":
+        return {"phase": "provider", "code": code, "retryable": False}
     if code == "adapter_refused":
         return {"phase": "admission", "code": code, "retryable": False}
     if code == "transport_error":
