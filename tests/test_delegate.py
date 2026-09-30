@@ -14076,6 +14076,28 @@ def _skewed_review_dispatch(tmp_path: Path, monkeypatch, *, task_id: str, **over
     return rc, main, dispatch_wt
 
 
+def test_review_attempt_refuses_output_schema_before_route_or_provisioning(tmp_tasks_dir, tmp_path, capsys):
+    with (
+        patch("scripts.agent_runtime.target_admission.resolve_and_admit") as admit,
+        patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare,
+        patch.object(delegate, "_resolve_output_schema") as resolve_schema,
+        patch.object(delegate.subprocess, "Popen") as spawn,
+    ):
+        rc = delegate.cmd_dispatch(_write_args(
+            mode="read-only", task_id="review-schema-refusal",
+            review_attempt=str(tmp_path / "missing-manifest.yaml"),
+            review_id="review", attempt_id="current",
+            output_schema=str(tmp_path / "missing-schema.json"),
+        ))
+    assert rc == 2
+    assert "attempt_output_schema_unsupported" in capsys.readouterr().err
+    admit.assert_not_called()
+    prepare.assert_not_called()
+    resolve_schema.assert_not_called()
+    spawn.assert_not_called()
+    assert not list(tmp_tasks_dir.glob("review-schema-refusal*"))
+
+
 def test_review_attempt_refuses_a_prompt_rendered_against_other_server_code(
     tmp_tasks_dir, tmp_path, monkeypatch, capsys
 ):

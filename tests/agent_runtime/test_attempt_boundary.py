@@ -15,6 +15,7 @@ import tempfile
 import threading
 import tomllib
 import urllib.request
+from dataclasses import replace
 from pathlib import Path
 
 import pytest
@@ -741,14 +742,18 @@ def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, 
         def build_invocation(self, **kwargs):
             attempt = kwargs["tool_config"]["review_attempt_boundary"]
             observed.append(attempt)
-            app_data = attempt.write_root / "app-data"
-            output = attempt.write_root / "tmp" / "output.txt"
+            plan = real_adapter.build_invocation(**{**kwargs, "model": real_adapter.default_model})
+            assert plan.metadata["parent_read_root"] == str(attempt.write_root)
+            app_data = Path(plan.env_overrides.get("AGY_APP_DATA_DIR", attempt.write_root / "app-data"))
+            output = plan.output_file
             transcript = agy_module._brain_transcript_path(app_data, conversation_id)
             target = output if agent == "codex" else transcript
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text("own return")
-            log = attempt.write_root / "tmp" / "agy.log"
-            log.write_text(f"Created conversation {conversation_id}\n")
+            if agent == "agy":
+                assert plan.metadata["log_read_root"] == str(attempt.write_root)
+                log = Path(plan.env_overrides[agy_module._AGY_LOG_ENV])
+                log.write_text(f"Created conversation {conversation_id}\n")
             script = (
                 "import pathlib\n"
                 f"forbidden=pathlib.Path({str(forbidden)!r})\n"
@@ -760,11 +765,7 @@ def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, 
                 "target.symlink_to(forbidden)\n"
                 "print('SWAPPED:seat-name',flush=True)\n"
             )
-            return InvocationPlan(
-                cmd=[sys.executable, "-c", script], cwd=kwargs["cwd"],
-                output_file=output if agent == "codex" else None,
-                env_overrides={agy_module._AGY_LOG_ENV: str(log), "AGY_APP_DATA_DIR": str(app_data)},
-            )
+            return replace(plan, cmd=[sys.executable, "-c", script], stdin_payload=None)
 
         def parse_response(self, **kwargs):
             assert kwargs["returncode"] == 0

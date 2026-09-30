@@ -83,19 +83,29 @@ This uses the directory-fd method described in the
 [Linux open/openat reference](https://man7.org/linux/man-pages/man2/open.2.html);
 `O_NOFOLLOW` on the leaf alone does not protect preceding components.
 
-| Parent read site | Disposition |
-| --- | --- |
-| Codex `parse_response`: final output file | Shared reader; unsafe output returns typed failure immediately. |
-| Shared `_output_schema.load_output_schema` and Codex `_tool_config_flags`: caller-supplied output schema | Shared reader before JSON/hash validation; adapter planning cannot read it through an earlier unsafe loader. |
-| Codex `_read_rollout_segment`: completion, prompt binding and tool trace | Shared reader with invocation offset; unsafe reads cannot be swallowed by matching/recovery. |
-| Codex `_read_rollout_session_id`: session metadata | Shared reader before metadata parsing. |
-| AGY `_read_transcript_events`: transcript events | Shared reader with invocation offset; a shortened resumed transcript remains unbound. |
-| AGY `_transcript_baseline`: resumed prefix sizing | Checked fd `fstat` size; no transcript bytes read. |
-| AGY `_conversation_id_from_log`: invocation log | Shared reader before UUID extraction. |
-| AGY `_inline_saved_tool_result_pointer`: saved result | Lexical conversation steps containment plus shared reader; no resolve/check/reopen race. |
-| Runner `_finalize_v4_runner_origin`: output observation | Shared reader before recording; refusal cannot persist host bytes. |
-| Runner failure diagnostics via watchdog `tail_liveness_file_for_debug` | Checked fd seek and bounded tail read; unsafe files yield no diagnostic bytes. |
-| Runner `_prepare_stdin_handle`: prompt input | Retains the original parent-created descriptor through spawn, without reopening its name. |
+| Parent read site | Walk anchor and ownership | Disposition |
+| --- | --- | --- |
+| Codex `parse_response`: final output file | Plan `parent_read_root`: parent-owned attempt `write_root`; ordinary temp root resolved before launch; `/` without a plan. | Shared reader; unsafe output returns typed failure immediately. |
+| Shared `_output_schema.load_output_schema` and Codex `_tool_config_flags`: caller-supplied output schema | Parent-owned `review_write_root` when supplied; otherwise schema parent resolved before launch. | Shared reader before JSON/hash validation. Dispatch refuses `--review-attempt` with `--output-schema` as `attempt_output_schema_unsupported`. |
+| Codex `_read_rollout_segment`: completion, prompt binding and tool trace | Adapter `_rollout_read_root`: parent-owned attempt `write_root`; ordinary Codex home resolved before launch; `/` for unplanned calls. | Shared reader with invocation offset; unsafe reads cannot be swallowed by matching/recovery. |
+| Codex `_select_rollout_for_plan` and `_read_rollout_session_id`: session metadata | Same `_rollout_read_root`, passed through to the session-ID reader; `/` for direct calls. | Shared reader before metadata parsing. |
+| AGY `_read_transcript_events`: transcript events | `_transcript_read_location`: parent-owned attempt `write_root`; ordinary app-data root resolved before launch; `/` for changed ordinary overrides or direct calls. | Shared reader with invocation offset; a shortened resumed transcript remains unbound. |
+| AGY `_transcript_baseline`: resumed prefix sizing | App-data root resolved before launch, while still parent-controlled; formal attempts cannot resume. | Checked fd `fstat` size; no transcript bytes read. |
+| AGY `_conversation_id_from_log`: invocation log | Plan `log_read_root`: parent-owned attempt `write_root`; ordinary log parent resolved before launch; `/` for direct calls. | Shared reader before UUID extraction. |
+| AGY `_inline_saved_tool_result_pointer`: saved result | Plan's transcript read root carried through FIFO, indexed and generic result pairing; parent-owned attempt `write_root`, ordinary pre-launch app-data root, or `/` for direct calls. Conversation steps directories are lexical containment only, never walk anchors. | Shared reader refuses replaced conversation ancestors even after the transcript has been read. |
+| Runner `_finalize_v4_runner_origin`: output observation | Plan `parent_read_root` (parent-owned attempt `write_root` or ordinary pre-launch adapter root); `/` if absent. | Shared reader before recording; refusal cannot persist host bytes. |
+| Runner failure diagnostics via watchdog `tail_liveness_file_for_debug` | Default `/`: parent-owned filesystem root, with every descendant walked no-follow. | Checked fd seek and bounded tail read; unsafe files yield no diagnostic bytes. |
+| Runner `_prepare_stdin_handle`: prompt input | No named-file walk anchor. | Retains the original parent-created descriptor through spawn, without reopening its name. |
+
+The anchor audit found no other seat-writable walk anchor in these consumers.
+Ordinary pre-launch roots are trusted adapter configuration, not formal-attempt
+isolation claims. A fallback `/` is conservative and does not trust a replaced
+intermediate directory. The sandbox swap regression builds each plan with its
+real adapter and preserves these anchors while substituting the probe command.
+
+Residual N5: a Codex session-meta line exceeding the 64 KiB prefix can omit the
+session ID. The prefix bound is unchanged; infra owns any future change, with
+an oversized metadata-line regression and exact-head review before landing.
 
 Codex rollout timestamps, snapshot sizes, liveness mtime polling and runner
 cleanup size checks inspect metadata only; they never read target bytes.

@@ -273,6 +273,93 @@ def test_agy_saved_result_component_swap_is_refused(tmp_path):
         agy._inline_saved_tool_result_pointer(text, transcript_path=transcript)
 
 
+@pytest.mark.parametrize("steps_dir", ["steps", ".system_generated/steps"])
+def test_agy_saved_result_symlinked_conversation_is_refused(tmp_path, steps_dir):
+    app_data = tmp_path / "app-data"
+    conversation = app_data / "brain" / UUID
+    conversation.parent.mkdir(parents=True)
+    outside = tmp_path / "outside"
+    output = outside / steps_dir / "output.txt"
+    output.parent.mkdir(parents=True)
+    output.write_bytes(SENTINEL)
+    assert output.read_bytes() == SENTINEL  # outside-boundary positive control
+    conversation.symlink_to(outside, target_is_directory=True)
+    transcript = agy._brain_transcript_path(app_data, UUID)
+    pointer = conversation / steps_dir / "output.txt"
+    text = f"The output was large and was saved to: {pointer.as_uri()}"
+    assert agy._SAVED_OUTPUT_POINTER_RE.search(text)
+    with pytest.raises(AttemptReadError, match="attempt_read_unsafe_path"):
+        agy._inline_saved_tool_result_pointer(text, transcript_path=transcript)
+
+
+@pytest.mark.parametrize("shape", ["fifo", "step_index", "generic"])
+@pytest.mark.parametrize("swap", [False, True])
+def test_agy_saved_result_uses_plan_root_after_transcript_read(tmp_path, monkeypatch, shape, swap):
+    import json
+
+    root = tmp_path / "runtime"
+    root.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(root, target_is_directory=True)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: root / "agy.log")
+    plan = agy.AgyAdapter().build_invocation(
+        prompt="prompt", mode="workspace-write", cwd=tmp_path,
+        model=None, task_id=None, session_id=None,
+        tool_config={"agy_home_override": str(alias / "home"), "review_write_root": str(root)},
+    )
+    assert plan.metadata["parent_read_root"] == str(root)
+    app_data, _ = agy._transcript_read_location(plan)
+    transcript = agy._brain_transcript_path(app_data, UUID)
+    conversation = transcript.parent.parent.parent
+    output = conversation / "steps" / "output.txt"
+    output.parent.mkdir(parents=True)
+    output.write_text("own saved result")
+    transcript.parent.mkdir(parents=True)
+    events = [
+        {"tool_calls": [{"name": "call_mcp_tool", "args": {
+            "ServerName": "sources", "ToolName": "search_text", "Arguments": {},
+        }}]},
+        {"type": "GENERIC" if shape == "generic" else "MCP_TOOL",
+         "content": f"The output was large and was saved to: {output.as_uri()}"},
+    ]
+    if shape != "fifo":
+        for index, event in enumerate(events):
+            event["step_index"] = index
+    transcript.write_text("\n".join(json.dumps(event) for event in events) + "\n")
+    Path(plan.env_overrides[agy._AGY_LOG_ENV]).write_text(f"Created conversation {UUID}\n")
+    outside = tmp_path / "outside"
+    forbidden = outside / "steps" / "output.txt"
+    forbidden.parent.mkdir(parents=True)
+    forbidden.write_bytes(SENTINEL)
+    assert forbidden.read_bytes() == SENTINEL
+    original = agy._read_transcript_events
+    read_file = agy.safe_read_attempt_file
+    saved_roots = []
+
+    def observe_saved_root(path, **kwargs):
+        if path == output:
+            saved_roots.append(kwargs["trusted_root"])
+        return read_file(path, **kwargs)
+
+    def read_then_swap(*args, **kwargs):
+        result = original(*args, **kwargs)
+        if swap:
+            conversation.rename(conversation.with_name("old-conversation"))
+            conversation.symlink_to(outside, target_is_directory=True)
+        return result
+
+    monkeypatch.setattr(agy, "_read_transcript_events", read_then_swap)
+    monkeypatch.setattr(agy, "safe_read_attempt_file", observe_saved_root)
+    if swap:
+        with pytest.raises(AttemptReadError, match="attempt_read_unsafe_path"):
+            agy._parse_transcript_tool_calls(plan)
+    else:
+        calls = agy._parse_transcript_tool_calls(plan)
+        assert calls[0]["result"] == [{"type": "text", "text": "own saved result"}]
+    assert saved_roots == [root]
+
+
 def test_agy_transcript_baseline_refuses_symlink(tmp_path):
     app_data = tmp_path / "app-data"
     transcript = agy._brain_transcript_path(app_data, UUID)

@@ -1069,13 +1069,14 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     if bound is None:
         return []
     transcript_path, events = bound.path, bound.events
+    _, trusted_root = _transcript_read_location(plan)
 
     has_step_index = any(_event_step_index(event) is not None for event in events)
     if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
-        return _pair_transcript_generic_results(events, transcript_path=transcript_path)
+        return _pair_transcript_generic_results(events, transcript_path=transcript_path, trusted_root=trusted_root)
     if has_step_index:
-        return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
-    return _pair_transcript_fifo(events, transcript_path=transcript_path)
+        return _pair_transcript_by_step_index(events, transcript_path=transcript_path, trusted_root=trusted_root)
+    return _pair_transcript_fifo(events, transcript_path=transcript_path, trusted_root=trusted_root)
 
 
 class _TranscriptSlice(NamedTuple):
@@ -1181,11 +1182,14 @@ def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any
     return call
 
 
-def _mcp_result_text(event: Mapping[str, Any], *, transcript_path: Path) -> str:
+def _mcp_result_text(
+    event: Mapping[str, Any], *, transcript_path: Path, trusted_root: Path = Path("/")
+) -> str:
     result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
     return _inline_saved_tool_result_pointer(
         result_text,
         transcript_path=transcript_path,
+        trusted_root=trusted_root,
     )
 
 
@@ -1193,6 +1197,7 @@ def _pair_transcript_fifo(
     events: list[dict[str, Any]],
     *,
     transcript_path: Path,
+    trusted_root: Path = Path("/"),
 ) -> list[dict[str, Any]]:
     """Legacy pairing: file order FIFO between planner intents and MCP results."""
     calls: list[dict[str, Any]] = []
@@ -1205,7 +1210,7 @@ def _pair_transcript_fifo(
         calls.append(
             _attach_tool_result(
                 call,
-                _mcp_result_text(event, transcript_path=transcript_path),
+                _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root),
             )
         )
     calls.extend(pending)
@@ -1229,6 +1234,7 @@ def _pair_transcript_by_step_index(
     events: list[dict[str, Any]],
     *,
     transcript_path: Path,
+    trusted_root: Path = Path("/"),
 ) -> list[dict[str, Any]]:
     """Pair planner intents with MCP results in ``step_index`` (FIFO) order.
 
@@ -1262,7 +1268,7 @@ def _pair_transcript_by_step_index(
             pending_keys.add(key)
         if event.get("type") != "MCP_TOOL":
             continue
-        result_text = _mcp_result_text(event, transcript_path=transcript_path)
+        result_text = _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root)
         if pending:
             call = pending.pop(0)
             pending_keys.discard(_intent_dedupe_key(call))
@@ -1285,6 +1291,7 @@ def _pair_transcript_generic_results(
     events: list[dict[str, Any]],
     *,
     transcript_path: Path,
+    trusted_root: Path = Path("/"),
 ) -> list[dict[str, Any]]:
     """Pair planner intents with ``GENERIC`` results (agy 2026-09 transcript shape).
 
@@ -1323,7 +1330,7 @@ def _pair_transcript_generic_results(
             calls.append(
                 _attach_tool_result(
                     call,
-                    _mcp_result_text(event, transcript_path=transcript_path),
+                    _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root),
                 )
             )
     return calls
@@ -1498,7 +1505,9 @@ def _build_tool_call(tool_name: str, args: dict[str, Any], result_text: str) -> 
     return call
 
 
-def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> str:
+def _inline_saved_tool_result_pointer(
+    text: str, *, transcript_path: Path, trusted_root: Path = Path("/")
+) -> str:
     """Inline agy's safe ``file://.../steps/.../output.txt`` tool-result pointer."""
     match = _SAVED_OUTPUT_POINTER_RE.search(text)
     if not match:
@@ -1510,12 +1519,12 @@ def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> st
 
     path = Path(urllib.parse.unquote(parsed.path))
     allowed_roots = _allowed_tool_result_roots(transcript_path)
-    root = next((root for root in allowed_roots if _is_relative_to(path, root)), None)
-    if root is None:
+    if not any(_is_relative_to(path, root) for root in allowed_roots):
         _logger.warning("agy refused unsafe tool result pointer")
         return text
     try:
-        raw = safe_read_attempt_file(path, trusted_root=root)
+        # Steps roots constrain names only; the seat can replace their ancestors.
+        raw = safe_read_attempt_file(path, trusted_root=trusted_root)
     except FileNotFoundError:
         _logger.warning("agy tool result pointer missing")
         return text

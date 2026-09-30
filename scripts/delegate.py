@@ -9384,6 +9384,13 @@ def _dispatch(
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
     # the original request before the route probes anything and the resolved route after it.
     review_attempt = getattr(args, "review_attempt", None)
+    if review_attempt and getattr(args, "output_schema", None):
+        print(
+            "❌ review attempt refused: attempt_output_schema_unsupported: "
+            "--review-attempt cannot be combined with --output-schema (#9251)",
+            file=sys.stderr,
+        )
+        return 2
     from scripts.agent_runtime.target_admission import launch_seat
 
     if str(_REPO_ROOT) not in sys.path:
@@ -13090,7 +13097,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Bind a JSON Schema to the final response of an effective Codex "
             "dispatch. The file is parsed before spawn, resolved to an "
             "absolute path, hashed into task state, and revalidated by the "
-            "Codex adapter before it emits --output-schema."
+            "Codex adapter before it emits --output-schema. "
+            "Cannot be combined with --review-attempt; default: omitted."
         ),
     )
     d.add_argument(
