@@ -102,6 +102,80 @@ def test_same_family_requested_reviewer_takes_resolvers_eligible_seat(monkeypatc
     assert routing.substitution["source"] == "reviewer-resolver"
 
 
+@pytest.mark.parametrize("risk", ["critical", "medium"])
+@pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
+def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk, flags):
+    args = _args(
+        "--agent", "claude", "--model", "claude-fable-5-1",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, *flags,
+    )
+    assert all(
+        candidate.concrete_model != args.model
+        for rung in reviewer_resolver.REVIEW_LADDERS[risk] for candidate in rung
+    )
+    (refusal, target), routing = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-fable-5-1")
+    assert routing.substitution is None
+    assert "SUBSTITUT" not in capsys.readouterr().err
+
+
+def test_off_ladder_reviewer_is_substituted_when_budget_requires_it(monkeypatch, capsys):
+    args = _args(
+        "--agent", "claude", "--model", "claude-fable-5-1", "--check-budget",
+        "--review-author-model", "composer-2.5", "--review-risk", "critical",
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
+    assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert routing.substitution["actual_agent"] == "codex"
+    assert "HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("flags", [(), ("--force-agent",)])
+@pytest.mark.parametrize("seat,model", [("codex", "gpt-6.1-sol"), ("grok", "grok-4.7")])
+def test_admission_identity_swap_always_prints_typed_note(monkeypatch, capsys, flags, seat, model):
+    args = _args(
+        "--agent", seat, "--model", model,
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical", *flags,
+    )
+    (refusal, target), routing = _admit(args, monkeypatch)
+    assert refusal is None and target.recipient == "claude"
+    assert routing.substitution["actual_model"] == target.model
+    assert "REVIEW_IDENTITY_SUBSTITUTED:" in capsys.readouterr().err
+
+
+def test_gemini_alias_keeps_ukrainian_review_admission(monkeypatch, capsys):
+    args = _args("--agent", "gemini", "--review-profile", "ukrainian")
+    args.model = None
+    (refusal, target), routing = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
+    assert routing.substitution["actual_agent"] == "agy"
+    assert "RETIRED CLI ALIAS:" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize(
+    "flags", [("--review-author-model", "gpt-6.1-sol"), ("--review-risk", "medium"),
+              ("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical")],
+)
+def test_ukrainian_review_resolver_flags_refuse_with_code_only_guidance(monkeypatch, flags):
+    (refusal, target), _ = _admit(_args("--review-profile", "ukrainian", *flags), monkeypatch)
+    assert target is None
+    assert "REVIEW_ROUTE_REFUSED:" in refusal and "code profile only" in refusal
+
+
+def test_review_resolver_help_and_budget_notice_state_code_profile_only(monkeypatch, capsys):
+    parser = delegate.build_parser()
+    with pytest.raises(SystemExit) as exit_info:
+        parser.parse_args(["dispatch", "--help"])
+    assert exit_info.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert help_text.count("Code profile only") >= 2
+    (refusal, target), _ = _admit(_args("--review-profile", "ukrainian", "--check-budget"), monkeypatch)
+    assert refusal is None and target.recipient == "codex"
+    assert "code profile only" in capsys.readouterr().err
+
+
 def test_review_budget_success_matches_exact_in_process_resolver_result(monkeypatch, capsys):
     resolutions = []
     real = reviewer_resolver.resolve_reviewer
@@ -244,7 +318,7 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
         pinned_head_sha="a" * 40,
     )
     if reused and local_head != "a" * 40:
-        with pytest.raises(RuntimeError, match="differs from the Gemini path-gate SHA"):
+        with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
             delegate._resolve_worktree_base_sha(**kwargs)
     else:
         assert delegate._resolve_worktree_base_sha(**kwargs) == "a" * 40

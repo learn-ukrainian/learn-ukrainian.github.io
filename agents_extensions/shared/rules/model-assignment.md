@@ -34,6 +34,14 @@ Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degra
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
 
+Review-typed dispatches judge an explicitly requested reviewer by the resolver's
+per-candidate eligibility gates; ladder membership is not an allowlist. For the
+code profile only, supply `--review-author-model` and `--review-risk` to allow
+canonical reviewer substitution when admission or the budget guard requires it.
+Every substitution emits a typed note, including with `--force-agent`, which
+bypasses budget checks but does not waive reviewer eligibility. Ukrainian
+reviews use `--review-profile ukrainian` without these code resolver flags.
+
 ### Historical Wave 1 CF SCORECARD fold (provisional, 2026-08-23)
 
 Operator/CTO GO 2026-08-23. Letter grades are **advisory labels** on the existing

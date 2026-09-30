@@ -63,6 +63,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "returncode": int | null,
         "returncode_reason": str | null,
         "require_review_verdict": bool,  # opt-in bridge review completion gate
+        "pinned_head": str | null,  # exact --branch/--pr head required before dispatch
+        "review_author_model": str | null,  # trusted author identity for code review resolution
+        "review_risk": str | null,  # code review resolver risk; budget substitution needs author + risk
+        "review_profile": str | null,  # code (default) or ukrainian
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
@@ -6990,11 +6994,11 @@ def _record_worktree_local_venv_warning(
 
 
 def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> None:
-    """Refuse when a later fetch is not the SHA the Gemini path gate checked."""
+    """Refuse when a fetched or reused head differs from the required pinned SHA."""
     if pinned_head_sha is not None and origin_sha != pinned_head_sha:
         raise RuntimeError(
             "refusing dispatch: fetched branch head "
-            f"{origin_sha} differs from the Gemini path-gate SHA {pinned_head_sha}"
+            f"{origin_sha} differs from the pinned head SHA {pinned_head_sha}"
         )
 
 
@@ -11352,6 +11356,11 @@ def _dispatch_route(
         if request.review_select is not None:
             selected_agent, selected_model = request.review_select(None, requested_agent)
             if (selected_agent, selected_model) != (requested_agent, original_model):
+                print(
+                    f"REVIEW_IDENTITY_SUBSTITUTED: --agent {requested_agent} --model {original_model} "
+                    f"→ --agent {selected_agent} --model {selected_model} (reviewer resolver admission).",
+                    file=sys.stderr,
+                )
                 _remember_agent_substitution(
                     model_resolution,
                     source="reviewer-resolver",
@@ -11871,12 +11880,12 @@ def _resolve_agent_with_budget_guard(
         if sub == requested and chosen == requested_model:
             print(
                 "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer; "
-                "--review-author-model and --review-risk are required for budget substitution",
+                "budget substitution requires --review-author-model and --review-risk (code profile only)",
                 file=sys.stderr,
             )
             return requested
         print(
-            f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} --model {chosen} "
+            f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
             f"({reason}; reviewer resolver).",
             file=sys.stderr,
         )
@@ -12948,6 +12957,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="MODEL",
         help=(
             "Author's concrete model for cross-family reviewer resolution (e.g. gpt-6.1-sol). "
+            "Code profile only. "
             "Review budget substitution requires this and --review-risk; the reviewer's model "
             "is never the author identity. Default: None (keep eligible requested reviewer)."
         ),
@@ -12958,7 +12968,7 @@ def build_parser() -> argparse.ArgumentParser:
         choices=("low", "medium", "high", "critical"),
         help=(
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
-            "Uses --review-profile (code by default). Default: None (no review budget substitution). "
+            "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
             "Example: critical for admission or launcher changes."
         ),
     )

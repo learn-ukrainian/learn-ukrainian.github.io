@@ -764,26 +764,29 @@ def format_refusal(agent: str, reasons: Iterable[Any]) -> str:
 
 
 def _alternative_seats() -> str:
-    """Catalog-backed alternatives distinguish judging from consults and discussions."""
-    from scripts.review.model_catalog import load_model_catalog
+    """Prefer catalog alternatives; unavailable catalog data must not interrupt a typed refusal."""
+    try:
+        from scripts.review.model_catalog import load_model_catalog
 
-    catalog = load_model_catalog()
-    models = catalog["models"]
-    reviewers = sorted(
-        {
-            entry["route"]
-            for entry in catalog["review_candidates"].values()
-            if models[entry["model_id"]]["family"] in {"anthropic", "openai"}
-            and catalog["review_scheduler"]["endpoints"].get(entry["route"], {}).get("formal_review_eligible")
-        }
-    )
-    consults = sorted(
-        {
-            seat
-            for seat, entry in catalog["orchestrator_seats"].items()
-            if models.get(entry["model_id"], {}).get("family") in {"anthropic", "openai", "xai"}
-        }
-    )
+        catalog = load_model_catalog()
+        models = catalog["models"]
+        reviewers = sorted(
+            {
+                entry["route"]
+                for entry in catalog["review_candidates"].values()
+                if models[entry["model_id"]]["family"] in {"anthropic", "openai"}
+                and catalog["review_scheduler"]["endpoints"].get(entry["route"], {}).get("formal_review_eligible")
+            }
+        )
+        consults = sorted(
+            {
+                seat
+                for seat, entry in catalog["orchestrator_seats"].items()
+                if models.get(entry["model_id"], {}).get("family") in {"anthropic", "openai", "xai"}
+            }
+        )
+    except Exception:  # Like is_kimi_model, refusal remains available without the catalog.
+        reviewers, consults = ["claude", "codex"], ["claude", "codex", "grok"]
     return (
         f"reviews → {', '.join(reviewers)} (per the reviewer resolver); "
         f"consults and discussions → {', '.join(consults[:-1])}, or {consults[-1]}; "

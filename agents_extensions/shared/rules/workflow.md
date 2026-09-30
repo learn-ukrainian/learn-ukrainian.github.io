@@ -155,6 +155,15 @@ the separate challenge proof and `confirm-started` can unlock cleanup.
 
 ## Merge policy — ready PRs must not sit (#4703; landing order #7450)
 
+For review-typed `delegate.py dispatch` calls, `--review-author-model` and
+`--review-risk` provide trusted inputs to the code reviewer resolver (code
+profile only). An eligible requested reviewer is retained; necessary admission
+or budget substitutions use the resolver and emit a typed identity-change note.
+Without both inputs, no budget substitution occurs. Ukrainian reviews use
+`--review-profile ukrainian` without these code resolver flags. Existing
+`--review-attempt` identities never change. `--pinned-head` requires `--branch`
+or `--pr` and is checked against the fetched and reused heads before launch.
+
 The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09-03;
 **CF review-fix before CI** clarified operator 2026-09-18):
 

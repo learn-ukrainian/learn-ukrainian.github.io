@@ -216,17 +216,27 @@ def resolve_and_admit(
     for name in raw:
         recipient, target_model, reason = name, explicit_model, "explicit"
         approved_review_targets: set[tuple[str, str | None]] = set()
+        review_seat = name
+        if review_dispatch:
+            review_seat = COMPAT_TARGETS.get(name.strip().lower(), name) if compat else name
+            review_seat = _retired_successor(review_seat) or review_seat
+        review_model = explicit_model
+        if review_dispatch and review_seat != name and review_model is None:
+            from .telemetry import _default_model_for
+
+            review_model = _default_model_for(review_seat)
 
         def review_select(
             snapshot: Mapping[str, Any] | None,
             budget_seat: str,
             *,
-            requested_seat: str = name,
+            requested_seat: str = review_seat,
+            requested_model: str | None = review_model,
             approved: set[tuple[str, str | None]] = approved_review_targets,
         ) -> tuple[str, str | None]:
             selected = _resolve_review_target(
                 requested_seat,
-                explicit_model,
+                requested_model,
                 author_model=review_author_model,
                 risk=review_risk,
                 profile=review_profile or "code",
@@ -301,9 +311,12 @@ def _resolve_review_target(
     """
     from scripts.review.reviewer_resolver import (
         REVIEW_CANDIDATES,
+        REVIEW_LADDERS,
         UNKNOWN_AUTHOR_FAMILY,
+        UNRESOLVED_AUTHOR_FAMILIES,
         ResolverInputs,
         evaluate_candidate,
+        resolve_author_family,
         resolve_family,
         resolve_reviewer,
     )
@@ -316,6 +329,11 @@ def _resolve_review_target(
     if profile != "ukrainian":
         forbidden.add("google")
     trusted = bool(author_model and risk)
+    if profile != "code" and (author_model or risk):
+        raise ReviewAdmissionRefused(
+            "REVIEW_ROUTE_REFUSED: --review-author-model and --review-risk support the code profile only; "
+            "Ukrainian reviews use --review-profile ukrainian without these flags"
+        )
     if attempt and snapshot is not None:
         raise ReviewAdmissionRefused(
             "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt substitution is not allowed (#8517)"
@@ -325,44 +343,50 @@ def _resolve_review_target(
         review_profile=profile,
         domain=profile,
         risk=risk or "medium",
-        # The dispatch rules prohibit judging by these families, including catalogued old routes.
-        subject_families=frozenset(forbidden),
         routing_snapshot=snapshot if trusted else None,
     )
-    resolution = (
-        resolve_reviewer(inputs, excluded_quota_buckets=frozenset({budget_seat}) if snapshot else frozenset())
-        if trusted
-        else None
-    )
-    if resolution is not None and resolution.fail_closed_reason:
-        raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
-    if profile == "ukrainian" and not trusted:
-        eligible = seat in {"claude", "codex", "agy", "gemini"} and family in {"anthropic", "openai", "google"}
-    elif resolution is not None:
-        eligible = any(
-            candidate.route == seat
-            and candidate.concrete_model == concrete
-            and candidate.status in {"eligible", "selected"}
-            for candidate in resolution.trace
-        )
+    author_family = resolve_author_family(author_model or "") if trusted else UNKNOWN_AUTHOR_FAMILY
+    if trusted and author_family in UNRESOLVED_AUTHOR_FAMILIES:
+        raise ReviewAdmissionRefused("REVIEW_ROUTE_REFUSED: author's concrete model family cannot be resolved")
+    if profile == "ukrainian":
+        eligible = seat in {"claude", "codex", "agy"} and family in {"anthropic", "openai", "google"}
     else:
         eligible = family not in forbidden and any(
             candidate.route == seat
             and candidate.concrete_model == concrete
-            and evaluate_candidate(candidate, inputs, author_family=UNKNOWN_AUTHOR_FAMILY).status == "eligible"
+            and evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
             for candidate in REVIEW_CANDIDATES.values()
         )
     if attempt and (snapshot is not None or not eligible):
         raise ReviewAdmissionRefused(
-            "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt substitution is not allowed (#8517)"
+            "REVIEW_ATTEMPT_IDENTITY_REFUSED: requested review attempt identity is ineligible; "
+            "attempt identities cannot be substituted (#8517)"
         )
     if eligible and (snapshot is None or not trusted):
         return seat, model
-    selected = resolution.selected if resolution else None
+    if not trusted:
+        raise ReviewAdmissionRefused(
+            f"REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile {profile}; "
+            "code profile substitution requires --review-author-model and --review-risk"
+        )
+    # Dispatch prohibitions constrain the ladder, rather than masquerading as
+    # subject-boundary exclusions. Per-candidate eligibility above is independent
+    # of ladder membership; only a necessary substitute uses ladder selection.
+    ladder = tuple(
+        tuple(candidate for candidate in rung if candidate.family not in forbidden)
+        for rung in REVIEW_LADDERS[inputs.risk]
+    )
+    resolution = resolve_reviewer(
+        inputs,
+        ladder=ladder,
+        excluded_quota_buckets=frozenset({budget_seat}) if snapshot else frozenset(),
+    )
+    if resolution.fail_closed_reason:
+        raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
+    selected = resolution.selected
     if selected is None or selected.family in forbidden:
         raise ReviewAdmissionRefused(
-            f"REVIEW_ROUTE_REFUSED: no eligible reviewer for --review-profile {profile}; substitution requires "
-            "--review-author-model and --review-risk and a resolver-selected seat"
+            f"REVIEW_ROUTE_REFUSED: no resolver-selected eligible substitute for --review-profile {profile}"
         )
     return selected.route, selected.concrete_model
 

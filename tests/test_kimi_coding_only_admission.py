@@ -607,6 +607,24 @@ def test_kimi_refusal_distinguishes_reviewers_from_consult_and_discussion_seats(
     assert "grok" in consultations
 
 
+def test_kimi_refusal_stays_typed_when_catalog_import_is_unavailable(monkeypatch):
+    import builtins
+
+    real_import = builtins.__import__
+
+    def without_catalog(name, *args, **kwargs):
+        if name == "scripts.review.model_catalog":
+            raise ModuleNotFoundError("catalog unavailable")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", without_catalog)
+    with pytest.raises(kimi_admission.KimiAdmissionRefused) as refusal:
+        kimi_admission.refuse_kimi_if_disallowed(("kimi",), mode="read-only", review=True)
+    message = str(refusal.value)
+    assert "reviews → claude, codex (per the reviewer resolver)" in message
+    assert "consults and discussions → claude, codex, or grok" in message
+
+
 # --- delegate dispatch admission --------------------------------------------------
 
 
