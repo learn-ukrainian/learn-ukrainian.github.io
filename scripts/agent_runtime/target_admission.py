@@ -94,6 +94,7 @@ class RouteRequest:
     retired_successor: str | None
     fallbacks: Mapping[str, str]
     review_select: ReviewSelector | None = None
+    retired_model_resolution: tuple[str, str] | None = None
 
 
 # A launch route: the ``(seat, model, reason)`` a request is launched as.
@@ -161,6 +162,10 @@ def resolve_and_admit(
     review_risk: str | None = None,
     review_profile: str | None = None,
     review_attempt: bool = False,
+    review_alias_model_resolver: Callable[[str, str | None], tuple[str, str]] | None = None,
+    review_owned_paths: tuple[str, ...] = (),
+    review_subject_seats: frozenset[str] = frozenset(),
+    review_subject_families: frozenset[str] = frozenset(),
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -198,7 +203,10 @@ def resolve_and_admit(
 
     Review dispatches additionally constrain routes to ``review_select``'s
     admitted identities. Budget substitutions require both ``review_author_model``
-    and ``review_risk``; review attempts never change identity.
+    and ``review_risk``; review attempts never change identity. Retired aliases
+    use ``review_alias_model_resolver`` once before selection and carry that
+    model resolution into the launch route. Review owned paths and explicit
+    subject seats/families use the canonical resolver's exclusion semantics.
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -217,6 +225,7 @@ def resolve_and_admit(
         recipient, target_model, reason = name, explicit_model, "explicit"
         approved_review_targets: set[tuple[str, str | None]] = set()
         review_seat = name
+        retired_model_resolution = None
         if review_dispatch:
             review_seat = COMPAT_TARGETS.get(name.strip().lower(), name) if compat else name
             successor = _retired_successor(review_seat)
@@ -228,10 +237,14 @@ def resolve_and_admit(
                 )
             review_seat = successor or review_seat
         review_model = explicit_model
-        if review_dispatch and review_seat != name and review_model is None:
-            from .telemetry import _default_model_for
+        if review_dispatch and review_seat != name:
+            if successor and review_alias_model_resolver is not None:
+                retired_model_resolution = review_alias_model_resolver(review_seat, explicit_model)
+                review_model = retired_model_resolution[0]
+            elif review_model is None:
+                from .telemetry import _default_model_for
 
-            review_model = _default_model_for(review_seat)
+                review_model = _default_model_for(review_seat)
 
         def review_select(
             snapshot: Mapping[str, Any] | None,
@@ -251,6 +264,9 @@ def resolve_and_admit(
                 snapshot=snapshot,
                 budget_seat=budget_seat,
                 budget_substitute=fallbacks.get(budget_seat),
+                owned_paths=review_owned_paths,
+                subject_seats=review_subject_seats,
+                subject_families=review_subject_families,
             )
             approved.add(selected)
             return selected
@@ -273,6 +289,7 @@ def resolve_and_admit(
                     _retired_successor(recipient),
                     fallbacks,
                     review_select if review_dispatch else None,
+                    retired_model_resolution,
                 )
             )
         if resolver is not None:
@@ -310,6 +327,9 @@ def _resolve_review_target(
     snapshot: Mapping[str, Any] | None,
     budget_seat: str,
     budget_substitute: str | None = None,
+    owned_paths: tuple[str, ...] = (),
+    subject_seats: frozenset[str] = frozenset(),
+    subject_families: frozenset[str] = frozenset(),
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
@@ -329,6 +349,7 @@ def _resolve_review_target(
         resolve_family,
         resolve_reviewer,
     )
+    from scripts.review.subject_seat import prepare_subject_exclusion
 
     from .telemetry import _default_model_for
 
@@ -352,12 +373,21 @@ def _resolve_review_target(
         else:
             detail = f"review attempt refused for {seat}: budget guard requires substitution; attempt identity is immutable"
         raise ReviewAdmissionRefused(f"REVIEW_ATTEMPT_IDENTITY_REFUSED: {detail} (#8517)")
+    subject = prepare_subject_exclusion(
+        owned_paths=owned_paths, subject_seats=subject_seats, subject_families=subject_families
+    )
+    if subject.fail_closed_reason:
+        raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {subject.fail_closed_reason}")
     inputs = ResolverInputs(
         author_model=author_model or "",
         review_profile=profile,
         domain=profile,
         risk=risk or "medium",
         routing_snapshot=snapshot if trusted else None,
+        owned_paths=owned_paths,
+        subject_seats=subject.seats,
+        subject_families=subject.families,
+        subject_evidence=subject.evidence,
     )
     author_family = resolve_author_family(author_model or "") if trusted else UNKNOWN_AUTHOR_FAMILY
     if trusted and author_family in UNRESOLVED_AUTHOR_FAMILIES:
@@ -385,9 +415,14 @@ def _resolve_review_target(
     if eligible and (snapshot is None or not trusted):
         return seat, model
     if not trusted:
+        hint = (
+            "choose an eligible Claude, GPT or Gemini Ukrainian reviewer"
+            if profile == "ukrainian"
+            else "code profile substitution requires --review-author-model and --review-risk"
+        )
         raise ReviewAdmissionRefused(
             f"REVIEW_ROUTE_REFUSED: requested reviewer is ineligible for --review-profile {profile}; "
-            "code profile substitution requires --review-author-model and --review-risk"
+            f"{hint}"
         )
     # Dispatch prohibitions constrain the ladder, rather than masquerading as
     # subject-boundary exclusions. Per-candidate eligibility above is independent
