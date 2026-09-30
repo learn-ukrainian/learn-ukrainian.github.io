@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 from .adapters import acpx
-from .kimi_admission import acp_refusal
+from .kimi_admission import is_kimi_seat
 
 
 def probe_acp_health(cwd: Path) -> dict[str, dict[str, Any]]:
@@ -65,7 +65,7 @@ def probe_acp_health(cwd: Path) -> dict[str, dict[str, Any]]:
 
     def probe(lane: str) -> tuple[str, dict[str, Any]]:
         # Kimi: web, UI and backend coding only; every ACP call is refused.
-        if acp_refusal(lane, target_agent=participants[lane].get("agent")):
+        if is_kimi_seat(lane) or is_kimi_seat(participants[lane].get("agent"), model=participants[lane].get("model")):
             return lane, result(code="policy_refused", unknown=True)
         try:
             executable = acpx._PARTICIPANT_PROVIDER_BINARIES.get(lane)

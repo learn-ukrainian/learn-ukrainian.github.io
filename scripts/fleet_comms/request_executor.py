@@ -18,7 +18,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.kimi_admission import require_acp_admission
+from scripts.agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -154,7 +154,7 @@ class RequestExecutor:
         metadata: dict[str, Any] | None = None,
     ) -> RequestRecord:
         endpoint, matched_name = self.registry.resolve(recipient)
-        require_acp_admission(endpoint.name)
+        refuse_kimi_if_disallowed((recipient, endpoint.name), mode=ACP_MODE)
         # resolve(): live → (endpoint, endpoint.name); retired → (successor, retired_name).
         requested = matched_name
         resolved = endpoint.name

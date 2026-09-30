@@ -5,10 +5,14 @@ reviews, consults, design or rules.
 
 Every Kimi seat (``kimi``, ``kimicc``, the ``acpx-kimi*`` ACP seats, and any
 ``kimi-code/*`` / ``kimi-k*`` model id) is limited to workspace-write
-implementation in site UI code, backend/tooling code and tests. The checks here
-are pure and run before any side effect. Entry points call them first:
-``delegate.py dispatch`` and its worker, ``runner.invoke``, the Kimi adapters,
-the ACP ask/discussion seams, the fleet-comms authority, and ``ask-* --review``.
+implementation of paths on an explicit allowlist. Anything not on the
+allowlist is refused.
+
+``refuse_kimi_if_disallowed`` is the one gate. Every entry point calls it
+first, after resolving the effective seats and models (overrides, pins and
+substitutes) and before any telemetry, broker message, failure record, state
+write, artifact store or channel write. A refusal raises
+``KimiAdmissionRefused`` to the caller and records nothing.
 """
 
 from __future__ import annotations
@@ -16,7 +20,7 @@ from __future__ import annotations
 import posixpath
 import re
 from collections.abc import Iterable, Mapping
-from pathlib import Path, PurePosixPath
+from pathlib import Path
 from typing import Any
 
 POLICY_LINE = (
@@ -28,88 +32,75 @@ KIMI_ALTERNATIVES = (
     "claude, codex, or agy for Ukrainian-language content"
 )
 _POLICY = "KIMI CODING-ONLY"
-ADMITTED_MODE = "workspace-write"
-ACP_ACTIVITY = "ACP asks, consults, discussions, and reviews"
 
-# Owned paths a Kimi seat may write: site UI code, backend/tooling code, tests,
-# CI and the Dagger module. Everything else is refused, and the protected
-# families below are refused even when they sit under an allowed root.
-CODING_ROOTS = (
-    "scripts/",
-    "tests/",
-    ".github/",
-    ".dagger/",
-    "site/src/components/",
-    "site/src/layouts/",
-    "site/src/pages/",
-    "site/src/styles/",
-    "site/src/css/",
-    "site/src/assets/",
-    "site/src/lib/",
-    "site/tests/",
-    "site/e2e/",
-)
-# Site build/test configuration at the site root (astro.config.mjs, vitest.config.ts...).
-_SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
-# Code directories whose logic encodes Ukrainian grammar, morphology, stress,
-# lexicon or language-correctness rules (site/src/lib/ and scripts/ otherwise
-# admit coding). Each entry carries its one-line reason.
-UKRAINIAN_CODE_FAMILIES = {
-    "site/src/lib/lexicon/": "grammar mechanics, VESUM form keys, heteronyms and lexicon runtime for the word atlas",
-    "scripts/lexicon/": "lexicon builders, VESUM shards, heteronym and calque corrections",
-    "scripts/linguistics/": "Ukrainian tokenizer",
-    "scripts/verification/": "VESUM, stress and Russian-morphology checks",
-    "scripts/vocab/": "vocabulary extraction and lexical sandbox over Ukrainian words",
-    "scripts/vocab_audit/": "vocabulary audit of Ukrainian word lists",
-    "scripts/mphdict/": "morphological dictionary queries",
-    "scripts/etymology/": "etymology, cognate and Ukrainian transliteration logic",
-    "scripts/practice/": "per-part-of-speech grammar mechanics engines and paradigm densification",
-    "scripts/atlas/": "lexical projection, normalization and VESUM attestation for the word atlas",
-    "scripts/audit/checks/": "language-correctness checks: grammar, euphony, morphology, stress, russicisms",
-    "scripts/projects/open_model_data/": "Ukrainian grammar, decolonization and correction datasets",
-    "scripts/projects/ua_eval_harness/": "Ukrainian-language evaluation cases",
-    "scripts/projects/ua_open_weight_eval/": "Ukrainian-language model evaluation",
-    "scripts/data/": "stress overrides and other Ukrainian language data tables",
-    "scripts/build/universal_rules/": "Ukrainian-language writing and grammar rules for the build",
+# Modes. Only workspace-write implementation is admitted; the other labels
+# name the activity an entry point is about to perform.
+ADMITTED_MODE = "workspace-write"
+ACP_MODE = "acp"
+REVIEW_MODE = "review"
+_MODE_ACTIVITIES = {
+    ACP_MODE: "ACP asks, consults, discussions, and reviews",
+    REVIEW_MODE: "review dispatches",
 }
-UKRAINIAN_CODE_PREFIXES = tuple(UKRAINIAN_CODE_FAMILIES)
-# File and directory names under these roots that mark Ukrainian language logic
-# wherever they sit (scripts/pipeline/stress_annotator.py, scripts/audit/russianism_eval.py...).
-_LANGUAGE_CODE_ROOTS = ("scripts/", "site/src/lib/")
-_LANGUAGE_CODE_NAME = re.compile(
-    r"vesum|pymorphy|morph|stress|grammar|euphon|russic|russianism|calque|mechanics|paradigm|declens"
-    r"|conjug|inflect|phonet|orthoepy|translit|lexicon|lexical|heteronym"
-)
-PROTECTED_PATH_PREFIXES = (
-    # Ukrainian-language content and data.
-    "curriculum/",
-    "wiki/",
-    "data/",
-    "registry/",
-    "site/src/content/",
-    "site/src/data/",
-    "site/src/lexicon/",
-    "site/src/lib/i18n/",
-    # Ukrainian grammar, morphology, stress and lexicon code: it encodes
-    # language rules, so editing it is Ukrainian-language work.
-    *UKRAINIAN_CODE_PREFIXES,
-    # Rules, instructions and private agent state.
-    "docs/",
-    "agents_extensions/shared/rules/",
-    "agents_extensions/shared/memory/",
-    "agents_extensions/shared/skills/",
-    ".claude/",
-    ".agent/",
-    ".codex/",
-)
-PROTECTED_ROOT_FILES = frozenset({"claude.md", "agents.md", "gemini.md"})
-# Path components that mark agent-private state wherever they appear.
-PRIVATE_STATE_COMPONENTS = frozenset({".claude", ".agent", ".codex"})
-# Locale and translation files are Ukrainian-language content wherever they sit.
-_LOCALE_COMPONENTS = frozenset({"i18n", "l10n", "locale", "locales", "translation", "translations"})
-_LOCALE_SUFFIXES = frozenset({".po", ".pot", ".mo", ".ftl", ".xliff", ".xlf", ".arb"})
-# Language-tagged message catalogs such as ``uk.json`` or ``messages.uk-UA.yaml``.
-_LOCALE_TAGGED_NAME = re.compile(r"(^|[._-])(uk|uk[-_]ua)\.(json|ya?ml|toml|properties|strings|resx)$")
+
+# Backend/tooling packages verified to hold no Ukrainian-language data,
+# prompts or grammar. Each admits the package and its tests under tests/<same>/.
+_BACKEND_PACKAGES = {
+    "agent_runtime": "agent CLI adapters, runner, routing and telemetry",
+    "api": "monitoring API routers and dashboards",
+    "orchestration": "dispatch, worktree, task-record and merge tooling",
+    "ci": "CI sharding, timing and change-classification helpers",
+    "fleet_comms": "fleet message plane, request executor and artifact store",
+    "hygiene": "repository and session hygiene guards",
+    "storage": "storage topology, artifacts and data-volume guards",
+}
+
+# The allowlist: the only paths a Kimi seat may own. Keys ending in ``/`` are
+# directory roots; other keys are single files. Each carries its reason.
+KIMI_OWNED_ROOTS: dict[str, str] = {
+    "site/src/components/": "site UI components",
+    "site/src/layouts/": "site page layouts",
+    "site/src/pages/": "site routes and page shells",
+    "site/src/styles/": "site stylesheets",
+    "site/src/css/": "site stylesheets",
+    "site/src/assets/": "site static assets",
+    "site/src/lib/a1-archive-routes.ts": "archive route helper; no language data",
+    "site/src/lib/arc.ts": "arc data types and helpers; no language data",
+    "site/src/lib/doc-nav.ts": "docs page route helpers",
+    "site/src/lib/readings.ts": "reading visibility predicate",
+    **{f"scripts/{name}/": reason for name, reason in _BACKEND_PACKAGES.items()},
+    **{f"tests/{name}/": f"tests of scripts/{name}/" for name in _BACKEND_PACKAGES},
+    ".github/workflows/": "CI workflows",
+    ".github/actions/": "composite CI actions",
+    ".github/codeql/": "CodeQL configuration",
+    ".github/dependabot.yml": "dependency update configuration",
+    ".dagger/": "Dagger CI module",
+}
+# Site build and test configuration at the site root (astro.config.mjs, vitest.config.ts...).
+SITE_CONFIG_REASON = "site build and test configuration"
+_SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
+
+# Paths inside an allowlisted root that are still refused. Keys match as
+# prefixes, so ``scripts/api/hramatka_`` covers every Hramatka module.
+KIMI_EXCLUDED_PATHS: dict[str, str] = {
+    "scripts/agent_runtime/kimi_admission.py": "the Kimi admission gate is routing policy",
+    "scripts/agent_runtime/adapters/kimi.py": "Kimi's own runtime refusal is routing policy",
+    "scripts/agent_runtime/adapters/kimicc.py": "Kimi's own runtime refusal is routing policy",
+    "scripts/agent_runtime/kimicc_headless.sh": "Kimi's own runtime refusal is routing policy",
+    "tests/agent_runtime/adapters/test_kimi_adapter.py": "tests of Kimi's routing policy",
+    "tests/agent_runtime/adapters/test_kimicc_headless.py": "tests of Kimi's routing policy",
+    "scripts/agent_runtime/profiles/": "reviewer prompt profiles",
+    "scripts/api/hramatka_": "Hramatka lesson generation and grammar quality gates",
+    "tests/api/test_hramatka_": "Hramatka lesson generation and grammar quality gates",
+    "scripts/api/sources_router.py": "Ukrainian dictionary and corpus lookups",
+    "tests/api/test_sources_router": "Ukrainian dictionary and corpus lookups",
+    "scripts/orchestration/curriculum_": "curriculum lifecycle, readiness and preparation",
+    "tests/orchestration/test_curriculum_": "curriculum lifecycle, readiness and preparation",
+    "scripts/orchestration/prompt_contracts.py": "curriculum phase prompt contracts",
+    "tests/orchestration/test_prompt_contracts.py": "curriculum phase prompt contracts",
+    "scripts/orchestration/preparation_evidence.py": "curriculum preparation evidence",
+}
+
 # Fleet repository roles a Kimi seat may target (scripts/config/fleet_repos.yaml).
 CODING_REPO_ROLES = frozenset({"public-monorepo"})
 # Research tracks that are always curriculum tracks, in addition to every level
@@ -118,6 +109,8 @@ _CURRICULUM_TRACK_NAMES = frozenset({"core", "seminar", "seminars", "hramatka"})
 _CURRICULUM_TRACK_PREFIXES = ("l2-uk",)
 # tool_config keys that mark a review or sealed review attempt.
 _REVIEW_TOOL_CONFIG_KEYS = ("review_verdict_required", "review_isolation", "review_id")
+# Components of a prompt-file path that mark agent-private state.
+_PRIVATE_STATE_COMPONENTS = frozenset({".claude", ".agent", ".codex"})
 
 
 class KimiAdmissionRefused(ValueError):
@@ -140,9 +133,9 @@ def is_kimi_model(model: str | None) -> bool:
 
 
 def is_kimi_seat(agent: str | None, *, model: str | None = None) -> bool:
-    """True when ``agent`` is a Kimi seat or ``model`` names a Kimi model."""
+    """True when ``agent`` is a Kimi seat (``kimi``, ``kimicc``, ``kimi-<lane>`` slots, ``acpx-kimi*``) or ``model`` names a Kimi model."""
     name = str(agent or "").strip().casefold()
-    if name in KIMI_AGENT_IDS or name.startswith("acpx-kimi"):
+    if name in KIMI_AGENT_IDS or name.startswith(("kimi-", "acpx-kimi")):
         return True
     return is_kimi_model(model)
 
@@ -151,8 +144,8 @@ def normalize_owned_path(path: str) -> str | None:
     """The repository-relative POSIX form of ``path``, or None when it is absolute or escapes the repository.
 
     Separators are unified and collapsed and ``.``/``..`` segments are resolved
-    lexically, so ``site//src/content/x`` and ``./docs/../docs/x`` reach the
-    prefix checks in their canonical form.
+    lexically, so ``site//src/components/x`` and ``./docs/../scripts/x`` reach
+    the allowlist in their canonical form.
     """
     text = str(path).strip().replace("\\", "/")
     if not text or text.startswith(("/", "~")) or re.match(r"^[A-Za-z]:", text):
@@ -163,35 +156,31 @@ def normalize_owned_path(path: str) -> str | None:
     return normalized
 
 
-def _is_locale_path(parts: tuple[str, ...]) -> bool:
-    if _LOCALE_COMPONENTS.intersection(parts):
-        return True
-    name = parts[-1]
-    return PurePosixPath(name).suffix in _LOCALE_SUFFIXES or bool(_LOCALE_TAGGED_NAME.search(name))
+def _allowlist_match(normalized: str) -> str | None:
+    for root in KIMI_OWNED_ROOTS:
+        if normalized == root.rstrip("/") or (root.endswith("/") and normalized.startswith(root)):
+            return root
+    if _SITE_CONFIG_FILE.match(normalized):
+        return "site/*.config.*"
+    return None
 
 
-def protected_path_reason(path: str) -> str | None:
-    """Why ``path`` is outside web, UI and backend coding, or None when a Kimi seat may own it."""
+def owned_path_reason(path: str) -> str | None:
+    """Why a Kimi seat may not own ``path``, or None when the allowlist admits it.
+
+    The allowlist matches case-sensitively, so a differently cased path is
+    refused; exclusions match case-insensitively, so a case-insensitive
+    filesystem cannot reach an excluded file through another spelling.
+    """
     normalized = normalize_owned_path(path)
     if normalized is None:
         return f"owned path {path!r} is not a repository-relative path"
+    if _allowlist_match(normalized) is None:
+        return f"owned path {normalized!r} is not on the Kimi allowlist"
     folded = normalized.casefold()
-    parts = PurePosixPath(folded).parts
-    if folded in PROTECTED_ROOT_FILES:
-        return f"owned path {normalized!r} is an agent instruction file"
-    for prefix in PROTECTED_PATH_PREFIXES:
-        if folded == prefix.rstrip("/") or folded.startswith(prefix):
-            return f"owned path {normalized!r} is under protected {prefix!r}"
-    if PRIVATE_STATE_COMPONENTS.intersection(parts):
-        return f"owned path {normalized!r} is agent-private state"
-    if folded.startswith(_LANGUAGE_CODE_ROOTS) and any(_LANGUAGE_CODE_NAME.search(part) for part in parts):
-        return f"owned path {normalized!r} is Ukrainian grammar, morphology, stress or lexicon code"
-    if _is_locale_path(parts):
-        return f"owned path {normalized!r} is a locale or translation file"
-    if _SITE_CONFIG_FILE.match(folded):
-        return None
-    if not any(folded == root.rstrip("/") or folded.startswith(root) for root in CODING_ROOTS):
-        return f"owned path {normalized!r} is outside the coding roots {list(CODING_ROOTS)}"
+    for prefix, reason in KIMI_EXCLUDED_PATHS.items():
+        if folded.startswith(prefix):
+            return f"owned path {normalized!r} is excluded ({reason})"
     return None
 
 
@@ -211,7 +200,7 @@ def _curriculum_level_keys(repo_root: Path) -> frozenset[str] | None:
     return frozenset(keys)
 
 
-def curriculum_track_reason(track: str | None, *, repo_root: Path) -> str | None:
+def curriculum_track_reason(track: str | None, *, repo_root: Path | None) -> str | None:
     """Why a research track is a curriculum track, or None when it is not.
 
     Fails closed: when the curriculum manifest cannot be read, any track is
@@ -222,7 +211,7 @@ def curriculum_track_reason(track: str | None, *, repo_root: Path) -> str | None
         return None
     if text in _CURRICULUM_TRACK_NAMES or text.startswith(_CURRICULUM_TRACK_PREFIXES):
         return f"--research-track {track!r} is a curriculum track"
-    levels = _curriculum_level_keys(repo_root)
+    levels = _curriculum_level_keys(repo_root) if repo_root is not None else None
     if levels is None:
         return f"--research-track {track!r} cannot be proven non-curriculum (curriculum manifest unreadable)"
     if text in levels:
@@ -230,143 +219,70 @@ def curriculum_track_reason(track: str | None, *, repo_root: Path) -> str | None
     return None
 
 
-def prompt_file_reason(prompt_file: str | None) -> str | None:
-    """Why the prompt file is private agent state, or None."""
-    if not prompt_file:
-        return None
-    parts = Path(str(prompt_file)).expanduser().parts
-    if PRIVATE_STATE_COMPONENTS.intersection(parts):
-        return f"--prompt-file {prompt_file!r} lives in agent-private state"
+def _kimi_seat_name(participants: Iterable[str | None], models: Iterable[str | None]) -> str | None:
+    for participant in participants:
+        if is_kimi_seat(participant):
+            return str(participant).strip()
+    for model in models:
+        if is_kimi_model(model):
+            return str(model).strip()
     return None
 
 
-def _mode_reason(mode: str) -> str | None:
-    if mode != ADMITTED_MODE:
-        return f"--mode {mode} (only {ADMITTED_MODE} implementation is admitted)"
-    return None
-
-
-def dispatch_refusal(
+def refuse_kimi_if_disallowed(
+    effective_participants: Iterable[str | None],
+    effective_models: Iterable[str | None] = (),
     *,
-    agent: str,
-    model: str | None = None,
     mode: str,
-    repo_root: Path,
+    paths: Iterable[str] = (),
+    repo: str | None = None,
     review: bool = False,
-    review_attempt: bool = False,
-    require_review_verdict: bool = False,
-    review_profile: str | None = None,
+    tool_config: Mapping[str, Any] | None = None,
     language_lane: bool = False,
     research_track: str | None = None,
-    owned_paths: Iterable[str] = (),
     prompt_file: str | None = None,
-    repo_key: str | None = None,
-    repo_role: str | None = None,
-) -> str | None:
-    """The refusal message for a Kimi dispatch outside web, UI and backend coding, else None.
+    repo_root: Path | None = None,
+) -> None:
+    """Raise ``KimiAdmissionRefused`` when any effective seat or model is Kimi and the work is not admitted.
 
-    Returns None for every non-Kimi seat. Each reason is collected so the
-    caller sees every violated condition at once.
+    ``effective_participants`` and ``effective_models`` are the seats and
+    models after every override, pin and substitution. ``mode`` is the
+    runtime mode (only ``workspace-write`` is admitted) or an activity label
+    (``ACP_MODE``, ``REVIEW_MODE``). ``paths`` are the owned paths, each of
+    which must be on the allowlist. ``repo`` is the fleet repository role.
+    Pure: it reads only the curriculum manifest (for ``research_track``) and
+    never writes. Returns None for every non-Kimi call.
     """
-    if not is_kimi_seat(agent, model=model):
-        return None
+    seat = _kimi_seat_name(tuple(effective_participants), tuple(effective_models))
+    if seat is None:
+        return
     reasons: list[str] = []
-    mode_reason = _mode_reason(mode)
-    if mode_reason:
-        reasons.append(mode_reason)
-    if review or review_attempt or require_review_verdict or review_profile:
-        reasons.append("review dispatches (--review-attempt, --require-review-verdict, --review-profile, review type)")
+    if mode != ADMITTED_MODE:
+        reasons.append(_MODE_ACTIVITIES.get(mode) or f"--mode {mode} (only {ADMITTED_MODE} implementation is admitted)")
+    config = tool_config or {}
+    if review or any(config.get(key) for key in _REVIEW_TOOL_CONFIG_KEYS):
+        reasons.append("review dispatches")
     if language_lane:
         reasons.append("Ukrainian-language work (--language-lane, a Ukrainian review profile or curriculum path)")
     track_reason = curriculum_track_reason(research_track, repo_root=repo_root)
     if track_reason:
         reasons.append(track_reason)
-    for path in owned_paths:
-        path_reason = protected_path_reason(path)
+    for path in paths:
+        path_reason = owned_path_reason(path)
         if path_reason:
             reasons.append(path_reason)
-    file_reason = prompt_file_reason(prompt_file)
-    if file_reason:
-        reasons.append(file_reason)
-    if repo_role is not None and repo_role not in CODING_REPO_ROLES:
-        reasons.append(f"--repo {repo_key or repo_role!r} is a private repository")
-    if not reasons:
-        return None
-    return format_refusal(agent, reasons)
-
-
-def runtime_refusal(
-    agent: str,
-    *,
-    mode: str,
-    model: str | None = None,
-    tool_config: Mapping[str, Any] | None = None,
-    review: bool = False,
-) -> str | None:
-    """The runtime-boundary refusal for a Kimi invocation, else None.
-
-    ``runner.invoke``, the Kimi adapters and the delegate worker call this
-    before any spawn: only workspace-write invocations with no review marker
-    are admitted.
-    """
-    if not is_kimi_seat(agent, model=model):
-        return None
-    reasons: list[str] = []
-    mode_reason = _mode_reason(mode)
-    if mode_reason:
-        reasons.append(mode_reason)
-    config = tool_config or {}
-    if review or any(config.get(key) for key in _REVIEW_TOOL_CONFIG_KEYS):
-        reasons.append("review dispatches")
-    if not reasons:
-        return None
-    return format_refusal(agent, reasons)
-
-
-def require_runtime_admission(
-    agent: str,
-    *,
-    mode: str,
-    model: str | None = None,
-    tool_config: Mapping[str, Any] | None = None,
-    review: bool = False,
-) -> None:
-    """Raise ``KimiAdmissionRefused`` when ``runtime_refusal`` refuses the invocation."""
-    refusal = runtime_refusal(agent, mode=mode, model=model, tool_config=tool_config, review=review)
-    if refusal:
-        raise KimiAdmissionRefused(refusal)
-
-
-def acp_refusal(
-    participant: str,
-    *,
-    target_agent: str | None = None,
-    model: str | None = None,
-    activity: str = ACP_ACTIVITY,
-) -> str | None:
-    """ACP calls (asks, consults, discussions, ACP reviews) and ask reviews are never coding."""
-    if not (is_kimi_seat(participant) or is_kimi_seat(target_agent, model=model)):
-        return None
-    return format_refusal(participant, [activity])
-
-
-def require_acp_admission(
-    participant: str,
-    *,
-    target_agent: str | None = None,
-    model: str | None = None,
-    activity: str = ACP_ACTIVITY,
-) -> None:
-    """Raise ``KimiAdmissionRefused`` for a Kimi participant; entry points call this before any side effect."""
-    refusal = acp_refusal(participant, target_agent=target_agent, model=model, activity=activity)
-    if refusal:
-        raise KimiAdmissionRefused(refusal)
+    if prompt_file and _PRIVATE_STATE_COMPONENTS.intersection(Path(str(prompt_file)).expanduser().parts):
+        reasons.append(f"--prompt-file {prompt_file!r} lives in agent-private state")
+    if repo is not None and repo not in CODING_REPO_ROLES:
+        reasons.append(f"--repo role {repo!r} is a private repository")
+    if reasons:
+        raise KimiAdmissionRefused(format_refusal(seat, reasons))
 
 
 def format_refusal(agent: str, reasons: Iterable[Any]) -> str:
     joined = "; ".join(str(reason) for reason in reasons)
     return (
-        f"ROUTING REFUSED: {_POLICY}: {POLICY_LINE} {agent} seats take workspace-write implementation in "
-        f"{', '.join(CODING_ROOTS)} and site/*.config.* only. Refused: {joined}. "
-        f"Alternative seats: {KIMI_ALTERNATIVES}."
+        f"ROUTING REFUSED: {_POLICY}: {POLICY_LINE} {agent} seats take workspace-write implementation of "
+        f"allowlisted UI and backend paths only (KIMI_OWNED_ROOTS in scripts/agent_runtime/kimi_admission.py). "
+        f"Refused: {joined}. Alternative seats: {KIMI_ALTERNATIVES}."
     )

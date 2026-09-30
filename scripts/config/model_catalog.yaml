@@ -51,8 +51,8 @@ policy:
     - >-
       Kimi: web, UI and backend coding only — no Ukrainian-language content, no
       reviews, consults, design or rules. Kimi seats (`kimi`, `kimicc`, every
-      `kimi-code/*` / `kimi-k3*` id) take workspace-write implementation in site UI
-      code, scripts/, tests/, .github/ and .dagger/ only; they carry no review,
+      `kimi-code/*` / `kimi-k3*` id) take workspace-write implementation of the
+      allowlisted UI and backend paths (KIMI_OWNED_ROOTS) only; they carry no review,
       consult, advisor, or ACP-discussion role and are absent from
       review_candidates and review_ladders; dispatch, the runtime, ACP and the
       fleet-comms authority refuse everything else before any side effect

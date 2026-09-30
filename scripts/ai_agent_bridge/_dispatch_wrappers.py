@@ -451,9 +451,9 @@ def run_ask_review_dispatch(
     Kimi seat before anything is written.
     """
     # Kimi seats never review: refuse before the temporary prompt is written.
-    from scripts.agent_runtime.kimi_admission import require_acp_admission
+    from scripts.agent_runtime.kimi_admission import REVIEW_MODE, refuse_kimi_if_disallowed
 
-    require_acp_admission(agent, model=model, activity="review dispatches (ask-* --review)")
+    refuse_kimi_if_disallowed((agent,), (model,), mode=REVIEW_MODE, review=True)
     timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"

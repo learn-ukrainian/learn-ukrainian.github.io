@@ -9,8 +9,10 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
+from agent_runtime.adapters.kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import AgentTimeoutError, RateLimitedError
+from agent_runtime.kimi_admission import KimiAdmissionRefused
 from agent_runtime.runner import InterAgentTransportError
 
 from ._ask_contract import EFFORT_CHOICES
@@ -34,7 +36,6 @@ from ._grok_build import (
     GROK_BUILD_DEFAULT_MODEL,
 )
 from ._hermes import HERMES_DEFAULT_MODEL
-from ._kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -1374,9 +1375,16 @@ def _dispatch_command(args):
     elif args.command == "thread":
         resolve_thread(args.identifier)
     elif args.command == "process":
-        process_message_for_recipient(args.message_id, model=args.model, no_timeout=args.no_timeout)
+        try:
+            process_message_for_recipient(args.message_id, model=args.model, no_timeout=args.no_timeout)
+        except KimiAdmissionRefused as exc:
+            raise SystemExit(f"❌ {exc}") from exc
     elif args.command in {"process-claude", "process-codex", "process-grok", "process-grok-build", "process-kimi"}:
-        if _process_target(args.message_id, args.command.removeprefix("process-"), vars(args)) is False:
+        try:
+            processed = _process_target(args.message_id, args.command.removeprefix("process-"), vars(args))
+        except KimiAdmissionRefused as exc:
+            raise SystemExit(f"❌ {exc}") from exc
+        if processed is False:
             raise SystemExit("ACP processing failed; message left unconsumed")
     elif args.command == "process-ask":
         process_background_ask(args.message_id, args.target)

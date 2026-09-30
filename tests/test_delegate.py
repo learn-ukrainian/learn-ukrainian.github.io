@@ -5698,10 +5698,14 @@ def test_kimicc_read_only_review_grant_is_retired():
         pytest.param("danger", {}, id="danger"),
     ],
 )
-def test_run_worker_refuses_a_kimi_review_before_invocation(tmp_tasks_dir, tmp_path, mode, review):
-    """Formerly a read-only Kimi review ran here with rc 0; Kimi seats now take web, UI and backend coding only."""
+def test_run_worker_refuses_a_kimi_review_before_invocation(tmp_tasks_dir, tmp_path, capsys, mode, review):
+    """Formerly a read-only Kimi review ran here with rc 0; Kimi seats now take web, UI and backend coding only.
+
+    The refusal goes to the caller only: the parent's state record is left untouched.
+    """
     task_id = f"worker-kimicc-refused-{mode}"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id, "status": "spawning"})
+    initial = {"task_id": task_id, "status": "spawning"}
+    delegate._write_state_atomic(delegate._state_path(task_id), initial)
 
     with patch("agent_runtime.runner.invoke") as mock_invoke:
         rc = delegate._run_worker(
@@ -5718,10 +5722,8 @@ def test_run_worker_refuses_a_kimi_review_before_invocation(tmp_tasks_dir, tmp_p
 
     assert rc == 1
     mock_invoke.assert_not_called()
-    state = delegate._read_state(delegate._state_path(task_id))
-    assert state["status"] == "failed"
-    assert "KIMI CODING-ONLY" in state["stderr_excerpt"]
-    assert state.get("pid") is None
+    assert "KIMI CODING-ONLY" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path(task_id)) == initial
 
 
 def _codex_worker_result():

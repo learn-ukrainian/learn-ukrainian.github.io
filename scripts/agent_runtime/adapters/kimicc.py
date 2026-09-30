@@ -21,7 +21,7 @@ from scripts.review.model_catalog import (
     resolve_kimi_model,
 )
 
-from ..kimi_admission import ADMITTED_MODE, format_refusal, require_runtime_admission
+from ..kimi_admission import ADMITTED_MODE, format_refusal, refuse_kimi_if_disallowed
 from ..result import ParseResult
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
 from .base import InvocationPlan
@@ -141,7 +141,7 @@ class KimiccHarness:
         effort: str | None = None,
     ) -> InvocationPlan:
         tc: dict[str, Any] = tool_config or {}
-        require_runtime_admission("kimicc", mode=mode, model=model, tool_config=tc)
+        refuse_kimi_if_disallowed(("kimicc",), (model,), mode=mode, tool_config=tc)
         if trail_isolation_requested(tc):
             raise TrailIsolationError(f"KimiccHarness: {format_refusal('kimicc', ['trail sessions'])}")
         if session_id is not None:

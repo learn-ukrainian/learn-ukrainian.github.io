@@ -497,10 +497,10 @@ def test_legacy_gemini_error_handler_never_acks(bridge_db):
     assert _replies(message_id)[0][2] == "error"
 
 
-@pytest.mark.parametrize("seat", ["claude", "codex", "grok", "kimi", "agy"])
+@pytest.mark.parametrize("seat", ["claude", "codex", "grok", "agy"])
 def test_native_error_handlers_never_ack(bridge_db, seat):
     """Mutation check: removing the no-ack guard turns every one of these red."""
-    from scripts.ai_agent_bridge import _agy, _claude, _codex, _grok_build, _kimi
+    from scripts.ai_agent_bridge import _agy, _claude, _codex, _grok_build
 
     message_id = _send(seat)
     msg = {
@@ -518,8 +518,6 @@ def test_native_error_handlers_never_ack(bridge_db, seat):
         _codex._handle_codex_error(msg, message_id, "boom")
     elif seat == "grok":
         _grok_build._handle_grok_build_error(msg, message_id, "boom")
-    elif seat == "kimi":
-        _kimi._handle_kimi_error(msg, message_id, "boom")
     elif seat == "agy":
         _agy._handle_agy_error(msg, message_id, "boom")
 
@@ -619,7 +617,6 @@ def forbid_legacy_processors(monkeypatch):
         ("_codex", "process_for_codex"),
         ("_agy", "process_for_agy"),
         ("_grok_build", "process_for_grok_build"),
-        ("_kimi", "process_for_kimi"),
         ("_hermes", "process_for_hermes"),
         ("_opencode", "process_for_opencode"),
     ]:
@@ -655,8 +652,9 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
     assert _row(message_id)[0] == 1
 
 
-def test_kimi_messages_are_refused_before_acp_and_left_unconsumed(bridge_db, monkeypatch, forbid_legacy_processors):
-    """Kimi: web, UI and backend coding only — process-kimi and the detached worker never reach ACP."""
+def test_kimi_messages_are_refused_with_zero_side_effects(bridge_db, monkeypatch, forbid_legacy_processors):
+    """Kimi: web, UI and backend coding only — process-kimi and the detached worker return the refusal to the
+    caller and leave the broker exactly as it was: no reply, no failure record, no acknowledgement."""
     from unittest.mock import Mock
 
     from scripts.ai_agent_bridge import _ask_lifecycle, _cli
@@ -664,17 +662,18 @@ def test_kimi_messages_are_refused_before_acp_and_left_unconsumed(bridge_db, mon
     acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
     monkeypatch.setattr(_process, "run_compat_ask", acp)
     cli_message = _send("kimi", sender="agy")
-    with pytest.raises(SystemExit, match="message left unconsumed"):
-        _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
     detached_message = _send("kimi", sender="agy")
-    _ask_lifecycle._process_target(detached_message, "kimi", {"no_timeout": True})
+    before = {message_id: (_row(message_id), _replies(message_id)) for message_id in (cli_message, detached_message)}
+
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _ask_lifecycle.process_background_ask(detached_message, "kimi")
 
     acp.assert_not_called()
-    assert _row(cli_message)[0] == 0
-    assert _row(detached_message)[0] == 0
-    errors = [row for row in _replies(cli_message) if row[2] == "error"]
-    assert len(errors) == 2
-    assert all("KIMI CODING-ONLY" in str(row[3]) for row in errors)
+    assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before
 
 
 @pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm", "hermes"])

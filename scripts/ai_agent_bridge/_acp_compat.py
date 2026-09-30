@@ -41,14 +41,25 @@ def require_compat_target(command_target: str, *, model: str | None = None) -> s
     (a ``ValueError``): Kimi seats take web, UI and backend coding only, never
     ACP asks, consults, discussions or reviews.
     """
-    from agent_runtime.kimi_admission import require_acp_admission
-
+    refuse_kimi_compat(command_target, model=model)
     try:
-        participant = _TARGETS[command_target]
+        return _TARGETS[command_target]
     except KeyError as exc:
         raise ValueError(f"legacy ask target {command_target!r} has no enabled ACP route") from exc
-    require_acp_admission(participant, model=model)
-    return participant
+
+
+def refuse_kimi_compat(command_target: str, *, model: str | None = None) -> None:
+    """The Kimi gate for one ACP ask: the command target, its participant, adapter agent, pin and override."""
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
+
+    participant = _TARGETS.get(command_target)
+    route = ACPX_SUPPORTED_PARTICIPANTS.get(participant or "") or {}
+    refuse_kimi_if_disallowed(
+        (command_target, participant, route.get("agent")),
+        (route.get("model"), model),
+        mode=ACP_MODE,
+    )
 
 
 def registered_participant_model(participant: str) -> str | None:
@@ -790,12 +801,11 @@ def _run_single_acp_job(
     set this attempt is the substitute seat: its job metadata and result
     receipt carry the record.
     """
-    from agent_runtime.kimi_admission import require_acp_admission
     from agent_runtime.runner import invoke_inter_agent
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
     # A quota substitute is a new seat: admit it before its job is enqueued.
-    require_acp_admission(participant, model=model)
+    refuse_kimi_compat(participant, model=model)
     key = _idempotency_key(
         participant=participant,
         task_id=task_id,

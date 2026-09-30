@@ -92,7 +92,7 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
-from .kimi_admission import acp_refusal, require_runtime_admission
+from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
@@ -3346,7 +3346,7 @@ def invoke(
     review marker; anything else raises ``KimiAdmissionRefused`` before
     attribution, trail provisioning, or adapter planning.
     """
-    require_runtime_admission(agent_name, mode=mode, model=model, tool_config=tool_config)
+    refuse_kimi_if_disallowed((agent_name,), (model,), mode=mode, tool_config=tool_config)
     attribution = resolve_invocation_attribution(
         explicit=initiator,
         task_id=task_id,
@@ -3477,6 +3477,16 @@ def resolve_inter_agent_route(
     presence from inventing a new ACP provider route.
     """
     participant = str(agent).strip().lower()
+    raw_entry = ACPX_SUPPORTED_PARTICIPANTS.get(participant)
+    raw_fields = raw_entry if isinstance(raw_entry, dict) else {}
+    try:
+        refuse_kimi_if_disallowed(
+            (participant, raw_fields.get("agent")),
+            (raw_fields.get("model"), model),
+            mode=ACP_MODE,
+        )
+    except KimiAdmissionRefused as exc:
+        raise InterAgentTransportError(str(exc)) from exc
     try:
         raw_route = ACPX_SUPPORTED_PARTICIPANTS[participant]
         seat = raw_route["seat"]
@@ -3490,9 +3500,6 @@ def resolve_inter_agent_route(
         raise InterAgentTransportError(
             f"ACP participant {participant!r} has an invalid enabled adapter route"
         )
-    kimi_refusal = acp_refusal(participant, target_agent=target_agent, model=pinned_model or model)
-    if kimi_refusal:
-        raise InterAgentTransportError(kimi_refusal)
     try:
         entry = get_agent_entry(seat)
     except KeyError as exc:
@@ -3677,6 +3684,10 @@ def _invoke_direct_only(
     bounded ACPX comparison pilot is the only supported caller.
     """
     try:
+        refuse_kimi_if_disallowed((agent_name,), (model,), mode=ACP_MODE)
+    except KimiAdmissionRefused as exc:
+        raise AgentUnavailableError(str(exc)) from exc
+    try:
         entry = get_agent_entry(agent_name)
     except KeyError:
         raise AgentUnavailableError(f"Agent {agent_name!r} is not in the registry") from None
@@ -3686,9 +3697,6 @@ def _invoke_direct_only(
         )
     if entrypoint not in {"acpx-pilot-shadow", "acpx-discuss", "acpx-transport"}:
         raise ValueError("ACPX direct-only invocation entrypoint was altered")
-    kimi_refusal = acp_refusal(agent_name, model=model)
-    if kimi_refusal:
-        raise AgentUnavailableError(kimi_refusal)
     attribution_token = _INVOCATION_ATTRIBUTION.set(
         resolve_invocation_attribution(explicit=initiator, task_id=task_id)
     )

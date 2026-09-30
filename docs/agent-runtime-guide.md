@@ -40,9 +40,16 @@ yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 
 ## Kimi routes and KimiCC headless route
 
+Kimi seats take web, UI and backend coding only: `workspace-write`
+implementation of paths on the allowlist in
+`scripts/agent_runtime/kimi_admission.py` (`KIMI_OWNED_ROOTS`). Asks, consults,
+discussions, reviews, trail sessions and read-only or danger modes are refused
+by `refuse_kimi_if_disallowed` before any side effect.
+
 **Native Kimi is the default** interactive and headless/fleet route
-(`./start-kimi.sh`, `delegate.py --agent kimi`, bridge). Native **Kimi K3 is
-max-only** — the native adapter does not accept a non-max effort ladder for K3.
+(`./start-kimi.sh`, `delegate.py --agent kimi --mode workspace-write`). Native
+**Kimi K3 is max-only** — the native adapter does not accept a non-max effort
+ladder for K3.
 
 **KimiCC is bounded explicit opt-in** (`./start-kimicc.sh`,
 `start-kimi.sh --harness claude-code`, or runtime `harness=kimicc`). On the
@@ -488,7 +495,7 @@ profile:
 
 ```python
 invoke(
-    "grok",  # or "kimi" with harness="kimicc"
+    "grok",
     prompt,
     mode="read-only",
     cwd=Path.cwd(),
@@ -514,11 +521,9 @@ The admission policy is fail-closed:
 - Native Grok gets a private MCP cwd, an exact three-tool allowlist, explicit
   allows for those tools, and explicit denies for Bash, reads/writes/edits,
   web, and discovery tools.
-- Kimi is eligible only through `tool_config={"harness": "kimicc", "trail_isolation": True}`.
-  KimiCC forwards Claude Code's exact `--tools`, `--allowedTools`,
-  `--strict-mcp-config`, and empty `--setting-sources` profile.
-- Native Kimi, GLM/opencode, Hermes Grok, and every unproven harness refuse
-  before spawn. GLM currently ignores tool restrictions, so a refusal is more
+- Every Kimi seat (native and KimiCC) refuses trail sessions: Kimi seats take
+  web, UI and backend coding only (`scripts/agent_runtime/kimi_admission.py`).
+- GLM/opencode, Hermes Grok, and every unproven harness refuse before spawn. GLM currently ignores tool restrictions, so a refusal is more
   honest than a pretend sandbox.
 
 The boundary prevents accidental weak-driver deviation, not a malicious

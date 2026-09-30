@@ -539,7 +539,16 @@ def _stored_reply_is_useful(reply_id: int) -> bool:
 
 
 def process_background_ask(message_id: int, target: str) -> None:
-    """Run one detached ask worker and leave a terminal lifecycle status."""
+    """Run one detached ask worker and leave a terminal lifecycle status.
+
+    A Kimi target exits with the refusal before any lifecycle record.
+    """
+    from agent_runtime.kimi_admission import KimiAdmissionRefused
+
+    try:
+        refuse_kimi_target(message_id, target)
+    except KimiAdmissionRefused as exc:
+        raise SystemExit(f"❌ {exc}") from exc
     terminal = _AskTerminalRecorder(message_id)
     atexit.register(terminal.atexit)
     previous_handlers: dict[int, Any] = {}
@@ -870,11 +879,26 @@ def ask_sender_model(msg: dict[str, Any]) -> str | None:
     return str(model) if model else None
 
 
+def refuse_kimi_target(message_id: int, target: str) -> None:
+    """The Kimi gate for draining one message: its target seat and the model it was sent to.
+
+    Raises ``KimiAdmissionRefused`` before any reply, failure record or
+    acknowledgement; reading the message is the only access.
+    """
+    from ._acp_compat import refuse_kimi_compat
+    from ._messaging import read_message
+
+    msg = read_message(message_id, quiet=True)
+    refuse_kimi_compat(target, model=ask_target_model(msg) if msg else None)
+
+
 def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bool | None:
     """Drain ordinary asks via ACP; retain the toolful legacy review processors.
 
     Ordinary drains return success; review processors retain their None return.
+    A Kimi target raises ``KimiAdmissionRefused`` before any record.
     """
+    refuse_kimi_target(message_id, target)
     no_timeout = bool(options.get("no_timeout", False))
     review = bool(options.get("review", False))
     new_session = bool(options.get("new_session", False))
@@ -911,10 +935,6 @@ def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bo
         from ._grok_build import process_for_grok_build
 
         process_for_grok_build(message_id, new_session, no_timeout, review)
-    elif target == "kimi":
-        from ._kimi import process_for_kimi
-
-        process_for_kimi(message_id, new_session, no_timeout, review)
     elif target == "cursor":
         from ._cursor import process_for_cursor
 

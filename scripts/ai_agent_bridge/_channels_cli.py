@@ -1376,8 +1376,16 @@ def _handle_p(args) -> int:
 
 def _handle_inbox_run(args) -> int:
     """Handle `ab inbox run <agent>`."""
+    from agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
+
     from ._inbox import run_inbox
 
+    # Inbox replies are consults and discussions: a Kimi inbox is refused before housekeeping writes.
+    try:
+        refuse_kimi_if_disallowed((args.agent,), mode=ACP_MODE)
+    except KimiAdmissionRefused as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
     if _reject_non_cli_agent(args.agent, "ab inbox run"):
         return 1
 
@@ -1538,8 +1546,15 @@ def _handle_sync(args) -> int:
         print("❌ sync requires an agent or --all", file=sys.stderr)
         return 2
 
+    from agent_runtime.kimi_admission import is_kimi_seat
+
+    # Kimi seats never drain an inbox (consults and discussions are refused), so --all skips them.
     agents = (
-        [agent for agent in _channels.get_valid_agents() if _cli_available_agent(agent)]
+        [
+            agent
+            for agent in _channels.get_valid_agents()
+            if _cli_available_agent(agent) and not is_kimi_seat(agent)
+        ]
         if args.all
         else [args.agent]
     )
@@ -1624,14 +1639,22 @@ def _handle_discuss(args) -> int:
         ACPX_SUPPORTED_PARTICIPANTS if acp_routine else {}
     )
     with_agents = _parse_csv(args.with_agents)
-    # Kimi seats never join discussions: refuse before any channel write.
-    from agent_runtime.kimi_admission import acp_refusal
+    agent_models: dict[str, str] = {}
+    if getattr(args, "models", None):
+        try:
+            agent_models = _parse_agent_models(args.models)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 1
+    # Kimi seats never join discussions: one gate on the effective seats and
+    # models (--models overrides included) before any channel write.
+    from agent_runtime.acpx_discuss import AcpxDiscussionError, refuse_kimi_discussion
 
-    for agent in with_agents:
-        kimi_refusal = acp_refusal(agent)
-        if kimi_refusal:
-            print(f"❌ {kimi_refusal}", file=sys.stderr)
-            return 2
+    try:
+        refuse_kimi_discussion(with_agents, agent_models)
+    except AcpxDiscussionError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
     review_error = _gemini_review_request_error(
         channel=args.channel,
         agents=with_agents,
@@ -1687,13 +1710,7 @@ def _handle_discuss(args) -> int:
         )
         return 1
 
-    agent_models: dict[str, str] = {}
-    if getattr(args, "models", None):
-        try:
-            agent_models = _parse_agent_models(args.models)
-        except ValueError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 1
+    if agent_models:
         unknown_models = [a for a in agent_models if a not in with_agents]
         if unknown_models:
             print(

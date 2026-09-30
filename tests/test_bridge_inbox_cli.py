@@ -445,7 +445,8 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     # `[agent for agent in _channels.VALID_AGENTS if _cli_available_agent(agent)]`.
     # When a new CLI agent is registered (e.g. grok via #1934, deepseek
     # via #2107, cursor via Phase 2 PR), this list tracks the registry —
-    # the test guards the iteration order, not a frozen subset.
+    # the test guards the iteration order, not a frozen subset. Kimi seats
+    # are skipped: they never drain an inbox (web, UI and backend coding only).
     cli_agents = [
         "agy",
         "claude",
@@ -453,7 +454,6 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
         "grok",
         "grok-build",
         "glm",
-        "kimi",
         "deepseek",
         "cursor",
     ]

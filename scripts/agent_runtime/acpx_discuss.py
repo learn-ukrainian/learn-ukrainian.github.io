@@ -40,7 +40,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_discussion_scope,
 )
 from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
-from scripts.agent_runtime.kimi_admission import acp_refusal
+from scripts.agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
 from scripts.agent_runtime.result import Result
 from scripts.agent_runtime.runner import (
     _invoke_native_once,
@@ -1232,12 +1232,30 @@ class AcpxDiscussionController:
         }
 
 
+def refuse_kimi_discussion(participants: Sequence[str], models: Mapping[str, str] | None) -> None:
+    """Raise ``AcpxDiscussionError`` when any effective seat or model of a discussion is Kimi.
+
+    The effective selection is every participant, its registered adapter
+    agent and pinned model, and every ``models`` override. Kimi seats never
+    join discussions, so this runs before any plane, store or channel is
+    opened.
+    """
+    if models is not None and not isinstance(models, Mapping):
+        raise AcpxDiscussionError("models must be a participant-keyed mapping")
+    names = tuple(str(item).strip().lower() for item in participants)
+    routes = [ACPX_SUPPORTED_PARTICIPANTS.get(name) or {} for name in names]
+    try:
+        refuse_kimi_if_disallowed(
+            (*names, *(route.get("agent") for route in routes)),
+            (*(route.get("model") for route in routes), *(str(value) for value in (models or {}).values())),
+            mode=ACP_MODE,
+        )
+    except KimiAdmissionRefused as exc:
+        raise AcpxDiscussionError(str(exc)) from exc
+
+
 def run_discussion(**kwargs: Any) -> dict[str, Any]:
-    # Kimi seats never join discussions: refuse before the plane is opened.
-    for participant in kwargs.get("participants") or ():
-        kimi_refusal = acp_refusal(str(participant))
-        if kimi_refusal:
-            raise AcpxDiscussionError(kimi_refusal)
+    refuse_kimi_discussion(kwargs.get("participants") or PARTICIPANTS, kwargs.get("models"))
     root_arg = kwargs.pop("root", None)
     root = Path(root_arg) if root_arg is not None else default_plane_root(repo_root=Path(kwargs["cwd"]))
     controller = AcpxDiscussionController(root=root)

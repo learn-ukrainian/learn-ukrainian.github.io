@@ -191,11 +191,13 @@ or count as a formal review.
   **`kimi-code/k3`** (aliases `k3`) @ high/max = **complex coding only** (long-context /
   consequential). Do not burn full-K3 on routine queue when k3-256k fits.
   **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults,
-  design or rules (until further notice).** Every Kimi seat takes workspace-write implementation in
-  site UI code (`site/src/{components,layouts,pages,styles,css,assets,lib}` except `lib/i18n`,
-  `site/*.config.*`, site tests), `scripts/`, `tests/`, `.github/` and `.dagger/`; dispatch, the
-  runtime, ACP and the fleet-comms authority refuse the rest before any side effect
-  (`scripts/agent_runtime/kimi_admission.py`).
+  design or rules (until further notice).** Every Kimi seat takes workspace-write implementation of
+  allowlisted paths only (`KIMI_OWNED_ROOTS`: site UI components, layouts, pages, styles and assets,
+  four named `site/src/lib` helpers, `site/*.config.*`, the verified backend packages
+  `scripts/{agent_runtime,api,orchestration,ci,fleet_comms,hygiene,storage}` and their tests, CI
+  workflows and `.dagger/`); anything not on the allowlist is refused. One gate,
+  `refuse_kimi_if_disallowed`, runs first at every entry point on the effective seats and models,
+  before any side effect (`scripts/agent_runtime/kimi_admission.py`).
   Native `kimi` CLI only — never OpenRouter (Wave 1 fold + #7142).
 * **glm / Z.AI** (operator 2026-08-08 / #6468; **Flash workhorse 2026-08-26**): **keep and use**
   — **`glm-5.3-flash` is the GLM workhorse** (`--agent glm`, default Flash, OpenCode

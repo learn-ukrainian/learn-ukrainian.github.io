@@ -7702,6 +7702,22 @@ def _run_worker(
     to show up correctly in ``ps`` and systemd-style supervisors if
     we ever wrap this in one.
     """
+    # The worker is a second entry point: a worker argv built by hand or a
+    # stale parent must not invoke a Kimi seat outside web, UI and backend
+    # coding. The refusal goes to the caller only; no state is written.
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_if_disallowed
+
+    try:
+        refuse_kimi_if_disallowed(
+            (agent,),
+            (model,),
+            mode=mode,
+            review=require_review_verdict or review_id is not None,
+        )
+    except KimiAdmissionRefused as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 1
+
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
     # through the runtime's finally block (see handler docstring).
     signal.signal(signal.SIGTERM, _worker_sigterm_handler)
@@ -7719,33 +7735,6 @@ def _run_worker(
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     state_path = _state_path(task_id)
-
-    # The worker is a second entry point: a worker argv built by hand or a
-    # stale parent must not invoke a Kimi seat outside web, UI and backend coding.
-    from scripts.agent_runtime.kimi_admission import runtime_refusal
-
-    kimi_refusal = runtime_refusal(
-        agent,
-        mode=mode,
-        model=model,
-        review=require_review_verdict or review_id is not None,
-    )
-    if kimi_refusal:
-        refused_state = _read_state(state_path) or {"task_id": task_id}
-        refused_state.update(
-            {
-                "status": "failed",
-                "finished_at": datetime.now(UTC).isoformat(),
-                "stderr_excerpt": kimi_refusal[:500],
-                "returncode": None,
-                "returncode_reason": "routing refused before invocation",
-                "last_error": _first_error_line(kimi_refusal),
-                "exit_code": None,
-            }
-        )
-        _write_state_atomic(state_path, refused_state)
-        print(f"❌ {kimi_refusal}", file=sys.stderr)
-        return 1
 
     # Update state to include our actual PID. The parent wrote an
     # initial state before forking; we overwrite with the real one
@@ -9112,7 +9101,6 @@ def _dispatch(
     kimi_refusal = _kimi_admission_refusal(
         args,
         agent=resolve_retired_agent_alias(args.agent) or args.agent,
-        repo_key=fleet_repo.key,
         repo_role=fleet_repo.role,
     )
     if kimi_refusal:
@@ -9698,9 +9686,7 @@ def _dispatch(
         return 2
 
     # A budget substitution or --model can land on a Kimi seat after the early check.
-    kimi_refusal = _kimi_admission_refusal(
-        args, agent=dispatch_agent, repo_key=fleet_repo.key, repo_role=fleet_repo.role
-    )
+    kimi_refusal = _kimi_admission_refusal(args, agent=dispatch_agent, repo_role=fleet_repo.role)
     if kimi_refusal:
         print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 2
@@ -11036,37 +11022,39 @@ def _kimi_admission_refusal(
     args: argparse.Namespace,
     *,
     agent: str,
-    repo_key: str | None = None,
     repo_role: str | None = None,
 ) -> str | None:
-    """Refusal message when ``agent`` is a Kimi seat and the dispatch is not web, UI or backend coding.
+    """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted.
 
     ``--owned-path`` and ``--research-owned-path`` both declare task ownership,
-    so every path from either flag must be admissible.
+    so every path from either flag must be on the Kimi allowlist.
     """
-    from scripts.agent_runtime.kimi_admission import dispatch_refusal
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_if_disallowed
 
     owned: list[str] = []
     for attr in ("owned_path", "research_owned_path"):
         value = getattr(args, attr, None) or []
         owned.extend([value] if isinstance(value, str) else value)
-    return dispatch_refusal(
-        agent=agent,
-        model=getattr(args, "model", None),
-        mode=str(getattr(args, "mode", "") or ""),
-        repo_root=_REPO_ROOT,
-        review=bool(getattr(args, "review", False))
-        or str(getattr(args, "type", "") or "").strip().casefold() == "review",
-        review_attempt=bool(getattr(args, "review_attempt", None)),
-        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
-        review_profile=getattr(args, "review_profile", None),
-        language_lane=_dispatch_is_language_lane(args),
-        research_track=getattr(args, "research_track", None),
-        owned_paths=owned,
-        prompt_file=getattr(args, "prompt_file", None),
-        repo_key=repo_key,
-        repo_role=repo_role,
-    )
+    try:
+        refuse_kimi_if_disallowed(
+            (agent,),
+            (getattr(args, "model", None),),
+            mode=str(getattr(args, "mode", "") or ""),
+            paths=owned,
+            repo=repo_role,
+            review=bool(getattr(args, "review", False))
+            or bool(getattr(args, "review_attempt", None))
+            or bool(getattr(args, "require_review_verdict", False))
+            or bool(getattr(args, "review_profile", None))
+            or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+            language_lane=_dispatch_is_language_lane(args),
+            research_track=getattr(args, "research_track", None),
+            prompt_file=getattr(args, "prompt_file", None),
+            repo_root=_REPO_ROOT,
+        )
+    except KimiAdmissionRefused as exc:
+        return str(exc)
+    return None
 
 
 def _discard_model_probe_output(plan: object) -> None:

@@ -21,7 +21,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.agent_runtime.kimi_admission import require_acp_admission
+from scripts.agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -602,7 +602,11 @@ class AuthorityService:
         A Kimi recipient (or a Kimi ``requested_model``) is refused before any
         write: Kimi seats take web, UI and backend coding only.
         """
-        require_acp_admission(str(recipient or ""), model=(metadata or {}).get("requested_model"))
+        refuse_kimi_if_disallowed(
+            (str(recipient or ""),),
+            ((metadata or {}).get("requested_model"),),
+            mode=ACP_MODE,
+        )
         key = idempotency_key or new_id("authority-request-key")
         recipient_name = _nonempty(recipient, field="recipient")
         self._ensure_channel(channel)
@@ -664,8 +668,7 @@ class AuthorityService:
         A Kimi participant is refused before any write: Kimi seats never join
         discussions.
         """
-        for participant in participants:
-            require_acp_admission(str(participant or ""))
+        refuse_kimi_if_disallowed(tuple(str(participant or "") for participant in participants), mode=ACP_MODE)
         key = idempotency_key or new_id("authority-discussion-key")
         channel_name = _nonempty(channel, field="channel")
         participants_norm = _normalize_recipients(participants)

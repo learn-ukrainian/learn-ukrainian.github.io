@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import contextlib
 
-from ._acp_compat import require_compat_target, resolve_compat_model, run_compat_ask
+from ._acp_compat import refuse_kimi_compat, require_compat_target, resolve_compat_model, run_compat_ask
 from ._ask_contract import requested_effort
 from ._ask_lifecycle import ask_target_model, record_ask_failure, record_ask_reply
 from ._db import get_db
@@ -92,29 +92,30 @@ def process_message_for_recipient(
     Returns the routed seat's response on success (after replying to the
     sender and acknowledging the inbound message); returns None on any
     failure, leaving the message unacknowledged and retryable.
+
+    A Kimi recipient or target model raises ``KimiAdmissionRefused`` to the
+    caller before any reply, failure record or acknowledgement: the message
+    stays exactly as it was.
     """
     msg = read_message(message_id)
     if not msg:
         return None
+    recipient = str(msg.get("to") or "").strip().lower()
+    requested_model = model or ask_target_model(msg)
+    refuse_kimi_compat(recipient, model=requested_model)
     if _message_acknowledged(message_id):
         print(f"⏭️  Message {message_id} is already acknowledged; skipping.")
         return None
 
-    from agent_runtime.kimi_admission import KimiAdmissionRefused
-
-    recipient = str(msg.get("to") or "").strip().lower()
     try:
         participant = require_compat_target(recipient)
-    except ValueError as exc:
-        if isinstance(exc, KimiAdmissionRefused):
-            reason = str(exc)
-        else:
-            reason = f"recipient seat {recipient!r} has no enabled ACP route"
+    except ValueError:
+        reason = f"recipient seat {recipient!r} has no enabled ACP route"
         print(f"❌ {reason}; message left unconsumed")
         _notify_processing_failure(msg, message_id, recipient or "unknown", reason)
         return None
 
-    selected_model = resolve_compat_model(recipient, model or ask_target_model(msg))
+    selected_model = resolve_compat_model(recipient, requested_model)
     task_id = msg.get("task_id") or f"process-{message_id}"
     print(
         f"🤖 Routing message #{message_id} to ACP participant "

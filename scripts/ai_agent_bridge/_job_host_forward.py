@@ -44,7 +44,8 @@ ENV_JOB_REPO = "LU_JOB_REPO"
 ENV_SERVICES_REPO = "LU_SERVICES_REMOTE_ROOT"
 
 REMOTE_PATH_EXPORT = 'export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"'
-# Generous wall clock: seat profiles go up to 1800s (kimi); transport grace on top.
+# Wall clock for a forward that passes no hard timeout (compat asks always pass
+# one, plus 60s): a 30-minute ask with transport grace on top.
 DEFAULT_SSH_TIMEOUT_SECONDS = 2100.0
 
 # Remote asks print this on stderr even when the substitute succeeds (rc=0).

@@ -896,6 +896,11 @@ def run_inbox(
             "Install it or add scripts/ to PYTHONPATH."
         )
 
+    # Inbox replies are consults and discussions; a Kimi inbox is refused
+    # before any claim, lease, telemetry or delivery write.
+    from agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
+
+    refuse_kimi_if_disallowed((agent,), mode=ACP_MODE)
     _validate_agent(agent)
     if max_messages is not None and max_messages <= 0:
         raise ValueError("max_messages must be > 0 when provided")
