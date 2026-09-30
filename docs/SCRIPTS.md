@@ -1157,7 +1157,10 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
-| `scripts/ci/area_replay.py` | Replay recorded CI runs (changed paths + failed test files, JSON Lines) through the PR-tier test-area skip; exits 1 on any escape (#8872). Area closure proof: `tests/test_ci_test_areas_invariant.py` | `.venv/bin/python -m scripts.ci.area_replay runs.jsonl` |
+| `scripts/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16` |
+| `scripts/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact skip set; writes the tested-tree record | `.venv/bin/python -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
+| `scripts/ci/reuse_green_run.py` | Merge queue: reuse a green full pytest run of the identical tree, else run everything | run by ci.yml's `reuse` job |
+| `scripts/ci/checks.sh` | Every lint/content-contract gate of ci.yml's Checks job; runs all, fails if any failed | `bash scripts/ci/checks.sh` |
 | `scripts/projects/open_model_data/v4_mine_stem_controls.py` | Phase 3.3 STEM `PRESERVE` miner + polysemy typing (#8007). Receipts are hash-only; shards stay local. | `python -m scripts.projects.open_model_data.v4_mine_stem_controls --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" --output-dir "$STEM_CONTROLS_OUT"` |
 
 ---

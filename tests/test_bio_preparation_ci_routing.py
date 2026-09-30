@@ -1,43 +1,34 @@
-"""Regression coverage for the BIO preparation gate (#4431), rebooted for #5766.
+"""Regression coverage for the BIO preparation gate (#4431, #5766).
 
-Before #5766 this file defended a *selection* mechanism: a ``changes`` job computed a
-``preparation`` path filter, and a dedicated ``bio-preparation-data`` job ran only when that
-filter matched. Two of the original four tests asserted directly on those YAML path filters.
+The gate lives in ``scripts/ci/bio_preparation_gate.py`` and runs from
+``scripts/ci/checks.sh`` in ci.yml's ``checks`` job on every event. What is
+defended here:
 
-#5766 deletes changed-files selection entirely — every gate job now runs on every PR — so those
-two tests lost their subject. The invariant they defended ("editing a BIO capsule surface reaches
-the preparation validator") did not disappear; it became unconditional and true by construction,
-which is strictly stronger than a path filter that had to be kept in sync by hand.
-
-What genuinely still needs defending, and is covered here:
-
-* the validator survived the move into the ``contracts`` job and is reachable from the one
-  required gate (``ci-gate``);
-* the #7141 minimal PR tier leaves ``contracts`` out of pull-request pushes, but its exact
-  landing-tier condition runs the job on every ``merge_group``/``push`` event, with no separate
-  path-based condition that could skip the validator;
-* the validator step itself has no ``if:``;
-* its internal change detection is intact (rename decomposition + registry-entry tracking);
-* the path classifier deciding *which* BIO files it validates still recognises every capsule
-  surface. That logic moved out of the YAML filter and into the embedded script, so it is
-  extracted and exercised directly rather than asserted textually.
+* the validator is reachable from the one required gate (``ci-gate``) and
+  nothing can skip it (no job-level or step-level ``if:``, and checks.sh runs
+  every check unconditionally);
+* its change detection is intact (rename decomposition + registry-entry tracking);
+* the path classifier deciding *which* BIO files it validates still recognises
+  every capsule surface, exercised directly.
 """
 
 from __future__ import annotations
 
-import ast
 from pathlib import Path
 
 import pytest
 import yaml
 
+from scripts.ci.bio_preparation_gate import is_bio_preparation_path
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
+CHECKS_SCRIPT = REPO_ROOT / "scripts/ci/checks.sh"
+GATE_SCRIPT = REPO_ROOT / "scripts/ci/bio_preparation_gate.py"
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
-VALIDATOR_STEP_NAME = "Validate BIO preparation capsules and active holds"
-CONTRACTS_TIER_IF = "needs.changes.outputs.docs_only == 'false'"
+VALIDATOR_CHECK = 'check "Validate BIO preparation capsules and active holds" .venv/bin/python -m scripts.ci.bio_preparation_gate'
 
 BIO_PREPARATION_PATHS = (
     "curriculum/l2-uk-en/plans/bio/knyahynia-olha.yaml",
@@ -58,90 +49,45 @@ NON_PREPARATION_PATHS = (
 MANIFEST_SET = {"knyahynia-olha"}
 
 
-def _workflow() -> dict:
-    return yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
-
-
-def _normalise_expression(value: object) -> str:
-    return " ".join(str(value).split())
-
-
-def _validator_job_and_step() -> tuple[str, dict, dict]:
-    """Locate the validator wherever it lives, so a future move fails loudly, not silently."""
-    workflow = _workflow()
-    for job_name, job in workflow["jobs"].items():
-        for step in job.get("steps", []):
-            if step.get("name") == VALIDATOR_STEP_NAME:
-                return job_name, job, step
-    raise AssertionError(
-        f"the BIO preparation validator step {VALIDATOR_STEP_NAME!r} is not in ci.yml at all — "
-        "the gate has been deleted, not moved"
-    )
-
-
-def _validator_python_body() -> str:
-    """Strip the ``python - <<'PY' ... PY`` heredoc wrapper off the embedded script."""
-    _, _, step = _validator_job_and_step()
-    lines = step["run"].splitlines()
-    assert lines[0].endswith("<<'PY'"), f"unexpected validator invocation: {lines[0]!r}"
-    assert lines[-1].strip() == "PY", f"unexpected heredoc terminator: {lines[-1]!r}"
-    return "\n".join(lines[1:-1])
-
-
-def _classifier():
-    """Compile ``is_bio_preparation_path`` out of the embedded script and bind its closure."""
-    tree = ast.parse(_validator_python_body())
-    for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name == "is_bio_preparation_path":
-            namespace: dict = {"Path": Path, "manifest_set": MANIFEST_SET}
-            module = ast.Module(body=[node], type_ignores=[])
-            exec(compile(module, filename="<ci.yml embedded validator>", mode="exec"), namespace)
-            return namespace["is_bio_preparation_path"]
-    raise AssertionError("is_bio_preparation_path() is no longer defined in the embedded validator script")
+def _checks_job() -> tuple[dict, dict]:
+    workflow = yaml.safe_load(CI_WORKFLOW.read_text(encoding="utf-8"))
+    job = workflow["jobs"]["checks"]
+    step = next(step for step in job["steps"] if "scripts/ci/checks.sh" in str(step.get("run", "")))
+    return workflow, job | {"_step": step}
 
 
 def test_bio_preparation_validator_is_reachable_from_the_required_gate() -> None:
-    job_name, _, _ = _validator_job_and_step()
-    required = _workflow()["jobs"]["ci-gate"]["needs"]
-    assert job_name in required, (
-        f"the BIO preparation validator runs in job {job_name!r}, which CI Gate does not require "
-        f"(requires: {required}) — CI Gate could pass while BIO preparation validation failed"
-    )
+    workflow, _ = _checks_job()
+    assert "checks" in workflow["jobs"]["ci-gate"]["needs"]
+    assert VALIDATOR_CHECK in CHECKS_SCRIPT.read_text(encoding="utf-8").splitlines()
 
 
 def test_nothing_can_skip_the_bio_preparation_validator() -> None:
-    """Contracts skip only docs-only diffs; the validator step itself has no if:."""
-    job_name, job, step = _validator_job_and_step()
-    contracts_if = _normalise_expression(job.get("if"))
-    assert contracts_if == CONTRACTS_TIER_IF, (
-        f"job {job_name!r} must skip only docs-only PRs "
-        f"({CONTRACTS_TIER_IF!r}); got {contracts_if!r}"
-    )
-    assert "if" not in step, (
-        f"the {VALIDATOR_STEP_NAME!r} step carries an `if:` and could be skipped"
-    )
+    _, job = _checks_job()
+    assert "if" not in job, "the checks job carries an `if:` and could be skipped"
+    assert "if" not in job["_step"], "the checks.sh step carries an `if:` and could be skipped"
+    # checks.sh runs every check at top level, never inside a condition.
+    assert any(line == VALIDATOR_CHECK for line in CHECKS_SCRIPT.read_text(encoding="utf-8").splitlines())
 
 
 def test_validator_change_detection_is_intact() -> None:
-    script = _validator_python_body()
-    assert script.count('"--no-renames"') == 2, (
-        "rename decomposition dropped: a renamed BIO capsule would otherwise be invisible to the "
-        "changed-slug scan"
-    )
-    assert '"git", "show", f"{base_sha}:{registry_rel}"' in script
-    assert "registry_changed_slugs" in script
+    script = GATE_SCRIPT.read_text(encoding="utf-8")
+    assert '"--no-renames"' in script, "rename decomposition dropped"
+    assert '_git_names(base_sha, head_sha, "AM")' in script
+    assert '_git_names(base_sha, head_sha, "D")' in script
+    assert '_show(f"{base_sha}:{REGISTRY_REL}"' in script
     assert "changed_slugs.update(registry_changed_slugs)" in script
 
 
 @pytest.mark.parametrize("raw_path", BIO_PREPARATION_PATHS)
 def test_path_classifier_recognises_every_bio_capsule_surface(raw_path: str) -> None:
-    assert _classifier()(raw_path) is True, (
+    assert is_bio_preparation_path(raw_path, MANIFEST_SET) is True, (
         f"{raw_path} is a BIO capsule surface but the validator does not classify it as one"
     )
 
 
 @pytest.mark.parametrize("raw_path", NON_PREPARATION_PATHS)
 def test_path_classifier_does_not_over_claim(raw_path: str) -> None:
-    assert _classifier()(raw_path) is False, (
+    assert is_bio_preparation_path(raw_path, MANIFEST_SET) is False, (
         f"{raw_path} is not a BIO preparation surface but the validator classifies it as one"
     )

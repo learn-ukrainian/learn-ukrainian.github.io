@@ -523,11 +523,10 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
 # =============================================================================
 # CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
 # =============================================================================
-# GitHub Actions collects through one initial `tests` path instead of ~337
-# positional file arguments per shard (1,345 test files total on the baseline
-# head; collection cost, not test selection); this hook
-# narrows that single-path collection back down to one shard's files. See
-# scripts/ci/pytest_shards.py `plan-files` and docs/runbooks/ci-gate.md.
+# GitHub Actions collects through one initial `tests` path instead of ~100
+# positional file arguments per shard (collection cost, not test selection);
+# this hook narrows that single-path collection back down to one shard's
+# files. See scripts/ci/split_tests.py and docs/runbooks/ci-gate.md.
 
 LU_PYTEST_SHARD_FILES_ENV_VAR = "LU_PYTEST_SHARD_FILES"
 

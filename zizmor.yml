@@ -9,7 +9,7 @@ rules:
       - gemini-plan-execute.yml:49
   self-repository:
     ignore:
-      # content-ci.yml:30 and ci.yml:200/365/549 — `./` is the form pinned
+      # content-ci.yml:30, ci.yml and ci-advisory.yml — `./` is the form pinned
       # actionlint 1.7.12 accepts; `$/` is the form zizmor wants (zizmor 1.30 /
       # GitHub Actions, 2026-07-30) but actionlint rejects (rhysd/actionlint#711
       # still open; 1.7.12 remains the latest release). Keep `./` until actionlint
@@ -17,6 +17,7 @@ rules:
       # named content-ci.yml:29 and had gone stale (the step moved); corrected
       # to the `uses:` line zizmor reports. Line-anchored, so re-check on edits.
       - content-ci.yml:30
-      - ci.yml:200
-      - ci.yml:365
-      - ci.yml:549
+      - ci.yml:116
+      - ci.yml:155
+      - ci.yml:198
+      - ci-advisory.yml:35
