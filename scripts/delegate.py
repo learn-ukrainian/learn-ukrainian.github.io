@@ -9115,7 +9115,8 @@ def _run_dor_preflight(
 
     A registered stream epic of this repository is linked context, not a task card (#9276): it is recorded
     as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
-    is still checked. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
+    (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
+    says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
     """
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
@@ -9180,12 +9181,16 @@ def _run_dor_preflight(
     check(tasks)
     stream_epics: list[int] = []
     if epics:
-        if issue_numbers:
-            stream_epics = [number for _repo, number in epics]
-        else:
+        if not issue_numbers:
             # No task issue was checked (none named, or all were pull requests): the epic is all the
-            # brief names, and an epic is not a task card.
-            check(epics)
+            # brief names. An epic is not a task card, so its own card verdict cannot admit the brief,
+            # and no override applies.
+            names = ", ".join(f"#{number}" for _repo, number in epics)
+            return (
+                f"❌ DoR refused: dor_epic_only_no_task_issue: the brief names only the stream epic {names}; "
+                "name the task issue it implements (#9276)"
+            ), None
+        stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
         return None, None
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}

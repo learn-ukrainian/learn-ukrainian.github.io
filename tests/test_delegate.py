@@ -1387,19 +1387,30 @@ def test_dor_preflight_stream_epic_plus_failing_task_still_fails(monkeypatch):
     assert record["stream_epic"] == [6943]
 
 
-def test_dor_preflight_epic_only_brief_still_fails(monkeypatch):
-    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
+@pytest.mark.parametrize("failing", [set(), {(_LOCAL, 6943)}], ids=["epic-card-pass", "epic-card-warn"])
+def test_dor_preflight_epic_only_brief_is_refused_whatever_the_epic_card_says(monkeypatch, failing):
+    calls = _epic_card_fakes(monkeypatch, failing=failing)
     error, record = delegate._run_dor_preflight("Stream epic #6943.", None, dispatch_repo=_LOCAL)
-    assert "#6943: outcome,why" in error
-    assert record == {"issues": [6943], "warnings": {"6943": "outcome,why"}}
-    assert _checked_issues(calls) == [[_LOCAL, "6943"]]
+    assert "dor_epic_only_no_task_issue" in error
+    assert "#6943" in error
+    assert record is None
+    assert _checked_issues(calls) == []
 
 
-def test_dor_preflight_epic_with_only_pull_request_task_still_checks_the_epic(monkeypatch):
-    _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)}, pull_requests={8750})
+def test_dor_preflight_epic_only_brief_is_refused_even_with_an_override_reason(monkeypatch):
+    _epic_card_fakes(monkeypatch)
+    error, record = delegate._run_dor_preflight("Stream epic #6943.", "urgent repair", dispatch_repo=_LOCAL)
+    assert "dor_epic_only_no_task_issue" in error
+    assert record is None
+
+
+@pytest.mark.parametrize("failing", [set(), {(_LOCAL, 6943)}], ids=["epic-card-pass", "epic-card-warn"])
+def test_dor_preflight_epic_with_only_pull_request_is_refused_whatever_the_epic_card_says(monkeypatch, failing):
+    calls = _epic_card_fakes(monkeypatch, failing=failing, pull_requests={8750})
     error, record = delegate._run_dor_preflight("PR #8750 under epic #6943", None, dispatch_repo=_LOCAL)
-    assert "#6943: outcome,why" in error
-    assert "stream_epic" not in record
+    assert "dor_epic_only_no_task_issue" in error
+    assert record is None
+    assert _checked_issues(calls) == []
 
 
 def test_dor_preflight_foreign_repository_issue_numbered_like_an_epic_is_checked(monkeypatch):
