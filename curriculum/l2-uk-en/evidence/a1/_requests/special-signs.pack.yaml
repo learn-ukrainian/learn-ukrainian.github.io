@@ -83,19 +83,4 @@ exercises:
     span: {first_words: 'тин [–• – ]', last_words: 'рись [–• = ]'}
     pattern: 'Hear and read the printed hard/soft minimal pairs; do not compose replacements from memory.'
 standard:
-  - {id: S-001, lines: '571-572'}
-unsupported:
-  - id: U-001
-    claim: 'The required named English-speaker teaching point classifying Ф as a visual look-alike has no identified supporting T- or X- source. T-008 establishes the native glyph and sound, T-012 establishes the alphabet table, and T-018 establishes F/ph-to-ф correspondence, but none establishes visual similarity or an English-reader look-alike trap. These narrower claims are not substituted for the required claim. Planning stopped before lesson, word-request or grammar authoring.'
-    searches:
-      - {tool: 'sources.search_text', query: 'Ф English; Ф Latin; Ф латинська (subject ukrmova); Ф схожа (subject bukvar); Cyrillic alphabet; ф f (source_file uni-ukrmova-orthography-strokal-2021). Returned material did not establish the required visual look-alike point.'}
-      - {tool: 'sources.search_sources', query: 'літера Ф латинська F схожість (track a1). No supporting visual-comparison teaching record identified.'}
-      - {tool: 'sources.get_chunk_context', query: '1-klas-bukvar-zaharijchuk-2025-2_s0059; 5-klas-ukrmova-zabolotnyi-2023_s0001; uni-ukrmova-orthography-strokal-2021_s0431. Native-letter, alphabet and transliteration evidence respectively; no visual look-alike statement.'}
-      - {tool: 'read-only corpus query: textbooks', query: 'ULP seasons 1-6 and anna-ohoiko-*; regex look.like|similar.*letter|same.*letter|Latin.*letter|Cyrillic.*letter|letter.*English|Greek in chunks containing Ф or ф. Candidate passages concerned English lessons, letters as correspondence, Greek culture or generic Cyrillic learning, not the visual shape of Ф.'}
-      - {tool: 'sources.search_external', query: 'alphabet, channel ulp_youtube. Per-letter pronunciation transcripts retrieved; they do not supply a T- or X- visual-comparison record.'}
-  - id: U-002
-    claim: 'The required Standard alphabet citation at canonical newline-numbered lines 571-572 cannot be built correctly by this base. S-001 requested 571-572 but contains a blank line and the heading for Catalog V instead of the alphabet requirement. The canonical file hash is 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac. scripts/curriculum/evidence/sources.py get_standard_lines() uses str.splitlines(), which also treats the file form-feed page breaks as line separators. S-001 is retained as diagnostic evidence of the incorrect extraction, not as alphabet coverage. The request does not substitute another range; correcting the helper is outside this packet owned paths.'
-    searches:
-      - {tool: 'nl -ba on canonical Standard text', query: 'docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:571-572 contains section 4.1.1 on the Ukrainian alphabet, printed and handwritten letters, uppercase and lowercase letters.'}
-      - {tool: 'read-only canonical text comparison', query: 'read_text().split(newline) versus read_text().splitlines() at one-based indices 571-572: the first gives the alphabet requirement; the second gives a blank line and the Catalog V heading.'}
-      - {tool: 'read-only source inspection', query: 'scripts/curriculum/evidence/sources.py:992-997 get_standard_lines() calls content.splitlines(); build-pack writes the resulting wrong slice into S-001 and pack-verify confirms that same slice.'}
+  - {id: S-001, lines: '585-586'}
