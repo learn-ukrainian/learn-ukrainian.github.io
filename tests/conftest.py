@@ -33,7 +33,17 @@ from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, reru
 from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
-pytest_plugins = ["tests.cursor_process_guard"]
+pytest_plugins = ["tests.helpers.checkout_write_guard", "tests.cursor_process_guard"]
+
+
+@pytest.fixture(scope="session", autouse=True)
+def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path, None, None]:
+    """Keep sources request logs outside the checkout in each pytest worker."""
+    log_dir = tmp_path_factory.mktemp("mcp-sources-logs")
+    with pytest.MonkeyPatch.context() as mp:
+        mp.setenv("LU_MCP_SOURCES_LOG_DIR", str(log_dir))
+        yield log_dir
+
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
