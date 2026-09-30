@@ -3371,6 +3371,10 @@ def invoke(
         try:
             attempt = prepare_attempt_boundary(agent_name, mode, session_id, tool_config)
         except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
+            if str(exc) == "attempt_boundary_claude_adapter_pending":
+                raise AgentUnavailableError(
+                    "formal attempt filesystem boundary refused: attempt_boundary_claude_adapter_pending"
+                ) from exc
             raise AgentUnavailableError("formal attempt filesystem boundary refused") from exc
         prepared_config = attempt.tool_config if attempt is not None else tool_config
         launch = prepare_trail_isolation(

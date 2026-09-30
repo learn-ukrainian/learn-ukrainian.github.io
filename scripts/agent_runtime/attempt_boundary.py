@@ -232,6 +232,10 @@ class AttemptBoundary:
     def __init__(self, *, agent: str, tool_config: dict[str, Any]):
         from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
 
+        # Claude's adapter must land with its own eligible cross-family review
+        # before formal attempts can stage credentials or launch any process.
+        if agent == "claude":
+            raise ReviewIsolationError("attempt_boundary_claude_adapter_pending")
         if agent not in SUPPORTED_HARNESSES:
             raise ReviewIsolationError("attempt_harness_unsupported")
         config = Path(tool_config["mcp_config_path"])

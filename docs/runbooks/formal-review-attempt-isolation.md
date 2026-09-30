@@ -1,7 +1,10 @@
 # Formal review attempt isolation
 
 Issue: #9251. This boundary applies to `delegate.py dispatch --review-attempt`
-for plan, lesson and lesson re-review attempts, using AGY, Codex or Claude.
+for plan, lesson and lesson re-review attempts, using AGY or Codex.
+Claude formal attempts refuse before boundary provisioning or adapter launch
+with `attempt_boundary_claude_adapter_pending` until its adapter change lands
+separately. Ordinary Claude dispatches remain supported.
 Cursor is explicitly refused at admission and provisioning until it has a
 proven boundary. Other unsupported harnesses remain refused.
 
@@ -48,16 +51,27 @@ runner parses the fresh transcript before cleaning up the boundary and sources
 processes, including on refusal, timeout or failure. Formal attempts cannot resume
 or trigger runner provider failover.
 
-Claude uses an instruction-free home, `--setting-sources ''` and disabled slash
-command expansion under the OS boundary. Its `--bare` mode is incompatible
-with subscription authentication, as documented in the
-[Claude authentication reference](https://code.claude.com/docs/en/authentication#generate-a-long-lived-token).
-The fresh home, explicit empty settings and unmounted host state preserve the
-closure while using the native authenticated CLI. Codex uses its fresh sources-only home and bypasses its nested
+Codex uses its fresh sources-only home and bypasses its nested
 sandbox, which otherwise cancels stdio MCP calls. AGY uses a fresh home and
 app-data directory under the same OS boundary. AGY's separate sealed code-review
 `review_isolation` mode remains refused; formal content attempts use the
 runner-owned manifest boundary, rather than enabling that unsupported mode.
+
+## Claude adapter follow-up
+
+The Claude adapter change is excluded from this branch so it can receive an
+eligible cross-family review: changing that adapter excludes Claude reviewers
+because it governs their own boundary. A Claude Opus worker owns the follow-up
+PR, reviewed by `gpt-6.1-sol`.
+
+Under `review_attempt_boundary`, replace the ordinary worker-guard `--settings`
+with `--setting-sources ""` and `--disable-slash-commands`. Empty setting sources
+prevent host/project settings and hooks from loading; disabling slash commands
+prevents command expansion. Keep the instruction-free fresh home and OS closure.
+Do not add `--bare`: it disables subscription authentication, as documented in the
+[Claude authentication reference](https://code.claude.com/docs/en/authentication#generate-a-long-lived-token).
+The follow-up must remove the typed refusal, restore Claude's launch-proof test
+matrix, and establish its own exact-head provider compatibility proof.
 
 ## Provider egress boundary
 
@@ -98,7 +112,7 @@ falling back to the host network.
 ## Provider compatibility proof
 
 At the exact implementation head, record the SHA-256 of the allowlist and each
-native CLI version. For AGY, Codex and Claude, wrap their real adapter invocation
+native CLI version. For AGY and Codex, wrap their real adapter invocation
 with `AttemptBoundary.wrap`, provide a minimal prompt requesting a fixed token
 without tools, and parse the actual terminal response with that adapter. Retain
 only the implementation SHA, allowlist digest, CLI version, tested variable,
@@ -114,6 +128,10 @@ same wrapped invocation: it must refuse before the CLI can produce the token.
 A harness failure remains a blocker; do not broaden the network namespace or
 silently substitute a provider. Independently repeat this proof on the reviewed
 head before landing; a changed proxy, allowlist or invocation voids prior proof.
+
+AC-2 retains the AGY and Codex proof rows. The Claude row is excluded from this
+branch's compatibility claims and belongs to the adapter follow-up; its refusal
+tests prove only that an attempt cannot launch, not provider compatibility.
 
 ## Verification and post-merge proof (AC-4)
 
@@ -135,11 +153,13 @@ includes IPv6/mapped sockets, cleared/overridden proxies, redirects, host abstra
 sockets, neighboring attempt sockets, inherited file/socket/namespace descriptors,
 private procfs and absent sysfs. A subprocess launch error never proves denial.
 
-The second command requires the actual installed AGY, Codex and Claude CLIs.
+The second command requires the actual installed AGY and Codex CLIs.
 It fails if their real executables or dependencies cannot launch inside the
 boundary. The test matrix exercises each harness and each attempt kind, denying
 absolute reads, traversal, symlinks, Git history, prior homes and sessions;
 allowing copied inputs, sources calls, receipt recording and the own return.
+Claude's plan, lesson and re-review rows instead prove the typed refusal before
+adapter planning or process launch.
 The normal CI run uses a native executable fixture for adapter startup only;
 filesystem probes and sources calls use the real production boundary in both
 modes. A separate reviewer should run these probes on the target host at the

@@ -123,7 +123,7 @@ def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str) -> di
     }
 
 
-@pytest.mark.parametrize("agent", ["agy", "codex", "claude"])
+@pytest.mark.parametrize("agent", ["agy", "codex"])
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_subprocess_forbidden_read_matrix(world, tmp_path, agent, kind):
     root, old_home = world
@@ -213,7 +213,7 @@ def test_runtime_files_does_not_grant_native_binary_parent():
     assert binary.parent not in runtime_files(binary)
 
 
-@pytest.mark.parametrize("agent", ["agy", "codex", "claude"])
+@pytest.mark.parametrize("agent", ["agy", "codex"])
 def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent):
     root, _ = world
     doc = manifest_world(root, "plan")
@@ -262,7 +262,8 @@ def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent):
 
 
 def test_runner_requires_boundary_and_preserves_nonattempt_behavior(monkeypatch):
-    assert prepare_attempt_boundary("agy", "read-only", None, {}) is None
+    for agent in ("agy", "codex", "claude"):
+        assert prepare_attempt_boundary(agent, "read-only", None, {}) is None
     for tc, mode, session in [
         ({"review_id": "review"}, "read-only", None),
         ({"attempt_id": "current", "strict_mcp_config": True}, "workspace-write", None),
@@ -279,6 +280,33 @@ def test_cursor_attempt_refused_before_files_or_spawn(world, tmp_path):
     with pytest.raises(ValueError, match="Cursor is not admitted"):
         prepare_review_attempt("review", "attempt", path, "cursor", receipts_root=tmp_path / "receipts")
     assert not (tmp_path / "receipts").exists()
+
+
+def test_claude_boundary_refuses_before_input_reads_or_provisioning(monkeypatch):
+    def unexpected(*args, **kwargs):
+        pytest.fail("pending Claude adapter must refuse before boundary side effects")
+
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.verify_review_attempt_paths", unexpected)
+    monkeypatch.setattr(tempfile, "TemporaryDirectory", unexpected)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.stage_engine_auth", unexpected)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.SourcesConnection", unexpected)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.AttemptEgress", unexpected)
+    with pytest.raises(ReviewIsolationError, match=r"^attempt_boundary_claude_adapter_pending$"):
+        AttemptBoundary(agent="claude", tool_config={})
+
+
+@pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
+def test_runner_refuses_claude_attempt_before_adapter_or_spawn(world, tmp_path, monkeypatch, kind):
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, kind), "claude")
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("pending Claude adapter must refuse before adapter planning or spawn")
+
+    monkeypatch.setattr(runner, "_load_adapter", unexpected)
+    monkeypatch.setattr(subprocess, "Popen", unexpected)
+    with pytest.raises(AgentUnavailableError, match="attempt_boundary_claude_adapter_pending"):
+        runner.invoke("claude", "probe", cwd=root, tool_config=tc, hard_timeout=30)
 
 
 def test_seat_cannot_read_other_attempt_through_host_http_projection(world, tmp_path):
@@ -321,7 +349,7 @@ def test_seat_cannot_read_other_attempt_through_host_http_projection(world, tmp_
         thread.join(timeout=2)
 
 
-@pytest.mark.parametrize("agent", ["agy", "codex", "claude"])
+@pytest.mark.parametrize("agent", ["agy", "codex"])
 def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path, monkeypatch, agent):
     root, home = world
     forbidden = home / "previous-session.txt"
@@ -360,26 +388,22 @@ def test_runner_executes_attempt_boundary_and_cleans_after_parse(world, tmp_path
     assert observed and not observed[0].workspace.exists()
 
 
-@pytest.mark.parametrize("agent", ["agy", "codex", "claude"])
+@pytest.mark.parametrize("agent", ["agy", "codex"])
 @pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
 def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monkeypatch, agent, kind):
     from scripts.agent_runtime.adapters.agy import AgyAdapter
-    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
     from scripts.agent_runtime.adapters.codex import CodexAdapter
 
     root, home = world
     tc = attempt_config(root, tmp_path, manifest_world(root, kind), agent)
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
     try:
-        adapter = {"agy": AgyAdapter, "claude": ClaudeAdapter, "codex": CodexAdapter}[agent]()
+        adapter = {"agy": AgyAdapter, "codex": CodexAdapter}[agent]()
         if os.environ.get("LU_REVIEW_HOST_PROBES") != "1":
             # CI has no authenticated provider CLIs. Keep the real adapter
             # planning and sandbox seam, using a native executable fixture.
             monkeypatch.setattr(shutil, "which", lambda name: "/bin/true")
             monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda binary: None)
-            monkeypatch.setattr("scripts.agent_runtime.adapters.claude._default_claude_bin", lambda: "/bin/true")
-            monkeypatch.setattr("scripts.agent_runtime.adapters.claude._ensure_supported_claude_cli_version",
-                                lambda prefix: (2, 1, 285))
         if agent == "agy":
             monkeypatch.setattr(adapter, "_resolve_model_flag", lambda model: "gemini-3.8-flash-high")
         plan = adapter.build_invocation(prompt="probe", mode="read-only", cwd=boundary.workspace,
@@ -393,11 +417,6 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             assert Path(plan.env_overrides["CODEX_HOME"]).is_relative_to(boundary.write_root)
             assert plan.output_file.is_relative_to(boundary.write_root)
             assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
-        else:
-            assert "--bare" not in plan.cmd
-            assert plan.cmd[plan.cmd.index("--setting-sources") + 1] == ""
-            assert "--disable-slash-commands" in plan.cmd
-            assert "--strict-mcp-config" in plan.cmd
         # Probe the actual installed executable and its runtime closure inside
         # the production wrapper, without starting a provider/model request.
         cmd, env = boundary.wrap([plan.cmd[0], "--version"], plan.env_overrides)

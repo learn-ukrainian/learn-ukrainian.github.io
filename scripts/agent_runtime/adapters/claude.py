@@ -454,13 +454,7 @@ class ClaudeAdapter:
         # review isolation receives the settings flag too, but its existing
         # --safe-mode suppresses hooks and shell/write tools; the isolated OS
         # sandbox does not mount the checkout's tracked hook paths.
-        if tc.get("review_attempt_boundary"):
-            # No host hooks/settings are reachable in the manifest sandbox.
-            # --bare disables subscription OAuth as well as discovery. The
-            # fresh home + OS closure provides isolation without that flag.
-            cmd.extend(["--setting-sources", "", "--disable-slash-commands"])
-        else:
-            cmd.extend(["--settings", _worker_guard_settings(publish_guard=reviewer_guard and not review_isolation)])
+        cmd.extend(["--settings", _worker_guard_settings(publish_guard=reviewer_guard and not review_isolation)])
         if review_isolation:
             # Exact read/search tools + empty setting sources: no write/shell
             # tools and no project CLAUDE.md/hooks/skills when flags are honored.
