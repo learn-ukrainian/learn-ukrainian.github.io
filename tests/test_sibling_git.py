@@ -83,6 +83,7 @@ def world(tmp_path, monkeypatch):
     ssh.write_text(f"#!/bin/sh\nexec /usr/bin/git-upload-pack {shlex.quote(str(upstream))}\n")
     ssh.chmod(0o700)
     monkeypatch.setenv("HOME", str(tmp_path / "isolated home"))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", os.devnull)
     monkeypatch.setenv("PYTHONDONTWRITEBYTECODE", "1")
     monkeypatch.setenv("GIT_OPTIONAL_LOCKS", "0")
     for key in ("PYTHONPATH", "PYTHONHOME", "PYTHONUSERBASE", "PYTHONSTARTUP", "PYTHONINSPECT"):
@@ -98,6 +99,7 @@ def world(tmp_path, monkeypatch):
     def fixture_init(self, hooks):
         original(self, hooks)
         self.env["GIT_SSH_COMMAND"] = shlex.quote(str(ssh))
+        self.env["GIT_CONFIG_SYSTEM"] = os.devnull
 
     monkeypatch.setattr(sg.Git, "__init__", fixture_init)
     before = snapshot(primary)
@@ -175,6 +177,91 @@ def test_sync_main_product(world, tmp_path):
     assert git(world[1], "rev-parse", "HEAD") == sha
     assert (world[1] / "file.txt").read_text() == "fetched\n"
     assert invoke("sync-main")[0] == 0
+
+
+GH_CREDENTIAL_CONFIG = """[credential "https://github.com"]
+    helper =
+    helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+    helper =
+    helper = !gh auth git-credential
+"""
+
+
+@pytest.mark.parametrize("scope", ["global", "system"])
+@pytest.mark.parametrize("verb", ["status", "sync-main"])
+def test_inherited_gh_credential_helpers_accepted(world, tmp_path, monkeypatch, scope, verb):
+    sha = advance(world, tmp_path)
+    if scope == "global":
+        config = Path(os.environ["HOME"]) / ".gitconfig"
+        config.parent.mkdir()
+    else:
+        config = tmp_path / "system gitconfig"
+        original = sg.Git.__init__
+
+        def system_init(self, hooks):
+            original(self, hooks)
+            self.env["GIT_CONFIG_SYSTEM"] = str(config)
+
+        monkeypatch.setattr(sg.Git, "__init__", system_init)
+    config.write_text(GH_CREDENTIAL_CONFIG)
+    code, out, err = invoke(verb)
+    assert code == 0, err
+    if verb == "status":
+        assert json.loads(out)["clean"] is True
+    else:
+        assert json.loads(out)["head"] == sha
+        assert git(world[1], "rev-parse", "HEAD") == sha
+        assert (world[1] / "file.txt").read_text() == "fetched\n"
+
+
+@pytest.mark.parametrize("scope", ["local", "worktree"])
+@pytest.mark.parametrize("verb", ["status", "sync-main"])
+def test_repository_gh_credential_helpers_refused(world, scope, verb):
+    sibling = world[1]
+    # Trusted inherited values must not mask the same key in repository scope.
+    Path(os.environ["HOME"]).mkdir()
+    (Path(os.environ["HOME"]) / ".gitconfig").write_text(GH_CREDENTIAL_CONFIG)
+    if scope == "local":
+        config = sibling / ".git/config"
+        config.write_text(config.read_text() + GH_CREDENTIAL_CONFIG)
+    else:
+        git(sibling, "config", "extensions.worktreeConfig", "true")
+        (sibling / ".git/config.worktree").write_text(GH_CREDENTIAL_CONFIG)
+    before = snapshot(sibling)
+    code, _, err = invoke(verb)
+    assert code == 2
+    assert "unsupported redirect, transport, or executable configuration" in err
+    assert snapshot(sibling) == before
+
+
+def test_command_gh_credential_helpers_refused(world):
+    with sg.git_session() as runner:
+        # Exercise Git's real command-scope output, without caller inheritance.
+        runner.env.update({
+            "GIT_CONFIG_COUNT": "1",
+            "GIT_CONFIG_KEY_0": "credential.https://github.com.helper",
+            "GIT_CONFIG_VALUE_0": "!gh auth git-credential",
+        })
+        with pytest.raises(sg.Refusal, match="unsupported redirect, transport, or executable configuration"):
+            sg._safe_config(runner, world[1])
+
+
+@pytest.mark.parametrize("key", ["include.path", "includeIf.gitdir:*/.path", "url.ssh://git@github.com/.insteadOf", "core.sshCommand"])
+@pytest.mark.parametrize("verb", ["status", "sync-main"])
+def test_global_unsafe_config_still_refused(world, tmp_path, key, verb):
+    included = tmp_path / "included gitconfig"
+    included.write_text(GH_CREDENTIAL_CONFIG)
+    config = Path(os.environ["HOME"]) / ".gitconfig"
+    config.parent.mkdir()
+    config.write_text(GH_CREDENTIAL_CONFIG)
+    value = str(included) if key.lower().startswith("include") else "unsafe"
+    git(world[1], "config", "--file", str(config), key, value)
+    before = snapshot(world[1])
+    code, _, err = invoke(verb)
+    assert code == 2
+    assert "unsupported redirect, transport, or executable configuration" in err
+    assert snapshot(world[1]) == before
 
 
 @pytest.fixture
