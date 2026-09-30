@@ -27,6 +27,8 @@ from pathlib import Path
 
 import pytest
 
+from scripts.common.repo_root import project_interpreter
+from scripts.orchestration import worktree_claims
 from scripts.orchestration.dispatch_isolation import _parse_bytes, build_scope_argv
 
 SOURCE_ROOT = Path(__file__).resolve().parents[2]
@@ -160,11 +162,16 @@ def prune_stale_worktrees(primary: Path) -> None:
 
 
 def remove_test_worktree(primary: Path, checkout: Path) -> None:
-    command(
-        ["git", "--git-dir", str(primary / ".git"), "worktree", "remove", "--force", str(checkout)],
-        cwd=primary / ".worktrees" / "data-tier",
-        timeout=600,
+    removal = worktree_claims.remove_unclaimed_worktree(
+        checkout,
+        repo_root=primary,
+        reason="data-tier checkout cleanup",
+        owner_task_id=None,
+        force=True,
     )
+    if removal.action != "removed":
+        detail = f"{removal.reason}: {removal.error}" if removal.error else removal.reason
+        raise DataTierError(f"checkout cleanup {removal.action}: {detail}")
 
 
 def stop_scope(unit: str) -> None:
@@ -202,7 +209,7 @@ def make_test_worktree(primary: Path) -> Path:
         if command(["git", "status", "--porcelain"], cwd=path).stdout.strip():
             raise DataTierError("new data-tier checkout is not clean")
     except BaseException:
-        command(["git", "--git-dir", str(git_dir), "worktree", "remove", "--force", str(path)], cwd=parent, timeout=600)
+        remove_test_worktree(primary, path)
         raise
     return path
 
@@ -582,7 +589,10 @@ def run(args: argparse.Namespace) -> int:
         collected = output_dir / f"{run_key}.collected.json"
         log = output_dir / f"{run_key}.log"
         require_memory()
-        project_python = primary / ".venv" / "bin" / "python"
+        try:
+            project_python = project_interpreter(primary)
+        except FileNotFoundError as error:
+            raise DataTierError("shared project interpreter unavailable") from error
         if not project_python.is_file():
             raise DataTierError("shared project interpreter unavailable")
         prune_stale_worktrees(primary)

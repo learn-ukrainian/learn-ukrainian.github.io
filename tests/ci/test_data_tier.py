@@ -14,6 +14,8 @@ import pytest
 
 from scripts.ci import data_tier
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_selection_matches_class_c_audit_and_excludes_opt_ins() -> None:
     selection = data_tier.load_selection()
@@ -311,6 +313,7 @@ def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
     events = []
     reports = []
     monkeypatch.setattr(data_tier, "primary_checkout", lambda: primary)
+    monkeypatch.setattr(data_tier, "project_interpreter", lambda root: project_python if root == primary else None)
     monkeypatch.setattr(data_tier, "require_memory", lambda: None)
     monkeypatch.setattr(data_tier, "prune_stale_worktrees", lambda _primary: None)
     monkeypatch.setattr(data_tier, "make_test_worktree", lambda _primary: checkout)
@@ -338,6 +341,67 @@ def nightly(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> SimpleNamespace:
 
     monkeypatch.setattr(data_tier, "report", report)
     return SimpleNamespace(primary=primary, events=events, reports=reports, execute=execute)
+
+
+@pytest.mark.parametrize("action", ["removed", "skipped", "error"])
+def test_checkout_cleanup_obeys_guard_outcome(action: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    checkout = tmp_path / ".worktrees" / "data-tier" / ("run-" + "a" * 32)
+    calls = []
+
+    def remove(path: Path, **kwargs: object) -> SimpleNamespace:
+        calls.append((path, kwargs))
+        return SimpleNamespace(
+            action=action, reason="guard outcome", error="guard failure" if action == "error" else None
+        )
+
+    monkeypatch.setattr(data_tier.worktree_claims, "remove_unclaimed_worktree", remove)
+    if action == "removed":
+        data_tier.remove_test_worktree(tmp_path, checkout)
+    else:
+        with pytest.raises(data_tier.DataTierError, match=f"checkout cleanup {action}: guard outcome"):
+            data_tier.remove_test_worktree(tmp_path, checkout)
+    assert calls == [
+        (
+            checkout,
+            {
+                "repo_root": tmp_path,
+                "reason": "data-tier checkout cleanup",
+                "owner_task_id": None,
+                "force": True,
+            },
+        )
+    ]
+
+
+def test_checkout_creation_failure_uses_guarded_cleanup(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    created = []
+    removed = []
+
+    def command(argv: list[str], **kwargs: object) -> SimpleNamespace:
+        if "add" in argv:
+            created.append(Path(argv[-2]))
+            return SimpleNamespace(stdout="")
+        raise data_tier.DataTierError("fetch failed")
+
+    monkeypatch.setattr(data_tier, "command", command)
+    monkeypatch.setattr(
+        data_tier, "remove_test_worktree", lambda primary, checkout: removed.append((primary, checkout))
+    )
+    with pytest.raises(data_tier.DataTierError, match="fetch failed"):
+        data_tier.make_test_worktree(tmp_path)
+    assert len(created) == 1
+    assert removed == [(tmp_path, created[0])]
+
+
+def test_interpreter_resolver_refusal_is_reported(nightly: SimpleNamespace, monkeypatch: pytest.MonkeyPatch) -> None:
+    def resolve(root: Path) -> Path:
+        assert root == nightly.primary
+        raise FileNotFoundError("unavailable")
+
+    monkeypatch.setattr(data_tier, "project_interpreter", resolve)
+    assert data_tier.run(SimpleNamespace(only=None, no_report=False)) == 1
+    assert nightly.reports[0]["runner_errors"] == ["shared project interpreter unavailable"]
+    assert nightly.events == []
 
 
 @pytest.mark.parametrize(
