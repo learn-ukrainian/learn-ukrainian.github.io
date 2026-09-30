@@ -31,7 +31,7 @@ DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 # Subdirs under docs/research/ that hold tooling / research notes rather than
 # curriculum dossiers. Files here are exempt from the dossier word-count floor.
 # Real dossiers live under a track-named subdir (docs/research/{track}/{slug}.md).
-_NON_DOSSIER_RESEARCH_SUBDIRS = frozenset({"atlas", "lexicon"})
+_NON_DOSSIER_RESEARCH_SUBDIRS = frozenset({"atlas", "lexicon", "retrieval-bakeoff-9233"})
 
 
 @dataclass(frozen=True)

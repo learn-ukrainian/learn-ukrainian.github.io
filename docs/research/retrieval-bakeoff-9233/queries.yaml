@@ -1,0 +1,1438 @@
+schema: retrieval-probe-9233-queries.v1
+design_sha256: 6f59c17dd04c3e9e189b521c73a28b392f9aa1fc102f2370a4f48fdd60704e7e
+source_files:
+  pack: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+  grammar_terms: docs/epics/fresh-build-a2-arc.md
+g1_rule: 'v3 item 1, review fix: 2-4 single-lemma content-POS words; reject proper
+  nouns, pronouns, archaic/rare/short analyses, dash-separated pronunciation drill
+  pairs and hyphen-attached fragments; preserve case at admission; first distinct
+  eligible paradigm form; prefer unused combinations in source order (4, then 3, then
+  2 words), otherwise retain the first combination; insufficient spans are English-only'
+g2_rule: v3 items 2 and 4; non-self-check grammar positions, existing first-match
+  category precedence; source-owned category terms from the A2 arc rationale, plus
+  number/verb from the registered grammar textbook chunk; VESUM base plus first two
+  distinct paradigm forms
+g1:
+- id: G1-UA-001
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+  citation_ids: &id001
+  - T-001
+  - X-002
+  stratum: ukrainian_form_mismatch
+  query: мовний звук голосний приголосний
+  forms:
+  - source_form: мовні
+    query_form: мовний
+    lemma: мовний
+  - source_form: звуки
+    query_form: звук
+    lemma: звук
+  - source_form: голосні
+    query_form: голосний
+    lemma: голосний
+  - source_form: приголосні
+    query_form: приголосний
+    lemma: приголосний
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-002
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+  citation_ids: *id001
+  stratum: english
+  query: hear say initial sound before naming vowel consonant
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-003
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0028
+  citation_ids: &id002
+  - T-006
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-004
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0028
+  citation_ids: *id002
+  stratum: english
+  query: primer printed page letter its heard sound see
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-005
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0032
+  citation_ids: &id003
+  - T-007
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-006
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0032
+  citation_ids: *id003
+  stratum: english
+  query: primer printed page after
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-007
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0036
+  citation_ids: &id004
+  - T-008
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-008
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0036
+  citation_ids: *id004
+  stratum: english
+  query: primer printed page after
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-009
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0040
+  citation_ids: &id005
+  - T-009
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-010
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0040
+  citation_ids: *id005
+  stratum: english
+  query: primer printed page after heard sound before written
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-011
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044
+  citation_ids: &id006
+  - T-010
+  - X-003
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-012
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044
+  citation_ids: *id006
+  stratum: english
+  query: primer printed page first consonant sound letter correspondence
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-013
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0048
+  citation_ids: &id007
+  - T-011
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-014
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0048
+  citation_ids: *id007
+  stratum: english
+  query: primer printed page after contrast previously heard
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-015
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0052
+  citation_ids: &id008
+  - T-012
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-016
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0052
+  citation_ids: *id008
+  stratum: english
+  query: primer printed page first tables
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-017
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0056
+  citation_ids: &id009
+  - T-013
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-018
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0056
+  citation_ids: *id009
+  stratum: english
+  query: primer printed page after adult latin shape interference
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-019
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058
+  citation_ids: &id010
+  - T-019
+  stratum: ukrainian_form_mismatch
+  query: прочитати ім'я дитина допомогти
+  forms:
+  - source_form: прочитай
+    query_form: прочитати
+    lemma: прочитати
+  - source_form: імена
+    query_form: ім'я
+    lemma: ім'я
+  - source_form: дітей
+    query_form: дитина
+    lemma: дитина
+  - source_form: допоможи
+    query_form: допомогти
+    lemma: допомогти
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-020
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0058
+  citation_ids: *id010
+  stratum: english
+  query: primer printed page decodable personal names using taught
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-021
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0060
+  citation_ids: &id011
+  - T-014
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-022
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0060
+  citation_ids: *id011
+  stratum: english
+  query: primer printed page after tables
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-023
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0064
+  citation_ids: &id012
+  - T-015
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-024
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0064
+  citation_ids: *id012
+  stratum: english
+  query: primer printed page after sound mapping short syllables
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-025
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0068
+  citation_ids: &id013
+  - T-016
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-026
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0068
+  citation_ids: *id013
+  stratum: english
+  query: primer printed page after syllables become short connected
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-027
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0072
+  citation_ids: &id014
+  - T-017
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-028
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0072
+  citation_ids: *id014
+  stratum: english
+  query: primer printed page after reading short exchange
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-029
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
+  citation_ids: &id015
+  - X-004
+  - X-005
+  stratum: ukrainian_form_mismatch
+  query: відшукати загубленого складом слово
+  forms:
+  - source_form: відшукай
+    query_form: відшукати
+    lemma: відшукати
+  - source_form: загублений
+    query_form: загубленого
+    lemma: загублений
+  - source_form: склад
+    query_form: складом
+    lemma: склад
+  - source_form: словах
+    query_form: слово
+    lemma: слово
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-030
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
+  citation_ids: *id015
+  stratum: english
+  query: pick missing syllable bounded list complete known word
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-031
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0080
+  citation_ids: &id016
+  - T-018
+  stratum: ukrainian_form_mismatch
+  query: бачити чути
+  forms:
+  - source_form: бачу
+    query_form: бачити
+    lemma: бачити
+  - source_form: чую
+    query_form: чути
+    lemma: чути
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-EN-032
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0080
+  citation_ids: *id016
+  stratum: english
+  query: primer printed page after adult latin shape interference
+  forms: []
+  source_file: 1-klas-bukvar-zaharijchuk-2025-1
+  subject: bukvar
+- id: G1-UA-033
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w001
+  citation_ids: &id017
+  - T-002
+  stratum: ukrainian_form_mismatch
+  query: морозива привіту
+  forms:
+  - source_form: морозиво
+    query_form: морозива
+    lemma: морозиво
+  - source_form: привіт
+    query_form: привіту
+    lemma: привіт
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-EN-034
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w001
+  citation_ids: *id017
+  stratum: english
+  query: adult informal greeting chunk familiar peer use versus
+  forms: []
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-UA-035
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w005
+  citation_ids: &id018
+  - X-001
+  stratum: ukrainian_form_mismatch
+  query: привіту справа бач
+  forms:
+  - source_form: привіт
+    query_form: привіту
+    lemma: привіт
+  - source_form: справи
+    query_form: справа
+    lemma: справа
+  - source_form: бачити
+    query_form: бач
+    lemma: бачити
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-EN-036
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w005
+  citation_ids: *id018
+  stratum: english
+  query: hear greeting prompt give matching spoken response before
+  forms: []
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-EN-037
+  gold_chunk_id: ulp-1-00-lesson-notes_l0002_w001
+  citation_ids:
+  - T-020
+  stratum: english
+  query: adult formal greeting dialogue setting receptionist guest ulp
+  forms: []
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-EN-038
+  gold_chunk_id: ulp-1-00-lesson-notes_l0002_w002
+  citation_ids:
+  - T-003
+  - T-021
+  stratum: english
+  query: adult formal greeting chunk any time day not
+  forms: []
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-EN-039
+  gold_chunk_id: ulp-1-00-lesson-notes_l0005_w003
+  citation_ids:
+  - T-004
+  stratum: english
+  query: adult sound comparison english speakers ulp season lesson
+  forms: []
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-UA-040
+  gold_chunk_id: ulp-1-00-lesson-notes_l0010_w001
+  citation_ids: &id019
+  - T-005
+  stratum: ukrainian_form_mismatch
+  query: сім'ї привіту справа зви
+  forms:
+  - source_form: сім'я
+    query_form: сім'ї
+    lemma: сім'я
+  - source_form: привіт
+    query_form: привіту
+    lemma: привіт
+  - source_form: справи
+    query_form: справа
+    lemma: справа
+  - source_form: звати
+    query_form: зви
+    lemma: звати
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+- id: G1-EN-041
+  gold_chunk_id: ulp-1-00-lesson-notes_l0010_w001
+  citation_ids: *id019
+  stratum: english
+  query: ulp review shape first person ukrainian story aligned
+  forms: []
+  source_file: ulp-1-00-lesson-notes
+  subject: lexicon
+g2:
+- id: G2-A1-008
+  level: a1
+  position: 8
+  slug: things-have-gender
+  job: Tell the gender of a noun and pick він / вона / воно, мій / моя / моє
+  category: gender
+  source_text: рід
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: рід
+  inflected_queries:
+  - роду
+  - родові
+  forms:
+  - рід
+  - роду
+  - родові
+- id: G2-A1-013
+  level: a1
+  position: 13
+  slug: many-things
+  job: 'Go from one to many: nominative plural'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A1-015
+  level: a1
+  position: 15
+  slug: what-i-like
+  job: 'Say what you like doing: infinitive, люблю + infinitive'
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
+- id: G2-A1-016
+  level: a1
+  position: 16
+  slug: verbs-group-one
+  job: Conjugate first-conjugation verbs in the present
+  category: tense
+  source_text: час
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: час
+  inflected_queries:
+  - часу
+  - часові
+  forms:
+  - час
+  - часу
+  - часові
+- id: G2-A1-017
+  level: a1
+  position: 17
+  slug: verbs-group-two
+  job: Conjugate second-conjugation verbs; tell the two apart
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
+- id: G2-A1-020
+  level: a1
+  position: 20
+  slug: my-morning
+  job: Describe a morning routine with reflexive verbs
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
+- id: G2-A1-029
+  level: a1
+  position: 29
+  slug: where-is-it
+  job: 'Say where something is: locative of nouns with agreeing adjectives'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A1-031
+  level: a1
+  position: 31
+  slug: where-to
+  job: 'Say where you are going: accusative of direction; де vs куди'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A1-037
+  level: a1
+  position: 37
+  slug: i-eat-i-drink
+  job: 'Say what you eat and drink: accusative, inanimate, with agreeing adjectives'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A1-040
+  level: a1
+  position: 40
+  slug: people-around-me
+  job: 'Talk about people you see, know and think about: accusative, animate; мене
+    / тебе / нас / вас; `про` + accusative'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A1-042
+  level: a1
+  position: 42
+  slug: hey-friend
+  job: 'Address people by name: vocative'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A1-043
+  level: a1
+  position: 43
+  slug: please-do-this
+  job: 'Ask someone to do something: imperative, ти and ви'
+  category: mood
+  source_text: спосіб
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: спосіб
+  inflected_queries:
+  - способу
+  - способові
+  forms:
+  - спосіб
+  - способу
+  - способові
+- id: G2-A1-048
+  level: a1
+  position: 48
+  slug: what-happened
+  job: 'Say what happened: past tense and gender'
+  category: gender
+  source_text: рід
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: рід
+  inflected_queries:
+  - роду
+  - родові
+  forms:
+  - рід
+  - роду
+  - родові
+- id: G2-A1-050
+  level: a1
+  position: 50
+  slug: what-will-happen
+  job: 'Say what will happen: compound future'
+  category: tense
+  source_text: час
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: час
+  inflected_queries:
+  - часу
+  - часові
+  forms:
+  - час
+  - часу
+  - часові
+- id: G2-A2-001
+  level: a2
+  position: 1
+  slug: a2-bridge
+  job: 'Show what you can do after A1 and start working in Ukrainian only: three tenses,
+    four cases, questions — with the grammar words needed to follow a Ukrainian explanation'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A2-002
+  level: a2
+  position: 2
+  slug: aspect-concept
+  job: Notice that Ukrainian verbs come in pairs — one for the process, one for the
+    result — and read a past-tense story that uses both
+  category: aspect
+  source_text: вид
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: вид
+  inflected_queries:
+  - виду
+  - видові
+  forms:
+  - вид
+  - виду
+  - видові
+- id: G2-A2-003
+  level: a2
+  position: 3
+  slug: aspect-in-vocabulary
+  job: 'Learn verbs as pairs from now on: recognise the common ways a pair is formed
+    and keep a pair list'
+  category: aspect
+  source_text: вид
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: вид
+  inflected_queries:
+  - виду
+  - видові
+  forms:
+  - вид
+  - виду
+  - видові
+- id: G2-A2-005
+  level: a2
+  position: 5
+  slug: genitive-intro
+  job: 'Say what there is not and what you do not have: genitive singular of nouns,
+    with its vowel alternations'
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/genitive-intro/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-006
+  level: a2
+  position: 6
+  slug: genitive-dates-numbers
+  job: 'Give dates, birthdays and amounts: ordinals in the genitive, quantity words
+    with the genitive'
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/genitive-dates-numbers/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-009
+  level: a2
+  position: 9
+  slug: genitive-prepositions-source
+  job: 'Say where someone or something comes from, what something is made of and since
+    when: `з / із / зі` + genitive'
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/genitive-prepositions-source/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-010
+  level: a2
+  position: 10
+  slug: genitive-prepositions-purpose
+  job: 'Say who or what something is for: `для` + genitive'
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/genitive-prepositions-purpose/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-011
+  level: a2
+  position: 11
+  slug: genitive-prepositions-direction
+  job: 'Say how far and next to what: `до`, `біля`, `навпроти` + genitive; give and
+    follow directions'
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/genitive-prepositions-direction/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-013
+  level: a2
+  position: 13
+  slug: genitive-adjectives-pronouns
+  job: 'Say whose and of which: adjectives, possessives and all personal pronouns
+    in the genitive, and the pronoun forms of the accusative'
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/genitive-adjectives-pronouns/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-014
+  level: a2
+  position: 14
+  slug: genitive-plural
+  job: 'Talk about many and few: genitive plural after quantities; stress that moves
+    between forms'
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/genitive-plural/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-017
+  level: a2
+  position: 17
+  slug: dative-pronouns
+  job: 'Say who likes, needs or feels something and who is how old: dative of all
+    personal pronouns'
+  category: case
+  source_text: давальний відмінок
+  source_path: curriculum/l2-uk-en/a2/dative-pronouns/module.md
+  base_query: давальний відмінок
+  inflected_queries:
+  - давального відмінка
+  - давальному відмінкові
+  forms:
+  - давальний відмінок
+  - давального відмінка
+  - давальному відмінкові
+- id: G2-A2-018
+  level: a2
+  position: 18
+  slug: dative-nouns
+  job: 'Give, tell and send something to someone: dative singular of nouns, with its
+    consonant alternations'
+  category: case
+  source_text: давальний відмінок
+  source_path: curriculum/l2-uk-en/a2/dative-nouns/module.md
+  base_query: давальний відмінок
+  inflected_queries:
+  - давального відмінка
+  - давальному відмінкові
+  forms:
+  - давальний відмінок
+  - давального відмінка
+  - давальному відмінкові
+- id: G2-A2-019
+  level: a2
+  position: 19
+  slug: dative-adjectives-pronouns
+  job: 'Give something to my new neighbour: adjectives and possessives in the dative'
+  category: case
+  source_text: давальний відмінок
+  source_path: curriculum/l2-uk-en/a2/dative-adjectives-pronouns/module.md
+  base_query: давальний відмінок
+  inflected_queries:
+  - давального відмінка
+  - давальному відмінкові
+  forms:
+  - давальний відмінок
+  - давального відмінка
+  - давальному відмінкові
+- id: G2-A2-020
+  level: a2
+  position: 20
+  slug: locative-expanded
+  job: 'Say where, in which month and year, along what, and wearing what: the whole
+    locative, with its consonant alternations'
+  category: case
+  source_text: місцевий відмінок
+  source_path: curriculum/l2-uk-en/a2/locative-expanded/module.md
+  base_query: місцевий відмінок
+  inflected_queries:
+  - місцевого відмінка
+  - місцевому відмінкові
+  forms:
+  - місцевий відмінок
+  - місцевого відмінка
+  - місцевому відмінкові
+- id: G2-A2-021
+  level: a2
+  position: 21
+  slug: dative-verbs
+  job: 'Use the verbs that take the dative: help, advise, thank, call, answer'
+  category: case
+  source_text: давальний відмінок
+  source_path: curriculum/l2-uk-en/a2/dative-verbs/module.md
+  base_query: давальний відмінок
+  inflected_queries:
+  - давального відмінка
+  - давальному відмінкові
+  forms:
+  - давальний відмінок
+  - давального відмінка
+  - давальному відмінкові
+- id: G2-A2-024
+  level: a2
+  position: 24
+  slug: instrumental-accompaniment
+  job: 'Say with whom and with what: `з` + instrumental'
+  category: case
+  source_text: орудний відмінок
+  source_path: curriculum/l2-uk-en/a2/instrumental-accompaniment/module.md
+  base_query: орудний відмінок
+  inflected_queries:
+  - орудного відмінка
+  - орудному відмінкові
+  forms:
+  - орудний відмінок
+  - орудного відмінка
+  - орудному відмінкові
+- id: G2-A2-025
+  level: a2
+  position: 25
+  slug: instrumental-means
+  job: Say by what means and with what tool; verbs that take the instrumental
+  category: case
+  source_text: орудний відмінок
+  source_path: curriculum/l2-uk-en/a2/instrumental-means/module.md
+  base_query: орудний відмінок
+  inflected_queries:
+  - орудного відмінка
+  - орудному відмінкові
+  forms:
+  - орудний відмінок
+  - орудного відмінка
+  - орудному відмінкові
+- id: G2-A2-026
+  level: a2
+  position: 26
+  slug: instrumental-profession
+  job: Say what someone works as, was, and wants to become; workplaces, working hours,
+    pay (`:1118-1122`)
+  category: case
+  source_text: орудний відмінок
+  source_path: curriculum/l2-uk-en/a2/instrumental-profession/module.md
+  base_query: орудний відмінок
+  inflected_queries:
+  - орудного відмінка
+  - орудному відмінкові
+  forms:
+  - орудний відмінок
+  - орудного відмінка
+  - орудному відмінкові
+- id: G2-A2-027
+  level: a2
+  position: 27
+  slug: vocative-expanded
+  job: 'Address anyone correctly: every noun type, first name with patronymic, `пане
+    / пані` with a name or title'
+  category: case
+  source_text: кличний відмінок
+  source_path: curriculum/l2-uk-en/a2/vocative-expanded/module.md
+  base_query: кличний відмінок
+  inflected_queries:
+  - кличного відмінка
+  - кличному відмінкові
+  forms:
+  - кличний відмінок
+  - кличного відмінка
+  - кличному відмінкові
+- id: G2-A2-028
+  level: a2
+  position: 28
+  slug: instrumental-prepositions
+  job: Say above, under, in front of, behind and between; before an event
+  category: case
+  source_text: орудний відмінок
+  source_path: curriculum/l2-uk-en/a2/instrumental-prepositions/module.md
+  base_query: орудний відмінок
+  inflected_queries:
+  - орудного відмінка
+  - орудному відмінкові
+  forms:
+  - орудний відмінок
+  - орудного відмінка
+  - орудному відмінкові
+- id: G2-A2-029
+  level: a2
+  position: 29
+  slug: instrumental-adjectives-pronouns
+  job: 'Talk with my old friends and with them: adjectives, possessives and all personal
+    pronouns in the instrumental'
+  category: case
+  source_text: орудного відмінка
+  source_path: curriculum/l2-uk-en/a2/instrumental-adjectives-pronouns/module.md
+  base_query: орудний відмінок
+  inflected_queries:
+  - орудного відмінка
+  - орудному відмінкові
+  forms:
+  - орудний відмінок
+  - орудного відмінка
+  - орудному відмінкові
+- id: G2-A2-032
+  level: a2
+  position: 32
+  slug: plural-nominative-accusative
+  job: 'Name and see many people and things: nominative and accusative plural of nouns,
+    adjectives and pronouns'
+  category: case
+  source_text: знахідний відмінок
+  source_path: curriculum/l2-uk-en/a2/plural-nominative-accusative/module.md
+  base_query: знахідний відмінок
+  inflected_queries:
+  - знахідного відмінка
+  - знахідному відмінкові
+  forms:
+  - знахідний відмінок
+  - знахідного відмінка
+  - знахідному відмінкові
+- id: G2-A2-033
+  level: a2
+  position: 33
+  slug: plural-genitive
+  job: 'Complete the genitive plural: every noun type, with adjectives and pronouns'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A2-034
+  level: a2
+  position: 34
+  slug: plural-other-cases
+  job: Use the dative, instrumental and locative plural
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/plural-other-cases/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-036
+  level: a2
+  position: 36
+  slug: which-case-when
+  job: Choose the case from the question and the preposition; read the table of noun
+    types
+  category: case
+  source_text: місцевий відмінок
+  source_path: curriculum/l2-uk-en/a2/which-case-when/module.md
+  base_query: місцевий відмінок
+  inflected_queries:
+  - місцевого відмінка
+  - місцевому відмінкові
+  forms:
+  - місцевий відмінок
+  - місцевого відмінка
+  - місцевому відмінкові
+- id: G2-A2-037
+  level: a2
+  position: 37
+  slug: all-cases-practice
+  job: Keep one story going through all seven cases, singular and plural
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A2-040
+  level: a2
+  position: 40
+  slug: aspect-in-past
+  job: 'Tell what was going on and what got done: choosing the aspect in the past'
+  category: aspect
+  source_text: вид
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: вид
+  inflected_queries:
+  - виду
+  - видові
+  forms:
+  - вид
+  - виду
+  - видові
+- id: G2-A2-041
+  level: a2
+  position: 41
+  slug: synthetic-future
+  job: 'Say what you will be doing and what you will get done: perfective future,
+    compound future and the one-word imperfective future'
+  category: tense
+  source_text: час
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: час
+  inflected_queries:
+  - часу
+  - часові
+  forms:
+  - час
+  - часу
+  - часові
+- id: G2-A2-042
+  level: a2
+  position: 42
+  slug: aspect-mastery
+  job: Choose the aspect in advice, plans, repeated and single actions; sound changes
+    inside a pair
+  category: aspect
+  source_text: вид
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: вид
+  inflected_queries:
+  - виду
+  - видові
+  forms:
+  - вид
+  - виду
+  - видові
+- id: G2-A2-043
+  level: a2
+  position: 43
+  slug: motion-verbs
+  job: Go, ride and fly there and back, one way and regularly; then arrive, leave,
+    cross, go around and come up with the common prefixes
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
+- id: G2-A2-044
+  level: a2
+  position: 44
+  slug: imperative-complete
+  job: 'Ask, instruct, forbid and wish: imperative of the 2nd person, and of the 3rd
+    person with `хай / нехай`'
+  category: mood
+  source_text: спосіб
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: спосіб
+  inflected_queries:
+  - способу
+  - способові
+  forms:
+  - спосіб
+  - способу
+  - способові
+- id: G2-A2-048
+  level: a2
+  position: 48
+  slug: purpose-clauses
+  job: 'Say what something is done for: `щоб` with the infinitive and with the past'
+  category: tense
+  source_text: час
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: час
+  inflected_queries:
+  - часу
+  - часові
+  forms:
+  - час
+  - часу
+  - часові
+- id: G2-A2-055
+  level: a2
+  position: 55
+  slug: numerals-and-cases
+  job: 'Count things correctly: numeral with noun, the forms of `один`, amounts of
+    money, sizes and prices'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+- id: G2-A2-061
+  level: a2
+  position: 61
+  slug: metalanguage-words-and-cases
+  job: Read and use a Ukrainian explanation about parts of speech and cases
+  category: case
+  source_text: родовий відмінок
+  source_path: curriculum/l2-uk-en/a2/metalanguage-words-and-cases/module.md
+  base_query: родовий відмінок
+  inflected_queries:
+  - родового відмінка
+  - родовому відмінкові
+  forms:
+  - родовий відмінок
+  - родового відмінка
+  - родовому відмінкові
+- id: G2-A2-062
+  level: a2
+  position: 62
+  slug: metalanguage-verbs-and-time
+  job: Read and use a Ukrainian explanation about tense, aspect and mood
+  category: aspect
+  source_text: вид
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: вид
+  inflected_queries:
+  - виду
+  - видові
+  forms:
+  - вид
+  - виду
+  - видові
+- id: G2-A2-066
+  level: a2
+  position: 66
+  slug: metalanguage-syntax-cases
+  job: 'Analyse a sentence in Ukrainian the way a school textbook does: subject, predicate,
+    the case and its question'
+  category: case
+  source_text: відмінок
+  source_path: docs/epics/fresh-build-a2-arc.md
+  base_query: відмінок
+  inflected_queries:
+  - відмінка
+  - відмінкові
+  forms:
+  - відмінок
+  - відмінка
+  - відмінкові
+g2_term_inventory:
+  case:
+    source_text: відмінок
+    forms:
+    - відмінок
+    - відмінка
+    - відмінкові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  gender:
+    source_text: рід
+    forms:
+    - рід
+    - роду
+    - родові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  number:
+    source_text: число
+    forms:
+    - число
+    - числа
+    - числу
+    source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  verb:
+    source_text: дієслово
+    forms:
+    - дієслово
+    - дієслова
+    - дієслову
+    source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  aspect:
+    source_text: вид
+    forms:
+    - вид
+    - виду
+    - видові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  tense:
+    source_text: час
+    forms:
+    - час
+    - часу
+    - часові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  mood:
+    source_text: спосіб
+    forms:
+    - спосіб
+    - способу
+    - способові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  sentence:
+    source_text: речення
+    forms:
+    - речення
+    - реченню
+    - реченням
+    source_path: docs/epics/fresh-build-a2-arc.md
+g2_category_exclusions: {}
+counts:
+  g1: 41
+  g1_cited_chunks: 22
+  g1_ukrainian_form_mismatch: 19
+  g1_english: 22
+  g2: 50
+  arc_non_self_check_positions: 110
+previous_query_sha256: eb512d0b0b9f2bd5fe0a01b0d2729e26bf2b9789e95ff34aeff10c427de49eac
+g1_changes:
+- previous_id: G1-UA-029
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
+  old_query: відшукати загубленого складу слово
+  new_query: відшукати загубленого складом слово
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
+- previous_id: G1-UA-033
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w001
+  old_query: кий морозива привіту
+  new_query: морозива привіту
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
+- previous_id: G1-UA-035
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w005
+  old_query: привіту справа рад ти
+  new_query: привіту справа бач
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
+- previous_id: G1-UA-038
+  gold_chunk_id: ulp-1-00-lesson-notes_l0002_w002
+  old_query: доброго дня
+  new_query: null
+  reason: fewer than two eligible Ukrainian words after rejecting ambiguous/function/proper/archaic
+    analyses and drill fragments; English-only
+- previous_id: G1-UA-040
+  gold_chunk_id: ulp-1-00-lesson-notes_l0005_w003
+  old_query: воя вити рити рову
+  new_query: null
+  reason: fewer than two eligible Ukrainian words after rejecting ambiguous/function/proper/archaic
+    analyses and drill fragments; English-only
+- previous_id: G1-UA-042
+  gold_chunk_id: ulp-1-00-lesson-notes_l0010_w001
+  old_query: мій сім'ї привіту справа
+  new_query: сім'ї привіту справа зви
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
