@@ -8,8 +8,12 @@ logs/mcp-sources-requests.jsonl), including ignored deploy targets and data outp
 from __future__ import annotations
 
 import hashlib
+import os
+import stat
 import subprocess
+from collections.abc import Iterator
 from dataclasses import dataclass
+from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Any
 
@@ -20,13 +24,36 @@ MONITORED_CHECKOUT_PATHS: tuple[str, ...] = (
     "logs/mcp-sources-requests.jsonl",
 )
 
-MONITORED_CHECKOUT_ROOTS: tuple[str, ...] = (
-    ".claude",
-    ".codex",
-    ".agent",
-    ".gemini",
-    "data",
-)
+# Root -> (watched immediate children, live-runtime exclusions relative to root).
+# Agent roots are allowlisted to deploy outputs from scripts/deploy_prompts.sh;
+# other scratch/driver state is outside the watched set. Exclusions are pruned
+# before traversal, so continuous writers do not affect the session baseline.
+MONITORED_CHECKOUT_TREES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
+    ".claude": (
+        ("agents", "skills", "rules", "hooks", "settings*.json"),
+        ("*-epic",),  # Live lane-driver briefs, handoffs and state.
+    ),
+    ".codex": (
+        ("agents", "skills", "rules", "hooks", "settings*.json", "config.toml", "hooks.json"),
+        (),
+    ),
+    ".agent": (
+        ("agents", "skills", "rules", "hooks", "settings*.json"),
+        (
+            "sessions",  # Active harness session records.
+            "runtime",  # Live process/driver state.
+            "thread-rollovers",  # Continuity packets written by running lanes.
+        ),
+    ),
+    ".gemini": (("agents", "skills", "rules", "hooks", "settings*.json"), ()),
+    "data": (
+        ("*",),
+        (
+            "telemetry",  # Continuously updated service/agent observations.
+            "lexicon/cache",  # Live dictionary lookup cache.
+        ),
+    ),
+}
 
 EXEMPT_DIR_PARTS: frozenset[str] = frozenset(
     {
@@ -64,6 +91,36 @@ def _hash_file(path: Path) -> _FileSig:
 def _is_exempt_path(relpath: str) -> bool:
     parts = set(Path(relpath).parts)
     return bool(parts & EXEMPT_DIR_PARTS)
+
+
+def _walk_files(
+    root: Path, watched: tuple[str, ...] = ("*",), excluded: tuple[str, ...] = (),
+) -> Iterator[Path]:
+    """Prune root-relative runtime paths and tolerate vanishing directories."""
+    def onerror(error: OSError) -> None:
+        if not isinstance(error, FileNotFoundError):
+            raise error
+
+    def included(path: Path) -> bool:
+        relative = path.relative_to(root)
+        rel = relative.as_posix()
+        return (
+            (len(relative.parts) > 1 or any(fnmatchcase(path.name, pattern) for pattern in watched))
+            # fnmatch's '*' crosses '/', so anchor exclusions to their depth.
+            # A top-level '*-epic' must not hide skills/drive-epic/SKILL.md.
+            and not any(
+                rel.count("/") == pattern.count("/") and fnmatchcase(rel, pattern)
+                for pattern in excluded
+            )
+            and not _is_exempt_path(rel)
+        )
+
+    for parent, directories, files in os.walk(root, onerror=onerror):
+        directory = Path(parent)
+        directories[:] = [name for name in directories if included(directory / name)]
+        for name in files:
+            if included(directory / name):
+                yield directory / name
 
 
 class CheckoutWriteGuard:
@@ -129,20 +186,23 @@ class CheckoutWriteGuard:
     def _tree_signatures(self) -> dict[str, tuple[int, int]]:
         """Watch deploy/data files cheaply, without reading large corpus payloads."""
         signatures = {}
-        for rel_root in MONITORED_CHECKOUT_ROOTS:
-            for path in (self.root / rel_root).rglob("*"):
+        for rel_root, (watched, excluded) in MONITORED_CHECKOUT_TREES.items():
+            for path in _walk_files(self.root / rel_root, watched, excluded):
                 rel = path.relative_to(self.root).as_posix()
-                if path.is_file() and not _is_exempt_path(rel):
-                    stat = path.stat()
-                    signatures[rel] = (stat.st_mtime_ns, stat.st_size)
+                try:
+                    file_stat = path.stat()
+                except FileNotFoundError:
+                    continue
+                if stat.S_ISREG(file_stat.st_mode):
+                    signatures[rel] = (file_stat.st_mtime_ns, file_stat.st_size)
         return signatures
 
     def _log_signatures(self) -> dict[str, _FileSig]:
         """Include ignored, pre-existing logs in the session baseline."""
         return {
             path.relative_to(self.root).as_posix(): _hash_file(path)
-            for path in (self.root / "logs").rglob("*")
-            if path.is_file() and not _is_exempt_path(path.relative_to(self.root).as_posix())
+            for path in _walk_files(self.root / "logs")
+            if path.is_file()
         }
 
     def check(self) -> list[str]:

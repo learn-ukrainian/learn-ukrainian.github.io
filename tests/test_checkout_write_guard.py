@@ -3,17 +3,40 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+from tests.helpers import checkout_write_guard
 from tests.helpers.checkout_write_guard import (
     PROJECT_ROOT,
     CheckoutWriteError,
     CheckoutWriteGuard,
 )
+
+# Explicit paths keep the behavioral contract independent of the guard policy.
+WATCHED_PATHS = [
+    f"{root}/{child}"
+    for root in (".claude", ".codex", ".agent", ".gemini")
+    for child in (
+        "agents/test.md", "skills/test/SKILL.md", "rules/test.md", "hooks/test.sh",
+        "settings.json", "settings.local.json",
+    )
+] + [
+    ".claude/skills/drive-epic/SKILL.md",
+    ".codex/config.toml", ".codex/hooks.json", "data/corpus_audit/report.md",
+    "data/telemetry-other/report.md", "data/lexicon/cache-other/report.md",
+]
+
+LIVE_RUNTIME_PATHS = [
+    ".agent/sessions/test.json", ".agent/runtime/test.json",
+    ".agent/thread-rollovers/test.json", ".claude/infra-epic/briefs/test.md",
+    "data/telemetry/test.json", "data/lexicon/cache/test.json",
+]
 
 
 def _init_git_repo(path: Path) -> None:
@@ -169,8 +192,8 @@ def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malforme
         ".gemini/agents/test.md",
         "data/corpus_audit/section_extraction_report.md",
         "external-tmp",
+        *LIVE_RUNTIME_PATHS,
     ],
-    ids=["unchanged", "request-log", "claude", "codex", "agent", "gemini", "corpus-audit", "external-tmp"],
 )
 def test_registered_guard_enforces_normal_pytest_session(
     tmp_path: Path, write_path: str | None, workers: int,
@@ -187,6 +210,10 @@ def test_registered_guard_enforces_normal_pytest_session(
         encoding="utf-8",
     )
     (tmp_path / "conftest.py").write_text('pytest_plugins = ["checkout_write_guard"]\n', encoding="utf-8")
+    if write_path in LIVE_RUNTIME_PATHS:
+        existing = tmp_path / write_path
+        existing.parent.mkdir(parents=True, exist_ok=True)
+        existing.write_text("baseline", encoding="utf-8")
     if write_path == "external-tmp":
         sample = "def test_sample(tmp_path):\n    (tmp_path / 'unrelated.txt').write_text('sample')\n"
     elif write_path is None:
@@ -198,6 +225,7 @@ def test_registered_guard_enforces_normal_pytest_session(
             f"    output = Path({write_path!r})\n"
             "    output.parent.mkdir(parents=True, exist_ok=True)\n"
             "    output.write_text('sample')\n"
+            "    output.with_name('new-' + output.name).write_text('new')\n"
         )
     (tmp_path / "test_sample.py").write_text(sample, encoding="utf-8")
     result = subprocess.run(
@@ -205,7 +233,7 @@ def test_registered_guard_enforces_normal_pytest_session(
         cwd=tmp_path, capture_output=True, text=True, timeout=60,
     )
     assert "1 passed" in result.stdout, result.stdout + result.stderr
-    if write_path not in (None, "external-tmp"):
+    if write_path not in (None, "external-tmp", *LIVE_RUNTIME_PATHS):
         assert result.returncode == 1, result.stdout + result.stderr
         assert "ERROR: checkout mutations detected by checkout_write_guard" in result.stdout
         label = "artifact" if write_path.startswith("logs/") else "file"
@@ -215,12 +243,12 @@ def test_registered_guard_enforces_normal_pytest_session(
         assert "checkout mutations detected" not in result.stdout
 
 
-@pytest.mark.parametrize("root", [".claude", ".codex", ".agent", ".gemini", "data"])
+@pytest.mark.parametrize("rel", WATCHED_PATHS)
 @pytest.mark.parametrize("change", ["unchanged", "create", "rewrite", "append", "delete"])
-def test_guard_baselines_ignored_deploy_and_data_files(tmp_path: Path, root: str, change: str) -> None:
+def test_guard_baselines_ignored_deploy_and_data_files(tmp_path: Path, rel: str, change: str) -> None:
     _init_git_repo(tmp_path)
+    root = Path(rel).parts[0]
     (tmp_path / ".gitignore").write_text(f"{root}/\n", encoding="utf-8")
-    rel = f"{root}/nested/output.txt"
     output = tmp_path / rel
     output.parent.mkdir(parents=True)
     if change != "create":
@@ -245,6 +273,93 @@ def test_guard_baselines_ignored_deploy_and_data_files(tmp_path: Path, root: str
     assert guard.check() == [expected]
     with pytest.raises(CheckoutWriteError, match="guarded checkout file"):
         guard.verify()
+
+
+@pytest.mark.parametrize("phase", ["start", "finish"])
+@pytest.mark.parametrize("root", ["data", "logs"])
+@pytest.mark.parametrize("vanished", ["file", "directory"])
+def test_session_hooks_skip_vanished_files_and_directories(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str, root: str, vanished: str,
+) -> None:
+    """Inject real deletion after listing; both hooks must keep walking siblings."""
+    monkeypatch.setattr(checkout_write_guard, "PROJECT_ROOT", tmp_path)
+    output = []
+    session = SimpleNamespace(
+        config=SimpleNamespace(pluginmanager=SimpleNamespace(
+            get_plugin=lambda _name: SimpleNamespace(write_line=output.append),
+        )),
+        exitstatus=0,
+    )
+    survivor = tmp_path / root / "survivor.txt"
+    survivor.parent.mkdir(parents=True)
+    survivor.write_text("kept", encoding="utf-8")
+    if phase == "finish":
+        checkout_write_guard.pytest_sessionstart(session)
+    directory = tmp_path / root / "vanishing"
+    directory.mkdir(parents=True)
+    victim = directory / "victim.txt"
+    victim.write_text("gone", encoding="utf-8")
+    deleted = []
+    original_stat = Path.stat
+    original_scandir = os.scandir
+
+    def racing_stat(path: Path, *args, **kwargs):
+        if path == victim and not deleted:
+            victim.unlink()
+            deleted.append(victim)
+        return original_stat(path, *args, **kwargs)
+
+    def racing_scandir(path):
+        if not isinstance(path, int) and Path(path) == directory and not deleted:
+            shutil.rmtree(directory)
+            deleted.append(directory)
+        return original_scandir(path)
+
+    monkeypatch.setattr(Path, "stat", racing_stat if vanished == "file" else original_stat)
+    monkeypatch.setattr(os, "scandir", racing_scandir if vanished == "directory" else original_scandir)
+    if phase == "start":
+        checkout_write_guard.pytest_sessionstart(session)
+    else:
+        checkout_write_guard.pytest_sessionfinish(session, 0)
+        assert session.exitstatus == 0
+        assert output == []
+    guard = session.config._checkout_write_guard
+    assert guard.check() == []
+    assert deleted
+    assert not victim.exists()
+    # Skipping a vanished entry must not lose the surviving sibling's baseline.
+    survivor.write_text("changed sibling", encoding="utf-8")
+    assert any(f"{root}/survivor.txt" in violation for violation in guard.check())
+
+
+def test_guard_prunes_runtime_directories_before_scanning(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    excluded = set()
+    for rel in LIVE_RUNTIME_PATHS:
+        path = tmp_path / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text("live", encoding="utf-8")
+        excluded.add(path.parent)
+    original_scandir = os.scandir
+
+    def forbid_runtime_scan(path):
+        if not isinstance(path, int):
+            assert Path(path) not in excluded, f"traversed live runtime directory: {path}"
+        return original_scandir(path)
+
+    monkeypatch.setattr(os, "scandir", forbid_runtime_scan)
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    assert guard.check() == []
+
+
+def test_guard_does_not_suppress_other_walk_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def inaccessible_scandir(path):
+        raise PermissionError("denied")
+
+    monkeypatch.setattr(os, "scandir", inaccessible_scandir)
+    with pytest.raises(PermissionError, match="denied"):
+        CheckoutWriteGuard(repo_root=tmp_path)
 
 
 def test_guard_snapshots_watched_trees_without_hashing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
