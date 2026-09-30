@@ -329,6 +329,22 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     assert "ROUTING WARNING" in captured.err
 
 
+def test_issue_9272_review_dry_run_never_prints_grok_substitution(monkeypatch, tmp_path, capsys):
+    _patch_spawn(monkeypatch, tmp_path)
+    spawned = _track_worker_spawns(monkeypatch)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="near_cap"))
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    args = _dispatch_args("--agent", "codex", "--model", "gpt-6.1-sol", "--require-review-verdict",
+                          "--check-budget", "--dry-run")
+    assert delegate.cmd_dispatch(args) == 0
+    assert not spawned
+    assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
+    state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    assert state["agent"] == "codex" and state["substitution"] is None
+    assert state["review_author_model"] is None and state["review_risk"] is None
+
+
 def _hot_language_budget():
     def lane(status):
         return {

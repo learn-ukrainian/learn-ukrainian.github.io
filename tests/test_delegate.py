@@ -8291,6 +8291,42 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     state = delegate._read_state(delegate._state_path("branch-reuse-dry-run"))
     assert state is not None
     assert lines[1] == state["run_nonce"]
+    assert state["worktree_base_sha"] == "branch-head"
+    assert state["pinned_head"] is None
+
+
+@pytest.mark.parametrize("dry_run", [True, False])
+def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
+    tmp_tasks_dir, tmp_path, monkeypatch, dry_run,
+):
+    worktree = _tmp_dispatch_repo_root(tmp_path, monkeypatch) / ".worktrees/dispatch/claude/pinned-branch"
+    worktree.mkdir(parents=True)
+    branch = "claude/pinned-branch"
+    pinned = "a" * 40
+    _, base_stub = _make_run_stub(
+        abbrev_ref=branch, status_porcelain="", rev_list_count="0", rev_parse_head_sha=pinned,
+    )
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["git", "worktree", "add"]:
+            pytest.fail("pinned branch reuse must not add a worktree")
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    proc = MagicMock(pid=24680)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: proc)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--task-id", "pinned-branch", "--prompt", "validate pin",
+        "--mode", "read-only", "--worktree", str(worktree), "--branch", branch, "--pinned-head", pinned,
+    ])
+    args.dry_run = dry_run
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path("pinned-branch"))
+    assert state is not None
+    assert state["pinned_head"] == state["worktree_base_sha"] == pinned
+    assert state["status"] == ("dry_run" if dry_run else "spawning")
+    if not dry_run:
+        assert state["pid"] == proc.pid
 
 
 def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
