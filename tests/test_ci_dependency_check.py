@@ -7,6 +7,7 @@ import subprocess
 from pathlib import Path
 from subprocess import CompletedProcess
 
+import pytest
 import yaml
 
 from scripts.audit import check_ci_dependencies
@@ -104,6 +105,7 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     assert job["outputs"]["uv-cache-key"] == f"${{{{ steps.{ci_env['id']}.outputs.uv-cache-key }}}}"
 
 
+@pytest.mark.repo_wide
 def test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache() -> None:
     """A pin change cannot leave the cache writer or setup-uv on another Python."""
     assert (_REPO_ROOT / ".python-version").read_text().strip() == "3.12.14"
