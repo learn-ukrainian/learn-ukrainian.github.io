@@ -15,7 +15,7 @@ import contextlib
 
 from ._acp_compat import refuse_kimi_compat, require_compat_target, resolve_compat_model, run_compat_ask
 from ._ask_contract import requested_effort
-from ._ask_lifecycle import ask_target_model, record_ask_failure, record_ask_reply
+from ._ask_lifecycle import ask_target_model, record_ask_failure, record_ask_reply, skip_stored_kimi_row
 from ._db import get_db
 from ._messaging import acknowledge, read_message, send_message
 
@@ -94,17 +94,17 @@ def process_message_for_recipient(
     failure, leaving the message unacknowledged and retryable.
 
     Kimi is not a bridge recipient. A Kimi ``model`` raises
-    ``KimiAdmissionRefused`` before the broker is opened; a message addressed
-    to a Kimi seat or model is never processed: the refusal is raised right
-    after the read, before any reply, failure record or acknowledgement.
+    ``KimiAdmissionRefused`` before the broker is opened; a stored message
+    addressed to a Kimi seat or model is never processed: it is skipped right
+    after the read, before any reply, failure record or acknowledgement, and
+    returns None (``skip_stored_kimi_row``).
     """
     refuse_kimi_compat("", model=model)
     msg = read_message(message_id)
-    if not msg:
+    if not msg or skip_stored_kimi_row(msg, message_id):
         return None
     recipient = str(msg.get("to") or "").strip().lower()
     requested_model = model or ask_target_model(msg)
-    refuse_kimi_compat(recipient, model=requested_model)
     if _message_acknowledged(message_id):
         print(f"⏭️  Message {message_id} is already acknowledged; skipping.")
         return None

@@ -1510,12 +1510,15 @@ def broker_db(tmp_path, monkeypatch):
     return types.SimpleNamespace(connects=connects, unchanged=unchanged)
 
 
+_SKIPPED = "skipped: Kimi is not a bridge recipient"
+
+
 @pytest.mark.parametrize("message_id", [7, 8])
-def test_a_kimi_addressed_message_is_never_processed(broker_db, message_id):
+def test_a_kimi_addressed_message_is_never_processed(broker_db, capsys, message_id):
     from scripts.ai_agent_bridge import _process
 
-    with pytest.raises(ValueError, match=_TOKEN):  # KimiAdmissionRefused
-        _process.process_message_for_recipient(message_id)
+    assert _process.process_message_for_recipient(message_id) is None
+    assert capsys.readouterr().out.count(_SKIPPED) == 1
     assert broker_db.unchanged()
     assert not _process.recipient_has_acp_route("kimi")
 
@@ -1528,37 +1531,44 @@ def test_process_refuses_a_kimi_model_before_the_broker_is_opened(broker_db):
     assert broker_db.connects == []
 
 
-@pytest.mark.parametrize(
-    ("argv", "opened"),
-    [
-        (["process", "7"], True),
-        (["process", "8"], True),
-        (["process-claude", "7"], True),
-        (["process-claude", "8"], True),
-        (["process", "9", "--model", "kimi-code/k3"], False),
-        (["process-kimi", "7"], False),
-    ],
-)
-def test_process_cli_commands_refuse_and_record_nothing(broker_db, argv, opened):
-    """A Kimi seat or model named on the command line is refused unopened; a Kimi-addressed row after its read."""
+@pytest.mark.parametrize("argv", [["process", "9", "--model", "kimi-code/k3"], ["process-kimi", "7"]])
+def test_process_cli_refuses_a_kimi_request_unopened(broker_db, argv):
+    """A Kimi seat or model named on the command line is a Kimi request: refused before the broker is opened."""
     from scripts.ai_agent_bridge import _cli
 
     with pytest.raises(SystemExit, match=_TOKEN):
         _cli._dispatch_command(_cli._build_parser().parse_args(argv))
-    assert bool(broker_db.connects) is opened
+    assert broker_db.connects == []
     assert broker_db.unchanged()
 
 
-@pytest.mark.parametrize(
-    ("message_id", "target", "opened"), [(7, "kimi", False), (7, "claude", True), (8, "claude", True)]
-)
-def test_detached_ask_worker_refuses_and_records_nothing(broker_db, monkeypatch, message_id, target, opened):
+@pytest.mark.parametrize("argv", [["process", "7"], ["process", "8"], ["process-claude", "7"], ["process-claude", "8"]])
+def test_process_cli_skips_a_stored_kimi_row_and_records_nothing(broker_db, capsys, argv):
+    """A generic drain reads the broker, then skips a stored Kimi-addressed row, reporting it once."""
+    from scripts.ai_agent_bridge import _cli
+
+    _cli._dispatch_command(_cli._build_parser().parse_args(argv))
+    assert capsys.readouterr().out.count(_SKIPPED) == 1
+    assert broker_db.unchanged()
+
+
+def test_detached_ask_worker_refuses_a_kimi_target_unopened(broker_db, monkeypatch):
     from scripts.ai_agent_bridge import _ask_lifecycle
 
     monkeypatch.setattr(_ask_lifecycle.atexit, "register", _fail)
     with pytest.raises(SystemExit, match=_TOKEN):
-        _ask_lifecycle.process_background_ask(message_id, target)
-    assert bool(broker_db.connects) is opened
+        _ask_lifecycle.process_background_ask(7, "kimi")
+    assert broker_db.connects == []
+    assert broker_db.unchanged()
+
+
+@pytest.mark.parametrize("message_id", [7, 8])
+def test_detached_ask_worker_skips_a_stored_kimi_row(broker_db, monkeypatch, capsys, message_id):
+    from scripts.ai_agent_bridge import _ask_lifecycle
+
+    monkeypatch.setattr(_ask_lifecycle.atexit, "register", _fail)
+    assert _ask_lifecycle.process_background_ask(message_id, "claude") is None
+    assert capsys.readouterr().out.count(_SKIPPED) == 1
     assert broker_db.unchanged()
 
 
@@ -2040,18 +2050,238 @@ def test_every_kimi_recipient_entry_leaves_existing_wal_databases_untouched(writ
             writer.close()
 
 
-def test_a_kimi_row_only_in_the_wal_is_never_processed(write_trap):
-    """A Kimi-addressed message not yet checkpointed is read, refused, and left exactly as it was."""
-    from scripts.ai_agent_bridge import _process
+class _KimiEffect(BaseException):
+    """A Kimi-specific effect. A ``BaseException``, so no drain's ``except Exception`` can swallow it."""
 
+
+@contextlib.contextmanager
+def _kimi_effect_trap():
+    """Arm, for a whole drain call, a trap on every Kimi-specific effect; generic broker reads stay allowed.
+
+    Trapped: the ACP compat ask, the runtime runner and every legacy provider
+    processor (adapter/runner invocation); process spawns and background
+    relaunches; replies, acknowledgements, ask status and failure records,
+    retry claims and terminal records (writes attributing processing); bridge
+    usage telemetry. Every broker connection also gets an authorizer that
+    records and denies any INSERT, UPDATE or DELETE on ``messages``.
+    """
+    from agent_runtime import runner as agent_runner
+    from scripts.agent_runtime import runner as scripts_runner
+    from scripts.ai_agent_bridge import (
+        _acp_compat,
+        _agy,
+        _ask_lifecycle,
+        _claude,
+        _codex,
+        _cursor,
+        _grok_build,
+        _hermes,
+        _messaging,
+        _opencode,
+        _process,
+    )
+    from scripts.telemetry import legacy_bridge
+
+    effects: list[str] = []
+
+    def trap(name):
+        def effect(*args, **_kwargs):
+            effects.append(f"{name}{tuple(str(arg) for arg in args[:2])}")
+            raise _KimiEffect(f"{name} on a stored Kimi row")
+
+        return effect
+
+    real_connect = sqlite3.connect
+
+    def connect(*args, **kwargs):
+        conn = real_connect(*args, **kwargs)
+
+        def authorize(action, table, *_rest):
+            if table == "messages" and action in (sqlite3.SQLITE_INSERT, sqlite3.SQLITE_UPDATE, sqlite3.SQLITE_DELETE):
+                effects.append(f"sqlite write {action} on messages")
+                return sqlite3.SQLITE_DENY
+            return sqlite3.SQLITE_OK
+
+        conn.set_authorizer(authorize)
+        return conn
+
+    targets = [
+        (_process, ("run_compat_ask", "send_message", "acknowledge", "record_ask_failure", "record_ask_reply")),
+        (_process, ("_notify_processing_failure",)),
+        (_acp_compat, ("run_compat_ask",)),
+        (agent_runner, ("invoke", "invoke_inter_agent")),
+        (scripts_runner, ("invoke", "invoke_inter_agent")),
+        (_claude, ("process_for_claude",)),
+        (_codex, ("process_for_codex",)),
+        (_agy, ("process_for_agy",)),
+        (_grok_build, ("process_for_grok_build",)),
+        (_cursor, ("process_for_cursor",)),
+        (_hermes, ("process_for_hermes",)),
+        (_opencode, ("process_for_opencode",)),
+        (_messaging, ("send_message", "acknowledge")),
+        (_ask_lifecycle, ("mark_ask_processing", "record_ask_failure", "record_ask_reply", "_set_ask_status")),
+        (_ask_lifecycle, ("claim_ask_retry", "launch_background_ask", "_AskTerminalRecorder", "_remove_pid_file")),
+        (_ask_lifecycle.atexit, ("register",)),
+        (subprocess, ("Popen",)),
+        (os, ("fork", "posix_spawn", "posix_spawnp")),
+        (legacy_bridge, ("start_bridge_invocation_safely", "finish_bridge_invocation_safely")),
+        (legacy_bridge, ("record_bridge_invocation_start", "record_bridge_invocation_finish")),
+    ]
+    with pytest.MonkeyPatch.context() as trapped:
+        for owner, names in targets:
+            for name in names:
+                trapped.setattr(owner, name, trap(f"{getattr(owner, '__name__', owner)}.{name}"))
+        trapped.setattr(sqlite3, "connect", connect)
+        yield effects
+
+
+def _stored_drain_rows(writer: sqlite3.Connection) -> None:
+    """Uncheckpointed Kimi-model rows addressed to the seats the batch drains select (10-12)."""
+    writer.executemany(
+        "INSERT INTO messages (id, task_id, from_llm, to_llm, message_type, content, data, timestamp)"
+        " VALUES (?, 't', 'agy', ?, 'query', 'q', ?, '2026-09-30T00:00:00+00:00')",
+        [
+            (10, "claude", json.dumps({"to_model": "kimi-code/k3"})),
+            (11, "codex", json.dumps({"to_model": "k3"})),
+            (12, "gemini", json.dumps({"to_model": "kimi-code/k3"})),
+        ],
+    )
+    writer.commit()
+
+
+def _direct(message_id):
+    def call(_state):
+        from scripts.ai_agent_bridge import _process
+
+        return _process.process_message_for_recipient(message_id)
+
+    return call
+
+
+def _cli_argv(*argv):
+    def call(_state):
+        from scripts.ai_agent_bridge import _cli
+
+        return _cli._dispatch_command(_cli._build_parser().parse_args(list(argv)))
+
+    return call
+
+
+def _interactive(message_id):
+    def call(_state):
+        from scripts.ai_agent_bridge import _cli
+
+        return _cli._dispatch_interactive("process", ["process", str(message_id)])
+
+    return call
+
+
+def _target(message_id, target):
+    def call(_state):
+        from scripts.ai_agent_bridge import _ask_lifecycle
+
+        return _ask_lifecycle._process_target(message_id, target, {"no_timeout": True})
+
+    return call
+
+
+def _background(message_id, target):
+    def call(_state):
+        from scripts.ai_agent_bridge import _ask_lifecycle
+
+        return _ask_lifecycle.process_background_ask(message_id, target)
+
+    return call
+
+
+def _batch(seat):
+    def call(_state):
+        from scripts.ai_agent_bridge import _cli, _codex
+
+        return {
+            "claude": _cli.process_all_claude,
+            "codex": _codex.process_all_codex,
+            "gemini": _cli.process_all_gemini,
+        }[seat]()
+
+    return call
+
+
+def _watchdog(agent, message_id=None):
+    """The ask watchdog sweep, with a dead worker's launch record naming *agent*."""
+
+    def call(_state):
+        from scripts.ai_agent_bridge import _ask_lifecycle
+
+        return _ask_lifecycle.run_ask_watchdog(message_id)
+
+    call.launch_agent = agent
+    return call
+
+
+@pytest.mark.parametrize(
+    ("call", "skips"),
+    [
+        pytest.param(_direct(8), 1, id="direct-routed-onto-kimi"),
+        pytest.param(_direct(9), 1, id="direct-inserted-for-kimi"),
+        pytest.param(_direct(10), 1, id="direct-kimi-model"),
+        pytest.param(_cli_argv("process", "9"), 1, id="cli-process"),
+        pytest.param(_cli_argv("process-claude", "8"), 1, id="cli-target"),
+        pytest.param(_cli_argv("process-codex", "11"), 1, id="cli-target-kimi-model"),
+        pytest.param(_interactive(9), 1, id="interactive-process"),
+        pytest.param(_target(9, "claude"), 1, id="target-drain"),
+        pytest.param(_background(9, "claude"), 1, id="background"),
+        pytest.param(_background(10, "claude"), 1, id="background-kimi-model"),
+        pytest.param(_batch("claude"), 1, id="process-all-claude"),
+        pytest.param(_batch("codex"), 1, id="process-all-codex"),
+        pytest.param(_batch("gemini"), 1, id="process-all-gemini"),
+        pytest.param(_watchdog("kimi"), 3, id="ask-watchdog-kimi-launch"),
+        pytest.param(_watchdog("claude", 10), 1, id="ask-watchdog-kimi-model"),
+    ],
+)
+def test_generic_drains_skip_stored_kimi_rows_before_any_kimi_effect(tmp_path, monkeypatch, capsys, call, skips):
+    """A generic drain skips a stored Kimi row before any Kimi-specific effect.
+
+    Kimi is not a bridge recipient, and since sends refuse Kimi, a Kimi row
+    can only be a legacy stored one. A generic drain (``process``,
+    ``process-<seat>``, ``process-all``, a background worker, the ask
+    watchdog) is not a Kimi request: reading the broker is its job, so it may
+    open the WAL-mode DB and touch its ``-shm``. The binding invariant is that
+    a stored Kimi-addressed row is skipped before any Kimi-specific effect —
+    no adapter or runner invocation, no process, no reply row, no
+    acknowledgement or status write attributing processing to Kimi, no Kimi
+    telemetry — is left exactly as it was and is reported once as
+    ``skipped: Kimi is not a bridge recipient``.
+
+    The rows include uncheckpointed inserts and routing updates held in a
+    live WAL (a writer stays open), and the trap is armed for the whole call.
+    """
+    from scripts.ai_agent_bridge import _ask_lifecycle, _db
+
+    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "state" / "broker" / "messages.db")
     broker, authority = _seed_broker(live_wal=True)
     authority.close()
     try:
+        _stored_drain_rows(broker)
+        launch_agent = getattr(call, "launch_agent", None)
+        if launch_agent:
+            monkeypatch.setattr(_ask_lifecycle, "REPO_ROOT", tmp_path)
+            launch = tmp_path / "batch_state" / "asks" / "t" / "launch.json"
+            launch.parent.mkdir(parents=True)
+            launch.write_text(
+                json.dumps({"pid": 999_999_999, "agent": launch_agent, "started_at": _ask_lifecycle._now_iso()}),
+                encoding="utf-8",
+            )
         before = broker.execute("SELECT * FROM messages ORDER BY id").fetchall()
-        for message_id in (8, 9):  # a routing update onto Kimi, and an insert addressed to Kimi
-            with pytest.raises(ValueError, match=_TOKEN):  # KimiAdmissionRefused
-                _process.process_message_for_recipient(message_id)
+        assert {row[3] for row in before if row[0] in (8, 9)} == {"kimi"}  # the WAL routing update and insert
+        with _kimi_effect_trap() as effects, contextlib.suppress(_KimiEffect):
+            call(None)
+        out = capsys.readouterr().out
+
+        assert effects == []
+        assert out.count(_SKIPPED) == skips
         assert broker.execute("SELECT * FROM messages ORDER BY id").fetchall() == before
+        assert not (tmp_path / "batch_state" / "asks" / "t" / "retry-claim").exists()
     finally:
         broker.close()
 

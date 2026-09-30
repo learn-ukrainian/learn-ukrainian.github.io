@@ -543,8 +543,8 @@ def process_background_ask(message_id: int, target: str) -> None:
     """Run one detached ask worker and leave a terminal lifecycle status.
 
     A Kimi target exits with the refusal before the broker is opened; a
-    message addressed to a Kimi seat or model exits with it right after the
-    read, before any lifecycle record.
+    stored message addressed to a Kimi seat or model is skipped right after
+    the read, before any lifecycle record (``skip_stored_kimi_row``).
     """
     from agent_runtime.kimi_admission import KimiAdmissionRefused
 
@@ -553,11 +553,11 @@ def process_background_ask(message_id: int, target: str) -> None:
 
     try:
         refuse_kimi_compat(target)
-        msg = read_message(message_id, quiet=True)
-        if msg:
-            refuse_kimi_message(msg, target)
     except KimiAdmissionRefused as exc:
         raise SystemExit(f"❌ {exc}") from exc
+    msg = read_message(message_id, quiet=True)
+    if msg and skip_stored_kimi_row(msg, message_id, target):
+        return
     terminal = _AskTerminalRecorder(message_id)
     atexit.register(terminal.atexit)
     previous_handlers: dict[int, Any] = {}
@@ -800,16 +800,19 @@ def run_ask_watchdog(target_message_id: int | None = None) -> list[int]:
 
 
 def _re_fire_ask(message_id: int) -> bool:
-    """Re-fire a dead background ask worker once with auto-retried metadata."""
-    if not claim_ask_retry(message_id):
-        return False
+    """Re-fire a dead background ask worker once with auto-retried metadata.
 
+    A stored ask addressed to a Kimi seat or model is skipped before the retry
+    claim: no claim, metadata write or relaunch (``skip_stored_kimi_row``).
+    """
     launch = _read_ask_record(message_id, "launch.json")
     if not launch:
         return False
     target = str(launch.get("agent") or launch.get("harness") or "grok")
     msg = fetch_ask_message(message_id, target)
-    if not msg:
+    if not msg or skip_stored_kimi_row(msg, message_id, target):
+        return False
+    if not claim_ask_retry(message_id):
         return False
 
     meta = _ask_metadata(msg)
@@ -910,16 +913,30 @@ def ask_sender_model(msg: dict[str, Any]) -> str | None:
     return str(model) if model else None
 
 
-def refuse_kimi_message(msg: dict[str, Any], target: str) -> None:
-    """The Kimi gate for draining one message that has been read: its target, recipient seat and target model.
+STORED_KIMI_ROW_SKIPPED = "skipped: Kimi is not a bridge recipient"
 
-    Kimi is not a bridge recipient, so a message addressed to a Kimi seat or
-    model is never processed. Raises ``KimiAdmissionRefused`` before any
-    reply, failure record or acknowledgement.
+
+def skip_stored_kimi_row(msg: dict[str, Any], message_id: int, target: str | None = None) -> bool:
+    """Report and skip a stored message addressed to a Kimi seat or model; return True when skipped.
+
+    Kimi is not a bridge recipient and nothing new can be addressed to it, but
+    a legacy row may still sit in the broker. A generic drain reads the broker
+    (its job); a stored Kimi row it meets is skipped before any Kimi-specific
+    effect — no adapter or runner call, no process, no reply, failure record,
+    acknowledgement or Kimi telemetry. The row is left as-is and reported once.
+    ``target`` is the stored or generic drain target, never a Kimi request:
+    those are refused before the broker is opened.
     """
+    from agent_runtime.kimi_admission import KimiAdmissionRefused
+
     from ._acp_compat import refuse_kimi_recipients
 
-    refuse_kimi_recipients((target, msg.get("to")), (ask_target_model(msg),))
+    try:
+        refuse_kimi_recipients((target, msg.get("to")), (ask_target_model(msg),))
+    except KimiAdmissionRefused:
+        print(f"⏭️  Message {message_id} {STORED_KIMI_ROW_SKIPPED}; left as-is.")
+        return True
+    return False
 
 
 def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bool | None:
@@ -927,8 +944,8 @@ def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bo
 
     Ordinary drains return success; review processors retain their None return.
     A Kimi target raises ``KimiAdmissionRefused`` before the broker is opened;
-    a message addressed to a Kimi seat or model raises it right after the read,
-    before any record.
+    a stored message addressed to a Kimi seat or model is skipped right after
+    the read, before any record, and returns None (``skip_stored_kimi_row``).
     """
     from ._acp_compat import refuse_kimi_compat
     from ._messaging import read_message
@@ -939,8 +956,8 @@ def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bo
     review = bool(options.get("review", False))
     new_session = bool(options.get("new_session", False))
     msg = read_message(message_id, quiet=True)
-    if msg:
-        refuse_kimi_message(msg, target)
+    if msg and skip_stored_kimi_row(msg, message_id, target):
+        return None
     if not review:
         if not msg:
             return

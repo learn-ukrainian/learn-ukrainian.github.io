@@ -22,6 +22,7 @@ from ._ask_lifecycle import (
     print_asks,
     print_timeout_notice,
     process_background_ask,
+    skip_stored_kimi_row,
 )
 from ._broker import bridge_status, broker_cleanup
 from ._codex import (
@@ -201,7 +202,7 @@ def process_all_gemini(model: str | None = None):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50)
+        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50), to_llm, data
         FROM messages
         WHERE to_llm = 'gemini' AND acknowledged = 0
         ORDER BY id ASC
@@ -218,11 +219,15 @@ def process_all_gemini(model: str | None = None):
 
     success = 0
     failed = 0
+    skipped = 0
 
     for row in rows:
-        msg_id, _task_id, from_llm, _msg_type, preview = row
+        msg_id, _task_id, from_llm, _msg_type, preview, to_llm, data = row
         preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+        if skip_stored_kimi_row({"to": to_llm, "data": data}, msg_id):
+            skipped += 1
+            continue
 
         try:
             if process_message_for_recipient(msg_id, model=model):
@@ -236,7 +241,7 @@ def process_all_gemini(model: str | None = None):
             print(f"    ❌ Failed: {e}\n")
 
     print(f"\n{'═' * 50}")
-    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+    print(f"📊 Results: {success} succeeded, {failed} failed, {skipped} skipped out of {len(rows)} total")
 
 
 def process_all_claude(new_session: bool = False):
@@ -245,7 +250,7 @@ def process_all_claude(new_session: bool = False):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50)
+        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50), to_llm, data
         FROM messages
         WHERE to_llm = 'claude' AND acknowledged = 0
         ORDER BY id ASC
@@ -262,11 +267,15 @@ def process_all_claude(new_session: bool = False):
 
     success = 0
     failed = 0
+    skipped = 0
 
     for row in rows:
-        msg_id, _task_id, from_llm, _msg_type, preview = row
+        msg_id, _task_id, from_llm, _msg_type, preview, to_llm, data = row
         preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+        if skip_stored_kimi_row({"to": to_llm, "data": data}, msg_id):
+            skipped += 1
+            continue
 
         try:
             if _process_target(msg_id, "claude", {"new_session": new_session}) is False:
@@ -280,7 +289,7 @@ def process_all_claude(new_session: bool = False):
             print(f"    ❌ Failed: {e}\n")
 
     print(f"\n{'═' * 50}")
-    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+    print(f"📊 Results: {success} succeeded, {failed} failed, {skipped} skipped out of {len(rows)} total")
 
 
 def _parse_usage_window(window: str) -> int:
@@ -1972,7 +1981,7 @@ def _kimi_request_error(args) -> str | None:
     seat and model on the command line is checked against the static route
     registry, with no broker access, so a refusal leaves the broker DB and its
     ``-wal``/``-shm`` sidecars exactly as they were. A message already
-    addressed to a Kimi seat is refused by the drain after its read.
+    addressed to a Kimi seat or model is skipped by the drain after its read.
     """
     from agent_runtime.acpx_discuss import AcpxDiscussionError, refuse_kimi_discussion
 

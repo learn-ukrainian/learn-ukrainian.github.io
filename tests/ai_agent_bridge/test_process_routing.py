@@ -671,9 +671,10 @@ def test_send_refuses_a_kimi_recipient(bridge_db):
         _send("kimi", sender="agy")
 
 
-def test_kimi_messages_are_refused_with_zero_side_effects(bridge_db, monkeypatch, forbid_legacy_processors):
-    """Kimi is not a bridge recipient — an existing Kimi-addressed row is never processed: every drain returns
-    the refusal and leaves the broker exactly as it was: no reply, no failure record, no acknowledgement."""
+def test_kimi_messages_are_skipped_with_zero_side_effects(bridge_db, monkeypatch, capsys, forbid_legacy_processors):
+    """Kimi is not a bridge recipient — an existing Kimi-addressed row is never processed. A Kimi target is a
+    Kimi request and is refused; a generic drain skips the stored row, reports it once and leaves the broker
+    exactly as it was: no reply, no failure record, no acknowledgement."""
     from unittest.mock import Mock
 
     from scripts.ai_agent_bridge import _ask_lifecycle, _cli
@@ -687,13 +688,12 @@ def test_kimi_messages_are_refused_with_zero_side_effects(bridge_db, monkeypatch
     with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
         _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
     with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
-        _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
-    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
-        _cli._dispatch_command(_cli._build_parser().parse_args(["process-claude", str(cli_message)]))
-    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
         _ask_lifecycle.process_background_ask(detached_message, "kimi")
-    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
-        _ask_lifecycle.process_background_ask(detached_message, "codex")
+    capsys.readouterr()
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process-claude", str(cli_message)]))
+    _ask_lifecycle.process_background_ask(detached_message, "codex")
+    assert capsys.readouterr().out.count("skipped: Kimi is not a bridge recipient") == 3
 
     acp.assert_not_called()
     assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before
