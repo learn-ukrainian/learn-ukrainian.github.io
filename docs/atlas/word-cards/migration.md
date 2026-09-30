@@ -48,7 +48,7 @@ Round 1 supplied the expected identities as overlay `identity` entries and then 
 - **Pass criteria:** replay pool reproduced exactly; held-out identity errors = 0 on ordinary controls and ≤ the threshold the operator sets per category (recommendation: 0 wrong merges, ≤ 2 wrong splits, false abstentions ≤ 5 %); zero model-written Ukrainian; every assertion has a locator that resolves in the read-only databases; removal of any single source recomputes states as the rules say.
 
 ## 5. Ordering and dependencies
-#8979 register entries for the unregistered Atlas sources and the lineage fields → M0. `schema.md` §16.3 decision 1 (operator; the conservative default runs meanwhile) → M4/M5, decision 2 → M5; decision 3 is adopted (M1/M2 paths). #8334 sign-off on `identity.md` → M4. #8400 harvest completion (19 rows in #9123) → M3 for ULIF fields; the pilot can start on VESUM + PULS + textbooks + teacher content without it. #8980 takedown design → M8. #8983 rules (reading `mapping_evidenced`) → Gate 1. Decision 4 (held-out lanes) → Gate 2.
+#8979 register entries for the unregistered Atlas sources and the lineage fields → M0. `schema.md` §16.3 decision 1 (settled by the operator on 2026-09-29; uncertain cross-source correspondences remain unresolved pending language-lane adjudication) → M4/M5, decision 2 → M5; decision 3 is adopted (M1/M2 paths). #8334 full identity/URL sign-off remains outstanding → M4. #8400 harvest completion (19 rows in #9123) → M3 for ULIF fields; the pilot can start on VESUM + PULS + textbooks + teacher content without it. #8980 takedown design → M8. #8983 rules (reading `mapping_evidenced`) → Gate 1. Decision 4 (held-out lanes) → Gate 2.
 
 ## 6. Consumer inventory (from `git grep -l "atlas\.db"`), change needed
 
