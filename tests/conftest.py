@@ -1032,18 +1032,34 @@ def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: p
     return isolated
 
 
+@pytest.fixture(scope="session")
+def _rules_core_absent_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """A checkout view without the rules core (``tests/rules_core_view.py``)."""
+    from tests.rules_core_view import checkout_view
+
+    return checkout_view(tmp_path_factory.mktemp("rules-core-absent") / "checkout", None)
+
+
 @pytest.fixture(autouse=True)
-def _rules_core_absent_by_default(tmp_path_factory: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Keep the rules core out of prompts and launcher argv unless a test opts in.
+def _rules_core_absent_when_marked(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Run a ``rules_core_absent`` test as if the checkout had no rules core.
 
     Launchers, ``delegate.py``, ACP calls and bridge builders prepend the rules core
-    (``scripts/lib/rules_core.py``); a missing core is a warning, not a failure. Pointing
-    ``LU_RULES_CORE_DIR`` at an empty directory keeps exact prompt/argv assertions
-    independent of whether the checkout carries the core. Subprocess launchers
-    inherit it. ``tests/test_rules_core_loading.py`` sets its own directory.
+    (``scripts/lib/rules_core.py``). Only tests that pin an exact argv or prompt block
+    order carry the marker; every other test runs with the checkout's real core.
+    In-process code sees the view's rules directory through the loader's
+    ``core_dir`` resolver; ``run_launcher`` starts subprocess launchers from the view.
+    A seat exported by a launched session never leaks into a test.
     """
-    monkeypatch.setenv("LU_RULES_CORE_DIR", str(tmp_path_factory.getbasetemp() / "rules-core-absent"))
     monkeypatch.delenv("LU_RULES_SEAT", raising=False)
+    if request.node.get_closest_marker("rules_core_absent") is None:
+        return
+    from scripts.lib import rules_core
+    from tests import test_launcher_contract
+
+    view = request.getfixturevalue("_rules_core_absent_root")
+    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: view / rules_core.RULES_DIR_REL)
+    monkeypatch.setattr(test_launcher_contract, "LAUNCH_ROOT", view)
 
 
 class SocketBlockedError(RuntimeError):

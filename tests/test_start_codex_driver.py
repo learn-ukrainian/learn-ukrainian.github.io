@@ -121,6 +121,7 @@ def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> No
     assert result.stdout.index("would mint and bootstrap") < result.stdout.index("would bind drive-epic")
 
 
+@pytest.mark.rules_core_absent
 def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> None:
     result = run_launcher(
         "start-codex-driver.sh",

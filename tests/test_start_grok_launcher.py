@@ -81,6 +81,7 @@ def test_grok_forwards_provider_arguments_only_after_separator() -> None:
     assert "--reasoning high" in result.stdout
 
 
+@pytest.mark.rules_core_absent
 def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> None:
     from tests.test_launcher_contract import hermes_stub_env
 
