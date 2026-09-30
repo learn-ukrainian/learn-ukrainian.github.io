@@ -1,8 +1,13 @@
 """Guard the CI install's cache fallback and fail-closed dependency check."""
 
+import json
+import os
+import re
+import subprocess
 from pathlib import Path
 from subprocess import CompletedProcess
 
+import pytest
 import yaml
 
 from scripts.audit import check_ci_dependencies
@@ -98,6 +103,76 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
     assert setup["with"] == {"python-version-file": ".python-version"}
     ci_env = next(step for step in job["steps"] if step.get("uses") == "./.github/actions/python-ci-env")
     assert job["outputs"]["uv-cache-key"] == f"${{{{ steps.{ci_env['id']}.outputs.uv-cache-key }}}}"
+
+
+@pytest.mark.repo_wide
+def test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache() -> None:
+    """A pin change cannot leave the cache writer or setup-uv on another Python."""
+    assert (_REPO_ROOT / ".python-version").read_text().strip() == "3.12.14"
+    for path in sorted((_REPO_ROOT / ".github/workflows").glob("*.y*ml")):
+        document = yaml.safe_load(path.read_text(encoding="utf-8"))
+        assert "UV_PYTHON" not in document.get("env", {}), path
+        for name, job in document["jobs"].items():
+            steps = job.get("steps", [])
+            setups = [step for step in steps if step.get("uses", "").startswith("actions/setup-python@")]
+            if any(re.search(r"\bpython(?:3(?:\.\d+)?)?\b", step.get("run", "")) for step in steps):
+                assert setups, (path, name, "Python job has no setup")
+                first_setup = steps.index(setups[0])
+                assert all(
+                    index > first_setup for index, step in enumerate(steps)
+                    if re.search(r"\bpython(?:3(?:\.\d+)?)?\b", step.get("run", ""))
+                ), (path, name, "Python runs before setup")
+            for setup in setups:
+                assert setup["with"]["python-version-file"] == ".python-version", (path, name)
+                assert "python-version" not in setup["with"], (path, name)
+                assert setup["with"].get("check-latest", False) is False
+            for step in steps:
+                if "sparse-checkout" in step.get("with", {}):
+                    assert ".python-version" in step["with"]["sparse-checkout"].splitlines(), (path, name)
+    assert _action_step("Set up uv")["with"]["python-version"] == "${{ steps.python-pin.outputs.version }}"
+    assert "python -m venv --without-pip .venv" in _action_step("Install Python deps")["run"]
+
+
+def test_setup_uv_reads_the_pin_instead_of_inferencing_an_interpreter(tmp_path: Path) -> None:
+    """The cache key follows a changed pin even before that Python is installed."""
+    steps = yaml.safe_load(_ACTION.read_text(encoding="utf-8"))["runs"]["steps"]
+    reader = _action_step("Read Python pin")
+    assert reader["id"] == "python-pin"
+    assert steps.index(reader) < steps.index(_action_step("Set up uv"))
+    for pin in ("3.12.14", "3.12.15"):
+        (tmp_path / ".python-version").write_text(pin + "\n")
+        output = tmp_path / "output"
+        output.write_text("")
+        subprocess.run(
+            ["bash", "-e", "-c", reader["run"]], cwd=tmp_path,
+            env={**os.environ, "GITHUB_OUTPUT": str(output)}, check=True, timeout=10,
+        )
+        assert output.read_text() == f"version={pin}\n"
+
+    (tmp_path / ".python-version").unlink()
+    output.write_text("")
+    result = subprocess.run(
+        ["bash", "-e", "-c", reader["run"]], cwd=tmp_path,
+        env={**os.environ, "GITHUB_OUTPUT": str(output)}, capture_output=True, timeout=10,
+    )
+    assert result.returncode != 0
+    assert output.read_text() == ""
+
+
+def test_python_subprocess_records_the_test_runtime() -> None:
+    """Provenance for the two-runtime validation: children inherit pytest's Python."""
+    import sys
+
+    from tests.helpers.python import project_python
+
+    output = subprocess.check_output(
+        [project_python(), "-c", "import json,sys; print(json.dumps([sys.executable,sys.version]))"],
+        text=True, timeout=10,
+    )
+    executable, version = json.loads(output)
+    assert executable == sys.executable
+    assert version == sys.version
+    print(f"Test subprocess: executable={executable}, version={version}")
 
 
 def test_warm_workflow_fails_loudly_when_main_has_no_uv_entry() -> None:
