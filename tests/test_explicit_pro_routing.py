@@ -14,13 +14,16 @@ from scripts.batch.batch_otaman import BatchOtaman, dispatch_otaman
 
 
 def test_resolve_compat_model_legacy_flash_maps_to_pin():
-    """Legacy Flash slugs map to the AGY live registry pin."""
+    """Compatibility aliases follow the pin; retired generations are refused (#9301)."""
+    import pytest
+
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
     assert resolve_compat_model("gemini", "gemini-3-flash-preview") == pin
     assert resolve_compat_model("gemini", "gemini-3.0-flash-preview") == pin
-    assert resolve_compat_model("gemini", "gemini-3.7-flash") == pin
+    with pytest.raises(ValueError, match=r"gemini-3\.7-flash.*retired.*use gemini-3\.8-flash-high"):
+        resolve_compat_model("gemini", "gemini-3.7-flash")
     assert resolve_compat_model("gemini", None) is None
 
 

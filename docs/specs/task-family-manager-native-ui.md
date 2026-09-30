@@ -91,7 +91,7 @@ All examples in this section are normative target APIs, not current endpoints.
         "worktree": null,
         "branch": "main",
         "pr": null,
-        "model": "gpt-5.6-sol",
+        "model": "gpt-6.1-sol",
         "harness": "codex",
         "host": "local",
         "local": true

@@ -464,7 +464,7 @@ def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkey
         payload["verdict"] = "PASS"
 
     def runtime(agent, prompt, **kwargs):
-        assert agent == "claude" and kwargs["model"] == "claude-opus-4-8"
+        assert agent == "claude" and kwargs["model"] == "claude-opus-5-5"
         assert qg_schema.render_reviewer_output_contract("direct") in prompt
         adapter = adapter_for(agent, monkeypatch)
         plan = build_plan(adapter, tmp_path, kwargs["tool_config"])

@@ -694,7 +694,7 @@ def test_entire_outage_is_fail_open_and_spool_is_cleaned(tmp_path: Path, monkeyp
         host_harness="agy",
         runner_agent="agy",
         entrypoint="dispatch",
-        requested_model="gemini-3.6-flash-high",
+        requested_model="gemini-3.8-flash-high",
         prompt="fixture",
         repo_path=tmp_path,
         runtime_repo_root=tmp_path,

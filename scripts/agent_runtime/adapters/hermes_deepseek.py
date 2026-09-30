@@ -5,17 +5,8 @@ calls inside its own session loop using ``~/.hermes/config.yaml``. The adapter
 only sees Hermes's final assistant message on stdout, so ``tool_calls_total``
 remains ``None`` (unknown, not zero).
 
-Model variants surfaced through ``model`` arg:
-* ``deepseek-v4-pro`` (default) — DeepSeek v4 Pro, primary content/review slot
-  post-2026-06-15 (per the late-evening 2026-05-17 bakeoff: A+ on content
-  review with MCP-backed verdict; matches Opus xhigh on coding; A- on plan).
-* ``deepseek-v4-flash`` — faster/cheaper variant, A+ on code review at ~15s
-  with zero false positives (the role winner per the same bakeoff).
-
-DeepSeek streams empty lines as keep-alives during reasoning (per their API
-FAQ). Hermes accumulates content past those lines correctly; opencode does
-not (33% banner-only flake observed). That's why this adapter wraps hermes
-instead of an OpenAI-shaped opencode adapter.
+The default model is ``deepseek-v4.1-flash``. Retired model requests are
+refused before invocation; historical run identities stay unchanged.
 
 Reasoning effort is config-scoped in Hermes ``-z`` mode (same as Grok). This
 adapter does NOT mutate ``~/.hermes/config.yaml`` per call to avoid races
@@ -29,6 +20,8 @@ import logging
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
+
+from scripts.review.model_catalog import retired_model_refusal
 
 from ..result import ParseResult
 from ..routes import (
@@ -64,7 +57,7 @@ class HermesDeepSeekAdapter:
     """Adapter for the Hermes CLI using DeepSeek v4 (pro or flash)."""
 
     name: str = "deepseek"
-    default_model: str = "deepseek-v4-pro"
+    default_model: str = "deepseek-v4.1-flash"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -99,6 +92,9 @@ class HermesDeepSeekAdapter:
             )
 
         requested_model = model or self.default_model
+        refusal = retired_model_refusal(requested_model)
+        if refusal:
+            raise ValueError(refusal)
         requested_provider, requested_model, provider_forced = resolve_hermes_requested_route(
             tool_config=tool_config,
             default_provider="deepseek",

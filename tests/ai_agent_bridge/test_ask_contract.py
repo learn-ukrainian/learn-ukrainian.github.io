@@ -101,7 +101,7 @@ def test_terminal_failure_replays_without_invoking_provider_again(
             "same prompt",
             task_id="failure-replay",
             source="codex",
-            model="gemini-3.6-flash-high",
+            model="gemini-3.8-flash-high",
             effort="high",
         )
 
@@ -110,15 +110,15 @@ def test_terminal_failure_replays_without_invoking_provider_again(
         "same prompt",
         task_id="failure-replay",
         source="codex",
-        model="gemini-3.6-flash-high",
+        model="gemini-3.8-flash-high",
         effort="high",
     )
 
     assert replay.ok is False
     assert replay.transport_outcome == "error"
     assert replay.usage_record == {
-        "from_model": "gemini-3.6-flash-high",
-        "model_requested": "gemini-3.6-flash-high",
+        "from_model": "gemini-3.8-flash-high",
+        "model_requested": "gemini-3.8-flash-high",
         "effort_requested": "high",
         "effort_applied": None,
         "harness": "acp",
@@ -171,7 +171,7 @@ def test_terminalization_conflict_preserves_completed_provider_response(
     provider_result = SimpleNamespace(
         ok=True,
         agent="agy",
-        model="gemini-3.6-flash-high",
+        model="gemini-3.8-flash-high",
         response="completed provider response",
         stderr_excerpt=None,
         duration_s=1.0,
@@ -195,7 +195,7 @@ def test_terminalization_conflict_preserves_completed_provider_response(
             "agy",
             "question",
             task_id="terminalization-conflict",
-            model="gemini-3.6-flash-high",
+            model="gemini-3.8-flash-high",
             effort="high",
             output_path=str(output_path),
         )
@@ -216,7 +216,7 @@ def test_claim_race_to_terminal_replays_without_invoking_provider(
     replay_result = SimpleNamespace(
         ok=True,
         agent="agy",
-        model="gemini-3.6-flash-high",
+        model="gemini-3.8-flash-high",
         response="durably completed response",
         stderr_excerpt=None,
         duration_s=1.0,
@@ -259,14 +259,14 @@ def test_claim_race_to_terminal_replays_without_invoking_provider(
         "agy",
         "question",
         task_id="terminal-claim-race",
-        model="gemini-3.6-flash-high",
+        model="gemini-3.8-flash-high",
         effort="high",
     )
 
     assert result.response == "durably completed response"
     assert result.usage_record["replayed"] is True
     assert result.usage_record["transport"] == "acp"
-    assert result.usage_record["from_model"] == "gemini-3.6-flash-high"
+    assert result.usage_record["from_model"] == "gemini-3.8-flash-high"
     assert result.usage_record["harness"] == "acp"
     assert invoke.call_count == 0
     assert probe.call_count == 0
@@ -768,7 +768,7 @@ def test_acp_result_receipt_and_replay_preserve_response_provenance() -> None:
     result = SimpleNamespace(
         ok=True,
         agent="agy",
-        model="gemini-3.6-flash-high",
+        model="gemini-3.8-flash-high",
         response="answer",
         stderr_excerpt=None,
         duration_s=1.0,
@@ -779,20 +779,20 @@ def test_acp_result_receipt_and_replay_preserve_response_provenance() -> None:
     )
 
     receipt = _acp_compat._result_receipt(
-        result, model_requested="gemini-3.6-flash-high", effort_requested="high"
+        result, model_requested="gemini-3.8-flash-high", effort_requested="high"
     )
     payload = json.loads(receipt)
     assert {key: payload[key] for key in ("from_model", "model_requested", "effort_requested", "effort_applied", "harness")} == {
-        "from_model": "gemini-3.6-flash-high",
-        "model_requested": "gemini-3.6-flash-high",
+        "from_model": "gemini-3.8-flash-high",
+        "model_requested": "gemini-3.8-flash-high",
         "effort_requested": "high",
         "effort_applied": "high",
         "harness": "acp",
     }
     replay = _acp_compat._replay_result(receipt)
     assert replay.usage_record == {
-        "from_model": "gemini-3.6-flash-high",
-        "model_requested": "gemini-3.6-flash-high",
+        "from_model": "gemini-3.8-flash-high",
+        "model_requested": "gemini-3.8-flash-high",
         "effort_requested": "high",
         "effort_applied": "high",
         "harness": "acp",
@@ -805,7 +805,7 @@ def test_acp_replay_preserves_explicit_none_effort_applied() -> None:
     result = SimpleNamespace(
         ok=True,
         agent="agy",
-        model="gemini-3.6-flash-high",
+        model="gemini-3.8-flash-high",
         response="answer",
         stderr_excerpt=None,
         duration_s=1.0,
@@ -826,7 +826,7 @@ def test_acp_failed_result_receipt_serializes_none_effort_as_unapplied() -> None
     result = SimpleNamespace(
         ok=False,
         agent="agy",
-        model="gemini-3.6-flash-high",
+        model="gemini-3.8-flash-high",
         response="",
         stderr_excerpt="provider failed",
         duration_s=1.0,

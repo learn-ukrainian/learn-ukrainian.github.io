@@ -86,7 +86,8 @@ def test_codex_claude_code_dry_run_redacts_explicit_proxy_token() -> None:
 def test_codex_claude_code_rejects_old_model_before_provider(model):
     result = run_launcher("start-codex.sh", "--harness", "claude-code", "--model", model)
     assert result.returncode == 2
-    assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
+    assert "is retired in the model catalog" in result.stderr
+    assert model in result.stderr
     assert "would exec" not in result.stdout
 
 

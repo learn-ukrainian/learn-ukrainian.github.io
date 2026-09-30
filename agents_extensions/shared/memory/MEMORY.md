@@ -146,7 +146,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
 
 ## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
-**Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, DeepSeek, Cursor, pool, glm — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven (CodexBar pace + disk bound), not fixed caps. Use the full fleet for parallel work.
+**Fleet lanes:** Claude, Codex, AGY (the Gemini lane), Grok, Cursor, pool, glm — current models, tiers and seats live in `rules/model-assignment.md` and `scripts/config/model_catalog.yaml`; read them live, never from this file. Width is pace/reserve-driven (CodexBar pace + disk bound), not fixed caps. Use the full fleet for parallel work.
 
 **Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
 - One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build (native alias), ask-hermes, ask-opencode, ask-pool, ask-cursor, ask-glm...)

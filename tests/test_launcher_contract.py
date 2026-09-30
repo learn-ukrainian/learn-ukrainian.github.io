@@ -736,6 +736,8 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/project_interpreter.sh",
+        "scripts/review/model_catalog.py",
+        "scripts/config/model_catalog.yaml",
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
     ):

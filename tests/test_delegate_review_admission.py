@@ -102,11 +102,15 @@ def test_same_family_requested_reviewer_takes_resolvers_eligible_seat(monkeypatc
     assert routing.substitution["source"] == "reviewer-resolver"
 
 
-@pytest.mark.parametrize("risk", ["critical", "medium"])
+@pytest.mark.parametrize(
+    "risk,model", [("critical", "claude-opus-5-5"), ("medium", "claude-fable-5-1")]
+)
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
-def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk, flags):
+def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk, model, flags):
+    # #9301 puts Fable 5.1 on the critical ladder; Opus remains an eligible
+    # explicit pin outside that ladder. Keep testing the off-ladder premise.
     args = _args(
-        "--agent", "claude", "--model", "claude-fable-5-1",
+        "--agent", "claude", "--model", model,
         "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, *flags,
     )
     assert all(
@@ -115,15 +119,19 @@ def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk,
     )
     (refusal, target), routing = _admit(args, monkeypatch)
     assert refusal is None
-    assert (target.recipient, target.model) == ("claude", "claude-fable-5-1")
+    assert (target.recipient, target.model) == ("claude", model)
     assert routing.substitution is None
     assert "SUBSTITUT" not in capsys.readouterr().err
 
 
 def test_off_ladder_reviewer_is_substituted_when_budget_requires_it(monkeypatch, capsys):
     args = _args(
-        "--agent", "claude", "--model", "claude-fable-5-1", "--check-budget",
+        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
         "--review-author-model", "composer-2.5", "--review-risk", "critical",
+    )
+    assert all(
+        candidate.concrete_model != args.model
+        for rung in reviewer_resolver.REVIEW_LADDERS[args.review_risk] for candidate in rung
     )
     (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
     assert refusal is None and (target.recipient, target.model) == ("codex", "gpt-6.1-sol")

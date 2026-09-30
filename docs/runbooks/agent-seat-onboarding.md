@@ -336,7 +336,7 @@ before dispatching:
 1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
 2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
    recon with exact owned paths and an objective scope ceiling.
-3. Reserve `gpt-6.1-sol` at `high` for hard consequential advisory judgment.
+3. Reserve `gpt-6.1-sol` at `xhigh` for hard consequential advisory judgment.
    When an advisory envelope is needed, include the task contract, exact owned
    paths, maximum changed-file and non-test-LOC ceilings, constraints, risk
    boundaries, acceptance evidence, and escalation triggers. Astra is an advisor,
@@ -350,7 +350,7 @@ before dispatching:
 
 Record the envelope and Luna's acceptance evidence with the task handoff. If an
 escalation trigger fires, stop bounded execution and return the unresolved point
-to Astra at `high` or the accountable orchestrator before making a consequential decision.
+to Astra at `xhigh` or the accountable orchestrator before making a consequential decision.
 
 ### Fleet-comms authority and legacy projections
 
@@ -432,13 +432,13 @@ not permanent routing weights and do not override current CodexBar headroom.
 - Exactly one read-only/stateless participant per enabled route: Codex, Grok,
   Claude, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek. Kimi and KimiCC
   seats are named in the registry but refused by `kimi_admission`.
-- Grok fixed effective model/effort: `grok-4.6` / `high` (caller may pass
+- Grok fixed effective model/effort: `grok-4.7` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
   Rotated from `grok-4.5` by operator order 2026-08-16 (#6865).
 - Grok ACP server command (single custom agent argument; never built-in
   `grok-build`, which cannot force `--no-leader`): absolute resolved Grok
   binary plus exact argv order
-  `agent --model grok-4.6 --reasoning-effort high --agent-profile
+  `agent --model grok-4.7 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`.
 - The project-owned Grok profile is digest-checked before every spawn. Its
   empty tool allowlist plus explicit denylist removes write, shell, subagent,

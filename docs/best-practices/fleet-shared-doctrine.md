@@ -35,7 +35,7 @@ If a scorecard row conflicts with LANGUAGE-LANES, egress, or review-gate rules �
 | **Egress** | Where prompt/code data may leave (Western lab, China-route, local-only). |
 | **CF review** | Cross-**family** formal review of a change; discussion/panel alone does **not** satisfy the gate. |
 | **Consequential** | Work that can merge to `main`, change learner-facing Atlas/curriculum, alter security/CI gates, or spend non-trivial quota on multi-agent implementation. |
-| **Ceiling model** | Astra, Fable 5, and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. Since operator 2026-09-29 (#9230) the Astra seat is held by GPT-6.1 Sol (`gpt-6.1-sol`); `gpt-6-astra` is not routable. |
+| **Ceiling model** | Astra, Fable 5.1 (`claude-fable-5-1`), and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. Since operator 2026-09-29 (#9230) the Astra seat is held by GPT-6.1 Sol (`gpt-6.1-sol`); `gpt-6-astra` is not routable. |
 | **Provisional / validated / deprecated** | Scorecard assignment confidence (see scorecard § evidence). |
 
 ---
@@ -71,8 +71,8 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 ## 4. Cost discipline (Astra / Fable / future xAI ceiling)
 
 - **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** prefer **`--agent cursor --model grok-4.7-high`** for mechanical **and** ordinary infra/code implement when fit allows — not LANGUAGE-LANES, not advisor/authority. Cursor Auto runs only a well-defined coding task (`--research-role implementation` write dispatch, owned paths, PASS DoR card); the driver seat, design, consults, discussions and recon pin `grok-4.7` or `composer-2.5`, and a review runs the approved concrete model the reviewer resolver selects. `cursor:auto` never CF-of-record.
-- **Utilize, do not trim (operator 2026-08-08 / #6468):** free/behind seats (Cursor, DeepSeek Flash, AGY, Pool, **Z.AI/GLM**, **Kimi k3-256k**, Claude routine, Grok workers) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. **Keep Kimi and Z.AI/GLM** — they are first-class. Cutting subscriptions is a last resort after sustained measured zero use, not a response to multi-driver complexity. Concurrent drivers (~2 Grok + 1 Claude + 1–4 Codex) share free pools; coordinate via `/api/delegate/active`.
-- **DeepSeek pin (2026-08-13):** Flash @ high = everyday DeepSeek. Pro @ high = hard implement only (complex multi-file, hard lookup). Language/VESUM/folk still forbidden. First-party `deepseek/` via OpenCode only. Default `--agent deepseek` remains Flash.
+- **Utilize, do not trim (operator 2026-08-08 / #6468):** free/behind seats (Cursor, AGY, Pool, **Z.AI/GLM**, **Kimi k3-256k**, Claude routine, Grok workers) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. **Keep Kimi and Z.AI/GLM** — they are first-class. Cutting subscriptions is a last resort after sustained measured zero use, not a response to multi-driver complexity. Concurrent drivers (~2 Grok + 1 Claude + 1–4 Codex) share free pools; coordinate via `/api/delegate/active`.
+- **DeepSeek:** excluded from dispatch, implementation and review. Flash remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, LOCAL-ONLY, via first-party `deepseek/` through OpenCode.
 - **OpenRouter:** mainly Pool + Gemma; not a general multi-model bus.
 - **Timed pauses:** near_cap/paused lanes carry **return-at** (e.g. Codex 2026-08-10T19:47Z) — auto-return, never permanent neglect.
 - **Cursor gate:** #6469 plan-only adapter **fixed** — cursor-first mechanical tier is active.
@@ -89,13 +89,13 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 | Model | Effort |
 |---|---|
-| GPT-6.1 Sol (coding, review, and the Astra advisory seat) | **`high`** default for accountable driving, coding, adversarial review, and consequential advisory judgment; raise effort only for a separately justified hard case |
+| GPT-6.1 Sol (coding, review, and the Astra advisory seat) | **`high`** default for accountable driving, coding and adversarial review; **`xhigh`** for consequential advisory judgment |
 | GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling; never sole authority |
 | **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
 | **Sonnet 5.5** (provisional Claude practical seat) | Fleet dispatches **`high`** by default. Well-specified agentic coding may use `medium`; harder or longer coding and reviews use `high`. See subsection below. |
 | **Fable 5.1** (advisor / authority seat) | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
-| Fable 5 (legacy) | Prefer **`xhigh`** for ceiling work only when that SKU is seated |
-| Opus 5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
+| Fable 5 (retired) | Historical identity only; use Fable 5.1 for current advisory work |
+| Opus 5.5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
 | Claude Haiku recon | **`medium`** default; never sole authority |
 
 #### Fable 5.1 `/effort` decision topology (operator 2026-09-09)
@@ -180,7 +180,7 @@ Authoritative CF quality ladder remains in `model-assignment.md`; this doctrine 
 
 ## 7. Language + evidence
 
-- **LANGUAGE-LANES** for load-bearing Ukrainian judgment: `agy` / `codex` / `claude` / `grok-4.6` only (see model-assignment).
+- **LANGUAGE-LANES** for load-bearing Ukrainian judgment: `agy` / `codex` / `claude` only (see model-assignment).
 - **Gemini 3.1 Pro via AGY** is the designated UA specialist; outputs remain **hypotheses until VESUM/`sources`-backed**.
 - Code review and CF seat eligibility follow `model-assignment.md` Code review row.
 - VESUM validates **morphology/attestation** — not arbitrary cultural or historical claims.
