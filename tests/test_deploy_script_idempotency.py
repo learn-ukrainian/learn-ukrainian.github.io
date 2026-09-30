@@ -144,6 +144,7 @@ UNSCOPED_RULE_FILES = (
     "model-assignment.md",
     "fleet-driver-routing.md",
     "core.md",
+    "core-curriculum.md",
 )
 CLAUDE_RULE_FILES = (
     "_load-via-api.md",

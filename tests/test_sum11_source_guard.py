@@ -51,7 +51,7 @@ RULE_CONTEXT_LINES = {
     }),
     # Always-loaded core: the single contrast-only prohibition.
     "agents_extensions/shared/rules/core.md": frozenset({
-        "- СУМ-11 (`search_definitions`) is Soviet-contrast evidence only, never proof of meaning, stress or existence.",
+        "- СУМ-11 (`search_definitions`) is Soviet-contrast context, never proof of meaning, stress or existence; missing modern meaning stays flagged unresolved, never an invented gloss. <!-- p5-sum11: U22 -->",
     }),
     # Prohibitions and contrast-only use.
     "agents_extensions/shared/rules/non-negotiable-rules.md": frozenset({
