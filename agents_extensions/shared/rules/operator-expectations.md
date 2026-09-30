@@ -106,8 +106,8 @@ tie-breakers.
    **Tiers:** authority (Fable/Astra) · practical (Terra/Sonnet/Flash-high) · heap (Luna and
    weaker with a complete advisor packet). Fable remains the Anthropic authority seat even
    under a small Claude sub — reach via native Claude pin or **Cursor → Fable**.
-   **Kimi** is an additional design/coding consult lane for **non-Ukrainian** work (infra,
-   harness, product code) — not a substitute for Fable/Astra on new architecture GO.
+   **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
+   consults, design or rules.**
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal
    operations, not an outage. On limit: check `/api/orient` runtime headroom; for
    Claude/Codex budget buckets at `near_cap`, substitute per
@@ -186,9 +186,8 @@ tie-breakers.
     without **present-tense approval** from the **operator** or a designated **advisor**.
     Current designated advisors: **Fable** and **Astra** (roster may change — confirm via
     `/api/rules` / `model-assignment.md` when unsure; do not treat stale digests as roster).
-    **Kimi** may be consulted for design and coding on **non-Ukrainian** surfaces (infra,
-    harness, product code); Kimi does not alone satisfy item-12 architecture GO — that remains
-    operator / Fable / Astra. Fable is a summoned design advisor, not a standing reviewer or
+    **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
+    consults, design or rules.** Fable is a summoned design advisor, not a standing reviewer or
     routing default. Discussion/panels improve quality but do **not** replace advisor approval
     for design. This gate governs *deciding*, not *implementing*: once the operator or an
     advisor has ordered or approved the work, item 10 governs — drive it to a complete outcome

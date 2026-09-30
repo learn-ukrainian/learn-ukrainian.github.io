@@ -761,7 +761,7 @@ def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authori
 
 
 def test_kimi_never_receives_automatic_review_load():
-    """Kimi seats admit neutral coding only: no Kimi candidate is ever evaluated or selected."""
+    """Kimi seats admit web, UI and backend coding only: no Kimi candidate is ever evaluated or selected."""
     counts = {"grok-4.7": 0}
     assigned_bytes = {"grok": 0, "kimi": 0}
 
@@ -928,7 +928,7 @@ def test_unknown_explicit_pin_fails_closed_before_candidate_walk():
 
 
 def test_kimi_k3_is_not_a_review_candidate_and_its_pin_fails_closed():
-    """Formerly the explicit kimicc ACPX review participant; Kimi seats now admit neutral coding only."""
+    """Formerly the explicit kimicc ACPX review participant; Kimi seats now admit web, UI and backend coding only."""
     assert "kimi-k3" not in REVIEW_CANDIDATES
     assert not [c for c in REVIEW_CANDIDATES.values() if c.family == "moonshot" and c.route in {"kimi", "kimicc"}]
     resolution = resolve_reviewer(
@@ -988,7 +988,7 @@ def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing()
     assert selected.credential_bucket == "codex"
     assert selected.quota_limit == selected.credential_limit == 1
 
-    # Kimi seats admit neutral coding only: no review candidate binds a Kimi participant.
+    # Kimi seats admit web, UI and backend coding only: no review candidate binds a Kimi participant.
     assert not [c for c in REVIEW_CANDIDATES.values() if c.participant in {"kimi", "kimicc"}]
 
 

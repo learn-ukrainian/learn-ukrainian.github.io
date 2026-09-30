@@ -34,12 +34,21 @@ _TARGETS = {
 }
 
 
-def require_compat_target(command_target: str) -> str:
-    """Resolve a legacy command name before any sender or payload work."""
+def require_compat_target(command_target: str, *, model: str | None = None) -> str:
+    """Resolve a legacy command name before any sender or payload work.
+
+    A Kimi seat, or a Kimi model on any seat, raises ``KimiAdmissionRefused``
+    (a ``ValueError``): Kimi seats take web, UI and backend coding only, never
+    ACP asks, consults, discussions or reviews.
+    """
+    from agent_runtime.kimi_admission import require_acp_admission
+
     try:
-        return _TARGETS[command_target]
+        participant = _TARGETS[command_target]
     except KeyError as exc:
         raise ValueError(f"legacy ask target {command_target!r} has no enabled ACP route") from exc
+    require_acp_admission(participant, model=model)
+    return participant
 
 
 def registered_participant_model(participant: str) -> str | None:
@@ -100,19 +109,12 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
     return model
 
 
-# Per-seat default hard timeouts for compat asks (#6877). The generic 300s
-# ceiling is mis-sized for Kimi: K3 is a max-effort-only model whose long
-# deliberation before first output is designed behavior, and the fleet routes
-# hard reviews to this seat — a live CF review was killed at exactly 300.0s
-# and completed in ~10+ min only when retried with --no-timeout. Kimi gets a
-# 1800s profile aligned with that review workload; every other seat keeps the
-# generic default (none of the remaining compat seats is max-effort-only —
-# claude/grok/agy/glm/deepseek are pinned at "high"). ``--no-timeout``
-# (86400s) is unchanged and bypasses every profile.
+# Per-seat default hard timeouts for compat asks (#6877). No compat seat
+# needs a profile today: the max-effort-only Kimi seat that had one takes web,
+# UI and backend coding only and is refused before any ask, and the remaining
+# seats are pinned at "high". ``--no-timeout`` (86400s) bypasses every profile.
 ASK_HARD_TIMEOUT_DEFAULT_S = 300
-ASK_HARD_TIMEOUT_PROFILES: dict[str, int] = {
-    "kimi": 1800,
-}
+ASK_HARD_TIMEOUT_PROFILES: dict[str, int] = {}
 
 
 def ask_hard_timeout(command_target: str) -> int:
@@ -601,7 +603,7 @@ def run_compat_ask(
     hard_timeout: int | None = None,
 ) -> object:
     """Execute one normal ACP ask with fail-open body-free usage telemetry."""
-    participant = require_compat_target(command_target)
+    participant = require_compat_target(command_target, model=model)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
 
@@ -674,7 +676,7 @@ def _run_compat_ask_impl(
     itself out of quota fails loudly with no second hop. Every other failure
     class is unchanged.
     """
-    participant = require_compat_target(command_target)
+    participant = require_compat_target(command_target, model=model)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
     if hard_timeout is None:
@@ -788,9 +790,12 @@ def _run_single_acp_job(
     set this attempt is the substitute seat: its job metadata and result
     receipt carry the record.
     """
+    from agent_runtime.kimi_admission import require_acp_admission
     from agent_runtime.runner import invoke_inter_agent
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
+    # A quota substitute is a new seat: admit it before its job is enqueued.
+    require_acp_admission(participant, model=model)
     key = _idempotency_key(
         participant=participant,
         task_id=task_id,

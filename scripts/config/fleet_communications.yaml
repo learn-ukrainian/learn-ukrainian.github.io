@@ -95,10 +95,11 @@ endpoints:
     default_ttl_seconds: 3600
     retry_class: standard
     concurrency_limit: 1
-    # Kimi seats admit neutral coding only (workspace-write dispatch in code/test
-    # paths). The seat stays live for that work, but requests addressed to it,
-    # ACP asks, consults, discussion panels, and reviews are refused before
-    # spawn (scripts/agent_runtime/kimi_admission.py).
+    # Kimi: web, UI and backend coding only — no Ukrainian-language content, no
+    # reviews, consults, design or rules. The seat stays live for workspace-write
+    # dispatch, but requests addressed to it, ACP asks, consults, discussion
+    # panels, and reviews are refused before any side effect
+    # (scripts/agent_runtime/kimi_admission.py).
     formal_review_eligible: false
     model_family_resolver: canonical-reviewer-resolver
   - name: cursor

@@ -49,12 +49,14 @@ policy:
       bus. Do not relaunch OpenRouter-for-subscribed-models patterns for
       Moonshot/Kimi K3. OpenRouter remains mainly Pool + Gemma access.
     - >-
-      Kimi seats (`kimi`, `kimicc`, every `kimi-code/*` / `kimi-k3*` id) are limited
-      to neutral coding: workspace-write implementation in code/test paths with no
-      Ukrainian-language content, rules/policy, or private material. They carry no
-      review, consult, advisor, or ACP-discussion role and are absent from
-      review_candidates and review_ladders; dispatch and ACP admission refuse
-      everything else before spawn (scripts/agent_runtime/kimi_admission.py).
+      Kimi: web, UI and backend coding only — no Ukrainian-language content, no
+      reviews, consults, design or rules. Kimi seats (`kimi`, `kimicc`, every
+      `kimi-code/*` / `kimi-k3*` id) take workspace-write implementation in site UI
+      code, scripts/, tests/, .github/ and .dagger/ only; they carry no review,
+      consult, advisor, or ACP-discussion role and are absent from
+      review_candidates and review_ladders; dispatch, the runtime, ACP and the
+      fleet-comms authority refuse everything else before any side effect
+      (scripts/agent_runtime/kimi_admission.py).
     - >-
       EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION
       still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer /
@@ -167,7 +169,7 @@ review_scheduler:
       capacity_weight: 1.0
     kimi:
       formal_review_eligible: false
-      formal_review_exclusion_reason: Kimi seats admit neutral coding only; reviews are refused
+      formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
       models: []
       participant: kimi
       adapter_transport: acp
@@ -181,7 +183,7 @@ review_scheduler:
       capacity_weight: 1.0
     kimicc:
       formal_review_eligible: false
-      formal_review_exclusion_reason: Kimi seats admit neutral coding only; reviews are refused
+      formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
       # Routable kimicc models only. kimi-code/k3-256k is omitted: the live
       # coding endpoint rejects coding_model_id k3-256k with
       # [claude-code:unrecognized_model] (#8745). No replacement 256k id.
@@ -442,8 +444,8 @@ models:
       Anthropic authority-tier seat. Operator 2026-08-06: formal CF eligible when pinned
       on the sealed claude endpoint (sealed review-pr was removed in #8520).
       Advisory consultations remain non-binding for designated advisor authority (Astra/Fable).
-      Kimi seats are limited to neutral coding (workspace-write in code/test paths); they
-      take no review, consult, advisor, or discussion role.
+      Kimi: web, UI and backend coding only — no Ukrainian-language content, no
+      reviews, consults, design or rules.
       Effort ladder low..max; use high for advisory and xhigh only for a documented hard turn.
       Thinking is ON by default and disabling it is invalid above high effort. Separate
       rate-limit bucket from the Opus 4.x pool.
@@ -626,7 +628,7 @@ models:
       platform_model_id: "kimi-k3[1m]"
       coding_model_id: k3
       context_profile: kimicc_k3
-    # Neutral coding only: no review, consult, advisor, or ACP-discussion role.
+    # Kimi: web, UI and backend coding only — no review, consult, advisor, or ACP-discussion role.
     roles: [consequential_coding, long_context_debugging]
     # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
     transports: [native_kimi]
@@ -1090,7 +1092,7 @@ review_candidates:
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
 # AGY remains fail-closed because its text-only wrapper cannot consume the
 # parent-owned sealed MCP. Grok enters through the proven exact-head ACP review
-# path; Kimi seats admit neutral coding only and never review.
+# path; Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:

@@ -30,7 +30,6 @@ ASK_SEATS = (
     ("ask-grok", "_handle_ask_grok_build", "grok"),
     ("ask-glm", "_handle_ask_glm", "glm"),
     ("ask-gemma", "_handle_ask_gemma", "gemma"),
-    ("ask-kimi", "_handle_ask_kimi", "kimi"),
     ("ask-cursor", "_handle_ask_cursor", "cursor"),
     ("ask-hermes", "_handle_ask_hermes", "hermes"),
     ("ask-deepseek", "_handle_ask_deepseek", "deepseek"),
@@ -39,6 +38,11 @@ ASK_SEATS = (
 
 RETIRED_ASK_SEATS = (
     ("ask-opencode", "_handle_ask_opencode", "opencode"),
+)
+
+# Kimi: web, UI and backend coding only — the parser stays, every ask is refused.
+REFUSED_ASK_SEATS = (
+    ("ask-kimi", "_handle_ask_kimi", "kimi"),
 )
 
 
@@ -723,7 +727,7 @@ def test_unsupported_effort_emits_note_and_stamps_null(capsys: pytest.CaptureFix
 
 @pytest.mark.parametrize(
     "harness",
-    [seat[0].removeprefix("ask-") for seat in (*ASK_SEATS, *RETIRED_ASK_SEATS)],
+    [seat[0].removeprefix("ask-") for seat in (*ASK_SEATS, *RETIRED_ASK_SEATS, *REFUSED_ASK_SEATS)],
 )
 def test_every_response_provenance_shape_has_required_fields(harness: str) -> None:
     data, from_model = response_provenance(
@@ -875,39 +879,38 @@ def test_native_ask_tool_contract_present_in_ask_mode_and_absent_otherwise() -> 
 def test_ask_hard_timeout_profile_table_is_exact() -> None:
     """Mutation-check (#M-16): every compat seat resolves its exact profile.
 
-    Kimi is the only max-effort-only seat on the compat routes (K3; long
-    deliberation before first output is designed behavior), so it gets 1800s.
-    Every other seat — claude/grok/agy/glm/deepseek are pinned at "high", not
-    max-only — keeps the generic 300s default. Exact equality here means a
-    silent profile-table edit fails this test.
+    No compat seat needs a profile today: the max-effort-only Kimi seat that had
+    one (1800s) is refused before any ask, and every other seat is pinned at
+    "high". Exact equality here means a silent profile-table edit fails this test.
     """
     assert _acp_compat.ASK_HARD_TIMEOUT_DEFAULT_S == 300
-    assert _acp_compat.ASK_HARD_TIMEOUT_PROFILES == {"kimi": 1800}
+    assert _acp_compat.ASK_HARD_TIMEOUT_PROFILES == {}
     for target in _acp_compat._TARGETS:
-        expected = 1800 if target == "kimi" else 300
-        assert _acp_compat.ask_hard_timeout(target) == expected, target
+        assert _acp_compat.ask_hard_timeout(target) == 300, target
     assert _acp_compat.ask_hard_timeout("no-such-seat") == 300
 
 
 def test_compat_ask_resolves_seat_timeout_profile(monkeypatch: pytest.MonkeyPatch) -> None:
     """hard_timeout=None resolves the seat profile before the provider call."""
+    monkeypatch.setattr(_acp_compat, "ASK_HARD_TIMEOUT_PROFILES", {"glm": 1800})
     authority = _RecordingAuthority()
     invoke = _stub_live_invocation(monkeypatch, authority, _make_ok_result("OK"))
 
-    _acp_compat._run_compat_ask_impl("kimi", "review this diff", task_id="kimi-profile")
+    _acp_compat._run_compat_ask_impl("glm", "review this diff", task_id="glm-profile")
     assert invoke.call_args.kwargs["hard_timeout"] == 1800
 
-    _acp_compat._run_compat_ask_impl("glm", "ping", task_id="glm-profile")
+    _acp_compat._run_compat_ask_impl("claude", "ping", task_id="claude-profile")
     assert invoke.call_args.kwargs["hard_timeout"] == 300
 
 
 def test_compat_ask_explicit_timeout_beats_profile(monkeypatch: pytest.MonkeyPatch) -> None:
     """An explicit hard_timeout (--no-timeout's 86400) bypasses the profile."""
+    monkeypatch.setattr(_acp_compat, "ASK_HARD_TIMEOUT_PROFILES", {"glm": 1800})
     authority = _RecordingAuthority()
     invoke = _stub_live_invocation(monkeypatch, authority, _make_ok_result("OK"))
 
     _acp_compat._run_compat_ask_impl(
-        "kimi", "review this diff", task_id="kimi-no-timeout", hard_timeout=86400
+        "glm", "review this diff", task_id="glm-no-timeout", hard_timeout=86400
     )
     assert invoke.call_args.kwargs["hard_timeout"] == 86400
 
@@ -915,7 +918,7 @@ def test_compat_ask_explicit_timeout_beats_profile(monkeypatch: pytest.MonkeyPat
 @pytest.mark.parametrize(
     ("command", "handler_name", "expected"),
     [
-        ("ask-kimi", "_handle_ask_kimi", None),  # None → compat resolves 1800s
+        ("ask-glm", "_handle_ask_glm", None),  # None → compat resolves the seat profile
         ("ask-claude", "_handle_ask_claude", None),  # None → compat resolves 300s
     ],
 )
@@ -945,10 +948,10 @@ def test_cli_no_timeout_still_bypasses_profile(monkeypatch: pytest.MonkeyPatch) 
         lambda *args, **kwargs: captured.update(kwargs) or SimpleNamespace(ok=True),
     )
     args = _cli._build_parser().parse_args(
-        ["ask-kimi", "question", "--task-id", "no-timeout", "--from", "codex", "--no-timeout"]
+        ["ask-glm", "question", "--task-id", "no-timeout", "--from", "codex", "--no-timeout"]
     )
 
-    _cli._handle_ask_kimi(args)
+    _cli._handle_ask_glm(args)
 
     assert captured["hard_timeout"] == 86400
 
@@ -959,42 +962,40 @@ def test_timeout_error_names_seat_profile_and_no_timeout_escape(
     """#6877: the timeout exit text names the seat's profile and the escape."""
     from agent_runtime.errors import AgentTimeoutError
 
+    monkeypatch.setattr(_acp_compat, "ASK_HARD_TIMEOUT_PROFILES", {"glm": 1800})
+
     def raise_timeout(*args: object, **kwargs: object) -> object:
-        raise AgentTimeoutError("acpx-kimi-shadow", 1800)
+        raise AgentTimeoutError("acpx-glm-shadow", 1800)
 
     monkeypatch.setattr(_acp_compat, "run_compat_ask", raise_timeout)
     args = _cli._build_parser().parse_args(
-        ["ask-kimi", "question", "--task-id", "slow-review", "--from", "codex"]
+        ["ask-glm", "question", "--task-id", "slow-review", "--from", "codex"]
     )
 
     with pytest.raises(SystemExit) as exc_info:
-        _cli._handle_ask_kimi(args)
+        _cli._handle_ask_glm(args)
 
     message = str(exc_info.value)
-    assert "ask-kimi" in message
+    assert "ask-glm" in message
     assert "hard_timeout=1800s" in message
     assert "defaults to 1800s" in message
     assert "generic default 300s" in message
     assert "--no-timeout" in message
 
 
-def test_kimi_unsupported_effort_is_a_clean_cli_error(monkeypatch: pytest.MonkeyPatch) -> None:
-    from agent_runtime.runner import InterAgentTransportError
-
-    def raise_route_error(*args: object, **kwargs: object) -> object:
-        raise InterAgentTransportError(
-            "ACP participant 'kimi' only supports its registered effort pin None; got 'high'"
-        )
-
-    monkeypatch.setattr(_acp_compat, "run_compat_ask", raise_route_error)
+@pytest.mark.parametrize(("command", "handler_name", "_target"), REFUSED_ASK_SEATS)
+@pytest.mark.parametrize("extra", [[], ["--effort", "high"], ["--review"]])
+def test_kimi_ask_is_a_clean_refusal_before_the_shim(
+    command: str, handler_name: str, _target: str, extra: list[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Kimi: web, UI and backend coding only — ask-kimi never reaches ACP or review dispatch."""
+    monkeypatch.setattr(_acp_compat, "run_compat_ask", lambda *_a, **_k: pytest.fail("ACP shim reached"))
     args = _cli._build_parser().parse_args(
-        ["ask-kimi", "question", "--task-id", "kimi-effort", "--from", "codex", "--effort", "high"]
+        [command, "question", "--task-id", "kimi-refused", "--from", "codex", *extra]
     )
     with pytest.raises(SystemExit) as exc_info:
-        _cli._handle_ask_kimi(args)
-    assert str(exc_info.value) == (
-        "ACP participant 'kimi' only supports its registered effort pin None; got 'high'"
-    )
+        getattr(_cli, handler_name)(args)
+    assert "KIMI CODING-ONLY" in str(exc_info.value)
 
 
 def test_codex_prompt_preserves_runtime_and_dispatch_boundaries() -> None:

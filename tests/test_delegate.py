@@ -5624,7 +5624,7 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
 
 def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     """ask-kimi --review (dispatch --agent kimi --harness kimicc --mode read-only --require-review-verdict)
-    formerly reached a sources grant; Kimi seats now admit neutral coding only."""
+    formerly reached a sources grant; Kimi seats now admit web, UI and backend coding only."""
     popen = MagicMock(side_effect=AssertionError("refused dispatch spawned a process"))
     monkeypatch.setattr(delegate.subprocess, "Popen", popen)
     rc = delegate.main(
@@ -5645,7 +5645,7 @@ def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(tmp_
     )
     assert rc == 2
     err = capsys.readouterr().err
-    assert "KIMI NEUTRAL-CODING-ONLY" in err
+    assert "KIMI CODING-ONLY" in err
     assert "--mode read-only" in err
     assert "review dispatches" in err
     popen.assert_not_called()
@@ -5668,8 +5668,8 @@ def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monk
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
     plan = KimiccHarness().build_invocation(
-        prompt="What does this function do?",
-        mode="read-only",
+        prompt="Implement the helper.",
+        mode="workspace-write",
         cwd=worktree,
         model="k3",
         task_id="kimi-no-grant",
@@ -5685,122 +5685,43 @@ def test_kimicc_read_only_review_grant_is_retired():
     assert not hasattr(delegate, "_kimicc_read_only_review_grant")
 
 
-def _kimicc_worker_result(response: str):
-    return type(
-        "_Result",
-        (),
-        {
-            "ok": True,
-            "response": response,
-            "stderr_excerpt": None,
-            "returncode": 0,
-            "rate_limited": False,
-            "model": "fixture",
-            "effort": "unknown",
-            "cli_version": "fixture",
-        },
-    )()
+@pytest.mark.parametrize(
+    ("mode", "review"),
+    [
+        pytest.param("read-only", {"require_review_verdict": True}, id="ask-kimi-review"),
+        pytest.param(
+            "read-only",
+            {"require_review_verdict": True, "review_id": "rev-sealed", "attempt_id": "att-sealed"},
+            id="sealed-review-attempt",
+        ),
+        pytest.param("workspace-write", {"require_review_verdict": True}, id="write-mode-review"),
+        pytest.param("danger", {}, id="danger"),
+    ],
+)
+def test_run_worker_refuses_a_kimi_review_before_invocation(tmp_tasks_dir, tmp_path, mode, review):
+    """Formerly a read-only Kimi review ran here with rc 0; Kimi seats now take web, UI and backend coding only."""
+    task_id = f"worker-kimicc-refused-{mode}"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id, "status": "spawning"})
 
-
-def test_run_worker_kimicc_read_only_review_grants_nothing(tmp_tasks_dir, tmp_path):
-    """The _run_worker seam formerly added the sources grant; the retired grant adds nothing now."""
-    task_id = "worker-kimicc-review-grant"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
-
-    with patch(
-        "agent_runtime.runner.invoke",
-        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
-    ) as mock_invoke:
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
         rc = delegate._run_worker(
             task_id=task_id,
             agent="kimi",
             prompt="Review the diff and call mcp__sources__verify_word once.",
-            mode="read-only",
+            mode=mode,
             cwd_str=str(tmp_path),
             model=None,
             hard_timeout=60,
             harness="kimicc",
-            require_review_verdict=True,
+            **review,
         )
 
-    assert rc == 0
-    tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert "allowed_tools" not in tool_config
-    assert "mcp_config_path" not in tool_config
-    assert "strict_mcp_config" not in tool_config
-    assert "review_verdict_required" not in tool_config
-
-
-def test_run_worker_kimicc_review_attempt_keeps_sealed_mcp(tmp_tasks_dir, tmp_path):
-    """A sealed review-attempt config is not replaced by the kimicc grant."""
-    task_id = "worker-kimicc-sealed-review"
-    sealed = tmp_path / "sealed.mcp.json"
-    sealed.write_text('{"mcpServers":{"sources":{"url":"http://127.0.0.1/sealed"}}}\n', encoding="utf-8")
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
-
-    with patch(
-        "agent_runtime.runner.invoke",
-        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
-    ) as mock_invoke:
-        rc = delegate._run_worker(
-            task_id=task_id,
-            agent="kimi",
-            prompt="Review the diff.",
-            mode="read-only",
-            cwd_str=str(tmp_path),
-            model=None,
-            hard_timeout=60,
-            harness="kimicc",
-            require_review_verdict=True,
-            review_id="rev-sealed",
-            attempt_id="att-sealed",
-            mcp_config_path=str(sealed),
-            strict_mcp_config=True,
-        )
-
-    assert rc == 0
-    tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert tool_config["mcp_config_path"] == str(sealed)
-    assert tool_config["strict_mcp_config"] is True
-    assert tool_config["review_id"] == "rev-sealed"
-    assert tool_config["attempt_id"] == "att-sealed"
-    assert "allowed_tools" not in tool_config
-
-
-def test_run_worker_kimicc_workspace_write_review_grants_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
-    task_id = "worker-kimicc-write-review"
-    worktree = tmp_path / "worktree"
-    worktree.mkdir()
-    _init_git_repo_for_test(worktree, monkeypatch)
-    delegate._write_state_atomic(
-        delegate._state_path(task_id),
-        {"task_id": task_id, "worktree_path": str(worktree), "worktree_base": "main"},
-    )
-    response = (
-        "VERDICT: APPROVE\n"
-        'DELIVERABLE: {"outcome":"no_change","reason":"write mode must not receive the sources grant"}\n'
-    )
-
-    with (
-        patch("agent_runtime.runner.invoke", return_value=_kimicc_worker_result(response)) as mock_invoke,
-        patch.object(delegate, "_count_commits_ahead", return_value=0),
-    ):
-        rc = delegate._run_worker(
-            task_id=task_id,
-            agent="kimi",
-            prompt="Review the diff.",
-            mode="workspace-write",
-            cwd_str=str(worktree),
-            model=None,
-            hard_timeout=60,
-            harness="kimicc",
-            require_review_verdict=True,
-        )
-
-    assert rc == 0
-    tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert "allowed_tools" not in tool_config
-    assert "mcp_config_path" not in tool_config
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state["status"] == "failed"
+    assert "KIMI CODING-ONLY" in state["stderr_excerpt"]
+    assert state.get("pid") is None
 
 
 def _codex_worker_result():
@@ -6218,15 +6139,21 @@ def test_run_worker_ordinary_agy_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, 
     assert not any(line.split()[:1] == ["mcp"] for line in recorded), recorded
 
 
-def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
+def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path, monkeypatch):
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
     state_path = delegate._state_path("worker-kimicc")
-    delegate._write_state_atomic(state_path, {"task_id": "worker-kimicc", "harness": "kimicc"})
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": "worker-kimicc", "harness": "kimicc", "worktree_path": str(worktree), "worktree_base": "main"},
+    )
     mock_result = type(
         "_Result",
         (),
         {
             "ok": True,
-            "response": "done",
+            "response": 'DELIVERABLE: {"outcome":"no_change","reason":"fixture"}\n',
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
@@ -6236,13 +6163,16 @@ def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks
         },
     )()
 
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke,
+        patch.object(delegate, "_count_commits_ahead", return_value=0),
+    ):
         rc = delegate._run_worker(
             task_id="worker-kimicc",
             agent="kimi",
             prompt="hi",
-            mode="read-only",
-            cwd_str=str(tmp_path),
+            mode="workspace-write",
+            cwd_str=str(worktree),
             model=None,
             hard_timeout=60,
             harness="kimicc",

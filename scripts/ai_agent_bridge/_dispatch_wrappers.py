@@ -397,9 +397,6 @@ def build_ask_review_dispatch_command(
         "--agent",
         agent,
     ]
-    # Native kimi refuses read-only. kimicc is the harness that can run it.
-    if agent == "kimi":
-        cmd += ["--harness", "kimicc"]
     cmd += [
         "--mode",
         "read-only",
@@ -450,8 +447,13 @@ def run_ask_review_dispatch(
     state dict plus the read-back ``response`` text and a normalized ``ok``.
     Raises ``RuntimeError`` if dispatch itself could not be started or the
     wait output could not be parsed — callers turn that into a hard failure,
-    never a silent fallback to ACP.
+    never a silent fallback to ACP. Raises ``KimiAdmissionRefused`` for a
+    Kimi seat before anything is written.
     """
+    # Kimi seats never review: refuse before the temporary prompt is written.
+    from scripts.agent_runtime.kimi_admission import require_acp_admission
+
+    require_acp_admission(agent, model=model, activity="review dispatches (ask-* --review)")
     timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"

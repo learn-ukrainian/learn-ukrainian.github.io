@@ -40,6 +40,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_discussion_scope,
 )
 from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
+from scripts.agent_runtime.kimi_admission import acp_refusal
 from scripts.agent_runtime.result import Result
 from scripts.agent_runtime.runner import (
     _invoke_native_once,
@@ -1232,6 +1233,11 @@ class AcpxDiscussionController:
 
 
 def run_discussion(**kwargs: Any) -> dict[str, Any]:
+    # Kimi seats never join discussions: refuse before the plane is opened.
+    for participant in kwargs.get("participants") or ():
+        kimi_refusal = acp_refusal(str(participant))
+        if kimi_refusal:
+            raise AcpxDiscussionError(kimi_refusal)
     root_arg = kwargs.pop("root", None)
     root = Path(root_arg) if root_arg is not None else default_plane_root(repo_root=Path(kwargs["cwd"]))
     controller = AcpxDiscussionController(root=root)

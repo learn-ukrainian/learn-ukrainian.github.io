@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import json
 import logging
-import re
 from pathlib import Path
 from unittest.mock import patch
 
@@ -13,7 +12,6 @@ import pytest
 from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
 from scripts.agent_runtime.adapters.kimi import (
     _MODE_FLAGS,
-    _READ_ONLY_REFUSAL,
     KIMI_DEFAULT_EFFORT,
     KIMI_DEFAULT_MODEL,
     KIMI_MODEL_ALIASES,
@@ -52,9 +50,8 @@ def _build(
     )
 
 
-@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
-def test_build_invocation_uses_flagless_write_modes(tmp_path, monkeypatch, mode):
-    plan = _build(tmp_path, monkeypatch, mode=mode)
+def test_build_invocation_uses_flagless_workspace_write(tmp_path, monkeypatch):
+    plan = _build(tmp_path, monkeypatch, mode="workspace-write")
 
     assert plan.cmd[0] == str(tmp_path / "kimi")
     assert plan.cmd[plan.cmd.index("-m") + 1] == KIMI_MODEL_ALIASES[KIMI_DEFAULT_MODEL]
@@ -174,7 +171,7 @@ def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monk
     with pytest.raises(ValueError, match="not a routable kimicc model"):
         KimiccHarness().build_invocation(
             prompt="Inspect the target.",
-            mode="read-only",
+            mode="workspace-write",
             cwd=tmp_path,
             model="k3-256k",
             task_id="kimicc-reject-256k",
@@ -192,7 +189,7 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
     native_k3 = _build(tmp_path, monkeypatch, model="k3", effort="high")
     default = KimiccHarness().build_invocation(
         prompt="Inspect the target.",
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model="k3",
         task_id="kimi-kimicc-default-effort",
@@ -201,7 +198,7 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
     )
     override = KimiccHarness().build_invocation(
         prompt="Inspect the target.",
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model="k3",
         task_id="kimi-kimicc-override-effort",
@@ -211,7 +208,7 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
     )
     k2_7 = KimiccHarness().build_invocation(
         prompt="Inspect the target.",
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model="k2.7",
         task_id="kimi-kimicc-k2-7-effort",
@@ -238,7 +235,7 @@ def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
     plan = KimiccHarness().build_invocation(
         prompt="Inspect the target.",
-        mode="read-only",
+        mode="workspace-write",
         cwd=tmp_path,
         model="k3",
         task_id="kimi-kimicc-parser",
@@ -258,12 +255,11 @@ def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
     assert parsed.response == "KimiCC response"
 
 
-def test_mode_flag_mapping_is_empty_for_all_headless_modes():
-    assert _MODE_FLAGS == {
-        "read-only": (),
-        "workspace-write": (),
-        "danger": (),
-    }
+def test_mode_flag_mapping_admits_flagless_workspace_write_only():
+    """Kimi: web, UI and backend coding only — workspace-write is the one admitted mode."""
+    assert _MODE_FLAGS == {"workspace-write": ()}
+    assert KimiAdapter.supported_modes == frozenset({"workspace-write"})
+    assert KimiccHarness.supported_modes == frozenset({"workspace-write"})
 
 
 def _kimicc_ready(tmp_path, monkeypatch):
@@ -274,54 +270,71 @@ def _kimicc_ready(tmp_path, monkeypatch):
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
 
 
-def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch):
+def test_kimicc_accepts_delegate_attempt_keys_on_workspace_write(tmp_path, monkeypatch):
     _kimicc_ready(tmp_path, monkeypatch)
-    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
-    lease = tmp_path / "learn-ukrainian" / "lease"
-    lease.mkdir(parents=True)
-    checkout = tmp_path / "checkout"
-    checkout.mkdir()
     plan = KimiccHarness().build_invocation(
-        prompt="critique",
-        mode="read-only",
-        cwd=checkout,
+        prompt="implement",
+        mode="workspace-write",
+        cwd=tmp_path,
         model="k3",
-        task_id="kimicc-readonly",
+        task_id="kimicc-write",
         session_id=None,
         tool_config={
             "harness": "kimicc",
-            "read_only_tmp_root": str(lease),
-            "mcp_config_path": str(tmp_path / "review.mcp.json"),
+            "mcp_config_path": str(tmp_path / "writer.mcp.json"),
             "strict_mcp_config": True,
             "mcp_server_names": ["sources"],
-            "review_id": "rev-1",
             "attempt_id": "att-1",
             "codex_home_override": str(tmp_path / "codex-home"),
             "agy_home_override": str(tmp_path / "agy-home"),
         },
     )
 
-    assert plan.cmd[plan.cmd.index("--mode") + 1] == "read-only"
-    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(tmp_path / "review.mcp.json")
+    assert plan.cmd[plan.cmd.index("--mode") + 1] == "workspace-write"
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(tmp_path / "writer.mcp.json")
     assert "--strict-mcp-config" in plan.cmd
-    assert plan.env_overrides["TMPDIR"] == str(lease)
+    assert "TMPDIR" not in plan.env_overrides
     assert "codex_home_override" not in plan.cmd
     assert "agy_home_override" not in plan.cmd
 
 
-@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
-def test_kimicc_does_not_forward_a_non_strict_sources_grant(tmp_path, monkeypatch, mode):
-    """Kimi seats admit neutral coding only: a bare sources grant reaches the wrapper in no mode.
+def test_kimicc_refuses_a_review_attempt_and_read_only_lease_keys(tmp_path, monkeypatch):
+    """A review_id is a review attempt; a read-only lease has no admitted mode to serve."""
+    _kimicc_ready(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        KimiccHarness().build_invocation(
+            prompt="critique",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model="k3",
+            task_id="kimicc-review-id",
+            session_id=None,
+            tool_config={"review_id": "rev-1"},
+        )
+    with pytest.raises(ValueError, match="unsupported tool_config keys"):
+        KimiccHarness().build_invocation(
+            prompt="implement",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model="k3",
+            task_id="kimicc-lease",
+            session_id=None,
+            tool_config={"read_only_tmp_root": str(tmp_path / "lease")},
+        )
+
+
+def test_kimicc_does_not_forward_a_non_strict_sources_grant(tmp_path, monkeypatch):
+    """Kimi seats admit web, UI and backend coding only: a bare sources grant reaches the wrapper in no mode.
 
     Formerly the read-only branch forwarded mcp_config_path + allowed_tools as a review grant.
     """
     _kimicc_ready(tmp_path, monkeypatch)
     plan = KimiccHarness().build_invocation(
         prompt="critique",
-        mode=mode,
+        mode="workspace-write",
         cwd=tmp_path,
         model="k3",
-        task_id=f"kimicc-sources-{mode}",
+        task_id="kimicc-sources",
         session_id=None,
         tool_config={
             "mcp_config_path": str(tmp_path / ".mcp.json"),
@@ -345,7 +358,7 @@ def _former_review_grant(tmp_path) -> dict:
         "allowed_tools": review_tools_allowed_csv("claude"),
         "mcp_config_path": str(trusted),
         "strict_mcp_config": True,
-        kimicc_adapter.REVIEW_VERDICT_MARKER_KEY: True,
+        "review_verdict_required": True,
     }
 
 
@@ -358,7 +371,7 @@ def test_kimicc_refuses_the_review_profile_in_every_mode(tmp_path, monkeypatch, 
         "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
         lambda _: probed.append("probed"),
     )
-    with pytest.raises(ValueError, match="KIMI NEUTRAL-CODING-ONLY"):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
         KimiccHarness().build_invocation(
             prompt="critique",
             mode=mode,
@@ -371,93 +384,28 @@ def test_kimicc_refuses_the_review_profile_in_every_mode(tmp_path, monkeypatch, 
     assert probed == []
 
 
-def test_kimicc_read_only_without_the_marker_stays_in_plan_mode(tmp_path, monkeypatch):
-    """A strict config without the marker is plain MCP plumbing: the wrapper keeps plan mode."""
-    _kimicc_ready(tmp_path, monkeypatch)
-    grant = _former_review_grant(tmp_path)
-    grant.pop(kimicc_adapter.REVIEW_VERDICT_MARKER_KEY)
-    plan = KimiccHarness().build_invocation(
-        prompt="critique",
-        mode="read-only",
-        cwd=tmp_path,
-        model="k3",
-        task_id="kimicc-read-only-plan",
-        session_id=None,
-        tool_config=grant,
-    )
-    assert "--read-only-review" not in plan.cmd
-    assert not hasattr(kimicc_adapter, "read_only_review_refusal")
-    assert not hasattr(kimicc_adapter, "READ_ONLY_REVIEW_ALLOWED_TOOLS")
-
-
-def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
+@pytest.mark.parametrize("mode", ["read-only", "danger"])
+def test_kimicc_refuses_read_only_and_danger_before_any_probe(tmp_path, monkeypatch, mode):
+    """Formerly read-only stayed in plan mode; Kimi seats now admit workspace-write only."""
     _kimicc_ready(tmp_path, monkeypatch)
     probed: list[str] = []
     monkeypatch.setattr(
         "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
         lambda _: probed.append("probed"),
     )
-    with pytest.raises(ValueError, match="read_only_tmp_root"):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
         KimiccHarness().build_invocation(
             prompt="critique",
-            mode="read-only",
+            mode=mode,
             cwd=tmp_path,
             model="k3",
-            task_id="kimicc-bad-lease",
+            task_id=f"kimicc-{mode}",
             session_id=None,
-            tool_config={"read_only_tmp_root": str(tmp_path)},
+            tool_config={"harness": "kimicc"},
         )
     assert probed == []
-
-
-def _kimicc_lease_invocation(tmp_path, monkeypatch, lease: Path, checkout: Path):
-    _kimicc_ready(tmp_path, monkeypatch)
-    monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
-    return KimiccHarness().build_invocation(
-        prompt="critique",
-        mode="read-only",
-        cwd=checkout,
-        model="k3",
-        task_id="kimicc-lease",
-        session_id=None,
-        tool_config={"read_only_tmp_root": str(lease)},
-    )
-
-
-def test_kimicc_rejects_nested_read_only_lease(tmp_path, monkeypatch):
-    checkout = tmp_path / "learn-ukrainian"
-    checkout.mkdir()
-    lease = checkout / "nested"
-    lease.mkdir()
-    with pytest.raises(ValueError, match="read_only_tmp_root"):
-        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
-
-
-def test_kimicc_rejects_ancestor_read_only_lease(tmp_path, monkeypatch):
-    lease = tmp_path / "learn-ukrainian" / "lease"
-    lease.mkdir(parents=True)
-    checkout = lease / "checkout"
-    checkout.mkdir()
-    with pytest.raises(ValueError, match="read_only_tmp_root"):
-        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
-
-
-def test_kimicc_rejects_glob_read_only_lease(tmp_path, monkeypatch):
-    lease = tmp_path / "learn-ukrainian" / "rev*iew"
-    lease.mkdir(parents=True)
-    checkout = tmp_path / "checkout"
-    checkout.mkdir()
-    with pytest.raises(ValueError, match="read_only_tmp_root"):
-        _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
-
-
-def test_kimicc_accepts_isolated_read_only_lease(tmp_path, monkeypatch):
-    lease = tmp_path / "learn-ukrainian" / "lease"
-    lease.mkdir(parents=True)
-    checkout = tmp_path / "checkout"
-    checkout.mkdir()
-    plan = _kimicc_lease_invocation(tmp_path, monkeypatch, lease, checkout)
-    assert plan.env_overrides["TMPDIR"] == str(lease.resolve())
+    assert not hasattr(kimicc_adapter, "read_only_review_refusal")
+    assert not hasattr(kimicc_adapter, "READ_ONLY_REVIEW_ALLOWED_TOOLS")
 
 
 def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):
@@ -465,7 +413,7 @@ def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):
     with pytest.raises(ValueError, match="unsupported tool_config keys"):
         KimiccHarness().build_invocation(
             prompt="critique",
-            mode="read-only",
+            mode="workspace-write",
             cwd=tmp_path,
             model="k3",
             task_id="kimicc-unknown",
@@ -474,12 +422,12 @@ def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):
         )
 
 
-def test_read_only_refuses_before_kimi_binary_resolution(tmp_path, monkeypatch):
+@pytest.mark.parametrize("mode", ["read-only", "danger"])
+def test_read_only_and_danger_refuse_before_kimi_binary_resolution(tmp_path, monkeypatch, mode):
     with patch("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary") as resolve_binary:
-        with pytest.raises(ValueError, match=re.escape(_READ_ONLY_REFUSAL)):
-            _build(tmp_path, monkeypatch, mode="read-only")
+        with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+            _build(tmp_path, monkeypatch, mode=mode)
     resolve_binary.assert_not_called()
-    assert "kimicc" in _READ_ONLY_REFUSAL
 
 
 def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):

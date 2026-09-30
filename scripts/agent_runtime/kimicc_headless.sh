@@ -6,6 +6,9 @@
 # Claude process. It intentionally never writes CLAUDE_CONFIG_DIR or installs an
 # apiKeyHelper: --bare is stateless, so runs that exceed the roughly 15-minute
 # OAuth lifetime must be relaunched.
+#
+# Kimi: web, UI and backend coding only — no Ukrainian-language content, no
+# reviews, consults, design or rules. Only --mode workspace-write is accepted.
 
 set -euo pipefail
 
@@ -16,7 +19,7 @@ source "$PROJECT_DIR/scripts/lib/kimicc_route.sh"
 MODEL_ALIAS="${KIMICC_MODEL:-k3}"
 ENDPOINT="${KIMICC_ENDPOINT:-coding}"
 ISOLATE_CONFIG=0
-MODE="read-only"
+MODE=""
 PROMPT=""
 FORWARD_ARGS=()
 
@@ -38,15 +41,8 @@ while (($#)); do
       PROMPT="${2:?--prompt requires a value}"
       shift 2
       ;;
-    --mcp-config|--allowedTools|--tools|--agent|--max-budget-usd|--effort)
+    --mcp-config|--allowedTools|--agent|--max-budget-usd|--effort)
       FORWARD_ARGS+=("$1" "${2:?$1 requires a value}")
-      shift 2
-      ;;
-    --setting-sources)
-      # An explicit empty value is the isolation profile's way to suppress
-      # ambient user/project settings, so distinguish an empty argument from
-      # an omitted one here.
-      FORWARD_ARGS+=("$1" "${2?--setting-sources requires a value}")
       shift 2
       ;;
     --strict-mcp-config)
@@ -70,13 +66,10 @@ if [ -z "$PROMPT" ]; then
   usage
   exit 2
 fi
-case "$MODE" in
-  read-only|workspace-write|danger) ;;
-  *)
-    echo "Error: unsupported KimiCC headless mode '$MODE'." >&2
-    exit 2
-    ;;
-esac
+if [ "$MODE" != "workspace-write" ]; then
+  echo "Error: ROUTING REFUSED: KimiCC headless admits --mode workspace-write only (got '${MODE:-<none>}'). Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules." >&2
+  exit 2
+fi
 
 export KIMICC_HEADLESS=1
 if kimicc_configure_route "$PROJECT_DIR"; then
@@ -92,23 +85,5 @@ fi
 
 CLAUDE_BIN="${KIMICC_CLAUDE_BIN:-claude}"
 CMD=("$CLAUDE_BIN" -p --bare --model "$LEAD_MODEL" --output-format stream-json --verbose)
-if [ "$MODE" = "danger" ]; then
-  CMD+=(--dangerously-skip-permissions)
-elif [ "$MODE" = "read-only" ]; then
-  # Claude Code plan mode is the CLI's read-only permission mode. Kimi seats
-  # admit neutral coding only, so there is no review profile that leaves it.
-  CMD+=(--permission-mode plan)
-  # An explicit --tools profile from the adapter (trail isolation) wins over
-  # the default read/search set so a caller allowlist is not doubled.
-  has_tools=0
-  for arg in "${FORWARD_ARGS[@]}"; do
-    if [ "$arg" = "--tools" ]; then
-      has_tools=1
-    fi
-  done
-  if [ "$has_tools" -eq 0 ]; then
-    CMD+=(--tools "Read,Grep,Glob,LS")
-  fi
-fi
 CMD+=("${FORWARD_ARGS[@]}" -- "$PROMPT")
 exec "${CMD[@]}"

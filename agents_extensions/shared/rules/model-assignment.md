@@ -127,7 +127,8 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
     advisor seats. Astra is pinned at `high` for advisory and escalation. Fable's cost is accepted for advisor turns:
     they are rare, short, and decision-bearing; never spend them on queue grind.
   * **Other advisors**: `gemini-3.8-flash-high` (default for routine and deep; `gemini-3.1-pro-high` only on explicit request) ·
-    `kimi-k3-max` · `glm-5.3` @ `max` (advisory) · `grok-4.6` @ `high`.
+    `glm-5.3` @ `max` (advisory) · `grok-4.6` @ `high`. (Kimi: web, UI and backend coding only —
+    no Ukrainian-language content, no reviews, consults, design or rules.)
   * Legacy Terra qualification does not authorize a current Codex fallback; use
     the GPT-6 seat that fits the assigned role.
   * `gemini-3.8-flash-high` is currently the strongest lane for Ukrainian.
@@ -189,10 +190,12 @@ or count as a formal review.
   **`kimi-code/k3-256k`** (aliases `k3-256k`) = **everyday fast coding/impl**;
   **`kimi-code/k3`** (aliases `k3`) @ high/max = **complex coding only** (long-context /
   consequential). Do not burn full-K3 on routine queue when k3-256k fits.
-  **Neutral coding only (until further notice):** every Kimi seat takes workspace-write implementation
-  in code/test paths (`scripts/`, `tests/`, `site/` code, `.github/`, `.dagger/`) — never reviews,
-  consults, advisor or discussion panels, Ukrainian-language content, rules/policy, or private repos;
-  dispatch and ACP admission refuse the rest before spawn (`scripts/agent_runtime/kimi_admission.py`).
+  **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults,
+  design or rules (until further notice).** Every Kimi seat takes workspace-write implementation in
+  site UI code (`site/src/{components,layouts,pages,styles,css,assets,lib}` except `lib/i18n`,
+  `site/*.config.*`, site tests), `scripts/`, `tests/`, `.github/` and `.dagger/`; dispatch, the
+  runtime, ACP and the fleet-comms authority refuse the rest before any side effect
+  (`scripts/agent_runtime/kimi_admission.py`).
   Native `kimi` CLI only — never OpenRouter (Wave 1 fold + #7142).
 * **glm / Z.AI** (operator 2026-08-08 / #6468; **Flash workhorse 2026-08-26**): **keep and use**
   — **`glm-5.3-flash` is the GLM workhorse** (`--agent glm`, default Flash, OpenCode
@@ -517,7 +520,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | **pool** (`laguna-s-2.1` default) | free CF volume + web-verify volume | not language; bridge `ask-pool` |
 | **glm / Z.AI** (`glm-5.3-flash` workhorse; `glm-5.3` explicit) | deep security + large-context coherence audits; **Flash default** for ordinary code/infra (LOCAL-ONLY) | **LOCAL-ONLY** China egress; never CI/sensitive; prefer Flash API workhorse; `--model glm-5.3` for Coding Plan coherence |
 | **grok-4.7** | daily driver / CF (not QG judge) | oversight may be native Grok; don't solo multi-file when free workers exist |
-| **kimi** (**keep**) | **neutral coding only:** **`k3-256k` everyday** coding/impl; **`k3` @ high/max** complex coding | native `kimi` CLI only — never OpenRouter; don't burn full k3 on routine; throttle 5h windows when farAhead |
+| **kimi** (**keep**) | **web, UI and backend coding only:** **`k3-256k` everyday** coding/impl; **`k3` @ high/max** complex coding | native `kimi` CLI only — never OpenRouter; don't burn full k3 on routine; throttle 5h windows when farAhead |
 | **glm / Z.AI** (**keep**) | **`glm-5.3-flash` workhorse** (default `--agent glm`); **`glm-5.3` explicit** for Coding Plan security/coherence | LOCAL-ONLY; prefer Flash API for implement; `--model glm-5.3` for Coding Plan |
 | **codex** Sol (1–4 drivers) | coding and review; Luna for routine bounded work and scouting; Astra @ high for hard advisory only | **throttle mechanical when near_cap / paused unless a verified operator reset reserve applies**; shed to Cursor `grok-4.7-high` / implementation only / k3-256k / GLM |
 
@@ -529,7 +532,7 @@ free disk. **Never convert a timed pause into permanent neglect of that seat.**
 
 | Path | Use for | Do not use for |
 | --- | --- | --- |
-| **Native CLIs** (claude, codex, cursor, grok, kimi, agy) | default dispatch + ask for those families | Kimi workers: native `kimi` CLI subscription path only — never OpenRouter |
+| **Native CLIs** (claude, codex, cursor, grok, kimi, agy) | default dispatch + ask for those families | Kimi: web, UI and backend coding only (workspace-write dispatch; no ask) — native `kimi` CLI subscription path only, never OpenRouter |
 | **DeepSeek first-party** (`deepseek` via OpenCode) | all DeepSeek work (`deepseek-v4.1-flash` default; Pro for hard implementation) | `openrouter/deepseek/*` is guard-REFUSED |
 | **Z.AI / opencode glm** | `glm-5.3` @ high (advisory max) LOCAL-ONLY reviews | general multi-model fallback |
 | **OpenRouter** | **mainly Pool + Gemma access** when that is the named path | **not** a general multi-model bus; **not** a Kimi K3 worker bus (`kimi`/`kimicc`/`kimi-code/k3*` = `native_kimi` only); never Gemini (AGY) / GLM subscribed seats |
@@ -579,7 +582,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 **Advisor (on-demand, HARD calls only): `gpt-6-astra @ high` by default** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis, or a bounded advisory envelope. Codex workhorse and red-team efforts are Sol `high`; bounded work is Luna `high`. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
 
-**Kimi onboarding (native `kimi` CLI only):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi` — omitted flags default to **`k3-256k`** (everyday coding/impl; no forced effort, operator 2026-08-13). Explicitly select `--model k3 --effort high|max` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (high/max effort, 1M window); `k2.7-coding` and its high-speed variant remain available as legacy routine workers. Current quota affects selection only among models that clear the task's quality floor. **Never route Kimi K3 workers through OpenRouter.** Kimi seats take neutral coding only — never a reviewer, consult, or panel seat.
+**Kimi onboarding (native `kimi` CLI only):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi` — omitted flags default to **`k3-256k`** (everyday coding/impl; no forced effort, operator 2026-08-13). Explicitly select `--model k3 --effort high|max` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (high/max effort, 1M window); `k2.7-coding` and its high-speed variant remain available as legacy routine workers. Current quota affects selection only among models that clear the task's quality floor. **Never route Kimi K3 workers through OpenRouter.** Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules.
 
 ## Fleet discussion panels — actively involve ≥1 other agent before committing (user order 2026-06-23)
 
@@ -644,7 +647,7 @@ language judgment (#M-13a) · grok is NEVER a judge seat · GLM-5.3 is LOCAL-ONL
 egress — no CI, no secrets, no sensitive data).
 
 *Operational notes (not #5933 rulings; separate authority cited):* Gemma is not an advisor
-seat (§panels above) · Kimi seats take neutral coding only and sit on no panel · on any ask
+seat (§panels above) · Kimi: web, UI and backend coding only, on no panel · on any ask
 transport failure, reroute BY SEAT within the pool and record the substitution
 (workflow.md substitution rule).
 
@@ -675,7 +678,7 @@ several models are reachable through more than one. Know both axes before routin
 | --- | --- | --- | --- |
 | **hermes** — REMOVED from this host (operator order 2026-08-16); row kept for history only | (was: SOUL.md persona · `sources` MCP · 16 toolsets · session store) | (was: deepseek · zai/GLM · OpenRouter catalog) | DeepSeek bridge asks now use `ab ask-deepseek` (opencode ACP seat, #6805); execution `delegate.py dispatch --agent deepseek` |
 | **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside **laguna-s-2.1**, free; m.1 prior-gen fallback) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek (first-party `deepseek/` provider; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` / `ask-deepseek` (named seats only; generic `ask-opencode` is retired) |
-| **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes, never opencode — the native CLI is the ONLY sanctioned grok route for every seat (interactive, orchestrator, ask, dispatch, reviewer/judge) as of operator order 2026-08-16 (#6865, retires the 2026-07-27 opencode-for-orchestrator-seats ruling, see Consequences below). `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native `kimi` CLI subscription seat only (models `k3` · `k3-256k` · `k2.7-coding` · `k2.7-coding-highspeed`) — **never OpenRouter** as a Kimi worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` / `ask-kimi` · `delegate.py dispatch --agent <a> --mode danger --worktree` (includes `--agent kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
+| **native CLIs** (codex, cursor, agy, grok, claude, kimi) | each CLI's own tool loop + repo context; capabilities differ per CLI. GPT/Codex is **native-only**: never route it through Hermes. Grok: never Hermes, never opencode — the native CLI is the ONLY sanctioned grok route for every seat (interactive, orchestrator, ask, dispatch, reviewer/judge) as of operator order 2026-08-16 (#6865, retires the 2026-07-27 opencode-for-orchestrator-seats ruling, see Consequences below). `grok` = the native Grok CLI seat (alias `grok-build` kept permanently); `kimi` = native `kimi` CLI subscription seat only (models `k3` · `k3-256k` · `k2.7-coding` · `k2.7-coding-highspeed`) — **never OpenRouter** as a Kimi worker bus | one primary family each; Cursor is multi-model and must be pinned for review identity | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` (Kimi: web, UI and backend coding only — `--agent kimi --mode workspace-write --worktree`; no `ask-kimi`) · orchestrator grok via `ab ask-grok-build` / native `grok` CLI — never `ab ask-opencode --model xai/grok-*` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
@@ -764,8 +767,8 @@ no filesystem, tool, or driver authority.
 The compatibility key `execution_routing.sol_advised_bounded` retains its name.
 Its current advisor is Astra high and its bounded worker is Luna high, with Sol
 high for broader autonomous integration. Current designated advisors are
-**Fable** and **Astra**; **Kimi** seats take neutral coding only (no review,
-consult, advisor, or discussion role). All GPT-6 models are OpenAI-family and
+**Fable** and **Astra**. Kimi: web, UI and backend coding only — no
+Ukrainian-language content, no reviews, consults, design or rules. All GPT-6 models are OpenAI-family and
 cannot satisfy independent CF for an OpenAI-authored PR.
 
 ## Claude reviewer-seat economics (2026-06-12)

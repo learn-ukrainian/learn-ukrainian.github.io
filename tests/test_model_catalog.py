@@ -150,7 +150,7 @@ def test_luna_economics_use_model_specific_openai_sources() -> None:
 
 
 def test_kimi_is_absent_from_review_candidates_and_every_ladder() -> None:
-    """Kimi seats admit neutral coding only (formerly a rung on every ladder); glm is pin-only."""
+    """Kimi seats admit web, UI and backend coding only (formerly a rung on every ladder); glm is pin-only."""
     catalog = load_model_catalog()
     assert "kimi-k3" not in catalog["review_candidates"]
     for ladder in catalog["review_ladders"].values():
@@ -171,7 +171,7 @@ def test_kimi_models_carry_coding_roles_only() -> None:
     for endpoint in ("kimi", "kimicc"):
         scheduler = catalog["review_scheduler"]["endpoints"][endpoint]
         assert scheduler["formal_review_eligible"] is False
-        assert "neutral coding only" in scheduler["formal_review_exclusion_reason"]
+        assert "web, UI and backend coding only" in scheduler["formal_review_exclusion_reason"]
 
 
 def test_glm_is_absent_from_automatic_review_ladders() -> None:

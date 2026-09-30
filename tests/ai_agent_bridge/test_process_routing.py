@@ -163,7 +163,7 @@ def test_process_gemini_recipient_resolves_to_agy_participant(bridge_db, monkeyp
 
 def test_process_success_acks_only_after_routed_reply(bridge_db, monkeypatch):
     """Mutation check: ack must follow the routed reply, never precede it."""
-    message_id = _send("kimi")
+    message_id = _send("cursor")
     events: list[str] = []
     monkeypatch.setattr(
         _process,
@@ -636,7 +636,6 @@ def forbid_legacy_processors(monkeypatch):
         "process-codex",
         "process-grok",
         "process-grok-build",
-        "process-kimi",
     ],
 )
 def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command, forbid_legacy_processors):
@@ -656,7 +655,29 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
     assert _row(message_id)[0] == 1
 
 
-@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "kimi", "pool", "glm", "hermes"])
+def test_kimi_messages_are_refused_before_acp_and_left_unconsumed(bridge_db, monkeypatch, forbid_legacy_processors):
+    """Kimi: web, UI and backend coding only — process-kimi and the detached worker never reach ACP."""
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _ask_lifecycle, _cli
+
+    acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    cli_message = _send("kimi", sender="agy")
+    with pytest.raises(SystemExit, match="message left unconsumed"):
+        _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
+    detached_message = _send("kimi", sender="agy")
+    _ask_lifecycle._process_target(detached_message, "kimi", {"no_timeout": True})
+
+    acp.assert_not_called()
+    assert _row(cli_message)[0] == 0
+    assert _row(detached_message)[0] == 0
+    errors = [row for row in _replies(cli_message) if row[2] == "error"]
+    assert len(errors) == 2
+    assert all("KIMI CODING-ONLY" in str(row[3]) for row in errors)
+
+
+@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm", "hermes"])
 def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
     bridge_db, monkeypatch, target, forbid_legacy_processors
 ):

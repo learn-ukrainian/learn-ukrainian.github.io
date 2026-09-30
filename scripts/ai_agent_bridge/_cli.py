@@ -639,7 +639,9 @@ def _build_parser() -> argparse.ArgumentParser:
     proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     proc_kimi_parser = subparsers.add_parser(
-        "process-kimi", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+        "process-kimi",
+        help="Refused: Kimi: web, UI and backend coding only — no Ukrainian-language content, "
+        "no reviews, consults, design or rules",
     )
     proc_kimi_parser.add_argument("message_id", type=int, help="Message ID for kimi to process")
     proc_kimi_parser.add_argument(
@@ -990,7 +992,9 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     ask_kimi_parser = subparsers.add_parser(
-        "ask-kimi", help="Ordinary ask via two-seat ACP; reviews via toolful dispatch (use '-' for stdin)"
+        "ask-kimi",
+        help="Refused: Kimi: web, UI and backend coding only — no Ukrainian-language content, "
+        "no reviews, consults, design or rules (use delegate.py dispatch --agent kimi --mode workspace-write)",
     )
     ask_kimi_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_kimi_parser.add_argument("--task-id", required=True, help="Task ID")
@@ -1635,9 +1639,17 @@ def _handle_acp_compat(args, target: str) -> None:
     """Route a legacy ask command through the single ACP compatibility shim."""
     if getattr(args, "background", False):
         raise SystemExit("legacy ask --background is retired; enqueue through fleet-comms")
+    model = getattr(args, "to_model", None) or getattr(args, "model", None)
+    # Seat admission first: a refused seat (every Kimi seat) stops before stdin,
+    # PR-head resolution, telemetry, or any dispatch.
+    from ._acp_compat import require_compat_target
+
+    try:
+        require_compat_target(target, model=model)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
     content = sys.stdin.read() if args.content == "-" else args.content
     data = Path(args.data).read_text(encoding="utf-8") if getattr(args, "data", None) else None
-    model = getattr(args, "to_model", None) or getattr(args, "model", None)
     task_id = getattr(args, "task_id", None)
     if not task_id:
         raise SystemExit(f"ask-{target} requires --task-id")
@@ -1714,13 +1726,11 @@ def _handle_acp_compat(args, target: str) -> None:
     from ._acp_compat import (
         ASK_HARD_TIMEOUT_DEFAULT_S,
         ask_hard_timeout,
-        require_compat_target,
         run_compat_ask,
     )
     from ._job_host_forward import AskForwardError
 
     try:
-        require_compat_target(target)
         result = run_compat_ask(
             target,
             content,
@@ -1788,7 +1798,7 @@ def _dispatch_headless_review(
     try:
         # Same legacy-alias resolution as the ACP path (e.g. hermes→deepseek,
         # gemini→agy) so `--agent` is a name `delegate.py dispatch` accepts.
-        dispatch_agent = require_compat_target(target)
+        dispatch_agent = require_compat_target(target, model=model)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 

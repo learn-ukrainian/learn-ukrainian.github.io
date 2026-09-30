@@ -81,7 +81,7 @@ def test_acp_missing_builtin_exec_excludes_only_that_lane(monkeypatch, tmp_path,
 
 
 def test_acp_kimi_lanes_are_policy_refused_even_when_the_cli_is_healthy(monkeypatch, tmp_path):
-    """Kimi seats admit neutral coding only, so no ACP route to them is ever eligible."""
+    """Kimi seats admit web, UI and backend coding only, so no ACP route to them is ever eligible."""
     _healthy_probes(monkeypatch)
     health = acp_health.probe_acp_health(tmp_path)
     for lane in ("kimi", "kimicc"):

@@ -64,7 +64,7 @@ def probe_acp_health(cwd: Path) -> dict[str, dict[str, Any]]:
             providers[executable] = result(code="probe_unavailable", unknown=True)
 
     def probe(lane: str) -> tuple[str, dict[str, Any]]:
-        # Kimi seats admit neutral coding only; every ACP call is refused.
+        # Kimi: web, UI and backend coding only; every ACP call is refused.
         if acp_refusal(lane, target_agent=participants[lane].get("agent")):
             return lane, result(code="policy_refused", unknown=True)
         try:

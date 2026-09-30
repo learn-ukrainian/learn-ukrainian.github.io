@@ -92,7 +92,7 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
-from .kimi_admission import acp_refusal
+from .kimi_admission import acp_refusal, require_runtime_admission
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
@@ -3341,7 +3341,12 @@ def invoke(
     planning. Unsupported adapters refuse before spawn, while supported
     profiles receive a private one-server MCP configuration that is removed
     after success, refusal, timeout, or adapter error.
+
+    A Kimi seat is admitted only for workspace-write implementation with no
+    review marker; anything else raises ``KimiAdmissionRefused`` before
+    attribution, trail provisioning, or adapter planning.
     """
+    require_runtime_admission(agent_name, mode=mode, model=model, tool_config=tool_config)
     attribution = resolve_invocation_attribution(
         explicit=initiator,
         task_id=task_id,

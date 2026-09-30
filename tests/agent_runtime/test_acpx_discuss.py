@@ -234,7 +234,7 @@ def test_expired_authority_reservation_uses_existing_terminal_orphan_recovery(
         job = service.enqueue_discussion(
             channel="acp-health",
             prompt="Recover without calling providers.",
-            participants=("kimi", "glm"),
+            participants=("cursor", "glm"),
             rounds=1,
             task_digest=hashlib.sha256(b"task-6243-orphan").hexdigest(),
             correlation_id="correlation-6243-orphan",
@@ -307,7 +307,7 @@ def test_enabled_nondefault_pair_uses_fixed_acp_seats_and_persists_participants(
 
 @pytest.mark.parametrize("kimi_seat", ["kimi", "kimicc"])
 def test_panel_with_a_kimi_seat_is_refused_before_any_call(tmp_path, monkeypatch, kimi_seat):
-    """Kimi seats admit neutral coding only: a discussion panel naming one never starts."""
+    """Kimi seats admit web, UI and backend coding only: a discussion panel naming one never starts."""
     controller = _controller(
         tmp_path,
         monkeypatch,
@@ -315,7 +315,7 @@ def test_panel_with_a_kimi_seat_is_refused_before_any_call(tmp_path, monkeypatch
         lambda *_a, **_k: pytest.fail("a refused panel must not synthesize"),
     )
     try:
-        with pytest.raises(acpx_discuss.AcpxDiscussionError, match="KIMI NEUTRAL-CODING-ONLY"):
+        with pytest.raises(acpx_discuss.AcpxDiscussionError, match="KIMI CODING-ONLY"):
             controller.run(
                 prompt="Compare the two bounded options.",
                 cwd=Path.cwd(),

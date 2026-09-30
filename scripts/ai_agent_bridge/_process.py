@@ -100,11 +100,16 @@ def process_message_for_recipient(
         print(f"⏭️  Message {message_id} is already acknowledged; skipping.")
         return None
 
+    from agent_runtime.kimi_admission import KimiAdmissionRefused
+
     recipient = str(msg.get("to") or "").strip().lower()
     try:
         participant = require_compat_target(recipient)
-    except ValueError:
-        reason = f"recipient seat {recipient!r} has no enabled ACP route"
+    except ValueError as exc:
+        if isinstance(exc, KimiAdmissionRefused):
+            reason = str(exc)
+        else:
+            reason = f"recipient seat {recipient!r} has no enabled ACP route"
         print(f"❌ {reason}; message left unconsumed")
         _notify_processing_failure(msg, message_id, recipient or "unknown", reason)
         return None

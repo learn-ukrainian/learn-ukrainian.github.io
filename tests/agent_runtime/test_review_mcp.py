@@ -209,7 +209,7 @@ def test_prepare_review_attempt_refuses_grok(manifest_file: Path, tmp_path: Path
 
 
 def test_prepare_review_attempt_refuses_kimicc(manifest_file: Path, tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match=r"review attempt refused for kimicc: Kimi seats admit neutral coding only"):
+    with pytest.raises(ValueError, match=r"review attempt refused for kimicc: Kimi: web, UI and backend coding only"):
         prepare_review_attempt(
             review_id="rev-001",
             attempt_id="att-001",
@@ -284,7 +284,7 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
     assert rc == 2
     captured = capsys.readouterr()
     # Kimi admission refuses before the review-attempt harness check.
-    assert "KIMI NEUTRAL-CODING-ONLY" in captured.err
+    assert "KIMI CODING-ONLY" in captured.err
     assert "review dispatches" in captured.err
 
 

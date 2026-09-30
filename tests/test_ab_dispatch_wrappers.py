@@ -261,17 +261,15 @@ def test_run_dispatch_timeout_returns_1(monkeypatch, tmp_path, capsys):
     assert f"dispatch command timed out after {wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS}s" in err
 
 
-def test_ask_kimi_review_argv_selects_kimicc_harness():
+def test_ask_kimi_review_is_refused_before_argv_or_prompt(monkeypatch):
+    """Formerly ask-kimi --review selected the kimicc harness; Kimi seats now never review."""
+    monkeypatch.setattr(wrappers, "_prompt_directory", lambda: pytest.fail("prompt written"))
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        wrappers.run_ask_review_dispatch("kimi", "Review PR #8703.", task_id="review-8703")
     command = wrappers.build_ask_review_dispatch_command(
-        "kimi",
-        "review-8703",
-        Path("prompt.md"),
-        model=None,
-        effort=None,
+        "kimi", "review-8703", Path("prompt.md"), model=None, effort=None
     )
-    assert command[command.index("--agent") + 1] == "kimi"
-    assert command[command.index("--harness") + 1] == "kimicc"
-    assert "--mode" in command and command[command.index("--mode") + 1] == "read-only"
+    assert "--harness" not in command
 
 
 def test_ask_non_kimi_review_argv_omits_kimicc_harness():

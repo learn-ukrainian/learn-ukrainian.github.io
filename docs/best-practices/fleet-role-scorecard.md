@@ -28,7 +28,7 @@
 | General implementer | GPT-6 Sol, Claude Sonnet 5.5 for well-scoped non-security code, Grok 4.7 | GPT-6 Luna for bounded work; Gemini 3.8 Flash for well-defined work; K3; Cursor (**pin family**). Security-sensitive code authoring goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Fable 5.1 for Claude). | `high` by task fit | provisional |
 | Polished written deliverables in English | Claude Sonnet 5.5 | Reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts | By task fit | provisional |
 | Hard implementer | GPT-6 Sol, Claude Opus 5.5 | Escalate hard design judgment to Astra or Fable | `high` | provisional |
-| UI / visual product design | K3 | Astra for hard systems UX advice; Kimi consult non-UA | K3 `high`; Astra `high` | provisional (K3 UI primacy needs bakeoffs) |
+| UI / visual product design | K3 | Astra for hard systems UX advice (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | K3 `high`; Astra `high` | provisional (K3 UI primacy needs bakeoffs) |
 | Code/security CF review | **Author-family-conditional** (see §3); for security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125 | — | `high`+ | provisional |
 | Critical CF review | GPT-6 Sol ↔ Fable/Opus **cross-family** | — | `high` | provisional |
 | Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6 Sol, Claude Fable 5.1 + sources | `high` | provisional (morphology remains VESUM-gated) |

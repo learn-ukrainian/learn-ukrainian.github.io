@@ -404,7 +404,8 @@ def test_load_adapter_kimi():
     adapter = _load_adapter("kimi")
     assert adapter.name == "kimi"
     assert adapter.default_model == "k3-256k"
-    assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
+    # Kimi: web, UI and backend coding only — workspace-write is the one admitted mode.
+    assert adapter.supported_modes == frozenset({"workspace-write"})
 
 
 def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):

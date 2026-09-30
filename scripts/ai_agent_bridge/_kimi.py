@@ -1,4 +1,8 @@
-"""Native Kimi Code bridge integration for one-shot asks and reviews."""
+"""Native Kimi Code bridge integration for one-shot asks and reviews.
+
+Kimi seats admit web, UI and backend coding only, so both entry points refuse
+before any broker write, worktree provisioning, or invocation.
+"""
 from __future__ import annotations
 
 import json
@@ -7,6 +11,7 @@ import os
 from agent_runtime import runner as agent_runner
 from agent_runtime.adapters.kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from agent_runtime.errors import AgentStalledError, AgentTimeoutError, AgentUnavailableError, RateLimitedError
+from agent_runtime.kimi_admission import acp_refusal, require_acp_admission
 
 from ._ask_contract import requested_effort, resolve_model_selection, response_provenance
 from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
@@ -58,6 +63,7 @@ def ask_kimi(
     review_pr_number: int | None = None,
 ) -> int:
     """Send a broker message and invoke the native Kimi CLI to answer it."""
+    require_acp_admission("kimi", model=to_model or model)
     effective_model = resolve_model_selection(
         lane="ask-kimi", to_model=to_model, model=model, default=KIMI_BRIDGE_DEFAULT_MODEL
     )
@@ -88,6 +94,10 @@ def process_for_kimi(
     """Process a Kimi-targeted message through the always-fresh runtime lane."""
     msg = _fetch_kimi_message(message_id)
     if not msg:
+        return
+    refusal = acp_refusal("kimi")
+    if refusal:
+        _handle_kimi_error(msg, message_id, refusal)
         return
     _ = new_session  # v1 registry policy is resume_policy="never".
     timeout = _resolve_kimi_bridge_timeout(no_timeout)

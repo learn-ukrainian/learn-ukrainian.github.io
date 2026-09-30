@@ -59,19 +59,20 @@ def test_ask_review_flag_runs_as_normal_ask(monkeypatch):
     sentinel = object()
     monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", lambda *a, **k: sentinel)
     result = _acp_compat.run_compat_ask(
-        "kimi", "hello", task_id="kimi-ask", review=True
+        "claude", "hello", task_id="claude-ask", review=True
     )
     assert result is sentinel
 
 
-def test_ask_kimi_background_records_a_kimi_target(monkeypatch):
+def test_ask_kimi_background_is_refused_before_the_broker_write(monkeypatch):
+    """Kimi: web, UI and backend coding only — formerly this recorded a background Kimi ask."""
     launches: list[tuple] = []
-    monkeypatch.setattr(_kimi, "send_message", lambda *_args, **_kwargs: 41)
-    monkeypatch.setattr(_kimi, "register_ask", lambda *_args: None)
+    monkeypatch.setattr(_kimi, "send_message", lambda *_args, **_kwargs: pytest.fail("broker write"))
     monkeypatch.setattr(_kimi, "launch_background_ask", lambda *args: launches.append(args))
 
-    assert _kimi.ask_kimi("review", task_id="task-1", background=True) == 41
-    assert launches == [(41, "kimi", {"new_session": False, "no_timeout": False, "review": False})]
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        _kimi.ask_kimi("review", task_id="task-1", background=True)
+    assert launches == []
 
 
 def test_kimi_background_worker_routes_to_kimi_processor(monkeypatch):
@@ -109,35 +110,27 @@ def test_kimi_prompt_and_error_handler_include_broker_context(monkeypatch):
     assert sent[0]["msg_type"] == "error"
 
 
-def test_process_kimi_invokes_runtime_with_read_only_mode(monkeypatch):
+def test_process_kimi_refuses_before_the_worktree_or_runtime(monkeypatch):
     message = {
         "id": 7, "task_id": "task-1", "from": "codex", "to": "kimi", "type": "query",
         "content": "Review this.", "data": '{"to_model": "k3"}', "timestamp": "now",
     }
-    calls: list[tuple] = []
+    errors: list[str] = []
 
     @contextmanager
     def checkout(*_args, **_kwargs):
+        pytest.fail("a refused Kimi ask must not provision a worktree")
         yield None
 
     monkeypatch.setattr(_kimi, "_fetch_kimi_message", lambda _id: message)
     monkeypatch.setattr(_kimi, "provision_review_worktree", checkout)
-    monkeypatch.setattr(_kimi, "send_message", lambda **_kwargs: 8)
-    monkeypatch.setattr(_kimi, "acknowledge", lambda *_args: None)
-    monkeypatch.setattr(_kimi, "record_ask_reply", lambda *_args: None)
-    monkeypatch.setattr(_kimi, "set_session", lambda *_args: None)
-    monkeypatch.setattr(
-        _kimi.agent_runner,
-        "invoke",
-        lambda *args, **kwargs: calls.append((args, kwargs))
-        or SimpleNamespace(ok=True, response="done", session_id=None, model="k3"),
-    )
+    monkeypatch.setattr(_kimi, "acknowledge", lambda *_args: pytest.fail("a refused ask is never acknowledged"))
+    monkeypatch.setattr(_kimi, "_handle_kimi_error", lambda _msg, _id, reason: errors.append(reason))
+    monkeypatch.setattr(_kimi.agent_runner, "invoke", lambda *_a, **_k: pytest.fail("runtime invoked"))
 
     _kimi.process_for_kimi(7)
 
-    assert calls[0][0][0] == "kimi"
-    assert calls[0][1]["mode"] == "read-only"
-    assert calls[0][1]["model"] == "k3"
+    assert len(errors) == 1 and "KIMI CODING-ONLY" in errors[0]
 
 
 def test_fetch_kimi_message_returns_none_for_an_unaddressed_row(monkeypatch, capsys):
@@ -149,10 +142,7 @@ def test_fetch_kimi_message_returns_none_for_an_unaddressed_row(monkeypatch, cap
 
 
 def test_check_model_refuses_read_only_native_kimi_probe():
-    with pytest.raises(
-        ValueError,
-        match=r"kimi headless auto-approves mutations; read-only cannot be guaranteed in native prompt mode",
-    ):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
         _build_kimi_probe_plan("k3")
 
 

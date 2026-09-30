@@ -92,7 +92,7 @@ stampede one hot lane.
 | **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-5-high`. Draws the API pool. |
 | **DeepSeek V4.1 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4.1-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
-| **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
+| **Kimi k3** | complex / long-context coding only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
 | **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
 | **Z.AI GLM-5.3** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |

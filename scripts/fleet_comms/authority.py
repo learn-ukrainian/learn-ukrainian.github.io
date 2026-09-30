@@ -21,6 +21,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
+from scripts.agent_runtime.kimi_admission import require_acp_admission
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -596,7 +597,12 @@ class AuthorityService:
         metadata: Mapping[str, Any] | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityJob:
-        """Queue an ordinary request atomically with its immutable message."""
+        """Queue an ordinary request atomically with its immutable message.
+
+        A Kimi recipient (or a Kimi ``requested_model``) is refused before any
+        write: Kimi seats take web, UI and backend coding only.
+        """
+        require_acp_admission(str(recipient or ""), model=(metadata or {}).get("requested_model"))
         key = idempotency_key or new_id("authority-request-key")
         recipient_name = _nonempty(recipient, field="recipient")
         self._ensure_channel(channel)
@@ -653,7 +659,13 @@ class AuthorityService:
         task_id: str | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityJob:
-        """Queue a bounded (one-to-three round) discussion without invoking it."""
+        """Queue a bounded (one-to-three round) discussion without invoking it.
+
+        A Kimi participant is refused before any write: Kimi seats never join
+        discussions.
+        """
+        for participant in participants:
+            require_acp_admission(str(participant or ""))
         key = idempotency_key or new_id("authority-discussion-key")
         channel_name = _nonempty(channel, field="channel")
         participants_norm = _normalize_recipients(participants)

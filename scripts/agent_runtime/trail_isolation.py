@@ -16,6 +16,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from .kimi_admission import format_refusal
+
 try:
     from scripts.common.repo_root import project_interpreter
 except ImportError:
@@ -24,9 +26,6 @@ except ImportError:
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 TRAIL_MCP_SERVER_NAME = "trail"
 TRAIL_TOOL_NAMES: tuple[str, ...] = ("trail_status", "trail_step", "trail_summon")
-KIMICC_TRAIL_TOOLS: tuple[str, ...] = tuple(
-    f"mcp__{TRAIL_MCP_SERVER_NAME}__{name}" for name in TRAIL_TOOL_NAMES
-)
 GROK_TRAIL_TOOLS: tuple[str, ...] = tuple(
     f"{TRAIL_MCP_SERVER_NAME}__{name}" for name in TRAIL_TOOL_NAMES
 )
@@ -67,15 +66,11 @@ def _tool_csv(tool_names: tuple[str, ...]) -> str:
     return ",".join(tool_names)
 
 
-def _profile_for_agent(agent_name: str, tool_config: Mapping[str, Any]) -> str:
+def _profile_for_agent(agent_name: str) -> str:
     if agent_name in {"grok", "grok-build"}:
         return "grok"
     if agent_name == "kimi":
-        if tool_config.get("harness") != "kimicc":
-            raise TrailIsolationError(
-                "trail isolation refused for native Kimi: the native CLI cannot prove tool admission; use harness='kimicc'"
-            )
-        return "kimicc"
+        raise TrailIsolationError(f"trail isolation refused: {format_refusal('kimi', ['trail sessions'])}")
     if agent_name == "glm":
         raise TrailIsolationError(
             "trail isolation refused for GLM: the opencode adapter ignores tool restrictions"
@@ -127,7 +122,7 @@ def prepare_trail_isolation(
 ) -> TrailIsolationLaunch | None:
     """Provision the exact three-tool profile or refuse before any spawn.
 
-    The caller may select only the profile and, for Kimi, the KimiCC harness.
+    The caller may select only the profile and the harness.
     Ambient MCP configuration and caller-provided allow/deny lists are never
     merged into a weak-driver invocation.
     """
@@ -147,23 +142,21 @@ def prepare_trail_isolation(
     if requested is not True and not isinstance(requested, dict):
         raise TrailIsolationError("trail_isolation must be true or a configuration object")
 
-    profile = _profile_for_agent(agent_name, supplied)
+    # Refuses every agent without a provable profile; grok is the only one left.
+    _profile_for_agent(agent_name)
     root = Path(tempfile.mkdtemp(prefix="agent-runtime-trail-isolation-"))
     root.chmod(0o700)
     try:
         mcp_config_path = _write_private_mcp_config(root)
-        tool_names = KIMICC_TRAIL_TOOLS if profile == "kimicc" else GROK_TRAIL_TOOLS
         configured: dict[str, Any] = {
             "trail_isolation": True,
             "mcp_config_path": str(mcp_config_path),
-            "allowed_tools": _tool_csv(tool_names),
-            "tools": _tool_csv(tool_names),
+            "allowed_tools": _tool_csv(GROK_TRAIL_TOOLS),
+            "tools": _tool_csv(GROK_TRAIL_TOOLS),
             "strict_mcp_config": True,
             "setting_sources": "",
             "trail_isolation_cwd": str(root),
         }
-        if profile == "kimicc":
-            configured["harness"] = "kimicc"
         return TrailIsolationLaunch(tool_config=configured, root=root)
     except BaseException:
         shutil.rmtree(root, ignore_errors=True)
@@ -172,10 +165,9 @@ def prepare_trail_isolation(
 
 def assert_trail_isolation_config(tool_config: Mapping[str, Any], *, profile: str) -> Path:
     """Validate that an adapter received the parent-produced exact profile."""
-    if profile not in {"grok", "kimicc"}:
+    if profile != "grok":
         raise TrailIsolationError(f"unknown trail isolation profile {profile!r}")
-    expected_tools = GROK_TRAIL_TOOLS if profile == "grok" else KIMICC_TRAIL_TOOLS
-    expected_csv = _tool_csv(expected_tools)
+    expected_csv = _tool_csv(GROK_TRAIL_TOOLS)
     if tool_config.get("trail_isolation") is not True:
         raise TrailIsolationError("trail isolation profile marker is missing")
     for key in ("allowed_tools", "tools"):

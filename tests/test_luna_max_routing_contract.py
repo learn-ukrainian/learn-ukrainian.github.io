@@ -56,7 +56,7 @@ def test_luna_is_absent_from_formal_review_candidates_and_ladders() -> None:
 
 
 def test_kimi_k3_is_on_no_code_review_ladder() -> None:
-    """Kimi seats admit neutral coding only (formerly a rung on every ladder)."""
+    """Kimi seats admit web, UI and backend coding only (formerly a rung on every ladder)."""
     ladders = load_model_catalog()["review_ladders"]
     assert set(ladders) == {"critical", "high", "medium", "low"}
 

@@ -21,31 +21,23 @@ from scripts.review.model_catalog import (
     resolve_kimi_model,
 )
 
-from ..kimi_admission import format_refusal
-from ..read_only_tmp import validate_read_only_tmp_root
+from ..kimi_admission import ADMITTED_MODE, format_refusal, require_runtime_admission
 from ..result import ParseResult
-from ..trail_isolation import (
-    TrailIsolationError,
-    assert_trail_isolation_config,
-    trail_isolation_requested,
-)
+from ..trail_isolation import TrailIsolationError, trail_isolation_requested
 from .base import InvocationPlan
 from .claude import ClaudeAdapter, _default_claude_bin, _ensure_supported_claude_cli_version
 
 _HEADLESS_WRAPPER = Path(__file__).resolve().parents[1] / "kimicc_headless.sh"
-# Review completion marker. Kimi seats admit neutral coding only, so a
-# tool_config carrying it is refused instead of running a review.
-REVIEW_VERDICT_MARKER_KEY = "review_verdict_required"
-# Keys delegate.py adds on read-only and review attempts. Agent-specific
-# homes (codex/agy) are ignored here; rejecting them would make a shared
-# review tool_config unusable on this harness.
-_DELEGATE_READ_ONLY_AND_REVIEW_KEYS = frozenset(
+# Keys delegate.py may add to any attempt. Agent-specific homes (codex/agy)
+# are ignored here; rejecting them would make a shared tool_config unusable
+# on this harness. Review markers (review_id, review_verdict_required) are
+# refused by the admission check before this list is consulted.
+_DELEGATE_ATTEMPT_KEYS = frozenset(
     {
         "agy_home_override",
         "attempt_id",
         "codex_home_override",
         "mcp_server_names",
-        "read_only_tmp_root",
         "review_id",
     }
 )
@@ -56,30 +48,11 @@ _SUPPORTED_TOOL_CONFIG_KEYS = (
             "allowed_tools",
             "max_budget_usd",
             "mcp_config_path",
-            "tools",
             "strict_mcp_config",
-            "setting_sources",
-            "trail_isolation",
-            "trail_isolation_cwd",
             "runtime_route",
         }
     )
-    | _DELEGATE_READ_ONLY_AND_REVIEW_KEYS
-)
-_TRAIL_ISOLATION_TOOL_CONFIG_KEYS = (
-    frozenset(
-        {
-            "allowed_tools",
-            "harness",
-            "mcp_config_path",
-            "setting_sources",
-            "strict_mcp_config",
-            "tools",
-            "trail_isolation",
-            "trail_isolation_cwd",
-        }
-    )
-    | _DELEGATE_READ_ONLY_AND_REVIEW_KEYS
+    | _DELEGATE_ATTEMPT_KEYS
 )
 
 
@@ -144,12 +117,16 @@ def _allowed_tools_arg(value: Any) -> str:
 
 
 class KimiccHarness:
-    """Build a stateless Claude Code invocation routed through KimiCC."""
+    """Build a stateless Claude Code invocation routed through KimiCC.
+
+    Kimi seats admit web, UI and backend coding only, so the harness plans
+    workspace-write implementation and nothing else.
+    """
 
     name = "kimicc"
     # First routable id on the catalog kimicc endpoint. Not the native k3-256k default.
     default_model = kimicc_default_model()
-    supported_modes = frozenset({"read-only", "workspace-write", "danger"})
+    supported_modes = frozenset({ADMITTED_MODE})
 
     def build_invocation(
         self,
@@ -163,8 +140,10 @@ class KimiccHarness:
         tool_config: dict | None,
         effort: str | None = None,
     ) -> InvocationPlan:
-        if mode not in self.supported_modes:
-            raise ValueError(f"KimiccHarness: unsupported mode {mode!r}")
+        tc: dict[str, Any] = tool_config or {}
+        require_runtime_admission("kimicc", mode=mode, model=model, tool_config=tc)
+        if trail_isolation_requested(tc):
+            raise TrailIsolationError(f"KimiccHarness: {format_refusal('kimicc', ['trail sessions'])}")
         if session_id is not None:
             raise ValueError("KimiccHarness is stateless (--bare) and does not support session resume")
         if not _HEADLESS_WRAPPER.is_file():
@@ -188,27 +167,9 @@ class KimiccHarness:
         if not isinstance(coding_model_id, str) or not coding_model_id.strip():
             raise ValueError(f"KimiccHarness: catalog model {model_id!r} has no coding_model_id")
 
-        tc: dict[str, Any] = tool_config or {}
-        if tc.get("review_isolation"):
-            raise ValueError("KimiccHarness does not support sealed review isolation")
-        if tc.get(REVIEW_VERDICT_MARKER_KEY):
-            raise ValueError(f"KimiccHarness: {format_refusal('kimicc', ['review dispatches'])}")
-        trail_isolation = trail_isolation_requested(tc)
-        if trail_isolation:
-            if mode != "read-only":
-                raise TrailIsolationError("KimiCC trail isolation requires mode='read-only'")
-            assert_trail_isolation_config(tc, profile="kimicc")
-            unsupported = sorted(set(tc) - _TRAIL_ISOLATION_TOOL_CONFIG_KEYS)
-            if unsupported:
-                raise TrailIsolationError(
-                    f"KimiCC trail isolation refuses incompatible tool_config keys: {unsupported}"
-                )
         unsupported = sorted(set(tc) - _SUPPORTED_TOOL_CONFIG_KEYS - {"harness"})
         if unsupported:
             raise ValueError(f"KimiccHarness: unsupported tool_config keys: {unsupported}")
-        # Same order as CodexAdapter: refuse a bad read-only lease before any
-        # CLI probe, next to the isolation checks above.
-        read_only_tmp = validate_read_only_tmp_root(tc, cwd, mode, adapter="KimiccHarness")
 
         # The headless wrapper invokes the native Claude binary itself, but
         # resolve it here so a missing harness fails before a task is spawned.
@@ -226,21 +187,7 @@ class KimiccHarness:
             "--prompt",
             prompt,
         ]
-        if trail_isolation:
-            cmd.extend(
-                [
-                    "--mcp-config",
-                    str(tc["mcp_config_path"]),
-                    "--allowedTools",
-                    _allowed_tools_arg(tc["allowed_tools"]),
-                    "--tools",
-                    str(tc["tools"]),
-                    "--strict-mcp-config",
-                    "--setting-sources",
-                    str(tc["setting_sources"]),
-                ]
-            )
-        elif tc.get("strict_mcp_config") and isinstance(tc.get("mcp_config_path"), str):
+        if tc.get("strict_mcp_config") and isinstance(tc.get("mcp_config_path"), str):
             cmd.extend(["--mcp-config", str(tc["mcp_config_path"]), "--strict-mcp-config"])
             if tc.get("allowed_tools"):
                 cmd.extend(["--allowedTools", _allowed_tools_arg(tc["allowed_tools"])])
@@ -256,8 +203,6 @@ class KimiccHarness:
             cmd.extend(["--effort", effective_effort])
 
         env_overrides = {"KIMICC_CLAUDE_BIN": claude_bin}
-        if read_only_tmp is not None:
-            env_overrides["TMPDIR"] = str(read_only_tmp)
         if effective_effort:
             # The wrapper derives Claude Code's environment default from this
             # value. Mirror the exact child argv so an explicit override does

@@ -244,7 +244,7 @@ _DISPATCH_AGENT_CHOICES = (
     "grok",  # canonical native CLI seat
     "grok-build",  # permanent alias → grok
     "grok-hermes",  # demoted Hermes path
-    "kimi",  # managed native kimi-code CLI seat; neutral coding only; no automatic fallback chain
+    "kimi",  # managed native kimi-code CLI seat; web, UI and backend coding only; no automatic fallback chain
     "deepseek",
     "agy",
     "cursor",
@@ -7720,6 +7720,33 @@ def _run_worker(
 
     state_path = _state_path(task_id)
 
+    # The worker is a second entry point: a worker argv built by hand or a
+    # stale parent must not invoke a Kimi seat outside web, UI and backend coding.
+    from scripts.agent_runtime.kimi_admission import runtime_refusal
+
+    kimi_refusal = runtime_refusal(
+        agent,
+        mode=mode,
+        model=model,
+        review=require_review_verdict or review_id is not None,
+    )
+    if kimi_refusal:
+        refused_state = _read_state(state_path) or {"task_id": task_id}
+        refused_state.update(
+            {
+                "status": "failed",
+                "finished_at": datetime.now(UTC).isoformat(),
+                "stderr_excerpt": kimi_refusal[:500],
+                "returncode": None,
+                "returncode_reason": "routing refused before invocation",
+                "last_error": _first_error_line(kimi_refusal),
+                "exit_code": None,
+            }
+        )
+        _write_state_atomic(state_path, refused_state)
+        print(f"❌ {kimi_refusal}", file=sys.stderr)
+        return 1
+
     # Update state to include our actual PID. The parent wrote an
     # initial state before forking; we overwrite with the real one
     # (in case the parent's guess was off, or we were re-exec'd).
@@ -9080,7 +9107,7 @@ def _dispatch(
     from agent_runtime.routes import is_retired_gpt56_model
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
-    # Kimi seats admit neutral coding only; refuse before any check that can
+    # Kimi seats admit web, UI and backend coding only; refuse before any check that can
     # run an external command, write a record, or create a worktree.
     kimi_refusal = _kimi_admission_refusal(
         args,
@@ -11012,13 +11039,18 @@ def _kimi_admission_refusal(
     repo_key: str | None = None,
     repo_role: str | None = None,
 ) -> str | None:
-    """Refusal message when ``agent`` is a Kimi seat and the dispatch is not neutral coding."""
-    from scripts.agent_runtime.kimi_admission import neutral_coding_refusal
+    """Refusal message when ``agent`` is a Kimi seat and the dispatch is not web, UI or backend coding.
 
-    owned = getattr(args, "research_owned_path", None) or []
-    if isinstance(owned, str):
-        owned = [owned]
-    return neutral_coding_refusal(
+    ``--owned-path`` and ``--research-owned-path`` both declare task ownership,
+    so every path from either flag must be admissible.
+    """
+    from scripts.agent_runtime.kimi_admission import dispatch_refusal
+
+    owned: list[str] = []
+    for attr in ("owned_path", "research_owned_path"):
+        value = getattr(args, attr, None) or []
+        owned.extend([value] if isinstance(value, str) else value)
+    return dispatch_refusal(
         agent=agent,
         model=getattr(args, "model", None),
         mode=str(getattr(args, "mode", "") or ""),
@@ -11673,7 +11705,7 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         # "gemini" excluded: it is a permanent retired-CLI alias (→ agy), so
         # it must never appear as a "idle capacity available in: gemini"
         # suggestion — that would just point drivers back at the dead CLI.
-        # "kimi" is suggested only when this dispatch is neutral coding that a
+        # "kimi" is suggested only when this dispatch is web, UI or backend coding that a
         # Kimi seat would admit (default public repo, no refusal reason).
         target_norm = normalize_agent_name(dispatch_agent) or target_norm
         kimi_admissible = target_norm == "kimi" or (
@@ -12225,8 +12257,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="Agent to run for the task: codex, gemini (retired CLI — permanent "
         "alias to agy, do not install gemini), claude, grok "
         "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi "
-        "(neutral coding only: workspace-write in code/test paths; reviews, consults, "
-        "and content are refused).",
+        "(web, UI and backend coding only: workspace-write in site UI, scripts/ and tests/; "
+        "Ukrainian-language content, reviews, consults, design and rules are refused).",
     )
     d.add_argument(
         "--harness",

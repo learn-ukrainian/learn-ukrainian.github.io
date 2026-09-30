@@ -1624,6 +1624,14 @@ def _handle_discuss(args) -> int:
         ACPX_SUPPORTED_PARTICIPANTS if acp_routine else {}
     )
     with_agents = _parse_csv(args.with_agents)
+    # Kimi seats never join discussions: refuse before any channel write.
+    from agent_runtime.kimi_admission import acp_refusal
+
+    for agent in with_agents:
+        kimi_refusal = acp_refusal(agent)
+        if kimi_refusal:
+            print(f"❌ {kimi_refusal}", file=sys.stderr)
+            return 2
     review_error = _gemini_review_request_error(
         channel=args.channel,
         agents=with_agents,
