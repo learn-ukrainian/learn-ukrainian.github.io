@@ -407,6 +407,11 @@ def _codex_reserve_budget():
                 "health": {"healthy": True},
                 "freshness": "fresh",
                 "age_s": 10,
+                "reset_credits": {
+                    "available_count": 2,
+                    "expires_at": ["2099-01-01T00:00:00Z", "2099-02-01T00:00:00Z"],
+                    "fetched_at": datetime.now(UTC).isoformat(),
+                },
                 "codexbar": {
                     "will_last_to_reset": False,
                     "weekly_used_pct": 70.0,
@@ -425,10 +430,71 @@ def test_check_budget_uses_reset_reserve_for_codex(monkeypatch, capsys):
     monkeypatch.setattr(
         delegate,
         "_load_reset_reserve",
-        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 2},
+        lambda _root, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 2,
+            "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+            "expires_at": "2099-03-01T00:00:00Z",
+        },
     )
     assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) == "codex"
     assert "reset reserve active (2 confirmed reset(s) remaining)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("requested", ["codex", "claude"])
+@pytest.mark.parametrize("inventory_state", ["available", "applied", "expired", "unknown", "stale"])
+def test_budget_guard_bounds_old_assertion_by_snapshot_inventory(
+    monkeypatch, tmp_path, capsys, inventory_state, requested
+):
+    from scripts.fleet import reset_reserve
+
+    now = datetime.now(UTC)
+    budget = _codex_reserve_budget()
+    info = budget["agents"]["codex"]
+    info["reset_credits"]["available_count"] = 1
+    if inventory_state == "applied":
+        info["reset_credits"]["available_count"] = 0
+    elif inventory_state == "expired":
+        info["reset_credits"]["expires_at"] = [(now - timedelta(seconds=1)).isoformat()]
+    elif inventory_state == "unknown":
+        info["reset_credits"] = None
+    elif inventory_state == "stale":
+        info["reset_credits"]["fetched_at"] = (now - timedelta(minutes=15)).isoformat()
+    path = tmp_path / "batch_state" / "routing_budget" / "operator_reset_reserve.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": reset_reserve.SCHEMA_VERSION,
+                "provider": "codex",
+                "remaining_resets": 2,
+                "confirmed_at": (now - timedelta(days=7)).isoformat(),
+                "expires_at": "2099-03-01T00:00:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex", "codex": "cursor"})
+    monkeypatch.setattr(
+        reset_reserve, "get_provider_usage_data", lambda _provider: pytest.fail("snapshot inventory must be used")
+    )
+    if requested == "claude" and inventory_state != "available":
+        with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
+            delegate._resolve_agent_with_budget_guard(requested, language_lane=True)
+        assert "reset reserve active" not in capsys.readouterr().err
+        return
+    result = delegate._resolve_agent_with_budget_guard(requested, language_lane=requested == "claude")
+    output = capsys.readouterr().err
+    if inventory_state == "available":
+        assert result == "codex"
+        if requested == "codex":
+            assert "reset reserve active (1 confirmed reset(s) remaining)" in output
+    else:
+        assert result == "cursor"
+        assert "reset reserve active" not in output
 
 
 def test_check_budget_stale_snapshot_does_not_activate_reset_reserve(monkeypatch, capsys):
@@ -438,7 +504,13 @@ def test_check_budget_stale_snapshot_does_not_activate_reset_reserve(monkeypatch
     monkeypatch.setattr(
         delegate,
         "_load_reset_reserve",
-        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 2},
+        lambda _root, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 2,
+            "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+            "expires_at": "2099-03-01T00:00:00Z",
+        },
     )
     assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) == "codex"
     assert "reset reserve active" not in capsys.readouterr().err
@@ -449,7 +521,13 @@ def test_language_fallback_can_land_on_reserve_eligible_codex(monkeypatch):
     monkeypatch.setattr(
         delegate,
         "_load_reset_reserve",
-        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 1},
+        lambda _root, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 1,
+            "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+            "expires_at": "2099-03-01T00:00:00Z",
+        },
     )
     _use_fallbacks(monkeypatch, {"claude": "codex"})
     assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks()) == "codex"

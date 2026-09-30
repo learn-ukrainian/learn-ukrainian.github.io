@@ -1,6 +1,7 @@
 """Transport-scoped ACP recommendation exclusion, including all-lanes failure."""
 
 from copy import deepcopy
+from datetime import UTC, datetime, timedelta
 from types import SimpleNamespace
 
 import pytest
@@ -136,11 +137,22 @@ def test_acp_preserves_verified_codex_reset_reserve(monkeypatch, budget):
             "eligible": True,
             "freshness": "fresh",
             "age_s": 5,
+            "reset_credits": {
+                "available_count": 2,
+                "expires_at": ["2099-01-01T00:00:00Z", "2099-02-01T00:00:00Z"],
+                "fetched_at": datetime.now(UTC).isoformat(),
+            },
             "codexbar": {"weekly_used_pct": 80, "windows": {"primary": {"remaining_pct": 20}}},
             "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
         }
     )
-    budget["reset_reserve"] = {"available": True, "provider": "codex", "remaining_resets": 2}
+    budget["reset_reserve"] = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+        "expires_at": "2099-03-01T00:00:00Z",
+    }
     health = {lane: _health(True) for lane in budget["agents"]}
     monkeypatch.setattr(state_router, "probe_acp_health", lambda _cwd: deepcopy(health))
     monkeypatch.setattr(

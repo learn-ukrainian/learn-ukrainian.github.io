@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from datetime import UTC, datetime, timedelta
 
 import pytest
 
@@ -117,6 +118,11 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
             "health": {"healthy": True},
             "freshness": "fresh",
             "age_s": 10,
+            "reset_credits": {
+                "available_count": 2,
+                "expires_at": ["2099-01-01T00:00:00Z", "2099-02-01T00:00:00Z"],
+                "fetched_at": datetime.now(UTC).isoformat(),
+            },
             "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
             "codexbar": {
                 **budget["agents"]["codex"]["codexbar"],
@@ -125,7 +131,13 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
             },
         }
     )
-    reserve = {"available": True, "provider": "codex", "remaining_resets": 2}
+    reserve = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+        "expires_at": "2099-03-01T00:00:00Z",
+    }
     rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve)}
     assert rows["codex"]["avoid"] is False
     assert rows["codex"]["status"] == "hot"
@@ -142,6 +154,52 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
     assert blocked["codex"]["avoid"] is True
 
 
+def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp_path):
+    from scripts.fleet import reset_reserve
+
+    now = datetime.now(UTC)
+    budget = _fixture_budget()
+    info = budget["agents"]["codex"]
+    info.update(
+        eligible=True,
+        health={"healthy": True},
+        freshness="fresh",
+        age_s=10,
+        runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+        reset_credits={
+            "available_count": 1,
+            "expires_at": ["2099-01-01T00:00:00Z"],
+            "fetched_at": now.isoformat(),
+        },
+    )
+    info["codexbar"].update(weekly_used_pct=72, windows={"primary": {"remaining_pct": 12}})
+    path = tmp_path / "batch_state" / "routing_budget" / "operator_reset_reserve.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": reset_reserve.SCHEMA_VERSION,
+                "provider": "codex",
+                "remaining_resets": 2,
+                "confirmed_at": (now - timedelta(days=7)).isoformat(),
+                "expires_at": "2099-03-01T00:00:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(capacity_pick, "__file__", str(tmp_path / "scripts" / "fleet" / "capacity_pick.py"))
+    monkeypatch.setattr(
+        reset_reserve, "get_provider_usage_data", lambda _provider: pytest.fail("snapshot inventory must be used")
+    )
+    row = next(row for row in capacity_pick.build_lane_rows(budget) if row["lane"] == "codex")
+    assert row["avoid"] is False
+    assert "reset reserve eligible (1 remaining)" in row["notes"]
+    info["reset_credits"]["available_count"] = 0
+    row = next(row for row in capacity_pick.build_lane_rows(budget) if row["lane"] == "codex")
+    assert row["avoid"] is True
+    assert row["reset_reserve_eligible"] is False
+
+
 def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
     budget = _fixture_budget()
     budget["diagnostics"] = {"stale": True}
@@ -151,6 +209,11 @@ def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
             "health": {"healthy": True},
             "freshness": "fresh",
             "age_s": 10,
+            "reset_credits": {
+                "available_count": 2,
+                "expires_at": ["2099-01-01T00:00:00Z", "2099-02-01T00:00:00Z"],
+                "fetched_at": datetime.now(UTC).isoformat(),
+            },
             "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
             "codexbar": {
                 **budget["agents"]["codex"]["codexbar"],
@@ -159,7 +222,13 @@ def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
             },
         }
     )
-    reserve = {"available": True, "provider": "codex", "remaining_resets": 2}
+    reserve = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": 2,
+        "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+        "expires_at": "2099-03-01T00:00:00Z",
+    }
     row = next(row for row in capacity_pick.build_lane_rows(budget, reset_reserve=reserve) if row["lane"] == "codex")
     assert row["avoid"] is True
     assert row["reset_reserve_eligible"] is False
