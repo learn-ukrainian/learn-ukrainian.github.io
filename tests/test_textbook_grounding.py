@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+import os
 import sqlite3
+import subprocess
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -722,3 +725,254 @@ def test_resolvable_reference_keeps_its_specific_excerpt(
     assert calls == [ulp]
     ulp_section = context.split(f"### {ulp}", 1)[1].split("### ", 1)[0]
     assert ">" not in ulp_section
+
+
+_VASHULENKO_GRADE3 = "Вашуленко Grade 3, Будова слова"
+_AVRAMENKO_BUDOVA = "Авраменко, 5 клас. Будова слова: корінь, префікс, суфікс і закінчення."
+_VASHULENKO_WRONG_GRADE = "Вашуленко, 5 клас. Будова слова не з третього класу."
+_LITVINOVA_PAGE_LIST = "Литвінова Grade 7, p.36, 61-62"
+
+
+def test_shared_topic_word_does_not_keep_another_source(monkeypatch) -> None:
+    """Вашуленко Grade 3 must not take an Авраменко grade-5 excerpt that says «Будова слова»."""
+    from wiki import sources_db
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        assert track == "a2"
+        assert limit == 4
+        if query == _VASHULENKO_GRADE3:
+            return [
+                {
+                    "chunk_id": "5-klas-ukrmova-vashulenko_s0010",
+                    "source_type": "textbook_sections",
+                    "title": "Будова слова",
+                    "section_title": "Будова слова",
+                    "text": _VASHULENKO_WRONG_GRADE,
+                    "source_file": "5-klas-ukrmova-vashulenko",
+                    "author": "Вашуленко",
+                    "author_uk": "Вашуленко",
+                    "grade": "5",
+                }
+            ]
+        return [
+            {
+                "chunk_id": "5-klas-ukrmova-avramenko-2022_s0060",
+                "source_type": "textbook_sections",
+                "title": "Будова слова",
+                "section_title": "Будова слова",
+                "text": _AVRAMENKO_BUDOVA,
+                "source_file": "5-klas-ukrmova-avramenko-2022",
+                "author": "Авраменко",
+                "author_uk": "Авраменко",
+                "grade": "5",
+            }
+        ]
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    plan = _excerpt_plan(
+        [
+            _VASHULENKO_GRADE3,
+            "Будова слова",
+            "Вашуленко, Будова слова",
+            "State Standard 2024",
+        ]
+    )
+
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "a2")
+
+    assert _AVRAMENKO_BUDOVA not in context
+    assert _VASHULENKO_WRONG_GRADE not in context
+    assert "5-klas-ukrmova-avramenko-2022" not in context
+    assert "avramenko" not in context.casefold()
+    assert context.count("corpus_missing: true") == 4
+
+
+def test_author_and_grade_agreement_keeps_specific_excerpt(monkeypatch) -> None:
+    """The same topic is kept when the hit's author and grade are the reference's."""
+    from wiki import sources_db
+
+    excerpt = "Корінь і закінчення у Вашуленка для 3 класу."
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        assert query == _VASHULENKO_GRADE3
+        assert track == "a2"
+        assert limit == 4
+        return [
+            {
+                "chunk_id": "S12",
+                "source_type": "textbook_sections",
+                "title": "Будова слова",
+                "section_title": "Будова слова",
+                "text": excerpt,
+                "source_file": "3-klas-ukrainska-mova-vashulenko-2020-1",
+                "grade": 3,
+            }
+        ]
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    plan = _excerpt_plan([_VASHULENKO_GRADE3, _VASHULENKO_GRADE3])
+
+    first = linear_pipeline._build_textbook_excerpt_context(plan, "a2")
+    second = linear_pipeline._build_textbook_excerpt_context(plan, "a2")
+
+    assert first == second
+    assert first.count(excerpt) == 1
+    assert "Same textbook excerpt as 'Вашуленко Grade 3, Будова слова'." in first
+    assert "5-klas" not in first
+
+
+def test_page_list_citation_does_not_resolve_to_first_page(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """`p.36, 61-62` is not page 36. The strict parser returns None; direct lookup must too."""
+    from wiki import sources_db
+
+    page36 = "UNIQUE_LITVINOVA_PAGE_36_MOOD_TABLE"
+    db_path = tmp_path / "sources.db"
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "7-klas-ukrmova-litvinova-2024_s0036",
+                "title": "Сторінка 36",
+                "text": page36,
+                "source_file": "7-klas-ukrmova-litvinova-2024",
+                "grade": "7",
+                "author": "litvinova",
+                "author_uk": "Літвінова",
+            }
+        ],
+    )
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+    calls: list[str] = []
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        calls.append(query)
+        assert track == "b1"
+        assert limit == 4
+        return []
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    rejected = [
+        _LITVINOVA_PAGE_LIST,
+        "Литвінова Grade 7, p.36, 61",
+        "Литвінова Grade 7, p.36 61",
+        "Авраменко Grade 7, p.77, 83",
+        "Літвінова 7 клас, стор. 36, 61-62",
+        "Литвінова Grade 7, p.36-40",
+        "Литвінова Grade 7, p.36–40",
+        "Литвінова Grade 7, p.36—40",
+        "Літвінова 7 клас, стор. 36-40",
+        "Літвінова 7 клас, стор. 36–40",
+        "Літвінова 7 клас, стор.36—40",
+        "Кравцова Grade 2, p.22-23",
+        "Литвінова Grade 7, pp.36",
+        "Литвінова Grade 7, pp. 36-40",
+        "Заболотний Grade 7, p.72-75",
+    ]
+    for title in rejected:
+        assert linear_pipeline._parse_textbook_reference_title(title) is None, title
+
+    assert linear_pipeline._parse_textbook_reference_title("Літвінова Grade 7, p.55") == (
+        "Літвінова",
+        7,
+        55,
+    )
+    assert linear_pipeline._parse_textbook_reference_title("Заболотний 5 клас, стор. 83") == (
+        "Заболотний",
+        5,
+        83,
+    )
+    assert linear_pipeline._parse_textbook_reference_title("Голуб Grade 6, с. 179") == (
+        "Голуб",
+        6,
+        179,
+    )
+    assert linear_pipeline._lookup_textbook_reference_chunk(_LITVINOVA_PAGE_LIST) is None
+
+    plan = _excerpt_plan([_LITVINOVA_PAGE_LIST])
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "b1")
+
+    assert calls == [_LITVINOVA_PAGE_LIST]
+    assert page36 not in context
+    assert "7-klas-ukrmova-litvinova-2024" not in context
+    assert "corpus_missing: true" in context
+
+
+def test_excerpt_context_is_identical_across_hash_seeds(tmp_path: Path) -> None:
+    """Source-identity filtering and same-page dedup do not depend on set order."""
+    repo = Path(__file__).resolve().parents[1]
+    db_path = tmp_path / "sources.db"
+    excerpt = "§ 38 Розмовна лексика з одного джерела."
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "10-klas-ukrmova-karaman-2018_s0187",
+                "title": "Сторінка 105",
+                "text": excerpt,
+                "source_file": "10-klas-ukrmova-karaman-2018",
+                "grade": "10",
+                "author": "karaman",
+                "author_uk": "Караман",
+            }
+        ],
+    )
+    code = """
+import sys
+from pathlib import Path
+
+from scripts.build import linear_pipeline
+
+linear_pipeline.TEXTBOOK_SOURCES_DB_PATH = Path(sys.argv[1])
+wrong = {
+    "chunk_id": "5-klas-ukrmova-avramenko-2022_s0060",
+    "source_type": "textbook_sections",
+    "title": "Будова слова",
+    "text": "Авраменко, 5 клас. Будова слова.",
+    "source_file": "5-klas-ukrmova-avramenko-2022",
+    "author": "Авраменко",
+    "grade": "5",
+}
+right = {
+    "chunk_id": "S12",
+    "source_type": "textbook_sections",
+    "title": "Будова слова",
+    "text": "Корінь і закінчення.",
+    "source_file": "3-klas-ukrainska-mova-vashulenko-2020-1",
+    "grade": 3,
+}
+print(linear_pipeline._textbook_hit_matches_reference("Вашуленко Grade 3, Будова слова", wrong))
+print(linear_pipeline._textbook_hit_matches_reference("Вашуленко Grade 3, Будова слова", right))
+print(linear_pipeline._textbook_hit_matches_reference("Будова слова", right))
+print(linear_pipeline._parse_textbook_reference_title("Литвінова Grade 7, p.36, 61-62"))
+plan = {
+    "references": [
+        {"title": "Караман Grade 10, p.187"},
+        {"title": "Караман Grade 10, p.187"},
+    ],
+    "title": "Звуки",
+    "subtitle": "Літери",
+    "content_outline": [{"section": "Звуки", "points": ["голосні"]}],
+}
+print(linear_pipeline._build_textbook_excerpt_context(plan, "a1"))
+"""
+    outputs: list[str] = []
+    for seed in ("0", "1", "17", "91", "12345"):
+        env = os.environ.copy()
+        env["PYTHONHASHSEED"] = seed
+        completed = subprocess.run(
+            [sys.executable, "-c", code, str(db_path)],
+            check=True,
+            capture_output=True,
+            text=True,
+            env=env,
+            cwd=repo,
+            timeout=60,
+        )
+        outputs.append(completed.stdout)
+    assert len(set(outputs)) == 1
+    assert outputs[0].splitlines()[:4] == ["False", "True", "False", "None"]
+    assert outputs[0].count(excerpt) == 1
+    assert "Same textbook excerpt as 'Караман Grade 10, p.187'." in outputs[0]

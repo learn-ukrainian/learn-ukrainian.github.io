@@ -1966,13 +1966,15 @@ _TEXTBOOK_REFERENCE_TITLE_RE = re.compile(
 )
 # Plans also cite "Author, … N клас, стор. N". The strict English form stays
 # first; this wider shape resolves the same author/grade/page lookup. A page
-# range (стор. 13-15, p.22-23) fails closed instead of citing only the first page.
+# list or range is not one page, so direct lookup leaves it unresolved.
 _TEXTBOOK_AUTHOR_RE = re.compile(r"[А-ЯҐЄІЇA-Z][А-ЯҐЄІЇа-яґєіїA-Za-z'’ʼ-]*")
 _TEXTBOOK_GRADE_RE = re.compile(r"(?i)(?:\bGrade\s+(?P<grade_en>\d+)\b|\b(?P<grade_uk>\d+)\s*клас\b)")
 _TEXTBOOK_PAGE_RE = re.compile(r"(?i)(?:\bp\.\s*|\bpage\s+|[сc]\.\s*|\bстор\.?\s*|\bсторінка\s+)(?P<page>\d+)\b")
 _PAGE_RANGE_TAIL_RE = re.compile(r"\s*[-–—]")
-# Words that show up in citation boilerplate and in unrelated textbook hits.
-# Matching on them would treat a shared chunk as specific to every reference.
+_PP_PAGE_RE = re.compile(r"(?i)\bpp\b")
+_SOURCE_FILE_GRADE_RE = re.compile(r"(?i)(?:^|[^0-9])(\d{1,2})-klas\b")
+# Citation boilerplate is not an author. A title whose only capitals are these
+# words names no source, so a search hit must not be borrowed for it.
 _NON_IDENTIFYING_REFERENCE_TOKENS = frozenset(
     {
         "and",
@@ -2036,9 +2038,29 @@ def _canonicalize_author_uk(author: str) -> str:
     return _CYRILLIC_AUTHOR_CANONICAL.get(author, author)
 
 
+def _direct_page_lookup_rejected(text: str) -> bool:
+    """True when the citation is a page list or range, not one page.
+
+    The strict ``Author Grade N, p.N`` parser returns None for these. Direct
+    lookup must do the same: a comma list, a dash/en-dash/em-dash range,
+    ``pp.``, or a second number after the first page.
+    """
+    if _PP_PAGE_RE.search(text):
+        return True
+    pages = list(_TEXTBOOK_PAGE_RE.finditer(text))
+    if len(pages) != 1:
+        return len(pages) > 1
+    tail = text[pages[0].end() :]
+    if _PAGE_RANGE_TAIL_RE.match(tail):
+        return True
+    if re.search(r"\d", tail):
+        return True
+    return "," in tail
+
+
 def _parse_textbook_reference_title(title: str) -> tuple[str, int, int] | None:
     text = title.strip()
-    if not text:
+    if not text or _direct_page_lookup_rejected(text):
         return None
     match = _TEXTBOOK_REFERENCE_TITLE_RE.match(text)
     if match:
@@ -2052,14 +2074,11 @@ def _parse_textbook_reference_title(title: str) -> tuple[str, int, int] | None:
     pages = list(_TEXTBOOK_PAGE_RE.finditer(text))
     if author_match is None or len(grades) != 1 or len(pages) != 1:
         return None
-    page_match = pages[0]
-    if _PAGE_RANGE_TAIL_RE.match(text[page_match.end() :]):
-        return None
     grade_match = grades[0]
     grade_text = grade_match.group("grade_en") or grade_match.group("grade_uk")
     if grade_text is None:
         return None
-    return (author_match.group(0), int(grade_text), int(page_match.group("page")))
+    return (author_match.group(0), int(grade_text), int(pages[0].group("page")))
 
 
 def _textbook_source_year(source_file: str) -> int:
@@ -2311,48 +2330,81 @@ def _search_literary_hits(query: str, *, level: str, limit: int = 1) -> list[dic
     return literary_hits[:limit]
 
 
-def _reference_distinctive_tokens(title: str) -> set[str]:
-    return {
-        token.casefold()
-        for token in _SOURCE_SEARCH_TERM_RE.findall(title)
-        if not token.isdigit() and token.casefold() not in _NON_IDENTIFYING_REFERENCE_TOKENS
-    }
+def _reference_author_name(title: str) -> str | None:
+    for match in _TEXTBOOK_AUTHOR_RE.finditer(title):
+        token = match.group(0)
+        if token.casefold() in _NON_IDENTIFYING_REFERENCE_TOKENS:
+            continue
+        return token
+    return None
 
 
-def _folded_identity_tokens(tokens: set[str]) -> set[str]:
-    folded: set[str] = set()
-    for token in tokens:
-        value = fold_citation_author(token)
-        if len(value) >= 3:
-            folded.add(value)
-    return folded
+def _reference_grade_number(title: str) -> int | None:
+    found: set[int] = set()
+    for match in _TEXTBOOK_GRADE_RE.finditer(title):
+        value = match.group("grade_en") or match.group("grade_uk")
+        if value is not None:
+            found.add(int(value))
+    if len(found) != 1:
+        return None
+    return next(iter(found))
+
+
+def _folded_name_keys(value: str) -> set[str]:
+    keys: set[str] = set()
+    for token in _SOURCE_SEARCH_TERM_RE.findall(value):
+        if token.isdigit() or token.casefold() in _NON_IDENTIFYING_REFERENCE_TOKENS:
+            continue
+        for candidate in (token, _canonicalize_author_uk(token)):
+            folded = fold_citation_author(candidate)
+            if len(folded) >= 3:
+                keys.add(folded)
+    return keys
+
+
+def _hit_grade_numbers(hit: Mapping[str, Any]) -> set[int]:
+    """Grades named by the hit's own grade field or, if absent, its source slug."""
+    raw = hit.get("grade")
+    if raw not in (None, ""):
+        text = str(raw).strip()
+        if re.fullmatch(r"\d{1,2}", text):
+            return {int(text)}
+        named = _TEXTBOOK_GRADE_RE.search(text)
+        if named:
+            value = named.group("grade_en") or named.group("grade_uk")
+            if value is not None:
+                return {int(value)}
+        return set()
+    found: set[int] = set()
+    for field in ("source_file", "chunk_id"):
+        for match in _SOURCE_FILE_GRADE_RE.finditer(str(hit.get(field) or "")):
+            found.add(int(match.group(1)))
+    if len(found) == 1:
+        return found
+    return set()
+
+
+def _hit_author_keys(hit: Mapping[str, Any]) -> set[str]:
+    keys: set[str] = set()
+    for field in ("author", "author_uk", "source_file", "chunk_id"):
+        keys |= _folded_name_keys(str(hit.get(field) or ""))
+    return keys
 
 
 def _textbook_hit_matches_reference(title: str, hit: Mapping[str, Any]) -> bool:
-    """True when this hit names the reference, not only the shared module topic."""
-    tokens = _reference_distinctive_tokens(title)
-    if not tokens:
+    """True when the hit's source agrees with this reference's author and grade.
+
+    A topic word never qualifies a hit, including one that appears only in the
+    excerpt. A reference that names no author or no grade resolves nothing.
+    """
+    author = _reference_author_name(title)
+    grade = _reference_grade_number(title)
+    if author is None or grade is None:
         return False
-    fields = " ".join(
-        str(hit.get(key) or "")
-        for key in (
-            "chunk_id",
-            "title",
-            "section_title",
-            "author",
-            "author_uk",
-            "source_file",
-            "source",
-            "text",
-            "content",
-            "excerpt",
-            "snippet",
-        )
-    )
-    hit_tokens = {token.casefold() for token in _SOURCE_SEARCH_TERM_RE.findall(fields)}
-    if tokens & hit_tokens:
-        return True
-    return bool(_folded_identity_tokens(tokens) & _folded_identity_tokens(hit_tokens))
+    author_keys = _folded_name_keys(author)
+    if not author_keys or not (author_keys & _hit_author_keys(hit)):
+        return False
+    return grade in _hit_grade_numbers(hit)
 
 
 def _textbook_chunk_identity(hit: Mapping[str, Any]) -> tuple[str, ...]:
