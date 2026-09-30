@@ -16,7 +16,13 @@ from agent_runtime.kimi_admission import KimiAdmissionRefused
 from agent_runtime.runner import InterAgentTransportError
 
 from ._ask_contract import EFFORT_CHOICES
-from ._ask_lifecycle import _process_target, maybe_print_timeout_notice, print_asks, process_background_ask
+from ._ask_lifecycle import (
+    _process_target,
+    mark_timeout_notices_shown,
+    print_asks,
+    print_timeout_notice,
+    process_background_ask,
+)
 from ._broker import bridge_status, broker_cleanup
 from ._codex import (
     has_codex_headroom,
@@ -1962,7 +1968,16 @@ def main():
         from ._channels_cli import _maybe_print_backlog_warnings
 
         _maybe_print_backlog_warnings(_resolve_backlog_warn_agent(args))
-    if args.command is not None:
-        maybe_print_timeout_notice()
-    if not _dispatch_command(args):
+    # Nothing before the command writes: the notices are read query-only and
+    # marked shown only once the command succeeds, so a refused command (a Kimi
+    # seat's included) leaves the broker DB as it was.
+    notices = print_timeout_notice() if args.command is not None else []
+    try:
+        handled = _dispatch_command(args)
+    except SystemExit as exc:
+        if exc.code in (None, 0):
+            mark_timeout_notices_shown(notices)
+        raise
+    mark_timeout_notices_shown(notices)
+    if not handled:
         parser.print_help()

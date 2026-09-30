@@ -53,6 +53,7 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import urllib.request
 import uuid
 from datetime import UTC, datetime, timedelta
@@ -62,7 +63,7 @@ from typing import Any
 from secret_redactor import redact_text, redact_value
 
 from ._config import REPO_ROOT
-from ._db import get_db
+from ._db import connect_readonly, get_db
 from ._prompts import review_protocol_prefix
 
 
@@ -1970,16 +1971,29 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
         conn.close()
 
 
-def live_pending_by_agent(now: str | None = None) -> list[dict[str, Any]]:
+def live_pending_by_agent(now: str | None = None, *, query_only: bool = False) -> list[dict[str, Any]]:
     """Return per-agent live pending counts (authority query for banner + show).
 
     Counts only ``status='pending'`` rows that would *remain* after
     ``expire_stale_deliveries`` — i.e. still within their effective TTL.
     Read-only: never mutates rows. Shared by the CLI backlog banner and
     ``inbox show`` so the two surfaces cannot disagree (#6864).
+
+    ``query_only`` reads through ``connect_readonly``, so the DB is never
+    created or migrated either; an absent, unmigrated or unreadable DB has
+    no rows. The banner uses it because it runs before a command's own checks.
     """
     current = now or _now_iso()
-    conn = get_db()
+    if not query_only:
+        return _live_pending_rows(get_db(), current)
+    try:
+        conn = connect_readonly()
+        return _live_pending_rows(conn, current) if conn is not None else []
+    except sqlite3.Error:
+        return []
+
+
+def _live_pending_rows(conn: Any, current: str) -> list[dict[str, Any]]:
     try:
         rows = conn.execute(
             f"""

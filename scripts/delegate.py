@@ -9189,7 +9189,8 @@ def _dispatch(
 
     caller_task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip()
     if caller_task_id:
-        caller_state = _read_state(_state_path(caller_task_id))
+        # Read-only: this runs before the Kimi gate, so it must not create the task directory.
+        caller_state = _read_state_json(_state_path_no_create(caller_task_id))
         if caller_state is None or caller_state.get("mode") not in _WRITE_CAPABLE_MODES:
             print(
                 f"❌ dispatch refused from task {caller_task_id!r}: "

@@ -15,6 +15,7 @@ import json
 import os
 import re
 import signal
+import sqlite3
 import subprocess
 import sys
 import time
@@ -29,7 +30,7 @@ from . import _config
 from ._ask_contract import MAX_TOTAL_ASK_RETRIES
 from ._broker import _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, PID_DIR, REPO_ROOT
-from ._db import get_db
+from ._db import connect_readonly, get_db
 
 _ASK_AGENT = "ask"
 # Stored on the legacy messages.data JSON so reply completion can reload by id.
@@ -630,25 +631,47 @@ def print_asks(task_id: str | None = None) -> None:
         print(f"{row[0]}  {row[1] or '-'}  {row[2]}  {status}  {consumption}  {row[4]}")
 
 
-def maybe_print_timeout_notice() -> None:
-    """Surface newly timed-out detached asks on the next bridge CLI command."""
+def print_timeout_notice() -> list[int]:
+    """Surface newly timed-out detached asks on the next bridge CLI command; returns their ids.
+
+    Reads query-only: it never creates, migrates or writes the broker DB, so a bridge command
+    can show it before its own admission check. The ids are marked shown by
+    ``mark_timeout_notices_shown``; until then the notice repeats.
+    """
+    try:
+        conn = connect_readonly()
+        if conn is None:
+            return []
+        try:
+            rows = conn.execute(
+                """
+                SELECT id, task_id, to_llm
+                FROM messages
+                WHERE status LIKE 'timed-out:%'
+                ORDER BY id ASC
+                """
+            ).fetchall()
+        finally:
+            conn.close()
+    except sqlite3.Error:  # an unmigrated or unreadable DB has no notice to show
+        return []
+    if not rows:
+        return []
+    labels = ", ".join(f"#{row[0]} ({row[2]}, task {row[1] or '-'})" for row in rows)
+    print(f"⚠️  Background ask timed out: {labels}. Run 'ab asks' for details.", file=sys.stderr)
+    return [int(row[0]) for row in rows]
+
+
+def mark_timeout_notices_shown(message_ids: list[int]) -> None:
+    """Record that the timeout notice for ``message_ids`` was shown, so it is not repeated."""
+    if not message_ids:
+        return
     conn = get_db()
     try:
-        rows = conn.execute(
-            """
-            SELECT id, task_id, to_llm
-            FROM messages
-            WHERE status LIKE 'timed-out:%'
-            ORDER BY id ASC
-            """
-        ).fetchall()
-        if not rows:
-            return
-        labels = ", ".join(f"#{row[0]} ({row[2]}, task {row[1] or '-'})" for row in rows)
-        print(f"⚠️  Background ask timed out: {labels}. Run 'ab asks' for details.", file=sys.stderr)
         conn.executemany(
-            "UPDATE messages SET status = 'timed-out-notified:' || substr(status, 11) WHERE id = ?",
-            [(row[0],) for row in rows],
+            "UPDATE messages SET status = 'timed-out-notified:' || substr(status, 11) "
+            "WHERE id = ? AND status LIKE 'timed-out:%'",
+            [(message_id,) for message_id in message_ids],
         )
         conn.commit()
     finally:

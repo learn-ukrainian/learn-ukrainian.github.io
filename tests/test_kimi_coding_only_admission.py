@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import re
@@ -1627,3 +1628,256 @@ def test_capacity_hint_suggests_kimi_for_web_ui_and_backend_coding(tmp_path, mon
     )
     delegate._check_capacity_hint("codex", args=coding)
     assert "kimi" in capsys.readouterr().err.split("available in:", 1)[1]
+
+
+# --- structural: no filesystem write before any Kimi refusal ---------------------------
+
+
+class _WriteAttempt(BaseException):
+    """A write before the refusal. A ``BaseException``, so no ``except Exception`` handler can swallow it."""
+
+
+_WRITE_OPEN_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_APPEND | os.O_TRUNC
+
+
+@pytest.fixture
+def write_trap(tmp_path, monkeypatch):
+    """Every filesystem, database and process creator raises and is recorded; reads still work.
+
+    State roots (task records, the broker DB) live under ``tmp_path/state``, so
+    a write the trap cannot see still shows up there. Tests seed state first,
+    then call inside ``armed()``.
+    """
+    import builtins
+    import io
+    import shutil
+    import tempfile
+
+    state = tmp_path / "state"
+    work = tmp_path / "work"
+    state.mkdir()
+    work.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(state / "tasks"))
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
+    monkeypatch.delenv("LU_AGENT_COMM_TRANSPORT", raising=False)
+    from scripts.ai_agent_bridge import _db
+
+    monkeypatch.setattr(_db, "DB_PATH", state / "broker" / "messages.db")
+    attempts: list[str] = []
+
+    def trap(name, real=None, reads=None):
+        def creator(*args, **kwargs):
+            if reads is not None and reads(*args, **kwargs):
+                return real(*args, **kwargs)
+            attempts.append(f"{name}{tuple(str(arg) for arg in args[:2])}")
+            raise _WriteAttempt(f"{name} before the Kimi refusal: {args[:2]!r}")
+
+        return creator
+
+    def read_mode(_file, mode="r", *_args, **_kwargs):
+        return not set(str(mode)) & set("wax+")
+
+    def read_flags(_path, flags, *_args, **_kwargs):
+        return not flags & _WRITE_OPEN_FLAGS
+
+    def read_only_db(database, *_args, uri=False, **_kwargs):
+        return bool(uri) and "mode=ro" in str(database)
+
+    def read_only_git(cmd, *_args, **_kwargs):
+        return isinstance(cmd, (list, tuple)) and list(cmd[:1]) == ["git"] and cmd[1] in _GATE_GIT
+
+    @contextlib.contextmanager
+    def armed():
+        """The trap, lifted on exit so nothing outside the call runs under it."""
+        with pytest.MonkeyPatch.context() as trapped:
+            _arm(trapped)
+            yield attempts
+
+    def _arm(monkeypatch) -> None:
+        for owner, name in ((os, "mkdir"), (os, "makedirs"), (os, "replace"), (os, "rename"), (os, "remove")):
+            monkeypatch.setattr(owner, name, trap(f"os.{name}"))
+        for name in ("unlink", "rmdir", "symlink", "link", "truncate"):
+            monkeypatch.setattr(os, name, trap(f"os.{name}"))
+        monkeypatch.setattr(os, "open", trap("os.open", os.open, read_flags))
+        monkeypatch.setattr(builtins, "open", trap("open", builtins.open, read_mode))
+        monkeypatch.setattr(io, "open", trap("io.open", io.open, read_mode))
+        for name in ("mkdir", "touch", "write_text", "write_bytes", "unlink", "rmdir", "rename", "replace"):
+            monkeypatch.setattr(Path, name, trap(f"Path.{name}"))
+        for name in ("mkstemp", "mkdtemp", "NamedTemporaryFile", "TemporaryFile", "TemporaryDirectory"):
+            monkeypatch.setattr(tempfile, name, trap(f"tempfile.{name}"))
+        for name in ("copy", "copy2", "copyfile", "copytree", "move", "rmtree"):
+            monkeypatch.setattr(shutil, name, trap(f"shutil.{name}"))
+        monkeypatch.setattr(sqlite3, "connect", trap("sqlite3.connect", sqlite3.connect, read_only_db))
+        monkeypatch.setattr(subprocess, "Popen", trap("subprocess.Popen", subprocess.Popen, read_only_git))
+
+    return types.SimpleNamespace(state=state, work=work, armed=armed, monkeypatch=monkeypatch)
+
+
+def _seed_task(state: Path, task_id: str, record: dict) -> None:
+    tasks = state / "tasks"
+    tasks.mkdir(exist_ok=True)
+    (tasks / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, **record}), encoding="utf-8")
+
+
+def _tree(root: Path) -> dict[str, bytes]:
+    return {str(path.relative_to(root)): path.read_bytes() if path.is_file() else b"" for path in root.rglob("*")}
+
+
+def _dispatch_main(argv):
+    return lambda _trap: delegate.main(argv)
+
+
+def _nested_dispatch(parent_mode: str | None):
+    def call(trap):
+        trap.monkeypatch.setenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "kimi-parent")
+        return delegate.main(_dispatch())
+
+    def seed(state):
+        if parent_mode:
+            _seed_task(state, "kimi-parent", {"mode": parent_mode, "status": "running"})
+
+    return seed, call
+
+
+def _worker(mode: str):
+    def call(trap):
+        return delegate._run_worker(
+            task_id="kimi-worker",
+            agent="kimi",
+            prompt="Implement it.",
+            mode=mode,
+            cwd_str=str(trap.work),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+        )
+
+    return call
+
+
+def _runner_invoke(mode: str):
+    def call(trap):
+        from scripts.agent_runtime import runner
+
+        return runner.invoke("kimi", "Implement it.", mode=mode, cwd=trap.work, tool_config=None)
+
+    return call
+
+
+def _adapter(harness: str):
+    def call(trap):
+        from scripts.agent_runtime.adapters import kimi as kimi_adapter
+        from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
+
+        adapter = kimicc_adapter.KimiccHarness() if harness == "kimicc" else kimi_adapter.KimiAdapter()
+        return adapter.build_invocation(
+            prompt="p", mode="read-only", cwd=trap.work, model=None, task_id="t", session_id=None, tool_config=None
+        )
+
+    return call
+
+
+def _acp_ask(trap):
+    from scripts.ai_agent_bridge import _acp_compat
+
+    return _acp_compat.run_compat_ask("kimi", "Consult on this design.", task_id="kimi-consult")
+
+
+def _acp_inter_agent(trap):
+    from scripts.agent_runtime import runner
+
+    trap.monkeypatch.setenv(runner.ACPX_TRANSPORT_ENV, "active")
+    return runner.invoke_inter_agent(
+        "kimi", "Consult.", cwd=trap.work, task_id="t", correlation_id="c", idempotency_key="i"
+    )
+
+
+def _acp_discuss(trap):
+    from scripts.agent_runtime import acpx_discuss
+
+    return acpx_discuss.run_discussion(
+        prompt="Compare the options.",
+        cwd=trap.work,
+        task_id="t",
+        correlation_id="c",
+        idempotency_key="i",
+        rounds=1,
+        participants=("claude", "kimi"),
+    )
+
+
+def _bridge(*argv: str, legacy_plane: bool = False):
+    def call(trap):
+        from scripts.ai_agent_bridge import _channels_cli, _cli
+
+        if legacy_plane:  # authority mode retires `inbox run` before the Kimi gate
+            trap.monkeypatch.setattr(_channels_cli, "_legacy_writes_retired", lambda: False)
+        trap.monkeypatch.setattr(sys, "argv", ["ab", *argv])
+        return _cli.main()
+
+    return call
+
+
+_PARENT_UNAVAILABLE = "read-only or unavailable parent task record"
+_NESTED_WITH_PARENT = _nested_dispatch("workspace-write")
+_NESTED_READ_ONLY_PARENT = _nested_dispatch("read-only")
+_NESTED_WITHOUT_PARENT = _nested_dispatch(None)
+
+
+@pytest.mark.parametrize(
+    ("seed", "call", "refusal"),
+    [
+        pytest.param(None, _dispatch_main(_dispatch()), _TOKEN, id="dispatch-read-only"),
+        pytest.param(None, _dispatch_main(_dispatch(*_WRITE)), _TOKEN, id="dispatch-unowned-write"),
+        pytest.param(*_NESTED_WITH_PARENT, _TOKEN, id="nested-dispatch-with-parent"),
+        pytest.param(*_NESTED_READ_ONLY_PARENT, _PARENT_UNAVAILABLE, id="nested-dispatch-read-only-parent"),
+        pytest.param(*_NESTED_WITHOUT_PARENT, _PARENT_UNAVAILABLE, id="nested-dispatch-without-parent"),
+        pytest.param(None, _worker("read-only"), _TOKEN, id="worker-read-only"),
+        pytest.param(
+            lambda state: _seed_task(state, "kimi-worker", {"mode": "workspace-write"}),
+            _worker("workspace-write"),
+            _TOKEN,
+            id="worker-unowned-write",
+        ),
+        pytest.param(None, _runner_invoke("read-only"), _TOKEN, id="runner-invoke-read-only"),
+        pytest.param(None, _runner_invoke("workspace-write"), _TOKEN, id="runner-invoke-unowned-write"),
+        pytest.param(None, _adapter("kimi"), _TOKEN, id="kimi-adapter"),
+        pytest.param(None, _adapter("kimicc"), _TOKEN, id="kimicc-adapter"),
+        pytest.param(None, _acp_ask, _TOKEN, id="acp-ask"),
+        pytest.param(None, _acp_inter_agent, _TOKEN, id="acp-inter-agent"),
+        pytest.param(None, _acp_discuss, _TOKEN, id="acp-discuss"),
+        pytest.param(None, _bridge("ask-kimi", "Consult.", "--task-id", "t"), _TOKEN, id="bridge-ask"),
+        pytest.param(
+            None,
+            _bridge("ask-claude", "Consult.", "--task-id", "t", "--to-model", "kimi-code/k3"),
+            _TOKEN,
+            id="bridge-ask-kimi-model",
+        ),
+        pytest.param(None, _bridge("process-kimi", "7"), _TOKEN, id="bridge-process"),
+        pytest.param(None, _bridge("inbox", "run", "kimi", "--once", legacy_plane=True), _TOKEN, id="bridge-inbox-run"),
+        pytest.param(
+            None, _bridge("discuss", "architecture", "Compare.", "--with", "claude,kimicc"), _TOKEN, id="bridge-discuss"
+        ),
+    ],
+)
+def test_no_entry_path_writes_before_the_kimi_refusal(write_trap, capsys, seed, call, refusal):
+    """Every Kimi entry mode refuses with every creator trapped, and leaves the state roots as they were."""
+    if seed:
+        seed(write_trap.state)
+    before = _tree(write_trap.state)
+
+    with write_trap.armed() as attempts:
+        try:
+            outcome = call(write_trap)
+        except _WriteAttempt as exc:
+            outcome = exc
+        except SystemExit as exc:
+            outcome = exc.code
+        except Exception as exc:  # each entry point refuses with its own error type
+            outcome = exc
+    captured = capsys.readouterr()
+
+    assert attempts == []
+    assert refusal in f"{outcome}\n{captured.out}\n{captured.err}"
+    assert _tree(write_trap.state) == before

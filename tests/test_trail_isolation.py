@@ -23,6 +23,7 @@ from agent_runtime.runner import invoke
 from agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
 from scripts.common.repo_root import project_interpreter
 from scripts.orchestration.trails import trail_mcp
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 FAKE_GROK = "/usr/local/bin/grok"
 FAKE_CLAUDE = "/usr/local/bin/claude"
@@ -162,6 +163,8 @@ def test_kimi_trail_sessions_are_refused_at_every_boundary(tmp_path: Path, harne
     with patch("agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
         with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
             invoke("kimi", "Run the trail.", tool_config={"trail_isolation": True, **extra})
+    # Admitted coding work (owned, Cyrillic-free paths) still refuses a trail session.
+    admitted = admitted_tool_config(tmp_path, {"trail_isolation": True, **extra})
     for adapter in (KimiAdapter(), KimiccHarness()):
         with pytest.raises(TrailIsolationError, match="trail sessions"):
             adapter.build_invocation(
@@ -171,7 +174,7 @@ def test_kimi_trail_sessions_are_refused_at_every_boundary(tmp_path: Path, harne
                 model=None,
                 task_id=None,
                 session_id=None,
-                tool_config={"trail_isolation": True, **extra},
+                tool_config=admitted,
             )
     assert not hasattr(trail_isolation, "KIMICC_TRAIL_TOOLS")
 

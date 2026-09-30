@@ -929,7 +929,9 @@ def _pending_backlog_rows() -> list[dict[str, Any]]:
     Uses the same authority query as ``inbox show``
     (``_channels.live_pending_by_agent``): only within-TTL ``pending``
     rows. Dead lanes are excluded (#5113) — expire them via
-    ``cleanup --expire`` instead of nagging every CLI invocation.
+    ``cleanup --expire`` instead of nagging every CLI invocation. Reads
+    query-only: the banner runs before the command's own checks, so it
+    never creates, migrates or writes the broker DB.
     """
     dead = _channels.dead_lane_agents()
     return [
@@ -938,7 +940,7 @@ def _pending_backlog_rows() -> list[dict[str, Any]]:
             "count": int(row["count"]),
             "oldest_created_at": str(row["oldest_created_at"]),
         }
-        for row in _channels.live_pending_by_agent()
+        for row in _channels.live_pending_by_agent(query_only=True)
         if row["oldest_created_at"] and row["agent"] not in dead
     ]
 
