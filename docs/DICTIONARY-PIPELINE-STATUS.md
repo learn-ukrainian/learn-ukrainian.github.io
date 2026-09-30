@@ -154,7 +154,7 @@ No group could be resolved from that evidence and no index was reassigned:
 
 There was no recoverable identity to apply. One bounded replay through the
 fixed parser was a no-op. The per-row disposition table for all 77 residual
-rows is posted on [issue #9347](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9347#issuecomment-5918274959).
+rows is posted on [issue #9347](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9347#issuecomment-5918340705).
 Source-response digests are recorded in that table; raw responses remain in
 canonical ULIF cache objects with their `stored_at` times. Per-row request
 digests were not retained.
