@@ -35,8 +35,8 @@ policy:
     - CodexBar is a health and quota signal, not a complete model inventory.
     - >-
       Cursor auto is a harness choice, never a model identity for formal review. Operator decision
-      2026-09-30 (#9274): Auto runs only a well-defined coding task (a write-capable implementation
-      dispatch with owned paths and a green DoR issue card); every other Cursor use pins a concrete
+      2026-09-30 (#9274): Auto runs only a well-defined coding task (a write-capable dispatch typed
+      --research-role implementation, with owned paths and a green DoR issue card); every other Cursor use pins a concrete
       approved model (orchestrator_seats.cursor).
     - >-
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
@@ -1201,8 +1201,8 @@ orchestrator_seats:
       Cursor orchestrator seat (parent #6952, #6955). The seat runs the concrete pin
       grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin.
       Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task
-      (auto_scope: a write-capable implementation dispatch with owned paths and a green
-      DoR issue card) and only within the explicit allowlist (currently grok-4.7 [xAI],
+      (auto_scope: a write-capable dispatch typed --research-role implementation, with owned
+      paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI],
       composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract). The driver
       seat, review, design, consults, discussions and recon never run Auto.
       When cursor:auto reports resolved_model=unknown, resolve its identity to the

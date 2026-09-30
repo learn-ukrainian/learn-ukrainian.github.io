@@ -54,10 +54,11 @@ Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rs
 ### 1b. Free-lane utilization (operator 2026-08-08 / #6468; capacity-first 2026-08-12 / #4707)
 
 **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** pass an explicit
-`--model`. `auto` is allowed only for a well-defined coding task — a write-capable implementation
-dispatch with `--owned-path` and a PASS DoR issue card; `delegate.py` refuses it otherwise. The
-driver seat, review, design, consults, discussions, recon and unclear work pin `grok-4.7` or
-`composer-2.5`. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
+`--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
+`--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
+card; `delegate.py` refuses it otherwise. The driver seat, design, consults, discussions, recon and
+unclear work pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer
+resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
 pool has headroom. A review of a Grok author must use an Other Models slug, not a Grok

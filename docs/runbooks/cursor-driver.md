@@ -28,7 +28,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 ## Auto Allowlist & ~30-Day Refresh Contract
 
-- **Scope (operator decision 2026-09-30, #9274):** Auto runs only a well-defined coding task — a worker `delegate.py dispatch --agent cursor --model auto` in a write-capable mode with `--owned-path` and a PASS DoR issue card, not review-typed and not classified design, consult, discussion, recon or advisory. `delegate.py` refuses anything else (`cursor_auto_outside_coding_task`) and names the pins; the Cursor adapter refuses Auto without delegate's admission. The driver seat, reviews, ACP consults and discussions pin `grok-4.7` or `composer-2.5`.
+- **Scope (operator decision 2026-09-30, #9274):** Auto runs only a well-defined coding task — a worker `delegate.py dispatch --agent cursor --model auto` typed `--research-role implementation`, in a write-capable mode with `--owned-path` and a PASS DoR issue card, not review-typed. A missing or other role is unclassified. `delegate.py` refuses anything else (`cursor_auto_outside_coding_task`) and names the pins; the Cursor adapter refuses Auto without delegate's admission and in `plan` or `ask` mode. The driver seat, ACP consults and discussions pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer resolver selects.
 - **Explicit Allowlist:** Within that scope, Auto is permitted only when it resolves within the catalog allowlist:
   - `grok-4.7`
   - `composer-2.5`

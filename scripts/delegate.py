@@ -11255,11 +11255,10 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     return False
 
 
-# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding task.
-# A research role or task family naming any of these is not one.
-_CURSOR_AUTO_NON_CODING_CLASSES = frozenset(
-    {"advisor", "advisory", "audit", "consult", "consultation", "design", "discuss", "discussion", "recon", "review", "scout", "scouting"}
-)
+# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding task,
+# typed by the dispatch's declared functional role (``--research-role``). Any other role,
+# or none, pins a concrete model.
+CURSOR_AUTO_IMPLEMENTATION_ROLE = "implementation"
 CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
 
 
@@ -11279,32 +11278,28 @@ def _cursor_auto_refusal(
 ) -> str | None:
     """Refusal when the admitted launch asks Cursor for Auto outside a well-defined coding task.
 
-    Auto needs positive evidence of that task: a write-capable mode, at least one
-    ``--owned-path``, a DoR preflight that checked an issue card and found it PASS
-    (``--allow-dor-warn`` is not PASS), no review typing, and no non-coding research
-    role or task family. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    Auto needs positive evidence of that task: ``--research-role implementation``
+    (the declared functional role; a missing or any other role is unclassified for
+    Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
+    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
     """
     from scripts.review.model_catalog import cursor_pinned_models, is_cursor_auto_selector
 
     if agent != "cursor" or not is_cursor_auto_selector(model):
         return None
     reasons: list[str] = []
+    role = str(getattr(args, "research_role", None) or "").strip()
+    if not role:
+        reasons.append(f"the task is unclassified (no --research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE})")
+    elif role != CURSOR_AUTO_IMPLEMENTATION_ROLE:
+        reasons.append(f"--research-role {role[:64]!r} is not {CURSOR_AUTO_IMPLEMENTATION_ROLE}")
     if args.mode not in _WRITE_CAPABLE_MODES:
         reasons.append(f"mode {args.mode} is not write-capable")
     if _dispatch_is_review_typed(args):
         reasons.append("the dispatch is review-typed")
     if not _declared_owned_paths(getattr(args, "owned_path", None)):
         reasons.append("no --owned-path")
-    classes = sorted(
-        {
-            token
-            for attr in ("research_role", "research_task_family")
-            for token in re.split(r"[^a-z]+", str(getattr(args, attr, "") or "").casefold())
-            if token in _CURSOR_AUTO_NON_CODING_CLASSES
-        }
-    )
-    if classes:
-        reasons.append(f"the task is classified {', '.join(classes)}")
     if not dor_record or not dor_record.get("issues"):
         reasons.append("no DoR issue card was checked")
     elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
@@ -11314,7 +11309,7 @@ def _cursor_auto_refusal(
     pins = " or ".join(f"--model {pin}" for pin in cursor_pinned_models())
     return (
         f"❌ dispatch refused: cursor_auto_outside_coding_task: --agent cursor --model {model} runs only a "
-        f"write-capable implementation dispatch with owned paths and a PASS DoR issue card ({'; '.join(reasons)}); "
+        f"--research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE} write dispatch with owned paths and a PASS DoR issue card ({'; '.join(reasons)}); "
         f"pin a concrete model: {pins} (operator decision 2026-09-30, #9274)"
     )
 
@@ -13268,7 +13263,8 @@ def build_parser() -> argparse.ArgumentParser:
             "ADR-011 P3 research context: the task's single role (e.g. quality). "
             "Explicit only — never inferred from the prompt, agent, provider, or "
             "branch. Combined with the other --research-* flags, injects bounded, "
-            "pointer-only research pointers (bodies fetched on demand)."
+            "pointer-only research pointers (bodies fetched on demand). "
+            "`implementation` types a coding dispatch; --agent cursor --model auto requires it (#9274)."
         ),
     )
     d.add_argument(

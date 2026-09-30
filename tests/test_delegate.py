@@ -6977,7 +6977,7 @@ def _cursor_auto_args(**overrides: Any) -> argparse.Namespace:
         "model": "auto",
         "mode": "danger",
         "owned_path": ["scripts/delegate.py"],
-        "research_role": None,
+        "research_role": "implementation",
         "research_task_family": None,
         "review": False,
         "review_attempt": None,
@@ -6996,16 +6996,23 @@ def _cursor_auto_args(**overrides: Any) -> argparse.Namespace:
         ({"review_profile": "code"}, _PASS_DOR, "review-typed"),
         ({"review_attempt": "attempt-1"}, _PASS_DOR, "review-typed"),
         ({"owned_path": None}, _PASS_DOR, "no --owned-path"),
-        ({"research_role": "design"}, _PASS_DOR, "classified design"),
-        ({"research_task_family": "consult"}, _PASS_DOR, "classified consult"),
-        ({"research_task_family": "code-review"}, _PASS_DOR, "classified review"),
-        ({"research_role": "recon"}, _PASS_DOR, "classified recon"),
+        # Positive typing: only --research-role implementation admits Auto.
+        ({"research_role": None}, _PASS_DOR, "unclassified (no --research-role implementation)"),
+        ({"research_role": "  "}, _PASS_DOR, "unclassified (no --research-role implementation)"),
+        ({"research_role": None, "research_task_family": "implementation"}, _PASS_DOR, "unclassified"),
+        ({"research_role": "architecture"}, _PASS_DOR, "--research-role 'architecture' is not implementation"),
+        ({"research_role": "planning"}, _PASS_DOR, "--research-role 'planning' is not implementation"),
+        ({"research_role": "driver"}, _PASS_DOR, "--research-role 'driver' is not implementation"),
+        ({"research_role": "reviewer"}, _PASS_DOR, "--research-role 'reviewer' is not implementation"),
+        ({"research_role": "consult"}, _PASS_DOR, "--research-role 'consult' is not implementation"),
+        ({"research_role": "Implementation"}, _PASS_DOR, "--research-role 'Implementation' is not implementation"),
+        ({"research_role": "implementation-design"}, _PASS_DOR, "is not implementation"),
         ({}, None, "no DoR issue card was checked"),
         ({}, {"issues": [], "warnings": {}}, "no DoR issue card was checked"),
         ({}, {"issues": [9274], "warnings": {"9274": "acceptance_criteria"}}, "not PASS"),
         ({}, {"issues": [9274], "warnings": {}, "allow_warn_reason": "urgent"}, "not PASS"),
         ({"model": "Auto", "mode": "workspace-write", "owned_path": None}, _PASS_DOR, "no --owned-path"),
-        ({"model": "cursor:auto", "research_role": "design"}, _PASS_DOR, "classified design"),
+        ({"model": "cursor:auto", "research_role": "design"}, _PASS_DOR, "--research-role 'design' is not implementation"),
     ],
 )
 def test_cursor_auto_refused_outside_a_well_defined_coding_task(overrides, dor_record, reason):
@@ -7020,8 +7027,18 @@ def test_cursor_auto_refused_outside_a_well_defined_coding_task(overrides, dor_r
 
 @pytest.mark.parametrize("mode", ["workspace-write", "danger"])
 def test_cursor_auto_admitted_for_a_write_implementation_dispatch(mode):
-    args = _cursor_auto_args(mode=mode, research_role="implementation", research_task_family="delegate-admission")
+    args = _cursor_auto_args(mode=mode, research_role=" implementation ", research_task_family="delegate-admission")
     assert delegate._cursor_auto_refusal(args, agent="cursor", model="auto", dor_record=_PASS_DOR) is None
+
+
+def test_cursor_auto_review_typed_implementation_role_is_refused():
+    """A review flag refuses Auto even when the declared role is implementation."""
+    args = _cursor_auto_args(review=True)
+    refusal = delegate._cursor_auto_refusal(args, agent="cursor", model="auto", dor_record=_PASS_DOR)
+    assert refusal is not None
+    assert "the dispatch is review-typed" in refusal
+    assert "unclassified" not in refusal
+    assert "is not implementation" not in refusal
 
 
 @pytest.mark.parametrize("model", [None, "", "grok-4.7", "grok-4.7-high", "composer-2.5", "claude-sonnet-5-5-high"])
@@ -7068,6 +7085,7 @@ def _cursor_dispatch(tmp_path, monkeypatch, *, dor_record, **overrides: Any):
         "mode": "danger",
         "model": "auto",
         "owned_path": ["scripts/delegate.py"],
+        "research_role": "implementation",
         "cwd": None,
         "worktree": str(worktree_path),
         "base": "main",
@@ -7096,6 +7114,7 @@ def test_dispatch_admits_cursor_auto_for_a_green_dor_write_implementation(tmp_ta
         ({"require_review_verdict": True}, _PASS_DOR, "REVIEW_ROUTE_REFUSED"),
         ({"owned_path": None}, _PASS_DOR, "cursor_auto_outside_coding_task"),
         ({"research_role": "design"}, _PASS_DOR, "cursor_auto_outside_coding_task"),
+        ({"research_role": None}, _PASS_DOR, "the task is unclassified"),
         (
             {"allow_dor_warn": "urgent"},
             {"issues": [9274], "warnings": {"9274": "verify"}, "allow_warn_reason": "urgent"},
