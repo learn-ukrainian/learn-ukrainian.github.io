@@ -5669,17 +5669,21 @@ def _advisory_completion_gate(
 
 
 # #9275: the single definition of the completion gates a task record calls for.
-# The worker's terminal settle runs them, and so does every recovery path that
-# can report ``done`` (stale-record settlement, rate-limit reclassification, the
-# ask-* review wrapper): success needs every applicable gate to pass.
+# The worker's terminal settle runs them, and so does the ask-* review wrapper;
+# success needs every applicable gate to pass. Recovery paths (stale-record
+# settlement, rate-limit reclassification) apply :func:`recovery_requires_rerun`.
+COMPLETION_GATE_BACKGROUND_LEFTOVERS = "background_leftovers"
 COMPLETION_GATE_DELIVERY = "delivery"
 COMPLETION_GATE_REVIEW_VERDICT = "review_verdict"
 COMPLETION_GATE_ADVISORY_CEILING = "advisory_ceiling"
 COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE = "advisory_exempt_change"
 # Recovery's pseudo-gate: a failure the record already carries is never overwritten.
 COMPLETION_GATE_RECORDED_FAILURE = "recorded_failure"
-# A gate that reads the worker's response cannot run when the saved response is gone or replaced.
+# The delivery gate reads a zero-commit run's response; it cannot run when the saved response is gone or replaced.
 COMPLETION_GATE_RESPONSE_UNAVAILABLE = "completion_gate_response_unavailable"
+# Operator decision 2026-09-30 (option A): recovery never settles a record with a
+# completion gate beyond delivery ``done``; it settles it ``failed`` with this cause.
+RECOVERY_REQUIRES_RERUN = "recovery_requires_rerun"
 # Record fields that hold a failure the worker already found.
 _RECORDED_FAILURE_FIELDS = (
     "failure_reason",
@@ -5711,12 +5715,16 @@ class CompletionGateResult:
 def applicable_completion_gates(record: Mapping[str, Any]) -> tuple[str, ...]:
     """Every completion gate the record calls for, in the order the worker runs them.
 
-    Delivery binds every write-capable dispatch; the review verdict binds an
-    opted-in review (``require_review_verdict``); a write-capable bounded worker
-    has its envelope ceilings checked, else a content exemption its changed paths.
+    An exit scan that did not rule out live background jobs (``leftovers_scan``
+    other than clear) leaves the run unconfirmed; delivery binds every
+    write-capable dispatch; the review verdict binds an opted-in review
+    (``require_review_verdict``); a write-capable bounded worker has its envelope
+    ceilings checked, else a content exemption its changed paths.
     """
     write = record.get("mode") in _WRITE_CAPABLE_MODES
     gates: list[str] = []
+    if record.get("leftovers_scan") not in (None, worker_leftovers.SCAN_CLEAR) or record.get("incomplete_run_reason"):
+        gates.append(COMPLETION_GATE_BACKGROUND_LEFTOVERS)
     if write:
         gates.append(COMPLETION_GATE_DELIVERY)
     if record.get("require_review_verdict"):
@@ -5742,6 +5750,9 @@ def run_completion_gate(
     None that the worker's tree is gone: a gate that needs either fails typed,
     never passes.
     """
+    if gate == COMPLETION_GATE_BACKGROUND_LEFTOVERS:
+        reason = record.get("incomplete_run_reason") or worker_leftovers.SCAN_UNKNOWN_REASON
+        return CompletionGateResult(gate, str(reason), str(reason), status="needs_finalize")
     if gate == COMPLETION_GATE_DELIVERY:
         if response is None and commits_ahead == 0:
             # Only a zero-commit run reads the response (its no_change declaration).
@@ -5751,9 +5762,7 @@ def run_completion_gate(
         )
         return CompletionGateResult(gate, reason, reason or "", status=_NO_DELIVERABLE_STATUS)
     if gate == COMPLETION_GATE_REVIEW_VERDICT:
-        if response is None:
-            return CompletionGateResult(gate, COMPLETION_GATE_RESPONSE_UNAVAILABLE, "saved response unavailable")
-        reason = _review_verdict_failure_reason(response)
+        reason = _review_verdict_failure_reason(response or "")
         return CompletionGateResult(gate, reason, reason or "")
     if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
         advisory = _advisory_completion_gate(record, worktree)
@@ -5779,7 +5788,7 @@ def recorded_completion_failure(record: Mapping[str, Any]) -> CompletionGateResu
 def saved_task_response(record: Mapping[str, Any], record_path: Path | None = None) -> str | None:
     """The worker's response as the record saved it, or None when it is gone or was replaced.
 
-    The ``.result`` sidecar next to the record is read first (it moves with the
+    Recovery's delivery gate reads it for a zero-commit run. The ``.result`` sidecar next to the record is read first (it moves with the
     record into the archive), then ``result_file``. A text whose length is not
     the recorded ``response_chars`` was replaced after the worker finished. A
     record with an empty response wrote no result file: that response is ``""``.
@@ -5803,17 +5812,36 @@ def saved_task_response(record: Mapping[str, Any], record_path: Path | None = No
     return None
 
 
+def recovery_requires_rerun(record: Mapping[str, Any]) -> CompletionGateResult | None:
+    """Recovery's refusal for a record with any completion gate beyond delivery; None for a delivery-only record.
+
+    Operator decision 2026-09-30 (option A): recovery runs after the worker is
+    gone, so it never re-measures a tree or reconstructs a response to settle
+    such a record ``done``. It settles it ``failed`` with :data:`RECOVERY_REQUIRES_RERUN`,
+    or with the failure the record already carries, for the driver to re-run
+    or finalize by hand.
+    """
+    gated = [gate for gate in applicable_completion_gates(record) if gate != COMPLETION_GATE_DELIVERY]
+    if not gated:
+        return None
+    recorded = recorded_completion_failure(record)
+    cause = recorded.failure if recorded is not None else RECOVERY_REQUIRES_RERUN
+    detail = f"completion gates {', '.join(gated)} run only in the worker; re-run the task or finalize it by hand"
+    return CompletionGateResult(gated[0], cause, detail)
+
+
 def completion_gate_recovery_failure(
     record: Mapping[str, Any], *, response: str | None, commits_ahead: int | None
 ) -> CompletionGateResult | None:
-    """The first reason recovery may not report this record ``done``; None when every applicable gate passes.
+    """The reason recovery may not report this record ``done``; None when it may.
 
-    Recovery runs after the worker is gone, so a failure the record already
-    carries stands, every gate in :func:`applicable_completion_gates` is re-run
-    on the saved ``response`` and the ``commits_ahead`` evidence the caller
-    holds now, and a gate that measures the worker's tree fails as unmeasured:
-    the tree is no longer the one the worker left.
+    A gated record is refused by :func:`recovery_requires_rerun`; a delivery-only
+    record keeps a failure it already carries, else its delivery gate runs on the
+    saved ``response`` and the ``commits_ahead`` evidence the caller holds now.
     """
+    refusal = recovery_requires_rerun(record)
+    if refusal is not None:
+        return refusal
     recorded = recorded_completion_failure(record)
     if recorded is not None:
         return recorded
@@ -9004,6 +9032,8 @@ def _run_worker(
         for gate in applicable_completion_gates(gate_record):
             if final_status != "done":
                 break
+            if gate == COMPLETION_GATE_BACKGROUND_LEFTOVERS:
+                continue  # the exit scan above already left this run needs_finalize
             if gate in (COMPLETION_GATE_DELIVERY, COMPLETION_GATE_REVIEW_VERDICT) and (
                 returncode != 0 or needs_finalize or no_deliverable_reason is not None
             ):

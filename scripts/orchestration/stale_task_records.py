@@ -25,19 +25,22 @@ finalized; they only inflate every scan and read as open attention items.
   out), a recorded commit missing from the object store, or a merged pull
   request that shares the branch name but none of the record's commits.
 
-Only class C is written. ``done`` needs a merged pull request tied to the task
-by commit identity: its head or merge commit is a recorded commit, or its head
-descends from one, and every #9275 completion gate the record calls for
-(:func:`delegate.applicable_completion_gates`) passes when re-run by
-:func:`delegate.completion_gate_recovery_failure`: a failure the record already
-carries stands; delivery counts a pull request merged since the task started;
-the review verdict is re-checked on the saved response (gone or replaced: a
-typed failure); a bounded worker's envelope ceilings or a content exemption's
-changed paths cannot be re-measured, because the worktree is gone. A failing
-gate settles its typed cause (``failed``, or ``no_deliverable`` for delivery),
-never ``done``. A pull request that only reuses the branch name may belong
-to a later task, so that record moves to D instead. A clean exit with no
-commits settles ``no_deliverable``; anything else settles ``failed``. Evidence
+Only class C is written. A record with any #9275 completion gate beyond
+delivery (:func:`delegate.applicable_completion_gates`: an exit scan that did
+not clear, a review verdict, an advisory envelope or content exemption) is
+never settled ``done`` (operator decision 2026-09-30, option A): those gates
+run only in the worker, so :func:`delegate.recovery_requires_rerun` settles it
+``failed`` with ``recovery_requires_rerun``, or with the failure it already
+carries, and the report lists it for the driver to re-run or finalize by hand;
+no pull request is looked up for it. For any other record ``done`` needs a
+merged pull request tied to the task by commit identity: its head or merge
+commit is a recorded commit, or its head descends from one, and
+:func:`delegate.completion_gate_recovery_failure` passes: a failure the record
+already carries stands, and delivery counts a pull request merged since the
+task started (a failing delivery gate settles ``no_deliverable``). A pull
+request that only reuses the branch name may belong to a later task, so that
+record moves to D instead. A clean exit with no commits settles
+``no_deliverable``; anything else settles ``failed``. Evidence
 comes from one fetch per repository of every remote branch into the private
 namespace ``refs/lu-stale-scan/<repo-key>/`` (dry runs too: it writes only that
 namespace), from the allowlisted ``https://github.com/<slug>.git`` with an
@@ -618,6 +621,8 @@ class Candidate:
         if self.outcome is not None:
             entry["outcome"] = self.outcome
             entry["settle_reason"] = self.settle_reason
+            if self.failure_reason is not None:
+                entry["failure_reason"] = self.failure_reason
         if self.merged_pr is not None:
             entry["merged_pr"] = self.merged_pr
         if self.skip_reason is not None:
@@ -811,11 +816,10 @@ def _decide_outcome(candidate: Candidate, index: PullIndex | None, checkout: Pat
         pull = max(tied, key=lambda item: str(item.get("merged_at") or ""))
         candidate.merged_pr = pull
         candidate.settle_reason = f"orphaned: PR #{pull.get('number')} merged this task's recorded commit"
-        # #9275: ``done`` needs every completion gate the record calls for to pass
-        # now. The saved response is re-checked; a pull request merged since the
-        # task started is the delivery evidence (one that merged earlier holds
-        # only the base the worker started from); a gate that measures the
-        # worker's tree cannot run, because the tree is gone.
+        # #9275: a delivery-only record (gated ones never get here) keeps a
+        # failure it carries; a pull request merged since the task started is its
+        # delivery evidence (one that merged earlier holds only the base the
+        # worker started from).
         gate_failure = delegate.completion_gate_recovery_failure(
             record,
             response=delegate.saved_task_response(record, candidate.path),
@@ -851,6 +855,18 @@ def _decide_outcome(candidate: Candidate, index: PullIndex | None, checkout: Pat
         )
 
 
+def _refuse_gated(candidate: Candidate) -> bool:
+    """Settle an orphaned record with a completion gate beyond delivery ``failed``; False for any other record."""
+    refusal = delegate.recovery_requires_rerun(candidate.record)
+    if refusal is None:
+        return False
+    candidate.outcome = refusal.status
+    candidate.failure_reason = refusal.failure
+    candidate.evidence["completion_gate"] = {"gate": refusal.gate, "failure": refusal.failure}
+    candidate.settle_reason = f"orphaned: worktree and branch gone; {refusal.detail} ({refusal.failure})"
+    return True
+
+
 def classify(
     candidates: list[Candidate],
     *,
@@ -883,7 +899,7 @@ def classify(
 
     orphaned_by_slug: dict[str, list[Candidate]] = defaultdict(list)
     for candidate in candidates:
-        if candidate.klass == "C":
+        if candidate.klass == "C" and not _refuse_gated(candidate):
             orphaned_by_slug[str(candidate.record.get("repository"))].append(candidate)
     indexes: dict[str, PullIndex] = {}
     for slug, orphaned in orphaned_by_slug.items():
@@ -911,8 +927,6 @@ def _settled_record(candidate: Candidate, current: dict[str, Any], settled_at: s
     if candidate.failure_reason is not None:
         updated["failure_reason"] = candidate.failure_reason
         updated["last_error"] = candidate.settle_reason
-        if candidate.evidence.get("completion_gate", {}).get("gate") == delegate.COMPLETION_GATE_REVIEW_VERDICT:
-            updated["review_verdict_failure"] = candidate.failure_reason
     if candidate.outcome == delegate._NO_DELIVERABLE_STATUS and not updated.get("no_deliverable_reason"):
         updated["no_deliverable_reason"] = candidate.failure_reason or candidate.settle_reason
     return updated

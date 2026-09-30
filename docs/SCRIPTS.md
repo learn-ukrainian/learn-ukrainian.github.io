@@ -968,8 +968,11 @@ committed (`no_changes_under_owned_paths`).
   `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
   that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
   `no_deliverable` or `failed` and carry a `settled_by` receipt. `done` needs a merged PR
-  that carries a recorded commit. A PR that only reuses the branch name leaves the record
-  in class D. Classes A, B and D are reported and never changed. They cover a branch or
+  that carries a recorded commit. A record with a completion gate beyond delivery (an exit
+  scan that did not clear, a review verdict, an advisory envelope or content exemption) is
+  never settled `done`: it settles `failed` with `recovery_requires_rerun` (or the failure it
+  already carries) for the driver to re-run or finalize by hand. A PR that only reuses the
+  branch name leaves the record in class D. Classes A, B and D are reported and never changed. They cover a branch or
   commit still on origin, a local branch or ref still holding the work (even renamed), a
   dirty worktree, and commits with no recorded commit id.
 - `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`
