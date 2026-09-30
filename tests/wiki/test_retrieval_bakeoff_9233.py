@@ -422,11 +422,13 @@ def test_complete_arm_latency_includes_all_stages(tmp_path: Path, monkeypatch) -
     monkeypatch.setattr(bakeoff, "_new_reranker", lambda *args: (SimpleNamespace(tokenizer=StubTokenizer()), {"kind": "test", "max_tokens": 8192}))
     monkeypatch.setattr(bakeoff, "_fts_search", stage(1, ["c1"]))
     monkeypatch.setattr(bakeoff, "_query_vector", stage(2, [1]))
+    monkeypatch.setattr(bakeoff, "_load_vectors", lambda *a: (["c1"], [[1]]))
     monkeypatch.setattr(bakeoff, "_dense_rank", stage(3, ["c1"]))
     monkeypatch.setattr(bakeoff, "reciprocal_rank_fusion", stage(4, ["c1"]))
     monkeypatch.setattr(bakeoff, "_rerank", stage(5, ["c1"]))
     query = {"id": "q", "query": "query", "family": "G3"}
     _compute_fixture(monkeypatch, query)
+    bakeoff._write_json(work / "search-progress" / (bakeoff.hashlib.sha256(f"H:{repo}".encode()).hexdigest() + ".json"), {"binding": {"run_manifest_sha256": "run"}, "rankings": {"q": ["c1"]}})
     for arm, embedder, ranker, expected in [("L", None, None, 1), ("D:x", repo, None, 5), ("H:x", repo, None, 10), ("R:x", repo, "ranker", 15)]:
         result = bakeoff._run_arm(corpus, work, [query], arm, embedder, ranker)
         assert result["cost"]["query_p95_seconds"] == expected
@@ -446,7 +448,8 @@ def test_guarded_arm_dispatches_complete_lexical_pipeline(tmp_path: Path, monkey
         return function(*args, **kwargs)
     monkeypatch.setattr(bakeoff, "_guarded_step", guard)
     result = bakeoff._isolated_arm(corpus, work, [query], "L", None, None, bakeoff._default_vesum_db())
-    assert guarded == [("search:L", 2)]
+    assert guarded[0] == ("search-timing:L", 1800)
+    assert guarded[1][0] == "search:L" and guarded[1][1] > 0
     assert result["rankings"] == {"q": ["c1"]}
     assert result["cost"]["query_peak_rss_bytes"] > 0
     assert result["cost"]["query_p95_seconds"] > 0

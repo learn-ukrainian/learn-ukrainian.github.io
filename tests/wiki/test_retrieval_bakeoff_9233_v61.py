@@ -4,6 +4,8 @@ from __future__ import annotations
 import copy
 import json
 import sqlite3
+from contextlib import nullcontext
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
@@ -41,6 +43,7 @@ def frozen(tmp_path, monkeypatch):
         else:
             configs[repo]["scoring_template"] = b.RERANKERS[repo]
     run = b.run_manifest(source, work, configs)
+    b._freeze(work / "lexical-measurement.json", {**b._measurement_binding(work), "cost_query_ids": evaluation["cost_query_ids"], "lexical_query_seconds": .1})
     measurements = {**b._measurement_binding(work), "lexical_query_seconds": 0.1, "embedders": {repo: {"projected_seconds": 1000 + index * 1000, "query_seconds": 0.2, "batch_size": 16} for index, repo in enumerate(sorted(b.EMBEDDERS))}, "rerankers": {}}
     return SimpleNamespace(source=source, work=work, evaluation=evaluation, run=run, configs=configs, measurements=measurements)
 
@@ -204,12 +207,12 @@ def test_item3_projection_mean_gate_and_borderline_rules(frozen):
 def test_item4_passages_preserve_exercise_tail_and_report_by_source():
     text = "h" * 128 + "middle" * 100 + "t" * 384
     preview, truncated, retained = b._passage(text, Tokenizer(), budget=512, tail=True)
-    assert preview == "h" * 128 + "t" * 384
-    assert truncated and retained == 512
+    assert preview == "h" * 128 + " … " + "t" * 381
+    assert truncated and retained == 509
     rows = [{"text": text, "source_file": "book"}, {"text": "short", "source_file": "book"}]
     _, stats = b._passage_stats(rows, Tokenizer(), 512, tail=True)
     assert stats["book"]["truncation_rate"] == 0.5
-    assert stats["book"]["retained_character_share"] == pytest.approx(517 / (len(text) + 5))
+    assert stats["book"]["retained_character_share"] == pytest.approx(514 / (len(text) + 5))
     assert b._passage(text, Tokenizer(), budget=900, tail=False)[0] == text[:900]
     assert b._passage("", Tokenizer(), budget=512, tail=True) == ("", False, 0)
 
@@ -220,7 +223,7 @@ def test_item2_permutation_and_real_adapter_top20_without_pool_addition():
         tokenizer = Tokenizer()
         def predict(self, pairs, **kwargs):
             assert len(pairs) == 20
-            assert all(len(document) == 512 and document.endswith("z" * 384) for _, document in pairs)
+            assert all(len(document) == 512 and document.endswith("z" * 381) for _, document in pairs)
             assert all(query == "q" * 300 for query, _ in pairs)
             return list(range(20))
     ordered = b._rerank(Ranker(), {"kind": "cross_encoder", "max_tokens": 2048}, "q" * 300, candidates)
@@ -399,12 +402,12 @@ def test_item6_launch_enforces_memory_threads_and_both_priorities(monkeypatch):
     for key in ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "ORT_NUM_THREADS", "TOKENIZERS_PARALLELISM"):
         monkeypatch.setenv(key, "fixture")
     report = b._enforce_host_limits()
-    assert ("memory", (b.resource.RLIMIT_AS, (10 * 1024**3, 10 * 1024**3))) in calls
+    assert not any(call[0] == "memory" for call in calls)
     assert ("nice", 14) in calls and ("io", 3) in calls
     assert ("threads", 6) in calls and ("interop", 6) in calls
     assert b.os.environ["OMP_NUM_THREADS"] == "6"
     assert b.os.environ["TOKENIZERS_PARALLELISM"] == "false"
-    assert report == b.GUARDRAILS
+    assert report == {**b.GUARDRAILS, "memory_enforcement": "rss_watchdog"}
 
 
 def test_item6_host_lock_and_unavailable_admission_fail_closed(frozen, monkeypatch):
@@ -520,24 +523,20 @@ def test_item6_guarded_launcher_success_resume_and_exhausted_deadline(frozen, mo
     events = []
     process = Process()
     monkeypatch.setenv("OPENBLAS_NUM_THREADS", "42")
-    def start():
-        assert all(b.os.environ[k] == "6" for k in b.THREAD_ENV)
-        events.append("start")
-    process.start = start
-    process.join = lambda **kw: events.append("join")
     parent = SimpleNamespace(close=lambda: events.append("parent-close"))
-    child = SimpleNamespace(close=lambda: events.append("child-close"))
-    context = SimpleNamespace(Pipe=lambda **kw: (parent, child), Process=lambda **kw: process)
-    monkeypatch.setattr(b.multiprocessing, "set_executable", lambda path: events.append("interpreter"))
-    monkeypatch.setattr(b.multiprocessing, "get_context", lambda method: context)
+    process.join = lambda **kw: events.append("join")
+    def launch(*args):
+        events.append("start")
+        return process, parent, "rss_watchdog"
+    monkeypatch.setattr(b, "_launch_heavy", launch)
     monkeypatch.setattr(b, "_admission_probe", lambda: True)
     def supervise(proc, pipe, state, projection, **kwargs):
         state.update(status="done", running_seconds=2)
         return {"ok": True, "result": {"fixture": True}, "guardrails": b.GUARDRAILS}
     monkeypatch.setattr(b, "_supervise", supervise)
     result = b._guarded_step(dict, (), {}, frozen.work, "fixture", 10)
-    assert result == {"fixture": True, "host_guardrails": b.GUARDRAILS}
-    assert events == ["interpreter", "start", "child-close", "join", "parent-close"]
+    assert result == {"fixture": True, "host_guardrails": b.GUARDRAILS, "host_running_seconds": 2}
+    assert events == ["start", "join", "parent-close"]
     assert b.os.environ["OPENBLAS_NUM_THREADS"] == "42"
     assert b._guarded_step(dict, (), {}, frozen.work, "fixture", 10) == result
     assert events.count("start") == 1
@@ -591,7 +590,7 @@ def test_retained_characters_use_original_offsets_not_decoded_length():
             # retention still accounts for the selected source spans.
             return super().decode(ids).replace(" ", "")
     _, _, retained = b._passage(" " * 700, Normalizer(), budget=512, tail=True)
-    assert retained == 512
+    assert retained == 509
 
 
 def test_item1_item2_item5_full_frozen_search_pool_and_score(frozen, monkeypatch):
@@ -607,6 +606,7 @@ def test_item1_item2_item5_full_frozen_search_pool_and_score(frozen, monkeypatch
     work.mkdir()
     evaluation = b.sample(frozen.source, work)
     run = b.run_manifest(frozen.source, work, frozen.configs)
+    b._freeze(work / "lexical-measurement.json", {**b._measurement_binding(work), "lexical_query_seconds": .1})
     measurements = copy.deepcopy(frozen.measurements)
     measurements.update(b._measurement_binding(work))
     for repo, value in measurements["embedders"].items():
@@ -696,3 +696,310 @@ def test_item4_embedder_uses_model_maximum_with_actual_prefix_overhead():
     assert stats["book"]["retained_character_share"] == .1
     with pytest.raises(ValueError, match="no passage token budget"):
         b._embedder_passage_stats(rows, model, {"max_tokens": 9, "prefixes": {"passage": "passage: "}}, b.E5)
+
+
+def test_r2_full_pipeline_projection_survives_old_deadline_and_still_stops_overrun(frozen, monkeypatch):
+    # Measured load + index/vector load + reporting: 35 s. Lexical + encode +
+    # rank + fuse: .002 + .020 + .095 + .003 s, measured over 50 plus warmup.
+    full_timing = 35 + 51 * .120
+    calls = []
+    monkeypatch.setattr(b, "_admission", lambda *a: {"measurements": {"lexical_query_seconds": .002, "embedders": {b.E5: {"query_seconds": .020, "model_load_seconds": 5}}}})
+    def guard(function, args, kwargs, work, step, projection):
+        calls.append((step, projection))
+        return {"cost": {"pipeline_seconds": full_timing, "pipeline_queries": 51}} if kwargs else {"rankings": {}}
+    monkeypatch.setattr(b, "_guarded_step", guard)
+    b._isolated_arm(frozen.source, frozen.work, frozen.evaluation["queries"], f"H:{b.E5}", b.E5, None)
+    assert calls[0] == (f"search-timing:H:{b.E5}", 1800)
+    projection = calls[1][1]
+    actual_seconds = 35 + 121 * .120
+    assert b._stop_reason(actual_seconds, 5 + .022 * 121, None, 0) == "DEADLINE"
+    assert b._stop_reason(actual_seconds, projection, None, 0) is None
+    clock, state = [0.], {}
+    with pytest.raises(RuntimeError, match="DEADLINE"):
+        b._supervise(Process(), Pipe(clock), state, projection, clock=lambda: clock[0], probe=lambda: True)
+    assert state["status"] == "DEADLINE" and state["running_seconds"] > 1.5 * projection
+
+
+def test_r2_search_projection_counts_child_startup_and_guardrail_setup(frozen, monkeypatch):
+    projections = []
+    monkeypatch.setattr(b, "_admission", lambda *a: {})
+    def guard(function, args, kwargs, work, step, projection):
+        projections.append(projection)
+        return {"host_running_seconds": 8, "cost": {"pipeline_seconds": .01, "pipeline_queries": 51}}
+    monkeypatch.setattr(b, "_guarded_step", guard)
+    b._isolated_arm(frozen.source, frozen.work, frozen.evaluation["queries"], "L", None, None)
+    assert projections == [1800, 8 * 121 / 51]
+
+
+def test_r2_timing_probe_measures_all_stages_and_loads_vectors_once(frozen, monkeypatch):
+    clock, loads = [0.], []
+    rows = [dict(row) for row in b._subset_rows(frozen.source)]
+    model = SimpleNamespace(tokenizer=Tokenizer())
+    meta = {"max_tokens": 2048, "prefixes": frozen.configs[b.E5]["prefixes"]}
+    def stage(seconds, value):
+        def call(*args, **kwargs):
+            clock[0] += seconds
+            return value
+        return call
+    monkeypatch.setattr(b.time, "perf_counter", lambda: clock[0])
+    monkeypatch.setattr(b, "_load_rows", stage(10, rows))
+    monkeypatch.setattr(b, "_new_encoder", stage(5, (model, meta)))
+    def vectors(path):
+        loads.append(path)
+        clock[0] += 20
+        return ([], [])
+    monkeypatch.setattr(b, "_load_vectors", vectors)
+    monkeypatch.setattr(b, "get_vesum_connection", lambda *a: nullcontext(None))
+    monkeypatch.setattr(b, "_fts_search", stage(.002, ["c0000"]))
+    monkeypatch.setattr(b, "_query_vector", stage(.020, [1]))
+    monkeypatch.setattr(b, "_dense_rank", stage(.095, ["c0000"]))
+    monkeypatch.setattr(b, "reciprocal_rank_fusion", stage(.003, ["c0000"]))
+    monkeypatch.setattr(b, "_embedder_passage_stats", lambda *a: pytest.fail("retokenization forbidden"))
+    vectors_path = frozen.work / "embeddings" / (b.E5.replace("/", "--") + ".sqlite3")
+    vectors_path.parent.mkdir()
+    vectors_path.touch()
+    result = b._run_arm(frozen.source, frozen.work, frozen.evaluation["queries"], f"H:{b.E5}", b.E5, None, timing_only=True)
+    assert loads == [vectors_path]
+    assert set(result["rankings"]) == set(frozen.evaluation["cost_query_ids"])
+    assert result["cost"]["pipeline_seconds"] == pytest.approx(35 + 51 * .12)
+    assert result["cost"]["query_p95_seconds"] == pytest.approx(.12)
+    assert result["cost"]["pipeline_queries"] == 51
+
+
+def test_r2_vectors_load_once_and_rank_as_one_matrix_product(tmp_path, monkeypatch):
+    import numpy as np
+    path = tmp_path / "vectors.db"
+    with sqlite3.connect(path) as conn:
+        conn.execute("CREATE TABLE vectors(chunk_id TEXT, vector BLOB, dimensions INTEGER)")
+        conn.executemany("INSERT INTO vectors VALUES (?,?,2)", [(cid, np.asarray(vector, dtype="float32").tobytes()) for cid, vector in [("b", [2, 0]), ("a", [1, 0]), ("zero", [0, 0]), ("other", [0, 2])]])
+    ids, matrix = b._load_vectors(path)
+    monkeypatch.setattr(b, "_ro_connect", lambda *a: pytest.fail("must reuse loaded vectors"))
+    products = []
+    class Matrix(np.ndarray):
+        def __matmul__(self, query):
+            products.append(query)
+            return super().__matmul__(query)
+    matrix = matrix.view(Matrix)
+    assert b._dense_rank([10, 0], (ids, matrix)) == ["a", "b", "other", "zero"]
+    assert b._dense_rank([0, 3], (ids, matrix))[0] == "other"
+    assert len(products) == 2
+    assert b._dense_rank([1], ([], np.empty((0, 0)))) == []
+
+
+def test_r2_preview_merging_tokenizer_enforces_reencoded_budget():
+    class MergingTokenizer(Tokenizer):
+        def encode(self, text, **kwargs):
+            # A long original has atomic pieces; adjacent decoded head/tail
+            # pieces expand at their joined boundary, as in the cached BGE bug.
+            return super().encode(text.replace("ht", "hxxxxxxxxxxxxxxxxxxxxxt"))
+        def __call__(self, text, **kwargs):
+            ids, offsets = [], []
+            for i, char in enumerate(text):
+                count = 22 if text[i:i + 2] == "ht" else 1
+                ids.extend([ord(char)] * count)
+                offsets.extend([(i, i + 1)] * count)
+            return {"input_ids": ids, "offset_mapping": offsets}
+    tokenizer = MergingTokenizer()
+    text = "h" * 128 + "middle" * 200 + "t" * 384
+    assert len(tokenizer.encode(tokenizer.decode(tokenizer.encode(text)[:128] + tokenizer.encode(text)[-384:]))) > 512
+    preview, truncated, retained = b._passage(text, tokenizer, budget=512, tail=True)
+    assert " … " in preview and len(tokenizer.encode(preview)) <= 512
+    assert truncated and retained == len(preview) - 3
+
+
+def test_r2_cached_bge_tokenizer_on_longest_real_chunks():
+    cache = Path.home() / ".cache/huggingface/hub/models--BAAI--bge-reranker-v2-m3/snapshots"
+    snapshots = sorted(p for p in cache.glob("*") if (p / "tokenizer.json").exists())
+    if not snapshots or not b._default_sources_db().exists():
+        pytest.skip("Cached BGE tokenizer or real corpus unavailable; no download")
+    from transformers import AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(str(snapshots[-1]), local_files_only=True)
+    rows = sorted(b._subset_rows(b._default_sources_db()), key=lambda r: len(r["text"]), reverse=True)[:2500]
+    truncated = 0
+    for row in rows:
+        preview, clipped, retained = b._passage(row["text"], tokenizer, budget=512, tail=True)
+        assert len(tokenizer.encode(preview, add_special_tokens=False)) <= 512
+        assert 0 <= retained <= len(row["text"])
+        truncated += clipped
+    assert len(rows) == 2500 and truncated > 0
+    print(f"cached BGE tokenizer: {len(rows)} longest real chunks; {truncated} truncated; zero over-budget previews")
+
+
+@pytest.mark.parametrize("scope", [True, False, "missing", "timeout", "launch_failure"])
+def test_r2_memory_launcher_scope_and_fallback(tmp_path, monkeypatch, scope):
+    monkeypatch.delenv("XDG_RUNTIME_DIR", raising=False)
+    monkeypatch.delenv("DBUS_SESSION_BUS_ADDRESS", raising=False)
+    commands = []
+    def run(command, **kwargs):
+        commands.append((command, kwargs))
+        if scope == "missing":
+            raise FileNotFoundError
+        if scope == "timeout":
+            raise b.subprocess.TimeoutExpired(command, 10)
+        return SimpleNamespace(returncode=0 if scope in {True, "launch_failure"} else 1)
+    def popen(command, **kwargs):
+        commands.append((command, kwargs))
+        return SimpleNamespace(pid=123, poll=lambda: 1 if scope == "launch_failure" else None)
+    monkeypatch.setattr(b.subprocess, "run", run)
+    monkeypatch.setattr(b.subprocess, "Popen", popen)
+    monkeypatch.setattr(b.time, "sleep", lambda *a: None)
+    ticks = iter([0, 11])
+    monkeypatch.setattr(b.time, "monotonic", lambda: next(ticks))
+    process, pipe, enforcement = b._launch_heavy(b.encode, (Path("db"), tmp_path, b.E5), {"limit": None, "batch_size": 16}, tmp_path)
+    expected = "systemd_scope" if scope is True else "rss_watchdog"
+    assert process.pid == 123 and enforcement == expected
+    assert b._scope_command() == ["systemd-run", "--user", "--scope", "--quiet", "-p", "MemoryMax=10G", "-p", "MemorySwapMax=0"]
+    command, kwargs = commands[-1]
+    assert command[:len(b._scope_command())] == b._scope_command() if scope is True else command[0] == str(b.project_interpreter(b.ROOT))
+    assert kwargs["env"]["XDG_RUNTIME_DIR"] == f"/run/user/{b.os.getuid()}"
+    assert kwargs["env"]["DBUS_SESSION_BUS_ADDRESS"] == f"unix:path=/run/user/{b.os.getuid()}/bus"
+    assert all(kwargs["env"][key] == "6" for key in b.THREAD_ENV)
+    assert kwargs["env"]["LU_BAKEOFF_MEMORY_ENFORCEMENT"] == expected
+    payload = json.loads((tmp_path / "steps/worker-input.json").read_text())
+    assert payload["args"][0] == {"path": "db"}
+    assert not pipe.poll(0)
+
+
+def test_r2_rss_watchdog_kills_above_resident_ceiling():
+    clock, state, process = [0.], {"memory_enforcement": "rss_watchdog"}, Process()
+    process.join = lambda **kwargs: None
+    process.is_alive = lambda: not process.killed
+    with pytest.raises(RuntimeError, match="MEMORY_LIMIT"):
+        b._supervise(process, Pipe(clock), state, 10000, clock=lambda: clock[0], rss=lambda *a: b.MEMORY_BYTES + 1)
+    assert process.terminated and process.killed and state["status"] == "MEMORY_LIMIT"
+    state = {"memory_enforcement": "rss_watchdog"}
+    message = {"ok": True, "result": {}}
+    assert b._supervise(Process(), Pipe(clock, message, 0), state, 10000, clock=lambda: clock[0], rss=lambda *a: b.MEMORY_BYTES) == message
+
+
+def test_r2_rss_includes_child_processes_and_tolerates_exit(monkeypatch):
+    import psutil
+    class Fake:
+        def __init__(self, pid):
+            self.pid = pid
+        def children(self, **kwargs):
+            return [Fake(2), Fake(3)]
+        def memory_info(self):
+            if self.pid == 3:
+                raise psutil.NoSuchProcess(3)
+            return SimpleNamespace(rss=self.pid * 100)
+    monkeypatch.setattr(psutil, "Process", Fake)
+    assert b._resident_bytes(SimpleNamespace(pid=1)) == 300
+    def gone(pid):
+        raise psutil.NoSuchProcess(pid)
+    monkeypatch.setattr(psutil, "Process", gone)
+    assert b._resident_bytes(SimpleNamespace(pid=1)) == 0
+
+
+def test_r2_lexical_timing_is_measured_and_overrides_typed_input(frozen, monkeypatch):
+    # Remove only the synthetic receipt, then time the frozen batch mechanically.
+    (frozen.work / "lexical-measurement.json").unlink()
+    clock, seen = [0.], []
+    monkeypatch.setattr(b.time, "perf_counter", lambda: clock[0])
+    monkeypatch.setattr(b, "_copy_subset", lambda *a: frozen.source)
+    monkeypatch.setattr(b, "get_vesum_connection", lambda *a: nullcontext(None))
+    def lexical(index, query, vesum, **kwargs):
+        seen.append(query)
+        clock[0] += .125
+        return []
+    monkeypatch.setattr(b, "_fts_search", lexical)
+    result = b._measure_lexical(frozen.source, frozen.work)
+    queries = {q["id"]: q["query"] for q in frozen.evaluation["queries"]}
+    assert seen == [queries[qid] for qid in frozen.evaluation["cost_query_ids"]]
+    assert len(seen) == 50 and result["lexical_query_seconds"] == .125
+    measurements = {**frozen.measurements, "lexical_query_seconds": 99999}
+    admitted = b.admit(frozen.work, measurements)
+    assert admitted["measurements"]["lexical_query_seconds"] == .125
+    assert b._measure_lexical(frozen.source, frozen.work) == result and len(seen) == 50
+
+
+@pytest.mark.parametrize("style", ["defaults", "attributes", "config_attributes", "unknown"])
+def test_r2_jina_native_limits_defaults_attributes_or_fail_closed(style):
+    class Defaults:
+        def rerank(self, query, documents, max_query_length=1024, max_doc_length=8192):
+            return []
+    class Attributes:
+        max_query_length, max_doc_length = 1024, 8192
+        def rerank(self, query, documents):
+            return []
+    class Config:
+        config = SimpleNamespace(query_limit=1024, doc_limit=8192)
+        def rerank(self, query, documents):
+            max_query_length = self.config.query_limit
+            max_doc_length = self.config.doc_limit
+            return max_query_length, max_doc_length
+    class Unknown:
+        def rerank(self, query, documents):
+            return []
+    model = {"defaults": Defaults, "attributes": Attributes, "config_attributes": Config, "unknown": Unknown}[style]()
+    if style == "unknown":
+        with pytest.raises(ValueError, match="pinned repository source locally"):
+            b._native_jina_limits(model)
+    else:
+        assert b._native_jina_limits(model) == {"max_query_length": 1024, "max_doc_length": 8192}
+
+
+def test_r2_reranker_uses_checkpoint_even_when_recomputed_hybrid_drifts(frozen, monkeypatch):
+    corpus = frozen.source
+    rows = [dict(row) for row in b._subset_rows(corpus)]
+    query = frozen.evaluation["queries"][0]
+    binding = b._measurement_binding(frozen.work)
+    original = [row["chunk_id"] for row in rows[:20]]
+    path = frozen.work / "search-progress" / (b.hashlib.sha256(f"H:{b.E5}".encode()).hexdigest() + ".json")
+    b._write_json(path, {"binding": binding, "rankings": {query["id"]: original}})
+    monkeypatch.setattr(b, "_evaluation", lambda *a: {"cost_query_ids": [query["id"]]})
+    monkeypatch.setattr(b, "_measurement_binding", lambda *a: binding)
+    monkeypatch.setattr(b, "_load_rows", lambda *a: rows)
+    monkeypatch.setattr(b, "_load_vectors", lambda *a: ([], []))
+    vectors_path = frozen.work / "embeddings" / (b.E5.replace("/", "--") + ".sqlite3")
+    vectors_path.parent.mkdir()
+    vectors_path.touch()
+    monkeypatch.setattr(b, "get_vesum_connection", lambda *a: nullcontext(None))
+    model = SimpleNamespace(tokenizer=Tokenizer())
+    monkeypatch.setattr(b, "_new_encoder", lambda *a: (model, {"max_tokens": 2048, "prefixes": frozen.configs[b.E5]["prefixes"]}))
+    monkeypatch.setattr(b, "_new_reranker", lambda *a: (model, {"kind": "cross_encoder", "max_tokens": 2048}))
+    monkeypatch.setattr(b, "_fts_search", lambda *a, **kw: [rows[-1]["chunk_id"]])
+    monkeypatch.setattr(b, "_query_vector", lambda *a: [1])
+    monkeypatch.setattr(b, "_dense_rank", lambda *a: [rows[-1]["chunk_id"]])
+    monkeypatch.setattr(b, "_embedder_passage_stats", lambda *a: pytest.fail("whole-corpus retokenization forbidden"))
+    seen = []
+    def ranker(model, meta, query, candidates):
+        ids = [row["chunk_id"] for row in candidates]
+        seen.append(ids)
+        return ids[::-1]
+    monkeypatch.setattr(b, "_rerank", ranker)
+    result = b._run_arm(corpus, frozen.work, [query], f"R:bge|{b.E5}", b.E5, "BAAI/bge-reranker-v2-m3")
+    assert seen == [original, original]
+    assert result["rankings"][query["id"]] == original[::-1]
+    b._assert_permutation(original, result["rankings"][query["id"]])
+
+
+def test_r2_result_transport_and_process_tree_signals(tmp_path, monkeypatch):
+    result = b._ResultFile(tmp_path / "output.json")
+    result.send({"ok": True, "result": {"probe": True}})
+    assert result.poll(0) and result.recv()["result"]["probe"]
+    result.close()
+    signals = []
+    monkeypatch.setattr(b.os, "killpg", lambda pid, number: signals.append((pid, number)))
+    process = b._HeavyProcess(SimpleNamespace(pid=42, poll=lambda: None, wait=lambda **kwargs: None))
+    assert process.is_alive()
+    process.terminate()
+    process.kill()
+    process.join(1)
+    assert signals == [(42, b.signal.SIGTERM), (42, b.signal.SIGKILL)]
+
+
+def test_r2_file_worker_preserves_paths_and_reports_actual_enforcement(tmp_path, monkeypatch):
+    source, output = tmp_path / "input.json", tmp_path / "output.json"
+    monkeypatch.setenv("LU_BAKEOFF_MEMORY_ENFORCEMENT", "systemd_scope")
+    monkeypatch.setattr(b, "_enforce_host_limits", lambda: {**b.GUARDRAILS, "memory_enforcement": "systemd_scope"})
+    seen = []
+    def encode(path, work, repo, **kwargs):
+        seen.append((path, work, repo, kwargs))
+        return {"smoke": True}
+    monkeypatch.setattr(b, "encode", encode)
+    b._write_json(source, {"function": "encode", "args": [{"path": "db"}, {"path": str(tmp_path)}, b.E5], "kwargs": {"limit": 1}})
+    b._file_worker(source, output)
+    assert seen == [(Path("db"), tmp_path, b.E5, {"limit": 1})]
+    assert json.loads(output.read_text())["guardrails"]["memory_enforcement"] == "systemd_scope"
+    assert output.with_suffix(".started").exists()

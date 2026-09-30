@@ -14,17 +14,18 @@ import hashlib
 import inspect
 import json
 import math
-import multiprocessing
 import os
 import random
 import resource
+import signal
 import sqlite3
 import statistics
+import subprocess
 import sys
 import tempfile
 import time
 from collections import Counter, defaultdict
-from contextlib import contextmanager
+from contextlib import contextmanager, suppress
 from pathlib import Path
 from typing import Any
 
@@ -51,7 +52,7 @@ THREADS = 6
 THREAD_ENV = ("OMP_NUM_THREADS", "MKL_NUM_THREADS", "OPENBLAS_NUM_THREADS", "NUMEXPR_NUM_THREADS", "ORT_NUM_THREADS")
 MEMORY_BYTES = 10 * 1024**3
 E5 = "intfloat/multilingual-e5-small"
-GUARDRAILS = {"threads": THREADS, "memory_bytes": MEMORY_BYTES, "memory_enforcement": "RLIMIT_AS", "cpu_nice": 19, "io_priority": "idle"}
+GUARDRAILS = {"threads": THREADS, "memory_bytes": MEMORY_BYTES, "memory_enforcement": "systemd_scope_or_rss_watchdog", "cpu_nice": 19, "io_priority": "idle"}
 PASSAGE_POLICIES = {"embedder": "model maximum; head only", "reranker": {"tokens": 512, "head": 128, "tail": 384, "overhead_excluded": True}}
 TOKEN_RE = phase1.TOKEN_RE
 
@@ -201,6 +202,7 @@ def run_manifest(db_path: Path, work: Path, configurations: dict[str, Any]) -> d
         "schema": "retrieval-bakeoff-9233-run.v6.1", "corpus_row_digest": _digest_rows(rows),
         "evaluation_manifest_sha256": evaluation["sha256"], "models": configurations,
         "passage_policies": PASSAGE_POLICIES, "guardrails": GUARDRAILS,
+        "memory_enforcement_receipt": "memory-enforcement.json (actual enforcement per step)",
         "harness_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "retrieval_configuration": {"rrf_k": RRF_K, "first_stage_depth": TOP_FIRST_STAGE, "rerank_depth": TOP_RERANK},
     })
@@ -276,7 +278,10 @@ def admit(work: Path, measurements: dict[str, Any], *, persist: bool = True) -> 
     encoded = measurements.get("embedders", {})
     if set(encoded) != set(EMBEDDERS):
         raise ValueError("All six encode measurements required before admission")
-    _positive(measurements.get("lexical_query_seconds"), "Lexical query seconds")
+    lexical = _read_frozen(work / "lexical-measurement.json")
+    if any(lexical.get(key) != value for key, value in binding.items()):
+        raise ValueError("Lexical measurement configuration mismatch")
+    measurements = {**measurements, "lexical_query_seconds": _positive(lexical["lexical_query_seconds"], "Lexical query seconds")}
     for value in encoded.values():
         _positive(value.get("query_seconds"), "Dense query seconds")
         if not isinstance(value.get("batch_size"), int) or value["batch_size"] < 1:
@@ -361,8 +366,6 @@ def _passage(text: str, tokenizer: Any, *, budget: int, tail: bool) -> tuple[str
     tokens = tokenizer.encode(text, add_special_tokens=False)
     if len(tokens) <= budget:
         return text, False, len(text)
-    kept = tokens[:128] + tokens[-384:] if tail else tokens[:budget]
-    preview = tokenizer.decode(kept, skip_special_tokens=True)
     # Count retained original characters using token offsets, rather than the
     # length of decoded text (which may normalize whitespace or Unicode).
     try:
@@ -375,8 +378,19 @@ def _passage(text: str, tokenizer: Any, *, budget: int, tail: bool) -> tuple[str
     head_end = int(offsets[127 if tail else budget - 1][1])
     tail_start = int(offsets[-384][0]) if tail else len(text)
     retained = min(len(text), head_end + len(text) - tail_start)
-    if not 0 <= retained <= len(text) or len(tokenizer.encode(preview, add_special_tokens=False)) > budget:
-        raise ValueError("Passage preview exceeds its token budget or has invalid offsets")
+    if not 0 <= retained <= len(text):
+        raise ValueError("Passage preview has invalid offsets")
+    # Source offsets preserve original characters and keep the pieces apart.
+    preview = text[:head_end] + " … " + text[tail_start:] if tail else text[:head_end]
+    # Decoding pieces is not token-count preserving. Slice the re-encoded
+    # preview at a token boundary and recheck, including normalizing tokenizers.
+    while len(tokenizer.encode(preview, add_special_tokens=False)) > budget:
+        encoded_preview = tokenizer(preview, add_special_tokens=False, return_offsets_mapping=True)
+        cut = int(encoded_preview["offset_mapping"][budget - 1][1])
+        if cut >= len(preview):
+            cut = len(preview) - 1
+        preview = preview[:max(0, cut)]
+        retained = min(len(preview), head_end) + max(0, len(preview) - head_end - 3) if tail else len(preview)
     return preview, True, retained
 
 
@@ -433,6 +447,7 @@ def measure(db_path: Path, work: Path, repo: str, *, batch_size: int = 16, varia
     rows = [dict(row) for row in _subset_rows(db_path)]
     by_id = {row["chunk_id"]: row for row in rows}
     binding = _measurement_binding(work)
+    lexical = _measure_lexical(db_path, work)
     checkpoint_path = work / "measurements" / (repo.replace("/", "--") + f"-{variant}-{int(repeat)}-progress.json")
     progress = json.loads(checkpoint_path.read_text()) if checkpoint_path.exists() else {"binding": binding, "units": []}
     if progress["binding"] != binding or progress.get("batch_size", batch_size) != batch_size:
@@ -488,6 +503,7 @@ def measure(db_path: Path, work: Path, repo: str, *, batch_size: int = 16, varia
             times.append(time.perf_counter() - started)
             _write_json(checkpoint_path, progress)
         result = {"model": repo, "variant": variant, **binding, "timing_pairs_sha256": frozen["sha256"], "query_seconds": times, "model_load_seconds": model_load_seconds, "p50_seconds": statistics.median(times), "p95_seconds": _percentile(times, .95), "mean_seconds": statistics.mean(times), "passage_stats": stats}
+    result["lexical_query_seconds"] = lexical["lexical_query_seconds"]
     _write_json(work / "measurements" / (repo.replace("/", "--") + f"-{variant}-{int(repeat)}.json"), result)
     return result
 
@@ -507,11 +523,7 @@ def _admission_probe() -> bool:
 
 
 def _enforce_host_limits() -> dict[str, Any]:
-    # Executed in a fresh child before loading any model. RLIMIT_AS is the
-    # documented fallback; it enforces address space, never advisory RSS.
-    _soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-    ceiling = min(MEMORY_BYTES, hard) if hard != resource.RLIM_INFINITY else MEMORY_BYTES
-    resource.setrlimit(resource.RLIMIT_AS, (ceiling, ceiling))
+    # Memory is enforced by the launcher/supervisor, never virtual address space.
     os.nice(max(0, 19 - os.getpriority(os.PRIO_PROCESS, 0)))
     import psutil
 
@@ -523,7 +535,121 @@ def _enforce_host_limits() -> dict[str, Any]:
 
     torch.set_num_threads(THREADS)
     torch.set_num_interop_threads(THREADS)
-    return {**GUARDRAILS, "memory_bytes": ceiling}
+    return {**GUARDRAILS, "memory_enforcement": os.environ.get("LU_BAKEOFF_MEMORY_ENFORCEMENT", "rss_watchdog")}
+
+
+def _scope_environment() -> dict[str, str]:
+    environment = dict(os.environ)
+    runtime = f"/run/user/{os.getuid()}"
+    if not environment.get("XDG_RUNTIME_DIR"):
+        environment["XDG_RUNTIME_DIR"] = runtime
+    if not environment.get("DBUS_SESSION_BUS_ADDRESS"):
+        environment["DBUS_SESSION_BUS_ADDRESS"] = f"unix:path={runtime}/bus"
+    for key in THREAD_ENV:
+        environment[key] = str(THREADS)
+    return environment
+
+
+def _scope_command() -> list[str]:
+    return ["systemd-run", "--user", "--scope", "--quiet", "-p", "MemoryMax=10G", "-p", "MemorySwapMax=0"]
+
+
+class _HeavyProcess:
+    def __init__(self, process: Any):
+        self.process = process
+        self.pid = process.pid
+
+    def is_alive(self) -> bool:
+        return self.process.poll() is None
+
+    def terminate(self) -> None:
+        self._signal(signal.SIGTERM)
+
+    def kill(self) -> None:
+        self._signal(signal.SIGKILL)
+
+    def _signal(self, number: int) -> None:
+        with suppress(ProcessLookupError):
+            os.killpg(self.pid, number)
+
+    def join(self, timeout: float) -> None:
+        with suppress(subprocess.TimeoutExpired):
+            self.process.wait(timeout=timeout)
+
+
+class _ResultFile:
+    def __init__(self, path: Path):
+        self.path = path
+
+    def poll(self, timeout: float) -> bool:
+        if not self.path.exists():
+            time.sleep(timeout)
+        return self.path.exists()
+
+    def recv(self) -> dict[str, Any]:
+        return json.loads(self.path.read_text())
+
+    def send(self, message: dict[str, Any]) -> None:
+        _write_json(self.path, message)
+
+    def close(self) -> None:
+        pass
+
+
+def _file_worker(payload_path: Path, result_path: Path) -> None:
+    _write_json(result_path.with_suffix(".started"), {"started": True})
+    payload = json.loads(payload_path.read_text())
+    functions = {f.__name__: f for f in (measure, encode, _run_arm)}
+    args = tuple(Path(a["path"]) if isinstance(a, dict) and set(a) == {"path"} else a for a in payload["args"])
+    _heavy_worker(_ResultFile(result_path), functions[payload["function"]], args, payload["kwargs"])
+
+
+def _launch_heavy(function: Any, args: tuple, kwargs: dict, work: Path) -> tuple[Any, Any, str]:
+    environment = _scope_environment()
+    try:
+        scoped = subprocess.run([*_scope_command(), "true"], env=environment, capture_output=True, timeout=10, check=False).returncode == 0
+    except (OSError, subprocess.TimeoutExpired):
+        scoped = False
+    enforcement = "systemd_scope" if scoped else "rss_watchdog"
+    environment["LU_BAKEOFF_MEMORY_ENFORCEMENT"] = enforcement
+    payload_path = work / "steps" / "worker-input.json"
+    result_path = work / "steps" / "worker-result.json"
+    # Unique output avoids consuming a prior result after an interrupted step.
+    result_path = result_path.with_name(f"worker-result-{os.getpid()}-{time.time_ns()}.json")
+    _write_json(payload_path, {"function": function.__name__, "args": [{"path": str(a)} if isinstance(a, Path) else a for a in args], "kwargs": kwargs})
+    command = [str(project_interpreter(ROOT)), "-c", "from pathlib import Path; import sys; from scripts.wiki.diagnostics.retrieval_bakeoff_9233 import _file_worker; _file_worker(Path(sys.argv[1]), Path(sys.argv[2]))", str(payload_path), str(result_path)]
+    if scoped:
+        command = _scope_command() + command
+    process = subprocess.Popen(command, env=environment, cwd=ROOT, start_new_session=True)
+    if scoped:
+        # A successful probe does not guarantee the subsequent scope starts.
+        # Retry only a launcher failure before the worker's start receipt; an
+        # OOM kill or any failure after entry must never restart compute.
+        expires = time.monotonic() + 10
+        while process.poll() is None and not result_path.with_suffix(".started").exists() and time.monotonic() < expires:
+            time.sleep(.05)
+        if process.poll() == 1 and not result_path.with_suffix(".started").exists():
+            enforcement = "rss_watchdog"
+            environment["LU_BAKEOFF_MEMORY_ENFORCEMENT"] = enforcement
+            process = subprocess.Popen(command[len(_scope_command()):], env=environment, cwd=ROOT, start_new_session=True)
+    return _HeavyProcess(process), _ResultFile(result_path), enforcement
+
+
+def _resident_bytes(process: Any) -> int:
+    import psutil
+
+    try:
+        parent = psutil.Process(process.pid)
+        processes = [parent, *parent.children(recursive=True)]
+    except psutil.NoSuchProcess:
+        return 0
+    total = 0
+    for child in processes:
+        try:
+            total += child.memory_info().rss
+        except psutil.NoSuchProcess:
+            continue
+    return total
 
 
 @contextmanager
@@ -559,7 +685,7 @@ def _heavy_worker(connection: Any, function: Any, args: tuple, kwargs: dict) -> 
         connection.close()
 
 
-def _supervise(process: Any, pipe: Any, state: dict[str, Any], projection: float, *, clock: Any = time.monotonic, probe: Any = None, window_end: float | None = None, wall_clock: Any = time.time) -> dict[str, Any]:
+def _supervise(process: Any, pipe: Any, state: dict[str, Any], projection: float, *, clock: Any = time.monotonic, probe: Any = None, window_end: float | None = None, wall_clock: Any = time.time, rss: Any = None) -> dict[str, Any]:
     probe = probe or _admission_probe
     started = clock()
     previous_running = float(state.get("running_seconds", 0))
@@ -576,6 +702,8 @@ def _supervise(process: Any, pipe: Any, state: dict[str, Any], projection: float
                 refused_since = None if healthy else now if refused_since is None else refused_since
                 next_probe = now + 300
             reason = _stop_reason(previous_running + now - started, projection, refused_since, now)
+            if state.get("memory_enforcement") == "rss_watchdog" and (rss or _resident_bytes)(process) > MEMORY_BYTES:
+                reason = "MEMORY_LIMIT"
             if window_end is not None and wall_clock() >= window_end:
                 reason = "QUIET_WINDOW_ENDED"
             if reason:
@@ -622,34 +750,28 @@ def _guarded_step(function: Any, args: tuple, kwargs: dict, work: Path, step: st
             raise ValueError("Quiet window has ended; resume in the next quiet window")
         if not _admission_probe():
             raise ValueError("Dispatch admission unhealthy or unknown; heavy step not started")
-        multiprocessing.set_executable(str(project_interpreter(ROOT)))
-        context = multiprocessing.get_context("spawn")
-        parent, child = context.Pipe(duplex=False)
-        process = context.Process(target=_heavy_worker, args=(child, function, args, kwargs))
-        # NumPy is imported by sources_db during spawn initialization, before
-        # the worker function can run. Cap BLAS in the child's inherited env.
-        previous_environment = {key: os.environ.get(key) for key in THREAD_ENV}
+        launch_started = time.monotonic()
+        process, parent, enforcement = _launch_heavy(function, args, kwargs, work)
         try:
-            for key in THREAD_ENV:
-                os.environ[key] = str(THREADS)
-            process.start()
-        finally:
-            for key, value in previous_environment.items():
-                if value is None:
-                    os.environ.pop(key, None)
-                else:
-                    os.environ[key] = value
-        child.close()
-        try:
+            state["memory_enforcement"] = enforcement
+            receipt_path = work / "memory-enforcement.json"
+            receipt = json.loads(receipt_path.read_text()) if receipt_path.exists() else {}
+            receipt[step] = {"memory_enforcement": enforcement, "memory_bytes": MEMORY_BYTES, "binding": binding}
+            _write_json(receipt_path, receipt)
+            state["running_seconds"] = float(state.get("running_seconds", 0)) + time.monotonic() - launch_started
             message = _supervise(process, parent, state, projection, window_end=window_end)
             result = message["result"]
             result["host_guardrails"] = message["guardrails"]
+            result["host_running_seconds"] = state["running_seconds"]
             state["result"] = result
             return result
         finally:
             if process.is_alive():
                 process.terminate()
             process.join(timeout=10)
+            if process.is_alive():
+                process.kill()
+                process.join(timeout=10)
             parent.close()
             state["calendar_seconds"] = time.time() - state["calendar_started"]
             _write_json(path, state)
@@ -742,7 +864,28 @@ def corpus(db_path: Path, work: Path) -> dict[str, Any]:
         counts[identity] += 1
     result = {"rows": len(rows), "row_digest_sha256": _digest_rows(rows), "identity_counts": dict(sorted(counts.items())), "subset": "ukrmova, bukvar, ULP source files, and v5 item 7 source identities"}
     _copy_subset(db_path, work)
+    if (work / "run-manifest.json").exists():
+        result["lexical_measurement"] = _measure_lexical(db_path, work)
     return result
+
+
+def _measure_lexical(db_path: Path, work: Path) -> dict[str, Any]:
+    path = work / "lexical-measurement.json"
+    binding = _measurement_binding(work)
+    if path.exists():
+        result = _read_frozen(path)
+        if any(result.get(key) != value for key, value in binding.items()):
+            raise ValueError("Lexical measurement configuration mismatch")
+        return result
+    evaluation = _evaluation(work)
+    queries = {q["id"]: q["query"] for q in evaluation["queries"]}
+    times = []
+    with _ro_connect(_copy_subset(db_path, work)) as index, get_vesum_connection(_default_vesum_db()) as vesum:
+        for qid in evaluation["cost_query_ids"]:
+            started = time.perf_counter()
+            _fts_search(index, queries[qid], vesum, lemma=True, limit=TOP_FIRST_STAGE)
+            times.append(time.perf_counter() - started)
+    return _freeze(path, {**binding, "cost_query_ids": evaluation["cost_query_ids"], "query_seconds": times, "lexical_query_seconds": _positive(statistics.mean(times), "Lexical query seconds")})
 
 
 def _vesum_analyses(conn: sqlite3.Connection, token: str) -> list[tuple[str, str]]:
@@ -964,21 +1107,29 @@ def _query_vector(model: Any, meta: dict[str, Any], query: str, repo: str) -> An
     return model.encode([text], batch_size=1, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False, **options)[0]
 
 
-def _dense_rank(query_vector: Any, vectors_path: Path, limit: int = TOP_FIRST_STAGE) -> list[str]:
+def _load_vectors(vectors_path: Path) -> tuple[Any, Any]:
     import numpy as np
 
-    conn = _ro_connect(vectors_path)
-    try:
-        best: list[tuple[float, str]] = []
-        q = np.asarray(query_vector, dtype="float32")
-        q /= max(float(np.linalg.norm(q)), 1e-12)
-        for chunk_id, blob, dimensions in conn.execute("SELECT chunk_id,vector,dimensions FROM vectors"):
-            vector = np.frombuffer(blob, dtype="float32", count=int(dimensions))
-            score = float(np.dot(q, vector) / max(float(np.linalg.norm(vector)), 1e-12))
-            best.append((score, str(chunk_id)))
-        return [chunk for _, chunk in sorted(best, key=lambda item: (-item[0], item[1]))[:limit]]
-    finally:
-        conn.close()
+    with _ro_connect(vectors_path) as conn:
+        rows = conn.execute("SELECT chunk_id,vector,dimensions FROM vectors ORDER BY chunk_id").fetchall()
+    ids = np.asarray([str(row[0]) for row in rows])
+    if not rows:
+        return ids, np.empty((0, 0), dtype="float32")
+    matrix = np.stack([np.frombuffer(row[1], dtype="float32", count=int(row[2])) for row in rows])
+    matrix /= np.maximum(np.linalg.norm(matrix, axis=1, keepdims=True), 1e-12)
+    return ids, matrix
+
+
+def _dense_rank(query_vector: Any, vectors: Any, limit: int = TOP_FIRST_STAGE) -> list[str]:
+    import numpy as np
+
+    ids, matrix = _load_vectors(vectors) if isinstance(vectors, Path) else vectors
+    if not len(ids):
+        return []
+    q = np.asarray(query_vector, dtype="float32")
+    q = q / max(float(np.linalg.norm(q)), 1e-12)
+    scores = matrix @ q
+    return ids[np.lexsort((ids, -scores))[:limit]].tolist()
 
 
 def _model_token_limit(tokenizer: Any, config: Any) -> int:
@@ -993,15 +1144,36 @@ def _native_jina_limits(model: Any) -> dict[str, int]:
     # a cap that differs from its native rerank preprocessing.
     import textwrap
 
-    tree = ast.parse(textwrap.dedent(inspect.getsource(model.rerank)))
-    limits = {}
+    names = {"max_query_length", "max_doc_length"}
+    limits = {name: getattr(model, name) for name in names if type(getattr(model, name, None)) is int and getattr(model, name) > 0}
+    for name, parameter in inspect.signature(model.rerank).parameters.items():
+        if name in names and type(parameter.default) is int and parameter.default > 0:
+            limits[name] = parameter.default
+    try:
+        tree = ast.parse(textwrap.dedent(inspect.getsource(model.rerank)))
+    except (OSError, TypeError, SyntaxError) as exc:
+        if set(limits) != names:
+            raise ValueError("Jina native truncation limits unavailable; verify the pinned repository source locally (no download)") from exc
+        return limits
     for node in ast.walk(tree):
-        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant) and type(node.value.value) is int:
+        if isinstance(node, ast.Assign):
+            value = node.value
+            if isinstance(value, ast.Constant):
+                value = value.value
+            elif isinstance(value, ast.Attribute):
+                attributes = []
+                while isinstance(value, ast.Attribute):
+                    attributes.append(value.attr)
+                    value = value.value
+                if isinstance(value, ast.Name) and value.id == "self":
+                    value = model
+                    for attribute in reversed(attributes):
+                        value = getattr(value, attribute, None)
             for target in node.targets:
-                if isinstance(target, ast.Name) and target.id in {"max_query_length", "max_doc_length"}:
-                    limits[target.id] = node.value.value
-    if set(limits) != {"max_query_length", "max_doc_length"}:
-        raise ValueError("Jina native truncation limits changed; verify its repository implementation")
+                if isinstance(target, ast.Name) and target.id in names and type(value) is int and value > 0:
+                    limits[target.id] = value
+    if set(limits) != names:
+        raise ValueError("Jina native truncation limits unavailable; verify the pinned repository source locally (no download)")
     return limits
 
 
@@ -1098,8 +1270,9 @@ def _load_queries() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     return queries, g3
 
 
-def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: str, embedder: str | None, reranker: str | None, vesum_path: Path | None = None) -> dict[str, Any]:
+def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: str, embedder: str | None, reranker: str | None, vesum_path: Path | None = None, *, timing_only: bool = False) -> dict[str, Any]:
     """One fresh process owns one complete pipeline, including its RSS peak."""
+    pipeline_started = time.perf_counter()
     chunks = _load_rows(corpus_path)
     evaluation = _evaluation(work)
     by_id = {str(row["chunk_id"]): row for row in chunks}
@@ -1113,23 +1286,35 @@ def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: 
         if reranker.endswith("@int8"):
             ranker = _quantize_reranker(ranker, ranker_meta)
     vector_path = work / "embeddings" / (embedder.replace("/", "--") + ".sqlite3") if embedder else None
-    checkpoint_path = work / "search-progress" / (hashlib.sha256(arm.encode()).hexdigest() + ".json")
+    vectors = _load_vectors(vector_path) if vector_path else None
+    checkpoint_path = work / "search-progress" / (hashlib.sha256(arm.encode()).hexdigest() + ("-timing" if timing_only else "") + ".json")
     binding = _measurement_binding(work)
     progress = json.loads(checkpoint_path.read_text()) if checkpoint_path.exists() else {"binding": binding, "rankings": {}, "query_seconds": {}}
     if progress["binding"] != binding:
         raise ValueError("Search checkpoint mismatch")
+    previous_pipeline_seconds = progress.get("pipeline_running_seconds", 0)
+    hybrid_rankings = {}
+    if reranker:
+        hybrid_path = work / "search-progress" / (hashlib.sha256(f"H:{embedder}".encode()).hexdigest() + ".json")
+        hybrid = json.loads(hybrid_path.read_text())
+        if hybrid["binding"] != binding:
+            raise ValueError("Hybrid checkpoint mismatch")
+        hybrid_rankings = hybrid["rankings"]
     rankings = progress["rankings"]
     times = []
     passage_stats = {}
     with _ro_connect(corpus_path) as lexical, get_vesum_connection(vesum_path or _default_vesum_db()) as vesum:
-        def retrieve(query: str) -> list[str]:
+        def retrieve(query: str, qid: str) -> list[str]:
             hits = []
             if not arm.startswith("D:"):
                 hits = _fts_search(lexical, query, vesum, lemma=True, limit=TOP_FIRST_STAGE)
             if embedder:
-                dense = _dense_rank(_query_vector(encoder, encoder_meta, query, embedder), vector_path)
+                dense = _dense_rank(_query_vector(encoder, encoder_meta, query, embedder), vectors)
                 hits = dense if arm.startswith("D:") else reciprocal_rank_fusion([hits, dense])
             if reranker:
+                # Recompute first stages for end-to-end timing, but permutation
+                # inputs come from the completed hybrid's exact checkpoint.
+                hits = hybrid_rankings[qid]
                 candidates = [by_id[cid] for cid in hits[:TOP_RERANK] if cid in by_id]
                 original = hits[:TOP_RERANK]
                 reordered = _rerank(ranker, ranker_meta, query, candidates)
@@ -1139,12 +1324,15 @@ def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: 
 
         measured = evaluation["cost_query_ids"]
         if measured:
-            retrieve(str(next(q["query"] for q in queries if q["id"] == measured[0])))
+            retrieve(str(next(q["query"] for q in queries if q["id"] == measured[0])), measured[0])
         for query in queries:
+            if timing_only and query["id"] not in measured:
+                continue
             if query["id"] not in rankings:
                 started = time.perf_counter()
-                rankings[query["id"]] = retrieve(str(query["query"]))
+                rankings[query["id"]] = retrieve(str(query["query"]), query["id"])
                 progress["query_seconds"][query["id"]] = time.perf_counter() - started
+                progress["pipeline_running_seconds"] = previous_pipeline_seconds + time.perf_counter() - pipeline_started
                 _write_json(checkpoint_path, progress)
             if query["id"] in measured:
                 times.append(progress["query_seconds"][query["id"]])
@@ -1152,7 +1340,7 @@ def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: 
     encode_cost = json.loads(encode_path.read_text()) if encode_path and encode_path.exists() else {}
     cost = {key: encode_cost[key] for key in ("wall_seconds", "steady_state_chunks_per_second", "peak_rss_bytes") if key in encode_cost}
     if encoder:
-        passage_stats[embedder] = _embedder_passage_stats(chunks, encoder, encoder_meta, embedder)
+        passage_stats[embedder] = encode_cost.get("passage_stats", {})
     if ranker:
         rerank_rows = {cid: by_id[cid] for ranking in rankings.values() for cid in ranking[:TOP_RERANK]}
         _, passage_stats[reranker] = _passage_stats(list(rerank_rows.values()), _reranker_tokenizer(ranker, ranker_meta), 512, tail=True)
@@ -1162,26 +1350,22 @@ def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: 
                  "index_size_bytes": (corpus_path.stat().st_size if not arm.startswith("D:") else 0) + (vector_path.stat().st_size if vector_path else 0),
                  "measurement": "fresh spawned process per arm; one full-pipeline warmup, then frozen 50-query cost batch; end-to-end lexical/dense/fusion/rerank as applicable; process-lifetime RSS including model setup",
                  "encoder": encoder_meta, "reranker": ranker_meta})
+    cost["pipeline_seconds"] = previous_pipeline_seconds + time.perf_counter() - pipeline_started
+    cost["pipeline_queries"] = len(rankings) + bool(measured)
     return {"rankings": rankings, "cost": cost}
 
 
 def _isolated_arm(*args: Any) -> dict[str, Any]:
-    _corpus_path, work, queries, arm, embedder, reranker, *_ = args
-    admission = _admission(work)
-    # The frozen cost measurements define running-time projections. Sum complete
-    # first-stage query estimates and rerank measurements, including warmup.
-    measurement = admission["measurements"]
-    seconds = _positive(measurement["lexical_query_seconds"], "Lexical query projection")
-    setup_seconds = 0.0
-    if embedder:
-        setup_seconds += measurement["embedders"][embedder].get("model_load_seconds", 0)
-        seconds += _positive(measurement["embedders"][embedder]["query_seconds"], "Dense query projection")
-    if reranker:
-        decision = admission["rerankers"][reranker.removesuffix("@int8")]
-        trial = decision["measurements"][-1]["attempts"][-1]
-        setup_seconds += trial.get("model_load_seconds", 0)
-        seconds += trial["p95_seconds"]
-    return _guarded_step(_run_arm, args, {}, work, f"search:{arm}", setup_seconds + seconds * (len(queries) + 1))
+    _corpus_path, work, queries, arm, _embedder, _reranker, *_ = args
+    _admission(work)
+    # Initial timing probe has a bounded 30-minute projection. Its checkpoint
+    # measures the entire pipeline, including setup, reporting and warmup.
+    timing = _guarded_step(_run_arm, args, {"timing_only": True}, work, f"search-timing:{arm}", 30 * 60)
+    cost = timing["cost"]
+    # Scale the complete elapsed measurement conservatively: this also scales
+    # setup rather than omitting any fixed costs from the real search step.
+    projection = _positive(timing.get("host_running_seconds", cost["pipeline_seconds"]), "Full-pipeline timing") * (len(queries) + 1) / cost["pipeline_queries"]
+    return _guarded_step(_run_arm, args, {}, work, f"search:{arm}", projection)
 
 
 def search(db_path: Path, work: Path, *, models: list[str], rerankers: list[str], query_limit: int, families: list[str]) -> dict[str, Any]:
@@ -1617,7 +1801,7 @@ Related: docs/research/retrieval-bakeoff-9233/g3-queries.yaml; design #9233 v6.1
     p.add_argument("--projection-seconds", type=float, required=True, help="Measured step projection in running seconds, used for the 1.5x deadline; example 1200. Initial probe requires an explicit bounded estimate.")
     p.add_argument("--repeat", action="store_true", help="Perform the one required borderline remeasurement; default reuse a completed measurement.")
     p = commands.add_parser("admit", parents=[common], help="Apply ascending-cost 20h encode and 8h/10s reranker admission; no model compute.")
-    p.add_argument("--measurements", type=Path, required=True, help="JSON with frozen binding, all six embedder projected_seconds/query_seconds, lexical_query_seconds, and optional reranker fp32/int8 attempt lists (p50_seconds, p95_seconds, mean_seconds, timing_pairs_sha256); fake measurements may be used for a dry run.")
+    p.add_argument("--measurements", type=Path, required=True, help="JSON with frozen binding, all six embedder projected_seconds/query_seconds, and optional reranker fp32/int8 attempt lists (p50_seconds, p95_seconds, mean_seconds, timing_pairs_sha256). Lexical timing is read from lexical-measurement.json, written by measure or corpus after manifest.")
     commands.add_parser("timing-pairs", parents=[common], help="Freeze E5 hybrid top-20 realised query/candidate pairs from search-results.json before reranker timing.")
     p = commands.add_parser("encode", parents=[common], help="CPU encode the subset resumably with the selected embedding model.")
     p.add_argument("--model", choices=sorted(EMBEDDERS), required=True, help="Exact embedding model repository; example intfloat/multilingual-e5-small.")
