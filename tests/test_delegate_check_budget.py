@@ -477,16 +477,18 @@ def test_budget_guard_bounds_old_assertion_by_snapshot_inventory(
     )
     monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex", "codex": "cursor"})
+    _use_fallbacks(monkeypatch, {"claude": "codex", "codex": "cursor"})
     monkeypatch.setattr(
         reset_reserve, "get_provider_usage_data", lambda _provider: pytest.fail("snapshot inventory must be used")
     )
     if requested == "claude" and inventory_state != "available":
         with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
-            delegate._resolve_agent_with_budget_guard(requested, language_lane=True)
+            delegate._resolve_agent_with_budget_guard(requested, language_lane=True, fallbacks=_fallbacks())
         assert "reset reserve active" not in capsys.readouterr().err
         return
-    result = delegate._resolve_agent_with_budget_guard(requested, language_lane=requested == "claude")
+    result = delegate._resolve_agent_with_budget_guard(
+        requested, language_lane=requested == "claude", fallbacks=_fallbacks()
+    )
     output = capsys.readouterr().err
     if inventory_state == "available":
         assert result == "codex"
