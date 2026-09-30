@@ -15,6 +15,7 @@ import tempfile
 import threading
 import tomllib
 import urllib.request
+import warnings
 from dataclasses import replace
 from pathlib import Path
 
@@ -451,24 +452,30 @@ def test_namespace_escape_matrix_with_positive_controls(world, tmp_path, proxy_m
 
     try:
         targets = []
-        for family, wildcard in [(socket.AF_INET, "0.0.0.0"), (socket.AF_INET6, "::")]:
+        for address in host_addresses():
+            if address.version == 6 and address.is_link_local:
+                warnings.warn("Skipping IPv6 link-local address: interface scope unavailable", stacklevel=2)
+                continue
+            family = socket.AF_INET if address.version == 4 else socket.AF_INET6
+            target = str(address)
             listener = socket.socket(family)
-            if family == socket.AF_INET6:
-                listener.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 1)
-            listener.bind((wildcard, 0))
+            try:
+                if family == socket.AF_INET6:
+                    listener.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 1)
+                listener.bind((target, 0))
+            except OSError as exc:
+                listener.close()
+                warnings.warn(f"Skipping IPv{address.version} address: bind failed (errno={exc.errno})", stacklevel=2)
+                continue
             listener.listen()
             listeners.append(listener)
             thread = threading.Thread(target=serve, args=(listener,), daemon=True)
             thread.start()
             threads.append(thread)
-            for address in host_addresses():
-                if address.version == (4 if family == socket.AF_INET else 6):
-                    target = str(address)
-                    if address.version == 6 and address.is_link_local:
-                        continue  # scoped interface addresses require interface identity
-                    targets.append((family, (target, listener.getsockname()[1])))
+            targets.append((family, (target, listener.getsockname()[1])))
             if family == socket.AF_INET:
-                targets.append((socket.AF_INET6, ("::ffff:127.0.0.1", listener.getsockname()[1])))
+                targets.append((socket.AF_INET6, (f"::ffff:{target}", listener.getsockname()[1])))
+        assert targets, "No host addresses could be bound for positive controls"
         # Host abstract namespace and a neighboring attempt's filesystem socket.
         abstract = "\0attempt-fixture-" + str(os.getpid()) + "-" + proxy_mode
         neighbor = str(Path(socket_directory.name) / "neighbor.sock")
@@ -621,6 +628,7 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
 
             tls_server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Redirect)
             context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
             context.load_cert_chain(cert, key)
             tls_server.socket = context.wrap_socket(tls_server.socket, server_side=True)
             tls_thread = threading.Thread(target=tls_server.serve_forever, daemon=True)
@@ -646,8 +654,10 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
         else:
             script = (
                 "import urllib.request,urllib.error,ssl\n"
+                "context=ssl._create_unverified_context()\n"
+                "context.minimum_version=ssl.TLSVersion.TLSv1_2\n"
                 "try:\n"
-                f" urllib.request.urlopen({url!r},context=ssl._create_unverified_context(),timeout=3).read()\n"
+                f" urllib.request.urlopen({url!r},context=context,timeout=3).read()\n"
                 "except urllib.error.URLError as e:\n"
                 " assert '403 Forbidden' in str(e),str(e)\n"
                 " print('DENIED:proxy_target')\n"
