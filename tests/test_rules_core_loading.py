@@ -22,6 +22,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import tomllib
@@ -811,6 +812,127 @@ def test_ask_transports_without_the_core_refuse_before_spawning(
         _hermes._invoke_hermes("hello", "laguna-s-2.1")
     with pytest.raises(SystemExit, match=r"ask-opencode: refused: .*core\.md"):
         _opencode._run_opencode("hello", "laguna-s-2.1")
+
+
+# --------------------------------------------------------------------------- public entries, before any write
+
+# Everything a public ask or discussion entry could write or start: a spy on each
+# records the call instead of doing it, so a refusal must leave every list empty.
+_ASK_SIDE_EFFECTS = (
+    "send_message",
+    "register_ask",
+    "launch_background_ask",
+    "_send_gemini_message",
+    "process_and_respond",
+)
+
+
+def _spy_side_effects(monkeypatch: pytest.MonkeyPatch, modules, names) -> list[str]:
+    calls: list[str] = []
+    for module in modules:
+        for name in names:
+            if hasattr(module, name):
+                monkeypatch.setattr(module, name, lambda *_a, _n=name, **_k: calls.append(_n))
+    return calls
+
+
+def _bridge_asks():
+    from scripts.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _hermes, _kimi, _opencode
+
+    return (
+        ("ask-cursor", _cursor, "ask_cursor"),
+        ("ask-hermes", _hermes, "ask_hermes"),
+        ("ask-opencode", _opencode, "ask_opencode"),
+        ("ask-pool", _opencode, "ask_pool"),
+        ("ask-glm", _opencode, "ask_glm"),
+        ("ask-gemma", _opencode, "ask_gemma"),
+        ("ask-claude", _claude, "ask_claude"),
+        ("ask-codex", _codex, "ask_codex"),
+        ("ask-agy", _agy, "ask_agy"),
+        ("ask-grok", _grok_build, "ask_grok_build"),
+        ("ask-kimi", _kimi, "ask_kimi"),
+        ("ask-gemini", _gemini, "ask_gemini"),
+    )
+
+
+@pytest.mark.parametrize("background", [False, True], ids=["foreground", "background"])
+@pytest.mark.parametrize("index", range(12))
+def test_bridge_ask_without_the_core_refuses_before_any_send(
+    index: int, background: bool, monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    from scripts.ai_agent_bridge import _ask_lifecycle, _messaging
+
+    who, module, name = _bridge_asks()[index]
+    calls = _spy_side_effects(monkeypatch, (module, _messaging, _ask_lifecycle), _ASK_SIDE_EFFECTS)
+    mode = {"async_mode": background} if name == "ask_gemini" else {"background": background}
+    with pytest.raises(SystemExit, match=rf"{who}: refused: .*core\.md"):
+        getattr(module, name)("hello", "t-core", **mode)
+    assert calls == [], f"{who} wrote before refusing: {calls}"
+
+
+def test_acp_ask_without_the_core_refuses_before_forward_or_enqueue(
+    monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    from agent_runtime.runner import InterAgentTransportError
+    from scripts.ai_agent_bridge import _acp_compat, _job_host_forward
+    from scripts.fleet_comms import authority
+    from scripts.telemetry import legacy_bridge
+
+    calls = _spy_side_effects(
+        monkeypatch,
+        (legacy_bridge, _job_host_forward, authority),
+        ("start_bridge_invocation_safely", "maybe_forward_compat_ask", "AuthorityService"),
+    )
+    with pytest.raises(InterAgentTransportError, match=r"ask-codex refused: .*core\.md"):
+        _acp_compat.run_compat_ask("codex", "hello", task_id="t-core", source="claude")
+    assert calls == [], f"the ACP ask wrote before refusing: {calls}"
+
+
+@pytest.mark.parametrize("review", [False, True], ids=["ask", "review"])
+def test_ask_cli_without_the_core_refuses_before_dispatch(
+    review: bool, monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    import argparse
+
+    from scripts.ai_agent_bridge import _acp_compat, _cli
+
+    calls = _spy_side_effects(
+        monkeypatch,
+        (_cli, _acp_compat),
+        ("_resolve_same_repo_pr_head", "_dispatch_headless_review", "run_compat_ask"),
+    )
+    args = argparse.Namespace(
+        content="hello", task_id="t-core", review=review, type="review" if review else "query", pr=None, branch=None
+    )
+    with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
+        _cli._handle_acp_compat(args, "cursor")
+    assert calls == [], f"ask-cursor dispatched before refusing: {calls}"
+
+
+def test_discuss_cli_without_the_core_refuses_before_any_channel_write(
+    monkeypatch: pytest.MonkeyPatch, missing_core: Path, capsys
+) -> None:
+    import argparse
+
+    from scripts.ai_agent_bridge import _channels_cli
+    from scripts.fleet_comms import authority
+
+    calls = _spy_side_effects(monkeypatch, (authority,), ("AuthorityService",))
+    monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "acp")
+    args = argparse.Namespace(
+        channel="core-check",
+        with_agents="codex,claude",
+        body="Solve the bounded fixture.",
+        max_rounds=1,
+        models=None,
+        efforts=None,
+        review=False,
+        review_profile=None,
+        idempotency_key=None,
+    )
+    assert _channels_cli._handle_discuss(args) == 1
+    assert calls == [], f"the discussion wrote before refusing: {calls}"
+    assert re.search(r"discussion refused: .*core\.md", capsys.readouterr().err)
 
 
 # --------------------------------------------------------------------------- /api/rules scopes

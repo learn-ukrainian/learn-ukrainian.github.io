@@ -604,6 +604,17 @@ def run_compat_ask(
     participant = require_compat_target(command_target)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
+    # Every ACP ask starts with the rules core: refuse before telemetry, the
+    # job-host forward or any authority enqueue/claim (the runner re-checks).
+    from agent_runtime.runner import InterAgentTransportError
+    from scripts.lib import rules_core
+
+    try:
+        rules_core.require_core()
+    except rules_core.RulesCoreMissing as exc:
+        raise InterAgentTransportError(
+            f"ask-{command_target} refused: {exc}; the rules core is required"
+        ) from exc
 
     from scripts.telemetry.legacy_bridge import (
         finish_bridge_invocation_safely,

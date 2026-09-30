@@ -61,6 +61,19 @@ def _prepend_review_protocol(
     )
 
 
+def require_core_or_exit(who: str) -> None:
+    """Exit naming the missing path unless the rules core is present.
+
+    Every public ask entry calls this first, before a message is sent, an ask is
+    registered or a background process is launched; ``with_core_or_exit`` stays at
+    prompt build as defence in depth.
+    """
+    try:
+        rules_core.require_core()
+    except rules_core.RulesCoreMissing as exc:
+        raise SystemExit(f"{who}: refused: {exc}; the rules core is required") from exc
+
+
 def with_core_or_exit(prompt: str, who: str) -> str:
     """Lead ``prompt`` with the rules core, or exit naming the missing path (nothing is sent without it)."""
     try:

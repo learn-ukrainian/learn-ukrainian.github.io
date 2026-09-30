@@ -24,7 +24,7 @@ from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_as
 from ._config import REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import build_codex_prompt
+from ._prompts import build_codex_prompt, require_core_or_exit
 from ._review_safety import (
     ReviewSafetyError,
     assert_formal_review_ask_payload,
@@ -125,6 +125,7 @@ def ask_codex(
     review_pr_lifecycle: bool = False,
     ):
     """Send message to Codex AND invoke Codex to process it."""
+    require_core_or_exit("ask-codex")
     try:
         has_target = review_branch is not None or review_pr_number is not None
         formal_review = assert_formal_review_ask_payload(

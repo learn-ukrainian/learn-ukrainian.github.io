@@ -40,7 +40,7 @@ from ._ask_lifecycle import (
 )
 from ._config import REPO_ROOT
 from ._messaging import acknowledge, send_message
-from ._prompts import with_core_or_exit
+from ._prompts import require_core_or_exit, with_core_or_exit
 from ._review_safety import (
     MAX_ASK_ATTACHMENT_BYTES,
     MAX_ASK_CONTENT_BYTES,
@@ -82,6 +82,7 @@ def ask_hermes(
     background: bool = False,
 ) -> int:
     """Send message to Hermes AND invoke Hermes one-shot to process it."""
+    require_core_or_exit("ask-hermes")
     effective_model = resolve_model_selection(
         lane="ask-hermes", to_model=to_model, model=model, default=HERMES_DEFAULT_MODEL
     )

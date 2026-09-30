@@ -50,7 +50,7 @@ from ._messaging import (
     send_to_gemini,
 )
 from ._model import _detect_model_error
-from ._prompts import build_gemini_prompt
+from ._prompts import build_gemini_prompt, require_core_or_exit
 
 
 def converse_gemini(
@@ -115,6 +115,7 @@ def ask_gemini(
     env override). Only the registered pin and equivalent display spelling are
     accepted on the AGY ACP route; other explicit Gemini models fail clearly.
     """
+    require_core_or_exit("ask-gemini")
     from ._acp_compat import resolve_compat_model
 
     selected = resolve_compat_model("gemini", model)
