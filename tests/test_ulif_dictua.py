@@ -1317,3 +1317,60 @@ def test_sources_db_migrate_cli_subprocess_clean_env(tmp_path):
     assert {"homonym_index", "sense_gloss", "homonym_checked"} <= columns
     assert ["normalized_query", "homonym_index"] in unique
     assert homonym == (1, 0)
+
+
+def test_header_row_with_unmapped_common_gender_label():
+    """R2-N1: 'відмінок | чол. і жін. р. | множина' must be recognized as header row."""
+    html = """
+    <div id="ContentPlaceHolder1_article">
+        <span class="word_style">Лойо́ла</span>
+        <span class="gram_style">- іменник</span>
+        <span class="comment_style">прізвище</span>
+        <table>
+            <tr>
+                <td>відмінок</td>
+                <td>чол. і жін. р.</td>
+                <td>множина</td>
+            </tr>
+            <tr>
+                <td>називний</td>
+                <td>Лойо́ла</td>
+                <td>Лойо́ли</td>
+            </tr>
+            <tr>
+                <td>родовий</td>
+                <td>Лойо́ли</td>
+                <td>Лойо́л</td>
+            </tr>
+        </table>
+    </div>
+    """
+    entry = ulif_parse.parse_ulif_entry(html, homonym_index=1)
+    forms = entry["forms"]
+    surfaces = [f["form_unstressed"] for f in forms]
+    assert "чол. і жін. р." not in surfaces
+    assert "множина" not in surfaces
+    assert "відмінок" not in surfaces
+
+    col1_forms = [f for f in forms if f["form_unstressed"].casefold() == "лойола" and not f["is_lemma"]]
+    assert len(col1_forms) >= 1
+    assert "чол. і жін. р." in col1_forms[0]["unmapped_labels"]
+    assert "v_naz" in col1_forms[0]["grammatical_tags"]
+
+    col2_forms = [f for f in forms if f["form_unstressed"].casefold() == "лойоли" and "p" in f["grammatical_tags"]]
+    assert len(col2_forms) >= 1
+
+    leaks = [f for f in forms if not f["is_lemma"] and not f["grammatical_tags"] and not f["unmapped_labels"]]
+    assert leaks == []
+
+
+def test_article_identity_without_article_container():
+    """R2-N3: absent article container classifies actual visible body after excluding scripts/styles."""
+    nonempty_html = '<html><body><div id="other"><span class="word_style">Синтети́чне</span> нерозпізнаний вміст</div></body></html>'
+    res_nonempty = ulif_parse.parse_ulif_entry(nonempty_html, homonym_index=1)
+    assert res_nonempty["is_empty_visible_article"] is False
+    assert res_nonempty["canonical_headword"] == ""
+
+    empty_html = '<html><head><style>.foo { color: red; }</style></head><body><script>var x = 1;</script></body></html>'
+    res_empty = ulif_parse.parse_ulif_entry(empty_html, homonym_index=1)
+    assert res_empty["is_empty_visible_article"] is True

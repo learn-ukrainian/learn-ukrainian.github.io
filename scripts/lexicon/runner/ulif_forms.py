@@ -100,7 +100,9 @@ def build_ulif_forms(
 
         failures_by_reason: dict[str, int] = defaultdict(int)
         mismatches: list[dict[str, Any]] = []
+        unavailable_relation_blobs: list[dict[str, Any]] = []
         has_extraction_defect = False
+        has_infrastructure_failure = False
 
         for offset in range(0, total_verified, batch_size):
             batch = verified_entries[offset : offset + batch_size]
@@ -150,6 +152,7 @@ def build_ulif_forms(
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
                     failures_by_reason[reason] += 1
+                    has_infrastructure_failure = True
                     continue
                 except ValueError:
                     reason = "corrupt_raw_manifest"
@@ -162,6 +165,7 @@ def build_ulif_forms(
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
                     failures_by_reason[reason] += 1
+                    has_infrastructure_failure = True
                     continue
 
                 if manifest_bytes is None:
@@ -184,6 +188,66 @@ def build_ulif_forms(
                     failures_by_reason[reason] += 1
                     continue
 
+                for rel_kind in ("synonyms", "antonyms", "phraseology"):
+                    if rel_kind in manifest:
+                        rel_ref = manifest[rel_kind]
+                        if not isinstance(rel_ref, str) or not rel_ref.startswith("sha256:") or len(rel_ref) != 71:
+                            unavailable_relation_blobs.append(
+                                {
+                                    "entry_id": entry_id,
+                                    "tab": rel_kind,
+                                    "ref": str(rel_ref),
+                                    "error": "corrupt_blob",
+                                    "locator": f"ulif:entry:{entry_id}:{rel_kind}",
+                                }
+                            )
+                        else:
+                            rel_sha = rel_ref.removeprefix("sha256:")
+                            try:
+                                rel_bytes = ulif_raw_cache.get(rel_sha, conn=raw_conn)
+                                if rel_bytes is None:
+                                    unavailable_relation_blobs.append(
+                                        {
+                                            "entry_id": entry_id,
+                                            "tab": rel_kind,
+                                            "ref": rel_ref,
+                                            "error": "missing_blob",
+                                            "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                                        }
+                                    )
+                            except ValueError:
+                                unavailable_relation_blobs.append(
+                                    {
+                                        "entry_id": entry_id,
+                                        "tab": rel_kind,
+                                        "ref": rel_ref,
+                                        "error": "corrupt_blob",
+                                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                                    }
+                                )
+                            except FileNotFoundError:
+                                has_infrastructure_failure = True
+                                unavailable_relation_blobs.append(
+                                    {
+                                        "entry_id": entry_id,
+                                        "tab": rel_kind,
+                                        "ref": rel_ref,
+                                        "error": "missing_cache_file",
+                                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                                    }
+                                )
+                            except Exception:
+                                has_infrastructure_failure = True
+                                unavailable_relation_blobs.append(
+                                    {
+                                        "entry_id": entry_id,
+                                        "tab": rel_kind,
+                                        "ref": rel_ref,
+                                        "error": "raw_cache_error",
+                                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                                    }
+                                )
+
                 if "paradigm" not in manifest:
                     reason = "raw_entry_page_absent"
                     locator = f"ulif:entry:{entry_id}"
@@ -196,29 +260,36 @@ def build_ulif_forms(
                             homonym_index=homonym_index,
                             is_invariable=False,
                         )
-                        batch_form_rows.append((
-                            entry_id,
-                            row["entry_key"],
-                            row["form_unstressed"],
-                            row["form_stressed"],
-                            json.dumps(row["stress_vowel_indices"]),
-                            json.dumps(row["grammatical_tags"], ensure_ascii=False),
-                            json.dumps(row["unmapped_labels"], ensure_ascii=False),
-                            row["variant_order"],
-                            row["preposition"],
-                            int(row["marked_asterisk"]),
-                            int(row["is_lemma"]),
-                            int(row["is_invariable"]),
-                            int(row["dual_stress_flag"]),
-                            row["pedagogical_stressed_form"],
-                            "",
-                            ULIF_FORMS_PARSER_VERSION,
-                            entry_fp,
-                        ))
+                        batch_form_rows.append(
+                            (
+                                entry_id,
+                                row["entry_key"],
+                                row["form_unstressed"],
+                                row["form_stressed"],
+                                json.dumps(row["stress_vowel_indices"]),
+                                json.dumps(row["grammatical_tags"], ensure_ascii=False),
+                                json.dumps(row["unmapped_labels"], ensure_ascii=False),
+                                row["variant_order"],
+                                row["preposition"],
+                                int(row["marked_asterisk"]),
+                                int(row["is_lemma"]),
+                                int(row["is_invariable"]),
+                                int(row["dual_stress_flag"]),
+                                row["pedagogical_stressed_form"],
+                                "",
+                                ULIF_FORMS_PARSER_VERSION,
+                                entry_fp,
+                            )
+                        )
                     continue
 
                 par_ref = manifest.get("paradigm")
-                if not par_ref or not isinstance(par_ref, str) or not par_ref.startswith("sha256:") or len(par_ref) != 71:
+                if (
+                    not par_ref
+                    or not isinstance(par_ref, str)
+                    or not par_ref.startswith("sha256:")
+                    or len(par_ref) != 71
+                ):
                     reason = "corrupt_raw_paradigm_blob"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
@@ -234,6 +305,7 @@ def build_ulif_forms(
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
                     failures_by_reason[reason] += 1
+                    has_infrastructure_failure = True
                     continue
                 except ValueError:
                     reason = "corrupt_raw_paradigm_blob"
@@ -246,6 +318,7 @@ def build_ulif_forms(
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
                     failures_by_reason[reason] += 1
+                    has_infrastructure_failure = True
                     continue
 
                 if par_bytes is None:
@@ -284,6 +357,14 @@ def build_ulif_forms(
                         has_extraction_defect = True
                         continue
 
+                if any(not f["is_lemma"] and not f["grammatical_tags"] and not f["unmapped_labels"] for f in forms):
+                    reason = "extraction_defect: label_row_as_form"
+                    locator = f"ulif:entry:{entry_id}"
+                    batch_failure_rows.append((entry_id, reason, locator))
+                    failures_by_reason[reason] += 1
+                    has_extraction_defect = True
+                    continue
+
                 parsed_grammar = parsed.get("grammatical_label") or ""
                 parsed_gloss = parsed.get("sense_gloss") or ""
 
@@ -296,38 +377,42 @@ def build_ulif_forms(
                     mismatch_fields.append("sense_gloss")
 
                 if mismatch_fields:
-                    mismatches.append({
-                        "entry_id": entry_id,
-                        "locator": f"ulif:entry:{entry_id}",
-                        "fields": mismatch_fields,
-                        "stored_headword": stored_headword,
-                        "parsed_headword": parsed_headword,
-                        "stored_grammar": stored_grammar,
-                        "parsed_grammar": parsed_grammar,
-                        "stored_gloss": stored_gloss,
-                        "parsed_gloss": parsed_gloss,
-                    })
+                    mismatches.append(
+                        {
+                            "entry_id": entry_id,
+                            "locator": f"ulif:entry:{entry_id}",
+                            "fields": mismatch_fields,
+                            "stored_headword": stored_headword,
+                            "parsed_headword": parsed_headword,
+                            "stored_grammar": stored_grammar,
+                            "parsed_grammar": parsed_grammar,
+                            "stored_gloss": stored_gloss,
+                            "parsed_gloss": parsed_gloss,
+                        }
+                    )
 
                 for f in forms:
-                    batch_form_rows.append((
-                        entry_id,
-                        f["entry_key"],
-                        f["form_unstressed"],
-                        f["form_stressed"],
-                        json.dumps(f["stress_vowel_indices"]),
-                        json.dumps(f["grammatical_tags"], ensure_ascii=False),
-                        json.dumps(f["unmapped_labels"], ensure_ascii=False),
-                        f["variant_order"],
-                        f["preposition"],
-                        int(f["marked_asterisk"]),
-                        int(f["is_lemma"]),
-                        int(f["is_invariable"]),
-                        int(f["dual_stress_flag"]),
-                        f["pedagogical_stressed_form"],
-                        par_sha,
-                        ULIF_FORMS_PARSER_VERSION,
-                        entry_fp,
-                    ))
+                    batch_form_rows.append(
+                        (
+                            entry_id,
+                            f["entry_key"],
+                            f["form_unstressed"],
+                            f["form_stressed"],
+                            json.dumps(f["stress_vowel_indices"]),
+                            json.dumps(f["grammatical_tags"], ensure_ascii=False),
+                            json.dumps(f["unmapped_labels"], ensure_ascii=False),
+                            f["variant_order"],
+                            f["preposition"],
+                            int(f["marked_asterisk"]),
+                            int(f["is_lemma"]),
+                            int(f["is_invariable"]),
+                            int(f["dual_stress_flag"]),
+                            f["pedagogical_stressed_form"],
+                            par_sha,
+                            ULIF_FORMS_PARSER_VERSION,
+                            entry_fp,
+                        )
+                    )
 
             placeholders = ",".join("?" * len(entry_ids))
             conn.execute(f"DELETE FROM ulif_forms WHERE entry_id IN ({placeholders})", entry_ids)
@@ -368,7 +453,7 @@ def build_ulif_forms(
         total_forms = conn.execute("SELECT count(*) FROM ulif_forms").fetchone()[0]
         finished_at = datetime.now(UTC).isoformat()
 
-        if has_extraction_defect:
+        if has_extraction_defect or has_infrastructure_failure:
             state = "failed"
         elif done_count + failed_count == total_verified:
             state = "complete"
@@ -397,6 +482,8 @@ def build_ulif_forms(
             "mismatches_count": len(mismatches),
             "mismatches": mismatches,
             "mismatches_sample": mismatches[:100],
+            "unavailable_relation_blobs_count": len(unavailable_relation_blobs),
+            "unavailable_relation_blobs": unavailable_relation_blobs,
             "started_at": started_at,
             "finished_at": finished_at,
         }
@@ -455,7 +542,13 @@ def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
     conn.row_factory = sqlite3.Row
     try:
         tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
-        required = {"ulif_dictua_entries", "ulif_dictua_sections", "ulif_forms", "ulif_forms_failures", "ulif_forms_build"}
+        required = {
+            "ulif_dictua_entries",
+            "ulif_dictua_sections",
+            "ulif_forms",
+            "ulif_forms_failures",
+            "ulif_forms_build",
+        }
         missing = required - tables
         if missing:
             return {"verified": False, "error": f"Missing tables: {sorted(missing)}"}
@@ -464,7 +557,10 @@ def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
         if build_row is None:
             return {"verified": False, "error": "ulif_forms_build table is empty"}
         if build_row["state"] != "complete":
-            return {"verified": False, "error": f"ulif_forms_build state is {build_row['state']!r}, expected 'complete'"}
+            return {
+                "verified": False,
+                "error": f"ulif_forms_build state is {build_row['state']!r}, expected 'complete'",
+            }
         if build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
             return {"verified": False, "error": f"stale parser_version: {build_row['parser_version']!r}"}
 
@@ -478,6 +574,18 @@ def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
             return {
                 "verified": False,
                 "error": f"Build contains {defect_count} extraction defect failures blocking verification",
+            }
+
+        infra_count = conn.execute(
+            """
+            SELECT count(*) FROM ulif_forms_failures
+            WHERE reason IN ('raw_cache_error', 'missing_cache_file')
+            """
+        ).fetchone()[0]
+        if infra_count > 0:
+            return {
+                "verified": False,
+                "error": f"Build contains {infra_count} infrastructure failures (raw_cache_error/missing_cache_file) blocking verification",
             }
 
         current_source_fp = sources_db.compute_ulif_source_fingerprint(conn)
@@ -497,13 +605,18 @@ def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
             """
         ).fetchone()[0]
         if unaccounted != 0:
-            return {"verified": False, "error": f"Found {unaccounted} verified entries with neither forms nor failure recorded"}
+            return {
+                "verified": False,
+                "error": f"Found {unaccounted} verified entries with neither forms nor failure recorded",
+            }
 
         empty_forms = conn.execute("SELECT count(*) FROM ulif_forms WHERE form_unstressed = ''").fetchone()[0]
         if empty_forms != 0:
             return {"verified": False, "error": f"Found {empty_forms} form rows with empty form_unstressed"}
 
-        total_verified = conn.execute("SELECT count(*) FROM ulif_dictua_entries WHERE homonym_checked = 1").fetchone()[0]
+        total_verified = conn.execute("SELECT count(*) FROM ulif_dictua_entries WHERE homonym_checked = 1").fetchone()[
+            0
+        ]
         done_count = conn.execute(
             """
             SELECT count(DISTINCT entry_id) FROM ulif_forms
@@ -583,42 +696,48 @@ def generate_disagreement_report(
 
             if status == "invalid_input":
                 not_applicable_count += 1
-                disagreements.append({
-                    "entry_id": row["entry_id"],
-                    "entry_key": row["entry_key"],
-                    "form_unstressed": unstressed,
-                    "ulif_stressed": ulif_stressed,
-                    "oracle_status": status,
-                    "oracle_stresses": "",
-                    "disagreement_type": "oracle_not_applicable",
-                    "agrees": None,
-                })
+                disagreements.append(
+                    {
+                        "entry_id": row["entry_id"],
+                        "entry_key": row["entry_key"],
+                        "form_unstressed": unstressed,
+                        "ulif_stressed": ulif_stressed,
+                        "oracle_status": status,
+                        "oracle_stresses": "",
+                        "disagreement_type": "oracle_not_applicable",
+                        "agrees": None,
+                    }
+                )
             elif agrees:
                 agreed_count += 1
                 if all_rows:
-                    disagreements.append({
+                    disagreements.append(
+                        {
+                            "entry_id": row["entry_id"],
+                            "entry_key": row["entry_key"],
+                            "form_unstressed": unstressed,
+                            "ulif_stressed": ulif_stressed,
+                            "oracle_status": status,
+                            "oracle_stresses": ",".join(oracle_stresses),
+                            "disagreement_type": "none",
+                            "agrees": True,
+                        }
+                    )
+            else:
+                disagreed_count += 1
+                dtype = "not_found" if status == "not_found" else ("stress_mismatch" if oracle_stresses else status)
+                disagreements.append(
+                    {
                         "entry_id": row["entry_id"],
                         "entry_key": row["entry_key"],
                         "form_unstressed": unstressed,
                         "ulif_stressed": ulif_stressed,
                         "oracle_status": status,
                         "oracle_stresses": ",".join(oracle_stresses),
-                        "disagreement_type": "none",
-                        "agrees": True,
-                    })
-            else:
-                disagreed_count += 1
-                dtype = "not_found" if status == "not_found" else ("stress_mismatch" if oracle_stresses else status)
-                disagreements.append({
-                    "entry_id": row["entry_id"],
-                    "entry_key": row["entry_key"],
-                    "form_unstressed": unstressed,
-                    "ulif_stressed": ulif_stressed,
-                    "oracle_status": status,
-                    "oracle_stresses": ",".join(oracle_stresses),
-                    "disagreement_type": dtype,
-                    "agrees": False,
-                })
+                        "disagreement_type": dtype,
+                        "agrees": False,
+                    }
+                )
 
         out = Path(out_path)
         out.parent.mkdir(parents=True, exist_ok=True)
@@ -720,8 +839,7 @@ def main(argv: list[str] | None = None) -> int:
         help="Verify ulif_forms tables consistency and completeness.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
-            "Example:\n"
-            "  .venv/bin/python -m scripts.lexicon.runner.ulif_forms verify --db /scratch/sources-copy.db"
+            "Example:\n  .venv/bin/python -m scripts.lexicon.runner.ulif_forms verify --db /scratch/sources-copy.db"
         ),
     )
     verify_p.add_argument(
@@ -766,7 +884,9 @@ def main(argv: list[str] | None = None) -> int:
                 report_path=args.report,
                 batch_size=args.batch_size,
             )
-            print(f"Build {report['state']}: done={report['entries_done']}, failed={report['entries_failed']}, forms={report['total_forms']}")
+            print(
+                f"Build {report['state']}: done={report['entries_done']}, failed={report['entries_failed']}, forms={report['total_forms']}"
+            )
             return 0 if report["state"] == "complete" else 1
         except Exception as e:
             print(f"Build error: {e}", file=sys.stderr)
@@ -776,7 +896,9 @@ def main(argv: list[str] | None = None) -> int:
         try:
             res = verify_ulif_forms(db_path=args.db)
             if res.get("verified"):
-                print(f"Verification PASSED: {res['entries_done']} entries with {res['total_forms']} forms, {res['entries_failed']} failures.")
+                print(
+                    f"Verification PASSED: {res['entries_done']} entries with {res['total_forms']} forms, {res['entries_failed']} failures."
+                )
                 return 0
             else:
                 print(f"Verification FAILED: {res.get('error')}", file=sys.stderr)
@@ -788,7 +910,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.subcommand == "disagreement-report":
         try:
             res = generate_disagreement_report(db_path=args.db, out_path=args.out, all_rows=args.all)
-            print(f"Disagreement report generated: {res['disagreed_count']} disagreements / {res['total_checked']} checked forms written to {res['output_file']}")
+            print(
+                f"Disagreement report generated: {res['disagreed_count']} disagreements / {res['total_checked']} checked forms written to {res['output_file']}"
+            )
             return 0
         except Exception as e:
             print(f"Disagreement report error: {e}", file=sys.stderr)

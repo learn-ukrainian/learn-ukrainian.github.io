@@ -34,7 +34,7 @@ from scripts.verification.stress import pedagogical_stressed_form
 ULIF_STRUCTURED_SCHEMA_VERSION = "ulif-structured-v1"
 # Keep in lockstep with scripts.rag.source_query.ULIF_PARSER_VERSION.
 ULIF_PARSER_VERSION = "ulif-dictua-v2"
-ULIF_FORMS_PARSER_VERSION = "ulif-forms-v2"
+ULIF_FORMS_PARSER_VERSION = "ulif-forms-v3"
 ULIF_NORMALIZER_VERSION = "ulif-strip-raw-html-v1"
 ULIF_SOURCE_ID = "ulif_dictua"
 ULIF_OFFICIAL_URL = "https://lcorp.ulif.org.ua/dictua/"
@@ -601,10 +601,12 @@ def _is_column_header_row(cells: list[tuple[int, _GridCell]]) -> bool:
     texts = [cell.text for _col, cell in cells if cell.text]
     if not texts:
         return False
-    mappings = [lookup_ulif_label(text) for text in texts]
-    if any(mapping is None or mapping.role not in _HEADER_ROLES for mapping in mappings):
+    if any(_ACUTE in text or text.endswith("*") for text in texts):
         return False
-    return any(mapping is not None and mapping.role in {"number", "gender", "axis"} for mapping in mappings)
+    mappings = [lookup_ulif_label(text) for text in texts]
+    if not any(mapping is not None and mapping.role in _HEADER_ROLES for mapping in mappings):
+        return False
+    return not any(mapping is not None and mapping.role in {"case", "verbform"} for mapping in mappings)
 
 
 def _section_label(cells: list[tuple[int, _GridCell]], width: int) -> str | None:
@@ -767,6 +769,11 @@ def _article_identity(html: str) -> dict[str, Any]:
     soup = BeautifulSoup(html, "html.parser")
     article = soup.find(id="ContentPlaceHolder1_article")
     if article is None:
+        body = soup.body if soup.body is not None else soup
+        for tag in body.find_all(["style", "script", "noscript"]):
+            tag.decompose()
+        visible_text = body.get_text(" ", strip=True)
+        is_empty_visible = not bool(visible_text)
         return {
             "canonical_headword": "",
             "grammatical_label": "",
@@ -775,7 +782,7 @@ def _article_identity(html: str) -> dict[str, Any]:
             "paradigm_table": None,
             "content_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
             "printed_homonym_number": None,
-            "is_empty_visible_article": True,
+            "is_empty_visible_article": is_empty_visible,
         }
     word_node = article.select_one(".word_style")
     gram_node = article.select_one(".gram_style")
@@ -873,10 +880,7 @@ def _paradigm_form_rows(table: Tag, entry_key: str) -> list[dict[str, Any]]:
         if (
             first_text
             and _ACUTE not in first_text
-            and (
-                (first_mapping is not None and first_mapping.role in _ROW_ROLES)
-                or len(origins) > 1
-            )
+            and ((first_mapping is not None and first_mapping.role in _ROW_ROLES) or len(origins) > 1)
         ):
             label = first_text
             form_cells = origins[1:]

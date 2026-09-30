@@ -547,3 +547,93 @@ def test_reader_checks_all_rows_and_missing_tables(tmp_path):
     assert unavail_records[0]["status"] == "unavailable"
     assert unavail_records[0]["verified"] is False
     assert unavail_records[0]["entry_count"] == 0
+
+
+def test_empty_article_identity_no_false_mismatch(tmp_path):
+    """R2-N5: Empty visible article sets stored_matches_raw=None and mismatches=None for empty/nonempty stored headword."""
+    db_path = tmp_path / "sources.db"
+    empty_html = '<html><body><div id="ContentPlaceHolder1_article"><style>.foo{}</style></div></body></html>'
+
+    sources_db.store_ulif_dictua_entry(
+        word="хто",
+        canonical_headword="",
+        grammatical_label="займенник",
+        sense_gloss="",
+        sections={},
+        raw_responses={"paradigm": empty_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    sources_db.store_ulif_dictua_entry(
+        word="ви",
+        canonical_headword="Ви",
+        grammatical_label="займенник",
+        sense_gloss="",
+        sections={},
+        raw_responses={"paradigm": empty_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    records = sources_db.get_ulif_word_records(["хто", "ви"], db_path=db_path)
+    assert len(records) == 2
+
+    id_x = records[0]["entries"][0]["identity_from_raw"]
+    assert id_x["canonical_headword"] == ""
+    assert id_x["error"] == "empty_visible_article"
+    assert id_x["stored_matches_raw"] is None
+    assert id_x["mismatches"] is None
+
+    id_v = records[1]["entries"][0]["identity_from_raw"]
+    assert id_v["canonical_headword"] == ""
+    assert id_v["error"] == "empty_visible_article"
+    assert id_v["stored_matches_raw"] is None
+    assert id_v["mismatches"] is None
+    assert records[1]["entries"][0]["canonical_headword"] == "Ви"
+
+
+def test_fingerprint_sqlite_row_and_dict_sort_consistency(tmp_path):
+    """R2-N8: sqlite3.Row and dict produce identical fingerprint; reordered rows sort deterministically."""
+    db_path = tmp_path / "fp_test.db"
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    conn.execute(
+        "CREATE TABLE t_entries (id INTEGER, normalized_query TEXT, canonical_headword TEXT, grammatical_label TEXT, sense_gloss TEXT, homonym_index INTEGER, homonym_checked INTEGER, raw_response_ref TEXT, status TEXT)"
+    )
+    conn.execute(
+        "CREATE TABLE t_sections (id INTEGER, kind TEXT, source_order INTEGER, sense_or_group_id TEXT, payload_json TEXT)"
+    )
+    conn.execute("INSERT INTO t_entries VALUES (1, 'замок', 'За́мок', 'іменник', '(будівля)', 1, 1, 'sha256:abc', 'ok')")
+    conn.execute("INSERT INTO t_sections VALUES (10, 'synonyms', 0, 'synonyms:1', '{\"term\":\"фортеця\"}')")
+    conn.execute(
+        "INSERT INTO t_sections VALUES (20, 'paradigm', 0, 'paradigm:1', '{\"rows\":[[\"Називний\",\"За́мок\"]]}')"
+    )
+    conn.commit()
+
+    entry_row = conn.execute("SELECT * FROM t_entries WHERE id = 1").fetchone()
+    sec_rows_1 = conn.execute("SELECT * FROM t_sections ORDER BY id ASC").fetchall()
+    sec_rows_2 = conn.execute("SELECT * FROM t_sections ORDER BY id DESC").fetchall()
+
+    fp_rows_1 = sources_db.compute_ulif_entry_fingerprint(entry_row, sec_rows_1)
+    fp_rows_2 = sources_db.compute_ulif_entry_fingerprint(entry_row, sec_rows_2)
+    assert fp_rows_1 == fp_rows_2
+
+    entry_dict = dict(entry_row)
+    sec_dicts = [dict(r) for r in sec_rows_1]
+    fp_dicts = sources_db.compute_ulif_entry_fingerprint(entry_dict, sec_dicts)
+    assert fp_rows_1 == fp_dicts
+
+    sec_dicts_tampered = [dict(r) for r in sec_rows_1]
+    sec_dicts_tampered[0]["payload_json"] = '{"term":"фортеця!"}'
+    fp_tampered = sources_db.compute_ulif_entry_fingerprint(entry_dict, sec_dicts_tampered)
+    assert fp_rows_1 != fp_tampered
+    conn.close()

@@ -29,12 +29,7 @@ def test_ensure_ulif_dictua_schema_creates_forms_tables(tmp_path):
     conn = sqlite3.connect(str(db_path))
     try:
         sources_db.ensure_ulif_dictua_schema(conn)
-        tables = {
-            row[0]
-            for row in conn.execute(
-                "SELECT name FROM sqlite_master WHERE type='table'"
-            ).fetchall()
-        }
+        tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
         assert "ulif_dictua_entries" in tables
         assert "ulif_dictua_sections" in tables
         assert "ulif_forms" in tables
@@ -42,12 +37,7 @@ def test_ensure_ulif_dictua_schema_creates_forms_tables(tmp_path):
         assert "ulif_forms_build" in tables
 
         # Indexes exist
-        indexes = {
-            row[1]
-            for row in conn.execute(
-                "SELECT type, name FROM sqlite_master WHERE type='index'"
-            ).fetchall()
-        }
+        indexes = {row[1] for row in conn.execute("SELECT type, name FROM sqlite_master WHERE type='index'").fetchall()}
         assert "idx_ulif_forms_entry_id" in indexes
         assert "idx_ulif_forms_form_unstressed" in indexes
         assert "idx_ulif_forms_failures_entry_id" in indexes
@@ -105,7 +95,7 @@ def test_stored_headword_empty_derives_identity_from_raw(tmp_path):
     sources_db.store_ulif_dictua_entry(
         word="замок",
         canonical_headword="",  # empty stored headword
-        grammatical_label="",   # empty stored grammar
+        grammatical_label="",  # empty stored grammar
         sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
         raw_responses={"paradigm": par_html},
         retrieved_at="2026-09-28T00:00:00Z",
@@ -268,7 +258,9 @@ def test_missing_raw_blob_records_explicit_failure(tmp_path):
     # Delete the paradigm raw blob from cache
     raw_cache = ulif_raw_cache.cache_path(db_path)
     with sqlite3.connect(raw_cache) as raw_conn:
-        manifest_body = raw_conn.execute("SELECT body FROM ulif_dictua_raw_responses WHERE content_type='application/json'").fetchone()[0]
+        manifest_body = raw_conn.execute(
+            "SELECT body FROM ulif_dictua_raw_responses WHERE content_type='application/json'"
+        ).fetchone()[0]
         manifest = json.loads(manifest_body)
         par_sha = manifest["paradigm"].removeprefix("sha256:")
         raw_conn.execute("DELETE FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (par_sha,))
@@ -523,7 +515,7 @@ def test_f12_disagreement_report_separates_oracle_not_applicable(tmp_path, monke
             '[]', '[]', '[]',
             1, '', 0, 1,
             0, 0, '123-abc',
-            'sha', 'ulif-forms-v2', 'fp'
+            'sha', 'ulif-forms-v3', 'fp'
         )
         """
     )
@@ -674,7 +666,7 @@ def test_open_cache_failure_leaves_state_failed(tmp_path, monkeypatch):
 
 
 def test_ulif_forms_concurrent_build_locking_and_safe_restart(tmp_path):
-    """Item 3: Two-process concurrency test: second builder is rejected with lock error, restart succeeds."""
+    """R2-N7: Actual two-builder process proof with deterministic handshake and rejection."""
     db_path = tmp_path / "sources.db"
     par_html = _read_fixture("zamok-entry-1.html")
 
@@ -691,30 +683,211 @@ def test_ulif_forms_concurrent_build_locking_and_safe_restart(tmp_path):
         db_path=db_path,
     )
 
-    lock_file = Path(f"{db_path.resolve()}.build.lock")
-    cmd = [
-        sys.executable,
-        "-c",
-        (
-            "import time; from filelock import FileLock; "
-            f"lock = FileLock({str(lock_file)!r}, timeout=0); "
-            "lock.acquire(); "
-            "print('LOCKED', flush=True); "
-            "time.sleep(2); "
-            "lock.release()"
-        ),
-    ]
-    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True)
+    ready_file = tmp_path / "builder1.ready"
+    release_file = tmp_path / "builder1.release"
+
+    child_code = (
+        "import sys, os, time\n"
+        "from scripts.lexicon.runner import ulif_forms, ulif_dictua_parse\n"
+        f"ready_f = {str(ready_file)!r}\n"
+        f"release_f = {str(release_file)!r}\n"
+        "orig_parse = ulif_dictua_parse.parse_ulif_entry\n"
+        "def waiting_parse(*args, **kwargs):\n"
+        "    with open(ready_f, 'w') as f:\n"
+        "        f.write('READY')\n"
+        "    start = time.time()\n"
+        "    while not os.path.exists(release_f) and time.time() - start < 15:\n"
+        "        time.sleep(0.05)\n"
+        "    return orig_parse(*args, **kwargs)\n"
+        "ulif_dictua_parse.parse_ulif_entry = waiting_parse\n"
+        f"rep = ulif_forms.build_ulif_forms(db_path={str(db_path)!r})\n"
+        "assert rep['state'] == 'complete'\n"
+        "print('BUILDER1_DONE', flush=True)\n"
+    )
+
+    proc1 = subprocess.Popen(
+        [sys.executable, "-c", child_code], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True
+    )
     try:
-        line = proc.stdout.readline()
-        assert "LOCKED" in line
+        import time
+
+        start_wait = time.time()
+        while not ready_file.is_file() and time.time() - start_wait < 15:
+            time.sleep(0.05)
+        assert ready_file.is_file(), "Builder 1 process did not acquire lock in time"
 
         with pytest.raises(RuntimeError, match="Another ULIF forms build is currently running"):
             ulif_forms.build_ulif_forms(db_path=db_path)
+
+        cli_proc2 = subprocess.run(
+            [sys.executable, "-m", "scripts.lexicon.runner.ulif_forms", "build", "--db", str(db_path)],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        assert cli_proc2.returncode != 0
+        assert (
+            "Another ULIF forms build is currently running" in cli_proc2.stderr
+            or "Another ULIF forms build is currently running" in cli_proc2.stdout
+        )
+
     finally:
-        proc.wait(timeout=10)
+        release_file.write_text("RELEASE")
+        stdout1, stderr1 = proc1.communicate(timeout=15)
+
+    assert proc1.returncode == 0, f"Builder 1 failed: {stderr1}"
+    assert "BUILDER1_DONE" in stdout1
+    assert ulif_forms.verify_ulif_forms(db_path)["verified"] is True
 
     rep = ulif_forms.build_ulif_forms(db_path=db_path)
     assert rep["state"] == "complete"
     assert rep["entries_done"] == 1
+    assert ulif_forms.verify_ulif_forms(db_path)["verified"] is True
+
+
+def test_label_row_as_form_defect_blocks_build(tmp_path, monkeypatch):
+    """R2-N1: Non-lemma form row lacking tags and unmapped labels blocks build as extraction_defect."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    from scripts.lexicon.runner import ulif_dictua_parse
+
+    orig_parse = ulif_dictua_parse.parse_ulif_entry
+
+    def mock_parse(html, **kw):
+        res = orig_parse(html, **kw)
+        res["forms"].append(
+            {
+                "entry_key": "замок#1",
+                "form_unstressed": "чол. і жін. р.",
+                "form_stressed": "чол. і жін. р.",
+                "stress_vowel_indices": [],
+                "grammatical_tags": [],
+                "unmapped_labels": [],
+                "variant_order": 1,
+                "preposition": "",
+                "marked_asterisk": False,
+                "is_lemma": False,
+                "is_invariable": False,
+                "dual_stress_flag": False,
+                "pedagogical_stressed_form": "чол. і жін. р.",
+            }
+        )
+        return res
+
+    monkeypatch.setattr(ulif_dictua_parse, "parse_ulif_entry", mock_parse)
+    rep = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert rep["state"] == "failed"
+    assert "extraction_defect: label_row_as_form" in rep["failures_by_reason"]
+    v = ulif_forms.verify_ulif_forms(db_path)
+    assert v["verified"] is False
+    # Even if state is manually marked complete, verify_ulif_forms must reject extraction defect
+    conn = sqlite3.connect(db_path)
+    conn.execute("UPDATE ulif_forms_build SET state = 'complete'")
+    conn.commit()
+    conn.close()
+    v2 = ulif_forms.verify_ulif_forms(db_path)
+    assert v2["verified"] is False
+    assert "extraction defect failures" in v2["error"]
+
+
+def test_infrastructure_error_mid_build_fails_global(tmp_path, monkeypatch):
+    """R2-N2: raw_cache_error and missing_cache_file fail build and verification globally."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    def faulty_get(sha, **kw):
+        raise sqlite3.OperationalError("disk I/O error (synthetic)")
+
+    monkeypatch.setattr(ulif_raw_cache, "get", faulty_get)
+    rep = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert rep["state"] == "failed"
+    assert rep["failures_by_reason"].get("raw_cache_error", 0) > 0
+
+    v = ulif_forms.verify_ulif_forms(db_path)
+    assert v["verified"] is False
+    # Even if state is manually marked complete, verify_ulif_forms must reject infrastructure failures
+    conn = sqlite3.connect(db_path)
+    conn.execute("UPDATE ulif_forms_build SET state = 'complete'")
+    conn.commit()
+    conn.close()
+    v2 = ulif_forms.verify_ulif_forms(db_path)
+    assert v2["verified"] is False
+    assert "infrastructure failures" in v2["error"]
+
+
+def test_builder_itemizes_unavailable_relation_blobs(tmp_path):
+    """R2-N6: Builder report itemizes unavailable relation blobs without dropping valid paradigm forms."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={
+            "paradigm": {"rows": [["Називний", "За́мок"]]},
+            "synonyms": [{"term": "фортеця"}],
+        },
+        raw_responses={
+            "paradigm": par_html,
+            "synonyms": "<html>corrupt</html>",
+        },
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    conn = sqlite3.connect(db_path)
+    entry = conn.execute("SELECT raw_response_ref FROM ulif_dictua_entries WHERE id = 1").fetchone()
+    manifest_ref = entry[0].removeprefix("sha256:")
+    raw_cache_path = ulif_raw_cache.cache_path(db_path)
+    raw_conn = sqlite3.connect(raw_cache_path)
+    manifest_data = json.loads(
+        bytes(
+            raw_conn.execute(
+                "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (manifest_ref,)
+            ).fetchone()[0]
+        )
+    )
+    syn_ref = manifest_data["synonyms"].removeprefix("sha256:")
+    raw_conn.execute("DELETE FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (syn_ref,))
+    raw_conn.commit()
+    raw_conn.close()
+    conn.close()
+
+    rep = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert rep["state"] == "complete"
+    assert rep["entries_done"] == 1
+    assert rep["unavailable_relation_blobs_count"] >= 1
+    unavail = rep["unavailable_relation_blobs"]
+    assert any(b["tab"] == "synonyms" and b["error"] == "missing_blob" for b in unavail)
     assert ulif_forms.verify_ulif_forms(db_path)["verified"] is True

@@ -127,7 +127,7 @@ CREATE INDEX IF NOT EXISTS idx_ulif_dictua_sections_entry_kind_order
     ON ulif_dictua_sections(entry_id, kind, source_order);
 """
 
-ULIF_FORMS_PARSER_VERSION = "ulif-forms-v2"
+ULIF_FORMS_PARSER_VERSION = "ulif-forms-v3"
 
 ULIF_FORMS_SCHEMA = """
 CREATE TABLE IF NOT EXISTS ulif_forms (
@@ -598,14 +598,14 @@ def compute_ulif_entry_fingerprint(
     h.update(b"\x00")
     h.update(str(entry_row["status"] if "status" in keys and entry_row["status"] else "").encode("utf-8"))
     if section_rows:
-        sorted_sections = sorted(
-            section_rows,
-            key=lambda s: (
-                str(s["kind"]) if hasattr(s, "keys") and "kind" in s else "",
-                int(s["source_order"]) if hasattr(s, "keys") and "source_order" in s and s["source_order"] is not None else 0,
-                int(s["id"]) if hasattr(s, "keys") and "id" in s and s["id"] is not None else 0,
-            ),
-        )
+        def _sec_sort_key(s: Any) -> tuple[str, int, int]:
+            s_keys = s.keys() if hasattr(s, "keys") else ()
+            k = str(s["kind"]) if "kind" in s_keys and s["kind"] else ""
+            so = int(s["source_order"]) if "source_order" in s_keys and s["source_order"] is not None else 0
+            sid = int(s["id"]) if "id" in s_keys and s["id"] is not None else 0
+            return (k, so, sid)
+
+        sorted_sections = sorted(section_rows, key=_sec_sort_key)
         for s in sorted_sections:
             s_keys = s.keys() if hasattr(s, "keys") else ()
             h.update(b"\x00")
@@ -893,8 +893,8 @@ def _derive_identity_from_raw(
             "locator": f"ulif:entry:{entry_id}",
             "parser_version": parsed.get("parser_version", ULIF_FORMS_PARSER_VERSION),
             "source_page_sha256": par_sha,
-            "stored_matches_raw": False,
-            "mismatches": ["canonical_headword"],
+            "stored_matches_raw": None,
+            "mismatches": None,
             "source": "raw_entry_page",
             "unavailable_relation_blobs": [],
         }
