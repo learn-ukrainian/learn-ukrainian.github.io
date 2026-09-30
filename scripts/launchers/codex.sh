@@ -206,7 +206,8 @@ launcher_adapter_exec() {
       if LC_RULES_CORE_TOML="$(rules_core_toml "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT")"; then
         cmd+=(-c "developer_instructions=$LC_RULES_CORE_TOML")
       else
-        rules_core_warn "TOML encoding failed"
+        rules_core_refuse "TOML encoding failed"
+        exit 1
       fi
     fi
   else

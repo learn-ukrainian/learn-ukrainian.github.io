@@ -26,6 +26,7 @@ from agents_extensions.shared.session_streams.store import SessionStreamStore
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.launcher_sandbox import copy_slot_registry
 from tests.project_python import project_python
+from tests.rules_core_view import install_loader_bypass
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 pytestmark = pytest.mark.repo_wide
@@ -194,6 +195,7 @@ def init_repo(
         watcher.chmod(0o755)
         # Driver launches check their handoff slot against the real roster (#8303).
         copy_slot_registry(primary)
+        install_loader_bypass(primary)
     git(primary, "add", ".")
     git(primary, "commit", "-m", "test fixture")
     # A raw .venv symlink would run the REAL codex transport probe (live model

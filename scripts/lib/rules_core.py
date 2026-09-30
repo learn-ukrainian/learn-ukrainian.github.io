@@ -11,6 +11,10 @@ Seats:
     core     ``agents_extensions/shared/rules/core.md``
     content  the core plus ``core-curriculum.md`` (curriculum seats)
 
+An absent, unreadable or empty core file refuses: every entry point raises
+``RulesCoreMissing`` (naming the repo-relative path) before any side effect, and the
+CLI exits 3. Nothing here warns and continues without the core.
+
 A seat is ``content`` when asked for explicitly (``--seat`` / ``LU_RULES_SEAT``) or
 when a driver lane's ``driver_agent_type`` is the curriculum orchestrator;
 otherwise it is ``core``.
@@ -101,7 +105,7 @@ class RulesCoreError(Exception):
 
 
 class RulesCoreMissing(RulesCoreError):
-    """A core source file is absent or unreadable."""
+    """A core source file is absent, unreadable or empty; the message names its path."""
 
 
 def normalize_seat(seat: str | None) -> str | None:
@@ -165,14 +169,17 @@ def source_path(rel: str, root: Path | None = None) -> Path:
 
 
 def assemble(sources: tuple[str, ...], root: Path | None = None) -> str:
-    """Join sources the way the legacy bundle does; every source must be readable."""
+    """Join sources the way the legacy bundle does; every source must be readable and non-empty."""
     parts: list[str] = []
     for rel in sources:
         path = source_path(rel, root)
         try:
-            parts.append(path.read_text(encoding="utf-8").rstrip() + "\n")
+            body = path.read_text(encoding="utf-8")
         except (OSError, UnicodeDecodeError) as exc:
             raise RulesCoreMissing(f"rules source unavailable: {rel} ({exc.__class__.__name__})") from exc
+        if not body.strip():
+            raise RulesCoreMissing(f"rules source unavailable: {rel} (empty)")
+        parts.append(body.rstrip() + "\n")
     return FILE_SEP.join(parts).rstrip() + "\n"
 
 
@@ -187,20 +194,30 @@ def core_block(seat: str = "core", root: Path | None = None) -> str:
     return f'{BLOCK_OPEN} seat="{seat}" sha256="{digest}">\n{text}{BLOCK_CLOSE}'
 
 
+def require_core(seat: str | None = None, root: Path | None = None) -> str:
+    """Refuse unless the seat's core sources are all readable; returns the resolved seat.
+
+    Entry points call this before their first side effect (a worktree, a task record,
+    a process); ``with_core`` then reads the same files again when it builds the prompt.
+
+    Raises:
+        RulesCoreMissing: a source is absent, unreadable or empty (message names the path).
+    """
+    resolved = resolve_seat(seat)
+    core_text(resolved, root)
+    return resolved
+
+
 def with_core(prompt: str, seat: str | None = None, root: Path | None = None) -> str:
     """Prepend the core block to ``prompt``; unchanged if the prompt already starts with it.
 
     Only a leading block counts: a core quoted further down (an attachment, a
     fenced file) does not stand in for the preamble.
 
-    Fails open: a missing core leaves the prompt as it was and warns on stderr, so a
-    checkout without the core never blocks a dispatch.
+    Raises:
+        RulesCoreMissing: the core is absent, unreadable or empty; nothing is sent without it.
     """
-    try:
-        block = core_block(resolve_seat(seat), root)
-    except RulesCoreMissing as exc:
-        print(f"WARNING: {exc}; continuing without the rules core.", file=sys.stderr)
-        return prompt
+    block = core_block(resolve_seat(seat), root)
     if prompt.startswith(block):
         return prompt
     return f"{block}\n\n{prompt}"

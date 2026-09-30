@@ -60,6 +60,7 @@ from ._opencode import (
     POOL_MODEL,
 )
 from ._process import process_message_for_recipient
+from ._prompts import require_core_or_exit
 
 _CALLER_IDENTITY_ENV_HINTS = (
     # Order mirrors _detect_caller_identity_from_env; SESSION_HANDOFF_AGENT is
@@ -1651,6 +1652,9 @@ def _review_target_kwargs(args) -> dict[str, str | int | None]:
 
 def _handle_acp_compat(args, target: str) -> None:
     """Route a legacy ask command through the single ACP compatibility shim."""
+    # The rules core first: before a PR head is resolved, a review is
+    # dispatched or an ACP job is forwarded or enqueued.
+    require_core_or_exit(f"ask-{target}")
     if getattr(args, "background", False):
         raise SystemExit("legacy ask --background is retired; enqueue through fleet-comms")
     model = getattr(args, "to_model", None) or getattr(args, "model", None)

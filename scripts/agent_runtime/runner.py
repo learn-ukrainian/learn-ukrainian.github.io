@@ -3623,10 +3623,14 @@ def invoke_inter_agent(
     )
     route = resolve_inter_agent_route(agent, model=model, effort=effort)
     # Every ACP ask, discussion leg and sealed review starts with the rules core
-    # (seat from $LU_RULES_SEAT); a checkout without it warns and sends unchanged.
+    # (seat from $LU_RULES_SEAT); without it the call is refused as a typed
+    # transport error, before any provenance is bound or a process is spawned.
     from scripts.lib import rules_core
 
-    prompt = rules_core.with_core(prompt)
+    try:
+        prompt = rules_core.with_core(prompt)
+    except rules_core.RulesCoreMissing as exc:
+        raise InterAgentTransportError(f"inter-agent call refused: {exc}; the rules core is required") from exc
     trusted_source = _resolve_trusted_transport_source(
         source=source,
         task_id=validated_task_id,

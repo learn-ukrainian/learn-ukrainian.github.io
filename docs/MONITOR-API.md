@@ -2963,7 +2963,7 @@ the Markdown, so its `ETag` never matches another scope or the full
 bundle; responses carry `X-Rules-Scope` and JSON adds `scope`. The
 manifest advertises `rules_core` and `rules_content` hashes; the SDK
 caches `MonitorClient.rules(scope=...)` under `rules:<scope>`. An unknown
-scope is `400`; a scope whose file is missing from the checkout is `503`.
+scope is `400`; a scope whose file is missing, unreadable or empty in the checkout (the core, or the addendum for `content`) is `503` naming the repo-relative path; nothing is served in its place.
 
 ### `GET /api/session/current?agent={name}&format={markdown,json}`
 

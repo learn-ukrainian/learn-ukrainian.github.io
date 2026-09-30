@@ -23,8 +23,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from scripts.lib import rules_core
-
 from ._ask_contract import (
     requested_effort,
     resolve_model_selection,
@@ -42,6 +40,7 @@ from ._ask_lifecycle import (
 )
 from ._config import REPO_ROOT
 from ._messaging import acknowledge, send_message
+from ._prompts import require_core_or_exit, with_core_or_exit
 from ._review_safety import (
     MAX_ASK_ATTACHMENT_BYTES,
     MAX_ASK_CONTENT_BYTES,
@@ -83,6 +82,7 @@ def ask_hermes(
     background: bool = False,
 ) -> int:
     """Send message to Hermes AND invoke Hermes one-shot to process it."""
+    require_core_or_exit("ask-hermes")
     effective_model = resolve_model_selection(
         lane="ask-hermes", to_model=to_model, model=model, default=HERMES_DEFAULT_MODEL
     )
@@ -263,7 +263,7 @@ def _invoke_hermes(
             )
         prompt = f"{prompt}\n\n## Attached data: {data_path.name}\n\n```\n{attached}\n```"
 
-    prompt = rules_core.with_core(prompt)
+    prompt = with_core_or_exit(prompt, "ask-hermes")
     timeout = None if no_timeout else HERMES_DEFAULT_TIMEOUT_S
     use_neutral = hermes_must_use_neutral_cwd(review=review)
 

@@ -31,7 +31,7 @@ from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_as
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import build_agy_prompt
+from ._prompts import build_agy_prompt, require_core_or_exit
 from ._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
@@ -506,6 +506,7 @@ def ask_agy(
     review_pr_number: int | None = None,
 ):
     """Send message to Agy AND invoke Agy to process it (one-shot)."""
+    require_core_or_exit("ask-agy")
     if background and (stdout_only or output_path):
         raise ValueError("ask-agy --background cannot be combined with --stdout-only or --output-path")
     if review or review_branch is not None or review_pr_number is not None:
