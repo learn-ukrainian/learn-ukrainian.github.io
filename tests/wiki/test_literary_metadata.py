@@ -44,6 +44,7 @@ def test_builder_schema_and_insert_include_literary_metadata(tmp_path, monkeypat
 
     monkeypatch.setattr(build_sources_db, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(build_sources_db, "LOG_DIR", tmp_path / "logs")
+    # checkout_write_defaults redirects the section report into this test's tmp_path.
     report_path = tmp_path / "corpus_audit" / "section_extraction_report.md"
     db_path = tmp_path / "sources.db"
     build_sources_db.build(

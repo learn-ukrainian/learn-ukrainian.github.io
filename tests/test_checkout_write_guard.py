@@ -16,6 +16,7 @@ import pytest
 from scripts.build.linear_pipeline import ensure_claude_writer_agent_deployed
 from scripts.wiki.extract_sections import extract_sections
 from tests.helpers import checkout_write_guard
+from tests.helpers.checkout_write_defaults import WriteDefaults
 from tests.helpers.checkout_write_guard import (
     PROJECT_ROOT,
     CheckoutWriteError,
@@ -66,6 +67,70 @@ def _init_git_repo(path: Path) -> None:
     subprocess.run(["git", "init"], cwd=path, capture_output=True, check=True, timeout=30)
     subprocess.run(["git", "config", "user.name", "Test User"], cwd=path, capture_output=True, check=True, timeout=30)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=path, capture_output=True, check=True, timeout=30)
+
+
+def _source_alias(filename: str, name: str):
+    source = PROJECT_ROOT / "scripts" / ("build" if filename == "linear_pipeline.py" else "wiki") / filename
+    spec = importlib.util.spec_from_file_location(name, source)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+# Match the two corpus tests: the second collection load replaces the first
+# sys.modules entry while both test modules retain their own module objects.
+_COLLECTION_BUILDERS = tuple(_source_alias("build_sources_db.py", "guard_collection_builder") for _ in range(2))
+
+
+@pytest.mark.parametrize("builder", _COLLECTION_BUILDERS, ids=["replaced-alias", "current-alias"])
+def test_collection_file_alias_report_default(tmp_path: Path, builder) -> None:
+    assert tmp_path / "corpus_audit/section_extraction_report.md" == builder.DEFAULT_REPORT_PATH
+
+
+@pytest.mark.parametrize("filename", ["linear_pipeline.py", "extract_sections.py", "build_sources_db.py"])
+def test_late_file_alias_defaults(tmp_path: Path, filename: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    name = "guard_late_alias"
+    monkeypatch.delitem(sys.modules, name, raising=False)
+    module = _source_alias(filename, name)
+    if filename == "linear_pipeline.py":
+        expected = tmp_path / ".claude/agents/curriculum-writer.md"
+        assert expected == module.CLAUDE_WRITER_AGENT_TARGET
+        assert module.ensure_claude_writer_agent_deployed()["path"] == str(expected)
+        assert expected.read_bytes() == module.CLAUDE_WRITER_AGENT_SOURCE.read_bytes()
+    else:
+        expected = tmp_path / "corpus_audit/section_extraction_report.md"
+        assert expected == module.DEFAULT_REPORT_PATH
+        db = tmp_path / "sections.db"
+        with sqlite3.connect(db) as conn:
+            conn.execute("""CREATE TABLE textbooks (
+                id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT, text TEXT,
+                source_file TEXT, grade TEXT, author TEXT, author_uk TEXT, char_count INTEGER
+            )""")
+        if filename == "extract_sections.py":
+            report = module.extract_sections(db)
+        else:
+            report = module._extract_sections_with_university_grade_adapter(db)
+        assert report.total_chunks == 0
+        assert "Status: **OK**" in expected.read_text(encoding="utf-8")
+
+
+def test_default_redirect_matches_exact_file_and_restores_alias(tmp_path: Path) -> None:
+    defaults = WriteDefaults()
+    module = _COLLECTION_BUILDERS[0]
+    original = module.DEFAULT_REPORT_PATH
+    defaults.loaded(module)
+    with pytest.MonkeyPatch.context() as patches:
+        defaults.patches = patches
+        defaults.tmp_path = tmp_path / "inner"
+        defaults.loaded(module)
+        assert tmp_path / "inner/corpus_audit/section_extraction_report.md" == module.DEFAULT_REPORT_PATH
+        unrelated = SimpleNamespace(__file__=str(tmp_path / "build_sources_db.py"), DEFAULT_REPORT_PATH=original)
+        defaults.loaded(unrelated)
+        assert original == unrelated.DEFAULT_REPORT_PATH
+        defaults.loaded(SimpleNamespace())
+    assert original == module.DEFAULT_REPORT_PATH
 
 
 @pytest.mark.parametrize("name", ["scripts.build.linear_pipeline", "build.linear_pipeline"])
@@ -154,6 +219,19 @@ def test_protocol_without_session_guard() -> None:
         next(protocol)
 
 
+def test_worker_attribution_handles_crashed_or_unguarded_nodes(tmp_path: Path) -> None:
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    config = SimpleNamespace(_checkout_write_guard=guard)
+    checkout_write_guard.pytest_testnodedown(SimpleNamespace(config=config), "worker crashed")
+    checkout_write_guard.pytest_testnodedown(SimpleNamespace(config=SimpleNamespace()), None)
+    assert guard._test_violations == []
+    violation = "guarded checkout file created: sample (test: sample.py::test_writer)"
+    checkout_write_guard.pytest_testnodedown(
+        SimpleNamespace(config=config, workeroutput={"checkout_write_violations": [violation]}), None,
+    )
+    assert guard._test_violations == [violation]
+
+
 def test_protocol_stats_only_two_known_targets(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     guard = CheckoutWriteGuard(repo_root=tmp_path)
     item = SimpleNamespace(config=SimpleNamespace(_checkout_write_guard=guard), nodeid="sample.py::test_reader")
@@ -180,16 +258,17 @@ def test_protocol_stats_only_two_known_targets(tmp_path: Path, monkeypatch: pyte
     ] * 2
 
 
-def test_protocol_names_setup_call_and_teardown_writers(tmp_path: Path) -> None:
+@pytest.mark.parametrize("workers", [0, 2], ids=["serial", "xdist"])
+def test_protocol_names_setup_call_and_teardown_writers(tmp_path: Path, workers: int) -> None:
     """Exercise the real pytest hook order without writing to this checkout."""
     sample = tmp_path / "test_sample.py"
-    sample.write_text('''from pathlib import Path
-import pytest
+    sample.write_text('''import pytest
+import checkout_write_guard as plugin
 
 @pytest.fixture
 def writer(request):
     phase, rel = request.param
-    output = Path(__file__).parent / rel
+    output = plugin.PROJECT_ROOT / rel
     output.parent.mkdir(parents=True, exist_ok=True)
     if phase == "setup":
         output.write_text(phase)
@@ -207,14 +286,24 @@ def test_writes(writer):
     if phase == "call":
         output.write_text(phase)
 ''', encoding="utf-8")
-    bootstrap = (
-        "import sys; from pathlib import Path; import pytest; "
-        "from tests.helpers import checkout_write_guard as plugin; "
-        f"plugin.PROJECT_ROOT = Path({str(tmp_path)!r}); "
-        f"sys.exit(pytest.main(['-q', '--confcutdir={tmp_path}', {str(sample)!r}], plugins=[plugin]))"
+    plugin = (PROJECT_ROOT / "tests/helpers/checkout_write_guard.py").read_text(encoding="utf-8")
+    (tmp_path / "checkout_write_guard.py").write_text(
+        plugin.replace("Path(__file__).resolve().parents[2]", "Path(__file__).resolve().parent"),
+        encoding="utf-8",
+    )
+    # Separate worker roots prevent concurrent writers from being observed by
+    # another worker's stat snapshots; the controller still receives all six.
+    (tmp_path / "conftest.py").write_text(
+        'import checkout_write_guard as plugin\n'
+        'pytest_plugins = ["checkout_write_guard"]\n'
+        'def pytest_configure(config):\n'
+        '    if hasattr(config, "workerinput"):\n'
+        '        plugin.PROJECT_ROOT /= config.workerinput["workerid"]\n'
+        '        plugin.PROJECT_ROOT.mkdir()\n', encoding="utf-8",
     )
     result = subprocess.run(
-        [sys.executable, "-c", bootstrap], cwd=PROJECT_ROOT,
+        [sys.executable, "-m", "pytest", "-q", str(sample),
+         *(["-n", str(workers), "--dist=worksteal"] if workers else [])], cwd=tmp_path,
         capture_output=True, text=True, timeout=60,
     )
     assert result.returncode == 1, result.stdout + result.stderr

@@ -355,11 +355,21 @@ def pytest_runtest_protocol(item: Any, nextitem: Any) -> Iterator[None]:
         )
 
 
+@pytest.hookimpl(optionalhook=True)
+def pytest_testnodedown(node: Any, error: Any) -> None:
+    """Collect worker attribution before the controller's sessionfinish hook."""
+    guard = getattr(node.config, "_checkout_write_guard", None)
+    if guard is not None:
+        guard._test_violations.extend(getattr(node, "workeroutput", {}).get("checkout_write_violations", []))
+
+
 def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
     """Check for checkout mutations at test session completion."""
     guard = getattr(session.config, "_checkout_write_guard", None)
     if guard is not None:
         violations = guard._test_violations + guard.check()
+        if hasattr(session.config, "workeroutput"):
+            session.config.workeroutput["checkout_write_violations"] = violations
         if violations:
             session.exitstatus = 1
             terminal = session.config.pluginmanager.get_plugin("terminalreporter")

@@ -243,6 +243,7 @@ def test_invoke_writer_routes_supported_writers(
     agent_name: str,
 ) -> None:
     calls = []
+    # checkout_write_defaults redirects the deploy target into this test's tmp_path.
     deploy_target = tmp_path / ".claude/agents/curriculum-writer.md"
 
     class Result:

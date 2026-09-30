@@ -7,7 +7,6 @@ Provides reusable content snippets and module templates for testing.
 import ast
 import contextlib
 import functools
-import importlib
 import ipaddress
 import itertools
 import os
@@ -34,7 +33,9 @@ from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, reru
 from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
-pytest_plugins = ["tests.helpers.checkout_write_guard", "tests.cursor_process_guard"]
+pytest_plugins = [
+    "tests.helpers.checkout_write_guard", "tests.helpers.checkout_write_defaults", "tests.cursor_process_guard",
+]
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -44,27 +45,6 @@ def sources_log_dir(tmp_path_factory: pytest.TempPathFactory) -> Generator[Path,
     with pytest.MonkeyPatch.context() as mp:
         mp.setenv("LU_MCP_SOURCES_LOG_DIR", str(log_dir))
         yield log_dir
-
-
-@pytest.fixture(autouse=True)
-def checkout_write_defaults(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Redirect deploy/report defaults for both supported import namespaces."""
-    writer_target = tmp_path / ".claude" / "agents" / "curriculum-writer.md"
-    report_path = tmp_path / "corpus_audit" / "section_extraction_report.md"
-    # Import before patching so imports made inside a test inherit the redirect
-    # too. linear_pipeline establishes the existing short-package import path.
-    for name in ("scripts.build.linear_pipeline", "build.linear_pipeline"):
-        module = importlib.import_module(name)
-        monkeypatch.setattr(module, "CLAUDE_WRITER_AGENT_TARGET", writer_target)
-        # These functions bind their keyword defaults at definition time.
-        # Patch the function itself so pre-existing from-import aliases work.
-        monkeypatch.setitem(module.ensure_claude_writer_agent_deployed.__kwdefaults__, "target_path", writer_target)
-    for prefix in ("scripts.wiki", "wiki"):
-        extractor = importlib.import_module(f"{prefix}.extract_sections")
-        builder = importlib.import_module(f"{prefix}.build_sources_db")
-        monkeypatch.setattr(extractor, "DEFAULT_REPORT_PATH", report_path)
-        monkeypatch.setitem(extractor.extract_sections.__kwdefaults__, "report_path", report_path)
-        monkeypatch.setattr(builder, "DEFAULT_REPORT_PATH", report_path)
 
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
