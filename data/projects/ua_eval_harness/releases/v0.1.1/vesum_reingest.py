@@ -22,16 +22,14 @@ from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass
 from pathlib import Path
 
-from scripts.rag.word_identity import normalize_evidence_form
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_LOCK_PATH = PROJECT_ROOT / "scripts" / "config" / "vesum_source.lock.json"
 PRODUCTION_DB_PATH = PROJECT_ROOT / "data" / "vesum.db"
 OPERATOR_ENTRYPOINT_PATH = PROJECT_ROOT / "scripts" / "rag" / "build_vesum_shadow.py"
 
-SCHEMA_VERSION = "vesum-reingest-v2"
+SCHEMA_VERSION = "vesum-reingest-v1"
 MARKER_POLICY_VERSION = "v1"
-IMPORTER_VERSION = "v2"
+IMPORTER_VERSION = "v1"
 COMPATIBILITY_HIDDEN_MARKERS = frozenset({"bad", "subst", "obsc"})
 COMPATIBILITY_HIDDEN_MARKERS_SQL = ", ".join(
     f"'{marker}'" for marker in sorted(COMPATIBILITY_HIDDEN_MARKERS)
@@ -165,10 +163,6 @@ def verify_pipeline_identity(lock: dict[str, object]) -> None:
         "operator_entrypoint": (
             "scripts/rag/build_vesum_shadow.py",
             sha256_file(OPERATOR_ENTRYPOINT_PATH),
-        ),
-        "word_identity": (
-            "scripts/rag/word_identity.py",
-            sha256_file(Path(__file__).with_name("word_identity.py")),
         ),
     }
     for key, (expected_path, actual_sha256) in expected.items():
@@ -324,9 +318,7 @@ CREATE TABLE forms_all (
     pos TEXT NOT NULL,
     tags TEXT NOT NULL,
     source_comment TEXT,
-    source_location TEXT NOT NULL,
-    word_form_folded TEXT NOT NULL,
-    lemma_folded TEXT NOT NULL
+    source_location TEXT NOT NULL
 );
 CREATE TABLE form_markers (
     form_id INTEGER NOT NULL REFERENCES forms_all(id) ON DELETE CASCADE,
@@ -361,9 +353,8 @@ def _flush_batches(
     connection.executemany(
         """
         INSERT INTO forms_all(
-            id, entry_id, word_form, lemma, pos, tags, source_comment, source_location,
-            word_form_folded, lemma_folded
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            id, entry_id, word_form, lemma, pos, tags, source_comment, source_location
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """,
         form_rows,
     )
@@ -521,8 +512,6 @@ def build_shadow_database(asset_path: Path, output_path: Path) -> BuildSummary:
                         analysis.tags,
                         analysis.source_comment,
                         analysis.source_location,
-                        normalize_evidence_form(analysis.word_form),
-                        normalize_evidence_form(analysis.lemma),
                     )
                 )
                 normalized_markers = marker_rows(analysis.tags, analysis.source_comment)
@@ -537,8 +526,6 @@ def build_shadow_database(asset_path: Path, output_path: Path) -> BuildSummary:
 
         connection.execute("CREATE INDEX idx_forms_all_word_form ON forms_all(word_form)")
         connection.execute("CREATE INDEX idx_forms_all_lemma ON forms_all(lemma)")
-        connection.execute("CREATE INDEX idx_forms_all_word_form_folded ON forms_all(word_form_folded)")
-        connection.execute("CREATE INDEX idx_forms_all_lemma_folded ON forms_all(lemma_folded)")
         connection.execute("CREATE INDEX idx_form_markers_form_id ON form_markers(form_id)")
         connection.execute("CREATE INDEX idx_form_markers_marker ON form_markers(marker)")
         canonical_sha256 = _canonical_jsonl_sha256(connection)

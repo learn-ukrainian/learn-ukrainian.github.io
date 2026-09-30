@@ -12,20 +12,24 @@ from __future__ import annotations
 import argparse
 import bz2
 import hashlib
-import importlib.util
 import json
 import sys
 from collections import Counter
 from collections.abc import Mapping, Sequence
 from pathlib import Path
-from types import ModuleType
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.projects.ua_eval_harness.release_sources import frozen_source_path
+from scripts.rag.vesum_reingest import (
+    iter_analyses,
+    load_lock,
+    marker_rows,
+    verify_pipeline_identity,
+    verify_release_asset,
+)
 
 SCHEMA_VERSION = "ua_eval_scoring_dispositions.v1"
 DEFAULT_CONFIG = ROOT / "data/projects/ua_eval_harness/scoring_disposition_config.json"
@@ -82,24 +86,6 @@ def _sha256(path: Path) -> str:
         return hashlib.sha256(path.read_bytes()).hexdigest()
     except OSError as exc:
         raise DispositionError(f"cannot hash {path}: {exc}") from exc
-
-
-def _frozen_vesum_parser(lock: Mapping[str, Any]) -> ModuleType:
-    """Load the hash-checked parser that produced the release's dispositions."""
-    pipeline = lock["pipeline"]
-    path = frozen_source_path(ROOT, Path(pipeline["parser_module"]["path"]))
-    if _sha256(path) != pipeline["parser_module"]["sha256"]:
-        raise DispositionError("frozen VESUM parser hash mismatch")
-    spec = importlib.util.spec_from_file_location("_ua_eval_frozen_vesum", path)
-    if spec is None or spec.loader is None:
-        raise DispositionError("cannot load frozen VESUM parser")
-    parser = importlib.util.module_from_spec(spec)
-    # Dataclasses require their defining module to be registered during loading.
-    sys.modules[spec.name] = parser
-    spec.loader.exec_module(parser)
-    parser.OPERATOR_ENTRYPOINT_PATH = ROOT / pipeline["operator_entrypoint"]["path"]
-    parser.verify_pipeline_identity(lock)
-    return parser
 
 
 def _canonical_sha256(value: Any) -> str:
@@ -214,19 +200,18 @@ def _vesum_evidence(
     *,
     forms: set[str],
     style_markers: set[str],
-    parser: ModuleType,
 ) -> dict[str, dict[str, Any]]:
     evidence: dict[str, dict[str, Any]] = {
         form: {"analysis_count": 0, "style_markers": set(), "receipt_rows": []} for form in forms
     }
     try:
         with bz2.open(asset_path, "rt", encoding="utf-8") as source:
-            for analysis in parser.iter_analyses(source):
+            for analysis in iter_analyses(source):
                 form = analysis.word_form.casefold()
                 if form not in evidence:
                     continue
                 raw_markers = set(analysis.tags.split(":"))
-                normalized_markers = parser.marker_rows(analysis.tags, analysis.source_comment)
+                normalized_markers = marker_rows(analysis.tags, analysis.source_comment)
                 markers = sorted(
                     (raw_markers & style_markers)
                     | {marker for marker, _origin, _marker_class in normalized_markers if marker in style_markers}
@@ -271,16 +256,15 @@ def build_dispositions(
         raise DispositionError("disposition policy is missing")
     _validated_policy(policy)
     evidence_config = config["evidence"]
-    lock_path = frozen_source_path(ROOT, Path(evidence_config["source_lock"]))
-    parser_path = frozen_source_path(ROOT, Path(evidence_config["parser"]))
+    lock_path = ROOT / str(evidence_config["source_lock"])
+    parser_path = ROOT / str(evidence_config["parser"])
     if _sha256(lock_path) != evidence_config["source_lock_sha256"]:
         raise DispositionError("VESUM source lock hash mismatch")
     if _sha256(parser_path) != evidence_config["parser_sha256"]:
         raise DispositionError("VESUM parser hash mismatch")
-    lock = _read_json(lock_path)
-    parser = _frozen_vesum_parser(lock)
-    lock = parser.load_lock(lock_path)
-    parser.verify_release_asset(asset_path, lock)
+    lock = load_lock(lock_path)
+    verify_pipeline_identity(lock)
+    verify_release_asset(asset_path, lock)
     release_asset = lock["release_asset"]
     if release_asset["sha256"] != evidence_config["release_asset_sha256"]:
         raise DispositionError("VESUM release asset hash does not match disposition config")
@@ -293,7 +277,6 @@ def build_dispositions(
         asset_path,
         forms=forms,
         style_markers=style_markers,
-        parser=parser,
     )
     adjudications: dict[tuple[str, int, int, tuple[str, ...]], Mapping[str, Any]] = {}
     for adjudication in config.get("contextual_adjudications", []):
@@ -475,7 +458,7 @@ def validate_dispositions(
             ("source_lock", "source_lock_sha256"),
             ("parser", "parser_sha256"),
         ):
-            if _sha256(frozen_source_path(ROOT, Path(evidence_config[path_key]))) != evidence_config[hash_key]:
+            if _sha256(ROOT / str(evidence_config[path_key])) != evidence_config[hash_key]:
                 raise DispositionError(f"disposition config {path_key} hash drift")
 
     expected = _calque_records(manifest, "F/Calque")

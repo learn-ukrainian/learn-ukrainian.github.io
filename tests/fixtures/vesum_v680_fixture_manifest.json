@@ -158,7 +158,7 @@
     }
   ],
   "generated_by": {
-    "importer_version": "v1",
+    "importer_version": "v2",
     "marker_policy_version": "v1",
     "module": "scripts/rag/vesum_reingest.py"
   },

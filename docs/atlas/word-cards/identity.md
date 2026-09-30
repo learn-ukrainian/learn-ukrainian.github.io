@@ -18,7 +18,10 @@ Attributes can change without changing the id: a 2019-orthography respelling, a 
 
 ## 2. Sources of identity evidence (measured)
 
-### 2.1 VESUM (`data/vesum.db`, `vesum-reingest-v1`, canonical sha `53923150…`)
+### 2.1 VESUM (`data/vesum.db`, `vesum-reingest-v2`, canonical sha `53923150…`)
+
+- Store v2 adds indexed `word_form_folded` and `lemma_folded` lookup columns (Unicode casefold, stress stripping and apostrophe normalization). Source spellings, entry identities, canonical digest and the four-column marker-filtered `forms` view stay unchanged. Receipt lookup uses these keys; lexeme matching below still preserves case-sensitive source identity. The frozen evaluation releases resolve their original lock and parser from the v0.1.1 release directory.
+
 - 442,458 entries (`entry_id`), 422,656 distinct lemmas, 423,661 distinct (lemma, pos). 18,935 lemmas have more than one entry; 18,037 (lemma, pos) pairs do. Entries are the paradigm authority: `forms_all(entry_id, word_form, lemma, pos, tags, source_comment, source_location)`; `word_form` never carries a stress mark (0 rows with U+0301).
 - Homonyms are told apart by the paradigm and by `:xp<n>` tags (1,528 entries) and by `source_comment`, which sometimes carries stress (1,090 entries) and, for 68 entries, a declared stress doublet (`xv2 броня́; бро́ня`, `а́дресний; адре́сний`, `xv2 а́тлас; атла́с`).
 - `замок`: entry 128972 `noun:inanim:m:v_naz:xp1`, comment `замо́к (пристрій)`, genitive `замка`; entry 128973 `…:xp2`, comment `за́мок (будівля)`, genitive `замку`; entry 128971 `Замок` `noun:inanim:m:v_naz:prop:geo`.

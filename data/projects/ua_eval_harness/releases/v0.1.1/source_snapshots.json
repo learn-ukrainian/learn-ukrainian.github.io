@@ -1,0 +1,8 @@
+{
+  "freeze_commit": "1497ad6a729ecdf97031bbd9d44059528a354608",
+  "sources": {
+    "build_scoring_dispositions.py": "c4627a0c038248c4d63b273475ed4e505b3df88ad7e134d2d8651df60fc5c5df",
+    "vesum_reingest.py": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477",
+    "vesum_source.lock.json": "27362c3112579cbd8378314189c6c2032ac1d3db5f89f155f5557bb31a3d0fa6"
+  }
+}
