@@ -210,7 +210,7 @@ def test_show_distinguishes_balance_key_cap_and_unknown(budget):
 def test_show_renders_multi_window_allotments(budget):
     text = usage.format_human({**budget, "source": "monitor-api"})
     assert "interactive (weekly):" in text
-    assert "agentic/Fable (monthly):" in text
+    assert "agentic (monthly):" in text
     assert "spent=$5.00/$200.00" in text
     assert "Cursor Models (Auto) (monthly): used=36.0% rem=64.0%" in text
     assert "Other Models (API) (monthly): used=10.0% rem=90.0%" in text
@@ -360,7 +360,7 @@ def test_show_does_not_import_state_router(monkeypatch, budget, capsys):
     assert usage.main(["show"]) == 0
     out = capsys.readouterr().out
     assert "Grok Bot (weekly)" in out
-    assert "agentic/Fable (monthly)" in out
+    assert "agentic (monthly)" in out
 
 
 def test_qa_passes_when_allotments_usable(budget, monkeypatch, capsys):
