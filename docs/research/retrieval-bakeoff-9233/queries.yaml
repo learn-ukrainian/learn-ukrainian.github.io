@@ -3,12 +3,15 @@ design_sha256: 6f59c17dd04c3e9e189b521c73a28b392f9aa1fc102f2370a4f48fdd60704e7e
 source_files:
   pack: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
   grammar_terms: docs/epics/fresh-build-a2-arc.md
-g1_rule: v3 item 1; source-span queries use 2-4 VESUM content words with each surface
-  form replaced by its first distinct paradigm form; insufficient Ukrainian spans
-  use the supplied English supports line as the English stratum
-g2_rule: v3 items 2 and 4; non-self-check grammar positions whose category terms occur
-  in the A2 arc source; each term uses its VESUM base plus first two distinct paradigm
-  forms
+g1_rule: 'v3 item 1, review fix: 2-4 single-lemma content-POS words; reject proper
+  nouns, pronouns, archaic/rare/short analyses, dash-separated pronunciation drill
+  pairs and hyphen-attached fragments; preserve case at admission; first distinct
+  eligible paradigm form; prefer unused combinations in source order (4, then 3, then
+  2 words), otherwise retain the first combination; insufficient spans are English-only'
+g2_rule: v3 items 2 and 4; non-self-check grammar positions, existing first-match
+  category precedence; source-owned category terms from the A2 arc rationale, plus
+  number/verb from the registered grammar textbook chunk; VESUM base plus first two
+  distinct paradigm forms
 g1:
 - id: G1-UA-001
   gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
@@ -352,7 +355,7 @@ g1:
   - X-004
   - X-005
   stratum: ukrainian_form_mismatch
-  query: відшукати загубленого складу слово
+  query: відшукати загубленого складом слово
   forms:
   - source_form: відшукай
     query_form: відшукати
@@ -361,7 +364,7 @@ g1:
     query_form: загубленого
     lemma: загублений
   - source_form: склад
-    query_form: складу
+    query_form: складом
     lemma: склад
   - source_form: словах
     query_form: слово
@@ -404,11 +407,8 @@ g1:
   citation_ids: &id017
   - T-002
   stratum: ukrainian_form_mismatch
-  query: кий морозива привіту
+  query: морозива привіту
   forms:
-  - source_form: київ
-    query_form: кий
-    lemma: кий
   - source_form: морозиво
     query_form: морозива
     lemma: морозиво
@@ -430,7 +430,7 @@ g1:
   citation_ids: &id018
   - X-001
   stratum: ukrainian_form_mismatch
-  query: привіту справа рад ти
+  query: привіту справа бач
   forms:
   - source_form: привіт
     query_form: привіту
@@ -438,12 +438,9 @@ g1:
   - source_form: справи
     query_form: справа
     lemma: справа
-  - source_form: рада
-    query_form: рад
-    lemma: рад
-  - source_form: тебе
-    query_form: ти
-    lemma: ти
+  - source_form: бачити
+    query_form: бач
+    lemma: бачити
   source_file: ulp-1-00-lesson-notes
   subject: lexicon
 - id: G1-EN-036
@@ -463,69 +460,32 @@ g1:
   forms: []
   source_file: ulp-1-00-lesson-notes
   subject: lexicon
-- id: G1-UA-038
+- id: G1-EN-038
   gold_chunk_id: ulp-1-00-lesson-notes_l0002_w002
-  citation_ids: &id019
+  citation_ids:
   - T-003
   - T-021
-  stratum: ukrainian_form_mismatch
-  query: доброго дня
-  forms:
-  - source_form: добрий
-    query_form: доброго
-    lemma: добрий
-  - source_form: день
-    query_form: дня
-    lemma: день
-  source_file: ulp-1-00-lesson-notes
-  subject: lexicon
-- id: G1-EN-039
-  gold_chunk_id: ulp-1-00-lesson-notes_l0002_w002
-  citation_ids: *id019
   stratum: english
   query: adult formal greeting chunk any time day not
   forms: []
   source_file: ulp-1-00-lesson-notes
   subject: lexicon
-- id: G1-UA-040
+- id: G1-EN-039
   gold_chunk_id: ulp-1-00-lesson-notes_l0005_w003
-  citation_ids: &id020
+  citation_ids:
   - T-004
-  stratum: ukrainian_form_mismatch
-  query: воя вити рити рову
-  forms:
-  - source_form: вій
-    query_form: воя
-    lemma: вій
-  - source_form: вий
-    query_form: вити
-    lemma: вити
-  - source_form: рив
-    query_form: рити
-    lemma: рити
-  - source_form: рів
-    query_form: рову
-    lemma: рів
-  source_file: ulp-1-00-lesson-notes
-  subject: lexicon
-- id: G1-EN-041
-  gold_chunk_id: ulp-1-00-lesson-notes_l0005_w003
-  citation_ids: *id020
   stratum: english
   query: adult sound comparison english speakers ulp season lesson
   forms: []
   source_file: ulp-1-00-lesson-notes
   subject: lexicon
-- id: G1-UA-042
+- id: G1-UA-040
   gold_chunk_id: ulp-1-00-lesson-notes_l0010_w001
-  citation_ids: &id021
+  citation_ids: &id019
   - T-005
   stratum: ukrainian_form_mismatch
-  query: мій сім'ї привіту справа
+  query: сім'ї привіту справа зви
   forms:
-  - source_form: моя
-    query_form: мій
-    lemma: мій
   - source_form: сім'я
     query_form: сім'ї
     lemma: сім'я
@@ -535,11 +495,14 @@ g1:
   - source_form: справи
     query_form: справа
     lemma: справа
+  - source_form: звати
+    query_form: зви
+    lemma: звати
   source_file: ulp-1-00-lesson-notes
   subject: lexicon
-- id: G1-EN-043
+- id: G1-EN-041
   gold_chunk_id: ulp-1-00-lesson-notes_l0010_w001
-  citation_ids: *id021
+  citation_ids: *id019
   stratum: english
   query: ulp review shape first person ukrainian story aligned
   forms: []
@@ -578,6 +541,22 @@ g2:
   - відмінок
   - відмінка
   - відмінкові
+- id: G2-A1-015
+  level: a1
+  position: 15
+  slug: what-i-like
+  job: 'Say what you like doing: infinitive, люблю + infinitive'
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
 - id: G2-A1-016
   level: a1
   position: 16
@@ -594,6 +573,38 @@ g2:
   - час
   - часу
   - часові
+- id: G2-A1-017
+  level: a1
+  position: 17
+  slug: verbs-group-two
+  job: Conjugate second-conjugation verbs; tell the two apart
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
+- id: G2-A1-020
+  level: a1
+  position: 20
+  slug: my-morning
+  job: Describe a morning routine with reflexive verbs
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
 - id: G2-A1-029
   level: a1
   position: 29
@@ -1206,6 +1217,23 @@ g2:
   - вид
   - виду
   - видові
+- id: G2-A2-043
+  level: a2
+  position: 43
+  slug: motion-verbs
+  job: Go, ride and fly there and back, one way and regularly; then arrive, leave,
+    cross, go around and come up with the common prefixes
+  category: verb
+  source_text: дієслово
+  source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  base_query: дієслово
+  inflected_queries:
+  - дієслова
+  - дієслову
+  forms:
+  - дієслово
+  - дієслова
+  - дієслову
 - id: G2-A2-044
   level: a2
   position: 44
@@ -1305,10 +1333,106 @@ g2:
   - відмінок
   - відмінка
   - відмінкові
+g2_term_inventory:
+  case:
+    source_text: відмінок
+    forms:
+    - відмінок
+    - відмінка
+    - відмінкові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  gender:
+    source_text: рід
+    forms:
+    - рід
+    - роду
+    - родові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  number:
+    source_text: число
+    forms:
+    - число
+    - числа
+    - числу
+    source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  verb:
+    source_text: дієслово
+    forms:
+    - дієслово
+    - дієслова
+    - дієслову
+    source_path: textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059
+  aspect:
+    source_text: вид
+    forms:
+    - вид
+    - виду
+    - видові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  tense:
+    source_text: час
+    forms:
+    - час
+    - часу
+    - часові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  mood:
+    source_text: спосіб
+    forms:
+    - спосіб
+    - способу
+    - способові
+    source_path: docs/epics/fresh-build-a2-arc.md
+  sentence:
+    source_text: речення
+    forms:
+    - речення
+    - реченню
+    - реченням
+    source_path: docs/epics/fresh-build-a2-arc.md
+g2_category_exclusions: {}
 counts:
-  g1: 43
+  g1: 41
   g1_cited_chunks: 22
-  g1_ukrainian_form_mismatch: 21
+  g1_ukrainian_form_mismatch: 19
   g1_english: 22
-  g2: 46
+  g2: 50
   arc_non_self_check_positions: 110
+previous_query_sha256: eb512d0b0b9f2bd5fe0a01b0d2729e26bf2b9789e95ff34aeff10c427de49eac
+g1_changes:
+- previous_id: G1-UA-029
+  gold_chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
+  old_query: відшукати загубленого складу слово
+  new_query: відшукати загубленого складом слово
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
+- previous_id: G1-UA-033
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w001
+  old_query: кий морозива привіту
+  new_query: морозива привіту
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
+- previous_id: G1-UA-035
+  gold_chunk_id: ulp-1-00-lesson-notes_l0001_w005
+  old_query: привіту справа рад ти
+  new_query: привіту справа бач
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
+- previous_id: G1-UA-038
+  gold_chunk_id: ulp-1-00-lesson-notes_l0002_w002
+  old_query: доброго дня
+  new_query: null
+  reason: fewer than two eligible Ukrainian words after rejecting ambiguous/function/proper/archaic
+    analyses and drill fragments; English-only
+- previous_id: G1-UA-040
+  gold_chunk_id: ulp-1-00-lesson-notes_l0005_w003
+  old_query: воя вити рити рову
+  new_query: null
+  reason: fewer than two eligible Ukrainian words after rejecting ambiguous/function/proper/archaic
+    analyses and drill fragments; English-only
+- previous_id: G1-UA-042
+  gold_chunk_id: ulp-1-00-lesson-notes_l0010_w001
+  old_query: мій сім'ї привіту справа
+  new_query: сім'ї привіту справа зви
+  reason: strict single-lemma/content-POS, non-proper-noun admission; first eligible
+    alternatives and unused combinations
