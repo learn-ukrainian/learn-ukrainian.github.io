@@ -347,8 +347,11 @@ decisions:
       are the human-facing product. No wiki is generated for core modules
       (Q10 resolved as 'no'). The existing wiki remains the LLM input only
       for tracks still on the V7 pipeline until each migrates; no wiki
-      content is deleted. Search stays keyword-only (FTS5) per #9233, reopened
-      only on a documented pack miss.
+      content is deleted. The search method for building packs is under
+      evaluation in #9233 (exact-form FTS5 vs lemma-aware FTS vs embedder +
+      reranker; the model choice is the operator's). Until that decision,
+      packs are built with the keyword (FTS5) sources tools. #9279 fixes
+      search_sources ranking when no dense index exists.
     evidence: >-
       Operator decision 2026-09-30; #9278; #7994; #9233; R-25/R-26;
       docs/decisions/2026-09-30-core-rebuild-pack-replaces-wiki.md
