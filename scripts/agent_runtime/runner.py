@@ -1469,6 +1469,18 @@ def _build_gemini_attempt_tool_config(
     return attempt_tool_config
 
 
+def _attempt_boundary_refusal(exc: Exception) -> str:
+    """Keep the refusal identifier, never isolation diagnostics or exception text."""
+    from scripts.review.isolation import ReviewIsolationError
+
+    detail = type(exc).__name__
+    if isinstance(exc, ReviewIsolationError):
+        code = str(exc).partition(":")[0]
+        if re.fullmatch(r"[a-z][a-z0-9_]*", code):
+            detail = code
+    return f"formal attempt filesystem boundary refused: {detail}"
+
+
 def _execute_invocation_plan(
     *,
     agent_name: str,
@@ -1507,7 +1519,7 @@ def _execute_invocation_plan(
         try:
             review_cmd, env = boundary.wrap(review_cmd, plan.env_overrides)
         except (OSError, ValueError, RuntimeError) as exc:
-            raise AgentUnavailableError("formal attempt filesystem boundary refused") from exc
+            raise AgentUnavailableError(_attempt_boundary_refusal(exc)) from exc
         for key in plan.env_unsets:
             env.pop(key, None)
         env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
@@ -3403,11 +3415,7 @@ def invoke(
         try:
             attempt = prepare_attempt_boundary(agent_name, mode, session_id, tool_config)
         except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
-            if str(exc) == "attempt_boundary_claude_adapter_pending":
-                raise AgentUnavailableError(
-                    "formal attempt filesystem boundary refused: attempt_boundary_claude_adapter_pending"
-                ) from exc
-            raise AgentUnavailableError("formal attempt filesystem boundary refused") from exc
+            raise AgentUnavailableError(_attempt_boundary_refusal(exc)) from exc
         prepared_config = attempt.tool_config if attempt is not None else tool_config
         launch = prepare_trail_isolation(
             agent_name=agent_name,

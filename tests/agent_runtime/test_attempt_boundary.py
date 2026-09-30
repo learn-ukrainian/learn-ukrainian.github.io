@@ -18,6 +18,7 @@ import urllib.request
 import warnings
 from dataclasses import replace
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -273,6 +274,70 @@ def test_runner_requires_boundary_and_preserves_nonattempt_behavior(monkeypatch)
     ]:
         with pytest.raises(AgentUnavailableError, match="filesystem boundary refused"):
             runner.invoke("agy", "probe", tool_config=tc, mode=mode, session_id=session)
+
+
+@pytest.mark.parametrize("site", ["prepare", "wrap"])
+@pytest.mark.parametrize(("error", "detail"), [
+    (ReviewIsolationError("attempt_egress_unavailable"), "attempt_egress_unavailable"),
+    (ReviewIsolationError("sandbox_probe_allow_failed:private diagnostic"), "sandbox_probe_allow_failed"),
+    (ReviewIsolationError("attempt_boundary_claude_adapter_pending"), "attempt_boundary_claude_adapter_pending"),
+    (ReviewIsolationError("invalid private diagnostic"), "ReviewIsolationError"),
+    (OSError("private diagnostic"), "OSError"),
+    (ValueError("private diagnostic"), "ValueError"),
+    (RuntimeError("attempt_boundary_claude_adapter_pending"), "RuntimeError"),
+])
+def test_runner_boundary_refusal_reports_only_code_or_exception_class(tmp_path, monkeypatch, site, error, detail):
+    def refuse(*args, **kwargs):
+        raise error
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("refused attempts must not plan or spawn a provider invocation")
+
+    monkeypatch.setattr(subprocess, "Popen", unexpected)
+    with pytest.raises(AgentUnavailableError) as caught:
+        if site == "prepare":
+            monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_attempt_boundary", refuse)
+            monkeypatch.setattr(runner, "_load_adapter", unexpected)
+            runner.invoke("agy", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
+        else:
+            boundary = SimpleNamespace(workspace=tmp_path, wrap=refuse)
+            runner._execute_invocation_plan(
+                agent_name="agy", adapter=None, plan=InvocationPlan(cmd=["agy", "--version"], cwd=tmp_path),
+                prompt="probe", mode="read-only", cwd=tmp_path, model="fixture-model", task_id="probe",
+                session_id=None, entrypoint="runtime", hard_timeout=30, stall_timeout=30,
+                tool_config={"review_attempt_boundary": boundary},
+            )
+    assert str(caught.value) == f"formal attempt filesystem boundary refused: {detail}"
+    assert caught.value.__cause__ is error
+
+
+@pytest.mark.parametrize("error", [KeyError("private diagnostic"), TypeError("private diagnostic")])
+def test_runner_preparation_error_redacts_exception_text(tmp_path, monkeypatch, error):
+    def refuse(*args, **kwargs):
+        raise error
+
+    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_attempt_boundary", refuse)
+    with pytest.raises(AgentUnavailableError) as caught:
+        runner.invoke("agy", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
+    assert str(caught.value) == f"formal attempt filesystem boundary refused: {type(error).__name__}"
+    assert caught.value.__cause__ is error
+
+
+def test_runner_reports_real_input_hash_refusal_before_provider_launch(world, tmp_path, monkeypatch):
+    root, _ = world
+    manifest = manifest_world(root, "plan")
+    tc = attempt_config(root, tmp_path, manifest, "agy")
+    (root / manifest["inputs"]["plan"]["path"]).write_text("Changed after the manifest was pinned.\n")
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("input drift must refuse before provider planning or launch")
+
+    monkeypatch.setattr(runner, "_load_adapter", unexpected)
+    monkeypatch.setattr(runner, "_spawn_pipe_subprocess", unexpected)
+    with pytest.raises(AgentUnavailableError) as caught:
+        runner.invoke("agy", "probe", cwd=root, tool_config=tc)
+    assert str(caught.value) == "formal attempt filesystem boundary refused: attempt_input_hash_mismatch"
+    assert isinstance(caught.value.__cause__, ReviewIsolationError)
 
 
 def test_cursor_attempt_refused_before_files_or_spawn(world, tmp_path):
