@@ -1,0 +1,720 @@
+- id: G3-001
+  query: чим відрізняється те що чуємо від того що пишемо
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=1].job
+  kind: paraphrase
+  area: phonetics
+- id: G3-002
+  query: як навчити читати короткі слова вголос
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=2].job
+  kind: paraphrase
+  area: phonetics
+- id: G3-003
+  query: коли між приголосним і наступною літерою пишемо апостроф
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=3].job
+  kind: paraphrase
+  area: orthography
+- id: G3-004
+  query: як голосом перетворити повідомлення на запитання
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=4].job
+  kind: paraphrase
+  area: phonetics
+- id: G3-005
+  query: як представитися і назвати свою професію
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=5].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-006
+  query: як розповісти хто зображений на родинному фото
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=6].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-007
+  query: короткий діалог знайомства з розповіддю про родину
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=7].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-008
+  query: як визначити чи слово поєднується з він вона чи воно
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=8].job
+  kind: paraphrase
+  area: morphology
+- id: G3-009
+  query: як змінюється назва ознаки поруч із назвою предмета
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=9].job
+  kind: paraphrase
+  area: morphology
+- id: G3-010
+  query: як називати колір різних речей
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=10].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-011
+  query: як сказати свій вік ціну і номер телефону
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=11].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-012
+  query: коли говоримо цей а коли ця або це
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=12].job
+  kind: paraphrase
+  area: morphology
+- id: G3-013
+  query: називний відмінок множини іменників
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=13].job
+  kind: term
+  area: morphology
+- id: G3-014
+  query: як описати кілька предметів і показати потрібний
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=14].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-015
+  query: як сказати що любиш робити
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=15].job
+  kind: paraphrase
+  area: syntax
+- id: G3-016
+  query: перша дієвідміна теперішній час
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=16].job
+  kind: term
+  area: morphology
+- id: G3-017
+  query: як відрізнити дві групи дієслів за формами теперішнього часу
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=17].job
+  kind: paraphrase
+  area: morphology
+- id: G3-018
+  query: як поєднати хочу можу і мушу з назвою дії
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=18].job
+  kind: paraphrase
+  area: syntax
+- id: G3-019
+  query: як побудувати просте запитання і заперечну відповідь
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=19].job
+  kind: paraphrase
+  area: syntax
+- id: G3-020
+  query: чому в назвах ранкових дій з'являється ся
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=20].job
+  kind: paraphrase
+  area: morphology
+- id: G3-021
+  query: діалог про щоденні справи і бажання
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=21].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-022
+  query: як запитати котра година і відповісти
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=22].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-023
+  query: як назвати день тижня місяць і дату зустрічі
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=23].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-024
+  query: як описати погоду тварин і рослини поруч
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=24].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-025
+  query: як розповісти що робиш спочатку а що потім
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=25].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-026
+  query: як запросити друга провести разом вихідний
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=26].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-027
+  query: розмова про погоду і плани на тиждень
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=27].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-028
+  query: як вибрати у чи в щоб слова легко вимовлялися
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=28].job
+  kind: paraphrase
+  area: orthography
+- id: G3-029
+  query: як змінюються назви предметів після запитання де
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=29].job
+  kind: paraphrase
+  area: morphology
+- id: G3-030
+  query: як пояснити де в місті пошта банк і лікарня
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=30].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-031
+  query: чому назва місця змінюється коли говоримо куди йдемо
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=31].job
+  kind: paraphrase
+  area: morphology
+- id: G3-032
+  query: як запитати яким автобусом доїхати
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=32].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-033
+  query: як пояснити дорогу до потрібної будівлі
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=33].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-034
+  query: як сказати звідки приїхав і відповісти на кордоні
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=34].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-035
+  query: діалог з перехожим про шлях до вокзалу
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=35].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-036
+  query: як називати їжу і напої за столом
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=36].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-037
+  query: як змінюється назва їжі після їм або купую
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=37].job
+  kind: paraphrase
+  area: morphology
+- id: G3-038
+  query: як замовити обід і попросити рахунок
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=38].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-039
+  query: як попросити кілограм яблук і дізнатися ціну
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=39].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-040
+  query: чому кажемо бачу друга але бачу будинок
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=40].job
+  kind: paraphrase
+  area: morphology
+- id: G3-041
+  query: діалог покупця і продавця про кількість і оплату
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=41].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-042
+  query: кличний відмінок особових імен
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=42].job
+  kind: term
+  area: morphology
+- id: G3-043
+  query: як попросити одну людину або кількох людей щось зробити
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=43].job
+  kind: paraphrase
+  area: morphology
+- id: G3-044
+  query: як з'єднати думки словами але і бо
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=44].job
+  kind: paraphrase
+  area: syntax
+- id: G3-045
+  query: як розповісти про дім реченнями зі словами що де коли
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=45].job
+  kind: paraphrase
+  area: syntax
+- id: G3-046
+  query: як привітати людину зі святом
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=46].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-047
+  query: як звернутися до людини і пояснити своє прохання
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=47].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-048
+  query: як утворюються слова про дію яка відбулася вчора
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=48].job
+  kind: paraphrase
+  area: morphology
+- id: G3-049
+  query: як розповісти про вчорашній день
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=49].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-050
+  query: як сказати що будеш робити завтра
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=50].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-051
+  query: як домовитися про час і місце зустрічі
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=51].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-052
+  query: як розповісти про життя раніше тепер і в майбутньому
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=52].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-053
+  query: як пояснити лікарю що болить
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=53].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-054
+  query: як попросити термінової допомоги
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=54].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-055
+  query: діалоги для одного дня в незнайомому місті
+  topic_source: curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml#positions[position=55].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-056
+  query: як повторити часи і відмінки в короткій розповіді
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=1].job
+  kind: paraphrase
+  area: syntax
+- id: G3-057
+  query: як відрізнити дію що тривала від дії що завершилася
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=2].job
+  kind: paraphrase
+  area: morphology
+- id: G3-058
+  query: утворення видових пар дієслів
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=3].job
+  kind: term
+  area: morphology
+- id: G3-059
+  query: як описати зовнішність одяг і характер знайомого
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=4].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-060
+  query: яка форма слова потрібна після немає
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=5].job
+  kind: paraphrase
+  area: morphology
+- id: G3-061
+  query: як назвати дату народження і кількість предметів
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=6].job
+  kind: paraphrase
+  area: morphology
+- id: G3-062
+  query: розповідь про перший тиждень у новому місті
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=7].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-063
+  query: розмова про знайомих їхній вік і те чого бракує
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=8].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-064
+  query: як сказати з чого зроблена річ і звідки її привезли
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=9].job
+  kind: paraphrase
+  area: morphology
+- id: G3-065
+  query: яку форму слова ставимо після для
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=10].job
+  kind: paraphrase
+  area: morphology
+- id: G3-066
+  query: як змінюються слова після біля до і навпроти
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=11].job
+  kind: paraphrase
+  area: morphology
+- id: G3-067
+  query: коли між словами пишемо і а коли й
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=12].job
+  kind: paraphrase
+  area: orthography
+- id: G3-068
+  query: як змінюються мій і твій коли питаємо чийого
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=13].job
+  kind: paraphrase
+  area: morphology
+- id: G3-069
+  query: яку форму назви предмета ставимо після багато і мало
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=14].job
+  kind: paraphrase
+  area: morphology
+- id: G3-070
+  query: як купити ліки і пояснити своє самопочуття
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=15].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-071
+  query: як в одній розмові пояснити походження місце і кількість
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=16].job
+  kind: paraphrase
+  area: syntax
+- id: G3-072
+  query: коли кажемо мені тобі йому замість я ти він
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=17].job
+  kind: paraphrase
+  area: morphology
+- id: G3-073
+  query: як змінюється назва людини якій даємо подарунок
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=18].job
+  kind: paraphrase
+  area: morphology
+- id: G3-074
+  query: як змінити опис людини після слова допомагаю
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=19].job
+  kind: paraphrase
+  area: morphology
+- id: G3-075
+  query: місцевий відмінок і чергування приголосних
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=20].job
+  kind: term
+  area: morphology
+- id: G3-076
+  query: яка форма слова потрібна після допомагати і дякувати
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=21].job
+  kind: paraphrase
+  area: syntax
+- id: G3-077
+  query: як надіслати посилку і запитати про послугу телефоном
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=22].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-078
+  query: діалог про подарунок другові і місце зустрічі
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=23].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-079
+  query: як сказати з ким проводиш час
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=24].job
+  kind: paraphrase
+  area: morphology
+- id: G3-080
+  query: як назвати знаряддя яким виконуємо дію
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=25].job
+  kind: paraphrase
+  area: morphology
+- id: G3-081
+  query: як змінюється назва професії після працювати і стати
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=26].job
+  kind: paraphrase
+  area: morphology
+- id: G3-082
+  query: як звертатися на ім'я та по батькові
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=27].job
+  kind: paraphrase
+  area: morphology
+- id: G3-083
+  query: як сказати що лежить під столом або між стільцями
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=28].job
+  kind: paraphrase
+  area: morphology
+- id: G3-084
+  query: як змінюються назви й ознаки людей після з ким
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=29].job
+  kind: paraphrase
+  area: morphology
+- id: G3-085
+  query: як пояснити порядок приготування страви
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=30].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-086
+  query: розмова за столом про гостей і їхні професії
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=31].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-087
+  query: як змінюються слова коли бачимо кількох людей
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=32].job
+  kind: paraphrase
+  area: morphology
+- id: G3-088
+  query: родовий відмінок множини прикметників і займенників
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=33].job
+  kind: term
+  area: morphology
+- id: G3-089
+  query: як змінити назви предметів після запитань чому чим і на чому
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=34].job
+  kind: paraphrase
+  area: morphology
+- id: G3-090
+  query: як розповісти про спорт і спілкування в мережі
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=35].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-091
+  query: як за запитанням вибрати потрібне закінчення слова
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=36].job
+  kind: paraphrase
+  area: morphology
+- id: G3-092
+  query: як показати всі форми слова в одній історії
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=37].job
+  kind: paraphrase
+  area: morphology
+- id: G3-093
+  query: як домовитися про оренду житла і кімнату в готелі
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=38].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-094
+  query: діалоги про щоденні справи з різними відмінками
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=39].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-095
+  query: коли в розповіді кажемо читав а коли прочитав
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=40].job
+  kind: paraphrase
+  area: morphology
+- id: G3-096
+  query: чим відрізняються буду читати читатиму і прочитаю
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=41].job
+  kind: paraphrase
+  area: morphology
+- id: G3-097
+  query: як вибрати форму дії для поради чи повторення
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=42].job
+  kind: paraphrase
+  area: morphology
+- id: G3-098
+  query: коли кажемо йти а коли ходити
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=43].job
+  kind: paraphrase
+  area: morphology
+- id: G3-099
+  query: як утворити прохання заборону і побажання з нехай
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=44].job
+  kind: paraphrase
+  area: morphology
+- id: G3-100
+  query: як розповісти про подорож і купити квиток
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=45].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-101
+  query: як поєднати рух і завершення дії в розповіді
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=46].job
+  kind: paraphrase
+  area: morphology
+- id: G3-102
+  query: як пояснити причину і назвати час події
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=47].job
+  kind: paraphrase
+  area: syntax
+- id: G3-103
+  query: як сказати для чого робимо щось за допомогою щоб
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=48].job
+  kind: paraphrase
+  area: syntax
+- id: G3-104
+  query: як уточнити про яку річ ідеться словом який
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=49].job
+  kind: paraphrase
+  area: syntax
+- id: G3-105
+  query: як порядок слів допомагає виділити нову інформацію
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=50].job
+  kind: paraphrase
+  area: syntax
+- id: G3-106
+  query: як побудувати речення про те що станеться якщо
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=51].job
+  kind: paraphrase
+  area: syntax
+- id: G3-107
+  query: як розповісти про навчальні предмети і робочий день
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=52].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-108
+  query: як поєднати причину мету й умову в розповіді
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=53].job
+  kind: paraphrase
+  area: syntax
+- id: G3-109
+  query: як сказати що одна річ краща за іншу
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=54].job
+  kind: paraphrase
+  area: morphology
+- id: G3-110
+  query: чому кажемо два столи але п'ять столів
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=55].job
+  kind: paraphrase
+  area: morphology
+- id: G3-111
+  query: коли вживаємо свій замість мій або твій
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=56].job
+  kind: paraphrase
+  area: morphology
+- id: G3-112
+  query: як сказати що хтось прийшов або ніхто не прийшов
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=57].job
+  kind: paraphrase
+  area: morphology
+- id: G3-113
+  query: як добирати слова з близьким і протилежним значенням
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=58].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-114
+  query: як висловити впевненість сумнів і надію
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=59].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-115
+  query: як говорити про природу і привітати людину зі святом
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=60].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-116
+  query: частини мови і назви відмінків
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=61].job
+  kind: term
+  area: morphology
+- id: G3-117
+  query: час вид і спосіб дієслова
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=62].job
+  kind: term
+  area: morphology
+- id: G3-118
+  query: як перепитати вчителя коли не зрозумів завдання
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=63].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-119
+  query: як наголос може змінювати значення слова
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=64].job
+  kind: paraphrase
+  area: phonetics
+- id: G3-120
+  query: як читати таблицю форм слова і словникову статтю
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=65].job
+  kind: paraphrase
+  area: morphology
+- id: G3-121
+  query: підмет присудок і відмінкові питання
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=66].job
+  kind: term
+  area: syntax
+- id: G3-122
+  query: зв'язна історія для повторення тем початкового рівня
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=67].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-123
+  query: як написати коротку біографію і підтримати діалог
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=68].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-124
+  query: розмови на кожен день тижня в Україні
+  topic_source: curriculum/l2-uk-en/lesson-plans/a2/_arc.yaml#positions[position=69].job
+  kind: paraphrase
+  area: themes_situations
+- id: G3-125
+  query: як упізнати ту саму літеру в друці й рукописі
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L571
+  kind: paraphrase
+  area: orthography
+- id: G3-126
+  query: коли назву пишемо з великої літери
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L571-572
+  kind: paraphrase
+  area: orthography
+- id: G3-127
+  query: як апостроф впливає на читання наступної літери
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L574
+  kind: paraphrase
+  area: orthography
+- id: G3-128
+  query: коли м'якість приголосного позначаємо окремим знаком
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L575
+  kind: paraphrase
+  area: orthography
+- id: G3-129
+  query: голосні та приголосні звуки
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L577
+  kind: term
+  area: phonetics
+- id: G3-130
+  query: чому ненаголошені голосні можуть звучати подібно
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L578-579
+  kind: paraphrase
+  area: phonetics
+- id: G3-131
+  query: як почути різницю між твердим і м'яким звуком
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L581
+  kind: paraphrase
+  area: phonetics
+- id: G3-132
+  query: як вимовляємо приголосний перед е
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L582
+  kind: paraphrase
+  area: phonetics
+- id: G3-133
+  query: дзвінкі та глухі приголосні
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L583
+  kind: term
+  area: phonetics
+- id: G3-134
+  query: як вимовляти звуки які позначають двома літерами
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L584
+  kind: paraphrase
+  area: phonetics
+- id: G3-135
+  query: як знайти склад який вимовляємо сильніше
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L586
+  kind: paraphrase
+  area: phonetics
+- id: G3-136
+  query: як поділити слово на склади
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L588
+  kind: paraphrase
+  area: phonetics
+- id: G3-137
+  query: як перенести частину слова на новий рядок
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L588
+  kind: paraphrase
+  area: orthography
+- id: G3-138
+  query: чергування прийменників у і в
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L591
+  kind: term
+  area: orthography
+- id: G3-139
+  query: коли пишемо зі замість з або із
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L593-594
+  kind: paraphrase
+  area: orthography
+- id: G3-140
+  query: як голос передає оклик і здивування
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L596
+  kind: paraphrase
+  area: phonetics
+- id: G3-141
+  query: чому при зміні слова замість і з'являється о або е
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L1177
+  kind: paraphrase
+  area: phonetics
+- id: G3-142
+  query: чому в різних формах слова різні приголосні
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L1178-1179
+  kind: paraphrase
+  area: phonetics
+- id: G3-143
+  query: чому в словах ходити і ходжу різні приголосні
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L1180-1181
+  kind: paraphrase
+  area: phonetics
+- id: G3-144
+  query: як наголос розрізняє слова й форми одного слова
+  topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L1183-1188
+  kind: paraphrase
+  area: phonetics
