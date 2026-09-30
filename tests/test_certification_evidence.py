@@ -18,6 +18,7 @@ import pytest
 import yaml
 
 from scripts.audit import llm_reviewer_dispatch, qg_workflow
+from scripts.orchestration import curriculum_readiness
 
 pytestmark = pytest.mark.reads_content
 
@@ -365,19 +366,161 @@ def _mirror_tier(artifact: ce.EvidenceArtifact) -> None:
             canonical[key] = copy.deepcopy(value)
 
 
+# Readiness re-reads these contracts on every certification call. The memo key is their bytes.
+_READINESS_CONTRACTS = (
+    "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
+    "agents_extensions/shared/curriculum-lifecycle/schema/preparation-result.v1.schema.json",
+    "agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json",
+    "agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml",
+    "agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v2.yaml",
+    "agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v3.yaml",
+    "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml",
+    "agents_extensions/shared/prompt-contracts/registry.v1.yaml",
+    "agents_extensions/shared/prompt-contracts/schema/prompt-manifest.v1.schema.json",
+    "agents_extensions/shared/prompt-contracts/schema/prompt-profile.v1.schema.json",
+    "agents_extensions/shared/prompt-contracts/schema/prompt-registry.v1.schema.json",
+    "curriculum/l2-uk-en/curriculum.yaml",
+)
+# Identity inputs are hashed, not executed. Their size is not the property under test.
+_HASH_ONLY_STUB = b"# synthetic certification identity input\n"
+_HASH_ONLY_STUB_MIN_BYTES = 32_000
+
+
+def _file_token(path: Path) -> tuple[str, str | None]:
+    if not path.is_file():
+        return ("missing", None)
+    data = path.read_bytes()
+    return ("file", hashlib.sha256(data).hexdigest())
+
+
+def _readiness_cache_key(
+    track: str,
+    slug: str,
+    consumed_preparation_identity: str | None,
+    repo_root: Path,
+    validators: Any,
+    active_manifest: Any,
+) -> tuple[Any, ...] | None:
+    """Return None when a call passes inputs this memo does not cover."""
+    if validators is not curriculum_readiness.VALIDATORS or active_manifest is not None:
+        return None
+    repo = Path(repo_root)
+    parts: list[Any] = [track, slug, consumed_preparation_identity]
+    for relative in _READINESS_CONTRACTS:
+        parts.append(_file_token(repo / relative))
+    for artifact in ("plan", "wiki-document", "wiki-sources"):
+        parts.append(_file_token(curriculum_readiness.artifact_path(artifact, repo, track, slug)))
+    module_dir = repo / "curriculum" / "l2-uk-en" / track / slug
+    parts.append(tuple((name, (module_dir / name).is_file()) for name in curriculum_readiness.MODULE_BUNDLE_FILES))
+    return tuple(parts)
+
+
+def _install_repeated_read_cache() -> Any:
+    """Memoize deterministic reads. A changed input byte is a cache miss."""
+    readiness_cache: dict[tuple[Any, ...], dict[str, Any]] = {}
+    config_cache: dict[tuple[bytes, bytes], dict[str, Any]] = {}
+    original_evaluate = curriculum_readiness.evaluate_preparation
+    original_load_config = tc.load_config
+
+    def cached_evaluate(
+        track: str,
+        slug: str,
+        *,
+        consumed_preparation_identity: str | None = None,
+        repo_root: Path = curriculum_readiness.PROJECT_ROOT,
+        validators: Any = curriculum_readiness.VALIDATORS,
+        active_manifest: Any = None,
+    ) -> dict[str, Any]:
+        key = _readiness_cache_key(track, slug, consumed_preparation_identity, repo_root, validators, active_manifest)
+        if key is None:
+            return original_evaluate(
+                track,
+                slug,
+                consumed_preparation_identity=consumed_preparation_identity,
+                repo_root=repo_root,
+                validators=validators,
+                active_manifest=active_manifest,
+            )
+        cached = readiness_cache.get(key)
+        if cached is None:
+            cached = copy.deepcopy(
+                original_evaluate(
+                    track,
+                    slug,
+                    consumed_preparation_identity=consumed_preparation_identity,
+                    repo_root=repo_root,
+                    validators=validators,
+                    active_manifest=active_manifest,
+                )
+            )
+            readiness_cache[key] = cached
+        return copy.deepcopy(cached)
+
+    def cached_load_config(path: Path = tc.DEFAULT_CONFIG_PATH) -> dict[str, Any]:
+        config_bytes = Path(path).read_bytes()
+        schema_bytes = tc.CONFIG_SCHEMA_PATH.read_bytes()
+        key = (hashlib.sha256(config_bytes).digest(), hashlib.sha256(schema_bytes).digest())
+        cached = config_cache.get(key)
+        if cached is None:
+            cached = copy.deepcopy(original_load_config(path))
+            config_cache[key] = cached
+        return copy.deepcopy(cached)
+
+    curriculum_readiness.evaluate_preparation = cached_evaluate
+    tc.load_config = cached_load_config
+
+    def restore() -> None:
+        curriculum_readiness.evaluate_preparation = original_evaluate
+        tc.load_config = original_load_config
+
+    return restore
+
+
+def _retain_referenced_prompt_profiles(repo: Path) -> None:
+    """B1 only needs the profiles its selectors and readiness records name."""
+    profiles_path = repo / "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml"
+    profiles = yaml.safe_load(profiles_path.read_text(encoding="utf-8"))
+    readiness_path = repo / "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml"
+    readiness = yaml.safe_load(readiness_path.read_text(encoding="utf-8"))
+    referenced = {profile_id for group in profiles["selectors"].values() for profile_id in group.values()}
+    referenced.update(profile["prompt_profile"] for profile in readiness["profiles"].values())
+    profiles["profiles"] = {
+        profile_id: profile for profile_id, profile in profiles["profiles"].items() if profile_id in referenced
+    }
+    profiles_path.write_text(yaml.safe_dump(profiles, sort_keys=False), encoding="utf-8")
+
+
+def _stub_large_hash_only_sources(repo: Path, relatives: list[str]) -> None:
+    for relative in relatives:
+        if not str(relative).endswith(".py"):
+            continue
+        path = repo / relative
+        if path.is_file() and path.stat().st_size >= _HASH_ONLY_STUB_MIN_BYTES:
+            path.write_bytes(_HASH_ONLY_STUB)
+
+
 def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], dict[str, Any]]:
     """Build a real B1 completion input set with no authority monkeypatches."""
     repo = tmp_path / "completion-repo"
-    shutil.copytree(ROOT / "agents_extensions", repo / "agents_extensions")
+    shutil.copytree(
+        ROOT / "agents_extensions/shared/prompt-contracts",
+        repo / "agents_extensions/shared/prompt-contracts",
+    )
     config = tc.load_config()
     paths = [*config["identity_paths"], *config["certification_identity_paths"]["pbr"]]
     for declared in config["certification_identity_paths"]["production_qg"].values():
         paths.extend(declared)
-    for relative in dict.fromkeys(paths):
+    relatives = list(dict.fromkeys(paths))
+    for relative in relatives:
         source = ROOT / relative
         target = repo / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(source, target)
+    preparation_schema = "agents_extensions/shared/curriculum-lifecycle/schema/preparation-result.v1.schema.json"
+    preparation_target = repo / preparation_schema
+    preparation_target.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(ROOT / preparation_schema, preparation_target)
+    _stub_large_hash_only_sources(repo, relatives)
     slug = "adjectives-comparative"
     (repo / "curriculum/l2-uk-en/plans/b1").mkdir(parents=True)
     shutil.copy2(ROOT / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml", repo / f"curriculum/l2-uk-en/plans/b1/{slug}.yaml")
@@ -410,6 +553,7 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
         selected = selector_config["selectors"]["tracks"].get("b1")
         selector_config["selectors"]["tracks"] = {"b1": selected} if selected else {}
         selector_path.write_text(yaml.safe_dump(selector_config, sort_keys=False), encoding="utf-8")
+    _retain_referenced_prompt_profiles(repo)
     config_path = repo / "agents_extensions/shared/skills/track-completion/config/track-completion.v1.yaml"
     ledger_root = tmp_path / "ledgers"
     _, ledger = tc.start_run(
@@ -468,8 +612,18 @@ def _completion_case(tmp_path: Path) -> tuple[Path, Path, Path, dict[str, Any], 
 CompletionCase = tuple[Path, Path, Path, dict[str, Any], dict[str, Any]]
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _shared_certification_reads() -> Any:
+    """Share unchanged readiness and config parses. Callers receive copies."""
+    restore = _install_repeated_read_cache()
+    yield
+    restore()
+
+
 @pytest.fixture(scope="module")
-def completion_case_source(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
+def completion_case_source(
+    tmp_path_factory: pytest.TempPathFactory, _shared_certification_reads: None
+) -> dict[str, Any]:
     """One prepared completion case per module; tests receive cheap copies."""
     base = tmp_path_factory.mktemp("completion-case")
     repo, _config_path, ledger_root, ledger, inputs = _completion_case(base)
@@ -1117,6 +1271,36 @@ def test_live_qg_dependency_drift_changes_qg_identity_only(completion_case: Comp
     assert after["qg_identity"] != before["qg_identity"]
     assert after["preparation_identity"] == before["preparation_identity"]
     assert after["pbr_dependency_identity"] == before["pbr_dependency_identity"]
+
+
+def test_changed_plan_bytes_and_config_reload_are_not_cached(
+    completion_case: CompletionCase,
+) -> None:
+    """Memoized readiness and config must miss when the source bytes change."""
+    repo, config_path, _ledger_root, _ledger, inputs = completion_case
+    before = curriculum_readiness.evaluate_preparation(
+        "b1",
+        "adjectives-comparative",
+        consumed_preparation_identity=inputs["preparation_identity"],
+        repo_root=repo,
+    )
+    plan_path = repo / "curriculum/l2-uk-en/plans/b1/adjectives-comparative.yaml"
+    plan_path.write_text(plan_path.read_text(encoding="utf-8") + "\n# preparation-identity drift\n", encoding="utf-8")
+    after = curriculum_readiness.evaluate_preparation(
+        "b1",
+        "adjectives-comparative",
+        consumed_preparation_identity=inputs["preparation_identity"],
+        repo_root=repo,
+    )
+    assert after["preparation_identity"] != before["preparation_identity"]
+    assert after["state"] == "built-preparation-drift"
+
+    loaded = tc.load_config(config_path)
+    loaded["lease_seconds"] = 1
+    assert tc.load_config(config_path)["lease_seconds"] == 86400
+    original = config_path.read_text(encoding="utf-8")
+    config_path.write_text(original.replace("lease_seconds: 86400", "lease_seconds: 86401", 1), encoding="utf-8")
+    assert tc.load_config(config_path)["lease_seconds"] == 86401
 
 
 def test_learner_mutation_stales_both_pbr_and_qg_inputs(completion_case: CompletionCase) -> None:
