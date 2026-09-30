@@ -134,7 +134,7 @@ def test_publish_manifest_uploads_versioned_and_canonical_assets(
         if args[:3] == ["gh", "release", "view"]:
             return subprocess.CompletedProcess(args, 0, stdout='{"assets":[]}', stderr="")
         if args[:3] == ["gh", "release", "upload"]:
-            assert Path(args[4]).exists()
+            assert Path(args[-1]).exists()
             upload_calls.append(args)
             return subprocess.CompletedProcess(args, 0)
         raise AssertionError(f"unexpected command: {args}")
@@ -155,7 +155,7 @@ def test_publish_manifest_uploads_versioned_and_canonical_assets(
 
     assert pointer["asset_url"].endswith(f"/{expected_versioned_name}")
     assert json.loads(pointer_path.read_text(encoding="utf-8")) == pointer
-    assert [Path(call[4]).name for call in upload_calls] == [expected_versioned_name, ASSET_NAME]
+    assert [Path(call[-1]).name for call in upload_calls] == [expected_versioned_name, ASSET_NAME]
     assert "--clobber" not in upload_calls[0]
     assert "--clobber" in upload_calls[1]
 
@@ -208,7 +208,7 @@ def test_publish_manifest_skips_existing_verified_versioned_asset(
     )
 
     assert download_calls == [expected_versioned_name]
-    assert [Path(call[4]).name for call in upload_calls] == [ASSET_NAME]
+    assert [Path(call[-1]).name for call in upload_calls] == [ASSET_NAME]
     assert "--clobber" in upload_calls[0]
 
 
@@ -552,3 +552,8 @@ def test_publish_manifest_cli_verify_only_dry_run(
     captured = capsys.readouterr()
     assert "would publish" in captured.out
     assert not pointer_path.exists()
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec):
+    """Exercise artifact uploads with the matcher, including gzip content."""

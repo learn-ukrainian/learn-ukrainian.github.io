@@ -20,7 +20,7 @@ if __package__ in (None, ""):
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
-from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
+from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     SHA,
@@ -30,6 +30,7 @@ from scripts.orchestration.integration_sweep import (
     parse_marker,
 )
 from scripts.orchestration.task_record_store import ARCHIVE_DIR_NAME
+from scripts.publish.github import Request, request_run
 from scripts.review.reviewer_resolver import (
     CURSOR_AUTO_UNION_FAMILY,
     UNRESOLVED_AUTHOR_FAMILIES,
@@ -66,7 +67,7 @@ def normalize_verdict(reply: str) -> str:
 @publication_boundary(RecordError)
 def _run_json(args: list[str], *, input_text: str | None = None) -> Any:
     try:
-        process = checked_run(args, input=input_text, capture_output=True, text=True, check=False, timeout=60)
+        process = request_run(args, input=input_text, capture_output=True, text=True, check=False, timeout=60)
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise RecordError("GitHub lookup or publication unavailable") from exc
     if process.returncode:
@@ -78,7 +79,7 @@ def _run_json(args: list[str], *, input_text: str | None = None) -> Any:
 
 
 def _pages(args: list[str]) -> list[dict[str, Any]]:
-    data = _run_json([*args, "--paginate", "--slurp"])
+    data = _run_json(Request(args.verb, **args.fields, paginate=True, slurp=True))
     if not isinstance(data, list) or not all(isinstance(page, list) for page in data):
         raise RecordError("paginated GitHub data incomplete")
     items = [item for page in data for item in page]
@@ -96,7 +97,7 @@ def _hot_or_archived(task_root: Path, name: str) -> Path:
 
 def author_families(repository: str, pr_number: int, task_root: Path) -> set[str]:
     """Resolve every base..head commit from explicit model attribution, fail closed."""
-    commits = _pages(["gh", "api", f"repos/{repository}/pulls/{pr_number}/commits?per_page=100"])
+    commits = _pages(Request("read-commits", repo=repository, number=pr_number))
     if not commits:
         raise RecordError("PR commit set unavailable")
     families = set()
@@ -126,9 +127,9 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
                     author_task = json.loads(task_file.read_text(encoding="utf-8"))
                 except (OSError, ValueError) as exc:
                     raise RecordError("author task provenance unavailable") from exc
-                if author_task.get("repository") != repository or not str(
-                    author_task.get("agent") or ""
-                ).startswith(harness):
+                if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
+                    harness
+                ):
                     raise RecordError("author task provenance conflicts with commit trailer")
                 if harness.startswith("cursor"):
                     if author_task.get("resolved_model_known") is not True:
@@ -331,13 +332,12 @@ def record(
                     break
         if existing is None:
             data = _run_json(
-                ["gh", "api", "-X", "POST", f"repos/{repository}/issues/{number}/comments", "--input", "-"],
-                input_text=json.dumps({"body": comment}),
+                Request("issue-comment-json", repo=repository, number=number, body=comment),
             )
             comment_id = data.get("id") if isinstance(data, dict) else None
             if not isinstance(comment_id, int):
                 raise RecordError("comment post response lacked id; retry to reconcile")
-            readback = _run_json(["gh", "api", f"repos/{repository}/issues/comments/{comment_id}"])
+            readback = _run_json(Request("read-comment", repo=repository, number=comment_id))
             if (
                 not isinstance(readback, dict)
                 or readback.get("body") != comment
@@ -371,7 +371,11 @@ def record(
 
 @publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Publish a completed exact-head cross-family verdict.\nUse after the reviewer exits; not to author or approve your own review.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\nOutputs and exit codes: Local publication receipt and GitHub review text/status. 0: recorded; 1: refused.\nRelated: #9297")
+    parser = argparse.ArgumentParser(
+        description="Publish a completed exact-head cross-family verdict.\nUse after the reviewer exits; not to author or approve your own review.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\nOutputs and exit codes: Local publication receipt and GitHub review text/status. 0: recorded; 1: refused.\nRelated: #9297",
+    )
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")
     parser.add_argument("--pr", type=int, help="Open PR number; otherwise resolve from review branch")
     args = parser.parse_args(argv)

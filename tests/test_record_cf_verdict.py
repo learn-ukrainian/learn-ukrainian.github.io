@@ -106,6 +106,16 @@ def setup_record(monkeypatch, tmp_path, *, head=SHA, branch=BRANCH, families=Non
     calls = {"posts": 0, "statuses": 0}
 
     def fake_json(args, *, input_text=None):
+        from scripts.publish.github import Request
+
+        if isinstance(args, Request):
+            if args.verb == "issue-comment-json":
+                input_text = json.dumps({"body": args.fields["body"]})
+                args = ["gh", "api", "-X", "POST"]
+            elif args.verb == "read-comment":
+                args = ["gh", "api", "issues/comments/" + str(args.fields["number"])]
+            else:
+                raise AssertionError(args.verb)
         if args[:3] == ["gh", "pr", "view"]:
             return {"number": 42, "headRefOid": head, "headRefName": branch, "state": "OPEN"}
         if args[:3] == ["gh", "pr", "list"]:

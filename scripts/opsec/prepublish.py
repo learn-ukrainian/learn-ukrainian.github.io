@@ -2,7 +2,7 @@
 
 Defense in depth, not universal enforcement: absolute gh paths, aliases,
 extensions and raw HTTP clients can bypass shell interception. Direct project
-publishers must call checked_run. The private matcher owns all matching logic;
+publishers must call scripts.publish.github.publish. The private matcher owns all matching logic;
 this module owns destination admission, blocking policy and masked diagnostics.
 """
 
@@ -81,7 +81,10 @@ def catalog() -> dict:
     import yaml
 
     try:
-        return yaml.safe_load((ROOT / "scripts/config/fleet_repos.yaml").read_text())["repos"]
+        return yaml.load(
+            (ROOT / "scripts/config/fleet_repos.yaml").read_text(),
+            Loader=getattr(yaml, "CSafeLoader", yaml.SafeLoader),
+        )["repos"]
     except Exception:
         raise PublishBlocked("OPSEC: repository allowlist unavailable; write refused.") from None
 
@@ -94,7 +97,7 @@ def normalize_repository(value: str, host: str = "github.com") -> str:
     parts = value.split("/")
     if len(parts) == 2:
         parts.insert(0, host.lower())
-    if len(parts) >= 3 and all(re.fullmatch(r"[A-Za-z0-9_.-]+", x) for x in parts[:3]):
+    if len(parts) == 3 and all(re.fullmatch(r"[A-Za-z0-9_.-]+", x) for x in parts[:3]):
         return "/".join(parts[:3]).lower()
     return "unknown"
 
@@ -291,49 +294,14 @@ def publish_environment(source: Mapping[str, str], *, root: Path = ROOT) -> dict
 
 
 def checked_run(args, *, runner=None, **kwargs):
-    """subprocess.run-compatible gateway for project publishers, including injected send spies."""
+    """Raw transport: closed read grammar or positively verified private write."""
     runner = runner or subprocess.run
     if not args or Path(str(args[0])).name != "gh":
         return runner(args, **kwargs)
-    from scripts.opsec.gh_snapshot import snapshot
+    from scripts.opsec.gh_snapshot import admit
 
     environment = dict(kwargs.get("env", os.environ))
-    with snapshot(
-        list(args[1:]),
-        cwd=Path(kwargs.get("cwd") or Path.cwd()),
-        environment=environment,
-        stdin=kwargs.get("input"),
-        reader=runner,
-    ) as frozen:
-        if frozen.write:
-            reason = os.environ.pop("LU_OPSEC_OVERRIDE", "")
-            if reason:
-                environment["LU_OPSEC_OVERRIDE"] = reason
-            check_texts(frozen.destination, frozen.texts, environment=environment, field_names=frozen.field_names)
-            kwargs["env"] = environment
-            if frozen.stdin is not None:
-                kwargs["input"] = (
-                    frozen.stdin.decode("utf-8") if kwargs.get("text") or kwargs.get("encoding") else frozen.stdin
-                )
-        elif "LU_OPSEC_OVERRIDE" in environment:
-            # Reads do not consume the parent's next-write override, but the
-            # read subprocess must not inherit it.
-            read_environment = dict(environment)
-            read_environment.pop("LU_OPSEC_OVERRIDE", None)
-            kwargs["env"] = read_environment
-        # Project publishers have already checked the immutable snapshot. Use
-        # the existing helper with pinned gh, avoiding a second scan that would
-        # consume the command override twice. Custom send spies keep argv intact.
-        if (
-            frozen.write
-            and getattr(runner, "__module__", None) == "subprocess"
-            and getattr(runner, "__name__", None) == "run"
-        ):
-            from scripts.opsec.gh_entry import guarded_command
-
-            environment.pop("LU_OPSEC_OVERRIDE", None)
-            kwargs["env"] = environment
-            return runner(
-                guarded_command(real_gh(environment), ROOT / "scripts/agent_runtime/shims/gh", frozen.argv), **kwargs
-            )
-        return runner([args[0], *frozen.argv], **kwargs)
+    frozen = admit(list(args[1:]), cwd=Path(kwargs.get("cwd") or Path.cwd()), environment=environment, reader=runner)
+    environment.pop("LU_OPSEC_OVERRIDE", None)
+    kwargs["env"] = environment
+    return runner([args[0], *frozen.argv], **kwargs)

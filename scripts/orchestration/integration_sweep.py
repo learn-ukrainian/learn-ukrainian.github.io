@@ -13,8 +13,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.gh_merge_queue_status import GRAPHQL_PR_MQ_QUERY
 from scripts.github_check_rollup import group_collapsed_by_name
+from scripts.publish.github import Request, request_run
 
 Runner = Callable[[list[str]], str]
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -246,7 +246,7 @@ class GitHubAdapter:
 
     def _default_runner(self, args: list[str]) -> str:
         try:
-            result = subprocess.run(
+            result = request_run(
                 args,
                 cwd=self.repo_root,
                 text=True,
@@ -255,7 +255,9 @@ class GitHubAdapter:
                 check=False,
             )
         except subprocess.TimeoutExpired as exc:
-            raise SweepError(f"{' '.join(args[:4])} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s") from exc
+            raise SweepError(
+                f"{args.verb if isinstance(args, Request) else ' '.join(args[:4])} timed out after {DEFAULT_GH_TIMEOUT_SECONDS}s"
+            ) from exc
         if result.returncode:
             raise SweepError((result.stderr or result.stdout or "GitHub lookup failed")[:1000])
         return result.stdout
@@ -267,7 +269,7 @@ class GitHubAdapter:
             raise SweepError("GitHub returned invalid JSON") from exc
 
     def identity(self) -> str:
-        login = self._runner(["gh", "api", "user", "--jq", ".login"]).strip()
+        login = self._json(Request("read-identity")).get("login", "").strip()
         if not login:
             raise SweepError("authenticated gh identity unavailable")
         return login
@@ -293,9 +295,7 @@ class GitHubAdapter:
         return payload
 
     def comments(self, repository: str, number: int) -> list[dict[str, Any]]:
-        pages = self._json(
-            ["gh", "api", f"repos/{repository}/issues/{number}/comments?per_page=100", "--paginate", "--slurp"]
-        )
+        pages = self._json(Request("read-comments", repo=repository, number=number, paginate=True, slurp=True))
         if not isinstance(pages, list) or not all(isinstance(page, list) for page in pages):
             raise SweepError("PR comments pagination incomplete")
         comments = [item for page in pages for item in page]
@@ -304,24 +304,10 @@ class GitHubAdapter:
         return comments
 
     def queue_membership(self, repository: str, pr: Mapping[str, Any]) -> bool:
-        owner, name = repository.split("/", 1)
-        number = pr["number"]
         data = self._json(
-            [
-                "gh",
-                "api",
-                "graphql",
-                "-f",
-                f"query={GRAPHQL_PR_MQ_QUERY}",
-                "-f",
-                f"owner={owner}",
-                "-f",
-                f"name={name}",
-                "-F",
-                f"number={number}",
-                "-f",
-                f"branch={pr.get('baseRefName') or 'main'}",
-            ]
+            Request(
+                "read-membership-head", repo=repository, number=pr["number"], branch=pr.get("baseRefName") or "main"
+            )
         )
         if not isinstance(data, dict) or data.get("errors"):
             raise SweepError("merge queue GraphQL lookup incomplete")

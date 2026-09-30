@@ -7,7 +7,7 @@
       },
       {
         "path": "scripts/lexicon/admit_fmu_boosters.py",
-        "sha256": "d3b7fc4d56aa2b11401a444e6d00afe8760618d2d6947ec0fdca16b105bdd609"
+        "sha256": "c7e72e3dd3ff2140dbcec0c7cae3e5e4094a62e81952dcf7453ba95e2e65190b"
       },
       {
         "path": "scripts/lexicon/admit_stem_slice_2a.py",
@@ -323,7 +323,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "fe55142c3cb85f87474eb7adc53c66dc34b2ddbdb380bc1ce9d883bcd3d2b971"
+        "sha256": "85413e1c4554748b6e96deb9acf9d2bcc6b43644fea85105dcb567068ab5694d"
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",

@@ -44,7 +44,8 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.opsec.prepublish import checked_run, publication_cli
+from scripts.opsec.prepublish import publication_cli
+from scripts.publish.github import Request, request_run
 from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
@@ -75,7 +76,7 @@ DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
 
 
 def _run(cmd: list[str], input_text: str | None = None) -> str:
-    return checked_run(
+    return request_run(
         cmd,
         check=True,
         capture_output=True,
@@ -150,13 +151,9 @@ def _load_behavior_proof_state(
     try:
         state = json.loads(state_file.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError) as exc:
-        raise ContractError(
-            f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID
-        ) from exc
+        raise ContractError(f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID) from exc
     except json.JSONDecodeError as exc:
-        raise ContractError(
-            f"behavior_proof_state_invalid_json:{exc.msg}", exit_code=EXIT_INVALID
-        ) from exc
+        raise ContractError(f"behavior_proof_state_invalid_json:{exc.msg}", exit_code=EXIT_INVALID) from exc
     if not isinstance(state, dict):
         raise ContractError("behavior_proof_state_must_be_object", exit_code=EXIT_INVALID)
     baseline = state.get("baseline")
@@ -181,10 +178,7 @@ def _load_behavior_proof_state(
     }
     if any(field not in saved_target for field in stable_target_fields):
         raise ContractError("behavior_proof_state_target_invalid", exit_code=EXIT_INVALID)
-    if any(
-        saved_target[field] != expected_value
-        for field, expected_value in stable_target_fields.items()
-    ):
+    if any(saved_target[field] != expected_value for field, expected_value in stable_target_fields.items()):
         raise ContractError("behavior_proof_state_target_mismatch", exit_code=EXIT_INVALID)
     return proof, intended_behavior
 
@@ -209,7 +203,7 @@ def _post_summary(issue: int, receipt: dict) -> None:
         "out_of_scope",
     ):
         lines.append(f"- {name}: {counts.get(name, 0)}")
-    _run(["gh", "issue", "comment", str(issue), "--body", "\n".join(lines)])
+    _run(Request("issue-comment", number=int(str(issue)), body="\n".join(lines)))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -392,12 +386,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         scope = _load_json_arg(args.scope_json or None, label="--scope-json")
         tests = _load_json_arg(args.tests_json or None, label="--tests-json")
-        dispositions = _load_json_arg(
-            args.dispositions_json or None, label="--dispositions-json"
-        )
-        routing_lineage = _load_json_arg(
-            args.routing_lineage_json or None, label="--routing-lineage-json"
-        )
+        dispositions = _load_json_arg(args.dispositions_json or None, label="--dispositions-json")
+        routing_lineage = _load_json_arg(args.routing_lineage_json or None, label="--routing-lineage-json")
     except ContractError as exc:
         print(
             json.dumps(
@@ -436,9 +426,7 @@ def main(argv: list[str] | None = None) -> int:
                 target=target,
             )
         else:
-            behavior_proof = _load_json_arg(
-                args.behavior_proof_json or None, label="--behavior-proof-json"
-            )
+            behavior_proof = _load_json_arg(args.behavior_proof_json or None, label="--behavior-proof-json")
             frozen_intended_behavior = ""
     except ContractError as exc:
         print(
@@ -478,10 +466,7 @@ def main(argv: list[str] | None = None) -> int:
         tests=tests,
         behavior_proof=behavior_proof,
         frozen_intended_behavior=frozen_intended_behavior,
-        dispositions={
-            str(k): v if isinstance(v, dict) else {"disposition": str(v)}
-            for k, v in dispositions.items()
-        },
+        dispositions={str(k): v if isinstance(v, dict) else {"disposition": str(v)} for k, v in dispositions.items()},
         routing_lineage={str(k): str(v) for k, v in routing_lineage.items()},
     )
 

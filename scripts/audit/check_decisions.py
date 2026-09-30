@@ -27,7 +27,8 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from scripts.opsec.prepublish import PublishBlocked, checked_run, publication_cli
+from scripts.opsec.prepublish import PublishBlocked, publication_cli
+from scripts.publish.github import Request, request_run
 
 DECISIONS_FILE = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
 
@@ -79,7 +80,9 @@ def _gh_issue_exists(dec_id: str) -> bool:
     try:
         result = subprocess.run(
             ["gh", "issue", "list", "--label", STALE_LABEL, "--search", dec_id, "--json", "number"],
-            capture_output=True, text=True, timeout=15,
+            capture_output=True,
+            text=True,
+            timeout=15,
         )
         return bool(result.stdout.strip() and result.stdout.strip() != "[]")
     except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -89,12 +92,17 @@ def _gh_issue_exists(dec_id: str) -> bool:
 def _ensure_label_exists() -> None:
     """Create the stale decision label if it doesn't exist."""
     import contextlib
+
     with contextlib.suppress(subprocess.TimeoutExpired, FileNotFoundError):
-        checked_run(
-            ["gh", "label", "create", STALE_LABEL,
-             "--description", "Decision past expiry date — needs re-evaluation",
-             "--color", "FBCA04"],
-            capture_output=True, timeout=15,
+        request_run(
+            Request(
+                "label-create",
+                name=STALE_LABEL,
+                description="Decision past expiry date — needs re-evaluation",
+                color="FBCA04",
+            ),
+            capture_output=True,
+            timeout=15,
         )
 
 
@@ -110,21 +118,21 @@ def create_issue(dec: dict) -> str | None:
     body = f"""## Stale Decision
 
 **ID:** {dec_id}
-**Decided:** {dec['date']}
-**Expired:** {dec['expires']}
-**Scope:** {dec.get('scope', 'unknown')}
+**Decided:** {dec["date"]}
+**Expired:** {dec["expires"]}
+**Scope:** {dec.get("scope", "unknown")}
 
 ## Original Reasoning
 
-{dec.get('reasoning', 'No reasoning recorded.')}
+{dec.get("reasoning", "No reasoning recorded.")}
 
 ## Evidence
 
-{dec.get('evidence', 'None recorded.')}
+{dec.get("evidence", "None recorded.")}
 
 ## Alternatives Considered
 
-{alternatives_text or 'None recorded.'}
+{alternatives_text or "None recorded."}
 
 ## Action Required
 
@@ -134,13 +142,11 @@ def create_issue(dec: dict) -> str | None:
 """
 
     try:
-        result = checked_run(
-            ["gh", "issue", "create",
-             "--title", title,
-             "--body", body,
-             "--label", STALE_LABEL,
-             "--label", "area:docs"],
-            capture_output=True, text=True, timeout=30,
+        result = request_run(
+            Request("issue-create", title=title, body=body, labels=[STALE_LABEL, "area:docs"]),
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
         if result.returncode == 0:
             return result.stdout.strip()
@@ -153,7 +159,11 @@ def create_issue(dec: dict) -> str | None:
 
 @publication_cli()
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Check decision journal for staleness.\nUse during decision audits; writes require --create-issues.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/audit/check_decisions.py --quiet\nOutputs and exit codes: Report stdout; optional issue and label writes. 0: no stale decisions; 1: stale decisions.\nRelated: #9297")
+    parser = argparse.ArgumentParser(
+        description="Check decision journal for staleness.\nUse during decision audits; writes require --create-issues.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/audit/check_decisions.py --quiet\nOutputs and exit codes: Report stdout; optional issue and label writes. 0: no stale decisions; 1: stale decisions.\nRelated: #9297",
+    )
     parser.add_argument("--quiet", action="store_true", help="One-liner output for session-setup")
     parser.add_argument("--create-issues", action="store_true", help="Create GH issues for stale decisions")
     args = parser.parse_args()

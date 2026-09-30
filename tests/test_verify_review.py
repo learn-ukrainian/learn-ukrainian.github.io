@@ -421,9 +421,7 @@ def test_local_target_verified_and_clean(tmp_path):
     assert result.validations[0].matched_line == 2
     assert result.receipt["target"]["mode"] == "local"
     # input_sha256 is target fingerprint, not reviewer JSON hash
-    assert result.receipt["target"]["input_sha256"] == compute_target_input_fingerprint(
-        repo, target
-    )
+    assert result.receipt["target"]["input_sha256"] == compute_target_input_fingerprint(repo, target)
     assert result.receipt["reviewer_output_sha256"] == sha256_text(raw)
     assert result.receipt["author"]["family"] == "author-family"
     assert result.receipt["reviewer"]["model"] == "reviewer-model"
@@ -808,9 +806,7 @@ def test_target_fingerprint_ignores_equivalent_ref_description(tmp_path):
     target = resolve_commit_target(repo, "HEAD")
     equivalent_ref = replace(target, description="same commit via branch name")
 
-    assert compute_target_input_fingerprint(
-        repo, target
-    ) == compute_target_input_fingerprint(repo, equivalent_ref)
+    assert compute_target_input_fingerprint(repo, target) == compute_target_input_fingerprint(repo, equivalent_ref)
 
 
 def test_missing_expected_fingerprint_cannot_exit_clean(tmp_path):
@@ -882,9 +878,7 @@ def test_duplicate_quote_later_occurrence_verifies(tmp_path):
         encoding="utf-8",
     )
     target = resolve_local_target(repo)
-    assert match_at_line(
-        (repo / "app.py").read_text(encoding="utf-8"), "shared = 1", 4
-    )[0]
+    assert match_at_line((repo / "app.py").read_text(encoding="utf-8"), "shared = 1", 4)[0]
     payload = {
         "schema_version": SCHEMA_VERSION,
         "overall": {
@@ -1004,9 +998,7 @@ def test_decode_failure_is_fail_closed_evidence(tmp_path, monkeypatch):
     raw = json.dumps(payload)
     result = verify_review(raw, _ctx(repo, target, raw))
     assert result.validations[0].outcome == OUTCOME_QUOTE_MISSING
-    assert "decode" in result.validations[0].detail or "read_or_decode" in result.validations[
-        0
-    ].detail
+    assert "decode" in result.validations[0].detail or "read_or_decode" in result.validations[0].detail
     assert result.exit_code == EXIT_UNVERIFIABLE
 
 
@@ -1067,7 +1059,7 @@ def test_cli_receipt_path_and_forbidden_paths(tmp_path, monkeypatch):
         [
             "--review-file",
             str(review),
-            * _cli_envelope_args(repo),
+            *_cli_envelope_args(repo),
             "--receipt-path",
             str(receipt),
         ]
@@ -1084,7 +1076,7 @@ def test_cli_receipt_path_and_forbidden_paths(tmp_path, monkeypatch):
         [
             "--review-file",
             str(review),
-            * _cli_envelope_args(repo),
+            *_cli_envelope_args(repo),
             "--receipt-path",
             str(forbidden),
         ]
@@ -1108,6 +1100,9 @@ def test_cli_issue_mode_posts_opt_in_comment(tmp_path, monkeypatch, capsys):
 
     def fake_run(cmd, input_text=None):
         calls.append(cmd)
+        if isinstance(cmd, verify_review_cli.Request):
+            assert cmd.verb == "issue-comment"
+            return ""
         if cmd[:3] == ["gh", "issue", "view"]:
             return json.dumps({"comments": [{"body": json.dumps(payload)}]})
         if cmd[:3] == ["gh", "issue", "comment"]:
@@ -1119,7 +1114,7 @@ def test_cli_issue_mode_posts_opt_in_comment(tmp_path, monkeypatch, capsys):
         [
             "--issue",
             "5284",
-            * _cli_envelope_args(
+            *_cli_envelope_args(
                 repo,
                 dispositions={
                     "F001": {
@@ -1135,25 +1130,22 @@ def test_cli_issue_mode_posts_opt_in_comment(tmp_path, monkeypatch, capsys):
     assert code == EXIT_ACTIONABLE
     out = capsys.readouterr().out
     assert "verified" in out
-    assert calls[-1][:3] == ["gh", "issue", "comment"]
+    assert calls[-1].verb == "issue-comment"
+    assert calls[-1].fields["number"] == 5284
 
 
 def test_cli_stdin_legacy_text_exit_invalid(tmp_path, monkeypatch, capsys):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("x\n", encoding="utf-8")
     monkeypatch.setattr(sys, "stdin", type("S", (), {"read": lambda self: "FINDING:\nFILE:LINE: app.py:1\n"})())
-    code = verify_review_cli.main(
-        ["--from-stdin", "--mode", "local", "--repo-root", str(repo)]
-    )
+    code = verify_review_cli.main(["--from-stdin", "--mode", "local", "--repo-root", str(repo)])
     assert code == EXIT_INVALID
 
 
 def test_cli_emit_target_manifest_source_blind(tmp_path, capsys):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
-    code = verify_review_cli.main(
-        ["--emit-target-manifest", "--mode", "local", "--repo-root", str(repo)]
-    )
+    code = verify_review_cli.main(["--emit-target-manifest", "--mode", "local", "--repo-root", str(repo)])
     assert code == 0
     out = capsys.readouterr().out
     data = json.loads(out)
@@ -1163,9 +1155,7 @@ def test_cli_emit_target_manifest_source_blind(tmp_path, capsys):
     assert len(data["input_sha256"]) == 64
     # Mutate and re-emit — fingerprint must change.
     (repo / "app.py").write_text("print('v1')\nvalue = 9\n", encoding="utf-8")
-    code2 = verify_review_cli.main(
-        ["--emit-target-manifest", "--mode", "local", "--repo-root", str(repo)]
-    )
+    code2 = verify_review_cli.main(["--emit-target-manifest", "--mode", "local", "--repo-root", str(repo)])
     assert code2 == 0
     data2 = json.loads(capsys.readouterr().out)
     assert data2["input_sha256"] != data["input_sha256"]
@@ -1248,7 +1238,7 @@ def test_cli_duplicate_later_and_inflated_range(tmp_path, capsys):
         [
             "--review-file",
             str(review),
-            * _cli_envelope_args(
+            *_cli_envelope_args(
                 repo,
                 dispositions={
                     "F001": {"disposition": "in_scope_blocker", "rationale": "later"},
@@ -1275,7 +1265,7 @@ def test_cli_duplicate_later_and_inflated_range(tmp_path, capsys):
         [
             "--review-file",
             str(review2),
-            * _cli_envelope_args(repo),
+            *_cli_envelope_args(repo),
         ]
     )
     assert code2 == EXIT_UNVERIFIABLE
@@ -1424,10 +1414,7 @@ def test_blind_enforcement_requires_attestation_and_unenforced_is_rendered(tmp_p
     raw = json.dumps(_clean_payload())
     unenforced = verify_review(raw, _ctx(repo, target, raw))
     assert unenforced.exit_code == EXIT_CLEAN
-    assert (
-        unenforced.receipt["behavior_proof"]["source_blind"]["blind_enforcement"]
-        == "declared-blind/unenforced"
-    )
+    assert unenforced.receipt["behavior_proof"]["source_blind"]["blind_enforcement"] == "declared-blind/unenforced"
 
     enforced_proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
     enforced_proof["source_blind"]["blind_enforced"] = True
@@ -1445,9 +1432,7 @@ def test_na_blind_proof_requires_reason_but_not_blind_enforced(tmp_path):
     del proof["source_blind"]["blind_enforced"]
     missing_pass_boolean = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
     assert missing_pass_boolean.exit_code == EXIT_INCOMPLETE
-    assert "behavior_proof.source_blind_blind_enforced_missing" in (
-        missing_pass_boolean.error or ""
-    )
+    assert "behavior_proof.source_blind_blind_enforced_missing" in (missing_pass_boolean.error or "")
 
     proof = _full_envelope_kwargs(repo, target)["behavior_proof"]
     proof["source_blind"] = {"status": "n/a"}
@@ -1462,9 +1447,7 @@ def test_na_blind_proof_requires_reason_but_not_blind_enforced(tmp_path):
     }
     unjustified_enforcement = verify_review(raw, _ctx(repo, target, raw, behavior_proof=proof))
     assert unjustified_enforcement.exit_code == EXIT_INCOMPLETE
-    assert "behavior_proof.source_blind_enforced_without_attestation" in (
-        unjustified_enforcement.error or ""
-    )
+    assert "behavior_proof.source_blind_enforced_without_attestation" in (unjustified_enforcement.error or "")
 
 
 def test_unversioned_green_behavior_proof_cannot_exit_clean(tmp_path):
@@ -1598,9 +1581,7 @@ def test_tracked_binary_same_length_mutation_changes_fingerprint(tmp_path):
     surface = path_surface_bytes(repo, target, "asset.bin")
     # Full-index + binary surface carries content identity, not only abbrev.
     assert b"index " in surface
-    index_line = next(
-        line for line in surface.splitlines() if line.startswith(b"index ")
-    )
+    index_line = next(line for line in surface.splitlines() if line.startswith(b"index "))
     # full-index: two 40-char hex object ids separated by ".."
     assert b".." in index_line
     left, right = index_line.split(b" ", 1)[1].split(b" ")[0].split(b"..")
@@ -1733,7 +1714,9 @@ def test_behavior_proof_state_rejects_invalid_shapes_and_bytes(tmp_path):
         verify_review_cli._load_behavior_proof_state(state_file, target=target)
     assert exc.value.exit_code == EXIT_INVALID
 
-    state_file.write_text(json.dumps({"baseline": {"intended_behavior": "x"}, "behavior_proof": None}), encoding="utf-8")
+    state_file.write_text(
+        json.dumps({"baseline": {"intended_behavior": "x"}, "behavior_proof": None}), encoding="utf-8"
+    )
     with pytest.raises(ContractError, match="behavior_proof_state_incomplete"):
         verify_review_cli._load_behavior_proof_state(state_file, target=target)
 
@@ -1781,12 +1764,13 @@ def test_cli_rejects_dual_behavior_proof_sources(tmp_path, capsys):
     review = tmp_path / "review.json"
     review.write_text(json.dumps(_clean_payload()), encoding="utf-8")
     args = _cli_envelope_args(repo)
-    code = verify_review_cli.main(
-        ["--review-file", str(review), *args, "--behavior-proof-json", json.dumps({})]
-    )
+    code = verify_review_cli.main(["--review-file", str(review), *args, "--behavior-proof-json", json.dumps({})])
     assert code == EXIT_INVALID
     data = json.loads(capsys.readouterr().err)
-    assert data["error"] == "behavior_proof_source_conflict: use exactly one of --behavior-proof-json or --behavior-proof-state-file"
+    assert (
+        data["error"]
+        == "behavior_proof_source_conflict: use exactly one of --behavior-proof-json or --behavior-proof-state-file"
+    )
 
 
 def test_cli_failed_proof_and_same_family_non_clean(tmp_path, capsys):
@@ -1916,12 +1900,14 @@ def test_verify_review_run_passes_default_timeout(monkeypatch: pytest.MonkeyPatc
         return mock_proc
 
     monkeypatch.setattr(subprocess, "run", fake_run)
-    verify_review_cli._run(["gh", "version"])
+    verify_review_cli._run(["gh", "pr", "list"])
     assert len(calls) == 1
     assert calls[0].get("timeout") == verify_review_cli.DEFAULT_GH_TIMEOUT_SECONDS
 
 
-def test_verify_review_read_review_timeout_exits_invalid(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+def test_verify_review_read_review_timeout_exits_invalid(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
     def timeout_run(*_args, **_kwargs):
         raise subprocess.TimeoutExpired(["gh", "issue", "view"], 60.0)
 
@@ -1931,7 +1917,6 @@ def test_verify_review_read_review_timeout_exits_invalid(monkeypatch: pytest.Mon
     err = capsys.readouterr().err
     assert "read_review_failed" in err
     assert "timed out after 60.0" in err
-
 
 
 @pytest.fixture(autouse=True)

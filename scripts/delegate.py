@@ -177,7 +177,7 @@ from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threate
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.lib import rules_core
-from scripts.opsec.prepublish import checked_run, publication_boundary
+from scripts.opsec.prepublish import publication_boundary
 from scripts.orchestration import (
     dispatch_admission,
     dispatch_isolation,
@@ -194,6 +194,7 @@ from scripts.orchestration.dead_worker_state import (
     task_state_lock,
     write_state_unlocked,
 )
+from scripts.publish.github import Request, request_run
 
 if TYPE_CHECKING:
     from scripts.agent_runtime.target_admission import AdmittedTarget, Route, RouteRequest
@@ -5623,21 +5624,8 @@ def _create_auto_finalize_pr(
     body: str,
 ) -> str | None:
     try:
-        proc = checked_run(
-            [
-                "gh",
-                "pr",
-                "create",
-                "--draft",
-                "--base",
-                base_branch,
-                "--head",
-                branch,
-                "--title",
-                title,
-                "--body",
-                body,
-            ],
+        proc = request_run(
+            Request("pr-create", draft=True, base=base_branch, head=branch, title=title, body=body),
             cwd=worktree,
             capture_output=True,
             text=True,

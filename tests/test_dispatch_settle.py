@@ -64,8 +64,15 @@ def test_heal_zombie_review_names_dead_worker_reason(tmp_path: Path) -> None:
     task_id = "dead-review"
     path = task_dir / f"{task_id}.json"
     path.write_text(
-        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999_999,
-                    "require_review_verdict": True, "failure_reason": None}),
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "running",
+                "pid": 999_999_999,
+                "require_review_verdict": True,
+                "failure_reason": None,
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -81,9 +88,16 @@ def test_settle_missing_worktree_review_names_reason(tmp_path: Path) -> None:
     task_id = "missing-review"
     path = task_dir / f"{task_id}.json"
     path.write_text(
-        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999_999,
-                    "worktree_path": str(tmp_path / "missing"),
-                    "require_review_verdict": True, "failure_reason": None}),
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "running",
+                "pid": 999_999_999,
+                "worktree_path": str(tmp_path / "missing"),
+                "require_review_verdict": True,
+                "failure_reason": None,
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -155,9 +169,14 @@ def test_settle_push_opens_pr_only_with_explicit_flag(
     actions = ds.push_and_maybe_open_pr(tmp_path, "codex/t1", open_pr=parsed.open_pr, title=None, body=None)
 
     assert calls[0] == ["git", "push", "-u", "origin", "HEAD"]
-    assert [call[:3] for call in calls if call[:3] == ["gh", "pr", "create"]] == (
-        [["gh", "pr", "create"]] if open_pr else []
-    )
+    from scripts.publish.github import Request
+
+    creates = [call for call in calls if isinstance(call, Request)]
+    assert len(creates) == int(open_pr)
+    if creates:
+        assert creates[0].verb == "pr-create"
+        assert creates[0].fields["title"] == "chore(dispatch): settle codex/t1"
+        assert creates[0].fields["body"].startswith("Auto-opened")
     assert actions == (["pushed", "pr_created:https://example.invalid/pr/1"] if open_pr else ["pushed"])
 
 

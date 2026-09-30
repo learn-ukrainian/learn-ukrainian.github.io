@@ -21,7 +21,6 @@ import json
 import os
 import re
 import sqlite3
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -43,6 +42,7 @@ from scripts.lexicon import enrich_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
 from scripts.lexicon.manifest_io import _write_atomic, load_manifest
+from scripts.publish.github import Asset, publish
 from scripts.verification.vesum import verify_word
 
 MANIFEST_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
@@ -734,6 +734,11 @@ def build_new_atlas_entry(lemma: str, pos: str, gloss: str, source_info: dict[st
     }
 
 
+def _publish_asset(asset_path: Path) -> None:
+    """Publish the explicit release artifact through the common text boundary."""
+    publish("release-upload", tag="atlas-manifest", assets=[Asset(asset_path)], clobber=True, check=True, timeout=120)
+
+
 def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
     print("Building inventory and decisions...")
     build_inventory_and_decisions(dry_run=dry_run)
@@ -885,17 +890,7 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
     asset_path.write_bytes(gz_bytes)
 
     print(f"Uploading asset {asset_filename} to GitHub release atlas-manifest...")
-    subprocess.check_call(
-        [
-            "gh",
-            "release",
-            "upload",
-            "atlas-manifest",
-            str(asset_path),
-            "--clobber",
-        ],
-        timeout=120,
-    )
+    _publish_asset(asset_path)
 
     print("Updating lexicon-manifest.pointer.json...")
     pointer_data = json.loads(POINTER_PATH.read_text(encoding="utf-8"))

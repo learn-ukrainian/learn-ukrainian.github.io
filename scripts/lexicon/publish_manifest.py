@@ -15,8 +15,6 @@ import hashlib
 import json
 import subprocess
 import sys
-import tempfile
-from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -30,6 +28,8 @@ from scripts.lexicon.manifest_fingerprint import (
     build_fingerprint,
     sidecar_payload,
 )
+from scripts.opsec.prepublish import publication_boundary
+from scripts.publish.github import Asset, Request, request_run
 
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-manifest.pointer.json"
@@ -235,6 +235,7 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
     temp_path.replace(pointer_path)
 
 
+@publication_boundary(ManifestPublishError)
 def upload_release_asset(
     gzip_path: Path = DEFAULT_GZIP,
     *,
@@ -243,24 +244,10 @@ def upload_release_asset(
     repo: str = DEFAULT_REPO,
     clobber: bool = True,
 ) -> None:
-    upload_path = gzip_path
-    with tempfile.TemporaryDirectory() if gzip_path.name != asset_name else nullcontext(None) as temp_dir:
-        if temp_dir is not None:
-            upload_path = Path(temp_dir) / asset_name
-            upload_path.write_bytes(gzip_path.read_bytes())
-
-        command = [
-            "gh",
-            "release",
-            "upload",
-            release_tag,
-            str(upload_path),
-            "--repo",
-            repo,
-        ]
-        if clobber:
-            command.append("--clobber")
-        subprocess.run(command, check=True, timeout=DEFAULT_GH_TIMEOUT_SECONDS)
+    command = Request(
+        "release-upload", tag=release_tag, assets=[Asset(gzip_path, asset_name)], repo=repo, clobber=clobber
+    )
+    request_run(command, check=True, timeout=DEFAULT_GH_TIMEOUT_SECONDS)
 
 
 def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
@@ -315,7 +302,13 @@ def download_published_manifest(
     try:
         manifest_bytes = gzip.decompress(_download_release_asset(ASSET_NAME, release_tag=release_tag, repo=repo))
         manifest = json.loads(manifest_bytes.decode("utf-8"))
-    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+    except (
+        subprocess.CalledProcessError,
+        subprocess.TimeoutExpired,
+        OSError,
+        UnicodeDecodeError,
+        json.JSONDecodeError,
+    ) as exc:
         excerpt = _stderr_excerpt(exc) if isinstance(exc, subprocess.CalledProcessError) else ""
         detail = f" (gh stderr: {excerpt})" if excerpt else ""
         raise ManifestPublishError(

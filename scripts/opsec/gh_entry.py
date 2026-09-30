@@ -1,4 +1,4 @@
-"""Execute the checked snapshot through the existing gh retry/merge guard."""
+"""Execute admitted raw reads/private writes through the retry/merge guard."""
 
 from __future__ import annotations
 
@@ -6,13 +6,12 @@ import os
 import signal
 import subprocess
 import sys
-import tempfile
 from pathlib import Path
 
 # Executed by the shim as a file, so imports do not depend on caller cwd.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
-from scripts.opsec.gh_snapshot import snapshot
-from scripts.opsec.prepublish import PublishBlocked, check_texts, real_gh
+from scripts.opsec.gh_snapshot import admit
+from scripts.opsec.prepublish import PublishBlocked, real_gh
 
 
 def execute(command, environment, stdin=None):
@@ -54,21 +53,10 @@ def main() -> int:
     try:
         real = real_gh(environment)
         environment["AGENT_REAL_GH"] = real
-        with snapshot(argv, cwd=Path.cwd(), environment=environment) as frozen:
-            if frozen.write:
-                check_texts(frozen.destination, frozen.texts, environment=environment, field_names=frozen.field_names)
-            environment.pop("LU_OPSEC_OVERRIDE", None)
-            # All retries use the same scanned files/stdin. The Bash helper still
-            # owns its established rate-limit and merge/approval behavior.
-            command = guarded_command(real, shim, frozen.argv)
-            if frozen.stdin is None:
-                return execute(command, environment)
-            with tempfile.TemporaryFile() as stream:
-                stream.write(frozen.stdin)
-                stream.seek(0)
-                # Shell helper rewinds stdin before retries when a snapshot exists.
-                environment["LU_OPSEC_REPLAY_STDIN"] = "1"
-                return execute(command, environment, stream)
+        frozen = admit(argv, cwd=Path.cwd(), environment=environment)
+        environment.pop("LU_OPSEC_OVERRIDE", None)
+        command = guarded_command(real, shim, frozen.argv)
+        return execute(command, environment)
     except PublishBlocked as exc:
         print(str(exc), file=sys.stderr)
         return 2

@@ -16,7 +16,8 @@ from urllib.parse import quote
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
+from scripts.opsec.prepublish import publication_boundary, publication_cli
+from scripts.publish.github import Asset, Request, request_run
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"
@@ -68,7 +69,9 @@ def _load_metadata(dataset_root: Path) -> dict[str, Any]:
     return metadata
 
 
-def collect_dataset(dataset_root: Path = DEFAULT_DATASET_ROOT) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, str]]]:
+def collect_dataset(
+    dataset_root: Path = DEFAULT_DATASET_ROOT,
+) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, str]]]:
     """Collect dataset files and metadata for a deterministic package."""
 
     if not dataset_root.exists():
@@ -149,7 +152,7 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
 @publication_boundary(OpenDatasetPublishError)
 def ensure_release(release_tag: str, repo: str) -> None:
     try:
-        existing = checked_run(
+        existing = request_run(
             ["gh", "release", "view", release_tag, "--repo", repo],
             check=False,
             stdout=subprocess.DEVNULL,
@@ -161,19 +164,14 @@ def ensure_release(release_tag: str, repo: str) -> None:
     if existing.returncode == 0:
         return
     try:
-        checked_run(
-            [
-                "gh",
-                "release",
-                "create",
-                release_tag,
-                "--repo",
-                repo,
-                "--title",
-                "Word Atlas open dataset",
-                "--notes",
-                "Release asset storage for the open Word Atlas lexicon dataset.",
-            ],
+        request_run(
+            Request(
+                "release-create",
+                tag=release_tag,
+                repo=repo,
+                title="Word Atlas open dataset",
+                notes="Release asset storage for the open Word Atlas lexicon dataset.",
+            ),
             check=True,
             timeout=GH_RELEASE_CREATE_TIMEOUT_SECONDS,
         )
@@ -181,20 +179,12 @@ def ensure_release(release_tag: str, repo: str) -> None:
         raise _called_process_error_from_timeout(exc) from exc
 
 
+@publication_boundary(OpenDatasetPublishError)
 def upload_release_asset(gzip_path: Path, *, release_tag: str, repo: str) -> None:
     ensure_release(release_tag, repo)
-    command = [
-        "gh",
-        "release",
-        "upload",
-        release_tag,
-        str(gzip_path),
-        "--repo",
-        repo,
-        "--clobber",
-    ]
+    command = Request("release-upload", tag=release_tag, assets=[Asset(str(gzip_path))], repo=repo, clobber=True)
     try:
-        subprocess.run(command, check=True, timeout=GH_RELEASE_ASSET_TIMEOUT_SECONDS)
+        request_run(command, check=True, timeout=GH_RELEASE_ASSET_TIMEOUT_SECONDS)
     except subprocess.TimeoutExpired as exc:
         raise _called_process_error_from_timeout(exc) from exc
 
@@ -230,13 +220,27 @@ def publish_open_dataset(
 
 @publication_cli(OpenDatasetPublishError)
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Publish the open Word Atlas dataset as a release asset.\nUse --dry-run before publishing; not for practice decks.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/open_dataset/publish.py --dry-run\nOutputs and exit codes: Package and pointer files; release writes unless dry-run. 0: success; >=1: failed.\nRelated: #9297")
-    parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT, help="Dataset directory (default: %(default)s).")
+    parser = argparse.ArgumentParser(
+        description="Publish the open Word Atlas dataset as a release asset.\nUse --dry-run before publishing; not for practice decks.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/open_dataset/publish.py --dry-run\nOutputs and exit codes: Package and pointer files; release writes unless dry-run. 0: success; >=1: failed.\nRelated: #9297",
+    )
+    parser.add_argument(
+        "--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT, help="Dataset directory (default: %(default)s)."
+    )
     parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP, help="Output package file (default: %(default)s).")
-    parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER, help="Published pointer file (default: %(default)s).")
-    parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG, help="Release tag, e.g. atlas-open-dataset (default: %(default)s).")
+    parser.add_argument(
+        "--pointer", type=Path, default=DEFAULT_POINTER, help="Published pointer file (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--release-tag",
+        default=DEFAULT_RELEASE_TAG,
+        help="Release tag, e.g. atlas-open-dataset (default: %(default)s).",
+    )
     parser.add_argument("--repo", default=DEFAULT_REPO, help="Destination OWNER/REPO (default: %(default)s).")
-    parser.add_argument("--dry-run", action="store_true", help="Build package metadata without uploading/writing pointer")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Build package metadata without uploading/writing pointer"
+    )
     args = parser.parse_args()
     pointer = publish_open_dataset(
         dataset_root=args.dataset_root,

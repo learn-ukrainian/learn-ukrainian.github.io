@@ -395,7 +395,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
                     "closedAt": None,
                 }
             )
-        if "api graphql" in command:
+        if "graphql" in args:
             return json.dumps({"data": {"repository": {"issue": {"parent": {"number": 10}}}}})
         if "pr view" in command:
             return json.dumps(
@@ -438,7 +438,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
                     }
                 ]
             )
-        if command.endswith("deployments -f sha=" + MERGE):
+        if f"deployments?sha={MERGE}&per_page=100" in command:
             return json.dumps([{"id": 9, "environment": "production", "sha": MERGE}])
         if "deployments/9/statuses" in command:
             return json.dumps([{"state": "success", "environment_url": "https://prod"}])
@@ -464,7 +464,7 @@ def test_github_adapter_normalizes_parent_pr_checks_and_deployments(tmp_path: Pa
         }
     ]
     deployment_call = next(
-        args for args in calls if any(value.endswith("/deployments") for value in args) and "-f" in args
+        args for args in calls if any(f"/deployments?sha={MERGE}&per_page=100" in value for value in args)
     )
     assert deployment_call[deployment_call.index("--method") + 1] == "GET"
 

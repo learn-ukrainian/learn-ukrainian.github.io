@@ -49,6 +49,15 @@ curl -s 'http://localhost:8765/api/comms/inbox?agent=claude'  # unread messages
 .venv/bin/python -m scripts.fleet_comms plane-status
 ```
 
+### Public GitHub publishing
+
+Publish agent-authored GitHub changes with `python -m scripts.publish` using
+its named verbs and closed fields. Repository code uses the same module API.
+Raw `gh` is reserved for the strict read allowlist and verified private
+repository writes. API reads use the module's named read helpers; arbitrary
+API or GraphQL passthrough is unavailable. See `docs/dev/agent-public-text.md`.
+Run Python with the task's prescribed project interpreter.
+
 ### Project Research Registry — orchestrator dispatch duty
 
 Cold-start awareness is not enough. Before **every** `delegate.py dispatch`, the
@@ -173,7 +182,7 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
 makes a prior APPROVE stale. `auto-arm-merge.yml` and the `automerge-ok` label pipeline
-are retired; enqueue with `gh pr merge --squash` after both gates (never `--auto` as a
+are retired; enqueue with `python -m scripts.publish pr-merge` after both gates (never `--auto` as a
 substitute for review). Do **not** pass `--delete-branch` while this repo uses a
 merge queue (head deletion mid-queue can close without landing); delete the remote branch
 only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or self-label.

@@ -29,7 +29,8 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from scripts.common.repo_root import project_interpreter
-from scripts.opsec.prepublish import checked_run, publication_cli
+from scripts.opsec.prepublish import publication_cli
+from scripts.publish.github import Request, request_run
 
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 VENV_PYTHON = str(project_interpreter())
@@ -40,8 +41,8 @@ DEFAULT_AUDIT_MODULE_TIMEOUT_SECONDS: float = 60.0
 
 def _run_gh(args: list[str], check: bool = True, timeout: float = DEFAULT_GH_TIMEOUT_SECONDS) -> str:
     """Run a gh CLI command and return stdout."""
-    result = checked_run(
-        ["gh", *args],
+    result = request_run(
+        args if isinstance(args, Request) else ["gh", *args],
         capture_output=True,
         text=True,
         check=check,
@@ -53,13 +54,20 @@ def _run_gh(args: list[str], check: bool = True, timeout: float = DEFAULT_GH_TIM
 
 def _get_open_review_issues() -> list[dict]:
     """Fetch open issues with 'Review:' in the title."""
-    raw = _run_gh([
-        "issue", "list",
-        "--state", "open",
-        "--search", "Review: in:title",
-        "--json", "number,title,labels",
-        "--limit", "50",
-    ])
+    raw = _run_gh(
+        [
+            "issue",
+            "list",
+            "--state",
+            "open",
+            "--search",
+            "Review: in:title",
+            "--json",
+            "number,title,labels",
+            "--limit",
+            "50",
+        ]
+    )
     if not raw:
         return []
     return json.loads(raw)
@@ -130,22 +138,24 @@ def _run_audit(md_path: Path, timeout: float = DEFAULT_AUDIT_MODULE_TIMEOUT_SECO
 
 def _close_issue(number: int, comment: str) -> None:
     """Close a GH issue with a comment."""
-    _run_gh(["issue", "comment", str(number), "--body", comment])
-    _run_gh(["issue", "close", str(number)])
+    _run_gh(Request("issue-comment", number=number, body=comment))
+    _run_gh(Request("issue-close", number=number))
 
 
 def _comment_issue(number: int, comment: str) -> None:
     """Add a comment to a GH issue."""
-    _run_gh(["issue", "comment", str(number), "--body", comment])
+    _run_gh(Request("issue-comment", number=number, body=comment))
 
 
 @publication_cli()
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Audit open module review issues.\nUse --dry-run to inspect or --close to publish verified results.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/audit/check_review_issues.py --dry-run\nOutputs and exit codes: Report stdout; optional issue comments and close operations. 0: report complete; >=1: error.\nRelated: #9297")
-    parser.add_argument("--close", action="store_true",
-                        help="Actually close passing issues")
-    parser.add_argument("--dry-run", action="store_true",
-                        help="Show what would happen without running audit")
+    parser = argparse.ArgumentParser(
+        description="Audit open module review issues.\nUse --dry-run to inspect or --close to publish verified results.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/audit/check_review_issues.py --dry-run\nOutputs and exit codes: Report stdout; optional issue comments and close operations. 0: report complete; >=1: error.\nRelated: #9297",
+    )
+    parser.add_argument("--close", action="store_true", help="Actually close passing issues")
+    parser.add_argument("--dry-run", action="store_true", help="Show what would happen without running audit")
     args = parser.parse_args()
 
     issues = _get_open_review_issues()
@@ -194,10 +204,7 @@ def main() -> None:
         else:
             print("  ❌ Audit gate failures remain")
             # Extract failing gates for summary
-            failing_lines = [
-                line for line in audit_output.splitlines()
-                if "❌" in line or "FAIL" in line.upper()
-            ]
+            failing_lines = [line for line in audit_output.splitlines() if "❌" in line or "FAIL" in line.upper()]
             for line in failing_lines[:5]:
                 print(f"    {line.strip()}")
             if args.close:

@@ -74,6 +74,7 @@ def gh_shim_sandbox(tmp_path):
     scripts = root / "scripts"
     scripts.mkdir()
     shutil.copytree(ROOT / "scripts/opsec", scripts / "opsec", ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(ROOT / "scripts/publish", scripts / "publish", ignore=shutil.ignore_patterns("__pycache__"))
     shim = scripts / "agent_runtime/shims/gh"
     shim.parent.mkdir(parents=True)
     shutil.copy2(ROOT / "scripts/agent_runtime/shims/gh", shim)

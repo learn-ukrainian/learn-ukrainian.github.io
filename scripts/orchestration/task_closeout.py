@@ -22,8 +22,9 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.github_check_rollup import collapse_status_rollup
-from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
+from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration import task_identity, task_lifecycle
+from scripts.publish.github import Request, request_run
 
 Runner = Callable[[list[str], str | None], str]
 
@@ -53,7 +54,7 @@ def _default_runner(repo_root: Path) -> Runner:
     @publication_boundary(task_lifecycle.LifecycleError)
     def run(args: list[str], stdin: str | None = None) -> str:
         try:
-            completed = checked_run(
+            completed = request_run(
                 args,
                 cwd=repo_root,
                 input=stdin,
@@ -64,15 +65,16 @@ def _default_runner(repo_root: Path) -> Runner:
             )
         except subprocess.TimeoutExpired as exc:
             raise task_lifecycle.LifecycleError(
-                f"{' '.join(args[:4])} timed out after {DEFAULT_COMMAND_TIMEOUT_SECONDS}s"
+                f"{args.verb if isinstance(args, Request) else ' '.join(args[:4])} timed out after {DEFAULT_COMMAND_TIMEOUT_SECONDS}s"
             ) from exc
         if completed.returncode != 0:
             detail = (completed.stderr or completed.stdout or "command failed").strip()
-            raise task_lifecycle.LifecycleError(f"{' '.join(args[:4])} failed: {detail[:1000]}")
+            raise task_lifecycle.LifecycleError(
+                f"{args.verb if isinstance(args, Request) else ' '.join(args[:4])} failed: {detail[:1000]}"
+            )
         return completed.stdout
 
     return run
-
 
 
 _TERMINAL_CONCLUSIONS = frozenset(
@@ -147,11 +149,14 @@ class GhGitHubAdapter:
         if runner is None:
             self._run = _default_runner(self.repo_root)
         else:
+
             @publication_boundary(task_lifecycle.LifecycleError)
             def checked(command, stdin=None):
                 def send(args, **kwargs):
                     return subprocess.CompletedProcess(args, 0, runner(args, kwargs.get("input")), "")
-                return checked_run(command, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
+
+                return request_run(command, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
+
             self._run = checked
 
     def _json(self, args: list[str], stdin: str | None = None) -> Any:
@@ -160,20 +165,16 @@ class GhGitHubAdapter:
             return json.loads(raw or "null")
         except json.JSONDecodeError as exc:
             raise task_lifecycle.LifecycleError(
-                f"GitHub command returned invalid JSON: {' '.join(args[:4])}"
+                f"GitHub command returned invalid JSON: {args.verb if isinstance(args, Request) else ' '.join(args[:4])}"
             ) from exc
 
     def registered_stream_epics(self) -> list[int]:
         try:
             from scripts.orchestration import issue_stream_audit
 
-            registry = issue_stream_audit.load_registry(
-                self.repo_root / "scripts" / "config" / "issue_streams.yaml"
-            )
+            registry = issue_stream_audit.load_registry(self.repo_root / "scripts" / "config" / "issue_streams.yaml")
         except (OSError, ValueError) as exc:
-            raise task_lifecycle.LifecycleError(
-                f"cannot load the issue-stream registry: {exc}"
-            ) from exc
+            raise task_lifecycle.LifecycleError(f"cannot load the issue-stream registry: {exc}") from exc
         return sorted({epic for epics in registry.values() for epic in epics})
 
     def membership_audit_report(self) -> dict[str, Any]:
@@ -195,9 +196,7 @@ class GhGitHubAdapter:
         try:
             return issue_stream_audit.run_audit(self.repo_root)
         except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
-            raise task_lifecycle.LifecycleError(
-                f"cannot run the issue-stream membership audit: {exc}"
-            ) from exc
+            raise task_lifecycle.LifecycleError(f"cannot run the issue-stream membership audit: {exc}") from exc
 
     @staticmethod
     def _owner_name(repository: str) -> tuple[str, str]:
@@ -220,24 +219,7 @@ class GhGitHubAdapter:
                 "number,state,body,url,closedAt",
             ]
         )
-        owner, name = self._owner_name(repository)
-        parent_doc = self._json(
-            [
-                "gh",
-                "api",
-                "graphql",
-                "-F",
-                f"owner={owner}",
-                "-F",
-                f"name={name}",
-                "-F",
-                f"number={issue_number}",
-                "-f",
-                "query=query($owner:String!,$name:String!,$number:Int!){"
-                "repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){"
-                "number state url parent{number url}}}}",
-            ]
-        )
+        parent_doc = self._json(Request("read-issue-parent", repo=repository, number=issue_number))
         repository_doc = ((parent_doc or {}).get("data") or {}).get("repository") or {}
         parent_issue = repository_doc.get("issue") or {}
         parent = parent_issue.get("parent") or {}
@@ -296,22 +278,8 @@ class GhGitHubAdapter:
         }
 
     def _comments(self, repository: str, pr_number: int) -> list[dict[str, Any]]:
-        issue_comments = self._json(
-            [
-                "gh",
-                "api",
-                f"repos/{repository}/issues/{pr_number}/comments",
-                "--paginate",
-            ]
-        )
-        native_reviews = self._json(
-            [
-                "gh",
-                "api",
-                f"repos/{repository}/pulls/{pr_number}/reviews",
-                "--paginate",
-            ]
-        )
+        issue_comments = self._json(Request("read-comments", repo=repository, number=pr_number, paginate=True))
+        native_reviews = self._json(Request("read-reviews", repo=repository, number=pr_number, paginate=True))
         if not isinstance(issue_comments, list) or not isinstance(native_reviews, list):
             raise task_lifecycle.LifecycleError("GitHub PR comments response is not a list")
         comments = [
@@ -343,23 +311,11 @@ class GhGitHubAdapter:
     def _deployments(self, repository: str, sha: str | None) -> list[dict[str, Any]]:
         if not sha:
             return []
-        deployments = self._json(
-            [
-                "gh",
-                "api",
-                "--method",
-                "GET",
-                f"repos/{repository}/deployments",
-                "-f",
-                f"sha={sha}",
-            ]
-        )
+        deployments = self._json(Request("read-deployments", repo=repository, sha=sha))
         result: list[dict[str, Any]] = []
         for deployment in deployments or []:
             deployment_id = deployment.get("id")
-            statuses = self._json(
-                ["gh", "api", f"repos/{repository}/deployments/{deployment_id}/statuses"]
-            )
+            statuses = self._json(Request("read-deployment-statuses", repo=repository, number=deployment_id))
             latest = statuses[0] if statuses else {}
             result.append(
                 {
@@ -385,8 +341,8 @@ class GhGitHubAdapter:
         follow_up = self.read_issue(repository, int(follow_up_number))
         original_ref = f"#{original_issue}"
         follow_up_ref = f"#{follow_up_number}"
-        follow_up["reciprocal_links_verified"] = (
-            follow_up_ref in original_body and original_ref in str(follow_up.get("body") or "")
+        follow_up["reciprocal_links_verified"] = follow_up_ref in original_body and original_ref in str(
+            follow_up.get("body") or ""
         )
         return follow_up
 
@@ -501,39 +457,20 @@ class GhGitHubAdapter:
         }
 
     def update_issue_body(self, repository: str, issue_number: int, body: str) -> None:
-        request = json.dumps({"body": body}, ensure_ascii=False)
         self._run(
-            ["gh", "api", "-X", "PATCH", f"repos/{repository}/issues/{issue_number}", "--input", "-"],
-            request,
+            Request("issue-edit", repo=repository, number=issue_number, body=body),
+            None,
         )
 
     def arm_auto_merge(self, repository: str, pr_number: int) -> None:
         self._run(
-            [
-                "gh",
-                "pr",
-                "merge",
-                str(pr_number),
-                "--repo",
-                repository,
-                "--auto",
-                "--squash",
-            ],
+            Request("pr-merge", number=int(str(pr_number)), repo=repository),
             None,
         )
 
     def close_issue(self, repository: str, issue_number: int) -> None:
         self._run(
-            [
-                "gh",
-                "issue",
-                "close",
-                str(issue_number),
-                "--repo",
-                repository,
-                "--reason",
-                "completed",
-            ],
+            Request("issue-close", number=int(str(issue_number)), repo=repository, reason="completed"),
             None,
         )
 
@@ -560,9 +497,7 @@ def _replace_checkbox(body: str, ac_id: str) -> str:
     return "\n".join(lines) + suffix
 
 
-def evidenced_issue_body(
-    ledger: Mapping[str, Any], observation: Mapping[str, Any]
-) -> tuple[str, list[str]]:
+def evidenced_issue_body(ledger: Mapping[str, Any], observation: Mapping[str, Any]) -> tuple[str, list[str]]:
     evaluation = task_lifecycle.evaluate(ledger, observation)
     valid = {key: set(value) for key, value in evaluation["valid_evidence"].items()}
     body = str(observation["github"]["issue"].get("body") or "")
@@ -615,9 +550,10 @@ def _assert_mutation_ready(
         _assert_closing_references_match_disposition(ledger, observation)
         if hard:
             raise task_lifecycle.LifecycleError("auto-merge blocked: " + "; ".join(hard))
-        if task_lifecycle.STATE_RANK.get(evaluation["last_success_state"], -1) < task_lifecycle.STATE_RANK[
-            "REVIEW_PASSED"
-        ]:
+        if (
+            task_lifecycle.STATE_RANK.get(evaluation["last_success_state"], -1)
+            < task_lifecycle.STATE_RANK["REVIEW_PASSED"]
+        ):
             raise task_lifecycle.LifecycleError("auto-merge requires verified current-head outside-family review")
         if str(observation["github"]["pr"].get("state") or "").upper() != "OPEN":
             raise task_lifecycle.LifecycleError("auto-merge requires an open PR")
@@ -632,37 +568,27 @@ def _assert_mutation_ready(
             raise task_lifecycle.LifecycleError("issue close has missing pre-close AC evidence")
         if evaluation["preclose_unchecked"]:
             raise task_lifecycle.LifecycleError(
-                "issue close requires evidenced AC checkboxes: "
-                + ", ".join(evaluation["preclose_unchecked"])
+                "issue close requires evidenced AC checkboxes: " + ", ".join(evaluation["preclose_unchecked"])
             )
         if ledger["remaining_scope"]["status"] == "open":
             raise task_lifecycle.LifecycleError("issue close is blocked by untransferred remaining scope")
     return evaluation
 
 
-def _assert_closing_references_match_disposition(
-    ledger: Mapping[str, Any], observation: Mapping[str, Any]
-) -> None:
+def _assert_closing_references_match_disposition(ledger: Mapping[str, Any], observation: Mapping[str, Any]) -> None:
     """Fail closed when GitHub closing references contradict retained scope."""
 
     raw_numbers = observation["github"]["pr"].get("closing_issue_numbers")
-    if not isinstance(raw_numbers, list) or any(
-        not isinstance(number, int) or number < 1 for number in raw_numbers
-    ):
+    if not isinstance(raw_numbers, list) or any(not isinstance(number, int) or number < 1 for number in raw_numbers):
         raise task_lifecycle.LifecycleError("authoritative PR closing references are unavailable or malformed")
     closing_numbers = set(raw_numbers)
     remaining_scope = ledger["remaining_scope"]["status"]
-    expected = (
-        {int(ledger["identity"]["github_issue_number"])}
-        if remaining_scope == "none"
-        else set()
-    )
+    expected = {int(ledger["identity"]["github_issue_number"])} if remaining_scope == "none" else set()
     unexpected = sorted(closing_numbers - expected)
     if unexpected:
         rendered = ", ".join(f"#{number}" for number in unexpected)
         raise task_lifecycle.LifecycleError(
-            "GitHub closing references contradict the declared remaining-scope disposition: "
-            f"{rendered}"
+            f"GitHub closing references contradict the declared remaining-scope disposition: {rendered}"
         )
 
 
@@ -745,9 +671,7 @@ def perform_mutation(
         operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         prior_status = task_lifecycle.mutation_status(ledger, operation_id)
 
-        if prior_status == "complete" and _desired_remote_state(
-            action, ledger, before
-        ):
+        if prior_status == "complete" and _desired_remote_state(action, ledger, before):
             return {
                 "action": action,
                 "operation_id": operation_id,
@@ -790,9 +714,7 @@ def perform_mutation(
                 requested_at=now,
                 detail=f"mutation gate rejected the action: {exc}",
             )
-            raise task_lifecycle.LifecycleError(
-                f"mutation blocked with durable receipt {failed['id']}: {exc}"
-            ) from exc
+            raise task_lifecycle.LifecycleError(f"mutation blocked with durable receipt {failed['id']}: {exc}") from exc
 
         ledger, intent, _ = task_lifecycle.append_mutation_event(
             ledger,
@@ -812,9 +734,7 @@ def perform_mutation(
                 identity = ledger["identity"]
                 if action == "sync-acs":
                     body, _ = evidenced_issue_body(ledger, before)
-                    adapter.update_issue_body(
-                        identity["repository"], identity["github_issue_number"], body
-                    )
+                    adapter.update_issue_body(identity["repository"], identity["github_issue_number"], body)
                 elif action == "arm-auto-merge":
                     adapter.arm_auto_merge(identity["repository"], ledger["pr"]["number"])
                 else:
@@ -863,9 +783,7 @@ def perform_mutation(
                 remote_mutation_performed=remote_performed,
                 detail=f"mutation/readback failed: {exc}",
             )
-            raise task_lifecycle.LifecycleError(
-                f"mutation failed with durable receipt {failed['id']}: {exc}"
-            ) from exc
+            raise task_lifecycle.LifecycleError(f"mutation failed with durable receipt {failed['id']}: {exc}") from exc
 
 
 def _state_file(args: argparse.Namespace, identity: Mapping[str, Any] | None = None) -> Path:
@@ -908,9 +826,7 @@ def cmd_init(args: argparse.Namespace) -> int:
     # Native precedence needs no audit at all: any native parent — matching or
     # not — decides the outcome alone in resolve_membership. Only fetch the
     # live audit snapshot when native parentage is absent.
-    membership_report = (
-        None if issue["parent_epic"] is not None else adapter.membership_audit_report()
-    )
+    membership_report = None if issue["parent_epic"] is not None else adapter.membership_audit_report()
     membership = task_lifecycle.resolve_membership(
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
@@ -920,13 +836,10 @@ def cmd_init(args: argparse.Namespace) -> int:
     )
     if not membership["valid"]:
         raise task_lifecycle.LifecycleError(
-            "issue membership does not resolve to the identity's exact registered "
-            f"stream epic: {membership['reason']}"
+            f"issue membership does not resolve to the identity's exact registered stream epic: {membership['reason']}"
         )
     now = args.now or utc_now()
-    snapshot = task_lifecycle.build_ac_snapshot(
-        issue["body"], _load_policy(Path(args.ac_policy)), finalized_at=now
-    )
+    snapshot = task_lifecycle.build_ac_snapshot(issue["body"], _load_policy(Path(args.ac_policy)), finalized_at=now)
     ledger = task_lifecycle.build_lifecycle(
         identity,
         author_family=args.author_family,
@@ -1002,9 +915,7 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     with task_lifecycle.lifecycle_lock(path):
         ledger = task_lifecycle.load_lifecycle(path)
         adapter = _adapter(args, ledger)
-        observation = adapter.observe(
-            ledger, now=now, branch=args.branch, worktree=args.worktree
-        )
+        observation = adapter.observe(ledger, now=now, branch=args.branch, worktree=args.worktree)
         ledger, receipt, replayed = task_lifecycle.reconcile(ledger, observation, now=now)
         return _write_and_print(
             path,
@@ -1044,15 +955,17 @@ def cmd_mutate(args: argparse.Namespace) -> int:
 
 def cmd_carrier(args: argparse.Namespace) -> int:
     path = _state_file(args)
-    carrier = task_lifecycle.carrier_projection(
-        task_lifecycle.load_lifecycle(path), state_file=str(path)
-    )
+    carrier = task_lifecycle.carrier_projection(task_lifecycle.load_lifecycle(path), state_file=str(path))
     print(json.dumps(carrier, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/orchestration/task_closeout.py --help\nOutputs and exit codes: Lifecycle observations and explicitly authorized mutations. 0: command succeeded; >=1: refused or failed.\nRelated: #9297")
+    parser = argparse.ArgumentParser(
+        description="Verify typed task closeout evidence.\nUse read-only observation first; mutations need explicit authorization.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/orchestration/task_closeout.py --help\nOutputs and exit codes: Lifecycle observations and explicitly authorized mutations. 0: command succeeded; >=1: refused or failed.\nRelated: #9297",
+    )
     parser.add_argument("--repo-root", type=Path, default=repo_root_from_file())
     sub = parser.add_subparsers(dest="command", required=True)
 

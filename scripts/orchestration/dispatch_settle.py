@@ -31,8 +31,9 @@ from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     default_ledger_path,
 )
-from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
+from scripts.opsec.prepublish import publication_boundary, publication_cli
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal
+from scripts.publish.github import Request, request_run
 
 
 def repo_root_from_file() -> Path:
@@ -68,7 +69,7 @@ def _run(
     timeout: float = DEFAULT_COMMAND_TIMEOUT_SECONDS,
 ) -> subprocess.CompletedProcess[str]:
     try:
-        return checked_run(
+        return request_run(
             args,
             cwd=str(cwd) if cwd is not None else None,
             capture_output=True,
@@ -306,15 +307,7 @@ def push_and_maybe_open_pr(
         "Auto-opened by `python -m scripts.orchestration.dispatch_settle` after a worker left commits without a PR.\n"
     )
     create = _run(
-        [
-            "gh",
-            "pr",
-            "create",
-            "--title",
-            pr_title,
-            "--body",
-            pr_body,
-        ],
+        Request("pr-create", head=branch, base="main", title=pr_title, body=pr_body),
         cwd=worktree,
     )
     if create.returncode != 0:
@@ -524,7 +517,11 @@ def _cmd_release_stale(_args: argparse.Namespace) -> int:
 
 
 def _build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Inspect and settle a dispatch task.\nUse only for the assigned task; PR creation remains opt-in.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/orchestration/dispatch_settle.py task --help\nOutputs and exit codes: Task disposition and optional branch push or PR creation. 0: settled; >=1: unresolved or failed.\nRelated: #9297")
+    parser = argparse.ArgumentParser(
+        description="Inspect and settle a dispatch task.\nUse only for the assigned task; PR creation remains opt-in.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="Examples:\n  .venv/bin/python scripts/orchestration/dispatch_settle.py task --help\nOutputs and exit codes: Task disposition and optional branch push or PR creation. 0: settled; >=1: unresolved or failed.\nRelated: #9297",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     task = sub.add_parser("task", help="Heal/report/push-PR for one dispatch task id")

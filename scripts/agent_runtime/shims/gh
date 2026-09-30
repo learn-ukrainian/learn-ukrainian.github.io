@@ -11,9 +11,9 @@
 # 2. Automatically retry operations throttled by GitHub secondary rate limits
 #    (HTTP 403 / 429) using bounded exponential backoff.
 #
-# Public text writes are snapshotted and checked by scripts/opsec/prepublish.py.
-# The snapshot survives retries, including piped stdin, so every attempt sends
-# the same checked bytes. Reads do not load the private matcher.
+# Raw commands use strict read/private-write admission. Public writes use
+# scripts.publish.github; its frozen payloads survive the retry helper.
+# Reads do not load the private matcher.
 
 set -euo pipefail
 
@@ -22,7 +22,7 @@ _deny() {
 error: agent invoked with AGENT_NO_MERGE=1 cannot merge or approve PRs.
        User reviews and merges. See INCIDENT #1403.
        Review of record under a shared GitHub identity (#7472): post via
-       `gh pr comment` a VERDICT + exact head SHA + resolved_model —
+       `python -m scripts.publish pr-comment` a VERDICT + exact head SHA + resolved_model —
        not `gh pr review --approve`. The cf-attest Gate job is retired.
 EOF
   exit 1
@@ -173,9 +173,6 @@ _run_with_secondary_rate_limit_retry() {
   local http_status=""
   local retries_exhausted=false
   while :; do
-    if [[ "${LU_OPSEC_REPLAY_STDIN:-}" == "1" ]]; then
-      "$(dirname "$(git -C "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)" rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python" -c 'import os; os.lseek(0, 0, 0)'
-    fi
     if "$real_gh" "$@" >"$_agent_gh_retry_stdout_file" 2>"$_agent_gh_retry_stderr_file"; then
       exit_status=0
     else
@@ -201,7 +198,7 @@ _run_with_secondary_rate_limit_retry() {
     local delay_s=$((base_delay_s * (2 ** (attempt - 1))))
     printf 'agent-gh-shim: GitHub HTTP %s throttled; retrying gh in %ss (attempt %s/%s).\n' \
       "$http_status" "$delay_s" "$attempt" "$max_retries" >&2
-    if [[ ! -t 0 && "${LU_OPSEC_REPLAY_STDIN:-}" != "1" ]]; then
+    if [[ ! -t 0 && "${LU_OPSEC_FILE_PAYLOAD:-}" != "1" ]]; then
       printf 'agent-gh-shim: warning: piped stdin was consumed on attempt 1 and cannot be replayed for retried command: gh %s\n' \
         "[arguments masked]" >&2
     fi
