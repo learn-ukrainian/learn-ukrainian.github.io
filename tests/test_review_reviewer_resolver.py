@@ -15,8 +15,6 @@ from scripts.review.reviewer_resolver import (
     AMBIGUOUS_AUTHOR_FAMILY,
     CONFLICTING_AUTHOR_FAMILY,
     CURSOR_AUTO_UNION_FAMILY,
-    DEEPSEEK_V4_1_FLASH,
-    DEEPSEEK_V4_PRO,
     GLM,
     GROK_4_7,
     GROK_4_7_CURSOR_FALLBACK,
@@ -25,7 +23,6 @@ from scripts.review.reviewer_resolver import (
     QWEN,
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
-    SONNET_5,
     SONNET_5_5,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
@@ -44,6 +41,11 @@ PRACTICAL_ASTRA = replace(
 )
 
 
+# Deliberately forbidden candidates exercise custom-ladder admission, never fleet seats.
+DEEPSEEK_V4_PRO = replace(SONNET_5_5, name="deepseek-v4-pro", concrete_model="deepseek-v4-pro", family="deepseek", route="deepseek")
+DEEPSEEK_V4_1_FLASH = replace(DEEPSEEK_V4_PRO, name="deepseek-v4.1-flash", concrete_model="deepseek-v4.1-flash")
+
+
 @pytest.fixture
 def practical_astra(monkeypatch):
     monkeypatch.setitem(REVIEW_CANDIDATES, PRACTICAL_ASTRA.name, PRACTICAL_ASTRA)
@@ -56,7 +58,7 @@ def test_family_resolution_across_model_and_harness_aliases():
         "claude-tools": "anthropic",
         "claude-sonnet-5-5": "anthropic",
         "claude-opus-4-8": "anthropic",
-        "claude-fable-5": "anthropic",
+        "claude-fable-5-1": "anthropic",
         "codex": "openai",
         "codex-tools": "openai",
         "gpt-6.1-sol": "openai",
@@ -161,14 +163,14 @@ def test_unknown_auto_author_excludes_xai_and_moonshot_candidates():
 def test_cursor_as_reviewer_excluded_against_xai_and_moonshot_authors():
     # Moonshot-family author: Cursor-transport candidates must be excluded
     kimi_inputs = ResolverInputs(author_model="kimi-code/k3")
-    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-fable-5-cursor-fallback"):
+    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-fable-5-1-cursor-fallback"):
         cand = REVIEW_CANDIDATES[cand_name]
         res = evaluate_candidate(cand, kimi_inputs)
         assert res.status == "excluded", (cand_name, res.status)
 
     # xAI-family author: Cursor-transport candidates must be excluded
     grok_inputs = ResolverInputs(author_model="grok-4.6")
-    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-fable-5-cursor-fallback"):
+    for cand_name in ("composer-2.5", "grok-4.7-cursor-fallback", "claude-fable-5-1-cursor-fallback"):
         cand = REVIEW_CANDIDATES[cand_name]
         res = evaluate_candidate(cand, grok_inputs)
         assert res.status == "excluded", (cand_name, res.status)
@@ -211,7 +213,7 @@ def test_critical_uses_authority_while_routine_uses_practical_defaults():
     # OpenAI author: critical → Fable 5 (Sol advisory); high/medium/low → Sonnet 5.5.
     # Operator 2026-07-26: Opus 5 de-advisored; Fable is the Anthropic authority seat.
     critical = resolve_reviewer(ResolverInputs(author_model="codex", risk="critical"))
-    assert critical.selected.name == "claude-fable-5"
+    assert critical.selected.name == "claude-fable-5-1"
     for risk in ("high", "medium", "low"):
         resolution = resolve_reviewer(ResolverInputs(author_model="codex", risk=risk))
         assert resolution.selected.name == "claude-sonnet-5-5", risk
@@ -225,8 +227,7 @@ def test_critical_security_review_excludes_sonnet_5_5(author_model: str, review_
     )
     assert resolution.selected is not None
     assert resolution.selected.concrete_model != "claude-sonnet-5-5"
-    sonnet = next(entry for entry in resolution.trace if entry.name == "claude-sonnet-5-5")
-    assert sonnet.status == "excluded"
+    assert all(entry.name != "claude-sonnet-5-5" for entry in resolution.trace)
 
 
 def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
@@ -250,6 +251,62 @@ def test_high_risk_openai_author_gets_sonnet_not_fable():
     assert next(entry for entry in resolution.trace if entry.name == "openai_frontier").status == "advisory_only"
 
 
+def test_high_risk_suitability_explains_eligible_opus_below_sonnet():
+    resolution = resolve_reviewer(ResolverInputs(author_model="gpt-6.1-sol", risk="high"))
+    opus = next(item for item in resolution.trace if item.name == "claude-opus-5-5")
+    assert opus.status == "eligible"
+    assert opus.reason is None
+    assert opus.selection_score is not None
+    assert opus.suitability_rank == 3
+    assert resolution.selected.name == "claude-sonnet-5-5"
+    assert resolution.selected.suitability_rank == 0
+    # An explicitly requested role makes both candidates equally suitable;
+    # quality tier then selects Opus, ahead of the practical Sonnet seat.
+    same_fit = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk="high", requested_role="critical_review")
+    )
+    assert same_fit.selected.name == "claude-opus-5-5"
+
+
+@pytest.mark.parametrize("model", ["claude-fable-5", "cursor:CLAUDE-FABLE-5-thinking-high", "grok-4.6", "grok-4.6-high", "grok-4.6[context=500k]"])
+def test_retired_model_is_excluded_before_quality_even_on_custom_ladder(model):
+    candidate = replace(OPENAI_FRONTIER, name="retired-test", concrete_model=model, family="anthropic")
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", formal_review=False), ladder=((candidate,),)
+    )
+    assert resolution.selected is None
+    assert resolution.trace[0].status == "excluded"
+    assert "retired" in resolution.trace[0].reason
+    assert resolution.trace[0].selection_score is None
+
+
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-sonnet-5"])
+def test_critical_security_sonnet_pin_and_custom_ladder_fail_closed(model):
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="gpt-6.1-sol", risk="critical", pinned_candidate=model,
+                       pressure_override_reason="test explicit pin")
+    )
+    assert resolution.selected is None
+    if model == "claude-sonnet-5":
+        assert model not in REVIEW_CANDIDATES
+        assert resolution.fail_closed_reason
+    else:
+        assert "hard eligibility gate" in resolution.fail_closed_reason
+        assert "Sonnet is excluded" in next(item for item in resolution.trace if item.name == model).reason
+    candidate = replace(SONNET_5_5, concrete_model=model)
+    result = evaluate_candidate(candidate, ResolverInputs(author_model="codex", risk="critical"))
+    assert result.status == "excluded"
+    assert "Sonnet is excluded" in result.reason
+
+
+@pytest.mark.parametrize("model", ["cursor:CLAUDE-SONNET-5-5-high", "claude-sonnet-5[1m]"])
+def test_qualified_sonnet_pin_cannot_bypass_security_filter(model):
+    candidate = replace(SONNET_5_5, concrete_model=model, model_roles=frozenset({"critical_review"}))
+    result = evaluate_candidate(candidate, ResolverInputs(author_model="codex", risk="critical"))
+    assert result.status == "excluded"
+    assert "Sonnet is excluded" in result.reason
+
+
 def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
     resolution = resolve_reviewer(
         ResolverInputs(
@@ -260,10 +317,10 @@ def test_fable_uses_cursor_only_when_native_claude_is_unhealthy():
     )
 
     assert resolution.selected is None
-    fallback = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-cursor-fallback")
+    fallback = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-1-cursor-fallback")
     assert fallback.status == "excluded"
     assert ("formal-review transport" in fallback.reason) or ("generic multi-model harness" in fallback.reason)
-    native = next(entry for entry in resolution.trace if entry.name == "claude-fable-5")
+    native = next(entry for entry in resolution.trace if entry.name == "claude-fable-5-1")
     assert native.status == "excluded"
     assert "unhealthy" in native.reason
 
@@ -277,14 +334,14 @@ def test_fable_keeps_native_claude_when_native_health_is_degraded():
         )
     )
 
-    assert resolution.selected.name == "claude-fable-5"
+    assert resolution.selected.name == "claude-fable-5-1"
     assert resolution.selected.transport == "native_claude"
     assert resolution.selected.health == "degraded"
 
 
 def test_high_risk_kimi_author_gets_claude_not_composer():
     resolution = resolve_reviewer(ResolverInputs(author_model="kimi-code/k3", risk="critical"))
-    assert resolution.selected.name == "claude-fable-5"
+    assert resolution.selected.name == "claude-fable-5-1"
     composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
     assert composer.status == "excluded"
     assert "same family" in composer.reason
@@ -371,7 +428,7 @@ def test_gemini_lane_outage_does_not_create_code_review_route():
 
 def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch):
     injected = replace(
-        SONNET_5,
+        SONNET_5_5,
         name="injected-gemini",
         concrete_model="gemini-3.8-flash-high",
         family="google",
@@ -524,7 +581,7 @@ def test_health_breaks_ties_only_within_the_same_remaining_quality_rung():
     assert resolution.selected is None
 
 
-def test_deepseek_flash_receipt_uses_entire_native_opencode_high_route():
+def test_deepseek_is_absent_from_automatic_ladders_even_when_other_lanes_are_dark():
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -545,7 +602,7 @@ def test_deepseek_flash_receipt_uses_entire_native_opencode_high_route():
         )
     )
     assert resolution.selected is None
-    assert next(item for item in resolution.trace if item.name == "deepseek-v4.1-flash").status == "excluded"
+    assert all(item.family != "deepseek" for item in resolution.trace)
 
 
 def test_folk_content_excludes_both_deepseek_models():
@@ -556,7 +613,7 @@ def test_folk_content_excludes_both_deepseek_models():
             author_family="anthropic",
         )
         assert result.status == "excluded"
-        assert "folk_content" in result.reason
+        assert "DeepSeek is excluded" in result.reason
 
 
 def test_glm_data_egress_gate_is_fail_closed():
@@ -728,8 +785,8 @@ def test_load_capacity_headroom_and_freshness_balance_only_within_best_tier(prac
 
 def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authority_models():
     sol = REVIEW_CANDIDATES["openai_frontier"]
-    fable = replace(REVIEW_CANDIDATES["claude-fable-5"], capacity_weight=2.0)
-    counts = {"openai_frontier": 0, "claude-fable-5": 0}
+    fable = replace(REVIEW_CANDIDATES["claude-fable-5-1"], capacity_weight=2.0)
+    counts = {"openai_frontier": 0, "claude-fable-5-1": 0}
     assigned_bytes = {"codex": 0, "claude": 0}
 
     for index in range(120):
@@ -756,7 +813,7 @@ def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authori
         counts[selected.name] += 1
         assigned_bytes[selected.route] += 1_000
 
-    assert counts == {"openai_frontier": 40, "claude-fable-5": 80}
+    assert counts == {"openai_frontier": 40, "claude-fable-5-1": 80}
     assert assigned_bytes == {"codex": 40_000, "claude": 80_000}
 
 
@@ -886,7 +943,7 @@ def test_explicit_pin_requires_reason_and_cannot_bypass_formal_transport_gate(pr
 
 
 def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
-    fable = REVIEW_CANDIDATES["claude-fable-5"]
+    fable = REVIEW_CANDIDATES["claude-fable-5-1"]
     selected = resolve_reviewer(
         ResolverInputs(
             author_model="gpt-5.6-terra",
@@ -897,7 +954,7 @@ def test_explicit_pin_may_override_ladder_preference_but_not_hard_gates():
         )
     )
     assert selected.selected is not None
-    assert selected.selected.name == "claude-fable-5"
+    assert selected.selected.name == "claude-fable-5-1"
     assert "explicit pressure override" in selected.substitution_note
 
     same_family = resolve_reviewer(
@@ -1007,9 +1064,9 @@ def test_critical_ladder_keeps_authority_before_practical():
     # Opus 5 is de-advisored and absent from the critical ladder entirely.
     assert [rung[0].name for rung in critical[:4]] == [
         "openai_frontier",
-        "claude-fable-5",
-        "claude-fable-5-cursor-fallback",
-        "claude-sonnet-5-5",
+        "claude-fable-5-1",
+        "claude-fable-5-1-cursor-fallback",
+        "grok-4.7",
     ]
 
 
@@ -1045,7 +1102,7 @@ def test_medium_codex_author_falls_through_unavailable_opus_to_sonnet_5_5():
 
 def test_old_sonnet_record_still_resolves_anthropic_family():
     assert resolve_author_family("claude-sonnet-5") == "anthropic"
-    assert REVIEW_CANDIDATES["claude-sonnet-5"].concrete_model == "claude-sonnet-5"
+    assert "claude-sonnet-5" not in REVIEW_CANDIDATES
 
 
 def test_candidate_constants_preserve_expected_identity():
@@ -1056,11 +1113,10 @@ def test_candidate_constants_preserve_expected_identity():
     assert GLM.requires_data_egress_policy == "local_interactive"
     assert GLM.invocation.endswith("ask-glm")
     assert GROK_4_7.transport == "native_grok"
-    from scripts.review.reviewer_resolver import GROK_4_7_CURSOR_FALLBACK, SONNET_5, SONNET_5_5
+    from scripts.review.reviewer_resolver import GROK_4_7_CURSOR_FALLBACK, SONNET_5_5
 
     assert GROK_4_7_CURSOR_FALLBACK.transport == "cursor"
     assert GROK_4_7_CURSOR_FALLBACK.concrete_model == "grok-4.7"
-    assert SONNET_5.concrete_model == "claude-sonnet-5"
     assert SONNET_5_5.concrete_model == "claude-sonnet-5-5"
 
 

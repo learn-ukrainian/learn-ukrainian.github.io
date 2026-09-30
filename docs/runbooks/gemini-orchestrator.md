@@ -27,7 +27,7 @@
 | `--epic <name>` | Pin lane (atlas, harness, hramatka, …) |
 | `--stream <id>` | Override stream id (default derived from epic) |
 | `--handoff-agent <id>` | Override `SESSION_HANDOFF_AGENT` |
-| `--model <id>` | Gemini model (`gemini-3.8-flash-high` [default], `gemini-3.7-flash-high`, `pro` / `gemini-3.1-pro-high` [explicit request only]) |
+| `--model <id>` | Gemini model (`gemini-3.8-flash-high` [default], `pro` / `gemini-3.1-pro-high` [explicit request only]) |
 | `--no-always-approve` | Require manual tool approval (do not pass `--dangerously-skip-permissions`) |
 | `--help-launcher` | Show launcher help |
 

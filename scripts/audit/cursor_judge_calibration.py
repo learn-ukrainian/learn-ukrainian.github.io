@@ -2,7 +2,7 @@
 """Calibrate composer-2.5 (via Cursor Agent CLI) as a Russianism judge.
 
 Sibling of ``scripts/audit/opencode_judge_calibration.py``. Difference:
-routes through the ``cursor-agent -p`` / ``agent -p`` headless CLI instead
+routes through the ``cursor-agent -p`` headless CLI instead
 of ``opencode run``. Cursor exposes the in-house Composer 2.5 model + the
 hosted Anthropic / OpenAI / xAI models behind one subscription, currently
 under a 10x usage promotion (effectively free for batches this size).
@@ -13,8 +13,13 @@ atm they are runnin 10x usage promotion".
 Usage:
     .venv/bin/python scripts/audit/cursor_judge_calibration.py
     .venv/bin/python scripts/audit/cursor_judge_calibration.py --dry-run
-    .venv/bin/python scripts/audit/cursor_judge_calibration.py --model composer-2.5-fast
+    .venv/bin/python scripts/audit/cursor_judge_calibration.py --model grok-4.7
+
+Judging is not a coding dispatch: ``--model`` must be a concrete approved
+Cursor pin. Auto, Fast variants and unlisted models are refused before any
+provider call (operator decision 2026-09-30, #9274).
 """
+
 from __future__ import annotations
 
 import argparse
@@ -51,14 +56,24 @@ except ModuleNotFoundError:
         score_case,
     )
 
-CURSOR_BIN = "agent"  # symlinked to ~/.local/bin/agent and ~/.local/bin/cursor-agent
 REQUEST_TIMEOUT_S = 600
 
 OUT_DIR = PROJECT_ROOT / "audit" / "2026-05-23-composer-2.5-cursor-judge-calibration"
 
 
+def _require_approved_model(model: str) -> None:
+    """Exit with the typed refusal unless ``model`` is a concrete approved Cursor pin."""
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.review.model_catalog import cursor_non_dispatch_model_refusal
+
+    refusal = cursor_non_dispatch_model_refusal(model)
+    if refusal:
+        raise SystemExit(f"cursor_judge_calibration: refused: {refusal}")
+
+
 def call_cursor(prompt: str, model: str) -> dict:
-    """Invoke composer-2.5 (or any cursor model) via ``agent -p`` headless mode.
+    """Invoke an approved Cursor pin via the ``cursor-agent -p`` headless CLI.
 
     Cursor's text output is typically just the assistant reply (no event
     framing required), so we feed stdout to ``parse_json_verdict`` directly.
@@ -67,11 +82,15 @@ def call_cursor(prompt: str, model: str) -> dict:
     workspace trust acknowledgement otherwise. We pass it because the judge
     prompt does NOT instruct the model to read or write any files.
     """
+    _require_approved_model(model)
+    from scripts.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
+
+    cursor_bin = resolve_cursor_agent_binary()
     t0 = time.time()
     try:
         proc = subprocess.run(
             [
-                CURSOR_BIN,
+                cursor_bin,
                 "-p",
                 prompt,
                 "--model",
@@ -89,7 +108,7 @@ def call_cursor(prompt: str, model: str) -> dict:
     except FileNotFoundError:
         return {
             "verdict": "judge_error",
-            "error": f"`{CURSOR_BIN}` not on PATH. Install via `curl https://cursor.com/install -fsS | bash`.",
+            "error": "`cursor-agent` not on PATH. Install via `curl https://cursor.com/install -fsS | bash`.",
             "duration_s": time.time() - t0,
         }
     except subprocess.TimeoutExpired:
@@ -113,13 +132,11 @@ def call_cursor(prompt: str, model: str) -> dict:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--model",
         default="composer-2.5",
-        help="Cursor model id (default: composer-2.5). Also try composer-2.5-fast.",
+        help="Concrete approved Cursor pin (default: composer-2.5); Auto and Fast are refused.",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print plan + skip API calls")
     parser.add_argument(
@@ -135,6 +152,7 @@ def main() -> int:
         help="Limit to first N cases (smoke test). Default: all 12.",
     )
     args = parser.parse_args()
+    _require_approved_model(args.model)
 
     cases = pull_calibration_cases()
     print(f"Loaded {len(cases)} calibration cases from working tree:{CALIBRATION_BLOB}")
@@ -143,7 +161,7 @@ def main() -> int:
         print(f"Limited to first {len(cases)} cases (smoke)")
 
     if args.dry_run:
-        print(f"Would subprocess `{CURSOR_BIN} -p PROMPT --model {args.model} ...` per case")
+        print(f"Would subprocess `cursor-agent -p PROMPT --model {args.model} ...` per case")
         print(f"Would write artifacts to {args.out_dir}")
         for c in cases:
             print(f"  - {c['prompt_id']}  (expected_clean={c['gold']['expected_clean']})")
@@ -177,10 +195,10 @@ def main() -> int:
     agg = aggregate(scores)
     print("")
     print(f"Aggregate over {agg['n']} cases:")
-    print(f"  case_accuracy: {agg['case_accuracy']*100:.1f}%")
-    print(f"  precision:     {agg['precision']*100:.1f}%")
-    print(f"  recall:        {agg['recall']*100:.1f}%")
-    print(f"  F1:            {agg['f1']*100:.1f}%")
+    print(f"  case_accuracy: {agg['case_accuracy'] * 100:.1f}%")
+    print(f"  precision:     {agg['precision'] * 100:.1f}%")
+    print(f"  recall:        {agg['recall'] * 100:.1f}%")
+    print(f"  F1:            {agg['f1'] * 100:.1f}%")
 
     leaderboard_row = {
         "judge": args.model,
@@ -192,9 +210,7 @@ def main() -> int:
         "case_accuracy": agg["case_accuracy"],
         "tested_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
-    leaderboard_path.write_text(
-        json.dumps(leaderboard_row, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    leaderboard_path.write_text(json.dumps(leaderboard_row, indent=2, ensure_ascii=False), encoding="utf-8")
     report_path.write_text(
         render_grok_report(model=args.model, agg=agg, judgments_path=judgments_path),
         encoding="utf-8",

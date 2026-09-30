@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "scripts"))
 
 from agent_runtime.adapters.glm import GlmAdapter
@@ -86,3 +88,11 @@ def test_parse_response_fails_closed_on_pty_empty_stdout(tmp_path):
     assert result.ok is False
     assert result.response == ""
     assert result.stderr_excerpt
+
+
+def test_retired_glm_52_is_refused(tmp_path, monkeypatch):
+    for key in ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL"):
+        monkeypatch.delenv(key, raising=False)
+    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use glm-5.3"):
+        GlmAdapter().build_invocation(prompt="prompt", mode="workspace-write", cwd=tmp_path,
+            model="glm-5.2", task_id=None, session_id=None, tool_config=None)

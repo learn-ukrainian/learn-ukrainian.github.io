@@ -105,18 +105,15 @@ def test_parse_response_survives_pty_empty_stdout(tmp_path):
     assert result.stderr_excerpt
 
 
-def test_explicit_model_and_effort_overrides_win(tmp_path):
-    """--model deepseek-v4-pro routes to the first-party Pro pin (reachable
-    only via explicit override); --effort max maps to --variant max."""
-    plan = _build("Deep pass.", tmp_path, model="deepseek-v4-pro", effort="max")
-
-    assert plan.cmd[plan.cmd.index("--model") + 1] == "deepseek/deepseek-v4-pro"
-    assert plan.cmd[plan.cmd.index("--variant") + 1] == "max"
+def test_explicit_retired_pro_is_refused_before_invocation(tmp_path):
+    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use deepseek-v4.1-flash"):
+        _build("Deep pass.", tmp_path, model="deepseek-v4-pro", effort="max")
 
 
-def test_retired_v4_identity_cannot_launch_moving_flash_alias(tmp_path):
-    with pytest.raises(ValueError, match="retired for historical records"):
-        _build("Check.", tmp_path, model="deepseek-v4-flash")
+@pytest.mark.parametrize("model", ["deepseek-v4-flash", "deepseek-v4-flash-legacy", "deepseek/deepseek-v4-flash"])
+def test_retired_v4_identity_cannot_launch_moving_flash_alias(tmp_path, model):
+    with pytest.raises(ValueError, match=r"is retired in the model catalog"):
+        _build("Check.", tmp_path, model=model)
 
 
 def test_cached_alias_drift_refuses_new_flash_dispatch(tmp_path):

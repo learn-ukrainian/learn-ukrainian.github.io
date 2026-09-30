@@ -2,7 +2,7 @@ arc_schema: 1
 level: a2
 source:
   path: docs/epics/fresh-build-a2-arc.md
-  sha256: 3023551e407b25d93dd905744d9866aea678533e162eb1cb5522d50381932522
+  sha256: cb2ef4357c4a3d21f3f025bd24d2902318c544848ecc9b091dcee7f78e4a46b6
 est_lessons_total: 224
 immersion_bands:
 - start: 1

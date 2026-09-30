@@ -415,7 +415,7 @@ def test_launcher_drops_force_from_successor_args() -> None:
     script = f"""
 set -euo pipefail
 source "{_REPO_ROOT}/scripts/lib/launcher_core.sh"
-LC_DRIVER_ORIGINAL_ARGS=(--epic infra --force --model grok-4.6 -- --force)
+LC_DRIVER_ORIGINAL_ARGS=(--epic infra --force --model grok-4.7 -- --force)
 launcher_drop_force_from_successor_args
 printf 'COUNT=%s\\n' "${{#LC_DRIVER_ORIGINAL_ARGS[@]}}"
 printf 'ARGS=%s\\n' "${{LC_DRIVER_ORIGINAL_ARGS[*]}}"
@@ -430,7 +430,7 @@ printf 'ARGS=%s\\n' "${{LC_DRIVER_ORIGINAL_ARGS[*]}}"
     )
     assert result.returncode == 0, result.stderr + result.stdout
     assert "COUNT=6" in result.stdout
-    assert "ARGS=--epic infra --model grok-4.6 -- --force" in result.stdout
+    assert "ARGS=--epic infra --model grok-4.7 -- --force" in result.stdout
 
 
 def test_claim_fails_closed_on_missing_required_fields(tmp_path: Path) -> None:

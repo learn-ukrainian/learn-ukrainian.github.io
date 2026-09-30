@@ -224,3 +224,14 @@ def test_claude_bridge_extracts_target_model_metadata() -> None:
 
     assert _claude._extract_target_model(msg) == "claude-sonnet-4-5"
     assert _claude._extract_target_model({"data": "{bad json"}) is None
+
+
+def test_default_models_use_current_catalog_pins():
+    from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
+    catalog = load_model_catalog()
+    for model in russianism_eval.DEFAULT_MODELS.split(","):
+        assert model in catalog["models"]
+        assert retired_model_refusal(model) is None
+    assert {model for model in russianism_eval.DEFAULT_MODELS.split(",") if model.startswith("gpt-")} == {
+        "gpt-6.1-sol", "gpt-6-luna"
+    }

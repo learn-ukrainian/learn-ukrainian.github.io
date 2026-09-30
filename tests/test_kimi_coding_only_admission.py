@@ -595,8 +595,35 @@ def test_refusal_states_the_policy_and_names_the_alternative_seats():
     message = _refusal(mode="read-only", review=True, paths=("docs/x.md",))
     assert message.startswith(f"ROUTING REFUSED: {_TOKEN}")
     assert kimi_admission.POLICY_LINE in message
-    assert "claude, codex, or grok" in message
+    # The Cursor seat's concrete xAI pin makes it a consult alternative (#9274).
+    assert "consults and discussions → claude, codex, cursor, or grok" in message
     assert "--mode read-only" in message and "review dispatches" in message and "docs/x.md" in message
+
+
+def test_kimi_refusal_distinguishes_reviewers_from_consult_and_discussion_seats():
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    reviews, consultations = message.split("reviews → ", 1)[1].split("; consults and discussions → ", 1)
+    assert "claude" in reviews and "codex" in reviews and "reviewer resolver" in reviews
+    assert "grok" not in reviews and "kimi" not in reviews and "agy" not in reviews
+    assert "grok" in consultations
+
+
+def test_kimi_refusal_stays_typed_when_catalog_import_is_unavailable(monkeypatch):
+    import builtins
+
+    real_import = builtins.__import__
+
+    def without_catalog(name, *args, **kwargs):
+        if name == "scripts.review.model_catalog":
+            raise ModuleNotFoundError("catalog unavailable")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", without_catalog)
+    with pytest.raises(kimi_admission.KimiAdmissionRefused) as refusal:
+        kimi_admission.refuse_kimi_if_disallowed(("kimi",), mode="read-only", review=True)
+    message = str(refusal.value)
+    assert "reviews → claude, codex (per the reviewer resolver)" in message
+    assert "consults and discussions → claude, codex, or grok" in message
 
 
 # --- delegate dispatch admission --------------------------------------------------

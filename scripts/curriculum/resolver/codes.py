@@ -33,6 +33,7 @@ TOKEN_UNRESOLVED = state_codes.TOKEN_UNRESOLVED
 STALE_QUESTIONS = "stale_questions"
 RECEIPT_INVALID = "receipt_invalid"
 EVIDENCE_ID_UNRESOLVED = "evidence_id_unresolved"
+EVIDENCE_FORM_MISMATCH = "evidence_form_mismatch"
 LOCK_MISMATCH = evidence_codes.LOCK_MISMATCH
 SOURCE_UNAVAILABLE = evidence_codes.SOURCE_UNAVAILABLE
 
@@ -94,6 +95,7 @@ DESCRIPTIONS: dict[str, str] = {
     STALE_QUESTIONS: "failure: the questions batch was built from other inputs than the current ones",
     RECEIPT_INVALID: "failure: a resolutions file breaks its schema or its internal rules",
     EVIDENCE_ID_UNRESOLVED: "failure: a requirement receipt cites an id absent from its source store",
+    EVIDENCE_FORM_MISMATCH: "failure: a requirement citation does not support its option form",
     LOCK_MISMATCH: "failure: file bytes disagree with the lock sidecar",
     SOURCE_UNAVAILABLE: "failure: a required source is unavailable",
     SOURCE_CHANGED: "report: a stored stress differs from the oracle today (or a source changed mid-session)",

@@ -43,6 +43,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
+
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -269,7 +271,14 @@ class CodexAdapter:
         effective_codex_home = tc_early.get("codex_home_override")
         if not effective_codex_home and review_write_root is not None:
             effective_codex_home = str(review_write_root / "home" / ".codex")
-        self._codex_home_scope = str(effective_codex_home) if effective_codex_home else None
+        self._codex_home_scope = str(
+            Path(effective_codex_home or os.environ.get("CODEX_HOME") or Path.home() / ".codex").resolve()
+        )
+        self._rollout_read_root = (
+            Path(str(tc_early["review_write_root"]))
+            if tc_early.get("review_write_root")
+            else self._codex_home_path().resolve()
+        )
 
         # Reset per-invocation state so _read_latest_rollout_task_complete
         # uses a fresh rollout snapshot (prevents cross-contamination
@@ -315,13 +324,15 @@ class CodexAdapter:
         write_root = review_write_root or (
             Path(str(tc_early["review_write_root"])) if tc_early.get("review_write_root") else None
         )
+        # Resolve trusted temp ancestors before any seat can rename components.
+        output_read_root = write_root or Path(read_only_tmp_root or tempfile.gettempdir()).resolve()
         execution_cwd = cwd
         if tc_early.get("review_isolation") and review_write_root is not None:
             # Codex discovers AGENTS.md from its working root independently of
             # --ignore-rules. Run from the parent-created instruction-free
             # directory; complete changed content remains in the sealed prompt.
             execution_cwd = review_write_root / "exec"
-        if tc_early.get("review_isolation") and write_root is not None:
+        if (tc_early.get("review_isolation") or tc_early.get("attempt_os_sandbox")) and write_root is not None:
             out_dir = write_root / "tmp"
             output_path = out_dir / f"codex-runtime{safe_suffix}-{os.getpid()}.txt"
             fd = os.open(
@@ -334,7 +345,7 @@ class CodexAdapter:
             with tempfile.NamedTemporaryFile(
                 prefix=f"codex-runtime{safe_suffix}-",
                 suffix=".txt",
-                dir=read_only_tmp_root,
+                dir=output_read_root,
                 delete=False,
             ) as output_fd:
                 output_path = Path(output_fd.name)
@@ -380,6 +391,10 @@ class CodexAdapter:
             # when approval_policy=never. The verified parent OS sandbox is
             # the review boundary, so bypass only the nested Codex sandbox to
             # keep the sole sealed read-only MCP tool usable.
+            cmd.append("--dangerously-bypass-approvals-and-sandbox")
+        elif tc.get("attempt_os_sandbox"):
+            # Parent runner owns the manifest filesystem boundary. Keeping a
+            # nested read-only sandbox cancels the authorized stdio sources.
             cmd.append("--dangerously-bypass-approvals-and-sandbox")
         elif read_only_tmp_root is not None:
             cmd.extend(_read_only_tmp_flags(read_only_tmp_root))
@@ -432,7 +447,7 @@ class CodexAdapter:
             output_file=output_path,
             env_overrides=env_overrides,
             liveness_paths=(output_path,),
-            metadata=schema_metadata(load_output_schema(tool_config)),
+            metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
         )
 
     @classmethod
@@ -502,7 +517,14 @@ class CodexAdapter:
             if not isinstance(expected_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
                 raise ValueError("CodexAdapter: output_schema_sha256 must be a lowercase SHA-256")
             try:
-                payload = schema_path.read_bytes()
+                payload = safe_read_attempt_file(
+                    schema_path
+                    if tool_config.get("review_write_root")
+                    else schema_path.parent.resolve() / schema_path.name,
+                    trusted_root=Path(tool_config["review_write_root"])
+                    if tool_config.get("review_write_root")
+                    else schema_path.parent.resolve(),
+                )
                 schema = _json.loads(payload.decode("utf-8"))
             except (OSError, UnicodeDecodeError, _json.JSONDecodeError) as exc:
                 raise ValueError(f"CodexAdapter: invalid output schema JSON: {exc}") from exc
@@ -555,13 +577,21 @@ class CodexAdapter:
         from this invocation's bound rollout. This preserves completed-turn
         recovery after early reap without treating partial output as success.
         """
-        # Read the output file if it exists. Tolerate all errors.
         file_output = ""
-        if output_file is not None and output_file.exists():
+        if output_file is not None:
             try:
-                file_output = output_file.read_text("utf-8", errors="replace").strip()
-            except OSError:
-                file_output = ""
+                file_output = (
+                    safe_read_attempt_file(
+                        output_file,
+                        trusted_root=Path(plan.metadata.get("parent_read_root", "/")) if plan else Path("/"),
+                    )
+                    .decode("utf-8", errors="replace")
+                    .strip()
+                )
+            except AttemptReadError as exc:
+                return ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+            except FileNotFoundError:
+                pass
 
         output_schema = plan_output_schema(plan)
 
@@ -933,6 +963,8 @@ class CodexAdapter:
                     last_message = msg
 
             return last_message
+        except AttemptReadError:
+            raise
         except Exception:
             # Last-resort fallback: never let a rollout-parse error
             # bubble out of parse_response. Swallow everything and
@@ -970,10 +1002,13 @@ class CodexAdapter:
         resume_session_id = getattr(self, "_resume_session_id", None)
         if resume_session_id:
             for candidate in sorted(all_candidates, key=mtime, reverse=True):
-                if (
-                    self._read_rollout_session_id(candidate) == resume_session_id
-                    and self._rollout_matches_plan(candidate, plan)
-                ):
+                try:
+                    matches = self._read_rollout_session_id(
+                        candidate, trusted_root=getattr(self, "_rollout_read_root", Path("/"))
+                    ) == resume_session_id and self._rollout_matches_plan(candidate, plan)
+                except AttemptReadError:
+                    continue  # Unbound candidates have supplied no eligible bytes.
+                if matches:
                     self._bound_rollout = candidate
                     return candidate
 
@@ -982,7 +1017,11 @@ class CodexAdapter:
             return None
 
         for candidate in sorted(new_candidates, key=mtime, reverse=True):
-            if self._rollout_matches_plan(candidate, plan):
+            try:
+                matches = self._rollout_matches_plan(candidate, plan)
+            except AttemptReadError:
+                continue
+            if matches:
                 self._bound_rollout = candidate
                 return candidate
         return None
@@ -1004,9 +1043,9 @@ class CodexAdapter:
         offsets: dict[Path, int] = getattr(self, "_rollout_start_offsets", {})
         start_offset = offsets.get(rollout, 0)
         try:
-            with open(rollout, "rb") as stream:
-                stream.seek(start_offset)
-                return stream.read().decode("utf-8", errors="replace")
+            return safe_read_attempt_file(
+                rollout, offset=start_offset, trusted_root=getattr(self, "_rollout_read_root", Path("/"))
+            ).decode("utf-8", errors="replace")
         except OSError:
             return ""
 
@@ -1021,30 +1060,34 @@ class CodexAdapter:
         rollout = self._select_rollout_for_plan(plan)
         if rollout is None:
             return None
-        return self._read_rollout_session_id(rollout)
+        return self._read_rollout_session_id(rollout, trusted_root=getattr(self, "_rollout_read_root", Path("/")))
 
     @staticmethod
-    def _read_rollout_session_id(rollout: Path) -> str | None:
+    def _read_rollout_session_id(rollout: Path, *, trusted_root: Path = Path("/")) -> str | None:
         """Read one validated session UUID from a rollout's opening metadata."""
         try:
-            with open(rollout, encoding="utf-8", errors="replace") as stream:
-                for line_number, line in enumerate(stream, start=1):
-                    if line_number > 25:
-                        break
-                    try:
-                        event = _json.loads(line)
-                    except (TypeError, ValueError):
-                        continue
-                    if event.get("type") != "session_meta":
-                        continue
-                    payload = event.get("payload")
-                    if not isinstance(payload, dict):
-                        return None
-                    for key in ("session_id", "id"):
-                        candidate = payload.get(key)
-                        if isinstance(candidate, str) and _SESSION_ID_VALUE_RE.fullmatch(candidate):
-                            return candidate
+            lines = (
+                safe_read_attempt_file(rollout, trusted_root=trusted_root, max_bytes=65536, prefix=True)
+                .decode("utf-8", errors="replace")
+                .splitlines()
+            )
+            for line_number, line in enumerate(lines, start=1):
+                if line_number > 25:
+                    break
+                try:
+                    event = _json.loads(line)
+                except (TypeError, ValueError):
+                    continue
+                if event.get("type") != "session_meta":
+                    continue
+                payload = event.get("payload")
+                if not isinstance(payload, dict):
                     return None
+                for key in ("session_id", "id"):
+                    candidate = payload.get(key)
+                    if isinstance(candidate, str) and _SESSION_ID_VALUE_RE.fullmatch(candidate):
+                        return candidate
+                return None
         except OSError:
             return None
         return None
@@ -1104,6 +1147,8 @@ class CodexAdapter:
                             ):
                                 return True
             return False
+        except AttemptReadError:
+            raise
         except Exception:
             return False
 

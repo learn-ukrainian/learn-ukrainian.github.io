@@ -48,7 +48,7 @@ that requires structured investigation (not simple fixes).
 
 | Factor | Value |
 |--------|-------|
-| Python version | 3.12.8 |
+| Python version | 3.12.14 |
 | OS | macOS / Linux |
 | Branch | main / feature-X |
 | Last working commit | abc123 |

@@ -25,6 +25,25 @@ def test_model_assignment_does_not_claim_claude_autoload() -> None:
     assert "loads via `npm run agents:deploy` into `.claude/rules/`" not in body
 
 
+def test_model_assignment_routing_table_excludes_deepseek_and_retired_pro_pins() -> None:
+    body = (REPO / "agents_extensions/shared/rules/model-assignment.md").read_text(
+        encoding="utf-8"
+    )
+    coding, review = (
+        next(line for line in body.splitlines() if line.startswith(prefix)).split("|")[1:-1]
+        for prefix in ("| **Coding / impl / fixtures** |", "| **Code review** (")
+    )
+    assert all("deepseek" not in cell.lower() for cell in coding[1:4] + review[1:4])
+    assert "pin the model (`auto` only for a well-defined coding dispatch)" in coding[1]
+    assert coding[3].strip() == "grok"
+    assert coding[4].strip().endswith("retired Pro pins are historical only")
+    assert review[2].strip().endswith("GLM-5.3 · pool **`laguna-s-2.1`**")
+    assert review[3].strip() == "**second dissent / volume:** Pool S 2.1"
+    assert review[4].strip().endswith(
+        "DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired"
+    )
+
+
 def test_gemini_md_names_live_v7_build_command() -> None:
     body = (REPO / "GEMINI.md").read_text(encoding="utf-8")
     assert "scripts/build/v6_build.py" not in body

@@ -412,6 +412,14 @@ class _FixtureSources:
         with Sources() as sources:
             return sources.resolve_evidence_ids(evidence_ids)
 
+    def bind_evidence_forms(self, resolved, citations):
+        from scripts.curriculum.evidence.sources import Sources
+
+        if self.evidence_sources is not None:
+            return self.evidence_sources.bind_evidence_forms(resolved, citations)
+        with Sources() as sources:
+            return sources.bind_evidence_forms(resolved, citations)
+
     def _vesum_identity(self):
         return "f" * 64, {}
 
@@ -518,6 +526,7 @@ def _run_contract(
     level=None,
     observed_writer=None,
     gloss_ids=frozenset(),
+    question_dispatch=None,
 ):
     lvl = level or plan.get("level") or "a1"
     if lvl == "a1":
@@ -560,7 +569,7 @@ def _run_contract(
         plans_dir=tmp_path,
         evidence_dir=tmp_path,
         question_seat=seat,
-        question_dispatch=answer,
+        question_dispatch=question_dispatch or answer,
         sources=_FixtureSources(),
         allowlist=allowlist,
         site_dir=tmp_path / "site",
@@ -946,3 +955,46 @@ def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatc
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is False and report["passed_through"] == 7
     assert len(captured) == 1 and isinstance(captured[0], Sources) and captured[0]._conn is None
+
+
+@pytest.mark.parametrize("dispatch_fails", [False, True])
+def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, monkeypatch, dispatch_fails):
+    import sqlite3
+
+    from scripts.curriculum.evidence.sources import SourceResult, Sources
+
+    draft, plan, pack, words = _fixture(two_senses=True)
+    monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
+    monkeypatch.setattr(Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64))
+    captured = []
+    original_resolve = runner.resolve
+    original_choices = runner.check_7_a1_choices
+
+    def resolve(expanded, allowlist, sources):
+        old = sources._db()
+        captured.append((sources, old))
+        return original_resolve(expanded, allowlist, sources)
+
+    def dispatch(batch, seat):
+        sources, old = captured[0]
+        assert sources._conn is None
+        with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+            old.execute("SELECT 1")
+        if dispatch_fails:
+            raise RuntimeError("fixture provider failure")
+        with sqlite3.connect(sources.sources_db) as writer:
+            writer.execute("INSERT INTO grinchenko (id, definition) VALUES (99, 'post-dispatch row')")
+        return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
+
+    def choices(*args, **kwargs):
+        sources, old = captured[0]
+        assert kwargs["sources"] is sources and sources._conn is None
+        assert sources._db() is not old
+        assert sources._db().execute("SELECT definition FROM grinchenko WHERE id=99").fetchone()[0] == "post-dispatch row"
+        return original_choices(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "resolve", resolve)
+    monkeypatch.setattr(runner, "check_7_a1_choices", choices)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, question_dispatch=dispatch)
+    assert report["passed"] is not dispatch_fails, report
+    assert captured[0][0]._conn is None

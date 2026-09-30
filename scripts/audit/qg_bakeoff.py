@@ -73,8 +73,7 @@ OPENCODE_TRANSPORT = "opencode"
 OPENCODE_ENTRYPOINT = "qg_bakeoff_opencode"
 OPENCODE_MEASUREMENT_TIER = "opencode_bare_or_tooled"
 DEEPSEEK_DIRECT_FLASH_PIN = DEEPSEEK_OPENCODE_MODEL_ROUTES["deepseek-v4.1-flash"]
-DEEPSEEK_DIRECT_PRO_PIN = DEEPSEEK_OPENCODE_MODEL_ROUTES["deepseek-v4-pro"]
-DEEPSEEK_DIRECT_PINS = (DEEPSEEK_DIRECT_FLASH_PIN, DEEPSEEK_DIRECT_PRO_PIN)
+DEEPSEEK_DIRECT_PINS = (DEEPSEEK_DIRECT_FLASH_PIN,)
 DEEPSEEK_OPENROUTER_FLASH_PIN = "openrouter/deepseek/deepseek-v4-flash"
 DEEPSEEK_OPENROUTER_PRO_PIN = "openrouter/deepseek/deepseek-v4-pro"
 DEEPSEEK_OPENROUTER_PINS = (DEEPSEEK_OPENROUTER_FLASH_PIN, DEEPSEEK_OPENROUTER_PRO_PIN)
@@ -148,7 +147,6 @@ class CandidateModel:
 DEFAULT_CANDIDATE_MODELS: tuple[CandidateModel, ...] = (
     CandidateModel("gemma-4-31b", "openrouter/google/gemma-4-31b-it"),
     CandidateModel("deepseek-v4.1-flash-direct", DEEPSEEK_DIRECT_FLASH_PIN),
-    CandidateModel("deepseek-v4-pro-direct", DEEPSEEK_DIRECT_PRO_PIN),
     CandidateModel("claude-frontier-openrouter-unreachable", "TODO_OPENROUTER_ANTHROPIC_FRONTIER_PIN", unresolved=True),
     CandidateModel("gpt-frontier-openrouter-unreachable", "TODO_OPENROUTER_OPENAI_FRONTIER_PIN", unresolved=True),
     CandidateModel("gemini-frontier-openrouter-unreachable", "TODO_OPENROUTER_GOOGLE_GEMINI_FRONTIER_PIN", unresolved=True),
@@ -240,7 +238,7 @@ ProviderRunner = Callable[
 BareRunner = ProviderRunner
 
 
-CLAUDE_SUBSCRIPTION_BARE_MODEL_ID = "claude-opus-4-8"
+CLAUDE_SUBSCRIPTION_BARE_MODEL_ID = "claude-opus-5-5"
 GPT_SUBSCRIPTION_BARE_MODEL_ID = "gpt-6.1-sol"
 GEMINI_SUBSCRIPTION_BARE_MODEL_ID = "gemini-3.1-pro-high"
 _SUBSCRIPTION_PRICING_BASIS = (
@@ -2711,7 +2709,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         help=(
             "Comma-separated or repeated model pins. opencode provider/model pins "
             "(including deepseek/... and OpenRouter baselines) work for tooled/bare; "
-            "subscription native pins (claude-opus-4-8,gpt-6.1-sol,gemini-3.1-pro-high) are --arm bare only. "
+            "subscription native pins (claude-opus-5-5,gpt-6.1-sol,gemini-3.1-pro-high) are --arm bare only. "
             "LU_ROUTING_GUARD_OVERRIDE=1 is invalid for published scorecards."
         ),
     )

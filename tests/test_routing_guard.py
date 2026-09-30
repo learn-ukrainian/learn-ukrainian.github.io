@@ -229,7 +229,7 @@ def test_delegate_dispatch_dry_run_rejects_guarded_model(tmp_path) -> None:
             "--agent",
             "codex",
             "--model",
-            "openrouter/anthropic/claude-sonnet-5",
+            "openrouter/anthropic/claude-sonnet-5-5",
             "--task-id",
             "guard-dry-run-test",
             "--prompt",

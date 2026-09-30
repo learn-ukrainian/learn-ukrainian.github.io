@@ -69,10 +69,10 @@ if [[ "$*" == *"check_research_registry.py"* ]]; then
   printf '%s\n' "$STRICT_GATE_FAKE_JSON"
   exit "${STRICT_GATE_FAKE_EXIT:-0}"
 fi
-printf "Python 3.12.8\n"
+printf "Python 3.12.14\n"
 PYEOF
   printf 'fixture db\n' > "$root/.mcp/servers/message-broker/messages.db"
-  printf '3.12.8\n' > "$root/.python-version"
+  printf '3.12.14\n' > "$root/.python-version"
   chmod +x "$root/.venv/bin/python"
   mkdir -p "$root/scripts/orchestration"
   touch "$root/scripts/orchestration/thread_handoff.py"

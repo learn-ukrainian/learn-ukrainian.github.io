@@ -29,7 +29,6 @@ from ._codex import (
     has_codex_headroom,
     process_all_codex,
 )
-from ._cursor import CURSOR_DEFAULT_MODEL
 from ._db import get_db
 from ._dispatch_wrappers import (
     MANDATORY_COMMIT_PUSH_PR_CHECKLIST,
@@ -691,7 +690,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_claude_parser.add_argument(
         "--type",
         default="query",
-        help="Message type (default: query; use advisory to pin claude-opus-5)",
+        help="Message type (default: query; use advisory to pin claude-opus-5-5)",
     )
     ask_claude_parser.add_argument("--data", help="Path to data file to attach")
     ask_claude_parser.add_argument(
@@ -974,7 +973,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_cursor_parser.add_argument("--data", help="Path to data file to attach")
     ask_cursor_parser.add_argument(
         "--model",
-        help=f"Deprecated alias for --to-model (default {CURSOR_DEFAULT_MODEL})",
+        help="Deprecated alias for --to-model (default: the Cursor seat's concrete pin; Auto is refused)",
     )
     ask_cursor_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_cursor_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")

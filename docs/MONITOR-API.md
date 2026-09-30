@@ -2024,7 +2024,7 @@ load-more control are presentation-only.
       "automatic": true,
       "requested_role": "infra:medium",
       "resolved_route": "grok",
-      "resolved_model": "grok-4.6",
+      "resolved_model": "grok-4.7",
       "resolved_family": "xai",
       "current_state": "complete",
       "failure_classification": null,

@@ -19,9 +19,9 @@ import pytest
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.common.repo_root import project_interpreter
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
-from tests.helpers.python import require_repo_venv
 from tests.launcher_sandbox import copy_slot_registry
 from tests.rules_core_view import (
     install_loader_bypass,
@@ -167,7 +167,7 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
 
 
 def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
-    require_repo_venv()
+    assert project_interpreter(REPO).is_file()
     shell = shutil.which("bash")
     assert shell is not None
     bin_dir = tmp_path / "bin"
@@ -736,6 +736,8 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/project_interpreter.sh",
+        "scripts/review/model_catalog.py",
+        "scripts/config/model_catalog.yaml",
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
     ):

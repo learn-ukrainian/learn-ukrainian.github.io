@@ -62,7 +62,7 @@ def test_gemini_driver_claims_a_lease_for_supported_selectors(selector: str) -> 
     _assert_drive_epic_uses_agy_interactive_flag(_would_exec_line(result.stdout))
 
 
-@pytest.mark.parametrize("model", ("gemini-3.6-flash-high", "gemini-3.1-pro-high"))
+@pytest.mark.parametrize("model", ("gemini-3.8-flash-high", "gemini-3.1-pro-high"))
 def test_gemini_driver_allows_only_certified_models(model: str) -> None:
     result = run_launcher("start-gemini-driver.sh", "--epic", "devops", "--model", model)
     assert result.returncode == 0, result.stderr

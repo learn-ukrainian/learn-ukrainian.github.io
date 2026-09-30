@@ -43,6 +43,12 @@ sys.modules["build_sources_db"] = bs
 _SPEC.loader.exec_module(bs)
 
 
+@pytest.fixture(autouse=True)
+def _isolate_literary_report(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Successful rebuilds must not leave validation reports in checkout logs."""
+    monkeypatch.setattr(bs, "LOG_DIR", tmp_path / "logs")
+
+
 def _make_populated_db(path: Path, *, with_wiki: bool = False) -> None:
     """Create a minimal valid sources.db with rows in the main tables."""
     conn = sqlite3.connect(str(path))

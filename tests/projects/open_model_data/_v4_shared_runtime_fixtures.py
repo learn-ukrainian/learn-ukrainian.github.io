@@ -48,7 +48,6 @@ from psycopg.rows import dict_row
 from scripts.fleet_comms.request_executor import RequestExecutor
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
-_BUILD_LOCK = _REPO_ROOT / "batch_state/v4-runtime-build.lock"
 
 
 def principal(jti):
@@ -166,12 +165,14 @@ def prepared(pg_cluster, monkeypatch, tmp_path):
 
 
 @pytest.fixture(scope="module")
-def built_wheel(tmp_path_factory):
+def built_wheel(tmp_path_factory, request):
     output = tmp_path_factory.mktemp("owned-wheel")
     # xdist workers share setuptools in-place build paths in this checkout.
     # Serialize wheel creation, while the behavioral tests remain parallel.
-    lock_path = _BUILD_LOCK
-    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    lock_root = tmp_path_factory.getbasetemp()
+    if hasattr(request.config, "workerinput"):
+        lock_root = lock_root.parent
+    lock_path = lock_root / "v4-runtime-build.lock"
     env = dict(os.environ)
     from learn_ukrainian_v4_runtime.provenance import verify_current_identity
 

@@ -70,7 +70,7 @@ def test_claude_branch_review_invokes_from_provisioned_checkout(monkeypatch, tmp
         or Result(
             ok=True,
             agent="claude",
-            model="claude-opus-4-8",
+            model="claude-opus-5-5",
             mode="read-only",
             response="reply",
             stderr_excerpt=None,

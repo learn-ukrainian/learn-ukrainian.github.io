@@ -96,6 +96,9 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
+from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
+
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
@@ -303,25 +306,16 @@ _AGY_PRINT_TIMEOUT = "120m"
 # now lists slugs and headless ``--model <slug>`` is the proven path.
 #
 # Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
-# Live probe 2026-09-13: 3.8/3.7/3.6 Flash are listed; 3.5 is retired.
+# Older Flash, Claude thinking and GPT-OSS selections are refused by the catalog.
 _AGY_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.8-flash-high",
     "gemini-3.8-flash-medium",
     "gemini-3.8-flash-low",
-    "gemini-3.7-flash-high",
-    "gemini-3.7-flash-medium",
-    "gemini-3.7-flash-low",
-    "gemini-3.6-flash-high",
-    "gemini-3.6-flash-medium",
-    "gemini-3.6-flash-low",
     "gemini-3.1-pro-high",
     "gemini-3.1-pro-low",
-    "claude-sonnet-4-6",
-    "claude-opus-4-6-thinking",
-    "gpt-oss-120b-medium",
 )
 
-# Legacy display labels still accepted as input (normalize → same key as slug).
+# Recognize legacy display labels for active selection or retired-model refusal.
 _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
     "Gemini 3.8 Flash (High)",
     "Gemini 3.8 Flash (Medium)",
@@ -362,9 +356,6 @@ def _build_agy_model_map() -> dict[str, str]:
     out: dict[str, str] = {}
     for slug in _AGY_MODEL_SLUGS:
         out[_normalize_model(slug)] = slug
-    # Retired 3.5 aliases preserve their tier on 3.8, including display labels.
-    for tier in ("high", "medium", "low"):
-        out[_normalize_model(f"gemini-3.5-flash-{tier}")] = f"gemini-3.8-flash-{tier}"
     # Legacy labels that share a normalize key with a slug resolve automatically.
     # Claude/GPT-OSS thinking labels normalize differently — map them explicitly.
     legacy_to_slug = {
@@ -407,7 +398,21 @@ class AgyAdapter:
     @staticmethod
     def resolve_model_slug(model: str) -> str | None:
         """Return the canonical AGY model for a known slug or legacy alias."""
-        return _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model))
+        # Display labels and provider spellings must not bypass retirement.
+        catalog = load_model_catalog()
+        normalized = _normalize_model(model)
+        identities = {
+            _normalize_model(alias): model_id
+            for model_id, spec in catalog["models"].items()
+            for alias in (model_id, *spec.get("aliases", []))
+        }
+        canonical = identities.get(normalized)
+        if canonical is None:
+            canonical = _AGY_MODEL_BY_NORMALIZED.get(normalized)
+        refusal = retired_model_refusal(canonical or model, catalog)
+        if refusal:
+            raise ValueError(refusal.replace(repr(canonical or model), repr(model), 1))
+        return _AGY_MODEL_BY_NORMALIZED.get(normalized)
 
     @staticmethod
     def model_ids_match(left: str, right: str) -> bool:
@@ -473,7 +478,7 @@ class AgyAdapter:
 
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
-        if review_isolation:
+        if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
@@ -484,13 +489,17 @@ class AgyAdapter:
         with contextlib.suppress(OSError):
             agy_bin = str(Path(agy_bin).resolve())
         _require_background_wait_support(agy_bin)
-        if review_isolation and tc.get("review_write_root"):
+        if (review_isolation or tc.get("review_attempt_boundary")) and tc.get("review_write_root"):
             log_dir = Path(str(tc["review_write_root"])) / "tmp"
             log_dir.mkdir(parents=True, exist_ok=True)
             safe_task = "".join(c if c.isalnum() or c in "-_." else "_" for c in (task_id or "review"))[:48]
             log_path = log_dir / f"agy-runtime-{safe_task}-{os.getpid()}.log"
         else:
             log_path = _build_log_path(task_id)
+
+        log_read_root = Path(str(tc["review_write_root"])) if tc.get("review_write_root") else log_path.parent.resolve()
+        if not tc.get("review_write_root"):
+            log_path = log_read_root / log_path.name
 
         # Non-review: `--dangerously-skip-permissions` is unconditional so
         # headless tool use does not hang on interactive prompts.
@@ -558,6 +567,9 @@ class AgyAdapter:
             # $HOME/.gemini/config and keeps transcripts under AGY_APP_DATA_DIR.
             env_overrides["HOME"] = str(agy_home)
             env_overrides[_AGY_APP_DATA_ENV] = str(Path(agy_home) / ".gemini" / "antigravity-cli")
+        app_data = _agy_app_data(env_overrides)
+        app_data_root = app_data.resolve()
+        transcript_read_root = Path(str(tc["review_write_root"])) if tc.get("review_write_root") else app_data_root
         baseline = (
             {_TRANSCRIPT_BASELINE_KEY: _transcript_baseline(_agy_app_data(env_overrides), session_id)}
             if session_id and not review_isolation
@@ -575,10 +587,15 @@ class AgyAdapter:
             metadata={
                 **schema_metadata(output_schema),
                 **baseline,
+                "parent_read_root": str(transcript_read_root),
+                "agy_app_data_path": str(app_data),
+                "agy_app_data_root": str(app_data_root),
+                "attempt_read_root": bool(tc.get("review_write_root")),
+                "log_read_root": str(log_read_root),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
-                }
+                },
             },
             host_harness="agy",
         )
@@ -1055,13 +1072,14 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     if bound is None:
         return []
     transcript_path, events = bound.path, bound.events
+    _, trusted_root = _transcript_read_location(plan)
 
     has_step_index = any(_event_step_index(event) is not None for event in events)
     if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
-        return _pair_transcript_generic_results(events, transcript_path=transcript_path)
+        return _pair_transcript_generic_results(events, transcript_path=transcript_path, trusted_root=trusted_root)
     if has_step_index:
-        return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
-    return _pair_transcript_fifo(events, transcript_path=transcript_path)
+        return _pair_transcript_by_step_index(events, transcript_path=transcript_path, trusted_root=trusted_root)
+    return _pair_transcript_fifo(events, transcript_path=transcript_path, trusted_root=trusted_root)
 
 
 class _TranscriptSlice(NamedTuple):
@@ -1070,7 +1088,9 @@ class _TranscriptSlice(NamedTuple):
     unreadable_lines: int
 
 
-def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> tuple[list[dict[str, Any]], int] | None:
+def _read_transcript_events(
+    transcript_path: Path, *, offset: int = 0, trusted_root: Path = Path("/")
+) -> tuple[list[dict[str, Any]], int] | None:
     """Parse the transcript's JSONL events from byte ``offset`` onward.
 
     Returns the events and the count of non-blank lines that are not a JSON
@@ -1079,9 +1099,11 @@ def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> tuple[
     line means; nothing is silently dropped.
     """
     try:
-        with transcript_path.open("rb") as handle:
-            handle.seek(offset)
-            raw_lines = handle.read().splitlines()
+        raw_lines = safe_read_attempt_file(transcript_path, offset=offset, trusted_root=trusted_root).splitlines()
+    except AttemptReadError as exc:
+        if str(exc) == "attempt_read_invalid_offset":
+            return None
+        raise
     except OSError:
         return None
 
@@ -1163,11 +1185,14 @@ def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any
     return call
 
 
-def _mcp_result_text(event: Mapping[str, Any], *, transcript_path: Path) -> str:
+def _mcp_result_text(
+    event: Mapping[str, Any], *, transcript_path: Path, trusted_root: Path = Path("/")
+) -> str:
     result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
     return _inline_saved_tool_result_pointer(
         result_text,
         transcript_path=transcript_path,
+        trusted_root=trusted_root,
     )
 
 
@@ -1175,6 +1200,7 @@ def _pair_transcript_fifo(
     events: list[dict[str, Any]],
     *,
     transcript_path: Path,
+    trusted_root: Path = Path("/"),
 ) -> list[dict[str, Any]]:
     """Legacy pairing: file order FIFO between planner intents and MCP results."""
     calls: list[dict[str, Any]] = []
@@ -1187,7 +1213,7 @@ def _pair_transcript_fifo(
         calls.append(
             _attach_tool_result(
                 call,
-                _mcp_result_text(event, transcript_path=transcript_path),
+                _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root),
             )
         )
     calls.extend(pending)
@@ -1211,6 +1237,7 @@ def _pair_transcript_by_step_index(
     events: list[dict[str, Any]],
     *,
     transcript_path: Path,
+    trusted_root: Path = Path("/"),
 ) -> list[dict[str, Any]]:
     """Pair planner intents with MCP results in ``step_index`` (FIFO) order.
 
@@ -1244,7 +1271,7 @@ def _pair_transcript_by_step_index(
             pending_keys.add(key)
         if event.get("type") != "MCP_TOOL":
             continue
-        result_text = _mcp_result_text(event, transcript_path=transcript_path)
+        result_text = _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root)
         if pending:
             call = pending.pop(0)
             pending_keys.discard(_intent_dedupe_key(call))
@@ -1267,6 +1294,7 @@ def _pair_transcript_generic_results(
     events: list[dict[str, Any]],
     *,
     transcript_path: Path,
+    trusted_root: Path = Path("/"),
 ) -> list[dict[str, Any]]:
     """Pair planner intents with ``GENERIC`` results (agy 2026-09 transcript shape).
 
@@ -1305,7 +1333,7 @@ def _pair_transcript_generic_results(
             calls.append(
                 _attach_tool_result(
                     call,
-                    _mcp_result_text(event, transcript_path=transcript_path),
+                    _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root),
                 )
             )
     return calls
@@ -1332,10 +1360,15 @@ def _bound_conversation(plan: InvocationPlan | None) -> tuple[str, Path] | None:
     if plan is None:
         return None
     log_file = plan.env_overrides.get(_AGY_LOG_ENV)
-    conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
+    conversation_id = (
+        _conversation_id_from_log(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
+        if log_file
+        else None
+    )
     if not conversation_id:
         return None
-    transcript = _brain_transcript_path(_agy_app_data(plan.env_overrides), conversation_id)
+    app_data, _ = _transcript_read_location(plan)
+    transcript = _brain_transcript_path(app_data, conversation_id)
     return (conversation_id, transcript) if transcript.exists() else None
 
 
@@ -1360,16 +1393,28 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
         offset = raw_offset if isinstance(raw_offset, int) and raw_offset >= 0 else None
     if offset is None:
         return None
-    try:
-        if transcript.stat().st_size < offset:
-            return None
-    except OSError:
-        return None
-    parsed = _read_transcript_events(transcript, offset=offset)
+    _, read_root = _transcript_read_location(plan)
+    parsed = _read_transcript_events(transcript, offset=offset, trusted_root=read_root)
     if parsed is None:
         return None
     events, unreadable = parsed
     return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
+
+
+def _transcript_read_location(plan: InvocationPlan) -> tuple[Path, Path]:
+    """Use the root captured before launch, without changing the CLI environment.
+
+    Ordinary callers may adjust a plan's app-data override; such a path keeps
+    the conservative filesystem-root walk instead of using a stale snapshot.
+    Attempts always retain their enforced write-root containment.
+    """
+    app_data = _agy_app_data(plan.env_overrides)
+    if str(app_data) == plan.metadata.get("agy_app_data_path"):
+        app_data = Path(plan.metadata["agy_app_data_root"])
+        return app_data, Path(plan.metadata["parent_read_root"])
+    if plan.metadata.get("attempt_read_root"):
+        return app_data, Path(plan.metadata["parent_read_root"])
+    return app_data, Path("/")
 
 
 def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:
@@ -1383,7 +1428,8 @@ def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:
     offset: int | None = None
     if re.fullmatch(_AGY_UUID, session_id):
         try:
-            offset = _brain_transcript_path(app_data, session_id).stat().st_size
+            root = app_data.resolve()  # Baseline is taken before the seat launches.
+            offset = safe_attempt_file_size(_brain_transcript_path(root, session_id), trusted_root=root)
         except FileNotFoundError:
             offset = 0
         except OSError:
@@ -1399,14 +1445,16 @@ def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:
     return app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
 
 
-def _conversation_id_from_log(log_file: Path) -> str | None:
+def _conversation_id_from_log(log_file: Path, *, trusted_root: Path = Path("/")) -> str | None:
     latest: str | None = None
     try:
-        with log_file.open(encoding="utf-8", errors="replace") as handle:
-            for line in handle:
-                match = _AGY_CONVERSATION_RE.search(line)
-                if match:
-                    latest = match.group("id")
+        lines = (
+            safe_read_attempt_file(log_file, trusted_root=trusted_root).decode("utf-8", errors="replace").splitlines()
+        )
+        for line in lines:
+            match = _AGY_CONVERSATION_RE.search(line)
+            if match:
+                latest = match.group("id")
     except OSError:
         return None
     return latest
@@ -1460,7 +1508,9 @@ def _build_tool_call(tool_name: str, args: dict[str, Any], result_text: str) -> 
     return call
 
 
-def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> str:
+def _inline_saved_tool_result_pointer(
+    text: str, *, transcript_path: Path, trusted_root: Path = Path("/")
+) -> str:
     """Inline agy's safe ``file://.../steps/.../output.txt`` tool-result pointer."""
     match = _SAVED_OUTPUT_POINTER_RE.search(text)
     if not match:
@@ -1471,24 +1521,18 @@ def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> st
         return text
 
     path = Path(urllib.parse.unquote(parsed.path))
-    try:
-        resolved_path = path.resolve(strict=True)
-    except OSError:
-        _logger.warning("agy tool result pointer missing: %s", path)
-        return text
-
     allowed_roots = _allowed_tool_result_roots(transcript_path)
-    if not any(_is_relative_to(resolved_path, root) for root in allowed_roots):
-        _logger.warning("agy refused unsafe tool result pointer: %s", resolved_path)
+    if not any(_is_relative_to(path, root) for root in allowed_roots):
+        _logger.warning("agy refused unsafe tool result pointer")
         return text
-
     try:
-        size = resolved_path.stat().st_size
-        with resolved_path.open("rb") as handle:
-            raw = handle.read(_MAX_INLINE_TOOL_RESULT_BYTES + 1)
-    except OSError:
-        _logger.warning("agy failed to read tool result pointer: %s", resolved_path)
+        # Steps roots constrain names only; the seat can replace their ancestors.
+        raw = safe_read_attempt_file(path, trusted_root=trusted_root)
+    except FileNotFoundError:
+        _logger.warning("agy tool result pointer missing")
         return text
+    size = len(raw)
+    resolved_path = path  # Logging only; never resolve a seat-controlled name.
 
     truncated = len(raw) > _MAX_INLINE_TOOL_RESULT_BYTES
     if truncated:
@@ -1519,11 +1563,7 @@ def _allowed_tool_result_roots(transcript_path: Path) -> tuple[Path, ...]:
         conversation_root / "steps",
         conversation_root / ".system_generated" / "steps",
     )
-    roots: list[Path] = []
-    for candidate in candidates:
-        with contextlib.suppress(OSError):
-            roots.append(candidate.resolve())
-    return tuple(roots)
+    return candidates
 
 
 def _is_relative_to(path: Path, root: Path) -> bool:

@@ -17,7 +17,7 @@ if str(SCRIPTS_DIR) not in sys.path:
 from agent_runtime.runner import invoke
 
 DEFAULT_MODELS = {
-    "deepseek": "deepseek-v4-pro",
+    "deepseek": "deepseek-v4.1-flash",
     "grok": "grok-4.7",
     "grok-hermes": "grok-4.5",  # disabled/banned Hermes route (2026-07-22); not rotated
     "grok-build": "grok-4.7",

@@ -187,13 +187,17 @@ def dispatch_slice_probe(monkeypatch):
     needs a real ``Popen`` surface (``poll()``, pipes, ``/proc``) that the
     fake worker processes here do not provide. Default the probe to "not
     ready" so every test takes the plain-``Popen`` path; a slice-path test
-    sets ``dispatch_slice_probe["ready"] = True`` instead. An ambient
-    ``LU_DISPATCH_ISOLATION=fallback`` would override even a "ready" probe,
-    so the fixture clears it; only the test that exercises the forced
-    fallback sets it again itself.
+    sets ``dispatch_slice_probe["ready"] = True`` instead.
+    ``LU_TEST_FORCE_DISPATCH_SCOPE=1`` forces that ready probe for a whole run
+    without asking the host. An ambient ``LU_DISPATCH_ISOLATION=fallback``
+    would override even a "ready" probe, so the fixture clears it; only the
+    test that exercises the forced fallback sets it again itself.
     """
     monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
     state = {"ready": False, "reason": "test stub: host slice probe disabled"}
+    if os.environ.get("LU_TEST_FORCE_DISPATCH_SCOPE") == "1":
+        state["ready"] = True
+        state["reason"] = None
 
     def _probe(env=None, **_kwargs):
         source = os.environ if env is None else env
@@ -1080,7 +1084,7 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
 
 @pytest.mark.parametrize("agent", ["cursor", "codex"])
 @pytest.mark.parametrize(
-    "model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra"]
+    "model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra", "claude-fable-5", "grok-4.6"]
 )
 def test_dispatch_rejects_catalog_retired_model_before_spawn(tmp_tasks_dir, capsys, agent, model):
     args = delegate.build_parser().parse_args(
@@ -2879,6 +2883,34 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["returncode_reason"] is None
 
 
+@pytest.mark.parametrize(("strict", "code"), [
+    (False, "attempt_requires_fresh_read_only_sources"),
+    (True, "attempt_boundary_inputs_missing"),
+])
+def test_run_worker_persists_attempt_boundary_refusal_code(tmp_tasks_dir, tmp_path, monkeypatch, strict, code):
+    """A real pre-launch refusal must survive into the durable task record."""
+    from agent_runtime import runner as runtime_runner
+
+    task_id = "attempt-boundary-refusal"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cli_version": "fixture"})
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("boundary refusal must precede provider planning or launch")
+
+    monkeypatch.setattr(runtime_runner, "_load_adapter", unexpected)
+    rc = delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="probe", mode="read-only", cwd_str=str(tmp_path),
+        model="gemini-3.8-flash-high", hard_timeout=30, review_id="review", attempt_id="current",
+        strict_mcp_config=strict,
+    )
+    state = delegate._read_state(state_path)
+    assert rc == 1 and state["status"] == "failed"
+    assert state["last_error"].startswith(
+        f"runtime error: AgentUnavailableError: formal attempt filesystem boundary refused: {code}"
+    )
+
+
 def _run_cursor_review_worker(tmp_tasks_dir, tmp_path, invoke):
     task_id = "cursor-review-restore"
     state_path = delegate._state_path(task_id)
@@ -3382,7 +3414,7 @@ def _finalize_mock_result():
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "grok-4.6",
+            "model": "grok-4.7",
             "effort": "high",
             "cli_version": "0.2.111",
         },
@@ -3731,6 +3763,38 @@ def test_parse_review_verdict_follows_commonmark_code_blocks(label, response):
 def test_parse_review_verdict_accepts_commonmark_paragraph_lines(label, response, expected):
     """#8786: up to three leading spaces is still a paragraph line; a longer closer closes."""
     assert delegate.parse_review_verdict(response) == expected
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        ("h2-plain", "Findings.\n\n## VERDICT: REQUEST_CHANGES\n", "REQUEST_CHANGES"),
+        ("h1-bold", "# **VERDICT: APPROVE**\n", "APPROVE"),
+        ("h6-blocked", "###### VERDICT: BLOCKED\n", "BLOCKED"),
+        ("three-space-indent-heading", "   ## VERDICT: APPROVE\n", "APPROVE"),
+    ],
+)
+def test_parse_review_verdict_accepts_atx_heading_lines(label, response, expected):
+    """#9305: a verdict rendered as a Markdown heading is still the verdict."""
+    assert delegate.parse_review_verdict(response) == expected
+    assert delegate._review_verdict_failure_reason(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("quoted-heading", "> ## VERDICT: APPROVE\n"),
+        ("fenced-heading", "```\n## VERDICT: APPROVE\n```\n"),
+        ("four-space-indented-heading", "Example:\n\n    ## VERDICT: APPROVE\n"),
+        # CommonMark requires a space after the ``#`` run, so this is a paragraph.
+        ("heading-marker-without-space", "##VERDICT: APPROVE\n"),
+        ("seven-hashes-is-not-a-heading", "####### VERDICT: APPROVE\n"),
+        ("heading-with-prose-prefix", "## The VERDICT: APPROVE\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_non_verdict_heading_lines(label, response):
+    """#9305: headings that are quoted, code, malformed, or not label-first are not verdicts."""
+    assert delegate.parse_review_verdict(response) is None
 
 
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
@@ -5773,6 +5837,8 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
             attempt_id="att-test",
             mcp_config_path=str(tmp_path / "review.mcp.json"),
             strict_mcp_config=True,
+            review_manifest=str(tmp_path / "manifest.yaml"),
+            review_input_root=str(tmp_path),
         )
 
     assert rc == 0
@@ -5782,6 +5848,8 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
         "mcp_server_names": ["sources"],
         "review_id": "rev-test",
         "attempt_id": "att-test",
+        "review_manifest": str(tmp_path / "manifest.yaml"),
+        "review_input_root": str(tmp_path),
         "allowed_tools": ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
     }
 
@@ -6134,6 +6202,39 @@ def test_run_worker_ordinary_codex_dispatch_is_unchanged(tmp_tasks_dir, tmp_path
     assert mock_invoke.call_args.kwargs["tool_config"] == {}
     recorded = calls.read_text(encoding="utf-8").splitlines() if calls.exists() else []
     assert not any("mcp" in line for line in recorded), recorded
+
+
+@pytest.mark.parametrize(
+    ("admission", "expected"),
+    [
+        ({"admitted": True, "model": "auto", "issues": [9274]}, True),
+        (None, False),
+        ({"admitted": False}, False),
+    ],
+)
+def test_run_worker_passes_only_a_recorded_cursor_auto_admission(tmp_tasks_dir, tmp_path, admission, expected):
+    """#9274: the Cursor adapter sees the Auto admission only when dispatch recorded one."""
+    from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
+
+    task_id = "worker-cursor-auto"
+    state: dict[str, Any] = {"task_id": task_id}
+    if admission is not None:
+        state[delegate.CURSOR_AUTO_ADMISSION_STATE_KEY] = admission
+    delegate._write_state_atomic(delegate._state_path(task_id), state)
+
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model="grok-4.7",
+            hard_timeout=60,
+        )
+
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert (tool_config.get(CURSOR_AUTO_ADMITTED_KEY) is True) is expected
 
 
 def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
@@ -6897,6 +6998,180 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert add_cmd[-1] == "deadbeef", f"worktree must be created from the resolved SHA, got base={add_cmd[-1]!r}"
     captured = capsys.readouterr()
     assert "issue-1383-smoke" in captured.out
+
+
+_PASS_DOR = {"issues": [9274], "warnings": {}}
+
+
+def _cursor_auto_args(**overrides: Any) -> argparse.Namespace:
+    values: dict[str, Any] = {
+        "agent": "cursor",
+        "model": "auto",
+        "mode": "danger",
+        "owned_path": ["scripts/delegate.py"],
+        "research_role": "implementation",
+        "research_task_family": None,
+        "review": False,
+        "review_attempt": None,
+        "require_review_verdict": False,
+        "review_profile": None,
+    }
+    values.update(overrides)
+    return argparse.Namespace(**values)
+
+
+@pytest.mark.parametrize(
+    ("overrides", "dor_record", "reason"),
+    [
+        ({"mode": "read-only"}, _PASS_DOR, "mode read-only is not write-capable"),
+        ({"require_review_verdict": True}, _PASS_DOR, "review-typed"),
+        ({"review_profile": "code"}, _PASS_DOR, "review-typed"),
+        ({"review_attempt": "attempt-1"}, _PASS_DOR, "review-typed"),
+        ({"owned_path": None}, _PASS_DOR, "no --owned-path"),
+        # Positive typing: only --research-role implementation admits Auto.
+        ({"research_role": None}, _PASS_DOR, "unclassified (no --research-role implementation)"),
+        ({"research_role": "  "}, _PASS_DOR, "unclassified (no --research-role implementation)"),
+        ({"research_role": None, "research_task_family": "implementation"}, _PASS_DOR, "unclassified"),
+        ({"research_role": "architecture"}, _PASS_DOR, "--research-role 'architecture' is not implementation"),
+        ({"research_role": "planning"}, _PASS_DOR, "--research-role 'planning' is not implementation"),
+        ({"research_role": "driver"}, _PASS_DOR, "--research-role 'driver' is not implementation"),
+        ({"research_role": "reviewer"}, _PASS_DOR, "--research-role 'reviewer' is not implementation"),
+        ({"research_role": "consult"}, _PASS_DOR, "--research-role 'consult' is not implementation"),
+        ({"research_role": "Implementation"}, _PASS_DOR, "--research-role 'Implementation' is not implementation"),
+        ({"research_role": "implementation-design"}, _PASS_DOR, "is not implementation"),
+        ({}, None, "no DoR issue card was checked"),
+        ({}, {"issues": [], "warnings": {}}, "no DoR issue card was checked"),
+        ({}, {"issues": [9274], "warnings": {"9274": "acceptance_criteria"}}, "not PASS"),
+        ({}, {"issues": [9274], "warnings": {}, "allow_warn_reason": "urgent"}, "not PASS"),
+        ({"model": "Auto", "mode": "workspace-write", "owned_path": None}, _PASS_DOR, "no --owned-path"),
+        ({"model": "cursor:auto", "research_role": "design"}, _PASS_DOR, "--research-role 'design' is not implementation"),
+    ],
+)
+def test_cursor_auto_refused_outside_a_well_defined_coding_task(overrides, dor_record, reason):
+    """#9274: Auto needs positive evidence of a write implementation dispatch with a PASS DoR card."""
+    args = _cursor_auto_args(**overrides)
+    refusal = delegate._cursor_auto_refusal(args, agent="cursor", model=args.model, dor_record=dor_record)
+    assert refusal is not None
+    assert "cursor_auto_outside_coding_task" in refusal
+    assert reason in refusal
+    assert "--model grok-4.7 or --model composer-2.5" in refusal
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_cursor_auto_admitted_for_a_write_implementation_dispatch(mode):
+    args = _cursor_auto_args(mode=mode, research_role=" implementation ", research_task_family="delegate-admission")
+    assert delegate._cursor_auto_refusal(args, agent="cursor", model="auto", dor_record=_PASS_DOR) is None
+
+
+def test_cursor_auto_review_typed_implementation_role_is_refused():
+    """A review flag refuses Auto even when the declared role is implementation."""
+    args = _cursor_auto_args(review=True)
+    refusal = delegate._cursor_auto_refusal(args, agent="cursor", model="auto", dor_record=_PASS_DOR)
+    assert refusal is not None
+    assert "the dispatch is review-typed" in refusal
+    assert "unclassified" not in refusal
+    assert "is not implementation" not in refusal
+
+
+@pytest.mark.parametrize("model", [None, "", "grok-4.7", "grok-4.7-high", "composer-2.5", "claude-sonnet-5-5-high"])
+def test_cursor_pinned_models_are_unaffected_by_the_auto_gate(model):
+    args = _cursor_auto_args(model=model, mode="read-only", owned_path=None, require_review_verdict=True)
+    assert delegate._cursor_auto_refusal(args, agent="cursor", model=model, dor_record=None) is None
+
+
+def test_cursor_auto_gate_applies_only_to_the_cursor_seat():
+    args = _cursor_auto_args(agent="codex", mode="read-only")
+    assert delegate._cursor_auto_refusal(args, agent="codex", model="auto", dor_record=None) is None
+
+
+def _cursor_dispatch(tmp_path, monkeypatch, *, dor_record, **overrides: Any):
+    _tmp_dispatch_repo_root(tmp_path, monkeypatch)
+    worktree_path = tmp_path / ".worktrees" / "dispatch" / "cursor" / "cursor-9274"
+    popen_calls: list[Any] = []
+
+    class _FakeStdin:
+        def write(self, data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24681
+        stdin = _FakeStdin()
+
+    def fake_popen(*a, **k):
+        popen_calls.append(a)
+        return _FakeProc()
+
+    _calls, fake_run = _make_run_stub(rev_parse_head_sha="deadbeef")
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+    monkeypatch.setattr(delegate, "_run_dor_preflight", lambda prompt, reason, *, dispatch_repo: (None, dor_record))
+    values: dict[str, Any] = {
+        "agent": "cursor",
+        "task_id": "cursor-auto-9274",
+        "prompt": "Implement the fix for issue #9274",
+        "prompt_file": None,
+        "allow_dor_warn": None,
+        "mode": "danger",
+        "model": "auto",
+        "owned_path": ["scripts/delegate.py"],
+        "research_role": "implementation",
+        "cwd": None,
+        "worktree": str(worktree_path),
+        "base": "main",
+        "hard_timeout": 3600,
+    }
+    values.update(overrides)
+    rc = delegate.cmd_dispatch(argparse.Namespace(**values))
+    return rc, popen_calls
+
+
+def test_dispatch_admits_cursor_auto_for_a_green_dor_write_implementation(tmp_tasks_dir, tmp_path, monkeypatch):
+    rc, popen_calls = _cursor_dispatch(tmp_path, monkeypatch, dor_record=_PASS_DOR)
+    assert rc == 0
+    assert popen_calls
+    state = delegate._read_state(delegate._state_path("cursor-auto-9274"))
+    assert state is not None
+    assert state["agent"] == "cursor"
+    assert state[delegate.CURSOR_AUTO_ADMISSION_STATE_KEY] == {"admitted": True, "model": "auto", "issues": [9274]}
+
+
+@pytest.mark.parametrize(
+    ("overrides", "dor_record", "refusal"),
+    [
+        ({"mode": "read-only", "owned_path": None, "worktree": None}, None, "cursor_auto_outside_coding_task"),
+        # The reviewer resolver refuses a review-typed Auto request before the Auto gate runs.
+        ({"require_review_verdict": True}, _PASS_DOR, "REVIEW_ROUTE_REFUSED"),
+        ({"owned_path": None}, _PASS_DOR, "cursor_auto_outside_coding_task"),
+        ({"research_role": "design"}, _PASS_DOR, "cursor_auto_outside_coding_task"),
+        ({"research_role": None}, _PASS_DOR, "the task is unclassified"),
+        (
+            {"allow_dor_warn": "urgent"},
+            {"issues": [9274], "warnings": {"9274": "verify"}, "allow_warn_reason": "urgent"},
+            "cursor_auto_outside_coding_task",
+        ),
+        ({}, None, "cursor_auto_outside_coding_task"),
+    ],
+)
+def test_dispatch_refuses_cursor_auto_before_any_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, overrides, dor_record, refusal
+):
+    rc, popen_calls = _cursor_dispatch(tmp_path, monkeypatch, dor_record=dor_record, **overrides)
+    assert rc == 2
+    assert popen_calls == []
+    assert delegate._read_state(delegate._state_path("cursor-auto-9274")) is None
+    assert refusal in capsys.readouterr().err
+
+
+def test_dispatch_keeps_pinned_cursor_models_without_an_auto_admission(tmp_tasks_dir, tmp_path, monkeypatch):
+    rc, popen_calls = _cursor_dispatch(tmp_path, monkeypatch, dor_record=_PASS_DOR, model="grok-4.7")
+    assert rc == 0
+    assert popen_calls
+    state = delegate._read_state(delegate._state_path("cursor-auto-9274"))
+    assert state is not None
+    assert delegate.CURSOR_AUTO_ADMISSION_STATE_KEY not in state
 
 
 def test_fetch_base_strips_origin_prefix(monkeypatch):
@@ -8255,6 +8530,42 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     state = delegate._read_state(delegate._state_path("branch-reuse-dry-run"))
     assert state is not None
     assert lines[1] == state["run_nonce"]
+    assert state["worktree_base_sha"] == "branch-head"
+    assert state["pinned_head"] is None
+
+
+@pytest.mark.parametrize("dry_run", [True, False])
+def test_branch_reuse_pinned_head_is_recorded_in_dry_run_and_real_task(
+    tmp_tasks_dir, tmp_path, monkeypatch, dry_run,
+):
+    worktree = _tmp_dispatch_repo_root(tmp_path, monkeypatch) / ".worktrees/dispatch/claude/pinned-branch"
+    worktree.mkdir(parents=True)
+    branch = "claude/pinned-branch"
+    pinned = "a" * 40
+    _, base_stub = _make_run_stub(
+        abbrev_ref=branch, status_porcelain="", rev_list_count="0", rev_parse_head_sha=pinned,
+    )
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["git", "worktree", "add"]:
+            pytest.fail("pinned branch reuse must not add a worktree")
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    proc = MagicMock(pid=24680)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *_args, **_kwargs: proc)
+    args = delegate.build_parser().parse_args([
+        "dispatch", "--agent", "claude", "--task-id", "pinned-branch", "--prompt", "validate pin",
+        "--mode", "read-only", "--worktree", str(worktree), "--branch", branch, "--pinned-head", pinned,
+    ])
+    args.dry_run = dry_run
+    assert delegate.cmd_dispatch(args) == 0
+    state = delegate._read_state(delegate._state_path("pinned-branch"))
+    assert state is not None
+    assert state["pinned_head"] == state["worktree_base_sha"] == pinned
+    assert state["status"] == ("dry_run" if dry_run else "spawning")
+    if not dry_run:
+        assert state["pid"] == proc.pid
 
 
 def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
@@ -9440,8 +9751,27 @@ class _GuardFakeStdin:
 
 
 class _GuardFakeProc:
+    """Stand-in for the detached worker.
+
+    Scope startup calls ``poll`` while it waits for the one-byte start marker,
+    then ``returncode``, ``kill`` and ``wait`` if that marker never arrives.
+    ``kill`` and ``wait`` update only this object. ``pid`` is not a process,
+    and nothing here signals it.
+    """
+
     pid = 44551
     stdin = _GuardFakeStdin()
+    returncode = None
+
+    def poll(self):
+        return self.returncode
+
+    def wait(self, timeout=None):
+        return self.returncode
+
+    def kill(self):
+        if self.returncode is None:
+            self.returncode = -signal.SIGKILL
 
 
 def _patch_worker_popen(monkeypatch):
@@ -9450,13 +9780,20 @@ def _patch_worker_popen(monkeypatch):
     ``delegate.subprocess`` and ``worktree_containment.subprocess`` are the same
     module object, so a blanket ``Popen`` patch would also break the containment
     guard's git plumbing (``subprocess.run`` uses ``Popen`` internally). Route
-    ``git`` invocations to the real Popen and fake only the ``.venv`` worker.
+    ``git`` invocations to the real Popen and fake only the worker.
+
+    A scoped launch passes the start-marker fd in ``pass_fds``. This writes the
+    byte the real marker wrapper writes after ``systemd-run`` execs, so
+    ``_marker_seen`` keeps ``_GuardFakeProc`` instead of reading ``/proc`` or
+    signalling its pid.
     """
     real_popen = delegate.subprocess.Popen
 
     def fake_popen(cmd, *a, **k):
         if cmd and str(cmd[0]) == "git":
             return real_popen(cmd, *a, **k)
+        for fd in k.get("pass_fds") or ():
+            os.write(fd, b"1")
         return _GuardFakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
@@ -13979,6 +14316,15 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     _patch_worker_popen(monkeypatch)
+    spawned = []
+    patched_popen = delegate.subprocess.Popen
+
+    def capture_worker(cmd, *args, **kwargs):
+        if "_worker" in cmd:
+            spawned.append(cmd)
+        return patched_popen(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", capture_worker)
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
     # The reverse flow (#9163): rendered in the primary, dispatched from a worktree whose own server code differs.
     # The dispatcher's checkout runs neither the templates nor the server, so its difference does not refuse.
@@ -14004,6 +14350,15 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
             )
         )
     assert rc == 0
+    assert len(spawned) == 1
+    worker_args = delegate.build_parser().parse_args(spawned[0][2:])
+    assert worker_args.review_manifest == str(manifest.resolve())
+    assert worker_args.review_input_root == str(main)
+    with patch.object(delegate, "_run_worker", return_value=0) as worker, patch.object(delegate.sys, "stdin") as stdin:
+        stdin.read.return_value = "probe"
+        assert delegate.cmd_worker(worker_args) == 0
+    assert worker.call_args.kwargs["review_manifest"] == str(manifest.resolve())
+    assert worker.call_args.kwargs["review_input_root"] == str(main)
     assert delegate._review_attempt_marker_path(dispatch_wt).read_text(encoding="utf-8") == "review-marked\n"
     state = delegate._read_state(delegate._state_path("review-marked"))
     assert state["worktree_disallow_reuse"] is True
@@ -14021,6 +14376,49 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     assert contract["render_template_digest"] == contract["template_digest"]
     assert contract["server_digest"].startswith("sha256:")
     assert contract["prompt_sha256"] == state["prompt_sha256"]
+
+
+def test_review_attempt_scope_launch_keeps_the_guard_fake(tmp_tasks_dir, monkeypatch, dispatch_slice_probe):
+    """A ready slice probe keeps ``_GuardFakeProc`` as the scoped worker (#9009).
+
+    The probe is forced ready in-process, so the host's user manager is not
+    consulted. ``poll`` is the surface scope startup calls when the start
+    marker is late; the spawn helper writes the marker and this process is kept.
+    """
+    dispatch_slice_probe["ready"] = True
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", "review-attempt-scope", "--prompt", "hi"]
+    )
+    args.cwd = str(delegate._REPO_ROOT)
+    recorded: list[list[str]] = []
+    spawned: list[_GuardFakeProc] = []
+    _patch_worker_popen(monkeypatch)
+    patched = delegate.subprocess.Popen
+
+    def recording_popen(cmd, *popen_args, **kwargs):
+        proc = patched(cmd, *popen_args, **kwargs)
+        if cmd and str(cmd[0]) != "git":
+            recorded.append([str(part) for part in cmd])
+            spawned.append(proc)
+        return proc
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", recording_popen)
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    assert len(spawned) == 1
+    proc = spawned[0]
+    assert isinstance(proc, _GuardFakeProc)
+    assert proc.poll() is None
+    state = delegate._read_state(delegate._state_path("review-attempt-scope"))
+    assert state is not None
+    assert state["pid"] == proc.pid
+    assert state["launch_mode"] == "scope"
+    assert state["launch_unit"].startswith("lu-worker-review-attempt-scope-")
+    assert "launch_fallback_reason" not in state
+    assert recorded[0][0] == "systemd-run"
+    assert "--scope" in recorded[0]
+    assert "--expand-environment=no" in recorded[0]
 
 
 def _skewed_review_dispatch(tmp_path: Path, monkeypatch, *, task_id: str, **overrides) -> tuple[int, Path, Path]:
@@ -14052,6 +14450,28 @@ def _skewed_review_dispatch(tmp_path: Path, monkeypatch, *, task_id: str, **over
             )
         )
     return rc, main, dispatch_wt
+
+
+def test_review_attempt_refuses_output_schema_before_route_or_provisioning(tmp_tasks_dir, tmp_path, capsys):
+    with (
+        patch("scripts.agent_runtime.target_admission.resolve_and_admit") as admit,
+        patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare,
+        patch.object(delegate, "_resolve_output_schema") as resolve_schema,
+        patch.object(delegate.subprocess, "Popen") as spawn,
+    ):
+        rc = delegate.cmd_dispatch(_write_args(
+            mode="read-only", task_id="review-schema-refusal",
+            review_attempt=str(tmp_path / "missing-manifest.yaml"),
+            review_id="review", attempt_id="current",
+            output_schema=str(tmp_path / "missing-schema.json"),
+        ))
+    assert rc == 2
+    assert "attempt_output_schema_unsupported" in capsys.readouterr().err
+    admit.assert_not_called()
+    prepare.assert_not_called()
+    resolve_schema.assert_not_called()
+    spawn.assert_not_called()
+    assert not list(tmp_tasks_dir.glob("review-schema-refusal*"))
 
 
 def test_review_attempt_refuses_a_prompt_rendered_against_other_server_code(
@@ -14123,6 +14543,8 @@ def test_review_attempt_refuses_at_launch_when_the_primary_server_changes_after_
     def fake_popen(cmd, *a, **k):
         if cmd and str(cmd[0]) == "git":
             return real_popen(cmd, *a, **k)
+        for fd in k.get("pass_fds") or ():
+            os.write(fd, b"1")
         spawned.append([str(part) for part in cmd])
         return _GuardFakeProc()
 
