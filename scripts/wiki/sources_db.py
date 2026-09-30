@@ -33,6 +33,7 @@ from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -124,6 +125,53 @@ CREATE TABLE IF NOT EXISTS ulif_dictua_sections (
 );
 CREATE INDEX IF NOT EXISTS idx_ulif_dictua_sections_entry_kind_order
     ON ulif_dictua_sections(entry_id, kind, source_order);
+"""
+
+ULIF_FORMS_PARSER_VERSION = "ulif-forms-v1"
+
+ULIF_FORMS_SCHEMA = """
+CREATE TABLE IF NOT EXISTS ulif_forms (
+    id INTEGER PRIMARY KEY,
+    entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
+    entry_key TEXT NOT NULL,
+    form_unstressed TEXT NOT NULL,
+    form_stressed TEXT NOT NULL,
+    stress_vowel_indices TEXT NOT NULL DEFAULT '[]',
+    grammatical_tags TEXT NOT NULL DEFAULT '[]',
+    unmapped_labels TEXT NOT NULL DEFAULT '[]',
+    variant_order INTEGER NOT NULL DEFAULT 1,
+    preposition TEXT NOT NULL DEFAULT '',
+    marked_asterisk INTEGER NOT NULL DEFAULT 0,
+    is_lemma INTEGER NOT NULL DEFAULT 0,
+    is_invariable INTEGER NOT NULL DEFAULT 0,
+    dual_stress_flag INTEGER NOT NULL DEFAULT 0,
+    pedagogical_stressed_form TEXT NOT NULL DEFAULT '',
+    source_page_sha256 TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_ulif_forms_entry_id ON ulif_forms(entry_id);
+CREATE INDEX IF NOT EXISTS idx_ulif_forms_form_unstressed ON ulif_forms(form_unstressed);
+
+CREATE TABLE IF NOT EXISTS ulif_forms_failures (
+    id INTEGER PRIMARY KEY,
+    entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
+    reason TEXT NOT NULL,
+    locator TEXT NOT NULL DEFAULT '',
+    UNIQUE(entry_id)
+);
+CREATE INDEX IF NOT EXISTS idx_ulif_forms_failures_entry_id ON ulif_forms_failures(entry_id);
+
+CREATE TABLE IF NOT EXISTS ulif_forms_build (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    state TEXT NOT NULL CHECK (state IN ('building', 'complete', 'failed')),
+    parser_version TEXT NOT NULL,
+    total_entries INTEGER NOT NULL DEFAULT 0,
+    entries_done INTEGER NOT NULL DEFAULT 0,
+    entries_failed INTEGER NOT NULL DEFAULT 0,
+    total_forms INTEGER NOT NULL DEFAULT 0,
+    started_at TEXT NOT NULL DEFAULT '',
+    finished_at TEXT NOT NULL DEFAULT ''
+);
 """
 
 _ULIF_ENTRY_MIGRATION_COLUMNS = frozenset({
@@ -292,6 +340,7 @@ def ensure_ulif_dictua_schema(conn: sqlite3.Connection) -> None:
     # CREATE TABLE IF NOT EXISTS does not rewrite an entries table that
     # still has the spelling-only unique key.
     conn.executescript(ULIF_DICTUA_SCHEMA)
+    conn.executescript(ULIF_FORMS_SCHEMA)
     conn.commit()
 
 
@@ -506,6 +555,398 @@ def get_ulif_dictua_entry(
         if len(rows) == 1:
             return _materialize_ulif_dictua_entry(conn, rows[0])
         return _ulif_dictua_ambiguous(normalized, rows)
+    finally:
+        conn.close()
+
+
+def _derive_identity_from_raw(
+    *,
+    entry_id: int,
+    homonym_index: int,
+    stored_headword: str,
+    stored_grammar: str,
+    stored_gloss: str,
+    raw_response_ref: str,
+    entry_forms: list[dict[str, Any]],
+    db_path: str | Path | None = None,
+) -> dict[str, Any]:
+    from scripts.lexicon.runner.ulif_dictua_parse import (
+        ULIF_FORMS_PARSER_VERSION,
+        parse_ulif_entry,
+    )
+
+    manifest_bytes = resolve_ulif_dictua_raw_response(raw_response_ref, db_path=db_path)
+    if manifest_bytes:
+        try:
+            manifest = json.loads(manifest_bytes)
+        except Exception:
+            manifest = None
+
+        if isinstance(manifest, dict):
+            if "paradigm" in manifest:
+                par_ref = manifest["paradigm"]
+                if isinstance(par_ref, str) and par_ref.startswith("sha256:"):
+                    par_sha = par_ref.removeprefix("sha256:")
+                    path = Path(db_path) if db_path is not None else _read_db_path()
+                    cache = (
+                        ulif_raw_cache.cache_path()
+                        if path == PROJECT_ROOT / "data/sources.db"
+                        else ulif_raw_cache.cache_path(path)
+                    )
+                    try:
+                        par_html = ulif_raw_cache.get(par_sha, path=cache)
+                    except Exception:
+                        par_html = None
+
+                    if par_html:
+                        parsed = parse_ulif_entry(
+                            par_html.decode("utf-8", errors="replace"),
+                            homonym_index=homonym_index,
+                        )
+                        parsed_headword = parsed.get("canonical_headword") or ""
+                        if not parsed_headword:
+                            return {
+                                "canonical_headword": "",
+                                "extraction_failed": "empty_article",
+                                "locator": f"ulif:entry:{entry_id}",
+                                "parser_version": parsed.get("parser_version", ULIF_FORMS_PARSER_VERSION),
+                                "source_page_sha256": par_sha,
+                                "stored_matches_raw": False,
+                                "mismatches": ["canonical_headword"],
+                            }
+
+                        mismatches = []
+                        if stored_headword != parsed_headword:
+                            mismatches.append("canonical_headword")
+                        if stored_grammar != (parsed.get("grammatical_label") or ""):
+                            mismatches.append("grammatical_label")
+
+                        return {
+                            "canonical_headword": parsed_headword,
+                            "grammatical_label": parsed.get("grammatical_label") or "",
+                            "sense_gloss": parsed.get("sense_gloss") or "",
+                            "is_invariable": parsed.get("is_invariable", False),
+                            "printed_homonym_number": parsed.get("printed_homonym_number"),
+                            "parser_version": parsed.get("parser_version", ULIF_FORMS_PARSER_VERSION),
+                            "source_page_sha256": par_sha,
+                            "stored_matches_raw": (len(mismatches) == 0),
+                            "mismatches": mismatches,
+                            "source": "raw_entry_page",
+                        }
+            else:
+                return {
+                    "canonical_headword": stored_headword,
+                    "grammatical_label": stored_grammar,
+                    "sense_gloss": stored_gloss,
+                    "is_invariable": False,
+                    "raw_entry_page_absent": True,
+                    "weaker_provenance": "stored_columns_only",
+                    "stored_matches_raw": True,
+                    "mismatches": [],
+                    "source": "stored_columns_assertion",
+                }
+
+    lemma_form = next((f for f in entry_forms if f.get("is_lemma")), None)
+    if lemma_form:
+        mismatches = []
+        parsed_headword = lemma_form.get("form_stressed") or ""
+        if stored_headword != parsed_headword:
+            mismatches.append("canonical_headword")
+        return {
+            "canonical_headword": parsed_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": lemma_form.get("is_invariable", False),
+            "parser_version": lemma_form.get("parser_version", ULIF_FORMS_PARSER_VERSION),
+            "source_page_sha256": lemma_form.get("source_page_sha256", ""),
+            "stored_matches_raw": (len(mismatches) == 0),
+            "mismatches": mismatches,
+            "source": "derived_forms_table",
+        }
+
+    return {
+        "canonical_headword": stored_headword,
+        "grammatical_label": stored_grammar,
+        "sense_gloss": stored_gloss,
+        "is_invariable": False,
+        "raw_entry_page_absent": True,
+        "weaker_provenance": "stored_columns_only",
+        "stored_matches_raw": True,
+        "mismatches": [],
+        "source": "stored_columns_assertion",
+    }
+
+
+def get_ulif_word_records(
+    words: str | list[str] | tuple[str, ...],
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
+    """Return complete ULIF source word records for one or more Ukrainian words.
+
+    Exposes all verified harvested material for every source homonym:
+    canonical headword, grammatical label, complete sense gloss, full
+    ordered section payloads (including raw_html and unknown keys), forms rows
+    or explicit forms_state, and separate raw-derived identity attribution.
+    """
+    word_list = [words] if isinstance(words, str) else list(words)
+
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return [
+            {
+                "word": w,
+                "normalized_query": normalize_ulif_dictua_query(w),
+                "status": "unavailable",
+                "verified": False,
+                "entry_count": 0,
+                "entries": [],
+                "homonyms": [],
+            }
+            for w in word_list
+        ]
+
+    try:
+        has_forms_build = _ulif_table_exists(conn, "ulif_forms_build")
+        has_forms_table = _ulif_table_exists(conn, "ulif_forms")
+        has_failures_table = _ulif_table_exists(conn, "ulif_forms_failures")
+        has_sections_table = _ulif_table_exists(conn, "ulif_dictua_sections")
+
+        if has_forms_build:
+            build_row = conn.execute(
+                "SELECT state, parser_version FROM ulif_forms_build WHERE id = 1"
+            ).fetchone()
+            if build_row is None:
+                global_forms_state = "unbuilt"
+            elif build_row["state"] != "complete":
+                global_forms_state = str(build_row["state"])
+            elif build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
+                global_forms_state = "stale_parser_version"
+            else:
+                global_forms_state = "complete"
+        else:
+            global_forms_state = "missing_table"
+
+        records: list[dict] = []
+        for word in word_list:
+            normalized = normalize_ulif_dictua_query(word)
+            if not normalized:
+                records.append({
+                    "word": word,
+                    "normalized_query": "",
+                    "status": "invalid_input",
+                    "verified": False,
+                    "entry_count": 0,
+                    "entries": [],
+                    "homonyms": [],
+                })
+                continue
+
+            rows = _load_ulif_dictua_rows(conn, normalized)
+            if not rows:
+                records.append({
+                    "word": word,
+                    "normalized_query": normalized,
+                    "status": "not_found",
+                    "verified": False,
+                    "entry_count": 0,
+                    "entries": [],
+                    "homonyms": [],
+                })
+                continue
+
+            entries: list[dict] = []
+            for row in rows:
+                entry_id = int(row["id"])
+                keys = row.keys()
+                homonym_index = (
+                    int(row["homonym_index"])
+                    if "homonym_index" in keys and row["homonym_index"] is not None
+                    else 1
+                )
+                homonym_checked = (
+                    int(row["homonym_checked"])
+                    if "homonym_checked" in keys and row["homonym_checked"] is not None
+                    else 0
+                )
+                is_verified = (homonym_checked == 1)
+
+                stored_headword = str(row["canonical_headword"] or "")
+                stored_grammar = str(row["grammatical_label"] if "grammatical_label" in keys else "")
+                stored_gloss = str(row["sense_gloss"] if "sense_gloss" in keys else "")
+                register_pos = str(row["register_position"] if "register_position" in keys else "")
+                raw_ref = str(row["raw_response_ref"] or "")
+                retrieved_at = str(row["retrieved_at"] or "")
+                resp_sha = str(row["response_sha256"] or "")
+                content_sha = str(
+                    row["content_sha256"]
+                    if "content_sha256" in keys and row["content_sha256"]
+                    else resp_sha
+                )
+                parser_v = str(row["parser_version"] or "")
+                status = str(row["status"] or "")
+
+                if not is_verified:
+                    entries.append({
+                        "entry_id": entry_id,
+                        "homonym_index": homonym_index,
+                        "canonical_headword": stored_headword,
+                        "grammatical_label": stored_grammar,
+                        "sense_gloss": stored_gloss,
+                        "register_position": register_pos,
+                        "homonym_checked": homonym_checked,
+                        "verified": False,
+                        "status": status,
+                        "raw_response_ref": raw_ref,
+                        "retrieved_at": retrieved_at,
+                        "response_sha256": resp_sha,
+                        "content_sha256": content_sha,
+                        "parser_version": parser_v,
+                        "identity_from_raw": None,
+                        "sections": {},
+                        "forms": [],
+                        "forms_state": "unverified",
+                    })
+                    continue
+
+                # Verified entry: load complete section payloads without collapsing
+                sections: dict[str, list[dict]] = {k: [] for k in ULIF_DICTUA_SECTION_KINDS}
+                if has_sections_table:
+                    sec_rows = conn.execute(
+                        """
+                        SELECT kind, source_order, sense_or_group_id, payload_json
+                        FROM ulif_dictua_sections
+                        WHERE entry_id = ?
+                        ORDER BY kind, source_order
+                        """,
+                        (entry_id,),
+                    ).fetchall()
+                    for s_row in sec_rows:
+                        kind = str(s_row["kind"])
+                        try:
+                            payload = json.loads(s_row["payload_json"])
+                        except Exception:
+                            payload = {"raw_payload_json": s_row["payload_json"]}
+                        if not isinstance(payload, dict):
+                            payload = {"value": payload}
+                        payload["source_order"] = int(s_row["source_order"])
+                        payload["sense_or_group_id"] = str(s_row["sense_or_group_id"])
+                        sections.setdefault(kind, []).append(payload)
+
+                entry_forms: list[dict[str, Any]] = []
+                entry_forms_state = global_forms_state
+                entry_forms_failure = None
+
+                if global_forms_state == "complete" and has_forms_table:
+                    f_rows = conn.execute(
+                        """
+                        SELECT entry_key, form_unstressed, form_stressed,
+                               stress_vowel_indices, grammatical_tags, unmapped_labels,
+                               variant_order, preposition, marked_asterisk, is_lemma,
+                               is_invariable, dual_stress_flag, pedagogical_stressed_form,
+                               source_page_sha256, parser_version
+                        FROM ulif_forms
+                        WHERE entry_id = ?
+                        ORDER BY variant_order, id
+                        """,
+                        (entry_id,),
+                    ).fetchall()
+                    if f_rows:
+                        for f_row in f_rows:
+                            f_dict = dict(f_row)
+                            for json_col in ("stress_vowel_indices", "grammatical_tags", "unmapped_labels"):
+                                try:
+                                    f_dict[json_col] = json.loads(f_dict[json_col])
+                                except Exception:
+                                    f_dict[json_col] = []
+                            for bool_col in ("marked_asterisk", "is_lemma", "is_invariable", "dual_stress_flag"):
+                                f_dict[bool_col] = bool(f_dict[bool_col])
+                            entry_forms.append(f_dict)
+                        entry_forms_state = "complete"
+                    elif has_failures_table:
+                        fail_row = conn.execute(
+                            "SELECT reason, locator FROM ulif_forms_failures WHERE entry_id = ?",
+                            (entry_id,),
+                        ).fetchone()
+                        if fail_row:
+                            entry_forms_state = str(fail_row["reason"])
+                            entry_forms_failure = {
+                                "reason": str(fail_row["reason"]),
+                                "locator": str(fail_row["locator"]),
+                            }
+                        else:
+                            entry_forms_state = "missing_forms"
+
+                identity_from_raw = _derive_identity_from_raw(
+                    entry_id=entry_id,
+                    homonym_index=homonym_index,
+                    stored_headword=stored_headword,
+                    stored_grammar=stored_grammar,
+                    stored_gloss=stored_gloss,
+                    raw_response_ref=raw_ref,
+                    entry_forms=entry_forms,
+                    db_path=db_path,
+                )
+
+                entry_dict = {
+                    "entry_id": entry_id,
+                    "homonym_index": homonym_index,
+                    "canonical_headword": stored_headword,
+                    "grammatical_label": stored_grammar,
+                    "sense_gloss": stored_gloss,
+                    "register_position": register_pos,
+                    "homonym_checked": homonym_checked,
+                    "verified": True,
+                    "status": status,
+                    "raw_response_ref": raw_ref,
+                    "retrieved_at": retrieved_at,
+                    "response_sha256": resp_sha,
+                    "content_sha256": content_sha,
+                    "parser_version": parser_v,
+                    "identity_from_raw": identity_from_raw,
+                    "sections": sections,
+                    "forms": entry_forms,
+                    "forms_state": entry_forms_state,
+                }
+                if entry_forms_failure is not None:
+                    entry_dict["forms_failure"] = entry_forms_failure
+
+                entries.append(entry_dict)
+
+            all_verified = all(e["verified"] for e in entries)
+            any_verified = any(e["verified"] for e in entries)
+            if all_verified:
+                word_status = "ok"
+            elif any_verified:
+                word_status = "partial_unverified"
+            else:
+                word_status = "unverified"
+
+            word_record = {
+                "word": word,
+                "normalized_query": normalized,
+                "status": word_status,
+                "verified": all_verified,
+                "entry_count": len(entries),
+                "entries": entries,
+                "homonyms": entries,
+            }
+
+            if len(entries) == 1:
+                first = entries[0]
+                word_record["canonical_headword"] = first["canonical_headword"]
+                word_record["grammatical_label"] = first["grammatical_label"]
+                word_record["sense_gloss"] = first["sense_gloss"]
+                word_record["sections"] = first["sections"]
+                word_record["forms"] = first["forms"]
+                word_record["forms_state"] = first["forms_state"]
+                word_record["identity_from_raw"] = first["identity_from_raw"]
+                if "forms_failure" in first:
+                    word_record["forms_failure"] = first["forms_failure"]
+
+            records.append(word_record)
+
+        return records
     finally:
         conn.close()
 

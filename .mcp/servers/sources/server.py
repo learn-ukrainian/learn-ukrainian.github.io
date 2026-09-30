@@ -827,6 +827,36 @@ async def list_tools() -> list[Tool]:
             },
         ),
         _tool(
+            name="query_ulif_records",
+            description=(
+                "Query complete ULIF source word records for one or more Ukrainian words from the local "
+                "canonical cache. Exposes all harvested homonyms, grammatical labels, complete sense glosses, "
+                "every paradigm/form/stress alternative, every synonym group, every antonym group, and every "
+                "phraseology group with its full text/examples/labels/source ordering and provenance. "
+                "Never fetches live."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "words": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of Ukrainian words to look up (max 200 words).",
+                    },
+                    "detail": {
+                        "type": "string",
+                        "enum": ["full", "compact"],
+                        "default": "full",
+                        "description": (
+                            "Detail level: 'full' returns complete payloads including raw_html; "
+                            "'compact' drops only raw_html keys to reduce payload size."
+                        ),
+                    },
+                },
+                "required": ["words"],
+            },
+        ),
+        _tool(
             name="query_r2u",
             description=(
                 "Look up Russian→Ukrainian translations on r2u.org.ua. "
@@ -1794,6 +1824,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             "query_ulif_synonyms": lambda: handle_query_ulif_synonyms(arguments),
             "query_ulif_antonyms": lambda: handle_query_ulif_antonyms(arguments),
             "query_ulif_phraseology": lambda: handle_query_ulif_phraseology(arguments),
+            "query_ulif_records": lambda: handle_query_ulif_records(arguments),
             "query_r2u": lambda: handle_query_r2u(arguments),
             "query_e2u": lambda: handle_query_e2u(arguments),
             "query_sum20": lambda: handle_query_sum20(arguments),
@@ -3136,6 +3167,71 @@ async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
     from rag.source_query import query_ulif_phraseology
 
     return await _handle_ulif_relation(args["word"], "phraseology", query_ulif_phraseology)
+
+
+async def handle_query_ulif_records(args: dict) -> list[TextContent]:
+    from scripts.lexicon.runner.ulif_dictua_parse import strip_raw_html
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from wiki.sources_db import (
+        ULIF_DICTUA_ATTRIBUTION_LABEL,
+        ULIF_DICTUA_OFFICIAL_URL,
+        ULIF_DICTUA_SOURCE_ID,
+        _read_db_path,
+        get_ulif_word_records,
+    )
+
+    try:
+        _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return [TextContent(type="text", text="Sources database not found.")]
+
+    words = args.get("words") if isinstance(args, dict) else None
+    if isinstance(words, str):
+        words = [words]
+    if not isinstance(words, list) or not words or not all(isinstance(w, str) for w in words):
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: words must be a nonempty list of strings. Expected arguments: words.",
+            "expected_arguments": ["words"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+    detail = str(args.get("detail") or "full").lower()
+    if detail not in {"full", "compact"}:
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": f"invalid_input: detail must be 'full' or 'compact', got {detail!r}.",
+            "expected_arguments": ["words", "detail"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+    warning = None
+    if len(words) > 200:
+        warning = f"Requested {len(words)} words; truncated to maximum 200 words."
+        words = words[:200]
+
+    records = await asyncio.to_thread(get_ulif_word_records, words)
+    if detail == "compact":
+        records = strip_raw_html(records)
+
+    response: dict[str, Any] = {
+        "source": {
+            "source_id": ULIF_DICTUA_SOURCE_ID,
+            "official_url": ULIF_DICTUA_OFFICIAL_URL,
+            "attribution_label": ULIF_DICTUA_ATTRIBUTION_LABEL,
+        },
+        "detail": detail,
+        "record_count": len(records),
+        "records": records,
+    }
+    if detail == "compact":
+        response["detail_note"] = "Compact detail drops only raw_html keys from section payloads."
+    if warning:
+        response["warning"] = warning
+
+    return [TextContent(type="text", text=json.dumps(response, ensure_ascii=False))]
 
 
 async def handle_query_r2u(args: dict) -> list[TextContent]:
