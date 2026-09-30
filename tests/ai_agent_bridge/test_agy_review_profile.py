@@ -525,7 +525,7 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
     def fake_dispatch(*_args: object, **kwargs: object) -> None:
         assert kwargs["pinned_head"] == gate_sha
         raise RuntimeError(
-            f"refusing dispatch: fetched branch head {moved_sha} differs from the Gemini path-gate SHA {gate_sha}"
+            f"refusing dispatch: fetched branch head {moved_sha} differs from the pinned head SHA {gate_sha}"
         )
 
     monkeypatch.setattr("scripts.ai_agent_bridge._dispatch_wrappers.run_ask_review_dispatch", fake_dispatch)
@@ -543,7 +543,7 @@ def test_pr_head_move_between_gate_and_dispatch_is_refused(monkeypatch: pytest.M
         return subprocess.CompletedProcess(command, 0, stdout=f"{_CONTENT_PATH}\n")
 
     monkeypatch.setattr("subprocess.run", fake_run)
-    with pytest.raises(SystemExit, match="differs from the Gemini path-gate SHA"):
+    with pytest.raises(SystemExit, match="differs from the pinned head SHA"):
         _handle_acp_compat(_review_args(pr=41), "agy")
 
 
@@ -936,5 +936,5 @@ def test_dispatch_refuses_when_fetched_head_differs_from_gate_sha() -> None:
 
     gate = "a" * 40
     _refuse_if_gate_head_moved(gate, gate)
-    with pytest.raises(RuntimeError, match="differs from the Gemini path-gate SHA"):
+    with pytest.raises(RuntimeError, match="differs from the pinned head SHA"):
         _refuse_if_gate_head_moved("b" * 40, gate)

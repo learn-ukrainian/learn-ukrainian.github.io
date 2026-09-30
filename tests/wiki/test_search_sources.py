@@ -139,6 +139,43 @@ def test_search_sections_fts5_groups_chunks_and_applies_fixed_weights(monkeypatc
     assert results[0]["text"] == results[0]["full_text"]
 
 
+def test_search_sources_ranks_unsectioned_chunks_with_sections(monkeypatch):
+    conn = _make_conn()
+    _seed_conn(conn)
+    conn.executemany(
+        """
+        INSERT INTO textbooks (
+            id, chunk_id, title, text, source_file, grade, author, char_count, parent_section_id
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """,
+        [
+            (5, "section-hit", "uniquealpha", "section candidate", "grade1-book", "1", "tester", 24, 101),
+            (6, "ulp-unsectioned-hit", "uniquebeta", "unsectioned candidate", "ulp-test", "", "tester", 29, None),
+        ],
+    )
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections",))
+    monkeypatch.setattr(sources_db, "_get_tokenizer", lambda: FakeTokenizer())
+    monkeypatch.setattr(
+        sources_db,
+        "rerank_candidates",
+        lambda query, candidates, limit=10, **_kwargs: [
+            {**candidate, "dense_score": 0.0, "ranking": "keyword_rrf"}
+            for candidate in candidates[:limit]
+        ],
+    )
+
+    results = sources_db.search_sources("uniquealpha uniquebeta", track="a1", limit=5)
+
+    by_chunk = {row["chunk_id"]: row for row in results}
+    assert "ulp-unsectioned-hit" in by_chunk
+    assert by_chunk["ulp-unsectioned-hit"]["parent_section_id"] is None
+    assert by_chunk["ulp-unsectioned-hit"]["text"] == "unsectioned candidate"
+    assert by_chunk["ulp-unsectioned-hit"]["unit_key"] == "textbook_sections:ulp-unsectioned-hit"
+    assert by_chunk["S101"]["section_id"] == 101
+    assert {row["keyword_rank"] for row in results} == {1, 2}
+
+
 def test_search_sources_uses_query_builder_and_dense_rerank(monkeypatch, tmp_path):
     conn = _make_conn()
     _seed_conn(conn)
