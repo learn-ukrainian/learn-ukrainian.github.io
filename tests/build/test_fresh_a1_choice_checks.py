@@ -29,11 +29,33 @@ from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: 
 
 ROOT = Path(__file__).resolve().parents[2]
 A1_STORE = ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml"
+if not A1_STORE.is_file():
+    pytest.skip(
+        f"Missing repository-relative prerequisite: {A1_STORE.relative_to(ROOT)}",
+        allow_module_level=True,
+    )
 STORE_WORDS = yaml.safe_load(A1_STORE.read_text(encoding="utf-8"))["words"]
 NEGATION = next(record for record in STORE_WORDS if record["id"] == NEGATION_PARTICLE_RECORD)
 W075 = next(record for record in STORE_WORDS if record["id"] == "W-075")
 W031 = next(record for record in STORE_WORDS if record["id"] == "W-031")
 W047 = next(record for record in STORE_WORDS if record["id"] == "W-047")
+
+
+@pytest.fixture(autouse=True)
+def _isolate_atlas_manifest(tmp_path_factory: pytest.TempPathFactory):
+    from scripts.generate_mdx import atlas_links
+
+    manifest = tmp_path_factory.mktemp("atlas_manifest") / "lexicon-manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    mp = pytest.MonkeyPatch()
+    mp.setattr(atlas_links, "_DEFAULT_MANIFEST", manifest)
+    atlas_links._load_manifest_tables.cache_clear()
+    try:
+        yield
+    finally:
+        atlas_links._load_manifest_tables.cache_clear()
+        mp.undo()
+
 
 
 def _record(number: int, lemma: str, forms: list[tuple[str, str]]) -> dict:

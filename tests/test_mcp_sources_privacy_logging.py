@@ -42,7 +42,7 @@ def _load_sources_server():
     return module
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="module", autouse=True)
 def log_path(tmp_path_factory: pytest.TempPathFactory):
     """Redirect the server's log writes to a tmp dir for this module only."""
     log_dir = tmp_path_factory.mktemp("mcp-sources-logs")
