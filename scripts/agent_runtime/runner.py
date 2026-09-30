@@ -68,6 +68,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
@@ -454,7 +455,7 @@ def _resolve_plan_telemetry(
     version remains explicitly unknown; the exact binary is instead hashed and
     help/version-probed inside the verified sandbox by the isolation layer.
     """
-    if tool_config and tool_config.get("review_isolation"):
+    if tool_config and (tool_config.get("review_isolation") or tool_config.get("review_attempt_boundary")):
         return InvocationTelemetry(
             model=requested_model,
             effort=requested_effort or "unknown",
@@ -525,17 +526,23 @@ def _prepare_stdin_handle(
         dir=str(directory) if directory is not None else None,
     )
     path = Path(path_str)
+    handle = None
     try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(stdin_payload.encode("utf-8"))
+        handle = os.fdopen(fd, "w+", encoding="utf-8")
+        handle.write(stdin_payload)
+        handle.flush()
+        handle.seek(0)
     except OSError:
+        if handle is not None:
+            handle.close()
+        else:
+            os.close(fd)
         with contextlib.suppress(OSError):
             path.unlink()
         raise
 
     # Ownership transfers to the subprocess lifecycle; _cleanup_stdin_temp
     # closes it in the runner finally block.
-    handle = open(path, encoding="utf-8")  # noqa: SIM115
     if unlink_after_open:
         path.unlink()
         return handle, None
@@ -1494,7 +1501,17 @@ def _execute_invocation_plan(
     isolation_capability_digest: str | None = None
     isolation_prompt_digest: str | None = None
     isolation_prompt_transport: str | None = None
-    if tool_config and tool_config.get("review_isolation"):
+    if tool_config and tool_config.get("review_attempt_boundary"):
+        boundary = tool_config["review_attempt_boundary"]
+        review_cwd = boundary.workspace
+        try:
+            review_cmd, env = boundary.wrap(review_cmd, plan.env_overrides)
+        except (OSError, ValueError, RuntimeError) as exc:
+            raise AgentUnavailableError("formal attempt filesystem boundary refused") from exc
+        for key in plan.env_unsets:
+            env.pop(key, None)
+        env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+    elif tool_config and tool_config.get("review_isolation"):
         try:
             from scripts.review.isolation import (
                 ReviewIsolationError,
@@ -1829,14 +1846,17 @@ def _execute_invocation_plan(
         # the finally clause doesn't try to close them again.
         stdout_master_fd = None
         stderr_master_fd = None
-        parse = adapter.parse_response(
-            stdout=stdout_text,
-            stderr=stderr_text,
-            returncode=final_returncode if final_returncode is not None else -1,
-            output_file=plan.output_file,
-            plan=plan,
-            call_start_time=start_time,
-        )
+        try:
+            parse = adapter.parse_response(
+                stdout=stdout_text,
+                stderr=stderr_text,
+                returncode=final_returncode if final_returncode is not None else -1,
+                output_file=plan.output_file,
+                plan=plan,
+                call_start_time=start_time,
+            )
+        except AttemptReadError as exc:
+            parse = ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
         if (
             not parse.ok
             and final_returncode not in (None, 0)
@@ -1874,7 +1894,7 @@ def _execute_invocation_plan(
             )
             fleet_capture = None
         if v4_claim is not None:
-            _finalize_v4_runner_origin(
+            parse = _finalize_v4_runner_origin(
                 authorization_id=v4_authorization_id or "",
                 claim=v4_claim,
                 plan=plan,
@@ -1991,16 +2011,27 @@ def _finalize_v4_runner_origin(
     returncode: int | None,
     parse: ParseResult,
     requested_model: str,
-) -> None:
-    """Persist the runner-owned V4 observation from this exact process."""
+) -> ParseResult:
+    """Persist the runner-owned V4 observation, including typed read refusals."""
     from scripts.fleet_comms import v4_execution_origin as origin
     from scripts.fleet_comms.request_executor import RequestExecutor
 
     output_bytes = b""
     if getattr(plan, "output_file", None) is not None:
         output_path = Path(plan.output_file)
-        if output_path.is_file():
-            output_bytes = output_path.read_bytes()
+        try:
+            if not (parse.failure_code or "").startswith("attempt_read_"):
+                output_bytes = safe_read_attempt_file(
+                    output_path,
+                    trusted_root=Path(plan.metadata.get("parent_read_root", "/")),
+                )
+        except FileNotFoundError:
+            pass
+        except AttemptReadError as exc:
+            parse = replace(parse, ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+    if (parse.failure_code or "").startswith("attempt_read_"):
+        parse = replace(parse, ok=False, response="", stderr_excerpt=parse.failure_code)
+        stderr_text = parse.failure_code
     with RequestExecutor() as executor:
         executor.finalize_v4_runner_execution(
             request_id=authorization_id,
@@ -2016,6 +2047,7 @@ def _finalize_v4_runner_origin(
             parse_session_id=parse.session_id,
             requested_model=requested_model,
         )
+    return parse
 
 
 def _raise_for_kill_reason(
@@ -3364,21 +3396,33 @@ def invoke(
     )
     attribution_token = _INVOCATION_ATTRIBUTION.set(attribution)
     launch = None
+    attempt = None
     try:
+        from .attempt_boundary import prepare_attempt_boundary
+
+        try:
+            attempt = prepare_attempt_boundary(agent_name, mode, session_id, tool_config)
+        except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
+            if str(exc) == "attempt_boundary_claude_adapter_pending":
+                raise AgentUnavailableError(
+                    "formal attempt filesystem boundary refused: attempt_boundary_claude_adapter_pending"
+                ) from exc
+            raise AgentUnavailableError("formal attempt filesystem boundary refused") from exc
+        prepared_config = attempt.tool_config if attempt is not None else tool_config
         launch = prepare_trail_isolation(
             agent_name=agent_name,
             mode=mode,
-            tool_config=tool_config,
+            tool_config=prepared_config,
         )
         return _invoke_impl(
             agent_name,
             prompt,
             mode=mode,
-            cwd=cwd,
+            cwd=attempt.workspace if attempt is not None else cwd,
             model=model,
             task_id=task_id,
             session_id=session_id,
-            tool_config=launch.tool_config if launch is not None else tool_config,
+            tool_config=launch.tool_config if launch is not None else prepared_config,
             entrypoint=entrypoint,
             hard_timeout=hard_timeout,
             stall_timeout=stall_timeout,
@@ -3387,10 +3431,13 @@ def invoke(
             event_sink=event_sink,
             effort=effort,
             v4_authorization_id=v4_authorization_id,
+            allow_runner_failover=attempt is None,
         )
     finally:
         if launch is not None:
             launch.cleanup()
+        if attempt is not None:
+            attempt.cleanup()
         _INVOCATION_ATTRIBUTION.reset(attribution_token)
 
 

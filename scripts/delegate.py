@@ -7830,6 +7830,8 @@ def _run_worker(
     attempt_id: str | None = None,
     mcp_config_path: str | None = None,
     strict_mcp_config: bool = False,
+    review_manifest: str | None = None,
+    review_input_root: str | None = None,
     finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
@@ -8008,6 +8010,9 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
+            if review_manifest is not None:
+                tool_config["review_manifest"] = review_manifest
+                tool_config["review_input_root"] = review_input_root
             if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
@@ -9393,6 +9398,13 @@ def _dispatch(
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
     # the original request before the route probes anything and the resolved route after it.
     review_attempt = getattr(args, "review_attempt", None)
+    if review_attempt and getattr(args, "output_schema", None):
+        print(
+            "❌ review attempt refused: attempt_output_schema_unsupported: "
+            "--review-attempt cannot be combined with --output-schema (#9251)",
+            file=sys.stderr,
+        )
+        return 2
     from scripts.agent_runtime.target_admission import launch_seat
 
     if str(_REPO_ROOT) not in sys.path:
@@ -10866,6 +10878,10 @@ def _dispatch(
                     "--mcp-config-path",
                     str(review_plan.config_path),
                     "--strict-mcp-config",
+                    "--review-manifest",
+                    str(Path(review_attempt).resolve()),
+                    "--review-input-root",
+                    str(review_contract["render_checkout"]),
                 ]
             )
 
@@ -12668,6 +12684,8 @@ def cmd_worker(args: argparse.Namespace) -> int:
         attempt_id=getattr(args, "attempt_id", None),
         mcp_config_path=getattr(args, "mcp_config_path", None),
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
+        review_manifest=getattr(args, "review_manifest", None),
+        review_input_root=getattr(args, "review_input_root", None),
         finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
@@ -13180,7 +13198,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Bind a JSON Schema to the final response of an effective Codex "
             "dispatch. The file is parsed before spawn, resolved to an "
             "absolute path, hashed into task state, and revalidated by the "
-            "Codex adapter before it emits --output-schema."
+            "Codex adapter before it emits --output-schema. "
+            "Cannot be combined with --review-attempt; default: omitted."
         ),
     )
     d.add_argument(
@@ -13416,6 +13435,8 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--attempt-id", default=None)
     wk.add_argument("--mcp-config-path", default=None)
     wk.add_argument("--strict-mcp-config", action="store_true")
+    wk.add_argument("--review-manifest", default=None, help="Formal attempt manifest path (default: none)")
+    wk.add_argument("--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)")
     wk.set_defaults(func=cmd_worker)
 
     return p

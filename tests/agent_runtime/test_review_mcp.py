@@ -438,7 +438,8 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
     captured = capsys.readouterr()
     if seat == "cursor":
         assert "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for cursor:" in captured.err
-        assert "ineligible for --review-profile code" in captured.err
+        assert "formal attempts require a proven manifest filesystem boundary" in captured.err
+        assert "Cursor is not admitted (#9251)" in captured.err
     else:
         assert "resolves inside the primary checkout; write-capable dispatch may not run there" in captured.err
 
