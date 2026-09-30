@@ -231,6 +231,151 @@ def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
     assert not reaper_lifecycle.is_reap_pending(repo, worktree)
 
 
+def _dead_pid() -> int:
+    proc = subprocess.Popen(["true"])
+    proc.wait()
+    return proc.pid
+
+
+def test_superseded_archived_record_no_longer_claims_the_finished_tasks_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A done task re-dispatched with --force-new leaves its old needs_finalize run beside it; that run claims nothing."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/ci-v3", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-ci-r4")
+    patch_gh(monkeypatch, {"claude/ci-v3": [{"number": 9259, "state": "MERGED"}]})
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    old_run = {"task_id": "impl-ci-r4", "status": "needs_finalize", "worktree_path": str(worktree), "pid": _dead_pid()}
+    (tasks / "impl-ci-r4.20260930T022748759089Z.archived.json").write_text(json.dumps(old_run), encoding="utf-8")
+    (tasks / "impl-ci-r4.20260930T022833947211Z.7.archived.json").write_text(
+        json.dumps({**old_run, "status": "failed"}), encoding="utf-8"
+    )
+    _write_task_record(
+        repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid()
+    )
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_archived_needs_finalize_record_never_claims_even_for_another_task(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/archived-claim")
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    (tasks / "old.20260930T022748759089Z.archived.json").write_text(
+        json.dumps({"task_id": "old", "status": "running", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+    (tasks / "live.json").write_text(
+        json.dumps({"task_id": "live", "status": "running", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+
+    assert worktree_claims.active_worktree_claim_refusal(worktree, tasks_dir=tasks, repo_root=repo) == (
+        "worktree claimed by active task live"
+    )
+    (tasks / "live.json").unlink()
+    assert worktree_claims.active_worktree_claim_refusal(worktree, tasks_dir=tasks, repo_root=repo) is None
+
+
+def _needs_finalize_claim_case(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    pr_state: str,
+    pr_head: str | None,
+    pid: int | None,
+) -> tuple[Path, Path, Any]:
+    """A worktree of a merged branch that a later, reusing task still records as ``needs_finalize``."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
+    head = git(repo, "rev-parse", "claude/impl-9230")
+    patch_gh(
+        monkeypatch,
+        {"claude/impl-9230": [{"number": 9237, "state": pr_state, "headRefOid": pr_head or head}]},
+    )
+    _write_task_record(
+        repo,
+        "impl-9230-r3",
+        status="needs_finalize",
+        run_nonce="n3",
+        worktree_path=str(worktree),
+        worktree_branch="claude/impl-9230",
+        final_branch_head_commit=head,
+        worktree_reused=True,
+        pid=pid,
+    )
+    return repo, worktree, result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+
+def test_needs_finalize_claim_with_merged_pr_and_dead_worker_is_released(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, worktree, result = _needs_finalize_claim_case(
+        tmp_path, monkeypatch, pr_state="MERGED", pr_head=None, pid=_dead_pid()
+    )
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+@pytest.mark.parametrize(
+    ("pr_state", "pr_head", "live_pid"),
+    [
+        ("MERGED", None, True),
+        ("MERGED", "f" * 40, False),
+    ],
+)
+def test_needs_finalize_claim_stays_unless_merged_head_matches_and_worker_is_gone(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    pr_state: str,
+    pr_head: str | None,
+    live_pid: bool,
+) -> None:
+    _, worktree, result = _needs_finalize_claim_case(
+        tmp_path,
+        monkeypatch,
+        pr_state=pr_state,
+        pr_head=pr_head,
+        pid=os.getpid() if live_pid else _dead_pid(),
+    )
+
+    assert result.action == "skipped"
+    assert "worktree claimed by active task impl-9230-r3" in result.reason
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize(
+    ("states", "error", "settled"),
+    [
+        ([rw.PullRequestState(1, "MERGED", "abc")], None, True),
+        ([rw.PullRequestState(1, "OPEN", "abc")], None, False),
+        ([rw.PullRequestState(1, "CLOSED", "abc")], None, False),
+        ([rw.PullRequestState(1, "MERGED", "other")], None, False),
+        ([], None, False),
+        ([rw.PullRequestState(1, "MERGED", "abc")], "gh outage", False),
+    ],
+)
+def test_needs_finalize_claim_settled_requires_a_proven_merge_of_the_recorded_head(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    states: list[rw.PullRequestState],
+    error: str | None,
+    settled: bool,
+) -> None:
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: (states, error))
+    record = {"worktree_branch": "claude/x", "final_branch_head_commit": "abc", "pid": _dead_pid()}
+
+    assert rw._needs_finalize_claim_settled(tmp_path, record) is settled
+    assert rw._needs_finalize_claim_settled(tmp_path, {**record, "worktree_branch": None}) is False
+    assert rw._needs_finalize_claim_settled(tmp_path, {**record, "final_branch_head_commit": None}) is False
+
+
 def _fleet_layout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
     """Public primary plus its ``infra-private`` sibling checkout, laid out as layout A does (#8624)."""
     public = init_repo(tmp_path, "learn-ukrainian")

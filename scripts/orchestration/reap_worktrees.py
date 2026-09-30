@@ -2990,6 +2990,23 @@ def _prune_branch(
     return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
+def _needs_finalize_claim_settled(repo_root: Path, record: dict[str, Any]) -> bool:
+    """Return True when a ``needs_finalize`` record's work is proven merged and its worker is gone.
+
+    The record's worker PID must be dead, and its branch must have a MERGED PR
+    whose head is exactly the head the task recorded on exit. Anything unknown
+    (no branch, no recorded head, a failed PR lookup) keeps the claim.
+    """
+    if _task_pid_alive(record):
+        return False
+    branch = record.get("worktree_branch")
+    head = record.get("final_branch_head_commit")
+    if not isinstance(branch, str) or not branch or not isinstance(head, str) or not head:
+        return False
+    states, error = _query_pr_states(repo_root, branch)
+    return error is None and any(state.state == "MERGED" and state.head_sha == head for state in states)
+
+
 def _enter_dispatch_worktree_guard(
     stack: contextlib.ExitStack,
     *,
@@ -3029,6 +3046,7 @@ def _enter_dispatch_worktree_guard(
         repo_root=primary,
         owner_task_id=owner_task_id,
         owner_state_file=tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
+        settled_claim=lambda record: _needs_finalize_claim_settled(primary, record),
     )
 
 
