@@ -1,7 +1,7 @@
 """Writer dispatch, execution, result harvesting, and schema validation (#8431 r3 §1, §7).
 
 The writer call:
-- takes explicit --writer {claude,codex,agy,grok} (code never auto-routes)
+- takes explicit --writer {claude,codex,agy} (code never auto-routes)
 - requires preflight result: refuses structurally unless preflight passed (#8431 §7 row 0)
 - runs scripts/delegate.py dispatch --agent <writer> --mode read-only --worktree
   --task-id write-<level>-<slug>-<n>-<attempt> --prompt-file ... --research-role writer
@@ -36,7 +36,7 @@ from scripts.build.fresh.preflight import PreflightResult
 from scripts.curriculum.evidence import lock
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy", "grok")
+ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy")
 
 
 class WriterCallError(Exception):

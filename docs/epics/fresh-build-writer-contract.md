@@ -82,16 +82,27 @@ the recorded reason informing feedback; the item-level `explanation` remains. Ev
 or `explanation` is subject to resolver, inventory, stress and immersion checks.
 
 `kind: form` tests one taught A1 group (`Gender`, `Number`, `Case`, `Person`, `VerbForm`).
+At A1, case-choice items after a negated verb are refused unless a preposition or an agreeing adjective directly before the blank fixes the form.
+The trigger conservatively includes finite-verb homographs even when a non-verb reading is also possible.
 All options from one lemma force this kind. It supplies `tests_feature`, aligned
 `option_records` (or the fill-in `record`), and `requires`: **all** A1 group values imposed
-on the slot by the full sentence, not merely the value being taught. A language-lane seat
-from another family confirms this complete demand and records a requirement receipt beside
+on the slot by the full sentence, not the key's features. A finite verb slot
+names `VerbForm: Fin` in `requires`; a plural slot omits `Gender` because plural forms
+carry no gender. If any form of the lemma fits through an alternative reading — partitive
+genitive after request, offer, or consumption verbs or `можна`, genitive of negation,
+animate accusative/genitive syncretism, or another reading — rewrite the sentence so it
+forces one reading or drop the item. Never repair it by removing a group from `requires`.
+A language-lane seat from another family confirms each option in this sentence with source
+evidence and records a requirement receipt beside
 the resolution receipts. The post-resolution check admits an option only if one analysis
 of its bound record's form carries the whole demand; it reads every analysis. An A1 noun
-without a plural atom can satisfy `Number: Sing`. An unbound option or a bound record
-lacking a required group fails. The key alone must be admitted. Each distractor differs
-from it in `tests_feature`; the gate checks this where decidable, and the reviewer judges
-it otherwise. Tense, aspect, mood and sense are not A1 distractor groups. The
+without a plural atom can satisfy `Number: Sing`. An option without a bound store form fails.
+An option is excluded only when every analysis carries a required group with a different
+value. An option that is neither admitted nor excluded is undecidable and fails the item.
+The key alone must be admitted. Each distractor must be a form that the sentence rules out
+by a feature the form itself carries. `tests_feature` names one focus group; the reviewer
+judges whether the distractors really make the learner choose along that focus. Tense,
+aspect, mood and sense are not A1 distractor groups. The
 A1 analytic future uses a single store form from the auxiliary record in the auxiliary slot
 or a single store form from the main verb record in the infinitive slot, never a composite
 option string.

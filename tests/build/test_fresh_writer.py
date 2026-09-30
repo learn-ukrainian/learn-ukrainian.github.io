@@ -112,21 +112,22 @@ def test_bilingual_arrays_unequal_length_fails(a1_valid_fixture):
 
 
 def test_writer_seat_validation(tmp_path, passing_preflight):
-    """The writer seat must be explicitly one of {claude, codex, agy, grok}."""
+    """The writer seat must be explicitly one of {claude, codex, agy}."""
     prompt_file = tmp_path / "prompt.md"
     prompt_file.write_text("prompt", encoding="utf-8")
 
-    with pytest.raises(ValueError, match="Invalid writer 'unknown_seat'"):
-        dispatch_writer(
-            writer="unknown_seat",
-            level="a1",
-            slug="mod-1",
-            lesson_n=1,
-            prompt_file=prompt_file,
-            prompt_sha256="0" * 64,
-            output_dir=tmp_path / "out",
-            preflight_result=passing_preflight,
-        )
+    for bad_seat in ("unknown_seat", "grok"):
+        with pytest.raises(ValueError, match=f"Invalid writer '{bad_seat}'"):
+            dispatch_writer(
+                writer=bad_seat,
+                level="a1",
+                slug="mod-1",
+                lesson_n=1,
+                prompt_file=prompt_file,
+                prompt_sha256="0" * 64,
+                output_dir=tmp_path / "out",
+                preflight_result=passing_preflight,
+            )
 
 
 def test_dispatch_refuses_without_passing_preflight(tmp_path):
