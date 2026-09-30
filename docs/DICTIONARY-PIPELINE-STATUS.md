@@ -198,19 +198,32 @@ real witness fields to equal the option or one of those lemmas: VESUM
 `word_form`/`lemma`, СУМ-20 `headword`/`stressed_headword`, Грінченко and VTS
 `word`, ULIF `canonical_headword`. Only ULIF rows with `status='ok'` bind,
 including for invalid options; a negative lookup is not a word witness.
-Definitions and metadata cannot bind. VESUM lookups use indexed exact
-candidates (given, casefolded, upper, title,
-capitalised and per-hyphen-part capitalised), followed by normalized filtering;
-1,490 VESUM forms and 297 lemmas remain unreachable by those candidates and
-fail closed. A folded, indexed store is a separate follow-up; the builder and
-source lock remain unchanged here to preserve the frozen evaluation release.
+Definitions and metadata cannot bind. VESUM store v2 adds indexed folded
+`word_form`/`lemma` keys; receipt lookup uses them through the unchanged
+marker-filtered four-column `forms` view. Source rows, canonical digest and
+cited-row digests exclude these derived keys. The full-store census reaches
+all 3,764,650 distinct compatible forms and
+408,202 lemmas (0/0 unreachable), with the canonical digest unchanged. It
+retains the pinned v6.8.0 asset and marker policy; older stores keep the exact
+candidate
+fallback and its 1,490-form / 297-lemma reachability gap until activation.
+The frozen `ua_eval_harness` releases read the original lock and parser
+copies under `data/projects/ua_eval_harness/releases/v0.1.1/`, recovered
+from freeze commit `1497ad6a729ecdf97031bbd9d44059528a354608`. Their manifests,
+lock hash and baseline results remain byte-identical as the live lock advances.
+Build an explicit shadow with `scripts/rag/build_vesum_shadow.py`; activation
+remains a separate driver operation after review and merge.
 Text kinds (`pravopys`, `textbook`)
 require a whole-word match of the option or any attested VESUM paradigm form
 of its lemmas. Soft hyphens (U+00AD), including a following line break, are
-removed before matching; fragments after them cannot bind (`Фор­мат` never
+removed in both witness and option before matching. Spaces after a soft hyphen
+are preserved unless a line break follows; fragments after them cannot bind
+(`Фор­мат` never
 witnesses `мат`). Non-breaking hyphens (U+2011) fold to `-`. Line-end hyphens
 inside words are tried both joined and kept (`червиво-\nго` witnesses
-`червивого`, never the fragment `го`; `будь-\nякий` witnesses `будь-який`). Standalone
+`червивого`, never the fragment `го`; `будь-\nякий` witnesses `будь-який`).
+The kept interpretation also binds `червиво-го`; this is pinned string identity,
+not evidence that the option is a valid lexical form. Standalone
 one-letter options and paradigm witnesses are refused; witnesses need at least
 two letters. Longer function words may bind by whole-word occurrence: this
 proves word identity only, never contextual grammatical support. Multi-word

@@ -34,6 +34,22 @@ def pravopys_fixture(monkeypatch):
     monkeypatch.setattr(source_query, "pravopys_section", section)
 
 
+def test_folded_lookup_columns_do_not_change_cited_source_rows_or_digests(request):
+    _, db = request.getfixturevalue("receipt_sources")
+    eid = IDS["vesum"]
+    with Sources(vesum_db=db) as api:
+        before = api.resolve_evidence_ids([eid])
+    assert before.raw[eid]
+    with sqlite3.connect(db) as conn:
+        conn.execute("ALTER TABLE forms_all ADD COLUMN word_form_folded TEXT")
+        conn.execute("ALTER TABLE forms_all ADD COLUMN lemma_folded TEXT")
+        conn.execute("UPDATE forms_all SET word_form_folded = lower(word_form), lemma_folded = lower(lemma)")
+    with Sources(vesum_db=db) as api:
+        after = api.resolve_evidence_ids([eid])
+    assert after.raw == before.raw
+    assert after.content_hash == before.content_hash
+
+
 def document(eid):
     return {
         "requirements_schema": 2,
@@ -531,10 +547,19 @@ def test_legacy_hyphen_apostrophe_candidates_reach_each_capitalised_part(request
 @pytest.mark.parametrize("kind", ["textbook", "pravopys"])
 @pytest.mark.parametrize("text,option,expected", [
     ("червиво-\nго", "червивого", True),
+    # Pin the existing dual interpretation: binding is string identity, not a
+    # linguistic judgement of whether this is a lexical hyphen.
+    ("червиво-\nго", "червиво-го", True),
     ("червиво-\nго", "го", False),
     ("червиво- \r\n  го", "ЧЕРВИВОГО", True),
     ("червиво\u0301-\nго", "червивого", True),
     ("Фор\u00adмат файлу", "мат", False),
+    ("Фор\u00ad мат", "формат", False),
+    ("Фор\u00ad\tмат", "формат", False),
+    ("Фор\u00ad \r\n мат", "формат", True),
+    ("Формат файлу", "Фор\u00adмат", True),
+    ("Формат файлу", "Фор\u00ad \r\n мат", True),
+    ("Формат файлу", "Фор\u00ad мат", False),
     ("доб\u00adрий", "добрий", True),
     ("доб\u00ad\nрий", "добрий", True),
     ("доб\u00ad \r\n  рий", "добрий", True),
@@ -542,6 +567,7 @@ def test_legacy_hyphen_apostrophe_candidates_reach_each_capitalised_part(request
     ("жовто-\nблакитний", "жовто-блакитний", True),
     ("жовто- \r\n  блакитний", "жовто-блакитний", True),
     ("будь\u2011який", "будь-який", True),
+    ("будь-який", "будь\u2011який", True),
     ("жовто\u2011\nблакитний", "жовто-блакитний", True),
     ("жовто-\nблакитний", "блакитний", False),
     ("one-\ntwo", "onetwo", True),
@@ -578,6 +604,21 @@ def test_text_binding_dehyphenation_short_words_and_exact_phrases(kind, text, op
     with Sources() as api:
         result = api.bind_evidence_forms(SourceResult({eid: [{"text": text}]}, "a" * 64), [(eid, option)])
         assert result.raw[eid, option] is expected
+
+
+@pytest.mark.parametrize("kind", ["textbook", "pravopys"])
+@pytest.mark.parametrize("option", ["t\u00adwo", "t\u00ad \r\n wo", "synth\u2011etic"])
+def test_text_option_typesetting_is_normalized_before_paradigm_lookup(request, kind, option):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    _, db = request.getfixturevalue("receipt_sources")
+    if "\u2011" in option:
+        with sqlite3.connect(db) as conn:
+            conn.execute("INSERT INTO forms_all VALUES (999, 999, '999-1000', 'synth-etic', 'one', 'noun', 'noun')")
+    eid = IDS[kind]
+    with Sources(vesum_db=db) as api:
+        result = api.bind_evidence_forms(SourceResult({eid: [{"text": "one"}]}, "a" * 64), [(eid, option)])
+        assert result.raw[eid, option] is True
 
 
 @pytest.mark.parametrize("kind", ["textbook", "pravopys"])

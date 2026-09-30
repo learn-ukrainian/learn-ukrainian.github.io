@@ -41,8 +41,12 @@ data/projects/ua_eval_harness/model_run_config.example.json
 data/projects/ua_eval_harness/model_run_config_schema_v1.json
 data/projects/ua_eval_harness/releases/v0.1.0/freeze_manifest.json
 data/projects/ua_eval_harness/releases/v0.1.0/split_integrity.json
+data/projects/ua_eval_harness/releases/v0.1.1/build_scoring_dispositions.py
 data/projects/ua_eval_harness/releases/v0.1.1/freeze_manifest.json
+data/projects/ua_eval_harness/releases/v0.1.1/source_snapshots.json
 data/projects/ua_eval_harness/releases/v0.1.1/split_integrity.json
+data/projects/ua_eval_harness/releases/v0.1.1/vesum_reingest.py
+data/projects/ua_eval_harness/releases/v0.1.1/vesum_source.lock.json
 data/projects/ua_eval_harness/scoring_disposition_config.json
 data/projects/ua_eval_harness/scoring_dispositions_v1.json
 data/projects/ua_eval_harness/v0.2/annotation_schema_v1.json
