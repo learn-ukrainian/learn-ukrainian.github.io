@@ -221,7 +221,7 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
   --expected-input-sha256 "$TARGET_SHA" \
   --issue-ref '#5284' \
   --scope-json '{"owner_boundary":"scripts/verify_review.py"}' \
-  --author-model 'gpt-5.6-sol' --author-family openai --author-harness codex \
+  --author-model 'gpt-6.1-sol' --author-family openai --author-harness codex \
   --author-selection-reason 'accountable-author' \
   --reviewer-model 'grok-4.7' --reviewer-family xai --reviewer-harness grok-build \
   --reviewer-selection-reason 'cross-family-gate' \

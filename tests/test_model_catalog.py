@@ -1120,11 +1120,62 @@ def test_catalog_identity_resolves_longest_id_and_preserves_retirement(model, ca
     assert resolve_catalog_model_id(model) == canonical
 
 
-def test_reviewer_invocation_cannot_hide_a_retired_pin_behind_active_metadata():
+@pytest.mark.parametrize("flag", ["--model {}", "--model={}", "-m {}", "--to-model {}", "--to-model={}"])
+@pytest.mark.parametrize("model", ["claude-fable-5", "claude-sonnet-5-5", "unknown-model"])
+def test_reviewer_invocation_cannot_hide_a_retired_pin_behind_active_metadata(flag, model):
     catalog = deepcopy(load_model_catalog())
-    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py --model claude-fable-5"
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py " + flag.format(model)
     with pytest.raises(ModelCatalogError, match="invocation model does not match"):
         validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("invocation", [
+    "delegate.py --model claude-fable-5-1 --to-model=claude-fable-5",
+    "delegate.py -m claude-fable-5 --model=claude-fable-5-1",
+    "delegate.py --model",
+    "delegate.py --model=",
+])
+def test_reviewer_invocation_checks_every_model_token(invocation):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = invocation
+    with pytest.raises(ModelCatalogError, match="invocation model does not match"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("flag", ["--model '{}'", "--model={}", "-m {}", "--to-model {}", "--to-model={}"])
+def test_reviewer_invocation_accepts_matching_catalog_aliases(flag):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py " + flag.format(
+        "claude-fable-5-1-thinking-high"
+    )
+    validate_catalog(catalog)
+
+
+def test_reviewer_invocation_rejects_malformed_shell_quoting():
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py --model 'claude-fable-5-1"
+    with pytest.raises(ModelCatalogError, match="invocation is malformed"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("model", ["grok-4.6", "unknown-model", ""])
+def test_orchestrator_seat_rejects_unroutable_fallback_model(model):
+    catalog = deepcopy(load_model_catalog())
+    catalog["orchestrator_seats"]["grok"]["fallback_model_id"] = model
+    with pytest.raises(ModelCatalogError, match="fallback_model_id"):
+        validate_catalog(catalog)
+
+
+def test_catalog_cli_help_explains_lookup_and_side_effects(monkeypatch, capsys):
+    from scripts.review.model_catalog import _main
+
+    monkeypatch.setattr("sys.argv", ["model_catalog", "--help"])
+    with pytest.raises(SystemExit) as exc:
+        _main()
+    assert exc.value.code == 0
+    output = capsys.readouterr().out
+    for text in ("--resolve-kimi-model", "--resolve-glm-model", "default", "Examples:", "no writes", "Exit codes:", "Related:"):
+        assert text in output
 
 
 @pytest.mark.parametrize("model", [

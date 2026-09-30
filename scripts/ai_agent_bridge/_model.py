@@ -90,7 +90,11 @@ def check_model(
             print(f"🔍 Model '{model}': {status} (cached {int(age)}s ago)")
             return available
 
-    plan = _build_agy_probe_plan(model) if agent == "agy" else _build_kimi_probe_plan(model)
+    try:
+        plan = _build_agy_probe_plan(model) if agent == "agy" else _build_kimi_probe_plan(model)
+    except ValueError as exc:
+        print(f"❌ {exc}")
+        return False
     if plan is None:
         model_source = "AGY" if agent == "agy" else "Kimi"
         print(

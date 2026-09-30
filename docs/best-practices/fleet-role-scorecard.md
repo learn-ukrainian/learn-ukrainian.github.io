@@ -23,12 +23,12 @@
 
 | Role | Primary | Secondary / volume | Effort | Confidence |
 |---|---|---|---|---|
-| Ceiling advisor/designer | GPT-6.1 Sol (Astra seat), Fable 5.1 | — | Sol `high`; Fable `high` | provisional |
+| Ceiling advisor/designer | GPT-6.1 Sol (Astra seat), Fable 5.1 | — | Sol `xhigh`; Fable `high` | provisional |
 | Accountable orchestrator | GPT-6.1 Sol, Claude Opus 5.5 | — | `high` | provisional |
 | General implementer | GPT-6.1 Sol, Claude Sonnet 5.5 for well-scoped non-security code, Grok 4.7 | GPT-6 Luna for bounded work; Gemini 3.8 Flash for well-defined work; K3 (web, UI and backend code only); Cursor (**pin family**). Security-sensitive code authoring goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Fable 5.1 for Claude). | `high` by task fit | provisional |
 | Polished written deliverables in English | Claude Sonnet 5.5 | Reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts | By task fit | provisional |
 | Hard implementer | GPT-6.1 Sol, Claude Opus 5.5 | Escalate hard design judgment to Astra or Fable | `high` | provisional |
-| UI / visual product design | GPT-6.1 Sol (Astra seat), Fable 5.1 | K3 implements the approved design as web/UI code only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | Sol `high`; Fable `high`; K3 `high` | provisional |
+| UI / visual product design | GPT-6.1 Sol (Astra seat), Fable 5.1 | K3 implements the approved design as web/UI code only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | Sol `xhigh`; Fable `high`; K3 `high` | provisional |
 | Code/security CF review | **Author-family-conditional** (see §3); for security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125 | — | `high`+ | provisional |
 | Critical CF review | GPT-6.1 Sol ↔ Fable/Opus **cross-family** | — | `high` | provisional |
 | Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6.1 Sol, Claude Fable 5.1 + sources | `high` | provisional (morphology remains VESUM-gated) |
@@ -124,7 +124,7 @@ GPT-6 Luna / Claude Haiku / Gemini 3.8 Flash recon
     → Ukrainian curriculum content: sanctioned language lanes (Fable 5.1 for Claude), never Sonnet 5.5
     → escalate immediately if security / high blast radius / unclear invariants / multi-architecture
     → otherwise escalate after evidence-backed root-cause attempts fail
-      → Astra or Fable (high) for hard advisory judgment
+      → Astra (xhigh) or Fable (high) for hard advisory judgment
         → orchestrator integrates
         → CF review: other family + task-qualified
 ```

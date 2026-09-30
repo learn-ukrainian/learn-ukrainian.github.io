@@ -489,10 +489,16 @@ launcher_normalize_model() {
   # normalize to roster identifiers when a model is provided.
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:fable) LC_MODEL='claude-fable-5-1' ;;
-    claude:fable-5) LC_MODEL='claude-fable-5-1' ;;  # short alias follows the live seat
+    claude:fable-5)
+      launcher_error "model 'fable-5' is retired in the model catalog (claude-fable-5); use claude-fable-5-1"
+      exit 2
+      ;;
     claude:sonnet) LC_MODEL='claude-sonnet-5-5' ;;
     claude:opus|claude:opus-5-5|claude:opus-5.5) LC_MODEL='claude-opus-5-5[1m]' ;;
-    claude:opus-5) LC_MODEL='claude-opus-5-5' ;;
+    claude:opus-5)
+      launcher_error "model 'opus-5' is retired in the model catalog (claude-opus-5); use claude-opus-5-5"
+      exit 2
+      ;;
   esac
 }
 

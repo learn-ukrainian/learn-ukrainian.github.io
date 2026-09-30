@@ -5,6 +5,7 @@ from __future__ import annotations
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
+from shlex import split as shell_split
 from typing import Any
 
 import yaml
@@ -260,6 +261,9 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
                 f"orchestrator_seats.{seat_name}.escalate_model_id must reference an active model"
             )
         _require_routable_model(models, esc_model, f"orchestrator_seats.{seat_name}.escalate_model_id")
+        if "fallback_model_id" in seat:
+            fallback = _require_string(seat["fallback_model_id"], f"orchestrator_seats.{seat_name}.fallback_model_id")
+            _require_routable_model(models, fallback, f"orchestrator_seats.{seat_name}.fallback_model_id")
 
         if seat_name == "cursor":
             model_id = seat["model_id"]
@@ -603,10 +607,16 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 f"review_candidates.{name}.transport {transport!r} is not listed in models.{model_id}.transports"
             )
         invocation = _require_string(candidate.get("invocation"), f"review_candidates.{name}.invocation")
-        parts = invocation.split()
-        for index, part in enumerate(parts[:-1]):
-            if part == "--model":
-                invoked = resolve_catalog_model_id(parts[index + 1], catalog)
+        try:
+            parts = shell_split(invocation)
+        except ValueError as exc:
+            raise ModelCatalogError(f"review_candidates.{name}.invocation is malformed: {exc}") from exc
+        for index, part in enumerate(parts):
+            flag, separator, value = part.partition("=")
+            if flag in {"--model", "-m", "--to-model"}:
+                if not separator:
+                    value = parts[index + 1] if index + 1 < len(parts) else ""
+                invoked = resolve_catalog_model_id(value, catalog)
                 if invoked != model_id:
                     raise ModelCatalogError(
                         f"review_candidates.{name}.invocation model does not match {model_id!r}"
@@ -913,11 +923,28 @@ def _main() -> int:
     """Expose catalog-backed model resolution for shell launchers."""
     import argparse
 
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Resolve catalog-backed Kimi or GLM aliases for shell launchers.\n"
+            "Use for route lookup, not provider-health or quota probing."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.review.model_catalog --resolve-kimi-model k3\n"
+            "  .venv/bin/python -m scripts.review.model_catalog --resolve-glm-model glm --format glmcc\n"
+            "Outputs: resolved model or tab-separated route fields on stdout; no writes.\n"
+            "Exit codes: 0 resolved; 2 invalid arguments or unknown model.\n"
+            "Related: scripts/config/model_catalog.yaml; scripts/lib/kimicc_route.sh."
+        ),
+    )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--resolve-kimi-model", metavar="ALIAS")
-    group.add_argument("--resolve-glm-model", metavar="ALIAS")
-    parser.add_argument("--format", choices=("native", "kimicc", "glmcc"), default="native")
+    group.add_argument("--resolve-kimi-model", metavar="ALIAS", help="Kimi catalog alias to resolve, e.g. k3")
+    group.add_argument("--resolve-glm-model", metavar="ALIAS", help="GLM catalog alias to resolve, e.g. glm")
+    parser.add_argument(
+        "--format", choices=("native", "kimicc", "glmcc"), default="native",
+        help="Output model id (native, default) or route fields (kimicc/glmcc)",
+    )
     args = parser.parse_args()
 
     if args.resolve_kimi_model:

@@ -29,13 +29,13 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5-1** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ high; advisory turns only), Opus-class when roster says so |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5-1** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ xhigh; advisory turns only), Opus-class when roster says so |
 | **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (review/CF, not judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
-review seat and, since operator 2026-09-29 (#9230), also the Astra advisory seat for hard,
-consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting.
+review seat and, since operator 2026-09-29 (#9230), also the Astra advisory seat at `xhigh`
+for hard, consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting.
 `gpt-6-sol` and `gpt-6-astra` are not routable. "Astra" below names that advisory seat; do
 not spend advisory turns on ordinary implementation or review.
 
@@ -139,7 +139,6 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | Model | Input | Cache write | Cache read | Output | Slug |
 | --- | --- | --- | --- | --- | --- |
 | Claude Sonnet 5.5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-5-high` |
-| Claude Opus 5 | $5 | $6.25 | $0.50 | $25 | `claude-opus-5-thinking-high` |
 | Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` |
 | Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` |
 | Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |

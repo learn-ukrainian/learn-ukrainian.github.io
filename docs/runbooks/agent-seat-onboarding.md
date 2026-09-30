@@ -336,7 +336,7 @@ before dispatching:
 1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
 2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
    recon with exact owned paths and an objective scope ceiling.
-3. Reserve `gpt-6.1-sol` at `high` for hard consequential advisory judgment.
+3. Reserve `gpt-6.1-sol` at `xhigh` for hard consequential advisory judgment.
    When an advisory envelope is needed, include the task contract, exact owned
    paths, maximum changed-file and non-test-LOC ceilings, constraints, risk
    boundaries, acceptance evidence, and escalation triggers. Astra is an advisor,
@@ -350,7 +350,7 @@ before dispatching:
 
 Record the envelope and Luna's acceptance evidence with the task handoff. If an
 escalation trigger fires, stop bounded execution and return the unresolved point
-to Astra at `high` or the accountable orchestrator before making a consequential decision.
+to Astra at `xhigh` or the accountable orchestrator before making a consequential decision.
 
 ### Fleet-comms authority and legacy projections
 

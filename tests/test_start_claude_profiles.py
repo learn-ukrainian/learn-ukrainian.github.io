@@ -73,10 +73,18 @@ def test_explicit_retired_sonnet_driver_pin_is_refused() -> None:
     assert "would exec claude" not in result.stdout
 
 
-def test_short_fable_5_alias_follows_live_seat_but_retired_id_is_refused() -> None:
-    alias = run_launcher("start-claude.sh", "--model", "fable-5")
-    assert alias.returncode == 0, alias.stderr
-    assert "would exec claude --model claude-fable-5-1" in alias.stdout
+@pytest.mark.parametrize("alias", ["fable-5", "opus-5"])
+@pytest.mark.parametrize("script", ["start-claude.sh", "start-claude-driver.sh"])
+def test_versioned_retired_claude_alias_is_refused(alias, script) -> None:
+    args = ("--epic", "devops") if script == "start-claude-driver.sh" else ()
+    result = run_launcher(script, *args, "--model", alias)
+    assert result.returncode != 0
+    assert "is retired in the model catalog" in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would exec claude" not in result.stdout
+
+
+def test_full_retired_fable_id_is_refused() -> None:
     retired = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-fable-5")
     assert retired.returncode != 0
     assert "would claim lease" not in retired.stdout
@@ -109,9 +117,6 @@ def test_claude_opus_aliases_resolve_to_5_5() -> None:
         result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", alias)
         assert result.returncode == 0, (alias, result.stderr)
         assert "would exec claude --model claude-opus-5-5" in result.stdout
-    legacy = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "opus-5")
-    assert legacy.returncode == 0, legacy.stderr
-    assert "would exec claude --model claude-opus-5-5 --effort high" in legacy.stdout
 
 
 def test_claude_interactive_does_not_inherit_driver_default() -> None:

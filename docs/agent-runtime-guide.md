@@ -323,7 +323,7 @@ its structured result before delivering canonical JSON to that parser.
 
 Reviewer choices, configured model pins, lineage checks and QG canaries are
 unchanged. Direct review uses the native Claude adapter with its existing
-`claude-opus-4-8` pin. A schema-capable adapter does not establish availability,
+`claude-opus-5-5` pin. A schema-capable adapter does not establish availability,
 policy admission or semantic correctness for every configured model. Issue
 #7810's frozen 18-cell matrix retains those residuals; held-out evaluation and
 cross-family approval belong to the reviewer of record at the exact PR head.

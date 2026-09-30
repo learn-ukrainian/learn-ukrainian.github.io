@@ -1223,9 +1223,9 @@ formal_cf_defaults:
     isolation_issue: 5555
 
 review_ladders:
-  # #5293 quality-first: never let a later rung improve quality tier.
-  # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Sol high → Opus 5.5 → Sonnet 5.5 → Grok / pool.
+  # Hard filters precede profile/risk suitability; quality tier ranks within equal suitability.
+  # Critical suitability favors frontier_authority (false APPROVED is expensive).
+  # Sol high → Opus 5.5 → Sonnet 5.5 → Grok / pool breaks otherwise equal ties.
   # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
@@ -1241,7 +1241,7 @@ review_ladders:
     - [pool]
     - [pool-xs]
   high: &practical_first_code_review
-    # Routine CF order: Sol high → Opus 5.5 high → Sonnet 5.5 → Grok…
+    # Suitability before tier; this routine ladder breaks remaining ties.
     # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
     - [claude-opus-5-5]
