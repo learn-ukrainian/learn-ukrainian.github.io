@@ -25,6 +25,7 @@ from scripts.build.fresh.runner import NEGATION_PARTICLE_RECORD, check_4_activit
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import ResolverError
+from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: F401
 
 ROOT = Path(__file__).resolve().parents[2]
 A1_STORE = ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml"
@@ -1393,3 +1394,15 @@ def test_missing_vesum_fails_as_named_check_not_exception(tmp_path: Path) -> Non
             typ="fill-in",
             lookup=lambda _words: (_ for _ in ()).throw(FileNotFoundError("VESUM missing")),
         )
+
+
+def test_choice_gate_records_resolved_evidence_identity(tmp_path):
+    from scripts.curriculum.evidence.sources import Sources
+
+    item = _form(["брата", "брату"], BROTHER, {"Case": "Acc"})
+    _write_form_receipt(tmp_path, item)
+    result = _check(tmp_path, item, BROTHER)
+    with Sources() as api:
+        evidence = api.resolve_evidence_ids(["vesum:487702-487719"])
+    assert result["status"] == "passed"
+    assert result["details"]["requirement_evidence"] == {"sha256": evidence.content_hash, "sources": evidence.metadata}

@@ -47,11 +47,15 @@ _EXACT_HEAD = "6957cf" + "a" * 34  # 40-hex exact PR head
 
 
 def test_cursor_attested_composer_author_refuses_same_family_review():
-    """Attested cursor:composer-2.5 is Moonshot: Kimi/Composer reviewers refuse."""
+    """Attested cursor:composer-2.5 is Moonshot: the Composer reviewer refuses.
+
+    Kimi is no longer a review candidate at all (web, UI and backend coding only).
+    """
     inputs = ResolverInputs(author_model="cursor:composer-2.5", risk="medium")
     assert resolve_author_family(inputs.author_model) == "moonshot"
+    assert "kimi-k3" not in REVIEW_CANDIDATES
 
-    for name in ("composer-2.5", "kimi-k3"):
+    for name in ("composer-2.5",):
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
         assert result.status == "excluded", (name, result.status)
         assert "same family" in result.reason

@@ -179,7 +179,7 @@ were removed in #8520):
   same-route model plus `--override-reason` for an exceptional operator pin,
   for example `--reviewer claude --model claude-fable-5` or
   `--reviewer codex --model gpt-5.6-sol`.
-- `kimi` remains a recognized request identity but fails closed until its catalog endpoint satisfies sealed-review eligibility. `agy` is not a code-review reviewer (Gemini reviews Ukrainian only, never code). GLM-5.3 is
+- `kimi` remains a recognized request identity but is always refused for review, ask, consult and ACP discussion (Kimi takes web, UI and backend coding only). `agy` is not a code-review reviewer (Gemini reviews Ukrainian only, never code). GLM-5.3 is
   **LOCAL-ONLY** / China egress and requires the matching egress policy.
 - `--no-claude-available` is a deprecated compatibility hint and never routes.
 - Do **not** identify the reviewer as “Hermes”; record model + family + harness.

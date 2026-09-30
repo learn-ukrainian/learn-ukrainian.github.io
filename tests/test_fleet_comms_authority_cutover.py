@@ -253,7 +253,7 @@ def test_discussion_enqueue_atomically_creates_initial_state_and_provenance(
         job = service.enqueue_discussion(
             channel="bounded-consultation",
             prompt="Compare the two bounded options.",
-            participants=("kimi", "glm"),
+            participants=("cursor", "glm"),
             rounds=2,
             task_digest=_sha("task-6243"),
             correlation_id="correlation-6243",
@@ -425,7 +425,7 @@ def test_failed_job_event_accepts_only_closed_body_free_failure_metadata(
         ).fetchone()
 
         second = service.enqueue_request(
-            recipient="kimi",
+            recipient="cursor",
             body="another bounded request",
             idempotency_key="unsafe-failure",
         )

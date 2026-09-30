@@ -47,12 +47,12 @@ def test_discuss_rejects_five_acp_seats_before_authority_creation(
     monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "acp")
     monkeypatch.setenv("FLEET_COMMS_ROOT", str(tmp_path / "fleet"))
     args = _args()
-    args.with_agents = "codex,kimi,glm,claude,grok"
+    args.with_agents = "codex,cursor,glm,claude,grok"
 
     assert _channels_cli._handle_discuss(args) == 1
 
     error = capsys.readouterr().err
-    assert "codex, kimi, glm, claude, grok" in error
+    assert "codex, cursor, glm, claude, grok" in error
     assert "2 to 4" in error
     assert "allowed:" in error
     assert not (tmp_path / "fleet" / "comms.sqlite3").exists()

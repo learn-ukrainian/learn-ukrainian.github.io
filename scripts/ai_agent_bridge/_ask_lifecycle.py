@@ -15,6 +15,7 @@ import json
 import os
 import re
 import signal
+import sqlite3
 import subprocess
 import sys
 import time
@@ -29,7 +30,7 @@ from . import _config
 from ._ask_contract import MAX_TOTAL_ASK_RETRIES
 from ._broker import _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, PID_DIR, REPO_ROOT
-from ._db import get_db
+from ._db import connect_readonly, get_db
 
 _ASK_AGENT = "ask"
 # Stored on the legacy messages.data JSON so reply completion can reload by id.
@@ -539,7 +540,24 @@ def _stored_reply_is_useful(reply_id: int) -> bool:
 
 
 def process_background_ask(message_id: int, target: str) -> None:
-    """Run one detached ask worker and leave a terminal lifecycle status."""
+    """Run one detached ask worker and leave a terminal lifecycle status.
+
+    A Kimi target exits with the refusal before the broker is opened; a
+    stored message addressed to a Kimi seat or model is skipped right after
+    the read, before any lifecycle record (``skip_stored_kimi_row``).
+    """
+    from agent_runtime.kimi_admission import KimiAdmissionRefused
+
+    from ._acp_compat import refuse_kimi_compat
+    from ._messaging import read_message
+
+    try:
+        refuse_kimi_compat(target)
+    except KimiAdmissionRefused as exc:
+        raise SystemExit(f"❌ {exc}") from exc
+    msg = read_message(message_id, quiet=True)
+    if msg and skip_stored_kimi_row(msg, message_id, target):
+        return
     terminal = _AskTerminalRecorder(message_id)
     atexit.register(terminal.atexit)
     previous_handlers: dict[int, Any] = {}
@@ -621,25 +639,49 @@ def print_asks(task_id: str | None = None) -> None:
         print(f"{row[0]}  {row[1] or '-'}  {row[2]}  {status}  {consumption}  {row[4]}")
 
 
-def maybe_print_timeout_notice() -> None:
-    """Surface newly timed-out detached asks on the next bridge CLI command."""
+def print_timeout_notice() -> list[int]:
+    """Surface newly timed-out detached asks on the next bridge CLI command; returns their ids.
+
+    A stored Kimi ask (legacy) is not a new ask: it is neither shown nor marked.
+
+    Reads query-only: it never creates, migrates or writes the broker DB, so a bridge command
+    can show it before its own admission check. The ids are marked shown by
+    ``mark_timeout_notices_shown``; until then the notice repeats.
+    """
+    try:
+        conn = connect_readonly()
+        if conn is None:
+            return []
+        try:
+            rows = conn.execute(
+                """
+                SELECT id, task_id, to_llm
+                FROM messages
+                WHERE status LIKE 'timed-out:%' AND NOT kimi_message(to_llm, data)
+                ORDER BY id ASC
+                """
+            ).fetchall()
+        finally:
+            conn.close()
+    except sqlite3.Error:  # an unmigrated or unreadable DB has no notice to show
+        return []
+    if not rows:
+        return []
+    labels = ", ".join(f"#{row[0]} ({row[2]}, task {row[1] or '-'})" for row in rows)
+    print(f"⚠️  Background ask timed out: {labels}. Run 'ab asks' for details.", file=sys.stderr)
+    return [int(row[0]) for row in rows]
+
+
+def mark_timeout_notices_shown(message_ids: list[int]) -> None:
+    """Record that the timeout notice for ``message_ids`` was shown, so it is not repeated; a stored Kimi row stays as it is."""
+    if not message_ids:
+        return
     conn = get_db()
     try:
-        rows = conn.execute(
-            """
-            SELECT id, task_id, to_llm
-            FROM messages
-            WHERE status LIKE 'timed-out:%'
-            ORDER BY id ASC
-            """
-        ).fetchall()
-        if not rows:
-            return
-        labels = ", ".join(f"#{row[0]} ({row[2]}, task {row[1] or '-'})" for row in rows)
-        print(f"⚠️  Background ask timed out: {labels}. Run 'ab asks' for details.", file=sys.stderr)
         conn.executemany(
-            "UPDATE messages SET status = 'timed-out-notified:' || substr(status, 11) WHERE id = ?",
-            [(row[0],) for row in rows],
+            "UPDATE messages SET status = 'timed-out-notified:' || substr(status, 11) "
+            "WHERE id = ? AND status LIKE 'timed-out:%' AND NOT kimi_message(to_llm, data)",
+            [(message_id,) for message_id in message_ids],
         )
         conn.commit()
     finally:
@@ -760,16 +802,19 @@ def run_ask_watchdog(target_message_id: int | None = None) -> list[int]:
 
 
 def _re_fire_ask(message_id: int) -> bool:
-    """Re-fire a dead background ask worker once with auto-retried metadata."""
-    if not claim_ask_retry(message_id):
-        return False
+    """Re-fire a dead background ask worker once with auto-retried metadata.
 
+    A stored ask addressed to a Kimi seat or model is skipped before the retry
+    claim: no claim, metadata write or relaunch (``skip_stored_kimi_row``).
+    """
     launch = _read_ask_record(message_id, "launch.json")
     if not launch:
         return False
     target = str(launch.get("agent") or launch.get("harness") or "grok")
     msg = fetch_ask_message(message_id, target)
-    if not msg:
+    if not msg or skip_stored_kimi_row(msg, message_id, target):
+        return False
+    if not claim_ask_retry(message_id):
         return False
 
     meta = _ask_metadata(msg)
@@ -870,19 +915,52 @@ def ask_sender_model(msg: dict[str, Any]) -> str | None:
     return str(model) if model else None
 
 
+STORED_KIMI_ROW_SKIPPED = "skipped: Kimi is not a bridge recipient"
+
+
+def skip_stored_kimi_row(msg: dict[str, Any], message_id: int, target: str | None = None) -> bool:
+    """Report and skip a stored message addressed to a Kimi seat or model; return True when skipped.
+
+    Kimi is not a bridge recipient and nothing new can be addressed to it, but
+    a legacy row may still sit in the broker. A generic drain reads the broker
+    (its job); a stored Kimi row it meets is skipped before any Kimi-specific
+    effect — no adapter or runner call, no process, no reply, failure record,
+    acknowledgement or Kimi telemetry. The row is left as-is and reported once.
+    ``target`` is the stored or generic drain target, never a Kimi request:
+    those are refused before the broker is opened.
+    """
+    from agent_runtime.kimi_admission import KimiAdmissionRefused
+
+    from ._acp_compat import refuse_kimi_recipients
+
+    try:
+        refuse_kimi_recipients((target, msg.get("to")), (ask_target_model(msg),), attachments=(msg.get("data"),))
+    except KimiAdmissionRefused:
+        print(f"⏭️  Message {message_id} {STORED_KIMI_ROW_SKIPPED}; left as-is.")
+        return True
+    return False
+
+
 def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bool | None:
     """Drain ordinary asks via ACP; retain the toolful legacy review processors.
 
     Ordinary drains return success; review processors retain their None return.
+    A Kimi target raises ``KimiAdmissionRefused`` before the broker is opened;
+    a stored message addressed to a Kimi seat or model is skipped right after
+    the read, before any record, and returns None (``skip_stored_kimi_row``).
     """
-    no_timeout = bool(options.get("no_timeout", False))
-    review = bool(options.get("review", False))
-    new_session = bool(options.get("new_session", False))
+    from ._acp_compat import refuse_kimi_compat
     from ._messaging import read_message
     from ._process import process_message_for_recipient
 
+    refuse_kimi_compat(target)
+    no_timeout = bool(options.get("no_timeout", False))
+    review = bool(options.get("review", False))
+    new_session = bool(options.get("new_session", False))
+    msg = read_message(message_id, quiet=True)
+    if msg and skip_stored_kimi_row(msg, message_id, target):
+        return None
     if not review:
-        msg = read_message(message_id, quiet=True)
         if not msg:
             return
         review = str(msg.get("type", "")).strip().casefold() == "review"
@@ -911,10 +989,6 @@ def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bo
         from ._grok_build import process_for_grok_build
 
         process_for_grok_build(message_id, new_session, no_timeout, review)
-    elif target == "kimi":
-        from ._kimi import process_for_kimi
-
-        process_for_kimi(message_id, new_session, no_timeout, review)
     elif target == "cursor":
         from ._cursor import process_for_cursor
 

@@ -13,33 +13,72 @@ import json
 import os
 import re
 import sys
+from collections.abc import Iterable
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+from agent_runtime.target_admission import COMPAT_TARGETS as _TARGETS  # noqa: F401  (legacy ask names, read-only)
 
 from ._config import REPO_ROOT
 
-_TARGETS = {
-    "claude": "claude",
-    "codex": "codex",
-    "agy": "agy",
-    "gemini": "agy",
-    "hermes": "deepseek",
-    "deepseek": "deepseek",
-    "pool": "pool",
-    "glm": "glm",
-    "gemma": "gemma",
-    "cursor": "cursor",
-    "grok": "grok",
-    "grok-build": "grok",
-    "kimi": "kimi",
-}
+if TYPE_CHECKING:
+    from agent_runtime.target_admission import AdmittedTarget
 
 
-def require_compat_target(command_target: str) -> str:
-    """Resolve a legacy command name before any sender or payload work."""
-    try:
-        return _TARGETS[command_target]
-    except KeyError as exc:
-        raise ValueError(f"legacy ask target {command_target!r} has no enabled ACP route") from exc
+def admit_compat_target(command_target: str, *, model: str | None = None, data: object = None) -> AdmittedTarget:
+    """Resolve a legacy command name to its ACP participant and admit it, before any sender or payload work.
+
+    A Kimi seat, or a Kimi model on any seat or in the ``data`` attachment's
+    model/recipient keys, raises ``KimiAdmissionRefused`` (a ``ValueError``): Kimi seats take web, UI and backend
+    coding only, never ACP asks, consults, discussions or reviews. An unknown name raises ``ValueError``.
+    """
+    from agent_runtime.kimi_admission import ACP_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
+    (target,) = resolve_and_admit((command_target,), mode=ACP_MODE, model=model, attachments=(data,), compat=True)
+    return target
+
+
+def require_compat_target(command_target: str, *, model: str | None = None, data: object = None) -> str:
+    """The ACP participant ``admit_compat_target`` resolves, for validation and display (sinks take the target)."""
+    return admit_compat_target(command_target, model=model, data=data).recipient
+
+
+def refuse_kimi_compat(command_target: str, *, model: str | None = None, data: object = None) -> None:
+    """The Kimi gate for one ACP ask: the command target, its participant, adapter agent, pin, override and attachment."""
+    from agent_runtime.kimi_admission import ACP_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
+    resolve_and_admit((command_target,), mode=ACP_MODE, model=model, attachments=(data,))
+
+
+def refuse_kimi_recipients(
+    recipients: Iterable[str | None],
+    models: Iterable[str | None] = (),
+    *,
+    attachments: Iterable[object] = (),
+) -> None:
+    """Kimi is not a bridge recipient: refuse any Kimi recipient seat, its registered route, or a Kimi model.
+
+    ``attachments`` are the request's ``data`` payloads (JSON strings, mappings
+    or lists of mappings): the model and recipient keys they carry are gated
+    with the explicit names, after the explicit model overrides an attached
+    ``to_model`` as ``send_message`` stores it. Raises ``KimiAdmissionRefused``
+    (a ``ValueError``). Decided from the names and the static route registry
+    alone, before any broker access. Entry points that deliver take their
+    targets from ``resolve_and_admit`` instead.
+    """
+    from agent_runtime.kimi_admission import BRIDGE_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
+    explicit_models = [model for model in models if model]
+    resolve_and_admit(
+        recipients,
+        mode=BRIDGE_MODE,
+        model=explicit_models[0] if explicit_models else None,
+        also_models=explicit_models[1:],
+        attachments=attachments,
+    )
 
 
 def registered_participant_model(participant: str) -> str | None:
@@ -100,19 +139,12 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
     return model
 
 
-# Per-seat default hard timeouts for compat asks (#6877). The generic 300s
-# ceiling is mis-sized for Kimi: K3 is a max-effort-only model whose long
-# deliberation before first output is designed behavior, and the fleet routes
-# hard reviews to this seat — a live CF review was killed at exactly 300.0s
-# and completed in ~10+ min only when retried with --no-timeout. Kimi gets a
-# 1800s profile aligned with that review workload; every other seat keeps the
-# generic default (none of the remaining compat seats is max-effort-only —
-# claude/grok/agy/glm/deepseek are pinned at "high"). ``--no-timeout``
-# (86400s) is unchanged and bypasses every profile.
+# Per-seat default hard timeouts for compat asks (#6877). No compat seat
+# needs a profile today: the max-effort-only Kimi seat that had one takes web,
+# UI and backend coding only and is refused before any ask, and the remaining
+# seats are pinned at "high". ``--no-timeout`` (86400s) bypasses every profile.
 ASK_HARD_TIMEOUT_DEFAULT_S = 300
-ASK_HARD_TIMEOUT_PROFILES: dict[str, int] = {
-    "kimi": 1800,
-}
+ASK_HARD_TIMEOUT_PROFILES: dict[str, int] = {}
 
 
 def ask_hard_timeout(command_target: str) -> int:
@@ -230,12 +262,14 @@ def _substitution_decision(*, error: BaseException | None = None, result: object
     return dict(_NO_SUBSTITUTION_DECISION)
 
 
-def _resolve_quota_substitution(seat: str, reason: str, *, already_substituted: bool) -> str | None:
-    """Return the mapped ACP substitute seat, or None with a loud stderr note.
+def _resolve_quota_substitution(seat: str, reason: str, *, already_substituted: bool) -> AdmittedTarget | None:
+    """Return the admitted ACP substitute for ``seat``, or None with a loud stderr note.
 
     At most one substitution per ask (#8499): a substitute that is itself out
     of quota fails loudly — no second hop, and never a bridge or provider
-    fallback (fleet-comms-coordination ACP-only route policy).
+    fallback (fleet-comms-coordination ACP-only route policy). The substitute
+    is resolved and admitted in one step (``resolve_and_admit``), so a Kimi
+    substitute raises ``KimiAdmissionRefused`` before its job exists.
     """
     if already_substituted:
         print(
@@ -245,33 +279,28 @@ def _resolve_quota_substitution(seat: str, reason: str, *, already_substituted: 
             file=sys.stderr,
         )
         return None
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+    from agent_runtime.kimi_admission import ACP_MODE
+    from agent_runtime.target_admission import SubstituteUnavailable, resolve_and_admit
 
-    substitute = load_dispatch_fallbacks(_FALLBACK_SUBS_PATH).get(seat)
-    if not substitute or substitute == seat:
-        print(
-            f"ACP seat '{seat}' is over quota/rate-limited (reason: {reason}) and "
-            "agent_fallback_substitutions.yaml dispatch_fallbacks has no substitute "
-            "for it; failing without bridge/provider fallback.",
-            file=sys.stderr,
+    try:
+        (target,) = resolve_and_admit(
+            (seat,), mode=ACP_MODE, compat=True, substitute=reason, fallbacks_path=_FALLBACK_SUBS_PATH
         )
+    except SubstituteUnavailable as exc:
+        print(str(exc), file=sys.stderr)
         return None
-    if substitute not in set(_TARGETS.values()):
-        print(
-            f"ACP seat '{seat}' is over quota/rate-limited (reason: {reason}) but "
-            f"dispatch_fallbacks maps it to '{substitute}', which is not an enabled "
-            "ACP ask seat; failing without bridge/provider fallback.",
-            file=sys.stderr,
-        )
-        return None
-    return substitute
+    return target
 
 
-def _substitute_seat_for_decision(seat: str, decision: dict[str, object], *, already_substituted: bool) -> str | None:
-    """Map one stored/computed substitution decision to a seat hop, or None."""
+def _substitute_seat_for_decision(
+    seat: AdmittedTarget, decision: dict[str, object], *, already_substituted: bool
+) -> AdmittedTarget | None:
+    """Map one stored/computed substitution decision to an admitted seat hop, or None."""
     if not decision["substitute"]:
         return None
-    return _resolve_quota_substitution(seat, str(decision["reason"]), already_substituted=already_substituted)
+    return _resolve_quota_substitution(
+        seat.recipient, str(decision["reason"]), already_substituted=already_substituted
+    )
 
 
 def _announce_substitution(
@@ -458,7 +487,7 @@ def _failure_metadata(*, error: BaseException | None = None, result: object | No
                 "code": "route_model_conflict",
                 "retryable": False,
             }
-        if "effort pin" in error_text or "registered effort" in error_text:
+        if "effort pin" in error_text or "registered effort" in error_text or "supported effort values" in error_text:
             return {
                 "phase": "admission",
                 "code": "route_effort_conflict",
@@ -496,6 +525,8 @@ def _failure_metadata(*, error: BaseException | None = None, result: object | No
         return {"phase": "transport", "code": code, "retryable": True}
     if code == "provider_unavailable":
         return {"phase": "provider", "code": code, "retryable": True}
+    if code == "provider_error":
+        return {"phase": "provider", "code": code, "retryable": False}
     if code == "adapter_refused":
         return {"phase": "admission", "code": code, "retryable": False}
     if code == "transport_error":
@@ -601,7 +632,7 @@ def run_compat_ask(
     hard_timeout: int | None = None,
 ) -> object:
     """Execute one normal ACP ask with fail-open body-free usage telemetry."""
-    participant = require_compat_target(command_target)
+    participant = admit_compat_target(command_target, model=model, data=data).recipient
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
     # Every ACP ask starts with the rules core: refuse before telemetry, the
@@ -685,7 +716,7 @@ def _run_compat_ask_impl(
     itself out of quota fails loudly with no second hop. Every other failure
     class is unchanged.
     """
-    participant = require_compat_target(command_target)
+    target = admit_compat_target(command_target, model=model, data=data)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
     if hard_timeout is None:
@@ -701,13 +732,12 @@ def _run_compat_ask_impl(
             content,
             task_id=task_id,
             source=source,
-            model=model,
             effort=effort,
             data=data,
             output_path=output_path,
             stdout_only=stdout_only,
             hard_timeout=hard_timeout,
-            participant=participant,
+            target=target,
             repo_root=REPO_ROOT,
         )
     except AskForwardError:
@@ -719,8 +749,7 @@ def _run_compat_ask_impl(
     if data:
         prompt += "\n\n--- attached inert text ---\n" + data
 
-    seat = participant
-    seat_model = model
+    seat = target
     seat_effort = effort
     substitution: dict[str, str] | None = None
     while True:
@@ -730,7 +759,6 @@ def _run_compat_ask_impl(
                 prompt,
                 task_id=task_id,
                 source=source,
-                model=seat_model,
                 effort=seat_effort,
                 review=review,
                 hard_timeout=hard_timeout,
@@ -742,9 +770,9 @@ def _run_compat_ask_impl(
             if substitute is None:
                 raise
             substitution = _announce_substitution(
-                seat, substitute, str(decision["reason"]), model=seat_model, effort=seat_effort
+                seat.recipient, substitute.recipient, str(decision["reason"]), model=seat.model, effort=seat_effort
             )
-            seat, seat_model, seat_effort = substitute, None, None
+            seat, seat_effort = substitute, None
             continue
         if terminalization_error is not None or bool(getattr(result, "ok", False)):
             break
@@ -752,9 +780,9 @@ def _run_compat_ask_impl(
         if substitute is None:
             break
         substitution = _announce_substitution(
-            seat, substitute, str(decision["reason"]), model=seat_model, effort=seat_effort
+            seat.recipient, substitute.recipient, str(decision["reason"]), model=seat.model, effort=seat_effort
         )
-        seat, seat_model, seat_effort = substitute, None, None
+        seat, seat_effort = substitute, None
 
     if substitution is not None:
         result = _with_substitution_record(result, substitution)
@@ -776,18 +804,17 @@ def _run_compat_ask_impl(
 
 
 def _run_single_acp_job(
-    participant: str,
+    target: AdmittedTarget,
     prompt: str,
     *,
     task_id: str,
     source: str | None,
-    model: str | None,
     effort: str | None,
     review: bool,
     hard_timeout: int,
     substitution: dict[str, str] | None = None,
 ) -> tuple[object, Exception | None, dict[str, object]]:
-    """Run one authority-job ACP attempt against ``participant``.
+    """Run one authority-job ACP attempt against the admitted ``target`` (its participant and model).
 
     Returns ``(result, terminalization_error, substitution_decision)``. The
     job is terminalized durably before this returns or raises, so a quota
@@ -800,8 +827,12 @@ def _run_single_acp_job(
     receipt carry the record.
     """
     from agent_runtime.runner import invoke_inter_agent
+    from agent_runtime.target_admission import require_admitted
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
+    # The target comes from resolve_and_admit (a quota substitute too): no seat is resolved here.
+    target = require_admitted(target)
+    participant, model = target.recipient, target.model
     key = _idempotency_key(
         participant=participant,
         task_id=task_id,

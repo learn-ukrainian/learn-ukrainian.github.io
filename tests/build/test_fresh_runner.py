@@ -31,6 +31,7 @@ from tests.build.test_fresh_assemble import (
     validate_fixture_plan,
     validate_fixture_words,
 )
+from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: F401
 
 pytestmark = pytest.mark.reads_content
 ROOT = Path(__file__).resolve().parents[2]
@@ -400,6 +401,17 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
 
 
 class _FixtureSources:
+    def __init__(self, *, evidence_sources=None):
+        self.evidence_sources = evidence_sources
+
+    def resolve_evidence_ids(self, evidence_ids):
+        from scripts.curriculum.evidence.sources import Sources
+
+        if self.evidence_sources is not None:
+            return self.evidence_sources.resolve_evidence_ids(evidence_ids)
+        with Sources() as sources:
+            return sources.resolve_evidence_ids(evidence_ids)
+
     def _vesum_identity(self):
         return "f" * 64, {}
 
@@ -888,3 +900,49 @@ def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, mo
     second, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert second == first
     assert {name: (state / name).read_bytes() for name in before} == before
+
+
+def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkeypatch):
+    from scripts.curriculum.evidence.sources import SourceResult, Sources
+
+    draft, plan, pack, words = _fixture()
+    # Exercise the owned-session path rather than the injected source double.
+    monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
+    monkeypatch.setattr(Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64))
+    resolve = runner.resolve
+    choices = runner.check_7_a1_choices
+    captured = []
+
+    def scoped_resolve(expanded, allowlist, sources):
+        sources._db()
+        captured.append(sources)
+        return resolve(expanded, allowlist, sources)
+
+    def scoped_choices(*args, **kwargs):
+        assert kwargs["sources"] is captured[0]
+        assert captured[0]._conn is not None
+        return choices(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "resolve", scoped_resolve)
+    monkeypatch.setattr(runner, "check_7_a1_choices", scoped_choices)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    assert len(captured) == 1 and captured[0]._conn is None
+
+
+def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatch):
+    from scripts.curriculum.evidence.sources import Sources
+
+    draft, plan, pack, words = _fixture()
+    monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
+    captured = []
+
+    def unavailable(expanded, allowlist, sources):
+        sources._db()
+        captured.append(sources)
+        raise OSError("fixture source failure")
+
+    monkeypatch.setattr(runner, "resolve", unavailable)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False and report["passed_through"] == 7
+    assert len(captured) == 1 and isinstance(captured[0], Sources) and captured[0]._conn is None

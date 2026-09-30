@@ -119,10 +119,10 @@ def test_ask_branch_routes_to_headless_dispatch_not_acp(
     acp_guard: dict[str, int], captured_dispatch: dict[str, object]
 ) -> None:
     args = _cli._build_parser().parse_args(
-        ["ask-kimi", "review this change", "--task-id", "review-branch", "--branch", "feat-x", "--from", "test"]
+        ["ask-codex", "review this change", "--task-id", "review-branch", "--branch", "feat-x", "--from", "test"]
     )
 
-    _cli._handle_ask_kimi(args)
+    _cli._handle_ask_codex(args)
 
     assert acp_guard["count"] == 0
     assert "origin/feat-x" in captured_dispatch["content"]
@@ -265,10 +265,10 @@ def test_ask_branch_does_not_consult_gh(
 ) -> None:
     _install_fake_gh(tmp_path, monkeypatch, stderr="gh must not be called", code=1)
     args = _cli._build_parser().parse_args(
-        ["ask-kimi", "review this change", "--task-id", "review-branch", "--branch", "feat-x", "--from", "test"]
+        ["ask-codex", "review this change", "--task-id", "review-branch", "--branch", "feat-x", "--from", "test"]
     )
 
-    _cli._handle_ask_kimi(args)
+    _cli._handle_ask_codex(args)
 
     assert acp_guard["count"] == 0
     assert captured_dispatch["branch"] == "feat-x"

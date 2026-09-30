@@ -13,9 +13,9 @@ from __future__ import annotations
 
 import contextlib
 
-from ._acp_compat import require_compat_target, resolve_compat_model, run_compat_ask
+from ._acp_compat import refuse_kimi_compat, require_compat_target, resolve_compat_model, run_compat_ask
 from ._ask_contract import requested_effort
-from ._ask_lifecycle import ask_target_model, record_ask_failure, record_ask_reply
+from ._ask_lifecycle import ask_target_model, record_ask_failure, record_ask_reply, skip_stored_kimi_row
 from ._db import get_db
 from ._messaging import acknowledge, read_message, send_message
 
@@ -92,15 +92,23 @@ def process_message_for_recipient(
     Returns the routed seat's response on success (after replying to the
     sender and acknowledging the inbound message); returns None on any
     failure, leaving the message unacknowledged and retryable.
+
+    Kimi is not a bridge recipient. A Kimi ``model`` raises
+    ``KimiAdmissionRefused`` before the broker is opened; a stored message
+    addressed to a Kimi seat or model is never processed: it is skipped right
+    after the read, before any reply, failure record or acknowledgement, and
+    returns None (``skip_stored_kimi_row``).
     """
+    refuse_kimi_compat("", model=model)
     msg = read_message(message_id)
-    if not msg:
+    if not msg or skip_stored_kimi_row(msg, message_id):
         return None
+    recipient = str(msg.get("to") or "").strip().lower()
+    requested_model = model or ask_target_model(msg)
     if _message_acknowledged(message_id):
         print(f"⏭️  Message {message_id} is already acknowledged; skipping.")
         return None
 
-    recipient = str(msg.get("to") or "").strip().lower()
     try:
         participant = require_compat_target(recipient)
     except ValueError:
@@ -109,7 +117,7 @@ def process_message_for_recipient(
         _notify_processing_failure(msg, message_id, recipient or "unknown", reason)
         return None
 
-    selected_model = resolve_compat_model(recipient, model or ask_target_model(msg))
+    selected_model = resolve_compat_model(recipient, requested_model)
     task_id = msg.get("task_id") or f"process-{message_id}"
     print(
         f"🤖 Routing message #{message_id} to ACP participant "

@@ -24,7 +24,7 @@ Sonnet (or any one model). The writer's family is never eligible.
 
 **Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**,
 chosen from the "Code review" row of `model-assignment.md`
-(GLM from the Cloud catalog, Grok, GPT, Kimi K3, … — whatever the
+(GLM from the Cloud catalog, Grok, GPT, … — never Kimi; whatever the
 live catalog lists that is outside the author's family and meets
 that Code review routing). Gemini/AGY reviews Ukrainian only, never code
 (operator 2026-09-25). **VPS drivers** may still

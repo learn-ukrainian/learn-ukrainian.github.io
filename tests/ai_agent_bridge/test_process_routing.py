@@ -163,7 +163,7 @@ def test_process_gemini_recipient_resolves_to_agy_participant(bridge_db, monkeyp
 
 def test_process_success_acks_only_after_routed_reply(bridge_db, monkeypatch):
     """Mutation check: ack must follow the routed reply, never precede it."""
-    message_id = _send("kimi")
+    message_id = _send("cursor")
     events: list[str] = []
     monkeypatch.setattr(
         _process,
@@ -497,10 +497,10 @@ def test_legacy_gemini_error_handler_never_acks(bridge_db):
     assert _replies(message_id)[0][2] == "error"
 
 
-@pytest.mark.parametrize("seat", ["claude", "codex", "grok", "kimi", "agy"])
+@pytest.mark.parametrize("seat", ["claude", "codex", "grok", "agy"])
 def test_native_error_handlers_never_ack(bridge_db, seat):
     """Mutation check: removing the no-ack guard turns every one of these red."""
-    from scripts.ai_agent_bridge import _agy, _claude, _codex, _grok_build, _kimi
+    from scripts.ai_agent_bridge import _agy, _claude, _codex, _grok_build
 
     message_id = _send(seat)
     msg = {
@@ -518,8 +518,6 @@ def test_native_error_handlers_never_ack(bridge_db, seat):
         _codex._handle_codex_error(msg, message_id, "boom")
     elif seat == "grok":
         _grok_build._handle_grok_build_error(msg, message_id, "boom")
-    elif seat == "kimi":
-        _kimi._handle_kimi_error(msg, message_id, "boom")
     elif seat == "agy":
         _agy._handle_agy_error(msg, message_id, "boom")
 
@@ -619,7 +617,6 @@ def forbid_legacy_processors(monkeypatch):
         ("_codex", "process_for_codex"),
         ("_agy", "process_for_agy"),
         ("_grok_build", "process_for_grok_build"),
-        ("_kimi", "process_for_kimi"),
         ("_hermes", "process_for_hermes"),
         ("_opencode", "process_for_opencode"),
     ]:
@@ -636,7 +633,6 @@ def forbid_legacy_processors(monkeypatch):
         "process-codex",
         "process-grok",
         "process-grok-build",
-        "process-kimi",
     ],
 )
 def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command, forbid_legacy_processors):
@@ -656,7 +652,54 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
     assert _row(message_id)[0] == 1
 
 
-@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "kimi", "pool", "glm", "hermes"])
+def _legacy_kimi_row() -> int:
+    """A Kimi-addressed row written before Kimi stopped being a bridge recipient (``send`` now refuses it)."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp)"
+            " VALUES ('task-6915', 'agy', 'kimi', 'advisory', 'Advisor note.', '2026-09-30T00:00:00+00:00')"
+        )
+        conn.commit()
+        return int(cursor.lastrowid)
+    finally:
+        conn.close()
+
+
+def test_send_refuses_a_kimi_recipient(bridge_db):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        _send("kimi", sender="agy")
+
+
+def test_kimi_messages_are_skipped_with_zero_side_effects(bridge_db, monkeypatch, capsys, forbid_legacy_processors):
+    """Kimi is not a bridge recipient — an existing Kimi-addressed row is never processed. A Kimi target is a
+    Kimi request and is refused; a generic drain skips the stored row, reports it once and leaves the broker
+    exactly as it was: no reply, no failure record, no acknowledgement."""
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _ask_lifecycle, _cli
+
+    acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    cli_message = _legacy_kimi_row()
+    detached_message = _legacy_kimi_row()
+    before = {message_id: (_row(message_id), _replies(message_id)) for message_id in (cli_message, detached_message)}
+
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _ask_lifecycle.process_background_ask(detached_message, "kimi")
+    capsys.readouterr()
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process-claude", str(cli_message)]))
+    _ask_lifecycle.process_background_ask(detached_message, "codex")
+    assert capsys.readouterr().out.count("skipped: Kimi is not a bridge recipient") == 3
+
+    acp.assert_not_called()
+    assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before
+
+
+@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm", "hermes"])
 def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
     bridge_db, monkeypatch, target, forbid_legacy_processors
 ):

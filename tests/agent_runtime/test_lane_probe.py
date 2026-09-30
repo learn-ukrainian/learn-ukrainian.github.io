@@ -114,6 +114,7 @@ def test_probe_uses_write_mode_for_kimi_without_executing_a_prompt(monkeypatch, 
     _registered_lane(monkeypatch, "kimi")
     adapter = _FakeAdapter(["kimi", "-p", "ignored"])
     adapter.name = "kimi"
+    adapter.supported_modes = frozenset({"workspace-write"})  # the Kimi adapters admit nothing else
     monkeypatch.setattr(lane_probe, "_load_adapter", lambda _agent: adapter)
     monkeypatch.setattr(lane_probe.subprocess, "run", lambda *_args, **_kwargs: SimpleNamespace(returncode=0))
 

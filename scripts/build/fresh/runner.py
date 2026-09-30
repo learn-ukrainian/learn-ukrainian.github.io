@@ -55,6 +55,7 @@ import unicodedata
 import uuid
 from collections import Counter
 from collections.abc import Callable
+from contextlib import ExitStack
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -600,10 +601,19 @@ def check_7_a1_choices(
     lesson_n: int,
     requirement_inputs: dict[str, Any] | None = None,
     vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    sources: Any = None,
 ) -> dict[str, Any]:
     """Check A1 choice uniqueness after resolution; never infer a slot's demand."""
+    if sources is None:
+        from scripts.curriculum.evidence.sources import Sources
+
+        with Sources() as client:
+            return check_7_a1_choices(
+                draft, lesson, words, stream, state_dir=state_dir, lesson_n=lesson_n,
+                requirement_inputs=requirement_inputs, vesum_lookup=vesum_lookup, sources=client,
+            )
     by_id = {record["id"]: record for record in words.get("words") or []}
-    receipt_doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state_dir, lesson_n))
+    receipt_doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state_dir, lesson_n), sources=sources)
     completeness: list[dict[str, Any]] = []
     if vesum_lookup is None:
         from scripts.verification.vesum import verify_words
@@ -703,6 +713,7 @@ def check_7_a1_choices(
                     options=texts,
                     key_index=key,
                     requires=demand,
+                    sources=sources,
                 )
                 if status != "confirmed":
                     return bad(status, aid, index)
@@ -742,7 +753,11 @@ def check_7_a1_choices(
                     return bad("orthography_distractor_is_word", aid, index)
             elif kind != "comprehension":
                 return bad("choice_kind_invalid", aid, index)
-    return _pass(7, {"requirement_receipts": completeness})
+    details = {"requirement_receipts": completeness}
+    if receipt_doc is not None:
+        evidence = receipts.resolve_requirement_evidence(receipt_doc, sources=sources)
+        details["requirement_evidence"] = {"sha256": evidence.content_hash, "sources": evidence.metadata}
+    return _pass(7, details)
 
 
 def _structural_activity_error(activity: dict[str, Any], typ: str, records: dict[str, dict[str, Any]]) -> str | None:
@@ -1393,100 +1408,100 @@ def run_lesson(
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
-    try:
-        expanded_obj = ExpandedDocument.from_data(expanded)
-        selected_allowlist = allowlist or load_allowlist(level, slug, n, plans_dir=plans_dir, evidence_dir=evidence_dir)
-        if sources is None:
-            with Sources() as source_client:
-                stream = resolve(expanded_obj, selected_allowlist, source_client)
-        else:
-            stream = resolve(expanded_obj, selected_allowlist, sources)
-    except ResolverError as err:
-        layer = "pack" if err.code in {codes.UNKNOWN_WORD_ID, codes.LOCK_MISMATCH} else "engine"
-        return finish(failure(7, err.message, layer, code=err.code))
-    except (OSError, ValueError) as err:
-        return finish(failure(7, f"resolver_input_unavailable: {err}", "pack"))
-    except Exception as err:
-        return finish(failure(7, f"resolver_error: {err}", "engine"))
-    row = check_7_deterministic(stream, lesson, draft, form_options)
-    if row["status"] == "failed":
-        return finish(row)
-    rows.append(row)
-    # Questions omit step, while receipts retain it for digest provenance.
-    token_steps = [token["unit"].pop("step", None) for token in stream.tokens]
-    batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
-    try:
-        questions.write_questions(state_dir / f"lesson-{n}.questions.yaml", batch)
-    except (ResolverError, OSError) as err:
-        return finish(failure(8, f"question_batch_invalid: {err}", "engine", code=getattr(err, "code", None)))
-    if batch["questions"] and not question_seat:
-        return finish(failure(8, "question_seat_required", "driver"))
-    if batch["questions"] and (question_seat.count(":") != 1 or not all(question_seat.split(":"))):
-        return finish(failure(8, "question_seat_invalid", "driver"))
-    try:
-        if batch["questions"]:
-            answer_doc = (question_dispatch or (lambda b, s: dispatch_questions(b, s, repo_root=repo_root)))(
-                batch, question_seat
-            )
-            selections = receipts.apply_answers(batch, answer_doc, question_seat.replace(":", "@"))
-            if len(selections) != len(batch["questions"]):
-                raise ResolverError(
-                    codes.TOKEN_UNRESOLVED, "every question must be answered before inventory and rendering"
-                )
-        else:
-            selections = {}
-        receipt_doc = receipts.build_receipts(
-            stream, batch, selections, question_seat.replace(":", "@") if question_seat else None
-        )
-        for receipt, step in zip(receipt_doc["tokens"], token_steps, strict=True):
-            if step is not None:
-                receipt["unit"]["step"] = step
-        receipt_path = state_dir / f"lesson-{n}.resolutions.yaml"
-        receipt_sha = receipts.write_receipts(receipt_path, receipt_doc)
-        for token, receipt in zip(stream.tokens, receipt_doc["tokens"], strict=True):
-            token["selected"] = receipt["selected"]
-            token["provenance"] = receipt["provenance"]
-        for token, step in zip(stream.tokens, token_steps, strict=True):
-            if step is not None:
-                token["unit"] = {**token["unit"], "step": step}
-        stream.inputs["receipts_sha256"] = receipt_sha
-    except (ResolverError, ValueError, RuntimeError, OSError) as err:
-        return finish(
-            failure(
-                8, str(err), "writer" if isinstance(err, ResolverError) else "driver", code=getattr(err, "code", None)
-            )
-        )
-    rows.append(_pass(8, {"questions": len(batch["questions"]), "answered": len(selections)}))
-    if level == "a1":
+    with ExitStack() as source_session:
         try:
-            choice_row = check_7_a1_choices(
-                draft,
-                lesson,
-                words,
-                stream,
-                state_dir=state_dir,
-                lesson_n=n,
-                requirement_inputs=receipts.requirement_inputs(
-                    receipt_doc["inputs"],
-                    yaml.safe_load((state_dir / f"lesson-{n}.draft.yaml").read_text(encoding="utf-8")),
-                ),
+            expanded_obj = ExpandedDocument.from_data(expanded)
+            selected_allowlist = allowlist or load_allowlist(level, slug, n, plans_dir=plans_dir, evidence_dir=evidence_dir)
+            if sources is None:
+                sources = source_session.enter_context(Sources())
+            stream = resolve(expanded_obj, selected_allowlist, sources)
+        except ResolverError as err:
+            layer = "pack" if err.code in {codes.UNKNOWN_WORD_ID, codes.LOCK_MISMATCH} else "engine"
+            return finish(failure(7, err.message, layer, code=err.code))
+        except (OSError, ValueError) as err:
+            return finish(failure(7, f"resolver_input_unavailable: {err}", "pack"))
+        except Exception as err:
+            return finish(failure(7, f"resolver_error: {err}", "engine"))
+        row = check_7_deterministic(stream, lesson, draft, form_options)
+        if row["status"] == "failed":
+            return finish(row)
+        rows.append(row)
+        # Questions omit step, while receipts retain it for digest provenance.
+        token_steps = [token["unit"].pop("step", None) for token in stream.tokens]
+        batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
+        try:
+            questions.write_questions(state_dir / f"lesson-{n}.questions.yaml", batch)
+        except (ResolverError, OSError) as err:
+            return finish(failure(8, f"question_batch_invalid: {err}", "engine", code=getattr(err, "code", None)))
+        if batch["questions"] and not question_seat:
+            return finish(failure(8, "question_seat_required", "driver"))
+        if batch["questions"] and (question_seat.count(":") != 1 or not all(question_seat.split(":"))):
+            return finish(failure(8, "question_seat_invalid", "driver"))
+        try:
+            if batch["questions"]:
+                answer_doc = (question_dispatch or (lambda b, s: dispatch_questions(b, s, repo_root=repo_root)))(
+                    batch, question_seat
+                )
+                selections = receipts.apply_answers(batch, answer_doc, question_seat.replace(":", "@"))
+                if len(selections) != len(batch["questions"]):
+                    raise ResolverError(
+                        codes.TOKEN_UNRESOLVED, "every question must be answered before inventory and rendering"
+                    )
+            else:
+                selections = {}
+            receipt_doc = receipts.build_receipts(
+                stream, batch, selections, question_seat.replace(":", "@") if question_seat else None
             )
-        except OSError as err:
-            return finish(
-                failure(7, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable")
-            )
-        except (ResolverError, ValueError) as err:
+            for receipt, step in zip(receipt_doc["tokens"], token_steps, strict=True):
+                if step is not None:
+                    receipt["unit"]["step"] = step
+            receipt_path = state_dir / f"lesson-{n}.resolutions.yaml"
+            receipt_sha = receipts.write_receipts(receipt_path, receipt_doc)
+            for token, receipt in zip(stream.tokens, receipt_doc["tokens"], strict=True):
+                token["selected"] = receipt["selected"]
+                token["provenance"] = receipt["provenance"]
+            for token, step in zip(stream.tokens, token_steps, strict=True):
+                if step is not None:
+                    token["unit"] = {**token["unit"], "step": step}
+            stream.inputs["receipts_sha256"] = receipt_sha
+        except (ResolverError, ValueError, RuntimeError, OSError) as err:
             return finish(
                 failure(
-                    7,
-                    f"a1_choice_check_invalid: {err}",
-                    "engine",
-                    code=getattr(err, "code", None) or "a1_choice_check_invalid",
+                    8, str(err), "writer" if isinstance(err, ResolverError) else "driver", code=getattr(err, "code", None)
                 )
             )
-        if choice_row["status"] == "failed":
-            return finish(choice_row)
-        row["details"].update(choice_row.get("details", {}))
+        rows.append(_pass(8, {"questions": len(batch["questions"]), "answered": len(selections)}))
+        if level == "a1":
+            try:
+                choice_row = check_7_a1_choices(
+                    draft,
+                    lesson,
+                    words,
+                    stream,
+                    state_dir=state_dir,
+                    lesson_n=n,
+                    sources=sources,
+                    requirement_inputs=receipts.requirement_inputs(
+                        receipt_doc["inputs"],
+                        yaml.safe_load((state_dir / f"lesson-{n}.draft.yaml").read_text(encoding="utf-8")),
+                    ),
+                )
+            except OSError as err:
+                return finish(
+                    failure(7, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable")
+                )
+            except (ResolverError, ValueError) as err:
+                return finish(
+                    failure(
+                        7,
+                        f"a1_choice_check_invalid: {err}",
+                        "engine",
+                        code=getattr(err, "code", None) or "a1_choice_check_invalid",
+                    )
+                )
+            if choice_row["status"] == "failed":
+                return finish(choice_row)
+            row["details"].update(choice_row.get("details", {}))
     try:
         gate = inventory_gate(
             level,

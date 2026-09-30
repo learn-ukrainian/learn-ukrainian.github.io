@@ -40,9 +40,32 @@ yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 
 ## Kimi routes and KimiCC headless route
 
+Kimi seats take web, UI and backend coding only: `workspace-write`
+implementation of paths on the allowlist in
+`scripts/agent_runtime/kimi_admission.py` (`KIMI_OWNED_ROOTS`). Asks, consults,
+discussions, reviews, trail sessions and read-only or danger modes are refused
+by `refuse_kimi_if_disallowed` before any side effect. Ukrainian content is
+recognised by content: an owned file, or any file under an owned directory or
+glob, that contains a Cyrillic character is refused, and so is a directory or
+glob scope that covers an excluded file (narrow it to specific files or clean
+subdirectories). A Kimi worker does not commit: `delegate.py` checks its diff
+from the merge base and commits the owned paths only when the diff adds no
+Cyrillic character; otherwise the task ends `failed` with
+`kimi_content_refusal` and nothing is committed.
+
+Targets are admitted in the same step they are resolved:
+`scripts/agent_runtime/target_admission.py` `resolve_and_admit` performs every
+resolution a request goes through (explicit recipients and model, `data`
+attachments, compat names, ACP route pins, slot holders, registry lookups,
+quota substitution) and then runs the Kimi gate. Delivery, insertion, wake and
+launch sinks in the bridge, channels, ACP, fleet-comms and `delegate.py` take
+the `AdmittedTarget` it returns, never a raw name, and the resolvers are
+called from that module only (`tests/test_target_admission_structure.py`).
+
 **Native Kimi is the default** interactive and headless/fleet route
-(`./start-kimi.sh`, `delegate.py --agent kimi`, bridge). Native **Kimi K3 is
-max-only** — the native adapter does not accept a non-max effort ladder for K3.
+(`./start-kimi.sh`, `delegate.py --agent kimi --mode workspace-write`). Native
+**Kimi K3 is max-only** — the native adapter does not accept a non-max effort
+ladder for K3.
 
 **KimiCC is bounded explicit opt-in** (`./start-kimicc.sh`,
 `start-kimi.sh --harness claude-code`, or runtime `harness=kimicc`). On the
@@ -83,8 +106,8 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   the explicit fleet-comms `acp-discuss` controller; it is never a generic
   runner, routing, dispatch, failover, or review setting. Rollback is setting
   the flag to `off` (or unsetting it) and using native transport.
-- Direct-only seats cover Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool,
-  AGY/Gemini, GLM, Gemma, and DeepSeek through the fixed registry in
+- Direct-only seats cover Codex, Grok, Claude, Cursor, Pool,
+  AGY/Gemini, GLM, Gemma, and DeepSeek (the registry still names the Kimi and KimiCC seats, but `kimi_admission` refuses them before any side effect) through the fixed registry in
   `scripts/agent_runtime/adapters/acpx.py` (including `acpx-codex-shadow`,
   `acpx-grok-shadow` via `AcpxGrokShadowAdapter`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`). They
@@ -488,7 +511,7 @@ profile:
 
 ```python
 invoke(
-    "grok",  # or "kimi" with harness="kimicc"
+    "grok",
     prompt,
     mode="read-only",
     cwd=Path.cwd(),
@@ -514,11 +537,9 @@ The admission policy is fail-closed:
 - Native Grok gets a private MCP cwd, an exact three-tool allowlist, explicit
   allows for those tools, and explicit denies for Bash, reads/writes/edits,
   web, and discovery tools.
-- Kimi is eligible only through `tool_config={"harness": "kimicc", "trail_isolation": True}`.
-  KimiCC forwards Claude Code's exact `--tools`, `--allowedTools`,
-  `--strict-mcp-config`, and empty `--setting-sources` profile.
-- Native Kimi, GLM/opencode, Hermes Grok, and every unproven harness refuse
-  before spawn. GLM currently ignores tool restrictions, so a refusal is more
+- Every Kimi seat (native and KimiCC) refuses trail sessions: Kimi seats take
+  web, UI and backend coding only (`scripts/agent_runtime/kimi_admission.py`).
+- GLM/opencode, Hermes Grok, and every unproven harness refuse before spawn. GLM currently ignores tool restrictions, so a refusal is more
   honest than a pretend sandbox.
 
 The boundary prevents accidental weak-driver deviation, not a malicious

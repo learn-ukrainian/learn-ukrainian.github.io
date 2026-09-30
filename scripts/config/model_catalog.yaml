@@ -49,6 +49,15 @@ policy:
       bus. Do not relaunch OpenRouter-for-subscribed-models patterns for
       Moonshot/Kimi K3. OpenRouter remains mainly Pool + Gemma access.
     - >-
+      Kimi: web, UI and backend coding only — no Ukrainian-language content, no
+      reviews, consults, design or rules. Kimi seats (`kimi`, `kimicc`, every
+      `kimi-code/*` / `kimi-k3*` id) take workspace-write implementation of the
+      allowlisted UI and backend paths (KIMI_OWNED_ROOTS) only; they carry no review,
+      consult, advisor, or ACP-discussion role and are absent from
+      review_candidates and review_ladders; dispatch, the runtime, ACP and the
+      fleet-comms authority refuse everything else before any side effect
+      (scripts/agent_runtime/kimi_admission.py).
+    - >-
       EXEMPT (not a fleet seat) — scripts/projects/open_model_data Phase 3 v2.1 ROLE_EXECUTION
       still pins harness opencode + exact_model grok-4.5 for ukrainian_source_reviewer /
       cross_family_code_infra_reviewer / textbook_nonhit_auditor (and OPENCODE_REVIEW_MODEL
@@ -160,7 +169,7 @@ review_scheduler:
       capacity_weight: 1.0
     kimi:
       formal_review_eligible: false
-      formal_review_exclusion_reason: bare Kimi launcher is not the canonical K3 participant
+      formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
       models: []
       participant: kimi
       adapter_transport: acp
@@ -174,7 +183,7 @@ review_scheduler:
       capacity_weight: 1.0
     kimicc:
       formal_review_eligible: false
-      formal_review_exclusion_reason: authenticated K3 sealed MCP canary has not completed
+      formal_review_exclusion_reason: "Kimi: web, UI and backend coding only; reviews are refused"
       # Routable kimicc models only. kimi-code/k3-256k is omitted: the live
       # coding endpoint rejects coding_model_id k3-256k with
       # [claude-code:unrecognized_model] (#8745). No replacement 256k id.
@@ -464,7 +473,8 @@ models:
       Anthropic authority-tier seat. Operator 2026-08-06: formal CF eligible when pinned
       on the sealed claude endpoint (sealed review-pr was removed in #8520).
       Advisory consultations remain non-binding for designated advisor authority (Sol/Fable).
-      Kimi may consult on non-Ukrainian design/coding; it does not alone satisfy architecture GO.
+      Kimi: web, UI and backend coding only — no Ukrainian-language content, no
+      reviews, consults, design or rules.
       Effort ladder low..max; use high for advisory and xhigh only for a documented hard turn.
       Thinking is ON by default and disabling it is invalid above high effort. Separate
       rate-limit bucket from the Opus 4.x pool.
@@ -647,7 +657,8 @@ models:
       platform_model_id: "kimi-k3[1m]"
       coding_model_id: k3
       context_profile: kimicc_k3
-    roles: [consequential_coding, strong_review, long_context_debugging, multimodal_analysis]
+    # Kimi: web, UI and backend coding only — no review, consult, advisor, or ACP-discussion role.
+    roles: [consequential_coding, long_context_debugging]
     # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
     transports: [native_kimi]
     strengths: [strong_agentic_coding, max_effort, image_video_tools, strong_root_cause, dense_ci_nits]
@@ -685,7 +696,7 @@ models:
       platform_model_id: kimi-k3-256k
       coding_model_id: k3-256k
       context_profile: kimicc_k3_256k
-    roles: [routine_coding, everyday_review]
+    roles: [routine_coding]
     # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
     transports: [native_kimi]
     strengths: [strong_agentic_coding, half_quota_vs_k3, effort_low_high_max]
@@ -702,7 +713,7 @@ models:
       platform_model_id: kimi-k3-max
       coding_model_id: kimi-k3-max
       context_profile: kimicc_k3
-    roles: [architecture, critical_review, long_context_debugging, advisor]
+    roles: [consequential_coding, long_context_debugging]
     # Native `kimi` CLI only — OpenRouter is forbidden as a Kimi worker bus.
     transports: [native_kimi]
     strengths: [frontier_reasoning, max_effort, long_context_review]
@@ -1018,17 +1029,6 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.6
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
-  kimi-k3:
-    model_id: kimi-code/k3
-    # kimicc is the concrete K3 ACP participant; bare `kimi` is a launcher
-    # family and must never be serialized as the participant identity.
-    # Transport is native_kimi only — never OpenRouter as a Kimi worker bus.
-    route: kimicc
-    transport: native_kimi
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent kimi --model k3
-    health_keys: [kimi]
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
   glm-5.3:
     model_id: glm-5.3
     route: glm
@@ -1121,7 +1121,7 @@ review_candidates:
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
 # AGY remains fail-closed because its text-only wrapper cannot consume the
 # parent-owned sealed MCP. Grok enters through the proven exact-head ACP review
-# path; Kimi K3 remains fail-closed until its authenticated sealed canary passes.
+# path; Kimi: web, UI and backend coding only, never review.
 # Parallel escalate ladder (user 2026-07-22): practical default + authority deep.
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
@@ -1269,7 +1269,7 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Sol high → Opus 5.5 → Sonnet 5.5 → Grok / K3 / DS / pool.
+  # high/medium/low: Sol high → Opus 5.5 → Sonnet 5.5 → Grok / DS / pool.
   # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
@@ -1282,7 +1282,6 @@ review_ladders:
     - [claude-sonnet-5-5]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
-    - [kimi-k3]
     # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
     - [deepseek-v4.1-flash]
@@ -1290,7 +1289,7 @@ review_ladders:
     - [pool]
     - [pool-xs]
   high: &practical_first_code_review
-    # Routine CF order: Sol high → Opus 5.5 high → Sonnet 5.5 → Grok / K3…
+    # Routine CF order: Sol high → Opus 5.5 high → Sonnet 5.5 → Grok…
     # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
     - [claude-opus-5-5]
@@ -1298,7 +1297,6 @@ review_ladders:
     - [claude-sonnet-5-5]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
-    - [kimi-k3]
     # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
     - [deepseek-v4.1-flash]

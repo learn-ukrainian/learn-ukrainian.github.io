@@ -125,7 +125,9 @@ async def list_tools() -> list[Tool]:
                 "(compiled Ukrainian textbook pedagogy). Use this for general retrieval "
                 "when you want all relevant Ukrainian-source content in one query. "
                 "Use the corpus-specific tools (search_text, search_literary, etc.) "
-                "only when you need to scope to a single source."
+                "only when you need to scope to a single source. The structured result "
+                "envelope may include top-level `ranking` for a shared hit ranking, "
+                "`mixed` for different hit rankings, or omit it when hits have no ranking metadata."
             ),
             inputSchema={
                 "type": "object",
@@ -1993,6 +1995,13 @@ async def handle_search_sources(args: dict):
     envelope = build_search_envelope(
         tool="search_sources", query=query_obj, hits=list(hits), summary_prose=prose
     )
+    hit_rankings = {
+        hit["ranking"]
+        for hit in hits
+        if isinstance(hit, dict) and isinstance(hit.get("ranking"), str)
+    }
+    if hit_rankings:
+        envelope["ranking"] = next(iter(hit_rankings)) if len(hit_rankings) == 1 else "mixed"
     return [TextContent(type="text", text=prose)], envelope
 
 

@@ -269,11 +269,13 @@ def test_detached_timeout_marks_terminal_state_and_next_cli_notice_is_once(bridg
     lifecycle.process_background_ask(message_id, "agy")
     assert _status(message_id).startswith("timed-out:")
 
-    lifecycle.maybe_print_timeout_notice()
+    shown = lifecycle.print_timeout_notice()
     assert f"Background ask timed out: #{message_id}" in capsys.readouterr().err
-    assert _status(message_id).startswith("timed-out-notified:")
+    assert _status(message_id).startswith("timed-out:")  # reading the notice writes nothing
 
-    lifecycle.maybe_print_timeout_notice()
+    lifecycle.mark_timeout_notices_shown(shown)
+    assert _status(message_id).startswith("timed-out-notified:")
+    assert lifecycle.print_timeout_notice() == []
     assert capsys.readouterr().err == ""
 
 

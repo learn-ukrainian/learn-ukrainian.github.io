@@ -111,7 +111,7 @@ AGY_SEALED_REVIEW_UNSUPPORTED = (
     "project-instruction, MCP, hook, and nested-reviewer suppression for "
     "sealed formal CF review, and sealed review-pr is retired. "
     "Use the lightweight direct review on an eligible lane: "
-    "`ask-claude|ask-codex|ask-kimi - --task-id review-<N> --type review` "
+    "`ask-claude|ask-codex - --task-id review-<N> --type review` "
     "(or `--pr <N>`, which routes to the same direct path). "
     "AGY remains fine for advisory ask-agy *without* --review."
 )
