@@ -11,7 +11,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
-from scripts.agent_runtime.adapters.cursor import CursorAdapter
+from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY, CursorAdapter
 from tests.cursor_process_guard import bounded_cursor_smoke
 
 
@@ -53,6 +53,60 @@ def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model)
         tool_config=None,
     )
     assert plan.cmd[plan.cmd.index("--model") + 1] == model
+
+
+@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default"])
+@pytest.mark.parametrize(
+    ("mode", "tool_config"),
+    [
+        ("read-only", None),
+        ("read-only", {CURSOR_AUTO_ADMITTED_KEY: True}),
+        ("workspace-write", None),
+        ("workspace-write", {CURSOR_AUTO_ADMITTED_KEY: "true"}),
+        ("danger", {}),
+    ],
+)
+def test_cursor_adapter_refuses_auto_without_delegate_admission(adapter, tmp_path, monkeypatch, model, mode, tool_config):
+    """#9274: Auto runs only a write dispatch delegate admitted as a well-defined coding task."""
+    monkeypatch.setattr(adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("Auto reached workspace setup"))
+    with pytest.raises(ValueError, match=r"cursor_auto_outside_coding_task.*grok-4\.7 or composer-2\.5"):
+        adapter.build_invocation(
+            prompt="implement",
+            mode=mode,
+            cwd=tmp_path,
+            model=model,
+            task_id="auto-refused",
+            session_id=None,
+            tool_config=tool_config,
+        )
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_cursor_adapter_runs_auto_for_an_admitted_write_dispatch(adapter, tmp_path, mode):
+    plan = adapter.build_invocation(
+        prompt="implement",
+        mode=mode,
+        cwd=tmp_path,
+        model="auto",
+        task_id="auto-admitted",
+        session_id=None,
+        tool_config={CURSOR_AUTO_ADMITTED_KEY: True},
+    )
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "auto"
+
+
+def test_cursor_adapter_pins_default_model_when_none_is_given(adapter, tmp_path):
+    """No --model is not Auto: the adapter sends its concrete default pin."""
+    plan = adapter.build_invocation(
+        prompt="review",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="default-pin",
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7"
 
 
 def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatch):
@@ -173,7 +227,7 @@ def test_cursor_adapter_workspace_write_allows_edits_by_default(adapter, tmp_pat
         cwd=tmp_path,
         task_id="task-6469",
         session_id=None,
-        tool_config={"cursor_workspace": str(tmp_path)},
+        tool_config={"cursor_workspace": str(tmp_path), CURSOR_AUTO_ADMITTED_KEY: True},
     )
     assert "--mode" not in plan.cmd
     assert "--force" in plan.cmd
@@ -181,12 +235,12 @@ def test_cursor_adapter_workspace_write_allows_edits_by_default(adapter, tmp_pat
 
 
 def test_cursor_adapter_workspace_write_explicit_plan_still_allowed(adapter, tmp_path, monkeypatch):
-    """Callers may still force plan mode for intentional non-write runs."""
+    """Callers may still force plan mode for intentional non-write runs on a concrete pin."""
     monkeypatch.setattr("shutil.which", lambda _: "/usr/bin/cursor-agent")
     plan = adapter.build_invocation(
         prompt="only plan",
         mode="workspace-write",
-        model="auto",
+        model="grok-4.7",
         cwd=tmp_path,
         task_id="task-6469-plan",
         session_id=None,
@@ -195,6 +249,41 @@ def test_cursor_adapter_workspace_write_explicit_plan_still_allowed(adapter, tmp
     assert "--mode" in plan.cmd
     assert plan.cmd[plan.cmd.index("--mode") + 1] == "plan"
     assert "--force" not in plan.cmd
+
+
+@pytest.mark.parametrize("cursor_mode", ["plan", "ask"])
+@pytest.mark.parametrize("force", [None, True, False])
+def test_cursor_adapter_refuses_admitted_auto_in_plan_or_ask_mode(adapter, tmp_path, monkeypatch, cursor_mode, force):
+    """#9274: an admitted write dispatch still refuses Auto when the effective mode is plan or ask."""
+    monkeypatch.setattr(adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("Auto reached workspace setup"))
+    tool_config = {"cursor_mode": cursor_mode, "cursor_workspace": str(tmp_path), CURSOR_AUTO_ADMITTED_KEY: True}
+    if force is not None:
+        tool_config["force"] = force
+    with pytest.raises(ValueError, match=rf"not a --mode {cursor_mode} run \(cursor_auto_outside_coding_task\)"):
+        adapter.build_invocation(
+            prompt="only plan",
+            mode="workspace-write",
+            model="auto",
+            cwd=tmp_path,
+            task_id="auto-plan-refused",
+            session_id=None,
+            tool_config=tool_config,
+        )
+
+
+def test_cursor_adapter_danger_auto_ignores_plan_mode_request(adapter, tmp_path):
+    """Danger never passes --mode, so an admitted Auto dispatch runs the agent regardless of cursor_mode."""
+    plan = adapter.build_invocation(
+        prompt="implement",
+        mode="danger",
+        cwd=tmp_path,
+        model="auto",
+        task_id="auto-danger",
+        session_id=None,
+        tool_config={"cursor_mode": "plan", CURSOR_AUTO_ADMITTED_KEY: True},
+    )
+    assert "--mode" not in plan.cmd
+    assert "--force" in plan.cmd
 
 
 def test_cursor_adapter_build_invocation_danger(adapter, tmp_path, monkeypatch):

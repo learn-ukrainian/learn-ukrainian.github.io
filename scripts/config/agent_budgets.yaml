@@ -35,7 +35,8 @@ grok:
 # grok-hermes is API/Hermes-path and intentionally ABSENT from subscription caps.
 cursor:
   # Cursor Ultra 20× — monthly Auto + API pools (not 5h/weekly). Burn/status tracks Auto;
-  # pin ``--model auto`` to spend Auto allocation. Pinning sonnet/opus burns API pool.
+  # ``--model auto`` spends Auto allocation, and runs only a well-defined coding dispatch
+  # (operator decision 2026-09-30, #9274). Pinning sonnet/opus burns API pool.
   # Native probe: cursor dashboard API; CodexBar optional overlay when binary exists.
 kimi:
   # Native Kimi Code OAuth subscription lane (K3). Request windows come from

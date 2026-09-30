@@ -53,8 +53,12 @@ Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rs
 
 ### 1b. Free-lane utilization (operator 2026-08-08 / #6468; capacity-first 2026-08-12 / #4707)
 
-**Cursor (operator 2026-09-22):** pass an explicit `--model`. Do not pass `auto`.
-Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
+**Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** pass an explicit
+`--model`. `auto` is allowed only for a well-defined coding task — a dispatch typed
+`--research-role implementation` in a write-capable mode with `--owned-path` and a PASS DoR issue
+card; `delegate.py` refuses it otherwise. The driver seat, design, consults, discussions, recon and
+unclear work pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer
+resolver selects. Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
 pool has headroom. A review of a Grok author must use an Other Models slug, not a Grok
@@ -118,7 +122,7 @@ operator must confirm and refresh the count and expiry; no agent infers them fro
 
 ### Cursor pools (checked 2026-09-22)
 
-Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send `auto`, a Fast variant, or a previous generation.
+Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send a Fast variant or a previous generation. Send `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30); it spends the Auto allocation.
 
 **Cursor Models pool.** More included usage. Grok and Composer are exempt from the Teams/Enterprise token rate ($0.25 per million on third-party requests). Our pin in this pool is `grok-4.7-high` (Grok 4.7, not Fast).
 
@@ -126,7 +130,7 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | --- | --- | --- | --- | --- |
 | Grok 4.7 | $2 | $0.50 | $6 | `grok-4.7-high` |
 | Grok 4.7 Fast | $4 | $1 | $12 | do not send |
-| Composer 2.5 | $0.50 | $0.20 | $2.50 | do not send (operator 2026-09-22) |
+| Composer 2.5 | $0.50 | $0.20 | $2.50 | `composer-2.5` (concrete pin; operator decision 2026-09-30) |
 | Composer 2.5 Fast | $3 | $0.50 | $15 | do not send |
 | Grok 4.6, Grok 4.5 | $2 | $0.50 | $6 | do not send |
 
