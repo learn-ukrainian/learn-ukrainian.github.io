@@ -1,6 +1,6 @@
 # Core dependencies for learn-ukrainian
 # Generated from .venv — use: pip install -r requirements.txt
-# Python 3.12.8 required (pyenv with --enable-loadable-sqlite-extensions)
+# Python 3.12.14 required (pyenv with --enable-loadable-sqlite-extensions)
 
 # YAML/JSON
 pyyaml>=6.0

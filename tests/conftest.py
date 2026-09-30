@@ -33,6 +33,8 @@ from scripts.common.flake_quarantine import TIMEOUT_PATTERN, load_registry, reru
 from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
+pytest_plugins = ["tests.cursor_process_guard"]
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 

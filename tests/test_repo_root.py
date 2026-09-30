@@ -541,7 +541,7 @@ def test_project_interpreter_accepts_hosted_python3_12(tmp_path, monkeypatch):
     """A versioned interpreter outside any checkout ``.venv/bin`` is the CI fallback."""
     checkout = tmp_path / "checkout"
     checkout.mkdir()
-    hosted = tmp_path / "hostedtoolcache" / "Python" / "3.12.8" / "x64" / "bin" / "python3.12"
+    hosted = tmp_path / "hostedtoolcache" / "Python" / "3.12.14" / "x64" / "bin" / "python3.12"
     hosted.parent.mkdir(parents=True)
     hosted.write_text("", encoding="utf-8")
     alias = tmp_path / "hosted-alias"
@@ -592,7 +592,7 @@ def test_project_interpreter_uses_sys_executable_when_no_project_venv_exists(tmp
     """(c) CI: no ``.venv`` anywhere, and ``sys.executable`` is not inside a checkout ``.venv``."""
     checkout = tmp_path / "checkout"
     checkout.mkdir()
-    ci_python = tmp_path / "hostedtoolcache" / "Python" / "3.12.8" / "x64" / "bin" / "python"
+    ci_python = tmp_path / "hostedtoolcache" / "Python" / "3.12.14" / "x64" / "bin" / "python"
     ci_python.parent.mkdir(parents=True)
     ci_python.write_text("", encoding="utf-8")
     monkeypatch.setattr(sys, "executable", str(ci_python))

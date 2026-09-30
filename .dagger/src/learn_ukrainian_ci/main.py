@@ -88,7 +88,7 @@ _FRESH_PROCESS_TESTS: tuple[str, ...] = (
 
 # Python version pinned to match .python-version + ci.yml. Touched only
 # when the project's Python pin moves.
-_PYTHON_IMAGE = "python:3.12.8-slim-bookworm"
+_PYTHON_IMAGE = "python:3.12.14-slim-bookworm"
 
 # Torch CPU wheel — same pin as ci.yml line 311-312. Fetched from the
 # PyTorch CPU index instead of PyPI because the default wheel is the

@@ -24,7 +24,7 @@ if [[ -z "${entire_command}" || ! -x "${entire_command}" ]]; then
   exit 1
 fi
 if [[ ! -x "${python_command}" ]]; then
-  echo "Project Python 3.12.8 is required at ${python_command}" >&2
+  echo "Project Python 3.12.14 is required at ${python_command}" >&2
   exit 1
 fi
 if [[ "$("${entire_command}" version | head -n 1)" != "Entire CLI 0.8.42" ]]; then
