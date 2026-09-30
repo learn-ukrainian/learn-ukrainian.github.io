@@ -139,6 +139,9 @@ def build_gemini_ladder(
     rung_specs: list[tuple[str, AuthMode | None, CliMode]] = []
     include_agy = preferred_model == PRIMARY_GEMINI_MODEL and allowed_auth_modes != ("api",)
     for model in model_order:
+        # Flash aliases are AGY-only; never send them to the Gemini CLI.
+        if model in {FLASH_GEMINI_MODEL, FINAL_GEMINI_MODEL}:
+            continue
         for auth_mode in ("api", "oauth"):
             if auth_mode not in allowed_auth_modes:
                 continue
@@ -455,7 +458,7 @@ def run_gemini_fallback_ladder(
 
             if rung.cli == "agy-cli":
                 # Agy is a separate-quota probe, not another retry sink. If it
-                # cannot answer once, keep the Gemini ladder moving to flash.
+                # cannot answer once, advance or report ladder exhaustion.
                 excerpt = _clean_excerpt(outcome.stderr_excerpt or outcome.note)
                 next_step = (
                     f"Advancing to rung {rung.index + 1}."

@@ -36,14 +36,16 @@ def test_supported_pipeline_and_spot_audit_defaults_are_admitted():
         for lane, transport in (
             ("claude-tools", "native_claude"), ("codex-tools", "native_codex"),
             ("gemini-tools", "agy"), ("agy-tools", "agy"),
-            ("grok-tools", "native_grok"), ("cursor-tools", "cursor"),
         ):
             require_execution_model(defaults[lane]["model"], transport=transport)
+    for lane, transport in (("grok-tools", "native_grok"), ("cursor-tools", "cursor")):
+        require_execution_model(linear_pipeline.WRITER_DEFAULTS[lane]["model"], transport=transport)
     require_execution_model(llm_reviewer_dispatch.CLAUDE_SPOT_AUDIT_MODEL_ID, transport="native_claude")
     for model in (batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL, batch_gemini_config.FLASH_LITE_MODEL):
         require_execution_model(model, transport="agy")
-    # Distinct successors preserve a finite capacity cascade.
-    assert len({batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL, batch_gemini_config.FLASH_LITE_MODEL}) == 3
+    # Flash-Lite resolves to Flash: only two configured tiers, no extra capacity.
+    assert batch_gemini_config.FLASH_LITE_MODEL == batch_gemini_config.FLASH_MODEL
+    assert len({batch_gemini_config.PRO_MODEL, batch_gemini_config.FLASH_MODEL}) == 2
 
 
 @pytest.mark.parametrize("module", [code_review_benchmark, judge_calibration_matrix])
@@ -97,6 +99,22 @@ def test_standalone_gemini_defaults_refused_before_corpus_or_credentials(monkeyp
         asyncio.run(bulk_ocr_gemini.run(SimpleNamespace(dry_run=False, model=bulk_ocr_gemini.DEFAULT_MODEL)))
     with pytest.raises(ModelCatalogError, match="not in the model catalog"):
         content_quality.call_gemini_api("content", {})
+
+
+def test_enabled_content_quality_records_model_refusal_and_preserves_deterministic_findings(monkeypatch):
+    monkeypatch.setattr(content_quality, "CONTENT_QUALITY_ENABLED", True)
+    deterministic_finding = {"type": "INVALID_CHARACTER", "severity": "error", "issue": "fixture"}
+    monkeypatch.setattr(content_quality, "validate_characters_in_content", lambda *args: [deterministic_finding])
+    # Refusal must precede credential access and must not escape into the audit.
+    monkeypatch.setattr(content_quality.os, "getenv", forbidden)
+    violations = content_quality.check_content_quality("Mechanical fixture. " * 40, "A1", 1)
+    assert violations[0] == deterministic_finding
+    assert violations[1]["type"] == "CONTENT_QUALITY"
+    assert violations[1]["severity"] == "info"
+    assert "LLM evaluation refused:" in violations[1]["issue"]
+    assert "not in the model catalog" in violations[1]["issue"]
+    assert "AGY" in violations[1]["fix"]
+    assert len(violations) == 2
 
 
 def test_shell_defaults_and_retired_plan_enrichment():

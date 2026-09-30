@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
-from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
+from batch_gemini_config import FLASH_MODEL, PRO_MODEL
 from scripts.ai_agent_bridge import _channels, _db, _inbox
 
 
@@ -416,33 +416,32 @@ def test_run_inbox_gemini_passes_auth_mode_to_runtime(mock_invoke):
     }
 
 
+@pytest.mark.parametrize("raises", [False, True])
 @patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
-def test_run_inbox_gemini_429_falls_back_flash_to_flash_lite(mock_invoke):
+def test_run_inbox_gemini_flash_capacity_exhaustion_does_not_retry_alias(mock_invoke, raises):
     thread = _make_thread("gemini", count=1)
     message_id = str(thread[0]["message_id"])
     _set_delivery_model(message_id, FLASH_MODEL)
-    mock_invoke.side_effect = [
-        _ok_result(
-            "gemini",
-            model=FLASH_MODEL,
-            ok=False,
-            response="",
-            stderr_excerpt="HTTP 429 Too Many Requests",
-            returncode=1,
-        ),
-        _ok_result("gemini", model=FLASH_LITE_MODEL, response="bridge reply"),
-    ]
+    if raises:
+        mock_invoke.side_effect = _inbox.RateLimitedError("gemini", FLASH_MODEL, "429 quota")
+    else:
+        mock_invoke.return_value = _ok_result(
+            "gemini", model=FLASH_MODEL, ok=False, response="",
+            stderr_excerpt="HTTP 429 Too Many Requests", returncode=1,
+        )
 
     summary = _inbox.run_inbox("gemini")
 
-    assert summary.deliveries_delivered == 1
-    assert mock_invoke.call_count == 2
-    assert mock_invoke.call_args_list[0].kwargs["model"] == FLASH_MODEL
-    assert mock_invoke.call_args_list[1].kwargs["model"] == FLASH_LITE_MODEL
+    assert summary.deliveries_failed == (0 if raises else 1)
+    assert summary.deliveries_released == (1 if raises else 0)
+    assert summary.aborted is raises
+    assert mock_invoke.call_count == 1
+    assert mock_invoke.call_args.kwargs["model"] == FLASH_MODEL
     delivered = _channels.deliveries_for_message(message_id)[0]
-    assert delivered["to_model"] == FLASH_LITE_MODEL
+    assert delivered["status"] == ("pending" if raises else "failed")
+    assert delivered["to_model"] == FLASH_MODEL
     messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
-    assert messages[-1]["body"] == "bridge reply"
+    assert len(messages) == 1
 
 
 @patch("scripts.ai_agent_bridge._inbox.runtime_invoke")
@@ -467,23 +466,15 @@ def test_run_inbox_gemini_429_exhausts_cascade_and_fails(mock_invoke):
             stderr_excerpt="HTTP 429 Too Many Requests",
             returncode=1,
         ),
-        _ok_result(
-            "gemini",
-            model=FLASH_LITE_MODEL,
-            ok=False,
-            response="",
-            stderr_excerpt="HTTP 429 Too Many Requests",
-            returncode=1,
-        ),
     ]
 
     summary = _inbox.run_inbox("gemini")
 
     assert summary.deliveries_failed == 1
-    assert mock_invoke.call_count == 3
+    assert mock_invoke.call_count == 2
     delivered = _channels.deliveries_for_message(message_id)[0]
     assert delivered["status"] == "failed"
-    assert delivered["to_model"] == FLASH_LITE_MODEL
+    assert delivered["to_model"] == FLASH_MODEL
     messages = _channels.read("topic", thread_id=str(thread[0]["thread_id"]))
     assert len(messages) == 1
 
