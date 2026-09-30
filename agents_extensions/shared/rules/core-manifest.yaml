@@ -1,11 +1,11 @@
 # Rules-core coverage manifest: obligation-inventory unit id -> anchor.
 # Ids and anchors only; the inventory text is not in this repository. Each anchor is the
-# `<!-- anchor: lead-id -->` comment on the rule that states the unit, in the
-# canonical wording of its duplicate group. tests/test_rules_core_coverage.py
-# checks every anchor exists. Units not placed are listed in
-# docs/rules-core-draft-notes.md (currently none).
-schema: rules-core-manifest.v1
-denominator: 344
+# `<!-- anchor: lead-id -->` comment on the rule that states the unit, in the union
+# wording of its duplicate group. The denominator is the frozen id list in
+# core-expected-ids.txt, not this file. tests/test_rules_core_structural_coverage.py
+# checks that the mapped ids equal that list and that every anchor exists once; that
+# is structural coverage only, and semantic preservation is checked by review.
+schema: rules-core-manifest.v2
 files:
   core: agents_extensions/shared/rules/core.md
   content_addendum: agents_extensions/shared/rules/core-curriculum.md
@@ -253,12 +253,12 @@ core:
   # p5-scope
   S18: p5-scope
   U02: p5-scope
-  # p5-sum11
-  N33: p5-sum11
-  Y03: p5-sum11
-  Q10: p5-sum11
-  Q17: p5-sum11
-  U22: p5-sum11
+  # p5-soviet
+  N33: p5-soviet
+  Y03: p5-soviet
+  Q10: p5-soviet
+  Q17: p5-soviet
+  U22: p5-soviet
   # p6-alone
   O24: p6-alone
   O25: p6-alone
