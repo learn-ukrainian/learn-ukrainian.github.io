@@ -13,6 +13,8 @@ allow_real = False
 real_targets: frozenset[str] = frozenset()
 real_roots: tuple[str, ...] = ()
 child_directory: Path | None = None
+SESSION_TOKEN_ENV = "LU_TEST_CURSOR_SESSION_TOKEN"
+session_token: str | None = None
 _installed = False
 _which = shutil.which  # Keep the safety lookup independent of adapter mocks.
 
@@ -55,6 +57,11 @@ def audit_exec(event: str, args: tuple) -> None:
     else:
         return
     refuse_real_cursor(executable, argv, env)
+    # Intentionally mutate the caller's env dict (or os.environ for env=None)
+    # before spawn/exec reads it, including when a test supplies env={}.
+    if active and session_token is not None:
+        environment = env if env is not None else os.environ
+        environment[SESSION_TOKEN_ENV] = session_token
     if active and not allow_real and child_directory is not None:
         environment = env if env is not None else os.environ
         environment["LU_TEST_CURSOR_TARGETS"] = json.dumps(sorted(real_targets))
@@ -76,5 +83,7 @@ def install(targets, roots, directory: Path | None) -> None:
 
 
 def install_from_environment() -> None:
+    global session_token
+    session_token = os.environ.get(SESSION_TOKEN_ENV)
     install(json.loads(os.environ["LU_TEST_CURSOR_TARGETS"]),
             json.loads(os.environ["LU_TEST_CURSOR_ROOTS"]), Path(__file__).parent)

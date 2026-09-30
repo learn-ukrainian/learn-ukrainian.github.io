@@ -117,10 +117,19 @@ The suite blocks a spawn of the installed `gh` unless the test is marked `@pytes
 
 Cursor tests resolve `cursor-agent` and `agent` to recording fakes by default.
 An execution tripwire refuses installed Cursor targets, including absolute
-paths and nested Python subprocesses. The session compares live Cursor and
-TypeScript language-server processes against its starting baseline using PID
-and creation time; a new survivor fails the session and is named in the output,
-even after re-parenting or a cwd change. Pre-existing processes are excluded.
+paths and nested Python subprocesses. Nested hook installation uses
+`sitecustomize` through `PYTHONPATH`: `python -I` ignores that path and
+`python -S` skips `sitecustomize`. Those interpreters do not install the nested hook;
+the parent's explicit-target checks and fake PATH still apply.
+The session compares live Cursor and TypeScript language-server processes
+against its starting baseline using PID and creation time. A survivor fails
+only if it belongs to the current UID, started after session start, and carries
+the per-session `LU_TEST_CURSOR_SESSION_TOKEN` in its process environment,
+even after re-parenting or a cwd change. The tripwire propagates the token
+through explicitly replaced child environments too. Pre-existing processes
+are excluded; foreign or unreadable process environments produce warnings,
+never session failures. Under xdist the controller owns the final scan and
+verdict; workers inherit its token and install the tripwire without scanning.
 The optional real smoke requires `--run-real-cursor-smoke`, is refused in CI and
 dispatch workers, and tears down its process group and detached Cursor/LSP
 survivors on success, error, or timeout. The fake smoke always runs.

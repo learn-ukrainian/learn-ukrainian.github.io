@@ -2,7 +2,8 @@
 
 The execution tripwire also installs in nested Python interpreters. PATH shims
 cover nested shells; explicitly named installed targets are refused before spawn.
-Process identities use PID and creation time, never parentage or cwd.
+Process identities use PID and creation time, never parentage or cwd. Only
+same-uid survivors carrying this session's token can fail the controller.
 """
 from __future__ import annotations
 
@@ -12,6 +13,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import time
 import uuid
 from pathlib import Path
 
@@ -56,21 +58,68 @@ def pytest_addoption(parser: pytest.Parser) -> None:
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:
-    session.config._cursor_process_baseline = process_snapshot()
+    config = session.config
+    if hasattr(config, "workerinput"):
+        # Workers share the controller token, including replacement workers.
+        token = config.workerinput[tripwire.SESSION_TOKEN_ENV]
+    else:
+        # Linux /proc start times use boot time rounded to whole seconds,
+        # plus clock ticks. Wall time can be almost a second ahead of that
+        # epoch. Compare in the same clock and resolution as create_time().
+        ticks = os.sysconf("SC_CLK_TCK")
+        config._cursor_process_started = psutil.boot_time() + int(
+            time.clock_gettime(time.CLOCK_BOOTTIME) * ticks
+        ) / ticks
+        config._cursor_process_uid = os.getuid()
+        config._cursor_process_baseline = process_snapshot()
+        token = uuid.uuid4().hex
+    config._cursor_process_token = token
+    os.environ[tripwire.SESSION_TOKEN_ENV] = token
+    tripwire.session_token = token
     tripwire.install(REAL_TARGETS, REAL_ROOTS, tripwire.child_directory)
+
+
+@pytest.hookimpl(optionalhook=True)
+def pytest_configure_node(node) -> None:
+    """Pass controller ownership explicitly; do not mint per-worker tokens."""
+    node.workerinput[tripwire.SESSION_TOKEN_ENV] = node.config._cursor_process_token
 
 
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     tripwire.active = False
+    if hasattr(session.config, "workerinput"):
+        # The controller scans after all workers finish; their descendants carry
+        # its token. Worker-local snapshots and exit overrides are unnecessary.
+        return
     baseline = getattr(session.config, "_cursor_process_baseline", {})
     current = process_snapshot()
-    survivors = current.keys() - baseline.keys()
+    survivors = []
+    for pid, created in sorted(current.keys() - baseline.keys()):
+        name = current[(pid, created)]
+        try:
+            proc = psutil.Process(pid)
+            # Recheck identity so a PID reused since the snapshot cannot be
+            # attributed using another process's environment.
+            if proc.create_time() != created or created < session.config._cursor_process_started:
+                continue
+            if proc.uids().real != session.config._cursor_process_uid:
+                print(f"cursor process guard: warning: {name} pid={pid}: different uid; ignored")
+                continue
+            if proc.environ().get(tripwire.SESSION_TOKEN_ENV) != session.config._cursor_process_token:
+                print(f"cursor process guard: warning: {name} pid={pid}: no matching session token; ignored")
+                continue
+            if proc.status() != psutil.STATUS_ZOMBIE:
+                survivors.append((pid, created))
+        except psutil.NoSuchProcess:
+            continue
+        except psutil.AccessDenied:
+            print(f"cursor process guard: warning: {name} pid={pid}: ownership/environment unreadable; ignored")
     if survivors:
         for pid, created in sorted(survivors):
             print(f"cursor process guard: survived session: {current[(pid, created)]} pid={pid}")
         session.exitstatus = pytest.ExitCode.TESTS_FAILED
     else:
-        print("cursor process guard: baseline diff empty (0 survivors)")
+        print("cursor process guard: baseline diff empty (0 survivors attributed to this session)")
 
 
 @pytest.fixture(scope="session", autouse=True)

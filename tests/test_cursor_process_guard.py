@@ -21,6 +21,9 @@ from tests import cursor_process_guard as guard
 @pytest.fixture(autouse=True)
 def fake_process_owner(tmp_path, monkeypatch):
     monkeypatch.setenv("LU_TEST_CURSOR_TEST_OWNER", str(tmp_path))
+    # Hook unit tests mint tokens without changing the enclosing test session.
+    monkeypatch.setenv(tripwire.SESSION_TOKEN_ENV, os.environ[tripwire.SESSION_TOKEN_ENV])
+    monkeypatch.setattr(tripwire, "session_token", tripwire.session_token)
 
 
 @pytest.mark.parametrize("name", ["cursor-agent", "agent"])
@@ -137,6 +140,7 @@ def test_audit_hook_propagates_guard_through_explicit_environment(tmp_path):
     tripwire.audit_exec("subprocess.Popen", ("not-a-real-binary", ["not-a-real-binary"], None, env))
     assert json.loads(env["LU_TEST_CURSOR_TARGETS"]) == sorted(tripwire.real_targets)
     assert json.loads(env["LU_TEST_CURSOR_ROOTS"]) == list(tripwire.real_roots)
+    assert env[tripwire.SESSION_TOKEN_ENV] == os.environ[tripwire.SESSION_TOKEN_ENV]
     assert env["PYTHONPATH"].split(os.pathsep) == [str(tripwire.child_directory), "existing-import-root"]
     first_path = env["PYTHONPATH"]
     tripwire.audit_exec("os.posix_spawn", ("not-a-real-binary", ["not-a-real-binary"], env))
@@ -156,6 +160,20 @@ def test_child_initialization_restores_guard_from_environment(monkeypatch):
     monkeypatch.setenv("LU_TEST_CURSOR_ROOTS", json.dumps(tripwire.real_roots))
     tripwire.install_from_environment()
     assert tripwire.child_directory == Path(tripwire.__file__).parent
+    assert tripwire.session_token == os.environ[tripwire.SESSION_TOKEN_ENV]
+
+
+@pytest.mark.parametrize("event", ["subprocess.Popen", "os.exec", "os.posix_spawn", "os.system"])
+def test_token_propagates_without_nested_hook_directory(monkeypatch, event):
+    monkeypatch.setattr(tripwire, "child_directory", None)
+    monkeypatch.setattr(tripwire, "allow_real", True)
+    env = {}
+    args = ("unrelated", ["unrelated"], None, env) if event == "subprocess.Popen" else (
+        ("unrelated", ["unrelated"], env) if event != "os.system" else ("true",)
+    )
+    tripwire.audit_exec(event, args)
+    target_env = os.environ if event == "os.system" else env
+    assert target_env[tripwire.SESSION_TOKEN_ENV] == tripwire.session_token
 
 
 def _detached_script(pidfile: Path) -> str:
@@ -216,28 +234,54 @@ def test_baseline_ignores_preexisting_process_and_pid_reuse_is_detected(monkeypa
     monkeypatch.setattr(tripwire, "active", tripwire.active)
     before = {(101, 1.0): "tsserver.js"}
     monkeypatch.setattr(guard, "process_snapshot", lambda: before.copy())
+    monkeypatch.setattr(guard.time, "clock_gettime", lambda _: 1.5)
+    monkeypatch.setattr(psutil, "boot_time", lambda: 0.0)
     session = SimpleNamespace(config=SimpleNamespace(), exitstatus=pytest.ExitCode.OK)
     guard.pytest_sessionstart(session)
     guard.pytest_sessionfinish(session, 0)
     assert session.exitstatus == pytest.ExitCode.OK
     monkeypatch.setattr(guard, "process_snapshot", lambda: {(101, 2.0): "typingsInstaller.js"})
+    monkeypatch.setattr(psutil, "Process", lambda _: SimpleNamespace(
+        create_time=lambda: 2.0, uids=lambda: SimpleNamespace(real=os.getuid()),
+        environ=lambda: {tripwire.SESSION_TOKEN_ENV: session.config._cursor_process_token},
+        status=lambda: psutil.STATUS_RUNNING,
+    ))
     guard.pytest_sessionfinish(session, 0)
     assert session.exitstatus == pytest.ExitCode.TESTS_FAILED
     assert "typingsInstaller.js pid=101" in capsys.readouterr().out
     tripwire.active = True
 
 
-def test_real_pytest_session_fails_and_names_detached_survivor(tmp_path):
+@pytest.mark.parametrize("foreign", [False, True])
+@pytest.mark.parametrize("workers", [0, 2])
+def test_real_pytest_session_fails_and_names_detached_survivor(tmp_path, foreign, workers):
     baseline = guard.process_snapshot()
     pidfile = tmp_path / "leaked.pid"
     child = tmp_path / "typescript-language-server"
     child.write_text(_detached_script(pidfile))
+    launcher = tmp_path / "launch.py"
+    if foreign:
+        # An isolated interpreter has no audit hook. It simulates another
+        # session by removing our token before spawning its watched process.
+        launcher.write_text(
+            "import os, subprocess, sys\n"
+            f"os.environ.pop({tripwire.SESSION_TOKEN_ENV!r}, None)\n"
+            f"subprocess.run([sys.executable, '-I', {str(child)!r}], check=True)\n",
+        )
+    else:
+        launcher.write_text(
+            "import os, subprocess, sys\n"
+            # Preserve only the cleanup marker; the audit hook must add the
+            # controller token and nested tripwire to this replaced env.
+            f"subprocess.run([sys.executable, {str(child)!r}], "
+            "env={'LU_TEST_CURSOR_TEST_OWNER': os.environ['LU_TEST_CURSOR_TEST_OWNER']}, check=True)\n",
+        )
     (tmp_path / "conftest.py").write_text("pytest_plugins = ['tests.cursor_process_guard']\n")
     (tmp_path / "pytest.ini").write_text("[pytest]\n")
     (tmp_path / "test_leak.py").write_text(
         "import subprocess, sys, time\nfrom pathlib import Path\n"
         "def test_leak():\n"
-        f"    subprocess.run([sys.executable, {str(child)!r}], check=True, timeout=5)\n"
+        f"    subprocess.run([sys.executable, *{['-I'] if foreign else []!r}, {str(launcher)!r}], check=True, timeout=5)\n"
         f"    ready = Path({str(pidfile)!r})\n"
         "    for _ in range(500):\n"
         "        if ready.exists() and ready.read_text(): return\n"
@@ -246,17 +290,102 @@ def test_real_pytest_session_fails_and_names_detached_survivor(tmp_path):
     )
     root = Path(__file__).resolve().parents[1]
     env = dict(os.environ, PYTHONPATH=os.pathsep.join([str(root), str(root / "scripts")]), PYTEST_ADDOPTS="")
+    parallel_args = ["-n", str(workers)] if workers else []
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pytest", "-q", "-c", str(tmp_path / "pytest.ini"),
-             "--confcutdir", str(tmp_path), str(tmp_path / "test_leak.py")],
+             "--confcutdir", str(tmp_path), *parallel_args, str(tmp_path / "test_leak.py")],
             cwd=tmp_path, env=env, capture_output=True, text=True, timeout=20,
         )
-        assert result.returncode == pytest.ExitCode.TESTS_FAILED, result.stdout + result.stderr
-        assert "survived session: typescript-language-server" in result.stdout
-        assert str(_wait_pidfile(pidfile)) in result.stdout
+        output = result.stdout + result.stderr
+        pid = _wait_pidfile(pidfile)
+        proc = psutil.Process(pid)
+        assert proc.cwd() == "/"
+        assert proc.ppid() != os.getpid()
+        if foreign:
+            assert tripwire.SESSION_TOKEN_ENV not in proc.environ()
+            assert result.returncode == pytest.ExitCode.OK, output
+            assert f"warning: typescript-language-server pid={pid}: no matching session token; ignored" in output
+            assert "survived session:" not in output
+            assert output.count("baseline diff empty") == 1
+        else:
+            assert proc.environ()[tripwire.SESSION_TOKEN_ENV] != tripwire.session_token
+            assert result.returncode == pytest.ExitCode.TESTS_FAILED, output
+            assert f"survived session: typescript-language-server pid={pid}" in output
+            assert output.count("survived session:") == 1
     finally:
         _clean_fake_processes(tmp_path)
+
+
+def test_xdist_workers_share_controller_token_and_do_not_scan(monkeypatch, capsys):
+    monkeypatch.setattr(tripwire, "active", tripwire.active)
+    controller = SimpleNamespace(config=SimpleNamespace())
+    guard.pytest_sessionstart(controller)
+    node = SimpleNamespace(config=controller.config, workerinput={})
+    guard.pytest_configure_node(node)
+    worker = SimpleNamespace(config=SimpleNamespace(workerinput=node.workerinput), exitstatus=pytest.ExitCode.OK)
+    monkeypatch.setattr(guard, "process_snapshot", lambda: pytest.fail("worker scanned processes"))
+    guard.pytest_sessionstart(worker)
+    assert worker.config._cursor_process_token == controller.config._cursor_process_token
+    assert tripwire.session_token == controller.config._cursor_process_token
+    assert os.environ[tripwire.SESSION_TOKEN_ENV] == controller.config._cursor_process_token
+    guard.pytest_sessionfinish(worker, 0)
+    assert worker.exitstatus == pytest.ExitCode.OK
+    assert capsys.readouterr().out == ""
+
+
+def test_session_start_uses_process_clock_ticks_and_fresh_token(monkeypatch):
+    monkeypatch.setattr(tripwire, "active", tripwire.active)
+    monkeypatch.setattr(guard, "process_snapshot", lambda: {})
+    monkeypatch.setattr(psutil, "boot_time", lambda: 100.0)
+    monkeypatch.setattr(guard.time, "clock_gettime", lambda _: 1.239)
+    monkeypatch.setattr(guard.os, "sysconf", lambda _: 100)
+    inherited = tripwire.session_token
+    session = SimpleNamespace(config=SimpleNamespace())
+    guard.pytest_sessionstart(session)
+    assert session.config._cursor_process_started == 101.23
+    assert session.config._cursor_process_uid == os.getuid()
+    assert session.config._cursor_process_token != inherited
+    assert tripwire.session_token == session.config._cursor_process_token
+    assert os.environ[tripwire.SESSION_TOKEN_ENV] == session.config._cursor_process_token
+
+
+@pytest.mark.parametrize("ownership", ["other_uid", "unreadable", "foreign_token", "old", "pid_reused", "exited", "zombie"])
+def test_unattributed_or_dead_process_never_fails_session(monkeypatch, capsys, ownership):
+    monkeypatch.setattr(tripwire, "active", tripwire.active)
+    monkeypatch.setattr(guard.time, "clock_gettime", lambda _: 1.5)
+    monkeypatch.setattr(psutil, "boot_time", lambda: 0.0)
+    monkeypatch.setattr(guard, "process_snapshot", lambda: {})
+    session = SimpleNamespace(config=SimpleNamespace(), exitstatus=pytest.ExitCode.OK)
+    guard.pytest_sessionstart(session)
+    created = 1.0 if ownership == "old" else 2.0
+    monkeypatch.setattr(guard, "process_snapshot", lambda: {(101, created): "tsserver.js"})
+
+    def environment():
+        if ownership == "other_uid":
+            pytest.fail("read another uid's environment")
+        if ownership == "unreadable":
+            raise psutil.AccessDenied(101)
+        return {tripwire.SESSION_TOKEN_ENV: "foreign" if ownership == "foreign_token" else tripwire.session_token}
+
+    def process(pid):
+        if ownership == "exited":
+            raise psutil.NoSuchProcess(pid)
+        return SimpleNamespace(
+            create_time=lambda: 3.0 if ownership == "pid_reused" else created,
+            uids=lambda: SimpleNamespace(real=os.getuid() + (ownership == "other_uid")),
+            environ=environment,
+            status=lambda: psutil.STATUS_ZOMBIE if ownership == "zombie" else psutil.STATUS_RUNNING,
+        )
+
+    monkeypatch.setattr(psutil, "Process", process)
+    guard.pytest_sessionfinish(session, 0)
+    assert session.exitstatus == pytest.ExitCode.OK
+    output = capsys.readouterr().out
+    assert "survived session:" not in output
+    if ownership in {"other_uid", "unreadable", "foreign_token"}:
+        assert "warning: tsserver.js pid=101:" in output
+        assert "ignored" in output
 
 
 def test_real_smoke_explicit_option_is_refused_in_workers(monkeypatch):
