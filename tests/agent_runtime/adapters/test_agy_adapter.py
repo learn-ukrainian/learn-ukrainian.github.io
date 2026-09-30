@@ -415,8 +415,8 @@ def test_build_invocation_escapes_lone_surrogate_in_stdin_message(tmp_path: Path
 
 def test_build_invocation_maps_model_slug(tmp_path: Path) -> None:
     # Runtime slugs pass through as ``agy models`` ids (verified 2026-07-21 for 3.6).
-    plan = _build(tmp_path, model="gemini-3.6-flash-high")
-    assert _model_after_flag(plan) == "gemini-3.6-flash-high"
+    plan = _build(tmp_path, model="gemini-3.8-flash-high")
+    assert _model_after_flag(plan) == "gemini-3.8-flash-high"
 
 
 def test_build_invocation_accepts_display_string(tmp_path: Path) -> None:
@@ -496,10 +496,10 @@ def test_build_invocation_maps_pro_preview_to_supported_slug(tmp_path: Path) -> 
 
 @pytest.mark.parametrize("tier", ["high", "medium", "low"])
 @pytest.mark.parametrize("display_label", [False, True])
-def test_build_invocation_remaps_retired_flash_aliases(tmp_path: Path, tier: str, display_label: bool) -> None:
+def test_build_invocation_refuses_retired_flash_aliases(tmp_path: Path, tier: str, display_label: bool) -> None:
     model = f"Gemini 3.5 Flash ({tier.title()})" if display_label else f"gemini-3.5-flash-{tier}"
-    plan = _build(tmp_path, model=model)
-    assert _model_after_flag(plan) == f"gemini-3.8-flash-{tier}"
+    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use gemini-3.8-flash-high"):
+        _build(tmp_path, model=model)
     assert f"gemini-3.5-flash-{tier}" not in agy_module._AGY_MODEL_SLUGS
 
 
@@ -2076,3 +2076,17 @@ def test_unrelated_task_named_with_pending_phrasing_is_only_a_warning(tmp_path: 
 
     _assert_passed_with_language_warning(result, reply)
     assert result.stderr_excerpt.splitlines()[1].startswith("pending-work wording: ")
+
+
+@pytest.mark.parametrize("model", [
+    "gpt-oss-120b", "gpt-oss-120b-medium", "GPT-OSS 120B (Medium)",
+    "gemini-3.7-flash-high", "Gemini 3.7 Flash (High)",
+    "gemini-3.6-flash-medium", "Gemini 3.6 Flash (Low)",
+    "claude-sonnet-4-6", "Claude Sonnet 4.6 (Thinking)",
+    "claude-opus-4-6-thinking", "Claude Opus 4.6 (Thinking)",
+])
+def test_issue_9301_retired_agy_model_refused_before_invocation(tmp_path, model):
+    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use"):
+        _build(tmp_path, model=model)
+    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use"):
+        AgyAdapter.resolve_model_slug(model)

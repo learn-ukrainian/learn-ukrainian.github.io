@@ -129,10 +129,10 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     command = state["command"]
     assert state["agent"] == "claude"
     assert state["mode"] == "read-only"
-    assert state["model"] == "claude-opus-4-8"
+    assert state["model"] == "claude-opus-5-5"
     assert state["effort"] == "xhigh"
     assert _option(command, "--agent") == "claude"
-    assert _option(command, "--model") == "claude-opus-4-8"
+    assert _option(command, "--model") == "claude-opus-5-5"
     assert _option(command, "--effort") == "xhigh"
     assert _option(command, "--task-id").startswith("review-1740-")
     prompt_path = Path(state["prompt_file"])
@@ -171,7 +171,7 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
     command = calls[0][0]
     assert _option(command, "--agent") == "claude"
     assert _option(command, "--mode") == "read-only"
-    assert _option(command, "--model") == "claude-opus-4-8"
+    assert _option(command, "--model") == "claude-opus-5-5"
     assert _option(command, "--effort") == "high"
     assert _option(command, "--task-id").startswith("review-")
     text = str(captured_prompt["text"])

@@ -338,7 +338,7 @@ before dispatching:
    recon, always under a complete Sol advisory envelope (operator decision 2026-09-30, #9275). There is no direct bounded dispatch;
    the same holds for the `gemini-3.8-flash-high` fallback unless the dispatch is
    classified Ukrainian authoring or review.
-3. `gpt-6.1-sol` at `high` (the Astra seat) issues that envelope read-only with
+3. `gpt-6.1-sol` at `xhigh` (the Astra seat) issues that envelope read-only with
    `--advisory-role bounded_advisory_envelope --advisory-binding <digest>`, where the
    digest is the worker dispatch's `--print-advisory-binding` output. The envelope
    holds the task contract, exact owned paths, maximum changed-file and
@@ -355,7 +355,7 @@ before dispatching:
 
 Record the envelope and Luna's acceptance evidence with the task handoff. If an
 escalation trigger fires, stop bounded execution and return the unresolved point
-to Astra at `high` or the accountable orchestrator before making a consequential decision.
+to Astra at `xhigh` or the accountable orchestrator before making a consequential decision.
 
 ### Fleet-comms authority and legacy projections
 
@@ -437,13 +437,13 @@ not permanent routing weights and do not override current CodexBar headroom.
 - Exactly one read-only/stateless participant per enabled route: Codex, Grok,
   Claude, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek. Kimi and KimiCC
   seats are named in the registry but refused by `kimi_admission`.
-- Grok fixed effective model/effort: `grok-4.6` / `high` (caller may pass
+- Grok fixed effective model/effort: `grok-4.7` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
   Rotated from `grok-4.5` by operator order 2026-08-16 (#6865).
 - Grok ACP server command (single custom agent argument; never built-in
   `grok-build`, which cannot force `--no-leader`): absolute resolved Grok
   binary plus exact argv order
-  `agent --model grok-4.6 --reasoning-effort high --agent-profile
+  `agent --model grok-4.7 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`.
 - The project-owned Grok profile is digest-checked before every spawn. Its
   empty tool allowlist plus explicit denylist removes write, shell, subagent,

@@ -23,7 +23,7 @@ def _isolate_runtime(tmp_path):
     _reset_rate_limit_cache_for_tests()
 
 
-def _build(prompt: str, tmp_path: Path, model: str = "deepseek-v4-pro"):
+def _build(prompt: str, tmp_path: Path, model: str = "deepseek-v4.1-flash"):
     return HermesDeepSeekAdapter().build_invocation(
         prompt=prompt,
         mode="workspace-write",
@@ -39,9 +39,9 @@ def _build(prompt: str, tmp_path: Path, model: str = "deepseek-v4-pro"):
 def test_deepseek_adapter_invokes_hermes_z_with_correct_argv_pro(tmp_path, monkeypatch):
     monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
 
-    plan = _build("Write the module.", tmp_path, model="deepseek-v4-pro")
+    plan = _build("Write the module.", tmp_path, model="deepseek-v4.1-flash")
 
-    assert plan.cmd == ["hermes", "-z", "Write the module.", "-m", "deepseek-v4-pro", "--provider", "deepseek"]
+    assert plan.cmd == ["hermes", "-z", "Write the module.", "-m", "deepseek-v4.1-flash", "--provider", "deepseek"]
     assert plan.cwd == tmp_path
     assert plan.stdin_payload == ""
 
@@ -69,7 +69,7 @@ def test_deepseek_adapter_translates_mcp_prefix_for_hermes(tmp_path, monkeypatch
         "Verify each Ukrainian word via `mcp__sources__verify_words` and "
         "look up etymology via `mcp__sources__search_esum`."
     )
-    plan = _build(prompt_with_mcp, tmp_path, model="deepseek-v4-pro")
+    plan = _build(prompt_with_mcp, tmp_path, model="deepseek-v4.1-flash")
 
     sent_prompt = plan.cmd[2]  # ["hermes", "-z", PROMPT, "-m", MODEL]
     assert "mcp__sources__" not in sent_prompt, (
@@ -86,13 +86,13 @@ def test_deepseek_adapter_leaves_non_mcp_prompts_unchanged(tmp_path, monkeypatch
     monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
 
     prompt = "Module b1-052: write content. Use `mcp__rag__legacy_tool` only if it appears."
-    plan = _build(prompt, tmp_path, model="deepseek-v4-pro")
+    plan = _build(prompt, tmp_path, model="deepseek-v4.1-flash")
 
     assert plan.cmd[2] == prompt
 
 
 def test_deepseek_adapter_default_model_is_pro(tmp_path, monkeypatch):
-    """When model=None, the adapter falls back to deepseek-v4-pro (primary)."""
+    """When model=None, the adapter falls back to deepseek-v4.1-flash (primary)."""
     monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
     adapter = HermesDeepSeekAdapter()
 
@@ -109,7 +109,7 @@ def test_deepseek_adapter_default_model_is_pro(tmp_path, monkeypatch):
 
     # Inspect the -m value rather than cmd[-1] (provider flag may be appended after)
     m_idx = plan.cmd.index("-m")
-    assert plan.cmd[m_idx + 1] == "deepseek-v4-pro"
+    assert plan.cmd[m_idx + 1] == "deepseek-v4.1-flash"
 
 
 def test_deepseek_adapter_returns_stdout_as_response():
@@ -152,7 +152,7 @@ def test_deepseek_adapter_handles_missing_hermes_binary(tmp_path):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="deepseek-v4-pro",
+            model="deepseek-v4.1-flash",
             entrypoint="dispatch",
             effort="medium",
         )
@@ -177,7 +177,7 @@ def test_deepseek_adapter_honors_timeout(tmp_path, monkeypatch):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="deepseek-v4-pro",
+            model="deepseek-v4.1-flash",
             entrypoint="dispatch",
             hard_timeout=1,
         )
@@ -226,7 +226,7 @@ def test_runner_preserves_unknown_deepseek_tool_call_total(tmp_path, monkeypatch
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="deepseek-v4-pro",
+            model="deepseek-v4.1-flash",
             entrypoint="dispatch",
             effort="medium",
         )
@@ -373,3 +373,8 @@ def test_deepseek_adapter_inband_400_parses_as_failure():
 
     assert result.ok is False
     assert "HTTP 400" in (result.stderr_excerpt or "")
+
+
+def test_retired_pro_is_refused(tmp_path):
+    with pytest.raises(ValueError, match=r"is retired in the model catalog.*use deepseek-v4.1-flash"):
+        _build("prompt", tmp_path, model="deepseek-v4-pro")

@@ -71,9 +71,9 @@ create a feature branch in the main checkout. Concrete dispatch:
         --base origin/main \
         --prompt-file brief.md
 
-    # For dispatches that warrant peak Opus 4.7 reasoning:
+    # For dispatches that warrant peak Opus 5.5 reasoning:
     .venv/bin/python scripts/delegate.py dispatch \
-        --agent claude --model claude-opus-4-8 --effort xhigh \
+        --agent claude --model claude-opus-5-5 --effort xhigh \
         --task-id <task-id> --mode danger --worktree \
         --base origin/main --prompt-file brief.md
     # Accepted --effort levels: low | medium | high | xhigh | max

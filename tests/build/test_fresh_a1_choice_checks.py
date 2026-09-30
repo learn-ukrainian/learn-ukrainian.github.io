@@ -223,7 +223,6 @@ def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm"
     (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     options = item["options"]
     key = item.get("correct", 0)
-    evidence_id = "vesum:" + VESUM_LOCATIONS[item["option_records"][0]]
     doc = {
         "requirements_schema": 2,
         "lesson": {"level": "a1", "slug": "sample", "n": 1},
@@ -240,7 +239,8 @@ def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm"
                 "reason": "source-backed unique reading" if decision == "confirm" else "alternative reading",
                 "requires_forced": decision == "confirm",
                 "options": [
-                    {"text": text, "judgement": "valid" if i == key else "invalid", "evidence": [evidence_id]}
+                    {"text": text, "judgement": "valid" if i == key else "invalid",
+                     "evidence": ["vesum:" + VESUM_LOCATIONS[item["option_records"][i]]]}
                     for i, text in enumerate(options)
                 ],
                 "writer": {"seat": "codex@sol", "family": "openai"},
@@ -1420,6 +1420,8 @@ def test_choice_gate_records_resolved_evidence_identity(tmp_path):
     _write_form_receipt(tmp_path, item)
     result = _check(tmp_path, item, BROTHER)
     with Sources() as api:
-        evidence = api.resolve_evidence_ids(["vesum:487702-487719"])
+        evidence = receipts.resolve_requirement_evidence(
+            receipts.read_requirement_receipts(receipts.requirement_receipt_path(tmp_path, 1), sources=api), sources=api,
+        )
     assert result["status"] == "passed"
     assert result["details"]["requirement_evidence"] == {"sha256": evidence.content_hash, "sources": evidence.metadata}

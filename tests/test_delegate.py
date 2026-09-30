@@ -1099,7 +1099,7 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
 
 @pytest.mark.parametrize("agent", ["cursor", "codex"])
 @pytest.mark.parametrize(
-    "model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra"]
+    "model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra", "claude-fable-5", "grok-4.6"]
 )
 def test_dispatch_rejects_catalog_retired_model_before_spawn(tmp_tasks_dir, capsys, agent, model):
     args = delegate.build_parser().parse_args(
@@ -2898,6 +2898,34 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["returncode_reason"] is None
 
 
+@pytest.mark.parametrize(("strict", "code"), [
+    (False, "attempt_requires_fresh_read_only_sources"),
+    (True, "attempt_boundary_inputs_missing"),
+])
+def test_run_worker_persists_attempt_boundary_refusal_code(tmp_tasks_dir, tmp_path, monkeypatch, strict, code):
+    """A real pre-launch refusal must survive into the durable task record."""
+    from agent_runtime import runner as runtime_runner
+
+    task_id = "attempt-boundary-refusal"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cli_version": "fixture"})
+
+    def unexpected(*args, **kwargs):
+        pytest.fail("boundary refusal must precede provider planning or launch")
+
+    monkeypatch.setattr(runtime_runner, "_load_adapter", unexpected)
+    rc = delegate._run_worker(
+        task_id=task_id, agent="agy", prompt="probe", mode="read-only", cwd_str=str(tmp_path),
+        model="gemini-3.8-flash-high", hard_timeout=30, review_id="review", attempt_id="current",
+        strict_mcp_config=strict,
+    )
+    state = delegate._read_state(state_path)
+    assert rc == 1 and state["status"] == "failed"
+    assert state["last_error"].startswith(
+        f"runtime error: AgentUnavailableError: formal attempt filesystem boundary refused: {code}"
+    )
+
+
 def _run_cursor_review_worker(tmp_tasks_dir, tmp_path, invoke):
     task_id = "cursor-review-restore"
     state_path = delegate._state_path(task_id)
@@ -3401,7 +3429,7 @@ def _finalize_mock_result():
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "grok-4.6",
+            "model": "grok-4.7",
             "effort": "high",
             "cli_version": "0.2.111",
         },

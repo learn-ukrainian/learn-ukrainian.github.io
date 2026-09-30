@@ -16,6 +16,8 @@ import sys
 from pathlib import Path
 from types import SimpleNamespace
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters import cursor as cursor_mod
@@ -79,6 +81,7 @@ def test_missing_binary_with_env_api_key_is_authenticated(monkeypatch):
     result = cursor_mod.probe_cursor_login()
     assert result["is_authenticated"] is True
     assert result["login_state"] == "authenticated"
+    assert result["error_kind"] == "missing_binary"
 
 
 def test_missing_binary_no_key_is_need_login(monkeypatch):
@@ -106,7 +109,7 @@ def test_cursor_cli_binary_resolves_home_local_when_path_empty(tmp_path, monkeyp
     monkeypatch.setenv("HOME", str(fake_home))
     monkeypatch.setenv("PATH", "")
 
-    assert cursor_mod._cursor_cli_binary() == str(fake_bin)
+    assert Path(cursor_mod._cursor_cli_binary()) == fake_bin.resolve()
 
 
 def test_cursor_cli_binary_skips_non_executable_home_bin(tmp_path, monkeypatch):
@@ -119,8 +122,8 @@ def test_cursor_cli_binary_skips_non_executable_home_bin(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(fake_home))
     monkeypatch.setenv("PATH", "")
 
-    assert cursor_mod._cursor_cli_binary() != str(fake_bin)
-    assert cursor_mod._cursor_cli_binary() == "cursor-agent"
+    with pytest.raises(cursor_mod.CursorAgentMissingError, match="cursor-agent"):
+        cursor_mod._cursor_cli_binary()
 
 
 def test_permission_error_with_env_api_key_is_authenticated(monkeypatch):

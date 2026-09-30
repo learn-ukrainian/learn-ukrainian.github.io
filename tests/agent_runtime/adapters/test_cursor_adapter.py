@@ -1,4 +1,5 @@
 """Tests for CursorAdapter."""
+
 from __future__ import annotations
 
 import json
@@ -66,7 +67,9 @@ def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model)
         ("danger", {}),
     ],
 )
-def test_cursor_adapter_refuses_auto_without_delegate_admission(adapter, tmp_path, monkeypatch, model, mode, tool_config):
+def test_cursor_adapter_refuses_auto_without_delegate_admission(
+    adapter, tmp_path, monkeypatch, model, mode, tool_config
+):
     """#9274: Auto runs only a write dispatch delegate admitted as a well-defined coding task."""
     monkeypatch.setattr(adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("Auto reached workspace setup"))
     with pytest.raises(ValueError, match=r"cursor_auto_outside_coding_task.*grok-4\.7 or composer-2\.5"):
@@ -109,9 +112,7 @@ def test_cursor_adapter_pins_default_model_when_none_is_given(adapter, tmp_path)
     assert plan.cmd[plan.cmd.index("--model") + 1] == "grok-4.7"
 
 
-def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatch):
-    monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
-
+def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path):
     plan = adapter.build_invocation(
         prompt="Hello",
         mode="read-only",
@@ -122,7 +123,7 @@ def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatc
         tool_config={"cursor_mode": "ask"},
     )
 
-    assert "/usr/local/bin/agent" in plan.cmd
+    assert Path(plan.cmd[0]).name == "cursor-agent"
     assert "-p" in plan.cmd
     # Regression: cursor-agent's -p takes NO argument; a literal "-" after
     # it is parsed as the positional prompt = the string "-", which causes
@@ -145,9 +146,7 @@ def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatc
 def test_cursor_adapter_read_only_mcp_config_writes_workspace_file(
     adapter,
     tmp_path,
-    monkeypatch,
 ):
-    monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
     source_config = tmp_path / ".mcp.json"
     source_config.write_text(
         json.dumps(
@@ -184,9 +183,7 @@ def test_cursor_adapter_read_only_mcp_config_writes_workspace_file(
     }
 
 
-def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path, monkeypatch):
-    monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
-
+def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path):
     plan = adapter.build_invocation(
         prompt="Fix bug",
         mode="workspace-write",
@@ -214,7 +211,6 @@ def test_cursor_adapter_build_invocation_workspace_write(adapter, tmp_path, monk
     assert "--model" in plan.cmd
     assert "composer-2.5-heavy" in plan.cmd
     assert "--yolo" not in plan.cmd
-
 
 
 def test_cursor_adapter_workspace_write_allows_edits_by_default(adapter, tmp_path, monkeypatch):
@@ -286,9 +282,7 @@ def test_cursor_adapter_danger_auto_ignores_plan_mode_request(adapter, tmp_path)
     assert "--force" in plan.cmd
 
 
-def test_cursor_adapter_build_invocation_danger(adapter, tmp_path, monkeypatch):
-    monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
-
+def test_cursor_adapter_build_invocation_danger(adapter, tmp_path):
     plan = adapter.build_invocation(
         prompt="Delete all",
         mode="danger",
@@ -311,7 +305,7 @@ def test_cursor_adapter_build_invocation_danger(adapter, tmp_path, monkeypatch):
     assert "--yolo" not in plan.cmd
 
 
-def test_cursor_adapter_no_literal_dash_argument_anywhere(adapter, tmp_path, monkeypatch):
+def test_cursor_adapter_no_literal_dash_argument_anywhere(adapter, tmp_path):
     """Regression for the 2026-05-24 'cursor reads literal "-" as prompt' bug.
 
     cursor-agent's `-p`/`--print` is a boolean toggle, NOT a flag that takes
@@ -325,8 +319,6 @@ def test_cursor_adapter_no_literal_dash_argument_anywhere(adapter, tmp_path, mon
     output_chars=0, classified as rate_limited via a false-positive regex
     match in `_RATE_LIMIT_RE` against cursor's empty-prompt thinking trace.
     """
-    monkeypatch.setattr("shutil.which", lambda x: "/usr/local/bin/agent" if x == "agent" else None)
-
     for mode in ("read-only", "workspace-write", "danger"):
         plan = adapter.build_invocation(
             prompt="real prompt content",
@@ -342,9 +334,7 @@ def test_cursor_adapter_no_literal_dash_argument_anywhere(adapter, tmp_path, mon
             "cursor-agent parses this as positional prompt = '-' string, "
             "ignoring the real prompt on stdin"
         )
-        assert plan.stdin_payload == "real prompt content", (
-            f"mode={mode}: stdin_payload not set to the real prompt"
-        )
+        assert plan.stdin_payload == "real prompt content", f"mode={mode}: stdin_payload not set to the real prompt"
 
 
 def test_cursor_adapter_parse_response_success(adapter):
@@ -651,11 +641,7 @@ def test_cursor_adapter_parse_response_parses_v2026_05_27_single_assistant_messa
 
 def test_cursor_adapter_parse_response_parses_v2026_05_27_assistant_messages(adapter):
     """cursor-agent v2026.05.27 emits {role, message: {content: [...]}}."""
-    fixture = (
-        Path(__file__).parent
-        / "fixtures"
-        / "cursor_v2026_05_27_session_transcript.jsonl"
-    )
+    fixture = Path(__file__).parent / "fixtures" / "cursor_v2026_05_27_session_transcript.jsonl"
     stdout = fixture.read_text(encoding="utf-8")
     result = adapter.parse_response(
         stdout=stdout,

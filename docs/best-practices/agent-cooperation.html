@@ -127,7 +127,7 @@
   <main>
     <h1>Agent Cooperation Best Practices</h1>
 <blockquote>
-<p><strong>Scope:</strong> How Claude, Codex, Cursor, DeepSeek, and track orchestrators work
+<p><strong>Scope:</strong> How Claude, Codex, Cursor, and track orchestrators work
 together without degrading each other's output quality.
 Historical protocol archive: <code>docs/archive/CLAUDE-GEMINI-COOPERATION.md</code>
 Review evidence contract: <a href="../review-protocol.md"><code>docs/review-protocol.md</code></a></p>
@@ -224,9 +224,9 @@ the independent review gate.</p>
 <td>Main orchestrator, adversarial reviewer, bug finder, code improver</td>
 </tr>
 <tr>
-<td>⚙️ <strong>Review lane</strong></td>
-<td>DeepSeek</td>
-<td>Cheap code/content review and deterministic triage</td>
+<td>⚙️ <strong>Code review lane</strong></td>
+<td>Qualified outside-family reviewer from <code>closeout_cli resolve-reviewer</code></td>
+<td>DeepSeek is excluded from dispatch and review; <code>ask-deepseek</code> is consult-only for non-language work</td>
 </tr>
 </tbody>
 </table>

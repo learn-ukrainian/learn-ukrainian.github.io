@@ -300,7 +300,12 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     )
     assert registered_participant_model("agy") == "gemini-9.9-flash-high"
     assert resolve_compat_model("gemini", "Gemini 9.9 Flash (High)") == "gemini-9.9-flash-high"
-    assert resolve_compat_model("gemini", "gemini-3.7-flash") == "gemini-9.9-flash-high"
+    # Compatibility aliases still follow a rotated pin. A retired concrete
+    # generation must not silently upgrade, even when the registry rotates (#9301).
+    assert resolve_compat_model("gemini", "gemini-3-flash-preview") == "gemini-9.9-flash-high"
+    assert resolve_compat_model("gemini", "gemini-3.0-flash-preview") == "gemini-9.9-flash-high"
+    with pytest.raises(ValueError, match=r"gemini-3\.7-flash.*retired.*use gemini-3\.8-flash-high"):
+        resolve_compat_model("gemini", "gemini-3.7-flash")
     # Non-Gemini model ids pass through for the route resolver to judge loudly.
     assert resolve_compat_model("gemini", "custom-provider/model-x") == "custom-provider/model-x"
     # Non-agy seats never get rewritten.
@@ -836,7 +841,8 @@ def cursor_provider(monkeypatch):
     run = Mock(return_value=subprocess.CompletedProcess(args=[], returncode=0, stdout="LGTM\n", stderr=""))
     # Scoped to the Cursor bridge: the broker's own notifications also use subprocess.
     monkeypatch.setattr(_cursor, "subprocess", SimpleNamespace(run=run, TimeoutExpired=subprocess.TimeoutExpired))
-    monkeypatch.setattr(_cursor.shutil, "which", lambda name: f"/stub/{name}")
+    # Binary lookup is the shared resolver on the bridge module.
+    monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
     monkeypatch.setattr(_process, "run_compat_ask", Mock(side_effect=AssertionError("review must not enter ACP")))
     return run
 

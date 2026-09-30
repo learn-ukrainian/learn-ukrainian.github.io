@@ -130,9 +130,9 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:
   `tool_config={"acpx_shadow": True, "target_agent": "grok"}`.
-  Fixed effective model/effort `grok-4.6` / `high`. Custom agent command
+  Fixed effective model/effort `grok-4.7` / `high`. Custom agent command
   (never built-in `grok-build`): absolute Grok binary +
-  `agent --model grok-4.6 --reasoning-effort high --agent-profile
+  `agent --model grok-4.7 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`. The project-owned
   profile is digest-checked before every spawn and removes write, shell,
   subagent, memory, web, MCP, and LSP tools at the Grok server boundary.
@@ -323,7 +323,7 @@ its structured result before delivering canonical JSON to that parser.
 
 Reviewer choices, configured model pins, lineage checks and QG canaries are
 unchanged. Direct review uses the native Claude adapter with its existing
-`claude-opus-4-8` pin. A schema-capable adapter does not establish availability,
+`claude-opus-5-5` pin. A schema-capable adapter does not establish availability,
 policy admission or semantic correctness for every configured model. Issue
 #7810's frozen 18-cell matrix retains those residuals; held-out evaluation and
 cross-family approval belong to the reviewer of record at the exact PR head.

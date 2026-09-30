@@ -12,8 +12,8 @@ through the hash-pinned ACP profile. The model catalog remains the authority.
 | Sealed evidence | Parent-owned MCP plus hash-pinned `acpx-grok-sealed-review.md` | Only the sealed review tools are exposed |
 | Sealed snapshot cwd + OS sandbox | Active through ACPX confinement | No primary-checkout or general filesystem access |
 | `review-pr --reviewer grok` | Retired (#8520) | Replaced by direct `ask-* --type review` (sealed `review-pr` removed in #8520) |
-| Registry `formal_review_eligible` | `true` for native `grok-4.6` | Catalog endpoint is authoritative |
-| Cursor explicit `grok-4.6` | Live for **orchestrator / implement / advisory** when native dark | Still **not** sealed formal CF |
+| Registry `formal_review_eligible` | `true` for native `grok-4.7` | Catalog endpoint is authoritative |
+| Cursor explicit `grok-4.7` | Live for **orchestrator / implement / advisory** when native dark | Still **not** sealed formal CF |
 
 **Proof command:**
 
@@ -28,15 +28,15 @@ through the hash-pinned ACP profile. The model catalog remains the authority.
 The native Grok ACP route is eligible only when the runtime selects its
 hash-pinned sealed-review profile and validates the parent-owned MCP config.
 The ordinary no-tool profile remains unchanged for non-review conversations.
-Cursor-pinned `grok-4.6` remains a native-dark implementation/advisory
+Cursor-pinned `grok-4.7` remains a native-dark implementation/advisory
 fallback and is not an interchangeable formal-review route.
 
 ## Live lane (non-formal)
 
-- `delegate.py --agent grok --model grok-4.6`
+- `delegate.py --agent grok --model grok-4.7`
 - `ai_agent_bridge ask-grok` / `ask-grok-build`
 - Native Grok Build TUI / CLI cold-start
-- Cursor **explicit** `--model grok-4.6` if native path dark (never Cursor `auto` as identity)
+- Cursor **explicit** `--model grok-4.7` if native path dark (never Cursor `auto` as identity)
 - **Orchestrator seat** (fleet-comms): same pin; requests CF via direct `ask-* --type review` (sealed `review-pr` removed in #8520), does not self-seal
 
 ## Substitute formal CF

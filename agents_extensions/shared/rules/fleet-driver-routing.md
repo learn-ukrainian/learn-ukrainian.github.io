@@ -29,22 +29,22 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ high; advisory turns only), Opus-class when roster says so |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5-1** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ xhigh; advisory turns only), Opus-class when roster says so |
 | **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (review/CF, not judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
-review seat and, since operator 2026-09-29 (#9230), also the Astra advisory seat for hard,
-consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
+review seat and, since operator 2026-09-29 (#9230), also the Astra advisory seat at `xhigh`
+for hard, consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
 `gpt-6-sol` and `gpt-6-astra` are not routable. "Astra" below names that advisory seat; do
 not spend advisory turns on ordinary implementation or review.
 
 **Standing operator preference (2026-08-06):** Fable remains the Anthropic
 authority seat even if the operator shrinks the Claude subscription. Reach Fable via:
 
-1. Native Claude seat with model pin **claude-fable-5** (preferred when available), or
+1. Native Claude seat with model pin **claude-fable-5-1** (preferred when available), or
 2. **Cursor** multi-model pin to Fable (use composite identity for CF author/review
-   bookkeeping, e.g. `cursor:claude-fable-5` per `resolve_author_family` rules).
+   bookkeeping, e.g. `cursor:claude-fable-5-1` per `resolve_author_family` rules).
 
 Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rsync gates, or smoke
 `--limit 5` jobs.
@@ -62,7 +62,7 @@ resolver selects. Cursor has two monthly pools ([Models & Pricing](https://curso
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
 pool has headroom. A review of a Grok author must use an Other Models slug, not a Grok
-slug. DeepSeek stays **Flash everyday**; **Pro @ high = hard implement only**.
+slug. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
@@ -96,7 +96,7 @@ stampede one hot lane.
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-5-high`. Draws the API pool. |
-| **DeepSeek V4.1 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4.1-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
+| **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | complex / long-context coding only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
@@ -140,7 +140,6 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | Model | Input | Cache write | Cache read | Output | Slug |
 | --- | --- | --- | --- | --- | --- |
 | Claude Sonnet 5.5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-5-high` |
-| Claude Opus 5 | $5 | $6.25 | $0.50 | $25 | `claude-opus-5-thinking-high` |
 | Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` |
 | Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` |
 | Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |

@@ -104,7 +104,7 @@ Codex harness remains native; use the Claude-Code harness only when its
 interface is required.
 
 ```bash
-./start-codex.sh --harness claude-code --model gpt-5.6-sol
+./start-codex.sh --harness claude-code --model gpt-6.1-sol
 ./start-codex-driver.sh --governor AUTO
 ```
 
@@ -1808,7 +1808,7 @@ AGY examples:
 # Fast AGY one-off
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Quick one-off check." \
   --task-id adhoc-agy-check \
-  --to-model gemini-3.5-flash-high
+  --to-model gemini-3.8-flash-high
 
 # Drain AGY channel inbox explicitly
 .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run agy

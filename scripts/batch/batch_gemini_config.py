@@ -127,11 +127,11 @@ CASCADE_PER_CALL_MAX_S = _ONE_DAY
 # Change these to switch models across the entire pipeline without touching CLI flags.
 # Research:      seminar tracks → Opus, core tracks → Sonnet
 # Content:       always Opus (quality content generation)
-# Apr 2026: Sonnet 4.6 is the better default on Pro — Opus burns ~2x faster.
+# Sonnet is the routine default; reserve Opus for consequential judgment.
 # Use Opus ONLY where deep reasoning is critical (seminar content, final review).
 # Ref: Anthropic guidance (Lydia Hallie, 2026-04-03)
-CLAUDE_SONNET = "claude-sonnet-4-6"
-CLAUDE_OPUS   = "claude-opus-4-8"
+CLAUDE_SONNET = "claude-sonnet-5-5"
+CLAUDE_OPUS   = "claude-opus-5-5"
 
 CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Research — RAG search + summarization
 CLAUDE_MODEL_CORE_CONTENT       = CLAUDE_OPUS    # Content — writing quality needs Opus

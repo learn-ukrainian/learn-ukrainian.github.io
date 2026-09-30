@@ -79,7 +79,11 @@ def mechanical_payload(profile: str) -> dict[str, Any]:
 def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
     module_name, class_name = ADAPTERS[route]
     module = importlib.import_module(f"scripts.agent_runtime.adapters.{module_name}")
-    monkeypatch.setattr(module.shutil, "which", lambda command: f"/usr/bin/{command}")
+    if route == "cursor":
+        # Binary lookup is the shared resolver; which() still stubs the other adapters.
+        monkeypatch.setattr(module, "resolve_cursor_agent_binary", lambda: "/usr/bin/cursor-agent")
+    else:
+        monkeypatch.setattr(module.shutil, "which", lambda command: f"/usr/bin/{command}")
     if route == "claude":
         monkeypatch.setattr(module, "_ensure_supported_claude_cli_version", lambda _: (2, 1, 200))
     if route == "glm":
@@ -460,7 +464,7 @@ def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkey
         payload["verdict"] = "PASS"
 
     def runtime(agent, prompt, **kwargs):
-        assert agent == "claude" and kwargs["model"] == "claude-opus-4-8"
+        assert agent == "claude" and kwargs["model"] == "claude-opus-5-5"
         assert qg_schema.render_reviewer_output_contract("direct") in prompt
         adapter = adapter_for(agent, monkeypatch)
         plan = build_plan(adapter, tmp_path, kwargs["tool_config"])

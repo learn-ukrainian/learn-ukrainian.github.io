@@ -4,9 +4,13 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
+from scripts.agent_runtime.adapters.cursor import CursorAgentMissingError
 from scripts.ai_agent_bridge import _cursor
 from scripts.ai_agent_bridge._cursor import _invoke_cursor, cursor_default_model
 from scripts.lib import rules_core
+
+_RESOLVE = "scripts.ai_agent_bridge._cursor.resolve_cursor_agent_binary"
+_CURSOR_BIN = "/usr/local/bin/cursor-agent"
 
 
 def test_cursor_default_model_is_the_concrete_seat_pin():
@@ -61,12 +65,12 @@ def test_ask_cursor_defaults_to_the_concrete_seat_pin(monkeypatch):
 
 def test_invoke_cursor_constructs_correct_argv():
     """Cursor subprocess is invoked with -p PROMPT --model MODEL --output-format text --trust."""
-    with patch("scripts.ai_agent_bridge._cursor.shutil.which", return_value="/fake/agent"):
+    with patch(_RESOLVE, return_value=_CURSOR_BIN):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="response body", stderr="")
             _invoke_cursor("hello", "composer-2.5")
             argv = run_mock.call_args[0][0]
-            assert argv[0] == "/fake/agent"
+            assert argv[0] == _CURSOR_BIN
             assert "-p" in argv
             assert argv[argv.index("-p") + 1] == rules_core.with_core("hello")
             assert "--model" in argv
@@ -76,27 +80,21 @@ def test_invoke_cursor_constructs_correct_argv():
             assert "--trust" in argv
 
 
-def test_invoke_cursor_falls_back_to_cursor_agent():
-    """If 'agent' binary is missing, it should try 'cursor-agent'."""
-    def which_side_effect(name):
-        if name == "agent":
-            return None
-        if name == "cursor-agent":
-            return "/fake/cursor-agent"
-        return None
-
-    with patch("scripts.ai_agent_bridge._cursor.shutil.which", side_effect=which_side_effect):
+def test_invoke_cursor_uses_resolved_cursor_agent():
+    """The ask path spawns whatever ``resolve_cursor_agent_binary`` returns."""
+    with patch(_RESOLVE, return_value=_CURSOR_BIN) as resolve:
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="response body", stderr="")
             _invoke_cursor("hello", "composer-2.5")
+            resolve.assert_called_once_with()
             argv = run_mock.call_args[0][0]
-            assert argv[0] == "/fake/cursor-agent"
+            assert argv[0] == _CURSOR_BIN
 
 
 def test_invoke_cursor_attaches_data_file(tmp_path):
     data_file = tmp_path / "context.md"
     data_file.write_text("# Context\nSome content.")
-    with patch("scripts.ai_agent_bridge._cursor.shutil.which", return_value="/fake/agent"):
+    with patch(_RESOLVE, return_value=_CURSOR_BIN):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="ok", stderr="")
             _invoke_cursor("review this", "composer-2.5", data=str(data_file))
@@ -108,13 +106,14 @@ def test_invoke_cursor_attaches_data_file(tmp_path):
 
 
 def test_invoke_cursor_raises_when_binary_missing():
-    with patch("scripts.ai_agent_bridge._cursor.shutil.which", return_value=None):
-        with pytest.raises(SystemExit, match="cursor-agent CLI not found"):
-            _invoke_cursor("hello", "composer-2.5")
+    with patch(_RESOLVE, side_effect=CursorAgentMissingError()):
+        with patch("scripts.ai_agent_bridge._cursor.subprocess.run", side_effect=AssertionError("spawned")):
+            with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
+                _invoke_cursor("hello", "composer-2.5")
 
 
 def test_invoke_cursor_raises_on_nonzero_exit():
-    with patch("scripts.ai_agent_bridge._cursor.shutil.which", return_value="/fake/agent"):
+    with patch(_RESOLVE, return_value=_CURSOR_BIN):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=1, stdout="", stderr="auth failed")
             with pytest.raises(SystemExit, match="cursor-agent exited 1"):
@@ -122,7 +121,7 @@ def test_invoke_cursor_raises_on_nonzero_exit():
 
 
 def test_invoke_cursor_strips_output():
-    with patch("scripts.ai_agent_bridge._cursor.shutil.which", return_value="/fake/agent"):
+    with patch(_RESOLVE, return_value=_CURSOR_BIN):
         with patch("scripts.ai_agent_bridge._cursor.subprocess.run") as run_mock:
             run_mock.return_value = MagicMock(returncode=0, stdout="  response with spaces  \n", stderr="")
             result = _invoke_cursor("hello", "composer-2.5")

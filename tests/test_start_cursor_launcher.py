@@ -10,9 +10,14 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.review.model_catalog import load_model_catalog
 from tests.test_launcher_contract import REPO, run_launcher
 
 DRIVER = "start-cursor-driver.sh"
+RETIRED_MODEL_IDS = {
+    model_id for model_id, entry in load_model_catalog()["models"].items()
+    if entry["lifecycle"] == "retired"
+}
 
 
 def test_cursor_driver_wrapper_calls_launcher_main_cursor() -> None:
@@ -57,6 +62,38 @@ def test_cursor_driver_rejects_dummy_agent_on_path(tmp_path: Path) -> None:
     assert "would exec cursor-agent" in result.stdout
 
 
+def test_cursor_launcher_refuses_decoy_agent_when_cursor_agent_is_missing(tmp_path: Path) -> None:
+    """A live launch with only a decoy ``agent`` exits non-zero and never runs it.
+
+    ``scripts/launchers/cursor.sh`` is the shell-side exception to
+    ``resolve_cursor_agent_binary``: it still requires exactly ``cursor-agent``.
+    """
+    shell = shutil.which("bash")
+    assert shell is not None
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "bash").symlink_to(shell)
+    marker = tmp_path / "decoy-ran"
+    dummy_agent = bin_dir / "agent"
+    dummy_agent.write_text("#!/bin/sh\nprintf '%s\\n' ran >> \"$DECOY_RAN\"\n", encoding="utf-8")
+    dummy_agent.chmod(0o755)
+    probe_path = f"{bin_dir}{os.pathsep}{os.defpath}"
+    assert shutil.which("agent", path=probe_path) == str(dummy_agent)
+    assert shutil.which("cursor-agent", path=probe_path) is None
+
+    result = run_launcher(
+        DRIVER,
+        "--epic",
+        "infra",
+        env={"PATH": probe_path, "DECOY_RAN": str(marker)},
+        dry_run=False,
+    )
+    assert result.returncode != 0, result.stdout + result.stderr
+    assert "Cursor agent executable (cursor-agent) is unavailable." in result.stderr
+    assert not marker.exists()
+    assert "ran" not in result.stdout
+
+
 def test_cursor_driver_requires_epic_fail_closed() -> None:
     """Launching without --epic must not silently claim main orchestrator."""
     missing = run_launcher(DRIVER)
@@ -94,6 +131,15 @@ def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
     assert "not certified" in uncertified.stderr
     assert harness.returncode == 2
     assert "only --harness cursor-agent" in harness.stderr
+
+
+@pytest.mark.parametrize("model", ["grok-4.6", "grok-4.6[context=500k,reasoning_effort=high]"])
+def test_cursor_driver_rejects_retired_grok_before_lease(model: str) -> None:
+    result = run_launcher(DRIVER, "--epic", "devops", "--model", model)
+    assert result.returncode == 2
+    assert "is retired in the model catalog" in result.stderr
+    assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize(
@@ -140,8 +186,13 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
         run_launcher(DRIVER, "--epic", "infra", "--model", model),
         run_launcher(DRIVER, "--epic", "infra", env={"LAUNCHER_MODEL": model}),
     ):
-        assert result.returncode == 4, result.stdout + result.stderr
-        assert "not certified for the cursor driver" in result.stderr
+        if model.partition("[")[0] in RETIRED_MODEL_IDS:
+            assert result.returncode == 2, result.stdout + result.stderr
+            assert "is retired in the model catalog" in result.stderr
+            assert model in result.stderr
+        else:
+            assert result.returncode == 4, result.stdout + result.stderr
+            assert "not certified for the cursor driver" in result.stderr
         assert "would claim lease" not in result.stdout
         assert "would exec" not in result.stdout
 
@@ -275,9 +326,14 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
     tmp_path: Path, selection: tuple[str, ...]
 ) -> None:
     result, argv = _run_interactive(tmp_path, *selection)
-    assert result.returncode == 4, result.stdout + result.stderr
-    assert "cursor interactive session" in result.stderr
-    assert "grok-4.7-high or composer-2.5" in result.stderr
+    if selection[0] == "--model" and selection[1].partition("[")[0] in RETIRED_MODEL_IDS:
+        assert result.returncode == 2, result.stdout + result.stderr
+        assert "is retired in the model catalog" in result.stderr
+        assert selection[1] in result.stderr
+    else:
+        assert result.returncode == 4, result.stdout + result.stderr
+        assert "cursor interactive session" in result.stderr
+        assert "grok-4.7-high or composer-2.5" in result.stderr
     assert argv is None
     assert "mock deploy" not in result.stdout
 

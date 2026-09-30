@@ -1,6 +1,6 @@
 # Agent Cooperation Best Practices
 
-> **Scope:** How Claude, Codex, Cursor, DeepSeek, and track orchestrators work
+> **Scope:** How Claude, Codex, Cursor, and track orchestrators work
 > together without degrading each other's output quality.
 > Historical protocol archive: `docs/archive/CLAUDE-GEMINI-COOPERATION.md`
 > Review evidence contract: [`docs/review-protocol.md`](../review-protocol.md)
@@ -57,7 +57,7 @@ the independent review gate.
 | 💙 **Синя команда** (Blue) | Claude | Architect, reviewer, quality gate |
 | 💛 **Жовта команда** (Gold) | Cursor / track writers | Content builder, implementer |
 | 🟢 **Зелена команда** (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
-| ⚙️ **Review lane** | DeepSeek | Cheap code/content review and deterministic triage |
+| ⚙️ **Code review lane** | Qualified outside-family reviewer from `closeout_cli resolve-reviewer` | DeepSeek is excluded from dispatch and review; `ask-deepseek` is consult-only for non-language work |
 
 Gemini/AGY handles Ukrainian-language work and review under the LANGUAGE-LANES
 rule. Code review follows `model-assignment.md` Code review row. Historical

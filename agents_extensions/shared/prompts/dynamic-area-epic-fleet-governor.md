@@ -166,12 +166,12 @@ first. Then query CodexBar as the local quota/config/health probe:
 Use the live model catalog and rules as authority. Standing task-fit defaults:
 
 - Ukrainian pedagogy, CEFR, authoring, or content review uses only `agy`,
-  `codex`, `claude`, or `grok-4.6`, with AGY
+  `codex`, or `claude`, with AGY
   `gemini-3.8-flash-high` first for current Ukrainian teaching voice and
   `gemini-3.8-flash-high` for deep work when live policy permits. Require
   `sources`/VESUM evidence for linguistic claims.
 - Codex routing: Sol @ `high` handles coding and review; Luna @ `high` handles
-  routine bounded work and scouting; Astra @ `high` is for hard consequential
+  routine bounded work and scouting; Astra @ `xhigh` is for hard consequential
   advisory judgment only. Do not route routine implementation or review to Astra.
 - Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8
   Flash handles Ukrainian and well-defined work with a complete brief and

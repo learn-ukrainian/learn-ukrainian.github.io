@@ -196,8 +196,8 @@ def test_ab_discuss_passes_registered_agy_model_pin(discuss_bridge, monkeypatch)
         max_rounds=1,
         review=False,
         review_profile="ukrainian",
-        models="agy:gemini-3.6-flash-high",
+        models="agy:gemini-3.8-flash-high",
     )
 
     assert _channels_cli._handle_discuss(args) == 0
-    assert observed["models"] == {"agy": "gemini-3.6-flash-high"}
+    assert observed["models"] == {"agy": "gemini-3.8-flash-high"}
