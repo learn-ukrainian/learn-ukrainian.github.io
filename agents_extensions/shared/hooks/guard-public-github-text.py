@@ -12,20 +12,55 @@ from pathlib import Path
 
 
 def invokes_gh(command: str) -> bool:
-    """Recognize gh at command positions, leaving ordinary prefix rules intact."""
+    """Recognize command positions, common wrappers and nested shell -c forms."""
     try:
-        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()")
+        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()\n")
+        lexer.whitespace = " \t\r"
         lexer.whitespace_split = True
         expecting_command = True
+        shell = False
+        shell_script = False
+        wrapper = False
         for word in lexer:
-            if word and all(char in ";|&()" for char in word):
+            if shell_script:
+                if invokes_gh(word):
+                    return True
+                shell_script = False
+                expecting_command = False
+            elif word and all(char in ";|&()\n" for char in word):
                 expecting_command = True
+                shell = False
+                wrapper = False
+            elif shell and word.startswith("-") and not word.startswith("--") and "c" in word[1:]:
+                shell_script = True
             elif expecting_command:
-                if "=" in word or word in {"env", "command", "exec", "sudo"}:
+                if "=" in word or word in {
+                    "env",
+                    "command",
+                    "exec",
+                    "sudo",
+                    "time",
+                    "timeout",
+                    "xargs",
+                    "if",
+                    "then",
+                    "elif",
+                    "while",
+                    "until",
+                    "do",
+                    "!",
+                }:
+                    wrapper = word in {"time", "timeout", "xargs", "env", "sudo"} or wrapper
                     continue
                 if Path(word).name == "gh":
                     return True
-                expecting_command = False
+                if Path(word).name in {"bash", "sh", "zsh", "dash"}:
+                    shell = True
+                    expecting_command = False
+                elif wrapper or word.startswith("-") or word.replace(".", "").isdigit():
+                    continue
+                else:
+                    expecting_command = False
     except ValueError:
         pass
     return False
@@ -42,6 +77,9 @@ def main() -> int:
 
         command = payload.get("tool_input", {}).get("command", "")
         if not invokes_gh(command):
+            return 0
+        shim = str(root / "scripts/agent_runtime/shims")
+        if os.environ.get("PATH", "").split(os.pathsep)[0] == shim:
             return 0
         # Early warning only: the final argv/files/stdin are enforced by the shim.
         warning = ""

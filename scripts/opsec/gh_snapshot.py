@@ -15,11 +15,9 @@ from pathlib import Path
 
 from scripts.opsec.prepublish import PublishBlocked, is_private, normalize_repository
 
+# Only options needed to materialize inputs are interpreted. This table never
+# determines classification or the argument scan set.
 VALUE_OPTIONS = {
-    "--description",
-    "-d",
-    "--color",
-    "--name",
     "--repo",
     "-R",
     "--hostname",
@@ -45,50 +43,29 @@ VALUE_OPTIONS = {
     "-B",
     "--head",
     "-H",
-    "--jq",
-    "-q",
-    "--template",
-    "-T",
     "--recover",
-    "--reviewer",
-    "-r",
-    "--assignee",
-    "-a",
-    "--label",
-    "-l",
-    "--milestone",
-    "-m",
-    "--project",
-    "-p",
-    "--match-head-commit",
-    "--add-label",
-    "--remove-label",
-    "--add-assignee",
-    "--remove-assignee",
-    "--add-reviewer",
-    "--remove-reviewer",
-    "--add-project",
-    "--remove-project",
-    "--reason",
-    "--header",
-    "--cache",
-    "--preview",
-}
-TEXT_OPTIONS = {
-    "--description",
-    "-d",
-    "--name",
-    "--body",
-    "-b",
-    "--title",
-    "-t",
-    "--comment",
-    "-c",
-    "--subject",
-    "--notes",
-    "-n",
 }
 FILE_OPTIONS = {"--body-file", "--notes-file", "--input"}
+READ_VERBS = {
+    "pr": {"view", "list", "status", "checks", "diff", "checkout"},
+    "issue": {"view", "list", "status"},
+    "run": {"view", "list", "watch", "download"},
+    "workflow": {"list", "view"},
+    "repo": {"view", "list", "clone"},
+    "release": {"view", "list", "download", "verify", "verify-asset"},
+    "auth": {"status"},
+    "search": {"code", "commits", "issues", "prs", "repos"},
+    "gist": {"view", "list", "clone"},
+    "label": {"list"},
+    "project": {"view", "list", "field-list", "item-list"},
+    "org": {"list"},
+    "cache": {"list"},
+    "ruleset": {"view", "list", "check"},
+    "secret": {"list"},
+    "variable": {"list", "get"},
+    "ssh-key": {"list"},
+    "gpg-key": {"list"},
+}
 
 
 @dataclass
@@ -109,18 +86,40 @@ class FrozenCommand:
             self.add_text(text, name)
 
 
-def command_parts(argv: list[str]) -> tuple[str, str]:
-    """Locate the command after global repository/host selectors."""
+def command_indexes(argv: list[str]) -> list[int]:
+    """Find group/verb without interpreting command-specific flag grammar."""
+    indexes = []
     i = 0
-    while i < len(argv):
+    while i < len(argv) and len(indexes) < 2:
         arg = argv[i]
         if arg in {"--repo", "-R", "--hostname"}:
             i += 2
-        elif arg.startswith("-"):
-            i += 1
-        else:
-            return arg, argv[i + 1] if i + 1 < len(argv) else ""
-    return "", ""
+            continue
+        if not arg.startswith("-"):
+            indexes.append(i)
+        i += 1
+    return indexes
+
+
+def command_parts(argv: list[str]) -> tuple[str, str]:
+    parts = [argv[i] for i in command_indexes(argv)]
+    return tuple([*parts, "", ""][:2])
+
+
+def no_text_token(token: str) -> bool:
+    """Structural flag, number, SHA or bare repository; labels remain text.
+
+    Attached short values and long assignments are text, except a repository
+    selector whose value is itself a bare OWNER/REPO. Command names are removed
+    by index before this predicate is applied.
+    """
+    if token.startswith("--repo="):
+        token = token.partition("=")[2]
+    elif token.startswith("-R") and len(token) > 2:
+        token = token[2:].removeprefix("=")
+    return bool(
+        re.fullmatch(r"(?:--[a-z][a-z0-9-]*|-[A-Za-z]|[0-9]+|[a-fA-F0-9]{7,40}|[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+)", token)
+    )
 
 
 def expand_api_clusters(argv: list[str]) -> list[str]:
@@ -131,7 +130,7 @@ def expand_api_clusters(argv: list[str]) -> list[str]:
     for arg in argv:
         if len(arg) > 2 and arg.startswith("-") and not arg.startswith("--"):
             tail = arg[1:]
-            while tail and tail[0] in "is":
+            while tail and tail[0] in "isp":
                 result.append("-" + tail[0])
                 tail = tail[1:]
             if tail:
@@ -150,12 +149,6 @@ def options(argv: list[str]) -> tuple[list[tuple[int, str, str]], list[str]]:
     value_options = set(VALUE_OPTIONS)
     if not api and (group, verb) != ("workflow", "run"):
         value_options -= {"-f", "--field", "--raw-field"}
-    if group not in {"label", "gist"}:
-        value_options.discard("-d")
-    if (group, verb) == ("workflow", "list"):
-        value_options.discard("-a")
-    if review:
-        value_options.discard("-a")
     i = 0
     while i < len(argv):
         arg = argv[i]
@@ -266,36 +259,50 @@ def _read(args: list[str], *, cwd: Path, environment: dict, reader) -> str:
 
 
 def destination(argv: list[str], found: list, positional: list[str], *, cwd: Path, environment: dict, reader) -> str:
-    """Pin explicit repo, URL, API route or remote. Only positive private identity exempts."""
-    values = {name: value for _, name, value in found}
-    host = values.get("--hostname", environment.get("GH_HOST", "github.com"))
-    api = positional and positional[0] == "api"
-    route = positional[1] if api and len(positional) > 1 else ""
-    if api and (route == "graphql" or route.endswith("/graphql")):
-        return "unknown"
-    explicit = values.get("--repo", values.get("-R"))
-    match = re.search(r"(?:^|/)repos/([^/]+)/([^/?]+)", route)
-    if match and "{" not in match.group(0):
-        if route.startswith(("https://", "http://")):
-            from urllib.parse import urlsplit
+    """Exempt only agreeing, positive identities; ambiguous destinations are public."""
+    from urllib.parse import urlsplit
 
-            host = urlsplit(route).hostname or "unknown"
-            if host == "api.github.com":
-                host = "github.com"
-        return normalize_repository(f"{match[1]}/{match[2]}", host)
-    if api and not match:
+    hosts = [value for _, name, value in found if name == "--hostname"]
+    hosts += [environment["GH_HOST"]] if environment.get("GH_HOST") else []
+    if len({host.lower() for host in hosts}) > 1:
         return "unknown"
-    if not api and len(positional) > 2 and positional[:2] == ["repo", "edit"]:
-        return normalize_repository(positional[2], host)
-    urls = [p for p in positional if p.startswith(("https://", "http://"))]
-    if urls:
-        return normalize_repository(urls[-1], host)
-    if explicit:
-        return normalize_repository(explicit, host)
+    host = hosts[-1] if hosts else "github.com"
+    identities = [normalize_repository(value, host) for _, name, value in found if name in {"--repo", "-R"}]
     if environment.get("GH_REPO"):
-        return normalize_repository(environment["GH_REPO"], host)
-    # Resolve local remotes without an outbound lookup. Ambiguous multi-remote
-    # selection requires an explicit repo rather than accidentally exempting it.
+        identities.append(normalize_repository(environment["GH_REPO"], host))
+    group, verb = command_parts(argv)
+    if group == "api":
+        route = positional[1] if len(positional) > 1 else ""
+        match = re.search(r"(?:^|/)repos/([^/]+)/([^/?]+)", route)
+        if not match or "{" in match.group(0):
+            return "unknown"
+        route_host = host
+        if route.startswith(("https://", "http://")):
+            route_host = urlsplit(route).hostname or "unknown"
+            if route_host == "api.github.com":
+                route_host = "github.com"
+        identities.append(normalize_repository(f"{match[1]}/{match[2]}", route_host))
+    elif group == "repo" and verb in {"edit", "create", "delete", "rename", "archive", "fork"}:
+        if len(positional) > 2:
+            identities.append(normalize_repository(positional[2], host))
+    # URLs in flag values or arbitrary argument positions cannot grant an
+    # exemption. They still veto conflicting/ambiguous destination evidence.
+    indexes = command_indexes(argv)
+    selector_index = indexes[1] + 1 if len(indexes) > 1 else -1
+    selectors = [argv[selector_index]] if group in {"issue", "pr", "repo"} and 0 <= selector_index < len(argv) else []
+    repo_urls = [value for _, name, value in found if name in {"--repo", "-R"}]
+    for arg in argv:
+        for url in re.findall(r"https?://[^\s]+", arg):
+            if url in repo_urls:
+                continue
+            if url not in selectors and not (group == "api" and len(positional) > 1 and url == positional[1]):
+                identities.append("unknown")
+            elif group != "api":
+                identities.append(normalize_repository(url, host))
+    if identities:
+        targets = set(identities)
+        return targets.pop() if len(targets) == 1 else "unknown"
+    # Remote inference is allowed only in the absence of explicit evidence.
     try:
         result = subprocess.run(
             ["git", "config", "--get-regexp", r"^remote\..*\.url$"],
@@ -323,54 +330,33 @@ def snapshot(
 ) -> Iterator[FrozenCommand]:
     """Read each file/stdin once and forward controlled copies of precisely those bytes."""
     group, verb = command_parts(argv)
-    # Reads return before value parsing: their option meanings cannot refuse publication.
-    writes = {
-        "issue": {"create", "edit", "comment", "close", "reopen"},
-        "pr": {"create", "edit", "comment", "review", "close", "reopen", "merge"},
-        "release": {"create", "edit"},
-        "label": {"create", "edit"},
-        "repo": {"edit"},
-        "workflow": {"run"},
-        "project": {"item-create"},
-        "gist": {"create"},
-    }
-    if group != "api" and verb not in writes.get(group, set()):
+    # Unknown groups/verbs fail closed as writes. Reads never parse flags or
+    # load private tooling. API needs its own payload/method semantics below.
+    if group != "api" and verb in READ_VERBS.get(group, set()):
         yield FrozenCommand(list(argv))
         return
+    original_argv = list(argv)
     argv = expand_api_clusters(argv)
-    frozen = FrozenCommand(list(argv))
+    frozen = FrozenCommand(list(argv), write=True)
     found, positional = options(argv)
-    if not positional:
-        yield frozen
-        return
-    group = positional[0]
-    verb = positional[1] if len(positional) > 1 else ""
-    api = group == "api"
-    graphql = api and (verb == "graphql" or verb.endswith("/graphql"))
     values = {name: value for _, name, value in found}
+    api = group == "api"
+    # API flags can precede the endpoint; materialization finds it separately.
     if api:
-        method = values.get(
-            "--method",
-            values.get(
-                "-X",
-                "POST"
-                if any(name in {"-f", "-F", "--field", "--raw-field", "--input"} for _, name, _ in found)
-                else "GET",
-            ),
-        ).upper()
-        frozen.write = method not in {"GET", "HEAD", "OPTIONS"}
-    else:
-        frozen.write = verb in writes.get(group, set())
-    if not frozen.write and not (graphql):
-        yield frozen
-        return
+        verb = positional[1] if len(positional) > 1 else ""
+    graphql = api and (verb == "graphql" or verb.endswith("/graphql"))
+    if api:
+        method = values.get("--method", values.get("-X", "GET")).upper()
+        has_payload = any(name in {"-f", "-F", "--field", "--raw-field", "--input"} for _, name, _ in found)
+        frozen.write = has_payload or method not in {"GET", "HEAD", "OPTIONS"}
+        if not frozen.write and not graphql:
+            yield frozen
+            return
     frozen.destination = destination(argv, found, positional, cwd=cwd, environment=environment, reader=reader)
     if is_private(frozen.destination):
         yield frozen
         return
     with tempfile.TemporaryDirectory(prefix="lu-publish-") as temp:
-        if group == "label" and len(positional) > 2:
-            frozen.add_text(positional[2], "name")
         copies: dict[str, tuple[bytes, str]] = {}
 
         def copy_file(value: str) -> tuple[bytes, str]:
@@ -389,9 +375,8 @@ def snapshot(
                         content = (cwd / value).read_bytes()
                     content.decode("utf-8")
                     target_path = Path(temp) / str(len(copies))
-                    if group == "gist":
-                        target_path = target_path / (Path(value).name if value != "-" else "gistfile.txt")
-                        target_path.parent.mkdir()
+                    target_path = target_path / (Path(value).name if value != "-" else "stdin.txt")
+                    target_path.parent.mkdir()
                     target = str(target_path)
                     Path(target).write_bytes(content)
                     copies[value] = (content, target)
@@ -435,8 +420,6 @@ def snapshot(
                         fields.update(payload)
                     except Exception:
                         raise PublishBlocked("OPSEC: GraphQL input must be JSON; write refused.") from None
-            elif name in TEXT_OPTIONS:
-                frozen.add_text(value, name.lstrip("-"))
             elif (api or (group, verb) == ("workflow", "run")) and name in {"-F", "--field", "-f", "--raw-field"}:
                 key, _, content = value.partition("=")
                 if name in {"-F", "--field"} and content.startswith("@"):
@@ -495,8 +478,6 @@ def snapshot(
                     environment["GH_REPO"] = frozen.destination
                 elif group not in {"project", "gist", "repo"} and not any(name in values for name in {"--repo", "-R"}):
                     frozen.argv.extend(["--repo", frozen.destination])
-            elif group not in {"release", "project", "gist"}:
-                raise PublishBlocked("OPSEC: destination unresolved; use --repo OWNER/REPO.")
             if (
                 any(arg in {"-e", "--web", "-w", "--generate-notes"} or arg.startswith("--editor") for arg in argv)
                 or "--recover" in values
@@ -567,7 +548,16 @@ def snapshot(
             body_present = any(
                 name in values for name in {"--body", "-b", "--body-file", "--notes", "-n", "--notes-file"}
             )
-            if verb == "edit" and not found:
+            if (
+                verb == "edit"
+                and group in {"issue", "pr", "release", "gist"}
+                and not any(
+                    a.startswith("-")
+                    and a not in {"--repo", "-R", "--hostname"}
+                    and not a.startswith(("--repo=", "-R", "--hostname="))
+                    for a in argv
+                )
+            ):
                 raise PublishBlocked("OPSEC: interactive edit refused; use --title or --body-file.")
             if group in {"issue", "pr", "release"} and verb in {"comment", "review", "create"} and not body_present:
                 raise PublishBlocked("OPSEC: interactive body refused; use --body-file (empty files are allowed).")
@@ -577,12 +567,69 @@ def snapshot(
                 and not any(name in values for name in {"--title", "-t"})
             ):
                 raise PublishBlocked("OPSEC: interactive title refused; use --title.")
-            if group == "gist":
-                for value in positional[2:] or ["-"]:
+        # The scan set is independent of the materialization option table:
+        # inspect every original token, and every regular file named by a token
+        # (including assignment/@/attached-short forms), even for unknown verbs.
+        argument_texts = [(arg, f"argument[{i + 1}]") for i, arg in enumerate(original_argv)]
+        gist_files = 0
+        indexes = set(command_indexes(argv))
+        payload = [arg for i, arg in enumerate(argv) if i not in indexes]
+        for index, arg in enumerate(argv):
+            candidates = [("", arg)]
+            if arg.startswith("-") and not arg.startswith("--") and len(arg) > 2:
+                candidates.append((arg[:2], arg[2:]))
+            # A field may contain more than one assignment layer: --field=body=@file.
+            for prefix, tail in list(candidates):
+                while "=" in tail:
+                    head, _, tail = tail.partition("=")
+                    prefix += head + "="
+                    candidates.append((prefix, tail))
+            for prefix, value in candidates:
+                if value.startswith("@"):
+                    prefix += "@"
+                    value = value[1:]
+                if value == "-" and (prefix.endswith("@") or group == "gist"):
+                    exists = True
+                else:
+                    try:
+                        exists = (cwd / value).is_file()
+                    except (OSError, ValueError):
+                        exists = False
+                if exists:
                     content, target = copy_file(value)
-                    frozen.add_text(content.decode("utf-8"), "gist-file")
-                    if value in frozen.argv:
-                        frozen.argv[frozen.argv.index(value)] = target
-                    else:
-                        frozen.argv.append(target)
+                    name = f"file[{index + 1}]"
+                    if content.decode("utf-8") not in frozen.texts:
+                        frozen.add_text(content.decode("utf-8"), name)
+                    if not any(n in FILE_OPTIONS and v == value for _, n, v in found):
+                        with suppress(ValueError):
+                            frozen.add_json(json.loads(content), name)
+                    # Text values that happen to name files are scanned too,
+                    # but remain literal text. File-input options above already
+                    # replay copies; gist operands and @ references do so here.
+                    literal = any(i == index and n not in FILE_OPTIONS for i, n, _ in found)
+                    previous = argv[index - 1] if index else ""
+                    gist_file = group == "gist" and (
+                        (verb == "create" and not literal and previous not in {"-d", "--desc"})
+                        or (verb == "edit" and previous in {"--add", "-a"})
+                    )
+                    if index not in indexes and frozen.argv[index] == arg and (prefix.endswith("@") or gist_file):
+                        frozen.argv[index] = prefix + target
+                        if gist_file:
+                            gist_files += 1
+        if stdin is not None and frozen.stdin is None:
+            frozen.stdin = stdin.encode("utf-8") if isinstance(stdin, str) else stdin
+            try:
+                frozen.add_text(frozen.stdin.decode("utf-8"), "stdin")
+            except (AttributeError, UnicodeDecodeError):
+                raise PublishBlocked("OPSEC: stdin must be UTF-8 text; write refused.") from None
+        if (group, verb) == ("secret", "set") and not any(name in values for name in {"--body", "-b"}):
+            content, _ = copy_file("-")
+            frozen.add_text(content.decode("utf-8"), "stdin")
+        if group == "gist" and verb == "create" and not gist_files:
+            content, target = copy_file("-")
+            frozen.add_text(content.decode("utf-8"), "stdin")
+            frozen.argv.append(target)
+        if frozen.texts or any(not no_text_token(arg) for arg in payload):
+            for text, name in argument_texts:
+                frozen.add_text(text, name)
         yield frozen

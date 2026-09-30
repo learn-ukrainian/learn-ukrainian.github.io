@@ -175,10 +175,14 @@ def test_send_spy_all_write_forms(synthetic_opsec, tmp_path, monkeypatch, form, 
     args, stdin = form_args(form, text, tmp_path)
     calls = []
     scanned = []
+    semantic_scanned = set()
     original = gate.check_texts
 
     def check(destination, texts, **kwargs):
         scanned.extend(texts)
+        semantic_scanned.update(
+            t for t, n in zip(texts, kwargs["field_names"], strict=True) if not n.startswith("argument[")
+        )
         return original(destination, texts, **kwargs)
 
     monkeypatch.setattr(gate, "check_texts", check)
@@ -187,6 +191,10 @@ def test_send_spy_all_write_forms(synthetic_opsec, tmp_path, monkeypatch, form, 
         with snapshot(
             argv[1:], cwd=tmp_path, environment={"GH_REPO": "unit/public"}, stdin=kwargs.get("input")
         ) as frozen:
+            delivered = {
+                t for t, n in zip(frozen.texts, frozen.field_names, strict=True) if not n.startswith("argument[")
+            }
+            assert delivered == semantic_scanned
             calls.append((argv, frozen.texts))
         assert "LU_OPSEC_OVERRIDE" not in kwargs.get("env", {})
         return subprocess.CompletedProcess(argv, 0, "sent", "")
@@ -198,7 +206,7 @@ def test_send_spy_all_write_forms(synthetic_opsec, tmp_path, monkeypatch, form, 
     else:
         gate.checked_run(["gh", *args], runner=send, cwd=tmp_path, input=stdin, text=True)
         assert len(calls) == 1
-        assert calls[0][1] == scanned
+        assert all(arg in scanned for arg in args)
         assert any(text in value for value in scanned)
 
 
@@ -227,7 +235,7 @@ def test_graphql_post_queries_are_reads(query, tmp_path):
         ["issue", "view", "1"],
         ["pr", "list"],
         ["api", "repos/unit/public/issues"],
-        ["api", "-X", "GET", "repos/unit/public/issues", "-f", "body=" + TOKEN],
+        ["api", "-X", "GET", "repos/unit/public/issues"],
     ],
 )
 def test_reads_do_not_require_matcher(args, tmp_path):
@@ -785,8 +793,7 @@ def test_short_comment_value_never_classifies_destination(group, verb, synthetic
     found, positional = options(args)
     assert positional == [group, verb, "1"]
     assert (
-        destination(args, found, positional, cwd=ROOT, environment={"GH_REPO": "unit/public"}, reader=None)
-        == "github.com/unit/public"
+        destination(args, found, positional, cwd=ROOT, environment={"GH_REPO": "unit/public"}, reader=None) == "unknown"
     )
 
 
@@ -901,7 +908,7 @@ def test_class6_block_override_consulted(synthetic_opsec, tmp_path):
 
 
 def test_location_reports_field_and_line_without_text(synthetic_opsec):
-    with pytest.raises(gate.PublishBlocked, match="field=body line=2") as error:
+    with pytest.raises(gate.PublishBlocked, match=r"field=argument\[7\] line=2") as error:
         gate.checked_run(
             ["gh", "issue", "comment", "1", "--repo", "unit/public", "--body", "clean\n" + TOKEN],
             runner=lambda *a, **kw: pytest.fail("send"),
@@ -1130,13 +1137,13 @@ def test_real_matcher_shim_budget_20_10kb_bodies(gh_shim_sandbox, tmp_path):
     spy = tmp_path / "real-gh"
     spy.write_text("#!/bin/sh\nexit 0\n")
     spy.chmod(0o755)
-    body = tmp_path / "body"
+    body = root / "body"
     body.write_text("a" * 10_240)
     timings = []
     for _ in range(20):
         start = time.perf_counter()
         result = subprocess.run(
-            [str(shim), "issue", "comment", "1", "--body-file", str(body)],
+            [str(shim), "issue", "comment", "1", "--body-file", body.name],
             cwd=root,
             env={"PATH": os.defpath, "AGENT_REAL_GH": str(spy)},
             capture_output=True,
@@ -1147,3 +1154,384 @@ def test_real_matcher_shim_budget_20_10kb_bodies(gh_shim_sandbox, tmp_path):
     median = statistics.median(timings)
     print(f"real matcher shim median 20 x 10KB: {median:.3f} ms")
     assert median < 200
+
+
+ROUND2_BYPASSES = [
+    ["issue", "-R", "unit/public", "comment", "1", "--body", TOKEN],
+    ["issue", "--repo=unit/public", "comment", "1", "--body", TOKEN],
+    ["pr", "--repo", "unit/public", "comment", "1", "--body", TOKEN],
+    ["issue", "-R", "unit/public", "create", "--title", "t", "--body", TOKEN],
+    ["pr", "merge", "1", "-m", "-b", TOKEN],
+    ["pr", "merge", "1", "-m", "-t", TOKEN],
+    ["pr", "merge", "1", "-r", "-t", TOKEN],
+]
+
+
+@pytest.mark.parametrize("args", ROUND2_BYPASSES)
+def test_round2_bypasses_block_before_send(args, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(["gh", *args], env={"GH_REPO": "unit/public"}, runner=lambda *a, **k: pytest.fail("send"))
+
+
+def test_round2_public_gist_file_blocks(synthetic_opsec, tmp_path):
+    body = tmp_path / "unit.txt"
+    body.write_text(TOKEN)
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(["gh", "gist", "create", "-p", str(body)], runner=lambda *a, **k: pytest.fail("send"))
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["pr", "merge", "1", "-m"],
+        ["pr", "merge", "1", "-r"],
+        ["pr", "review", "1", "-r", "-b", "text"],
+        ["release", "create", "unit-tag", "-p", "-n", "notes", "-t", "title"],
+        ["release", "edit", "unit-tag", "--draft=false"],
+        ["issue", "edit", "1", "--remove-milestone"],
+        ["repo", "edit", "--add-topic", "unit-topic"],
+        ["repo", "edit", "-d", "clean"],
+    ],
+)
+def test_round2_boolean_flags_and_nontext_edits_deliver(args, synthetic_opsec):
+    calls = []
+    gate.checked_run(["gh", *args], env={"GH_REPO": "unit/public"}, runner=lambda *a, **k: calls.append(a))
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["pr", "merge", "1", "--squash"],
+        ["pr", "merge", "1", "-m"],
+        ["pr", "merge", "1", "-r"],
+        ["issue", "edit", "1", "--remove-milestone"],
+        ["issue", "edit", "1", "--milestone", "123"],
+        ["pr", "merge", "1", "--match-head-commit", "a" * 40],
+    ],
+)
+def test_no_text_writes_pass_without_matcher(args, monkeypatch, tmp_path):
+    monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("matcher for no-text write"))
+    calls = []
+    gate.checked_run(
+        ["gh", *args], env={"GH_REPO": "unit/public"}, cwd=tmp_path, runner=lambda *a, **k: calls.append(a)
+    )
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["issue", "edit", "1", "--add-label", TOKEN],
+        ["issue", "edit", "1", "--milestone", TOKEN],
+        ["label", "create", TOKEN],
+        ["repo", "create", "unit/public", "--description", TOKEN],
+        ["project", "create", "--title", TOKEN],
+        ["project", "edit", "1", "--description", TOKEN],
+        ["unit-unknown", "unit-write", "--unknown", TOKEN],
+        ["pr", "unit-unknown", "--unknown=" + TOKEN],
+    ],
+)
+def test_every_nonread_argument_is_scanned(args, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(["gh", *args], env={"GH_REPO": "unit/public"}, runner=lambda *a, **k: pytest.fail("send"))
+
+
+@pytest.mark.parametrize("form", ["bare", "at", "assignment", "nested", "short"])
+def test_every_existing_file_argument_scanned(form, synthetic_opsec, tmp_path):
+    body = tmp_path / "unit.txt"
+    body.write_text(TOKEN)
+    arg = {
+        "bare": str(body),
+        "at": "@" + str(body),
+        "assignment": "--unknown=" + str(body),
+        "nested": "body=@" + str(body),
+        "short": "-z" + str(body),
+    }[form]
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(["gh", "unit-unknown", "write", arg], cwd=tmp_path, runner=lambda *a, **k: pytest.fail("send"))
+
+
+@pytest.mark.parametrize(
+    "selectors,environment",
+    [
+        (["--repo", "unit/private", "-R", "unit/public"], {}),
+        (["-R", "unit/public", "--repo", "unit/private"], {}),
+        (["--repo=unit/private", "-Runit/public"], {}),
+        (["--repo", "unit/private"], {"GH_REPO": "unit/public"}),
+        (["--repo", "unit/private"], {"GH_REPO": "unresolved"}),
+        (["--repo", "unit/private", "--unknown", "https://github.com/unit/private/issues/1"], {}),
+    ],
+)
+def test_private_exemption_requires_all_destinations_to_agree(selectors, environment, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(
+            ["gh", "issue", "comment", "1", *selectors, "--body", TOKEN],
+            env=environment,
+            runner=lambda *a, **k: pytest.fail("send"),
+        )
+
+
+def test_repeated_agreeing_private_selectors_exempt():
+    calls = []
+    gate.checked_run(
+        ["gh", "issue", "comment", "1", "--repo", "unit/private", "-Runit/private", "--body", TOKEN],
+        env={"GH_REPO": "unit/private"},
+        runner=lambda *a, **k: calls.append(a),
+    )
+    assert len(calls) == 1
+
+
+# Fixed independent table: additions to production's allowlist require this
+# behavior table to change as well, so the test does not mirror implementation.
+READ_COMMANDS = [
+    ("pr", "view"),
+    ("pr", "list"),
+    ("pr", "status"),
+    ("pr", "checks"),
+    ("pr", "diff"),
+    ("pr", "checkout"),
+    ("issue", "view"),
+    ("issue", "list"),
+    ("issue", "status"),
+    ("run", "view"),
+    ("run", "list"),
+    ("run", "watch"),
+    ("run", "download"),
+    ("workflow", "list"),
+    ("workflow", "view"),
+    ("repo", "view"),
+    ("repo", "list"),
+    ("repo", "clone"),
+    ("release", "view"),
+    ("release", "list"),
+    ("release", "download"),
+    ("release", "verify"),
+    ("release", "verify-asset"),
+    ("auth", "status"),
+    ("search", "code"),
+    ("search", "commits"),
+    ("search", "issues"),
+    ("search", "prs"),
+    ("search", "repos"),
+    ("gist", "view"),
+    ("gist", "list"),
+    ("gist", "clone"),
+    ("label", "list"),
+    ("project", "view"),
+    ("project", "list"),
+    ("project", "field-list"),
+    ("project", "item-list"),
+    ("org", "list"),
+    ("cache", "list"),
+    ("ruleset", "view"),
+    ("ruleset", "list"),
+    ("ruleset", "check"),
+    ("secret", "list"),
+    ("variable", "list"),
+    ("variable", "get"),
+    ("ssh-key", "list"),
+    ("gpg-key", "list"),
+]
+
+
+@pytest.mark.parametrize("group,verb", READ_COMMANDS)
+@pytest.mark.parametrize("selector", [[], ["-R", "unit/public"], ["--repo=unit/public"], ["--hostname", "github.com"]])
+def test_read_allowlist_without_tooling(group, verb, selector, monkeypatch):
+    monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("matcher for read"))
+    calls = []
+    args = ["gh", group, *selector, verb, "--unknown=" + TOKEN]
+    gate.checked_run(args, runner=lambda *a, **k: calls.append(a))
+    assert calls == [(args,)]
+
+
+def test_read_behavior_table_covers_allowlist():
+    from scripts.opsec.gh_snapshot import READ_VERBS
+
+    assert set(READ_COMMANDS) == {(g, v) for g, verbs in READ_VERBS.items() for v in verbs}
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "printf hello\ngh issue list",
+        "cat <<'EOF'\nhello\nEOF\ngh issue list",
+        "if gh issue list; then printf hello; fi",
+        "time gh issue list",
+        "timeout 30 gh issue list",
+        "timeout --signal TERM 30s gh issue list",
+        "printf 1 | xargs gh issue view",
+        "bash -c 'gh issue list'",
+        "bash -lc 'gh issue list'",
+    ],
+)
+def test_hook_detects_wrapped_and_newline_gh(command, monkeypatch, capsys):
+    spec = importlib.util.spec_from_file_location(
+        "wrapped_hook", ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setenv("PATH", os.defpath)
+    monkeypatch.setattr(
+        sys, "stdin", __import__("io").StringIO(json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}))
+    )
+    assert module.main() == 0
+    assert "export PATH=" in json.loads(capsys.readouterr().out)["hookSpecificOutput"]["updatedInput"]["command"]
+
+
+def test_hook_keeps_command_when_shim_already_first(monkeypatch, capsys):
+    spec = importlib.util.spec_from_file_location(
+        "installed_hook", ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setenv("PATH", str(ROOT / "scripts/agent_runtime/shims") + os.pathsep + os.defpath)
+    monkeypatch.setattr(
+        sys,
+        "stdin",
+        __import__("io").StringIO(json.dumps({"tool_name": "Bash", "tool_input": {"command": "gh issue list"}})),
+    )
+    assert module.main() == 0
+    assert capsys.readouterr().out == ""
+
+
+@pytest.mark.parametrize("method", ["GET", "HEAD", "POST"])
+def test_api_payload_flags_scanned_even_with_read_method(method, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(
+            ["gh", "api", "-X", method, "repos/unit/public/issues", "-f", "body=" + TOKEN],
+            runner=lambda *a, **k: pytest.fail("send"),
+        )
+
+
+def test_json_input_hit_reported_once(synthetic_opsec, tmp_path):
+    body = tmp_path / "body.json"
+    body.write_text(json.dumps({"body": TOKEN}))
+    with pytest.raises(gate.PublishBlocked) as error:
+        gate.checked_run(
+            ["gh", "api", "repos/unit/public/issues/1/comments", "--input", str(body)],
+            runner=lambda *a, **k: pytest.fail("send"),
+        )
+    assert str(error.value).count("rule=synthetic-rule") == 1
+    assert "field=input line=1" in str(error.value) and TOKEN not in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["issue", "comment", "--unknown", "https://github.com/unit/private/issues/1", "--body", TOKEN],
+        ["issue", "comment", "--assignee", "https://github.com/unit/private/issues/1", "--body", TOKEN],
+    ],
+)
+def test_flag_value_url_cannot_grant_private_exemption(args, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(["gh", *args], env={}, runner=lambda *a, **k: pytest.fail("send"))
+
+
+def test_repo_url_flag_positive_private_identity():
+    calls = []
+    gate.checked_run(
+        ["gh", "issue", "comment", "1", "-R", "https://github.com/unit/private", "--body", TOKEN],
+        env={},
+        runner=lambda *a, **k: calls.append(a),
+    )
+    assert len(calls) == 1
+
+
+def test_gist_edit_supplied_file_is_snapshotted(synthetic_opsec, tmp_path):
+    body = tmp_path / "unit.txt"
+    body.write_text("clean")
+    original = gate.check_texts
+
+    def check(*args, **kwargs):
+        original(*args, **kwargs)
+        body.write_text(TOKEN)
+
+    calls = []
+
+    def send(args, **kwargs):
+        assert args[:4] == ["gh", "gist", "edit", "a" * 32]
+        assert Path(args[-1]).read_text() == "clean"
+        calls.append(args)
+
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(gate, "check_texts", check)
+        gate.checked_run(["gh", "gist", "edit", "a" * 32, "--add", str(body)], runner=send)
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["api", "repos/unit/public/issues", "-pfbody=" + TOKEN],
+        ["api", "repos/unit/public/issues", "-pifbody=" + TOKEN],
+    ],
+)
+def test_api_clustered_payload_always_scanned(args, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(["gh", *args], runner=lambda *a, **k: pytest.fail("send"))
+
+
+def test_no_text_override_logs_without_loading_matcher(monkeypatch, tmp_path):
+    monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("matcher for empty set"))
+    log = tmp_path / "override.jsonl"
+    gate.check_texts(
+        "github.com/unit/public", [], environment={"LU_OPSEC_OVERRIDE": "synthetic empty set"}, log_path=log
+    )
+    assert json.loads(log.read_text())["rule_ids"] == []
+
+
+@pytest.mark.parametrize("args", [["unit-unknown", "write"], ["secret", "set", "unit-name"]])
+def test_supplied_stdin_is_scanned_and_replayed(args, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(["gh", *args], input=TOKEN, text=True, runner=lambda *a, **k: pytest.fail("send"))
+    calls = []
+
+    def send(command, **kwargs):
+        assert kwargs["input"] == "clean\n"
+        calls.append(command)
+
+    gate.checked_run(["gh", *args], input="clean\n", text=True, runner=send)
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("flag", ["--body", "--title"])
+def test_existing_file_named_in_inline_text_is_scanned_but_stays_literal(flag, synthetic_opsec, tmp_path):
+    body = tmp_path / "unit.txt"
+    body.write_text("clean")
+    calls = []
+    gate.checked_run(
+        ["gh", "pr", "edit", "1", flag, body.name],
+        cwd=tmp_path,
+        env={"GH_REPO": "unit/public"},
+        runner=lambda args, **k: calls.append(args),
+    )
+    assert calls[0][calls[0].index(flag) + 1] == body.name
+    body.write_text(TOKEN)
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(
+            ["gh", "pr", "edit", "1", flag, body.name],
+            cwd=tmp_path,
+            env={"GH_REPO": "unit/public"},
+            runner=lambda *a, **k: pytest.fail("send"),
+        )
+
+
+def test_gist_stdin_scanned_when_description_names_existing_file(synthetic_opsec, tmp_path):
+    (tmp_path / "unit-description").write_text("clean")
+    with pytest.raises(gate.PublishBlocked, match="rule=synthetic-rule"):
+        gate.checked_run(
+            ["gh", "gist", "create", "-d", "unit-description"],
+            input=TOKEN,
+            text=True,
+            cwd=tmp_path,
+            runner=lambda *a, **k: pytest.fail("send"),
+        )
+
+
+@pytest.mark.parametrize(
+    "selector", [["-R", "unit/public"], ["--repo=unit/public"], ["-Runit/public"], ["--hostname=github.com"]]
+)
+def test_repository_options_alone_do_not_enable_interactive_edit(selector, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="interactive edit"):
+        gate.checked_run(["gh", "issue", "edit", "1", *selector], env={}, runner=lambda *a, **k: pytest.fail("send"))

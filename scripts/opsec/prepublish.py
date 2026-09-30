@@ -180,6 +180,10 @@ def check_texts(
     """Scan final fields; an override permits policy hits only after a durable log."""
     environment = os.environ if environment is None else environment
     reason = environment.pop("LU_OPSEC_OVERRIDE", "")
+    if not texts:
+        if reason.strip():
+            _record_override(destination, [], reason, log_path)
+        return
     if is_private(destination):
         if reason.strip():
             _record_override(destination, [], reason, log_path)
@@ -197,7 +201,9 @@ def check_texts(
                 if not re.fullmatch(r"[A-Za-z0-9_.\[\]-]{1,80}", name):
                     name = f"text[{index + 1}]"
                 line = text.count("\n", 0, finding["start"]) + 1
-                locations.append(f"rule={rule} class={level} field={name} line={line}")
+                location = f"rule={rule} class={level} field={name} line={line}"
+                if location not in locations:
+                    locations.append(location)
     if reason.strip():
         _record_override(destination, blocks, reason, log_path)
         return
