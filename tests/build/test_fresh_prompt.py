@@ -673,7 +673,10 @@ def test_read_only_writer_prompt_contract(request, sample_plan_entry, sample_cit
     rendered = (render_recap_prompt if recap else render_lesson_prompt)(**kwargs)
 
     assert _read_only_write_intent_error(mode="read-only", prompt=rendered) is None
-    assert "Examples and activity items must use only the known material listed above." in rendered
+    assert (
+        "Examples and activity items must use only this lesson's own plan entry (its letters, grammar and words) "
+        "and the material taught before this lesson listed in this section."
+    ) in rendered
 
 
 def test_read_only_requires_confirm_prompt_contract(tmp_path, sample_plan_entry, sample_cited_records):
