@@ -62,6 +62,7 @@ from ._ask_lifecycle import (
 )
 from ._config import REPO_ROOT
 from ._messaging import acknowledge, send_message
+from ._prompts import require_core_or_exit, with_core_or_exit
 from ._reply_sidecar import write_reply_sidecar
 from ._review_safety import (
     ReviewSafetyError,
@@ -603,6 +604,7 @@ def ask_opencode(
     member. To reach poolside.ai, prefer :func:`ask_pool` (opencode is a
     router — "opencode" does not identify the model).
     """
+    require_core_or_exit("ask-opencode")
     effective_model = resolve_model_selection(
         lane="ask-opencode", to_model=to_model, model=model, default=OPENCODE_DEFAULT_MODEL
     )
@@ -689,6 +691,7 @@ def ask_pool(
     ``model`` overrides the pinned ``POOL_MODEL`` (model tags drift — see the
     "examples not constants" note in model-assignment.md).
     """
+    require_core_or_exit("ask-pool")
     effective_variant, effort_reason = _resolve_opencode_effort(
         lane="ask-pool", effort=effort, variant=variant
     )
@@ -809,6 +812,7 @@ def ask_glm(
     GLM model on ``zai/`` or ``zai-coding-plan/`` only — the China-egress guard
     above is unconditional.
     """
+    require_core_or_exit("ask-glm")
     try:
         formal_review = assert_formal_review_ask_payload(
             content,
@@ -940,6 +944,7 @@ def ask_gemma(
     ``openrouter/google/gemma-4-31b-it`` fallback — while tags drift (see the
     "examples not constants" note in model-assignment.md).
     """
+    require_core_or_exit("ask-gemma")
     effective_model = resolve_model_selection(
         lane="ask-gemma", to_model=to_model, model=model, default=GEMMA_MODEL
     )
@@ -1223,7 +1228,7 @@ def _run_opencode(
     # markdown list, etc.) is passed as the positional prompt, not misparsed by
     # opencode as an unknown flag. Unconditional — content is always positional.
     argv.append("--")
-    argv.append(content)
+    argv.append(with_core_or_exit(content, "ask-opencode"))
 
     # Inject per-model (or env-overridable) output token budget for reasoning
     # models. This is passed via the known experimental lever so that glm/pool

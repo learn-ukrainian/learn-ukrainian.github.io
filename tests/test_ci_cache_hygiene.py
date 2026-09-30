@@ -24,7 +24,7 @@ NOW = datetime(2026, 9, 29, 19, 0, tzinfo=UTC)
 MAIN = "refs/heads/main"
 TRAP_JS = "codeql-trap-1-2.27.1-javascript-"
 TRAP_PY = "codeql-trap-1-2.27.1-python-"
-UV = "setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.12.8-"
+UV = "setup-uv-2-x86_64-unknown-linux-gnu-ubuntu-24.04-3.12.14-"
 CURRENT = "c" * 64
 OLD = "a" * 64
 OLDER = "b" * 64
@@ -143,7 +143,7 @@ def test_unknown_prefixes_and_unmatched_keys_are_left_alone() -> None:
     entries = [
         _entry(1, "stanza-uk-model-v2-Linux-" + OLD, hours_ago=500),
         _entry(2, "node-cache-Linux-x64-npm-" + OLD, hours_ago=500),
-        _entry(3, "setup-python-Linux-x64-24.04-Ubuntu-python-3.12.8-pip-" + OLD, hours_ago=500),
+        _entry(3, "setup-python-Linux-x64-24.04-Ubuntu-python-3.12.14-pip-" + OLD, hours_ago=500),
         # TRAP-like key without a commit sha on main: not a known family.
         _entry(4, "codeql-trap-1-2.27.1-javascript-notasha", hours_ago=500),
         _entry(5, TRAP_JS + _sha(5), hours_ago=1),

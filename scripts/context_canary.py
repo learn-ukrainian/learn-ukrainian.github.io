@@ -44,7 +44,7 @@ Usage
   .venv/bin/python scripts/context_canary.py mint --facts facts.json --out probe.json
   .venv/bin/python scripts/context_canary.py mint --snapshot handoff-snapshot.json --out probe.json
   .venv/bin/python scripts/context_canary.py score --probe probe.json --answers answers.json \
-      --context-tokens 500000 --model claude-opus-4-8 --log canary_log.csv \
+      --context-tokens 500000 --model claude-opus-5-5 --log canary_log.csv \
       [--threshold 0.75] [--pass-ratio 0.85] [--verdict v.json]
 
 `facts.json`   : [{"id": "...", "q": "...", "a": "..."}, ...]  (legacy)

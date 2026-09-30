@@ -583,11 +583,11 @@ def test_seat_without_mapping_fails_unchanged_with_clear_message(
     invoke = _wire(
         monkeypatch,
         authority,
-        {"kimi": _capacity_result("kimi")},
+        {"cursor": _capacity_result("cursor")},
         tmp_path=tmp_path,
     )
 
-    result = _acp_compat._run_compat_ask_impl("kimi", "question", task_id="quota-no-map")
+    result = _acp_compat._run_compat_ask_impl("cursor", "question", task_id="quota-no-map")
 
     assert result.ok is False
     assert invoke.call_count == 1
@@ -596,7 +596,7 @@ def test_seat_without_mapping_fails_unchanged_with_clear_message(
     err = capsys.readouterr().err
     assert "ACP substitution:" not in err
     assert (
-        "ACP seat 'kimi' is over quota/rate-limited (reason: rate_limited) and "
+        "ACP seat 'cursor' is over quota/rate-limited (reason: rate_limited) and "
         "agent_fallback_substitutions.yaml dispatch_fallbacks has no substitute for it"
     ) in err
     assert "failing without bridge/provider fallback" in err
@@ -627,13 +627,15 @@ def test_cli_turns_unmapped_rate_limit_into_a_clean_error(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     def raise_rate_limited(*_args: object, **_kwargs: object) -> object:
-        raise RateLimitedError("kimi", "k3", "usage limit reached")
+        raise RateLimitedError("cursor", "composer-2.5", "usage limit reached")
 
     monkeypatch.setattr(_acp_compat, "run_compat_ask", raise_rate_limited)
-    args = _cli._build_parser().parse_args(["ask-kimi", "question", "--task-id", "rate-limited-cli", "--from", "codex"])
+    args = _cli._build_parser().parse_args(
+        ["ask-cursor", "question", "--task-id", "rate-limited-cli", "--from", "codex"]
+    )
 
-    with pytest.raises(SystemExit, match="kimi/k3 rate limited"):
-        _cli._handle_ask_kimi(args)
+    with pytest.raises(SystemExit, match=r"cursor/composer-2\.5 rate limited"):
+        _cli._handle_ask_cursor(args)
 
 
 def test_substitution_record_survives_receipt_replay() -> None:
@@ -1065,9 +1067,20 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
 
 
 def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:
-    """delegate.py and the ACP ask path read one loader, not two copies."""
+    """delegate.py's launch route and the ACP ask path read one loader, not two copies."""
+    import argparse
+
     import delegate
     from scripts.common.fallback_substitutions import load_dispatch_fallbacks
 
-    assert delegate._load_dispatch_fallbacks() == load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
-    assert delegate._load_dispatch_fallbacks()["codex"] == "cursor"
+    received: list[object] = []
+
+    def route(request):
+        received.append(request.fallbacks)
+        return request.seat, request.model, "explicit"
+
+    args = argparse.Namespace(agent="codex", model=None, mode="read-only")
+    refusal, _target = delegate._admit_dispatch_target(args, agent="codex", trees=(), route=route)
+    assert refusal is None
+    assert received == [load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)]
+    assert received[0]["codex"] == "cursor"

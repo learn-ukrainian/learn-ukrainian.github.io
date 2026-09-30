@@ -5,7 +5,6 @@ title: RB1 Cold-start, orientation, and queue pick
 seats:
   - grok
   - glm-local
-  - kimi
 parameters:
   handoff_agent: string
 stop_codes:

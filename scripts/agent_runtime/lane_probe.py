@@ -41,7 +41,7 @@ _MAX_TIMEOUT_SECONDS = 30
 def _mode_for_probe(adapter: Any) -> str:
     """Choose a supported mode without executing an agent request."""
     supported = getattr(adapter, "supported_modes", frozenset())
-    if "read-only" in supported and getattr(adapter, "name", "") != "kimi":
+    if "read-only" in supported:
         return "read-only"
     if "workspace-write" in supported:
         return "workspace-write"

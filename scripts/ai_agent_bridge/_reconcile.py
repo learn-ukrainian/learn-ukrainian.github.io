@@ -123,7 +123,11 @@ def reconcile_deliveries(
     dry_run: bool = False,
     now: str | None = None,
 ) -> tuple[ReconcileChange, ...]:
-    """Return or apply deterministic state fixes for stuck deliveries."""
+    """Return or apply deterministic state fixes for stuck deliveries.
+
+    Stored deliveries addressed to a Kimi seat or model are never selected
+    (``kimi_row``; Kimi is not a bridge recipient): they are left as they are.
+    """
     now_iso = now or _now_iso()
     now_dt = datetime.fromisoformat(now_iso)
 
@@ -137,6 +141,7 @@ def reconcile_deliveries(
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.status IN ('pending', 'processing')
+              AND NOT kimi_row(d.to_agent, d.to_model)
             ORDER BY cm.created_at ASC, d.delivery_id ASC
             """
         ).fetchall()

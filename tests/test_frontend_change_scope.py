@@ -404,12 +404,21 @@ def test_removing_denominator_entry_fails_hydrate_guard(tmp_path: Path) -> None:
         scope.assert_hydrate_entrypoints_in_denominator(denominator=loaded)
 
 
-def test_ci_yml_frontend_job_is_gated_by_changes_output() -> None:
+def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
+    """Every frontend step after the scope decision is gated on its `run` output."""
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
     assert "frontend-e2e" not in jobs
-    assert "needs.changes.outputs.frontend == 'true'" in str(jobs["frontend"].get("if"))
+    frontend = jobs["frontend"]
+    # Skipped only when the merge queue reuses a green full run of the identical tree.
+    assert frontend["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert "frontend" in jobs["ci-gate"]["needs"]
+    steps = frontend["steps"]
+    scope_index = next(index for index, step in enumerate(steps) if step.get("id") == "scope")
+    assert "scripts/ci/frontend_change_scope.py" in steps[scope_index]["run"]
+    assert "github.event.merge_group.base_sha" in steps[scope_index]["env"]["BASE_SHA"]
+    for step in steps[scope_index + 1 :]:
+        assert step.get("if") == "steps.scope.outputs.run == 'true'", step
 
 
 def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:

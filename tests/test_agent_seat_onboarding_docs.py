@@ -20,7 +20,7 @@ COOPERATION = REPO / "docs/best-practices/agent-cooperation.md"
 RUNTIME = REPO / "docs/agent-runtime-guide.md"
 ROSTER = REPO / "docs/runbooks/epic-orchestrator-roster.md"
 HANDOFF = REPO / "docs/runbooks/epic-stream-handoff.md"
-DRIVE_EPIC = REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md"
+DRIVE_EPIC = REPO / "agents_extensions/shared/skills/drive-epic"
 FLEET_COMMS = REPO / "agents_extensions/shared/rules/fleet-comms-coordination.md"
 OPEN_GAPS = REPO / "docs/runbooks/fleet-comms-open-gaps.md"
 
@@ -328,8 +328,6 @@ def test_routine_acp_panel_selection_hierarchy_is_bounded_and_non_authoritative(
         "codex",
         "grok",
         "claude",
-        "kimi",
-        "kimicc k3",
         "cursor",
         "pool",
         "agy/gemini",
@@ -337,6 +335,7 @@ def test_routine_acp_panel_selection_hierarchy_is_bounded_and_non_authoritative(
         "deepseek",
     ):
         assert participant in lower
+    assert "never kimi" in lower
     assert "acp-discuss" in onboarding
     assert "default two rounds" in lower
     assert "hard maximum" in lower
@@ -366,14 +365,12 @@ def test_routine_acp_panel_selection_hierarchy_is_bounded_and_non_authoritative(
 def test_fleet_wide_acp_covers_callers_and_enabled_participants(onboarding: str) -> None:
     lower = onboarding.lower()
     assert "caller-access parity" in lower
-    for caller in ("claude", "codex", "agy/gemini", "grok", "kimi and kimicc", "cursor"):
+    for caller in ("claude", "codex", "agy/gemini", "grok", "cursor"):
         assert caller in lower
     for participant in (
         "codex",
         "grok",
         "claude",
-        "kimi",
-        "kimicc k3",
         "cursor",
         "pool",
         "agy/gemini",
@@ -381,6 +378,8 @@ def test_fleet_wide_acp_covers_callers_and_enabled_participants(onboarding: str)
         "deepseek",
     ):
         assert participant in lower
+    assert "kimi and kimicc seats" in lower
+    assert "refused by `kimi_admission`" in lower
     assert "do not rotate or silently\nsubstitute" in lower
     assert "ordinary workers and review-only seats" in lower
     for lifecycle_path in (
@@ -418,7 +417,7 @@ def test_acpx_second_pilot_grok_evidence_and_boundary(onboarding: str, all_owned
     assert "not a new coordination plane" in lower or "not** a new coordination plane" in lower
     assert "agent-stdio-v1" in onboarding
     assert "observed" in lower and "not an allowlist" in lower
-    assert "grok-4.6" in onboarding
+    assert "grok-4.7" in onboarding
     assert "--no-leader" in onboarding
     assert "--agent-profile" in onboarding
     assert "digest-checked" in lower
@@ -587,8 +586,10 @@ def test_acp_replay_section_allows_any_supported_two_seat_pair(onboarding: str) 
     assert "Participants are exactly `codex,grok`" not in body
 
 
+@pytest.mark.repo_wide
 def test_live_driver_diagnostics_never_claim_again() -> None:
-    body = " ".join(_read(DRIVE_EPIC).split())
+    skill = [DRIVE_EPIC / "SKILL.md", *sorted((DRIVE_EPIC / "references").glob("*.md"))]
+    body = " ".join(" ".join(_read(path) for path in skill).split())
     assert "Live-driver diagnostics use `session_streams handoff-status`" in body
     assert "Live drivers never run `handoff-claim`" in body
     assert "launcher has already claimed the lease" in body

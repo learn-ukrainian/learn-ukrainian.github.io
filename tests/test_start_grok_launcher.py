@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
 
@@ -23,8 +24,8 @@ def test_grok_interactive_defaults_to_native_harness_and_rejects_epic() -> None:
 def test_grok_explicit_retired_model_is_refused() -> None:
     """#6870: interactive start-grok.sh must refuse retired grok-4.5."""
     result = run_launcher("start-grok.sh", "--model", "grok-4.5")
-    assert result.returncode == 4, result.stderr
-    assert "not certified" in result.stderr
+    assert result.returncode == 2, result.stderr
+    assert "is retired in the model catalog" in result.stderr
     assert "grok-4.5" in result.stderr
     assert "--model grok-4.5" not in result.stdout
 
@@ -81,6 +82,7 @@ def test_grok_forwards_provider_arguments_only_after_separator() -> None:
     assert "--reasoning high" in result.stdout
 
 
+@pytest.mark.rules_core_absent
 def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> None:
     from tests.test_launcher_contract import hermes_stub_env
 

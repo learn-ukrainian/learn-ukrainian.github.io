@@ -68,6 +68,18 @@ def _fake_restic(fake_bin: Path, body: str) -> None:
     _write_executable(fake_bin / "restic", body)
 
 
+def _default_receipt(project: Path) -> Path:
+    receipt = project / "batch_state" / "backups" / "last-run.json"
+    receipt.parent.mkdir(parents=True, exist_ok=True)
+    return receipt
+
+
+def _seed_success_receipt(project: Path) -> Path:
+    receipt = _default_receipt(project)
+    receipt.write_text('{"exit_status":0}\n', encoding="utf-8")
+    return receipt
+
+
 def test_shell_env_file_is_expanded_and_exported_to_backup_tools(
     writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
 ) -> None:
@@ -352,6 +364,116 @@ def test_retention_sources_shell_env_file(
 
     assert result.returncode == 0, result.stderr
     assert f"received:{environment['HOME']}/retention-value" in result.stdout
+
+
+def test_exec_true_env_file_leaves_no_default_success_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, project, _fake_bin = writer_environment
+    receipt = _seed_success_receipt(project)
+    env_file = tmp_path / "backup.env"
+    env_file.write_text("exec true\n", encoding="utf-8")
+    env_file.chmod(0o600)
+    sentinel = tmp_path / "backup-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    environment.update({"LU_BACKUP_ENV_FILE": str(env_file), "LU_BACKUP_SCRIPT": str(backup)})
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 0, result.stderr
+    assert not sentinel.exists()
+    assert not receipt.exists()
+
+
+def test_cleared_exit_trap_env_file_leaves_no_default_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, project, _fake_bin = writer_environment
+    receipt = _seed_success_receipt(project)
+    env_file = tmp_path / "backup.env"
+    env_file.write_text("trap - EXIT\nexit 0\n", encoding="utf-8")
+    env_file.chmod(0o600)
+    sentinel = tmp_path / "backup-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    environment.update({"LU_BACKUP_ENV_FILE": str(env_file), "LU_BACKUP_SCRIPT": str(backup)})
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 0, result.stderr
+    assert not sentinel.exists()
+    assert not receipt.exists()
+
+
+def test_normal_run_rewrites_default_receipt_after_sourcing(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, project, fake_bin = writer_environment
+    receipt = _seed_success_receipt(project)
+    env_file = tmp_path / "backup.env"
+    env_file.write_text('export LU_BACKUP_MARKER="sourced"\n', encoding="utf-8")
+    env_file.chmod(0o600)
+    backup = tmp_path / "backup.sh"
+    _write_executable(
+        backup,
+        "#!/bin/bash\n"
+        '[[ "${LU_BACKUP_MARKER:-}" == sourced ]] || exit 9\n'
+        "printf '%s\\n' '==> Linux backup run 20260926T033000Z-ab12cd34 complete; receipt snapshot cc.'\n",
+    )
+    _fake_restic(fake_bin, "#!/bin/bash\nprintf '[]\\n'\n")
+    environment.update({"LU_BACKUP_ENV_FILE": str(env_file), "LU_BACKUP_SCRIPT": str(backup)})
+
+    result = _run_wrapper(environment)
+
+    assert result.returncode == 0, result.stderr
+    written = json.loads(receipt.read_text(encoding="utf-8"))
+    assert written["schema_version"] == 1
+    assert written["exit_status"] == 0
+    assert written["run_id"] == "20260926T033000Z-ab12cd34"
+    assert receipt.stat().st_mode & 0o777 == 0o600
+
+
+def test_retention_exec_true_leaves_default_success_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path
+) -> None:
+    environment, project, _fake_bin = writer_environment
+    receipt = _seed_success_receipt(project)
+    env_file = tmp_path / "backup.env"
+    env_file.write_text("exec true\n", encoding="utf-8")
+    env_file.chmod(0o600)
+    sentinel = tmp_path / "retention-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    environment.update({"LU_BACKUP_ENV_FILE": str(env_file), "LU_BACKUP_SCRIPT": str(backup)})
+
+    result = _run_wrapper(environment, "retention")
+
+    assert result.returncode == 0, result.stderr
+    assert not sentinel.exists()
+    assert receipt.read_text(encoding="utf-8") == '{"exit_status":0}\n'
+
+
+@pytest.mark.parametrize("mode", ["dry-run", "check"])
+def test_dry_run_and_check_leave_default_receipt(
+    writer_environment: tuple[dict[str, str], Path, Path], tmp_path: Path, mode: str
+) -> None:
+    environment, project, _fake_bin = writer_environment
+    receipt = _seed_success_receipt(project)
+    env_file = tmp_path / "backup.env"
+    env_file.write_text("exec true\n", encoding="utf-8")
+    env_file.chmod(0o600)
+    sentinel = tmp_path / "backup-invoked"
+    backup = tmp_path / "backup.sh"
+    _write_executable(backup, f'#!/bin/bash\ntouch "{sentinel}"\n')
+    environment.update({"LU_BACKUP_ENV_FILE": str(env_file), "LU_BACKUP_SCRIPT": str(backup)})
+
+    result = _run_wrapper(environment, mode)
+
+    assert result.returncode == 2
+    assert "usage:" in result.stderr
+    assert not sentinel.exists()
+    assert receipt.read_text(encoding="utf-8") == '{"exit_status":0}\n'
 
 
 @pytest.mark.parametrize("fatal_line", [': "${MISSING:?required}"', "exit 0"])

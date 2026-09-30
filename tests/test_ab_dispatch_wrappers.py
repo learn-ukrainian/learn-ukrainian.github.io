@@ -129,10 +129,10 @@ def test_review_deep_for_pr_target_generates_prompt_and_dry_run_state(monkeypatc
     command = state["command"]
     assert state["agent"] == "claude"
     assert state["mode"] == "read-only"
-    assert state["model"] == "claude-opus-4-8"
+    assert state["model"] == "claude-opus-5-5"
     assert state["effort"] == "xhigh"
     assert _option(command, "--agent") == "claude"
-    assert _option(command, "--model") == "claude-opus-4-8"
+    assert _option(command, "--model") == "claude-opus-5-5"
     assert _option(command, "--effort") == "xhigh"
     assert _option(command, "--task-id").startswith("review-1740-")
     prompt_path = Path(state["prompt_file"])
@@ -171,7 +171,7 @@ def test_review_deep_for_path_target_generates_prompt_and_dispatches(monkeypatch
     command = calls[0][0]
     assert _option(command, "--agent") == "claude"
     assert _option(command, "--mode") == "read-only"
-    assert _option(command, "--model") == "claude-opus-4-8"
+    assert _option(command, "--model") == "claude-opus-5-5"
     assert _option(command, "--effort") == "high"
     assert _option(command, "--task-id").startswith("review-")
     text = str(captured_prompt["text"])
@@ -261,25 +261,31 @@ def test_run_dispatch_timeout_returns_1(monkeypatch, tmp_path, capsys):
     assert f"dispatch command timed out after {wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS}s" in err
 
 
-def test_ask_kimi_review_argv_selects_kimicc_harness():
-    command = wrappers.build_ask_review_dispatch_command(
-        "kimi",
-        "review-8703",
-        Path("prompt.md"),
-        model=None,
-        effort=None,
-    )
-    assert command[command.index("--agent") + 1] == "kimi"
-    assert command[command.index("--harness") + 1] == "kimicc"
-    assert "--mode" in command and command[command.index("--mode") + 1] == "read-only"
+def _admitted_reviewer(agent: str, model: str | None = None):
+    from scripts.agent_runtime.kimi_admission import REVIEW_MODE
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+
+    (target,) = resolve_and_admit((agent,), mode=REVIEW_MODE, model=model, review=True)
+    return target
+
+
+def test_ask_kimi_review_is_refused_before_argv_or_prompt(monkeypatch):
+    """Formerly ask-kimi --review selected the kimicc harness; Kimi seats now never review."""
+    monkeypatch.setattr(wrappers, "_prompt_directory", lambda: pytest.fail("prompt written"))
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        wrappers.run_ask_review_dispatch("kimi", "Review PR #8703.", task_id="review-8703")
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        _admitted_reviewer("kimi")
+    # The argv builder takes only an admitted target: a raw seat name never reaches it.
+    with pytest.raises(TypeError, match="AdmittedTarget"):
+        wrappers.build_ask_review_dispatch_command("kimi", "review-8703", Path("prompt.md"), effort=None)
 
 
 def test_ask_non_kimi_review_argv_omits_kimicc_harness():
     command = wrappers.build_ask_review_dispatch_command(
-        "claude",
+        _admitted_reviewer("claude"),
         "review-1",
         Path("prompt.md"),
-        model=None,
         effort=None,
     )
     assert "--harness" not in command

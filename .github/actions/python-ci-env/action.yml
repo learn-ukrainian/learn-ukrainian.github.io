@@ -2,9 +2,8 @@ name: 'Python CI environment'
 description: >-
   Set up uv, install requirements-lock.txt into .venv (offline-first with an
   index retry, #9061), install ./packages/v4-runtime, then verify the Atlas
-  lexicon manifest. Shared by the pytest, fast-checks and needs-artifact-audit
-  jobs so the copied setup blocks cannot drift (#9062).
-
+  lexicon manifest. Shared by ci.yml, ci-advisory.yml and uv-cache-warm.yml so
+  the install cannot drift between jobs (#9062).
 outputs:
   uv-cache-key:
     description: 'Exact setup-uv cache key for this runner, Python and requirements-lock.txt.'
@@ -13,11 +12,21 @@ outputs:
 runs:
   using: 'composite'
   steps:
+    - name: Read Python pin
+      id: python-pin
+      shell: bash
+      run: |
+        version=$(cat .python-version)
+        printf 'version=%s\n' "$version" >> "$GITHUB_OUTPUT"
+
     - name: Set up uv
       id: setup-uv
       uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
       with:
         version: '0.12.9'
+        # Read the same pin as setup-python; avoid uv's interpreter inference
+        # producing an unknown cache key before a matching environment exists.
+        python-version: ${{ steps.python-pin.outputs.version }}
         enable-cache: true
         # Hash of requirements-lock.txt only. setup-uv restores that exact key
         # and passes no restore-keys; a different lock cannot satisfy --offline.

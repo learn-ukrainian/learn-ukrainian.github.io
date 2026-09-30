@@ -33,6 +33,11 @@ Named Failure Reasons for Check 4:
 - answer_index_out_of_range: 0-based key index out of bounds
 - answer_not_in_options: key text not found in offered options/words
 - form_choice_options_invalid: form-choice options not unique, not in record, or answer tag mismatch
+- form_sentence_missing: A1 form-choice item has no rendered sentence for its requirement receipt
+- a1_case_contrast_under_negated_verb: A1 case-choice sentence contains the negation particle (A1 word-store
+  record W-061) followed by a finite verb, without an adjacent preposition or agreeing adjective exemption
+- a1_negation_particle_record_invalid: the A1 word store lacks W-061, or W-061 is not a particle bound to
+  VESUM entry 226767 (store defect)
 - select_correct_set_invalid: select activity has fewer correct options than required
 """
 
@@ -43,12 +48,15 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import subprocess
 import sys
 import unicodedata
 import uuid
 from collections import Counter
 from collections.abc import Callable
+from contextlib import ExitStack
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -61,7 +69,7 @@ from scripts.build.fresh.assemble import (
     check_9_stress_and_render,
     check_11_render,
 )
-from scripts.build.fresh.candidates import item_candidates, option_record_bindings
+from scripts.build.fresh.candidates import classify_form_analyses, item_candidates, option_record_bindings
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
 from scripts.build.fresh.path_guard import checked_existing_path
@@ -76,7 +84,7 @@ from scripts.curriculum.resolver import codes, questions, receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.narrow import learner_usable
 from scripts.curriculum.resolver.stream import resolve
-from scripts.curriculum.resolver.tokenize import lookup_form, tokenize
+from scripts.curriculum.resolver.tokenize import Token, lookup_form, tokenize
 from scripts.curriculum.validate.activity_report import draft_report
 from scripts.review.digest.error import DigestError
 
@@ -245,6 +253,308 @@ def _analyses(record: dict[str, Any] | None, surface: str) -> list[set[str]]:
     ]
 
 
+# The verbal negation particle, named by two identities because the engine types no Ukrainian
+# and its tags (`part`) do not distinguish it from other particles. The A1 word-store id is
+# stable within the store (the registry allocates W- ids once and never reuses them); the
+# record's own VESUM binding pins which particle it is, so a W-061 rebound to another
+# particle refuses instead of silently missing negation. words-verify re-checks that binding
+# against VESUM; this check reads only the store record.
+NEGATION_PARTICLE_RECORD = "W-061"
+NEGATION_PARTICLE_ENTRY = {"source": "vesum", "entry_id": 226767}
+
+
+class NegationParticleRecordInvalid(LookupError):
+    """The word store's NEGATION_PARTICLE_RECORD is missing or not the negation particle: a store defect."""
+
+
+def negation_particle(records: dict[str, dict[str, Any]]) -> str:
+    """Return the casefolded negation particle, copied from its word-store record's lemma."""
+    record = records.get(NEGATION_PARTICLE_RECORD)
+    lemma = record.get("lemma") if isinstance(record, dict) else None
+    if not isinstance(record, dict) or record.get("pos") != "part" or not isinstance(lemma, str) or not lemma.strip():
+        raise NegationParticleRecordInvalid(f"word store record {NEGATION_PARTICLE_RECORD} is not a particle")
+    if record.get("entry") != NEGATION_PARTICLE_ENTRY:
+        raise NegationParticleRecordInvalid(
+            f"word store record {NEGATION_PARTICLE_RECORD} is not bound to VESUM entry "
+            f"{NEGATION_PARTICLE_ENTRY['entry_id']}"
+        )
+    return lookup_form(lemma).casefold()
+
+
+@dataclass(frozen=True)
+class _WordTag:
+    pos: str
+    tags: str
+    atoms: frozenset[str]
+
+
+def _extract_word_tags(
+    surface: str,
+    records: dict[str, dict[str, Any]],
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]],
+) -> list[_WordTag]:
+    surface_norm = lookup_form(surface).casefold()
+    seen: set[tuple[str, str]] = set()
+    out: list[_WordTag] = []
+
+    for record in records.values():
+        if not isinstance(record, dict):
+            continue
+        for form in record.get("forms") or []:
+            if (
+                isinstance(form, dict)
+                and learner_usable(form)
+                and lookup_form(form.get("form", "")).casefold() == surface_norm
+            ):
+                tags = str(form.get("tags") or "")
+                pos = str(form.get("pos") or record.get("pos") or (tags.split(":")[0] if tags else ""))
+                key = (pos, tags)
+                if key not in seen:
+                    seen.add(key)
+                    out.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+
+    found = vesum_lookup([surface_norm])
+    entries = found.get(surface_norm) or found.get(surface) or []
+    for entry in entries:
+        tags = str(entry.get("tags") or "")
+        pos = str(entry.get("pos") or (tags.split(":")[0] if tags else ""))
+        key = (pos, tags)
+        if key not in seen:
+            seen.add(key)
+            out.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+
+    return out
+
+
+def _option_word_tags(
+    record: dict[str, Any] | None,
+    surface: str,
+    records: dict[str, dict[str, Any]],
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]],
+) -> list[_WordTag]:
+    if record is not None:
+        surface_norm = lookup_form(surface).casefold()
+        res: list[_WordTag] = []
+        for form in record.get("forms") or []:
+            if (
+                isinstance(form, dict)
+                and learner_usable(form)
+                and lookup_form(form.get("form", "")).casefold() == surface_norm
+            ):
+                tags = str(form.get("tags") or "")
+                pos = str(form.get("pos") or record.get("pos") or (tags.split(":")[0] if tags else ""))
+                res.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+        if res:
+            return res
+    return _extract_word_tags(surface, records, vesum_lookup)
+
+
+def _analysis_features(analysis: _WordTag) -> dict[str, str | None]:
+    atoms = analysis.atoms
+    case = None
+    if "v_naz" in atoms:
+        case = "Nom"
+    elif "v_rod" in atoms:
+        case = "Gen"
+    elif "v_dav" in atoms:
+        case = "Dat"
+    elif "v_zna" in atoms:
+        case = "Acc"
+    elif "v_oru" in atoms:
+        case = "Ins"
+    elif "v_mis" in atoms:
+        case = "Loc"
+    elif "v_kly" in atoms:
+        case = "Voc"
+
+    number = None
+    if atoms & {"p", "ns"}:
+        number = "Plur"
+    elif atoms & {"s", "m", "f", "n"}:
+        number = "Sing"
+
+    gender = None
+    if number != "Plur":
+        if "m" in atoms:
+            gender = "Masc"
+        elif "f" in atoms:
+            gender = "Fem"
+        elif "n" in atoms:
+            gender = "Neut"
+
+    animacy = None
+    if "ranim" in atoms:
+        animacy = "ranim"
+    elif "rinanim" in atoms:
+        animacy = "rinanim"
+    elif "unanim" in atoms:
+        animacy = "unanim"
+    elif "anim" in atoms:
+        animacy = "anim"
+    elif "inanim" in atoms:
+        animacy = "inanim"
+
+    return {
+        "case": case,
+        "number": number,
+        "gender": gender,
+        "animacy": animacy,
+    }
+
+
+def _animacy_matches_accusative(mod_anim: str | None, noun_anim: str | None) -> bool:
+    if mod_anim == "unanim" or noun_anim == "unanim":
+        return True
+    if mod_anim in {"ranim", "anim"}:
+        return noun_anim in {"anim", "unanim"}
+    if mod_anim in {"rinanim", "inanim"}:
+        return noun_anim in {"inanim", "unanim"}
+    return True
+
+
+def _analysis_agrees(mod_feat: dict[str, str | None], noun_feat: dict[str, str | None], case_target: str) -> bool:
+    if mod_feat["case"] != case_target or noun_feat["case"] != case_target:
+        return False
+    if mod_feat["number"] != noun_feat["number"] or mod_feat["number"] is None:
+        return False
+    if mod_feat["number"] == "Sing" and (mod_feat["gender"] != noun_feat["gender"] or mod_feat["gender"] is None):
+        return False
+    return case_target != "Acc" or _animacy_matches_accusative(mod_feat["animacy"], noun_feat["animacy"])
+
+
+def _option_agrees_with_run(
+    option_analyses: list[dict[str, str | None]],
+    run_token_analyses: list[list[dict[str, str | None]]],
+) -> bool:
+    for case_target in ("Gen", "Acc"):
+        for noun_feat in option_analyses:
+            if noun_feat["case"] != case_target:
+                continue
+            if all(
+                any(_analysis_agrees(mod_feat, noun_feat, case_target) for mod_feat in mod_analyses)
+                for mod_analyses in run_token_analyses
+            ):
+                return True
+    return False
+
+
+def _is_unambiguous_adj(tags_list: list[_WordTag]) -> bool:
+    if not tags_list:
+        return False
+    for t in tags_list:
+        if t.pos == "numr":
+            return False
+        if not ("adj" in t.atoms or t.pos == "adj"):
+            return False
+        if t.atoms & {"adv", "noun", "predic", "verb"}:
+            return False
+    return True
+
+
+def a1_case_contrast_under_negated_verb(
+    item: dict[str, Any],
+    records: dict[str, dict[str, Any]],
+    activity_type: str,
+    *,
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+) -> bool:
+    """Refuse an A1 case contrast under a negated finite verb unless E1 or E3 applies.
+
+    Rule rev 6.5 (closes Sol blocker 1 and adopts E1/E3 exemptions).
+    """
+    options = item.get("options") or []
+    bindings = option_record_bindings(item, activity_type)
+    if len(bindings) != len(options) or len(options) < 2:
+        return False
+    case_sets = []
+    for record_id, option in zip(bindings, options, strict=True):
+        text = _choice_text(option)
+        analyses = _analyses(records.get(record_id), text) if isinstance(text, str) else []
+        case_sets.append(frozenset(atom for analysis in analyses for atom in analysis if atom.startswith("Case=")))
+    if not all(case_sets) or len(set(case_sets)) <= 1:
+        return False
+
+    sentence = receipts.requirement_sentence(item)
+    tokens = tokenize(sentence)
+    if len(tokens) < 2:
+        return False
+    particle = negation_particle(records)
+    successors = [
+        tokens[index + 1].lookup.casefold()
+        for index, token in enumerate(tokens[:-1])
+        if token.lookup.casefold() == particle and sentence[token.end : tokens[index + 1].start].isspace()
+    ]
+    if not successors:
+        return False
+
+    if vesum_lookup is None:
+        from scripts.verification.vesum import verify_words
+
+        def vesum_lookup(words: list[str]) -> dict[str, list[dict[str, Any]]]:
+            return verify_words(words, db_path=os.environ.get("VESUM_DB_PATH"))
+
+    has_negated_verb = False
+    for surface in successors:
+        tags_list = _extract_word_tags(surface, records, vesum_lookup)
+        if any("VerbForm=Fin" in to_oracle(t.tags) for t in tags_list):
+            has_negated_verb = True
+            break
+    if not has_negated_verb:
+        return False
+
+    # Check exemptions E1 and E3
+    blank_match = re.search(r"_{2,}|\[blank\]", sentence)
+    if blank_match is None:
+        return True
+    blank_start = blank_match.start()
+
+    tokens_before = [t for t in tokens if t.end <= blank_start]
+    if not tokens_before:
+        return True
+
+    t_last = tokens_before[-1]
+    gap_to_blank = sentence[t_last.end : blank_start]
+    if gap_to_blank.strip() != "" or not (not gap_to_blank or gap_to_blank.isspace()):
+        return True
+
+    # E1 — adjacent preposition
+    t_last_surface = t_last.lookup.casefold()
+    t_last_tags = _extract_word_tags(t_last_surface, records, vesum_lookup)
+    if t_last_tags and all(t.pos == "prep" or "prep" in t.atoms for t in t_last_tags):
+        return False
+
+    # E3 — adjacent unambiguous adjectives
+    run_tokens: list[tuple[Token, list[_WordTag]]] = []
+    for i in range(len(tokens_before) - 1, -1, -1):
+        tok = tokens_before[i]
+        if run_tokens:
+            next_tok = run_tokens[0][0]
+            gap = sentence[tok.end : next_tok.start]
+            if gap.strip() != "" or not (not gap or gap.isspace()):
+                break
+        surface = tok.lookup.casefold()
+        tags_list = _extract_word_tags(surface, records, vesum_lookup)
+        if not _is_unambiguous_adj(tags_list):
+            break
+        run_tokens.insert(0, (tok, tags_list))
+
+    if run_tokens:
+        run_features = [[_analysis_features(tag) for tag in tags_list] for _, tags_list in run_tokens]
+        agreeing_options: list[Any] = []
+        for option, record_id in zip(options, bindings, strict=True):
+            opt_text = _choice_text(option)
+            if not isinstance(opt_text, str):
+                continue
+            opt_tags = _option_word_tags(records.get(record_id), opt_text, records, vesum_lookup)
+            opt_features = [_analysis_features(t) for t in opt_tags]
+            if _option_agrees_with_run(opt_features, run_features):
+                agreeing_options.append(option)
+        if len(agreeing_options) == 1:
+            return False
+
+    return True
+
+
 def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:
     required = {f"{group}={value}" for group, value in demand.items()}
     return any(required <= analysis for analysis in analyses)
@@ -252,22 +562,16 @@ def _admitted(analyses: list[set[str]], demand: dict[str, str]) -> bool:
 
 def _independent_language_question(provenance: Any, state_dir: Path, lesson_n: int) -> bool:
     """A question receipt counts only when its language seat differs from the writer's family."""
-    from scripts.review.second_seat import IdentityError, concrete_family, writer_family
+    from scripts.review.second_seat import IdentityError, writer_family
 
     if not isinstance(provenance, str):
         return False
     match = re.fullmatch(r"question:([^:]+):Q-[0-9]{3,}", provenance)
     if match is None:
         return False
-    agent, separator, model = match.group(1).partition("@")
-    if separator != "@" or agent.casefold() not in {"agy", "claude", "codex", "grok"} or not model:
-        return False
     try:
-        seat_family = concrete_family(model, what="question seat model")
-        return seat_family == concrete_family(agent, what="question seat lane") and seat_family != writer_family(
-            state_dir, lesson_n
-        )
-    except IdentityError:
+        return receipts.language_seat_family(match.group(1), what="question") != writer_family(state_dir, lesson_n)
+    except (ResolverError, IdentityError):
         return False
 
 
@@ -297,10 +601,19 @@ def check_7_a1_choices(
     lesson_n: int,
     requirement_inputs: dict[str, Any] | None = None,
     vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
+    sources: Any = None,
 ) -> dict[str, Any]:
     """Check A1 choice uniqueness after resolution; never infer a slot's demand."""
+    if sources is None:
+        from scripts.curriculum.evidence.sources import Sources
+
+        with Sources() as client:
+            return check_7_a1_choices(
+                draft, lesson, words, stream, state_dir=state_dir, lesson_n=lesson_n,
+                requirement_inputs=requirement_inputs, vesum_lookup=vesum_lookup, sources=client,
+            )
     by_id = {record["id"]: record for record in words.get("words") or []}
-    receipt_doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state_dir, lesson_n))
+    receipt_doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state_dir, lesson_n), sources=sources)
     completeness: list[dict[str, Any]] = []
     if vesum_lookup is None:
         from scripts.verification.vesum import verify_words
@@ -377,24 +690,33 @@ def check_7_a1_choices(
                     for rec, text in zip(bound, texts, strict=True)
                 ):
                     return bad("form_option_without_analysis", aid, index)
-                for rec, text in zip(bound, texts, strict=True):
-                    analyses = _analyses(rec, text)
-                    if any(
-                        not any(any(atom.startswith(f"{group}=") for atom in analysis) for analysis in analyses)
-                        for group in demand
-                    ):
-                        return bad("form_option_missing_required_group", aid, index)
-                admitted = [_admitted(_analyses(rec, text), demand) for rec, text in zip(bound, texts, strict=True)]
-                if admitted != [i == key for i in range(len(options))]:
+                classifications = [
+                    classify_form_analyses(_analyses(rec, text), demand) for rec, text in zip(bound, texts, strict=True)
+                ]
+                if "undecidable" in classifications:
+                    return bad("form_option_missing_required_group", aid, index)
+                if [state == "admitted" for state in classifications] != [i == key for i in range(len(options))]:
                     return bad("form_not_unique_for_requires", aid, index)
+                sentence = receipts.requirement_sentence(item)
+                if not sentence and (
+                    (typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"}
+                ):
+                    return bad("form_sentence_missing", aid, index)
                 status = receipts.requirement_status(
                     receipt_doc,
                     lesson=stream.lesson,
+                    state_dir=state_dir,
                     inputs=requirement_inputs if requirement_inputs is not None else stream.inputs,
                     activity=aid,
                     item=index,
+                    payload_sha256=receipts.requirement_payload_sha256(sentence, texts, key, demand),
+                    options=texts,
+                    key_index=key,
                     requires=demand,
+                    sources=sources,
                 )
+                if status != "confirmed":
+                    return bad(status, aid, index)
                 completeness.append({"activity": aid, "item": index, "requirement": status})
             elif kind == "vocabulary":
                 target = item.get("target_record")
@@ -431,7 +753,11 @@ def check_7_a1_choices(
                     return bad("orthography_distractor_is_word", aid, index)
             elif kind != "comprehension":
                 return bad("choice_kind_invalid", aid, index)
-    return _pass(7, {"requirement_receipts": completeness})
+    details = {"requirement_receipts": completeness}
+    if receipt_doc is not None:
+        evidence = receipts.resolve_requirement_evidence(receipt_doc, sources=sources)
+        details["requirement_evidence"] = {"sha256": evidence.content_hash, "sources": evidence.metadata}
+    return _pass(7, details)
 
 
 def _structural_activity_error(activity: dict[str, Any], typ: str, records: dict[str, dict[str, Any]]) -> str | None:
@@ -519,6 +845,7 @@ def check_4_activities(
     pack: dict[str, Any],
     *,
     level: str | None = None,
+    vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
 ) -> tuple[dict[str, Any], dict[tuple[str, int], list[dict[str, Any]]]]:
     mod_level = (
         (level or "").lower()
@@ -645,7 +972,40 @@ def check_4_activities(
                 item["_resolved_key_index"] = next(iter(resolved_indices))
 
             if (
-                level == "a1"
+                mod_level == "a1"
+                and item.get("kind") == "form"
+                and ((typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"})
+                and not receipts.requirement_sentence(item)
+            ):
+                return failure(
+                    4, "form_sentence_missing", "writer", code="form_sentence_missing", activity=aid, token=str(idx)
+                ), {}
+            try:
+                negated_case = mod_level == "a1" and a1_case_contrast_under_negated_verb(
+                    item, records, typ, vesum_lookup=vesum_lookup
+                )
+            except NegationParticleRecordInvalid as err:
+                return failure(
+                    4,
+                    f"a1_negation_particle_record_invalid: {err}",
+                    "word_store",
+                    code="a1_negation_particle_record_invalid",
+                ), {}
+            except (OSError, sqlite3.Error) as err:
+                return failure(
+                    4, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable"
+                ), {}
+            if negated_case:
+                return failure(
+                    4,
+                    "a1_case_contrast_under_negated_verb",
+                    "writer",
+                    code="a1_case_contrast_under_negated_verb",
+                    activity=aid,
+                    token=str(idx),
+                ), {}
+            if (
+                mod_level == "a1"
                 and item.get("kind") == "form"
                 and ((typ == "fill-in" and item.get("mode") == "form-choice") or typ in {"quiz", "multiple-choice"})
             ):
@@ -1048,91 +1408,107 @@ def run_lesson(
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
-    try:
-        expanded_obj = ExpandedDocument.from_data(expanded)
-        selected_allowlist = allowlist or load_allowlist(level, slug, n, plans_dir=plans_dir, evidence_dir=evidence_dir)
-        if sources is None:
-            with Sources() as source_client:
-                stream = resolve(expanded_obj, selected_allowlist, source_client)
-        else:
-            stream = resolve(expanded_obj, selected_allowlist, sources)
-    except ResolverError as err:
-        layer = "pack" if err.code in {codes.UNKNOWN_WORD_ID, codes.LOCK_MISMATCH} else "engine"
-        return finish(failure(7, err.message, layer, code=err.code))
-    except (OSError, ValueError) as err:
-        return finish(failure(7, f"resolver_input_unavailable: {err}", "pack"))
-    except Exception as err:
-        return finish(failure(7, f"resolver_error: {err}", "engine"))
-    row = check_7_deterministic(stream, lesson, draft, form_options)
-    if row["status"] == "failed":
-        return finish(row)
-    rows.append(row)
-    # Questions omit step, while receipts retain it for digest provenance.
-    token_steps = [token["unit"].pop("step", None) for token in stream.tokens]
-    batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
-    try:
-        questions.write_questions(state_dir / f"lesson-{n}.questions.yaml", batch)
-    except (ResolverError, OSError) as err:
-        return finish(failure(8, f"question_batch_invalid: {err}", "engine", code=getattr(err, "code", None)))
-    if batch["questions"] and not question_seat:
-        return finish(failure(8, "question_seat_required", "driver"))
-    if batch["questions"] and (question_seat.count(":") != 1 or not all(question_seat.split(":"))):
-        return finish(failure(8, "question_seat_invalid", "driver"))
-    try:
-        if batch["questions"]:
-            answer_doc = (question_dispatch or (lambda b, s: dispatch_questions(b, s, repo_root=repo_root)))(
-                batch, question_seat
-            )
-            selections = receipts.apply_answers(batch, answer_doc, question_seat.replace(":", "@"))
-            if len(selections) != len(batch["questions"]):
-                raise ResolverError(
-                    codes.TOKEN_UNRESOLVED, "every question must be answered before inventory and rendering"
-                )
-        else:
-            selections = {}
-        receipt_doc = receipts.build_receipts(
-            stream, batch, selections, question_seat.replace(":", "@") if question_seat else None
-        )
-        for receipt, step in zip(receipt_doc["tokens"], token_steps, strict=True):
-            if step is not None:
-                receipt["unit"]["step"] = step
-        receipt_path = state_dir / f"lesson-{n}.resolutions.yaml"
-        receipt_sha = receipts.write_receipts(receipt_path, receipt_doc)
-        for token, receipt in zip(stream.tokens, receipt_doc["tokens"], strict=True):
-            token["selected"] = receipt["selected"]
-            token["provenance"] = receipt["provenance"]
-        for token, step in zip(stream.tokens, token_steps, strict=True):
-            if step is not None:
-                token["unit"] = {**token["unit"], "step": step}
-        stream.inputs["receipts_sha256"] = receipt_sha
-    except (ResolverError, ValueError, RuntimeError, OSError) as err:
-        return finish(
-            failure(
-                8, str(err), "writer" if isinstance(err, ResolverError) else "driver", code=getattr(err, "code", None)
-            )
-        )
-    rows.append(_pass(8, {"questions": len(batch["questions"]), "answered": len(selections)}))
-    if level == "a1":
+    owns_sources = sources is None
+    with ExitStack() as source_session:
         try:
-            choice_row = check_7_a1_choices(
-                draft, lesson, words, stream, state_dir=state_dir, lesson_n=n, requirement_inputs=receipt_doc["inputs"]
+            expanded_obj = ExpandedDocument.from_data(expanded)
+            selected_allowlist = allowlist or load_allowlist(level, slug, n, plans_dir=plans_dir, evidence_dir=evidence_dir)
+            if sources is None:
+                sources = source_session.enter_context(Sources())
+            stream = resolve(expanded_obj, selected_allowlist, sources)
+        except ResolverError as err:
+            layer = "pack" if err.code in {codes.UNKNOWN_WORD_ID, codes.LOCK_MISMATCH} else "engine"
+            return finish(failure(7, err.message, layer, code=err.code))
+        except (OSError, ValueError) as err:
+            return finish(failure(7, f"resolver_input_unavailable: {err}", "pack"))
+        except Exception as err:
+            return finish(failure(7, f"resolver_error: {err}", "engine"))
+        row = check_7_deterministic(stream, lesson, draft, form_options)
+        if row["status"] == "failed":
+            return finish(row)
+        rows.append(row)
+        # Questions omit step, while receipts retain it for digest provenance.
+        token_steps = [token["unit"].pop("step", None) for token in stream.tokens]
+        batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
+        try:
+            questions.write_questions(state_dir / f"lesson-{n}.questions.yaml", batch)
+        except (ResolverError, OSError) as err:
+            return finish(failure(8, f"question_batch_invalid: {err}", "engine", code=getattr(err, "code", None)))
+        if batch["questions"] and not question_seat:
+            return finish(failure(8, "question_seat_required", "driver"))
+        if batch["questions"] and (question_seat.count(":") != 1 or not all(question_seat.split(":"))):
+            return finish(failure(8, "question_seat_invalid", "driver"))
+        try:
+            if batch["questions"]:
+                # Resolution rows already have their identities in the stream.
+                # Release our pinned snapshot during the slow provider call;
+                # the receipt gate opens a fresh snapshot lazily through _db().
+                # Injected sessions belong to their caller and stay untouched.
+                if owns_sources:
+                    sources.close()
+                answer_doc = (question_dispatch or (lambda b, s: dispatch_questions(b, s, repo_root=repo_root)))(
+                    batch, question_seat
+                )
+                selections = receipts.apply_answers(batch, answer_doc, question_seat.replace(":", "@"))
+                if len(selections) != len(batch["questions"]):
+                    raise ResolverError(
+                        codes.TOKEN_UNRESOLVED, "every question must be answered before inventory and rendering"
+                    )
+            else:
+                selections = {}
+            receipt_doc = receipts.build_receipts(
+                stream, batch, selections, question_seat.replace(":", "@") if question_seat else None
             )
-        except OSError as err:
-            return finish(
-                failure(7, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable")
-            )
-        except (ResolverError, ValueError) as err:
+            for receipt, step in zip(receipt_doc["tokens"], token_steps, strict=True):
+                if step is not None:
+                    receipt["unit"]["step"] = step
+            receipt_path = state_dir / f"lesson-{n}.resolutions.yaml"
+            receipt_sha = receipts.write_receipts(receipt_path, receipt_doc)
+            for token, receipt in zip(stream.tokens, receipt_doc["tokens"], strict=True):
+                token["selected"] = receipt["selected"]
+                token["provenance"] = receipt["provenance"]
+            for token, step in zip(stream.tokens, token_steps, strict=True):
+                if step is not None:
+                    token["unit"] = {**token["unit"], "step": step}
+            stream.inputs["receipts_sha256"] = receipt_sha
+        except (ResolverError, ValueError, RuntimeError, OSError) as err:
             return finish(
                 failure(
-                    7,
-                    f"a1_choice_check_invalid: {err}",
-                    "engine",
-                    code=getattr(err, "code", None) or "a1_choice_check_invalid",
+                    8, str(err), "writer" if isinstance(err, ResolverError) else "driver", code=getattr(err, "code", None)
                 )
             )
-        if choice_row["status"] == "failed":
-            return finish(choice_row)
-        row["details"].update(choice_row.get("details", {}))
+        rows.append(_pass(8, {"questions": len(batch["questions"]), "answered": len(selections)}))
+        if level == "a1":
+            try:
+                choice_row = check_7_a1_choices(
+                    draft,
+                    lesson,
+                    words,
+                    stream,
+                    state_dir=state_dir,
+                    lesson_n=n,
+                    sources=sources,
+                    requirement_inputs=receipts.requirement_inputs(
+                        receipt_doc["inputs"],
+                        yaml.safe_load((state_dir / f"lesson-{n}.draft.yaml").read_text(encoding="utf-8")),
+                    ),
+                )
+            except OSError as err:
+                return finish(
+                    failure(7, f"a1_choice_source_unavailable: {err}", "pack", code="a1_choice_source_unavailable")
+                )
+            except (ResolverError, ValueError) as err:
+                return finish(
+                    failure(
+                        7,
+                        f"a1_choice_check_invalid: {err}",
+                        "engine",
+                        code=getattr(err, "code", None) or "a1_choice_check_invalid",
+                    )
+                )
+            if choice_row["status"] == "failed":
+                return finish(choice_row)
+            row["details"].update(choice_row.get("details", {}))
     try:
         gate = inventory_gate(
             level,

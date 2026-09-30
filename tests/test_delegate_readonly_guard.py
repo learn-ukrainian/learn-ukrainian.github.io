@@ -101,7 +101,7 @@ def _finalize_mock_result(response: str = "done"):
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "grok-4.6",
+            "model": "grok-4.7",
             "effort": "high",
             "cli_version": "0.2.111",
         },
@@ -654,7 +654,7 @@ def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
             "stderr_excerpt": "worker killed: out of memory",
             "returncode": -9,
             "rate_limited": False,
-            "model": "grok-4.6",
+            "model": "grok-4.7",
             "effort": "high",
             "cli_version": "0.2.111",
         },
@@ -693,7 +693,8 @@ def test_read_only_failed_worker_keeps_real_error_alongside_mutation(
 # ---------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize("agent", ["codex", "claude", "grok", "cursor", "kimi"])
+# kimi is absent: Kimi seats never run read-only (the worker refuses them before invocation).
+@pytest.mark.parametrize("agent", ["codex", "claude", "grok", "cursor"])
 def test_read_only_snapshot_untracked_root_leak_fails_task_per_lane(
     agent,
     tmp_tasks_dir,

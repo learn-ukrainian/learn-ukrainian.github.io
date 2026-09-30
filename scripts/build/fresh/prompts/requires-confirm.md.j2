@@ -1,0 +1,33 @@
+# A1 form-item requirement confirmation
+
+Lesson: {{ batch.lesson.level }}/{{ batch.lesson.slug }}/{{ batch.lesson.n }}.
+
+For **each** item, judge **each option in this sentence**, not in isolation. Use source evidence with IDs
+`<source>:<id>` where source is `vesum`, `pravopys`, `textbook`, `grinchenko`, `sum20`, `vts`, or `ulif`.
+Never use SUM-11 or a tool name as a source. Record at least one evidence ID for every judgement.
+
+Set `requires_forced: false` if the sentence does not force **every** value in `requires`. Check every
+form of the lemma, including forms outside the option list. Look for partitive genitive after request,
+offer, or consumption verbs and mozhna ("may I?"); genitive of negation; animate accusative/genitive syncretism;
+and any other alternative reading. Deny if an alternative reading fits, if a second option may be
+correct, or if evidence is missing. Rewrite the item to force one reading or drop it; never repair an
+unforced demand by removing a group from `requires`.
+
+Return one YAML mapping with `answers`, one answer per question, exactly once and in option order.
+Each answer has `activity`, `item`, `decision: confirm | deny`, non-empty `reason`,
+`requires_forced: true | false`, and `options: [{text, judgement, evidence}]`.
+Judgements are `valid`, `invalid`, or `depends_on_context`. Confirm only when the key is valid,
+every distractor invalid, all judgements have evidence, and `requires_forced` is true.
+An unsupported judgement may have empty evidence only in a deny with a reason starting `unresolved`.
+
+{% for q in batch.questions %}
+## {{ q.activity }}/{{ q.item }}
+
+Sentence: {{ q.sentence }}
+Options (authored order):
+{% for option in q.options %}- {{ loop.index0 }}: {{ option }}{% if loop.index0 == q.key_index %} [key]{% endif %}
+{% endfor %}
+Requires: {{ q.requires }}
+Payload SHA-256: {{ q.payload_sha256 }}
+
+{% endfor %}

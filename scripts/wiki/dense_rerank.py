@@ -587,10 +587,17 @@ def invalidate_corpus_index(corpus: str, *, manifest_db: Path = DEFAULT_MANIFEST
 
 
 def _keyword_order(candidates: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
-    scored = [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates]
+    scored = [
+        {
+            **candidate,
+            "dense_score": 0.0,
+            "cosine_score": 0.0,
+        }
+        for candidate in candidates
+    ]
     scored.sort(
         key=lambda row: (
-            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+            float(row.get("keyword_rank", row.get("fts_score", row.get("rank", 0.0))) or 0.0),
             str(row.get("unit_key", "")),
         )
     )
@@ -614,7 +621,14 @@ def rerank_candidates(
     try:
         index = load_corpus_index(corpus, manifest_db=manifest_db)
         if not index.unit_rows:
-            return [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates[:limit]]
+            return [
+                {
+                    **candidate,
+                    "dense_score": 0.0,
+                    "cosine_score": 0.0,
+                }
+                for candidate in candidates[:limit]
+            ]
         if encoder is None and _dense_search_block_reason() is not None:
             return _keyword_order(candidates, limit)
 
@@ -625,7 +639,13 @@ def rerank_candidates(
             unit_key = str(candidate.get("unit_key", "")).strip()
             location = index.unit_rows.get(unit_key)
             if location is None:
-                missing.append({**candidate, "dense_score": 0.0, "cosine_score": 0.0})
+                missing.append(
+                    {
+                        **candidate,
+                        "dense_score": 0.0,
+                        "cosine_score": 0.0,
+                    }
+                )
                 continue
             shard_id, row_idx = location
             vectors.append(np.asarray(index.shards[shard_id][row_idx], dtype=np.float32))
@@ -726,6 +746,31 @@ def _iter_textbook_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
                 "section_id": int(row["section_id"]),
                 "source_file": str(row["source_file"] or ""),
                 "title": str(row["section_title"] or ""),
+            },
+        )
+
+    chunk_rows = conn.execute(
+        """
+        SELECT id, chunk_id, source_file, title, text
+        FROM textbooks
+        WHERE parent_section_id IS NULL
+        ORDER BY id
+        """
+    ).fetchall()
+    for row in chunk_rows:
+        text = str(row["text"] or "")
+        chunk_id = str(row["chunk_id"] or "")
+        yield CorpusUnit(
+            unit_key=f"textbook_sections:{chunk_id}",
+            corpus="textbook_sections",
+            parent_key=str(row["source_file"] or ""),
+            text=text,
+            text_sha256=text_sha256(text),
+            metadata={
+                "chunk_id": chunk_id,
+                "source_file": str(row["source_file"] or ""),
+                "title": str(row["title"] or ""),
+                "row_id": int(row["id"]),
             },
         )
 

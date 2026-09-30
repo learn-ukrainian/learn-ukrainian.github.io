@@ -79,7 +79,11 @@ def mechanical_payload(profile: str) -> dict[str, Any]:
 def adapter_for(route: str, monkeypatch: pytest.MonkeyPatch):
     module_name, class_name = ADAPTERS[route]
     module = importlib.import_module(f"scripts.agent_runtime.adapters.{module_name}")
-    monkeypatch.setattr(module.shutil, "which", lambda command: f"/usr/bin/{command}")
+    if route == "cursor":
+        # Binary lookup is the shared resolver; which() still stubs the other adapters.
+        monkeypatch.setattr(module, "resolve_cursor_agent_binary", lambda: "/usr/bin/cursor-agent")
+    else:
+        monkeypatch.setattr(module.shutil, "which", lambda command: f"/usr/bin/{command}")
     if route == "claude":
         monkeypatch.setattr(module, "_ensure_supported_claude_cli_version", lambda _: (2, 1, 200))
     if route == "glm":
@@ -424,16 +428,17 @@ def test_dimension_production_wrapper_passes_schema_and_consumes_object(route, t
     assert result["score"] == 7.0
 
 
-def test_dimension_grok_frozen_model_remains_refused(tmp_path, monkeypatch):
-    monkeypatch.setattr(linear, "_runtime_tool_config", lambda *a, **kw: {})
+@pytest.mark.parametrize("reviewer", ("grok-tools", "cursor-tools"))
+def test_dimension_grok_frozen_model_remains_refused(reviewer, tmp_path, monkeypatch):
+    def forbidden(*args, **kwargs):
+        pytest.fail("prohibited reviewer must be refused before configuration or invocation")
 
-    def runtime(agent, prompt, **kwargs):
-        assert kwargs["model"] == "grok-4.5"
-        return build_plan(adapter_for(agent, monkeypatch), tmp_path, kwargs["tool_config"], model=kwargs["model"])
-
-    with pytest.raises(linear.LinearPipelineError, match="unsupported Grok model"):
-        linear.invoke_reviewer_dim("fixture", "grok-tools", dim="pedagogical", writer_under_review="fixture",
-                                   cwd=tmp_path, invoker=runtime)
+    monkeypatch.setattr(linear, "_runtime_tool_config", forbidden)
+    assert reviewer not in linear.REVIEWER_DEFAULTS
+    assert reviewer not in linear.REVIEWER_CHOICES
+    with pytest.raises(linear.LinearPipelineError, match="Grok dimension reviewers are prohibited"):
+        linear.invoke_reviewer_dim("fixture", reviewer, dim="pedagogical", writer_under_review="fixture",
+                                   cwd=tmp_path, invoker=forbidden)
 
 
 def direct_context(tmp_path: Path) -> direct.DirectModuleContext:
@@ -460,7 +465,7 @@ def test_direct_claude_production_phase_consumes_result(damage, tmp_path, monkey
         payload["verdict"] = "PASS"
 
     def runtime(agent, prompt, **kwargs):
-        assert agent == "claude" and kwargs["model"] == "claude-opus-4-8"
+        assert agent == "claude" and kwargs["model"] == "claude-opus-5-5"
         assert qg_schema.render_reviewer_output_contract("direct") in prompt
         adapter = adapter_for(agent, monkeypatch)
         plan = build_plan(adapter, tmp_path, kwargs["tool_config"])

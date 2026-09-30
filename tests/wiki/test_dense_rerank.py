@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import sqlite3
 import sys
 import types
 from pathlib import Path
@@ -19,6 +20,35 @@ class FakeEncoder:
             value = float(text.split(":")[0])
             rows.append(np.full(dense_rerank.EMBEDDING_DIMS, value, dtype=np.float16))
         return np.stack(rows, axis=0)
+
+
+def test_iter_textbook_units_includes_unsectioned_chunks():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        CREATE TABLE textbook_sections (
+            section_id INTEGER, source_file TEXT, section_title TEXT, full_text TEXT
+        );
+        CREATE TABLE textbooks (
+            id INTEGER, chunk_id TEXT, source_file TEXT, title TEXT, text TEXT,
+            parent_section_id INTEGER
+        );
+        INSERT INTO textbook_sections VALUES (7, 'section-book', 'Section', 'section text');
+        INSERT INTO textbooks VALUES (1, 'section-chunk', 'section-book', 'Child', 'child text', 7);
+        INSERT INTO textbooks VALUES (2, 'ulp-chunk', 'ulp-book', 'ULP title', 'unsectioned text', NULL);
+        """
+    )
+
+    units = list(dense_rerank._iter_textbook_units(conn))
+
+    assert [unit.unit_key for unit in units] == [
+        "textbook_sections:7",
+        "textbook_sections:ulp-chunk",
+    ]
+    assert units[1].text == "unsectioned text"
+    assert units[1].parent_key == "ulp-book"
+    conn.close()
 
 
 def test_encode_texts_preserves_original_order_after_sorted_batching(monkeypatch):
@@ -165,6 +195,29 @@ def test_rerank_candidates_degrades_to_fts_order_when_encoder_unavailable(monkey
     assert {row["cosine_score"] for row in results} == {0.0}
 
 
+def test_rerank_candidates_truncates_by_keyword_rank_when_encoder_unavailable(monkeypatch):
+    monkeypatch.setenv(dense_rerank.NO_DENSE_ENV, "1")
+    index = dense_rerank.CorpusEmbeddingIndex(
+        corpus="test_corpus",
+        shards={0: np.zeros((2, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)},
+        unit_rows={"1": (0, 0), "2": (0, 1)},
+    )
+    monkeypatch.setattr(dense_rerank, "load_corpus_index", lambda *a, **kw: index)
+
+    results = dense_rerank.rerank_candidates(
+        "query",
+        [
+            {"unit_key": "1", "keyword_rank": 2, "fts_score": -100.0},
+            {"unit_key": "2", "keyword_rank": 1, "fts_score": -1.0},
+        ],
+        corpus="test_corpus",
+        limit=1,
+    )
+
+    assert [row["unit_key"] for row in results] == ["2"]
+    assert results[0]["keyword_rank"] == 1
+
+
 def _two_row_index(monkeypatch) -> None:
     shard = np.zeros((2, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)
     shard[0, 0] = 1.0
@@ -277,4 +330,49 @@ def test_rerank_candidates_uses_dense_on_accelerator_or_cpu_opt_in(monkeypatch, 
     results = dense_rerank.rerank_candidates("query", _CANDIDATES, corpus="test_corpus")
 
     assert [row["unit_key"] for row in results] == ["1", "2"]
+    assert results[0]["dense_score"] == pytest.approx(1.0)
+
+
+def test_rerank_candidates_keeps_best_unsectioned_chunk_by_dense_score(monkeypatch):
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    conn.executescript(
+        """
+        CREATE TABLE textbook_sections (
+            section_id INTEGER, source_file TEXT, section_title TEXT, full_text TEXT
+        );
+        CREATE TABLE textbooks (
+            id INTEGER, chunk_id TEXT, source_file TEXT, title TEXT, text TEXT,
+            parent_section_id INTEGER
+        );
+        INSERT INTO textbook_sections VALUES (7, 'section-book', 'Section', 'section text');
+        INSERT INTO textbooks VALUES (1, 'ulp-chunk', 'ulp-book', 'ULP title', 'unsectioned text', NULL);
+        """
+    )
+    units = list(dense_rerank._iter_textbook_units(conn))
+    conn.close()
+    shard = np.zeros((len(units), dense_rerank.EMBEDDING_DIMS), dtype=np.float16)
+    unit_rows = {}
+    for row_idx, unit in enumerate(units):
+        unit_rows[unit.unit_key] = (0, row_idx)
+        shard[row_idx, 0 if unit.unit_key.endswith("ulp-chunk") else 1] = 1.0
+    index = dense_rerank.CorpusEmbeddingIndex(
+        corpus="textbook_sections",
+        shards={0: shard},
+        unit_rows=unit_rows,
+    )
+    monkeypatch.setattr(dense_rerank, "load_corpus_index", lambda *a, **kw: index)
+
+    results = dense_rerank.rerank_candidates(
+        "query",
+        [
+            {"unit_key": units[0].unit_key, "keyword_rank": 1},
+            {"unit_key": units[1].unit_key, "keyword_rank": 8},
+        ],
+        corpus="textbook_sections",
+        limit=1,
+        encoder=_QueryEncoder(),
+    )
+
+    assert [row["unit_key"] for row in results] == ["textbook_sections:ulp-chunk"]
     assert results[0]["dense_score"] == pytest.approx(1.0)

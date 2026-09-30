@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 from tests.launcher_sandbox import copy_slot_registry
+from tests.rules_core_view import install_loader_bypass
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 # Tests spawn the same prescribed project interpreter that is running pytest;
@@ -74,6 +75,7 @@ def _prepare_repo(
         destination = primary / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(_REPO_ROOT / relative, destination)
+    install_loader_bypass(primary)
     # Driver launches check their handoff slot against the real roster (#8303).
     copy_slot_registry(primary)
 
@@ -419,8 +421,9 @@ def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Pa
         tmp_path, (["--epic", "devops"] if driver else []) + ["--model", model], driver=driver,
         order_capture=order, expect_success=False,
     )
-    assert result.returncode == (4 if driver else 2)
-    assert ("not certified" if driver else "approved models are gpt-6-luna, gpt-6.1-sol") in result.stderr
+    assert result.returncode == 2
+    assert "is retired in the model catalog" in result.stderr
+    assert model in result.stderr
     assert not (tmp_path / "capture.txt").exists()
     assert not order.exists()
     assert not (linked / ".claude" / "devops-epic" / "session-lease.env").exists()

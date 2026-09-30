@@ -1,6 +1,6 @@
 # Agent Cooperation Best Practices
 
-> **Scope:** How Claude, Codex, Cursor, DeepSeek, and track orchestrators work
+> **Scope:** How Claude, Codex, Cursor, and track orchestrators work
 > together without degrading each other's output quality.
 > Historical protocol archive: `docs/archive/CLAUDE-GEMINI-COOPERATION.md`
 > Review evidence contract: [`docs/review-protocol.md`](../review-protocol.md)
@@ -57,7 +57,7 @@ the independent review gate.
 | 💙 **Синя команда** (Blue) | Claude | Architect, reviewer, quality gate |
 | 💛 **Жовта команда** (Gold) | Cursor / track writers | Content builder, implementer |
 | 🟢 **Зелена команда** (Green) | Codex | Main orchestrator, adversarial reviewer, bug finder, code improver |
-| ⚙️ **Review lane** | DeepSeek | Cheap code/content review and deterministic triage |
+| ⚙️ **Code review lane** | Qualified outside-family reviewer from `closeout_cli resolve-reviewer` | DeepSeek is excluded from dispatch and review; `ask-deepseek` is consult-only for non-language work |
 
 Gemini/AGY handles Ukrainian-language work and review under the LANGUAGE-LANES
 rule. Code review follows `model-assignment.md` Code review row. Historical
@@ -901,8 +901,9 @@ Formal CF and auto-merge stay with the orchestrator.
 
 ### Formal CF budget rotation (Codex-authored PRs)
 Current sealed reviewer routes are `codex|claude|glm|grok`; the canonical
-`review_scheduler.endpoints` catalog remains authoritative. `agy` and
-`kimi` are recognized request identities but are not yet formally eligible.
+`review_scheduler.endpoints` catalog remains authoritative. `agy` is a
+recognized request identity that is not formally eligible. Kimi is not a
+reviewer: Kimi seats take web, UI and backend coding only.
 For **Codex/Luna-authored** PRs, use the deterministic routing budget rather
 than default-stacking one provider. An explicit `--model` may select another
 formally eligible model on the requested native route, but still requires

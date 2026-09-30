@@ -66,7 +66,7 @@ def test_acp_provider_contract_failure_is_scoped_and_recovers(monkeypatch, tmp_p
     assert acp_health.probe_acp_health(tmp_path)["deepseek"]["eligible"] is True
 
 
-@pytest.mark.parametrize("lane", ["codex", "cursor", "kimi"])
+@pytest.mark.parametrize("lane", ["codex", "cursor", "claude"])
 def test_acp_missing_builtin_exec_excludes_only_that_lane(monkeypatch, tmp_path, lane):
     _healthy_probes(monkeypatch)
 
@@ -78,6 +78,17 @@ def test_acp_missing_builtin_exec_excludes_only_that_lane(monkeypatch, tmp_path,
     assert health[lane]["eligible"] is False
     assert health[lane]["failure_code"] == "cli_incompatible"
     assert health["agy"]["eligible"] is True
+
+
+def test_acp_kimi_lanes_are_policy_refused_even_when_the_cli_is_healthy(monkeypatch, tmp_path):
+    """Kimi seats admit web, UI and backend coding only, so no ACP route to them is ever eligible."""
+    _healthy_probes(monkeypatch)
+    health = acp_health.probe_acp_health(tmp_path)
+    for lane in ("kimi", "kimicc"):
+        assert health[lane]["eligible"] is False
+        assert health[lane]["healthy"] is None
+        assert health[lane]["failure_code"] == "policy_refused"
+    assert health["codex"]["eligible"] is True
 
 
 def test_acp_unavailable_probe_is_unknown_and_ineligible(monkeypatch):

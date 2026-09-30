@@ -18,7 +18,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 ## Identity Contract & Attestation
 
-`cursor:auto` is a dynamic harness selector, never a concrete model identity. The identity contract enforces:
+`cursor:auto` is a dynamic harness selector, never a concrete model identity. The driver seat and every interactive Cursor session launched through `scripts/lib/launcher_core.sh` run the concrete pin `grok-4.7-high` (or `composer-2.5`) and never Auto (operator decision 2026-09-30, #9274). An interactive session is not a typed implementation dispatch, so it has no Auto exception. The launcher defaults to the pin in both modes and refuses Auto, a Fast variant, a previous generation, an empty model and a `--model` forwarded after `--` before anything executes. The identity contract enforces:
 
 1. **Attested `resolved_model` Required for Driver-of-Record:** Driver-of-record requires an attested concrete `resolved_model` extracted from the run (via headless telemetry extraction in `scripts/delegate.py` and `scripts/agent_runtime/adapters/cursor.py`). An unattested run or unknown-Auto can **never** be driver-of-record.
 2. **Unknown-Auto Resolves to Allowlist-Union Family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, resolve its identity to the **allowlist-union family {xAI, Moonshot}** (`grok-4.7` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum:
@@ -28,7 +28,8 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 ## Auto Allowlist & ~30-Day Refresh Contract
 
-- **Explicit Allowlist:** Auto is permitted only when it resolves within the catalog allowlist:
+- **Scope (operator decision 2026-09-30, #9274):** Auto runs only a well-defined coding task — a worker `delegate.py dispatch --agent cursor --model auto` typed `--research-role implementation`, in a write-capable mode with `--owned-path` and a PASS DoR issue card, not review-typed. A missing or other role is unclassified. `delegate.py` refuses anything else (`cursor_auto_outside_coding_task`) and names the pins; the Cursor adapter refuses Auto without delegate's admission and in `plan` or `ask` mode. The driver seat, ACP consults and discussions pin `grok-4.7` or `composer-2.5`; a review runs the approved concrete model the reviewer resolver selects.
+- **Explicit Allowlist:** Within that scope, Auto is permitted only when it resolves within the catalog allowlist:
   - `grok-4.7`
   - `composer-2.5`
 - **Catalog Refresh Contract:** The allowlist is refreshed under the catalog's ~30-day freshness contract (`scripts/config/model_catalog.yaml`, enforced by `scripts/lint/lint_model_catalog.py`). The operator does not freeze a single SKU; when Cursor's pair changes, the allowlist rotates in the catalog.
@@ -40,7 +41,7 @@ Cross-family independence checks evaluate either the **attested concrete model f
 - **Attested Cursor `composer-2.5`:** Belongs to the **Moonshot** family (Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged, recorded for future reassessment. Composer 2.5 conservatively shares Moonshot independence lineage with Kimi; not native Kimi).
 - **Attested Cursor `grok-4.7`:** Belongs to the **xAI** family (xAI via Cursor; distinct transport from the native Grok seat).
 - **Unknown `cursor:auto`:** Belongs to the **union family {xAI, Moonshot}**. Reviewers must be strictly outside both families.
-- **Same-Family / Union-Family Refusal:** A review of a Cursor-authored head must refuse if the reviewer belongs to the same attested family (e.g. Kimi reviewing Composer 2.5, or Grok reviewing Cursor `grok-4.7`) or if an unknown-Auto head is reviewed by any member of {xAI, Moonshot}.
+- **Same-Family / Union-Family Refusal:** A review of a Cursor-authored head must refuse if the reviewer belongs to the same attested family (e.g. a Moonshot-family seat and Composer 2.5, or Grok reviewing Cursor `grok-4.7`; Kimi itself is never a reviewer) or if an unknown-Auto head is reviewed by any member of {xAI, Moonshot}.
 
 ## Operating Constraints & Concurrency
 

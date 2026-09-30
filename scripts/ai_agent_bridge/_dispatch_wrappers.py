@@ -12,7 +12,7 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 # Bootstrap import path for scripts.* from any cwd
 _local_repo_root = Path(__file__).resolve().parents[2]
@@ -20,6 +20,9 @@ if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
 from scripts.common.repo_root import resolve_repo_root
+
+if TYPE_CHECKING:
+    from agent_runtime.target_admission import AdmittedTarget
 
 REPO_ROOT = resolve_repo_root(Path(__file__), 2)
 PYTHON = ".venv/bin/python"
@@ -287,7 +290,7 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> li
         "--mode",
         "read-only",
         "--model",
-        "claude-opus-4-8",
+        "claude-opus-5-5",
         "--effort",
         effort,
         "--task-id",
@@ -370,11 +373,10 @@ def handle_review_deep(args: Any) -> int:
 
 
 def build_ask_review_dispatch_command(
-    agent: str,
+    target: AdmittedTarget,
     task_id: str,
     prompt_file: Path,
     *,
-    model: str | None,
     effort: str | None,
     branch: str | None = None,
     review_profile: str | None = None,
@@ -389,17 +391,21 @@ def build_ask_review_dispatch_command(
     ``--branch`` attaches that worktree to the author branch. A read-only
     reviewer cannot ``git checkout``, so a worktree born on ``main`` never
     reaches the SHA under review.
+
+    ``target`` is the ``AdmittedTarget`` ``resolve_and_admit`` produced for
+    the review seat; the command carries its seat and model.
     """
+    from agent_runtime.target_admission import require_admitted
+
+    target = require_admitted(target)
+    model = target.model
     cmd = [
         PYTHON,
         "scripts/delegate.py",
         "dispatch",
         "--agent",
-        agent,
+        target.recipient,
     ]
-    # Native kimi refuses read-only. kimicc is the harness that can run it.
-    if agent == "kimi":
-        cmd += ["--harness", "kimicc"]
     cmd += [
         "--mode",
         "read-only",
@@ -450,17 +456,22 @@ def run_ask_review_dispatch(
     state dict plus the read-back ``response`` text and a normalized ``ok``.
     Raises ``RuntimeError`` if dispatch itself could not be started or the
     wait output could not be parsed — callers turn that into a hard failure,
-    never a silent fallback to ACP.
+    never a silent fallback to ACP. Raises ``KimiAdmissionRefused`` for a
+    Kimi seat before anything is written.
     """
+    # Kimi seats never review: the seat is admitted before the temporary prompt is written.
+    from agent_runtime.kimi_admission import REVIEW_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
+    (target,) = resolve_and_admit((agent,), mode=REVIEW_MODE, model=model, review=True)
     timeout = hard_timeout or _ASK_REVIEW_DEFAULT_TIMEOUT_S
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
         prompt_path.write_text(content, encoding="utf-8")
         dispatch_command = build_ask_review_dispatch_command(
-            agent,
+            target,
             task_id,
             prompt_path,
-            model=model,
             effort=effort,
             branch=branch,
             review_profile=review_profile,

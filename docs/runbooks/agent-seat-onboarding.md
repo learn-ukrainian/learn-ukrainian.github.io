@@ -120,7 +120,7 @@ and the narrowly allowlisted dual paths.
 | **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + legacy file handoffs** | Durable coordination authority in `authority` mode; legacy file stores remain read-only migration/projection inputs | Competing message buses; new legacy writes; silent plane/retention/eligibility flips |
-| **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
+| **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi: web, UI and backend coding only); not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
@@ -336,7 +336,7 @@ before dispatching:
 1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
 2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
    recon with exact owned paths and an objective scope ceiling.
-3. Reserve `gpt-6.1-sol` at `high` for hard consequential advisory judgment.
+3. Reserve `gpt-6.1-sol` at `xhigh` for hard consequential advisory judgment.
    When an advisory envelope is needed, include the task contract, exact owned
    paths, maximum changed-file and non-test-LOC ceilings, constraints, risk
    boundaries, acceptance evidence, and escalation triggers. Astra is an advisor,
@@ -350,7 +350,7 @@ before dispatching:
 
 Record the envelope and Luna's acceptance evidence with the task handoff. If an
 escalation trigger fires, stop bounded execution and return the unresolved point
-to Astra at `high` or the accountable orchestrator before making a consequential decision.
+to Astra at `xhigh` or the accountable orchestrator before making a consequential decision.
 
 ### Fleet-comms authority and legacy projections
 
@@ -399,8 +399,7 @@ not permanent routing weights and do not override current CodexBar headroom.
   `shadow` is the unchanged comparison pilot. `active` is accepted only by the
   explicit `acp-discuss` controller described below.
 - Direct-only seat names include `acpx-codex-shadow`, `acpx-grok-shadow`,
-  `acpx-claude-shadow`, `acpx-kimi-shadow`, `acpx-kimicc-shadow`,
-  `acpx-cursor-shadow`, `acpx-pool-shadow`, `acpx-agy-shadow`,
+  `acpx-claude-shadow`, `acpx-cursor-shadow`, `acpx-pool-shadow`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`; never
   registered for dispatch, routing, review, or failover.
 - ACPX, Grok, AGY, and OpenCode use rolling compatibility contracts.
@@ -431,14 +430,15 @@ not permanent routing weights and do not override current CodexBar headroom.
 - Feature-flagged adapters (default off / shadow comparison / bounded active
   controller).
 - Exactly one read-only/stateless participant per enabled route: Codex, Grok,
-  Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek.
-- Grok fixed effective model/effort: `grok-4.6` / `high` (caller may pass
+  Claude, Cursor, Pool, AGY/Gemini, GLM, Gemma, and DeepSeek. Kimi and KimiCC
+  seats are named in the registry but refused by `kimi_admission`.
+- Grok fixed effective model/effort: `grok-4.7` / `high` (caller may pass
   only `None` or those exact values; metadata never fabricates otherwise).
   Rotated from `grok-4.5` by operator order 2026-08-16 (#6865).
 - Grok ACP server command (single custom agent argument; never built-in
   `grok-build`, which cannot force `--no-leader`): absolute resolved Grok
   binary plus exact argv order
-  `agent --model grok-4.6 --reasoning-effort high --agent-profile
+  `agent --model grok-4.7 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`.
 - The project-owned Grok profile is digest-checked before every spawn. Its
   empty tool allowlist plus explicit denylist removes write, shell, subagent,
@@ -503,7 +503,7 @@ printf '%s\n' 'Compare the two bounded options and name risks.' |
 
 Every fleet launcher exports ACP as the routine transport. The project
 `discuss` command automatically selects the durable ACP controller when the request names
-2 to 4 distinct enabled participants: Codex, Grok, Claude, Kimi, KimiCC K3,
+2 to 4 distinct enabled participants: Codex, Grok, Claude,
 Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. The direct `acp-discuss` command remains available for
 operators and tests. Selection starts no process at cold start and does not
 change `delegate.py`. Any other count or invalid seat list is rejected loudly
@@ -537,7 +537,7 @@ receive the contract for awareness but do not start conversations independently.
 | Codex orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | AGY/Gemini orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
 | Grok orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
-| Kimi and KimiCC orchestrators | Eligible caller | Explicit routine ACP selection only when the requested participants are enabled |
+| Kimi and KimiCC seats | Not an ACP caller or participant (web, UI and backend coding only) | Refused by `kimi_admission`; dispatch for owned web, UI and backend paths only |
 | Cursor orchestrators with an explicit model | Eligible caller | Explicit routine ACP selection only; never use an automatic/opaque model route |
 | Dispatch-only, worker, and review-only seats | Awareness only | The accountable orchestrator owns invocation |
 

@@ -463,28 +463,28 @@ class TestLadderAuthModeFiltering:
 
     def test_ladder_oauth_only_keeps_agy_rung(self) -> None:
         ladder = build_gemini_ladder(allowed_auth_modes=("oauth",))
-        assert len(ladder) == 4
+        assert len(ladder) == 2
         gemini_rungs = [r for r in ladder if r.cli == "gemini-cli"]
         assert all(r.auth_mode == "oauth" for r in gemini_rungs)
         assert ladder[1].cli == "agy-cli"
-        # Rung indices renumber to filtered total so log "Rung 1/4" is honest
-        assert [r.index for r in ladder] == [1, 2, 3, 4]
-        assert all(r.total == 4 for r in ladder)
+        # Rung indices renumber to filtered total so log "Rung 1/2" is honest
+        assert [r.index for r in ladder] == [1, 2]
+        assert all(r.total == 2 for r in ladder)
 
-    def test_ladder_api_only_has_three_rungs(self) -> None:
+    def test_ladder_api_only_has_primary_rung(self) -> None:
         ladder = build_gemini_ladder(allowed_auth_modes=("api",))
-        assert len(ladder) == 3
+        assert len(ladder) == 1
         assert all(r.auth_mode == "api" for r in ladder)
 
-    def test_ladder_both_has_seven_rungs_with_agy_after_pro(self) -> None:
+    def test_ladder_both_has_three_rungs_with_agy_after_pro(self) -> None:
         ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
-        assert len(ladder) == 7
+        assert len(ladder) == 3
         # API-first ordering preserves the "fast-path first" intent
         assert ladder[0].auth_mode == "api"
         assert ladder[1].auth_mode == "oauth"
         assert ladder[0].model == ladder[1].model
         assert ladder[2].cli == "agy-cli"
-        assert ladder[3].auth_mode == "api"
+        assert ladder[2].auth_mode is None
 
     def test_empty_allowed_modes_rejected(self) -> None:
         import pytest

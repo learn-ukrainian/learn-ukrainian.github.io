@@ -34,6 +34,22 @@ pytestmark = pytest.mark.reads_content
 STATE = ic.STATE_NAME
 
 
+@pytest.fixture(scope="module", autouse=True)
+def _isolate_atlas_manifest(tmp_path_factory: pytest.TempPathFactory):
+    from scripts.generate_mdx import atlas_links
+
+    manifest = tmp_path_factory.mktemp("atlas_manifest") / "lexicon-manifest.json"
+    manifest.write_text('{"entries": []}', encoding="utf-8")
+    mp = pytest.MonkeyPatch()
+    mp.setattr(atlas_links, "_DEFAULT_MANIFEST", manifest)
+    atlas_links._load_manifest_tables.cache_clear()
+    try:
+        yield
+    finally:
+        atlas_links._load_manifest_tables.cache_clear()
+        mp.undo()
+
+
 # --- run-crafted ------------------------------------------------------------------------------------
 
 
@@ -103,6 +119,22 @@ CONTROLS = [
 
 def test_the_whole_crafted_suite_passes_before_any_break(tmp_path: Path) -> None:
     assert [(case.key, case.passed) for case in ic.run_all(tmp_path)] == [(key, True) for key, _, _ in ic.CRAFTED_CASES]
+
+
+def test_layers_refuses_a_receipt_id_absent_from_the_fixture(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    build_sources = ic.receipt_source_paths
+
+    def without_cited_row(root: Path) -> tuple[Path, Path]:
+        sources_db, vesum_db = build_sources(root)
+        with sqlite3.connect(vesum_db) as conn:
+            conn.execute("DELETE FROM forms_all WHERE source_location = ?", ("5682038-5682052",))
+        return sources_db, vesum_db
+
+    monkeypatch.setattr(ic, "receipt_source_paths", without_cited_row)
+    cases = ic.run_all(tmp_path)
+    assert {case.key for case in cases if not case.passed} == {"iii"}, "\n".join(case.line() for case in cases)
+    layers = next(case for case in cases if case.key == "iii")
+    assert "evidence_id_unresolved" in layers.line() and "vesum:5682038-5682052" in layers.line()
 
 
 @pytest.mark.parametrize(

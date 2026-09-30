@@ -49,11 +49,39 @@ Project-local wrappers for interactive agent sessions:
 ```
 
 Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
-lane via `scripts/delegate.py --agent kimi` or the project bridge/runtime. Interactive native
+coding lane via `scripts/delegate.py dispatch --agent kimi --mode workspace-write` (web, UI
+and backend coding only). The bridge is not a Kimi route: it refuses every Kimi recipient,
+ask, inbox and discussion. Interactive native
 Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
 `~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback).
 Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
 Use `./start-kimicc.sh` or `./start-kimi.sh --harness claude-code` for Kimi through Claude Code.
+
+### Rules core loading
+
+Every launcher starts its seat with the rules core
+(`agents_extensions/shared/rules/core.md`; curriculum driver lanes add
+`core-curriculum.md`), read offline by `scripts/lib/rules_core.py` through
+`scripts/lib/rules_core.sh`. The core always comes from the checkout the code
+runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
+native Codex `-c developer_instructions=…`, Grok `--rules`, native Kimi an
+`--agent-file` that keeps its default prompt; AGY, Cursor, OpenCode and Hermes
+receive the core at the head of the initial prompt. Native Kimi refuses
+`--continue`, `--session`, `--resume`, `--agent` and `--agent-file` (exit 2): a
+resumed or custom agent would not carry the core, and Kimi seats take fresh
+web/UI/backend coding tasks. `delegate.py dispatch`
+(`--rules-seat core|content`, default `$LU_RULES_SEAT`), ACP calls and the
+legacy bridge prompts prepend the same block unless the prompt already starts
+with it. An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
+any adapter check or deploy, `delegate.py dispatch` exits 2 before any check or task record, an ACP call raises
+`InterAgentTransportError`, a discussion raises `AcpxDiscussionError` before admission, an `ask-*` prompt exits, and
+the loader CLI exits 3; each message names the path. `LAUNCHER_DRY_RUN=1` prints the seat
+and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
+
+```bash
+.venv/bin/python scripts/lib/rules_core.py --format json          # seat, bytes, first/last pillar anchors
+.venv/bin/python scripts/lib/rules_core.py --lane core --format seat   # content
+```
 
 ### Parallel routes and original Claude config
 
@@ -76,7 +104,7 @@ Codex harness remains native; use the Claude-Code harness only when its
 interface is required.
 
 ```bash
-./start-codex.sh --harness claude-code --model gpt-5.6-sol
+./start-codex.sh --harness claude-code --model gpt-6.1-sol
 ./start-codex-driver.sh --governor AUTO
 ```
 
@@ -147,8 +175,9 @@ and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.
 | `k2.7` | `kimi-k2.7-code` | 262 144 | 249 036 |
 | `k2.7-highspeed` | `kimi-k2.7-code-highspeed` | 262 144 | 249 036 |
 
-**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py --agent kimi`
-or the project bridge/runtime). Do not point headless jobs at kimicc.
+**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py dispatch
+--agent kimi --mode workspace-write`; the bridge is not a Kimi route). Do not point headless
+jobs at kimicc.
 
 K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
 rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).
@@ -1111,7 +1140,6 @@ Use this before content generation to verify plan files still match `scripts/aud
 ```bash
 .venv/bin/python scripts/migrate/migrate_to_v2.py b1
 .venv/bin/python scripts/generate_mdx/generate_plan_markdown.py hist
-.venv/bin/python scripts/generate_mdx/generate_plan_markdown.py --all
 ```
 
 ---
@@ -1153,11 +1181,15 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/curriculum_qg_harness.py` | Run calibrated Ukrainian QG fixtures or scan one module into compact evidence | `.venv/bin/python scripts/audit/curriculum_qg_harness.py --fixtures tests/fixtures/curriculum_qg/fixtures.yaml` |
 | `scripts/audit/ingest_ua_gec_gold.py` | Curate the small attributed UA-GEC gold fixture for the #2156 eval harness | `.venv/bin/python scripts/audit/ingest_ua_gec_gold.py --dry-run` |
 | `scripts/audit/module_quality_audit.py` | Report surface and LLM-QG/compact evidence coverage by level | `.venv/bin/python scripts/audit/module_quality_audit.py --level b1 --format summary` |
-| `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
+| `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py docs/session-state/current.md` |
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
-| `scripts/ci/area_replay.py` | Replay recorded CI runs (changed paths + failed test files, JSON Lines) through the PR-tier test-area skip; exits 1 on any escape (#8872). Area closure proof: `tests/test_ci_test_areas_invariant.py` | `.venv/bin/python -m scripts.ci.area_replay runs.jsonl` |
+| `scripts/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; pins `scripts/ci/history-tests.txt` (tests that need git history or fetch) to shard 1, the only full-history shard; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16` |
+| `scripts/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact collected and skip sets; writes the tested-tree record | `.venv/bin/python -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
+| `scripts/ci/reuse_green_run.py` | Merge queue: reuse a green full run (pytest, secret scan, Checks, Frontend) of the identical tree, bound to the queued PR, its tested merge commit and the complete job inventory of one attempt, else run everything | run by ci.yml's `reuse` job |
+| `scripts/ci/metadata_commit.py` | Merge queue: an empty-diff commit carrying the queue commit's metadata, so TruffleHog scans message, author and committer alone | run by ci.yml's `queue-metadata-scan` job |
+| `scripts/ci/checks.sh` | Every lint/content-contract gate of ci.yml's Checks job; runs all, fails if any failed | `bash scripts/ci/checks.sh` |
 | `scripts/projects/open_model_data/v4_mine_stem_controls.py` | Phase 3.3 STEM `PRESERVE` miner + polysemy typing (#8007). Receipts are hash-only; shards stay local. | `python -m scripts.projects.open_model_data.v4_mine_stem_controls --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" --output-dir "$STEM_CONTROLS_OUT"` |
 
 ---
@@ -1585,13 +1617,15 @@ This is also called by `session-setup.sh`.
 Scans `docs/session-state/*.md` for references to env/config files that do not exist locally.
 
 ```bash
-.venv/bin/python scripts/audit/lint_session_state.py --all
-.venv/bin/python scripts/audit/lint_session_state.py --file docs/session-state/current.md
+.venv/bin/python scripts/audit/lint_session_state.py docs/session-state/current.md
+.venv/bin/python scripts/audit/lint_session_state.py --all   # explicit whole-directory audit
 ```
 
 Known user-scoped paths that are expected but not committed live in
 `scripts/audit/known_user_paths.yaml`. This check is also wired into pre-commit
-for `docs/session-state/*.md`.
+for `docs/session-state/*.md`; the hook lints only the session-state files in the
+commit, so a stale reference in an untouched file (written on another host) never
+blocks an unrelated commit (#8354). `--all` remains for explicit/CI audits.
 
 **Capabilities and Limitations:**
 - ✅ Catches: missing-file references for tilde-rooted dotfiles (`~/.bash_secrets`, etc.) + `.env*` variants.
@@ -1653,7 +1687,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
-| Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
+| Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi/K3, which takes web, UI and backend coding only; feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
 | Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |
@@ -1767,7 +1801,7 @@ AGY examples:
 # Fast AGY one-off
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "Quick one-off check." \
   --task-id adhoc-agy-check \
-  --to-model gemini-3.5-flash-high
+  --to-model gemini-3.8-flash-high
 
 # Drain AGY channel inbox explicitly
 .venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run agy

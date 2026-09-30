@@ -190,9 +190,8 @@ AGENTS: dict[str, AgentEntry] = {
     "deepseek": {
         # OpenCode → first-party api.deepseek.com (deepseek-direct/*) is the
         # dispatch default (operator 2026-08-13): Flash default, --variant high,
-        # native Entire capture. Pro is reachable via --model deepseek-v4-pro
-        # for hard implement tasks only (complex multi-file, hard lookup —
-        # operator GO 2026-08-13, canary #6703). Bridge asks (`ask-deepseek`,
+        # native Entire capture. Retired Pro model requests are refused.
+        # Bridge asks (`ask-deepseek`,
         # `ask-hermes` alias) ride the acpx-deepseek-shadow ACP seat on the
         # same first-party opencode route since the Hermes removal (operator
         # order 2026-08-16, #6805). First-party DeepSeek is China-hosted →

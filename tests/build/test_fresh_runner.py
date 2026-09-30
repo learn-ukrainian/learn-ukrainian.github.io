@@ -16,6 +16,7 @@ from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.inventory_gate import GateFailure, GateReport
+from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist
 from tests.build.test_fresh_assemble import (
     make_draft,
@@ -30,9 +31,42 @@ from tests.build.test_fresh_assemble import (
     validate_fixture_plan,
     validate_fixture_words,
 )
+from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: F401
 
 pytestmark = pytest.mark.reads_content
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def _confirm_fixture_form(state: Path, item: dict) -> None:
+    resolution = receipts.check_receipts(state / "lesson-1.resolutions.yaml")
+    demand = item["requires"]
+    options = item["options"]
+    authored = yaml.safe_load((state / "lesson-1.draft.yaml").read_text(encoding="utf-8"))
+    doc = {
+        "requirements_schema": 2,
+        "lesson": resolution["lesson"],
+        "inputs": receipts.requirement_inputs(resolution["inputs"], authored),
+        "items": [
+            {
+                "activity": "a1",
+                "item": 0,
+                "requires": demand,
+                "payload_sha256": receipts.requirement_payload_sha256(
+                    receipts.requirement_sentence(item), options, 0, demand
+                ),
+                "decision": "confirm",
+                "reason": "fixture checks receipt plumbing",
+                "requires_forced": True,
+                "options": [
+                    {"text": text, "judgement": "valid" if i == 0 else "invalid", "evidence": ["vesum:5682038-5682052"]}
+                    for i, text in enumerate(options)
+                ],
+                "writer": {"seat": "codex@sol", "family": "openai"},
+                "reviewer": {"seat": "claude@sonnet", "family": "anthropic", "lane": "language"},
+            }
+        ],
+    }
+    receipts.write_requirement_receipts(receipts.requirement_receipt_path(state, 1), doc)
 
 
 def _fixture(*, text: str = "слово " * 11, two_senses: bool = False):
@@ -367,6 +401,25 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
 
 
 class _FixtureSources:
+    def __init__(self, *, evidence_sources=None):
+        self.evidence_sources = evidence_sources
+
+    def resolve_evidence_ids(self, evidence_ids):
+        from scripts.curriculum.evidence.sources import Sources
+
+        if self.evidence_sources is not None:
+            return self.evidence_sources.resolve_evidence_ids(evidence_ids)
+        with Sources() as sources:
+            return sources.resolve_evidence_ids(evidence_ids)
+
+    def bind_evidence_forms(self, resolved, citations):
+        from scripts.curriculum.evidence.sources import Sources
+
+        if self.evidence_sources is not None:
+            return self.evidence_sources.bind_evidence_forms(resolved, citations)
+        with Sources() as sources:
+            return sources.bind_evidence_forms(resolved, citations)
+
     def _vesum_identity(self):
         return "f" * 64, {}
 
@@ -473,6 +526,7 @@ def _run_contract(
     level=None,
     observed_writer=None,
     gloss_ids=frozenset(),
+    question_dispatch=None,
 ):
     lvl = level or plan.get("level") or "a1"
     if lvl == "a1":
@@ -499,6 +553,7 @@ def _run_contract(
 
     state = tmp_path / "state"
     state.mkdir(exist_ok=True)
+    (state / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     (state / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes(draft))
     monkeypatch.setattr(runner, "write_manifest", manifest_writer or (lambda *a, **kw: ({"recap": False}, "a" * 64)))
     report = runner.run_lesson(
@@ -514,7 +569,7 @@ def _run_contract(
         plans_dir=tmp_path,
         evidence_dir=tmp_path,
         question_seat=seat,
-        question_dispatch=answer,
+        question_dispatch=question_dispatch or answer,
         sources=_FixtureSources(),
         allowlist=allowlist,
         site_dir=tmp_path / "site",
@@ -832,9 +887,12 @@ def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, mo
     validate_fixture_plan(plan)
     validate_fixture_draft(draft)
     first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert first["checks"][6]["code"] == "requires_receipt_missing"
+    _confirm_fixture_form(state, draft["activities"][0]["items"][0])
+    first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert first["passed"] is True, first
     assert first["checks"][6]["details"]["requirement_receipts"] == [
-        {"activity": "a1", "item": 0, "requirement": "not_checked"}
+        {"activity": "a1", "item": 0, "requirement": "confirmed"}
     ]
     mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
     assert "сло\u0301во" in mdx and "слова\u0301" in mdx
@@ -851,3 +909,92 @@ def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, mo
     second, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert second == first
     assert {name: (state / name).read_bytes() for name in before} == before
+
+
+def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkeypatch):
+    from scripts.curriculum.evidence.sources import SourceResult, Sources
+
+    draft, plan, pack, words = _fixture()
+    # Exercise the owned-session path rather than the injected source double.
+    monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
+    monkeypatch.setattr(Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64))
+    resolve = runner.resolve
+    choices = runner.check_7_a1_choices
+    captured = []
+
+    def scoped_resolve(expanded, allowlist, sources):
+        sources._db()
+        captured.append(sources)
+        return resolve(expanded, allowlist, sources)
+
+    def scoped_choices(*args, **kwargs):
+        assert kwargs["sources"] is captured[0]
+        assert captured[0]._conn is not None
+        return choices(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "resolve", scoped_resolve)
+    monkeypatch.setattr(runner, "check_7_a1_choices", scoped_choices)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    assert len(captured) == 1 and captured[0]._conn is None
+
+
+def test_runner_releases_owned_snapshot_on_resolver_failure(tmp_path, monkeypatch):
+    from scripts.curriculum.evidence.sources import Sources
+
+    draft, plan, pack, words = _fixture()
+    monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
+    captured = []
+
+    def unavailable(expanded, allowlist, sources):
+        sources._db()
+        captured.append(sources)
+        raise OSError("fixture source failure")
+
+    monkeypatch.setattr(runner, "resolve", unavailable)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False and report["passed_through"] == 7
+    assert len(captured) == 1 and isinstance(captured[0], Sources) and captured[0]._conn is None
+
+
+@pytest.mark.parametrize("dispatch_fails", [False, True])
+def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, monkeypatch, dispatch_fails):
+    import sqlite3
+
+    from scripts.curriculum.evidence.sources import SourceResult, Sources
+
+    draft, plan, pack, words = _fixture(two_senses=True)
+    monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
+    monkeypatch.setattr(Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64))
+    captured = []
+    original_resolve = runner.resolve
+    original_choices = runner.check_7_a1_choices
+
+    def resolve(expanded, allowlist, sources):
+        old = sources._db()
+        captured.append((sources, old))
+        return original_resolve(expanded, allowlist, sources)
+
+    def dispatch(batch, seat):
+        sources, old = captured[0]
+        assert sources._conn is None
+        with pytest.raises(sqlite3.ProgrammingError, match="closed"):
+            old.execute("SELECT 1")
+        if dispatch_fails:
+            raise RuntimeError("fixture provider failure")
+        with sqlite3.connect(sources.sources_db) as writer:
+            writer.execute("INSERT INTO grinchenko (id, definition) VALUES (99, 'post-dispatch row')")
+        return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
+
+    def choices(*args, **kwargs):
+        sources, old = captured[0]
+        assert kwargs["sources"] is sources and sources._conn is None
+        assert sources._db() is not old
+        assert sources._db().execute("SELECT definition FROM grinchenko WHERE id=99").fetchone()[0] == "post-dispatch row"
+        return original_choices(*args, **kwargs)
+
+    monkeypatch.setattr(runner, "resolve", resolve)
+    monkeypatch.setattr(runner, "check_7_a1_choices", choices)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, question_dispatch=dispatch)
+    assert report["passed"] is not dispatch_fails, report
+    assert captured[0][0]._conn is None

@@ -23,6 +23,8 @@ from dataclasses import dataclass
 from pathlib import Path, PurePosixPath
 
 ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 RAW_ESUM = ROOT / "data/raw/esum"
 JP2_STAGING = RAW_ESUM / "jp2-staging"
 OCR_DIR = RAW_ESUM / "gemini-ocr"
@@ -793,6 +795,10 @@ def quality_halt_message() -> str:
 
 
 async def run(args: argparse.Namespace) -> int:
+    if not args.dry_run:
+        from scripts.review.model_catalog import require_execution_model
+
+        require_execution_model(args.model, transport="native_gemini")
     selected = parse_only(args.only)
     volumes = discover_volumes()
     if selected:

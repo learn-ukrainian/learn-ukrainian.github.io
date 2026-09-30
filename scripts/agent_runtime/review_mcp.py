@@ -2,6 +2,11 @@
 
 Issue: #8517 (Refs #8430, #8397)
 
+These paths belong to the host receipt runtime, not to the review seat's
+readable evidence. Formal dispatches stage a copied manifest closure and a
+fresh home through ``attempt_boundary`` before any model process launches
+(#9251); the sources process keeps these original paths outside that sandbox.
+
 Provisions a per-attempt MCP configuration and empty receipt ledger for review
 seats. Formal reviews require audit-grade receipts recorded over stdio via
 attempt-specific environment variables:
@@ -11,7 +16,11 @@ attempt-specific environment variables:
 
 The generated MCP configuration defines exclusively a `sources` server started
 over stdio from the primary checkout's virtual environment and server script,
-bypassing the shared streamable-HTTP daemon (127.0.0.1:8766).
+bypassing the shared streamable-HTTP daemon (127.0.0.1:8766). Because the prompt may be
+rendered in another checkout, ``check_review_contract`` refuses the attempt when the
+server code or templates its render recorded differ from what the seat would run, and
+``prepare_review_attempt`` digests the server again from the exact checkout and interpreter
+it writes into the configuration, refusing when that differs from what admission checked (#9163).
 
 Codex has no ``--mcp-config`` flag, and per-invocation ``-c mcp_servers.X`` overrides
 MERGE with the user's global ``~/.codex/config.toml``. A Codex attempt therefore also
@@ -89,20 +98,22 @@ from typing import Any
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
 from scripts.review.receipts.ledger import REVIEW_TOOLS
+from scripts.review.render_contract import check_launch_contract, check_render_contract
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
 ENV_LEDGER_PATH = "LU_REVIEW_LEDGER_PATH"
 ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
-SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex", "cursor"})
+SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex"})
 
 UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
+    "cursor": "formal attempts require a proven manifest filesystem boundary; Cursor is not admitted (#9251)",
     "gemini": "Gemini has one global MCP config without per-invocation MCP config support",
     "grok": "not yet proven",
     "grok-build": "not yet proven",
-    "kimicc": "not yet supported",
-    "kimi": "Native Kimi Code reads global profile config and cannot take a per-attempt stdio config",
+    "kimicc": "Kimi: web, UI and backend coding only; reviews are refused",
+    "kimi": "Kimi: web, UI and backend coding only; reviews are refused",
     "grok-hermes": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
     "deepseek": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
     "qwen": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
@@ -506,9 +517,7 @@ class ReviewMcpPlan:
 def review_tools_allowed_csv(harness: str) -> str | None:
     """Return the Claude Code ``--allowedTools`` names for the sources server.
 
-    Only Claude Code understands these names. Kimi reviews use that same
-    grant on the kimicc read-only dispatch path, which calls this with
-    ``claude`` because the headless binary is Claude Code.
+    Only Claude Code understands these names.
     """
     if harness.lower().strip() != "claude":
         return None
@@ -637,6 +646,23 @@ def _agy_oauth_link_state(link: Path, real_token: Path) -> str | None:
     return None
 
 
+def review_server_checkout() -> Path:
+    """The checkout every review attempt launches its sources server from: the primary checkout."""
+    return resolve_repo_root(Path(__file__), 2)
+
+
+def check_review_contract(
+    prompt_file: Path | None, prompt_text: str, server_checkout: Path | None = None
+) -> dict[str, Any]:
+    """Refuse a review attempt whose prompt was rendered against other code than its seat would run (#9163).
+
+    ``prompt_file`` is the ``--prompt-file`` the dispatch runs (``None`` for a literal or stdin prompt, which has no
+    render record and is refused); ``server_checkout`` defaults to ``review_server_checkout()``, where the seat's
+    sources server launches. See ``scripts.review.render_contract.check_render_contract``.
+    """
+    return check_render_contract(prompt_file, prompt_text, Path(server_checkout or review_server_checkout()))
+
+
 def prepare_review_attempt(
     review_id: str,
     attempt_id: str,
@@ -644,6 +670,7 @@ def prepare_review_attempt(
     harness: str,
     *,
     receipts_root: Path | None = None,
+    review_contract: Mapping[str, Any] | None = None,
 ) -> ReviewMcpPlan:
     """Prepare the per-attempt stdio sources MCP config, empty ledger, and sidecar.
 
@@ -653,12 +680,16 @@ def prepare_review_attempt(
         manifest_path: Path to the review manifest YAML.
         harness: Agent harness name (e.g. 'claude', 'cursor').
         receipts_root: Optional override for the receipts base directory (used in tests).
+        review_contract: What admission checked (``check_review_contract``). When given, the sources server is
+            digested again from the checkout and interpreter this config launches, and a difference refuses
+            before any file is written (#9163).
 
     Returns:
         ReviewMcpPlan containing the written config path and adapter options.
 
     Raises:
-        ValueError: If tokens are invalid or harness is unsupported.
+        ValueError: If tokens are invalid or harness is unsupported, or (``ReviewContractError``) the server
+            differs from the one admission checked.
         FileExistsError: If ledger, sidecar, or config already exists.
         FileNotFoundError: If manifest_path does not exist.
     """
@@ -686,7 +717,7 @@ def prepare_review_attempt(
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
 
     # Primary checkout root: resolved via repository helper scripts.common.repo_root
-    primary_root = resolve_repo_root(Path(__file__), 2)
+    primary_root = review_server_checkout()
     python_bin = project_interpreter()
     sources_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
 
@@ -712,6 +743,10 @@ def prepare_review_attempt(
             f"AGY OAuth token not found for the scoped review home: no {_AGY_TOKEN_NAME} in the "
             "real AGY_APP_DATA_DIR (default ~/.gemini/antigravity-cli) (#8617)"
         )
+
+    if review_contract is not None:
+        # Admission checked the primary earlier in the dispatch; the seat launches what is on disk now (#9163).
+        check_launch_contract(review_contract, primary_root, python_bin)
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = {

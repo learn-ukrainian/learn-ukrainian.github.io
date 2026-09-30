@@ -41,7 +41,7 @@ from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import build_claude_prompt
+from ._prompts import build_claude_prompt, require_core_or_exit
 from ._review_safety import (
     ReviewSafetyError,
     assert_formal_review_ask_payload,
@@ -56,7 +56,7 @@ from ._review_worktree import (
 )
 
 CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5-5"
-CLAUDE_ADVISORY_MODEL = "claude-opus-5"
+CLAUDE_ADVISORY_MODEL = "claude-opus-5-5"
 
 
 def _claude_error_provenance(msg: dict, bridge_model: str) -> tuple[str, str]:
@@ -98,6 +98,7 @@ def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query"
                on_message_created: Callable[[int], None] | None = None,
                review_pr_lifecycle: bool = False):
     """Send message to Claude AND invoke Claude to process it."""
+    require_core_or_exit("ask-claude")
     try:
         has_target = review_branch is not None or review_pr_number is not None
         formal_review = assert_formal_review_ask_payload(

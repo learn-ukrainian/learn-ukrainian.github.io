@@ -6,10 +6,10 @@ credentials stay in Kimi's own home directory; this adapter never reads or
 injects them.
 
 Kimi Code prompt mode runs with automatic tool approval and cannot be combined
-with its interactive permission or plan flags. Consequently, headless
-workspace-write and danger must be flagless (delegate.py already verifies
-their worktrees), while read-only is refused because the CLI cannot guarantee
-it.
+with its interactive permission or plan flags, so headless workspace-write is
+flagless (delegate.py already verifies its worktree). Kimi seats admit web, UI
+and backend coding only: every other mode is refused by the shared admission
+check before planning.
 """
 
 from __future__ import annotations
@@ -24,6 +24,7 @@ from typing import Any
 from scripts.review.model_catalog import kimi_model_aliases
 
 from ..failover import GH_AUTH_FAILURE_RE
+from ..kimi_admission import ADMITTED_MODE, format_refusal, refuse_kimi_execution
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
@@ -61,15 +62,7 @@ _RATE_LIMIT_RE = re.compile(
     r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|\b429\b",
     re.IGNORECASE,
 )
-_MODE_FLAGS: dict[str, tuple[str, ...]] = {
-    "read-only": (),
-    "workspace-write": (),
-    "danger": (),
-}
-
-_READ_ONLY_REFUSAL = (
-    "kimi headless auto-approves mutations; read-only cannot be guaranteed in native prompt mode — use --harness kimicc"
-)
+_MODE_FLAGS: dict[str, tuple[str, ...]] = {ADMITTED_MODE: ()}
 
 
 class KimiAdapter:
@@ -94,10 +87,9 @@ class KimiAdapter:
     ) -> InvocationPlan:
         config = tool_config or {}
         harness = config.get("harness")
-        if trail_isolation_requested(config) and harness != "kimicc":
-            raise TrailIsolationError(
-                "trail isolation refused for native Kimi: native Kimi cannot prove tool admission; use KimiCC"
-            )
+        refuse_kimi_execution(("kimi",), (model,), mode=mode, cwd=cwd, tool_config=config)
+        if trail_isolation_requested(config):
+            raise TrailIsolationError(f"KimiAdapter: {format_refusal('kimi', ['trail sessions'])}")
         if harness == "kimicc":
             return KimiccHarness().build_invocation(
                 prompt=prompt,
@@ -114,10 +106,6 @@ class KimiAdapter:
         # harness="native" reaches the same code path as an omitted flag by
         # design: it exists only so dispatch can record an explicit
         # harness=native attribution in task state (#5938 F2).
-        if mode not in self.supported_modes:
-            raise ValueError(f"KimiAdapter: unsupported mode {mode!r} (supported: {sorted(self.supported_modes)})")
-        if mode == "read-only":
-            raise ValueError(_READ_ONLY_REFUSAL)
 
         requested_model = resolve_kimi_model(model)
 

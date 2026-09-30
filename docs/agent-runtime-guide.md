@@ -40,9 +40,32 @@ yourself writing `subprocess.Popen([..., "claude", ...])` — stop. Use
 
 ## Kimi routes and KimiCC headless route
 
+Kimi seats take web, UI and backend coding only: `workspace-write`
+implementation of paths on the allowlist in
+`scripts/agent_runtime/kimi_admission.py` (`KIMI_OWNED_ROOTS`). Asks, consults,
+discussions, reviews, trail sessions and read-only or danger modes are refused
+by `refuse_kimi_if_disallowed` before any side effect. Ukrainian content is
+recognised by content: an owned file, or any file under an owned directory or
+glob, that contains a Cyrillic character is refused, and so is a directory or
+glob scope that covers an excluded file (narrow it to specific files or clean
+subdirectories). A Kimi worker does not commit: `delegate.py` checks its diff
+from the merge base and commits the owned paths only when the diff adds no
+Cyrillic character; otherwise the task ends `failed` with
+`kimi_content_refusal` and nothing is committed.
+
+Targets are admitted in the same step they are resolved:
+`scripts/agent_runtime/target_admission.py` `resolve_and_admit` performs every
+resolution a request goes through (explicit recipients and model, `data`
+attachments, compat names, ACP route pins, slot holders, registry lookups,
+quota substitution) and then runs the Kimi gate. Delivery, insertion, wake and
+launch sinks in the bridge, channels, ACP, fleet-comms and `delegate.py` take
+the `AdmittedTarget` it returns, never a raw name, and the resolvers are
+called from that module only (`tests/test_target_admission_structure.py`).
+
 **Native Kimi is the default** interactive and headless/fleet route
-(`./start-kimi.sh`, `delegate.py --agent kimi`, bridge). Native **Kimi K3 is
-max-only** — the native adapter does not accept a non-max effort ladder for K3.
+(`./start-kimi.sh`, `delegate.py --agent kimi --mode workspace-write`). Native
+**Kimi K3 is max-only** — the native adapter does not accept a non-max effort
+ladder for K3.
 
 **KimiCC is bounded explicit opt-in** (`./start-kimicc.sh`,
 `start-kimi.sh --harness claude-code`, or runtime `harness=kimicc`). On the
@@ -83,8 +106,8 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   the explicit fleet-comms `acp-discuss` controller; it is never a generic
   runner, routing, dispatch, failover, or review setting. Rollback is setting
   the flag to `off` (or unsetting it) and using native transport.
-- Direct-only seats cover Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool,
-  AGY/Gemini, GLM, Gemma, and DeepSeek through the fixed registry in
+- Direct-only seats cover Codex, Grok, Claude, Cursor, Pool,
+  AGY/Gemini, GLM, Gemma, and DeepSeek (the registry still names the Kimi and KimiCC seats, but `kimi_admission` refuses them before any side effect) through the fixed registry in
   `scripts/agent_runtime/adapters/acpx.py` (including `acpx-codex-shadow`,
   `acpx-grok-shadow` via `AcpxGrokShadowAdapter`, `acpx-agy-shadow`,
   `acpx-glm-shadow`, `acpx-gemma-shadow`, and `acpx-deepseek-shadow`). They
@@ -107,9 +130,9 @@ Approved boundary (#6027, #6043, #6078, #6130, #6158, #6249):
   `tool_config={"acpx_shadow": True, "target_agent": "codex"}`.
 - Grok participant:
   `tool_config={"acpx_shadow": True, "target_agent": "grok"}`.
-  Fixed effective model/effort `grok-4.6` / `high`. Custom agent command
+  Fixed effective model/effort `grok-4.7` / `high`. Custom agent command
   (never built-in `grok-build`): absolute Grok binary +
-  `agent --model grok-4.6 --reasoning-effort high --agent-profile
+  `agent --model grok-4.7 --reasoning-effort high --agent-profile
   <hash-pinned-project-no-tool-profile> --no-leader stdio`. The project-owned
   profile is digest-checked before every spawn and removes write, shell,
   subagent, memory, web, MCP, and LSP tools at the Grok server boundary.
@@ -300,7 +323,7 @@ its structured result before delivering canonical JSON to that parser.
 
 Reviewer choices, configured model pins, lineage checks and QG canaries are
 unchanged. Direct review uses the native Claude adapter with its existing
-`claude-opus-4-8` pin. A schema-capable adapter does not establish availability,
+`claude-opus-5-5` pin. A schema-capable adapter does not establish availability,
 policy admission or semantic correctness for every configured model. Issue
 #7810's frozen 18-cell matrix retains those residuals; held-out evaluation and
 cross-family approval belong to the reviewer of record at the exact PR head.
@@ -488,7 +511,7 @@ profile:
 
 ```python
 invoke(
-    "grok",  # or "kimi" with harness="kimicc"
+    "grok",
     prompt,
     mode="read-only",
     cwd=Path.cwd(),
@@ -514,11 +537,9 @@ The admission policy is fail-closed:
 - Native Grok gets a private MCP cwd, an exact three-tool allowlist, explicit
   allows for those tools, and explicit denies for Bash, reads/writes/edits,
   web, and discovery tools.
-- Kimi is eligible only through `tool_config={"harness": "kimicc", "trail_isolation": True}`.
-  KimiCC forwards Claude Code's exact `--tools`, `--allowedTools`,
-  `--strict-mcp-config`, and empty `--setting-sources` profile.
-- Native Kimi, GLM/opencode, Hermes Grok, and every unproven harness refuse
-  before spawn. GLM currently ignores tool restrictions, so a refusal is more
+- Every Kimi seat (native and KimiCC) refuses trail sessions: Kimi seats take
+  web, UI and backend coding only (`scripts/agent_runtime/kimi_admission.py`).
+- GLM/opencode, Hermes Grok, and every unproven harness refuse before spawn. GLM currently ignores tool restrictions, so a refusal is more
   honest than a pretend sandbox.
 
 The boundary prevents accidental weak-driver deviation, not a malicious
@@ -833,6 +854,57 @@ in that case; the removal guard does not.
 The sibling repositories do not get their own `batch_state` or lock namespace.
 Do not add one: a second lock file for the same path would let a reaper and a
 dispatch hold "the" lock at once.
+
+### Review attempts: server and templates must match (#9163)
+
+A `--review-attempt` seat always runs the sources MCP server from the primary
+checkout, but its prompt may have been rendered in any checkout. The two must
+come from the same code, so the check binds the prompt to the checkout that
+rendered it (`scripts/review/render_contract.py`):
+
+- **Render time.** `scripts/review/prompts/render.py --output <prompt>` writes a
+  `render_contract` record into `<prompt>.files_read.json`: the render checkout,
+  the templates the render actually loaded with their sha256 and one digest over
+  them, that checkout's server-code digest, and the prompt's sha256.
+- **Server-code digest.** Two named components. `repository`:
+  `.mcp/servers/sources/server.py` plus every repository module it imports,
+  found by a static walk of `import` / `from … import` statements
+  (function-level imports included) resolved the way the server's own
+  `sys.path` resolves them: `scripts/`, then the repository root, then the
+  server's directory. Files are read from disk whether or not git ignores them;
+  a symlink contributes its target's bytes; `__pycache__`, documents and
+  modules the server never imports do not count. Imports outside the
+  repository (standard library, third-party) and dynamic `importlib` imports
+  are not traced. `requirements-lock.txt`: the sha256 of the checkout's lock,
+  which pins every third-party package the environment is built from; a
+  checkout without it refuses as `review_server_lock_missing`. Accepted
+  residual: an installed package that changes without a lock change (for
+  example a reinstall of `packages/v4-runtime`) is not seen.
+- **Dispatch time.** Before any archival (`--force-new` included), worktree,
+  task record or worker, `review_mcp.check_review_contract` refuses with exit 2:
+  - `review_render_record_missing` — the prompt is a literal or stdin prompt,
+    or its sidecar has no render record; re-render with `--output` and dispatch
+    with `--prompt-file`;
+  - `review_render_record_stale` — the prompt file no longer hashes to the
+    prompt its record names;
+  - `review_contract_mismatch` — the primary checkout's server code differs
+    from the recorded render-time digest, or a loaded template in the render
+    checkout changed since rendering. The message names the render checkout,
+    the primary checkout, both digests, the differing server components and the
+    fix: pull the primary checkout to `origin/main`, then re-render and retry.
+- **Launch time.** `review_mcp.prepare_review_attempt` receives the admitted
+  contract and, before writing the ledger or the seat's MCP config, digests the
+  server again from exactly the checkout and interpreter that config launches
+  (`render_contract.check_launch_contract`). If the checkout, the interpreter or
+  the digest differs from admission (the primary was pulled in between), it refuses with exit 2 as `review_server_changed`,
+  naming both digests and the differing components; no worker is spawned. The
+  config is written right after this check; the seat's harness starts the server
+  from it when the worker runs, and the worker does not check again (accepted
+  residual: a change inside that window is not caught).
+
+The checkout running `delegate.py` plays no part. The task record keeps the
+digests compared, the per-component digests and the interpreter under
+`review_contract`.
 
 ## Common mistakes
 

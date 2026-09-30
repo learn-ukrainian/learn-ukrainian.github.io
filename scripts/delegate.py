@@ -53,8 +53,9 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_chars": int,
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
-        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
+        "review_contract": {render_checkout, server_checkout, server_interpreter, render_server_digest, server_digest, server_components, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
@@ -62,6 +63,10 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "returncode": int | null,
         "returncode_reason": str | null,
         "require_review_verdict": bool,  # opt-in bridge review completion gate
+        "pinned_head": str | null,  # exact --branch/--pr head required before dispatch
+        "review_author_model": str | null,  # trusted author identity for code review resolution
+        "review_risk": str | null,  # code review resolver risk; budget substitution needs author + risk
+        "review_profile": str | null,  # code (default) or ukrainian
         "failure_reason": str | null,  # named cause on failed verdict-required reviews
         "launch_mode": "scope" | "popen-fallback",  # #8645 part C
         "launch_unit": str | null,                  # scope unit when launch_mode is scope
@@ -73,7 +78,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "leftovers_scan_error": str | absent,       # why the scan was unknown
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
-        "finalize_skipped_paths": [str] | absent    # changed files auto-finalize left out of its commit
+        "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
+        "kimi_content_refusal": str | absent        # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
     }
 
 Design notes:
@@ -122,7 +128,6 @@ from __future__ import annotations
 import argparse
 import ast
 import contextlib
-import fnmatch
 import functools
 import hashlib
 import json
@@ -146,7 +151,7 @@ from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
@@ -175,6 +180,7 @@ from scripts.config import (
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
+from scripts.lib import rules_core
 from scripts.orchestration import (
     dispatch_admission,
     dispatch_isolation,
@@ -191,6 +197,9 @@ from scripts.orchestration.dead_worker_state import (
     task_state_lock,
     write_state_unlocked,
 )
+
+if TYPE_CHECKING:
+    from scripts.agent_runtime.target_admission import AdmittedTarget, Route, RouteRequest
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
@@ -244,7 +253,7 @@ _DISPATCH_AGENT_CHOICES = (
     "grok",  # canonical native CLI seat
     "grok-build",  # permanent alias → grok
     "grok-hermes",  # demoted Hermes path
-    "kimi",  # managed native kimi-code CLI seat; no automatic fallback chain
+    "kimi",  # managed native kimi-code CLI seat; web, UI and backend coding only; no automatic fallback chain
     "deepseek",
     "agy",
     "cursor",
@@ -418,11 +427,16 @@ DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 # ---------------------------------------------------------------------------
 
 
-def _state_path(task_id: str) -> Path:
-    tasks_dir().mkdir(parents=True, exist_ok=True)
+def _state_path_no_create(task_id: str) -> Path:
+    """The task record's path, without creating the task directory (for readers that must not write)."""
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
     return tasks_dir() / f"{safe}.json"
+
+
+def _state_path(task_id: str) -> Path:
+    tasks_dir().mkdir(parents=True, exist_ok=True)
+    return _state_path_no_create(task_id)
 
 
 def _result_path(task_id: str) -> Path:
@@ -811,7 +825,9 @@ def _review_task_failure_reason(state: dict[str, Any]) -> str:
         return "read_only_checkout_snapshot_failed"
     if state.get("returncode") is None:
         if state.get("returncode_reason") in {
-            "worktree preparation failed", "forward configuration failed", "worker process was not started",
+            "worktree preparation failed",
+            "forward configuration failed",
+            "worker process was not started",
             "scoped worker startup was ambiguous; not relaunched",
         }:
             return "review_worker_not_started"
@@ -2494,8 +2510,13 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
 # Indentation follows CommonMark: at most three leading spaces; four or more,
 # or a tab, make the line an indented code block, i.e. an example.
+# After that indentation an ATX heading marker (``#`` to ``######`` plus at
+# least one space) may precede the label, so ``## VERDICT: REQUEST_CHANGES``
+# and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
+# has no space, which CommonMark does not treat as a heading, and
+# ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
@@ -5048,7 +5069,9 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
 
 def _is_read_only_package_build_path(path: str) -> bool:
     normalized = _normalize_read_only_relpath(path)
-    return any(normalized == prefix or normalized.startswith(f"{prefix}/") for prefix in _READ_ONLY_PACKAGE_BUILD_PREFIXES)
+    return any(
+        normalized == prefix or normalized.startswith(f"{prefix}/") for prefix in _READ_ONLY_PACKAGE_BUILD_PREFIXES
+    )
 
 
 def _read_only_dispatch_sandbox_root(path: str) -> str | None:
@@ -5255,60 +5278,32 @@ def _declared_owned_paths(raw: object) -> tuple[str, ...] | None:
     return paths or None
 
 
-def _owned_path_matcher(raw: str) -> Callable[[str], bool] | None:
-    """How one ``--owned-path`` claim matches a repo-relative path; None when it owns nothing.
-
-    Claims are read the way the write-path admission guard reads them
-    (:func:`scripts.guardrails.delegate_ownership.normalize_claim`): a plain
-    path owns itself and everything below it, ``dir/`` and ``dir/**`` own the
-    subtree, and a claim with other wildcards is a case-sensitive glob. An
-    empty, ``.`` or absolute claim owns nothing, nor does one with a ``..``
-    segment anywhere (``scripts/../docs`` would own ``docs``). A glob must
-    start with a literal top-level name: ``fnmatch``'s ``*`` also matches
-    ``/``, so ``**``, ``./**``, ``*``, ``*/**`` or ``*.py`` would own the whole
-    repository or every top-level entry.
-    """
-    try:
-        from scripts.guardrails.delegate_ownership import ClaimKind, normalize_claim
-    except ImportError:  # pragma: no cover - flat script path
-        from guardrails.delegate_ownership import ClaimKind, normalize_claim  # type: ignore
-
-    if ".." in (raw or "").strip().replace("\\", "/").split("/"):
-        return None
-    claim = normalize_claim(raw)
-    if claim.kind is not ClaimKind.UNKNOWN:
-        norm = claim.norm
-        return lambda path: path == norm or path.startswith(norm + "/")
-    pattern = claim.norm
-    while pattern.startswith("./"):
-        pattern = pattern[2:]
-    segments = pattern.split("/")
-    if not any(ch in pattern for ch in "*?[") or any(segment in {"", "."} for segment in segments):
-        return None
-    if any(ch in segments[0] for ch in "*?["):
-        return None
-    return lambda path: fnmatch.fnmatchcase(path, pattern)
-
-
 def _owned_path_errors(values: Sequence[str] | None) -> list[str]:
     """``--owned-path`` values that could never own a file; dispatch refuses them."""
-    return [value for value in values or () if _owned_path_matcher(value) is None]
+    try:
+        from scripts.guardrails.delegate_ownership import owned_path_matcher
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import owned_path_matcher  # type: ignore
+
+    return [value for value in values or () if owned_path_matcher(value) is None]
 
 
 def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
-    """Whether a repo-relative changed ``path`` falls under a declared owned path."""
-    return any(matcher(path) for raw in owned_paths if (matcher := _owned_path_matcher(raw)) is not None)
+    """Whether a repo-relative changed ``path`` falls under a declared owned path (:func:`path_is_owned`)."""
+    try:
+        from scripts.guardrails.delegate_ownership import path_is_owned
+    except ImportError:  # pragma: no cover - flat script path
+        from guardrails.delegate_ownership import path_is_owned  # type: ignore
+
+    return path_is_owned(path, owned_paths)
 
 
-def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
-    """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
+def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()) -> str | None:
+    """``git diff <diff_args>`` as if every change, untracked files included, were committed; None when unknown.
 
     Untracked files are marked intent-to-add in a throwaway copy of the index
     (no file content is written to the object store) so they show up as
-    additions; the real index is never touched. Renames are not detected:
-    git pairs a move only above a similarity threshold, so a caller that
-    must not split a move treats every deletion as a possible source of every
-    addition.
+    additions; the real index is never touched.
     """
     env = _sanitized_git_env()
     try:
@@ -5341,10 +5336,12 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
             if add_proc.returncode != 0:
                 return None
             diff_proc = subprocess.run(
-                ["git", "diff", "--no-renames", "--name-status", "-z", "HEAD", "--"],
+                ["git", *git_options, "diff", *diff_args],
                 cwd=worktree,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=False,
                 env=scratch_env,
                 timeout=DEFAULT_GIT_TIMEOUT_S,
@@ -5353,7 +5350,20 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
         return None
     if diff_proc.returncode != 0:
         return None
-    fields = diff_proc.stdout.split("\0")
+    return diff_proc.stdout
+
+
+def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+    """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
+
+    Renames are not detected: git pairs a move only above a similarity
+    threshold, so a caller that must not split a move treats every deletion
+    as a possible source of every addition.
+    """
+    output = _worktree_diff_output(worktree, ["--no-renames", "--name-status", "-z", "HEAD", "--"])
+    if output is None:
+        return None
+    fields = output.split("\0")
     added: list[str] = []
     deleted: list[str] = []
     for index in range(0, len(fields) - 1, 2):
@@ -5365,6 +5375,118 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
         elif status == "D":
             deleted.append(path)
     return tuple(added), tuple(deleted)
+
+
+def _kimi_worker_refusal(
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    cwd: Path,
+    review: bool,
+) -> tuple[str | None, Any]:
+    """The worker-side gate: ``(refusal, admitted target)``; installs the Kimi worktree boundary when it admits.
+
+    The worker's seat and model are resolved and admitted in one step
+    (``resolve_and_admit``); the worker invokes the admitted target.
+
+    A Kimi seat is refused unless its mode and review flags are admitted (read
+    first, from the argv alone), the task's owned paths pass admission read in
+    ``cwd`` — the tree the worker runs in — and in the commit checked out
+    there, and ``cwd`` is the task's worktree, where the boundary (hooks and
+    push block, ``kimi_boundary``) must install. For any other seat a boundary
+    left in ``cwd`` by an earlier Kimi run is taken down. Writes nothing but
+    that worktree's git config and hooks directory.
+    """
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.kimi_admission import (
+        ADMITTED_MODE,
+        KimiAdmissionRefused,
+        format_refusal,
+        is_kimi_seat,
+    )
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+
+    boundary_errors = (kimi_boundary.BoundaryError, OSError, subprocess.SubprocessError)
+    if not is_kimi_seat(agent, model=model):
+        if mode in _WRITE_CAPABLE_MODES and kimi_boundary.is_installed(cwd):
+            try:
+                kimi_boundary.remove(cwd, env=_sanitized_git_env())
+            except boundary_errors as exc:
+                return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}", None
+        (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
+        return None, target
+    try:
+        if mode != ADMITTED_MODE or review:
+            # Refused by mode or review alone: no need to read the task record (or create its directory).
+            resolve_and_admit((agent,), model=model, mode=mode, review=review)
+        # Read-only: a refused worker must leave no task directory or file behind.
+        launch = _read_state_json(_state_path_no_create(task_id)) or {}
+        owned = _declared_owned_paths(launch.get("owned_paths")) or ()
+        (target,) = resolve_and_admit(
+            (agent,),
+            model=model,
+            mode=mode,
+            review=review,
+            paths=owned,
+            repo_root=_REPO_ROOT,
+            trees=lambda: _kimi_worktree_trees(cwd),
+        )
+    except KimiAdmissionRefused as exc:
+        return str(exc), None
+    worktree = launch.get("worktree_path")
+    if not worktree or Path(worktree).resolve() != cwd.resolve():
+        return format_refusal(agent, [f"workspace-write outside the task's dispatch worktree (cwd {str(cwd)!r})"]), None
+    base_ref = _commit_count_base_ref(cwd, str(launch.get("worktree_base") or "main"))
+    try:
+        kimi_boundary.install(cwd, agent=agent, base_ref=base_ref, owned_paths=owned, env=_sanitized_git_env())
+    except boundary_errors as exc:
+        return format_refusal(agent, [f"the worktree boundary could not be installed ({exc})"]), None
+    return None, target
+
+
+def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
+    """The refusal when a Kimi worker's changed files are not plain UTF-8 text or hold Cyrillic text; None otherwise.
+
+    The changes run from the merge base with ``base_ref`` to the working tree,
+    so they cover the worker's own commits and its uncommitted and untracked
+    files. Each changed path's post-image is read in full, so git's binary
+    classification cannot hide text. Fails closed: changes that cannot be
+    read are a refusal.
+    """
+    from scripts.agent_runtime import kimi_boundary
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_kimi_changes
+
+    unreadable = format_refusal(agent, ["the finalized changes could not be read for Ukrainian content"])
+    try:
+        base_proc = subprocess.run(
+            ["git", "merge-base", base_ref, "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return unreadable
+    merge_base = (base_proc.stdout or "").strip()
+    if base_proc.returncode != 0 or not merge_base:
+        return unreadable
+    name_status = _worktree_diff_output(worktree, ["--name-status", "-z", "--no-renames", merge_base, "--"])
+    if name_status is None:
+        return unreadable
+    try:
+        changes = kimi_boundary.changes(
+            worktree, kimi_boundary.parse_name_status(name_status), after=None, env=_sanitized_git_env()
+        )
+        refuse_kimi_changes(agent, changes)
+    except KimiAdmissionRefused as exc:
+        return str(exc)
+    except (OSError, subprocess.SubprocessError):
+        return unreadable
+    return None
 
 
 def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
@@ -6877,11 +6999,11 @@ def _record_worktree_local_venv_warning(
 
 
 def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> None:
-    """Refuse when a later fetch is not the SHA the Gemini path gate checked."""
+    """Refuse when a fetched or reused head differs from the required pinned SHA."""
     if pinned_head_sha is not None and origin_sha != pinned_head_sha:
         raise RuntimeError(
             "refusing dispatch: fetched branch head "
-            f"{origin_sha} differs from the Gemini path-gate SHA {pinned_head_sha}"
+            f"{origin_sha} differs from the pinned head SHA {pinned_head_sha}"
         )
 
 
@@ -6939,6 +7061,7 @@ def _resolve_worktree_base_sha(
         resolved = _resolve_sha(worktree_path)
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
+        _refuse_if_gate_head_moved(resolved, pinned_head_sha)
         return resolved
 
     if requested_branch:
@@ -7247,8 +7370,14 @@ def _augment_prompt_with_worktree(
     *,
     mode: str = "read-only",
     sparse_telemetry: dict[str, Any] | None = None,
+    delegate_commits: bool = False,
 ) -> str:
-    """Inject worktree context into the delegated prompt when relevant."""
+    """Inject worktree context into the delegated prompt when relevant.
+
+    ``delegate_commits`` (Kimi seats) replaces the commit-and-push closeout:
+    the worker leaves its changes in the tree and delegate commits the owned
+    paths after checking that the diff adds no Cyrillic text.
+    """
     if worktree_path is None:
         return prompt
     sparse_note = ""
@@ -7265,7 +7394,16 @@ def _augment_prompt_with_worktree(
                 + "Do not invent content for missing paths.\n"
             )
     delivery_note = ""
-    if mode in _WRITE_CAPABLE_MODES:
+    if mode in _WRITE_CAPABLE_MODES and delegate_commits:
+        delivery_note = (
+            "\n[write-mode closeout]\n"
+            "Do not commit or push. Leave your changes in this worktree, inside the owned paths.\n"
+            "After you exit, delegate checks the diff and commits and pushes the owned paths; "
+            "a diff that adds any Cyrillic character, or content that is not text, is refused and "
+            "nothing is committed. This worktree's git hooks refuse the same commits, and it has no push access.\n"
+            "Delete scratch files before you finish.\n"
+        )
+    elif mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
@@ -7655,8 +7793,8 @@ def _emit_terminal_dispatch_event(
 def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness: str | None) -> list[str]:
     """Flags ``cmd_dispatch`` copies onto the ``_worker`` argv.
 
-    ``--harness`` and ``--require-review-verdict`` are how a read-only kimi
-    review reaches ``_run_worker``. Review-attempt MCP flags stay on the
+    ``--harness`` selects the Kimi transport and ``--require-review-verdict``
+    carries the review completion gate. Review-attempt MCP flags stay on the
     ``review_plan`` branch and are not part of this list.
     """
     flags: list[str] = []
@@ -7665,53 +7803,6 @@ def _dispatch_worker_identity_flags(args: argparse.Namespace, requested_harness:
     if bool(getattr(args, "require_review_verdict", False)):
         flags.append("--require-review-verdict")
     return flags
-
-
-def _kimicc_read_only_review_grant(
-    *,
-    harness: str | None,
-    mode: str,
-    require_review_verdict: bool,
-    cwd: Path | None = None,
-) -> dict[str, Any]:
-    """Sources MCP grant for ``ask-kimi --review``.
-
-    That ask is ``dispatch --agent kimi --harness kimicc --mode read-only
-    --require-review-verdict``. The headless wrapper always passes ``--bare``,
-    and ``claude --bare`` does not load ``.mcp.json``. The config this grant
-    names is always the trusted primary checkout file ``_REPO_ROOT /
-    ".mcp.json"`` (``main``), never the ``.mcp.json`` in the worker cwd. A
-    dispatch worktree is the branch under review, so its config is untrusted:
-    a stdio entry would run the author's command, and a repointed sources URL
-    would forge verification results. ``cwd`` is accepted and ignored so
-    callers can keep passing the worker checkout. ``strict_mcp_config`` is set
-    so the kimicc adapter passes ``--strict-mcp-config`` (Claude Code: only
-    servers from ``--mcp-config``; no checkout auto-discovery). Write modes
-    and non-review read-only dispatches get nothing. A missing trusted file
-    refuses the grant instead of launching without the sources server.
-    """
-    del cwd  # untrusted; the reviewed checkout must not supply MCP config
-    if harness != "kimicc" or mode != "read-only" or not require_review_verdict:
-        return {}
-    from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
-
-    allowed = review_tools_allowed_csv("claude")
-    if not allowed:
-        return {}
-    mcp_config = _REPO_ROOT / ".mcp.json"
-    if not mcp_config.is_file():
-        raise ValueError(
-            "kimicc review grant refused: trusted MCP config is missing at "
-            f"{mcp_config}. Refusing to launch without it."
-        )
-    return {
-        "allowed_tools": allowed,
-        "mcp_config_path": str(mcp_config),
-        "strict_mcp_config": True,
-        # The adapter leaves plan mode only with this marker plus its own
-        # checks of the config path and the tool allowlist (#8652).
-        "review_verdict_required": True,
-    }
 
 
 def _run_worker(
@@ -7739,6 +7830,8 @@ def _run_worker(
     attempt_id: str | None = None,
     mcp_config_path: str | None = None,
     strict_mcp_config: bool = False,
+    review_manifest: str | None = None,
+    review_input_root: str | None = None,
     finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
@@ -7749,6 +7842,27 @@ def _run_worker(
     to show up correctly in ``ps`` and systemd-style supervisors if
     we ever wrap this in one.
     """
+    # The worker is a second entry point: a worker argv built by hand or a
+    # stale parent must not invoke a Kimi seat outside web, UI and backend
+    # coding. It reads the task's owned paths in the tree it is about to run
+    # in, then installs the worktree boundary (hooks and push block), before
+    # any state write or invocation. A refusal goes to the caller only.
+    kimi_refusal, worker_target = _kimi_worker_refusal(
+        task_id,
+        agent=agent,
+        model=model,
+        mode=mode,
+        cwd=Path(cwd_str),
+        review=require_review_verdict or review_id is not None,
+    )
+    if kimi_refusal:
+        print(f"❌ {kimi_refusal}", file=sys.stderr)
+        return 1
+    # The worker runs the admitted seat and model; nothing resolves them again.
+    agent, model = worker_target.recipient, worker_target.model
+    from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
+    from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
+
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
     # through the runtime's finally block (see handler docstring).
     signal.signal(signal.SIGTERM, _worker_sigterm_handler)
@@ -7866,6 +7980,8 @@ def _run_worker(
     leftovers_unconfirmed = False
     telemetry_settled = False
     rescue_status: str | None = None
+    kimi_worker = is_kimi_seat(agent, model=model)
+    kimi_content_refusal: str | None = None
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
@@ -7895,25 +8011,15 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
+            if review_manifest is not None:
+                tool_config["review_manifest"] = review_manifest
+                tool_config["review_input_root"] = review_input_root
             if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
             elif agent in {"claude", "grok", "grok-build"} and mode == "read-only":
                 tool_config["reviewer_tools"] = True
-            # ask-kimi --review is dispatch --agent kimi --harness kimicc
-            # --mode read-only --require-review-verdict, not --review-attempt.
-            # A sealed review attempt already set strict_mcp_config and its
-            # mcp_config_path; do not overwrite those keys.
-            if not tool_config.get("strict_mcp_config"):
-                tool_config.update(
-                    _kimicc_read_only_review_grant(
-                        harness=harness,
-                        mode=mode,
-                        require_review_verdict=require_review_verdict,
-                        cwd=cwd,
-                    )
-                )
             if (
                 strict_mcp_config
                 and review_id is not None
@@ -7980,6 +8086,13 @@ def _run_worker(
 
                 verify_review_attempt_paths(mcp_config_path)
 
+            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[CURSOR_AUTO_ADMISSION_STATE_KEY].get(
+                "admitted"
+            ):
+                tool_config[CURSOR_AUTO_ADMITTED_KEY] = True
+            if is_kimi_seat(agent, model=model):
+                # The runner and the adapters run the same gate on these paths and this tree.
+                tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -8237,7 +8350,8 @@ def _run_worker(
             # (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``: dirty worktrees,
             # zero commits, ``status: done``) and 31 files of finished work were one agent
             # restart away from being lost. Detection now runs for the whole write-capable
-            # set; the riskier auto-finalize action stays scoped to ``danger``.
+            # set; the riskier auto-finalize action stays scoped to ``danger``, except for
+            # Kimi, whose work delegate always commits after the content check below.
             if worktree_path and mode in _WRITE_CAPABLE_MODES:
                 base_branch = str(final_state.get("worktree_base") or "main")
                 base_ref = _commit_count_base_ref(Path(worktree_path), base_branch)
@@ -8245,6 +8359,10 @@ def _run_worker(
                     Path(worktree_path),
                     base_ref,
                 )
+                # Kimi takes only plain text without Ukrainian content: a diff that breaks
+                # that is refused before auto-finalize can stage or commit anything.
+                if kimi_worker:
+                    kimi_content_refusal = _kimi_diff_refusal(Path(worktree_path), base_ref, agent)
                 # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
                 #
                 # ``_count_commits_ahead`` returns None when it cannot count, and
@@ -8297,9 +8415,16 @@ def _run_worker(
                     needs_finalize
                     and rescue_status is None
                     and returncode == 0
-                    and mode == "danger"
+                    and (mode == "danger" or kimi_worker)
+                    and kimi_content_refusal is None
                     and not run_incomplete
                 ):
+                    if kimi_worker:
+                        # The content check passed and the worker has exited: take the
+                        # boundary down so delegate's own commit and push go through.
+                        from scripts.agent_runtime import kimi_boundary
+
+                        kimi_boundary.remove(Path(worktree_path), env=_sanitized_git_env())
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
@@ -8394,6 +8519,13 @@ def _run_worker(
             needs_finalize = False
             final_status = "failed"
             ok_outcome = False
+        elif kimi_content_refusal:
+            # Nothing was committed for the worker; its changes stay in the tree.
+            needs_finalize = False
+            final_status = "failed"
+            ok_outcome = False
+            final_state["kimi_content_refusal"] = kimi_content_refusal
+            stderr_excerpt = f"{kimi_content_refusal}\n{stderr_excerpt}" if stderr_excerpt else kimi_content_refusal
         elif needs_finalize:
             final_status = "needs_finalize"
         elif no_deliverable:
@@ -8979,10 +9111,33 @@ _DOR_ISSUE_RE = re.compile(
 )
 
 
+def _registered_stream_epics() -> frozenset[int]:
+    """Epic numbers registered for this repository in the stream registry (#9276).
+
+    Uses the registry ``issue_stream_audit`` audits from, including closed and retired epics: an epic
+    is never a task card. An unreadable registry yields no exemption, so the check only gets stricter.
+    """
+    import yaml
+
+    from scripts.orchestration import issue_stream_audit
+
+    try:
+        registry = issue_stream_audit.load_registry()
+    except (OSError, ValueError, AttributeError, TypeError, yaml.YAMLError):
+        return frozenset()
+    return frozenset(epic for epics in registry.values() for epic in epics)
+
+
 def _run_dor_preflight(
     prompt: str, allow_reason: str | None, *, dispatch_repo: str
 ) -> tuple[str | None, dict[str, Any] | None]:
-    """Check each issue named by an implementation brief before dispatch side effects."""
+    """Check each issue named by an implementation brief before dispatch side effects.
+
+    A registered stream epic of this repository is linked context, not a task card (#9276): it is recorded
+    as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
+    (or an epic and pull requests) is refused as ``dor_epic_only_no_task_issue``, whatever the epic's card
+    says and even under ``--allow-dor-warn``. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
+    """
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
         repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
@@ -8993,53 +9148,74 @@ def _run_dor_preflight(
     candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
     if not candidates:
         return None, None
+    epic_numbers = _registered_stream_epics()
+    epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
+    tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
     issue_numbers: list[int] = []
     checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
     issue_repositories: list[dict[str, Any]] = []
-    for repo, number in candidates:
-        label = str(number) if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold() else f"{repo}#{number}"
-        recorded = False
-        try:
-            issue = subprocess.run(
-                ["gh", "api", f"repos/{repo}/issues/{number}"],
-                capture_output=True,
-                text=True,
-                timeout=60,
-                check=False,
-            )
-            if issue.returncode:
-                raise ValueError("issue lookup failed")
-            issue_payload = json.loads(issue.stdout)
-            if not isinstance(issue_payload, dict) or issue_payload.get("number") != number:
-                raise ValueError("issue lookup must identify the requested number")
-            if "pull_request" in issue_payload:
-                continue
-            issue_numbers.append(number)
-            recorded = True
-            if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
-                issue_repositories.append({"issue": number, "repo": repo})
-            result = subprocess.run(
-                [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
-                capture_output=True,
-                text=True,
-                timeout=75,
-                check=False,
-            )
-            payload = json.loads(result.stdout)
-            if not isinstance(payload, dict):
-                raise ValueError("checker result must be an object")
-            if result.returncode or payload.get("verdict") != "PASS":
-                warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
-        except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
-            if not recorded:
+
+    def check(batch: list[tuple[str, int]]) -> None:
+        for repo, number in batch:
+            label = str(number) if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold() else f"{repo}#{number}"
+            recorded = False
+            try:
+                issue = subprocess.run(
+                    ["gh", "api", f"repos/{repo}/issues/{number}"],
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                    check=False,
+                )
+                if issue.returncode:
+                    raise ValueError("issue lookup failed")
+                issue_payload = json.loads(issue.stdout)
+                if not isinstance(issue_payload, dict) or issue_payload.get("number") != number:
+                    raise ValueError("issue lookup must identify the requested number")
+                if "pull_request" in issue_payload:
+                    continue
                 issue_numbers.append(number)
+                recorded = True
                 if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
                     issue_repositories.append({"issue": number, "repo": repo})
-            warnings[label] = "checker_error"
+                result = subprocess.run(
+                    [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
+                    capture_output=True,
+                    text=True,
+                    timeout=75,
+                    check=False,
+                )
+                payload = json.loads(result.stdout)
+                if not isinstance(payload, dict):
+                    raise ValueError("checker result must be an object")
+                if result.returncode or payload.get("verdict") != "PASS":
+                    warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
+            except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
+                if not recorded:
+                    issue_numbers.append(number)
+                    if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
+                        issue_repositories.append({"issue": number, "repo": repo})
+                warnings[label] = "checker_error"
+
+    check(tasks)
+    stream_epics: list[int] = []
+    if epics:
+        if not issue_numbers:
+            # No task issue was checked (none named, or all were pull requests): the epic is all the
+            # brief names. An epic is not a task card, so its own card verdict cannot admit the brief,
+            # and no override applies.
+            names = ", ".join(f"#{number}" for _repo, number in epics)
+            return (
+                f"❌ DoR refused: dor_epic_only_no_task_issue: the brief names only the stream epic {names}; "
+                "name the task issue it implements (#9276)"
+            ), None
+        stream_epics = [number for _repo, number in epics]
     if not issue_numbers:
         return None, None
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    if stream_epics:
+        record["stream_epic"] = stream_epics
     if issue_repositories:
         record["issue_repositories"] = issue_repositories
     if allow_reason is not None:
@@ -9050,6 +9226,56 @@ def _run_dor_preflight(
         )
         return f"❌ DoR issue card WARN ({details}); fix the issue or pass --allow-dor-warn REASON", record
     return None, record
+
+
+def _review_attempt_prompt_admission(
+    args: argparse.Namespace, early_prompt: str | None, review_id: str, attempt_id: str
+) -> tuple[str | None, dict[str, Any] | None]:
+    """Admit a ``--review-attempt`` prompt, or say why not: ``(refusal, None)`` or ``(None, review_contract)``.
+
+    Runs before any side effect. The prompt's own attempt block (#8996) must name this dispatch's ids, and the
+    prompt must come from a ``--prompt-file`` whose render record matches the code the seat would run (#9163).
+    """
+    from scripts.agent_runtime.review_mcp import check_review_contract
+    from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
+    from scripts.review.render_contract import ReviewContractError
+
+    prompt_file = Path(args.prompt_file) if getattr(args, "prompt_file", None) else None
+    prompt = early_prompt or ""
+    try:
+        if prompt_file is None and getattr(args, "prompt", None) == "-":
+            # stdin is read only later, and a stdin prompt has no render record: refused as review_render_record_missing
+            return None, check_review_contract(None, "")
+        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+    except AttemptIdsUnreadableError as err:
+        return f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", None
+    except ReviewContractError as err:
+        return f"❌ {err}", None
+    if prompt_review_id is None or prompt_attempt_id is None:
+        # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
+        # ledger this dispatch prepares — the failure #8996 was filed for.
+        return (
+            "❌ review attempt refused: prompt_attempt_ids_missing: a --review-attempt prompt must print "
+            "the review_id and attempt_id its seat echoes (render it with --review-id/--attempt-id) (#8996)"
+        ), None
+    id_mismatches = [
+        f"{name} prompt={found!r} dispatch={expected!r}"
+        for name, found, expected in (
+            ("review_id", prompt_review_id, review_id),
+            ("attempt_id", prompt_attempt_id, attempt_id),
+        )
+        if found != expected
+    ]
+    if id_mismatches:
+        return (
+            "❌ review attempt refused: prompt_attempt_ids_mismatch: the prompt's attempt block ids differ "
+            f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)"
+        ), None
+    # The seat's sources server launches from the primary checkout; the prompt may have been rendered anywhere.
+    try:
+        return None, check_review_contract(prompt_file, prompt)
+    except ReviewContractError as err:
+        return f"❌ {err}", None
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -9073,6 +9299,10 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    if getattr(args, "pinned_head", None) and not (getattr(args, "branch", None) or getattr(args, "pr", None)):
+        print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
+        return 2
+
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -9092,7 +9322,8 @@ def _dispatch(
 
     caller_task_id = os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID", "").strip()
     if caller_task_id:
-        caller_state = _read_state(_state_path(caller_task_id))
+        # Read-only: this runs before the Kimi gate, so it must not create the task directory.
+        caller_state = _read_state_json(_state_path_no_create(caller_task_id))
         if caller_state is None or caller_state.get("mode") not in _WRITE_CAPABLE_MODES:
             print(
                 f"❌ dispatch refused from task {caller_task_id!r}: "
@@ -9125,10 +9356,25 @@ def _dispatch(
             resolve_fleet_repo,
         )
 
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+
     try:
-        fleet_repo, target_repo_root = resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
+        fleet_repo, target_repo_root = resolve_fleet_repo(
+            fleet_repo_key, primary_root=_REPO_ROOT, require_checkout=False
+        )
     except FleetRepoError as exc:
         print(f"❌ {exc}", file=sys.stderr)
+        return 2
+    # Kimi admission turns on the repository's catalog role, not on which sibling
+    # checkouts this host has: a Kimi request reports a missing checkout only after
+    # the Kimi gate. Every other request is refused for it here, as before.
+    try:
+        resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
+        checkout_error = None
+    except FleetRepoError as exc:
+        checkout_error = f"❌ {exc}"
+    if checkout_error and not is_kimi_seat(args.agent, model=getattr(args, "model", None)):
+        print(checkout_error, file=sys.stderr)
         return 2
     if not re.fullmatch(r"[\w.-]+/[\w.-]+", fleet_repo.github):
         print(f"❌ --repo {fleet_repo.key!r} has no valid owner/name in fleet_repos", file=sys.stderr)
@@ -9136,14 +9382,62 @@ def _dispatch(
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
-    from scripts.review.model_catalog import retired_model_refusal
+    from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
 
     # A catalog-retired model is refused before any check can run a command.
     retired_refusal = retired_model_refusal(getattr(args, "model", None))
     if retired_refusal:
         print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
+        return 2
+
+    # Every worker and review seat starts with the rules core: without it nothing
+    # is dispatched, and this runs before any check, worktree or task record.
+    try:
+        rules_core.require_core(getattr(args, "rules_seat", None))
+    except rules_core.RulesCoreMissing as exc:
+        print(f"❌ dispatch refused: {exc}; the rules core is required.", file=sys.stderr)
+        return 2
+
+    # The launch route (the retired-CLI alias and any budget substitution; #8517: a review
+    # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
+    # the original request before the route probes anything and the resolved route after it.
+    review_attempt = getattr(args, "review_attempt", None)
+    if review_attempt and getattr(args, "output_schema", None):
+        print(
+            "❌ review attempt refused: attempt_output_schema_unsupported: "
+            "--review-attempt cannot be combined with --output-schema (#9251)",
+            file=sys.stderr,
+        )
+        return 2
+    from scripts.agent_runtime.target_admission import launch_seat
+
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.ai_agent_bridge.routing_guard import (
+        RoutingGuardError,
+        assert_agent_routing_allowed,
+        assert_model_routing_allowed,
+    )
+
+    try:
+        assert_agent_routing_allowed(args.agent, context="delegate dispatch")
+        assert_model_routing_allowed(getattr(args, "model", None), context="delegate dispatch --model")
+    except RoutingGuardError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+
+    original_agent = args.agent
+    original_model = getattr(args, "model", None)
+    language_lane = _dispatch_is_language_lane(args)
+    if language_lane and launch_seat(original_agent) not in _LANGUAGE_LANES:
+        print(
+            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"--agent {launch_seat(original_agent)} cannot author, review, critique, settle, or judge "
+            "Ukrainian language, culture, or heritage content; "
+            "allowed lanes are claude, codex (GPT), and agy (Gemini).",
+            file=sys.stderr,
+        )
         return 2
 
     # #8775: validate caller-supplied paths once, before the DoR check, PR
@@ -9162,7 +9456,7 @@ def _dispatch(
     if worktree_arg and worktree_arg != "auto":
         validated_worktree, path_error = _validate_explicit_worktree(
             worktree_arg,
-            agent=resolve_retired_agent_alias(args.agent) or args.agent,
+            agent=launch_seat(args.agent),
             repo_root=target_repo_root,
         )
         if path_error:
@@ -9175,6 +9469,36 @@ def _dispatch(
             print(path_error, file=sys.stderr)
             return 2
         args.cwd = str(validated_cwd)
+
+    # The single Kimi gate runs on the original request (--agent, --model and their aliases)
+    # before the launch route probes the budget or a model, and on the route it resolves —
+    # the retired-CLI alias and any budget substitution — on the validated paths, before any
+    # other check that can run an external command, write a record, sweep runtime tmp,
+    # archive a task or create a worktree. Owned paths are read in the tree the worker
+    # starts from: a reused worktree on disk and at its commit, a new one at its creation
+    # base commit (fetched and read with git plumbing). The worktree must start from
+    # ``kimi_start_commit``; two checks below refuse one that does not.
+    routing = _DispatchRouting()
+    kimi_refusal, kimi_start_commit, launch_target = _kimi_dispatch_gate(
+        args,
+        agent=original_agent,
+        route=_dispatch_route(args, routing, language_lane=language_lane, review_attempt=review_attempt),
+        repo_role=fleet_repo.role,
+        target_repo_root=target_repo_root,
+        validated_worktree=validated_worktree,
+        validated_cwd=validated_cwd,
+    )
+    if kimi_refusal:
+        print(f"❌ {kimi_refusal}", file=sys.stderr)
+        return 2
+    if checkout_error:
+        print(checkout_error, file=sys.stderr)
+        return 2
+    # Everything below launches the admitted route; nothing resolves it again.
+    dispatch_agent, args.model = launch_target.recipient, launch_target.model
+    requested_agent = routing.requested_agent or original_agent
+    agent_alias_note = routing.alias_note
+    agent_substitution = routing.substitution
 
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
@@ -9199,6 +9523,15 @@ def _dispatch(
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
 
     task_id = args.task_id
     try:
@@ -9252,7 +9585,7 @@ def _dispatch(
         pr_number=pr_number,
         branch=getattr(args, "branch", None),
         repo_root=str(_REPO_ROOT),
-        model=getattr(args, "model", None),
+        model=original_model,
         review=bool(getattr(args, "review", False))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review",
         head_out=gemini_checked_heads,
@@ -9273,10 +9606,10 @@ def _dispatch(
             print("❌ --force-admission requires a non-empty reason", file=sys.stderr)
             return 2
 
-    review_attempt = getattr(args, "review_attempt", None)
     review_id = getattr(args, "review_id", None)
     attempt_id = getattr(args, "attempt_id", None)
     review_plan = None
+    review_contract: dict[str, Any] | None = None
     if review_attempt or review_id or attempt_id:
         if not (review_attempt and review_id and attempt_id):
             print(
@@ -9287,14 +9620,6 @@ def _dispatch(
         manifest_path = Path(review_attempt)
         if not manifest_path.is_file():
             print(f"❌ review manifest file not found: {manifest_path}", file=sys.stderr)
-            return 2
-
-        retired_target = resolve_retired_agent_alias(args.agent)
-        if retired_target:
-            print(
-                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
-                file=sys.stderr,
-            )
             return 2
 
         effective_harness = requested_harness or args.agent
@@ -9314,6 +9639,11 @@ def _dispatch(
                 f"❌ review attempt refused for {args.agent}: unsupported harness {effective_harness!r} (#8517)",
                 file=sys.stderr,
             )
+            return 2
+        # Before any archival, worktree, task record or worker (#9163 finding 3).
+        review_refusal, review_contract = _review_attempt_prompt_admission(args, early_prompt, review_id, attempt_id)
+        if review_refusal:
+            print(review_refusal, file=sys.stderr)
             return 2
 
     invalid_owned_paths = _owned_path_errors(getattr(args, "owned_path", None))
@@ -9530,40 +9860,14 @@ def _dispatch(
     # rendered the prompt to a file (the R3 adjudication) checks the task ran exactly that file.
     source_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
-    if review_attempt:
-        # A prompt whose own attempt block (#8996) names different ids than this dispatch was told to use
-        # would let the seat's return validate against the wrong receipt ledger; refuse before any side effect.
-        from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
-
-        try:
-            prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
-        except AttemptIdsUnreadableError as err:
-            print(f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", file=sys.stderr)
-            return 2
-        if prompt_review_id is None or prompt_attempt_id is None:
-            # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
-            # ledger this dispatch prepares — the failure #8996 was filed for.
-            print(
-                "❌ review attempt refused: prompt_attempt_ids_missing: a --review-attempt prompt must print "
-                "the review_id and attempt_id its seat echoes (render it with --review-id/--attempt-id) (#8996)",
-                file=sys.stderr,
-            )
-            return 2
-        id_mismatches = [
-            f"{name} prompt={found!r} dispatch={expected!r}"
-            for name, found, expected in (
-                ("review_id", prompt_review_id, review_id),
-                ("attempt_id", prompt_attempt_id, attempt_id),
-            )
-            if found != expected
-        ]
-        if id_mismatches:
-            print(
-                "❌ review attempt refused: prompt_attempt_ids_mismatch: the prompt's attempt block ids differ "
-                f"from --review-id/--attempt-id ({'; '.join(id_mismatches)}) (#8996)",
-                file=sys.stderr,
-            )
-            return 2
+    if review_attempt and review_contract is not None and source_prompt_sha256 != review_contract["prompt_sha256"]:
+        # Admission checked the prompt file before any side effect; the file must still be that prompt (#9163).
+        print(
+            "❌ review attempt refused: review_prompt_changed: the prompt file changed after its admission "
+            f"(admitted {review_contract['prompt_sha256']}, now {source_prompt_sha256}) (#9163)",
+            file=sys.stderr,
+        )
+        return 2
 
     if args.mode in {"workspace-write", "danger"} and prompt != early_prompt:
         dor_error, dor_record = _run_dor_preflight(prompt, dor_reason, dispatch_repo=fleet_repo.github)
@@ -9597,128 +9901,6 @@ def _dispatch(
         research_ctx = _build_research_context(args)
     except ResearchContextError as exc:
         print(f"❌ {exc}", file=sys.stderr)
-        return 2
-
-    if str(_REPO_ROOT) not in sys.path:
-        sys.path.insert(0, str(_REPO_ROOT))
-    from scripts.ai_agent_bridge.routing_guard import (
-        RoutingGuardError,
-        assert_agent_routing_allowed,
-        assert_model_routing_allowed,
-    )
-
-    try:
-        assert_agent_routing_allowed(args.agent, context="delegate dispatch")
-        assert_model_routing_allowed(getattr(args, "model", None), context="delegate dispatch --model")
-    except RoutingGuardError as exc:
-        print(f"❌ {exc}", file=sys.stderr)
-        return 2
-
-    # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
-    # BEFORE the budget guard and unconditionally — a hot/cool budget reading
-    # for a retired lane is not proof its binary still exists (CodexBar showed
-    # gemini ~99% remaining the same night `--agent gemini` failed with
-    # `FileNotFoundError: 'gemini'`). --force-agent bypasses the budget guard,
-    # not this — there is no CLI left to force.
-    original_agent = args.agent
-    original_model = getattr(args, "model", None)
-    model_resolution: dict[str, Any] = {}
-    agent_alias_note: str | None = None
-    retired_target = resolve_retired_agent_alias(args.agent)
-    requested_agent = args.agent
-    if retired_target:
-        if review_attempt:
-            print(
-                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
-                file=sys.stderr,
-            )
-            return 2
-        try:
-            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-        _remember_agent_substitution(
-            model_resolution,
-            source="retired-cli",
-            requested_agent=original_agent,
-            requested_model=original_model,
-            actual_agent=retired_target,
-            actual_model=retired_model,
-            how=retired_how,
-        )
-        agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
-        print(
-            f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
-            f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
-            f"({agent_alias_note}; the {requested_agent} CLI is not installed/supported).",
-            file=sys.stderr,
-        )
-        requested_agent = retired_target
-
-    language_lane = _dispatch_is_language_lane(args)
-    if language_lane and requested_agent not in _LANGUAGE_LANES:
-        print(
-            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
-            f"--agent {requested_agent} cannot author, review, critique, settle, or judge "
-            "Ukrainian language, culture, or heritage content; "
-            "allowed lanes are claude, codex (GPT), and agy (Gemini).",
-            file=sys.stderr,
-        )
-        return 2
-
-    if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
-        try:
-            dispatch_agent = (
-                _resolve_agent_with_budget_guard(
-                    requested_agent,
-                    provider="openrouter",
-                    language_lane=language_lane,
-                    requested_model=original_model,
-                    model_resolution=model_resolution,
-                    origin_agent=original_agent,
-                )
-                if getattr(args, "provider", None) == "openrouter"
-                else _resolve_agent_with_budget_guard(
-                    requested_agent,
-                    language_lane=language_lane,
-                    requested_model=original_model,
-                    model_resolution=model_resolution,
-                    origin_agent=original_agent,
-                )
-            )
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-    else:
-        dispatch_agent = requested_agent
-
-    agent_substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
-    if dispatch_agent != original_agent and agent_substitution is None:
-        try:
-            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-        _remember_agent_substitution(
-            model_resolution,
-            source="budget-guard",
-            requested_agent=original_agent,
-            requested_model=original_model,
-            actual_agent=dispatch_agent,
-            actual_model=chosen_model,
-            how=chosen_how,
-        )
-        agent_substitution = model_resolution["record"]
-    if agent_substitution is not None:
-        args.model = agent_substitution["actual_model"]
-
-    if language_lane and dispatch_agent not in _LANGUAGE_LANES:
-        print(
-            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
-            f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini).",
-            file=sys.stderr,
-        )
         return 2
 
     if dispatch_agent == "agy" and getattr(args, "model", None):
@@ -9944,7 +10126,8 @@ def _dispatch(
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
-                    allow_rebase=not bool(getattr(args, "dry_run", False)),
+                    # A Kimi worktree is never rebased: it must stay at the commit the gate read.
+                    allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
@@ -9985,6 +10168,14 @@ def _dispatch(
             failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
             print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
             return 1
+
+    # The base resolved under the worktree lock must be the commit the Kimi gate read.
+    if kimi_start_commit is not None and worktree_arg and resolved_worktree_base_sha != kimi_start_commit:
+        from scripts.agent_runtime.kimi_admission import format_refusal
+
+        moved = f"the worktree base {resolved_worktree_base_sha} is not the commit {kimi_start_commit} its owned paths were read at"
+        print(f"❌ {format_refusal(dispatch_agent, [moved + '; retry the dispatch'])}", file=sys.stderr)
+        return 2
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
     # Runs before task-state write / worktree / branch side effects so a refuse
@@ -10099,6 +10290,10 @@ def _dispatch(
                 harness=requested_harness,
             )
             dry_run_state = {
+                "pinned_head": pinned_head,
+                "review_author_model": getattr(args, "review_author_model", None),
+                "review_risk": getattr(args, "review_risk", None),
+                "review_profile": getattr(args, "review_profile", None),
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
@@ -10208,6 +10403,8 @@ def _dispatch(
                 attempt_id=attempt_id,
                 manifest_path=Path(review_attempt),
                 harness=effective_harness,
+                # Launch-time check (#9163): the primary may have changed since admission.
+                review_contract=review_contract,
             )
         except (ValueError, FileExistsError) as exc:
             print(f"❌ {exc}", file=sys.stderr)
@@ -10396,6 +10593,20 @@ def _dispatch(
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
 
+    # A Kimi worker needs its own worktree, checked out at the commit the gate read. The
+    # gate and the check above already hold this; this re-check under the worktree lock
+    # catches a worktree changed meanwhile, before any task record, tmp lease or worker exists.
+    if is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)):
+        from scripts.agent_runtime.kimi_admission import format_refusal
+
+        kimi_head = _resolve_sha(worktree_path) if worktree_path is not None else None
+        if kimi_head is None or (kimi_start_commit is not None and kimi_head != kimi_start_commit):
+            stdout_fd.close()
+            stderr_fd.close()
+            where = f"is at {kimi_head}, not {kimi_start_commit}" if kimi_head else "is missing"
+            print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
+            return 2
+
     if review_plan is not None and worktree_path is not None:
         try:
             _mark_review_attempt_worktree(worktree_path, task_id)
@@ -10450,6 +10661,7 @@ def _dispatch(
             sparse_telemetry=worktree_telemetry.get("sparse")
             if isinstance(worktree_telemetry.get("sparse"), dict)
             else None,
+            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
         )
         if worktree_path is not None:
             prompt_blocks.insert(0, "worktree")
@@ -10464,6 +10676,13 @@ def _dispatch(
             if research_block:
                 prompt_blocks.append("research")
             prompt = prompt + research_block
+
+        # Every worker and review seat starts with the rules core, read from this
+        # checkout (its presence was required at the top of the dispatch).
+        cored_prompt = rules_core.with_core(prompt, getattr(args, "rules_seat", None))
+        if cored_prompt != prompt:
+            prompt_blocks.insert(0, "rules_core")
+            prompt = cored_prompt
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
@@ -10478,6 +10697,10 @@ def _dispatch(
         # the parent PID as a placeholder (overwritten by worker).
         worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
         initial_state = {
+            "pinned_head": pinned_head,
+            "review_author_model": getattr(args, "review_author_model", None),
+            "review_risk": getattr(args, "review_risk", None),
+            "review_profile": getattr(args, "review_profile", None),
             "task_id": task_id,
             "run_nonce": run_nonce,
             # Authoritative repository identity for the Work projection's scoped
@@ -10535,6 +10758,9 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if cursor_auto_admission is not None:
+            # The Cursor adapter runs Auto only with this admission (#9274).
+            initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -10548,6 +10774,8 @@ def _dispatch(
                 "attempt_id": attempt_id,
                 "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
             }
+            # The render-time and dispatch-time digests compared (#9163): what the review of record ran against.
+            initial_state["review_contract"] = review_contract
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -10618,8 +10846,7 @@ def _dispatch(
             "_worker",
             "--task-id",
             task_id,
-            "--agent",
-            dispatch_agent,
+            *_worker_route_argv(launch_target),
             "--mode",
             args.mode,
             "--cwd",
@@ -10651,8 +10878,6 @@ def _dispatch(
                     str(output_schema_sha256),
                 ]
             )
-        if args.model:
-            cmd.extend(["--model", args.model])
         if getattr(args, "provider", None):
             cmd.extend(["--provider", args.provider])
         effort = getattr(args, "effort", None)
@@ -10670,6 +10895,10 @@ def _dispatch(
                     "--mcp-config-path",
                     str(review_plan.config_path),
                     "--strict-mcp-config",
+                    "--review-manifest",
+                    str(Path(review_attempt).resolve()),
+                    "--review-input-root",
+                    str(review_contract["render_checkout"]),
                 ]
             )
 
@@ -10921,12 +11150,6 @@ def _fetch_routing_budget() -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
-def _load_dispatch_fallbacks() -> dict[str, str]:
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-
-    return load_dispatch_fallbacks(_FALLBACK_SUBS_PATH)
-
-
 def _budget_lane_status(agent: str, agent_info: dict[str, Any]) -> str | None:
     if agent == "claude":
         return (agent_info.get("interactive") or {}).get("status") or agent_info.get("status")
@@ -11046,6 +11269,409 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
         if text.startswith("curriculum/") or text.startswith("scripts/curriculum/"):
             return True
     return False
+
+
+# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding task,
+# typed by the dispatch's declared functional role (``--research-role``). Any other role,
+# or none, pins a concrete model.
+CURSOR_AUTO_IMPLEMENTATION_ROLE = "implementation"
+CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
+
+
+def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
+    """True when any review flag types this dispatch as a review."""
+    return (
+        bool(getattr(args, "review", False))
+        or bool(getattr(args, "review_attempt", None))
+        or bool(getattr(args, "require_review_verdict", False))
+        or bool(getattr(args, "review_profile", None))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+    )
+
+
+def _cursor_auto_refusal(
+    args: argparse.Namespace, *, agent: str, model: str | None, dor_record: dict[str, Any] | None
+) -> str | None:
+    """Refusal when the admitted launch asks Cursor for Auto outside a well-defined coding task.
+
+    Auto needs positive evidence of that task: ``--research-role implementation``
+    (the declared functional role; a missing or any other role is unclassified for
+    Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
+    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    """
+    from scripts.review.model_catalog import (
+        CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+        cursor_pinned_models,
+        is_cursor_auto_selector,
+    )
+
+    if agent != "cursor" or not is_cursor_auto_selector(model):
+        return None
+    reasons: list[str] = []
+    role = str(getattr(args, "research_role", None) or "").strip()
+    if not role:
+        reasons.append(f"the task is unclassified (no --research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE})")
+    elif role != CURSOR_AUTO_IMPLEMENTATION_ROLE:
+        reasons.append(f"--research-role {role[:64]!r} is not {CURSOR_AUTO_IMPLEMENTATION_ROLE}")
+    if args.mode not in _WRITE_CAPABLE_MODES:
+        reasons.append(f"mode {args.mode} is not write-capable")
+    if _dispatch_is_review_typed(args):
+        reasons.append("the dispatch is review-typed")
+    if not _declared_owned_paths(getattr(args, "owned_path", None)):
+        reasons.append("no --owned-path")
+    if not dor_record or not dor_record.get("issues"):
+        reasons.append("no DoR issue card was checked")
+    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+        reasons.append("the DoR issue card is not PASS")
+    if not reasons:
+        return None
+    pins = " or ".join(f"--model {pin}" for pin in cursor_pinned_models())
+    return (
+        f"❌ dispatch refused: {CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}: --agent cursor --model {model} runs only a "
+        f"--research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE} write dispatch with owned paths and a PASS DoR issue card ({'; '.join(reasons)}); "
+        f"pin a concrete model: {pins} (operator decision 2026-09-30, #9274)"
+    )
+
+
+def _kimi_worktree_trees(worktree: Path) -> list[Any]:
+    """An existing worktree as a Kimi worker sees it: its files on disk and the commit checked out there."""
+    from scripts.agent_runtime.kimi_admission import worktree_trees
+
+    return worktree_trees(worktree, env=_sanitized_git_env())
+
+
+def _resolve_local_base_sha(*, base: str, branch: str | None, pinned_head_sha: str | None) -> str:
+    """The commit a new Kimi worktree would start from, from local objects only.
+
+    The Kimi content scan runs before any effect, so this never fetches: it
+    verifies the pinned head, the existing remote-tracking ref of ``branch``,
+    or the base's remote-tracking ref, as a commit already in the repository.
+    Worktree creation later fetches as it does for any seat and refuses when
+    the fetched commit is not the one scanned. Raises ``RuntimeError`` when the
+    commit is not available locally.
+    """
+    if pinned_head_sha:
+        ref = pinned_head_sha
+    elif branch:
+        ref = f"origin/{branch}"
+    else:
+        ref = _origin_base_ref(base)
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        proc = None
+    sha = (proc.stdout or "").strip() if proc is not None and proc.returncode == 0 else ""
+    if not sha:
+        raise RuntimeError(f"base not available locally ({ref}); refresh origin and retry")
+    return sha
+
+
+def _kimi_start_trees(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    target_repo_root: Path,
+    validated_worktree: Path | None,
+    validated_cwd: Path | None,
+) -> tuple[list[Any], str]:
+    """The trees a Kimi worker will start from, and the commit they are read at.
+
+    A reused worktree (``--worktree``, ``--branch`` or ``--cwd``) is read as it
+    is on disk and at the commit checked out there. A new worktree is read at
+    its creation base commit, resolved from objects already present locally
+    (no fetch, no checkout) and read with git plumbing. Dispatch then refuses
+    a worktree that is not created from, or no longer checked out at, that
+    commit. Raises ``ValueError`` or ``RuntimeError`` when there is no such tree.
+    """
+    from scripts.agent_runtime.kimi_admission import CommitTree
+
+    worktree = getattr(args, "worktree", None) or ("auto" if getattr(args, "branch", None) else None)
+    if worktree == "auto":
+        path: Path | None = _auto_worktree_path(agent, str(args.task_id), repo_root=target_repo_root)
+    elif worktree:
+        path = validated_worktree
+    elif validated_cwd is not None:
+        path = _resolve_verified_worktree_path(validated_cwd)
+        if path is None:
+            raise ValueError(f"--cwd {str(validated_cwd)!r} is not a dispatch worktree")
+    else:
+        path = None
+    if path is None:
+        raise ValueError("workspace-write without a dispatch worktree")
+    if path.exists():
+        trees = _kimi_worktree_trees(path)
+        return trees, trees[-1].commit
+    if getattr(args, "pr", None) and not getattr(args, "branch", None):
+        raise ValueError("--pr without --branch: name the PR branch so its head is read before dispatch")
+    base_sha = _resolve_local_base_sha(
+        base=getattr(args, "base", None) or "main",
+        branch=getattr(args, "branch", None),
+        pinned_head_sha=getattr(args, "pinned_head", None),
+    )
+    return [CommitTree(_REPO_ROOT, base_sha, env=_sanitized_git_env())], base_sha
+
+
+def _worker_route_argv(target: AdmittedTarget) -> list[str]:
+    """The worker's ``--agent``/``--model`` arguments, taken from the admitted launch target only."""
+    from scripts.agent_runtime.target_admission import require_admitted
+
+    target = require_admitted(target)
+    argv = ["--agent", target.recipient]
+    if target.model:
+        argv.extend(["--model", target.model])
+    return argv
+
+
+@dataclass
+class _DispatchRouting:
+    """What a dispatch's launch route decided; filled in by :func:`_dispatch_route` inside ``resolve_and_admit``."""
+
+    requested_agent: str | None = None  # after the retired-CLI alias, before budget substitution
+    alias_note: str | None = None
+    substitution: dict[str, Any] | None = None
+
+
+class _DispatchRouteRefused(Exception):
+    """The launch route refused the dispatch; the message says why."""
+
+
+def _dispatch_route(
+    args: argparse.Namespace,
+    routing: _DispatchRouting,
+    *,
+    language_lane: bool,
+    review_attempt: Any,
+) -> Route:
+    """The launch route ``resolve_and_admit`` runs for a dispatch, after the original request is gated.
+
+    A retired CLI resolves to its successor (a review attempt refuses that,
+    #8517); with ``--check-budget`` and no ``--force-agent`` the budget guard
+    may substitute a coding seat from ``dispatch_fallbacks``; its model is
+    mapped or defaulted (``_resolve_substitution_model``). Review routes use
+    ``request.review_select`` instead, retaining the resolver's exact model.
+    Refusals raise
+    ``_DispatchRouteRefused`` or ``BudgetGuardRefuseError``. Records what it
+    decided in ``routing``.
+    """
+
+    def route(request: RouteRequest) -> tuple[str, str | None, str]:
+        original_agent, original_model = request.seat, request.model
+        model_resolution: dict[str, Any] = {}
+        requested_agent = original_agent
+        retired_target = request.retired_successor
+        # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
+        # BEFORE the budget guard and unconditionally — a hot/cool budget reading
+        # for a retired lane is not proof its binary still exists. --force-agent
+        # bypasses the budget guard, not this — there is no CLI left to force.
+        if retired_target:
+            if review_attempt:
+                raise _DispatchRouteRefused(
+                    f"review attempt refused: agent substitution from {original_agent} to {retired_target} "
+                    "(retired CLI) is not allowed (#8517)"
+                )
+            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
+            _remember_agent_substitution(
+                model_resolution,
+                source="retired-cli",
+                requested_agent=original_agent,
+                requested_model=original_model,
+                actual_agent=retired_target,
+                actual_model=retired_model,
+                how=retired_how,
+            )
+            routing.alias_note = f"NOTE: {original_agent}→{retired_target} retired CLI"
+            print(
+                f"🔄 RETIRED CLI ALIAS: --agent {original_agent} → {retired_target} "
+                f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
+                f"({routing.alias_note}; the {original_agent} CLI is not installed/supported).",
+                file=sys.stderr,
+            )
+            requested_agent = retired_target
+        routing.requested_agent = requested_agent
+
+        if request.review_select is not None:
+            selected_agent, selected_model = request.review_select(None, requested_agent)
+            if (selected_agent, selected_model) != (requested_agent, original_model):
+                print(
+                    f"REVIEW_IDENTITY_SUBSTITUTED: --agent {requested_agent} --model {original_model} "
+                    f"→ --agent {selected_agent} --model {selected_model} (reviewer resolver admission).",
+                    file=sys.stderr,
+                )
+                _remember_agent_substitution(
+                    model_resolution,
+                    source="reviewer-resolver",
+                    requested_agent=original_agent,
+                    requested_model=original_model,
+                    actual_agent=selected_agent,
+                    actual_model=selected_model,
+                    how="reviewer-resolver",
+                )
+            requested_agent = selected_agent
+            original_model = selected_model
+
+        if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
+            dispatch_agent = _resolve_agent_with_budget_guard(
+                requested_agent,
+                provider="openrouter" if getattr(args, "provider", None) == "openrouter" else None,
+                language_lane=language_lane,
+                requested_model=original_model,
+                model_resolution=model_resolution,
+                origin_agent=original_agent,
+                fallbacks=request.fallbacks,
+                review_select=request.review_select,
+            )
+        else:
+            dispatch_agent = requested_agent
+
+        substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
+        if dispatch_agent != original_agent and substitution is None:
+            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
+            _remember_agent_substitution(
+                model_resolution,
+                source="budget-guard",
+                requested_agent=original_agent,
+                requested_model=original_model,
+                actual_agent=dispatch_agent,
+                actual_model=chosen_model,
+                how=chosen_how,
+            )
+            substitution = model_resolution["record"]
+        if language_lane and dispatch_agent not in _LANGUAGE_LANES:
+            raise _DispatchRouteRefused(
+                "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+                f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini)."
+            )
+        routing.substitution = substitution
+        if substitution is not None:
+            substitution["requested_model"] = request.model
+        if substitution is None:
+            return dispatch_agent, original_model, "explicit"
+        return dispatch_agent, substitution["actual_model"], f"route:{substitution['source']}"
+
+    return route
+
+
+def _kimi_dispatch_gate(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    route: Route,
+    repo_role: str | None,
+    target_repo_root: Path,
+    validated_worktree: Path | None,
+    validated_cwd: Path | None,
+) -> tuple[str | None, str | None, Any]:
+    """The dispatch-side gate: ``(refusal, start commit, admitted target)``.
+
+    ``agent`` and ``--model`` are the original request; ``route`` (see
+    :func:`_dispatch_route`) resolves the launch route inside
+    ``resolve_and_admit``, which gates the request before it and the route
+    after it. The admitted target is the seat and model the worker is
+    launched with; None when refused. The start commit is the commit the
+    owned paths were last read at — in the worktree of the seat resolved so
+    far — which the worker's worktree must be created from or checked out at;
+    None when the call is refused, is not Kimi, or owns no paths. The tree is
+    resolved only after every policy check admits.
+    """
+    from scripts.agent_runtime.target_admission import launch_seat
+
+    start: list[str] = []
+    seat = [launch_seat(agent)]
+
+    def routed(request: RouteRequest) -> tuple[str, str | None, str]:
+        result = route(request)
+        seat[0] = result[0]
+        return result
+
+    def trees() -> list[Any]:
+        resolved, commit = _kimi_start_trees(
+            args,
+            agent=seat[0],
+            target_repo_root=target_repo_root,
+            validated_worktree=validated_worktree,
+            validated_cwd=validated_cwd,
+        )
+        start.append(commit)
+        return resolved
+
+    refusal, target = _admit_dispatch_target(args, agent=agent, repo_role=repo_role, trees=trees, route=routed)
+    return refusal, (start[-1] if start and refusal is None else None), target
+
+
+def _kimi_admission_refusal(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    trees: Any,
+    repo_role: str | None = None,
+) -> str | None:
+    """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted."""
+    return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role)[0]
+
+
+def _admit_dispatch_target(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    trees: Any,
+    repo_role: str | None = None,
+    route: Route | None = None,
+) -> tuple[str | None, Any]:
+    """``(refusal, admitted target)`` for launching ``agent`` with ``--model``; exactly one is None.
+
+    The original request (``agent``, ``--model``) and the launch ``route``
+    it resolves to (retired-CLI alias, budget substitution) are resolved and
+    admitted in one step (``resolve_and_admit``); a route refusal is returned
+    like a Kimi refusal. ``--owned-path`` and ``--research-owned-path`` both
+    declare task ownership, so every path from either flag must be on the
+    Kimi allowlist and is read for Ukrainian content in ``trees`` (see
+    ``refuse_kimi_if_disallowed``).
+    """
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
+
+    def flag_paths(attr: str) -> list[str]:
+        value = getattr(args, attr, None) or []
+        return [value] if isinstance(value, str) else list(value)
+
+    # Only ``--owned-path`` is ownership (the worker's boundary and scan use it); a
+    # ``--research-owned-path`` is checked like one but never stands in for it.
+    declared = flag_paths("owned_path")
+    owned = declared + flag_paths("research_owned_path")
+    try:
+        (target,) = resolve_and_admit(
+            (agent,),
+            model=getattr(args, "model", None),
+            mode=str(getattr(args, "mode", "") or ""),
+            route=route,
+            fallbacks_path=_FALLBACK_SUBS_PATH,
+            review_dispatch=bool(getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)),
+            review_author_model=getattr(args, "review_author_model", None),
+            review_risk=getattr(args, "review_risk", None),
+            review_profile=getattr(args, "review_profile", None),
+            review_attempt=bool(getattr(args, "review_attempt", None)),
+            paths=owned,
+            declared_paths=declared,
+            repo=repo_role,
+            review=_dispatch_is_review_typed(args),
+            language_lane=_dispatch_is_language_lane(args),
+            research_track=getattr(args, "research_track", None),
+            prompt_file=getattr(args, "prompt_file", None),
+            repo_root=_REPO_ROOT,
+            trees=trees,
+        )
+    except (KimiAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+        return str(exc), None
+    return None, target
 
 
 def _discard_model_probe_output(plan: object) -> None:
@@ -11249,15 +11875,19 @@ def _resolve_agent_with_budget_guard(
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
     origin_agent: str | None = None,
+    fallbacks: Mapping[str, str],
+    review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
     Hard auto-sub on fresh snapshot when chosen lane is near_cap, hot, or in
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
-    has a known target. Without a usable fallback: refuse (raise
+    (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
+    route) has a known target. Without a usable fallback: refuse (raise
     BudgetGuardRefuseError) unless caller used --force-agent before this call.
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
+    Review routes use ``review_select`` before either coding fallback path.
     """
     requested = (agent or "").strip().lower()
     if language_lane and requested not in _LANGUAGE_LANES:
@@ -11349,7 +11979,7 @@ def _resolve_agent_with_budget_guard(
     agent_dict = agent_info if isinstance(agent_info, dict) else {}
     status = _budget_lane_status(requested, agent_dict)
     will_last = _budget_will_last_to_reset(agent_dict)
-    reserve = _load_reset_reserve(_REPO_ROOT)
+    reserve = _load_reset_reserve(_REPO_ROOT, codex_info=agents.get("codex", {}))
     reserve_relaxes = (
         requested == "codex"
         and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
@@ -11386,7 +12016,31 @@ def _resolve_agent_with_budget_guard(
     if not needs_action:
         return requested
 
-    fallbacks = _load_dispatch_fallbacks()
+    if review_select is not None:
+        sub, chosen = review_select(payload, requested)
+        if sub == requested and chosen == requested_model:
+            print(
+                "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer; "
+                "budget substitution requires --review-author-model and --review-risk (code profile only)",
+                file=sys.stderr,
+            )
+            return requested
+        print(
+            f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
+            f"({reason}; reviewer resolver).",
+            file=sys.stderr,
+        )
+        _remember_agent_substitution(
+            model_resolution,
+            source="reviewer-resolver",
+            requested_agent=origin_agent or requested,
+            requested_model=requested_model,
+            actual_agent=sub,
+            actual_model=chosen,
+            how="reviewer-resolver",
+        )
+        return sub
+
     sub = fallbacks.get(requested)
     # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
     # no inferred/hardcoded mappings (a deleted config entry must mean
@@ -11444,7 +12098,7 @@ def _resolve_agent_with_budget_guard(
 
 def _language_lane_substitute(
     requested: str,
-    fallbacks: dict[str, str],
+    fallbacks: Mapping[str, str],
     agents: dict[str, Any],
     *,
     is_stale: bool,
@@ -11680,16 +12334,25 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
             from api.lane_health import compute_lane_health, normalize_agent_name
 
         from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+        from scripts.agent_runtime.kimi_admission import DirectoryTree
 
         # "gemini" excluded: it is a permanent retired-CLI alias (→ agy), so
         # it must never appear as a "idle capacity available in: gemini"
         # suggestion — that would just point drivers back at the dead CLI.
+        # "kimi" is suggested only when this dispatch is web, UI or backend coding that a
+        # Kimi seat would admit (default public repo, no refusal reason).
+        target_norm = normalize_agent_name(dispatch_agent) or target_norm
+        # A suggestion only: the owned paths are read in this checkout, not in a worker's tree.
+        kimi_admissible = target_norm == "kimi" or (
+            args is not None
+            and getattr(args, "repo", None) is None
+            and _kimi_admission_refusal(args, agent="kimi", trees=(DirectoryTree(_REPO_ROOT),)) is None
+        )
         subscription_lanes = tuple(
             lane
             for lane in ("claude", "codex", "gemini", "grok", "cursor", "kimi")
-            if lane not in RETIRED_AGENT_ALIASES
+            if lane not in RETIRED_AGENT_ALIASES and (lane != "kimi" or kimi_admissible)
         )
-        target_norm = normalize_agent_name(dispatch_agent) or target_norm
 
         in_flight: dict[str, int] = {lane: 0 for lane in subscription_lanes}
         if tasks_dir().is_dir():
@@ -12097,6 +12760,8 @@ def cmd_worker(args: argparse.Namespace) -> int:
         attempt_id=getattr(args, "attempt_id", None),
         mcp_config_path=getattr(args, "mcp_config_path", None),
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
+        review_manifest=getattr(args, "review_manifest", None),
+        review_input_root=getattr(args, "review_input_root", None),
         finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
@@ -12228,7 +12893,9 @@ def build_parser() -> argparse.ArgumentParser:
         # guard still catches programmatic Namespace bypass.
         help="Agent to run for the task: codex, gemini (retired CLI — permanent "
         "alias to agy, do not install gemini), claude, grok "
-        "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi.",
+        "(native CLI; grok-build=alias), grok-hermes, deepseek, agy, cursor, or kimi "
+        "(web, UI and backend coding only: workspace-write in site UI, scripts/ and tests/; "
+        "Ukrainian-language content, reviews, consults, design and rules are refused).",
     )
     d.add_argument(
         "--harness",
@@ -12375,7 +13042,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="SHA",
         help=(
             "Exact commit the worktree must check out. A fetched branch tip that "
-            "differs from this SHA refuses the dispatch."
+            "differs from this SHA refuses the dispatch. Requires --branch or --pr; "
+            "without either, refuses before probes or task/worktree creation. Default: None."
         ),
     )
     d.add_argument(
@@ -12424,6 +13092,27 @@ def build_parser() -> argparse.ArgumentParser:
             "Required with --require-review-verdict when --agent is agy or gemini. "
             "code is refused (Gemini reviews Ukrainian only, never code — "
             "operator 2026-09-25). Ukrainian content review must pass ukrainian."
+        ),
+    )
+    d.add_argument(
+        "--review-author-model",
+        default=None,
+        metavar="MODEL",
+        help=(
+            "Author's concrete model for cross-family reviewer resolution (e.g. gpt-6.1-sol). "
+            "Code profile only. "
+            "Review budget substitution requires this and --review-risk; the reviewer's model "
+            "is never the author identity. Default: None (keep eligible requested reviewer)."
+        ),
+    )
+    d.add_argument(
+        "--review-risk",
+        default=None,
+        choices=("low", "medium", "high", "critical"),
+        help=(
+            "Risk passed to the canonical reviewer resolver with --review-author-model. "
+            "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
+            "Example: critical for admission or launcher changes."
         ),
     )
     d.add_argument(
@@ -12585,7 +13274,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Bind a JSON Schema to the final response of an effective Codex "
             "dispatch. The file is parsed before spawn, resolved to an "
             "absolute path, hashed into task state, and revalidated by the "
-            "Codex adapter before it emits --output-schema."
+            "Codex adapter before it emits --output-schema. "
+            "Cannot be combined with --review-attempt; default: omitted."
         ),
     )
     d.add_argument(
@@ -12596,7 +13286,8 @@ def build_parser() -> argparse.ArgumentParser:
             "ADR-011 P3 research context: the task's single role (e.g. quality). "
             "Explicit only — never inferred from the prompt, agent, provider, or "
             "branch. Combined with the other --research-* flags, injects bounded, "
-            "pointer-only research pointers (bodies fetched on demand)."
+            "pointer-only research pointers (bodies fetched on demand). "
+            "`implementation` types a coding dispatch; --agent cursor --model auto requires it (#9274)."
         ),
     )
     d.add_argument(
@@ -12620,6 +13311,15 @@ def build_parser() -> argparse.ArgumentParser:
             "ADR-011 P3 research context: an owned/changed path for the task. "
             "Repeatable. Matched against each record's owned_paths globs. "
             "Also feeds the writable-path admission guard (#5643)."
+        ),
+    )
+    d.add_argument(
+        "--rules-seat",
+        choices=rules_core.SEATS,
+        default=None,
+        help=(
+            "Rules core the worker starts with: core, or content (core plus the curriculum "
+            f"addendum) for curriculum seats. Default: ${rules_core.SEAT_ENV}, else core."
         ),
     )
     d.add_argument(
@@ -12812,6 +13512,8 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--attempt-id", default=None)
     wk.add_argument("--mcp-config-path", default=None)
     wk.add_argument("--strict-mcp-config", action="store_true")
+    wk.add_argument("--review-manifest", default=None, help="Formal attempt manifest path (default: none)")
+    wk.add_argument("--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)")
     wk.set_defaults(func=cmd_worker)
 
     return p

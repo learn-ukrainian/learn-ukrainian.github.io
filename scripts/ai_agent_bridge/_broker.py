@@ -182,7 +182,13 @@ def broker_cleanup(
 
 
 def broker_retention_cleanup(older_than: str = "30d", dry_run: bool = False) -> int:
-    """Delete acknowledged/terminal broker rows older than the retention window."""
+    """Delete acknowledged/terminal broker rows older than the retention window.
+
+    A stored Kimi message or delivery (legacy) is kept (``kimi_message``,
+    ``kimi_row``), and so is the channel message it belongs to.
+    """
+    from ._db import register_kimi_row_functions
+
     if not DB_PATH.exists():
         return 0
 
@@ -192,6 +198,7 @@ def broker_retention_cleanup(older_than: str = "30d", dry_run: bool = False) -> 
     db.row_factory = sqlite3.Row
     db.execute("PRAGMA busy_timeout=5000")
     db.execute("PRAGMA foreign_keys=ON")
+    register_kimi_row_functions(db)
 
     counts = _retention_counts(db, cutoff_iso)
     total = sum(counts.values())
@@ -212,7 +219,7 @@ def broker_retention_cleanup(older_than: str = "30d", dry_run: bool = False) -> 
             db.execute(
                 """
                 DELETE FROM messages
-                WHERE acknowledged = 1 AND timestamp < ?
+                WHERE acknowledged = 1 AND timestamp < ? AND NOT kimi_message(to_llm, data)
                 """,
                 (cutoff_iso,),
             )
@@ -221,6 +228,7 @@ def broker_retention_cleanup(older_than: str = "30d", dry_run: bool = False) -> 
                 """
                 DELETE FROM deliveries
                 WHERE status IN ('delivered', 'failed')
+                  AND NOT kimi_row(to_agent, to_model)
                   AND message_id IN (
                       SELECT message_id FROM channel_messages WHERE created_at < ?
                   )
@@ -260,7 +268,7 @@ def _retention_counts(db: sqlite3.Connection, cutoff_iso: str) -> dict[str, int]
     counts = {"messages": 0, "deliveries": 0, "channel_messages": 0}
     if _table_exists(db, "messages"):
         counts["messages"] = db.execute(
-            "SELECT COUNT(*) FROM messages WHERE acknowledged = 1 AND timestamp < ?",
+            "SELECT COUNT(*) FROM messages WHERE acknowledged = 1 AND timestamp < ? AND NOT kimi_message(to_llm, data)",
             (cutoff_iso,),
         ).fetchone()[0]
     if _table_exists(db, "deliveries") and _table_exists(db, "channel_messages"):
@@ -270,6 +278,7 @@ def _retention_counts(db: sqlite3.Connection, cutoff_iso: str) -> dict[str, int]
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.status IN ('delivered', 'failed')
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND cm.created_at < ?
             """,
             (cutoff_iso,),
@@ -282,7 +291,7 @@ def _retention_counts(db: sqlite3.Connection, cutoff_iso: str) -> dict[str, int]
               AND NOT EXISTS (
                   SELECT 1 FROM deliveries d
                   WHERE d.message_id = cm.message_id
-                    AND d.status NOT IN ('delivered', 'failed')
+                    AND (d.status NOT IN ('delivered', 'failed') OR kimi_row(d.to_agent, d.to_model))
               )
             """,
             (cutoff_iso,),
@@ -335,7 +344,13 @@ def _cleanup_stale_pids(action: str, max_age_hours: int, dry_run: bool) -> int:
 
 
 def _cleanup_ancient_messages(action: str, max_age_hours: int, dry_run: bool) -> int:
-    """Force-ack ancient unacknowledged messages. Returns count of cleaned items."""
+    """Force-ack ancient unacknowledged messages. Returns count of cleaned items.
+
+    A stored message addressed to a Kimi seat or model (legacy) is skipped and
+    left unacknowledged (``skip_stored_kimi_row``).
+    """
+    from ._ask_lifecycle import skip_stored_kimi_row
+
     cleaned = 0
     if not DB_PATH.exists():
         return 0
@@ -344,13 +359,15 @@ def _cleanup_ancient_messages(action: str, max_age_hours: int, dry_run: bool) ->
     db.row_factory = sqlite3.Row
     datetime.now(UTC).isoformat()
     rows = db.execute(
-        "SELECT id, task_id, from_llm, to_llm, timestamp FROM messages WHERE acknowledged=0"
+        "SELECT id, task_id, from_llm, to_llm, timestamp, data FROM messages WHERE acknowledged=0"
     ).fetchall()
     for row in rows:
         try:
             ts = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
             age_h = (datetime.now(UTC) - ts).total_seconds() / 3600
             if age_h > max_age_hours:
+                if skip_stored_kimi_row({"to": row["to_llm"], "data": row["data"]}, row["id"]):
+                    continue
                 print(f"  {action} stuck msg #{row['id']}: {row['from_llm']}→{row['to_llm']} "
                       f"task={row['task_id']} ({age_h:.1f}h old)")
                 if not dry_run:

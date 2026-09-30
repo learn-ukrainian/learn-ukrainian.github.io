@@ -33,6 +33,7 @@ from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any
 
 import yaml
 
@@ -124,6 +125,55 @@ CREATE TABLE IF NOT EXISTS ulif_dictua_sections (
 );
 CREATE INDEX IF NOT EXISTS idx_ulif_dictua_sections_entry_kind_order
     ON ulif_dictua_sections(entry_id, kind, source_order);
+"""
+
+ULIF_FORMS_PARSER_VERSION = "ulif-forms-v4"
+
+ULIF_FORMS_SCHEMA = """
+CREATE TABLE IF NOT EXISTS ulif_forms (
+    id INTEGER PRIMARY KEY,
+    entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
+    entry_key TEXT NOT NULL,
+    form_unstressed TEXT NOT NULL,
+    form_stressed TEXT NOT NULL,
+    stress_vowel_indices TEXT NOT NULL DEFAULT '[]',
+    grammatical_tags TEXT NOT NULL DEFAULT '[]',
+    unmapped_labels TEXT NOT NULL DEFAULT '[]',
+    variant_order INTEGER NOT NULL DEFAULT 1,
+    preposition TEXT NOT NULL DEFAULT '',
+    marked_asterisk INTEGER NOT NULL DEFAULT 0,
+    is_lemma INTEGER NOT NULL DEFAULT 0,
+    is_invariable INTEGER NOT NULL DEFAULT 0,
+    dual_stress_flag INTEGER NOT NULL DEFAULT 0,
+    pedagogical_stressed_form TEXT NOT NULL DEFAULT '',
+    source_page_sha256 TEXT NOT NULL DEFAULT '',
+    parser_version TEXT NOT NULL DEFAULT '',
+    source_entry_fingerprint TEXT NOT NULL DEFAULT ''
+);
+CREATE INDEX IF NOT EXISTS idx_ulif_forms_entry_id ON ulif_forms(entry_id);
+CREATE INDEX IF NOT EXISTS idx_ulif_forms_form_unstressed ON ulif_forms(form_unstressed);
+
+CREATE TABLE IF NOT EXISTS ulif_forms_failures (
+    id INTEGER PRIMARY KEY,
+    entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
+    reason TEXT NOT NULL,
+    locator TEXT NOT NULL DEFAULT '',
+    UNIQUE(entry_id)
+);
+CREATE INDEX IF NOT EXISTS idx_ulif_forms_failures_entry_id ON ulif_forms_failures(entry_id);
+
+CREATE TABLE IF NOT EXISTS ulif_forms_build (
+    id INTEGER PRIMARY KEY CHECK (id = 1),
+    state TEXT NOT NULL CHECK (state IN ('building', 'complete', 'failed')),
+    parser_version TEXT NOT NULL,
+    total_entries INTEGER NOT NULL DEFAULT 0,
+    entries_done INTEGER NOT NULL DEFAULT 0,
+    entries_failed INTEGER NOT NULL DEFAULT 0,
+    total_forms INTEGER NOT NULL DEFAULT 0,
+    started_at TEXT NOT NULL DEFAULT '',
+    finished_at TEXT NOT NULL DEFAULT '',
+    source_fingerprint TEXT NOT NULL DEFAULT ''
+);
 """
 
 _ULIF_ENTRY_MIGRATION_COLUMNS = frozenset({
@@ -292,6 +342,15 @@ def ensure_ulif_dictua_schema(conn: sqlite3.Connection) -> None:
     # CREATE TABLE IF NOT EXISTS does not rewrite an entries table that
     # still has the spelling-only unique key.
     conn.executescript(ULIF_DICTUA_SCHEMA)
+    conn.executescript(ULIF_FORMS_SCHEMA)
+    if _ulif_table_exists(conn, "ulif_forms"):
+        cols = {r[1] for r in conn.execute("PRAGMA table_info(ulif_forms)")}
+        if "source_entry_fingerprint" not in cols:
+            conn.execute("ALTER TABLE ulif_forms ADD COLUMN source_entry_fingerprint TEXT NOT NULL DEFAULT ''")
+    if _ulif_table_exists(conn, "ulif_forms_build"):
+        cols = {r[1] for r in conn.execute("PRAGMA table_info(ulif_forms_build)")}
+        if "source_fingerprint" not in cols:
+            conn.execute("ALTER TABLE ulif_forms_build ADD COLUMN source_fingerprint TEXT NOT NULL DEFAULT ''")
     conn.commit()
 
 
@@ -506,6 +565,731 @@ def get_ulif_dictua_entry(
         if len(rows) == 1:
             return _materialize_ulif_dictua_entry(conn, rows[0])
         return _ulif_dictua_ambiguous(normalized, rows)
+    finally:
+        conn.close()
+
+
+def compute_ulif_entry_fingerprint(
+    entry_row: dict[str, Any] | sqlite3.Row,
+    section_rows: list[dict[str, Any] | sqlite3.Row] | None = None,
+) -> str:
+    """Compute deterministic SHA-256 fingerprint for a single ULIF source entry.
+
+    Covers id, normalized_query, canonical headword, grammatical label, sense gloss,
+    homonym indices, raw response ref, status, and all ordered section payloads.
+    """
+    h = hashlib.sha256()
+    keys = entry_row.keys() if hasattr(entry_row, "keys") else ()
+    h.update(str(entry_row["id"] if "id" in keys and entry_row["id"] is not None else 0).encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["normalized_query"] if "normalized_query" in keys and entry_row["normalized_query"] else "").encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["canonical_headword"] if "canonical_headword" in keys and entry_row["canonical_headword"] else "").encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["grammatical_label"] if "grammatical_label" in keys and entry_row["grammatical_label"] else "").encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["sense_gloss"] if "sense_gloss" in keys and entry_row["sense_gloss"] else "").encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["homonym_index"] if "homonym_index" in keys and entry_row["homonym_index"] is not None else 1).encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["homonym_checked"] if "homonym_checked" in keys and entry_row["homonym_checked"] is not None else 0).encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["raw_response_ref"] if "raw_response_ref" in keys and entry_row["raw_response_ref"] else "").encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["status"] if "status" in keys and entry_row["status"] else "").encode("utf-8"))
+    if section_rows:
+        def _sec_sort_key(s: Any) -> tuple[str, int, int]:
+            s_keys = s.keys() if hasattr(s, "keys") else ()
+            k = str(s["kind"]) if "kind" in s_keys and s["kind"] else ""
+            so = int(s["source_order"]) if "source_order" in s_keys and s["source_order"] is not None else 0
+            sid = int(s["id"]) if "id" in s_keys and s["id"] is not None else 0
+            return (k, so, sid)
+
+        sorted_sections = sorted(section_rows, key=_sec_sort_key)
+        for s in sorted_sections:
+            s_keys = s.keys() if hasattr(s, "keys") else ()
+            h.update(b"\x00")
+            h.update(str(s["kind"] if "kind" in s_keys and s["kind"] else "").encode())
+            h.update(b"\x00")
+            h.update(str(s["source_order"] if "source_order" in s_keys and s["source_order"] is not None else 0).encode())
+            h.update(b"\x00")
+            h.update(str(s["sense_or_group_id"] if "sense_or_group_id" in s_keys and s["sense_or_group_id"] else "").encode())
+            h.update(b"\x00")
+            payload = s["payload_json"] if "payload_json" in s_keys and s["payload_json"] else ""
+            h.update(payload.encode() if isinstance(payload, str) else str(payload).encode())
+    return h.hexdigest()
+
+
+def compute_ulif_source_fingerprint(conn: sqlite3.Connection) -> str:
+    """Compute whole-source verification fingerprint over all verified entries and sections.
+
+    Uses the exact same projection as compute_ulif_entry_fingerprint for consistency.
+    """
+    if not _ulif_table_exists(conn, "ulif_dictua_entries"):
+        return ""
+    if not _ulif_table_exists(conn, "ulif_dictua_sections"):
+        return ""
+
+    h = hashlib.sha256()
+
+    entries_cursor = conn.execute(
+        """
+        SELECT id, normalized_query, homonym_index, canonical_headword,
+               grammatical_label, sense_gloss, raw_response_ref, homonym_checked, status
+        FROM ulif_dictua_entries
+        WHERE homonym_checked = 1
+        ORDER BY id
+        """
+    )
+    sections_cursor = conn.execute(
+        """
+        SELECT id, entry_id, kind, source_order, sense_or_group_id, payload_json
+        FROM ulif_dictua_sections
+        ORDER BY entry_id, kind, source_order, id
+        """
+    )
+
+    current_sec = sections_cursor.fetchone()
+    for entry in entries_cursor:
+        entry_id = int(entry["id"])
+        entry_secs: list[sqlite3.Row] = []
+        while current_sec is not None and int(current_sec["entry_id"]) < entry_id:
+            current_sec = sections_cursor.fetchone()
+        while current_sec is not None and int(current_sec["entry_id"]) == entry_id:
+            entry_secs.append(current_sec)
+            current_sec = sections_cursor.fetchone()
+        entry_fp = compute_ulif_entry_fingerprint(entry, entry_secs)
+        h.update(f"{entry_id}:{entry_fp}\n".encode())
+
+    return h.hexdigest()
+
+
+def _derive_identity_from_raw(
+    *,
+    entry_id: int,
+    homonym_index: int,
+    stored_headword: str,
+    stored_grammar: str,
+    stored_gloss: str,
+    raw_response_ref: str,
+    entry_forms: list[dict[str, Any]],
+    db_path: str | Path | None = None,
+) -> dict[str, Any]:
+    from scripts.lexicon.runner.ulif_dictua_parse import (
+        ULIF_FORMS_PARSER_VERSION,
+        parse_ulif_entry,
+    )
+
+    path = Path(db_path) if db_path is not None else _read_db_path()
+    cache = (
+        ulif_raw_cache.cache_path()
+        if path == PROJECT_ROOT / "data/sources.db"
+        else ulif_raw_cache.cache_path(path)
+    )
+
+    if not cache.exists():
+        lemma_form = next((f for f in entry_forms if f.get("is_lemma")), None)
+        if lemma_form:
+            return {
+                "canonical_headword": lemma_form.get("form_stressed") or "",
+                "grammatical_label": stored_grammar,
+                "sense_gloss": stored_gloss,
+                "is_invariable": lemma_form.get("is_invariable", False),
+                "parser_version": lemma_form.get("parser_version", ULIF_FORMS_PARSER_VERSION),
+                "source_page_sha256": lemma_form.get("source_page_sha256", ""),
+                "stored_matches_raw": None,
+                "mismatches": None,
+                "source": "derived_forms_table",
+                "error": "raw_cache_unavailable",
+            }
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_cache_unavailable",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    if not raw_response_ref or not raw_response_ref.startswith("sha256:"):
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_manifest_missing",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    manifest_sha = raw_response_ref.removeprefix("sha256:")
+    try:
+        manifest_bytes = ulif_raw_cache.get(manifest_sha, path=cache)
+    except ValueError:
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_manifest_corrupt",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+    except (sqlite3.Error, OSError):
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_cache_unavailable",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    if manifest_bytes is None:
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_manifest_missing",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    try:
+        manifest = json.loads(manifest_bytes)
+    except Exception:
+        manifest = None
+
+    if not isinstance(manifest, dict):
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_manifest_malformed",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    if "paradigm" not in manifest:
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "raw_entry_page_absent": True,
+            "weaker_provenance": "stored_columns_only",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+        }
+
+    par_ref = manifest["paradigm"]
+    if not isinstance(par_ref, str) or not par_ref.startswith("sha256:"):
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_paradigm_ref_malformed",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    par_sha = par_ref.removeprefix("sha256:")
+    try:
+        par_html = ulif_raw_cache.get(par_sha, path=cache)
+    except ValueError:
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_paradigm_corrupt",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+    except (sqlite3.Error, OSError):
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_cache_unavailable",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    if par_html is None:
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": "raw_paradigm_missing",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    try:
+        parsed = parse_ulif_entry(
+            par_html.decode("utf-8", errors="replace"),
+            homonym_index=homonym_index,
+        )
+    except Exception as ex:
+        return {
+            "canonical_headword": stored_headword,
+            "grammatical_label": stored_grammar,
+            "sense_gloss": stored_gloss,
+            "is_invariable": False,
+            "error": f"extraction_failed: {type(ex).__name__}: {ex}",
+            "locator": f"ulif:entry:{entry_id}",
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "stored_columns_assertion",
+            "weaker_provenance": "stored_columns_only",
+        }
+
+    parsed_headword = parsed.get("canonical_headword") or ""
+    if not parsed_headword:
+        is_empty = parsed.get("is_empty_visible_article", False)
+        err = "empty_visible_article" if is_empty else "unrecognized_article_defect"
+        return {
+            "canonical_headword": "",
+            "error": err,
+            "locator": f"ulif:entry:{entry_id}",
+            "parser_version": parsed.get("parser_version", ULIF_FORMS_PARSER_VERSION),
+            "source_page_sha256": par_sha,
+            "stored_matches_raw": None,
+            "mismatches": None,
+            "source": "raw_entry_page",
+            "unavailable_relation_blobs": [],
+        }
+
+    unavailable_relations: list[dict[str, Any]] = []
+    for rel_kind in ("synonyms", "antonyms", "phraseology"):
+        if rel_kind in manifest:
+            rel_ref = manifest[rel_kind]
+            if not isinstance(rel_ref, str) or not rel_ref.startswith("sha256:") or len(rel_ref) != 71:
+                unavailable_relations.append({
+                    "tab": rel_kind,
+                    "ref": str(rel_ref),
+                    "error": "corrupt_blob",
+                    "locator": f"ulif:entry:{entry_id}:{rel_kind}",
+                })
+            else:
+                rel_sha = rel_ref.removeprefix("sha256:")
+                try:
+                    rel_bytes = ulif_raw_cache.get(rel_sha, path=cache)
+                    if rel_bytes is None:
+                        unavailable_relations.append({
+                            "tab": rel_kind,
+                            "ref": rel_ref,
+                            "error": "missing_blob",
+                            "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                        })
+                except ValueError:
+                    unavailable_relations.append({
+                        "tab": rel_kind,
+                        "ref": rel_ref,
+                        "error": "corrupt_blob",
+                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                    })
+                except Exception:
+                    unavailable_relations.append({
+                        "tab": rel_kind,
+                        "ref": rel_ref,
+                        "error": "raw_cache_error",
+                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                    })
+
+    mismatches = []
+    if stored_headword != parsed_headword:
+        mismatches.append("canonical_headword")
+    if stored_grammar != (parsed.get("grammatical_label") or ""):
+        mismatches.append("grammatical_label")
+    if stored_gloss != (parsed.get("sense_gloss") or ""):
+        mismatches.append("sense_gloss")
+
+    return {
+        "canonical_headword": parsed_headword,
+        "grammatical_label": parsed.get("grammatical_label") or "",
+        "sense_gloss": parsed.get("sense_gloss") or "",
+        "is_invariable": parsed.get("is_invariable", False),
+        "printed_homonym_number": parsed.get("printed_homonym_number"),
+        "parser_version": parsed.get("parser_version", ULIF_FORMS_PARSER_VERSION),
+        "source_page_sha256": par_sha,
+        "stored_matches_raw": (len(mismatches) == 0),
+        "mismatches": mismatches,
+        "source": "raw_entry_page",
+        "unavailable_relation_blobs": unavailable_relations,
+    }
+
+
+def get_ulif_word_records(
+    words: str | list[str] | tuple[str, ...],
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
+    """Return complete ULIF source word records for one or more Ukrainian words.
+
+    Exposes all verified harvested material for every source homonym:
+    canonical headword, grammatical label, complete sense gloss, full
+    ordered section payloads (including raw_html and unknown keys), forms rows
+    or explicit forms_state, and separate raw-derived identity attribution.
+    """
+    word_list = [words] if isinstance(words, str) else list(words)
+
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return [
+            {
+                "word": w,
+                "normalized_query": normalize_ulif_dictua_query(w),
+                "status": "unavailable",
+                "verified": False,
+                "entry_count": 0,
+                "entries": [],
+            }
+            for w in word_list
+        ]
+
+    try:
+        has_entries_table = _ulif_table_exists(conn, "ulif_dictua_entries")
+        if not has_entries_table:
+            return [
+                {
+                    "word": w,
+                    "normalized_query": normalize_ulif_dictua_query(w),
+                    "status": "unavailable",
+                    "verified": False,
+                    "entry_count": 0,
+                    "entries": [],
+                }
+                for w in word_list
+            ]
+
+        has_forms_build = _ulif_table_exists(conn, "ulif_forms_build")
+        has_forms_table = _ulif_table_exists(conn, "ulif_forms")
+        has_failures_table = _ulif_table_exists(conn, "ulif_forms_failures")
+        has_sections_table = _ulif_table_exists(conn, "ulif_dictua_sections")
+
+        if not has_forms_build or not has_forms_table or not has_failures_table or not has_sections_table:
+            global_forms_state = "missing_table"
+        else:
+            build_row = conn.execute(
+                "SELECT state, parser_version, source_fingerprint FROM ulif_forms_build WHERE id = 1"
+            ).fetchone()
+            if build_row is None:
+                global_forms_state = "unbuilt"
+            elif build_row["state"] != "complete":
+                global_forms_state = str(build_row["state"])
+            elif build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
+                global_forms_state = "stale_parser_version"
+            elif not build_row["source_fingerprint"]:
+                global_forms_state = "missing_source_fingerprint"
+            else:
+                global_forms_state = "complete"
+
+        records: list[dict] = []
+        for word in word_list:
+            normalized = normalize_ulif_dictua_query(word)
+            if not normalized:
+                records.append({
+                    "word": word,
+                    "normalized_query": "",
+                    "status": "invalid_input",
+                    "verified": False,
+                    "entry_count": 0,
+                    "entries": [],
+                })
+                continue
+
+            rows = _load_ulif_dictua_rows(conn, normalized)
+            if not rows:
+                records.append({
+                    "word": word,
+                    "normalized_query": normalized,
+                    "status": "not_found",
+                    "verified": False,
+                    "entry_count": 0,
+                    "entries": [],
+                })
+                continue
+
+            entries: list[dict] = []
+            for row in rows:
+                entry_id = int(row["id"])
+                keys = row.keys()
+                homonym_index = (
+                    int(row["homonym_index"])
+                    if "homonym_index" in keys and row["homonym_index"] is not None
+                    else 1
+                )
+                homonym_checked = (
+                    int(row["homonym_checked"])
+                    if "homonym_checked" in keys and row["homonym_checked"] is not None
+                    else 0
+                )
+                is_verified = (homonym_checked == 1)
+
+                stored_headword = str(row["canonical_headword"] if "canonical_headword" in keys and row["canonical_headword"] else "")
+                stored_grammar = str(row["grammatical_label"] if "grammatical_label" in keys and row["grammatical_label"] else "")
+                stored_gloss = str(row["sense_gloss"] if "sense_gloss" in keys and row["sense_gloss"] else "")
+                register_pos = str(row["register_position"] if "register_position" in keys and row["register_position"] else "")
+                raw_ref = str(row["raw_response_ref"] if "raw_response_ref" in keys and row["raw_response_ref"] else "")
+                retrieved_at = str(row["retrieved_at"] if "retrieved_at" in keys and row["retrieved_at"] else "")
+                resp_sha = str(row["response_sha256"] if "response_sha256" in keys and row["response_sha256"] else "")
+                content_sha = str(
+                    row["content_sha256"]
+                    if "content_sha256" in keys and row["content_sha256"]
+                    else resp_sha
+                )
+                parser_v = str(row["parser_version"] if "parser_version" in keys and row["parser_version"] else "")
+                status = str(row["status"] if "status" in keys and row["status"] else "")
+
+                if not is_verified:
+                    entries.append({
+                        "entry_id": entry_id,
+                        "homonym_index": homonym_index,
+                        "canonical_headword": stored_headword,
+                        "grammatical_label": stored_grammar,
+                        "sense_gloss": stored_gloss,
+                        "register_position": register_pos,
+                        "homonym_checked": homonym_checked,
+                        "verified": False,
+                        "status": status,
+                        "raw_response_ref": raw_ref,
+                        "retrieved_at": retrieved_at,
+                        "response_sha256": resp_sha,
+                        "content_sha256": content_sha,
+                        "parser_version": parser_v,
+                        "identity_from_raw": None,
+                        "sections": {},
+                        "sections_state": "unverified",
+                        "forms": [],
+                        "forms_state": "unverified",
+                    })
+                    continue
+
+                # Verified entry: load complete section payloads without collapsing
+                if has_sections_table:
+                    sections: dict[str, list[dict]] = {k: [] for k in ULIF_DICTUA_SECTION_KINDS}
+                    sections_state = "complete"
+                    sec_rows = conn.execute(
+                        """
+                        SELECT id, kind, source_order, sense_or_group_id, payload_json
+                        FROM ulif_dictua_sections
+                        WHERE entry_id = ?
+                        ORDER BY kind, source_order, id
+                        """,
+                        (entry_id,),
+                    ).fetchall()
+                    for s_row in sec_rows:
+                        kind = str(s_row["kind"])
+                        sec_id = int(s_row["id"])
+                        src_order = int(s_row["source_order"])
+                        group_id = str(s_row["sense_or_group_id"])
+                        raw_json_str = s_row["payload_json"]
+                        try:
+                            payload = json.loads(raw_json_str)
+                            if not isinstance(payload, dict):
+                                payload = {"value": payload}
+                        except Exception:
+                            payload = {
+                                "error": "malformed_stored_json",
+                                "raw_payload_json": raw_json_str,
+                            }
+                        payload_copy = dict(payload)
+                        if "section_id" not in payload_copy:
+                            payload_copy["section_id"] = sec_id
+                        if "source_order" not in payload_copy:
+                            payload_copy["source_order"] = src_order
+                        if "sense_or_group_id" not in payload_copy:
+                            payload_copy["sense_or_group_id"] = group_id
+                        if "locator" not in payload_copy:
+                            payload_copy["locator"] = f"ulif:section:{sec_id}"
+                        sections.setdefault(kind, []).append(payload_copy)
+                else:
+                    sections = {}
+                    sections_state = "missing_table"
+                    sec_rows = []
+
+                entry_forms: list[dict[str, Any]] = []
+                entry_forms_state = global_forms_state
+                entry_forms_failure = None
+
+                current_entry_fp = compute_ulif_entry_fingerprint(row, sec_rows)
+
+                if global_forms_state == "complete":
+                    f_rows = conn.execute(
+                        """
+                        SELECT entry_key, form_unstressed, form_stressed,
+                               stress_vowel_indices, grammatical_tags, unmapped_labels,
+                               variant_order, preposition, marked_asterisk, is_lemma,
+                               is_invariable, dual_stress_flag, pedagogical_stressed_form,
+                               source_page_sha256, parser_version, source_entry_fingerprint
+                        FROM ulif_forms
+                        WHERE entry_id = ?
+                        ORDER BY id
+                        """,
+                        (entry_id,),
+                    ).fetchall()
+                    if f_rows:
+                        row_validation_error: str | None = None
+                        for f_row in f_rows:
+                            stored_fp = f_row["source_entry_fingerprint"]
+                            stored_pv = f_row["parser_version"]
+                            if stored_pv != ULIF_FORMS_PARSER_VERSION:
+                                row_validation_error = "stale_parser_version"
+                                break
+                            if not stored_fp or stored_fp != current_entry_fp:
+                                row_validation_error = "stale_source_snapshot"
+                                break
+                        if row_validation_error is not None:
+                            entry_forms_state = row_validation_error
+                        else:
+                            for f_row in f_rows:
+                                f_dict = dict(f_row)
+                                for json_col in ("stress_vowel_indices", "grammatical_tags", "unmapped_labels"):
+                                    try:
+                                        f_dict[json_col] = json.loads(f_dict[json_col])
+                                    except Exception:
+                                        f_dict[json_col] = []
+                                for bool_col in ("marked_asterisk", "is_lemma", "is_invariable", "dual_stress_flag"):
+                                    f_dict[bool_col] = bool(f_dict[bool_col])
+                                entry_forms.append(f_dict)
+                            entry_forms_state = "complete"
+
+                    if has_failures_table:
+                        fail_row = conn.execute(
+                            "SELECT reason, locator FROM ulif_forms_failures WHERE entry_id = ?",
+                            (entry_id,),
+                        ).fetchone()
+                        if fail_row:
+                            entry_forms_state = str(fail_row["reason"])
+                            entry_forms_failure = {
+                                "reason": str(fail_row["reason"]),
+                                "locator": str(fail_row["locator"]),
+                            }
+                            if str(fail_row["reason"]) != "raw_entry_page_absent":
+                                entry_forms = []
+                        elif not f_rows:
+                            entry_forms_state = "missing_forms"
+                else:
+                    if has_failures_table:
+                        fail_row = conn.execute(
+                            "SELECT reason, locator FROM ulif_forms_failures WHERE entry_id = ?",
+                            (entry_id,),
+                        ).fetchone()
+                        if fail_row:
+                            entry_forms_state = str(fail_row["reason"])
+                            entry_forms_failure = {
+                                "reason": str(fail_row["reason"]),
+                                "locator": str(fail_row["locator"]),
+                            }
+                    entry_forms = []
+
+                identity_from_raw = _derive_identity_from_raw(
+                    entry_id=entry_id,
+                    homonym_index=homonym_index,
+                    stored_headword=stored_headword,
+                    stored_grammar=stored_grammar,
+                    stored_gloss=stored_gloss,
+                    raw_response_ref=raw_ref,
+                    entry_forms=entry_forms,
+                    db_path=db_path,
+                )
+
+                if entry_forms_state == "complete" and entry_forms:
+                    raw_page_sha = identity_from_raw.get("source_page_sha256")
+                    for f in entry_forms:
+                        form_page_sha = f.get("source_page_sha256")
+                        if form_page_sha and raw_page_sha and form_page_sha != raw_page_sha:
+                            entry_forms_state = "stale_source_page"
+                            entry_forms = []
+                            break
+
+                entry_dict = {
+                    "entry_id": entry_id,
+                    "homonym_index": homonym_index,
+                    "canonical_headword": stored_headword,
+                    "grammatical_label": stored_grammar,
+                    "sense_gloss": stored_gloss,
+                    "register_position": register_pos,
+                    "homonym_checked": homonym_checked,
+                    "verified": True,
+                    "status": status,
+                    "raw_response_ref": raw_ref,
+                    "retrieved_at": retrieved_at,
+                    "response_sha256": resp_sha,
+                    "content_sha256": content_sha,
+                    "parser_version": parser_v,
+                    "identity_from_raw": identity_from_raw,
+                    "sections": sections,
+                    "sections_state": sections_state,
+                    "forms": entry_forms,
+                    "forms_state": entry_forms_state,
+                }
+                if entry_forms_failure is not None:
+                    entry_dict["forms_failure"] = entry_forms_failure
+
+                entries.append(entry_dict)
+
+            all_verified = all(e["verified"] for e in entries)
+            any_verified = any(e["verified"] for e in entries)
+            if all_verified:
+                word_status = "ok"
+            elif any_verified:
+                word_status = "partial_unverified"
+            else:
+                word_status = "unverified"
+
+            word_record = {
+                "word": word,
+                "normalized_query": normalized,
+                "status": word_status,
+                "verified": all_verified,
+                "entry_count": len(entries),
+                "entries": entries,
+            }
+
+            records.append(word_record)
+
+        return records
     finally:
         conn.close()
 
@@ -847,6 +1631,7 @@ _PRIOR_KEY_BY_CORPUS = {
     "wikipedia": "wikipedia",
     "ukrainian_wiki": "ukrainian_wiki",
 }
+RRF_K = 60
 
 
 def _load_track_priors() -> dict[str, dict[str, float]]:
@@ -1014,7 +1799,7 @@ def _search_sections_fts5(
     max_chunk_candidates: int = 100,
     max_sections: int = 30,
 ) -> list[dict]:
-    """Return section candidates grouped from chunk-level FTS5 hits."""
+    """Return section and unsectioned chunk candidates from textbook FTS5 hits."""
     try:
         conn = _get_conn()
     except FileNotFoundError:
@@ -1025,8 +1810,6 @@ def _search_sections_fts5(
     if not fts_query:
         return []
 
-    extra_where = ["s.parent_section_id IS NOT NULL"]
-    extra_params: list[object] = []
     # #1340 (2026-04-20): grade filter intentionally NOT applied here.
     # CEFR (L2 framework) does not map onto Ukrainian school grades
     # (L1 native staging). Grade 5 systematic phonetics is exactly
@@ -1042,7 +1825,7 @@ def _search_sections_fts5(
     _ = track  # keep parameter live for downstream callers
 
     rows = conn.execute(
-        f"""
+        """
         SELECT
             s.id,
             s.chunk_id,
@@ -1056,11 +1839,10 @@ def _search_sections_fts5(
         FROM textbooks_fts
         JOIN textbooks s ON s.id = textbooks_fts.rowid
         WHERE textbooks_fts MATCH ?
-          AND {' AND '.join(extra_where)}
         ORDER BY rank, s.id
         LIMIT ?
         """,
-        (fts_query, *extra_params, max_chunk_candidates),
+        (fts_query, max_chunk_candidates),
     ).fetchall()
 
     if not rows:
@@ -1075,6 +1857,8 @@ def _search_sections_fts5(
         "best_rank": float("inf"),
         "matched_chunk_ids": [],
     })
+    by_chunk: dict[str, dict] = {}
+    chunk_rows: dict[str, sqlite3.Row] = {}
 
     for row in rows:
         text = str(row["text"] or "")
@@ -1087,20 +1871,31 @@ def _search_sections_fts5(
         if not bucket_a_hit and not bucket_b_hit:
             continue
 
-        section_id = int(row["parent_section_id"])
-        aggregated = by_section[section_id]
+        if row["parent_section_id"] is None:
+            chunk_id = str(row["chunk_id"])
+            aggregated = by_chunk.setdefault(chunk_id, {
+                "bucket_a_hits": 0,
+                "bucket_b_hits": 0,
+                "best_rank": float("inf"),
+                "matched_chunk_ids": [],
+            })
+            chunk_rows[chunk_id] = row
+        else:
+            section_id = int(row["parent_section_id"])
+            aggregated = by_section[section_id]
         aggregated["bucket_a_hits"] += int(bucket_a_hit)
         aggregated["bucket_b_hits"] += int(bucket_b_hit)
         aggregated["best_rank"] = min(float(row["rank"] or 0.0), aggregated["best_rank"])
         aggregated["matched_chunk_ids"].append(str(row["chunk_id"]))
 
-    if not by_section:
+    if not by_section and not by_chunk:
         return []
 
-    ranked_sections = sorted(
-        (
+    ranked_candidates = sorted(
+        [
             {
-                "section_id": section_id,
+                "kind": "section",
+                "candidate_id": section_id,
                 "bucket_a_hits": data["bucket_a_hits"],
                 "bucket_b_hits": data["bucket_b_hits"],
                 "section_score": (data["bucket_a_hits"] * 3) + data["bucket_b_hits"],
@@ -1108,45 +1903,94 @@ def _search_sections_fts5(
                 "matched_chunk_ids": data["matched_chunk_ids"],
             }
             for section_id, data in by_section.items()
-        ),
+        ]
+        + [
+            {
+                "kind": "chunk",
+                "candidate_id": chunk_id,
+                "bucket_a_hits": data["bucket_a_hits"],
+                "bucket_b_hits": data["bucket_b_hits"],
+                "section_score": (data["bucket_a_hits"] * 3) + data["bucket_b_hits"],
+                "best_rank": data["best_rank"],
+                "matched_chunk_ids": data["matched_chunk_ids"],
+            }
+            for chunk_id, data in by_chunk.items()
+        ],
         key=lambda row: (
             -int(row["section_score"]),
             float(row["best_rank"]),
-            int(row["section_id"]),
+            (0, int(row["candidate_id"]))
+            if row["kind"] == "section"
+            else (1, str(row["candidate_id"])),
         ),
-    )[:max_sections]
+    )
+    selected_candidates = ranked_candidates[:max_sections]
+    if by_section and not any(row["kind"] == "section" for row in selected_candidates):
+        selected_candidates[-1:] = [next(row for row in ranked_candidates if row["kind"] == "section")]
+        selected_candidates.sort(
+            key=lambda row: (
+                -int(row["section_score"]),
+                float(row["best_rank"]),
+                (0, int(row["candidate_id"]))
+                if row["kind"] == "section"
+                else (1, str(row["candidate_id"])),
+            ),
+        )
 
-    section_ids = [int(row["section_id"]) for row in ranked_sections]
-    placeholders = ",".join("?" * len(section_ids))
-    section_rows = conn.execute(
-        f"""
-        SELECT
-            section_id,
-            source_file,
-            grade,
-            section_title,
-            section_number,
-            page_start,
-            page_end,
-            chunk_count,
-            full_text
-        FROM textbook_sections
-        WHERE section_id IN ({placeholders})
-        """,
-        tuple(section_ids),
-    ).fetchall()
-    section_meta = {int(row["section_id"]): dict(row) for row in section_rows}
+    section_ids = [
+        int(row["candidate_id"])
+        for row in selected_candidates
+        if row["kind"] == "section"
+    ]
+    section_meta: dict[int, dict] = {}
+    if section_ids:
+        placeholders = ",".join("?" * len(section_ids))
+        section_rows = conn.execute(
+            f"""
+            SELECT
+                section_id,
+                source_file,
+                grade,
+                section_title,
+                section_number,
+                page_start,
+                page_end,
+                chunk_count,
+                full_text
+            FROM textbook_sections
+            WHERE section_id IN ({placeholders})
+            """,
+            tuple(section_ids),
+        ).fetchall()
+        section_meta = {int(row["section_id"]): dict(row) for row in section_rows}
 
     results: list[dict] = []
-    for ranked in ranked_sections:
-        meta = section_meta.get(int(ranked["section_id"]))
+    for ranked in selected_candidates:
+        if ranked["kind"] == "chunk":
+            row = chunk_rows[str(ranked["candidate_id"])]
+            chunk_id = str(row["chunk_id"])
+            text = str(row["text"] or "")
+            results.append({
+                **dict(row),
+                **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
+                "full_text": text,
+                "fts_score": float(ranked["best_rank"]),
+                "unit_key": f"textbook_sections:{chunk_id}",
+                "corpus": "textbook_sections",
+                "parent_key": str(row["source_file"] or ""),
+                "source_type": "textbook",
+            })
+            continue
+
+        meta = section_meta.get(int(ranked["candidate_id"]))
         if not meta:
             continue
         results.append({
             **meta,
-            **ranked,
+            **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
+            "section_id": int(ranked["candidate_id"]),
             "text": meta["full_text"],
-            "chunk_id": f"S{meta['section_id']}",
+            "chunk_id": f"S{ranked['candidate_id']}",
             "corpus": "textbook_sections",
             # Do NOT set "unit_key" here — the dispatcher computes it
             # downstream without the "S" prefix to match the embedding
@@ -1577,7 +2421,7 @@ def _dispatch_corpus_search(
     candidate_k_per_corpus: int,
 ) -> list[dict]:
     if corpus == "textbook_sections":
-        section_candidates = _search_sections_fts5(
+        textbook_candidates = _search_sections_fts5(
             bucket_a_phrases,
             bucket_b_keywords,
             track=track,
@@ -1589,11 +2433,19 @@ def _dispatch_corpus_search(
         # entries written by load_corpus_units. Without this, the
         # dense rerank lookup misses every chunked section's
         # sub-units and zeroes out the score (Codex msg #459).
-        candidates = _expand_to_chunk_candidates(
-            section_candidates,
-            corpus="textbook_sections",
-            parent_id_field="section_id",
-        )
+        candidates = [
+            expanded
+            for candidate in textbook_candidates
+            for expanded in (
+                _expand_to_chunk_candidates(
+                    [candidate],
+                    corpus="textbook_sections",
+                    parent_id_field=(
+                        "section_id" if candidate.get("section_id") is not None else "chunk_id"
+                    ),
+                )
+            )
+        ]
     elif corpus in {"modern_literary", "archaic_literary"}:
         candidates = _search_literary_candidates(
             bucket_a_phrases,
@@ -1622,6 +2474,13 @@ def _dispatch_corpus_search(
     else:
         return []
 
+    # Textbook keyword_rank follows _search_sections_fts5 order: section_score
+    # first, then best BM25, shared by sections and unsectioned chunks. In
+    # mixed sets, dense scores (~0.3–0.8 × prior) outrank keyword RRF scores
+    # (~0.016 × prior) by design.
+    for idx, candidate in enumerate(candidates, start=1):
+        candidate.setdefault("keyword_rank", idx)
+
     reranked = rerank_candidates(
         dense_query,
         candidates,
@@ -1629,9 +2488,21 @@ def _dispatch_corpus_search(
         limit=candidate_k_per_corpus,
     )
     prior = _corpus_prior(track, corpus)
-    for row in reranked:
+    for rank_idx, row in enumerate(reranked, start=1):
         row["prior_weight"] = prior
-        row["final_score"] = float(row.get("dense_score", 0.0)) * prior
+        keyword_rank = int(row.get("keyword_rank") or rank_idx)
+        keyword_score = 1.0 / (RRF_K + keyword_rank)
+        row["keyword_rank"] = keyword_rank
+        row["keyword_score"] = keyword_score
+        row["rrf_score"] = keyword_score * prior
+
+        is_dense = row.get("ranking") == "dense" or float(row.get("dense_score", 0.0)) != 0.0
+        if is_dense:
+            row["ranking"] = "dense"
+            row["final_score"] = float(row.get("dense_score", 0.0)) * prior
+        else:
+            row["ranking"] = "keyword_rrf"
+            row["final_score"] = row["rrf_score"]
     return reranked
 
 
@@ -1815,6 +2686,11 @@ def _search_archaic_metadata(
     ]
 
 
+def _is_textbook_section(match: dict) -> bool:
+    """Return whether a result satisfies the textbook-corpus guarantee."""
+    return match.get("corpus") == "textbook_sections"
+
+
 def search_sources(
     query: str | Path,
     *,
@@ -1861,26 +2737,45 @@ def search_sources(
         for future in futures:
             merged.extend(future.result())
 
-    merged.sort(
-        key=lambda row: (
-            -float(row.get("final_score", 0.0)),
-            -float(row.get("dense_score", 0.0)),
-            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
-            str(row.get("unit_key", "")),
+    if merged and all(row.get("ranking") == "keyword_rrf" for row in merged):
+        merged.sort(
+            key=lambda row: (
+                -float(row.get("final_score", 0.0)),
+                str(row.get("corpus", "")),
+                str(row.get("unit_key", "")),
+            )
         )
-    )
+    else:
+        merged.sort(
+            key=lambda row: (
+                -float(row.get("final_score", 0.0)),
+                -float(row.get("dense_score", 0.0)),
+                float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+                str(row.get("unit_key", "")),
+            )
+        )
     expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
     capped = _apply_context_cap(track, expanded)
+    # The guarantee applies to what the caller receives, so check the
+    # returned slice, not the longer capped list.
     if require_textbook_section and not any(
-        match.get("corpus") == "textbook_sections" for match in capped
+        _is_textbook_section(match) for match in capped[:limit]
     ):
         textbook_section = next(
-            (match for match in expanded if match.get("corpus") == "textbook_sections"),
+            (
+                match
+                for match in [*capped, *expanded]
+                if _is_textbook_section(match)
+            ),
             None,
         )
         if textbook_section is None:
             raw_textbook_section = next(
-                (match for match in merged if match.get("corpus") == "textbook_sections"),
+                (
+                    match
+                    for match in merged
+                    if _is_textbook_section(match)
+                ),
                 None,
             )
             if raw_textbook_section is not None:
@@ -1891,7 +2786,7 @@ def search_sources(
                 *[
                     match
                     for match in capped
-                    if match.get("corpus") != "textbook_sections"
+                    if not _is_textbook_section(match)
                     or match.get("unit_key") != textbook_section.get("unit_key")
                 ],
             ]

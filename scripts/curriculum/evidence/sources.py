@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.rag.config import VESUM_DB_PATH
+from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
 
 from . import codes, config, db_identity, tags
@@ -38,7 +39,6 @@ SOURCES_DB_SCHEME = "rows-v2"
 SOURCES_DB_META_SCHEME = db_identity.SOURCES_DB_META_SCHEME
 LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
-APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
 journal_mode_from_header = db_identity.journal_mode_from_header
 # VESUM uses noun/adj for pronouns; dmklinger uses pronoun (and particle for
 # determiners). Preserve the requested VESUM POS as the result key.
@@ -77,6 +77,43 @@ STORE_POS = {
     "conj": {"CCONJ", "SCONJ"},
 }
 ALPHABET_GUARD_POS = {"prep", "conj", "part"}
+
+# Requirement-receipt locators. Numeric dictionary ids name source rows, not
+# headword guesses. Canonical VESUM locators are exact N-M source_location
+# keys. Legacy bare N may name an entry_id or forms_all.id (both occur in
+# rev 6.5 receipts); neither namespace grants admission without word binding.
+RECEIPT_EVIDENCE_STORES = {
+    "vesum": ("forms_all", "source_location (canonical); entry_id / id (legacy)"),
+    "pravopys": ("2019.pravopys.net/sections/<number>/", "section"),
+    "textbook": ("textbooks", "chunk_id"),
+    "grinchenko": ("grinchenko", "id"),
+    "sum20": ("sum20_articles", "wordid"),
+    "vts": ("slovnyk_me_entries", "id (dictionary_slug=vts)"),
+    "ulif": ("ulif_dictua_entries", "id"),
+}
+
+
+def _contains_evidence_form(text: str, form: str) -> bool:
+    """Match a whole word or exact phrase independent of typesetting breaks.
+
+    Witnesses need at least two letters, including paradigm variants; standalone
+    one-letter options cannot bind text kinds. Longer function words can bind by
+    occurrence: this establishes identity, never their contextual correctness.
+    Strip soft hyphens, fold non-breaking hyphens, and try line-end hyphens
+    both joined and kept. Collapse whitespace in the witness and option so
+    phrase identity preserves adjacent words rather than PDF line wrapping.
+    """
+    text = re.sub(r"\u00ad[ \t]*\r?\n?[ \t]*", "", normalize_evidence_form(text)).replace("\u2011", "-")
+    line_end_hyphen = r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])"
+    texts = [re.sub(line_end_hyphen, replacement, text) for replacement in ("", "-")]
+    form = re.sub(r"\s+", " ", form)
+    return bool(
+        sum(char.isalpha() for char in form) >= 2
+        and any(
+            re.search(r"(?<![\w'-])" + re.escape(form) + r"(?![\w'-])", re.sub(r"\s+", " ", candidate))
+            for candidate in texts
+        )
+    )
 
 
 def is_alphabet_letter_gloss(row: dict) -> bool:
@@ -311,6 +348,10 @@ class Sources:
         self.journal_mode: str | None = None
         self._snapshot_started: float | None = None
         self._wal_bytes_start: int | None = None
+        self._receipt_evidence: dict[str, list[dict]] = {}
+        self._receipt_identities: dict[str, Any] = {}
+        self._receipt_words: dict[str, list[dict]] = {}
+        self._receipt_paradigms: dict[str, list[dict]] = {}
 
     def __enter__(self):
         return self
@@ -320,6 +361,10 @@ class Sources:
 
     def close(self) -> None:
         """Release the pinned snapshot (rollback, never commit) and report its lifetime."""
+        self._receipt_evidence.clear()
+        self._receipt_identities.clear()
+        self._receipt_words.clear()
+        self._receipt_paradigms.clear()
         if self._kaikki_conn is not None:
             side, self._kaikki_conn = self._kaikki_conn, None
             with closing(side), suppress(sqlite3.Error):
@@ -488,6 +533,210 @@ class Sources:
         if self._vesum_identity()[0] != digest:
             raise ValueError(f"{codes.SOURCE_CHANGED}: VESUM batch")
         return SourceResult(raw, digest, metadata)
+
+    def resolve_evidence_ids(self, evidence_ids: Iterable[str]) -> SourceResult[dict[str, list[dict]]]:
+        """Resolve receipt locators on this session, preserving source-row identity.
+
+        Unknown keys return empty rows; unavailable stores raise to the receipt
+        boundary, which converts them to a named refusal. No fuzzy/headword or
+        cross-dictionary fallback. VESUM's static-file identity is checked on
+        both sides of a read, as in inspect_many; sources.db uses _db's pinned
+        read-only snapshot. Правопис uses the existing accessor once per section
+        and retains those bytes for the session, never a second network lookup.
+        """
+        requested = list(dict.fromkeys(evidence_ids))
+        pending = [eid for eid in requested if eid not in self._receipt_evidence]
+        if any(eid.startswith("vesum:") for eid in requested):
+            digest, metadata = self._vesum_identity()
+            self._receipt_identities["vesum"] = {"content_hash": digest, **metadata}
+            vesum_ids = [eid for eid in pending if eid.startswith("vesum:")]
+            if vesum_ids:
+                numbers = {eid[6:]: eid for eid in vesum_ids if re.fullmatch(r"[1-9][0-9]*", eid[6:])}
+                locations = {eid[6:]: eid for eid in vesum_ids if re.fullmatch(r"[1-9][0-9]*-[1-9][0-9]*", eid[6:])}
+                result = {eid: [] for eid in vesum_ids}
+                # Neither entry_id nor source_location is indexed in the real
+                # store. Batch them in one scan rather than scanning per option.
+                keys = list(numbers)
+                ranges = list(locations)
+                if keys or ranges:
+                    with closing(open_readonly(self.vesum_db)) as conn:
+                        for start in range(0, max(len(keys), len(ranges)), BATCH_SIZE):
+                            ns, rs = keys[start : start + BATCH_SIZE], ranges[start : start + BATCH_SIZE]
+                            nslots, rslots = ",".join("?" for _ in ns), ",".join("?" for _ in rs)
+                            rows = conn.execute(
+                                f"SELECT * FROM forms_all WHERE id IN ({nslots}) OR entry_id IN ({nslots}) "
+                                f"OR source_location IN ({rslots}) ORDER BY id",
+                                [*ns, *ns, *rs],
+                            )
+                            for row in rows:
+                                matches = {
+                                    numbers.get(str(row["id"])),
+                                    numbers.get(str(row["entry_id"])),
+                                    locations.get(row["source_location"]),
+                                } - {None}
+                                for eid in matches:
+                                    result[eid].append(dict(row))
+                self._vesum_identity()
+                self._receipt_evidence.update(result)
+        for eid in pending:
+            kind, _, key = eid.partition(":")
+            if kind == "vesum":
+                continue
+            if kind not in RECEIPT_EVIDENCE_STORES or not key:
+                self._receipt_evidence[eid] = []
+                continue
+            if kind == "pravopys":
+                from scripts.rag.source_query import PRAVOPYS_BASE, pravopys_section
+
+                if not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 2 or not 1 <= int(key) <= 61:
+                    self._receipt_evidence[eid] = []
+                    continue
+                section = pravopys_section(int(key), report_unavailable=True)
+                if section and section.get("status") == "unavailable":
+                    raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
+                self._receipt_evidence[eid] = [section] if section else []
+                self._receipt_identities["pravopys"] = {
+                    "scheme": "pravopys-live-section-v1", "origin": PRAVOPYS_BASE,
+                }
+                continue
+            if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
+                self._receipt_evidence[eid] = []
+                continue
+            table, column = {
+                "textbook": ("textbooks", "chunk_id"),
+                "grinchenko": ("grinchenko", "id"),
+                "sum20": ("sum20_articles", "wordid"),
+                "vts": ("slovnyk_me_entries", "id"),
+                "ulif": ("ulif_dictua_entries", "id"),
+            }[kind]
+            condition = " AND dictionary_slug = 'vts'" if kind == "vts" else ""
+            rows = self._db().execute(f"SELECT * FROM {table} WHERE {column} = ?{condition} ORDER BY id", (key,))
+            self._receipt_evidence[eid] = [dict(row) for row in rows]
+            self._receipt_identities["sources_db"] = {"scheme": SOURCES_DB_SCHEME}
+        raw = {eid: self._receipt_evidence[eid] for eid in requested}
+        identities = {
+            kind: value for kind, value in self._receipt_identities.items()
+            if (kind == "vesum" and any(eid.startswith("vesum:") for eid in requested))
+            or (kind == "pravopys" and any(eid.startswith("pravopys:") for eid in requested))
+            or (kind == "sources_db" and any(eid.partition(":")[0] not in {"vesum", "pravopys"} for eid in requested))
+        }
+        return SourceResult(raw, batch_digest(raw), identities)
+
+    def _receipt_vesum_rows(
+        self, values: Iterable[str], *, paradigm: bool = False,
+    ) -> SourceResult[dict[str, list[dict]]]:
+        """Read attested analyses or paradigms using Unicode word identity.
+
+        Use indexed exact given, casefolded, upper, title, capitalised and
+        per-hyphen-part capitalised candidates, then normalized filtering through
+        the marker-filtered compatibility view. 1,490 forms and 297 lemmas remain
+        unreachable by these candidates and fail closed; a folded store is a
+        separate follow-up. Cache within the checked static identity.
+        """
+        requested = list(dict.fromkeys(values))
+        digest, metadata = self._vesum_identity()
+        cache = self._receipt_paradigms if paradigm else self._receipt_words
+        pending = [value for value in requested if value not in cache]
+        column = "lemma" if paradigm else "word_form"
+        if pending:
+            with closing(open_readonly(self.vesum_db)) as conn:
+                for start in range(0, len(pending), BATCH_SIZE):
+                    batch = pending[start : start + BATCH_SIZE]
+                    candidates = sorted({
+                        candidate for value in batch
+                        for candidate in (
+                            value, value.casefold(), value.upper(), value.title(), value.capitalize(),
+                            "-".join(part.capitalize() for part in value.split("-")),
+                        )
+                    })
+                    slots = ','.join('?' for _ in candidates)
+                    rows = conn.execute(
+                        f"SELECT word_form, lemma, pos, tags FROM forms "
+                        f"WHERE {column} IN ({slots}) "
+                        "ORDER BY word_form, lemma, pos, tags", candidates,
+                    )
+                    found = {value: [] for value in batch}
+                    for row in rows:
+                        normalized = normalize_evidence_form(row[column])
+                        if normalized in found:
+                            found[normalized].append(dict(row))
+                    cache.update(found)
+        self._vesum_identity()
+        return SourceResult({value: cache[value] for value in requested}, digest, metadata)
+
+    def bind_evidence_forms(
+        self, resolved: SourceResult[dict[str, list[dict]]], citations: Iterable[tuple[str, str]],
+    ) -> SourceResult[dict[tuple[str, str], bool]]:
+        """Bind citations to the option's word, for valid and invalid judgements.
+
+        Dictionary headwords/lemmas or word_form must casefold-equal the option
+        or an attested VESUM lemma. Legacy VESUM integers bind through either
+        resolved namespace; canonical N-M remains preferred. Text kinds require
+        a whole-word occurrence of the option or any attested paradigm form of
+        its VESUM lemmas. Stress/apostrophe normalization also applies. No guessed
+        lemmas, definition matches, or metadata witnesses. Binding establishes
+        word identity, never correctness of the contextual language judgement.
+        Only ULIF rows with status='ok' provide witnesses, for both judgements.
+        Text soft hyphens are stripped and line-end hyphens tried joined and
+        kept before matching. Standalone
+        one-letter options and one-letter paradigm witnesses cannot bind text;
+        longer function words can bind by occurrence. Multi-word options require
+        the exact phrase after whitespace collapse, never independent token matches.
+        """
+        fields = {
+            "vesum": ("word_form", "lemma"),
+            "pravopys": ("text",),
+            "textbook": ("text",),
+            "grinchenko": ("word",),
+            "sum20": ("headword", "stressed_headword"),
+            "vts": ("word",),
+            "ulif": ("canonical_headword",),
+        }
+        raw = {}
+        pending = {}
+        for eid, text in dict.fromkeys(citations):
+            kind = eid.partition(":")[0]
+            form = normalize_evidence_form(text)
+            witnesses = [
+                normalize_evidence_form(row[field])
+                for row in resolved.raw[eid]
+                if kind != "ulif" or row.get("status") == "ok"
+                for field in fields.get(kind, ())
+                if isinstance(row.get(field), str)
+            ]
+            is_text = kind in {"pravopys", "textbook"}
+            supported = any(
+                _contains_evidence_form(value, form) if is_text else bool(form and value == form)
+                for value in witnesses
+            )
+            raw[eid, text] = supported
+            if not supported and (
+                not is_text or (sum(char.isalpha() for char in form) >= 2 and not any(char.isspace() for char in form))
+            ):
+                pending[eid, text] = (form, witnesses, is_text)
+        analyses = self._receipt_vesum_rows(form for form, _, _ in pending.values()) if pending else None
+        text_lemmas = {
+            normalize_evidence_form(row["lemma"])
+            for form, _, is_text in pending.values() if is_text for row in analyses.raw[form]
+        }
+        paradigms = self._receipt_vesum_rows(text_lemmas, paradigm=True) if text_lemmas else None
+        for citation, (form, witnesses, is_text) in pending.items():
+            lemmas = {normalize_evidence_form(row["lemma"]) for row in analyses.raw[form]}
+            if is_text:
+                forms = {
+                    normalize_evidence_form(row["word_form"])
+                    for lemma in lemmas for row in paradigms.raw[lemma]
+                } if paradigms is not None else set()
+                raw[citation] = any(_contains_evidence_form(value, variant) for value in witnesses for variant in forms)
+            else:
+                raw[citation] = any(value in lemmas for value in witnesses)
+        metadata = {"normalization": "stress-apostrophes-casefold-v2"}
+        if analyses is not None:
+            metadata["vesum"] = {"content_hash": analyses.content_hash, **analyses.metadata}
+            metadata["analyses_sha256"] = batch_digest(analyses.raw)
+        if paradigms is not None:
+            metadata["paradigms_sha256"] = batch_digest(paradigms.raw)
+        return SourceResult(raw, batch_digest(raw), metadata)
 
     def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""

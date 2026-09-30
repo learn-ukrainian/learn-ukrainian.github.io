@@ -125,7 +125,7 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
             correlation_id="corr-8463",
             idempotency_key="idem-8463-three",
             rounds=2,
-            participants=("claude", "kimi", "glm"),
+            participants=("claude", "cursor", "glm"),
         )
         rows = controller.conn.execute(
             "SELECT sender, recipient FROM comms_messages WHERE conversation_id = ?",
@@ -139,22 +139,22 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
     assert sorted(agent for agent, _prompt in prompts) == [
         "acpx-claude-shadow",
         "acpx-claude-shadow",
+        "acpx-cursor-shadow",
+        "acpx-cursor-shadow",
         "acpx-glm-shadow",
         "acpx-glm-shadow",
-        "acpx-kimi-shadow",
-        "acpx-kimi-shadow",
     ]
     round_two = {
         agent: prompt for agent, prompt in prompts if "prior response" in prompt
     }
-    assert "kimi's prior response" in round_two["acpx-claude-shadow"]
+    assert "cursor's prior response" in round_two["acpx-claude-shadow"]
     assert "glm's prior response" in round_two["acpx-claude-shadow"]
-    assert "claude's prior response" in round_two["acpx-kimi-shadow"]
-    assert "glm's prior response" in round_two["acpx-kimi-shadow"]
+    assert "claude's prior response" in round_two["acpx-cursor-shadow"]
+    assert "glm's prior response" in round_two["acpx-cursor-shadow"]
     assert "claude's prior response" in round_two["acpx-glm-shadow"]
-    assert "kimi's prior response" in round_two["acpx-glm-shadow"]
+    assert "cursor's prior response" in round_two["acpx-glm-shadow"]
     edges = {(str(row[0]), str(row[1])) for row in rows}
-    seats = ("claude", "kimi", "glm")
+    seats = ("claude", "cursor", "glm")
     for seat in seats:
         assert ("root", seat) in edges
         assert (seat, "root") in edges
@@ -166,7 +166,7 @@ def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypa
         root=tmp_path / "plane", conversation_id=result["conversation_id"]
     )
     assert receipt["checks"]["fixed_participants"] is True
-    assert receipt["participants"] == ["claude", "kimi", "glm"]
+    assert receipt["participants"] == ["claude", "cursor", "glm"]
 
 
 def test_controller_adopts_exact_authority_reservation_without_second_conversation(
@@ -181,7 +181,7 @@ def test_controller_adopts_exact_authority_reservation_without_second_conversati
         job = service.enqueue_discussion(
             channel="acp-health",
             prompt=prompt,
-            participants=("kimi", "glm"),
+            participants=("cursor", "glm"),
             rounds=1,
             task_digest=hashlib.sha256(task_id.encode()).hexdigest(),
             correlation_id=correlation_id,
@@ -205,7 +205,7 @@ def test_controller_adopts_exact_authority_reservation_without_second_conversati
             correlation_id=correlation_id,
             idempotency_key=idempotency_key,
             rounds=1,
-            participants=("kimi", "glm"),
+            participants=("cursor", "glm"),
             source="codex",
             reserved_conversation_id=job.subject_id,
         )
@@ -234,7 +234,7 @@ def test_expired_authority_reservation_uses_existing_terminal_orphan_recovery(
         job = service.enqueue_discussion(
             channel="acp-health",
             prompt="Recover without calling providers.",
-            participants=("kimi", "glm"),
+            participants=("cursor", "glm"),
             rounds=1,
             task_digest=hashlib.sha256(b"task-6243-orphan").hexdigest(),
             correlation_id="correlation-6243-orphan",
@@ -284,7 +284,7 @@ def test_enabled_nondefault_pair_uses_fixed_acp_seats_and_persists_participants(
             correlation_id="corr-6130",
             idempotency_key="idem-6130-generic",
             rounds=1,
-            participants=("claude", "kimicc"),
+            participants=("claude", "agy"),
         )
         stored = controller.conn.execute(
             "SELECT participants_json FROM acp_conversations WHERE conversation_id = ?",
@@ -294,15 +294,41 @@ def test_enabled_nondefault_pair_uses_fixed_acp_seats_and_persists_participants(
         controller.close()
 
     assert sorted(calls) == [
+        ("acpx-agy-shadow", "agy"),
         ("acpx-claude-shadow", "claude"),
-        ("acpx-kimicc-shadow", "kimi"),
     ]
-    assert stored == '["claude", "kimicc"]'
+    assert stored == '["claude", "agy"]'
     receipt = acpx_discuss.verify_discussion_receipt(
         root=tmp_path / "plane", conversation_id=result["conversation_id"]
     )
-    assert receipt["participants"] == ["claude", "kimicc"]
+    assert receipt["participants"] == ["claude", "agy"]
     assert receipt["checks"]["fixed_participants"] is True
+
+
+@pytest.mark.parametrize("kimi_seat", ["kimi", "kimicc"])
+def test_panel_with_a_kimi_seat_is_refused_before_any_call(tmp_path, monkeypatch, kimi_seat):
+    """Kimi seats admit web, UI and backend coding only: a discussion panel naming one never starts."""
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        lambda *_a, **_k: pytest.fail("a refused panel must not call a participant"),
+        lambda *_a, **_k: pytest.fail("a refused panel must not synthesize"),
+    )
+    try:
+        with pytest.raises(acpx_discuss.AcpxDiscussionError, match="KIMI CODING-ONLY"):
+            controller.run(
+                prompt="Compare the two bounded options.",
+                cwd=Path.cwd(),
+                task_id="task-kimi-panel",
+                correlation_id="corr-kimi-panel",
+                idempotency_key=f"idem-kimi-panel-{kimi_seat}",
+                rounds=1,
+                participants=("claude", kimi_seat),
+            )
+        conversations = controller.conn.execute("SELECT COUNT(*) FROM acp_conversations").fetchone()[0]
+    finally:
+        controller.close()
+    assert conversations == 0
 
 
 def test_conversation_survives_dispatch_worktree_cleanup(tmp_path, monkeypatch):

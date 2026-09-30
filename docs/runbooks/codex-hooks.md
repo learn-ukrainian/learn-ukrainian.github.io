@@ -126,7 +126,7 @@ Codex hydration; keep the bounded launcher-bound capsule on `SessionStart`
 with matcher `compact`.
 
 The canonical checkout's `.venv/bin/python` must report exactly the version in
-the canonical `.python-version` file (currently `Python 3.12.8`). Linked
+the canonical `.python-version` file (currently `Python 3.12.14`). Linked
 worktrees intentionally have no local `.venv`; `SessionStart` and bare
 `python`/`python3` rewrites use the canonical interpreter. A missing or
 mismatched canonical interpreter blocks a bare-interpreter rewrite instead of

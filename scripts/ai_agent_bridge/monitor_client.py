@@ -540,13 +540,28 @@ class MonitorClient:
         _, body, _ = self._get("/api/state/manifest")
         return json.loads(body)
 
-    def rules(self, *, manifest: dict[str, Any] | None = None) -> ComponentResult:
-        """Return the condensed rule text, cached by manifest hash."""
+    def rules(
+        self, *, manifest: dict[str, Any] | None = None, scope: str | None = None
+    ) -> ComponentResult:
+        """Return rule text, cached by manifest hash.
+
+        ``scope=None`` is the full bundle (cache key ``rules``). ``core``,
+        ``content`` and ``task:<name>`` are cached under ``rules:<scope>`` so a
+        scope never serves another scope's bytes; ``core`` and ``content`` use
+        the manifest's ``rules_core`` / ``rules_content`` hashes.
+        """
+        if scope is None:
+            return self._cached_component(
+                key="rules",
+                manifest_key="rules",
+                manifest=manifest,
+                default_url="/api/rules?format=markdown",
+            )
         return self._cached_component(
-            key="rules",
-            manifest_key="rules",
+            key=f"rules:{scope}",
+            manifest_key=f"rules_{scope}" if scope in ("core", "content") else "",
             manifest=manifest,
-            default_url="/api/rules?format=markdown",
+            default_url=f"/api/rules?scope={urllib.parse.quote(scope, safe=':')}&format=markdown",
         )
 
     def session(self, *, manifest: dict[str, Any] | None = None) -> ComponentResult:

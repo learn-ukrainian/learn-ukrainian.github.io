@@ -221,9 +221,9 @@ TARGET_SHA=$(.venv/bin/python scripts/verify_review.py --emit-target-manifest \
   --expected-input-sha256 "$TARGET_SHA" \
   --issue-ref '#5284' \
   --scope-json '{"owner_boundary":"scripts/verify_review.py"}' \
-  --author-model 'gpt-5.6-sol' --author-family openai --author-harness codex \
+  --author-model 'gpt-6.1-sol' --author-family openai --author-harness codex \
   --author-selection-reason 'accountable-author' \
-  --reviewer-model 'grok-4.6' --reviewer-family xai --reviewer-harness grok-build \
+  --reviewer-model 'grok-4.7' --reviewer-family xai --reviewer-harness grok-build \
   --reviewer-selection-reason 'cross-family-gate' \
   --tests-json '{"commands":["pytest tests/test_verify_review.py"],"passed":true}' \
   --behavior-proof-state-file "$STATE_FILE" \
@@ -299,3 +299,22 @@ Multi-finding validation order is deterministic: sort by
    - `invalid` / `incomplete` / `stale` / `unverifiable` → reject the review
      output; re-run after correcting structure, freshness, or evidence — do not
      treat bad evidence or incomplete provenance as a green closeout.
+
+## Reviewer selection trace
+
+`closeout_cli resolve-reviewer` applies hard exclusions before ranking. Its
+`review_scheduler.profile_risk_role_order` then ranks semantic suitability,
+followed by quality tier and deterministic resource-pressure scoring within
+that fit and tier. An earlier YAML rung does not override a better role match.
+
+For a `gpt-6.1-sol` author with profile `code` and risk `high`, native
+`claude-opus-5-5` is eligible but matches `critical_review` at suitability
+rank 3; `claude-sonnet-5-5` matches `strong_review` at rank 0. Sonnet therefore
+wins before `selection_score` breaks ties. This is the configured suitability
+rule, rather than an Opus health or quota exclusion. Both may report unknown
+health when no routing snapshot is supplied. When an explicit requested role
+fits both equally, Opus's authority tier wins. Critical security review
+excludes every Sonnet model and uses the Fable 5.1 authority route.
+
+Read `status`, `reason`, `suitability_rank`, and `selection_score` for every
+candidate; do not infer provider health or review eligibility from selection.

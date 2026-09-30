@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
 
@@ -25,6 +26,7 @@ def test_kimi_rejects_harnesses_outside_native_or_claude_code(harness: str) -> N
     assert "kimi-code|claude-code" in result.stderr
 
 
+@pytest.mark.rules_core_absent
 def test_kimi_native_accepts_explicit_model_and_provider_arguments() -> None:
     result = run_launcher("start-kimi.sh", "--model", "k3", "--", "--yolo")
     assert result.returncode == 0, result.stderr

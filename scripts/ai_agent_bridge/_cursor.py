@@ -7,20 +7,21 @@ Invocation pattern:
     .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-cursor <content> \
       --task-id <task> [--model composer-2.5] [--data FILE]
 
-Default model is ``auto`` so cursor-agent picks the best available model from
-the user's plan without burning the per-model composer-2.5 quota. Pass
-``--model composer-2.5`` explicitly only when you specifically need that model
-(e.g. judge-calibration runs or A/B comparisons).
+Every call runs a concrete approved Cursor pin: the catalog's Cursor seat pin
+by default, or another allowlisted pin via ``--model``. Auto is refused before
+any provider call, and a queued ask with no stored model is refused rather than
+defaulted (operator decision 2026-09-30, #9274).
 
-Under the hood: agent -p PROMPT --model MODEL --output-format text --trust
+Under the hood: cursor-agent -p PROMPT --model MODEL --output-format text --trust
 """
 
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 from pathlib import Path
+
+from scripts.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
 
 from ._ask_contract import (
     requested_effort,
@@ -38,9 +39,26 @@ from ._ask_lifecycle import (
     register_ask,
 )
 from ._messaging import acknowledge, send_message
+from ._prompts import require_core_or_exit, with_core_or_exit
 
-CURSOR_DEFAULT_MODEL = "auto"
 CURSOR_DEFAULT_TIMEOUT_S = 900
+
+
+def cursor_default_model() -> str:
+    """The catalog's concrete Cursor seat pin, used when an ask names no model."""
+    from scripts.review.model_catalog import cursor_pinned_models
+
+    return cursor_pinned_models()[0]
+
+
+def _require_approved_cursor_model(model: str | None) -> str:
+    """Return ``model`` when it is a concrete approved Cursor pin; otherwise exit with the typed refusal."""
+    from scripts.review.model_catalog import cursor_non_dispatch_model_refusal
+
+    refusal = cursor_non_dispatch_model_refusal(model)
+    if refusal:
+        raise SystemExit(f"ask-cursor: refused: {refusal}")
+    return str(model)
 
 
 def ask_cursor(
@@ -57,8 +75,9 @@ def ask_cursor(
     background: bool = False,
 ) -> int:
     """Send message to Cursor Agent AND invoke Cursor one-shot to process it."""
-    effective_model = resolve_model_selection(
-        lane="ask-cursor", to_model=to_model, model=model, default=CURSOR_DEFAULT_MODEL
+    require_core_or_exit("ask-cursor")
+    effective_model = _require_approved_cursor_model(
+        resolve_model_selection(lane="ask-cursor", to_model=to_model, model=model, default=cursor_default_model())
     )
     effort_applied, effort_reason = unsupported_effort_note(
         lane="cursor",
@@ -113,7 +132,8 @@ def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
         assert_ask_content_present(msg, message_id=message_id, target="cursor")
     if not msg:
         return
-    model = ask_target_model(msg) or CURSOR_DEFAULT_MODEL
+    # No stored model is refused, not defaulted: legacy asks defaulted to Auto.
+    model = _require_approved_cursor_model(ask_target_model(msg))
     effort = requested_effort(msg)
     effort_applied, effort_reason = unsupported_effort_note(
         lane="cursor",
@@ -144,19 +164,13 @@ def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
 
 def _invoke_cursor(
     content: str,
-    model: str,
+    model: str | None,
     *,
     data: str | None = None,
     no_timeout: bool = False,
 ) -> str:
-    """Run agent -p PROMPT --model MODEL --output-format text --trust; return captured stdout."""
-    agent_bin = shutil.which("agent")
-    if not agent_bin:
-        # Fallback to cursor-agent if 'agent' is not found
-        agent_bin = shutil.which("cursor-agent")
-
-    if not agent_bin:
-        raise SystemExit("ask-cursor: cursor-agent CLI not found in PATH")
+    """Run ``cursor-agent -p`` with the approved model; return captured stdout."""
+    model = _require_approved_cursor_model(model)
 
     # If data file attached, prepend its content to the prompt under a fenced block.
     # Cursor agent doesn't have a direct --file flag for one-shot prompts that
@@ -168,13 +182,18 @@ def _invoke_cursor(
             raise SystemExit(f"ask-cursor: --data file does not exist: {data}")
         attached = data_path.read_text(encoding="utf-8", errors="replace")
         prompt = f"{content}\n\n## Attached data: {data_path.name}\n\n```\n{attached}\n```"
+    prompt = with_core_or_exit(prompt, "ask-cursor")
+    agent_bin = resolve_cursor_agent_binary()
 
     argv = [
         agent_bin,
-        "-p", prompt,
-        "--model", model,
-        "--output-format", "text",
-        "--trust"
+        "-p",
+        prompt,
+        "--model",
+        model,
+        "--output-format",
+        "text",
+        "--trust",
     ]
 
     timeout = None if no_timeout else CURSOR_DEFAULT_TIMEOUT_S
@@ -189,9 +208,6 @@ def _invoke_cursor(
         raise SystemExit(f"ask-cursor: cursor-agent timed out after {timeout}s") from exc
 
     if result.returncode != 0:
-        raise SystemExit(
-            f"ask-cursor: cursor-agent exited {result.returncode}\n"
-            f"stderr: {result.stderr[-2000:]}"
-        )
+        raise SystemExit(f"ask-cursor: cursor-agent exited {result.returncode}\nstderr: {result.stderr[-2000:]}")
 
     return result.stdout.strip()

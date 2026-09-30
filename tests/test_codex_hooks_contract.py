@@ -53,19 +53,19 @@ def _run(command: list[str], *, cwd: Path) -> subprocess.CompletedProcess[str]:
 def _make_exact_python_checkout(root: Path, *, delegate: Path | None = None) -> None:
     python = root / ".venv" / "bin" / "python"
     python.parent.mkdir(parents=True)
-    script = "#!/bin/bash\nprintf 'Python 3.12.8\\n'\n"
+    script = "#!/bin/bash\nprintf 'Python 3.12.14\\n'\n"
     if delegate is not None:
         script = (
             "#!/bin/bash\n"
             "if [ \"${1:-}\" = \"--version\" ]; then\n"
-            "  printf 'Python 3.12.8\\n'\n"
+            "  printf 'Python 3.12.14\\n'\n"
             "  exit 0\n"
             "fi\n"
             f"exec {shlex.quote(os.fspath(delegate))} \"$@\"\n"
         )
     python.write_text(script, encoding="utf-8")
     python.chmod(0o755)
-    (root / ".python-version").write_text("3.12.8\n", encoding="utf-8")
+    (root / ".python-version").write_text("3.12.14\n", encoding="utf-8")
 
 
 def _make_linked_worktree(tmp_path: Path) -> tuple[Path, Path]:

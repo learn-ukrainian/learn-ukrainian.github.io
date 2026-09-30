@@ -19,6 +19,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from agent_runtime.adapters import cursor as cursor_mod
 from agent_runtime.adapters.cursor import (
     CursorAdapter,
     _load_cursor_api_key_from_env_file,
@@ -29,6 +30,12 @@ from agent_runtime.env_sanitize import build_agent_env
 @pytest.fixture
 def adapter() -> CursorAdapter:
     return CursorAdapter()
+
+
+@pytest.fixture(autouse=True)
+def _stub_cursor_agent_binary(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Env plumbing is independent of which Cursor executable is installed."""
+    monkeypatch.setattr(cursor_mod, "resolve_cursor_agent_binary", lambda: "/usr/local/bin/cursor-agent")
 
 
 def test_cursor_adapter_child_env_when_api_key_in_parent_env(adapter, tmp_path):
@@ -45,7 +52,7 @@ def test_cursor_adapter_child_env_when_api_key_in_parent_env(adapter, tmp_path):
             prompt="test prompt",
             mode="read-only",
             cwd=tmp_path,
-            model="auto",
+            model="grok-4.7",
             task_id="test-task",
             session_id=None,
             tool_config={},
@@ -80,7 +87,7 @@ def test_cursor_adapter_child_env_when_api_key_in_file(adapter, tmp_path, monkey
             prompt="test prompt",
             mode="workspace-write",
             cwd=tmp_path,
-            model="auto",
+            model="grok-4.7",
             task_id="test-task",
             session_id=None,
             tool_config={},
@@ -115,7 +122,7 @@ def test_cursor_adapter_parent_env_wins_over_file(adapter, tmp_path, monkeypatch
             prompt="test prompt",
             mode="danger",
             cwd=tmp_path,
-            model="auto",
+            model="grok-4.7",
             task_id="test-task",
             session_id=None,
             tool_config={},
@@ -139,7 +146,7 @@ def test_cursor_adapter_child_env_no_key_when_both_absent(adapter, tmp_path, mon
             prompt="test prompt",
             mode="read-only",
             cwd=tmp_path,
-            model="auto",
+            model="grok-4.7",
             task_id="test-task",
             session_id=None,
             tool_config={},
@@ -173,7 +180,7 @@ def test_cursor_adapter_child_env_does_not_leak_unrelated_or_foreign_credentials
             prompt="test prompt",
             mode="workspace-write",
             cwd=tmp_path,
-            model="auto",
+            model="grok-4.7",
             task_id="test-task",
             session_id=None,
             tool_config={},

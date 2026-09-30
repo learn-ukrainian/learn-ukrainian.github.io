@@ -41,10 +41,10 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
-# Model Tiering — Gemini (3 tiers, mirrors Claude: Pro≈Opus, Flash≈Sonnet, Flash-Lite≈Haiku)
+# Model Tiering — Gemini (Pro and Flash; Flash-Lite is a compatibility alias)
 PRO_MODEL = "gemini-3.1-pro-preview"                 # Deep reasoning: writing, content, review
-FLASH_MODEL = "gemini-3-flash-preview"                 # Back online 2026-04-08
-FLASH_LITE_MODEL = "gemini-3.1-flash-lite-preview"   # Fast structured output: skeleton, vocab, activities
+FLASH_MODEL = "gemini-3.8-flash-high"               # Default AGY Flash tier
+FLASH_LITE_MODEL = FLASH_MODEL                       # Same AGY route; no separate capacity tier
 GEMINI_REVIEW_MODEL = PRO_MODEL                      # Review needs Pro for strict schema + linguistic analysis
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
 
@@ -127,11 +127,11 @@ CASCADE_PER_CALL_MAX_S = _ONE_DAY
 # Change these to switch models across the entire pipeline without touching CLI flags.
 # Research:      seminar tracks → Opus, core tracks → Sonnet
 # Content:       always Opus (quality content generation)
-# Apr 2026: Sonnet 4.6 is the better default on Pro — Opus burns ~2x faster.
+# Sonnet is the routine default; reserve Opus for consequential judgment.
 # Use Opus ONLY where deep reasoning is critical (seminar content, final review).
 # Ref: Anthropic guidance (Lydia Hallie, 2026-04-03)
-CLAUDE_SONNET = "claude-sonnet-4-6"
-CLAUDE_OPUS   = "claude-opus-4-8"
+CLAUDE_SONNET = "claude-sonnet-5-5"
+CLAUDE_OPUS   = "claude-opus-5-5"
 
 CLAUDE_MODEL_CORE_RESEARCH      = CLAUDE_SONNET  # Research — RAG search + summarization
 CLAUDE_MODEL_CORE_CONTENT       = CLAUDE_OPUS    # Content — writing quality needs Opus

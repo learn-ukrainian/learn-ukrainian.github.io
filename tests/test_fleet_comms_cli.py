@@ -249,19 +249,19 @@ def test_supported_bridge_command_defaults_to_durable_acp(
     args = SimpleNamespace(
         channel="architecture",
         body="Compare the bounded options.",
-        with_agents="kimicc,pool",
+        with_agents="cursor,pool",
         max_rounds=2,
         review=False,
         models=None,
     )
 
     assert _channels_cli._handle_discuss(args) == 0
-    assert observed["participants"] == ("kimicc", "pool")
+    assert observed["participants"] == ("cursor", "pool")
     assert observed["initiator"] == "codex"
     assert "Compare the bounded options." in str(observed["prompt"])
     assert "--- monitor: project state" not in str(observed["prompt"])
     output = capsys.readouterr().out
-    assert "transport: ACP (kimicc, pool)" in output
+    assert "transport: ACP (cursor, pool)" in output
     assert "/fleet.html?conversation=conversation_" in output
     from scripts.fleet_comms.authority import AuthorityService
 

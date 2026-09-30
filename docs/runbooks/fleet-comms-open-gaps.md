@@ -72,19 +72,19 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Cross-family CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6.1-sol` @ high** (cross-family) | yes (`ask-claude --type review`; Sonnet default, Fable explicit) |
-| **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | yes (`ask-codex --type review`) |
+| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6.1-sol` @ xhigh** (cross-family) | yes (`ask-claude --type review`; Sonnet default, Fable explicit) |
+| **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ xhigh** | yes (`ask-codex --type review`) |
 | **grok** | `grok-4.7` @ high | same SKU (Cursor = avail. fallback) | yes (`ask-grok --type review`) |
 | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | no until #5555 — still *requests* CF |
-| **cursor** | `auto` @ high (allowlist: `grok-4.7`, `composer-2.5`) | **`gpt-6.1-sol` @ high** | no — formal CF requires attested `resolved_model` |
+| **cursor** | `grok-4.7` @ high (or `composer-2.5`; Auto only for a well-defined coding dispatch) | **`gpt-6.1-sol` @ xhigh** | no — formal CF requires attested `resolved_model` |
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
-| claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
-| codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-| cursor | auto | high | gpt-6.1-sol | high |
+| claude | claude-opus-5-5 | high | gpt-6.1-sol | xhigh |
+| codex | gpt-6.1-sol | high | gpt-6.1-sol | xhigh |
+| cursor | grok-4.7 | high | gpt-6.1-sol | xhigh |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -151,7 +151,7 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 # Exceptional pin: still passes every hard gate and uses the same reservation ledger.
 .venv/bin/python scripts/delegate.py dispatch \
   --agent claude --mode read-only --worktree --branch <branch> \
-  --task-id review-<N> --model claude-fable-5 --effort high \
+  --task-id review-<N> --model claude-fable-5-1 --effort high \
   --prompt-file prompt.md
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
@@ -215,7 +215,7 @@ not erase routing evidence.
 Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
 
 - Resolve-reviewer: use the live `scripts/config/model_catalog.yaml` ladders. **Critical** keeps Sol/Fable authority first, with Sonnet 5.5 as the Anthropic practical fallback; **high/medium/low** walk Sol → Opus 5.5 → Sonnet 5.5 before later practical and volume rungs.
-- Grok uses the proven exact-head source-blind ACP path. Kimi K3's adapter is implemented but stays fail-closed until an authenticated sealed canary passes. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
+- Grok uses the proven exact-head source-blind ACP path. Kimi is not a review or ACP seat (web, UI and backend coding only); its adapter is refused by `kimi_admission`. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 
 ## Closeout checklist
@@ -231,7 +231,7 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
   by the operator-approved `authority` cutover in #6159; `dual_write` is now a
   compatibility rollback mode
 - [ ] operator: retention plan dry-run × ≥7 days before scheduled apply (auto-logged by `retention_engine.py plan`; apply still OFF; 3/7 as of 2026-07-23)
-- [x] exact-head ACP sealed review: Claude, Codex, GLM, and Grok eligible; Kimi K3 adapter present but fail-closed pending its authenticated canary; AGY structurally fail-closed
+- [x] exact-head ACP sealed review: Claude, Codex, GLM, and Grok eligible; Kimi is out of scope (web, UI and backend coding only, never a reviewer); AGY structurally fail-closed
 - [ ] operator: Claude + Grok + Codex + AGY cold-start stream smoke (launchers dual-aware; live multi-CLI soak optional)
 - [x] planned `dual_write`-default step superseded by #6159 authority cutover
 

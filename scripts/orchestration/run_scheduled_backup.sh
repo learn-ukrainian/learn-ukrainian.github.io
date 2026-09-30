@@ -281,6 +281,10 @@ run_backup_and_record() {
   local -a pipe_status
 
   initial_output="$(last_run_path)"
+  # Run mode only. Drop the default receipt before the env file is sourced:
+  # `exec` replaces this process and `trap - EXIT` skips both the guard and
+  # the removal after a successful source. Health reads this path.
+  rm -f "$initial_output" || { echo "scheduled-backup: could not invalidate last-run receipt" >&2; exit 1; }
   BACKUP_ENV_SOURCE_ERROR_REPORTED=0
   exec {backup_env_error_fd}>&2
   # Keep the guard active until sourcing succeeds, including shell-level exit.

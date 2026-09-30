@@ -11,7 +11,7 @@
 | **Any** | **Phonetics** | **4.1 Phonetics** | `569-597` | Alphabet, Apostrophe, Soft Sign, Vowels, Consonants, Intonation. |
 | **03** | **Gender** | **4.2.1.1 Noun Gender** | `604-605` | Masculine, Feminine, Neuter foundation. |
 | **03** | **Plurality** | **4.2.1.1 Plural Nom** | `606-607` | Basic plural endings (-и, -і). |
-| **06** | **Verbs I** | **4.2.4.1 Present Tense** | `704-709` | Conjugation of Classes (читати, робити). |
+| **06** | **Verbs I** | **4.2.4.1 Present Tense** | `704-709` | Conjugation of Classes (читати, працювати). |
 | **07** | **Questions** | **4.3.1 Simple Sentence** | `729-739` | Interrogative sentences, question words. |
 | **10** | **Checkpoint** | **Catalog A (Intent)** | `453-478` | Communicative intentions check. |
 | **11** | **Accusative (Things)** | **4.2.3.2 Accusative** | `678-688` | Object of action (Inanimate). |
@@ -31,7 +31,7 @@
 | **28** | **Adverbs** | **Grammar: Adverbs** | `N/A` | Manner, Frequency (Functional Competence). |
 | **29** | **Nature** | **3.11 Nature (Theme)** | `547-551` | Weather, Plants, Animals. |
 | **31** | **Health** | **3.10 Health (Theme)** | `541-545` | Body, Feeling, Pharmacy. |
-| **32** | **Family** | **3.1 Family (Theme)** | `486` | Family members, Genitive relations. |
+| **32** | **Family** | **3.1 Family (Theme)** | `486` | Family members, relatives. |
 | **33** | **Holidays** | **3.12 Holidays (Theme)** | `553-556` | Traditions, Greetings. |
 
 ## A2 Level (Початковий рівень другого ступеня)
@@ -47,14 +47,14 @@
 ## B2 Level (Середній рівень другого ступеня)
 
 * **Themes (Catalog B):** Lines `2874-3065`
-* **Grammar (Catalog V):** Lines `3066-3915`
+* **Grammar (Catalog V):** Lines `3066-3480`
 
 ## C1 Level (Рівень вільного володіння I)
 
 * **Themes (Catalog B):** Lines `3916-4136`
-* **Grammar (Catalog V):** Lines `4137-5069`
+* **Grammar (Catalog V):** Lines `4137-4601`
 
 ## C2 Level (Рівень вільного володіння II)
 
 * **Themes (Catalog B):** Lines `5070-5300`
-* **Grammar (Catalog V):** Lines `5301-6000`
+* **Grammar (Catalog V):** Lines `5301-5739`

@@ -1091,7 +1091,6 @@ def _compute_dispatch_routing_budget(
     batch_state_dir: Path | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
-    reset_reserve = load_reset_reserve(project_root or Path(__file__).resolve().parents[2], now=current_time)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
@@ -1217,7 +1216,9 @@ def _compute_dispatch_routing_budget(
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
-            "reset_reserve": reset_reserve,
+            "reset_reserve": load_reset_reserve(
+                project_root or Path(__file__).resolve().parents[2], now=current_time
+            ),
             "api_accounts": api_accounts,
             "in_flight": in_flight_by_agent,
             "recommendation": rec,
@@ -1342,6 +1343,8 @@ def _compute_dispatch_routing_budget(
         else:
             cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
         if isinstance(cb_data, dict):
+            for field in ("credit_balance", "reset_credits", "fable_weekly", "claude_gpt_windows"):
+                agents[lane][field] = cb_data.get(field)
             agents[lane]["freshness"] = cb_data.get("freshness", "unavailable")
             agents[lane]["age_s"] = cb_data.get("age_s")
             if cb_data.get("error_kind") == "need_login" or cb_data.get("failure_kind") == "need_login":
@@ -1408,6 +1411,10 @@ def _compute_dispatch_routing_budget(
                 "weekly_remaining_pct": cb_data.get("weekly_remaining_pct"),
                 "windows": cb_data.get("windows"),
                 "provider_windows": cb_data.get("provider_windows"),
+                "credit_balance": cb_data.get("credit_balance"),
+                "reset_credits": cb_data.get("reset_credits"),
+                "fable_weekly": cb_data.get("fable_weekly"),
+                "claude_gpt_windows": cb_data.get("claude_gpt_windows"),
                 "probe_state": cb_data.get("probe_state"),
                 "login_state": cb_data.get("login_state"),
                 "monthly_cap_usd": cb_data.get("monthly_cap_usd"),
@@ -1708,6 +1715,9 @@ def _compute_dispatch_routing_budget(
 
     recommendation_agents = {lane: dict(info) for lane, info in agents.items()}
     codex_info = agents.get("codex", {})
+    reset_reserve = load_reset_reserve(
+        project_root or Path(__file__).resolve().parents[2], now=current_time, codex_info=codex_info
+    )
     reserve_relaxes_codex = codex_is_threatened(codex_info) and codex_reset_reserve_eligible(
         reset_reserve, codex_info, now=current_time, snapshot_stale=is_stale
     )
@@ -2937,6 +2947,8 @@ async def manifest(request: Request, ctx: MonitorContext = Depends(get_ctx)):
         {
           "generated_at": "2026-04-17T10:15:00Z",
           "rules":   {"hash": "...", "url": "/api/rules?format=markdown"},
+          "rules_core":    {"hash": "...", "url": "/api/rules?scope=core&format=markdown"},
+          "rules_content": {"hash": "...", "url": "/api/rules?scope=content&format=markdown"},
           "session": {"hash": "...", "url": "/api/session/current?agent=orchestrator&format=markdown"},
           "orient":  {"url": "/api/orient"},
           "inbox":   {"url_template": "/api/comms/inbox?agent={name}"},
@@ -2962,6 +2974,15 @@ async def manifest(request: Request, ctx: MonitorContext = Depends(get_ctx)):
             "url": "/api/rules?format=markdown",
             "format": "markdown",
             "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
+        },
+        # Scoped rules carry their own hash; content = core + curriculum addendum.
+        "rules_core": {
+            "hash": rules_hash(project_root=ctx.roots.project_root, scope="core"),
+            "url": "/api/rules?scope=core&format=markdown",
+        },
+        "rules_content": {
+            "hash": rules_hash(project_root=ctx.roots.project_root, scope="content"),
+            "url": "/api/rules?scope=content&format=markdown",
         },
         "session": {
             "hash": session_hash(project_root=ctx.roots.project_root),

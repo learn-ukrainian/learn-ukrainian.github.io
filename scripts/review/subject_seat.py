@@ -207,8 +207,8 @@ def adapter_subject_index() -> Mapping[str, frozenset[str]]:
     """Map ``scripts/agent_runtime/adapters/<file>.py`` to the seats that own it.
 
     Built from the agent registry so a new per-seat adapter is classified
-    without a second hand-written ladder. ``kimicc.py`` is the Kimi reviewer
-    participant harness; the registry names the seat ``kimi`` and points the
+    without a second hand-written ladder. ``kimicc.py`` is the Kimi Claude Code
+    harness; the registry names the seat ``kimi`` and points the
     dispatch adapter at ``kimi.py``.
     """
     from scripts.agent_runtime.registry import AGENTS

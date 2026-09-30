@@ -23,12 +23,14 @@ try:
     from scripts.fleet.reset_reserve import (
         codex_is_threatened,
         codex_reset_reserve_eligible,
+        effective_reset_reserve,
         load_reset_reserve,
     )
 except ImportError:  # pragma: no cover - script path fallback
     from reset_reserve import (  # type: ignore
         codex_is_threatened,
         codex_reset_reserve_eligible,
+        effective_reset_reserve,
         load_reset_reserve,
     )
 
@@ -230,7 +232,12 @@ def build_lane_rows(
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     budget_flight = budget.get("in_flight") if isinstance(budget.get("in_flight"), dict) else {}
     active = active_in_flight or {}
-    reserve = reset_reserve if reset_reserve is not None else load_reset_reserve(Path(__file__).resolve().parents[2])
+    reserve = (
+        reset_reserve
+        if reset_reserve is not None
+        else load_reset_reserve(Path(__file__).resolve().parents[2], codex_info=agents.get("codex"))
+    )
+    reserve = effective_reset_reserve(reserve, agents.get("codex"))
     diagnostics = budget.get("diagnostics") if isinstance(budget.get("diagnostics"), dict) else {}
     snapshot_stale = bool(diagnostics.get("stale"))
     rows: list[dict[str, Any]] = []
@@ -273,6 +280,28 @@ def build_lane_rows(
         notes: list[str] = []
         if quota_source:
             notes.append(f"quota:{quota_source}")
+        # Inventory is informational: only the separately asserted operator
+        # reserve above can relax admission. Never derive that assertion here.
+        if lane == "codex" and codex_is_threatened(info) and info.get("freshness") == "fresh":
+            from datetime import UTC, datetime
+
+            from scripts.api.subscription_usage import _parse_resets_at_any
+
+            inventory = info.get("reset_credits") or (cb or {}).get("reset_credits") or {}
+            count = inventory.get("available_count")
+            expirations = inventory.get("expires_at")
+            now = datetime.now(UTC)
+            available = (
+                sum(
+                    1
+                    for value in expirations
+                    if value is None or ((expiry := _parse_resets_at_any(value)) is not None and expiry > now)
+                )
+                if isinstance(expirations, list)
+                else 0
+            )
+            if isinstance(count, int) and not isinstance(count, bool) and min(count, available) > 0:
+                notes.append(f"free full reset available ({min(count, available)}; operator decision)")
         if reserve_relaxes:
             notes.append(f"reset reserve eligible ({reserve.get('remaining_resets')} remaining)")
         if avoid:

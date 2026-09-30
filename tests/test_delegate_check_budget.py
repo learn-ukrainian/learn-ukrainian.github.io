@@ -29,6 +29,18 @@ def _allow_notebook_dispatch(monkeypatch):
     monkeypatch.setenv("LU_ALLOW_NOTEBOOK_DISPATCH", "1")
 
 
+def _use_fallbacks(monkeypatch, table: dict[str, str]) -> None:
+    """Serve ``table`` as the ``dispatch_fallbacks`` that ``resolve_and_admit`` hands the launch route."""
+    monkeypatch.setattr("scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: dict(table))
+
+
+def _fallbacks() -> dict[str, str]:
+    """The ``dispatch_fallbacks`` table as the launch route receives it (patched by ``_use_fallbacks``)."""
+    from scripts.common import fallback_substitutions
+
+    return fallback_substitutions.load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
+
+
 class _FakeBudgetResponse:
     """Configurable fake for /routing-budget responses (supports rec, agents status for hard sub, stale, empty)."""
 
@@ -317,6 +329,22 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     assert "ROUTING WARNING" in captured.err
 
 
+def test_issue_9272_review_dry_run_never_prints_grok_substitution(monkeypatch, tmp_path, capsys):
+    _patch_spawn(monkeypatch, tmp_path)
+    spawned = _track_worker_spawns(monkeypatch)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _codex_cursor_budget(codex_status="near_cap"))
+    monkeypatch.setattr(delegate, "_load_reset_reserve", lambda *_a, **_k: {})
+    args = _dispatch_args("--agent", "codex", "--model", "gpt-6.1-sol", "--require-review-verdict",
+                          "--check-budget", "--dry-run")
+    assert delegate.cmd_dispatch(args) == 0
+    assert not spawned
+    assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
+    state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
+    assert state["agent"] == "codex" and state["substitution"] is None
+    assert state["review_author_model"] is None and state["review_risk"] is None
+
+
 def _hot_language_budget():
     def lane(status):
         return {
@@ -342,7 +370,7 @@ def _hot_language_budget():
 def test_language_lane_refuses_to_shed_onto_cursor(monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
     with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
-        delegate._resolve_agent_with_budget_guard("claude", language_lane=True)
+        delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks())
 
 
 @pytest.mark.parametrize("marker", ["--language-lane", "--review-profile=ukrainian"])
@@ -373,15 +401,15 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
 
 def test_language_fallback_refuses_grok_even_when_cool(monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex", "codex": "grok"})
+    _use_fallbacks(monkeypatch, {"claude": "codex", "codex": "grok"})
     with pytest.raises(delegate.BudgetGuardRefuseError, match="cannot move to grok"):
-        delegate._resolve_agent_with_budget_guard("claude", language_lane=True)
+        delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks())
 
 
 def test_language_budget_guard_refuses_direct_grok_even_when_cool(monkeypatch):
     monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
     with pytest.raises(delegate.BudgetGuardRefuseError, match="--agent grok is outside"):
-        delegate._resolve_agent_with_budget_guard("grok", language_lane=True)
+        delegate._resolve_agent_with_budget_guard("grok", language_lane=True, fallbacks=_fallbacks())
 
 
 def _codex_reserve_budget():
@@ -395,6 +423,11 @@ def _codex_reserve_budget():
                 "health": {"healthy": True},
                 "freshness": "fresh",
                 "age_s": 10,
+                "reset_credits": {
+                    "available_count": 2,
+                    "expires_at": ["2099-01-01T00:00:00Z", "2099-02-01T00:00:00Z"],
+                    "fetched_at": datetime.now(UTC).isoformat(),
+                },
                 "codexbar": {
                     "will_last_to_reset": False,
                     "weekly_used_pct": 70.0,
@@ -413,10 +446,73 @@ def test_check_budget_uses_reset_reserve_for_codex(monkeypatch, capsys):
     monkeypatch.setattr(
         delegate,
         "_load_reset_reserve",
-        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 2},
+        lambda _root, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 2,
+            "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+            "expires_at": "2099-03-01T00:00:00Z",
+        },
     )
-    assert delegate._resolve_agent_with_budget_guard("codex") == "codex"
+    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) == "codex"
     assert "reset reserve active (2 confirmed reset(s) remaining)" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("requested", ["codex", "claude"])
+@pytest.mark.parametrize("inventory_state", ["available", "applied", "expired", "unknown", "stale"])
+def test_budget_guard_bounds_old_assertion_by_snapshot_inventory(
+    monkeypatch, tmp_path, capsys, inventory_state, requested
+):
+    from scripts.fleet import reset_reserve
+
+    now = datetime.now(UTC)
+    budget = _codex_reserve_budget()
+    info = budget["agents"]["codex"]
+    info["reset_credits"]["available_count"] = 1
+    if inventory_state == "applied":
+        info["reset_credits"]["available_count"] = 0
+    elif inventory_state == "expired":
+        info["reset_credits"]["expires_at"] = [(now - timedelta(seconds=1)).isoformat()]
+    elif inventory_state == "unknown":
+        info["reset_credits"] = None
+    elif inventory_state == "stale":
+        info["reset_credits"]["fetched_at"] = (now - timedelta(minutes=15)).isoformat()
+    path = tmp_path / "batch_state" / "routing_budget" / "operator_reset_reserve.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(
+        json.dumps(
+            {
+                "schema_version": reset_reserve.SCHEMA_VERSION,
+                "provider": "codex",
+                "remaining_resets": 2,
+                "confirmed_at": (now - timedelta(days=7)).isoformat(),
+                "expires_at": "2099-03-01T00:00:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    _use_fallbacks(monkeypatch, {"claude": "codex", "codex": "cursor"})
+    monkeypatch.setattr(
+        reset_reserve, "get_provider_usage_data", lambda _provider: pytest.fail("snapshot inventory must be used")
+    )
+    if requested == "claude" and inventory_state != "available":
+        with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
+            delegate._resolve_agent_with_budget_guard(requested, language_lane=True, fallbacks=_fallbacks())
+        assert "reset reserve active" not in capsys.readouterr().err
+        return
+    result = delegate._resolve_agent_with_budget_guard(
+        requested, language_lane=requested == "claude", fallbacks=_fallbacks()
+    )
+    output = capsys.readouterr().err
+    if inventory_state == "available":
+        assert result == "codex"
+        if requested == "codex":
+            assert "reset reserve active (1 confirmed reset(s) remaining)" in output
+    else:
+        assert result == "cursor"
+        assert "reset reserve active" not in output
 
 
 def test_check_budget_stale_snapshot_does_not_activate_reset_reserve(monkeypatch, capsys):
@@ -426,9 +522,15 @@ def test_check_budget_stale_snapshot_does_not_activate_reset_reserve(monkeypatch
     monkeypatch.setattr(
         delegate,
         "_load_reset_reserve",
-        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 2},
+        lambda _root, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 2,
+            "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+            "expires_at": "2099-03-01T00:00:00Z",
+        },
     )
-    assert delegate._resolve_agent_with_budget_guard("codex") == "codex"
+    assert delegate._resolve_agent_with_budget_guard("codex", fallbacks=_fallbacks()) == "codex"
     assert "reset reserve active" not in capsys.readouterr().err
 
 
@@ -437,10 +539,16 @@ def test_language_fallback_can_land_on_reserve_eligible_codex(monkeypatch):
     monkeypatch.setattr(
         delegate,
         "_load_reset_reserve",
-        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 1},
+        lambda _root, **_kwargs: {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 1,
+            "confirmed_at": (datetime.now(UTC) - timedelta(days=7)).isoformat(),
+            "expires_at": "2099-03-01T00:00:00Z",
+        },
     )
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex"})
-    assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True) == "codex"
+    _use_fallbacks(monkeypatch, {"claude": "codex"})
+    assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True, fallbacks=_fallbacks()) == "codex"
 
 
 def test_adapter_rejects_foreign_model_after_substitution(monkeypatch, tmp_path):
@@ -602,7 +710,7 @@ def test_refuse_without_yaml_map(monkeypatch, tmp_path, capsys):
     """near_cap/hot without yaml mapping → refuse dispatch (exit non-zero)."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {})
+    _use_fallbacks(monkeypatch, {})
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
@@ -623,7 +731,7 @@ def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_
     """A yaml typo must never dispatch a nonexistent adapter: unknown target → refuse."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "gemeni"})
+    _use_fallbacks(monkeypatch, {"claude": "gemeni"})
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
@@ -662,7 +770,7 @@ def test_hard_sub_on_hot(monkeypatch, tmp_path, capsys):
             "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
         },
     )
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"codex": "cursor"})
+    _use_fallbacks(monkeypatch, {"codex": "cursor"})
 
     rc = delegate.cmd_dispatch(
         delegate.build_parser().parse_args(
@@ -719,7 +827,7 @@ def test_hard_sub_on_deficit(monkeypatch, tmp_path, capsys):
             "diagnostics": {"records_loaded": 3, "stale": False, "codexbar_data_available": True},
         },
     )
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"codex": "cursor"})
+    _use_fallbacks(monkeypatch, {"codex": "cursor"})
 
     rc = delegate.cmd_dispatch(
         delegate.build_parser().parse_args(
@@ -750,7 +858,7 @@ def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_pa
     """Freshly reset Claude (1% used, delta +0.49, will_last false, status hot) stays on Claude."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex"})
+    _use_fallbacks(monkeypatch, {"claude": "codex"})
     monkeypatch.setattr(
         delegate,
         "_fetch_routing_budget",
@@ -785,7 +893,7 @@ def test_issue_9040_claude_snapshot_does_not_hard_substitute(monkeypatch, tmp_pa
     assert rc == 0
     err = capsys.readouterr().err
     assert "HARD AUTO-SUBSTITUTE" not in err
-    assert delegate._resolve_agent_with_budget_guard("claude") == "claude"
+    assert delegate._resolve_agent_with_budget_guard("claude", fallbacks=_fallbacks()) == "claude"
 
 
 def test_genuine_pace_deficit_still_hard_substitutes(monkeypatch, tmp_path, capsys):
@@ -802,7 +910,7 @@ def test_genuine_pace_deficit_still_hard_substitutes(monkeypatch, tmp_path, caps
 
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"codex": "cursor"})
+    _use_fallbacks(monkeypatch, {"codex": "cursor"})
     monkeypatch.setattr(
         delegate,
         "_fetch_routing_budget",
@@ -857,7 +965,7 @@ def test_refuse_hot_lists_cooler(monkeypatch, tmp_path, capsys):
     """hot lane with no yaml fallback → refuse and list cooler seats."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
-    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {})
+    _use_fallbacks(monkeypatch, {})
     monkeypatch.setattr(
         delegate,
         "_fetch_routing_budget",
@@ -1196,7 +1304,7 @@ def test_prepaid_guard_refuses_without_cost_ledger(monkeypatch, lane, provider, 
         },
     )
     with pytest.raises(delegate.BudgetGuardRefuseError, match=f"NOTE: ROUTING REFUSED: prepaid {prepaid}"):
-        delegate._resolve_agent_with_budget_guard(lane, provider=provider)
+        delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks())
 
 
 @pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
@@ -1219,7 +1327,7 @@ def test_fresh_funded_prepaid_does_not_require_cost_ledger(monkeypatch, lane, pr
             "diagnostics": {"records_loaded": 0, "stale": True},
         },
     )
-    assert delegate._resolve_agent_with_budget_guard(lane, provider=provider) == lane
+    assert delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks()) == lane
 
 
 @pytest.mark.parametrize("lane,provider", [("deepseek", None), ("codex", "openrouter")])
@@ -1229,7 +1337,7 @@ def test_prepaid_monitor_failure_refuses(monkeypatch, lane, provider):
 
     monkeypatch.setattr(delegate, "_fetch_routing_budget", unavailable)
     with pytest.raises(delegate.BudgetGuardRefuseError, match="NEED_PROBE"):
-        delegate._resolve_agent_with_budget_guard(lane, provider=provider)
+        delegate._resolve_agent_with_budget_guard(lane, provider=provider, fallbacks=_fallbacks())
 
 
 @pytest.mark.parametrize(

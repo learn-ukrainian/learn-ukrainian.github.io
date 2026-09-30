@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1.10 — active routing refreshed 2026-09-29 for #9230. Codex uses GPT-6.1 Sol (`gpt-6.1-sol`) @ high for coding, review, and the Astra advisory seat (hard advisory judgment), and Luna @ high for routine bounded work and scouting. Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8 Flash handles Ukrainian and well-defined work. Historical bakeoff SCORE cells retain the model/version used in each evaluation and are not active routing instructions; current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. See §10 Provenance for version history.
+> **Status:** v1.10 — active routing refreshed 2026-09-29 for #9230. Codex uses GPT-6.1 Sol (`gpt-6.1-sol`) @ high for coding and review, and @ xhigh for the Astra advisory seat (hard advisory judgment), and Luna @ high for routine bounded work and scouting. Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8 Flash handles Ukrainian and well-defined work. Historical bakeoff SCORE cells retain the model/version used in each evaluation and are not active routing instructions; current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -27,13 +27,13 @@ Each cell carries:
 | Agent | Sub-models in use | Auth lane | Cost lane | Status |
 | --- | --- | --- | --- | --- |
 | **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (advisor / authority seat; native Claude first, pinned Cursor fallback only), Sonnet 5.5 (strong practical) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Fable 5.1 handles advisor turns and Ukrainian-specific linguistic judgment; Sonnet handles routine Claude-lane work. |
-| **Codex** ⭐ | GPT-6.1 Sol (coding, review, and hard advisory @ high), Luna (routine bounded work and scout @ high) | Native Codex CLI | Metered | GPT-6.1 Sol handles advanced coding and adversarial review and holds the Astra seat for hard consequential advisory judgment; Luna handles bounded routine implementation and scouting. |
+| **Codex** ⭐ | GPT-6.1 Sol (coding and review @ high; hard advisory @ xhigh), Luna (routine bounded work and scout @ high) | Native Codex CLI | Metered | GPT-6.1 Sol handles advanced coding and adversarial review and holds the Astra seat for hard consequential advisory judgment; Luna handles bounded routine implementation and scouting. |
 | **agy** | Gemini 3.8 Flash High | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian review and well-defined implementation tasks to Flash with a complete one-unit brief and acceptance criteria. Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
-| **DeepSeek** | **`deepseek-v4.1-flash`** @ high = everyday (frontier-practical code/infra). **`deepseek-v4-pro`** @ high = **hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) | Review/research: `opencode run --model deepseek/deepseek-flash --variant high` (native Entire capture). Tool-heavy: `delegate.py --agent deepseek --model deepseek-v4.1-flash` (default; `--model deepseek-v4-pro` for hard tasks). Pro never default. | Cheap / often idle paid balance | **CODE + infra CF volume.** Prefer when Codex/Claude hot. Not language/folk/authority. First-party only (`openrouter/deepseek/*` refused). |
+| **DeepSeek** | `deepseek-v4.1-flash` catalog identity only | Historical transport evidence | Not an eligible route | Excluded from dispatch and review. |
 | **Grok** | **Grok 4.7** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
 | *Grok Bot (not a seat)* | Cursor/xAI cloud teammate (`app/cursor`) — **external QA observer only** | Not `delegate.py`; no registry adapter; never `--agent grok-bot` | — | Files labeled GitHub issues/comments for drivers to consume. See [`docs/runbooks/grok-bot-qa-observer.md`](../runbooks/grok-bot-qa-observer.md). |
-| **Kimi** (**keep** — operator 2026-08-08) | **`kimi-code/k3-256k`** everyday fast; **`kimi-code/k3`** @ high/max advisory/complex only | Native Kimi Code CLI OAuth: `delegate.py dispatch --agent kimi` | Subscription; CodexBar 5h + weekly | **First-class.** Split tiers so full k3 is not burned on routine. CF outside Moonshot lineage; not a language seat. |
-| **cursor** | **Auto** (default worker) · Composer 2.5 (pinned when family independence matters) | `scripts/delegate.py dispatch --agent cursor` / `ask-cursor` (default model `auto`) | Metered; **Ultra 20x month (2026-08-13→~2026-09-13)** — use it; unused resets | **First-class code/infra worker.** **This month: first pick** for mechanical + ordinary infra/code implement when fit allows; never `auto` as formal CF identity. `concurrency_limit: 1`. Not a language seat. |
+| **Kimi** (**keep** — operator 2026-08-08) | **`kimi-code/k3-256k`** everyday fast; **`kimi-code/k3`** @ high/max complex coding only | Native Kimi Code CLI OAuth: `delegate.py dispatch --agent kimi` | Subscription; CodexBar 5h + weekly | **First-class.** Split tiers so full k3 is not burned on routine. Web, UI and backend coding only (`workspace-write` on allowlisted paths); never a reviewer, CF gate, consult or language seat. |
+| **cursor** | `grok-4.7` (dispatch default; `--model grok-4.7-high` for mechanical work) · Composer 2.5 (pinned when family independence matters) · Auto only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30) | `scripts/delegate.py dispatch --agent cursor` / `ask-cursor` (pins `grok-4.7` or `composer-2.5`) | Metered monthly pools; unused resets | **First-class code/infra worker.** First pick for mechanical + ordinary infra/code implement when fit allows; the driver seat, review, design, consults and recon never run Auto; never `auto` as formal CF identity. `concurrency_limit: 1`. Not a language seat. |
 | **pool** | poolside.ai **`laguna-s-2.1`** default (gen-2 S); XS/M.1 only when explicitly requested | `ab ask-pool` (opencode; **OpenRouter is mainly Pool + Gemma**) | **Free** (watch weekly bursts) | Differentiator = **free** cross-family code review + web-verify *volume*. NOT Ukrainian/prose. Bridge only. |
 | **glm / Z.AI** | **`glm-5.3-flash`** workhorse (default `--agent glm` → `zai/glm-5.3-flash`); **`glm-5.3`** explicit for Coding Plan security/coherence (`ask-glm`) | `delegate.py dispatch --agent glm` (Flash default) · `ab ask-glm` (Coding Plan consult) | Z.AI API prepaid for Flash (provider `zai`); Coding Plan 5h for `glm-5.3` | **Active workhorse** — LOCAL-ONLY China egress; NOT Ukrainian/prose; NOT LANGUAGE-LANES; NOT CF/review ladder (same-family zhipu). Was ox-alpha (OpenRouter stealth, now retired). |
 | *web-verify note* | — | — | — | **Live web fact-check is an opencode + lightpanda HARNESS capability, not model-specific** — ANY opencode-hosted model browses (kubedojo-verified incl. deepseek). Don't attribute it to a single model. |
@@ -50,21 +50,21 @@ Each cell carries:
 
 The rest of this doc is *task → agent*. This section is the **inverse — *free lane → next work*** — so capacity is never left idle (user directive 2026-06-19; cf. MEMORY #M-6 "parallel by default").
 
-- **Cursor Ultra month (operator 2026-08-13; sunset/review ~2026-09-13):** Ultra **20x** (~100% left at pin; resets unused ~30d). Prefer **`--agent cursor`** as the **first pick** for mechanical **and** ordinary infra/code implement when fit allows (not LANGUAGE-LANES, not advisor/authority). Spread remains — Cursor is not the only seat — but idle Ultra while burning Codex/Kimi/DeepSeek on those jobs is waste. `cursor:auto` still never CF-of-record. DeepSeek Flash everyday; **Pro @ high = hard implement only**.
+- **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** prefer **`--agent cursor --model grok-4.7-high`** for mechanical **and** ordinary infra/code implement when fit allows (not LANGUAGE-LANES, not advisor/authority). Spread remains — Cursor is not the only seat. Auto runs only a well-defined coding dispatch (owned paths, PASS DoR card). `cursor:auto` still never CF-of-record. DeepSeek is excluded from dispatch and review.
 - **Concurrent drivers (operator 2026-08-08):** typically **~2 Grok + 1 Claude + 1–4 Codex** live. Free workers are a **shared pool** — check `/api/delegate/active` before dispatch; claim disjoint owned paths. **Utilize, do not trim** (keep Kimi + Z.AI/GLM). Timed lane pauses have a **return-at** (never permanent neglect). Canonical survey issue: **#6468**. Cursor mechanical tier active (#6469 fixed).
-- **Capacity rule (no fixed caps):** width is pace/reserve-driven per `rules/model-assignment.md` § Worker priority ladder. Before firing, read native usage (`python -m scripts.fleet.usage show`; `json` for pace metadata, `refresh` for blocking probes) and disk headroom (`df -h /` plus `du -sh "$repo_root/.worktrees"` where `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`). A lane at `farBehind` pace with meaningful reserve and free disk → pull work into it; a lane at/ahead of pace or thin reserve → throttle/queue. Check `/api/delegate/active` for in-flight state, but do **not** queue merely because a lane already has 2 jobs. DeepSeek (review), cursor + grok (writer/fixer) are additional lanes evaluated the same way.
+- **Capacity rule (no fixed caps):** width is pace/reserve-driven per `rules/model-assignment.md` § Worker priority ladder. Before firing, read native usage (`python -m scripts.fleet.usage show`; `json` for pace metadata, `refresh` for blocking probes) and disk headroom (`df -h /` plus `du -sh "$repo_root/.worktrees"` where `repo_root=$(dirname "$(git rev-parse --git-common-dir)")`). A lane at `farBehind` pace with meaningful reserve and free disk → pull work into it; a lane at/ahead of pace or thin reserve → throttle/queue. Check `/api/delegate/active` for in-flight state, but do **not** queue merely because a lane already has 2 jobs. Cursor + grok (writer/fixer) are additional lanes evaluated the same way. DeepSeek is excluded from dispatch and review; `ask-deepseek` is consult-only for non-language work.
 - **When a lane frees up, pull the next item that FITS it — don't idle, don't make-work:**
   - **Codex / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
   - **agy / cursor / grok:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, schema edits, bounded refactors. Ukrainian wiki/content writing is agy (Gemini), codex (GPT), or claude only. **agy/Flash (#5737):** treat as a **worker given a complete brief**, not an orchestrator that invents its own micro-PR sequence; one shippable unit per dispatch.
-  - **kimi K3:** consequential coding, long-context debugging, and strong review; pair authored output with the normal cross-family gate and continue collecting local bakeoff evidence.
-  - **DeepSeek Flash (default) / Pro (hard implement only):** code/infra PR diffs and CF volume — `deepseek-v4.1-flash`; Pro @ high only for hard implement tasks (complex multi-file, hard lookup — 2026-08-13). Not language/VESUM seats (LANGUAGE-LANES). Don't review inline on the author seat.
-  - **Cursor Auto (Ultra month first pick through ~2026-09-13):** prefer for mechanical + ordinary infra/code implement when fit allows — do not leave Auto idle while Codex/Kimi/DeepSeek burn those jobs; still not language/advisor/CF identity.
+  - **kimi K3:** consequential coding and long-context debugging (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules); pair authored output with the normal cross-family gate.
+  - **DeepSeek:** excluded from dispatch, implementation and review. `deepseek-v4.1-flash` stays active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work.
+  - **Cursor (`grok-4.7-high`; Auto only for a well-defined coding dispatch):** prefer for mechanical + ordinary infra/code implement when fit allows — do not leave Cursor idle while Codex/Kimi burn those jobs; still not language/advisor/CF identity.
   - **Z.AI / GLM-5.3-Flash (`--agent glm`, LOCAL-ONLY):** free-lane pull for mechanical/ordinary infra/code implement when Cursor is busy or unfit; Flash API prepaid (not Coding Plan 5h). Explicit `--model glm-5.3` for Coding Plan security/coherence.
   - **OpenRouter:** mainly Pool + Gemma; do not route “everything” through OpenRouter.
   - **grok-4.\* / hermes / opencode (explicit `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
   - **Explore (Haiku subagent):** search/grep fan-out.
 - **Where "next work" comes from:** the active track handoff's NEXT-ACTIONS, open GH issues, and the build/review queue. If nothing genuinely fits a free lane, log it and leave it idle — do **not** manufacture busywork (quality > utilization).
-- **Quality gate, not just utilization:** gates passing ≠ shippable (#M-11). Anything a support lane produces gets a strong-model (Codex/Claude) or cross-model (**DeepSeek Flash** / Pool / GLM) code review before it ships; Ukrainian review follows LANGUAGE-LANES. See `model-assignment.md` Code review row. "Keep the lane busy" never lowers the bar.
+- **Quality gate, not just utilization:** gates passing ≠ shippable (#M-11). Anything a support lane produces gets a strong-model (Codex/Claude) or cross-model (Pool / GLM) code review before it ships; Ukrainian review follows LANGUAGE-LANES. See `model-assignment.md` Code review row. "Keep the lane busy" never lowers the bar.
 
 ---
 
@@ -120,7 +120,7 @@ use the active roster above and `model-assignment.md` for routing.
 | **Primary** | Codex (codex-tools) | reviewer-as-fixer ADR-007 contract honored; baseline shipping | 2026-04-26 | `docs/decisions/2026-04-26-reboot-agent-responsibilities.md` §2 | "Cross-agent, no self-review" — `SELF_REVIEW_DETECTED` audit gate enforces. Used for per-dim LLM QG. |
 | Runner-up 1 | Claude | reserved for cultural/creative nuance dims | 2026-04-26 | same | "When those reviewers need a different voice." |
 | Runner-up 2 | Grok (4.3) | judge-calibration in progress | 2026-05-15 → 2026-05-17 | `audit/2026-05-15-grok-4.3-judge-calibration/`, `audit/2026-05-17-judge-calibration-*` | 4-axis calibration matrix (with-mcp / effort-high / effort-xhigh). Outcome: see audit dirs (full read pending in evidence sweep). |
-| Historical only | DeepSeek | deepseek-v4-pro history (PR #2107/#2112) — **not a live route** | 2026-05-17 | bakeoff archive | **Operational (2026-08-08, superseded 2026-08-13):** use **Flash only**; Pro DO NOT USE — **superseded** by the 2026-08-13 pin (Pro @ high = hard implement only, canary #6703); content/VESUM seats remain LANGUAGE-LANES (no deepseek). |
+| Historical only | DeepSeek | deepseek-v4-pro history (PR #2107/#2112) — **not a live route** | 2026-05-17 | bakeoff archive | Historical evidence only; DeepSeek is excluded from dispatch and review, Pro is retired, and Flash remains active in the catalog. `ask-deepseek` is consult-only for non-language work. |
 
 **Known weakness:** Path 3 PR3 (#2123) showed the corrector can violate the `<fixes>`-only contract (regenerate instead of patch). Filed as #2127 — promotes the size-limit gate to enforce shape compliance, not just trust the prompt.
 
@@ -203,10 +203,10 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-09-25 | `scripts/config/model_catalog.yaml` | Resolve by risk and follow `model-assignment.md` Code review row; Gemini is excluded. |
-| Current practical seat | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `scripts/config/model_catalog.yaml` · Arena Code leaderboard | Frontier-practical frontend/code lane: OpenCode high for Entire-aware review, Hermes high for rich tool execution; not critical authority. |
+| Historical result | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `scripts/config/model_catalog.yaml` · Arena Code leaderboard | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
 | Historical result | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Strong architectural evidence, subject to cross-family review independence. |
 
-**Known weakness (DeepSeek-flash):** current promotion evidence is preliminary and frontend-specific;
+**Known weakness (DeepSeek-flash):** historical promotion evidence is preliminary and frontend-specific;
 repo-native long-tail and non-frontend evaluation remain incomplete.
 **Known strength:** top-7 Arena frontend coding result, 15-second historical turnaround, and very low cost.
 
@@ -216,9 +216,9 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Primary** | DeepSeek-pro hermes | uses `sources` MCP proactively (verify_words×N, query_cefr_level, russian_shadow); PR #2107 shipped, PR #2112 validated write-mode | 2026-05-17 | PRs #2107, #2112 | New primary as of 2026-05-17. |
-| Runner-up 1 | Claude Opus xhigh | "fast pass" | ongoing | MEMORY #M-0 | Inline by orchestrator for ad-hoc verification. |
-| Runner-up 2 | DeepSeek-flash | "cheap" pass | ongoing | MEMORY #M-0 | When budget is tight. |
+| Historical result | DeepSeek-pro hermes | uses `sources` MCP proactively (verify_words×N, query_cefr_level, russian_shadow); PR #2107 shipped, PR #2112 validated write-mode | 2026-05-17 | PRs #2107, #2112 | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
+| Historical result | Claude Opus xhigh | "fast pass" | ongoing | MEMORY #M-0 | Historical observation; current Ukrainian review follows `model-assignment.md`. |
+| Historical result | DeepSeek-flash | "cheap" pass | ongoing | MEMORY #M-0 | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
 
 ---
 
@@ -227,7 +227,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Primary (routine)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
-| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request); Codex/Claude/Astra high for higher stakes. |
+| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request); Codex/Claude high for higher stakes; Astra advisory xhigh. |
 | Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
 | Runner-up 2 | Claude inline | when orchestrator IS Claude | ongoing | same | The Q&A is me; no round-trip. |
 
@@ -263,7 +263,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Adversarial review (pre-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh --task-id X --prompt-file BRIEF` |
 | Adversarial review | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6.1-sol --effort high --mode read-only ...` per substitutions YAML |
 | Code review (PR diff) | Resolve the exact cross-family route with `closeout_cli resolve-reviewer --author-model <exact> --risk <level>`; dispatch its returned route, transport, and required timeout. |
-| Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** claude / codex (GPT) / agy (Gemini) — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is a code-only hard-implement seat since 2026-08-13). |
+| Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** claude / codex (GPT) / agy (Gemini) — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is retired; DeepSeek is excluded from all dispatch and review). |
 | Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.8-flash-high` |
 | Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.8-flash-high` |
 | Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,agy` |
@@ -295,7 +295,7 @@ Listed by priority for next-session fill:
 | Gap | Why | Next step |
 | --- | --- | --- |
 | Gemini for novel-impl (4.6 runner-up = OPEN) | Routing routinely defers to Codex; Gemini may take pieces of this lane | File bakeoff: same well-scoped novel-impl brief to both Gemini + Codex |
-| DeepSeek for adversarial review (4.4 runner-up = limited) | Deepseek-pro only landed 2026-05-17; need more shipped reviews to score | Use it on next 2-3 design-review opportunities |
+| Historical DeepSeek adversarial review | DeepSeek-pro landed 2026-05-17; retained as historical evidence | No new dispatch or review; Pro is retired and `ask-deepseek` is consult-only for non-language work |
 | Historical Grok V7 review calibration (no current Ukrainian review seat) | Multiple calibration matrices in audit/2026-05-15-* and 2026-05-17-* | Preserve as historical evidence; 2026-09-27 LANGUAGE-LANES RULE excludes Grok |
 | Grok for code dispatch (4.5/4.6 = absent) | `HermesGrokAdapter` is one-shot text; can't ship commits today (#2072) | Implement file-edit wrapper per #2072 to unlock the lane |
 | Codex Desktop for UI testing (4.11 runner-up = present but unused) | Has @browser tools we haven't exercised | Try Codex Desktop on next browser-test session |
@@ -303,6 +303,11 @@ Listed by priority for next-session fill:
 ---
 
 ## 8. Ranking by role — quality-first, cost-aware (added v1.2)
+
+Historical scorecards and bakeoff proposals below preserve the evaluated model
+versions. They do not authorize new routing. DeepSeek is excluded from dispatch,
+implementation and review; Pro is retired. Use the current catalog and
+`model-assignment.md` for routing.
 
 > **Purpose:** Answer the recurring question *"which model is best for which role, and is the cheap one good enough?"* in one table. Cost notation: $$$ = high (>$3/M input), $$ = medium ($0.50-$3), $ = low (<$0.50), 0$ = unmetered (within current weekly cap).
 > **Validation legend:** ✅ = empirical bakeoff data on this role; ⚠️ = gut-routing or limited data; ❓ = no bakeoff, needs validation.
@@ -412,13 +417,13 @@ The user said: *"quality foremost, but if Chinese models bring quality we use th
 | Qwen-3.6-max-preview | Chinese (Alibaba) | No | ❓ Untested |
 | Qwen-3.6-flash | Chinese (Alibaba) | No | ❓ Untested |
 | Kimi K2 | Chinese (Moonshot) | No | ⏸ EXCLUDED per user direction 2026-05-18 |
-| Kimi K3 | Chinese (Moonshot) | No | Operator-classified frontier-practical coding/review model; native OAuth route; local matched-role scorecard still desirable |
+| Kimi K3 | Chinese (Moonshot) | No | Frontier-practical coding model (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules); native OAuth route |
 
 **Honest take:** DeepSeek has earned primary slots on quality, not just cost. Qwen integration just landed; needs role-specific bakeoffs to know if it earns slots or stays runner-up.
 
 **Recommended next bakeoffs to answer "which Chinese model is good enough for which role" (priority order):**
 
-Kimi K3 is eligible now for consequential coding and cross-family review by operator direction. Continue matched code-implementation, code-review, and Q&A cells so future ranking changes rest on local evidence as well as provider capability.
+Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules. Continue matched code-implementation cells so future ranking changes rest on local evidence as well as provider capability.
 
 1. **Qwen-3.6-plus as V7 module writer at B1+** (codex's tools+register issue at A1 may not exist at B1+ register; qwen plausibly fits well here at low cost) — cost ~$5-10/module
 2. ~~**Qwen-3.6-plus as Russianism judge** vs Claude Opus 86% F1 baseline — cost ~$2/case set~~ **DONE 2026-05-19.** Verdict: F1 69%, precision 90%, recall 56%. Rank 5/5; doesn't earn primary. See `audit/2026-05-19-qwen-3.6-judge-calibration/REPORT.md`.

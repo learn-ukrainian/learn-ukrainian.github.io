@@ -6,6 +6,7 @@ import re
 
 import pytest
 
+from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
 _DRIVE_EPIC_NEEDLE = "agents_extensions/shared/skills/drive-epic/SKILL.md"
@@ -36,6 +37,7 @@ def _assert_drive_epic_uses_agy_interactive_flag(exec_line: str) -> None:
     assert _AGY_SKIP_PERMISSIONS in exec_line, exec_line
 
 
+@pytest.mark.rules_core_absent
 def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
     interactive = run_launcher("start-gemini.sh")
     epic = run_launcher("start-gemini.sh", "--epic", "atlas")
@@ -49,6 +51,7 @@ def test_gemini_interactive_defaults_to_agy_and_rejects_epic() -> None:
     assert "interactive launchers reject --epic" in epic.stderr
 
 
+@pytest.mark.rules_core_absent
 @pytest.mark.parametrize("selector", ("atlas", "practice", "infra.devops", "seminars-bio"))
 def test_gemini_driver_claims_a_lease_for_supported_selectors(selector: str) -> None:
     result = run_launcher("start-gemini-driver.sh", "--epic", selector)
@@ -59,7 +62,7 @@ def test_gemini_driver_claims_a_lease_for_supported_selectors(selector: str) -> 
     _assert_drive_epic_uses_agy_interactive_flag(_would_exec_line(result.stdout))
 
 
-@pytest.mark.parametrize("model", ("gemini-3.6-flash-high", "gemini-3.1-pro-high"))
+@pytest.mark.parametrize("model", ("gemini-3.8-flash-high", "gemini-3.1-pro-high"))
 def test_gemini_driver_allows_only_certified_models(model: str) -> None:
     result = run_launcher("start-gemini-driver.sh", "--epic", "devops", "--model", model)
     assert result.returncode == 0, result.stderr
@@ -73,6 +76,7 @@ def test_gemini_driver_rejects_uncertified_model_and_non_agy_harness() -> None:
     assert "only --harness agy" in harness.stderr
 
 
+@pytest.mark.rules_core_absent
 def test_gemini_forwards_provider_arguments_only_after_separator() -> None:
     result = run_launcher("start-gemini.sh", "--", "--sandbox", "read-only")
     assert result.returncode == 0, result.stderr
@@ -82,6 +86,7 @@ def test_gemini_forwards_provider_arguments_only_after_separator() -> None:
     assert _AGY_SKIP_PERMISSIONS not in exec_line, exec_line
 
 
+@pytest.mark.rules_core_absent
 def test_gemini_driver_passes_binding_via_agy_interactive_flag() -> None:
     result = run_launcher("start-gemini-driver.sh", "--epic", "hramatka")
     assert result.returncode == 0, result.stderr
@@ -90,6 +95,7 @@ def test_gemini_driver_passes_binding_via_agy_interactive_flag() -> None:
     _assert_drive_epic_uses_agy_interactive_flag(exec_line)
 
 
+@pytest.mark.rules_core_absent
 def test_gemini_driver_forwards_provider_args_without_duplicating_prompt() -> None:
     result = run_launcher(
         "start-gemini-driver.sh", "--epic", "devops", "--", "--sandbox", "read-only"
@@ -100,6 +106,7 @@ def test_gemini_driver_forwards_provider_args_without_duplicating_prompt() -> No
     _assert_drive_epic_uses_agy_interactive_flag(exec_line)
 
 
+@pytest.mark.rules_core_absent
 def test_gemini_driver_seed_names_accountability_and_compaction_recovery() -> None:
     driver = run_launcher("start-gemini-driver.sh", "--epic", "devops")
     assert driver.returncode == 0, driver.stderr

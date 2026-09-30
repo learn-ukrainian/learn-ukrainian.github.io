@@ -1,19 +1,13 @@
 """``repo_wide`` marker invariant (#8707).
 
-The selected CI tier picks test files by import-graph candidates: the Changes
-job maps a changed ``scripts/foo.py`` to ``tests/**/test_foo*.py`` and a changed
-``tests/test_x.py`` to itself. A test that scans the repository's own trees has
-no such import link, so selection can never pick it. That is how PR #8692
-merged green on the selected tier and then turned ``main`` red:
-``tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`` scans all
-of ``tests/`` for hard-coded epic assertions and was never selected for a
-``tests/orchestration/test_thread_handoff.py`` change.
-
-Every test that enforces a repository-wide invariant by scanning files it does
-not import must therefore carry ``repo_wide``, and the selected tier always
-runs the marker (``ci.yml`` adds a ``-m repo_wide`` invocation). The docs lane
-runs it too, because several repo-wide tests read ``docs/``. This module is
-itself ``repo_wide``.
+A test that scans the repository's own trees (rather than importing the code
+it checks) must carry ``repo_wide``. The marker names the repository
+invariants so a worker can run them alone before pushing
+(``pytest -m repo_wide``; the dispatch sparse checkout keeps that command
+working, see ``scripts/delegate.py``). CI runs every test, marked or not.
+PR #8692 is why it exists: ``tests/test_lint_test_assertions.py`` scans all of
+``tests/`` for hard-coded epic assertions and had no import link to the change
+that broke it. This module is itself ``repo_wide``.
 
 Two checks keep the marker honest:
 
@@ -54,7 +48,6 @@ pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TESTS_ROOT = _REPO_ROOT / "tests"
-_CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
 
 # Whole-tree scanners over tests/, scripts/, agents_extensions/ (or a stable
 # subtree of them) that carry the marker at module scope.
@@ -67,7 +60,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/orchestration/test_worktree_removal_invariant.py",
         "tests/test_agent_fleet_tooling_guardrails.py",
         "tests/test_ask_opencode.py",
-        "tests/test_ci_test_areas_invariant.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
         "tests/test_fleet_routing_open_model_data_import_guard.py",
@@ -80,7 +72,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_post_processor_mutation_invariant.py",
         "tests/test_public_tree_no_baked_host_run_root.py",
         "tests/test_pytest_plugins_not_test_modules.py",
-        "tests/test_reads_content_marker_invariant.py",
         "tests/test_session_identity_env_isolation.py",
         "tests/test_session_state_retired.py",
         "tests/test_sparse_collection_guard.py",
@@ -94,11 +85,13 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
 # Repo-wide tests that live in an otherwise generic module, so the marker is on
 # the function (or its class) only.
 KNOWN_REPO_WIDE_FUNCTIONS = (
+    "tests/agent_runtime/test_attempt_safe_read.py::test_scripts_only_import_does_not_load_isolation",
     "tests/agent_runtime/test_claude_permissions.py::test_tracked_hooks_work_in_fresh_clone_without_deployed_claude",
     "tests/api/test_app_factory.py::test_db_access_patterns_have_the_step_two_allowlist",
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
     "tests/projects/open_model_data/test_v4_per_slot_factory.py::test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator",
+    "tests/test_ci_dependency_check.py::test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
@@ -115,11 +108,10 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
 # actually repo-wide. Each entry needs a concrete reason; the registry is kept
 # fresh by ``test_not_repo_wide_entries_are_justified``.
 NOT_REPO_WIDE = {
-    "tests/test_ci_shard_partition.py::test_planned_shard_collects_build_tests_through_directory": (
-        "Runs `git ls-files -- tests` and a pytest --collect-only over the planned "
-        "allowlist, but every file it depends on (tests/conftest.py, scripts/ci/*, the "
-        "duration snapshot) is on the shared-root denylist, so any change that could "
-        "affect it already forces the full tier."
+    "tests/test_ci_split.py::test_planned_shard_collects_build_tests_through_directory": (
+        "Runs `git ls-files -- tests` to plan the CI shards and a pytest --collect-only "
+        "over one shard's allowlist; it checks the split and the conftest allowlist hook, "
+        "not a repository invariant."
     ),
     "tests/test_fleet_comms_launcher_awareness.py::test_no_launcher_starts_an_acp_process_at_cold_start": (
         "Reads only scripts/lib/launcher_core.sh plus the repository root's start-*.sh. "
@@ -760,34 +752,6 @@ def test_cached_scan_facts_recompute_after_source_changes() -> None:
     assert "test_scan" in _cached_scan_facts("changed.py", first)[0]
     assert "test_changed" in _cached_scan_facts("changed.py", second)[0]
     assert "test_scan" not in _cached_scan_facts("changed.py", second)[0]
-
-
-def test_selected_tier_command_always_runs_repo_wide() -> None:
-    """The selected tier must include a ``-m repo_wide`` pytest invocation."""
-    ci_text = _CI.read_text(encoding="utf-8")
-    selected_blocks = re.findall(
-        r'if \[ "\$PYTEST_MODE" = "selected" \]; then\n(.*?)\n\s*fi',
-        ci_text,
-        re.DOTALL,
-    )
-    assert selected_blocks, "ci.yml has no selected-mode pytest block"
-    assert any(re.search(r"-m [^\n]*repo_wide", block) for block in selected_blocks), (
-        "the selected tier must run `-m repo_wide` so repo-wide tests always run (#8707)"
-    )
-
-
-def test_docs_lane_also_runs_repo_wide() -> None:
-    """Docs-only PRs only get the docs lane, and repo-wide scanners read docs/."""
-    ci_text = _CI.read_text(encoding="utf-8")
-    docs_blocks = re.findall(
-        r'if \[ "\$DOCS_ONLY" = "true" \]; then\n(.*?)\n\s*exit 0',
-        ci_text,
-        re.DOTALL,
-    )
-    assert docs_blocks, "ci.yml has no docs-only pytest block"
-    assert any(re.search(r"-m [^\n]*repo_wide", block) for block in docs_blocks), (
-        "the docs lane must also run `-m repo_wide`: repo-wide tests read docs/ (#8707)"
-    )
 
 
 def _synthetic(source: str) -> ast.Module:

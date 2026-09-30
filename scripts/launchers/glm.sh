@@ -39,10 +39,18 @@ launcher_adapter_canary() { return 0; }
 launcher_adapter_exec() {
   if _glm_opencode_flash; then
     local cmd=(opencode run --auto --format json -m zai-coding-plan/glm-5.3-flash)
+    # `opencode run` joins its message arguments; the rules core leads them.
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      if [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then
+        cmd+=("$LC_RULES_CORE")
+      else
+        cmd+=("$(rules_core_prefix "")")
+      fi
+    fi
     cmd+=("${LC_FORWARD_ARGS[@]}")
     if [ "$LC_DRY_RUN" = 1 ]; then
       printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"
-      printf '%q ' "${cmd[@]}"
+      launcher_print_argv "${cmd[@]}"
       printf '< /dev/null\n'
       return 0
     fi
@@ -52,7 +60,10 @@ launcher_adapter_exec() {
   if [ -n "${LC_EFFORT:-}" ]; then
     cmd+=(--effort "$LC_EFFORT")
   fi
+  if [ -n "${LC_RULES_CORE:-}" ]; then
+    cmd+=(--append-system-prompt "$LC_RULES_CORE")
+  fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
-  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; printf '%q ' "${cmd[@]}"; printf '\n'; return 0; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
   exec "${cmd[@]}"
 }

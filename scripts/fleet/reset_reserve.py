@@ -9,9 +9,9 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.api.subscription_usage import pace_is_deficit
+    from scripts.api.subscription_usage import get_provider_usage_data, pace_is_deficit
 except ImportError:  # pragma: no cover - script path fallback
-    from api.subscription_usage import pace_is_deficit  # type: ignore
+    from api.subscription_usage import get_provider_usage_data, pace_is_deficit  # type: ignore
 
 try:
     from scripts.common.repo_root import main_checkout_root
@@ -20,12 +20,12 @@ except ImportError:  # pragma: no cover - script path fallback
 
 
 SCHEMA_VERSION = "operator-reset-reserve.v1"
-MAX_RESERVE_AGE_SECONDS = 24 * 60 * 60
 MAX_PROVIDER_AGE_SECONDS = 15 * 60
 RESERVE_RELATIVE_PATH = Path("batch_state/routing_budget/operator_reset_reserve.json")
 
 
 def _utc_datetime(value: object) -> datetime | None:
+    """Parse explicit UTC timestamps; non-UTC offsets are rejected by design."""
     if not isinstance(value, str):
         return None
     try:
@@ -48,11 +48,89 @@ def unavailable_reserve() -> dict[str, Any]:
     }
 
 
-def load_reset_reserve(repo_root: Path, *, now: datetime | None = None) -> dict[str, Any]:
+def effective_reset_reserve(
+    reserve: dict[str, Any], codex_info: dict[str, Any] | None, *, now: datetime | None = None
+) -> dict[str, Any]:
+    """Bound an assertion by the fresh live inventory, without changing it.
+
+    A null credit expiry represents a provider-reported non-expiring credit.
+    Otherwise the last unexpired credit bounds the assertion's own expiry.
+    """
+    current = (now or datetime.now(UTC)).astimezone(UTC)
+    if not isinstance(reserve, dict) or reserve.get("available") is not True:
+        return unavailable_reserve()
+    remaining = reserve.get("remaining_resets")
+    confirmed_at = _utc_datetime(reserve.get("confirmed_at"))
+    expires_at = _utc_datetime(reserve.get("expires_at"))
+    if (
+        isinstance(remaining, bool)
+        or not isinstance(remaining, int)
+        or remaining <= 0
+        or confirmed_at is None
+        or expires_at is None
+        or confirmed_at > current
+        or expires_at <= current
+        or expires_at <= confirmed_at
+    ):
+        return unavailable_reserve()
+    info = codex_info if isinstance(codex_info, dict) else {}
+    cb = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
+    age = info.get("age_s", cb.get("age_s"))
+    if (
+        info.get("freshness", cb.get("freshness")) != "fresh"
+        or isinstance(age, bool)
+        or not isinstance(age, (int, float))
+        or not math.isfinite(age)
+        or not 0 <= age < MAX_PROVIDER_AGE_SECONDS
+        or cb.get("stale") is True
+        or info.get("stale") is True
+    ):
+        return unavailable_reserve()
+    inventory = info.get("reset_credits", cb.get("reset_credits"))
+    if not isinstance(inventory, dict):
+        return unavailable_reserve()
+    count = inventory.get("available_count")
+    expirations = inventory.get("expires_at")
+    fetched_at = _utc_datetime(inventory.get("fetched_at"))
+    if (
+        isinstance(count, bool)
+        or not isinstance(count, int)
+        or count <= 0
+        or not isinstance(expirations, list)
+        or fetched_at is None
+        or not 0 <= (current - fetched_at).total_seconds() < MAX_PROVIDER_AGE_SECONDS
+    ):
+        return unavailable_reserve()
+    live_expirations: list[datetime | None] = []
+    for value in expirations:
+        expiry = _utc_datetime(value)
+        if value is not None and expiry is None:
+            return unavailable_reserve()
+        if expiry is None or expiry > current:
+            live_expirations.append(expiry)
+    effective_count = min(remaining, count, len(live_expirations))
+    if effective_count <= 0:
+        return unavailable_reserve()
+    if None not in live_expirations:
+        expires_at = min(expires_at, max(expiry for expiry in live_expirations if expiry is not None))
+    return {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": effective_count,
+        "confirmed_at": confirmed_at.isoformat().replace("+00:00", "Z"),
+        "expires_at": expires_at.isoformat().replace("+00:00", "Z"),
+    }
+
+
+def load_reset_reserve(
+    repo_root: Path, *, now: datetime | None = None, codex_info: dict[str, Any] | None = None
+) -> dict[str, Any]:
     """Load the primary checkout assertion and expose only its safe fields.
 
     The assertion is never changed or consumed. Invalid, absent, expired, or
-    over-age data all produce the same unavailable result.
+    unknown/stale live inventory produces the same unavailable result. CLI
+    consumers pass their Monitor provider snapshot; in-process API consumers
+    use the shared provider cache.
     """
     path = main_checkout_root(Path(repo_root).resolve()) / RESERVE_RELATIVE_PATH
     try:
@@ -73,21 +151,12 @@ def load_reset_reserve(repo_root: Path, *, now: datetime | None = None) -> dict[
         or remaining <= 0
     ):
         return unavailable_reserve()
-    confirmed_at = _utc_datetime(payload.get("confirmed_at"))
-    expires_at = _utc_datetime(payload.get("expires_at"))
-    current = (now or datetime.now(UTC)).astimezone(UTC)
-    if confirmed_at is None or expires_at is None:
-        return unavailable_reserve()
-    lifetime = (expires_at - confirmed_at).total_seconds()
-    if lifetime <= 0 or lifetime > MAX_RESERVE_AGE_SECONDS or confirmed_at > current or expires_at <= current:
-        return unavailable_reserve()
-    return {
-        "available": True,
-        "provider": "codex",
-        "remaining_resets": remaining,
-        "confirmed_at": confirmed_at.isoformat().replace("+00:00", "Z"),
-        "expires_at": expires_at.isoformat().replace("+00:00", "Z"),
-    }
+    if codex_info is None:
+        try:
+            codex_info = get_provider_usage_data("codex")
+        except (OSError, ValueError):
+            return unavailable_reserve()
+    return effective_reset_reserve({**payload, "available": True}, codex_info, now=now)
 
 
 def codex_reset_reserve_eligible(
@@ -105,8 +174,7 @@ def codex_reset_reserve_eligible(
     """
     if snapshot_stale or not isinstance(reserve, dict) or reserve.get("available") is not True:
         return False
-    remaining_resets = reserve.get("remaining_resets")
-    if isinstance(remaining_resets, bool) or not isinstance(remaining_resets, int) or remaining_resets <= 0:
+    if not effective_reset_reserve(reserve, codex_info, now=now)["available"]:
         return False
     info = codex_info if isinstance(codex_info, dict) else {}
     health = info.get("health")

@@ -338,9 +338,8 @@ def test_delegate_prints_warning(monkeypatch, capsys):
     }
 
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: mock_payload)
-    monkeypatch.setattr("scripts.delegate._load_dispatch_fallbacks", lambda: {})
 
-    res = _resolve_agent_with_budget_guard("codex")
+    res = _resolve_agent_with_budget_guard("codex", fallbacks={})
     assert res == "codex"
 
     # Capture outputs

@@ -13,18 +13,26 @@ import time
 from contextlib import suppress
 from datetime import timedelta
 from pathlib import Path
+from tempfile import TemporaryDirectory
 
 import pytest
 
 from agents_extensions.shared.session_streams.db import SessionStreamDatabase
 from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
+from scripts.common.repo_root import project_interpreter
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
-from tests.helpers.python import require_repo_venv
-from tests.launcher_sandbox import copy_slot_registry
+from tests.launcher_sandbox import copy_interactive_launcher_checkout, copy_slot_registry
+from tests.rules_core_view import (
+    install_loader_bypass,
+    rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
+)
 
 REPO = Path(__file__).resolve().parents[1]
+# The checkout run_launcher starts launchers from; rules_core_absent tests get a
+# view of REPO whose launcher loader loads nothing (tests/rules_core_view.py).
+LAUNCH_ROOT = REPO
 PUBLIC = (
     "start-claude.sh",
     "start-claude-driver.sh",
@@ -53,19 +61,53 @@ def run_launcher(
     *args: str,
     env: dict[str, str] | None = None,
     dry_run: bool = True,
+    root: Path | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    if not dry_run and root is None:
+        with TemporaryDirectory(prefix="launcher-checkout-") as temporary:
+            checkout = Path(temporary) / "checkout"
+            copy_interactive_launcher_checkout(checkout)
+            return run_launcher(name, *args, env=env, dry_run=False, root=checkout)
+    launch_root = root if root is not None else LAUNCH_ROOT
     launch_env = os.environ.copy()
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
     return subprocess.run(
-        [str(REPO / name), *args],
-        cwd=REPO,
+        [str(launch_root / name), *args],
+        cwd=launch_root,
         env=launch_env,
         text=True,
         capture_output=True,
         check=False,
         timeout=30,
     )
+
+
+def test_real_launcher_deploy_is_confined_to_temporary_checkout(tmp_path: Path) -> None:
+    """Keep the real startup deploy and assert its actual output, not a stub."""
+    checkout = tmp_path / "checkout with spaces"
+    copy_interactive_launcher_checkout(checkout)
+    binary = tmp_path / "bin" / "claude"
+    binary.parent.mkdir()
+    binary.write_text("#!/bin/sh\nprintf 'provider cwd=%s\\n' \"$PWD\"\n", encoding="utf-8")
+    binary.chmod(0o755)
+    result = run_launcher(
+        "start-claude.sh", dry_run=False, root=checkout,
+        env={"PATH": f"{binary.parent}{os.pathsep}{os.environ['PATH']}",
+             "HOME": str(tmp_path / "home"), "LU_SKIP_PLANE_TUNNEL_CHECK": "1"},
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Agent extensions deployed (agents:deploy)" in result.stdout
+    assert f"provider cwd={checkout}" in result.stdout
+    sources = checkout / "agents_extensions/shared/skills"
+    deployed = checkout / ".agents/skills"
+    expected = {path.relative_to(sources) for path in sources.rglob("*") if path.is_file()}
+    actual = {path.relative_to(deployed) for path in deployed.rglob("*") if path.is_file()}
+    assert actual == expected
+    assert any(path.name == "SKILL.md" for path in actual)
+    for relative in expected:
+        assert (deployed / relative).read_bytes() == (sources / relative).read_bytes()
+    assert not (checkout / ".codex/skills").exists()
 
 
 def test_root_launcher_allowlist_is_exact() -> None:
@@ -160,7 +202,7 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
 
 
 def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
-    require_repo_venv()
+    assert project_interpreter(REPO).is_file()
     shell = shutil.which("bash")
     assert shell is not None
     bin_dir = tmp_path / "bin"
@@ -236,6 +278,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -398,6 +441,7 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     if forward_ready is not None:
         _append_forward_ready_hook(root / "scripts/lib/launcher_core.sh", forward_ready)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
@@ -727,12 +771,15 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         "scripts/lib/session_supervisor.sh",
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/project_interpreter.sh",
+        "scripts/review/model_catalog.py",
+        "scripts/config/model_catalog.yaml",
         "scripts/config/issue_streams.yaml",
         "scripts/config/launcher_stream_aliases.tsv",
     ):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -982,6 +1029,7 @@ def test_retired_names_are_absent_from_tracked_content() -> None:
     assert found.returncode == 1, found.stdout + found.stderr
 
 
+@pytest.mark.rules_core_absent
 def test_claude_driver_injects_lane_agent_type() -> None:
     """--epic <lane> selects the lane's driver_agent_type from area_assignments.yaml (#F1, prompt audit)."""
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")

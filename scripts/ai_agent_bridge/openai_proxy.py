@@ -314,12 +314,12 @@ def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
 _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "codex": ModelRoute(family="openai-codex", backend=_codex_backend),
     "gemini-3.0-flash-preview": ModelRoute(
-        family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.5 Flash (High)"
+        family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.8 Flash (High)"
     ),
     "gemini-3.1-pro-preview": ModelRoute(
         family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.1 Pro (High)"
     ),
-    "claude-opus-4-8": ModelRoute(family="anthropic", backend=_claude_backend),
+    "claude-opus-5-5": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     # grok-4.5 → Hermes removed (#6870 / #6865): Hermes is banned for grok;

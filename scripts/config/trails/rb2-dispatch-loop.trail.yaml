@@ -4,7 +4,7 @@ schema_version: trailspec.v1.1
 trail_id: rb2-dispatch-loop
 version: "1.0.0"
 title: RB2 Dispatch loop — brief, dispatch, bounded settlement, and recovery
-seats: [grok, glm-local, kimi]
+seats: [grok, glm-local]
 parameters:
   handoff_agent: string
   lane: string

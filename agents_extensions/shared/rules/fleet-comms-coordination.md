@@ -39,7 +39,7 @@ at the **onboarding contract** for ownership and experimental ACPX scope; this r
 | Caveman | Optional output-style compression (lite default); never persisted GitHub/curriculum text |
 
 - ACP / ACPX are **toolless**. Use them only for inter-agent communication (state transfer). Do **not** use `ask-*` ACP/ACPX for plan, create, review, or design tasks.
-- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/kimi/glm/opencode/agy).
+- For plan, create, review, and design, use **toolful** native or `delegate.py` seats (claude/codex/glm/opencode/agy; Kimi takes web, UI and backend coding only, never plan, review or design).
 - Explicit: `ask-* --type review` over ACP is **not** the review-of-record path when the reviewer needs to read the tree. Review of record = toolful seat + verdict posted on the PR.
 - Caveman is **style**, not transport. Default intensity: **lite** (drop filler/hedging, keep articles and full sentences). Never use it as a substitute for fleet-comms durable state, and never caveman persisted artifacts (commits, PR/issue bodies, curriculum, runbooks, review-of-record text posted on GitHub).
 
@@ -179,7 +179,7 @@ Every epic driver session (any harness) MUST:
 
 - Driver entrypoints: `./start-grok-driver.sh --epic <epic>`,
   `./start-gemini-driver.sh --epic <epic>`,
-  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5|claude-sonnet-5-5]`,
+  `./start-claude-driver.sh --epic <epic> [--model claude-fable-5-1|claude-sonnet-5-5]`,
   and `./start-codex-driver.sh --epic <epic>`. Interactive launchers reject `--epic`.
 - Seat routing reminder: `docs/runbooks/epic-orchestrator-roster.md` (Gemini→harness/corpus,
   Grok→atlas/tracks, Sonnet 5.5→well-scoped routine work, Opus→hard Claude-lane work — it
@@ -230,7 +230,7 @@ Never auto-reset branches for review thrash. Do not reintroduce sealed formal CF
 For normal **read-only inter-agent communication**, ACP is the only provider
 transport. Fleet launchers make ordinary (non-review) `ask-*` and `discuss`
 calls that name **2 to 4 distinct enabled seats** use the durable ACP controller:
-Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY, GLM, and DeepSeek.
+Codex, Grok, Claude, Cursor, Pool, AGY, GLM, and DeepSeek. Kimi seats are never participants (web, UI and backend coding only; the runtime refuses them).
 Any other participant count is rejected
 loudly before a conversation begins. The direct `.venv/bin/python -m
 scripts.fleet_comms acp-discuss` surface remains available to operators.

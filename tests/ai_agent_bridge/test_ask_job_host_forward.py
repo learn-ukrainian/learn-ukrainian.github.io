@@ -133,6 +133,7 @@ def test_maybe_forward_refuses_cleanly_when_retired_without_config(
             "agy",
             "hello",
             task_id="7172-refuse",
+            target=_acp_compat.admit_compat_target("agy"),
             repo_root=tmp_path,
         )
     message = str(excinfo.value)

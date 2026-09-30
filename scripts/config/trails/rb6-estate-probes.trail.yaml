@@ -5,7 +5,6 @@ title: RB6 Estate probes — VPS, service, disk, private repo, public site (read
 seats:
   - grok
   - glm-local
-  - kimi
 parameters:
   handoff_agent: string
 stop_codes:

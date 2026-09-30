@@ -302,3 +302,16 @@ def test_root_effort_does_not_replace_nested_effort():
     assert data["profiles"]["custom"]["model_reasoning_effort"] == "medium"
     assert original in merged
     assert deployer.merge_config(merged) == merged
+
+
+def test_advisor_profile_uses_xhigh_without_changing_regular_roles():
+    root = Path(__file__).resolve().parents[1] / "agents_extensions/codex-home"
+    assets = deployer.source_assets(root)
+    assert assets
+    for name, (_, effort, _) in deployer.PROFILE_ROLES.items():
+        profile = tomllib.loads((root / f"agents/{name}.toml").read_text())
+        assert profile["model_reasoning_effort"] == effort
+        if name == "astra_advisor_high":
+            assert effort == "xhigh"
+        elif name != "luna_explorer_medium":
+            assert effort == "high"

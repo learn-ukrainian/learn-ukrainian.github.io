@@ -1,494 +1,243 @@
 # CI Gate
 
-New workflow (Fable 5.1, 2026-09-03). `.github/workflows/ci.yml` is a short
-replacement, not the old two-tier merge-queue file.
+`.github/workflows/ci.yml` is one small workflow (ci-v3, 2026-09-30). `CI Gate`
+is the only required GitHub check. Every `pull_request`, `merge_group`,
+`schedule` (03:30 UTC on `main`) and `workflow_dispatch` run executes the same
+jobs and the full non-slow pytest suite. There are no path tiers, test areas,
+import-graph selection or labels: a change cannot pick which tests it runs.
+Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
-`CI Gate` is the only required GitHub check. Same jobs on `pull_request` and
-`merge_group`. Inside Fast checks, the Preflight step runs on `pull_request`
-only.
-
-| Job | When |
+| Job | What it does |
 | --- | --- |
-| Changes | always (`docs_only` / `docs_reads_content` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates` / `preflight`) |
-| Secret scan | always |
-| Fast checks | always; one runner for four check steps, in this order (see [Fast checks](#fast-checks-8750-phase-a2)): |
-| Fast checks: Preflight step | `pull_request` in the `full` or `selected` tier (`preflight=true`): the `repo_wide` set plus the registered extra tests, in parallel with the shards (see below) |
-| Fast checks: Ruff step | not docs-only |
-| Fast checks: Plan Validate step | always (the v2 plan validator self-scopes on `pull_request` to its input paths; the generated arc landing `a1 --check` always runs) |
-| Fast checks: TypeSafe triage step | always (advisory during soak, #8232: `continue-on-error`, and CI Gate accepts any outcome, so a red TypeSafe step is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the step red) |
-| pytest | always (`full` → 10 shards; `selected` → 1 shard over candidates plus the `repo_wide` tests; `docs` → 1 `docs_skills` shard plus the `repo_wide` tests, plus the `reads_content` tests when the change touches `curriculum/` or `wiki/`; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
-| Contracts | not docs-only |
-| Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
-| CI Gate | always |
+| Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
+| Queue commit metadata scan | `merge_group` only, reuse or not. TruffleHog over the queue commit's message, author and committer (below). |
+| Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. Skipped only on a recorded merge-queue reuse. |
+| Checks | `scripts/ci/checks.sh`: every lint and content-contract gate; runs all, fails if any failed. Skipped only on a recorded merge-queue reuse. |
+| Frontend | Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. Skipped only on a recorded merge-queue reuse. |
+| pytest (1..N) | The full `not atlas_release and not slow` suite, split over N static shards. Skipped only on a recorded merge-queue reuse. |
+| pytest report | Whole-run checks over every shard; records the tested tree, commit, PR and run. |
+| CI Gate | `if: always()`; fails on any job result other than the expected one. |
 
-The Changes job uses `scripts/ci/classify_changes.py`. The `full` Python tier
-runs every required Python test except `slow` and `atlas_release`; those run
-only nightly. Ordinary PRs skip ruff/contracts and run one `docs_skills` pytest
-leg only when every path is Markdown in docs/, shared skills, agent deploy
-trees, or the repository root,
-or belongs to curriculum/ or wiki/ without a `site/` path (the curriculum/wiki
-fast path predates the content class).
-Frontend denominator matches always override the docs exemption, including
-`packages/activity-kit/`. Unknown paths, including Markdown under unrecognized
-or executable trees, run the full pytest shard set and ruff/contracts;
-frontend follows its denominator. All docs YAML, schemas, packages, dashboards,
-dependency manifests/locks, Python/pre-commit configuration, and scripts/config
-or scripts/ci changes therefore run the full PR-tier floor.
+`ci-advisory.yml` (pull_request only, never required) carries the advisory
+checks: TypeSafe triage (#8232), Atlas POC richness (#3930) and the diff-scoped
+Atlas vocabulary coverage report.
 
-Content class (#8399): learner content under `curriculum/l2-uk-en/`,
-`curriculum/l2-uk-direct/`, `site/src/content/docs/`, or `wiki/`, minus the
-code-imported files inside those roots (each forces full on both events and
-is excluded from the docs exemption): any `curriculum/**/curriculum.yaml`,
-`curriculum/l2-uk-direct/manifest.yaml`,
-`curriculum/l2-uk-direct/bolshakova-letter-order.yaml`,
-`curriculum/l2-uk-en/module-mapping.json`, `curriculum/l2-uk-en/vocabulary.db`,
-and any `*.py`/`*.db`/`*.sqlite` or track-root `*.json` under the roots (the
-importers are listed in `is_code_load_bearing_content`'s docstring). The
-events then differ deliberately:
+## Gate inventory
 
-- **pull_request**: the content class applies only when every changed path is
-  content class AND at least one is `site/src/content/docs/**` — the case
-  that used to fall to full because `frontend` was true (PR #8384). A PR
-  touching only `curriculum/**`/`wiki/**` keeps the docs fast path.
-- **merge_group**: each queue entry uses its own changed paths (ALLGREEN).
-  Docs-only changes run the full required Python tier because tests can read
-  docs through dynamically constructed paths. Curriculum/wiki-only entries
-  keep their `docs` class with the `reads_content` leg; learner-page content
-  keeps its `content` class. Frontend-only changes run the full
-  required Python tier because Python tests read `site/` and
-  `packages/activity-kit/` files. Any other change, including Python source,
-  tests, workflows, dependencies, mixed classes, and uncertain paths, runs
-  `full` before reaching `main`.
-  Code files under broad curriculum/wiki docs roots, and Python or shell files
-  under frontend roots, also run `full` even if they previously entered a
-  narrower class.
-  Frontend still follows its existing path denominator; `full` does not
-  automatically turn on the Frontend job. Lookup failures resolve to `full`.
+Every gate of the previous `ci.yml` and where it lives now. Only the machinery
+that chose *which* tests or checks a change ran is gone.
 
-| Changed-path class | `pull_request` Python tier | `merge_group` Python tier | Frontend job |
-| --- | --- | --- | --- |
-| Docs-only | `docs` | `full` | off |
-| Content-only learner pages | `content` | `content` | on |
-| Curriculum/wiki without learner pages | `docs` | `docs` | off |
-| Docs mixed with curriculum/wiki | `docs` | `full` | off |
-| Frontend-only `site/` or `packages/activity-kit/` | none | `full` | on when in denominator |
-| Code, other mixed classes, or uncertain | selected or `full` | `full` | existing denominator |
+| Gate | Before | Now |
+| --- | --- | --- |
+| TruffleHog, event-aware range (`secret_scan_scope.py`) | Secret scan | Secret scan (unchanged) |
+| OPSEC public identifiers (`lint_opsec_leaks.py`) | Secret scan | Secret scan (unchanged) |
+| Internal IDs (`check_no_internal_ids.py`) | Secret scan | Secret scan (unchanged) |
+| Read-only token (`permissions: contents: read`) | workflow | workflow; `reuse` adds `actions`/`pull-requests: read` |
+| Credential-free checkout (`persist-credentials: false`) | every checkout | every checkout (tested) |
+| SHA-pinned actions | every `uses:` | every `uses:` (tested; actionlint + zizmor) |
+| Ruff lint (`ruff check scripts/ tests/ agents_extensions/ dashboards/`) | Fast checks, not docs-only | checks.sh, every run. `ruff format --check` stays off (~2,050 files differ). |
+| Strict v2 plan validation | Fast checks | checks.sh (same PR path scoping) |
+| Arc landing drift (`build_arc_landing a1 --check`) | Fast checks | checks.sh |
+| Word Atlas sense-lint ratchet | Contracts | checks.sh |
+| Lesson-schema drift | Contracts | checks.sh |
+| MDX source/forward parity, generation drift | Contracts | checks.sh |
+| Teacher cloze content | Contracts | checks.sh |
+| Locked module not published | Contracts | checks.sh |
+| Atlas manifest freshness and enrichment | Contracts | checks.sh (the manifest load itself is in `python-ci-env`) |
+| Static practice assets | Contracts | checks.sh |
+| Dossier word counts | Contracts | checks.sh |
+| BIO preparation capsules and holds | Contracts (inline Python) | checks.sh → `scripts/ci/bio_preparation_gate.py` |
+| Frontend build, generated-artifact drift (before test:unit re-runs hydrate), unit and built-output tests | Frontend, when the denominator matched | Frontend (same denominator, same order) |
+| Frontend change denominator incl. backend hydrate inputs | Changes (`classify_changes`) | Frontend scope step (`frontend_change_scope.py`); completeness kept by `tests/test_frontend_denominator_invariant.py` |
+| Full non-slow pytest, strict markers, `--timeout=120` | pytest shards (full/selected/docs/content tiers) | pytest shards, full suite on every event |
+| Postgres tests must not skip (`pg_skip_guard.py`) | per shard | per shard |
+| needs_artifact collected set == `registry/artifacts/needs-artifact-expected.txt` | Needs artifact audit (separate `--collect-only`) | pytest report, from each shard's collected list (tests/conftest.py writes it before `-m` deselects) |
+| needs_artifact skip set == the same expected set | Needs artifact audit (separate run) | pytest report, from the shards' JUnit |
+| Every test file ran | none (planner trust) | pytest report: shard file lists must partition `git ls-files tests` |
+| Full-history checkout where tests read old commits | pytest, Fast checks, Contracts | pytest shard 1 (the history shard), Checks, Frontend, Secret scan; pytest shards 2..N are shallow |
+| Queue commit metadata (message, author, committer) scanned for secrets | Secret scan, every queue run | Secret scan on a full queue run; Queue commit metadata scan on every queue run |
+| TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
+| Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
+| Slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
 
-The docs lane runs marked `docs_skills` and `repo_wide` tests, plus
-`reads_content` for curriculum/wiki edits. The content lane runs marked
-`reads_content` tests. The queue runs `full` for every docs-only entry,
-including dynamically constructed test reads. Their PR path class remains
-`docs`.
+The needs_artifact audit makes two independent comparisons with the expected
+list. The collected set comes from collection, before `-m` deselects anything:
+each shard sets `LU_PYTEST_NEEDS_ARTIFACT_COLLECTED` and `tests/conftest.py`
+writes every marked test it collected (xdist worker gw0 writes; all workers
+collect the same items). The outer pytest removes the variable from its
+environment and hands the path to its workers through xdist's `workerinput`,
+so a test that starts a child pytest cannot overwrite the shard's list with
+the child's. Run 36658788394 lost 77 ids that way, in the three shards holding
+such tests; `test_nested_pytest_leaves_the_collected_list_intact` covers it.
+The skip set comes from the JUnit reports. In CI no
+artifact store is present, so every marked test must run in the tier and skip
+with the `needs_artifact:` message. A marked test deselected as `slow`, skipped
+for another reason, or passing is in the collected set but not the skip set,
+and fails the report.
 
-The content class emits `pytest_mode=content`: one shard running
-`-m 'reads_content and not slow and not atlas_release'` (same filters and
-`--timeout=120` as the full PR tier) plus the non-slow tests in
-`tests/test_ci_shard_partition.py`,
-with Ruff, Contracts and the Frontend build still on (`docs_only=false`,
-`frontend=true`). The marker is load-bearing:
-`tests/test_reads_content_marker_invariant.py` fails when a test module
-references those content roots without carrying `reads_content`, so new
-content-reading tests cannot silently fall out of the class.
+Executed outcomes were compared test by test with the old workflow on the same
+base: the old run 36648511336 (merge-queue run of `252ea0fa64`) against the new
+run 36658788394. 36,322 test ids ran in both. Every one of them had the same
+outcome, except the fixed-port dashboard smoke described under pytest shards.
+Both runs skipped all 368 expected needs_artifact tests. The 192 ids found
+only in the old run and the 124 found only in the new run all belong to CI
+test files this change deleted or rewrote.
 
-**Runner-slot budget (#8876).** `scripts.ci.slot_inventory --check` expands
-every PR-path workflow. Its dynamic `ci.yml` pytest matrix uses the full-tier
-default from that workflow's `env.PYTEST_SHARD_COUNT`; an unreadable default
-fails the check. The current inventory is 32 jobs, including 10 pytest shards
-and 17 jobs in `ci.yml`. On the GitHub Team plan, 60 hosted jobs can run
-concurrently. The inventory ceiling is 58 = 60 - 2 reserved slots. Two
-overlapping full `ci.yml` workflows use at most 2 × 17 = 34 slots, leaving
-24 for other PR workflows plus two reserved slots. The 32-job inventory is a
-sum across workflows, not a simultaneous peak: if every job in two copies were
-runnable together, 2 × 32 = 64 would exceed 60 and some jobs would queue.
+## CI Gate
 
-CI runs on `pull_request` opened/synchronize/reopened; labels and PR-body
-edits do not start it. `full-ci` is read from the PR's current labels
-(case-insensitive, fail closed) on the next PR push and in every merge-queue
-run, where every PR in the group is resolved from the queue refs. A label added
-after a green PR run does not rerun it: push again, or rely on the merge queue.
-Use the label only when a change affects tests the path classifier cannot see;
-explain that blind spot in the PR. It forces the full Python tier while known
-changed paths still decide whether Frontend runs. The merge queue already runs
-the full Python tier for code, frontend-only, and docs changes outside
-curriculum/wiki (#9073).
-Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full
-floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the
-separate slow selection; this adds no retries or duplicate slow-test execution.
-Missing/malformed comparison data, API errors, empty changes, and the compare
-API's 300-file cap fail closed to the full tier including frontend.
+CI Gate needs every other job and checks each result:
 
-Scripts/`tests/`-only PRs that pass the selected allowlist run
-`pytest_mode=selected`: one matrix job, `shard_count=1`, and `plan-files`
-stdin from `pytest_candidates` (resolved once in Changes — no re-derive in
-pytest). Shared-root denylist hits (`.github/`, `scripts/ci|config|build/`,
-conftest, locks, packages/schemas/site/curriculum, etc.), non-test files under
-`tests/`, non-`.py` under `scripts/`, stem collisions, unmapped scripts, deleted
-test files, empty or ≥80 candidates, and anything outside the allowlist stay
-`pytest_mode=full` with ten shards. A selected PR runs `full` on its
-`merge_group` entry. Contracts and ruff stay on whenever
-`docs_only=false`. After merge, the CI stream owner tracks one week of
-`ci_timings` on the private work item (selected may be rare under on-disk stem
-collision conservatism).
+- Reuse check and Queue commit metadata scan: `skipped` outside the merge
+  queue, `success` inside it (the metadata scan also on a reuse).
+- Secret scan, Checks, Frontend, pytest and pytest report: `success`, except in
+  a merge-queue run whose Reuse check reported `reuse=true` with a run id; then
+  all five must be `skipped`, and the gate logs the reused run for each.
 
-## Repo-wide tests always run in the selected and docs tiers (#8707)
+`cancelled`, a missing result or any other value fails the gate. The gate runs
+under `always()` because GitHub treats a skipped required check as passing.
+`tests/test_ci_pr_triggers.py` executes the gate script against every case.
 
-Import selection can never pick a test that scans the repository's own trees:
-the Changes job links a changed `scripts/foo.py` to `tests/**/test_foo*.py` (and
-a changed `tests/test_x.py` to itself), but a test scanning `tests/` or
-`scripts/` has no import edge to the changed module. That is how PR #8692
-merged green on the selected tier and then turned `main` red on shard 3 for
-every full-tier run: `tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`
-scans all of `tests/` and was never selected for a `tests/orchestration/test_thread_handoff.py`
-change.
+## Merge queue: reuse of an identical tree
 
-Such tests carry the `repo_wide` marker (registered in `pyproject.toml`). After
-the candidate run, a `selected` shard runs the marked set under its own narrow
-allowlist:
+A `merge_group` commit whose tree equals the tree a `pull_request` run of the
+queued PR already tested in full holds the same code; running the same jobs
+again cannot learn anything. `scripts/ci/reuse_green_run.py`:
 
-```
-git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
-  | xargs -r grep -lE 'pytest\.mark\.repo_wide' | sort
-LU_PYTEST_SHARD_FILES=<that list> pytest tests \
-  -m 'repo_wide and not slow and not atlas_release' -n logical --dist=loadfile ...
-```
+1. computes `git rev-parse <merge_group.head_sha>^{tree}`;
+2. reads the queued PR number from the queue ref, then the PR's head SHA, and
+   the pytest shard matrix from the queue commit's `ci.yml`;
+3. lists successful `pull_request` runs of `ci.yml` for that head SHA;
+4. reuses the first run that proves all of:
+   - the run: `pull_request`, `ci.yml`, completed `success`, for the PR's
+     current head, in its first and only attempt;
+   - its `ci-tested-tree` record (written by `pytest report` only after every
+     shard passed and the report's checks held): `tier: full`, the queued PR's
+     number, this run's id and attempt 1, more than zero tests, a commit SHA;
+   - that commit, read from GitHub's API rather than the record: a merge whose
+     parents include the PR head (the pull_request merge commit) and whose tree
+     is the queue commit's tree; the record names the same tree;
+   - the run's attempt-1 jobs: exactly Secret scan, Checks, Frontend,
+     `pytest (1..N)`, pytest report and CI Gate, each once and `success`; the
+     two queue-only jobs `skipped`; nothing else.
 
-The narrow allowlist keeps collection cheap (the full tree is ~2 minutes to
-collect); the known set currently runs ~400 tests in under two minutes. An
-empty list fails the step loudly. The grep matches the exact marker
-declaration, not a bare `repo_wide` mention, so a comment or an unrelated
-string cannot pull a file into the allowlist (the `-m` filter would skip it
-anyway, but the list stays honest).
+Anything else runs every job: a different tree (main moved, or several PRs in
+one group), no record (older runs, expired artifacts), another PR's record, a
+zero-test or non-full record, a re-run, a job that is missing, duplicated,
+unexpected or not `success`, or any lookup error. The decision, the reused run
+and every reused job's id are in the Reuse check's job summary; CI Gate's log
+names the reused run for each skipped job. A reused queue run is the Reuse
+check, the Queue commit metadata scan and CI Gate.
 
-The **docs lane** runs the same `-m repo_wide` invocation after its
-`docs_skills` run. Docs-lane PRs reach no other pytest leg, and several
-repo-wide scanners read `docs/`: `tests/test_work_privacy.py`,
-`tests/test_agent_fleet_tooling_guardrails.py`, and
-`tests/test_public_tree_no_baked_host_run_root.py`. A docs-only PR that adds a
-baked host path under `docs/` is therefore caught before merge.
+Reusing Secret scan and Checks is sound for the file contents they read: the
+scanned diff and the checked tree. With an identical tree, every line the queue
+commit adds over `main` was either added by the PR's commits, which the PR run
+scanned, or already on `main`. The diff-scoped checks see the same diff,
+because an identical tree in practice means `main` has not moved.
 
-The **content lane** deliberately runs no `-m repo_wide` leg: content mode runs
-`-m 'reads_content and not slow and not atlas_release'` (plus the shard safety
-net), so a scanner of a content root is selected by its `reads_content` marker
-without a repo-wide pass. Which lane a content-only PR reaches decides whether
-that marker is enough:
+The queue commit's own metadata is new: the queue writes PR-derived text into
+its message, and TruffleHog scans each commit's message, author and committer
+as well as its diff. The Queue commit metadata scan therefore runs on every
+queue run. `scripts/ci/metadata_commit.py` writes a commit with the queue
+commit's author, committer and message, its first parent as the only parent
+and that parent's tree, and TruffleHog scans `parent..that commit`: an empty
+diff, so the scan reads the metadata alone.
 
-- A PR whose paths are all content-class and include a `site/src/content/docs/`
-  path lands on the **content lane**, which runs `reads_content`: scanners of
-  that tree, for example `tests/test_site_links.py`, run here.
-- A PR touching only `curriculum/` or `wiki/` — no `site/src/content/docs/`
-  path — is docs-only and lands on the **docs lane**. Since #8720 the docs lane
-  also runs `-m 'reads_content and not slow and not atlas_release'` (under the
-  same narrow allowlist as the `repo_wide` leg) whenever the flag
-  `docs_reads_content` is `true`, which `classify_changes.py` sets only for a
-  docs-lane result with some path under `curriculum/` or `wiki/`. This closes
-  the gap that let PR #8712 (a docs-only change) merge green and turn `main`
-  red on the next full-tier run: `docs/epics/fresh-build-build-program.md` is a
-  hashed source of every `curriculum/l2-uk-en/lesson-plans/<lvl>/_decisions.yaml`,
-  and `tests/curriculum/arc/test_decisions_record.py` (a `reads_content` module)
-  went red on `main`. A few curriculum and wiki scanners are marked `repo_wide`
-  and ran there before #8720: `tests/test_ohoiko_source_inventory_scope.py`,
-  `tests/test_prompt_template_render.py`, `tests/test_a1_review_scores.py`,
-  `tests/test_aggregate_findings.py`, `tests/test_schema_validation.py`
-  (`test_a2_plans_match_module_schema`), and the reference checks in
-  `tests/test_skill_instruction_routes.py`; the new `reads_content` leg is what
-  covers the rest.
+Because the pull_request run already executes every job, reuse applies
+whenever `main` has not moved between the PR's last green run and its queue
+entry.
 
-Repo-wide tests that read a content tree and must also run on the content lane
-carry `reads_content` as well: `tests/test_llm_reviewer_dispatch.py`,
-`tests/test_threshold_source_of_truth.py`, `tests/test_sparse_collection_guard.py`,
-`tests/test_public_tree_no_baked_host_run_root.py`,
-`tests/api/test_app_factory.py`, and
-`tests/test_curriculum_upgrade_no_host_run_root.py` are marked both ways, and
-none is `slow`/`atlas_release`.
+## pytest shards
 
-`tests/test_repo_wide_marker_invariant.py` keeps the marker honest. Marker
-detection is syntactic and per-function (AST): a test counts only when its own
-`@pytest.mark.repo_wide` decorator, its class decorator, or a module-level
-`pytestmark` contains `pytest.mark.repo_wide`, so decorator order and comments
-do not matter and a module with two scanners and one marker fails. The
-authoritative guarantee is the explicit registry of known repo-wide
-modules/functions plus a reasoned `NOT_REPO_WIDE` escape hatch; the AST
-heuristic over each test module (repo-rooted `.glob`/`.rglob`,
-`os.walk`/`os.scandir`, `git ls-files`/`ls-tree` through `subprocess`, and
-known whole-tree linters, propagated through helper calls) is a best-effort
-net. The invariant also fails when the selected tier or the docs lane drops
-its `-m repo_wide` invocation.
+- `scripts/ci/split_tests.py split` assigns the tracked `tests/**/test_*.py`
+  files to N shards, longest first onto the least-loaded shard, using
+  `scripts/ci/pytest-file-durations.json`. A file with no recorded time gets
+  the median. Every shard computes the same assignment; the shard number and
+  count come from `matrix.shard` and `strategy.job-total`.
+- The shard collects through one `tests` path; the `LU_PYTEST_SHARD_FILES`
+  allowlist hook in `tests/conftest.py` keeps collection to the shard's files.
+- Within a shard, `-n logical --dist=worksteal` spreads single tests over the
+  runner's cores, so one long file no longer pins a shard. The old workflow
+  used `--dist=loadfile`, so tests of one file never overlapped. Tests that
+  share a fixed resource must now serialize themselves: the two fixed-port
+  smokes in `tests/test_work_dashboard_private_integration.py` take a file
+  lock in the run's shared temp root. Without the lock, one of them skipped
+  with "ports busy" in every new-workflow run.
+- A stale durations file only costs balance, never coverage. Refresh it from a
+  full run's JUnit when shard times drift:
 
-No CF attest. No auto-arm. No landing-class classifier. No coverage floor.
-Red team review is out of band.
+  ```bash
+  gh run download <run-id> --pattern 'pytest-junit-shard-*' --dir /tmp/junit
+  .venv/bin/python -m scripts.ci.split_tests durations /tmp/junit/*/*.xml > scripts/ci/pytest-file-durations.json
+  ```
 
-## Early PR preflight (#8750 phase A)
+### History shard
 
-The Preflight step of the `Fast checks` job reports a broken repo-wide invariant (a missing
-`subprocess` timeout, the test-assertion lint, the marker invariants) in a few
-minutes instead of after a full pytest shard. Before it, the p50 time to the
-first failed job on a full PR run was about 13 minutes.
+Seven test files are listed in `scripts/ci/history-tests.txt`. Five read old
+commits: `git show`/`git cat-file` of an old SHA, a recorded historical
+commit, a frozen base commit, and `origin/main` ancestry. Two run a
+`--dry-run` `delegate.py dispatch --worktree`, which fetches `main` from
+GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
+s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
+and balances the other files around them. Shard 1 is the only shard checked out
+with full history (`fetch-depth: 0`). Shards 2..N check out only the tested
+commit (`fetch-depth: 1`) and run pytest with `GIT_ALLOW_PROTOCOL=file`. A
+listed file that is no longer tracked fails the split.
 
-### Measured results (2026-09-25)
+The list is measured, not guessed. Run 36654595606 had every shard shallow
+with network git blocked in the pytest step. It was compared test by test with
+the full-history run 36650655215. Only these seven files changed outcome (28
+tests, passed to failed). The one other change is a `test_ci_split` workflow
+assertion that failed on the experiment's own `GIT_ALLOW_PROTOCOL` edit. None of them skipped:
+each failed loudly, with git exit 128 or a blocked https transport. Without the
+block, the network fetch in the two delegate tests pulled main's history into
+their shard and hid two of the five history files. A new test that needs
+history or fetches from GitHub therefore fails on a shallow shard; add its file
+to the list.
 
-Baseline before phase A (459 CI runs, 2026-09-22 20:24Z to 2026-09-24 23:07Z):
-89% of PR runs take the full tier; time to first failed job on failing full PR
-runs p50 13.0 min, p95 29.2 min; pytest job queue p50 1.2 min, p95 12.7 min.
+To change the shard count, edit the static `matrix.shard` list (it must stay
+`1..N`). `scripts/ci/slot_inventory.py --check` (actionlint workflow) counts
+every PR-path job against the 58-slot ceiling (GitHub Team: 60 concurrent
+jobs, two reserved).
 
-Held-out probe PR #8759 (a timeout-less `subprocess.run`): the preflight failed
-on `tests/test_subprocess_timeout_guard.py::test_no_unallowlisted_timeout_less_subprocess_calls_under_scripts`
-after 3m04s of execution; it waited 5m21s for a runner; its verdict came 10m12s
-after the run started; `CI Gate` was red; the shards' repo_wide backstop also
-failed.
+## Shard setup
 
-Known limit at the time of this measurement: the preflight competed with the
-pytest shards for GitHub-hosted runners at the former 20-job Free-plan cap, so
-queue time could dominate. Phase A.2 (issue #8750) consolidated short checks
-into one `fast-checks` job. The organization moved to the 60-job Team plan on
-2026-09-27; the historical queue measurements above predate that change.
+Per shard: checkout (shallow; full history on the history shard), Python
+3.12.14, then `scripts/ci/test_env.sh start` runs `npm ci` and
+`scripts/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
+verification) in the background while `python-ci-env` installs the locked
+environment from main's exact-key uv cache; `test_env.sh wait` fails the job if
+either background task failed. A container image was not adopted: the checkout
+cannot be inside an image, and pulling a prebuilt environment of this size
+costs about what the cache restore does (see the measurements in the ci-v3 PR).
 
-**When it runs.** `scripts/ci/classify_changes.py` decides once and emits
-`preflight`. `preflight_for()` returns `true` only for a `pull_request` event
-whose tier is `full` or `selected`: the tiers whose shards run the
-`repo_wide` set. The Preflight step's `if:` (and its setup steps') and CI
-Gate both read that one output, and nothing in `ci.yml` re-derives it. The other lanes get no
-preflight:
+All Python workflow jobs read the repository's `.python-version` with
+`setup-python`'s `python-version-file`. The shared composite reads the same
+file for setup-uv's explicit `python-version`, so local environments, the
+cache reader and the cache writer agree. Keep `check-latest` disabled (the
+default). A pin update changes the uv key; until main warms that key, the
+composite's online install fallback handles the miss. The #9062 measurement
+on hosted image `20260920.314` found 3.12.14 already cached, while 3.12.8
+required a download on every shard.
 
-- The **docs** lane already runs `repo_wide` in its single short shard.
-- The **content** and **frontend** lanes do not run `repo_wide` at all, so a
-  preflight there would change what the gate proves.
-- **`merge_group`, `schedule` and `workflow_dispatch`** always get
-  `preflight=false`.
-
-A `full-ci` label or a classifier failure on a PR forces `full`, and so turns
-preflight on.
-
-**What it runs.** It uses the same allowlist construction and flags as the
-shards' `repo_wide` leg. An empty allowlist fails the step loudly:
-
-```
-LU_PYTEST_SHARD_FILES=<repo_wide list> pytest tests \
-  -m 'repo_wide and not slow and not atlas_release' --strict-markers \
-  -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
-  --timeout-method=thread --override-ini addopts=-v
-```
-
-A second invocation then runs the files registered in the step's
-`PREFLIGHT_EXTRA_TESTS` env, one path per line, under
-`-m 'not slow and not atlas_release'` with the same flags. These are cheap
-invariants that fail often but are not `repo_wide`. Today the list holds only
-`tests/curriculum/arc/test_decisions_record.py`, the cross-file hash
-invariant that caused 7 of the 40 sampled PR failures. On its own it takes
-about 5 s. An empty list also fails loudly. `tests/test_ci_preflight.py`
-checks that every registered path exists and is not already `repo_wide`.
-Both invocations always run, so one run reports every broken invariant; the
-step fails if either one failed.
-
-**Setup.** Preflight uses the same Python and uv install as the shards, and
-the same Atlas manifest hydrate. It leaves out the Postgres service, Node/npm
-and the native apt packages (bubblewrap, libpq, apparmor), because no
-`repo_wide` test uses them: no marked file mentions a Postgres DSN,
-`psycopg` or `bwrap`, and the one that mentions `npm` stubs it. The whole
-selection passes in a fresh depth-1 clone with no Postgres DSN and no
-`node_modules` (the shared Fast checks checkout is full-history because
-Plan Validate and TypeSafe triage need it). The uv setup, dependency install
-and hydrate steps run only when `preflight=true`. Step
-`timeout-minutes: 8`.
-
-**Parallel, not gating.** No shard `needs: fast-checks`, and the shards still
-run the `repo_wide` tests as the backstop, so a green run is no slower.
-Nothing is cancelled when preflight fails. Preflight only makes the red
-signal arrive earlier.
-
-**CI Gate rule.** This rule lives in the gate step:
-
-- `preflight=true`: the Preflight step outcome must be `success`. `failure`,
-  `cancelled`, `skipped` and a missing output all fail the gate.
-- `preflight=false`: the Preflight step outcome must be `skipped`.
-- If Changes itself did not succeed, the gate fails before it reaches this
-  rule.
-
-`merge_group` and nightly runs have no preflight. Their gate evaluation is
-unchanged apart from the `preflight=false → skipped` branch.
-
-**Superseded runs.** A new push to the same PR cancels the superseded run
-through the workflow `concurrency` group. CI Gate is `if: always()`, so it
-still runs for that stale SHA and fails there (see the `concurrency` comment
-in `ci.yml`). That red lands on a commit that is no longer the PR head. The
-replacement run on the new head is the one that decides the PR.
-
-## Fast checks (#8750 phase A.2)
-
-Every `ci.yml` job runs on a GitHub-hosted runner, and the account runs at
-most 20 jobs at once. Preflight, Ruff, Plan Validate and TypeSafe triage each
-took about 1 to 3 minutes, and each held a full runner slot while pytest
-shards waited for one. The `fast-checks` job (`needs: changes`) now runs them
-as steps of one job: one checkout (full history), one `setup-python` with pip
-cache, and uv plus the shard-style `.venv` install and Atlas hydrate only
-when `preflight=true`. Ruff and Plan Validate install their own small pip
-dependencies inside their steps. Four jobs became one, so every run holds
-three fewer runner slots.
-
-**Every check runs.** Each check step has `if: ${{ !cancelled() && <its
-original job condition> }}`, so a failed step does not skip the checks after
-it, and one run reports every red check. A cancelled run still skips them.
-Preflight runs first, for the earliest signal.
-
-**Timeouts.** Each check keeps its old job timeout as a step
-`timeout-minutes`: Preflight 8, Ruff 5, Plan Validate 10, TypeSafe triage 5.
-The job timeout is 35: the 28-minute sum plus 7 for checkout and the
-preflight install.
-
-**Outputs, not conclusions.** Each check step has an `id`, and the job
-exposes `steps.<id>.outcome` as the outputs `preflight`, `ruff`,
-`plan_validate` and `typesafe`. CI Gate reads those outcomes, never a step
-`conclusion`: under `continue-on-error` a failed step concludes `success`.
-A step skipped by its condition reports `skipped`.
-
-**CI Gate rule for Fast checks:**
-
-- The job result must be `success` or `failure`. `cancelled`, `skipped` or a
-  missing result fails the gate.
-- The Changes flags these rules read (`preflight`, `docs_only`) must be
-  `true` or `false`; anything else fails the gate.
-- Preflight: `success` when `preflight=true`, `skipped` otherwise.
-- Ruff: `success` when `docs_only=false`, `skipped` otherwise.
-- Plan Validate: always `success`.
-- TypeSafe triage: logged, never blocks. A missing output still fails the gate,
-  because it means the job outputs are broken.
-- The gate logs every check's outcome before it fails, so one gate log names
-  every red check.
-- If every check passed its rule but the job still failed, a setup step
-  (checkout, Python, the preflight install) broke, and the gate fails.
-
-`tests/test_ci_pr_triggers.py` runs the real gate script for every
-check × condition × outcome combination, including cancelled and missing
-outputs.
-
-**Retry trade-off.** "Re-run failed jobs" now re-runs all four checks, not
-only the red one. A Ruff fix therefore costs up to one more Preflight run
-(about 3 minutes). That is the price of freeing three runner slots per run.
-
-## pytest shard collection and balance (ci-shard-balance-2026-09-07)
-
-The code pytest shards run on all 4 runner vCPUs (`-n logical`, not `-n auto`
-which counts physical cores), collect through one initial `tests` path
-instead of positional file arguments, and balance by measured per-file
-duration instead of a modulo split. Full-tier shard count (`10`) is declared
-once in `ci.yml`'s workflow-level `env: PYTEST_SHARD_COUNT`. The Changes job
-emits `shard_count` (1 or 10) and `shards`; `plan-files` always uses
-`needs.changes.outputs.shard_count` so selected mode never LPT-partitions a
-candidate set into unused buckets.
-`--max-worker-restart=0` fails the job on a worker crash: pytest-timeout's
-thread method terminates the process, and replacing it can leave xdist
-hanging until the job limit.
-
-Dispatch workers are a separate host from these runners. SCOPE for #8645
-part B: this guards workers against accidental xdist fan-out and concurrent
-full suites. It is not a sandbox against deliberate evasion; parts A (memory
-admission) and C (per-worker cgroup) are the hard limits.
-
-When `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.py`
-clamps xdist to two workers. `pyproject.toml` `addopts` still passes
-`-p ci.pytest_dispatch_cap`, and `scripts/delegate.py` also sets
-`PYTEST_PLUGINS=ci.pytest_dispatch_cap` (appended when the variable is already
-set). `build_agent_env` forwards that variable into the agent CLI only while
-the dispatch marker is set, and only as the single entry
-`ci.pytest_dispatch_cap` — any other comma-separated plugin name is dropped.
-A worker that copies CI's `--override-ini addopts=-v` therefore still loads
-the cap. The `pythonpath` ini key is separate from `addopts` and still
-makes `ci.pytest_dispatch_cap` importable. The plugin is idempotent when both
-registrations load it. `-n auto`, `-n logical`, and an explicit `-n` use
-`--maxprocesses=2`. A `--tx` spec whose expanded worker count is greater than
-2 (for example `--tx 3*popen`) is a usage error before configuration; the cap
-does not rewrite the spec. A full-suite invocation takes one non-blocking lock
-under `/var/tmp/lu/learn-ukrainian/` (`LU_PYTEST_FULL_SUITE_LOCK` overrides
-that path). The fd is stored on the pytest config that acquired it and
-released only in that run's `pytest_unconfigure`, so a nested `pytest.main()`
-does not drop the outer run's lock. CI does not set the dispatch variable
-(see `.github/workflows/`), so shard `-n logical` is unchanged. A second
-full-suite run on a dispatch host fails immediately and tells the worker to
-run targeted tests.
-
-**Collection — allowlist hook.** `tests/conftest.py` implements
-`pytest_ignore_collect`, gated on env var `LU_PYTEST_SHARD_FILES`: unset,
-collection is completely unchanged (local dev, `docs_skills` lane); set, it
-must point at a readable, non-empty, newline-delimited list of repo-relative
-`test_*.py` paths with no duplicates — anything else (missing, unreadable,
-malformed, empty) raises loudly at first collection. Directories are never
-filtered by the hook: it explicitly admits them and allowed files, overriding
-pytest's default `norecursedirs` exclusions such as `build`; other files are
-ignored. This preserves the tracked-file selection, including `tests/build/`.
-
-**Balance — `scripts/ci/pytest_shards.py` file plane.** The file-plane subcommands,
-extending the existing planner (Cursor Cloud's node-ID plane — `plan` /
-`plan-shard` / `run` / `verify-artifacts` — is untouched):
-
-- `plan-files --shard-id N --shard-count K --durations <json> --output <path>`:
-  reads candidate repo-relative file paths from stdin (`ci.yml` pipes in
-  `git ls-files -- tests | grep -E '/test_[^/]+\.py$' | sort`), LPT-assigns
-  them across `K` shards from the run's frozen duration snapshot (median
-  fallback for files without history), writes shard `N`'s sorted allowlist,
-  and prints every shard's predicted weight.
-- `file-durations --junit <xml>... --output <json>`: refreshes the committed
-  snapshot from JUnit reports. Aggregation policy: a JUnit
-  `<testcase time="...">` already sums setup+call+teardown for that node
-  (pytest's own writer combines the three), so no phase decomposition is
-  attempted; the same node ID appearing in more than one report (a rerun, or
-  the same file spanning several reports) keeps the maximum, not the sum,
-  before per-file totals are formed; a testcase whose `classname`/`name`
-  doesn't resolve to a repo test file is skipped and counted, never raised.
-
-**Duration source.** For a full-tier run, Changes searches recent successful
-merge-queue runs for the newest complete pytest matrix. It requires all pytest
-jobs and their matching JUnit artifacts, checks disjoint testcase identities,
-rejects failures and reports with less than 90% of the committed file coverage,
-and ignores runs older than seven days. It uploads one immutable duration file
-for every shard of this CI run. An unavailable, incomplete, or stale source
-selects `scripts/ci/pytest-file-durations.json` and logs why. Selected runs use
-the committed file directly. CI Gate checks pytest shard completeness from
-`needs` data alone, never a jobs-API re-listing (#8967: querying
-`/actions/runs/{id}/attempts/{attempt}/jobs` right after `needs` resolved
-sometimes returned an incomplete page — 10/10 shards green, Gate saw 6 and
-failed). `needs.pytest.result` is GitHub's own aggregate over every matrix
-instance from `fromJSON(needs.changes.outputs.shards)`, computed at
-needs-resolution time, so it is success only when every shard concluded
-success; the gate also cross-checks `needs.changes.outputs.shard_count`
-against the length of that same `shards` array (both written by one
-`classify_changes` call) so the two can never silently drift. A missing,
-failed, or unexpectedly skipped shard still fails the required gate. The `needs_artifact`
-skip-set audit runs as a parallel required job, so its collection and runtime
-checks do not extend shard 1's pytest path.
-Manual `workflow_dispatch` shard trials use a run-specific concurrency group;
-pull-request cancellation and merge-group sequencing retain their existing keys.
-Pytest jobs retain full checkout history because reviewer parity tests load
-historical source with `git show`.
-
-**Committed snapshot refresh procedure.** After a complete full merge-queue CI
-run, download each shard's uploaded `pytest-junit-shard-N` artifact and run:
-
-```
-args=()
-for shard in $(seq 1 10); do args+=(--junit "pytest-shard-${shard}.xml"); done
-.venv/bin/python scripts/ci/pytest_shards.py file-durations \
-  "${args[@]}" --output scripts/ci/pytest-file-durations.json
-```
-
-Use one `--junit` per shard in that run. Commit the refreshed snapshot (sorted
-keys, 3-decimal rounding) when shard balance measurably drifts — not on every
-green run.
+The history shard keeps full Git history: five pinned test files read history
+and two more fetch `main` (listed in `scripts/ci/history-tests.txt`, consumed
+by `scripts/ci/split_tests.py`).
+Other shards are shallow. #9211 rejected blobless checkout because those
+history readers need the committed blobs as well as the commit graph.
 
 ## Cloud advisory runner dependency parity (#6977 slice A)
 
 `scripts/ci/cursor_cloud_full_pytest.sh` (the offline-verifiable Cursor cloud
 pytest prototype; see `docs/design/2026-09-06-cloud-agent-pytest-advisory.md`)
-mirrors this job's "Install Python deps" and "Hydrate Atlas lexicon manifest"
-steps: same lockfile exclude set (`torch`/`torchvision`/`open_clip_torch`/
-`stanza`), `uv pip` when available, `packages/v4-runtime --no-build-isolation`
-+ `build_assets.py`, and an unconditional hard-fail manifest hydrate. It also
-requires `LEARN_UKRAINIAN_CP_PG_DSN` (same fixture creds as this job's
-disposable Postgres service) whenever control-plane tests are selected, and
-detects (never sudo-installs) the Linux native deps this job's "Install
-native mechanism test dependencies" step provisions (`bubblewrap`, `libpq`).
-**When this job's dependency install recipe changes, update the runner
-script to match** — a drifted runner is a false-green risk, not just stale
-docs (the whole point of that runner is offline/local sealed-run parity with
-this job). Runner ↔ CI parity is covered offline by
-`tests/ci/test_cursor_cloud_pytest_verify.py`; artifact transport, live cloud
-qualification and the advisory Check publisher remain open (operator/advisor
-GO required, see the design doc's "Explicit open decision" section).
+mirrors the `python-ci-env` install: same lockfile exclude set
+(`torch`/`torchvision`/`open_clip_torch`/`stanza`), `uv pip` when available,
+`packages/v4-runtime --no-build-isolation` + `build_assets.py`, and an
+unconditional hard-fail manifest hydrate. It also requires
+`LEARN_UKRAINIAN_CP_PG_DSN` whenever control-plane tests are selected, and
+detects (never sudo-installs) the native deps `scripts/ci/start_postgres.sh`
+provisions (`bubblewrap`, `libpq`). It plans node-ID shards with
+`scripts/ci/pytest_shards.py` (`plan` / `run` / `verify-artifacts`), which
+GitHub Actions no longer uses. **When the CI dependency install changes,
+update the runner script to match** — a drifted runner is a false-green risk.
+Runner ↔ CI parity is covered offline by
+`tests/ci/test_cursor_cloud_pytest_verify.py`.

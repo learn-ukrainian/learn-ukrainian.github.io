@@ -163,7 +163,7 @@ def test_process_gemini_recipient_resolves_to_agy_participant(bridge_db, monkeyp
 
 def test_process_success_acks_only_after_routed_reply(bridge_db, monkeypatch):
     """Mutation check: ack must follow the routed reply, never precede it."""
-    message_id = _send("kimi")
+    message_id = _send("cursor")
     events: list[str] = []
     monkeypatch.setattr(
         _process,
@@ -300,7 +300,12 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     )
     assert registered_participant_model("agy") == "gemini-9.9-flash-high"
     assert resolve_compat_model("gemini", "Gemini 9.9 Flash (High)") == "gemini-9.9-flash-high"
-    assert resolve_compat_model("gemini", "gemini-3.7-flash") == "gemini-9.9-flash-high"
+    # Compatibility aliases still follow a rotated pin. A retired concrete
+    # generation must not silently upgrade, even when the registry rotates (#9301).
+    assert resolve_compat_model("gemini", "gemini-3-flash-preview") == "gemini-9.9-flash-high"
+    assert resolve_compat_model("gemini", "gemini-3.0-flash-preview") == "gemini-9.9-flash-high"
+    with pytest.raises(ValueError, match=r"gemini-3\.7-flash.*retired.*use gemini-3\.8-flash-high"):
+        resolve_compat_model("gemini", "gemini-3.7-flash")
     # Non-Gemini model ids pass through for the route resolver to judge loudly.
     assert resolve_compat_model("gemini", "custom-provider/model-x") == "custom-provider/model-x"
     # Non-agy seats never get rewritten.
@@ -497,10 +502,10 @@ def test_legacy_gemini_error_handler_never_acks(bridge_db):
     assert _replies(message_id)[0][2] == "error"
 
 
-@pytest.mark.parametrize("seat", ["claude", "codex", "grok", "kimi", "agy"])
+@pytest.mark.parametrize("seat", ["claude", "codex", "grok", "agy"])
 def test_native_error_handlers_never_ack(bridge_db, seat):
     """Mutation check: removing the no-ack guard turns every one of these red."""
-    from scripts.ai_agent_bridge import _agy, _claude, _codex, _grok_build, _kimi
+    from scripts.ai_agent_bridge import _agy, _claude, _codex, _grok_build
 
     message_id = _send(seat)
     msg = {
@@ -518,8 +523,6 @@ def test_native_error_handlers_never_ack(bridge_db, seat):
         _codex._handle_codex_error(msg, message_id, "boom")
     elif seat == "grok":
         _grok_build._handle_grok_build_error(msg, message_id, "boom")
-    elif seat == "kimi":
-        _kimi._handle_kimi_error(msg, message_id, "boom")
     elif seat == "agy":
         _agy._handle_agy_error(msg, message_id, "boom")
 
@@ -619,7 +622,6 @@ def forbid_legacy_processors(monkeypatch):
         ("_codex", "process_for_codex"),
         ("_agy", "process_for_agy"),
         ("_grok_build", "process_for_grok_build"),
-        ("_kimi", "process_for_kimi"),
         ("_hermes", "process_for_hermes"),
         ("_opencode", "process_for_opencode"),
     ]:
@@ -636,7 +638,6 @@ def forbid_legacy_processors(monkeypatch):
         "process-codex",
         "process-grok",
         "process-grok-build",
-        "process-kimi",
     ],
 )
 def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command, forbid_legacy_processors):
@@ -656,7 +657,54 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
     assert _row(message_id)[0] == 1
 
 
-@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "kimi", "pool", "glm", "hermes"])
+def _legacy_kimi_row() -> int:
+    """A Kimi-addressed row written before Kimi stopped being a bridge recipient (``send`` now refuses it)."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp)"
+            " VALUES ('task-6915', 'agy', 'kimi', 'advisory', 'Advisor note.', '2026-09-30T00:00:00+00:00')"
+        )
+        conn.commit()
+        return int(cursor.lastrowid)
+    finally:
+        conn.close()
+
+
+def test_send_refuses_a_kimi_recipient(bridge_db):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        _send("kimi", sender="agy")
+
+
+def test_kimi_messages_are_skipped_with_zero_side_effects(bridge_db, monkeypatch, capsys, forbid_legacy_processors):
+    """Kimi is not a bridge recipient — an existing Kimi-addressed row is never processed. A Kimi target is a
+    Kimi request and is refused; a generic drain skips the stored row, reports it once and leaves the broker
+    exactly as it was: no reply, no failure record, no acknowledgement."""
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _ask_lifecycle, _cli
+
+    acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
+    monkeypatch.setattr(_process, "run_compat_ask", acp)
+    cli_message = _legacy_kimi_row()
+    detached_message = _legacy_kimi_row()
+    before = {message_id: (_row(message_id), _replies(message_id)) for message_id in (cli_message, detached_message)}
+
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _cli._dispatch_command(_cli._build_parser().parse_args(["process-kimi", str(cli_message)]))
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _ask_lifecycle.process_background_ask(detached_message, "kimi")
+    capsys.readouterr()
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
+    _cli._dispatch_command(_cli._build_parser().parse_args(["process-claude", str(cli_message)]))
+    _ask_lifecycle.process_background_ask(detached_message, "codex")
+    assert capsys.readouterr().out.count("skipped: Kimi is not a bridge recipient") == 3
+
+    acp.assert_not_called()
+    assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before
+
+
+@pytest.mark.parametrize("target", ["claude", "codex", "agy", "grok", "pool", "glm", "hermes"])
 def test_detached_ordinary_worker_uses_acp_without_provider_fallback(
     bridge_db, monkeypatch, target, forbid_legacy_processors
 ):
@@ -765,3 +813,87 @@ def test_ordinary_async_process_refuses_before_acp(bridge_db, monkeypatch):
         _cli._dispatch_command(args)
     acp.assert_not_called()
     assert _row(message_id)[0] == 0
+
+
+# ── #9274: the legacy Cursor review drain never runs Auto ───────────────
+
+
+def _cursor_review(to_model: str | None) -> int:
+    return send_message(
+        "Review the exact branch head.",
+        task_id="review-9274",
+        msg_type="review",
+        from_llm="codex",
+        to_llm="cursor",
+        to_model=to_model,
+        quiet=True,
+    )
+
+
+@pytest.fixture
+def cursor_provider(monkeypatch):
+    """Spy on the Cursor bridge's provider spawn; ACP must never see a review."""
+    import subprocess
+    from unittest.mock import Mock
+
+    from scripts.ai_agent_bridge import _cursor
+
+    run = Mock(return_value=subprocess.CompletedProcess(args=[], returncode=0, stdout="LGTM\n", stderr=""))
+    # Scoped to the Cursor bridge: the broker's own notifications also use subprocess.
+    monkeypatch.setattr(_cursor, "subprocess", SimpleNamespace(run=run, TimeoutExpired=subprocess.TimeoutExpired))
+    # Binary lookup is the shared resolver on the bridge module.
+    monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
+    monkeypatch.setattr(_process, "run_compat_ask", Mock(side_effect=AssertionError("review must not enter ACP")))
+    return run
+
+
+@pytest.mark.parametrize(
+    ("to_model", "code"),
+    [
+        (None, "cursor_model_unpinned"),
+        ("auto", "cursor_auto_outside_coding_task"),
+        ("Auto", "cursor_auto_outside_coding_task"),
+        ("cursor:auto", "cursor_auto_outside_coding_task"),
+        ("default", "cursor_auto_outside_coding_task"),
+        ("composer-2.5-fast", "cursor_model_not_approved"),
+    ],
+)
+def test_cursor_review_drain_refuses_auto_or_unpinned_before_spawn(bridge_db, cursor_provider, to_model, code):
+    from scripts.ai_agent_bridge import _ask_lifecycle
+
+    message_id = _cursor_review(to_model)
+    with pytest.raises(SystemExit, match=rf"ask-cursor: refused: .*\({code}\); pin grok-4\.7 or composer-2\.5"):
+        _ask_lifecycle._process_target(message_id, "cursor", {"no_timeout": True})
+
+    cursor_provider.assert_not_called()
+    assert _row(message_id)[0] == 0
+    assert _replies(message_id, task_id="review-9274") == []
+
+
+def test_detached_cursor_review_records_the_typed_refusal(bridge_db, cursor_provider, monkeypatch, tmp_path):
+    from scripts.ai_agent_bridge import _ask_lifecycle
+
+    message_id = _cursor_review(None)
+    monkeypatch.setattr(_ask_lifecycle, "REPO_ROOT", tmp_path)
+    monkeypatch.setattr(_ask_lifecycle, "_background_options", lambda *_args: {"no_timeout": True})
+
+    _ask_lifecycle.process_background_ask(message_id, "cursor")
+
+    cursor_provider.assert_not_called()
+    status = _ask_lifecycle._ask_status(message_id)
+    assert status.startswith("failed:ask-cursor: refused: no concrete Cursor model is pinned (cursor_model_unpinned)")
+
+
+@pytest.mark.parametrize("to_model", ["grok-4.7", "composer-2.5"])
+def test_cursor_review_drain_runs_a_concrete_pin(bridge_db, cursor_provider, to_model):
+    from scripts.ai_agent_bridge import _ask_lifecycle
+
+    message_id = _cursor_review(to_model)
+    _ask_lifecycle._process_target(message_id, "cursor", {"no_timeout": True})
+
+    cursor_provider.assert_called_once()
+    argv = cursor_provider.call_args.args[0]
+    assert argv[argv.index("--model") + 1] == to_model
+    assert _row(message_id)[0] == 1
+    replies = _replies(message_id, task_id="review-9274")
+    assert [(sender, kind, content) for sender, _to, kind, content in replies] == [("cursor", "response", "LGTM")]

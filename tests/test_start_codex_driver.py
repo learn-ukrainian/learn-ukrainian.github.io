@@ -11,6 +11,10 @@ from pathlib import Path
 
 import pytest
 
+from tests.rules_core_view import (
+    install_loader_bypass,
+    rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
+)
 from tests.test_launcher_contract import REPO, run_launcher
 
 
@@ -39,6 +43,8 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         "scripts/lib/context_profiles.py",
         "scripts/lib/deploy_extensions.sh",
         "scripts/lib/project_interpreter.sh",
+        "scripts/review/model_catalog.py",
+        "scripts/config/model_catalog.yaml",
         "scripts/lib/launcher_core.sh",
         "scripts/lib/handoff_identity.sh",
         "scripts/config/launcher_stream_aliases.tsv",
@@ -49,6 +55,7 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, target)
+    install_loader_bypass(root)
 
     probe = root / ".venv" / "bin" / "python"
     probe.parent.mkdir(parents=True)
@@ -121,6 +128,7 @@ def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> No
     assert result.stdout.index("would mint and bootstrap") < result.stdout.index("would bind drive-epic")
 
 
+@pytest.mark.rules_core_absent
 def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> None:
     result = run_launcher(
         "start-codex-driver.sh",

@@ -182,6 +182,7 @@ from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.resolver import codes as resolver_codes
+from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
 from scripts.generate_mdx.atlas_links import atlas_href_for
@@ -1178,12 +1179,7 @@ def assemble_expanded_document(
             if not isinstance(item, dict):
                 continue
 
-            prompt = None
-            for key in ("prompt", "sentence", "question", "cue", "statement"):
-                val = item.get(key)
-                if isinstance(val, str) and val.strip():
-                    prompt = val
-                    break
+            prompt = receipts.requirement_sentence(item) or None
             if prompt:
                 if act_type == "fill-in" and item.get("mode") == "orthography":
                     marker = re.search(r"_{3,}|\[blank\]", prompt)

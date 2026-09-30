@@ -51,9 +51,10 @@ $driver_mode
 Options:
   -h, --help                 Show this help and exit.
   --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
-                             Cursor driver default: grok-4.7-high (not Auto, not a fast
-                             variant). Claude interactive / Grok: omit to keep last
-                             TUI/session model.
+                             Cursor default (driver and interactive): grok-4.7-high;
+                             it also accepts composer-2.5, never Auto, a Fast variant,
+                             an empty model or a forwarded --model. Claude
+                             interactive / Grok: omit to keep last TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
                              --reasoning-effort). Claude driver default: high. Otherwise
                              omit to keep last session selection. Other providers ignore.
@@ -70,8 +71,11 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
+  LAUNCHER_DRY_RUN_ARGV_FILE With dry-run, also write the exact NUL-separated argv here.
+  LU_RULES_SEAT              Rules core seat: core or content (default: content for a
+                             curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
-                             claude-opus-5-5[1m]; Cursor driver: grok-4.7-high; empty
+                             claude-opus-5-5[1m]; Cursor: grok-4.7-high; empty
                              for Claude interactive/Grok = last session).
   LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
                              empty for Claude interactive/Grok = last session).
@@ -81,7 +85,7 @@ $provider_env
 EXIT CODES:
   0  Launch completed, help shown, or dry-run succeeded.
   1  Launch refused on a continuity precondition (rollover ambiguity or lease).
-  2  Usage error (unknown flag, unsupported harness, or invalid selector).
+  2  Usage error (unknown flag, retired model, unsupported harness, or invalid selector).
   3  Required provider credential or executable is unavailable.
   4  Driver certification is missing or revoked.
   5  Provider transport is degraded; use the stated external-fleet disposition.
@@ -217,15 +221,61 @@ launcher_hermes_exec() {
     if [ -n "$prompt" ]; then prompt+=$'\n'; fi
     prompt+="$arg"
   done
-  if [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then cmd+=(--query "$prompt"); fi
+  # Hermes has no system-prompt flag: the rules core leads the seeded query.
+  if [ -n "${LC_RULES_CORE:-}" ]; then
+    cmd+=(--query "$(rules_core_prefix "$prompt")")
+  elif [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then
+    cmd+=(--query "$prompt")
+  fi
   if [ "$LC_DRY_RUN" = 1 ]; then
     printf 'LAUNCHER_DRY_RUN=1: credential_source=%s provider=%s model=%s requested_effort=%s harness=hermes\nwould exec ' \
       "$LC_AUTH_SOURCE" "$LC_HERMES_PROVIDER" "$LC_MODEL" "${LC_EFFORT:-default}"
-    printf '%q ' "${cmd[@]}"
+    launcher_print_argv "${cmd[@]}"
     printf '\n'
     return 0
   fi
   launcher_exec_command "${cmd[@]}"
+}
+
+# Dry-run argv printer shared by every adapter. Stdout shows each argument with
+# the rules core replaced by a size placeholder; LAUNCHER_DRY_RUN_ARGV_FILE, when
+# set, receives the exact NUL-separated argv the launch would exec.
+launcher_print_argv() {
+  local arg placeholder
+  placeholder="<rules-core seat=${LC_RULES_SEAT:-none} bytes=${LC_RULES_CORE_BYTES:-0}>"
+  for arg in "$@"; do
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      arg="${arg//"$LC_RULES_CORE"/$placeholder}"
+      if [ -n "${LC_RULES_CORE_TOML:-}" ]; then
+        arg="${arg//"$LC_RULES_CORE_TOML"/$placeholder}"
+      fi
+    fi
+    printf '%q ' "$arg"
+  done
+  if [ -n "${LAUNCHER_DRY_RUN_ARGV_FILE:-}" ]; then
+    printf '%s\0' "$@" > "$LAUNCHER_DRY_RUN_ARGV_FILE"
+  fi
+}
+
+# Every seat starts with the rules core (scripts/lib/rules_core.sh). A driver on
+# a curriculum lane is a content seat and also gets the curriculum addendum. An
+# absent or unreadable core refuses the launch (exit 1), naming the path.
+launcher_load_rules_core() {
+  local lane=""
+  LC_RULES_CORE_TOML=""
+  if [ ! -r "$LC_ROOT/scripts/lib/rules_core.sh" ]; then
+    launcher_error "refusing to launch ${LC_PROVIDER}: rules core unavailable ($LC_ROOT/scripts/lib/rules_core.sh is missing)."
+    exit 1
+  fi
+  # shellcheck source=scripts/lib/rules_core.sh
+  source "$LC_ROOT/scripts/lib/rules_core.sh"
+  if [ "$LC_MODE" = driver ] && [ "$LC_GOVERNOR" = 0 ]; then
+    lane="$LC_EPIC"
+  fi
+  rules_core_load "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT" "$lane" "$LC_PROVIDER" || exit 1
+  if [ -n "$LC_RULES_CORE" ] && [ "$LC_DRY_RUN" = 1 ]; then
+    printf 'launcher: rules core seat=%s bytes=%s\n' "$LC_RULES_SEAT" "$LC_RULES_CORE_BYTES"
+  fi
 }
 
 launcher_clear_foreign_route_state() {
@@ -277,13 +327,11 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     cursor)
-      # Pin grok-4.7-high. Omitting --model lets cursor-agent use Auto, which
-      # routes to a fast Grok variant and burns the seat. --model still overrides.
-      if [ "$LC_MODE" = driver ]; then
-        LC_MODEL="${LAUNCHER_MODEL:-grok-4.7-high}"
-      else
-        LC_MODEL="${LAUNCHER_MODEL:-}"
-      fi
+      # Driver and interactive sessions both pin the catalog seat. Omitting
+      # --model lets cursor-agent use Auto, which only a typed implementation
+      # dispatch may run (operator decision 2026-09-30, #9274). --model or
+      # LAUNCHER_MODEL may choose another certified pin.
+      LC_MODEL="${LAUNCHER_MODEL:-$LC_CURSOR_SEAT_PIN}"
       LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
       ;;
     kimi)
@@ -441,11 +489,15 @@ launcher_normalize_model() {
   # normalize to roster identifiers when a model is provided.
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:fable) LC_MODEL='claude-fable-5-1' ;;
-    claude:fable-5|claude:claude-fable-5) LC_MODEL='claude-fable-5' ;;  # legacy alias
+    claude:fable-5) LC_MODEL='claude-fable-5' ;;
     claude:sonnet) LC_MODEL='claude-sonnet-5-5' ;;
     claude:opus|claude:opus-5-5|claude:opus-5.5) LC_MODEL='claude-opus-5-5[1m]' ;;
     claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
+  if [ -n "$LC_MODEL" ]; then
+    "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT/scripts/review/model_catalog.py" \
+      --check-retired-model "$LC_MODEL" || exit 2
+  fi
 }
 
 launcher_normalize_effort() {
@@ -626,6 +678,12 @@ launcher_validate_mode() {
 launcher_validate_driver_certification() {
   # Interactive Grok: empty --model keeps the last TUI selection; an explicit
   # pin must be the certified native model (refuse retired grok-4.5, #6870).
+  # Cursor pins a concrete model in every mode: an interactive session is not a
+  # typed implementation dispatch, so it never runs Auto either (#9274).
+  if [ "$LC_PROVIDER" = "cursor" ] && [ "$LC_GOVERNOR" = "0" ]; then
+    launcher_validate_cursor_pin
+    return 0
+  fi
   if [ "$LC_MODE" = "interactive" ] && [ "$LC_PROVIDER" = "grok" ]; then
     if [ -z "${LC_MODEL:-}" ]; then
       return 0
@@ -640,15 +698,12 @@ launcher_validate_driver_certification() {
   fi
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
-  # Claude/Grok/Cursor may omit --model so the CLI keeps its current selection.
-  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ] || [ "$LC_PROVIDER" = "cursor" ]; } && [ -z "${LC_MODEL:-}" ]; then
-    return 0
-  fi
-  if [ "$LC_PROVIDER" = "cursor" ] && launcher_cursor_model_certified "$LC_MODEL"; then
+  # Claude/Grok may omit --model so the CLI keeps its current selection.
+  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ]; } && [ -z "${LC_MODEL:-}" ]; then
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-fable-5-1|claude:claude-sonnet-5-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)
@@ -658,18 +713,51 @@ launcher_validate_driver_certification() {
   esac
 }
 
+# Catalog seat pin: orchestrator_seats.cursor model_id grok-4.7 at effort high
+# (scripts/config/model_catalog.yaml; tests/test_start_cursor_launcher.py
+# keeps the two in step).
+LC_CURSOR_SEAT_PIN=grok-4.7-high
+
+# Every launched Cursor session, driver or interactive, runs a concrete
+# approved pin, never Auto (operator decision 2026-09-30, #9274): an empty
+# model and a provider --model forwarded after `--` would let cursor-agent pick
+# Auto or override the certified pin.
+launcher_validate_cursor_pin() {
+  local arg seat="cursor driver"
+  [ "$LC_MODE" = driver ] || seat="cursor interactive session"
+  for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
+    case "$arg" in
+      --model|--model=*)
+        launcher_error "the $seat takes its model from the launcher --model, not from forwarded '$arg' (pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto)."
+        exit 4
+        ;;
+    esac
+  done
+  if [ -z "${LC_MODEL:-}" ]; then
+    launcher_error "the $seat requires a concrete model; an empty model runs Auto (pin $LC_CURSOR_SEAT_PIN or composer-2.5)."
+    exit 4
+  fi
+  if ! launcher_cursor_model_certified "$LC_MODEL"; then
+    launcher_error "model '$LC_MODEL' is not certified for the $seat (pin $LC_CURSOR_SEAT_PIN or composer-2.5; never Auto, Fast or a previous generation)."
+    exit 4
+  fi
+}
+
 # Cursor CLI model ids: bare certified pins, effort variants such as
 # grok-4.7-high, and bracket overrides such as
-# grok-4.7[context=500k,reasoning_effort=high,fast=false].
+# grok-4.7[context=500k,reasoning_effort=high,fast=false]. Auto, Fast variants
+# and previous generations are not certified.
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    auto|grok-4.7|grok-4.6|composer-2.5) return 0 ;;
+    grok-4.7|composer-2.5) return 0 ;;
     grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
-    grok-4.7-low-fast|grok-4.7-medium-fast|grok-4.7-high-fast|grok-4.7-xhigh-fast) return 0 ;;
-    composer-2.5-fast) return 0 ;;
   esac
-  [[ "$model" =~ ^(grok-4\.7|grok-4\.6|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]]
+  [[ "$model" =~ ^(grok-4\.7|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1
+  # A bracket override may only switch Fast off.
+  local rest="${model//fast=false,/}"
+  rest="${rest//fast=false]/]}"
+  [[ "$rest" != *fast=* ]]
 }
 
 launcher_prepare_driver_identity() {
@@ -1176,15 +1264,17 @@ launcher_main() {
   launcher_defaults
   launcher_parse "$@"
   launcher_drop_force_from_successor_args
-  launcher_normalize_model
   launcher_normalize_effort
   # Provider adapters are sourced dynamically and consume these values.
   export LC_ENDPOINT LC_ISOLATE_CONFIG
   launcher_resolve_roots
+  launcher_normalize_model
   # shellcheck source=scripts/lib/handoff_identity.sh
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode
   launcher_validate_driver_certification
+  # Before any adapter check, plane probe or deploy: no core, no launch.
+  launcher_load_rules_core
   # shellcheck disable=SC1090
   source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate

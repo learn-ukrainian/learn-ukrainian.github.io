@@ -6,6 +6,7 @@ Staleness check: `.venv/bin/python scripts/check_decisions.py`
 
 | ID | Date | Expires | Scope | Status | Title |
 | ---- | ------ | --------- | ------- | -------- | ------- |
+| dec-015 | 2026-09-30 | 2026-12-29 | pipeline | active | Evidence pack replaces wiki as LLM research input for core rebuild |
 | dec-014 | 2026-07-28 | 2026-10-26 | atlas-lane-closeout | active | Lane-owned green PRs require same-day formal review and merge arming |
 | dec-013 | 2026-07-28 | 2026-10-26 | atlas-practice | active | Lexicon explains words; practice decks drill them |
 | dec-012 | 2026-07-12 | 2027-07-12 | architecture | active | Static delivery is canonical; learning works without dynamic services |

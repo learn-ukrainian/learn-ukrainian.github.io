@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import sys
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
+from shlex import split as shell_split
 from typing import Any
 
 import yaml
@@ -71,6 +73,15 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
 CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7", "composer-2.5")
 CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
 CURSOR_AUTO_EXPECTED_RESOLUTION: str = "union_family"
+# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
+# task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
+CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
+# Values that ask Cursor to choose the model instead of naming one.
+_CURSOR_SELECTOR_MODELS = frozenset({"auto", "default"})
+# Typed refusal reasons for Cursor model selection.
+CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
+CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
+CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
 
 
 
@@ -112,6 +123,20 @@ def _require_active_execution_model(models: dict[str, Any], value: Any, label: s
         raise ModelCatalogError(f"{label} references unknown model {model_id!r}")
     if models[model_id]["lifecycle"] != "active":
         raise ModelCatalogError(f"{label} must reference an active model")
+    _require_routable_model(models, model_id, label)
+    return model_id
+
+
+def _require_routable_model(models: dict[str, Any], value: Any, label: str) -> str:
+    """Validate an executable reference while preserving historical model records."""
+    model_id = _require_string(value, label)
+    if model_id not in models:
+        raise ModelCatalogError(f"{label} references unknown model {model_id!r}")
+    model = models[model_id]
+    if model["lifecycle"] == "retired":
+        raise ModelCatalogError(f"{label} references retired model {model_id!r}")
+    if model["family"] == "deepseek":
+        raise ModelCatalogError(f"{label}: DeepSeek is excluded from dispatch and review by core.md P2")
     return model_id
 
 
@@ -236,11 +261,13 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
             raise ModelCatalogError(
                 f"orchestrator_seats.{seat_name}.escalate_model_id must reference an active model"
             )
+        _require_routable_model(models, esc_model, f"orchestrator_seats.{seat_name}.escalate_model_id")
+        if "fallback_model_id" in seat:
+            fallback = _require_string(seat["fallback_model_id"], f"orchestrator_seats.{seat_name}.fallback_model_id")
+            _require_routable_model(models, fallback, f"orchestrator_seats.{seat_name}.fallback_model_id")
 
         if seat_name == "cursor":
             model_id = seat["model_id"]
-            if model_id != "auto":
-                raise ModelCatalogError(f"orchestrator_seats.cursor.model_id must be 'auto', got {model_id!r}")
             allowlist = _require_string_list(
                 seat.get("auto_allowlist"),
                 "orchestrator_seats.cursor.auto_allowlist",
@@ -248,6 +275,15 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
             if tuple(allowlist) != CURSOR_AUTO_EXPECTED_ALLOWLIST:
                 raise ModelCatalogError(
                     f"orchestrator_seats.cursor.auto_allowlist must equal exactly {list(CURSOR_AUTO_EXPECTED_ALLOWLIST)}, got {allowlist}"
+                )
+            if model_id not in allowlist:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.model_id must be a concrete pin from auto_allowlist {allowlist}, got {model_id!r}"
+                )
+            auto_scope = _require_string(seat.get("auto_scope"), "orchestrator_seats.cursor.auto_scope")
+            if auto_scope != CURSOR_AUTO_EXPECTED_SCOPE:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.auto_scope must be {CURSOR_AUTO_EXPECTED_SCOPE!r}, got {auto_scope!r}"
                 )
             for allowed in allowlist:
                 if allowed not in models:
@@ -289,9 +325,10 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
                 raise ModelCatalogError(f"orchestrator_seats.{seat_name}.model_id references unknown model {model_id!r}")
             if models[model_id]["lifecycle"] != "active":
                 raise ModelCatalogError(f"orchestrator_seats.{seat_name}.model_id must reference an active model")
+            _require_routable_model(models, model_id, f"orchestrator_seats.{seat_name}.model_id")
 
 
-def _validate_review_scheduler(raw: Any) -> None:
+def _validate_review_scheduler(raw: Any, models: dict[str, Any]) -> None:
     if raw is None:
         return
     scheduler = _require_mapping(raw, "review_scheduler")
@@ -308,13 +345,14 @@ def _validate_review_scheduler(raw: Any) -> None:
                 raise ModelCatalogError(
                     f"review_scheduler.endpoints.{name}.models cannot treat {m!r} as a formal review identity"
                 )
+            _require_routable_model(models, m, f"review_scheduler.endpoints.{name}.models")
         if name == "cursor" and ep.get("formal_review_eligible") is True:
             raise ModelCatalogError(
                 "review_scheduler.endpoints.cursor must remain formal_review_eligible: false"
             )
 
 
-def _validate_formal_cf_defaults(raw: Any) -> None:
+def _validate_formal_cf_defaults(raw: Any, models: dict[str, Any]) -> None:
     if raw is None:
         return
     defaults = _require_mapping(raw, "formal_cf_defaults")
@@ -323,6 +361,13 @@ def _validate_formal_cf_defaults(raw: Any) -> None:
         model_id = entry.get("model_id")
         if isinstance(model_id, str) and model_id.casefold() in {"auto", "cursor:auto"}:
             raise ModelCatalogError(f"formal_cf_defaults.{name}.model_id cannot use {model_id!r} as formal CF default")
+        for field in ("model_id", "escalate_model_id", "fallback_model_id"):
+            if field in entry:
+                _require_routable_model(models, entry[field], f"formal_cf_defaults.{name}.{field}")
+        for member in _require_string_list(
+            entry.get("family_models", []), f"formal_cf_defaults.{name}.family_models", allow_empty=True
+        ):
+            _require_routable_model(models, member, f"formal_cf_defaults.{name}.family_models")
 
 
 
@@ -352,6 +397,11 @@ def substitution_model_admitted(catalog: dict[str, Any], lane: str, model: str) 
     itself a catalog id is admitted when a review candidate for that route
     invokes it with ``--model``.
     """
+    if retired_model_refusal(model, catalog):
+        return False
+    canonical_id = resolve_catalog_model_id(model, catalog)
+    if canonical_id and catalog["models"][canonical_id]["family"] == "deepseek":
+        return False
     transport = _lane_catalog_transport(catalog, lane)
     models = catalog.get("models") or {}
     if transport and isinstance(models, dict):
@@ -365,6 +415,7 @@ def substitution_model_admitted(catalog: dict[str, Any], lane: str, model: str) 
         if (
             isinstance(entry, dict)
             and entry.get("lifecycle") != "retired"
+            and entry.get("family") != "deepseek"
             and transport in (entry.get("transports") or [])
         ):
             return True
@@ -415,10 +466,7 @@ def _validate_budget_substitution_models(raw: Any, catalog: dict[str, Any]) -> N
         for source_model, target_model in mapping.items():
             _require_string(source_model, f"budget_substitution_models.{lane} source")
             target = _require_string(target_model, f"budget_substitution_models.{lane}.{source_model}")
-            if source_model not in models:
-                raise ModelCatalogError(
-                    f"budget_substitution_models.{lane}.{source_model} is not a catalog model id"
-                )
+            _require_routable_model(models, source_model, f"budget_substitution_models.{lane}.{source_model}")
             if not substitution_model_admitted(catalog, lane, target):
                 raise ModelCatalogError(
                     f"budget_substitution_models.{lane} maps {source_model} to {target}, "
@@ -498,6 +546,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
+        if lifecycle == "retired" and model["transports"]:
+            raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must not route GPT/Grok families through Hermes")
         aliases = model.get("aliases", [])
@@ -527,7 +577,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 )
     for model_id, model in models.items():
         if "replaced_by" in model:
-            _require_active_execution_model(models, model["replaced_by"], f"models.{model_id}.replaced_by")
+            # Successor identity is metadata, not dispatch/review admission.
+            replacement = _require_string(model["replaced_by"], f"models.{model_id}.replaced_by")
+            if replacement not in models or models[replacement]["lifecycle"] != "active":
+                raise ModelCatalogError(f"models.{model_id}.replaced_by must reference an active model")
 
     _validate_execution_routing(catalog.get("execution_routing"), models)
 
@@ -542,6 +595,7 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             raise ModelCatalogError(f"review_candidates.{name} cannot use {model_id!r} as a formal review candidate")
         if model_id not in models:
             raise ModelCatalogError(f"review_candidates.{name}.model_id references unknown model {model_id!r}")
+        _require_routable_model(models, model_id, f"review_candidates.{name}.model_id")
         if model_id.casefold().startswith("gemini-") or candidate.get("route") == "agy":
             raise ModelCatalogError(
                 f"review_candidates.{name} violates operator 2026-09-25: "
@@ -555,7 +609,33 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             raise ModelCatalogError(
                 f"review_candidates.{name}.transport {transport!r} is not listed in models.{model_id}.transports"
             )
-        _require_string(candidate.get("invocation"), f"review_candidates.{name}.invocation")
+        invocation = _require_string(candidate.get("invocation"), f"review_candidates.{name}.invocation")
+        try:
+            parts = shell_split(invocation)
+        except ValueError as exc:
+            raise ModelCatalogError(f"review_candidates.{name}.invocation is malformed: {exc}") from exc
+        # Python's -m selects the executable module before application flags.
+        # Start after that module (or the script), so a later -m is a model pin.
+        argument_start = 1
+        if parts and Path(parts[0]).name.startswith("python"):
+            for index, part in enumerate(parts[1:], start=1):
+                if part == "-m":
+                    argument_start = index + 2
+                    break
+                if not part.startswith("-"):
+                    argument_start = index + 1
+                    break
+        for index in range(argument_start, len(parts)):
+            part = parts[index]
+            flag, separator, value = part.partition("=")
+            if flag in {"--model", "-m", "--to-model"}:
+                if not separator:
+                    value = parts[index + 1] if index + 1 < len(parts) else ""
+                invoked = resolve_catalog_model_id(value, catalog)
+                if invoked != model_id:
+                    raise ModelCatalogError(
+                        f"review_candidates.{name}.invocation model does not match {model_id!r}"
+                    )
         profiles = _require_string_list(candidate.get("review_profiles"), f"review_candidates.{name}.review_profiles")
         if any(profile != profile.casefold() for profile in profiles):
             raise ModelCatalogError(f"review_candidates.{name}.review_profiles must use lowercase profile names")
@@ -584,8 +664,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 raise ModelCatalogError(f"review_candidates.{name}.{field} must be a list of strings")
 
     _validate_orchestrator_seats(catalog.get("orchestrator_seats"), models)
-    _validate_review_scheduler(catalog.get("review_scheduler"))
-    _validate_formal_cf_defaults(catalog.get("formal_cf_defaults"))
+    _validate_review_scheduler(catalog.get("review_scheduler"), models)
+    _validate_formal_cf_defaults(catalog.get("formal_cf_defaults"), models)
 
     ladders = _require_mapping(catalog.get("review_ladders"), "review_ladders")
     if set(ladders) != VALID_RISKS:
@@ -607,6 +687,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(f"review_ladders.{risk} repeats candidate {candidate_name!r}")
                 seen.add(candidate_name)
                 model_id = candidates[candidate_name]["model_id"]
+                if risk == "critical" and model_id.startswith("claude-sonnet-"):
+                    raise ModelCatalogError(
+                        f"review_ladders.{risk}: Sonnet is excluded from security review by core.md P2"
+                    )
                 if models[model_id]["lifecycle"] != "active":
                     raise ModelCatalogError(
                         f"review_ladders.{risk} candidate {candidate_name!r} must reference an active model"
@@ -664,20 +748,56 @@ def _model_id_candidates(model: str) -> list[str]:
     return candidates
 
 
-def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
-    """Return a refusal message when ``model`` names a catalog-retired model.
+def is_cursor_auto_selector(model: Any) -> bool:
+    """True when ``model`` asks Cursor to choose the model (Auto) instead of naming one.
 
-    This is the one dispatch-admission check for retirement: delegate, the
-    runner, and adapters with their own model guards all call it. Ids match
-    case-insensitively through catalog aliases and harness prefixes. A
-    provider variant such as ``gpt-6-sol-high`` resolves to the longest
-    catalog id it extends. Unknown ids return None; transport gates own them.
+    Matches case-insensitively, with or without a ``cursor:`` or ``cursor/`` prefix.
+    ``None`` and an empty value are not selectors: the Cursor adapter pins its
+    default model when none is given.
     """
+    text = str(model or "").strip().casefold()
+    for prefix in ("cursor:", "cursor/"):
+        if text.startswith(prefix):
+            text = text[len(prefix) :]
+    return text in _CURSOR_SELECTOR_MODELS
+
+
+def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
+    """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
+    seat = (catalog or load_model_catalog())["orchestrator_seats"]["cursor"]
+    pin = seat["model_id"]
+    return (pin, *(model for model in seat["auto_allowlist"] if model != pin))
+
+
+def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """Return a typed refusal unless ``model`` is a concrete approved Cursor pin.
+
+    For Cursor paths outside delegate's admitted implementation dispatch (bridge
+    review, consult, discuss and queued-ask drains): Auto is never admitted there,
+    and a missing model is refused rather than defaulted, because the legacy
+    default was Auto (operator decision 2026-09-30, #9274).
+    """
+    pins = cursor_pinned_models(catalog)
+    fix = f"pin {' or '.join(pins)} (operator decision 2026-09-30, #9274)"
+    text = str(model or "").strip()
+    if not text:
+        return f"no concrete Cursor model is pinned ({CURSOR_MODEL_UNPINNED_CODE}); {fix}"
+    if is_cursor_auto_selector(text):
+        return (
+            f"model {text!r} runs only a delegate-admitted write implementation dispatch "
+            f"({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}); {fix}"
+        )
+    if text not in pins:
+        return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}"
+    return None
+
+
+def resolve_catalog_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """Resolve aliases, harness prefixes, effort suffixes and bracket overrides."""
     text = str(model or "").strip()
     if not text:
         return None
     catalog = catalog or load_model_catalog()
-    models = catalog["models"]
     lookup = {alias.casefold(): model_id for alias, model_id in model_aliases(catalog).items()}
     candidates = [candidate.casefold() for candidate in _model_id_candidates(text)]
     model_id = next((lookup[candidate] for candidate in candidates if candidate in lookup), None)
@@ -686,14 +806,52 @@ def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> 
             (len(alias), owner)
             for candidate in candidates
             for alias, owner in lookup.items()
-            if candidate.startswith(f"{alias}-")
+            if candidate.startswith((f"{alias}-", f"{alias}["))
         ]
         model_id = max(extended)[1] if extended else None
+    return model_id
+
+
+def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """Refuse retired ids using the same canonical identity as review admission.
+
+    Delegate, the runner and adapter model guards call this before side effects.
+    Unknown ids return None; transport gates own them.
+    """
+    text = str(model or "").strip()
+    if not text:
+        return None
+    catalog = catalog or load_model_catalog()
+    models = catalog["models"]
+    model_id = resolve_catalog_model_id(text, catalog)
     if model_id is None or models[model_id]["lifecycle"] != "retired":
         return None
     replacement = models[model_id].get("replaced_by")
     advice = f"use {replacement}" if replacement else "use an active catalog model"
     return f"model {text!r} is retired in the model catalog ({model_id}); {advice}"
+
+
+def require_execution_model(
+    model: str, *, transport: str, catalog: dict[str, Any] | None = None,
+) -> str:
+    """Reject frozen audit defaults before provider or configuration side effects.
+
+    Historical model palettes remain readable; they do not authorize new runs.
+    Retirement uses the canonical refusal path shared with fleet admission.
+    """
+    catalog = catalog or load_model_catalog()
+    refusal = retired_model_refusal(model, catalog)
+    if refusal:
+        raise ModelCatalogError(refusal)
+    model_id = resolve_catalog_model_id(model, catalog)
+    if model_id is None:
+        raise ModelCatalogError(f"model {model!r} is not in the model catalog")
+    entry = catalog["models"][model_id]
+    if entry["lifecycle"] not in {"active", "fallback"}:
+        raise ModelCatalogError(f"model {model!r} is not admitted for execution")
+    if transport not in entry["transports"]:
+        raise ModelCatalogError(f"model {model!r} has no admitted {transport} transport")
+    return model_id
 
 
 def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
@@ -803,14 +961,44 @@ def _main() -> int:
     """Expose catalog-backed model resolution for shell launchers."""
     import argparse
 
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description=(
+            "Resolve Kimi or GLM aliases and refuse retired models for shell launchers.\n"
+            "Use for catalog admission and route lookup, not provider-health or quota probing."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.review.model_catalog --resolve-kimi-model k3\n"
+            "  .venv/bin/python -m scripts.review.model_catalog --resolve-glm-model glm --format glmcc\n"
+            "  .venv/bin/python -m scripts.review.model_catalog --check-retired-model claude-fable-5\n"
+            "Outputs: resolved model or tab-separated route fields on stdout; no writes.\n"
+            "Exit codes: 0 resolved or not retired; 2 retired model, invalid arguments or unknown route.\n"
+            "Related: scripts/config/model_catalog.yaml; scripts/lib/kimicc_route.sh."
+        ),
+    )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--resolve-kimi-model", metavar="ALIAS")
-    group.add_argument("--resolve-glm-model", metavar="ALIAS")
-    parser.add_argument("--format", choices=("native", "kimicc", "glmcc"), default="native")
+    group.add_argument("--resolve-kimi-model", metavar="ALIAS", help="Kimi catalog alias to resolve, e.g. k3")
+    group.add_argument("--resolve-glm-model", metavar="ALIAS", help="GLM catalog alias to resolve, e.g. glm")
+    group.add_argument(
+        "--check-retired-model", metavar="MODEL",
+        help="Refuse a retired catalog identity, including aliases and context suffixes; e.g. claude-fable-5",
+    )
+    parser.add_argument(
+        "--format", choices=("native", "kimicc", "glmcc"), default="native",
+        help="Output model id (native, default) or route fields (kimicc/glmcc)",
+    )
     args = parser.parse_args()
 
-    if args.resolve_kimi_model:
+    if args.check_retired_model:
+        try:
+            refusal = retired_model_refusal(args.check_retired_model)
+        except ModelCatalogError as exc:
+            parser.error(str(exc))
+        if refusal:
+            print(refusal, file=sys.stderr)
+            return 2
+    elif args.resolve_kimi_model:
         try:
             model_id, routes = resolve_kimi_model(args.resolve_kimi_model)
         except ModelCatalogError as exc:

@@ -53,17 +53,21 @@ import hashlib
 import json
 import os
 import re
+import sqlite3
 import urllib.request
 import uuid
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from secret_redactor import redact_text, redact_value
 
 from ._config import REPO_ROOT
-from ._db import get_db
+from ._db import connect_readonly, get_db
 from ._prompts import review_protocol_prefix
+
+if TYPE_CHECKING:
+    from agent_runtime.target_admission import AdmittedTarget
 
 
 class StaleClaimError(Exception):
@@ -366,65 +370,13 @@ def _validate_post_agent(agent: str, *, assignments_path: Path | None = None) ->
 
 
 def _validate_recipient_agent(agent: str, *, assignments_path: Path | None = None) -> None:
+    """Raise ``ValueError`` for an unknown target; ``KimiAdmissionRefused`` (a ``ValueError``) for a Kimi seat."""
+    from ._acp_compat import refuse_kimi_recipients
+
+    refuse_kimi_recipients((agent,))
     valids = get_valid_recipient_agents(assignments_path=assignments_path)
     if agent not in valids:
         raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {valids}.")
-
-
-def _resolve_delivery_agent(
-    agent: str,
-    *,
-    warnings: list[str],
-    warn_if_unheld: bool,
-) -> str:
-    """Resolve a slot to its live holder, retaining unheld slots unchanged.
-
-    Two distinct failure categories, both surfaced (#5889):
-
-    - **Resolver/import failure** (``resolve_slot_holder`` raises, or the
-      module cannot be imported): an infrastructure problem, NOT a "no live
-      holder" state. Always appended to ``warnings`` — never silent-dropped
-      — and the slot identity is returned so the post still queues.
-    - **No live holder** (resolver returned ``has_holder=False``): the
-      normal bounce. Appended to ``warnings`` only when ``warn_if_unheld``
-      is set (recipient side); the ``from_agent`` side stays quiet because
-      an unheld sender is not a delivery concern.
-    """
-    if "-" not in agent or agent in STATIC_VALID_AGENTS:
-        return agent
-
-    try:
-        from scripts.orchestration.slot_routing import resolve_slot_holder
-
-        res = resolve_slot_holder(agent)
-    except Exception as exc:
-        # Never silent-drop a resolver/import failure (#5889 item 2). It is
-        # a distinct category from "no live holder": the resolver itself
-        # broke or could not be imported. Surface it as a warning and keep
-        # the slot identity so the post can still queue at identity.
-        msg = (
-            f"⚠️ channel-bridge: slot resolver failed for '{agent}' "
-            f"({type(exc).__name__}: {exc}) — queued at identity"
-        )
-        warnings.append(msg)
-        import sys as _sys
-
-        print(msg, file=_sys.stderr)
-        return agent
-
-    if res.has_holder:
-        return res.holder_agent or agent
-
-    if warn_if_unheld:
-        msg = (
-            f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder "
-            f"(queued at {res.queue_location})"
-        )
-        warnings.append(msg)
-        import sys as _sys
-
-        print(msg, file=_sys.stderr)
-    return agent
 
 
 def _validate_priority(priority: str) -> None:
@@ -461,13 +413,16 @@ def _validate_error_kind(error_kind: str) -> None:
         raise ValueError(f"Unknown delivery error kind '{error_kind}'. Expected one of {VALID_DELIVERY_ERROR_KINDS}.")
 
 
-def _touch_wake_file(agent: str) -> None:
-    """Best-effort wake hint for #1192 OS-level inbox watchers.
+def _touch_wake_file(target: AdmittedTarget) -> None:
+    """Best-effort wake hint for #1192 OS-level inbox watchers, for one admitted ``target``.
 
     The file is replaced atomically per recipient after the post
     transaction commits, so watchers never observe a partially-written
     wake file and a wake failure never rolls back the message insert.
     """
+    from agent_runtime.target_admission import require_admitted
+
+    agent = require_admitted(target).recipient
     try:
         WAKE_ROOT.mkdir(parents=True, exist_ok=True)
         wake_path = WAKE_ROOT / agent
@@ -1066,6 +1021,44 @@ def set_channel_ttl(name: str, hours: int) -> dict[str, Any]:
 # ── Posting ───────────────────────────────────────────────────────────
 
 
+def _insert_delivery(
+    conn: Any,
+    target: AdmittedTarget,
+    *,
+    message_id: str,
+    created_at: str,
+    pre_delivered: bool,
+    mode: str,
+    deadline_seconds: int | None,
+) -> str:
+    """Insert one delivery row for the admitted ``target`` inside the caller's transaction; return its id."""
+    from agent_runtime.target_admission import require_admitted
+
+    target = require_admitted(target)
+    dlv_id = _new_id()
+    if pre_delivered:
+        conn.execute(
+            """
+            INSERT INTO deliveries (
+                delivery_id, message_id, to_agent, to_model, status,
+                delivered_at, deadline_seconds
+            ) VALUES (?, ?, ?, ?, 'delivered', ?, ?)
+            """,
+            (dlv_id, message_id, target.recipient, target.model, created_at, deadline_seconds),
+        )
+    else:
+        conn.execute(
+            """
+            INSERT INTO deliveries (
+                delivery_id, message_id, to_agent, to_model, status, mode,
+                deadline_seconds
+            ) VALUES (?, ?, ?, ?, 'pending', ?, ?)
+            """,
+            (dlv_id, message_id, target.recipient, target.model, mode, deadline_seconds),
+        )
+    return dlv_id
+
+
 def post(
     channel: str,
     from_agent: str,
@@ -1133,22 +1126,32 @@ def post(
     not block-mode — the message commits either way. Set
     ``verify_citations=False`` for synthetic test posts or system kinds
     where citation verification is not relevant.
+
+    Kimi is not a bridge recipient. Recipients are resolved to their live
+    slot holders and admitted in one step (``resolve_and_admit``), so a Kimi
+    ``to_agents`` entry or ``to_model``, a Kimi model or recipient in
+    ``attachments``, or a slot whose live holder is a Kimi seat raises
+    ``KimiAdmissionRefused`` before any snapshot, broker access, insert or wake.
     """
+    from agent_runtime.kimi_admission import BRIDGE_MODE
+    from agent_runtime.target_admission import resolve_and_admit, resolve_sender
+
+    warnings: list[str] = []
+    recipients = list(to_agents or [])
+    delivery_targets = resolve_and_admit(
+        recipients,
+        mode=BRIDGE_MODE,
+        model=to_model,
+        attachments=(attachments,),
+        slots=STATIC_VALID_AGENTS,
+        warnings=warnings,
+    )
     _validate_post_agent(from_agent)
     _validate_kind(kind)
     _validate_priority(priority)
-    warnings: list[str] = []
-    resolved_from_agent = _resolve_delivery_agent(
-        from_agent,
-        warnings=warnings,
-        warn_if_unheld=False,
-    )
-    delivery_targets: list[str] = []
-    for agent in to_agents or []:
+    for agent in recipients:
         _validate_recipient_agent(agent)
-        delivery_targets.append(
-            _resolve_delivery_agent(agent, warnings=warnings, warn_if_unheld=True)
-        )
+    resolved_from_agent = resolve_sender(from_agent, static_agents=STATIC_VALID_AGENTS, warnings=warnings)
     body = redact_text(body) or ""
     attachments = redact_value(attachments)
     monitor_state_snapshot = redact_value(monitor_state_snapshot)
@@ -1289,57 +1292,32 @@ def post(
         )
 
         delivery_ids = []
-        delivery_agents = []
+        woken = []
         seen_delivery_agents: set[str] = set()
-        for agent in delivery_targets:
+        for target in delivery_targets:
             # Skip sender self-fanout: an agent does not need to "process"
             # its own reply. Channel deliveries are for other subscribers.
-            if agent == resolved_from_agent or agent in seen_delivery_agents:
+            if target.recipient == resolved_from_agent or target.recipient in seen_delivery_agents:
                 continue
-            seen_delivery_agents.add(agent)
-            delivery_agents.append(agent)
-            dlv_id = _new_id()
-            delivery_ids.append(dlv_id)
-            if pre_delivered:
-                conn.execute(
-                    """
-                    INSERT INTO deliveries (
-                        delivery_id, message_id, to_agent, to_model, status,
-                        delivered_at, deadline_seconds
-                    ) VALUES (?, ?, ?, ?, 'delivered', ?, ?)
-                    """,
-                    (
-                        dlv_id,
-                        message_id,
-                        agent,
-                        to_model,
-                        created_at,
-                        deadline_seconds,
-                    ),
+            seen_delivery_agents.add(target.recipient)
+            woken.append(target)
+            delivery_ids.append(
+                _insert_delivery(
+                    conn,
+                    target,
+                    message_id=message_id,
+                    created_at=created_at,
+                    pre_delivered=pre_delivered,
+                    mode=mode,
+                    deadline_seconds=deadline_seconds,
                 )
-            else:
-                conn.execute(
-                    """
-                    INSERT INTO deliveries (
-                        delivery_id, message_id, to_agent, to_model, status, mode,
-                        deadline_seconds
-                    ) VALUES (?, ?, ?, ?, 'pending', ?, ?)
-                    """,
-                    (
-                        dlv_id,
-                        message_id,
-                        agent,
-                        to_model,
-                        mode,
-                        deadline_seconds,
-                    ),
-                )
+            )
 
         conn.commit()
 
         if not pre_delivered:
-            for agent in set(delivery_agents):
-                _touch_wake_file(agent)
+            for target in woken:
+                _touch_wake_file(target)
 
         return {
             "message_id": message_id,
@@ -1508,7 +1486,11 @@ def claim_next_delivery(
     max_attempts: int = DEFAULT_MAX_DELIVERY_ATTEMPTS,
     now: str | None = None,
 ) -> dict[str, Any] | None:
-    """Atomically claim the oldest eligible pending delivery for an agent."""
+    """Atomically claim the oldest eligible pending delivery for an agent.
+
+    A stored delivery addressed to a Kimi seat or model is never claimed
+    (``kimi_row``; Kimi is not a bridge recipient): it is left as it is.
+    """
     _validate_agent(agent)
     if lease_seconds <= 0:
         raise ValueError("lease_seconds must be > 0")
@@ -1527,6 +1509,7 @@ def claim_next_delivery(
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.to_agent = ?
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND d.attempt_count < ?
               AND (d.retry_after IS NULL OR d.retry_after <= ?)
               AND (
@@ -1688,7 +1671,10 @@ def mark_delivery_failed(
 
 
 def release_expired_leases(now: str | None = None) -> int:
-    """Reclaim deliveries stuck in processing after their lease expires."""
+    """Reclaim deliveries stuck in processing after their lease expires.
+
+    Stored deliveries addressed to a Kimi seat or model are left as they are (``kimi_row``).
+    """
     now = now or _now_iso()
     conn = get_db()
     try:
@@ -1700,6 +1686,7 @@ def release_expired_leases(now: str | None = None) -> int:
                 lease_until=NULL
             WHERE status='processing'
               AND lease_until < ?
+              AND NOT kimi_row(to_agent, to_model)
             """,
             (now,),
         )
@@ -1734,6 +1721,9 @@ def expire_stale_deliveries(now: str | None = None) -> int:
     ``DEFAULT_ACTION_REQUIRED_TTL_HOURS`` instead, and their expiry error
     is tagged ``ESCALATION`` so a stalled review request stands out from
     routine drops (#4837 item 4) instead of silently disappearing.
+
+    Stored deliveries addressed to a Kimi seat or model are left as they are
+    (``kimi_row``; Kimi is not a bridge recipient).
     """
     now = now or _now_iso()
     conn = get_db()
@@ -1761,6 +1751,7 @@ def expire_stale_deliveries(now: str | None = None) -> int:
                 retry_after = NULL,
                 last_error_kind = NULL
             WHERE status = 'pending'
+              AND NOT kimi_row(to_agent, to_model)
               AND EXISTS (
                     SELECT 1
                     FROM channel_messages cm
@@ -1799,6 +1790,7 @@ def preview_stale_deliveries(now: str | None = None) -> list[dict[str, Any]]:
             JOIN channel_messages cm ON cm.message_id = d.message_id
             JOIN channels c ON c.name = cm.channel
             WHERE d.status = 'pending'
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND (
                     julianday(:now) - julianday(cm.created_at)
                   ) * 24.0 > {_effective_ttl_hours_sql()}
@@ -1829,6 +1821,8 @@ def bulk_expire_dead_lanes(dead_lanes: frozenset[str] | None = None) -> dict[str
     that agent's own inbox drain — would otherwise never touch its queue,
     letting it accumulate forever regardless of TTL (#4837 item 4). Returns
     a per-agent count of rows expired (agents with 0 pending are omitted).
+    Stored deliveries addressed to a Kimi seat or model are left as they are
+    (``kimi_row``).
     """
     dead = dead_lanes if dead_lanes is not None else dead_lane_agents()
     if not dead:
@@ -1859,7 +1853,7 @@ def bulk_expire_dead_lanes(dead_lanes: frozenset[str] | None = None) -> dict[str
                     lease_until = NULL,
                     retry_after = NULL,
                     last_error_kind = NULL
-                WHERE status = 'pending' AND to_agent = ?
+                WHERE status = 'pending' AND to_agent = ? AND NOT kimi_row(to_agent, to_model)
                 """,
                 (agent, agent, agent, agent),
             )
@@ -1893,7 +1887,7 @@ def preview_dead_lane_deliveries(dead_lanes: frozenset[str] | None = None) -> li
             f"""
             SELECT delivery_id, to_agent
             FROM deliveries
-            WHERE status = 'pending' AND to_agent IN ({placeholders})
+            WHERE status = 'pending' AND to_agent IN ({placeholders}) AND NOT kimi_row(to_agent, to_model)
             ORDER BY to_agent ASC
             """,
             tuple(sorted(dead)),
@@ -1970,16 +1964,29 @@ def pending_deliveries_for(agent: str) -> list[dict[str, Any]]:
         conn.close()
 
 
-def live_pending_by_agent(now: str | None = None) -> list[dict[str, Any]]:
+def live_pending_by_agent(now: str | None = None, *, query_only: bool = False) -> list[dict[str, Any]]:
     """Return per-agent live pending counts (authority query for banner + show).
 
     Counts only ``status='pending'`` rows that would *remain* after
     ``expire_stale_deliveries`` — i.e. still within their effective TTL.
     Read-only: never mutates rows. Shared by the CLI backlog banner and
     ``inbox show`` so the two surfaces cannot disagree (#6864).
+
+    ``query_only`` reads through ``connect_readonly``, so the DB is never
+    created or migrated either; an absent, unmigrated or unreadable DB has
+    no rows. The banner uses it because it runs before a command's own checks.
     """
     current = now or _now_iso()
-    conn = get_db()
+    if not query_only:
+        return _live_pending_rows(get_db(), current)
+    try:
+        conn = connect_readonly()
+        return _live_pending_rows(conn, current) if conn is not None else []
+    except sqlite3.Error:
+        return []
+
+
+def _live_pending_rows(conn: Any, current: str) -> list[dict[str, Any]]:
     try:
         rows = conn.execute(
             f"""
