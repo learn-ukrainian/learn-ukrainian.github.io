@@ -452,7 +452,15 @@ def junit_summary(path: Path) -> dict:
 
 
 def known_issue(nodeid: str, baseline: dict[str, int]) -> int | None:
-    return baseline.get(nodeid)
+    """Return the known issue for a failing node id, exact id first, then its whole test function.
+
+    A baseline key without a ``[...]`` parametrization suffix covers every parametrization of that test.
+    """
+    if nodeid in baseline:
+        return baseline[nodeid]
+    if nodeid.endswith("]") and "[" in nodeid:
+        return baseline.get(nodeid.split("[", 1)[0])
+    return None
 
 
 def issue_body(summary: dict, baseline: dict[str, int]) -> str:

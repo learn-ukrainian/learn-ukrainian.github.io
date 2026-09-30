@@ -70,6 +70,42 @@ def test_junit_summary_and_known_citation_issue(tmp_path: Path) -> None:
     )
 
 
+def test_known_issue_maps_whole_test_function_and_exact_ids() -> None:
+    whole = "tests/test_citation_resolution_invariant.py::test_published_citations_resolve_invariant"
+    exact = "tests/test_x.py::test_y[case-a]"
+    baseline = {whole: 8403, exact: 11, "tests/test_x.py::test_y": 12}
+    assert data_tier.known_issue(f"{whole}[wiki/grammar/b2/academic-writing.md]", baseline) == 8403
+    assert data_tier.known_issue(f"{whole}[wiki/grammar/b1/aspect.md]", baseline) == 8403
+    assert data_tier.known_issue(whole, baseline) == 8403
+    assert data_tier.known_issue(exact, baseline) == 11
+    assert data_tier.known_issue("tests/test_x.py::test_y[case-b]", baseline) == 12
+    assert data_tier.known_issue(f"{whole}_other[wiki/a.md]", baseline) is None
+    assert data_tier.known_issue("tests/test_x.py::test_z[case-a]", baseline) is None
+    assert data_tier.known_issue("tests/test_citation_resolution_invariant.py::test_other", baseline) is None
+
+
+def test_shipped_baseline_maps_every_citation_parametrization_to_8403() -> None:
+    baseline = json.loads(data_tier.BASELINE.read_text(encoding="utf-8"))["known_failures"]
+    body = data_tier.issue_body(
+        {
+            "run_key": "run-1",
+            "main_sha": "abc",
+            "ran": 2,
+            "passed": 0,
+            "failed": 2,
+            "skipped": 0,
+            "failing_tests": [
+                "tests/test_citation_resolution_invariant.py::test_published_citations_resolve_invariant[wiki/grammar/b2/dim-zhytlo.md]",
+                "tests/test_esum_search.py::test_search_esum_berkut_returns_turkic_origin",
+            ],
+            "skip_reasons": {},
+        },
+        baseline,
+    )
+    assert "dim-zhytlo.md]` — known issue #8403" in body
+    assert "test_search_esum_berkut_returns_turkic_origin` — new" in body
+
+
 def test_memory_floor_is_a_stop_condition(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(data_tier, "available_memory", lambda: 6 * 1024**3 - 1)
     with pytest.raises(data_tier.DataTierError, match="below the 6 GiB floor"):
