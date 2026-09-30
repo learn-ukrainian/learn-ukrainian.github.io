@@ -81,7 +81,7 @@ system configuration is inspected but excluded from execution.
 | `core.editor`, `sequence.editor`, `core.askPass` | Fixed `/usr/bin/false`; terminal and credential prompts disabled. |
 | `diff.external` | Fixed `/usr/bin/false`; the added-path diff also uses `--no-ext-diff --no-textconv`. |
 | `diff.*.command`, `diff.*.textconv` | Refused, including unused drivers. |
-| `credential.helper` | Empty fixed override resets the helper list; URL-scoped `credential.*.helper` refused. |
+| `credential.helper` | Empty fixed override resets the helper list; URL-scoped `credential.*.helper` accepted only in inherited global/system config (excluded from execution), and refused in local/worktree/command scope. Includes remain refused. |
 | `protocol.allow`, `protocol.*.allow` | Fixed default `never`, SSH `always`; controlled `GIT_ALLOW_PROTOCOL=ssh` excludes every other protocol, including remote helpers. |
 | `http.*`, `remote.*.proxy`, `remote.*.proxyAuthMethod` | Refused; only the registered SSH transport is supported. |
 | `remote.<name>.*` with `/` or `:` in `<name>`, or `<name>` equal to `sibling-git-canonical` | Refused; URL-like names cannot redirect fetch, and the module exclusively controls its reserved fetch remote. |

@@ -167,7 +167,7 @@ class Git:
             raise Refusal(f"Git {args[0]} failed; maintenance stopped")
         return result.stdout if "-z" in args else result.stdout.strip()
 
-    def config(self, path: Path, *, inherited: bool = False) -> list[tuple[str, str]]:
+    def config(self, path: Path, *, inherited: bool = False) -> list[tuple[str, str, str]]:
         env = self.env.copy()
         if inherited:
             # Read (never execute) installed global/system config to avoid
@@ -175,7 +175,7 @@ class Git:
             env.pop("GIT_CONFIG_GLOBAL")
             env.pop("GIT_CONFIG_NOSYSTEM")
         result = subprocess.run(
-            [_GIT, "-C", str(path), "config", "--null", "--list"],
+            [_GIT, "-C", str(path), "config", "--null", "--list", "--show-scope"],
             env=env,
             capture_output=True,
             text=True,
@@ -184,7 +184,8 @@ class Git:
         )
         if result.returncode:
             raise Refusal("cannot inspect repository configuration")
-        return [tuple(item.split("\n", 1)) for item in result.stdout.split("\0") if "\n" in item]
+        fields = result.stdout.split("\0")
+        return [(scope, *item.split("\n", 1)) for scope, item in zip(fields[::2], fields[1::2], strict=False) if "\n" in item]
 
 
 @contextmanager
@@ -195,7 +196,7 @@ def git_session():
 
 
 def _safe_config(git: Git, path: Path) -> None:
-    for key, value in git.config(path, inherited=True):
+    for scope, key, value in git.config(path, inherited=True):
         key = key.lower()
         remote_name = key[7:].rsplit(".", 1)[0] if key.startswith("remote.") else ""
         if (
@@ -215,7 +216,12 @@ def _safe_config(git: Git, path: Path) -> None:
             or (key.startswith("bundle.") and key.endswith(".uri"))
             or key.startswith("uploadpack.")
             or key.startswith("http.")
-            or (key.startswith("credential.") and key.endswith(".helper") and key != "credential.helper")
+            # Inherited helpers are inspected but excluded from execution;
+            # repository and command scopes remain untrusted.
+            or (
+                key.startswith("credential.") and key.endswith(".helper")
+                and key != "credential.helper" and scope not in {"global", "system"}
+            )
             or (key.startswith("diff.") and key.endswith((".command", ".textconv")))
             or (key.startswith("gpg.") and key.endswith("program") and key not in {
                 "gpg.program", "gpg.openpgp.program", "gpg.x509.program", "gpg.ssh.program",
@@ -269,7 +275,7 @@ def resolve_repository(key: str, primary: Path, git: Git) -> Repository:
     if len(actual) != 4 or [_plain_path(Path(p), exists=False) for p in actual] != expected:
         raise Refusal("Git paths do not match the independent registered checkout")
     canonical = f"git@github.com:{spec.github}.git"
-    urls = [v for k, v in git.config(checkout) if k == "remote.origin.url"]
+    urls = [v for _, k, v in git.config(checkout) if k == "remote.origin.url"]
     if urls not in ([canonical], [f"ssh://git@github.com/{spec.github}.git"]):
         raise Refusal("origin must be the registered canonical GitHub SSH remote")
     return Repository(key, checkout, git_dir, common, canonical)
