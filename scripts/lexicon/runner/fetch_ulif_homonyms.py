@@ -1523,7 +1523,7 @@ def _parse_cached_entry(
         )
         if parsed["canonical_headword"] and (
             parsed["normalized_spelling"] != normalize_ulif_spelling(spelling)
-            or parsed["canonical_headword"] != stressed_headword
+            or (stressed_headword is not None and parsed["canonical_headword"] != stressed_headword)
         ):
             raise ValueError(f"cached identity mismatch for {spelling} at {register_position}")
     return parsed
