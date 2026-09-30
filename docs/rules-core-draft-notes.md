@@ -183,8 +183,12 @@ rows in `fleet-role-scorecard.md`; the `MEMORY.md` lines behind S32–S35.
 1. **Small review fixes by the lead (S13).** `non-negotiable-rules.md` sends every review fix back to the
    authoring lane, however small. `model-assignment.md` lets the lead fix CI failures it caused, up to
    five lines. The core states the first rule as its source does and says nothing about the exemption.
-2. **Cursor driver seat (S14).** Driver guidance allows Auto or Composer; dispatch and review policy
-   require a concrete pin. The core pins Cursor dispatch and review identities only.
+2. **Cursor driver seat (S14). Resolved by operator decision 2026-09-30 (#9274).** Driver guidance
+   allowed Auto or Composer; dispatch and review policy required a concrete pin. Decision: Cursor Auto
+   runs only a well-defined coding task (a write implementation dispatch with owned paths and a green
+   DoR card); the driver seat, review, design, consults, discussions, recon and unclear work pin
+   `grok-4.7` or `composer-2.5`. The core's `p2-cursor` unit states this, and `delegate.py`, the
+   Cursor adapter, the ACP participant and `launcher_core.sh` enforce it.
 3. **Authority packet before a bounded worker (S21). Resolved 2026-09-30 (operator decision, #9275).**
    Every bounded-worker dispatch needs a complete advisory envelope from the catalog advisor route
    (`gpt-6.1-sol`) first; there is no direct bounded dispatch and token cost is accepted. The catalog's

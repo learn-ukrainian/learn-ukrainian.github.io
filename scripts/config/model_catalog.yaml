@@ -33,7 +33,11 @@ policy:
     - codexbar_health_and_quota
   notes:
     - CodexBar is a health and quota signal, not a complete model inventory.
-    - Cursor auto is a harness choice, never a model identity for formal review.
+    - >-
+      Cursor auto is a harness choice, never a model identity for formal review. Operator decision
+      2026-09-30 (#9274): Auto runs only a well-defined coding task (a write-capable dispatch typed
+      --research-role implementation, with owned paths and a green DoR issue card); every other Cursor use pins a concrete
+      approved model (orchestrator_seats.cursor).
     - >-
       GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
       Claude Opus 5.5 may use native Claude or an explicitly verified Cursor slug.
@@ -1184,7 +1188,7 @@ orchestrator_seats:
     escalate_when: n/a_same_sku
     note: "Google-family seat; Flash default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only when explicitly requested)"
   cursor:
-    model_id: auto
+    model_id: grok-4.7
     effort: high
     escalate_model_id: gpt-6.1-sol
     escalate_effort: high
@@ -1192,16 +1196,20 @@ orchestrator_seats:
     auto_allowlist:
       - grok-4.7
       - composer-2.5
+    auto_scope: write_implementation_dispatch_with_green_dor
     attestation_rule: driver_of_record_requires_attested_resolved_model
     unknown_auto_family_resolution: union_family
     unknown_auto_union_families:
       - xai
       - moonshot
     note: >-
-      Cursor Auto orchestrator seat (parent #6952, #6955). Launcher/registry/adapter
-      default pin is grok-4.7 (#8464); Auto remains the catalog seat identity and is
-      permitted only when it resolves within the explicit allowlist (currently
-      grok-4.7 [xAI], composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract).
+      Cursor orchestrator seat (parent #6952, #6955). The seat runs the concrete pin
+      grok-4.7 (#8464; the launcher sends grok-4.7-high) or another allowlisted pin.
+      Operator decision 2026-09-30 (#9274): Auto runs only a well-defined coding task
+      (auto_scope: a write-capable dispatch typed --research-role implementation, with owned
+      paths and a green DoR issue card, in agent mode) and only within the explicit allowlist (currently grok-4.7 [xAI],
+      composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract). The driver
+      seat, review, design, consults, discussions and recon never run Auto.
       When cursor:auto reports resolved_model=unknown, resolve its identity to the
       allowlist-union family {xAI, Moonshot}: Cursor-authored PRs require a single
       cross-family reviewer from outside {xAI, Moonshot}; Cursor-as-reviewer is eligible
@@ -1315,8 +1323,8 @@ review_ladders:
 # Keyed by the substitute lane. A source model with a row rewrites to that
 # target. No explicit --model, or an explicit model the substitute adapter
 # does not reject, uses that lane's registry default — the dispatch pin named
-# on orchestrator_seats (cursor: grok-4.7). That pin is not the cursor seat
-# identity `auto`, and not the interactive driver's grok-4.7-high slug.
+# on orchestrator_seats (cursor: grok-4.7), not the driver launcher's
+# grok-4.7-high slug.
 # An explicit model with no row that the substitute adapter rejects is
 # refused before spawn (agy rejects an unknown Gemini slug; codex rejects
 # anything outside gpt-6.1-sol/gpt-6-luna). Cursor forwards an unrecognized

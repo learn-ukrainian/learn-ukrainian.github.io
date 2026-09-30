@@ -18,7 +18,10 @@ from scripts.review.model_catalog import (
     canonical_model_id,
     catalog_age_days,
     catalog_is_stale,
+    cursor_non_dispatch_model_refusal,
+    cursor_pinned_models,
     glm_model_aliases,
+    is_cursor_auto_selector,
     kimi_model_aliases,
     load_model_catalog,
     model_aliases,
@@ -464,7 +467,9 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["claude"]["model_id"] == "claude-opus-5-5"
     assert seats["claude"]["effort"] == "high"
     assert seats["grok"]["fallback_model_id"] == "grok-4.7"
-    assert seats["cursor"]["model_id"] == "auto"
+    # Operator decision 2026-09-30 (#9274): the seat runs a concrete pin; Auto is coding-dispatch only.
+    assert seats["cursor"]["model_id"] == "grok-4.7"
+    assert seats["cursor"]["auto_scope"] == "write_implementation_dispatch_with_green_dor"
     assert seats["cursor"]["effort"] == "high"
     assert seats["cursor"]["escalate_model_id"] == "gpt-6.1-sol"
     assert seats["cursor"]["escalate_effort"] == "high"
@@ -643,11 +648,83 @@ def test_cursor_orchestrator_unknown_auto_resolves_to_union_family():
         validate_catalog(broken_mismatched_fams)
 
 
-def test_catalog_rejects_cursor_orchestrator_non_auto_model_id():
+@pytest.mark.parametrize("model_id", ["auto", "Auto", "cursor:auto", "grok-4.7-fast", "grok-4.6", "kimi-code/k3"])
+def test_catalog_rejects_cursor_orchestrator_without_concrete_allowlisted_pin(model_id: str):
     broken = deepcopy(load_model_catalog())
-    broken["orchestrator_seats"]["cursor"]["model_id"] = "composer-2.5"
-    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.model_id must be 'auto'"):
+    broken["orchestrator_seats"]["cursor"]["model_id"] = model_id
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.model_id must be a concrete pin"):
         validate_catalog(broken)
+
+
+def test_catalog_accepts_each_allowlisted_cursor_orchestrator_pin():
+    for model_id in ("grok-4.7", "composer-2.5"):
+        catalog = deepcopy(load_model_catalog())
+        catalog["orchestrator_seats"]["cursor"]["model_id"] = model_id
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("scope", [None, "any", "driver_seat"])
+def test_catalog_rejects_cursor_orchestrator_missing_or_widened_auto_scope(scope: str | None):
+    broken = deepcopy(load_model_catalog())
+    if scope is None:
+        del broken["orchestrator_seats"]["cursor"]["auto_scope"]
+    else:
+        broken["orchestrator_seats"]["cursor"]["auto_scope"] = scope
+    with pytest.raises(ModelCatalogError, match=r"orchestrator_seats\.cursor\.auto_scope"):
+        validate_catalog(broken)
+
+
+@pytest.mark.parametrize(
+    ("model", "expected"),
+    [
+        ("auto", True),
+        ("Auto", True),
+        (" AUTO ", True),
+        ("cursor:auto", True),
+        ("cursor/Auto", True),
+        ("default", True),
+        (None, False),
+        ("", False),
+        ("grok-4.7", False),
+        ("grok-4.7-high", False),
+        ("composer-2.5", False),
+        ("autonomous", False),
+    ],
+)
+def test_is_cursor_auto_selector(model: str | None, expected: bool):
+    assert is_cursor_auto_selector(model) is expected
+
+
+def test_cursor_pinned_models_lead_with_the_seat_pin():
+    assert cursor_pinned_models() == ("grok-4.7", "composer-2.5")
+    catalog = deepcopy(load_model_catalog())
+    catalog["orchestrator_seats"]["cursor"]["model_id"] = "composer-2.5"
+    assert cursor_pinned_models(catalog) == ("composer-2.5", "grok-4.7")
+
+
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [
+        (None, "cursor_model_unpinned"),
+        ("  ", "cursor_model_unpinned"),
+        ("auto", "cursor_auto_outside_coding_task"),
+        ("Cursor:Auto", "cursor_auto_outside_coding_task"),
+        ("default", "cursor_auto_outside_coding_task"),
+        ("composer-2.5-fast", "cursor_model_not_approved"),
+        ("grok-4.7-high", "cursor_model_not_approved"),
+        ("claude-opus-5-5", "cursor_model_not_approved"),
+    ],
+)
+def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str):
+    refusal = cursor_non_dispatch_model_refusal(model)
+    assert refusal is not None
+    assert f"({code})" in refusal
+    assert "pin grok-4.7 or composer-2.5" in refusal
+
+
+@pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
+def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
+    assert cursor_non_dispatch_model_refusal(model) is None
 
 
 def test_catalog_rejects_cursor_auto_as_formal_review_identity():

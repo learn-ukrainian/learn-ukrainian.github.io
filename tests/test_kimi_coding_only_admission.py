@@ -595,7 +595,8 @@ def test_refusal_states_the_policy_and_names_the_alternative_seats():
     message = _refusal(mode="read-only", review=True, paths=("docs/x.md",))
     assert message.startswith(f"ROUTING REFUSED: {_TOKEN}")
     assert kimi_admission.POLICY_LINE in message
-    assert "claude, codex, or grok" in message
+    # The Cursor seat's concrete xAI pin makes it a consult alternative (#9274).
+    assert "consults and discussions → claude, codex, cursor, or grok" in message
     assert "--mode read-only" in message and "review dispatches" in message and "docs/x.md" in message
 
 

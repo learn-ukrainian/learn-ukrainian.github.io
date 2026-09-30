@@ -1147,7 +1147,6 @@ Use this before content generation to verify plan files still match `scripts/aud
 ```bash
 .venv/bin/python scripts/migrate/migrate_to_v2.py b1
 .venv/bin/python scripts/generate_mdx/generate_plan_markdown.py hist
-.venv/bin/python scripts/generate_mdx/generate_plan_markdown.py --all
 ```
 
 ---

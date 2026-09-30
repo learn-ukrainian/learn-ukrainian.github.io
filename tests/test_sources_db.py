@@ -15,6 +15,18 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(
 from wiki import sources_db
 
 
+@pytest.fixture(autouse=True)
+def sources_report_log_dir(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Both builder import names must write literary reports outside the checkout."""
+    from scripts.wiki import build_sources_db as qualified_builder
+    from wiki import build_sources_db as builder
+
+    log_dir = tmp_path / "logs"
+    for module in (builder, qualified_builder):
+        monkeypatch.setattr(module, "LOG_DIR", log_dir)
+    return log_dir
+
+
 def test_reader_missing_database_raises_without_creating_file(tmp_path: Path) -> None:
     missing = tmp_path / "data" / "sources.db"
     missing.parent.mkdir()
@@ -334,7 +346,7 @@ class TestBuildSourcesDb:
         with pytest.raises(ValueError, match="requires exact page-image verification"):
             bdb._require_production_textbook_entry(entry, source_file="7-klas-test-author-2024")
 
-    def test_builds_all_tables(self, sample_data, monkeypatch):
+    def test_builds_all_tables(self, sample_data, monkeypatch, sources_report_log_dir):
         import wiki.build_sources_db as bdb
         from wiki.build_sources_db import build
 
@@ -347,6 +359,7 @@ class TestBuildSourcesDb:
             gdrive_dir=sample_data["gdrive"],
         )
         assert db.exists()
+        assert list(sources_report_log_dir.glob("literary_metadata_restore_*.txt"))
 
         conn = sqlite3.connect(str(db))
         # Check each table has data

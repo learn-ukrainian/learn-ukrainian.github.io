@@ -2,6 +2,11 @@
 
 Issue: #8517 (Refs #8430, #8397)
 
+These paths belong to the host receipt runtime, not to the review seat's
+readable evidence. Formal dispatches stage a copied manifest closure and a
+fresh home through ``attempt_boundary`` before any model process launches
+(#9251); the sources process keeps these original paths outside that sandbox.
+
 Provisions a per-attempt MCP configuration and empty receipt ledger for review
 seats. Formal reviews require audit-grade receipts recorded over stdio via
 attempt-specific environment variables:
@@ -100,9 +105,10 @@ ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
 ENV_LEDGER_PATH = "LU_REVIEW_LEDGER_PATH"
 ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
-SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex", "cursor"})
+SUPPORTED_HARNESSES: frozenset[str] = frozenset({"agy", "claude", "codex"})
 
 UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
+    "cursor": "formal attempts require a proven manifest filesystem boundary; Cursor is not admitted (#9251)",
     "gemini": "Gemini has one global MCP config without per-invocation MCP config support",
     "grok": "not yet proven",
     "grok-build": "not yet proven",

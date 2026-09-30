@@ -32,9 +32,11 @@ home theme (D6).
 1. *Literacy scope.* Module 1's subtitle promised seven letters while its body listed all 33
    (`plans/a1/sounds-letters-and-hello.yaml:17` vs `:141-205`). With lessons there is no reason to
    cram: §4 gives an honest inventory per module and lesson.
-2. *The level plan contradicts the Standard.* `curriculum/l2-uk-en/plans/a1.yaml:34-40` claims
-   genitive "basic" and cardinals 1–1000 as grammar scope; `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23`
-   claims five cases. Both are replaced by §3 of this arc.
+2. *The historical level plan contradicted the Standard.* `curriculum/l2-uk-en/plans/a1.yaml:34-40`
+   claimed genitive "basic" and cardinals 1–1000 as grammar scope;
+   `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` claimed five cases. The level plan was retired on
+   2026-09-30 in #9252 item 2; its last commit is `fc241af5ff` in Git history. Both claims are
+   replaced by §3 of this arc.
 3. *No lesson grain.* Every module was one 1,200-word block. §5 estimates lessons per module.
 4. *Skills the Standard requires were thin:* writing (forms, postcard, SMS), listening, real-world
    reading. §5 assigns them as lesson duties, not as extra modules.
@@ -233,5 +235,6 @@ household objects already met at 9 and 12.
   compliance gate and the plan-review skill that read it must treat the Standard as a **minimum**
   (D0): "taught earlier on ULP evidence" is not a violation. To be settled before A1 module plans
   are reviewed.
-- `curriculum/l2-uk-en/plans/a1.yaml:34-40` and `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` contradict
-  the Standard (genitive, five cases, cardinals 1–1000 as grammar); replaced by §3 here.
+- `curriculum/l2-uk-en/plans/a1.yaml:34-40` and `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` contradicted
+  the Standard (genitive, five cases, cardinals 1–1000 as grammar); the level plan was retired on
+  2026-09-30 in #9252 item 2 and remains in Git history at `fc241af5ff`. The claims are replaced by §3 here.

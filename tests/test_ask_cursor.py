@@ -4,16 +4,59 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from scripts.ai_agent_bridge._cursor import CURSOR_DEFAULT_MODEL, _invoke_cursor
+from scripts.ai_agent_bridge import _cursor
+from scripts.ai_agent_bridge._cursor import _invoke_cursor, cursor_default_model
 from scripts.lib import rules_core
 
 
-def test_cursor_default_model_is_auto():
-    # Cursor's default model is "auto" so cursor-agent picks the best available
-    # model from the user's plan without burning the per-model composer-2.5
-    # quota. Pass `--model composer-2.5` explicitly only when you specifically
-    # need that model (judge-calibration, A/B comparisons, etc.).
-    assert CURSOR_DEFAULT_MODEL == "auto"
+def test_cursor_default_model_is_the_concrete_seat_pin():
+    # A bridge ask is not a coding dispatch, so it never runs Auto (#9274): the
+    # default is the catalog's concrete Cursor seat pin.
+    assert cursor_default_model() == "grok-4.7"
+
+
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [
+        (None, "cursor_model_unpinned"),
+        ("", "cursor_model_unpinned"),
+        ("auto", "cursor_auto_outside_coding_task"),
+        ("AUTO", "cursor_auto_outside_coding_task"),
+        ("cursor/auto", "cursor_auto_outside_coding_task"),
+        ("grok-4.7-fast", "cursor_model_not_approved"),
+        ("grok-4.6", "cursor_model_not_approved"),
+    ],
+)
+def test_invoke_cursor_refuses_non_pinned_models_before_spawn(model, code):
+    with patch("shutil.which", side_effect=AssertionError("resolved the binary before refusing")):
+        with patch("subprocess.run", side_effect=AssertionError("spawned before refusing")):
+            with pytest.raises(SystemExit, match=rf"ask-cursor: refused: .*\({code}\)"):
+                _invoke_cursor("hello", model)
+
+
+def test_ask_cursor_refuses_explicit_auto_before_any_send(monkeypatch):
+    calls: list[str] = []
+    for name in ("send_message", "register_ask", "launch_background_ask", "_invoke_cursor"):
+        monkeypatch.setattr(_cursor, name, lambda *_a, _n=name, **_k: calls.append(_n))
+    for kwargs in ({"model": "auto"}, {"to_model": "Auto"}):
+        with pytest.raises(SystemExit, match=r"\(cursor_auto_outside_coding_task\)"):
+            _cursor.ask_cursor("hello", "t-9274", msg_type="review", **kwargs)
+    assert calls == []
+
+
+def test_ask_cursor_defaults_to_the_concrete_seat_pin(monkeypatch):
+    sent: list[dict] = []
+    invoked: list[str] = []
+    monkeypatch.setattr(_cursor, "send_message", lambda *a, **k: sent.append(k) or len(sent))
+    monkeypatch.setattr(_cursor, "register_ask", lambda *_a, **_k: None)
+    monkeypatch.setattr(_cursor, "acknowledge", lambda *_a, **_k: None)
+    monkeypatch.setattr(_cursor, "record_ask_reply", lambda *_a, **_k: None)
+    monkeypatch.setattr(_cursor, "_invoke_cursor", lambda _c, model, **_k: invoked.append(model) or "ok")
+
+    _cursor.ask_cursor("hello", "t-9274")
+
+    assert invoked == ["grok-4.7"]
+    assert sent[0]["to_model"] == "grok-4.7"
 
 
 def test_invoke_cursor_constructs_correct_argv():

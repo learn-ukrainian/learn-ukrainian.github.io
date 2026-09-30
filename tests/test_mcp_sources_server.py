@@ -39,6 +39,13 @@ VESUM_FIXTURE_VERSION = "a" * 64
 VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
 
 
+def test_session_fixture_isolates_request_log(server_module, sources_log_dir: Path) -> None:
+    server_module._log_tool_call("session-isolation-probe", {})
+    log_path = sources_log_dir / "mcp-sources-requests.jsonl"
+    entries = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
+    assert entries[-1]["tool"] == "session-isolation-probe"
+
+
 @pytest.fixture
 def server_module():
     """Import the server module fresh."""

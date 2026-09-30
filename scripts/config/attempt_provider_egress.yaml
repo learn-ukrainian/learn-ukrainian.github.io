@@ -1,0 +1,16 @@
+# Exact provider endpoints for formal review attempts only; no wildcard matching.
+harnesses:
+  agy:
+    - cloudcode-pa.googleapis.com
+    - daily-cloudcode-pa.googleapis.com
+    - oauth2.googleapis.com
+    - www.googleapis.com
+    # Native eligibility startup fetches the account image from this exact service.
+    - lh3.googleusercontent.com
+  codex:
+    - chatgpt.com
+    - api.openai.com
+    - auth.openai.com
+  claude:
+    - api.anthropic.com
+    - platform.claude.com

@@ -37,7 +37,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.review.model_catalog import retired_model_refusal
+from scripts.review.model_catalog import (
+    CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+    cursor_pinned_models,
+    is_cursor_auto_selector,
+    retired_model_refusal,
+)
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -96,6 +101,24 @@ _MODEL_CONTAINER_KEYS = frozenset(
     }
 )
 _MODEL_ID_KEYS = ("id", "modelId", "model_id", "name")
+# tool_config key delegate sets only after admitting a Cursor Auto dispatch as a
+# well-defined coding task (operator decision 2026-09-30, #9274).
+CURSOR_AUTO_ADMITTED_KEY = "cursor_auto_admitted"
+
+
+def _effective_cursor_mode(mode: str, config: dict) -> str | None:
+    """The ``--mode`` value the invocation passes, or ``None`` for agent execution (edits and tools).
+
+    Read-only runs ``ask`` unless ``cursor_mode`` overrides it; workspace-write
+    honours ``cursor_mode`` ``plan`` or ``ask`` and otherwise runs the agent;
+    danger always runs the agent.
+    """
+    if mode == "read-only":
+        return str(config.get("cursor_mode", "ask"))
+    if mode == "workspace-write":
+        requested = config.get("cursor_mode")
+        return str(requested) if requested in ("plan", "ask") else None
+    return None
 
 
 class CursorAdapter:
@@ -143,6 +166,22 @@ class CursorAdapter:
         refusal = retired_model_refusal(model)
         if refusal:
             raise ValueError(f"Cursor adapter: {refusal}")
+        config = tool_config or {}
+        cursor_mode = _effective_cursor_mode(mode, config)
+        # Auto needs delegate's admission and agent execution: plan and ask
+        # runs are not implementation, with or without ``force``.
+        if is_cursor_auto_selector(model) and not (
+            mode in {"workspace-write", "danger"}
+            and cursor_mode is None
+            and config.get(CURSOR_AUTO_ADMITTED_KEY) is True
+        ):
+            pins = " or ".join(cursor_pinned_models())
+            run = f"a --mode {cursor_mode} run" if cursor_mode else f"a {mode} run without delegate's admission"
+            raise ValueError(
+                f"Cursor adapter: model {model!r} runs only a delegate-admitted write implementation dispatch "
+                f"in agent mode, not {run} ({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}); pin {pins} "
+                f"(operator decision 2026-09-30, #9274)"
+            )
 
         # Resolve binary. shutil.which handles PATH lookup.
         # Prefer the UNAMBIGUOUS ``cursor-agent`` name. A generic ``agent`` on
@@ -154,8 +193,6 @@ class CursorAdapter:
         # generic ``agent`` only when cursor-agent is absent (legacy cursor
         # installs shipped as ``agent``). (#2309 bio driver, 2026-06-02)
         cursor_bin = shutil.which("cursor-agent") or shutil.which("agent") or "cursor-agent"
-
-        config = tool_config or {}
 
         # Workspace resolution
         workspace = config.get("cursor_workspace") or str(cwd)
@@ -199,7 +236,6 @@ class CursorAdapter:
 
         # Mode-specific argv assembly
         if mode == "read-only":
-            cursor_mode = config.get("cursor_mode", "ask")
             cmd.extend(["--mode", cursor_mode])
             if self._should_approve_mcps(config, default=False):
                 cmd.append("--approve-mcps")
@@ -211,9 +247,8 @@ class CursorAdapter:
             # --mode = agent execution (edits + tools, per -p print docs).
             # Callers may still pass cursor_mode=plan|ask for intentional
             # non-write runs.
-            cursor_mode = config.get("cursor_mode")
-            if cursor_mode in ("plan", "ask"):
-                cmd.extend(["--mode", str(cursor_mode)])
+            if cursor_mode:
+                cmd.extend(["--mode", cursor_mode])
             # The dispatch worktree is the write boundary. Sandbox enabled
             # aborts the agent on hosts where the helper cannot start.
             if self._should_approve_mcps(config, default=True):
@@ -222,10 +257,7 @@ class CursorAdapter:
             cmd.extend(["--sandbox", sandbox])
             # Unattended file/shell tools need approval grant; without --force
             # print-mode can still narrate a plan and exit "successfully".
-            if config.get("force", True) is not False and cursor_mode not in (
-                "plan",
-                "ask",
-            ):
+            if config.get("force", True) is not False and cursor_mode is None:
                 cmd.append("--force")
         elif mode == "danger":
             # Danger mode: no --mode flag (cursor-agent default allows edits;

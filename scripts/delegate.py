@@ -7927,6 +7927,8 @@ def _run_worker(
     attempt_id: str | None = None,
     mcp_config_path: str | None = None,
     strict_mcp_config: bool = False,
+    review_manifest: str | None = None,
+    review_input_root: str | None = None,
     finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
@@ -7969,6 +7971,7 @@ def _run_worker(
     if advisory_refusal:
         print(f"❌ {advisory_refusal}", file=sys.stderr)
         return 1
+    from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
@@ -8119,6 +8122,9 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
+            if review_manifest is not None:
+                tool_config["review_manifest"] = review_manifest
+                tool_config["review_input_root"] = review_input_root
             if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
@@ -8191,6 +8197,10 @@ def _run_worker(
 
                 verify_review_attempt_paths(mcp_config_path)
 
+            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[CURSOR_AUTO_ADMISSION_STATE_KEY].get(
+                "admitted"
+            ):
+                tool_config[CURSOR_AUTO_ADMITTED_KEY] = True
             if is_kimi_seat(agent, model=model):
                 # The runner and the adapters run the same gate on these paths and this tree.
                 tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
@@ -9526,7 +9536,7 @@ def _dispatch(
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
-    from scripts.review.model_catalog import retired_model_refusal
+    from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
 
     # A catalog-retired model is refused before any check can run a command.
     retired_refusal = retired_model_refusal(getattr(args, "model", None))
@@ -9546,6 +9556,13 @@ def _dispatch(
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
     # the original request before the route probes anything and the resolved route after it.
     review_attempt = getattr(args, "review_attempt", None)
+    if review_attempt and getattr(args, "output_schema", None):
+        print(
+            "❌ review attempt refused: attempt_output_schema_unsupported: "
+            "--review-attempt cannot be combined with --output-schema (#9251)",
+            file=sys.stderr,
+        )
+        return 2
     from scripts.agent_runtime.target_admission import launch_seat
 
     if str(_REPO_ROOT) not in sys.path:
@@ -9675,6 +9692,15 @@ def _dispatch(
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
 
     task_id = args.task_id
     try:
@@ -10918,6 +10944,9 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if cursor_auto_admission is not None:
+            # The Cursor adapter runs Auto only with this admission (#9274).
+            initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -11077,6 +11106,10 @@ def _dispatch(
                     "--mcp-config-path",
                     str(review_plan.config_path),
                     "--strict-mcp-config",
+                    "--review-manifest",
+                    str(Path(review_attempt).resolve()),
+                    "--review-input-root",
+                    str(review_contract["render_checkout"]),
                 ]
             )
 
@@ -11675,6 +11708,69 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     return False
 
 
+# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding task,
+# typed by the dispatch's declared functional role (``--research-role``). Any other role,
+# or none, pins a concrete model.
+CURSOR_AUTO_IMPLEMENTATION_ROLE = "implementation"
+CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
+
+
+def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
+    """True when any review flag types this dispatch as a review."""
+    return (
+        bool(getattr(args, "review", False))
+        or bool(getattr(args, "review_attempt", None))
+        or bool(getattr(args, "require_review_verdict", False))
+        or bool(getattr(args, "review_profile", None))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+    )
+
+
+def _cursor_auto_refusal(
+    args: argparse.Namespace, *, agent: str, model: str | None, dor_record: dict[str, Any] | None
+) -> str | None:
+    """Refusal when the admitted launch asks Cursor for Auto outside a well-defined coding task.
+
+    Auto needs positive evidence of that task: ``--research-role implementation``
+    (the declared functional role; a missing or any other role is unclassified for
+    Auto), a write-capable mode, at least one ``--owned-path``, a DoR preflight that
+    checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
+    review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    """
+    from scripts.review.model_catalog import (
+        CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+        cursor_pinned_models,
+        is_cursor_auto_selector,
+    )
+
+    if agent != "cursor" or not is_cursor_auto_selector(model):
+        return None
+    reasons: list[str] = []
+    role = str(getattr(args, "research_role", None) or "").strip()
+    if not role:
+        reasons.append(f"the task is unclassified (no --research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE})")
+    elif role != CURSOR_AUTO_IMPLEMENTATION_ROLE:
+        reasons.append(f"--research-role {role[:64]!r} is not {CURSOR_AUTO_IMPLEMENTATION_ROLE}")
+    if args.mode not in _WRITE_CAPABLE_MODES:
+        reasons.append(f"mode {args.mode} is not write-capable")
+    if _dispatch_is_review_typed(args):
+        reasons.append("the dispatch is review-typed")
+    if not _declared_owned_paths(getattr(args, "owned_path", None)):
+        reasons.append("no --owned-path")
+    if not dor_record or not dor_record.get("issues"):
+        reasons.append("no DoR issue card was checked")
+    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+        reasons.append("the DoR issue card is not PASS")
+    if not reasons:
+        return None
+    pins = " or ".join(f"--model {pin}" for pin in cursor_pinned_models())
+    return (
+        f"❌ dispatch refused: {CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}: --agent cursor --model {model} runs only a "
+        f"--research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE} write dispatch with owned paths and a PASS DoR issue card ({'; '.join(reasons)}); "
+        f"pin a concrete model: {pins} (operator decision 2026-09-30, #9274)"
+    )
+
+
 def _kimi_worktree_trees(worktree: Path) -> list[Any]:
     """An existing worktree as a Kimi worker sees it: its files on disk and the commit checked out there."""
     from scripts.agent_runtime.kimi_admission import worktree_trees
@@ -12003,11 +12099,7 @@ def _admit_dispatch_target(
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
-            review=bool(getattr(args, "review", False))
-            or bool(getattr(args, "review_attempt", None))
-            or bool(getattr(args, "require_review_verdict", False))
-            or bool(getattr(args, "review_profile", None))
-            or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+            review=_dispatch_is_review_typed(args),
             language_lane=_dispatch_is_language_lane(args),
             research_track=getattr(args, "research_track", None),
             prompt_file=getattr(args, "prompt_file", None),
@@ -13105,6 +13197,8 @@ def cmd_worker(args: argparse.Namespace) -> int:
         attempt_id=getattr(args, "attempt_id", None),
         mcp_config_path=getattr(args, "mcp_config_path", None),
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
+        review_manifest=getattr(args, "review_manifest", None),
+        review_input_root=getattr(args, "review_input_root", None),
         finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
@@ -13617,7 +13711,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Bind a JSON Schema to the final response of an effective Codex "
             "dispatch. The file is parsed before spawn, resolved to an "
             "absolute path, hashed into task state, and revalidated by the "
-            "Codex adapter before it emits --output-schema."
+            "Codex adapter before it emits --output-schema. "
+            "Cannot be combined with --review-attempt; default: omitted."
         ),
     )
     d.add_argument(
@@ -13628,7 +13723,8 @@ def build_parser() -> argparse.ArgumentParser:
             "ADR-011 P3 research context: the task's single role (e.g. quality). "
             "Explicit only — never inferred from the prompt, agent, provider, or "
             "branch. Combined with the other --research-* flags, injects bounded, "
-            "pointer-only research pointers (bodies fetched on demand)."
+            "pointer-only research pointers (bodies fetched on demand). "
+            "`implementation` types a coding dispatch; --agent cursor --model auto requires it (#9274)."
         ),
     )
     d.add_argument(
@@ -13890,6 +13986,8 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--attempt-id", default=None)
     wk.add_argument("--mcp-config-path", default=None)
     wk.add_argument("--strict-mcp-config", action="store_true")
+    wk.add_argument("--review-manifest", default=None, help="Formal attempt manifest path (default: none)")
+    wk.add_argument("--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)")
     wk.set_defaults(func=cmd_worker)
 
     return p

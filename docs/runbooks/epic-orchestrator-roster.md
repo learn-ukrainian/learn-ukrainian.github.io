@@ -34,7 +34,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **any epic** — incident · architecture cutover · contested review | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
 | **any epic** — Fable alternate (advisor seat; summon, don't seat) | Fable 5.1 | `./start-claude-driver.sh --epic <epic> --model fable` |
 | **any epic** — routine Anthropic alternate | Sonnet 5.5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5-5` |
-| **any epic** — Cursor TUI driver (Auto; attested after run) | Cursor Auto | `./start-cursor-driver.sh --epic <epic>` |
+| **any epic** — Cursor TUI driver (pinned `grok-4.7-high`, never Auto; attested after run) | Cursor `grok-4.7` | `./start-cursor-driver.sh --epic <epic>` |
 
 **Driver launcher convention:** `./start-<provider>-driver.sh --epic <epic>` where `<provider>` ∈
 `codex · grok · gemini · claude · cursor`. The core owns all launcher flags; provider
@@ -132,7 +132,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
 | claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
 | codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-| cursor | auto | high | gpt-6.1-sol | high |
+| cursor | grok-4.7 | high | gpt-6.1-sol | high |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
