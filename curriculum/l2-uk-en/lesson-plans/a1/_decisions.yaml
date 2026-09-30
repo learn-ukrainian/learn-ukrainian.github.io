@@ -10,8 +10,8 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-build-program.md
     line: '| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |'
-  doc_sha256: 5a1e7190500683fb9134642f993288f4a79dc2c6348440f1d94dec31f4f109b7
-  section_sha256: e0cf80d3ed52201afe8341d23dea50203cac85931c085e80ded82acba0437f5d
+  doc_sha256: 57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371
+  section_sha256: 00fed5fff3c40c72a392710fe16d7641be380cbfb8c8179ffede60d07d12fd5d
   text: |+
     ## 2. Decisions
 
@@ -27,9 +27,11 @@ sources:
     1. *Literacy scope.* Module 1's subtitle promised seven letters while its body listed all 33
        (`plans/a1/sounds-letters-and-hello.yaml:17` vs `:141-205`). With lessons there is no reason to
        cram: §4 gives an honest inventory per module and lesson.
-    2. *The level plan contradicts the Standard.* `curriculum/l2-uk-en/plans/a1.yaml:34-40` claims
-       genitive "basic" and cardinals 1–1000 as grammar scope; `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23`
-       claims five cases. Both are replaced by §3 of this arc.
+    2. *The historical level plan contradicted the Standard.* `curriculum/l2-uk-en/plans/a1.yaml:34-40`
+       claimed genitive "basic" and cardinals 1–1000 as grammar scope;
+       `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` claimed five cases. The level plan was retired on
+       2026-09-30 in #9252 item 2; its last commit is `fc241af5ff` in Git history. Both claims are
+       replaced by §3 of this arc.
     3. *No lesson grain.* Every module was one 1,200-word block. §5 estimates lessons per module.
     4. *Skills the Standard requires were thin:* writing (forms, postcard, SMS), listening, real-world
        reading. §5 assigns them as lesson duties, not as extra modules.
@@ -73,7 +75,7 @@ sources:
   accepted_evidence:
     doc: docs/epics/fresh-build-a1-arc.md
     line: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
-  doc_sha256: 5a1e7190500683fb9134642f993288f4a79dc2c6348440f1d94dec31f4f109b7
+  doc_sha256: 57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371
   section_sha256: dcb7c50f6fce61ff44312d31a5c8c38484c9618dc0bda1eaada15a23bd3c7d67
   text: |+
     ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
