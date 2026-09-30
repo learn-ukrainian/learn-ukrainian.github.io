@@ -749,6 +749,31 @@ def _iter_textbook_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
             },
         )
 
+    chunk_rows = conn.execute(
+        """
+        SELECT id, chunk_id, source_file, title, text
+        FROM textbooks
+        WHERE parent_section_id IS NULL
+        ORDER BY id
+        """
+    ).fetchall()
+    for row in chunk_rows:
+        text = str(row["text"] or "")
+        chunk_id = str(row["chunk_id"] or "")
+        yield CorpusUnit(
+            unit_key=f"textbook_sections:{chunk_id}",
+            corpus="textbook_sections",
+            parent_key=str(row["source_file"] or ""),
+            text=text,
+            text_sha256=text_sha256(text),
+            metadata={
+                "chunk_id": chunk_id,
+                "source_file": str(row["source_file"] or ""),
+                "title": str(row["title"] or ""),
+                "row_id": int(row["id"]),
+            },
+        )
+
 
 def _iter_modern_literary_units(conn: sqlite3.Connection) -> Iterator[CorpusUnit]:
     for row in _literary_query(conn, "language_period = ?", ("modern",)):
