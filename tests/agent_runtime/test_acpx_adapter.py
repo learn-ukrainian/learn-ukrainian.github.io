@@ -2473,7 +2473,7 @@ def test_ordinary_claude_advisory_build_invocation_uses_eight_turns(tmp_path, mo
     assert ("--max-turns", "8") in pairs
 
 
-@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-sonnet-5", "claude-fable-5-1"])
+@pytest.mark.parametrize("model", ["claude-sonnet-5-5", "claude-fable-5-1"])
 def test_claude_sealed_review_exposes_only_required_stream(tmp_path, monkeypatch, model):
     _stub_binary(monkeypatch, tmp_path)
     monkeypatch.setenv(acpx_module.TRANSPORT_ENV, "active")

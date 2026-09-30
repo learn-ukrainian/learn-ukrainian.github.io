@@ -125,7 +125,7 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
     if _DEEPSEEK_RETIRED_PREFIX_RE.match(text):
         raise RoutingGuardError(
             f"{context}: {text!r} uses the retired DeepSeek provider alias. "
-            "Use deepseek/deepseek-flash or deepseek/deepseek-v4-pro."
+            "Use deepseek/deepseek-flash."
         )
     direct_prefix = _DEEPSEEK_FIRST_PARTY_PREFIX_RE.match(text)
     if direct_prefix and not _DEEPSEEK_FAMILY_MODEL_RE.match(text[direct_prefix.end() :]):

@@ -237,11 +237,9 @@ REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
 
 # Compatibility constants for direct candidate evaluation and callers that
 # explicitly imported the old default. Medium is the balanced default risk.
-CLAUDE_OPUS_4_8 = REVIEW_CANDIDATES["claude-opus-4-8"]
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
 GROK_4_7 = REVIEW_CANDIDATES["grok-4.7"]
 GROK_4_7_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
-SONNET_5 = REVIEW_CANDIDATES["claude-sonnet-5"]
 SONNET_5_5 = REVIEW_CANDIDATES["claude-sonnet-5-5"]
 POOL = REVIEW_CANDIDATES["pool"]
 GLM = REVIEW_CANDIDATES["glm-5.3"]

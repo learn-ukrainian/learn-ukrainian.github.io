@@ -15,6 +15,8 @@ import re
 import shutil
 from pathlib import Path
 
+from scripts.review.model_catalog import retired_model_refusal
+
 from ..errors import AgentRuntimeError
 from ..result import ParseResult
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
@@ -26,7 +28,6 @@ _logger = logging.getLogger(__name__)
 _OPENCODE_MODEL_ROUTES: dict[str, str] = {
     "glm-5.3-flash": "zai/glm-5.3-flash",
     "glm-5.3": "zai-coding-plan/glm-5.3",
-    "glm-5.2": "zai-coding-plan/glm-5.2",  # prior pin
 }
 
 # Env vars whose presence indicates an automated/CI context where the
@@ -118,6 +119,9 @@ class GlmAdapter:
 
         binary = shutil.which("opencode") or "opencode"
         target_model = model or self.default_model
+        refusal = retired_model_refusal(target_model)
+        if refusal:
+            raise ValueError(refusal)
         # Route bare catalog ids to the subscription-pinned opencode provider —
         # a bare "glm-5.3" would leave provider resolution to opencode and can
         # land off the Z.AI Coding Plan sub. Explicit provider-prefixed ids

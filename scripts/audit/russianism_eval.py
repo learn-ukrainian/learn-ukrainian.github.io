@@ -30,9 +30,9 @@ from scripts.audit.checks.russicism_detection import check_russicisms
 PYTHON, BRIDGE = Path(".venv/bin/python"), Path("scripts/ai_agent_bridge/__main__.py")
 DEFAULT_BRIDGE_TIMEOUT_SECONDS: float = 300.0
 DEFAULT_MODELS = (
-    "claude-opus-4-7,claude-sonnet-4-5,claude-haiku-4-5,"
-    "gpt-5.5,gpt-5.5-mini,gemini-3.1-pro-high,"
-    "gemini-3.5-flash-high"
+    "claude-opus-5-5,claude-sonnet-5-5,"
+    "gpt-6.1-sol,gpt-6-luna,gemini-3.1-pro-high,"
+    "gemini-3.8-flash-high"
 )
 FROM_AGENT = "russianism-eval"
 _FOUND_COUNT_RE, _WORD_RE = re.compile(r"Found\s+(\d+)\s+Russicism", re.IGNORECASE), re.compile(r"[\w'’-]+", re.UNICODE)

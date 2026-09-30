@@ -97,6 +97,7 @@ from pathlib import Path
 from typing import Any, NamedTuple
 
 from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
+from scripts.review.model_catalog import load_model_catalog, retired_model_refusal
 
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
@@ -305,25 +306,16 @@ _AGY_PRINT_TIMEOUT = "120m"
 # now lists slugs and headless ``--model <slug>`` is the proven path.
 #
 # Historical note: earlier AGY builds wanted display labels (#2731 slug bug).
-# Live probe 2026-09-13: 3.8/3.7/3.6 Flash are listed; 3.5 is retired.
+# Older Flash, Claude thinking and GPT-OSS selections are refused by the catalog.
 _AGY_MODEL_SLUGS: tuple[str, ...] = (
     "gemini-3.8-flash-high",
     "gemini-3.8-flash-medium",
     "gemini-3.8-flash-low",
-    "gemini-3.7-flash-high",
-    "gemini-3.7-flash-medium",
-    "gemini-3.7-flash-low",
-    "gemini-3.6-flash-high",
-    "gemini-3.6-flash-medium",
-    "gemini-3.6-flash-low",
     "gemini-3.1-pro-high",
     "gemini-3.1-pro-low",
-    "claude-sonnet-4-6",
-    "claude-opus-4-6-thinking",
-    "gpt-oss-120b-medium",
 )
 
-# Legacy display labels still accepted as input (normalize → same key as slug).
+# Recognize legacy display labels for active selection or retired-model refusal.
 _AGY_MODEL_LEGACY_LABELS: tuple[str, ...] = (
     "Gemini 3.8 Flash (High)",
     "Gemini 3.8 Flash (Medium)",
@@ -364,9 +356,6 @@ def _build_agy_model_map() -> dict[str, str]:
     out: dict[str, str] = {}
     for slug in _AGY_MODEL_SLUGS:
         out[_normalize_model(slug)] = slug
-    # Retired 3.5 aliases preserve their tier on 3.8, including display labels.
-    for tier in ("high", "medium", "low"):
-        out[_normalize_model(f"gemini-3.5-flash-{tier}")] = f"gemini-3.8-flash-{tier}"
     # Legacy labels that share a normalize key with a slug resolve automatically.
     # Claude/GPT-OSS thinking labels normalize differently — map them explicitly.
     legacy_to_slug = {
@@ -409,7 +398,21 @@ class AgyAdapter:
     @staticmethod
     def resolve_model_slug(model: str) -> str | None:
         """Return the canonical AGY model for a known slug or legacy alias."""
-        return _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model))
+        # Display labels and provider spellings must not bypass retirement.
+        catalog = load_model_catalog()
+        normalized = _normalize_model(model)
+        identities = {
+            _normalize_model(alias): model_id
+            for model_id, spec in catalog["models"].items()
+            for alias in (model_id, *spec.get("aliases", []))
+        }
+        canonical = identities.get(normalized)
+        if canonical is None:
+            canonical = _AGY_MODEL_BY_NORMALIZED.get(normalized)
+        refusal = retired_model_refusal(canonical or model, catalog)
+        if refusal:
+            raise ValueError(refusal.replace(repr(canonical or model), repr(model), 1))
+        return _AGY_MODEL_BY_NORMALIZED.get(normalized)
 
     @staticmethod
     def model_ids_match(left: str, right: str) -> bool:

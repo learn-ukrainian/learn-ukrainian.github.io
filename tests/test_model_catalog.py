@@ -75,7 +75,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     }
     assert required <= set(models)
     assert models["claude-sonnet-5-5"]["lifecycle"] == "active"
-    assert models["claude-sonnet-5"]["lifecycle"] == "fallback"
+    assert models["claude-sonnet-5"]["lifecycle"] == "retired"
     for risk, ladder in load_model_catalog()["review_ladders"].items():
         names = {candidate for rung in ladder for candidate in rung}
         assert ("claude-sonnet-5-5" in names) == (risk != "critical")
@@ -89,7 +89,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
 def test_fallback_sonnet_candidate_cannot_reenter_automatic_ladder():
     broken = deepcopy(load_model_catalog())
     broken["review_ladders"]["medium"][3] = ["claude-sonnet-5"]
-    with pytest.raises(ModelCatalogError, match="must reference an active model"):
+    with pytest.raises(ModelCatalogError, match=r"unknown candidate|must reference an active model"):
         validate_catalog(broken)
 
 
@@ -211,9 +211,9 @@ def test_deepseek_metadata_is_preserved_without_review_seats() -> None:
         for ladder in catalog["review_ladders"].values():
             assert model not in {name for rung in ladder for name in rung}
     pro = catalog["models"]["deepseek-v4-pro"]
-    assert pro["lifecycle"] == "active"
+    assert pro["lifecycle"] == "retired"
     assert "temporary_operator_hold_prefer_flash" not in pro["weaknesses"]
-    assert {"hard_implement", "complex_coding"} <= set(pro["roles"])
+    assert pro["roles"] == ["historical_record_resolution"]
 
 
 def test_kimi_aliases_and_routes_are_catalog_backed() -> None:
@@ -277,7 +277,8 @@ def test_glm_model_aliases_and_consumer_lint() -> None:
     aliases = glm_model_aliases()
     assert "glm-5.3" in aliases
     assert aliases["glm-5.3"] == "glm-5.3"
-    assert aliases["glm52"] == "glm-5.2"  # prior pin
+    assert "glm52" not in aliases
+    assert model_aliases()["glm52"] == "glm-5.2"  # historical identity
     assert aliases["glm53"] == "glm-5.3"
     assert aliases["glm"] == "glm-5.3"
 
@@ -409,10 +410,8 @@ def test_formal_cf_defaults_pin_role_specific_efforts():
     assert defaults["claude"]["effort"] == "high"
     assert set(defaults["claude"].get("family_models", [])) >= {
         "claude-sonnet-5-5",
-        "claude-sonnet-5",
         "claude-fable-5-1",
-        "claude-opus-5",
-        "claude-opus-4-8",
+        "claude-opus-5-5",
     }
     assert defaults["glm"]["model_id"] == "glm-5.3"
     assert defaults["glm"]["effort"] == "high"
@@ -448,21 +447,21 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["cursor"]["auto_scope"] == "write_implementation_dispatch_with_green_dor"
     assert seats["cursor"]["effort"] == "high"
     assert seats["cursor"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert seats["cursor"]["escalate_effort"] == "high"
+    assert seats["cursor"]["escalate_effort"] == "xhigh"
     assert seats["cursor"]["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     assert seats["cursor"]["attestation_rule"] == "driver_of_record_requires_attested_resolved_model"
     assert seats["cursor"]["unknown_auto_family_resolution"] == "union_family"
     assert seats["cursor"]["unknown_auto_union_families"] == ["xai", "moonshot"]
 
 
-def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
+def test_orchestrator_escalate_pins_astra_xhigh_and_agy_flash():
     """Each seat has default + escalate like AGY Flash, same-SKU escalation, operator 2026-09-22."""
     seats = load_model_catalog()["orchestrator_seats"]
     assert seats["claude"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert seats["claude"]["escalate_effort"] == "high"
+    assert seats["claude"]["escalate_effort"] == "xhigh"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["escalate_effort"] == "high"
-    # Codex reviewer escalation uses the same Astra high advisor pin.
+    # Codex reviewer escalation uses the same Astra xhigh advisor pin.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-6.1-sol"
     assert fc["claude"]["escalate_model_id"] == "claude-fable-5-1"
@@ -802,8 +801,7 @@ def test_critical_ladder_anthropic_authority_is_fable_not_opus():
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
     """Model capability metadata must preserve the routing/authority boundary."""
     roles = set(load_model_catalog()["models"]["claude-opus-5"]["roles"])
-    assert "advisory_consultation" in roles
-    assert "orchestration" not in roles
+    assert roles == {"historical_record_resolution"}
 
 
 def test_opus_5_5_is_the_claude_orchestrator_and_formal_cf_pin() -> None:
@@ -822,7 +820,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
 
     advisor = route["advisor"]
     assert advisor["model_id"] == "gpt-6.1-sol"
-    assert advisor["effort"] == "high"
+    assert advisor["effort"] == "xhigh"
     assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
     assert advisor["output_fields"] == [
         "task_contract",
@@ -991,7 +989,7 @@ def test_sol_holds_the_astra_advisor_seat_and_runtime_review_pins():
     assert AGENTS["codex"]["default_model"] == "gpt-6.1-sol"
     assert AGENTS["codex"]["default_effort"] == "high"
     assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6.1-sol --effort high")
-    assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
+    assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "xhigh"
     for risk in ("low", "medium", "high"):
         assert catalog["review_ladders"][risk][0] == ["openai_frontier"]
 
@@ -1084,14 +1082,28 @@ def test_replaced_by_must_sit_on_retired_model_and_name_active_model():
 
 
 @pytest.mark.parametrize(
-    ("retired", "successor"), [("claude-fable-5", "claude-fable-5-1"), ("grok-4.6", "grok-4.7")]
+    ("retired", "successor"), [
+        ("claude-fable-5", "claude-fable-5-1"),
+        ("grok-4.6", "grok-4.7"),
+        ("claude-opus-5", "claude-opus-5-5"),
+        ("claude-opus-4-8", "claude-opus-5-5"),
+        ("claude-sonnet-5", "claude-sonnet-5-5"),
+        ("gemini-3.7-flash-high", "gemini-3.8-flash-high"),
+        ("gemini-3.6-flash-high", "gemini-3.8-flash-high"),
+        ("gemini-3.5-flash-high", "gemini-3.8-flash-high"),
+        ("glm-5.2", "glm-5.3"),
+        ("deepseek-v4-pro", "deepseek-v4.1-flash"),
+        ("claude-sonnet-4.6-thinking", "claude-sonnet-5-5"),
+        ("claude-opus-4.6-thinking", "claude-opus-5-5"),
+        ("gpt-oss-120b", "gpt-6-luna"),
+    ]
 )
 def test_issue_9301_retired_ids_remain_historical_only(retired, successor):
     catalog = load_model_catalog()
     assert catalog["models"][retired]["lifecycle"] == "retired"
     assert catalog["models"][retired]["replaced_by"] == successor
     assert catalog["models"][retired]["transports"] == []
-    for section in ("review_candidates", "review_scheduler", "orchestrator_seats", "formal_cf_defaults",
+    for section in ("execution_routing", "review_candidates", "review_scheduler", "orchestrator_seats", "formal_cf_defaults",
                     "review_ladders", "budget_substitution_models"):
         assert retired not in json.dumps(catalog[section]).replace(successor, "successor"), section
     for model in (retired, f"cursor:{retired.upper()}-thinking-high", f"{retired}[1m]"):
@@ -1115,7 +1127,22 @@ def test_reviewer_invocation_cannot_hide_a_retired_pin_behind_active_metadata():
         validate_catalog(catalog)
 
 
-@pytest.mark.parametrize("model", ["claude-fable-5", "grok-4.6", "deepseek-v4.1-flash"])
+@pytest.mark.parametrize("model", [
+    "claude-fable-5",
+    "grok-4.6",
+    "claude-opus-5",
+    "claude-opus-4-8",
+    "claude-sonnet-5",
+    "gemini-3.7-flash-high",
+    "gemini-3.6-flash-high",
+    "gemini-3.5-flash-high",
+    "glm-5.2",
+    "deepseek-v4-pro",
+    "claude-sonnet-4.6-thinking",
+    "claude-opus-4.6-thinking",
+    "gpt-oss-120b",
+    "deepseek-v4.1-flash",
+])
 @pytest.mark.parametrize("reference", ["candidate", "endpoint", "default", "escalation", "family", "substitution_source", "substitution_target"])
 def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, reference):
     catalog = deepcopy(load_model_catalog())
@@ -1141,5 +1168,28 @@ def test_catalog_rejects_retired_and_rule_excluded_executable_references(model, 
 def test_catalog_rejects_sonnet_on_critical_security_ladder(model):
     catalog = deepcopy(load_model_catalog())
     catalog["review_ladders"]["critical"].append([model])
-    with pytest.raises(ModelCatalogError, match="Sonnet is excluded from security review"):
+    with pytest.raises(ModelCatalogError, match=r"Sonnet is excluded from security review|unknown candidate"):
         validate_catalog(catalog)
+
+
+def test_issue_9301_active_exceptions_and_advisory_effort():
+    catalog = load_model_catalog()
+    for model in ("deepseek-v4.1-flash", "gemini-3.1-pro-high"):
+        assert catalog["models"][model]["lifecycle"] == "active"
+    assert {model for model, spec in catalog["models"].items()
+            if spec["family"] == "openai" and spec["lifecycle"] != "retired"} == {"gpt-6.1-sol", "gpt-6-luna"}
+    for section in ("orchestrator_seats", "formal_cf_defaults"):
+        for spec in catalog[section].values():
+            if spec.get("escalate_model_id") == "gpt-6.1-sol":
+                assert spec["escalate_effort"] == "xhigh"
+    assert catalog["orchestrator_seats"]["codex"]["effort"] == "high"
+    assert catalog["formal_cf_defaults"]["codex"]["effort"] == "high"
+
+
+def test_live_claude_caller_defaults_are_active_catalog_models():
+    from scripts.ai_agent_bridge._claude import CLAUDE_ADVISORY_MODEL, CLAUDE_DEFAULT_ASK_MODEL
+    from scripts.ai_llm.claude_call import CLAUDE_MODEL_LADDER
+    catalog = load_model_catalog()
+    for model in (CLAUDE_DEFAULT_ASK_MODEL, CLAUDE_ADVISORY_MODEL, *CLAUDE_MODEL_LADDER):
+        assert catalog["models"][model]["lifecycle"] == "active"
+    assert CLAUDE_ADVISORY_MODEL == "claude-opus-5-5"

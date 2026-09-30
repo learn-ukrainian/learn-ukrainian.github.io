@@ -111,8 +111,8 @@ review_scheduler:
   endpoints:
     claude:
       formal_review_eligible: true
-      # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
-      models: [claude-fable-5-1, claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
+      # Active formal CF pins; superseded Opus/Sonnet identities are historical only.
+      models: [claude-fable-5-1, claude-sonnet-5-5, claude-opus-5-5]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -136,7 +136,7 @@ review_scheduler:
       capacity_weight: 1.0
     glm:
       formal_review_eligible: true
-      models: [glm-5.3, glm-5.2]
+      models: [glm-5.3]
       participant: glm
       adapter_transport: acp
       catalog_transport: opencode
@@ -249,7 +249,7 @@ execution_routing:
   sol_advised_bounded:
     advisor:
       model_id: gpt-6.1-sol
-      effort: high
+      effort: xhigh
       role: bounded_advisory_envelope
       output_fields:
         - task_contract
@@ -310,7 +310,8 @@ models:
     notes: >-
       Operator 2026-09-29 (#9230): the only Sol and the only GPT-6 frontier seat.
       Codex orchestrator, coder, reviewer, and the hard advisory seat that GPT-6
-      Astra held, all at high. GPT-6 Luna stays the scouting and bounded-work seat.
+      Astra held. Orchestration, coding and review use high; the advisory seat
+      uses xhigh (#9301). GPT-6 Luna stays the scouting and bounded-work seat.
       API id gpt-6.1-sol (official model page). Context window 1,050,000 tokens,
       max input 922,000, max output 128,000; knowledge cutoff 2026-04-30;
       reasoning effort low, medium (default), high, xhigh, max. Standard price
@@ -469,9 +470,10 @@ models:
   claude-opus-5:
     family: anthropic
     tier: frontier_authority
-    lifecycle: active
-    roles: [advisory_consultation, architecture, critical_review, security_review, agentic_coding]
-    transports: [native_claude, cursor]
+    lifecycle: retired
+    replaced_by: claude-opus-5-5
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [deep_reasoning, long_horizon_agentic, high_precision_and_recall_code_review]
     weaknesses: [verbose_by_default, over_delegates_to_subagents, elevated_refusal_surface]
     notes: >-
@@ -485,18 +487,14 @@ models:
       rate-limit bucket from the Opus 4.x pool.
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
-  # Retained alongside claude-opus-5. Opus is the non-binding Anthropic advisory-
-  # consultation seat; designated approval authority remains identity-scoped and the
-  # current advisor roster uses claude-fable-5-1 + gpt-6.1-sol. This legacy id
-  # is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
-  # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
-  # broke collection with KeyError: 'claude-opus-4-8'.
+  # Historical Opus 4.8 identity; live callers use Opus 5.5.
   claude-opus-4-8:
     family: anthropic
     tier: frontier_authority
-    lifecycle: active
-    roles: [architecture, critical_review, security_review, orchestration]
-    transports: [native_claude, cursor]
+    lifecycle: retired
+    replaced_by: claude-opus-5-5
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [production_judgment, adversarial_review, reliable_long_horizon_coding]
     weaknesses: [frontier_quota_cost, superseded_by_claude-opus-5]
     sources:
@@ -525,9 +523,10 @@ models:
   claude-sonnet-5:
     family: anthropic
     tier: frontier_practical
-    lifecycle: fallback
-    roles: [implementation, agentic_coding, strong_review]
-    transports: [native_claude, cursor]
+    lifecycle: retired
+    replaced_by: claude-sonnet-5-5
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [speed_intelligence_balance, complex_instruction_following]
     weaknesses: [less_final_authority_than_opus, tokenizer_uses_more_tokens]
     sources:
@@ -543,8 +542,8 @@ models:
     weaknesses: [not_default_critical_authority, deep_architecture_prefers_sol]
     notes: >-
       Default AGY Flash pin (operator GO 2026-09-02). Live `agy models` probe
-      2026-09-02 lists gemini-3.8-flash-high/medium/low; 3.7/3.6 stay in the
-      back-compat allowlist. Native AGY subscribed seat — never OpenRouter.
+      2026-09-02 lists gemini-3.8-flash-high/medium/low; older Flash
+      generations are retired. Native AGY subscribed seat — never OpenRouter.
       Ukrainian-lane default is the Text Arena language-category jump vs 3.7
       Flash High (lmarena 2026-09-02, Gemini 3.8 Flash High): Writing,
       Literature & Language #7→#3; Multi-Turn #9→#4; Longer Query #13→#5;
@@ -560,10 +559,11 @@ models:
   gemini-3.7-flash-high:
     family: google
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: gemini-3.8-flash-high
     aliases: [gemini-3.7-flash, gemini-3.7-flash-medium, gemini-3.7-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
-    transports: [agy]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [superseded_as_default_by_3_8_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     notes: >-
@@ -575,10 +575,11 @@ models:
   gemini-3.6-flash-high:
     family: google
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: gemini-3.8-flash-high
     aliases: [gemini-3.6-flash, gemini-3.6-flash-medium, gemini-3.6-flash-low]
-    roles: [implementation, agentic_coding, subagent_work, multimodal_analysis]
-    transports: [agy]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost]
     weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
     sources:
@@ -597,10 +598,11 @@ models:
   gemini-3.5-flash-high:
     family: google
     tier: strong_efficient
-    lifecycle: active
-    aliases: [gemini-3.5-flash]
-    roles: [implementation, subagent_work, multimodal_analysis]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: gemini-3.8-flash-high
+    aliases: [gemini-3.5-flash, gemini-3.5-flash-medium, gemini-3.5-flash-low]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [speed, low_cost, back_compat]
     weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority]
     sources:
@@ -784,16 +786,17 @@ models:
   glm-5.2:
     family: zhipu
     tier: frontier_practical
-    lifecycle: fallback
-    # Fallback pin — kept resolvable for pinned workflows; do not route new work here.
+    lifecycle: retired
+    replaced_by: glm-5.3
+    # Historical route metadata only; new work uses GLM-5.3.
     aliases: [glm52]
     glm_routes:
       glmcc_alias: glm-5.2
       platform_model_id: glm-5.2
       coding_model_id: glm-5.2
       context_profile: glmcc_glm52
-    roles: [long_context_review, security_review, complex_debugging]
-    transports: [opencode, glmcc]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [long_horizon_coding, one_million_context, strong_open_model]
     weaknesses: [china_data_egress, local_interactive_only, quota_multiplier, superseded_by_glm_5_3]
     sources:
@@ -805,9 +808,10 @@ models:
     # 9c44e63f63 @ high; supersedes the 2026-08-06 DO NOT USE hold). Pro @ high =
     # hard implement only (complex multi-file, hard lookup) — NOT the default and
     # NOT on the routine review ladder (Flash stays the volume rung).
-    lifecycle: active
-    roles: [hard_implement, complex_coding, long_context_reasoning]
-    transports: [hermes, opencode]
+    lifecycle: retired
+    replaced_by: deepseek-v4.1-flash
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [quality_per_dollar, one_million_context, tool_calling]
     weaknesses: [silent_stall_history, not_for_folk_content, not_default_seat, not_on_routine_review_ladder]
     sources:
@@ -911,9 +915,11 @@ models:
   gpt-oss-120b:
     family: openai
     tier: specialist
-    lifecycle: active
-    roles: [bounded_open_model_work, routine_fact_check]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: gpt-6-luna
+    aliases: [gpt-oss-120b-medium]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [open_weight, tool_calling]
     weaknesses: [not_frontier_authority]
     sources:
@@ -951,9 +957,11 @@ models:
   claude-sonnet-4.6-thinking:
     family: anthropic
     tier: compatibility
-    lifecycle: fallback
-    roles: [compatibility_only]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: claude-sonnet-5-5
+    aliases: [claude-sonnet-4-6, claude-sonnet-4-6-thinking]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [existing_route_compatibility]
     weaknesses: [superseded_by_sonnet_5]
     sources:
@@ -961,28 +969,18 @@ models:
   claude-opus-4.6-thinking:
     family: anthropic
     tier: compatibility
-    lifecycle: fallback
-    roles: [compatibility_only]
-    transports: [agy]
+    lifecycle: retired
+    replaced_by: claude-opus-5-5
+    aliases: [claude-opus-4-6-thinking]
+    roles: [historical_record_resolution]
+    transports: []
     strengths: [existing_route_compatibility]
     weaknesses: [superseded_by_opus_4.8]
     sources:
       - https://platform.claude.com/docs/en/about-claude/models/overview
 
 review_candidates:
-  # NOTE: a second `claude-opus-4-8:` key used to appear further down this mapping.
-  # YAML last-wins meant THIS block never took effect, so the duplicate was dead
-  # config that the strict check-yaml hook flagged (fixed 2026-07-24). The surviving
-  # pinned entry now lives below as `claude-opus-5`. Keys here must stay unique.
-  # Kept: scripts/review/reviewer_resolver.py:213 binds CLAUDE_OPUS_4_8 at import
-  # time, so deleting this key breaks collection of every test that imports it.
-  claude-opus-4-8:
-    model_id: claude-opus-4-8
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-4-8
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
+  # Selectable seats reference active models; retired identities stay in models.
   openai_frontier:
     model_id: gpt-6.1-sol
     route: codex
@@ -1042,25 +1040,11 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-opus-5-5-high
     review_profiles: [code, infra]
     capabilities: [code_review]
-  claude-opus-5:
-    model_id: claude-opus-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
   claude-sonnet-5-5:
     model_id: claude-sonnet-5-5
     route: claude
     transport: native_claude
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  claude-sonnet-5:
-    model_id: claude-sonnet-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   composer-2.5:
@@ -1101,7 +1085,7 @@ orchestrator_seats:
     model_id: claude-opus-5-5
     effort: high
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: high
+    escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     note: >-
       Operator 2026-09-22: Opus 5.5 is the Claude orchestrator seat and executes
@@ -1112,9 +1096,9 @@ orchestrator_seats:
       Ukrainian-specific linguistic judgment (summoned judgment, advisor panels,
       the critical review ladder); the orchestrator seat does not confer approval
       authority. Non-binding Anthropic advisory consultations still
-      route to Opus 5 under the 2026-07-31 directive. grok-4.7 owns the daily epic
+      route to Opus 5.5 under the 2026-07-31 directive. grok-4.7 owns the daily epic
       loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
-      Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ high; Claude is an escalation TARGET,
+      Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ xhigh; Claude is an escalation TARGET,
       not an escalator. Driving default is `high` (Opus 5.5 API default is medium;
       step down to medium/low for routine turns; xhigh for hard turns and pinned
       curriculum/linguistic review skills; max almost never) — see
@@ -1123,11 +1107,11 @@ orchestrator_seats:
     model_id: gpt-6.1-sol
     effort: high
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: high
-    escalate_when: n/a_same_sku
+    escalate_effort: xhigh
+    escalate_when: consequential_advisory
     note: >
       Operator 2026-09-29 (#9230): GPT-6.1 Sol @ high is the Codex orchestrator,
-      advanced seat, and advisory escalation (it took GPT-6 Astra's seat). GPT-6
+      advanced seat; advisory escalation uses xhigh (the former Astra seat). GPT-6
       Luna @ high does scouting and bounded work and is not this seat. Named alternate on
       harness/infra and DevOps — never a concurrent same-stream co-owner.
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
@@ -1154,7 +1138,7 @@ orchestrator_seats:
     model_id: grok-4.7
     effort: high
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: high
+    escalate_effort: xhigh
     escalate_when: deep_single_shot_or_architecture
     auto_allowlist:
       - grok-4.7
@@ -1182,7 +1166,7 @@ orchestrator_seats:
       from within the driver session).
 
 # Formal CF transport defaults (model + effort; sealed review-pr was removed in #8520). Advisor/authority
-# roles use high effort; Sol high fills the routine Codex reviewer role.
+# roles use their catalog effort; Sol high fills the routine Codex reviewer role.
 # Fable remains off the
 # routine ladder. CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
@@ -1192,21 +1176,18 @@ formal_cf_defaults:
     # Advisory escalation. The one-shot Codex ACP participant does not expose
     # reasoning effort, so previously review-pr pinned the model only.
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: high
+    escalate_effort: xhigh
   claude:
     model_id: claude-sonnet-5-5
     effort: high
-    # Sealed Claude ACP: Sonnet 5.5 default; Fable / Opus 5.5 / Opus 5 / Opus 4.8 via --model pin
+    # Sealed Claude ACP: Sonnet 5.5 default; Fable 5.1 / Opus 5.5 via --model pin
     # (operator 2026-08-06 formal pin). Effort fixed high on sealed participant.
     escalate_model_id: claude-fable-5-1
     escalate_effort: high
     family_models:
       - claude-sonnet-5-5
-      - claude-sonnet-5
       - claude-fable-5-1
       - claude-opus-5-5
-      - claude-opus-5
-      - claude-opus-4-8
   glm:
     model_id: glm-5.3
     effort: high
@@ -1216,7 +1197,6 @@ formal_cf_defaults:
     escalate_effort: max
     family_models:
       - glm-5.3
-      - glm-5.2
   pool:
     # Laguna S 2.1 — gen-2 strongest (not m.1; not xs)
     model_id: poolside/laguna-s-2.1

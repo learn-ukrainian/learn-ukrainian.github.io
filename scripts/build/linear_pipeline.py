@@ -116,12 +116,12 @@ WRITER_CHOICES = (
     "agy-tools",
 )
 WRITER_DEFAULTS: dict[str, dict[str, str]] = {
-    "claude-tools": {"model": "claude-opus-4-8", "effort": "xhigh"},
+    "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
     "grok-tools": {"model": "grok-4.5", "effort": "medium"},
     "cursor-tools": {"model": "composer-2.5", "effort": "medium"},
-    "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
+    "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     # AGY selects the model via --model; effort remains a telemetry placeholder.
     "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "high"},
@@ -162,12 +162,12 @@ REVIEWER_CHOICES = (
     "agy-tools",
 )
 REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
-    "claude-tools": {"model": "claude-opus-4-8", "effort": "xhigh"},
+    "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
     "grok-tools": {"model": "grok-4.5", "effort": "medium"},
     "cursor-tools": {"model": "grok-4.5", "effort": "medium"},
-    "deepseek-tools": {"model": "deepseek-v4-pro", "effort": "medium"},
+    "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
 }

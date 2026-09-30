@@ -262,7 +262,7 @@ def test_handle_ask_gemini_routes_to_agy(monkeypatch):
         task_id = "task-1"
         type = "query"
         data = None
-        model = "gemini-3.6-flash"
+        model = "gemini-3.8-flash-high"
         from_llm = "claude"
         from_model = None
         async_mode = False

@@ -690,7 +690,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_claude_parser.add_argument(
         "--type",
         default="query",
-        help="Message type (default: query; use advisory to pin claude-opus-5)",
+        help="Message type (default: query; use advisory to pin claude-opus-5-5)",
     )
     ask_claude_parser.add_argument("--data", help="Path to data file to attach")
     ask_claude_parser.add_argument(

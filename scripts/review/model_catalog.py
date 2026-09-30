@@ -570,7 +570,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 )
     for model_id, model in models.items():
         if "replaced_by" in model:
-            _require_active_execution_model(models, model["replaced_by"], f"models.{model_id}.replaced_by")
+            # Successor identity is metadata, not dispatch/review admission.
+            replacement = _require_string(model["replaced_by"], f"models.{model_id}.replaced_by")
+            if replacement not in models or models[replacement]["lifecycle"] != "active":
+                raise ModelCatalogError(f"models.{model_id}.replaced_by must reference an active model")
 
     _validate_execution_routing(catalog.get("execution_routing"), models)
 

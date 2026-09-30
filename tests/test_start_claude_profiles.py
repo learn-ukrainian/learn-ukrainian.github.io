@@ -67,10 +67,10 @@ def test_certified_claude_driver_models_are_revalidated() -> None:
     assert untrusted.returncode == 4
 
 
-def test_explicit_legacy_sonnet_driver_pin_remains_accepted() -> None:
+def test_explicit_retired_sonnet_driver_pin_is_refused() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-sonnet-5")
-    assert result.returncode == 0, result.stderr
-    assert "would exec claude --model claude-sonnet-5" in result.stdout
+    assert result.returncode == 4
+    assert "would exec claude" not in result.stdout
 
 
 def test_short_fable_5_alias_follows_live_seat_but_retired_id_is_refused() -> None:
@@ -104,14 +104,14 @@ def test_claude_driver_default_yields_to_launcher_env() -> None:
     assert "would exec claude --model claude-fable-5-1 --effort medium" in result.stdout
 
 
-def test_claude_opus_aliases_resolve_to_5_5_and_keep_opus_5_pinnable() -> None:
+def test_claude_opus_aliases_resolve_to_5_5() -> None:
     for alias in ("opus", "opus-5-5", "opus-5.5", "claude-opus-5-5"):
         result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", alias)
         assert result.returncode == 0, (alias, result.stderr)
         assert "would exec claude --model claude-opus-5-5" in result.stdout
     legacy = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "opus-5")
     assert legacy.returncode == 0, legacy.stderr
-    assert "would exec claude --model claude-opus-5 --effort high" in legacy.stdout
+    assert "would exec claude --model claude-opus-5-5 --effort high" in legacy.stdout
 
 
 def test_claude_interactive_does_not_inherit_driver_default() -> None:

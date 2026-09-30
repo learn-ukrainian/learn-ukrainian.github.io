@@ -39,7 +39,7 @@ def _plan_with_metadata(
     tmp_path: Path,
     *,
     requested_provider: str = "deepseek",
-    requested_model: str = "deepseek-v4-pro",
+    requested_model: str = "deepseek-v4.1-flash",
     log_offset: int = 0,
 ) -> InvocationPlan:
     return InvocationPlan(
@@ -66,7 +66,7 @@ def test_hermes_parse_reads_fallback_from_agent_log(tmp_path, capsys):
     with log_path.open("a", encoding="utf-8") as handle:
         handle.write(
             "2026-07-05 10:00 INFO Fallback activated: "
-            "deepseek-v4-pro -> deepseek/deepseek-v3.2 (openrouter)\n"
+            "deepseek-v4.1-flash -> deepseek/deepseek-v3.2 (openrouter)\n"
         )
 
     result = HermesDeepSeekAdapter().parse_response(
@@ -80,7 +80,7 @@ def test_hermes_parse_reads_fallback_from_agent_log(tmp_path, capsys):
     assert result.ok is True
     assert result.substitution == {
         "requested_provider": "deepseek",
-        "requested_model": "deepseek-v4-pro",
+        "requested_model": "deepseek-v4.1-flash",
         "actual_provider": "openrouter",
         "actual_model": "deepseek/deepseek-v3.2",
         "substituted": True,
@@ -182,7 +182,7 @@ fallback_providers:
             prompt="hi",
             mode="read-only",
             cwd=tmp_path,
-            model="deepseek-v4-pro",
+            model="deepseek-v4.1-flash",
             task_id=None,
             session_id=None,
             tool_config={"hermes_home": str(hermes_home)},
@@ -235,7 +235,7 @@ def test_runner_persists_and_emits_hermes_substitution(tmp_path, monkeypatch):
             metadata={
                 "hermes": {
                     "requested_provider": "deepseek",
-                    "requested_model": "deepseek-v4-pro",
+                    "requested_model": "deepseek-v4.1-flash",
                     "log_path": str(tmp_path / "missing.log"),
                     "log_offset": 0,
                 }
@@ -257,7 +257,7 @@ def test_runner_persists_and_emits_hermes_substitution(tmp_path, monkeypatch):
             "hello",
             mode="read-only",
             cwd=tmp_path,
-            model="deepseek-v4-pro",
+            model="deepseek-v4.1-flash",
             entrypoint="dispatch",
             event_sink=lambda name, **fields: sink_events.append((name, fields)),
         )
@@ -291,7 +291,7 @@ def test_probe_requires_result_usage_and_event_substitution(tmp_path):
     _write_config(hermes_home)
     substitution = {
         "requested_provider": "deepseek",
-        "requested_model": "deepseek-v4-pro",
+        "requested_model": "deepseek-v4.1-flash",
         "actual_provider": "openrouter",
         "actual_model": "deepseek/deepseek-v3.2",
         "substituted": True,

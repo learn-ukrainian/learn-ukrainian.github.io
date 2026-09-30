@@ -23,7 +23,6 @@ from scripts.review.reviewer_resolver import (
     QWEN,
     REVIEW_CANDIDATES,
     REVIEW_LADDERS,
-    SONNET_5,
     SONNET_5_5,
     UNKNOWN_AUTHOR_FAMILY,
     ResolverInputs,
@@ -288,9 +287,14 @@ def test_critical_security_sonnet_pin_and_custom_ladder_fail_closed(model):
                        pressure_override_reason="test explicit pin")
     )
     assert resolution.selected is None
-    assert "hard eligibility gate" in resolution.fail_closed_reason
-    assert "Sonnet is excluded" in next(item for item in resolution.trace if item.name == model).reason
-    result = evaluate_candidate(REVIEW_CANDIDATES[model], ResolverInputs(author_model="codex", risk="critical"))
+    if model == "claude-sonnet-5":
+        assert model not in REVIEW_CANDIDATES
+        assert resolution.fail_closed_reason
+    else:
+        assert "hard eligibility gate" in resolution.fail_closed_reason
+        assert "Sonnet is excluded" in next(item for item in resolution.trace if item.name == model).reason
+    candidate = replace(SONNET_5_5, concrete_model=model)
+    result = evaluate_candidate(candidate, ResolverInputs(author_model="codex", risk="critical"))
     assert result.status == "excluded"
     assert "Sonnet is excluded" in result.reason
 
@@ -424,7 +428,7 @@ def test_gemini_lane_outage_does_not_create_code_review_route():
 
 def test_gemini_code_review_refused_even_in_injected_ladder_and_pin(monkeypatch):
     injected = replace(
-        SONNET_5,
+        SONNET_5_5,
         name="injected-gemini",
         concrete_model="gemini-3.8-flash-high",
         family="google",
@@ -1098,7 +1102,7 @@ def test_medium_codex_author_falls_through_unavailable_opus_to_sonnet_5_5():
 
 def test_old_sonnet_record_still_resolves_anthropic_family():
     assert resolve_author_family("claude-sonnet-5") == "anthropic"
-    assert REVIEW_CANDIDATES["claude-sonnet-5"].concrete_model == "claude-sonnet-5"
+    assert "claude-sonnet-5" not in REVIEW_CANDIDATES
 
 
 def test_candidate_constants_preserve_expected_identity():
@@ -1109,11 +1113,10 @@ def test_candidate_constants_preserve_expected_identity():
     assert GLM.requires_data_egress_policy == "local_interactive"
     assert GLM.invocation.endswith("ask-glm")
     assert GROK_4_7.transport == "native_grok"
-    from scripts.review.reviewer_resolver import GROK_4_7_CURSOR_FALLBACK, SONNET_5, SONNET_5_5
+    from scripts.review.reviewer_resolver import GROK_4_7_CURSOR_FALLBACK, SONNET_5_5
 
     assert GROK_4_7_CURSOR_FALLBACK.transport == "cursor"
     assert GROK_4_7_CURSOR_FALLBACK.concrete_model == "grok-4.7"
-    assert SONNET_5.concrete_model == "claude-sonnet-5"
     assert SONNET_5_5.concrete_model == "claude-sonnet-5-5"
 
 
