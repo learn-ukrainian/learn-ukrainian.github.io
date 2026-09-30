@@ -80,10 +80,12 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
         "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
-        "advisory_envelope": {requirement, advisory_args_sha256, prompt_sha256, repo_root, advisor_task_id,
-                              advisor_model, advisor_run_nonce, result_path, result_sha256, envelope_sha256,
+        "advisory_envelope": {requirement, advisory_args, advisory_args_sha256, prompt_sha256, admitted_agent,
+                              admitted_model_id, research_block, repo_root, advisor_task_id, advisor_model,
+                              advisor_run_nonce, result_path, result_sha256, envelope_sha256,
                               dispatch_args_sha256, owned_paths, max_changed_files, max_non_test_loc}
                              | absent,  # bounded-worker admission; the worker re-verifies it (#9275)
+        "advisory_prompt_sha256": str | absent,  # the bounded worker's prompt as checked and submitted
         "advisory_exemption": {model_id, task_family, review_profile, mode, classified_paths} | absent,
                               # a Gemini Flash launch classified Ukrainian; the worker re-classifies it
         "advisory_ceiling_check": {measured, changed_files, non_test_loc, max_*, exceeded | error} | absent,
@@ -91,7 +93,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "advisory_route": str | absent,
         "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
         "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
-                              # advisor runs: the result as its worker wrote it, sealed at finish
+                              # advisor runs: a consistency checksum of the result as its worker wrote it
     }
 
 Design notes:
@@ -329,10 +331,20 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
 ADVISORY_BINDING_EXCLUDED_FIELDS = frozenset({"advisory_task", "print_advisory_binding"})
 
 
+def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
+    """The arguments ``advisory_args_sha256`` hashes: ``dispatch_args_sha256``'s, without the envelope reference."""
+    return {
+        key: value
+        for key, value in vars(args).items()
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
+        and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+        and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
+    }
+
+
 def advisory_args_sha256(args: argparse.Namespace) -> str:
     """``dispatch_args_sha256`` without the envelope reference: the argument half of the advisory binding."""
-    kept = {key: value for key, value in vars(args).items() if key not in ADVISORY_BINDING_EXCLUDED_FIELDS}
-    return dispatch_args_sha256(argparse.Namespace(**kept))
+    return bounded_advisory.canonical_sha256(advisory_args_payload(args))
 
 
 def advisory_binding(args_sha256: str, prompt_sha256: str | None) -> str:
@@ -7638,6 +7650,76 @@ def _render_research_prompt_block(pointers: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+_RESEARCH_POINTER_LINE = re.compile(r"- ([a-z0-9]+(?:-[a-z0-9]+)*) \[([a-z_-]+)\] content_hash=([A-Za-z0-9:]+)")
+
+
+def _recorded_research_block(block: object) -> str:
+    """A recorded research block, when it is exactly a rendering of research pointers (#9275).
+
+    The bounded worker rebuilds its expected prompt with the research block the
+    dispatcher recorded; only a block that re-renders from its own pointer
+    lines is a permitted dispatcher block. Raises ``AdvisoryRefused`` otherwise.
+    """
+    if block in (None, ""):
+        return ""
+    text = str(block)
+    pointers = [
+        {"id": match.group(1), "state": match.group(2), "content_hash": match.group(3)}
+        for line in text.splitlines()
+        if (match := _RESEARCH_POINTER_LINE.fullmatch(line))
+    ]
+    if not pointers or _render_research_prompt_block(pointers) != text:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.ADMISSION_INVALID, "the recorded research block is not a rendering of research pointers"
+        )
+    return text
+
+
+def _compose_dispatch_prompt(
+    base: str,
+    *,
+    worktree_path: Path | None,
+    mode: str,
+    sparse_telemetry: dict[str, Any] | None,
+    delegate_commits: bool,
+    research_block: str,
+    advisory_block: str,
+    advisory_block_kind: str | None,
+    rules_seat: str | None,
+    blocks: list[str] | None = None,
+) -> str:
+    """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
+
+    In prompt order: the rules core, the worktree block, ``base``, the research
+    pointers and the advisory block. ``blocks``, when given, gets the kinds
+    added, in prompt order. The bounded worker rebuilds its expected prompt
+    with this function (#9275), so the two cannot drift apart.
+    """
+    prompt = _augment_prompt_with_worktree(
+        base,
+        worktree_path,
+        mode=mode,
+        sparse_telemetry=sparse_telemetry,
+        delegate_commits=delegate_commits,
+    )
+    if worktree_path is not None and blocks is not None:
+        blocks.insert(0, "worktree")
+    if research_block and blocks is not None:
+        blocks.append("research")
+    prompt = prompt + research_block
+    if advisory_block_kind is not None:
+        if blocks is not None:
+            blocks.append(advisory_block_kind)
+        prompt = prompt + advisory_block
+    # Every worker and review seat starts with the rules core, read from this checkout.
+    cored_prompt = rules_core.with_core(prompt, rules_seat)
+    if cored_prompt != prompt:
+        if blocks is not None:
+            blocks.insert(0, "rules_core")
+        prompt = cored_prompt
+    return prompt
+
+
 def _with_optional_research_state(state: dict[str, Any], research_state: dict[str, Any] | None) -> dict[str, Any]:
     """Add ``"research"`` to ``state`` only when ``research_state`` is non-``None``.
 
@@ -7964,6 +8046,7 @@ def _run_worker(
         agent=agent,
         model=model,
         mode=mode,
+        cwd=Path(cwd_str),
         prompt=prompt,
         runtime_tmp_root=runtime_tmp_root,
         runtime_tmp_namespace_root=runtime_tmp_namespace_root,
@@ -8085,6 +8168,10 @@ def _run_worker(
     no_deliverable = False
     no_deliverable_reason: str | None = None
     pre_spawn_failure = False
+    # #9275: the digest of the prompt checked and submitted at the provider
+    # handoff, or the typed code that refused it there.
+    advisory_prompt_sha256: str | None = None
+    advisory_handoff_refusal: str | None = None
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     leftovers_scan: worker_leftovers.ExitScan | None = None
@@ -8197,13 +8284,18 @@ def _run_worker(
 
                 verify_review_attempt_paths(mcp_config_path)
 
-            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[CURSOR_AUTO_ADMISSION_STATE_KEY].get(
-                "admitted"
-            ):
+            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[
+                CURSOR_AUTO_ADMISSION_STATE_KEY
+            ].get("admitted"):
                 tool_config[CURSOR_AUTO_ADMITTED_KEY] = True
             if is_kimi_seat(agent, model=model):
                 # The runner and the adapters run the same gate on these paths and this tree.
                 tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
+            # #9275: the provider handoff. The admission is re-verified on the
+            # exact prompt object submitted below, after every transformation.
+            advisory_prompt_sha256 = _verify_bounded_worker(
+                task_id, agent=agent, model=model, mode=mode, cwd=cwd, prompt=prompt
+            )
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -8267,6 +8359,13 @@ def _run_worker(
         except AgentRuntimeError as exc:
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except bounded_advisory.AdvisoryRefused as exc:
+            pre_spawn_failure = True
+            advisory_handoff_refusal = exc.code
+            stderr_excerpt = f"worker refused at the provider handoff: {exc}"[:500]
+            returncode_reason = (
+                "bounded model failed its advisory admission at the provider handoff; provider not started"
+            )
         except ValueError as exc:
             pre_spawn_failure = True
             stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
@@ -8335,6 +8434,10 @@ def _run_worker(
         final_state = _read_state(state_path) or {}
         final_state["require_review_verdict"] = require_review_verdict
         final_state["review_verdict_failure"] = None
+        if advisory_prompt_sha256 is not None:
+            final_state["advisory_prompt_sha256"] = advisory_prompt_sha256
+        if advisory_handoff_refusal is not None:
+            final_state["failure_reason"] = advisory_handoff_refusal
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
 
@@ -9457,7 +9560,9 @@ def _dispatch(
     # args.branch, a rejected --model cleared to None): the hash binds what was
     # literally parsed, not what dispatch later resolved it to (#8430 R3-A r8).
     dispatch_args_hash = dispatch_args_sha256(args)
-    advisory_args_hash = advisory_args_sha256(args)
+    # The advisory binding's argument half, as parsed: dispatch mutates ``args`` below (#9275).
+    advisory_args = json.loads(json.dumps(advisory_args_payload(args)))
+    advisory_args_hash = bounded_advisory.canonical_sha256(advisory_args)
     if getattr(args, "print_advisory_binding", False):
         try:
             print(advisory_binding(advisory_args_hash, _binding_prompt_sha256(args, read_stdin=True)))
@@ -9662,7 +9767,7 @@ def _dispatch(
             args,
             dispatch_agent=dispatch_agent,
             launch_model=launch_target.model,
-            args_sha256=advisory_args_hash,
+            bound_args=advisory_args,
             repo_root=target_repo_root,
         )
     except bounded_advisory.AdvisoryRefused as exc:
@@ -10833,42 +10938,33 @@ def _dispatch(
     spawned = False
     try:
         cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
-        prompt = _augment_prompt_with_worktree(
-            prompt,
-            worktree_path,
-            mode=args.mode,
-            sparse_telemetry=worktree_telemetry.get("sparse")
-            if isinstance(worktree_telemetry.get("sparse"), dict)
-            else None,
-            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
-        )
-        if worktree_path is not None:
-            prompt_blocks.insert(0, "worktree")
-
         # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
         # instruction (never digest bodies) when an explicit context was supplied and
         # the registry is enabled. Fail-open — a disabled/malformed registry leaves the
         # prompt and state untouched.
         research_state: dict[str, Any] | None = None
+        research_block = ""
         if research_ctx is not None:
             research_block, research_state = _resolve_research_injection(research_ctx, task_id)
-            if research_block:
-                prompt_blocks.append("research")
-            prompt = prompt + research_block
 
         # #9275: the bounded worker reads its envelope (ceilings included); the
         # advisor reads the envelope output contract bound to the worker dispatch.
         advisory_block, advisory_block_kind = advisory_admission.prompt_block()
-        if advisory_block_kind is not None:
-            prompt_blocks.append(advisory_block_kind)
-            prompt = prompt + advisory_block
-
-        # Every worker and review seat starts with the rules core, read from this
-        # checkout (its presence was required at the top of the dispatch).
-        cored_prompt = rules_core.with_core(prompt, getattr(args, "rules_seat", None))
-        if cored_prompt != prompt:
-            prompt_blocks.insert(0, "rules_core")
-            prompt = cored_prompt
+        # The rules core's presence was required at the top of the dispatch.
+        prompt = _compose_dispatch_prompt(
+            prompt,
+            worktree_path=worktree_path,
+            mode=args.mode,
+            sparse_telemetry=worktree_telemetry.get("sparse")
+            if isinstance(worktree_telemetry.get("sparse"), dict)
+            else None,
+            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
+            research_block=research_block,
+            advisory_block=advisory_block,
+            advisory_block_kind=advisory_block_kind,
+            rules_seat=getattr(args, "rules_seat", None),
+            blocks=prompt_blocks,
+        )
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
@@ -10981,7 +11077,7 @@ def _dispatch(
         # the admitted slot stays held until the worker writes its pid (#8717).
         if admission_record is not None:
             initial_state["admission"] = admission_record
-        initial_state.update(advisory_admission.state_fields())
+        initial_state.update(advisory_admission.state_fields(research_block=research_block))
         # #9275: the envelope admitted at route resolution must still be the
         # advisor's canonical result now, just before the worker is spawned.
         try:
@@ -11488,19 +11584,26 @@ class _AdvisoryAdmission:
     envelope: bounded_advisory.ValidatedEnvelope | None = None
     advisor_binding: str | None = None
     prompt_sha256: str | None = None  # the bounded worker's prompt text as bound at admission
-    args_sha256: str | None = None  # the argument half of the bounded worker's binding
+    args: dict[str, Any] | None = None  # the argument half of the bounded worker's binding
     repo_root: Path | None = None  # where the envelope's owned paths were validated
+    agent: str | None = None  # the admitted launch the bounded worker must run
+    model_id: str | None = None
     exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
 
-    def state_fields(self) -> dict[str, Any]:
+    def state_fields(self, *, research_block: str = "") -> dict[str, Any]:
+        """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt."""
         if self.envelope is not None and self.requirement is not None:
-            assert self.args_sha256 is not None and self.prompt_sha256 is not None and self.repo_root is not None
+            assert self.args is not None and self.prompt_sha256 is not None and self.repo_root is not None
+            assert self.agent is not None and self.model_id is not None
             return {
                 "advisory_envelope": self.envelope.state_record(
                     self.requirement,
-                    args_sha256=self.args_sha256,
+                    args=self.args,
                     prompt_sha256=self.prompt_sha256,
                     repo_root=self.repo_root,
+                    agent=self.agent,
+                    model_id=self.model_id,
+                    research_block=research_block,
                 )
             }
         if self.exemption is not None:
@@ -11527,7 +11630,7 @@ def _admit_advisory(
     *,
     dispatch_agent: str,
     launch_model: str | None,
-    args_sha256: str,
+    bound_args: dict[str, Any],
     repo_root: Path,
 ) -> _AdvisoryAdmission:
     """Admit the admitted route under #9275 or raise ``AdvisoryRefused``.
@@ -11535,6 +11638,7 @@ def _admit_advisory(
     ``dispatch_agent`` and ``launch_model`` are the admitted launch target, so
     aliases, ``--force-agent`` and budget substitution are already applied: a
     substitution into a bounded worker needs an envelope like a direct request.
+    ``bound_args`` is the argument half of the binding, captured as parsed.
     """
     from scripts.agent_runtime.telemetry import _default_model_for
     from scripts.review.model_catalog import canonical_model_id
@@ -11561,6 +11665,7 @@ def _admit_advisory(
         task_family=task_family,
         review_profile=review_profile,
         owned_paths=classified_paths,
+        repo_root=repo_root,
         policy=policy,
     )
     advisory_task = getattr(args, "advisory_task", None)
@@ -11604,7 +11709,7 @@ def _admit_advisory(
     envelope = bounded_advisory.load_envelope(
         advisory_task,
         state_path=_state_path_no_create(advisory_task),
-        binding_sha256=advisory_binding(args_sha256, prompt_sha256),
+        binding_sha256=advisory_binding(bounded_advisory.canonical_sha256(bound_args), prompt_sha256),
         repo_root=repo_root,
         policy=policy,
     )
@@ -11613,8 +11718,75 @@ def _admit_advisory(
         requirement=requirement,
         envelope=envelope,
         prompt_sha256=prompt_sha256,
-        args_sha256=args_sha256,
+        args=bound_args,
         repo_root=repo_root,
+        agent=dispatch_agent,
+        model_id=model_id,
+    )
+
+
+def _bounded_prompt_composer(
+    record: Mapping[str, Any], *, agent: str, model: str | None, mode: str
+) -> bounded_advisory.PromptComposer:
+    """How ``_dispatch`` built this worker's prompt around a brief, rebuilt from the task record (#9275).
+
+    The permitted dispatcher blocks are re-derived, never copied from the
+    prompt: the rules core from this checkout and the bound ``--rules-seat``,
+    the worktree block from the recorded worktree, the lifecycle block from
+    the recorded carrier, the research block only when it re-renders from its
+    own pointers, and the advisory block from the advisor's sealed envelope.
+    """
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+
+    def compose(brief: str, validated: bounded_advisory.ValidatedEnvelope, args: Mapping[str, Any]) -> str:
+        carrier = record.get("task_lifecycle")
+        lifecycle = ""
+        if isinstance(carrier, dict):
+            from scripts.orchestration import task_lifecycle
+
+            lifecycle = task_lifecycle.render_carrier_prompt(carrier)
+        worktree = record.get("worktree_path")
+        sparse = record.get("worktree_sparse")
+        admitted = record.get("advisory_envelope") or {}
+        return _compose_dispatch_prompt(
+            brief + lifecycle,
+            worktree_path=Path(str(worktree)) if worktree else None,
+            mode=mode,
+            sparse_telemetry=sparse if isinstance(sparse, dict) else None,
+            delegate_commits=is_kimi_seat(agent, model=model),
+            research_block=_recorded_research_block(admitted.get("research_block")),
+            advisory_block=bounded_advisory.worker_prompt_block(validated),
+            advisory_block_kind="advisory_envelope",
+            rules_seat=args.get("rules_seat"),
+        )
+
+    return compose
+
+
+def _verify_bounded_worker(
+    task_id: str, *, agent: str, model: str | None, mode: str, cwd: Path, prompt: str
+) -> str | None:
+    """Re-verify this worker's #9275 admission against ``prompt``, the exact text it hands the provider.
+
+    Reads the worker's own task record (never creating it). Returns the
+    SHA-256 of the checked prompt for an envelope admission, None when the
+    model is not bounded or runs under a Ukrainian exemption; raises
+    ``AdvisoryRefused`` otherwise.
+    """
+    from scripts.agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import canonical_model_id
+
+    record = _read_state_json(_state_path_no_create(task_id))
+    return bounded_advisory.verify_worker_admission(
+        record,
+        agent=agent,
+        model_id=canonical_model_id(model or _default_model_for(agent)),
+        mode=mode,
+        cwd=cwd,
+        prompt=prompt,
+        compose_prompt=_bounded_prompt_composer(record or {}, agent=agent, model=model, mode=mode),
+        state_path_for=_state_path_no_create,
+        default_repo_root=_REPO_ROOT,
     )
 
 
@@ -11624,33 +11796,24 @@ def _advisory_worker_refusal(
     agent: str,
     model: str | None,
     mode: str,
+    cwd: Path,
     prompt: str,
     runtime_tmp_root: str | None,
     runtime_tmp_namespace_root: str | None,
 ) -> str | None:
-    """The worker-side #9275 backstop: a refusal when a bounded model lacks a valid parent admission.
+    """The worker-side #9275 backstop at start: a refusal when a bounded model lacks a valid parent admission.
 
-    Reads the worker's own task record (never creating it) and re-verifies the
-    admission ``_dispatch`` recorded (``bounded_advisory.verify_worker_admission``).
-    A refused worker with a task record marks it failed with the typed code; a
+    Runs ``_verify_bounded_worker`` before the worker marks itself running;
+    the provider handoff runs it again on the exact prompt submitted. A
+    refused worker with a task record marks it failed with the typed code; a
     hand-built worker argv with no record gets the refusal only.
     """
-    from scripts.agent_runtime.telemetry import _default_model_for
-    from scripts.review.model_catalog import canonical_model_id
-
-    state_path = _state_path_no_create(task_id)
-    record = _read_state_json(state_path)
     try:
-        bounded_advisory.verify_worker_admission(
-            record,
-            model_id=canonical_model_id(model or _default_model_for(agent)),
-            mode=mode,
-            prompt=prompt,
-            state_path_for=_state_path_no_create,
-            default_repo_root=_REPO_ROOT,
-        )
+        _verify_bounded_worker(task_id, agent=agent, model=model, mode=mode, cwd=cwd, prompt=prompt)
     except bounded_advisory.AdvisoryRefused as exc:
         refusal = f"worker refused before start: {exc}"
+        state_path = _state_path_no_create(task_id)
+        record = _read_state_json(state_path)
         if record:
             record.update(
                 {

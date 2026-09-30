@@ -176,7 +176,8 @@ worker (`gpt-6-luna`), and to its `gemini-3.8-flash-high` fallback unless the di
 classified Ukrainian authoring or review, needs a complete envelope from a finished
 `gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `delegate.py` refuses it
 otherwise (`BOUNDED_ENVELOPE_REQUIRED`), including after a budget substitution, and fails
-the worker at finalize when it exceeds the envelope ceilings. The envelope's `owned_paths`
+the worker at finalize when it exceeds the envelope ceilings (a completion gate checked after
+the worker exits, not a limit on what it does while running). The envelope's `owned_paths`
 must equal the worker's `--owned-path` set. A Fable brief is design advice; it is not an
 envelope and does not admit a bounded worker (the packet path used to be "Fable or Astra";
 it is now the catalog advisor route only). Routine lockfile, pointer and smoke tasks take

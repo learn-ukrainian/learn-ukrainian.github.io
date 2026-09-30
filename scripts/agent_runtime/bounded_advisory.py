@@ -6,6 +6,13 @@ dispatch that resolves to the catalog's bounded worker
 Flash fallback without an explicit Ukrainian authoring/review classification,
 needs an envelope from the catalog advisor route, bound to that dispatch.
 
+Threat model (advisor decision on #9275): the rule is cooperative. It stops
+omitted advice, stale or foreign bindings, accidental prompt drift and scope
+overruns by processes that follow the dispatch path. It does not defend against
+deliberate forgery by a process that can rewrite task records, results or
+launcher code: such a process can recompute every digest kept here. Nothing in
+this module authenticates who wrote a record or result.
+
 The envelope is accepted only by reference to the advisor's task
 (``delegate.py dispatch --advisory-task <task-id>``), never as a free file. The
 advisor task must have run with ``--advisory-role bounded_advisory_envelope``
@@ -15,25 +22,39 @@ catalog ``output_fields`` key, typed and meaningful, plus the
 ``dispatch_args_sha256`` binding digest of the worker dispatch that the advisor
 dispatch recorded as ``advisory_binding_sha256``.
 
-The advisor's worker seals its result when it finishes: the task record's
-``advisory_seal`` holds the SHA-256 of the result it wrote, of the envelope in
-it, and the attested advisor model and run nonce. Admission recomputes both
-digests and refuses a result that no longer matches its seal.
+The advisor's worker records ``advisory_seal`` beside the result when it
+finishes: the SHA-256 of the result it wrote, of the envelope in it, and the
+model and run nonce it ran. The seal is a consistency checksum. Admission
+recomputes both digests and refuses a result edited or replaced after finish
+without a matching record update; a writer that updates both is outside the
+threat model above.
 
-This module is pure validation: it reads a task record and its result, and
-raises ``AdvisoryRefused`` with a typed code. ``delegate.py`` computes the
-binding digest, calls it after route resolution and again just before the task
-record is published, and checks the ceilings at finalize. The worker process
-re-verifies the parent's admission before it starts a bounded model
-(``verify_worker_admission``), so the internal worker entry cannot run one
-without it.
+The bound brief is what the worker runs: the worker rebuilds the expected
+prompt from the brief whose SHA-256 the envelope binds plus the dispatcher
+blocks it can re-derive, and compares it with the exact bytes it hands the
+provider (``verify_worker_admission``). It never trusts a prompt digest stored
+in its own task record.
+
+The envelope ceilings are completion gates: ``delegate.py`` measures the
+worker's changes after it exits and fails the task when either ceiling is
+exceeded or cannot be measured. They do not stop a worker from overrunning
+them while it runs.
+
+This module is pure validation: it reads task records, results and the
+repository tree, and raises ``AdvisoryRefused`` with a typed code.
+``delegate.py`` computes the binding digest, calls it after route resolution
+and again just before the task record is published, re-verifies it in the
+worker before start and at the provider handoff, and checks the ceilings at
+finalize.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
+import subprocess
 import unicodedata
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -66,6 +87,18 @@ _CODE_SUFFIXES = frozenset(
         ".sh", ".bash", ".css", ".scss", ".html", ".sql", ".toml", ".ini", ".cfg",
     }
 )  # fmt: skip
+# Git attributes that mark a file as code wherever it lives: a programming-language
+# diff driver, or a linguist language other than these content formats.
+_CODE_DIFF_DRIVERS = frozenset(
+    {
+        "ada", "bash", "cpp", "csharp", "css", "dts", "elixir", "fortran", "golang", "html", "java",
+        "kotlin", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "rust", "scheme",
+    }
+)  # fmt: skip
+_CONTENT_LINGUIST_LANGUAGES = frozenset({"markdown", "mdx", "yaml", "json", "text", "csv", "tsv"})
+# A glob is content-only when its last segment ends in a literal extension.
+_LITERAL_EXTENSION_RE = re.compile(r"\.([A-Za-z0-9_-]+)$")
+_GIT_TIMEOUT_S = 60
 SEAL_FIELD = "advisory_seal"
 
 # Typed refusal codes.
@@ -87,6 +120,7 @@ SEAL_MISMATCH = "ADVISORY_SEAL_MISMATCH"
 ADMISSION_MISSING = "BOUNDED_ADMISSION_MISSING"
 ADMISSION_INVALID = "BOUNDED_ADMISSION_INVALID"
 ADVISOR_ROUTE_REFUSED = "ADVISORY_ROLE_REFUSED"
+EXECUTION_MISMATCH = "BOUNDED_EXECUTION_MISMATCH"
 CEILING_EXCEEDED = "advisory_ceiling_exceeded"
 CEILING_UNMEASURED = "advisory_ceiling_unmeasured"
 
@@ -121,19 +155,30 @@ class ValidatedEnvelope:
         self,
         requirement: str,
         *,
-        args_sha256: str,
+        args: Mapping[str, Any],
         prompt_sha256: str,
         repo_root: Path,
+        agent: str,
+        model_id: str,
+        research_block: str = "",
     ) -> dict[str, Any]:
         """What the worker's task record keeps: the envelope's source, digests, binding inputs, scope and ceilings.
 
-        ``args_sha256`` and ``prompt_sha256`` are the two halves of the binding
-        (``binding_digest``); the worker re-derives the binding from them.
+        ``args`` (the dispatch arguments, hashing to ``advisory_args_sha256``)
+        and ``prompt_sha256`` (the brief) are the two halves of the binding
+        (``binding_digest``); the worker re-derives the binding from them and
+        reads its admitted mode, owned paths and rules seat from ``args``.
+        ``agent`` and ``model_id`` are the admitted launch; ``research_block``
+        the research pointer block the dispatcher added to the prompt.
         """
         return {
             "requirement": requirement,
-            "advisory_args_sha256": args_sha256,
+            "advisory_args": dict(args),
+            "advisory_args_sha256": canonical_sha256(args),
             "prompt_sha256": prompt_sha256,
+            "admitted_agent": agent,
+            "admitted_model_id": model_id,
+            "research_block": research_block,
             "repo_root": str(repo_root),
             "advisor_task_id": self.advisor_task_id,
             "advisor_model": self.advisor_model,
@@ -154,10 +199,15 @@ def binding_digest(args_sha256: str, prompt_sha256: str | None) -> str:
     return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
 
 
-def envelope_sha256(envelope: Mapping[str, Any]) -> str:
-    """SHA-256 of an envelope's canonical JSON (sorted keys, compact separators)."""
-    canonical = json.dumps(envelope, sort_keys=True, separators=(",", ":"))
+def canonical_sha256(value: Mapping[str, Any]) -> str:
+    """SHA-256 of a JSON object's canonical form (sorted keys, compact separators, ASCII)."""
+    canonical = json.dumps(value, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+def envelope_sha256(envelope: Mapping[str, Any]) -> str:
+    """SHA-256 of an envelope's canonical JSON (``canonical_sha256``)."""
+    return canonical_sha256(envelope)
 
 
 def _result_envelope_sha256(result_text: str) -> str | None:
@@ -173,11 +223,13 @@ def _result_envelope_sha256(result_text: str) -> str | None:
 
 
 def seal_advisor_result(response: str, *, model: str | None, run_nonce: str | None) -> dict[str, Any]:
-    """The finish-time seal an advisor's worker records beside the result it writes.
+    """The finish-time consistency checksum an advisor's worker records beside the result it writes.
 
     ``response`` is the text written, UTF-8, to the canonical result; ``model``
     the model the worker ran. Admission refuses a result that no longer hashes
-    to ``result_sha256`` or whose envelope no longer hashes to ``envelope_sha256``.
+    to ``result_sha256`` or whose envelope no longer hashes to
+    ``envelope_sha256``. The seal authenticates nothing: whoever can write the
+    task record can recompute it (see the module threat model).
     """
     return {
         "result_sha256": hashlib.sha256(response.encode("utf-8")).hexdigest(),
@@ -223,25 +275,162 @@ def _path_segments(path: Any) -> list[str] | None:
     return segments or None
 
 
-def is_ukrainian_content_path(path: Any) -> bool:
-    """True when ``path`` stays inside a Ukrainian content root and names no code file.
+def _git(repo_root: Path, *args: str, stdin: bytes | None = None) -> bytes:
+    """``git --literal-pathspecs <args>`` in ``repo_root``; raises ``RuntimeError`` when it fails."""
+    try:
+        proc = subprocess.run(
+            ["git", "--literal-pathspecs", *args],
+            cwd=repo_root,
+            input=stdin,
+            capture_output=True,
+            check=False,
+            timeout=_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise RuntimeError(f"git {args[0]}: {exc}") from None
+    if proc.returncode != 0:
+        detail = proc.stderr.decode("utf-8", "replace").strip() or f"exit {proc.returncode}"
+        raise RuntimeError(f"git {args[0]}: {detail}")
+    return proc.stdout
 
-    The path is normalized first, so ``././scripts``, ``curriculum/../scripts``
-    and ``scripts/`` classify like ``scripts``. A glob is judged by its static
-    prefix (a root-level glob such as ``**/*.py`` covers code) and by its last
-    segment's suffix (``curriculum/**/*.py`` is code).
+
+def _tracked_entries(repo_root: Path, base: str) -> dict[str, str]:
+    """``path -> git file mode`` for every file git tracks at or under ``base``, sparse or not."""
+    entries: dict[str, str] = {}
+    for record in _git(repo_root, "ls-files", "-s", "-z", "--", base).split(b"\0"):
+        if record:
+            meta, _, path = record.partition(b"\t")
+            entries[path.decode("utf-8", "surrogateescape")] = meta.split()[0].decode("ascii")
+    return entries
+
+
+def _content_root_of(resolved: Path, root: Path) -> str | None:
+    """The Ukrainian content root a resolved path lies under, or None."""
+    try:
+        parts = resolved.relative_to(root).parts
+    except ValueError:
+        return None
+    return parts[0] if parts and parts[0] in _UKRAINIAN_CONTENT_ROOTS else None
+
+
+def _disk_files(repo_root: Path, base: str) -> tuple[list[str], str | None]:
+    """Files on disk at or under ``base``, following symlinked directories, and the first directory outside content.
+
+    The walk stops at a directory whose real path leaves the Ukrainian content
+    roots (returned second), so a symlink out of content is never walked.
     """
+    root = repo_root.resolve()
+    top = repo_root / base
+    if not top.is_dir():
+        return ([base] if top.exists() or top.is_symlink() else []), None
+    files: list[str] = []
+    seen: set[str] = set()
+    for directory, subdirs, names in os.walk(top, followlinks=True):
+        rel_dir = Path(directory).relative_to(repo_root).as_posix()
+        real = Path(os.path.realpath(directory))
+        if _content_root_of(real, root) is None:
+            return files, rel_dir
+        if str(real) in seen:
+            subdirs[:] = []
+            continue
+        seen.add(str(real))
+        subdirs.sort()
+        files.extend(f"{rel_dir}/{name}" for name in sorted(names))
+    return files, None
+
+
+def _code_by_attributes(repo_root: Path, files: Sequence[str]) -> list[str]:
+    """Files that git attributes mark as code (a code diff driver or a non-content linguist language)."""
+    if not files:
+        return []
+    stdin = b"".join(name.encode("utf-8", "surrogateescape") + b"\0" for name in files)
+    fields = _git(repo_root, "check-attr", "-z", "--stdin", "diff", "linguist-language", stdin=stdin).split(b"\0")
+    code: set[str] = set()
+    for index in range(0, len(fields) - 2, 3):
+        name, attribute, value = (field.decode("utf-8", "surrogateescape") for field in fields[index : index + 3])
+        value = value.casefold()
+        if value in {"unspecified", "unset", "set"}:
+            continue
+        if (attribute == "diff" and value in _CODE_DIFF_DRIVERS) or (
+            attribute == "linguist-language" and value not in _CONTENT_LINGUIST_LANGUAGES
+        ):
+            code.add(name)
+    return sorted(code)
+
+
+def content_path_problem(path: Any, repo_root: Path) -> str | None:
+    """Why ``path`` is not Ukrainian content only in ``repo_root``; None when every file it can match is.
+
+    The path is normalized first (``././scripts``, ``curriculum/../scripts`` and
+    ``scripts/`` classify like ``scripts``) and must start inside a Ukrainian
+    content root. A glob must pin a literal non-code extension in its last
+    segment and use no character class, so ``docs/**/*.p[y]``, ``docs/**/*.p?``
+    and ``docs/**/*`` are code-capable. Then every file the path owns, as
+    dispatch ownership reads it (``owned_path_matcher``), is enumerated from
+    git's index and from disk, symlinks followed: each must resolve under a
+    content root and be code neither by extension nor by git attributes. A
+    directory is judged by the files it holds. An unreadable tree is a problem
+    (fail closed).
+    """
+    from scripts.guardrails.delegate_ownership import owned_path_matcher
+
     segments = _path_segments(path)
     if segments is None:
-        return False
+        return "is not a repository-relative path inside the repository"
+    if segments[-1] == "**" and len(segments) > 1:
+        segments = segments[:-1]  # ``dir/**`` owns the subtree, exactly as ``dir/`` does
     static: list[str] = []
     for segment in segments:
         if _GLOB_CHARS & set(segment):
             break
         static.append(segment)
     if not static or static[0] not in _UKRAINIAN_CONTENT_ROOTS:
-        return False
-    return PurePosixPath(segments[-1]).suffix.lower() not in _CODE_SUFFIXES
+        return "is outside the Ukrainian content roots"
+    if PurePosixPath(segments[-1]).suffix.lower() in _CODE_SUFFIXES:
+        return "names a code file"
+    normalized = "/".join(segments)
+    if len(static) < len(segments):
+        if "[" in normalized:
+            return "uses a character class, which can match a code file"
+        extension = _LITERAL_EXTENSION_RE.search(segments[-1])
+        if extension is None or f".{extension.group(1).lower()}" in _CODE_SUFFIXES:
+            return "is a glob without a literal non-code extension, which can match a code file"
+    matcher = owned_path_matcher(normalized)
+    if matcher is None:
+        return "owns no file"
+    root = repo_root.resolve()
+    base = "/".join(static)
+    if _content_root_of((repo_root / base).resolve(), root) is None:
+        return f"resolves outside the Ukrainian content roots ({base!r})"
+    try:
+        tracked = _tracked_entries(repo_root, base)
+        on_disk, outside = _disk_files(repo_root, base)
+    except (OSError, RuntimeError) as exc:
+        return f"cannot be resolved in {repo_root} ({exc})"
+    if outside is not None:
+        return f"reaches directory {outside!r}, which resolves outside the Ukrainian content roots"
+    files = sorted(rel for rel in {*tracked, *on_disk} if matcher(rel))
+    for rel in files:
+        target = repo_root / rel
+        if tracked.get(rel) == "120000" and not target.exists():
+            return f"covers symlink {rel!r}, which cannot be resolved in this tree"
+        resolved = target.resolve()
+        if PurePosixPath(rel).suffix.lower() in _CODE_SUFFIXES or resolved.suffix.lower() in _CODE_SUFFIXES:
+            return f"covers code file {rel!r}"
+        if _content_root_of(resolved, root) is None:
+            return f"covers {rel!r}, which resolves outside the Ukrainian content roots"
+    try:
+        by_attributes = _code_by_attributes(repo_root, files)
+    except RuntimeError as exc:
+        return f"cannot be checked for code attributes in {repo_root} ({exc})"
+    if by_attributes:
+        return f"covers {by_attributes[0]!r}, which git attributes mark as code"
+    return None
+
+
+def is_ukrainian_content_path(path: Any, repo_root: Path) -> bool:
+    """True when every file ``path`` can match in ``repo_root`` is Ukrainian content (``content_path_problem``)."""
+    return content_path_problem(path, repo_root) is None
 
 
 def bounded_requirement(
@@ -251,6 +440,7 @@ def bounded_requirement(
     task_family: str | None,
     review_profile: str | None,
     owned_paths: Iterable[str] = (),
+    repo_root: Path,
     policy: BoundedExecutionPolicy | None = None,
 ) -> str | None:
     """Why this launch needs an advisory envelope, or None when it does not.
@@ -261,8 +451,9 @@ def bounded_requirement(
     fallback unless it is explicitly classified non-bounded — a Ukrainian
     authoring or review task family, or ``--review-profile ukrainian`` for a
     read-only review — and nothing contradicts that; missing or conflicting
-    classification counts as bounded (fail closed). Either exemption owning any
-    path outside the Ukrainian content roots, or any code file, conflicts.
+    classification counts as bounded (fail closed). Either exemption owning a
+    path that is not Ukrainian content only in ``repo_root``
+    (``content_path_problem``) conflicts.
     """
     policy = policy or bounded_execution_policy()
     if model_id is None:
@@ -279,10 +470,14 @@ def bounded_requirement(
     if review_profile == "ukrainian" and family is not None and not ukrainian_family:
         conflicts.append(f"--review-profile ukrainian with non-Ukrainian task family {family!r}")
     if ukrainian_family or review_profile == "ukrainian":
-        code_paths = sorted({str(path) for path in owned_paths if not is_ukrainian_content_path(path)})
-        if code_paths:
+        problems = sorted(
+            f"{path!r} {problem}"
+            for path in {str(path) for path in owned_paths}
+            if (problem := content_path_problem(path, repo_root)) is not None
+        )
+        if problems:
             claim = f"task family {family!r}" if ukrainian_family else "--review-profile ukrainian"
-            conflicts.append(f"{claim} owning code or non-content paths {code_paths}")
+            conflicts.append(f"{claim} owning code or non-content paths ({'; '.join(problems)})")
     if conflicts:
         return f"{model_id} with an ambiguous classification ({'; '.join(conflicts)}) is the bounded fallback"
     if ukrainian_family:
@@ -545,9 +740,10 @@ def _verify_exemption(
     *,
     model_id: str,
     mode: str,
+    repo_root: Path,
     policy: BoundedExecutionPolicy,
 ) -> None:
-    """The recorded Ukrainian exemption still classifies this launch as non-bounded."""
+    """The recorded Ukrainian exemption still classifies this launch as non-bounded in ``repo_root``."""
     classified = exemption.get("classified_paths")
     if not isinstance(classified, list) or not all(isinstance(path, str) for path in classified):
         raise AdvisoryRefused(ADMISSION_INVALID, "the recorded exemption has no classified path list")
@@ -568,37 +764,108 @@ def _verify_exemption(
         task_family=exemption.get("task_family"),
         review_profile=exemption.get("review_profile"),
         owned_paths=classified,
+        repo_root=repo_root,
         policy=policy,
     )
     if requirement is not None:
         raise AdvisoryRefused(ENVELOPE_REQUIRED, f"{requirement}; the recorded exemption does not hold")
 
 
+# Stands in for the brief when the dispatcher blocks around it are rebuilt; a
+# NUL byte never occurs in a dispatcher block.
+_BRIEF_PLACEHOLDER = "\0bounded-advisory-brief\0"
+
+PromptComposer = Callable[[str, ValidatedEnvelope, Mapping[str, Any]], str]
+
+
+def _require_execution(
+    admitted: Mapping[str, Any],
+    args: Mapping[str, Any],
+    record: Mapping[str, Any],
+    *,
+    agent: str | None,
+    model_id: str,
+    mode: str,
+    cwd: Path,
+    envelope_paths: Sequence[str],
+) -> None:
+    """The worker runs the admitted launch: agent, model, mode, owned scope and worktree."""
+    mismatches: list[str] = []
+    if admitted.get("admitted_model_id") != model_id:
+        mismatches.append(f"model {model_id!r} is not the admitted {admitted.get('admitted_model_id')!r}")
+    if admitted.get("admitted_agent") != agent:
+        mismatches.append(f"agent {agent!r} is not the admitted {admitted.get('admitted_agent')!r}")
+    if args.get("mode") != mode:
+        mismatches.append(f"mode {mode!r} is not the bound --mode {args.get('mode')!r}")
+    bound_paths = sorted({str(path).strip() for path in _as_list(args.get("owned_path")) if str(path).strip()})
+    if bound_paths != sorted(set(envelope_paths)):
+        mismatches.append(f"bound --owned-path {bound_paths} is not the envelope owned_paths")
+    worktree = record.get("worktree_path")
+    if worktree is not None and Path(str(worktree)).resolve() != cwd.resolve():
+        mismatches.append(f"cwd {str(cwd)!r} is not the admitted worktree {worktree!r}")
+    if mismatches:
+        raise AdvisoryRefused(EXECUTION_MISMATCH, "; ".join(mismatches))
+
+
+def _require_bound_prompt(prompt: str, *, prompt_sha256: str, compose: Callable[[str], str]) -> str:
+    """Refuse unless ``prompt`` is the bound brief inside the dispatcher blocks; returns the checked bytes' SHA-256.
+
+    The dispatcher blocks are rebuilt around a placeholder brief; the text
+    between them in ``prompt`` must hash to the bound ``prompt_sha256``, and
+    rebuilding the prompt around that brief must give back ``prompt`` byte for
+    byte, so any appended, prepended or altered instruction refuses.
+    """
+    head, found, tail = compose(_BRIEF_PLACEHOLDER).partition(_BRIEF_PLACEHOLDER)
+    prompt_bytes = prompt.encode("utf-8")
+    if not found or len(prompt) < len(head) + len(tail) or not prompt.startswith(head) or not prompt.endswith(tail):
+        raise AdvisoryRefused(
+            BINDING_MISMATCH, "the worker's prompt is not the bound brief within the permitted dispatcher blocks"
+        )
+    brief = prompt[len(head) : len(prompt) - len(tail)]
+    if hashlib.sha256(brief.encode("utf-8")).hexdigest() != prompt_sha256:
+        raise AdvisoryRefused(BINDING_MISMATCH, "the brief in the worker's prompt is not the brief the envelope binds")
+    if compose(brief).encode("utf-8") != prompt_bytes:
+        raise AdvisoryRefused(
+            BINDING_MISMATCH, "the worker's prompt is not the bound brief within the permitted dispatcher blocks"
+        )
+    return hashlib.sha256(prompt_bytes).hexdigest()
+
+
 def verify_worker_admission(
     record: Mapping[str, Any] | None,
     *,
+    agent: str | None,
     model_id: str | None,
     mode: str,
+    cwd: Path,
     prompt: str,
+    compose_prompt: PromptComposer,
     state_path_for: Callable[[str], Path],
     default_repo_root: Path,
     policy: BoundedExecutionPolicy | None = None,
-) -> None:
+) -> str | None:
     """The worker's backstop: refuse to start a bounded model its parent did not admit.
 
-    ``record`` is the worker's own task record, ``prompt`` the text it is about
-    to hand the model. A bounded-worker model runs only when the record carries
-    the parent's validated admission — advisor task, sealed result and envelope
-    digests, the two binding halves (argument digest and bound prompt SHA-256)
-    — and all of it re-verifies now: the binding re-derives, the advisor's
-    sealed result still loads and binds, the recorded ceilings and owned paths
-    are the envelope's, and the prompt is the one the parent recorded, carrying
-    that envelope. A Gemini Flash launch runs either with such an admission or
-    with a recorded Ukrainian exemption that still classifies as non-bounded.
+    ``record`` is the worker's own task record and ``prompt`` the exact text it
+    hands the provider; the caller checks and submits the same object. A
+    bounded-worker model runs only when the record carries the parent's
+    admission and all of it re-verifies now: the recorded dispatch arguments
+    hash to the argument half of the binding, the binding re-derives, the
+    advisor's sealed result still loads and binds, the recorded ceilings and
+    owned paths are the envelope's, the launch (agent, model, mode, owned paths,
+    worktree) is the admitted one, and ``prompt`` is the envelope-bound brief
+    inside exactly the blocks ``compose_prompt(brief, envelope, args)``
+    rebuilds. The record's own prompt digests are never trusted for that.
+    A Gemini Flash launch runs either with such an admission or with a
+    recorded Ukrainian exemption that still classifies as non-bounded in
+    ``cwd``.
+
+    Returns the SHA-256 of the checked prompt bytes for an envelope admission,
+    None otherwise.
     """
     policy = policy or bounded_execution_policy()
     if model_id not in {policy.bounded_worker_model_id, policy.bounded_fallback_model_id}:
-        return
+        return None
     if not record:
         raise AdvisoryRefused(ADMISSION_MISSING, f"{model_id} has no task record carrying a parent admission")
     if record.get("mode") != mode:
@@ -607,8 +874,8 @@ def verify_worker_admission(
     if admitted is None and model_id == policy.bounded_fallback_model_id:
         exemption = record.get("advisory_exemption")
         if isinstance(exemption, dict):
-            _verify_exemption(record, exemption, model_id=model_id, mode=mode, policy=policy)
-            return
+            _verify_exemption(record, exemption, model_id=model_id, mode=mode, repo_root=cwd, policy=policy)
+            return None
     if not isinstance(admitted, dict):
         raise AdvisoryRefused(
             ADMISSION_MISSING, f"{model_id} is a bounded model and its task record carries no advisory admission"
@@ -619,14 +886,17 @@ def verify_worker_admission(
     args_sha256 = _require_digest(admitted, "advisory_args_sha256")
     prompt_sha256 = _require_digest(admitted, "prompt_sha256")
     binding = _require_digest(admitted, BINDING_FIELD)
+    args = admitted.get("advisory_args")
+    if not isinstance(args, dict):
+        raise AdvisoryRefused(ADMISSION_INVALID, "the recorded admission carries no dispatch arguments")
+    if canonical_sha256(args) != args_sha256:
+        raise AdvisoryRefused(BINDING_MISMATCH, "the recorded dispatch arguments do not hash to the bound digest")
     if binding_digest(args_sha256, prompt_sha256) != binding:
         raise AdvisoryRefused(
             BINDING_MISMATCH, "the recorded binding does not derive from its argument and prompt digests"
         )
     if record.get("prompt_sha256") != prompt_sha256:
         raise AdvisoryRefused(BINDING_MISMATCH, "the task's prompt is not the prompt the envelope was bound to")
-    if hashlib.sha256(prompt.encode("utf-8")).hexdigest() != record.get("effective_prompt_sha256"):
-        raise AdvisoryRefused(BINDING_MISMATCH, "the worker's prompt is not the prompt its parent recorded")
     repo_root = admitted.get("repo_root")
     current = load_envelope(
         advisor_task_id,
@@ -657,8 +927,12 @@ def verify_worker_admission(
             f"the recorded admission of advisory task {advisor_task_id!r} no longer matches its sealed envelope",
         )
     require_owned_paths_match(current.owned_paths, record.get("owned_paths"))
-    if worker_prompt_block(current) not in prompt:
-        raise AdvisoryRefused(ENVELOPE_CHANGED, "the worker's prompt does not carry the admitted envelope")
+    _require_execution(
+        admitted, args, record, agent=agent, model_id=model_id, mode=mode, cwd=cwd, envelope_paths=current.owned_paths
+    )
+    return _require_bound_prompt(
+        prompt, prompt_sha256=prompt_sha256, compose=lambda brief: compose_prompt(brief, current, args)
+    )
 
 
 def worker_prompt_block(validated: ValidatedEnvelope) -> str:

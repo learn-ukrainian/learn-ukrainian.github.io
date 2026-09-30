@@ -473,7 +473,8 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   and test/log triage alike; token cost is accepted. `delegate.py` refuses a dispatch
   without it (`BOUNDED_ENVELOPE_REQUIRED`), also after a budget substitution, records the
   envelope's result path and digest in the task record, and fails the worker at finalize
-  (`advisory_ceiling_exceeded`) when it exceeds the envelope ceilings. Missing or
+  (`advisory_ceiling_exceeded`) when it exceeds the envelope ceilings; the ceilings are
+  a completion gate checked after the worker exits, not a runtime limit. Missing or
   conflicting classification counts as bounded. Work that has no envelope, or is too
   broad for a ceiling, routes to Sol @ `high` instead.
 * **Routine lockfile, pointer and smoke tasks** take no advisory seat (core `p2-retired`),

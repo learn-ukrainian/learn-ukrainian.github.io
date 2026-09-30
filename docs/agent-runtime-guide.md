@@ -799,10 +799,16 @@ read-only `--review-profile ukrainian`), is refused (`BOUNDED_ENVELOPE_REQUIRED`
 `--advisory-task` names a finished advisor task that issued an envelope for it. The check
 runs after aliases, `--force-agent` and budget substitution, before any task record or
 worktree. Either Ukrainian exemption holds only while every `--owned-path` and
-`--research-owned-path`, normalized first (`./`, `..`, repeated or trailing `/`, globs by
-their static prefix and last-segment suffix), stays under `curriculum`, `wiki`, `docs`,
-`data` or `plans` and names no code file; anything else is an ambiguous classification and
-needs an envelope.
+`--research-owned-path` is Ukrainian content only, judged by what it resolves to. The path
+is normalized (`./`, `..`, repeated or trailing `/`) and must start under `curriculum`,
+`wiki`, `docs`, `data` or `plans`. A glob must end in a literal non-code extension and use
+no character class, so `docs/**/*.p[y]`, `docs/**/*.p?` and `docs/**/*` can match code.
+Every file the path owns, as dispatch ownership reads it, is then enumerated from git's
+index and from disk with symlinks followed. Each file, and each directory reached, must
+resolve under a content root, and no file may be code by extension or by a git attribute
+(a programming-language `diff` driver or a non-content `linguist-language`). A directory is
+judged by the files it holds, and an unreadable tree fails closed. Anything else is an
+ambiguous classification and needs an envelope.
 
 ```bash
 # 1. Fix the worker dispatch and print its binding (arguments + prompt text).
@@ -815,31 +821,52 @@ needs an envelope.
 .venv/bin/python scripts/delegate.py dispatch <same arguments as step 1> --advisory-task A
 ```
 
+**Threat model.** The rule is cooperative. It stops omitted advice, stale or foreign
+bindings, accidental prompt drift and scope overruns by processes that follow the dispatch
+path. Deliberate forgery by a process that can rewrite task records, results or launcher
+code is out of scope: such a process can recompute every digest described here, and none
+of them authenticates who wrote a record or result.
+
 The advisor task must be `done`, read-only, on `gpt-6.1-sol`, with role
 `bounded_advisory_envelope` and the same binding. When the advisor's worker writes its
 result it records `advisory_seal` (SHA-256 of the result and of its envelope, the model it
-ran, its run nonce); admission recomputes both digests and refuses a missing seal
-(`ADVISORY_SEAL_MISSING`) or a result, envelope, model or run that no longer matches it
-(`ADVISORY_SEAL_MISMATCH`). Its canonical `.result` must hold exactly
+ran, its run nonce). The seal is a consistency checksum, not proof of authorship: admission
+recomputes both digests and refuses a missing seal (`ADVISORY_SEAL_MISSING`) or a result,
+envelope, model or run that no longer matches it (`ADVISORY_SEAL_MISMATCH`), which catches a
+result edited or replaced after finish without a matching record update. Its canonical `.result` must hold exactly
 one fenced `advisory-envelope` JSON object with every catalog `output_fields` key (non-empty
 `task_contract`; non-empty lists; positive integer ceilings; `owned_paths` repo-relative under
 an existing top-level root) plus `dispatch_args_sha256` equal to the binding. `--owned-path`
 must equal the envelope's `owned_paths`. The result is re-validated just before spawn; a
 change fails the task (`ADVISORY_ENVELOPE_CHANGED`). The worker record keeps
 `advisory_envelope` (advisor task, result path and SHA-256, envelope SHA-256, binding,
-ceilings), the worker prompt carries the envelope, and at finalize a write-mode worker whose
-diff from the merge base exceeds `max_changed_files` or `max_non_test_loc` fails
-(`advisory_ceiling_exceeded`; unmeasurable is `advisory_ceiling_unmeasured`).
+ceilings) and the worker prompt carries the envelope.
 
-The internal `_worker` entry re-verifies all of this before it starts a bounded model, so a
-hand-built or stale worker argv cannot skip admission. The record's `advisory_envelope` also
-keeps both binding halves (`advisory_args_sha256`, `prompt_sha256`); the worker re-derives
-the binding, reloads the advisor's sealed envelope, compares the recorded ceilings and owned
-paths with it, and checks that its prompt is the one the parent recorded and carries that
-envelope. A Gemini Flash worker instead runs on a recorded `advisory_exemption` that still
-classifies as Ukrainian. Otherwise it exits before the provider starts, marking an existing
-task record `failed` (`BOUNDED_ADMISSION_MISSING`, `BOUNDED_ADMISSION_INVALID` or the
-envelope code).
+The ceilings are completion gates. After a write-mode worker exits, a worker whose diff
+from the merge base exceeds `max_changed_files` or `max_non_test_loc` fails
+(`advisory_ceiling_exceeded`), and a diff that cannot be measured fails too
+(`advisory_ceiling_unmeasured`). Exactly reaching a ceiling passes. Nothing stops the
+worker from overrunning a ceiling while it runs; the overrun fails the task instead of
+settling it.
+
+The internal `_worker` entry re-verifies all of this before it starts a bounded model and
+again at the provider handoff, so a hand-built or stale worker argv cannot skip admission.
+The record's `advisory_envelope` keeps both binding halves: the parsed dispatch arguments
+(`advisory_args`, hashing to `advisory_args_sha256`) and the brief's `prompt_sha256`. The
+worker re-derives the binding, reloads the advisor's sealed envelope and compares the
+recorded ceilings and owned paths with it. It checks that it runs the admitted launch:
+agent and model (`admitted_agent`, `admitted_model_id`), the bound `--mode` and
+`--owned-path`, and the recorded worktree as its cwd (`BOUNDED_EXECUTION_MISMATCH`). It then
+rebuilds the expected prompt from the brief the envelope binds plus the dispatcher blocks it
+can re-derive: the rules core, the worktree block, the lifecycle block from the recorded
+carrier, the research block only when it re-renders from its own pointers, and the envelope
+block from the sealed result. The exact prompt object it hands the provider must equal that
+rebuild byte for byte, so an appended, prepended or altered instruction refuses
+(`ADVISORY_BINDING_MISMATCH`). The record's `effective_prompt_sha256` plays no part. The
+checked digest is kept as `advisory_prompt_sha256`. A Gemini Flash worker instead runs on a
+recorded `advisory_exemption`, re-classified in its own tree. Otherwise it exits before the
+provider starts, marking an existing task record `failed` (`BOUNDED_ADMISSION_MISSING`,
+`BOUNDED_ADMISSION_INVALID` or the envelope code).
 
 ### Auto-finalize scope and unfinished background jobs (#8991)
 
