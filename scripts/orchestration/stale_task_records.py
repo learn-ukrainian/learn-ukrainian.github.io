@@ -27,10 +27,15 @@ finalized; they only inflate every scan and read as open attention items.
 
 Only class C is written. ``done`` needs a merged pull request tied to the task
 by commit identity: its head or merge commit is a recorded commit, or its head
-descends from one. A record with a #9275 completion gate (a bounded worker's
-envelope ceilings, a content exemption's changed paths) never settles ``done``:
-its worktree is gone, so the gate cannot re-measure the worker's changes, and it
-settles ``failed`` with the gate's typed unmeasured cause. A pull request that only reuses the branch name may belong
+descends from one, and every #9275 completion gate the record calls for
+(:func:`delegate.applicable_completion_gates`) passes when re-run by
+:func:`delegate.completion_gate_recovery_failure`: a failure the record already
+carries stands; delivery counts a pull request merged since the task started;
+the review verdict is re-checked on the saved response (gone or replaced: a
+typed failure); a bounded worker's envelope ceilings or a content exemption's
+changed paths cannot be re-measured, because the worktree is gone. A failing
+gate settles its typed cause (``failed``, or ``no_deliverable`` for delivery),
+never ``done``. A pull request that only reuses the branch name may belong
 to a later task, so that record moves to D instead. A clean exit with no
 commits settles ``no_deliverable``; anything else settles ``failed``. Evidence
 comes from one fetch per repository of every remote branch into the private
@@ -802,20 +807,28 @@ def _decide_outcome(candidate: Candidate, index: PullIndex | None, checkout: Pat
             and any(_is_ancestor(checkout, sha, pull["head_sha"]) for sha in candidate.work_commits)
         ]
     record = candidate.record
-    gate_unmeasured = delegate._completion_gate_unmeasured_code(record)
     if tied:
         pull = max(tied, key=lambda item: str(item.get("merged_at") or ""))
         candidate.merged_pr = pull
         candidate.settle_reason = f"orphaned: PR #{pull.get('number')} merged this task's recorded commit"
-        if gate_unmeasured is None:
+        # #9275: ``done`` needs every completion gate the record calls for to pass
+        # now. The saved response is re-checked; a pull request merged since the
+        # task started is the delivery evidence (one that merged earlier holds
+        # only the base the worker started from); a gate that measures the
+        # worker's tree cannot run, because the tree is gone.
+        gate_failure = delegate.completion_gate_recovery_failure(
+            record,
+            response=delegate.saved_task_response(record, candidate.path),
+            commits_ahead=1 if _merged_since(pull, start) else record.get("commits_ahead"),
+        )
+        if gate_failure is None:
             candidate.outcome = "done"
         else:
-            # #9275: ``done`` needs the completion gate run on the worker's changes,
-            # and its worktree is gone; a merged pull request does not measure them.
-            candidate.outcome = "failed"
-            candidate.failure_reason = gate_unmeasured
+            candidate.outcome = gate_failure.status
+            candidate.failure_reason = gate_failure.failure
+            candidate.evidence["completion_gate"] = {"gate": gate_failure.gate, "failure": gate_failure.failure}
             candidate.settle_reason += (
-                f", but its completion gate cannot measure the worker's changes ({gate_unmeasured})"
+                f", but its {gate_failure.gate} completion gate refuses done ({gate_failure.failure})"
             )
     elif same_branch:
         candidate.klass = "D"
@@ -898,8 +911,10 @@ def _settled_record(candidate: Candidate, current: dict[str, Any], settled_at: s
     if candidate.failure_reason is not None:
         updated["failure_reason"] = candidate.failure_reason
         updated["last_error"] = candidate.settle_reason
+        if candidate.evidence.get("completion_gate", {}).get("gate") == delegate.COMPLETION_GATE_REVIEW_VERDICT:
+            updated["review_verdict_failure"] = candidate.failure_reason
     if candidate.outcome == delegate._NO_DELIVERABLE_STATUS and not updated.get("no_deliverable_reason"):
-        updated["no_deliverable_reason"] = candidate.settle_reason
+        updated["no_deliverable_reason"] = candidate.failure_reason or candidate.settle_reason
     return updated
 
 

@@ -891,6 +891,9 @@ def _review_task_failure_reason(state: dict[str, Any]) -> str:
     """Give every failed verdict-required review a stable, queryable cause."""
     if state.get("review_verdict_failure"):
         return state["review_verdict_failure"]
+    # A typed cause another gate already set (#9275) is kept, never renamed.
+    if isinstance(state.get("failure_reason"), str) and state["failure_reason"]:
+        return state["failure_reason"]
     if state.get("read_only_mutation_paths"):
         return "read_only_checkout_mutation"
     if state.get("read_only_checkout_snapshot_error"):
@@ -5665,18 +5668,166 @@ def _advisory_completion_gate(
     return None
 
 
-def _completion_gate_unmeasured_code(record: Mapping[str, Any]) -> str | None:
-    """The typed failure for a record whose #9275 completion gate can no longer measure its changes.
+# #9275: the single definition of the completion gates a task record calls for.
+# The worker's terminal settle runs them, and so does every recovery path that
+# can report ``done`` (stale-record settlement, rate-limit reclassification, the
+# ask-* review wrapper): success needs every applicable gate to pass.
+COMPLETION_GATE_DELIVERY = "delivery"
+COMPLETION_GATE_REVIEW_VERDICT = "review_verdict"
+COMPLETION_GATE_ADVISORY_CEILING = "advisory_ceiling"
+COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE = "advisory_exempt_change"
+# Recovery's pseudo-gate: a failure the record already carries is never overwritten.
+COMPLETION_GATE_RECORDED_FAILURE = "recorded_failure"
+# A gate that reads the worker's response cannot run when the saved response is gone or replaced.
+COMPLETION_GATE_RESPONSE_UNAVAILABLE = "completion_gate_response_unavailable"
+# Record fields that hold a failure the worker already found.
+_RECORDED_FAILURE_FIELDS = (
+    "failure_reason",
+    "review_verdict_failure",
+    "no_deliverable_reason",
+    "kimi_content_refusal",
+    "agy_oauth_link_error",
+    "read_only_mutation_paths",
+)
 
-    None when the record calls for no gate. Recovery that has lost the worker's
-    tree (its worktree is gone) uses this instead of settling ``done``.
+
+@dataclass(frozen=True)
+class CompletionGateResult:
+    """One completion gate's verdict on a task record.
+
+    ``failure`` is the typed cause (None when the gate passed), ``status`` the
+    terminal status a failure settles, and ``record_key``/``check`` the
+    measurement the gate writes to the record, when it has one.
     """
-    if record.get("mode") not in _WRITE_CAPABLE_MODES:
-        return None
-    if isinstance(record.get("advisory_envelope"), dict):
-        return bounded_advisory.CEILING_UNMEASURED
-    if isinstance(record.get("advisory_exemption"), dict):
-        return bounded_advisory.EXEMPT_CHANGES_UNMEASURED
+
+    gate: str
+    failure: str | None
+    detail: str = ""
+    status: str = "failed"
+    record_key: str | None = None
+    check: dict[str, Any] | None = None
+
+
+def applicable_completion_gates(record: Mapping[str, Any]) -> tuple[str, ...]:
+    """Every completion gate the record calls for, in the order the worker runs them.
+
+    Delivery binds every write-capable dispatch; the review verdict binds an
+    opted-in review (``require_review_verdict``); a write-capable bounded worker
+    has its envelope ceilings checked, else a content exemption its changed paths.
+    """
+    write = record.get("mode") in _WRITE_CAPABLE_MODES
+    gates: list[str] = []
+    if write:
+        gates.append(COMPLETION_GATE_DELIVERY)
+    if record.get("require_review_verdict"):
+        gates.append(COMPLETION_GATE_REVIEW_VERDICT)
+    if write and isinstance(record.get("advisory_envelope"), dict):
+        gates.append(COMPLETION_GATE_ADVISORY_CEILING)
+    elif write and isinstance(record.get("advisory_exemption"), dict):
+        gates.append(COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE)
+    return tuple(gates)
+
+
+def run_completion_gate(
+    gate: str,
+    record: Mapping[str, Any],
+    *,
+    response: str | None,
+    commits_ahead: int | None,
+    worktree: Path | None,
+) -> CompletionGateResult:
+    """Run one completion gate on the worker's response, commit count and tree.
+
+    ``response`` None means the saved response is unavailable and ``worktree``
+    None that the worker's tree is gone: a gate that needs either fails typed,
+    never passes.
+    """
+    if gate == COMPLETION_GATE_DELIVERY:
+        if response is None and commits_ahead == 0:
+            # Only a zero-commit run reads the response (its no_change declaration).
+            return CompletionGateResult(gate, COMPLETION_GATE_RESPONSE_UNAVAILABLE, "saved response unavailable")
+        reason = _delivery_failure_reason(
+            response or "", _parse_delivery_declaration(response or ""), commits_ahead=commits_ahead
+        )
+        return CompletionGateResult(gate, reason, reason or "", status=_NO_DELIVERABLE_STATUS)
+    if gate == COMPLETION_GATE_REVIEW_VERDICT:
+        if response is None:
+            return CompletionGateResult(gate, COMPLETION_GATE_RESPONSE_UNAVAILABLE, "saved response unavailable")
+        reason = _review_verdict_failure_reason(response)
+        return CompletionGateResult(gate, reason, reason or "")
+    if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
+        advisory = _advisory_completion_gate(record, worktree)
+        if advisory is None:
+            raise ValueError(f"record does not call for completion gate {gate!r}")
+        record_key, check, failure, detail = advisory
+        return CompletionGateResult(gate, failure, detail if failure else "", record_key=record_key, check=check)
+    raise ValueError(f"unknown completion gate {gate!r}")
+
+
+def recorded_completion_failure(record: Mapping[str, Any]) -> CompletionGateResult | None:
+    """A failure the record already carries, as a result with its typed cause; None when it carries none."""
+    for field in _RECORDED_FAILURE_FIELDS:
+        value = record.get(field)
+        if not value:
+            continue
+        cause = value if isinstance(value, str) else field
+        status = _NO_DELIVERABLE_STATUS if field == "no_deliverable_reason" else "failed"
+        return CompletionGateResult(COMPLETION_GATE_RECORDED_FAILURE, cause, f"{field}: {cause}", status=status)
+    return None
+
+
+def saved_task_response(record: Mapping[str, Any], record_path: Path | None = None) -> str | None:
+    """The worker's response as the record saved it, or None when it is gone or was replaced.
+
+    The ``.result`` sidecar next to the record is read first (it moves with the
+    record into the archive), then ``result_file``. A text whose length is not
+    the recorded ``response_chars`` was replaced after the worker finished. A
+    record with an empty response wrote no result file: that response is ``""``.
+    """
+    chars = record.get("response_chars")
+    known_chars = isinstance(chars, int) and not isinstance(chars, bool)
+    candidates: list[Path] = []
+    if record_path is not None:
+        candidates.append(record_path.with_suffix(".result"))
+    result_file = record.get("result_file")
+    if isinstance(result_file, str) and result_file:
+        candidates.append(Path(result_file))
+    for path in candidates:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        return text if not known_chars or len(text) == chars else None
+    if known_chars and chars == 0 and not result_file:
+        return ""
+    return None
+
+
+def completion_gate_recovery_failure(
+    record: Mapping[str, Any], *, response: str | None, commits_ahead: int | None
+) -> CompletionGateResult | None:
+    """The first reason recovery may not report this record ``done``; None when every applicable gate passes.
+
+    Recovery runs after the worker is gone, so a failure the record already
+    carries stands, every gate in :func:`applicable_completion_gates` is re-run
+    on the saved ``response`` and the ``commits_ahead`` evidence the caller
+    holds now, and a gate that measures the worker's tree fails as unmeasured:
+    the tree is no longer the one the worker left.
+    """
+    recorded = recorded_completion_failure(record)
+    if recorded is not None:
+        return recorded
+    return first_completion_gate_failure(record, response=response, commits_ahead=commits_ahead, worktree=None)
+
+
+def first_completion_gate_failure(
+    record: Mapping[str, Any], *, response: str | None, commits_ahead: int | None, worktree: Path | None
+) -> CompletionGateResult | None:
+    """Run every gate in :func:`applicable_completion_gates` in order; the first failure, or None when all pass."""
+    for gate in applicable_completion_gates(record):
+        result = run_completion_gate(gate, record, response=response, commits_ahead=commits_ahead, worktree=worktree)
+        if result.failure is not None:
+            return result
     return None
 
 
@@ -8834,21 +8985,7 @@ def _run_worker(
         # ``DELIVERABLE:`` line is honoured as an optional positive signal.
         # Read-only tasks are excluded: their deliverable may be analysis or
         # an external side effect such as a posted review comment.
-        if (
-            mode in _WRITE_CAPABLE_MODES
-            and final_status == "done"
-            and returncode == 0
-            and not needs_finalize
-            and no_deliverable_reason is None
-        ):
-            delivery_declaration = _parse_delivery_declaration(response)
-            no_deliverable_reason = _delivery_failure_reason(
-                response,
-                delivery_declaration,
-                commits_ahead=commits_ahead,
-            )
-            no_deliverable = no_deliverable_reason is not None
-
+        #
         # A review-typed dispatch (#8421) that settled ``done`` must actually
         # state a verdict. A reviewer that backgrounds its work and replies
         # with a promise to keep waiting exits 0 with an intent-only body; the
@@ -8856,35 +8993,48 @@ def _run_worker(
         # without this gate the false ``done`` reported success to ask-* review
         # drivers. Opt-in via ``--require-review-verdict`` (the ask-* review
         # wrapper only) — ordinary asks and implement dispatches are unchanged.
-        if (
-            require_review_verdict
-            and final_status == "done"
-            and returncode == 0
-            and not needs_finalize
-            and no_deliverable_reason is None
-        ):
-            review_verdict_failure = _review_verdict_failure_reason(response)
-            if review_verdict_failure is not None:
-                final_state["review_verdict_failure"] = review_verdict_failure
+        #
+        # #9275: a bounded worker's envelope ceilings, and a Ukrainian content
+        # exemption's changed paths, are checked on what it changed; a breach, or
+        # changes that cannot be measured, is a typed failure, never done.
+        #
+        # Which gates apply is one definition (``applicable_completion_gates``),
+        # shared with every recovery path that can report ``done``.
+        gate_record = {**final_state, "mode": mode, "require_review_verdict": require_review_verdict}
+        for gate in applicable_completion_gates(gate_record):
+            if final_status != "done":
+                break
+            if gate in (COMPLETION_GATE_DELIVERY, COMPLETION_GATE_REVIEW_VERDICT) and (
+                returncode != 0 or needs_finalize or no_deliverable_reason is not None
+            ):
+                continue
+            gate_result = run_completion_gate(
+                gate,
+                gate_record,
+                response=response,
+                commits_ahead=commits_ahead,
+                worktree=Path(worktree_path) if worktree_path else None,
+            )
+            if gate_result.record_key is not None:
+                final_state[gate_result.record_key] = gate_result.check
+            if gate == COMPLETION_GATE_DELIVERY:
+                delivery_declaration = _parse_delivery_declaration(response)
+                no_deliverable_reason = gate_result.failure
+                no_deliverable = no_deliverable_reason is not None
+            elif gate_result.failure is None:
+                continue
+            elif gate == COMPLETION_GATE_REVIEW_VERDICT:
+                final_state["review_verdict_failure"] = gate_result.failure
                 final_status = "failed"
                 ok_outcome = False
-                stderr_excerpt = review_verdict_failure
-
-        # #9275: the completion gates. A bounded worker's envelope ceilings, and a
-        # Ukrainian content exemption's changed paths, are checked on what it changed;
-        # a breach, or changes that cannot be measured, is a typed failure, never done.
-        if mode in _WRITE_CAPABLE_MODES and final_status == "done":
-            advisory_gate = _advisory_completion_gate(final_state, Path(worktree_path) if worktree_path else None)
-            if advisory_gate is not None:
-                gate_key, gate_check, gate_failure, gate_detail = advisory_gate
-                final_state[gate_key] = gate_check
-                if gate_failure is not None:
-                    final_state["failure_reason"] = gate_failure
-                    final_status = "failed"
-                    ok_outcome = False
-                    needs_finalize = False
-                    message = f"{gate_failure}: {gate_detail}"
-                    stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
+                stderr_excerpt = gate_result.failure
+            else:
+                final_state["failure_reason"] = gate_result.failure
+                final_status = "failed"
+                ok_outcome = False
+                needs_finalize = False
+                message = f"{gate_result.failure}: {gate_result.detail}"
+                stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
 
         if pre_spawn_failure:
             needs_finalize = False

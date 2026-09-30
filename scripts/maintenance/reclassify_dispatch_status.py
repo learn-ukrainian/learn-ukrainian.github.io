@@ -4,7 +4,9 @@
 Walks ``batch_state/tasks/*.json``, and the ``archive/`` that old terminal
 records move into (#8625), and revisits any task currently marked
 ``rate_limited`` using the current adapter parsing logic plus whatever saved
-signals we still have in the task file / usage logs.
+signals we still have in the task file / usage logs. A record is promoted to
+``done`` only when every completion gate it calls for passes on the saved
+evidence (``delegate.completion_gate_recovery_failure``, #9275).
 
 Issue: #1404
 """
@@ -147,6 +149,20 @@ def _reclassify_task(
         return None
     if new_status != "done":
         return "skipped", task_id, f"reclassified to {new_status}, left unchanged"
+    # #9275: ``done`` also needs every completion gate the record calls for to
+    # pass on the saved evidence; a gate that refuses leaves the failure in place.
+    gate_failure = delegate.completion_gate_recovery_failure(
+        task_state,
+        response=delegate.saved_task_response(task_state, task_path),
+        commits_ahead=task_state.get("commits_ahead"),
+    )
+    if gate_failure is not None:
+        return (
+            "skipped",
+            task_id,
+            f"reclassified to done, but its {gate_failure.gate} completion gate refuses done "
+            f"({gate_failure.failure}); left unchanged",
+        )
 
     previous_status = task_state["status"]
     if dry_run:

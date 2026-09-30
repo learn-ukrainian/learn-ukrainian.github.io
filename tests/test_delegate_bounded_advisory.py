@@ -2232,3 +2232,74 @@ def test_r5_a_read_only_review_interrupted_before_its_verdict_check_is_a_typed_f
     state = delegate._read_state(state_path)
     assert (state["status"], state["needs_finalize"]) == ("failed", False)
     assert state["last_error"] == delegate._INTERRUPTED_BEFORE_COMPLETION_GATES
+
+
+# #9275 r7: one definition of the completion gates a record calls for, shared by
+# the worker's terminal settle and every recovery path that can report ``done``.
+
+
+@pytest.mark.parametrize(
+    ("record", "gates"),
+    [
+        ({"mode": "read-only"}, ()),
+        ({"mode": "read-only", "require_review_verdict": True}, ("review_verdict",)),
+        ({"mode": "workspace-write"}, ("delivery",)),
+        ({"mode": "danger", "require_review_verdict": True}, ("delivery", "review_verdict")),
+        ({"mode": "danger", "advisory_envelope": {}, "advisory_exemption": {}}, ("delivery", "advisory_ceiling")),
+        ({"mode": "workspace-write", "advisory_exemption": {}}, ("delivery", "advisory_exempt_change")),
+        # Advisory gates measure a write worker's changes; a read-only record has none.
+        ({"mode": "read-only", "advisory_envelope": {}}, ()),
+    ],
+)
+def test_r7_applicable_completion_gates(record, gates):
+    assert delegate.applicable_completion_gates(record) == gates
+
+
+def test_r7_saved_task_response_reads_the_sidecar_and_refuses_a_replaced_or_missing_one(tmp_path):
+    record_path = tmp_path / "t.json"
+    record = {"response_chars": 5, "result_file": str(tmp_path / "elsewhere.result")}
+    assert delegate.saved_task_response(record, record_path) is None
+    (tmp_path / "elsewhere.result").write_text("hello")
+    assert delegate.saved_task_response(record, record_path) == "hello"
+    (tmp_path / "t.result").write_text("hello")
+    assert delegate.saved_task_response(record, record_path) == "hello"
+    (tmp_path / "t.result").write_text("hello, replaced")
+    assert delegate.saved_task_response(record, record_path) is None
+    assert delegate.saved_task_response({"response_chars": 0, "result_file": None}, tmp_path / "none.json") == ""
+
+
+def test_r7_recovery_keeps_a_recorded_failure_then_reruns_each_gate():
+    envelope_record = {"mode": "danger", "advisory_envelope": {}, "commits_ahead": 1}
+    failure = delegate.completion_gate_recovery_failure(envelope_record, response="done", commits_ahead=1)
+    assert (failure.gate, failure.failure) == ("advisory_ceiling", bounded_advisory.CEILING_UNMEASURED)
+    recorded = delegate.completion_gate_recovery_failure(
+        {"mode": "read-only", "no_deliverable_reason": "no_commits_no_changes"}, response="x", commits_ahead=None
+    )
+    assert (recorded.gate, recorded.failure, recorded.status) == (
+        "recorded_failure",
+        "no_commits_no_changes",
+        "no_deliverable",
+    )
+    review = {"mode": "read-only", "require_review_verdict": True}
+    assert delegate.completion_gate_recovery_failure(review, response="VERDICT: APPROVE", commits_ahead=None) is None
+    assert (
+        delegate.completion_gate_recovery_failure(review, response=None, commits_ahead=None).failure
+        == delegate.COMPLETION_GATE_RESPONSE_UNAVAILABLE
+    )
+
+
+def test_r7_a_verdict_required_record_keeps_another_gates_typed_failure(tmp_path, monkeypatch):
+    """A verdict-gated bounded worker that breaches its ceilings is recorded with that cause, not renamed."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    path = delegate._state_path("verdict-bounded")
+    delegate._write_state_atomic(
+        path,
+        {
+            "task_id": "verdict-bounded",
+            "status": "failed",
+            "returncode": 0,
+            "require_review_verdict": True,
+            "failure_reason": bounded_advisory.CEILING_EXCEEDED,
+        },
+    )
+    assert delegate._read_state(path)["failure_reason"] == bounded_advisory.CEILING_EXCEEDED

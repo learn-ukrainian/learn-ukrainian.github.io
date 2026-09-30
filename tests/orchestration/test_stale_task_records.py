@@ -1320,3 +1320,208 @@ def test_a_gated_record_is_never_settled_done_even_when_a_merged_pr_carries_its_
 
     _settle(tasks_dir, repo, pulls, apply=True)
     assert json.loads((tasks_dir / "gated.json").read_text())["status"] == "failed"
+
+
+# #9275 r7: recovery re-runs every completion gate the record calls for
+# (``delegate.applicable_completion_gates``); success needs all of them to pass.
+
+_NO_VERDICT = "Reviewed the change; the background check is still running.\n"
+_APPROVE = "Findings: none blocking.\nVERDICT: APPROVE\n"
+
+
+def _interrupted_verdict_worker(tmp_path: Path, repo: Path, name: str, response: str) -> str:
+    """Run the real worker for a verdict-gated write task, interrupt it inside its verdict check, then lose its tree.
+
+    Returns the worker's pushed commit, which no ref holds afterwards: the
+    worktree, the local branch and the remote branch are all gone.
+    """
+    branch = f"codex/{name}"
+    worktree = tmp_path / f"wt-{name}"
+    _git(repo, "worktree", "add", "-b", branch, str(worktree), "main")
+    (worktree / f"{name}.txt").write_text("work\n")
+    _git(worktree, "add", f"{name}.txt")
+    _git(worktree, "commit", "-m", name)
+    _git(worktree, "push", "-u", "origin", branch)
+    sha = _git(worktree, "rev-parse", "HEAD")
+    state_path = delegate._state_path(name)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": name,
+            "agent": "codex",
+            "mode": "workspace-write",
+            "status": "running",
+            "repository": SLUG,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "worktree_reused": True,
+        },
+    )
+    result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": response, "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-6.1-sol", "effort": "high", "cli_version": "fixture",
+        },
+    )()  # fmt: skip
+    patch = pytest.MonkeyPatch()
+    try:
+        patch.setattr("agent_runtime.runner.invoke", lambda *_a, **_k: result)
+        patch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+        patch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+
+        def interrupt(_response):
+            raise KeyboardInterrupt("SIGTERM during the verdict check")
+
+        patch.setattr(delegate, "_review_verdict_failure_reason", interrupt)
+        with pytest.raises(KeyboardInterrupt):
+            delegate._run_worker(
+                task_id=name,
+                agent="codex",
+                prompt="review and fix",
+                mode="workspace-write",
+                cwd_str=str(worktree),
+                model="gpt-6.1-sol",
+                hard_timeout=60,
+                keep_worktree=True,
+                require_review_verdict=True,
+            )
+    finally:
+        patch.undo()
+    record = json.loads(state_path.read_text())
+    assert (record["status"], record["require_review_verdict"]) == ("needs_finalize", True)
+    assert record["last_error"] == delegate._INTERRUPTED_BEFORE_COMPLETION_GATES
+    assert record["final_branch_head_commit"] == sha
+    assert state_path.with_suffix(".result").read_text() == response
+    # The tree is lost and the record ages past --min-age-days.
+    _git(repo, "worktree", "remove", "--force", str(worktree))
+    _git(repo, "branch", "-D", branch)
+    _git(repo, "push", "origin", "--delete", branch)
+    record.update(started_at=OLD_START.isoformat(), finished_at=OLD_FINISH.isoformat())
+    state_path.write_text(json.dumps(record, indent=2))
+    return sha
+
+
+def test_r7_the_reviewers_probe_a_verdict_gated_worker_interrupted_in_its_verdict_check_never_settles_done(
+    tmp_path, tasks_dir, repo
+):
+    """The r6 review's reproduction: a merged PR carries the commit, but the saved response has no verdict."""
+    sha = _interrupted_verdict_worker(tmp_path, repo, "probe", _NO_VERDICT)
+    assert delegate._review_verdict_failure_reason(_NO_VERDICT) == "review_missing_verdict_line"
+    pulls = [_merged("codex/probe", 41, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    for _ in range(2):
+        _settle(tasks_dir, repo, pulls, apply=True)
+        record = json.loads((tasks_dir / "probe.json").read_text())
+        assert record["status"] == "failed"
+        assert (record["failure_reason"], record["review_verdict_failure"]) == (
+            "review_missing_verdict_line",
+            "review_missing_verdict_line",
+        )
+        assert record["settle_evidence"]["completion_gate"] == {
+            "gate": "review_verdict",
+            "failure": "review_missing_verdict_line",
+        }
+        assert "review_missing_verdict_line" in record["last_error"]
+        assert record["merged_pr"]["number"] == 41
+
+
+def test_r7_a_verdict_gated_record_whose_saved_response_passes_the_checker_settles_done(tmp_path, tasks_dir, repo):
+    sha = _interrupted_verdict_worker(tmp_path, repo, "approved", _APPROVE)
+    pulls = [_merged("codex/approved", 42, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["approved.json"]
+
+    assert (row["class"], row["action"], row["outcome"]) == ("C", "settled", "done")
+    record = json.loads((tasks_dir / "approved.json").read_text())
+    assert (record["status"], record.get("failure_reason")) == ("done", None)
+    assert "completion_gate" not in record["settle_evidence"]
+
+
+def _gated_record(tasks_dir: Path, repo: Path, name: str, *, response: str | None, **fields: Any) -> str:
+    base = _git(repo, "rev-parse", "HEAD")
+    sha = _orphan_commit(repo, name)
+    record = {"commits_ahead": 1, "worktree_base_sha": base, "final_branch_head_commit": sha, **fields}
+    _record(tasks_dir, name, worktree_dirty_on_exit=True, **record)
+    if response is not None:
+        (tasks_dir / f"{name}.result").write_text(response)
+    return sha
+
+
+@pytest.mark.parametrize(
+    ("name", "response", "fields", "outcome", "gate", "failure"),
+    [
+        # Delivery: the tied PR merged before the task started (the base the worker
+        # started from), so the recorded zero commits stand and nothing was declared.
+        (
+            "delivery",
+            "Looked around; nothing to change.\n",
+            {"commits_ahead": 0, "response_chars": 34},
+            "no_deliverable",
+            "delivery",
+            "no_commits_no_changes",
+        ),
+        # Review verdict, saved response replaced after the worker finished.
+        (
+            "replaced",
+            _APPROVE,
+            {"require_review_verdict": True, "response_chars": len(_NO_VERDICT) + 1},
+            "failed",
+            "review_verdict",
+            "completion_gate_response_unavailable",
+        ),
+        # Review verdict, saved response gone.
+        (
+            "gone",
+            None,
+            {"require_review_verdict": True, "response_chars": 120},
+            "failed",
+            "review_verdict",
+            "completion_gate_response_unavailable",
+        ),
+        # A failure the record already carries is never overwritten.
+        (
+            "recorded",
+            _APPROVE,
+            {"failure_reason": "kimi_content_refused", "response_chars": len(_APPROVE)},
+            "failed",
+            "recorded_failure",
+            "kimi_content_refused",
+        ),
+        ("ceiling", _APPROVE, {"advisory_envelope": {}}, "failed", "advisory_ceiling", "advisory_ceiling_unmeasured"),
+        (
+            "exempt",
+            _APPROVE,
+            {"advisory_exemption": {}},
+            "failed",
+            "advisory_exempt_change",
+            "advisory_exempt_changes_unmeasured",
+        ),
+    ],
+)
+def test_r7_each_completion_gate_is_rerun_by_settle_stale(
+    tasks_dir, repo, name, response, fields, outcome, gate, failure
+):
+    sha = _gated_record(tasks_dir, repo, name, response=response, **fields)
+    merged_at = OLD_START - timedelta(days=2) if gate == "delivery" else OLD_FINISH + timedelta(days=1)
+    pulls = [_merged(f"codex/{name}", 51, merged_at, head_sha=sha)]
+
+    for _ in range(2):
+        _settle(tasks_dir, repo, pulls, apply=True)
+        record = json.loads((tasks_dir / f"{name}.json").read_text())
+        assert (record["status"], record["failure_reason"]) == (outcome, failure)
+        assert record["settle_evidence"]["completion_gate"] == {"gate": gate, "failure": failure}
+        if outcome == "no_deliverable":
+            assert record["no_deliverable_reason"] == failure
+
+
+def test_r7_delivery_counts_a_pull_request_merged_since_the_task_started(tasks_dir, repo):
+    """The merged commit is delivery evidence even when the worker exited before committing it itself."""
+    sha = _gated_record(tasks_dir, repo, "finalized", response=None, commits_ahead=0)
+    pulls = [_merged("codex/finalized", 52, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["finalized.json"]
+
+    assert (row["outcome"], json.loads((tasks_dir / "finalized.json").read_text())["status"]) == ("done", "done")
