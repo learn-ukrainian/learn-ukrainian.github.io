@@ -1,8 +1,20 @@
-# Test files that read git history. scripts/ci/split_tests.py pins them to
-# pytest shard 1, the only shard ci.yml checks out with full history
-# (fetch-depth: 0); every other shard is a shallow checkout (fetch-depth: 1).
-# A test on a shallow shard that needs history fails loudly (git exits 128);
-# add its file here. See docs/runbooks/ci-gate.md "History shard".
+# Test files that need git history or the network. scripts/ci/split_tests.py
+# pins them to pytest shard 1, the only shard ci.yml checks out with full
+# history (fetch-depth: 0). Every other shard is a shallow checkout
+# (fetch-depth: 1) and runs pytest with GIT_ALLOW_PROTOCOL=file. There, a test
+# that reads history fails with git exit 128, and a test that fetches from
+# GitHub fails on the blocked https transport. Neither can pass silently; add
+# its file here. See docs/runbooks/ci-gate.md "History shard".
+
+# Read old commits.
 tests/build/test_reviewer_scoring_parity.py  # git show <old sha>:<path>
 tests/orchestration/test_curriculum_lifecycle_pilot.py  # verifies a recorded historical commit
-tests/test_open_model_phase3_source_universe_freeze_validator.py  # git rev-parse origin/main, merge-base ancestry
+tests/test_gemma_hardware_probe.py  # git cat-file blob <pre-migration sha>:<path>
+tests/test_open_model_phase3_source_universe_freeze_validator.py  # origin/main and merge-base ancestry
+tests/test_storage_classification_table.py  # classification table at a frozen base commit
+
+# A --dry-run `delegate.py dispatch --worktree` runs `git fetch origin main`
+# against this checkout. That takes about 0.3 s with full history and 65-77 s
+# on a shallow checkout, which then downloads all of main's history.
+tests/agent_runtime/test_review_mcp.py
+tests/test_delegate_admission.py

@@ -130,19 +130,25 @@ entry.
 
 ### History shard
 
-Three test files read git history: `git show <old sha>:<path>`, a recorded
-historical commit, and `origin/main` ancestry. They are listed in
-`scripts/ci/history-tests.txt`. `split_tests.py` pins them to shard 1 and
-balances the other files around them. Shard 1 is the only shard checked out
-with full history (`fetch-depth: 0`); shards 2..N check out only the tested
-commit (`fetch-depth: 1`). A listed file that is no longer tracked fails the
-split.
+Seven test files are listed in `scripts/ci/history-tests.txt`. Five read old
+commits: `git show`/`git cat-file` of an old SHA, a recorded historical
+commit, a frozen base commit, and `origin/main` ancestry. Two run a
+`--dry-run` `delegate.py dispatch --worktree`, which fetches `main` from
+GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
+s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
+and balances the other files around them. Shard 1 is the only shard checked out
+with full history (`fetch-depth: 0`). Shards 2..N check out only the tested
+commit (`fetch-depth: 1`) and run pytest with `GIT_ALLOW_PROTOCOL=file`. A
+listed file that is no longer tracked fails the split.
 
-The list is measured, not guessed. One run with every shard shallow was
-compared test by test with a full-history run of the same commit. Only these
-three files changed outcome. No test skipped because history was missing:
-all three failed loudly, with git exit 128. A new test that needs history
-therefore fails on a shallow shard; add its file to the list.
+The list is measured, not guessed. One run had every shard shallow with
+network git blocked, and it was compared test by test with a full-history run
+of the same code. Only these seven files changed outcome. None of them skipped:
+each failed loudly, with git exit 128 or a blocked https transport. Without the
+block, the network fetch in the two delegate tests pulled main's history into
+their shard and hid two of the five history files. A new test that needs
+history or fetches from GitHub therefore fails on a shallow shard; add its file
+to the list.
 
 To change the shard count, edit the static `matrix.shard` list (it must stay
 `1..N`). `scripts/ci/slot_inventory.py --check` (actionlint workflow) counts

@@ -410,7 +410,8 @@ def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
     jobs = workflow["jobs"]
     assert "frontend-e2e" not in jobs
     frontend = jobs["frontend"]
-    assert "if" not in frontend
+    # Skipped only when the merge queue reuses a green full run of the identical tree.
+    assert frontend["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert "frontend" in jobs["ci-gate"]["needs"]
     steps = frontend["steps"]
     scope_index = next(index for index, step in enumerate(steps) if step.get("id") == "scope")

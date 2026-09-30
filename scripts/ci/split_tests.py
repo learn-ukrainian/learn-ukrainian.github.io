@@ -7,10 +7,10 @@ the least-loaded shard (LPT), using the recorded per-file seconds in
 the median, so a new or renamed file is still run, only balanced less well.
 The shards are a partition of the input: every file lands on exactly one.
 
-The files listed in ``scripts/ci/history-tests.txt`` read old commits and
-always go to shard 1 (``HISTORY_SHARD``), the only shard ci.yml checks out
-with full history; every other shard is a shallow checkout. The rest of the
-files are balanced around them. A listed file missing from the input fails
+The files listed in ``scripts/ci/history-tests.txt`` need git history (or
+fetch from GitHub) and always go to shard 1 (``HISTORY_SHARD``), the only
+shard ci.yml checks out with full history; every other shard is a shallow
+checkout. The rest of the files are balanced around them. A listed file missing from the input fails
 the split, so the list cannot go stale silently.
 
 ``durations`` rebuilds that JSON from the JUnit files of a full run:

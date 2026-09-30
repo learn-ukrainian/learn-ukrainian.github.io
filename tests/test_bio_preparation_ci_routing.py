@@ -64,7 +64,11 @@ def test_bio_preparation_validator_is_reachable_from_the_required_gate() -> None
 
 def test_nothing_can_skip_the_bio_preparation_validator() -> None:
     _, job = _checks_job()
-    assert "if" not in job, "the checks job carries an `if:` and could be skipped"
+    # The one skip: a merge-queue run reusing a green full run of the identical
+    # tree, whose Checks job (this validator included) already passed.
+    assert job.get("if") == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}", (
+        "the checks job may be skipped only on a recorded merge-queue reuse"
+    )
     assert "if" not in job["_step"], "the checks.sh step carries an `if:` and could be skipped"
     # checks.sh runs every check at top level, never inside a condition.
     assert any(line == VALIDATOR_CHECK for line in CHECKS_SCRIPT.read_text(encoding="utf-8").splitlines())

@@ -325,6 +325,9 @@ def test_only_the_history_shard_checks_out_full_history() -> None:
     }
     # fetch-depth 0 is full history; 1 is a shallow checkout of the tested commit.
     assert depths == {shard: "0" if shard == HISTORY_SHARD else "1" for shard in depths}
+    # Shallow shards block network git, so a fetch cannot hide a history need.
+    script = next(step["run"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
+    assert f'[ "$SHARD" = {HISTORY_SHARD} ] || export GIT_ALLOW_PROTOCOL=file' in script
 
 
 def test_pr_runs_share_one_group_per_pr_number() -> None:

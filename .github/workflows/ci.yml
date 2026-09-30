@@ -215,6 +215,9 @@ jobs:
           set -euo pipefail
           mkdir -p ci-artifacts
           export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"
+          # Shallow shards: a test that fetches from GitHub fails instead of
+          # quietly downloading history (scripts/ci/history-tests.txt).
+          [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
           git ls-files -- tests | grep -E '/test_[^/]+\.py$' \
             | python3 -m scripts.ci.split_tests split --shard "$SHARD" --of "$SHARDS" > "$LU_PYTEST_SHARD_FILES"
           .venv/bin/python -m pytest tests -n logical --dist=worksteal --max-worker-restart=0 \
