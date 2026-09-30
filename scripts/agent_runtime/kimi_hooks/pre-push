@@ -1,7 +1,7 @@
 #!/bin/sh
 # Kimi worktree boundary (scripts/agent_runtime/kimi_boundary.py): refuse a
-# push whose commits add Cyrillic text, add content that is not text, or change
-# a path outside the task's owned paths; then run the repository's own hook.
+# push whose commits change files to hold Cyrillic text or other than plain UTF-8
+# text, or change a path outside the task's owned paths; then run the repository's own hook.
 python=$(git config --worktree --get kimiguard.python) || python=
 root=$(git config --worktree --get kimiguard.root) || root=
 if [ -z "$python" ] || [ -z "$root" ]; then

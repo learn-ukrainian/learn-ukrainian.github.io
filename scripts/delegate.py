@@ -74,7 +74,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
-        "kimi_content_refusal": str | absent        # a Kimi diff added Cyrillic text or non-text content; nothing was committed
+        "kimi_content_refusal": str | absent        # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
     }
 
 Design notes:
@@ -5367,11 +5367,11 @@ def _kimi_worker_refusal(
 
     A Kimi seat is refused unless its mode and review flags are admitted (read
     first, from the argv alone), the task's owned paths pass admission read in
-    ``cwd`` — the tree the worker runs in — and ``cwd`` is the task's
-    worktree, where the boundary (hooks and push block, ``kimi_boundary``)
-    must install. For any other seat a boundary left in ``cwd`` by an earlier
-    Kimi run is taken down. Writes nothing but that worktree's git config and
-    hooks directory.
+    ``cwd`` — the tree the worker runs in — and in the commit checked out
+    there, and ``cwd`` is the task's worktree, where the boundary (hooks and
+    push block, ``kimi_boundary``) must install. For any other seat a boundary
+    left in ``cwd`` by an earlier Kimi run is taken down. Writes nothing but
+    that worktree's git config and hooks directory.
     """
     from scripts.agent_runtime import kimi_boundary
     from scripts.agent_runtime.kimi_admission import (
@@ -5394,7 +5394,13 @@ def _kimi_worker_refusal(
         launch = _read_state(_state_path(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
         refuse_kimi_if_disallowed(
-            (agent,), (model,), mode=mode, review=review, paths=owned, repo_root=_REPO_ROOT, execution_root=cwd
+            (agent,),
+            (model,),
+            mode=mode,
+            review=review,
+            paths=owned,
+            repo_root=_REPO_ROOT,
+            trees=lambda: _kimi_worktree_trees(cwd),
         )
     except KimiAdmissionRefused as exc:
         return str(exc)
@@ -5410,7 +5416,7 @@ def _kimi_worker_refusal(
 
 
 def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
-    """The refusal when a Kimi worker's changes add Cyrillic text or unreadable content; None otherwise.
+    """The refusal when a Kimi worker's changed files are not plain UTF-8 text or hold Cyrillic text; None otherwise.
 
     The changes run from the merge base with ``base_ref`` to the working tree,
     so they cover the worker's own commits and its uncommitted and untracked
@@ -5442,11 +5448,7 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
         return unreadable
     try:
         changes = kimi_boundary.changes(
-            worktree,
-            kimi_boundary.parse_name_status(name_status),
-            before=merge_base,
-            after=None,
-            env=_sanitized_git_env(),
+            worktree, kimi_boundary.parse_name_status(name_status), after=None, env=_sanitized_git_env()
         )
         refuse_kimi_changes(agent, changes)
     except KimiAdmissionRefused as exc:
@@ -8310,8 +8312,8 @@ def _run_worker(
                     Path(worktree_path),
                     base_ref,
                 )
-                # Kimi takes no Ukrainian content: a diff that adds Cyrillic text is
-                # refused before auto-finalize can stage or commit anything.
+                # Kimi takes only plain text without Ukrainian content: a diff that breaks
+                # that is refused before auto-finalize can stage or commit anything.
                 if kimi_worker:
                     kimi_content_refusal = _kimi_diff_refusal(Path(worktree_path), base_ref, agent)
                 # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
@@ -9353,20 +9355,6 @@ def _dispatch(
         )
         return 2
 
-    # The single Kimi gate runs on the effective route — after --model, the retired-CLI
-    # alias and any budget substitution resolve — and before any check that can run an
-    # external command, write a record, sweep runtime tmp, archive a task or create a worktree.
-    # Owned paths are read in the checkout the worker will run in (a reused worktree as it is on disk).
-    kimi_refusal = _kimi_admission_refusal(
-        args,
-        agent=dispatch_agent,
-        repo_role=fleet_repo.role,
-        execution_root=_kimi_execution_root(args, agent=dispatch_agent, target_repo_root=target_repo_root),
-    )
-    if kimi_refusal:
-        print(f"❌ {kimi_refusal}", file=sys.stderr)
-        return 2
-
     # #8775: validate caller-supplied paths once, before the DoR check, PR
     # resolution, or anything else that can run an external command, and
     # before any use reaches a check, a subprocess cwd, a task record, or the
@@ -9396,6 +9384,25 @@ def _dispatch(
             print(path_error, file=sys.stderr)
             return 2
         args.cwd = str(validated_cwd)
+
+    # The single Kimi gate runs on the effective route — after --model, the retired-CLI
+    # alias and any budget substitution resolve, and on the validated paths — before any
+    # other check that can run an external command, write a record, sweep runtime tmp,
+    # archive a task or create a worktree. Owned paths are read in the tree the worker
+    # starts from: a reused worktree on disk and at its commit, a new one at its creation
+    # base commit (fetched and read with git plumbing). The worktree must start from
+    # ``kimi_start_commit``; two checks below refuse one that does not.
+    kimi_refusal, kimi_start_commit = _kimi_dispatch_gate(
+        args,
+        agent=dispatch_agent,
+        repo_role=fleet_repo.role,
+        target_repo_root=target_repo_root,
+        validated_worktree=validated_worktree,
+        validated_cwd=validated_cwd,
+    )
+    if kimi_refusal:
+        print(f"❌ {kimi_refusal}", file=sys.stderr)
+        return 2
 
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
@@ -10034,7 +10041,8 @@ def _dispatch(
                     base=getattr(args, "base", None) or "main",
                     branch=requested_branch,
                     detached=detached_read_only,
-                    allow_rebase=not bool(getattr(args, "dry_run", False)),
+                    # A Kimi worktree is never rebased: it must stay at the commit the gate read.
+                    allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
@@ -10075,6 +10083,14 @@ def _dispatch(
             failed_step = "lock worktree" if isinstance(exc, WorktreeLockError) else "resolve immutable worktree base"
             print(f"❌ failed to {failed_step} for {task_id!r}: {exc}", file=sys.stderr)
             return 1
+
+    # The base resolved under the worktree lock must be the commit the Kimi gate read.
+    if kimi_start_commit is not None and worktree_arg and resolved_worktree_base_sha != kimi_start_commit:
+        from scripts.agent_runtime.kimi_admission import format_refusal
+
+        moved = f"the worktree base {resolved_worktree_base_sha} is not the commit {kimi_start_commit} its owned paths were read at"
+        print(f"❌ {format_refusal(dispatch_agent, [moved + '; retry the dispatch'])}", file=sys.stderr)
+        return 2
 
     # Writable-path admission guard (#5643 Δ2-A WARN; #5645 REFUSE later).
     # Runs before task-state write / worktree / branch side effects so a refuse
@@ -10486,22 +10502,18 @@ def _dispatch(
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
 
-    # The prepared worktree is the tree the Kimi worker runs in: read its owned
-    # paths before any task record, tmp lease or worker exists.
+    # A Kimi worker needs its own worktree, checked out at the commit the gate read. The
+    # gate and the check above already hold this; this re-check under the worktree lock
+    # catches a worktree changed meanwhile, before any task record, tmp lease or worker exists.
     if is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)):
         from scripts.agent_runtime.kimi_admission import format_refusal
 
-        kimi_refusal = (
-            _kimi_admission_refusal(
-                args, agent=dispatch_agent, repo_role=fleet_repo.role, execution_root=Path(worktree_path)
-            )
-            if worktree_path is not None
-            else format_refusal(dispatch_agent, ["workspace-write without a dispatch worktree"])
-        )
-        if kimi_refusal:
+        kimi_head = _resolve_sha(worktree_path) if worktree_path is not None else None
+        if kimi_head is None or (kimi_start_commit is not None and kimi_head != kimi_start_commit):
             stdout_fd.close()
             stderr_fd.close()
-            print(f"❌ {kimi_refusal}", file=sys.stderr)
+            where = f"is at {kimi_head}, not {kimi_start_commit}" if kimi_head else "is missing"
+            print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
 
     if review_plan is not None and worktree_path is not None:
@@ -11157,46 +11169,111 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     return False
 
 
-def _kimi_execution_root(args: argparse.Namespace, *, agent: str, target_repo_root: Path) -> Path:
-    """The checkout a Kimi worker will run in, as far as it exists before the worktree is prepared.
+def _kimi_worktree_trees(worktree: Path) -> list[Any]:
+    """An existing worktree as a Kimi worker sees it: its files on disk and the commit checked out there."""
+    from scripts.agent_runtime.kimi_admission import CommitTree, DirectoryTree
 
-    A reused worktree (an explicit ``--worktree PATH``, the auto path of this
-    task, or a ``--cwd`` worktree) is read as it is on disk. A worktree that
-    does not exist yet will be created from the base branch, so the target
-    checkout stands in for it; dispatch re-checks the prepared worktree before
-    it records or spawns anything, and the worker checks it again before it
-    runs. Reads the filesystem only.
+    head = _resolve_sha(worktree)
+    if head is None:
+        raise RuntimeError(f"cannot resolve the commit checked out in {worktree}")
+    return [DirectoryTree(worktree), CommitTree(worktree, head, env=_sanitized_git_env())]
+
+
+def _kimi_start_trees(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    target_repo_root: Path,
+    validated_worktree: Path | None,
+    validated_cwd: Path | None,
+) -> tuple[list[Any], str]:
+    """The trees a Kimi worker will start from, and the commit they are read at.
+
+    A reused worktree (``--worktree``, ``--branch`` or ``--cwd``) is read as it
+    is on disk and at the commit checked out there. A new worktree is read at
+    its creation base commit, fetched and resolved as worktree creation
+    resolves it and read with git plumbing — no checkout. Dispatch then refuses
+    a worktree that is not created from, or no longer checked out at, that
+    commit. Raises ``ValueError`` or ``RuntimeError`` when there is no such tree.
     """
-    worktree = getattr(args, "worktree", None)
-    if not worktree and getattr(args, "branch", None):
-        worktree = "auto"
-    try:
-        if worktree == "auto":
-            candidate = _auto_worktree_path(agent, str(args.task_id), repo_root=target_repo_root)
-        elif worktree:
-            candidate = _normalize_worktree_path(str(worktree), repo_root=target_repo_root)
-        elif getattr(args, "cwd", None):
-            candidate = _resolve_cwd_path(str(args.cwd))
-        else:
-            return target_repo_root
-    except (OSError, RuntimeError, ValueError):
-        # Path validation right after the gate refuses a path that cannot resolve.
-        return target_repo_root
-    return candidate if candidate.is_dir() else target_repo_root
+    from scripts.agent_runtime.kimi_admission import CommitTree
+
+    worktree = getattr(args, "worktree", None) or ("auto" if getattr(args, "branch", None) else None)
+    if worktree == "auto":
+        path: Path | None = _auto_worktree_path(agent, str(args.task_id), repo_root=target_repo_root)
+    elif worktree:
+        path = validated_worktree
+    elif validated_cwd is not None:
+        path = _resolve_verified_worktree_path(validated_cwd)
+        if path is None:
+            raise ValueError(f"--cwd {str(validated_cwd)!r} is not a dispatch worktree")
+    else:
+        path = None
+    if path is None:
+        raise ValueError("workspace-write without a dispatch worktree")
+    if path.exists():
+        trees = _kimi_worktree_trees(path)
+        return trees, trees[-1].commit
+    if getattr(args, "pr", None) and not getattr(args, "branch", None):
+        raise ValueError("--pr without --branch: name the PR branch so its head is read before dispatch")
+    base_sha = _resolve_worktree_base_sha(
+        agent=agent,
+        task_id=str(args.task_id),
+        raw_path=str(path),
+        validated_path=validated_worktree,
+        base=getattr(args, "base", None) or "main",
+        branch=getattr(args, "branch", None),
+        allow_rebase=False,
+        pinned_head_sha=getattr(args, "pinned_head", None),
+    )
+    return [CommitTree(_REPO_ROOT, base_sha, env=_sanitized_git_env())], base_sha
+
+
+def _kimi_dispatch_gate(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    repo_role: str | None,
+    target_repo_root: Path,
+    validated_worktree: Path | None,
+    validated_cwd: Path | None,
+) -> tuple[str | None, str | None]:
+    """The dispatch-side Kimi gate: ``(refusal, start commit)``.
+
+    The start commit is the commit the owned paths were read at, which the
+    worker's worktree must be created from or checked out at; None when the
+    call is refused, is not Kimi, or owns no paths. The tree is resolved only
+    after every policy check admits.
+    """
+    start: list[str] = []
+
+    def trees() -> list[Any]:
+        resolved, commit = _kimi_start_trees(
+            args,
+            agent=agent,
+            target_repo_root=target_repo_root,
+            validated_worktree=validated_worktree,
+            validated_cwd=validated_cwd,
+        )
+        start.append(commit)
+        return resolved
+
+    refusal = _kimi_admission_refusal(args, agent=agent, repo_role=repo_role, trees=trees)
+    return refusal, (start[0] if start and refusal is None else None)
 
 
 def _kimi_admission_refusal(
     args: argparse.Namespace,
     *,
     agent: str,
+    trees: Any,
     repo_role: str | None = None,
-    execution_root: Path = _REPO_ROOT,
 ) -> str | None:
     """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted.
 
     ``--owned-path`` and ``--research-owned-path`` both declare task ownership,
     so every path from either flag must be on the Kimi allowlist and is read
-    for Ukrainian content in ``execution_root``, the checkout the worker runs in.
+    for Ukrainian content in ``trees`` (see ``refuse_kimi_if_disallowed``).
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_if_disallowed
 
@@ -11220,7 +11297,7 @@ def _kimi_admission_refusal(
             research_track=getattr(args, "research_track", None),
             prompt_file=getattr(args, "prompt_file", None),
             repo_root=_REPO_ROOT,
-            execution_root=execution_root,
+            trees=trees,
         )
     except KimiAdmissionRefused as exc:
         return str(exc)
@@ -11859,6 +11936,7 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
             from api.lane_health import compute_lane_health, normalize_agent_name
 
         from agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
+        from scripts.agent_runtime.kimi_admission import DirectoryTree
 
         # "gemini" excluded: it is a permanent retired-CLI alias (→ agy), so
         # it must never appear as a "idle capacity available in: gemini"
@@ -11866,10 +11944,11 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
         # "kimi" is suggested only when this dispatch is web, UI or backend coding that a
         # Kimi seat would admit (default public repo, no refusal reason).
         target_norm = normalize_agent_name(dispatch_agent) or target_norm
+        # A suggestion only: the owned paths are read in this checkout, not in a worker's tree.
         kimi_admissible = target_norm == "kimi" or (
             args is not None
             and getattr(args, "repo", None) is None
-            and _kimi_admission_refusal(args, agent="kimi") is None
+            and _kimi_admission_refusal(args, agent="kimi", trees=(DirectoryTree(_REPO_ROOT),)) is None
         )
         subscription_lanes = tuple(
             lane

@@ -195,11 +195,15 @@ or count as a formal review.
   allowlisted paths only (`KIMI_OWNED_ROOTS`: site UI components, layouts, pages, styles and assets,
   four named `site/src/lib` helpers, `site/*.config.*`, the verified backend packages
   `scripts/{agent_runtime,api,orchestration,ci,fleet_comms,hygiene,storage}` and their tests, CI
-  workflows and `.dagger/`); anything not on the allowlist is refused, as is any owned file or
-  scope containing Cyrillic text or covering an excluded file, and a finalized Kimi diff that adds
-  Cyrillic text is refused before delegate commits it. One gate,
+  workflows and `.dagger/`); anything not on the allowlist is refused, as is an owned scope
+  covering an excluded file. Kimi content must be plain UTF-8 text (no control characters but tab,
+  LF, CR) without Cyrillic: an owned file or scope holding anything else (Cyrillic, UTF-16, another
+  encoding, a binary) is refused — read in the tree the worker starts from, a reused worktree on
+  disk and at its commit or a new worktree's base commit via git plumbing — and so is a finalized
+  Kimi diff whose changed files break the rule, before delegate commits it. One gate,
   `refuse_kimi_if_disallowed`, runs first at every entry point on the effective seats and models,
-  before any side effect (`scripts/agent_runtime/kimi_admission.py`).
+  before any side effect (`scripts/agent_runtime/kimi_admission.py`); a Kimi launch whose
+  credential isolation cannot be established is refused.
   Native `kimi` CLI only — never OpenRouter (Wave 1 fold + #7142).
 * **glm / Z.AI** (operator 2026-08-08 / #6468; **Flash workhorse 2026-08-26**): **keep and use**
   — **`glm-5.3-flash` is the GLM workhorse** (`--agent glm`, default Flash, OpenCode

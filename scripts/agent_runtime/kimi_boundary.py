@@ -17,8 +17,9 @@ that content on its own:
 ``remove`` takes the boundary down; delegate calls it after its own check
 passes and before it commits and pushes.
 
-The content check reads the post-image of every changed path, so neither
-git's binary classification nor a wide encoding hides Cyrillic text.
+The content check reads the full post-image of every changed path and admits
+only plain UTF-8 text without Cyrillic, so neither git's binary
+classification nor another encoding hides Ukrainian content.
 """
 
 from __future__ import annotations
@@ -115,26 +116,24 @@ def changes(
     repo: Path,
     pairs: Iterable[tuple[str, str]],
     *,
-    before: str,
     after: str | None,
     env: Mapping[str, str] | None = None,
 ) -> list[FileChange]:
     """The ``FileChange`` of each changed path.
 
-    ``before`` is the tree-ish of the pre-images; ``after`` is the tree-ish of
-    the post-images, ``""`` for the index, or None for the working tree. A
-    post-image that cannot be read stays None, which the content check refuses.
+    ``after`` is the tree-ish of the post-images, ``""`` for the index, or
+    None for the working tree. A post-image that cannot be read stays None,
+    which the content check refuses.
     """
     from scripts.agent_runtime.kimi_admission import FileChange
 
     result = []
     for status, path in pairs:
         if status == "D":
-            result.append(FileChange(path, None, None, deleted=True))
+            result.append(FileChange(path, None, deleted=True))
             continue
-        pre = None if status == "A" else _blob(repo, f"{before}:{path}", env)
         post = _worktree_file(repo / path) if after is None else _blob(repo, f"{after}:{path}", env)
-        result.append(FileChange(path, pre, post))
+        result.append(FileChange(path, post))
     return result
 
 
@@ -146,13 +145,13 @@ def _diff_pairs(repo: Path, *args: str, env: Mapping[str, str] | None = None) ->
 def index_changes(repo: Path, *, env: Mapping[str, str] | None = None) -> list[FileChange]:
     """What the index would commit on top of HEAD (the tree git is about to commit)."""
     head = "HEAD" if _git(repo, "rev-parse", "--verify", "-q", "HEAD", env=env).returncode == 0 else _EMPTY_TREE
-    return changes(repo, _diff_pairs(repo, "--cached", head, env=env), before=head, after="", env=env)
+    return changes(repo, _diff_pairs(repo, "--cached", head, env=env), after="", env=env)
 
 
 def commit_changes(repo: Path, base_ref: str, commit: str, *, env: Mapping[str, str] | None = None) -> list[FileChange]:
     """What ``commit`` changes since its merge base with ``base_ref``."""
     merge_base = _git_text(repo, "merge-base", base_ref, commit, env=env)
-    return changes(repo, _diff_pairs(repo, merge_base, commit, env=env), before=merge_base, after=commit, env=env)
+    return changes(repo, _diff_pairs(repo, merge_base, commit, env=env), after=commit, env=env)
 
 
 def ownership_reasons(paths: Sequence[str], owned: Sequence[str]) -> list[str]:

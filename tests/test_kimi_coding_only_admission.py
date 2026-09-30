@@ -26,13 +26,50 @@ _BACKEND_OWNED = ("scripts/agent_runtime/runner.py", "tests/agent_runtime/test_r
 _UI_OWNED = ("site/src/components/LiveStatus.tsx", "site/src/styles/match-up.css", "site/vitest.config.ts")
 
 
+_REAL_RUN = subprocess.run
+_REAL_POPEN = subprocess.Popen
+# Read-only git plumbing the Kimi gate runs to read the tree a worker starts from.
+_GATE_GIT = frozenset({"rev-parse", "ls-tree", "cat-file"})
+
+
 def _fail(*_args, **_kwargs):
     raise AssertionError("a refused Kimi call reached a side effect")
 
 
+def _run(cmd, **kwargs) -> subprocess.CompletedProcess:
+    """``subprocess.run`` itself, even while a test has replaced ``run`` and ``Popen`` with a failure."""
+    patched = subprocess.Popen
+    subprocess.Popen = _REAL_POPEN
+    try:
+        return _REAL_RUN(cmd, **kwargs)
+    finally:
+        subprocess.Popen = patched
+
+
+def _plumbing_only(monkeypatch) -> list[str]:
+    """Let ``subprocess.run`` run only read-only git plumbing; returns the subcommands that ran."""
+    ran: list[str] = []
+
+    def run(cmd, *args, **kwargs):
+        if list(cmd[:1]) != ["git"] or cmd[1] not in _GATE_GIT:
+            raise AssertionError(f"a Kimi admission check ran {cmd!r}")
+        ran.append(cmd[1])
+        return _run(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", run)
+    return ran
+
+
+def _head(repo: Path = _REPO_ROOT) -> str:
+    return _run(["git", "rev-parse", "HEAD"], cwd=repo, capture_output=True, text=True, check=True).stdout.strip()
+
+
 def _refusal(participants=("kimi",), models=(), **overrides) -> str | None:
+    """The gate's refusal, with owned paths read on disk under ``repo_root`` unless ``trees`` is given."""
     kwargs = {"mode": "workspace-write", "paths": _BACKEND_OWNED, "repo": "public-monorepo", "repo_root": _REPO_ROOT}
     kwargs.update(overrides)
+    if "trees" not in kwargs:
+        kwargs["trees"] = (kimi_admission.DirectoryTree(kwargs["repo_root"]),) if kwargs["repo_root"] else ()
     try:
         kimi_admission.refuse_kimi_if_disallowed(participants, models, **kwargs)
     except kimi_admission.KimiAdmissionRefused as exc:
@@ -54,7 +91,6 @@ ADMITTED_PATHS = (
     "site/src/styles/match-up.css",
     "site/src/css/x.css",
     "site/src/assets/logo.svg",
-    "site/src/assets/houston.webp",
     "site/src/lib/arc.ts",
     "site/src/lib/doc-nav.ts",
     "site/src/lib/readings.ts",
@@ -260,85 +296,136 @@ def _scratch_repo(tmp_path: Path) -> Path:
     (components / "clean" / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
     (components / "Lesson.tsx").write_text('export const title = "Урок";\n', encoding="utf-8")
     (components / "logo.png").write_bytes(b"\x89PNG\r\n\x1a\n\xd0\x9f\xd1\x80\x00\xff")
+    (components / "Wide.tsx").write_bytes("export const title = 'Урок';\n".encode("utf-16-le"))
     return tmp_path
 
 
-@pytest.mark.parametrize(
-    ("scope", "refused"),
-    [
-        ("site/src/components/**", True),
-        ("site/src/components", True),
-        ("site/src/components/*.tsx", True),
-        ("site/src/components/clean/**", False),
-        ("site/src/components/clean/Button.tsx", False),
-        ("site/src/components/logo.png", False),  # a binary asset carries no text
-        ("site/src/components/New.tsx", False),  # a new file: the finalize check covers what it adds
-    ],
-)
-def test_a_scope_holding_any_cyrillic_file_is_refused(tmp_path, scope, refused):
+_LESSON_CYRILLIC = "Cyrillic text in 'site/src/components/Lesson.tsx'"
+_NOT_PLAIN_TEXT = "content that is not plain text"
+_SCOPE_CASES = [
+    ("site/src/components/**", [_LESSON_CYRILLIC, _NOT_PLAIN_TEXT, "logo.png", "Wide.tsx"]),
+    ("site/src/components", [_LESSON_CYRILLIC, _NOT_PLAIN_TEXT]),
+    ("site/src/components/*.tsx", [_LESSON_CYRILLIC, "'site/src/components/Wide.tsx'"]),
+    ("site/src/components/clean/**", None),
+    ("site/src/components/clean/Button.tsx", None),
+    # A binary asset or a wide encoding is not plain text, so it cannot be checked.
+    ("site/src/components/logo.png", [f"owned file holds {_NOT_PLAIN_TEXT} ('site/src/components/logo.png'"]),
+    ("site/src/components/Wide.tsx", [f"owned file holds {_NOT_PLAIN_TEXT}", "UTF-16"]),
+    ("site/src/components/New.tsx", None),  # a new file: the finalize check covers what it adds
+]
+
+
+@pytest.mark.parametrize(("scope", "expected"), _SCOPE_CASES)
+def test_a_scope_holding_cyrillic_or_non_text_content_is_refused_on_disk(tmp_path, scope, expected):
     message = _refusal(paths=(scope,), repo_root=_scratch_repo(tmp_path), research_track=None)
-    assert bool(message) is refused
-    if refused:
-        assert "site/src/components/Lesson.tsx" in message and "Ukrainian content" in message
+    if expected is None:
+        assert message is None
+    else:
+        assert message and all(fragment in message for fragment in expected), message
 
 
-def test_owned_paths_fail_closed_without_a_repository_root():
+@pytest.mark.parametrize(("scope", "expected"), _SCOPE_CASES)
+def test_a_scope_holding_cyrillic_or_non_text_content_is_refused_in_a_commit(tmp_path, monkeypatch, scope, expected):
+    """The same rule read with git plumbing from a commit: its files, not a checkout of them."""
+    for key in tuple(os.environ):
+        if key.startswith("GIT_"):
+            monkeypatch.delenv(key, raising=False)
+    repo = _scratch_repo(tmp_path / "repo")
+    _git(repo, "init", "--initial-branch=main")
+    _git(repo, "add", "-A")
+    _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-m", "base")
+    commit = _git(repo, "rev-parse", "HEAD").strip()
+    _git(repo, "rm", "-r", "-q", "--cached", "site")
+    for path in (repo / "site").rglob("*"):  # the checkout no longer holds the files
+        if path.is_file():
+            path.unlink()
+    tree = kimi_admission.CommitTree(repo, commit)
+    message = _refusal(paths=(scope,), repo_root=None, trees=(tree,), research_track=None)
+    if expected is None:
+        assert message is None
+    else:
+        assert message and all(fragment in message for fragment in expected), message
+        assert f"in commit {commit[:12]}" in message
+
+
+def test_owned_paths_fail_closed_without_a_tree_to_read():
     message = _refusal(paths=("site/src/components/LiveStatus.tsx",), repo_root=None)
-    assert message and "cannot be checked for Ukrainian content" in message
+    assert message and "cannot be checked for Ukrainian content (no tree to read)" in message
+
+
+def test_owned_paths_fail_closed_when_the_tree_cannot_be_resolved():
+    def unresolvable():
+        raise RuntimeError("no base")
+
+    message = _refusal(paths=("site/src/components/LiveStatus.tsx",), trees=unresolvable)
+    assert message and "cannot be read for Ukrainian content (no base)" in message
+
+
+def test_the_tree_is_resolved_only_after_every_policy_check_admits():
+    message = _refusal(paths=("site/src/components/LiveStatus.tsx",), mode="read-only", trees=_fail)
+    assert message and "--mode read-only" in message
+
+
+def test_an_owned_binary_asset_in_the_repository_is_refused():
+    path = "site/src/assets/houston.webp"
+    assert kimi_admission.owned_path_reason(path) is None  # on the allowlist by path
+    message = _refusal(paths=(path,))
+    assert message and _NOT_PLAIN_TEXT in message and "binary files are refused" in message
 
 
 _CYRILLIC_LINE = "const label = 'Привіт';"
+_UKRAINIAN = "the changed files hold Ukrainian content"
+_NOT_TEXT = "the changed files hold content that is not plain text"
 
 
 @pytest.mark.parametrize(
-    ("before", "after", "added"),
+    ("after", "expected"),
     [
-        (None, f"{_CYRILLIC_LINE}\n".encode(), True),
-        (b"old = '\xd0\x9f\xd1\x80\xd0\xb8'\n", b"old = 'hello'\n", False),  # removing Cyrillic is fine
-        (None, "const a = 'ԑ';\n".encode(), True),  # Cyrillic Supplement
-        (None, b"const a = 'hello';\n", False),
-        # A NUL byte makes git call the file binary; the text is still read.
-        (None, f"{_CYRILLIC_LINE}\0\n".encode(), True),
-        # Wide encodings, with and without a byte-order mark.
-        (None, f"{_CYRILLIC_LINE}\n".encode("utf-16"), True),
-        (None, f"{_CYRILLIC_LINE}\n".encode("utf-16-le"), True),
-        (None, f"{_CYRILLIC_LINE}\n".encode("utf-32-be"), True),
-        # A line that already held Cyrillic text adds nothing when it stays or moves.
-        (f"{_CYRILLIC_LINE}\nx = 1\n".encode(), f"x = 2\n{_CYRILLIC_LINE}\n".encode(), False),
-        (f"{_CYRILLIC_LINE}\n".encode(), f"{_CYRILLIC_LINE}\n{_CYRILLIC_LINE}\n".encode(), True),
+        (f"{_CYRILLIC_LINE}\n".encode(), _UKRAINIAN),
+        ("const a = 'ԑ';\n".encode(), _UKRAINIAN),  # Cyrillic Supplement
+        # A post-image is checked in full: Cyrillic text it kept from before is still refused.
+        (f"x = 2\n{_CYRILLIC_LINE}\n".encode(), _UKRAINIAN),
+        (b"const a = 'hello';\n", None),
+        (b"a\tb\r\nc\n", None),  # tab, CR and LF are the only control characters admitted
+        ("const a = 'café';\n".encode(), None),
+        # A NUL byte makes git call the file binary; it is not plain text either way.
+        (f"{_CYRILLIC_LINE}\0\n".encode(), _NOT_TEXT),
+        (b"const a = 'hello';\0\n", _NOT_TEXT),
+        (b"page\x0cbreak\n", _NOT_TEXT),
+        # UTF-16 and UTF-32, with and without a byte-order mark, and single-byte encodings.
+        (f"{_CYRILLIC_LINE}\n".encode("utf-16"), _NOT_TEXT),
+        ("Урок".encode("utf-16-le"), _NOT_TEXT),
+        ("Урок".encode("utf-16-be"), _NOT_TEXT),
+        ("hello".encode("utf-16-le"), _NOT_TEXT),
+        (f"{_CYRILLIC_LINE}\n".encode("utf-32-be"), _NOT_TEXT),
+        (f"{_CYRILLIC_LINE}\n".encode("cp1251"), _NOT_TEXT),
+        (b"\x89PNG\r\n\x1a\n\xff\xfe\xfd", _NOT_TEXT),
+        (None, _NOT_TEXT),  # a post-image that could not be read
     ],
 )
-def test_a_change_that_adds_cyrillic_text_is_refused(before, after, added):
-    change = kimi_admission.FileChange("site/src/x.tsx", before, after)
-    assert bool(kimi_admission.added_cyrillic_lines(before, after)) is added
-    if added:
-        with pytest.raises(kimi_admission.KimiAdmissionRefused, match="the changes add Ukrainian content"):
-            kimi_admission.refuse_kimi_changes("kimi", [change])
-    else:
+def test_changed_files_must_be_plain_utf8_text_without_cyrillic(after, expected):
+    change = kimi_admission.FileChange("site/src/x.tsx", after)
+    if expected is None:
         kimi_admission.refuse_kimi_changes("kimi", [change])
+        return
+    with pytest.raises(kimi_admission.KimiAdmissionRefused, match=expected) as refused:
+        kimi_admission.refuse_kimi_changes("kimi", [change])
+    if expected == _NOT_TEXT:
+        assert kimi_admission.TEXT_RULE in str(refused.value)
 
 
 def test_a_cyrillic_file_name_is_refused():
-    change = kimi_admission.FileChange("site/src/Урок.tsx", None, b"export {};\n")
-    assert kimi_admission.change_reasons([change]) == [
-        "the changes add Ukrainian content (Cyrillic text: site/src/Урок.tsx: (file name))"
-    ]
-
-
-@pytest.mark.parametrize("after", [b"\x89PNG\r\n\x1a\n\xff\xfe\xfd", None])
-def test_content_that_cannot_be_read_as_text_is_refused(after):
-    change = kimi_admission.FileChange("site/src/assets/logo.png", None, after)
-    with pytest.raises(kimi_admission.KimiAdmissionRefused, match="cannot be read as text"):
-        kimi_admission.refuse_kimi_changes("kimi", [change])
+    change = kimi_admission.FileChange("site/src/Урок.tsx", b"export {};\n")
+    assert kimi_admission.change_reasons([change]) == [f"{_UKRAINIAN} (Cyrillic text: site/src/Урок.tsx: (file name))"]
 
 
 def test_a_deletion_adds_nothing():
-    change = kimi_admission.FileChange("site/src/Урок.tsx", "Урок".encode(), None, deleted=True)
+    change = kimi_admission.FileChange("site/src/Урок.tsx", None, deleted=True)
     assert kimi_admission.change_reasons([change]) == []
 
 
 def _git(repo: Path, *args: str) -> str:
-    return subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True, timeout=30).stdout
+    return _run(["git", *args], cwd=repo, check=True, capture_output=True, text=True, timeout=30).stdout
 
 
 @pytest.fixture
@@ -370,22 +457,28 @@ def test_finalize_refuses_a_kimi_diff_that_adds_cyrillic(kimi_worktree, committe
 
 
 @pytest.mark.parametrize("committed", [False, True])
-def test_finalize_refuses_cyrillic_that_git_classifies_as_binary(kimi_worktree, committed):
-    """UTF-8 Cyrillic plus a NUL byte: git reports a binary diff, and the text is still refused."""
+@pytest.mark.parametrize(
+    "data",
+    [
+        "export const label = 'Урок';\0\n".encode(),  # git reports a binary diff
+        "export const label = 'Урок';\n".encode("utf-16-le"),
+        "export const label = 'Урок';\n".encode("utf-16-be"),
+    ],
+)
+def test_finalize_refuses_content_that_is_not_plain_text(kimi_worktree, committed, data):
     label = kimi_worktree / "Label.tsx"
-    label.write_bytes("export const label = 'Урок';\0\n".encode())
+    label.write_bytes(data)
     _git(kimi_worktree, "add", "-A")
     if committed:
         _git(kimi_worktree, "commit", "-m", "worker commit")
-    assert "Binary files" in _git(kimi_worktree, "diff", "--cached" if not committed else "base", "--", "Label.tsx")
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert message and _TOKEN in message and "Label.tsx: export const label = 'Урок';" in message
+    assert message and _TOKEN in message and f"{_NOT_TEXT} ('Label.tsx')" in message
 
 
 def test_finalize_refuses_an_undecodable_addition(kimi_worktree):
     (kimi_worktree / "blob.bin").write_bytes(b"\x89PNG\r\n\x1a\n\xff\xfe\xfd")
     message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
-    assert message and "cannot be read as text" in message and "blob.bin" in message
+    assert message and _NOT_TEXT in message and "blob.bin" in message and "binary files are refused" in message
 
 
 def test_finalize_admits_a_cyrillic_free_kimi_diff(kimi_worktree):
@@ -593,6 +686,9 @@ def test_a_budget_substitution_onto_kimi_is_refused_before_cleanup_and_archiving
     no_spawn, capsys, monkeypatch, extra, reason
 ):
     """The gate runs on the effective route, after substitution and before any sweep or archive."""
+    base = _head()
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base)
+    _plumbing_only(monkeypatch)
     monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
     substituted: list[str] = []
 
@@ -609,15 +705,90 @@ def test_a_budget_substitution_onto_kimi_is_refused_before_cleanup_and_archiving
     assert substituted == ["codex"]
 
 
-def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, monkeypatch, tmp_path):
-    """A reused worktree holding Cyrillic text is refused even though the dispatcher's checkout is clean."""
+def _commit_all(repo: Path, message: str) -> str:
+    _git(repo, "add", "-A")
+    _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "-m", message)
+    return _git(repo, "rev-parse", "HEAD").strip()
+
+
+@pytest.fixture
+def clean_git_env(monkeypatch):
+    for key in tuple(os.environ):
+        if key.startswith("GIT_"):
+            monkeypatch.delenv(key, raising=False)
+
+
+def test_dispatch_reads_owned_paths_at_the_new_worktree_base_commit(
+    no_spawn, capsys, monkeypatch, tmp_path, clean_git_env
+):
+    """The base commit holds Cyrillic text the dispatcher's checkout lacks: refused with no log and no worktree."""
+    path = "site/src/components/LiveStatus.tsx"
+    primary = tmp_path / "primary"
+    (primary / path).parent.mkdir(parents=True)
+    _git(primary, "init", "-q", "--initial-branch=main")
+    (primary / path).write_text("export const label = 'Урок';\n", encoding="utf-8")
+    base = _commit_all(primary, "base with Ukrainian content")
+    _git(primary, "update-ref", "refs/remotes/origin/main", base)
+    (primary / path).write_text("export const label = 'Lesson';\n", encoding="utf-8")
+    _commit_all(primary, "the dispatcher checkout is clean")
+    fetched: list[str] = []
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.setattr(delegate, "_fetch_base", lambda branch: fetched.append(branch) or True)
+    ran = _plumbing_only(monkeypatch)
+
+    reason = f"Cyrillic text in {path!r}, in commit {base[:12]}"
+    _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path), reason)
+    assert fetched == ["main"]
+    assert set(ran) <= _GATE_GIT and "ls-tree" in ran
+    assert not (primary / ".worktrees").exists()
+    assert _git(primary, "worktree", "list").count("\n") == 1
+
+
+def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, monkeypatch, tmp_path, clean_git_env):
+    """A reused worktree is read on disk and at its commit, whatever the dispatcher's checkout holds."""
     path = "site/src/components/LiveStatus.tsx"
     assert not kimi_admission.CYRILLIC.search((_REPO_ROOT / path).read_text(encoding="utf-8"))
     reused = tmp_path / "reused"
     (reused / path).parent.mkdir(parents=True)
+    _git(reused, "init", "-q", "--initial-branch=kimi/task")
     (reused / path).write_text("export const label = 'Урок';\n", encoding="utf-8")
+    commit = _commit_all(reused, "committed Ukrainian content")
+    (reused / path).write_text("export const label = 'Lesson';\n", encoding="utf-8")  # clean on disk only
+    (reused / "site/src/components/Draft.tsx").write_text("export const d = 'Чернетка';\n", encoding="utf-8")
     monkeypatch.setattr(delegate, "_auto_worktree_path", lambda *_a, **_k: reused)
-    _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path), f"Cyrillic text in {path!r}")
+    _plumbing_only(monkeypatch)
+    argv = _dispatch(*_WRITE, "--owned-path", "site/src/components/")
+    rc = delegate.main(argv)
+    err = capsys.readouterr().err
+    assert rc == 2 and _TOKEN in err, err
+    assert f"Cyrillic text in {path!r}, in commit {commit[:12]}" in err
+    assert f"Cyrillic text in 'site/src/components/Draft.tsx', in {reused}" in err
+    assert not no_spawn.exists() or not any(no_spawn.iterdir())
+
+
+def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, monkeypatch, capsys):
+    """The base resolved under the worktree lock must be the commit the gate read."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
+    monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
+    monkeypatch.setattr(delegate, "_run_dor_preflight", lambda *_a, **_k: (None, None))
+    monkeypatch.setattr(delegate, "_check_capacity_hint", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_report_dispatch_admission", lambda *_a, **_k: None)
+    gate_base = _head()
+    bases = iter([gate_base, "0" * 40])
+    calls: list[bool] = []
+
+    def resolve(**kwargs):
+        calls.append(kwargs["allow_rebase"])
+        return next(bases)
+
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", resolve)
+    argv = _dispatch(*_WRITE, "--dry-run", "--owned-path", "scripts/agent_runtime/runner.py")
+    rc = delegate.main(argv)
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert _TOKEN in err and f"is not the commit {gate_base} its owned paths were read at" in err
+    assert calls == [False, False]  # a Kimi worktree is never rebased
 
 
 def test_dispatch_refuses_a_kimi_model_on_another_seat(no_spawn, capsys):
@@ -653,6 +824,8 @@ def test_web_ui_and_backend_dispatches_pass_admission(tmp_path, monkeypatch, own
     monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
     monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda *_a, **_k: (None, None))
+    base = _head()
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base)
     seen: list[str] = []
 
     def reached(agent, **_kwargs):
@@ -704,9 +877,15 @@ def test_worker_refuses_with_zero_side_effects(tmp_path, monkeypatch, capsys, mo
 def test_worker_reads_owned_paths_in_the_tree_it_runs_in(tmp_path, monkeypatch, capsys):
     """The worker scans its own worktree before any state write, boundary or invocation."""
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    for key in tuple(os.environ):
+        if key.startswith("GIT_"):
+            monkeypatch.delenv(key, raising=False)
     path = "site/src/components/LiveStatus.tsx"
     worktree = tmp_path / "wt"
     (worktree / path).parent.mkdir(parents=True)
+    _git(worktree, "init", "-q", "--initial-branch=kimi/task")
+    (worktree / path).write_text("export const label = 'Lesson';\n", encoding="utf-8")
+    _commit_all(worktree, "clean base")
     (worktree / path).write_text("export const label = 'Урок';\n", encoding="utf-8")
     state_path = delegate._state_path("kimi-reused")
     delegate._write_state_atomic(
@@ -797,6 +976,21 @@ def test_kimi_adapters_refuse_read_only_and_danger_before_planning(tmp_path, mon
         )
 
 
+def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(tmp_path, monkeypatch):
+    from scripts.agent_runtime import runner
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+
+    def no_tempdir(*_args, **_kwargs):
+        raise OSError("no temporary directory")
+
+    monkeypatch.setattr(kimi_adapter, "_resolve_kimi_binary", lambda: "/bin/true")
+    monkeypatch.setattr("tempfile.mkdtemp", no_tempdir)
+    monkeypatch.setattr(subprocess, "Popen", _fail)
+    with pytest.raises(ValueError, match=_TOKEN) as refused:
+        runner.invoke("kimi", "Implement it.", mode="workspace-write", cwd=tmp_path, task_id="kimi-isolation")
+    assert "credential isolation could not be established" in str(refused.value)
+
+
 def test_trail_isolation_refuses_kimi():
     from scripts.agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
 
@@ -858,21 +1052,22 @@ def _write_label(repo: Path, data: bytes) -> None:
 
 
 @pytest.mark.parametrize(
-    "data",
+    ("data", "reason"),
     [
-        "export const label = 'Урок';\n".encode(),
-        "export const label = 'Урок';\0\n".encode(),  # git calls this binary
-        "export const label = 'Урок';\n".encode("utf-16"),
+        ("export const label = 'Урок';\n".encode(), _UKRAINIAN),
+        ("export const label = 'Урок';\0\n".encode(), _NOT_TEXT),  # git calls this binary
+        ("export const label = 'Урок';\n".encode("utf-16"), _NOT_TEXT),
+        ("export const label = 'Урок';\n".encode("utf-16-le"), _NOT_TEXT),
     ],
 )
-def test_the_pre_commit_hook_refuses_a_worker_commit_that_adds_cyrillic(bounded_repo, data):
+def test_the_pre_commit_hook_refuses_a_worker_commit_that_is_not_cyrillic_free_text(bounded_repo, data, reason):
     repo = bounded_repo.repo
     head = _git(repo, "rev-parse", "HEAD")
     _write_label(repo, data)
     _git(repo, "add", "-A")
     proc = _git_proc(repo, "commit", "-m", "worker commit")
     assert proc.returncode != 0
-    assert "commit refused by the Kimi worktree boundary" in proc.stderr and "Ukrainian content" in proc.stderr
+    assert "commit refused by the Kimi worktree boundary" in proc.stderr and reason in proc.stderr
     assert _git(repo, "rev-parse", "HEAD") == head
 
 

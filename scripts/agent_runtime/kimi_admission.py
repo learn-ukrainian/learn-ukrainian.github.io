@@ -14,24 +14,28 @@ substitutes) and before any telemetry, broker message, failure record, state
 write, artifact store or channel write. A refusal raises
 ``KimiAdmissionRefused`` to the caller and records nothing.
 
-Ukrainian content is recognised by content, not by path: an owned file, or any
-file under an owned directory or glob, that contains a Cyrillic character is
-refused, and ``refuse_kimi_changes`` rejects a Kimi change set that adds one or
-adds content that cannot be read as text. The git hooks and push block around a
-Kimi worktree live in ``kimi_boundary``.
+Content is admitted only as plain text: valid UTF-8 with no control
+characters other than tab, LF and CR, and no Cyrillic character (Ukrainian
+content is recognised by content, not by path). Anything else — UTF-16 with or
+without a byte-order mark, another encoding, a binary file — is refused. The
+rule covers every owned file, and every file under an owned directory or glob,
+in the tree the worker starts from (``DirectoryTree`` on disk, ``CommitTree``
+read with git plumbing), and every changed file's post-image
+(``refuse_kimi_changes``). The git hooks and push block around a Kimi worktree
+live in ``kimi_boundary``.
 """
 
 from __future__ import annotations
 
-import codecs
+import fnmatch
 import os
 import posixpath
 import re
-from collections import Counter
-from collections.abc import Iterable, Mapping
+import subprocess
+from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 POLICY_LINE = (
     "Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules."
@@ -126,10 +130,17 @@ _REVIEW_TOOL_CONFIG_KEYS = ("review_verdict_required", "review_isolation", "revi
 _PRIVATE_STATE_COMPONENTS = frozenset({".claude", ".agent", ".codex"})
 # The Cyrillic and Cyrillic Supplement blocks: any such character marks Ukrainian content.
 CYRILLIC = re.compile("[Ѐ-ӿԀ-ԯ]")
+# C0 controls other than tab, LF and CR, DEL, and the C1 controls.
+_CONTROL = re.compile("[\x00-\x08\x0b\x0c\x0e-\x1f\x7f-\x9f]")
+TEXT_RULE = (
+    "Kimi admits only UTF-8 text without control characters other than tab, LF and CR; "
+    "UTF-16, other encodings and binary files are refused"
+)
 _GLOB_CHARS = frozenset("*?[")
 # Build and dependency output skipped when a directory or glob scope is expanded.
 _SCOPE_SKIPPED_DIRS = frozenset({".git", "node_modules", "__pycache__", ".pytest_cache", ".astro", "dist"})
 _DIFF_SAMPLE_LIMIT = 5
+_GIT_TIMEOUT_S = 60
 
 
 class KimiAdmissionRefused(ValueError):
@@ -211,23 +222,26 @@ def _walk_files(repo_root: Path, base: str) -> Iterable[str]:
             yield f"{rel_dir}/{name}" if rel_dir != "." else name
 
 
+def _literal_base(glob: str) -> str:
+    """The directory part of ``glob`` before its first wildcard segment."""
+    literal: list[str] = []
+    for segment in glob.split("/"):
+        if _GLOB_CHARS.intersection(segment):
+            break
+        literal.append(segment)
+    return "/".join(literal)
+
+
 def scope_files(normalized: str, *, repo_root: Path) -> tuple[bool, list[str]]:
-    """Whether ``normalized`` is a directory or glob scope, and the existing files it owns.
+    """Whether ``normalized`` is a directory or glob scope, and the existing files it owns on disk.
 
     Ownership is read as dispatch reads it: a directory owns its subtree and a
     glob is a case-sensitive ``fnmatch`` pattern whose ``*`` also crosses
     ``/``. A single file owns itself; a path that does not exist yet owns no
     existing file.
     """
-    import fnmatch
-
     if _GLOB_CHARS.intersection(normalized):
-        literal: list[str] = []
-        for segment in normalized.split("/"):
-            if _GLOB_CHARS.intersection(segment):
-                break
-            literal.append(segment)
-        base = "/".join(literal)
+        base = _literal_base(normalized)
         if not base or not (repo_root / base).is_dir():
             return True, []
         return True, [rel for rel in _walk_files(repo_root, base) if fnmatch.fnmatchcase(rel, normalized)]
@@ -237,9 +251,96 @@ def scope_files(normalized: str, *, repo_root: Path) -> tuple[bool, list[str]]:
     return False, [normalized] if target.is_file() else []
 
 
-def _has_cyrillic(path: Path) -> bool:
-    # A file that reads as no text (a binary asset) carries no text content.
-    return any(CYRILLIC.search(text) for text in text_readings(path.read_bytes()).values())
+class ContentTree(Protocol):
+    """A tree of files a Kimi worker starts from."""
+
+    def owned_files(self, normalized: str) -> tuple[bool, dict[str, bytes | None]]:
+        """Whether ``normalized`` is a directory or glob scope, and each file it owns with its content.
+
+        Content is None for an entry that holds no file content (a submodule).
+        Raises ``OSError`` or ``RuntimeError`` when the tree cannot be read.
+        """
+        ...
+
+
+@dataclass(frozen=True)
+class DirectoryTree:
+    """The files on disk under ``root``: a worktree as the worker sees it."""
+
+    root: Path
+
+    def __str__(self) -> str:
+        return f"in {self.root}"
+
+    def owned_files(self, normalized: str) -> tuple[bool, dict[str, bytes | None]]:
+        is_scope, files = scope_files(normalized, repo_root=self.root)
+        return is_scope, {rel: (self.root / rel).read_bytes() for rel in files}
+
+
+@dataclass(frozen=True)
+class CommitTree:
+    """The files of ``commit`` in the repository at ``repo``, read with git plumbing and no checkout."""
+
+    repo: Path
+    commit: str
+    env: Mapping[str, str] | None = None
+
+    def __str__(self) -> str:
+        return f"in commit {self.commit[:12]}"
+
+    def _git(self, *args: str, stdin: bytes | None = None) -> bytes:
+        proc = subprocess.run(
+            ["git", *args],
+            cwd=self.repo,
+            input=stdin,
+            capture_output=True,
+            check=False,
+            env=None if self.env is None else dict(self.env),
+            timeout=_GIT_TIMEOUT_S,
+        )
+        if proc.returncode != 0:
+            detail = proc.stderr.decode("utf-8", "replace").strip() or f"exit {proc.returncode}"
+            raise RuntimeError(f"git {args[0]} {self.commit[:12]} failed: {detail}")
+        return proc.stdout
+
+    def _entries(self, base: str) -> dict[str, tuple[str, str]]:
+        """``path -> (object type, object id)`` for every entry at or under ``base``."""
+        entries: dict[str, tuple[str, str]] = {}
+        for record in self._git("ls-tree", "-r", "-z", "--full-tree", self.commit, "--", base).split(b"\0"):
+            if record:
+                meta, _, path = record.partition(b"\t")
+                _mode, kind, oid = meta.decode("ascii").split()
+                entries[path.decode("utf-8", "surrogateescape")] = (kind, oid)
+        return entries
+
+    def _blobs(self, oids: Iterable[str]) -> dict[str, bytes]:
+        wanted = sorted(set(oids))
+        if not wanted:
+            return {}
+        out = self._git("cat-file", "--batch", stdin="".join(f"{oid}\n" for oid in wanted).encode("ascii"))
+        blobs: dict[str, bytes] = {}
+        pos = 0
+        while pos < len(out):
+            header_end = out.index(b"\n", pos)
+            fields = out[pos:header_end].decode("ascii").split()
+            if len(fields) != 3:
+                raise RuntimeError(f"git cat-file cannot read {fields[0] if fields else 'an object'}")
+            start = header_end + 1
+            blobs[fields[0]] = out[start : start + int(fields[2])]
+            pos = start + int(fields[2]) + 1
+        return blobs
+
+    def owned_files(self, normalized: str) -> tuple[bool, dict[str, bytes | None]]:
+        if _GLOB_CHARS.intersection(normalized):
+            base = _literal_base(normalized)
+            entries = self._entries(base) if base else {}
+            entries = {path: entry for path, entry in entries.items() if fnmatch.fnmatchcase(path, normalized)}
+            is_scope = True
+        else:
+            entries = self._entries(normalized)
+            is_scope = bool(entries) and normalized not in entries
+        blobs = self._blobs(oid for kind, oid in entries.values() if kind == "blob")
+        return is_scope, {path: blobs.get(oid) if kind == "blob" else None for path, (kind, oid) in entries.items()}
 
 
 def _sample(paths: list[str]) -> str:
@@ -247,20 +348,45 @@ def _sample(paths: list[str]) -> str:
     return shown + (f" and {len(paths) - _DIFF_SAMPLE_LIMIT} more" if len(paths) > _DIFF_SAMPLE_LIMIT else "")
 
 
-def owned_scope_reasons(path: str, *, repo_root: Path | None) -> list[str]:
-    """Why an allowlisted owned path is still refused for its content or its descendants.
+_CYRILLIC_TEXT = "Cyrillic text"
 
-    Any owned file, or file under an owned directory or glob, that contains a
-    Cyrillic character is Ukrainian content. A directory or glob scope that
-    also covers an excluded or off-allowlist file must be narrowed to specific
-    files or clean subdirectories. Fails closed without a repository root.
+
+def content_problem(data: bytes | None) -> str | None:
+    """Why ``data`` is not admissible Kimi content, or None when it is.
+
+    Admissible content is UTF-8 text with no control characters other than
+    tab, LF and CR, and no Cyrillic character. None (no file content) is not
+    admissible either.
+    """
+    if data is None:
+        return "no file content"
+    try:
+        text = data.decode("utf-8")
+    except UnicodeDecodeError:
+        return "not UTF-8"
+    if _CONTROL.search(text):
+        return "control characters"
+    if CYRILLIC.search(text):
+        return _CYRILLIC_TEXT
+    return None
+
+
+def owned_scope_reasons(path: str, tree: ContentTree) -> list[str]:
+    """Why an allowlisted owned path is still refused for its content or its descendants in ``tree``.
+
+    Every owned file, and every file under an owned directory or glob, must be
+    plain UTF-8 text without Cyrillic text or a Cyrillic file name. A directory
+    or glob scope that also covers an excluded or off-allowlist file must be
+    narrowed to specific files or clean subdirectories. Fails closed when the
+    tree cannot be read.
     """
     normalized = normalize_owned_path(path)
     if normalized is None:
         return []
-    if repo_root is None:
-        return [f"owned path {normalized!r} cannot be checked for Ukrainian content (no repository root)"]
-    is_scope, files = scope_files(normalized, repo_root=repo_root)
+    try:
+        is_scope, files = tree.owned_files(normalized)
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+        return [f"owned path {normalized!r} cannot be checked for Ukrainian content {tree} ({exc})"]
     reasons: list[str] = []
     if is_scope:
         blocked = [rel for rel in files if owned_path_reason(rel)]
@@ -269,119 +395,62 @@ def owned_scope_reasons(path: str, *, repo_root: Path | None) -> list[str]:
                 f"owned scope {normalized!r} contains excluded or off-allowlist paths ({_sample(blocked)}); "
                 "narrow it to specific files or clean subdirectories"
             )
-    try:
-        cyrillic = [rel for rel in files if _has_cyrillic(repo_root / rel)]
-    except OSError as exc:
-        return [*reasons, f"owned path {normalized!r} cannot be checked for Ukrainian content ({exc})"]
+    cyrillic: list[str] = []
+    not_text: list[str] = []
+    for rel, data in files.items():
+        problem = content_problem(data)
+        if CYRILLIC.search(rel) or problem == _CYRILLIC_TEXT:
+            cyrillic.append(rel)
+        elif problem:
+            not_text.append(rel)
+    where = f"owned scope {normalized!r} holds" if is_scope else "owned file holds"
     if cyrillic:
-        where = f"owned scope {normalized!r} holds" if is_scope else "owned file holds"
-        reasons.append(f"{where} Ukrainian content (Cyrillic text in {_sample(cyrillic)})")
+        reasons.append(f"{where} Ukrainian content (Cyrillic text in {_sample(cyrillic)}, {tree})")
+    if not_text:
+        reasons.append(f"{where} content that is not plain text ({_sample(not_text)}, {tree}); {TEXT_RULE}")
     return reasons
 
 
 @dataclass(frozen=True)
 class FileChange:
-    """One changed path: its content before and after, as bytes.
-
-    ``before`` is None for a new file. ``after`` is None for a deleted file
-    (``deleted``) or for a post-image that could not be read.
-    """
+    """One changed path and its post-image: None for a deleted file (``deleted``) or an unreadable one."""
 
     path: str
-    before: bytes | None
     after: bytes | None
     deleted: bool = False
 
 
-# Byte-order marks, longest first: the UTF-32-LE mark begins with the UTF-16-LE one.
-_BOM_ENCODINGS = (
-    (codecs.BOM_UTF32_LE, "utf-32"),
-    (codecs.BOM_UTF32_BE, "utf-32"),
-    (codecs.BOM_UTF8, "utf-8-sig"),
-    (codecs.BOM_UTF16_LE, "utf-16"),
-    (codecs.BOM_UTF16_BE, "utf-16"),
-)
-_WIDE_ENCODINGS = ("utf-16-le", "utf-16-be", "utf-32-le", "utf-32-be")
-
-
-def text_readings(data: bytes) -> dict[str, str]:
-    """Every way ``data`` reads as text, by encoding; empty when it reads as none.
-
-    A byte-order mark fixes the encoding. Without one the bytes are read as
-    UTF-8 and, when they hold a NUL, also as UTF-16 and UTF-32 in both byte
-    orders, so neither a NUL byte (which makes git call a file binary) nor a
-    wide encoding hides Cyrillic text.
-    """
-    for bom, encoding in _BOM_ENCODINGS:
-        if data.startswith(bom):
-            try:
-                return {encoding: data.decode(encoding)}
-            except UnicodeDecodeError:
-                return {}
-    readings: dict[str, str] = {}
-    candidates = ("utf-8", *_WIDE_ENCODINGS) if b"\0" in data else ("utf-8",)
-    for encoding in candidates:
-        try:
-            readings[encoding] = data.decode(encoding)
-        except UnicodeDecodeError:
-            continue
-    return readings
-
-
-def added_cyrillic_lines(before: bytes | None, after: bytes) -> list[str] | None:
-    """The lines ``after`` adds over ``before`` that contain a Cyrillic character; None when ``after`` is not text.
-
-    Lines are compared per reading, as multisets, so moving a line that already
-    held Cyrillic text adds nothing and a second copy of it adds one.
-    """
-    readings = text_readings(after)
-    if not readings:
-        return None
-    previous = text_readings(before) if before is not None else {}
-    added: list[str] = []
-    for encoding, text in readings.items():
-        existing = Counter(previous.get(encoding, "").splitlines())
-        for line in text.splitlines():
-            if not CYRILLIC.search(line):
-                continue
-            if existing[line]:
-                existing[line] -= 1
-                continue
-            sample = line.strip()[:80]
-            if sample not in added:
-                added.append(sample)
-    return added
+def _first_cyrillic_line(data: bytes) -> str:
+    text = data.decode("utf-8")
+    return next(line.strip()[:80] for line in text.splitlines() if CYRILLIC.search(line))
 
 
 def change_reasons(changes: Iterable[FileChange]) -> list[str]:
-    """Why a Kimi change set is refused: it adds Cyrillic text or a Cyrillic file name, or adds content that is not text."""
+    """Why a Kimi change set is refused: a changed file is not plain UTF-8 text, or holds Cyrillic text or a Cyrillic name."""
     cyrillic: list[str] = []
-    unreadable: list[str] = []
+    not_text: list[str] = []
     for change in changes:
         if change.deleted:
             continue
         if CYRILLIC.search(change.path):
             cyrillic.append(f"{change.path}: (file name)")
-        lines = None if change.after is None else added_cyrillic_lines(change.before, change.after)
-        if lines is None:
-            unreadable.append(change.path)
-            continue
-        cyrillic.extend(f"{change.path}: {line}" for line in lines)
+        problem = content_problem(change.after)
+        if problem == _CYRILLIC_TEXT:
+            cyrillic.append(f"{change.path}: {_first_cyrillic_line(change.after or b'')}")
+        elif problem:
+            not_text.append(change.path)
     reasons: list[str] = []
     if cyrillic:
         shown = "; ".join(cyrillic[:_DIFF_SAMPLE_LIMIT])
         more = f"; and {len(cyrillic) - _DIFF_SAMPLE_LIMIT} more" if len(cyrillic) > _DIFF_SAMPLE_LIMIT else ""
-        reasons.append(f"the changes add Ukrainian content (Cyrillic text: {shown}{more})")
-    if unreadable:
-        reasons.append(
-            f"the changes add content that cannot be read as text ({_sample(unreadable)}); "
-            "binary files cannot be checked for Ukrainian content"
-        )
+        reasons.append(f"the changed files hold Ukrainian content (Cyrillic text: {shown}{more})")
+    if not_text:
+        reasons.append(f"the changed files hold content that is not plain text ({_sample(not_text)}); {TEXT_RULE}")
     return reasons
 
 
 def refuse_kimi_changes(agent: str, changes: Iterable[FileChange]) -> None:
-    """Raise ``KimiAdmissionRefused`` when a Kimi worker's changes add Cyrillic text or unreadable content."""
+    """Raise ``KimiAdmissionRefused`` when a Kimi worker's changed files are not plain text or hold Cyrillic text."""
     reasons = change_reasons(changes)
     if reasons:
         raise KimiAdmissionRefused(format_refusal(agent, reasons))
@@ -445,7 +514,7 @@ def refuse_kimi_if_disallowed(
     research_track: str | None = None,
     prompt_file: str | None = None,
     repo_root: Path | None = None,
-    execution_root: Path | None = None,
+    trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]] = (),
 ) -> None:
     """Raise ``KimiAdmissionRefused`` when any effective seat or model is Kimi and the work is not admitted.
 
@@ -453,16 +522,20 @@ def refuse_kimi_if_disallowed(
     models after every override, pin and substitution. ``mode`` is the
     runtime mode (only ``workspace-write`` is admitted) or an activity label
     (``ACP_MODE``, ``REVIEW_MODE``). ``paths`` are the owned paths, each of
-    which must be on the allowlist, free of Cyrillic text and, for a directory
-    or glob, free of excluded descendants, read in ``execution_root`` — the
-    checkout the worker runs in — or ``repo_root`` when it is not given.
-    ``repo`` is the fleet repository role. It reads only the owned files and
-    the curriculum manifest under ``repo_root`` (for ``research_track``) and
-    never writes. Returns None for every non-Kimi call.
+    which must be on the allowlist. ``repo`` is the fleet repository role and
+    ``repo_root`` holds the curriculum manifest read for ``research_track``.
+
+    Only when every one of those checks admits are the owned paths read in
+    ``trees`` — the trees the worker starts from (its worktree on disk, the
+    commit it is checked out or created from). ``trees`` may be a callable,
+    so resolving a base commit never precedes a policy refusal; a callable
+    that raises, or owned paths with no tree to read, refuse. Never writes.
+    Returns None for every non-Kimi call.
     """
     seat = _kimi_seat_name(tuple(effective_participants), tuple(effective_models))
     if seat is None:
         return
+    owned = tuple(paths)
     reasons: list[str] = []
     if mode != ADMITTED_MODE:
         reasons.append(_MODE_ACTIVITIES.get(mode) or f"--mode {mode} (only {ADMITTED_MODE} implementation is admitted)")
@@ -474,25 +547,35 @@ def refuse_kimi_if_disallowed(
     track_reason = curriculum_track_reason(research_track, repo_root=repo_root)
     if track_reason:
         reasons.append(track_reason)
-    for path in paths:
-        path_reason = owned_path_reason(path)
-        if path_reason:
-            reasons.append(path_reason)
-        else:
-            reasons.extend(owned_scope_reasons(path, repo_root=execution_root or repo_root))
+    reasons.extend(reason for path in owned if (reason := owned_path_reason(path)))
     if prompt_file and _PRIVATE_STATE_COMPONENTS.intersection(Path(str(prompt_file)).expanduser().parts):
         reasons.append(f"--prompt-file {prompt_file!r} lives in agent-private state")
     if repo is not None and repo not in CODING_REPO_ROLES:
         reasons.append(f"--repo role {repo!r} is a private repository")
+    if not reasons and owned:
+        reasons.extend(_content_reasons(owned, trees))
     if reasons:
         raise KimiAdmissionRefused(format_refusal(seat, reasons))
+
+
+def _content_reasons(
+    owned: Sequence[str], trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]]
+) -> list[str]:
+    try:
+        resolved = trees() if callable(trees) else trees
+    except (OSError, RuntimeError, ValueError, subprocess.SubprocessError) as exc:
+        return [f"the tree the worker starts from cannot be read for Ukrainian content ({exc})"]
+    if not resolved:
+        return ["owned paths cannot be checked for Ukrainian content (no tree to read)"]
+    reasons = [reason for tree in resolved for path in owned for reason in owned_scope_reasons(path, tree)]
+    return list(dict.fromkeys(reasons))
 
 
 def format_refusal(agent: str, reasons: Iterable[Any]) -> str:
     joined = "; ".join(str(reason) for reason in reasons)
     return (
         f"ROUTING REFUSED: {_POLICY}: {POLICY_LINE} {agent} seats take workspace-write implementation of "
-        f"allowlisted UI and backend paths without Cyrillic text only "
+        f"allowlisted UI and backend paths holding plain UTF-8 text without Cyrillic only "
         f"(KIMI_OWNED_ROOTS in scripts/agent_runtime/kimi_admission.py). "
         f"Refused: {joined}. Alternative seats: {KIMI_ALTERNATIVES}."
     )

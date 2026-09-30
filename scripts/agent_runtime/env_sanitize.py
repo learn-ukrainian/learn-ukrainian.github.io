@@ -58,6 +58,8 @@ _SAFE_NAME_PREFIXES = (
 )
 
 _GIT_TIMEOUT_SECONDS = 30
+# `git config --unset-all` exit status when the key is not set.
+_GIT_CONFIG_KEY_MISSING = 5
 
 # Variables that could carry a push credential into a Kimi seat.
 _PUSH_CREDENTIAL_NAMES = (
@@ -356,8 +358,12 @@ def _isolated_git_env(
     ``GH_CONFIG_DIR`` at an empty sandbox like the token case, but installs no
     ``GIT_ASKPASS``: the child has no GitHub credential at all.
 
-    Never raises: isolation failure must not block spawning an agent.
+    Never raises for other seats: isolation failure must not block spawning an
+    agent. With ``no_credentials`` any failure raises ``OSError`` or
+    ``subprocess.TimeoutExpired`` instead: an agent without credential
+    isolation is not launched.
     """
+    sandbox_dir: Path | None = None
     try:
         sandbox_dir = Path(tempfile.mkdtemp(prefix="lu-agent-runtime-git-"))
         sandbox_global = sandbox_dir / "agent.gitconfig"
@@ -373,12 +379,14 @@ def _isolated_git_env(
         if strip_helpers:
             keys_to_unset.insert(0, "credential.helper")
         for key in keys_to_unset:
-            subprocess.run(
+            unset = subprocess.run(
                 ["git", "config", "--file", str(sandbox_global), "--unset-all", key],
                 check=False,
                 capture_output=True,
                 timeout=_GIT_TIMEOUT_SECONDS,
             )
+            if no_credentials and unset.returncode not in (0, _GIT_CONFIG_KEY_MISSING):
+                raise OSError(f"git config --unset-all {key} failed (exit {unset.returncode})")
         env = {
             "GIT_CONFIG_GLOBAL": str(sandbox_global),
             "GIT_CONFIG_NOSYSTEM": "1",
@@ -426,6 +434,10 @@ def _isolated_git_env(
                 env["GH_CONFIG_DIR"] = host_gh_config_dir
         return env
     except (OSError, subprocess.TimeoutExpired):
+        if no_credentials:
+            if sandbox_dir is not None:
+                shutil.rmtree(sandbox_dir, ignore_errors=True)
+            raise
         # Isolation failure must not re-open the operator's global Git config.
         # Losing the copied commit identity is safer than falling back to an
         # interactive credential helper.
@@ -446,6 +458,10 @@ def build_agent_env(
     ``overrides`` are applied to the parent environment before sanitization so
     adapter-supplied values are subject to the same policy as inherited values.
     The runner applies explicit ``InvocationPlan.env_unsets`` after this call.
+    For a Kimi seat it raises ``KimiAdmissionRefused`` when credential
+    isolation (an empty ``GH_CONFIG_DIR``, the credential-helper and GitHub
+    header resets) cannot be established: no partially isolated environment
+    is returned.
     """
     raw = dict(os.environ)
     if _normalized_provider(provider) == "agy":
@@ -514,14 +530,19 @@ def build_agent_env(
         for name in _PUSH_CREDENTIAL_NAMES:
             env.pop(name, None)
 
-    env.update(
-        _isolated_git_env(
+    try:
+        isolation = _isolated_git_env(
             env.get("HOME") or raw.get("HOME"),
             token,
             host_gh_config_dir=None if no_push else usable_host_gh_config_dir(raw.get("GH_CONFIG_DIR")),
             no_credentials=no_push,
         )
-    )
+    except (OSError, subprocess.TimeoutExpired) as exc:  # raised only for a Kimi seat
+        from .kimi_admission import KimiAdmissionRefused, format_refusal
+
+        failure = f"a launch whose credential isolation could not be established ({exc})"
+        raise KimiAdmissionRefused(format_refusal(provider, [failure])) from exc
+    env.update(isolation)
 
     # Git reads this process-scoped config for ordinary child invocations,
     # including shell and Python subprocess wrappers. pushInsteadOf affects only

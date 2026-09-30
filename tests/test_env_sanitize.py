@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import os
+import subprocess
 import sys
 from pathlib import Path
 from unittest.mock import patch
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
@@ -36,10 +39,7 @@ def test_user_logname_not_provider_specific() -> None:
     }
 
     with patch.dict("os.environ", parent_env, clear=True):
-        envs = {
-            provider: build_agent_env(provider=provider)
-            for provider in ("gemini", "claude", "codex", "bridge")
-        }
+        envs = {provider: build_agent_env(provider=provider) for provider in ("gemini", "claude", "codex", "bridge")}
 
     for env in envs.values():
         assert env["USER"] == "example"
@@ -123,8 +123,7 @@ def test_workdir_repointing_git_env_is_scrubbed() -> None:
     with patch.dict("os.environ", hostile, clear=True):
         env = build_agent_env(provider="codex")
 
-    for leaked in ("GIT_WORK_TREE", "GIT_DIR", "GIT_INDEX_FILE",
-                   "GIT_COMMON_DIR", "PWD", "OLDPWD"):
+    for leaked in ("GIT_WORK_TREE", "GIT_DIR", "GIT_INDEX_FILE", "GIT_COMMON_DIR", "PWD", "OLDPWD"):
         assert leaked not in env, f"{leaked} must be scrubbed from the child env"
 
 
@@ -219,7 +218,7 @@ def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path
         "\tname = Example\n"
         "[credential]\n"
         "\thelper = !/usr/bin/gh auth git-credential\n"
-        "[http \"https://github.com/\"]\n"
+        '[http "https://github.com/"]\n'
         "\textraheader = AUTHORIZATION: basic c2VjcmV0\n",
         encoding="utf-8",
     )
@@ -230,9 +229,7 @@ def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path
         clear=True,
     ):
         no_token_env = build_agent_env(provider="codex")
-        sandbox_no_token = Path(no_token_env["GIT_CONFIG_GLOBAL"]).read_text(
-            encoding="utf-8"
-        )
+        sandbox_no_token = Path(no_token_env["GIT_CONFIG_GLOBAL"]).read_text(encoding="utf-8")
 
     assert "gh auth git-credential" in sandbox_no_token
     assert "extraheader" not in sandbox_no_token.lower()
@@ -248,9 +245,7 @@ def test_credential_helper_survives_sandbox_copy_without_identity_token(tmp_path
         clear=True,
     ):
         token_env = build_agent_env(provider="codex")
-        sandbox_token = Path(token_env["GIT_CONFIG_GLOBAL"]).read_text(
-            encoding="utf-8"
-        )
+        sandbox_token = Path(token_env["GIT_CONFIG_GLOBAL"]).read_text(encoding="utf-8")
 
     assert "gh auth git-credential" not in sandbox_token
     assert token_env["GIT_ASKPASS"].endswith("git-askpass.sh")
@@ -263,7 +258,9 @@ def test_kimi_seat_gets_no_push_credential(tmp_path) -> None:
     gh_config = tmp_path / "gh-config"
     gh_config.mkdir()
     (gh_config / "hosts.yml").write_text("github.com:\n    user: ops\n", encoding="utf-8")
-    (tmp_path / ".gitconfig").write_text("[credential]\n\thelper = !/usr/bin/gh auth git-credential\n", encoding="utf-8")
+    (tmp_path / ".gitconfig").write_text(
+        "[credential]\n\thelper = !/usr/bin/gh auth git-credential\n", encoding="utf-8"
+    )
 
     with patch.dict(
         "os.environ",
@@ -309,8 +306,7 @@ def test_dispatch_markers_pass_through_for_every_dispatch_provider() -> None:
             clear=True,
         ):
             envs = {
-                provider: build_agent_env(provider=provider)
-                for provider in ("claude", "codex", "kimi", "grok", "agy")
+                provider: build_agent_env(provider=provider) for provider in ("claude", "codex", "kimi", "grok", "agy")
             }
 
         for provider, env in envs.items():
@@ -456,3 +452,71 @@ def test_ambient_agy_app_data_dir_is_stripped_unless_the_override_supplies_it() 
     assert "AGY_APP_DATA_DIR" not in ordinary
     assert "AGY_APP_DATA_DIR" not in ordinary_tools
     assert review["AGY_APP_DATA_DIR"] == scoped_app_data
+
+
+def _kimi_isolation_env(tmp_path: Path) -> dict[str, str]:
+    (tmp_path / ".gitconfig").write_text(
+        "[credential]\n\thelper = !/usr/bin/gh auth git-credential\n", encoding="utf-8"
+    )
+    return {"PATH": "/usr/bin", "HOME": str(tmp_path), "USER": "example"}
+
+
+def _fail_mkdtemp(*_args, **_kwargs):
+    raise OSError("no temporary directory")
+
+
+def _fail_gh_config_mkdir(original):
+    def mkdir(self, *args, **kwargs):
+        if self.name == "gh":
+            raise OSError("cannot create the gh config sandbox")
+        return original(self, *args, **kwargs)
+
+    return mkdir
+
+
+def _fail_unset(key: str, original):
+    def run(cmd, *args, **kwargs):
+        if "--unset-all" in cmd and key in cmd:
+            return subprocess.CompletedProcess(cmd, 3, b"", b"could not lock config file")
+        return original(cmd, *args, **kwargs)
+
+    return run
+
+
+@pytest.mark.parametrize(
+    "failure",
+    ["mkdtemp", "gh-config-dir", "credential.helper", "http.https://github.com/.extraheader"],
+)
+def test_a_kimi_seat_is_refused_when_credential_isolation_cannot_be_established(tmp_path, monkeypatch, failure):
+    """Kimi never gets a partially isolated environment: no temp GH_CONFIG_DIR or config reset, no launch."""
+    import agent_runtime.env_sanitize as env_sanitize
+
+    made: list[str] = []
+    real_mkdtemp = env_sanitize.tempfile.mkdtemp
+
+    def mkdtemp(*args, **kwargs):
+        made.append(real_mkdtemp(*args, dir=tmp_path, **kwargs))
+        return made[-1]
+
+    if failure == "mkdtemp":
+        monkeypatch.setattr(env_sanitize.tempfile, "mkdtemp", _fail_mkdtemp)
+    else:
+        monkeypatch.setattr(env_sanitize.tempfile, "mkdtemp", mkdtemp)
+    if failure == "gh-config-dir":
+        monkeypatch.setattr(Path, "mkdir", _fail_gh_config_mkdir(Path.mkdir))
+    elif failure != "mkdtemp":
+        monkeypatch.setattr(env_sanitize.subprocess, "run", _fail_unset(failure, subprocess.run))
+    with patch.dict("os.environ", _kimi_isolation_env(tmp_path), clear=True):
+        with pytest.raises(ValueError, match="KIMI CODING-ONLY") as refused:
+            build_agent_env(provider="kimi")
+    assert "credential isolation could not be established" in str(refused.value)
+    assert all(not Path(path).exists() for path in made)  # the partial sandbox is removed
+
+
+def test_other_seats_keep_the_isolation_fallback(tmp_path, monkeypatch):
+    import agent_runtime.env_sanitize as env_sanitize
+
+    monkeypatch.setattr(env_sanitize.tempfile, "mkdtemp", _fail_mkdtemp)
+    with patch.dict("os.environ", _kimi_isolation_env(tmp_path), clear=True):
+        env = build_agent_env(provider="codex")
+    assert env["GIT_CONFIG_GLOBAL"] == os.devnull
