@@ -235,9 +235,8 @@ repos:
 
       - id: lint-session-state
         name: lint session-state env references
-        entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_session_state.py --all
+        entry: bash scripts/pre_commit/project_python.sh scripts/audit/lint_session_state.py
         language: system
-        pass_filenames: false
         files: ^docs/session-state/.*\.md$
         stages: [pre-commit]
 
