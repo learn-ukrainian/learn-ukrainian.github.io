@@ -2506,8 +2506,13 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # digit follows it (``APPROVE_LATER``), so ``APPROVEX`` is not a verdict.
 # Indentation follows CommonMark: at most three leading spaces; four or more,
 # or a tab, make the line an indented code block, i.e. an example.
+# After that indentation an ATX heading marker (``#`` to ``######`` plus at
+# least one space) may precede the label, so ``## VERDICT: REQUEST_CHANGES``
+# and ``# **VERDICT: APPROVE**`` are verdicts (#9305). ``##VERDICT: APPROVE``
+# has no space, which CommonMark does not treat as a heading, and
+# ``## The VERDICT: APPROVE`` does not start with the label; neither counts.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"^ {0,3}(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
+    r"^ {0,3}(?:#{1,6} +)?(?:[*_][*_\s]*)?VERDICT[*_`\s]*:[*_`\s]*"
     r"(APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)"
     r"(?![^\W_]|_+[^\W_])",
     re.IGNORECASE,
