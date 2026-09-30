@@ -172,6 +172,7 @@ _SAFE_ACP_FAILURE_CODES = frozenset(
         "primary_tree_write",
         "protocol_output_limit",
         "provider_unavailable",
+        "provider_error",
         "rate_limited",
         "result_invalid",
         "timeout",
@@ -3531,6 +3532,11 @@ def resolve_inter_agent_route(
 
     pinned_effort = ACPX_PARTICIPANT_EFFORTS.get(participant)
     if effort is not None and effort != pinned_effort:
+        if pinned_effort is None:
+            raise InterAgentTransportError(
+                f"ACP participant {participant!r} supported effort values: default (omit --effort); "
+                "the ACPX one-shot exec interface has no reasoning-effort flag"
+            )
         raise InterAgentTransportError(
             f"ACP participant {participant!r} only supports its registered effort pin "
             f"{pinned_effort!r}; got {effort!r}"

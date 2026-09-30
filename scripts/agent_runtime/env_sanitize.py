@@ -125,6 +125,9 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
         # chooses the existing Codex ChatGPT login; no credential is carried
         # in this variable.
         "ACPX_AUTH_CHAT_GPT",
+        # Adapter-resolved installed CLI; codex-acp otherwise launches its
+        # bundled Codex, which can lag native dispatch's model support (#9273).
+        "CODEX_PATH",
     },
     "acpx-grok-shadow": {
         # acpx@0.13.0 treats this as a non-secret auth-method selector:

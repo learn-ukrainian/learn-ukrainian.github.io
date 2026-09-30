@@ -169,6 +169,65 @@ def test_search_sources_uses_query_builder_and_dense_rerank(monkeypatch, tmp_pat
     assert results[0]["section_title"] == "Апостроф і наголос"
 
 
+def test_search_sources_uses_track_weighted_rrf_without_dense_index(monkeypatch):
+    monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections", "modern_literary"))
+    monkeypatch.setattr(
+        sources_db,
+        "_prepare_query",
+        lambda query, track: ([], {"відмінок"}, "відмінок"),
+    )
+    textbook = {
+        "corpus": "textbook_sections",
+        "unit_key": "textbook_sections:1",
+        "section_id": 1,
+        "text": "Textbook section",
+        "full_text": "Textbook section",
+        "fts_score": -1.0,
+    }
+    literary = {
+        "corpus": "modern_literary",
+        "unit_key": "modern_literary:1",
+        "chunk_id": "literary-1",
+        "text": "Literary passage",
+        "full_text": "Literary passage",
+        "fts_score": -100.0,
+    }
+    monkeypatch.setattr(sources_db, "_search_sections_fts5", lambda *args, **kwargs: [textbook])
+    monkeypatch.setattr(sources_db, "_expand_to_chunk_candidates", lambda rows, **kwargs: rows)
+    monkeypatch.setattr(sources_db, "_search_literary_candidates", lambda *args, **kwargs: [literary])
+    monkeypatch.setattr(
+        sources_db,
+        "rerank_candidates",
+        lambda query, candidates, **kwargs: [
+            {**candidate, "dense_score": 0.0, "ranking": "keyword_rrf"}
+            for candidate in candidates
+        ],
+    )
+    monkeypatch.setattr(sources_db, "_expand_neighbor_context", lambda hit: hit)
+
+    results = sources_db.search_sources("відмінок", track="a1", limit=2)
+
+    assert [hit["corpus"] for hit in results] == ["textbook_sections", "modern_literary"]
+    assert all(hit["ranking"] == "keyword_rrf" for hit in results)
+    for hit in results:
+        assert hit["keyword_rank"] == 1
+        assert hit["keyword_score"] == pytest.approx(1 / (sources_db.RRF_K + 1))
+        assert hit["final_score"] == pytest.approx(
+            hit["keyword_score"] * sources_db._corpus_prior("a1", hit["corpus"])
+        )
+    assert results[0]["fts_score"] > results[1]["fts_score"]
+
+    monkeypatch.setattr(sources_db, "_corpus_prior", lambda track, corpus: 1.0)
+    # The corpus enumeration puts textbook first, so this proves the documented
+    # corpus tie-break wins over stable input order.
+    monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections", "modern_literary"))
+    tied_results = sources_db.search_sources("відмінок", track="a1", limit=2)
+    assert [(hit["corpus"], hit["unit_key"]) for hit in tied_results] == [
+        ("modern_literary", "modern_literary:1"),
+        ("textbook_sections", "textbook_sections:1"),
+    ]
+
+
 def test_search_sources_archaic_strategy_is_reserved(tmp_path):
     discovery_path = tmp_path / "demo.yaml"
     discovery_path.write_text("query_keywords: []\n", encoding="utf-8")

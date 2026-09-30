@@ -587,10 +587,17 @@ def invalidate_corpus_index(corpus: str, *, manifest_db: Path = DEFAULT_MANIFEST
 
 
 def _keyword_order(candidates: list[dict[str, Any]], limit: int) -> list[dict[str, Any]]:
-    scored = [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates]
+    scored = [
+        {
+            **candidate,
+            "dense_score": 0.0,
+            "cosine_score": 0.0,
+        }
+        for candidate in candidates
+    ]
     scored.sort(
         key=lambda row: (
-            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+            float(row.get("keyword_rank", row.get("fts_score", row.get("rank", 0.0))) or 0.0),
             str(row.get("unit_key", "")),
         )
     )
@@ -614,7 +621,14 @@ def rerank_candidates(
     try:
         index = load_corpus_index(corpus, manifest_db=manifest_db)
         if not index.unit_rows:
-            return [{**candidate, "dense_score": 0.0, "cosine_score": 0.0} for candidate in candidates[:limit]]
+            return [
+                {
+                    **candidate,
+                    "dense_score": 0.0,
+                    "cosine_score": 0.0,
+                }
+                for candidate in candidates[:limit]
+            ]
         if encoder is None and _dense_search_block_reason() is not None:
             return _keyword_order(candidates, limit)
 
@@ -625,7 +639,13 @@ def rerank_candidates(
             unit_key = str(candidate.get("unit_key", "")).strip()
             location = index.unit_rows.get(unit_key)
             if location is None:
-                missing.append({**candidate, "dense_score": 0.0, "cosine_score": 0.0})
+                missing.append(
+                    {
+                        **candidate,
+                        "dense_score": 0.0,
+                        "cosine_score": 0.0,
+                    }
+                )
                 continue
             shard_id, row_idx = location
             vectors.append(np.asarray(index.shards[shard_id][row_idx], dtype=np.float32))

@@ -805,6 +805,46 @@ def _acp_error_is_rate_limited(error: Mapping[str, Any]) -> bool:
     return False
 
 
+def _acp_metadata_is_provider_failure(payload: Mapping[str, Any]) -> bool:
+    """Recognize provider-owned failure metadata, never assistant text.
+
+    codex-acp's legacy interface renders provider errors as ordinary text but
+    also reports a systemError thread status. Its typed interface uses the
+    JetBrains Air sessionFailure extension. Neither signal can be inferred
+    from a model quoting error JSON in an answer (#9273).
+    """
+    meta = payload.get("_meta")
+    if not isinstance(meta, dict):
+        return False
+    codex = meta.get("codex")
+    if isinstance(codex, dict):
+        status = codex.get("threadStatus")
+        if isinstance(status, dict) and status.get("type") == "systemError":
+            return True
+        error = codex.get("error")
+        if isinstance(error, dict) and error.get("willRetry") is False:
+            return True
+    jetbrains = meta.get("jetbrains")
+    air = jetbrains.get("air") if isinstance(jetbrains, dict) else None
+    failure = air.get("sessionFailure") if isinstance(air, dict) else None
+    return isinstance(failure, dict) and failure.get("severity") == "error"
+
+
+def _require_codex_cli() -> tuple[str, str]:
+    """Resolve the installed Codex CLI, avoiding codex-acp's bundled copy."""
+    binary = resolve_agent_binary("codex")
+    if not binary:
+        raise AcpxShadowRefusalError("AcpxAdapter: installed codex CLI unavailable; install the current Codex CLI")
+    try:
+        probe = subprocess.run([binary, "--version"], capture_output=True, text=True, timeout=5, check=False)
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise AcpxShadowRefusalError("AcpxAdapter: installed codex CLI version probe failed") from exc
+    match = re.fullmatch(r"codex-cli ([0-9]+\.[0-9]+\.[0-9]+(?:[-+][\w.-]+)?)", probe.stdout.strip())
+    if probe.returncode != 0 or match is None:
+        raise AcpxShadowRefusalError("AcpxAdapter: installed codex CLI returned an unrecognized version")
+    return binary, match[1]
+
+
 def _is_jsonrpc_id(value: object) -> bool:
     """JSON-RPC request ids are string | number; JSON ``true``/``false`` are not."""
     return value is not None and not isinstance(value, bool) and isinstance(value, (str, int, float))
@@ -1960,16 +2000,19 @@ class AcpxAdapter:
         )
         cmd.extend(["--model", model or self.default_model])
         if effort is not None:
-            # ACPX has no reasoning-effort flag today. Per the AgentAdapter
-            # protocol, adapters must warn and proceed rather than hard-fail
-            # on an unsupported effort level.
-            _logger.debug("AcpxAdapter: effort=%r has no ACPX flag equivalent; ignoring", effort)
+            raise AcpxShadowRefusalError(
+                "AcpxAdapter: supported effort values: default (omit --effort); "
+                "the ACPX one-shot exec interface has no reasoning-effort flag"
+            )
+        codex_binary, codex_version = _require_codex_cli()
         cmd.extend(["codex", "exec", "-f", "-"])
 
         metadata: dict[str, Any] = {
             "acpx_shadow": tc.get("acpx_transport") is not True,
             "acpx_cli_version": acpx_version,
             "acpx_cli_compatibility": ACPX_CLI_COMPATIBILITY_CONTRACT,
+            "codex_cli_version": codex_version,
+            "codex_cli_source": "installed",
             "task_id": validated_task_id,
             "correlation_id": correlation_id,
             "idempotency_key": idempotency_key,
@@ -1987,7 +2030,7 @@ class AcpxAdapter:
             # sanitizer allowlists only this literal route marker; no token is
             # read, stored, or forwarded by the controller.
             env_overrides=_acpx_runtime_env_overrides(
-                {"ACPX_AUTH_CHAT_GPT": "1"},
+                {"ACPX_AUTH_CHAT_GPT": "1", "CODEX_PATH": codex_binary},
                 adapter_label="AcpxAdapter",
             ),
             liveness_paths=(),
@@ -2065,6 +2108,7 @@ class AcpxAdapter:
         duplicate_id: object | None = None
         message_chunks: list[str] = []
         final_error: dict[str, Any] | None = None
+        provider_failure = False
         final_stop_reason: object = _MISSING_STOP_REASON
         stop_reason_response_count = 0
         tokens: int | None = None
@@ -2082,6 +2126,8 @@ class AcpxAdapter:
                 update = params.get("update")
                 if not isinstance(update, dict):
                     return self._closed("unrecognized session/update update schema", stderr)
+                if update.get("sessionUpdate") == "session_info_update":
+                    provider_failure = provider_failure or _acp_metadata_is_provider_failure(update)
                 if update.get("sessionUpdate") == "agent_message_chunk":
                     content = update.get("content")
                     if not isinstance(content, dict):
@@ -2175,6 +2221,7 @@ class AcpxAdapter:
             elif has_result:
                 result = event["result"]
                 if "stopReason" in result:
+                    provider_failure = provider_failure or _acp_metadata_is_provider_failure(result)
                     final_stop_reason = result["stopReason"]
                     stop_reason_response_count += 1
 
@@ -2234,6 +2281,13 @@ class AcpxAdapter:
                 stderr,
                 failure_code=failure_code,
                 rate_limited=rate_limited,
+            )
+
+        if provider_failure:
+            return self._closed(
+                "ACP provider reported a terminal failure in session metadata",
+                stderr,
+                failure_code="provider_error",
             )
 
         if final_stop_reason is _MISSING_STOP_REASON:

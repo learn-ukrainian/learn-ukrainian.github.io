@@ -1631,6 +1631,7 @@ _PRIOR_KEY_BY_CORPUS = {
     "wikipedia": "wikipedia",
     "ukrainian_wiki": "ukrainian_wiki",
 }
+RRF_K = 60
 
 
 def _load_track_priors() -> dict[str, dict[str, float]]:
@@ -2406,6 +2407,12 @@ def _dispatch_corpus_search(
     else:
         return []
 
+    # Textbook keyword_rank follows _search_sections_fts5 order: section_score
+    # first, then best BM25. In mixed sets, dense scores (~0.3–0.8 × prior)
+    # outrank keyword RRF scores (~0.016 × prior) by design.
+    for idx, candidate in enumerate(candidates, start=1):
+        candidate.setdefault("keyword_rank", idx)
+
     reranked = rerank_candidates(
         dense_query,
         candidates,
@@ -2413,9 +2420,21 @@ def _dispatch_corpus_search(
         limit=candidate_k_per_corpus,
     )
     prior = _corpus_prior(track, corpus)
-    for row in reranked:
+    for rank_idx, row in enumerate(reranked, start=1):
         row["prior_weight"] = prior
-        row["final_score"] = float(row.get("dense_score", 0.0)) * prior
+        keyword_rank = int(row.get("keyword_rank") or rank_idx)
+        keyword_score = 1.0 / (RRF_K + keyword_rank)
+        row["keyword_rank"] = keyword_rank
+        row["keyword_score"] = keyword_score
+        row["rrf_score"] = keyword_score * prior
+
+        is_dense = row.get("ranking") == "dense" or float(row.get("dense_score", 0.0)) != 0.0
+        if is_dense:
+            row["ranking"] = "dense"
+            row["final_score"] = float(row.get("dense_score", 0.0)) * prior
+        else:
+            row["ranking"] = "keyword_rrf"
+            row["final_score"] = row["rrf_score"]
     return reranked
 
 
@@ -2645,14 +2664,23 @@ def search_sources(
         for future in futures:
             merged.extend(future.result())
 
-    merged.sort(
-        key=lambda row: (
-            -float(row.get("final_score", 0.0)),
-            -float(row.get("dense_score", 0.0)),
-            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
-            str(row.get("unit_key", "")),
+    if merged and all(row.get("ranking") == "keyword_rrf" for row in merged):
+        merged.sort(
+            key=lambda row: (
+                -float(row.get("final_score", 0.0)),
+                str(row.get("corpus", "")),
+                str(row.get("unit_key", "")),
+            )
         )
-    )
+    else:
+        merged.sort(
+            key=lambda row: (
+                -float(row.get("final_score", 0.0)),
+                -float(row.get("dense_score", 0.0)),
+                float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+                str(row.get("unit_key", "")),
+            )
+        )
     expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
     capped = _apply_context_cap(track, expanded)
     # The guarantee applies to what the caller receives, so check the

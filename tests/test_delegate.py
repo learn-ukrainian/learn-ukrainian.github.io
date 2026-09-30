@@ -187,13 +187,17 @@ def dispatch_slice_probe(monkeypatch):
     needs a real ``Popen`` surface (``poll()``, pipes, ``/proc``) that the
     fake worker processes here do not provide. Default the probe to "not
     ready" so every test takes the plain-``Popen`` path; a slice-path test
-    sets ``dispatch_slice_probe["ready"] = True`` instead. An ambient
-    ``LU_DISPATCH_ISOLATION=fallback`` would override even a "ready" probe,
-    so the fixture clears it; only the test that exercises the forced
-    fallback sets it again itself.
+    sets ``dispatch_slice_probe["ready"] = True`` instead.
+    ``LU_TEST_FORCE_DISPATCH_SCOPE=1`` forces that ready probe for a whole run
+    without asking the host. An ambient ``LU_DISPATCH_ISOLATION=fallback``
+    would override even a "ready" probe, so the fixture clears it; only the
+    test that exercises the forced fallback sets it again itself.
     """
     monkeypatch.delenv("LU_DISPATCH_ISOLATION", raising=False)
     state = {"ready": False, "reason": "test stub: host slice probe disabled"}
+    if os.environ.get("LU_TEST_FORCE_DISPATCH_SCOPE") == "1":
+        state["ready"] = True
+        state["reason"] = None
 
     def _probe(env=None, **_kwargs):
         source = os.environ if env is None else env
@@ -1320,6 +1324,152 @@ def test_dor_preflight_cross_repo_references_deduplicate_by_repo_and_number(monk
         "acme/other",
         "learn-ukrainian/learn-ukrainian.github.io",
     ]
+
+
+def _epic_card_fakes(monkeypatch, *, failing=(), pull_requests=()):
+    """Fake ``gh api`` and the card checker: every issue passes unless listed in ``failing`` (repo, number)."""
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            number = command[-1].rsplit("/issues/", 1)[1]
+            payload = {
+                "number": int(number),
+                **({"pull_request": {"url": "pr"}} if int(number) in pull_requests else {}),
+            }
+            return CompletedProcess(command, 0, json.dumps(payload), "")
+        key = (command[command.index("--repo") + 1], int(command[command.index("--issue") + 1]))
+        if key in failing:
+            return CompletedProcess(command, 1, '{"verdict":"WARN","missing":["outcome","why"]}', "")
+        return CompletedProcess(command, 0, '{"verdict":"PASS","missing":[]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    return calls
+
+
+def _checked_issues(calls):
+    return [[call[call.index("--repo") + 1], call[call.index("--issue") + 1]] for call in calls if "--issue" in call]
+
+
+_LOCAL = delegate._CANONICAL_GITHUB_REPO
+
+
+def test_registered_stream_epics_come_from_the_stream_registry():
+    epics = delegate._registered_stream_epics()
+    assert 6943 in epics
+    assert 9251 not in epics
+
+
+def test_registered_stream_epics_unreadable_registry_exempts_nothing(monkeypatch):
+    from scripts.orchestration import issue_stream_audit
+
+    def unreadable(*_a, **_k):
+        raise ValueError("bad registry")
+
+    monkeypatch.setattr(issue_stream_audit, "load_registry", unreadable)
+    assert delegate._registered_stream_epics() == frozenset()
+
+
+def test_dor_preflight_stream_epic_plus_task_checks_only_the_task(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
+    error, record = delegate._run_dor_preflight("Issue: #9251 ... Stream epic #6943.", None, dispatch_repo=_LOCAL)
+    assert error is None
+    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert _checked_issues(calls) == [[_LOCAL, "9251"]]
+    assert not [call for call in calls if call[-1].endswith("/issues/6943")]
+
+
+def test_dor_preflight_stream_epic_plus_failing_task_still_fails(monkeypatch):
+    _epic_card_fakes(monkeypatch, failing={(_LOCAL, 9251)})
+    error, record = delegate._run_dor_preflight("Fixes #9251, epic #6943", None, dispatch_repo=_LOCAL)
+    assert "#9251: outcome,why" in error
+    assert "6943" not in error
+    assert record["warnings"] == {"9251": "outcome,why"}
+    assert record["stream_epic"] == [6943]
+
+
+@pytest.mark.parametrize("failing", [set(), {(_LOCAL, 6943)}], ids=["epic-card-pass", "epic-card-warn"])
+def test_dor_preflight_epic_only_brief_is_refused_whatever_the_epic_card_says(monkeypatch, failing):
+    calls = _epic_card_fakes(monkeypatch, failing=failing)
+    error, record = delegate._run_dor_preflight("Stream epic #6943.", None, dispatch_repo=_LOCAL)
+    assert "dor_epic_only_no_task_issue" in error
+    assert "#6943" in error
+    assert record is None
+    assert _checked_issues(calls) == []
+
+
+def test_dor_preflight_epic_only_brief_is_refused_even_with_an_override_reason(monkeypatch):
+    _epic_card_fakes(monkeypatch)
+    error, record = delegate._run_dor_preflight("Stream epic #6943.", "urgent repair", dispatch_repo=_LOCAL)
+    assert "dor_epic_only_no_task_issue" in error
+    assert record is None
+
+
+@pytest.mark.parametrize("failing", [set(), {(_LOCAL, 6943)}], ids=["epic-card-pass", "epic-card-warn"])
+def test_dor_preflight_epic_with_only_pull_request_is_refused_whatever_the_epic_card_says(monkeypatch, failing):
+    calls = _epic_card_fakes(monkeypatch, failing=failing, pull_requests={8750})
+    error, record = delegate._run_dor_preflight("PR #8750 under epic #6943", None, dispatch_repo=_LOCAL)
+    assert "dor_epic_only_no_task_issue" in error
+    assert record is None
+    assert _checked_issues(calls) == []
+
+
+def test_dor_preflight_foreign_repository_issue_numbered_like_an_epic_is_checked(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch, failing={("acme/other", 6943)})
+    error, record = delegate._run_dor_preflight("Fixes #9251 and acme/other#6943", None, dispatch_repo=_LOCAL)
+    assert "acme/other#6943: outcome,why" in error
+    assert "stream_epic" not in record
+    assert _checked_issues(calls) == [["acme/other", "6943"], [_LOCAL, "9251"]]
+    assert record["issue_repositories"] == [{"issue": 6943, "repo": "acme/other"}]
+
+
+def test_dor_preflight_bare_number_in_a_foreign_dispatch_repository_is_not_this_repos_epic(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch)
+    error, record = delegate._run_dor_preflight("Fixes #9251 and #6943", None, dispatch_repo="acme/other")
+    assert error is None
+    assert "stream_epic" not in record
+    assert _checked_issues(calls) == [["acme/other", "6943"], ["acme/other", "9251"]]
+
+
+@pytest.mark.parametrize(
+    "epic_reference",
+    [
+        "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6943",
+        "learn-ukrainian/learn-ukrainian.github.io#6943",
+        "Learn-Ukrainian/Learn-Ukrainian.github.io#6943",
+    ],
+)
+def test_dor_preflight_local_epic_full_url_and_qualified_forms_are_exempt(monkeypatch, epic_reference):
+    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
+    error, record = delegate._run_dor_preflight(
+        f"Fixes https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9251; stream {epic_reference}",
+        None,
+        dispatch_repo=_LOCAL,
+    )
+    assert error is None
+    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert _checked_issues(calls) == [[_LOCAL, "9251"]]
+
+
+def test_dor_preflight_foreign_full_url_numbered_like_an_epic_is_checked(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch, failing={("acme/other", 6943)})
+    error, record = delegate._run_dor_preflight(
+        "Fixes #9251 and https://github.com/acme/other/issues/6943", None, dispatch_repo=_LOCAL
+    )
+    assert "acme/other#6943: outcome,why" in error
+    assert "stream_epic" not in record
+    assert _checked_issues(calls) == [["acme/other", "6943"], [_LOCAL, "9251"]]
+
+
+def test_dor_preflight_override_reason_is_recorded_beside_the_stream_epic(monkeypatch):
+    _epic_card_fakes(monkeypatch, failing={(_LOCAL, 9251)})
+    error, record = delegate._run_dor_preflight("Fixes #9251 epic #6943", "urgent repair", dispatch_repo=_LOCAL)
+    assert error is None
+    assert record["stream_epic"] == [6943]
+    assert record["allow_warn_reason"] == "urgent repair"
 
 
 def test_dor_dispatch_private_repo_uses_mapped_issue_card(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
@@ -3585,6 +3735,38 @@ def test_parse_review_verdict_follows_commonmark_code_blocks(label, response):
 def test_parse_review_verdict_accepts_commonmark_paragraph_lines(label, response, expected):
     """#8786: up to three leading spaces is still a paragraph line; a longer closer closes."""
     assert delegate.parse_review_verdict(response) == expected
+
+
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        ("h2-plain", "Findings.\n\n## VERDICT: REQUEST_CHANGES\n", "REQUEST_CHANGES"),
+        ("h1-bold", "# **VERDICT: APPROVE**\n", "APPROVE"),
+        ("h6-blocked", "###### VERDICT: BLOCKED\n", "BLOCKED"),
+        ("three-space-indent-heading", "   ## VERDICT: APPROVE\n", "APPROVE"),
+    ],
+)
+def test_parse_review_verdict_accepts_atx_heading_lines(label, response, expected):
+    """#9305: a verdict rendered as a Markdown heading is still the verdict."""
+    assert delegate.parse_review_verdict(response) == expected
+    assert delegate._review_verdict_failure_reason(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("quoted-heading", "> ## VERDICT: APPROVE\n"),
+        ("fenced-heading", "```\n## VERDICT: APPROVE\n```\n"),
+        ("four-space-indented-heading", "Example:\n\n    ## VERDICT: APPROVE\n"),
+        # CommonMark requires a space after the ``#`` run, so this is a paragraph.
+        ("heading-marker-without-space", "##VERDICT: APPROVE\n"),
+        ("seven-hashes-is-not-a-heading", "####### VERDICT: APPROVE\n"),
+        ("heading-with-prose-prefix", "## The VERDICT: APPROVE\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_non_verdict_heading_lines(label, response):
+    """#9305: headings that are quoted, code, malformed, or not label-first are not verdicts."""
+    assert delegate.parse_review_verdict(response) is None
 
 
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
@@ -9330,8 +9512,27 @@ class _GuardFakeStdin:
 
 
 class _GuardFakeProc:
+    """Stand-in for the detached worker.
+
+    Scope startup calls ``poll`` while it waits for the one-byte start marker,
+    then ``returncode``, ``kill`` and ``wait`` if that marker never arrives.
+    ``kill`` and ``wait`` update only this object. ``pid`` is not a process,
+    and nothing here signals it.
+    """
+
     pid = 44551
     stdin = _GuardFakeStdin()
+    returncode = None
+
+    def poll(self):
+        return self.returncode
+
+    def wait(self, timeout=None):
+        return self.returncode
+
+    def kill(self):
+        if self.returncode is None:
+            self.returncode = -signal.SIGKILL
 
 
 def _patch_worker_popen(monkeypatch):
@@ -9340,13 +9541,20 @@ def _patch_worker_popen(monkeypatch):
     ``delegate.subprocess`` and ``worktree_containment.subprocess`` are the same
     module object, so a blanket ``Popen`` patch would also break the containment
     guard's git plumbing (``subprocess.run`` uses ``Popen`` internally). Route
-    ``git`` invocations to the real Popen and fake only the ``.venv`` worker.
+    ``git`` invocations to the real Popen and fake only the worker.
+
+    A scoped launch passes the start-marker fd in ``pass_fds``. This writes the
+    byte the real marker wrapper writes after ``systemd-run`` execs, so
+    ``_marker_seen`` keeps ``_GuardFakeProc`` instead of reading ``/proc`` or
+    signalling its pid.
     """
     real_popen = delegate.subprocess.Popen
 
     def fake_popen(cmd, *a, **k):
         if cmd and str(cmd[0]) == "git":
             return real_popen(cmd, *a, **k)
+        for fd in k.get("pass_fds") or ():
+            os.write(fd, b"1")
         return _GuardFakeProc()
 
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
@@ -13913,6 +14121,49 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     assert contract["prompt_sha256"] == state["prompt_sha256"]
 
 
+def test_review_attempt_scope_launch_keeps_the_guard_fake(tmp_tasks_dir, monkeypatch, dispatch_slice_probe):
+    """A ready slice probe keeps ``_GuardFakeProc`` as the scoped worker (#9009).
+
+    The probe is forced ready in-process, so the host's user manager is not
+    consulted. ``poll`` is the surface scope startup calls when the start
+    marker is late; the spawn helper writes the marker and this process is kept.
+    """
+    dispatch_slice_probe["ready"] = True
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "claude", "--task-id", "review-attempt-scope", "--prompt", "hi"]
+    )
+    args.cwd = str(delegate._REPO_ROOT)
+    recorded: list[list[str]] = []
+    spawned: list[_GuardFakeProc] = []
+    _patch_worker_popen(monkeypatch)
+    patched = delegate.subprocess.Popen
+
+    def recording_popen(cmd, *popen_args, **kwargs):
+        proc = patched(cmd, *popen_args, **kwargs)
+        if cmd and str(cmd[0]) != "git":
+            recorded.append([str(part) for part in cmd])
+            spawned.append(proc)
+        return proc
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", recording_popen)
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    assert len(spawned) == 1
+    proc = spawned[0]
+    assert isinstance(proc, _GuardFakeProc)
+    assert proc.poll() is None
+    state = delegate._read_state(delegate._state_path("review-attempt-scope"))
+    assert state is not None
+    assert state["pid"] == proc.pid
+    assert state["launch_mode"] == "scope"
+    assert state["launch_unit"].startswith("lu-worker-review-attempt-scope-")
+    assert "launch_fallback_reason" not in state
+    assert recorded[0][0] == "systemd-run"
+    assert "--scope" in recorded[0]
+    assert "--expand-environment=no" in recorded[0]
+
+
 def _skewed_review_dispatch(tmp_path: Path, monkeypatch, *, task_id: str, **overrides) -> tuple[int, Path, Path]:
     """Render in the worktree, whose server code differs, then dispatch from the primary checkout (#9163 finding 1)."""
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
@@ -14013,6 +14264,8 @@ def test_review_attempt_refuses_at_launch_when_the_primary_server_changes_after_
     def fake_popen(cmd, *a, **k):
         if cmd and str(cmd[0]) == "git":
             return real_popen(cmd, *a, **k)
+        for fd in k.get("pass_fds") or ():
+            os.write(fd, b"1")
         spawned.append([str(part) for part in cmd])
         return _GuardFakeProc()
 

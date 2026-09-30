@@ -24,6 +24,7 @@ from tests.build.test_fresh_assemble import (
     validate_fixture_words,
 )
 from tests.build.test_fresh_runner import _confirm_fixture_form, _fixture, _run_contract
+from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: F401
 
 pytestmark = pytest.mark.reads_content
 
