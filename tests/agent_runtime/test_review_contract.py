@@ -230,7 +230,7 @@ def test_a_prompt_without_its_render_record_refuses_with_its_own_code(
         check_review_contract(bare, PROMPT_TEXT, server_checkout=primary)
 
     render_record_path(bare).write_text(json.dumps({"files_read": [], "template_sha256": {}}), encoding="utf-8")
-    with pytest.raises(ReviewContractError, match=r"review_render_record_missing: .* holds no version 3"):
+    with pytest.raises(ReviewContractError, match=rf"review_render_record_missing: .* holds no version {render_contract.RENDER_RECORD_VERSION}"):
         check_review_contract(bare, PROMPT_TEXT, server_checkout=primary)
 
 
@@ -265,8 +265,8 @@ def test_a_changed_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, P
     message = str(refused.value)
     print(message)
     now = server_code(primary).components()[LOCK_FILE]
-    assert "review_contract_mismatch: the prompt was rendered against different server code" in message
-    assert f"differing server components: {LOCK_FILE}: {rendered_as} -> {now}\n" in message
+    assert "review_render_record_digest_mismatch: the prompt was rendered against different server code" in message
+    assert f"differing server components: {LOCK_FILE}: {rendered_as} -> {now}" in message
 
 
 def test_a_checkout_without_the_lock_refuses_by_name(tmp_path: Path, checkouts: tuple[Path, Path]) -> None:

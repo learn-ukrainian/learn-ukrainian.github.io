@@ -103,7 +103,7 @@ def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         review_mcp_module,
         "check_review_contract",
-        lambda _prompt_file, prompt_text: {"prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()},
+        lambda _prompt_file, prompt_text, **_ids: {"prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()},
     )
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
 

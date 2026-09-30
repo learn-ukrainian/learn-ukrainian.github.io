@@ -652,7 +652,8 @@ def review_server_checkout() -> Path:
 
 
 def check_review_contract(
-    prompt_file: Path | None, prompt_text: str, server_checkout: Path | None = None
+    prompt_file: Path | None, prompt_text: str, server_checkout: Path | None = None,
+    *, review_id: str | None = None, attempt_id: str | None = None,
 ) -> dict[str, Any]:
     """Refuse a review attempt whose prompt was rendered against other code than its seat would run (#9163).
 
@@ -660,7 +661,10 @@ def check_review_contract(
     render record and is refused); ``server_checkout`` defaults to ``review_server_checkout()``, where the seat's
     sources server launches. See ``scripts.review.render_contract.check_render_contract``.
     """
-    return check_render_contract(prompt_file, prompt_text, Path(server_checkout or review_server_checkout()))
+    return check_render_contract(
+        prompt_file, prompt_text, Path(server_checkout or review_server_checkout()),
+        review_id=review_id, attempt_id=attempt_id,
+    )
 
 
 def prepare_review_attempt(

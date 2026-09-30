@@ -707,6 +707,7 @@ def _core_terminal_fields(
         "duration_s": round(duration_s, 3),
         "response_chars": len(response),
         "result_file": result_file,
+        "result_sha256": hashlib.sha256(response.encode("utf-8")).hexdigest() if result_file else None,
         "stderr_excerpt": stderr_excerpt,
         "returncode": returncode,
         "returncode_reason": returncode_reason,
@@ -8309,7 +8310,7 @@ def _run_worker(
         if response:
             result_path = state_path.with_suffix(".result")
             try:
-                result_path.write_text(response)
+                result_path.write_text(response, encoding="utf-8")
                 result_file = str(result_path)
             except OSError:
                 result_file = None
@@ -9236,21 +9237,35 @@ def _review_attempt_prompt_admission(
     Runs before any side effect. The prompt's own attempt block (#8996) must name this dispatch's ids, and the
     prompt must come from a ``--prompt-file`` whose render record matches the code the seat would run (#9163).
     """
+    import yaml
+
     from scripts.agent_runtime.review_mcp import check_review_contract
-    from scripts.review.prompts.check import AttemptIdsUnreadableError, parse_attempt_ids
+    from scripts.review.prompts.check import AttemptIdsUnreadableError, check_prompt, parse_attempt_ids
     from scripts.review.render_contract import ReviewContractError
 
     prompt_file = Path(args.prompt_file) if getattr(args, "prompt_file", None) else None
     prompt = early_prompt or ""
     try:
+        manifest = yaml.safe_load(Path(args.review_attempt).read_bytes())
+        if isinstance(manifest, dict) and any(key in manifest for key in ("manifest_schema", "kind", "inputs")):
+            contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
+            checked = check_prompt(
+                prompt, Path(args.review_attempt), repo_root=Path(contract["input_root"]),
+                prompts_dir=Path(contract["prompts_dir"]), review_id=review_id, attempt_id=attempt_id,
+            )
+            if not checked.passed:
+                return "❌ review attempt refused: prompt_render_invalid: " + "; ".join(checked.errors), None
+            return None, contract
         if prompt_file is None and getattr(args, "prompt", None) == "-":
             # stdin is read only later, and a stdin prompt has no render record: refused as review_render_record_missing
             return None, check_review_contract(None, "")
-        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt)
+        prompt_review_id, prompt_attempt_id = parse_attempt_ids(prompt, custom=True)
     except AttemptIdsUnreadableError as err:
         return f"❌ review attempt refused: prompt_attempt_ids_unreadable: {err} (#8996)", None
     except ReviewContractError as err:
         return f"❌ {err}", None
+    except (OSError, ValueError, yaml.YAMLError) as err:
+        return f"❌ review attempt refused: prompt_render_invalid: {type(err).__name__}", None
     if prompt_review_id is None or prompt_attempt_id is None:
         # A seat whose prompt names no ids can only guess them, and a guessed id never matches the
         # ledger this dispatch prepares — the failure #8996 was filed for.
@@ -9273,9 +9288,11 @@ def _review_attempt_prompt_admission(
         ), None
     # The seat's sources server launches from the primary checkout; the prompt may have been rendered anywhere.
     try:
-        return None, check_review_contract(prompt_file, prompt)
+        return None, check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
     except ReviewContractError as err:
         return f"❌ {err}", None
+    except (OSError, ValueError) as err:
+        return f"❌ review attempt refused: prompt_render_invalid: {type(err).__name__}", None
 
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
@@ -10772,7 +10789,7 @@ def _dispatch(
             initial_state["review_attempt"] = {
                 "review_id": review_id,
                 "attempt_id": attempt_id,
-                "manifest_sha256": hashlib.sha256(Path(review_attempt).read_bytes()).hexdigest(),
+                "manifest_sha256": review_plan.manifest_sha256,
             }
             # The render-time and dispatch-time digests compared (#9163): what the review of record ran against.
             initial_state["review_contract"] = review_contract
@@ -10898,7 +10915,7 @@ def _dispatch(
                     "--review-manifest",
                     str(Path(review_attempt).resolve()),
                     "--review-input-root",
-                    str(review_contract["render_checkout"]),
+                    str(review_contract["input_root"]),
                 ]
             )
 
