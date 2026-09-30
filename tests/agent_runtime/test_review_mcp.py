@@ -272,6 +272,7 @@ def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.
     )
     assert rc == 2
     captured = capsys.readouterr()
+    assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
     assert "review attempt refused for grok: not yet proven (#8517)" in captured.err
 
 
@@ -405,16 +406,22 @@ def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> No
             )
 
 
-def test_delegate_dispatch_cursor_refuses_primary_checkout(
-    manifest_file: Path, capsys: pytest.CaptureFixture[str]
+@pytest.mark.parametrize("seat", ["cursor", "claude"])
+def test_delegate_dispatch_review_refuses_primary_checkout(
+    manifest_file: Path, capsys: pytest.CaptureFixture[str], seat: str
 ) -> None:
+    # Cursor identity admission now precedes its dispatch worktree guard.
+    # Keep that refusal covered, and exercise primary-checkout protection with
+    # an eligible write-capable review seat. The Cursor adapter guard is tested above.
     rc = delegate_cli.main(
         [
             "dispatch",
             "--agent",
-            "cursor",
+            seat,
+            "--mode",
+            "workspace-write",
             "--task-id",
-            "review-task-cursor-primary",
+            "review-task-primary",
             "--cwd",
             str(delegate_cli._REPO_ROOT),
             "--prompt",
@@ -429,7 +436,12 @@ def test_delegate_dispatch_cursor_refuses_primary_checkout(
     )
     assert rc == 2
     captured = capsys.readouterr()
-    assert "review attempt for cursor requires a dispatch worktree; refusing primary checkout (#8517)" in captured.err
+    if seat == "cursor":
+        assert "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for cursor:" in captured.err
+        assert "formal attempts require a proven manifest filesystem boundary" in captured.err
+        assert "Cursor is not admitted (#9251)" in captured.err
+    else:
+        assert "resolves inside the primary checkout; write-capable dispatch may not run there" in captured.err
 
 
 def test_delegate_dispatch_refuses_budget_guard_substitution(
@@ -479,6 +491,7 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
     )
     assert rc == 2
     captured = capsys.readouterr()
+    assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
     assert (
         "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)"
         in captured.err
@@ -507,6 +520,7 @@ def test_delegate_dispatch_refuses_retired_alias_substitution(
     )
     assert rc == 2
     captured = capsys.readouterr()
+    assert "REVIEW_ATTEMPT_IDENTITY_REFUSED" in captured.err
     assert (
         "review attempt refused: agent substitution from gemini to agy (retired CLI) is not allowed (#8517)"
         in captured.err

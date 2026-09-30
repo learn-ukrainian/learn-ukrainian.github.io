@@ -408,7 +408,7 @@ def test_session_setup_hook_epic_validation_contract(
 
     venv_bin = project_dir / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
-    (venv_bin / "python").write_text("#!/bin/sh\necho 'Python 3.12.8'\n", encoding="utf-8")
+    (venv_bin / "python").write_text("#!/bin/sh\necho 'Python 3.12.14'\n", encoding="utf-8")
     (venv_bin / "python").chmod(0o755)
 
     scripts_lib = project_dir / "scripts" / "lib"

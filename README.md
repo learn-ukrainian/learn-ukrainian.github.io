@@ -85,7 +85,7 @@ npm run dev:starlight
 # Opens at http://localhost:4321/
 ```
 
-**Requirements:** Node.js 20+, Python 3.12.8 (for build scripts and audits)
+**Requirements:** Node.js 20+, Python 3.12.14 (for build scripts and audits)
 
 ## Project Structure
 
@@ -121,9 +121,9 @@ Want to run the build pipeline locally or contribute code? The full guide is
 in [CONTRIBUTING.md](CONTRIBUTING.md). The short version:
 
 ```bash
-# 1. Python environment — pyenv + 3.12.8 with sqlite extensions
-PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.8
-pyenv local 3.12.8
+# 1. Python environment — pyenv + 3.12.14 with sqlite extensions
+PYTHON_CONFIGURE_OPTS="--enable-loadable-sqlite-extensions" pyenv install 3.12.14
+pyenv local 3.12.14
 python -m venv .venv
 .venv/bin/pip install -r requirements.txt
 

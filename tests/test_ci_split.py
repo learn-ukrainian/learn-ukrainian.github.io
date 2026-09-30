@@ -815,7 +815,15 @@ def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
     job = _jobs_of_ci()["queue-metadata-scan"]
     # Not gated on the reuse decision: the reused secret scan covered files, not this commit's metadata.
     assert job["if"] == "github.event_name == 'merge_group'" and "needs" not in job
-    checkout, metadata, scan = job["steps"]
+    steps = job["steps"]
+    checkout, setup, metadata, scan = (
+        next(step for step in steps if str(step.get("uses", "")).startswith("actions/checkout@")),
+        next(step for step in steps if str(step.get("uses", "")).startswith("actions/setup-python@")),
+        next(step for step in steps if step.get("id") == "metadata"),
+        next(step for step in steps if "trufflehog" in step.get("uses", "")),
+    )
+    assert steps.index(checkout) < steps.index(setup) < steps.index(metadata) < steps.index(scan)
+    assert setup["with"] == {"python-version-file": ".python-version"}
     assert checkout["with"] == {"persist-credentials": False, "fetch-depth": 2}
     assert metadata["id"] == "metadata"
     assert "python3 -m scripts.ci.metadata_commit --commit HEAD" in metadata["run"]

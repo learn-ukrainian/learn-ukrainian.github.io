@@ -140,36 +140,53 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         description=(
             "Lint docs/session-state handoffs for referenced env/config files "
             "that do not exist.\n"
-            "Use before committing handoff docs; do not use for general markdown linting."
+            "Use before committing handoff docs; do not use for general markdown linting.\n"
+            "The pre-commit hook passes only the session-state files in the commit, so "
+            "files the commit does not touch (written on another host) never block it."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/audit/lint_session_state.py --all\n"
             "  .venv/bin/python scripts/audit/lint_session_state.py "
-            "--file docs/session-state/current.md\n\n"
+            "docs/session-state/current.md\n"
+            "  .venv/bin/python scripts/audit/lint_session_state.py "
+            "--file docs/session-state/current.md\n"
+            "  .venv/bin/python scripts/audit/lint_session_state.py --all\n\n"
             "Outputs: Prints path:line diagnostics to stdout. Writes no files.\n\n"
-            "Exit codes: 0 clean, 1 missing referenced env/config files, 2 CLI usage error.\n\n"
-            "Related: scripts/audit/known_user_paths.yaml, issue #1787."
+            "Exit codes: 0 clean, 1 missing referenced env/config files, "
+            "2 CLI usage error (no file given, or --all combined with files).\n\n"
+            "Related: scripts/audit/known_user_paths.yaml, issue #1787, issue #8354."
         ),
     )
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
+    parser.add_argument(
+        "files",
+        nargs="*",
+        type=Path,
+        help="Session-state markdown files to lint (what pre-commit passes)",
+    )
+    parser.add_argument(
         "--file",
+        dest="extra_files",
+        action="append",
+        default=[],
         type=Path,
         help="Session-state markdown file to lint, e.g. docs/session-state/current.md",
     )
-    group.add_argument(
+    parser.add_argument(
         "--all",
         action="store_true",
-        help="Lint every docs/session-state/*.md file",
+        help="Lint every docs/session-state/*.md file (explicit audit of the whole directory)",
     )
-    return parser.parse_args(argv)
+    args = parser.parse_args(argv)
+    args.files = [*args.files, *args.extra_files]
+    if args.all == bool(args.files):
+        parser.error("give either --all or at least one session-state file, not both/neither")
+    return args
 
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    paths = session_state_files() if args.all else [args.file]
+    paths = session_state_files() if args.all else args.files
     allowlist = load_allowlist()
 
     violations: list[Violation] = []

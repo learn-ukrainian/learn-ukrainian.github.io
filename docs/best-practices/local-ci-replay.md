@@ -24,7 +24,7 @@ Three structural wins:
 |---|---|---|
 | Architecture | amd64 emulated via QEMU on arm64 host (~2-3× slower for CPU-bound steps) | Native aarch64 — uses your CPU directly |
 | Caching | `actions/cache@v4` is a no-op; pip wheels re-download every cold run | Explicit `cache_volume` mounts — pip cache survives cold container restarts |
-| Runner image | `ghcr.io/catthehacker/ubuntu:act-latest` — missing rsync, no control over installed tools | You pin the base image and apt packages — `python:3.12.8-slim-bookworm + build-essential + python3-dev + zlib1g-dev` for us |
+| Runner image | `ghcr.io/catthehacker/ubuntu:act-latest` — missing rsync, no control over installed tools | You pin the base image and apt packages — `python:3.12.14-slim-bookworm + build-essential + python3-dev + zlib1g-dev` for us |
 
 These translate to: act first-run pytest at **7m45s with 7 failures**
 (4× rsync-missing + 3× perf budgets violated by emulation) versus
@@ -96,7 +96,7 @@ the Dagger Python SDK. Each `@function`-decorated method becomes a
 callable subcommand. Key design choices, all documented inline in the
 module:
 
-- **Base image** pinned to `python:3.12.8-slim-bookworm` — matches
+- **Base image** pinned to `python:3.12.14-slim-bookworm` — matches
   `.python-version` and `ci.yml`'s setup-python pin.
 - **apt deps**: `rsync git curl ca-certificates build-essential
   python3-dev zlib1g-dev`. GHA's `ubuntu-latest` ships these by default;
