@@ -1,0 +1,15 @@
+{
+  "available_count": 2,
+  "credits": [
+    {
+      "reset_type": "codex_rate_limits",
+      "status": "available",
+      "expires_at": "2026-10-22T21:07:26.659782Z"
+    },
+    {
+      "reset_type": "codex_rate_limits",
+      "status": "available",
+      "expires_at": "2026-10-29T19:15:04.620993Z"
+    }
+  ]
+}

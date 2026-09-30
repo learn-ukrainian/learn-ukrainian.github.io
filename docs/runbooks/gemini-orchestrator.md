@@ -57,15 +57,15 @@ The cold-start prompt explicitly tells Gemini **not** to open or resume the leas
 | harness / infra | `gemini-infra` |
 | devops | `gemini-devops` |
 
-## Fleet Management & Rate Limits (`codexbar`)
+## Fleet Management & Rate Limits
 
-Gemini orchestrators monitor usage across the fleet using `codexbar`:
+Gemini orchestrators monitor usage across the fleet using the native fleet probes:
 
 ```bash
-codexbar usage --format json
+.venv/bin/python -m scripts.fleet.usage show --fresh
 ```
 
-Use `codexbar` to verify model credits, rate limits, and availability before dispatching tasks to specific agent families (Codex, Claude, Grok, Kimi, Gemini).
+Use `scripts.fleet.usage show` to verify credits, quota windows, and availability before dispatching. `--fresh` bypasses the cached Monitor snapshot. CodexBar v0.69.0 remains a manual cross-check (`codexbar usage --provider <provider> --format json --no-color`); JSON enables its optional Codex reset inventory. Reset credits are informational and spending one requires an operator decision.
 
 ## Advisor Approval Gate
 
