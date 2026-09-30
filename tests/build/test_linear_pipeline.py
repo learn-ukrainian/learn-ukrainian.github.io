@@ -243,6 +243,8 @@ def test_invoke_writer_routes_supported_writers(
     agent_name: str,
 ) -> None:
     calls = []
+    # checkout_write_defaults redirects the deploy target into this test's tmp_path.
+    deploy_target = tmp_path / ".claude/agents/curriculum-writer.md"
 
     class Result:
         response = "writer output"
@@ -273,6 +275,10 @@ def test_invoke_writer_routes_supported_writers(
     if writer == "claude-tools":
         assert tool_config["mcp_config_path"].endswith(".mcp.json")
         assert tool_config["allowed_tools"] == "mcp__sources__*"
+        assert tool_config["agent"] == "curriculum-writer"
+        assert deploy_target.read_text(encoding="utf-8") == linear_pipeline.CLAUDE_WRITER_AGENT_SOURCE.read_text(
+            encoding="utf-8",
+        )
 
 
 def test_invoke_writer_rejects_unknown_writer(tmp_path: Path) -> None:

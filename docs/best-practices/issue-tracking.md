@@ -170,7 +170,7 @@ gh issue comment {N} --body "[full review/spec/request]"
 # Ping AGY
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
   "New task posted on #N. Please read and start." \
-  --task-id issue-N --to-model gemini-3.5-flash-high
+  --task-id issue-N --to-model gemini-3.8-flash-high
 
 # Ping Codex
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \

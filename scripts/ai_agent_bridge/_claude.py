@@ -56,7 +56,7 @@ from ._review_worktree import (
 )
 
 CLAUDE_DEFAULT_ASK_MODEL = "claude-sonnet-5-5"
-CLAUDE_ADVISORY_MODEL = "claude-opus-5"
+CLAUDE_ADVISORY_MODEL = "claude-opus-5-5"
 
 
 def _claude_error_provenance(msg: dict, bridge_model: str) -> tuple[str, str]:

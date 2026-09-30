@@ -109,9 +109,8 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Fable 5.1** (Anthropic top tier) — hardest judgment and top Anthropic advisor (with
   Astra); summoned, not seated as the resident driver since Opus 5.5 took the driver seat
-  (operator 2026-09-22). **Opus 5.5 is the orchestrator seat. Opus 5 remains a
-  complex-coding/deep-review dispatch seat and the non-binding Anthropic advisory
-  consultation** (`claude-opus-5`, operator 2026-07-26). Designated advisor authority
+  (operator 2026-09-22). **Opus 5.5 is the orchestrator and complex-coding/deep-review dispatch seat**
+  (`claude-opus-5-5`). Designated advisor authority
   stays Fable 5.1.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
@@ -130,9 +129,9 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
-| claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
-| codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
-| cursor | grok-4.7 | high | gpt-6.1-sol | high |
+| claude | claude-opus-5-5 | high | gpt-6.1-sol | xhigh |
+| codex | gpt-6.1-sol | high | gpt-6.1-sol | xhigh |
+| cursor | grok-4.7 | high | gpt-6.1-sol | xhigh |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -233,7 +232,7 @@ teaches the message-plane and cross-family review loop.
 A driver escalates instead of deciding solo when it hits: (1) an architecture/layout/process
 change, (2) a contested cross-family verdict, (3) a fragile fix whose right layer is unclear,
 (4) a high-risk route that would trip the `model_catalog.yaml` risk floor, or (5) a repo-wide
-safety interruption of another lane. Advisors for those calls: **Fable, Astra @ high**.
+safety interruption of another lane. Advisors for those calls: **Fable @ high, Astra @ xhigh**.
 
 Everything else the driver runs to completion and reports past-tense — no "should I?" menus.
 

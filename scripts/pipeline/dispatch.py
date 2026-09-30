@@ -321,7 +321,7 @@ def _get_claude_bin() -> str:
 def dispatch_claude_phase(
     prompt_file: Path,
     phase_label: str,
-    model: str = "claude-opus-4-8",
+    model: str = "claude-opus-5-5",
     timeout: int = 600,
     allow_tools: list[str] | None = None,
 ) -> tuple[bool, str]:

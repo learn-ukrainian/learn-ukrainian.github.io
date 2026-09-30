@@ -480,7 +480,7 @@ def phase_review(ctx: DirectModuleContext) -> bool:
     try:
         response, result = invoke_reviewer_with_schema(
             "claude", prompt, profile="direct", cwd=PROJECT_ROOT,
-            mode="read-only", model="claude-opus-4-8", task_id=task_id,
+            mode="read-only", model="claude-opus-5-5", task_id=task_id,
             entrypoint="dispatch", hard_timeout=600,
         )
         verdict = parse_direct_review_response(response)

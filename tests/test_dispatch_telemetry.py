@@ -98,6 +98,8 @@ def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias
     for route, identity in (
         ("deepseek/deepseek-flash", "deepseek-v4.1-flash"),
         ("deepseek/deepseek-v4-pro", "deepseek-v4-pro"),
+        ("deepseek/deepseek-v4-flash", "deepseek-v4-flash"),
+        ("deepseek/unknown-model", "deepseek/unknown-model"),
     ):
         plan = InvocationPlan(
             cmd=["opencode", "run", "--model", route, "--variant", "high"],
@@ -115,6 +117,25 @@ def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias
         assert telemetry.cli_version == "1.18.0"
 
 
+def test_deepseek_dispatch_start_telemetry_preserves_recorded_catalog_identity():
+    # Retirement forbids new execution, but must not rewrite historical labels.
+    for requested, identity in (
+        (None, "deepseek-v4.1-flash"),
+        ("deepseek/deepseek-flash", "deepseek-v4.1-flash"),
+        ("deepseek/deepseek-v4-pro", "deepseek-v4-pro"),
+        ("deepseek-v4-pro", "deepseek-v4-pro"),
+        ("deepseek/deepseek-v4-flash", "deepseek-v4-flash"),
+        ("deepseek/unknown-model", "deepseek/unknown-model"),
+    ):
+        with patch("agent_runtime.telemetry._probe_version", return_value="1.18.0"):
+            telemetry = resolve_dispatch_start_telemetry(
+                agent_name="deepseek", requested_model=requested, requested_effort=None,
+            )
+        assert telemetry.model == identity
+        assert telemetry.effort == "high"
+        assert telemetry.cli_version == "1.18.0"
+
+
 def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkeypatch, caplog):
     """Known CLI limits are explicit metadata, not dispatch warnings (#4837)."""
     hermes_home = tmp_path / "hermes"
@@ -125,7 +146,10 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
     )
     monkeypatch.setenv("HERMES_HOME", str(hermes_home))
 
+    probed: list[tuple[str, ...]] = []
+
     def probe(prefix: tuple[str, ...]) -> str | None:
+        probed.append(prefix)
         return {
             "agy": "1.1.1",
             "cursor-agent": "2026.07.09",
@@ -133,6 +157,10 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
         }.get(Path(prefix[0]).name)
 
     caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    monkeypatch.setattr(
+        "agent_runtime.adapters.cursor.resolve_cursor_agent_binary",
+        lambda: "/usr/local/bin/cursor-agent",
+    )
     with patch("agent_runtime.telemetry._probe_version", side_effect=probe):
         agy = resolve_dispatch_start_telemetry(
             agent_name="agy",
@@ -153,6 +181,7 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
 
     assert (agy.effort, agy.cli_version) == ("not-exposed", "1.1.1")
     assert (cursor.effort, cursor.cli_version) == ("not-exposed", "2026.07.09")
+    assert ("/usr/local/bin/cursor-agent",) in probed
     assert (deepseek.effort, deepseek.cli_version) == ("high", "1.18.0")
     assert "dispatch telemetry for" not in caplog.text
 
@@ -170,8 +199,7 @@ def test_unexpected_version_probe_failure_still_warns(caplog):
     assert telemetry.effort == "not-exposed"
     assert telemetry.cli_version == "unknown"
     assert (
-        "dispatch telemetry for agy could not resolve cli_version: version probe failed; "
-        "recording 'unknown'"
+        "dispatch telemetry for agy could not resolve cli_version: version probe failed; recording 'unknown'"
     ) in caplog.text
 
 

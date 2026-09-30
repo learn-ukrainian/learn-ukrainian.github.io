@@ -9,6 +9,7 @@ so the read must come from there (ported from kubedojo's fixed bridge).
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from contextlib import contextmanager
 from pathlib import Path
@@ -25,6 +26,31 @@ from scripts.ai_agent_bridge._review_worktree import (
     ProvisionedReviewWorktree,
     ReviewIsolationEvidenceBinder,
 )
+
+
+@pytest.mark.parametrize("model", ["gemini-3.7-flash-high", "Gemini 3.6 Flash (High)"])
+def test_check_model_reports_retired_refusal_without_provider_probe(model, monkeypatch, capsys):
+    from scripts.ai_agent_bridge import _model
+
+    def unexpected_probe(*_args, **_kwargs):
+        pytest.fail("retired model must be refused before a provider call")
+
+    monkeypatch.setattr(_model.subprocess, "run", unexpected_probe)
+    assert _model.check_model(model, force=True) is False
+    output = capsys.readouterr().out
+    assert "is retired in the model catalog" in output
+    assert "use gemini-3.8-flash-high" in output
+
+
+def test_check_model_cli_prints_refusal_without_traceback():
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.ai_agent_bridge", "check-model", "gemini-3.7-flash-high"],
+        cwd=REPO_ROOT, capture_output=True, text=True, timeout=30,
+    )
+    assert result.returncode == 1
+    assert "is retired in the model catalog" in result.stdout
+    assert "use gemini-3.8-flash-high" in result.stdout
+    assert "Traceback" not in result.stderr
 
 
 def test_pro_slug_round_trips_from_data_blob():

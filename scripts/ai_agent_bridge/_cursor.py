@@ -12,15 +12,16 @@ by default, or another allowlisted pin via ``--model``. Auto is refused before
 any provider call, and a queued ask with no stored model is refused rather than
 defaulted (operator decision 2026-09-30, #9274).
 
-Under the hood: agent -p PROMPT --model MODEL --output-format text --trust
+Under the hood: cursor-agent -p PROMPT --model MODEL --output-format text --trust
 """
 
 from __future__ import annotations
 
 import json
-import shutil
 import subprocess
 from pathlib import Path
+
+from scripts.agent_runtime.adapters.cursor import resolve_cursor_agent_binary
 
 from ._ask_contract import (
     requested_effort,
@@ -168,15 +169,8 @@ def _invoke_cursor(
     data: str | None = None,
     no_timeout: bool = False,
 ) -> str:
-    """Run agent -p PROMPT --model MODEL --output-format text --trust; return captured stdout."""
+    """Run ``cursor-agent -p`` with the approved model; return captured stdout."""
     model = _require_approved_cursor_model(model)
-    agent_bin = shutil.which("agent")
-    if not agent_bin:
-        # Fallback to cursor-agent if 'agent' is not found
-        agent_bin = shutil.which("cursor-agent")
-
-    if not agent_bin:
-        raise SystemExit("ask-cursor: cursor-agent CLI not found in PATH")
 
     # If data file attached, prepend its content to the prompt under a fenced block.
     # Cursor agent doesn't have a direct --file flag for one-shot prompts that
@@ -188,13 +182,18 @@ def _invoke_cursor(
             raise SystemExit(f"ask-cursor: --data file does not exist: {data}")
         attached = data_path.read_text(encoding="utf-8", errors="replace")
         prompt = f"{content}\n\n## Attached data: {data_path.name}\n\n```\n{attached}\n```"
+    prompt = with_core_or_exit(prompt, "ask-cursor")
+    agent_bin = resolve_cursor_agent_binary()
 
     argv = [
         agent_bin,
-        "-p", with_core_or_exit(prompt, "ask-cursor"),
-        "--model", model,
-        "--output-format", "text",
-        "--trust"
+        "-p",
+        prompt,
+        "--model",
+        model,
+        "--output-format",
+        "text",
+        "--trust",
     ]
 
     timeout = None if no_timeout else CURSOR_DEFAULT_TIMEOUT_S
@@ -209,9 +208,6 @@ def _invoke_cursor(
         raise SystemExit(f"ask-cursor: cursor-agent timed out after {timeout}s") from exc
 
     if result.returncode != 0:
-        raise SystemExit(
-            f"ask-cursor: cursor-agent exited {result.returncode}\n"
-            f"stderr: {result.stderr[-2000:]}"
-        )
+        raise SystemExit(f"ask-cursor: cursor-agent exited {result.returncode}\nstderr: {result.stderr[-2000:]}")
 
     return result.stdout.strip()

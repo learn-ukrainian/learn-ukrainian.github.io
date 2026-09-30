@@ -3,16 +3,10 @@
 Operator 2026-08-13: DeepSeek dispatch routes through OpenCode to first-party
 ``api.deepseek.com`` with ``--variant high`` by default, replacing the Hermes
 dispatch default so runs get native Entire capture. ``deepseek-v4.1-flash`` is
-the default; ``deepseek-v4-pro`` is reachable via an explicit ``--model
-deepseek-v4-pro`` for hard implement tasks (complex multi-file, hard lookup)
-per the 2026-08-13 operator GO (canary #6703) — Pro is not the default and
-stays off the routine review ladder. The Hermes adapter (``hermes_deepseek.py``)
-stays available for ``ask-hermes`` only.
-
-2026-09-24 (#8514): the opencode first-party provider id is ``deepseek``
-(models: ``deepseek-flash``, ``deepseek-v4-pro``); the original
-``deepseek-direct/*`` pin resolves to ``ProviderModelNotFoundError`` on
-opencode 1.18.x and failed every dispatch at start.
+the default. Superseded Pro and Flash pins are retired and refused before
+invocation; historical records retain their original identities. The first-party
+OpenCode alias is ``deepseek/deepseek-flash``. The Hermes adapter remains
+available for legacy bridge compatibility.
 
 LOCAL-ONLY: prompt data egresses to China — forbidden in CI (same guard as
 the Hermes route, via ``scripts.agent_runtime.routes``).
@@ -26,6 +20,8 @@ import re
 import shutil
 from pathlib import Path
 
+from scripts.review.model_catalog import retired_model_refusal
+
 from ..result import ParseResult
 from ..routes import (
     deepseek_first_party_error,
@@ -37,12 +33,11 @@ from .base import InvocationPlan
 _logger = logging.getLogger(__name__)
 
 # Bare catalog model id → first-party opencode provider route. Flash is the
-# dispatch default; Pro stays reachable only via an explicit --model override.
+# dispatch default; retired Pro pins are refused.
 # Provider id ``deepseek`` is opencode's first-party api.deepseek.com provider
 # (#8514: ``deepseek-direct`` does not exist on opencode 1.18.x).
 DEEPSEEK_OPENCODE_MODEL_ROUTES: dict[str, str] = {
     "deepseek-v4.1-flash": "deepseek/deepseek-flash",
-    "deepseek-v4-pro": "deepseek/deepseek-v4-pro",
 }
 
 
@@ -132,15 +127,9 @@ class DeepSeekAdapter:
 
         binary = shutil.which("opencode") or "opencode"
         target_model = model or self.default_model
-        if target_model in {
-            "deepseek-v4-flash",
-            "deepseek-v4-flash-legacy",
-            "deepseek/deepseek-v4-flash",
-        }:
-            raise ValueError(
-                "deepseek-v4-flash is retired for historical records; "
-                "use deepseek-v4.1-flash for new first-party dispatches"
-            )
+        refusal = retired_model_refusal(target_model)
+        if refusal:
+            raise ValueError(refusal)
         # Route bare catalog ids to the first-party opencode provider — a bare
         # "deepseek-v4.1-flash" would leave provider resolution to opencode and
         # can land off the api.deepseek.com account. Explicit provider-prefixed

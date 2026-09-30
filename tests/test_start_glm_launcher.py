@@ -85,15 +85,15 @@ def test_glm_catalog_aliases_resolve_to_the_allowlisted_model(alias: str, tmp_pa
     assert "would exec claude --model glm-5.3" in result.stdout
 
 
-def test_glm52_alias_still_resolves_to_fallback_glm_5_2(tmp_path: Path) -> None:
+def test_glm52_retired_alias_is_refused(tmp_path: Path) -> None:
     result = run_launcher(
         "start-glmcc.sh",
         "--model",
         "glm52",
         env={**_GLM_CREDENTIALS, "ZAI_API_KEY": "test-key", "HOME": str(tmp_path / "home")},
     )
-    assert result.returncode == 0, result.stderr
-    assert "would exec claude --model glm-5.2" in result.stdout
+    assert result.returncode == 2
+    assert "would exec claude" not in result.stdout
 
 
 def test_glm_rejects_unknown_model_endpoint_and_isolation_value(tmp_path: Path) -> None:

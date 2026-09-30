@@ -290,7 +290,7 @@ def build_review_deep_command(target: str, prompt_file: Path, effort: str) -> li
         "--mode",
         "read-only",
         "--model",
-        "claude-opus-4-8",
+        "claude-opus-5-5",
         "--effort",
         effort,
         "--task-id",

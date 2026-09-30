@@ -691,6 +691,11 @@ class TestMessaging:
 class TestModel:
     """Tests for scripts/ai_agent_bridge/_model.py."""
 
+    @pytest.fixture(autouse=True)
+    def supported_agy_version(self, monkeypatch):
+        # Probe-result mocks must not also replace the adapter's version check.
+        monkeypatch.setattr("agent_runtime.adapters.agy._agy_version", lambda _binary: (1, 2, 9))
+
     def test_handle_model_check_failure_not_found(self, capsys):
         import time
 
@@ -750,35 +755,35 @@ class TestModel:
 
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE["gemini-3.5-flash-high"] = (True, time.time() - 7200)  # 2 hours old
+        _MODEL_CACHE["gemini-3.8-flash-high"] = (True, time.time() - 7200)  # 2 hours old
         try:
             with patch("subprocess.run", side_effect=FileNotFoundError):
-                result = check_model("gemini-3.5-flash-high")
+                result = check_model("gemini-3.8-flash-high")
             assert result is False
         finally:
-            _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+            _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_timeout(self, capsys):
         import subprocess
 
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 90)):
-            result = check_model("gemini-3.5-flash-high")
+            result = check_model("gemini-3.8-flash-high")
         assert result is False
         assert "timed out" in capsys.readouterr().out
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_file_not_found(self, capsys):
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         with patch("subprocess.run", side_effect=FileNotFoundError):
-            result = check_model("gemini-3.5-flash-high")
+            result = check_model("gemini-3.8-flash-high")
         assert result is False
         assert "AGY CLI not found" in capsys.readouterr().out
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
     def test_check_model_unknown_slug(self, capsys):
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
@@ -792,16 +797,16 @@ class TestModel:
     def test_check_model_success(self):
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
         mock_result = MagicMock(returncode=0, stdout="MODEL_OK", stderr="")
         with patch("subprocess.run", return_value=mock_result) as run:
-            assert check_model("gemini-3.5-flash-high") is True
+            assert check_model("gemini-3.8-flash-high") is True
         cmd = run.call_args.args[0]
         assert "agy" in cmd[0] or cmd[0].endswith("/agy")
         assert "--model" in cmd
-        # Retired 3.5 aliases remap to live 3.8 slugs before argv is built.
+        # Active 3.8 slug is preserved in the probe invocation.
         assert "gemini-3.8-flash-high" in cmd or "Gemini 3.8 Flash (High)" in cmd
-        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        _MODEL_CACHE.pop("gemini-3.8-flash-high", None)
 
 
 # ---------------------------------------------------------------------------

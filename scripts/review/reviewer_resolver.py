@@ -39,7 +39,13 @@ from typing import Literal
 from scripts.agent_runtime.adapters.acpx import ACPX_PARTICIPANT_CATALOG_TRANSPORTS, ACPX_SUPPORTED_PARTICIPANTS
 from scripts.agent_runtime.agent_identity import resolve_retired_agent_alias
 from scripts.audit import model_families
-from scripts.review.model_catalog import VALID_REVIEW_PROFILES, VALID_RISKS, load_model_catalog
+from scripts.review.model_catalog import (
+    VALID_REVIEW_PROFILES,
+    VALID_RISKS,
+    load_model_catalog,
+    resolve_catalog_model_id,
+    retired_model_refusal,
+)
 from scripts.review.reviewer_scheduler import circuit_exclusion_reason, selection_key
 from scripts.review.subject_seat import prepare_subject_exclusion, subject_exclusion_reason
 
@@ -231,14 +237,10 @@ REVIEW_LADDERS: dict[str, tuple[tuple[ReviewerCandidate, ...], ...]] = {
 
 # Compatibility constants for direct candidate evaluation and callers that
 # explicitly imported the old default. Medium is the balanced default risk.
-CLAUDE_OPUS_4_8 = REVIEW_CANDIDATES["claude-opus-4-8"]
 OPENAI_FRONTIER = REVIEW_CANDIDATES["openai_frontier"]
 GROK_4_7 = REVIEW_CANDIDATES["grok-4.7"]
 GROK_4_7_CURSOR_FALLBACK = REVIEW_CANDIDATES["grok-4.7-cursor-fallback"]
-SONNET_5 = REVIEW_CANDIDATES["claude-sonnet-5"]
 SONNET_5_5 = REVIEW_CANDIDATES["claude-sonnet-5-5"]
-DEEPSEEK_V4_PRO = REVIEW_CANDIDATES["deepseek-v4-pro"]
-DEEPSEEK_V4_1_FLASH = REVIEW_CANDIDATES["deepseek-v4.1-flash"]
 POOL = REVIEW_CANDIDATES["pool"]
 GLM = REVIEW_CANDIDATES["glm-5.3"]
 # Medium = practical formal CF default ladder (not authority-first).
@@ -609,6 +611,30 @@ def evaluate_candidate(
     )
     normalized_snapshot = normalize_routing_snapshot(inputs.routing_snapshot)
     health = _health_of(candidate, normalized_snapshot)
+
+    # Catalog validation protects the installed ladders; this independent gate
+    # also protects explicit pins and custom candidates before any quality prior.
+    refusal = retired_model_refusal(candidate.concrete_model, _MODEL_CATALOG)
+    model_id = resolve_catalog_model_id(candidate.concrete_model, _MODEL_CATALOG)
+    model_family = _MODEL_CATALOG["models"].get(model_id, {}).get("family")
+    if candidate.family == "deepseek" or model_family == "deepseek" or candidate.route == "deepseek":
+        refusal = "DeepSeek is excluded from dispatch and review by core.md P2"
+    if inputs.risk.strip().casefold() == "critical" and (model_id or "").startswith("claude-sonnet-"):
+        refusal = "Sonnet is excluded from security review by core.md P2"
+    if refusal:
+        return CandidateResult(
+            name=candidate.name,
+            concrete_model=candidate.concrete_model,
+            family=candidate.family,
+            route=candidate.route,
+            transport=candidate.transport,
+            invocation=candidate.invocation,
+            quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded",
+            reason=refusal,
+            health=health,
+        )
 
     if is_ukrainian_content_change(inputs) and candidate.family not in _UKRAINIAN_CONTENT_FAMILIES:
         return CandidateResult(

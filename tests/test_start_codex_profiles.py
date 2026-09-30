@@ -421,8 +421,9 @@ def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Pa
         tmp_path, (["--epic", "devops"] if driver else []) + ["--model", model], driver=driver,
         order_capture=order, expect_success=False,
     )
-    assert result.returncode == (4 if driver else 2)
-    assert ("not certified" if driver else "approved models are gpt-6-luna, gpt-6.1-sol") in result.stderr
+    assert result.returncode == 2
+    assert "is retired in the model catalog" in result.stderr
+    assert model in result.stderr
     assert not (tmp_path / "capture.txt").exists()
     assert not order.exists()
     assert not (linked / ".claude" / "devops-epic" / "session-lease.env").exists()

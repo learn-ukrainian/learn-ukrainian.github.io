@@ -102,11 +102,12 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     inputs = ResolverInputs(author_model="codex", changed_paths=("curriculum/A1/lesson.mdx",))
     # Kimi is no longer a review candidate at all (web, UI and backend coding only).
     assert "kimi-k3" not in REVIEW_CANDIDATES
+    # DeepSeek is excluded from every review, not just language review.
+    assert "deepseek-v4.1-flash" not in REVIEW_CANDIDATES
     for candidate in (
         GROK_4_7,
         GLM,
         REVIEW_CANDIDATES["composer-2.5"],
-        REVIEW_CANDIDATES["deepseek-v4.1-flash"],
     ):
         result = evaluate_candidate(candidate, inputs)
         assert result.status == "excluded", candidate.name
@@ -121,6 +122,12 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     )
     assert pinned.selected is None
     assert pinned.fail_closed_reason
+    deepseek_pin = resolve_reviewer(
+        ResolverInputs(author_model="codex", pinned_candidate="deepseek-v4.1-flash",
+                       pressure_override_reason="test pin")
+    )
+    assert deepseek_pin.selected is None
+    assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
 
 
 def test_pure_infra_change_can_still_select_grok():
