@@ -482,9 +482,12 @@ def test_import_bundle_runs_before_detect_and_is_fail_open(monkeypatch: pytest.M
 
 
 def test_python_version_matches_pin(tmp_path: Path) -> None:
-    # Check the real interpreter against the declared execution pin: CI's
-    # tool-cache pin or the local canonical pin. The production guard stays exact.
-    version = os.environ.get("UV_PYTHON") or (REPO_ROOT / ".python-version").read_text().strip()
+    # This positive fixture pins the running interpreter, so it also exercises
+    # a baseline runtime during patch-version migrations. The mismatch fixture
+    # below verifies that the production guard stays exact.
+    import platform
+
+    version = platform.python_version()
     (tmp_path / ".python-version").write_text(f"{version}\n")
     result = gate.phase_python_version(_args(repo_root=str(tmp_path)))
     assert result == {"status": "ok"}

@@ -7,7 +7,7 @@ Paste these rules into future orchestration prompts and then verify them against
 
 ## Non-Negotiable Files
 
-- Do not edit `.python-version`; it must remain `3.12.8`.
+- Do not edit `.python-version`; it must remain `3.12.14`.
 - Do not edit `.yamllint`.
 - Do not edit `.markdownlint.json`.
 - Do not weaken tests, skip tests with empty bodies, or change assertions to weaker checks.

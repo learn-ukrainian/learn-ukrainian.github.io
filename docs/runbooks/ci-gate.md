@@ -210,14 +210,20 @@ either background task failed. A container image was not adopted: the checkout
 cannot be inside an image, and pulling a prebuilt environment of this size
 costs about what the cache restore does (see the measurements in the ci-v3 PR).
 
-The required CI, advisory CI and uv cache warmer share the same `UV_PYTHON`
-pin in their workflow environments. Both `setup-python` and the composite's
-setup-uv step receive that exact version, so the cache reader and writer
-agree even though the local `.python-version` remains unchanged. Python
-3.12.14 is preinstalled in the hosted Ubuntu 24.04 tool cache (image
-`20260920.314`); 3.12.8 was downloaded on every shard. Keep `check-latest`
-disabled (the default). A pin update changes the uv key, so until main warms
-the new key the composite's existing online install fallback handles the miss.
+All Python workflow jobs read the repository's `.python-version` with
+`setup-python`'s `python-version-file`. The shared composite reads the same
+file for setup-uv's explicit `python-version`, so local environments, the
+cache reader and the cache writer agree. Keep `check-latest` disabled (the
+default). A pin update changes the uv key; until main warms that key, the
+composite's online install fallback handles the miss. The #9062 measurement
+on hosted image `20260920.314` found 3.12.14 already cached, while 3.12.8
+required a download on every shard.
+
+The history shard keeps full Git history: five pinned test files read history
+and two more fetch `main` (listed in `scripts/ci/history-tests.txt`, consumed
+by `scripts/ci/split_tests.py`).
+Other shards are shallow. #9211 rejected blobless checkout because those
+history readers need the committed blobs as well as the commit graph.
 
 ## Cloud advisory runner dependency parity (#6977 slice A)
 

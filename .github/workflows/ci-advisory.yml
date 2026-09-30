@@ -15,8 +15,6 @@ permissions:
   contents: read
 
 env:
-  # Exact hosted tool-cache pin; also selects the matching setup-uv cache key.
-  UV_PYTHON: '3.12.14'
   UV_HTTP_RETRIES: '6'
   UV_HTTP_TIMEOUT: '60'
 
@@ -32,7 +30,7 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: ${{ env.UV_PYTHON }}
+          python-version-file: '.python-version'
       - name: Python CI environment
         uses: ./.github/actions/python-ci-env
       - name: TypeSafe triage (docs/best-practices/typesafe-jev.md, #8232)

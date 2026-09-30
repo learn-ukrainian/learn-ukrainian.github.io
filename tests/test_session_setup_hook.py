@@ -93,9 +93,9 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
 
     fake_python = project_dir / ".venv" / "bin" / "python"
     fake_python.parent.mkdir(parents=True)
-    fake_python.write_text("#!/bin/sh\nprintf 'Python 3.12.8\\n'\n", encoding="utf-8")
+    fake_python.write_text("#!/bin/sh\nprintf 'Python 3.12.14\\n'\n", encoding="utf-8")
     fake_python.chmod(0o755)
-    (project_dir / ".python-version").write_text("3.12.8\n", encoding="utf-8")
+    (project_dir / ".python-version").write_text("3.12.14\n", encoding="utf-8")
 
     remote_payload = {
         "schema": "remote-epic-lifecycle.v1",

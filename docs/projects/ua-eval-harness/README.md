@@ -46,13 +46,13 @@ research package or its frozen release.
 
 ## Quick verification
 
-Requirements are Git, `uv`, and CPython 3.12.8. Verification does not require a
+Requirements are Git, `uv`, and CPython 3.12.14. Verification does not require a
 model-provider account or credential.
 
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
-uv venv --python 3.12.8
+uv venv --python 3.12.14
 .venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v011.py
 ```
 

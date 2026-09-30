@@ -2,13 +2,13 @@
 
 ## Quick check without provider credentials
 
-Requirements: Git, `uv`, and CPython 3.12.8. No provider account, API key,
+Requirements: Git, `uv`, and CPython 3.12.14. No provider account, API key,
 private repository, product state, or live model call is required.
 
 ```bash
 git clone https://github.com/learn-ukrainian/learn-ukrainian.github.io.git
 cd learn-ukrainian.github.io
-uv venv --python 3.12.8
+uv venv --python 3.12.14
 .venv/bin/python scripts/projects/ua_eval_harness/smoke_public_v011.py
 ```
 

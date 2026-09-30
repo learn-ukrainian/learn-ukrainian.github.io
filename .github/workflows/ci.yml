@@ -15,8 +15,6 @@ permissions:
   contents: read
 
 env:
-  # Exact hosted tool-cache pin; also selects the matching setup-uv cache key.
-  UV_PYTHON: '3.12.14'
   UV_HTTP_RETRIES: '6'
   UV_HTTP_TIMEOUT: '60'
   PIP_RETRIES: '6'
@@ -51,7 +49,11 @@ jobs:
             scripts/ci/
             scripts/__init__.py
             .github/workflows/ci.yml
+            .python-version
           sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
       - id: find
         env:
           GH_TOKEN: ${{ github.token }}
@@ -74,6 +76,9 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 2  # the queue commit and its parents; no blob filter (TruffleHog clones this repo)
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
       - id: metadata
         run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
       - uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
@@ -93,6 +98,9 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
       - name: Resolve secret scan commit scope
         id: secret-scan-scope
         env:
@@ -136,7 +144,7 @@ jobs:
           fetch-depth: 0  # origin/main merge-base diffs
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: ${{ env.UV_PYTHON }}
+          python-version-file: '.python-version'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
@@ -166,6 +174,9 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
       - id: scope
         env:
           EVENT_NAME: ${{ github.event_name }}
@@ -178,10 +189,6 @@ jobs:
           node-version: '22'
           cache: npm
           cache-dependency-path: site/package-lock.json
-      - if: steps.scope.outputs.run == 'true'
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
-        with:
-          python-version: ${{ env.UV_PYTHON }}
       - if: steps.scope.outputs.run == 'true'
         name: Python CI environment
         uses: ./.github/actions/python-ci-env
@@ -222,7 +229,7 @@ jobs:
       - run: bash scripts/ci/test_env.sh start postgres
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: ${{ env.UV_PYTHON }}
+          python-version-file: '.python-version'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
@@ -285,7 +292,11 @@ jobs:
             tests/
             scripts/
             registry/artifacts/needs-artifact-expected.txt
+            .python-version
           sparse-checkout-cone-mode: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
       - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           pattern: pytest-junit-shard-*

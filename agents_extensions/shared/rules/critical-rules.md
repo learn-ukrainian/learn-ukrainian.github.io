@@ -7,8 +7,8 @@
 
 ### 2. Use Python venv
 **ALWAYS** `.venv/bin/python`, **NEVER** `python3` or `python` directly.
-- pyenv Python 3.12.8 with `--enable-loadable-sqlite-extensions`
-- Recreate: `rm -rf .venv && ~/.pyenv/versions/3.12.8/bin/python -m venv .venv`
+- pyenv Python 3.12.14 with `--enable-loadable-sqlite-extensions`
+- Recreate: `rm -rf .venv && ~/.pyenv/versions/3.12.14/bin/python -m venv .venv`
 
 ### 3. Language Settings
 **English**: all technical work. **Ukrainian**: curriculum content only.
