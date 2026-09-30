@@ -57,6 +57,38 @@ def test_cursor_driver_rejects_dummy_agent_on_path(tmp_path: Path) -> None:
     assert "would exec cursor-agent" in result.stdout
 
 
+def test_cursor_launcher_refuses_decoy_agent_when_cursor_agent_is_missing(tmp_path: Path) -> None:
+    """A live launch with only a decoy ``agent`` exits non-zero and never runs it.
+
+    ``scripts/launchers/cursor.sh`` is the shell-side exception to
+    ``resolve_cursor_agent_binary``: it still requires exactly ``cursor-agent``.
+    """
+    shell = shutil.which("bash")
+    assert shell is not None
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    (bin_dir / "bash").symlink_to(shell)
+    marker = tmp_path / "decoy-ran"
+    dummy_agent = bin_dir / "agent"
+    dummy_agent.write_text("#!/bin/sh\nprintf '%s\\n' ran >> \"$DECOY_RAN\"\n", encoding="utf-8")
+    dummy_agent.chmod(0o755)
+    probe_path = f"{bin_dir}{os.pathsep}{os.defpath}"
+    assert shutil.which("agent", path=probe_path) == str(dummy_agent)
+    assert shutil.which("cursor-agent", path=probe_path) is None
+
+    result = run_launcher(
+        DRIVER,
+        "--epic",
+        "infra",
+        env={"PATH": probe_path, "DECOY_RAN": str(marker)},
+        dry_run=False,
+    )
+    assert result.returncode != 0, result.stdout + result.stderr
+    assert "Cursor agent executable (cursor-agent) is unavailable." in result.stderr
+    assert not marker.exists()
+    assert "ran" not in result.stdout
+
+
 def test_cursor_driver_requires_epic_fail_closed() -> None:
     """Launching without --epic must not silently claim main orchestrator."""
     missing = run_launcher(DRIVER)

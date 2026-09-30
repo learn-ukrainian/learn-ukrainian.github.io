@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 import pytest
 
-from scripts.agent_runtime.adapters.cursor import CursorAdapter
+from scripts.agent_runtime.adapters.cursor import CursorAdapter, CursorAgentMissingError
 
 
 @pytest.fixture
@@ -29,16 +30,23 @@ def test_cursor_adapter_resume_first_run(adapter, tmp_path, monkeypatch):
     assert "--resume" not in plan.cmd
 
 
+def _executable(path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+    path.chmod(0o755)
+
+
 def test_cursor_adapter_prefers_cursor_agent_over_generic_agent(adapter, tmp_path, monkeypatch):
-    """Regression: a generic ``agent`` binary on PATH (e.g. grok's Grok Build
-    TUI at ~/.local/bin/agent) must NOT shadow ``cursor-agent``. Resolving
-    ``agent`` first silently misfired every cursor dispatch to grok
-    (returncode 2: "a value is required for '--single <PROMPT>'")."""
-    resolved = {
-        "cursor-agent": "/Users/x/.local/bin/cursor-agent",
-        "agent": "/Users/x/.local/bin/agent",  # impostor: grok Build TUI
-    }
-    monkeypatch.setattr("shutil.which", lambda name: resolved.get(name))
+    """A generic ``agent`` earlier on PATH must not shadow ``cursor-agent``."""
+    decoy_dir = tmp_path / "decoy"
+    later_dir = tmp_path / "later"
+    home = tmp_path / "home"
+    _executable(decoy_dir / "agent")
+    cursor = later_dir / "cursor-agent"
+    _executable(cursor)
+    home.mkdir()
+    monkeypatch.setenv("PATH", os.pathsep.join((str(decoy_dir), str(later_dir))))
+    monkeypatch.setenv("HOME", str(home))
 
     plan = adapter.build_invocation(
         prompt="hello",
@@ -50,28 +58,28 @@ def test_cursor_adapter_prefers_cursor_agent_over_generic_agent(adapter, tmp_pat
         tool_config=None,
     )
 
-    assert plan.cmd[0] == "/Users/x/.local/bin/cursor-agent"
+    assert Path(plan.cmd[0]) == cursor.resolve()
 
 
-def test_cursor_adapter_falls_back_to_agent_when_no_cursor_agent(adapter, tmp_path, monkeypatch):
-    """When ``cursor-agent`` is absent, fall back to a generic ``agent`` binary
-    (legacy cursor installs shipped under the bare ``agent`` name)."""
-    monkeypatch.setattr(
-        "shutil.which",
-        lambda name: "/usr/local/bin/agent" if name == "agent" else None,
-    )
+def test_cursor_adapter_refuses_generic_agent_when_cursor_agent_is_absent(adapter, tmp_path, monkeypatch):
+    """No ``cursor-agent`` means a typed refusal, not a generic ``agent``."""
+    decoy_dir = tmp_path / "decoy"
+    home = tmp_path / "home"
+    _executable(decoy_dir / "agent")
+    home.mkdir()
+    monkeypatch.setenv("PATH", str(decoy_dir))
+    monkeypatch.setenv("HOME", str(home))
 
-    plan = adapter.build_invocation(
-        prompt="hi",
-        mode="workspace-write",
-        cwd=tmp_path,
-        model=None,
-        task_id="bin-resolve-2",
-        session_id=None,
-        tool_config=None,
-    )
-
-    assert plan.cmd[0] == "/usr/local/bin/agent"
+    with pytest.raises(CursorAgentMissingError, match="cursor-agent"):
+        adapter.build_invocation(
+            prompt="hi",
+            mode="workspace-write",
+            cwd=tmp_path,
+            model=None,
+            task_id="bin-resolve-2",
+            session_id=None,
+            tool_config=None,
+        )
 
 
 def test_cursor_adapter_resume_explicit_session(adapter, tmp_path, monkeypatch):
@@ -210,15 +218,7 @@ def test_cursor_adapter_recovers_response_from_session_transcript(
     adapter._transcripts_snapshot = adapter._snapshot_preexisting_transcripts(workspace)
     session_id = "session-transcript-123"
     encoded = adapter._encode_workspace_path(workspace)
-    transcript = (
-        fake_home
-        / ".cursor"
-        / "projects"
-        / encoded
-        / "agent-transcripts"
-        / session_id
-        / f"{session_id}.jsonl"
-    )
+    transcript = fake_home / ".cursor" / "projects" / encoded / "agent-transcripts" / session_id / f"{session_id}.jsonl"
     transcript.parent.mkdir(parents=True)
     transcript.write_text(
         "\n".join(

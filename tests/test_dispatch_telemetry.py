@@ -125,7 +125,10 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
     )
     monkeypatch.setenv("HERMES_HOME", str(hermes_home))
 
+    probed: list[tuple[str, ...]] = []
+
     def probe(prefix: tuple[str, ...]) -> str | None:
+        probed.append(prefix)
         return {
             "agy": "1.1.1",
             "cursor-agent": "2026.07.09",
@@ -133,6 +136,10 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
         }.get(Path(prefix[0]).name)
 
     caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    monkeypatch.setattr(
+        "agent_runtime.adapters.cursor.resolve_cursor_agent_binary",
+        lambda: "/usr/local/bin/cursor-agent",
+    )
     with patch("agent_runtime.telemetry._probe_version", side_effect=probe):
         agy = resolve_dispatch_start_telemetry(
             agent_name="agy",
@@ -153,6 +160,7 @@ def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkey
 
     assert (agy.effort, agy.cli_version) == ("not-exposed", "1.1.1")
     assert (cursor.effort, cursor.cli_version) == ("not-exposed", "2026.07.09")
+    assert ("/usr/local/bin/cursor-agent",) in probed
     assert (deepseek.effort, deepseek.cli_version) == ("high", "1.18.0")
     assert "dispatch telemetry for" not in caplog.text
 
@@ -170,8 +178,7 @@ def test_unexpected_version_probe_failure_still_warns(caplog):
     assert telemetry.effort == "not-exposed"
     assert telemetry.cli_version == "unknown"
     assert (
-        "dispatch telemetry for agy could not resolve cli_version: version probe failed; "
-        "recording 'unknown'"
+        "dispatch telemetry for agy could not resolve cli_version: version probe failed; recording 'unknown'"
     ) in caplog.text
 
 

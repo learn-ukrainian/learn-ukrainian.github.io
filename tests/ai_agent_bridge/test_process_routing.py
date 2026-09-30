@@ -836,7 +836,8 @@ def cursor_provider(monkeypatch):
     run = Mock(return_value=subprocess.CompletedProcess(args=[], returncode=0, stdout="LGTM\n", stderr=""))
     # Scoped to the Cursor bridge: the broker's own notifications also use subprocess.
     monkeypatch.setattr(_cursor, "subprocess", SimpleNamespace(run=run, TimeoutExpired=subprocess.TimeoutExpired))
-    monkeypatch.setattr(_cursor.shutil, "which", lambda name: f"/stub/{name}")
+    # Binary lookup is the shared resolver on the bridge module.
+    monkeypatch.setattr(_cursor, "resolve_cursor_agent_binary", lambda: "/stub/cursor-agent")
     monkeypatch.setattr(_process, "run_compat_ask", Mock(side_effect=AssertionError("review must not enter ACP")))
     return run
 

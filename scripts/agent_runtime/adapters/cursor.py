@@ -1,4 +1,4 @@
-"""CursorAdapter — wraps ``agent`` / ``cursor-agent`` for the agent runtime.
+"""CursorAdapter — wraps the ``cursor-agent`` CLI for the agent runtime.
 
 Mirrors the Gemini I/O pattern (stdout JSONL stream) and the Codex adapter's
 per-invocation configuration patterns. Supports read-only, workspace-write,
@@ -28,7 +28,6 @@ import json
 import logging
 import os
 import re
-import shutil
 import subprocess
 import urllib.error
 import urllib.request
@@ -44,6 +43,8 @@ from scripts.review.model_catalog import (
     retired_model_refusal,
 )
 
+from ..binary_resolve import resolve_agent_binary
+from ..errors import AgentRuntimeError
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
@@ -121,8 +122,38 @@ def _effective_cursor_mode(mode: str, config: dict) -> str | None:
     return None
 
 
+CURSOR_AGENT_EXECUTABLE = "cursor-agent"
+
+
+class CursorAgentMissingError(AgentRuntimeError):
+    """``cursor-agent`` is not executable. A generic ``agent`` binary is never used."""
+
+    def __init__(self) -> None:
+        super().__init__(f"{CURSOR_AGENT_EXECUTABLE} is not available; refusing to execute a generic agent binary")
+
+
+def resolve_cursor_agent_binary() -> str:
+    """Return the ``cursor-agent`` executable path.
+
+    Searches PATH and the login install directories for that name only.
+    A generic ``agent`` executable is never consulted.
+
+    The one shell-side exception is ``scripts/launchers/cursor.sh``. A shell
+    script cannot call this function, so that launcher looks up the name
+    ``cursor-agent`` itself and exits non-zero when the executable is missing.
+    It never accepts a generic ``agent``.
+
+    Raises:
+        CursorAgentMissingError: no executable named ``cursor-agent``.
+    """
+    found = resolve_agent_binary(CURSOR_AGENT_EXECUTABLE, path=os.environ.get("PATH", ""))
+    if not found:
+        raise CursorAgentMissingError()
+    return found
+
+
 class CursorAdapter:
-    """Adapter for the Cursor agent CLI (``agent`` or ``cursor-agent``)."""
+    """Adapter for the Cursor agent CLI (``cursor-agent``)."""
 
     name: str = "cursor"
     default_model: str = "grok-4.7"
@@ -183,16 +214,9 @@ class CursorAdapter:
                 f"(operator decision 2026-09-30, #9274)"
             )
 
-        # Resolve binary. shutil.which handles PATH lookup.
-        # Prefer the UNAMBIGUOUS ``cursor-agent`` name. A generic ``agent`` on
-        # PATH can be a DIFFERENT tool: grok's "Grok Build TUI" installs
-        # ``~/.local/bin/agent``, whose ``-p`` means ``--single <PROMPT>`` (a
-        # value flag), so resolving ``agent`` first silently misfired EVERY
-        # cursor dispatch to grok (returncode 2: "a value is required for
-        # '--single <PROMPT>'"). Resolve ``cursor-agent`` first; fall back to a
-        # generic ``agent`` only when cursor-agent is absent (legacy cursor
-        # installs shipped as ``agent``). (#2309 bio driver, 2026-06-02)
-        cursor_bin = shutil.which("cursor-agent") or shutil.which("agent") or "cursor-agent"
+        # ``cursor-agent`` only. A generic ``agent`` on PATH can be a different
+        # tool and must not receive Cursor arguments (#9322).
+        cursor_bin = resolve_cursor_agent_binary()
 
         # Workspace resolution
         workspace = config.get("cursor_workspace") or str(cwd)
@@ -308,8 +332,7 @@ class CursorAdapter:
             workspace_path = Path(workspace).resolve()
             if (workspace_path / ".git").is_dir():
                 raise RuntimeError(
-                    "Cursor review attempt requires a dispatch worktree; "
-                    "refusing primary checkout workspace (#8517)"
+                    "Cursor review attempt requires a dispatch worktree; refusing primary checkout workspace (#8517)"
                 )
 
         requested = config.get("mcp_server_names") or []
@@ -693,29 +716,12 @@ def _extract_concrete_model_from_events(events: list[dict]) -> str | None:
 
 _CURSOR_AUTH_PATH = Path.home() / ".config" / "cursor" / "auth.json"
 _CURSOR_USAGE_URL = "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurrentPeriodUsage"
-_CURSOR_GROK_BOT_USAGE_URL = (
-    "https://api2.cursor.sh/aiserver.v1.DashboardService/GetSandUsageStatus"
-)
+_CURSOR_GROK_BOT_USAGE_URL = "https://api2.cursor.sh/aiserver.v1.DashboardService/GetSandUsageStatus"
 
 
 def _cursor_cli_binary() -> str:
-    """Resolve the Cursor CLI even when systemd PATH omits ``~/.local/bin``.
-
-    Prefer the unambiguous ``cursor-agent`` name. A generic ``agent`` on PATH
-    can be Grok Build TUI (``~/.local/bin/agent``), so only fall back to
-    ``agent`` after PATH and ``~/.local/bin/cursor-agent`` miss. The home-bin
-    path is used only when the file exists **and** is executable.
-    """
-    found = shutil.which("cursor-agent")
-    if found:
-        return found
-    home_bin = Path.home() / ".local" / "bin" / "cursor-agent"
-    try:
-        if home_bin.is_file() and os.access(home_bin, os.X_OK):
-            return str(home_bin)
-    except OSError:
-        pass
-    return shutil.which("agent") or "cursor-agent"
+    """Return the ``cursor-agent`` executable, never a generic ``agent``."""
+    return resolve_cursor_agent_binary()
 
 
 def _cursor_env_or_file_authenticated() -> bool:
@@ -734,42 +740,59 @@ def _cursor_env_or_file_authenticated() -> bool:
     return _load_cursor_api_key_from_env_file() is not None
 
 
+def _cursor_login_probe_failure(exc: BaseException, fetched_at: str) -> dict[str, Any]:
+    """Map a pre-spawn or spawn failure to a login probe result.
+
+    ``missing_binary`` is reported whether or not a Cursor API key is present.
+    Credentials still mark the lane authenticated, but they must not hide the
+    fact that ``cursor-agent`` cannot be executed (#9322).
+    """
+    if isinstance(exc, (CursorAgentMissingError, FileNotFoundError)):
+        kind = "missing_binary"
+    elif isinstance(exc, subprocess.TimeoutExpired):
+        kind = "timeout"
+    elif isinstance(exc, PermissionError):
+        kind = "permission"
+    else:
+        kind = "os_error"
+    is_auth = _cursor_env_or_file_authenticated()
+    error_kind = kind if kind == "missing_binary" else (None if is_auth else kind)
+    return {
+        "lane": "cursor",
+        "source": "cursor_cli",
+        "login_state": "authenticated" if is_auth else "NEED_LOGIN",
+        "is_authenticated": is_auth,
+        "status": "authenticated" if is_auth else "need_login",
+        "error_kind": error_kind,
+        "fetched_at": fetched_at,
+    }
+
+
 def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
     """Preflight Cursor CLI auth without printing secrets.
 
     Returns ``login_state`` of ``authenticated`` or ``NEED_LOGIN``. A usable
     ``CURSOR_API_KEY`` (env or on-disk key file) counts as authenticated even
     when the CLI's own session state says otherwise — see
-    ``_cursor_env_or_file_authenticated``.
+    ``_cursor_env_or_file_authenticated``. A missing ``cursor-agent`` is
+    ``error_kind=missing_binary`` regardless of those credentials, and the
+    probe does not spawn when the resolver cannot find the executable.
     """
     fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     try:
+        binary = _cursor_cli_binary()
+    except CursorAgentMissingError as exc:
+        return _cursor_login_probe_failure(exc, fetched_at)
+    try:
         res = subprocess.run(
-            [_cursor_cli_binary(), "status", "--format", "json"],
+            [binary, "status", "--format", "json"],
             capture_output=True,
             text=True,
             timeout=timeout_s,
             check=False,
         )
     except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as exc:
-        if isinstance(exc, FileNotFoundError):
-            kind = "missing_binary"
-        elif isinstance(exc, subprocess.TimeoutExpired):
-            kind = "timeout"
-        elif isinstance(exc, PermissionError):
-            kind = "permission"
-        else:
-            kind = "os_error"
-        is_auth = _cursor_env_or_file_authenticated()
-        return {
-            "lane": "cursor",
-            "source": "cursor_cli",
-            "login_state": "authenticated" if is_auth else "NEED_LOGIN",
-            "is_authenticated": is_auth,
-            "status": "authenticated" if is_auth else "need_login",
-            "error_kind": None if is_auth else kind,
-            "fetched_at": fetched_at,
-        }
+        return _cursor_login_probe_failure(exc, fetched_at)
 
     try:
         parsed = json.loads(res.stdout or "{}")
@@ -878,9 +901,7 @@ def _empty_cursor_provider_windows(*, resets_at: str | None = None) -> dict[str,
     return {
         "auto": _monthly_window_block(None, label="Cursor Models (Auto)", resets_at=resets_at),
         "api": _monthly_window_block(None, label="Other Models (API)", resets_at=resets_at),
-        "grok_bot": _usage_window_block(
-            None, label="Grok Bot", window="weekly", resets_at=None
-        ),
+        "grok_bot": _usage_window_block(None, label="Grok Bot", window="weekly", resets_at=None),
     }
 
 
@@ -1008,12 +1029,8 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
     total_pct = float(total_used) if isinstance(total_used, (int, float)) else None
     resets_at = _ms_to_iso_z(payload.get("billingCycleEnd"))
 
-    auto_block = _monthly_window_block(
-        auto_pct, label="Cursor Models (Auto)", resets_at=resets_at
-    )
-    api_block = _monthly_window_block(
-        api_pct, label="Other Models (API)", resets_at=resets_at
-    )
+    auto_block = _monthly_window_block(auto_pct, label="Cursor Models (Auto)", resets_at=resets_at)
+    api_block = _monthly_window_block(api_pct, label="Other Models (API)", resets_at=resets_at)
     grok_timeout = max(2.0, min(timeout_s, 5.0))
     try:
         grok_block = _probe_cursor_grok_bot_window(token=token, timeout_s=grok_timeout)
@@ -1026,9 +1043,7 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
         "grok_bot": grok_block,
     }
     if total_pct is not None:
-        provider_windows["total"] = _monthly_window_block(
-            total_pct, label="Total (included)", resets_at=resets_at
-        )
+        provider_windows["total"] = _monthly_window_block(total_pct, label="Total (included)", resets_at=resets_at)
 
     # Burn/status tracks the Auto-routing pool (operator: pin ``auto`` to spend Auto).
     burn_pct = auto_pct
