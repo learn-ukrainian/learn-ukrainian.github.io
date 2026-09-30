@@ -311,27 +311,71 @@ def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path, core_ro
     assert argv[argv.index("-p") + 1] == rules_core.core_block("core") + "\n\nhello"
 
 
-@pytest.mark.parametrize(
-    "forwarded",
-    (
-        ("--continue",),
-        ("-c",),
-        ("--session",),
-        ("-S", "abc"),
-        ("--session=abc",),
-        ("--resume",),
-        ("--agent", "okabe"),
-        ("--agent=okabe",),
-        ("--agent-file", "/tmp/custom.md"),
-    ),
-    ids=lambda forwarded: forwarded[0],
+_KIMI_REFUSED = (
+    ("--continue",),
+    ("-c",),
+    ("-C",),
+    ("-yc",),
+    ("-cy",),
+    ("--session",),
+    ("--session=abc",),
+    ("-S",),
+    ("-S", "abc"),
+    ("-Sabc",),
+    ("-ySabc",),
+    ("--resume",),
+    ("--resume=abc",),
+    ("-r",),
+    ("-rabc",),
+    ("--agent", "okabe"),
+    ("--agent=okabe",),
+    ("--agent-file", "/tmp/custom.md"),
+    ("--agent-file=/tmp/custom.md",),
+    ("--model", "k2.7"),
+    ("-m", "k2.7"),
+    ("--unknown-flag",),
+    ("-Z",),
+    ("session",),
+    ("fork", "abc"),
+    ("--",),
+    ("-",),
+    ("--yolo", "--prompt"),
+    ("-p",),
+    ("-p", "--continue"),
+    ("--prompt", "-S"),
+    ("-p-c",),
 )
-def test_kimi_code_refuses_resumed_and_custom_agent_sessions(forwarded, tmp_path: Path, core_root: Path) -> None:
+
+
+@pytest.mark.parametrize("forwarded", _KIMI_REFUSED, ids=lambda forwarded: " ".join(forwarded))
+def test_kimi_code_admits_only_fresh_session_flags(forwarded, tmp_path: Path, core_root: Path) -> None:
     result, _ = _launch(core_root, "start-kimi.sh", ("--", *forwarded), tmp_path, None, expect_launch=False)
     assert result.returncode == 2, result.stdout + result.stderr
     assert "Kimi Code starts fresh sessions only" in result.stderr
-    assert forwarded[0].split("=")[0] in result.stderr
     assert "fresh web/UI/backend coding tasks" in result.stderr
+
+
+@pytest.mark.parametrize(
+    "forwarded",
+    (
+        (),
+        ("--yolo",),
+        ("-y",),
+        ("--auto",),
+        ("--plan",),
+        ("-yp", "hello"),
+        ("-phello",),
+        ("--prompt=hello",),
+        ("--prompt", "hello", "--output-format", "text"),
+        ("--output-format=stream-json", "--yolo"),
+        ("--skills-dir", "/tmp/skills", "--add-dir=/tmp/extra", "--add-dir", "/tmp/more"),
+    ),
+    ids=lambda forwarded: " ".join(forwarded) or "plain",
+)
+def test_kimi_code_fresh_launch_carries_the_core(forwarded, tmp_path: Path, core_root: Path) -> None:
+    _, argv = _launch(core_root, "start-kimi.sh", ("--", *forwarded) if forwarded else (), tmp_path, None)
+    _assert_core(_carrier(argv, "--agent-file"), "core", "kimi-fresh")
+    assert argv[len(argv) - len(forwarded) :] == list(forwarded)
 
 
 def test_kimi_on_claude_code_keeps_the_core_when_resuming(tmp_path: Path, core_root: Path) -> None:
