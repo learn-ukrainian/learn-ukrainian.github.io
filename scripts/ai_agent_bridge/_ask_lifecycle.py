@@ -907,7 +907,7 @@ def refuse_kimi_target(message_id: int, target: str) -> None:
 
     Raises ``KimiAdmissionRefused`` before any reply, failure record or
     acknowledgement. A Kimi target is refused before any lookup; otherwise
-    the target model is read query-only, so the check never writes.
+    the target model comes from an immutable snapshot read, so the check never writes.
     """
     from ._acp_compat import refuse_kimi_compat
     from ._messaging import peek_message_route

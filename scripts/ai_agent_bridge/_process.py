@@ -81,6 +81,18 @@ def _notify_processing_failure(msg: dict, message_id: int, participant: str, rea
     record_ask_failure(message_id, reason)
 
 
+def refuse_kimi_recipient(message_id: int, model: str | None = None) -> None:
+    """The Kimi gate for ``process <id>``: the requested model, then the message's recipient seat and model.
+
+    Raises ``KimiAdmissionRefused``. A Kimi ``model`` is refused before any
+    lookup; the recipient comes from ``peek_message_route``, which never writes.
+    """
+    refuse_kimi_compat("", model=model)
+    route = peek_message_route(message_id)
+    if route:
+        refuse_kimi_compat(str(route.get("to") or "").strip().lower(), model=model or ask_target_model(route))
+
+
 def process_message_for_recipient(
     message_id: int,
     *,
@@ -96,12 +108,9 @@ def process_message_for_recipient(
     A Kimi recipient or target model raises ``KimiAdmissionRefused`` to the
     caller before any reply, failure record or acknowledgement: a Kimi
     ``model`` is refused before any lookup, and the recipient is resolved
-    through a query-only read, so the database stays exactly as it was.
+    through an immutable snapshot read, so the database stays exactly as it was.
     """
-    refuse_kimi_compat("", model=model)
-    route = peek_message_route(message_id)
-    if route:
-        refuse_kimi_compat(str(route.get("to") or "").strip().lower(), model=model or ask_target_model(route))
+    refuse_kimi_recipient(message_id, model)
     msg = read_message(message_id)
     if not msg:
         return None

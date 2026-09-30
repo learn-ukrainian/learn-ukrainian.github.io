@@ -511,14 +511,32 @@ def connect_readonly() -> sqlite3.Connection | None:
 
     Unlike ``get_db`` it never creates the file, runs no migration, sets no
     persistent PRAGMA and refuses every write (``mode=ro`` plus
-    ``query_only``), so admission checks can read a message without changing
-    the database.
+    ``query_only``). It still sees rows not yet checkpointed from the WAL, so
+    SQLite may create the ``-wal``/``-shm`` sidecars of a WAL-mode database;
+    admission checks that must leave the filesystem untouched use
+    ``connect_snapshot``.
     """
     if not DB_PATH.exists():
         return None
     conn = sqlite3.connect(f"{DB_PATH.resolve().as_uri()}?mode=ro", uri=True)
     conn.execute("PRAGMA query_only=ON")
     conn.execute("PRAGMA busy_timeout=5000")
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def connect_snapshot() -> sqlite3.Connection | None:
+    """A read of the broker DB's main file that cannot touch the filesystem, or None when it does not exist.
+
+    ``immutable=1`` turns off locking and the WAL, so SQLite opens only the
+    main file, read-only, and never creates or updates ``-wal``/``-shm``
+    sidecars. The price is that rows still in an un-checkpointed WAL are
+    invisible: a caller must treat a missing row as "unknown", never as proof.
+    """
+    if not DB_PATH.exists():
+        return None
+    conn = sqlite3.connect(f"{DB_PATH.resolve().as_uri()}?mode=ro&immutable=1", uri=True)
+    conn.execute("PRAGMA query_only=ON")
     conn.row_factory = sqlite3.Row
     return conn
 

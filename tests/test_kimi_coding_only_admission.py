@@ -1682,7 +1682,8 @@ def write_trap(tmp_path, monkeypatch):
         return not flags & _WRITE_OPEN_FLAGS
 
     def read_only_db(database, *_args, uri=False, **_kwargs):
-        return bool(uri) and "mode=ro" in str(database)
+        # ``mode=ro`` alone still creates -wal/-shm sidecars on a WAL-mode DB.
+        return bool(uri) and {"mode=ro", "immutable=1"} <= set(str(database).partition("?")[2].split("&"))
 
     def read_only_git(cmd, *_args, **_kwargs):
         return isinstance(cmd, (list, tuple)) and list(cmd[:1]) == ["git"] and cmd[1] in _GATE_GIT
@@ -1881,3 +1882,116 @@ def test_no_entry_path_writes_before_the_kimi_refusal(write_trap, capsys, seed, 
     assert attempts == []
     assert refusal in f"{outcome}\n{captured.out}\n{captured.err}"
     assert _tree(write_trap.state) == before
+
+
+# --- the bridge against an EXISTING WAL-mode broker DB ---------------------------------
+
+
+def _seed_broker(live_wal: bool) -> sqlite3.Connection | None:
+    """A migrated WAL-mode broker DB holding a Kimi-addressed message (7) and a Kimi-model ask (8).
+
+    Both rows are checkpointed into the main file, as SQLite leaves them once
+    the last connection closes (no sidecars). With ``live_wal`` a writer stays
+    open with newer, un-checkpointed traffic, so ``-wal``/``-shm`` exist; the
+    caller closes the returned connection.
+    """
+    from scripts.ai_agent_bridge import _db
+
+    conn = _db.get_db()
+    assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
+    conn.executemany(
+        "INSERT INTO messages (id, task_id, from_llm, to_llm, message_type, content, data, timestamp)"
+        " VALUES (?, 't', 'codex', ?, 'query', 'q', ?, '2026-09-30T00:00:00+00:00')",
+        [(7, "kimi", None), (8, "claude", json.dumps({"to_model": "kimi-code/k3"}))],
+    )
+    conn.commit()
+    conn.close()
+    sidecars = {_db.DB_PATH.with_name(_db.DB_PATH.name + suffix) for suffix in ("-wal", "-shm")}
+    assert not any(path.exists() for path in sidecars)
+    if not live_wal:
+        return None
+    writer = sqlite3.connect(_db.DB_PATH)
+    writer.execute(
+        "INSERT INTO messages (id, task_id, from_llm, to_llm, content, timestamp)"
+        " VALUES (9, 't', 'codex', 'claude', 'q', '2026-09-30T00:00:00+00:00')"
+    )
+    writer.commit()
+    assert all(path.exists() for path in sidecars)
+    return writer
+
+
+def _stat_tree(root: Path) -> dict[str, tuple[int, int, bytes]]:
+    """Every entry under *root* with its size, mtime and bytes: a created, touched or grown sidecar shows up."""
+    return {
+        str(path.relative_to(root)): (stat.st_size, stat.st_mtime_ns, path.read_bytes() if path.is_file() else b"")
+        for path in sorted(root.rglob("*"))
+        for stat in (path.stat(),)
+    }
+
+
+@pytest.mark.parametrize("live_wal", [False, True], ids=["wal-checkpointed", "wal-live"])
+@pytest.mark.parametrize(
+    "call",
+    [
+        pytest.param(_bridge("ask-kimi", "Consult.", "--task-id", "t"), id="bridge-ask"),
+        pytest.param(
+            _bridge("ask-claude", "Consult.", "--task-id", "t", "--to-model", "kimi-code/k3"),
+            id="bridge-ask-kimi-model",
+        ),
+        pytest.param(_bridge("process-kimi", "7"), id="bridge-process"),
+        pytest.param(_bridge("inbox", "run", "kimi", "--once", legacy_plane=True), id="bridge-inbox-run"),
+        pytest.param(_bridge("discuss", "architecture", "Compare.", "--with", "claude,kimicc"), id="bridge-discuss"),
+        pytest.param(_bridge("process", "7"), id="bridge-process-kimi-recipient"),
+        pytest.param(_bridge("process", "8"), id="bridge-process-kimi-model"),
+        pytest.param(_bridge("process-claude", "8"), id="bridge-process-seat-kimi-model"),
+        pytest.param(_bridge("process-ask", "8", "claude"), id="bridge-process-ask-kimi-model"),
+    ],
+)
+def test_bridge_refuses_kimi_without_touching_an_existing_wal_broker(write_trap, capsys, call, live_wal):
+    """No bridge mode opens the broker DB writably before its Kimi refusal: no sidecar is created or touched."""
+    writer = _seed_broker(live_wal)
+    try:
+        before = _stat_tree(write_trap.state)
+        with write_trap.armed() as attempts:
+            try:
+                outcome = call(write_trap)
+            except _WriteAttempt as exc:
+                outcome = exc
+            except SystemExit as exc:
+                outcome = exc.code
+        captured = capsys.readouterr()
+
+        assert attempts == []
+        assert _TOKEN in f"{outcome}\n{captured.out}\n{captured.err}"
+        assert _stat_tree(write_trap.state) == before
+    finally:
+        if writer is not None:
+            writer.close()
+
+
+def test_the_admission_snapshot_skips_the_wal_and_the_full_read_still_refuses(write_trap):
+    """A Kimi message still only in the WAL is invisible to the snapshot; the authoritative gate refuses it."""
+    from scripts.ai_agent_bridge import _db, _messaging, _process
+
+    writer = _seed_broker(live_wal=True)
+    try:
+        writer.execute(
+            "INSERT INTO messages (id, task_id, from_llm, to_llm, content, timestamp)"
+            " VALUES (10, 't', 'codex', 'kimi', 'q', '2026-09-30T00:00:00+00:00')"
+        )
+        writer.commit()
+        before = _stat_tree(write_trap.state)
+        with write_trap.armed() as attempts:
+            assert _messaging.peek_message_route(7)["to"] == "kimi"
+            assert _messaging.peek_message_route(10) is None
+        assert attempts == []
+        assert _stat_tree(write_trap.state) == before
+
+        with pytest.raises(ValueError, match=_TOKEN):  # KimiAdmissionRefused
+            _process.process_message_for_recipient(10)
+        acknowledged = writer.execute("SELECT acknowledged FROM messages WHERE id = 10").fetchone()[0]
+        assert not acknowledged
+        assert writer.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 4  # no reply or failure row
+    finally:
+        writer.close()
+    assert _db.DB_PATH.exists()

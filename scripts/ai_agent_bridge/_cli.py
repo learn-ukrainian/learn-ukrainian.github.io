@@ -1960,17 +1960,66 @@ def _resolve_backlog_warn_agent(args) -> str | None:
     return os.environ.get("SESSION_HANDOFF_AGENT") or None
 
 
+def _kimi_request_error(args) -> str | None:
+    """The Kimi refusal for a bridge command, decided before any broker access; None when admitted.
+
+    Kimi seats take web, UI and backend coding only, never asks, drains,
+    inbox replies or discussions. Every mode that names its seat or model on
+    the command line is decided from the arguments and the static route
+    registry alone. The drain modes also check the message's recipient and
+    target model through ``peek_message_route``, an immutable snapshot read
+    that never creates WAL sidecars; their handlers repeat the check after the
+    full read.
+    """
+    from agent_runtime.acpx_discuss import AcpxDiscussionError, refuse_kimi_discussion
+    from agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
+
+    from ._acp_compat import refuse_kimi_compat
+    from ._ask_lifecycle import refuse_kimi_target
+    from ._process import refuse_kimi_recipient
+
+    command = args.command or ""
+    model = getattr(args, "to_model", None) or getattr(args, "model", None)
+    try:
+        if command.startswith("ask-"):
+            refuse_kimi_compat(command.removeprefix("ask-"), model=model)
+        elif command == "process":
+            refuse_kimi_recipient(args.message_id, model)
+        elif command.startswith("process-") and hasattr(args, "message_id"):
+            target = args.target if command == "process-ask" else command.removeprefix("process-")
+            refuse_kimi_compat(target, model=model)
+            refuse_kimi_target(args.message_id, target)
+        elif command == "inbox" and getattr(args, "inbox_command", None) == "run":
+            refuse_kimi_if_disallowed((args.agent,), mode=ACP_MODE)
+        elif command == "discuss":
+            from ._channels_cli import _parse_agent_models, _parse_csv
+
+            try:
+                models = _parse_agent_models(args.models) if getattr(args, "models", None) else {}
+            except ValueError:  # the handler reports a malformed --models; the seats are still checked
+                models = {}
+            refuse_kimi_discussion(_parse_csv(args.with_agents), models)
+    except (KimiAdmissionRefused, AcpxDiscussionError) as exc:
+        return f"❌ {exc}"
+    return None
+
+
 def main():
     """CLI entry point."""
     parser = _build_parser()
     args = parser.parse_args()
+    # A Kimi request stops here, before the backlog warning, the timeout
+    # notices, telemetry or any broker connection: an existing WAL-mode broker
+    # DB would otherwise gain -wal/-shm sidecars before the refusal.
+    refusal = _kimi_request_error(args)
+    if refusal:
+        raise SystemExit(refusal)
     if args.command == "inbox":
         from ._channels_cli import _maybe_print_backlog_warnings
 
         _maybe_print_backlog_warnings(_resolve_backlog_warn_agent(args))
-    # Nothing before the command writes: the notices are read query-only and
-    # marked shown only once the command succeeds, so a refused command (a Kimi
-    # seat's included) leaves the broker DB as it was.
+    # The notices are read query-only and marked shown only once the command
+    # succeeds, so a command its own handler refuses leaves the rows as they were.
     notices = print_timeout_notice() if args.command is not None else []
     try:
         handled = _dispatch_command(args)

@@ -3,6 +3,7 @@
 import json
 import os
 import re
+import sqlite3
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -119,19 +120,25 @@ def read_message(message_id: int, quiet: bool = False):
 def peek_message_route(message_id: int) -> dict | None:
     """The recipient seat and ask metadata of one message, read without writing.
 
-    Admission checks use this instead of ``read_message``: it opens the
-    broker DB query-only, so it never migrates the schema or touches a
-    consumption flag. Returns None when the DB or the message is missing.
+    Admission checks use this instead of ``read_message``: it reads an
+    immutable snapshot of the broker DB's main file, so it never migrates the
+    schema, touches a consumption flag or creates WAL sidecars. Returns None
+    when the DB or the message is missing, the snapshot cannot be read, or the
+    row is still only in the WAL; the authoritative gate after the full read
+    then decides.
     """
-    from ._db import connect_readonly
+    from ._db import connect_snapshot
 
-    conn = connect_readonly()
-    if conn is None:
-        return None
     try:
-        row = conn.execute("SELECT to_llm, data FROM messages WHERE id = ?", (message_id,)).fetchone()
-    finally:
-        conn.close()
+        conn = connect_snapshot()
+        if conn is None:
+            return None
+        try:
+            row = conn.execute("SELECT to_llm, data FROM messages WHERE id = ?", (message_id,)).fetchone()
+        finally:
+            conn.close()
+    except sqlite3.DatabaseError:  # an unmigrated DB, or a checkpoint racing the unlocked read
+        return None
     if not row:
         return None
     return {"id": message_id, "to": row[0], "data": row[1]}
