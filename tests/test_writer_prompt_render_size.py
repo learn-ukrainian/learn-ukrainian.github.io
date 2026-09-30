@@ -209,6 +209,37 @@ def test_a1_letter_module_writer_prompt_stays_under_ceiling(
     assert _a1_letter_prompt_size() <= WRITER_PROMPT_CEILING_BYTES
 
 
+def test_a1_letter_prompt_bytes_ignore_staged_root(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Two stage roots render the same prompt bytes.
+
+    One root is short. The other is much longer and contains a quote and a
+    backslash, which JSON would escape if that absolute path were serialized.
+    Reads still use the staged files; the manifest records the checkout-relative
+    wiki path.
+    """
+    short_root = tmp_path / "stage-root-short-9335"
+    long_root = tmp_path.joinpath(
+        "n" * 180,
+        "n" * 180,
+        'stage-root-"9335\\',
+        "n" * 180,
+    )
+    expected_wiki_path = '"wiki_path": "wiki/pedagogy/a1/sounds-letters-and-hello.md"'
+    prompts: list[str] = []
+    for root in (short_root, long_root):
+        _pin_a1_letter_prompt_inputs(monkeypatch, root)
+        prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+        prompts.append(prompt)
+        assert "stage-root-" not in prompt
+        assert expected_wiki_path in prompt
+
+    assert prompts[0] == prompts[1]
+    assert len(prompts[0].encode("utf-8")) <= WRITER_PROMPT_CEILING_BYTES
+
+
 def test_a1_letter_prompt_size_ignores_ambient_curriculum(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,

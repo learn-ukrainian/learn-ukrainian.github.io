@@ -136,12 +136,45 @@ _META_SLUG_RE = re.compile(r"^\s*slug\s*:\s*(?P<slug>[-\w]+)\s*$", re.MULTILINE)
 _IPA_RE = re.compile(r"\[(?![SС]\d)(?=[^\]\n]*(?:[:'ʼ’]|[A-Za-z]))[^\]\n]{1,60}\]")
 _WRITTEN_RE = re.compile(r"(?<!\w)(-[\w'’ʼ-]{0,12}ся|-шся|-ться)(?!\w)", re.IGNORECASE)
 _MD_LINK_RE = re.compile(r"\[(?P<title>[^\]]+)\]\((?P<url>[^)]+)\)")
-_BULLET_RESOURCE_RE = re.compile(
-    r"^\s*[-*]\s*(?:(?P<role>[A-Za-zА-ЯІЇЄҐа-яіїєґ-]+)\s*[:—-]\s*)?(?P<body>.+?)\s*$"
-)
+_BULLET_RESOURCE_RE = re.compile(r"^\s*[-*]\s*(?:(?P<role>[A-Za-zА-ЯІЇЄҐа-яіїєґ-]+)\s*[:—-]\s*)?(?P<body>.+?)\s*$")
 _VOCAB_BULLET_RE = re.compile(r"^\s*[-*]\s+(?P<body>.+?)\s*$")
 _VOCAB_PREFIX_STARS_RE = re.compile(r"^(?P<stars>[★☆]{1,8})\s+(?P<body>.+?)$")
 _VOCAB_STARS_RE = re.compile(r"\((?P<stars>[★☆\s]{0,8})\)")
+
+
+def _repository_relative_wiki_path(path: str | Path) -> str:
+    """Path string stored in manifests and copied into writer prompts.
+
+    A checkout article ``wiki/pedagogy/a1/slug.md`` keeps that repository-relative
+    string. Reads may come from a staged copy under ``WIKI_DIR`` (or another
+    tree whose path still contains a ``wiki`` segment); the stored value stays
+    the checkout string, so prompt bytes do not follow the directory length.
+    """
+    raw = Path(path)
+    if not raw.is_absolute():
+        return raw.as_posix()
+
+    resolved = raw.resolve()
+    from wiki.config import PROJECT_ROOT, WIKI_DIR
+
+    try:
+        return resolved.relative_to(Path(PROJECT_ROOT).resolve()).as_posix()
+    except ValueError:
+        pass
+
+    try:
+        relative = resolved.relative_to(Path(WIKI_DIR).resolve())
+    except ValueError:
+        relative = None
+    else:
+        suffix = relative.as_posix()
+        return "wiki" if suffix in {"", "."} else f"wiki/{suffix}"
+
+    parts = resolved.parts
+    for index in range(len(parts) - 1, 0, -1):
+        if parts[index] == "wiki":
+            return Path(*parts[index:]).as_posix()
+    return raw.as_posix()
 
 
 def extract_manifest(wiki_path: str | Path) -> dict[str, Any]:
@@ -153,7 +186,7 @@ def extract_manifest(wiki_path: str | Path) -> dict[str, Any]:
 
     manifest = WikiManifest(
         slug=slug,
-        wiki_path=str(path),
+        wiki_path=_repository_relative_wiki_path(path),
         sequence_steps=_extract_sequence_steps(lines),
         l2_errors=_extract_l2_errors(lines),
         phonetic_rules=_extract_phonetic_rules(lines),
@@ -183,9 +216,7 @@ def validate_manifest(manifest: dict[str, Any]) -> None:
         if not isinstance(resource["title"], str) or not resource["title"].strip():
             raise ValueError(f"external_resources[{index}] requires non-empty title")
         if role != "textbook" and not resource["url"]:
-            raise ValueError(
-                f"external_resources[{index}] role {role!r} requires url"
-            )
+            raise ValueError(f"external_resources[{index}] role {role!r} requires url")
 
 
 def _extract_slug(text: str, path: Path) -> str:
@@ -296,13 +327,7 @@ def _external_resource_from_cells(
     *,
     fallback_role: str | None = None,
 ) -> ExternalResource | None:
-    title_raw = (
-        row.get("title")
-        or row.get("назва")
-        or row.get("ресурс")
-        or row.get("resource")
-        or ""
-    )
+    title_raw = row.get("title") or row.get("назва") or row.get("ресурс") or row.get("resource") or ""
     title_from_link, link_url = _extract_markdown_link(title_raw)
     url = _clean_optional(row.get("url") or row.get("посилання") or link_url)
     role = _normalize_external_role(row.get("role") or row.get("роль") or fallback_role, url=url)
