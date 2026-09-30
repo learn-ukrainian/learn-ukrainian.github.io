@@ -219,7 +219,14 @@ def resolve_and_admit(
         review_seat = name
         if review_dispatch:
             review_seat = COMPAT_TARGETS.get(name.strip().lower(), name) if compat else name
-            review_seat = _retired_successor(review_seat) or review_seat
+            successor = _retired_successor(review_seat)
+            if review_attempt and successor:
+                raise ReviewAdmissionRefused(
+                    "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused: "
+                    f"agent substitution from {review_seat} to {successor} (retired CLI) "
+                    "is not allowed (#8517)"
+                )
+            review_seat = successor or review_seat
         review_model = explicit_model
         if review_dispatch and review_seat != name and review_model is None:
             from .telemetry import _default_model_for
@@ -243,6 +250,7 @@ def resolve_and_admit(
                 attempt=review_attempt,
                 snapshot=snapshot,
                 budget_seat=budget_seat,
+                budget_substitute=fallbacks.get(budget_seat),
             )
             approved.add(selected)
             return selected
@@ -301,6 +309,7 @@ def _resolve_review_target(
     attempt: bool,
     snapshot: Mapping[str, Any] | None,
     budget_seat: str,
+    budget_substitute: str | None = None,
 ) -> tuple[str, str | None]:
     """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
 
@@ -335,9 +344,14 @@ def _resolve_review_target(
             "Ukrainian reviews use --review-profile ukrainian without these flags"
         )
     if attempt and snapshot is not None:
-        raise ReviewAdmissionRefused(
-            "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt substitution is not allowed (#8517)"
-        )
+        if budget_substitute and budget_substitute != budget_seat:
+            detail = (
+                f"review attempt refused: agent substitution from {budget_seat} to {budget_substitute} "
+                "(budget guard) is not allowed"
+            )
+        else:
+            detail = f"review attempt refused for {seat}: budget guard requires substitution; attempt identity is immutable"
+        raise ReviewAdmissionRefused(f"REVIEW_ATTEMPT_IDENTITY_REFUSED: {detail} (#8517)")
     inputs = ResolverInputs(
         author_model=author_model or "",
         review_profile=profile,
@@ -357,10 +371,16 @@ def _resolve_review_target(
             and evaluate_candidate(candidate, inputs, author_family=author_family).status == "eligible"
             for candidate in REVIEW_CANDIDATES.values()
         )
-    if attempt and (snapshot is not None or not eligible):
+    if attempt and not eligible:
+        from .review_mcp import UNSUPPORTED_HARNESS_REASONS
+
+        detail = UNSUPPORTED_HARNESS_REASONS.get(
+            seat,
+            f"requested model {concrete!r} is ineligible for --review-profile {profile}; "
+            "attempt identities cannot be substituted",
+        )
         raise ReviewAdmissionRefused(
-            "REVIEW_ATTEMPT_IDENTITY_REFUSED: requested review attempt identity is ineligible; "
-            "attempt identities cannot be substituted (#8517)"
+            f"REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for {seat}: {detail} (#8517)"
         )
     if eligible and (snapshot is None or not trusted):
         return seat, model

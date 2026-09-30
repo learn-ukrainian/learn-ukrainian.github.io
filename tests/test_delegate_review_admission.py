@@ -264,6 +264,35 @@ def test_review_attempt_refuses_budget_substitution_separately(monkeypatch, caps
     assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
 
 
+
+@pytest.mark.parametrize("fallbacks", [{}, {"codex": "codex"}])
+def test_review_attempt_budget_refusal_without_substitute_names_seat_and_cause(monkeypatch, fallbacks):
+    monkeypatch.setattr("scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: fallbacks)
+    (refusal, target), routing = _admit(
+        _args("--check-budget", "--review-attempt", "attempt.yaml"), monkeypatch
+    )
+    assert target is None and routing.substitution is None
+    assert refusal == (
+        "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused for codex: "
+        "budget guard requires substitution; attempt identity is immutable (#8517)"
+    )
+
+
+def test_retired_review_attempt_refuses_before_route_and_budget_probe(monkeypatch):
+    def fail(*_args, **_kwargs):
+        pytest.fail("retired review attempt must refuse before routing or probing")
+
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
+    with pytest.raises(ReviewAdmissionRefused) as refused:
+        resolve_and_admit(
+            ("gemini",), mode="read-only", review_dispatch=True, review_attempt=True, route=fail
+        )
+    assert str(refused.value) == (
+        "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt refused: "
+        "agent substitution from gemini to agy (retired CLI) is not allowed (#8517)"
+    )
+
+
 def test_review_attempt_with_headroom_keeps_identity(monkeypatch):
     (refusal, target), _ = _admit(
         _args("--check-budget", "--review-attempt", "attempt.yaml"), monkeypatch, _budget(codex="cool")
