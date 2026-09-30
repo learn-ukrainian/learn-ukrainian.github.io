@@ -52,7 +52,7 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 
 ### Build engine
 
-- **R-10 Create, never upgrade.** The engine builds from the plan, the wiki and the MCP.
+- **R-10 Create, never upgrade.** The engine builds from the plan, the evidence pack and the MCP.
 - **R-11 No context poisoning.** Old builds and old plans are never given to the writer or to the
   engine. The arc author may mine old plans for textbook citations only, and re-verifies each one
   through the MCP before using it.
@@ -130,8 +130,8 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 ### Scope and order
 
 - **R-20 Levels.** A1 first, then A2, B1, B2, using the same schema, engine and workflow.
-- **R-21 Wiki and workflow.** Plans, the wiki and the build workflow are all improved as part of
-  this work, not only the prompts.
+- **R-21 Evidence packs and workflow.** Plans, evidence packs and the build workflow are all
+  improved as part of this work, not only the prompts.
 
 ### Pipeline (accepted by the operator 2026-09-21)
 
@@ -144,8 +144,7 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   point, verbatim textbook quotes with chunk ids, model exercises from the textbooks, example
   sentences, known learner errors, verified word records with form-grain stress, videos. The
   reasoning the old wiki carried (why this order, what English speakers get wrong) lives in the
-  plan as a short rationale per lesson. A human-readable wiki page may be rendered from the pack;
-  it is not an input.
+  plan as a short rationale per lesson.
 - **R-26 The writer does not search.** A lesson writer receives that lesson's plan entry, that
   lesson's evidence, and the learner state "completed lessons 1..n−1". The MCP is used after the
   draft, for verification.
@@ -208,7 +207,7 @@ each has a proposed default that applies unless corrected.
 | Q7 | Should vocabulary cards link to the Atlas dictionary entry for the word? | **Operator:** yes, and a missing entry is generated through the Atlas pipeline — see R-34. |
 | Q8 | Should lessons feed spaced review (practice decks) across lessons and modules? | **Operator:** not later — decks are planned and built with the module — see R-33. |
 | Q9 | Audio: is recorded or synthesized pronunciation in scope for A1? | Out of scope here; videos carry pronunciation. Revisit after A1. |
-| Q10 | What does "better wiki" mean concretely? | One wiki packet per module that the plan cites, regenerated from the corpus with the same verification rules as plans. To be specified in its own child. |
+| Q10 | What does "better wiki" mean concretely? | **Operator:** no — no wiki is generated for core modules; the evidence pack replaces the wiki as the model's research input. |
 | Q11 | When A2 is rebuilt, is the current A2 archived like A1 (`/a2-v1/`)? | Yes, same pattern. |
 
 ## 5. What "done" means for this document

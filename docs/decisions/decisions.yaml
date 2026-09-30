@@ -333,3 +333,37 @@ decisions:
         rejected_because: "The owner must re-fire or repair packaging the same day rather than abandon delivery."
     superseded_by: null
     depends_on: []
+
+  - id: dec-015
+    status: active
+    date: 2026-09-30
+    expires: 2026-12-29
+    scope: pipeline
+    title: "Evidence pack replaces wiki as LLM research input for core rebuild"
+    reasoning: >-
+      For the core A1–B2 rebuild, the per-module evidence pack is the model's
+      research input and replaces the wiki (confirms R-25/R-26 of 2026-09-21).
+      The wiki is an LLM-facing artifact, never a human-facing page; lessons
+      are the human-facing product. No wiki is generated for core modules
+      (Q10 resolved as 'no'). The existing wiki remains the LLM input only
+      for tracks still on the V7 pipeline until each migrates; no wiki
+      content is deleted. The search method for building packs is under
+      evaluation in #9233 (exact-form FTS5 vs lemma-aware FTS vs embedder +
+      reranker; the model choice is the operator's). Until that decision,
+      packs are built with the keyword (FTS5) sources tools. #9279 fixes
+      search_sources ranking when no dense index exists.
+    evidence: >-
+      Operator decision 2026-09-30; #9278; #7994; #9233; R-25/R-26;
+      docs/decisions/2026-09-30-core-rebuild-pack-replaces-wiki.md
+    alternatives:
+      - option: "Generate per-module wiki packets for core (Q10 yes)"
+        rejected_because: >-
+          Evidence packs already supply structured corpus-grounded evidence
+          directly to the writer; generating an intermediate wiki for core
+          is redundant and duplicates pack data.
+      - option: "Render human-facing wiki pages from evidence packs"
+        rejected_because: >-
+          The wiki is an LLM-facing artifact, never a human-facing page.
+          The lessons are the human-facing product.
+    superseded_by: null
+    depends_on: []
