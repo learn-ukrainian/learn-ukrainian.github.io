@@ -933,6 +933,13 @@ and covers both the unit stop and the per-process pidfd path. A unit stop cannot
 atomic with the scan; closing the window needs a privileged helper inside the worker's own
 scope.
 
+**Bounded-worker advisory envelope (#9275):** a dispatch that launches `gpt-6-luna`, or
+`gemini-3.8-flash-high` without a Ukrainian authoring/review classification, needs
+`--advisory-task <id>` naming a finished `gpt-6.1-sol` advisor task (`--advisory-role
+bounded_advisory_envelope --advisory-binding <digest>`, digest from the worker command with
+`--print-advisory-binding`). See `docs/agent-runtime-guide.md` § Bounded workers need an
+advisory envelope.
+
 **Auto-finalize owned paths (#8991):** auto-finalize commits only under the task's explicit
 `--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
 never derived from `--research-owned-path`, which classifies research context. Claims are
@@ -961,8 +968,11 @@ committed (`no_changes_under_owned_paths`).
   `git fetch --no-tags --prune origin` per repository, so remote branches are current; if
   that fetch fails, no record of that repository is settled (class D, `fetch_failed`). Settled records become `done`,
   `no_deliverable` or `failed` and carry a `settled_by` receipt. `done` needs a merged PR
-  that carries a recorded commit. A PR that only reuses the branch name leaves the record
-  in class D. Classes A, B and D are reported and never changed. They cover a branch or
+  that carries a recorded commit. A record with a completion gate beyond delivery (an exit
+  scan that did not clear, a review verdict, an advisory envelope or content exemption) is
+  never settled `done`: it settles `failed` with `recovery_requires_rerun` (or the failure it
+  already carries) for the driver to re-run or finalize by hand. A PR that only reuses the
+  branch name leaves the record in class D. Classes A, B and D are reported and never changed. They cover a branch or
   commit still on origin, a local branch or ref still holding the work (even renamed), a
   dirty worktree, and commits with no recorded commit id.
 - `archive` moves terminal records older than 14 days, with their `.result` and `.snapshots`

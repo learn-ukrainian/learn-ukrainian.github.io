@@ -79,7 +79,22 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
-        "kimi_content_refusal": str | absent        # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "advisory_envelope": {requirement, advisory_args, advisory_args_sha256, prompt_sha256,
+                              admitted_execution, research_block, repo_root, advisor_task_id, advisor_model,
+                              advisor_run_nonce, result_path, result_sha256, envelope_sha256,
+                              dispatch_args_sha256, owned_paths, max_changed_files, max_non_test_loc}
+                             | absent,  # bounded-worker admission; the worker re-verifies it (#9275)
+        "advisory_prompt_sha256": str | absent,  # the bounded worker's prompt as checked and submitted
+        "advisory_exemption": {model_id, task_family, review_profile, mode, classified_paths} | absent,
+                              # a Gemini Flash launch classified Ukrainian; the worker re-classifies it
+        "advisory_ceiling_check": {measured, changed_files, non_test_loc, max_*, exceeded | error} | absent,
+        "advisory_exempt_change_check": {measured, changed_paths, ignored_residue, problems | error} | absent,
+        "advisory_role": "bounded_advisory_envelope" | absent,  # the advisor run that issues an envelope (#9275)
+        "advisory_route": str | absent,
+        "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
+        "advisory_seal": {result_sha256, envelope_sha256, advisor_model, run_nonce} | absent,
+                              # advisor runs: a consistency checksum of the result as its worker wrote it
     }
 
 Design notes:
@@ -161,6 +176,7 @@ _local_repo_root = Path(__file__).resolve().parents[1]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.agent_runtime import bounded_advisory
 from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
@@ -308,6 +324,62 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+# Fields excluded from the advisory binding digest on top of the record hash's
+# exclusions (#9275): the envelope reference itself, which the advisor cannot
+# know when it issues the envelope, and the flag that prints the digest.
+ADVISORY_BINDING_EXCLUDED_FIELDS = frozenset({"advisory_task", "print_advisory_binding"})
+
+
+def advisory_args_payload(args: argparse.Namespace) -> dict[str, Any]:
+    """The arguments ``advisory_args_sha256`` hashes: ``dispatch_args_sha256``'s, without the envelope reference."""
+    return {
+        key: value
+        for key, value in vars(args).items()
+        if key not in DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
+        and key not in _DISPATCH_ARGS_HASH_ARGPARSE_KEYS
+        and key not in ADVISORY_BINDING_EXCLUDED_FIELDS
+    }
+
+
+def advisory_args_sha256(args: argparse.Namespace) -> str:
+    """``dispatch_args_sha256`` without the envelope reference: the argument half of the advisory binding."""
+    return bounded_advisory.canonical_sha256(advisory_args_payload(args))
+
+
+def advisory_binding(args_sha256: str, prompt_sha256: str | None) -> str:
+    """The digest an advisory envelope binds to: the dispatch arguments and the prompt text they carry.
+
+    Every parsed ``dispatch`` argument except the envelope reference — task id,
+    prompt, owned paths, mode, model, research flags — and the SHA-256 of the
+    prompt text (a ``--prompt-file`` is bound by content, not only by path), so
+    an envelope issued for one dispatch admits no other.
+    """
+    return bounded_advisory.binding_digest(args_sha256, prompt_sha256)
+
+
+def _binding_prompt_sha256(args: argparse.Namespace, *, read_stdin: bool) -> str | None:
+    """SHA-256 of the dispatch's prompt text for the advisory binding; None for an unread stdin prompt.
+
+    Raises ``OSError`` when a ``--prompt-file`` cannot be read.
+    """
+    if getattr(args, "prompt_file", None):
+        text = Path(args.prompt_file).read_text(encoding="utf-8")
+    elif getattr(args, "prompt", None) == "-":
+        if not read_stdin:
+            return None
+        text = sys.stdin.read()
+    elif getattr(args, "prompt", None) is not None:
+        text = str(args.prompt)
+    else:
+        return None
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def advisory_binding_sha256(args: argparse.Namespace, *, read_stdin: bool = False) -> str:
+    """The advisory binding of a parsed dispatch (what ``--print-advisory-binding`` prints)."""
+    return advisory_binding(advisory_args_sha256(args), _binding_prompt_sha256(args, read_stdin=read_stdin))
 
 
 def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
@@ -819,6 +891,9 @@ def _review_task_failure_reason(state: dict[str, Any]) -> str:
     """Give every failed verdict-required review a stable, queryable cause."""
     if state.get("review_verdict_failure"):
         return state["review_verdict_failure"]
+    # A typed cause another gate already set (#9275) is kept, never renamed.
+    if isinstance(state.get("failure_reason"), str) and state["failure_reason"]:
+        return state["failure_reason"]
     if state.get("read_only_mutation_paths"):
         return "read_only_checkout_mutation"
     if state.get("read_only_checkout_snapshot_error"):
@@ -5489,6 +5564,333 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
     return None
 
 
+def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: Mapping[str, Any]) -> dict[str, Any]:
+    """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
+
+    Changes run from the merge base with the base branch to the working tree:
+    the worker's commits plus its uncommitted and untracked files.
+    """
+    try:
+        max_files = int(envelope["max_changed_files"])
+        max_loc = int(envelope["max_non_test_loc"])
+    except (KeyError, TypeError, ValueError):
+        return {"measured": False, "error": "the task record's envelope has no ceilings"}
+    numstat, error = _advisory_worker_diff(worktree, base_branch, ["--numstat", "-z", "--no-renames"])
+    if numstat is None:
+        return {"measured": False, "error": error}
+    try:
+        entries = bounded_advisory.parse_numstat_z(numstat)
+    except ValueError as exc:
+        return {"measured": False, "error": str(exc)}
+    return bounded_advisory.ceiling_verdict(entries, max_changed_files=max_files, max_non_test_loc=max_loc)
+
+
+def _advisory_worker_diff(
+    worktree: Path | None, base_branch: str, diff_args: Sequence[str], *, committed_only: bool = False
+) -> tuple[str | None, str | None]:
+    """``(git diff <diff_args> <merge-base>, None)`` over the worker's changes, or ``(None, why)`` when unreadable.
+
+    Changes run from the merge base with the base branch to the working tree:
+    the worker's commits plus its uncommitted and untracked files; with
+    ``committed_only``, to ``HEAD``: its commits alone.
+    """
+    if worktree is None or not worktree.is_dir():
+        return None, "no worktree to measure"
+    try:
+        base_proc = subprocess.run(
+            ["git", "merge-base", _commit_count_base_ref(worktree, base_branch), "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return None, f"merge-base: {exc}"
+    merge_base = (base_proc.stdout or "").strip()
+    if base_proc.returncode != 0 or not merge_base:
+        return None, "merge-base with the base branch is unknown"
+    if committed_only:
+        try:
+            proc = subprocess.run(
+                ["git", "diff", *diff_args, merge_base, "HEAD", "--"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return None, f"the worker's committed diff could not be read: {exc}"
+        return (proc.stdout, None) if proc.returncode == 0 else (None, "the worker's committed diff could not be read")
+    output = _worktree_diff_output(worktree, [*diff_args, merge_base, "--"])
+    if output is None:
+        return None, "the worker's diff could not be read"
+    return output, None
+
+
+# #9275: the record keys the completion gates write their measurement to.
+_ADVISORY_GATE_KEYS = ("advisory_ceiling_check", "advisory_exempt_change_check")
+_INTERRUPTED_BEFORE_COMPLETION_GATES = "interrupted before the completion gates ran"
+
+
+def _advisory_completion_gate(
+    record: Mapping[str, Any], worktree: Path | None
+) -> tuple[str, dict[str, Any], str | None, str] | None:
+    """The #9275 completion gate a write task's record calls for, run on its changes; None when neither applies.
+
+    ``(record key, check, failure code or None, detail)``: the envelope
+    ceilings of a bounded worker, or the changed-path classification of a
+    Ukrainian content exemption. Unmeasurable changes fail.
+    """
+    base_branch = str(record.get("worktree_base") or "main")
+    envelope = record.get("advisory_envelope")
+    if isinstance(envelope, dict):
+        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope)
+        failure = (
+            bounded_advisory.CEILING_UNMEASURED
+            if not ceiling.get("measured")
+            else (bounded_advisory.CEILING_EXCEEDED if ceiling.get("exceeded") else None)
+        )
+        detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
+        return "advisory_ceiling_check", ceiling, failure, detail
+    if isinstance(record.get("advisory_exemption"), dict):
+        check = _exempt_change_check(worktree, base_branch)
+        failure = (
+            bounded_advisory.EXEMPT_CHANGES_UNMEASURED
+            if not check.get("measured")
+            else (bounded_advisory.EXEMPT_CODE_CHANGE if check.get("problems") else None)
+        )
+        detail = "; ".join(check.get("problems") or []) or str(check.get("error") or "unmeasured")
+        return "advisory_exempt_change_check", check, failure, detail
+    return None
+
+
+# #9275: the single definition of the completion gates a task record calls for.
+# The worker's terminal settle runs them, and so does the ask-* review wrapper;
+# success needs every applicable gate to pass. Recovery paths (stale-record
+# settlement, rate-limit reclassification) apply :func:`recovery_requires_rerun`.
+COMPLETION_GATE_BACKGROUND_LEFTOVERS = "background_leftovers"
+COMPLETION_GATE_DELIVERY = "delivery"
+COMPLETION_GATE_REVIEW_VERDICT = "review_verdict"
+COMPLETION_GATE_ADVISORY_CEILING = "advisory_ceiling"
+COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE = "advisory_exempt_change"
+# Recovery's pseudo-gate: a failure the record already carries is never overwritten.
+COMPLETION_GATE_RECORDED_FAILURE = "recorded_failure"
+# The delivery gate reads a zero-commit run's response; it cannot run when the saved response is gone or replaced.
+COMPLETION_GATE_RESPONSE_UNAVAILABLE = "completion_gate_response_unavailable"
+# Operator decision 2026-09-30 (option A): recovery never settles a record with a
+# completion gate beyond delivery ``done``; it settles it ``failed`` with this cause.
+RECOVERY_REQUIRES_RERUN = "recovery_requires_rerun"
+# Record fields that hold a failure the worker already found.
+_RECORDED_FAILURE_FIELDS = (
+    "failure_reason",
+    "review_verdict_failure",
+    "no_deliverable_reason",
+    "kimi_content_refusal",
+    "agy_oauth_link_error",
+    "read_only_mutation_paths",
+)
+
+
+@dataclass(frozen=True)
+class CompletionGateResult:
+    """One completion gate's verdict on a task record.
+
+    ``failure`` is the typed cause (None when the gate passed), ``status`` the
+    terminal status a failure settles, and ``record_key``/``check`` the
+    measurement the gate writes to the record, when it has one.
+    """
+
+    gate: str
+    failure: str | None
+    detail: str = ""
+    status: str = "failed"
+    record_key: str | None = None
+    check: dict[str, Any] | None = None
+
+
+def applicable_completion_gates(record: Mapping[str, Any]) -> tuple[str, ...]:
+    """Every completion gate the record calls for, in the order the worker runs them.
+
+    An exit scan that did not rule out live background jobs (``leftovers_scan``
+    other than clear) leaves the run unconfirmed; delivery binds every
+    write-capable dispatch; the review verdict binds an opted-in review
+    (``require_review_verdict``); a write-capable bounded worker has its envelope
+    ceilings checked, else a content exemption its changed paths.
+    """
+    write = record.get("mode") in _WRITE_CAPABLE_MODES
+    gates: list[str] = []
+    if record.get("leftovers_scan") not in (None, worker_leftovers.SCAN_CLEAR) or record.get("incomplete_run_reason"):
+        gates.append(COMPLETION_GATE_BACKGROUND_LEFTOVERS)
+    if write:
+        gates.append(COMPLETION_GATE_DELIVERY)
+    if record.get("require_review_verdict"):
+        gates.append(COMPLETION_GATE_REVIEW_VERDICT)
+    if write and isinstance(record.get("advisory_envelope"), dict):
+        gates.append(COMPLETION_GATE_ADVISORY_CEILING)
+    elif write and isinstance(record.get("advisory_exemption"), dict):
+        gates.append(COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE)
+    return tuple(gates)
+
+
+def run_completion_gate(
+    gate: str,
+    record: Mapping[str, Any],
+    *,
+    response: str | None,
+    commits_ahead: int | None,
+    worktree: Path | None,
+) -> CompletionGateResult:
+    """Run one completion gate on the worker's response, commit count and tree.
+
+    ``response`` None means the saved response is unavailable and ``worktree``
+    None that the worker's tree is gone: a gate that needs either fails typed,
+    never passes.
+    """
+    if gate == COMPLETION_GATE_BACKGROUND_LEFTOVERS:
+        reason = record.get("incomplete_run_reason") or worker_leftovers.SCAN_UNKNOWN_REASON
+        return CompletionGateResult(gate, str(reason), str(reason), status="needs_finalize")
+    if gate == COMPLETION_GATE_DELIVERY:
+        if response is None and commits_ahead == 0:
+            # Only a zero-commit run reads the response (its no_change declaration).
+            return CompletionGateResult(gate, COMPLETION_GATE_RESPONSE_UNAVAILABLE, "saved response unavailable")
+        reason = _delivery_failure_reason(
+            response or "", _parse_delivery_declaration(response or ""), commits_ahead=commits_ahead
+        )
+        return CompletionGateResult(gate, reason, reason or "", status=_NO_DELIVERABLE_STATUS)
+    if gate == COMPLETION_GATE_REVIEW_VERDICT:
+        reason = _review_verdict_failure_reason(response or "")
+        return CompletionGateResult(gate, reason, reason or "")
+    if gate in (COMPLETION_GATE_ADVISORY_CEILING, COMPLETION_GATE_ADVISORY_EXEMPT_CHANGE):
+        advisory = _advisory_completion_gate(record, worktree)
+        if advisory is None:
+            raise ValueError(f"record does not call for completion gate {gate!r}")
+        record_key, check, failure, detail = advisory
+        return CompletionGateResult(gate, failure, detail if failure else "", record_key=record_key, check=check)
+    raise ValueError(f"unknown completion gate {gate!r}")
+
+
+def recorded_completion_failure(record: Mapping[str, Any]) -> CompletionGateResult | None:
+    """A failure the record already carries, as a result with its typed cause; None when it carries none."""
+    for field in _RECORDED_FAILURE_FIELDS:
+        value = record.get(field)
+        if not value:
+            continue
+        cause = value if isinstance(value, str) else field
+        status = _NO_DELIVERABLE_STATUS if field == "no_deliverable_reason" else "failed"
+        return CompletionGateResult(COMPLETION_GATE_RECORDED_FAILURE, cause, f"{field}: {cause}", status=status)
+    return None
+
+
+def saved_task_response(record: Mapping[str, Any], record_path: Path | None = None) -> str | None:
+    """The worker's response as the record saved it, or None when it is gone or was replaced.
+
+    Recovery's delivery gate reads it for a zero-commit run. The ``.result`` sidecar next to the record is read first (it moves with the
+    record into the archive), then ``result_file``. A text whose length is not
+    the recorded ``response_chars`` was replaced after the worker finished. A
+    record with an empty response wrote no result file: that response is ``""``.
+    """
+    chars = record.get("response_chars")
+    known_chars = isinstance(chars, int) and not isinstance(chars, bool)
+    candidates: list[Path] = []
+    if record_path is not None:
+        candidates.append(record_path.with_suffix(".result"))
+    result_file = record.get("result_file")
+    if isinstance(result_file, str) and result_file:
+        candidates.append(Path(result_file))
+    for path in candidates:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (OSError, UnicodeDecodeError):
+            continue
+        return text if not known_chars or len(text) == chars else None
+    if known_chars and chars == 0 and not result_file:
+        return ""
+    return None
+
+
+def recovery_requires_rerun(record: Mapping[str, Any]) -> CompletionGateResult | None:
+    """Recovery's refusal for a record with any completion gate beyond delivery; None for a delivery-only record.
+
+    Operator decision 2026-09-30 (option A): recovery runs after the worker is
+    gone, so it never re-measures a tree or reconstructs a response to settle
+    such a record ``done``. It settles it ``failed`` with :data:`RECOVERY_REQUIRES_RERUN`,
+    or with the failure the record already carries, for the driver to re-run
+    or finalize by hand.
+    """
+    gated = [gate for gate in applicable_completion_gates(record) if gate != COMPLETION_GATE_DELIVERY]
+    if not gated:
+        return None
+    recorded = recorded_completion_failure(record)
+    cause = recorded.failure if recorded is not None else RECOVERY_REQUIRES_RERUN
+    detail = f"completion gates {', '.join(gated)} run only in the worker; re-run the task or finalize it by hand"
+    return CompletionGateResult(gated[0], cause, detail)
+
+
+def completion_gate_recovery_failure(
+    record: Mapping[str, Any], *, response: str | None, commits_ahead: int | None
+) -> CompletionGateResult | None:
+    """The reason recovery may not report this record ``done``; None when it may.
+
+    A gated record is refused by :func:`recovery_requires_rerun`; a delivery-only
+    record keeps a failure it already carries, else its delivery gate runs on the
+    saved ``response`` and the ``commits_ahead`` evidence the caller holds now.
+    """
+    refusal = recovery_requires_rerun(record)
+    if refusal is not None:
+        return refusal
+    recorded = recorded_completion_failure(record)
+    if recorded is not None:
+        return recorded
+    return first_completion_gate_failure(record, response=response, commits_ahead=commits_ahead, worktree=None)
+
+
+def first_completion_gate_failure(
+    record: Mapping[str, Any], *, response: str | None, commits_ahead: int | None, worktree: Path | None
+) -> CompletionGateResult | None:
+    """Run every gate in :func:`applicable_completion_gates` in order; the first failure, or None when all pass."""
+    for gate in applicable_completion_gates(record):
+        result = run_completion_gate(gate, record, response=response, commits_ahead=commits_ahead, worktree=worktree)
+        if result.failure is not None:
+            return result
+    return None
+
+
+def _advisory_completion_gate_fails(record: Mapping[str, Any], worktree: Path) -> bool:
+    """True when the record's #9275 completion gate already fails, so auto-finalize must not commit or open a PR."""
+    gate = _advisory_completion_gate(record, worktree)
+    return gate is not None and gate[2] is not None
+
+
+def _exempt_change_check(worktree: Path | None, base_branch: str) -> dict[str, Any]:
+    """Classify every path a content-exempt worker changed (#9275); unmeasurable is reported as such.
+
+    Every committed path is classified, and every uncommitted one except the
+    scratch residue auto-finalize never publishes (``_is_disposable_auto_finalize_path``),
+    which is listed as ``ignored_residue``.
+    """
+    name_args = ["--name-only", "-z", "--no-renames"]
+    names, error = _advisory_worker_diff(worktree, base_branch, name_args)
+    committed, committed_error = _advisory_worker_diff(worktree, base_branch, name_args, committed_only=True)
+    if names is None or committed is None:
+        return {"measured": False, "error": error or committed_error}
+    assert worktree is not None
+    committed_paths = {name for name in committed.split("\0") if name}
+    all_paths = {name for name in names.split("\0") if name} | committed_paths
+    residue = sorted(
+        path for path in all_paths if path not in committed_paths and _is_disposable_auto_finalize_path(path)
+    )
+    changed = sorted(all_paths - set(residue))
+    try:
+        problems = bounded_advisory.exempt_change_problems(changed, worktree)
+    except RuntimeError as exc:
+        return {"measured": False, "error": str(exc)}
+    return {"measured": True, "changed_paths": changed, "ignored_residue": residue, "problems": problems}
+
+
 def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
     """Additions and deletions that could be one move across the owned-path boundary.
 
@@ -7541,6 +7943,76 @@ def _render_research_prompt_block(pointers: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+_RESEARCH_POINTER_LINE = re.compile(r"- ([a-z0-9]+(?:-[a-z0-9]+)*) \[([a-z_-]+)\] content_hash=([A-Za-z0-9:]+)")
+
+
+def _recorded_research_block(block: object) -> str:
+    """A recorded research block, when it is exactly a rendering of research pointers (#9275).
+
+    The bounded worker rebuilds its expected prompt with the research block the
+    dispatcher recorded; only a block that re-renders from its own pointer
+    lines is a permitted dispatcher block. Raises ``AdvisoryRefused`` otherwise.
+    """
+    if block in (None, ""):
+        return ""
+    text = str(block)
+    pointers = [
+        {"id": match.group(1), "state": match.group(2), "content_hash": match.group(3)}
+        for line in text.splitlines()
+        if (match := _RESEARCH_POINTER_LINE.fullmatch(line))
+    ]
+    if not pointers or _render_research_prompt_block(pointers) != text:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.ADMISSION_INVALID, "the recorded research block is not a rendering of research pointers"
+        )
+    return text
+
+
+def _compose_dispatch_prompt(
+    base: str,
+    *,
+    worktree_path: Path | None,
+    mode: str,
+    sparse_telemetry: dict[str, Any] | None,
+    delegate_commits: bool,
+    research_block: str,
+    advisory_block: str,
+    advisory_block_kind: str | None,
+    rules_seat: str | None,
+    blocks: list[str] | None = None,
+) -> str:
+    """The prompt a worker receives: ``base`` (the brief and any lifecycle block) inside the dispatcher blocks.
+
+    In prompt order: the rules core, the worktree block, ``base``, the research
+    pointers and the advisory block. ``blocks``, when given, gets the kinds
+    added, in prompt order. The bounded worker rebuilds its expected prompt
+    with this function (#9275), so the two cannot drift apart.
+    """
+    prompt = _augment_prompt_with_worktree(
+        base,
+        worktree_path,
+        mode=mode,
+        sparse_telemetry=sparse_telemetry,
+        delegate_commits=delegate_commits,
+    )
+    if worktree_path is not None and blocks is not None:
+        blocks.insert(0, "worktree")
+    if research_block and blocks is not None:
+        blocks.append("research")
+    prompt = prompt + research_block
+    if advisory_block_kind is not None:
+        if blocks is not None:
+            blocks.append(advisory_block_kind)
+        prompt = prompt + advisory_block
+    # Every worker and review seat starts with the rules core, read from this checkout.
+    cored_prompt = rules_core.with_core(prompt, rules_seat)
+    if cored_prompt != prompt:
+        if blocks is not None:
+            blocks.insert(0, "rules_core")
+        prompt = cored_prompt
+    return prompt
+
+
 def _with_optional_research_state(state: dict[str, Any], research_state: dict[str, Any] | None) -> dict[str, Any]:
     """Add ``"research"`` to ``state`` only when ``research_state`` is non-``None``.
 
@@ -7860,6 +8332,33 @@ def _run_worker(
         return 1
     # The worker runs the admitted seat and model; nothing resolves them again.
     agent, model = worker_target.recipient, worker_target.model
+    # #9275: a bounded model runs only with the parent's advisory admission in
+    # the task record, re-verified here on the launch values it runs; nothing
+    # reaches the provider without it.
+    advisory_execution = {
+        "effort": effort,
+        "hard_timeout": hard_timeout,
+        "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
+        "max_budget_usd": max_budget_usd,
+        "provider": provider,
+        "harness": harness,
+        "finalize_open_pr": finalize_open_pr,
+    }
+    advisory_refusal = _advisory_worker_refusal(
+        task_id,
+        agent=agent,
+        model=model,
+        mode=mode,
+        cwd=Path(cwd_str),
+        execution=advisory_execution,
+        prompt=prompt,
+        runtime_tmp_root=runtime_tmp_root,
+        runtime_tmp_namespace_root=runtime_tmp_namespace_root,
+    )
+    if advisory_refusal:
+        print(f"❌ {advisory_refusal}", file=sys.stderr)
+        return 1
     from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
@@ -7974,11 +8473,20 @@ def _run_worker(
     no_deliverable = False
     no_deliverable_reason: str | None = None
     pre_spawn_failure = False
+    # #9275: the digest of the prompt checked and submitted at the provider
+    # handoff, or the typed code that refused it there.
+    advisory_prompt_sha256: str | None = None
+    advisory_handoff_refusal: str | None = None
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     leftovers_scan: worker_leftovers.ExitScan | None = None
     leftovers_unconfirmed = False
     telemetry_settled = False
+    # #9275: set only once every applicable completion gate (delivery, review
+    # verdict, advisory ceiling or exemption) has run on the current tree and
+    # the outcome is final. Before that the interrupt fallback never persists
+    # ``done``: an interrupted gate is not a passed gate.
+    completion_gates_settled = False
     rescue_status: str | None = None
     kimi_worker = is_kimi_seat(agent, model=model)
     kimi_content_refusal: str | None = None
@@ -8086,13 +8594,18 @@ def _run_worker(
 
                 verify_review_attempt_paths(mcp_config_path)
 
-            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[CURSOR_AUTO_ADMISSION_STATE_KEY].get(
-                "admitted"
-            ):
+            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[
+                CURSOR_AUTO_ADMISSION_STATE_KEY
+            ].get("admitted"):
                 tool_config[CURSOR_AUTO_ADMITTED_KEY] = True
             if is_kimi_seat(agent, model=model):
                 # The runner and the adapters run the same gate on these paths and this tree.
                 tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
+            # #9275: the provider handoff. The admission is re-verified on the
+            # exact prompt object submitted below, after every transformation.
+            advisory_prompt_sha256 = _verify_bounded_worker(
+                task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=advisory_execution, prompt=prompt
+            )
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -8156,6 +8669,13 @@ def _run_worker(
         except AgentRuntimeError as exc:
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except bounded_advisory.AdvisoryRefused as exc:
+            pre_spawn_failure = True
+            advisory_handoff_refusal = exc.code
+            stderr_excerpt = f"worker refused at the provider handoff: {exc}"[:500]
+            returncode_reason = (
+                "bounded model failed its advisory admission at the provider handoff; provider not started"
+            )
         except ValueError as exc:
             pre_spawn_failure = True
             stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
@@ -8222,8 +8742,15 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        # #9275: gate evidence is this run's measurement, never an earlier record's.
+        for gate_key in _ADVISORY_GATE_KEYS:
+            final_state.pop(gate_key, None)
         final_state["require_review_verdict"] = require_review_verdict
         final_state["review_verdict_failure"] = None
+        if advisory_prompt_sha256 is not None:
+            final_state["advisory_prompt_sha256"] = advisory_prompt_sha256
+        if advisory_handoff_refusal is not None:
+            final_state["failure_reason"] = advisory_handoff_refusal
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
 
@@ -8309,10 +8836,16 @@ def _run_worker(
         if response:
             result_path = state_path.with_suffix(".result")
             try:
-                result_path.write_text(response)
+                result_path.write_text(response, encoding="utf-8")
                 result_file = str(result_path)
             except OSError:
                 result_file = None
+            # #9275: an advisor's result is sealed as written, with the model this
+            # worker ran, so admission refuses a result replaced after finish.
+            if result_file is not None and final_state.get("advisory_role") is not None:
+                final_state[bounded_advisory.SEAL_FIELD] = bounded_advisory.seal_advisor_result(
+                    response, model=model, run_nonce=final_state.get("run_nonce")
+                )
 
         # Fix 5 (#1476 AC 5): dispatch-finish telemetry — record whether the
         # worktree exited dirty so follow-up reviewers can see at a glance
@@ -8418,6 +8951,7 @@ def _run_worker(
                     and (mode == "danger" or kimi_worker)
                     and kimi_content_refusal is None
                     and not run_incomplete
+                    and not _advisory_completion_gate_fails(final_state, Path(worktree_path))
                 ):
                     if kimi_worker:
                         # The content check passed and the worker has exited: take the
@@ -8479,21 +9013,7 @@ def _run_worker(
         # ``DELIVERABLE:`` line is honoured as an optional positive signal.
         # Read-only tasks are excluded: their deliverable may be analysis or
         # an external side effect such as a posted review comment.
-        if (
-            mode in _WRITE_CAPABLE_MODES
-            and final_status == "done"
-            and returncode == 0
-            and not needs_finalize
-            and no_deliverable_reason is None
-        ):
-            delivery_declaration = _parse_delivery_declaration(response)
-            no_deliverable_reason = _delivery_failure_reason(
-                response,
-                delivery_declaration,
-                commits_ahead=commits_ahead,
-            )
-            no_deliverable = no_deliverable_reason is not None
-
+        #
         # A review-typed dispatch (#8421) that settled ``done`` must actually
         # state a verdict. A reviewer that backgrounds its work and replies
         # with a promise to keep waiting exits 0 with an intent-only body; the
@@ -8501,19 +9021,50 @@ def _run_worker(
         # without this gate the false ``done`` reported success to ask-* review
         # drivers. Opt-in via ``--require-review-verdict`` (the ask-* review
         # wrapper only) — ordinary asks and implement dispatches are unchanged.
-        if (
-            require_review_verdict
-            and final_status == "done"
-            and returncode == 0
-            and not needs_finalize
-            and no_deliverable_reason is None
-        ):
-            review_verdict_failure = _review_verdict_failure_reason(response)
-            if review_verdict_failure is not None:
-                final_state["review_verdict_failure"] = review_verdict_failure
+        #
+        # #9275: a bounded worker's envelope ceilings, and a Ukrainian content
+        # exemption's changed paths, are checked on what it changed; a breach, or
+        # changes that cannot be measured, is a typed failure, never done.
+        #
+        # Which gates apply is one definition (``applicable_completion_gates``),
+        # shared with every recovery path that can report ``done``.
+        gate_record = {**final_state, "mode": mode, "require_review_verdict": require_review_verdict}
+        for gate in applicable_completion_gates(gate_record):
+            if final_status != "done":
+                break
+            if gate == COMPLETION_GATE_BACKGROUND_LEFTOVERS:
+                continue  # the exit scan above already left this run needs_finalize
+            if gate in (COMPLETION_GATE_DELIVERY, COMPLETION_GATE_REVIEW_VERDICT) and (
+                returncode != 0 or needs_finalize or no_deliverable_reason is not None
+            ):
+                continue
+            gate_result = run_completion_gate(
+                gate,
+                gate_record,
+                response=response,
+                commits_ahead=commits_ahead,
+                worktree=Path(worktree_path) if worktree_path else None,
+            )
+            if gate_result.record_key is not None:
+                final_state[gate_result.record_key] = gate_result.check
+            if gate == COMPLETION_GATE_DELIVERY:
+                delivery_declaration = _parse_delivery_declaration(response)
+                no_deliverable_reason = gate_result.failure
+                no_deliverable = no_deliverable_reason is not None
+            elif gate_result.failure is None:
+                continue
+            elif gate == COMPLETION_GATE_REVIEW_VERDICT:
+                final_state["review_verdict_failure"] = gate_result.failure
                 final_status = "failed"
                 ok_outcome = False
-                stderr_excerpt = review_verdict_failure
+                stderr_excerpt = gate_result.failure
+            else:
+                final_state["failure_reason"] = gate_result.failure
+                final_status = "failed"
+                ok_outcome = False
+                needs_finalize = False
+                message = f"{gate_result.failure}: {gate_result.detail}"
+                stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
 
         if pre_spawn_failure:
             needs_finalize = False
@@ -8531,6 +9082,9 @@ def _run_worker(
         elif no_deliverable:
             final_status = _NO_DELIVERABLE_STATUS
             ok_outcome = False
+        # Every completion gate has run and the outcome is final: from here an
+        # interrupt persists it with its gate evidence, as the checkpoint would.
+        completion_gates_settled = True
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
         if leftovers_scan is not None and leftovers_scan.reason and final_status == "needs_finalize":
@@ -8613,6 +9167,16 @@ def _run_worker(
                 ),
                 returncode,
             )
+            interrupted_gate_error: str | None = None
+            if interrupted_status == "done" and not completion_gates_settled:
+                # #9275: success needs every applicable completion gate run on the
+                # current tree. A write dispatch interrupted before that boundary is
+                # left for finalization; a read-only one is a typed failure.
+                interrupted_gate_error = _INTERRUPTED_BEFORE_COMPLETION_GATES
+                if mode in _WRITE_CAPABLE_MODES:
+                    interrupted_needs_finalize = True
+                else:
+                    interrupted_status = "failed"
             if interrupted_needs_finalize:
                 interrupted_status = "needs_finalize"
             _write_state_atomic(
@@ -8640,6 +9204,7 @@ def _run_worker(
                         finalize_error=(f"interrupted during finalize: {type(interrupt_exc).__name__}"),
                         last_error=(
                             no_deliverable_reason
+                            or interrupted_gate_error
                             or (_first_error_line(stderr_excerpt) if interrupted_status != "done" else None)
                         ),
                     ),
@@ -9316,6 +9881,20 @@ def _dispatch(
     # args.branch, a rejected --model cleared to None): the hash binds what was
     # literally parsed, not what dispatch later resolved it to (#8430 R3-A r8).
     dispatch_args_hash = dispatch_args_sha256(args)
+    # The advisory binding's argument half, as parsed: dispatch mutates ``args`` below (#9275).
+    advisory_args = json.loads(json.dumps(advisory_args_payload(args)))
+    advisory_args_hash = bounded_advisory.canonical_sha256(advisory_args)
+    if getattr(args, "print_advisory_binding", False):
+        try:
+            print(advisory_binding(advisory_args_hash, _binding_prompt_sha256(args, read_stdin=True)))
+        except OSError as exc:
+            print(f"❌ cannot read --prompt-file for the advisory binding: {exc}", file=sys.stderr)
+            return 2
+        return 0
+    advisory_flag_refusal = _advisory_flag_refusal(args)
+    if advisory_flag_refusal:
+        print(f"❌ dispatch refused: {advisory_flag_refusal}", file=sys.stderr)
+        return 2
 
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
@@ -9499,6 +10078,22 @@ def _dispatch(
     requested_agent = routing.requested_agent or original_agent
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
+
+    # #9275 (operator decision 2026-09-30): a bounded worker is admitted only with a
+    # complete advisory envelope bound to this dispatch. Checked on the admitted
+    # route — after aliases, --force-agent and any substitution — before any task
+    # record, worktree or other side effect.
+    try:
+        advisory_admission = _admit_advisory(
+            args,
+            dispatch_agent=dispatch_agent,
+            launch_model=launch_target.model,
+            bound_args=advisory_args,
+            repo_root=target_repo_root,
+        )
+    except bounded_advisory.AdvisoryRefused as exc:
+        print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+        return 2
 
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
@@ -9865,6 +10460,15 @@ def _dispatch(
         print(
             "❌ review attempt refused: review_prompt_changed: the prompt file changed after its admission "
             f"(admitted {review_contract['prompt_sha256']}, now {source_prompt_sha256}) (#9163)",
+            file=sys.stderr,
+        )
+        return 2
+
+    if advisory_admission.prompt_sha256 is not None and source_prompt_sha256 != advisory_admission.prompt_sha256:
+        # The envelope was admitted for the prompt read at admission; the prompt run must be that text (#9275).
+        print(
+            f"❌ dispatch refused: {bounded_advisory.BINDING_MISMATCH}: the prompt changed after advisory admission "
+            f"(admitted {advisory_admission.prompt_sha256}, now {source_prompt_sha256})",
             file=sys.stderr,
         )
         return 2
@@ -10339,6 +10943,7 @@ def _dispatch(
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
+            dry_run_state.update(advisory_admission.state_fields())
             dry_run_reap = _reap_runtime_tmp_lease(
                 runtime_tmp_root,
                 runtime_tmp_namespace_root,
@@ -10654,35 +11259,33 @@ def _dispatch(
     spawned = False
     try:
         cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
-        prompt = _augment_prompt_with_worktree(
-            prompt,
-            worktree_path,
-            mode=args.mode,
-            sparse_telemetry=worktree_telemetry.get("sparse")
-            if isinstance(worktree_telemetry.get("sparse"), dict)
-            else None,
-            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
-        )
-        if worktree_path is not None:
-            prompt_blocks.insert(0, "worktree")
-
         # POINTERS ONLY: inject bounded research pointers + an on-demand fetch
         # instruction (never digest bodies) when an explicit context was supplied and
         # the registry is enabled. Fail-open — a disabled/malformed registry leaves the
         # prompt and state untouched.
         research_state: dict[str, Any] | None = None
+        research_block = ""
         if research_ctx is not None:
             research_block, research_state = _resolve_research_injection(research_ctx, task_id)
-            if research_block:
-                prompt_blocks.append("research")
-            prompt = prompt + research_block
 
-        # Every worker and review seat starts with the rules core, read from this
-        # checkout (its presence was required at the top of the dispatch).
-        cored_prompt = rules_core.with_core(prompt, getattr(args, "rules_seat", None))
-        if cored_prompt != prompt:
-            prompt_blocks.insert(0, "rules_core")
-            prompt = cored_prompt
+        # #9275: the bounded worker reads its envelope (ceilings included); the
+        # advisor reads the envelope output contract bound to the worker dispatch.
+        advisory_block, advisory_block_kind = advisory_admission.prompt_block()
+        # The rules core's presence was required at the top of the dispatch.
+        prompt = _compose_dispatch_prompt(
+            prompt,
+            worktree_path=worktree_path,
+            mode=args.mode,
+            sparse_telemetry=worktree_telemetry.get("sparse")
+            if isinstance(worktree_telemetry.get("sparse"), dict)
+            else None,
+            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
+            research_block=research_block,
+            advisory_block=advisory_block,
+            advisory_block_kind=advisory_block_kind,
+            rules_seat=getattr(args, "rules_seat", None),
+            blocks=prompt_blocks,
+        )
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
@@ -10795,6 +11398,40 @@ def _dispatch(
         # the admitted slot stays held until the worker writes its pid (#8717).
         if admission_record is not None:
             initial_state["admission"] = admission_record
+        # #9275: the launch handed to the worker below, recorded for its admission check.
+        worker_execution = _worker_execution(
+            args,
+            cwd=cwd,
+            silence_timeout=silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+            max_budget_usd=max_budget_usd,
+            harness=requested_harness,
+        )
+        initial_state.update(advisory_admission.state_fields(research_block=research_block, execution=worker_execution))
+        # #9275: the envelope admitted at route resolution must still be the
+        # advisor's canonical result now, just before the worker is spawned.
+        try:
+            _recheck_advisory(advisory_admission, repo_root=target_repo_root)
+        except bounded_advisory.AdvisoryRefused as exc:
+            refusal = f"dispatch refused before spawn: {exc}"
+            initial_state.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "stderr_excerpt": refusal[:500],
+                    "returncode": None,
+                    "returncode_reason": "advisory envelope changed before spawn; worker not started",
+                    "last_error": exc.code,
+                    "failure_reason": exc.code,
+                    "exit_code": None,
+                }
+            )
+            initial_state.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _record_final_branch_head(initial_state)
+            _write_state_atomic(state_path, initial_state)
+            worktree_locks.close()
+            print(f"❌ {refusal}", file=sys.stderr)
+            return 2
         _write_state_atomic(state_path, initial_state)
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
@@ -10848,27 +11485,27 @@ def _dispatch(
             task_id,
             *_worker_route_argv(launch_target),
             "--mode",
-            args.mode,
+            worker_execution["mode"],
             "--cwd",
-            cwd,
+            worker_execution["cwd"],
             "--hard-timeout",
-            str(args.hard_timeout),
+            str(worker_execution["hard_timeout"]),
             "--silence-timeout",
-            str(silence_timeout),
+            str(worker_execution["silence_timeout"]),
             "--initial-response-timeout",
-            str(initial_response_timeout),
+            str(worker_execution["initial_response_timeout"]),
             "--runtime-tmp-root",
             str(runtime_tmp_root),
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
+        cmd.extend(_dispatch_worker_identity_flags(args, worker_execution["harness"]))
         if keep_worktree:
             cmd.append("--keep-worktree")
-        if bool(getattr(args, "finalize_open_pr", False)):
+        if worker_execution["finalize_open_pr"]:
             cmd.append("--finalize-open-pr")
-        if max_budget_usd is not None:
-            cmd.extend(["--max-budget-usd", str(max_budget_usd)])
+        if worker_execution["max_budget_usd"] is not None:
+            cmd.extend(["--max-budget-usd", str(worker_execution["max_budget_usd"])])
         if output_schema_path is not None:
             cmd.extend(
                 [
@@ -10878,11 +11515,10 @@ def _dispatch(
                     str(output_schema_sha256),
                 ]
             )
-        if getattr(args, "provider", None):
-            cmd.extend(["--provider", args.provider])
-        effort = getattr(args, "effort", None)
-        if effort:
-            cmd.extend(["--effort", effort])
+        if worker_execution["provider"]:
+            cmd.extend(["--provider", worker_execution["provider"]])
+        if worker_execution["effort"]:
+            cmd.extend(["--effort", worker_execution["effort"]])
         if run_nonce:
             cmd.extend(["--run-nonce", run_nonce])
         if review_plan is not None:
@@ -11245,6 +11881,345 @@ def _budget_needs_hard_capacity_action(
 
 
 _LANGUAGE_LANES = frozenset({"claude", "codex", "agy"})
+_SHA256_HEX_RE = re.compile(r"[0-9a-f]{64}")
+
+
+def _advisory_flag_refusal(args: argparse.Namespace) -> str | None:
+    """A typed refusal when the #9275 advisory flags are combined inconsistently; None otherwise."""
+    advisory_task = getattr(args, "advisory_task", None)
+    role = getattr(args, "advisory_role", None)
+    binding = getattr(args, "advisory_binding", None)
+    conflict = bounded_advisory.FLAG_CONFLICT
+    if advisory_task is not None and not str(advisory_task).strip():
+        return f"{conflict}: --advisory-task must name a task"
+    if advisory_task is not None and role is not None:
+        return f"{conflict}: --advisory-task (bounded worker) and --advisory-role (advisor) are exclusive"
+    if advisory_task is not None and str(advisory_task).strip() == str(args.task_id):
+        return f"{conflict}: --advisory-task must name another task, not this one"
+    if (role is None) != (binding is None):
+        return f"{conflict}: --advisory-role and --advisory-binding are required together"
+    if binding is not None and not _SHA256_HEX_RE.fullmatch(str(binding)):
+        return f"{conflict}: --advisory-binding must be a lowercase sha256 hex digest"
+    if role is not None and getattr(args, "mode", "read-only") != "read-only":
+        return f"{bounded_advisory.ADVISOR_ROUTE_REFUSED}: the advisor runs read-only, not {args.mode}"
+    return None
+
+
+@dataclass(frozen=True)
+class _AdvisoryAdmission:
+    """What #9275 admission decided for a dispatch: an advisor run, a bounded worker with its envelope, or neither."""
+
+    requirement: str | None = None
+    envelope: bounded_advisory.ValidatedEnvelope | None = None
+    advisor_binding: str | None = None
+    prompt_sha256: str | None = None  # the bounded worker's prompt text as bound at admission
+    args: dict[str, Any] | None = None  # the argument half of the bounded worker's binding
+    repo_root: Path | None = None  # where the envelope's owned paths were validated
+    agent: str | None = None  # the admitted launch the bounded worker must run
+    model_id: str | None = None
+    exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
+
+    def state_fields(self, *, research_block: str = "", execution: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt.
+
+        ``execution`` is the launch handed to the worker (``_worker_execution``),
+        recorded with the admitted agent and model as ``admitted_execution``;
+        None for a dry run, which starts no worker.
+        """
+        if self.envelope is not None and self.requirement is not None:
+            assert self.args is not None and self.prompt_sha256 is not None and self.repo_root is not None
+            assert self.agent is not None and self.model_id is not None
+            return {
+                "advisory_envelope": self.envelope.state_record(
+                    self.requirement,
+                    args=self.args,
+                    prompt_sha256=self.prompt_sha256,
+                    repo_root=self.repo_root,
+                    execution=(
+                        None if execution is None else {"agent": self.agent, "model_id": self.model_id, **execution}
+                    ),
+                    research_block=research_block,
+                )
+            }
+        if self.exemption is not None:
+            return {"advisory_exemption": dict(self.exemption)}
+        if self.advisor_binding is not None:
+            return {
+                "advisory_role": bounded_advisory.bounded_execution_policy().advisor_role,
+                "advisory_route": bounded_advisory.ADVISOR_ROUTE,
+                "advisory_binding_sha256": self.advisor_binding,
+            }
+        return {}
+
+    def prompt_block(self) -> tuple[str, str | None]:
+        """``(text, block kind)`` appended to the worker prompt; empty when neither role applies."""
+        if self.envelope is not None:
+            return bounded_advisory.worker_prompt_block(self.envelope), "advisory_envelope"
+        if self.advisor_binding is not None:
+            return bounded_advisory.advisor_prompt_block(self.advisor_binding), "advisory_contract"
+        return "", None
+
+
+def _worker_execution(
+    args: argparse.Namespace,
+    *,
+    cwd: str,
+    silence_timeout: int,
+    initial_response_timeout: int,
+    max_budget_usd: float | None,
+    harness: str | None,
+) -> dict[str, Any]:
+    """The launch values ``cmd_dispatch`` hands the ``_worker`` argv, beside the admitted agent and model (#9275).
+
+    A bounded worker compares each with what it runs (``EXECUTION_FIELDS``).
+    """
+    return {
+        "mode": args.mode,
+        "cwd": cwd,
+        "effort": getattr(args, "effort", None) or None,
+        "hard_timeout": args.hard_timeout,
+        "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
+        "max_budget_usd": max_budget_usd,
+        "provider": getattr(args, "provider", None) or None,
+        "harness": harness,
+        "finalize_open_pr": bool(getattr(args, "finalize_open_pr", False)),
+    }
+
+
+def _admit_advisory(
+    args: argparse.Namespace,
+    *,
+    dispatch_agent: str,
+    launch_model: str | None,
+    bound_args: dict[str, Any],
+    repo_root: Path,
+) -> _AdvisoryAdmission:
+    """Admit the admitted route under #9275 or raise ``AdvisoryRefused``.
+
+    ``dispatch_agent`` and ``launch_model`` are the admitted launch target, so
+    aliases, ``--force-agent`` and budget substitution are already applied: a
+    substitution into a bounded worker needs an envelope like a direct request.
+    ``bound_args`` is the argument half of the binding, captured as parsed.
+    """
+    from scripts.agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import canonical_model_id
+
+    policy = bounded_advisory.bounded_execution_policy()
+    model_id = canonical_model_id(launch_model or _default_model_for(dispatch_agent))
+    if getattr(args, "advisory_role", None) is not None:
+        if model_id != policy.advisor_model_id:
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.ADVISOR_ROUTE_REFUSED,
+                f"--advisory-role runs on the advisor {policy.advisor_model_id}; the admitted route launches "
+                f"{dispatch_agent} {launch_model or model_id!r}",
+            )
+        return _AdvisoryAdmission(advisor_binding=str(args.advisory_binding))
+    declared = _declared_owned_paths(getattr(args, "owned_path", None)) or []
+    research_paths = getattr(args, "research_owned_path", None) or []
+    classified_paths = [*declared, *research_paths]
+    mode = str(getattr(args, "mode", "") or "")
+    task_family = getattr(args, "research_task_family", None)
+    review_profile = getattr(args, "review_profile", None)
+    requirement = bounded_advisory.bounded_requirement(
+        model_id,
+        mode=mode,
+        task_family=task_family,
+        review_profile=review_profile,
+        owned_paths=classified_paths,
+        repo_root=repo_root,
+        policy=policy,
+    )
+    advisory_task = getattr(args, "advisory_task", None)
+    if requirement is None:
+        if advisory_task is not None:
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.FLAG_CONFLICT,
+                f"--advisory-task applies only to a bounded-worker dispatch; the admitted route launches "
+                f"{dispatch_agent} {launch_model or model_id!r}",
+            )
+        if model_id == policy.bounded_fallback_model_id:
+            # The worker re-classifies from this record before it starts the model.
+            return _AdvisoryAdmission(
+                exemption={
+                    "model_id": model_id,
+                    "task_family": task_family,
+                    "review_profile": review_profile,
+                    "mode": mode,
+                    "classified_paths": [str(path) for path in classified_paths],
+                }
+            )
+        return _AdvisoryAdmission()
+    if advisory_task is None:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.ENVELOPE_REQUIRED,
+            f"{requirement}; dispatch it with --advisory-task <task-id> naming a finished "
+            f"{policy.advisor_model_id} advisory task (operator decision 2026-09-30, #9275)",
+        )
+    advisory_task = str(advisory_task).strip()
+    try:
+        prompt_sha256 = _binding_prompt_sha256(args, read_stdin=False)
+    except OSError as exc:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.BINDING_MISMATCH, f"--prompt-file cannot be read for the advisory binding: {exc}"
+        ) from None
+    if prompt_sha256 is None:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.FLAG_CONFLICT,
+            "a bounded dispatch binds its prompt text; pass --prompt or --prompt-file, not stdin",
+        )
+    envelope = bounded_advisory.load_envelope(
+        advisory_task,
+        state_path=_state_path_no_create(advisory_task),
+        binding_sha256=advisory_binding(bounded_advisory.canonical_sha256(bound_args), prompt_sha256),
+        repo_root=repo_root,
+        policy=policy,
+    )
+    bounded_advisory.require_owned_paths_match(envelope.owned_paths, declared)
+    return _AdvisoryAdmission(
+        requirement=requirement,
+        envelope=envelope,
+        prompt_sha256=prompt_sha256,
+        args=bound_args,
+        repo_root=repo_root,
+        agent=dispatch_agent,
+        model_id=model_id,
+    )
+
+
+def _bounded_prompt_composer(
+    record: Mapping[str, Any], *, agent: str, model: str | None, mode: str
+) -> bounded_advisory.PromptComposer:
+    """How ``_dispatch`` built this worker's prompt around a brief, rebuilt from the task record (#9275).
+
+    The permitted dispatcher blocks are re-derived, never copied from the
+    prompt: the rules core from this checkout and the bound ``--rules-seat``,
+    the worktree block from the recorded worktree, the lifecycle block from
+    the recorded carrier, the research block only when it re-renders from its
+    own pointers, and the advisory block from the advisor's sealed envelope.
+    """
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+
+    def compose(brief: str, validated: bounded_advisory.ValidatedEnvelope, args: Mapping[str, Any]) -> str:
+        carrier = record.get("task_lifecycle")
+        lifecycle = ""
+        if isinstance(carrier, dict):
+            from scripts.orchestration import task_lifecycle
+
+            lifecycle = task_lifecycle.render_carrier_prompt(carrier)
+        worktree = record.get("worktree_path")
+        sparse = record.get("worktree_sparse")
+        admitted = record.get("advisory_envelope") or {}
+        return _compose_dispatch_prompt(
+            brief + lifecycle,
+            worktree_path=Path(str(worktree)) if worktree else None,
+            mode=mode,
+            sparse_telemetry=sparse if isinstance(sparse, dict) else None,
+            delegate_commits=is_kimi_seat(agent, model=model),
+            research_block=_recorded_research_block(admitted.get("research_block")),
+            advisory_block=bounded_advisory.worker_prompt_block(validated),
+            advisory_block_kind="advisory_envelope",
+            rules_seat=args.get("rules_seat"),
+        )
+
+    return compose
+
+
+def _verify_bounded_worker(
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    cwd: Path,
+    execution: Mapping[str, Any],
+    prompt: str,
+) -> str | None:
+    """Re-verify this worker's #9275 admission against ``prompt``, the exact text it hands the provider.
+
+    ``execution`` holds the other launch values the worker runs (effort,
+    timeouts, budget, provider, harness, PR opening); each must be the admitted
+    one. Reads the worker's own task record (never creating it). Returns the
+    SHA-256 of the checked prompt for an envelope admission, None when the
+    model is not bounded or runs under a Ukrainian exemption; raises
+    ``AdvisoryRefused`` otherwise.
+    """
+    from scripts.agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import canonical_model_id
+
+    record = _read_state_json(_state_path_no_create(task_id))
+    return bounded_advisory.verify_worker_admission(
+        record,
+        agent=agent,
+        model_id=canonical_model_id(model or _default_model_for(agent)),
+        mode=mode,
+        cwd=cwd,
+        execution=execution,
+        prompt=prompt,
+        compose_prompt=_bounded_prompt_composer(record or {}, agent=agent, model=model, mode=mode),
+        state_path_for=_state_path_no_create,
+        default_repo_root=_REPO_ROOT,
+    )
+
+
+def _advisory_worker_refusal(
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    cwd: Path,
+    execution: Mapping[str, Any],
+    prompt: str,
+    runtime_tmp_root: str | None,
+    runtime_tmp_namespace_root: str | None,
+) -> str | None:
+    """The worker-side #9275 backstop at start: a refusal when a bounded model lacks a valid parent admission.
+
+    Runs ``_verify_bounded_worker`` before the worker marks itself running;
+    the provider handoff runs it again on the exact prompt submitted. A
+    refused worker with a task record marks it failed with the typed code; a
+    hand-built worker argv with no record gets the refusal only.
+    """
+    try:
+        _verify_bounded_worker(
+            task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=execution, prompt=prompt
+        )
+    except bounded_advisory.AdvisoryRefused as exc:
+        refusal = f"worker refused before start: {exc}"
+        state_path = _state_path_no_create(task_id)
+        record = _read_state_json(state_path)
+        if record:
+            record.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "stderr_excerpt": refusal[:500],
+                    "returncode": None,
+                    "returncode_reason": "bounded model without a valid advisory admission; provider not started",
+                    "last_error": exc.code,
+                    "failure_reason": exc.code,
+                    "exit_code": None,
+                }
+            )
+            record.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _write_state_atomic(state_path, record)
+        return refusal
+    return None
+
+
+def _recheck_advisory(admission: _AdvisoryAdmission, *, repo_root: Path) -> None:
+    """Refuse when the admitted envelope's advisor record or result changed before spawn (#9275)."""
+    validated = admission.envelope
+    if validated is None:
+        return
+    current = bounded_advisory.load_envelope(
+        validated.advisor_task_id,
+        state_path=_state_path_no_create(validated.advisor_task_id),
+        binding_sha256=validated.binding_sha256,
+        repo_root=repo_root,
+    )
+    bounded_advisory.require_unchanged(validated, current)
 
 
 def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
@@ -13333,6 +14308,43 @@ def build_parser() -> argparse.ArgumentParser:
             "dirty danger-mode worktree commits only changes under these paths; without "
             "any it commits nothing and the task ends needs_finalize. Independent of "
             "--research-owned-path."
+        ),
+    )
+    d.add_argument(
+        "--advisory-task",
+        default=None,
+        metavar="TASK_ID",
+        help=(
+            "#9275: the finished advisor task whose envelope admits this bounded-worker dispatch. "
+            "Required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
+            "Gemini Flash bounded fallback without a Ukrainian authoring/review classification; "
+            "refused on any other dispatch. Its owned_paths must equal --owned-path. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--advisory-role",
+        default=None,
+        choices=("bounded_advisory_envelope",),
+        help=(
+            "#9275: run this read-only dispatch as the catalog advisor that issues a bounded-worker "
+            "envelope; the admitted model must be the advisor model. Requires --advisory-binding. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--advisory-binding",
+        default=None,
+        metavar="SHA256",
+        help=(
+            "#9275: with --advisory-role, the worker dispatch's binding digest, printed by the worker "
+            "dispatch command with --print-advisory-binding. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--print-advisory-binding",
+        action="store_true",
+        help=(
+            "#9275: print this dispatch's advisory binding digest (every parsed argument except "
+            "--advisory-task and this flag) and exit without any other effect."
         ),
     )
     d.add_argument(

@@ -25,14 +25,14 @@
 |---|---|---|---|---|
 | Ceiling advisor/designer | GPT-6.1 Sol (Astra seat), Fable 5.1 | — | Sol `xhigh`; Fable `high` | provisional |
 | Accountable orchestrator | GPT-6.1 Sol, Claude Opus 5.5 | — | `high` | provisional |
-| General implementer | GPT-6.1 Sol, Claude Sonnet 5.5 for well-scoped non-security code, Grok 4.7 | GPT-6 Luna for bounded work; Gemini 3.8 Flash for well-defined work; K3 (web, UI and backend code only); Cursor (**pin family**). Security-sensitive code authoring goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Fable 5.1 for Claude). | `high` by task fit | provisional |
+| General implementer | GPT-6.1 Sol, Claude Sonnet 5.5 for well-scoped non-security code, Grok 4.7 | GPT-6 Luna for bounded work under a Sol advisory envelope; Gemini 3.8 Flash for well-defined work; K3 (web, UI and backend code only); Cursor (**pin family**). Security-sensitive code authoring goes to Opus 5.5 or Codex Sol; Ukrainian curriculum content stays with sanctioned language lanes (Fable 5.1 for Claude). | `high` by task fit | provisional |
 | Polished written deliverables in English | Claude Sonnet 5.5 | Reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts | By task fit | provisional |
 | Hard implementer | GPT-6.1 Sol, Claude Opus 5.5 | Escalate hard design judgment to Astra or Fable | `high` | provisional |
 | UI / visual product design | GPT-6.1 Sol (Astra seat), Fable 5.1 | K3 implements the approved design as web/UI code only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | Sol `xhigh`; Fable `high`; K3 `high` | provisional |
 | Code/security CF review | **Author-family-conditional** (see §3); for security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125 | — | `high`+ | provisional |
 | Critical CF review | GPT-6.1 Sol ↔ Fable/Opus **cross-family** | — | `high` | provisional |
 | Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6.1 Sol, Claude Fable 5.1 + sources | `high` | provisional (morphology remains VESUM-gated) |
-| Recon / triage | GPT-6 Luna, Claude Haiku, Gemini 3.8 Flash | — | Luna `high` with exact owned paths + objective scope ceiling; others by task fit; never sole release | provisional |
+| Recon / triage | GPT-6 Luna, Claude Haiku, Gemini 3.8 Flash | — | Luna `high` with exact owned paths + objective scope ceiling, from a Sol advisory envelope (always required, #9275); others by task fit; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.
 
@@ -153,7 +153,7 @@ Re-verify capacity and routing when the subscription plan or API routing changes
 ## 8. Quick routing card
 
 ```text
-Routine code/fix          → GPT-6.1 Sol high | GPT-6 Luna high when bounded | Sonnet 5.5 for well-scoped non-security work | Grok 4.7
+Routine code/fix          → GPT-6.1 Sol high | GPT-6 Luna high when bounded (Sol envelope) | Sonnet 5.5 for well-scoped non-security work | Grok 4.7
 Security-sensitive code  → Claude Opus 5.5 | Codex Sol (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions; never Sonnet 5.5)
 Polished English work     → Sonnet 5.5 (reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, design review)
 Ukrainian curriculum      → sanctioned language lanes; Fable 5.1 for Claude (never Sonnet 5.5)
@@ -163,7 +163,7 @@ UI / visual product       → Sol/Fable design → K3 or Sol/Opus/Grok implement
 UA language                 → Gemini 3.8 Flash High (AGY) + VESUM/sources (3.1 Pro only on explicit request, operator 2026-09-22)
 Security/bug CF             → author-family-conditional (Grok/GLM/Opus/…)
 Architecture decision       → Astra/Fable advisory → orchestrator decides
-Recon                     → GPT-6 Luna high | Claude Haiku | Gemini 3.8 Flash
+Recon                     → GPT-6 Luna high (Sol envelope) | Claude Haiku | Gemini 3.8 Flash (Sol envelope)
 ```
 
 ---

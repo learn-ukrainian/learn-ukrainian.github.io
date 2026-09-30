@@ -790,6 +790,127 @@ dispatch. `unknown` remains reserved for an unexpected resolution failure.
 Every terminal state records a concrete subprocess `returncode`, or a
 `returncode_reason` when no child process ever yielded one.
 
+### Bounded workers need an advisory envelope (#9275)
+
+Operator decision 2026-09-30: there is no direct bounded dispatch. A dispatch whose admitted
+route launches `gpt-6-luna`, or `gemini-3.8-flash-high` without a Ukrainian authoring or
+review classification (`--research-task-family ukrainian-authoring|ukrainian-review`, or
+read-only `--review-profile ukrainian`), is refused (`BOUNDED_ENVELOPE_REQUIRED`) unless
+`--advisory-task` names a finished advisor task that issued an envelope for it. The check
+runs after aliases, `--force-agent` and budget substitution, before any task record or
+worktree. Either Ukrainian exemption holds only while every `--owned-path` and
+`--research-owned-path` is Ukrainian content only, judged by what it resolves to. The path
+is normalized (`./`, `..`, repeated or trailing `/`) and must start under `curriculum`,
+`wiki`, `docs`, `data` or `plans`. A glob must end in a literal non-code extension and use
+no character class, so `docs/**/*.p[y]`, `docs/**/*.p?` and `docs/**/*` can match code.
+Every file the path owns, as dispatch ownership reads it, is then enumerated from git's
+index and from disk with symlinks followed. Each file, and each directory reached, must
+resolve under a content root, and no file may be code by extension or by a git attribute
+(a programming-language `diff` driver or a non-content `linguist-language`). A directory is
+judged by the files it holds, and an unreadable tree fails closed. Anything else is an
+ambiguous classification and needs an envelope.
+
+```bash
+# 1. Fix the worker dispatch and print its binding (arguments + prompt text).
+.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-luna --task-id W \
+  --prompt-file brief.md --worktree --mode danger --owned-path scripts/x.py --print-advisory-binding
+# 2. The advisor (catalog advisor route, gpt-6.1-sol, read-only) issues the envelope.
+.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6.1-sol --task-id A \
+  --prompt-file advise.md --advisory-role bounded_advisory_envelope --advisory-binding <digest>
+# 3. The worker runs the same arguments plus the advisor task.
+.venv/bin/python scripts/delegate.py dispatch <same arguments as step 1> --advisory-task A
+```
+
+**Threat model.** The rule is cooperative. It stops omitted advice, stale or foreign
+bindings, accidental prompt drift and scope overruns by processes that follow the dispatch
+path. Deliberate forgery by a process that can rewrite task records, results or launcher
+code is out of scope: such a process can recompute every digest described here, and none
+of them authenticates who wrote a record or result.
+
+The advisor task must be `done`, read-only, on `gpt-6.1-sol`, with role
+`bounded_advisory_envelope` and the same binding. When the advisor's worker writes its
+result it records `advisory_seal` (SHA-256 of the result and of its envelope, the model it
+ran, its run nonce). The seal is a consistency checksum, not proof of authorship: admission
+recomputes both digests and refuses a missing seal (`ADVISORY_SEAL_MISSING`) or a result,
+envelope, model or run that no longer matches it (`ADVISORY_SEAL_MISMATCH`), which catches a
+result edited or replaced after finish without a matching record update. Its canonical `.result` must hold exactly
+one fenced `advisory-envelope` JSON object with every catalog `output_fields` key (non-empty
+`task_contract`; non-empty lists; positive integer ceilings; `owned_paths` repo-relative under
+an existing top-level root) plus `dispatch_args_sha256` equal to the binding. `--owned-path`
+must equal the envelope's `owned_paths`. The result is re-validated just before spawn; a
+change fails the task (`ADVISORY_ENVELOPE_CHANGED`). The worker record keeps
+`advisory_envelope` (advisor task, result path and SHA-256, envelope SHA-256, binding,
+ceilings) and the worker prompt carries the envelope.
+
+Two completion gates run after a write-mode worker exits, on its diff from the merge base
+(commits plus uncommitted and untracked files). Nothing stops a worker from breaching
+either while it runs; the breach fails the task instead of settling it, and in `danger`
+mode the gate runs before auto-finalize too, so a failing tree is never committed or
+offered as a PR.
+
+- **Envelope ceilings.** A bounded worker whose diff exceeds `max_changed_files` or
+  `max_non_test_loc` fails (`advisory_ceiling_exceeded`); a diff that cannot be measured
+  fails too (`advisory_ceiling_unmeasured`). Exactly reaching a ceiling passes.
+- **Content exemption.** Admission classifies a Ukrainian exemption's owned directories and
+  globs by the files they hold at that moment, so it cannot rule out a code file the worker
+  adds later (an owned `docs/new-lessons/` and a brief asking for `generate.py`). A Gemini
+  Flash write worker running on an `advisory_exemption` therefore has every changed path
+  classified (`advisory_exempt_change_check`): a path outside the Ukrainian content roots,
+  a `.gitattributes` file, or a file that is code by extension or git attributes, judged on
+  the file and on its resolved symlink target, fails the task
+  (`advisory_exempt_code_change`); changes that cannot be read fail too
+  (`advisory_exempt_changes_unmeasured`). Every committed path is classified; uncommitted
+  scratch residue that auto-finalize never publishes (`.venv`, `node_modules`,
+  `__pycache__`, `.pytest_cache`, `*.pyc`) is listed as `ignored_residue` instead. A
+  content-only diff settles `done`.
+
+`done` is reachable only after every applicable completion gate (these two, the delivery
+check and the review-verdict check) has run on the current tree, and the gate's measurement
+is written in the same record write as the outcome. Only this run's measurement counts:
+evidence left on the record by an earlier run is dropped first. An interrupt before that
+point settles a write dispatch `needs_finalize` and a read-only one `failed`, never `done`;
+a worker killed outright leaves its record `running`, which the dead-worker probes settle
+as non-success.
+
+Recovery never settles a gated record `done` (operator decision 2026-09-30). A record is
+gated when it calls for any completion gate beyond delivery: an exit scan that did not
+clear (`leftovers_scan` `live` or `unknown`), a review verdict (`require_review_verdict`),
+an advisory envelope's ceilings or a content exemption's changed paths
+(`delegate.applicable_completion_gates`). Those gates run only in the worker, on its tree
+and its response, so recovery (`stale_task_records settle-stale` and the rate-limit
+reclassifier `scripts/maintenance/reclassify_dispatch_status.py`) never re-measures a tree
+or re-reads a saved response for them. It settles such a record `failed` with
+`failure_reason: recovery_requires_rerun`, keeping a failure the record already carries,
+and reports it: the driver re-runs the task or finalizes it by hand. A delivery-only record
+keeps its recovery: `settle-stale` settles it `done` when a merged pull request carries its
+recorded commit, with the delivery check unchanged.
+
+Admission classifies a path by its resolved target as well: a `.md` symlink to a file whose
+git attributes mark it as code (for example `diff=python`) is not content.
+
+The internal `_worker` entry re-verifies all of this before it starts a bounded model and
+again at the provider handoff, so a hand-built or stale worker argv cannot skip admission.
+The record's `advisory_envelope` keeps both binding halves: the parsed dispatch arguments
+(`advisory_args`, hashing to `advisory_args_sha256`) and the brief's `prompt_sha256`. The
+worker re-derives the binding, reloads the advisor's sealed envelope and compares the
+recorded ceilings and owned paths with it. It checks that it runs the admitted launch
+recorded as `admitted_execution`: agent, model, mode, cwd, effort, hard, silence and
+initial-response timeouts, budget, provider, harness and PR opening. Each value must equal
+the admitted one and, where a dispatch argument sets it, that bound argument; the cwd is
+always compared, with the recorded worktree too when there is one, and the bound
+`--owned-path` must equal the envelope's. A difference refuses before any provider call
+(`BOUNDED_EXECUTION_MISMATCH`). It then
+rebuilds the expected prompt from the brief the envelope binds plus the dispatcher blocks it
+can re-derive: the rules core, the worktree block, the lifecycle block from the recorded
+carrier, the research block only when it re-renders from its own pointers, and the envelope
+block from the sealed result. The exact prompt object it hands the provider must equal that
+rebuild byte for byte, so an appended, prepended or altered instruction refuses
+(`ADVISORY_BINDING_MISMATCH`). The record's `effective_prompt_sha256` plays no part. The
+checked digest is kept as `advisory_prompt_sha256`. A Gemini Flash worker instead runs on a
+recorded `advisory_exemption`, re-classified in its own tree. Otherwise it exits before the
+provider starts, marking an existing task record `failed` (`BOUNDED_ADMISSION_MISSING`,
+`BOUNDED_ADMISSION_INVALID` or the envelope code).
+
 ### Auto-finalize scope and unfinished background jobs (#8991)
 
 **Pass `--owned-path` for every write dispatch whose dirty tree may be auto-finalized.**

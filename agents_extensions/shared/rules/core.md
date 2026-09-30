@@ -40,7 +40,7 @@ and authority seat order; never reconstruct ladders from historical prose. <!-- 
 | Drive a stream | `gpt-6.1-sol` · `claude-opus-5-5` | `grok-4.7` |
 | Advice, new design | Fable `claude-fable-5-1` · Astra `gpt-6.1-sol` | — |
 | Hard or accountable code | `gpt-6.1-sol` · `claude-opus-5-5` | Cursor `grok-4.7` · Kimi |
-| Bounded code, recon (owned paths, ceiling) | `gpt-6-luna` | `gemini-3.8-flash-high` |
+| Bounded code, recon (Sol envelope first) | `gpt-6-luna` | `gemini-3.8-flash-high` |
 | Security code (hooks, launchers, credentials, admission, sandbox) | `claude-opus-5-5` · `gpt-6.1-sol`; review `--risk critical` | never Sonnet |
 | Routine code, English prose | `claude-sonnet-5-5` | `gpt-6.1-sol` |
 | Ukrainian authoring | `gpt-6.1-sol` · `gemini-3.8-flash-high` (A1–A2) | `claude-fable-5-1` |
@@ -48,7 +48,9 @@ and authority seat order; never reconstruct ladders from historical prose. <!-- 
 
 Claude's Ukrainian seat is always Fable. Use GPT-6.1 Sol at high for orchestration, advanced coding, Ukrainian
 authoring and red-team work. Use GPT-6 Luna at high for scouting and bounded repeatable work; max is permitted only
-for unusually hard scouting. `start-claude-driver.sh` defaults to `claude-opus-5-5[1m]` at high unless `--model`,
+for unusually hard scouting. No bounded dispatch is direct (operator decision 2026-09-30): every Luna dispatch, and
+every Flash one not classified Ukrainian authoring or review, first gets a complete `gpt-6.1-sol` advisory envelope
+bound to it (`--advisory-task`). `start-claude-driver.sh` defaults to `claude-opus-5-5[1m]` at high unless `--model`,
 `--effort`, `LAUNCHER_MODEL` or `LAUNCHER_EFFORT` overrides it. Interactive `start-claude.sh` retains its last TUI
 selection; the designated advisor seat remains separate. <!-- p2-table: M04 -->
 
@@ -59,7 +61,7 @@ selection; the designated advisor seat remains separate. <!-- p2-table: M04 -->
 - Kimi, AGY and GLM never via OpenRouter. GLM is local-only (no CI, no sensitive data); Flash by default, full GLM by explicit choice. <!-- p2-glm: M08 -->
 - No DeepSeek for any dispatch or review. Pool: `laguna-s-2.1` default, `laguna-xs-2.1` on explicit request, `laguna-m.1` fallback only; no invented ids. <!-- p2-others: M18 -->
 - Cursor Auto runs only a well-defined coding task: a write implementation dispatch with owned paths and a green DoR card (operator decision 2026-09-30). Every other Cursor use (driver seat, review, design, consults, discussions, recon, unclear work) pins an approved concrete model, never Fast or older routes; review identities are concrete; a Grok author's reviewer is not Grok. Cursor Composer is eligible only with the concrete `composer-2.5` model identity. <!-- p2-cursor: M23 -->
-- Retired catalog models are refused (Astra is a role, not an id); Grok 4.6 is not admitted. No advisory seat on routine lockfile, pointer or smoke tasks. <!-- p2-retired: M05 -->
+- Retired catalog models are refused (Astra is a role, not an id); Grok 4.6 is not admitted. No advisory seat on routine lockfile, pointer or smoke tasks: they take a non-bounded route such as `claude-sonnet-5-5`, never a bounded worker without an envelope. <!-- p2-retired: M05 -->
 - On a limit substitute an eligible route (`agent_fallback_substitutions.yaml`, else the same model via another harness or an equivalent lane) and record model, family, harness and reason; never silently drop work or run past a cap. <!-- p2-capacity: O17 -->
 
 ## P3 — Definition of Ready and Definition of Done

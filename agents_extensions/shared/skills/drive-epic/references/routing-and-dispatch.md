@@ -50,8 +50,12 @@ Before **every** implement `delegate.py dispatch`:
    also refuse dispatch unless that override is supplied. PR references are
    skipped after API resolution. Briefs without issue references are not gated.
    Opening or editing an issue updates one advisory checker comment.
-3. **Default bounded work:** Fable or Astra **brief** → heap/practical **worker(s)** —
-   not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
+3. **Default bounded work:** a `gpt-6.1-sol` advisory **envelope** (the Astra seat,
+   `--advisory-role bounded_advisory_envelope`) → bounded **worker(s)** dispatched with
+   `--advisory-task` — not a Sonnet/Terra fixation solo. There is no direct bounded dispatch
+   (operator decision 2026-09-30, #9275): `delegate.py` refuses Luna, and Flash not classified
+   Ukrainian authoring/review, without a complete envelope bound to that dispatch. See
+   `fleet-driver-routing.md` §2.
 4. **Fable path:** native `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
    lockfiles / pointer / smoke jobs.
 5. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a

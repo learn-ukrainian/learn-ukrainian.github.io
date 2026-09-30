@@ -110,7 +110,18 @@ def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_m
     monkeypatch.setattr(sources_db, "_conn", None)
     task_id = "sources-read-only-lookup"
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(worktree)})
+    # What dispatch records for a read-only Gemini Flash Ukrainian review (#9275).
+    exemption = {
+        "model_id": "gemini-3.8-flash-high",
+        "task_family": "ukrainian-review",
+        "review_profile": None,
+        "mode": "read-only",
+        "classified_paths": [],
+    }
+    delegate._write_state_atomic(
+        state_path,
+        {"task_id": task_id, "cwd": str(worktree), "mode": "read-only", "advisory_exemption": exemption},
+    )
 
     def lookup(*_args, **_kwargs):
         result = _run(
