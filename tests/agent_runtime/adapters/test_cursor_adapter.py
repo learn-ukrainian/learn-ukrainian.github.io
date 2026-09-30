@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import json
-import os
 import shutil
 import subprocess
 import sys
@@ -13,6 +12,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 from scripts.agent_runtime.adapters.cursor import CursorAdapter
+from tests.cursor_process_guard import bounded_cursor_smoke
 
 
 @pytest.fixture
@@ -427,12 +427,13 @@ def test_cursor_adapter_successful_echoed_rate_limit_text_is_not_rate_limited(ad
     assert result.response == "Completed successfully; a prior task was rate limited."
 
 
-def test_cursor_agent_trivial_invoke_smoke():
-    if os.environ.get("CI"):
-        pytest.skip("real cursor-agent smoke test is skipped in CI")
+def test_cursor_agent_trivial_invoke_smoke(tmp_path, monkeypatch, fake_cursor_bin):
+    """The former live launch path runs a recording fake even without CI."""
+    monkeypatch.delenv("CI", raising=False)
+    log = tmp_path / "invocations.jsonl"
+    monkeypatch.setenv("LU_TEST_CURSOR_LOG", str(log))
     cursor_bin = shutil.which("cursor-agent") or shutil.which("agent")
-    if not cursor_bin:
-        pytest.skip("cursor-agent CLI not installed")
+    assert cursor_bin == str(fake_cursor_bin / "cursor-agent")
 
     result = subprocess.run(
         [
@@ -451,6 +452,15 @@ def test_cursor_agent_trivial_invoke_smoke():
         cwd=Path.cwd(),
     )
 
+    assert result.returncode == 0, result.stderr or result.stdout
+    assert "PONG" in result.stdout
+    invocation = json.loads(log.read_text())
+    assert invocation["argv"] == ["-p", "--model", "auto", "--output-format", "stream-json", "--trust"]
+    assert invocation["stdin"] == "Reply with exactly: PONG"
+
+
+def test_cursor_agent_real_invoke_smoke(real_cursor_binary):
+    result = bounded_cursor_smoke(real_cursor_binary)
     assert result.returncode == 0, result.stderr or result.stdout
     assert "PONG" in result.stdout
 
