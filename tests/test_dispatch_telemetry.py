@@ -98,6 +98,8 @@ def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias
     for route, identity in (
         ("deepseek/deepseek-flash", "deepseek-v4.1-flash"),
         ("deepseek/deepseek-v4-pro", "deepseek-v4-pro"),
+        ("deepseek/deepseek-v4-flash", "deepseek-v4-flash"),
+        ("deepseek/unknown-model", "deepseek/unknown-model"),
     ):
         plan = InvocationPlan(
             cmd=["opencode", "run", "--model", route, "--variant", "high"],
@@ -109,6 +111,25 @@ def test_deepseek_telemetry_records_catalog_identity_not_moving_invocation_alias
                 plan=plan,
                 requested_model=identity,
                 requested_effort=None,
+            )
+        assert telemetry.model == identity
+        assert telemetry.effort == "high"
+        assert telemetry.cli_version == "1.18.0"
+
+
+def test_deepseek_dispatch_start_telemetry_preserves_recorded_catalog_identity():
+    # Retirement forbids new execution, but must not rewrite historical labels.
+    for requested, identity in (
+        (None, "deepseek-v4.1-flash"),
+        ("deepseek/deepseek-flash", "deepseek-v4.1-flash"),
+        ("deepseek/deepseek-v4-pro", "deepseek-v4-pro"),
+        ("deepseek-v4-pro", "deepseek-v4-pro"),
+        ("deepseek/deepseek-v4-flash", "deepseek-v4-flash"),
+        ("deepseek/unknown-model", "deepseek/unknown-model"),
+    ):
+        with patch("agent_runtime.telemetry._probe_version", return_value="1.18.0"):
+            telemetry = resolve_dispatch_start_telemetry(
+                agent_name="deepseek", requested_model=requested, requested_effort=None,
             )
         assert telemetry.model == identity
         assert telemetry.effort == "high"

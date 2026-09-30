@@ -231,7 +231,7 @@ def test_cursor_unattested_quorum_fail_closed_and_pin_cannot_substitute(monkeypa
     pinned = reviewer_resolver.resolve_reviewer(
         ResolverInputs(
             author_model="generic-unattested-harness",
-            pinned_candidate="claude-sonnet-5",
+            pinned_candidate="claude-sonnet-5-5",
             pressure_override_reason="probe",
         )
     )

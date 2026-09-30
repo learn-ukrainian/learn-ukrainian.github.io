@@ -214,6 +214,23 @@ def _hermes_configured_effort() -> str | None:
     return top_level_agent_effort(read_hermes_config(home / "config.yaml"))
 
 
+def _deepseek_catalog_identity(model: str | None) -> str | None:
+    """Resolve recorded routes without using dispatch eligibility as identity.
+
+    Moving aliases use the adapter's current pin; versioned historical routes
+    retain their catalog identity even after retirement (#9301).
+    """
+    from scripts.review.model_catalog import resolve_catalog_model_id
+
+    from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
+
+    pinned = next(
+        (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == model),
+        None,
+    )
+    return pinned or resolve_catalog_model_id(model) or model
+
+
 def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
     if _is_acp_shadow_identity(agent_name, plan):
         return (
@@ -225,13 +242,7 @@ def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | Non
         alias = plan.metadata.get("kimicc_alias")
         return str(alias).strip() if isinstance(alias, str) and alias.strip() else None
     if agent_name == "deepseek":
-        from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
-
-        invocation_model = _arg_after(plan.cmd, "--model")
-        return next(
-            (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == invocation_model),
-            invocation_model,
-        )
+        return _deepseek_catalog_identity(_arg_after(plan.cmd, "--model"))
     return _arg_after(plan.cmd, "-m", "--model")
 
 
@@ -301,12 +312,7 @@ def _resolve_model_from_defaults(
         # after-spawn labels agree for an omitted model.
         return _kimicc_alias(requested_model)
     if agent_name == "deepseek" and requested_model:
-        from .adapters.deepseek import DEEPSEEK_OPENCODE_MODEL_ROUTES
-
-        return next(
-            (identity for identity, route in DEEPSEEK_OPENCODE_MODEL_ROUTES.items() if route == requested_model),
-            requested_model,
-        )
+        return _deepseek_catalog_identity(requested_model)
     if requested_model:
         return requested_model
     if _is_acp_shadow_identity(agent_name):
