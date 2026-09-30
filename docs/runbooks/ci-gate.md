@@ -9,10 +9,10 @@ Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 
 | Job | What it does |
 | --- | --- |
-| Reuse check | `merge_group` only. Looks for a green full pytest run of the identical tree (below). |
-| Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. |
-| Checks | `scripts/ci/checks.sh`: every lint and content-contract gate; runs all, fails if any failed. |
-| Frontend | Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. |
+| Reuse check | `merge_group` only. Looks for a green full run of the identical tree (below). |
+| Secret scan | Event-aware TruffleHog range, OPSEC public-identifier lint, internal-ID check. Skipped only on a recorded merge-queue reuse. |
+| Checks | `scripts/ci/checks.sh`: every lint and content-contract gate; runs all, fails if any failed. Skipped only on a recorded merge-queue reuse. |
+| Frontend | Builds and tests the site when the diff touches the frontend denominator; otherwise exits green after the scope step. Skipped only on a recorded merge-queue reuse. |
 | pytest (1..N) | The full `not atlas_release and not slow` suite, split over N static shards. Skipped only on a recorded merge-queue reuse. |
 | pytest report | Whole-run checks over every shard; records the tested tree. |
 | CI Gate | `if: always()`; fails on any job result other than the expected one. |
@@ -52,7 +52,7 @@ that chose *which* tests or checks a change ran is gone.
 | Postgres tests must not skip (`pg_skip_guard.py`) | per shard | per shard |
 | needs_artifact skip set == `registry/artifacts/needs-artifact-expected.txt` | Needs artifact audit (separate collection + run) | pytest report, from the shards' JUnit (no second collection) |
 | Every test file ran | none (planner trust) | pytest report: shard file lists must partition `git ls-files tests` |
-| Full-history checkout where tests read old commits | pytest, Fast checks, Contracts | pytest, Checks, Frontend, Secret scan |
+| Full-history checkout where tests read old commits | pytest, Fast checks, Contracts | pytest shard 1 (the history shard), Checks, Frontend, Secret scan; pytest shards 2..N are shallow |
 | TypeSafe triage (advisory) | Fast checks, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Atlas POC richness, vocabulary coverage (advisory) | Contracts, `continue-on-error` | `ci-advisory.yml` (not required) |
 | Slow tests, quarantine run, flake ledger, failure issue | `pytest-slow-nightly.yml` | unchanged |
@@ -66,10 +66,10 @@ fails its shard; the skip-set comparison covers both halves.
 
 CI Gate needs every other job and checks each result:
 
-- Secret scan, Checks, Frontend: `success`.
 - Reuse check: `skipped` outside the merge queue, `success` inside it.
-- pytest and pytest report: `success`, except in a merge-queue run whose Reuse
-  check reported `reuse=true` with a run id; then both must be `skipped`.
+- Secret scan, Checks, Frontend, pytest and pytest report: `success`, except in
+  a merge-queue run whose Reuse check reported `reuse=true` with a run id; then
+  all five must be `skipped`, and the gate logs the reused run for each.
 
 `cancelled`, a missing result or any other value fails the gate. The gate runs
 under `always()` because GitHub treats a skipped required check as passing.
@@ -78,23 +78,34 @@ under `always()` because GitHub treats a skipped required check as passing.
 ## Merge queue: reuse of an identical tree
 
 A `merge_group` commit whose tree equals the tree a `pull_request` run of the
-queued PR already tested in full holds the same code; running the suite again
-cannot learn anything. `scripts/ci/reuse_green_run.py`:
+queued PR already tested in full holds the same code; running the same jobs
+again cannot learn anything. `scripts/ci/reuse_green_run.py`:
 
 1. computes `git rev-parse <merge_group.head_sha>^{tree}`;
 2. reads the queued PR number from the queue ref, then the PR's head SHA;
 3. lists successful `pull_request` runs of `ci.yml` for that head SHA;
 4. downloads each run's `ci-tested-tree` artifact, written by `pytest report`
    only after every shard passed and the partition held (`tier: full`);
-5. reuses the first run whose record has `tier: full` and the same tree.
+5. reuses the first run whose record has `tier: full` and the same tree, and
+   in which each of `Secret scan`, `Checks`, `Frontend` and `pytest report` is
+   one job that concluded `success`.
 
-Anything else runs the full suite: a different tree (main moved, or several PRs
-in one group), no record (older runs, expired artifacts), a record that is not
-the full tier, or any lookup error. The decision and the reused run id are in
-the Reuse check's job summary and in CI Gate's log. The rest of the jobs
-(secret scan, checks, frontend) always run in the queue.
+Anything else runs every job: a different tree (main moved, or several PRs in
+one group), no record (older runs, expired artifacts), a record that is not the
+full tier, a gate job that is missing or not `success`, or any lookup error.
+The decision, the reused run and each gate's job id are in the Reuse check's
+job summary; CI Gate's log names the reused run for each skipped job. A reused
+queue run is the Reuse check plus CI Gate.
 
-Because the pull_request run already executes the full suite, reuse applies
+Reusing Secret scan and Checks is sound for the same reason as pytest. Both
+read only file contents: the scanned diff and the checked tree. With an
+identical tree, every line the queue commit adds over `main` was either added
+by the PR's commits, which the PR run scanned, or already on `main`. The
+diff-scoped checks see the same diff, because an identical tree in practice
+means `main` has not moved. Neither job reads commit messages, so the queue
+commit's generated message is the one input a reuse does not scan again.
+
+Because the pull_request run already executes every job, reuse applies
 whenever `main` has not moved between the PR's last green run and its queue
 entry.
 
@@ -117,6 +128,22 @@ entry.
   .venv/bin/python -m scripts.ci.split_tests durations /tmp/junit/*/*.xml > scripts/ci/pytest-file-durations.json
   ```
 
+### History shard
+
+Three test files read git history: `git show <old sha>:<path>`, a recorded
+historical commit, and `origin/main` ancestry. They are listed in
+`scripts/ci/history-tests.txt`. `split_tests.py` pins them to shard 1 and
+balances the other files around them. Shard 1 is the only shard checked out
+with full history (`fetch-depth: 0`); shards 2..N check out only the tested
+commit (`fetch-depth: 1`). A listed file that is no longer tracked fails the
+split.
+
+The list is measured, not guessed. One run with every shard shallow was
+compared test by test with a full-history run of the same commit. Only these
+three files changed outcome. No test skipped because history was missing:
+all three failed loudly, with git exit 128. A new test that needs history
+therefore fails on a shallow shard; add its file to the list.
+
 To change the shard count, edit the static `matrix.shard` list (it must stay
 `1..N`). `scripts/ci/slot_inventory.py --check` (actionlint workflow) counts
 every PR-path job against the 58-slot ceiling (GitHub Team: 60 concurrent
@@ -124,7 +151,7 @@ jobs, two reserved).
 
 ## Shard setup
 
-Per shard: checkout (full history: some tests read old commits), Python
+Per shard: checkout (shallow; full history on the history shard), Python
 3.12.8, then `scripts/ci/test_env.sh start` runs `npm ci` and
 `scripts/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked

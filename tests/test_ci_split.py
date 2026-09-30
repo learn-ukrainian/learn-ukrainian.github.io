@@ -1,6 +1,7 @@
 """CI pytest sharding, the whole-run report, and merge-queue reuse.
 
-- ``scripts/ci/split_tests.py``: the static duration-balanced file split.
+- ``scripts/ci/split_tests.py``: the static duration-balanced file split and
+  the history files it pins to shard 1.
 - ``tests/conftest.py``: the ``LU_PYTEST_SHARD_FILES`` allowlist hook each
   shard collects through.
 - ``scripts/ci/pytest_report.py``: partition, executed-test and
@@ -22,7 +23,7 @@ import pytest
 import yaml
 
 from scripts.ci import pytest_report, reuse_green_run
-from scripts.ci.split_tests import assign, junit_file_seconds
+from scripts.ci.split_tests import DEFAULT_HISTORY, HISTORY_SHARD, assign, junit_file_seconds, read_list
 from scripts.ci.split_tests import main as split_main
 from tests.conftest import LU_PYTEST_SHARD_FILES_ENV_VAR, _load_shard_allowlist, pytest_ignore_collect
 
@@ -72,14 +73,36 @@ def test_split_rejects_duplicates_and_zero_shards() -> None:
         assign(["tests/test_a.py"], {}, 0)
 
 
+def test_split_pins_history_files_to_the_history_shard() -> None:
+    durations = {"tests/test_a.py": 10.0, "tests/test_b.py": 6.0, "tests/test_c.py": 5.0, "tests/test_d.py": 1.0}
+    shards = assign(list(durations), durations, 2, pinned=["tests/test_d.py", "tests/test_c.py"])
+    assert HISTORY_SHARD == 1
+    # d and c (6) start shard 1; a(10) goes to the empty shard 2; b(6) joins shard 1 (6 < 10).
+    assert shards == [["tests/test_b.py", "tests/test_c.py", "tests/test_d.py"], ["tests/test_a.py"]]
+    with pytest.raises(ValueError, match=re.escape("pinned files are not in the input: tests/test_gone.py")):
+        assign(list(durations), durations, 2, pinned=["tests/test_gone.py"])
+
+
 def test_split_cli_prints_one_shard(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
     durations = tmp_path / "durations.json"
     durations.write_text(json.dumps({"tests/test_a.py": 5.0, "tests/test_b.py": 1.0}), encoding="utf-8")
+    history = tmp_path / "history.txt"
+    history.write_text("# comment\ntests/test_b.py  # reads old commits\n\n", encoding="utf-8")
+    args = ["--durations", str(durations), "--history", str(history)]
     monkeypatch.setattr(sys, "stdin", __import__("io").StringIO("tests/test_a.py\ntests/test_b.py\n"))
-    assert split_main(["split", "--shard", "2", "--of", "2", "--durations", str(durations)]) == 0
-    assert capsys.readouterr().out == "tests/test_b.py\n"
+    assert split_main(["split", "--shard", "2", "--of", "2", *args]) == 0
+    # b is pinned to shard 1 despite being the shorter file.
+    assert capsys.readouterr().out == "tests/test_a.py\n"
     with pytest.raises(SystemExit):
-        split_main(["split", "--shard", "3", "--of", "2", "--durations", str(durations)])
+        split_main(["split", "--shard", "3", "--of", "2", *args])
+
+
+def test_committed_history_list_names_tracked_test_files() -> None:
+    listed = read_list(DEFAULT_HISTORY)
+    assert listed and len(listed) == len(set(listed))
+    for name in listed:
+        assert re.fullmatch(r"tests/(?:.+/)?test_[^/]+\.py", name), name
+        assert (_REPO_ROOT / name).is_file(), name
 
 
 def test_durations_sum_testcase_time_per_file(tmp_path: Path) -> None:
@@ -114,7 +137,7 @@ def test_planned_shard_collects_build_tests_through_directory(tmp_path: Path) ->
     paths = [path for path in tracked if re.search(r"/test_[^/]+\.py$", path)]
     durations = json.loads((_REPO_ROOT / "scripts/ci/pytest-file-durations.json").read_text(encoding="utf-8"))
     target = "tests/build/test_linear_pipeline.py"
-    owners = [shard for shard in assign(paths, durations, 16) if target in shard]
+    owners = [shard for shard in assign(paths, durations, 16, read_list(DEFAULT_HISTORY)) if target in shard]
     assert len(owners) == 1
     allowlist = tmp_path / "shard.txt"
     allowlist.write_text("\n".join(owners[0]) + "\n", encoding="utf-8")
@@ -343,25 +366,79 @@ def _record(tree: str = _TREE, tier: str = "full"):
     return lambda: {"tier": tier, "tree": tree}
 
 
+def _run_jobs(**conclusions: str):
+    """A run's jobs: every gate green unless overridden (``Checks="failure"``, ``Frontend=None`` drops it)."""
+    names = {gate: "success" for gate in reuse_green_run.GATES}
+    names.update({key.replace("_", " "): value for key, value in conclusions.items()})
+    jobs = [{"name": name, "conclusion": value, "id": 100 + index} for index, (name, value) in enumerate(names.items())]
+    jobs.append({"name": "pytest (1)", "conclusion": "success", "id": 99})
+    return lambda: [job for job in jobs if job["conclusion"] is not None]
+
+
 def test_reuse_when_a_green_full_run_tested_the_identical_tree() -> None:
-    decision = reuse_green_run.decide(_TREE, [("11", _record())])
+    decision = reuse_green_run.decide(_TREE, [("11", _record(), _run_jobs())])
     assert decision.reuse and decision.run_id == "11"
+    # Every reused gate is logged with its job in the reused run.
+    assert [gate for gate, _job in decision.jobs] == ["Secret scan", "Checks", "Frontend", "pytest report"]
+    assert all(isinstance(job, int) for _gate, job in decision.jobs)
 
 
 def test_no_reuse_for_a_different_tree() -> None:
-    decision = reuse_green_run.decide(_TREE, [("11", _record(tree="2" * 40))])
+    decision = reuse_green_run.decide(_TREE, [("11", _record(tree="2" * 40), _run_jobs())])
     assert not decision.reuse and "differs" in decision.reason
 
 
 def test_no_reuse_when_the_run_was_not_the_full_tier() -> None:
-    decision = reuse_green_run.decide(_TREE, [("11", _record(tier="fast")), ("10", lambda: None)])
+    decision = reuse_green_run.decide(
+        _TREE, [("11", _record(tier="fast"), _run_jobs()), ("10", lambda: None, _run_jobs())]
+    )
     assert not decision.reuse
     assert "is not 'full'" in decision.reason and "no ci-tested-tree record" in decision.reason
 
 
+@pytest.mark.parametrize(
+    ("jobs", "reason"),
+    [
+        (_run_jobs(Checks="failure"), "'Checks' concluded 'failure'"),
+        (_run_jobs(Secret_scan="skipped"), "'Secret scan' concluded 'skipped'"),
+        (_run_jobs(Frontend=None), "0 jobs named 'Frontend'"),
+        (lambda: [*_run_jobs()(), {"name": "Checks", "conclusion": "success", "id": 7}], "2 jobs named 'Checks'"),
+    ],
+)
+def test_no_reuse_unless_every_gate_succeeded_in_the_run(jobs, reason: str) -> None:
+    decision = reuse_green_run.decide(_TREE, [("11", _record(), jobs)])
+    assert not decision.reuse and not decision.jobs
+    assert reason in decision.reason
+
+
 def test_reuse_takes_the_first_matching_candidate() -> None:
-    decision = reuse_green_run.decide(_TREE, [("12", lambda: None), ("11", _record()), ("10", _record())])
-    assert decision.run_id == "11"
+    decision = reuse_green_run.decide(
+        _TREE,
+        [
+            ("12", lambda: None, _run_jobs()),
+            ("11", _record(), _run_jobs(Checks="failure")),
+            ("10", _record(), _run_jobs()),
+        ],
+    )
+    assert decision.run_id == "10"
+
+
+def test_reuse_logs_the_run_id_per_gate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    monkeypatch.setattr(
+        reuse_green_run, "lookup", lambda *_args: reuse_green_run.decide(_TREE, [("11", _record(), _run_jobs())])
+    )
+    output, summary = tmp_path / "output", tmp_path / "summary"
+    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+    for name in ("REPO", "HEAD_SHA", "HEAD_REF"):
+        monkeypatch.setenv(name, "x")
+
+    assert reuse_green_run.main() == 0
+    assert output.read_text(encoding="utf-8") == "reuse=true\nrun_id=11\n"
+    logged = capsys.readouterr().out
+    for gate in reuse_green_run.GATES:
+        assert f"{gate}: reused from run 11, job " in logged
+        assert f"{gate}: reused from run 11, job " in summary.read_text(encoding="utf-8")
 
 
 def test_lookup_failure_runs_the_full_suite(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -383,7 +460,9 @@ def test_a_record_that_fails_to_load_runs_the_full_suite(tmp_path: Path, monkeyp
     def unreadable() -> dict:
         raise json.JSONDecodeError("bad", "", 0)
 
-    monkeypatch.setattr(reuse_green_run, "lookup", lambda *_args: reuse_green_run.decide(_TREE, [("11", unreadable)]))
+    monkeypatch.setattr(
+        reuse_green_run, "lookup", lambda *_args: reuse_green_run.decide(_TREE, [("11", unreadable, _run_jobs())])
+    )
     output = tmp_path / "output"
     monkeypatch.setenv("GITHUB_OUTPUT", str(output))
     for name in ("REPO", "HEAD_SHA", "HEAD_REF"):

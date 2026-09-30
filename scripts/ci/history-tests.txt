@@ -1,0 +1,8 @@
+# Test files that read git history. scripts/ci/split_tests.py pins them to
+# pytest shard 1, the only shard ci.yml checks out with full history
+# (fetch-depth: 0); every other shard is a shallow checkout (fetch-depth: 1).
+# A test on a shallow shard that needs history fails loudly (git exits 128);
+# add its file here. See docs/runbooks/ci-gate.md "History shard".
+tests/build/test_reviewer_scoring_parity.py  # git show <old sha>:<path>
+tests/orchestration/test_curriculum_lifecycle_pilot.py  # verifies a recorded historical commit
+tests/test_open_model_phase3_source_universe_freeze_validator.py  # git rev-parse origin/main, merge-base ancestry

@@ -2,7 +2,7 @@
 
 Safety invariant under test: no event path may make the required "CI Gate"
 check green or skipped without every required job running (or, in the merge
-queue only, a recorded reuse of a green full pytest run of the same tree).
+queue only, a recorded reuse of a green full run of the same tree).
 
 - ci.yml fires on opened/synchronize/reopened only, never `edited` or
   `labeled`. The negated-closing-reference body guard lives in
@@ -308,9 +308,23 @@ def test_every_event_runs_every_job(event: str) -> None:
     assert names["ci-gate"] == "CI Gate"
 
 
-def test_merge_queue_reuse_skips_only_the_pytest_jobs() -> None:
+def test_merge_queue_reuse_skips_every_reused_job() -> None:
     results, _ = _simulate(_EVENTS["merge_group"], reuse="true")
-    assert {job for job, result in results.items() if result != "success"} == {"pytest", "pytest-report"}
+    reused = {"secret-scan", "checks", "frontend", "pytest", "pytest-report"}
+    assert {job for job, result in results.items() if result != "success"} == reused
+
+
+def test_only_the_history_shard_checks_out_full_history() -> None:
+    from scripts.ci.split_tests import HISTORY_SHARD
+
+    pytest_job = _load("ci.yml")["jobs"]["pytest"]
+    checkout = next(step for step in pytest_job["steps"] if step.get("uses", "").startswith("actions/checkout@"))
+    depths = {
+        shard: _interpolate(checkout["with"]["fetch-depth"], {"matrix": {"shard": float(shard)}})
+        for shard in pytest_job["strategy"]["matrix"]["shard"]
+    }
+    # fetch-depth 0 is full history; 1 is a shallow checkout of the tested commit.
+    assert depths == {shard: "0" if shard == HISTORY_SHARD else "1" for shard in depths}
 
 
 def test_pr_runs_share_one_group_per_pr_number() -> None:
@@ -418,19 +432,24 @@ def test_gate_names_a_cancelled_job() -> None:
     assert "required job was cancelled: pytest" in result.stdout
 
 
+_REUSED = {name: "skipped" for name in _GREEN}
+
+
 def test_gate_accepts_merge_queue_reuse_with_a_run_id() -> None:
-    result = _run_gate(
-        "merge_group", REUSE_JOB="success", REUSE="true", REUSED_RUN="123", PYTEST="skipped", PYTEST_REPORT="skipped"
-    )
+    result = _run_gate("merge_group", REUSE_JOB="success", REUSE="true", REUSED_RUN="123", **_REUSED)
     assert result.returncode == 0, result.stdout
-    assert "pytest reused from run 123" in result.stdout
+    for job in ("secret-scan", "checks", "frontend", "pytest", "pytest-report"):
+        assert f"{job} reused from run 123" in result.stdout
 
 
 @pytest.mark.parametrize(
     "overrides",
     [
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "", "PYTEST": "skipped", "PYTEST_REPORT": "skipped"},
-        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", "PYTEST": "success", "PYTEST_REPORT": "skipped"},
+        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "", **_REUSED},
+        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "PYTEST": "success"},
+        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "CHECKS": "failure"},
+        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "SECRET_SCAN": "cancelled"},
+        {"REUSE_JOB": "success", "REUSE": "false", **_REUSED},
         {"REUSE_JOB": "success", "REUSE": "false", "PYTEST": "skipped", "PYTEST_REPORT": "skipped"},
         {"REUSE_JOB": "failure", "REUSE": "", "PYTEST": "success"},
         {"REUSE_JOB": "cancelled", "REUSE": ""},

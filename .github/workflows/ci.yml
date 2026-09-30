@@ -2,7 +2,7 @@ name: CI
 
 # See docs/runbooks/ci-gate.md. Every event runs the same jobs and the full
 # non-slow pytest suite (slow tests: pytest-slow-nightly.yml). The merge queue
-# reuses a green full pytest run of the identical tree instead of rerunning it.
+# reuses a green full run of the identical tree instead of rerunning its jobs.
 # The one required context is "CI Gate".
 
 concurrency:
@@ -58,6 +58,8 @@ jobs:
 
   secret-scan:
     name: Secret scan
+    needs: [reuse]
+    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -97,6 +99,8 @@ jobs:
 
   checks:
     name: Checks
+    needs: [reuse]
+    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -127,6 +131,8 @@ jobs:
     # Builds only when the diff touches scripts/ci/frontend_change_denominator.json
     # (site/ plus the backend inputs hydrate reads) or the base is unknown.
     name: Frontend
+    needs: [reuse]
+    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -182,7 +188,10 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 0  # tests read old commits; fetched here, never lazily
+          # Shard 1 alone gets full history for the files in
+          # scripts/ci/history-tests.txt (split_tests.py pins them there);
+          # every other shard is shallow. Never fetched lazily (#9062).
+          fetch-depth: ${{ matrix.shard != 1 && 1 || 0 }}
       # PostgreSQL 16/bubblewrap and npm ci run in the background during the Python install.
       - run: bash scripts/ci/test_env.sh start postgres
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
@@ -283,18 +292,15 @@ jobs:
               [ "$2" != cancelled ] || echo "::error::required job was cancelled: $1"
               echo "::error::$1 is '${2:-missing}', expected '$3'"; status=1; fi
           }
-          want secret-scan "$SECRET_SCAN" success
-          want checks "$CHECKS" success
-          want frontend "$FRONTEND" success
           if [ "$EVENT_NAME" = merge_group ]; then want reuse "$REUSE_JOB" success
           else want reuse "$REUSE_JOB" skipped; fi
+          expected=success
           if [ "$EVENT_NAME" = merge_group ] && [ "$REUSE" = true ]; then
             [ -n "$REUSED_RUN" ] || { echo "::error::reuse=true without a run id"; status=1; }
-            want pytest "$PYTEST" skipped
-            want pytest-report "$PYTEST_REPORT" skipped
-            echo "pytest reused from run ${REUSED_RUN}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${REUSED_RUN}"
-          else
-            want pytest "$PYTEST" success
-            want pytest-report "$PYTEST_REPORT" success
+            expected=skipped
           fi
+          for job in secret-scan:SECRET_SCAN checks:CHECKS frontend:FRONTEND pytest:PYTEST pytest-report:PYTEST_REPORT; do
+            var="${job#*:}"; want "${job%%:*}" "${!var}" "$expected"
+            [ "$expected" = success ] || echo "${job%%:*} reused from run ${REUSED_RUN}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${REUSED_RUN}"
+          done
           [ "$status" != 0 ] || echo "CI Gate green"; exit "$status"
