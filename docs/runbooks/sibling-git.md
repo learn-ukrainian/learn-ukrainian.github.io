@@ -39,6 +39,8 @@ transport is GitHub SSH, with the registry's exact owner and repository;
 `git@github.com:owner/repository.git` and
 `ssh://git@github.com/owner/repository.git` are accepted origin spellings.
 Authentication uses installed SSH and its normal trusted host configuration.
+Fetch uses the reserved `sibling-git-canonical` remote with its URL supplied
+by the module for that command; no remote configuration is written to disk.
 There are no user-supplied Git flags, remotes, refs, configuration or executables.
 
 The helper validates real checkout, Git directory, common directory and index
@@ -69,6 +71,8 @@ system configuration is inspected but excluded from execution.
 | `credential.helper` | Empty fixed override resets the helper list; URL-scoped `credential.*.helper` refused. |
 | `protocol.allow`, `protocol.*.allow` | Fixed default `never`, SSH `always`; controlled `GIT_ALLOW_PROTOCOL=ssh` excludes every other protocol, including remote helpers. |
 | `http.*`, `remote.*.proxy`, `remote.*.proxyAuthMethod` | Refused; only the registered SSH transport is supported. |
+| `remote.<name>.*` with `/` or `:` in `<name>`, or `<name>` equal to `sibling-git-canonical` | Refused; URL-like names cannot redirect fetch, and the module exclusively controls its reserved fetch remote. |
+| `fetch.bundleURI`, `transfer.bundleURI`, any `*.bundleURI`, `bundle.<id>.uri`, and `*.bundleCreationToken` (including `fetch.bundleCreationToken`) | Refused; bundle downloads, foreign object imports and incremental bundle state are unsupported. |
 | `core.hooksPath`, `core.fsmonitor` | Empty hook directory and fixed `false`. |
 | `core.sshCommand`, `core.gitProxy`, `url.*`, `remote.*.uploadpack`, `remote.*.vcs`, `uploadpack.*` | Refused; SSH and upload-pack selection are fixed by the runner. |
 | `core.alternateRefsCommand`, `extensions.partialClone`, `remote.*.promisor`, `gc.recentObjectsHook` | Refused; implicit fetches and object enumeration commands are unsupported. |

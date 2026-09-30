@@ -23,6 +23,7 @@ from scripts.orchestration import worktree_claims
 from scripts.orchestration.fleet_repos import load_fleet_repos, resolve_fleet_repo
 
 _GIT = "/usr/bin/git"
+_FETCH_REMOTE = "sibling-git-canonical"
 _SOURCE_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -196,6 +197,7 @@ def git_session():
 def _safe_config(git: Git, path: Path) -> None:
     for key, value in git.config(path, inherited=True):
         key = key.lower()
+        remote_name = key[7:].rsplit(".", 1)[0] if key.startswith("remote.") else ""
         if (
             key in {"core.worktree", "core.sshcommand", "core.attributesfile"}
             or (key == "core.bare" and value != "false")
@@ -205,6 +207,12 @@ def _safe_config(git: Git, path: Path) -> None:
                 "extensions.partialclone", "gc.recentobjectshook", "gpg.ssh.defaultkeycommand",
             }
             or (key.startswith("remote.") and key.endswith((".uploadpack", ".vcs", ".proxy", ".proxyauthmethod", ".promisor")))
+            # Git resolves remote names before URLs. Reserve our fetch remote
+            # entirely; even another URL value would precede a -c override.
+            or remote_name == _FETCH_REMOTE
+            or any(c in remote_name for c in "/:")
+            or key.endswith((".bundleuri", ".bundlecreationtoken"))
+            or (key.startswith("bundle.") and key.endswith(".uri"))
             or key.startswith("uploadpack.")
             or key.startswith("http.")
             or (key.startswith("credential.") and key.endswith(".helper") and key != "credential.helper")
@@ -318,6 +326,8 @@ def sync_main(repo: Repository, primary: Path, git: Git) -> dict:
     old = preflight()
     git.text(
         repo.checkout,
+        "-c",
+        f"remote.{_FETCH_REMOTE}.url={repo.remote}",
         "fetch",
         "--no-tags",
         "--no-recurse-submodules",
@@ -325,7 +335,7 @@ def sync_main(repo: Repository, primary: Path, git: Git) -> dict:
         "--refmap=",
         "--upload-pack=git-upload-pack",
         "--",
-        repo.remote,
+        _FETCH_REMOTE,
         "refs/heads/main",
     )
     fetched = git.text(repo.checkout, "rev-parse", "--verify", "FETCH_HEAD^{commit}")

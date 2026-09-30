@@ -12,7 +12,9 @@ import subprocess
 import sys
 import types
 from contextlib import redirect_stderr, redirect_stdout
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from threading import Thread
 
 import pytest
 
@@ -174,6 +176,117 @@ def test_sync_main_product(world, tmp_path):
     assert git(world[1], "rev-parse", "HEAD") == sha
     assert (world[1] / "file.txt").read_text() == "fetched\n"
     assert invoke("sync-main")[0] == 0
+
+
+@pytest.fixture
+def foreign(world, tmp_path):
+    # A descendant would pass the fast-forward gate if the fetch is redirected.
+    checkout = tmp_path / "other"
+    git(tmp_path, "clone", "--no-hardlinks", str(world[2]), str(checkout))
+    git(checkout, "config", "user.name", "Fixture")
+    git(checkout, "config", "user.email", "fixture@example.invalid")
+    sha = commit(checkout, "foreign.txt", "foreign repository\n")
+    bundle = tmp_path / "foreign.bundle"
+    git(checkout, "bundle", "create", str(bundle), "main")
+    return checkout, sha, bundle
+
+
+@pytest.mark.parametrize("name", [
+    "git@github.com:fixture/sibling.git",
+    "ssh://git@github.com/fixture/sibling.git",
+    "github.com/fixture/sibling.git",
+    "github:fixture",
+    "sibling-git-canonical",
+])
+def test_remote_names_cannot_redirect_fetch(world, foreign, tmp_path, name):
+    sibling, upstream = world[1:]
+    other, sha, _ = foreign
+    log = tmp_path / "ssh.log"
+    ssh = tmp_path / "fixture ssh"
+    ssh.write_text(
+        "#!/bin/sh\n"
+        f"printf '%s\\n' \"$*\" >> {shlex.quote(str(log))}\n"
+        'case "$*" in\n'
+        f"  *other*) exec /usr/bin/git-upload-pack {shlex.quote(str(other))} ;;\n"
+        f"  *) exec /usr/bin/git-upload-pack {shlex.quote(str(upstream))} ;;\n"
+        "esac\n"
+    )
+    git(sibling, "config", f"remote.{name}.url", "ssh://git@github.com/fixture/other.git")
+    # Control: real Git reaches the other repository through the same SSH stub.
+    control = tmp_path / "control"
+    git(tmp_path, "clone", "--no-hardlinks", str(sibling), str(control))
+    git(control, "config", f"remote.{name}.url", "ssh://git@github.com/fixture/other.git")
+    with sg.git_session() as runner:
+        assert runner.run(control, ["fetch", "--", name, "refs/heads/main"]).returncode == 0
+    assert git(control, "rev-parse", "FETCH_HEAD") == sha
+    assert "other.git" in log.read_text()
+    log.unlink()
+    before = snapshot(sibling)
+    code, _, err = invoke("sync-main")
+    assert code == 2 and "unsupported redirect" in err
+    assert not log.exists()
+    assert snapshot(sibling) == before
+    with pytest.raises(subprocess.CalledProcessError):
+        git(sibling, "cat-file", "-e", sha)
+
+
+def test_bundle_uri_listener_receives_no_request(world, foreign, tmp_path):
+    requests = []
+
+    class Listener(BaseHTTPRequestHandler):
+        def do_GET(self):
+            requests.append(self.path)
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(foreign[2].read_bytes())
+
+        def log_message(self, *_args):
+            pass
+
+    with ThreadingHTTPServer(("127.0.0.1", 0), Listener) as server:
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            uri = f"http://localhost:{server.server_port}/foreign.bundle"
+            # Control proves the listener and bundle exercise Git's download path.
+            control = tmp_path / "control"
+            git(tmp_path, "clone", "--no-hardlinks", str(world[1]), str(control))
+            git(control, "config", "fetch.bundleURI", uri)
+            with sg.git_session() as runner:
+                assert runner.run(control, ["fetch", "--", "git@github.com:fixture/sibling.git", "main"]).returncode == 0
+            assert requests == ["/foreign.bundle"]
+            assert git(control, "cat-file", "-t", foreign[1]) == "commit"
+            requests.clear()
+            git(world[1], "config", "fetch.bundleURI", uri)
+            before = snapshot(world[1])
+            code, _, err = invoke("sync-main")
+            assert code == 2 and "unsupported redirect" in err
+            assert snapshot(world[1]) == before
+        finally:
+            server.shutdown()
+            thread.join(timeout=5)
+        assert not thread.is_alive()
+        assert requests == []
+
+
+@pytest.mark.parametrize("key", ["fetch.bundleURI", "transfer.bundleURI"])
+def test_local_bundle_cannot_import_foreign_objects(world, foreign, tmp_path, key):
+    sibling = world[1]
+    _, sha, bundle = foreign
+    # Control: this full bundle contains an importable foreign descendant.
+    control = tmp_path / "control"
+    git(tmp_path, "clone", "--no-hardlinks", str(sibling), str(control))
+    git(control, "config", "fetch.bundleURI", str(bundle))
+    with sg.git_session() as runner:
+        assert runner.run(control, ["fetch", "--", "git@github.com:fixture/sibling.git", "main"]).returncode == 0
+    assert git(control, "cat-file", "-t", sha) == "commit"
+    git(sibling, "config", key, str(bundle))
+    before = snapshot(sibling)
+    code, _, err = invoke("sync-main")
+    assert code == 2 and "unsupported redirect" in err
+    assert snapshot(sibling) == before
+    with pytest.raises(subprocess.CalledProcessError):
+        git(sibling, "cat-file", "-e", sha)
 
 
 def test_status_product(world):
@@ -390,6 +503,16 @@ def test_executable_configuration_never_runs(world, tmp_path, monkeypatch, kind)
         ("gc.recentObjectsHook", True),
         ("extensions.partialClone", True),
         ("remote.hidden.promisor", True),
+        ("remote.github:fixture.fetch", True),
+        ("remote.github.com/fixture.tagOpt", True),
+        ("remote.sibling-git-canonical.url", True),
+        ("remote.sibling-git-canonical.fetch", True),
+        ("fetch.bundleURI", True),
+        ("transfer.bundleURI", True),
+        ("remote.hidden.bundleURI", True),
+        ("future.bundleURI", True),
+        ("bundle.foreign.uri", True),
+        ("fetch.bundleCreationToken", True),
     ],
 )
 def test_swept_executable_keys_never_run(world, managed, tmp_path, key, refused, verb):
