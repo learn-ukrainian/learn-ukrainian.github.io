@@ -11179,6 +11179,40 @@ def _kimi_worktree_trees(worktree: Path) -> list[Any]:
     return [DirectoryTree(worktree), CommitTree(worktree, head, env=_sanitized_git_env())]
 
 
+def _resolve_local_base_sha(*, base: str, branch: str | None, pinned_head_sha: str | None) -> str:
+    """The commit a new Kimi worktree would start from, from local objects only.
+
+    The Kimi content scan runs before any effect, so this never fetches: it
+    verifies the pinned head, the existing remote-tracking ref of ``branch``,
+    or the base's remote-tracking ref, as a commit already in the repository.
+    Worktree creation later fetches as it does for any seat and refuses when
+    the fetched commit is not the one scanned. Raises ``RuntimeError`` when the
+    commit is not available locally.
+    """
+    if pinned_head_sha:
+        ref = pinned_head_sha
+    elif branch:
+        ref = f"origin/{branch}"
+    else:
+        ref = _origin_base_ref(base)
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        proc = None
+    sha = (proc.stdout or "").strip() if proc is not None and proc.returncode == 0 else ""
+    if not sha:
+        raise RuntimeError(f"base not available locally ({ref}); refresh origin and retry")
+    return sha
+
+
 def _kimi_start_trees(
     args: argparse.Namespace,
     *,
@@ -11191,8 +11225,8 @@ def _kimi_start_trees(
 
     A reused worktree (``--worktree``, ``--branch`` or ``--cwd``) is read as it
     is on disk and at the commit checked out there. A new worktree is read at
-    its creation base commit, fetched and resolved as worktree creation
-    resolves it and read with git plumbing — no checkout. Dispatch then refuses
+    its creation base commit, resolved from objects already present locally
+    (no fetch, no checkout) and read with git plumbing. Dispatch then refuses
     a worktree that is not created from, or no longer checked out at, that
     commit. Raises ``ValueError`` or ``RuntimeError`` when there is no such tree.
     """
@@ -11216,14 +11250,9 @@ def _kimi_start_trees(
         return trees, trees[-1].commit
     if getattr(args, "pr", None) and not getattr(args, "branch", None):
         raise ValueError("--pr without --branch: name the PR branch so its head is read before dispatch")
-    base_sha = _resolve_worktree_base_sha(
-        agent=agent,
-        task_id=str(args.task_id),
-        raw_path=str(path),
-        validated_path=validated_worktree,
+    base_sha = _resolve_local_base_sha(
         base=getattr(args, "base", None) or "main",
         branch=getattr(args, "branch", None),
-        allow_rebase=False,
         pinned_head_sha=getattr(args, "pinned_head", None),
     )
     return [CommitTree(_REPO_ROOT, base_sha, env=_sanitized_git_env())], base_sha

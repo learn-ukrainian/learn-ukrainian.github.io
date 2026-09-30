@@ -731,17 +731,37 @@ def test_dispatch_reads_owned_paths_at_the_new_worktree_base_commit(
     _git(primary, "update-ref", "refs/remotes/origin/main", base)
     (primary / path).write_text("export const label = 'Lesson';\n", encoding="utf-8")
     _commit_all(primary, "the dispatcher checkout is clean")
-    fetched: list[str] = []
     monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
-    monkeypatch.setattr(delegate, "_fetch_base", lambda branch: fetched.append(branch) or True)
-    ran = _plumbing_only(monkeypatch)
+    monkeypatch.setattr(delegate, "_fetch_base", _fail)
+    monkeypatch.setattr(delegate, "_fetch_existing_branch", _fail)
+    ran = _plumbing_only(monkeypatch)  # any fetch or other git write raises
 
     reason = f"Cyrillic text in {path!r}, in commit {base[:12]}"
     _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path), reason)
-    assert fetched == ["main"]
     assert set(ran) <= _GATE_GIT and "ls-tree" in ran
     assert not (primary / ".worktrees").exists()
     assert _git(primary, "worktree", "list").count("\n") == 1
+
+
+@pytest.mark.parametrize("extra", [(), ("--branch", "kimi/task")], ids=["base", "branch"])
+def test_dispatch_refuses_a_base_missing_locally_without_fetching(
+    no_spawn, capsys, monkeypatch, tmp_path, clean_git_env, extra
+):
+    """No remote-tracking commit locally: refused with the refresh reason, never fetched."""
+    path = "site/src/components/LiveStatus.tsx"
+    primary = tmp_path / "primary"
+    (primary / path).parent.mkdir(parents=True)
+    _git(primary, "init", "-q", "--initial-branch=main")
+    (primary / path).write_text("export const label = 'Lesson';\n", encoding="utf-8")
+    _commit_all(primary, "no origin ref exists")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.setattr(delegate, "_fetch_base", _fail)
+    monkeypatch.setattr(delegate, "_fetch_existing_branch", _fail)
+    ran = _plumbing_only(monkeypatch)
+
+    _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--owned-path", path, *extra), "base not available locally")
+    assert set(ran) <= {"rev-parse"}
+    assert not (primary / ".worktrees").exists()
 
 
 def test_dispatch_reads_owned_paths_in_the_reused_worktree(no_spawn, capsys, monkeypatch, tmp_path, clean_git_env):
@@ -775,20 +795,20 @@ def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, mo
     monkeypatch.setattr(delegate, "_check_capacity_hint", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_report_dispatch_admission", lambda *_a, **_k: None)
     gate_base = _head()
-    bases = iter([gate_base, "0" * 40])
     calls: list[bool] = []
 
     def resolve(**kwargs):
         calls.append(kwargs["allow_rebase"])
-        return next(bases)
+        return "0" * 40  # the fetch at creation moved the base
 
+    monkeypatch.setattr(delegate, "_resolve_local_base_sha", lambda **_kwargs: gate_base)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", resolve)
     argv = _dispatch(*_WRITE, "--dry-run", "--owned-path", "scripts/agent_runtime/runner.py")
     rc = delegate.main(argv)
     err = capsys.readouterr().err
     assert rc == 2, err
     assert _TOKEN in err and f"is not the commit {gate_base} its owned paths were read at" in err
-    assert calls == [False, False]  # a Kimi worktree is never rebased
+    assert calls == [False]  # a Kimi worktree is never rebased
 
 
 def test_dispatch_refuses_a_kimi_model_on_another_seat(no_spawn, capsys):
