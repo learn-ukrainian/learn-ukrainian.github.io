@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import sqlite3
+from collections.abc import Callable, Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -109,22 +111,14 @@ def _write_fixture_vesum(path: Path) -> None:
         connection.close()
 
 
-def test_folk_vesum_gate_fixture_vesum_rejects_mixed_case_proper_noun(
+@contextmanager
+def _fixture_vesum_gate(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
-) -> None:
-    """«ІРан» must not inherit the VESUM lemma «Іран» through casefolding (#9344).
-
-    The fixture is the only dictionary. No data/sources.db or data/vesum.db.
-    """
+) -> Iterator[tuple[Path, Callable[..., dict[str, object]]]]:
+    """Gate backed only by the fixture VESUM. No data/sources.db or data/vesum.db."""
     fixture = tmp_path / "vesum.db"
     _write_fixture_vesum(fixture)
-
-    # The real classifier capitalizes a casefolded miss. Pin that mechanism:
-    # without the gate's casing check, «ІРан» would be heritage_attested.
-    capitalized = _vesum_attestation(_normalize_word("ІРан"), surface=True, vesum_db_path=fixture)
-    assert capitalized is not None
-    assert "Іран" in str(capitalized.get("ref"))
 
     def classify_from_fixture(form: str, *_args: object, **_kwargs: object) -> dict[str, object]:
         vesum = _vesum_attestation(_normalize_word(form), surface=True, vesum_db_path=fixture)
@@ -140,17 +134,37 @@ def test_folk_vesum_gate_fixture_vesum_rejects_mixed_case_proper_noun(
     def verify(words: list[str]) -> dict[str, list[dict[str, str]]]:
         return verify_words(words, db_path=fixture)
 
-    def gate(text: str) -> dict[str, object]:
+    def gate(text: str, *, level: str = "folk") -> dict[str, object]:
         return linear_pipeline._vesum_gate(
             module_text=text,
             activities=[],
             vocabulary=[],
             resources=[],
             verify_words_fn=verify,
-            level="folk",
+            level=level,
         )
 
     try:
+        yield fixture, gate
+    finally:
+        close_vesum_conn()
+
+
+def test_folk_vesum_gate_fixture_vesum_rejects_mixed_case_proper_noun(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """«ІРан» must not inherit the VESUM lemma «Іран» through casefolding (#9344).
+
+    The fixture is the only dictionary. No data/sources.db or data/vesum.db.
+    """
+    with _fixture_vesum_gate(tmp_path, monkeypatch) as (fixture, gate):
+        # The real classifier capitalizes a casefolded miss. Pin that mechanism:
+        # without the gate's casing check, «ІРан» would be heritage_attested.
+        capitalized = _vesum_attestation(_normalize_word("ІРан"), surface=True, vesum_db_path=fixture)
+        assert capitalized is not None
+        assert "Іран" in str(capitalized.get("ref"))
+
         rejected = gate("ІРан ЙОль ЯЛду")
         assert rejected["passed"] is False
         assert set(rejected["missing"]) == {"ІРан", "ЙОль", "ЯЛду"}
@@ -186,8 +200,60 @@ def test_folk_vesum_gate_fixture_vesum_rejects_mixed_case_proper_noun(
         assert sibling["passed"] is False
         assert sibling["missing"] == ["ІРан"]
         assert "ІРан" not in sibling["heritage_attested_words"]
-    finally:
-        close_vesum_conn()
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "ІРан Іран",
+        "ІРан **Іран**",
+        "ІРан Іра́н",
+    ],
+)
+def test_folk_vesum_gate_fixture_rejects_malformed_casing_beside_sibling(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    text: str,
+) -> None:
+    """A valid sibling must not hide «ІРан», including a decorated sibling (#9344).
+
+    Plain «Іран», bold «**Іран**», and stressed «Іра́н» each share the lowercase
+    key. Decoration matching has to keep «ІРан» so the casing check can reject it.
+    """
+    with _fixture_vesum_gate(tmp_path, monkeypatch) as (_fixture, gate):
+        rejected = gate(text)
+
+    assert rejected["passed"] is False
+    assert rejected["missing"] == ["ІРан"]
+    assert rejected["heritage_attested"] == 0
+
+
+@pytest.mark.parametrize("level", ["bio", "hist"])
+@pytest.mark.parametrize(
+    ("text", "heritage_words"),
+    [
+        ("ІРан", ["ІРан"]),
+        ("ІРан Іран", []),
+        ("ІРан **Іран**", []),
+        ("ІРан Іра́н", []),
+        ("ГАГілка", ["ГАГілка"]),
+        ("дерево Дерево", []),
+    ],
+)
+def test_bio_and_hist_vesum_gate_keeps_casefold_acceptance(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    level: str,
+    text: str,
+    heritage_words: list[str],
+) -> None:
+    """The #9344 casing rejection is folk-only. Bio and hist keep the prior result."""
+    with _fixture_vesum_gate(tmp_path, monkeypatch) as (_fixture, gate):
+        result = gate(text, level=level)
+
+    assert result["passed"] is True
+    assert result["missing"] == []
+    assert result["heritage_attested_words"] == heritage_words
 
 
 def test_foreign_proper_noun_fallback_does_not_apply_to_core_levels() -> None:

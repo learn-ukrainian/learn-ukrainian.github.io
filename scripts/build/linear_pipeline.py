@@ -11341,6 +11341,29 @@ def _vesum_casefolded_fallback_casing_is_valid(surface: str) -> bool:
     return _is_titlecase_ukrainian_proper_noun_surface(token)
 
 
+def _lowercase_keys_with_only_nonstandard_case(
+    keys: set[str],
+    unchecked_pairs: Sequence[tuple[str, str, str]],
+) -> set[str]:
+    """Keys whose every original surface has non-standard casing.
+
+    Casefolding would record «ІРан» as the attested lemma «Іран». A mixed
+    group still attests the key; the folk gate then drops only the bad surface.
+    """
+    originals_by_lower: dict[str, list[str]] = {}
+    for _surface, lower, original in unchecked_pairs:
+        if lower not in keys:
+            continue
+        originals_by_lower.setdefault(lower, []).append(original)
+    blocked: set[str] = set()
+    for lower, originals in originals_by_lower.items():
+        if originals and not any(
+            _vesum_casefolded_fallback_casing_is_valid(original) for original in originals
+        ):
+            blocked.add(lower)
+    return blocked
+
+
 def _nonstandard_case_surfaces_cleared_by_casefold(
     unchecked_pairs: Sequence[tuple[str, str, str]],
     *,
@@ -11726,11 +11749,9 @@ def _resolve_folk_heritage_attested_missing(
         return set()
 
     candidates_by_missing: dict[str, set[str]] = {word: {word} for word in missing_lc}
-    originals_by_lower: dict[str, list[str]] = {}
     for surface, lower, original_case_lookup in unchecked_pairs:
         if lower not in missing_lc:
             continue
-        originals_by_lower.setdefault(lower, []).append(original_case_lookup)
         candidates_by_missing[lower].add(_normalize_for_vesum(surface).lower())
         candidates_by_missing[lower].add(_normalize_for_vesum(original_case_lookup).lower())
 
@@ -11744,12 +11765,6 @@ def _resolve_folk_heritage_attested_missing(
 
     attested: set[str] = set()
     for word, candidates in candidates_by_missing.items():
-        # Casefolding would record «ІРан» as the attested lemma «Іран». Refuse
-        # the fallback when every surface of this key has non-standard casing;
-        # a mixed group still attests the key, and the gate drops the bad surface.
-        originals = originals_by_lower.get(word, ())
-        if originals and not any(_vesum_casefolded_fallback_casing_is_valid(original) for original in originals):
-            continue
         if candidates & _HERITAGE_FALLBACK_BLOCKED_SURFACES:
             continue
         # Existence-gate accept (#3647): real active-participle calques the classifier
@@ -12039,6 +12054,9 @@ def _vesum_gate(
                 "checked": len(unchecked_pairs),
             }
         missing_lc -= foreign_proper_attested_lc
+    # #9344 rejects malformed casing on the folk gate only. Other seminar
+    # tracks keep the casefold acceptance they had before that rejection.
+    folk_level = str(level or "").strip().lower() == "folk"
     heritage_attested_lc: set[str] = set()
     if missing_lc and _vesum_heritage_attestation_enabled(level):
         try:
@@ -12049,6 +12067,11 @@ def _vesum_gate(
                 "error": str(exc),
                 "checked": len(unchecked_pairs),
             }
+        if folk_level:
+            heritage_attested_lc -= _lowercase_keys_with_only_nonstandard_case(
+                heritage_attested_lc,
+                unchecked_pairs,
+            )
     missing_lc -= heritage_attested_lc
     plan_exempted_lc: set[str] = set()
     plan_exempted_by_category: dict[str, list[str]] = {
@@ -12072,7 +12095,7 @@ def _vesum_gate(
             }
     missing_lc -= plan_exempted_lc
     nonstandard_case_surfaces: set[str] = set()
-    if _vesum_heritage_attestation_enabled(level):
+    if folk_level:
         nonstandard_case_surfaces = _nonstandard_case_surfaces_cleared_by_casefold(
             unchecked_pairs,
             heritage_attested_lc=heritage_attested_lc,
@@ -12428,7 +12451,10 @@ def _iter_vesum_lookup_surface_pairs(
     normalized_words = {
         word for word in _iter_vesum_word_surfaces(_normalize_for_vesum(text)) if len(word) >= min_word_length
     }
-    decorated_by_lower: dict[str, set[tuple[str, str]]] = {}
+    # Match decoration to the exact normalized surface. Keying only on the
+    # lowercase form lets «**Іран**» or «Іра́н» consume the shared key and
+    # drop the sibling «ІРан» before the casing check (#9344).
+    decorated_by_word: dict[str, set[tuple[str, str]]] = {}
     decorated_text = _canonicalize_vesum_apostrophes(text)
     for match in _VESUM_DECORATED_WORD_RE.finditer(decorated_text):
         raw = match.group(0).strip(_VESUM_WORD_EDGE_CHARS)
@@ -12438,20 +12464,20 @@ def _iter_vesum_lookup_surface_pairs(
             continue
         normalized = _normalize_for_vesum(raw)
         for word in _iter_vesum_candidate_words(normalized):
-            lower = word.lower()
-            if len(word) < min_word_length and lower not in _VESUM_SHORT_DECORATED_WORDS:
+            if len(word) < min_word_length and word.lower() not in _VESUM_SHORT_DECORATED_WORDS:
                 continue
-            decorated_by_lower.setdefault(lower, set()).add((raw, word))
+            decorated_by_word.setdefault(word, set()).add((raw, word))
 
     pairs: set[tuple[str, str, str]] = set()
     for word in normalized_words:
         lower = word.lower()
-        decorated = decorated_by_lower.pop(lower, set())
+        decorated = decorated_by_word.pop(word, set())
         if decorated:
             pairs.update((surface, lower, original_case) for surface, original_case in decorated)
         else:
             pairs.add((word, lower, word))
-    for lower, decorated in decorated_by_lower.items():
+    for word, decorated in decorated_by_word.items():
+        lower = word.lower()
         pairs.update((surface, lower, original_case) for surface, original_case in decorated)
     return pairs
 
