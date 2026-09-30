@@ -79,7 +79,14 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
-        "kimi_content_refusal": str | absent        # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
+        "advisory_envelope": {requirement, advisor_task_id, advisor_model, advisor_run_nonce, result_path,
+                              result_sha256, envelope_sha256, dispatch_args_sha256, owned_paths,
+                              max_changed_files, max_non_test_loc} | absent,  # bounded-worker envelope (#9275)
+        "advisory_ceiling_check": {measured, changed_files, non_test_loc, max_*, exceeded | error} | absent,
+        "advisory_role": "bounded_advisory_envelope" | absent,  # the advisor run that issues an envelope (#9275)
+        "advisory_route": str | absent,
+        "advisory_binding_sha256": str | absent     # the worker dispatch's advisory binding digest
     }
 
 Design notes:
@@ -161,6 +168,7 @@ _local_repo_root = Path(__file__).resolve().parents[1]
 if str(_local_repo_root) not in sys.path:
     sys.path.insert(0, str(_local_repo_root))
 
+from scripts.agent_runtime import bounded_advisory
 from scripts.api.subscription_usage import pace_is_deficit, pace_is_visible
 from scripts.common.repo_root import main_checkout_root as _main_checkout_root  # noqa: F401  # compatibility seam
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
@@ -308,6 +316,53 @@ def dispatch_args_sha256(args: argparse.Namespace) -> str:
     }
     canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
+# Fields excluded from the advisory binding digest on top of the record hash's
+# exclusions (#9275): the envelope reference itself, which the advisor cannot
+# know when it issues the envelope, and the flag that prints the digest.
+ADVISORY_BINDING_EXCLUDED_FIELDS = frozenset({"advisory_task", "print_advisory_binding"})
+
+
+def advisory_args_sha256(args: argparse.Namespace) -> str:
+    """``dispatch_args_sha256`` without the envelope reference: the argument half of the advisory binding."""
+    kept = {key: value for key, value in vars(args).items() if key not in ADVISORY_BINDING_EXCLUDED_FIELDS}
+    return dispatch_args_sha256(argparse.Namespace(**kept))
+
+
+def advisory_binding(args_sha256: str, prompt_sha256: str | None) -> str:
+    """The digest an advisory envelope binds to: the dispatch arguments and the prompt text they carry.
+
+    Every parsed ``dispatch`` argument except the envelope reference — task id,
+    prompt, owned paths, mode, model, research flags — and the SHA-256 of the
+    prompt text (a ``--prompt-file`` is bound by content, not only by path), so
+    an envelope issued for one dispatch admits no other.
+    """
+    payload = {"dispatch_args_sha256": args_sha256, "prompt_sha256": prompt_sha256}
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")).hexdigest()
+
+
+def _binding_prompt_sha256(args: argparse.Namespace, *, read_stdin: bool) -> str | None:
+    """SHA-256 of the dispatch's prompt text for the advisory binding; None for an unread stdin prompt.
+
+    Raises ``OSError`` when a ``--prompt-file`` cannot be read.
+    """
+    if getattr(args, "prompt_file", None):
+        text = Path(args.prompt_file).read_text(encoding="utf-8")
+    elif getattr(args, "prompt", None) == "-":
+        if not read_stdin:
+            return None
+        text = sys.stdin.read()
+    elif getattr(args, "prompt", None) is not None:
+        text = str(args.prompt)
+    else:
+        return None
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def advisory_binding_sha256(args: argparse.Namespace, *, read_stdin: bool = False) -> str:
+    """The advisory binding of a parsed dispatch (what ``--print-advisory-binding`` prints)."""
+    return advisory_binding(advisory_args_sha256(args), _binding_prompt_sha256(args, read_stdin=read_stdin))
 
 
 def _resolve_dispatch_harness(agent: str, harness: str | None) -> str | None:
@@ -5489,6 +5544,44 @@ def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
     return None
 
 
+def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: Mapping[str, Any]) -> dict[str, Any]:
+    """Measure a bounded worker's changes against its envelope ceilings (#9275); unmeasurable is reported as such.
+
+    Changes run from the merge base with the base branch to the working tree:
+    the worker's commits plus its uncommitted and untracked files.
+    """
+    try:
+        max_files = int(envelope["max_changed_files"])
+        max_loc = int(envelope["max_non_test_loc"])
+    except (KeyError, TypeError, ValueError):
+        return {"measured": False, "error": "the task record's envelope has no ceilings"}
+    if worktree is None or not worktree.is_dir():
+        return {"measured": False, "error": "no worktree to measure"}
+    try:
+        base_proc = subprocess.run(
+            ["git", "merge-base", _commit_count_base_ref(worktree, base_branch), "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {"measured": False, "error": f"merge-base: {exc}"}
+    merge_base = (base_proc.stdout or "").strip()
+    if base_proc.returncode != 0 or not merge_base:
+        return {"measured": False, "error": "merge-base with the base branch is unknown"}
+    numstat = _worktree_diff_output(worktree, ["--numstat", "-z", "--no-renames", merge_base, "--"])
+    if numstat is None:
+        return {"measured": False, "error": "the worker's diff could not be read"}
+    try:
+        entries = bounded_advisory.parse_numstat_z(numstat)
+    except ValueError as exc:
+        return {"measured": False, "error": str(exc)}
+    return bounded_advisory.ceiling_verdict(entries, max_changed_files=max_files, max_non_test_loc=max_loc)
+
+
 def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
     """Additions and deletions that could be one move across the owned-path boundary.
 
@@ -8505,6 +8598,30 @@ def _run_worker(
                 ok_outcome = False
                 stderr_excerpt = review_verdict_failure
 
+        # #9275: a bounded worker's envelope ceilings are checked on what it changed.
+        # Exceeding either ceiling, or failing to measure, is a typed failure, never done.
+        advisory_envelope = final_state.get("advisory_envelope")
+        if isinstance(advisory_envelope, dict) and mode in _WRITE_CAPABLE_MODES and final_status == "done":
+            ceiling = _advisory_ceiling_check(
+                Path(worktree_path) if worktree_path else None,
+                str(final_state.get("worktree_base") or "main"),
+                advisory_envelope,
+            )
+            final_state["advisory_ceiling_check"] = ceiling
+            ceiling_failure = (
+                bounded_advisory.CEILING_UNMEASURED
+                if not ceiling.get("measured")
+                else (bounded_advisory.CEILING_EXCEEDED if ceiling.get("exceeded") else None)
+            )
+            if ceiling_failure is not None:
+                detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
+                final_state["failure_reason"] = ceiling_failure
+                final_status = "failed"
+                ok_outcome = False
+                needs_finalize = False
+                message = f"{ceiling_failure}: {detail}"
+                stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
+
         if pre_spawn_failure:
             needs_finalize = False
             final_status = "failed"
@@ -9306,6 +9423,18 @@ def _dispatch(
     # args.branch, a rejected --model cleared to None): the hash binds what was
     # literally parsed, not what dispatch later resolved it to (#8430 R3-A r8).
     dispatch_args_hash = dispatch_args_sha256(args)
+    advisory_args_hash = advisory_args_sha256(args)
+    if getattr(args, "print_advisory_binding", False):
+        try:
+            print(advisory_binding(advisory_args_hash, _binding_prompt_sha256(args, read_stdin=True)))
+        except OSError as exc:
+            print(f"❌ cannot read --prompt-file for the advisory binding: {exc}", file=sys.stderr)
+            return 2
+        return 0
+    advisory_flag_refusal = _advisory_flag_refusal(args)
+    if advisory_flag_refusal:
+        print(f"❌ dispatch refused: {advisory_flag_refusal}", file=sys.stderr)
+        return 2
 
     task_id = args.task_id
     run_nonce = getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE") or _generate_run_nonce()
@@ -9482,6 +9611,22 @@ def _dispatch(
     requested_agent = routing.requested_agent or original_agent
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
+
+    # #9275 (operator decision 2026-09-30): a bounded worker is admitted only with a
+    # complete advisory envelope bound to this dispatch. Checked on the admitted
+    # route — after aliases, --force-agent and any substitution — before any task
+    # record, worktree or other side effect.
+    try:
+        advisory_admission = _admit_advisory(
+            args,
+            dispatch_agent=dispatch_agent,
+            launch_model=launch_target.model,
+            args_sha256=advisory_args_hash,
+            repo_root=target_repo_root,
+        )
+    except bounded_advisory.AdvisoryRefused as exc:
+        print(f"❌ dispatch refused: {exc}", file=sys.stderr)
+        return 2
 
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
@@ -9839,6 +9984,15 @@ def _dispatch(
         print(
             "❌ review attempt refused: review_prompt_changed: the prompt file changed after its admission "
             f"(admitted {review_contract['prompt_sha256']}, now {source_prompt_sha256}) (#9163)",
+            file=sys.stderr,
+        )
+        return 2
+
+    if advisory_admission.prompt_sha256 is not None and source_prompt_sha256 != advisory_admission.prompt_sha256:
+        # The envelope was admitted for the prompt read at admission; the prompt run must be that text (#9275).
+        print(
+            f"❌ dispatch refused: {bounded_advisory.BINDING_MISMATCH}: the prompt changed after advisory admission "
+            f"(admitted {advisory_admission.prompt_sha256}, now {source_prompt_sha256})",
             file=sys.stderr,
         )
         return 2
@@ -10313,6 +10467,7 @@ def _dispatch(
                 dry_run_state["admission"] = admission.to_record(force_reason=force_admission_reason)
             if lifecycle_carrier is not None:
                 dry_run_state["task_lifecycle"] = lifecycle_carrier
+            dry_run_state.update(advisory_admission.state_fields())
             dry_run_reap = _reap_runtime_tmp_lease(
                 runtime_tmp_root,
                 runtime_tmp_namespace_root,
@@ -10651,6 +10806,13 @@ def _dispatch(
                 prompt_blocks.append("research")
             prompt = prompt + research_block
 
+        # #9275: the bounded worker reads its envelope (ceilings included); the
+        # advisor reads the envelope output contract bound to the worker dispatch.
+        advisory_block, advisory_block_kind = advisory_admission.prompt_block()
+        if advisory_block_kind is not None:
+            prompt_blocks.append(advisory_block_kind)
+            prompt = prompt + advisory_block
+
         # Every worker and review seat starts with the rules core, read from this
         # checkout (its presence was required at the top of the dispatch).
         cored_prompt = rules_core.with_core(prompt, getattr(args, "rules_seat", None))
@@ -10766,6 +10928,31 @@ def _dispatch(
         # the admitted slot stays held until the worker writes its pid (#8717).
         if admission_record is not None:
             initial_state["admission"] = admission_record
+        initial_state.update(advisory_admission.state_fields())
+        # #9275: the envelope admitted at route resolution must still be the
+        # advisor's canonical result now, just before the worker is spawned.
+        try:
+            _recheck_advisory(advisory_admission, repo_root=target_repo_root)
+        except bounded_advisory.AdvisoryRefused as exc:
+            refusal = f"dispatch refused before spawn: {exc}"
+            initial_state.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "stderr_excerpt": refusal[:500],
+                    "returncode": None,
+                    "returncode_reason": "advisory envelope changed before spawn; worker not started",
+                    "last_error": exc.code,
+                    "failure_reason": exc.code,
+                    "exit_code": None,
+                }
+            )
+            initial_state.update(_reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root))
+            _record_final_branch_head(initial_state)
+            _write_state_atomic(state_path, initial_state)
+            worktree_locks.close()
+            print(f"❌ {refusal}", file=sys.stderr)
+            return 2
         _write_state_atomic(state_path, initial_state)
         # The published record now claims the worktree for settle's scan, so
         # the lock is released before the worker, whose own settle takes it
@@ -11212,6 +11399,146 @@ def _budget_needs_hard_capacity_action(
 
 
 _LANGUAGE_LANES = frozenset({"claude", "codex", "agy"})
+_SHA256_HEX_RE = re.compile(r"[0-9a-f]{64}")
+
+
+def _advisory_flag_refusal(args: argparse.Namespace) -> str | None:
+    """A typed refusal when the #9275 advisory flags are combined inconsistently; None otherwise."""
+    advisory_task = getattr(args, "advisory_task", None)
+    role = getattr(args, "advisory_role", None)
+    binding = getattr(args, "advisory_binding", None)
+    conflict = bounded_advisory.FLAG_CONFLICT
+    if advisory_task is not None and not str(advisory_task).strip():
+        return f"{conflict}: --advisory-task must name a task"
+    if advisory_task is not None and role is not None:
+        return f"{conflict}: --advisory-task (bounded worker) and --advisory-role (advisor) are exclusive"
+    if advisory_task is not None and str(advisory_task).strip() == str(args.task_id):
+        return f"{conflict}: --advisory-task must name another task, not this one"
+    if (role is None) != (binding is None):
+        return f"{conflict}: --advisory-role and --advisory-binding are required together"
+    if binding is not None and not _SHA256_HEX_RE.fullmatch(str(binding)):
+        return f"{conflict}: --advisory-binding must be a lowercase sha256 hex digest"
+    if role is not None and getattr(args, "mode", "read-only") != "read-only":
+        return f"{bounded_advisory.ADVISOR_ROUTE_REFUSED}: the advisor runs read-only, not {args.mode}"
+    return None
+
+
+@dataclass(frozen=True)
+class _AdvisoryAdmission:
+    """What #9275 admission decided for a dispatch: an advisor run, a bounded worker with its envelope, or neither."""
+
+    requirement: str | None = None
+    envelope: bounded_advisory.ValidatedEnvelope | None = None
+    advisor_binding: str | None = None
+    prompt_sha256: str | None = None  # the bounded worker's prompt text as bound at admission
+
+    def state_fields(self) -> dict[str, Any]:
+        if self.envelope is not None and self.requirement is not None:
+            return {"advisory_envelope": self.envelope.state_record(self.requirement)}
+        if self.advisor_binding is not None:
+            return {
+                "advisory_role": bounded_advisory.bounded_execution_policy().advisor_role,
+                "advisory_route": bounded_advisory.ADVISOR_ROUTE,
+                "advisory_binding_sha256": self.advisor_binding,
+            }
+        return {}
+
+    def prompt_block(self) -> tuple[str, str | None]:
+        """``(text, block kind)`` appended to the worker prompt; empty when neither role applies."""
+        if self.envelope is not None:
+            return bounded_advisory.worker_prompt_block(self.envelope), "advisory_envelope"
+        if self.advisor_binding is not None:
+            return bounded_advisory.advisor_prompt_block(self.advisor_binding), "advisory_contract"
+        return "", None
+
+
+def _admit_advisory(
+    args: argparse.Namespace,
+    *,
+    dispatch_agent: str,
+    launch_model: str | None,
+    args_sha256: str,
+    repo_root: Path,
+) -> _AdvisoryAdmission:
+    """Admit the admitted route under #9275 or raise ``AdvisoryRefused``.
+
+    ``dispatch_agent`` and ``launch_model`` are the admitted launch target, so
+    aliases, ``--force-agent`` and budget substitution are already applied: a
+    substitution into a bounded worker needs an envelope like a direct request.
+    """
+    from scripts.agent_runtime.telemetry import _default_model_for
+    from scripts.review.model_catalog import canonical_model_id
+
+    policy = bounded_advisory.bounded_execution_policy()
+    model_id = canonical_model_id(launch_model or _default_model_for(dispatch_agent))
+    if getattr(args, "advisory_role", None) is not None:
+        if model_id != policy.advisor_model_id:
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.ADVISOR_ROUTE_REFUSED,
+                f"--advisory-role runs on the advisor {policy.advisor_model_id}; the admitted route launches "
+                f"{dispatch_agent} {launch_model or model_id!r}",
+            )
+        return _AdvisoryAdmission(advisor_binding=str(args.advisory_binding))
+    declared = _declared_owned_paths(getattr(args, "owned_path", None)) or []
+    research_paths = getattr(args, "research_owned_path", None) or []
+    requirement = bounded_advisory.bounded_requirement(
+        model_id,
+        mode=str(getattr(args, "mode", "") or ""),
+        task_family=getattr(args, "research_task_family", None),
+        review_profile=getattr(args, "review_profile", None),
+        owned_paths=[*declared, *research_paths],
+        policy=policy,
+    )
+    advisory_task = getattr(args, "advisory_task", None)
+    if requirement is None:
+        if advisory_task is not None:
+            raise bounded_advisory.AdvisoryRefused(
+                bounded_advisory.FLAG_CONFLICT,
+                f"--advisory-task applies only to a bounded-worker dispatch; the admitted route launches "
+                f"{dispatch_agent} {launch_model or model_id!r}",
+            )
+        return _AdvisoryAdmission()
+    if advisory_task is None:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.ENVELOPE_REQUIRED,
+            f"{requirement}; dispatch it with --advisory-task <task-id> naming a finished "
+            f"{policy.advisor_model_id} advisory task (operator decision 2026-09-30, #9275)",
+        )
+    advisory_task = str(advisory_task).strip()
+    try:
+        prompt_sha256 = _binding_prompt_sha256(args, read_stdin=False)
+    except OSError as exc:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.BINDING_MISMATCH, f"--prompt-file cannot be read for the advisory binding: {exc}"
+        ) from None
+    if prompt_sha256 is None:
+        raise bounded_advisory.AdvisoryRefused(
+            bounded_advisory.FLAG_CONFLICT,
+            "a bounded dispatch binds its prompt text; pass --prompt or --prompt-file, not stdin",
+        )
+    envelope = bounded_advisory.load_envelope(
+        advisory_task,
+        state_path=_state_path_no_create(advisory_task),
+        binding_sha256=advisory_binding(args_sha256, prompt_sha256),
+        repo_root=repo_root,
+        policy=policy,
+    )
+    bounded_advisory.require_owned_paths_match(envelope.owned_paths, declared)
+    return _AdvisoryAdmission(requirement=requirement, envelope=envelope, prompt_sha256=prompt_sha256)
+
+
+def _recheck_advisory(admission: _AdvisoryAdmission, *, repo_root: Path) -> None:
+    """Refuse when the admitted envelope's advisor record or result changed before spawn (#9275)."""
+    validated = admission.envelope
+    if validated is None:
+        return
+    current = bounded_advisory.load_envelope(
+        validated.advisor_task_id,
+        state_path=_state_path_no_create(validated.advisor_task_id),
+        binding_sha256=validated.binding_sha256,
+        repo_root=repo_root,
+    )
+    bounded_advisory.require_unchanged(validated, current)
 
 
 def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
@@ -13237,6 +13564,43 @@ def build_parser() -> argparse.ArgumentParser:
             "dirty danger-mode worktree commits only changes under these paths; without "
             "any it commits nothing and the task ends needs_finalize. Independent of "
             "--research-owned-path."
+        ),
+    )
+    d.add_argument(
+        "--advisory-task",
+        default=None,
+        metavar="TASK_ID",
+        help=(
+            "#9275: the finished advisor task whose envelope admits this bounded-worker dispatch. "
+            "Required whenever the admitted route launches the bounded worker (gpt-6-luna) or the "
+            "Gemini Flash bounded fallback without a Ukrainian authoring/review classification; "
+            "refused on any other dispatch. Its owned_paths must equal --owned-path. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--advisory-role",
+        default=None,
+        choices=("bounded_advisory_envelope",),
+        help=(
+            "#9275: run this read-only dispatch as the catalog advisor that issues a bounded-worker "
+            "envelope; the admitted model must be the advisor model. Requires --advisory-binding. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--advisory-binding",
+        default=None,
+        metavar="SHA256",
+        help=(
+            "#9275: with --advisory-role, the worker dispatch's binding digest, printed by the worker "
+            "dispatch command with --print-advisory-binding. Default: None."
+        ),
+    )
+    d.add_argument(
+        "--print-advisory-binding",
+        action="store_true",
+        help=(
+            "#9275: print this dispatch's advisory binding digest (every parsed argument except "
+            "--advisory-task and this flag) and exit without any other effect."
         ),
     )
     d.add_argument(

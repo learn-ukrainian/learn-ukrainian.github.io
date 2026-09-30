@@ -7635,6 +7635,8 @@ def test_dispatch_gemini_worker_env_strips_gh_token(
 
     args = argparse.Namespace(
         agent="gemini",
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
         task_id="gemini-no-gh-token",
         prompt="test",
         prompt_file=None,
@@ -7696,6 +7698,8 @@ def test_dispatch_agy_worker_env_strips_gh_token(
 
     args = argparse.Namespace(
         agent="agy",
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
         task_id="agy-no-gh-token",
         prompt="test",
         prompt_file=None,
@@ -7753,6 +7757,8 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
 
     args = argparse.Namespace(
         agent="gemini",
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
         task_id="gemini-retired-alias",
         prompt="test",
         prompt_file=None,
@@ -7848,6 +7854,8 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     # directly — this test is about worktree reuse, not the gemini alias.
     args = argparse.Namespace(
         agent="agy",
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
         task_id="existing-worktree",
         prompt="test",
         prompt_file=None,
@@ -9730,6 +9738,8 @@ def test_read_only_dispatch_auto_pins_detached_worktree(tmp_tasks_dir, monkeypat
     for agent in ("agy", "codex"):
         args = argparse.Namespace(
             agent=agent,
+            # #9275: agy without a Ukrainian classification is the bounded fallback.
+            research_task_family="ukrainian-authoring",
             task_id=f"{agent}-read-only-pin-probe",
             prompt="test",
             prompt_file=None,
@@ -10582,7 +10592,13 @@ def test_dispatch_read_only_explicit_primary_cwd(tmp_tasks_dir, monkeypatch, age
     monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
     monkeypatch.setattr(delegate, "_resolve_verified_worktree_path", lambda *_args, **_kwargs: None)
     args = _write_args(
-        task_id=f"ro-root-{agent}", agent=agent, mode="read-only", cwd=str(delegate._REPO_ROOT), worktree=None
+        task_id=f"ro-root-{agent}",
+        agent=agent,
+        mode="read-only",
+        cwd=str(delegate._REPO_ROOT),
+        worktree=None,
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
     )
 
     rc = delegate.cmd_dispatch(args)
@@ -12250,6 +12266,8 @@ def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path,
     monkeypatch.setattr(delegate, "_ensure_worktree", fail_ensure)
     args = _write_args(
         agent="agy",
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
         task_id="task-8610-relative",
         branch=None,
         worktree=".worktrees/dispatch/agy/task-8610-relative/",
@@ -12629,7 +12647,7 @@ def test_dispatch_fails_before_spawning_when_the_worktree_lock_is_busy(tmp_tasks
     with _worktree_lock_held_elsewhere(worktree):
         _spawn_passthrough_popen(monkeypatch, worker_spawns.append)
         rc = delegate.cmd_dispatch(
-            _write_args(agent="agy", task_id=task_id, worktree=str(worktree), mode="workspace-write")
+            _write_args(agent="agy", research_task_family="ukrainian-authoring", task_id=task_id, worktree=str(worktree), mode="workspace-write")
         )
 
     assert rc == 1
@@ -12654,7 +12672,7 @@ def test_cwd_dispatch_fails_when_the_worktree_lock_is_busy(tmp_tasks_dir, tmp_pa
     with _worktree_lock_held_elsewhere(worktree):
         _spawn_passthrough_popen(monkeypatch, worker_spawns.append)
         rc = delegate.cmd_dispatch(
-            _write_args(agent="agy", task_id="impl-cwd-busy", cwd=str(worktree), mode="workspace-write")
+            _write_args(agent="agy", research_task_family="ukrainian-authoring", task_id="impl-cwd-busy", cwd=str(worktree), mode="workspace-write")
         )
 
     assert rc == 1
@@ -12761,7 +12779,7 @@ def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_task
     assert settle_holds_lock.wait(timeout=30)
 
     rc = delegate.cmd_dispatch(
-        _write_args(agent="agy", task_id="impl-cwd-late", cwd=str(worktree), mode="workspace-write")
+        _write_args(agent="agy", research_task_family="ukrainian-authoring", task_id="impl-cwd-late", cwd=str(worktree), mode="workspace-write")
     )
     settler.join(timeout=60)
 
@@ -15173,6 +15191,8 @@ def test_cmd_dispatch_refusal_on_running_holder_writes_terminal_task_record(
 
     args = _write_args(
         agent="agy",
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
         task_id="task-7236-refused",
         branch=branch,
         worktree="auto",
@@ -15201,6 +15221,8 @@ def test_cmd_dispatch_refusal_on_base_resolution_writes_terminal_task_record(
     """#7236: base resolution refusal writes a failed task record with the reason."""
     args = _write_args(
         agent="agy",
+        # #9275: agy without a Ukrainian classification is the bounded fallback.
+        research_task_family="ukrainian-authoring",
         task_id="task-7236-bad-base",
         branch=None,
         worktree="auto",

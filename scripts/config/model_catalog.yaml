@@ -272,11 +272,16 @@ execution_routing:
         - unresolved_consequential_ambiguity
         - broader_integration
         - final_disposition
-    direct_worker:
-      model_id: gpt-6-luna
+    # Operator decision 2026-09-30 (#9275): there is no direct bounded dispatch.
+    # Every dispatch to a bounded worker (preferred_worker, or the Gemini Flash
+    # fallback below unless it carries a Ukrainian authoring/review
+    # classification) needs a complete advisory envelope from the advisor above,
+    # bound to that dispatch; delegate.py refuses one without it.
+    bounded_fallback_worker:
+      model_id: gemini-3.8-flash-high
       effort: high
-      task_types: [bounded_implementation, bounded_investigation, recon, bounded_checks, log_triage]
-      constraints: [objective_scope_ceiling, no_consequential_decisions, no_final_disposition]
+      requires: [complete_advisory_envelope, objective_scope_ceiling]
+      non_bounded_task_families: [ukrainian-authoring, ukrainian-review]
     autonomous_fallback:
       model_id: gpt-6.1-sol
       effort: high

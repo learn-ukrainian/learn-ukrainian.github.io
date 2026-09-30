@@ -35,7 +35,7 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 **Codex role boundary:** GPT-6.1 Sol (`gpt-6.1-sol`) @ `high` is the only Sol: the coding and
 review seat and, since operator 2026-09-29 (#9230), also the Astra advisory seat for hard,
-consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting.
+consequential advisory judgment. Luna @ `high` handles routine bounded work and scouting under a Sol advisory envelope (§2).
 `gpt-6-sol` and `gpt-6-astra` are not routable. "Astra" below names that advisory seat; do
 not spend advisory turns on ordinary implementation or review.
 
@@ -106,7 +106,8 @@ stampede one hot lane.
 k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). A valid operator reset
 reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
 an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
-Luna handles bounded work; Astra is summoned for hard advice, not implementation or review.
+Luna handles bounded work under a Sol advisory envelope (§2); Astra is summoned for hard advice, not
+implementation or review.
 
 The operator records a shared assertion at `batch_state/routing_budget/operator_reset_reserve.json`
 in the primary checkout. Its exact JSON fields are `schema_version` (`operator-reset-reserve.v1`),
@@ -153,14 +154,32 @@ For **bounded** work (clear owned paths, objective acceptance command, no open
 architecture decision):
 
 ```text
-1) AUTHORITY brief (Astra or Fable) → task_contract, owned_paths, scope ceiling,
-   acceptance_evidence, escalation_triggers
-2) HEAP / PRACTICAL worker(s) execute ONLY that packet
+0) Driver fixes the worker dispatch arguments and prints their binding digest:
+   delegate.py dispatch <worker args> --print-advisory-binding
+1) ADVISOR envelope from the catalog advisor route (gpt-6.1-sol @ high, the Astra seat):
+   delegate.py dispatch --agent codex --model gpt-6.1-sol --mode read-only \
+     --advisory-role bounded_advisory_envelope --advisory-binding <digest> ...
+   → task_contract, owned_paths, max_changed_files, max_non_test_loc, constraints,
+     risk_boundaries, acceptance_evidence, escalation_triggers
+2) BOUNDED worker executes ONLY that envelope:
+   delegate.py dispatch <worker args> --advisory-task <advisor task id>
 3) Driver integrates; formal CF = independent cross-family (discussion ≠ CF)
 ```
 
-This is the catalog `execution_routing.sol_advised_bounded` idea generalized to
-**Fable or Astra** as advisor. Advisory family **never** satisfies cross-family PR CF.
+This is the catalog `execution_routing.sol_advised_bounded` route. **Operator decision
+2026-09-30 (#9275): there is no direct bounded dispatch.** Every dispatch to the bounded
+worker (`gpt-6-luna`), and to its `gemini-3.8-flash-high` fallback unless the dispatch is
+classified Ukrainian authoring or review, needs a complete envelope from a finished
+`gpt-6.1-sol` advisor task bound to that dispatch's arguments and prompt text; `delegate.py` refuses it
+otherwise (`BOUNDED_ENVELOPE_REQUIRED`), including after a budget substitution, and fails
+the worker at finalize when it exceeds the envelope ceilings. The envelope's `owned_paths`
+must equal the worker's `--owned-path` set. A Fable brief is design advice; it is not an
+envelope and does not admit a bounded worker (the packet path used to be "Fable or Astra";
+it is now the catalog advisor route only). Routine lockfile, pointer and smoke tasks take
+no advisory seat, so they go to a non-bounded worker (for example `claude-sonnet-5-5`)
+instead of a bounded one. Native Codex subagents spawned in-session by a `gpt-6.1-sol`
+parent run under that parent's own contract; the parent is their advisor and sets their
+owned paths and ceilings. Advisory family **never** satisfies cross-family PR CF.
 
 For **unbounded / ambiguous** work: practical or authority implementer only after
 the routing card records why heap was refused.
@@ -179,7 +198,7 @@ task_id: <id>
 tier: authority | practical | heap
 model_x_harness: <e.g. codex/gpt-6-luna>   # both axes
 why_this_tier: <one sentence>
-advisor_packet: none | astra | fable | other=<id>  # required for heap
+advisor_packet: none | sol=<advisor task id>  # required for heap; delegate refuses Luna/Flash without it
 owned_paths: <paths>
 acceptance_cmd: <deterministic command that proves done>
 alternatives_considered:

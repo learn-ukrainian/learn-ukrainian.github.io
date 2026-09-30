@@ -790,6 +790,39 @@ dispatch. `unknown` remains reserved for an unexpected resolution failure.
 Every terminal state records a concrete subprocess `returncode`, or a
 `returncode_reason` when no child process ever yielded one.
 
+### Bounded workers need an advisory envelope (#9275)
+
+Operator decision 2026-09-30: there is no direct bounded dispatch. A dispatch whose admitted
+route launches `gpt-6-luna`, or `gemini-3.8-flash-high` without a Ukrainian authoring or
+review classification (`--research-task-family ukrainian-authoring|ukrainian-review`, or
+read-only `--review-profile ukrainian`), is refused (`BOUNDED_ENVELOPE_REQUIRED`) unless
+`--advisory-task` names a finished advisor task that issued an envelope for it. The check
+runs after aliases, `--force-agent` and budget substitution, before any task record or
+worktree.
+
+```bash
+# 1. Fix the worker dispatch and print its binding (arguments + prompt text).
+.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-luna --task-id W \
+  --prompt-file brief.md --worktree --mode danger --owned-path scripts/x.py --print-advisory-binding
+# 2. The advisor (catalog advisor route, gpt-6.1-sol, read-only) issues the envelope.
+.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6.1-sol --task-id A \
+  --prompt-file advise.md --advisory-role bounded_advisory_envelope --advisory-binding <digest>
+# 3. The worker runs the same arguments plus the advisor task.
+.venv/bin/python scripts/delegate.py dispatch <same arguments as step 1> --advisory-task A
+```
+
+The advisor task must be `done`, read-only, on `gpt-6.1-sol`, with role
+`bounded_advisory_envelope` and the same binding. Its canonical `.result` must hold exactly
+one fenced `advisory-envelope` JSON object with every catalog `output_fields` key (non-empty
+`task_contract`; non-empty lists; positive integer ceilings; `owned_paths` repo-relative under
+an existing top-level root) plus `dispatch_args_sha256` equal to the binding. `--owned-path`
+must equal the envelope's `owned_paths`. The result is re-validated just before spawn; a
+change fails the task (`ADVISORY_ENVELOPE_CHANGED`). The worker record keeps
+`advisory_envelope` (advisor task, result path and SHA-256, envelope SHA-256, binding,
+ceilings), the worker prompt carries the envelope, and at finalize a write-mode worker whose
+diff from the merge base exceeds `max_changed_files` or `max_non_test_loc` fails
+(`advisory_ceiling_exceeded`; unmeasurable is `advisory_ceiling_unmeasured`).
+
 ### Auto-finalize scope and unfinished background jobs (#8991)
 
 **Pass `--owned-path` for every write dispatch whose dirty tree may be auto-finalized.**

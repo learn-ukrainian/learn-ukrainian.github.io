@@ -185,10 +185,12 @@ rows in `fleet-role-scorecard.md`; the `MEMORY.md` lines behind S32–S35.
    five lines. The core states the first rule as its source does and says nothing about the exemption.
 2. **Cursor driver seat (S14).** Driver guidance allows Auto or Composer; dispatch and review policy
    require a concrete pin. The core pins Cursor dispatch and review identities only.
-3. **Authority packet before a bounded worker (S21).** One source always requires the advisory packet;
-   another allows direct Luna dispatch with exact paths and a scope ceiling. The catalog has both
-   routes (`execution_routing` `preferred_worker` and `direct_worker`). The core's bounded-code row
-   holds for both.
+3. **Authority packet before a bounded worker (S21). Resolved 2026-09-30 (operator decision, #9275).**
+   Every bounded-worker dispatch needs a complete advisory envelope from the catalog advisor route
+   (`gpt-6.1-sol`) first; there is no direct bounded dispatch and token cost is accepted. The catalog's
+   `direct_worker` route is removed, `delegate.py` refuses a bounded dispatch without a bound envelope,
+   and the core's bounded-code row and `p2-retired` unit state it (routine lockfile, pointer and smoke
+   tasks take a non-bounded route instead).
 4. **Budget.** The complete core is 32,629 bytes against the 26,000-byte budget: raise the budget again,
    or move units out of the always-loaded core (see Budget).
 

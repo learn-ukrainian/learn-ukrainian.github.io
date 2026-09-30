@@ -933,6 +933,13 @@ and covers both the unit stop and the per-process pidfd path. A unit stop cannot
 atomic with the scan; closing the window needs a privileged helper inside the worker's own
 scope.
 
+**Bounded-worker advisory envelope (#9275):** a dispatch that launches `gpt-6-luna`, or
+`gemini-3.8-flash-high` without a Ukrainian authoring/review classification, needs
+`--advisory-task <id>` naming a finished `gpt-6.1-sol` advisor task (`--advisory-role
+bounded_advisory_envelope --advisory-binding <digest>`, digest from the worker command with
+`--print-advisory-binding`). See `docs/agent-runtime-guide.md` § Bounded workers need an
+advisory envelope.
+
 **Auto-finalize owned paths (#8991):** auto-finalize commits only under the task's explicit
 `--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
 never derived from `--research-owned-path`, which classifies research context. Claims are
