@@ -9,15 +9,14 @@ rules:
       - gemini-plan-execute.yml:49
   self-repository:
     ignore:
-      # content-ci.yml:30, ci.yml and ci-advisory.yml — `./` is the form pinned
+      # Every workflow that calls a local action: `./` is the form pinned
       # actionlint 1.7.12 accepts; `$/` is the form zizmor wants (zizmor 1.30 /
       # GitHub Actions, 2026-07-30) but actionlint rejects (rhysd/actionlint#711
       # still open; 1.7.12 remains the latest release). Keep `./` until actionlint
-      # accepts `$/`, then migrate and drop these ignores. The earlier ignore
-      # named content-ci.yml:29 and had gone stale (the step moved); corrected
-      # to the `uses:` line zizmor reports. Line-anchored, so re-check on edits.
-      - content-ci.yml:30
-      - ci.yml:116
-      - ci.yml:155
-      - ci.yml:198
-      - ci-advisory.yml:35
+      # accepts `$/`, then migrate and drop these ignores. Whole-file entries:
+      # the reason holds for every `./` use in the file, and line-anchored
+      # entries went stale whenever a step moved.
+      - content-ci.yml
+      - ci.yml
+      - ci-advisory.yml
+      - uv-cache-warm.yml

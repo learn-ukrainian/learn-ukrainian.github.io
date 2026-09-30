@@ -5,8 +5,10 @@
 - ``tests/conftest.py``: the ``LU_PYTEST_SHARD_FILES`` allowlist hook each
   shard collects through.
 - ``scripts/ci/pytest_report.py``: partition, executed-test and
-  needs_artifact-skip checks over every shard.
+  needs_artifact collected/skip checks over every shard.
+- ``tests/conftest.py``: the collected ``needs_artifact`` list pytest report audits.
 - ``scripts/ci/reuse_green_run.py``: the merge-queue reuse decision.
+- ``scripts/ci/metadata_commit.py``: the queue commit's metadata-only secret scan.
 - ``.github/workflows/ci.yml``: the pytest job flags these rely on.
 """
 
@@ -22,7 +24,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from scripts.ci import pytest_report, reuse_green_run
+from scripts.ci import metadata_commit, pytest_report, reuse_green_run
 from scripts.ci.split_tests import DEFAULT_HISTORY, HISTORY_SHARD, assign, junit_file_seconds, read_list
 from scripts.ci.split_tests import main as split_main
 from tests.conftest import LU_PYTEST_SHARD_FILES_ENV_VAR, _load_shard_allowlist, pytest_ignore_collect
@@ -273,7 +275,8 @@ def _report_repo(tmp_path: Path, expected_skips: str) -> Path:
     return repo
 
 
-def _shard(results: Path, number: int, files: list[str], cases: str) -> None:
+def _shard(results: Path, number: int, files: list[str], cases: str, collected: tuple[str, ...] = ()) -> None:
+    """One shard's artifact: file list, JUnit report, and the collected needs_artifact node ids."""
     directory = results / f"pytest-junit-shard-{number}"
     directory.mkdir(parents=True)
     (directory / f"pytest-shard-{number}-files.txt").write_text(
@@ -282,6 +285,9 @@ def _shard(results: Path, number: int, files: list[str], cases: str) -> None:
     (directory / f"pytest-shard-{number}.xml").write_text(
         f"<testsuites><testsuite>{cases}</testsuite></testsuites>", encoding="utf-8"
     )
+    (directory / f"pytest-shard-{number}-needs-artifact.txt").write_text(
+        "".join(f"{node_id}\n" for node_id in collected), encoding="utf-8"
+    )
 
 
 _PASS_A = '<testcase classname="tests.test_a" name="test_ok" time="1"/>'
@@ -289,70 +295,150 @@ _SKIP_B = (
     '<testcase classname="tests.sub.test_b" name="test_artifact" time="0">'
     '<skipped message="needs_artifact: data/x.json missing"/></testcase>'
 )
+_OTHER_SKIP_B = (
+    '<testcase classname="tests.sub.test_b" name="test_artifact" time="0">'
+    '<skipped message="needs_sparse_tree: data/projects absent"/></testcase>'
+)
+_B = "tests/sub/test_b.py::test_artifact"
+_B_ID = "tests.sub.test_b::test_artifact\n"
 
 
-def test_report_passes_a_complete_run_and_records_the_tree(tmp_path: Path) -> None:
-    repo = _report_repo(tmp_path, "tests.sub.test_b::test_artifact\n")
+def _report(tmp_path: Path, repo: Path, results: Path) -> tuple[int, Path]:
+    record = tmp_path / "out" / "tested-tree.json"
+    return pytest_report.main(["--results", str(results), "--root", str(repo), "--record", str(record)]), record
+
+
+def test_report_passes_a_complete_run_and_records_the_tree(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    for name, value in {
+        "GITHUB_EVENT_NAME": "pull_request",
+        "PR_NUMBER": "7",
+        "GITHUB_RUN_ID": "11",
+        "GITHUB_RUN_ATTEMPT": "1",
+    }.items():
+        monkeypatch.setenv(name, value)
+    repo = _report_repo(tmp_path, _B_ID)
     results = tmp_path / "results"
     _shard(results, 1, ["tests/test_a.py"], _PASS_A)
-    _shard(results, 2, ["tests/sub/test_b.py"], _SKIP_B)
-    record = tmp_path / "out" / "tested-tree.json"
+    _shard(results, 2, ["tests/sub/test_b.py"], _SKIP_B, collected=(_B,))
 
-    assert pytest_report.main(["--results", str(results), "--root", str(repo), "--record", str(record)]) == 0
+    status, record = _report(tmp_path, repo, results)
 
+    assert status == 0
     assert json.loads(record.read_text(encoding="utf-8")) == {
         "tier": "full",
         "tree": _git(repo, "rev-parse", "HEAD^{tree}"),
         "sha": _git(repo, "rev-parse", "HEAD"),
         "tests": 2,
+        "event": "pull_request",
+        "pr": 7,
+        "run_id": 11,
+        "run_attempt": 1,
     }
 
 
 @pytest.mark.parametrize(
     ("shards", "expected_skips", "problem"),
     [
-        ([(1, ["tests/test_a.py"], _PASS_A)], "", "ran on no shard"),
+        ([(1, ["tests/test_a.py"], _PASS_A, ())], "", "ran on no shard"),
         (
-            [(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A), (2, ["tests/sub/test_b.py"], _SKIP_B)],
-            "",
+            [
+                (1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A, ()),
+                (2, ["tests/sub/test_b.py"], _SKIP_B, (_B,)),
+            ],
+            _B_ID,
             "more than one shard",
         ),
         (
-            [(1, ["tests/test_a.py", "tests/sub/test_b.py", "tests/test_gone.py"], _PASS_A)],
+            [(1, ["tests/test_a.py", "tests/sub/test_b.py", "tests/test_gone.py"], _PASS_A, ())],
             "",
             "not tracked test files",
         ),
-        ([(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A + _SKIP_B)], "", "unexpected needs_artifact skips"),
+        ([(1, ["tests/test_a.py", "tests/sub/test_b.py"], "", ())], "", "no test results"),
         (
-            [(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A)],
-            "tests.sub.test_b::test_artifact\n",
-            "did not skip",
+            [(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A + _SKIP_B, (_B,))],
+            "",
+            "unexpected needs_artifact skips",
+        ),
+        # A new marked test the tier deselects (slow): nothing skipped, so only
+        # the collected set shows it.
+        (
+            [(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A, (_B,))],
+            "",
+            "collected needs_artifact tests that are not expected",
+        ),
+        # Listed as expected, but deselected (slow) instead of skipping.
+        (
+            [(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A, (_B,))],
+            _B_ID,
+            "did not skip for a missing artifact",
+        ),
+        # Marked and expected, but skipped for another reason.
+        (
+            [(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A + _OTHER_SKIP_B, (_B,))],
+            _B_ID,
+            "did not skip for a missing artifact",
+        ),
+        # Skipped for a missing artifact, but no longer marked.
+        (
+            [(1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A + _SKIP_B, ())],
+            _B_ID,
+            "expected needs_artifact tests that were not collected",
         ),
     ],
 )
 def test_report_fails_closed(tmp_path: Path, capsys, shards, expected_skips: str, problem: str) -> None:
     repo = _report_repo(tmp_path, expected_skips)
     results = tmp_path / "results"
-    for number, files, cases in shards:
-        _shard(results, number, files, cases)
-    record = tmp_path / "tested-tree.json"
+    for number, files, cases, collected in shards:
+        _shard(results, number, files, cases, collected)
 
-    assert pytest_report.main(["--results", str(results), "--root", str(repo), "--record", str(record)]) == 1
+    status, record = _report(tmp_path, repo, results)
 
+    assert status == 1
     assert problem in capsys.readouterr().err
     assert not record.exists()
 
 
-def test_report_fails_when_a_shard_uploaded_no_junit(tmp_path: Path, capsys) -> None:
+@pytest.mark.parametrize(
+    ("missing", "problem"),
+    [("pytest-shard-1.xml", "no JUnit report"), ("pytest-shard-1-needs-artifact.txt", "no collected")],
+)
+def test_report_fails_when_a_shard_uploaded_no_junit_or_collection(
+    tmp_path: Path, capsys, missing: str, problem: str
+) -> None:
     repo = _report_repo(tmp_path, "")
     results = tmp_path / "results"
     _shard(results, 1, ["tests/test_a.py", "tests/sub/test_b.py"], _PASS_A)
-    (results / "pytest-junit-shard-1" / "pytest-shard-1.xml").unlink()
+    (results / "pytest-junit-shard-1" / missing).unlink()
 
-    assert (
-        pytest_report.main(["--results", str(results), "--root", str(repo), "--record", str(tmp_path / "r.json")]) == 1
-    )
-    assert "no JUnit report" in capsys.readouterr().err
+    assert _report(tmp_path, repo, results)[0] == 1
+    assert problem in capsys.readouterr().err
+
+
+def test_conftest_records_marked_tests_before_deselection(tmp_path: Path) -> None:
+    """A real pytest run under xdist: ``-m 'not needs_artifact'`` deselects every marked test,
+    yet the collected list still names them (so a ``slow`` marked test cannot drop out)."""
+    expected = pytest_report.read_expected_skips(_REPO_ROOT / pytest_report.EXPECTED_ARTIFACT_SKIPS)
+    module = sorted(expected)[0].split("::", 1)[0]
+    test_file = module.replace(".", "/") + ".py"
+    collected = tmp_path / "collected.txt"
+    result = subprocess.run(
+        [
+            sys.executable, "-m", "pytest", test_file, "-n", "2", "-p", "no:cacheprovider",
+            "-m", "not needs_artifact", "--override-ini", "addopts=-q",
+        ],
+        cwd=_REPO_ROOT,
+        env={**os.environ, "LU_PYTEST_NEEDS_ARTIFACT_COLLECTED": str(collected)},
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=300,
+    )  # fmt: skip
+    assert result.returncode in (0, 5), result.stdout + result.stderr
+    ids = {
+        pytest_report.nodeid_to_junit_id(line) for line in collected.read_text(encoding="utf-8").splitlines() if line
+    }
+    assert ids == {test_id for test_id in expected if test_id.startswith(f"{module}::")}
 
 
 # =============================================================================
@@ -360,116 +446,208 @@ def test_report_fails_when_a_shard_uploaded_no_junit(tmp_path: Path, capsys) -> 
 # =============================================================================
 
 _TREE = "1" * 40
+_PR_HEAD = "a" * 40
+_MERGE = "c" * 40
+_QUEUED = reuse_green_run.Queued(pr=7, pr_head=_PR_HEAD, tree=_TREE, jobs=reuse_green_run.expected_jobs((1, 2, 3)))
 
 
-def _record(tree: str = _TREE, tier: str = "full"):
-    return lambda: {"tier": tier, "tree": tree}
+def _run(**overrides) -> dict:
+    return {
+        "id": 11,
+        "event": "pull_request",
+        "path": ".github/workflows/ci.yml",
+        "status": "completed",
+        "conclusion": "success",
+        "run_attempt": 1,
+        "head_sha": _PR_HEAD,
+    } | overrides
 
 
-def _run_jobs(**conclusions: str):
-    """A run's jobs: every gate green unless overridden (``Checks="failure"``, ``Frontend=None`` drops it)."""
-    names = {gate: "success" for gate in reuse_green_run.GATES}
-    names.update({key.replace("_", " "): value for key, value in conclusions.items()})
-    jobs = [{"name": name, "conclusion": value, "id": 100 + index} for index, (name, value) in enumerate(names.items())]
-    jobs.append({"name": "pytest (1)", "conclusion": "success", "id": 99})
-    return lambda: [job for job in jobs if job["conclusion"] is not None]
+def _record(**overrides) -> dict:
+    return {
+        "tier": "full",
+        "tree": _TREE,
+        "sha": _MERGE,
+        "tests": 250,
+        "event": "pull_request",
+        "pr": 7,
+        "run_id": 11,
+        "run_attempt": 1,
+    } | overrides
 
 
-def test_reuse_when_a_green_full_run_tested_the_identical_tree() -> None:
-    decision = reuse_green_run.decide(_TREE, [("11", _record(), _run_jobs())])
-    assert decision.reuse and decision.run_id == "11"
-    # Every reused gate is logged with its job in the reused run.
-    assert [gate for gate, _job in decision.jobs] == ["Secret scan", "Checks", "Frontend", "pytest report"]
-    assert all(isinstance(job, int) for _gate, job in decision.jobs)
+def _jobs(edit=None) -> dict:
+    """A pull_request run's attempt-1 jobs: the full inventory green, the queue-only jobs skipped."""
+    jobs = [
+        {"name": name, "status": "completed", "conclusion": "success", "id": 100 + index, "run_attempt": 1}
+        for index, name in enumerate(_QUEUED.jobs)
+    ] + [
+        {"name": name, "status": "completed", "conclusion": "skipped", "id": 90 + index, "run_attempt": 1}
+        for index, name in enumerate(reuse_green_run.SKIPPED_ON_PULL_REQUEST)
+    ]
+    if edit:
+        jobs = edit(jobs)
+    return {"total_count": len(jobs), "jobs": jobs}
 
 
-def test_no_reuse_for_a_different_tree() -> None:
-    decision = reuse_green_run.decide(_TREE, [("11", _record(tree="2" * 40), _run_jobs())])
-    assert not decision.reuse and "differs" in decision.reason
-
-
-def test_no_reuse_when_the_run_was_not_the_full_tier() -> None:
-    decision = reuse_green_run.decide(
-        _TREE, [("11", _record(tier="fast"), _run_jobs()), ("10", lambda: None, _run_jobs())]
+def _candidate(run=None, record="default", commits=None, jobs=None) -> reuse_green_run.Candidate:
+    """A candidate whose GitHub commit objects are ``commits`` (default: the PR merge commit)."""
+    commits = commits or {_MERGE: {"sha": _MERGE, "tree": _TREE, "parents": ["b" * 40, _PR_HEAD]}}
+    return reuse_green_run.Candidate(
+        run=run or _run(),
+        load_record=lambda: _record() if record == "default" else record,
+        load_commit=commits.__getitem__,
+        load_jobs=lambda: jobs or _jobs(),
     )
-    assert not decision.reuse
-    assert "is not 'full'" in decision.reason and "no ci-tested-tree record" in decision.reason
+
+
+def _set(name: str, **fields):
+    return lambda jobs: [job | fields if job["name"] == name else job for job in jobs]
+
+
+def test_reuse_when_one_green_attempt_tested_the_identical_tree() -> None:
+    decision = reuse_green_run.decide(_QUEUED, [_candidate()])
+    assert decision.reuse and decision.run_id == "11", decision.reason
+    # Every job of the inventory is logged with its job id in the reused run.
+    assert [name for name, _job in decision.jobs] == list(_QUEUED.jobs)
+    assert {"pytest (1)", "pytest (2)", "pytest (3)", "Secret scan", "Checks", "Frontend", "pytest report"} <= {
+        name for name, _job in decision.jobs
+    }
+    assert "PR #7" in decision.reason and _MERGE in decision.reason
+
+
+_OTHER_TREE_COMMIT = {"d" * 40: {"sha": "d" * 40, "tree": "2" * 40, "parents": ["b" * 40, _PR_HEAD]}}
 
 
 @pytest.mark.parametrize(
-    ("jobs", "reason"),
+    ("candidate", "reason"),
     [
-        (_run_jobs(Checks="failure"), "'Checks' concluded 'failure'"),
-        (_run_jobs(Secret_scan="skipped"), "'Secret scan' concluded 'skipped'"),
-        (_run_jobs(Frontend=None), "0 jobs named 'Frontend'"),
-        (lambda: [*_run_jobs()(), {"name": "Checks", "conclusion": "success", "id": 7}], "2 jobs named 'Checks'"),
+        # The job inventory.
+        (
+            _candidate(jobs=_jobs(lambda jobs: [j for j in jobs if j["name"] != "pytest (2)"])),
+            "0 jobs named 'pytest (2)'",
+        ),
+        (_candidate(jobs=_jobs(_set("pytest (2)", conclusion="cancelled"))), "'pytest (2)' is 'completed'/'cancelled'"),
+        (_candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[5], id=7)])), "2 jobs named 'pytest (1)'"),
+        (_candidate(jobs=_jobs(_set("Checks", conclusion="failure"))), "'Checks' is 'completed'/'failure'"),
+        (_candidate(jobs=_jobs(_set("Secret scan", conclusion="skipped"))), "'Secret scan' is 'completed'/'skipped'"),
+        (_candidate(jobs=_jobs(lambda jobs: [j for j in jobs if j["name"] != "Frontend"])), "0 jobs named 'Frontend'"),
+        (_candidate(jobs=_jobs(lambda jobs: [j for j in jobs if j["name"] != "pytest report"])), "'pytest report'"),
+        (_candidate(jobs=_jobs(lambda jobs: [*jobs, dict(jobs[0], name="pytest (4)")])), "unexpected job 'pytest (4)'"),
+        (_candidate(jobs=_jobs(_set("Reuse check", conclusion="success"))), "'Reuse check' concluded 'success'"),
+        (_candidate(jobs={"total_count": 30, "jobs": _jobs()["jobs"]}), "of 30 jobs listed"),
+        # The run: one attempt, the right PR head, event and workflow.
+        (_candidate(run=_run(run_attempt=2)), "run_attempt is 2"),
+        (_candidate(jobs=_jobs(_set("pytest (3)", run_attempt=2))), "jobs from run attempt [2]"),
+        (_candidate(run=_run(head_sha="e" * 40)), "head_sha is"),
+        (_candidate(run=_run(event="push")), "event is 'push'"),
+        (_candidate(run=_run(conclusion="failure")), "conclusion is 'failure'"),
+        (_candidate(run=_run(path=".github/workflows/other.yml")), "path is"),
+        # The record.
+        (_candidate(record=None), "no ci-tested-tree record"),
+        (_candidate(record=_record(tier="fast")), "record tier is 'fast'"),
+        (_candidate(record=_record(tests=0)), "record claims 0 tests"),
+        (_candidate(record=_record(tests=True)), "record claims True tests"),
+        (_candidate(record=_record(pr=8)), "record pr is 8"),
+        (_candidate(record=_record(run_id=12)), "record run_id is 12"),
+        (_candidate(record=_record(run_attempt=2)), "record run_attempt is 2"),
+        (_candidate(record=_record(sha="not-a-sha")), "is not a commit SHA"),
+        # The tested commit, read from GitHub: the record's tree claim is not trusted.
+        (
+            _candidate(record=_record(sha="d" * 40), commits=_OTHER_TREE_COMMIT),
+            f"has tree {'2' * 40}, the queue commit {_TREE}",
+        ),
+        (
+            _candidate(commits={_MERGE: {"sha": _MERGE, "tree": _TREE, "parents": ["b" * 40, "e" * 40]}}),
+            f"is not a merge of PR head {_PR_HEAD}",
+        ),
+        (_candidate(record=_record(tree="3" * 40)), "record tree"),
     ],
 )
-def test_no_reuse_unless_every_gate_succeeded_in_the_run(jobs, reason: str) -> None:
-    decision = reuse_green_run.decide(_TREE, [("11", _record(), jobs)])
-    assert not decision.reuse and not decision.jobs
+def test_no_reuse_without_complete_proof(candidate: reuse_green_run.Candidate, reason: str) -> None:
+    decision = reuse_green_run.decide(_QUEUED, [candidate])
+    assert not decision.reuse and not decision.jobs and decision.run_id == ""
     assert reason in decision.reason
 
 
 def test_reuse_takes_the_first_matching_candidate() -> None:
     decision = reuse_green_run.decide(
-        _TREE,
+        _QUEUED,
         [
-            ("12", lambda: None, _run_jobs()),
-            ("11", _record(), _run_jobs(Checks="failure")),
-            ("10", _record(), _run_jobs()),
+            _candidate(run=_run(id=13), record=None),
+            _candidate(run=_run(id=12), record=_record(run_id=12), jobs=_jobs(_set("Checks", conclusion="failure"))),
+            _candidate(run=_run(id=10), record=_record(run_id=10)),
         ],
     )
     assert decision.run_id == "10"
 
 
-def test_reuse_logs_the_run_id_per_gate(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
-    monkeypatch.setattr(
-        reuse_green_run, "lookup", lambda *_args: reuse_green_run.decide(_TREE, [("11", _record(), _run_jobs())])
-    )
-    output, summary = tmp_path / "output", tmp_path / "summary"
-    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
-    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
-    for name in ("REPO", "HEAD_SHA", "HEAD_REF"):
-        monkeypatch.setenv(name, "x")
-
-    assert reuse_green_run.main() == 0
-    assert output.read_text(encoding="utf-8") == "reuse=true\nrun_id=11\n"
-    logged = capsys.readouterr().out
-    for gate in reuse_green_run.GATES:
-        assert f"{gate}: reused from run 11, job " in logged
-        assert f"{gate}: reused from run 11, job " in summary.read_text(encoding="utf-8")
+def test_pytest_shards_match_the_ci_matrix() -> None:
+    matrix = _jobs_of_ci()["pytest"]["strategy"]["matrix"]["shard"]
+    assert reuse_green_run.pytest_shards(_CI.read_text(encoding="utf-8")) == tuple(matrix)
+    # Every other ci.yml job name is either required in the reused run or queue-only.
+    names = {job.get("name") for job in _jobs_of_ci().values()}
+    assert set(reuse_green_run.EXPECTED_JOBS) | set(reuse_green_run.SKIPPED_ON_PULL_REQUEST) == names - {
+        "pytest (${{ matrix.shard }})"
+    }
 
 
-def test_lookup_failure_runs_the_full_suite(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    def broken(*_args, **_kwargs):
-        raise subprocess.CalledProcessError(1, ["gh"], stderr="HTTP 502")
+@pytest.mark.parametrize("text", ["", "        shard: [1, 2]\n        shard: [1]\n", "        shard: [2, 3]\n"])
+def test_pytest_shards_refuse_an_unreadable_matrix(text: str) -> None:
+    with pytest.raises(ValueError):
+        reuse_green_run.pytest_shards(text)
 
-    monkeypatch.setattr(reuse_green_run, "lookup", broken)
+
+def _main_env(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
     output = tmp_path / "output"
     monkeypatch.setenv("GITHUB_OUTPUT", str(output))
     monkeypatch.delenv("GITHUB_STEP_SUMMARY", raising=False)
     for name in ("REPO", "HEAD_SHA", "HEAD_REF"):
         monkeypatch.setenv(name, "x")
+    return output
 
+
+def test_reuse_logs_the_run_and_job_ids(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys) -> None:
+    monkeypatch.setattr(reuse_green_run, "lookup", lambda *_args: reuse_green_run.decide(_QUEUED, [_candidate()]))
+    output = _main_env(monkeypatch, tmp_path)
+    summary = tmp_path / "summary"
+    monkeypatch.setenv("GITHUB_STEP_SUMMARY", str(summary))
+
+    assert reuse_green_run.main() == 0
+    assert output.read_text(encoding="utf-8") == "reuse=true\nrun_id=11\n"
+    logged = capsys.readouterr().out
+    for name in _QUEUED.jobs:
+        assert f"{name}: reused from run 11, job " in logged
+        assert f"{name}: reused from run 11, job " in summary.read_text(encoding="utf-8")
+
+
+def test_lookup_failure_runs_every_job(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    def broken(*_args, **_kwargs):
+        raise subprocess.CalledProcessError(1, ["gh"], stderr="HTTP 502")
+
+    monkeypatch.setattr(reuse_green_run, "lookup", broken)
+    output = _main_env(monkeypatch, tmp_path)
     assert reuse_green_run.main() == 0
     assert output.read_text(encoding="utf-8") == "reuse=false\nrun_id=\n"
 
 
-def test_a_record_that_fails_to_load_runs_the_full_suite(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    def unreadable() -> dict:
-        raise json.JSONDecodeError("bad", "", 0)
-
-    monkeypatch.setattr(
-        reuse_green_run, "lookup", lambda *_args: reuse_green_run.decide(_TREE, [("11", unreadable, _run_jobs())])
-    )
-    output = tmp_path / "output"
-    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
-    for name in ("REPO", "HEAD_SHA", "HEAD_REF"):
-        monkeypatch.setenv(name, "x")
-
+@pytest.mark.parametrize(
+    "candidate",
+    [
+        reuse_green_run.Candidate(
+            run=_run(), load_record=lambda: json.loads("{"), load_commit=dict, load_jobs=lambda: _jobs()
+        ),
+        # GitHub does not know the recorded commit.
+        _candidate(record=_record(sha="f" * 40)),
+    ],
+)
+def test_a_record_or_commit_that_fails_to_load_runs_every_job(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, candidate
+) -> None:
+    monkeypatch.setattr(reuse_green_run, "lookup", lambda *_args: reuse_green_run.decide(_QUEUED, [candidate]))
+    output = _main_env(monkeypatch, tmp_path)
     assert reuse_green_run.main() == 0
-    assert output.read_text(encoding="utf-8").startswith("reuse=false\n")
+    assert output.read_text(encoding="utf-8") == "reuse=false\nrun_id=\n"
 
 
 @pytest.mark.parametrize(
@@ -489,16 +667,76 @@ def test_queued_pr_number_rejects_other_refs() -> None:
 
 
 # =============================================================================
+# scripts/ci/metadata_commit.py
+# =============================================================================
+
+_RAW = (
+    "tree " + "1" * 40 + "\n"
+    "parent " + "2" * 40 + "\n"
+    "parent " + "3" * 40 + "\n"
+    "author A <a@example.invalid> 1 +0000\n"
+    "committer GitHub <noreply@github.com> 2 +0000\n"
+    "gpgsig -----BEGIN PGP SIGNATURE-----\n"
+    " \n"
+    " abc\n"
+    " -----END PGP SIGNATURE-----\n"
+    "\n"
+    "Merge pull request #7: title\n\nbody\n"
+)
+
+
+def test_metadata_only_object_keeps_people_and_message_and_drops_the_diff() -> None:
+    obj = metadata_commit.metadata_only_object(_RAW, "2" * 40, "4" * 40)
+    assert obj == (
+        "tree " + "4" * 40 + "\n"
+        "parent " + "2" * 40 + "\n"
+        "author A <a@example.invalid> 1 +0000\n"
+        "committer GitHub <noreply@github.com> 2 +0000\n"
+        "\n"
+        "Merge pull request #7: title\n\nbody\n"
+    )
+
+
+def test_metadata_commit_writes_an_empty_diff_commit_on_a_branch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys
+) -> None:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    ident = ["-c", "user.name=Queue", "-c", "user.email=q@example.invalid"]
+    _git(repo, "init", "-q", "-b", "main")
+    (repo / "f").write_text("base\n", encoding="utf-8")
+    _git(repo, "add", "f")
+    _git(repo, *ident, "commit", "-qm", "base")
+    _git(repo, "checkout", "-qb", "pr")
+    (repo / "f").write_text("changed\n", encoding="utf-8")
+    _git(repo, *ident, "commit", "-qam", "pr")
+    _git(repo, "checkout", "-q", "main")
+    _git(repo, *ident, "merge", "-q", "--no-ff", "pr", "-m", "Merge pull request #7\n\nPR-derived text")
+    monkeypatch.chdir(repo)
+
+    assert metadata_commit.main([]) == 0
+
+    outputs = dict(line.split("=", 1) for line in capsys.readouterr().out.splitlines())
+    new, parent = outputs["commit"], outputs["parent"]
+    assert parent == _git(repo, "rev-parse", "HEAD^1")
+    assert _git(repo, "rev-parse", "ci-queue-metadata") == new
+    assert _git(repo, "rev-list", "--parents", "-n", "1", new).split() == [new, parent]
+    assert _git(repo, "diff", "--name-only", parent, new) == ""
+    fields = "%an%n%ae%n%ad%n%cn%n%ce%n%cd%n%B"
+    assert _git(repo, "log", "-1", f"--format={fields}", new) == _git(repo, "log", "-1", f"--format={fields}", "HEAD")
+
+
+# =============================================================================
 # .github/workflows/ci.yml wiring
 # =============================================================================
 
 
-def _jobs() -> dict:
+def _jobs_of_ci() -> dict:
     return yaml.safe_load(_CI.read_text(encoding="utf-8"))["jobs"]
 
 
 def _run_pytest_script() -> str:
-    return next(step["run"] for step in _jobs()["pytest"]["steps"] if step.get("name") == "Run pytest")
+    return next(step["run"] for step in _jobs_of_ci()["pytest"]["steps"] if step.get("name") == "Run pytest")
 
 
 def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
@@ -517,10 +755,15 @@ def test_pytest_job_runs_the_full_non_slow_tier_through_the_split() -> None:
         assert flag in script
     assert "-n auto" not in script
     assert "scripts.ci.pg_skip_guard" in script
+    assert (
+        'export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}'
+        + pytest_report.COLLECTED_SUFFIX
+        + '"'
+    ) in script
 
 
 def test_pytest_matrix_is_contiguous_and_counted_by_the_job() -> None:
-    pytest_job = _jobs()["pytest"]
+    pytest_job = _jobs_of_ci()["pytest"]
     shards = pytest_job["strategy"]["matrix"]["shard"]
     assert shards == list(range(1, len(shards) + 1))
     env = next(step["env"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
@@ -528,32 +771,54 @@ def test_pytest_matrix_is_contiguous_and_counted_by_the_job() -> None:
 
 
 def test_shard_artifacts_feed_the_report_and_the_flake_ledger() -> None:
-    jobs = _jobs()
+    jobs = _jobs_of_ci()
     upload = next(step for step in jobs["pytest"]["steps"] if step.get("name") == "Upload pytest JUnit report")
     # scripts/ci/flake_ledger.py downloads "pytest-junit-shard-*" from merge_group runs.
     assert upload["with"]["name"] == "pytest-junit-shard-${{ matrix.shard }}"
     assert "ci-artifacts/pytest-shard-*.xml" in upload["with"]["path"]
     assert "ci-artifacts/pytest-shard-*-files.txt" in upload["with"]["path"]
+    assert f"ci-artifacts/pytest-shard-*{pytest_report.COLLECTED_SUFFIX}" in upload["with"]["path"]
     report = jobs["pytest-report"]
     assert report["if"] == "${{ !cancelled() && needs.pytest.result == 'success' }}"
     steps = report["steps"]
     assert any(step.get("with", {}).get("pattern") == "pytest-junit-shard-*" for step in steps)
-    assert any("scripts.ci.pytest_report" in str(step.get("run", "")) for step in steps)
+    report_step = next(step for step in steps if "scripts.ci.pytest_report" in str(step.get("run", "")))
+    # The record names the PR it tested; reuse_green_run binds the queued PR to it.
+    assert report_step["env"] == {"PR_NUMBER": "${{ github.event.pull_request.number }}"}
     assert any(step.get("with", {}).get("name") == reuse_green_run.ARTIFACT for step in steps)
 
 
 def test_pytest_is_skipped_only_on_a_recorded_reuse() -> None:
-    jobs = _jobs()
+    jobs = _jobs_of_ci()
     assert jobs["pytest"]["needs"] == ["reuse"]
     assert jobs["pytest"]["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert jobs["reuse"]["if"] == "github.event_name == 'merge_group'"
     assert jobs["reuse"]["permissions"] == {"contents": "read", "actions": "read", "pull-requests": "read"}
+    # reuse_green_run reads the shard matrix from the queue commit's ci.yml.
+    assert reuse_green_run.WORKFLOW in jobs["reuse"]["steps"][0]["with"]["sparse-checkout"].split()
+
+
+def test_queue_commit_metadata_is_scanned_on_every_merge_group_run() -> None:
+    job = _jobs_of_ci()["queue-metadata-scan"]
+    # Not gated on the reuse decision: the reused secret scan covered files, not this commit's metadata.
+    assert job["if"] == "github.event_name == 'merge_group'" and "needs" not in job
+    checkout, metadata, scan = job["steps"]
+    assert checkout["with"] == {"persist-credentials": False, "fetch-depth": 2}
+    assert metadata["id"] == "metadata"
+    assert "python3 -m scripts.ci.metadata_commit --commit HEAD" in metadata["run"]
+    full_scan = next(step for step in _jobs_of_ci()["secret-scan"]["steps"] if "trufflehog" in step.get("uses", ""))
+    assert scan["uses"] == full_scan["uses"]
+    assert scan["with"] == {
+        "base": "${{ steps.metadata.outputs.parent }}",
+        "head": "${{ steps.metadata.outputs.commit }}",
+        "extra_args": "--results=verified,unknown --exclude-detectors=Lob",
+    }
 
 
 def test_every_checkout_drops_credentials_and_every_action_is_sha_pinned() -> None:
     text = _CI.read_text(encoding="utf-8")
     assert "continue-on-error" not in text
-    for job_id, job in _jobs().items():
+    for job_id, job in _jobs_of_ci().items():
         for step in job.get("steps", []):
             uses = step.get("uses")
             if not uses or uses.startswith("./"):

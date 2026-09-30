@@ -303,8 +303,8 @@ def test_no_workflow_reruns_ci_on_a_label() -> None:
 def test_every_event_runs_every_job(event: str) -> None:
     results, names = _simulate(_EVENTS[event])
     skipped = {job for job, result in results.items() if result != "success"}
-    # The reuse check exists only in the merge queue.
-    assert skipped == (set() if event == "merge_group" else {"reuse"})
+    # The reuse check and the queue commit's metadata scan exist only in the merge queue.
+    assert skipped == (set() if event == "merge_group" else {"reuse", "queue-metadata-scan"})
     assert names["ci-gate"] == "CI Gate"
 
 
@@ -312,6 +312,8 @@ def test_merge_queue_reuse_skips_every_reused_job() -> None:
     results, _ = _simulate(_EVENTS["merge_group"], reuse="true")
     reused = {"secret-scan", "checks", "frontend", "pytest", "pytest-report"}
     assert {job for job, result in results.items() if result != "success"} == reused
+    # The queue commit's message, author and committer are scanned even on reuse.
+    assert results["queue-metadata-scan"] == "success"
 
 
 def test_only_the_history_shard_checks_out_full_history() -> None:
@@ -395,7 +397,16 @@ _GREEN = {
 
 
 def _run_gate(event: str, **results: str) -> subprocess.CompletedProcess[str]:
-    env = {"EVENT_NAME": event, "REUSE_JOB": "skipped", "REUSE": "", "REUSED_RUN": "", **_GREEN, **results}
+    metadata_scan = "success" if event == "merge_group" else "skipped"
+    env = {
+        "EVENT_NAME": event,
+        "REUSE_JOB": "skipped",
+        "REUSE": "",
+        "REUSED_RUN": "",
+        "METADATA_SCAN": metadata_scan,
+        **_GREEN,
+        **results,
+    }
     return subprocess.run(
         ["bash", "-e", "-c", _gate_script()],
         check=False,
@@ -422,6 +433,7 @@ def test_gate_passes_a_green_pull_request_run() -> None:
         {"SECRET_SCAN": ""},
         {"FRONTEND": "skipped"},
         {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1"},  # reuse outside the queue
+        {"METADATA_SCAN": "success"},  # a queue-only job outside the queue
     ],
 )
 def test_gate_fails_a_pull_request_run_missing_any_job(overrides: dict[str, str]) -> None:
@@ -457,6 +469,9 @@ def test_gate_accepts_merge_queue_reuse_with_a_run_id() -> None:
         {"REUSE_JOB": "failure", "REUSE": "", "PYTEST": "success"},
         {"REUSE_JOB": "cancelled", "REUSE": ""},
         {"REUSE_JOB": "skipped"},
+        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "METADATA_SCAN": "skipped"},
+        {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1", **_REUSED, "METADATA_SCAN": "failure"},
+        {"REUSE_JOB": "success", "REUSE": "false", "METADATA_SCAN": "cancelled"},
     ],
 )
 def test_gate_fails_closed_in_the_merge_queue(overrides: dict[str, str]) -> None:

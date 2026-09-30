@@ -2,8 +2,9 @@ name: CI
 
 # See docs/runbooks/ci-gate.md. Every event runs the same jobs and the full
 # non-slow pytest suite (slow tests: pytest-slow-nightly.yml). The merge queue
-# reuses a green full run of the identical tree instead of rerunning its jobs.
-# The one required context is "CI Gate".
+# reuses a green full run of the identical tree instead of rerunning its jobs
+# (scripts/ci/reuse_green_run.py), but always scans the queue commit's own
+# metadata for secrets. The one required context is "CI Gate".
 
 concurrency:
   # A push cancels the stale pull_request run; other events are never cancelled.
@@ -47,6 +48,7 @@ jobs:
           sparse-checkout: |
             scripts/ci/
             scripts/__init__.py
+            .github/workflows/ci.yml
           sparse-checkout-cone-mode: false
       - id: find
         env:
@@ -55,6 +57,28 @@ jobs:
           HEAD_SHA: ${{ github.event.merge_group.head_sha }}
           HEAD_REF: ${{ github.event.merge_group.head_ref }}
         run: python3 -m scripts.ci.reuse_green_run
+
+  queue-metadata-scan:
+    # The queue writes PR-derived text into its commit's message, so the
+    # commit's metadata is new even when the reuse check reuses a run's
+    # file-content secret scan of the identical tree. Scans message, author
+    # and committer only (an empty-diff commit carrying that metadata).
+    name: Queue commit metadata scan
+    if: github.event_name == 'merge_group'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 2  # the queue commit and its parents; no blob filter (TruffleHog clones this repo)
+      - id: metadata
+        run: python3 -m scripts.ci.metadata_commit --commit HEAD >> "$GITHUB_OUTPUT"
+      - uses: trufflesecurity/trufflehog@f714bf454f350590f4a24c3ddb1aef02c35bf5b6 # v3.97.5
+        with:
+          base: ${{ steps.metadata.outputs.parent }}
+          head: ${{ steps.metadata.outputs.commit }}
+          extra_args: --results=verified,unknown --exclude-detectors=Lob
 
   secret-scan:
     name: Secret scan
@@ -215,6 +239,8 @@ jobs:
           set -euo pipefail
           mkdir -p ci-artifacts
           export LU_PYTEST_SHARD_FILES="ci-artifacts/pytest-shard-${SHARD}-files.txt"
+          # Every collected needs_artifact test, before -m deselects (pytest report audits it).
+          export LU_PYTEST_NEEDS_ARTIFACT_COLLECTED="ci-artifacts/pytest-shard-${SHARD}-needs-artifact.txt"
           # Shallow shards: a test that fetches from GitHub fails instead of
           # quietly downloading history (scripts/ci/history-tests.txt).
           [ "$SHARD" = 1 ] || export GIT_ALLOW_PROTOCOL=file
@@ -239,6 +265,7 @@ jobs:
           path: |
             ci-artifacts/pytest-shard-*.xml
             ci-artifacts/pytest-shard-*-files.txt
+            ci-artifacts/pytest-shard-*-needs-artifact.txt
           if-no-files-found: error
           retention-days: 14
 
@@ -261,7 +288,9 @@ jobs:
         with:
           pattern: pytest-junit-shard-*
           path: ci-artifacts/shards
-      - run: python3 -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json
+      - env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: python3 -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ci-tested-tree
@@ -273,7 +302,7 @@ jobs:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
-    needs: [reuse, secret-scan, checks, frontend, pytest, pytest-report]
+    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -283,6 +312,7 @@ jobs:
           REUSE_JOB: ${{ needs.reuse.result }}
           REUSE: ${{ needs.reuse.outputs.reuse }}
           REUSED_RUN: ${{ needs.reuse.outputs.run_id }}
+          METADATA_SCAN: ${{ needs.queue-metadata-scan.result }}
           SECRET_SCAN: ${{ needs.secret-scan.result }}
           CHECKS: ${{ needs.checks.result }}
           FRONTEND: ${{ needs.frontend.result }}
@@ -295,8 +325,11 @@ jobs:
               [ "$2" != cancelled ] || echo "::error::required job was cancelled: $1"
               echo "::error::$1 is '${2:-missing}', expected '$3'"; status=1; fi
           }
-          if [ "$EVENT_NAME" = merge_group ]; then want reuse "$REUSE_JOB" success
-          else want reuse "$REUSE_JOB" skipped; fi
+          if [ "$EVENT_NAME" = merge_group ]; then
+            want reuse "$REUSE_JOB" success; want queue-metadata-scan "$METADATA_SCAN" success
+          else
+            want reuse "$REUSE_JOB" skipped; want queue-metadata-scan "$METADATA_SCAN" skipped
+          fi
           expected=success
           if [ "$EVENT_NAME" = merge_group ] && [ "$REUSE" = true ]; then
             [ -n "$REUSED_RUN" ] || { echo "::error::reuse=true without a run id"; status=1; }

@@ -1694,11 +1694,39 @@ class _FlakeRerunReporter:
                 output.write(summary)
 
 
+LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR = "LU_PYTEST_NEEDS_ARTIFACT_COLLECTED"
+
+
+class _NeedsArtifactCollection:
+    """Write every collected ``needs_artifact`` test before ``-m`` deselects any.
+
+    scripts/ci/pytest_report.py compares this set with
+    registry/artifacts/needs-artifact-expected.txt, independently of the
+    tests that skipped at run time, so a marked test the tier deselects
+    (``slow``) or skips for another reason fails the audit. Under xdist every
+    worker collects the same items and gw0 writes them; the controller
+    collects nothing.
+    """
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_collection_modifyitems(self, config: pytest.Config, items: list[pytest.Item]) -> None:
+        if getattr(config, "workerinput", {}).get("workerid", "gw0") != "gw0":
+            return
+        marked = sorted(item.nodeid for item in items if item.get_closest_marker("needs_artifact"))
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text("".join(f"{node_id}\n" for node_id in marked), encoding="utf-8")
+
+
 def pytest_configure(config: pytest.Config) -> None:
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
+    if collected_path := os.environ.get(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR):
+        config.pluginmanager.register(_NeedsArtifactCollection(Path(collected_path)), "needs-artifact-collection")
     _install_socket_guard()
     config.addinivalue_line(
         "markers",
