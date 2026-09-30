@@ -458,11 +458,51 @@ if [[ "$DRY_RUN" == true ]]; then
     exit 0
 fi
 
-# Step 3: Sync — with per-target --exclude for declared orphan paths
+# One process copies every non-agent mirror. Patterns are the same anchored
+# excludes rsync received (`--exclude=/path`); `*-epic` stays root-anchored.
+# .agent/ is not in this spec: its rsync is descriptor-bound below.
+write_sync_spec() {
+    local spec="$1" src="$2" dst="$3" paths="$4" kind="$5" p
+    local -
+    set -f
+    printf '%s\t%s\t%s' "$kind" "$src" "$dst" >>"$spec"
+    # shellcheck disable=SC2086  # patterns are space-separated and must not glob
+    for p in $paths; do
+        printf '\t/%s' "$p" >>"$spec"
+    done
+    printf '\n' >>"$spec"
+}
+
+# Step 3: Sync — with per-target excludes for declared orphan paths
 echo "=== Syncing ==="
 "$PROJECT_PYTHON" scripts/deploy/retire_codex_skills.py apply
-# shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
+sync_spec="$(mktemp)"
+: >"$sync_spec"
+write_sync_spec "$sync_spec" "$SHARED_EXTENSIONS" .claude \
+    "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS" delete
+write_sync_spec "$sync_spec" "$SHARED_EXTENSIONS" .codex \
+    "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES" delete
+if [[ -d "$CODEX_EXTENSIONS" ]]; then
+    write_sync_spec "$sync_spec" "$CODEX_EXTENSIONS" .codex "" copy
+fi
+write_sync_spec "$sync_spec" "$SHARED_EXTENSIONS/skills" .agents/skills "$ORPHAN_PATHS_AGENTS" delete
+gemini_skill_excludes=""
+for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
+    [[ -d "$shared_skill" ]] || continue
+    gemini_skill_excludes+=" skills/${shared_skill##*/}/"
+done
+write_sync_spec "$sync_spec" gemini_extensions .gemini \
+    "$ORPHAN_PATHS_GEMINI$gemini_skill_excludes" delete
+for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
+    [[ -d "$shared_skill" ]] || continue
+    write_sync_spec "$sync_spec" "$shared_skill" ".gemini/skills/${shared_skill##*/}" "" delete
+done
+write_sync_spec "$sync_spec" "$SHARED_EXTENSIONS/rules" .gemini/rules "" delete
+"$PROJECT_PYTHON" scripts/deploy/sync_prompt_mirrors.py "$sync_spec" || {
+    rm -f "$sync_spec"
+    exit 1
+}
+rm -f "$sync_spec"
 # .agent/ overlays source without --delete. A deploy-owned manifest reaps only
 # retired paths which an earlier deploy recorded, preserving all other runtime
 # scratch even when it shares a source directory such as prompts/. #4741
@@ -472,32 +512,6 @@ reap_retired_shared_agent_paths
 # after the check and redirect a path-based write outside this repository.
 sync_shared_agent_mirror
 write_shared_agent_manifest
-# shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES") "$SHARED_EXTENSIONS/" .codex/
-if [[ -d "$CODEX_EXTENSIONS" ]]; then
-    rsync -av "$CODEX_EXTENSIONS/" .codex/
-fi
-# shellcheck disable=SC2046
-# rsync needs the destination's parent dir to exist before it can create
-# `.agents/skills/`. On a clean checkout (e.g. the test fixture in
-# tests/test_deploy_script_idempotency.py) `.agents/` does not exist yet,
-# and rsync fails with `mkdir ".agents/skills" failed: No such file or
-# directory (2)`. Pre-create the parent so a fresh clone works.
-mkdir -p .agents
-# shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENTS") "$SHARED_EXTENSIONS/skills/" .agents/skills/
-# shellcheck disable=SC2046
-rsync -av --delete \
-    $(build_excludes "$ORPHAN_PATHS_GEMINI") \
-    $(build_shared_skill_overlay_excludes) \
-    gemini_extensions/ .gemini/
-for shared_skill in "$SHARED_EXTENSIONS"/skills/*; do
-    [[ -d "$shared_skill" ]] || continue
-    skill_name="$(basename "$shared_skill")"
-    mkdir -p ".gemini/skills/$skill_name"
-    rsync -av --delete "$shared_skill/" ".gemini/skills/$skill_name/"
-done
-rsync -av --delete "$SHARED_EXTENSIONS/rules/" .gemini/rules/
 echo ""
 
 # Ensure deployed hooks are executable in the destination

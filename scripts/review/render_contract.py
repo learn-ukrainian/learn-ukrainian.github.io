@@ -68,6 +68,7 @@ class _ModuleFinder:
     def __init__(self, roots: Iterable[Path]):
         self.roots = tuple(roots)
         self._cache: dict[str, _Module | None] = {}
+        self.scanned: list[Path] = []
 
     def find(self, name: str) -> _Module | None:
         if name in self._cache:
@@ -83,10 +84,12 @@ class _ModuleFinder:
         self._cache[name] = found
         return found
 
-    @staticmethod
-    def _scan(directories: Iterable[Path], leaf: str) -> _Module | None:
+    def _scan(self, directories: Iterable[Path], leaf: str) -> _Module | None:
         portions: list[Path] = []
         for directory in directories:
+            # A file added here changes the directory's mtime, so a later call cannot reuse a walk
+            # that did not see it.
+            self.scanned.append(directory)
             package = directory / leaf
             if (package / "__init__.py").is_file():
                 return _Module((package / "__init__.py",), (package,))
@@ -97,10 +100,43 @@ class _ModuleFinder:
         return _Module((), tuple(portions)) if portions else None
 
 
+# Statement containers only. A full ``ast.walk`` visits every expression and dominated the digest.
+_IMPORT_CONTAINERS: tuple[type[ast.AST], ...] = (
+    ast.Module,
+    ast.FunctionDef,
+    ast.AsyncFunctionDef,
+    ast.ClassDef,
+    ast.If,
+    ast.For,
+    ast.AsyncFor,
+    ast.While,
+    ast.With,
+    ast.AsyncWith,
+    ast.Try,
+    ast.ExceptHandler,
+    *(
+        node
+        for name in ("Match", "match_case", "TryStar")
+        if (node := getattr(ast, name, None)) is not None
+    ),
+)
+
+
+def _import_statements(tree: ast.AST) -> Iterable[ast.AST]:
+    """``import`` statements, including ones nested in functions, without walking expressions."""
+    stack = [tree]
+    while stack:
+        node = stack.pop()
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            yield node
+        if isinstance(node, _IMPORT_CONTAINERS):
+            stack.extend(ast.iter_child_nodes(node))
+
+
 def _imported_names(tree: ast.AST, package: str) -> list[str]:
     """Every module name an ``import``/``from … import`` in ``tree`` may load, with its parent packages."""
     names: list[str] = []
-    for node in ast.walk(tree):
+    for node in _import_statements(tree):
         if isinstance(node, ast.Import):
             targets = [alias.name for alias in node.names]
         elif isinstance(node, ast.ImportFrom):
@@ -127,13 +163,92 @@ def _imported_names(tree: ast.AST, package: str) -> list[str]:
 _IMPORTS_CACHE: dict[tuple[str, str], tuple[str, ...]] = {}
 
 
+def _code_lines(data: bytes) -> Iterable[bytes]:
+    """Lines of ``data`` outside a triple-quoted string.
+
+    A line that opens ``\"\"\"`` or ``'''`` and does not close it hides the following lines until the closer.
+    A quote written inside another string can fool the count; the snippet is then parsed, and a snippet that
+    does not parse is thrown away in favour of parsing the whole file.
+    """
+    active: bytes | None = None
+    for raw in data.splitlines():
+        if active is not None:
+            closer = raw.find(active)
+            if closer < 0:
+                continue
+            raw = raw[closer + 3 :]
+            active = None
+        opened: bytes | None = None
+        for token in (b'"""', b"'''"):
+            if raw.count(token) % 2 == 1:
+                opened = token
+                break
+        yield raw
+        active = opened
+
+
+def _import_snippet(data: bytes) -> bytes:
+    """The file's import statements, dedented so they parse as a module of their own."""
+    out: list[bytes] = []
+    cont = False
+    base = 0
+    depth = 0
+    for raw in _code_lines(data):
+        if cont:
+            piece = raw[base:] if len(raw) >= base and raw[:base] == b" " * base else raw.lstrip()
+            out.append(piece)
+            depth += piece.count(b"(") + piece.count(b"[") + piece.count(b"{")
+            depth -= piece.count(b")") + piece.count(b"]") + piece.count(b"}")
+            if depth <= 0:
+                cont = False
+                depth = 0
+            continue
+        stripped = raw.lstrip()
+        if stripped.startswith((b"import ", b"import\t", b"from ", b"from\t", b"from.")) or stripped in (
+            b"import",
+            b"from",
+        ):
+            base = len(raw) - len(stripped)
+            piece = raw[base:]
+            out.append(piece)
+            depth = (
+                piece.count(b"(")
+                + piece.count(b"[")
+                + piece.count(b"{")
+                - piece.count(b")")
+                - piece.count(b"]")
+                - piece.count(b"}")
+            )
+            cont = depth > 0
+            if not cont:
+                depth = 0
+    return b"\n".join(out) + (b"\n" if out else b"")
+
+
+def _parse_imports(data: bytes) -> ast.AST | None:
+    """The import statements of ``data``, or the whole file when the snippet does not parse.
+
+    A file with no ``import`` token imports nothing. A module that does not parse imports nothing either;
+    it is still hashed by the caller.
+    """
+    if b"import" not in data:
+        return None
+    text = _import_snippet(data)
+    if text.strip():
+        try:
+            return ast.parse(text)
+        except (SyntaxError, ValueError):
+            pass
+    try:
+        return ast.parse(data)
+    except (SyntaxError, ValueError):
+        return None
+
+
 def _imports_of(sha256: str, package: str, data: bytes) -> tuple[str, ...]:
     key = (sha256, package)
     if key not in _IMPORTS_CACHE:
-        try:
-            tree = ast.parse(data)
-        except (SyntaxError, ValueError):
-            tree = None  # still hashed; a module that does not parse imports nothing
+        tree = _parse_imports(data)
         _IMPORTS_CACHE[key] = tuple(dict.fromkeys(_imported_names(tree, package))) if tree else ()
     return _IMPORTS_CACHE[key]
 
@@ -168,19 +283,53 @@ class ServerCode:
         return _mapping_digest(_SERVER_DIGEST_VERSION, self.components())
 
 
-def server_code(checkout: Path) -> ServerCode:
-    """What the sources server of ``checkout`` executes.
+def _stamp(path: Path) -> tuple[str, int, int, int, int] | None:
+    """mtime and size of ``path`` and, when it is a symlink, of the link itself."""
+    try:
+        followed = path.stat()
+        link = path.lstat()
+    except OSError:
+        return None
+    return (str(path), followed.st_mtime_ns, followed.st_size, link.st_mtime_ns, link.st_size)
 
-    The entry and each repository module it imports, recursively (a symlink is followed and its target's bytes
-    hashed), and the checkout's ``LOCK_FILE``. Modules found outside the roots are not traced.
-    """
-    root = Path(checkout).resolve()
+
+def _stamps(paths: Iterable[Path]) -> tuple[tuple[str, int, int, int, int], ...] | None:
+    rows: list[tuple[str, int, int, int, int]] = []
+    seen: set[str] = set()
+    for path in paths:
+        stamp = _stamp(path)
+        if stamp is None or stamp[0] in seen:
+            if stamp is None:
+                return None
+            continue
+        seen.add(stamp[0])
+        rows.append(stamp)
+    return tuple(rows)
+
+
+def _stamps_match(stamps: tuple[tuple[str, int, int, int, int], ...]) -> bool:
+    for key, followed_mtime, followed_size, link_mtime, link_size in stamps:
+        current = _stamp(Path(key))
+        if current != (key, followed_mtime, followed_size, link_mtime, link_size):
+            return False
+    return True
+
+
+#: One walk per checkout while every hashed file, the lock and every scanned directory still match.
+_SERVER_CODE_CACHE: dict[Path, tuple[tuple[tuple[str, int, int, int, int], ...], ServerCode]] = {}
+
+
+def _copy_server_code(code: ServerCode) -> ServerCode:
+    return ServerCode(files=dict(code.files), lock_sha256=code.lock_sha256)
+
+
+def _walk_server_code(root: Path) -> tuple[ServerCode, tuple[tuple[str, int, int, int, int], ...]]:
     entry = root / SERVER_ENTRY
     if not entry.is_file():
         raise ReviewContractError(f"review attempt refused: no sources server at {entry} (#9163)")
     lock = root / LOCK_FILE
     try:
-        lock_sha256 = hashlib.sha256(lock.read_bytes()).hexdigest()
+        lock_bytes = lock.read_bytes()
     except OSError as exc:
         raise ReviewContractError(
             f"review attempt refused: review_server_lock_missing: cannot read {lock}, which pins the third-party "
@@ -188,6 +337,7 @@ def server_code(checkout: Path) -> ServerCode:
         ) from exc
     finder = _ModuleFinder((root / "scripts", root, entry.resolve().parent))
     hashes: dict[str, str] = {}
+    read_paths: list[Path] = []
     pending: list[tuple[Path, str]] = [(entry, "")]
     while pending:
         path, package = pending.pop()
@@ -199,11 +349,34 @@ def server_code(checkout: Path) -> ServerCode:
         except OSError as exc:
             raise ReviewContractError(f"review attempt refused: cannot read {path}: {exc} (#9163)") from exc
         hashes[key] = hashlib.sha256(data).hexdigest()
+        read_paths.append(path)
         for name in _imports_of(hashes[key], package, data):
             module = finder.find(name)
             for file in module.files if module is not None else ():
                 pending.append((file, name if file.name == "__init__.py" else name.rpartition(".")[0]))
-    return ServerCode(files=dict(sorted(hashes.items())), lock_sha256=lock_sha256)
+    stamps = _stamps((*read_paths, *finder.scanned, lock))
+    if stamps is None:
+        raise ReviewContractError(f"review attempt refused: cannot stat the sources server files under {root} (#9163)")
+    return ServerCode(files=dict(sorted(hashes.items())), lock_sha256=hashlib.sha256(lock_bytes).hexdigest()), stamps
+
+
+def server_code(checkout: Path) -> ServerCode:
+    """What the sources server of ``checkout`` executes.
+
+    The entry and each repository module it imports, recursively (a symlink is followed and its target's bytes
+    hashed), and the checkout's ``LOCK_FILE``. Modules found outside the roots are not traced.
+
+    A later call for the same checkout reuses that walk while the mtime and size of every hashed file, the lock
+    and every directory the walk searched are unchanged. A changed file, a retargeted symlink, or a new module
+    in a searched directory is walked again.
+    """
+    root = Path(checkout).resolve()
+    cached = _SERVER_CODE_CACHE.get(root)
+    if cached is not None and _stamps_match(cached[0]):
+        return _copy_server_code(cached[1])
+    code, stamps = _walk_server_code(root)
+    _SERVER_CODE_CACHE[root] = (stamps, code)
+    return _copy_server_code(code)
 
 
 def server_code_files(checkout: Path) -> dict[str, str]:

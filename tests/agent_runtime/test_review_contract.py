@@ -147,6 +147,20 @@ def test_server_code_is_the_entry_and_every_repository_module_it_imports(checkou
     assert list(code.components()) == ["repository", LOCK_FILE]
 
 
+def test_a_module_created_for_an_existing_import_changes_the_digest(checkouts: tuple[Path, Path]) -> None:
+    """A file added where an import already looks is part of the digest, without editing that import again."""
+    primary, _worktree = checkouts
+    morph = primary / "scripts/verification/morph.py"
+    morph.write_text(morph.read_text(encoding="utf-8") + "\nfrom . import created\n", encoding="utf-8")
+    before = server_code_digest(primary)
+    assert "scripts/verification/created.py" not in server_code_files(primary)
+
+    (primary / "scripts/verification/created.py").write_text("VALUE = 1\n", encoding="utf-8")
+
+    assert server_code_digest(primary) != before
+    assert "scripts/verification/created.py" in server_code_files(primary)
+
+
 def test_rendered_in_a_skewed_worktree_and_run_by_the_primary_server_refuses(
     tmp_path: Path, checkouts: tuple[Path, Path]
 ) -> None:
@@ -330,3 +344,42 @@ def test_the_launch_check_refuses_a_server_changed_since_admission(
         check_launch_contract(contract, worktree, python)
     with pytest.raises(ReviewContractError, match="review_server_changed"):
         check_launch_contract(contract, primary, tmp_path / "other" / "bin" / "python")
+
+
+def test_an_import_inside_a_triple_quoted_string_is_not_followed() -> None:
+    """A docstring that shows an import is not a module the server executes."""
+    data = b'from pathlib import Path\n"""\nimport not_a_real_module\n"""\n\ndef load():\n    import json\n'
+    tree = render_contract._parse_imports(data)
+    assert tree is not None
+    names = set(render_contract._imported_names(tree, ""))
+    assert "pathlib" in names and "json" in names
+    assert "not_a_real_module" not in names
+
+
+def test_import_scan_finds_the_same_server_files_as_a_full_parse() -> None:
+    """The snippet scan and a full parse name the same repository files for this checkout."""
+    root = Path(__file__).resolve().parents[2]
+    fast = server_code(root)
+
+    def full_parse(data: bytes):
+        if b"import" not in data:
+            return None
+        try:
+            import ast
+
+            return ast.parse(data)
+        except (SyntaxError, ValueError):
+            return None
+
+    original = render_contract._parse_imports
+    render_contract._parse_imports = full_parse
+    render_contract._IMPORTS_CACHE.clear()
+    render_contract._SERVER_CODE_CACHE.clear()
+    try:
+        slow = server_code(root)
+    finally:
+        render_contract._parse_imports = original
+        render_contract._IMPORTS_CACHE.clear()
+        render_contract._SERVER_CODE_CACHE.clear()
+    assert slow.files == fast.files
+    assert slow.digest == fast.digest
