@@ -119,7 +119,7 @@ WRITER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
-    "grok-tools": {"model": "grok-4.5", "effort": "medium"},
+    "grok-tools": {"model": "grok-4.7", "effort": "medium"},
     "cursor-tools": {"model": "composer-2.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
@@ -155,8 +155,6 @@ REVIEWER_CHOICES = (
     "claude-tools",
     "gemini-tools",
     "codex-tools",
-    "grok-tools",
-    "cursor-tools",
     "deepseek-tools",
     "qwen-tools",
     "agy-tools",
@@ -165,8 +163,6 @@ REVIEWER_DEFAULTS: dict[str, dict[str, str]] = {
     "claude-tools": {"model": "claude-opus-5-5", "effort": "xhigh"},
     "gemini-tools": {"model": "gemini-3.1-pro-preview", "effort": "high"},
     "codex-tools": {"model": "gpt-6.1-sol", "effort": "high"},
-    "grok-tools": {"model": "grok-4.5", "effort": "medium"},
-    "cursor-tools": {"model": "grok-4.5", "effort": "medium"},
     "deepseek-tools": {"model": "deepseek-v4.1-flash", "effort": "medium"},
     "qwen-tools": {"model": "qwen/qwen3.6-plus", "effort": "medium"},
     "agy-tools": {"model": "gemini-3.8-flash-high", "effort": "medium"},
@@ -5379,6 +5375,8 @@ def invoke_reviewer_dim(
     stdout_silence_timeout: int | None = None,
 ) -> dict[str, Any] | str:
     """Call one per-dimension reviewer and emit response/audit telemetry."""
+    if reviewer in {"grok-tools", "cursor-tools"}:
+        raise LinearPipelineError("Grok dimension reviewers are prohibited; select a qualified reviewer lane")
     if reviewer not in REVIEWER_CHOICES:
         raise LinearPipelineError(f"Unknown reviewer {reviewer!r}; expected one of {REVIEWER_CHOICES}")
     if invoker is None:

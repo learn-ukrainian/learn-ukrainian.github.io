@@ -41,10 +41,10 @@ PLANS_DIR = CURRICULUM_DIR / "plans"
 PHASES_DIR = PROJECT_ROOT / "agents_extensions/shared" / "phases" / "gemini"
 QUICK_REF_DIR = PROJECT_ROOT / "agents_extensions/shared" / "quick-ref"
 
-# Model Tiering — Gemini (3 tiers, mirrors Claude: Pro≈Opus, Flash≈Sonnet, Flash-Lite≈Haiku)
+# Model Tiering — Gemini (Pro and Flash; Flash-Lite is a compatibility alias)
 PRO_MODEL = "gemini-3.1-pro-preview"                 # Deep reasoning: writing, content, review
-FLASH_MODEL = "gemini-3-flash-preview"                 # Back online 2026-04-08
-FLASH_LITE_MODEL = "gemini-3.1-flash-lite-preview"   # Fast structured output: skeleton, vocab, activities
+FLASH_MODEL = "gemini-3.8-flash-high"               # Default AGY Flash tier
+FLASH_LITE_MODEL = FLASH_MODEL                       # Same AGY route; no separate capacity tier
 GEMINI_REVIEW_MODEL = PRO_MODEL                      # Review needs Pro for strict schema + linguistic analysis
 FALLBACK_MODEL = "auto"                              # Let gemini-cli route when a model is unavailable
 

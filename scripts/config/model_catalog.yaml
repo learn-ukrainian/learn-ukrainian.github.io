@@ -68,7 +68,9 @@ policy:
       xai/grok-4.5). Those pins live in hash-bound v2.1 evidence/validator artifacts
       (phase3_functional_roles.py validator_sha256 + phase3_source_production_transport.py
       inventory sha); rotating or rewriting them is outside the fleet seat list and requires
-      a separate open-model-data rebind (#6870 item 3). Fleet routing must not read them.
+      a separate open-model-data rebind (#6870 item 3). The same rebind must cover
+      gemini-3.6/3.7 (including Flash variants), claude-fable-5 and grok-4.6 pins
+      in those hash-bound Phase 3 artifacts. Fleet routing must not read them.
     - >-
       Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged. Composer 2.5
       conservatively shares Moonshot independence lineage with Kimi.
@@ -647,7 +649,7 @@ models:
     # the catalog. Never referenced by any active review_candidate, ladder,
     # orchestrator_seat, or formal_cf_default — live routes use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
-    transports: [native_grok]
+    transports: []
     strengths: [strong_coding, sharp_review, agentic_work]
     weaknesses: [native_subscription_window, superseded_by_grok_4_6]
     sources:
@@ -1272,6 +1274,8 @@ budget_substitution_models:
     gpt-6-luna: gpt-6-luna
   cursor:
     claude-opus-5-5: claude-opus-5-5-high
+    # Read-only cursor-agent --list-models verified 2026-09-30:
+    # claude-fable-5-1-thinking-high - Claude Fable 5.1 1M Thinking (NO ZDR)
     claude-fable-5-1: claude-fable-5-1-thinking-high
     grok-4.7: grok-4.7
     composer-2.5: composer-2.5

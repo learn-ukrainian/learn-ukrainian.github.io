@@ -219,7 +219,7 @@ def dispatch_gemini(
     """Dispatch a prompt to Gemini with stdout_only=True and Flash fallback.
 
     This is the default dispatch used by the pipeline. Always forces stdout_only=True.
-    Default calls use Flash and fall back only across Flash rungs (Flash High → Flash Lite).
+    Default calls use Flash; Flash-Lite is an alias of the same route and adds no capacity.
     Pro is used only when explicitly requested by the caller.
     """
     if model is None:

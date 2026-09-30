@@ -344,7 +344,12 @@ def build_native_command(cell: Cell, prompt: str) -> list[str]:
 
 def run_native_cli(cell: Cell, prompt: str) -> HarnessCall:
     """Invoke a native provider CLI for one calibration prompt."""
-    return run_subprocess(build_native_command(cell, prompt), timeout_s=REQUEST_TIMEOUT_S)
+    cmd = build_native_command(cell, prompt)
+    from scripts.review.model_catalog import require_execution_model
+
+    transport = {"anthropic": "native_claude", "openai": "native_codex", "google": "native_gemini", "xai": "native_grok"}[cell.family]
+    require_execution_model(cell.model, transport=transport)
+    return run_subprocess(cmd, timeout_s=REQUEST_TIMEOUT_S)
 
 
 def _read_effort_line(text: str) -> tuple[int, str] | None:
@@ -407,6 +412,9 @@ def hermes_mcp_command(action: str) -> HarnessCall:
 
 def run_hermes(cell: Cell, prompt: str, *, config_path: Path = HERMES_CFG) -> HarnessCall:
     """Invoke Hermes one-shot mode with atomic effort config swapping."""
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model(cell.model, transport="hermes")
     try:
         with hermes_effort_swap(config_path, cell.effort):
             disabled: HarnessCall | None = None

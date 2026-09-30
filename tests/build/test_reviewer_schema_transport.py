@@ -428,16 +428,17 @@ def test_dimension_production_wrapper_passes_schema_and_consumes_object(route, t
     assert result["score"] == 7.0
 
 
-def test_dimension_grok_frozen_model_remains_refused(tmp_path, monkeypatch):
-    monkeypatch.setattr(linear, "_runtime_tool_config", lambda *a, **kw: {})
+@pytest.mark.parametrize("reviewer", ("grok-tools", "cursor-tools"))
+def test_dimension_grok_frozen_model_remains_refused(reviewer, tmp_path, monkeypatch):
+    def forbidden(*args, **kwargs):
+        pytest.fail("prohibited reviewer must be refused before configuration or invocation")
 
-    def runtime(agent, prompt, **kwargs):
-        assert kwargs["model"] == "grok-4.5"
-        return build_plan(adapter_for(agent, monkeypatch), tmp_path, kwargs["tool_config"], model=kwargs["model"])
-
-    with pytest.raises(linear.LinearPipelineError, match="unsupported Grok model"):
-        linear.invoke_reviewer_dim("fixture", "grok-tools", dim="pedagogical", writer_under_review="fixture",
-                                   cwd=tmp_path, invoker=runtime)
+    monkeypatch.setattr(linear, "_runtime_tool_config", forbidden)
+    assert reviewer not in linear.REVIEWER_DEFAULTS
+    assert reviewer not in linear.REVIEWER_CHOICES
+    with pytest.raises(linear.LinearPipelineError, match="Grok dimension reviewers are prohibited"):
+        linear.invoke_reviewer_dim("fixture", reviewer, dim="pedagogical", writer_under_review="fixture",
+                                   cwd=tmp_path, invoker=forbidden)
 
 
 def direct_context(tmp_path: Path) -> direct.DirectModuleContext:

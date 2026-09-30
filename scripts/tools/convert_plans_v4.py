@@ -36,12 +36,15 @@ import os
 import re
 import shutil
 import subprocess
+import sys
 import time
 from pathlib import Path
 
 import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 PLANS_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans"
 TEMPLATES_PATH = PROJECT_ROOT / "docs" / "l2-uk-en" / "v4-seminar-section-templates.yaml"
 
@@ -182,6 +185,9 @@ Return ONLY valid YAML. No markdown fences, no preamble. Start with `module:` li
 
 def call_gemini(prompt: str, *, max_retries: int = 3) -> str | None:
     """Call Gemini CLI and return response."""
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model(GEMINI_MODEL, transport="native_gemini")
     for attempt in range(max_retries):
         try:
             proc = subprocess.Popen(
@@ -408,6 +414,11 @@ def main():
                         help="Show what would be converted")
 
     args = parser.parse_args()
+
+    if not args.dry_run:
+        from scripts.review.model_catalog import require_execution_model
+
+        require_execution_model(GEMINI_MODEL, transport="native_gemini")
 
     if args.all_tracks:
         tracks = ALL_SEMINAR_TRACKS

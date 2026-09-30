@@ -546,6 +546,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
+        if lifecycle == "retired" and model["transports"]:
+            raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must not route GPT/Grok families through Hermes")
         aliases = model.get("aliases", [])
@@ -827,6 +829,29 @@ def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> 
     replacement = models[model_id].get("replaced_by")
     advice = f"use {replacement}" if replacement else "use an active catalog model"
     return f"model {text!r} is retired in the model catalog ({model_id}); {advice}"
+
+
+def require_execution_model(
+    model: str, *, transport: str, catalog: dict[str, Any] | None = None,
+) -> str:
+    """Reject frozen audit defaults before provider or configuration side effects.
+
+    Historical model palettes remain readable; they do not authorize new runs.
+    Retirement uses the canonical refusal path shared with fleet admission.
+    """
+    catalog = catalog or load_model_catalog()
+    refusal = retired_model_refusal(model, catalog)
+    if refusal:
+        raise ModelCatalogError(refusal)
+    model_id = resolve_catalog_model_id(model, catalog)
+    if model_id is None:
+        raise ModelCatalogError(f"model {model!r} is not in the model catalog")
+    entry = catalog["models"][model_id]
+    if entry["lifecycle"] not in {"active", "fallback"}:
+        raise ModelCatalogError(f"model {model!r} is not admitted for execution")
+    if transport not in entry["transports"]:
+        raise ModelCatalogError(f"model {model!r} has no admitted {transport} transport")
+    return model_id
 
 
 def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
