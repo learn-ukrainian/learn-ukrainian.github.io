@@ -4,24 +4,26 @@ Rows are structural test doubles, not Ukrainian attestation.
 """
 
 import sqlite3
+from collections.abc import Iterable
+from pathlib import Path
 
 import pytest
 
 from scripts.curriculum.evidence.sources import Sources
 
 
-@pytest.fixture(autouse=True)
-def receipt_sources(tmp_path, monkeypatch, request):
-    locations = set(getattr(request.module, "VESUM_LOCATIONS", {}).values())
+def receipt_source_paths(root: Path, locations: Iterable[str] = ()) -> tuple[Path, Path]:
+    """Build tiny SQLite stores for real citation resolution, without host data."""
+    locations = set(locations)
     locations.update({"487702-487719", "5682038-5682052", "6445807-6445825"})
-    vesum_db = tmp_path / "receipt-vesum.db"
+    vesum_db = root / "receipt-vesum.db"
     with sqlite3.connect(vesum_db) as conn:
         conn.execute("CREATE TABLE forms_all (id INTEGER PRIMARY KEY, entry_id INTEGER, source_location TEXT)")
         conn.executemany(
             "INSERT INTO forms_all VALUES (?, ?, ?)",
             [(int(loc.split("-")[0]), index + 1, loc) for index, loc in enumerate(sorted(locations))],
         )
-    sources_db = tmp_path / "receipt-sources.db"
+    sources_db = root / "receipt-sources.db"
     with sqlite3.connect(sources_db) as conn:
         conn.executescript("""
             CREATE TABLE textbooks (id INTEGER PRIMARY KEY, chunk_id TEXT, text TEXT);
@@ -36,6 +38,12 @@ def receipt_sources(tmp_path, monkeypatch, request):
             INSERT INTO slovnyk_me_entries VALUES (1, 'vts', 'fixture source bytes');
             INSERT INTO slovnyk_me_entries VALUES (2, 'sum', 'wrong dictionary');
         """)
+    return sources_db, vesum_db
+
+
+@pytest.fixture(autouse=True)
+def receipt_sources(tmp_path, monkeypatch, request):
+    sources_db, vesum_db = receipt_source_paths(tmp_path, getattr(request.module, "VESUM_LOCATIONS", {}).values())
     original_init = Sources.__init__
 
     def fixture_init(self, **kwargs):

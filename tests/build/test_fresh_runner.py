@@ -401,9 +401,14 @@ def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, mo
 
 
 class _FixtureSources:
+    def __init__(self, *, evidence_sources=None):
+        self.evidence_sources = evidence_sources
+
     def resolve_evidence_ids(self, evidence_ids):
         from scripts.curriculum.evidence.sources import Sources
 
+        if self.evidence_sources is not None:
+            return self.evidence_sources.resolve_evidence_ids(evidence_ids)
         with Sources() as sources:
             return sources.resolve_evidence_ids(evidence_ids)
 

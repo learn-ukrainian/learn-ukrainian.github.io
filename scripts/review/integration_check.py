@@ -52,6 +52,7 @@ from scripts.build.fresh.cli import main as fresh_cli
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.inventory_gate import GateReport
 from scripts.curriculum.learner_state.planned import planned_state
 from scripts.curriculum.resolver import receipts
@@ -71,6 +72,7 @@ from tests.build.test_fresh_plan_review import fake_verify
 from tests.build.test_fresh_runner import _fixture as engine_fixture
 from tests.build.test_fresh_runner import _FixtureSources
 from tests.curriculum import test_plan_validate as plan_fixture
+from tests.curriculum.resolver.evidence_helpers import receipt_source_paths
 from tests.helpers import plan_review_world
 from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _review
 from tests.review.test_record import LEVEL, PROSE, SLUG, World, finding, unsupported
@@ -221,8 +223,9 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
     def answer(batch: dict[str, Any], seat: str) -> dict[str, Any]:  # the question seat: the first candidate of each
         return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
 
-    mp = pytest.MonkeyPatch()
-    try:  # the seams the runner tests use: the learner state and the lesson lock need the sources database
+    sources_db, vesum_db = receipt_source_paths(state)
+    with Sources(sources_db=sources_db, vesum_db=vesum_db) as evidence_sources, pytest.MonkeyPatch.context() as mp:
+        # Keep the runner seams, but resolve receipt citations against real fixture rows.
         mp.setattr(
             assemble,
             "planned_state",
@@ -252,7 +255,7 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
                 evidence_dir=scratch,
                 question_seat="agy:fixture",
                 question_dispatch=answer,
-                sources=_FixtureSources(),
+                sources=_FixtureSources(evidence_sources=evidence_sources),
                 allowlist=Allowlist.from_records(words["words"], gloss_ids=frozenset(), words_lock="f" * 64),
                 site_dir=scratch / "site",
                 inventory_gate=lambda *a, **kw: GateReport(LEVEL, SLUG, n, ()),
@@ -295,10 +298,10 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
                 }
             ],
         }
-        receipts.write_requirement_receipts(receipts.requirement_receipt_path(state, n), receipt_doc)
+        receipts.write_requirement_receipts(
+            receipts.requirement_receipt_path(state, n), receipt_doc, sources=evidence_sources
+        )
         report = run_once(draft)
-    finally:
-        mp.undo()
     failed = [row for row in report["checks"] if row["status"] == "failed"]
     if failed:
         raise RuntimeError(f"the engine did not assemble lesson {n}: {failed[0]}")
