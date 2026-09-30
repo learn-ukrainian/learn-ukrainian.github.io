@@ -70,7 +70,10 @@ resumed or custom agent would not carry the core, and Kimi seats take fresh
 web/UI/backend coding tasks. `delegate.py dispatch`
 (`--rules-seat core|content`, default `$LU_RULES_SEAT`), ACP calls and the
 legacy bridge prompts prepend the same block unless the prompt already starts
-with it. A missing core warns and the launch or dispatch continues without it. `LAUNCHER_DRY_RUN=1` prints the seat
+with it. An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
+any adapter check or deploy, `delegate.py dispatch` exits 2 before any check or task record, an ACP call raises
+`InterAgentTransportError`, a discussion raises `AcpxDiscussionError` before admission, an `ask-*` prompt exits, and
+the loader CLI exits 3; each message names the path. `LAUNCHER_DRY_RUN=1` prints the seat
 and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
 
 ```bash

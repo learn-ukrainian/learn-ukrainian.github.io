@@ -50,6 +50,7 @@ from scripts.fleet_comms.artifacts import ArtifactStore
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.message_plane import default_plane_root
 from scripts.guardrails.worktree_containment import classify_repo_path
+from scripts.lib import rules_core
 
 logger = logging.getLogger(__name__)
 
@@ -937,6 +938,12 @@ class AcpxDiscussionController:
                 raise AcpxDiscussionError(
                     f"invalid ACP participant selection for {participant!r}: {exc}"
                 ) from exc
+        # Every discussion leg starts with the rules core: refuse before a
+        # reservation is admitted, not one failed leg at a time.
+        try:
+            rules_core.require_core()
+        except rules_core.RulesCoreMissing as exc:
+            raise AcpxDiscussionError(f"discussion refused: {exc}; the rules core is required") from exc
         idempotency_digest = _digest(idempotency_key)
         replay = self._terminal_replay(idempotency_digest)
         if replay is not None:

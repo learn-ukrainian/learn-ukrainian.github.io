@@ -7,15 +7,18 @@
 #   grok         --rules "$LC_RULES_CORE"
 #   kimi-code    --agent-file <rules_core_kimi_agent_file>   (keeps ${base_prompt})
 #   agy, cursor-agent, opencode, hermes: the core leads the initial prompt
-# Fail-open: a missing core or interpreter warns and the launch continues without it.
+# Fail-closed: a missing or unreadable core, seat or loader refuses the launch
+# (rules_core_load returns 1) before any adapter check or side effect runs.
 
-rules_core_warn() {
-  printf 'WARNING: rules core not loaded (%s); launching without it.\n' "$*" >&2
+# rules_core_refuse REASON — the refusal line for a launch that cannot load the core.
+rules_core_refuse() {
+  printf 'Error: refusing to launch: rules core unavailable (%s).\n' "$*" >&2
 }
 
 # rules_core_load PYTHON ROOT LANE PROVIDER
 # Sets LC_RULES_SEAT, LC_RULES_CORE, LC_RULES_CORE_BYTES and exports LU_RULES_SEAT
-# so delegate.py and ACP calls made from the session inherit the seat.
+# so delegate.py and ACP calls made from the session inherit the seat. Returns 1,
+# naming the path, when the core cannot be loaded.
 rules_core_load() {
   local py="$1" root="$2" lane="${3:-}" provider="${4:-claude}"
   local script="$root/scripts/lib/rules_core.py"
@@ -24,21 +27,22 @@ rules_core_load() {
   LC_RULES_CORE=""
   LC_RULES_CORE_BYTES=0
   if [ ! -x "$py" ] || [ ! -f "$script" ]; then
-    rules_core_warn "loader unavailable: $script"
-    return 0
+    rules_core_refuse "loader unavailable: $script"
+    return 1
   fi
   if [ -n "$lane" ]; then
     lane_args=(--lane "$lane" --provider "$provider")
   fi
   if ! LC_RULES_SEAT="$("$py" "$script" --root "$root" ${lane_args[@]+"${lane_args[@]}"} --format seat)"; then
     LC_RULES_SEAT=""
-    rules_core_warn "seat resolution failed"
-    return 0
+    rules_core_refuse "seat resolution failed: $script"
+    return 1
   fi
   if ! LC_RULES_CORE="$("$py" "$script" --root "$root" --seat "$LC_RULES_SEAT" --format block)"; then
     LC_RULES_CORE=""
-    rules_core_warn "core source missing for seat $LC_RULES_SEAT"
-    return 0
+    rules_core_refuse "seat $LC_RULES_SEAT needs $root/agents_extensions/shared/rules/core.md" \
+      "and, for a content seat, core-curriculum.md; both must be readable"
+    return 1
   fi
   # shellcheck disable=SC2034  # read by launcher_core.sh (dry-run report, argv placeholder)
   LC_RULES_CORE_BYTES="$(printf '%s' "$LC_RULES_CORE" | wc -c | tr -d ' ')"

@@ -11,6 +11,10 @@ otherwise ``tests/fixtures/rules_core/`` stands in: in-process through the loade
 ``core_dir`` resolver, and for launcher and CLI subprocesses through a checkout view
 (``tests/rules_core_view.py``) whose rules directory holds the fixture. Nothing in the
 environment can move the core.
+
+A missing core refuses: each entry point (launcher, ``delegate.py`` dispatch, ACP call and
+discussion, bridge builder, ``ask-*`` prompt, ``/api/rules`` scope) is exercised without the
+core and must refuse, naming the path, before its first side effect.
 """
 
 from __future__ import annotations
@@ -18,6 +22,7 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import re
 import subprocess
 import sys
 import tomllib
@@ -59,6 +64,25 @@ def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
 def absent_root(request: pytest.FixtureRequest) -> Path:
     """The checkout view without the rules core (shared with ``rules_core_absent`` tests)."""
     return absent_checkout(request)
+
+
+@pytest.fixture
+def missing_core(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    """In-process loader reads a rules directory that holds no core."""
+    empty = tmp_path / "no-core"
+    empty.mkdir()
+    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: empty)
+    return empty
+
+
+@pytest.fixture
+def core_without_addendum(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Path:
+    """In-process loader reads ``core.md`` but no ``core-curriculum.md``."""
+    partial = tmp_path / "core-only"
+    partial.mkdir()
+    (partial / "core.md").write_text((CORE_DIR / "core.md").read_text(encoding="utf-8"), encoding="utf-8")
+    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: partial)
+    return partial
 
 
 def _hostile_core_dir(tmp_path: Path) -> Path:
@@ -122,13 +146,46 @@ def test_block_frames_the_text_with_its_digest() -> None:
     assert text.startswith((CORE_DIR / "core.md").read_text(encoding="utf-8").rstrip())
 
 
-def test_with_core_prepends_once_and_fails_open(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, capsys) -> None:
+def test_with_core_prepends_once() -> None:
     once = rules_core.with_core("task")
     assert once == rules_core.core_block("core") + "\n\ntask"
     assert rules_core.with_core(once) == once
-    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: tmp_path / "missing")
-    assert rules_core.with_core("task") == "task"
-    assert "continuing without the rules core" in capsys.readouterr().err
+    assert rules_core.require_core() == "core"
+    assert rules_core.require_core("content") == "content"
+
+
+def test_a_missing_core_refuses_every_loader_entry(missing_core: Path, capsys) -> None:
+    for call in (
+        lambda: rules_core.with_core("task"),
+        lambda: rules_core.core_block("core"),
+        lambda: rules_core.core_text("content"),
+        lambda: rules_core.require_core(),
+        lambda: rules_core.require_core("content"),
+    ):
+        with pytest.raises(rules_core.RulesCoreMissing, match=r"agents_extensions/shared/rules/core\.md"):
+            call()
+    assert "continuing without" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("damage", ["empty", "blank", "directory"])
+def test_an_empty_or_unreadable_core_is_missing(damage: str, monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    broken = tmp_path / "broken"
+    broken.mkdir()
+    if damage == "directory":
+        (broken / "core.md").mkdir()
+    else:
+        (broken / "core.md").write_text("" if damage == "empty" else " \n\t\n", encoding="utf-8")
+    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: broken)
+    with pytest.raises(rules_core.RulesCoreMissing, match=r"core\.md"):
+        rules_core.with_core("task")
+
+
+def test_a_content_seat_also_needs_the_curriculum_addendum(core_without_addendum: Path) -> None:
+    assert rules_core.with_core("task").startswith(rules_core.BLOCK_OPEN)
+    assert rules_core.require_core("core") == "core"
+    for call in (lambda: rules_core.require_core("content"), lambda: rules_core.with_core("task", "content")):
+        with pytest.raises(rules_core.RulesCoreMissing, match=r"core-curriculum\.md"):
+            call()
 
 
 def test_a_core_quoted_in_an_attachment_does_not_replace_the_preamble() -> None:
@@ -189,7 +246,7 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_ro
         timeout=60,
     )
     assert missing.returncode == 3
-    assert "rules source unavailable" in missing.stderr
+    assert "rules source unavailable: agents_extensions/shared/rules/core.md" in missing.stderr
 
 
 def test_shell_ack_matches_the_python_ack() -> None:
@@ -396,10 +453,44 @@ def test_launcher_ignores_the_old_env_override(tmp_path: Path, core_root: Path) 
     assert _carrier(argv, "--append-system-prompt") == rules_core.core_block("core")
 
 
-def test_launcher_without_the_core_warns_and_still_launches(tmp_path: Path, absent_root: Path) -> None:
-    result, argv = _launch(absent_root, "start-claude.sh", (), tmp_path, None)
-    assert "--append-system-prompt" not in argv
-    assert "WARNING: rules core not loaded" in result.stderr
+@pytest.mark.parametrize(
+    ("row", "name", "args", "env_kind", "carrier", "seat"), LAUNCHER_ROWS, ids=[row[0] for row in LAUNCHER_ROWS]
+)
+def test_launcher_without_the_core_refuses_before_any_side_effect(
+    row, name, args, env_kind, carrier, seat, tmp_path: Path, absent_root: Path
+) -> None:
+    result, _ = _launch(absent_root, name, args, tmp_path, env_kind, expect_launch=False)
+    assert result.returncode == 1, (result.stdout, result.stderr)
+    assert "refusing to launch" in result.stderr
+    assert "agents_extensions/shared/rules/core.md" in result.stderr
+    assert "would deploy agent extensions" not in result.stdout, "the refusal must precede the deploy step"
+    assert "would exec" not in result.stdout
+
+
+@pytest.fixture(scope="module")
+def addendum_less_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """A checkout view carrying ``core.md`` but not ``core-curriculum.md``."""
+    core_only = tmp_path_factory.mktemp("rules-core-partial") / "rules"
+    core_only.mkdir()
+    (core_only / "core.md").write_text((CORE_DIR / "core.md").read_text(encoding="utf-8"), encoding="utf-8")
+    return checkout_view(core_only.parent / "checkout", core_only)
+
+
+def test_content_seat_launcher_needs_the_addendum_but_a_core_seat_does_not(
+    tmp_path: Path, addendum_less_root: Path
+) -> None:
+    refused, _ = _launch(
+        addendum_less_root,
+        "start-claude-driver.sh",
+        ("--epic", "curriculum-upgrade"),
+        tmp_path,
+        None,
+        expect_launch=False,
+    )
+    assert refused.returncode == 1, refused.stderr
+    assert "core-curriculum.md" in refused.stderr
+    _, argv = _launch(addendum_less_root, "start-claude-driver.sh", ("--epic", "infra"), tmp_path, None)
+    assert _carrier(argv, "--append-system-prompt") == rules_core.core_block("core")
 
 
 # --------------------------------------------------------------------------- delegate.py workers
@@ -445,6 +536,47 @@ def test_delegate_rules_seat_flag_and_env(tmp_path: Path, monkeypatch: pytest.Mo
     monkeypatch.setenv(rules_core.SEAT_ENV, "content")
     _, inherited = _dispatched_worker_prompt(tmp_path, monkeypatch, ["--mode", "read-only"])
     _assert_core(inherited, "content", "delegate-dispatch-content-env")
+
+
+def _refused_dispatch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, extra: list[str], capsys
+) -> tuple[int, str, str]:
+    """Dispatch with the core unavailable; nothing may be spawned or recorded."""
+    from scripts import delegate
+
+    def _spawn(*_a, **_k):
+        raise AssertionError("a dispatch without the rules core must not spawn a worker")
+
+    monkeypatch.setenv("LU_SCRATCH_ROOT", str(tmp_path))
+    monkeypatch.setattr(delegate.subprocess, "Popen", _spawn)
+    task_id = "rules-core-refused-" + hashlib.sha256(" ".join(extra).encode()).hexdigest()[:8]
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "codex", "--task-id", task_id, "--prompt", "the source prompt", *extra]
+    )
+    args.cwd = str(delegate._REPO_ROOT)
+    code = delegate.cmd_dispatch(args)
+    assert delegate._read_state(delegate._state_path(task_id)) is None, "a refused dispatch leaves no task record"
+    captured = capsys.readouterr()
+    return code, captured.err, task_id
+
+
+def test_delegate_dispatch_without_the_core_refuses(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, missing_core: Path, capsys
+) -> None:
+    code, err, _ = _refused_dispatch(tmp_path, monkeypatch, [], capsys)
+    assert code == 2
+    assert "dispatch refused" in err
+    assert "agents_extensions/shared/rules/core.md" in err
+
+
+@pytest.mark.parametrize("extra", [["--rules-seat", "content"], ["--mode", "read-only"]])
+def test_delegate_content_seat_without_the_addendum_refuses(
+    extra: list[str], tmp_path: Path, monkeypatch: pytest.MonkeyPatch, core_without_addendum: Path, capsys
+) -> None:
+    monkeypatch.setenv(rules_core.SEAT_ENV, "content")
+    code, err, _ = _refused_dispatch(tmp_path, monkeypatch, extra, capsys)
+    assert code == 2
+    assert "core-curriculum.md" in err
 
 
 # (row, adapter "module:Class", mode, tool_config) — review dispatches reuse these adapters read-only
@@ -564,6 +696,56 @@ def test_acp_inter_agent_call_carries_the_core(tmp_path: Path, monkeypatch: pyte
     _assert_core(seen[0], "core", "acp-inter-agent")
 
 
+def test_acp_inter_agent_call_without_the_core_is_a_typed_refusal(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    from scripts.agent_runtime import runner
+
+    def _spawn(*_a, **_k):
+        raise AssertionError("an ACP call without the rules core must not reach the transport")
+
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
+    monkeypatch.setattr(runner, "_invoke_direct_only", _spawn)
+    with pytest.raises(runner.InterAgentTransportError, match=r"agents_extensions/shared/rules/core\.md"):
+        runner.invoke_inter_agent(
+            "codex",
+            "review this",
+            cwd=tmp_path,
+            task_id="t-acp",
+            correlation_id="c-acp",
+            idempotency_key="k-acp",
+            source="claude",
+        )
+
+
+def test_acp_discussion_without_the_core_refuses_before_admission(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    from scripts.agent_runtime import acpx_discuss
+
+    def _leg(*_a, **_k):
+        raise AssertionError("a discussion without the rules core must not call a participant")
+
+    monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
+    monkeypatch.setattr(acpx_discuss, "classify_repo_path", lambda *_a, **_k: "dispatch_worktree")
+    controller = acpx_discuss.AcpxDiscussionController(
+        root=tmp_path / "plane", participant_call=_leg, synthesis_call=_leg
+    )
+    try:
+        with pytest.raises(acpx_discuss.AcpxDiscussionError, match=r"core\.md"):
+            controller.run(
+                prompt="Solve the bounded fixture.",
+                cwd=Path.cwd(),
+                task_id="task-core",
+                correlation_id="corr-core",
+                idempotency_key="idem-core",
+            )
+        count = controller.conn.execute("SELECT COUNT(*) FROM acp_conversation_events").fetchone()[0]
+    finally:
+        controller.close()
+    assert count == 0, "a refused discussion admits no conversation"
+
+
 # --------------------------------------------------------------------------- legacy bridge builders
 
 
@@ -602,6 +784,155 @@ def test_legacy_inline_digests_are_kept_alongside_the_core() -> None:
     assert _prompts._CODEX_STANDING_RULES in codex
     review = _prompts.build_claude_prompt(_msg(), review=True)
     assert review.index("</rules-core>") < review.index(_prompts.review_protocol_prefix().strip()[:40])
+
+
+@pytest.mark.parametrize("index", range(7))
+def test_legacy_bridge_builder_without_the_core_refuses(index: int, missing_core: Path) -> None:
+    _, build = _legacy_rows()[index]
+    with pytest.raises(SystemExit, match=r"bridge: refused: .*core\.md"):
+        build()
+
+
+def test_ask_transports_without_the_core_refuse_before_spawning(
+    monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    from scripts.ai_agent_bridge import _cursor, _hermes, _opencode
+
+    def _spawn(*_a, **_k):
+        raise AssertionError("an ask without the rules core must not spawn a process")
+
+    monkeypatch.setattr(_hermes, "_run_hermes_subprocess", _spawn)
+    for module in (_cursor, _opencode):
+        monkeypatch.setattr(module.subprocess, "run", _spawn)
+    monkeypatch.setattr(_cursor.shutil, "which", lambda name: f"/stub/{name}")
+    monkeypatch.setattr(_opencode.shutil, "which", lambda name: f"/stub/{name}")
+    with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
+        _cursor._invoke_cursor("hello", "composer-2.5")
+    with pytest.raises(SystemExit, match=r"ask-hermes: refused: .*core\.md"):
+        _hermes._invoke_hermes("hello", "laguna-s-2.1")
+    with pytest.raises(SystemExit, match=r"ask-opencode: refused: .*core\.md"):
+        _opencode._run_opencode("hello", "laguna-s-2.1")
+
+
+# --------------------------------------------------------------------------- public entries, before any write
+
+# Everything a public ask or discussion entry could write or start: a spy on each
+# records the call instead of doing it, so a refusal must leave every list empty.
+_ASK_SIDE_EFFECTS = (
+    "send_message",
+    "register_ask",
+    "launch_background_ask",
+    "_send_gemini_message",
+    "process_and_respond",
+)
+
+
+def _spy_side_effects(monkeypatch: pytest.MonkeyPatch, modules, names) -> list[str]:
+    calls: list[str] = []
+    for module in modules:
+        for name in names:
+            if hasattr(module, name):
+                monkeypatch.setattr(module, name, lambda *_a, _n=name, **_k: calls.append(_n))
+    return calls
+
+
+def _bridge_asks():
+    from scripts.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _hermes, _kimi, _opencode
+
+    return (
+        ("ask-cursor", _cursor, "ask_cursor"),
+        ("ask-hermes", _hermes, "ask_hermes"),
+        ("ask-opencode", _opencode, "ask_opencode"),
+        ("ask-pool", _opencode, "ask_pool"),
+        ("ask-glm", _opencode, "ask_glm"),
+        ("ask-gemma", _opencode, "ask_gemma"),
+        ("ask-claude", _claude, "ask_claude"),
+        ("ask-codex", _codex, "ask_codex"),
+        ("ask-agy", _agy, "ask_agy"),
+        ("ask-grok", _grok_build, "ask_grok_build"),
+        ("ask-kimi", _kimi, "ask_kimi"),
+        ("ask-gemini", _gemini, "ask_gemini"),
+    )
+
+
+@pytest.mark.parametrize("background", [False, True], ids=["foreground", "background"])
+@pytest.mark.parametrize("index", range(12))
+def test_bridge_ask_without_the_core_refuses_before_any_send(
+    index: int, background: bool, monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    from scripts.ai_agent_bridge import _ask_lifecycle, _messaging
+
+    who, module, name = _bridge_asks()[index]
+    calls = _spy_side_effects(monkeypatch, (module, _messaging, _ask_lifecycle), _ASK_SIDE_EFFECTS)
+    mode = {"async_mode": background} if name == "ask_gemini" else {"background": background}
+    with pytest.raises(SystemExit, match=rf"{who}: refused: .*core\.md"):
+        getattr(module, name)("hello", "t-core", **mode)
+    assert calls == [], f"{who} wrote before refusing: {calls}"
+
+
+def test_acp_ask_without_the_core_refuses_before_forward_or_enqueue(
+    monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    from agent_runtime.runner import InterAgentTransportError
+    from scripts.ai_agent_bridge import _acp_compat, _job_host_forward
+    from scripts.fleet_comms import authority
+    from scripts.telemetry import legacy_bridge
+
+    calls = _spy_side_effects(
+        monkeypatch,
+        (legacy_bridge, _job_host_forward, authority),
+        ("start_bridge_invocation_safely", "maybe_forward_compat_ask", "AuthorityService"),
+    )
+    with pytest.raises(InterAgentTransportError, match=r"ask-codex refused: .*core\.md"):
+        _acp_compat.run_compat_ask("codex", "hello", task_id="t-core", source="claude")
+    assert calls == [], f"the ACP ask wrote before refusing: {calls}"
+
+
+@pytest.mark.parametrize("review", [False, True], ids=["ask", "review"])
+def test_ask_cli_without_the_core_refuses_before_dispatch(
+    review: bool, monkeypatch: pytest.MonkeyPatch, missing_core: Path
+) -> None:
+    import argparse
+
+    from scripts.ai_agent_bridge import _acp_compat, _cli
+
+    calls = _spy_side_effects(
+        monkeypatch,
+        (_cli, _acp_compat),
+        ("_resolve_same_repo_pr_head", "_dispatch_headless_review", "run_compat_ask"),
+    )
+    args = argparse.Namespace(
+        content="hello", task_id="t-core", review=review, type="review" if review else "query", pr=None, branch=None
+    )
+    with pytest.raises(SystemExit, match=r"ask-cursor: refused: .*core\.md"):
+        _cli._handle_acp_compat(args, "cursor")
+    assert calls == [], f"ask-cursor dispatched before refusing: {calls}"
+
+
+def test_discuss_cli_without_the_core_refuses_before_any_channel_write(
+    monkeypatch: pytest.MonkeyPatch, missing_core: Path, capsys
+) -> None:
+    import argparse
+
+    from scripts.ai_agent_bridge import _channels_cli
+    from scripts.fleet_comms import authority
+
+    calls = _spy_side_effects(monkeypatch, (authority,), ("AuthorityService",))
+    monkeypatch.setenv("LU_AGENT_COMM_TRANSPORT", "acp")
+    args = argparse.Namespace(
+        channel="core-check",
+        with_agents="codex,claude",
+        body="Solve the bounded fixture.",
+        max_rounds=1,
+        models=None,
+        efforts=None,
+        review=False,
+        review_profile=None,
+        idempotency_key=None,
+    )
+    assert _channels_cli._handle_discuss(args) == 1
+    assert calls == [], f"the discussion wrote before refusing: {calls}"
+    assert re.search(r"discussion refused: .*core\.md", capsys.readouterr().err)
 
 
 # --------------------------------------------------------------------------- /api/rules scopes
@@ -659,8 +990,18 @@ def test_task_scope_serves_its_row_sources(api_client) -> None:
 
 def test_missing_core_scope_is_unavailable_not_empty(api_client, monkeypatch, tmp_path: Path) -> None:
     monkeypatch.setattr(rules_core, "core_dir", lambda root=None: tmp_path / "missing")
-    assert api_client.get("/api/rules?scope=core").status_code == 503
+    for scope in ("core", "content"):
+        response = api_client.get(f"/api/rules?scope={scope}")
+        assert response.status_code == 503
+        assert "agents_extensions/shared/rules/core.md" in response.json()["detail"]
     assert api_client.get("/api/rules").status_code == 200
+
+
+def test_content_scope_without_the_addendum_is_unavailable(api_client, core_without_addendum: Path) -> None:
+    assert api_client.get("/api/rules?scope=core").status_code == 200
+    response = api_client.get("/api/rules?scope=content")
+    assert response.status_code == 503
+    assert "core-curriculum.md" in response.json()["detail"]
 
 
 def test_sdk_caches_each_scope_under_its_own_key(monkeypatch) -> None:

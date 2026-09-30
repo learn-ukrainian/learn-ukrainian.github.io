@@ -23,11 +23,14 @@ from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.helpers.python import require_repo_venv
 from tests.launcher_sandbox import copy_slot_registry
-from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
+from tests.rules_core_view import (
+    install_loader_bypass,
+    rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
+)
 
 REPO = Path(__file__).resolve().parents[1]
 # The checkout run_launcher starts launchers from; rules_core_absent tests get a
-# view of REPO without the rules core (tests/rules_core_view.py).
+# view of REPO whose launcher loader loads nothing (tests/rules_core_view.py).
 LAUNCH_ROOT = REPO
 PUBLIC = (
     "start-claude.sh",
@@ -240,6 +243,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -402,6 +406,7 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     if forward_ready is not None:
         _append_forward_ready_hook(root / "scripts/lib/launcher_core.sh", forward_ready)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
@@ -737,6 +742,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")

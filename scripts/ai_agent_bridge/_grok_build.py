@@ -47,7 +47,7 @@ from ._ask_lifecycle import (
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import bridge_prompt
+from ._prompts import bridge_prompt, require_core_or_exit
 from ._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
@@ -105,6 +105,7 @@ def ask_grok_build(
     review_pr_number: int | None = None,
 ) -> int:
     """Send message to the native grok seat and invoke it to process the message."""
+    require_core_or_exit("ask-grok")
     effective_model = resolve_model_selection(
         lane="ask-grok", to_model=to_model, model=model, default=GROK_BUILD_DEFAULT_MODEL
     )

@@ -11,7 +11,10 @@ from pathlib import Path
 
 import pytest
 
-from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
+from tests.rules_core_view import (
+    install_loader_bypass,
+    rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
+)
 from tests.test_launcher_contract import REPO, run_launcher
 
 
@@ -50,6 +53,7 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, target)
+    install_loader_bypass(root)
 
     probe = root / ".venv" / "bin" / "python"
     probe.parent.mkdir(parents=True)

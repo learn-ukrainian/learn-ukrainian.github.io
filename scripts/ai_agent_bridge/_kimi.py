@@ -13,7 +13,7 @@ from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_as
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import bridge_prompt
+from ._prompts import bridge_prompt, require_core_or_exit
 from ._review_worktree import (
     ReviewWorktreeError,
     provision_review_worktree,
@@ -58,6 +58,7 @@ def ask_kimi(
     review_pr_number: int | None = None,
 ) -> int:
     """Send a broker message and invoke the native Kimi CLI to answer it."""
+    require_core_or_exit("ask-kimi")
     effective_model = resolve_model_selection(
         lane="ask-kimi", to_model=to_model, model=model, default=KIMI_BRIDGE_DEFAULT_MODEL
     )
