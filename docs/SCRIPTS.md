@@ -1182,7 +1182,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/curriculum_qg_harness.py` | Run calibrated Ukrainian QG fixtures or scan one module into compact evidence | `.venv/bin/python scripts/audit/curriculum_qg_harness.py --fixtures tests/fixtures/curriculum_qg/fixtures.yaml` |
 | `scripts/audit/ingest_ua_gec_gold.py` | Curate the small attributed UA-GEC gold fixture for the #2156 eval harness | `.venv/bin/python scripts/audit/ingest_ua_gec_gold.py --dry-run` |
 | `scripts/audit/module_quality_audit.py` | Report surface and LLM-QG/compact evidence coverage by level | `.venv/bin/python scripts/audit/module_quality_audit.py --level b1 --format summary` |
-| `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
+| `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py docs/session-state/current.md` |
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
@@ -1618,13 +1618,15 @@ This is also called by `session-setup.sh`.
 Scans `docs/session-state/*.md` for references to env/config files that do not exist locally.
 
 ```bash
-.venv/bin/python scripts/audit/lint_session_state.py --all
-.venv/bin/python scripts/audit/lint_session_state.py --file docs/session-state/current.md
+.venv/bin/python scripts/audit/lint_session_state.py docs/session-state/current.md
+.venv/bin/python scripts/audit/lint_session_state.py --all   # explicit whole-directory audit
 ```
 
 Known user-scoped paths that are expected but not committed live in
 `scripts/audit/known_user_paths.yaml`. This check is also wired into pre-commit
-for `docs/session-state/*.md`.
+for `docs/session-state/*.md`; the hook lints only the session-state files in the
+commit, so a stale reference in an untouched file (written on another host) never
+blocks an unrelated commit (#8354). `--all` remains for explicit/CI audits.
 
 **Capabilities and Limitations:**
 - ✅ Catches: missing-file references for tilde-rooted dotfiles (`~/.bash_secrets`, etc.) + `.env*` variants.
