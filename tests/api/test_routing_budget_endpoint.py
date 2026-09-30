@@ -314,6 +314,11 @@ def test_api_projects_sanitized_reserve_and_can_recommend_codex(monkeypatch, tmp
                 "stale": False,
                 "freshness": "fresh",
                 "age_s": 1.0,
+                "reset_credits": {
+                    "available_count": 2,
+                    "expires_at": ["2026-05-20T00:00:00Z", "2026-05-21T00:00:00Z"],
+                    "fetched_at": now.isoformat(),
+                },
             }
             if provider == "codex"
             else None
