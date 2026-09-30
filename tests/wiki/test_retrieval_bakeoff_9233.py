@@ -464,7 +464,7 @@ def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Pat
         def __init__(self, repo, **kwargs):
             self.max_seq_length = 8192
             self.tokenizer = SimpleNamespace(truncation_side="left")
-            self.prompts = {"query": "query: ", "document": "document: "}
+            self.prompts = {"query": "query: ", "document": ""}
             self.calls = []
         def encode(self, texts, **kwargs):
             self.calls.append((texts, kwargs))
@@ -480,8 +480,8 @@ def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Pat
     bakeoff._query_vector(encoder, meta, "query", repo)
     bakeoff._encode_batch(encoder, meta, ["document"], repo, 1)
     assert encoder.calls[0][0] == ["query"] and encoder.calls[0][1]["prompt_name"] == "query"
-    assert encoder.calls[1][0] == ["document"] and encoder.calls[1][1]["prompt_name"] == "document"
-    assert meta["prefixes"] == {"query": "query: ", "passage": "document: "}
+    assert encoder.calls[1][0] == ["document"] and encoder.calls[1][1]["prompt"] == ""
+    assert meta["prefixes"] == {"query": "query: ", "passage": ""}
     assert encoder.tokenizer.truncation_side == "right"
     ranker, rmeta = bakeoff._new_reranker("BAAI/bge-reranker-v2-m3", tmp_path)
     assert ranker.max_seq_length == rmeta["max_tokens"] == 8192
@@ -489,6 +489,149 @@ def test_model_config_prompts_and_runtime_limits_without_downloads(tmp_path: Pat
     assert bakeoff.EMBEDDERS["Qwen/Qwen3-Embedding-0.6B"]["query_prefix"].endswith("\nQuery:")
     with pytest.raises(ValueError, match="finite token limit"):
         bakeoff._model_token_limit(SimpleNamespace(model_max_length=10**30), SimpleNamespace())
+
+
+@pytest.fixture
+def fake_sentence_encoder(monkeypatch):
+    import sys
+
+    class Encoder:
+        def __init__(self, repo, **kwargs):
+            self.max_seq_length = 64
+            self.tokenizer = StubTokenizer()
+            self.tokenizer.num_special_tokens_to_add = lambda pair: 2
+            self.prompts = {}
+            self.calls = []
+            self.encoded_texts = []
+
+        def encode(self, texts, **kwargs):
+            self.calls.append((texts, kwargs))
+            # Mirror Sentence Transformers' named/explicit/default prompt
+            # selection so these assertions pin the actual prefixed inputs.
+            prompt = kwargs.get("prompt")
+            if prompt is None:
+                prompt = self.prompts.get(kwargs.get("prompt_name"), "unwanted default: ")
+            self.encoded_texts.extend(prompt + text for text in texts)
+            return [[1.0, 0.0] for _ in texts]
+
+    monkeypatch.setattr(bakeoff, "_model_options", lambda *a: {"revision": "a" * 40})
+
+    def install(prompts):
+        model = Encoder(None)
+        model.prompts = prompts
+        monkeypatch.setitem(sys.modules, "sentence_transformers", SimpleNamespace(SentenceTransformer=lambda *a, **kw: model))
+        return model
+
+    return install
+
+
+SENTENCE_REPOS = [repo for repo, spec in bakeoff.EMBEDDERS.items() if spec["kind"] == "sentence"]
+
+
+@pytest.mark.parametrize("repo", SENTENCE_REPOS)
+@pytest.mark.parametrize("prompt", [None, "", " \t\n", "matching"])
+def test_sentence_prompt_resolution_uses_frozen_prefixes_on_both_sides(
+    tmp_path: Path, monkeypatch, fake_sentence_encoder, repo, prompt,
+) -> None:
+    spec = bakeoff.EMBEDDERS[repo]
+    prompts = {} if prompt is None else {
+        "query": spec["query_prefix"] if prompt == "matching" else prompt,
+        "document": spec["passage_prefix"] if prompt == "matching" else prompt,
+    }
+    model = fake_sentence_encoder(prompts)
+    loaded, meta = bakeoff._new_encoder(repo, tmp_path)
+    assert loaded is model
+    assert meta["prefixes"] == {"query": spec["query_prefix"], "passage": spec["passage_prefix"]}
+    names = {
+        "query": "query" if prompt == "matching" and spec["query_prefix"].strip() else None,
+        "passage": "document" if prompt == "matching" and spec["passage_prefix"].strip() else None,
+    }
+    assert meta["prompt_names"] == names
+    bakeoff._query_vector(model, meta, "sample query", repo)
+    bakeoff._encode_batch(model, meta, ["sample passage"], repo, 1)
+    assert model.encoded_texts == [spec["query_prefix"] + "sample query", spec["passage_prefix"] + "sample passage"]
+    for side, (texts, kwargs), text in zip(("query", "passage"), model.calls, ("sample query", "sample passage"), strict=True):
+        if names[side]:
+            assert texts == [text] and kwargs["prompt_name"] == names[side]
+            assert "prompt" not in kwargs
+        else:
+            assert texts == [meta["prefixes"][side] + text] and kwargs["prompt"] == ""
+            assert "prompt_name" not in kwargs
+    budgets = []
+    monkeypatch.setattr(bakeoff, "_passage_stats", lambda rows, tokenizer, budget, **kw: ([], budgets.append(budget)))
+    bakeoff._embedder_passage_stats([], model, meta, repo)
+    assert budgets == [64 - len(spec["passage_prefix"]) - 2]
+
+
+@pytest.mark.parametrize("repo", SENTENCE_REPOS)
+@pytest.mark.parametrize("side", ["query", "document"])
+def test_sentence_conflicting_nonempty_prompt_refuses_before_encoding(
+    tmp_path: Path, fake_sentence_encoder, repo, side,
+) -> None:
+    model = fake_sentence_encoder({side: "conflicting prefix: "})
+    with pytest.raises(ValueError, match=f"configuration mismatch.*{side} prompt"):
+        bakeoff._new_encoder(repo, tmp_path)
+    assert model.calls == []
+
+
+@pytest.mark.parametrize("prompts", [{}, {"query": "", "document": ""}, {"query": " \t", "document": "\n"},
+                                    {"query": "native query: ", "document": "native passage: "}])
+def test_jina_native_selectors_and_actual_prompt_budget(
+    tmp_path: Path, monkeypatch, fake_sentence_encoder, prompts,
+) -> None:
+    repo = "jinaai/jina-embeddings-v5-text-nano"
+    model = fake_sentence_encoder(prompts)
+    loaded, meta = bakeoff._new_encoder(repo, tmp_path)
+    assert loaded is model
+    assert meta["prefixes"] == {"query": "task=retrieval; prompt_name=query", "passage": "task=retrieval; prompt_name=document"}
+    assert meta["prompt_names"] == {
+        "query": "query" if prompts.get("query", "").strip() else None,
+        "passage": "document" if prompts.get("document", "").strip() else None,
+    }
+    # Jina uses its native retrieval task and named prompts even when the
+    # tokenizer prompt is empty; selector strings must never enter the text.
+    model.prompts.setdefault("query", "")
+    model.prompts.setdefault("document", "")
+    bakeoff._query_vector(model, meta, "sample query", repo)
+    bakeoff._encode_batch(model, meta, ["sample passage"], repo, 1)
+    assert model.encoded_texts == [model.prompts["query"] + "sample query", model.prompts["document"] + "sample passage"]
+    for (texts, kwargs), name, text in zip(model.calls, ("query", "document"), ("sample query", "sample passage"), strict=True):
+        assert texts == [text]
+        assert kwargs["task"] == "retrieval" and kwargs["prompt_name"] == name
+    budgets = []
+    monkeypatch.setattr(bakeoff, "_passage_stats", lambda rows, tokenizer, budget, **kw: ([], budgets.append(budget)))
+    bakeoff._embedder_passage_stats([], model, meta, repo)
+    assert budgets == [64 - len(model.prompts["document"]) - 2]
+
+
+def test_flag_frozen_prefixes_on_both_sides_and_passage_budget(tmp_path: Path, monkeypatch) -> None:
+    import sys
+
+    calls = []
+    model = SimpleNamespace(tokenizer=StubTokenizer())
+    model.tokenizer.num_special_tokens_to_add = lambda pair: 2
+
+    def encode(texts, **kwargs):
+        calls.append((texts, kwargs))
+        return {"dense_vecs": [[1.0, 0.0]]}
+
+    model.encode = encode
+    monkeypatch.setattr(bakeoff, "_model_options", lambda *a: {"revision": "a" * 40})
+    monkeypatch.setitem(sys.modules, "huggingface_hub", SimpleNamespace(snapshot_download=lambda *a, **kw: "snapshot"))
+    monkeypatch.setitem(sys.modules, "FlagEmbedding", SimpleNamespace(BGEM3FlagModel=lambda *a, **kw: model))
+    repo = "BAAI/bge-m3"
+    loaded, meta = bakeoff._new_encoder(repo, tmp_path)
+    assert loaded is model
+    assert meta["prefixes"] == {"query": "", "passage": ""}
+    assert meta["prompt_names"] == {"query": None, "passage": None}
+    bakeoff._query_vector(model, meta, "sample query", repo)
+    bakeoff._encode_batch(model, meta, ["sample passage"], repo, 1)
+    assert [texts for texts, _ in calls] == [["sample query"], ["sample passage"]]
+    assert all(kwargs["max_length"] == 8192 for _, kwargs in calls)
+    budgets = []
+    monkeypatch.setattr(bakeoff, "_passage_stats", lambda rows, tokenizer, budget, **kw: ([], budgets.append(budget)))
+    bakeoff._embedder_passage_stats([], model, meta, repo)
+    assert budgets == [8192 - 2]
 
 
 def test_native_jina_limits_are_recorded_without_downloads(tmp_path: Path, monkeypatch) -> None:
