@@ -396,7 +396,7 @@ def repo_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 
 @pytest.fixture
-def repo(tmp_path: Path, repo_template: Path) -> Path:
+def repo(tmp_path: Path, repo_template: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     """Fresh primary checkout and registered worktree for each case."""
     main = tmp_path / "main"
     shutil.copytree(repo_template, main)
@@ -404,6 +404,7 @@ def repo(tmp_path: Path, repo_template: Path) -> Path:
     gitdir = main / ".git/worktrees/task-1"
     (worktree / ".git").write_text(f"gitdir: {gitdir}\n", encoding="utf-8")
     (gitdir / "gitdir").write_text(f"{worktree / '.git'}\n", encoding="utf-8")
+    monkeypatch.setattr(hook, "_primary_checkout_root", lambda wc: main.resolve())
     return main
 
 
@@ -2011,3 +2012,240 @@ def test_issue_8785_review_allowed_cases(repo: Path, command: str):
         },
     )
     assert result.returncode == 0, result.stderr
+
+
+# Repository targeting (#9309): all checkout paths and the catalog are synthetic.
+@pytest.fixture
+def fleet(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
+    from scripts.orchestration import fleet_repos
+
+    sibling = tmp_path / "sibling"
+    sibling.mkdir()
+    _git(sibling, "init", "-q", "-b", "main")
+    catalog = tmp_path / "fleet_repos.yaml"
+    catalog.write_text(
+        "version: 1\nrepos:\n"
+        "  public:\n    github: example/public\n    local_name: main\n    default: true\n"
+        "  sibling:\n    github: example/sibling\n    local_name: sibling\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(fleet_repos, "_CONFIG_PATH", catalog)
+    return repo, sibling
+
+
+def _fleet_bash(repo: Path, command: str, *, cwd: Path | None = None):
+    return _run(repo, {"tool_name": "Bash", "cwd": str(cwd or repo), "tool_input": {"command": command}})
+
+
+@pytest.mark.parametrize("separator", ["&&", ";"])
+def test_issue_9309_sibling_cd_merge_allowed(fleet, separator):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, f"cd {shlex.quote(str(sibling))} {separator} git merge --ff-only origin/main")
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_9309_sibling_dash_c_worktree_remove_allowed(fleet):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, f"git -C {shlex.quote(str(sibling))} worktree remove ../retired")
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template", ["cd {target} && git merge --ff-only origin/main", "git -C {target} worktree remove {target}"]
+)
+def test_issue_9309_primary_maintenance_refused(fleet, template):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, template.format(target=shlex.quote(str(primary))), cwd=sibling)
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_unlisted_repository_refused(fleet, tmp_path):
+    primary, _ = fleet
+    unlisted = tmp_path / "unlisted"
+    unlisted.mkdir()
+    _git(unlisted, "init", "-q", "-b", "main")
+    result = _fleet_bash(primary, f"cd {shlex.quote(str(unlisted))} && git merge --ff-only origin/main")
+    assert result.returncode == 2
+    assert "unlisted_git_repository" in result.stderr
+
+
+@pytest.mark.parametrize("target", ['"$VAR"', '"$(pwd)"', "-", "../missing"])
+@pytest.mark.parametrize("from_sibling", [False, True])
+def test_issue_9309_unresolvable_navigation_refused(fleet, target, from_sibling):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, f"cd {target} && git merge origin/main", cwd=sibling if from_sibling else primary)
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_last_cd_wins(fleet):
+    primary, sibling = fleet
+    result = _fleet_bash(
+        primary, f"cd {shlex.quote(str(sibling))} && cd {shlex.quote(str(primary))} && git merge origin/main"
+    )
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_primary_symlink_refused(fleet, tmp_path):
+    primary, _ = fleet
+    alias = tmp_path / "alias"
+    alias.symlink_to(primary, target_is_directory=True)
+    result = _fleet_bash(primary, f"cd {shlex.quote(str(alias))} && git merge origin/main")
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize("attached", [False, True])
+def test_issue_9309_repeated_dash_c_relative_to_previous(fleet, attached):
+    primary, sibling = fleet
+    flags = f"-C{shlex.quote(str(sibling))} -C../main" if attached else f"-C {shlex.quote(str(sibling))} -C ../main"
+    result = _fleet_bash(primary, f"git {flags} merge origin/main")
+    assert result.returncode == 2, result.stderr
+    assert "git_mediated_primary_worktree" in result.stderr
+    reverse = (
+        f"-C{shlex.quote(str(primary))} -C../sibling" if attached else f"-C {shlex.quote(str(primary))} -C ../sibling"
+    )
+    result = _fleet_bash(primary, f"git {reverse} merge origin/main")
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("target_primary", [False, True])
+@pytest.mark.parametrize(
+    "selector",
+    [
+        "git --git-dir={gitdir} --work-tree={tree}",
+        "git --git-dir {gitdir} --work-tree {tree}",
+        "GIT_DIR={gitdir} GIT_WORK_TREE={tree} git",
+        "GIT_DIR={gitdir}; GIT_WORK_TREE={tree}; git",
+        "export GIT_DIR={gitdir} GIT_WORK_TREE={tree}; git",
+        "env GIT_DIR={gitdir} GIT_WORK_TREE={tree} git",
+    ],
+)
+def test_issue_9309_explicit_repository_selectors(fleet, target_primary, selector):
+    primary, sibling = fleet
+    target = primary if target_primary else sibling
+    command = selector.format(gitdir=shlex.quote(str(target / ".git")), tree=shlex.quote(str(target)))
+    result = _fleet_bash(primary, f"{command} merge --ff-only origin/main", cwd=sibling if target_primary else primary)
+    assert result.returncode == (2 if target_primary else 0), result.stderr
+
+
+@pytest.mark.parametrize(
+    "selector",
+    [
+        'git --git-dir="$VAR"',
+        'git --work-tree="$VAR"',
+        'GIT_DIR="$VAR" git',
+        'GIT_WORK_TREE="$(pwd)" git',
+        'git -C "$(pwd)"',
+        'git --git-dir="$(pwd)/.git"',
+        'git --work-tree="`pwd`"',
+    ],
+)
+def test_issue_9309_unresolvable_selectors_refused(fleet, selector):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, f"{selector} merge origin/main", cwd=sibling)
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize("swap", [False, True])
+def test_issue_9309_mixed_repository_and_worktree_refused(fleet, swap):
+    primary, sibling = fleet
+    store, tree = (primary, sibling) if swap else (sibling, primary)
+    result = _fleet_bash(
+        primary,
+        f"git --git-dir={shlex.quote(str(store / '.git'))} --work-tree={shlex.quote(str(tree))} merge origin/main",
+    )
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_inline_override_stays_refused(fleet):
+    primary, _ = fleet
+    result = _fleet_bash(primary, "LEARN_UK_ALLOW_PRIMARY_GIT_WRITE=1 git merge origin/main")
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_catalog_unavailable_fails_closed(fleet, monkeypatch):
+    from scripts.orchestration import fleet_repos
+
+    primary, sibling = fleet
+    monkeypatch.setattr(fleet_repos, "_CONFIG_PATH", primary / "missing-catalog.yaml")
+    result = _fleet_bash(primary, f"git -C {shlex.quote(str(sibling))} merge origin/main")
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "command", ["source settings.sh; git merge origin/main", "eval unknown; git merge origin/main"]
+)
+def test_issue_9309_opaque_environment_refused(fleet, command):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, command, cwd=sibling)
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_primary_root_uses_hook_location(monkeypatch, tmp_path):
+    from scripts.guardrails import worktree_containment
+
+    source_repo = tmp_path / "owner"
+    source_repo.mkdir()
+    _git(source_repo, "init", "-q", "-b", "main")
+    hook_path = source_repo / "hooks" / "guard.py"
+    hook_path.parent.mkdir()
+    hook_path.touch()
+    monkeypatch.setattr(hook, "__file__", str(hook_path))
+    assert hook._primary_checkout_root(worktree_containment) == source_repo.resolve()
+
+
+@pytest.mark.parametrize("failure", ["timeout", "missing_git", "malformed_output"])
+def test_issue_9309_probe_failure_refused(fleet, monkeypatch, failure):
+    primary, sibling = fleet
+    real_run = subprocess.run
+
+    def probe_failure(argv, **kwargs):
+        if "--show-prefix" not in argv:
+            return real_run(argv, **kwargs)
+        if failure == "timeout":
+            raise subprocess.TimeoutExpired(argv, 10)
+        if failure == "missing_git":
+            raise FileNotFoundError("git unavailable")
+        return subprocess.CompletedProcess(argv, 0, "unexpected\n", "")
+
+    monkeypatch.setattr(hook.subprocess, "run", probe_failure)
+    result = _fleet_bash(primary, f"git -C {shlex.quote(str(sibling))} merge origin/main")
+    assert result.returncode == 2, result.stderr
+
+
+def test_issue_9309_primary_subdirectory_pathspecs_preserved(fleet):
+    primary, _ = fleet
+    result = _fleet_bash(primary, "git add tracked.md", cwd=primary / "curriculum")
+    assert result.returncode == 2, result.stderr
+    assert "tracked_primary_checkout" in result.stderr
+    result = _fleet_bash(primary, "git add ../local_state/cache.json", cwd=primary / "curriculum")
+    assert result.returncode == 0, result.stderr
+
+
+def test_issue_9309_empty_dash_c_keeps_previous_directory(fleet):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, f'git -C {shlex.quote(str(sibling))} -C "" merge origin/main')
+    assert result.returncode == 0, result.stderr
+
+
+@pytest.mark.parametrize("selector", ["git --work-tree={target}", "GIT_WORK_TREE={target} git"])
+def test_issue_9309_worktree_selector_alone_cannot_redirect_store(fleet, selector):
+    primary, sibling = fleet
+    result = _fleet_bash(primary, selector.format(target=shlex.quote(str(primary))) + " merge origin/main", cwd=sibling)
+    assert result.returncode == 2, result.stderr
+
+
+@pytest.mark.parametrize(
+    "template",
+    [
+        "cd {sibling} || git merge origin/main",
+        "false && cd {sibling}; git merge origin/main",
+        "if false; then cd {sibling}; fi; git merge origin/main",
+        "git -C {sibling} -c core.worktree={primary} merge origin/main",
+        "git -C {sibling} --config-env=core.worktree=TARGET merge origin/main",
+    ],
+)
+def test_issue_9309_ambiguous_navigation_or_config_refused(fleet, template):
+    primary, sibling = fleet
+    command = template.format(primary=shlex.quote(str(primary)), sibling=shlex.quote(str(sibling)))
+    result = _fleet_bash(primary, command)
+    assert result.returncode == 2, result.stderr
