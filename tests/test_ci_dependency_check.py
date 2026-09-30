@@ -26,7 +26,7 @@ def test_ci_install_blocks_use_the_same_cache_and_integrity_sequence() -> None:
     # that used to carry a copy calls it, so the copies cannot drift apart.
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
-    for job in ("fast-checks", "pytest", "needs-artifact-audit"):
+    for job in ("checks", "frontend", "pytest"):
         assert any(
             step.get("uses") == "./.github/actions/python-ci-env"
             for step in jobs[job]["steps"]

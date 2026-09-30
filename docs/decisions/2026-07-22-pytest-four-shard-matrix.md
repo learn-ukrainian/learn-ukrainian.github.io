@@ -3,7 +3,7 @@
 - **Date:** 2026-07-22
 - **Decided by:** Sol (`gpt-5.6-sol`, bridge `advise-pytest-ci-speed-sol`, ask #4342 → #4343)
 - **Issue:** #5657
-- **Status:** active
+- **Status:** superseded 2026-09-30 by the ci-v3 workflow (`docs/runbooks/ci-gate.md`): static duration-balanced file shards (`scripts/ci/split_tests.py`) and a whole-run report job replace the node-ID planner in GitHub Actions; the node-ID planner remains only for the Cursor Cloud runner.
 
 ## Decision
 

@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import re
+import subprocess
 from pathlib import Path
 
 import pytest
 
-from scripts.ci.classify_changes import git_tree_paths
 from scripts.ci.frontend_change_scope import load_denominator, path_in_denominator
 
 pytestmark = pytest.mark.repo_wide
@@ -23,6 +23,12 @@ SITE_CONFIGS = (
 )
 SOURCE_SUFFIXES = {".astro", ".js", ".jsx", ".mjs", ".ts", ".tsx"}
 RELATIVE_LITERAL = re.compile(r"(?P<quote>['\"])(?P<path>\.\./[^'\"]+)(?P=quote)")
+
+
+def git_tree_paths(repo_root: Path) -> set[str]:
+    """Paths at HEAD from the git object tree (sparse-checkout safe)."""
+    raw = subprocess.check_output(["git", "ls-tree", "-r", "--name-only", "HEAD"], text=True, timeout=120, cwd=repo_root)
+    return {line for line in raw.splitlines() if line}
 
 
 def site_sources() -> list[Path]:
