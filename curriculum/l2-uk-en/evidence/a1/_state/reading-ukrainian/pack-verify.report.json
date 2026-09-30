@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 2,
+    "exercises_count": 5,
+    "notes_count": 0,
+    "standard_count": 0,
+    "texts_count": 21,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 1,
+    "videos_count": 13
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml",
+    "sha256": "434724cb67dbfbc88d12945fc165ff7bd9eaba1563085c963173f0d5cf249234"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock",
+    "sha256": "11b18ef741f924fdb7b4380972b9c418b8bdb490817464eacbf66c4a20cdb4b9"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "reading-ukrainian",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}

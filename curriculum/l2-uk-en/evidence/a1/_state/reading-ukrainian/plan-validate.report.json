@@ -1,0 +1,281 @@
+{
+  "activity_report": {
+    "explanation_coverage": "not_available_at_this_stage",
+    "lessons": [
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 2,
+              "quiz": 2,
+              "watch-and-repeat": 1
+            },
+            "total": 5
+          },
+          "workbook": {
+            "by_type": {
+              "match-up": 1,
+              "pick-syllables": 1,
+              "quiz": 1
+            },
+            "total": 3
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "match-up",
+          "pick-syllables",
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 1
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 3,
+              "observe": 1,
+              "quiz": 3
+            },
+            "total": 7
+          },
+          "workbook": {
+            "by_type": {
+              "divide-words": 1,
+              "quiz": 1
+            },
+            "total": 2
+          }
+        },
+        "distinct_types": [
+          "divide-words",
+          "letter-grid",
+          "observe",
+          "quiz"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 2
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 2,
+              "quiz": 2,
+              "watch-and-repeat": 1
+            },
+            "total": 5
+          },
+          "workbook": {
+            "by_type": {
+              "odd-one-out": 1,
+              "quiz": 1
+            },
+            "total": 2
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "odd-one-out",
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 3
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 3,
+              "quiz": 3,
+              "watch-and-repeat": 1
+            },
+            "total": 7
+          },
+          "workbook": {
+            "by_type": {
+              "anagram": 1,
+              "match-up": 1,
+              "quiz": 1
+            },
+            "total": 3
+          }
+        },
+        "distinct_types": [
+          "anagram",
+          "letter-grid",
+          "match-up",
+          "quiz",
+          "watch-and-repeat"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 4
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 2,
+              "observe": 2,
+              "quiz": 3
+            },
+            "total": 7
+          },
+          "workbook": {
+            "by_type": {
+              "pick-syllables": 1,
+              "quiz": 1,
+              "unjumble": 1
+            },
+            "total": 3
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "observe",
+          "pick-syllables",
+          "quiz",
+          "unjumble"
+        ],
+        "has_workbook": true,
+        "is_recap": false,
+        "kind": "teach",
+        "n": 5
+      },
+      {
+        "activities": {
+          "inline": {
+            "by_type": {
+              "letter-grid": 1,
+              "observe": 2,
+              "quiz": 1
+            },
+            "total": 4
+          },
+          "workbook": {
+            "by_type": {},
+            "total": 0
+          }
+        },
+        "distinct_types": [
+          "letter-grid",
+          "observe",
+          "quiz"
+        ],
+        "has_workbook": false,
+        "is_recap": true,
+        "kind": "recap",
+        "n": 6
+      }
+    ],
+    "module": {
+      "all_distinct_types": [
+        "anagram",
+        "divide-words",
+        "letter-grid",
+        "match-up",
+        "observe",
+        "odd-one-out",
+        "pick-syllables",
+        "quiz",
+        "unjumble",
+        "watch-and-repeat"
+      ],
+      "inline_activities": 35,
+      "largest_workbook_type": "quiz",
+      "largest_workbook_type_share": 0.38461538461538464,
+      "longest_same_type_workbook_run": 1,
+      "longest_same_type_workbook_run_type": "pick-syllables",
+      "non_recap_lessons": 5,
+      "non_recap_lessons_with_workbook": 5,
+      "workbook_activities": 13,
+      "workbook_distinct_types": [
+        "anagram",
+        "divide-words",
+        "match-up",
+        "odd-one-out",
+        "pick-syllables",
+        "quiz",
+        "unjumble"
+      ],
+      "workbook_presence_complete": true
+    },
+    "module_slug": "reading-ukrainian",
+    "rendered": "not_available_at_this_stage",
+    "response_opportunities": "not_available_at_this_stage",
+    "stage": "plan"
+  },
+  "failures": [],
+  "inputs": {
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b2cd953f5f30cdce30837ab77438f684314767475be40032bc95ea24e65fbb4",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "10975fc25ad82672f06be1007ed82c9821895234c44f054ba0aa8eea777d1dd1",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "434724cb67dbfbc88d12945fc165ff7bd9eaba1563085c963173f0d5cf249234",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "11b18ef741f924fdb7b4380972b9c418b8bdb490817464eacbf66c4a20cdb4b9",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "7e20aba1fd0352eecbfd39624d6749b63d8f025ba339ab203800e156f1c8d2a2",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "b23bdc16fd922893bab5e9415061234d1c658385f0f0610ec73282ebdfafaa02",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "e85078ff74306ad85e42d2a0db191513a9b8883e13b2a0c9dc1568bf4662efe7",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832",
+    "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
+    "schemas/activities-a1.schema.json": "cc185c5286a7dbe6a4c65d1e0668fd9f2d53ed9d5032182edb4e2db7d98fc8aa",
+    "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
+    "schemas/module-plan-v2.schema.json": "587b90fe0f15bffd9187e9987cb44a5a94aea9196ca4cc71154386dc99d96fed",
+    "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
+  },
+  "level": "a1",
+  "mode": "provisional",
+  "not_checked": [
+    {
+      "code": "minutes_constants_undefined",
+      "lesson": null,
+      "message": "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
+      "step": null
+    },
+    {
+      "code": "word_target_not_calibrated",
+      "lesson": null,
+      "message": "not_checked: word_target presence and type are checked; the per-level minimum is not calibrated (§2a)",
+      "step": null
+    },
+    {
+      "code": "lesson_activity_minimums_not_calibrated",
+      "lesson": null,
+      "message": "not_checked: per-lesson inline/workbook activity minimums are not calibrated (§2a)",
+      "step": null
+    },
+    {
+      "code": "arc_has_no_structured_grammar_or_vocabulary",
+      "lesson": null,
+      "message": "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+      "step": null
+    },
+    {
+      "code": "title_quantities_not_parsed",
+      "lesson": null,
+      "message": "no ASCII digits in the title or subtitle; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
+      "step": null
+    },
+    {
+      "code": "pending_promotion",
+      "lesson": null,
+      "message": "evidence_ref.sha256 is 83cb54cbcc140bd06e3d70865e9d6b7fadfdc78e601ffbe6d3bd8b8c3f27af35 and the provisional pack's sha256 is 434724cb67dbfbc88d12945fc165ff7bd9eaba1563085c963173f0d5cf249234; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "step": null
+    }
+  ],
+  "notes": [],
+  "slug": "reading-ukrainian",
+  "status": "pass",
+  "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",
+  "waivers": []
+}
