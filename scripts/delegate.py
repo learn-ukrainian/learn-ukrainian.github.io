@@ -11284,7 +11284,11 @@ def _cursor_auto_refusal(
     checked an issue card and found it PASS (``--allow-dor-warn`` is not PASS), and no
     review typing. No ``--model`` is not Auto: the Cursor adapter pins its default.
     """
-    from scripts.review.model_catalog import cursor_pinned_models, is_cursor_auto_selector
+    from scripts.review.model_catalog import (
+        CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+        cursor_pinned_models,
+        is_cursor_auto_selector,
+    )
 
     if agent != "cursor" or not is_cursor_auto_selector(model):
         return None
@@ -11308,7 +11312,7 @@ def _cursor_auto_refusal(
         return None
     pins = " or ".join(f"--model {pin}" for pin in cursor_pinned_models())
     return (
-        f"❌ dispatch refused: cursor_auto_outside_coding_task: --agent cursor --model {model} runs only a "
+        f"❌ dispatch refused: {CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}: --agent cursor --model {model} runs only a "
         f"--research-role {CURSOR_AUTO_IMPLEMENTATION_ROLE} write dispatch with owned paths and a PASS DoR issue card ({'; '.join(reasons)}); "
         f"pin a concrete model: {pins} (operator decision 2026-09-30, #9274)"
     )

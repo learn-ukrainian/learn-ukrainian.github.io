@@ -37,7 +37,12 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.review.model_catalog import cursor_pinned_models, is_cursor_auto_selector, retired_model_refusal
+from scripts.review.model_catalog import (
+    CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE,
+    cursor_pinned_models,
+    is_cursor_auto_selector,
+    retired_model_refusal,
+)
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -174,7 +179,7 @@ class CursorAdapter:
             run = f"a --mode {cursor_mode} run" if cursor_mode else f"a {mode} run without delegate's admission"
             raise ValueError(
                 f"Cursor adapter: model {model!r} runs only a delegate-admitted write implementation dispatch "
-                f"in agent mode, not {run} (cursor_auto_outside_coding_task); pin {pins} "
+                f"in agent mode, not {run} ({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}); pin {pins} "
                 f"(operator decision 2026-09-30, #9274)"
             )
 

@@ -13,7 +13,11 @@ atm they are runnin 10x usage promotion".
 Usage:
     .venv/bin/python scripts/audit/cursor_judge_calibration.py
     .venv/bin/python scripts/audit/cursor_judge_calibration.py --dry-run
-    .venv/bin/python scripts/audit/cursor_judge_calibration.py --model composer-2.5-fast
+    .venv/bin/python scripts/audit/cursor_judge_calibration.py --model grok-4.7
+
+Judging is not a coding dispatch: ``--model`` must be a concrete approved
+Cursor pin. Auto, Fast variants and unlisted models are refused before any
+provider call (operator decision 2026-09-30, #9274).
 """
 from __future__ import annotations
 
@@ -57,8 +61,19 @@ REQUEST_TIMEOUT_S = 600
 OUT_DIR = PROJECT_ROOT / "audit" / "2026-05-23-composer-2.5-cursor-judge-calibration"
 
 
+def _require_approved_model(model: str) -> None:
+    """Exit with the typed refusal unless ``model`` is a concrete approved Cursor pin."""
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.insert(0, str(PROJECT_ROOT))
+    from scripts.review.model_catalog import cursor_non_dispatch_model_refusal
+
+    refusal = cursor_non_dispatch_model_refusal(model)
+    if refusal:
+        raise SystemExit(f"cursor_judge_calibration: refused: {refusal}")
+
+
 def call_cursor(prompt: str, model: str) -> dict:
-    """Invoke composer-2.5 (or any cursor model) via ``agent -p`` headless mode.
+    """Invoke composer-2.5 (or another approved Cursor pin) via ``agent -p`` headless mode.
 
     Cursor's text output is typically just the assistant reply (no event
     framing required), so we feed stdout to ``parse_json_verdict`` directly.
@@ -67,6 +82,7 @@ def call_cursor(prompt: str, model: str) -> dict:
     workspace trust acknowledgement otherwise. We pass it because the judge
     prompt does NOT instruct the model to read or write any files.
     """
+    _require_approved_model(model)
     t0 = time.time()
     try:
         proc = subprocess.run(
@@ -119,7 +135,7 @@ def main() -> int:
     parser.add_argument(
         "--model",
         default="composer-2.5",
-        help="Cursor model id (default: composer-2.5). Also try composer-2.5-fast.",
+        help="Concrete approved Cursor pin (default: composer-2.5); Auto and Fast are refused.",
     )
     parser.add_argument("--dry-run", action="store_true", help="Print plan + skip API calls")
     parser.add_argument(
@@ -135,6 +151,7 @@ def main() -> int:
         help="Limit to first N cases (smoke test). Default: all 12.",
     )
     args = parser.parse_args()
+    _require_approved_model(args.model)
 
     cases = pull_calibration_cases()
     print(f"Loaded {len(cases)} calibration cases from working tree:{CALIBRATION_BLOB}")

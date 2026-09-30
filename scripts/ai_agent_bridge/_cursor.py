@@ -7,10 +7,10 @@ Invocation pattern:
     .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-cursor <content> \
       --task-id <task> [--model composer-2.5] [--data FILE]
 
-Default model is ``auto`` so cursor-agent picks the best available model from
-the user's plan without burning the per-model composer-2.5 quota. Pass
-``--model composer-2.5`` explicitly only when you specifically need that model
-(e.g. judge-calibration runs or A/B comparisons).
+Every call runs a concrete approved Cursor pin: the catalog's Cursor seat pin
+by default, or another allowlisted pin via ``--model``. Auto is refused before
+any provider call, and a queued ask with no stored model is refused rather than
+defaulted (operator decision 2026-09-30, #9274).
 
 Under the hood: agent -p PROMPT --model MODEL --output-format text --trust
 """
@@ -40,8 +40,24 @@ from ._ask_lifecycle import (
 from ._messaging import acknowledge, send_message
 from ._prompts import require_core_or_exit, with_core_or_exit
 
-CURSOR_DEFAULT_MODEL = "auto"
 CURSOR_DEFAULT_TIMEOUT_S = 900
+
+
+def cursor_default_model() -> str:
+    """The catalog's concrete Cursor seat pin, used when an ask names no model."""
+    from scripts.review.model_catalog import cursor_pinned_models
+
+    return cursor_pinned_models()[0]
+
+
+def _require_approved_cursor_model(model: str | None) -> str:
+    """Return ``model`` when it is a concrete approved Cursor pin; otherwise exit with the typed refusal."""
+    from scripts.review.model_catalog import cursor_non_dispatch_model_refusal
+
+    refusal = cursor_non_dispatch_model_refusal(model)
+    if refusal:
+        raise SystemExit(f"ask-cursor: refused: {refusal}")
+    return str(model)
 
 
 def ask_cursor(
@@ -59,8 +75,8 @@ def ask_cursor(
 ) -> int:
     """Send message to Cursor Agent AND invoke Cursor one-shot to process it."""
     require_core_or_exit("ask-cursor")
-    effective_model = resolve_model_selection(
-        lane="ask-cursor", to_model=to_model, model=model, default=CURSOR_DEFAULT_MODEL
+    effective_model = _require_approved_cursor_model(
+        resolve_model_selection(lane="ask-cursor", to_model=to_model, model=model, default=cursor_default_model())
     )
     effort_applied, effort_reason = unsupported_effort_note(
         lane="cursor",
@@ -115,7 +131,8 @@ def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
         assert_ask_content_present(msg, message_id=message_id, target="cursor")
     if not msg:
         return
-    model = ask_target_model(msg) or CURSOR_DEFAULT_MODEL
+    # No stored model is refused, not defaulted: legacy asks defaulted to Auto.
+    model = _require_approved_cursor_model(ask_target_model(msg))
     effort = requested_effort(msg)
     effort_applied, effort_reason = unsupported_effort_note(
         lane="cursor",
@@ -146,12 +163,13 @@ def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
 
 def _invoke_cursor(
     content: str,
-    model: str,
+    model: str | None,
     *,
     data: str | None = None,
     no_timeout: bool = False,
 ) -> str:
     """Run agent -p PROMPT --model MODEL --output-format text --trust; return captured stdout."""
+    model = _require_approved_cursor_model(model)
     agent_bin = shutil.which("agent")
     if not agent_bin:
         # Fallback to cursor-agent if 'agent' is not found

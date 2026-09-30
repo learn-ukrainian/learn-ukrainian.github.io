@@ -16,6 +16,7 @@ from scripts.review.model_catalog import (
     ModelCatalogError,
     catalog_age_days,
     catalog_is_stale,
+    cursor_non_dispatch_model_refusal,
     cursor_pinned_models,
     glm_model_aliases,
     is_cursor_auto_selector,
@@ -697,6 +698,31 @@ def test_cursor_pinned_models_lead_with_the_seat_pin():
     catalog = deepcopy(load_model_catalog())
     catalog["orchestrator_seats"]["cursor"]["model_id"] = "composer-2.5"
     assert cursor_pinned_models(catalog) == ("composer-2.5", "grok-4.7")
+
+
+@pytest.mark.parametrize(
+    ("model", "code"),
+    [
+        (None, "cursor_model_unpinned"),
+        ("  ", "cursor_model_unpinned"),
+        ("auto", "cursor_auto_outside_coding_task"),
+        ("Cursor:Auto", "cursor_auto_outside_coding_task"),
+        ("default", "cursor_auto_outside_coding_task"),
+        ("composer-2.5-fast", "cursor_model_not_approved"),
+        ("grok-4.7-high", "cursor_model_not_approved"),
+        ("claude-opus-5-5", "cursor_model_not_approved"),
+    ],
+)
+def test_cursor_non_dispatch_model_refusal_is_typed(model: str | None, code: str):
+    refusal = cursor_non_dispatch_model_refusal(model)
+    assert refusal is not None
+    assert f"({code})" in refusal
+    assert "pin grok-4.7 or composer-2.5" in refusal
+
+
+@pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
+def test_cursor_non_dispatch_model_refusal_admits_the_concrete_pins(model: str):
+    assert cursor_non_dispatch_model_refusal(model) is None
 
 
 def test_catalog_rejects_cursor_auto_as_formal_review_identity():

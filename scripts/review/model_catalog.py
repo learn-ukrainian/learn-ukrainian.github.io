@@ -76,6 +76,10 @@ CURSOR_AUTO_EXPECTED_RESOLUTION: str = "union_family"
 CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
 # Values that ask Cursor to choose the model instead of naming one.
 _CURSOR_SELECTOR_MODELS = frozenset({"auto", "default"})
+# Typed refusal reasons for Cursor model selection.
+CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE = "cursor_auto_outside_coding_task"
+CURSOR_MODEL_UNPINNED_CODE = "cursor_model_unpinned"
+CURSOR_MODEL_NOT_APPROVED_CODE = "cursor_model_not_approved"
 
 
 
@@ -695,6 +699,29 @@ def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ..
     seat = (catalog or load_model_catalog())["orchestrator_seats"]["cursor"]
     pin = seat["model_id"]
     return (pin, *(model for model in seat["auto_allowlist"] if model != pin))
+
+
+def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """Return a typed refusal unless ``model`` is a concrete approved Cursor pin.
+
+    For Cursor paths outside delegate's admitted implementation dispatch (bridge
+    review, consult, discuss and queued-ask drains): Auto is never admitted there,
+    and a missing model is refused rather than defaulted, because the legacy
+    default was Auto (operator decision 2026-09-30, #9274).
+    """
+    pins = cursor_pinned_models(catalog)
+    fix = f"pin {' or '.join(pins)} (operator decision 2026-09-30, #9274)"
+    text = str(model or "").strip()
+    if not text:
+        return f"no concrete Cursor model is pinned ({CURSOR_MODEL_UNPINNED_CODE}); {fix}"
+    if is_cursor_auto_selector(text):
+        return (
+            f"model {text!r} runs only a delegate-admitted write implementation dispatch "
+            f"({CURSOR_AUTO_OUTSIDE_CODING_TASK_CODE}); {fix}"
+        )
+    if text not in pins:
+        return f"model {text!r} is not an approved Cursor pin ({CURSOR_MODEL_NOT_APPROVED_CODE}); {fix}"
+    return None
 
 
 def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
