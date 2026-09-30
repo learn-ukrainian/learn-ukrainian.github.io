@@ -205,6 +205,12 @@ _INVALID_USAGE_NDJSON = (
 )
 
 
+@pytest.fixture(autouse=True)
+def installed_codex_cli(monkeypatch):
+    # Unit tests never depend on an npm adapter's bundled Codex or a host CLI.
+    monkeypatch.setattr(acpx_module, "_require_codex_cli", lambda: ("/installed/codex", "0.159.2"))
+
+
 def _stub_binary(
     monkeypatch,
     tmp_path: Path,
@@ -1003,6 +1009,9 @@ def test_build_invocation_argv_is_fully_confined(tmp_path, monkeypatch):
     assert "--no-terminal" in plan.cmd
     assert "--json-strict" in plan.cmd
     assert ("--model", "gpt-6.1-sol") in pairs
+    assert plan.env_overrides["CODEX_PATH"] == "/installed/codex"
+    assert plan.metadata["codex_cli_version"] == "0.159.2"
+    assert plan.metadata["codex_cli_source"] == "installed"
 
 
 def test_build_invocation_accepts_approved_explicit_model(tmp_path, monkeypatch):
@@ -1015,13 +1024,13 @@ def test_build_invocation_accepts_approved_explicit_model(tmp_path, monkeypatch)
     assert ("--model", "gpt-6-luna") in pairs
 
 
-def test_build_invocation_ignores_unsupported_effort_without_raising(tmp_path, monkeypatch):
+def test_build_invocation_refuses_unsupported_effort_with_supported_values(tmp_path, monkeypatch):
     _shadow_env(monkeypatch)
     _stub_binary(monkeypatch, tmp_path)
     adapter = AcpxAdapter()
 
-    plan = _build(adapter, cwd=tmp_path, effort="xhigh")
-    assert plan is not None  # did not raise
+    with pytest.raises(AcpxShadowRefusalError, match=r"supported effort values: default \(omit --effort\)"):
+        _build(adapter, cwd=tmp_path, effort="high")
 
 
 def test_build_invocation_rejects_write_mode(tmp_path, monkeypatch):

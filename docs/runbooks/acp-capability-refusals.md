@@ -38,4 +38,18 @@ Each ACP snapshot probes again, so repaired dependencies can recover without
 waiting for historical failure records to expire. Verify recovery with a bounded
 ordinary ask and inspect its response before claiming the provider works.
 
+The Codex ACP adapter resolves the installed `codex` executable and passes it
+to `codex-acp` through `CODEX_PATH`. Without that selector, `codex-acp` launches
+its bundled Codex, which can lag native dispatch's model support. Invocation
+metadata records the installed CLI version without pinning a release. For the
+ACPX one-shot interface, supported Codex effort values are the default only:
+omit `--effort`. Explicit values are refused instead of silently ignored.
+
+Provider failures are classified from JSON-RPC error envelopes and structured
+session metadata, including Codex `threadStatus: systemError` and terminal
+`sessionFailure` errors. They produce a failed durable ask and a non-zero exit
+even when the process exits zero or reports `stopReason: end_turn`. Assistant
+text quoting the same error JSON or refusal remains an answer; its wording
+does not establish a provider failure. Related: #9273.
+
 Related: #7812. Ask parser option consistency is tracked separately in #7814.
