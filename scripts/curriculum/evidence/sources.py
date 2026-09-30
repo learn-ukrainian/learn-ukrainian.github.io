@@ -78,6 +78,19 @@ STORE_POS = {
 }
 ALPHABET_GUARD_POS = {"prep", "conj", "part"}
 
+# Requirement-receipt locators. Numeric dictionary ids name source rows, not
+# headword guesses. VESUM also accepts the entry and form locators already used
+# by the evaluation receipts; ranges are exact source_location keys.
+RECEIPT_EVIDENCE_STORES = {
+    "vesum": ("forms_all", "entry_id / id / source_location"),
+    "pravopys": ("2019.pravopys.net/sections/<number>/", "section"),
+    "textbook": ("textbooks", "chunk_id"),
+    "grinchenko": ("grinchenko", "id"),
+    "sum20": ("sum20_articles", "wordid"),
+    "vts": ("slovnyk_me_entries", "id (dictionary_slug=vts)"),
+    "ulif": ("ulif_dictua_entries", "id"),
+}
+
 
 def is_alphabet_letter_gloss(row: dict) -> bool:
     """Reject source rows mislabeled as a particle or pronoun but defining a letter."""
@@ -311,6 +324,8 @@ class Sources:
         self.journal_mode: str | None = None
         self._snapshot_started: float | None = None
         self._wal_bytes_start: int | None = None
+        self._receipt_evidence: dict[str, list[dict]] = {}
+        self._receipt_identities: dict[str, Any] = {}
 
     def __enter__(self):
         return self
@@ -320,6 +335,8 @@ class Sources:
 
     def close(self) -> None:
         """Release the pinned snapshot (rollback, never commit) and report its lifetime."""
+        self._receipt_evidence.clear()
+        self._receipt_identities.clear()
         if self._kaikki_conn is not None:
             side, self._kaikki_conn = self._kaikki_conn, None
             with closing(side), suppress(sqlite3.Error):
@@ -488,6 +505,92 @@ class Sources:
         if self._vesum_identity()[0] != digest:
             raise ValueError(f"{codes.SOURCE_CHANGED}: VESUM batch")
         return SourceResult(raw, digest, metadata)
+
+    def resolve_evidence_ids(self, evidence_ids: Iterable[str]) -> SourceResult[dict[str, list[dict]]]:
+        """Resolve receipt locators on this session, preserving source-row identity.
+
+        Unknown keys return empty rows; unavailable stores raise to the receipt
+        boundary, which converts them to a named refusal. No fuzzy/headword or
+        cross-dictionary fallback. VESUM's static-file identity is checked on
+        both sides of a read, as in inspect_many; sources.db uses _db's pinned
+        read-only snapshot. Правопис uses the existing accessor once per section
+        and retains those bytes for the session, never a second network lookup.
+        """
+        requested = list(dict.fromkeys(evidence_ids))
+        pending = [eid for eid in requested if eid not in self._receipt_evidence]
+        if any(eid.startswith("vesum:") for eid in requested):
+            digest, metadata = self._vesum_identity()
+            self._receipt_identities["vesum"] = {"content_hash": digest, **metadata}
+            vesum_ids = [eid for eid in pending if eid.startswith("vesum:")]
+            if vesum_ids:
+                numbers = {eid[6:]: eid for eid in vesum_ids if re.fullmatch(r"[1-9][0-9]*", eid[6:])}
+                locations = {eid[6:]: eid for eid in vesum_ids if re.fullmatch(r"[1-9][0-9]*-[1-9][0-9]*", eid[6:])}
+                result = {eid: [] for eid in vesum_ids}
+                # Neither entry_id nor source_location is indexed in the real
+                # store. Batch them in one scan rather than scanning per option.
+                keys = list(numbers)
+                ranges = list(locations)
+                if keys or ranges:
+                    with closing(open_readonly(self.vesum_db)) as conn:
+                        for start in range(0, max(len(keys), len(ranges)), BATCH_SIZE):
+                            ns, rs = keys[start : start + BATCH_SIZE], ranges[start : start + BATCH_SIZE]
+                            nslots, rslots = ",".join("?" for _ in ns), ",".join("?" for _ in rs)
+                            rows = conn.execute(
+                                f"SELECT * FROM forms_all WHERE id IN ({nslots}) OR entry_id IN ({nslots}) "
+                                f"OR source_location IN ({rslots}) ORDER BY id",
+                                [*ns, *ns, *rs],
+                            )
+                            for row in rows:
+                                matches = {
+                                    numbers.get(str(row["id"])),
+                                    numbers.get(str(row["entry_id"])),
+                                    locations.get(row["source_location"]),
+                                } - {None}
+                                for eid in matches:
+                                    result[eid].append(dict(row))
+                self._vesum_identity()
+                self._receipt_evidence.update(result)
+        for eid in pending:
+            kind, _, key = eid.partition(":")
+            if kind == "vesum":
+                continue
+            if kind not in RECEIPT_EVIDENCE_STORES or not key:
+                self._receipt_evidence[eid] = []
+                continue
+            if kind == "pravopys":
+                from scripts.rag.source_query import pravopys_section
+
+                if not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 2 or not 1 <= int(key) <= 61:
+                    self._receipt_evidence[eid] = []
+                    continue
+                section = pravopys_section(int(key), report_unavailable=True)
+                if section and section.get("status") == "unavailable":
+                    raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
+                self._receipt_evidence[eid] = [section] if section else []
+                self._receipt_identities["pravopys"] = {"scheme": SOURCES_DB_SCHEME}
+                continue
+            if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
+                self._receipt_evidence[eid] = []
+                continue
+            table, column = {
+                "textbook": ("textbooks", "chunk_id"),
+                "grinchenko": ("grinchenko", "id"),
+                "sum20": ("sum20_articles", "wordid"),
+                "vts": ("slovnyk_me_entries", "id"),
+                "ulif": ("ulif_dictua_entries", "id"),
+            }[kind]
+            condition = " AND dictionary_slug = 'vts'" if kind == "vts" else ""
+            rows = self._db().execute(f"SELECT * FROM {table} WHERE {column} = ?{condition} ORDER BY id", (key,))
+            self._receipt_evidence[eid] = [dict(row) for row in rows]
+            self._receipt_identities["sources_db"] = {"scheme": SOURCES_DB_SCHEME}
+        raw = {eid: self._receipt_evidence[eid] for eid in requested}
+        identities = {
+            kind: value for kind, value in self._receipt_identities.items()
+            if (kind == "vesum" and any(eid.startswith("vesum:") for eid in requested))
+            or (kind == "pravopys" and any(eid.startswith("pravopys:") for eid in requested))
+            or (kind == "sources_db" and any(eid.partition(":")[0] not in {"vesum", "pravopys"} for eid in requested))
+        }
+        return SourceResult(raw, batch_digest(raw), identities)
 
     def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""

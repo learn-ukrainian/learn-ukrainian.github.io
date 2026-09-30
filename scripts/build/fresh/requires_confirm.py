@@ -77,6 +77,7 @@ def record_answers(
     writer_seat: str,
     writer_family: str,
     state_dir: Path,
+    sources: Any = None,
 ) -> dict[str, Any]:
     """Reject incomplete, reordered, unsupported or internally inconsistent judgements."""
     for value in (seat, family, writer_seat, writer_family):
@@ -146,7 +147,7 @@ def record_answers(
     if seen != set(by_locator):
         raise _bad(f"missing answers: {sorted(set(by_locator) - seen)!r}")
     doc = {"requirements_schema": 2, "lesson": batch["lesson"], "inputs": batch["inputs"], "items": rows}
-    receipts.validate_requirement_receipts(doc)
+    receipts.validate_requirement_receipts(doc, sources=sources)
     return doc
 
 
