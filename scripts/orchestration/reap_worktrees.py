@@ -2990,21 +2990,52 @@ def _prune_branch(
     return None if deleted.returncode == 0 else _format_failure(deleted)
 
 
-def _needs_finalize_claim_settled(repo_root: Path, record: dict[str, Any]) -> bool:
-    """Return True when a ``needs_finalize`` record's work is proven merged and its worker is gone.
+_ClaimIdentity = tuple[str, str, str]
 
-    The record's worker PID must be dead, and its branch must have a MERGED PR
-    whose head is exactly the head the task recorded on exit. Anything unknown
-    (no branch, no recorded head, a failed PR lookup) keeps the claim.
+
+def _pid_proven_absent(record: dict[str, Any]) -> bool:
+    """Return True only when the record names a valid positive integer PID that no process holds.
+
+    A missing, null, malformed, boolean, zero or negative PID proves nothing, and
+    neither does a probe that fails for any reason other than "no such process".
     """
-    if _task_pid_alive(record):
+    pid = record.get("pid")
+    if isinstance(pid, bool) or not isinstance(pid, int) or pid <= 0:
         return False
-    branch = record.get("worktree_branch")
-    head = record.get("final_branch_head_commit")
-    if not isinstance(branch, str) or not branch or not isinstance(head, str) or not head:
+    try:
+        os.kill(pid, 0)
+    except ProcessLookupError:
+        return True
+    except OSError:
         return False
+    return False
+
+
+def _needs_finalize_claim_identity(record: dict[str, Any]) -> _ClaimIdentity | None:
+    """Return the (task id, branch, recorded head) a settled-claim proof is bound to, if all are present."""
+    identity = (record.get("task_id"), record.get("worktree_branch"), record.get("final_branch_head_commit"))
+    if all(isinstance(part, str) and part for part in identity):
+        return identity  # type: ignore[return-value]
+    return None
+
+
+def _needs_finalize_claim_proven_settled(repo_root: Path, record: dict[str, Any]) -> _ClaimIdentity | None:
+    """Return the record's identity when its work is proven merged and its worker proven gone.
+
+    The record's PID must be a valid positive integer that a probe proves absent,
+    and its branch must have a MERGED PR whose head is exactly the head the task
+    recorded on exit. Anything unknown (no task id, branch or recorded head, a
+    bad PID, a failed PR lookup) returns ``None`` and keeps the claim. This runs
+    a network lookup, so it must not run while the dispatch lock is held.
+    """
+    identity = _needs_finalize_claim_identity(record)
+    if identity is None or not _pid_proven_absent(record):
+        return None
+    _, branch, head = identity
     states, error = _query_pr_states(repo_root, branch)
-    return error is None and any(state.state == "MERGED" and state.head_sha == head for state in states)
+    if error is None and any(state.state == "MERGED" and state.head_sha == head for state in states):
+        return identity
+    return None
 
 
 def _enter_dispatch_worktree_guard(
@@ -3031,23 +3062,44 @@ def _enter_dispatch_worktree_guard(
     try:
         control_root = worktree_claims.control_plane_root(primary)
         lock_dir = _common_git_dir(control_root, timeout=_LOCKED_GIT_TIMEOUT_S) / worktree_claims.LOCK_DIR_NAME
-        stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
     except worktree_claims.ControlPlaneError as exc:
         return f"{worktree_claims.LOCK_UNAVAILABLE} ({exc})"
-    except worktree_claims.WorktreeLockError as exc:
-        return f"{worktree_claims.lock_refusal(exc)} ({exc})"
     except RuntimeError as exc:
         return f"worktree lock unavailable ({exc})"
     tasks_dir = control_root / "batch_state" / "tasks"
     owner_task_id = _dispatch_task_id(repo_root, info)
-    return worktree_claims.active_worktree_claim_refusal(
-        info.path,
-        tasks_dir=tasks_dir,
-        repo_root=primary,
-        owner_task_id=owner_task_id,
-        owner_state_file=tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
-        settled_claim=lambda record: _needs_finalize_claim_settled(primary, record),
-    )
+    claim_scan = {
+        "tasks_dir": tasks_dir,
+        "repo_root": primary,
+        "owner_task_id": owner_task_id,
+        "owner_state_file": tasks_dir / f"{owner_task_id}.json" if owner_task_id else None,
+    }
+
+    # Prove every needs_finalize claim's merge before taking the lock: the PR lookup
+    # is a network call that would otherwise hold delegate's dispatch lock.
+    proven: set[_ClaimIdentity] = set()
+
+    def prove(record: dict[str, Any]) -> bool:
+        identity = _needs_finalize_claim_proven_settled(primary, record)
+        if identity is not None:
+            proven.add(identity)
+        return identity is not None
+
+    worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=prove, **claim_scan)
+
+    try:
+        stack.enter_context(worktree_claims.worktree_lock(info.path, lock_dir=lock_dir))
+    except worktree_claims.WorktreeLockError as exc:
+        return f"{worktree_claims.lock_refusal(exc)} ({exc})"
+    except RuntimeError as exc:
+        return f"worktree lock unavailable ({exc})"
+
+    def still_settled(record: dict[str, Any]) -> bool:
+        # Under the lock: no network. The record must still be the one proven.
+        identity = _needs_finalize_claim_identity(record)
+        return identity is not None and identity in proven and _pid_proven_absent(record)
+
+    return worktree_claims.active_worktree_claim_refusal(info.path, settled_claim=still_settled, **claim_scan)
 
 
 def _reap_qualified_worktree(

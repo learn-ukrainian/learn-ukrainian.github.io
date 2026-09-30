@@ -361,7 +361,7 @@ def test_needs_finalize_claim_stays_unless_merged_head_matches_and_worker_is_gon
         ([rw.PullRequestState(1, "MERGED", "abc")], "gh outage", False),
     ],
 )
-def test_needs_finalize_claim_settled_requires_a_proven_merge_of_the_recorded_head(
+def test_needs_finalize_claim_proof_requires_a_proven_merge_of_the_recorded_head(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     states: list[rw.PullRequestState],
@@ -369,11 +369,103 @@ def test_needs_finalize_claim_settled_requires_a_proven_merge_of_the_recorded_he
     settled: bool,
 ) -> None:
     monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: (states, error))
-    record = {"worktree_branch": "claude/x", "final_branch_head_commit": "abc", "pid": _dead_pid()}
+    record = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc", "pid": _dead_pid()}
 
-    assert rw._needs_finalize_claim_settled(tmp_path, record) is settled
-    assert rw._needs_finalize_claim_settled(tmp_path, {**record, "worktree_branch": None}) is False
-    assert rw._needs_finalize_claim_settled(tmp_path, {**record, "final_branch_head_commit": None}) is False
+    assert (rw._needs_finalize_claim_proven_settled(tmp_path, record) is not None) is settled
+    for missing in ("task_id", "worktree_branch", "final_branch_head_commit"):
+        assert rw._needs_finalize_claim_proven_settled(tmp_path, {**record, missing: None}) is None
+
+
+@pytest.mark.parametrize("bad_pid", [None, "missing", "123", 12.0, True, 0, -1, -4242])
+def test_needs_finalize_claim_proof_keeps_the_claim_without_a_valid_positive_dead_pid(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    bad_pid: object,
+) -> None:
+    """A merged PR alone never releases the claim: the worker must be proven absent by its recorded PID."""
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None))
+    record: dict[str, Any] = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc"}
+    if bad_pid != "missing":
+        record["pid"] = bad_pid
+
+    assert rw._needs_finalize_claim_proven_settled(tmp_path, record) is None
+
+
+def test_needs_finalize_claim_with_no_pid_in_the_record_blocks_the_reap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, worktree, result = _needs_finalize_claim_case(tmp_path, monkeypatch, pr_state="MERGED", pr_head=None, pid=None)
+
+    assert result.action == "skipped"
+    assert "worktree claimed by active task impl-9230-r3" in result.reason
+    assert worktree.exists()
+
+
+def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
+    head = git(repo, "rev-parse", "claude/impl-9230")
+    patch_gh(monkeypatch, {"claude/impl-9230": [{"number": 9237, "state": "MERGED", "headRefOid": head}]})
+    _write_task_record(
+        repo,
+        "impl-9230-r3",
+        status="needs_finalize",
+        worktree_path=str(worktree),
+        worktree_branch="claude/impl-9230",
+        final_branch_head_commit=head,
+        pid=_dead_pid(),
+    )
+    real_query = rw._query_pr_states
+    lookups_under_lock: list[bool] = []
+
+    def spy(repo_root: Path, branch: str) -> Any:
+        lookups_under_lock.append(any(thread == threading.get_ident() for _, thread in worktree_claims._HELD_LOCKS))
+        return real_query(repo_root, branch)
+
+    monkeypatch.setattr(rw, "_query_pr_states", spy)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert lookups_under_lock
+    assert not any(lookups_under_lock)
+
+
+def test_needs_finalize_claim_changed_after_the_proof_keeps_the_claim(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The record is re-validated against the precomputed proof under the lock; a changed head keeps the claim."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
+    head = git(repo, "rev-parse", "claude/impl-9230")
+    patch_gh(monkeypatch, {"claude/impl-9230": [{"number": 9237, "state": "MERGED", "headRefOid": head}]})
+    fields = {
+        "status": "needs_finalize",
+        "worktree_path": str(worktree),
+        "worktree_branch": "claude/impl-9230",
+        "final_branch_head_commit": head,
+        "pid": _dead_pid(),
+    }
+    _write_task_record(repo, "impl-9230-r3", **fields)
+    real_query = rw._query_pr_states
+
+    def query_then_record_moves_on(repo_root: Path, branch: str) -> Any:
+        result = real_query(repo_root, branch)
+        _write_task_record(repo, "impl-9230-r3", **{**fields, "final_branch_head_commit": "f" * 40})
+        return result
+
+    monkeypatch.setattr(rw, "_query_pr_states", query_then_record_moves_on)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert "worktree claimed by active task impl-9230-r3" in result.reason
+    assert worktree.exists()
 
 
 def _fleet_layout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
