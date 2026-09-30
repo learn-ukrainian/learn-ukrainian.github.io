@@ -1,6 +1,6 @@
 # Dictionary Pipeline Status
 
-> Updated: 2026-09-30 (ULIF headword repair review fixes, #9338)
+> Updated: 2026-09-30 (ULIF run-mode recovery and source dispositions, #9347)
 
 ## In RAG ✅
 
@@ -34,9 +34,11 @@ DictUA entry selections can open on a relation tab (synonyms or phraseology),
 whose article has no `.word_style` headword. The ingest now recovers missing
 identity from the separately cached paradigm tab, keeping any identity already
 present on the entry page. A recovered paradigm headword must match its
-register `stressed_headword` exactly, including stress and capitalization.
-Both walk-time ingest and offline parsing use this rule; recovery without
-register identity fails closed. Source spellings are never inferred from the
+register `stressed_headword` exactly, including stress and capitalization,
+when that identity is known. Both walk-time ingest and offline walk parsing
+use this rule. Targeted run ledgers have no stressed register identity; their
+recovered headword must still match the normalized query spelling. Source
+spellings are never inferred from the
 query or relation terms.
 An identity that cannot be recovered is stored as `parse_error`, not `ok`.
 
@@ -71,8 +73,8 @@ The review-fix replay then covered the remaining 23 rows in 16 mismatch groups:
 
 The 16 groups still have printed homonym numbers that disagree with
 register-order indexes. Where every register row in a group carries one exact
-stressed headword, that unanimous identity recovered 5 empty rows in 5 groups.
-The remaining 18 rows in 11 groups became `parse_error`: register headwords
+stressed headword, that unanimous identity recovered 5 empty rows in 4 groups.
+The remaining 18 rows in 12 groups became `parse_error`: register headwords
 differ in stress or capitalization. No homonym ordering was assigned. Their
 ledger units remain `error`, with the original mismatch reason and a separate
 headword-repair reason. Repeated repair excludes those units from the stored
@@ -104,6 +106,75 @@ MCP `verify_words` VESUM check found 19/20: `безкінечно` was absent fr
 while cache-only `query_ulif` attested `безкіне́чно` (`ulif:23553`). This is
 reported as a dictionary coverage difference, not a judgement against the
 source spelling. VESUM verifies morphology, not the retained ULIF stress.
+
+### ULIF run-mode recovery and residual disposition (#9347)
+
+The run-mode regression is fixed: the stress-exact check applies only when
+`stressed_headword` is known. The normalized spelling check still binds in
+run mode. Captured synonyms-plus-paradigm fixtures cover direct recovery,
+wrong-spelling refusal, full run-mode replay and bounded identity repair;
+walk-mode stress and capitalization checks remain covered.
+
+On 2026-09-30, all 59 empty-article rows (57 spelling groups) were selected
+once through the existing `HomonymFetcher`, with healthy sibling selections
+filtered out. Fresh register membership and stressed headwords were compared
+with the completed walk before accepting each selection. The standard runner
+lock, one session, sequential requests, at least one second between requests,
+back-off and immutable raw-cache storage were used. The bounded run made
+270 HTTP requests; all 59 target selections completed with HTTP 200 between
+19:08:24 and 19:12:55 UTC. Every selected entry and its paradigm tab still
+lacked `.word_style`, an article panel and a paradigm table. The source thus
+provided no lemma article to recover; relation-tab material was not used as
+identity. No cache or corpus was deleted or moved.
+
+The cached article/paradigm pages for all 49 register entries in the 16
+mismatch groups were inspected. These are source observations, not permission
+to renumber: every group's printed numbers still conflict with register order
+under the governing [#8400 plan](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8400).
+No group could be resolved from that evidence and no index was reassigned:
+
+| Group | Register indexes | Printed numbers | Disposition |
+|-------|------------------|-----------------|-------------|
+| віскряк | 1 | 2 | Unresolved |
+| глевтяк | 1 | 2 | Unresolved |
+| любка | 1,2,3,4 | 1,2,1,2 | Unresolved |
+| нориця | 1,2,3,4 | 1,2,1,2 | Unresolved |
+| об'їздити | 1,2,3,4 | 1,2,1,2 | Unresolved |
+| пара | 1,2,3,4,5 | 1,2,1,2,3 | Unresolved |
+| підмет | 1,2 | 2,1 | Unresolved |
+| розкидати | 1,2,3,4 | 1,2,1,2 | Unresolved |
+| розкидатися | 1,2,3,4,5 | 1,2,1,2,3 | Unresolved |
+| розсипатися | 1,2,3,4,5,6 | 1,2,3,1,2,3 | Unresolved |
+| сп'янілий | 1 | 2 | Unresolved |
+| сповнитися | 1,2 | 2,1 | Unresolved |
+| співанка | 1,2 | 2,1 | Unresolved |
+| спірний | 1,2 | 2,1 | Unresolved |
+| чайка | 1,2,3,4 | 1,2,1,2 | Unresolved |
+| ялівник | 1,2 | 2,3 | Unresolved |
+
+There was no recoverable identity to apply. One bounded replay through the
+fixed parser was a no-op. The per-row disposition table for all 77 residual
+rows is posted on [issue #9347](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9347#issuecomment-5918340705).
+Source-response digests are recorded in that table; raw responses remain in
+canonical ULIF cache objects with their `stored_at` times. Per-row request
+digests were not retained.
+
+| Measurement | Before | After |
+|-------------|--------|-------|
+| Total entry rows | 269,262 | 269,262 |
+| `ok` | 262,738 | 262,738 |
+| `parse_error` | 77 | 77 |
+| `not_found` | 6,447 | 6,447 |
+| `ok` rows with an empty headword | 0 | 0 |
+| Section rows | 336,396 | 336,396 |
+| Recovered from the 77-row cohort | 0 | 0 |
+
+Before/after fingerprints cover all 269,185 out-of-cohort entries and all
+336,396 sections; the 77 cohort rows are compared in full. The production
+ledger's meta and spelling records are unchanged. The curriculum-upgrade
+driver owns the remaining 77 unavailable identities and 16 numbering groups,
+plus exact-head cross-family review and landing of this fix. This source
+disposition does not claim recovery or completion of the full ULIF plan.
 
 VTS receipt citations use bounded retained snapshots in
 `sources.db:slovnyk_me_entries` (#9296). Import existing schema-v4 cache files

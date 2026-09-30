@@ -146,6 +146,35 @@ def test_paradigm_identity_mismatch_fails_closed():
         )
 
 
+@pytest.mark.parametrize("spelling", ["бачити", "дуже"])
+def test_run_mode_paradigm_identity_keeps_spelling_check(spelling):
+    kwargs = dict(spelling=spelling, homonym_index=1, register_position="0:21", stressed_headword=None)
+    if spelling == "дуже":
+        with pytest.raises(ValueError, match="cached identity mismatch"):
+            runner._parse_cached_entry(_capture("synonyms"), {"paradigm": _capture("paradigm")}, **kwargs)
+    else:
+        parsed = runner._parse_cached_entry(_capture("synonyms"), {"paradigm": _capture("paradigm")}, **kwargs)
+        assert parsed["canonical_headword"] == "ба́чити"
+        assert parsed["normalized_spelling"] == "бачити"
+
+
+@pytest.mark.parametrize("repair", [False, True])
+def test_run_mode_replays_relation_first_capture(cached_group, repair):
+    ledger, conn = cached_group
+    ledger.conn.execute("DELETE FROM register_rows")
+    ledger.conn.commit()
+    ledger.set_meta("mode", "run")
+    ledger.ensure("бачити")
+    ledger.mark("бачити", "stored", entry_count=1)
+    assert runner.parse_stored(ledger, conn, empty_headwords_only=repair) == 1
+    recovered = conn.execute(
+        "SELECT canonical_headword, status FROM ulif_dictua_entries WHERE normalized_query='бачити'"
+    ).fetchone()
+    assert tuple(recovered) == ("ба́чити", "ok")
+    if repair:
+        assert runner.parse_stored(ledger, conn, empty_headwords_only=True) == 0
+
+
 @pytest.mark.parametrize("walk_commit", [False, True])
 def test_same_spelling_different_stress_fails_closed(cached_group, walk_commit):
     ledger, conn = cached_group
