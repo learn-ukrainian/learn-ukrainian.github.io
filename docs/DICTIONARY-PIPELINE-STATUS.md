@@ -127,12 +127,26 @@ real witness fields to equal the option or one of those lemmas: VESUM
 `word_form`/`lemma`, СУМ-20 `headword`/`stressed_headword`, Грінченко and VTS
 `word`, ULIF `canonical_headword`. Only ULIF rows with `status='ok'` bind,
 including for invalid options; a negative lookup is not a word witness.
-Definitions and metadata cannot bind. VESUM analyses and paradigms use indexed
-exact candidates (given, casefolded, upper, title and capitalised), followed
-by normalized filtering; mixed-case forms outside those candidates fail closed.
+Definitions and metadata cannot bind. VESUM lookups use indexed exact
+candidates (given, casefolded, upper, title,
+capitalised and per-hyphen-part capitalised), followed by normalized filtering;
+1,490 VESUM forms and 297 lemmas remain unreachable by those candidates and
+fail closed. A folded, indexed store is a separate follow-up; the builder and
+source lock remain unchanged here to preserve the frozen evaluation release.
 Text kinds (`pravopys`, `textbook`)
 require a whole-word match of the option or any attested VESUM paradigm form
-of its lemmas. Case correctness is checked by the language judgement elsewhere.
+of its lemmas. Soft hyphens (U+00AD), including a following line break, are
+removed before matching; fragments after them cannot bind (`Фор­мат` never
+witnesses `мат`). Non-breaking hyphens (U+2011) fold to `-`. Line-end hyphens
+inside words are tried both joined and kept (`червиво-\nго` witnesses
+`червивого`, never the fragment `го`; `будь-\nякий` witnesses `будь-який`). Standalone
+one-letter options and paradigm witnesses are refused; witnesses need at least
+two letters. Longer function words may bind by whole-word occurrence: this
+proves word identity only, never contextual grammatical support. Multi-word
+options require the exact phrase after whitespace runs (including newlines)
+collapse to one space in both the option and source text; separate tokens or
+paradigm variants cannot bind a phrase. Case correctness is checked by the
+language judgement elsewhere.
 Other existing rows refuse with `evidence_form_mismatch`. Live Pravopys
 receipts use `pravopys-live-section-v1` identities.
 
