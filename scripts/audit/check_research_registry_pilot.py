@@ -73,7 +73,10 @@ EXPECTED_BODIES = {
     "unlp-2026-gec-minimal-edit": 3409,
 }
 EXPECTED_RESEARCH_COMPONENT_BYTES = 107
-EXPECTED_STATE_MANIFEST_BYTES = {"disabled": 1196, "enabled": 1315}
+# The state manifest's absolute size belongs to its other components (rules,
+# scoped rules, session, ...), which change independently of the registry.  The
+# pilot pins only what the registry owns: the bytes the research component adds.
+EXPECTED_STATE_MANIFEST_RESEARCH_DELTA = 119
 
 
 @contextmanager
@@ -159,25 +162,28 @@ def run(root: Path = PROJECT_ROOT) -> dict[str, Any]:
         disabled = client.get("/api/state/manifest")
         _assert_equal(disabled.status_code, 200, "disabled state manifest status")
         manifest_sizes["disabled"] = len(disabled.content)
-        _assert_equal(
-            manifest_sizes["disabled"], EXPECTED_STATE_MANIFEST_BYTES["disabled"], "disabled state manifest bytes"
-        )
+        disabled_manifest = disabled.json()
+        if "research" in disabled_manifest:
+            raise AssertionError("disabled state manifest exposes the research component")
 
         os.environ[reg.ENV_FLAG] = "true"
         enabled = client.get("/api/state/manifest")
         _assert_equal(enabled.status_code, 200, "enabled state manifest status")
         manifest_sizes["enabled"] = len(enabled.content)
+        enabled_manifest = enabled.json()
         _assert_equal(
-            manifest_sizes["enabled"], EXPECTED_STATE_MANIFEST_BYTES["enabled"], "enabled state manifest bytes"
+            {key: value for key, value in enabled_manifest.items() if key != "research"},
+            disabled_manifest,
+            "enabled state manifest outside the research component",
         )
         _assert_equal(
             manifest_sizes["enabled"] - manifest_sizes["disabled"],
-            119,
+            EXPECTED_STATE_MANIFEST_RESEARCH_DELTA,
             "research state-manifest delta",
         )
         if manifest_sizes["enabled"] >= reg.MAX_STATE_MANIFEST_BYTES:
             raise AssertionError("production state manifest cap exceeded")
-        component = enabled.json()["research"]
+        component = enabled_manifest["research"]
         component_bytes = len(reg.canonical_json_bytes(component))
         _assert_equal(component_bytes, EXPECTED_RESEARCH_COMPONENT_BYTES, "research manifest component bytes")
         if component_bytes > reg.MAX_RESEARCH_COMPONENT_BYTES:

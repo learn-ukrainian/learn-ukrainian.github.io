@@ -13,13 +13,18 @@ from pathlib import Path
 import pytest
 
 from scripts.audit import check_research_registry_pilot as pilot
+from scripts.research import registry as reg
 
 
 def test_real_seeded_pilot_checker_is_green() -> None:
     report = pilot.run(Path(__file__).resolve().parents[1])
 
     assert report["metrics"] == {"tp": 3, "fp": 0, "fn": 0, "precision": 1.0, "recall": 1.0}
-    assert report["state_manifest_bytes"] == {"disabled": 1196, "enabled": 1315}
+    # Absolute sizes track the manifest's other components (e.g. the rules core
+    # hashes); the registry owns only its delta, and the whole must fit the cap.
+    sizes = report["state_manifest_bytes"]
+    assert sizes["enabled"] - sizes["disabled"] == pilot.EXPECTED_STATE_MANIFEST_RESEARCH_DELTA
+    assert sizes["enabled"] < reg.MAX_STATE_MANIFEST_BYTES
     assert report["warm_reads"] == {
         "quality_manifest": [200, 342, 304, 0],
         "record_body": [200, 2630, 304, 0],
