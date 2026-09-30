@@ -1,6 +1,6 @@
 {
   "schema": 1,
   "known_failures": {
-    "tests/test_citation_resolution_invariant.py::test_published_citations_resolve_invariant[wiki/grammar/b2/academic-writing.md]": 8403
+    "tests/test_citation_resolution_invariant.py::test_published_citations_resolve_invariant": 8403
   }
 }
