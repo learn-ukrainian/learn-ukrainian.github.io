@@ -49,7 +49,9 @@ Project-local wrappers for interactive agent sessions:
 ```
 
 Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
-lane via `scripts/delegate.py --agent kimi` or the project bridge/runtime. Interactive native
+coding lane via `scripts/delegate.py dispatch --agent kimi --mode workspace-write` (web, UI
+and backend coding only). The bridge is not a Kimi route: it refuses every Kimi recipient,
+ask, inbox and discussion. Interactive native
 Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
 `~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback).
 Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
@@ -170,8 +172,9 @@ and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.
 | `k2.7` | `kimi-k2.7-code` | 262 144 | 249 036 |
 | `k2.7-highspeed` | `kimi-k2.7-code-highspeed` | 262 144 | 249 036 |
 
-**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py --agent kimi`
-or the project bridge/runtime). Do not point headless jobs at kimicc.
+**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py dispatch
+--agent kimi --mode workspace-write`; the bridge is not a Kimi route). Do not point headless
+jobs at kimicc.
 
 K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
 rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).

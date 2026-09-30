@@ -15,7 +15,7 @@ no review lane is planned for it.**
 | Sealed snapshot cwd only | Not wired through `prepare_isolated_review_launch` for engine `kimi` | Absent → refuse |
 | `review-pr --reviewer kimi` | Retired (#8520) | Replaced by direct `ask-* --type review` substitute seats |
 | Registry `formal_review_eligible` | `false` | **v1 complete residual** |
-| Wire #5618 / enable #5619 | Residual closeout | Reopen only with Option A/B proof |
+| Wire #5618 / enable #5619 | Residual closeout | Retired: Kimi never reviews |
 
 ## Live lane (implementation only)
 

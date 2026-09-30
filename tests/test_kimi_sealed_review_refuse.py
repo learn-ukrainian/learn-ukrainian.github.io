@@ -1,4 +1,4 @@
-"""Kimi sealed formal review is fail-closed until isolation is proven (#5556)."""
+"""Kimi never reviews, so its sealed formal review is refused (#5556)."""
 
 from __future__ import annotations
 

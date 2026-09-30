@@ -901,8 +901,9 @@ Formal CF and auto-merge stay with the orchestrator.
 
 ### Formal CF budget rotation (Codex-authored PRs)
 Current sealed reviewer routes are `codex|claude|glm|grok`; the canonical
-`review_scheduler.endpoints` catalog remains authoritative. `agy` and
-`kimi` are recognized request identities but are not yet formally eligible.
+`review_scheduler.endpoints` catalog remains authoritative. `agy` is a
+recognized request identity that is not formally eligible. Kimi is not a
+reviewer: Kimi seats take web, UI and backend coding only.
 For **Codex/Luna-authored** PRs, use the deterministic routing budget rather
 than default-stacking one provider. An explicit `--model` may select another
 formally eligible model on the requested native route, but still requires

@@ -542,12 +542,20 @@ def _stored_reply_is_useful(reply_id: int) -> bool:
 def process_background_ask(message_id: int, target: str) -> None:
     """Run one detached ask worker and leave a terminal lifecycle status.
 
-    A Kimi target exits with the refusal before any lifecycle record.
+    A Kimi target exits with the refusal before the broker is opened; a
+    message addressed to a Kimi seat or model exits with it right after the
+    read, before any lifecycle record.
     """
     from agent_runtime.kimi_admission import KimiAdmissionRefused
 
+    from ._acp_compat import refuse_kimi_compat
+    from ._messaging import read_message
+
     try:
-        refuse_kimi_target(message_id, target)
+        refuse_kimi_compat(target)
+        msg = read_message(message_id, quiet=True)
+        if msg:
+            refuse_kimi_message(msg, target)
     except KimiAdmissionRefused as exc:
         raise SystemExit(f"❌ {exc}") from exc
     terminal = _AskTerminalRecorder(message_id)
@@ -902,37 +910,38 @@ def ask_sender_model(msg: dict[str, Any]) -> str | None:
     return str(model) if model else None
 
 
-def refuse_kimi_target(message_id: int, target: str) -> None:
-    """The Kimi gate for draining one message: its target seat and the model it was sent to.
+def refuse_kimi_message(msg: dict[str, Any], target: str) -> None:
+    """The Kimi gate for draining one message that has been read: its target, recipient seat and target model.
 
-    Raises ``KimiAdmissionRefused`` before any reply, failure record or
-    acknowledgement. A Kimi target is refused before any lookup; otherwise
-    the target model comes from an immutable snapshot read, so the check never writes.
+    Kimi is not a bridge recipient, so a message addressed to a Kimi seat or
+    model is never processed. Raises ``KimiAdmissionRefused`` before any
+    reply, failure record or acknowledgement.
     """
-    from ._acp_compat import refuse_kimi_compat
-    from ._messaging import peek_message_route
+    from ._acp_compat import refuse_kimi_recipients
 
-    refuse_kimi_compat(target)
-    route = peek_message_route(message_id)
-    if route:
-        refuse_kimi_compat(target, model=ask_target_model(route))
+    refuse_kimi_recipients((target, msg.get("to")), (ask_target_model(msg),))
 
 
 def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bool | None:
     """Drain ordinary asks via ACP; retain the toolful legacy review processors.
 
     Ordinary drains return success; review processors retain their None return.
-    A Kimi target raises ``KimiAdmissionRefused`` before any record.
+    A Kimi target raises ``KimiAdmissionRefused`` before the broker is opened;
+    a message addressed to a Kimi seat or model raises it right after the read,
+    before any record.
     """
-    refuse_kimi_target(message_id, target)
-    no_timeout = bool(options.get("no_timeout", False))
-    review = bool(options.get("review", False))
-    new_session = bool(options.get("new_session", False))
+    from ._acp_compat import refuse_kimi_compat
     from ._messaging import read_message
     from ._process import process_message_for_recipient
 
+    refuse_kimi_compat(target)
+    no_timeout = bool(options.get("no_timeout", False))
+    review = bool(options.get("review", False))
+    new_session = bool(options.get("new_session", False))
+    msg = read_message(message_id, quiet=True)
+    if msg:
+        refuse_kimi_message(msg, target)
     if not review:
-        msg = read_message(message_id, quiet=True)
         if not msg:
             return
         review = str(msg.get("type", "")).strip().casefold() == "review"

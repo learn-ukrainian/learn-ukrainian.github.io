@@ -85,7 +85,9 @@ def test_ukrainian_content_areas_have_only_approved_provider_slots() -> None:
 def test_removed_content_slots_are_not_bridge_recipients(provider: str, lane: str) -> None:
     slot = f"{provider}-{lane}"
     assert slot not in _channels.get_valid_recipient_agents(assignments_path=_AREA_ASSIGNMENTS_YAML)
-    with pytest.raises(ValueError, match="Unknown delivery target"):
+    # A Kimi slot is refused first: Kimi is not a bridge recipient at all.
+    refusal = "KIMI CODING-ONLY" if provider == "kimi" else "Unknown delivery target"
+    with pytest.raises(ValueError, match=refusal):
         _channels._validate_recipient_agent(slot, assignments_path=_AREA_ASSIGNMENTS_YAML)
 
 

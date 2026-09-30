@@ -1961,39 +1961,45 @@ def _resolve_backlog_warn_agent(args) -> str | None:
 
 
 def _kimi_request_error(args) -> str | None:
-    """The Kimi refusal for a bridge command, decided before any broker access; None when admitted.
+    """The Kimi refusal for a bridge command, decided from its arguments alone; None when admitted.
 
-    Kimi seats take web, UI and backend coding only, never asks, drains,
-    inbox replies or discussions. Every mode that names its seat or model on
-    the command line is decided from the arguments and the static route
-    registry alone. The drain modes also check the message's recipient and
-    target model through ``peek_message_route``, an immutable snapshot read
-    that never creates WAL sidecars; their handlers repeat the check after the
-    full read.
+    Kimi is not a bridge recipient: no ask, send, post, channel subscription,
+    inbox command, drain or discussion may name a Kimi seat or model. Every
+    seat and model on the command line is checked against the static route
+    registry, with no broker access, so a refusal leaves the broker DB and its
+    ``-wal``/``-shm`` sidecars exactly as they were. A message already
+    addressed to a Kimi seat is refused by the drain after its read.
     """
     from agent_runtime.acpx_discuss import AcpxDiscussionError, refuse_kimi_discussion
-    from agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
 
-    from ._acp_compat import refuse_kimi_compat
-    from ._ask_lifecycle import refuse_kimi_target
-    from ._process import refuse_kimi_recipient
+    from ._acp_compat import refuse_kimi_compat, refuse_kimi_recipients
+    from ._channels_cli import _parse_agent_models, _parse_csv
 
     command = args.command or ""
     model = getattr(args, "to_model", None) or getattr(args, "model", None)
+    inbox_command = getattr(args, "inbox_command", None)
     try:
         if command.startswith("ask-"):
             refuse_kimi_compat(command.removeprefix("ask-"), model=model)
-        elif command == "process":
-            refuse_kimi_recipient(args.message_id, model)
-        elif command.startswith("process-") and hasattr(args, "message_id"):
-            target = args.target if command == "process-ask" else command.removeprefix("process-")
-            refuse_kimi_compat(target, model=model)
-            refuse_kimi_target(args.message_id, target)
-        elif command == "inbox" and getattr(args, "inbox_command", None) == "run":
-            refuse_kimi_if_disallowed((args.agent,), mode=ACP_MODE)
+        elif command == "process-ask":
+            refuse_kimi_compat(args.target, model=model)
+        elif command.startswith("process"):
+            refuse_kimi_compat(command.removeprefix("process").removeprefix("-"), model=model)
+        elif command == "send":
+            refuse_kimi_recipients((args.to_llm,), (model,))
+        elif command == "inbox":
+            refuse_kimi_recipients(
+                (getattr(args, "for_llm", None), getattr(args, "agent", None) if inbox_command else None)
+            )
+        elif command in {"ack-all", "sync"}:
+            refuse_kimi_recipients((args.agent,))
+        elif command == "post":
+            refuse_kimi_recipients(_parse_csv(args.to) if args.to else (), (model,))
+        elif command == "p":
+            refuse_kimi_recipients(_parse_csv(args.agent) if args.agent else ())
+        elif command == "channel" and getattr(args, "channel_command", None) == "new":
+            refuse_kimi_recipients(_parse_csv(args.agents) if args.agents else ())
         elif command == "discuss":
-            from ._channels_cli import _parse_agent_models, _parse_csv
-
             try:
                 models = _parse_agent_models(args.models) if getattr(args, "models", None) else {}
             except ValueError:  # the handler reports a malformed --models; the seats are still checked

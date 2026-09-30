@@ -55,9 +55,11 @@ ADMITTED_MODE = "workspace-write"
 OWNED_PATHS_KEY = "kimi_owned_paths"
 ACP_MODE = "acp"
 REVIEW_MODE = "review"
+BRIDGE_MODE = "bridge"
 _MODE_ACTIVITIES = {
     ACP_MODE: "ACP asks, consults, discussions, and reviews",
     REVIEW_MODE: "review dispatches",
+    BRIDGE_MODE: "bridge messages, channel posts and inbox drains (Kimi is not a bridge recipient)",
 }
 
 # Backend/tooling packages verified to hold no Ukrainian-language data,

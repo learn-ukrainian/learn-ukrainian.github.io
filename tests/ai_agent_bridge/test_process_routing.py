@@ -652,17 +652,36 @@ def test_ordinary_seat_process_commands_use_acp(bridge_db, monkeypatch, command,
     assert _row(message_id)[0] == 1
 
 
+def _legacy_kimi_row() -> int:
+    """A Kimi-addressed row written before Kimi stopped being a bridge recipient (``send`` now refuses it)."""
+    conn = get_db()
+    try:
+        cursor = conn.execute(
+            "INSERT INTO messages (task_id, from_llm, to_llm, message_type, content, timestamp)"
+            " VALUES ('task-6915', 'agy', 'kimi', 'advisory', 'Advisor note.', '2026-09-30T00:00:00+00:00')"
+        )
+        conn.commit()
+        return int(cursor.lastrowid)
+    finally:
+        conn.close()
+
+
+def test_send_refuses_a_kimi_recipient(bridge_db):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+        _send("kimi", sender="agy")
+
+
 def test_kimi_messages_are_refused_with_zero_side_effects(bridge_db, monkeypatch, forbid_legacy_processors):
-    """Kimi: web, UI and backend coding only — process-kimi and the detached worker return the refusal to the
-    caller and leave the broker exactly as it was: no reply, no failure record, no acknowledgement."""
+    """Kimi is not a bridge recipient — an existing Kimi-addressed row is never processed: every drain returns
+    the refusal and leaves the broker exactly as it was: no reply, no failure record, no acknowledgement."""
     from unittest.mock import Mock
 
     from scripts.ai_agent_bridge import _ask_lifecycle, _cli
 
     acp = Mock(side_effect=AssertionError("a Kimi ask reached ACP"))
     monkeypatch.setattr(_process, "run_compat_ask", acp)
-    cli_message = _send("kimi", sender="agy")
-    detached_message = _send("kimi", sender="agy")
+    cli_message = _legacy_kimi_row()
+    detached_message = _legacy_kimi_row()
     before = {message_id: (_row(message_id), _replies(message_id)) for message_id in (cli_message, detached_message)}
 
     with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
@@ -670,7 +689,11 @@ def test_kimi_messages_are_refused_with_zero_side_effects(bridge_db, monkeypatch
     with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
         _cli._dispatch_command(_cli._build_parser().parse_args(["process", str(cli_message)]))
     with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _cli._dispatch_command(_cli._build_parser().parse_args(["process-claude", str(cli_message)]))
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
         _ask_lifecycle.process_background_ask(detached_message, "kimi")
+    with pytest.raises(SystemExit, match="KIMI CODING-ONLY"):
+        _ask_lifecycle.process_background_ask(detached_message, "codex")
 
     acp.assert_not_called()
     assert {message_id: (_row(message_id), _replies(message_id)) for message_id in before} == before

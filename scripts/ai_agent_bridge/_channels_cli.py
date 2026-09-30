@@ -53,6 +53,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from agent_runtime.kimi_admission import is_kimi_seat
+
 from . import _channels
 from ._channels_watch import watch_channel_events
 from ._config import REPO_ROOT
@@ -1261,10 +1263,16 @@ def _normalize_priority(raw: str | None, *, review: bool) -> str:
 
 def _broadcast_recipients(channel: dict[str, Any]) -> list[str]:
     """All live seats for a channel — its subscribers, or every valid agent
-    if the channel has none configured — minus current dead lanes (#4837)."""
+    if the channel has none configured — minus current dead lanes (#4837)
+    and Kimi seats, which are not bridge recipients."""
     live = set(_channels.live_agents())
     base = channel["subscribers"] or list(_channels.get_valid_agents())
-    return [a for a in base if a in live]
+    return [a for a in base if a in live and not is_kimi_seat(a)]
+
+
+def _subscriber_recipients(channel: dict[str, Any]) -> list[str]:
+    """A channel's default recipients: its subscribers, minus Kimi seats, which are not bridge recipients."""
+    return [agent for agent in channel["subscribers"] if not is_kimi_seat(agent)]
 
 
 def _handle_post(args) -> int:
@@ -1285,7 +1293,9 @@ def _handle_post(args) -> int:
 
     # Default recipients = channel subscribers; --broadcast overrides with
     # all live seats (subscribers or every valid agent, minus dead lanes).
-    to_agents = _broadcast_recipients(ch) if broadcast else (_parse_csv(args.to) if args.to else ch["subscribers"])
+    to_agents = (
+        _broadcast_recipients(ch) if broadcast else (_parse_csv(args.to) if args.to else _subscriber_recipients(ch))
+    )
     review_error = _gemini_review_request_error(
         channel=args.channel,
         agents=to_agents,
@@ -1547,8 +1557,6 @@ def _handle_sync(args) -> int:
     if not args.all and args.agent is None:
         print("❌ sync requires an agent or --all", file=sys.stderr)
         return 2
-
-    from agent_runtime.kimi_admission import is_kimi_seat
 
     # Kimi seats never drain an inbox (consults and discussions are refused), so --all skips them.
     agents = (

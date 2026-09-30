@@ -367,6 +367,10 @@ def _validate_post_agent(agent: str, *, assignments_path: Path | None = None) ->
 
 
 def _validate_recipient_agent(agent: str, *, assignments_path: Path | None = None) -> None:
+    """Raise ``ValueError`` for an unknown target; ``KimiAdmissionRefused`` (a ``ValueError``) for a Kimi seat."""
+    from ._acp_compat import refuse_kimi_recipients
+
+    refuse_kimi_recipients((agent,))
     valids = get_valid_recipient_agents(assignments_path=assignments_path)
     if agent not in valids:
         raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {valids}.")
@@ -1134,7 +1138,13 @@ def post(
     not block-mode — the message commits either way. Set
     ``verify_citations=False`` for synthetic test posts or system kinds
     where citation verification is not relevant.
+
+    Kimi is not a bridge recipient: a Kimi ``to_agents`` entry or ``to_model``
+    raises ``KimiAdmissionRefused`` before any broker access.
     """
+    from ._acp_compat import refuse_kimi_recipients
+
+    refuse_kimi_recipients(to_agents or (), (to_model,))
     _validate_post_agent(from_agent)
     _validate_kind(kind)
     _validate_priority(priority)

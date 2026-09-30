@@ -439,8 +439,11 @@ def test_inbox_run_once_processes_one_thread(monkeypatch, capsys):
 
 
 def test_sync_all_iterates_known_agents(monkeypatch, capsys):
+    from agent_runtime.kimi_admission import is_kimi_seat
+
     for agent in _channels.VALID_AGENTS:
-        _make_thread(agent, channel=f"{agent}-topic", count=1)
+        if not is_kimi_seat(agent):  # Kimi is not a bridge recipient: no thread can be posted to it
+            _make_thread(agent, channel=f"{agent}-topic", count=1)
     # Mirrors the live `cmd_sync --all` iteration order, which is
     # `[agent for agent in _channels.VALID_AGENTS if _cli_available_agent(agent)]`.
     # When a new CLI agent is registered (e.g. grok via #1934, deepseek

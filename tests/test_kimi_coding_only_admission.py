@@ -5,7 +5,6 @@ from __future__ import annotations
 import contextlib
 import json
 import os
-import re
 import sqlite3
 import subprocess
 import sys
@@ -197,6 +196,7 @@ def test_every_allowlisted_root_and_exclusion_carries_a_reason():
             assert reason.strip(), key
 
 
+@pytest.mark.repo_wide
 def test_every_allowlisted_root_exists_in_the_repository():
     tracked = subprocess.run(
         ["git", "ls-files", "site/src", "scripts", "tests", ".github", ".dagger"],
@@ -1460,54 +1460,36 @@ def test_inbox_worker_refuses_kimi_before_any_claim(monkeypatch):
         _inbox.run_inbox("kimi")
 
 
-# --- broker drain paths: refusal returns an error and records nothing ------------------
-
-
-_MUTATION = re.compile(
-    r"^\s*(INSERT|UPDATE|DELETE|REPLACE|ALTER|CREATE|DROP)\b|PRAGMA\s+(journal_mode|user_version)", re.I
-)
+# --- broker drain paths: a Kimi-addressed row is never processed ------------------------
 
 
 @pytest.fixture
 def broker_db(tmp_path, monkeypatch):
-    """A real in-memory broker DB on a pre-migration schema; every SQL statement is recorded.
+    """A migrated broker DB with a Kimi-addressed message (7), a Kimi-model ask (8) and an acknowledged one (9).
 
-    ``get_db`` would migrate this schema (ALTER TABLE, a consumption-flag
-    backfill UPDATE, CREATE TABLE), so any path that reaches it before the
-    refusal shows up as a mutation. Broker writes and telemetry also fail the test.
+    Every reply, acknowledgement, failure record and ACP call raises;
+    ``unchanged()`` compares the whole database with its seeded dump, and
+    ``connects`` records every SQLite connection opened after seeding.
     """
     from scripts.ai_agent_bridge import _ask_lifecycle, _db, _messaging, _process
 
-    uri = f"file:kimi-broker-{tmp_path.name}?mode=memory&cache=shared"
-    real_connect = sqlite3.connect
-    keeper = real_connect(uri, uri=True)
-    keeper.executescript(
-        """
-        CREATE TABLE messages (
-            id INTEGER PRIMARY KEY AUTOINCREMENT, task_id TEXT, from_llm TEXT NOT NULL, to_llm TEXT NOT NULL,
-            message_type TEXT DEFAULT 'message', content TEXT NOT NULL, data TEXT, timestamp TEXT NOT NULL,
-            acknowledged INTEGER DEFAULT 0
-        );
-        """
-    )
-    keeper.executemany(
+    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "messages.db")
+    seed = _db.get_db()
+    seed.executemany(
         "INSERT INTO messages (id, task_id, from_llm, to_llm, message_type, content, data, timestamp, acknowledged)"
         " VALUES (?, 't', 'codex', ?, 'query', 'q', ?, '2026-09-30T00:00:00+00:00', ?)",
         [(7, "kimi", None, 0), (8, "claude", json.dumps({"to_model": "kimi-code/k3"}), 0), (9, "claude", None, 1)],
     )
-    keeper.commit()
-    before = list(keeper.iterdump())
-    statements: list[str] = []
+    seed.commit()
+    before = list(seed.iterdump())
+    seed.close()
+    real_connect = sqlite3.connect
+    connects: list[str] = []
 
-    def connect(_database, *args, **kwargs):
-        kwargs["uri"] = True
-        conn = real_connect(uri, *args, **kwargs)
-        conn.set_trace_callback(statements.append)
-        return conn
+    def connect(database, *args, **kwargs):
+        connects.append(str(database))
+        return real_connect(database, *args, **kwargs)
 
-    db_file = tmp_path / "messages.db"
-    db_file.touch()
-    monkeypatch.setattr(_db, "DB_PATH", db_file)
     monkeypatch.setattr(sqlite3, "connect", connect)
     for module, names in (
         (_process, ("send_message", "acknowledge", "record_ask_failure", "record_ask_reply", "run_compat_ask")),
@@ -1518,71 +1500,78 @@ def broker_db(tmp_path, monkeypatch):
         for name in names:
             monkeypatch.setattr(module, name, _fail)
 
-    def mutations() -> list[str]:
-        assert list(keeper.iterdump()) == before
-        return [statement for statement in statements if _MUTATION.search(statement)]
+    def unchanged() -> bool:
+        check = real_connect(_db.DB_PATH)
+        try:
+            return list(check.iterdump()) == before
+        finally:
+            check.close()
 
-    yield types.SimpleNamespace(statements=statements, mutations=mutations)
-    keeper.close()
+    return types.SimpleNamespace(connects=connects, unchanged=unchanged)
 
 
 @pytest.mark.parametrize("message_id", [7, 8])
-def test_process_message_refuses_with_zero_sql_mutations(broker_db, message_id):
+def test_a_kimi_addressed_message_is_never_processed(broker_db, message_id):
     from scripts.ai_agent_bridge import _process
 
-    with pytest.raises(ValueError, match=_TOKEN):
+    with pytest.raises(ValueError, match=_TOKEN):  # KimiAdmissionRefused
         _process.process_message_for_recipient(message_id)
-    assert broker_db.statements, "the recipient was resolved from the real DB"
-    assert broker_db.mutations() == []
+    assert broker_db.unchanged()
     assert not _process.recipient_has_acp_route("kimi")
 
 
-def test_process_message_refuses_a_kimi_model_before_any_lookup(broker_db):
+def test_process_refuses_a_kimi_model_before_the_broker_is_opened(broker_db):
     from scripts.ai_agent_bridge import _process
 
     with pytest.raises(ValueError, match=_TOKEN):
         _process.process_message_for_recipient(9, model="kimi-code/k3")
-    assert broker_db.statements == []
+    assert broker_db.connects == []
 
 
-@pytest.mark.parametrize(("argv", "looked_up"), [(["process", "7"], True), (["process-kimi", "7"], False)])
-def test_process_cli_commands_refuse_with_zero_sql_mutations(broker_db, argv, looked_up):
+@pytest.mark.parametrize(
+    ("argv", "opened"),
+    [
+        (["process", "7"], True),
+        (["process", "8"], True),
+        (["process-claude", "7"], True),
+        (["process-claude", "8"], True),
+        (["process", "9", "--model", "kimi-code/k3"], False),
+        (["process-kimi", "7"], False),
+    ],
+)
+def test_process_cli_commands_refuse_and_record_nothing(broker_db, argv, opened):
+    """A Kimi seat or model named on the command line is refused unopened; a Kimi-addressed row after its read."""
     from scripts.ai_agent_bridge import _cli
 
     with pytest.raises(SystemExit, match=_TOKEN):
         _cli._dispatch_command(_cli._build_parser().parse_args(argv))
-    assert bool(broker_db.statements) is looked_up  # a known Kimi target is refused before any lookup
-    assert broker_db.mutations() == []
+    assert bool(broker_db.connects) is opened
+    assert broker_db.unchanged()
 
 
-@pytest.mark.parametrize(("message_id", "target", "looked_up"), [(7, "kimi", False), (8, "claude", True)])
-def test_detached_ask_worker_refuses_with_zero_sql_mutations(broker_db, monkeypatch, message_id, target, looked_up):
+@pytest.mark.parametrize(
+    ("message_id", "target", "opened"), [(7, "kimi", False), (7, "claude", True), (8, "claude", True)]
+)
+def test_detached_ask_worker_refuses_and_records_nothing(broker_db, monkeypatch, message_id, target, opened):
     from scripts.ai_agent_bridge import _ask_lifecycle
 
     monkeypatch.setattr(_ask_lifecycle.atexit, "register", _fail)
     with pytest.raises(SystemExit, match=_TOKEN):
         _ask_lifecycle.process_background_ask(message_id, target)
-    assert bool(broker_db.statements) is looked_up
-    assert broker_db.mutations() == []
+    assert bool(broker_db.connects) is opened
+    assert broker_db.unchanged()
 
 
-def test_the_admission_lookup_cannot_write(broker_db):
-    from scripts.ai_agent_bridge import _db, _messaging
+def test_the_query_only_connection_never_creates_or_writes_the_db(broker_db, tmp_path, monkeypatch):
+    from scripts.ai_agent_bridge import _db
 
-    assert _messaging.peek_message_route(8) == {"id": 8, "to": "claude", "data": '{"to_model": "kimi-code/k3"}'}
-    assert _messaging.peek_message_route(404) is None
     conn = _db.connect_readonly()
     with pytest.raises(sqlite3.OperationalError):
         conn.execute("UPDATE messages SET acknowledged = 1")
     conn.close()
-    assert broker_db.mutations() == ["UPDATE messages SET acknowledged = 1"]
-
-
-def test_the_admission_lookup_never_creates_the_db(tmp_path, monkeypatch):
-    from scripts.ai_agent_bridge import _db, _messaging
-
+    assert broker_db.unchanged()
     monkeypatch.setattr(_db, "DB_PATH", tmp_path / "absent.db")
-    assert _messaging.peek_message_route(7) is None
+    assert _db.connect_readonly() is None
     assert not (tmp_path / "absent.db").exists()
 
 
@@ -1681,10 +1670,6 @@ def write_trap(tmp_path, monkeypatch):
     def read_flags(_path, flags, *_args, **_kwargs):
         return not flags & _WRITE_OPEN_FLAGS
 
-    def read_only_db(database, *_args, uri=False, **_kwargs):
-        # ``mode=ro`` alone still creates -wal/-shm sidecars on a WAL-mode DB.
-        return bool(uri) and {"mode=ro", "immutable=1"} <= set(str(database).partition("?")[2].split("&"))
-
     def read_only_git(cmd, *_args, **_kwargs):
         return isinstance(cmd, (list, tuple)) and list(cmd[:1]) == ["git"] and cmd[1] in _GATE_GIT
 
@@ -1709,7 +1694,8 @@ def write_trap(tmp_path, monkeypatch):
             monkeypatch.setattr(tempfile, name, trap(f"tempfile.{name}"))
         for name in ("copy", "copy2", "copyfile", "copytree", "move", "rmtree"):
             monkeypatch.setattr(shutil, name, trap(f"shutil.{name}"))
-        monkeypatch.setattr(sqlite3, "connect", trap("sqlite3.connect", sqlite3.connect, read_only_db))
+        # No refusal reads a database: even ``mode=ro`` creates -wal/-shm sidecars on a WAL-mode DB.
+        monkeypatch.setattr(sqlite3, "connect", trap("sqlite3.connect"))
         monkeypatch.setattr(subprocess, "Popen", trap("subprocess.Popen", subprocess.Popen, read_only_git))
 
     return types.SimpleNamespace(state=state, work=work, armed=armed, monkeypatch=monkeypatch)
@@ -1884,18 +1870,19 @@ def test_no_entry_path_writes_before_the_kimi_refusal(write_trap, capsys, seed, 
     assert _tree(write_trap.state) == before
 
 
-# --- the bridge against an EXISTING WAL-mode broker DB ---------------------------------
+# --- every Kimi recipient entry against EXISTING WAL-mode broker and authority DBs ---------
 
 
-def _seed_broker(live_wal: bool) -> sqlite3.Connection | None:
-    """A migrated WAL-mode broker DB holding a Kimi-addressed message (7) and a Kimi-model ask (8).
+def _seed_broker(live_wal: bool) -> list[sqlite3.Connection]:
+    """A migrated WAL-mode broker DB and authority plane, each holding Kimi-addressed rows.
 
-    Both rows are checkpointed into the main file, as SQLite leaves them once
-    the last connection closes (no sidecars). With ``live_wal`` a writer stays
-    open with newer, un-checkpointed traffic, so ``-wal``/``-shm`` exist; the
-    caller closes the returned connection.
+    The seeded rows are checkpointed into the main files, as SQLite leaves them
+    once the last connection closes (no sidecars). With ``live_wal`` a writer
+    stays open on each DB with newer, un-checkpointed inserts and routing
+    updates, so ``-wal``/``-shm`` exist; the caller closes the returned writers.
     """
     from scripts.ai_agent_bridge import _db
+    from scripts.fleet_comms.authority import AuthorityService
 
     conn = _db.get_db()
     assert conn.execute("PRAGMA journal_mode").fetchone()[0] == "wal"
@@ -1906,18 +1893,33 @@ def _seed_broker(live_wal: bool) -> sqlite3.Connection | None:
     )
     conn.commit()
     conn.close()
-    sidecars = {_db.DB_PATH.with_name(_db.DB_PATH.name + suffix) for suffix in ("-wal", "-shm")}
+    plane = _db.DB_PATH.parent.parent / "plane"
+    with AuthorityService(root=plane) as service:
+        service.create_channel("ops", subscribers=["claude", "kimi"])  # a legacy Kimi subscriber row
+        comms = Path(service.store.db_path)
+    databases = (_db.DB_PATH, comms)
+    sidecars = [path.with_name(path.name + suffix) for path in databases for suffix in ("-wal", "-shm")]
     assert not any(path.exists() for path in sidecars)
     if not live_wal:
-        return None
-    writer = sqlite3.connect(_db.DB_PATH)
-    writer.execute(
+        return []
+    broker = sqlite3.connect(_db.DB_PATH)
+    broker.execute(
         "INSERT INTO messages (id, task_id, from_llm, to_llm, content, timestamp)"
-        " VALUES (9, 't', 'codex', 'claude', 'q', '2026-09-30T00:00:00+00:00')"
+        " VALUES (9, 't', 'codex', 'kimi', 'q', '2026-09-30T00:00:00+00:00')"
     )
-    writer.commit()
+    broker.execute("UPDATE messages SET to_llm = 'kimi', data = ? WHERE id = 8", (json.dumps({"to_model": "k3"}),))
+    broker.commit()
+    authority = sqlite3.connect(comms)
+    authority.execute(
+        "INSERT INTO authority_channel_subscribers(channel_id, recipient, metadata_json, created_at)"
+        " SELECT channel_id, 'kimicc', '{}', '2026-09-30T00:00:00+00:00' FROM authority_channels WHERE name = 'ops'"
+    )
+    authority.execute(
+        "UPDATE authority_channel_subscribers SET metadata_json = '{\"lane\": 1}' WHERE recipient = 'kimi'"
+    )
+    authority.commit()
     assert all(path.exists() for path in sidecars)
-    return writer
+    return [broker, authority]
 
 
 def _stat_tree(root: Path) -> dict[str, tuple[int, int, bytes]]:
@@ -1929,27 +1931,94 @@ def _stat_tree(root: Path) -> dict[str, tuple[int, int, bytes]]:
     }
 
 
+def _fleet(*argv: str):
+    def call(trap):
+        from scripts.fleet_comms import cli as fleet_cli
+
+        return fleet_cli.main([*argv, "--root", str(trap.state / "plane")])
+
+    return call
+
+
+def _send(**kwargs):
+    def call(_trap):
+        from scripts.ai_agent_bridge import _messaging
+
+        return _messaging.send_message("Consult.", **kwargs)
+
+    return call
+
+
+def _post(**kwargs):
+    def call(_trap):
+        from scripts.ai_agent_bridge import _channels
+
+        return _channels.post("ops", "claude", "Consult.", **kwargs)
+
+    return call
+
+
+def _new_channel(_trap):
+    from scripts.ai_agent_bridge import _channels
+
+    return _channels.create_channel("kimi-ops", subscribers=["kimi"])
+
+
+_KIMI_MODEL = ("--to-model", "kimi-code/k3")
+
+
 @pytest.mark.parametrize("live_wal", [False, True], ids=["wal-checkpointed", "wal-live"])
 @pytest.mark.parametrize(
     "call",
     [
-        pytest.param(_bridge("ask-kimi", "Consult.", "--task-id", "t"), id="bridge-ask"),
+        pytest.param(_bridge("ask-kimi", "Consult.", "--task-id", "t"), id="ask"),
+        pytest.param(_bridge("ask-claude", "Consult.", "--task-id", "t", *_KIMI_MODEL), id="ask-kimi-model"),
+        pytest.param(_bridge("send", "Consult.", "--to", "kimi"), id="send"),
+        pytest.param(_bridge("send", "Consult.", "--to", "claude", *_KIMI_MODEL), id="send-kimi-model"),
+        pytest.param(_bridge("post", "ops", "Consult.", "--to", "claude,kimi"), id="post"),
+        pytest.param(_bridge("post", "ops", "Consult.", "--to", "claude", "--model", "k3"), id="post-kimi-model"),
+        pytest.param(_bridge("p", "ops", "kimicc", "Consult."), id="p"),
+        pytest.param(_bridge("channel", "new", "kimi-ops", "--agents", "kimi"), id="channel-new"),
+        pytest.param(_bridge("inbox", "--for", "kimi"), id="inbox"),
+        pytest.param(_bridge("inbox", "show", "kimi"), id="inbox-show"),
+        pytest.param(_bridge("inbox", "run", "kimi", "--once", legacy_plane=True), id="inbox-run"),
+        pytest.param(_bridge("ack-all", "kimi"), id="ack-all"),
+        pytest.param(_bridge("sync", "kimi"), id="sync"),
+        pytest.param(_bridge("process-kimi", "7"), id="process-kimi"),
+        pytest.param(_bridge("process-ask", "7", "kimi"), id="process-ask"),
+        pytest.param(_bridge("process", "8", "--model", "kimi-code/k3"), id="process-kimi-model"),
+        pytest.param(_bridge("discuss", "architecture", "Compare.", "--with", "claude,kimicc"), id="discuss"),
+        pytest.param(_send(to_llm="kimi"), id="send-message"),
+        pytest.param(_send(to_llm="claude", to_model="kimi-code/k3"), id="send-message-kimi-model"),
+        pytest.param(_post(to_agents=["kimi"]), id="channel-post"),
+        pytest.param(_post(to_agents=["claude"], to_model="k3"), id="channel-post-kimi-model"),
+        pytest.param(_new_channel, id="create-channel"),
+        pytest.param(_acp_ask, id="acp-ask"),
+        pytest.param(_acp_inter_agent, id="acp-inter-agent"),
+        pytest.param(_acp_discuss, id="acp-discuss"),
         pytest.param(
-            _bridge("ask-claude", "Consult.", "--task-id", "t", "--to-model", "kimi-code/k3"),
-            id="bridge-ask-kimi-model",
+            _fleet(
+                "channel",
+                "publish",
+                "ops",
+                "Consult.",
+                "--sender",
+                "claude",
+                "--recipient",
+                "kimi",
+                "--idempotency-key",
+                "k",
+            ),
+            id="fleet-publish",
         ),
-        pytest.param(_bridge("process-kimi", "7"), id="bridge-process"),
-        pytest.param(_bridge("inbox", "run", "kimi", "--once", legacy_plane=True), id="bridge-inbox-run"),
-        pytest.param(_bridge("discuss", "architecture", "Compare.", "--with", "claude,kimicc"), id="bridge-discuss"),
-        pytest.param(_bridge("process", "7"), id="bridge-process-kimi-recipient"),
-        pytest.param(_bridge("process", "8"), id="bridge-process-kimi-model"),
-        pytest.param(_bridge("process-claude", "8"), id="bridge-process-seat-kimi-model"),
-        pytest.param(_bridge("process-ask", "8", "claude"), id="bridge-process-ask-kimi-model"),
+        pytest.param(_fleet("channel", "subscribe", "ops", "kimicc"), id="fleet-subscribe"),
+        pytest.param(_fleet("channel", "create", "kimi-ops", "--subscriber", "kimi"), id="fleet-create"),
+        pytest.param(_fleet("deliveries", "claim", "--recipient", "kimi", "--worker-id", "w"), id="fleet-claim"),
     ],
 )
-def test_bridge_refuses_kimi_without_touching_an_existing_wal_broker(write_trap, capsys, call, live_wal):
-    """No bridge mode opens the broker DB writably before its Kimi refusal: no sidecar is created or touched."""
-    writer = _seed_broker(live_wal)
+def test_every_kimi_recipient_entry_leaves_existing_wal_databases_untouched(write_trap, capsys, call, live_wal):
+    """Kimi is not a bridge recipient: each refusal opens no database, so no file or sidecar changes at all."""
+    writers = _seed_broker(live_wal)
     try:
         before = _stat_tree(write_trap.state)
         with write_trap.armed() as attempts:
@@ -1959,39 +2028,58 @@ def test_bridge_refuses_kimi_without_touching_an_existing_wal_broker(write_trap,
                 outcome = exc
             except SystemExit as exc:
                 outcome = exc.code
+            except Exception as exc:  # each entry point refuses with its own error type
+                outcome = exc
         captured = capsys.readouterr()
 
         assert attempts == []
         assert _TOKEN in f"{outcome}\n{captured.out}\n{captured.err}"
         assert _stat_tree(write_trap.state) == before
     finally:
-        if writer is not None:
+        for writer in writers:
             writer.close()
 
 
-def test_the_admission_snapshot_skips_the_wal_and_the_full_read_still_refuses(write_trap):
-    """A Kimi message still only in the WAL is invisible to the snapshot; the authoritative gate refuses it."""
-    from scripts.ai_agent_bridge import _db, _messaging, _process
+def test_a_kimi_row_only_in_the_wal_is_never_processed(write_trap):
+    """A Kimi-addressed message not yet checkpointed is read, refused, and left exactly as it was."""
+    from scripts.ai_agent_bridge import _process
 
-    writer = _seed_broker(live_wal=True)
+    broker, authority = _seed_broker(live_wal=True)
+    authority.close()
     try:
-        writer.execute(
-            "INSERT INTO messages (id, task_id, from_llm, to_llm, content, timestamp)"
-            " VALUES (10, 't', 'codex', 'kimi', 'q', '2026-09-30T00:00:00+00:00')"
-        )
-        writer.commit()
-        before = _stat_tree(write_trap.state)
-        with write_trap.armed() as attempts:
-            assert _messaging.peek_message_route(7)["to"] == "kimi"
-            assert _messaging.peek_message_route(10) is None
-        assert attempts == []
-        assert _stat_tree(write_trap.state) == before
-
-        with pytest.raises(ValueError, match=_TOKEN):  # KimiAdmissionRefused
-            _process.process_message_for_recipient(10)
-        acknowledged = writer.execute("SELECT acknowledged FROM messages WHERE id = 10").fetchone()[0]
-        assert not acknowledged
-        assert writer.execute("SELECT COUNT(*) FROM messages").fetchone()[0] == 4  # no reply or failure row
+        before = broker.execute("SELECT * FROM messages ORDER BY id").fetchall()
+        for message_id in (8, 9):  # a routing update onto Kimi, and an insert addressed to Kimi
+            with pytest.raises(ValueError, match=_TOKEN):  # KimiAdmissionRefused
+                _process.process_message_for_recipient(message_id)
+        assert broker.execute("SELECT * FROM messages ORDER BY id").fetchall() == before
     finally:
-        writer.close()
-    assert _db.DB_PATH.exists()
+        broker.close()
+
+
+def test_a_kimi_subscriber_gets_no_delivery(tmp_path):
+    """An existing Kimi subscriber row stays, but a fan-out publish never creates a delivery for it."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with AuthorityService(root=tmp_path / "plane") as service:
+        service.create_channel("ops", subscribers=["claude", "kimi", "kimicc"])
+        message = service.publish_message(sender="codex", body="Status.", channel="ops", idempotency_key="k")
+        recipients = {
+            row["recipient"]
+            for row in service._conn.execute(
+                "SELECT recipient FROM authority_deliveries WHERE message_id = ?", (message.message_id,)
+            )
+        }
+        assert recipients == {"claude"}
+        assert set(service.get_channel("ops").subscribers) == {"claude", "kimi", "kimicc"}
+
+
+@pytest.mark.parametrize("broadcast", [False, True])
+def test_channel_default_recipients_skip_kimi_seats(monkeypatch, broadcast):
+    from scripts.ai_agent_bridge import _channels, _channels_cli
+
+    channel = {"subscribers": ["claude", "kimi", "kimicc", "codex"]}
+    monkeypatch.setattr(_channels, "live_agents", lambda: ["claude", "kimi", "kimicc", "codex"])
+    recipients = (
+        _channels_cli._broadcast_recipients(channel) if broadcast else _channels_cli._subscriber_recipients(channel)
+    )
+    assert recipients == ["claude", "codex"]

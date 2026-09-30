@@ -13,6 +13,7 @@ import json
 import os
 import re
 import sys
+from collections.abc import Iterable
 from pathlib import Path
 
 from ._config import REPO_ROOT
@@ -50,15 +51,34 @@ def require_compat_target(command_target: str, *, model: str | None = None) -> s
 
 def refuse_kimi_compat(command_target: str, *, model: str | None = None) -> None:
     """The Kimi gate for one ACP ask: the command target, its participant, adapter agent, pin and override."""
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
+    from agent_runtime.kimi_admission import ACP_MODE
 
-    participant = _TARGETS.get(command_target)
-    route = ACPX_SUPPORTED_PARTICIPANTS.get(participant or "") or {}
+    _refuse_kimi_seats((command_target,), (model,), mode=ACP_MODE)
+
+
+def refuse_kimi_recipients(recipients: Iterable[str | None], models: Iterable[str | None] = ()) -> None:
+    """Kimi is not a bridge recipient: refuse any Kimi recipient seat, its registered route, or a Kimi model.
+
+    Raises ``KimiAdmissionRefused`` (a ``ValueError``). Decided from the names
+    and the static route registry alone, so every send, post, channel and
+    inbox entry calls it before any broker access.
+    """
+    from agent_runtime.kimi_admission import BRIDGE_MODE
+
+    _refuse_kimi_seats(recipients, models, mode=BRIDGE_MODE)
+
+
+def _refuse_kimi_seats(seats: Iterable[str | None], models: Iterable[str | None], *, mode: str) -> None:
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+    from agent_runtime.kimi_admission import refuse_kimi_if_disallowed
+
+    names = [str(seat or "").strip().lower() for seat in seats]
+    participants = [_TARGETS.get(name) or name for name in names]
+    routes = [ACPX_SUPPORTED_PARTICIPANTS.get(participant) or {} for participant in participants]
     refuse_kimi_if_disallowed(
-        (command_target, participant, route.get("agent")),
-        (route.get("model"), model),
-        mode=ACP_MODE,
+        (*names, *participants, *(route.get("agent") for route in routes)),
+        (*(route.get("model") for route in routes), *models),
+        mode=mode,
     )
 
 

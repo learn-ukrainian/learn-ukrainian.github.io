@@ -21,7 +21,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
+from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, is_kimi_seat, refuse_kimi_if_disallowed
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -315,7 +315,12 @@ class AuthorityService:
         subscribers: Iterable[str] = (),
         metadata: Mapping[str, Any] | None = None,
     ) -> AuthorityChannel:
-        """Create a channel once; exact repeats are idempotent."""
+        """Create a channel once; exact repeats are idempotent.
+
+        A Kimi subscriber is kept as given (the legacy import replays history
+        through here) but never receives a delivery: ``publish_message`` skips
+        it. New Kimi subscriptions are refused by ``subscribe`` and the CLI.
+        """
         channel_name = _nonempty(name, field="channel")
         normalized_subscribers = _normalize_recipients(subscribers)
         meta = _safe_json_mapping(metadata)
@@ -353,7 +358,12 @@ class AuthorityService:
         *,
         metadata: Mapping[str, Any] | None = None,
     ) -> AuthorityChannel:
-        """Add durable future fan-out subscribers without rewriting history."""
+        """Add durable future fan-out subscribers without rewriting history.
+
+        A Kimi subscriber is refused before any write: Kimi is not a bridge recipient.
+        """
+        recipients = tuple(recipients)
+        refuse_kimi_if_disallowed(tuple(str(item or "") for item in recipients), mode=BRIDGE_MODE)
         channel_name = _nonempty(channel, field="channel")
         recipients_norm = _normalize_recipients(recipients)
         if not recipients_norm:
@@ -493,7 +503,14 @@ class AuthorityService:
         created_at: str | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityMessage:
-        """Append an immutable message and atomically fan it out to subscribers."""
+        """Append an immutable message and atomically fan it out to subscribers.
+
+        An explicit Kimi recipient is refused before any write, and a Kimi
+        subscriber gets no delivery: Kimi is not a bridge recipient.
+        """
+        if recipients is not None:
+            recipients = tuple(recipients)
+            refuse_kimi_if_disallowed(tuple(str(item or "") for item in recipients), mode=BRIDGE_MODE)
         message_key = idempotency_key or new_id("authority-message-key")
         with self._write_transaction():
             return self._publish_message_tx(
@@ -1135,7 +1152,11 @@ class AuthorityService:
         max_attempts: int = 3,
         now: str | None = None,
     ) -> AuthorityDeliveryLease | None:
-        """Claim one recipient delivery; a stale worker cannot later acknowledge it."""
+        """Claim one recipient delivery; a stale worker cannot later acknowledge it.
+
+        A Kimi recipient is refused before any write: Kimi is not a bridge recipient.
+        """
+        refuse_kimi_if_disallowed((str(recipient or ""),), mode=BRIDGE_MODE)
         recipient_name = _nonempty(recipient, field="recipient")
         worker = _nonempty(worker_id, field="worker_id")
         if lease_seconds <= 0 or max_attempts <= 0:
@@ -1763,7 +1784,9 @@ class AuthorityService:
                    WHERE channel_id = ? AND recipient != ? ORDER BY recipient ASC""",
                 (str(channel_row["channel_id"]), sender_name),
             ).fetchall()
-            recipients_norm = tuple(str(row["recipient"]) for row in subscriber_rows)
+            recipients_norm = tuple(
+                str(row["recipient"]) for row in subscriber_rows if not is_kimi_seat(str(row["recipient"]))
+            )
         else:
             recipients_norm = _normalize_recipients(recipients)
         revisions = self._normalize_context_revisions(context_revisions, channel_row)

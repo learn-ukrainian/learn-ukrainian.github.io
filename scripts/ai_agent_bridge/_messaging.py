@@ -3,7 +3,6 @@
 import json
 import os
 import re
-import sqlite3
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
@@ -117,33 +116,6 @@ def read_message(message_id: int, quiet: bool = False):
     return msg
 
 
-def peek_message_route(message_id: int) -> dict | None:
-    """The recipient seat and ask metadata of one message, read without writing.
-
-    Admission checks use this instead of ``read_message``: it reads an
-    immutable snapshot of the broker DB's main file, so it never migrates the
-    schema, touches a consumption flag or creates WAL sidecars. Returns None
-    when the DB or the message is missing, the snapshot cannot be read, or the
-    row is still only in the WAL; the authoritative gate after the full read
-    then decides.
-    """
-    from ._db import connect_snapshot
-
-    try:
-        conn = connect_snapshot()
-        if conn is None:
-            return None
-        try:
-            row = conn.execute("SELECT to_llm, data FROM messages WHERE id = ?", (message_id,)).fetchone()
-        finally:
-            conn.close()
-    except sqlite3.DatabaseError:  # an unmigrated DB, or a checkpoint racing the unlocked read
-        return None
-    if not row:
-        return None
-    return {"id": message_id, "to": row[0], "data": row[1]}
-
-
 OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS: float = 10.0
 
 
@@ -159,7 +131,13 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
     under ``batch_state/asks/`` (#5392). The SQLite row then carries a head
     excerpt plus an explicit ``TRUNCATED`` footer (path + sha256 + bytes) so
     consumers never mistake a transport clip for a short model reply.
+
+    Kimi is not a bridge recipient: a Kimi ``to_llm`` or ``to_model`` raises
+    ``KimiAdmissionRefused`` before the sidecar or any broker connection.
     """
+    from ._acp_compat import refuse_kimi_recipients
+
+    refuse_kimi_recipients((to_llm,), (to_model,))
     content = redact_text(content) or ""
     data = redact_text(data) if data is not None else None
 

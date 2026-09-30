@@ -785,11 +785,23 @@ def _authority_root(args: argparse.Namespace) -> Path | None:
     return Path(args.root).expanduser() if args.root else None
 
 
+def _refuse_kimi_recipients(recipients: list[str] | tuple[str, ...]) -> None:
+    """Kimi is not a bridge recipient: refuse from the arguments alone, before the authority DB is opened."""
+    from scripts.agent_runtime.kimi_admission import BRIDGE_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
+
+    try:
+        refuse_kimi_if_disallowed(tuple(recipients), mode=BRIDGE_MODE)
+    except KimiAdmissionRefused as exc:
+        raise FleetCommsCliError(str(exc)) from exc
+
+
 def cmd_deliveries(args: argparse.Namespace) -> int:
     """Expose authority delivery operations without loading message bodies."""
     from scripts.control_plane.storage import ControlPlaneError
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
+    if args.deliveries_command == "claim":
+        _refuse_kimi_recipients((args.recipient,))
     try:
         with AuthorityService(root=_authority_root(args)) as service:
             if args.deliveries_command == "claim":
@@ -910,6 +922,7 @@ def cmd_channel_create(args: argparse.Namespace) -> int:
     """Create or exactly replay one authority-owned asynchronous channel."""
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
+    _refuse_kimi_recipients(args.subscriber)
     try:
         with AuthorityService(root=_authority_root(args)) as service:
             channel = service.create_channel(
@@ -927,6 +940,7 @@ def cmd_channel_subscribe(args: argparse.Namespace) -> int:
     """Add durable future fan-out recipients to an authority channel."""
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
+    _refuse_kimi_recipients(args.recipient)
     try:
         with AuthorityService(root=_authority_root(args)) as service:
             channel = service.subscribe(
@@ -961,6 +975,7 @@ def cmd_channel_publish(args: argparse.Namespace) -> int:
     """Append one immutable message and atomically create its fan-out deliveries."""
     from scripts.fleet_comms.authority import AuthorityService, AuthorityServiceError
 
+    _refuse_kimi_recipients(args.recipient)
     try:
         with AuthorityService(root=_authority_root(args)) as service:
             message = service.publish_message(
