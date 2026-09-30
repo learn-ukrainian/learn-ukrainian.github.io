@@ -1,0 +1,79 @@
+level: a1
+slug: special-signs
+totals:
+  all:
+    activities:
+      by_type:
+        divide-words: 1
+        error-correction: 2
+        fill-in: 2
+        group-sort: 1
+        match-up: 2
+        odd-one-out: 1
+        quiz: 2
+        true-false: 1
+      total: 12
+    response_opportunities:
+      by_type:
+        divide-words: 4
+        error-correction: 10
+        fill-in: 9
+        group-sort: 14
+        match-up: 9
+        odd-one-out: 3
+        quiz: 6
+        true-false: 4
+      total: 59
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  inline:
+    activities:
+      by_type:
+        divide-words: 1
+        error-correction: 1
+        fill-in: 1
+        match-up: 1
+        quiz: 1
+      total: 5
+    response_opportunities:
+      by_type:
+        divide-words: 4
+        error-correction: 4
+        fill-in: 4
+        match-up: 5
+        quiz: 3
+      total: 20
+    uncounted_activities:
+      by_type: {}
+      total: 0
+  workbook:
+    activities:
+      by_type:
+        error-correction: 1
+        fill-in: 1
+        group-sort: 1
+        match-up: 1
+        odd-one-out: 1
+        quiz: 1
+        true-false: 1
+      total: 7
+    response_opportunities:
+      by_type:
+        error-correction: 6
+        fill-in: 5
+        group-sort: 14
+        match-up: 4
+        odd-one-out: 3
+        quiz: 3
+        true-false: 4
+      total: 39
+    uncounted_activities:
+      by_type: {}
+      total: 0
+v1_module:
+  path: curriculum/l2-uk-en/a1-v1/special-signs/activities.yaml
+  sha256: b5fbcae8267d178d97ea5a2351a1f514ad6c3401491a06a1bdbd49e3961c21a6
+  shape: inline/workbook keys
+  status: present
+v1_totals_schema: 1

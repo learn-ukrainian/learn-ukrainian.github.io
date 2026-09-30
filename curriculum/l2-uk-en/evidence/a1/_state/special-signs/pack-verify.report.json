@@ -1,0 +1,32 @@
+{
+  "chunk_id_moved": [],
+  "counts": {
+    "errors_count": 0,
+    "examples_count": 1,
+    "exercises_count": 5,
+    "notes_count": 0,
+    "standard_count": 1,
+    "texts_count": 26,
+    "unsupported_open_count": 0,
+    "unsupported_resolved_count": 2,
+    "videos_count": 5
+  },
+  "errors": [],
+  "kind": "pack-verify",
+  "level": "a1",
+  "not_checked": [],
+  "pack": {
+    "path": "curriculum/l2-uk-en/evidence/a1/special-signs.yaml",
+    "sha256": "a637dc9c37ffb8be028c2d249e7bbde75ae490f753fc817eef6bc72c08c27ab6"
+  },
+  "pack_lock": {
+    "path": "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock",
+    "sha256": "750764090570b6c7cfd7aa5c6e4e4b88968c4301f8b101cf073cd62537ff814c"
+  },
+  "report_schema": 1,
+  "reports": [],
+  "slug": "special-signs",
+  "status": "ok",
+  "strict": true,
+  "warnings": []
+}
