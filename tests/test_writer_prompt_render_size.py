@@ -1,4 +1,5 @@
 import json
+import shutil
 import subprocess
 from pathlib import Path
 
@@ -209,35 +210,80 @@ def test_a1_letter_module_writer_prompt_stays_under_ceiling(
     assert _a1_letter_prompt_size() <= WRITER_PROMPT_CEILING_BYTES
 
 
+def _render_pinned_a1_letter_prompt(monkeypatch: pytest.MonkeyPatch, root: Path) -> str:
+    _pin_a1_letter_prompt_inputs(monkeypatch, root)
+    return render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+
+
 def test_a1_letter_prompt_bytes_ignore_staged_root(
     monkeypatch: pytest.MonkeyPatch,
     tmp_path: Path,
 ) -> None:
-    """Two stage roots render the same prompt bytes.
+    """Stage location does not change the rendered prompt bytes.
 
-    One root is short. The other is much longer and contains a quote and a
-    backslash, which JSON would escape if that absolute path were serialized.
-    Reads still use the staged files; the manifest records the checkout-relative
-    wiki path.
+    Outside the checkout: a short root and a long root whose name contains a
+    quote and a backslash. Inside the checkout: two different depths. A normal
+    checkout read of the same article stores today's repository-relative wiki
+    path. All five renders are the same bytes.
     """
-    short_root = tmp_path / "stage-root-short-9335"
-    long_root = tmp_path.joinpath(
+    project_root = Path(wiki_config.PROJECT_ROOT).resolve()
+    outside_short = tmp_path / "stage-root-short-9335"
+    outside_long = tmp_path.joinpath(
         "n" * 180,
         "n" * 180,
         'stage-root-"9335\\',
         "n" * 180,
     )
+    inside_shallow = project_root / "tmp" / "impl-9335-r4-shallow"
+    inside_deep = project_root / "tmp" / "impl-9335-r4-deep" / "nested" / "stage"
+    checkout_wiki = project_root / "wiki"
+    checkout_article = checkout_wiki / "pedagogy" / "a1" / "sounds-letters-and-hello.md"
+    checkout_sources = checkout_article.with_suffix(".sources.yaml")
     expected_wiki_path = '"wiki_path": "wiki/pedagogy/a1/sounds-letters-and-hello.md"'
-    prompts: list[str] = []
-    for root in (short_root, long_root):
-        _pin_a1_letter_prompt_inputs(monkeypatch, root)
-        prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
-        prompts.append(prompt)
-        assert "stage-root-" not in prompt
-        assert expected_wiki_path in prompt
+    today = "wiki/pedagogy/a1/sounds-letters-and-hello.md"
 
-    assert prompts[0] == prompts[1]
-    assert len(prompts[0].encode("utf-8")) <= WRITER_PROMPT_CEILING_BYTES
+    outside_resolved = outside_short.resolve()
+    assert project_root != outside_resolved and project_root not in outside_resolved.parents
+    shallow_depth = len(inside_shallow.resolve().relative_to(project_root).parts)
+    deep_depth = len(inside_deep.resolve().relative_to(project_root).parts)
+    assert shallow_depth < deep_depth
+
+    wiki_existed = checkout_wiki.exists()
+    prompts: list[str] = []
+    try:
+        for root in (outside_short, outside_long, inside_shallow, inside_deep):
+            prompt = _render_pinned_a1_letter_prompt(monkeypatch, root)
+            prompts.append(prompt)
+            assert "stage-root-" not in prompt
+            assert "impl-9335-r4-" not in prompt
+            assert expected_wiki_path in prompt
+
+        checkout_article.parent.mkdir(parents=True, exist_ok=True)
+        checkout_article.write_text(_checkout_text(_A1_LETTER_WIKI), encoding="utf-8")
+        checkout_sources.write_text(_checkout_text(_A1_LETTER_SOURCES), encoding="utf-8")
+        _pin_a1_letter_prompt_inputs(monkeypatch, outside_short)
+        monkeypatch.setattr(wiki_config, "WIKI_DIR", checkout_wiki)
+        monkeypatch.setattr(linear_pipeline, "_wiki_article_paths", lambda *_args: [checkout_article])
+        checkout_prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+        stored_today = checkout_article.resolve().relative_to(project_root).as_posix()
+        assert stored_today == today
+        assert f'"wiki_path": "{stored_today}"' in checkout_prompt
+        prompts.append(checkout_prompt)
+
+        for prompt in prompts[1:]:
+            assert prompt == prompts[0]
+        assert len(prompts[0].encode("utf-8")) <= WRITER_PROMPT_CEILING_BYTES
+    finally:
+        shutil.rmtree(inside_shallow, ignore_errors=True)
+        shutil.rmtree(project_root / "tmp" / "impl-9335-r4-deep", ignore_errors=True)
+        stage_tmp = project_root / "tmp"
+        if stage_tmp.is_dir() and not any(stage_tmp.iterdir()):
+            stage_tmp.rmdir()
+        if wiki_existed:
+            checkout_article.unlink(missing_ok=True)
+            checkout_sources.unlink(missing_ok=True)
+        else:
+            shutil.rmtree(checkout_wiki, ignore_errors=True)
 
 
 def test_a1_letter_prompt_size_ignores_ambient_curriculum(

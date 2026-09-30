@@ -146,9 +146,10 @@ def _repository_relative_wiki_path(path: str | Path) -> str:
     """Path string stored in manifests and copied into writer prompts.
 
     A checkout article ``wiki/pedagogy/a1/slug.md`` keeps that repository-relative
-    string. Reads may come from a staged copy under ``WIKI_DIR`` (or another
-    tree whose path still contains a ``wiki`` segment); the stored value stays
-    the checkout string, so prompt bytes do not follow the directory length.
+    string. Reads may come from a staged copy under ``WIKI_DIR``. Resolve that
+    staged wiki root first: a stage directory inside the checkout is also under
+    ``PROJECT_ROOT``, and stripping the checkout root first keeps the stage
+    prefix. Fall back to the project root for a path outside the staged wiki.
     """
     raw = Path(path)
     if not raw.is_absolute():
@@ -158,17 +159,17 @@ def _repository_relative_wiki_path(path: str | Path) -> str:
     from wiki.config import PROJECT_ROOT, WIKI_DIR
 
     try:
-        return resolved.relative_to(Path(PROJECT_ROOT).resolve()).as_posix()
-    except ValueError:
-        pass
-
-    try:
         relative = resolved.relative_to(Path(WIKI_DIR).resolve())
     except ValueError:
         relative = None
     else:
         suffix = relative.as_posix()
         return "wiki" if suffix in {"", "."} else f"wiki/{suffix}"
+
+    try:
+        return resolved.relative_to(Path(PROJECT_ROOT).resolve()).as_posix()
+    except ValueError:
+        pass
 
     parts = resolved.parts
     for index in range(len(parts) - 1, 0, -1):
