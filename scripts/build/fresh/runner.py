@@ -293,7 +293,9 @@ def _extract_word_tags(
     vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]],
 ) -> list[_WordTag]:
     surface_norm = lookup_form(surface).casefold()
-    store_matches: list[_WordTag] = []
+    seen: set[tuple[str, str]] = set()
+    out: list[_WordTag] = []
+
     for record in records.values():
         if not isinstance(record, dict):
             continue
@@ -305,17 +307,21 @@ def _extract_word_tags(
             ):
                 tags = str(form.get("tags") or "")
                 pos = str(form.get("pos") or record.get("pos") or (tags.split(":")[0] if tags else ""))
-                store_matches.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
-    if store_matches:
-        return store_matches
+                key = (pos, tags)
+                if key not in seen:
+                    seen.add(key)
+                    out.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
 
-    found = vesum_lookup([surface])
-    entries = found.get(surface) or found.get(surface_norm) or []
-    out: list[_WordTag] = []
+    found = vesum_lookup([surface_norm])
+    entries = found.get(surface_norm) or found.get(surface) or []
     for entry in entries:
         tags = str(entry.get("tags") or "")
         pos = str(entry.get("pos") or (tags.split(":")[0] if tags else ""))
-        out.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+        key = (pos, tags)
+        if key not in seen:
+            seen.add(key)
+            out.append(_WordTag(pos=pos, tags=tags, atoms=frozenset(tags.split(":"))))
+
     return out
 
 

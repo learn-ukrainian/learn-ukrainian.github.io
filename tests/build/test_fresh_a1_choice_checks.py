@@ -10,6 +10,7 @@ The negation particle is the A1 word store's record W-061 (VESUM entry 226767).
 from __future__ import annotations
 
 import copy
+import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
 
@@ -28,6 +29,9 @@ ROOT = Path(__file__).resolve().parents[2]
 A1_STORE = ROOT / "curriculum/l2-uk-en/evidence/a1/_words.yaml"
 STORE_WORDS = yaml.safe_load(A1_STORE.read_text(encoding="utf-8"))["words"]
 NEGATION = next(record for record in STORE_WORDS if record["id"] == NEGATION_PARTICLE_RECORD)
+W075 = next(record for record in STORE_WORDS if record["id"] == "W-075")
+W031 = next(record for record in STORE_WORDS if record["id"] == "W-031")
+W047 = next(record for record in STORE_WORDS if record["id"] == "W-047")
 
 
 def _record(number: int, lemma: str, forms: list[tuple[str, str]]) -> dict:
@@ -298,6 +302,7 @@ def _case_offer(
     *,
     options: list[str] | None = None,
     target_record: dict | None = None,
+    option_records: list[str] | None = None,
     lookup_table: dict[str, list[dict]] | None = None,
     key: int = 0,
     demand: dict[str, str] | None = None,
@@ -312,6 +317,8 @@ def _case_offer(
     opts = options or ["подарунка", "подарунок", "подарунком"]
     req = demand or {"Case": "Gen"}
     item = _form(opts, rec, req, key=key, taught=feature)
+    if option_records is not None:
+        item["option_records"] = option_records
     item["kind"] = kind
     item["option_why"] = ["Why."] * len(opts)
     item[sentence_field] = sentence
@@ -335,6 +342,15 @@ def _case_offer(
         "знаєш": [{"tags": "verb:imperf:pres:s:2:insert"}],
         "у": [{"tags": "prep"}],
         "в": [{"tags": "prep"}],
+        "за": [
+            {"pos": "adv", "tags": "adv:predic"},
+            {"pos": "part", "tags": "part"},
+            {"pos": "prep", "tags": "prep"},
+        ],
+        "при": [
+            {"pos": "verb", "tags": "verb:imperf:impr:s:2"},
+            {"pos": "prep", "tags": "prep"},
+        ],
         "цьому": [
             {"tags": "noun:inanim:n:v_dav:pron:dem"},
             {"tags": "noun:inanim:n:v_mis:pron:dem"},
@@ -350,10 +366,55 @@ def _case_offer(
             {"tags": "adj:p:v_mis"},
         ],
         "добре": [
-            {"tags": "adv:compb:predic"},
-            {"tags": "adj:n:v_naz:compb"},
-            {"tags": "adj:n:v_zna:compb"},
-            {"tags": "adj:n:v_kly:compb"},
+            {"pos": "adv", "tags": "adv:compb:predic"},
+            {"pos": "adj", "tags": "adj:n:v_naz:compb"},
+            {"pos": "adj", "tags": "adj:n:v_zna:compb"},
+            {"pos": "adj", "tags": "adj:n:v_kly:compb"},
+        ],
+        "подарунка": [
+            {"pos": "noun", "tags": "noun:inanim:m:v_rod"},
+            {"pos": "noun", "tags": "noun:inanim:m:v_zna:var"},
+        ],
+        "подарунок": [
+            {"pos": "noun", "tags": "noun:inanim:m:v_naz"},
+            {"pos": "noun", "tags": "noun:inanim:m:v_zna"},
+        ],
+        "подарунком": [
+            {"pos": "noun", "tags": "noun:inanim:m:v_oru"},
+        ],
+        "каші": [
+            {"pos": "noun", "tags": "noun:inanim:f:v_rod"},
+            {"pos": "noun", "tags": "noun:inanim:f:v_dav"},
+            {"pos": "noun", "tags": "noun:inanim:f:v_mis"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_naz"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_zna"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_kly"},
+        ],
+        "книги": [
+            {"pos": "noun", "tags": "noun:inanim:f:v_rod"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_naz"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_zna"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_kly"},
+        ],
+        "брата": [
+            {"pos": "noun", "tags": "noun:anim:m:v_rod"},
+            {"pos": "noun", "tags": "noun:anim:m:v_zna"},
+        ],
+        "кордонів": [
+            {"pos": "noun", "tags": "noun:inanim:p:v_rod"},
+        ],
+        "діло": [
+            {"pos": "noun", "tags": "noun:inanim:n:v_naz"},
+            {"pos": "noun", "tags": "noun:inanim:n:v_zna"},
+            {"pos": "noun", "tags": "noun:inanim:n:v_kly"},
+            {"pos": "verb", "tags": "verb:perf:past:n"},
+        ],
+        "діла": [
+            {"pos": "noun", "tags": "noun:inanim:n:v_rod"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_naz"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_zna"},
+            {"pos": "noun", "tags": "noun:inanim:p:v_kly"},
+            {"pos": "verb", "tags": "verb:perf:past:f"},
         ],
         "нового": [
             {"tags": "noun:inanim:n:v_rod"},
@@ -623,6 +684,128 @@ def test_sentence_without_negated_verb_is_unaffected() -> None:
     row = _case_offer("Я купую ___.", options=["подарунка", "подарунок"])
     assert row.get("code") != "a1_case_contrast_under_negated_verb"
     assert row["status"] == "passed"
+
+
+@pytest.mark.parametrize(
+    ("sentence", "opts", "rec", "extra", "key", "req"),
+    [
+        (
+            "Я не роблю добре ___.",
+            ["діло", "діла"],
+            DEED,
+            [W075],
+            0,
+            {"Case": "Nom"},
+        ),
+        (
+            "Я ніколи не працюю за ___.",
+            ["подарунка", "подарунок"],
+            GIFT,
+            [W031],
+            0,
+            {"Case": "Gen"},
+        ),
+        (
+            "Я не при ___.",
+            ["подарунка", "подарунок"],
+            GIFT,
+            [W047],
+            0,
+            {"Case": "Gen"},
+        ),
+    ],
+)
+def test_store_records_narrower_than_vesum_cannot_earn_exemption(
+    sentence: str,
+    opts: list[str],
+    rec: dict,
+    extra: list[dict],
+    key: int,
+    req: dict[str, str],
+) -> None:
+    # W-075 «добре», W-031 «за» and W-047 «при» are present in the store as subsets of VESUM.
+    # The union with VESUM lookup provides their extra analyses, preventing false exemptions.
+    row = _case_offer(
+        sentence,
+        options=opts,
+        target_record=rec,
+        extra_records=extra,
+        key=key,
+        demand=req,
+    )
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+def test_adjacent_unambiguous_adjective_e3_refuses_when_two_options_agree() -> None:
+    # "Я не люблю манної ___." with манної (adj:f:v_rod).
+    # Two options каші (PORRIDGE, noun:inanim:f:v_rod) and книги (BOOK, noun:inanim:f:v_rod)
+    # both agree in Genitive Fem Sing with the modifier run.
+    # E3 requires exactly one agreeing option; two agreeing options refuses (pins "exactly one").
+    row = _case_offer(
+        "Я не люблю манної ___.",
+        options=["каші", "книги"],
+        target_record=PORRIDGE,
+        option_records=["W-15", "W-2"],
+        extra_records=[BOOK],
+        key=0,
+        demand={"Case": "Gen"},
+    )
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_case_contrast_under_negated_verb", "writer")
+
+
+def test_case_contrast_pins_var_accusative_reading() -> None:
+    # подарунка has Case=Gen (v_rod) and Case=Acc (v_zna:var).
+    # брата has Case=Gen (v_rod) and Case=Acc (v_zna).
+    # Their shared Accusative comes from the var reading on подарунка.
+    # With var kept: Case sets are identical ({Gen, Acc}), so not a case contrast (passed).
+    # If var were dropped: Case sets would contrast ({Gen, Acc} vs {Gen}), wrongly refusing under negated verb.
+    row = _case_offer(
+        "Я не бачу ___.",
+        options=["брата", "подарунка"],
+        target_record=GIFT,
+        option_records=["W-1", "W-18"],
+        extra_records=[BROTHER],
+        kind="vocabulary",
+        key=0,
+    )
+    assert row.get("code") != "a1_case_contrast_under_negated_verb"
+    assert row["status"] == "passed"
+
+    # Counterpart: against Genitive-only кордонів ({Gen}):
+    # With var kept: подарунка is {Gen, Acc} vs кордонів {Gen}, contrasting -> refused.
+    # If var were dropped: both would be {Gen} (identical), wrongly passing without case contrast.
+    row_contrast = _case_offer(
+        "Я не бачу ___.",
+        options=["кордонів", "подарунка"],
+        target_record=GIFT,
+        option_records=["W-20", "W-18"],
+        extra_records=[BORDER],
+        kind="vocabulary",
+        key=0,
+    )
+    assert (row_contrast["check"], row_contrast["code"], row_contrast["layer"]) == (
+        4,
+        "a1_case_contrast_under_negated_verb",
+        "writer",
+    )
+
+
+@pytest.mark.parametrize("exc", [sqlite3.OperationalError("disk I/O error"), OSError("connection lost")])
+def test_choice_checks_vesum_lookup_error_fails_closed_when_store_records_present(exc: Exception) -> None:
+    def failing_lookup(words: list[str]) -> dict:
+        raise exc
+
+    item = _form(["діло", "діла"], DEED, {"Case": "Nom"}, key=0)
+    item["sentence"] = "Я не роблю добре ___."
+    row = check_4_activities(
+        {"activities": [{"id": "a1", "items": [item]}]},
+        {"level": "a1", "activities": [{"id": "a1", "type": "quiz"}]},
+        {"words": [DEED, NEGATION, W075]},
+        {},
+        level="a1",
+        vesum_lookup=failing_lookup,
+    )[0]
+    assert (row["check"], row["code"], row["layer"]) == (4, "a1_choice_source_unavailable", "pack")
 
 
 def test_brother_accusative_requires_receipt(tmp_path: Path) -> None:
