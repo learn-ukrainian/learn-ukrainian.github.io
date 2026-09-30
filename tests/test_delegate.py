@@ -1322,6 +1322,152 @@ def test_dor_preflight_cross_repo_references_deduplicate_by_repo_and_number(monk
     ]
 
 
+def _epic_card_fakes(monkeypatch, *, failing=(), pull_requests=()):
+    """Fake ``gh api`` and the card checker: every issue passes unless listed in ``failing`` (repo, number)."""
+    from subprocess import CompletedProcess
+
+    calls = []
+
+    def gh_and_checker(command, **kwargs):
+        calls.append(command)
+        if command[:2] == ["gh", "api"]:
+            number = command[-1].rsplit("/issues/", 1)[1]
+            payload = {
+                "number": int(number),
+                **({"pull_request": {"url": "pr"}} if int(number) in pull_requests else {}),
+            }
+            return CompletedProcess(command, 0, json.dumps(payload), "")
+        key = (command[command.index("--repo") + 1], int(command[command.index("--issue") + 1]))
+        if key in failing:
+            return CompletedProcess(command, 1, '{"verdict":"WARN","missing":["outcome","why"]}', "")
+        return CompletedProcess(command, 0, '{"verdict":"PASS","missing":[]}', "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", gh_and_checker)
+    return calls
+
+
+def _checked_issues(calls):
+    return [[call[call.index("--repo") + 1], call[call.index("--issue") + 1]] for call in calls if "--issue" in call]
+
+
+_LOCAL = delegate._CANONICAL_GITHUB_REPO
+
+
+def test_registered_stream_epics_come_from_the_stream_registry():
+    epics = delegate._registered_stream_epics()
+    assert 6943 in epics
+    assert 9251 not in epics
+
+
+def test_registered_stream_epics_unreadable_registry_exempts_nothing(monkeypatch):
+    from scripts.orchestration import issue_stream_audit
+
+    def unreadable(*_a, **_k):
+        raise ValueError("bad registry")
+
+    monkeypatch.setattr(issue_stream_audit, "load_registry", unreadable)
+    assert delegate._registered_stream_epics() == frozenset()
+
+
+def test_dor_preflight_stream_epic_plus_task_checks_only_the_task(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
+    error, record = delegate._run_dor_preflight("Issue: #9251 ... Stream epic #6943.", None, dispatch_repo=_LOCAL)
+    assert error is None
+    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert _checked_issues(calls) == [[_LOCAL, "9251"]]
+    assert not [call for call in calls if call[-1].endswith("/issues/6943")]
+
+
+def test_dor_preflight_stream_epic_plus_failing_task_still_fails(monkeypatch):
+    _epic_card_fakes(monkeypatch, failing={(_LOCAL, 9251)})
+    error, record = delegate._run_dor_preflight("Fixes #9251, epic #6943", None, dispatch_repo=_LOCAL)
+    assert "#9251: outcome,why" in error
+    assert "6943" not in error
+    assert record["warnings"] == {"9251": "outcome,why"}
+    assert record["stream_epic"] == [6943]
+
+
+@pytest.mark.parametrize("failing", [set(), {(_LOCAL, 6943)}], ids=["epic-card-pass", "epic-card-warn"])
+def test_dor_preflight_epic_only_brief_is_refused_whatever_the_epic_card_says(monkeypatch, failing):
+    calls = _epic_card_fakes(monkeypatch, failing=failing)
+    error, record = delegate._run_dor_preflight("Stream epic #6943.", None, dispatch_repo=_LOCAL)
+    assert "dor_epic_only_no_task_issue" in error
+    assert "#6943" in error
+    assert record is None
+    assert _checked_issues(calls) == []
+
+
+def test_dor_preflight_epic_only_brief_is_refused_even_with_an_override_reason(monkeypatch):
+    _epic_card_fakes(monkeypatch)
+    error, record = delegate._run_dor_preflight("Stream epic #6943.", "urgent repair", dispatch_repo=_LOCAL)
+    assert "dor_epic_only_no_task_issue" in error
+    assert record is None
+
+
+@pytest.mark.parametrize("failing", [set(), {(_LOCAL, 6943)}], ids=["epic-card-pass", "epic-card-warn"])
+def test_dor_preflight_epic_with_only_pull_request_is_refused_whatever_the_epic_card_says(monkeypatch, failing):
+    calls = _epic_card_fakes(monkeypatch, failing=failing, pull_requests={8750})
+    error, record = delegate._run_dor_preflight("PR #8750 under epic #6943", None, dispatch_repo=_LOCAL)
+    assert "dor_epic_only_no_task_issue" in error
+    assert record is None
+    assert _checked_issues(calls) == []
+
+
+def test_dor_preflight_foreign_repository_issue_numbered_like_an_epic_is_checked(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch, failing={("acme/other", 6943)})
+    error, record = delegate._run_dor_preflight("Fixes #9251 and acme/other#6943", None, dispatch_repo=_LOCAL)
+    assert "acme/other#6943: outcome,why" in error
+    assert "stream_epic" not in record
+    assert _checked_issues(calls) == [["acme/other", "6943"], [_LOCAL, "9251"]]
+    assert record["issue_repositories"] == [{"issue": 6943, "repo": "acme/other"}]
+
+
+def test_dor_preflight_bare_number_in_a_foreign_dispatch_repository_is_not_this_repos_epic(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch)
+    error, record = delegate._run_dor_preflight("Fixes #9251 and #6943", None, dispatch_repo="acme/other")
+    assert error is None
+    assert "stream_epic" not in record
+    assert _checked_issues(calls) == [["acme/other", "6943"], ["acme/other", "9251"]]
+
+
+@pytest.mark.parametrize(
+    "epic_reference",
+    [
+        "https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6943",
+        "learn-ukrainian/learn-ukrainian.github.io#6943",
+        "Learn-Ukrainian/Learn-Ukrainian.github.io#6943",
+    ],
+)
+def test_dor_preflight_local_epic_full_url_and_qualified_forms_are_exempt(monkeypatch, epic_reference):
+    calls = _epic_card_fakes(monkeypatch, failing={(_LOCAL, 6943)})
+    error, record = delegate._run_dor_preflight(
+        f"Fixes https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9251; stream {epic_reference}",
+        None,
+        dispatch_repo=_LOCAL,
+    )
+    assert error is None
+    assert record == {"issues": [9251], "warnings": {}, "stream_epic": [6943]}
+    assert _checked_issues(calls) == [[_LOCAL, "9251"]]
+
+
+def test_dor_preflight_foreign_full_url_numbered_like_an_epic_is_checked(monkeypatch):
+    calls = _epic_card_fakes(monkeypatch, failing={("acme/other", 6943)})
+    error, record = delegate._run_dor_preflight(
+        "Fixes #9251 and https://github.com/acme/other/issues/6943", None, dispatch_repo=_LOCAL
+    )
+    assert "acme/other#6943: outcome,why" in error
+    assert "stream_epic" not in record
+    assert _checked_issues(calls) == [["acme/other", "6943"], [_LOCAL, "9251"]]
+
+
+def test_dor_preflight_override_reason_is_recorded_beside_the_stream_epic(monkeypatch):
+    _epic_card_fakes(monkeypatch, failing={(_LOCAL, 9251)})
+    error, record = delegate._run_dor_preflight("Fixes #9251 epic #6943", "urgent repair", dispatch_repo=_LOCAL)
+    assert error is None
+    assert record["stream_epic"] == [6943]
+    assert record["allow_warn_reason"] == "urgent repair"
+
+
 def test_dor_dispatch_private_repo_uses_mapped_issue_card(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     from subprocess import CompletedProcess
 
