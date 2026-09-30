@@ -224,6 +224,8 @@ def template_sources(prompts_dir: Path) -> dict[str, tuple[str, str]]:
     root = prompts_dir.resolve()
     sources: dict[str, tuple[str, str]] = {}
     for path in sorted(root.glob("*.md.j2")):
+        if path.is_symlink():
+            raise TemplateReadError(f"template_alias_refused: template {path.name} is a symlink")
         resolved = path.resolve()
         if resolved.parent != root or not resolved.is_file():
             raise TemplateReadError(f"template {path.name} is not a regular file of {root.as_posix()}")

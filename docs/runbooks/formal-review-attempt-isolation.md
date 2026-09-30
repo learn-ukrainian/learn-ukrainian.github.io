@@ -74,12 +74,41 @@ An invalid render refuses as `prompt_render_invalid` before provisioning or laun
 The version-4 render record includes the review ID, attempt ID, prompt hash,
 input root and render checkout. Dispatch recomputes the recorded server components
 and template hashes from that checkout's canonical `scripts/review/prompts`
-directory. A different recorded template directory refuses as
+directory to check record integrity. Formal manifest admission then independently
+re-renders using the **server checkout's** templates, derived from the running
+admission code and runtime configuration, never from the render record. The
+record's `input_root` remains only the pinned-input locator: containment and
+pin-hash checks still apply. A different recorded template directory refuses as
 `review_render_record_prompts_dir_mismatch`, even with matching template hashes. A
 record copied from another attempt refuses as `review_render_record_attempt_mismatch`;
 edited or stale digests refuse as `review_render_record_digest_mismatch`. The
 existing prompt-hash, server-code and launch-time checks still apply. Older
 render records require a fresh render; they cannot authorize a new attempt.
+
+Issue #9378 adds server template authority at this pre-launch gate. Admission
+passes the recorded reads, path hashes and logical template map to `check_prompt`.
+The checker derives the complete loaded-template set from its own server render,
+then compares exact loader names and hashes and requires byte equality of the
+prompt. It relocates only exact template loader paths between checkouts; it does
+not relocate input pins or case-fold names. A copied tree with an injected template
+refuses as `prompt_render_invalid: prompt_not_exact_render`; omitted or substituted
+dependencies refuse as `template_read_not_recorded` or `template_sha256_mismatch`
+under the same admission code. A loaded template absent from the server refuses;
+missing templates on both sides still refuse as
+`review_render_record_digest_mismatch`. An unused added template is admissible.
+Absolute or traversal loader names refuse as `review_render_template_name_invalid`;
+the renderer refuses symlink aliases as `template_alias_refused`, and a sidecar
+path outside its declared template directory that resolves to a loaded server
+template refuses as `template_identity_mismatch`. Nested list or
+mapping IDs refuse as `non_scalar_attempt_id` through `attempt_ids_unreadable`
+(manifest prompts) or `prompt_attempt_ids_unreadable` (custom prompts).
+
+Clean worktrees at the server commit, plan worktrees behind it with unchanged
+used templates, fixture input roots and `previous_attempt` re-reviews remain
+admissible. If a legitimate flow cannot meet these checks, stop and report it;
+do not substitute render-checkout templates. Pinning tests live in
+`tests/review/test_template_admission.py` and
+`tests/test_delegate.py::test_render_manifest_server_authority_refuses_before_launch`.
 
 Dispatch stores the manifest hash supplied by `prepare_review_attempt`'s plan;
 it does not reopen the manifest to construct the task's binding. The runner's
