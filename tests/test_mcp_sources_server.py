@@ -1935,6 +1935,22 @@ class TestSlovnykMeSearchOutage:
         assert "Partial results" in result[0].text
         assert "### Result 1" in result[0].text
 
+    def test_search_slovnyk_me_200_challenge_renders_unavailable(self, server_module, monkeypatch):
+        """HTTP 200 Cloudflare challenge during live search fallback reports UNAVAILABLE (#9016)."""
+        from wiki import slovnyk_me, sources_db
+
+        challenge_html = "<html><title>Just a moment...</title><body>Checking browser</body></html>"
+        monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
+        monkeypatch.setattr(
+            slovnyk_me.requests,
+            "get",
+            lambda *a, **k: MagicMock(status_code=200, text=challenge_html, raise_for_status=lambda: None),
+        )
+        result = _run(server_module.handle_search_slovnyk_me({"query": "тест", "live": True}))
+        assert "UNAVAILABLE" in result[0].text
+        assert "vts (HTTP 200)" in result[0].text
+        assert "No slovnyk.me results" not in result[0].text
+
 
 class TestWikipediaPravopysHeritageOutage:
     """#9005 r3: Wikipedia, Правопис and heritage outages are reported as unavailable, never as a miss."""
@@ -2028,6 +2044,11 @@ class TestWikipediaPravopysHeritageOutage:
 
     def test_heritage_real_miss_is_unchanged(self, server_module):
         assert self._heritage(server_module, [], []).startswith("No heritage evidence found")
+
+    def test_heritage_200_challenge_is_unavailable(self, server_module):
+        text = self._heritage(server_module, [], [{"dictionary_slug": "vts", "error": "HTTP 200"}])
+        assert "UNAVAILABLE" in text and "No heritage evidence found" not in text
+        assert "vts (HTTP 200)" in text
 
 
 def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):

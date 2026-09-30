@@ -1538,12 +1538,15 @@ _CLOUDFLARE_CHALLENGE_MARKERS = (
 )
 
 
-def _is_cloudflare_challenge(status_code: int, text: str) -> bool:
+def is_cloudflare_challenge(status_code: int, text: str) -> bool:
     """Detect a Cloudflare challenge/block page rather than a real article."""
     if status_code not in _CLOUDFLARE_CHALLENGE_STATUS_CODES:
         return False
     lowered = text[:8000].lower()
     return any(marker in lowered for marker in _CLOUDFLARE_CHALLENGE_MARKERS)
+
+
+_is_cloudflare_challenge = is_cloudflare_challenge
 
 
 def _slovnyk_me_unavailable(

@@ -141,6 +141,40 @@ class TestWikiCache:
         assert deleted == 1
         assert cache.get("summary", "Positive") == "valid article"
 
+    def test_default_negative_ttl_expiry(self, tmp_path):
+        """Default-constructed WikiCache() expires negative entries after DEFAULT_NEGATIVE_TTL (#9016)."""
+        from rag.wiki_cache import DEFAULT_NEGATIVE_TTL, NEGATIVE_SENTINEL, WikiCache
+
+        db_file = tmp_path / "default_wiki_cache.db"
+        cache = WikiCache(db_path=db_file)
+        assert cache.negative_ttl == DEFAULT_NEGATIVE_TTL
+        assert cache.negative_ttl == 3600
+
+        cache.put("summary", "Positive", "valid article")
+        cache.put_negative("summary", "Negative")
+
+        assert cache.get("summary", "Positive") == "valid article"
+        assert cache.get("summary", "Negative") == NEGATIVE_SENTINEL
+
+        # Backdate both entries by DEFAULT_NEGATIVE_TTL + 10s (> 1h, but << 30d)
+        now = int(time.time())
+        cache._conn.execute(
+            "UPDATE wiki_cache SET fetched_at = ?",
+            (now - (DEFAULT_NEGATIVE_TTL + 10),),
+        )
+        cache._conn.commit()
+
+        # Negative entry is expired under production default negative TTL
+        assert cache.get("summary", "Negative") is None
+        # Positive entry remains valid
+        assert cache.get("summary", "Positive") == "valid article"
+
+        # clear_expired deletes stale negative entry, keeps positive
+        deleted = cache.clear_expired()
+        assert deleted == 1
+        assert cache.get("summary", "Positive") == "valid article"
+        cache.close()
+
 
 # ── source_query new functions ───────────────────────────────────
 
