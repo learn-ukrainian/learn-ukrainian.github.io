@@ -6,6 +6,10 @@ effort: xhigh
 
 # Drive an epic lane
 
+For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
+escalation turns. This overrides the shared effort above for Sol only;
+other providers retain their effort rules and explicit overrides.
+
 You drive **one epic or track lane** (`SESSION_EPIC` is set). You are **not** the main
 orchestrator. You own the lane's judgment: what is wrong, what is next, which model and
 harness should do it, whether the artifact actually worked, and what residual remains.
