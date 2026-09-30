@@ -983,7 +983,7 @@ def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, 
         if dispatch_fails:
             raise RuntimeError("fixture provider failure")
         with sqlite3.connect(sources.sources_db) as writer:
-            writer.execute("INSERT INTO grinchenko VALUES (99, 'post-dispatch row')")
+            writer.execute("INSERT INTO grinchenko (id, definition) VALUES (99, 'post-dispatch row')")
         return {"answers": [{"id": q["id"], "record": q["candidates"][0]["record"]} for q in batch["questions"]]}
 
     def choices(*args, **kwargs):

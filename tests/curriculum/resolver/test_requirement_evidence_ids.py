@@ -164,7 +164,7 @@ def test_one_readonly_database_snapshot_and_row_identity(request, monkeypatch):
         with pytest.raises(sqlite3.OperationalError, match="readonly"):
             api._db().execute("DELETE FROM grinchenko")
         with original_connect(sources_db) as writer:
-            writer.execute("INSERT INTO grinchenko VALUES (2, 'concurrent row')")
+            writer.execute("INSERT INTO grinchenko (id, definition) VALUES (2, 'concurrent row')")
         assert not api.resolve_evidence_ids(["grinchenko:2"]).raw["grinchenko:2"]
         assert api.resolve_evidence_ids(["grinchenko:11367"]) == first
         assert len(opened) == 1
@@ -250,8 +250,8 @@ def test_existing_id_cannot_support_unrelated_form_at_any_entry_point(tmp_path, 
             assert caught.value.code == codes.EVIDENCE_FORM_MISMATCH
 
 
-@pytest.mark.parametrize("text", ["One", "stone", "o ne", "\u0301", "оne"])
-def test_form_comparison_never_folds_case_letters_whitespace_or_substrings(text):
+@pytest.mark.parametrize("text", ["stone", "o ne", "\u0301", "оne"])
+def test_word_comparison_preserves_letters_whitespace_and_boundaries(text):
     doc = document(IDS["vesum"])
     doc["items"][0]["options"][0]["text"] = text
     with Sources() as api, pytest.raises(ResolverError) as caught:
@@ -260,12 +260,12 @@ def test_form_comparison_never_folds_case_letters_whitespace_or_substrings(text)
 
 
 @pytest.mark.parametrize("kind", IDS)
-def test_stress_and_apostrophes_are_the_only_comparison_normalization(kind):
+def test_stress_and_apostrophe_comparison_normalization(kind):
     from scripts.curriculum.evidence.sources import SourceResult
 
     with Sources() as api:
         eid = IDS[kind]
-        field = {"vesum": "word_form", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "text")
+        field = {"vesum": "word_form", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "word" if kind == "vts" else "text")
         resolved = SourceResult({eid: [{field: "м'яч"}]}, "a" * 64)
         result = api.bind_evidence_forms(resolved, [(eid, "м’я\u0301ч"), (eid, "мʼя\u0300ч")])
         assert all(result.raw.values())
@@ -278,8 +278,9 @@ def test_lemma_binding_comes_from_vesum_lookup(kind, request):
     _, db = request.getfixturevalue("receipt_sources")
     with sqlite3.connect(db) as conn:
         conn.execute("INSERT INTO forms_all VALUES (999, 999, '999-1000', 'inflected', 'lemma', 'noun', 'noun')")
+        conn.execute("INSERT INTO forms_all VALUES (1000, 999, '999-1000', 'lemma', 'lemma', 'noun', 'noun')")
     eid = IDS[kind]
-    field = {"vesum": "lemma", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "text")
+    field = {"vesum": "lemma", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "word" if kind == "vts" else "text")
     with Sources() as api:
         result = api.bind_evidence_forms(SourceResult({eid: [{field: "lemma"}]}, "a" * 64), [(eid, "inflected")])
         assert result.raw[eid, "inflected"] is True
@@ -302,3 +303,117 @@ def test_word_components_and_metadata_cannot_supply_form_support(source_text):
     resolved = SourceResult({eid: [{"text": source_text, "title": "one", "source_url": "one"}]}, "a" * 64)
     with Sources() as api:
         assert api.bind_evidence_forms(resolved, [(eid, "one")]).raw[eid, "one"] is False
+
+
+@pytest.mark.parametrize("text", ["One", "ONE", "oNe"])
+@pytest.mark.parametrize("kind", IDS)
+def test_capitalised_option_binds_without_judging_case(text, kind):
+    doc = document(IDS[kind])
+    doc["items"][0]["options"][0]["text"] = text
+    with Sources() as api:
+        receipts.validate_requirement_receipts(doc, sources=api)
+
+
+@pytest.mark.parametrize("kind", ["vesum", "grinchenko", "sum20", "ulif", "vts"])
+def test_dictionary_definition_cannot_bind_another_headword(kind):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    eid = IDS[kind]
+    row = {"word_form": "other", "word": "other", "headword": "other", "lemma": "other",
+           "canonical_headword": "other", "stressed_headword": "other",
+           "definition": "one", "definition_text": "one", "article_text": "one",
+           "sense_gloss": "one", "snippet": "one", "text": "one"}
+    with Sources() as api:
+        assert api.bind_evidence_forms(SourceResult({eid: [row]}, "a" * 64), [(eid, "one")]).raw[eid, "one"] is False
+
+
+@pytest.fixture
+def word_binding_rows(request):
+    _, db = request.getfixturevalue("receipt_sources")
+    # Structural doubles shaped after the task's examples, not source attestation.
+    rows = [
+        (10001, 101, "101-110", "жовта", "жовтий"),
+        (10002, 102, "102-110", "Різдвом", "Різдво"),
+        (10003, 102, "102-110", "Різдва", "Різдво"),
+        (10004, 103, "103-110", "незалежність", "незалежність"),
+        (10005, 103, "103-110", "Незалежності", "незалежність"),
+        (10006, 104, "104-110", "кашу", "каша"),
+        (10007, 105, "105-110", "способу", "спосіб"),
+        (10008, 106, "106-110", "кордони", "кордон"),
+        (3030583, 201, "201-210", "манну", "манний"),
+        (3785464, 202, "202-210", "нового", "новий"),
+        (5936922, 203, "203-210", "сухопутні", "сухопутний"),
+        # Legacy collision: id 101 is unrelated; entry_id 101 is the right word.
+        (101, 204, "204-210", "other", "other"),
+    ]
+    with sqlite3.connect(db) as writer:
+        writer.executemany("INSERT INTO forms_all VALUES (?, ?, ?, ?, ?, 'noun', 'noun')", rows)
+
+
+def test_capitalised_option_binds_legacy_entry_namespace(word_binding_rows):
+    doc = document("vesum:101")
+    doc["items"][0]["options"] = [
+        {"text": "Жовта", "judgement": "valid", "evidence": ["vesum:101"]},
+        {"text": "two", "judgement": "invalid", "evidence": [IDS["vesum"]]},
+    ]
+    with Sources() as api:
+        receipts.validate_requirement_receipts(doc, sources=api)
+
+
+@pytest.mark.parametrize("kind", ["pravopys", "textbook"])
+@pytest.mark.parametrize("option,judgement,source_text", [
+    ("різдвом", "invalid", "Rule example: Різдва."),
+    ("незалежність", "valid", "Rule example: Незалежності."),
+])
+def test_text_kind_binds_attested_paradigm_without_option_text(
+    kind, option, judgement, source_text, word_binding_rows, request, monkeypatch,
+):
+    from scripts.rag import source_query
+
+    if kind == "pravopys":
+        monkeypatch.setattr(source_query, "pravopys_section", lambda number, **kw: {"section": number, "text": source_text})
+    else:
+        db, _ = request.getfixturevalue("receipt_sources")
+        with sqlite3.connect(db) as writer:
+            writer.execute("UPDATE textbooks SET text=?", (source_text,))
+    doc = document(IDS["vesum"])
+    doc["items"][0]["options"][0 if judgement == "valid" else 1] = {"text": option, "judgement": judgement, "evidence": [IDS[kind]]}
+    with Sources() as api:
+        result = receipts.validate_requirement_receipts(doc, sources=api)
+        assert "paradigms_sha256" in result.metadata["form_binding"]
+
+
+@pytest.mark.parametrize("option,eid", [("кашу", "vesum:3030583"), ("способу", "vesum:3785464"), ("кордони", "vesum:5936922")])
+@pytest.mark.parametrize("judgement", ["valid", "invalid"])
+def test_neighbouring_adjective_citation_refuses(option, eid, judgement, word_binding_rows):
+    doc = document(IDS["vesum"])
+    doc["items"][0]["options"][0 if judgement == "valid" else 1] = {"text": option, "judgement": judgement, "evidence": [eid]}
+    with Sources() as api, pytest.raises(ResolverError) as caught:
+        receipts.validate_requirement_receipts(doc, sources=api)
+    assert caught.value.code == codes.EVIDENCE_FORM_MISMATCH
+
+
+def test_paradigm_binding_retains_whole_word_boundaries(word_binding_rows):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    eid = IDS["textbook"]
+    with Sources() as api:
+        for text in ["пронезалежності", "Незалежності-extra", "_Незалежності"]:
+            result = api.bind_evidence_forms(SourceResult({eid: [{"text": text}]}, "a" * 64), [(eid, "незалежність")])
+            assert result.raw[eid, "незалежність"] is False
+
+
+def test_normalized_analysis_and_paradigm_reads_cache_and_detect_change(word_binding_rows, request):
+    _, db = request.getfixturevalue("receipt_sources")
+    with Sources() as api:
+        first = api._receipt_vesum_rows(["різдвом"])
+        assert {row["lemma"] for row in first.raw["різдвом"]} == {"Різдво"}
+        assert api._receipt_vesum_rows(["різдвом"]) == first
+        paradigm = api._receipt_vesum_rows(["різдво"], paradigm=True)
+        assert {row["word_form"] for row in paradigm.raw["різдво"]} == {"Різдвом", "Різдва"}
+        with sqlite3.connect(db) as writer:
+            writer.execute("UPDATE forms_all SET lemma='changed' WHERE id=10002")
+        with pytest.raises(ValueError, match="source_changed"):
+            api._receipt_vesum_rows(["різдвом"])
+        api.close()
+        assert not api._receipt_words and not api._receipt_paradigms

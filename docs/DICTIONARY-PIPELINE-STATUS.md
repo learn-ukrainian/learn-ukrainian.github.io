@@ -38,12 +38,20 @@ the import. This follows the [bounded per-word recipe](audits/slovnyk-me-ingesti
 upsert without deleting cache or corpus. It is neither a bulk crawl nor a full
 dictionary mirror. `vts:<id>` refers to the imported row's local SQLite id.
 
-Receipt ids require form support in addition to existence. Canonical VESUM
-citations use the exact `vesum:N-M` source location. Legacy bare integers can
-resolve entry or form ids used by rev 6.5, but must support each cited option.
-Comparison removes stress accents and apostrophe variants only; case,
-whitespace and letters remain exact. Lemma mappings come from VESUM, never
-suffix rules. Live Pravopys receipts use `pravopys-live-section-v1` identities.
+Receipt ids bind to the option's **word**, for `valid` and `invalid`
+judgements alike; this proves source identity, never judgement correctness.
+Canonical VESUM citations use the exact `vesum:N-M` source location. Legacy
+bare integers bind if either entry-id or form-id namespace binds. Comparison
+normalizes stress accents, apostrophe variants and Unicode casefolding;
+whitespace and letters remain exact. Option lemmas come only from attested
+VESUM analyses, never suffix rules or guessed lemmas. Dictionary kinds
+(`vesum`, `sum20`, `ulif`, `grinchenko`, `vts`) require the row's
+headword/lemma or `word_form` to equal the option or one of those lemmas;
+definitions and metadata cannot bind. Text kinds (`pravopys`, `textbook`)
+require a whole-word match of the option or any attested VESUM paradigm form
+of its lemmas. Case correctness is checked by the language judgement elsewhere.
+Other existing rows refuse with `evidence_form_mismatch`. Live Pravopys
+receipts use `pravopys-live-section-v1` identities.
 
 | Resource | File | Size |
 |---------|------|------|

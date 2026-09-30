@@ -43,15 +43,15 @@ def receipt_source_paths(root: Path, locations: Iterable[str] = (), *, records: 
         conn.executescript("""
             CREATE TABLE textbooks (id INTEGER PRIMARY KEY, chunk_id TEXT, text TEXT);
             INSERT INTO textbooks VALUES (1, 'real-chunk', 'one two fixture source bytes');
-            CREATE TABLE grinchenko (id INTEGER PRIMARY KEY, definition TEXT);
-            INSERT INTO grinchenko VALUES (11367, 'one two fixture source bytes');
-            CREATE TABLE sum20_articles (id INTEGER PRIMARY KEY, wordid INTEGER, article_text TEXT);
-            INSERT INTO sum20_articles VALUES (1, 2319, 'one two fixture source bytes');
-            CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, status TEXT, canonical_headword TEXT);
-            INSERT INTO ulif_dictua_entries VALUES (18, 'ok', 'one two');
-            CREATE TABLE slovnyk_me_entries (id INTEGER PRIMARY KEY, dictionary_slug TEXT, text TEXT);
-            INSERT INTO slovnyk_me_entries VALUES (1, 'vts', 'one two fixture source bytes');
-            INSERT INTO slovnyk_me_entries VALUES (2, 'sum', 'wrong dictionary');
+            CREATE TABLE grinchenko (id INTEGER PRIMARY KEY, definition TEXT, word TEXT DEFAULT 'one', lemma TEXT DEFAULT 'two');
+            INSERT INTO grinchenko (id, definition) VALUES (11367, 'one two fixture source bytes');
+            CREATE TABLE sum20_articles (id INTEGER PRIMARY KEY, wordid INTEGER, article_text TEXT, headword TEXT DEFAULT 'one', lemma TEXT DEFAULT 'two');
+            INSERT INTO sum20_articles (id, wordid, article_text) VALUES (1, 2319, 'one two fixture source bytes');
+            CREATE TABLE ulif_dictua_entries (id INTEGER PRIMARY KEY, status TEXT, canonical_headword TEXT, lemma TEXT DEFAULT 'two');
+            INSERT INTO ulif_dictua_entries (id, status, canonical_headword) VALUES (18, 'ok', 'one');
+            CREATE TABLE slovnyk_me_entries (id INTEGER PRIMARY KEY, dictionary_slug TEXT, text TEXT, word TEXT DEFAULT 'one', lemma TEXT DEFAULT 'two');
+            INSERT INTO slovnyk_me_entries (id, dictionary_slug, text) VALUES (1, 'vts', 'one two fixture source bytes');
+            INSERT INTO slovnyk_me_entries (id, dictionary_slug, text) VALUES (2, 'sum', 'wrong dictionary');
         """)
     return sources_db, vesum_db
 

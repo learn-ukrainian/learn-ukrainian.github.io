@@ -81,7 +81,7 @@ ALPHABET_GUARD_POS = {"prep", "conj", "part"}
 # Requirement-receipt locators. Numeric dictionary ids name source rows, not
 # headword guesses. Canonical VESUM locators are exact N-M source_location
 # keys. Legacy bare N may name an entry_id or forms_all.id (both occur in
-# rev 6.5 receipts); neither namespace grants admission without form binding.
+# rev 6.5 receipts); neither namespace grants admission without word binding.
 RECEIPT_EVIDENCE_STORES = {
     "vesum": ("forms_all", "source_location (canonical); entry_id / id (legacy)"),
     "pravopys": ("2019.pravopys.net/sections/<number>/", "section"),
@@ -94,12 +94,12 @@ RECEIPT_EVIDENCE_STORES = {
 
 
 def normalize_evidence_form(text: str) -> str:
-    """Receipt comparison removes only stress accents and apostrophe variants.
+    """Fold case, stress and apostrophes for word identity, never lemmatization.
 
-    Case, whitespace, letters (including Ukrainian і/ї/й) and punctuation stay
-    exact. This is comparison normalization, never a lemmatization rule.
+    Whitespace, letters (including Ukrainian і/ї/й) and punctuation stay exact.
+    Case correctness belongs to the language judgement, not citation binding.
     """
-    return normalize_spelling(text).replace("\u0301", "").replace("\u0300", "")
+    return normalize_spelling(text).replace("\u0301", "").replace("\u0300", "").casefold()
 
 
 def _contains_evidence_form(text: str, form: str) -> bool:
@@ -341,6 +341,8 @@ class Sources:
         self._wal_bytes_start: int | None = None
         self._receipt_evidence: dict[str, list[dict]] = {}
         self._receipt_identities: dict[str, Any] = {}
+        self._receipt_words: dict[str, list[dict]] = {}
+        self._receipt_paradigms: dict[str, list[dict]] = {}
 
     def __enter__(self):
         return self
@@ -352,6 +354,8 @@ class Sources:
         """Release the pinned snapshot (rollback, never commit) and report its lifetime."""
         self._receipt_evidence.clear()
         self._receipt_identities.clear()
+        self._receipt_words.clear()
+        self._receipt_paradigms.clear()
         if self._kaikki_conn is not None:
             side, self._kaikki_conn = self._kaikki_conn, None
             with closing(side), suppress(sqlite3.Error):
@@ -609,23 +613,57 @@ class Sources:
         }
         return SourceResult(raw, batch_digest(raw), identities)
 
+    def _receipt_vesum_rows(
+        self, values: Iterable[str], *, paradigm: bool = False,
+    ) -> SourceResult[dict[str, list[dict]]]:
+        """Read attested analyses or paradigms using Unicode word identity.
+
+        SQLite NOCASE handles ASCII only. Compare with the same normalization
+        as citation witnesses; cache reads within the checked static identity.
+        """
+        requested = list(dict.fromkeys(values))
+        digest, metadata = self._vesum_identity()
+        cache = self._receipt_paradigms if paradigm else self._receipt_words
+        pending = [value for value in requested if value not in cache]
+        column = "lemma" if paradigm else "word_form"
+        if pending:
+            with closing(open_readonly(self.vesum_db)) as conn:
+                conn.create_function("receipt_word", 1, normalize_evidence_form, deterministic=True)
+                for start in range(0, len(pending), BATCH_SIZE):
+                    batch = pending[start : start + BATCH_SIZE]
+                    rows = conn.execute(
+                        f"SELECT word_form, lemma, pos, tags FROM forms "
+                        f"WHERE receipt_word({column}) IN ({','.join('?' for _ in batch)}) "
+                        "ORDER BY word_form, lemma, pos, tags", batch,
+                    )
+                    found = {value: [] for value in batch}
+                    for row in rows:
+                        found[normalize_evidence_form(row[column])].append(dict(row))
+                    cache.update(found)
+        self._vesum_identity()
+        return SourceResult({value: cache[value] for value in requested}, digest, metadata)
+
     def bind_evidence_forms(
         self, resolved: SourceResult[dict[str, list[dict]]], citations: Iterable[tuple[str, str]],
     ) -> SourceResult[dict[tuple[str, str], bool]]:
-        """Bind every numeric row citation to its option, directly or via VESUM.
+        """Bind citations to the option's word, for valid and invalid judgements.
 
-        Headwords and source text are witnesses; ids, URLs, titles, hashes and
-        arbitrary metadata are not. This checks form support, not whether a
-        rule establishes the option's contextual grammatical judgement.
+        Dictionary headwords/lemmas or word_form must casefold-equal the option
+        or an attested VESUM lemma. Legacy VESUM integers bind through either
+        resolved namespace; canonical N-M remains preferred. Text kinds require
+        a whole-word occurrence of the option or any attested paradigm form of
+        its VESUM lemmas. Stress/apostrophe normalization also applies. No guessed
+        lemmas, definition matches, or metadata witnesses. Binding establishes
+        word identity, never correctness of the contextual language judgement.
         """
         fields = {
             "vesum": ("word_form", "lemma"),
             "pravopys": ("text",),
             "textbook": ("text",),
-            "grinchenko": ("word", "definition"),
-            "sum20": ("headword", "stressed_headword", "article_text", "definition_text"),
-            "vts": ("word", "snippet", "text"),
-            "ulif": ("canonical_headword", "sense_gloss"),
+            "grinchenko": ("word", "headword", "lemma", "word_form"),
+            "sum20": ("headword", "stressed_headword", "lemma", "word_form"),
+            "vts": ("word", "headword", "lemma", "word_form"),
+            "ulif": ("canonical_headword", "headword", "lemma", "word_form"),
         }
         raw = {}
         pending = {}
@@ -633,25 +671,40 @@ class Sources:
             kind = eid.partition(":")[0]
             form = normalize_evidence_form(text)
             witnesses = [
-                row[field] for row in resolved.raw[eid] for field in fields.get(kind, ())
+                normalize_evidence_form(row[field])
+                for row in resolved.raw[eid] for field in fields.get(kind, ())
                 if isinstance(row.get(field), str)
             ]
-            supported = any(_contains_evidence_form(value, form) for value in witnesses)
+            is_text = kind in {"pravopys", "textbook"}
+            supported = any(
+                _contains_evidence_form(value, form) if is_text else bool(form and value == form)
+                for value in witnesses
+            )
             raw[eid, text] = supported
             if not supported:
-                pending[eid, text] = (form, witnesses)
-        # Only attested VESUM analyses can supply an option's lemma. No suffix
-        # stripping, case folding or cross-dictionary/headword guessing.
-        analyses = self.verify_words(form for form, _ in pending.values()) if pending else None
-        for citation, (form, witnesses) in pending.items():
-            raw[citation] = any(
-                _contains_evidence_form(value, normalize_evidence_form(analysis["lemma"]))
-                for analysis in analyses.raw[form] for value in witnesses
-            )
-        metadata = {"normalization": "stress-apostrophes-v1"}
+                pending[eid, text] = (form, witnesses, is_text)
+        analyses = self._receipt_vesum_rows(form for form, _, _ in pending.values()) if pending else None
+        text_lemmas = {
+            normalize_evidence_form(row["lemma"])
+            for form, _, is_text in pending.values() if is_text for row in analyses.raw[form]
+        }
+        paradigms = self._receipt_vesum_rows(text_lemmas, paradigm=True) if text_lemmas else None
+        for citation, (form, witnesses, is_text) in pending.items():
+            lemmas = {normalize_evidence_form(row["lemma"]) for row in analyses.raw[form]}
+            if is_text:
+                forms = {
+                    normalize_evidence_form(row["word_form"])
+                    for lemma in lemmas for row in paradigms.raw[lemma]
+                } if paradigms is not None else set()
+                raw[citation] = any(_contains_evidence_form(value, variant) for value in witnesses for variant in forms)
+            else:
+                raw[citation] = any(value in lemmas for value in witnesses)
+        metadata = {"normalization": "stress-apostrophes-casefold-v2"}
         if analyses is not None:
             metadata["vesum"] = {"content_hash": analyses.content_hash, **analyses.metadata}
             metadata["analyses_sha256"] = batch_digest(analyses.raw)
+        if paradigms is not None:
+            metadata["paradigms_sha256"] = batch_digest(paradigms.raw)
         return SourceResult(raw, batch_digest(raw), metadata)
 
     def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
