@@ -12,7 +12,8 @@ The rendered-prompt check validates (#8431 §8.1):
 - no path, pattern, or text of a v1 plan or forbidden v1 path (-v1/, /plans/, etc.)
 - uncited-id scan covers the WHOLE rendered prompt minus only the delimited schema exemplar
 - nothing from another lesson by id: no record id and no lesson number outside this lesson's
-  plan entry (except the recap's declared built lessons 1..N-1)
+  plan entry (except the recap's declared built lessons 1..N-1); the lesson-number scan skips the
+  delimited cited-record block, whose source prose names the source's lessons, not this curriculum's (#9185)
 - the delimited learner-state block is byte-identical to the block the planned state renders (letters,
   grammar ids with their points, word ids with their lemmas); its ids are admitted only inside it (#9182)
 - the style card hash exists and matches disk
@@ -21,7 +22,9 @@ The rendered-prompt check validates (#8431 §8.1):
 
 from __future__ import annotations
 
+import functools
 import hashlib
+import json
 import re
 from collections.abc import Mapping
 from dataclasses import dataclass
@@ -44,6 +47,7 @@ from scripts.curriculum.validate.registry import load_registry
 __all__ = [
     "RenderedPromptCheckResult",
     "check_rendered_prompt",
+    "cited_record_views",
     "compute_immersion_payload",
     "extract_plan_citations",
     "get_activity_item_shapes",
@@ -70,7 +74,9 @@ BAND_CARD_MAP = {
 #: {{gloss:W-...}}, {{uk:...}}, or {{<digits>}} for activity blanks.
 VALID_DOUBLE_BRACE_RE = re.compile(r"^\{\{(?:gloss:(?:W-[0-9]+|W-[.…]+)|uk:[^{}\u0300\u0301]+|[0-9]+)\}\}$")
 
-RECORD_ID_RE = re.compile(r"\b(?:W|EX|T|E|V|P|G|X|S)-[0-9a-zA-Z_-]+\b")
+#: Prose references to a lesson number, and the ``lesson: {n: ...}`` shape of the schema exemplar.
+LESSON_PROSE_RES = (re.compile(r"\b[Ll]esson\s+#?(\d+)\b"), re.compile(r"\b[Ll]esson-(\d+)\b"))
+LESSON_NUMBER_RES = (*LESSON_PROSE_RES, re.compile(r"\blesson:\s*(?:\{[^}]*|\n[ ]*)n:\s*(\d+)"))
 
 SCHEMA_EXEMPLAR_BEGIN = "<!-- BEGIN SCHEMA_SUMMARY_EXEMPLAR -->"
 SCHEMA_EXEMPLAR_END = "<!-- END SCHEMA_SUMMARY_EXEMPLAR -->"
@@ -78,6 +84,43 @@ SCHEMA_EXEMPLAR_END = "<!-- END SCHEMA_SUMMARY_EXEMPLAR -->"
 LEARNER_STATE_BEGIN = "<!-- BEGIN LEARNER_STATE -->"
 LEARNER_STATE_END = "<!-- END LEARNER_STATE -->"
 LEARNER_STATE_TEMPLATE = "_learner-state.md.j2"
+
+CITED_RECORDS_BEGIN = "<!-- BEGIN CITED_RECORDS -->"
+CITED_RECORDS_END = "<!-- END CITED_RECORDS -->"
+
+EVIDENCE_PACK_SCHEMA = REPO_ROOT / "schemas" / "evidence-pack-v1.schema.json"
+
+#: Record kind by id prefix: the ``<kind>_record`` definitions of the pack schema (their id patterns),
+#: plus the word store's ``W-`` records.
+RECORD_KINDS = {
+    "W": "word",
+    "T": "text",
+    "X": "exercise",
+    "EX": "example",
+    "E": "error",
+    "N": "note",
+    "V": "video",
+    "S": "standard",
+    "U": "unsupported",
+}
+
+#: A record id in the shapes the schemas define: every ``RECORD_KINDS`` prefix (the pack kinds and ``W-<n>``) and
+#: paradigm ``P-<n>`` (module-plan-v2), and grammar ``G-<level>-<nnn>``. A token that only starts like one
+#: (``P-looking``, a video id ``W-1rCu0indE``) is not a record id (#9185).
+RECORD_ID_RE = re.compile(
+    r"\b(?:(?:"
+    + "|".join(sorted({*RECORD_KINDS, "P"}, key=lambda p: (-len(p), p)))
+    + r")-[0-9]+|G-[a-z0-9]+-[0-9]{3})\b"
+)
+
+#: Word-store fields the cited-records section reads (``gloss`` and ``forms`` are optional).
+WORD_RECORD_FIELDS = ("lemma", "pos")
+
+#: Source-dict fields printed as attribution, in order, per pack source kind (null and empty values are omitted).
+SOURCE_FIELDS = {
+    "textbook": (("author", ""), ("file", ""), ("grade", "grade "), ("page", "page ")),
+    "literary": (("author", ""), ("work", ""), ("year", ""), ("file", ""), ("page", "page ")),
+}
 
 # Forbidden v1 path patterns per review finding 5 and §8.1
 FORBIDDEN_V1_PATTERNS: tuple[re.Pattern[str], ...] = (
@@ -216,6 +259,15 @@ def extract_plan_citations(plan_entry: dict[str, Any]) -> set[str]:
     return cited
 
 
+def _plan_lesson_numbers(value: Any) -> set[int]:
+    """Lesson numbers the plan entry's own text states (a rationale citing "ULP S1 lesson 10", a focus modelled on
+    "lesson 2 a5"): part of this lesson's binding input, like the record ids it cites (#9185)."""
+    if isinstance(value, str):
+        return {int(m.group(1)) for pattern in LESSON_PROSE_RES for m in pattern.finditer(value)}
+    items = value.values() if isinstance(value, Mapping) else value if isinstance(value, list) else ()
+    return set().union(*(_plan_lesson_numbers(item) for item in items))
+
+
 def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str, Any]) -> str:
     """Show only cited store forms; the item demand selects the usable subset."""
     if not any(act.get("type") in {"fill-in", "quiz", "multiple-choice"} for act in plan_entry.get("activities", [])):
@@ -312,14 +364,75 @@ def learner_state_view(
     return view
 
 
+@functools.cache
+def _pack_required_fields() -> dict[str, tuple[str, ...]]:
+    """Kind -> required fields of every ``<kind>_record`` definition in the evidence-pack v1 schema."""
+    defs = json.loads(EVIDENCE_PACK_SCHEMA.read_text(encoding="utf-8"))["$defs"]
+    return {
+        name.removesuffix("_record"): tuple(spec["required"]) for name, spec in defs.items() if name.endswith("_record")
+    }
+
+
+def _format_source(source: Mapping[str, Any]) -> str:
+    """One attribution line from a pack record's ``source`` dict; a null or empty field is left out."""
+    if "table" in source:
+        return f"{source['table']} row {source['id']}"
+    kind = source.get("kind")
+    if kind not in SOURCE_FIELDS:
+        raise ValueError(f"cited_record_invalid: unknown source kind {kind!r} in {sorted(source)}")
+    parts = [f"{label}{source[key]}" for key, label in SOURCE_FIELDS[kind] if source.get(key) not in (None, "")]
+    return f"{kind}: {', '.join(parts)}"
+
+
+def cited_record_views(cited_records: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Each cited record with its kind and formatted source, as the cited-records section renders it (#9185).
+
+    The kind comes from the id prefix; the fields are the schema's (``schemas/evidence-pack-v1.schema.json``)
+    or the word store's. An unknown kind or a missing field fails the render: nothing is dumped raw.
+    """
+    required = {**_pack_required_fields(), "word": WORD_RECORD_FIELDS}
+    views = []
+    for record_id, record in cited_records.items():
+        kind = RECORD_KINDS.get(str(record_id).split("-", 1)[0])
+        if kind is None or kind not in required:
+            raise ValueError(f"cited_record_invalid: {record_id!r} is not a known record kind")
+        missing = [field for field in required[kind] if field != "id" and field not in record]
+        if missing:
+            raise ValueError(f"cited_record_invalid: {kind} record {record_id!r} lacks {missing}")
+        source = record.get("source")
+        views.append(
+            {
+                "id": record_id,
+                "kind": kind,
+                "record": record,
+                "source": _format_source(source) if isinstance(source, Mapping) else None,
+            }
+        )
+    return views
+
+
+def _fenced(text: str) -> str:
+    """A fenced block holding ``text`` byte for byte; the fence outruns any backtick run inside it."""
+    longest = max((len(run) for run in re.findall(r"`+", text)), default=0)
+    fence = "`" * max(3, longest + 1)
+    return f"{fence}text\n{text}\n{fence}"
+
+
+def _unrendered_record_kind(record_id: str, kind: str) -> str:
+    raise ValueError(f"cited_record_invalid: no rendering for {kind} record {record_id!r}")
+
+
 def _environment(prompts_dir: Path | None) -> Environment:
-    return Environment(
+    env = Environment(
         loader=FileSystemLoader(str(prompts_dir or PROMPTS_DIR)),
         undefined=StrictUndefined,
         autoescape=jinja2.select_autoescape(
             enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
         ),
     )
+    env.filters["fenced"] = _fenced
+    env.globals["unrendered_record_kind"] = _unrendered_record_kind
+    return env
 
 
 def learner_state_block(
@@ -404,7 +517,7 @@ def render_lesson_prompt(
         plan_entry=pe,
         level=level,
         slug=slug,
-        cited_records=cited_records,
+        cited_records=cited_record_views(cited_records),
         learner_state=l_state,
         taught=learner_state_view(learner_state, word_store, grammar_registry),
         immersion=imm_dict,
@@ -478,7 +591,7 @@ def render_recap_prompt(
         level=level,
         slug=slug,
         built_lessons=built_lessons,
-        cited_records=cited_records,
+        cited_records=cited_record_views(cited_records),
         learner_state=l_state,
         taught=learner_state_view(learner_state, word_store, grammar_registry),
         immersion=imm_dict,
@@ -577,7 +690,7 @@ def check_rendered_prompt(
 
     # 4. Nothing from another lesson by id or number (Finding 5)
     current_lesson_n = plan_entry.get("lesson", {}).get("n") or plan_entry.get("n")
-    allowed_lesson_numbers: set[int] = set()
+    allowed_lesson_numbers = _plan_lesson_numbers(plan_entry)
     if current_lesson_n is not None:
         allowed_lesson_numbers.add(int(current_lesson_n))
 
@@ -595,14 +708,17 @@ def check_rendered_prompt(
                             f"recap_invalid_built_lesson: recap includes lesson {bl_n} >= current lesson {current_lesson_n}"
                         )
 
-    # Check for unauthorized lesson numbers across the prompt (excluding schema exemplar)
-    lesson_num_patterns = (
-        re.compile(r"\b[Ll]esson\s+#?(\d+)\b"),
-        re.compile(r"\b[Ll]esson-(\d+)\b"),
-        re.compile(r"\blesson:\s*(?:\{[^}]*|\n[ ]*)n:\s*(\d+)"),
-    )
-    for lpat in lesson_num_patterns:
-        for m in lpat.finditer(prompt_for_id_scan):
+    # Check for unauthorized lesson numbers across the prompt, except the ones the plan entry states, and excluding
+    # the schema exemplar and the cited records, whose source prose - a `supports` line, a video's `use`, quoted
+    # lesson notes - names lessons of the source, not of this curriculum (#9185)
+    prompt_for_lesson_scan = prompt_for_id_scan
+    if CITED_RECORDS_BEGIN not in prompt_for_id_scan or CITED_RECORDS_END not in prompt_for_id_scan:
+        errors.append("missing_cited_records_marker: cited-records block delimiters missing from prompt")
+    else:
+        before, rest = prompt_for_id_scan.split(CITED_RECORDS_BEGIN, 1)
+        prompt_for_lesson_scan = before + "\n" + rest.split(CITED_RECORDS_END, 1)[1]
+    for lpat in LESSON_NUMBER_RES:
+        for m in lpat.finditer(prompt_for_lesson_scan):
             lnum = int(m.group(1))
             if lnum not in allowed_lesson_numbers:
                 errors.append(

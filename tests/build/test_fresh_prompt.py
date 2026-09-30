@@ -5,6 +5,7 @@ from __future__ import annotations
 import dataclasses
 import hashlib
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -14,11 +15,17 @@ from scripts.build.fresh.immersion import compute_immersion_payload
 from scripts.build.fresh.manifest import learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.prompt import (
     CARDS_DIR,
+    CITED_RECORDS_BEGIN,
+    CITED_RECORDS_END,
+    EVIDENCE_PACK_SCHEMA,
     LEARNER_STATE_BEGIN,
     LEARNER_STATE_END,
+    RECORD_ID_RE,
+    RECORD_KINDS,
     SCHEMA_EXEMPLAR_BEGIN,
     SCHEMA_EXEMPLAR_END,
     check_rendered_prompt,
+    cited_record_views,
     grammar_points,
     learner_state_block,
     learner_state_view,
@@ -34,6 +41,103 @@ pytestmark = pytest.mark.reads_content
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 SAMPLE_WORD_STORE = {"words": [{"id": "W-base-1", "lemma": "і"}]}
+
+SHA = "0" * 64
+
+# Real-shaped records of every evidence-pack v1 kind (schemas/evidence-pack-v1.schema.json), with sources and
+# field values as the A1 position-1 pack carries them (#9185).
+ULP_SOURCE = {
+    "author": "Ukrainian Lessons Podcast",
+    "chunk_id": "ulp-1-00-lesson-notes_l0005_w003",
+    "file": "ulp-1-00-lesson-notes",
+    "grade": "",
+    "kind": "textbook",
+    "page": None,
+    "row_sha256": SHA,
+    "section_id": None,
+}
+PRIMER_SOURCE = {
+    "author": "zaharijchuk",
+    "chunk_id": "1-klas-bukvar-zaharijchuk-2025-1_s0012",
+    "file": "1-klas-bukvar-zaharijchuk-2025-1",
+    "grade": "1",
+    "kind": "textbook",
+    "page": 15,
+    "row_sha256": SHA,
+    "section_id": 12963,
+}
+TEXT_RECORD = {
+    "id": "T-004",
+    "source": ULP_SOURCE,
+    "quote": "the podcast for learning how to pronounce и:\n 1. In the English language",
+    "sha256": SHA,
+    "supports": "Adult L2 И sound and comparison with І for English speakers; ULP Season 1 lesson 5 trainer.",
+}
+EXERCISE_RECORD = {
+    "id": "X-004",
+    "source": PRIMER_SOURCE,
+    "quote": "Відшукай «загублений» склад у словах.\nма- __ -на",
+    "sha256": SHA,
+    "pattern": "Pick a missing syllable from a bounded list to complete a known word.",
+    "items_sample": ["Відшукай «загублений» склад у словах.\nма- __ -на", "со- __ ма-, -ва, -ла"],
+}
+EXAMPLE_RECORD = {
+    "id": "EX-001",
+    "source": {
+        "kind": "literary",
+        "file": "shevchenko-kobzar",
+        "author": "Тарас Шевченко",
+        "work": "Кобзар",
+        "year": 1840,
+        "page": None,
+        "chunk_id": 7,
+    },
+    "text": "Добрий день, пане!",
+    "sha256": SHA,
+    "sentence_ref": {"words": ["W-555"]},
+    "translation_en": "Good day, sir!",
+}
+ERROR_RECORD = {
+    "id": "E-001",
+    "source": {"table": "ua_gec_errors", "id": 4821, "row_sha256": SHA},
+    "incorrect": "приймати участь",
+    "correct": "брати участь",
+    "error_type": "Calque",
+    "pattern": "Russian calque of принимать участие.",
+}
+NOTE_RECORD = {
+    "id": "N-001",
+    "source": {"table": "style_guide", "id": 312},
+    "word": "вибачте",
+    "section": None,
+    "text": "Вибачте — ввічливе прохання.",
+    "excerpt_full": None,
+    "russianism_pattern": None,
+}
+VIDEO_RECORD = {
+    "id": "V-004",
+    "url": "https://www.youtube.com/watch?v=W-1rCu0indE",
+    "channel": "Ukrainian Lessons",
+    "use": "Listening model for the informal greeting in lesson 1.",
+    "checked": {
+        "http_status": 200,
+        "final_url": "https://www.youtube.com/watch?v=W-1rCu0indE",
+        "content_type": "text/html",
+        "date": "2026-09-29",
+    },
+}
+STANDARD_RECORD = {
+    "id": "S-001",
+    "lines": "351-353",
+    "text": "      1.3.1.1. Особа вміє:\n      написати власне прізвище та ім’я;",
+    "file_sha256": SHA,
+}
+UNSUPPORTED_RECORD = {
+    "id": "U-001",
+    "claim": "A1 learners confuse И and І by ear.",
+    "searches": [{"tool": "search_text", "query": "и і розрізнення"}],
+    "status": "open",
+}
 
 
 @pytest.fixture
@@ -101,15 +205,8 @@ def sample_cited_records():
             "pos": "noun",
             "forms": [{"form": "mama", "tags": "tag-nom", "stressed": "mama", "stress_source": "vesum"}],
         },
-        "EX-001": {
-            "example": "mama doma",
-            "translation": "mom is home",
-            "source": "textbook-1",
-        },
-        "T-001": {
-            "text": "Attested rule text",
-            "source": "textbook-1",
-        },
+        "EX-001": {**EXAMPLE_RECORD, "id": "EX-001", "text": "mama doma", "translation_en": "mom is home"},
+        "T-001": {**TEXT_RECORD, "id": "T-001", "quote": "Attested rule text"},
     }
 
 
@@ -413,14 +510,12 @@ def test_render_prompt_does_not_html_escape(sample_plan_entry, sample_learner_st
             "forms": [{"form": "mama", "tags": "tag-nom", "stressed": "mama", "stress_source": "vesum"}],
         },
         "EX-001": {
-            "example": "Це <приклад> & тест",
-            "translation": "This is an <example> & test",
-            "source": "textbook-1",
+            **EXAMPLE_RECORD,
+            "id": "EX-001",
+            "text": "Це <приклад> & тест",
+            "translation_en": "This is an <example> & test",
         },
-        "T-001": {
-            "text": "Rule: <a> & <b>",
-            "source": "textbook-1",
-        },
+        "T-001": {**TEXT_RECORD, "id": "T-001", "quote": "Rule: <a> & <b>"},
     }
     imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0)
     card_path = CARDS_DIR / "a1.md"
@@ -704,3 +799,282 @@ def test_grammar_points_reads_the_registry(tmp_path):
     registry.write_text("- id: bad\n", encoding="utf-8")
     with pytest.raises(ValueError, match="grammar registry"):
         grammar_points(registry, "a1")
+
+
+# --- #9185: the cited-records section renders every pack record kind from its schema fields -------------------
+
+ALL_KINDS = {
+    "E-001": ERROR_RECORD,
+    "EX-001": EXAMPLE_RECORD,
+    "N-001": NOTE_RECORD,
+    "S-001": STANDARD_RECORD,
+    "T-004": TEXT_RECORD,
+    "U-001": UNSUPPORTED_RECORD,
+    "V-004": VIDEO_RECORD,
+    "W-001": {
+        "lemma": "mama",
+        "pos": "noun",
+        "forms": [{"form": "mama", "tags": "tag-nom", "stressed": "mama", "stress_source": "vesum"}],
+    },
+    "X-004": EXERCISE_RECORD,
+}
+
+
+def _citing(plan_entry, ids, **changes):
+    """The sample plan entry with step s1 citing ``ids`` as evidence."""
+    steps = [dict(plan_entry["steps"][0], evidence=sorted(ids)), *plan_entry["steps"][1:]]
+    return {**plan_entry, "steps": steps, **changes}
+
+
+def _render(plan_entry, learner_state, cited, *, recap=False):
+    common = dict(
+        cited_records=cited,
+        learner_state=learner_state,
+        word_store=SAMPLE_WORD_STORE,
+        immersion=compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0),
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=CARDS_DIR / "a1.md",
+    )
+    if recap:
+        return render_recap_prompt(plan_entry, built_lessons=[], **common)
+    return render_lesson_prompt(plan_entry, **common)
+
+
+def _check(prompt, plan_entry, learner_state, *, recap=False):
+    return check_rendered_prompt(
+        prompt,
+        plan_entry,
+        CARDS_DIR / "a1.md",
+        is_recap=recap,
+        built_lessons=[],
+        learner_state=learner_state,
+        word_store=SAMPLE_WORD_STORE,
+    )
+
+
+def _cited_block(prompt: str) -> str:
+    return prompt.split(CITED_RECORDS_BEGIN, 1)[1].split(CITED_RECORDS_END, 1)[0]
+
+
+@pytest.mark.parametrize("recap", [False, True])
+def test_every_pack_record_kind_renders_from_its_schema_fields(sample_plan_entry, sample_learner_state, recap):
+    plan = _citing(sample_plan_entry, ALL_KINDS)
+    prompt = _render(plan, sample_learner_state, ALL_KINDS, recap=recap)
+    block = _cited_block(prompt)
+
+    expected = [
+        # text: quote bytes fenced, source attribution without the null page and empty grade, supports
+        "### Record `T-004`\n- Kind: text\n- Source: textbook: Ukrainian Lessons Podcast, ulp-1-00-lesson-notes\n"
+        "- Supports: Adult L2 И sound and comparison with І for English speakers; ULP Season 1 lesson 5 trainer.\n"
+        "- Quote (verbatim source text):\n```text\nthe podcast for learning how to pronounce и:\n"
+        " 1. In the English language\n```",
+        # exercise: pattern, quote, and only the sample items the quote does not already show
+        "### Record `X-004`\n- Kind: exercise\n"
+        "- Source: textbook: zaharijchuk, 1-klas-bukvar-zaharijchuk-2025-1, grade 1, page 15\n"
+        "- Pattern: Pick a missing syllable from a bounded list to complete a known word.\n"
+        "- Quote (verbatim source text):\n```text\nВідшукай «загублений» склад у словах.\nма- __ -на\n```\n"
+        "- Sample item 1:\n```text\nсо- __ ма-, -ва, -ла\n```",
+        # example: text and translation_en, literary source
+        "### Record `EX-001`\n- Kind: example\n- Source: literary: Тарас Шевченко, Кобзар, 1840, shevchenko-kobzar\n"
+        "- Text (verbatim):\n```text\nДобрий день, пане!\n```\n"
+        "- English translation (the engine prints it; do not translate): Good day, sir!",
+        "### Record `E-001`\n- Kind: error\n- Source: ua_gec_errors row 4821\n- Incorrect: приймати участь\n"
+        "- Correct: брати участь\n- Error type: Calque\n- Pattern: Russian calque of принимать участие.",
+        # note: null section, excerpt and russianism pattern are left out
+        "### Record `N-001`\n- Kind: note\n- Source: style_guide row 312\n- Word: вибачте\n"
+        "- Text:\n```text\nВибачте — ввічливе прохання.\n```\n\n",
+        "### Record `V-004`\n- Kind: video\n- Channel: Ukrainian Lessons\n"
+        "- URL: https://www.youtube.com/watch?v=W-1rCu0indE\n"
+        "- Use: Listening model for the informal greeting in lesson 1.\n- Link check: HTTP 200 on 2026-09-29\n",
+        "### Record `S-001`\n- Kind: standard\n- Source: State Standard, lines 351-353\n- Text (verbatim):\n"
+        "```text\n      1.3.1.1. Особа вміє:\n      написати власне прізвище та ім’я;\n```",
+        "### Record `U-001`\n- Kind: unsupported\n- Claim: A1 learners confuse И and І by ear.\n- Status: open\n"
+        "- Searches: search_text: и і розрізнення",
+        "### Record `W-001`\n- Kind: word\n- Lemma: mama\n- Part of Speech: noun\n- Forms:\n"
+        "  - form: mama, tags: tag-nom, stressed: mama, stress_source: vesum",
+    ]
+    for chunk in expected:
+        assert chunk in block
+    assert block.count("ма- __ -на") == 1
+    assert "W-555" not in prompt  # an example's sentence_ref is engine data, not writer input
+    assert "None" not in block and "Raw:" not in prompt and "{'" not in block
+    assert _check(prompt, plan, sample_learner_state, recap=recap).errors == []
+
+
+@pytest.mark.parametrize(
+    ("record_id", "record", "line"),
+    [
+        pytest.param("V-004", {**VIDEO_RECORD, "checked": None}, "- Link check: not checked\n", id="video-unchecked"),
+        pytest.param(
+            "V-004",
+            {**VIDEO_RECORD, "checked": {**VIDEO_RECORD["checked"], "final_url": "https://youtu.be/x"}},
+            "- Link check: HTTP 200 on 2026-09-29, final URL https://youtu.be/x\n",
+            id="video-redirected",
+        ),
+        pytest.param(
+            "N-001",
+            {**NOTE_RECORD, "section": "Етикет", "excerpt_full": "Повний текст.", "russianism_pattern": "извините"},
+            "- Section: Етикет\n- Text:\n```text\nВибачте — ввічливе прохання.\n```\n- Full excerpt:\n"
+            "```text\nПовний текст.\n```\n- Russianism pattern: извините\n",
+            id="note-full",
+        ),
+        pytest.param(
+            "U-001",
+            {**UNSUPPORTED_RECORD, "status": "resolved", "resolved_by": {"record": "T-004"}},
+            "- Status: resolved\n- Searches: search_text: и і розрізнення\n- Resolved by: T-004\n",
+            id="unsupported-resolved",
+        ),
+        pytest.param(
+            "T-004",
+            {**TEXT_RECORD, "quote": "Code: ```x```"},
+            "````text\nCode: ```x```\n````",
+            id="fence-outruns-backticks",
+        ),
+    ],
+)
+def test_optional_record_fields_render_when_present(sample_plan_entry, sample_learner_state, record_id, record, line):
+    cited = {record_id: record}
+    plan = _citing(sample_plan_entry, [record_id, "T-004"])  # T-004: the record U-001 is resolved by
+    prompt = _render(plan, sample_learner_state, cited)
+    assert line in _cited_block(prompt)
+    assert _check(prompt, plan, sample_learner_state).errors == []
+
+
+@pytest.mark.parametrize(
+    ("cited", "message"),
+    [
+        pytest.param({"Q-001": {"text": "x"}}, "'Q-001' is not a known record kind", id="unknown-kind"),
+        pytest.param(
+            {"T-004": {k: v for k, v in TEXT_RECORD.items() if k != "quote"}},
+            "text record 'T-004' lacks ['quote']",
+            id="text-without-quote",
+        ),
+        pytest.param(
+            {"V-004": {k: v for k, v in VIDEO_RECORD.items() if k != "channel"}},
+            "video record 'V-004' lacks ['channel']",
+            id="video-without-channel",
+        ),
+        pytest.param(
+            {"T-004": {**TEXT_RECORD, "source": {**ULP_SOURCE, "kind": "podcast"}}},
+            "unknown source kind 'podcast'",
+            id="unknown-source-kind",
+        ),
+    ],
+)
+def test_an_unknown_or_incomplete_record_fails_the_render(sample_plan_entry, sample_learner_state, cited, message):
+    with pytest.raises(ValueError, match=f"^cited_record_invalid: .*{re.escape(message)}"):
+        cited_record_views(cited)
+    with pytest.raises(ValueError, match="cited_record_invalid"):
+        _render(_citing(sample_plan_entry, cited), sample_learner_state, cited)
+
+
+def test_record_kinds_cover_every_record_kind_of_the_pack_schema():
+    defs = json.loads(EVIDENCE_PACK_SCHEMA.read_text(encoding="utf-8"))["$defs"]
+    schema_kinds = {
+        spec["properties"]["id"]["pattern"].removeprefix("^").split("-", 1)[0]: name.removesuffix("_record")
+        for name, spec in defs.items()
+        if name.endswith("_record")
+    }
+    assert schema_kinds == {prefix: kind for prefix, kind in RECORD_KINDS.items() if prefix != "W"}
+
+
+def test_lesson_numbers_in_cited_source_prose_are_not_curriculum_references(sample_plan_entry, sample_learner_state):
+    """The cited block's `supports` names ULP lesson 5 and a video's `use` names lesson 1; neither is flagged,
+    while the same reference anywhere outside the block still is."""
+    plan = _citing(sample_plan_entry, ALL_KINDS)
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "ULP Season 1 lesson 5" in _cited_block(prompt)
+    assert _check(prompt, plan, sample_learner_state).errors == []
+
+    outside = prompt.replace("First phonetics step.", "First phonetics step, as in ULP Season 1 lesson 5.")
+    assert any(
+        e.startswith("unauthorized_lesson_number: lesson number 5")
+        for e in _check(outside, plan, sample_learner_state).errors
+    )
+    after_block = prompt.replace(CITED_RECORDS_END, CITED_RECORDS_END + "\nSee lesson 7.")
+    assert any("lesson number 7" in e for e in _check(after_block, plan, sample_learner_state).errors)
+
+    no_markers = prompt.replace(CITED_RECORDS_BEGIN, "")
+    errors = _check(no_markers, plan, sample_learner_state).errors
+    assert any(e.startswith("missing_cited_records_marker") for e in errors)
+    assert any("lesson number 5" in e for e in errors)
+
+
+def test_lesson_numbers_the_plan_entry_states_are_its_own_input(sample_plan_entry, sample_learner_state):
+    """A plan that cites "ULP S1 lesson 10" or models an activity on "lesson 2 a5" (A1 position 1 does both)
+    renders; a lesson number the plan entry does not state still fails."""
+    plan = _citing(
+        sample_plan_entry,
+        ALL_KINDS,
+        rationale="ULP S1 lesson 10 supplies the review shape.",
+        activities=[{**sample_plan_entry["activities"][0], "focus": "Modeled on the choice of lesson 2 a5."}],
+    )
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "ULP S1 lesson 10" in prompt and "lesson 2 a5" in prompt
+    assert _check(prompt, plan, sample_learner_state).errors == []
+
+    tampered = prompt.replace("the review shape.", "the review shape of lesson 4.")
+    assert any("lesson number 4" in e for e in _check(tampered, plan, sample_learner_state).errors)
+
+
+def test_record_id_scan_matches_only_schema_id_shapes(sample_plan_entry, sample_learner_state):
+    assert RECORD_ID_RE.findall("Latin P-looking shape; watch?v=W-1rCu0indE; T-4, G-a1-001, EX-12x, W-11.") == [
+        "T-4",
+        "G-a1-001",
+        "W-11",
+    ]
+    plan = _citing(sample_plan_entry, ALL_KINDS, rationale="Override the Latin P-looking shape.")
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert _check(prompt, plan, sample_learner_state).errors == []
+
+
+def _schema_id_prefixes():
+    """Every id prefix of the pack schema's ``<kind>_record`` definitions, plus the word store's ``W``."""
+    defs = json.loads(EVIDENCE_PACK_SCHEMA.read_text(encoding="utf-8"))["$defs"]
+    pack = {
+        spec["properties"]["id"]["pattern"].removeprefix("^").split("-", 1)[0]
+        for n, spec in defs.items()
+        if n.endswith("_record")
+    }
+    return sorted({*pack, "W"})
+
+
+@pytest.mark.parametrize("prefix", _schema_id_prefixes())
+def test_uncited_record_id_of_every_schema_kind_fails_the_check(sample_plan_entry, sample_learner_state, prefix):
+    """An uncited ``<prefix>-999`` fails for every record kind the pack schema defines; the plan's cited record
+    of that kind in the same place passes."""
+    plan = _citing(sample_plan_entry, ALL_KINDS)
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "First phonetics step." in prompt
+
+    uncited = prompt.replace("First phonetics step.", f"First phonetics step, see {prefix}-999.")
+    errors = _check(uncited, plan, sample_learner_state).errors
+    assert any(e.startswith(f"uncited_record_id: record '{prefix}-999'") for e in errors), errors
+
+    (cited_id,) = [rid for rid in ALL_KINDS if rid.split("-", 1)[0] == prefix]
+    cited = prompt.replace("First phonetics step.", f"First phonetics step, see {cited_id}.")
+    assert _check(cited, plan, sample_learner_state).errors == []
+
+
+def test_lesson_without_consolidation_renders(sample_plan_entry, sample_learner_state):
+    """A lesson plan entry may omit `consolidation` (module-plan-v2 does not require it for any lesson kind)."""
+    plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS).items() if k != "consolidation"}
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "### Consolidation" not in prompt
+    assert _check(prompt, plan, sample_learner_state).errors == []
+
+
+def test_lesson_with_consolidation_lists_its_activities(sample_plan_entry, sample_learner_state):
+    plan = _citing(sample_plan_entry, ALL_KINDS)
+    prompt = _render(plan, sample_learner_state, ALL_KINDS)
+    assert "### Consolidation\n- activities: a1\n" in prompt
+
+
+def test_recap_without_consolidation_renders(sample_plan_entry, sample_learner_state):
+    """A recap plan entry may omit `consolidation` (module-plan-v2 does not require it; A1 position 1 lesson 6)."""
+    plan = {k: v for k, v in _citing(sample_plan_entry, ALL_KINDS, kind="recap").items() if k != "consolidation"}
+    prompt = _render(plan, sample_learner_state, ALL_KINDS, recap=True)
+    assert "### Consolidation" not in prompt
+    assert _check(prompt, plan, sample_learner_state, recap=True).errors == []
