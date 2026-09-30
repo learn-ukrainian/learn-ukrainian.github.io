@@ -10,7 +10,6 @@ import shlex
 import shutil
 import subprocess
 import sys
-import types
 from contextlib import redirect_stderr, redirect_stdout
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -829,19 +828,17 @@ def test_invocation_attacks_refused(world, monkeypatch, shape):
         "{interpreter} -m scripts.fleet.sibling_gitx sync-main --repo test",
     ],
 )
-def test_module_mentions_without_word_pair_match_main(world, monkeypatch, shape):
+def test_module_mentions_without_word_pair_keep_existing_behavior(world, monkeypatch, shape):
     primary = world[0]
     hook = fixture_hook(primary, monkeypatch)
     interpreter = shlex.quote(str(primary / ".venv/bin/python"))
     cmd = f"{interpreter} -m scripts.fleet.sibling_git sync-main --repo test"
     command = shape.format(interpreter=interpreter, quoted=shlex.quote(cmd))
-    baseline = types.ModuleType("main_guard_baseline")
-    baseline.__file__ = hook.__file__
-    source = git(ROOT, "show", "origin/main:agents_extensions/shared/hooks/guard-primary-checkout-write.py")
-    exec(compile(source, baseline.__file__, "exec"), baseline.__dict__)
     before = snapshot(primary)
     try:
-        assert decide(hook, command, primary) == decide(baseline, command, primary) == 0
+        # Pin the pre-existing decision, independent of a moving remote ref
+        # that is absent in CI's depth-one merge checkout.
+        assert decide(hook, command, primary) == 0
         assert snapshot(primary) == before
     finally:
         shutil.rmtree(primary / "scripts")
@@ -882,26 +879,25 @@ def test_module_context_attacks(world, tmp_path, monkeypatch, kind):
 
 
 @pytest.mark.parametrize(
-    "shape",
+    ("shape", "expected"),
     [
-        "git -C {sibling} merge --ff-only origin/main",
-        "cd {sibling} && git merge --ff-only origin/main",
-        "git -C {sibling} worktree remove {target}",
+        ("git -C {sibling} merge --ff-only origin/main", 2),
+        ("cd {sibling} && git merge --ff-only origin/main", 2),
+        ("git -C {sibling} worktree remove {target}", 0),
     ],
 )
-def test_raw_sibling_git_behavior_matches_main(world, monkeypatch, shape):
+def test_raw_sibling_git_keeps_existing_behavior(world, monkeypatch, shape, expected):
     primary, sibling, _ = world
     hook = fixture_hook(primary, monkeypatch)
     command = shape.format(sibling=shlex.quote(str(sibling)), target=shlex.quote(str(primary / "file.txt")))
-    baseline = types.ModuleType("main_guard_baseline")
-    baseline.__file__ = hook.__file__
-    source = git(ROOT, "show", "origin/main:agents_extensions/shared/hooks/guard-primary-checkout-write.py")
-    exec(compile(source, baseline.__file__, "exec"), baseline.__dict__)
-    assert decide(hook, command, primary) == decide(baseline, command, primary)
-    if "merge" in shape:
-        assert decide(hook, command, primary) == 2
-    shutil.rmtree(primary / "scripts")
-    shutil.rmtree(primary / "agents_extensions")
+    before = snapshot(primary)
+    try:
+        # These are existing parser decisions, not sibling_git executions.
+        assert decide(hook, command, primary) == expected
+        assert snapshot(primary) == before
+    finally:
+        shutil.rmtree(primary / "scripts")
+        shutil.rmtree(primary / "agents_extensions")
 
 
 def test_help_and_invalid_argv(world, capsys):
