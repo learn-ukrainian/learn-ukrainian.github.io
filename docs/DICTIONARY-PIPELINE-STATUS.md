@@ -1,6 +1,6 @@
 # Dictionary Pipeline Status
 
-> Updated: 2026-03-24 (all dictionaries ingested)
+> Updated: 2026-09-30 (ULIF cached headword recovery, #9338)
 
 ## In RAG ✅
 
@@ -27,6 +27,62 @@
 | Literary (new) | Грушевський тт.4-10 + Орлика | ~610 chunks | `PYTORCH_MPS_HIGH_WATERMARK_RATIO=0.0 .venv/bin/python scripts/rag/ingest.py --all-literary --batch-size 16` |
 
 ## Local databases (no RAG needed)
+
+### ULIF cached headword recovery (#9338)
+
+DictUA entry selections can open on a relation tab (synonyms or phraseology),
+whose article has no `.word_style` headword. The ingest now recovers missing
+identity from the separately cached paradigm tab, keeping any identity already
+present on the entry page. Both walk-time ingest and offline parsing use this
+rule; source spellings are never inferred from the query or relation terms.
+An identity that cannot be recovered is stored as `parse_error`, not `ok`.
+
+For a bounded, offline replay of affected groups, use the shared project
+interpreter with the existing completed walk ledger and live database:
+
+```bash
+<shared-project-python> -m scripts.lexicon.runner.fetch_ulif_homonyms parse \
+  --state-dir <completed-walk-state-dir> --db <sources.db> --empty-headwords-only
+```
+
+The repair snapshots groups containing `status='ok'` rows whose headword is
+empty, requires stored ledger units and unchanged register positions/homonym
+indexes, and upserts only their missing identity. It preserves row IDs,
+`homonym_checked`, sections, raw references and original fetch timestamps.
+No pages are fetched and no corpus or cache files are removed. Without the
+repair flag, `parse` retains its full replay behavior.
+
+The single bounded cache replay on 2026-09-30 covered 12,687 spelling groups:
+
+| Measurement | Before | After |
+|-------------|--------|-------|
+| `ok` rows with an empty headword | 12,899 | 23 |
+| Recovered headwords from that cohort | 0 | 12,817 |
+| Unrecoverable cohort rows marked `parse_error` | 0 | 59 |
+| Total entry rows | 269,262 | 269,262 |
+| Section rows | 336,396 | 336,396 |
+| Raw-cache objects | 943,308 | 943,308 |
+
+The 23 remaining `ok` rows belong to 16 groups with printed homonym numbers
+that disagree with register-order indexes. The existing #8400 safeguard
+rejected those groups and marked their ledger units `error`; no identity or
+homonym ordering was guessed. The other 59 empty rows have visibly empty
+cached paradigm articles and no headword on their cached entry response.
+They remain unavailable as word witnesses. The curriculum-upgrade driver
+owns both residuals: reconcile the 16 groups under #8400, and arrange
+operator-authorized source recovery for the 59 empty articles. Per-row cache
+hashes, register positions and mismatch observations were retained locally
+for that handoff; this repair does not claim full ULIF completion.
+
+All 12,899 cohort rows retained their IDs, spelling keys, homonym indexes,
+register positions, trust flags, raw references and fetch timestamps. A
+before/after fingerprint matched for the 256,363 rows outside the cohort.
+A preselected sample of 20 recovered rows (the reported example plus 19
+seeded samples) matched cached ULIF headwords in all 20 cases. The Sources
+MCP `verify_words` VESUM check found 19/20: `безкінечно` was absent from VESUM,
+while cache-only `query_ulif` attested `безкіне́чно` (`ulif:23553`). This is
+reported as a dictionary coverage difference, not a judgement against the
+source spelling. VESUM verifies morphology, not the retained ULIF stress.
 
 VTS receipt citations use bounded retained snapshots in
 `sources.db:slovnyk_me_entries` (#9296). Import existing schema-v4 cache files

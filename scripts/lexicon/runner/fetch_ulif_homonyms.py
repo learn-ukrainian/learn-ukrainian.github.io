@@ -1506,7 +1506,81 @@ def _tabs_for_entry_attempt(
     )
 
 
-def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
+def _parse_cached_entry(
+    entry_html: str,
+    raw_tabs: Mapping[str, str],
+    *,
+    spelling: str,
+    homonym_index: int,
+    register_position: str,
+) -> dict[str, Any]:
+    """Recover missing identity from the paradigm tab when entry opens on a relation tab."""
+    parsed = parse_ulif_entry(entry_html, homonym_index=homonym_index, register_position=register_position)
+    if not parsed["canonical_headword"] and "paradigm" in raw_tabs:
+        parsed = parse_ulif_entry(
+            raw_tabs["paradigm"], homonym_index=homonym_index, register_position=register_position
+        )
+        if parsed["canonical_headword"] and parsed["normalized_spelling"] != normalize_ulif_spelling(spelling):
+            raise ValueError(f"cached identity mismatch for {spelling} at {register_position}")
+    return parsed
+
+
+def _repair_group_identity(cache: sqlite3.Connection, spelling: str, parsed_rows: list[dict[str, Any]]) -> int:
+    """Upsert cached identity without replacing sections, timestamps or raw references."""
+    changed = 0
+    try:
+        # prepare_database uses autocommit. Avoid schema-creating upsert helpers:
+        # executescript would commit this group transaction before each row.
+        cache.execute("BEGIN IMMEDIATE")
+        cursor = cache.execute("SELECT * FROM ulif_dictua_entries WHERE normalized_query = ?", (spelling,))
+        columns = [column[0] for column in cursor.description]
+        rows = [dict(zip(columns, values, strict=True)) for values in cursor]
+        existing = {int(row["homonym_index"]): row for row in rows}
+        if {(index, str(row["register_position"])) for index, row in existing.items()} != {
+            (int(row["homonym_index"]), str(row["register_position"])) for row in parsed_rows
+        }:
+            raise ValueError(f"refusing to change group membership during headword repair: {spelling}")
+        for parsed in parsed_rows:
+            old = existing[int(parsed["homonym_index"])]
+            if old["status"] != "ok" or str(old["canonical_headword"]).strip():
+                continue
+            old.update(
+                canonical_headword=str(parsed["canonical_headword"]),
+                grammatical_label=str(parsed["grammatical_label"]),
+                sense_gloss=str(parsed["sense_gloss"]),
+                content_sha256=str(parsed["content_sha256"]),
+                parser_version=ULIF_PARSER_VERSION,
+                status="ok" if parsed["canonical_headword"] else "parse_error",
+            )
+            cache.execute(
+                """
+                INSERT INTO ulif_dictua_entries (
+                    id, normalized_query, homonym_index, canonical_headword, grammatical_label,
+                    sense_gloss, content_sha256, register_position, homonym_checked,
+                    raw_response_ref, retrieved_at, response_sha256, parser_version, status
+                ) VALUES (
+                    :id, :normalized_query, :homonym_index, :canonical_headword, :grammatical_label,
+                    :sense_gloss, :content_sha256, :register_position, :homonym_checked,
+                    :raw_response_ref, :retrieved_at, :response_sha256, :parser_version, :status
+                ) ON CONFLICT(normalized_query, homonym_index) DO UPDATE SET
+                    canonical_headword = excluded.canonical_headword,
+                    grammatical_label = excluded.grammatical_label,
+                    sense_gloss = excluded.sense_gloss,
+                    content_sha256 = excluded.content_sha256,
+                    parser_version = excluded.parser_version,
+                    status = excluded.status
+                """,
+                old,
+            )
+            changed += 1
+        cache.commit()
+    except Exception:
+        cache.rollback()
+        raise
+    return changed
+
+
+def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection, *, empty_headwords_only: bool = False) -> int:
     """Parse one-mode stored bodies offline; reject mixed run/walk ledgers."""
     from scripts.wiki.sources_db import store_ulif_dictua_entry
 
@@ -1516,6 +1590,18 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
         str(row["spelling"])
         for row in ledger.conn.execute("SELECT spelling FROM spellings WHERE state = 'stored' ORDER BY spelling")
     ]
+    if empty_headwords_only:
+        affected = {
+            str(row[0])
+            for row in cache.execute(
+                "SELECT DISTINCT normalized_query FROM ulif_dictua_entries "
+                "WHERE status = 'ok' AND trim(canonical_headword) = ''"
+            )
+        }
+        missing = affected - set(spellings)
+        if missing:
+            raise ValueError(f"{len(missing)} affected spelling groups lack a stored ledger unit")
+        spellings = [spelling for spelling in spellings if spelling in affected]
     total_spellings = len(spellings)
     # Walk ledgers bind each entry to a completed register row.
     walk_mode = mode == "walk"
@@ -1549,20 +1635,21 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
                 for entry in ledger.entry_responses(spelling)
             ]
         if not entries:
+            if empty_headwords_only:
+                raise ValueError(f"affected group has no completed entries: {spelling}")
             continue
         for homonym_index, register_position, entry_sha in entries:
-            html = _load_body(cache, entry_sha)
-            parsed = parse_ulif_entry(
-                html,
-                homonym_index=homonym_index,
-                register_position=register_position,
-            )
+            html = "" if empty_headwords_only else _load_body(cache, entry_sha)
             sections: dict[str, object] = {}
             raw: dict[str, str] = {}
             for tab in _tabs_for_entry_attempt(ledger, spelling, register_position, entry_sha):
                 kind = str(tab["tab_kind"])
+                if empty_headwords_only and kind != "paradigm":
+                    continue
                 tab_html = _load_body(cache, str(tab["response_sha256"]))
                 raw[kind] = tab_html
+                if empty_headwords_only:
+                    continue
                 if kind == "paradigm":
                     paradigm = parse_ulif_paradigm(tab_html)
                     if paradigm is not None:
@@ -1571,6 +1658,11 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
                     groups = parse_ulif_relation_groups(tab_html, kind)
                     if groups:
                         sections[kind] = groups
+            if empty_headwords_only and "paradigm" not in raw:
+                html = _load_body(cache, entry_sha)
+            parsed = _parse_cached_entry(
+                html, raw, spelling=spelling, homonym_index=homonym_index, register_position=register_position
+            )
             parsed_rows.append(parsed)
             section_sets.append(sections)
             raw_sets.append(raw)
@@ -1591,8 +1683,13 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
                 error=(f"printed_number_mismatch register={list(register)} printed={list(printed)}"),
             )
             continue
-        differing += _write_group(cache, spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
-        entries_written += len(parsed_rows)
+        if empty_headwords_only:
+            repaired = _repair_group_identity(cache, spelling, parsed_rows)
+            differing += bool(repaired)
+            entries_written += repaired
+        else:
+            differing += _write_group(cache, spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
+            entries_written += len(parsed_rows)
         ledger.set_duplicate_content(spelling, _duplicate_content(parsed_rows))
     ledger.set_meta("differing_content_hashes", str(differing))
     print(
@@ -1663,7 +1760,7 @@ def _write_group(
     existing = list(
         cache.execute(
             """
-            SELECT homonym_index, content_sha256
+            SELECT homonym_index, content_sha256, canonical_headword
             FROM ulif_dictua_entries
             WHERE normalized_query = ?
             ORDER BY homonym_index
@@ -1676,6 +1773,7 @@ def _write_group(
         same_count = len(existing) == len(parsed_rows)
         same_hashes = same_count and all(
             str(ex[1] or "") == str(pr["content_sha256"]) and str(ex[1] or "") != ""
+            and bool(str(ex[2] or "").strip()) and bool(pr["canonical_headword"])
             for ex, pr in zip(existing, parsed_rows, strict=True)
         )
         if same_hashes:
@@ -1712,7 +1810,7 @@ def _write_group(
                 raw_responses=raw,
                 retrieved_at=_now_iso(),
                 parser_version=ULIF_PARSER_VERSION,
-                status="ok",
+                status="ok" if parsed["canonical_headword"] else "parse_error",
                 homonym_index=int(parsed["homonym_index"]),
                 grammatical_label=str(parsed["grammatical_label"]),
                 sense_gloss=str(parsed["sense_gloss"]),
@@ -1965,8 +2063,6 @@ def _commit_spelling_group(
         )
 
         entry_html = _load_body(cache, str(r["entry_sha256"]))
-        parsed = parse_ulif_entry(entry_html, homonym_index=homonym_index, register_position=reg_pos)
-
         sections: dict[str, object] = {}
         raw: dict[str, str] = {}
         for tab in _tabs_for_entry_attempt(ledger, normalized_spelling, reg_pos, str(r["entry_sha256"])):
@@ -1981,6 +2077,10 @@ def _commit_spelling_group(
                 groups = parse_ulif_relation_groups(tab_html, kind)
                 if groups:
                     sections[kind] = groups
+
+        parsed = _parse_cached_entry(
+            entry_html, raw, spelling=normalized_spelling, homonym_index=homonym_index, register_position=reg_pos
+        )
 
         parsed_rows.append(parsed)
         section_sets.append(sections)
@@ -4770,10 +4870,15 @@ Related:
 Examples:
   .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms parse \\
       --state-dir batch_state/ulif-homonyms/state --db data/sources.db
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms parse \\
+      --state-dir batch_state/ulif-walk/state --db data/sources.db --empty-headwords-only
 
 Outputs:
   Populates ulif_dictua_entries and ulif_dictua_sections (sources.db)
   Marks homonym_checked = 1 on stored entries
+  With --empty-headwords-only: upserts missing identity only, preserving sections,
+  row ids, homonym_checked, fetch timestamps and raw references; never fetches.
+  An unrecoverable identity becomes parse_error instead of remaining ok.
 
 Exit codes:
   0: Parsing completed successfully
@@ -4796,6 +4901,14 @@ Related:
         type=Path,
         required=True,
         help="Sources SQLite database receiving parsed entries (raw bodies are in the ULIF cache; e.g. data/sources.db)",
+    )
+    parse.add_argument(
+        "--empty-headwords-only",
+        action="store_true",
+        help=(
+            "Replay only stored groups containing ok rows with empty headwords; "
+            "refuse changes to group membership (default: replay all stored groups)"
+        ),
     )
 
     status = sub.add_parser(
@@ -5155,7 +5268,7 @@ Related:
         ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
         try:
             try:
-                differing = parse_stored(ledger, cache)
+                differing = parse_stored(ledger, cache, empty_headwords_only=args.empty_headwords_only)
             except ValueError as exc:
                 print(f"refusing to parse: {exc}", file=sys.stderr)
                 return EXIT_USAGE
