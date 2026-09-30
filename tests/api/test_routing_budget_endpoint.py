@@ -2,15 +2,18 @@
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 
+import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
 from scripts.analytics.cost_report import CostRecord
 from scripts.api import state_router
 from scripts.api.monitor_context import fixture_context
+from scripts.fleet import reset_reserve
 
 
 def _write_budget_config(tmp_path: Path) -> Path:
@@ -341,6 +344,84 @@ def test_api_projects_sanitized_reserve_and_can_recommend_codex(monkeypatch, tmp
     }
     assert data["agents"]["codex"]["status"] == "hot"
     assert data["recommendation"]["primary_agent_for_code"] == "codex"
+
+
+@pytest.mark.parametrize(
+    ("inventory_overrides", "provider_overrides", "available"),
+    [
+        ({}, {}, True),
+        ({"available_count": 0, "expires_at": []}, {}, False),
+        ({}, {"stale": True, "freshness": "stale_last_good"}, False),
+        ({"fetched_at": "2026-05-13T20:00:00Z"}, {}, False),
+    ],
+)
+def test_fresh_refresh_evaluates_reserve_from_response_inventory(
+    monkeypatch, tmp_path, inventory_overrides, provider_overrides, available
+):
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 800.0, now)])
+    monkeypatch.setattr(state_router, "get_freshest_lane_usage", lambda: None)
+    monkeypatch.setattr(reset_reserve, "main_checkout_root", lambda _root: tmp_path)
+    assertion_path = tmp_path / reset_reserve.RESERVE_RELATIVE_PATH
+    assertion_path.parent.mkdir(parents=True)
+    assertion_path.write_text(
+        json.dumps(
+            {
+                "schema_version": reset_reserve.SCHEMA_VERSION,
+                "provider": "codex",
+                "remaining_resets": 5,
+                "confirmed_at": "2026-05-13T20:00:00Z",
+                "expires_at": "2026-05-14T20:00:00Z",
+            }
+        ),
+        encoding="utf-8",
+    )
+    cached = {
+        "lane": "codex",
+        "primary_used_pct": 70.0,
+        "weekly_used_pct": 80.0,
+        "weekly_pace_delta_pct": 10.0,
+        "weekly_expected_pct": 70.0,
+        "will_last_to_reset": False,
+        "windows": {"primary": {"remaining_pct": 20.0, "window_minutes": 300}},
+        "stale": False,
+        "freshness": "fresh",
+        "age_s": 0,
+    }
+    refreshed = {
+        **cached,
+        "reset_credits": {
+            "available_count": 2,
+            "expires_at": [None, None],
+            "fetched_at": now.isoformat(),
+            **inventory_overrides,
+        },
+        **provider_overrides,
+    }
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda provider: cached if provider == "codex" else None)
+    monkeypatch.setattr(state_router, "refresh_provider_usage_data", lambda _providers: {"codex": refreshed})
+    # The refresh result need not update the process cache for this response.
+    monkeypatch.setattr(reset_reserve, "get_provider_usage_data", lambda _provider: cached)
+
+    before = state_router.compute_routing_budget(now)
+    data = state_router.compute_routing_budget(now, fresh_codexbar=True)
+
+    assert before["reset_reserve"] == reset_reserve.unavailable_reserve()
+    assert data["agents"]["codex"]["reset_credits"] == refreshed["reset_credits"]
+    assert data["agents"]["codex"]["status"] == "hot"
+    if available:
+        assert data["reset_reserve"] == {
+            "available": True,
+            "provider": "codex",
+            "remaining_resets": 2,
+            "confirmed_at": "2026-05-13T20:00:00Z",
+            "expires_at": "2026-05-14T20:00:00Z",
+        }
+        assert data["recommendation"]["primary_agent_for_code"] == "codex"
+        assert any("Codex reset reserve active (2 confirmed reset(s) remaining)" in w for w in data["recommendation"]["warnings"])
+    else:
+        assert data["reset_reserve"] == reset_reserve.unavailable_reserve()
+        assert not any("Codex reset reserve active" in w for w in data["recommendation"]["warnings"])
 
 
 def test_status_cool_when_burn_under_50(monkeypatch, tmp_path):

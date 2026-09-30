@@ -25,6 +25,7 @@ RESERVE_RELATIVE_PATH = Path("batch_state/routing_budget/operator_reset_reserve.
 
 
 def _utc_datetime(value: object) -> datetime | None:
+    """Parse explicit UTC timestamps; non-UTC offsets are rejected by design."""
     if not isinstance(value, str):
         return None
     try:

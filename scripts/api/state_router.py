@@ -1091,7 +1091,6 @@ def _compute_dispatch_routing_budget(
     batch_state_dir: Path | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
-    reset_reserve = load_reset_reserve(project_root or Path(__file__).resolve().parents[2], now=current_time)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
@@ -1217,7 +1216,9 @@ def _compute_dispatch_routing_budget(
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
-            "reset_reserve": reset_reserve,
+            "reset_reserve": load_reset_reserve(
+                project_root or Path(__file__).resolve().parents[2], now=current_time
+            ),
             "api_accounts": api_accounts,
             "in_flight": in_flight_by_agent,
             "recommendation": rec,
@@ -1714,6 +1715,9 @@ def _compute_dispatch_routing_budget(
 
     recommendation_agents = {lane: dict(info) for lane, info in agents.items()}
     codex_info = agents.get("codex", {})
+    reset_reserve = load_reset_reserve(
+        project_root or Path(__file__).resolve().parents[2], now=current_time, codex_info=codex_info
+    )
     reserve_relaxes_codex = codex_is_threatened(codex_info) and codex_reset_reserve_eligible(
         reset_reserve, codex_info, now=current_time, snapshot_stale=is_stale
     )

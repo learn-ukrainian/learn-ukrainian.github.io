@@ -154,6 +154,42 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
     assert blocked["codex"]["avoid"] is True
 
 
+@pytest.mark.parametrize(("asserted", "live", "expected"), [(5, 2, 2), (2, 5, 2)])
+def test_raw_reset_reserve_note_reports_effective_count(asserted, live, expected):
+    now = datetime.now(UTC)
+    budget = _fixture_budget()
+    budget["agents"]["codex"].update(
+        eligible=True,
+        health={"healthy": True},
+        freshness="fresh",
+        age_s=0,
+        reset_credits={
+            "available_count": live,
+            "expires_at": [None] * live,
+            "fetched_at": now.isoformat(),
+        },
+        codexbar={
+            **budget["agents"]["codex"]["codexbar"],
+            "weekly_used_pct": 72.0,
+            "windows": {"primary": {"remaining_pct": 12.0}},
+        },
+        runtime={"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+    )
+    reserve = {
+        "available": True,
+        "provider": "codex",
+        "remaining_resets": asserted,
+        "confirmed_at": (now - timedelta(minutes=1)).isoformat(),
+        "expires_at": (now + timedelta(days=1)).isoformat(),
+    }
+
+    row = next(row for row in capacity_pick.build_lane_rows(budget, reset_reserve=reserve) if row["lane"] == "codex")
+
+    assert row["reset_reserve_eligible"] is True
+    assert f"reset reserve eligible ({expected} remaining)" in row["notes"]
+    assert reserve["remaining_resets"] == asserted
+
+
 def test_capacity_uses_snapshot_inventory_without_process_cache(monkeypatch, tmp_path):
     from scripts.fleet import reset_reserve
 
