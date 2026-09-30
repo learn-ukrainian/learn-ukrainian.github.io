@@ -525,7 +525,15 @@ def test_qwen_yes_no_scoring_preserves_template_without_joint_truncation(tmp_pat
     import sys
     from types import SimpleNamespace
 
-    import torch
+    import numpy as np
+
+    def softmax(values, dim):
+        assert dim == 1
+        weights = np.exp(values - values.max(axis=dim, keepdims=True))
+        return weights / weights.sum(axis=dim, keepdims=True)
+
+    torch = SimpleNamespace(tensor=np.asarray, no_grad=nullcontext, softmax=softmax)
+    monkeypatch.setitem(sys.modules, "torch", torch)
 
     class Tokenizer:
         model_max_length = 100
