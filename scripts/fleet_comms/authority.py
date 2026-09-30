@@ -26,6 +26,7 @@ from scripts.agent_runtime.target_admission import (
     AdmittedTarget,
     require_admitted,
     resolve_and_admit,
+    stored_kimi_request,
     stored_kimi_row,
 )
 from scripts.control_plane.storage import (
@@ -34,7 +35,7 @@ from scripts.control_plane.storage import (
     StoreId,
     assert_component_supported,
 )
-from scripts.fleet_comms.artifacts import ArtifactRecord, ArtifactStore
+from scripts.fleet_comms.artifacts import ArtifactRecord, ArtifactStore, ArtifactStoreError
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.formal_review_jobs import (
     FormalReviewJob,
@@ -323,6 +324,8 @@ class AuthorityService:
         self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
         self._conn = self.store.connection
+        # payload_artifact_id -> addressed to Kimi; payloads are immutable.
+        self._kimi_payloads: dict[str, bool] = {}
         if self._owns_store:
             apply_migrations(self._conn)
         self._require_authority_schema()
@@ -921,7 +924,10 @@ class AuthorityService:
         lease_seconds: int = 300,
         now: str | None = None,
     ) -> AuthorityJobLease | None:
-        """Claim exactly one eligible durable job under a fenced lease."""
+        """Claim exactly one eligible durable job under a fenced lease.
+
+        A stored Kimi job (legacy) is passed over unwritten (``_stored_kimi_job``).
+        """
         worker = _nonempty(worker_id, field="worker_id")
         if lease_seconds <= 0:
             raise AuthorityServiceError("lease_seconds_must_be_positive")
@@ -935,12 +941,13 @@ class AuthorityService:
             if kinds:
                 clauses.append("job_kind IN (" + ", ".join("?" for _ in kinds) + ")")
                 params.extend(sorted(kinds))
-            row = self._conn.execute(
+            candidates = self._conn.execute(
                 """SELECT * FROM authority_jobs WHERE """
                 + " AND ".join(clauses)
-                + " ORDER BY created_at ASC, job_id ASC LIMIT 1",
+                + " ORDER BY created_at ASC, job_id ASC",
                 params,
-            ).fetchone()
+            )
+            row = next((job for job in candidates if not self._stored_kimi_job(job)), None)
             if row is None:
                 return None
             token = int(row["fence_token"]) + 1
@@ -976,6 +983,8 @@ class AuthorityService:
         A retry by the same still-live worker returns its original fenced lease
         unchanged.  That lets a synchronous caller replay a receipt rather
         than duplicate provider work after a response was lost locally.
+        A stored Kimi job (legacy) is refused unwritten, and the reclaim
+        this runs first leaves other stored Kimi jobs as they are.
         """
         jid = _nonempty(job_id, field="job_id")
         worker = _nonempty(worker_id, field="worker_id")
@@ -984,6 +993,9 @@ class AuthorityService:
         now_value = self._now_string(now)
         lease_until = _iso(_parse_iso(now_value, field="now") + timedelta(seconds=lease_seconds))
         with self._write_transaction():
+            row = self._require_job_tx(jid)
+            if self._stored_kimi_job(row):
+                raise AuthorityServiceError("kimi_job_not_claimable")
             self._reclaim_expired_jobs_tx(now_value)
             row = self._require_job_tx(jid)
             state = str(row["state"])
@@ -1135,6 +1147,9 @@ class AuthorityService:
         now_value = self._now_string(now)
         with self._write_transaction():
             row = self._require_job_tx(jid)
+            if self._stored_kimi_job(row):
+                # Requeueing would address Kimi again; the legacy job stays as it is.
+                raise AuthorityServiceError("kimi_job_not_retryable")
             previous_state = str(row["state"])
             if previous_state not in allowed_states:
                 raise AuthorityServiceError("job_not_retryable")
@@ -1189,7 +1204,9 @@ class AuthorityService:
     ) -> AuthorityDeliveryLease | None:
         """Claim one recipient delivery; a stale worker cannot later acknowledge it.
 
-        A Kimi recipient is refused before any write: Kimi is not a bridge recipient.
+        A Kimi recipient is refused before any write: Kimi is not a bridge
+        recipient. A stored delivery of a request pinned to a Kimi model
+        (legacy) is passed over unwritten (``_stored_kimi_delivery``).
         """
         (target,) = _admit_recipients((recipient,), mode=BRIDGE_MODE)
         recipient_name = _nonempty(target.recipient, field="recipient")
@@ -1200,14 +1217,15 @@ class AuthorityService:
         lease_until = _iso(_parse_iso(now_value, field="now") + timedelta(seconds=lease_seconds))
         with self._write_transaction():
             self._reclaim_expired_deliveries_tx(now_value, max_attempts=max_attempts)
-            row = self._conn.execute(
+            candidates = self._conn.execute(
                 """SELECT * FROM authority_deliveries
                    WHERE recipient = ? AND state = 'queued'
                      AND attempt_count < ?
                      AND (deadline_at IS NULL OR deadline_at > ?)
-                   ORDER BY created_at ASC, delivery_id ASC LIMIT 1""",
+                   ORDER BY created_at ASC, delivery_id ASC""",
                 (recipient_name, max_attempts, now_value),
-            ).fetchone()
+            )
+            row = next((item for item in candidates if not self._stored_kimi_delivery(item)), None)
             if row is None:
                 return None
             token = int(row["fence_token"]) + 1
@@ -2057,14 +2075,17 @@ class AuthorityService:
             raise AuthorityServiceError("idempotency_key_reused_with_different_payload")
 
     def _reclaim_expired_jobs_tx(self, now: str) -> int:
+        """Expire or requeue abandoned jobs; a stored Kimi job (legacy) is left as it is."""
         reclaimed = 0
         expired_rows = self._conn.execute(
-            """SELECT job_id, fence_token FROM authority_jobs
+            """SELECT job_id, fence_token, payload_artifact_id FROM authority_jobs
                WHERE state IN ('queued', 'running') AND deadline_at IS NOT NULL
                  AND deadline_at <= ?""",
             (now,),
         ).fetchall()
         for row in expired_rows:
+            if self._stored_kimi_job(row):
+                continue
             self._conn.execute(
                 """UPDATE authority_jobs
                    SET state = 'expired', lease_owner = NULL, lease_expires_at = NULL,
@@ -2077,13 +2098,15 @@ class AuthorityService:
             self._dead_letter_job_tx(str(row["job_id"]), reason_code="deadline_expired")
             reclaimed += 1
         stale_rows = self._conn.execute(
-            """SELECT job_id, fence_token FROM authority_jobs
+            """SELECT job_id, fence_token, payload_artifact_id FROM authority_jobs
                WHERE state = 'running' AND lease_expires_at IS NOT NULL
                  AND lease_expires_at <= ?
                  AND (deadline_at IS NULL OR deadline_at > ?)""",
             (now, now),
         ).fetchall()
         for row in stale_rows:
+            if self._stored_kimi_job(row):
+                continue
             self._conn.execute(
                 """UPDATE authority_jobs
                    SET state = 'queued', lease_owner = NULL, lease_expires_at = NULL,
@@ -2100,13 +2123,13 @@ class AuthorityService:
         """Expire or requeue abandoned deliveries; a stored Kimi delivery (legacy) is left as it is."""
         reclaimed = 0
         expired = self._conn.execute(
-            """SELECT delivery_id, fence_token, recipient FROM authority_deliveries
+            """SELECT delivery_id, fence_token, recipient, message_id FROM authority_deliveries
                WHERE state IN ('queued', 'running') AND deadline_at IS NOT NULL
                  AND deadline_at <= ?""",
             (now,),
         ).fetchall()
         for row in expired:
-            if stored_kimi_row(row["recipient"]):
+            if self._stored_kimi_delivery(row):
                 continue
             delivery_id = str(row["delivery_id"])
             self._conn.execute(
@@ -2124,14 +2147,14 @@ class AuthorityService:
             self._dead_letter_delivery_tx(delivery_id, reason_code="deadline_expired")
             reclaimed += 1
         stale = self._conn.execute(
-            """SELECT delivery_id, fence_token, attempt_count, recipient FROM authority_deliveries
+            """SELECT delivery_id, fence_token, attempt_count, recipient, message_id FROM authority_deliveries
                WHERE state = 'running' AND lease_expires_at IS NOT NULL
                  AND lease_expires_at <= ?
                  AND (deadline_at IS NULL OR deadline_at > ?)""",
             (now, now),
         ).fetchall()
         for row in stale:
-            if stored_kimi_row(row["recipient"]):
+            if self._stored_kimi_delivery(row):
                 continue
             delivery_id = str(row["delivery_id"])
             terminal = int(row["attempt_count"]) >= max_attempts
@@ -2153,6 +2176,44 @@ class AuthorityService:
                 self._dead_letter_delivery_tx(delivery_id, reason_code="attempts_exhausted")
             reclaimed += 1
         return reclaimed
+
+    def _stored_kimi_job(self, row: sqlite3.Row) -> bool:
+        """True when a stored job is addressed to a Kimi seat or model (legacy: enqueue refuses Kimi).
+
+        Every generic reclaim, expiry, requeue, dead-letter and claim path
+        skips such a job before any write. The target is read, never written,
+        from the job's immutable payload artifact: a request's ``recipient``
+        and ``metadata`` (a ``requested_model``), a discussion's
+        ``participants``; a formal review names none. A payload that cannot be
+        read is not provably non-Kimi, so it is skipped too (fail closed).
+        """
+        artifact_id = str(row["payload_artifact_id"])
+        cached = self._kimi_payloads.get(artifact_id)
+        if cached is not None:
+            return cached
+        try:
+            payload = json.loads(self.store.read_bytes(artifact_id).decode("utf-8"))
+        except (ArtifactStoreError, UnicodeDecodeError, json.JSONDecodeError):
+            return True
+        if not isinstance(payload, dict):
+            return True
+        recipients = [payload.get("recipient"), *(payload.get("participants") or ())]
+        addressed = stored_kimi_request(
+            (name for name in recipients if name), attachments=(payload.get("metadata") or {},)
+        )
+        self._kimi_payloads[artifact_id] = addressed
+        return addressed
+
+    def _stored_kimi_delivery(self, row: sqlite3.Row) -> bool:
+        """True when a stored delivery is to a Kimi seat, or delivers a request job pinned to a Kimi model (legacy)."""
+        if stored_kimi_row(row["recipient"]):
+            return True
+        jobs = self._conn.execute(
+            """SELECT payload_artifact_id FROM authority_jobs
+               WHERE job_kind = 'request' AND subject_id = ?""",
+            (str(row["message_id"]),),
+        ).fetchall()
+        return any(self._stored_kimi_job(job) for job in jobs)
 
     def _record_wake_receipt_tx(
         self,

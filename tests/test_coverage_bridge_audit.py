@@ -347,13 +347,13 @@ class TestBroker:
         conn.executescript("""
             CREATE TABLE messages (
                 id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT, to_llm TEXT,
-                timestamp TEXT, acknowledged INTEGER DEFAULT 0
+                data TEXT, timestamp TEXT, acknowledged INTEGER DEFAULT 0
             );
             CREATE TABLE channel_messages (
                 message_id TEXT PRIMARY KEY, created_at TEXT, parent_id TEXT
             );
             CREATE TABLE deliveries (
-                delivery_id TEXT PRIMARY KEY, message_id TEXT, status TEXT
+                delivery_id TEXT PRIMARY KEY, message_id TEXT, to_agent TEXT, to_model TEXT, status TEXT
             );
         """)
         old_ts = (datetime.now(UTC) - timedelta(days=45)).isoformat()
@@ -389,7 +389,7 @@ class TestBroker:
         db_path = tmp_path / "test.db"
         conn = sqlite3.connect(str(db_path))
         conn.execute("""CREATE TABLE messages (
-            id INTEGER PRIMARY KEY, timestamp TEXT, acknowledged INTEGER DEFAULT 0
+            id INTEGER PRIMARY KEY, to_llm TEXT, data TEXT, timestamp TEXT, acknowledged INTEGER DEFAULT 0
         )""")
         old_ts = (datetime.now(UTC) - timedelta(days=45)).isoformat()
         conn.execute(
@@ -472,7 +472,10 @@ class TestMessaging:
         conn.close()
 
         def _fresh_conn():
+            from scripts.ai_agent_bridge._db import register_kimi_row_functions
+
             c = sqlite3.connect(str(db_path))
+            register_kimi_row_functions(c)  # as get_db does
             return c
 
         with patch("scripts.ai_agent_bridge._messaging.get_db", side_effect=_fresh_conn):

@@ -642,6 +642,8 @@ def print_asks(task_id: str | None = None) -> None:
 def print_timeout_notice() -> list[int]:
     """Surface newly timed-out detached asks on the next bridge CLI command; returns their ids.
 
+    A stored Kimi ask (legacy) is not a new ask: it is neither shown nor marked.
+
     Reads query-only: it never creates, migrates or writes the broker DB, so a bridge command
     can show it before its own admission check. The ids are marked shown by
     ``mark_timeout_notices_shown``; until then the notice repeats.
@@ -655,7 +657,7 @@ def print_timeout_notice() -> list[int]:
                 """
                 SELECT id, task_id, to_llm
                 FROM messages
-                WHERE status LIKE 'timed-out:%'
+                WHERE status LIKE 'timed-out:%' AND NOT kimi_message(to_llm, data)
                 ORDER BY id ASC
                 """
             ).fetchall()
@@ -671,14 +673,14 @@ def print_timeout_notice() -> list[int]:
 
 
 def mark_timeout_notices_shown(message_ids: list[int]) -> None:
-    """Record that the timeout notice for ``message_ids`` was shown, so it is not repeated."""
+    """Record that the timeout notice for ``message_ids`` was shown, so it is not repeated; a stored Kimi row stays as it is."""
     if not message_ids:
         return
     conn = get_db()
     try:
         conn.executemany(
             "UPDATE messages SET status = 'timed-out-notified:' || substr(status, 11) "
-            "WHERE id = ? AND status LIKE 'timed-out:%'",
+            "WHERE id = ? AND status LIKE 'timed-out:%' AND NOT kimi_message(to_llm, data)",
             [(message_id,) for message_id in message_ids],
         )
         conn.commit()
@@ -932,7 +934,7 @@ def skip_stored_kimi_row(msg: dict[str, Any], message_id: int, target: str | Non
     from ._acp_compat import refuse_kimi_recipients
 
     try:
-        refuse_kimi_recipients((target, msg.get("to")), (ask_target_model(msg),))
+        refuse_kimi_recipients((target, msg.get("to")), (ask_target_model(msg),), attachments=(msg.get("data"),))
     except KimiAdmissionRefused:
         print(f"⏭️  Message {message_id} {STORED_KIMI_ROW_SKIPPED}; left as-is.")
         return True

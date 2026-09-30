@@ -2685,18 +2685,37 @@ def test_fleet_comms_delivery_reclaim_leaves_a_stored_kimi_delivery_unwritten(tm
 
 
 def test_the_stale_request_requeue_leaves_a_stored_kimi_request_running(tmp_path):
+    """A stored request to a Kimi seat, or whose message metadata pins a Kimi model, is never requeued."""
     from scripts.fleet_comms.request_executor import RequestExecutor
 
     with RequestExecutor(root=tmp_path) as executor:
-        kept = executor.create_request(recipient="codex", body="ping")
+        kept = executor.create_request(recipient="codex", body="ping", metadata={"model": "gpt-6.1-sol"})
         legacy = executor.create_request(recipient="claude", body="ping")
+        pinned = executor.create_request(recipient="claude", body="ping")
         conn = executor.store.connection
         conn.execute("UPDATE requests SET state = 'running', updated_at = '2000-01-01T00:00:00Z'")
         conn.execute("UPDATE requests SET resolved_recipient = 'kimi' WHERE request_id = ?", (legacy.request_id,))
+        conn.execute(
+            "UPDATE comms_messages SET metadata_json = ? WHERE message_id = ?",
+            (json.dumps({"model": "kimi-code/k3"}), pinned.request_message_id),
+        )
         conn.commit()
 
         assert executor.requeue_stale_running(stale_after_seconds=60) == [kept.request_id]
         assert executor.get_request(legacy.request_id).state == "running"
+        assert executor.get_request(pinned.request_id).state == "running"
+
+
+def test_create_request_refuses_a_kimi_model_in_its_metadata_before_any_insert(tmp_path):
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    with RequestExecutor(root=tmp_path) as executor:
+        conn = executor.store.connection
+        with pytest.raises(KimiAdmissionRefused):
+            executor.create_request(recipient="claude", body="ping", metadata={"model": "k3"})
+        assert conn.execute("SELECT COUNT(*) FROM requests").fetchone()[0] == 0
+        assert conn.execute("SELECT COUNT(*) FROM comms_messages").fetchone()[0] == 0
 
 
 def test_the_ancient_message_sweep_leaves_a_stored_kimi_message_unacknowledged(broker_db, capsys):
@@ -2711,3 +2730,294 @@ def test_the_ancient_message_sweep_leaves_a_stored_kimi_message_unacknowledged(b
     check.close()
     assert acknowledged == {7: 0, 8: 0, 9: 1}
     assert capsys.readouterr().out.count(_SKIPPED) == 2
+
+
+# --- stored Kimi authority jobs: generic reclaim and claim paths leave them untouched ----------
+
+_FUTURE = "2999-01-01T00:00:00Z"
+
+
+def _legacy_job(service, payload, *, kind="request", deadline_at=None, lease_expires_at=None):
+    """A stored job written before enqueue refused Kimi (bypasses admission, as legacy rows did)."""
+    from scripts.fleet_comms.contracts import new_id
+
+    with service._write_transaction():
+        job = service._enqueue_job_tx(
+            job_kind=kind,
+            subject_id=new_id("legacy-subject"),
+            payload=payload,
+            deadline_at=deadline_at,
+            idempotency_key=new_id("legacy-key"),
+        )
+    if lease_expires_at is not None:
+        service._conn.execute(
+            "UPDATE authority_jobs SET state = 'running', lease_owner = 'w', lease_expires_at = ?, fence_token = 1"
+            " WHERE job_id = ?",
+            (lease_expires_at, job.job_id),
+        )
+        service._conn.commit()
+    return job.job_id
+
+
+@pytest.fixture
+def job_plane(tmp_path):
+    """An authority plane with stored Kimi jobs (by seat, model and participant) older than non-Kimi controls.
+
+    Every Kimi job is due for a generic write: expired deadlines, a stale
+    running lease, or simply queued first. Returns ``(service, kimi_ids,
+    controls, state)`` where ``state()`` snapshots the job, event and
+    dead-letter rows per job.
+    """
+    from scripts.fleet_comms.authority import AuthorityService
+
+    service = AuthorityService(root=tmp_path / "plane")
+    kimi_ids = {
+        "seat-expired": _legacy_job(service, {"recipient": "kimi", "metadata": {}}, deadline_at=_OLD),
+        "model-stale-lease": _legacy_job(
+            service,
+            {"recipient": "claude", "metadata": {"requested_model": "kimi-code/k3"}},
+            lease_expires_at=_OLD,
+        ),
+        "participant-expired": _legacy_job(
+            service, {"participants": ["claude", "kimicc"]}, kind="discussion", deadline_at=_OLD
+        ),
+        "alias-queued": _legacy_job(service, {"recipient": "codex", "metadata": {"model": "k3"}}),
+    }
+    controls = {
+        "expired": _legacy_job(service, {"recipient": "codex", "metadata": {"task_id": "e"}}, deadline_at=_OLD),
+        "stale-lease": _legacy_job(service, {"recipient": "codex", "metadata": {"task_id": "s"}}, lease_expires_at=_OLD),
+    }
+
+    def state():
+        conn = service._conn
+        return {
+            job_id: (
+                tuple(conn.execute("SELECT * FROM authority_jobs WHERE job_id = ?", (job_id,)).fetchone()),
+                conn.execute("SELECT COUNT(*) FROM authority_job_events WHERE job_id = ?", (job_id,)).fetchone()[0],
+                conn.execute("SELECT COUNT(*) FROM authority_dead_letters WHERE job_id = ?", (job_id,)).fetchone()[0],
+            )
+            for job_id in (*kimi_ids.values(), *controls.values())
+        }
+
+    try:
+        yield service, kimi_ids, controls, state
+    finally:
+        service.close()
+
+
+def _job_state(service, job_id):
+    return service.get_job(job_id).state
+
+
+@pytest.mark.parametrize("entry", ["claim-job", "claim-next-job", "reclaim"])
+def test_generic_job_reclaim_and_claims_leave_stored_kimi_jobs_unwritten(job_plane, entry):
+    """The reviewer's case: claiming a non-Kimi job never expires, events or dead-letters a legacy Kimi job.
+
+    ``claim_job`` (reached from the ACP compat ask and channel ``ask``) and
+    ``claim_next_job`` both run the generic reclaim first; ``claim_next_job``
+    also passes over the older queued Kimi jobs. Non-Kimi controls are
+    reclaimed as before.
+    """
+    service, kimi_ids, controls, state = job_plane
+    fresh = service.enqueue_request(recipient="claude", body="ping", deadline_at=_FUTURE)
+    before = state()
+
+    if entry == "claim-job":
+        lease = service.claim_job(fresh.job_id, "worker", now="2026-09-30T00:00:00Z")
+    elif entry == "claim-next-job":
+        lease = service.claim_next_job("worker", now="2026-09-30T00:00:00Z")
+    else:
+        lease = None
+        assert service.reclaim_expired_jobs(now="2026-09-30T00:00:00Z") == 2
+
+    after = state()
+    assert {job_id: after[job_id] for job_id in kimi_ids.values()} == {
+        job_id: before[job_id] for job_id in kimi_ids.values()
+    }
+    assert _job_state(service, controls["expired"]) == "expired"
+    assert after[controls["expired"]][2] == 1  # dead-lettered, as before
+    if lease is not None:
+        # claim_next_job takes the oldest non-Kimi queued job: the requeued control, then the fresh one.
+        assert lease.job.job_id in {fresh.job_id, controls["stale-lease"]}
+        assert lease.job.state == "running"
+    if entry != "claim-next-job":
+        assert _job_state(service, controls["stale-lease"]) == "queued"
+
+
+@pytest.mark.parametrize("operation", ["claim_job", "retry_job", "redrive_job"])
+def test_a_named_stored_kimi_job_is_refused_unwritten(job_plane, operation):
+    """Claiming, retrying or redriving a stored Kimi job by id is refused before any write."""
+    from scripts.fleet_comms.authority import AuthorityServiceError
+
+    service, kimi_ids, _controls, state = job_plane
+    job_id = kimi_ids["seat-expired"]
+    service._conn.execute(
+        "UPDATE authority_jobs SET state = ? WHERE job_id = ?",
+        ("dead_lettered" if operation == "redrive_job" else "failed" if operation == "retry_job" else "queued", job_id),
+    )
+    service._conn.commit()
+    before = state()
+    call = getattr(service, operation)
+    args = (job_id, "worker") if operation == "claim_job" else (job_id,)
+    with pytest.raises(AuthorityServiceError, match=r"kimi_job_not_(claimable|retryable)"):
+        call(*args, now="2026-09-30T00:00:00Z", **({} if operation == "claim_job" else {"deadline_at": _FUTURE}))
+    assert state() == before
+
+
+def test_an_unreadable_job_payload_is_left_unwritten(job_plane):
+    """A payload that cannot be read is not provably non-Kimi, so a generic reclaim leaves the job (fail closed)."""
+    service, _kimi_ids, controls, state = job_plane
+    job = service.get_job(controls["expired"])
+    service.store.get(job.payload_artifact_id).blob_path.write_bytes(b"tampered")
+    service._kimi_payloads.clear()
+    before = state()
+    assert service.reclaim_expired_jobs(now="2026-09-30T00:00:00Z") == 1  # only the stale-lease control
+    assert state()[controls["expired"]] == before[controls["expired"]]
+
+
+def test_a_delivery_of_a_kimi_model_request_is_never_claimed_or_reclaimed(tmp_path):
+    """A stored delivery to Claude of a request pinned to a Kimi model is passed over by claims and reclaims."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with AuthorityService(root=tmp_path / "plane") as service:
+        legacy = service.publish_message(sender="user", body="old", recipients=["claude"], deadline_at=_FUTURE)
+        stale = service.publish_message(sender="user", body="stale", recipients=["claude"], deadline_at=_OLD)
+        for message in (legacy, stale):
+            with service._write_transaction():
+                service._enqueue_job_tx(
+                    job_kind="request",
+                    subject_id=message.message_id,
+                    payload={"recipient": "claude", "metadata": {"requested_model": "kimi-code/k3"}},
+                    deadline_at=None,
+                    idempotency_key=f"legacy-{message.message_id}",
+                )
+        fresh = service.publish_message(sender="user", body="new", recipients=["claude"], deadline_at=_FUTURE)
+        conn = service._conn
+        dump = lambda: {row["delivery_id"]: tuple(row) for row in conn.execute("SELECT * FROM authority_deliveries")}  # noqa: E731
+        kimi_deliveries = {*legacy.delivery_ids, *stale.delivery_ids}
+        before = dump()
+
+        lease = service.claim_next_delivery("claude", "worker", now="2026-09-30T00:00:00Z")
+        assert lease is not None and lease.delivery.delivery_id == fresh.delivery_ids[0]
+        after = dump()
+        assert {key: after[key] for key in kimi_deliveries} == {key: before[key] for key in kimi_deliveries}
+        assert not conn.execute(
+            "SELECT COUNT(*) FROM authority_delivery_attempts WHERE delivery_id IN (?, ?)", tuple(kimi_deliveries)
+        ).fetchone()[0]
+        assert not conn.execute("SELECT COUNT(*) FROM authority_dead_letters").fetchone()[0]
+
+
+# --- stored Kimi bridge messages: bulk acknowledgement, timeout notices, retention, migration ----------
+
+
+@pytest.fixture
+def message_db(tmp_path, monkeypatch):
+    """A broker with stored Kimi messages (by seat, by ``to_model``, by another data key) and non-Kimi controls.
+
+    Every row is old, acknowledged-or-timed-out and due for a generic write.
+    Returns ``rows()``, the messages table keyed by id.
+    """
+    from scripts.ai_agent_bridge import _broker, _db
+
+    db_file = tmp_path / "messages.db"
+    monkeypatch.setattr(_db, "DB_PATH", db_file)
+    monkeypatch.setattr(_broker, "DB_PATH", db_file)
+    seed = _db.get_db()
+    seed.executemany(
+        "INSERT INTO messages (id, task_id, from_llm, to_llm, message_type, content, data, timestamp, acknowledged,"
+        " status) VALUES (?, 't', 'codex', ?, 'query', 'q', ?, ?, ?, ?)",
+        [
+            (1, "kimi", None, _OLD, 0, "timed-out:x"),
+            (2, "claude", json.dumps({"to_model": "kimi-code/k3"}), _OLD, 0, "timed-out:x"),
+            (3, "claude", json.dumps({"model": "k3"}), _OLD, 0, "timed-out:x"),
+            (4, "claude", None, _OLD, 0, "timed-out:x"),
+            (5, "claude", json.dumps({"to_model": "claude-opus-5-5"}), _OLD, 0, "timed-out:x"),
+        ],
+    )
+    seed.commit()
+    seed.close()
+
+    def rows() -> dict[int, tuple]:
+        check = sqlite3.connect(db_file)
+        try:
+            return {row[0]: tuple(row) for row in check.execute("SELECT * FROM messages ORDER BY id")}
+        finally:
+            check.close()
+
+    return rows
+
+
+_KIMI_MESSAGES = (1, 2, 3)
+
+
+def test_ack_all_leaves_a_stored_kimi_model_message_unacknowledged(message_db, capsys):
+    from scripts.ai_agent_bridge import _messaging
+
+    before = message_db()
+    _messaging.acknowledge_all("claude", consumed_by_live_driver=True)
+    after = message_db()
+    assert {key for key in before if before[key] != after[key]} == {4, 5}
+    assert "4, 5" in capsys.readouterr().out
+
+
+def test_timeout_notices_neither_show_nor_mark_a_stored_kimi_ask(message_db, capsys):
+    from scripts.ai_agent_bridge import _ask_lifecycle
+
+    before = message_db()
+    assert _ask_lifecycle.print_timeout_notice() == [4, 5]
+    _ask_lifecycle.mark_timeout_notices_shown([1, 2, 3, 4, 5])
+    after = message_db()
+    assert {key for key in before if before[key] != after[key]} == {4, 5}
+    assert "#1 " not in capsys.readouterr().err
+
+
+def test_retention_keeps_stored_kimi_messages_and_deliveries(message_db, delivery_db):
+    """``ab cleanup`` retention deletes old terminal rows but keeps stored Kimi ones and their channel messages."""
+    from scripts.ai_agent_bridge import _broker, _db
+
+    conn = _db.get_db()
+    conn.execute("UPDATE messages SET acknowledged = 1")
+    conn.execute("UPDATE deliveries SET status = 'delivered', lease_until = NULL")
+    conn.commit()
+    conn.close()
+    deliveries_before = delivery_db()
+
+    assert _broker.broker_retention_cleanup("1d", dry_run=True) == 2 + 3 + 3
+    assert _broker.broker_retention_cleanup("1d") == 8
+
+    assert set(message_db()) == set(_KIMI_MESSAGES)
+    assert delivery_db() == _kimi_rows(deliveries_before)
+    check = sqlite3.connect(_db.DB_PATH)
+    try:
+        kept = {row[0] for row in check.execute("SELECT message_id FROM channel_messages")}
+    finally:
+        check.close()
+    assert kept == {f"m-{key}" for key in _kimi_rows(deliveries_before)}
+
+
+def test_the_live_consumption_backfill_leaves_a_stored_kimi_message_as_it_is(tmp_path, monkeypatch):
+    """The one-time ``consumed_by_live_driver`` backfill grandfathers acknowledged rows, except stored Kimi ones."""
+    from scripts.ai_agent_bridge import _db
+
+    db_file = tmp_path / "messages.db"
+    monkeypatch.setattr(_db, "DB_PATH", db_file)
+    legacy = sqlite3.connect(db_file)
+    legacy.execute(
+        "CREATE TABLE messages (id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT NOT NULL, to_llm TEXT NOT NULL,"
+        " message_type TEXT, content TEXT NOT NULL, data TEXT, timestamp TEXT NOT NULL, acknowledged INTEGER DEFAULT 0)"
+    )
+    legacy.executemany(
+        "INSERT INTO messages (id, from_llm, to_llm, content, data, timestamp, acknowledged)"
+        " VALUES (?, 'codex', ?, 'q', ?, ?, 1)",
+        [(1, "kimi", None, _OLD), (2, "claude", json.dumps({"to_model": "k3"}), _OLD), (3, "claude", None, _OLD)],
+    )
+    legacy.commit()
+    legacy.close()
+
+    _db.get_db().close()
+    check = sqlite3.connect(db_file)
+    try:
+        consumed = dict(check.execute("SELECT id, consumed_by_live_driver FROM messages"))
+    finally:
+        check.close()
+    assert consumed == {1: 0, 2: 0, 3: 1}

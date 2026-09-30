@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.agent_runtime.kimi_admission import ACP_MODE
-from scripts.agent_runtime.target_admission import resolve_and_admit, stored_kimi_row
+from scripts.agent_runtime.target_admission import resolve_and_admit, stored_kimi_request
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -155,14 +155,17 @@ class RequestExecutor:
         metadata: dict[str, Any] | None = None,
     ) -> RequestRecord:
         # resolve(): live → (endpoint, endpoint.name); retired → (successor, retired_name).
-        # The endpoint lookup runs inside resolve_and_admit, which gates the requested and resolved seats.
+        # The endpoint lookup runs inside resolve_and_admit, which gates the requested and resolved
+        # seats and any model or recipient the stored metadata carries.
         lookup: dict[str, Any] = {}
 
         def _endpoint_name(name: str) -> str:
             lookup["endpoint"], lookup["matched"] = self.registry.resolve(name)
             return lookup["endpoint"].name
 
-        (target,) = resolve_and_admit((recipient,), mode=ACP_MODE, resolver=_endpoint_name)
+        (target,) = resolve_and_admit(
+            (recipient,), mode=ACP_MODE, resolver=_endpoint_name, attachments=(metadata or {},)
+        )
         endpoint = lookup["endpoint"]
         requested = lookup["matched"]
         resolved = target.recipient
@@ -560,20 +563,28 @@ class RequestExecutor:
         swept (#7504 CF r2); a claimant that legitimately runs longer must
         heartbeat via ``touch_claim()``.
 
-        A stored request resolved to a Kimi seat (legacy: Kimi is refused
-        before a request is recorded) is left as it is.
+        A stored request addressed to a Kimi seat or model (legacy: Kimi is
+        refused before a request is recorded) is left as it is: its requested
+        and resolved recipients and its message metadata are read, never written.
         """
         now = _utc_now()
         now_s = _iso(now)
         cutoff = _iso(now - timedelta(seconds=max(0, stale_after_seconds)))
         ph = "%s" if self._is_pg else "?"
         rows = self._conn.execute(
-            f"""SELECT request_id, resolved_recipient FROM requests
-               WHERE state = 'running' AND updated_at <= {ph} AND expires_at >= {ph}
-               ORDER BY updated_at""",
+            f"""SELECT r.request_id, r.requested_recipient, r.resolved_recipient, m.metadata_json
+               FROM requests r LEFT JOIN comms_messages m ON m.message_id = r.request_message_id
+               WHERE r.state = 'running' AND r.updated_at <= {ph} AND r.expires_at >= {ph}
+               ORDER BY r.updated_at""",
             (cutoff, now_s),
         ).fetchall()
-        stale_ids = [str(r["request_id"]) for r in rows if not stored_kimi_row(r["resolved_recipient"])]
+        stale_ids = [
+            str(r["request_id"])
+            for r in rows
+            if not stored_kimi_request(
+                (r["requested_recipient"], r["resolved_recipient"]), attachments=(r["metadata_json"] or "{}",)
+            )
+        ]
         requeued: list[str] = []
         for request_id in stale_ids:
             cursor = self._conn.execute(

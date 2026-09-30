@@ -270,3 +270,38 @@ def test_delegate_launches_only_the_admitted_route():
     assert delegate._worker_route_argv(target) == ["--agent", "claude", "--model", "claude-opus-5-5"]
     with pytest.raises(TypeError, match="AdmittedTarget"):
         delegate._worker_route_argv("kimi")
+
+
+def test_no_dispatch_fallback_row_maps_onto_a_kimi_seat_or_model():
+    """Makes the documented probe-before-final-gate limitation unreachable by data.
+
+    A launch route's budget probe runs before the final gate (see
+    ``RouteRequest``), so a fallback onto Kimi would probe once before its
+    refusal. No ``dispatch_fallbacks`` destination may therefore be a Kimi
+    seat, reach one through its retired successor or ACP route pin, or be
+    launched with a Kimi model (a mapped substitution model or its lane
+    default).
+    """
+    import delegate
+    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+
+    fallbacks = load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
+    assert fallbacks, "dispatch_fallbacks did not load; this guard would pass vacuously"
+    models = delegate._load_budget_substitution_table()
+    onto_kimi = []
+    for source, destination in fallbacks.items():
+        launch_models = [*models.get(destination, {}).values(), delegate._lane_default_model(destination)]
+        if target_admission.stored_kimi_row(destination) or any(
+            target_admission.stored_kimi_row(destination, model) for model in launch_models if model
+        ):
+            onto_kimi.append(f"{source} -> {destination}")
+    assert onto_kimi == []
+
+
+def test_the_fallback_guard_detects_a_kimi_destination():
+    """The guard's predicate refuses a Kimi seat, a Kimi model on another seat, and a route pinned to Kimi."""
+    assert target_admission.stored_kimi_row("kimi")
+    assert target_admission.stored_kimi_row("kimicc")
+    assert target_admission.stored_kimi_row("cursor", "kimi-code/k3")
+    assert target_admission.stored_kimi_row("cursor", "k3")
+    assert not target_admission.stored_kimi_row("cursor", "composer-2.5")

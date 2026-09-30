@@ -351,7 +351,7 @@ def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
     cursor.execute(
         f"""
         SELECT id FROM messages
-        WHERE to_llm IN ({placeholders}) AND acknowledged = 0
+        WHERE to_llm IN ({placeholders}) AND acknowledged = 0 AND NOT kimi_message(to_llm, data)
         ORDER BY id ASC
         """,
         recipients,
@@ -373,7 +373,7 @@ def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
             SET acknowledged = 1,
                 consumed_by_live_driver = 1,
                 consumed_at = COALESCE(consumed_at, ?)
-            WHERE to_llm IN ({placeholders}) AND acknowledged = 0
+            WHERE to_llm IN ({placeholders}) AND acknowledged = 0 AND NOT kimi_message(to_llm, data)
             """,
             (datetime.now(UTC).isoformat(), *recipients),
         )
@@ -381,7 +381,7 @@ def acknowledge_all(for_llm: str, *, consumed_by_live_driver: bool = False):
         cursor.execute(
             f"""
             UPDATE messages SET acknowledged = 1
-            WHERE to_llm IN ({placeholders}) AND acknowledged = 0
+            WHERE to_llm IN ({placeholders}) AND acknowledged = 0 AND NOT kimi_message(to_llm, data)
             """,
             recipients,
         )

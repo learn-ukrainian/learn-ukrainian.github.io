@@ -71,6 +71,12 @@ class RouteRequest:
     is the live CLI a retired seat name resolves to (None: not retired);
     ``fallbacks`` is the ``dispatch_fallbacks`` table, the only source of
     budget substitutes. The route runs after the original request is gated.
+
+    Known limitation: a route's own probes (a Monitor budget probe) run
+    before the final gate, so a non-Kimi request that a fallback row mapped
+    onto Kimi would probe once and then be refused. No ``dispatch_fallbacks``
+    row maps onto a Kimi seat or model, and
+    ``tests/test_target_admission.py`` fails if one ever does.
     """
 
     seat: str
@@ -238,6 +244,21 @@ def stored_kimi_row(agent: object, model: object = None) -> bool:
 def _stored_kimi_row(agent: str, model: str | None) -> bool:
     try:
         resolve_and_admit((agent,), mode=BRIDGE_MODE, model=model)
+    except KimiAdmissionRefused:
+        return True
+    return False
+
+
+def stored_kimi_request(recipients: Iterable[object], *, attachments: Iterable[Any] = ()) -> bool:
+    """``stored_kimi_row`` for a stored request with several recipients or attachments (an authority job payload).
+
+    True when any recipient, or any model or recipient key an attachment
+    carries, is a Kimi seat or model. Same bridge-mode decision; for generic
+    drains and sweeps only, never a delivery target.
+    """
+    names = tuple(str(item or "").strip() for item in recipients)
+    try:
+        resolve_and_admit(names, mode=BRIDGE_MODE, attachments=tuple(attachments))
     except KimiAdmissionRefused:
         return True
     return False

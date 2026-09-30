@@ -202,7 +202,25 @@ def _tune_connection(conn: sqlite3.Connection) -> None:
     conn.execute("PRAGMA cache_size=-20000")
     conn.execute("PRAGMA temp_store=MEMORY")
     conn.row_factory = sqlite3.Row
+    register_kimi_row_functions(conn)
+
+
+def register_kimi_row_functions(conn: sqlite3.Connection) -> None:
+    """Register the SQL predicates generic drains and sweeps use to leave stored Kimi rows unwritten."""
     conn.create_function("kimi_row", 2, _kimi_row_sql, deterministic=True)
+    conn.create_function("kimi_message", 2, _kimi_message_sql, deterministic=True)
+
+
+def _kimi_message_sql(to_llm: object, data: object) -> int:
+    """SQL ``kimi_message(to_llm, data)``: 1 for a stored ``messages`` row addressed to a Kimi seat or model.
+
+    The recipient is ``to_llm``; ``data`` is read like a ``send_message``
+    attachment, so any model or recipient key it carries counts
+    (``target_admission.stored_kimi_request``).
+    """
+    from scripts.agent_runtime.target_admission import stored_kimi_request
+
+    return int(stored_kimi_request((to_llm,), attachments=(data,)))
 
 
 def _kimi_row_sql(agent: object, model: object) -> int:
@@ -349,9 +367,10 @@ def get_db():
                 # as of 2026-07-23 — claude alone had 1119). Grandfather pre-existing
                 # acknowledged rows in as already handled; consumed_at stays NULL
                 # for them since the real consumption time is unknown, not "now".
+                # A stored Kimi row (legacy) is left as it is.
                 conn.execute(
                     "UPDATE messages SET consumed_by_live_driver = 1 "
-                    "WHERE acknowledged = 1 AND consumed_by_live_driver = 0"
+                    "WHERE acknowledged = 1 AND consumed_by_live_driver = 0 AND NOT kimi_message(to_llm, data)"
                 )
                 # Explicit commit: don't rely on the next ALTER TABLE's implicit
                 # DDL-commit behavior to persist this DML — that's an incidental
@@ -533,6 +552,7 @@ def connect_readonly() -> sqlite3.Connection | None:
     conn.execute("PRAGMA query_only=ON")
     conn.execute("PRAGMA busy_timeout=5000")
     conn.row_factory = sqlite3.Row
+    register_kimi_row_functions(conn)
     return conn
 
 
