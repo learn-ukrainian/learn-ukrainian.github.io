@@ -813,7 +813,9 @@ def _review_task_failure_reason(state: dict[str, Any]) -> str:
         return "read_only_checkout_snapshot_failed"
     if state.get("returncode") is None:
         if state.get("returncode_reason") in {
-            "worktree preparation failed", "forward configuration failed", "worker process was not started",
+            "worktree preparation failed",
+            "forward configuration failed",
+            "worker process was not started",
             "scoped worker startup was ambiguous; not relaunched",
         }:
             return "review_worker_not_started"
@@ -5050,7 +5052,9 @@ def _is_read_only_runtime_state_path(path: str) -> bool:
 
 def _is_read_only_package_build_path(path: str) -> bool:
     normalized = _normalize_read_only_relpath(path)
-    return any(normalized == prefix or normalized.startswith(f"{prefix}/") for prefix in _READ_ONLY_PACKAGE_BUILD_PREFIXES)
+    return any(
+        normalized == prefix or normalized.startswith(f"{prefix}/") for prefix in _READ_ONLY_PACKAGE_BUILD_PREFIXES
+    )
 
 
 def _read_only_dispatch_sandbox_root(path: str) -> str | None:
@@ -11400,7 +11404,7 @@ def _resolve_agent_with_budget_guard(
     agent_dict = agent_info if isinstance(agent_info, dict) else {}
     status = _budget_lane_status(requested, agent_dict)
     will_last = _budget_will_last_to_reset(agent_dict)
-    reserve = _load_reset_reserve(_REPO_ROOT)
+    reserve = _load_reset_reserve(_REPO_ROOT, codex_info=agents.get("codex", {}))
     reserve_relaxes = (
         requested == "codex"
         and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
