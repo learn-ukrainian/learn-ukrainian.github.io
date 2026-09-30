@@ -676,7 +676,7 @@
 - id: G3-136
   query: як поділити слово на склади
   topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L588
-  kind: paraphrase
+  kind: term
   area: phonetics
 - id: G3-137
   query: як перенести частину слова на новий рядок
@@ -699,7 +699,7 @@
   kind: paraphrase
   area: phonetics
 - id: G3-141
-  query: чому при зміні слова замість і з'являється о або е
+  query: чому, коли слово змінюється, замість і з'являється о або е
   topic_source: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:L1177
   kind: paraphrase
   area: phonetics

@@ -477,6 +477,29 @@ def _exact_chunk_search(connection: sqlite3.Connection, query: str, limit: int) 
     return [str(row[0]) for row in rows]
 
 
+def lemma_expanded_rows(rows: list[sqlite3.Row] | list[tuple[Any, ...]], vesum: sqlite3.Connection) -> tuple[list[tuple[Any, ...]], int]:
+    """Shared A1 index contract: id, chunk, title, text, source, subject rows."""
+    unique_tokens = {token for row in rows for value in row[2:4] for token in tokenize(str(value or ""))}
+    token_lemmas: dict[str, list[str]] = {}
+    tokens = sorted(unique_tokens)
+    for offset in range(0, len(tokens), 500):
+        batch = tokens[offset : offset + 500]
+        placeholders = ",".join("?" for _ in batch)
+        analyses = vesum.execute(
+            f"SELECT f.word_form, f.lemma FROM forms_all f WHERE f.word_form IN ({placeholders}) AND NOT EXISTS (SELECT 1 FROM form_markers m WHERE m.form_id=f.id AND m.marker IN ('bad','obsc','subst')) ORDER BY f.word_form, f.lemma",
+            batch,
+        ).fetchall()
+        for form, lemma in analyses:
+            token_lemmas.setdefault(normalize_token(str(form)), []).append(normalize_token(str(lemma)))
+
+    def expand(value: Any) -> str:
+        return " ".join(lemma for token in tokenize(str(value or ""))
+                        for lemma in dict.fromkeys(token_lemmas.get(token, [token])))
+
+    expanded = [(row[0], row[1], expand(row[2]), expand(row[3]), row[4], row[5]) for row in rows]
+    return expanded, len(unique_tokens)
+
+
 def _create_lemma_index(sources_path: Path, vesum_path: Path, temp_dir: Path) -> tuple[Path, dict[str, int | float]]:
     resolved_temp = temp_dir.resolve()
     repo_root = ROOT.resolve()
@@ -495,36 +518,14 @@ def _create_lemma_index(sources_path: Path, vesum_path: Path, temp_dir: Path) ->
             index.execute("PRAGMA journal_mode = OFF")
             index.execute("PRAGMA synchronous = OFF")
             index.execute("CREATE VIRTUAL TABLE lemma_fts USING fts5(chunk_id UNINDEXED, source_file UNINDEXED, subject UNINDEXED, title_terms, text_terms, tokenize='unicode61')")
-            unique_tokens: set[str] = set()
-            for title, text in source.execute("SELECT title, text FROM textbooks"):
-                unique_tokens.update(tokenize(str(title or "")))
-                unique_tokens.update(tokenize(str(text or "")))
-            token_lemmas: dict[str, list[str]] = {}
-            tokens = sorted(unique_tokens)
-            for offset in range(0, len(tokens), 500):
-                batch = tokens[offset : offset + 500]
-                placeholders = ",".join("?" for _ in batch)
-                rows = vesum.execute(
-                    f"SELECT f.word_form, f.lemma FROM forms_all f WHERE f.word_form IN ({placeholders}) AND NOT EXISTS (SELECT 1 FROM form_markers m WHERE m.form_id=f.id AND m.marker IN ('bad','obsc','subst')) ORDER BY f.word_form, f.lemma",
-                    batch,
-                ).fetchall()
-                for form, lemma in rows:
-                    token_lemmas.setdefault(normalize_token(str(form)), []).append(normalize_token(str(lemma)))
-            corpus_count = 0
-            rows = source.execute("SELECT id, chunk_id, title, text, source_file, subject FROM textbooks ORDER BY id")
-            for row in rows:
-                def expand(value: str) -> str:
-                    output: list[str] = []
-                    for token in tokenize(value):
-                        clean = normalize_token(token)
-                        lemmas = token_lemmas.get(clean)
-                        output.extend(dict.fromkeys(lemmas) if lemmas else [clean])
-                    return " ".join(output)
+            rows = source.execute("SELECT id, chunk_id, title, text, source_file, subject FROM textbooks ORDER BY id").fetchall()
+            expanded, unique_token_count = lemma_expanded_rows(rows, vesum)
+            corpus_count = len(expanded)
+            for row in expanded:
                 index.execute(
                     "INSERT INTO lemma_fts(rowid, chunk_id, source_file, subject, title_terms, text_terms) VALUES (?, ?, ?, ?, ?, ?)",
-                    (int(row[0]), str(row[1] or ""), str(row[4] or ""), str(row[5] or ""), expand(str(row[2] or "")), expand(str(row[3] or ""))),
+                    (int(row[0]), str(row[1] or ""), str(row[4] or ""), str(row[5] or ""), row[2], row[3]),
                 )
-                corpus_count += 1
             index.commit()
             index.close()
     except BaseException:
@@ -534,7 +535,7 @@ def _create_lemma_index(sources_path: Path, vesum_path: Path, temp_dir: Path) ->
         if index is not None:
             index.close()
         source.close()
-    return index_path, {"build_seconds": time.perf_counter() - started, "size_bytes": index_path.stat().st_size, "unique_surface_tokens": len(unique_tokens), "indexed_rows": corpus_count}
+    return index_path, {"build_seconds": time.perf_counter() - started, "size_bytes": index_path.stat().st_size, "unique_surface_tokens": unique_token_count, "indexed_rows": corpus_count}
 
 
 def _lemma_query(query: str, vesum: sqlite3.Connection, *, include_short: bool = True) -> list[str]:
@@ -558,7 +559,7 @@ def _lemma_search(index_path: Path, query: str, vesum: sqlite3.Connection, limit
     connection = sqlite3.connect(f"file:{index_path.resolve().as_posix()}?mode=ro", uri=True)
     try:
         rows = connection.execute(
-            "SELECT chunk_id FROM lemma_fts WHERE lemma_fts MATCH ? ORDER BY bm25(lemma_fts, 5.0, 1.0), rowid LIMIT ?",
+            "SELECT chunk_id FROM lemma_fts WHERE lemma_fts MATCH ? ORDER BY bm25(lemma_fts, 0, 0, 0, 5.0, 1.0), rowid LIMIT ?",
             (fts_query, limit),
         ).fetchall()
         return [str(row[0]) for row in rows]
@@ -769,7 +770,7 @@ def run_probe(args: argparse.Namespace) -> dict[str, Any]:
             "g1_metrics": metrics,
             "language_subset_metrics": {"denominator": len(language_queries), "arms": language_metrics},
             "g2_inflection_probe": {"positions": len(g2_results), "pairs": g2_results},
-            "a1_lemma_cost": {**index_cost, "query_batch_n": min(50, len(query_times)), "query_p50_seconds": statistics.median(query_times[:50]) if query_times else 0.0, "query_p95_seconds": _percentile(query_times[:50], .95), "peak_rss_bytes": peak_rss * 1024 if os.name != "darwin" else peak_rss},
+            "a1_lemma_cost": {**index_cost, "query_batch_n": min(50, len(query_times)), "query_p50_seconds": statistics.median(query_times[:50]) if query_times else 0.0, "query_p95_seconds": _percentile(query_times[:50], .95), "peak_rss_bytes": peak_rss * 1024 if sys.platform != "darwin" else peak_rss},
             "phase2_gate": gate,
         }
         _write_results(args.output_dir / "phase1-results.md", query_set, result)
@@ -825,7 +826,7 @@ def _write_results(path: Path, query_set: dict[str, Any], result: dict[str, Any]
         "| Previous ID | Previous query | Replacement | Reason |", "|---|---|---|---|", *changes, "",
         "## G1 retrieval metrics", "", "| Arm | Stratum | n | hit@20 | hit@100 | MRR |", "|---|---|---:|---:|---:|---:|", *rows, "",
         f"Language subset denominator: {result['language_subset_metrics']['denominator']} queries, selected by source identity (`ukrmova`, `bukvar`, ULP source files).", "", "| Arm | n | hit@20 | hit@100 | MRR |", "|---|---:|---:|---:|---:|", *language_rows, "",
-        "## Mechanical G2 inflection probe", "", f"Each unique term triple is reported once ({len(seen_triples)} triples; first position shown); the complete position inventory remains in queries.yaml. Category counts: {dict(Counter(q['category'] for q in query_set['g2']))}. Excluded categories: {query_set.get('g2_category_exclusions', {})}. Number (число) and verb (дієслово) are grounded in textbooks:{GRAMMAR_TEXTBOOK_CHUNK}; other terms retain their arc-source provenance. The existing first-match category priority is retained: all number/plural/singular jobs also match case first, so number has zero dedicated positions in this arc snapshot; its source term and paradigm are available, not silently absent. Overlap counts shared chunk IDs, never judged relevance.", "", "| First position | Pair | Arm | top-20 overlap | any shared chunk |", "|---|---|---|---:|---|", *inflection_rows, "",
+        "## Mechanical G2 inflection probe", "", f"Each unique term triple is reported once ({len(seen_triples)} triples; first position shown); the complete position inventory remains in queries.yaml. Category counts: {dict(Counter(q['category'] for q in query_set['g2']))}. Excluded categories: {query_set.get('g2_category_exclusions', {})}. Number (число) and verb (дієслово) are grounded in textbooks:{GRAMMAR_TEXTBOOK_CHUNK}; other terms retain their arc-source provenance. The existing first-match category priority is retained: all number/plural/singular jobs also match case first, so number has zero dedicated positions in this arc snapshot. Sentence (речення) also has zero dedicated positions: its jobs match earlier categories first. Both source terms and paradigms remain available. Overlap counts shared chunk IDs, never judged relevance.", "", "| First position | Pair | Arm | top-20 overlap | any shared chunk |", "|---|---|---|---:|---|", *inflection_rows, "",
         "## A1-lemma cost", "", f"Index build: {cost['build_seconds']:.3f} s; SQLite index size: {cost['size_bytes']} bytes; unique corpus surface tokens: {cost['unique_surface_tokens']}; indexed rows: {cost['indexed_rows']}; first 50 ordered G2 queries p50/p95: {cost['query_p50_seconds']:.6f}/{cost['query_p95_seconds']:.6f} s (n={cost['query_batch_n']}); peak process RSS: {cost['peak_rss_bytes']} bytes.", "",
         "## Phase 2 gate — descriptive only", "", f"Better lexical arm by Ukrainian G1 hit@20: {gate['better_lexical_arm']}. English is outside the primary contrast; the pooled row is a historical sensitivity reading only.", "",
         "| Stratum | n | Outside top 100 | v2 ≥20% met | Misses at 20 | Any-miss reading |", "|---|---:|---:|---|---:|---|", *gate_rows, "",

@@ -8,9 +8,12 @@ caches, judging pools, and keys are written below the caller-supplied work dir.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
+import inspect
 import json
 import math
+import multiprocessing
 import os
 import random
 import resource
@@ -18,7 +21,7 @@ import sqlite3
 import statistics
 import sys
 import time
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -28,13 +31,14 @@ ROOT = Path(__file__).resolve().parents[3]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.common.repo_root import project_interpreter
 from scripts.verification.vesum import get_vesum_connection
 from scripts.wiki import sources_db
 from scripts.wiki.diagnostics import retrieval_probe_9233 as phase1
 
 G3_PATH = ROOT / "docs/research/retrieval-bakeoff-9233/g3-queries.yaml"
 QUERY_PATH = ROOT / "docs/research/retrieval-bakeoff-9233/queries.yaml"
-G3_SHA256 = "8d5c4b34857d7abe85c1943bb69f39a454547a1176bea1b996c304ca7c8d03d4"
+G3_SHA256 = "152391220a5db3fd7ad4b48795d47a844bd223ad912d87dcaf6e12f10764fa53"
 SEED = 9233
 RRF_K = 60
 TOP_FIRST_STAGE = 100
@@ -47,31 +51,31 @@ TOKEN_RE = phase1.TOKEN_RE
 EMBEDDERS: dict[str, dict[str, str]] = {
     "BAAI/bge-m3": {"kind": "flag", "query_prefix": "", "passage_prefix": ""},
     "Snowflake/snowflake-arctic-embed-l-v2.0": {
-        "kind": "sentence", "query_prefix": "Represent this sentence for searching relevant passages: ", "passage_prefix": "",
+        "kind": "sentence", "query_prefix": "query: ", "passage_prefix": "",
     },
     "jinaai/jina-embeddings-v5-text-nano": {"kind": "jina", "query_prefix": "task=retrieval; prompt_name=query", "passage_prefix": "task=retrieval; prompt_name=document"},
     "intfloat/multilingual-e5-small": {"kind": "sentence", "query_prefix": "query: ", "passage_prefix": "passage: "},
     "hotchpotch/bekko-embedding-v1-a25m": {"kind": "sentence", "query_prefix": "", "passage_prefix": ""},
     "Qwen/Qwen3-Embedding-0.6B": {
-        "kind": "sentence", "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery: ", "passage_prefix": "",
+        "kind": "sentence", "query_prefix": "Instruct: Given a web search query, retrieve relevant passages that answer the query\nQuery:", "passage_prefix": "",
     },
 }
 RERANKERS = {
     "BAAI/bge-reranker-v2-m3": "cross_encoder",
     "jinaai/jina-reranker-v3.5": "jina",
-    "Qwen/Qwen3-Reranker-0.6B": "cross_encoder",
+    "Qwen/Qwen3-Reranker-0.6B": "qwen",
 }
 EXTRA_SOURCES = (
     "antonenko-davydovych-yak-my-hovorymo",
     "anna-ohoiko-500-verbs",
     "anna-ohoiko-1000-words-2nd-ed",
-    "pohribnyi",
+    "pohribnyi-ukrainska-literaturna-vymova-1992",
 )
 EXPLICIT_FUNCTION_WORDS = frozenset([
     "а", "або", "але", "в", "від", "до", "з", "за", "і", "й", "на", "не", "у", "та", "що", "це", "як", "про", "для", "коли", "де", "чим", "хто", "чого", "я", "ми", "ти", "ви", "він", "вона", "воно", "вони", "мій", "моя", "моє", "мого", "цим", "цього",
 ])
 TOPIC_FUNCTION_WORDS = frozenset({"з", "із", "зі", "і", "й", "у", "в"})
-POS_FUNCTION_MARKERS = ("conj", "conjunction", "prep", "preposition", "part", "particle", "adv.int", "pron.int")
+FUNCTION_POS = frozenset({"conj", "prep", "part"})
 
 
 def _ro_connect(path: Path) -> sqlite3.Connection:
@@ -106,29 +110,39 @@ def _subset_args() -> tuple[str, ...]:
     return EXTRA_SOURCES
 
 
-def _copy_subset(db_path: Path, work: Path) -> Path:
-    work.mkdir(parents=True, exist_ok=True)
-    target = work / "corpus.sqlite3"
-    if target.exists():
-        with _ro_connect(target) as cached:
-            ok = cached.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='chunks'").fetchone()
-        if ok:
-            return target
-    source = _ro_connect(db_path)
-    try:
-        rows = source.execute(
+def _subset_rows(db_path: Path) -> list[sqlite3.Row]:
+    with _ro_connect(db_path) as source:
+        for identity in EXTRA_SOURCES:
+            if not source.execute("SELECT 1 FROM textbooks WHERE source_file=? LIMIT 1", (identity,)).fetchone():
+                raise ValueError(f"Listed source identity matches zero rows: {identity}")
+        return source.execute(
             f"SELECT id,chunk_id,title,text,source_file,subject,parent_section_id FROM textbooks t WHERE {_subset_clause()} ORDER BY id",
             _subset_args(),
         ).fetchall()
-    finally:
-        source.close()
-    conn = sqlite3.connect(target)
-    conn.execute("CREATE TABLE chunks (id INTEGER PRIMARY KEY, chunk_id TEXT UNIQUE, title TEXT, text TEXT, source_file TEXT, subject TEXT, parent_section_id INTEGER)")
-    conn.executemany("INSERT INTO chunks VALUES (?,?,?,?,?,?,?)", [tuple(row) for row in rows])
-    conn.execute("CREATE VIRTUAL TABLE chunks_fts USING fts5(chunk_id UNINDEXED, title, text, tokenize='unicode61')")
-    conn.execute("INSERT INTO chunks_fts(rowid,chunk_id,title,text) SELECT id,chunk_id,title,text FROM chunks")
-    conn.commit()
-    conn.close()
+
+
+def _copy_subset(db_path: Path, work: Path, *, vesum_path: Path | None = None) -> Path:
+    work.mkdir(parents=True, exist_ok=True)
+    target = work / "corpus.sqlite3"
+    rows = _subset_rows(db_path)
+    digest = _digest_rows(rows)
+    if target.exists():
+        with _ro_connect(target) as cached:
+            metadata = dict(cached.execute("SELECT key,value FROM metadata"))
+            cached_rows = cached.execute("SELECT id,chunk_id,title,text,source_file,subject,parent_section_id FROM chunks ORDER BY id").fetchall()
+            indexed = cached.execute("SELECT rowid,chunk_id,title,text FROM chunks_fts ORDER BY rowid").fetchall()
+        if metadata.get("index_contract") != "A1-lemma-shared-v1" or metadata.get("row_digest") != digest or _digest_rows(cached_rows) != digest or _digest_rows(indexed) != metadata.get("index_digest"):
+            raise ValueError("Cached corpus digest/lemma contract mismatch; use a fresh --work-dir")
+        return target
+    with get_vesum_connection(vesum_path or _default_vesum_db()) as vesum:
+        expanded, _ = phase1.lemma_expanded_rows(rows, vesum)
+    with sqlite3.connect(target) as conn:
+        conn.execute("CREATE TABLE chunks (id INTEGER PRIMARY KEY, chunk_id TEXT UNIQUE, title TEXT, text TEXT, source_file TEXT, subject TEXT, parent_section_id INTEGER)")
+        conn.executemany("INSERT INTO chunks VALUES (?,?,?,?,?,?,?)", [tuple(row) for row in rows])
+        conn.execute("CREATE VIRTUAL TABLE chunks_fts USING fts5(chunk_id UNINDEXED, title, text, tokenize='unicode61')")
+        conn.executemany("INSERT INTO chunks_fts(rowid,chunk_id,title,text) VALUES (?,?,?,?)", [row[:4] for row in expanded])
+        conn.execute("CREATE TABLE metadata (key TEXT PRIMARY KEY, value TEXT)")
+        conn.executemany("INSERT INTO metadata VALUES (?,?)", [("index_contract", "A1-lemma-shared-v1"), ("row_digest", digest), ("index_digest", _digest_rows([row[:4] for row in expanded]))])
     return target
 
 
@@ -142,14 +156,7 @@ def _digest_rows(rows: list[sqlite3.Row] | list[tuple[Any, ...]]) -> str:
 
 
 def corpus(db_path: Path, work: Path) -> dict[str, Any]:
-    source = _ro_connect(db_path)
-    try:
-        rows = source.execute(
-            f"SELECT id,chunk_id,title,text,source_file,subject,parent_section_id FROM textbooks t WHERE {_subset_clause()} ORDER BY id",
-            _subset_args(),
-        ).fetchall()
-    finally:
-        source.close()
+    rows = _subset_rows(db_path)
     counts: dict[str, int] = defaultdict(int)
     for row in rows:
         identity = str(row["subject"] or "")
@@ -161,25 +168,44 @@ def corpus(db_path: Path, work: Path) -> dict[str, Any]:
     return result
 
 
-def _vesum_pos(conn: sqlite3.Connection, token: str) -> set[str]:
-    rows = conn.execute("SELECT DISTINCT pos FROM forms_all WHERE word_form=?", (token,)).fetchall()
-    return {str(row[0]).casefold() for row in rows}
+def _vesum_analyses(conn: sqlite3.Connection, token: str) -> list[tuple[str, str]]:
+    return [(str(row[0]), str(row[1])) for row in conn.execute(
+        "SELECT DISTINCT pos,tags FROM forms_all WHERE word_form=?", (token,))]
+
+
+def _is_function_analysis(pos: str, tags: str) -> bool:
+    return pos in FUNCTION_POS or (pos in {"adv", "noun", "adj"} and "pron" in tags.split(":") and "int" in tags.split(":"))
+
+
+def _topic_tokens(tokens: list[str], vesum: sqlite3.Connection) -> set[str]:
+    """Keep metalinguistic alternatives and governed lists as topic terms."""
+    topics: set[str] = set()
+    markers = {"вибрати", "пишемо", "писати", "чергування", "прийменників", "сполучників", "після", "замість"}
+    for index, token in enumerate(tokens):
+        if token not in markers:
+            continue
+        tail = tokens[index + 1:]
+        # A list contains two or more lexical function terms. The connector
+        # itself is not enough to make an ordinary sentence metalinguistic.
+        listed = {t for t in tail if t in TOPIC_FUNCTION_WORDS or any(pos == "prep" for pos, _ in _vesum_analyses(vesum, t))}
+        if len(listed) >= 2:
+            topics.update(listed)
+    return topics
 
 
 def filter_lemma_query(query: str, vesum: sqlite3.Connection) -> list[str]:
-    """Drop VESUM function words unless fewer than two content terms remain or topic."""
+    """Use real VESUM POS/tags; keep topics and content/preposition homonyms."""
     tokens = list(dict.fromkeys(phase1.tokenize(query)))
-    if len(tokens) == 1 and tokens[0] in TOPIC_FUNCTION_WORDS:
-        return tokens
-    content: list[str] = []
-    function: list[str] = []
+    topics = _topic_tokens(tokens, vesum)
+    content = []
     for token in tokens:
-        pos = _vesum_pos(vesum, token)
-        is_function = token in EXPLICIT_FUNCTION_WORDS or any(marker in p for p in pos for marker in POS_FUNCTION_MARKERS)
-        (function if is_function else content).append(token)
+        analyses = _vesum_analyses(vesum, token)
+        is_function = token in EXPLICIT_FUNCTION_WORDS or (bool(analyses) and all(_is_function_analysis(pos, tags) for pos, tags in analyses))
+        if not is_function:
+            content.append(token)
     if len(content) < 2:
         return tokens
-    return list(dict.fromkeys(content))
+    return [token for token in tokens if token in content or token in topics]
 
 
 def _lemma_terms(query: str, vesum: sqlite3.Connection) -> list[str]:
@@ -201,7 +227,7 @@ def _fts_search(conn: sqlite3.Connection, query: str, vesum: sqlite3.Connection,
     if not expression:
         return []
     return [str(row[0]) for row in conn.execute(
-        "SELECT c.chunk_id FROM chunks_fts JOIN chunks c ON c.id=chunks_fts.rowid WHERE chunks_fts MATCH ? ORDER BY bm25(chunks_fts,5.0,1.0),c.id LIMIT ?",
+        "SELECT c.chunk_id FROM chunks_fts JOIN chunks c ON c.id=chunks_fts.rowid WHERE chunks_fts MATCH ? ORDER BY bm25(chunks_fts,0,5.0,1.0),c.id LIMIT ?",
         (expression, limit),
     )]
 
@@ -234,21 +260,28 @@ def _new_encoder(repo: str, work: Path) -> tuple[Any, dict[str, Any]]:
 
         model = BGEM3FlagModel(repo, use_fp16=False, devices="cpu", cache_dir=str(work / "model-cache"))
         max_tokens = 8192
-        return model, {"kind": "flag", "max_tokens": max_tokens}
+        model.tokenizer.truncation_side = "right"
+        return model, {"kind": "flag", "max_tokens": max_tokens, "prefixes": {"query": "", "passage": ""}}
     from sentence_transformers import SentenceTransformer
 
     model = SentenceTransformer(repo, device="cpu", cache_folder=str(work / "model-cache"), trust_remote_code=spec["kind"] == "jina")
     max_tokens = int(model.max_seq_length)
-    return model, {"kind": spec["kind"], "max_tokens": max_tokens}
+    model.tokenizer.truncation_side = "right"
+    prompts = model.prompts
+    prefixes = {"query": prompts.get("query", spec["query_prefix"]), "passage": prompts.get("document", spec["passage_prefix"])}
+    return model, {"kind": spec["kind"], "max_tokens": max_tokens, "prefixes": prefixes,
+                   "prompt_names": {"query": "query" if "query" in prompts else None, "passage": "document" if "document" in prompts else None}}
 
 
 def _encode_batch(model: Any, meta: dict[str, Any], texts: list[str], repo: str, batch_size: int) -> Any:
     spec = EMBEDDERS[repo]
-    passages = [text if spec["kind"] == "jina" else spec["passage_prefix"] + text for text in texts]
+    prefixes = meta.get("prefixes", {"passage": spec["passage_prefix"]})
+    prompt_name = meta.get("prompt_names", {}).get("passage")
+    passages = texts if prompt_name or spec["kind"] == "jina" else [prefixes["passage"] + text for text in texts]
     if meta["kind"] == "flag":
         result = model.encode(passages, batch_size=batch_size, max_length=meta["max_tokens"], return_dense=True, return_sparse=False, return_colbert_vecs=False)
         return result["dense_vecs"]
-    options = {"task": "retrieval", "prompt_name": "document"} if spec["kind"] == "jina" else {}
+    options = {"task": "retrieval", "prompt_name": "document"} if spec["kind"] == "jina" else {"prompt_name": prompt_name} if prompt_name else {"prompt": ""}
     return model.encode(passages, batch_size=batch_size, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False, **options)
 
 
@@ -288,7 +321,7 @@ def encode(db_path: Path, work: Path, repo: str, *, limit: int | None, batch_siz
         db.commit()
     wall_seconds = time.perf_counter() - started
     peak_rss = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    if os.name != "darwin":
+    if sys.platform != "darwin":
         peak_rss *= 1024
     index_size = sum(p.stat().st_size for p in destination.parent.glob(destination.name + "*"))
     report = {
@@ -298,7 +331,7 @@ def encode(db_path: Path, work: Path, repo: str, *, limit: int | None, batch_siz
         "steady_state_chunks_per_second": steady_chunks / steady_seconds if steady_seconds else None,
         "steady_state_chunks": steady_chunks, "steady_state_seconds": steady_seconds,
         "wall_seconds": wall_seconds, "peak_rss_bytes": peak_rss, "index_size_bytes": index_size,
-        "prefixes": {"query": EMBEDDERS[repo]["query_prefix"], "passage": EMBEDDERS[repo]["passage_prefix"]},
+        "prefixes": meta.get("prefixes", {"query": EMBEDDERS[repo]["query_prefix"], "passage": EMBEDDERS[repo]["passage_prefix"]}),
         "truncation": f"head-only at model max sequence length ({meta['max_tokens']} tokens)",
         "index": str(destination),
     }
@@ -309,10 +342,12 @@ def encode(db_path: Path, work: Path, repo: str, *, limit: int | None, batch_siz
 
 def _query_vector(model: Any, meta: dict[str, Any], query: str, repo: str) -> Any:
     spec = EMBEDDERS[repo]
-    text = query if spec["kind"] == "jina" else spec["query_prefix"] + query
+    prefix = meta.get("prefixes", {}).get("query", spec["query_prefix"])
+    prompt_name = meta.get("prompt_names", {}).get("query")
+    text = query if prompt_name or spec["kind"] == "jina" else prefix + query
     if meta["kind"] == "flag":
         return model.encode([text], batch_size=1, max_length=meta["max_tokens"], return_dense=True, return_sparse=False, return_colbert_vecs=False)["dense_vecs"][0]
-    options = {"task": "retrieval", "prompt_name": "query"} if spec["kind"] == "jina" else {}
+    options = {"task": "retrieval", "prompt_name": "query"} if spec["kind"] == "jina" else {"prompt_name": prompt_name} if prompt_name else {"prompt": ""}
     return model.encode([text], batch_size=1, normalize_embeddings=True, convert_to_numpy=True, show_progress_bar=False, **options)[0]
 
 
@@ -333,33 +368,87 @@ def _dense_rank(query_vector: Any, vectors_path: Path, limit: int = TOP_FIRST_ST
         conn.close()
 
 
+def _model_token_limit(tokenizer: Any, config: Any) -> int:
+    limits = [int(value) for value in (tokenizer.model_max_length, getattr(config, "max_position_embeddings", None)) if value is not None and 0 < int(value) < 10**9]
+    if not limits:
+        raise ValueError("Model has no finite token limit")
+    return min(limits)
+
+
+def _native_jina_limits(model: Any) -> dict[str, int]:
+    # Read the loaded repository implementation's limits rather than inventing
+    # a cap that differs from its native rerank preprocessing.
+    import textwrap
+
+    tree = ast.parse(textwrap.dedent(inspect.getsource(model.rerank)))
+    limits = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Assign) and isinstance(node.value, ast.Constant) and type(node.value.value) is int:
+            for target in node.targets:
+                if isinstance(target, ast.Name) and target.id in {"max_query_length", "max_doc_length"}:
+                    limits[target.id] = node.value.value
+    if set(limits) != {"max_query_length", "max_doc_length"}:
+        raise ValueError("Jina native truncation limits changed; verify its repository implementation")
+    return limits
+
+
 def _new_reranker(repo: str, work: Path) -> tuple[Any, dict[str, Any]]:
     _model_cache(work)
-    if RERANKERS[repo] == "flag":
-        from FlagEmbedding import FlagReranker
-
-        model = FlagReranker(repo, use_fp16=False, devices="cpu", cache_dir=str(work / "model-cache"))
-        return model, {"kind": "flag", "max_tokens": int(model.tokenizer.model_max_length)}
     if RERANKERS[repo] == "jina":
         from transformers import AutoModel
 
         model = AutoModel.from_pretrained(repo, cache_dir=str(work / "model-cache"), trust_remote_code=True).to("cpu").eval()
-        return model, {"kind": "jina", "max_tokens": int(model.config.max_position_embeddings)}
+        model._ensure_tokenizer()
+        model._tokenizer.truncation_side = "right"
+        return model, {"kind": "jina", "max_tokens": _model_token_limit(model._tokenizer, model.config),
+                       "truncation": "head-only; native query/document limits", **_native_jina_limits(model)}
+    if RERANKERS[repo] == "qwen":
+        from transformers import AutoModelForCausalLM, AutoTokenizer
+
+        tokenizer = AutoTokenizer.from_pretrained(repo, cache_dir=str(work / "model-cache"), padding_side="left", truncation_side="right")
+        model = AutoModelForCausalLM.from_pretrained(repo, cache_dir=str(work / "model-cache")).to("cpu").eval()
+        return (model, tokenizer), {"kind": "qwen", "max_tokens": _model_token_limit(tokenizer, model.config), "truncation": "head-only, preserving system prefix and yes/no suffix"}
     from sentence_transformers import CrossEncoder
 
-    model = CrossEncoder(repo, device="cpu", cache_folder=str(work / "model-cache"), max_length=512)
-    return model, {"kind": "cross_encoder", "max_tokens": 512}
+    model = CrossEncoder(repo, device="cpu", cache_folder=str(work / "model-cache"))
+    limit = _model_token_limit(model.tokenizer, model.model.config)
+    model.max_seq_length = limit
+    model.tokenizer.truncation_side = "right"
+    return model, {"kind": "cross_encoder", "max_tokens": limit, "truncation": "head-only at model maximum, longest-first pair truncation"}
+
+
+def _qwen_scores(adapter: tuple[Any, Any], meta: dict[str, Any], query: str, documents: list[str]) -> list[float]:
+    import torch
+
+    model, tokenizer = adapter
+    prefix = "<|im_start|>system\nJudge whether the Document meets the requirements based on the Query and the Instruct provided. Note that the answer can only be \"yes\" or \"no\".<|im_end|>\n<|im_start|>user\n"
+    suffix = "<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n"
+    prefix_ids = tokenizer.encode(prefix, add_special_tokens=False)
+    suffix_ids = tokenizer.encode(suffix, add_special_tokens=False)
+    budget = meta["max_tokens"] - len(prefix_ids) - len(suffix_ids)
+    if budget < 1:
+        raise ValueError("Qwen context too small for its scoring template")
+    scores = []
+    with torch.no_grad():
+        for document in documents:
+            text = f"<Instruct>: Given a web search query, retrieve relevant passages that answer the query\n<Query>: {query}\n<Document>: {document}"
+            ids = tokenizer.encode(text, add_special_tokens=False, truncation=True, max_length=budget)
+            inputs = tokenizer.pad({"input_ids": [prefix_ids + ids + suffix_ids]}, padding=True, return_tensors="pt")
+            logits = model(**inputs).logits[:, -1, :]
+            selected = logits[:, [tokenizer.convert_tokens_to_ids("no"), tokenizer.convert_tokens_to_ids("yes")]]
+            scores.append(float(torch.softmax(selected, dim=1)[0, 1]))
+    return scores
 
 
 def _rerank(model: Any, meta: dict[str, Any], query: str, candidates: list[dict[str, Any]]) -> list[str]:
+    if not candidates:
+        return []
     pairs = [[query, str(item["text"])] for item in candidates]
-    if meta["kind"] == "flag":
-        scores = model.compute_score(pairs, normalize=True)
-        if not isinstance(scores, list):
-            scores = [scores]
-    elif meta["kind"] == "jina":
+    if meta["kind"] == "jina":
         result = model.rerank(query, [str(item["text"]) for item in candidates])
         return [str(candidates[int(row["index"])]["chunk_id"]) for row in result]
+    if meta["kind"] == "qwen":
+        scores = _qwen_scores(model, meta, query, [pair[1] for pair in pairs])
     else:
         import numpy as np
 
@@ -377,113 +466,117 @@ def _load_queries() -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     queries: list[dict[str, Any]] = []
     for row in g1_g2.get("g1", []):
         if row.get("stratum") != "english":
-            queries.append({**row, "family": "G1", "stratum": str(row.get("stratum", "G1")), "cluster": row["id"]})
+            queries.append({**row, "family": "G1", "stratum": str(row.get("stratum", "G1")), "cluster": "G1:" + str(row["query"])})
     for row in g1_g2.get("g2", []):
         for form_index, form in enumerate(row.get("forms", [])):
-            queries.append({"id": f"{row['id']}:{form}", "query": form, "family": "G2", "stratum": "G2-inflected" if form_index else "G2-base", "cluster": row["id"], "pair_index": form_index, "area": row.get("category", "")})
+            queries.append({"id": f"{row['id']}:{form}", "query": form, "family": "G2", "stratum": "G2-inflected" if form_index else "G2-base", "cluster": "G2:" + json.dumps(row["forms"], ensure_ascii=False, separators=(",", ":")), "pair_index": form_index, "area": row.get("category", "")})
     for row in g3:
         queries.append({**row, "family": "G3", "stratum": f"G3-{row.get('area','unknown')}-{row.get('kind','unknown')}", "cluster": row["id"]})
     return queries, g3
 
 
-def search(db_path: Path, work: Path, *, models: list[str], rerankers: list[str], query_limit: int, batch_size: int, families: list[str]) -> dict[str, Any]:
+def _run_arm(corpus_path: Path, work: Path, queries: list[dict[str, Any]], arm: str, embedder: str | None, reranker: str | None, vesum_path: Path | None = None) -> dict[str, Any]:
+    """One fresh process owns one complete pipeline, including its RSS peak."""
+    chunks = _load_rows(corpus_path)
+    by_id = {str(row["chunk_id"]): row for row in chunks}
+    encoder, encoder_meta = _new_encoder(embedder, work) if embedder else (None, {})
+    ranker, ranker_meta = _new_reranker(reranker, work) if reranker else (None, {})
+    vector_path = work / "embeddings" / (embedder.replace("/", "--") + ".sqlite3") if embedder else None
+    rankings = {}
+    times = []
+    with _ro_connect(corpus_path) as lexical, get_vesum_connection(vesum_path or _default_vesum_db()) as vesum:
+        def retrieve(query: str) -> list[str]:
+            hits = []
+            if not arm.startswith("D:"):
+                hits = _fts_search(lexical, query, vesum, lemma=True, limit=TOP_FIRST_STAGE)
+            if embedder:
+                dense = _dense_rank(_query_vector(encoder, encoder_meta, query, embedder), vector_path)
+                hits = dense if arm.startswith("D:") else reciprocal_rank_fusion([hits, dense])
+            if reranker:
+                candidates = [by_id[cid] for cid in hits[:TOP_RERANK] if cid in by_id]
+                hits = _rerank(ranker, ranker_meta, query, candidates)
+            return hits
+
+        measured = [q["id"] for q in queries if q["family"] == "G3"][:50]
+        if measured:
+            retrieve(str(next(q["query"] for q in queries if q["id"] == measured[0])))
+        for query in queries:
+            started = time.perf_counter()
+            rankings[query["id"]] = retrieve(str(query["query"]))
+            elapsed = time.perf_counter() - started
+            if query["id"] in measured:
+                times.append(elapsed)
+    encode_path = work / (embedder.replace("/", "--") + "-encode.json") if embedder else None
+    encode_cost = json.loads(encode_path.read_text()) if encode_path and encode_path.exists() else {}
+    cost = {key: encode_cost[key] for key in ("wall_seconds", "steady_state_chunks_per_second", "peak_rss_bytes") if key in encode_cost}
+    cost.update({"query_p50_seconds": statistics.median(times) if times else None,
+                 "query_p95_seconds": _percentile(times, .95) if times else None,
+                 "query_n": len(times), "query_peak_rss_bytes": _peak_rss_bytes(),
+                 "index_size_bytes": (corpus_path.stat().st_size if not arm.startswith("D:") else 0) + (vector_path.stat().st_size if vector_path else 0),
+                 "measurement": "fresh spawned process per arm; one full-pipeline warmup, then first 50 G3 queries; end-to-end lexical/dense/fusion/rerank as applicable; process-lifetime RSS including model setup",
+                 "encoder": encoder_meta, "reranker": ranker_meta})
+    return {"rankings": rankings, "cost": cost}
+
+
+def _arm_worker(connection: Any, *args: Any) -> None:
+    try:
+        connection.send({"ok": True, "result": _run_arm(*args)})
+    except Exception as exc:
+        connection.send({"ok": False, "error": f"{type(exc).__name__}: {exc}"})
+    finally:
+        connection.close()
+
+
+def _isolated_arm(*args: Any) -> dict[str, Any]:
+    # Use the prescribed shared interpreter, never a worktree venv.
+    multiprocessing.set_executable(str(project_interpreter(ROOT)))
+    context = multiprocessing.get_context("spawn")
+    parent, child = context.Pipe(duplex=False)
+    process = context.Process(target=_arm_worker, args=(child, *args))
+    process.start()
+    child.close()
+    try:
+        message = parent.recv()
+    except EOFError as exc:
+        raise RuntimeError("Arm process exited without a measurement") from exc
+    finally:
+        parent.close()
+        process.join()
+    if process.exitcode != 0 or not message["ok"]:
+        raise RuntimeError(message.get("error", f"Arm process exit {process.exitcode}"))
+    return message["result"]
+
+
+def search(db_path: Path, work: Path, *, models: list[str], rerankers: list[str], query_limit: int, families: list[str]) -> dict[str, Any]:
     corpus_path = _copy_subset(db_path, work)
     queries, _ = _load_queries()
     queries = [q for q in queries if q["family"] in families][:query_limit]
-    chunks = _load_rows(corpus_path)
-    by_id = {str(row["chunk_id"]): row for row in chunks}
-    lexical = sqlite3.connect(f"file:{corpus_path.as_posix()}?mode=ro", uri=True)
-    lexical.row_factory = sqlite3.Row
-    lexical.execute("PRAGMA query_only=ON")
-    lexical_rankings: dict[str, list[str]] = {}
-    query_times: dict[str, list[float]] = defaultdict(list)
-    g3_seen = 0
-    with get_vesum_connection(_default_vesum_db()) as vesum:
-        for query in queries:
-            started = time.perf_counter()
-            lexical_rankings[query["id"]] = _fts_search(lexical, str(query["query"]), vesum, lemma=True, limit=TOP_FIRST_STAGE)
-            if query["family"] == "G3" and g3_seen < 50:
-                g3_seen += 1
-                query_times["L"].append(time.perf_counter() - started)
-    arms: dict[str, dict[str, list[str]]] = {"L": lexical_rankings}
-    costs: dict[str, dict[str, Any]] = {}
-    encoders: dict[str, Path] = {}
+    arm_specs = [("L", None, None)]
+    coverage = {}
     for repo in models:
         if repo not in EMBEDDERS:
             raise ValueError(f"Unsupported embedding repository: {repo}")
         vector_path = work / "embeddings" / (repo.replace("/", "--") + ".sqlite3")
         if not vector_path.is_file():
             raise FileNotFoundError(f"Missing index for {repo}; run encode --model {repo} first")
-        model, meta = _new_encoder(repo, work)
-        encoders[repo] = vector_path
-        d_rankings: dict[str, list[str]] = {}
-        h_rankings: dict[str, list[str]] = {}
-        warmup_query = next((q for q in queries if q["family"] == "G3"), None)
-        if warmup_query is not None:
-            warmup_vector = _query_vector(model, meta, str(warmup_query["query"]), repo)
-            _dense_rank(warmup_vector, vector_path)
-        g3_seen = 0
-        for q in queries:
-            started = time.perf_counter()
-            qvec = _query_vector(model, meta, str(q["query"]), repo)
-            dense = _dense_rank(qvec, vector_path)
-            dense_elapsed = time.perf_counter() - started
-            rrf_started = time.perf_counter()
-            h_rankings[q["id"]] = reciprocal_rank_fusion([lexical_rankings[q["id"]], dense])
-            hybrid_elapsed = time.perf_counter() - rrf_started
-            d_rankings[q["id"]] = dense
-            if q["family"] == "G3" and g3_seen < 50:
-                g3_seen += 1
-                query_times[f"D:{repo}"].append(dense_elapsed)
-                query_times[f"H:{repo}"].append(dense_elapsed + hybrid_elapsed)
-        arms[f"D:{repo}"] = d_rankings
-        arms[f"H:{repo}"] = h_rankings
-        costs[repo] = json.loads((work / (repo.replace("/", "--") + "-encode.json")).read_text(encoding="utf-8")) if (work / (repo.replace("/", "--") + "-encode.json")).exists() else {}
-        del model
-    rerank_models: dict[str, tuple[Any, dict[str, Any]]] = {}
-    for repo in rerankers:
-        if repo not in RERANKERS:
-            raise ValueError(f"Unsupported reranker repository: {repo}")
-        rerank_models[repo] = _new_reranker(repo, work)
-        for embedder in models:
-            hybrid_name = f"H:{embedder}"
-            arm_name = f"R:{repo}|{embedder}"
-            rankings: dict[str, list[str]] = {}
-            warmup_query = next((q for q in queries if q["family"] == "G3"), None)
-            if warmup_query is not None:
-                warmup_candidates = [by_id[cid] for cid in arms[hybrid_name][warmup_query["id"]][:TOP_RERANK] if cid in by_id]
-                _rerank(*rerank_models[repo], str(warmup_query["query"]), warmup_candidates)
-            g3_seen = 0
-            for query in queries:
-                candidates = [by_id[cid] for cid in arms[hybrid_name][query["id"]][:TOP_RERANK] if cid in by_id]
-                started = time.perf_counter()
-                rankings[query["id"]] = _rerank(*rerank_models[repo], str(query["query"]), candidates)
-                if query["family"] == "G3" and g3_seen < 50:
-                    g3_seen += 1
-                    query_times[arm_name].append(time.perf_counter() - started)
-            arms[arm_name] = rankings
-    for arm, times in query_times.items():
-        costs.setdefault(arm, {})["query_p50_seconds"] = statistics.median(times)
-        costs[arm]["query_p95_seconds"] = _percentile(times, .95)
-        costs[arm]["query_n"] = len(times)
-        costs[arm]["query_peak_rss_bytes"] = _peak_rss_bytes()
-    costs.setdefault("L", {})["index_size_bytes"] = (work / "corpus.sqlite3").stat().st_size
-    for arm in list(query_times):
-        if arm == "L":
-            continue
-        embedder = arm.split("|", maxsplit=1)[1] if arm.startswith("R:") else arm.split(":", maxsplit=1)[1]
-        encode_cost = costs.get(embedder, {})
-        costs[arm].update({key: encode_cost[key] for key in ("index_size_bytes", "wall_seconds", "steady_state_chunks_per_second", "peak_rss_bytes") if key in encode_cost})
-    vector_coverage = {repo: {"indexed_vectors": _vector_count(path), "corpus_rows": len(chunks)} for repo, path in encoders.items()}
-    result = {"schema": "retrieval-bakeoff-9233-search.v1", "g3_query_sha256": G3_SHA256, "queries": queries, "arms": arms, "costs": costs, "vector_coverage": vector_coverage, "seed": SEED, "rrf_k": RRF_K, "top_first_stage": TOP_FIRST_STAGE, "top_rerank": TOP_RERANK}
+        coverage[repo] = {"indexed_vectors": _vector_count(vector_path), "corpus_rows": len(_load_rows(corpus_path))}
+        arm_specs.extend([(f"D:{repo}", repo, None), (f"H:{repo}", repo, None)])
+        for ranker in rerankers:
+            if ranker not in RERANKERS:
+                raise ValueError(f"Unsupported reranker repository: {ranker}")
+            arm_specs.append((f"R:{ranker}|{repo}", repo, ranker))
+    arms, costs = {}, {}
+    for arm, embedder, reranker in arm_specs:
+        measured = _isolated_arm(corpus_path, work, queries, arm, embedder, reranker)
+        arms[arm], costs[arm] = measured["rankings"], measured["cost"]
+    result = {"schema": "retrieval-bakeoff-9233-search.v1", "g3_query_sha256": G3_SHA256, "queries": queries, "arms": arms, "costs": costs, "vector_coverage": coverage, "seed": SEED, "rrf_k": RRF_K, "top_first_stage": TOP_FIRST_STAGE, "top_rerank": TOP_RERANK}
     (work / "search-results.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    lexical.close()
     return result
 
 
 def _peak_rss_bytes() -> int:
     value = resource.getrusage(resource.RUSAGE_SELF).ru_maxrss
-    return int(value * (1024 if os.name != "darwin" else 1))
+    return int(value * (1024 if sys.platform != "darwin" else 1))
 
 
 def _vector_count(path: Path) -> int:
@@ -498,20 +591,35 @@ def _percentile(values: list[float], probability: float) -> float:
     return ordered[min(len(ordered) - 1, math.ceil(probability * len(ordered)) - 1)]
 
 
-def pool(work: Path, *, query_limit: int | None = None) -> dict[str, Any]:
-    path = work / "search-results.json"
-    result = json.loads(path.read_text(encoding="utf-8"))
-    if query_limit is not None:
-        queries = result["queries"][:query_limit]
-    else:
-        # All G1 and base/first-inflected G2 pairs, then a fixed G3 sample up to 120.
-        required = [q for q in result["queries"] if q["family"] == "G1"]
-        required.extend(q for q in result["queries"] if q["family"] == "G2" and q.get("pair_index") in {0, 1})
-        remaining = max(0, 120 - len(required))
-        g3 = [q for q in result["queries"] if q["family"] == "G3"]
-        generator = random.Random(SEED)
-        required.extend(sorted(generator.sample(g3, min(remaining, len(g3))), key=lambda row: row["id"]))
-        queries = required
+def _pool_queries(queries: list[dict[str, Any]], query_limit: int | None = None) -> list[dict[str, Any]]:
+    # Deduplicate before budgeting, retaining G1 and then the registered G2 pair.
+    required = [q for q in queries if q["family"] == "G1"]
+    required.extend(q for q in queries if q["family"] == "G2" and q.get("pair_index") in {0, 1})
+    seen: set[str] = set()
+    unique = []
+    for query in required:
+        if query["query"] not in seen:
+            unique.append(query)
+            seen.add(query["query"])
+    g3 = []
+    for query in queries:
+        if query["family"] == "G3" and query["query"] not in seen:
+            g3.append(query)
+            seen.add(query["query"])
+    cap = 120 if query_limit is None else query_limit
+    if cap < 1:
+        raise ValueError("--query-limit must be positive")
+    remaining = max(0, cap - len(unique))
+    sampled = random.Random(SEED).sample(g3, min(remaining, len(g3)))
+    return unique[:cap] + sorted(sampled, key=lambda row: row["id"])
+
+
+def pool(work: Path, *, query_limit: int | None = None, overwrite: bool = False) -> dict[str, Any]:
+    judge_dir = work / "judging"
+    if not overwrite and (any((judge_dir / name).exists() for name in ("pool.json", "judge-a.jsonl", "judge-b.jsonl")) or (work / "sealed/pool-key.json").exists()):
+        raise ValueError("Refusing to overwrite existing judging pool; pass --overwrite-pool explicitly")
+    result = json.loads((work / "search-results.json").read_text(encoding="utf-8"))
+    queries = _pool_queries(result["queries"], query_limit)
     corpus_path = work / "corpus.sqlite3"
     chunks = {str(row["chunk_id"]): row for row in _load_rows(corpus_path)}
     # G1 known citations are always included even when only G3 is measured.
@@ -519,17 +627,17 @@ def pool(work: Path, *, query_limit: int | None = None) -> dict[str, Any]:
     citations: dict[str, list[str]] = defaultdict(list)
     for q in query_set:
         if q["family"] == "G1":
-            citations[str(q["id"])].append(str(q.get("gold_chunk_id", "")))
+            citations[str(q["query"])].append(str(q.get("gold_chunk_id", "")))
     generator = random.Random(SEED)
     judging: list[dict[str, Any]] = []
     key: list[dict[str, str]] = []
     for query in queries:
         qid = str(query["id"])
-        candidates: set[str] = set(citations.get(qid, []))
+        candidates: set[str] = set(citations.get(str(query["query"]), []))
         for _arm, rankings in result["arms"].items():
             candidates.update(str(cid) for cid in rankings.get(qid, [])[:POOL_DEPTH])
         candidates.discard("")
-        item_ids = [hashlib.sha256(f"{qid}\0{cid}".encode()).hexdigest()[:20] for cid in candidates]
+        item_ids = [hashlib.sha256(f"{qid}\0{cid}".encode()).hexdigest()[:20] for cid in sorted(candidates)]
         shuffled = list(zip(item_ids, sorted(candidates), strict=True))
         generator.shuffle(shuffled)
         records: list[dict[str, Any]] = []
@@ -537,12 +645,12 @@ def pool(work: Path, *, query_limit: int | None = None) -> dict[str, Any]:
             row = chunks.get(chunk_id)
             if row is None:
                 continue
-            records.append({"item_id": item_id, "chunk_id": chunk_id, "source_identity": str(row["source_file"]), "text": str(row["text"])})
+            records.append({"item_id": item_id, "text": str(row["text"])})
+            key.append({"item_id": item_id, "query_id": qid, "arm": "", "chunk_id": chunk_id, "source_identity": str(row["source_file"])})
             for arm, rankings in result["arms"].items():
                 if chunk_id in rankings.get(qid, [])[:POOL_DEPTH]:
                     key.append({"item_id": item_id, "query_id": qid, "arm": arm, "chunk_id": chunk_id})
         judging.append({"query_id": qid, "query": str(query["query"]), "items": records})
-    judge_dir = work / "judging"
     judge_dir.mkdir(parents=True, exist_ok=True)
     for judge in ("judge-a", "judge-b"):
         (judge_dir / f"{judge}.jsonl").write_text("", encoding="utf-8")
@@ -550,7 +658,7 @@ def pool(work: Path, *, query_limit: int | None = None) -> dict[str, Any]:
     key_path = work / "sealed" / "pool-key.json"
     key_path.parent.mkdir(parents=True, exist_ok=True)
     key_path.write_text(json.dumps(key, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    return {"queries": len(judging), "items": sum(len(q["items"]) for q in judging), "pool": str(judge_dir / "pool.json"), "key": str(key_path), "seed": SEED}
+    return {"family_counts": dict(Counter(q["family"] for q in queries)), "queries": len(judging), "items": sum(len(q["items"]) for q in judging), "pool": str(judge_dir / "pool.json"), "key": str(key_path), "seed": SEED}
 
 
 def stricter_label(first: bool, second: bool) -> bool:
@@ -597,7 +705,10 @@ def _read_labels(path: Path) -> dict[tuple[str, str], dict[str, Any]]:
             raise ValueError(f"Missing required labels in {path}: {row.get('item_id')}")
         if any(type(row[label]) is not bool for label in ("usable_quotation", "usable_exercise", "usable_example")) or "\n" in str(row["reason"]):
             raise ValueError(f"Invalid label types or multiline reason in {path}: {row.get('item_id')}")
-        labels[(str(row["query_id"]), str(row["item_id"]))] = row
+        identity = (str(row["query_id"]), str(row["item_id"]))
+        if identity in labels:
+            raise ValueError(f"Duplicate judging label id in {path}: {identity}")
+        labels[identity] = row
     return labels
 
 
@@ -609,7 +720,10 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
     merged: dict[tuple[str, str], dict[str, bool]] = {}
     disagreements: dict[str, int] = defaultdict(int)
     kappa_pairs: dict[str, list[tuple[bool, bool]]] = defaultdict(list)
-    for identity in set(a) | set(b):
+    expected = {(str(q["query_id"]), str(item["item_id"])) for q in pool_rows for item in q["items"]}
+    if set(a) != expected or set(b) != expected:
+        raise ValueError("Judging label ids do not exactly cover the blind pool")
+    for identity in sorted(expected):
         if identity not in a or identity not in b:
             raise ValueError(f"Both judges must label every pooled item; missing {identity}")
         merged[identity] = {}
@@ -636,6 +750,8 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
     arm_query_hits: dict[str, dict[str, tuple[float, float]]] = defaultdict(dict)
     arm_retrieved: dict[str, dict[str, tuple[int, int]]] = defaultdict(lambda: defaultdict(lambda: (0, 0)))
     for item in key:
+        if not item["arm"]:
+            continue
         label = merged[(item["query_id"], item["item_id"])]
         current = arm_retrieved[item["arm"]][item["query_id"]]
         quotation = label["usable_quotation"]
@@ -681,7 +797,7 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
     eligible = [arm for arm, entry in paired.items() if entry["eligible_noninferior"]]
     eligible.sort(key=lambda arm: (costs.get(arm, {}).get("query_p95_seconds", float("inf")), costs.get(arm, {}).get("index_size_bytes", float("inf")), costs.get(arm, {}).get("wall_seconds", float("inf"))))
     kappas = {label: cohen_kappa(pairs) for label, pairs in kappa_pairs.items()}
-    kappa_gate = bool(kappas) and all(value >= 0.6 for value in kappas.values())
+    kappa_gate = bool(kappas) and all(kappas.get(label, 0.0) >= 0.6 for label in ("usable_quotation", "usable_exercise"))
     if not kappa_gate:
         for entry in paired.values():
             entry["eligible_noninferior"] = False
@@ -689,7 +805,7 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
     eligible.sort(key=lambda arm: (costs.get(arm, {}).get("query_p95_seconds", float("inf")), costs.get(arm, {}).get("index_size_bytes", float("inf")), costs.get(arm, {}).get("wall_seconds", float("inf"))))
     report = {"schema": "retrieval-bakeoff-9233-score.v1", "g3_query_sha256": G3_SHA256, "query_count": len(query_ids), "judged_items": len(merged), "judge_disagreements": dict(disagreements), "cohen_kappa": kappas, "kappa_gate": kappa_gate, "strata": summaries, "paired_bootstrap_best_minus_arm": paired, "recommended_by_v5_cost_order": eligible[0] if eligible else None, "costs": costs, "eligibility_rule": "upper 95% bound of paired cluster bootstrap(best Recall@20 - arm Recall@20) <= 0.05, conditional on kappa >= 0.6", "seed": SEED}
     (work / "score-results.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    report_path = ROOT / "docs/research/retrieval-bakeoff-9233/phase2-results.md"
+    report_path = work / "phase2-results.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(_render_report(report), encoding="utf-8")
     return report
@@ -737,9 +853,9 @@ Related: docs/research/retrieval-bakeoff-9233/g3-queries.yaml; design #9233 v5.
     p.add_argument("--rerankers", nargs="+", choices=sorted(RERANKERS), default=sorted(RERANKERS), help="Reranker repositories; default all three v5 rerankers.")
     p.add_argument("--query-limit", type=int, default=10000, help="Maximum frozen queries after family filtering; default all queries.")
     p.add_argument("--families", nargs="+", choices=("G1", "G2", "G3"), default=["G1", "G2", "G3"], help="Query families to execute; default all Ukrainian G1, G2 and G3.")
-    p.add_argument("--batch-size", type=int, default=16, help="CPU batch size for model setup/runtime metadata; default 16.")
     p = commands.add_parser("pool", parents=[common], help="Create arm-blind judging files and a separately sealed arm key.")
-    p.add_argument("--query-limit", type=int, help="Pool first N search queries; default all search queries.")
+    p.add_argument("--query-limit", type=int, help="Cap unique pooled query strings at N; default 120: all unique G1/G2 pairs, then seeded G3 sample.")
+    p.add_argument("--overwrite-pool", action="store_true", help="Explicitly replace the pool and reset judge files; default refuse any existing pool or labels.")
     p = commands.add_parser("score", parents=[common], help="Score two judge JSONL files with strict/lenient labels and paired cluster bootstrap.")
     p.add_argument("--judge-a", type=Path, required=True, help="First judge JSONL with one item label per pooled item.")
     p.add_argument("--judge-b", type=Path, required=True, help="Second judge JSONL with the same item labels.")
@@ -759,9 +875,9 @@ def main(argv: list[str] | None = None) -> int:
                 raise ValueError("--limit must be positive")
             result = encode(db_path, work, args.model, limit=args.limit, batch_size=args.batch_size)
         elif args.command == "search":
-            result = search(db_path, work, models=args.models, rerankers=args.rerankers, query_limit=args.query_limit, batch_size=args.batch_size, families=args.families)
+            result = search(db_path, work, models=args.models, rerankers=args.rerankers, query_limit=args.query_limit, families=args.families)
         elif args.command == "pool":
-            result = pool(work, query_limit=args.query_limit)
+            result = pool(work, query_limit=args.query_limit, overwrite=args.overwrite_pool)
         else:
             result = score(work, args.judge_a, args.judge_b, iterations=args.bootstrap_iterations)
         print(json.dumps(result, ensure_ascii=False, sort_keys=True))

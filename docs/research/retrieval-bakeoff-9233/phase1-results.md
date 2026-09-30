@@ -16,7 +16,7 @@ Textbooks table: 52070 rows; row digest SHA-256 `51037bb53e487a9e6d4ef3733dffd19
 
 A0-prod uses production `search_sources` at limit 10, maps S{section_id} to member chunk IDs and keeps direct unsectioned chunk IDs from #9303, preserving actual returned result ranks. Its hit@20 and hit@100 are capped by tool depth. Both lexical chunk arms use the whole table without a subject predicate. Dense retrieval is disabled for this judge-free run (SOURCES_MCP_NO_DENSE=1).
 
-Before #9303 runtime: `43c3ea91e2d1aad5cd6b7c41e66528e38a8c3607`. After runtime: `f58fc926bd51125660cbc5eee558a787ec3bd613`; sources_db.py SHA-256 `a777ba9d3d2af8954545938b85abf23eb2ddc1712d652e89348596a36580280f`. Only that module is loaded from the selected Git snapshot; dependencies remain from the working tree. Before/after A0-prod G1 hit counts: 1/41 → 5/41. Unique unsectioned chunks actually returned across these G1 queries: 0 → 39 (not a claim that every unsectioned row was retrieved).
+Before #9303 runtime: `2a2e47c70565f42f91d7d2c248604c5dda4a86a8`. After runtime: `f58fc926bd51125660cbc5eee558a787ec3bd613`; sources_db.py SHA-256 `a777ba9d3d2af8954545938b85abf23eb2ddc1712d652e89348596a36580280f`. Only that module is loaded from the selected Git snapshot; dependencies remain from the working tree. Before/after A0-prod G1 hit counts: 1/41 → 5/41. Unique unsectioned chunks actually returned across these G1 queries: 0 → 39 (not a claim that every unsectioned row was retrieved).
 
 Unique G1 query strings: 27 all; 7 Ukrainian; 20 English. Paired bootstrap for A1-lemma − A0-chunk hit@20: cluster = exact Ukrainian query string, keeping all repeated gold-chunk records together; 7 clusters, 2000 resamples, seed 9233, gain 0.7368421052631579, 95% interval [0.5714285714285714, 1]. Repeated primer spans containing only бачити/чути cannot supply distinct strings under the frozen cited-span rule. This narrow, source-derived sample is not independent held-out semantic proof.
 
@@ -47,9 +47,9 @@ Previous query SHA-256: `eb512d0b0b9f2bd5fe0a01b0d2729e26bf2b9789e95ff34aeff10c4
 | A0-chunk | all | 41 | 0.146 | 0.146 | 0.085 |
 | A0-chunk | ukrainian_form_mismatch | 19 | 0.053 | 0.053 | 0.026 |
 | A0-chunk | english | 22 | 0.227 | 0.227 | 0.136 |
-| A1-lemma | all | 41 | 0.488 | 0.585 | 0.203 |
+| A1-lemma | all | 41 | 0.488 | 0.585 | 0.215 |
 | A1-lemma | ukrainian_form_mismatch | 19 | 0.789 | 1.000 | 0.305 |
-| A1-lemma | english | 22 | 0.227 | 0.227 | 0.114 |
+| A1-lemma | english | 22 | 0.227 | 0.227 | 0.136 |
 
 Language subset denominator: 41 queries, selected by source identity (`ukrmova`, `bukvar`, ULP source files).
 
@@ -57,11 +57,11 @@ Language subset denominator: 41 queries, selected by source identity (`ukrmova`,
 |---|---:|---:|---:|---:|
 | A0-prod | 41 | 0.122 | 0.122 | 0.067 |
 | A0-chunk | 41 | 0.146 | 0.146 | 0.085 |
-| A1-lemma | 41 | 0.488 | 0.585 | 0.203 |
+| A1-lemma | 41 | 0.488 | 0.585 | 0.215 |
 
 ## Mechanical G2 inflection probe
 
-Each unique term triple is reported once (12 triples; first position shown); the complete position inventory remains in queries.yaml. Category counts: {'gender': 2, 'case': 33, 'verb': 4, 'tense': 4, 'mood': 2, 'aspect': 5}. Excluded categories: {}. Number (число) and verb (дієслово) are grounded in textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059; other terms retain their arc-source provenance. The existing first-match category priority is retained: all number/plural/singular jobs also match case first, so number has zero dedicated positions in this arc snapshot; its source term and paradigm are available, not silently absent. Overlap counts shared chunk IDs, never judged relevance.
+Each unique term triple is reported once (12 triples; first position shown); the complete position inventory remains in queries.yaml. Category counts: {'gender': 2, 'case': 33, 'verb': 4, 'tense': 4, 'mood': 2, 'aspect': 5}. Excluded categories: {}. Number (число) and verb (дієслово) are grounded in textbooks:11-klas-ukrajinska-mova-avramenko-2019_s0059; other terms retain their arc-source provenance. The existing first-match category priority is retained: all number/plural/singular jobs also match case first, so number has zero dedicated positions in this arc snapshot. Sentence (речення) also has zero dedicated positions: its jobs match earlier categories first. Both source terms and paradigms remain available. Overlap counts shared chunk IDs, never judged relevance.
 
 | First position | Pair | Arm | top-20 overlap | any shared chunk |
 |---|---|---|---:|---|
@@ -72,7 +72,7 @@ Each unique term triple is reported once (12 triples; first position shown); the
 | G2-A1-013 | відмінок → відмінка | A0-chunk | 0 | false |
 | G2-A1-013 | відмінок → відмінка | A1-lemma | 20 | true |
 | G2-A1-013 | відмінок → відмінкові | A0-chunk | 0 | false |
-| G2-A1-013 | відмінок → відмінкові | A1-lemma | 2 | true |
+| G2-A1-013 | відмінок → відмінкові | A1-lemma | 1 | true |
 | G2-A1-015 | дієслово → дієслова | A0-chunk | 2 | true |
 | G2-A1-015 | дієслово → дієслова | A1-lemma | 20 | true |
 | G2-A1-015 | дієслово → дієслову | A0-chunk | 0 | false |
@@ -92,31 +92,31 @@ Each unique term triple is reported once (12 triples; first position shown); the
 | G2-A2-005 | родовий відмінок → родового відмінка | A0-chunk | 0 | false |
 | G2-A2-005 | родовий відмінок → родового відмінка | A1-lemma | 20 | true |
 | G2-A2-005 | родовий відмінок → родовому відмінкові | A0-chunk | 0 | false |
-| G2-A2-005 | родовий відмінок → родовому відмінкові | A1-lemma | 2 | true |
+| G2-A2-005 | родовий відмінок → родовому відмінкові | A1-lemma | 0 | false |
 | G2-A2-017 | давальний відмінок → давального відмінка | A0-chunk | 1 | true |
 | G2-A2-017 | давальний відмінок → давального відмінка | A1-lemma | 20 | true |
 | G2-A2-017 | давальний відмінок → давальному відмінкові | A0-chunk | 0 | false |
-| G2-A2-017 | давальний відмінок → давальному відмінкові | A1-lemma | 5 | true |
+| G2-A2-017 | давальний відмінок → давальному відмінкові | A1-lemma | 9 | true |
 | G2-A2-020 | місцевий відмінок → місцевого відмінка | A0-chunk | 0 | false |
 | G2-A2-020 | місцевий відмінок → місцевого відмінка | A1-lemma | 20 | true |
 | G2-A2-020 | місцевий відмінок → місцевому відмінкові | A0-chunk | 0 | false |
-| G2-A2-020 | місцевий відмінок → місцевому відмінкові | A1-lemma | 3 | true |
+| G2-A2-020 | місцевий відмінок → місцевому відмінкові | A1-lemma | 0 | false |
 | G2-A2-024 | орудний відмінок → орудного відмінка | A0-chunk | 0 | false |
 | G2-A2-024 | орудний відмінок → орудного відмінка | A1-lemma | 20 | true |
 | G2-A2-024 | орудний відмінок → орудному відмінкові | A0-chunk | 0 | false |
-| G2-A2-024 | орудний відмінок → орудному відмінкові | A1-lemma | 3 | true |
+| G2-A2-024 | орудний відмінок → орудному відмінкові | A1-lemma | 5 | true |
 | G2-A2-027 | кличний відмінок → кличного відмінка | A0-chunk | 1 | true |
 | G2-A2-027 | кличний відмінок → кличного відмінка | A1-lemma | 20 | true |
 | G2-A2-027 | кличний відмінок → кличному відмінкові | A0-chunk | 1 | true |
-| G2-A2-027 | кличний відмінок → кличному відмінкові | A1-lemma | 13 | true |
+| G2-A2-027 | кличний відмінок → кличному відмінкові | A1-lemma | 14 | true |
 | G2-A2-032 | знахідний відмінок → знахідного відмінка | A0-chunk | 0 | false |
 | G2-A2-032 | знахідний відмінок → знахідного відмінка | A1-lemma | 20 | true |
 | G2-A2-032 | знахідний відмінок → знахідному відмінкові | A0-chunk | 0 | false |
-| G2-A2-032 | знахідний відмінок → знахідному відмінкові | A1-lemma | 1 | true |
+| G2-A2-032 | знахідний відмінок → знахідному відмінкові | A1-lemma | 8 | true |
 
 ## A1-lemma cost
 
-Index build: 107.551 s; SQLite index size: 222494720 bytes; unique corpus surface tokens: 424150; indexed rows: 52070; first 50 ordered G2 queries p50/p95: 0.001997/0.010827 s (n=50); peak process RSS: 246562816 bytes.
+Index build: 86.344 s; SQLite index size: 222494720 bytes; unique corpus surface tokens: 424150; indexed rows: 52070; first 50 ordered G2 queries p50/p95: 0.001829/0.010445 s (n=50); peak process RSS: 626987008 bytes.
 
 ## Phase 2 gate — descriptive only
 
@@ -129,23 +129,29 @@ Better lexical arm by Ukrainian G1 hit@20: A1-lemma. English is outside the prim
 
 v3 dropped the numeric threshold without specifying a replacement. v5 superseded the Phase 1→2 gate with the hybrid-search goal; neither historical reading authorizes compute. The former G2 OR-clause is descriptive only: identical lemma sets necessarily produce identical queries and overlap; it is never a gate input. G2 judged recall is unmeasured.
 
-Former G2 overlap OR-clause occurrences: 84 position-pairs; descriptive, excluded from both readings.
+Former G2 overlap OR-clause occurrences: 73 position-pairs; descriptive, excluded from both readings.
 
 Residual: no embedder, reranker, Phase 2 or semantic relevance judging was run. Compute awaits the operator; the accountable driver owns that follow-on decision and independent exact-head code/Ukrainian review. No search recommendation follows from this Phase 1 report.
 
-## Verification for this fix round
+## Branch review fix: lexical rerun
 
-- Sources MCP `verify_words`: **81/81 FOUND**, covering every distinct retained G1 source/query/lemma and G2 query/inventory form. Evidence identifier: `vesum:c57f31588ba3040b38fc27d0fa0c5dd19c7288a3a317d60f515eecacb9b4d8b1`. Selection used read-only VESUM; this attests forms, not query usefulness.
-- Additional before/after production probe: unique returned ULP chunks **0 → 36**; G1 ULP citation hits **0/9 → 4/9 query records**, spanning six unique ULP citations. The post-fix snapshot includes subsequent #9314 refinements; this is a current before/after comparison, not isolated causal attribution to #9303.
-- Covering checks: `pytest -q tests/wiki/test_retrieval_probe_9233.py tests/wiki/test_retrieval_bakeoff_9233.py`; **29 passed**. Coverage run over those same files: **86%** of the Phase 1 probe. `ruff check scripts/wiki/diagnostics/retrieval_probe_9233.py tests/wiki/test_retrieval_probe_9233.py`: **All checks passed!**
-- Mutation checks: **16/16 caught**, each returning `rc=1` and `1 failed`; original source restored after every mutation. Mutations: index-first-analysis, index-drop-unknown, query-drop-unknown, query-first-analysis, allow-one-word, allow-homographs, reuse-combinations, force-any-miss-false, drop-descriptive-status, bootstrap-split-clusters, drop-direct-chunks, overwrite-frozen, wrong-snapshot-provenance, drop-number-category, retain-index, report-repeated-triples.
-- Probe command (PROJECT_PYTHON is the shared interpreter specified by the dispatch contract):
+BM25 now weights the indexed title ×5 and text ×1: `bm25(chunks_fts, 0, 5.0, 1.0)` in the bake-off and `bm25(lemma_fts, 0, 0, 0, 5.0, 1.0)` in the probe (three unindexed metadata columns). The production `textbooks_fts` has only title and text, so its existing `bm25(textbooks_fts, 5.0, 1.0)` is already correctly aligned. The regression test requires a title hit to outrank a same-length text hit in both lemma indexes.
+
+The Phase 1 rerun used the shared project interpreter, with dense retrieval disabled, two BLAS/OpenMP threads and two-CPU affinity:
 
 ```bash
 SOURCES_MCP_NO_DENSE=1 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MKL_NUM_THREADS=2 \
-  "$PROJECT_PYTHON" scripts/wiki/diagnostics/retrieval_probe_9233.py \
-  --temp-dir /tmp/probe-9233-p1-r1 \
+  taskset -c 0,1 "$PROJECT_PYTHON" scripts/wiki/diagnostics/retrieval_probe_9233.py \
+  --temp-dir /tmp/probe-9233-branch-r2 \
   --production-ref f58fc926bd51125660cbc5eee558a787ec3bd613
 ```
 
-The measured process was additionally bound to two CPUs. The temporary lemma index directory was empty after the run. G3 is unchanged (SHA-256 `8d5c4b34857d7abe85c1943bb69f39a454547a1176bea1b996c304ca7c8d03d4`); no embedder, reranker or Phase 2 action ran. No independent held-out semantic evaluation was performed in this judge-free fix round; exact-head code/Ukrainian review and subsequent CI remain the accountable driver's gates.
+Phase 2 subset validation (read-only rows; no embedding or reranking): **15,222** rows = 9,016 ukrmova + 223 bukvar + 4,286 ULP + 169 Антоненко-Давидович + 500 verbs + 1,000 words + 28 Pohribnyi. Row digest: `c9362ffe762a159d8c321c85f0f7a1500abfe1027001e246dd4d083f0d036969`. Any empty explicitly listed source identity now fails closed. Cached corpus and lemma-index rows are checked against their recorded digests before reuse.
+
+Default pool selection over the frozen queries deduplicates query strings before the 120 cap: **7 G1 + 24 G2 + 89 G3**. All known citations for a repeated G1 string remain in its pool. G1 clusters by query string (7 clusters); G2 by term triple (12 clusters). This is a selection check, not a model-generated judging pool or measured semantic recall.
+
+The harness measures each arm in a fresh spawned process: full-pipeline warmup, then the first 50 G3 queries; end-to-end query latency includes lexical retrieval, dense retrieval, fusion and reranking as applicable. Each arm records its own process RSS peak including model setup, actual prompt strings and model/native truncation limits. Model-backed measurements remain unverified until authorized compute and semantic judging.
+
+Covering verification uses only `tests/wiki/test_retrieval_probe_9233.py` and `tests/wiki/test_retrieval_bakeoff_9233.py`; synthetic model adapters never download weights. The unmocked lexical regression checks both «родового відмінка» and «бачу чую». Mutation checks for findings 1–4 restore original source after each run. No independent held-out semantic evaluation was performed; exact-head cross-family delta review, CI and compute remain with the accountable #9233 driver. The temporary Phase 1 lemma index was removed by the probe.
+
+Final covering test tail: `45 passed in 6.32s`; the preceding coverage run passed all 45 tests in 10.03s, with line coverage: harness **91%**, probe **86%**, combined **89%**. Ruff over both scripts and both named test files: `All checks passed!`. `git diff --check` emitted no errors. Findings 1–4 mutation tail: **7/7 caught**, each `rc=1; 1 failed`; surface index, cap before dedupe, G1 record clusters, G2 record clusters, unsorted ID hashing, overwrite guard, count-only label checking. Original source was restored after each mutation. These are regression proofs, not independent semantic judging or cross-family approval.
