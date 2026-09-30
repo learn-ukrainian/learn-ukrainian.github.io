@@ -6,6 +6,7 @@ import asyncio
 import contextlib
 import ipaddress
 import socket
+import tempfile
 import threading
 import time
 from dataclasses import replace
@@ -33,12 +34,21 @@ def request(proxy, data):
 
 
 @pytest.fixture
-def proxy(tmp_path):
-    result = AttemptEgress(tmp_path / "egress.sock", ALLOWED,
-                           limits=replace(Limits(), header_seconds=.2, resolve_seconds=.2, idle_seconds=.2))
-    yield result
-    result.cleanup()
-    assert not result.thread.is_alive()
+def proxy():
+    from pathlib import Path
+
+    # AF_UNIX has a small path limit independent of pytest's temp base.
+    with tempfile.TemporaryDirectory(prefix="eg-", dir="/tmp") as directory:
+        result = AttemptEgress(
+            Path(directory) / "egress.sock",
+            ALLOWED,
+            limits=replace(Limits(), header_seconds=0.2, resolve_seconds=0.2, idle_seconds=0.2),
+        )
+        try:
+            yield result
+        finally:
+            result.cleanup()
+            assert not result.thread.is_alive()
 
 
 @pytest.mark.parametrize("target", [

@@ -96,7 +96,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
@@ -494,6 +494,10 @@ class AgyAdapter:
         else:
             log_path = _build_log_path(task_id)
 
+        log_read_root = Path(str(tc["review_write_root"])) if tc.get("review_write_root") else log_path.parent.resolve()
+        if not tc.get("review_write_root"):
+            log_path = log_read_root / log_path.name
+
         # Non-review: `--dangerously-skip-permissions` is unconditional so
         # headless tool use does not hang on interactive prompts.
         # Review (#5285): never skip permissions; require OS sandbox (runner)
@@ -560,6 +564,9 @@ class AgyAdapter:
             # $HOME/.gemini/config and keeps transcripts under AGY_APP_DATA_DIR.
             env_overrides["HOME"] = str(agy_home)
             env_overrides[_AGY_APP_DATA_ENV] = str(Path(agy_home) / ".gemini" / "antigravity-cli")
+        app_data = _agy_app_data(env_overrides)
+        app_data_root = app_data.resolve()
+        transcript_read_root = Path(str(tc["review_write_root"])) if tc.get("review_write_root") else app_data_root
         baseline = (
             {_TRANSCRIPT_BASELINE_KEY: _transcript_baseline(_agy_app_data(env_overrides), session_id)}
             if session_id and not review_isolation
@@ -577,10 +584,15 @@ class AgyAdapter:
             metadata={
                 **schema_metadata(output_schema),
                 **baseline,
+                "parent_read_root": str(transcript_read_root),
+                "agy_app_data_path": str(app_data),
+                "agy_app_data_root": str(app_data_root),
+                "attempt_read_root": bool(tc.get("review_write_root")),
+                "log_read_root": str(log_read_root),
                 "entire_fleet": {
                     "requested_model": model or self.default_model,
                     "actual_model": resolved_model or model or self.default_model,
-                }
+                },
             },
             host_harness="agy",
         )
@@ -1072,7 +1084,9 @@ class _TranscriptSlice(NamedTuple):
     unreadable_lines: int
 
 
-def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> tuple[list[dict[str, Any]], int] | None:
+def _read_transcript_events(
+    transcript_path: Path, *, offset: int = 0, trusted_root: Path = Path("/")
+) -> tuple[list[dict[str, Any]], int] | None:
     """Parse the transcript's JSONL events from byte ``offset`` onward.
 
     Returns the events and the count of non-blank lines that are not a JSON
@@ -1081,7 +1095,7 @@ def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> tuple[
     line means; nothing is silently dropped.
     """
     try:
-        raw_lines = safe_read_attempt_file(transcript_path, offset=offset).splitlines()
+        raw_lines = safe_read_attempt_file(transcript_path, offset=offset, trusted_root=trusted_root).splitlines()
     except AttemptReadError as exc:
         if str(exc) == "attempt_read_invalid_offset":
             return None
@@ -1336,10 +1350,15 @@ def _bound_conversation(plan: InvocationPlan | None) -> tuple[str, Path] | None:
     if plan is None:
         return None
     log_file = plan.env_overrides.get(_AGY_LOG_ENV)
-    conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
+    conversation_id = (
+        _conversation_id_from_log(Path(log_file), trusted_root=Path(plan.metadata.get("log_read_root", "/")))
+        if log_file
+        else None
+    )
     if not conversation_id:
         return None
-    transcript = _brain_transcript_path(_agy_app_data(plan.env_overrides), conversation_id)
+    app_data, _ = _transcript_read_location(plan)
+    transcript = _brain_transcript_path(app_data, conversation_id)
     return (conversation_id, transcript) if transcript.exists() else None
 
 
@@ -1364,11 +1383,28 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
         offset = raw_offset if isinstance(raw_offset, int) and raw_offset >= 0 else None
     if offset is None:
         return None
-    parsed = _read_transcript_events(transcript, offset=offset)
+    _, read_root = _transcript_read_location(plan)
+    parsed = _read_transcript_events(transcript, offset=offset, trusted_root=read_root)
     if parsed is None:
         return None
     events, unreadable = parsed
     return _TranscriptSlice(transcript, events, unreadable) if events or unreadable else None
+
+
+def _transcript_read_location(plan: InvocationPlan) -> tuple[Path, Path]:
+    """Use the root captured before launch, without changing the CLI environment.
+
+    Ordinary callers may adjust a plan's app-data override; such a path keeps
+    the conservative filesystem-root walk instead of using a stale snapshot.
+    Attempts always retain their enforced write-root containment.
+    """
+    app_data = _agy_app_data(plan.env_overrides)
+    if str(app_data) == plan.metadata.get("agy_app_data_path"):
+        app_data = Path(plan.metadata["agy_app_data_root"])
+        return app_data, Path(plan.metadata["parent_read_root"])
+    if plan.metadata.get("attempt_read_root"):
+        return app_data, Path(plan.metadata["parent_read_root"])
+    return app_data, Path("/")
 
 
 def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:
@@ -1382,7 +1418,8 @@ def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:
     offset: int | None = None
     if re.fullmatch(_AGY_UUID, session_id):
         try:
-            offset = len(safe_read_attempt_file(_brain_transcript_path(app_data, session_id)))
+            root = app_data.resolve()  # Baseline is taken before the seat launches.
+            offset = safe_attempt_file_size(_brain_transcript_path(root, session_id), trusted_root=root)
         except FileNotFoundError:
             offset = 0
         except OSError:
@@ -1398,10 +1435,12 @@ def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:
     return app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
 
 
-def _conversation_id_from_log(log_file: Path) -> str | None:
+def _conversation_id_from_log(log_file: Path, *, trusted_root: Path = Path("/")) -> str | None:
     latest: str | None = None
     try:
-        lines = safe_read_attempt_file(log_file).decode("utf-8", errors="replace").splitlines()
+        lines = (
+            safe_read_attempt_file(log_file, trusted_root=trusted_root).decode("utf-8", errors="replace").splitlines()
+        )
         for line in lines:
             match = _AGY_CONVERSATION_RE.search(line)
             if match:

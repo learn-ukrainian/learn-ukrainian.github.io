@@ -34,7 +34,11 @@ def load_output_schema(tool_config: dict[str, Any] | None) -> dict[str, Any] | N
         raise ValueError("output_schema_path must be a non-empty absolute path")
     if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
         raise ValueError("output_schema_sha256 must be a lowercase SHA-256")
-    payload = safe_read_attempt_file(Path(path))
+    schema_path = Path(path)
+    root = Path(config["review_write_root"]) if config.get("review_write_root") else schema_path.parent.resolve()
+    if not config.get("review_write_root"):
+        schema_path = root / schema_path.name
+    payload = safe_read_attempt_file(schema_path, trusted_root=root)
     if hashlib.sha256(payload).hexdigest() != digest:
         raise ValueError("output schema SHA-256 changed after dispatch validation")
     schema = json.loads(payload)

@@ -1894,7 +1894,7 @@ def _execute_invocation_plan(
             )
             fleet_capture = None
         if v4_claim is not None:
-            _finalize_v4_runner_origin(
+            parse = _finalize_v4_runner_origin(
                 authorization_id=v4_authorization_id or "",
                 claim=v4_claim,
                 plan=plan,
@@ -2011,16 +2011,27 @@ def _finalize_v4_runner_origin(
     returncode: int | None,
     parse: ParseResult,
     requested_model: str,
-) -> None:
-    """Persist the runner-owned V4 observation from this exact process."""
+) -> ParseResult:
+    """Persist the runner-owned V4 observation, including typed read refusals."""
     from scripts.fleet_comms import v4_execution_origin as origin
     from scripts.fleet_comms.request_executor import RequestExecutor
 
     output_bytes = b""
     if getattr(plan, "output_file", None) is not None:
         output_path = Path(plan.output_file)
-        with contextlib.suppress(FileNotFoundError):
-            output_bytes = safe_read_attempt_file(output_path)
+        try:
+            if not (parse.failure_code or "").startswith("attempt_read_"):
+                output_bytes = safe_read_attempt_file(
+                    output_path,
+                    trusted_root=Path(plan.metadata.get("parent_read_root", "/")),
+                )
+        except FileNotFoundError:
+            pass
+        except AttemptReadError as exc:
+            parse = replace(parse, ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+    if (parse.failure_code or "").startswith("attempt_read_"):
+        parse = replace(parse, ok=False, response="", stderr_excerpt=parse.failure_code)
+        stderr_text = parse.failure_code
     with RequestExecutor() as executor:
         executor.finalize_v4_runner_execution(
             request_id=authorization_id,
@@ -2036,6 +2047,7 @@ def _finalize_v4_runner_origin(
             parse_session_id=parse.session_id,
             requested_model=requested_model,
         )
+    return parse
 
 
 def _raise_for_kill_reason(

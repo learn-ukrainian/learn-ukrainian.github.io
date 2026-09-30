@@ -785,7 +785,7 @@ def tail_liveness_file_for_debug(
     _, newest = candidates[0]
 
     try:
-        tail_bytes = safe_read_attempt_file(newest)[-max_bytes:]
+        tail_bytes = safe_read_attempt_file(newest, max_bytes=max_bytes, tail=True)
         return tail_bytes.decode("utf-8", errors="replace")
     except (OSError, AttemptReadError):
         return ""

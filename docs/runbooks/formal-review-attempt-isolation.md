@@ -12,7 +12,9 @@ Formal attempts on Linux have a private network namespace (`--unshare-net`),
 private PID namespace and private procfs. The host network and its loopback,
 interface listeners and abstract Unix sockets are unreachable, even when proxy
 variables are cleared or overridden. Ordinary dispatches retain their launch
-and network settings; their parent file reads also use the shared safe reader.
+and network settings. Their parent file reads use trusted adapter roots resolved
+before launch, so legitimate symlinks above those roots remain supported.
+Rollout discovery treats a refused, unbound candidate as a non-match.
 Platforms without the network namespace mechanism are refused for formal
 attempts; the former macOS filesystem-only capability is insufficient here.
 
@@ -61,15 +63,21 @@ runner-owned manifest boundary, rather than enabling that unsupported mode.
 ## Parent read boundary and site inventory
 
 Seat-writable names remain untrusted after exit. `safe_read_attempt_file` in
-`scripts/agent_runtime/attempt_boundary.py` walks every component from the trusted
-filesystem root with `openat` directory descriptors and `O_NOFOLLOW | O_DIRECTORY`,
+`scripts/agent_runtime/attempt_boundary.py` anchors its walk at the parent-owned,
+already-resolved attempt `write_root` or known adapter root, then walks every
+component below it with `openat` directory descriptors and `O_NOFOLLOW | O_DIRECTORY`,
 then opens the leaf with `O_NOFOLLOW | O_NONBLOCK | O_NOCTTY`. It checks the opened
-fd for a regular file, runner UID ownership, exactly one hard link and a 64 MiB
-maximum total size, including resumed prefixes. Reads use that fd only, with a
-bounded read and a second metadata check. Missing optional telemetry remains
-absent; unsafe reads raise body-free `AttemptReadError` codes. Runner parsing
-converts refusals to failed `ParseResult` values with no response, without
-rollout, stdout or provider fallback. Diagnostic tail refusals yield no text.
+fd for a regular file, runner UID ownership and exactly one hard link. Full and
+invocation-suffix reads cap accepted data at 64 MiB, refusing overflow; session-ID
+reads consume only a 64 KiB prefix, irrespective of total rollout size. Checked
+fd metadata supplies resumed lengths, and diagnostic tails seek on that fd.
+Reads use that fd only, with a bounded read and a second metadata check. Missing
+optional telemetry remains absent; unsafe reads raise body-free `AttemptReadError`
+codes. Runner parsing converts refusals to failed `ParseResult` values with no response, without
+rollout, stdout or provider fallback. A refused, unbound rollout candidate is a
+non-match; a refused bound rollout remains a typed failure. V4 finalization
+records empty output and the typed refusal instead of raising on the same read.
+Diagnostic tail refusals yield no text.
 
 This uses the directory-fd method described in the
 [Linux open/openat reference](https://man7.org/linux/man-pages/man2/open.2.html);
@@ -82,11 +90,11 @@ This uses the directory-fd method described in the
 | Codex `_read_rollout_segment`: completion, prompt binding and tool trace | Shared reader with invocation offset; unsafe reads cannot be swallowed by matching/recovery. |
 | Codex `_read_rollout_session_id`: session metadata | Shared reader before metadata parsing. |
 | AGY `_read_transcript_events`: transcript events | Shared reader with invocation offset; a shortened resumed transcript remains unbound. |
-| AGY `_transcript_baseline`: resumed prefix sizing | Shared reader; size derived from checked bytes. |
+| AGY `_transcript_baseline`: resumed prefix sizing | Checked fd `fstat` size; no transcript bytes read. |
 | AGY `_conversation_id_from_log`: invocation log | Shared reader before UUID extraction. |
 | AGY `_inline_saved_tool_result_pointer`: saved result | Lexical conversation steps containment plus shared reader; no resolve/check/reopen race. |
 | Runner `_finalize_v4_runner_origin`: output observation | Shared reader before recording; refusal cannot persist host bytes. |
-| Runner failure diagnostics via watchdog `tail_liveness_file_for_debug` | Shared reader before tail extraction; unsafe files yield no diagnostic bytes. |
+| Runner failure diagnostics via watchdog `tail_liveness_file_for_debug` | Checked fd seek and bounded tail read; unsafe files yield no diagnostic bytes. |
 | Runner `_prepare_stdin_handle`: prompt input | Retains the original parent-created descriptor through spawn, without reopening its name. |
 
 Codex rollout timestamps, snapshot sizes, liveness mtime polling and runner

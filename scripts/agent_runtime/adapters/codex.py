@@ -271,7 +271,14 @@ class CodexAdapter:
         effective_codex_home = tc_early.get("codex_home_override")
         if not effective_codex_home and review_write_root is not None:
             effective_codex_home = str(review_write_root / "home" / ".codex")
-        self._codex_home_scope = str(effective_codex_home) if effective_codex_home else None
+        self._codex_home_scope = str(
+            Path(effective_codex_home or os.environ.get("CODEX_HOME") or Path.home() / ".codex").resolve()
+        )
+        self._rollout_read_root = (
+            Path(str(tc_early["review_write_root"]))
+            if tc_early.get("review_write_root")
+            else self._codex_home_path().resolve()
+        )
 
         # Reset per-invocation state so _read_latest_rollout_task_complete
         # uses a fresh rollout snapshot (prevents cross-contamination
@@ -317,6 +324,8 @@ class CodexAdapter:
         write_root = review_write_root or (
             Path(str(tc_early["review_write_root"])) if tc_early.get("review_write_root") else None
         )
+        # Resolve trusted temp ancestors before any seat can rename components.
+        output_read_root = write_root or Path(read_only_tmp_root or tempfile.gettempdir()).resolve()
         execution_cwd = cwd
         if tc_early.get("review_isolation") and review_write_root is not None:
             # Codex discovers AGENTS.md from its working root independently of
@@ -336,7 +345,7 @@ class CodexAdapter:
             with tempfile.NamedTemporaryFile(
                 prefix=f"codex-runtime{safe_suffix}-",
                 suffix=".txt",
-                dir=read_only_tmp_root,
+                dir=output_read_root,
                 delete=False,
             ) as output_fd:
                 output_path = Path(output_fd.name)
@@ -438,7 +447,7 @@ class CodexAdapter:
             output_file=output_path,
             env_overrides=env_overrides,
             liveness_paths=(output_path,),
-            metadata=schema_metadata(load_output_schema(tool_config)),
+            metadata={**schema_metadata(load_output_schema(tool_config)), "parent_read_root": str(output_read_root)},
         )
 
     @classmethod
@@ -508,7 +517,14 @@ class CodexAdapter:
             if not isinstance(expected_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
                 raise ValueError("CodexAdapter: output_schema_sha256 must be a lowercase SHA-256")
             try:
-                payload = safe_read_attempt_file(schema_path)
+                payload = safe_read_attempt_file(
+                    schema_path
+                    if tool_config.get("review_write_root")
+                    else schema_path.parent.resolve() / schema_path.name,
+                    trusted_root=Path(tool_config["review_write_root"])
+                    if tool_config.get("review_write_root")
+                    else schema_path.parent.resolve(),
+                )
                 schema = _json.loads(payload.decode("utf-8"))
             except (OSError, UnicodeDecodeError, _json.JSONDecodeError) as exc:
                 raise ValueError(f"CodexAdapter: invalid output schema JSON: {exc}") from exc
@@ -564,7 +580,14 @@ class CodexAdapter:
         file_output = ""
         if output_file is not None:
             try:
-                file_output = safe_read_attempt_file(output_file).decode("utf-8", errors="replace").strip()
+                file_output = (
+                    safe_read_attempt_file(
+                        output_file,
+                        trusted_root=Path(plan.metadata.get("parent_read_root", "/")) if plan else Path("/"),
+                    )
+                    .decode("utf-8", errors="replace")
+                    .strip()
+                )
             except AttemptReadError as exc:
                 return ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
             except FileNotFoundError:
@@ -979,10 +1002,13 @@ class CodexAdapter:
         resume_session_id = getattr(self, "_resume_session_id", None)
         if resume_session_id:
             for candidate in sorted(all_candidates, key=mtime, reverse=True):
-                if (
-                    self._read_rollout_session_id(candidate) == resume_session_id
-                    and self._rollout_matches_plan(candidate, plan)
-                ):
+                try:
+                    matches = self._read_rollout_session_id(
+                        candidate, trusted_root=getattr(self, "_rollout_read_root", Path("/"))
+                    ) == resume_session_id and self._rollout_matches_plan(candidate, plan)
+                except AttemptReadError:
+                    continue  # Unbound candidates have supplied no eligible bytes.
+                if matches:
                     self._bound_rollout = candidate
                     return candidate
 
@@ -991,7 +1017,11 @@ class CodexAdapter:
             return None
 
         for candidate in sorted(new_candidates, key=mtime, reverse=True):
-            if self._rollout_matches_plan(candidate, plan):
+            try:
+                matches = self._rollout_matches_plan(candidate, plan)
+            except AttemptReadError:
+                continue
+            if matches:
                 self._bound_rollout = candidate
                 return candidate
         return None
@@ -1013,7 +1043,9 @@ class CodexAdapter:
         offsets: dict[Path, int] = getattr(self, "_rollout_start_offsets", {})
         start_offset = offsets.get(rollout, 0)
         try:
-            return safe_read_attempt_file(rollout, offset=start_offset).decode("utf-8", errors="replace")
+            return safe_read_attempt_file(
+                rollout, offset=start_offset, trusted_root=getattr(self, "_rollout_read_root", Path("/"))
+            ).decode("utf-8", errors="replace")
         except OSError:
             return ""
 
@@ -1028,13 +1060,17 @@ class CodexAdapter:
         rollout = self._select_rollout_for_plan(plan)
         if rollout is None:
             return None
-        return self._read_rollout_session_id(rollout)
+        return self._read_rollout_session_id(rollout, trusted_root=getattr(self, "_rollout_read_root", Path("/")))
 
     @staticmethod
-    def _read_rollout_session_id(rollout: Path) -> str | None:
+    def _read_rollout_session_id(rollout: Path, *, trusted_root: Path = Path("/")) -> str | None:
         """Read one validated session UUID from a rollout's opening metadata."""
         try:
-            lines = safe_read_attempt_file(rollout).decode("utf-8", errors="replace").splitlines()
+            lines = (
+                safe_read_attempt_file(rollout, trusted_root=trusted_root, max_bytes=65536, prefix=True)
+                .decode("utf-8", errors="replace")
+                .splitlines()
+            )
             for line_number, line in enumerate(lines, start=1):
                 if line_number > 25:
                     break

@@ -94,7 +94,7 @@ def test_swap_immediately_before_open_never_reads_forbidden(files, monkeypatch, 
     def open_fd(name, flags, *args, **kwargs):
         nonlocal swapped
         trigger = target.name if attack == "leaf" else root.name
-        if name == trigger and not swapped:
+        if Path(name).name == trigger and not swapped:
             swapped = True
             if attack == "leaf":
                 target.unlink()
@@ -136,7 +136,7 @@ def test_directory_swap_after_open_cannot_redirect_dirfd(files, monkeypatch):
     def open_fd(name, flags, *args, **kwargs):
         nonlocal swapped
         fd = original(name, flags, *args, **kwargs)
-        if name == root.name and not swapped:
+        if Path(name).name == root.name and not swapped:
             swapped = True
             root.rename(root.with_name("saved-seat"))
             root.symlink_to(forbidden.parent, target_is_directory=True)
@@ -284,20 +284,40 @@ def test_agy_transcript_baseline_refuses_symlink(tmp_path):
         agy._transcript_baseline(app_data, UUID)
 
 
-def test_runner_v4_origin_refuses_before_recording_output(files, monkeypatch):
+@pytest.mark.parametrize("parsed_failure", [False, True])
+def test_runner_v4_origin_finalizes_refusal_without_unsafe_output(files, monkeypatch, parsed_failure):
     _, target, forbidden = files
     target.unlink()
     target.symlink_to(forbidden)
     from scripts.fleet_comms.request_executor import RequestExecutor
 
-    monkeypatch.setattr(RequestExecutor, "__init__", lambda *a, **k: pytest.fail("must not record unsafe bytes"))
-    with pytest.raises(AttemptReadError):
-        runner._finalize_v4_runner_origin(
-            authorization_id="fixture", claim={"attempt_id": "fixture"},
-            plan=InvocationPlan(cmd=[], cwd=target.parent, output_file=target), review_cmd=[],
-            stdout_text="", stderr_text="", returncode=0, parse=ParseResult(ok=True, response="own"),
-            requested_model="fixture",
-        )
+    recorded = []
+    monkeypatch.setattr(RequestExecutor, "__init__", lambda *a, **k: None)
+    monkeypatch.setattr(RequestExecutor, "__enter__", lambda self: self)
+    monkeypatch.setattr(RequestExecutor, "__exit__", lambda *a: None)
+    monkeypatch.setattr(RequestExecutor, "finalize_v4_runner_execution", lambda self, **kw: recorded.append(kw))
+    parse = ParseResult(
+        ok=not parsed_failure,
+        response="own" if not parsed_failure else "",
+        failure_code="attempt_read_unsafe_path" if parsed_failure else None,
+    )
+    final_parse = runner._finalize_v4_runner_origin(
+        authorization_id="fixture",
+        claim={"attempt_id": "fixture"},
+        plan=InvocationPlan(cmd=[], cwd=target.parent, output_file=target),
+        review_cmd=[],
+        stdout_text="",
+        stderr_text="",
+        returncode=0,
+        parse=parse,
+        requested_model="fixture",
+    )
+    assert len(recorded) == 1
+    assert recorded[0]["output_bytes"] == b""
+    assert recorded[0]["parse_ok"] is False and recorded[0]["parse_response"] == ""
+    assert recorded[0]["stderr"] == b"attempt_read_unsafe_path"
+    assert final_parse.failure_code == "attempt_read_unsafe_path"
+    assert SENTINEL.decode() not in repr(recorded)
 
 
 def test_runner_debug_tail_never_returns_forbidden(files):
@@ -330,3 +350,250 @@ def test_schema_loaders_cannot_follow_seat_symlink(files, loader):
             "output_schema_path": str(target),
             "output_schema_sha256": hashlib.sha256(SENTINEL).hexdigest(),
         })
+
+
+def test_prefix_suffix_size_and_tail_ignore_unread_history(files, monkeypatch):
+    root, target, _ = files
+    with target.open("wb") as writer:
+        writer.write(b"prefix\n")
+        writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 100)
+        writer.seek(0, os.SEEK_END)
+        writer.write(b"suffix")
+    size = target.stat().st_size
+    assert safe_read_attempt_file(target, trusted_root=root, max_bytes=7, prefix=True) == b"prefix\n"
+    assert safe_read_attempt_file(target, trusted_root=root, offset=size - 6, max_bytes=6) == b"suffix"
+    assert safe_read_attempt_file(target, trusted_root=root, max_bytes=6, tail=True) == b"suffix"
+    with pytest.raises(AttemptReadError, match="oversized"):
+        safe_read_attempt_file(target, trusted_root=root, offset=size - 6, max_bytes=5)
+    with pytest.raises(AttemptReadError, match="invalid_bound"):
+        safe_read_attempt_file(target, trusted_root=root, tail=True, offset=1)
+    monkeypatch.setattr(boundary.os, "read", lambda *a: pytest.fail("size must not read bytes"))
+    assert boundary.safe_attempt_file_size(target, trusted_root=root) == size
+
+
+def test_trusted_root_allows_symlinks_above_it_but_refuses_beneath(tmp_path):
+    real = tmp_path / "real"
+    real.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(real, target_is_directory=True)
+    root = real / "runtime"
+    root.mkdir()
+    target = root / "output"
+    target.write_bytes(b"own return")
+    # The known root is resolved before launch; no output path is resolved.
+    known_root = (alias / "runtime").resolve()
+    assert safe_read_attempt_file(target, trusted_root=known_root) == b"own return"
+    sub = root / "sub"
+    sub.symlink_to(root, target_is_directory=True)
+    with pytest.raises(AttemptReadError, match="unsafe_path"):
+        safe_read_attempt_file(sub / "output", trusted_root=known_root)
+
+
+@pytest.mark.parametrize("returncode", [0, 1])
+@pytest.mark.parametrize("large_history", [False, True])
+def test_ordinary_codex_newer_huge_rollout_preserves_bound_answer(tmp_path, monkeypatch, returncode, large_history):
+    import json
+    import time
+
+    home = tmp_path / "codex-home"
+    directory = home / "sessions" / "day"
+    directory.mkdir(parents=True)
+    valid = directory / "rollout-valid.jsonl"
+    valid.write_text(json.dumps({"type": "session_meta", "payload": {"id": UUID}}) + "\n")
+    if large_history:
+        with valid.open("ab") as writer:
+            writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 1)
+    adapter = CodexAdapter()
+    monkeypatch.setattr(adapter, "_candidate_rollout_dirs", lambda: [directory])
+    plan = adapter.build_invocation(
+        prompt="current prompt",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=UUID,
+        tool_config={"codex_home_override": str(home)},
+    )
+    try:
+        unrelated = directory / "rollout-unrelated.jsonl"
+        with unrelated.open("wb") as writer:
+            writer.write(
+                json.dumps({"type": "session_meta", "payload": {"id": "ffffffff-bbbb-cccc-dddd-eeeeeeeeeeee"}}).encode()
+                + b"\n"
+            )
+            writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 1)
+        os.utime(unrelated, (time.time() + 10, time.time() + 10))
+        with valid.open("a") as writer:
+            writer.write(
+                json.dumps({"type": "event_msg", "payload": {"type": "user_message", "message": "current prompt"}})
+                + "\n"
+            )
+            writer.write(
+                json.dumps(
+                    {"type": "event_msg", "payload": {"type": "task_complete", "last_agent_message": "valid answer"}}
+                )
+                + "\n"
+            )
+        plan.output_file.write_text("valid answer")
+        result = adapter.parse_response(
+            stdout="", stderr="", returncode=returncode, output_file=plan.output_file, plan=plan
+        )
+        assert result.ok and result.response == "valid answer" and result.session_id == UUID
+        assert adapter._bound_rollout == valid
+    finally:
+        plan.output_file.unlink()
+
+
+@pytest.mark.parametrize("resumed", [False, True])
+def test_refused_unbound_rollout_is_nonmatch_but_bound_refusal_raises(files, monkeypatch, resumed):
+    import json
+
+    root, target, forbidden = files
+    bad = root / "rollout-bad.jsonl"
+    bad.symlink_to(forbidden)
+    good = root / "rollout-good.jsonl"
+    good.write_text(
+        json.dumps({"type": "session_meta", "payload": {"id": UUID}})
+        + "\n"
+        + json.dumps({"type": "event_msg", "payload": {"type": "user_message", "message": "prompt"}})
+        + "\n"
+    )
+    adapter = CodexAdapter()
+    adapter._rollout_read_root = root
+    adapter._resume_session_id = UUID if resumed else None
+    monkeypatch.setattr(adapter, "_candidate_rollout_dirs", lambda: [root])
+    plan = InvocationPlan(cmd=[], cwd=root, stdin_payload="prompt")
+    assert adapter._select_rollout_for_plan(plan) == good
+    good.unlink()
+    good.symlink_to(forbidden)
+    with pytest.raises(AttemptReadError, match="unsafe_path"):
+        adapter._select_rollout_for_plan(plan)
+    assert target.read_bytes() == b"own return"
+
+
+def test_ordinary_codex_symlinked_temp_and_home_ancestors(tmp_path, monkeypatch):
+    import json
+
+    real = tmp_path / "real"
+    real.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(real, target_is_directory=True)
+    home = alias / "home"
+    home.mkdir()
+    adapter = CodexAdapter()
+    monkeypatch.setattr("scripts.agent_runtime.adapters.codex.tempfile.gettempdir", lambda: str(alias))
+    plan = adapter.build_invocation(
+        prompt="prompt",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config={"codex_home_override": str(home)},
+    )
+    try:
+        directory = adapter._candidate_rollout_dirs()
+        assert not directory
+        from datetime import UTC, datetime
+
+        day = datetime.now(UTC)
+        directory = real / "home" / "sessions" / day.strftime("%Y/%m/%d")
+        directory.mkdir(parents=True)
+        rollout = directory / "rollout-own.jsonl"
+        rollout.write_text(
+            json.dumps({"type": "session_meta", "payload": {"id": UUID}})
+            + "\n"
+            + json.dumps({"type": "event_msg", "payload": {"type": "user_message", "message": "prompt"}})
+            + "\n"
+        )
+        (alias / plan.output_file.name).write_text("valid answer")
+        result = adapter.parse_response(stdout="", stderr="", returncode=0, output_file=plan.output_file, plan=plan)
+        assert result.ok and result.response == "valid answer" and result.session_id == UUID
+    finally:
+        plan.output_file.unlink()
+
+
+def test_agy_resume_baseline_and_reads_under_symlinked_ancestor(tmp_path, monkeypatch):
+    import json
+
+    real = tmp_path / "real"
+    real.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(real, target_is_directory=True)
+    home = alias / "home"
+    app_data = home / ".gemini" / "antigravity-cli"
+    transcript = agy._brain_transcript_path(app_data, UUID)
+    transcript.parent.mkdir(parents=True)
+    with transcript.open("wb") as writer:
+        writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 1)
+    size = transcript.stat().st_size
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy, "_build_log_path", lambda *a: alias / "agy.log")
+    plan = agy.AgyAdapter().build_invocation(
+        prompt="prompt",
+        mode="workspace-write",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=UUID,
+        tool_config={"agy_home_override": str(home)},
+    )
+    assert plan.metadata[agy._TRANSCRIPT_BASELINE_KEY]["offset"] == size
+    events = [{"type": "USER_INPUT", "text": "prompt"}, {"type": "PLANNER_RESPONSE", "text": "answer"}]
+    with transcript.open("a") as writer:
+        writer.write("\n".join(json.dumps(event) for event in events) + "\n")
+    Path(plan.env_overrides[agy._AGY_LOG_ENV]).write_text(f"Created conversation {UUID}\n")
+    bound = agy._invocation_transcript(plan)
+    assert bound is not None and bound.events == events and bound.unreadable_lines == 0
+
+
+@pytest.mark.parametrize("loader", [CodexAdapter._tool_config_flags, agy.load_output_schema])
+def test_ordinary_schema_under_symlinked_ancestor(tmp_path, loader):
+    import hashlib
+
+    real = tmp_path / "real"
+    real.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(real, target_is_directory=True)
+    schema = alias / "schema.json"
+    payload = b'{"type":"object"}'
+    schema.write_bytes(payload)
+    assert loader({"output_schema_path": str(schema), "output_schema_sha256": hashlib.sha256(payload).hexdigest()})
+
+
+def test_debug_tail_seeks_and_bounds_read_bytes(files, monkeypatch):
+    _, target, _ = files
+    with target.open("wb") as writer:
+        writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 1)
+        writer.seek(0, os.SEEK_END)
+        writer.write(b"useful tail")
+    original_read = os.read
+    consumed = []
+
+    def read(fd, count):
+        data = original_read(fd, count)
+        consumed.append(len(data))
+        return data
+
+    monkeypatch.setattr(boundary.os, "read", read)
+    assert tail_liveness_file_for_debug([target], max_bytes=11) == "useful tail"
+    assert sum(consumed) == 11
+
+
+def test_agy_attempt_root_remains_enforced_if_plan_override_changes(files):
+    root, _, forbidden = files
+    plan = InvocationPlan(
+        cmd=[],
+        cwd=root,
+        env_overrides={agy._AGY_APP_DATA_ENV: str(forbidden.parent)},
+        metadata={
+            "parent_read_root": str(root),
+            "attempt_read_root": True,
+            "agy_app_data_path": str(root / "app-data"),
+            "agy_app_data_root": str(root / "app-data"),
+        },
+    )
+    app_data, read_root = agy._transcript_read_location(plan)
+    assert app_data == forbidden.parent and read_root == root
+    with pytest.raises(AttemptReadError, match="outside_root"):
+        agy._read_transcript_events(forbidden, trusted_root=read_root)
