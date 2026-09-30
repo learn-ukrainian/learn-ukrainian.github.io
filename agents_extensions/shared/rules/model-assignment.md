@@ -39,8 +39,8 @@ that tier → cost among equivalent fits**. Formal code review uses the catalog'
 and the reviewer resolver for current routine and authority seat order; do not reconstruct a ladder
 from historical prose. The Codex orchestrator, advanced coding, Ukrainian authoring, and red-team seats use **GPT-6.1 Sol (`gpt-6.1-sol`) @ high**.
 Scouting and bounded repeatable work use **GPT-6 Luna @ high** (max only for an unusually
-hard scouting task). **Operator 2026-09-29 (#9230), advisory effort updated 2026-09-30 (#9301):** GPT-6.1 Sol is the only Sol and also holds
-the former GPT-6 Astra advisory seat, so advisory escalation is **GPT-6.1 Sol @ xhigh**; `gpt-6-sol`
+hard scouting task). **Operator 2026-09-29 (#9230), advisory effort set to high 2026-09-30 (#9360):** GPT-6.1 Sol is the only Sol and also holds
+the former GPT-6 Astra advisory seat, so advisory escalation is **GPT-6.1 Sol @ high**; `gpt-6-sol`
 and `gpt-6-astra` are not routable. In this file, "Astra" in seat or roster prose names that
 advisory seat, now held by GPT-6.1 Sol. Token prices under
 272K are Sol $2/$10 and Luna $0.10/$0.50 per million input/output tokens.
@@ -65,7 +65,7 @@ merge / do not jump MQ ahead of Foundry #7102.**
 | Seat | Provisional lock | Catalog tier (unchanged) | Wave 1 CF evidence |
 | --- | --- | --- | --- |
 | Fable (`claude-fable-5`, historical scorecard) | **S+** | `frontier_authority` | operator lock (no Wave 1 public CF cell required) |
-| Historical `gpt-5.6-sol` / Codex (retired; not a route) | **A** / hard advisory in the 2026-08-23 scorecard | `frontier_authority` at the time | #7142 thorough/confirmational on docs; live hard advice now routes to GPT-6.1 Sol @ xhigh in the Astra seat |
+| Historical `gpt-5.6-sol` / Codex (retired; not a route) | **A** / hard advisory in the 2026-08-23 scorecard | `frontier_authority` at the time | #7142 thorough/confirmational on docs; live hard advice now routes to GPT-6.1 Sol @ high in the Astra seat |
 | Historical Grok (`grok-4.6`; retired, not a route) | **≥B, NOT C** — do not demote | `frontier_practical` | #7133 pass with nits; residual-positional finding |
 | Kimi (native `kimi` CLI) | historical evidence only; Kimi no longer reviews (coding only) | `frontier_practical` | #7143 pass with nits |
 | AGY (`gemini-3.7-flash-high`) | historical fast scoped CF; no current code-review route | `frontier_practical` | #7137 pass, wall ~47s, low noise, concrete finding |
@@ -142,7 +142,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
     authority and does not satisfy the formal cross-family review gate.
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
   * **Top advisors**: `claude-fable-5-1` (Fable 5.1) · `gpt-6.1-sol` — the ONLY top-tier
-    advisor seats. GPT-6.1 Sol holds the Astra seat, pinned at `xhigh` for advisory and escalation. Fable's cost is accepted for advisor turns:
+    advisor seats. GPT-6.1 Sol holds the Astra seat, pinned at `high` for advisory and escalation. Fable's cost is accepted for advisor turns:
     they are rare, short, and decision-bearing; never spend them on queue grind.
   * **Other advisors**: `gemini-3.8-flash-high` (default for routine and deep; `gemini-3.1-pro-high` only on explicit request) ·
     `glm-5.3` @ `max` (advisory) · `grok-4.7` @ `high`. (Kimi: web, UI and backend coding only —
@@ -166,7 +166,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
 *Everyday routine non-security PRs use practical seats (`sonnet` / Sol @ `high`);
 authoring of security-sensitive code goes to Opus 5.5 or Codex Sol, and Ukrainian curriculum
 content stays with sanctioned language lanes (Fable 5.1 for Claude).
-GPT-6.1 Sol @ `xhigh` in the Astra seat is the advisory role.*
+GPT-6.1 Sol @ `high` in the Astra seat is the advisory role.*
 
 **Three-role boundary (operator directive 2026-07-31):** advisory consultation is
 non-binding model input (Anthropic → Opus); designated approval authority is the current
@@ -237,7 +237,7 @@ or count as a formal review.
 | --- | --- |
 | Inline code edit ≤5 LOC, fixing a CI failure I just caused | Me, current model |
 | Claude-side ROUTINE work — formulaic reviews, config/fixture edits, monitoring-only sessions, mechanical English wiki fixes, mechanical PR babysitting; polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts | **Sonnet 5.5** (user 2026-07-07: "use Sonnet more often for routine work") — dispatch `--model sonnet` / Sonnet session. Route authoring of security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) to **Opus 5.5 or Codex Sol**, not Sonnet 5.5; Claude-lane Ukrainian curriculum content stays with **Fable 5.1**. Reserve the frontier Claude tier (Opus 5.5 / whatever frontier model is active) for judgment work: architecture, adversarial review, pedagogy, hard bugs. **Route by TIER-FIT, not model name — the Claude lane rotates** (Fable 5 was temporary). **Motive = SAVE THE FRONTIER WINDOW** (user-confirmed 2026-07-07): if Sonnet is busy, QUEUE routine work or reroute to agy/codex — do not burn the frontier window on it. |
-| Code change >5 LOC, mechanical / pattern-applying / fixtures | use **Codex Sol @ `high`** for accountable coding and broader integration, or **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Clearly bounded work with exact owned paths and an objective scope ceiling uses **Luna @ `high`**. Cursor `grok-4.7-high` is a mechanical/ordinary alternative when fit and live capacity favor it; `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card), never as a model identity. Escalate consequential ambiguity to Astra @ `xhigh` for advice while Sol retains disposition. |
+| Code change >5 LOC, mechanical / pattern-applying / fixtures | use **Codex Sol @ `high`** for accountable coding and broader integration, or **Claude Opus 5.5 @ `high`** for hard Claude-lane coding. Clearly bounded work with exact owned paths and an objective scope ceiling uses **Luna @ `high`**. Cursor `grok-4.7-high` is a mechanical/ordinary alternative when fit and live capacity favor it; `auto` only for a well-defined coding dispatch (owned paths, PASS DoR card), never as a model identity. Escalate consequential ambiguity to Astra @ `high` for advice while Sol retains disposition. |
 | Code Review (PR diff) | Resolve with `.venv/bin/python -m scripts.review.closeout_cli ... resolve-reviewer --author-model <exact-model> --review-profile code --risk <low\|medium\|high\|critical>`. When the diff governs a seat's adapter or reviewer hooks, also pass repeatable `--owned-path` (inferred when unambiguous) or `--subject-seat` / `--subject-family`; that seat is excluded and the trace records why. Ambiguous paths require the explicit argument. The resolver applies hard filters first, then suitability for the review profile and risk, then the #5293 quality prior within equally suitable candidates. A lower tier can precede an eligible higher tier when it is more suitable; ladder order breaks remaining ties. Execute the returned `invocation`; preserve its concrete model, family, `route`, `transport`, health trace, and `requires_silence_timeout` receipt. Do not hand-pick Flash while an eligible higher-tier reviewer remains usable. |
 | Content Review with VESUM verification (load-bearing) | **LANGUAGE-LANES RULE binds (operator 2026-09-27): claude / codex (GPT) / agy (Gemini) only** — dispatch the reviewer on one of these three with the `sources` MCP (`verify_words`, `query_cefr_level`, `check_russian_shadow`). ~~deepseek-v4-pro default (#4358)~~ RETIRED for language seats by the same order; the #2112/# 4358 validation history stands as evidence only |
 | Wiki / content writing · content / pedagogy / factual **review** | agy — `delegate.py dispatch --agent agy` (write) or `ab ask-agy --to-model gemini-3.8-flash-high` (review default for routine and deep; `gemini-3.1-pro-high` only on explicit request). **Use agy actively here** (user 2026-06-24): the §7/factual-fabrication fence is LIFTED (cleared 2026-06-13 — it grounds in the `sources` MCP and abstains "NO SOURCE"), and its pedagogy/CEFR review is strong — it LED the 2026-06-24 practice-hub panel. **Metered** → be cost-aware, but do NOT under-use it where it's strong. NOT for cross-file architecture / security-concurrency / auth-heavy git / mass-mechanical (→ codex/claude). Caveat: agy `--data` truncates large/binary attachments → paste trimmed content or use codex `--data`. |
@@ -346,19 +346,19 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Fable 5.1 stays the advisor / authority seat, including Ukrainian-specific linguistic judgment, and is summoned for judgment, not seated as driver (see § Orchestration operating pattern). The orchestrator seat does not confer approval authority. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Sol at high — pick by CodexBar headroom |
-  | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ xhigh** | GPT-6.1 Sol orchestrates, does advanced work, and advises (it holds the Astra seat). Luna @ high scouts. Never co-owns a live lease |
+  | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes hard Claude-lane coding, architecture, and deep code review where relevant | **`gpt-6.1-sol` @ high** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Fable 5.1 stays the advisor / authority seat, including Ukrainian-specific linguistic judgment, and is summoned for judgment, not seated as driver (see § Orchestration operating pattern). The orchestrator seat does not confer approval authority. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Sol at high — pick by CodexBar headroom |
+  | **codex** | `gpt-6.1-sol` @ high | **`gpt-6.1-sol` @ high** | GPT-6.1 Sol orchestrates, does advanced work, and advises (it holds the Astra seat). Luna @ high scouts. Never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Cursor **explicit** `grok-4.7` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | Catalog seat only — **not** a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Flash is default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request) |
-  | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; `composer-2.5` also allowed; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ xhigh** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; unknown-Auto authors resolve to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
+  | **cursor** | `grok-4.7` @ high (launcher pin `grok-4.7-high`; `composer-2.5` also allowed; Auto only for a well-defined coding dispatch, operator decision 2026-09-30) | **`gpt-6.1-sol` @ high** | Driver seat never runs Auto; driver-of-record requires attested `resolved_model`; unknown-Auto authors resolve to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
   | seat | model_id | effort | escalate_model_id | escalate_effort |
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
-  | claude | claude-opus-5-5 | high | gpt-6.1-sol | xhigh |
-  | codex | gpt-6.1-sol | high | gpt-6.1-sol | xhigh |
-  | cursor | grok-4.7 | high | gpt-6.1-sol | xhigh |
+  | claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
+  | codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
+  | cursor | grok-4.7 | high | gpt-6.1-sol | high |
   | grok | grok-4.7 | high | grok-4.7 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -403,7 +403,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   widening.
 * **Codex is a named alternate driver**, using Sol @ `high` for the loop and advanced coding.
   Bounded implementation defaults to Luna @ `high`; adversarial reviewer effort is Sol @ `high`.
-  GPT-6.1 Sol @ `xhigh` in the Astra seat is the designated advisor.
+  GPT-6.1 Sol @ `high` in the Astra seat is the designated advisor.
 * Session-cadence seats stay unchanged for kimi (capable, slow), agy (compaction loses
   orchestration state — not a driver), gemini CLI (retired → agy).
 
@@ -446,11 +446,11 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   | kimi | false |
   <!-- fleet-roster-projection:end formal_review_eligible -->
 
-* **Advisor = `gpt-6.1-sol` @ `xhigh` (on-demand, NOT a standing worker).** The
+* **Advisor = `gpt-6.1-sol` @ `high` (on-demand, NOT a standing worker).** The
   `execution_routing.sol_advised_bounded` catalog route makes Astra produce a bounded
   envelope containing the task contract, exact owned paths, maximum changed-file
   and non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence,
-  and escalation triggers. The advisory pin is `xhigh`; summon it for consequential
+  and escalation triggers. The advisory pin is `high`; summon it for consequential
   judgments rather than routine work.
 * **Astra-advised bounded execution:** when that envelope is complete, prefer
   `gpt-6-luna` @ `high` for bounded implementation or investigation. The worker must
@@ -463,7 +463,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   ceiling, and a non-consequential task contract. This covers bounded
   implementation/investigation, recon, checks, and test/log triage. A missing
   ceiling, broader autonomous integration, or unresolved consequential
-  ambiguity routes to Sol @ `high`, with Astra @ `xhigh` advisory judgment when needed.
+  ambiguity routes to Sol @ `high`, with Astra @ `high` advisory judgment when needed.
 * **Review boundary:** Codex advisor and worker seats are both OpenAI-family. Astra's advisory
   output never satisfies the independent cross-family review gate.
 * **Workers = every other lane** — `gpt-6-luna` @ `high` (Codex bounded work / scout),
@@ -545,7 +545,7 @@ df -h /; du -sh "$repo_root/.worktrees"
 | **grok-4.7** | daily driver / CF (not QG judge) | oversight may be native Grok; don't solo multi-file when free workers exist |
 | **kimi** (**keep**) | **web, UI and backend coding only:** **`k3-256k` everyday** coding/impl; **`k3` @ high/max** complex coding | native `kimi` CLI only — never OpenRouter; don't burn full k3 on routine; throttle 5h windows when farAhead |
 | **glm / Z.AI** (**keep**) | **`glm-5.3-flash` workhorse** (default `--agent glm`); **`glm-5.3` explicit** for Coding Plan security/coherence | LOCAL-ONLY; prefer Flash API for implement; `--model glm-5.3` for Coding Plan |
-| **codex** Sol (1–4 drivers) | coding and review; Luna for routine bounded work and scouting; Astra @ xhigh for hard advisory only | **throttle mechanical when near_cap / paused unless a verified operator reset reserve applies**; shed to Cursor `grok-4.7-high` / implementation only / k3-256k / GLM |
+| **codex** Sol (1–4 drivers) | coding and review; Luna for routine bounded work and scouting; Astra @ high for hard advisory only | **throttle mechanical when near_cap / paused unless a verified operator reset reserve applies**; shed to Cursor `grok-4.7-high` / implementation only / k3-256k / GLM |
 
 **Throttle (do not feed more mechanical work):** any lane at/ahead of pace, thin reserve, or
 timed-paused (e.g. Codex near_cap until return-at). **Widen:** `farBehind` + meaningful reserve +
@@ -594,7 +594,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus/Fable ↔ Sol; summon Astra for hard advice, not CF | **high/medium/low formal CF defaults:** `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` · native `grok-4.7` (Cursor **`grok-4.7` explicit** if native dark) · GLM-5.3 · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 | For security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125. **Operator rule (2026-09-25): Gemini-family seats review Ukrainian language/content only; never code, infra, tooling, CI, tests, hooks, or skills, whether reviewer of record, second dissent, or panel CF.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
 | **UK content authoring** (author immersion-first, never translate) | **fresh-build lesson writer: codex Sol @ high** (operator default 2026-09-27, pending the pilot's measured writer selection, #8425) · **agy** (A1–A2 voice) ≈ **codex Sol @ high** | **claude** (B1–C2, sparingly — save the window) | — | **LANGUAGE-LANES RULE below binds**: only claude, codex (GPT), agy (Gemini); every other model family excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex Sol @ high** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; Grok is excluded from every Ukrainian review and judge seat; FOLK stays cross-family GPT↔Claude per the folk rubric |
-| **Research / recon / triage** | **Luna @ `high`** with exact owned paths + an objective scope ceiling; add an Astra envelope when the boundaries themselves need judgment | Sol @ `high` for broader work; Astra @ `xhigh` for advisory judgment | agy | Workers never sole authority on consequential calls |
+| **Research / recon / triage** | **Luna @ `high`** with exact owned paths + an objective scope ceiling; add an Astra envelope when the boundaries themselves need judgment | Sol @ `high` for broader work; Astra @ `high` for advisory judgment | agy | Workers never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | eligible opencode models — pool (FREE) · glm (LOCAL); DeepSeek is excluded from dispatch and review (`ask-deepseek` is consult-only for non-language work) | — | — | browsing = harness property, not a model trait |
 
 **Gemini code-review gate — accepted residuals (operator 2026-09-25).** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` without `--require-review-verdict` is an implementation dispatch and is not gated. A copy of code into a content path is out of scope: the gate exists so Gemini never reviews code, and a file under a content path is content by definition and is not executed.
@@ -603,7 +603,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 
 **Sources MCP by dispatch mode (checked 2026-09-22).** A language review that names `mcp__sources__*` has to run in a mode that can call that server. Codex `read-only` keeps the filesystem sandbox and sets `mcp_servers.sources.default_tools_approval_mode="approve"`. Without that approval, `approval_policy=never` cancels the stdio call (`MCP tool call requires approval, but approval policy is never`) before the tool runs. Codex `workspace-write` and `danger` already pass `--dangerously-bypass-approvals-and-sandbox`; the dispatch worktree is the write boundary. The sources server marks every tool `readOnlyHint`, so Codex does not treat a lookup as a destructive approval. Claude `read-only` and `workspace-write` share one invocation and can call sources when the seat's MCP config includes the server. AGY has no per-mode MCP flag; `read-only` sees sources when the AGY catalog lists the server. A Codex plan that names `mcp__sources__*` and can neither approve nor bypass those calls fails before spawn.
 
-**Advisor (on-demand, HARD calls only): `gpt-6.1-sol @ xhigh` by default** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis, or a bounded advisory envelope. Codex workhorse and red-team efforts are Sol `high`; bounded work is Luna `high`. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
+**Advisor (on-demand, HARD calls only): `gpt-6.1-sol @ high` by default** — architecture, high-stakes design/ADR review, difficult debugging, final synthesis, or a bounded advisory envelope. Codex workhorse and red-team efforts are Sol `high`; bounded work is Luna `high`. **Excluded:** qwen (cost). **LOCAL-ONLY:** glm (China-egress, never CI). **Cross-family review gate holds:** the reviewer must be outside the author's model family.
 
 **Kimi onboarding (native `kimi` CLI only):** dispatch with `.venv/bin/python scripts/delegate.py dispatch --agent kimi` — omitted flags default to **`k3-256k`** (everyday coding/impl; no forced effort, operator 2026-08-13). Explicitly select `--model k3 --effort high|max` whenever the task is consequential. K3 is the frontier-practical Moonshot seat (high/max effort, 1M window); `k2.7-coding` and its high-speed variant remain available as legacy routine workers. Current quota affects selection only among models that clear the task's quality floor. **Never route Kimi K3 workers through OpenRouter.** Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules.
 
@@ -680,7 +680,7 @@ Epic drivers **must** follow `fleet-driver-routing.md` (served immediately after
 in `/api/rules`):
 
 - **ROUTING_CARD_V1** before every implement dispatch (tier · model×harness · advisor packet · alternatives).
-- **Default bounded work:** authority brief (**Fable** or Astra @ xhigh when hard advisory
+- **Default bounded work:** authority brief (**Fable** or Astra @ high when hard advisory
   judgment is needed) → qualified practical implementer (Luna @ high for routine bounded
   Codex work, or another fit worker). A complete advisor packet defines the work; it does not
   turn Astra into an implementer.
@@ -774,7 +774,7 @@ Gemini 3.7, 3.6 and 3.5 Flash are retired; use Gemini 3.8 Flash.
 | Bounded coding, scouting, and recon | `gpt-6-luna` | `high` |
 | Adversarial code review | `gpt-6.1-sol` | `high` |
 | Ukrainian content authoring | `gpt-6.1-sol` | `high` |
-| Consequential advisor and difficult Ukrainian adjudication | `gpt-6.1-sol` | `xhigh` |
+| Consequential advisor and difficult Ukrainian adjudication | `gpt-6.1-sol` | `high` |
 
 Codex runtime routes accept exactly `gpt-6.1-sol` and `gpt-6-luna`. Omitted implementation and
 ordinary `ask-codex` model selections use GPT-6.1 Sol; bounded subagents default to Luna.
@@ -786,7 +786,7 @@ capacity, and transport capabilities. A model name or historical context window 
 no filesystem, tool, or driver authority.
 
 The compatibility key `execution_routing.sol_advised_bounded` retains its name.
-Its current advisor is GPT-6.1 Sol xhigh (the Astra seat) and its bounded worker is Luna high, with Sol
+Its current advisor is GPT-6.1 Sol high (the Astra seat) and its bounded worker is Luna high, with Sol
 high for broader autonomous integration. Current designated advisors are
 **Fable** and **Astra**. Kimi: web, UI and backend coding only — no
 Ukrainian-language content, no reviews, consults, design or rules. All GPT-6 models are OpenAI-family and

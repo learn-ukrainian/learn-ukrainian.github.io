@@ -480,21 +480,21 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["cursor"]["auto_scope"] == "write_implementation_dispatch_with_green_dor"
     assert seats["cursor"]["effort"] == "high"
     assert seats["cursor"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert seats["cursor"]["escalate_effort"] == "xhigh"
+    assert seats["cursor"]["escalate_effort"] == "high"
     assert seats["cursor"]["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     assert seats["cursor"]["attestation_rule"] == "driver_of_record_requires_attested_resolved_model"
     assert seats["cursor"]["unknown_auto_family_resolution"] == "union_family"
     assert seats["cursor"]["unknown_auto_union_families"] == ["xai", "moonshot"]
 
 
-def test_orchestrator_escalate_pins_astra_xhigh_and_agy_flash():
+def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     """Each seat has default + escalate like AGY Flash, same-SKU escalation, operator 2026-09-22."""
     seats = load_model_catalog()["orchestrator_seats"]
     assert seats["claude"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert seats["claude"]["escalate_effort"] == "xhigh"
+    assert seats["claude"]["escalate_effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["escalate_effort"] == "high"
-    # Codex reviewer escalation uses the same Astra xhigh advisor pin.
+    # Codex reviewer escalation uses the same Astra high advisor pin.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-6.1-sol"
     assert fc["claude"]["escalate_model_id"] == "claude-fable-5-1"
@@ -853,7 +853,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
 
     advisor = route["advisor"]
     assert advisor["model_id"] == "gpt-6.1-sol"
-    assert advisor["effort"] == "xhigh"
+    assert advisor["effort"] == "high"
     assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
     assert advisor["output_fields"] == [
         "task_contract",
@@ -1022,7 +1022,7 @@ def test_sol_holds_the_astra_advisor_seat_and_runtime_review_pins():
     assert AGENTS["codex"]["default_model"] == "gpt-6.1-sol"
     assert AGENTS["codex"]["default_effort"] == "high"
     assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6.1-sol --effort high")
-    assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "xhigh"
+    assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
     for risk in ("low", "medium", "high"):
         assert catalog["review_ladders"][risk][0] == ["openai_frontier"]
 
@@ -1314,9 +1314,28 @@ def test_issue_9301_active_exceptions_and_advisory_effort():
     for section in ("orchestrator_seats", "formal_cf_defaults"):
         for spec in catalog[section].values():
             if spec.get("escalate_model_id") == "gpt-6.1-sol":
-                assert spec["escalate_effort"] == "xhigh"
+                assert spec["escalate_effort"] == "high"
     assert catalog["orchestrator_seats"]["codex"]["effort"] == "high"
     assert catalog["formal_cf_defaults"]["codex"]["effort"] == "high"
+
+
+def test_sol_defaults_and_escalations_use_high_across_catalog():
+    bindings = []
+
+    def visit(value, path):
+        if isinstance(value, dict):
+            for model_key, effort_key in (("model_id", "effort"), ("escalate_model_id", "escalate_effort")):
+                if value.get(model_key) == "gpt-6.1-sol" and effort_key in value:
+                    assert value[effort_key] == "high", f"{path}.{effort_key}"
+                    bindings.append(f"{path}.{effort_key}")
+            for key, child in value.items():
+                visit(child, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                visit(child, f"{path}[{index}]")
+
+    visit(load_model_catalog(), "catalog")
+    assert len(bindings) == 8
 
 
 def test_live_claude_caller_defaults_are_active_catalog_models():
