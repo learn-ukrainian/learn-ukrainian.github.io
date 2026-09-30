@@ -268,16 +268,29 @@ def _plan_lesson_numbers(value: Any) -> set[int]:
     return set().union(*(_plan_lesson_numbers(item) for item in items))
 
 
-def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str, Any]) -> str:
+def _render_form_candidates(plan_entry: dict[str, Any], cited_records: dict[str, Any], *, level: str = "a1") -> str:
     """Show only cited store forms; the item demand selects the usable subset."""
     if not any(act.get("type") in {"fill-in", "quiz", "multiple-choice"} for act in plan_entry.get("activities", [])):
         return ""
     lines = [
         "## Form-choice candidate bank",
         "",
-        "Use one form from its bound record per option. State the complete slot `requires`; "
-        "choose one admitted key and distractors that differ in `tests_feature`. "
-        "The engine generates the item-specific subset and checks every written option.",
+        (
+            "Use one form from its bound record per option. State only the `requires` the sentence forces, "
+            "not the key's features. If another reading fits (partitive genitive after request, offer, "
+            "consumption or permission requests; genitive of negation; animate accusative/genitive syncretism), "
+            "rewrite the context to force one reading or drop the item; never remove a `requires` group to repair it. "
+            "A finite verb slot names `VerbForm: Fin` in `requires`; a plural slot omits `Gender` "
+            "because plural forms carry no gender. Choose one admitted key. Each distractor must be "
+            "a form that the sentence rules out by a feature the form itself carries. "
+            "`tests_feature` names one focus group; the reviewer judges whether the distractors "
+            "really make the learner choose along that focus. "
+            "The engine generates the item-specific subset and checks every written option."
+            if level == "a1"
+            else "Use one form from its bound record per option. State the complete slot `requires`; "
+            "choose one admitted key and distractors that differ in `tests_feature`. "
+            "The engine generates the item-specific subset and checks every written option."
+        ),
         "",
     ]
     found = False
@@ -531,7 +544,7 @@ def render_lesson_prompt(
         lesson_lock_entry_sha256=lesson_lock_entry_sha256,
         learner_state_sha256=learner_state_sha256,
     )
-    candidates = _render_form_candidates(pe, cited_records)
+    candidates = _render_form_candidates(pe, cited_records, level=level)
     return rendered + ("\n" + candidates if candidates else "")
 
 
@@ -605,7 +618,7 @@ def render_recap_prompt(
         lesson_lock_entry_sha256=lesson_lock_entry_sha256,
         learner_state_sha256=learner_state_sha256,
     )
-    candidates = _render_form_candidates(pe, cited_records)
+    candidates = _render_form_candidates(pe, cited_records, level=level)
     return rendered + ("\n" + candidates if candidates else "")
 
 
