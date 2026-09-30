@@ -1871,11 +1871,17 @@ def search_sources(
     )
     expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
     capped = _apply_context_cap(track, expanded)
+    # The guarantee applies to what the caller receives, so check the
+    # returned slice, not the longer capped list.
     if require_textbook_section and not any(
-        match.get("corpus") == "textbook_sections" for match in capped
+        match.get("corpus") == "textbook_sections" for match in capped[:limit]
     ):
         textbook_section = next(
-            (match for match in expanded if match.get("corpus") == "textbook_sections"),
+            (
+                match
+                for match in [*capped, *expanded]
+                if match.get("corpus") == "textbook_sections"
+            ),
             None,
         )
         if textbook_section is None:
