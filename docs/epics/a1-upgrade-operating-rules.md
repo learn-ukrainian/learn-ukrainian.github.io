@@ -104,7 +104,7 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 - **Content (V7 writer):** one writer, one reviewer. Writer = Gemini 3.8 Flash
   High (`agy-tools`). Reviewer = GPT-6.1 Sol @ high. They do not swap hats on the
   same module — the writer does not review its own module and the reviewer
-  does not write. Parallelism model: writer on module N+1 while Astra reviews
+  does not write. Parallelism model: writer on module N+1 while GPT-6.1 Sol reviews
   module N, not two content writers running at once.
 - **Machinery:** Claude Sonnet implements this epic's scripts/docs/CI work;
   Fable advises only if needed. Independent CF of record for machinery

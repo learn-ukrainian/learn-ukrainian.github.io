@@ -99,9 +99,10 @@ def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
 @pytest.mark.parametrize("model", ["grok-4.6", "grok-4.6[context=500k,reasoning_effort=high]"])
 def test_cursor_driver_rejects_retired_grok_before_lease(model: str) -> None:
     result = run_launcher(DRIVER, "--epic", "devops", "--model", model)
-    assert result.returncode == 4
-    assert "not certified" in result.stderr
+    assert result.returncode == 2
+    assert "is retired in the model catalog" in result.stderr
     assert "would claim lease" not in result.stdout
+    assert "would exec" not in result.stdout
 
 
 @pytest.mark.parametrize(

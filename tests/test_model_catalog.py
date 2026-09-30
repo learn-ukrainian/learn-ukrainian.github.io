@@ -1151,6 +1151,25 @@ def test_reviewer_invocation_accepts_matching_catalog_aliases(flag):
     validate_catalog(catalog)
 
 
+@pytest.mark.parametrize("prefix", [
+    ".venv/bin/python -m scripts.delegate dispatch",
+    ".venv/bin/python -u -m scripts.delegate dispatch",
+    ".venv/bin/python scripts/delegate.py dispatch",
+])
+@pytest.mark.parametrize("flag", ["--model", "-m"])
+@pytest.mark.parametrize("model", ["claude-fable-5-1", "claude-fable-5"])
+def test_python_module_selection_is_not_a_model_pin(prefix, flag, model):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = (
+        f"{prefix} --agent claude {flag} {model}"
+    )
+    if model == "claude-fable-5-1":
+        validate_catalog(catalog)
+    else:
+        with pytest.raises(ModelCatalogError, match="invocation model does not match"):
+            validate_catalog(catalog)
+
+
 def test_reviewer_invocation_rejects_malformed_shell_quoting():
     catalog = deepcopy(load_model_catalog())
     catalog["review_candidates"]["claude-fable-5-1"]["invocation"] = "delegate.py --model 'claude-fable-5-1"

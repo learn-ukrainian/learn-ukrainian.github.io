@@ -62,7 +62,7 @@ resolver selects. Cursor has two monthly pools ([Models & Pricing](https://curso
 For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
 advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
 pool has headroom. A review of a Grok author must use an Other Models slug, not a Grok
-slug. DeepSeek stays **Flash everyday**; **Pro @ high = hard implement only**.
+slug. DeepSeek is excluded from dispatch and review; `deepseek-v4.1-flash` remains active in the catalog, and Pro is retired.
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
@@ -96,7 +96,7 @@ stampede one hot lane.
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
 | **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-5-high`. Draws the API pool. |
-| **DeepSeek V4.1 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4.1-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
+| **DeepSeek V4.1 Flash** | Excluded from dispatch and review | `deepseek-v4.1-flash` remains active in the catalog; Pro is retired. `ask-deepseek` is consult-only for non-language work, never implementation or review. |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | complex / long-context coding only (Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews, consults, design or rules) | `--model k3` @ high/max — not routine queue |
 | **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |

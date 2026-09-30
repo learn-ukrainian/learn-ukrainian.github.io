@@ -85,7 +85,7 @@ $provider_env
 EXIT CODES:
   0  Launch completed, help shown, or dry-run succeeded.
   1  Launch refused on a continuity precondition (rollover ambiguity or lease).
-  2  Usage error (unknown flag, unsupported harness, or invalid selector).
+  2  Usage error (unknown flag, retired model, unsupported harness, or invalid selector).
   3  Required provider credential or executable is unavailable.
   4  Driver certification is missing or revoked.
   5  Provider transport is degraded; use the stated external-fleet disposition.
@@ -489,17 +489,15 @@ launcher_normalize_model() {
   # normalize to roster identifiers when a model is provided.
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:fable) LC_MODEL='claude-fable-5-1' ;;
-    claude:fable-5)
-      launcher_error "model 'fable-5' is retired in the model catalog (claude-fable-5); use claude-fable-5-1"
-      exit 2
-      ;;
+    claude:fable-5) LC_MODEL='claude-fable-5' ;;
     claude:sonnet) LC_MODEL='claude-sonnet-5-5' ;;
     claude:opus|claude:opus-5-5|claude:opus-5.5) LC_MODEL='claude-opus-5-5[1m]' ;;
-    claude:opus-5)
-      launcher_error "model 'opus-5' is retired in the model catalog (claude-opus-5); use claude-opus-5-5"
-      exit 2
-      ;;
+    claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
+  if [ -n "$LC_MODEL" ]; then
+    "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT/scripts/review/model_catalog.py" \
+      --check-retired-model "$LC_MODEL" || exit 2
+  fi
 }
 
 launcher_normalize_effort() {
@@ -1266,11 +1264,11 @@ launcher_main() {
   launcher_defaults
   launcher_parse "$@"
   launcher_drop_force_from_successor_args
-  launcher_normalize_model
   launcher_normalize_effort
   # Provider adapters are sourced dynamically and consume these values.
   export LC_ENDPOINT LC_ISOLATE_CONFIG
   launcher_resolve_roots
+  launcher_normalize_model
   # shellcheck source=scripts/lib/handoff_identity.sh
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode

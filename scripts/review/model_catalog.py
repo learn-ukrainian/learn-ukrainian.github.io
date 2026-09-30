@@ -611,7 +611,19 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             parts = shell_split(invocation)
         except ValueError as exc:
             raise ModelCatalogError(f"review_candidates.{name}.invocation is malformed: {exc}") from exc
-        for index, part in enumerate(parts):
+        # Python's -m selects the executable module before application flags.
+        # Start after that module (or the script), so a later -m is a model pin.
+        argument_start = 1
+        if parts and Path(parts[0]).name.startswith("python"):
+            for index, part in enumerate(parts[1:], start=1):
+                if part == "-m":
+                    argument_start = index + 2
+                    break
+                if not part.startswith("-"):
+                    argument_start = index + 1
+                    break
+        for index in range(argument_start, len(parts)):
+            part = parts[index]
             flag, separator, value = part.partition("=")
             if flag in {"--model", "-m", "--to-model"}:
                 if not separator:
@@ -925,29 +937,41 @@ def _main() -> int:
 
     parser = argparse.ArgumentParser(
         description=(
-            "Resolve catalog-backed Kimi or GLM aliases for shell launchers.\n"
-            "Use for route lookup, not provider-health or quota probing."
+            "Resolve Kimi or GLM aliases and refuse retired models for shell launchers.\n"
+            "Use for catalog admission and route lookup, not provider-health or quota probing."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.review.model_catalog --resolve-kimi-model k3\n"
             "  .venv/bin/python -m scripts.review.model_catalog --resolve-glm-model glm --format glmcc\n"
+            "  .venv/bin/python -m scripts.review.model_catalog --check-retired-model claude-fable-5\n"
             "Outputs: resolved model or tab-separated route fields on stdout; no writes.\n"
-            "Exit codes: 0 resolved; 2 invalid arguments or unknown model.\n"
+            "Exit codes: 0 resolved or not retired; 2 retired model, invalid arguments or unknown route.\n"
             "Related: scripts/config/model_catalog.yaml; scripts/lib/kimicc_route.sh."
         ),
     )
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--resolve-kimi-model", metavar="ALIAS", help="Kimi catalog alias to resolve, e.g. k3")
     group.add_argument("--resolve-glm-model", metavar="ALIAS", help="GLM catalog alias to resolve, e.g. glm")
+    group.add_argument(
+        "--check-retired-model", metavar="MODEL",
+        help="Refuse a retired catalog identity, including aliases and context suffixes; e.g. claude-fable-5",
+    )
     parser.add_argument(
         "--format", choices=("native", "kimicc", "glmcc"), default="native",
         help="Output model id (native, default) or route fields (kimicc/glmcc)",
     )
     args = parser.parse_args()
 
-    if args.resolve_kimi_model:
+    if args.check_retired_model:
+        try:
+            refusal = retired_model_refusal(args.check_retired_model)
+        except ModelCatalogError as exc:
+            parser.error(str(exc))
+        if refusal:
+            parser.error(refusal)
+    elif args.resolve_kimi_model:
         try:
             model_id, routes = resolve_kimi_model(args.resolve_kimi_model)
         except ModelCatalogError as exc:
