@@ -633,7 +633,12 @@ def test_item1_item2_item5_full_frozen_search_pool_and_score(frozen, monkeypatch
     monkeypatch.setattr(b, "_isolated_arm", isolated)
     result = b.search(frozen.source, work, models=[b.E5], rerankers=[], query_limit=10000, families=["G1", "G2", "G3"])
     assert result["queries"] == evaluation["queries"]
-    b.freeze_timing_pairs(work, result)
+    pairs = b.freeze_timing_pairs(work, result)
+    with pytest.raises(ValueError, match="all three rerankers"):
+        b.pool(work)
+    attempt = {"p50_seconds": 20, "p95_seconds": 20, "mean_seconds": 20, "timing_pairs_sha256": pairs["sha256"]}
+    measurements["rerankers"] = {repo: {"fp32": [attempt], "int8": [attempt]} for repo in b.RERANKERS}
+    b.admit(work, measurements)
     assert b.pool(work)["queries"] == 120
     pool_rows = json.loads((work / "judging/pool.json").read_text())
     key = json.loads((work / "sealed/pool-key.json").read_text())

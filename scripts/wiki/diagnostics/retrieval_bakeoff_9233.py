@@ -1285,6 +1285,8 @@ def pool(work: Path, *, query_limit: int | None = None, overwrite: bool = False)
         if result["evaluation_manifest_sha256"] != evaluation["sha256"] or result["queries"] != evaluation["queries"] or query_limit not in (None, 120):
             raise ValueError("Pool must match the frozen evaluation manifest")
         admission = _admission(work)
+        if set(admission["rerankers"]) != set(RERANKERS):
+            raise ValueError("Final judging requires timing/admission decisions for all three rerankers")
         expected_arms = {"L"}
         for repo in admission["admitted_embedders"]:
             expected_arms.update({f"D:{repo}", f"H:{repo}"})
@@ -1470,6 +1472,8 @@ def score(work: Path, labels_a: Path, labels_b: Path, *, iterations: int = 10000
     if "evaluation_manifest_sha256" in search_result:
         evaluation = _evaluation(work)
         run = _read_frozen(work / "run-manifest.json")
+        if set(_admission(work)["rerankers"]) != set(RERANKERS):
+            raise ValueError("Final scoring requires timing/admission decisions for all three rerankers")
         if search_result["evaluation_manifest_sha256"] != evaluation["sha256"] or search_result["run_manifest_sha256"] != run["sha256"] or search_result["queries"] != evaluation["queries"]:
             raise ValueError("Score manifest mismatch")
     key = json.loads((work / "sealed/pool-key.json").read_text(encoding="utf-8"))
