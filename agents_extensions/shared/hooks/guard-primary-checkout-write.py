@@ -2432,6 +2432,81 @@ def _block_uncertain(reason: str) -> int:
     return 2
 
 
+def _sibling_git_invocation(command: str, cwd: str) -> bool:
+    """Usability rail for literal argv in the root owning this hook (#9309).
+
+    This intentionally does not extend the shell parser. It runs before that
+    parser; the module's primary-root and effect checks provide the boundary.
+    """
+    if any(c in command for c in "\n\r;$`&|<>(){}[]*?~\\"):
+        return False
+    if any(key in os.environ for key in (
+        "PYTHONPATH", "PYTHONHOME", "PYTHONUSERBASE", "PYTHONSTARTUP", "PYTHONINSPECT", "PYTHONSAFEPATH",
+    )):
+        return False
+    # Python loads the package before this module executes: preventing cache
+    # writes must be a session setting, not something the module sets too late.
+    if os.environ.get("PYTHONDONTWRITEBYTECODE") != "1":
+        return False
+    try:
+        words = shlex.split(command)
+        root = next(p for p in Path(__file__).resolve().parents
+                    if (p / "scripts/guardrails/worktree_containment.py").is_file())
+        execution = Path(cwd)
+        if not execution.is_absolute() or execution.resolve(strict=True) != root:
+            return False
+        for relative in ("scripts/__init__.py", "scripts/fleet/__init__.py", "scripts/fleet/sibling_git.py"):
+            source = root / relative
+            if not source.is_file() or source.resolve(strict=True) != source:
+                return False
+        marker = root / ".git"
+        if marker.is_dir():
+            primary = root
+        else:
+            pointer = marker.read_text().strip()
+            if not pointer.startswith("gitdir: "):
+                return False
+            git_dir = Path(pointer[8:])
+            git_dir = git_dir if git_dir.is_absolute() else root / git_dir
+            common_raw = Path((git_dir / "commondir").read_text().strip())
+            common = common_raw if common_raw.is_absolute() else git_dir / common_raw
+            primary = common.resolve(strict=True).parent
+        interpreter = str(primary / ".venv/bin/python")
+        interpreters = {interpreter}
+        if root == primary:
+            interpreters.add(".venv/bin/python")
+        if len(words) < 4 or words[0] not in interpreters or words[1:3] != ["-m", "scripts.fleet.sibling_git"]:
+            return False
+        if not Path(interpreter).is_file():
+            return False
+        args = words[3:]
+        if args == ["--help"]:
+            return True
+        if len(args) not in (3, 4) or args[0] not in {"status", "sync-main", "worktree-remove"}:
+            return False
+        if args[1] != "--repo" or not re.fullmatch(r"[A-Za-z0-9_-]+", args[2]):
+            return False
+        return len(args) == (4 if args[0] == "worktree-remove" else 3) and (
+            len(args) == 3 or Path(args[3]).is_absolute()
+        )
+    except (OSError, RuntimeError, StopIteration, ValueError):
+        return False
+
+
+def _sibling_git_refusal() -> int:
+    sys.stderr.write(
+        "BLOCKED: the sibling maintenance usability rail requires one complete literal invocation from the root owning this hook.\n"
+        "The module and its primary-root checks provide the security boundary; this hook is a usability rail.\n"
+        "Set PYTHONDONTWRITEBYTECODE=1 in the session first; use the shared project's absolute interpreter.\n"
+        "No interpreter options, PYTHONPATH, prefixes, nested shells, redirects or trailing commands.\n"
+        "Copyable examples from the primary root (use the shared absolute interpreter from a dispatch root):\n"
+        "  .venv/bin/python -m scripts.fleet.sibling_git status --repo infra-private\n"
+        "  .venv/bin/python -m scripts.fleet.sibling_git sync-main --repo infra-private\n"
+        "  .venv/bin/python -m scripts.fleet.sibling_git worktree-remove --repo infra-private '/absolute/sibling/.worktrees/dispatch/codex/finished task'\n"
+    )
+    return 2
+
+
 def main() -> int:
     payload = _read_payload()
     if payload is None:
@@ -2454,6 +2529,12 @@ def main() -> int:
         command = raw_command
         if not command.strip(" \t\n"):
             return 0
+        try:
+            words = shlex.split(command)
+        except ValueError:
+            words = []  # The existing shell parser handles malformed commands.
+        if any(words[i:i + 2] == ["-m", "scripts.fleet.sibling_git"] for i in range(len(words) - 1)):
+            return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
         raw_targets = []
     else:
         raw_targets = write_tool_targets(tool_input)
