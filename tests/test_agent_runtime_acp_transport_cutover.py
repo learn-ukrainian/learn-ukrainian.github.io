@@ -440,6 +440,18 @@ def test_resolve_inter_agent_route_refuses_every_kimi_participant(participant: s
         runner.resolve_inter_agent_route(participant, model=model)
 
 
+@pytest.mark.parametrize("model", ["auto", "Auto", "cursor:auto", "default"])
+def test_resolve_inter_agent_route_refuses_cursor_auto(model: str) -> None:
+    """Operator decision 2026-09-30 (#9274): a Cursor consult or discussion never selects Auto."""
+    with pytest.raises(runner.InterAgentTransportError, match="no enabled catalog route"):
+        runner.resolve_inter_agent_route("cursor", model=model)
+
+
+@pytest.mark.parametrize("model", ["grok-4.7", "composer-2.5"])
+def test_resolve_inter_agent_route_admits_cursor_concrete_pins(model: str) -> None:
+    assert runner.resolve_inter_agent_route("cursor", model=model).model == model
+
+
 def test_invoke_inter_agent_refuses_kimi_before_spawn(monkeypatch, tmp_path) -> None:
     monkeypatch.setenv("LU_ACPX_TRANSPORT", "active")
     monkeypatch.setattr(runner, "_invoke_direct_only", lambda *_a, **_k: pytest.fail("refused call spawned"))

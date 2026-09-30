@@ -97,12 +97,12 @@ def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
 @pytest.mark.parametrize(
     "model",
     (
-        "auto",
         "grok-4.7",
-        "grok-4.6",
         "composer-2.5",
         "grok-4.7-high",
+        "grok-4.7-xhigh",
         "grok-4.7[context=500k,reasoning_effort=high,fast=false]",
+        "composer-2.5[fast=false]",
     ),
 )
 def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
@@ -111,6 +111,68 @@ def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
     # Dry-run prints the argv with shell quoting, so brackets and commas are escaped.
     quoted = model.replace("[", r"\[").replace("]", r"\]").replace(",", r"\,")
     assert f"--model {quoted}" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "model",
+    (
+        "auto",
+        "Auto",
+        "AUTO",
+        "cursor:auto",
+        "default",
+        "grok-4.7-fast",
+        "grok-4.7-high-fast",
+        "composer-2.5-fast",
+        "grok-4.7[context=500k,fast=true]",
+        "grok-4.7[fast=true,reasoning_effort=high]",
+        "grok-4.7[fast=1]",
+        "grok-4.6",
+        "grok-4.6[fast=false]",
+        "grok-4.5",
+    ),
+)
+def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str) -> None:
+    """#9274: the Cursor driver seat never runs Auto, a Fast variant, or a previous generation."""
+    for result in (
+        run_launcher(DRIVER, "--epic", "infra", "--model", model),
+        run_launcher(DRIVER, "--epic", "infra", env={"LAUNCHER_MODEL": model}),
+    ):
+        assert result.returncode == 4, result.stdout + result.stderr
+        assert "not certified for the cursor driver" in result.stderr
+        assert "would claim lease" not in result.stdout
+        assert "would exec" not in result.stdout
+
+
+def test_cursor_driver_refuses_an_empty_model() -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--model=")
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert "requires a concrete model" in result.stderr
+    assert "would exec" not in result.stdout
+
+
+def test_cursor_driver_empty_env_model_falls_back_to_the_pin() -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", env={"LAUNCHER_MODEL": ""})
+    assert result.returncode == 0, result.stderr
+    assert "--model grok-4.7-high" in result.stdout
+
+
+@pytest.mark.parametrize(
+    "forwarded",
+    (("--model", "auto"), ("--model=auto",), ("--model", "grok-4.7-high"), ("--model=Auto",)),
+)
+def test_cursor_driver_refuses_a_forwarded_provider_model(forwarded: tuple[str, ...]) -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--", *forwarded)
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert "not from forwarded" in result.stderr
+    assert "would exec" not in result.stdout
+
+
+def test_cursor_driver_forwards_other_provider_args() -> None:
+    result = run_launcher(DRIVER, "--epic", "infra", "--", "--print-models")
+    assert result.returncode == 0, result.stderr
+    assert "--model grok-4.7-high" in result.stdout
+    assert "--print-models" in result.stdout
 
 
 def test_observer_heartbeat_is_cursor_gated_in_launcher_core() -> None:

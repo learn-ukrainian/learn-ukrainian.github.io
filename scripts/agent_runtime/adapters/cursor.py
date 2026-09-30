@@ -37,7 +37,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.review.model_catalog import retired_model_refusal
+from scripts.review.model_catalog import cursor_pinned_models, is_cursor_auto_selector, retired_model_refusal
 
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -96,6 +96,9 @@ _MODEL_CONTAINER_KEYS = frozenset(
     }
 )
 _MODEL_ID_KEYS = ("id", "modelId", "model_id", "name")
+# tool_config key delegate sets only after admitting a Cursor Auto dispatch as a
+# well-defined coding task (operator decision 2026-09-30, #9274).
+CURSOR_AUTO_ADMITTED_KEY = "cursor_auto_admitted"
 
 
 class CursorAdapter:
@@ -143,6 +146,14 @@ class CursorAdapter:
         refusal = retired_model_refusal(model)
         if refusal:
             raise ValueError(f"Cursor adapter: {refusal}")
+        if is_cursor_auto_selector(model) and not (
+            mode in {"workspace-write", "danger"} and (tool_config or {}).get(CURSOR_AUTO_ADMITTED_KEY) is True
+        ):
+            pins = " or ".join(cursor_pinned_models())
+            raise ValueError(
+                f"Cursor adapter: model {model!r} runs only a delegate-admitted write implementation dispatch "
+                f"(cursor_auto_outside_coding_task); pin {pins} (operator decision 2026-09-30, #9274)"
+            )
 
         # Resolve binary. shutil.which handles PATH lookup.
         # Prefer the UNAMBIGUOUS ``cursor-agent`` name. A generic ``agent`` on

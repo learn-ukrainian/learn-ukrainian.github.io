@@ -7858,6 +7858,7 @@ def _run_worker(
         return 1
     # The worker runs the admitted seat and model; nothing resolves them again.
     agent, model = worker_target.recipient, worker_target.model
+    from scripts.agent_runtime.adapters.cursor import CURSOR_AUTO_ADMITTED_KEY
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
@@ -8080,6 +8081,10 @@ def _run_worker(
 
                 verify_review_attempt_paths(mcp_config_path)
 
+            if isinstance(state.get(CURSOR_AUTO_ADMISSION_STATE_KEY), dict) and state[CURSOR_AUTO_ADMISSION_STATE_KEY].get(
+                "admitted"
+            ):
+                tool_config[CURSOR_AUTO_ADMITTED_KEY] = True
             if is_kimi_seat(agent, model=model):
                 # The runner and the adapters run the same gate on these paths and this tree.
                 tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
@@ -9373,7 +9378,7 @@ def _dispatch(
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
-    from scripts.review.model_catalog import retired_model_refusal
+    from scripts.review.model_catalog import is_cursor_auto_selector, retired_model_refusal
 
     # A catalog-retired model is refused before any check can run a command.
     retired_refusal = retired_model_refusal(getattr(args, "model", None))
@@ -9506,6 +9511,15 @@ def _dispatch(
         if dor_error:
             print(dor_error, file=sys.stderr)
             return 2
+    cursor_auto_error = _cursor_auto_refusal(args, agent=dispatch_agent, model=args.model, dor_record=dor_record)
+    if cursor_auto_error:
+        print(cursor_auto_error, file=sys.stderr)
+        return 2
+    cursor_auto_admission = (
+        {"admitted": True, "model": args.model, "issues": list(dor_record["issues"])}
+        if dispatch_agent == "cursor" and dor_record and is_cursor_auto_selector(args.model)
+        else None
+    )
 
     task_id = args.task_id
     try:
@@ -10732,6 +10746,9 @@ def _dispatch(
             "agent_alias_note": agent_alias_note,
             "dor_preflight": dor_record,
         }
+        if cursor_auto_admission is not None:
+            # The Cursor adapter runs Auto only with this admission (#9274).
+            initial_state[CURSOR_AUTO_ADMISSION_STATE_KEY] = cursor_auto_admission
         if requested_harness is not None:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
@@ -11238,6 +11255,70 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     return False
 
 
+# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding task.
+# A research role or task family naming any of these is not one.
+_CURSOR_AUTO_NON_CODING_CLASSES = frozenset(
+    {"advisor", "advisory", "audit", "consult", "consultation", "design", "discuss", "discussion", "recon", "review", "scout", "scouting"}
+)
+CURSOR_AUTO_ADMISSION_STATE_KEY = "cursor_auto_admission"
+
+
+def _dispatch_is_review_typed(args: argparse.Namespace) -> bool:
+    """True when any review flag types this dispatch as a review."""
+    return (
+        bool(getattr(args, "review", False))
+        or bool(getattr(args, "review_attempt", None))
+        or bool(getattr(args, "require_review_verdict", False))
+        or bool(getattr(args, "review_profile", None))
+        or str(getattr(args, "type", "") or "").strip().casefold() == "review"
+    )
+
+
+def _cursor_auto_refusal(
+    args: argparse.Namespace, *, agent: str, model: str | None, dor_record: dict[str, Any] | None
+) -> str | None:
+    """Refusal when the admitted launch asks Cursor for Auto outside a well-defined coding task.
+
+    Auto needs positive evidence of that task: a write-capable mode, at least one
+    ``--owned-path``, a DoR preflight that checked an issue card and found it PASS
+    (``--allow-dor-warn`` is not PASS), no review typing, and no non-coding research
+    role or task family. No ``--model`` is not Auto: the Cursor adapter pins its default.
+    """
+    from scripts.review.model_catalog import cursor_pinned_models, is_cursor_auto_selector
+
+    if agent != "cursor" or not is_cursor_auto_selector(model):
+        return None
+    reasons: list[str] = []
+    if args.mode not in _WRITE_CAPABLE_MODES:
+        reasons.append(f"mode {args.mode} is not write-capable")
+    if _dispatch_is_review_typed(args):
+        reasons.append("the dispatch is review-typed")
+    if not _declared_owned_paths(getattr(args, "owned_path", None)):
+        reasons.append("no --owned-path")
+    classes = sorted(
+        {
+            token
+            for attr in ("research_role", "research_task_family")
+            for token in re.split(r"[^a-z]+", str(getattr(args, attr, "") or "").casefold())
+            if token in _CURSOR_AUTO_NON_CODING_CLASSES
+        }
+    )
+    if classes:
+        reasons.append(f"the task is classified {', '.join(classes)}")
+    if not dor_record or not dor_record.get("issues"):
+        reasons.append("no DoR issue card was checked")
+    elif dor_record.get("warnings") or dor_record.get("allow_warn_reason") is not None:
+        reasons.append("the DoR issue card is not PASS")
+    if not reasons:
+        return None
+    pins = " or ".join(f"--model {pin}" for pin in cursor_pinned_models())
+    return (
+        f"❌ dispatch refused: cursor_auto_outside_coding_task: --agent cursor --model {model} runs only a "
+        f"write-capable implementation dispatch with owned paths and a PASS DoR issue card ({'; '.join(reasons)}); "
+        f"pin a concrete model: {pins} (operator decision 2026-09-30, #9274)"
+    )
+
+
 def _kimi_worktree_trees(worktree: Path) -> list[Any]:
     """An existing worktree as a Kimi worker sees it: its files on disk and the commit checked out there."""
     from scripts.agent_runtime.kimi_admission import worktree_trees
@@ -11566,11 +11647,7 @@ def _admit_dispatch_target(
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
-            review=bool(getattr(args, "review", False))
-            or bool(getattr(args, "review_attempt", None))
-            or bool(getattr(args, "require_review_verdict", False))
-            or bool(getattr(args, "review_profile", None))
-            or str(getattr(args, "type", "") or "").strip().casefold() == "review",
+            review=_dispatch_is_review_typed(args),
             language_lane=_dispatch_is_language_lane(args),
             research_track=getattr(args, "research_track", None),
             prompt_file=getattr(args, "prompt_file", None),

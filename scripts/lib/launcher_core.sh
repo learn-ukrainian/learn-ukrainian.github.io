@@ -51,8 +51,9 @@ $driver_mode
 Options:
   -h, --help                 Show this help and exit.
   --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
-                             Cursor driver default: grok-4.7-high (not Auto, not a fast
-                             variant). Claude interactive / Grok: omit to keep last
+                             Cursor driver default: grok-4.7-high; it also accepts
+                             composer-2.5, never Auto, a Fast variant or a forwarded
+                             --model. Claude interactive / Grok: omit to keep last
                              TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
                              --reasoning-effort). Claude driver default: high. Otherwise
@@ -326,8 +327,9 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     cursor)
-      # Pin grok-4.7-high. Omitting --model lets cursor-agent use Auto, which
-      # routes to a fast Grok variant and burns the seat. --model still overrides.
+      # Pin grok-4.7-high. Omitting --model lets cursor-agent use Auto, which the
+      # driver seat never runs (operator decision 2026-09-30, #9274). --model or
+      # LAUNCHER_MODEL may choose another certified pin.
       if [ "$LC_MODE" = driver ]; then
         LC_MODEL="${LAUNCHER_MODEL:-grok-4.7-high}"
       else
@@ -689,11 +691,12 @@ launcher_validate_driver_certification() {
   fi
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
-  # Claude/Grok/Cursor may omit --model so the CLI keeps its current selection.
-  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ] || [ "$LC_PROVIDER" = "cursor" ]; } && [ -z "${LC_MODEL:-}" ]; then
+  if [ "$LC_PROVIDER" = "cursor" ]; then
+    launcher_validate_cursor_driver_pin
     return 0
   fi
-  if [ "$LC_PROVIDER" = "cursor" ] && launcher_cursor_model_certified "$LC_MODEL"; then
+  # Claude/Grok may omit --model so the CLI keeps its current selection.
+  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ]; } && [ -z "${LC_MODEL:-}" ]; then
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
@@ -707,18 +710,44 @@ launcher_validate_driver_certification() {
   esac
 }
 
+# The Cursor driver seat runs a concrete approved pin, never Auto (operator
+# decision 2026-09-30, #9274): an empty model and a provider --model forwarded
+# after `--` would let cursor-agent pick Auto or override the certified pin.
+launcher_validate_cursor_driver_pin() {
+  local arg
+  for arg in "${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}"; do
+    case "$arg" in
+      --model|--model=*)
+        launcher_error "the Cursor driver takes its model from the launcher --model, not from forwarded '$arg' (pin grok-4.7-high or composer-2.5; never Auto)."
+        exit 4
+        ;;
+    esac
+  done
+  if [ -z "${LC_MODEL:-}" ]; then
+    launcher_error "the Cursor driver requires a concrete model; an empty model runs Auto (pin grok-4.7-high or composer-2.5)."
+    exit 4
+  fi
+  if ! launcher_cursor_model_certified "$LC_MODEL"; then
+    launcher_error "model '$LC_MODEL' is not certified for the cursor driver (pin grok-4.7-high or composer-2.5; never Auto, Fast or a previous generation)."
+    exit 4
+  fi
+}
+
 # Cursor CLI model ids: bare certified pins, effort variants such as
 # grok-4.7-high, and bracket overrides such as
-# grok-4.7[context=500k,reasoning_effort=high,fast=false].
+# grok-4.7[context=500k,reasoning_effort=high,fast=false]. Auto, Fast variants
+# and previous generations are not certified.
 launcher_cursor_model_certified() {
   local model="$1"
   case "$model" in
-    auto|grok-4.7|grok-4.6|composer-2.5) return 0 ;;
+    grok-4.7|composer-2.5) return 0 ;;
     grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
-    grok-4.7-low-fast|grok-4.7-medium-fast|grok-4.7-high-fast|grok-4.7-xhigh-fast) return 0 ;;
-    composer-2.5-fast) return 0 ;;
   esac
-  [[ "$model" =~ ^(grok-4\.7|grok-4\.6|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]]
+  [[ "$model" =~ ^(grok-4\.7|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]] || return 1
+  # A bracket override may only switch Fast off.
+  local rest="${model//fast=false,/}"
+  rest="${rest//fast=false]/]}"
+  [[ "$rest" != *fast=* ]]
 }
 
 launcher_prepare_driver_identity() {

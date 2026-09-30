@@ -71,6 +71,11 @@ LUNA_ESCALATION_TRIGGERS = frozenset(
 CURSOR_AUTO_EXPECTED_ALLOWLIST: tuple[str, ...] = ("grok-4.7", "composer-2.5")
 CURSOR_AUTO_EXPECTED_ATTESTATION_RULE: str = "driver_of_record_requires_attested_resolved_model"
 CURSOR_AUTO_EXPECTED_RESOLUTION: str = "union_family"
+# Operator decision 2026-09-30 (#9274): Cursor Auto runs only a well-defined coding
+# task; every other Cursor use runs the seat's concrete pin or another allowlisted pin.
+CURSOR_AUTO_EXPECTED_SCOPE: str = "write_implementation_dispatch_with_green_dor"
+# Values that ask Cursor to choose the model instead of naming one.
+_CURSOR_SELECTOR_MODELS = frozenset({"auto", "default"})
 
 
 
@@ -239,8 +244,6 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
 
         if seat_name == "cursor":
             model_id = seat["model_id"]
-            if model_id != "auto":
-                raise ModelCatalogError(f"orchestrator_seats.cursor.model_id must be 'auto', got {model_id!r}")
             allowlist = _require_string_list(
                 seat.get("auto_allowlist"),
                 "orchestrator_seats.cursor.auto_allowlist",
@@ -248,6 +251,15 @@ def _validate_orchestrator_seats(raw: Any, models: dict[str, Any]) -> None:
             if tuple(allowlist) != CURSOR_AUTO_EXPECTED_ALLOWLIST:
                 raise ModelCatalogError(
                     f"orchestrator_seats.cursor.auto_allowlist must equal exactly {list(CURSOR_AUTO_EXPECTED_ALLOWLIST)}, got {allowlist}"
+                )
+            if model_id not in allowlist:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.model_id must be a concrete pin from auto_allowlist {allowlist}, got {model_id!r}"
+                )
+            auto_scope = _require_string(seat.get("auto_scope"), "orchestrator_seats.cursor.auto_scope")
+            if auto_scope != CURSOR_AUTO_EXPECTED_SCOPE:
+                raise ModelCatalogError(
+                    f"orchestrator_seats.cursor.auto_scope must be {CURSOR_AUTO_EXPECTED_SCOPE!r}, got {auto_scope!r}"
                 )
             for allowed in allowlist:
                 if allowed not in models:
@@ -662,6 +674,27 @@ def _model_id_candidates(model: str) -> list[str]:
         if char in "/:" and model[index + 1 :]:
             candidates.append(model[index + 1 :])
     return candidates
+
+
+def is_cursor_auto_selector(model: Any) -> bool:
+    """True when ``model`` asks Cursor to choose the model (Auto) instead of naming one.
+
+    Matches case-insensitively, with or without a ``cursor:`` or ``cursor/`` prefix.
+    ``None`` and an empty value are not selectors: the Cursor adapter pins its
+    default model when none is given.
+    """
+    text = str(model or "").strip().casefold()
+    for prefix in ("cursor:", "cursor/"):
+        if text.startswith(prefix):
+            text = text[len(prefix) :]
+    return text in _CURSOR_SELECTOR_MODELS
+
+
+def cursor_pinned_models(catalog: dict[str, Any] | None = None) -> tuple[str, ...]:
+    """The concrete Cursor pins that replace Auto: the seat pin first, then the rest of the allowlist."""
+    seat = (catalog or load_model_catalog())["orchestrator_seats"]["cursor"]
+    pin = seat["model_id"]
+    return (pin, *(model for model in seat["auto_allowlist"] if model != pin))
 
 
 def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:

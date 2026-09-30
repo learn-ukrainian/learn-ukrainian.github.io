@@ -668,7 +668,7 @@ def test_cursor_adapter_marks_only_headless_runner_for_fleet(tmp_path: Path, mon
             prompt="fixture",
             mode=mode,
             cwd=tmp_path,
-            model="auto",
+            model="grok-4.7",
             task_id="cursor-headless-fixture",
             session_id=None,
             tool_config={},
@@ -677,7 +677,7 @@ def test_cursor_adapter_marks_only_headless_runner_for_fleet(tmp_path: Path, mon
         assert plan.host_harness == "cursor-headless"
         assert plan.env_overrides.get("LU_ENTIRE_CAPTURE_OWNER") == "fleet"
         assert plan.metadata["entire_fleet"] == {
-            "requested_model": "auto",
+            "requested_model": "grok-4.7",
             "actual_model_known": "false",
         }
 
