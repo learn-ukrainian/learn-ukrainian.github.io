@@ -149,8 +149,13 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
         run_launcher(DRIVER, "--epic", "infra", "--model", model),
         run_launcher(DRIVER, "--epic", "infra", env={"LAUNCHER_MODEL": model}),
     ):
-        assert result.returncode == 4, result.stdout + result.stderr
-        assert "not certified for the cursor driver" in result.stderr
+        if model in ("grok-4.6", "grok-4.6[fast=false]", "grok-4.5"):
+            assert result.returncode == 2, result.stdout + result.stderr
+            assert "is retired in the model catalog" in result.stderr
+            assert model in result.stderr
+        else:
+            assert result.returncode == 4, result.stdout + result.stderr
+            assert "not certified for the cursor driver" in result.stderr
         assert "would claim lease" not in result.stdout
         assert "would exec" not in result.stdout
 
@@ -284,9 +289,14 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
     tmp_path: Path, selection: tuple[str, ...]
 ) -> None:
     result, argv = _run_interactive(tmp_path, *selection)
-    assert result.returncode == 4, result.stdout + result.stderr
-    assert "cursor interactive session" in result.stderr
-    assert "grok-4.7-high or composer-2.5" in result.stderr
+    if selection == ("--model", "grok-4.6"):
+        assert result.returncode == 2, result.stdout + result.stderr
+        assert "is retired in the model catalog" in result.stderr
+        assert "grok-4.6" in result.stderr
+    else:
+        assert result.returncode == 4, result.stdout + result.stderr
+        assert "cursor interactive session" in result.stderr
+        assert "grok-4.7-high or composer-2.5" in result.stderr
     assert argv is None
     assert "mock deploy" not in result.stdout
 
