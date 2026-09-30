@@ -156,8 +156,9 @@ def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malforme
         assert "Missing repository-relative prerequisite: curriculum/l2-uk-en/evidence/a1/_words.yaml" in result.stdout
 
 
+@pytest.mark.parametrize("workers", [0, 2], ids=["serial", "xdist"])
 @pytest.mark.parametrize("write", [False, True], ids=["unchanged", "planted-write"])
-def test_registered_guard_enforces_normal_pytest_session(tmp_path: Path, write: bool) -> None:
+def test_registered_guard_enforces_normal_pytest_session(tmp_path: Path, write: bool, workers: int) -> None:
     """No -p: temporary conftest registration must fail a passing writer test."""
     _init_git_repo(tmp_path)
     (tmp_path / ".gitignore").write_text("logs/\n", encoding="utf-8")
@@ -178,7 +179,7 @@ def test_registered_guard_enforces_normal_pytest_session(tmp_path: Path, write: 
         encoding="utf-8",
     )
     result = subprocess.run(
-        [sys.executable, "-m", "pytest", "-q", "test_sample.py"],
+        [sys.executable, "-m", "pytest", "-q", "test_sample.py", *(["-n", str(workers)] if workers else [])],
         cwd=tmp_path, capture_output=True, text=True, timeout=60,
     )
     assert "1 passed" in result.stdout, result.stdout + result.stderr

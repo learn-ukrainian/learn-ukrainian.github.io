@@ -201,6 +201,12 @@ def synthetic_trust_bundle(signing_resources, monkeypatch):
         yield
 
 
+def test_packaged_wheel_build_leaves_no_checkout_lock(built_wheel) -> None:
+    assert built_wheel.is_file()
+    checkout_lock = Path(__file__).resolve().parents[3] / "batch_state/v4-runtime-build.lock"
+    assert not checkout_lock.exists()
+
+
 def test_boundary_to_boundary_positive_source_free(tmp_path, monkeypatch, pg_cluster, built_wheel, signing_resources, synthetic_trust_bundle) -> None:
     """Parent capture → actual Sources HTTP → opaque issuance → A7/A8 replay.
 

@@ -39,15 +39,11 @@ VESUM_FIXTURE_VERSION = "a" * 64
 VESUM_FIXTURE_MATCH = {"lemma": "читати", "pos": "verb", "tags": "verb:imperf:impr:s:2"}
 
 
-@pytest.fixture(autouse=True)
-def _isolate_sources_log(tmp_path_factory: pytest.TempPathFactory):
-    log_dir = tmp_path_factory.mktemp("mcp-sources-logs")
-    mp = pytest.MonkeyPatch()
-    mp.setenv("LU_MCP_SOURCES_LOG_DIR", str(log_dir))
-    try:
-        yield log_dir
-    finally:
-        mp.undo()
+def test_session_fixture_isolates_request_log(server_module, sources_log_dir: Path) -> None:
+    server_module._log_tool_call("session-isolation-probe", {})
+    log_path = sources_log_dir / "mcp-sources-requests.jsonl"
+    entries = [json.loads(line) for line in log_path.read_text(encoding="utf-8").splitlines()]
+    assert entries[-1]["tool"] == "session-isolation-probe"
 
 
 @pytest.fixture

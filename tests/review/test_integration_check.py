@@ -50,7 +50,6 @@ def _isolate_atlas_manifest(tmp_path_factory: pytest.TempPathFactory):
         mp.undo()
 
 
-
 # --- run-crafted ------------------------------------------------------------------------------------
 
 
