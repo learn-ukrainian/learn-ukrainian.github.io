@@ -775,6 +775,7 @@ def _article_identity(html: str) -> dict[str, Any]:
             "paradigm_table": None,
             "content_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
             "printed_homonym_number": None,
+            "is_empty_visible_article": True,
         }
     word_node = article.select_one(".word_style")
     gram_node = article.select_one(".gram_style")
@@ -789,6 +790,7 @@ def _article_identity(html: str) -> dict[str, Any]:
         if note:
             notes.append(note)
     article_text = _ulif_text(article)
+    is_empty_visible = not bool(article_text.strip())
     return {
         "canonical_headword": headword,
         "grammatical_label": grammar,
@@ -797,6 +799,7 @@ def _article_identity(html: str) -> dict[str, Any]:
         "paradigm_table": _find_paradigm_table(article),
         "content_sha256": hashlib.sha256(str(article).encode("utf-8")).hexdigest(),
         "printed_homonym_number": printed,
+        "is_empty_visible_article": is_empty_visible,
     }
 
 
@@ -970,16 +973,18 @@ def parse_ulif_entry(
     normalized = normalize_ulif_spelling(headword)
     key = ulif_entry_key(normalized, homonym_index)
     table = identity["paradigm_table"]
-    invariable = bool(identity["invariable_phrase"] or table is None)
-    forms = [
-        base_lemma_row(
-            headword,
-            str(identity["grammatical_label"]),
-            homonym_index=homonym_index,
-            entry_key=key,
-            is_invariable=invariable,
+    invariable = bool(identity["invariable_phrase"])
+    forms: list[dict[str, Any]] = []
+    if headword:
+        forms.append(
+            base_lemma_row(
+                headword,
+                str(identity["grammatical_label"]),
+                homonym_index=homonym_index,
+                entry_key=key,
+                is_invariable=invariable,
+            )
         )
-    ]
     if isinstance(table, Tag):
         forms.extend(_paradigm_form_rows(table, key))
     return {
@@ -993,6 +998,7 @@ def parse_ulif_entry(
         "register_position": register_position,
         "printed_homonym_number": identity.get("printed_homonym_number"),
         "is_invariable": invariable,
+        "is_empty_visible_article": identity.get("is_empty_visible_article", False),
         "parser_version": ULIF_FORMS_PARSER_VERSION,
         "forms": forms,
     }

@@ -11,9 +11,12 @@ Verifies full-record source faithfulness:
 
 from __future__ import annotations
 
+import hashlib
+import json
 import sqlite3
 from pathlib import Path
 
+from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_forms
 from scripts.wiki import sources_db
 
@@ -406,3 +409,141 @@ def test_corrupt_manifest_and_stale_fingerprint_isolation(tmp_path):
     # Querying again immediately flags stale_source_snapshot
     records_after_mutation = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
     assert records_after_mutation[0]["entries"][0]["forms_state"] == "stale_source_snapshot"
+
+
+def test_nested_relation_unavailable_blobs_reported_per_entry(tmp_path):
+    """Item 4: Missing/corrupt nested relation blobs reported in identity_from_raw per entry."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+    syn_html = "<html>synonyms content</html>"
+    raw_cache_path = ulif_raw_cache.cache_path(db_path)
+
+    # Entry 1: will have missing synonym blob and malformed phraseology ref
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={
+            "paradigm": {"rows": [["Називний", "За́мок"]]},
+            "synonyms": [{"text": "твердиня"}],
+        },
+        raw_responses={"paradigm": par_html, "synonyms": syn_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    # Entry 2: healthy entry
+    sources_db.store_ulif_dictua_entry(
+        word="будинок",
+        canonical_headword="Буди́нок",
+        sections={"paradigm": {"rows": [["Називний", "Буди́нок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    # Tamper with raw cache for Entry 1 before building forms:
+    # 1. Delete synonyms blob so it's missing
+    syn_sha = hashlib.sha256(syn_html.encode("utf-8")).hexdigest()
+    cache_conn = sqlite3.connect(str(raw_cache_path))
+    cache_conn.execute("DELETE FROM ulif_dictua_raw_responses WHERE response_sha256 = ?", (syn_sha,))
+    cache_conn.commit()
+
+    # 2. Add a malformed phraseology ref into entry 1's manifest
+    conn = sqlite3.connect(str(db_path))
+    conn.row_factory = sqlite3.Row
+    entry1 = conn.execute("SELECT raw_response_ref FROM ulif_dictua_entries WHERE id = 1").fetchone()
+    manifest_sha = entry1["raw_response_ref"].removeprefix("sha256:")
+    manifest_bytes = ulif_raw_cache.get(manifest_sha, path=raw_cache_path)
+    manifest = json.loads(manifest_bytes)
+    manifest["phraseology"] = "corrupt_non_sha_ref"
+    new_manifest_bytes = json.dumps(manifest).encode("utf-8")
+    new_manifest_sha = hashlib.sha256(new_manifest_bytes).hexdigest()
+    ulif_raw_cache.put(
+        new_manifest_sha, new_manifest_bytes, "application/json", "2026-09-28T00:00:00Z", path=raw_cache_path
+    )
+    cache_conn.close()
+
+    conn.execute("UPDATE ulif_dictua_entries SET raw_response_ref = ? WHERE id = 1", (f"sha256:{new_manifest_sha}",))
+    conn.commit()
+    conn.close()
+
+    ulif_forms.build_ulif_forms(db_path=db_path)
+
+    records = sources_db.get_ulif_word_records(["замок", "будинок"], db_path=db_path)
+    assert len(records) == 2
+
+    # Entry 1: forms are complete, sections are intact, but unavailable relation blobs are listed
+    rec1 = records[0]["entries"][0]
+    assert rec1["forms_state"] == "complete"
+    assert len(rec1["forms"]) > 0
+    assert len(rec1["sections"]["synonyms"]) == 1
+    unavail = rec1["identity_from_raw"]["unavailable_relation_blobs"]
+    assert len(unavail) == 2
+    tabs = {u["tab"]: u for u in unavail}
+    assert tabs["synonyms"]["error"] == "missing_blob"
+    assert tabs["synonyms"]["ref"] == f"sha256:{syn_sha}"
+    assert tabs["synonyms"]["locator"] == f"ulif:entry:1:synonyms:sha256:{syn_sha}"
+    assert tabs["phraseology"]["error"] == "corrupt_blob"
+    assert tabs["phraseology"]["locator"] == "ulif:entry:1:phraseology"
+
+    # Entry 2: healthy entry in same batch is unaffected
+    rec2 = records[1]["entries"][0]
+    assert rec2["forms_state"] == "complete"
+    assert rec2["identity_from_raw"]["unavailable_relation_blobs"] == []
+
+
+def test_reader_checks_all_rows_and_missing_tables(tmp_path):
+    """Item 1: Reader rejects empty fingerprint on any row and handles missing tables."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    ulif_forms.build_ulif_forms(db_path=db_path)
+
+    # Verify initial read works
+    records = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
+    assert records[0]["entries"][0]["forms_state"] == "complete"
+    assert len(records[0]["entries"][0]["forms"]) > 1
+
+    # Tamper with the SECOND row's source_entry_fingerprint in ulif_forms
+    conn = sqlite3.connect(str(db_path))
+    rows = conn.execute("SELECT id FROM ulif_forms WHERE entry_id = 1 ORDER BY id").fetchall()
+    assert len(rows) > 1
+    second_row_id = rows[1][0]
+    conn.execute("UPDATE ulif_forms SET source_entry_fingerprint = '' WHERE id = ?", (second_row_id,))
+    conn.commit()
+    conn.close()
+
+    # Reader must not just check the first row; it must reject the whole set as stale_source_snapshot
+    records_tampered = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
+    assert records_tampered[0]["entries"][0]["forms_state"] == "stale_source_snapshot"
+    assert records_tampered[0]["entries"][0]["forms"] == []
+
+    # Missing ulif_dictua_entries table returns status="unavailable"
+    empty_db = tmp_path / "empty.db"
+    conn_empty = sqlite3.connect(str(empty_db))
+    conn_empty.close()
+    unavail_records = sources_db.get_ulif_word_records(["замок"], db_path=empty_db)
+    assert unavail_records[0]["status"] == "unavailable"
+    assert unavail_records[0]["verified"] is False
+    assert unavail_records[0]["entry_count"] == 0

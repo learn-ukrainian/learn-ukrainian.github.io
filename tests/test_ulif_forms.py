@@ -136,10 +136,11 @@ def test_stored_headword_empty_derives_identity_from_raw(tmp_path):
     assert "grammatical_label" in raw_id["mismatches"]
 
 
-def test_empty_article_capture_classified_as_extraction_failed(tmp_path):
-    """Hazard 2: empty article capture (хто, абихто class) with zero word_style/gram_style.
+def test_empty_article_capture_classified_as_empty_visible_article(tmp_path):
+    """Hazard 2: empty article capture (хто, абихто class) with zero visible text.
 
-    Must classify as extraction_failed: empty_article with locator, never emit empty lemma form.
+    Must classify as empty_visible_article residual with locator, never emit empty lemma form.
+    Build state remains complete because empty visible article is a source capture residual.
     """
     db_path = tmp_path / "sources.db"
     empty_article_html = """
@@ -167,13 +168,13 @@ def test_empty_article_capture_classified_as_extraction_failed(tmp_path):
     assert rep["state"] == "complete"
     assert rep["entries_done"] == 0
     assert rep["entries_failed"] == 1
-    assert rep["failures_by_reason"].get("extraction_failed: empty_article") == 1
+    assert rep["failures_by_reason"].get("empty_visible_article") == 1
 
     records = sources_db.get_ulif_word_records(["хто"], db_path=db_path)
     first_entry = records[0]["entries"][0]
     assert first_entry["forms"] == []
-    assert first_entry["forms_state"] == "extraction_failed: empty_article"
-    assert first_entry["forms_failure"]["reason"] == "extraction_failed: empty_article"
+    assert first_entry["forms_state"] == "empty_visible_article"
+    assert first_entry["forms_failure"]["reason"] == "empty_visible_article"
     assert first_entry["forms_failure"]["locator"] == f"ulif:entry:{first_entry['entry_id']}"
 
 
@@ -538,3 +539,182 @@ def test_f12_disagreement_report_separates_oracle_not_applicable(tmp_path, monke
     data = json.loads(out_path.read_text(encoding="utf-8"))
     assert data["records"][0]["disagreement_type"] == "oracle_not_applicable"
     assert data["records"][0]["agrees"] is None
+
+
+def test_same_length_payload_change_fails_verification(tmp_path):
+    """Item 1: Whole-source fingerprint hashes ordered payload bytes, not length.
+
+    Mutating payload characters in-place with identical length (aaaa -> bbbb)
+    must invalidate verification with 'stale source_fingerprint'.
+    """
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]], "marker": "aaaa"}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    rep = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert rep["state"] == "complete"
+    assert ulif_forms.verify_ulif_forms(db_path)["verified"] is True
+
+    # Mutate section payload in-place with exact same byte length
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("UPDATE ulif_dictua_sections SET payload_json = replace(payload_json, 'aaaa', 'bbbb')")
+    conn.commit()
+    conn.close()
+
+    ver = ulif_forms.verify_ulif_forms(db_path)
+    assert ver["verified"] is False
+    assert "stale source_fingerprint" in ver["error"]
+
+
+def test_parser_exception_fails_build_and_blocks_verification(tmp_path, monkeypatch):
+    """Item 2: Unexpected parser exception blocks full acceptance (state=failed, verified=False)."""
+    from scripts.lexicon.runner import ulif_dictua_parse
+
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    def _broken_parse(*args, **kwargs):
+        raise RuntimeError("Injected parser explosion")
+
+    monkeypatch.setattr(ulif_dictua_parse, "parse_ulif_entry", _broken_parse)
+
+    rep = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert rep["state"] == "failed"
+    assert rep["entries_failed"] == 1
+    assert any("Injected parser explosion" in k for k in rep["failures_by_reason"])
+
+    ver = ulif_forms.verify_ulif_forms(db_path)
+    assert ver["verified"] is False
+
+    records = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
+    assert len(records) == 1
+    entry = records[0]["entries"][0]
+    assert entry["forms"] == []
+    assert "Injected parser explosion" in entry["forms_state"]
+
+
+def test_nonempty_unrecognized_article_defect_fails_build(tmp_path):
+    """Item 2: Nonempty page without recognizable head is an extraction defect and blocks acceptance."""
+    db_path = tmp_path / "sources.db"
+    nonempty_unparseable_html = """
+    <html><body>
+      <div id="ContentPlaceHolder1_article">
+        <p>Нерозпізнаний вміст без стандартних стилів заголовка</p>
+      </div>
+    </body></html>
+    """
+
+    sources_db.store_ulif_dictua_entry(
+        word="дефект",
+        canonical_headword="",
+        sections={},
+        raw_responses={"paradigm": nonempty_unparseable_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    rep = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert rep["state"] == "failed"
+    assert rep["failures_by_reason"].get("extraction_defect: unrecognized_article") == 1
+
+    ver = ulif_forms.verify_ulif_forms(db_path)
+    assert ver["verified"] is False
+    assert "ulif_forms_build state is 'failed'" in ver["error"]
+
+
+def test_open_cache_failure_leaves_state_failed(tmp_path, monkeypatch):
+    """Item 3: Injected cache open failure leaves state='failed', not 'building'."""
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(str(db_path))
+    sources_db.ensure_ulif_dictua_schema(conn)
+    conn.close()
+
+    def _broken_open_cache(*args, **kwargs):
+        raise FileNotFoundError("Injected cache missing")
+
+    monkeypatch.setattr(ulif_raw_cache, "open_cache", _broken_open_cache)
+
+    with pytest.raises(FileNotFoundError, match="Injected cache missing"):
+        ulif_forms.build_ulif_forms(db_path=db_path)
+
+    conn = sqlite3.connect(str(db_path))
+    build_row = conn.execute("SELECT state FROM ulif_forms_build WHERE id = 1").fetchone()
+    conn.close()
+    assert build_row is not None
+    assert build_row[0] == "failed"
+
+
+def test_ulif_forms_concurrent_build_locking_and_safe_restart(tmp_path):
+    """Item 3: Two-process concurrency test: second builder is rejected with lock error, restart succeeds."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    lock_file = Path(f"{db_path.resolve()}.build.lock")
+    cmd = [
+        sys.executable,
+        "-c",
+        (
+            "import time; from filelock import FileLock; "
+            f"lock = FileLock({str(lock_file)!r}, timeout=0); "
+            "lock.acquire(); "
+            "print('LOCKED', flush=True); "
+            "time.sleep(2); "
+            "lock.release()"
+        ),
+    ]
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, text=True)
+    try:
+        line = proc.stdout.readline()
+        assert "LOCKED" in line
+
+        with pytest.raises(RuntimeError, match="Another ULIF forms build is currently running"):
+            ulif_forms.build_ulif_forms(db_path=db_path)
+    finally:
+        proc.wait(timeout=10)
+
+    rep = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert rep["state"] == "complete"
+    assert rep["entries_done"] == 1
+    assert ulif_forms.verify_ulif_forms(db_path)["verified"] is True

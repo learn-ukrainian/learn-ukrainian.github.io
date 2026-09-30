@@ -7,6 +7,7 @@ tables in an isolated copy of sources.db using the content-addressed raw cache.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import sqlite3
 import sys
@@ -14,6 +15,8 @@ from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+
+from filelock import FileLock, Timeout
 
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_dictua_parse
@@ -38,55 +41,67 @@ def build_ulif_forms(
 
     raw_cache = Path(raw_cache_path).resolve() if raw_cache_path is not None else ulif_raw_cache.cache_path(target_db)
 
-    conn = sqlite3.connect(str(target_db))
-    conn.row_factory = sqlite3.Row
-    conn.execute("PRAGMA foreign_keys=ON")
-    conn.execute("PRAGMA journal_mode=WAL")
-    sources_db.ensure_ulif_dictua_schema(conn)
+    lock_file = Path(f"{target_db}.build.lock")
+    lock = FileLock(str(lock_file), timeout=0)
+    try:
+        lock.acquire(timeout=0)
+    except Timeout as err:
+        raise RuntimeError(f"Another ULIF forms build is currently running on {target_db}") from err
 
-    verified_entries = conn.execute(
-        """
-        SELECT id, normalized_query, homonym_index, canonical_headword,
-               grammatical_label, sense_gloss, raw_response_ref, homonym_checked
-        FROM ulif_dictua_entries
-        WHERE homonym_checked = 1
-        ORDER BY id
-        """
-    ).fetchall()
-    total_verified = len(verified_entries)
-
-    started_at = datetime.now(UTC).isoformat()
-    source_fp = sources_db.compute_ulif_source_fingerprint(conn)
-
-    conn.execute("DELETE FROM ulif_forms")
-    conn.execute("DELETE FROM ulif_forms_failures")
-    conn.execute(
-        """
-        INSERT INTO ulif_forms_build (
-            id, state, parser_version, total_entries, entries_done,
-            entries_failed, total_forms, started_at, finished_at, source_fingerprint
-        )
-        VALUES (1, 'building', ?, ?, 0, 0, 0, ?, '', ?)
-        ON CONFLICT(id) DO UPDATE SET
-            state = 'building',
-            parser_version = excluded.parser_version,
-            total_entries = excluded.total_entries,
-            entries_done = 0,
-            entries_failed = 0,
-            total_forms = 0,
-            started_at = excluded.started_at,
-            finished_at = '',
-            source_fingerprint = excluded.source_fingerprint
-        """,
-        (ULIF_FORMS_PARSER_VERSION, total_verified, started_at, source_fp),
-    )
-    conn.commit()
-
-    raw_conn = ulif_raw_cache.open_cache(raw_cache, create=False)
-    failures_by_reason: dict[str, int] = defaultdict(int)
-    mismatches: list[dict[str, Any]] = []
+    conn: sqlite3.Connection | None = None
+    raw_conn: sqlite3.Connection | None = None
 
     try:
+        conn = sqlite3.connect(str(target_db))
+        conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA foreign_keys=ON")
+        conn.execute("PRAGMA journal_mode=WAL")
+        sources_db.ensure_ulif_dictua_schema(conn)
+
+        raw_conn = ulif_raw_cache.open_cache(raw_cache, create=False)
+
+        started_at = datetime.now(UTC).isoformat()
+        source_fp = sources_db.compute_ulif_source_fingerprint(conn)
+
+        verified_entries = conn.execute(
+            """
+            SELECT id, normalized_query, homonym_index, canonical_headword,
+                   grammatical_label, sense_gloss, raw_response_ref, homonym_checked, status
+            FROM ulif_dictua_entries
+            WHERE homonym_checked = 1
+            ORDER BY id
+            """
+        ).fetchall()
+        total_verified = len(verified_entries)
+
+        conn.execute("DELETE FROM ulif_forms")
+        conn.execute("DELETE FROM ulif_forms_failures")
+        conn.execute(
+            """
+            INSERT INTO ulif_forms_build (
+                id, state, parser_version, total_entries, entries_done,
+                entries_failed, total_forms, started_at, finished_at, source_fingerprint
+            )
+            VALUES (1, 'building', ?, ?, 0, 0, 0, ?, '', ?)
+            ON CONFLICT(id) DO UPDATE SET
+                state = 'building',
+                parser_version = excluded.parser_version,
+                total_entries = excluded.total_entries,
+                entries_done = 0,
+                entries_failed = 0,
+                total_forms = 0,
+                started_at = excluded.started_at,
+                finished_at = '',
+                source_fingerprint = excluded.source_fingerprint
+            """,
+            (ULIF_FORMS_PARSER_VERSION, total_verified, started_at, source_fp),
+        )
+        conn.commit()
+
+        failures_by_reason: dict[str, int] = defaultdict(int)
+        mismatches: list[dict[str, Any]] = []
+        has_extraction_defect = False
+
         for offset in range(0, total_verified, batch_size):
             batch = verified_entries[offset : offset + batch_size]
             entry_ids = [entry["id"] for entry in batch]
@@ -248,17 +263,26 @@ def build_ulif_forms(
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
                     failures_by_reason[reason] += 1
+                    has_extraction_defect = True
                     continue
 
                 parsed_headword = parsed.get("canonical_headword") or ""
                 forms = parsed.get("forms") or []
 
                 if not parsed_headword or not forms or forms[0]["form_unstressed"] == "":
-                    reason = "extraction_failed: empty_article"
-                    locator = f"ulif:entry:{entry_id}"
-                    batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
-                    continue
+                    if parsed.get("is_empty_visible_article", False):
+                        reason = "empty_visible_article"
+                        locator = f"ulif:entry:{entry_id}"
+                        batch_failure_rows.append((entry_id, reason, locator))
+                        failures_by_reason[reason] += 1
+                        continue
+                    else:
+                        reason = "extraction_defect: unrecognized_article"
+                        locator = f"ulif:entry:{entry_id}"
+                        batch_failure_rows.append((entry_id, reason, locator))
+                        failures_by_reason[reason] += 1
+                        has_extraction_defect = True
+                        continue
 
                 parsed_grammar = parsed.get("grammatical_label") or ""
                 parsed_gloss = parsed.get("sense_gloss") or ""
@@ -344,7 +368,12 @@ def build_ulif_forms(
         total_forms = conn.execute("SELECT count(*) FROM ulif_forms").fetchone()[0]
         finished_at = datetime.now(UTC).isoformat()
 
-        state = "complete" if (done_count + failed_count == total_verified) else "failed"
+        if has_extraction_defect:
+            state = "failed"
+        elif done_count + failed_count == total_verified:
+            state = "complete"
+        else:
+            state = "failed"
 
         conn.execute(
             """
@@ -384,18 +413,36 @@ def build_ulif_forms(
 
         return report
     except BaseException:
-        try:
-            conn.execute(
-                "UPDATE ulif_forms_build SET state = 'failed', finished_at = ? WHERE id = 1",
-                (datetime.now(UTC).isoformat(),),
-            )
-            conn.commit()
-        except Exception:
-            pass
+        if conn is not None:
+            try:
+                conn.execute(
+                    """
+                    INSERT INTO ulif_forms_build (
+                        id, state, parser_version, total_entries, entries_done,
+                        entries_failed, total_forms, started_at, finished_at, source_fingerprint
+                    ) VALUES (1, 'failed', ?, 0, 0, 0, 0, ?, ?, '')
+                    ON CONFLICT(id) DO UPDATE SET state = 'failed', finished_at = ?
+                    """,
+                    (
+                        ULIF_FORMS_PARSER_VERSION,
+                        datetime.now(UTC).isoformat(),
+                        datetime.now(UTC).isoformat(),
+                        datetime.now(UTC).isoformat(),
+                    ),
+                )
+                conn.commit()
+            except Exception:
+                pass
         raise
     finally:
-        raw_conn.close()
-        conn.close()
+        if raw_conn is not None:
+            with contextlib.suppress(Exception):
+                raw_conn.close()
+        if conn is not None:
+            with contextlib.suppress(Exception):
+                conn.close()
+        with contextlib.suppress(Exception):
+            lock.release()
 
 
 def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
@@ -408,7 +455,8 @@ def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
     conn.row_factory = sqlite3.Row
     try:
         tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall()}
-        missing = {"ulif_forms", "ulif_forms_failures", "ulif_forms_build"} - tables
+        required = {"ulif_dictua_entries", "ulif_dictua_sections", "ulif_forms", "ulif_forms_failures", "ulif_forms_build"}
+        missing = required - tables
         if missing:
             return {"verified": False, "error": f"Missing tables: {sorted(missing)}"}
 
@@ -419,6 +467,18 @@ def verify_ulif_forms(db_path: str | Path) -> dict[str, Any]:
             return {"verified": False, "error": f"ulif_forms_build state is {build_row['state']!r}, expected 'complete'"}
         if build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
             return {"verified": False, "error": f"stale parser_version: {build_row['parser_version']!r}"}
+
+        defect_count = conn.execute(
+            """
+            SELECT count(*) FROM ulif_forms_failures
+            WHERE reason LIKE 'extraction_failed%' OR reason LIKE 'extraction_defect%'
+            """
+        ).fetchone()[0]
+        if defect_count > 0:
+            return {
+                "verified": False,
+                "error": f"Build contains {defect_count} extraction defect failures blocking verification",
+            }
 
         current_source_fp = sources_db.compute_ulif_source_fingerprint(conn)
         stored_source_fp = build_row["source_fingerprint"]

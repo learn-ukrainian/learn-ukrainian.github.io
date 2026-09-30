@@ -166,11 +166,12 @@ When an entry cannot yield standard paradigm forms, it is categorized determinis
 | `corrupt_raw_manifest` | Malformed hash or corrupt manifest blob | Logged to `ulif_forms_failures` |
 | `missing_raw_paradigm_blob` | Manifest exists, but paradigm blob hash is missing in cache | Logged to `ulif_forms_failures` |
 | `corrupt_raw_paradigm_blob` | Paradigm blob hash mismatch / corrupt cache row | Logged to `ulif_forms_failures` |
-| `extraction_failed: empty_article` | Raw page captured empty container (e.g. *хто*, *абихто* class: 0 word/grammar styles) | Logged to `ulif_forms_failures`; never emitted as empty lemma or invariable |
-| `extraction_failed` | HTML malformed or parsing threw an exception | Logged to `ulif_forms_failures` with exception detail |
+| `empty_visible_article` | Raw page captured genuinely empty visible article (59 verified source pages; e.g. *хто*, *абихто* class: 0 word/grammar styles) | Source capture residual; logged to `ulif_forms_failures`; never emitted as empty lemma or invariable; does not block build acceptance |
+| `extraction_defect: unrecognized_article` | Non-empty page where parser could not identify a valid headword/forms | Extraction defect; logged to `ulif_forms_failures`; blocks build acceptance (`state: 'failed'`) |
+| `extraction_failed: parse_error: <err>` | HTML malformed or parsing threw an unexpected exception | Extraction failure; logged to `ulif_forms_failures` with exception detail; blocks build acceptance (`state: 'failed'`) |
 | `raw_entry_page_absent` | Manifest has no `paradigm` tab key | Retains a single base lemma row if stored headword is present (`is_invariable=False`), but reported as `raw_entry_page_absent` failure and counted in `entries_failed` (never forms-complete); fails if stored headword is also empty |
 
-**Invariant:** `total_entries == entries_done + entries_failed`. Entries with both a weaker base assertion and a source gap are counted in `entries_failed` and excluded from `entries_done` so no entry is double counted.
+**Invariant:** `total_entries == entries_done + entries_failed`. Entries with both a weaker base assertion and a source gap are counted in `entries_failed` and excluded from `entries_done` so no entry is double counted. Unexpected extraction defects and parser exceptions set `ulif_forms_build.state = 'failed'` and block verification. Nested relation cache gaps (`synonyms`, `antonyms`, `phraseology`) are tracked in `identity_from_raw.unavailable_relation_blobs` per-entry without failing the batch or dropping valid inflection forms. Concurrency is guarded via file locking (`.ulif_forms.lock`) to serialize runs and ensure safe restartability.
 
 ---
 

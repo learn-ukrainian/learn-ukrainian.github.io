@@ -545,7 +545,7 @@ def test_fixture_cells_keep_each_attested_preposition_out_of_the_form():
             assert preposition not in row["form_stressed"]
             assert preposition not in row["form_unstressed"]
             assert not row["form_stressed"].startswith(preposition)
-    assert seen == {"на/у"}
+    assert seen == {"на/в", "на/у", "по"}
 
 
 @pytest.mark.parametrize(

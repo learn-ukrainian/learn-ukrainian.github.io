@@ -575,60 +575,92 @@ def compute_ulif_entry_fingerprint(
 ) -> str:
     """Compute deterministic SHA-256 fingerprint for a single ULIF source entry.
 
-    Covers canonical headword, grammatical label, sense gloss, homonym indices,
-    raw response ref, and all ordered section payloads.
+    Covers id, normalized_query, canonical headword, grammatical label, sense gloss,
+    homonym indices, raw response ref, status, and all ordered section payloads.
     """
     h = hashlib.sha256()
     keys = entry_row.keys() if hasattr(entry_row, "keys") else ()
-    h.update(str(entry_row["canonical_headword"] if "canonical_headword" in keys else "").encode("utf-8"))
+    h.update(str(entry_row["id"] if "id" in keys and entry_row["id"] is not None else 0).encode("utf-8"))
     h.update(b"\x00")
-    h.update(str(entry_row["grammatical_label"] if "grammatical_label" in keys else "").encode("utf-8"))
+    h.update(str(entry_row["normalized_query"] if "normalized_query" in keys and entry_row["normalized_query"] else "").encode("utf-8"))
     h.update(b"\x00")
-    h.update(str(entry_row["sense_gloss"] if "sense_gloss" in keys else "").encode("utf-8"))
+    h.update(str(entry_row["canonical_headword"] if "canonical_headword" in keys and entry_row["canonical_headword"] else "").encode("utf-8"))
     h.update(b"\x00")
-    h.update(str(entry_row["homonym_index"] if "homonym_index" in keys else 1).encode("utf-8"))
+    h.update(str(entry_row["grammatical_label"] if "grammatical_label" in keys and entry_row["grammatical_label"] else "").encode("utf-8"))
     h.update(b"\x00")
-    h.update(str(entry_row["homonym_checked"] if "homonym_checked" in keys else 0).encode("utf-8"))
+    h.update(str(entry_row["sense_gloss"] if "sense_gloss" in keys and entry_row["sense_gloss"] else "").encode("utf-8"))
     h.update(b"\x00")
-    h.update(str(entry_row["raw_response_ref"] if "raw_response_ref" in keys else "").encode("utf-8"))
+    h.update(str(entry_row["homonym_index"] if "homonym_index" in keys and entry_row["homonym_index"] is not None else 1).encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["homonym_checked"] if "homonym_checked" in keys and entry_row["homonym_checked"] is not None else 0).encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["raw_response_ref"] if "raw_response_ref" in keys and entry_row["raw_response_ref"] else "").encode("utf-8"))
+    h.update(b"\x00")
+    h.update(str(entry_row["status"] if "status" in keys and entry_row["status"] else "").encode("utf-8"))
     if section_rows:
-        for s in section_rows:
+        sorted_sections = sorted(
+            section_rows,
+            key=lambda s: (
+                str(s["kind"]) if hasattr(s, "keys") and "kind" in s else "",
+                int(s["source_order"]) if hasattr(s, "keys") and "source_order" in s and s["source_order"] is not None else 0,
+                int(s["id"]) if hasattr(s, "keys") and "id" in s and s["id"] is not None else 0,
+            ),
+        )
+        for s in sorted_sections:
             s_keys = s.keys() if hasattr(s, "keys") else ()
             h.update(b"\x00")
-            h.update(str(s["kind"] if "kind" in s_keys else "").encode("utf-8"))
+            h.update(str(s["kind"] if "kind" in s_keys and s["kind"] else "").encode())
             h.update(b"\x00")
-            h.update(str(s["source_order"] if "source_order" in s_keys else 0).encode("utf-8"))
+            h.update(str(s["source_order"] if "source_order" in s_keys and s["source_order"] is not None else 0).encode())
             h.update(b"\x00")
-            h.update(str(s["sense_or_group_id"] if "sense_or_group_id" in s_keys else "").encode("utf-8"))
+            h.update(str(s["sense_or_group_id"] if "sense_or_group_id" in s_keys and s["sense_or_group_id"] else "").encode())
             h.update(b"\x00")
-            h.update(str(s["payload_json"] if "payload_json" in s_keys else "").encode("utf-8"))
+            payload = s["payload_json"] if "payload_json" in s_keys and s["payload_json"] else ""
+            h.update(payload.encode() if isinstance(payload, str) else str(payload).encode())
     return h.hexdigest()
 
 
 def compute_ulif_source_fingerprint(conn: sqlite3.Connection) -> str:
-    """Compute whole-source verification fingerprint over all verified entries and sections."""
+    """Compute whole-source verification fingerprint over all verified entries and sections.
+
+    Uses the exact same projection as compute_ulif_entry_fingerprint for consistency.
+    """
+    if not _ulif_table_exists(conn, "ulif_dictua_entries"):
+        return ""
+    if not _ulif_table_exists(conn, "ulif_dictua_sections"):
+        return ""
+
     h = hashlib.sha256()
-    cursor = conn.execute(
+
+    entries_cursor = conn.execute(
         """
-        SELECT id, canonical_headword, grammatical_label, sense_gloss,
-               homonym_index, homonym_checked, raw_response_ref
+        SELECT id, normalized_query, homonym_index, canonical_headword,
+               grammatical_label, sense_gloss, raw_response_ref, homonym_checked, status
         FROM ulif_dictua_entries
         WHERE homonym_checked = 1
         ORDER BY id
         """
     )
-    for row in cursor:
-        h.update(str(tuple(row)).encode("utf-8"))
-    if _ulif_table_exists(conn, "ulif_dictua_sections"):
-        sec_cursor = conn.execute(
-            """
-            SELECT entry_id, kind, source_order, sense_or_group_id, length(payload_json)
-            FROM ulif_dictua_sections
-            ORDER BY entry_id, kind, source_order, id
-            """
-        )
-        for s in sec_cursor:
-            h.update(str(tuple(s)).encode("utf-8"))
+    sections_cursor = conn.execute(
+        """
+        SELECT id, entry_id, kind, source_order, sense_or_group_id, payload_json
+        FROM ulif_dictua_sections
+        ORDER BY entry_id, kind, source_order, id
+        """
+    )
+
+    current_sec = sections_cursor.fetchone()
+    for entry in entries_cursor:
+        entry_id = int(entry["id"])
+        entry_secs: list[sqlite3.Row] = []
+        while current_sec is not None and int(current_sec["entry_id"]) < entry_id:
+            current_sec = sections_cursor.fetchone()
+        while current_sec is not None and int(current_sec["entry_id"]) == entry_id:
+            entry_secs.append(current_sec)
+            current_sec = sections_cursor.fetchone()
+        entry_fp = compute_ulif_entry_fingerprint(entry, entry_secs)
+        h.update(f"{entry_id}:{entry_fp}\n".encode())
+
     return h.hexdigest()
 
 
@@ -853,16 +885,56 @@ def _derive_identity_from_raw(
 
     parsed_headword = parsed.get("canonical_headword") or ""
     if not parsed_headword:
+        is_empty = parsed.get("is_empty_visible_article", False)
+        err = "empty_visible_article" if is_empty else "unrecognized_article_defect"
         return {
             "canonical_headword": "",
-            "extraction_failed": "empty_article",
+            "error": err,
             "locator": f"ulif:entry:{entry_id}",
             "parser_version": parsed.get("parser_version", ULIF_FORMS_PARSER_VERSION),
             "source_page_sha256": par_sha,
             "stored_matches_raw": False,
             "mismatches": ["canonical_headword"],
             "source": "raw_entry_page",
+            "unavailable_relation_blobs": [],
         }
+
+    unavailable_relations: list[dict[str, Any]] = []
+    for rel_kind in ("synonyms", "antonyms", "phraseology"):
+        if rel_kind in manifest:
+            rel_ref = manifest[rel_kind]
+            if not isinstance(rel_ref, str) or not rel_ref.startswith("sha256:") or len(rel_ref) != 71:
+                unavailable_relations.append({
+                    "tab": rel_kind,
+                    "ref": str(rel_ref),
+                    "error": "corrupt_blob",
+                    "locator": f"ulif:entry:{entry_id}:{rel_kind}",
+                })
+            else:
+                rel_sha = rel_ref.removeprefix("sha256:")
+                try:
+                    rel_bytes = ulif_raw_cache.get(rel_sha, path=cache)
+                    if rel_bytes is None:
+                        unavailable_relations.append({
+                            "tab": rel_kind,
+                            "ref": rel_ref,
+                            "error": "missing_blob",
+                            "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                        })
+                except ValueError:
+                    unavailable_relations.append({
+                        "tab": rel_kind,
+                        "ref": rel_ref,
+                        "error": "corrupt_blob",
+                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                    })
+                except Exception:
+                    unavailable_relations.append({
+                        "tab": rel_kind,
+                        "ref": rel_ref,
+                        "error": "cache_error",
+                        "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
+                    })
 
     mismatches = []
     if stored_headword != parsed_headword:
@@ -883,6 +955,7 @@ def _derive_identity_from_raw(
         "stored_matches_raw": (len(mismatches) == 0),
         "mismatches": mismatches,
         "source": "raw_entry_page",
+        "unavailable_relation_blobs": unavailable_relations,
     }
 
 
@@ -915,16 +988,30 @@ def get_ulif_word_records(
         ]
 
     try:
+        has_entries_table = _ulif_table_exists(conn, "ulif_dictua_entries")
+        if not has_entries_table:
+            return [
+                {
+                    "word": w,
+                    "normalized_query": normalize_ulif_dictua_query(w),
+                    "status": "unavailable",
+                    "verified": False,
+                    "entry_count": 0,
+                    "entries": [],
+                }
+                for w in word_list
+            ]
+
         has_forms_build = _ulif_table_exists(conn, "ulif_forms_build")
         has_forms_table = _ulif_table_exists(conn, "ulif_forms")
         has_failures_table = _ulif_table_exists(conn, "ulif_forms_failures")
         has_sections_table = _ulif_table_exists(conn, "ulif_dictua_sections")
 
-        if not has_forms_build or not has_forms_table or not has_failures_table:
+        if not has_forms_build or not has_forms_table or not has_failures_table or not has_sections_table:
             global_forms_state = "missing_table"
         else:
             build_row = conn.execute(
-                "SELECT state, parser_version FROM ulif_forms_build WHERE id = 1"
+                "SELECT state, parser_version, source_fingerprint FROM ulif_forms_build WHERE id = 1"
             ).fetchone()
             if build_row is None:
                 global_forms_state = "unbuilt"
@@ -932,6 +1019,8 @@ def get_ulif_word_records(
                 global_forms_state = str(build_row["state"])
             elif build_row["parser_version"] != ULIF_FORMS_PARSER_VERSION:
                 global_forms_state = "stale_parser_version"
+            elif not build_row["source_fingerprint"]:
+                global_forms_state = "missing_source_fingerprint"
             else:
                 global_forms_state = "complete"
 
@@ -1080,13 +1169,18 @@ def get_ulif_word_records(
                         (entry_id,),
                     ).fetchall()
                     if f_rows:
-                        first_f = f_rows[0]
-                        stored_fp = first_f["source_entry_fingerprint"]
-                        stored_pv = first_f["parser_version"]
-                        if stored_pv != ULIF_FORMS_PARSER_VERSION:
-                            entry_forms_state = "stale_parser_version"
-                        elif stored_fp and stored_fp != current_entry_fp:
-                            entry_forms_state = "stale_source_snapshot"
+                        row_validation_error: str | None = None
+                        for f_row in f_rows:
+                            stored_fp = f_row["source_entry_fingerprint"]
+                            stored_pv = f_row["parser_version"]
+                            if stored_pv != ULIF_FORMS_PARSER_VERSION:
+                                row_validation_error = "stale_parser_version"
+                                break
+                            if not stored_fp or stored_fp != current_entry_fp:
+                                row_validation_error = "stale_source_snapshot"
+                                break
+                        if row_validation_error is not None:
+                            entry_forms_state = row_validation_error
                         else:
                             for f_row in f_rows:
                                 f_dict = dict(f_row)
@@ -1111,8 +1205,23 @@ def get_ulif_word_records(
                                 "reason": str(fail_row["reason"]),
                                 "locator": str(fail_row["locator"]),
                             }
+                            if str(fail_row["reason"]) != "raw_entry_page_absent":
+                                entry_forms = []
                         elif not f_rows:
                             entry_forms_state = "missing_forms"
+                else:
+                    if has_failures_table:
+                        fail_row = conn.execute(
+                            "SELECT reason, locator FROM ulif_forms_failures WHERE entry_id = ?",
+                            (entry_id,),
+                        ).fetchone()
+                        if fail_row:
+                            entry_forms_state = str(fail_row["reason"])
+                            entry_forms_failure = {
+                                "reason": str(fail_row["reason"]),
+                                "locator": str(fail_row["locator"]),
+                            }
+                    entry_forms = []
 
                 identity_from_raw = _derive_identity_from_raw(
                     entry_id=entry_id,
@@ -1126,11 +1235,13 @@ def get_ulif_word_records(
                 )
 
                 if entry_forms_state == "complete" and entry_forms:
-                    form_page_sha = entry_forms[0].get("source_page_sha256")
                     raw_page_sha = identity_from_raw.get("source_page_sha256")
-                    if form_page_sha and raw_page_sha and form_page_sha != raw_page_sha:
-                        entry_forms_state = "stale_source_page"
-                        entry_forms = []
+                    for f in entry_forms:
+                        form_page_sha = f.get("source_page_sha256")
+                        if form_page_sha and raw_page_sha and form_page_sha != raw_page_sha:
+                            entry_forms_state = "stale_source_page"
+                            entry_forms = []
+                            break
 
                 entry_dict = {
                     "entry_id": entry_id,
