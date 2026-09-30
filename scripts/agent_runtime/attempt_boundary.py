@@ -16,9 +16,11 @@ import platform
 import shutil
 import signal
 import socket
+import stat
 import subprocess
 import tempfile
 import threading
+import time
 from pathlib import Path
 from typing import Any
 
@@ -32,7 +34,46 @@ from scripts.review.isolation import (
     wrap_argv_with_sandbox,
 )
 
+from .attempt_network import AttemptEgress, load_allowlist
 from .env_sanitize import build_agent_env
+
+
+def linux_claude_auth() -> dict[str, str]:
+    """Select only a fresh access token; --bare ignores file-backed login.
+
+    The existing auth staging supports keychain selection on Darwin. Linux
+    needs equivalent selection from its credential file, never a home grant,
+    refresh token, login mutation or copied credential store.
+    """
+    if platform.system() != "Linux" or any(os.environ.get(k) for k in (
+        "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN",
+    )):
+        return {}
+    path = Path.home() / ".claude" / ".credentials.json"
+    try:
+        fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except FileNotFoundError:
+        return {}
+    except OSError as exc:
+        raise ReviewIsolationError("attempt_claude_auth_unavailable") from exc
+    try:
+        info = os.fstat(fd)
+        if not stat.S_ISREG(info.st_mode) or info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) & 0o077:
+            raise ReviewIsolationError("attempt_claude_auth_not_private")
+        raw = os.read(fd, 65537)
+        if len(raw) > 65536:
+            raise ReviewIsolationError("attempt_claude_auth_oversized")
+        oauth = json.loads(raw)["claudeAiOauth"]
+        token, expires = oauth["accessToken"], oauth["expiresAt"]
+        if not isinstance(expires, int) or isinstance(expires, bool) or expires / 1000 <= time.time() + 60:
+            raise ReviewIsolationError("attempt_claude_auth_expired")
+        if not isinstance(token, str) or not 20 <= len(token) <= 8192 or any(c in token for c in "\n\r\0"):
+            raise ReviewIsolationError("attempt_claude_auth_invalid")
+        return {"CLAUDE_CODE_OAUTH_TOKEN": token}
+    except (ValueError, KeyError, TypeError) as exc:
+        raise ReviewIsolationError("attempt_claude_auth_invalid") from exc
+    finally:
+        os.close(fd)
 
 
 def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]:
@@ -207,9 +248,11 @@ class AttemptBoundary:
         temporary_parent = tool_config.get("read_only_tmp_root")
         self.temp = tempfile.TemporaryDirectory(prefix="attempt-", dir=temporary_parent)
         self.connection = None
-        self.socket_temp = None
+        self.egress = None
         self.agent = agent
         try:
+            if platform.system() != "Linux":
+                raise ReviewIsolationError("attempt_network_namespace_unavailable")
             base = Path(self.temp.name).resolve()
             self.workspace = base / "inputs"
             self.write_root = base / "runtime"
@@ -225,19 +268,20 @@ class AttemptBoundary:
             home.mkdir()
             if agent != "agy":
                 self.env.update(stage_engine_auth(agent, write_home=home))
+            if agent == "claude":
+                self.env.update(linux_claude_auth())
             self.env.update(HOME=str(home), TMPDIR=str(self.write_root / "tmp"))
             self.env.pop("GIT_DIR", None)
             self.env.pop("GIT_WORK_TREE", None)
             proxy = self.write_root / "stdio.py"
             proxy.write_bytes(Path(__file__).with_name("attempt_proxy.py").read_bytes())
             endpoint = self.write_root / "sources.sock"
-            if platform.system() == "Darwin":
-                # UNIX socket addresses have a short fixed limit. The socket
-                # alone is allowed, never the surrounding shared temp tree.
-                self.socket_temp = tempfile.TemporaryDirectory(prefix="attempt-mcp-", dir="/tmp")
-                endpoint = Path(self.socket_temp.name).resolve() / "sources.sock"
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
+            self.egress_endpoint = self.write_root / "egress.sock"
+            self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
+            self.forwarder = self.write_root / "forwarder.py"
+            self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
             proxy_server = {
                 "command": str(project_interpreter().resolve(strict=True)),
                 "args": [str(proxy), str(endpoint)],
@@ -291,12 +335,19 @@ class AttemptBoundary:
             write_root=self.write_root,
             reject_root=Path(self.tool_config["review_input_root"]),
             runtime_reads=[*runtime, self.endpoint],
+            network_allowed=False,
         )
-        argv = [str(binary), *cmd[1:]]
+        if self.egress is None or not self.egress.thread.is_alive():
+            raise ReviewIsolationError("attempt_egress_unavailable")
+        argv = [str(project_interpreter().resolve(strict=True)), str(self.forwarder), str(self.egress_endpoint),
+                str(binary), *cmd[1:]]
         env = {**self.env, **env_overrides}
         env["HOME"] = self.env["HOME"]
         env["TMPDIR"] = self.env["TMPDIR"]
         env["PATH"] = "/usr/bin:/bin:" + str(binary.parent)
+        for name in list(env):
+            if name.lower() in {"http_proxy", "https_proxy", "all_proxy", "no_proxy"}:
+                env.pop(name)
         wrapped = wrap_argv_with_sandbox(argv, self.sandbox)
         if self.sandbox.mechanism == "linux-bwrap":
             # A private procfs supports native executable discovery without
@@ -305,11 +356,15 @@ class AttemptBoundary:
         return wrapped, env
 
     def cleanup(self) -> None:
-        if self.connection is not None:
-            self.connection.cleanup()
-        if self.socket_temp is not None:
-            self.socket_temp.cleanup()
-        self.temp.cleanup()
+        try:
+            if self.egress is not None:
+                self.egress.cleanup()
+        finally:
+            try:
+                if self.connection is not None:
+                    self.connection.cleanup()
+            finally:
+                self.temp.cleanup()
 
 
 def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool_config: dict | None):

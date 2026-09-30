@@ -5,15 +5,12 @@ for plan, lesson and lesson re-review attempts, using AGY, Codex or Claude.
 Cursor is explicitly refused at admission and provisioning until it has a
 proven boundary. Other unsupported harnesses remain refused.
 
-**Candidate status: BLOCKED; do not merge or run real review attempts with this
-candidate.** The filesystem closure is implemented, but shared host networking
-allows an HTTP projection of another attempt's return to be read from inside
-the sandbox. `test_seat_cannot_read_other_attempt_through_host_http_projection`
-reproduces this using synthetic data. The test remains failing; it must not be
-skipped or marked expected-failure. Provider traffic currently requires
-networking, and a supported isolated provider-egress path has not been
-established. Infra owns that blocking exposure and the provider-compatibility
-proof. This candidate does not satisfy the issue's authorized-closure outcome.
+Formal attempts on Linux have a private network namespace (`--unshare-net`),
+private PID namespace and private procfs. The host network and its loopback,
+interface listeners and abstract Unix sockets are unreachable, even when proxy
+variables are cleared or overridden. Ordinary dispatches are unchanged.
+Platforms without the network namespace mechanism are refused for formal
+attempts; the former macOS filesystem-only capability is insufficient here.
 
 The authorized manifest closure is the complete set of eligible, hashed file
 pins in the manifest: `inputs.*`, plus lesson `module_digest` and
@@ -30,16 +27,15 @@ original shared state directory nor any neighboring receipt is exposed. The
 rendered prompt already contains these inputs, including the re-review evidence.
 
 The real harness process and its tool subprocesses run inside the existing
-verified OS sandbox: Bubblewrap on Linux, sandbox-exec on macOS. Linux uses a
-private PID namespace and procfs. The input directory is read-only. The writable
+verified Bubblewrap sandbox on Linux. The input directory is read-only. The writable
 directory holds only this attempt's fresh home, configuration, transcript, temp
 files and return. The installed executable and its narrow runtime dependencies
 are readable; its native binary's parent directory is not granted. No original
 checkout, Git objects, original home, prior session, receipt store or review
 harness source is mounted. CLI authentication is staged narrowly into the fresh
 home; sessions, project instructions, hooks and provider configuration are not
-copied. Provider networking remains available. An unavailable sandbox or a failed
-capability probe refuses launch; there is no filesystem-isolation fallback.
+copied. An unavailable sandbox or a failed capability probe refuses launch;
+there is no shared-network or filesystem-isolation fallback.
 
 Runtime access and seat evidence are separate. A parent-owned sources process
 runs outside the seat sandbox with the attempt's original receipt environment.
@@ -52,24 +48,92 @@ runner parses the fresh transcript before cleaning up the boundary and sources
 processes, including on refusal, timeout or failure. Formal attempts cannot resume
 or trigger runner provider failover.
 
-Claude uses an instruction-free home and `--bare --setting-sources ''` under
-the OS boundary. Codex uses its fresh sources-only home and bypasses its nested
+Claude uses an instruction-free home, `--setting-sources ''` and disabled slash
+command expansion under the OS boundary. Its `--bare` mode is incompatible
+with subscription authentication, as documented in the
+[Claude authentication reference](https://code.claude.com/docs/en/authentication#generate-a-long-lived-token).
+The fresh home, explicit empty settings and unmounted host state preserve the
+closure while using the native authenticated CLI. Codex uses its fresh sources-only home and bypasses its nested
 sandbox, which otherwise cancels stdio MCP calls. AGY uses a fresh home and
 app-data directory under the same OS boundary. AGY's separate sealed code-review
 `review_isolation` mode remains refused; formal content attempts use the
 runner-owned manifest boundary, rather than enabling that unsupported mode.
 
+## Provider egress boundary
+
+`scripts/config/attempt_provider_egress.yaml` contains the exact per-harness
+hostname allowlist. It includes the native provider startup/eligibility services
+as well as the inference endpoints; AGY's profile-image dependency is an exact
+hostname, with no domain suffix or wildcard grant. No runtime override admits
+additional hosts. The parent loads this config before launching a seat.
+
+The parent proxy (`attempt_network.py`) listens on a per-attempt Unix socket.
+It accepts only `CONNECT canonical-host:443` with exact allowlist membership,
+rejecting plain HTTP, IP literals, userinfo, malformed authorities, suffix
+lookalikes, conflicting or duplicate Host headers and request bodies. It
+normalizes mapped addresses and validates every DNS answer: one non-global,
+multicast, reserved, unspecified or host-interface address rejects the entire
+request. Interface addresses are enumerated at startup. Connections use only
+the validated numeric addresses, with no second lookup.
+
+The projected stdlib forwarder (`attempt_forwarder.py`) starts inside the
+namespace before the CLI. It relays bytes from namespace loopback to that Unix
+socket, without interpretation. It replaces inherited proxy variables with
+`HTTPS_PROXY`, `https_proxy`, `HTTP_PROXY`, `http_proxy`, `ALL_PROXY` and
+`all_proxy`, and sets both `NO_PROXY` spellings empty. The HTTP variables ensure
+plain HTTP requests go to the proxy and are refused. A CLI that ignores these
+variables has no direct network route. Sources keeps its separate stdio-to-Unix
+bridge; sources does not use provider egress.
+
+The parent enforces an 8 KiB header cap, 16 concurrent connections, two resolver
+processes, 5-second header/resolver deadlines, a 10-second total connect deadline
+and 60-second idle/drain deadlines. Relays read 64 KiB chunks with backpressure;
+stream reader buffers are bounded. Resolver output is capped at 64 KiB. DNS
+processes are killed and reaped on timeout or cancellation. Destination/byte
+aggregates are bounded by the allowlist and contain no payloads or addresses.
+Parent cleanup cancels connections and resolvers and closes the listener. A
+stopped proxy, failed forwarder or failed namespace refuses launch without
+falling back to the host network.
+
+## Provider compatibility proof
+
+At the exact implementation head, record the SHA-256 of the allowlist and each
+native CLI version. For AGY, Codex and Claude, wrap their real adapter invocation
+with `AttemptBoundary.wrap`, provide a minimal prompt requesting a fixed token
+without tools, and parse the actual terminal response with that adapter. Retain
+only the implementation SHA, allowlist digest, CLI version, tested variable,
+exit status, exact-token verdict and destination/byte aggregates in ignored local
+evidence. Never retain credentials, payloads, host addresses or host paths in
+public evidence. Proxy traffic alone or `--version` is insufficient proof.
+
+To identify a variable unambiguously, launch a projected stdlib helper after the
+forwarder that leaves only `HTTPS_PROXY` set before executing the mounted native
+CLI. Require a successful authenticated fixed-token response and positive proxy
+bytes correlated with that invocation. Then stop the parent proxy and repeat the
+same wrapped invocation: it must refuse before the CLI can produce the token.
+A harness failure remains a blocker; do not broaden the network namespace or
+silently substitute a provider. Independently repeat this proof on the reviewed
+head before landing; a changed proxy, allowlist or invocation voids prior proof.
+
 ## Verification and post-merge proof (AC-4)
 
-After the blocking exposure is fixed, set `PROJECT_PYTHON` to the prescribed shared project interpreter. Run from the
+Set `PROJECT_PYTHON` to the prescribed shared project interpreter. Run from the
 merged dispatch checkout. These are scoped foreground tests; no provider/model
 request is made by the host probes:
 
 ```bash
-"$PROJECT_PYTHON" -m pytest tests/agent_runtime/test_attempt_boundary.py -q
+"$PROJECT_PYTHON" -m pytest tests/agent_runtime/test_attempt_boundary.py tests/agent_runtime/test_attempt_network.py -q
 LU_REVIEW_HOST_PROBES=1 "$PROJECT_PYTHON" -m pytest \
   tests/agent_runtime/test_attempt_boundary.py -q
 ```
+
+The first command includes protocol parsing, DNS rebinding/mixed-answer denials,
+resolver hangs, slow headers, floods, connect deadlines and proxy failures. Every
+inside-boundary denial probe must exit zero with an explicit denial, and every
+forbidden fixture has an outside-boundary positive control. The escape matrix
+includes IPv6/mapped sockets, cleared/overridden proxies, redirects, host abstract
+sockets, neighboring attempt sockets, inherited file/socket/namespace descriptors,
+private procfs and absent sysfs. A subprocess launch error never proves denial.
 
 The second command requires the actual installed AGY, Codex and Claude CLIs.
 It fails if their real executables or dependencies cannot launch inside the
@@ -79,8 +143,7 @@ allowing copied inputs, sources calls, receipt recording and the own return.
 The normal CI run uses a native executable fixture for adapter startup only;
 filesystem probes and sources calls use the real production boundary in both
 modes. A separate reviewer should run these probes on the target host at the
-merged SHA and retain the output. macOS capability remains host-specific proof,
-not a claim established by Linux tests.
+merged SHA and retain the output. These tests establish Linux capability only; other platforms remain refused.
 
 The curriculum consumer owns the clean #8425 A1 position-2 plan-review rerun.
 Set `MANIFEST` to its current engine-produced plan manifest, `INPUT_ROOT` to

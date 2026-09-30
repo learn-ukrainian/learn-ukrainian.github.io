@@ -456,7 +456,9 @@ class ClaudeAdapter:
         # sandbox does not mount the checkout's tracked hook paths.
         if tc.get("review_attempt_boundary"):
             # No host hooks/settings are reachable in the manifest sandbox.
-            cmd.extend(["--bare", "--setting-sources", ""])
+            # --bare disables subscription OAuth as well as discovery. The
+            # fresh home + OS closure provides isolation without that flag.
+            cmd.extend(["--setting-sources", "", "--disable-slash-commands"])
         else:
             cmd.extend(["--settings", _worker_guard_settings(publish_guard=reviewer_guard and not review_isolation)])
         if review_isolation:

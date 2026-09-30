@@ -8,10 +8,13 @@ import http.server
 import json
 import os
 import shutil
+import socket
 import subprocess
 import sys
+import tempfile
 import threading
 import tomllib
+import urllib.request
 from pathlib import Path
 
 import pytest
@@ -297,13 +300,20 @@ def test_seat_cannot_read_other_attempt_through_host_http_projection(world, tmp_
     boundary = AttemptBoundary(agent="agy", tool_config=tc)
     try:
         url = f"http://127.0.0.1:{server.server_port}/other-attempt-return"
+        with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(url, timeout=2) as control:
+            assert control.read() == b"FORBIDDEN_OTHER_ATTEMPT_RETURN"
         script = (
-            "import urllib.request\n"
-            f"print(urllib.request.urlopen({url!r},timeout=2).read().decode())\n"
+            "import urllib.request,urllib.error\n"
+            "opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))\n"
+            "try:\n"
+            f" opener.open({url!r},timeout=2).read()\n"
+            "except urllib.error.URLError: print('DENIED:host_http')\n"
+            "else: raise AssertionError('forbidden host HTTP projection readable')\n"
         )
         cmd, env = boundary.wrap([sys.executable, "-c", script], {})
         proc = subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, text=True, timeout=10)
-        assert proc.returncode != 0, "forbidden host HTTP return projection was readable inside the launch boundary"
+        assert proc.returncode == 0, proc.stderr
+        assert proc.stdout.strip() == "DENIED:host_http"
     finally:
         boundary.cleanup()
         server.shutdown()
@@ -384,7 +394,9 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
             assert plan.output_file.is_relative_to(boundary.write_root)
             assert "--dangerously-bypass-approvals-and-sandbox" in plan.cmd
         else:
-            assert "--bare" in plan.cmd and "--setting-sources" in plan.cmd
+            assert "--bare" not in plan.cmd
+            assert plan.cmd[plan.cmd.index("--setting-sources") + 1] == ""
+            assert "--disable-slash-commands" in plan.cmd
             assert "--strict-mcp-config" in plan.cmd
         # Probe the actual installed executable and its runtime closure inside
         # the production wrapper, without starting a provider/model request.
@@ -395,3 +407,291 @@ def test_real_adapter_uses_fresh_home_and_attempt_outputs(world, tmp_path, monke
         assert env["HOME"] != str(home)
     finally:
         boundary.cleanup()
+
+
+@pytest.mark.parametrize("proxy_mode", ["normal", "cleared", "overridden"])
+@pytest.mark.live_network  # Positive controls target this fixture on enumerated local interfaces only.
+def test_namespace_escape_matrix_with_positive_controls(world, tmp_path, proxy_mode):
+    from scripts.agent_runtime.attempt_network import host_addresses
+
+    root, _ = world
+    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
+    listeners, peers, descriptors, threads = [], [], [], []
+    socket_directory = tempfile.TemporaryDirectory(prefix="attempt-fixture-", dir="/tmp")
+    sentinel = b"FORBIDDEN_SOCKET_SENTINEL"
+
+    def serve(listener):
+        while True:
+            try:
+                client, _ = listener.accept()
+                with client:
+                    client.sendall(sentinel)
+            except OSError:
+                return
+
+    try:
+        targets = []
+        for family, wildcard in [(socket.AF_INET, "0.0.0.0"), (socket.AF_INET6, "::")]:
+            listener = socket.socket(family)
+            if family == socket.AF_INET6:
+                listener.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 1)
+            listener.bind((wildcard, 0))
+            listener.listen()
+            listeners.append(listener)
+            thread = threading.Thread(target=serve, args=(listener,), daemon=True)
+            thread.start()
+            threads.append(thread)
+            for address in host_addresses():
+                if address.version == (4 if family == socket.AF_INET else 6):
+                    target = str(address)
+                    if address.version == 6 and address.is_link_local:
+                        continue  # scoped interface addresses require interface identity
+                    targets.append((family, (target, listener.getsockname()[1])))
+            if family == socket.AF_INET:
+                targets.append((socket.AF_INET6, ("::ffff:127.0.0.1", listener.getsockname()[1])))
+        # Host abstract namespace and a neighboring attempt's filesystem socket.
+        abstract = "\0attempt-fixture-" + str(os.getpid()) + "-" + proxy_mode
+        neighbor = str(Path(socket_directory.name) / "neighbor.sock")
+        for name in (abstract, neighbor):
+            listener = socket.socket(socket.AF_UNIX)
+            listener.bind(name)
+            listener.listen()
+            listeners.append(listener)
+            thread = threading.Thread(target=serve, args=(listener,), daemon=True)
+            thread.start()
+            threads.append(thread)
+            targets.append((socket.AF_UNIX, name))
+        # Every target really serves outside the boundary, including the host's
+        # interface addresses (never stored in public evidence).
+        for family, address in targets:
+            with socket.socket(family) as control:
+                control.settimeout(2)
+                control.connect(address)
+                assert control.recv(1024) == sentinel
+        forbidden_file = tmp_path / "inherited.txt"
+        forbidden_file.write_bytes(sentinel)
+        file_fd = os.open(forbidden_file, os.O_RDONLY)
+        namespace_fd = os.open("/proc/self/ns/net", os.O_RDONLY)
+        peer, other = socket.socketpair()
+        peers.extend([peer, other])
+        other.sendall(sentinel)
+        # Seed high inheritable descriptors, then use the production runner seam
+        # (Popen defaults to close_fds) rather than treating launch errors as denial.
+        for index, original in enumerate((file_fd, namespace_fd, peer.fileno()), 100):
+            os.dup2(original, index, inheritable=True)
+            descriptors.append(index)
+        os.close(file_fd)
+        os.close(namespace_fd)
+        parent_namespace = os.readlink("/proc/self/ns/net")
+        script = (
+            "import socket,os,pathlib,json\n"
+            f"targets={[(int(family), address) for family, address in targets]!r}\n"
+            f"mode={proxy_mode!r}\n"
+            "if mode!='normal':\n"
+            " for k in list(os.environ):\n"
+            "  if k.lower().endswith('_proxy'): os.environ.pop(k)\n"
+            " if mode=='overridden': os.environ['HTTPS_PROXY']='http://127.0.0.1:1'\n"
+            "for family,address in targets:\n"
+            " with socket.socket(family) as client:\n"
+            "  client.settimeout(.5)\n"
+            "  try: client.connect(address)\n"
+            "  except OSError as e: print('DENIED:socket:'+str(e.errno))\n"
+            "  else: raise AssertionError('host socket reachable')\n"
+            f"assert os.readlink('/proc/self/ns/net')!={parent_namespace!r}\n"
+            "assert not pathlib.Path('/sys/class/net').exists()\n"
+            f"for fd in {descriptors!r}:\n"
+            " try: os.fstat(fd)\n"
+            " except OSError: print('DENIED:inherited_fd')\n"
+            " else: raise AssertionError('inherited descriptor')\n"
+            f"for name in {[str(forbidden_file), '/proc/self/root' + str(forbidden_file), f'/proc/{os.getpid()}/root' + str(forbidden_file), f'/proc/{os.getpid()}/fd/100', f'/proc/{os.getpid()}/ns/net']!r}:\n"
+            " try: pathlib.Path(name).read_bytes()\n"
+            " except OSError: print('DENIED:proc_or_root')\n"
+            " else: raise AssertionError('host proc/root exposed')\n"
+            "# DNS cannot provide an alternative route: even known numeric host\n"
+            "# destinations were denied above; only the parent resolves egress.\n"
+            "print('DENIED:sys_and_host_namespace')\n"
+        )
+        cmd, env = boundary.wrap([sys.executable, "-c", script], {})
+        proc, _, _ = runner._spawn_pipe_subprocess(cmd, cwd=boundary.workspace, env=env)
+        stdout, stderr = proc.communicate(timeout=30)
+        assert proc.returncode == 0, stderr
+        assert len(stdout.splitlines()) == len(targets) + 3 + 5 + 1
+        if isinstance(stdout, bytes):
+            stdout = stdout.decode()
+        assert all(line.startswith("DENIED:") for line in stdout.splitlines())
+        assert "--unshare-net" in cmd and boundary.sandbox.network_allowed is False
+    finally:
+        for descriptor in descriptors:
+            os.close(descriptor)
+        for peer in peers:
+            peer.close()
+        for listener in listeners:
+            listener.shutdown(socket.SHUT_RDWR)
+            listener.close()
+        for thread in threads:
+            thread.join(2)
+        boundary.cleanup()
+        socket_directory.cleanup()
+
+
+def test_proxy_crash_refuses_launch_and_never_shares_network(world, tmp_path):
+    root, _ = world
+    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
+    try:
+        cmd, env = boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
+        boundary.egress.cleanup()
+        result = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=10)
+        assert result.returncode == 125
+        assert result.stdout == "" and "attempt_forwarder_start_failed" in result.stderr
+        assert "--unshare-net" in cmd
+        with pytest.raises(ReviewIsolationError, match="egress_unavailable"):
+            boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
+    finally:
+        boundary.cleanup()
+
+
+@pytest.mark.parametrize("denial", ["hostname", "loopback", "mixed", "non_connect", "redirect"])
+def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch, denial):
+    import asyncio
+    import ssl
+
+    from scripts.agent_runtime.attempt_network import load_allowlist
+
+    root, _ = world
+    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
+    allowed = sorted(load_allowlist("agy"))[0]
+
+    class Forbidden(http.server.BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"FORBIDDEN_HTTP_SENTINEL")
+
+        def log_message(self, *args):
+            pass
+
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Forbidden)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    tls_server = None
+    tls_thread = None
+    try:
+        control_url = f"http://127.0.0.1:{server.server_port}/"
+        with urllib.request.build_opener(urllib.request.ProxyHandler({})).open(control_url, timeout=2) as control:
+            assert control.read() == b"FORBIDDEN_HTTP_SENTINEL"
+
+        async def resolve(host):
+            return ["8.8.8.8", "::ffff:127.0.0.1"] if denial == "mixed" else ["127.0.0.1"]
+
+        monkeypatch.setattr(boundary.egress, "_resolve", resolve)
+        url = "https://not-allowed.example/" if denial == "hostname" else f"https://{allowed}/"
+        if denial == "redirect":
+            # A provider-shaped TLS fixture redirects the native HTTP client
+            # toward a forbidden host service; the redirect never reaches it.
+            cert, key = tmp_path / "cert.pem", tmp_path / "key.pem"
+            subprocess.run(["openssl", "req", "-x509", "-newkey", "rsa:2048", "-nodes", "-days", "1",
+                            "-subj", "/CN=provider.example", "-keyout", str(key), "-out", str(cert)],
+                           capture_output=True, check=True, timeout=10)
+
+            class Redirect(Forbidden):
+                def do_GET(self):
+                    self.send_response(302)
+                    self.send_header("Location", f"https://127.0.0.1:{server.server_port}/forbidden")
+                    self.end_headers()
+
+            tls_server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Redirect)
+            context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+            context.load_cert_chain(cert, key)
+            tls_server.socket = context.wrap_socket(tls_server.socket, server_side=True)
+            tls_thread = threading.Thread(target=tls_server.serve_forever, daemon=True)
+            tls_thread.start()
+
+            async def good_resolve(host):
+                return ["8.8.8.8"]
+
+            async def fixture_connect(addresses):
+                return await asyncio.open_connection("127.0.0.1", tls_server.server_port)
+
+            monkeypatch.setattr(boundary.egress, "_resolve", good_resolve)
+            monkeypatch.setattr(boundary.egress, "_connect", fixture_connect)
+        if denial == "non_connect":
+            script = (
+                "import socket,os,urllib.parse\n"
+                "p=urllib.parse.urlsplit(os.environ['HTTPS_PROXY'])\n"
+                "with socket.create_connection((p.hostname,p.port),timeout=2) as client:\n"
+                " client.sendall(b'GET / HTTP/1.1\\r\\n\\r\\n')\n"
+                " assert client.recv(1024).startswith(b'HTTP/1.1 403')\n"
+                "print('DENIED:proxy_method')\n"
+            )
+        else:
+            script = (
+                "import urllib.request,urllib.error,ssl\n"
+                "try:\n"
+                f" urllib.request.urlopen({url!r},context=ssl._create_unverified_context(),timeout=3).read()\n"
+                "except urllib.error.URLError as e:\n"
+                " assert '403 Forbidden' in str(e),str(e)\n"
+                " print('DENIED:proxy_target')\n"
+                "else: raise AssertionError('forbidden destination exposed')\n"
+            )
+        cmd, env = boundary.wrap([sys.executable, "-c", script], {})
+        proc = subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, text=True, timeout=15)
+        assert proc.returncode == 0, proc.stderr
+        assert proc.stdout.strip().startswith("DENIED:")
+        if denial == "redirect":
+            assert any(record["bytes"] > 0 for record in boundary.egress.records)
+    finally:
+        if tls_server is not None:
+            tls_server.shutdown()
+            tls_server.server_close()
+            tls_thread.join(2)
+        server.shutdown()
+        server.server_close()
+        thread.join(2)
+        boundary.cleanup()
+
+
+def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monkeypatch):
+    root, _ = world
+    boundary = AttemptBoundary(agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy"))
+    try:
+        cmd, env = boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
+        boundary.forwarder.write_text("raise SystemExit(125)\n")
+        result = subprocess.run(cmd, env=env, capture_output=True, text=True, timeout=10)
+        assert result.returncode == 125 and result.stdout == ""
+        assert "--unshare-net" in cmd
+
+        def fail(**kwargs):
+            assert kwargs["network_allowed"] is False
+            raise ReviewIsolationError("sandbox_probe_allow_failed:fixture")
+
+        monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_host_sandbox", fail)
+        with pytest.raises(ReviewIsolationError, match="sandbox_probe_allow_failed"):
+            boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
+    finally:
+        boundary.cleanup()
+
+
+def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
+    from scripts.agent_runtime.attempt_boundary import linux_claude_auth
+
+    _, home = world
+    credential = home / ".claude" / ".credentials.json"
+    credential.parent.mkdir()
+    access = "fixture-access-" + "x" * 30
+    refresh = "fixture-refresh-" + "y" * 30
+    credential.write_text(json.dumps({"claudeAiOauth": {"accessToken": access, "refreshToken": refresh,
+                                                      "expiresAt": 4_102_444_800_000}}))
+    credential.chmod(0o600)
+    assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}
+    credential.chmod(0o644)
+    with pytest.raises(ReviewIsolationError, match="not_private"):
+        linux_claude_auth()
+    credential.chmod(0o600)
+    credential.write_text(json.dumps({"claudeAiOauth": {"accessToken": access, "expiresAt": 0}}))
+    with pytest.raises(ReviewIsolationError, match="expired"):
+        linux_claude_auth()
+    credential.write_text("not json")
+    with pytest.raises(ReviewIsolationError, match="invalid"):
+        linux_claude_auth()
+    monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", access)
+    assert linux_claude_auth() == {}  # existing selected env wins
