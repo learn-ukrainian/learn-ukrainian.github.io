@@ -27,115 +27,20 @@ from typing import Any
 import yaml
 
 from scripts.common.repo_root import project_interpreter
-from scripts.review.isolation import (
-    ReviewIsolationError,
-    prepare_host_sandbox,
-    stage_engine_auth,
-    wrap_argv_with_sandbox,
+
+from .attempt_safe_read import (
+    MAX_ATTEMPT_READ_BYTES as MAX_ATTEMPT_READ_BYTES,
 )
-
-from .attempt_network import AttemptEgress, load_allowlist
+from .attempt_safe_read import (
+    AttemptReadError as AttemptReadError,
+)
+from .attempt_safe_read import (
+    safe_attempt_file_size as safe_attempt_file_size,
+)
+from .attempt_safe_read import (
+    safe_read_attempt_file as safe_read_attempt_file,
+)
 from .env_sanitize import build_agent_env
-
-# Bound bytes consumed by a parent read, including resumed suffixes.
-MAX_ATTEMPT_READ_BYTES = 64 * 1024 * 1024
-
-
-class AttemptReadError(ReviewIsolationError):
-    """Body-free refusal of a parent read of a seat-controlled file."""
-
-
-@contextlib.contextmanager
-def _checked_attempt_fd(path: Path, trusted_root: Path):
-    """Walk beneath a parent-owned root resolved before launching the seat.
-
-    Ancestors above that root are trusted; root and every component beneath it
-    are opened with NOFOLLOW. Never resolve a seat-controlled path at read time.
-    """
-    path = path.absolute()
-    if (
-        not trusted_root.is_absolute() or ".." in path.parts or ".." in trusted_root.parts
-        or not path.is_relative_to(trusted_root) or path == trusted_root
-    ):
-        raise AttemptReadError("attempt_read_outside_root")
-    directory = file_fd = None
-    try:
-        flags = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC
-        directory = os.open(trusted_root, flags | os.O_DIRECTORY)
-        for component in path.relative_to(trusted_root).parts[:-1]:
-            child = os.open(component, flags | os.O_DIRECTORY, dir_fd=directory)
-            os.close(directory)
-            directory = child
-        file_fd = os.open(path.name, flags | os.O_NONBLOCK | os.O_NOCTTY, dir_fd=directory)
-        _check_attempt_fd(file_fd)
-        yield file_fd
-        _check_attempt_fd(file_fd)
-    except FileNotFoundError:
-        raise
-    except OSError as exc:
-        raise AttemptReadError("attempt_read_unsafe_path") from exc
-    finally:
-        if file_fd is not None:
-            os.close(file_fd)
-        if directory is not None:
-            os.close(directory)
-
-
-def _check_attempt_fd(file_fd: int) -> os.stat_result:
-    info = os.fstat(file_fd)
-    if not stat.S_ISREG(info.st_mode):
-        raise AttemptReadError("attempt_read_not_regular")
-    if info.st_uid != os.getuid():
-        raise AttemptReadError("attempt_read_wrong_owner")
-    if info.st_nlink != 1:
-        raise AttemptReadError("attempt_read_link_count")
-    return info
-
-
-def safe_attempt_file_size(path: Path, *, trusted_root: Path = Path("/")) -> int:
-    """Size a checked regular fd without reading its contents."""
-    with _checked_attempt_fd(path, trusted_root) as file_fd:
-        return _check_attempt_fd(file_fd).st_size
-
-
-def safe_read_attempt_file(
-    path: Path,
-    *,
-    trusted_root: Path = Path("/"),
-    max_bytes: int = MAX_ATTEMPT_READ_BYTES,
-    offset: int = 0,
-    prefix: bool = False,
-    tail: bool = False,
-) -> bytes:
-    """Read a bounded full file, suffix, prefix or tail from one checked fd.
-
-    Full/suffix reads refuse overflow; prefix/tail reads intentionally stop at
-    the byte bound. NONBLOCK avoids hanging on a substituted FIFO. Missing
-    optional files keep FileNotFoundError; refusals contain no path or data.
-    """
-    if max_bytes < 0 or offset < 0 or (tail and (offset or prefix)):
-        raise AttemptReadError("attempt_read_invalid_bound")
-    with _checked_attempt_fd(path, trusted_root) as file_fd:
-        size = _check_attempt_fd(file_fd).st_size
-        if tail:
-            offset = max(0, size - max_bytes)
-        if offset > size:
-            raise AttemptReadError("attempt_read_invalid_offset")
-        limited = prefix or tail
-        if not limited and size - offset > max_bytes:
-            raise AttemptReadError("attempt_read_oversized")
-        os.lseek(file_fd, offset, os.SEEK_SET)
-        chunks: list[bytes] = []
-        remaining = max_bytes if limited else max_bytes + 1
-        while remaining:
-            chunk = os.read(file_fd, min(remaining, 65536))
-            if not chunk:
-                break
-            chunks.append(chunk)
-            remaining -= len(chunk)
-        if not limited and (remaining == 0 or _check_attempt_fd(file_fd).st_size - offset > max_bytes):
-            raise AttemptReadError("attempt_read_oversized")
-        return b"".join(chunks)
 
 
 def linux_claude_auth() -> dict[str, str]:
@@ -145,6 +50,8 @@ def linux_claude_auth() -> dict[str, str]:
     needs equivalent selection from its credential file, never a home grant,
     refresh token, login mutation or copied credential store.
     """
+    from scripts.review.isolation import ReviewIsolationError
+
     if platform.system() != "Linux" or any(os.environ.get(k) for k in (
         "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN",
     )):
@@ -184,6 +91,7 @@ def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]
     ledger and diff. No file referred to by an input's contents is opened.
     """
     from scripts.build.fresh.manifest import pinned_entries
+    from scripts.review.isolation import ReviewIsolationError
     from scripts.review.prompts.eligibility import pin_refusals
 
     if manifest.get("kind") not in {"plan", "lesson"}:
@@ -305,6 +213,8 @@ def runtime_files(binary: Path) -> list[Path]:
     Never grant a native executable's parent (which may be the user's bin).
     Python's dedicated installation is needed by the byte-only MCP proxy.
     """
+    from scripts.review.isolation import ReviewIsolationError
+
     executable = binary.resolve(strict=True)
     roots = [executable]
     with executable.open("rb") as handle:
@@ -330,6 +240,9 @@ def runtime_files(binary: Path) -> list[Path]:
 
 class AttemptBoundary:
     def __init__(self, *, agent: str, tool_config: dict[str, Any]):
+        from scripts.review.isolation import ReviewIsolationError, stage_engine_auth
+
+        from .attempt_network import AttemptEgress, load_allowlist
         from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
 
         # Claude's adapter must land with its own eligible cross-family review
@@ -428,6 +341,8 @@ class AttemptBoundary:
             raise
 
     def wrap(self, cmd: list[str], env_overrides: dict[str, str]) -> tuple[list[str], dict[str, str]]:
+        from scripts.review.isolation import ReviewIsolationError, prepare_host_sandbox, wrap_argv_with_sandbox
+
         binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
         runtime = runtime_files(binary)
         reject = Path(self.tool_config["review_input_root"]).resolve()
@@ -476,6 +391,8 @@ def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool
     tc = tool_config or {}
     if not (tc.get("review_id") or tc.get("attempt_id")):
         return None
+    from scripts.review.isolation import ReviewIsolationError
+
     required = ("review_id", "attempt_id", "review_manifest", "review_input_root", "mcp_config_path")
     if mode != "read-only" or session_id is not None or not tc.get("strict_mcp_config"):
         raise ReviewIsolationError("attempt_requires_fresh_read_only_sources")

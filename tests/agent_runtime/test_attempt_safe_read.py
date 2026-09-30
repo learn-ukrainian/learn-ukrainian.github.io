@@ -2,6 +2,9 @@
 from __future__ import annotations
 
 import os
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -11,12 +14,71 @@ from scripts.agent_runtime import runner
 from scripts.agent_runtime.adapters import agy
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.codex import CodexAdapter
-from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.agent_runtime.result import ParseResult
 from scripts.agent_runtime.watchdog import tail_liveness_file_for_debug
 
 SENTINEL = b"FORBIDDEN_PARENT_READ_SENTINEL"
 UUID = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+
+
+@pytest.fixture(scope="module")
+def scripts_only_tree(tmp_path_factory):
+    root = tmp_path_factory.mktemp("safe-read-imports")
+    scripts = Path(__file__).resolve().parents[2] / "scripts"
+    shutil.copytree(scripts, root / "scripts", ignore=shutil.ignore_patterns("__pycache__"))
+    return root
+
+
+@pytest.mark.parametrize("module", [
+    "scripts.agent_runtime.attempt_safe_read",
+    "scripts.agent_runtime.attempt_boundary",
+    "scripts.agent_runtime.runner",
+    "scripts.agent_runtime.watchdog",
+    *[
+        f"scripts.agent_runtime.adapters.{path.stem}"
+        for path in sorted((Path(__file__).resolve().parents[2] / "scripts/agent_runtime/adapters").glob("*.py"))
+    ],
+])
+def test_scripts_only_import_does_not_load_isolation(scripts_only_tree, module):
+    probe = """
+import importlib
+import importlib.abc
+import pathlib
+import sys
+
+root = pathlib.Path.cwd()
+sys.path[:0] = [str(root), str(root / 'scripts')]
+blocked = {'isolation', 'thread_handoff', 'task_identity'}
+
+class RejectIsolation(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.rsplit('.', 1)[-1] in blocked:
+            raise AssertionError('isolation stack imported: ' + fullname)
+
+sys.meta_path.insert(0, RejectIsolation())
+assert not (root / 'agents_extensions').exists()
+module = importlib.import_module(sys.argv[1])
+assert pathlib.Path(module.__file__).is_relative_to(root / 'scripts')
+assert not any(name.rsplit('.', 1)[-1] in blocked for name in sys.modules)
+print('scripts-only import OK')
+"""
+    result = subprocess.run(
+        [sys.executable, "-I", "-c", probe, module],
+        cwd=scripts_only_tree,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == 0, f"{module}: stdout={result.stdout!r} stderr={result.stderr!r}"
+    assert result.stdout.strip() == "scripts-only import OK"
+
+
+def test_boundary_reexports_leaf_helpers():
+    from scripts.agent_runtime import attempt_safe_read
+
+    for name in ("AttemptReadError", "MAX_ATTEMPT_READ_BYTES", "safe_attempt_file_size", "safe_read_attempt_file"):
+        assert getattr(boundary, name) is getattr(attempt_safe_read, name)
 
 
 @pytest.fixture

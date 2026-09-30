@@ -44,7 +44,7 @@ from pathlib import Path
 
 import psutil
 
-from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 
 # Poll interval for the mtime fallback thread. 5s is a good balance — fast
 # enough to extend the stall clock promptly, slow enough that the overhead

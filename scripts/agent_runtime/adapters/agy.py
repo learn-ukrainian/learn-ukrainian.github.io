@@ -96,7 +96,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
-from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_attempt_file_size, safe_read_attempt_file
 
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output

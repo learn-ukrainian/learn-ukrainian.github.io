@@ -15,7 +15,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
-from scripts.agent_runtime.attempt_boundary import safe_read_attempt_file
+from scripts.agent_runtime.attempt_safe_read import safe_read_attempt_file
 
 from ..result import ParseResult
 from .base import InvocationPlan

@@ -43,7 +43,7 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult

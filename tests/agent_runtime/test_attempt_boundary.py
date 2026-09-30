@@ -290,9 +290,9 @@ def test_claude_boundary_refuses_before_input_reads_or_provisioning(monkeypatch)
 
     monkeypatch.setattr("scripts.agent_runtime.review_mcp.verify_review_attempt_paths", unexpected)
     monkeypatch.setattr(tempfile, "TemporaryDirectory", unexpected)
-    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.stage_engine_auth", unexpected)
+    monkeypatch.setattr("scripts.review.isolation.stage_engine_auth", unexpected)
     monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.SourcesConnection", unexpected)
-    monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.AttemptEgress", unexpected)
+    monkeypatch.setattr("scripts.agent_runtime.attempt_network.AttemptEgress", unexpected)
     with pytest.raises(ReviewIsolationError, match=r"^attempt_boundary_claude_adapter_pending$"):
         AttemptBoundary(agent="claude", tool_config={})
 
@@ -694,7 +694,7 @@ def test_namespace_and_forwarder_failure_have_no_fallback(world, tmp_path, monke
             assert kwargs["network_allowed"] is False
             raise ReviewIsolationError("sandbox_probe_allow_failed:fixture")
 
-        monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_host_sandbox", fail)
+        monkeypatch.setattr("scripts.review.isolation.prepare_host_sandbox", fail)
         with pytest.raises(ReviewIsolationError, match="sandbox_probe_allow_failed"):
             boundary.wrap([sys.executable, "-c", "print('MUST_NOT_LAUNCH')"], {})
     finally:

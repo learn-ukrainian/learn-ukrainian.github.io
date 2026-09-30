@@ -68,7 +68,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
-from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError, safe_read_attempt_file
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
