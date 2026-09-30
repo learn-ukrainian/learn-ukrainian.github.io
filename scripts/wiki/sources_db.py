@@ -1799,7 +1799,7 @@ def _search_sections_fts5(
     max_chunk_candidates: int = 100,
     max_sections: int = 30,
 ) -> list[dict]:
-    """Return section candidates grouped from chunk-level FTS5 hits."""
+    """Return section and unsectioned chunk candidates from textbook FTS5 hits."""
     try:
         conn = _get_conn()
     except FileNotFoundError:
@@ -1810,8 +1810,6 @@ def _search_sections_fts5(
     if not fts_query:
         return []
 
-    extra_where = ["s.parent_section_id IS NOT NULL"]
-    extra_params: list[object] = []
     # #1340 (2026-04-20): grade filter intentionally NOT applied here.
     # CEFR (L2 framework) does not map onto Ukrainian school grades
     # (L1 native staging). Grade 5 systematic phonetics is exactly
@@ -1827,7 +1825,7 @@ def _search_sections_fts5(
     _ = track  # keep parameter live for downstream callers
 
     rows = conn.execute(
-        f"""
+        """
         SELECT
             s.id,
             s.chunk_id,
@@ -1841,11 +1839,10 @@ def _search_sections_fts5(
         FROM textbooks_fts
         JOIN textbooks s ON s.id = textbooks_fts.rowid
         WHERE textbooks_fts MATCH ?
-          AND {' AND '.join(extra_where)}
         ORDER BY rank, s.id
         LIMIT ?
         """,
-        (fts_query, *extra_params, max_chunk_candidates),
+        (fts_query, max_chunk_candidates),
     ).fetchall()
 
     if not rows:
@@ -1860,6 +1857,8 @@ def _search_sections_fts5(
         "best_rank": float("inf"),
         "matched_chunk_ids": [],
     })
+    by_chunk: dict[str, dict] = {}
+    chunk_rows: dict[str, sqlite3.Row] = {}
 
     for row in rows:
         text = str(row["text"] or "")
@@ -1872,20 +1871,31 @@ def _search_sections_fts5(
         if not bucket_a_hit and not bucket_b_hit:
             continue
 
-        section_id = int(row["parent_section_id"])
-        aggregated = by_section[section_id]
+        if row["parent_section_id"] is None:
+            chunk_id = str(row["chunk_id"])
+            aggregated = by_chunk.setdefault(chunk_id, {
+                "bucket_a_hits": 0,
+                "bucket_b_hits": 0,
+                "best_rank": float("inf"),
+                "matched_chunk_ids": [],
+            })
+            chunk_rows[chunk_id] = row
+        else:
+            section_id = int(row["parent_section_id"])
+            aggregated = by_section[section_id]
         aggregated["bucket_a_hits"] += int(bucket_a_hit)
         aggregated["bucket_b_hits"] += int(bucket_b_hit)
         aggregated["best_rank"] = min(float(row["rank"] or 0.0), aggregated["best_rank"])
         aggregated["matched_chunk_ids"].append(str(row["chunk_id"]))
 
-    if not by_section:
+    if not by_section and not by_chunk:
         return []
 
-    ranked_sections = sorted(
-        (
+    ranked_candidates = sorted(
+        [
             {
-                "section_id": section_id,
+                "kind": "section",
+                "candidate_id": section_id,
                 "bucket_a_hits": data["bucket_a_hits"],
                 "bucket_b_hits": data["bucket_b_hits"],
                 "section_score": (data["bucket_a_hits"] * 3) + data["bucket_b_hits"],
@@ -1893,45 +1903,94 @@ def _search_sections_fts5(
                 "matched_chunk_ids": data["matched_chunk_ids"],
             }
             for section_id, data in by_section.items()
-        ),
+        ]
+        + [
+            {
+                "kind": "chunk",
+                "candidate_id": chunk_id,
+                "bucket_a_hits": data["bucket_a_hits"],
+                "bucket_b_hits": data["bucket_b_hits"],
+                "section_score": (data["bucket_a_hits"] * 3) + data["bucket_b_hits"],
+                "best_rank": data["best_rank"],
+                "matched_chunk_ids": data["matched_chunk_ids"],
+            }
+            for chunk_id, data in by_chunk.items()
+        ],
         key=lambda row: (
             -int(row["section_score"]),
             float(row["best_rank"]),
-            int(row["section_id"]),
+            (0, int(row["candidate_id"]))
+            if row["kind"] == "section"
+            else (1, str(row["candidate_id"])),
         ),
-    )[:max_sections]
+    )
+    selected_candidates = ranked_candidates[:max_sections]
+    if by_section and not any(row["kind"] == "section" for row in selected_candidates):
+        selected_candidates[-1:] = [next(row for row in ranked_candidates if row["kind"] == "section")]
+        selected_candidates.sort(
+            key=lambda row: (
+                -int(row["section_score"]),
+                float(row["best_rank"]),
+                (0, int(row["candidate_id"]))
+                if row["kind"] == "section"
+                else (1, str(row["candidate_id"])),
+            ),
+        )
 
-    section_ids = [int(row["section_id"]) for row in ranked_sections]
-    placeholders = ",".join("?" * len(section_ids))
-    section_rows = conn.execute(
-        f"""
-        SELECT
-            section_id,
-            source_file,
-            grade,
-            section_title,
-            section_number,
-            page_start,
-            page_end,
-            chunk_count,
-            full_text
-        FROM textbook_sections
-        WHERE section_id IN ({placeholders})
-        """,
-        tuple(section_ids),
-    ).fetchall()
-    section_meta = {int(row["section_id"]): dict(row) for row in section_rows}
+    section_ids = [
+        int(row["candidate_id"])
+        for row in selected_candidates
+        if row["kind"] == "section"
+    ]
+    section_meta: dict[int, dict] = {}
+    if section_ids:
+        placeholders = ",".join("?" * len(section_ids))
+        section_rows = conn.execute(
+            f"""
+            SELECT
+                section_id,
+                source_file,
+                grade,
+                section_title,
+                section_number,
+                page_start,
+                page_end,
+                chunk_count,
+                full_text
+            FROM textbook_sections
+            WHERE section_id IN ({placeholders})
+            """,
+            tuple(section_ids),
+        ).fetchall()
+        section_meta = {int(row["section_id"]): dict(row) for row in section_rows}
 
     results: list[dict] = []
-    for ranked in ranked_sections:
-        meta = section_meta.get(int(ranked["section_id"]))
+    for ranked in selected_candidates:
+        if ranked["kind"] == "chunk":
+            row = chunk_rows[str(ranked["candidate_id"])]
+            chunk_id = str(row["chunk_id"])
+            text = str(row["text"] or "")
+            results.append({
+                **dict(row),
+                **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
+                "full_text": text,
+                "fts_score": float(ranked["best_rank"]),
+                "unit_key": f"textbook_sections:{chunk_id}",
+                "corpus": "textbook_sections",
+                "parent_key": str(row["source_file"] or ""),
+                "source_type": "textbook",
+            })
+            continue
+
+        meta = section_meta.get(int(ranked["candidate_id"]))
         if not meta:
             continue
         results.append({
             **meta,
-            **ranked,
+            **{key: value for key, value in ranked.items() if key not in {"kind", "candidate_id"}},
+            "section_id": int(ranked["candidate_id"]),
             "text": meta["full_text"],
-            "chunk_id": f"S{meta['section_id']}",
+            "chunk_id": f"S{ranked['candidate_id']}",
             "corpus": "textbook_sections",
             # Do NOT set "unit_key" here — the dispatcher computes it
             # downstream without the "S" prefix to match the embedding
@@ -2362,7 +2421,7 @@ def _dispatch_corpus_search(
     candidate_k_per_corpus: int,
 ) -> list[dict]:
     if corpus == "textbook_sections":
-        section_candidates = _search_sections_fts5(
+        textbook_candidates = _search_sections_fts5(
             bucket_a_phrases,
             bucket_b_keywords,
             track=track,
@@ -2374,11 +2433,19 @@ def _dispatch_corpus_search(
         # entries written by load_corpus_units. Without this, the
         # dense rerank lookup misses every chunked section's
         # sub-units and zeroes out the score (Codex msg #459).
-        candidates = _expand_to_chunk_candidates(
-            section_candidates,
-            corpus="textbook_sections",
-            parent_id_field="section_id",
-        )
+        candidates = [
+            expanded
+            for candidate in textbook_candidates
+            for expanded in (
+                [candidate]
+                if candidate.get("section_id") is None
+                else _expand_to_chunk_candidates(
+                    [candidate],
+                    corpus="textbook_sections",
+                    parent_id_field="section_id",
+                )
+            )
+        ]
     elif corpus in {"modern_literary", "archaic_literary"}:
         candidates = _search_literary_candidates(
             bucket_a_phrases,
@@ -2408,8 +2475,9 @@ def _dispatch_corpus_search(
         return []
 
     # Textbook keyword_rank follows _search_sections_fts5 order: section_score
-    # first, then best BM25. In mixed sets, dense scores (~0.3–0.8 × prior)
-    # outrank keyword RRF scores (~0.016 × prior) by design.
+    # first, then best BM25, shared by sections and unsectioned chunks. In
+    # mixed sets, dense scores (~0.3–0.8 × prior) outrank keyword RRF scores
+    # (~0.016 × prior) by design.
     for idx, candidate in enumerate(candidates, start=1):
         candidate.setdefault("keyword_rank", idx)
 
@@ -2683,22 +2751,31 @@ def search_sources(
         )
     expanded = [_expand_neighbor_context(match) for match in merged[:max(limit * 3, limit)]]
     capped = _apply_context_cap(track, expanded)
+    def is_textbook_section(match: dict) -> bool:
+        return match.get("corpus") == "textbook_sections" and (
+            "parent_section_id" not in match or match["parent_section_id"] is not None
+        )
+
     # The guarantee applies to what the caller receives, so check the
     # returned slice, not the longer capped list.
     if require_textbook_section and not any(
-        match.get("corpus") == "textbook_sections" for match in capped[:limit]
+        is_textbook_section(match) for match in capped[:limit]
     ):
         textbook_section = next(
             (
                 match
                 for match in [*capped, *expanded]
-                if match.get("corpus") == "textbook_sections"
+                if is_textbook_section(match)
             ),
             None,
         )
         if textbook_section is None:
             raw_textbook_section = next(
-                (match for match in merged if match.get("corpus") == "textbook_sections"),
+                (
+                    match
+                    for match in merged
+                    if is_textbook_section(match)
+                ),
                 None,
             )
             if raw_textbook_section is not None:
@@ -2709,7 +2786,7 @@ def search_sources(
                 *[
                     match
                     for match in capped
-                    if match.get("corpus") != "textbook_sections"
+                    if not is_textbook_section(match)
                     or match.get("unit_key") != textbook_section.get("unit_key")
                 ],
             ]
