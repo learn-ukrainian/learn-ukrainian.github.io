@@ -23,10 +23,11 @@ from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
 from tests.helpers.python import require_repo_venv
 from tests.launcher_sandbox import copy_slot_registry
+from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 
 REPO = Path(__file__).resolve().parents[1]
 # The checkout run_launcher starts launchers from; rules_core_absent tests get a
-# view of REPO without the rules core (tests/conftest.py).
+# view of REPO without the rules core (tests/rules_core_view.py).
 LAUNCH_ROOT = REPO
 PUBLIC = (
     "start-claude.sh",
