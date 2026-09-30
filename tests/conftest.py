@@ -20,6 +20,7 @@ import weakref
 from collections.abc import Collection, Generator
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
@@ -1706,10 +1707,18 @@ class _NeedsArtifactCollection:
     (``slow``) or skips for another reason fails the audit. Under xdist every
     worker collects the same items and gw0 writes them; the controller
     collects nothing.
+
+    The path reaches workers through ``workerinput``, never the environment:
+    a test that runs a child pytest would inherit the variable and overwrite
+    this run's list with the child's.
     """
 
     def __init__(self, path: Path) -> None:
         self.path = path
+
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_configure_node(self, node: Any) -> None:
+        node.workerinput[LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR] = str(self.path)
 
     @pytest.hookimpl(tryfirst=True)
     def pytest_collection_modifyitems(self, config: pytest.Config, items: list[pytest.Item]) -> None:
@@ -1725,7 +1734,11 @@ def pytest_configure(config: pytest.Config) -> None:
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
-    if collected_path := os.environ.get(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR):
+    if hasattr(config, "workerinput"):
+        collected_path = config.workerinput.get(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR)
+    else:
+        collected_path = os.environ.pop(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR, None)
+    if collected_path:
         config.pluginmanager.register(_NeedsArtifactCollection(Path(collected_path)), "needs-artifact-collection")
     _install_socket_guard()
     config.addinivalue_line(
