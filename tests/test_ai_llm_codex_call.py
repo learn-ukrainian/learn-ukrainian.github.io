@@ -17,7 +17,7 @@ def _result(
     ok: bool,
     response: str = "",
     stderr_excerpt: str | None = None,
-    model: str = "gpt-6-sol",
+    model: str = "gpt-6.1-sol",
 ) -> Result:
     return Result(
         ok=ok,
@@ -98,7 +98,7 @@ def test_respects_max_retries(tmp_path):
 def test_codex_model_ladder_is_gpt6_only():
     from ai_llm.codex_call import CODEX_MODEL_LADDER
 
-    assert CODEX_MODEL_LADDER == ("gpt-6-sol",)
+    assert CODEX_MODEL_LADDER == ("gpt-6.1-sol",)
 
 
 def test_retry_exhaustion_never_falls_back_to_gpt5(tmp_path):
@@ -110,7 +110,7 @@ def test_retry_exhaustion_never_falls_back_to_gpt5(tmp_path):
         )
     assert result.error_message == "broken"
     assert invoke.call_count == 2
-    assert {call.kwargs["model"] for call in invoke.call_args_list} == {"gpt-6-sol"}
+    assert {call.kwargs["model"] for call in invoke.call_args_list} == {"gpt-6.1-sol"}
     assert {call.kwargs["effort"] for call in invoke.call_args_list} == {"high"}
 
 

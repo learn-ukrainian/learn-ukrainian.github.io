@@ -20,13 +20,39 @@ def adapter():
     return CursorAdapter()
 
 
-@pytest.mark.parametrize("model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra"])
-def test_cursor_adapter_rejects_retired_gpt56_model_before_invocation(adapter, tmp_path, model):
-    with pytest.raises(ValueError, match="is retired"):
+@pytest.mark.parametrize(
+    "model",
+    ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra", "cursor:GPT-6-Sol-high"],
+)
+def test_cursor_adapter_rejects_catalog_retired_model_before_invocation(adapter, tmp_path, monkeypatch, model):
+    """#9230: the guard derives from catalog retirement, before any workspace write."""
+    monkeypatch.setattr(
+        adapter, "_ensure_workspace_mcp_config", lambda *a: pytest.fail("retired model reached workspace setup")
+    )
+    with pytest.raises(ValueError, match=r"^Cursor adapter: model .* is retired in the model catalog"):
         adapter.build_invocation(
-            prompt="review", mode="read-only", cwd=tmp_path, model=model,
-            task_id="retired-model", session_id=None, tool_config=None,
+            prompt="review",
+            mode="read-only",
+            cwd=tmp_path,
+            model=model,
+            task_id="retired-model",
+            session_id=None,
+            tool_config=None,
         )
+
+
+@pytest.mark.parametrize("model", ["composer-2.5", "grok-4.7"])
+def test_cursor_adapter_forwards_active_explicit_model(adapter, tmp_path, model):
+    plan = adapter.build_invocation(
+        prompt="review",
+        mode="read-only",
+        cwd=tmp_path,
+        model=model,
+        task_id="active-model",
+        session_id=None,
+        tool_config=None,
+    )
+    assert plan.cmd[plan.cmd.index("--model") + 1] == model
 
 
 def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatch):

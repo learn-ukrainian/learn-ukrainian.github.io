@@ -60,6 +60,9 @@ def hermetic_reap(monkeypatch, tmp_path):
         return [post_task_reap.reap_worktrees.PullRequestState(1, "MERGED", head)], None
 
     monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_pr_states", merged_pr)
+    # The commit-SHA PR search is a PR guard too: a failed lookup keeps the
+    # checkout, so the hermetic repo answers it instead of shelling out to gh.
+    monkeypatch.setattr(post_task_reap.reap_worktrees, "_query_prs_by_head_sha", lambda _repo, _sha: ([], None))
 
     # Shared-probe control (#7127): the bound checkout resolves to a GitHub
     # repository and provably has no OPEN PR, unless a test overrides it.

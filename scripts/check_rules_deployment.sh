@@ -12,19 +12,9 @@ cd "$PROJECT_ROOT"
 # shellcheck disable=SC1091
 source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
 
+# Entries are anchored at the target root, exactly as deploy excludes them.
 path_matches_declared_entry() {
-    local relative="$1"
-    local entries="$2"
-    local entry normalized
-    for entry in $entries; do
-        normalized="${entry%/}"
-        # Entries intentionally use deploy-compatible globs such as *-epic.
-        # shellcheck disable=SC2053
-        if [[ "$relative" == $normalized || "$relative" == $normalized/* ]]; then
-            return 0
-        fi
-    done
-    return 1
+    declared_paths_match "$1" "$2"
 }
 
 tracked_mirror_source() {
@@ -118,19 +108,10 @@ check_pair() {
     shift 2
 
     local diff_args=(-rq -x .DS_Store)
-    local orphan normalized
-    for orphan in "$@"; do
-        normalized="${orphan%/}"
-        # A subtree declaration such as skills/* must exclude the subtree
-        # root. Passing its basename ("*") to diff would mask every path.
-        if [[ "$normalized" == */\* ]]; then
-            normalized="${normalized%/\*}"
-        fi
-        diff_args+=(-x "$normalized")
-        if [[ "$normalized" == */* ]]; then
-            diff_args+=(-x "${normalized##*/}")
-        fi
-    done
+    local name
+    while IFS= read -r name; do
+        diff_args+=(-x "$name")
+    done < <(declared_diff_excludes "$src" "$dst" "$*")
     if [[ ! -d "$src" ]]; then
         echo "::error::Source dir missing: $src"
         return 1

@@ -178,7 +178,7 @@ def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
 
 
 def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
-    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-astra")
+    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol")
     assert sustained.returncode == 0, sustained.stderr
     assert "would probe" in sustained.stdout
     assert sustained.stdout.index("would claim lease") < sustained.stdout.index("would mint and bootstrap")
@@ -186,7 +186,7 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 
     governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", env={"SESSION_EPIC": "foreign"})
     assert governor.returncode == 0, governor.stderr
-    assert "--model gpt-6-sol" in governor.stdout
+    assert "--model gpt-6.1-sol" in governor.stdout
     assert "governor SESSION_EPIC=<unset>" in governor.stdout
     assert "would claim lease" not in governor.stdout
 
@@ -194,9 +194,9 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 @pytest.mark.parametrize(
     ("launcher", "args", "model", "effort"),
     [
-        ("start-codex.sh", [], "gpt-6-sol", "high"),
-        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6-sol", "high"),
-        ("start-codex.sh", ["--model", "gpt-6-astra", "--effort", "max"], "gpt-6-astra", "max"),
+        ("start-codex.sh", [], "gpt-6.1-sol", "high"),
+        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6.1-sol", "high"),
+        ("start-codex.sh", ["--model", "gpt-6.1-sol", "--effort", "max"], "gpt-6.1-sol", "max"),
     ],
 )
 def test_codex_launchers_pin_roles_and_preserve_explicit_effort(launcher, args, model, effort):
@@ -1099,7 +1099,7 @@ def test_hermes_help_never_probes_or_claims(provider: str) -> None:
 
 
 @pytest.mark.parametrize("provider,model,route", (
-    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6-sol", "openai-codex"),
+    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6.1-sol", "openai-codex"),
 ))
 def test_hermes_real_exec_preserves_literal_prompt_argv(
     tmp_path: Path, provider: str, model: str, route: str,

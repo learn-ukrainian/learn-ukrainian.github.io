@@ -46,10 +46,12 @@ from scripts.agent_runtime.review_mcp import (
     verify_codex_review_effective_mcp,
     verify_review_attempt_paths,
 )
-from scripts.common.repo_root import resolve_repo_root
+from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
+from scripts.review import render_contract
 from scripts.review.receipts import ledger as ledger_module
 from scripts.review.receipts.ledger import REVIEW_TOOLS
+from scripts.review.render_contract import ReviewContractError
 
 
 @pytest.fixture(autouse=True)
@@ -92,6 +94,18 @@ def _skip_advisory_dispatch_probes(monkeypatch: pytest.MonkeyPatch) -> None:
     """
     for name in ("_warn_venv_integrity", "_warn_node_modules_integrity"):
         monkeypatch.setattr(delegate_cli, name, lambda: None)
+
+
+@pytest.fixture(autouse=True)
+def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Dispatch tests here dispatch literal prompts with no render record; the contract checks have their own tests
+    (#9163), here and in test_review_contract.py."""
+    monkeypatch.setattr(
+        review_mcp_module,
+        "check_review_contract",
+        lambda _prompt_file, prompt_text: {"prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()},
+    )
+    monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
 
 
 @pytest.fixture
@@ -2481,6 +2495,53 @@ def test_fallback_still_works_for_an_attempt_provisioned_elsewhere(manifest_file
     stand_in = review_mcp_module._untrusted("stderr", "secret", diagnostics)
     assert f"details in {diagnostics.name}" in stand_in
     assert "secret" in diagnostics.read_text(encoding="utf-8")
+
+
+def test_prepare_refuses_a_server_changed_since_admission_before_writing_anything(
+    manifest_file: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#9163: the server is digested again from the checkout and interpreter the config launches, then refused."""
+    monkeypatch.setattr(review_mcp_module, "check_launch_contract", render_contract.check_launch_contract)
+    primary = tmp_path / "primary"
+    server = primary / ".mcp" / "servers" / "sources" / "server.py"
+    server.parent.mkdir(parents=True)
+    server.write_text("import json\nprint('receipt: <id>')\n", encoding="utf-8")
+    (primary / render_contract.LOCK_FILE).write_text("anyio==4.15.1\n", encoding="utf-8")
+    monkeypatch.setattr(review_mcp_module, "resolve_repo_root", lambda *_args: primary)
+    python = project_interpreter()  # what prepare writes into the config
+    admitted_code = render_contract.server_code(primary)
+    admitted = {
+        "server_checkout": str(primary.resolve()),
+        "server_interpreter": str(python),
+        "server_digest": admitted_code.digest,
+        "server_components": admitted_code.components(),
+    }
+    receipts = tmp_path / "receipts"
+    kwargs = {
+        "review_id": "rev-x-001",
+        "manifest_path": manifest_file,
+        "harness": "claude",
+        "receipts_root": receipts,
+        "review_contract": admitted,
+    }
+
+    plan = prepare_review_attempt(attempt_id="att-x-001", **kwargs)  # unchanged since admission: prepared
+    assert json.loads(plan.config_path.read_text())["mcpServers"]["sources"]["args"] == [str(server)]
+
+    server.write_text("import json\nprint('another receipt')\n", encoding="utf-8")  # the primary moved on
+    with pytest.raises(ReviewContractError) as refused:
+        prepare_review_attempt(attempt_id="att-x-002", **kwargs)
+
+    message = str(refused.value)
+    print(message)
+    assert message.startswith("review attempt refused: review_server_changed: ")
+    assert f"launching: {primary.resolve()} with {python} server digest sha256:" in message
+    assert "differing server components: repository: sha256:" in message
+    assert sorted(path.name for path in (receipts / "rev-x-001").iterdir()) == [
+        "att-x-001.jsonl",
+        "att-x-001.jsonl.sha256",
+        "att-x-001.mcp.json",
+    ]
 
 
 def test_default_root_uses_the_same_root_check(

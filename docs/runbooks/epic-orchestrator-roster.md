@@ -18,11 +18,11 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | Epic | Recommended seat | Run |
 | --- | --- | --- |
 | **harness / infra** | Gemini (AGY) | `./start-gemini-driver.sh --epic infra` |
-| **harness / infra** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic infra` |
+| **harness / infra** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic infra` |
 | **devops** | Gemini (AGY) | `./start-gemini-driver.sh --epic devops` |
-| **devops** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic devops` |
+| **devops** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic devops` |
 | **ops-api** (Operator API + UI; stream key `monitor`) | Cursor or Gemini (AGY); **Kimi for UI/design** | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
-| **ops-api** (named alternate) | Codex / gpt-6-astra @ high | `./start-codex-driver.sh --epic ops-api` |
+| **ops-api** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic ops-api` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
 | **hramatka** (teacher lesson service) | Grok 4.6 · Fable if judgment-heavy | `./start-grok-driver.sh --epic hramatka` |
@@ -130,9 +130,9 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
-| claude | claude-opus-5-5 | high | gpt-6-astra | high |
-| codex | gpt-6-sol | high | gpt-6-astra | high |
-| cursor | auto | high | gpt-6-astra | high |
+| claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
+| codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
+| cursor | auto | high | gpt-6.1-sol | high |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 

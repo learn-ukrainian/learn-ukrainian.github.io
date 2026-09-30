@@ -3063,6 +3063,13 @@ def _invoke_impl(
             f"Agent {agent_name!r} does not support mode {mode!r}. Supported modes: {sorted(adapter.supported_modes)}"
         )
 
+    # ---------- 2b. Refuse catalog-retired models on every adapter ----------
+    from scripts.review.model_catalog import retired_model_refusal
+
+    retired_refusal = retired_model_refusal(model)
+    if retired_refusal:
+        raise ValueError(f"Agent {agent_name!r}: {retired_refusal}")
+
     # ---------- 3. Validate cwd for write modes ----------
     if mode in _WRITE_CAPABLE_MODES:
         if cwd is None:

@@ -1,0 +1,82 @@
+<!-- BEGIN CITED_RECORDS -->
+{%- for r in cited_records %}
+
+### Record `{{ r.id }}`
+- Kind: {{ r.kind }}
+{%- if r.kind == "word" %}
+- Lemma: {{ r.record.lemma }}
+- Part of Speech: {{ r.record.pos }}
+{%- if r.record.get("gloss") %}
+- Gloss: {{ r.record.gloss }}
+{%- endif %}
+{%- if r.record.get("forms") %}
+- Forms:
+{%- for f in r.record.forms %}
+  - form: {{ f.form }}, tags: {{ f.tags }}, stressed: {% if f.stress_source == 'pending' %}(pending — no confirmed stress; do not print this form){% else %}{{ f.stressed }}{% endif %}, stress_source: {{ f.stress_source }}
+{%- endfor %}
+{%- endif %}
+{%- elif r.kind == "text" %}
+- Source: {{ r.source }}
+- Supports: {{ r.record.supports }}
+- Quote (verbatim source text):
+{{ r.record.quote | fenced }}
+{%- elif r.kind == "exercise" %}
+- Source: {{ r.source }}
+- Pattern: {{ r.record.pattern }}
+- Quote (verbatim source text):
+{{ r.record.quote | fenced }}
+{%- for item in r.record.items_sample if item != r.record.quote %}
+- Sample item {{ loop.index }}:
+{{ item | fenced }}
+{%- endfor %}
+{%- elif r.kind == "example" %}
+- Source: {{ r.source }}
+- Text (verbatim):
+{{ r.record.text | fenced }}
+{%- if r.record.get("translation_en") %}
+- English translation (the engine prints it; do not translate): {{ r.record.translation_en }}
+{%- endif %}
+{%- elif r.kind == "error" %}
+- Source: {{ r.source }}
+- Incorrect: {{ r.record.incorrect }}
+- Correct: {{ r.record.correct }}
+- Error type: {{ r.record.error_type }}
+- Pattern: {{ r.record.pattern }}
+{%- elif r.kind == "note" %}
+- Source: {{ r.source }}
+- Word: {{ r.record.word }}
+{%- if r.record.section %}
+- Section: {{ r.record.section }}
+{%- endif %}
+- Text:
+{{ r.record.text | fenced }}
+{%- if r.record.excerpt_full %}
+- Full excerpt:
+{{ r.record.excerpt_full | fenced }}
+{%- endif %}
+{%- if r.record.russianism_pattern %}
+- Russianism pattern: {{ r.record.russianism_pattern }}
+{%- endif %}
+{%- elif r.kind == "video" %}
+- Channel: {{ r.record.channel }}
+- URL: {{ r.record.url }}
+- Use: {{ r.record.use }}
+- Link check: {% if r.record.checked %}HTTP {{ r.record.checked.http_status }} on {{ r.record.checked.date }}{% if r.record.checked.final_url != r.record.url %}, final URL {{ r.record.checked.final_url }}{% endif %}{% else %}not checked{% endif %}
+{%- elif r.kind == "standard" %}
+- Source: State Standard, lines {{ r.record.lines }}
+- Text (verbatim):
+{{ r.record.text | fenced }}
+{%- elif r.kind == "unsupported" %}
+- Claim: {{ r.record.claim }}
+- Status: {{ r.record.status }}
+- Searches: {% for s in r.record.searches %}{{ s.tool }}: {{ s.query }}{{ "; " if not loop.last }}{% else %}none{% endfor %}
+{%- if r.record.get("resolved_by") %}
+- Resolved by: {{ r.record.resolved_by.record if r.record.resolved_by is mapping else r.record.resolved_by }}
+{%- endif %}
+{%- else %}
+{{ unrendered_record_kind(r.id, r.kind) }}
+{%- endif %}
+{%- else %}
+No external cited records required.
+{%- endfor %}
+<!-- END CITED_RECORDS -->

@@ -455,7 +455,7 @@ def test_codex_adapter_no_effort_means_default_high_override(tmp_path):
         for i in range(len(plan.cmd) - 1)
         if plan.cmd[i] == "-c"
     ]
-    assert plan.cmd[plan.cmd.index("-m") + 1] == "gpt-6-sol"
+    assert plan.cmd[plan.cmd.index("-m") + 1] == "gpt-6.1-sol"
     assert ("-c", "model_reasoning_effort=high") in flag_pairs, (
         f"expected ('-c', 'model_reasoning_effort=high') in flag pairs; "
         f"plan.cmd={plan.cmd}"

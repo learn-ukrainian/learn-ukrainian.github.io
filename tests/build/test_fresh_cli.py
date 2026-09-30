@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import copy
 import hashlib
+import re
 import stat
 import subprocess
 import sys
@@ -15,8 +16,11 @@ import pytest
 import yaml
 
 from scripts.build.fresh.cli import _build_parser, main
+from scripts.build.fresh.manifest import learner_state_document, learner_state_sha256, materialize_learner_state
 from scripts.build.fresh.path_guard import checked_path
 from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.learner_state.planned import planned_state
+from scripts.review.prompts.render import ManifestReader, _learner_state_context
 from tests.build.test_fresh_draft_schema import load_fixture
 
 pytestmark = pytest.mark.reads_content
@@ -741,3 +745,28 @@ def test_build_module_completion_passes_when_the_verdict_check_finds_nothing(tmp
         patch.object(cli, "_stale_module_verdict_problems", return_value=[]),
     ):
         assert main(["build", "a1", "fixture-module", "--module", "--repo-root", str(tmp_path)]) == 0
+
+
+def test_writer_echo_is_the_learner_state_identity_the_reviewer_recomputes(tmp_path):
+    """#9182: render-prompt echoes the learner_state_sha256 the manifest records and the reviewer recomputes."""
+    paths = _build_synthetic_tree(tmp_path)
+    output_prompt = tmp_path / "rendered_prompt.md"
+    argv = ["render-prompt", "a1", "synthetic-mod", "--lesson", "1", "-o", str(output_prompt)]
+    assert main([*argv, "--repo-root", str(tmp_path)]) == 0
+    echoed = re.search(r'learner_state_sha256: "([0-9a-f]{64})"', output_prompt.read_text(encoding="utf-8"))[1]
+
+    # The manifest writer's path: the same planned state, materialized as YAML, its identity recorded.
+    state = planned_state(
+        "a1", 1, 1, allow_missing_prior=True, plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent
+    )
+    state_path = paths["state_dir"] / "synthetic-mod" / "lesson-1.learner-state.yaml"
+    manifest = {
+        "kind": "module",
+        "inputs": {"learner_state": materialize_learner_state(state_path, learner_state_document(state), tmp_path)},
+        "learner_state": {"sha256": learner_state_sha256(state), "source": "planned_state"},
+    }
+    # The reviewer's path: re-read the pinned YAML and recompute the identity (refuses a mismatch with the record).
+    reviewed = _learner_state_context(ManifestReader(manifest, tmp_path), manifest)["learner_state_sha256"]
+
+    assert echoed == reviewed == manifest["learner_state"]["sha256"]
+    assert echoed != hashlib.sha256(lock.yaml_bytes(state.to_dict())).hexdigest()  # not the YAML-bytes hash
