@@ -47,7 +47,7 @@ from ._ask_lifecycle import (
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import _prepend_review_protocol
+from ._prompts import bridge_prompt
 from ._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
@@ -593,7 +593,7 @@ Standing rules for bridge Q&A:
 - Do NOT use broker or MCP messaging tools to send your response; output it directly.
 - This is the native grok-build lane. Do not route through Hermes/OpenRouter.
 """
-    return _prepend_review_protocol(
+    return bridge_prompt(
         prompt,
         review,
         review_branch=review_branch,

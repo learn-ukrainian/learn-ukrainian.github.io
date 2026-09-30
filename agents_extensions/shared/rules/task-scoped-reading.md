@@ -29,6 +29,11 @@ track coordination use `curriculum-lifecycle`; for prerequisite-only work use
 `curriculum-preparation`. A diagnostic review does not certify completion.
 Ordinary code or documentation edits do not require curriculum workflow loading.
 
+Each row is also served as one selection: `/api/rules?scope=task:<name>` with
+names `repo-change`, `cli`, `curriculum`, `fresh-build`, `routing`, `driver`,
+`fleet-comms`, `intake`, `review`, `task-family`, `rollover` (in row order).
+`_load-via-api.md` lists the same files for offline reads.
+
 The complete Monitor `/api/rules?format=markdown` response is available for full
 policy audits, ambiguous cross-cutting tasks, and clients needing the complete
 ruleset. Its hash cache and source order are unchanged. Offline, select these

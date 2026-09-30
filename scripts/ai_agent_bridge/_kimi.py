@@ -13,7 +13,7 @@ from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_as
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import _prepend_review_protocol
+from ._prompts import bridge_prompt
 from ._review_worktree import (
     ReviewWorktreeError,
     provision_review_worktree,
@@ -175,7 +175,7 @@ def _build_kimi_prompt(
     if msg.get("data"):
         prompt += f"\nAttached data:\n{msg['data']}\n"
     prompt += "\nRespond directly. Do not send broker messages; output the final response.\n"
-    return _prepend_review_protocol(
+    return bridge_prompt(
         prompt, review, review_branch=review_branch, review_pr_number=review_pr_number,
         review_worktree_provisioned=review_worktree_provisioned,
     )
