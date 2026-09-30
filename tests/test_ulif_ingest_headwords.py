@@ -142,7 +142,119 @@ def test_paradigm_identity_mismatch_fails_closed():
             spelling="дуже",
             homonym_index=1,
             register_position="427:21",
+            stressed_headword="ду́же",
         )
+
+
+@pytest.mark.parametrize("walk_commit", [False, True])
+def test_same_spelling_different_stress_fails_closed(cached_group, walk_commit):
+    ledger, conn = cached_group
+    ledger.conn.execute("UPDATE register_rows SET stressed_headword='бачи́ти'")
+    ledger.conn.commit()
+    ledger.ensure("бачити")
+    ledger.mark("бачити", "stored", entry_count=1)
+    with pytest.raises(ValueError, match="cached identity mismatch"):
+        if walk_commit:
+            # The stored shortcut applies only once homonym indexes are populated.
+            runner._commit_spelling_group(ledger, conn, "бачити")
+        else:
+            runner.parse_stored(ledger, conn, empty_headwords_only=True)
+    assert (
+        conn.execute("SELECT canonical_headword FROM ulif_dictua_entries WHERE normalized_query='бачити'").fetchone()[0]
+        == ""
+    )
+
+
+def test_repair_preserves_global_content_metadata(cached_group):
+    ledger, conn = cached_group
+    ledger.ensure("бачити")
+    ledger.mark("бачити", "stored", entry_count=1)
+    ledger.set_meta("differing_content_hashes", "12345")
+    ledger.set_duplicate_content("бачити", True)
+    assert runner.parse_stored(ledger, conn, empty_headwords_only=True) == 1
+    assert runner.parse_stored(ledger, conn, empty_headwords_only=True) == 0
+    assert ledger.meta("differing_content_hashes") == "12345"
+    assert ledger.conn.execute("SELECT duplicate_content FROM spellings WHERE spelling='бачити'").fetchone()[0] == 1
+
+
+@pytest.mark.parametrize("initial_error", [False, True])
+@pytest.mark.parametrize("other_headword", ["ба́чити", "бачи́ти", "Ба́чити", ""])
+def test_mismatch_repair_identity_and_second_run(cached_group, monkeypatch, capsys, initial_error, other_headword):
+    ledger, conn = cached_group
+    ledger.ensure_row(427, 22, select_arg="Select$22", stressed_headword=other_headword, normalized_spelling="бачити")
+    ledger.mark_row(427, 22, "completed", entry_sha256=CAPTURE_HASHES["synonyms"])
+    for role, kind in [("entry", "synonyms"), ("tab", "paradigm")]:
+        ledger.record_response(
+            spelling="бачити",
+            role=role,
+            tab_kind=kind if role == "tab" else "",
+            response_sha256=CAPTURE_HASHES[kind],
+            request_sha256="",
+            homonym_index=2,
+            register_position="427:22",
+        )
+    store_ulif_dictua_entry(
+        word="бачити",
+        canonical_headword="",
+        homonym_index=2,
+        sections={},
+        raw_responses={},
+        retrieved_at="second",
+        parser_version="previous",
+        status="ok",
+        register_position="427:22",
+        conn=conn,
+        db_path=runner._db_path(conn),
+    )
+    conn.commit()
+    ledger.ensure("бачити")
+    error = "printed_number_mismatch register=[1, 2] printed=[2, 1]"
+    ledger.mark("бачити", "error" if initial_error else "stored", entry_count=2, error=error if initial_error else "")
+    if not initial_error:
+        # Drive the mismatch path independently of the HTML printed-number parser.
+        monkeypatch.setattr(runner, "_printed_number_mismatch", lambda rows: ([1, 2], [2, 1]))
+        # Keep each cached tab bound to its own register identity before the group check.
+        original = runner._parse_cached_entry
+
+        def parse(html, raw, **kwargs):
+            kwargs["stressed_headword"] = "ба́чити"
+            return original(html, raw, **kwargs)
+
+        monkeypatch.setattr(runner, "_parse_cached_entry", parse)
+    before = [tuple(row) for row in conn.execute("SELECT * FROM ulif_dictua_entries ORDER BY id")]
+    assert runner.parse_stored(ledger, conn, empty_headwords_only=True) == 1
+    rows = conn.execute(
+        "SELECT canonical_headword, status FROM ulif_dictua_entries WHERE normalized_query='бачити' ORDER BY homonym_index"
+    ).fetchall()
+    expected = ("ба́чити", "ok") if other_headword == "ба́чити" else ("", "parse_error")
+    assert [tuple(row) for row in rows] == [expected, expected]
+    after = [tuple(row) for row in conn.execute("SELECT * FROM ulif_dictua_entries ORDER BY id")]
+    # Only headword, parser version and status may change; ordering and provenance stay intact.
+    for old, new in zip(before, after, strict=True):
+        assert tuple(value for i, value in enumerate(old) if i not in {3, 12, 13}) == tuple(
+            value for i, value in enumerate(new) if i not in {3, 12, 13}
+        )
+    assert ledger.meta("headword_repair_reason:бачити")
+    cache_changes, ledger_changes = conn.total_changes, ledger.conn.total_changes
+    assert runner.parse_stored(ledger, conn, empty_headwords_only=True) == 0
+    assert conn.total_changes == cache_changes
+    assert ledger.conn.total_changes == ledger_changes
+    assert "residual: бачити: printed_number_mismatch" in capsys.readouterr().out
+    assert (
+        conn.execute(
+            "SELECT count(*) FROM ulif_dictua_entries WHERE status='ok' AND trim(canonical_headword)=''"
+        ).fetchone()[0]
+        == 0
+    )
+
+
+def test_mismatch_repair_refuses_group_membership_change(cached_group):
+    ledger, conn = cached_group
+    ledger.ensure("бачити")
+    ledger.mark("бачити", "error", entry_count=1, error="printed_number_mismatch register=[1] printed=[2]")
+    conn.execute("UPDATE ulif_dictua_entries SET register_position='other' WHERE normalized_query='бачити'")
+    with pytest.raises(ValueError, match="refusing to change group membership"):
+        runner.parse_stored(ledger, conn, empty_headwords_only=True)
 
 
 def test_no_paradigm_preserves_entry_identity():

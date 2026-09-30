@@ -1,6 +1,6 @@
 # Dictionary Pipeline Status
 
-> Updated: 2026-09-30 (ULIF cached headword recovery, #9338)
+> Updated: 2026-09-30 (ULIF headword repair review fixes, #9338)
 
 ## In RAG ✅
 
@@ -33,8 +33,11 @@
 DictUA entry selections can open on a relation tab (synonyms or phraseology),
 whose article has no `.word_style` headword. The ingest now recovers missing
 identity from the separately cached paradigm tab, keeping any identity already
-present on the entry page. Both walk-time ingest and offline parsing use this
-rule; source spellings are never inferred from the query or relation terms.
+present on the entry page. A recovered paradigm headword must match its
+register `stressed_headword` exactly, including stress and capitalization.
+Both walk-time ingest and offline parsing use this rule; recovery without
+register identity fails closed. Source spellings are never inferred from the
+query or relation terms.
 An identity that cannot be recovered is stored as `parse_error`, not `ok`.
 
 For a bounded, offline replay of affected groups, use the shared project
@@ -46,33 +49,51 @@ interpreter with the existing completed walk ledger and live database:
 ```
 
 The repair snapshots groups containing `status='ok'` rows whose headword is
-empty, requires stored ledger units and unchanged register positions/homonym
-indexes, and upserts only their missing identity. It preserves row IDs,
+empty, requires stored ledger units or recorded printed-number-mismatch
+residuals and unchanged register positions/homonym indexes, and upserts only
+their missing identity. It preserves row IDs,
 `homonym_checked`, sections, raw references and original fetch timestamps.
 No pages are fetched and no corpus or cache files are removed. Without the
-repair flag, `parse` retains its full replay behavior.
+repair flag, `parse` retains its full replay behavior. Repair does not overwrite
+the global `differing_content_hashes` meta or duplicate-content flags.
 
-The single bounded cache replay on 2026-09-30 covered 12,687 spelling groups:
+The first bounded cache replay on 2026-09-30 covered 12,687 spelling groups.
+The review-fix replay then covered the remaining 23 rows in 16 mismatch groups:
 
-| Measurement | Before | After |
-|-------------|--------|-------|
-| `ok` rows with an empty headword | 12,899 | 23 |
-| Recovered headwords from that cohort | 0 | 12,817 |
-| Unrecoverable cohort rows marked `parse_error` | 0 | 59 |
-| Total entry rows | 269,262 | 269,262 |
-| Section rows | 336,396 | 336,396 |
-| Raw-cache objects | 943,308 | 943,308 |
+| Measurement | Before | First replay | Review-fix replay |
+|-------------|--------|--------------|-------------------|
+| `ok` rows with an empty headword | 12,899 | 23 | 0 |
+| Recovered headwords from that cohort | 0 | 12,817 | 12,822 |
+| Unrecoverable cohort rows marked `parse_error` | 0 | 59 | 77 |
+| Total entry rows | 269,262 | 269,262 | 269,262 |
+| Section rows | 336,396 | 336,396 | 336,396 |
+| Raw-cache objects | 943,308 | 943,308 | 943,308 |
 
-The 23 remaining `ok` rows belong to 16 groups with printed homonym numbers
-that disagree with register-order indexes. The existing #8400 safeguard
-rejected those groups and marked their ledger units `error`; no identity or
-homonym ordering was guessed. The other 59 empty rows have visibly empty
-cached paradigm articles and no headword on their cached entry response.
-They remain unavailable as word witnesses. The curriculum-upgrade driver
-owns both residuals: reconcile the 16 groups under #8400, and arrange
-operator-authorized source recovery for the 59 empty articles. Per-row cache
-hashes, register positions and mismatch observations were retained locally
-for that handoff; this repair does not claim full ULIF completion.
+The 16 groups still have printed homonym numbers that disagree with
+register-order indexes. Where every register row in a group carries one exact
+stressed headword, that unanimous identity recovered 5 empty rows in 5 groups.
+The remaining 18 rows in 11 groups became `parse_error`: register headwords
+differ in stress or capitalization. No homonym ordering was assigned. Their
+ledger units remain `error`, with the original mismatch reason and a separate
+headword-repair reason. Repeated repair excludes those units from the stored
+group requirement, reports them as residuals, and makes no data or ledger
+writes once no empty `ok` rows remain (regression-tested).
+
+The other 59 empty rows still have no identity on any cached page of their
+completed entry attempt; all were separately re-parsed during this round.
+They remain unavailable as word witnesses. The curriculum-upgrade driver owns
+the residuals: reconcile the 16 groups under #8400, and arrange
+operator-authorized source recovery for the 59 empty articles. The final worker
+report contains every affected residual group/row, its reason and page evidence;
+this repair does not claim full ULIF completion. The 6,447 existing `not_found`
+rows remain outside the empty-`ok` repair scope.
+
+The review-fix replay preserved all 23 rows' IDs, spelling keys, homonym indexes,
+register positions, trust flags, raw references, fetch timestamps, labels,
+glosses and content hashes. Full fingerprints matched for all 269,180 rows
+outside this round's 82-row evidence cohort and for all section contents. The
+59 existing `parse_error` rows were unchanged. Global content meta remained
+12,671 and all duplicate-content flags were unchanged.
 
 All 12,899 cohort rows retained their IDs, spelling keys, homonym indexes,
 register positions, trust flags, raw references and fetch timestamps. A

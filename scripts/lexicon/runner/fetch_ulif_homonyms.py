@@ -1513,6 +1513,7 @@ def _parse_cached_entry(
     spelling: str,
     homonym_index: int,
     register_position: str,
+    stressed_headword: str | None = None,
 ) -> dict[str, Any]:
     """Recover missing identity from the paradigm tab when entry opens on a relation tab."""
     parsed = parse_ulif_entry(entry_html, homonym_index=homonym_index, register_position=register_position)
@@ -1520,7 +1521,10 @@ def _parse_cached_entry(
         parsed = parse_ulif_entry(
             raw_tabs["paradigm"], homonym_index=homonym_index, register_position=register_position
         )
-        if parsed["canonical_headword"] and parsed["normalized_spelling"] != normalize_ulif_spelling(spelling):
+        if parsed["canonical_headword"] and (
+            parsed["normalized_spelling"] != normalize_ulif_spelling(spelling)
+            or parsed["canonical_headword"] != stressed_headword
+        ):
             raise ValueError(f"cached identity mismatch for {spelling} at {register_position}")
     return parsed
 
@@ -1580,12 +1584,45 @@ def _repair_group_identity(cache: sqlite3.Connection, spelling: str, parsed_rows
     return changed
 
 
+def _repair_mismatch_identity(ledger: SpellingLedger, cache: sqlite3.Connection, spelling: str) -> int:
+    """Recover only unanimous register identity; leave the numbering error intact."""
+    register_rows = list(
+        ledger.conn.execute(
+            "SELECT * FROM register_rows WHERE normalized_spelling = ? ORDER BY page_num, row_index", (spelling,)
+        )
+    )
+    cursor = cache.execute("SELECT * FROM ulif_dictua_entries WHERE normalized_query = ?", (spelling,))
+    columns = [column[0] for column in cursor.description]
+    parsed_rows = [dict(zip(columns, values, strict=True)) for values in cursor]
+    if {(int(row["homonym_index"]), str(row["register_position"])) for row in parsed_rows} != {
+        (index, f"{row['page_num']}:{row['row_index']}") for index, row in enumerate(register_rows, start=1)
+    }:
+        raise ValueError(f"refusing to change group membership during headword repair: {spelling}")
+    headwords = {str(row["stressed_headword"]) for row in register_rows}
+    headword = next(iter(headwords)) if len(headwords) == 1 else ""
+    reason = (
+        "unanimous register identity; homonym order unresolved"
+        if headword.strip()
+        else ("register headwords differ or are empty; identity and homonym order unresolved")
+    )
+    for row in parsed_rows:
+        row["canonical_headword"] = headword if headword.strip() else ""
+    changed = _repair_group_identity(cache, spelling, parsed_rows)
+    if changed:
+        ledger.set_meta(f"headword_repair_reason:{spelling}", reason)
+        print(
+            f"headword repair: {spelling}: {changed} rows {'recovered' if headword.strip() else 'marked parse_error'}; {reason}"
+        )
+    return changed
+
+
 def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection, *, empty_headwords_only: bool = False) -> int:
     """Parse one-mode stored bodies offline; reject mixed run/walk ledgers."""
     from scripts.wiki.sources_db import store_ulif_dictua_entry
 
     mode = _ledger_data_mode(ledger)
     differing = 0
+    mismatch_entries = 0
     spellings = [
         str(row["spelling"])
         for row in ledger.conn.execute("SELECT spelling FROM spellings WHERE state = 'stored' ORDER BY spelling")
@@ -1598,14 +1635,30 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection, *, empty_hea
                 "WHERE status = 'ok' AND trim(canonical_headword) = ''"
             )
         }
+        mismatch_residuals = list(
+            ledger.conn.execute(
+                "SELECT spelling, error FROM spellings WHERE state = 'error' AND error LIKE 'printed_number_mismatch%' "
+                "ORDER BY spelling"
+            )
+        )
+        residual_spellings = {str(row["spelling"]) for row in mismatch_residuals}
+        residual_affected = affected & residual_spellings
+        affected -= residual_spellings
         missing = affected - set(spellings)
         if missing:
             raise ValueError(f"{len(missing)} affected spelling groups lack a stored ledger unit")
+        for residual in mismatch_residuals:
+            spelling = str(residual["spelling"])
+            if spelling in residual_affected:
+                repaired = _repair_mismatch_identity(ledger, cache, spelling)
+                differing += bool(repaired)
+                mismatch_entries += repaired
+            print(f"residual: {spelling}: {residual['error']}")
         spellings = [spelling for spelling in spellings if spelling in affected]
     total_spellings = len(spellings)
     # Walk ledgers bind each entry to a completed register row.
     walk_mode = mode == "walk"
-    entries_written = 0
+    entries_written = mismatch_entries
     skipped_positions = 0
     mismatch_errors = 0
 
@@ -1661,7 +1714,12 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection, *, empty_hea
             if empty_headwords_only and "paradigm" not in raw:
                 html = _load_body(cache, entry_sha)
             parsed = _parse_cached_entry(
-                html, raw, spelling=spelling, homonym_index=homonym_index, register_position=register_position
+                html,
+                raw,
+                spelling=spelling,
+                homonym_index=homonym_index,
+                register_position=register_position,
+                stressed_headword=str(completed_rows[homonym_index - 1]["stressed_headword"]) if walk_mode else None,
             )
             parsed_rows.append(parsed)
             section_sets.append(sections)
@@ -1682,6 +1740,13 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection, *, empty_hea
                 straddled=bool(row["straddled_boundary"]) if row is not None else False,
                 error=(f"printed_number_mismatch register={list(register)} printed={list(printed)}"),
             )
+            if empty_headwords_only:
+                repaired = _repair_mismatch_identity(ledger, cache, spelling)
+                differing += bool(repaired)
+                entries_written += repaired
+                print(
+                    f"residual: {spelling}: printed_number_mismatch register={list(register)} printed={list(printed)}"
+                )
             continue
         if empty_headwords_only:
             repaired = _repair_group_identity(cache, spelling, parsed_rows)
@@ -1690,8 +1755,10 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection, *, empty_hea
         else:
             differing += _write_group(cache, spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
             entries_written += len(parsed_rows)
-        ledger.set_duplicate_content(spelling, _duplicate_content(parsed_rows))
-    ledger.set_meta("differing_content_hashes", str(differing))
+        if not empty_headwords_only:
+            ledger.set_duplicate_content(spelling, _duplicate_content(parsed_rows))
+    if not empty_headwords_only:
+        ledger.set_meta("differing_content_hashes", str(differing))
     print(
         f"parse complete: {total_spellings} spellings parsed, {entries_written} entries written, "
         f"{differing} groups differed, {mismatch_errors} printed_number_mismatch errors, "
@@ -2079,7 +2146,12 @@ def _commit_spelling_group(
                     sections[kind] = groups
 
         parsed = _parse_cached_entry(
-            entry_html, raw, spelling=normalized_spelling, homonym_index=homonym_index, register_position=reg_pos
+            entry_html,
+            raw,
+            spelling=normalized_spelling,
+            homonym_index=homonym_index,
+            register_position=reg_pos,
+            stressed_headword=str(r["stressed_headword"]),
         )
 
         parsed_rows.append(parsed)
@@ -4879,6 +4951,9 @@ Outputs:
   With --empty-headwords-only: upserts missing identity only, preserving sections,
   row ids, homonym_checked, fetch timestamps and raw references; never fetches.
   An unrecoverable identity becomes parse_error instead of remaining ok.
+  Printed-number-mismatch groups remain reported residuals; only unanimous
+  register headwords recover identity, without assigning homonym order.
+  A repeat repair with no empty ok rows performs no data or ledger writes.
 
 Exit codes:
   0: Parsing completed successfully
@@ -4906,7 +4981,8 @@ Related:
         "--empty-headwords-only",
         action="store_true",
         help=(
-            "Replay only stored groups containing ok rows with empty headwords; "
+            "Repair ok rows with empty headwords in stored groups or printed-number-mismatch residuals; "
+            "use only unanimous register identity for residuals and "
             "refuse changes to group membership (default: replay all stored groups)"
         ),
     )
