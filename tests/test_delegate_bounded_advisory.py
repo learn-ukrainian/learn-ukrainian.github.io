@@ -738,6 +738,30 @@ def _commit_and_push(worktree: Path, files: dict[str, str]) -> None:
     _git("push", "-u", "origin", "codex/luna-worker", cwd=worktree)
 
 
+# The launch a worker admitted by ``_admitted_worker`` runs: what ``_start_worker`` passes.
+_BOUND_LAUNCH_ARGS = (
+    "effort", "hard_timeout", "silence_timeout", "initial_response_timeout", "max_budget_usd", "provider",
+    "finalize_open_pr",
+)  # fmt: skip
+
+
+def _launch(mode: str, cwd: Path) -> dict:
+    return {
+        "agent": "codex",
+        "model_id": "gpt-6-luna",
+        "mode": mode,
+        "cwd": str(cwd),
+        "effort": None,
+        "hard_timeout": 60,
+        "silence_timeout": delegate.DEFAULT_SILENCE_TIMEOUT_S,
+        "initial_response_timeout": delegate.DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
+        "max_budget_usd": None,
+        "provider": None,
+        "harness": None,
+        "finalize_open_pr": False,
+    }
+
+
 def _admitted_worker(
     tasks: Path,
     *,
@@ -746,12 +770,27 @@ def _admitted_worker(
     mode: str = "read-only",
     brief: str = "bounded work",
     worktree: Path | None = None,
+    cwd: Path | None = None,
     lifecycle: dict | None = None,
     research_block: str = "",
     **envelope_overrides,
 ) -> tuple[dict, str]:
-    """A worker task record carrying a genuine parent admission, and the prompt the parent hands the worker."""
-    args = {"mode": mode, "owned_path": list(owned), "prompt": brief, "rules_seat": None}
+    """A worker task record carrying a genuine parent admission, and the prompt the parent hands the worker.
+
+    The admitted launch is ``_launch(mode, cwd)``: the worker's cwd is the
+    worktree when there is one, else ``tasks.parent`` (the ``worker_env`` cwd).
+    """
+    cwd = cwd or worktree or tasks.parent
+    execution = _launch(mode, cwd)
+    args = {
+        "mode": mode,
+        "owned_path": list(owned),
+        "prompt": brief,
+        "rules_seat": None,
+        "cwd": str(cwd),
+        "worktree": None,
+        **{field: execution[field] for field in _BOUND_LAUNCH_ARGS},
+    }
     args_sha256 = bounded_advisory.canonical_sha256(args)
     prompt_sha256 = __import__("hashlib").sha256(brief.encode("utf-8")).hexdigest()
     binding = bounded_advisory.binding_digest(args_sha256, prompt_sha256)
@@ -786,8 +825,7 @@ def _admitted_worker(
             args=args,
             prompt_sha256=prompt_sha256,
             repo_root=repo_root,
-            agent="codex",
-            model_id="gpt-6-luna",
+            execution=execution,
             research_block=research_block,
         ),
     }
@@ -1026,15 +1064,16 @@ def worker_env(monkeypatch, tmp_path):
     return type("_WorkerEnv", (), {"tasks": tasks, "spy": spy, "cwd": tmp_path})()
 
 
-def _start_worker(worker_env, prompt: str, *, agent: str = "codex", model: str | None = "gpt-6-luna") -> int:
+def _start_worker(worker_env, prompt: str, *, agent: str = "codex", model: str | None = "gpt-6-luna", **launch) -> int:
     return delegate._run_worker(
         task_id=WORKER_ID,
         agent=agent,
         prompt=prompt,
-        mode="read-only",
-        cwd_str=str(worker_env.cwd),
+        mode=launch.pop("mode", "read-only"),
+        cwd_str=str(launch.pop("cwd", worker_env.cwd)),
         model=model,
-        hard_timeout=60,
+        hard_timeout=launch.pop("hard_timeout", 60),
+        **launch,
     )
 
 
@@ -1193,27 +1232,152 @@ def test_b1_luna_dispatch_records_the_binding_halves_its_worker_re_derives(env, 
         bounded_advisory.binding_digest(admitted["advisory_args_sha256"], admitted["prompt_sha256"])
         == (admitted["dispatch_args_sha256"])
     )
-    assert (admitted["admitted_agent"], admitted["admitted_model_id"]) == ("codex", "gpt-6-luna")
+    execution = admitted["admitted_execution"]
+    assert (execution["agent"], execution["model_id"], execution["mode"]) == ("codex", "gpt-6-luna", "read-only")
+    assert execution["hard_timeout"] == delegate.DEFAULT_HARD_TIMEOUT_S
+    assert Path(execution["cwd"]).resolve() == REPO_ROOT.resolve()
     (prompt,) = env.prompts
     spy = _Spy()
     monkeypatch.setattr("agent_runtime.runner.invoke", spy)
     monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
     monkeypatch.setattr(delegate, "_read_only_checkout_snapshot", lambda *_a, **_k: ({}, None))
-    rc = delegate._run_worker(
-        task_id=WORKER_ID,
-        agent="codex",
-        prompt=prompt,
-        mode="read-only",
-        cwd_str=record["cwd"],
-        model="gpt-6-luna",
-        hard_timeout=60,
-    )
+    rc = _run_spawned_worker(env, prompt, monkeypatch)
     assert rc == 0, capsys.readouterr().err
     (submitted,) = spy.prompts
     checked = _worker_record(env.tasks)["advisory_prompt_sha256"]
     digest = __import__("hashlib").sha256(submitted.encode("utf-8")).hexdigest()
     assert submitted == prompt and digest == checked
+
+
+def _run_spawned_worker(env, prompt: str, monkeypatch, *argv_changes: tuple[str, str | None]) -> int:
+    """Run the worker exactly as the dispatch spawned it, with ``(flag, value)`` changes to its argv.
+
+    A value of None drops the flag; a flag not yet in the argv is appended.
+    """
+    (spawned,) = env.spawned
+    argv = list(spawned[spawned.index("_worker") :])
+    for flag, value in argv_changes:
+        if flag in argv:
+            index = argv.index(flag)
+            takes_value = index + 1 < len(argv) and not argv[index + 1].startswith("--")
+            del argv[index : index + (2 if takes_value else 1)]
+        if value is not None:
+            argv += [flag] if value == "" else [flag, value]
+    monkeypatch.setattr(sys, "stdin", __import__("io").StringIO(prompt))
+    return delegate.cmd_worker(delegate.build_parser().parse_args(argv))
+
+
+@pytest.mark.parametrize(
+    "change",
+    [
+        ("--agent", "cursor"),
+        ("--model", "gemini-3.8-flash"),
+        ("--mode", "workspace-write"),
+        ("--cwd", "__elsewhere__"),
+        ("--effort", "low"),
+        ("--hard-timeout", "999"),
+        ("--silence-timeout", "7"),
+        ("--initial-response-timeout", "7"),
+        ("--max-budget-usd", "99.0"),
+        ("--provider", "openrouter"),
+        ("--finalize-open-pr", ""),
+    ],
+    ids=lambda change: change[0].lstrip("-"),
+)
+def test_b1_each_launch_parameter_changed_alone_refuses_a_real_dispatch_before_any_provider_call(
+    env, capsys, monkeypatch, tmp_path, change
+):
+    """Round 3 B1: the worker of a real admitted dispatch runs only the admitted launch; the record is unchanged."""
+    argv = _admitted_luna(env, "--effort", "high", "--hard-timeout", "60")
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    (prompt,) = env.prompts
+    spy = _Spy()
+    monkeypatch.setattr("agent_runtime.runner.invoke", spy)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+    monkeypatch.setattr(delegate, "_read_only_checkout_snapshot", lambda *_a, **_k: ({}, None))
+    flag, value = change
+    if value == "__elsewhere__":
+        value = str(tmp_path)
+    rc = _run_spawned_worker(env, prompt, monkeypatch, (flag, value))
+    err = capsys.readouterr().err
+    assert rc == 1, err
+    assert spy.calls == 0
+    record = _worker_record(env.tasks)
+    assert record["status"] == "failed"
+    expected = bounded_advisory.ADMISSION_INVALID if flag == "--mode" else bounded_advisory.EXECUTION_MISMATCH
+    assert record["failure_reason"] == expected, err
+
+
+def test_b1_the_unchanged_spawned_worker_of_a_real_dispatch_reaches_the_provider(env, capsys, monkeypatch):
+    argv = _admitted_luna(env, "--effort", "high", "--hard-timeout", "60", "--max-budget-usd", "2.5")
+    assert _dispatch(argv) == 0, capsys.readouterr().err
+    (prompt,) = env.prompts
+    spy = _Spy()
+    monkeypatch.setattr("agent_runtime.runner.invoke", spy)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+    monkeypatch.setattr(delegate, "_read_only_checkout_snapshot", lambda *_a, **_k: ({}, None))
+    assert _run_spawned_worker(env, prompt, monkeypatch) == 0, capsys.readouterr().err
+    assert spy.calls == 1
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "launch"),
+    [
+        ("effort", "low", {"effort": "low"}),
+        ("hard_timeout", 999, {"hard_timeout": 999}),
+        ("provider", "openrouter", {"provider": "openrouter"}),
+    ],
+)
+def test_b1_an_admitted_execution_rewritten_to_match_the_worker_still_refuses_on_the_bound_arguments(
+    worker_env, capsys, field, value, launch
+):
+    """The bound dispatch arguments, whose digest the envelope binds, also fix the launch values they set."""
+    record, prompt = _admitted_worker(worker_env.tasks, repo_root=REPO_ROOT, owned=[OWNED])
+    record["advisory_envelope"]["admitted_execution"][field] = value
+    final = _run_refused_worker(worker_env, capsys, record, prompt, bounded_advisory.EXECUTION_MISMATCH, **launch)
+    assert "bound argument" in final["stderr_excerpt"]
+
+
+@pytest.mark.parametrize(
+    "launch",
+    [
+        {"agent": "cursor"},
+        {"model": "gemini-3.8-flash"},
+        {"cwd": "elsewhere"},
+        {"effort": "low"},
+        {"hard_timeout": 999},
+        {"silence_timeout": 7},
+        {"initial_response_timeout": 7},
+        {"max_budget_usd": 99.0},
+        {"provider": "openrouter"},
+        {"harness": "native"},
+        {"finalize_open_pr": True},
+    ],
+    ids=lambda launch: next(iter(launch)),
+)
+def test_b1_each_worker_launch_value_changed_alone_refuses_before_any_provider_call(worker_env, capsys, launch):
+    """Round 3 B1 (worker level): cwd is compared even with no recorded worktree."""
+    record, prompt = _admitted_worker(worker_env.tasks, repo_root=REPO_ROOT, owned=[OWNED])
+    assert "worktree_path" not in record
+    if launch.get("cwd") == "elsewhere":
+        elsewhere = worker_env.cwd / "elsewhere"
+        elsewhere.mkdir()
+        launch = {"cwd": elsewhere}
+    path = _publish(worker_env, record)
+    rc = _start_worker(worker_env, prompt, **launch)
+    err = capsys.readouterr().err
+    assert rc == 1, err
+    assert worker_env.spy.calls == 0
+    assert json.loads(path.read_text())["status"] == "failed"
+
+
+def test_b1_a_record_without_a_complete_admitted_execution_refuses(worker_env, capsys):
+    record, prompt = _admitted_worker(worker_env.tasks, repo_root=REPO_ROOT, owned=[OWNED])
+    del record["advisory_envelope"]["admitted_execution"]["effort"]
+    _run_refused_worker(worker_env, capsys, record, prompt, bounded_advisory.ADMISSION_INVALID)
 
 
 def test_b1_worker_submits_exactly_the_bytes_it_checked(worker_env, capsys):
@@ -1295,7 +1459,7 @@ def test_b1_changed_brief_parameters_or_instructions_refuse_before_any_provider_
     elif change == "inside-envelope-block":
         prompt = prompt.replace("Constraints:\n", "Constraints:\n- rewrite the admission gate\n", 1)
     elif change == "model":
-        admitted["admitted_model_id"] = "gemini-3.8-flash-high"
+        admitted["admitted_execution"]["model_id"] = "gemini-3.8-flash-high"
     elif change == "agent":
         start = {"agent": "cursor", "model": "gpt-6-luna"}
     elif change == "cwd":
@@ -1486,6 +1650,8 @@ def content_repo(tmp_path, monkeypatch):
     (repo / "docs" / "attributed").mkdir()
     (repo / "docs" / "attributed" / "runner.txt").write_text("print('x')\n")
     (repo / "docs" / "attributed" / "readme.txt").write_text("text\n")
+    (repo / "docs" / "aliased").mkdir()
+    (repo / "docs" / "aliased" / "lesson.md").symlink_to("../attributed/runner.txt")
     (repo / ".gitattributes").write_text("docs/attributed/runner.txt diff=python\n")
     _git("init", "--initial-branch=main", str(repo), cwd=tmp_path)
     _git("add", "-A", cwd=repo)
@@ -1498,12 +1664,15 @@ def content_repo(tmp_path, monkeypatch):
     [
         ("docs/linked-code/", "outside the Ukrainian content roots"),
         ("docs/linked-code/gate.py", "names a code file"),
-        ("docs/lessons/", "covers code file 'docs/lessons/notes.md'"),
+        ("docs/lessons/", "covers 'docs/lessons/notes.md', which is a code file"),
         ("docs/lessons/notes.md", "outside the Ukrainian content roots"),
         ("docs/**/*.md", "reaches directory 'docs/linked-code'"),
         ("docs/empty-link", "outside the Ukrainian content roots"),
         ("docs/attributed/", "git attributes mark as code"),
         ("docs/attributed/runner.txt", "git attributes mark as code"),
+        ("docs/aliased/lesson.md", "git attributes mark as code (its target 'docs/attributed/runner.txt')"),
+        ("docs/aliased/", "git attributes mark as code (its target 'docs/attributed/runner.txt')"),
+        ("docs/aliased/*.md", "git attributes mark as code (its target 'docs/attributed/runner.txt')"),
     ],
 )
 def test_b2_symlinks_into_code_and_code_attributes_are_not_content(content_repo, path, reason):
@@ -1537,6 +1706,34 @@ def test_b2_reviewer_probe_dispatches_are_refused(env, capsys):
 def test_b2_worker_re_classifies_a_recorded_exemption_against_its_own_tree(worker_env, capsys, content_repo):
     """A symlink into code that appears after dispatch refuses at the worker, before the provider."""
     _publish(worker_env, _exempt_record(classified_paths=["docs/lessons/"]))
+    rc = delegate._run_worker(
+        task_id=WORKER_ID,
+        agent="agy",
+        prompt="Review the lesson.",
+        mode="read-only",
+        cwd_str=str(content_repo),
+        model=None,
+        hard_timeout=60,
+    )
+    err = capsys.readouterr().err
+    assert rc == 1 and bounded_advisory.ENVELOPE_REQUIRED in err, err
+    assert worker_env.spy.calls == 0
+
+
+def test_b2_md_symlink_to_a_python_attributed_file_refuses_at_admission_and_at_the_worker(
+    worker_env, capsys, content_repo
+):
+    """Round 3 B2: a ``.md`` symlink is classified by its target's git attributes, not its own name."""
+    requirement = bounded_advisory.bounded_requirement(
+        "gemini-3.8-flash-high",
+        mode="workspace-write",
+        task_family="ukrainian-authoring",
+        review_profile=None,
+        owned_paths=["docs/aliased/lesson.md"],
+        repo_root=content_repo,
+    )
+    assert requirement is not None and "ambiguous classification" in requirement
+    _publish(worker_env, _exempt_record(classified_paths=["docs/aliased/lesson.md"]))
     rc = delegate._run_worker(
         task_id=WORKER_ID,
         agent="agy",
@@ -1641,3 +1838,214 @@ def test_b3_a_non_advisor_worker_records_no_seal(worker_env, capsys):
     rc = _start_worker(worker_env, "hello", model="gpt-6.1-sol")
     assert rc == 0, capsys.readouterr().err
     assert "advisory_seal" not in json.loads((worker_env.tasks / f"{WORKER_ID}.json").read_text())
+
+
+# --- Round 3: B3 the content-exemption completion gate ---------------------------
+
+
+def _exempt_writer_run(
+    env,
+    tmp_path,
+    monkeypatch,
+    capsys,
+    files: dict[str, str],
+    *,
+    symlinks: dict[str, str] | None = None,
+    mode: str = "workspace-write",
+    commit: bool = True,
+    finalize_open_pr: bool = False,
+) -> dict:
+    """The reviewer's probe: a real Ukrainian-authoring admission owning ``docs/new-lessons/``, then its worker.
+
+    The dispatch runs admission as a dry run and records the exemption; the
+    worker then runs with that record in a git worktree, and the capturing
+    provider writes, commits and pushes ``files`` (and ``symlinks``) as the
+    brief asks.
+    """
+    tasks = env.tasks
+    brief = "Create docs/new-lessons/generate.py that writes the lesson files, and the lessons it generates."
+    rc = _dispatch(
+        [
+            "dispatch", "--agent", "agy", "--task-id", WORKER_ID, "--prompt", brief, "--mode", mode,
+            "--worktree", "--dry-run", "--research-task-family", "ukrainian-authoring",
+            "--owned-path", "docs/new-lessons/",
+        ]
+    )  # fmt: skip
+    assert rc == 0, capsys.readouterr().err
+    exemption = _worker_record(tasks)["advisory_exemption"]
+    assert exemption["classified_paths"] == ["docs/new-lessons/"]
+    worktree = _bounded_worktree(tmp_path, monkeypatch)
+    (worktree / "docs" / "attributed").mkdir(parents=True)
+    (worktree / "docs" / "attributed" / "runner.txt").write_text("print('x')\n")
+    (worktree / ".gitattributes").write_text("docs/attributed/runner.txt diff=python\n")
+    _git("add", "-A", cwd=worktree)
+    _git("commit", "-m", "attributes", cwd=worktree)
+    _git("push", "origin", "HEAD:main", cwd=worktree)
+    _git("fetch", "origin", cwd=worktree)
+    state_path = delegate._state_path(WORKER_ID)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": WORKER_ID,
+            "status": "spawning",
+            "mode": mode,
+            "review_profile": None,
+            "owned_paths": ["docs/new-lessons/"],
+            "advisory_exemption": exemption,
+            "worktree_path": str(worktree),
+            "worktree_branch": "codex/luna-worker",
+            "worktree_base": "main",
+        },
+    )
+    spy = _Spy("Committed and pushed the change.")
+
+    def provider(_agent, prompt, *args, **kwargs):
+        for name, target in (symlinks or {}).items():
+            path = worktree / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.symlink_to(target)
+        if commit:
+            _commit_and_push(worktree, files)
+        else:
+            for name, text in files.items():
+                (worktree / name).parent.mkdir(parents=True, exist_ok=True)
+                (worktree / name).write_text(text)
+        return spy(_agent, prompt, *args, **kwargs)
+
+    monkeypatch.setattr("agent_runtime.runner.invoke", provider)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+    delegate._run_worker(
+        task_id=WORKER_ID,
+        agent="agy",
+        prompt=brief,
+        mode=mode,
+        cwd_str=str(worktree),
+        model=None,
+        hard_timeout=60,
+        keep_worktree=True,
+        finalize_open_pr=finalize_open_pr,
+    )
+    assert spy.calls == 1
+    return delegate._read_state(state_path)
+
+
+def test_b3_reviewer_probe_a_content_exempt_worker_adding_code_is_a_typed_failure(env, tmp_path, monkeypatch, capsys):
+    """Round 3 B3: the owned directory held no code at admission; the code the worker added fails the task."""
+    state = _exempt_writer_run(
+        env,
+        tmp_path,
+        monkeypatch,
+        capsys,
+        {"docs/new-lessons/generate.py": "print('lesson')\n", "docs/new-lessons/lesson-1.md": "# Урок\n"},
+    )
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == bounded_advisory.EXEMPT_CODE_CHANGE
+    check = state["advisory_exempt_change_check"]
+    assert check["changed_paths"] == ["docs/new-lessons/generate.py", "docs/new-lessons/lesson-1.md"]
+    assert check["problems"] == ["'docs/new-lessons/generate.py', which is a code file"]
+    assert state["last_error"].startswith(bounded_advisory.EXEMPT_CODE_CHANGE)
+
+
+def test_b3_a_content_only_diff_in_the_same_directory_settles_done(env, tmp_path, monkeypatch, capsys):
+    state = _exempt_writer_run(
+        env,
+        tmp_path,
+        monkeypatch,
+        capsys,
+        {"docs/new-lessons/lesson-1.md": "# Урок\n", "docs/new-lessons/l.yaml": "a: 1\n"},
+    )
+    assert state["status"] == "done", state.get("last_error")
+    assert state["advisory_exempt_change_check"]["problems"] == []
+
+
+@pytest.mark.parametrize(
+    ("files", "symlinks", "problem"),
+    [
+        (
+            {"docs/new-lessons/run.txt": "x\n", ".gitattributes": "docs/new-lessons/run.txt diff=python\n"},
+            {},
+            "'.gitattributes', which is outside the Ukrainian content roots",
+        ),
+        (
+            {"docs/new-lessons/.gitattributes": "*.txt diff=python\n"},
+            {},
+            "'docs/new-lessons/.gitattributes', which changes git attributes",
+        ),
+        ({"scripts/gate.py": "ALLOW = True\n"}, {}, "'scripts/gate.py', which is outside the Ukrainian content roots"),
+        (
+            {},
+            {"docs/new-lessons/alias.md": "../attributed/runner.txt"},
+            "'docs/new-lessons/alias.md', which git attributes mark as code (its target 'docs/attributed/runner.txt')",
+        ),
+    ],
+    ids=["root-attributes", "nested-attributes", "outside-content", "md-symlink-to-python-attributed"],
+)
+def test_b3_code_by_attributes_symlink_or_location_fails_the_exempt_completion_gate(
+    env, tmp_path, monkeypatch, capsys, files, symlinks, problem
+):
+    state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, files, symlinks=symlinks)
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == bounded_advisory.EXEMPT_CODE_CHANGE
+    assert problem in state["advisory_exempt_change_check"]["problems"]
+
+
+def test_b3_unreadable_exempt_changes_fail_closed(env, tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+    state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == bounded_advisory.EXEMPT_CHANGES_UNMEASURED
+
+
+def test_b3_a_failing_exempt_tree_is_never_auto_finalized_or_offered_as_a_pr(env, tmp_path, monkeypatch, capsys):
+    """Danger mode would commit, push and open a PR for a dirty tree; the gate runs first and stops it."""
+    finalized: list[dict] = []
+    monkeypatch.setattr(delegate, "_auto_finalize_dirty_worktree", lambda **kwargs: finalized.append(kwargs))
+    state = _exempt_writer_run(
+        env,
+        tmp_path,
+        monkeypatch,
+        capsys,
+        {"docs/new-lessons/generate.py": "print('lesson')\n"},
+        mode="danger",
+        commit=False,
+        finalize_open_pr=True,
+    )
+    assert finalized == []
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == bounded_advisory.EXEMPT_CODE_CHANGE
+    assert "pr_url" not in state
+
+
+def test_b3_uncommitted_scratch_residue_is_ignored_but_committed_residue_is_classified(
+    env, tmp_path, monkeypatch, capsys
+):
+    """Auto-finalize never publishes uncommitted residue; anything committed is classified like any change."""
+    state = _exempt_writer_run(
+        env,
+        tmp_path,
+        monkeypatch,
+        capsys,
+        {"docs/new-lessons/lesson-1.md": "# Урок\n", "docs/new-lessons/node_modules/gen/index.js": "run()\n"},
+    )
+    assert state["status"] == "failed"
+    assert state["advisory_exempt_change_check"]["problems"] == [
+        "'docs/new-lessons/node_modules/gen/index.js', which is a code file"
+    ]
+
+
+def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_path, monkeypatch, capsys):
+    original = delegate._worktree_diff_output
+
+    def with_residue(worktree, *args, **kwargs):
+        cache = Path(worktree) / "docs" / "new-lessons" / "__pycache__"
+        cache.mkdir(parents=True, exist_ok=True)
+        (cache / "gen.cpython-312.pyc").write_bytes(b"\0")
+        return original(worktree, *args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_worktree_diff_output", with_residue)
+    state = _exempt_writer_run(env, tmp_path, monkeypatch, capsys, {"docs/new-lessons/lesson-1.md": "# Урок\n"})
+    check = state["advisory_exempt_change_check"]
+    assert check["ignored_residue"] == ["docs/new-lessons/__pycache__/gen.cpython-312.pyc"]
+    assert check["problems"] == []
+    assert state.get("failure_reason") != bounded_advisory.EXEMPT_CODE_CHANGE

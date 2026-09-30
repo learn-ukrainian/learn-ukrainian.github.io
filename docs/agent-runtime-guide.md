@@ -842,21 +842,43 @@ change fails the task (`ADVISORY_ENVELOPE_CHANGED`). The worker record keeps
 `advisory_envelope` (advisor task, result path and SHA-256, envelope SHA-256, binding,
 ceilings) and the worker prompt carries the envelope.
 
-The ceilings are completion gates. After a write-mode worker exits, a worker whose diff
-from the merge base exceeds `max_changed_files` or `max_non_test_loc` fails
-(`advisory_ceiling_exceeded`), and a diff that cannot be measured fails too
-(`advisory_ceiling_unmeasured`). Exactly reaching a ceiling passes. Nothing stops the
-worker from overrunning a ceiling while it runs; the overrun fails the task instead of
-settling it.
+Two completion gates run after a write-mode worker exits, on its diff from the merge base
+(commits plus uncommitted and untracked files). Nothing stops a worker from breaching
+either while it runs; the breach fails the task instead of settling it, and in `danger`
+mode the gate runs before auto-finalize too, so a failing tree is never committed or
+offered as a PR.
+
+- **Envelope ceilings.** A bounded worker whose diff exceeds `max_changed_files` or
+  `max_non_test_loc` fails (`advisory_ceiling_exceeded`); a diff that cannot be measured
+  fails too (`advisory_ceiling_unmeasured`). Exactly reaching a ceiling passes.
+- **Content exemption.** Admission classifies a Ukrainian exemption's owned directories and
+  globs by the files they hold at that moment, so it cannot rule out a code file the worker
+  adds later (an owned `docs/new-lessons/` and a brief asking for `generate.py`). A Gemini
+  Flash write worker running on an `advisory_exemption` therefore has every changed path
+  classified (`advisory_exempt_change_check`): a path outside the Ukrainian content roots,
+  a `.gitattributes` file, or a file that is code by extension or git attributes, judged on
+  the file and on its resolved symlink target, fails the task
+  (`advisory_exempt_code_change`); changes that cannot be read fail too
+  (`advisory_exempt_changes_unmeasured`). Every committed path is classified; uncommitted
+  scratch residue that auto-finalize never publishes (`.venv`, `node_modules`,
+  `__pycache__`, `.pytest_cache`, `*.pyc`) is listed as `ignored_residue` instead. A
+  content-only diff settles `done`.
+
+Admission classifies a path by its resolved target as well: a `.md` symlink to a file whose
+git attributes mark it as code (for example `diff=python`) is not content.
 
 The internal `_worker` entry re-verifies all of this before it starts a bounded model and
 again at the provider handoff, so a hand-built or stale worker argv cannot skip admission.
 The record's `advisory_envelope` keeps both binding halves: the parsed dispatch arguments
 (`advisory_args`, hashing to `advisory_args_sha256`) and the brief's `prompt_sha256`. The
 worker re-derives the binding, reloads the advisor's sealed envelope and compares the
-recorded ceilings and owned paths with it. It checks that it runs the admitted launch:
-agent and model (`admitted_agent`, `admitted_model_id`), the bound `--mode` and
-`--owned-path`, and the recorded worktree as its cwd (`BOUNDED_EXECUTION_MISMATCH`). It then
+recorded ceilings and owned paths with it. It checks that it runs the admitted launch
+recorded as `admitted_execution`: agent, model, mode, cwd, effort, hard, silence and
+initial-response timeouts, budget, provider, harness and PR opening. Each value must equal
+the admitted one and, where a dispatch argument sets it, that bound argument; the cwd is
+always compared, with the recorded worktree too when there is one, and the bound
+`--owned-path` must equal the envelope's. A difference refuses before any provider call
+(`BOUNDED_EXECUTION_MISMATCH`). It then
 rebuilds the expected prompt from the brief the envelope binds plus the dispatcher blocks it
 can re-derive: the rules core, the worktree block, the lifecycle block from the recorded
 carrier, the research block only when it re-renders from its own pointers, and the envelope

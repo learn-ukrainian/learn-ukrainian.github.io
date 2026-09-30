@@ -35,17 +35,26 @@ blocks it can re-derive, and compares it with the exact bytes it hands the
 provider (``verify_worker_admission``). It never trusts a prompt digest stored
 in its own task record.
 
-The envelope ceilings are completion gates: ``delegate.py`` measures the
-worker's changes after it exits and fails the task when either ceiling is
-exceeded or cannot be measured. They do not stop a worker from overrunning
-them while it runs.
+The worker also compares every admitted execution parameter
+(``EXECUTION_FIELDS``: agent, model, mode, cwd, effort, timeouts, budget,
+provider, harness, PR opening) with what it is about to run, and with the bound
+dispatch arguments that set them, before any provider call.
+
+Two completion gates run after the worker exits; neither stops a worker while
+it runs. The envelope ceilings: ``delegate.py`` measures a bounded worker's
+changes and fails the task when either ceiling is exceeded or cannot be
+measured. The content exemption: a Gemini Flash write dispatch admitted as
+Ukrainian content classifies its owned directories and globs by the files they
+hold at admission, so ``delegate.py`` classifies every path the worker changed
+(``exempt_change_problems``) and fails the task, never ``done``, when one is
+code or the changes cannot be read.
 
 This module is pure validation: it reads task records, results and the
 repository tree, and raises ``AdvisoryRefused`` with a typed code.
 ``delegate.py`` computes the binding digest, calls it after route resolution
 and again just before the task record is published, re-verifies it in the
-worker before start and at the provider handoff, and checks the ceilings at
-finalize.
+worker before start and at the provider handoff, and runs both completion
+gates at finalize.
 """
 
 from __future__ import annotations
@@ -123,6 +132,20 @@ ADVISOR_ROUTE_REFUSED = "ADVISORY_ROLE_REFUSED"
 EXECUTION_MISMATCH = "BOUNDED_EXECUTION_MISMATCH"
 CEILING_EXCEEDED = "advisory_ceiling_exceeded"
 CEILING_UNMEASURED = "advisory_ceiling_unmeasured"
+EXEMPT_CODE_CHANGE = "advisory_exempt_code_change"
+EXEMPT_CHANGES_UNMEASURED = "advisory_exempt_changes_unmeasured"
+
+# The launch a bounded worker is admitted to run (``admitted_execution``); the
+# worker compares each with what it is about to run before any provider call.
+EXECUTION_FIELDS = (
+    "agent", "model_id", "mode", "cwd", "effort", "hard_timeout", "silence_timeout",
+    "initial_response_timeout", "max_budget_usd", "provider", "harness", "finalize_open_pr",
+)  # fmt: skip
+# The execution fields a dispatch argument of the same name sets; the envelope binds their digest.
+_BOUND_EXECUTION_ARGS = (
+    "mode", "effort", "hard_timeout", "silence_timeout", "initial_response_timeout",
+    "max_budget_usd", "provider", "finalize_open_pr",
+)  # fmt: skip
 
 
 class AdvisoryRefused(Exception):
@@ -158,8 +181,7 @@ class ValidatedEnvelope:
         args: Mapping[str, Any],
         prompt_sha256: str,
         repo_root: Path,
-        agent: str,
-        model_id: str,
+        execution: Mapping[str, Any] | None,
         research_block: str = "",
     ) -> dict[str, Any]:
         """What the worker's task record keeps: the envelope's source, digests, binding inputs, scope and ceilings.
@@ -168,16 +190,15 @@ class ValidatedEnvelope:
         and ``prompt_sha256`` (the brief) are the two halves of the binding
         (``binding_digest``); the worker re-derives the binding from them and
         reads its admitted mode, owned paths and rules seat from ``args``.
-        ``agent`` and ``model_id`` are the admitted launch; ``research_block``
-        the research pointer block the dispatcher added to the prompt.
+        ``execution`` is the admitted launch, one value per ``EXECUTION_FIELDS``
+        (None for a dry run, which starts no worker); ``research_block`` the
+        research pointer block the dispatcher added to the prompt.
         """
-        return {
+        record: dict[str, Any] = {
             "requirement": requirement,
             "advisory_args": dict(args),
             "advisory_args_sha256": canonical_sha256(args),
             "prompt_sha256": prompt_sha256,
-            "admitted_agent": agent,
-            "admitted_model_id": model_id,
             "research_block": research_block,
             "repo_root": str(repo_root),
             "advisor_task_id": self.advisor_task_id,
@@ -191,6 +212,9 @@ class ValidatedEnvelope:
             "max_changed_files": self.envelope["max_changed_files"],
             "max_non_test_loc": self.envelope["max_non_test_loc"],
         }
+        if execution is not None:
+            record["admitted_execution"] = dict(execution)
+        return record
 
 
 def binding_digest(args_sha256: str, prompt_sha256: str | None) -> str:
@@ -358,6 +382,42 @@ def _code_by_attributes(repo_root: Path, files: Sequence[str]) -> list[str]:
     return sorted(code)
 
 
+def _non_content_files(repo_root: Path, files: Sequence[str], *, symlinks: Iterable[str] = ()) -> list[tuple[str, str]]:
+    """``(file, reason)`` for each of ``files`` that is not Ukrainian content, judged by the file and its target.
+
+    A file is not content when it is a symlink that does not resolve
+    (``symlinks`` names those git tracks as links, sparse or not), its resolved
+    target leaves the content roots, the file or its resolved target has a code
+    extension, or git attributes mark the file or its resolved target as code.
+    Raises ``RuntimeError`` when git attributes cannot be read.
+    """
+    root = repo_root.resolve()
+    links = set(symlinks)
+    problems: dict[str, str] = {}
+    queried: dict[str, list[str]] = {}  # path whose attributes are read -> the files it classifies
+    for rel in files:
+        target = repo_root / rel
+        queried.setdefault(rel, []).append(rel)
+        if (rel in links or target.is_symlink()) and not target.exists():
+            problems[rel] = "is a symlink that cannot be resolved in this tree"
+            continue
+        resolved = target.resolve()
+        if PurePosixPath(rel).suffix.lower() in _CODE_SUFFIXES or resolved.suffix.lower() in _CODE_SUFFIXES:
+            problems[rel] = "is a code file"
+            continue
+        if _content_root_of(resolved, root) is None:
+            problems[rel] = "resolves outside the Ukrainian content roots"
+            continue
+        resolved_rel = resolved.relative_to(root).as_posix()
+        if resolved_rel != rel:
+            queried.setdefault(resolved_rel, []).append(rel)
+    for code_path in _code_by_attributes(repo_root, sorted(queried)):
+        for rel in queried[code_path]:
+            via = "" if code_path == rel else f" (its target {code_path!r})"
+            problems.setdefault(rel, f"git attributes mark as code{via}")
+    return sorted(problems.items())
+
+
 def content_path_problem(path: Any, repo_root: Path) -> str | None:
     """Why ``path`` is not Ukrainian content only in ``repo_root``; None when every file it can match is.
 
@@ -368,9 +428,11 @@ def content_path_problem(path: Any, repo_root: Path) -> str | None:
     and ``docs/**/*`` are code-capable. Then every file the path owns, as
     dispatch ownership reads it (``owned_path_matcher``), is enumerated from
     git's index and from disk, symlinks followed: each must resolve under a
-    content root and be code neither by extension nor by git attributes. A
-    directory is judged by the files it holds. An unreadable tree is a problem
-    (fail closed).
+    content root, and neither it nor its resolved target may be code by
+    extension or by git attributes (``_non_content_files``). A directory is
+    judged by the files it holds now; files a worker adds later are judged by
+    the completion gate (``exempt_change_problems``). An unreadable tree is a
+    problem (fail closed).
     """
     from scripts.guardrails.delegate_ownership import owned_path_matcher
 
@@ -410,22 +472,40 @@ def content_path_problem(path: Any, repo_root: Path) -> str | None:
     if outside is not None:
         return f"reaches directory {outside!r}, which resolves outside the Ukrainian content roots"
     files = sorted(rel for rel in {*tracked, *on_disk} if matcher(rel))
-    for rel in files:
-        target = repo_root / rel
-        if tracked.get(rel) == "120000" and not target.exists():
-            return f"covers symlink {rel!r}, which cannot be resolved in this tree"
-        resolved = target.resolve()
-        if PurePosixPath(rel).suffix.lower() in _CODE_SUFFIXES or resolved.suffix.lower() in _CODE_SUFFIXES:
-            return f"covers code file {rel!r}"
-        if _content_root_of(resolved, root) is None:
-            return f"covers {rel!r}, which resolves outside the Ukrainian content roots"
     try:
-        by_attributes = _code_by_attributes(repo_root, files)
+        problems = _non_content_files(
+            repo_root, files, symlinks={rel for rel, mode in tracked.items() if mode == "120000"}
+        )
     except RuntimeError as exc:
         return f"cannot be checked for code attributes in {repo_root} ({exc})"
-    if by_attributes:
-        return f"covers {by_attributes[0]!r}, which git attributes mark as code"
+    if problems:
+        rel, reason = problems[0]
+        return f"covers {rel!r}, which {reason}"
     return None
+
+
+def exempt_change_problems(paths: Iterable[str], repo_root: Path) -> list[str]:
+    """Why each path a content-exempt worker changed is not Ukrainian content; empty when every one is.
+
+    The completion gate of a Ukrainian exemption: admission classifies the
+    files an owned directory or glob holds then, not the ones a worker adds
+    later. A changed path fails when it lies outside the content roots, is a
+    ``.gitattributes`` file, or is not content as ``_non_content_files``
+    judges it (resolved through symlinks). Deleted paths are judged by name.
+    Raises ``RuntimeError`` when git attributes cannot be read.
+    """
+    problems: list[str] = []
+    content: list[str] = []
+    for rel in sorted({str(path) for path in paths}):
+        segments = _path_segments(rel)
+        if segments is None or segments[0] not in _UKRAINIAN_CONTENT_ROOTS:
+            problems.append(f"{rel!r}, which is outside the Ukrainian content roots")
+        elif segments[-1] == ".gitattributes":
+            problems.append(f"{rel!r}, which changes git attributes")
+        else:
+            content.append(rel)
+    problems.extend(f"{rel!r}, which {reason}" for rel, reason in _non_content_files(repo_root, content))
+    return problems
 
 
 def is_ukrainian_content_path(path: Any, repo_root: Path) -> bool:
@@ -778,31 +858,55 @@ _BRIEF_PLACEHOLDER = "\0bounded-advisory-brief\0"
 PromptComposer = Callable[[str, ValidatedEnvelope, Mapping[str, Any]], str]
 
 
+def _bound_execution_value(field: str, value: Any) -> Any:
+    """A bound dispatch argument as the worker receives it (an empty effort or provider is not passed on)."""
+    if field in {"effort", "provider"}:
+        return value or None
+    if field == "finalize_open_pr":
+        return bool(value)
+    return value
+
+
+def _same_cwd(left: Any, right: Any) -> bool:
+    return isinstance(left, str) and isinstance(right, str) and Path(left).resolve() == Path(right).resolve()
+
+
 def _require_execution(
     admitted: Mapping[str, Any],
     args: Mapping[str, Any],
     record: Mapping[str, Any],
     *,
-    agent: str | None,
-    model_id: str,
-    mode: str,
-    cwd: Path,
+    execution: Mapping[str, Any],
     envelope_paths: Sequence[str],
 ) -> None:
-    """The worker runs the admitted launch: agent, model, mode, owned scope and worktree."""
+    """The worker runs the admitted launch: every ``EXECUTION_FIELDS`` value, the bound arguments and owned scope.
+
+    ``execution`` is what the worker is about to run. Each value must equal the
+    one recorded at admission, and each that a dispatch argument sets must
+    equal that bound argument, whose digest the envelope binds. The cwd is
+    always compared: with the admitted cwd, with the recorded worktree, and with
+    a bound ``--cwd`` when no worktree was requested.
+    """
+    recorded = admitted.get("admitted_execution")
+    if not isinstance(recorded, dict) or set(recorded) != set(EXECUTION_FIELDS):
+        raise AdvisoryRefused(ADMISSION_INVALID, "the recorded admission carries no complete admitted execution")
     mismatches: list[str] = []
-    if admitted.get("admitted_model_id") != model_id:
-        mismatches.append(f"model {model_id!r} is not the admitted {admitted.get('admitted_model_id')!r}")
-    if admitted.get("admitted_agent") != agent:
-        mismatches.append(f"agent {agent!r} is not the admitted {admitted.get('admitted_agent')!r}")
-    if args.get("mode") != mode:
-        mismatches.append(f"mode {mode!r} is not the bound --mode {args.get('mode')!r}")
+    for field in EXECUTION_FIELDS:
+        actual, allowed = execution[field], recorded[field]
+        if not (_same_cwd(actual, allowed) if field == "cwd" else actual == allowed):
+            mismatches.append(f"{field} {actual!r} is not the admitted {allowed!r}")
+    for field in _BOUND_EXECUTION_ARGS:
+        if field in args and _bound_execution_value(field, args[field]) != execution[field]:
+            mismatches.append(f"{field} {execution[field]!r} is not the bound argument {args[field]!r}")
     bound_paths = sorted({str(path).strip() for path in _as_list(args.get("owned_path")) if str(path).strip()})
     if bound_paths != sorted(set(envelope_paths)):
         mismatches.append(f"bound --owned-path {bound_paths} is not the envelope owned_paths")
     worktree = record.get("worktree_path")
-    if worktree is not None and Path(str(worktree)).resolve() != cwd.resolve():
-        mismatches.append(f"cwd {str(cwd)!r} is not the admitted worktree {worktree!r}")
+    if worktree is not None and not _same_cwd(str(worktree), execution["cwd"]):
+        mismatches.append(f"cwd {execution['cwd']!r} is not the admitted worktree {worktree!r}")
+    bound_cwd = args.get("cwd")
+    if not args.get("worktree") and bound_cwd and not _same_cwd(str(bound_cwd), execution["cwd"]):
+        mismatches.append(f"cwd {execution['cwd']!r} is not the bound --cwd {bound_cwd!r}")
     if mismatches:
         raise AdvisoryRefused(EXECUTION_MISMATCH, "; ".join(mismatches))
 
@@ -838,6 +942,7 @@ def verify_worker_admission(
     model_id: str | None,
     mode: str,
     cwd: Path,
+    execution: Mapping[str, Any],
     prompt: str,
     compose_prompt: PromptComposer,
     state_path_for: Callable[[str], Path],
@@ -852,18 +957,25 @@ def verify_worker_admission(
     admission and all of it re-verifies now: the recorded dispatch arguments
     hash to the argument half of the binding, the binding re-derives, the
     advisor's sealed result still loads and binds, the recorded ceilings and
-    owned paths are the envelope's, the launch (agent, model, mode, owned paths,
-    worktree) is the admitted one, and ``prompt`` is the envelope-bound brief
+    owned paths are the envelope's, the launch is the admitted one (every
+    ``EXECUTION_FIELDS`` value, the bound arguments that set them, and the owned
+    paths), and ``prompt`` is the envelope-bound brief
     inside exactly the blocks ``compose_prompt(brief, envelope, args)``
     rebuilds. The record's own prompt digests are never trusted for that.
     A Gemini Flash launch runs either with such an admission or with a
     recorded Ukrainian exemption that still classifies as non-bounded in
     ``cwd``.
 
+    ``execution`` holds the remaining ``EXECUTION_FIELDS`` values the worker
+    is about to run (effort, timeouts, budget, provider, harness, PR opening).
+
     Returns the SHA-256 of the checked prompt bytes for an envelope admission,
     None otherwise.
     """
     policy = policy or bounded_execution_policy()
+    actual = {"agent": agent, "model_id": model_id, "mode": mode, "cwd": str(cwd), **execution}
+    if set(actual) != set(EXECUTION_FIELDS):
+        raise ValueError(f"agent, model_id, mode, cwd and execution must give exactly {list(EXECUTION_FIELDS)}")
     if model_id not in {policy.bounded_worker_model_id, policy.bounded_fallback_model_id}:
         return None
     if not record:
@@ -927,9 +1039,7 @@ def verify_worker_admission(
             f"the recorded admission of advisory task {advisor_task_id!r} no longer matches its sealed envelope",
         )
     require_owned_paths_match(current.owned_paths, record.get("owned_paths"))
-    _require_execution(
-        admitted, args, record, agent=agent, model_id=model_id, mode=mode, cwd=cwd, envelope_paths=current.owned_paths
-    )
+    _require_execution(admitted, args, record, execution=actual, envelope_paths=current.owned_paths)
     return _require_bound_prompt(
         prompt, prompt_sha256=prompt_sha256, compose=lambda brief: compose_prompt(brief, current, args)
     )

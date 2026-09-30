@@ -80,8 +80,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
         "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
         "kimi_content_refusal": str | absent,       # a Kimi diff held Cyrillic text or content that is not plain text; nothing was committed
-        "advisory_envelope": {requirement, advisory_args, advisory_args_sha256, prompt_sha256, admitted_agent,
-                              admitted_model_id, research_block, repo_root, advisor_task_id, advisor_model,
+        "advisory_envelope": {requirement, advisory_args, advisory_args_sha256, prompt_sha256,
+                              admitted_execution, research_block, repo_root, advisor_task_id, advisor_model,
                               advisor_run_nonce, result_path, result_sha256, envelope_sha256,
                               dispatch_args_sha256, owned_paths, max_changed_files, max_non_test_loc}
                              | absent,  # bounded-worker admission; the worker re-verifies it (#9275)
@@ -89,6 +89,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "advisory_exemption": {model_id, task_family, review_profile, mode, classified_paths} | absent,
                               # a Gemini Flash launch classified Ukrainian; the worker re-classifies it
         "advisory_ceiling_check": {measured, changed_files, non_test_loc, max_*, exceeded | error} | absent,
+        "advisory_exempt_change_check": {measured, changed_paths, ignored_residue, problems | error} | absent,
         "advisory_role": "bounded_advisory_envelope" | absent,  # the advisor run that issues an envelope (#9275)
         "advisory_route": str | absent,
         "advisory_binding_sha256": str | absent,    # the worker dispatch's advisory binding digest
@@ -5571,8 +5572,27 @@ def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: M
         max_loc = int(envelope["max_non_test_loc"])
     except (KeyError, TypeError, ValueError):
         return {"measured": False, "error": "the task record's envelope has no ceilings"}
+    numstat, error = _advisory_worker_diff(worktree, base_branch, ["--numstat", "-z", "--no-renames"])
+    if numstat is None:
+        return {"measured": False, "error": error}
+    try:
+        entries = bounded_advisory.parse_numstat_z(numstat)
+    except ValueError as exc:
+        return {"measured": False, "error": str(exc)}
+    return bounded_advisory.ceiling_verdict(entries, max_changed_files=max_files, max_non_test_loc=max_loc)
+
+
+def _advisory_worker_diff(
+    worktree: Path | None, base_branch: str, diff_args: Sequence[str], *, committed_only: bool = False
+) -> tuple[str | None, str | None]:
+    """``(git diff <diff_args> <merge-base>, None)`` over the worker's changes, or ``(None, why)`` when unreadable.
+
+    Changes run from the merge base with the base branch to the working tree:
+    the worker's commits plus its uncommitted and untracked files; with
+    ``committed_only``, to ``HEAD``: its commits alone.
+    """
     if worktree is None or not worktree.is_dir():
-        return {"measured": False, "error": "no worktree to measure"}
+        return None, "no worktree to measure"
     try:
         base_proc = subprocess.run(
             ["git", "merge-base", _commit_count_base_ref(worktree, base_branch), "HEAD"],
@@ -5584,18 +5604,92 @@ def _advisory_ceiling_check(worktree: Path | None, base_branch: str, envelope: M
             timeout=DEFAULT_GIT_TIMEOUT_S,
         )
     except (OSError, subprocess.TimeoutExpired) as exc:
-        return {"measured": False, "error": f"merge-base: {exc}"}
+        return None, f"merge-base: {exc}"
     merge_base = (base_proc.stdout or "").strip()
     if base_proc.returncode != 0 or not merge_base:
-        return {"measured": False, "error": "merge-base with the base branch is unknown"}
-    numstat = _worktree_diff_output(worktree, ["--numstat", "-z", "--no-renames", merge_base, "--"])
-    if numstat is None:
-        return {"measured": False, "error": "the worker's diff could not be read"}
+        return None, "merge-base with the base branch is unknown"
+    if committed_only:
+        try:
+            proc = subprocess.run(
+                ["git", "diff", *diff_args, merge_base, "HEAD", "--"],
+                cwd=worktree,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return None, f"the worker's committed diff could not be read: {exc}"
+        return (proc.stdout, None) if proc.returncode == 0 else (None, "the worker's committed diff could not be read")
+    output = _worktree_diff_output(worktree, [*diff_args, merge_base, "--"])
+    if output is None:
+        return None, "the worker's diff could not be read"
+    return output, None
+
+
+def _advisory_completion_gate(
+    record: Mapping[str, Any], worktree: Path | None
+) -> tuple[str, dict[str, Any], str | None, str] | None:
+    """The #9275 completion gate a write task's record calls for, run on its changes; None when neither applies.
+
+    ``(record key, check, failure code or None, detail)``: the envelope
+    ceilings of a bounded worker, or the changed-path classification of a
+    Ukrainian content exemption. Unmeasurable changes fail.
+    """
+    base_branch = str(record.get("worktree_base") or "main")
+    envelope = record.get("advisory_envelope")
+    if isinstance(envelope, dict):
+        ceiling = _advisory_ceiling_check(worktree, base_branch, envelope)
+        failure = (
+            bounded_advisory.CEILING_UNMEASURED
+            if not ceiling.get("measured")
+            else (bounded_advisory.CEILING_EXCEEDED if ceiling.get("exceeded") else None)
+        )
+        detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
+        return "advisory_ceiling_check", ceiling, failure, detail
+    if isinstance(record.get("advisory_exemption"), dict):
+        check = _exempt_change_check(worktree, base_branch)
+        failure = (
+            bounded_advisory.EXEMPT_CHANGES_UNMEASURED
+            if not check.get("measured")
+            else (bounded_advisory.EXEMPT_CODE_CHANGE if check.get("problems") else None)
+        )
+        detail = "; ".join(check.get("problems") or []) or str(check.get("error") or "unmeasured")
+        return "advisory_exempt_change_check", check, failure, detail
+    return None
+
+
+def _advisory_completion_gate_fails(record: Mapping[str, Any], worktree: Path) -> bool:
+    """True when the record's #9275 completion gate already fails, so auto-finalize must not commit or open a PR."""
+    gate = _advisory_completion_gate(record, worktree)
+    return gate is not None and gate[2] is not None
+
+
+def _exempt_change_check(worktree: Path | None, base_branch: str) -> dict[str, Any]:
+    """Classify every path a content-exempt worker changed (#9275); unmeasurable is reported as such.
+
+    Every committed path is classified, and every uncommitted one except the
+    scratch residue auto-finalize never publishes (``_is_disposable_auto_finalize_path``),
+    which is listed as ``ignored_residue``.
+    """
+    name_args = ["--name-only", "-z", "--no-renames"]
+    names, error = _advisory_worker_diff(worktree, base_branch, name_args)
+    committed, committed_error = _advisory_worker_diff(worktree, base_branch, name_args, committed_only=True)
+    if names is None or committed is None:
+        return {"measured": False, "error": error or committed_error}
+    assert worktree is not None
+    committed_paths = {name for name in committed.split("\0") if name}
+    all_paths = {name for name in names.split("\0") if name} | committed_paths
+    residue = sorted(
+        path for path in all_paths if path not in committed_paths and _is_disposable_auto_finalize_path(path)
+    )
+    changed = sorted(all_paths - set(residue))
     try:
-        entries = bounded_advisory.parse_numstat_z(numstat)
-    except ValueError as exc:
+        problems = bounded_advisory.exempt_change_problems(changed, worktree)
+    except RuntimeError as exc:
         return {"measured": False, "error": str(exc)}
-    return bounded_advisory.ceiling_verdict(entries, max_changed_files=max_files, max_non_test_loc=max_loc)
+    return {"measured": True, "changed_paths": changed, "ignored_residue": residue, "problems": problems}
 
 
 def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
@@ -8040,13 +8134,25 @@ def _run_worker(
     # The worker runs the admitted seat and model; nothing resolves them again.
     agent, model = worker_target.recipient, worker_target.model
     # #9275: a bounded model runs only with the parent's advisory admission in
-    # the task record, re-verified here; nothing reaches the provider without it.
+    # the task record, re-verified here on the launch values it runs; nothing
+    # reaches the provider without it.
+    advisory_execution = {
+        "effort": effort,
+        "hard_timeout": hard_timeout,
+        "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
+        "max_budget_usd": max_budget_usd,
+        "provider": provider,
+        "harness": harness,
+        "finalize_open_pr": finalize_open_pr,
+    }
     advisory_refusal = _advisory_worker_refusal(
         task_id,
         agent=agent,
         model=model,
         mode=mode,
         cwd=Path(cwd_str),
+        execution=advisory_execution,
         prompt=prompt,
         runtime_tmp_root=runtime_tmp_root,
         runtime_tmp_namespace_root=runtime_tmp_namespace_root,
@@ -8294,7 +8400,7 @@ def _run_worker(
             # #9275: the provider handoff. The admission is re-verified on the
             # exact prompt object submitted below, after every transformation.
             advisory_prompt_sha256 = _verify_bounded_worker(
-                task_id, agent=agent, model=model, mode=mode, cwd=cwd, prompt=prompt
+                task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=advisory_execution, prompt=prompt
             )
             result = runtime_invoke(
                 agent,
@@ -8638,6 +8744,7 @@ def _run_worker(
                     and (mode == "danger" or kimi_worker)
                     and kimi_content_refusal is None
                     and not run_incomplete
+                    and not _advisory_completion_gate_fails(final_state, Path(worktree_path))
                 ):
                     if kimi_worker:
                         # The content check passed and the worker has exited: take the
@@ -8735,29 +8842,21 @@ def _run_worker(
                 ok_outcome = False
                 stderr_excerpt = review_verdict_failure
 
-        # #9275: a bounded worker's envelope ceilings are checked on what it changed.
-        # Exceeding either ceiling, or failing to measure, is a typed failure, never done.
-        advisory_envelope = final_state.get("advisory_envelope")
-        if isinstance(advisory_envelope, dict) and mode in _WRITE_CAPABLE_MODES and final_status == "done":
-            ceiling = _advisory_ceiling_check(
-                Path(worktree_path) if worktree_path else None,
-                str(final_state.get("worktree_base") or "main"),
-                advisory_envelope,
-            )
-            final_state["advisory_ceiling_check"] = ceiling
-            ceiling_failure = (
-                bounded_advisory.CEILING_UNMEASURED
-                if not ceiling.get("measured")
-                else (bounded_advisory.CEILING_EXCEEDED if ceiling.get("exceeded") else None)
-            )
-            if ceiling_failure is not None:
-                detail = "; ".join(ceiling.get("exceeded") or []) or str(ceiling.get("error") or "unmeasured")
-                final_state["failure_reason"] = ceiling_failure
-                final_status = "failed"
-                ok_outcome = False
-                needs_finalize = False
-                message = f"{ceiling_failure}: {detail}"
-                stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
+        # #9275: the completion gates. A bounded worker's envelope ceilings, and a
+        # Ukrainian content exemption's changed paths, are checked on what it changed;
+        # a breach, or changes that cannot be measured, is a typed failure, never done.
+        if mode in _WRITE_CAPABLE_MODES and final_status == "done":
+            advisory_gate = _advisory_completion_gate(final_state, Path(worktree_path) if worktree_path else None)
+            if advisory_gate is not None:
+                gate_key, gate_check, gate_failure, gate_detail = advisory_gate
+                final_state[gate_key] = gate_check
+                if gate_failure is not None:
+                    final_state["failure_reason"] = gate_failure
+                    final_status = "failed"
+                    ok_outcome = False
+                    needs_finalize = False
+                    message = f"{gate_failure}: {gate_detail}"
+                    stderr_excerpt = f"{message}\n{stderr_excerpt}" if stderr_excerpt else message
 
         if pre_spawn_failure:
             needs_finalize = False
@@ -11077,7 +11176,16 @@ def _dispatch(
         # the admitted slot stays held until the worker writes its pid (#8717).
         if admission_record is not None:
             initial_state["admission"] = admission_record
-        initial_state.update(advisory_admission.state_fields(research_block=research_block))
+        # #9275: the launch handed to the worker below, recorded for its admission check.
+        worker_execution = _worker_execution(
+            args,
+            cwd=cwd,
+            silence_timeout=silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+            max_budget_usd=max_budget_usd,
+            harness=requested_harness,
+        )
+        initial_state.update(advisory_admission.state_fields(research_block=research_block, execution=worker_execution))
         # #9275: the envelope admitted at route resolution must still be the
         # advisor's canonical result now, just before the worker is spawned.
         try:
@@ -11155,27 +11263,27 @@ def _dispatch(
             task_id,
             *_worker_route_argv(launch_target),
             "--mode",
-            args.mode,
+            worker_execution["mode"],
             "--cwd",
-            cwd,
+            worker_execution["cwd"],
             "--hard-timeout",
-            str(args.hard_timeout),
+            str(worker_execution["hard_timeout"]),
             "--silence-timeout",
-            str(silence_timeout),
+            str(worker_execution["silence_timeout"]),
             "--initial-response-timeout",
-            str(initial_response_timeout),
+            str(worker_execution["initial_response_timeout"]),
             "--runtime-tmp-root",
             str(runtime_tmp_root),
             "--runtime-tmp-namespace-root",
             str(runtime_tmp_namespace_root),
         ]
-        cmd.extend(_dispatch_worker_identity_flags(args, requested_harness))
+        cmd.extend(_dispatch_worker_identity_flags(args, worker_execution["harness"]))
         if keep_worktree:
             cmd.append("--keep-worktree")
-        if bool(getattr(args, "finalize_open_pr", False)):
+        if worker_execution["finalize_open_pr"]:
             cmd.append("--finalize-open-pr")
-        if max_budget_usd is not None:
-            cmd.extend(["--max-budget-usd", str(max_budget_usd)])
+        if worker_execution["max_budget_usd"] is not None:
+            cmd.extend(["--max-budget-usd", str(worker_execution["max_budget_usd"])])
         if output_schema_path is not None:
             cmd.extend(
                 [
@@ -11185,11 +11293,10 @@ def _dispatch(
                     str(output_schema_sha256),
                 ]
             )
-        if getattr(args, "provider", None):
-            cmd.extend(["--provider", args.provider])
-        effort = getattr(args, "effort", None)
-        if effort:
-            cmd.extend(["--effort", effort])
+        if worker_execution["provider"]:
+            cmd.extend(["--provider", worker_execution["provider"]])
+        if worker_execution["effort"]:
+            cmd.extend(["--effort", worker_execution["effort"]])
         if run_nonce:
             cmd.extend(["--run-nonce", run_nonce])
         if review_plan is not None:
@@ -11590,8 +11697,13 @@ class _AdvisoryAdmission:
     model_id: str | None = None
     exemption: dict[str, Any] | None = None  # a Gemini Flash launch classified Ukrainian
 
-    def state_fields(self, *, research_block: str = "") -> dict[str, Any]:
-        """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt."""
+    def state_fields(self, *, research_block: str = "", execution: Mapping[str, Any] | None = None) -> dict[str, Any]:
+        """Task-record fields; ``research_block`` is the research pointer block added to the worker prompt.
+
+        ``execution`` is the launch handed to the worker (``_worker_execution``),
+        recorded with the admitted agent and model as ``admitted_execution``;
+        None for a dry run, which starts no worker.
+        """
         if self.envelope is not None and self.requirement is not None:
             assert self.args is not None and self.prompt_sha256 is not None and self.repo_root is not None
             assert self.agent is not None and self.model_id is not None
@@ -11601,8 +11713,9 @@ class _AdvisoryAdmission:
                     args=self.args,
                     prompt_sha256=self.prompt_sha256,
                     repo_root=self.repo_root,
-                    agent=self.agent,
-                    model_id=self.model_id,
+                    execution=(
+                        None if execution is None else {"agent": self.agent, "model_id": self.model_id, **execution}
+                    ),
                     research_block=research_block,
                 )
             }
@@ -11623,6 +11736,33 @@ class _AdvisoryAdmission:
         if self.advisor_binding is not None:
             return bounded_advisory.advisor_prompt_block(self.advisor_binding), "advisory_contract"
         return "", None
+
+
+def _worker_execution(
+    args: argparse.Namespace,
+    *,
+    cwd: str,
+    silence_timeout: int,
+    initial_response_timeout: int,
+    max_budget_usd: float | None,
+    harness: str | None,
+) -> dict[str, Any]:
+    """The launch values ``cmd_dispatch`` hands the ``_worker`` argv, beside the admitted agent and model (#9275).
+
+    A bounded worker compares each with what it runs (``EXECUTION_FIELDS``).
+    """
+    return {
+        "mode": args.mode,
+        "cwd": cwd,
+        "effort": getattr(args, "effort", None) or None,
+        "hard_timeout": args.hard_timeout,
+        "silence_timeout": silence_timeout,
+        "initial_response_timeout": initial_response_timeout,
+        "max_budget_usd": max_budget_usd,
+        "provider": getattr(args, "provider", None) or None,
+        "harness": harness,
+        "finalize_open_pr": bool(getattr(args, "finalize_open_pr", False)),
+    }
 
 
 def _admit_advisory(
@@ -11764,11 +11904,20 @@ def _bounded_prompt_composer(
 
 
 def _verify_bounded_worker(
-    task_id: str, *, agent: str, model: str | None, mode: str, cwd: Path, prompt: str
+    task_id: str,
+    *,
+    agent: str,
+    model: str | None,
+    mode: str,
+    cwd: Path,
+    execution: Mapping[str, Any],
+    prompt: str,
 ) -> str | None:
     """Re-verify this worker's #9275 admission against ``prompt``, the exact text it hands the provider.
 
-    Reads the worker's own task record (never creating it). Returns the
+    ``execution`` holds the other launch values the worker runs (effort,
+    timeouts, budget, provider, harness, PR opening); each must be the admitted
+    one. Reads the worker's own task record (never creating it). Returns the
     SHA-256 of the checked prompt for an envelope admission, None when the
     model is not bounded or runs under a Ukrainian exemption; raises
     ``AdvisoryRefused`` otherwise.
@@ -11783,6 +11932,7 @@ def _verify_bounded_worker(
         model_id=canonical_model_id(model or _default_model_for(agent)),
         mode=mode,
         cwd=cwd,
+        execution=execution,
         prompt=prompt,
         compose_prompt=_bounded_prompt_composer(record or {}, agent=agent, model=model, mode=mode),
         state_path_for=_state_path_no_create,
@@ -11797,6 +11947,7 @@ def _advisory_worker_refusal(
     model: str | None,
     mode: str,
     cwd: Path,
+    execution: Mapping[str, Any],
     prompt: str,
     runtime_tmp_root: str | None,
     runtime_tmp_namespace_root: str | None,
@@ -11809,7 +11960,9 @@ def _advisory_worker_refusal(
     hand-built worker argv with no record gets the refusal only.
     """
     try:
-        _verify_bounded_worker(task_id, agent=agent, model=model, mode=mode, cwd=cwd, prompt=prompt)
+        _verify_bounded_worker(
+            task_id, agent=agent, model=model, mode=mode, cwd=cwd, execution=execution, prompt=prompt
+        )
     except bounded_advisory.AdvisoryRefused as exc:
         refusal = f"worker refused before start: {exc}"
         state_path = _state_path_no_create(task_id)
