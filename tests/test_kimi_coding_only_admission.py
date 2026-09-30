@@ -54,6 +54,8 @@ def _refusal(**overrides):
             "site/src/css/x.css",
             "site/src/assets/logo.svg",
             "site/src/lib/arc.ts",
+            "site/src/lib/doc-nav.ts",
+            "scripts/agent_runtime/runner.py",
             "site/tests/arc.test.ts",
             "site/e2e/nav.spec.ts",
             "site/vitest.config.ts",
@@ -143,6 +145,14 @@ PROTECTED_PATHS = (
     "site/src/data/words.json",
     "site/src/lexicon/entry.ts",
     "site/src/lib/i18n/chrome.ts",
+    "site/src/lib/lexicon/x.ts",
+    "site/src/lib/lexicon/adjective-mechanics.ts",
+    "scripts/lexicon/x.py",
+    "scripts/verification/stress.py",
+    "scripts/practice/noun_mechanics_engine.py",
+    "scripts/audit/checks/grammar.py",
+    "scripts/pipeline/stress_annotator.py",
+    "site/src/lib/vesum-form-key.ts",
     "scripts/i18n/uk.json",
     "site/src/components/locales/strings.json",
     "tests/fixtures/messages.po",
@@ -162,6 +172,16 @@ PROTECTED_PATHS = (
     "agents_extensions/claude/agents/x.md",
     "README.md",
 )
+
+
+def test_every_ukrainian_code_family_is_refused_with_its_reason():
+    for prefix, reason in kimi_admission.UKRAINIAN_CODE_FAMILIES.items():
+        assert reason
+        assert kimi_admission.protected_path_reason(f"{prefix}module.ts")
+
+
+def test_the_repository_name_alone_does_not_mark_language_code():
+    assert kimi_admission.protected_path_reason("scripts/launchd/com.learn-ukrainian.watcher.plist") is None
 
 
 @pytest.mark.parametrize("path", PROTECTED_PATHS)

@@ -51,6 +51,35 @@ CODING_ROOTS = (
 )
 # Site build/test configuration at the site root (astro.config.mjs, vitest.config.ts...).
 _SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
+# Code directories whose logic encodes Ukrainian grammar, morphology, stress,
+# lexicon or language-correctness rules (site/src/lib/ and scripts/ otherwise
+# admit coding). Each entry carries its one-line reason.
+UKRAINIAN_CODE_FAMILIES = {
+    "site/src/lib/lexicon/": "grammar mechanics, VESUM form keys, heteronyms and lexicon runtime for the word atlas",
+    "scripts/lexicon/": "lexicon builders, VESUM shards, heteronym and calque corrections",
+    "scripts/linguistics/": "Ukrainian tokenizer",
+    "scripts/verification/": "VESUM, stress and Russian-morphology checks",
+    "scripts/vocab/": "vocabulary extraction and lexical sandbox over Ukrainian words",
+    "scripts/vocab_audit/": "vocabulary audit of Ukrainian word lists",
+    "scripts/mphdict/": "morphological dictionary queries",
+    "scripts/etymology/": "etymology, cognate and Ukrainian transliteration logic",
+    "scripts/practice/": "per-part-of-speech grammar mechanics engines and paradigm densification",
+    "scripts/atlas/": "lexical projection, normalization and VESUM attestation for the word atlas",
+    "scripts/audit/checks/": "language-correctness checks: grammar, euphony, morphology, stress, russicisms",
+    "scripts/projects/open_model_data/": "Ukrainian grammar, decolonization and correction datasets",
+    "scripts/projects/ua_eval_harness/": "Ukrainian-language evaluation cases",
+    "scripts/projects/ua_open_weight_eval/": "Ukrainian-language model evaluation",
+    "scripts/data/": "stress overrides and other Ukrainian language data tables",
+    "scripts/build/universal_rules/": "Ukrainian-language writing and grammar rules for the build",
+}
+UKRAINIAN_CODE_PREFIXES = tuple(UKRAINIAN_CODE_FAMILIES)
+# File and directory names under these roots that mark Ukrainian language logic
+# wherever they sit (scripts/pipeline/stress_annotator.py, scripts/audit/russianism_eval.py...).
+_LANGUAGE_CODE_ROOTS = ("scripts/", "site/src/lib/")
+_LANGUAGE_CODE_NAME = re.compile(
+    r"vesum|pymorphy|morph|stress|grammar|euphon|russic|russianism|calque|mechanics|paradigm|declens"
+    r"|conjug|inflect|phonet|orthoepy|translit|lexicon|lexical|heteronym"
+)
 PROTECTED_PATH_PREFIXES = (
     # Ukrainian-language content and data.
     "curriculum/",
@@ -61,6 +90,9 @@ PROTECTED_PATH_PREFIXES = (
     "site/src/data/",
     "site/src/lexicon/",
     "site/src/lib/i18n/",
+    # Ukrainian grammar, morphology, stress and lexicon code: it encodes
+    # language rules, so editing it is Ukrainian-language work.
+    *UKRAINIAN_CODE_PREFIXES,
     # Rules, instructions and private agent state.
     "docs/",
     "agents_extensions/shared/rules/",
@@ -152,6 +184,8 @@ def protected_path_reason(path: str) -> str | None:
             return f"owned path {normalized!r} is under protected {prefix!r}"
     if PRIVATE_STATE_COMPONENTS.intersection(parts):
         return f"owned path {normalized!r} is agent-private state"
+    if folded.startswith(_LANGUAGE_CODE_ROOTS) and any(_LANGUAGE_CODE_NAME.search(part) for part in parts):
+        return f"owned path {normalized!r} is Ukrainian grammar, morphology, stress or lexicon code"
     if _is_locale_path(parts):
         return f"owned path {normalized!r} is a locale or translation file"
     if _SITE_CONFIG_FILE.match(folded):
