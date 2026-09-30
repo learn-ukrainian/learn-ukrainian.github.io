@@ -136,14 +136,18 @@ capitalised and per-hyphen-part capitalised), followed by normalized filtering;
 spellings outside those candidates fail closed until a rebuilt store is activated.
 Text kinds (`pravopys`, `textbook`)
 require a whole-word match of the option or any attested VESUM paradigm form
-of its lemmas. Line-break hyphenation inside a word is joined before matching
-(`червиво-\nго` witnesses `червивого`, never the fragment `го`). Standalone
+of its lemmas. Soft hyphens (U+00AD), including a following line break, are
+removed before matching; fragments after them cannot bind (`Фор­мат` never
+witnesses `мат`). Non-breaking hyphens (U+2011) fold to `-`. Line-end hyphens
+inside words are tried both joined and kept (`червиво-\nго` witnesses
+`червивого`, never the fragment `го`; `будь-\nякий` witnesses `будь-який`). Standalone
 one-letter options and paradigm witnesses are refused; witnesses need at least
 two letters. Longer function words may bind by whole-word occurrence: this
 proves word identity only, never contextual grammatical support. Multi-word
-options require the exact phrase, including whitespace (apart from line-break
-hyphenation inside words); separate tokens or paradigm variants cannot bind a
-phrase. Case correctness is checked by the language judgement elsewhere.
+options require the exact phrase after whitespace runs (including newlines)
+collapse to one space in both the option and source text; separate tokens or
+paradigm variants cannot bind a phrase. Case correctness is checked by the
+language judgement elsewhere.
 Other existing rows refuse with `evidence_form_mismatch`. Live Pravopys
 receipts use `pravopys-live-section-v1` identities.
 

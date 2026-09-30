@@ -94,17 +94,25 @@ RECEIPT_EVIDENCE_STORES = {
 
 
 def _contains_evidence_form(text: str, form: str) -> bool:
-    """Match a whole word or exact phrase after joining line-break hyphenation.
+    """Match a whole word or exact phrase independent of typesetting breaks.
 
     Witnesses need at least two letters, including paradigm variants; standalone
     one-letter options cannot bind text kinds. Longer function words can bind by
     occurrence: this establishes identity, never their contextual correctness.
-    Phrase whitespace stays exact except for hyphenation inside a word.
+    Strip soft hyphens, fold non-breaking hyphens, and try line-end hyphens
+    both joined and kept. Collapse whitespace in the witness and option so
+    phrase identity preserves adjacent words rather than PDF line wrapping.
     """
-    text = re.sub(r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])", "", normalize_evidence_form(text))
+    text = re.sub(r"\u00ad[ \t]*\r?\n?[ \t]*", "", normalize_evidence_form(text)).replace("\u2011", "-")
+    line_end_hyphen = r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])"
+    texts = [re.sub(line_end_hyphen, replacement, text) for replacement in ("", "-")]
+    form = re.sub(r"\s+", " ", form)
     return bool(
         sum(char.isalpha() for char in form) >= 2
-        and re.search(r"(?<![\w'-])" + re.escape(form) + r"(?![\w'-])", text)
+        and any(
+            re.search(r"(?<![\w'-])" + re.escape(form) + r"(?![\w'-])", re.sub(r"\s+", " ", candidate))
+            for candidate in texts
+        )
     )
 
 
@@ -675,10 +683,11 @@ class Sources:
         lemmas, definition matches, or metadata witnesses. Binding establishes
         word identity, never correctness of the contextual language judgement.
         Only ULIF rows with status='ok' provide witnesses, for both judgements.
-        Text is dehyphenated across line breaks before matching. Standalone
+        Text soft hyphens are stripped and line-end hyphens tried joined and
+        kept before matching. Standalone
         one-letter options and one-letter paradigm witnesses cannot bind text;
         longer function words can bind by occurrence. Multi-word options require
-        the exact phrase (including whitespace), never independent token matches.
+        the exact phrase after whitespace collapse, never independent token matches.
         """
         fields = {
             "vesum": ("word_form", "lemma"),
