@@ -273,10 +273,10 @@ def planned_state(
                         if nid not in name_ids:
                             name_ids[str(nid)] = {"position": pos, "lesson": l_n}
 
-    # Determinism: sort dict keys
+    # Determinism: sort id keys; letters keep the plans' introduction order (positions ascending,
+    # each lesson's phonetics.letters list order), which the writer's taught-letters list shows (#9182)
     core_ids = dict(sorted(core_ids.items()))
     grammar_ids = dict(sorted(grammar_ids.items()))
-    letters = dict(sorted(letters.items()))
     name_ids = dict(sorted(name_ids.items()))
 
     # Base-layer ids and name ids must not increase cumulative_core_count,

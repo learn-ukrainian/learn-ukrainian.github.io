@@ -78,12 +78,74 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/model-assignment.md"
     "rules/operator-expectations.md"
     "rules/fleet-driver-routing.md"
+    # Draft rules core and its content-seat addendum: stay out of Claude autoload
+    # until their loading contract lands.
+    "rules/core.md"
+    "rules/core-curriculum.md"
 )
 CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
 
 # Codex discovers shared skills only via .agents/skills. Preserve the legacy
 # path from rsync deletion; capture verified copies into retained storage.
 CODEX_DISCOVERY_EXCLUDES="skills"
+
+# Every declared entry above is anchored at its target root. A glob never
+# crosses a "/": *-epic names .claude/atlas-epic/, never
+# .claude/skills/drive-epic/. deploy_prompts.sh passes each entry to rsync as
+# --exclude=/<entry>; the bash matchers below apply the same rule.
+
+# True when RELATIVE (a path under a target root) is ENTRY or a descendant.
+declared_path_match() {
+    local relative="$1" entry="${2%/}" slashes rest head prefix="" i
+    slashes="${entry//[^\/]/}"
+    rest="$relative"
+    for ((i = 0; i <= ${#slashes}; i++)); do
+        [[ -n "$rest" ]] || return 1
+        head="${rest%%/*}"
+        if [[ "$rest" == */* ]]; then rest="${rest#*/}"; else rest=""; fi
+        prefix+="${prefix:+/}$head"
+    done
+    # PREFIX has exactly as many components as ENTRY, so no * spans a "/".
+    # shellcheck disable=SC2053
+    [[ "$prefix" == $entry ]]
+}
+
+# True when RELATIVE matches any entry of a space-separated list.
+declared_paths_match() {
+    local relative="$1" entries="$2" entry
+    local -
+    set -f
+    for entry in $entries; do
+        declared_path_match "$relative" "$entry" && return 0
+    done
+    return 1
+}
+
+# Print one `diff --exclude` name per line for declared entries of SRC → DST.
+# diff matches an exclude against every basename in the tree, so a glob is
+# expanded to the concrete top-level names it matches; *-epic must not hide
+# skills/drive-epic from the drift report. A subtree entry such as skills/*
+# excludes its root, and a nested entry excludes its own basename.
+declared_diff_excludes() {
+    local src="$1" dst="$2" entries="$3" entry path
+    local -
+    set -f
+    for entry in $entries; do
+        entry="${entry%/}"
+        [[ "$entry" == */\* ]] && entry="${entry%/\*}"
+        if [[ "$entry" == */* ]]; then
+            printf '%s\n' "${entry##*/}"
+        elif [[ "$entry" == *[\*\?\[]* ]]; then
+            set +f
+            for path in "$src"/$entry "$dst"/$entry; do
+                [[ -e "$path" || -L "$path" ]] && printf '%s\n' "${path##*/}"
+            done
+            set -f
+        else
+            printf '%s\n' "$entry"
+        fi
+    done
+}
 
 # Interpreter cache written beside deployed hooks (#9108). Not declared runtime
 # state. rsync has no name rule for these: a *.pyc pattern also matches a

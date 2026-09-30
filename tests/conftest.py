@@ -20,6 +20,7 @@ import weakref
 from collections.abc import Collection, Generator
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
@@ -523,11 +524,10 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
 # =============================================================================
 # CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
 # =============================================================================
-# GitHub Actions collects through one initial `tests` path instead of ~337
-# positional file arguments per shard (1,345 test files total on the baseline
-# head; collection cost, not test selection); this hook
-# narrows that single-path collection back down to one shard's files. See
-# scripts/ci/pytest_shards.py `plan-files` and docs/runbooks/ci-gate.md.
+# GitHub Actions collects through one initial `tests` path instead of ~100
+# positional file arguments per shard (collection cost, not test selection);
+# this hook narrows that single-path collection back down to one shard's
+# files. See scripts/ci/split_tests.py and docs/runbooks/ci-gate.md.
 
 LU_PYTEST_SHARD_FILES_ENV_VAR = "LU_PYTEST_SHARD_FILES"
 
@@ -1695,11 +1695,51 @@ class _FlakeRerunReporter:
                 output.write(summary)
 
 
+LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR = "LU_PYTEST_NEEDS_ARTIFACT_COLLECTED"
+
+
+class _NeedsArtifactCollection:
+    """Write every collected ``needs_artifact`` test before ``-m`` deselects any.
+
+    scripts/ci/pytest_report.py compares this set with
+    registry/artifacts/needs-artifact-expected.txt, independently of the
+    tests that skipped at run time, so a marked test the tier deselects
+    (``slow``) or skips for another reason fails the audit. Under xdist every
+    worker collects the same items and gw0 writes them; the controller
+    collects nothing.
+
+    The path reaches workers through ``workerinput``, never the environment:
+    a test that runs a child pytest would inherit the variable and overwrite
+    this run's list with the child's.
+    """
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_configure_node(self, node: Any) -> None:
+        node.workerinput[LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR] = str(self.path)
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_collection_modifyitems(self, config: pytest.Config, items: list[pytest.Item]) -> None:
+        if getattr(config, "workerinput", {}).get("workerid", "gw0") != "gw0":
+            return
+        marked = sorted(item.nodeid for item in items if item.get_closest_marker("needs_artifact"))
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text("".join(f"{node_id}\n" for node_id in marked), encoding="utf-8")
+
+
 def pytest_configure(config: pytest.Config) -> None:
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
+    if hasattr(config, "workerinput"):
+        collected_path = config.workerinput.get(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR)
+    else:
+        collected_path = os.environ.pop(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR, None)
+    if collected_path:
+        config.pluginmanager.register(_NeedsArtifactCollection(Path(collected_path)), "needs-artifact-collection")
     _install_socket_guard()
     config.addinivalue_line(
         "markers",

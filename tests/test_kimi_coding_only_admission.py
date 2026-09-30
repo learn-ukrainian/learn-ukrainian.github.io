@@ -114,7 +114,7 @@ ADMITTED_PATHS = (
     "scripts//ci/x.py",
     # Directory and glob scopes whose every file is allowlisted and Cyrillic-free.
     "scripts/storage/**",
-    "scripts/ci/",
+    "scripts/hygiene/",
     "scripts/fleet_comms",
     "site/src/pages/api/**",
     "site/src/components/Live*.tsx",

@@ -554,7 +554,7 @@ LC_DRY_RUN=0; source "$LC_ROOT/scripts/launchers/codex.sh"
 launcher_codex_resolve_canonical_root
 printf 'canonical=%s\n' "$LC_CODEX_CANONICAL_ROOT"
 printf 'python=%s\n' "$(launcher_project_python)"
-LC_DRY_RUN=1 LC_MODEL=gpt-6-astra launcher_codex_transport_probe
+LC_DRY_RUN=1 LC_MODEL=gpt-6.1-sol launcher_codex_transport_probe
 """
     result = subprocess.run(
         ["bash", "-c", script, "bash", str(sgd.worktree)],

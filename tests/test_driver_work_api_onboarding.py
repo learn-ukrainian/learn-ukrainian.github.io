@@ -10,11 +10,19 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from tests.test_launcher_contract import PUBLIC as PUBLIC_LAUNCHERS
 
 REPO = Path(__file__).resolve().parents[1]
 LAUNCHER_CORE = REPO / "scripts/lib/launcher_core.sh"
-SKILL = REPO / "agents_extensions/shared/skills/drive-epic/SKILL.md"
+SKILL_DIR = REPO / "agents_extensions/shared/skills/drive-epic"
+
+
+def _skill_text() -> str:
+    """The drive-epic core plus its phase references (the skill is split)."""
+    paths = [SKILL_DIR / "SKILL.md", *sorted((SKILL_DIR / "references").glob("*.md"))]
+    return "\n".join(path.read_text(encoding="utf-8") for path in paths)
 
 # All 12 start-*.sh launchers source launcher_core.sh; PUBLIC_LAUNCHERS is
 # imported from test_launcher_contract.py's PUBLIC tuple (the allowlist SSOT,
@@ -45,15 +53,17 @@ def test_driver_prompt_names_work_api_and_grok_bot_queue_input() -> None:
     assert "capacity" not in prompt_line.lower()
 
 
+@pytest.mark.repo_wide
 def test_skill_teaches_work_api_projection_semantics() -> None:
-    body = SKILL.read_text(encoding="utf-8")
+    body = _skill_text()
     assert "http://127.0.0.1:8765/api/work/v1/projection" in body
     for term in ("health", "attention_rank", "safe_next_action"):
         assert term in body, f"skill must document {term!r} from the projection response"
 
 
+@pytest.mark.repo_wide
 def test_skill_teaches_grok_bot_with_hard_exclusions() -> None:
-    body = SKILL.read_text(encoding="utf-8")
+    body = _skill_text()
     assert "docs/runbooks/grok-bot-qa-observer.md" in body
     assert "external QA observer" in body
     # Hard exclusions preserved verbatim in meaning from the runbook.
@@ -63,10 +73,11 @@ def test_skill_teaches_grok_bot_with_hard_exclusions() -> None:
     assert "same-family Grok must not CF" in body
 
 
+@pytest.mark.repo_wide
 def test_skill_teaches_the_full_health_enum() -> None:
     from scripts.work.attention import HEALTH_RANK
 
-    body = SKILL.read_text(encoding="utf-8")
+    body = _skill_text()
     # The taught enum must match HEALTH_RANK exactly, not a stale 3-state subset
     # (UNKNOWN is authority-missing/stale, pairs with the INSPECT_UNKNOWN safe
     # action) — assert against the source of truth so this cannot silently drift.

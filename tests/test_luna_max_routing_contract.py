@@ -40,7 +40,7 @@ def test_catalog_routes_bounded_codex_workers_to_luna_high() -> None:
     assert "no_final_disposition" in direct["constraints"]
 
     fallback = route["autonomous_fallback"]
-    assert fallback["model_id"] == "gpt-6-sol"
+    assert fallback["model_id"] == "gpt-6.1-sol"
     assert fallback["effort"] == "high"
     assert "missing_objective_scope_ceiling" in fallback["when"]
 

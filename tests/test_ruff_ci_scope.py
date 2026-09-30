@@ -1,4 +1,4 @@
-"""Guard: CI Ruff job must lint scripts/, tests/, and agents_extensions/ (#7262)."""
+"""Guard: the CI Ruff check (scripts/ci/checks.sh) must lint scripts/, tests/, and agents_extensions/ (#7262)."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ import yaml
 pytestmark = pytest.mark.repo_invariant
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
+_CI = _REPO_ROOT / "scripts" / "ci" / "checks.sh"
 _PRE_COMMIT = _REPO_ROOT / ".pre-commit-config.yaml"
 _LOCK = _REPO_ROOT / "requirements-lock.txt"
 
@@ -24,14 +24,14 @@ _REQUIRED_RUFF_PATHS = ("scripts/", "tests/", "agents_extensions/")
 def _ruff_check_invocation(ci_text: str) -> str:
     """Return the `ruff check …` command line from the ruff job step."""
     match = re.search(
-        r"(?m)^[ \t]*python -m ruff check[^\n]*$",
+        r"(?m)^check \"Ruff\" \.venv/bin/python -m ruff check[^\n]*$",
         ci_text,
     )
     assert match is not None, (
-        f"{_CI.as_posix()} has no `python -m ruff check …` invocation — "
-        "the Ruff job must run ruff check against the repo Python trees"
+        f"{_CI.as_posix()} has no `check \"Ruff\" .venv/bin/python -m ruff check …` line — "
+        "the Checks job must run ruff check against the repo Python trees"
     )
-    return match.group(0)
+    return match.group(0).removeprefix('check "Ruff" ')
 
 
 def test_ci_ruff_job_lints_required_python_trees() -> None:
@@ -67,7 +67,7 @@ def test_pre_commit_ruff_checks_the_same_trees_as_ci() -> None:
     """Pre-commit must lint staged files in CI's trees with config discovery."""
     _, hook = _pre_commit_ruff()
     ci_argv = shlex.split(_ruff_check_invocation(_CI.read_text(encoding="utf-8")))
-    assert ci_argv[:4] == ["python", "-m", "ruff", "check"]
+    assert ci_argv[:4] == [".venv/bin/python", "-m", "ruff", "check"]
     assert "args" not in hook
     assert hook.get("pass_filenames", True) is True
     assert hook.get("always_run", False) is False

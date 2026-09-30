@@ -167,7 +167,7 @@ and you must supply better input before proceeding.
 
 Read the `selected` field for the formal, blocking reviewer. Read `advisory`
 for consult-only candidates — most notably `openai_frontier`: it always
-resolves to a concrete model (currently `gpt-6-sol`), and it is
+resolves to a concrete model (currently `gpt-6.1-sol`), and it is
 **advisory-only** when the author is OpenAI-family. An advisory verdict is
 useful input; it is never a substitute for the formal gate. `trace` shows
 every candidate walked and why it was excluded/selected/advisory — quote

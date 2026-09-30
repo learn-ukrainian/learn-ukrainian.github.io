@@ -97,7 +97,7 @@ EOF
 Hermes (opt-in only):
   --harness hermes           Use the existing Hermes OAuth login; no paid fallback.
                              Grok pins grok-4.7 via xai-oauth; Codex pins
-                             gpt-6-astra via openai-codex (interactive only).
+                             gpt-6.1-sol via openai-codex (interactive only).
                              --effort maps to the probed Hermes --reasoning flag.
                              Hermes accepts prompt text, not forwarded CLI flags.
                              Requires an installed CLI and an empty fallback chain,
@@ -262,7 +262,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-sol}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-6.1-sol}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -597,10 +597,10 @@ launcher_validate_mode() {
       launcher_require_registered_slot "$LC_PROVIDER" "$LC_EPIC" || exit 2
     fi
     if [ "$LC_MODEL" = gpt-6-luna ]; then
-      launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6-sol."
+      launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6.1-sol."
       exit 4
     fi
-    LC_MODEL="${LC_MODEL:-gpt-6-sol}"
+    LC_MODEL="${LC_MODEL:-gpt-6.1-sol}"
     unset SESSION_EPIC
     LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
     LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
@@ -648,7 +648,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6-sol|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)

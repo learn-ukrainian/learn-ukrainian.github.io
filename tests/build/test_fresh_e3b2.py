@@ -477,6 +477,66 @@ def test_changed_lesson_provenance_stales_the_manifest_and_closure(tmp_path, mon
     assert any(row["manifest_sha256"] == digest and row["input"] == "inputs.provenance" for row in closure["stale"])
 
 
+def test_an_earlier_plans_letter_order_change_stales_an_existing_lesson_manifest(tmp_path):
+    """A lesson manifest records the planned learner state; reordering an earlier plan's letters stales it (#9182).
+
+    The saved state file and every pin keep their bytes, so only the recomputed identity can see the change.
+    """
+    from scripts.curriculum.learner_state.planned import planned_state
+    from tests.curriculum.learner_state.test_planned import _setup_synthetic_curriculum, _write_yaml
+
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+    level, slug, n = "a1", "module-two", 1
+    state = planned_state(level, 2, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert list(state.letters) == ["А", "Б"]
+    state_dir = evidence_dir / "_state" / slug
+    doc = {
+        "kind": "lesson",
+        "level": level,
+        "slug": slug,
+        "lesson": n,
+        "inputs": {
+            "learner_state": manifest.materialize_learner_state(
+                state_dir / f"lesson-{n}.learner-state.yaml", manifest.learner_state_document(state), tmp_path
+            )
+        },
+        "learner_state": {"sha256": manifest.learner_state_sha256(state), "source": "planned_state"},
+    }
+    content = lock.yaml_bytes(doc)
+    digest = hashlib.sha256(content).hexdigest()
+    (state_dir / "manifests" / f"lesson-{n}").mkdir(parents=True)
+    (state_dir / "manifests" / f"lesson-{n}" / f"{digest}.yaml").write_bytes(content)
+    (tmp_path / "site/src/content/docs" / level / slug).mkdir(parents=True)
+
+    def closure_stale():
+        return compute_closure(level, slug, [{"n": n, "kind": "lesson"}], repo_root=tmp_path, state_dir=state_dir)[
+            "stale"
+        ]
+
+    assert manifest.changed_inputs(doc, tmp_path) == []
+    assert closure_stale() == []
+
+    earlier = plans_dir / "module-one.yaml"
+    plan = yaml.safe_load(earlier.read_text(encoding="utf-8"))
+    plan["lessons"][0]["inventory"]["phonetics"]["letters"] = ["Б", "А"]
+    _write_yaml(earlier, plan)
+    reordered = planned_state(level, 2, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert list(reordered.letters) == ["Б", "А"] and reordered.letters.keys() == state.letters.keys()
+
+    (change,) = manifest.changed_inputs(doc, tmp_path)
+    assert change == {
+        "input": "learner_state",
+        "entry": {"path": doc["inputs"]["learner_state"]["path"], "sha256": doc["learner_state"]["sha256"]},
+        "current_sha256": manifest.learner_state_sha256(reordered),
+    }
+    (row,) = closure_stale()
+    assert (row["manifest_sha256"], row["input"], row["current_sha256"]) == (
+        digest,
+        "learner_state",
+        manifest.learner_state_sha256(reordered),
+    )
+
+
 def test_manifest_history_and_closure_preserve_stale_attempts(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
     monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state({"b": 2, "a": 1}))
@@ -941,7 +1001,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
     if saved:
         shutil.copy2(state_dir / "module.build.yaml", saved / "writer-seat-required.build.yaml")
     no_recap = module.build_module(
-        level, slug, repo_root=tmp_path, lesson_n=3, writer_seat="codex:gpt-6-sol", runner=run_actual
+        level, slug, repo_root=tmp_path, lesson_n=3, writer_seat="codex:gpt-6.1-sol", runner=run_actual
     )
     assert not no_recap["complete"] and no_recap["lessons"][0]["reason"] == "recap_inputs_not_built"
     if saved:
@@ -961,9 +1021,9 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
                     slug,
                     "--module",
                     "--writer-seat",
-                    "codex:gpt-6-sol",
+                    "codex:gpt-6.1-sol",
                     "--question-seat",
-                    "codex:gpt-6-sol",
+                    "codex:gpt-6.1-sol",
                     "--repo-root",
                     str(tmp_path),
                 ]
@@ -1025,8 +1085,8 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         level,
         slug,
         repo_root=tmp_path,
-        writer_seat="codex:gpt-6-sol",
-        question_seat="codex:gpt-6-sol",
+        writer_seat="codex:gpt-6.1-sol",
+        question_seat="codex:gpt-6.1-sol",
         writer_dispatch=writer_call,
         runner=run_actual,
     )
@@ -1040,8 +1100,8 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         level,
         slug,
         repo_root=tmp_path,
-        writer_seat="codex:gpt-6-sol",
-        question_seat="codex:gpt-6-sol",
+        writer_seat="codex:gpt-6.1-sol",
+        question_seat="codex:gpt-6.1-sol",
         writer_dispatch=writer_call,
         runner=run_actual,
     )
@@ -1058,8 +1118,8 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         slug,
         repo_root=tmp_path,
         lesson_n=1,
-        writer_seat="codex:gpt-6-sol",
-        question_seat="codex:gpt-6-sol",
+        writer_seat="codex:gpt-6.1-sol",
+        question_seat="codex:gpt-6.1-sol",
         writer_dispatch=writer_call,
         runner=run_actual,
     )
@@ -1073,7 +1133,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         shutil.copy2(state_dir / "lesson-1.manifest-error.yaml", saved / "lesson-1.manifest-error.yaml")
         shutil.copy2(state_dir / "module.build.yaml", saved / "mismatch-module.build.yaml")
     terminal = module.build_module(
-        level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:gpt-6-sol", runner=run_actual
+        level, slug, repo_root=tmp_path, lesson_n=1, writer_seat="codex:gpt-6.1-sol", runner=run_actual
     )
     assert terminal["lessons"][0]["terminal_layer"] == "driver"
     if evidence_path:
@@ -1095,7 +1155,7 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         repo_root=tmp_path,
         plans_dir=plan_dir,
         evidence_dir=evidence_dir,
-        question_seat="codex:gpt-6-sol",
+        question_seat="codex:gpt-6.1-sol",
         site_dir=page_dir,
     )
     assert report["passed_through"] == 12 and report["manifest_sha256"] is None

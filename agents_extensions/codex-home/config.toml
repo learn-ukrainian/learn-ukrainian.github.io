@@ -1,6 +1,6 @@
 # Portable home defaults approved by the operator.
 # The deployer changes only the four keys below in the existing home config.
-model = "gpt-6-sol"
+model = "gpt-6.1-sol"
 model_reasoning_effort = "high"
 
 [agents]

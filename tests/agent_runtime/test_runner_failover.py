@@ -519,7 +519,7 @@ def test_shipped_config_declares_no_deepseek_chain():
 
     chain = load_failover_chain(
         "deepseek",
-        effective_model="deepseek-v4-flash",
+        effective_model="deepseek-v4.1-flash",
         path=default_failover_config_path(),
     )
 

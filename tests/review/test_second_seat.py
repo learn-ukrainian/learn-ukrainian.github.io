@@ -45,7 +45,7 @@ def test_the_third_family_rule() -> None:
     ("identifier", "family"),
     [
         ("claude-sonnet-5", "anthropic"),
-        ("gpt-6-astra", "openai"),
+        ("gpt-6.1-sol", "openai"),
         ("gemini-3.8-flash-high", "google"),
         ("agy", "google"),
         ("codex-tools", "openai"),
@@ -66,7 +66,7 @@ def write_writer(directory: Path, n: int, **meta) -> None:
 
 
 def test_the_writers_family_is_read_from_the_writer_record_through_the_resolver(tmp_path: Path) -> None:
-    write_writer(tmp_path, 1, writer="codex-tools", model="gpt-6-astra")
+    write_writer(tmp_path, 1, writer="codex-tools", model="gpt-6.1-sol")
     assert ss.writer_family(tmp_path, 1) == "openai"
     write_writer(
         tmp_path, 2, writer="claude-tools", model="unknown"

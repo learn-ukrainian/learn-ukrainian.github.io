@@ -50,12 +50,16 @@ if [[ "${1:-}" == "--dry-run" ]]; then
     DRY_RUN=true
 fi
 
-# Build rsync --exclude arguments from a space-separated path list.
+# Build rsync --exclude arguments from a space-separated path list. The
+# leading "/" anchors each entry at the transfer root: an unanchored *-epic
+# also matched skills/drive-epic and kept that skill out of .claude/.
 build_excludes() {
     local paths="$1"
     local args=""
+    local -
+    set -f
     for p in $paths; do
-        args+=" --exclude=$p"
+        args+=" --exclude=/$p"
     done
     echo "$args"
 }
@@ -212,7 +216,7 @@ git_source_deleted() {
 check_orphans() {
     local src="$1" dst="$2" declared="$3" label="$4"
     [[ -d "$dst" ]] || return 0
-    local path orphan d normalized
+    local path orphan
     local prune_terms bytecode_pattern
     # -type f: a directory named foo.pyc must stay visible so its contents
     # are not hidden from the orphan check.
@@ -242,16 +246,8 @@ check_orphans() {
         fi
         [[ -e "$src/$orphan" || -L "$src/$orphan" ]] && continue
         local matched=false
-        for d in $declared; do
-            normalized="${d%/}"
-            # Match the checker's exact path or slash-descendant semantics.
-            # Declared globs such as *-epic remain intentional patterns.
-            # shellcheck disable=SC2053
-            if [[ "$orphan" == $normalized || "$orphan" == $normalized/* ]]; then
-                matched=true
-                break
-            fi
-        done
+        # Same root-anchored semantics as the checker and the rsync excludes.
+        declared_paths_match "$orphan" "$declared" && matched=true
         if [[ "$matched" == false ]] && git_source_deleted "$src" "$orphan"; then
             echo "  ♻️  $label: stale deploy artifact '$orphan' (deleted from source in git) — deploy will remove it"
             continue
@@ -350,20 +346,10 @@ diff_dirs() {
     # Use diff -rq for a brief summary; ignore .DS_Store and declared orphan
     # paths (they'd always show as "Only in <dst>..." noise)
     local diff_args=(-rq --exclude='.DS_Store')
-    local normalized
-    for p in $orphans; do
-        # Strip trailing slash for diff --exclude
-        normalized="${p%/}"
-        # A subtree declaration such as skills/* must exclude the subtree
-        # root. Passing its basename ("*") to diff would mask every path.
-        if [[ "$normalized" == */\* ]]; then
-            normalized="${normalized%/\*}"
-        fi
-        diff_args+=(--exclude="$normalized")
-        if [[ "$normalized" == */* ]]; then
-            diff_args+=(--exclude="${normalized##*/}")
-        fi
-    done
+    local name
+    while IFS= read -r name; do
+        diff_args+=(--exclude="$name")
+    done < <(declared_diff_excludes "$src" "$dst" "$orphans")
     local diff_out
     diff_out=$(diff "${diff_args[@]}" "$src" "$dst" 2>/dev/null | filter_pycache_only_diff || true)
     if [[ -n "$diff_out" ]]; then

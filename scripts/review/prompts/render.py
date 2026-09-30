@@ -32,6 +32,7 @@ from scripts.build.fresh.cli import _load_cited_records
 from scripts.build.fresh.manifest import ATTEMPT_TOKEN, learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
 from scripts.review.receipts import REVIEW_TOOLS
+from scripts.review.render_contract import RENDER_RECORD_KEY, ReviewContractError, render_record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).resolve().parent
@@ -412,6 +413,8 @@ def _plan_context(reader: ManifestReader, manifest: dict[str, Any]) -> dict[str,
         "grammar_text": reader.pin_text("inputs.grammar"),
         "validate_report_text": reader.pin_text("inputs.validate_report"),
         "pack_verify_report_text": reader.pin_text("inputs.pack_verify_report"),
+        # Optional pin (#9166): a manifest written before it has none, and the template says so.
+        "v1_totals_text": reader.pin_text("inputs.v1_totals") if reader.has("inputs.v1_totals") else None,
     }
     context.update(_cited_records_context(reader, [row for row in plan.get("lessons") or [] if isinstance(row, dict)]))
     context.update(_learner_state_context(reader, manifest))
@@ -607,6 +610,9 @@ def render_prompt(
 ) -> tuple[str, str, list[Path]]:
     """Render a reviewer prompt from manifest inputs and write prompt sha256 beside it.
 
+    With ``output_path``, the ``<prompt>.files_read.json`` sidecar also carries the render record
+    (``render_contract.render_record``) a ``--review-attempt`` dispatch checks before it runs the prompt (#9163).
+
     Returns:
         tuple[rendered_prompt, prompt_sha256, files_read]
     """
@@ -628,10 +634,22 @@ def render_prompt(
         sidecar.write_text(f"{prompt_sha256}\n", encoding="ascii")
         files_read_sidecar = out.with_name(f"{out.name}.files_read.json")
         rel_files = [_relative(f, root) for f in rendering.files_read]
+        try:
+            # What a review attempt dispatching this prompt must still match (#9163): this checkout's server code
+            # and the templates this render loaded.
+            contract = render_record(
+                REPO_ROOT,
+                (prompts_dir or PROMPTS_DIR),
+                {path.name: sha for path, sha in rendering.template_sha256.items()},
+                prompt_sha256,
+            )
+        except ReviewContractError as exc:
+            raise RenderError(str(exc)) from exc
         read_record = {
             "files_read": rel_files,
             "template_sha256": {_relative(path, root): sha for path, sha in rendering.template_sha256.items()},
             "verifier_reads": [],  # the checker records what verification read
+            RENDER_RECORD_KEY: contract,
         }
         files_read_sidecar.write_text(json.dumps(read_record, indent=2) + "\n", encoding="utf-8")
 

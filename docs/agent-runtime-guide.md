@@ -846,6 +846,57 @@ The sibling repositories do not get their own `batch_state` or lock namespace.
 Do not add one: a second lock file for the same path would let a reaper and a
 dispatch hold "the" lock at once.
 
+### Review attempts: server and templates must match (#9163)
+
+A `--review-attempt` seat always runs the sources MCP server from the primary
+checkout, but its prompt may have been rendered in any checkout. The two must
+come from the same code, so the check binds the prompt to the checkout that
+rendered it (`scripts/review/render_contract.py`):
+
+- **Render time.** `scripts/review/prompts/render.py --output <prompt>` writes a
+  `render_contract` record into `<prompt>.files_read.json`: the render checkout,
+  the templates the render actually loaded with their sha256 and one digest over
+  them, that checkout's server-code digest, and the prompt's sha256.
+- **Server-code digest.** Two named components. `repository`:
+  `.mcp/servers/sources/server.py` plus every repository module it imports,
+  found by a static walk of `import` / `from … import` statements
+  (function-level imports included) resolved the way the server's own
+  `sys.path` resolves them: `scripts/`, then the repository root, then the
+  server's directory. Files are read from disk whether or not git ignores them;
+  a symlink contributes its target's bytes; `__pycache__`, documents and
+  modules the server never imports do not count. Imports outside the
+  repository (standard library, third-party) and dynamic `importlib` imports
+  are not traced. `requirements-lock.txt`: the sha256 of the checkout's lock,
+  which pins every third-party package the environment is built from; a
+  checkout without it refuses as `review_server_lock_missing`. Accepted
+  residual: an installed package that changes without a lock change (for
+  example a reinstall of `packages/v4-runtime`) is not seen.
+- **Dispatch time.** Before any archival (`--force-new` included), worktree,
+  task record or worker, `review_mcp.check_review_contract` refuses with exit 2:
+  - `review_render_record_missing` — the prompt is a literal or stdin prompt,
+    or its sidecar has no render record; re-render with `--output` and dispatch
+    with `--prompt-file`;
+  - `review_render_record_stale` — the prompt file no longer hashes to the
+    prompt its record names;
+  - `review_contract_mismatch` — the primary checkout's server code differs
+    from the recorded render-time digest, or a loaded template in the render
+    checkout changed since rendering. The message names the render checkout,
+    the primary checkout, both digests, the differing server components and the
+    fix: pull the primary checkout to `origin/main`, then re-render and retry.
+- **Launch time.** `review_mcp.prepare_review_attempt` receives the admitted
+  contract and, before writing the ledger or the seat's MCP config, digests the
+  server again from exactly the checkout and interpreter that config launches
+  (`render_contract.check_launch_contract`). If the checkout, the interpreter or
+  the digest differs from admission (the primary was pulled in between), it refuses with exit 2 as `review_server_changed`,
+  naming both digests and the differing components; no worker is spawned. The
+  config is written right after this check; the seat's harness starts the server
+  from it when the worker runs, and the worker does not check again (accepted
+  residual: a change inside that window is not caught).
+
+The checkout running `delegate.py` plays no part. The task record keeps the
+digests compared, the per-component digests and the interpreter under
+`review_contract`.
+
 ## Common mistakes
 
 - **Writing new subprocess logic outside the runtime.** If you're

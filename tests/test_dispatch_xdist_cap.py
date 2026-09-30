@@ -367,7 +367,7 @@ def test_scripts_ci_invocation_loads_the_cap(tmp_path: Path) -> None:
     env = _child_env(tmp_path, marker="impl-8645-b")
     completed = _run_repo(
         _REPO_ROOT,
-        ["-n", "1", "-q", "--collect-only", "scripts/ci/test_classify_changes.py"],
+        ["-n", "1", "-q", "--collect-only", "scripts/ci/test_source_cache.py"],
         env,
     )
     combined = completed.stdout + completed.stderr

@@ -46,9 +46,8 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
-
 from scripts.verification.check_ru_morph import is_russian_pattern
+from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 
 try:
     from mcp.server import Server
@@ -2109,9 +2108,8 @@ async def handle_get_chunk_context(args: dict):
     chunk_id = args["chunk_id"]
     query_obj = {"chunk_id": chunk_id}
 
-    from wiki.sources_db import _get_conn
-
     from scripts.storage.topology import ActiveDatabaseNetworkError
+    from wiki.sources_db import _get_conn
     try:
         conn = _get_conn()
     except (FileNotFoundError, ActiveDatabaseNetworkError):
@@ -2219,9 +2217,8 @@ async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
 
     server_path = Path(__file__).resolve()
-    from wiki.sources_db import _read_db_path
-
     from scripts.rag.config import VESUM_DB_PATH
+    from wiki.sources_db import _read_db_path
 
     sources_db_path = _read_db_path()
     vesum_db_path = Path(VESUM_DB_PATH).resolve()
@@ -2355,7 +2352,6 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     include_definitions = bool(args.get("include_definitions", False))
 
     import wiki.sources_db as sdb
-
     from scripts.verification.check_ru_morph import check_russian_patterns_batch
     from scripts.verification.vesum import verify_words
 
@@ -2574,9 +2570,8 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
     import contextlib
     import sqlite3
 
-    from wiki.sources_db import _read_db_path
-
     from scripts.storage.topology import ActiveDatabaseNetworkError
+    from wiki.sources_db import _read_db_path
 
     try:
         db = _read_db_path()
@@ -3017,10 +3012,18 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text="\n".join(lines))]
 
 
-async def handle_query_ulif(args: dict) -> list[TextContent]:
-    from wiki.sources_db import _read_db_path
+def _ulif_unavailable_text(word: str) -> str:
+    """Outage wording for ULIF DictUA lookups (#9005, #9016)."""
+    return (
+        f"ULIF DictUA (lcorp.ulif.org.ua) is unavailable for '{word}' (network "
+        "error or HTTP failure). Treat as unknown, not a negative — do not cite "
+        "this as 'no paradigm'."
+    )
 
+
+async def handle_query_ulif(args: dict) -> list[TextContent]:
     from scripts.storage.topology import ActiveDatabaseNetworkError
+    from wiki.sources_db import _read_db_path
 
     try:
         _read_db_path()
@@ -3070,15 +3073,8 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
                     + (f" {detail}" if detail else "")
                 )
             return [TextContent(type="text", text="\n".join(lines))]
-        if isinstance(result, dict) and result.get("status") == "unavailable":
-            return [TextContent(
-                type="text",
-                text=(
-                    f"ULIF DictUA (lcorp.ulif.org.ua) is unavailable for '{word}' (network "
-                    "error or HTTP failure). Treat as unknown, not a negative — do not cite "
-                    "this as 'no paradigm'."
-                ),
-            )]
+        if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
+            return [TextContent(type="text", text=_ulif_unavailable_text(word))]
         if not result or "rows" not in result:
             return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
 
@@ -3089,6 +3085,8 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
 
     from rag.source_query import query_ulif
     result = await asyncio.to_thread(query_ulif, word, args["sections"])
+    if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
+        return [TextContent(type="text", text=_ulif_unavailable_text(word))]
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 
 
@@ -3111,6 +3109,8 @@ def _render_ulif_relation_records(records: list[dict], kind: str) -> str:
 async def _handle_ulif_relation(word: str, kind: str, lookup) -> list[TextContent]:
     """Render every cached homonym that has *kind*, or the single lookup record."""
     result = await asyncio.to_thread(lookup, word)
+    if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
+        return [TextContent(type="text", text=_ulif_unavailable_text(word))]
     if isinstance(result, dict) and result.get("status") == "ambiguous":
         from wiki.sources_db import search_ulif_dictua_sections
 

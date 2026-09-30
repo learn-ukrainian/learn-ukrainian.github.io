@@ -742,13 +742,15 @@ def test_practice_deck_entry_changes_are_scoped_by_lemma() -> None:
 
 
 def test_ci_workflow_runs_ratchet_and_requires_committed_baseline() -> None:
-    workflow = (Path(__file__).resolve().parents[1] / ".github/workflows/ci.yml").read_text(encoding="utf-8")
-    assert workflow.count("Run Word Atlas sense-lint ratchet (#6437)") == 1
-    assert '--base-ref "$base_ref"' in workflow
+    root = Path(__file__).resolve().parents[1]
+    checks = (root / "scripts/ci/checks.sh").read_text(encoding="utf-8")
+    workflow = (root / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+    assert checks.count('check "Run Word Atlas sense-lint ratchet (#6437)" word_atlas_ratchet') == 1
+    assert '--base-ref "$base_ref"' in checks
+    assert 'base_ref="${BASE_SHA:-origin/main}"' in checks
+    assert "--ratchet" in checks
+    assert "--update-baseline" in checks
+    assert "git diff --exit-code -- scripts/audit/word_atlas_lint_baseline.json" in checks
+    # The checks job passes the event base (merge queue included) to checks.sh.
     assert "github.event.merge_group.base_sha" in workflow
-    assert "--ratchet" in workflow
-    assert "--update-baseline" in workflow
-    assert "git diff --exit-code -- scripts/audit/word_atlas_lint_baseline.json" in workflow
-    assert workflow.index("Run Word Atlas sense-lint ratchet (#6437)") > workflow.index(
-        "Install contract-check dependencies"
-    )
+    assert "bash scripts/ci/checks.sh" in workflow
