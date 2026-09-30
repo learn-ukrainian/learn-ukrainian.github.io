@@ -6,6 +6,8 @@ import json
 import unicodedata
 from pathlib import Path
 
+import pytest
+
 from scripts.agent_runtime.adapters.base import InvocationPlan
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 
@@ -87,3 +89,18 @@ def test_rollout_matches_response_item_shape(tmp_path: Path) -> None:
     adapter = CodexAdapter()
 
     assert adapter._rollout_matches_plan(rollout, _plan(tmp_path, "the prompt body")) is True
+
+
+@pytest.mark.parametrize("line_bytes", [65536, 65537, 1024 * 1024, 1024 * 1024 + 1])
+@pytest.mark.parametrize("id_key", ["id", "session_id"])
+def test_rollout_session_meta_read_bound(tmp_path: Path, line_bytes: int, id_key: str) -> None:
+    session_id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+    event = {"type": "session_meta", "payload": {id_key: session_id, "instructions": ""}}
+    overhead = len(json.dumps(event).encode("utf-8"))
+    event["payload"]["instructions"] = "x" * (line_bytes - overhead)
+    raw = json.dumps(event).encode("utf-8")
+    assert len(raw) == line_bytes
+    rollout = tmp_path / "rollout.jsonl"
+    rollout.write_bytes(raw + b"\n")
+    expected = session_id if line_bytes <= 1024 * 1024 else None
+    assert CodexAdapter._read_rollout_session_id(rollout, trusted_root=tmp_path) == expected
