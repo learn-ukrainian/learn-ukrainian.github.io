@@ -7,8 +7,10 @@ import pytest
 from scripts.build.phases.wiki_manifest import (
     WIKI_MANIFEST_SCHEMA,
     _normalize_external_role,
+    _repository_relative_wiki_path,
     extract_manifest,
 )
+from wiki import config as wiki_config
 
 pytestmark = pytest.mark.reads_content
 
@@ -228,3 +230,35 @@ slug: external-fixture
             "description": "Зворотні дієслова.",
         },
     ]
+
+
+def test_repository_relative_wiki_path_prefers_staged_wiki_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Staged wiki root wins over the checkout root. A normal read stays put.
+
+    ``PROJECT_ROOT`` is left unchanged. A stage directory inside the checkout
+    is still under that root; the stored path must not keep the stage prefix.
+    """
+    project_root = Path(wiki_config.PROJECT_ROOT).resolve()
+    today = "wiki/pedagogy/a1/sounds-letters-and-hello.md"
+    article_suffix = Path("pedagogy/a1/sounds-letters-and-hello.md")
+
+    assert _repository_relative_wiki_path(project_root / today) == today
+    checkout_script = project_root / "scripts/build/phases/wiki_manifest.py"
+    assert _repository_relative_wiki_path(checkout_script) == "scripts/build/phases/wiki_manifest.py"
+
+    outside_wiki = tmp_path / "outside-9335" / "wiki"
+    outside_resolved = outside_wiki.resolve()
+    assert project_root != outside_resolved and project_root not in outside_resolved.parents
+    monkeypatch.setattr(wiki_config, "WIKI_DIR", outside_wiki)
+    assert _repository_relative_wiki_path(outside_wiki / article_suffix) == today
+
+    shallow_wiki = project_root / "tmp" / "impl-9335-r4-path-shallow" / "wiki"
+    deep_wiki = project_root / "tmp" / "impl-9335-r4-path-deep" / "nested" / "stage" / "wiki"
+    assert len(shallow_wiki.relative_to(project_root).parts) < len(deep_wiki.relative_to(project_root).parts)
+    for wiki_root in (shallow_wiki, deep_wiki):
+        assert project_root in wiki_root.resolve().parents
+        monkeypatch.setattr(wiki_config, "WIKI_DIR", wiki_root)
+        assert _repository_relative_wiki_path(wiki_root / article_suffix) == today
