@@ -115,9 +115,9 @@ def test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache() -> None:
             assert setup["with"]["python-version"] == "${{ env.UV_PYTHON }}"
             assert "python-version-file" not in setup["with"]
             assert setup["with"].get("check-latest", False) is False
-    # setup-uv's `uv python find` consumes UV_PYTHON, and installs target the
-    # venv made by setup-python. No second interpreter is selected by the action.
-    assert "python-version" not in _action_step("Set up uv")["with"]
+    # Pass the pin explicitly: inference via `uv python find` can fall back to
+    # .python-version and yield an unknown key when that version is absent.
+    assert _action_step("Set up uv")["with"]["python-version"] == "${{ env.UV_PYTHON }}"
     assert "python -m venv --without-pip .venv" in _action_step("Install Python deps")["run"]
 
 

@@ -211,8 +211,8 @@ cannot be inside an image, and pulling a prebuilt environment of this size
 costs about what the cache restore does (see the measurements in the ci-v3 PR).
 
 The required CI, advisory CI and uv cache warmer share the same `UV_PYTHON`
-pin in their workflow environments. `setup-python` uses that exact version,
-and setup-uv's Python detection uses `UV_PYTHON`, so the cache reader and writer
+pin in their workflow environments. Both `setup-python` and the composite's
+setup-uv step receive that exact version, so the cache reader and writer
 agree even though the local `.python-version` remains unchanged. Python
 3.12.14 is preinstalled in the hosted Ubuntu 24.04 tool cache (image
 `20260920.314`); 3.12.8 was downloaded on every shard. Keep `check-latest`
