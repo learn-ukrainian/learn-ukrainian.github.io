@@ -9251,7 +9251,8 @@ def _review_attempt_prompt_admission(
             contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
             checked = check_prompt(
                 prompt, Path(args.review_attempt), repo_root=Path(contract["input_root"]),
-                prompts_dir=Path(contract["prompts_dir"]), review_id=review_id, attempt_id=attempt_id,
+                prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
+                review_id=review_id, attempt_id=attempt_id,
             )
             if not checked.passed:
                 return "❌ review attempt refused: prompt_render_invalid: " + "; ".join(checked.errors), None

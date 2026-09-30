@@ -185,9 +185,14 @@ def _return_schemas(prompt_text: str) -> list[dict[str, Any]]:
 
 
 def _load_id_document(body: str) -> Any:
-    """Refuse repeated id/attempt keys instead of letting YAML discard earlier declarations."""
+    """Refuse duplicate declarations and conflicting scalar ids throughout the YAML graph.
+
+    Walking the nodes also visits anchored mappings and merge-key values, including
+    declarations that a later key would override when the document is loaded.
+    """
     pending = [yaml.compose(body)]
     visited: set[int] = set()
+    id_values: dict[str, set[str]] = {"review_id": set(), "attempt_id": set()}
     while pending:
         node = pending.pop()
         if node is None or id(node) in visited:
@@ -200,6 +205,10 @@ def _load_id_document(body: str) -> Any:
                     if key.value in seen:
                         raise AttemptIdsUnreadableError(f"duplicate {key.value} declaration")
                     seen.add(key.value)
+                    if key.value in id_values and isinstance(value, yaml.nodes.ScalarNode):
+                        id_values[key.value].add(value.value)
+                        if len(id_values[key.value]) > 1:
+                            raise AttemptIdsUnreadableError(f"conflicting {key.value} declarations")
                 pending.append(value)
         elif isinstance(node, yaml.nodes.SequenceNode):
             pending.extend(node.value)
@@ -266,7 +275,8 @@ def parse_attempt_ids(prompt_text: str, *, custom: bool = False) -> tuple[str | 
                 found.add(_ids_from(_load_id_document(body)["attempt"], "fenced attempt"))
         if custom and ID_KEY_MENTION.search(body) and not (is_schema or is_attempt):
             raise AttemptIdsUnreadableError("a custom prompt names ids outside a readable fenced attempt or return schema")
-        remaining = remaining[:start] + " " * (end - start) + remaining[end:]
+        blanked = re.sub(r"[^\r\n]", " ", remaining[start:end])
+        remaining = remaining[:start] + blanked + remaining[end:]
     for entry in list(ATTEMPT_ENTRY.finditer(remaining)):
         try:
             loaded = _load_id_document(entry.group(0))

@@ -66,13 +66,16 @@ Issues #9012, #9025 and #9242 bind each artifact to the same attempt. A render
 manifest prompt is admitted through `check_prompt` with the dispatch review and
 attempt IDs: its bytes must equal a fresh render of the authorized manifest.
 Custom prompts retain the ID parser, which checks every attempt declaration
-and refuses conflicting or unreadable later IDs, including prose. YAML schema
+and refuses conflicting or unreadable later IDs, including prose and nested
+mappings, lists, anchors and merge keys within each attempt or schema. YAML schema
 examples nested inside `data_fence` blocks remain pinned data, not return schemas.
 An invalid render refuses as `prompt_render_invalid` before provisioning or launch.
 
 The version-4 render record includes the review ID, attempt ID, prompt hash,
 input root and render checkout. Dispatch recomputes the recorded server components
-and template hashes from that checkout and its recorded template directory. A
+and template hashes from that checkout's canonical `scripts/review/prompts`
+directory. A different recorded template directory refuses as
+`review_render_record_prompts_dir_mismatch`, even with matching template hashes. A
 record copied from another attempt refuses as `review_render_record_attempt_mismatch`;
 edited or stale digests refuse as `review_render_record_digest_mismatch`. The
 existing prompt-hash, server-code and launch-time checks still apply. Older

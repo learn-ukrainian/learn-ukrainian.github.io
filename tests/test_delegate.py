@@ -14296,7 +14296,7 @@ def _review_code(checkout: Path, server: str = "print('receipt: <id> (outcome: <
         (checkout / name).write_text(text, encoding="utf-8")
 
 
-def _rendered_attempt_prompt(checkout: Path, prompt_file: Path) -> Path:
+def _rendered_attempt_prompt(checkout: Path, prompt_file: Path, *, input_root: Path | None = None) -> Path:
     """``_MATCHING_ATTEMPT_PROMPT`` with the render record ``render_prompt`` writes beside it, rendered in ``checkout``."""
     from scripts.review.render_contract import RENDER_RECORD_KEY, render_record, render_record_path
 
@@ -14306,14 +14306,17 @@ def _rendered_attempt_prompt(checkout: Path, prompt_file: Path) -> Path:
     prompt_file.write_text(_MATCHING_ATTEMPT_PROMPT, encoding="utf-8")
     record = render_record(
         checkout, prompts_dir, loaded, hashlib.sha256(_MATCHING_ATTEMPT_PROMPT.encode("utf-8")).hexdigest(),
-        review_id="rev-test", attempt_id="att-test",
+        review_id="rev-test", attempt_id="att-test", input_root=input_root,
     )
     render_record_path(prompt_file).write_text(json.dumps({RENDER_RECORD_KEY: record}), encoding="utf-8")
     return prompt_file
 
 
 @pytest.mark.parametrize("manifest_mutation", ["unchanged", "changed", "removed"])
-def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, tmp_path, monkeypatch, manifest_mutation):
+@pytest.mark.parametrize("separate_input_root", [False, True], ids=["render-input-root", "separate-input-root"])
+def test_review_attempt_dispatch_marks_git_admin_and_audit_state(
+    tmp_tasks_dir, tmp_path, monkeypatch, manifest_mutation, separate_input_root
+):
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
@@ -14333,7 +14336,9 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     _review_code(main)
     _review_code(dispatch_wt, server="print('a newer server')\n")
     monkeypatch.setattr(delegate, "_local_repo_root", dispatch_wt)
-    prompt_file = _rendered_attempt_prompt(main, tmp_path / "rendered" / "prompt.md")
+    input_root = tmp_path / "inputs" if separate_input_root else main
+    input_root.mkdir(exist_ok=True)
+    prompt_file = _rendered_attempt_prompt(main, tmp_path / "rendered" / "prompt.md", input_root=input_root)
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
     plan = type("Plan", (), {
@@ -14365,12 +14370,12 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     assert len(spawned) == 1
     worker_args = delegate.build_parser().parse_args(spawned[0][2:])
     assert worker_args.review_manifest == str(manifest.resolve())
-    assert worker_args.review_input_root == str(main)
+    assert worker_args.review_input_root == str(input_root)
     with patch.object(delegate, "_run_worker", return_value=0) as worker, patch.object(delegate.sys, "stdin") as stdin:
         stdin.read.return_value = "probe"
         assert delegate.cmd_worker(worker_args) == 0
     assert worker.call_args.kwargs["review_manifest"] == str(manifest.resolve())
-    assert worker.call_args.kwargs["review_input_root"] == str(main)
+    assert worker.call_args.kwargs["review_input_root"] == str(input_root)
     assert delegate._review_attempt_marker_path(dispatch_wt).read_text(encoding="utf-8") == "review-marked\n"
     state = delegate._read_state(delegate._state_path("review-marked"))
     assert state["worktree_disallow_reuse"] is True
@@ -14384,6 +14389,7 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, 
     # #9163: the render-time and dispatch-time digests compared travel with the attempt
     contract = state["review_contract"]
     assert (contract["render_checkout"], contract["server_checkout"]) == (str(main), str(main))
+    assert contract["input_root"] == str(input_root)
     assert contract["render_server_digest"] == contract["server_digest"]
     assert contract["render_template_digest"] == contract["template_digest"]
     assert contract["server_digest"].startswith("sha256:")

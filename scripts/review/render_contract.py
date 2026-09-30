@@ -340,13 +340,19 @@ def check_render_contract(
     server = Path(server_checkout).resolve()
     python = Path(interpreter) if interpreter is not None else project_interpreter()
     code = server_code(server)
-    templates_now = current_templates(Path(recorded["prompts_dir"]), recorded["templates"])
     try:
         render_code = server_code(Path(recorded["render_checkout"]))
     except ReviewContractError as exc:
         raise ReviewContractError(
             "review attempt refused: review_render_record_digest_mismatch: recorded render checkout cannot be verified"
         ) from exc
+    prompts_dir = Path(recorded["render_checkout"]) / "scripts/review/prompts"
+    if Path(recorded["prompts_dir"]) != prompts_dir:
+        raise ReviewContractError(
+            "review attempt refused: review_render_record_prompts_dir_mismatch: recorded templates must come "
+            f"from the render checkout's scripts/review/prompts directory; {_RERENDER}"
+        )
+    templates_now = current_templates(prompts_dir, recorded["templates"])
     inconsistent = [
         what for what, then, now in (
             ("server code", recorded["server_digest"], render_code.digest),
