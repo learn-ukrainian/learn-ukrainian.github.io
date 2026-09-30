@@ -891,3 +891,50 @@ def test_builder_itemizes_unavailable_relation_blobs(tmp_path):
     unavail = rep["unavailable_relation_blobs"]
     assert any(b["tab"] == "synonyms" and b["error"] == "missing_blob" for b in unavail)
     assert ulif_forms.verify_ulif_forms(db_path)["verified"] is True
+
+
+@pytest.mark.parametrize("error_type,reason", [(sqlite3.OperationalError, "raw_cache_error"), (FileNotFoundError, "missing_cache_file")])
+def test_relation_probe_infrastructure_failure_is_persisted(tmp_path, monkeypatch, error_type, reason):
+    """Synthetic relation I/O fault: persisted proof survives a manually changed state row."""
+    db_path = tmp_path / "sources.db"
+    html = _read_fixture("zamok-entry-1.html")
+    headword = ulif_forms.ulif_dictua_parse.parse_ulif_entry(html, homonym_index=1)["canonical_headword"]
+    relation = "<html>synthetic relation I/O fixture</html>"
+    sources_db.store_ulif_dictua_entry(
+        word=headword,
+        canonical_headword=headword,
+        sections={"paradigm": {"rows": []}, "synonyms": [{"text": "synthetic relation"}]},
+        raw_responses={"paradigm": html, "synonyms": relation, "antonyms": relation, "phraseology": relation},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+    original_get = ulif_raw_cache.get
+    cache = ulif_raw_cache.open_cache(ulif_raw_cache.cache_path(db_path), create=False)
+    with sqlite3.connect(db_path) as conn:
+        manifest_ref = conn.execute("SELECT raw_response_ref FROM ulif_dictua_entries").fetchone()[0]
+    manifest = json.loads(original_get(manifest_ref.removeprefix("sha256:"), conn=cache))
+    cache.close()
+    relation_sha = manifest["synonyms"].removeprefix("sha256:")
+
+    def faulty_get(sha, **kwargs):
+        if sha == relation_sha:
+            raise error_type("synthetic relation-probe I/O failure")
+        return original_get(sha, **kwargs)
+
+    monkeypatch.setattr(ulif_raw_cache, "get", faulty_get)
+    report = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert report["state"] == "failed"
+    assert report["entries_failed"] == 1
+    assert report["unavailable_relation_blobs_count"] == 3
+    assert all(item["error"] == reason for item in report["unavailable_relation_blobs"])
+    with sqlite3.connect(db_path) as conn:
+        assert conn.execute("SELECT reason FROM ulif_forms_failures").fetchall() == [(reason,)]
+        assert conn.execute("SELECT count(*) FROM ulif_forms").fetchone()[0] > 0
+        conn.execute("UPDATE ulif_forms_build SET state='complete'")
+    verification = ulif_forms.verify_ulif_forms(db_path)
+    assert verification["verified"] is False
+    assert "infrastructure failures" in verification["error"]

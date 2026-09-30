@@ -34,7 +34,7 @@ from scripts.verification.stress import pedagogical_stressed_form
 ULIF_STRUCTURED_SCHEMA_VERSION = "ulif-structured-v1"
 # Keep in lockstep with scripts.rag.source_query.ULIF_PARSER_VERSION.
 ULIF_PARSER_VERSION = "ulif-dictua-v2"
-ULIF_FORMS_PARSER_VERSION = "ulif-forms-v3"
+ULIF_FORMS_PARSER_VERSION = "ulif-forms-v4"
 ULIF_NORMALIZER_VERSION = "ulif-strip-raw-html-v1"
 ULIF_SOURCE_ID = "ulif_dictua"
 ULIF_OFFICIAL_URL = "https://lcorp.ulif.org.ua/dictua/"
@@ -548,6 +548,7 @@ class _GridCell:
     colspan: int
     origin_row: int
     origin_col: int
+    is_data: bool
 
 
 def _cell_text(cell: Tag) -> str:
@@ -573,6 +574,7 @@ def _expand_table(table: Tag) -> list[list[_GridCell | None]]:
                 colspan=colspan,
                 origin_row=row_index,
                 origin_col=col,
+                is_data=bool({"td_inner_style", "td_inner_center_style"}.intersection(td.get("class", []))),
             )
             for d_row in range(rowspan):
                 for d_col in range(colspan):
@@ -600,6 +602,8 @@ def _origin_cells(row: list[_GridCell | None], row_index: int) -> list[tuple[int
 def _is_column_header_row(cells: list[tuple[int, _GridCell]]) -> bool:
     texts = [cell.text for _col, cell in cells if cell.text]
     if not texts:
+        return False
+    if any(cell.is_data for _col, cell in cells):
         return False
     if any(_ACUTE in text or text.endswith("*") for text in texts):
         return False

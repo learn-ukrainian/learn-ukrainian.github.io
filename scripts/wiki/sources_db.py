@@ -127,7 +127,7 @@ CREATE INDEX IF NOT EXISTS idx_ulif_dictua_sections_entry_kind_order
     ON ulif_dictua_sections(entry_id, kind, source_order);
 """
 
-ULIF_FORMS_PARSER_VERSION = "ulif-forms-v3"
+ULIF_FORMS_PARSER_VERSION = "ulif-forms-v4"
 
 ULIF_FORMS_SCHEMA = """
 CREATE TABLE IF NOT EXISTS ulif_forms (
@@ -932,7 +932,7 @@ def _derive_identity_from_raw(
                     unavailable_relations.append({
                         "tab": rel_kind,
                         "ref": rel_ref,
-                        "error": "cache_error",
+                        "error": "raw_cache_error",
                         "locator": f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}",
                     })
 

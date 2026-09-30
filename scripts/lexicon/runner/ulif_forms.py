@@ -227,6 +227,9 @@ def build_ulif_forms(
                                 )
                             except FileNotFoundError:
                                 has_infrastructure_failure = True
+                                batch_failure_rows.append(
+                                    (entry_id, "missing_cache_file", f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}")
+                                )
                                 unavailable_relation_blobs.append(
                                     {
                                         "entry_id": entry_id,
@@ -238,6 +241,9 @@ def build_ulif_forms(
                                 )
                             except Exception:
                                 has_infrastructure_failure = True
+                                batch_failure_rows.append(
+                                    (entry_id, "raw_cache_error", f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}")
+                                )
                                 unavailable_relation_blobs.append(
                                     {
                                         "entry_id": entry_id,
@@ -437,6 +443,9 @@ def build_ulif_forms(
                     """
                     INSERT INTO ulif_forms_failures (entry_id, reason, locator)
                     VALUES (?, ?, ?)
+                    ON CONFLICT(entry_id) DO UPDATE SET
+                        reason = excluded.reason,
+                        locator = excluded.locator
                     """,
                     batch_failure_rows,
                 )

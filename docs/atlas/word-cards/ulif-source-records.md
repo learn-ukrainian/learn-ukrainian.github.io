@@ -85,7 +85,7 @@ Stores parsed paradigm and inflectional rows derived from verified entries:
 | `entry_key` | `TEXT NOT NULL` | Parser entry key (e.g. `замок#1`) |
 | `form_unstressed` | `TEXT NOT NULL` | Unstressed surface form (indexed) |
 | `form_stressed` | `TEXT NOT NULL` | Stressed surface form (combining acute U+0301) |
-| `stress_vowel_indices` | `TEXT NOT NULL` | JSON array of 0-based vowel indices under stress |
+| `stress_vowel_indices` | `TEXT NOT NULL` | JSON array of 0-based character offsets of the stressed vowels within `form_unstressed` |
 | `grammatical_tags` | `TEXT NOT NULL` | JSON array of grammatical tags (e.g. `["noun", "inanim", "m", "v_naz"]`) |
 | `unmapped_labels` | `TEXT NOT NULL` | JSON array of raw source labels not mapped to canonical tags |
 | `variant_order` | `INTEGER NOT NULL DEFAULT 1` | 1-based order for variant forms in the same cell |
@@ -96,7 +96,7 @@ Stores parsed paradigm and inflectional rows derived from verified entries:
 | `dual_stress_flag` | `INTEGER NOT NULL DEFAULT 0` | 1 if form exhibits dual stress (stress doublet) |
 | `pedagogical_stressed_form` | `TEXT NOT NULL DEFAULT ''` | Standardized pedagogical stressed form for doublets |
 | `source_page_sha256` | `TEXT NOT NULL DEFAULT ''` | SHA-256 of the raw paradigm HTML blob parsed |
-| `parser_version` | `TEXT NOT NULL` | Parser version string (e.g. `ulif-forms-v3`) |
+| `parser_version` | `TEXT NOT NULL` | Parser version string (e.g. `ulif-forms-v4`) |
 | `source_entry_fingerprint` | `TEXT NOT NULL DEFAULT ''` | Deterministic SHA-256 fingerprint of source entry columns and sections |
 
 ### 3.2 `ulif_forms_failures` Table
@@ -116,7 +116,7 @@ One-row metadata ledger tracking build lifecycle and integrity:
 | --- | --- | --- |
 | `id` | `INTEGER PRIMARY KEY CHECK (id = 1)` | Singleton row constraint |
 | `state` | `TEXT NOT NULL` | Lifecycle state: `'building'`, `'complete'`, or `'failed'` |
-| `parser_version` | `TEXT NOT NULL` | Parser version used during the build (`ulif-forms-v3`) |
+| `parser_version` | `TEXT NOT NULL` | Parser version used during the build (`ulif-forms-v4`) |
 | `total_entries` | `INTEGER NOT NULL` | Total verified entries eligible (`homonym_checked=1`) |
 | `entries_done` | `INTEGER NOT NULL` | Count of entries yielding complete form rows (excluding failures) |
 | `entries_failed` | `INTEGER NOT NULL` | Count of entries recorded in `ulif_forms_failures` |
@@ -141,7 +141,7 @@ To prevent silent database modification while maintaining high data quality:
      - `sense_gloss` (str): Raw sense gloss.
      - `is_invariable` (bool): Whether marked as invariable lexeme.
      - `printed_homonym_number` (str | None): Homonym number printed on page if any.
-     - `parser_version` (str): Parser version string (`ulif-forms-v3`).
+     - `parser_version` (str): Parser version string (`ulif-forms-v4`).
      - `source_page_sha256` (str): Raw paradigm HTML blob SHA-256.
      - `stored_matches_raw` (bool | None): `True` if stored columns match raw; `False` if differing; `None` when raw identity is unusable/empty.
      - `mismatches` (list[str] | None): Field names differing between stored and parsed identity (e.g. `["canonical_headword"]`), or `None` when raw identity is unusable.
@@ -186,7 +186,7 @@ When an entry cannot yield standard paradigm forms, it is categorized determinis
 | `missing_cache_file` | Raw cache SQLite file not found | Infrastructure failure; logged to `ulif_forms_failures`; blocks build acceptance (`state: 'failed'`) |
 | `raw_entry_page_absent` | Manifest has no `paradigm` tab key | Retains a single base lemma row if stored headword is present (`is_invariable=False`), but reported as `raw_entry_page_absent` failure and counted in `entries_failed` (never forms-complete); fails if stored headword is also empty |
 
-**Invariant:** `total_entries == entries_done + entries_failed`. Entries with both a weaker base assertion and a source gap are counted in `entries_failed` and excluded from `entries_done` so no entry is double counted. Extraction defects, parser exceptions, and cache infrastructure failures set `ulif_forms_build.state = 'failed'` and block verification. Nested relation cache gaps (`synonyms`, `antonyms`, `phraseology`) are tracked in `identity_from_raw.unavailable_relation_blobs` per-entry without failing the batch or dropping valid inflection forms. Concurrency is guarded via file locking (`<db>.build.lock`) to serialize runs and ensure safe restartability.
+**Invariant:** `total_entries == entries_done + entries_failed`. Entries with both a weaker base assertion and a source gap are counted in `entries_failed` and excluded from `entries_done` so no entry is double counted. Extraction defects, parser exceptions, and cache infrastructure failures set `ulif_forms_build.state = 'failed'` and block verification. Nested relation cache gaps (`synonyms`, `antonyms`, `phraseology`) are tracked in `identity_from_raw.unavailable_relation_blobs` per-entry and in the build report's `unavailable_relation_blobs` list without dropping valid inflection forms. Relation-probe infrastructure errors also persist in `ulif_forms_failures` and fail the build. Concurrency is guarded via file locking (`<db>.build.lock`) to serialize runs and ensure safe restartability.
 
 ---
 
@@ -218,7 +218,7 @@ Verifies table counts, schema constraints, parser version, and source snapshot f
 ```
 Returns 0 if:
 - Required tables exist (`ulif_dictua_entries`, `ulif_dictua_sections`, `ulif_forms`, `ulif_forms_failures`, `ulif_forms_build`).
-- `ulif_forms_build` is `complete` and parser version matches `ulif-forms-v3`.
+- `ulif_forms_build` is `complete` and parser version matches `ulif-forms-v4`.
 - `source_fingerprint` matches recomputed snapshot hash over all verified entries and sections.
 - No extraction defect failures (`extraction_failed` or `extraction_defect`) exist in `ulif_forms_failures`.
 - No infrastructure failures (`raw_cache_error` or `missing_cache_file`) exist in `ulif_forms_failures`.

@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+import gzip
+import hashlib
 import importlib
+import json
 import sqlite3
 import sys
 from pathlib import Path
@@ -1320,7 +1323,7 @@ def test_sources_db_migrate_cli_subprocess_clean_env(tmp_path):
 
 
 def test_header_row_with_unmapped_common_gender_label():
-    """R2-N1: 'відмінок | чол. і жін. р. | множина' must be recognized as header row."""
+    """Synthetic R2-N1 fragment; real source captures are covered below."""
     html = """
     <div id="ContentPlaceHolder1_article">
         <span class="word_style">Лойо́ла</span>
@@ -1362,6 +1365,58 @@ def test_header_row_with_unmapped_common_gender_label():
 
     leaks = [f for f in forms if not f["is_lemma"] and not f["grammatical_tags"] and not f["unmapped_labels"]]
     assert leaks == []
+
+
+def _captured_paradigm(entry_id: int, sha256: str) -> str:
+    body = gzip.decompress((FIXTURES / f"ulif-entry-{entry_id}-paradigm.html.gz").read_bytes())
+    assert hashlib.sha256(body).hexdigest() == sha256
+    return body.decode("utf-8")
+
+
+def test_captured_unstressed_gender_rows_preserve_all_source_forms():
+    html = _captured_paradigm(91582, "9511dcf28bde66adcdef3a897a40c515980c0dbf84611c5a57a3efda5bc6b74b")
+    article = BeautifulSoup(html, "html.parser").find(id="ContentPlaceHolder1_article")
+    table = article.find("table")
+    data_cells = article.select("td.td_inner_style, td.td_inner_center_style")
+    original_forms = [
+        part.strip().rstrip("*")
+        for cell in data_cells
+        for part in cell.get_text(" ", strip=True).split(",")
+        if part.strip()
+    ]
+    forms = ulif_parse.parse_ulif_entry(html, homonym_index=1)["forms"]
+    assert len(forms) == 26
+    assert sum(not row["is_lemma"] for row in forms) == 25
+    assert sum(row["is_lemma"] for row in forms) == 1
+    assert [row["form_stressed"] for row in forms if not row["is_lemma"]] == original_forms
+
+    # These exact captured DOM rows are the three rows swallowed at v3.
+    added_forms = [
+        cell.get_text(" ", strip=True)
+        for row in table.find_all("tr", recursive=False)[18:21]
+        for cell in row.select("td.td_inner_style")
+    ]
+    assert len(added_forms) == 4
+    assert all(surface in original_forms for surface in added_forms)
+    fields = ("form_stressed", "grammatical_tags", "preposition", "marked_asterisk", "variant_order", "is_lemma")
+    kept = [{key: row[key] for key in fields} for row in forms if row["form_stressed"] not in added_forms]
+    assert len(kept) == 22
+    # Frozen projection of v3's 22 rows from this same SHA-verified capture.
+    serialized = json.dumps(kept, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()
+    assert hashlib.sha256(serialized).hexdigest() == "9fb5dd5924f65de603a7281399b0a8f80ec57927c7d14b0e947a9b8a8e15142d"
+    source_labels = {cell.get_text(" ", strip=True) for cell in article.select("td.td_left_style")}
+    assert not source_labels.intersection(row["form_stressed"] for row in forms)
+
+
+def test_captured_common_gender_header_retains_unknown_label():
+    html = _captured_paradigm(111616, "93695a69b5b8f8cd10bb5ade70d1f551999a4a87e5eda8528eda988009794096")
+    article = BeautifulSoup(html, "html.parser").find(id="ContentPlaceHolder1_article")
+    header = article.find("table").find("tr").find_all("td", recursive=False)
+    labels = [cell.get_text(" ", strip=True) for cell in header]
+    forms = ulif_parse.parse_ulif_entry(html, homonym_index=1)["forms"]
+    assert not set(labels).intersection(row["form_stressed"] for row in forms)
+    assert any(labels[1] in row["unmapped_labels"] for row in forms if not row["is_lemma"])
+    assert not any(not row["is_lemma"] and not row["grammatical_tags"] and not row["unmapped_labels"] for row in forms)
 
 
 def test_article_identity_without_article_container():
