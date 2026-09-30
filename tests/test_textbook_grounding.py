@@ -469,13 +469,7 @@ def test_seminar_textbook_miss_uses_literary_primary(monkeypatch) -> None:
 
     context = linear_pipeline._build_textbook_excerpt_context(plan, "folk")
 
-    assert search_sources_calls == [
-        (
-            "Чубинський колядки Колядки та щедрівки Міф про створення світу Читання архаїчна колядка",
-            "folk",
-            4,
-        )
-    ]
+    assert search_sources_calls == [("Чубинський колядки", "folk", 4)]
     assert search_literary_calls
     assert "Primary text (literary corpus)" in context
     assert "chunk_id: chubynsky-koliadka_c0001" in context
@@ -506,3 +500,225 @@ def test_core_textbook_miss_does_not_call_literary(monkeypatch) -> None:
 
     assert "corpus_missing: true" in context
     assert plan["references"][0]["corpus_missing"] is True
+
+
+def _excerpt_plan(titles: list[str]) -> dict[str, Any]:
+    return {
+        "references": [{"title": title} for title in titles],
+        "title": "Звуки та перші літери",
+        "subtitle": "Перші літери",
+        "content_outline": [{"section": "Звуки", "points": ["голосні", "приголосні"]}],
+    }
+
+
+_ONE_CHUNK_TITLES = [
+    "Караман Grade 10, p.187",
+    "Караман, підручник 10 клас, стор. 187",
+    "Караман Grade 10, p.187",
+    "Караман, 10 клас, стор. 187",
+    "Караман Grade 10, p.187",
+    "Караман 10 клас, стор. 187",
+]
+
+
+def test_six_references_resolving_to_one_chunk_render_it_once(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """Six citations of one page show that chunk once, in reference order."""
+    from wiki import sources_db
+
+    excerpt = "§ 38 Розмовна лексика з одного джерела."
+    db_path = tmp_path / "sources.db"
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "10-klas-ukrmova-karaman-2018_s0187",
+                "title": "Сторінка 105",
+                "text": excerpt,
+                "source_file": "10-klas-ukrmova-karaman-2018",
+                "grade": "10",
+                "author": "karaman",
+                "author_uk": "Караман",
+            }
+        ],
+    )
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+    calls: list[str] = []
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        calls.append(query)
+        return [
+            {
+                "chunk_id": "10-klas-ukrmova-karaman-2018_s0187",
+                "source_type": "textbook",
+                "text": excerpt,
+                "source_file": "10-klas-ukrmova-karaman-2018",
+                "author": "Караман",
+            }
+        ]
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    plan = _excerpt_plan(_ONE_CHUNK_TITLES)
+
+    first = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+    second = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+
+    assert first == second
+    assert first.count(excerpt) == 1
+    assert calls == []
+    cursor = -1
+    for title in _ONE_CHUNK_TITLES:
+        heading = f"### {title}"
+        start = cursor + 1
+        pos = first.find(heading, start)
+        assert pos > cursor
+        cursor = pos
+
+
+def test_unresolved_reference_contributes_no_unrelated_chunk(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """A title that cannot resolve to its own chunk adds no borrowed excerpt."""
+    from wiki import sources_db
+
+    unrelated = "UNIQUE_AVRAMENKO_PAGE_73_NOT_THIS_REFERENCE"
+    range_page = "Кравцова сторінка 22 не цитується з діапазону."
+    db_path = tmp_path / "sources.db"
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "2-klas-ukrmova-kravtsova_s0022",
+                "title": "Сторінка 22",
+                "text": range_page,
+                "source_file": "2-klas-ukrmova-kravtsova",
+                "grade": "2",
+                "author": "kravtsova",
+                "author_uk": "Кравцова",
+            }
+        ],
+    )
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+    calls: list[tuple[str, str, int]] = []
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        calls.append((query, track, limit))
+        return [
+            {
+                "chunk_id": "5-klas-ukrmova-avramenko-2022_s0073",
+                "source_type": "textbook_sections",
+                "title": "Сторінка 73",
+                "text": unrelated,
+                "source_file": "5-klas-ukrmova-avramenko-2022",
+                "author": "Авраменко",
+                "grade": "5",
+                "page": 73,
+            }
+        ]
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    titles = [
+        "ULP Season 1, Episode 1 — Informal Greetings",
+        "Wiki: pedagogy/a1/sounds-letters-and-hello (LOCKED 2026-04-23)",
+        "State Standard 2024",
+        "Synthesis of M28-M32 skills",
+        "Большакова, буквар 1 клас, стор. 24",
+        "Літвінова 5 клас, стор. 130",
+        "Кравцова Grade 2, p.22-23",
+    ]
+    plan = _excerpt_plan(titles)
+
+    first = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+    expected_calls = [(title, "a1", 4) for title in titles]
+    assert calls == expected_calls
+    second = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+
+    assert first == second
+    assert calls == expected_calls * 2
+    assert unrelated not in first
+    assert range_page not in first
+    assert "5-klas-ukrmova-avramenko-2022" not in first
+    assert all("Звуки" not in query for query, _track, _limit in calls)
+
+
+def test_resolvable_reference_keeps_its_specific_excerpt(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    """A parsed citation keeps its page, including the Ukrainian title form."""
+    from wiki import sources_db
+
+    zahariichuk = "Дієслова на -ся. Зіставте їх вимову й правопис."
+    zabolotnyi = "Звуки ми чуємо й вимовляємо, а букви бачимо й пишемо."
+    neighbor = "Сусідня сторінка Заболотного не цитується."
+    unrelated = "UNIQUE_AVRAMENKO_PAGE_73_NOT_THIS_REFERENCE"
+    db_path = tmp_path / "sources.db"
+    _seed_textbook_db(
+        db_path,
+        [
+            {
+                "chunk_id": "4-klas-ukrmova-zaharijchuk_s0162",
+                "title": "Сторінка 162",
+                "text": zahariichuk,
+                "source_file": "4-klas-ukrmova-zaharijchuk",
+                "grade": "4",
+                "author": "zaharijchuk",
+                "author_uk": "Захарійчук",
+            },
+            {
+                "chunk_id": "5-klas-ukrmova-zabolotnyi_s0083",
+                "title": "Сторінка 83",
+                "text": zabolotnyi,
+                "source_file": "5-klas-ukrmova-zabolotnyi",
+                "grade": "5",
+                "author": "zabolotnyi",
+                "author_uk": "Заболотний",
+            },
+            {
+                "chunk_id": "5-klas-ukrmova-zabolotnyi_s0084",
+                "title": "Сторінка 84",
+                "text": neighbor,
+                "source_file": "5-klas-ukrmova-zabolotnyi",
+                "grade": "5",
+                "author": "zabolotnyi",
+                "author_uk": "Заболотний",
+            },
+        ],
+    )
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+    calls: list[str] = []
+
+    def fake_search_sources(query: str, *, track: str, limit: int) -> list[dict]:
+        calls.append(query)
+        return [
+            {
+                "chunk_id": "5-klas-ukrmova-avramenko-2022_s0073",
+                "source_type": "textbook",
+                "text": unrelated,
+                "source_file": "5-klas-ukrmova-avramenko-2022",
+                "author": "Авраменко",
+            }
+        ]
+
+    monkeypatch.setattr(sources_db, "search_sources", fake_search_sources)
+    ulp = "ULP Season 1, Episode 1 — Informal Greetings"
+    plan = _excerpt_plan(
+        [
+            "Захарійчук Grade 4, p.162",
+            ulp,
+            "Заболотний 5 клас, стор. 83",
+        ]
+    )
+
+    context = linear_pipeline._build_textbook_excerpt_context(plan, "a1")
+
+    assert context.count(zahariichuk) == 1
+    assert context.count(zabolotnyi) == 1
+    assert neighbor not in context
+    assert unrelated not in context
+    assert calls == [ulp]
+    ulp_section = context.split(f"### {ulp}", 1)[1].split("### ", 1)[0]
+    assert ">" not in ulp_section

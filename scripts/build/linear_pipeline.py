@@ -1964,6 +1964,49 @@ _TEXTBOOK_REFERENCE_TITLE_RE = re.compile(
     r"^(?P<author>\S+)\s+Grade\s+(?P<grade>\d+),\s*p\.\s*(?P<page>\d+)$",
     re.IGNORECASE,
 )
+# Plans also cite "Author, … N клас, стор. N". The strict English form stays
+# first; this wider shape resolves the same author/grade/page lookup. A page
+# range (стор. 13-15, p.22-23) fails closed instead of citing only the first page.
+_TEXTBOOK_AUTHOR_RE = re.compile(r"[А-ЯҐЄІЇA-Z][А-ЯҐЄІЇа-яґєіїA-Za-z'’ʼ-]*")
+_TEXTBOOK_GRADE_RE = re.compile(r"(?i)(?:\bGrade\s+(?P<grade_en>\d+)\b|\b(?P<grade_uk>\d+)\s*клас\b)")
+_TEXTBOOK_PAGE_RE = re.compile(r"(?i)(?:\bp\.\s*|\bpage\s+|[сc]\.\s*|\bстор\.?\s*|\bсторінка\s+)(?P<page>\d+)\b")
+_PAGE_RANGE_TAIL_RE = re.compile(r"\s*[-–—]")
+# Words that show up in citation boilerplate and in unrelated textbook hits.
+# Matching on them would treat a shared chunk as specific to every reference.
+_NON_IDENTIFYING_REFERENCE_TOKENS = frozenset(
+    {
+        "and",
+        "the",
+        "for",
+        "with",
+        "from",
+        "grade",
+        "class",
+        "clas",
+        "klas",
+        "page",
+        "pages",
+        "клас",
+        "стор",
+        "сторінка",
+        "сторінки",
+        "буквар",
+        "підручник",
+        "українська",
+        "української",
+        "українську",
+        "мова",
+        "мови",
+        "мову",
+        "нуш",
+        "wiki",
+        "pedagogy",
+        "episode",
+        "episodes",
+        "season",
+        "locked",
+    }
+)
 
 # Cyrillic spelling-variant canonicalization. Maps non-canonical Cyrillic
 # author spellings (regional/historical variants like Литвінова or the
@@ -1994,14 +2037,29 @@ def _canonicalize_author_uk(author: str) -> str:
 
 
 def _parse_textbook_reference_title(title: str) -> tuple[str, int, int] | None:
-    match = _TEXTBOOK_REFERENCE_TITLE_RE.match(title.strip())
-    if not match:
+    text = title.strip()
+    if not text:
         return None
-    return (
-        match.group("author"),
-        int(match.group("grade")),
-        int(match.group("page")),
-    )
+    match = _TEXTBOOK_REFERENCE_TITLE_RE.match(text)
+    if match:
+        return (
+            match.group("author"),
+            int(match.group("grade")),
+            int(match.group("page")),
+        )
+    author_match = _TEXTBOOK_AUTHOR_RE.search(text)
+    grades = list(_TEXTBOOK_GRADE_RE.finditer(text))
+    pages = list(_TEXTBOOK_PAGE_RE.finditer(text))
+    if author_match is None or len(grades) != 1 or len(pages) != 1:
+        return None
+    page_match = pages[0]
+    if _PAGE_RANGE_TAIL_RE.match(text[page_match.end() :]):
+        return None
+    grade_match = grades[0]
+    grade_text = grade_match.group("grade_en") or grade_match.group("grade_uk")
+    if grade_text is None:
+        return None
+    return (author_match.group(0), int(grade_text), int(page_match.group("page")))
 
 
 def _textbook_source_year(source_file: str) -> int:
@@ -2253,6 +2311,62 @@ def _search_literary_hits(query: str, *, level: str, limit: int = 1) -> list[dic
     return literary_hits[:limit]
 
 
+def _reference_distinctive_tokens(title: str) -> set[str]:
+    return {
+        token.casefold()
+        for token in _SOURCE_SEARCH_TERM_RE.findall(title)
+        if not token.isdigit() and token.casefold() not in _NON_IDENTIFYING_REFERENCE_TOKENS
+    }
+
+
+def _folded_identity_tokens(tokens: set[str]) -> set[str]:
+    folded: set[str] = set()
+    for token in tokens:
+        value = fold_citation_author(token)
+        if len(value) >= 3:
+            folded.add(value)
+    return folded
+
+
+def _textbook_hit_matches_reference(title: str, hit: Mapping[str, Any]) -> bool:
+    """True when this hit names the reference, not only the shared module topic."""
+    tokens = _reference_distinctive_tokens(title)
+    if not tokens:
+        return False
+    fields = " ".join(
+        str(hit.get(key) or "")
+        for key in (
+            "chunk_id",
+            "title",
+            "section_title",
+            "author",
+            "author_uk",
+            "source_file",
+            "source",
+            "text",
+            "content",
+            "excerpt",
+            "snippet",
+        )
+    )
+    hit_tokens = {token.casefold() for token in _SOURCE_SEARCH_TERM_RE.findall(fields)}
+    if tokens & hit_tokens:
+        return True
+    return bool(_folded_identity_tokens(tokens) & _folded_identity_tokens(hit_tokens))
+
+
+def _textbook_chunk_identity(hit: Mapping[str, Any]) -> tuple[str, ...]:
+    chunk_id = str(hit.get("chunk_id") or "").strip()
+    if chunk_id:
+        return ("chunk", chunk_id)
+    return (
+        "text",
+        str(hit.get("source_file") or hit.get("source") or "").strip(),
+        str(hit.get("page") or "").strip(),
+        _textbook_hit_text(hit),
+    )
+
+
 def _build_textbook_excerpt_context(
     plan: Mapping[str, Any],
     level: str,
@@ -2270,20 +2384,30 @@ def _build_textbook_excerpt_context(
         if isinstance(ref, Mapping)
     }
     found_any = False
+    seen_chunks: dict[tuple[str, ...], str] = {}
     for title in references:
         reference = references_by_title.get(title, {})
         is_primary_reference = str(reference.get("type") or "").casefold() == "primary"
-        query = f"{title} {topic_query}".strip()
+        # Textbook search stays on the reference title. Appending the shared
+        # topic query makes every unresolved title retrieve the same chunk.
+        literary_fallback_query = f"{title} {topic_query}".strip()
         missing_reasons: list[str] = []
         direct_hits = _lookup_textbook_reference_chunk(
             title,
             limit=1,
             missing_reason=missing_reasons,
         )
-        hits = direct_hits if direct_hits is not None else _search_textbook_hits(query, level=level, limit=1)
+        if direct_hits is not None:
+            hits = direct_hits
+        else:
+            hits = [
+                hit
+                for hit in _search_textbook_hits(title, level=level, limit=1)
+                if _textbook_hit_matches_reference(title, hit)
+            ]
         hit_source = "textbook"
         if not hits and level_key in SEMINAR_LEVELS and is_primary_reference:
-            for literary_query in _literary_fallback_queries(plan, reference, query):
+            for literary_query in _literary_fallback_queries(plan, reference, literary_fallback_query):
                 hits = _search_literary_hits(literary_query, level=level_key, limit=1)
                 if hits:
                     hit_source = "literary"
@@ -2309,6 +2433,13 @@ def _build_textbook_excerpt_context(
             lines.append("*Textbook search returned metadata without excerpt text.*")
             lines.append("")
             continue
+        identity = _textbook_chunk_identity(hit)
+        prior_title = seen_chunks.get(identity)
+        if prior_title is not None:
+            lines.append(f"Same textbook excerpt as {prior_title!r}.")
+            lines.append("")
+            continue
+        seen_chunks[identity] = title
         found_any = True
         if hit_source == "literary":
             lines.append("Primary text (literary corpus)")

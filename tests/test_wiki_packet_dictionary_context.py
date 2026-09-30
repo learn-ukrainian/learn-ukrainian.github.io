@@ -174,5 +174,7 @@ def test_build_knowledge_packet_appends_textbook_excerpts(monkeypatch) -> None:
     assert "> Зворотна форма дієслова походить" in packet
     assert "### Захарійчук Grade 4, p.162" in packet
     assert "> Умиваюся, одягаюся, вітаюся" in packet
-    assert len(queries) == 2
-    assert all("My Morning" in query for query in queries)
+    assert queries == [
+        "Караман Grade 10, p.176",
+        "Захарійчук Grade 4, p.162",
+    ]
