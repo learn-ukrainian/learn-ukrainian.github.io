@@ -9091,10 +9091,32 @@ _DOR_ISSUE_RE = re.compile(
 )
 
 
+def _registered_stream_epics() -> frozenset[int]:
+    """Epic numbers registered for this repository in the stream registry (#9276).
+
+    Uses the registry ``issue_stream_audit`` audits from, including closed and retired epics: an epic
+    is never a task card. An unreadable registry yields no exemption, so the check only gets stricter.
+    """
+    import yaml
+
+    from scripts.orchestration import issue_stream_audit
+
+    try:
+        registry = issue_stream_audit.load_registry()
+    except (OSError, ValueError, AttributeError, TypeError, yaml.YAMLError):
+        return frozenset()
+    return frozenset(epic for epics in registry.values() for epic in epics)
+
+
 def _run_dor_preflight(
     prompt: str, allow_reason: str | None, *, dispatch_repo: str
 ) -> tuple[str | None, dict[str, Any] | None]:
-    """Check each issue named by an implementation brief before dispatch side effects."""
+    """Check each issue named by an implementation brief before dispatch side effects.
+
+    A registered stream epic of this repository is linked context, not a task card (#9276): it is recorded
+    as ``stream_epic`` and skipped when the brief also names a task issue, but a brief naming only an epic
+    is still checked. Only ``(this repository, epic number)`` is exempt; a same-numbered issue elsewhere is not.
+    """
     distinct: dict[tuple[str, int], tuple[str, int]] = {}
     for match in _DOR_ISSUE_RE.finditer(_strip_quoted_content(prompt)):
         repo = match.group("url_repo") or match.group("short_repo") or dispatch_repo
@@ -9105,53 +9127,70 @@ def _run_dor_preflight(
     candidates = sorted(distinct.values(), key=lambda issue: (issue[1], issue[0].casefold()))
     if not candidates:
         return None, None
+    epic_numbers = _registered_stream_epics()
+    epics = [c for c in candidates if c[0] == _CANONICAL_GITHUB_REPO and c[1] in epic_numbers]
+    tasks = [c for c in candidates if c not in epics]
     warnings: dict[str, str] = {}
     issue_numbers: list[int] = []
     checker = _REPO_ROOT / "scripts" / "ci" / "check_issue_task_quality.py"
     issue_repositories: list[dict[str, Any]] = []
-    for repo, number in candidates:
-        label = str(number) if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold() else f"{repo}#{number}"
-        recorded = False
-        try:
-            issue = subprocess.run(
-                ["gh", "api", f"repos/{repo}/issues/{number}"],
-                capture_output=True,
-                text=True,
-                timeout=60,
-                check=False,
-            )
-            if issue.returncode:
-                raise ValueError("issue lookup failed")
-            issue_payload = json.loads(issue.stdout)
-            if not isinstance(issue_payload, dict) or issue_payload.get("number") != number:
-                raise ValueError("issue lookup must identify the requested number")
-            if "pull_request" in issue_payload:
-                continue
-            issue_numbers.append(number)
-            recorded = True
-            if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
-                issue_repositories.append({"issue": number, "repo": repo})
-            result = subprocess.run(
-                [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
-                capture_output=True,
-                text=True,
-                timeout=75,
-                check=False,
-            )
-            payload = json.loads(result.stdout)
-            if not isinstance(payload, dict):
-                raise ValueError("checker result must be an object")
-            if result.returncode or payload.get("verdict") != "PASS":
-                warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
-        except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
-            if not recorded:
+
+    def check(batch: list[tuple[str, int]]) -> None:
+        for repo, number in batch:
+            label = str(number) if repo.casefold() == _CANONICAL_GITHUB_REPO.casefold() else f"{repo}#{number}"
+            recorded = False
+            try:
+                issue = subprocess.run(
+                    ["gh", "api", f"repos/{repo}/issues/{number}"],
+                    capture_output=True,
+                    text=True,
+                    timeout=60,
+                    check=False,
+                )
+                if issue.returncode:
+                    raise ValueError("issue lookup failed")
+                issue_payload = json.loads(issue.stdout)
+                if not isinstance(issue_payload, dict) or issue_payload.get("number") != number:
+                    raise ValueError("issue lookup must identify the requested number")
+                if "pull_request" in issue_payload:
+                    continue
                 issue_numbers.append(number)
+                recorded = True
                 if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
                     issue_repositories.append({"issue": number, "repo": repo})
-            warnings[label] = "checker_error"
+                result = subprocess.run(
+                    [sys.executable, str(checker), "--issue", str(number), "--repo", repo, "--strict", "--json"],
+                    capture_output=True,
+                    text=True,
+                    timeout=75,
+                    check=False,
+                )
+                payload = json.loads(result.stdout)
+                if not isinstance(payload, dict):
+                    raise ValueError("checker result must be an object")
+                if result.returncode or payload.get("verdict") != "PASS":
+                    warnings[label] = ",".join(payload.get("missing") or ["checker_error"])
+            except (OSError, subprocess.SubprocessError, json.JSONDecodeError, TypeError, ValueError):
+                if not recorded:
+                    issue_numbers.append(number)
+                    if repo.casefold() != _CANONICAL_GITHUB_REPO.casefold():
+                        issue_repositories.append({"issue": number, "repo": repo})
+                warnings[label] = "checker_error"
+
+    check(tasks)
+    stream_epics: list[int] = []
+    if epics:
+        if issue_numbers:
+            stream_epics = [number for _repo, number in epics]
+        else:
+            # No task issue was checked (none named, or all were pull requests): the epic is all the
+            # brief names, and an epic is not a task card.
+            check(epics)
     if not issue_numbers:
         return None, None
     record: dict[str, Any] = {"issues": issue_numbers, "warnings": warnings}
+    if stream_epics:
+        record["stream_epic"] = stream_epics
     if issue_repositories:
         record["issue_repositories"] = issue_repositories
     if allow_reason is not None:
