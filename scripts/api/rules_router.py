@@ -6,6 +6,16 @@ Endpoints:
     GET /api/rules                  Default: markdown blob
     GET /api/rules?format=markdown  Single concatenated Markdown string
     GET /api/rules?format=json      {hash, bytes, sources[], markdown}
+    GET /api/rules?scope=core       The rules core every seat loads
+    GET /api/rules?scope=content    The core plus the curriculum addendum
+    GET /api/rules?scope=task:NAME  The reference sources task-scoped-reading.md selects
+
+Without ``scope`` the legacy full bundle is served unchanged (sources, order,
+shape and hash). A scoped response carries its own hash — sha256 over
+``scope=<scope>\n`` plus the Markdown — so its ETag and cache identity never
+collide with the full bundle or another scope. Scope sources and assembly come
+from ``scripts/lib/rules_core.py``, the same loader launchers and workers use
+offline.
 
 Why this exists (GH #1309): every agent cold-start was reading three
 rule files individually (``critical-rules.md`` +
@@ -28,6 +38,8 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 from fastapi.responses import JSONResponse, PlainTextResponse
+
+from scripts.lib import rules_core
 
 from .monitor_context import MonitorContext, get_ctx
 from .telemetry.response import (
@@ -130,12 +142,33 @@ def _assemble_rules(project_root: Path) -> tuple[str, list[str], str]:
     return markdown, sources, digest
 
 
+def scope_digest(scope: str, markdown: str) -> str:
+    """Hash of a scoped response; the scope name is part of its identity."""
+    return hashlib.sha256(f"scope={scope}\n{markdown}".encode()).hexdigest()
+
+
+def _assemble_scope(project_root: Path, scope: str) -> tuple[str, list[str], str]:
+    """Return (markdown, sources, digest) for ``core``, ``content`` or ``task:<name>``."""
+    try:
+        sources = list(rules_core.scope_sources(scope))
+        markdown = rules_core.assemble(tuple(sources), project_root)
+    except rules_core.RulesCoreMissing as exc:
+        raise HTTPException(status_code=503, detail=f"{exc}; scope {scope!r} is unavailable in this checkout.") from exc
+    except rules_core.RulesCoreError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    return markdown, sources, scope_digest(scope, markdown)
+
+
 @router.get("")
 def get_rules(
     request: Request,
     format: Literal["markdown", "json"] = Query(
         "markdown",
         description="'markdown' returns the raw Markdown blob; 'json' wraps it with hash + metadata.",
+    ),
+    scope: str | None = Query(
+        None,
+        description="Omit for the full bundle; 'core', 'content', or 'task:<name>' for a scoped selection.",
     ),
     ctx: MonitorContext = Depends(get_ctx),
 ):
@@ -152,18 +185,22 @@ def get_rules(
     body — the client should reuse its cache. This makes the SDK's
     cache-hit path one small HTTP round-trip with zero payload.
     """
-    markdown, sources, digest = _assemble_rules(ctx.roots.project_root)
+    if scope is None:
+        markdown, sources, digest = _assemble_rules(ctx.roots.project_root)
+    else:
+        markdown, sources, digest = _assemble_scope(ctx.roots.project_root, scope)
     etag = f'"{digest}"'
     session_id = session_id_from_request(request)
+    scope_headers = {"X-Rules-Scope": scope} if scope is not None else {}
 
     if not telemetry_footer_enabled() and _matches_etag(request.headers.get("If-None-Match"), digest):
         return Response(
             status_code=304,
-            headers={"ETag": etag, "X-Rules-Hash": digest},
+            headers={"ETag": etag, "X-Rules-Hash": digest, **scope_headers},
         )
 
     if format == "json":
-        return _rules_json_response(markdown, sources, digest, etag, session_id)
+        return _rules_json_response(markdown, sources, digest, etag, session_id, scope=scope)
 
     # Raw Markdown path. FastAPI's default str response is
     # application/json, which would JSON-encode the whole blob — wrong
@@ -171,7 +208,7 @@ def get_rules(
     return PlainTextResponse(
         content=append_telemetry_footer(markdown, session_id),
         media_type="text/markdown; charset=utf-8",
-        headers=_cache_headers(etag, digest, "X-Rules-Hash"),
+        headers={**_cache_headers(etag, digest, "X-Rules-Hash"), **scope_headers},
     )
 
 
@@ -181,19 +218,20 @@ def _rules_json_response(
     digest: str,
     etag: str,
     session_id: str | None,
+    *,
+    scope: str | None = None,
 ):
-    return JSONResponse(
-        content=add_json_telemetry(
-            {
-                "hash": digest,
-                "bytes": len(markdown.encode("utf-8")),
-                "sources": sources,
-                "markdown": markdown,
-            },
-            session_id=session_id,
-        ),
-        headers=_cache_headers(etag, digest, "X-Rules-Hash"),
-    )
+    payload = {
+        "hash": digest,
+        "bytes": len(markdown.encode("utf-8")),
+        "sources": sources,
+        "markdown": markdown,
+    }
+    headers = _cache_headers(etag, digest, "X-Rules-Hash")
+    if scope is not None:
+        payload["scope"] = scope
+        headers["X-Rules-Scope"] = scope
+    return JSONResponse(content=add_json_telemetry(payload, session_id=session_id), headers=headers)
 
 
 def _cache_headers(etag: str, digest: str, hash_header: str) -> dict[str, str]:
@@ -203,7 +241,7 @@ def _cache_headers(etag: str, digest: str, hash_header: str) -> dict[str, str]:
     return headers
 
 
-def rules_hash(*, project_root: Path) -> str:
+def rules_hash(*, project_root: Path, scope: str | None = None) -> str:
     """Hash-only helper used by ``/api/state/manifest``.
 
     Cheap enough to call on every manifest request (three small file
@@ -211,7 +249,10 @@ def rules_hash(*, project_root: Path) -> str:
     stays 200-OK even if rules are momentarily missing.
     """
     try:
-        _, _, digest = _assemble_rules(project_root)
+        if scope is None:
+            _, _, digest = _assemble_rules(project_root)
+        else:
+            _, _, digest = _assemble_scope(project_root, scope)
     except HTTPException:
         return ""
     return digest

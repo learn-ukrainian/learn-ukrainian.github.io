@@ -55,6 +55,29 @@ Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
 Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
 Use `./start-kimicc.sh` or `./start-kimi.sh --harness claude-code` for Kimi through Claude Code.
 
+### Rules core loading
+
+Every launcher starts its seat with the rules core
+(`agents_extensions/shared/rules/core.md`; curriculum driver lanes add
+`core-curriculum.md`), read offline by `scripts/lib/rules_core.py` through
+`scripts/lib/rules_core.sh`. The core always comes from the checkout the code
+runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
+native Codex `-c developer_instructions=…`, Grok `--rules`, native Kimi an
+`--agent-file` that keeps its default prompt; AGY, Cursor, OpenCode and Hermes
+receive the core at the head of the initial prompt. Native Kimi refuses
+`--continue`, `--session`, `--resume`, `--agent` and `--agent-file` (exit 2): a
+resumed or custom agent would not carry the core, and Kimi seats take fresh
+web/UI/backend coding tasks. `delegate.py dispatch`
+(`--rules-seat core|content`, default `$LU_RULES_SEAT`), ACP calls and the
+legacy bridge prompts prepend the same block unless the prompt already starts
+with it. A missing core warns and the launch or dispatch continues without it. `LAUNCHER_DRY_RUN=1` prints the seat
+and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
+
+```bash
+.venv/bin/python scripts/lib/rules_core.py --format json          # seat, bytes, first/last pillar anchors
+.venv/bin/python scripts/lib/rules_core.py --lane core --format seat   # content
+```
+
 ### Parallel routes and original Claude config
 
 `start-codex.sh --harness claude-code`,

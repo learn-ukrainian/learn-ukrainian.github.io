@@ -49,6 +49,9 @@ SESSION_IDENTITY_ENV_VARS = (
     # Launcher driver identity (scripts/lib/launcher_core.sh).
     "SESSION_EPIC",
     "SESSION_HANDOFF_AGENT",
+    # Rules-core seat of the launched session (scripts/lib/rules_core.sh); its
+    # delegate.py workers and ACP calls inherit it.
+    "LU_RULES_SEAT",
     # Stream lease capsule (scripts/lib/session_supervisor.sh).
     "SESSION_STREAM_ID",
     "SESSION_STREAM_SESSION_ID",
@@ -1635,6 +1638,19 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     for item in items:
         if item.nodeid in selected:
             item.add_marker(pytest.mark.flaky(reruns=1, rerun_except=[TIMEOUT_PATTERN]))
+    # The marker's fixture lives in tests/rules_core_view.py (it links the whole
+    # checkout, so this conftest must not import it); a module that forgets the
+    # import would silently run a marked test with the core.
+    unserved = [
+        item.nodeid
+        for item in items
+        if item.get_closest_marker("rules_core_absent") is not None
+        and "rules_core_absent_when_marked" not in getattr(item, "fixturenames", ())
+    ]
+    if unserved:
+        raise pytest.UsageError(
+            f"rules_core_absent tests whose module does not import the rules_core_absent_when_marked fixture: {unserved}"
+        )
     missing = _sparse_missing_trees()
     if not missing:
         return

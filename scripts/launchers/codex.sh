@@ -200,10 +200,22 @@ launcher_adapter_exec() {
       -C "$LC_SESSION_ROOT" --model "$LC_MODEL"
       -c "model_reasoning_effort=$LC_EFFORT"
     )
+    # AGENTS.md autoload does not carry the rules core; developer_instructions
+    # adds it as a developer message (TOML-encoded so -c never reparses it).
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      if LC_RULES_CORE_TOML="$(rules_core_toml "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT")"; then
+        cmd+=(-c "developer_instructions=$LC_RULES_CORE_TOML")
+      else
+        rules_core_warn "TOML encoding failed"
+      fi
+    fi
   else
     cmd=(claude --model "$LC_MODEL")
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      cmd+=(--append-system-prompt "$LC_RULES_CORE")
+    fi
   fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
-  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; printf '%q ' "${cmd[@]}"; printf '\n'; return 0; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
   launcher_exec_command "${cmd[@]}"
 }

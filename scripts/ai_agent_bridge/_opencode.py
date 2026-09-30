@@ -45,6 +45,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from scripts.lib import rules_core
+
 from ._ask_contract import (
     requested_effort,
     resolve_model_selection,
@@ -1223,7 +1225,7 @@ def _run_opencode(
     # markdown list, etc.) is passed as the positional prompt, not misparsed by
     # opencode as an unknown flag. Unconditional — content is always positional.
     argv.append("--")
-    argv.append(content)
+    argv.append(rules_core.with_core(content))
 
     # Inject per-model (or env-overridable) output token budget for reasoning
     # models. This is passed via the known experimental lever so that glm/pool

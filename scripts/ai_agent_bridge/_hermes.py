@@ -23,6 +23,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from scripts.lib import rules_core
+
 from ._ask_contract import (
     requested_effort,
     resolve_model_selection,
@@ -261,6 +263,7 @@ def _invoke_hermes(
             )
         prompt = f"{prompt}\n\n## Attached data: {data_path.name}\n\n```\n{attached}\n```"
 
+    prompt = rules_core.with_core(prompt)
     timeout = None if no_timeout else HERMES_DEFAULT_TIMEOUT_S
     use_neutral = hermes_must_use_neutral_cwd(review=review)
 

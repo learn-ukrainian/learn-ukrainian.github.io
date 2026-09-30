@@ -20,6 +20,7 @@ from scripts.agent_runtime.result import ParseResult, Result
 from scripts.ai_agent_bridge._hermes import HERMES_DEFAULT_MODEL, _invoke_hermes
 from scripts.entire import cursor_native_hook_shim as shim
 from scripts.entire import fleet_capture as capture
+from scripts.lib import rules_core
 
 
 def _repo_root(tmp_path: Path) -> Path:
@@ -872,7 +873,8 @@ def test_invoke_hermes_uses_shared_runtime():
     ) as invoke_mock:
         assert _invoke_hermes("hello", "deepseek-v4.1-flash", task_id="task-1") == "response body"
     args, kwargs = invoke_mock.call_args
-    assert args == ("hermes-deepseek", "hello")
+    # The rules core leads the prompt when the checkout carries it.
+    assert args == ("hermes-deepseek", rules_core.with_core("hello"))
     assert kwargs["model"] == "deepseek-v4.1-flash"
     assert kwargs["task_id"] == "task-1"
     assert kwargs["entrypoint"] == "bridge"

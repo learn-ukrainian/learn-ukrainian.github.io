@@ -39,7 +39,11 @@ launcher_adapter_exec() {
   if [ -n "${LC_EFFORT:-}" ]; then
     cmd+=(--effort "$LC_EFFORT")
   fi
+  # CLAUDE.md autoload does not carry the rules core; append it to the system prompt.
+  if [ -n "${LC_RULES_CORE:-}" ]; then
+    cmd+=(--append-system-prompt "$LC_RULES_CORE")
+  fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
-  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; printf '%q ' "${cmd[@]}"; printf '\n'; return 0; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
   launcher_exec_command "${cmd[@]}"
 }

@@ -22,6 +22,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from scripts.lib import rules_core
+
 from ._ask_contract import (
     requested_effort,
     resolve_model_selection,
@@ -171,7 +173,7 @@ def _invoke_cursor(
 
     argv = [
         agent_bin,
-        "-p", prompt,
+        "-p", rules_core.with_core(prompt),
         "--model", model,
         "--output-format", "text",
         "--trust"

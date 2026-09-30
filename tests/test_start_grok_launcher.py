@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import pytest
 
+from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 from tests.test_launcher_contract import run_launcher
 
 
@@ -81,6 +82,7 @@ def test_grok_forwards_provider_arguments_only_after_separator() -> None:
     assert "--reasoning high" in result.stdout
 
 
+@pytest.mark.rules_core_absent
 def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> None:
     from tests.test_launcher_contract import hermes_stub_env
 

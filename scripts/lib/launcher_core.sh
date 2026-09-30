@@ -70,6 +70,9 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
+  LAUNCHER_DRY_RUN_ARGV_FILE With dry-run, also write the exact NUL-separated argv here.
+  LU_RULES_SEAT              Rules core seat: core or content (default: content for a
+                             curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
                              claude-opus-5-5[1m]; Cursor driver: grok-4.7-high; empty
                              for Claude interactive/Grok = last session).
@@ -217,15 +220,61 @@ launcher_hermes_exec() {
     if [ -n "$prompt" ]; then prompt+=$'\n'; fi
     prompt+="$arg"
   done
-  if [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then cmd+=(--query "$prompt"); fi
+  # Hermes has no system-prompt flag: the rules core leads the seeded query.
+  if [ -n "${LC_RULES_CORE:-}" ]; then
+    cmd+=(--query "$(rules_core_prefix "$prompt")")
+  elif [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then
+    cmd+=(--query "$prompt")
+  fi
   if [ "$LC_DRY_RUN" = 1 ]; then
     printf 'LAUNCHER_DRY_RUN=1: credential_source=%s provider=%s model=%s requested_effort=%s harness=hermes\nwould exec ' \
       "$LC_AUTH_SOURCE" "$LC_HERMES_PROVIDER" "$LC_MODEL" "${LC_EFFORT:-default}"
-    printf '%q ' "${cmd[@]}"
+    launcher_print_argv "${cmd[@]}"
     printf '\n'
     return 0
   fi
   launcher_exec_command "${cmd[@]}"
+}
+
+# Dry-run argv printer shared by every adapter. Stdout shows each argument with
+# the rules core replaced by a size placeholder; LAUNCHER_DRY_RUN_ARGV_FILE, when
+# set, receives the exact NUL-separated argv the launch would exec.
+launcher_print_argv() {
+  local arg placeholder
+  placeholder="<rules-core seat=${LC_RULES_SEAT:-none} bytes=${LC_RULES_CORE_BYTES:-0}>"
+  for arg in "$@"; do
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      arg="${arg//"$LC_RULES_CORE"/$placeholder}"
+      if [ -n "${LC_RULES_CORE_TOML:-}" ]; then
+        arg="${arg//"$LC_RULES_CORE_TOML"/$placeholder}"
+      fi
+    fi
+    printf '%q ' "$arg"
+  done
+  if [ -n "${LAUNCHER_DRY_RUN_ARGV_FILE:-}" ]; then
+    printf '%s\0' "$@" > "$LAUNCHER_DRY_RUN_ARGV_FILE"
+  fi
+}
+
+# Every seat starts with the rules core (scripts/lib/rules_core.sh). A driver on
+# a curriculum lane is a content seat and also gets the curriculum addendum.
+launcher_load_rules_core() {
+  local lane=""
+  LC_RULES_CORE_TOML=""
+  if [ ! -r "$LC_ROOT/scripts/lib/rules_core.sh" ]; then
+    printf 'WARNING: rules core not loaded (scripts/lib/rules_core.sh missing); launching without it.\n' >&2
+    LC_RULES_SEAT="" LC_RULES_CORE="" LC_RULES_CORE_BYTES=0
+    return 0
+  fi
+  # shellcheck source=scripts/lib/rules_core.sh
+  source "$LC_ROOT/scripts/lib/rules_core.sh"
+  if [ "$LC_MODE" = driver ] && [ "$LC_GOVERNOR" = 0 ]; then
+    lane="$LC_EPIC"
+  fi
+  rules_core_load "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT" "$lane" "$LC_PROVIDER"
+  if [ -n "$LC_RULES_CORE" ] && [ "$LC_DRY_RUN" = 1 ]; then
+    printf 'launcher: rules core seat=%s bytes=%s\n' "$LC_RULES_SEAT" "$LC_RULES_CORE_BYTES"
+  fi
 }
 
 launcher_clear_foreign_route_state() {
@@ -1210,6 +1259,7 @@ launcher_main() {
       exit 1
     fi
   fi
+  launcher_load_rules_core
 
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then
     local canary_rc=0
