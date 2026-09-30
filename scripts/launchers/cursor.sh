@@ -8,8 +8,10 @@ launcher_adapter_validate() {
 }
 launcher_adapter_preflight() {
   LC_AUTH_SOURCE='cursor-cli-oauth'
-  # Require the unambiguous cursor-agent binary. A generic ``agent`` on PATH can
-  # be a different tool (Grok Build TUI) and must not claim this seat (#6969).
+  # Shell-side exception to resolve_cursor_agent_binary() (#9322): a shell
+  # script cannot call the Python resolver. Require exactly cursor-agent and
+  # exit non-zero when it is missing. A generic agent on PATH is a different
+  # tool (Grok Build TUI) and must not claim this seat (#6969).
   LC_CURSOR_BIN=cursor-agent
   launcher_require_binary "$LC_CURSOR_BIN" 'Cursor agent executable (cursor-agent) is unavailable.' 3 || exit $?
 }

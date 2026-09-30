@@ -81,6 +81,7 @@ def test_missing_binary_with_env_api_key_is_authenticated(monkeypatch):
     result = cursor_mod.probe_cursor_login()
     assert result["is_authenticated"] is True
     assert result["login_state"] == "authenticated"
+    assert result["error_kind"] == "missing_binary"
 
 
 def test_missing_binary_no_key_is_need_login(monkeypatch):

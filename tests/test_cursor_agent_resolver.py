@@ -11,6 +11,7 @@ from types import SimpleNamespace
 import pytest
 
 import scripts.agent_runtime.binary_resolve as binary_resolve
+from scripts.agent_runtime import telemetry as telemetry_mod
 from scripts.agent_runtime.adapters import cursor as cursor_mod
 from scripts.agent_runtime.adapters.cursor import (
     CursorAdapter,
@@ -164,6 +165,81 @@ def test_installer_directory_cursor_agent_beats_decoy_agent(tmp_path: Path, monk
     resolved = resolve_cursor_agent_binary()
 
     assert Path(resolved) == installed.resolve()
+    assert _marker(marker) == ""
+
+
+def _forbid_spawns(monkeypatch: pytest.MonkeyPatch) -> list[list[str]]:
+    spawned: list[list[str]] = []
+
+    def _record(argv, *args, **kwargs):
+        spawned.append([str(part) for part in argv])
+        raise AssertionError(f"spawned {argv[0]}")
+
+    monkeypatch.setattr(cursor_mod.subprocess, "run", _record)
+    monkeypatch.setattr(subprocess, "Popen", _record)
+    monkeypatch.setattr(telemetry_mod, "_ORIGINAL_SUBPROCESS_POPEN", _record)
+    monkeypatch.setattr(telemetry_mod.subprocess, "Popen", _record)
+    monkeypatch.setattr(telemetry_mod.subprocess, "run", _record)
+    return spawned
+
+
+@pytest.mark.parametrize("source", ["environment", "stored"])
+def test_missing_binary_is_reported_for_either_credential_source(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, source: str
+) -> None:
+    """A missing ``cursor-agent`` stays ``missing_binary`` and does not spawn (#9322)."""
+    decoy_dir = tmp_path / "decoy"
+    marker = tmp_path / "ran"
+    home = tmp_path / "home"
+    _plant(decoy_dir / "agent", marker, "decoy")
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("PATH", str(decoy_dir))
+    if source == "environment":
+        monkeypatch.setenv("CURSOR_API_KEY", "fixture-env-key")
+    else:
+        monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+        key_file = home / ".config" / "cursor-agent" / "api.key.env"
+        key_file.parent.mkdir(parents=True)
+        key_file.write_text("CURSOR_API_KEY=fixture-stored-key\n", encoding="utf-8")
+    spawned = _forbid_spawns(monkeypatch)
+
+    probe = probe_cursor_login()
+
+    assert probe["error_kind"] == "missing_binary"
+    assert probe["is_authenticated"] is True
+    assert spawned == []
+    assert _marker(marker) == ""
+
+
+def test_cursor_version_probe_missing_binary_does_not_spawn(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The version probe calls the resolver and does not spawn when it refuses."""
+    decoy_dir = tmp_path / "decoy"
+    marker = tmp_path / "ran"
+    home = tmp_path / "home"
+    _plant(decoy_dir / "agent", marker, "decoy")
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("PATH", str(decoy_dir))
+    monkeypatch.delenv("CURSOR_API_KEY", raising=False)
+    spawned = _forbid_spawns(monkeypatch)
+    resolver_calls: list[str] = []
+    original = cursor_mod.resolve_cursor_agent_binary
+
+    def _counting() -> str:
+        resolver_calls.append("call")
+        return original()
+
+    monkeypatch.setattr(cursor_mod, "resolve_cursor_agent_binary", _counting)
+    telemetry_mod.cursor_cli_version.cache_clear()
+    try:
+        assert telemetry_mod.cursor_cli_version() is None
+        assert telemetry_mod.cursor_cli_version(("agent",)) is None
+    finally:
+        telemetry_mod.cursor_cli_version.cache_clear()
+
+    assert resolver_calls == ["call"]
+    assert spawned == []
     assert _marker(marker) == ""
 
 

@@ -138,6 +138,11 @@ def resolve_cursor_agent_binary() -> str:
     Searches PATH and the login install directories for that name only.
     A generic ``agent`` executable is never consulted.
 
+    The one shell-side exception is ``scripts/launchers/cursor.sh``. A shell
+    script cannot call this function, so that launcher looks up the name
+    ``cursor-agent`` itself and exits non-zero when the executable is missing.
+    It never accepts a generic ``agent``.
+
     Raises:
         CursorAgentMissingError: no executable named ``cursor-agent``.
     """
@@ -735,42 +740,59 @@ def _cursor_env_or_file_authenticated() -> bool:
     return _load_cursor_api_key_from_env_file() is not None
 
 
+def _cursor_login_probe_failure(exc: BaseException, fetched_at: str) -> dict[str, Any]:
+    """Map a pre-spawn or spawn failure to a login probe result.
+
+    ``missing_binary`` is reported whether or not a Cursor API key is present.
+    Credentials still mark the lane authenticated, but they must not hide the
+    fact that ``cursor-agent`` cannot be executed (#9322).
+    """
+    if isinstance(exc, (CursorAgentMissingError, FileNotFoundError)):
+        kind = "missing_binary"
+    elif isinstance(exc, subprocess.TimeoutExpired):
+        kind = "timeout"
+    elif isinstance(exc, PermissionError):
+        kind = "permission"
+    else:
+        kind = "os_error"
+    is_auth = _cursor_env_or_file_authenticated()
+    error_kind = kind if kind == "missing_binary" else (None if is_auth else kind)
+    return {
+        "lane": "cursor",
+        "source": "cursor_cli",
+        "login_state": "authenticated" if is_auth else "NEED_LOGIN",
+        "is_authenticated": is_auth,
+        "status": "authenticated" if is_auth else "need_login",
+        "error_kind": error_kind,
+        "fetched_at": fetched_at,
+    }
+
+
 def probe_cursor_login(*, timeout_s: float = 5.0) -> dict[str, Any]:
     """Preflight Cursor CLI auth without printing secrets.
 
     Returns ``login_state`` of ``authenticated`` or ``NEED_LOGIN``. A usable
     ``CURSOR_API_KEY`` (env or on-disk key file) counts as authenticated even
     when the CLI's own session state says otherwise — see
-    ``_cursor_env_or_file_authenticated``.
+    ``_cursor_env_or_file_authenticated``. A missing ``cursor-agent`` is
+    ``error_kind=missing_binary`` regardless of those credentials, and the
+    probe does not spawn when the resolver cannot find the executable.
     """
     fetched_at = datetime.now(UTC).isoformat().replace("+00:00", "Z")
     try:
+        binary = _cursor_cli_binary()
+    except CursorAgentMissingError as exc:
+        return _cursor_login_probe_failure(exc, fetched_at)
+    try:
         res = subprocess.run(
-            [_cursor_cli_binary(), "status", "--format", "json"],
+            [binary, "status", "--format", "json"],
             capture_output=True,
             text=True,
             timeout=timeout_s,
             check=False,
         )
-    except (CursorAgentMissingError, FileNotFoundError, subprocess.TimeoutExpired, OSError) as exc:
-        if isinstance(exc, (CursorAgentMissingError, FileNotFoundError)):
-            kind = "missing_binary"
-        elif isinstance(exc, subprocess.TimeoutExpired):
-            kind = "timeout"
-        elif isinstance(exc, PermissionError):
-            kind = "permission"
-        else:
-            kind = "os_error"
-        is_auth = _cursor_env_or_file_authenticated()
-        return {
-            "lane": "cursor",
-            "source": "cursor_cli",
-            "login_state": "authenticated" if is_auth else "NEED_LOGIN",
-            "is_authenticated": is_auth,
-            "status": "authenticated" if is_auth else "need_login",
-            "error_kind": None if is_auth else kind,
-            "fetched_at": fetched_at,
-        }
+    except (FileNotFoundError, subprocess.TimeoutExpired, OSError) as exc:
+        return _cursor_login_probe_failure(exc, fetched_at)
 
     try:
         parsed = json.loads(res.stdout or "{}")
