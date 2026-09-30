@@ -46,6 +46,7 @@ MONITORED_CHECKOUT_TREES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
         ),
     ),
     ".gemini": (("agents", "skills", "rules", "hooks", "settings*.json"), ()),
+    ".agents": (("skills",), ()),
     "data": (
         ("*",),
         (

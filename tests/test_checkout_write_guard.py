@@ -27,6 +27,8 @@ WATCHED_PATHS = [
         "settings.json", "settings.local.json",
     )
 ] + [
+    ".agents/skills/test/SKILL.md",
+    ".agents/skills/test/references/test.md",
     ".claude/skills/drive-epic/SKILL.md",
     ".codex/config.toml", ".codex/hooks.json", "data/corpus_audit/report.md",
     "data/telemetry-other/report.md", "data/lexicon/cache-other/report.md",
@@ -189,6 +191,7 @@ def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malforme
         ".claude/agents/curriculum-writer.md",
         ".codex/agents/test.toml",
         ".agent/skills/test.md",
+        ".agents/skills/test/SKILL.md",
         ".gemini/agents/test.md",
         "data/corpus_audit/section_extraction_report.md",
         "external-tmp",
@@ -200,7 +203,7 @@ def test_registered_guard_enforces_normal_pytest_session(
 ) -> None:
     """No -p: temporary conftest registration must fail a passing writer test."""
     _init_git_repo(tmp_path)
-    (tmp_path / ".gitignore").write_text("logs/\n.claude/\n.codex/\n.agent/\n.gemini/\ndata/\n", encoding="utf-8")
+    (tmp_path / ".gitignore").write_text("logs/\n.claude/\n.codex/\n.agent/\n.agents/\n.gemini/\ndata/\n", encoding="utf-8")
     logs = tmp_path / "logs"
     logs.mkdir()
     (logs / "existing.jsonl").write_text('{}\n', encoding="utf-8")
