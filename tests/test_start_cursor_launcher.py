@@ -10,9 +10,14 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.review.model_catalog import load_model_catalog
 from tests.test_launcher_contract import REPO, run_launcher
 
 DRIVER = "start-cursor-driver.sh"
+RETIRED_MODEL_IDS = {
+    model_id for model_id, entry in load_model_catalog()["models"].items()
+    if entry["lifecycle"] == "retired"
+}
 
 
 def test_cursor_driver_wrapper_calls_launcher_main_cursor() -> None:
@@ -149,7 +154,7 @@ def test_cursor_driver_refuses_auto_fast_and_previous_generation_pins(model: str
         run_launcher(DRIVER, "--epic", "infra", "--model", model),
         run_launcher(DRIVER, "--epic", "infra", env={"LAUNCHER_MODEL": model}),
     ):
-        if model in ("grok-4.6", "grok-4.6[fast=false]", "grok-4.5"):
+        if model.partition("[")[0] in RETIRED_MODEL_IDS:
             assert result.returncode == 2, result.stdout + result.stderr
             assert "is retired in the model catalog" in result.stderr
             assert model in result.stderr
@@ -289,10 +294,10 @@ def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
     tmp_path: Path, selection: tuple[str, ...]
 ) -> None:
     result, argv = _run_interactive(tmp_path, *selection)
-    if selection == ("--model", "grok-4.6"):
+    if selection[0] == "--model" and selection[1].partition("[")[0] in RETIRED_MODEL_IDS:
         assert result.returncode == 2, result.stdout + result.stderr
         assert "is retired in the model catalog" in result.stderr
-        assert "grok-4.6" in result.stderr
+        assert selection[1] in result.stderr
     else:
         assert result.returncode == 4, result.stdout + result.stderr
         assert "cursor interactive session" in result.stderr
