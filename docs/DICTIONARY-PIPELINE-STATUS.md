@@ -127,12 +127,23 @@ real witness fields to equal the option or one of those lemmas: VESUM
 `word_form`/`lemma`, СУМ-20 `headword`/`stressed_headword`, Грінченко and VTS
 `word`, ULIF `canonical_headword`. Only ULIF rows with `status='ok'` bind,
 including for invalid options; a negative lookup is not a word witness.
-Definitions and metadata cannot bind. VESUM analyses and paradigms use indexed
-exact candidates (given, casefolded, upper, title and capitalised), followed
-by normalized filtering; mixed-case forms outside those candidates fail closed.
+Definitions and metadata cannot bind. The VESUM shadow builder writes indexed
+`word_form_folded` and `lemma_folded` columns using the receipt identity
+normalizer; analyses and paradigms query these keys through the unchanged,
+marker-filtered `forms` view. Source bytes and canonical JSONL stay unchanged.
+Older stores use indexed exact candidates (given, casefolded, upper, title,
+capitalised and per-hyphen-part capitalised), followed by normalized filtering;
+spellings outside those candidates fail closed until a rebuilt store is activated.
 Text kinds (`pravopys`, `textbook`)
 require a whole-word match of the option or any attested VESUM paradigm form
-of its lemmas. Case correctness is checked by the language judgement elsewhere.
+of its lemmas. Line-break hyphenation inside a word is joined before matching
+(`червиво-\nго` witnesses `червивого`, never the fragment `го`). Standalone
+one-letter options and paradigm witnesses are refused; witnesses need at least
+two letters. Longer function words may bind by whole-word occurrence: this
+proves word identity only, never contextual grammatical support. Multi-word
+options require the exact phrase, including whitespace (apart from line-break
+hyphenation inside words); separate tokens or paradigm variants cannot bind a
+phrase. Case correctness is checked by the language judgement elsewhere.
 Other existing rows refuse with `evidence_form_mismatch`. Live Pravopys
 receipts use `pravopys-live-section-v1` identities.
 

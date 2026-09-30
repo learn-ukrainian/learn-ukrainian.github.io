@@ -169,6 +169,51 @@ def test_canonical_jsonl_hash_is_independent_of_shadow_path(tmp_path: Path) -> N
     assert len(first.canonical_jsonl_sha256) == 64
 
 
+@pytest.mark.parametrize("paradigm", [False, True])
+def test_folded_indexes_reach_mixed_case_and_preserve_marker_filter(tmp_path: Path, paradigm: bool) -> None:
+    from scripts.curriculum.evidence.sources import Sources
+    from scripts.rag.word_identity import normalize_evidence_form
+
+    asset = tmp_path / "folded.txt.bz2"
+    with bz2.open(asset, "wt", encoding="utf-8") as target:
+        target.write("MiXeD’HeAd noun\n  MiXeD’FoRm noun\nMiXeD’HeAd noun:bad\n  MiXeD’FoRm noun:bad\n")
+    database = tmp_path / "folded.db"
+    build_shadow_database(asset, database)
+    column = "lemma" if paradigm else "word_form"
+    value = "mixed'head" if paradigm else "mixed'form"
+    with sqlite3.connect(database) as conn:
+        assert len(conn.execute("SELECT * FROM forms").fetchone()) == 4
+        for word, lemma, folded_word, folded_lemma in conn.execute(
+            "SELECT word_form, lemma, word_form_folded, lemma_folded FROM forms_all"
+        ):
+            assert folded_word == normalize_evidence_form(word)
+            assert folded_lemma == normalize_evidence_form(lemma)
+        plan = conn.execute(
+            f"EXPLAIN QUERY PLAN SELECT word_form, lemma, pos, tags FROM forms WHERE {column} IN "
+            f"(SELECT {column} FROM forms_all WHERE {column}_folded IN (?))", (value,),
+        ).fetchall()
+        assert any(f"idx_forms_all_{column}_folded" in row[3] for row in plan)
+        assert any(f"idx_forms_all_{column} (" in row[3] for row in plan)
+    with Sources(vesum_db=database) as api:
+        rows = api._receipt_vesum_rows([value], paradigm=paradigm).raw[value]
+        assert len(rows) == (2 if paradigm else 1)
+        assert all(row["tags"] == "noun" for row in rows)
+        assert rows[0][column] == ("MiXeD’HeAd" if paradigm else "MiXeD’FoRm")
+
+
+@pytest.mark.parametrize("text,expected", [
+    ("MiXeD’Fo\u0301Rm", "mixed'form"),
+    ("MiXeDʼFo\u0300Rm", "mixed'form"),
+    ("MiXeD‘FoRm", "mixed'form"),
+    ("MiXeD`FoRm", "mixed'form"),
+    (" One  Two-іЇй! ", " one  two-іїй! "),
+])
+def test_folded_build_identity_is_exact_except_case_stress_apostrophes(text: str, expected: str) -> None:
+    from scripts.rag.word_identity import normalize_evidence_form
+
+    assert normalize_evidence_form(text) == expected
+
+
 def test_fixture_manifest_is_generated_from_database_with_attribution(tmp_path: Path) -> None:
     asset_path = _write_synthetic_asset(tmp_path)
     database_path = tmp_path / "shadow.db"
@@ -259,6 +304,7 @@ def test_committed_lock_matches_the_current_pipeline_and_generated_fixture_manif
         "fixture_manifest_sha256"
     ]
     assert fixture["source"]["sha256"] == lock["release_asset"]["sha256"]
+    assert fixture["generated_by"]["importer_version"] == lock["pipeline"]["importer_version"]
     assert fixture["known_absent_classes"] == lock["known_absent_marker_classes"]
 
 

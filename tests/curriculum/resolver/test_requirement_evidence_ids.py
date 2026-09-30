@@ -501,3 +501,81 @@ def test_indexed_vesum_lookup_filters_candidates_and_fails_closed_on_mixed_case(
     assert len(selects) == 2
     column = "lemma" if paradigm else "word_form"
     assert all(f"WHERE {column} IN (" in query and "receipt_word" not in query for query in selects)
+
+
+@pytest.mark.parametrize("paradigm", [False, True])
+def test_legacy_hyphen_apostrophe_candidates_reach_each_capitalised_part(request, paradigm):
+    _, db = request.getfixturevalue("receipt_sources")
+    value = "Кам'янець-Подільський" if paradigm else "Кам'янці-Подільському"
+    with sqlite3.connect(db) as writer:
+        writer.execute(
+            "INSERT INTO forms_all VALUES (999, 999, '999-1000', ?, ?, 'noun', 'noun')",
+            ("Кам'янці-Подільському", "Кам'янець-Подільський"),
+        )
+        writer.execute(
+            "INSERT INTO forms_all VALUES (1000, 999, '999-1000', ?, ?, 'noun', 'noun')",
+            ("Кам'янець-Подільський", "Кам'янець-Подільський"),
+        )
+    with Sources() as api:
+        assert len(api._receipt_vesum_rows([value.casefold()], paradigm=paradigm).raw[value.casefold()]) == (2 if paradigm else 1)
+        from scripts.curriculum.evidence.sources import SourceResult
+
+        eid = IDS["textbook"]
+        result = api.bind_evidence_forms(
+            SourceResult({eid: [{"text": "Кам'янець-Подільський"}]}, "a" * 64),
+            [(eid, "Кам’янці-Подільському")],
+        )
+        assert result.raw[eid, "Кам’янці-Подільському"] is True
+
+
+@pytest.mark.parametrize("kind", ["textbook", "pravopys"])
+@pytest.mark.parametrize("text,option,expected", [
+    ("червиво-\nго", "червивого", True),
+    ("червиво-\nго", "го", False),
+    ("червиво- \r\n  го", "ЧЕРВИВОГО", True),
+    ("червиво\u0301-\nго", "червивого", True),
+    ("one-\ntwo", "onetwo", True),
+    ("one-\ntwo", "two", False),
+    ("one-two", "onetwo", False),
+    ("one -\ntwo", "onetwo", False),
+    ("one -\ntwo", "two", True),
+    ("і", "і", False),
+    ("a", "a", False),
+    ("'a'", "a", False),
+    ("123", "123", False),
+    ("на", "на", True),
+    ("one на two", "НА", True),
+    ("напис", "на", False),
+    ("one two", "one two", True),
+    ("ONE TWO", "One Two", True),
+    ("one і two", "one і two", True),
+    ("one unrelated two", "one two", False),
+    ("one  two", "one two", False),
+    ("one\ntwo", "one two", False),
+    ("someone two", "one two", False),
+    ("one twosome", "one two", False),
+    ("one two's", "one two", False),
+])
+def test_text_binding_dehyphenation_short_words_and_exact_phrases(kind, text, option, expected):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    eid = IDS[kind]
+    with Sources() as api:
+        result = api.bind_evidence_forms(SourceResult({eid: [{"text": text}]}, "a" * 64), [(eid, option)])
+        assert result.raw[eid, option] is expected
+
+
+@pytest.mark.parametrize("kind", ["textbook", "pravopys"])
+@pytest.mark.parametrize("option,variant", [("a", "longer"), ("longer", "a"), ("one two", "longer")])
+def test_text_limits_cannot_be_bypassed_by_paradigm(request, kind, option, variant):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    _, db = request.getfixturevalue("receipt_sources")
+    with sqlite3.connect(db) as writer:
+        writer.executemany("INSERT INTO forms_all VALUES (?, 999, '999-1000', ?, 'short-lemma', 'noun', 'noun')", [
+            (999, option), (1000, variant),
+        ])
+    eid = IDS[kind]
+    with Sources() as api:
+        result = api.bind_evidence_forms(SourceResult({eid: [{"text": variant}]}, "a" * 64), [(eid, option)])
+        assert result.raw[eid, option] is False
