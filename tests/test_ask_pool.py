@@ -18,6 +18,7 @@ from scripts.ai_agent_bridge._opencode import (
     ask_glm,
     ask_pool,
 )
+from scripts.lib import rules_core
 
 # --- constants ------------------------------------------------------------
 
@@ -167,7 +168,7 @@ def test_invoke_opencode_always_separates_content_with_dashdash():
             _invoke_opencode("--- a/tricky diff line", POOL_MODEL, output_format="default")
             argv = run_mock.call_args[0][0]
             assert argv[-2] == "--"
-            assert argv[-1] == "--- a/tricky diff line"
+            assert argv[-1] == rules_core.with_core("--- a/tricky diff line")
 
 
 # --- model override (churn-resistance; tags drift per model-assignment.md) --
