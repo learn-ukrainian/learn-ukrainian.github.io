@@ -18,7 +18,7 @@ Cursor is a first-class worker and orchestrator seat in the fleet roster. Promot
 
 ## Identity Contract & Attestation
 
-`cursor:auto` is a dynamic harness selector, never a concrete model identity. The driver seat runs the concrete pin `grok-4.7-high` (or `composer-2.5`) and never Auto (operator decision 2026-09-30, #9274): `scripts/lib/launcher_core.sh` refuses Auto, a Fast variant, a previous generation, an empty model and a `--model` forwarded after `--`. The identity contract enforces:
+`cursor:auto` is a dynamic harness selector, never a concrete model identity. The driver seat and every interactive Cursor session launched through `scripts/lib/launcher_core.sh` run the concrete pin `grok-4.7-high` (or `composer-2.5`) and never Auto (operator decision 2026-09-30, #9274). An interactive session is not a typed implementation dispatch, so it has no Auto exception. The launcher defaults to the pin in both modes and refuses Auto, a Fast variant, a previous generation, an empty model and a `--model` forwarded after `--` before anything executes. The identity contract enforces:
 
 1. **Attested `resolved_model` Required for Driver-of-Record:** Driver-of-record requires an attested concrete `resolved_model` extracted from the run (via headless telemetry extraction in `scripts/delegate.py` and `scripts/agent_runtime/adapters/cursor.py`). An unattested run or unknown-Auto can **never** be driver-of-record.
 2. **Unknown-Auto Resolves to Allowlist-Union Family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, resolve its identity to the **allowlist-union family {xAI, Moonshot}** (`grok-4.7` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum:

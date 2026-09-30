@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import os
 import shutil
+import subprocess
 from pathlib import Path
 
 import pytest
+import yaml
 
 from tests.test_launcher_contract import REPO, run_launcher
 
@@ -189,6 +191,107 @@ def test_cursor_seat_enumerated_in_launcher_core_and_public_estate() -> None:
     assert "handoff_identity_for_cursor_epic" in core
     assert "launcher_cursor_model_certified" in core
     assert Path(REPO / "scripts/launchers/cursor.sh").is_file()
-    assert DRIVER in {
-        path.name for path in REPO.glob("start-*-driver.sh") if path.parent == REPO
-    }
+    assert DRIVER in {path.name for path in REPO.glob("start-*-driver.sh") if path.parent == REPO}
+
+
+# Interactive Cursor sessions (#9274): no public start-cursor.sh exists, but
+# launcher_main cursor interactive is reachable, and it is not a typed
+# implementation dispatch, so it pins a concrete model like the driver seat.
+_INTERACTIVE = r"""
+source() {
+  builtin source "$@" || return
+  case "$1" in
+    # Mock the agent-extensions deploy so the exec path runs hermetically.
+    */deploy_extensions.sh) deploy_agent_extensions() { echo 'mock deploy'; } ;;
+  esac
+}
+source "$LC_TEST_REPO/scripts/lib/launcher_core.sh"
+launcher_main cursor interactive "$@"
+"""
+
+
+def _run_interactive(tmp_path: Path, *args: str, env: dict[str, str] | None = None):
+    """Run launcher_main cursor interactive with a mock cursor-agent that records its argv."""
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir(exist_ok=True)
+    argv_file = tmp_path / "cursor-agent.argv"
+    mock = bin_dir / "cursor-agent"
+    mock.write_text(f"#!/bin/sh\nprintf '%s\\0' \"$@\" > '{argv_file}'\n", encoding="utf-8")
+    mock.chmod(0o755)
+    launch_env = os.environ.copy()
+    launch_env.update(
+        {
+            "LAUNCHER_DRY_RUN": "0",
+            "LC_TEST_REPO": str(REPO),
+            "LU_SKIP_PLANE_TUNNEL_CHECK": "1",
+            "PATH": f"{bin_dir}{os.pathsep}{launch_env['PATH']}",
+        }
+    )
+    launch_env.pop("LAUNCHER_MODEL", None)
+    launch_env.update(env or {})
+    result = subprocess.run(
+        ["bash", "-c", _INTERACTIVE, "cursor-interactive-test", *args],
+        cwd=REPO,
+        env=launch_env,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=60,
+    )
+    argv = argv_file.read_text(encoding="utf-8").split("\0")[:-1] if argv_file.exists() else None
+    return result, argv
+
+
+def test_cursor_seat_pin_matches_the_catalog_seat() -> None:
+    """The launcher pin is orchestrator_seats.cursor model_id at its effort."""
+    seat = yaml.safe_load((REPO / "scripts/config/model_catalog.yaml").read_text(encoding="utf-8"))[
+        "orchestrator_seats"
+    ]["cursor"]
+    core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
+    assert f"LC_CURSOR_SEAT_PIN={seat['model_id']}-{seat['effort']}\n" in core
+
+
+def test_cursor_interactive_defaults_to_the_concrete_pin(tmp_path: Path) -> None:
+    result, argv = _run_interactive(tmp_path, env={"LAUNCHER_MODEL": ""})
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert argv is not None and argv[:2] == ["--model", "grok-4.7-high"]
+
+
+@pytest.mark.parametrize(
+    "selection",
+    (
+        ("--model", "auto"),
+        ("--model=Auto",),
+        ("--model", "cursor:auto"),
+        ("--model=",),
+        ("--model", "grok-4.7-fast"),
+        ("--model", "composer-2.5[fast=true]"),
+        ("--model", "grok-4.6"),
+        ("--", "--model", "auto"),
+        ("--", "--model=grok-4.7-high"),
+    ),
+)
+def test_cursor_interactive_refuses_auto_empty_fast_and_forwarded_models(
+    tmp_path: Path, selection: tuple[str, ...]
+) -> None:
+    result, argv = _run_interactive(tmp_path, *selection)
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert "cursor interactive session" in result.stderr
+    assert "grok-4.7-high or composer-2.5" in result.stderr
+    assert argv is None
+    assert "mock deploy" not in result.stdout
+
+
+@pytest.mark.parametrize("model", ("auto", "grok-4.7-high-fast"))
+def test_cursor_interactive_refuses_auto_and_fast_from_the_environment(tmp_path: Path, model: str) -> None:
+    result, argv = _run_interactive(tmp_path, env={"LAUNCHER_MODEL": model})
+    assert result.returncode == 4, result.stdout + result.stderr
+    assert "not certified for the cursor interactive session" in result.stderr
+    assert argv is None
+
+
+@pytest.mark.parametrize("model", ("composer-2.5", "grok-4.7-xhigh", "grok-4.7[reasoning_effort=high,fast=false]"))
+def test_cursor_interactive_executes_an_explicit_approved_pin(tmp_path: Path, model: str) -> None:
+    result, argv = _run_interactive(tmp_path, "--model", model)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert argv is not None and argv[:2] == ["--model", model]
