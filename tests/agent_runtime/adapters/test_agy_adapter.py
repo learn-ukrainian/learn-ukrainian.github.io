@@ -303,6 +303,46 @@ def test_parse_response_pairs_duplicate_planner_intents_by_step_index(
     ]
 
 
+@pytest.mark.parametrize("truncated", [False, True])
+def test_saved_tool_result_logs_only_size_and_truncation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture,
+    truncated: bool,
+) -> None:
+    app_data = tmp_path / "app-data"
+    alias = tmp_path / "private-env-value"
+    plan = _plan(tmp_path, log_file=tmp_path / "agy.log", app_data=alias)
+    relative_output = Path("brain") / CONVERSATION_ID / "steps" / "103" / "output.txt"
+    output = app_data / relative_output
+    output.parent.mkdir(parents=True)
+    raw = b"PRIVATE_TOOL_RESULT"
+    output.write_bytes(raw)
+    limit = len(raw) - int(truncated)
+    monkeypatch.setattr(agy_module, "_MAX_INLINE_TOOL_RESULT_BYTES", limit)
+    caplog.set_level("INFO", logger=agy_module._logger.name)
+    transcript = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "logs" / "transcript.jsonl"
+    pointer = f"The output was large and was saved to: {(alias / relative_output).as_uri()}"
+
+    result = agy_module._inline_saved_tool_result_pointer(
+        pointer, transcript_path=transcript, trusted_root=app_data,
+        app_data_alias=agy_module._agy_app_data(plan.env_overrides),
+    )
+
+    expected = raw[:limit].decode("utf-8")
+    if truncated:
+        expected += f"\n\n[agy tool result truncated at {limit} bytes]"
+    assert result == expected
+    records = [record for record in caplog.records if record.name == agy_module._logger.name]
+    assert len(records) == 1
+    record = records[0]
+    assert record.levelname == ("WARNING" if truncated else "INFO")
+    assert record.msg == (
+        "agy inlined truncated tool result pointer (%s bytes)" if truncated
+        else "agy inlined tool result pointer (%s bytes)"
+    )
+    assert record.args == (len(raw),)
+    assert record.getMessage() == record.msg % len(raw)
+
+
 def _planner_intent(tool: str, query: str, *, step_index: int) -> dict[str, object]:
     return {
         "step_index": step_index,

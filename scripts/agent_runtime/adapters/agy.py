@@ -1559,7 +1559,6 @@ def _inline_saved_tool_result_pointer(
         _logger.warning("agy tool result pointer missing")
         return text
     size = len(raw)
-    resolved_path = path  # Logging only; never resolve a seat-controlled name.
 
     truncated = len(raw) > _MAX_INLINE_TOOL_RESULT_BYTES
     if truncated:
@@ -1568,14 +1567,12 @@ def _inline_saved_tool_result_pointer(
     if truncated:
         inline = inline.rstrip() + f"\n\n[agy tool result truncated at {_MAX_INLINE_TOOL_RESULT_BYTES} bytes]"
         _logger.warning(
-            "agy inlined truncated tool result pointer %s (%s bytes)",
-            resolved_path,
+            "agy inlined truncated tool result pointer (%s bytes)",
             size,
         )
     else:
         _logger.info(
-            "agy inlined tool result pointer %s (%s bytes)",
-            resolved_path,
+            "agy inlined tool result pointer (%s bytes)",
             size,
         )
     return text[: match.start()] + inline + text[match.end() :]
