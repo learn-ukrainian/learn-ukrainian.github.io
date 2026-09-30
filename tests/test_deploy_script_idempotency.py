@@ -216,7 +216,8 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
     ),
     "test_drift_is_caught": ("agents_extensions/shared/rules/pipeline.md",),
     # Every top-level SKILL.md, plus one nested script so the legacy inventory
-    # recurses. Copying the rest of each skill does not add an assertion.
+    # recurses. The migrator shells out to git once per file; copying the rest
+    # of each skill does not add an assertion.
     "test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy": (
         "agents_extensions/shared/skills",
     ),
@@ -424,7 +425,6 @@ def _copy_deploy_harness(target: Path) -> None:
         Path("scripts/deploy/retire_codex_skills.py"),
         Path("scripts/deploy/reap_agent_mirrors.py"),
         Path("scripts/deploy/sync_agent_mirror.py"),
-        Path("scripts/deploy/sync_prompt_mirrors.py"),
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
@@ -1566,7 +1566,8 @@ def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_pa
 
     Two flat SKILL.md files never reach a ``*-epic`` skill name or the nested
     directory the legacy inventory recurses into. Each SKILL.md is still compared
-    on every mirror. The remaining skill files are not named by an assertion.
+    on every mirror. The remaining skill files are not named by an assertion, and
+    the migrator pays one git subprocess per file.
     """
     repo = _init_checkout(tmp_path)
     _init_git_history(repo)

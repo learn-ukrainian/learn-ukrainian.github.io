@@ -21,36 +21,9 @@ from pathlib import Path
 
 BACKUP_DIRECTORY = "retired-skills"
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW
-_SKILLS_PREFIX = "agents_extensions/shared/skills"
 
 
-class _SkillIndex:
-    """One ``git ls-files`` of the skills tree, shared by every file in an inventory."""
-
-    def __init__(self, root: Path) -> None:
-        self.root = root
-        self._stages: dict[bytes, list[tuple[bytes, bytes]]] | None = None
-
-    def stages(self, git_path: str) -> list[tuple[bytes, bytes]]:
-        """Index stages for ``git_path``: ``(mode, stage)`` per entry, in git's order."""
-        if self._stages is None:
-            tracked = subprocess.run(
-                ["git", "ls-files", "--stage", "-z", "--", _SKILLS_PREFIX],
-                cwd=self.root, capture_output=True, check=False, timeout=30,
-            )
-            found: dict[bytes, list[tuple[bytes, bytes]]] = {}
-            if tracked.returncode == 0:
-                for entry in tracked.stdout.split(b"\0"):
-                    if not entry or b"\t" not in entry:
-                        continue
-                    metadata, path = entry.split(b"\t", 1)
-                    mode, _, stage = metadata.split()
-                    found.setdefault(path, []).append((mode, stage))
-            self._stages = found
-        return self._stages.get(os.fsencode(git_path), [])
-
-
-def cache_source_is_tracked(root: Path, relative: str, index: _SkillIndex | None = None) -> bool:
+def cache_source_is_tracked(root: Path, relative: str) -> bool:
     """Classify retained runtime bytes by cache path, without loading bytecode."""
     cache = Path(relative)
     fields = cache.name.split(".")
@@ -63,7 +36,7 @@ def cache_source_is_tracked(root: Path, relative: str, index: _SkillIndex | None
         source_relative = Path(source_from_cache(relative))
     except (ValueError, NotImplementedError):
         return False
-    source_root = root / _SKILLS_PREFIX
+    source_root = root / "agents_extensions/shared/skills"
     source = source_root / source_relative
     if not source.is_file() or source.is_symlink():
         return False
@@ -73,20 +46,27 @@ def cache_source_is_tracked(root: Path, relative: str, index: _SkillIndex | None
         if parent == root:
             break
     git_path = source.relative_to(root).as_posix()
-    stages = (index or _SkillIndex(root)).stages(git_path)
-    # One clean stage only: a conflict or a missing path is not a tracked source.
-    if len(stages) != 1:
+    tracked = subprocess.run(
+        ["git", "ls-files", "--stage", "-z", "--", git_path],
+        cwd=root, capture_output=True, check=False, timeout=30,
+    )
+    entries = tracked.stdout.rstrip(b"\0").split(b"\0")
+    if tracked.returncode != 0 or len(entries) != 1 or b"\t" not in entries[0]:
         return False
-    mode, stage = stages[0]
-    return mode in (b"100644", b"100755") and stage == b"0"
+    metadata, path = entries[0].split(b"\t", 1)
+    mode, _, stage = metadata.split()
+    return mode in (b"100644", b"100755") and stage == b"0" and path == os.fsencode(git_path)
 
 
-def source_matches(root: Path, relative: str, payload: bytes, index: _SkillIndex | None = None) -> bool:
+def source_matches(root: Path, relative: str, payload: bytes) -> bool:
     """Require tracked current bytes or a regular-file blob at this exact path."""
-    source_path = f"{_SKILLS_PREFIX}/{relative}"
+    source_path = f"agents_extensions/shared/skills/{relative}"
     source = root / source_path
-    tracked = bool((index or _SkillIndex(root)).stages(source_path))
-    if tracked and source.is_file() and not source.is_symlink() and payload == source.read_bytes():
+    tracked = subprocess.run(
+        ["git", "ls-files", "--error-unmatch", "--", source_path],
+        cwd=root, capture_output=True, check=False, timeout=30,
+    )
+    if tracked.returncode == 0 and source.is_file() and not source.is_symlink() and payload == source.read_bytes():
         return True
     digest = subprocess.run(
         ["git", "hash-object", "--stdin"], input=payload,
@@ -115,7 +95,7 @@ def signature(info: os.stat_result) -> tuple[int, ...]:
     return (info.st_dev, info.st_ino, info.st_mode, info.st_size, info.st_mtime_ns, info.st_ctime_ns)
 
 
-def inventory(root: Path, tree_fd: int, prefix: str = "", index: _SkillIndex | None = None) -> dict[str, tuple]:
+def inventory(root: Path, tree_fd: int, prefix: str = "") -> dict[str, tuple]:
     """Read a complete inventory without following links at any component."""
     result: dict[str, tuple] = {}
     for name in sorted(os.listdir(tree_fd)):
@@ -134,7 +114,7 @@ def inventory(root: Path, tree_fd: int, prefix: str = "", index: _SkillIndex | N
                 if signature(os.fstat(child_fd)) != signature(info):
                     raise ValueError("Legacy directory changed during inventory; preserve and reconcile")
                 result[relative] = signature(info)
-                result.update(inventory(root, child_fd, relative, index))
+                result.update(inventory(root, child_fd, relative))
             finally:
                 os.close(child_fd)
         elif stat.S_ISREG(info.st_mode):
@@ -147,11 +127,7 @@ def inventory(root: Path, tree_fd: int, prefix: str = "", index: _SkillIndex | N
                 if signature(os.fstat(stream.fileno())) != signature(before):
                     raise ValueError("Legacy file changed during inventory; preserve and reconcile")
             is_cache = Path(prefix).name == "__pycache__"
-            accepted = (
-                cache_source_is_tracked(root, relative, index)
-                if is_cache
-                else source_matches(root, relative, payload, index)
-            )
+            accepted = cache_source_is_tracked(root, relative) if is_cache else source_matches(root, relative, payload)
             if not accepted:
                 raise ValueError(f"Unverified legacy Codex skill content: {relative}; preserve and reconcile")
             result[relative] = (*signature(before), hashlib.sha256(payload).hexdigest())
@@ -213,8 +189,7 @@ def migrate(root: Path, mode: str) -> int:
                 source_fd = open_directory("skills", codex_fd)
             except FileNotFoundError:
                 return 0
-            index = _SkillIndex(root)
-            before = inventory(root, source_fd, index=index)
+            before = inventory(root, source_fd)
             if mode == "verify":
                 return 0
             if not directory_still_bound(root_fd, ".codex", codex_fd) or not directory_still_bound(codex_fd, "skills", source_fd):
@@ -234,7 +209,7 @@ def migrate(root: Path, mode: str) -> int:
             captured_info, source_info = os.fstat(captured_fd), os.fstat(source_fd)
             if (captured_info.st_dev, captured_info.st_ino) != (source_info.st_dev, source_info.st_ino):
                 raise ValueError("Legacy discovery tree replaced during capture; preserve and reconcile")
-            after = inventory(root, captured_fd, index=index)
+            after = inventory(root, captured_fd)
             if before != after:
                 raise ValueError("Legacy inventory changed during capture; preserve and reconcile")
             if not directory_still_bound(root_fd, ".codex", codex_fd) or not directory_still_bound(codex_fd, BACKUP_DIRECTORY, backup_fd):

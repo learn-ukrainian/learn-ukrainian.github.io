@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import ast
 import hashlib
 import json
 import os
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -346,40 +348,202 @@ def test_the_launch_check_refuses_a_server_changed_since_admission(
         check_launch_contract(contract, primary, tmp_path / "other" / "bin" / "python")
 
 
-def test_an_import_inside_a_triple_quoted_string_is_not_followed() -> None:
-    """A docstring that shows an import is not a module the server executes."""
-    data = b'from pathlib import Path\n"""\nimport not_a_real_module\n"""\n\ndef load():\n    import json\n'
-    tree = render_contract._parse_imports(data)
-    assert tree is not None
-    names = set(render_contract._imported_names(tree, ""))
-    assert "pathlib" in names and "json" in names
-    assert "not_a_real_module" not in names
+def _closure_by_main_rules(checkout: Path) -> dict[str, str]:
+    """File hashes from origin/main's walk: ``ast.parse``, ``ast.walk``, and path-based resolution.
 
+    Independent of the production cache. A scanner that drops a real import, or follows one that does not
+    parse, disagrees with this set.
+    """
+    root = Path(checkout).resolve()
+    entry = root / SERVER_FILE
+    roots = (root / "scripts", root, entry.resolve().parent)
 
-def test_import_scan_finds_the_same_server_files_as_a_full_parse() -> None:
-    """The snippet scan and a full parse name the same repository files for this checkout."""
-    root = Path(__file__).resolve().parents[2]
-    fast = server_code(root)
+    def scan(directories: tuple[Path, ...], leaf: str) -> tuple[tuple[Path, ...], tuple[Path, ...]] | None:
+        portions: list[Path] = []
+        for directory in directories:
+            package = directory / leaf
+            if (package / "__init__.py").is_file():
+                return ((package / "__init__.py",), (package,))
+            if (directory / f"{leaf}.py").is_file():
+                return ((directory / f"{leaf}.py",), ())
+            if package.is_dir():
+                portions.append(package)
+        return ((), tuple(portions)) if portions else None
 
-    def full_parse(data: bytes):
-        if b"import" not in data:
-            return None
+    found: dict[str, tuple[tuple[Path, ...], tuple[Path, ...]] | None] = {}
+
+    def find(name: str) -> tuple[tuple[Path, ...], tuple[Path, ...]] | None:
+        if name in found:
+            return found[name]
+        parent, _, leaf = name.rpartition(".")
+        module: tuple[tuple[Path, ...], tuple[Path, ...]] | None = None
+        if parent:
+            owner = find(parent)
+            if owner is not None and owner[1]:
+                module = scan(owner[1], leaf)
+        elif name not in sys.builtin_module_names:
+            module = scan(roots, leaf)
+        found[name] = module
+        return module
+
+    def imported_names(tree: ast.AST, package: str) -> list[str]:
+        names: list[str] = []
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                targets = [alias.name for alias in node.names]
+            elif isinstance(node, ast.ImportFrom):
+                base = node.module or ""
+                if node.level:
+                    anchor = package.split(".") if package else []
+                    if not package or node.level - 1 >= len(anchor):
+                        continue
+                    anchor = anchor[: len(anchor) - (node.level - 1)]
+                    base = ".".join([*anchor, *([node.module] if node.module else [])])
+                if not base:
+                    continue
+                targets = [base, *(f"{base}.{alias.name}" for alias in node.names if alias.name != "*")]
+            else:
+                continue
+            for target in targets:
+                parts = target.split(".")
+                names.extend(".".join(parts[: index + 1]) for index in range(len(parts)))
+        return names
+
+    hashes: dict[str, str] = {}
+    pending: list[tuple[Path, str]] = [(entry, "")]
+    while pending:
+        path, package = pending.pop()
+        key = path.relative_to(root).as_posix() if path.is_relative_to(root) else path.as_posix()
+        if key in hashes:
+            continue
+        data = path.read_bytes()
+        hashes[key] = hashlib.sha256(data).hexdigest()
         try:
-            import ast
-
-            return ast.parse(data)
+            tree = ast.parse(data)
         except (SyntaxError, ValueError):
-            return None
+            tree = None
+        names = list(dict.fromkeys(imported_names(tree, package))) if tree is not None else []
+        for name in names:
+            module = find(name)
+            if module is None:
+                continue
+            for file in module[0]:
+                pending.append((file, name if file.name == "__init__.py" else name.rpartition(".")[0]))
+    return dict(sorted(hashes.items()))
 
-    original = render_contract._parse_imports
-    render_contract._parse_imports = full_parse
-    render_contract._IMPORTS_CACHE.clear()
-    render_contract._SERVER_CODE_CACHE.clear()
-    try:
-        slow = server_code(root)
-    finally:
-        render_contract._parse_imports = original
-        render_contract._IMPORTS_CACHE.clear()
-        render_contract._SERVER_CODE_CACHE.clear()
-    assert slow.files == fast.files
-    assert slow.digest == fast.digest
+
+def _assert_same_closure_as_main(root: Path) -> None:
+    actual = server_code(root)
+    expected_files = _closure_by_main_rules(root)
+    assert actual.files == expected_files
+    lock_sha256 = hashlib.sha256((root / LOCK_FILE).read_bytes()).hexdigest()
+    assert actual.lock_sha256 == lock_sha256
+    assert actual.digest == render_contract.ServerCode(files=expected_files, lock_sha256=lock_sha256).digest
+
+
+# Real imports the rejected scanner dropped, and imports that only look real inside text it mishandled.
+_COUNTEREXAMPLE_SERVER = '''\
+import kept_top
+if flag: import kept_inline_if
+def load(): import kept_inline_function
+
+def nested():
+    import kept_inside_function_body
+
+# comment with """ triple
+import kept_after_comment
+
+label = 'see """ inside a string'
+import kept_after_string
+
+sample = "import not_from_string"
+# import not_from_comment
+
+def documented():
+    """
+    import not_executed
+    """
+    return 1
+
+import broken_mod
+'''
+
+_KEPT_IMPORTS = (
+    "kept_top",
+    "kept_inline_if",
+    "kept_inline_function",
+    "kept_inside_function_body",
+    "kept_after_comment",
+    "kept_after_string",
+)
+_IGNORED_IMPORTS = ("sneaky_mod", "not_from_string", "not_from_comment", "not_executed")
+
+
+def _counterexample_tree(root: Path) -> None:
+    _write(root, SERVER_FILE, _COUNTEREXAMPLE_SERVER)
+    _write(root, LOCK_FILE, "lock\n")
+    _write(root, "scripts/broken_mod.py", "def f(:\nimport sneaky_mod\n")
+    for name in (*_KEPT_IMPORTS, *_IGNORED_IMPORTS):
+        _write(root, f"scripts/{name}.py", "VALUE = 1\n")
+
+
+def test_import_closure_matches_main_on_the_reviewer_counterexamples(tmp_path: Path) -> None:
+    """One-line ``if``/function imports, quotes in comments and strings, and a module that does not parse."""
+    root = tmp_path / "checkout"
+    _counterexample_tree(root)
+
+    _assert_same_closure_as_main(root)
+    files = server_code_files(root)
+    for name in _KEPT_IMPORTS:
+        assert f"scripts/{name}.py" in files
+    assert "scripts/broken_mod.py" in files
+    for name in _IGNORED_IMPORTS:
+        assert f"scripts/{name}.py" not in files
+
+
+def test_equal_size_edit_with_restored_mtime_changes_the_digest(tmp_path: Path) -> None:
+    """A same-length edit whose mtime is put back still changes the closure digest."""
+    root = tmp_path / "checkout"
+    _write(root, SERVER_FILE, "import kept\n")
+    _write(root, LOCK_FILE, "lock\n")
+    target = root / "scripts" / "kept.py"
+    _write(root, "scripts/kept.py", "VALUE = 1\n")
+    before = server_code(root)
+    _assert_same_closure_as_main(root)
+
+    stamp = target.stat()
+    original = target.read_bytes()
+    rewritten = original.replace(b"VALUE = 1", b"VALUE = 2")
+    assert len(rewritten) == len(original) and rewritten != original
+    target.write_bytes(rewritten)
+    os.utime(target, ns=(stamp.st_atime_ns, stamp.st_mtime_ns))
+    assert target.stat().st_size == stamp.st_size
+    assert target.stat().st_mtime_ns == stamp.st_mtime_ns
+
+    after = server_code(root)
+    _assert_same_closure_as_main(root)
+    assert after.digest != before.digest
+    assert after.files["scripts/kept.py"] != before.files["scripts/kept.py"]
+
+
+def test_new_init_py_in_an_imported_namespace_package_changes_the_closure(tmp_path: Path) -> None:
+    """Adding ``__init__.py`` to a namespace package already imported is part of the next digest."""
+    root = tmp_path / "checkout"
+    _write(root, SERVER_FILE, "import scripts.ns.mod\n")
+    _write(root, LOCK_FILE, "lock\n")
+    _write(root, "scripts/__init__.py", "")
+    _write(root, "scripts/ns/mod.py", "VALUE = 1\n")
+    _write(root, "scripts/kept_from_init.py", "VALUE = 1\n")
+    before = server_code(root)
+    _assert_same_closure_as_main(root)
+    assert "scripts/ns/__init__.py" not in before.files
+    assert "scripts/ns/mod.py" in before.files
+    assert "scripts/kept_from_init.py" not in before.files
+
+    _write(root, "scripts/ns/__init__.py", "import kept_from_init\n")
+
+    after = server_code(root)
+    _assert_same_closure_as_main(root)
+    assert "scripts/ns/__init__.py" in after.files
+    assert "scripts/kept_from_init.py" in after.files
+    assert after.digest != before.digest
