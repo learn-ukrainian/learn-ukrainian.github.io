@@ -16,10 +16,10 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from build.phases import wiki_compressor
-from common import thresholds
 
 from audit import config as audit_config
+from build.phases import wiki_compressor
+from common import thresholds
 
 logger = logging.getLogger(__name__)
 

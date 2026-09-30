@@ -208,7 +208,7 @@ def _check(
 
 
 def _write_form_receipt(tmp_path: Path, item: dict, *, decision: str = "confirm") -> None:
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     options = item["options"]
     key = item.get("correct", 0)
     evidence_id = "vesum:" + VESUM_LOCATIONS[item["option_records"][0]]
@@ -996,7 +996,7 @@ def test_header_agreement_examples_reject_swapped_key(
 
 @pytest.mark.parametrize(
     ("seat", "family"),
-    [("claude@opus-5-5", "anthropic"), ("codex@gpt-6-sol", "openai"), ("agy@gemini-3-pro", "google")],
+    [("claude@opus-5-5", "anthropic"), ("codex@gpt-6.1-sol", "openai"), ("agy@gemini-3-pro", "google")],
 )
 def test_language_lanes_admit_claude_codex_and_agy(seat: str, family: str) -> None:
     assert receipts.language_seat_family(seat, what="test") == family
@@ -1011,7 +1011,7 @@ def test_language_lanes_refuse_grok() -> None:
 @pytest.mark.parametrize(
     ("seat", "accepted"),
     [
-        ("codex@gpt-6-sol", False),
+        ("codex@gpt-6.1-sol", False),
         ("claude@opus-5-5", True),
         ("agy@gemini-3-pro", True),
         ("grok@grok-4.7", False),
@@ -1022,7 +1022,7 @@ def test_language_lanes_refuse_grok() -> None:
     ],
 )
 def test_ambiguous_group_entry_needs_other_family_language_seat(tmp_path: Path, seat: str, accepted: bool) -> None:
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     activity = {
         "id": "a1",
         "grouping_feature": "Case",
@@ -1141,7 +1141,7 @@ def test_denied_partitive_item_fails_check_7(tmp_path: Path) -> None:
 
 
 def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     question = {
         "activity": "a1",
         "item": 0,
@@ -1185,7 +1185,7 @@ def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
     (tmp_path / "lesson-1.writer.yaml").write_text("model: claude-sonnet-4-5\n", encoding="utf-8")
     with pytest.raises(ResolverError, match="writer family disagrees"):
         record(answer)
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     for change in (
         {"options": [{**answer["options"][0], "evidence": []}, answer["options"][1]]},
         {"options": [{**answer["options"][0], "evidence": ["sum11:12"]}, answer["options"][1]]},
@@ -1249,7 +1249,7 @@ def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
 def test_requires_cli_writes_questions_prompt_and_denial(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     state = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/sample"
     state.mkdir(parents=True)
-    (state / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (state / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     item = _form(["хліб", "хліба"], _record(17, "хліб", []), {"Case": "Acc"})
     item["sentence"] = "Можна ___?"
     (state / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes({"activities": [{"id": "a1", "items": [item]}]}))

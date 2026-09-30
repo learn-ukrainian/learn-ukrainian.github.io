@@ -56,7 +56,7 @@ def make_v2(path: Path) -> None:
     conn.execute(
         "INSERT INTO attempts (review_id, attempt_id, kind, level, slug, lesson_n, manifest_sha256, reviewer_model,"
         " reviewer_family, harness, verdict, validated_at, task_id, role, seed_id)"
-        " VALUES ('R2', 'A2', 'lesson', 'a1', 'm', 3, ?, 'gpt-6-astra', 'openai', 'codex', 'APPROVE', 'now', 't-2',"
+        " VALUES ('R2', 'A2', 'lesson', 'a1', 'm', 3, ?, 'gpt-6.1-sol', 'openai', 'codex', 'APPROVE', 'now', 't-2',"
         " 'first', 'seed-old')",
         ("ef" * 32,),
     )

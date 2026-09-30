@@ -71,6 +71,8 @@ def mark_dead_worker_terminal(
         if terminal_status == "failed":
             current["exit_code"] = current.get("exit_code") if current.get("exit_code") is not None else -9
             current["returncode"] = current.get("returncode") if current.get("returncode") is not None else -9
+            if current.get("require_review_verdict"):
+                current["failure_reason"] = "worker_process_dead"
             current["last_error"] = current.get("last_error") or (
                 "dispatch_settle: recorded PID is dead while status=running"
             )

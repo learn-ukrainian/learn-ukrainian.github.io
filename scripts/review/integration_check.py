@@ -18,8 +18,9 @@ repository's content trees, and drives the product paths through their own comma
                   and receipts belong to the card's task).
 
 This proves the tooling, not reviewer quality (admitting a reviewer is the seeded-defect measurement, R3).
-Stand-ins, named: ``planned_state`` (lesson manifests) and ``pack-verify --strict`` (plan review) are replaced at
-their one seam, as the repository's own tests do, because the real ones need the sources database.
+Stand-ins, named: ``planned_state`` (the engine lesson's assembly run) and ``pack-verify --strict`` (plan review)
+are replaced at their one seam, as the repository's own tests do, because the real ones need the sources database.
+The lesson manifests record the real planned state of the plan world, the state recording recomputes.
 """
 
 from __future__ import annotations
@@ -46,11 +47,13 @@ from jsonschema import Draft202012Validator
 
 from scripts.agent_runtime import review_mcp
 from scripts.build.fresh import assemble, plan_manifest, runner
+from scripts.build.fresh import manifest as fresh_manifest
 from scripts.build.fresh.cli import main as fresh_cli
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.task_store_paths import tasks_dir
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.inventory_gate import GateReport
+from scripts.curriculum.learner_state.planned import planned_state
 from scripts.curriculum.resolver import receipts
 from scripts.curriculum.resolver.inputs import Allowlist
 from scripts.curriculum.validate.validate import main as validate_main
@@ -212,7 +215,7 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
     validate_fixture_draft(draft)
     state = scratch / "state"
     state.mkdir(parents=True)
-    (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (state / f"lesson-{n}.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     (state / f"lesson-{n}.draft.yaml").write_bytes(lock.yaml_bytes(draft))
 
     def answer(batch: dict[str, Any], seat: str) -> dict[str, Any]:  # the question seat: the first candidate of each
@@ -287,8 +290,8 @@ def engine_lesson(scratch: Path, n: int) -> EngineLesson:
                         }
                         for i, text in enumerate(option_texts)
                     ],
-                    "writer": {"seat": "codex@fixture", "family": "openai"},
-                    "reviewer": {"seat": "claude@fixture", "family": "anthropic", "lane": "language"},
+                    "writer": {"seat": "codex@gpt-6.1-sol", "family": "openai"},
+                    "reviewer": {"seat": "claude@opus-5-5", "family": "anthropic", "lane": "language"},
                 }
             ],
         }
@@ -331,6 +334,9 @@ class ModuleWorld(World):
         if engine is not None:
             self._install_engine_lesson(engine)
         self._overlay_plan_world()
+        # The plan world is real, so the lesson manifests record the real planned state: recording a return
+        # (a later process, no stand-in) recomputes that state to judge the manifest fresh.
+        mp.setattr(fresh_manifest, "planned_state", planned_state)
         mp.setattr(plan_manifest, "verify_pack_strict", fake_verify())
         self.plan_review_digest = self._plan_manifest()
         if promote:
@@ -357,8 +363,23 @@ class ModuleWorld(World):
 
     # the engine's files -------------------------------------------------------------------------
     def write_manifests(self, ns: tuple[int, ...] = (1, 2, 3)) -> None:
-        if not self._deferred:
-            super().write_manifests(ns)
+        """The engine's manifest writes, at the plan's arc position as the runner passes it."""
+        if self._deferred:
+            return
+        plan = yaml.safe_load((self.plan_dir / f"{SLUG}.yaml").read_bytes())
+        for n in ns:
+            fresh_manifest.write_manifest(
+                LEVEL,
+                SLUG,
+                n,
+                lesson_kind="recap" if n == 3 else "lesson",
+                state_dir=self.state_dir,
+                repo_root=self.root,
+                plans_dir=self.plan_dir,
+                evidence_dir=self.evidence_dir,
+                position=plan.get("arc_ref", {}).get("position", 1),
+                site_dir=self.page_dir,
+            )
 
     def _write_pages(self, suffix: str = "") -> None:
         body = "\n\n".join(unit["text"] for unit in UNITS)

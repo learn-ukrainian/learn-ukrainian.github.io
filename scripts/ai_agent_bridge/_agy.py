@@ -10,7 +10,7 @@ execution. Long-running V7 writer-phase work goes through
 
 import json
 import os
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 from agent_runtime import runner as agent_runner
 from agent_runtime.errors import (
@@ -19,7 +19,6 @@ from agent_runtime.errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
-
 from scripts.common.scratch import ensure_scratch_root
 
 from ._ask_contract import (
@@ -32,7 +31,7 @@ from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_as
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import build_agy_prompt
+from ._prompts import build_agy_prompt, require_core_or_exit
 from ._review_worktree import (
     ReviewWorktreeError,
     append_review_prompt_evidence,
@@ -147,6 +146,58 @@ def gemini_review_profile_error(profile: str | None) -> str | None:
     return AGY_REVIEW_PROFILE_REQUIRED
 
 
+# Learner-content roots: a Gemini review may cover only paths under these.
+_CONTENT_PREFIXES = (
+    "curriculum/l2-uk-en/",
+    "curriculum/l2-uk-direct/",
+    "site/src/content/docs/",
+    "wiki/",
+)
+# Track roots whose top level also carries code-imported manifests/data.
+_CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
+# Data/code extensions that are never prose content anywhere under the roots.
+_CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
+# Exact code-imported files inside the content roots.
+_CONTENT_CODE_PATHS = frozenset({
+    "curriculum/l2-uk-direct/manifest.yaml",
+    "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+    "curriculum/l2-uk-en/module-mapping.json",
+    "curriculum/l2-uk-en/vocabulary.db",
+})
+
+
+def _is_code_load_bearing_content(path: str) -> bool:
+    """True for code-imported files inside the content roots.
+
+    Importers (``grep -rln`` over ``scripts/``): ``curriculum/**/curriculum.yaml``
+    (level_config, pipeline, generate_mdx, sync, manifest_utils); the
+    l2-uk-direct ``manifest.yaml`` and ``bolshakova-letter-order.yaml``
+    (direct-track build/validate, agent_router, audits);
+    ``module-mapping.json`` (legacy TypeScript migrations);
+    ``vocabulary.db`` (vocab, practice, audit checks, lexicon backfill). Any
+    ``*.py`` / ``*.db`` / ``*.sqlite`` under the roots and any ``*.json`` at a
+    track root is code/data surface by extension.
+    """
+    if path.startswith("curriculum/") and PurePosixPath(path).name == "curriculum.yaml":
+        return True
+    if path in _CONTENT_CODE_PATHS:
+        return True
+    if not path.startswith(_CONTENT_PREFIXES):
+        return False
+    if path.endswith(_CONTENT_CODE_SUFFIXES):
+        return True
+    return any(
+        path.startswith(root) and "/" not in path[len(root) :] and path.endswith(".json")
+        for root in _CONTENT_TRACK_ROOTS
+    )
+
+
+def is_content_class_path(path: str) -> bool:
+    """True when a path is learner content with no code-imported surface."""
+    normalized = path.replace("\\", "/")
+    return normalized.startswith(_CONTENT_PREFIXES) and not _is_code_load_bearing_content(normalized)
+
+
 class GeminiChangedPathListError(RuntimeError):
     """The changed-file list for a Gemini PR or branch review could not be read."""
 
@@ -154,12 +205,10 @@ class GeminiChangedPathListError(RuntimeError):
 def gemini_content_paths_error(paths: list[str]) -> str | None:
     """Allow a Gemini PR/branch review only when every path is Ukrainian content.
 
-    The classifier is ``scripts.ci.classify_changes.is_content_class_path``.
-    An empty list is a listing failure: there is nothing to prove the diff
-    is content. The first non-content path is named in listed order.
+    The classifier is ``is_content_class_path``. An empty list is a listing
+    failure: there is nothing to prove the diff is content. The first
+    non-content path is named in listed order.
     """
-    from scripts.ci.classify_changes import is_content_class_path
-
     if not paths:
         raise GeminiChangedPathListError("changed-file list was empty")
     for path in paths:
@@ -457,6 +506,7 @@ def ask_agy(
     review_pr_number: int | None = None,
 ):
     """Send message to Agy AND invoke Agy to process it (one-shot)."""
+    require_core_or_exit("ask-agy")
     if background and (stdout_only or output_path):
         raise ValueError("ask-agy --background cannot be combined with --stdout-only or --output-path")
     if review or review_branch is not None or review_pr_number is not None:

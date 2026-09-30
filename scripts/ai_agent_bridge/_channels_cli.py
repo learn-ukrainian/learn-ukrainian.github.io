@@ -1607,6 +1607,18 @@ def _handle_discuss(args) -> int:
         )
         return 1
 
+    # ── the rules core first ──────────────────────────────────────
+    # Every discussion leg starts with it: refuse before the channel is
+    # created, the root is published or the discussion is enqueued (the
+    # discussion controller re-checks).
+    from scripts.lib import rules_core
+
+    try:
+        rules_core.require_core()
+    except rules_core.RulesCoreMissing as exc:
+        print(f"❌ discussion refused: {exc}; the rules core is required", file=sys.stderr)
+        return 1
+
     # ── validate inputs ────────────────────────────────────────────
     requested_transport = os.environ.get("LU_AGENT_COMM_TRANSPORT", "acp").strip().lower()
     if requested_transport != "acp":

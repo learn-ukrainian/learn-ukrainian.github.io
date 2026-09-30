@@ -16,6 +16,9 @@ import asyncio
 import hashlib
 import importlib.util
 import json
+import os
+import sqlite3
+import subprocess
 import sys
 import threading
 from pathlib import Path
@@ -29,7 +32,7 @@ import pymorphy3_dicts_uk  # noqa: F401  # Declares the Ukrainian morphology dic
 import pytest
 import rapidfuzz  # noqa: F401  # Declares the quote-verification runtime dependency.
 import requests  # noqa: F401  # Declares the Sources HTTP dependency to the CI fastlane.
-from mcp.types import TextContent
+from mcp.types import CallToolRequestParams, TextContent
 
 SOURCES_SERVER_PATH = Path(__file__).resolve().parents[1] / ".mcp" / "servers" / "sources" / "server.py"
 VESUM_FIXTURE_VERSION = "a" * 64
@@ -49,6 +52,148 @@ def server_module():
 def _run(coro):
     """Run an async coroutine synchronously."""
     return asyncio.run(coro)
+
+
+@pytest.mark.parametrize("stale_db", [False, True])
+def test_read_only_dispatch_sources_lookup_leaves_sparse_worktree_clean(server_module, tmp_path, monkeypatch, stale_db):
+    """A real sources handler read must not make the dispatch guard fail (#9122)."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    subprocess.run(["git", "init", str(primary)], check=True, capture_output=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "config", "user.email", "test@example.com"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "config", "user.name", "test"], check=True, timeout=30)
+    (primary / "tracked.txt").write_text("fixture\n", encoding="utf-8")
+    subprocess.run(["git", "-C", str(primary), "add", "tracked.txt"], check=True, timeout=30)
+    subprocess.run(["git", "-C", str(primary), "commit", "-m", "fixture"], check=True, capture_output=True, timeout=30)
+    worktree = tmp_path / "dispatch-worktree"
+    subprocess.run(
+        ["git", "-C", str(primary), "worktree", "add", "--detach", str(worktree), "HEAD"],
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    worktree_db = worktree / "data" / "sources.db"
+    if stale_db:
+        worktree_db.parent.mkdir()
+        worktree_db.touch()
+
+    db = primary / "data" / "sources.db"
+    db.parent.mkdir()
+    with sqlite3.connect(db) as conn:
+        conn.execute("CREATE TABLE textbooks (chunk_id TEXT, title TEXT, text TEXT)")
+        conn.execute("CREATE TABLE literary_texts (chunk_id TEXT, title TEXT, text TEXT)")
+        conn.execute("INSERT INTO textbooks VALUES ('chunk-1', 'Fixture', 'Source text')")
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
+    monkeypatch.setenv("LU_MCP_SOURCES_LOG_DIR", str(tmp_path))
+    monkeypatch.delenv("LU_SOURCES_DB", raising=False)
+    for key in tuple(os.environ):
+        if key.startswith(("GIT_", "PRE_COMMIT")):
+            monkeypatch.delenv(key, raising=False)
+
+    monkeypatch.syspath_prepend(str(SOURCES_SERVER_PATH.parents[3] / "scripts"))
+    import delegate
+    from rag import source_query
+    from wiki import sources_db
+
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", worktree)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree / "data" / "sources.db")
+    monkeypatch.setattr(sources_db, "_conn", None)
+    task_id = "sources-read-only-lookup"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "cwd": str(worktree)})
+
+    def lookup(*_args, **_kwargs):
+        result = _run(
+            server_module._on_call_tool(
+                None, CallToolRequestParams(name="get_chunk_context", arguments={"chunk_id": "chunk-1"})
+            )
+        )
+        assert result.is_error is False
+        assert "Source text" in result.content[0].text
+        with patch.object(source_query, "_get") as fetch:
+            fetch.return_value.text = "<html>missing WebForms tokens</html>"
+            fetch.return_value.raise_for_status.return_value = None
+            ulif_result = _run(
+                server_module._on_call_tool(
+                    None,
+                    CallToolRequestParams(
+                        name="query_ulif",
+                        arguments={"word": "fixture-word", "sections": ["paradigm"]},
+                    ),
+                )
+            )
+            assert ulif_result.is_error is False
+            assert json.loads(ulif_result.content[0].text)["status"] == "parse_error"
+            assert source_query.query_ulif("fixture-word")["status"] == "parse_error"
+            fetch.assert_called_once()
+        with sqlite3.connect(db) as conn:
+            assert conn.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0] == 1
+        return type(
+            "Result",
+            (),
+            {
+                "ok": True,
+                "response": "Source text",
+                "stderr_excerpt": None,
+                "returncode": 0,
+                "rate_limited": False,
+                "model": "fixture",
+                "effort": "high",
+                "cli_version": "fixture",
+            },
+        )()
+
+    try:
+        with patch("agent_runtime.runner.invoke", side_effect=lookup):
+            rc = delegate._run_worker(
+                task_id=task_id,
+                agent="agy",
+                prompt="Look up a source.",
+                mode="read-only",
+                cwd_str=str(worktree),
+                model=None,
+                hard_timeout=60,
+            )
+        state = delegate._read_state(state_path)
+        assert rc == 0
+        assert state["status"] == "done"
+        assert state["read_only_mutation_paths"] == []
+        if stale_db:
+            assert worktree_db.stat().st_size == 0
+        else:
+            assert not worktree_db.exists()
+            assert not worktree_db.parent.exists()
+    finally:
+        if sources_db._conn is not None:
+            sources_db._conn.close()
+
+
+def test_network_sources_override_has_missing_database_responses(server_module, tmp_path, monkeypatch):
+    from wiki import sources_db
+
+    worktree_db = tmp_path / "data" / "sources.db"
+    monkeypatch.setattr(sources_db, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(sources_db, "SOURCES_DB_PATH", worktree_db)
+    monkeypatch.setattr(sources_db, "_conn", None)
+    monkeypatch.setenv("LU_SOURCES_DB", "//unreachable/UkrainianData/sources.db")
+
+    content, envelope = _run(server_module.handle_get_chunk_context({"chunk_id": "fixture"}))
+    assert content[0].text == "Sources database not found."
+    assert envelope["status"] == "error"
+    assert envelope["error_code"] == "sources_db_missing"
+    for args in (
+        {"word": "fixture", "cache_only": True},
+        {"word": "fixture", "sections": ["paradigm"]},
+        {"word": "fixture"},
+    ):
+        ulif_content = _run(server_module.handle_query_ulif(args))
+        assert ulif_content[0].text == "Sources database not found."
+    assert server_module._lookup_wikipedia_in_db("fixture") is None
+    assert not worktree_db.exists()
+    assert not worktree_db.parent.exists()
 
 
 class TestListTools:
@@ -86,6 +231,7 @@ class TestListTools:
             "query_ulif_synonyms",
             "query_ulif_antonyms",
             "query_ulif_phraseology",
+            "query_ulif_records",
             "query_r2u",
             "query_e2u",
             "query_sum20",
@@ -188,6 +334,140 @@ class TestUlifHandlers:
 
         query.assert_called_once_with("великий", ["paradigm"])
         assert json.loads(result[0].text) == expected
+
+    def test_query_ulif_with_explicit_sections_transient_error_is_unavailable(self, server_module):
+        """query_ulif with explicit sections renders unavailable prose on outage (#9016)."""
+        transient = {
+            "status": "transient_error",
+            "word": "великий",
+            "canonical_headword": "великий",
+            "sections": {},
+        }
+        with patch("rag.source_query.query_ulif", return_value=transient):
+            result = _run(
+                server_module.handle_query_ulif(
+                    {"word": "великий", "sections": ["paradigm"]}
+                )
+            )
+
+        text = result[0].text
+        assert "unavailable" in text
+        assert "lcorp.ulif.org.ua" in text
+        assert "transient_error" not in text
+
+    @pytest.mark.parametrize(
+        "handler_name,query_fn_name",
+        [
+            ("handle_query_ulif_synonyms", "query_ulif_synonyms"),
+            ("handle_query_ulif_antonyms", "query_ulif_antonyms"),
+            ("handle_query_ulif_phraseology", "query_ulif_phraseology"),
+        ],
+    )
+    def test_ulif_relation_tools_transient_error_is_unavailable(
+        self, server_module, handler_name, query_fn_name
+    ):
+        """ULIF relation tools render unavailable prose instead of transient_error JSON (#9016)."""
+        transient = {
+            "status": "transient_error",
+            "word": "великий",
+            "canonical_headword": "великий",
+            "sections": {},
+        }
+        handler = getattr(server_module, handler_name)
+        with patch(f"rag.source_query.{query_fn_name}", return_value=transient):
+            result = _run(handler({"word": "великий"}))
+
+        text = result[0].text
+        assert "unavailable" in text
+        assert "lcorp.ulif.org.ua" in text
+        assert "transient_error" not in text
+
+
+class TestQueryUlifRecordsHandler:
+    def test_query_ulif_records_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        record_tool = next(t for t in tools if t.name == "query_ulif_records")
+        assert record_tool.input_schema["required"] == ["words"]
+        assert record_tool.input_schema["properties"]["words"]["type"] == "array"
+        assert record_tool.input_schema["properties"]["detail"]["enum"] == ["full", "compact"]
+
+    def test_query_ulif_records_invalid_inputs(self, server_module):
+        res1 = _run(server_module.handle_query_ulif_records({}))
+        assert "invalid_input" in res1[0].text
+
+        res2 = _run(server_module.handle_query_ulif_records({"words": []}))
+        assert "invalid_input" in res2[0].text
+
+        res3 = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "invalid"}))
+        assert "invalid_input" in res3[0].text
+
+    def test_query_ulif_records_full_detail(self, server_module):
+        mock_records = [
+            {
+                "word": "стіл",
+                "normalized_query": "стіл",
+                "status": "ok",
+                "verified": True,
+                "entry_count": 1,
+                "entries": [
+                    {
+                        "entry_id": 1,
+                        "homonym_index": 1,
+                        "canonical_headword": "сті́л",
+                        "sections": {
+                            "paradigm": [{"rows": [["Називний", "сті́л"]], "raw_html": "<table>...</table>"}],
+                        },
+                    }
+                ],
+            }
+        ]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records) as mock_fn:
+            result = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "full"}))
+            mock_fn.assert_called_once_with(["стіл"])
+
+        data = json.loads(result[0].text)
+        assert data["detail"] == "full"
+        assert data["record_count"] == 1
+        assert "source" in data
+        assert data["source"]["source_id"] == "ulif_dictua"
+        assert data["records"][0]["entries"][0]["sections"]["paradigm"][0]["raw_html"] == "<table>...</table>"
+
+    def test_query_ulif_records_compact_detail_strips_raw_html(self, server_module):
+        mock_records = [
+            {
+                "word": "стіл",
+                "normalized_query": "стіл",
+                "status": "ok",
+                "verified": True,
+                "entries": [
+                    {
+                        "entry_id": 1,
+                        "sections": {
+                            "paradigm": [{"rows": [["Називний", "сті́л"]], "raw_html": "<table>...</table>"}],
+                        },
+                    }
+                ],
+            }
+        ]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records):
+            result = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "compact"}))
+
+        data = json.loads(result[0].text)
+        assert data["detail"] == "compact"
+        assert "detail_note" in data
+        assert "raw_html" not in data["records"][0]["entries"][0]["sections"]["paradigm"][0]
+
+    def test_query_ulif_records_truncates_at_200(self, server_module):
+        words = [f"word_{i}" for i in range(250)]
+        mock_records = [{"word": w, "status": "not_found", "verified": False, "entries": []} for w in words[:200]]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records) as mock_fn:
+            result = _run(server_module.handle_query_ulif_records({"words": words}))
+            assert len(mock_fn.call_args[0][0]) == 200
+
+        data = json.loads(result[0].text)
+        assert data["record_count"] == 200
+        assert "warning" in data
+        assert "truncated" in data["warning"]
 
     def test_search_text_subject_schema(self, server_module):
         tools = _run(server_module.list_tools())
@@ -316,6 +596,24 @@ class TestLiveSourceUnavailable:
         assert "unavailable" in text
         assert "No entry found" not in text
         assert "HTTP 403" in text
+        assert "Cloudflare challenge detected" in text
+
+    def test_slovnyk_me_200_challenge_renders_unavailable(self, server_module):
+        """HTTP 200 Cloudflare challenge renders unavailable with challenge note (#9016)."""
+        unavailable = {
+            "status": "unavailable",
+            "word": "хата",
+            "dict": "vts",
+            "url": "https://slovnyk.me/dict/vts/хата",
+            "challenge": True,
+            "http_status": 200,
+        }
+        with patch("rag.source_query.slovnyk_me_lookup", return_value=unavailable):
+            result = _run(server_module.handle_query_slovnyk_me({"word": "хата", "dict": "vts"}))
+        text = result[0].text
+        assert "unavailable" in text
+        assert "No entry found" not in text
+        assert "HTTP 200" in text
         assert "Cloudflare challenge detected" in text
 
     def test_slovnyk_me_not_found_still_renders_no_entry(self, server_module):
@@ -1725,6 +2023,22 @@ class TestSlovnykMeSearchOutage:
         assert "Partial results" in result[0].text
         assert "### Result 1" in result[0].text
 
+    def test_search_slovnyk_me_200_challenge_renders_unavailable(self, server_module, monkeypatch):
+        """HTTP 200 Cloudflare challenge during live search fallback reports UNAVAILABLE (#9016)."""
+        from wiki import slovnyk_me, sources_db
+
+        challenge_html = "<html><title>Just a moment...</title><body>Checking browser</body></html>"
+        monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
+        monkeypatch.setattr(
+            slovnyk_me.requests,
+            "get",
+            lambda *a, **k: MagicMock(status_code=200, text=challenge_html, raise_for_status=lambda: None),
+        )
+        result = _run(server_module.handle_search_slovnyk_me({"query": "тест", "live": True}))
+        assert "UNAVAILABLE" in result[0].text
+        assert "vts (HTTP 200)" in result[0].text
+        assert "No slovnyk.me results" not in result[0].text
+
 
 class TestWikipediaPravopysHeritageOutage:
     """#9005 r3: Wikipedia, Правопис and heritage outages are reported as unavailable, never as a miss."""
@@ -1753,6 +2067,40 @@ class TestWikipediaPravopysHeritageOutage:
         assert "HTTP 403" in result[0].text
         cache.put_negative.assert_not_called()
         cache.put.assert_not_called()
+
+    def test_stale_negative_wikipedia_cache_revalidates_live(self, server_module, tmp_path):
+        """Wikipedia negative-cache entries older than negative TTL are re-validated (#9016)."""
+        import time
+
+        from rag.wiki_cache import WikiCache
+
+        db_path = tmp_path / "wiki_cache.db"
+        cache = WikiCache(db_path=db_path, negative_ttl=60)
+        cache.put_negative("summary", "Стаття")
+
+        # Backdate the negative entry by 120s (> negative_ttl 60s)
+        cache._conn.execute(
+            "UPDATE wiki_cache SET fetched_at = ?",
+            (int(time.time()) - 120,),
+        )
+        cache._conn.commit()
+
+        article = {
+            "title": "Стаття",
+            "description": "Опис",
+            "url": "https://uk.wikipedia.org/wiki/Стаття",
+            "extract": "Текст статті",
+        }
+        with (
+            patch("rag.wiki_cache.WikiCache", return_value=cache),
+            patch("rag.source_query.wikipedia_summary", return_value=article) as fetch,
+            patch.object(server_module, "_lookup_wikipedia_in_db", return_value=None),
+        ):
+            result = _run(server_module.handle_query_wikipedia({"query": "Стаття", "mode": "summary"}))
+
+        fetch.assert_called_once()
+        assert "(cached)" not in result[0].text
+        assert "Текст статті" in result[0].text
 
     def test_pravopys_outage_is_unavailable(self, server_module):
         unavailable = {"status": "unavailable", "section": 3, "url": "u", "reason": "HTTP 403"}
@@ -1784,6 +2132,11 @@ class TestWikipediaPravopysHeritageOutage:
 
     def test_heritage_real_miss_is_unchanged(self, server_module):
         assert self._heritage(server_module, [], []).startswith("No heritage evidence found")
+
+    def test_heritage_200_challenge_is_unavailable(self, server_module):
+        text = self._heritage(server_module, [], [{"dictionary_slug": "vts", "error": "HTTP 200"}])
+        assert "UNAVAILABLE" in text and "No heritage evidence found" not in text
+        assert "vts (HTTP 200)" in text
 
 
 def test_pravopys_unavailable_envelope_is_an_error_not_empty(server_module):

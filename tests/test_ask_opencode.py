@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from scripts.ai_agent_bridge._opencode import OPENCODE_DEFAULT_MODEL, _invoke_opencode
+from scripts.lib import rules_core
 
 pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
@@ -29,7 +30,7 @@ def test_invoke_opencode_constructs_correct_argv():
             assert argv[1] == "run"
             assert "--model" in argv
             assert "openrouter/google/gemma-4-31b-it" in argv
-            assert "hello" in argv
+            assert argv[-1] == rules_core.with_core("hello")
 
 
 def test_invoke_opencode_attaches_file(tmp_path):

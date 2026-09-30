@@ -22,6 +22,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+from tests.helpers.python import project_python
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_session_setup_hook.sh"
 _FIXTURE_ENV_KEYS = ("PATH", "HOME", "TMPDIR", "LANG")
@@ -42,15 +44,8 @@ def _fixture_allowlist() -> list[str]:
     ]
 
 
-def _canonical_python() -> Path:
-    result = subprocess.run(
-        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
-        cwd=_REPO_ROOT,
-        capture_output=True,
-        check=True,
-        text=True, timeout=30,
-    )
-    return Path(result.stdout.strip()).parent / ".venv" / "bin" / "python"
+def _canonical_python() -> str:
+    return project_python()
 
 
 def _stream_id_from_registry(stream_key: str) -> str:

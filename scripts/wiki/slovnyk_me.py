@@ -377,6 +377,15 @@ def parse_entry_html(
     }
 
 
+def _is_cloudflare_challenge(status_code: int, text: str) -> bool:
+    """Detect Cloudflare challenge/interstitial page using shared markers (#9016)."""
+    try:
+        from rag.source_query import is_cloudflare_challenge
+    except ImportError:  # pragma: no cover - direct package import fallback
+        from scripts.rag.source_query import is_cloudflare_challenge
+    return is_cloudflare_challenge(status_code, text)
+
+
 def fetch_entry(
     word: str,
     dict_slug: str,
@@ -398,6 +407,12 @@ def fetch_entry(
         return None
     url = f"{SLOVNYK_ME_BASE}/dict/{canonical_slug}/{quote(word)}"
     response = requests.get(url, timeout=timeout, headers={"User-Agent": user_agent})
+    if _is_cloudflare_challenge(response.status_code, response.text):
+        err = requests.HTTPError(
+            f"Cloudflare challenge ({response.status_code})",
+            response=response,
+        )
+        raise err
     if response.status_code == 404:
         return None
     response.raise_for_status()

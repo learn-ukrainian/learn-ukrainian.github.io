@@ -323,7 +323,7 @@ elif cmd == "wait":
         "task_id": task_id,
         "status": "done",
         "result_file": str(result_file),
-        "resolved_model": "gpt-6-astra",
+        "resolved_model": "gpt-6.1-sol",
     }}
     print(json.dumps(state, indent=2))
     sys.exit(0)
@@ -350,11 +350,11 @@ sys.exit(1)
         plan_activity_types=types,
         delegate_script=fake_delegate_script,
         repo_root=caller_root,
-        model="gpt-6-astra",
+        model="gpt-6.1-sol",
     )
 
     assert res["writer"] == "codex"
-    assert res["model"] == "gpt-6-astra"
+    assert res["model"] == "gpt-6.1-sol"
 
     # MAJOR D: Verify that caller_root was NOT used for reading results
     caller_result = caller_root / "batch_state/tasks/write-a1-delegate-test-3-1.result"
@@ -369,7 +369,7 @@ sys.exit(1)
     dispatch_argv = lines[0]["argv"]
     assert dispatch_argv[0] == "dispatch"
     assert "--agent" in dispatch_argv and dispatch_argv[dispatch_argv.index("--agent") + 1] == "codex"
-    assert "--model" in dispatch_argv and dispatch_argv[dispatch_argv.index("--model") + 1] == "gpt-6-astra"
+    assert "--model" in dispatch_argv and dispatch_argv[dispatch_argv.index("--model") + 1] == "gpt-6.1-sol"
     assert "--mode" in dispatch_argv and dispatch_argv[dispatch_argv.index("--mode") + 1] == "read-only"
     assert "--worktree" in dispatch_argv
     assert (

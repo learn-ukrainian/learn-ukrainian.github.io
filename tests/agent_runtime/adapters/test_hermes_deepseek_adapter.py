@@ -50,9 +50,9 @@ def test_deepseek_adapter_invokes_hermes_z_with_correct_argv_flash(tmp_path, mon
     """Flash variant uses the same shape, different ``-m``."""
     monkeypatch.setattr("agent_runtime.adapters.hermes_deepseek.shutil.which", lambda _: "hermes")
 
-    plan = _build("Review this code.", tmp_path, model="deepseek-v4-flash")
+    plan = _build("Review this code.", tmp_path, model="deepseek-v4.1-flash")
 
-    assert plan.cmd == ["hermes", "-z", "Review this code.", "-m", "deepseek-v4-flash", "--provider", "deepseek"]
+    assert plan.cmd == ["hermes", "-z", "Review this code.", "-m", "deepseek-v4.1-flash", "--provider", "deepseek"]
 
 
 def test_deepseek_adapter_translates_mcp_prefix_for_hermes(tmp_path, monkeypatch):

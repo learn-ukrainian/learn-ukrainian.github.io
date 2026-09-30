@@ -25,7 +25,6 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from navsi200_catalog import PRIORITY_TOPICS, load_catalog
-
 from scripts.storage.artifacts import write_artifact
 from scripts.storage.paths import artifact_path
 

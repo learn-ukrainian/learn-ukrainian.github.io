@@ -2125,7 +2125,7 @@ Legacy v1 bridge receipts are invalidated.
   "checked_at": "2026-07-28T13:56:41Z",
   "expires_at": "2026-07-28T14:11:41Z",
   "age_seconds": 5,
-  "model": "gpt-6-astra",
+  "model": "gpt-6.1-sol",
   "effort": "low",
   "source": "receipt"
 }
@@ -2894,6 +2894,8 @@ hashes against its local cache and only refetches what changed.
 {
   "generated_at": "2026-04-17T10:15:00Z",
   "rules":   {"hash": "abc...", "url": "/api/rules?format=markdown"},
+  "rules_core":    {"hash": "...", "url": "/api/rules?scope=core&format=markdown"},
+  "rules_content": {"hash": "...", "url": "/api/rules?scope=content&format=markdown"},
   "session": {"hash": "def...", "url": "/api/session/current?agent=orchestrator&format=markdown"},
   "orient":  {"url": "/api/orient", "fresh_param": "?fresh=true"},
   "inbox":   {"url_template": "/api/comms/inbox?agent={name}"}
@@ -2946,6 +2948,22 @@ receive the scoreboard without a second file read.
 - `format=json` → `{hash, bytes, sources[], markdown}`. Use this when
   an SDK needs to reconcile the hash against its on-disk cache. With
   telemetry enabled, the response also includes top-level `_telemetry`.
+
+**Scoped selections — `scope=core | content | task:<name>`.** Without
+`scope` the full bundle above is served unchanged. `scope=core` serves
+`agents_extensions/shared/rules/core.md`, the rules core every seat
+starts with; `scope=content` adds `core-curriculum.md` for curriculum
+seats; `scope=task:<name>` serves one `task-scoped-reading.md` row
+(`repo-change`, `cli`, `curriculum`, `fresh-build`, `routing`, `driver`,
+`fleet-comms`, `intake`, `review`, `task-family`, `rollover`). Sources and
+assembly come from `scripts/lib/rules_core.py`, the loader launchers,
+`delegate.py` workers and ACP calls use offline, so online and offline
+bytes are identical. A scoped hash is sha256 over `scope=<scope>\n` plus
+the Markdown, so its `ETag` never matches another scope or the full
+bundle; responses carry `X-Rules-Scope` and JSON adds `scope`. The
+manifest advertises `rules_core` and `rules_content` hashes; the SDK
+caches `MonitorClient.rules(scope=...)` under `rules:<scope>`. An unknown
+scope is `400`; a scope whose file is missing, unreadable or empty in the checkout (the core, or the addendum for `content`) is `503` naming the repo-relative path; nothing is served in its place.
 
 ### `GET /api/session/current?agent={name}&format={markdown,json}`
 

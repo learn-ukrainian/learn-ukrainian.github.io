@@ -1,0 +1,19 @@
+### Taught Before This Lesson (Planned, Complete)
+This is everything the learner has been taught before this lesson. This lesson's own letters, grammar and words are in its plan entry above.
+
+<!-- BEGIN LEARNER_STATE -->
+- **Letters taught** ({{ taught.letters | length }}, in taught order): {{ taught.letters | join(' ') if taught.letters else 'none yet' }}
+- **Grammar points taught** ({{ taught.grammar | length }}):{{ ' none yet' if not taught.grammar }}
+{%- for g in taught.grammar %}
+  - `{{ g.id }}`: {{ g.point }}
+{%- endfor %}
+- **Allowed words** ({{ taught.word_count }}; any form of each may be used):
+{%- for label, rows in (("Base layer", taught.base), ("Core words of earlier lessons", taught.core), ("Names admitted for use", taught.names)) %}
+  - {{ label }} ({{ rows | length }}): {% for w in rows %}`{{ w.id }}` {{ w.lemma }}{{ ", " if not loop.last }}{% else %}none{% endfor %}
+{%- endfor %}
+<!-- END LEARNER_STATE -->
+
+Use this state as you write:
+- Build examples and activity items from this known material.
+- Recycle earlier words and grammar wherever a step allows.
+- At the letter stage, write read and copy items only with letters taught above or introduced by this lesson.

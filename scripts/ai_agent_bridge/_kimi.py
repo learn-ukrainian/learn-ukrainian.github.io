@@ -13,7 +13,7 @@ from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_as
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import _prepend_review_protocol
+from ._prompts import bridge_prompt, require_core_or_exit
 from ._review_worktree import (
     ReviewWorktreeError,
     provision_review_worktree,
@@ -58,6 +58,7 @@ def ask_kimi(
     review_pr_number: int | None = None,
 ) -> int:
     """Send a broker message and invoke the native Kimi CLI to answer it."""
+    require_core_or_exit("ask-kimi")
     effective_model = resolve_model_selection(
         lane="ask-kimi", to_model=to_model, model=model, default=KIMI_BRIDGE_DEFAULT_MODEL
     )
@@ -175,7 +176,7 @@ def _build_kimi_prompt(
     if msg.get("data"):
         prompt += f"\nAttached data:\n{msg['data']}\n"
     prompt += "\nRespond directly. Do not send broker messages; output the final response.\n"
-    return _prepend_review_protocol(
+    return bridge_prompt(
         prompt, review, review_branch=review_branch, review_pr_number=review_pr_number,
         review_worktree_provisioned=review_worktree_provisioned,
     )

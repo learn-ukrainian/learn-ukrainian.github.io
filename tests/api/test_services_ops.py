@@ -15,17 +15,18 @@ from pathlib import Path
 import pytest
 
 from scripts.common.repo_root import main_checkout_root
+from tests.helpers.python import project_python, require_repo_venv
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SERVICES_SH = PROJECT_ROOT / "services.sh"
 # Service commands use the repository virtual environment in normal CI.  The
 # explicit override lets a dispatch worktree use the shared project interpreter
-# without creating a worktree-local virtual environment. Default to the primary
-# checkout interpreter so sparse worktrees without a local .venv still run.
+# without creating a worktree-local virtual environment. Default to the
+# interpreter running pytest so sparse worktrees without a local .venv still run.
 VENV_PYTHON = Path(
     os.environ.get(
         "SERVICES_TEST_PYTHON",
-        main_checkout_root(PROJECT_ROOT) / ".venv" / "bin" / "python",
+        project_python(),
     )
 )
 
@@ -289,12 +290,9 @@ def test_api_start_delegates_recovery_to_launchd(temp_services_sh, mock_lsof_env
     assert calls[:3] == ["start", "--repo-root", str(script_path.parent)]
 
 
-@pytest.mark.skipif(
-    not (PROJECT_ROOT / ".venv" / "bin" / "python").exists(),
-    reason="boots the real services.sh, which requires the repo venv ($VENV/python)",
-)
 def test_live_fallback_is_passed_to_launchd_with_a_loud_warning(temp_services_sh_real, mock_lsof_env):
     """``--live`` remains an explicit, visible escape hatch for API recovery."""
+    require_repo_venv()
     script_path, _port = temp_services_sh_real
     _, _, env = mock_lsof_env
     result = subprocess.run(

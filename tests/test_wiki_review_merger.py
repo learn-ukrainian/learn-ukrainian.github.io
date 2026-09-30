@@ -21,6 +21,7 @@ sys.path.insert(
 )
 
 import pytest
+
 from wiki.review_merger import (
     DEFAULT_DIM_PRIORITY,
     Fix,

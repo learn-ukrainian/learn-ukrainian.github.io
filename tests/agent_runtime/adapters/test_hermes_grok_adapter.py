@@ -25,11 +25,14 @@ def _isolate_runtime(tmp_path):
 
 
 def _build(prompt: str, tmp_path: Path):
+    # grok-hermes is a disabled lane whose only model (grok-4.5) is catalog-retired;
+    # runner admission refuses it when requested explicitly (#9230), so these
+    # plumbing tests leave the model unset and exercise the adapter default.
     return HermesGrokAdapter().build_invocation(
         prompt=prompt,
         mode="workspace-write",
         cwd=tmp_path,
-        model="grok-4.5",
+        model=None,
         task_id=None,
         session_id=None,
         tool_config={"hermes_mcp_servers": ["sources"]},
@@ -87,7 +90,6 @@ def test_grok_adapter_handles_missing_hermes_binary(tmp_path):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="grok-4.5",
             entrypoint="dispatch",
             effort="medium",
         )
@@ -112,7 +114,6 @@ def test_grok_adapter_honors_timeout(tmp_path, monkeypatch):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="grok-4.5",
             entrypoint="dispatch",
             hard_timeout=1,
         )
@@ -147,7 +148,6 @@ def test_runner_preserves_unknown_grok_tool_call_total(tmp_path, monkeypatch):
             "hello",
             mode="workspace-write",
             cwd=tmp_path,
-            model="grok-4.5",
             entrypoint="dispatch",
             effort="medium",
         )

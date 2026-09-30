@@ -70,6 +70,9 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
+  LAUNCHER_DRY_RUN_ARGV_FILE With dry-run, also write the exact NUL-separated argv here.
+  LU_RULES_SEAT              Rules core seat: core or content (default: content for a
+                             curriculum driver lane, else core). Exported to the session.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
                              claude-opus-5-5[1m]; Cursor driver: grok-4.7-high; empty
                              for Claude interactive/Grok = last session).
@@ -97,7 +100,7 @@ EOF
 Hermes (opt-in only):
   --harness hermes           Use the existing Hermes OAuth login; no paid fallback.
                              Grok pins grok-4.7 via xai-oauth; Codex pins
-                             gpt-6-astra via openai-codex (interactive only).
+                             gpt-6.1-sol via openai-codex (interactive only).
                              --effort maps to the probed Hermes --reasoning flag.
                              Hermes accepts prompt text, not forwarded CLI flags.
                              Requires an installed CLI and an empty fallback chain,
@@ -124,14 +127,17 @@ launcher_error() {
   printf 'Error: %s\n' "$*" >&2
 }
 
-# Project interpreter for helper modules, resolved from LC_ROOT by the shared
-# resolver (primary checkout's .venv; never trusts a worktree gitfile, #9118).
-# LC_DURABLE_HELPER_ROOT is NOT used: it comes from an unhardened git
-# common-dir lookup. The resolver prints its own error; callers exit 3.
+# Project interpreter for helper modules: the .venv of the helper root that
+# launcher_resolve_roots validated (#9118, #9121), so an operator-named Codex
+# primary serves the adapters too. Call after launcher_resolve_roots; callers
+# exit 3.
 launcher_project_python() {
-  # shellcheck source=scripts/lib/project_interpreter.sh
-  source "$LC_ROOT/scripts/lib/project_interpreter.sh"
-  project_interpreter_resolve "$LC_ROOT"
+  local python="${LC_DURABLE_HELPER_ROOT:-}/.venv/bin/python"
+  if [ -z "${LC_DURABLE_HELPER_ROOT:-}" ] || [ ! -f "$python" ] || [ ! -x "$python" ]; then
+    launcher_error "project interpreter not found: $python"
+    return 1
+  fi
+  printf '%s\n' "$python"
 }
 
 launcher_require_binary() {
@@ -214,15 +220,61 @@ launcher_hermes_exec() {
     if [ -n "$prompt" ]; then prompt+=$'\n'; fi
     prompt+="$arg"
   done
-  if [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then cmd+=(--query "$prompt"); fi
+  # Hermes has no system-prompt flag: the rules core leads the seeded query.
+  if [ -n "${LC_RULES_CORE:-}" ]; then
+    cmd+=(--query "$(rules_core_prefix "$prompt")")
+  elif [ "${#LC_FORWARD_ARGS[@]}" -gt 0 ]; then
+    cmd+=(--query "$prompt")
+  fi
   if [ "$LC_DRY_RUN" = 1 ]; then
     printf 'LAUNCHER_DRY_RUN=1: credential_source=%s provider=%s model=%s requested_effort=%s harness=hermes\nwould exec ' \
       "$LC_AUTH_SOURCE" "$LC_HERMES_PROVIDER" "$LC_MODEL" "${LC_EFFORT:-default}"
-    printf '%q ' "${cmd[@]}"
+    launcher_print_argv "${cmd[@]}"
     printf '\n'
     return 0
   fi
   launcher_exec_command "${cmd[@]}"
+}
+
+# Dry-run argv printer shared by every adapter. Stdout shows each argument with
+# the rules core replaced by a size placeholder; LAUNCHER_DRY_RUN_ARGV_FILE, when
+# set, receives the exact NUL-separated argv the launch would exec.
+launcher_print_argv() {
+  local arg placeholder
+  placeholder="<rules-core seat=${LC_RULES_SEAT:-none} bytes=${LC_RULES_CORE_BYTES:-0}>"
+  for arg in "$@"; do
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      arg="${arg//"$LC_RULES_CORE"/$placeholder}"
+      if [ -n "${LC_RULES_CORE_TOML:-}" ]; then
+        arg="${arg//"$LC_RULES_CORE_TOML"/$placeholder}"
+      fi
+    fi
+    printf '%q ' "$arg"
+  done
+  if [ -n "${LAUNCHER_DRY_RUN_ARGV_FILE:-}" ]; then
+    printf '%s\0' "$@" > "$LAUNCHER_DRY_RUN_ARGV_FILE"
+  fi
+}
+
+# Every seat starts with the rules core (scripts/lib/rules_core.sh). A driver on
+# a curriculum lane is a content seat and also gets the curriculum addendum. An
+# absent or unreadable core refuses the launch (exit 1), naming the path.
+launcher_load_rules_core() {
+  local lane=""
+  LC_RULES_CORE_TOML=""
+  if [ ! -r "$LC_ROOT/scripts/lib/rules_core.sh" ]; then
+    launcher_error "refusing to launch ${LC_PROVIDER}: rules core unavailable ($LC_ROOT/scripts/lib/rules_core.sh is missing)."
+    exit 1
+  fi
+  # shellcheck source=scripts/lib/rules_core.sh
+  source "$LC_ROOT/scripts/lib/rules_core.sh"
+  if [ "$LC_MODE" = driver ] && [ "$LC_GOVERNOR" = 0 ]; then
+    lane="$LC_EPIC"
+  fi
+  rules_core_load "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT" "$lane" "$LC_PROVIDER" || exit 1
+  if [ -n "$LC_RULES_CORE" ] && [ "$LC_DRY_RUN" = 1 ]; then
+    printf 'launcher: rules core seat=%s bytes=%s\n' "$LC_RULES_SEAT" "$LC_RULES_CORE_BYTES"
+  fi
 }
 
 launcher_clear_foreign_route_state() {
@@ -259,7 +311,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-sol}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-6.1-sol}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -460,16 +512,103 @@ launcher_normalize_effort() {
   esac
 }
 
+# Git's repository-local environment (`git rev-parse --local-env-vars`): each
+# one redirects which repository a git call, or a helper that asks git, sees.
+LC_GIT_LOCAL_ENV_VARS=(
+  GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_CONFIG GIT_CONFIG_PARAMETERS
+  GIT_CONFIG_COUNT GIT_OBJECT_DIRECTORY GIT_DIR GIT_WORK_TREE
+  GIT_IMPLICIT_WORK_TREE GIT_GRAFT_FILE GIT_INDEX_FILE GIT_NO_REPLACE_OBJECTS
+  GIT_REPLACE_REF_BASE GIT_PREFIX GIT_SHALLOW_FILE GIT_COMMON_DIR
+)
+
+# LC_DURABLE_HELPER_ROOT is the primary checkout that every launcher helper
+# interpreter and helper script runs from. It is resolved by the shared
+# project_interpreter.sh check (gitfile shape + back-pointer, never git, never
+# `commondir`), and an ambient value is overwritten. Untrusted git metadata
+# refuses the launch rather than falling back to a worktree-local root (#9121).
+#
+# The one exception is CODEX_CANONICAL_REPO_ROOT on a Codex launch: an
+# operator-set override (docs/SCRIPTS.md, #5438) and the only accepted way to
+# name a primary that Git cannot prove from the worktree, such as a
+# `--separate-git-dir` primary with no `<primary>/.git/worktrees/<name>`.
+# When set, it replaces the gitfile check and must itself be the primary
+# checkout of this worktree's Git common directory, on `main`; any mismatch
+# refuses. Unset, nothing here falls back to it.
 launcher_resolve_roots() {
+  unset "${LC_GIT_LOCAL_ENV_VARS[@]}"
   LC_SESSION_ROOT="$LC_ROOT"
-  local common_dir
-  common_dir="$(git -C "$LC_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
-  if [ -n "$common_dir" ]; then
-    LC_DURABLE_HELPER_ROOT="$(dirname "$common_dir")"
-  else
-    LC_DURABLE_HELPER_ROOT="$LC_ROOT"
+  LC_DURABLE_HELPER_ROOT=""
+  # shellcheck source=scripts/lib/project_interpreter.sh
+  source "$(dirname "${BASH_SOURCE[0]}")/project_interpreter.sh"
+  if [ "${LC_PROVIDER:-}" = codex ] && [ -n "${CODEX_CANONICAL_REPO_ROOT:-}" ]; then
+    LC_DURABLE_HELPER_ROOT="$(launcher_canonical_override_root "$CODEX_CANONICAL_REPO_ROOT")" || exit 1
+  elif ! LC_DURABLE_HELPER_ROOT="$(project_primary_root_resolve "$LC_ROOT")"; then
+    launcher_error "refusing to run launcher helpers from $LC_ROOT; its git metadata does not validate."
+    exit 3
   fi
   export LC_SESSION_ROOT LC_DURABLE_HELPER_ROOT
+}
+
+# Prints the physical path of an operator-named primary checkout, or explains
+# on stderr why it is not one: it must share this worktree's Git common
+# directory, be that repository's primary (its git dir IS the common dir, so a
+# linked worktree does not qualify; nor does a directory that reaches another
+# checkout's `.git`) and have `main` checked out. When the common directory
+# records `core.worktree`, the override must be that directory.
+#
+# Residual (#9121): a `--separate-git-dir` primary is a plain gitfile
+# (`gitdir: <common>`) and Git records no back-pointer to it, so a second
+# directory holding a copy of that gitfile is locally indistinguishable from
+# the primary unless `core.worktree` is set (Git does not set it by default).
+# This is the same class as the forged-fake-primary residual in
+# project_interpreter.sh. The override is operator-set environment, like PATH:
+# an operator who sets CODEX_CANONICAL_REPO_ROOT vouches for that directory.
+# Pinned by test_override_copied_separate_git_dir_gitfile_residual.
+launcher_canonical_override_root() {
+  local root common own_common own_git recorded
+  root="$(cd -P "$1" 2>/dev/null && pwd)" || {
+    launcher_error "CODEX_CANONICAL_REPO_ROOT is not a directory: $1"
+    return 1
+  }
+  common="$(git -C "$LC_ROOT" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" \
+    && common="$(cd -P "$common" 2>/dev/null && pwd)" || common=""
+  own_common="$(git -C "$root" rev-parse --path-format=absolute --git-common-dir 2>/dev/null)" \
+    && own_common="$(cd -P "$own_common" 2>/dev/null && pwd)" || own_common=""
+  if [ -n "$common" ] && [ "$own_common" = "$common" ] \
+    && recorded="$(git --git-dir="$common" config --get core.worktree 2>/dev/null)"; then
+    # A relative core.worktree is relative to the Git directory.
+    case "$recorded" in
+      /*) ;;
+      *) recorded="$common/$recorded" ;;
+    esac
+    if [ "$(cd -P "$recorded" 2>/dev/null && pwd)" != "$root" ]; then
+      launcher_error "CODEX_CANONICAL_REPO_ROOT is not the core.worktree Git records ($recorded): $root"
+      return 1
+    fi
+  fi
+  if [ -z "$common" ] || [ "$own_common" != "$common" ] \
+    || [ "$(git -C "$root" rev-parse --show-toplevel 2>/dev/null)" != "$root" ]; then
+    launcher_error "CODEX_CANONICAL_REPO_ROOT is not a checkout of this Git common directory."
+    return 1
+  fi
+  own_git="$(git -C "$root" rev-parse --absolute-git-dir 2>/dev/null)" \
+    && own_git="$(cd -P "$own_git" 2>/dev/null && pwd)" || own_git=""
+  if [ "$own_git" != "$common" ]; then
+    launcher_error "CODEX_CANONICAL_REPO_ROOT is a linked worktree, not the primary checkout: $root"
+    return 1
+  fi
+  # A lookalike reaches the real `<primary>/.git` through a symlink or a
+  # gitfile; Git can already name that primary, so only it qualifies.
+  if [ -L "$root/.git" ] \
+    || { [ "$(basename "$common")" = .git ] && [ "$(dirname "$common")" != "$root" ]; }; then
+    launcher_error "CODEX_CANONICAL_REPO_ROOT borrows another checkout's .git: $root"
+    return 1
+  fi
+  if [ "$(git -C "$root" branch --show-current 2>/dev/null)" != main ]; then
+    launcher_error "canonical checkout must be on main: $root"
+    return 1
+  fi
+  printf '%s\n' "$root"
 }
 
 launcher_validate_mode() {
@@ -507,10 +646,10 @@ launcher_validate_mode() {
       launcher_require_registered_slot "$LC_PROVIDER" "$LC_EPIC" || exit 2
     fi
     if [ "$LC_MODEL" = gpt-6-luna ]; then
-      launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6-sol."
+      launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6.1-sol."
       exit 4
     fi
-    LC_MODEL="${LC_MODEL:-gpt-6-sol}"
+    LC_MODEL="${LC_MODEL:-gpt-6.1-sol}"
     unset SESSION_EPIC
     LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
     LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
@@ -558,7 +697,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6-sol|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)
@@ -605,7 +744,7 @@ launcher_import_rollover_bundle() {
     epic:*) ;;
     *) return 0 ;;
   esac
-  helper_root="${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}"
+  helper_root="$LC_DURABLE_HELPER_ROOT"
   py="$helper_root/.venv/bin/python"
   script="$helper_root/scripts/orchestration/thread_handoff.py"
   if [ ! -x "$py" ] || [ ! -f "$script" ]; then
@@ -658,8 +797,8 @@ launcher_cursor_observer_presence() {
   fi
   local task_id
   task_id="${SESSION_TASK_ID:-${LC_EPIC:-cursor-driver}}"
-  # Linked worktrees carry no venv; the durable helper root does.
-  "${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" -m scripts.orchestration.observer_heartbeat \
+  # Linked worktrees carry no venv; the validated durable helper root does.
+  "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m scripts.orchestration.observer_heartbeat \
     --agent cursor \
     --task-id "$task_id" \
     --epic "$LC_EPIC" \
@@ -761,7 +900,7 @@ launcher_driver_renew_loop() {
       if ! kill -0 "$child_pid" 2>/dev/null; then
         break
       fi
-      if heartbeat_error="$("${LC_DURABLE_HELPER_ROOT:-$LC_ROOT}/.venv/bin/python" -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
+      if heartbeat_error="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" -m scripts.session_supervisor heartbeat --role driver 2>&1 >/dev/null)"; then
         renew_started=$SECONDS
         continue
       fi
@@ -828,9 +967,9 @@ launcher_close_driver_lease() {
   local deadline=$((SECONDS + 10#$retry_seconds))
   while :; do
     attempt=$((attempt + 1))
-    # Linked worktrees carry no venv; the durable helper root does. Capture
-    # stderr per attempt for classification only — it is never echoed.
-    if close_stderr="$("${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python" \
+    # Linked worktrees carry no venv; the validated durable helper root does.
+    # Capture stderr per attempt for classification only — it is never echoed.
+    if close_stderr="$("$LC_DURABLE_HELPER_ROOT/.venv/bin/python" \
         -m scripts.session_supervisor close --role driver 2>&1 >/dev/null)"; then
       LC_DRIVER_LEASE_CLOSED=1
       return 0
@@ -1024,12 +1163,10 @@ launcher_inject_driver_agent() {
   if launcher_forward_args_have_agent; then
     return 0
   fi
-  local py="$LC_SESSION_ROOT/.venv/bin/python"
+  # The validated durable helper root's interpreter only; a worktree-local
+  # .venv is never tried (#9118, #9121).
+  local py="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
   local agent_type=""
-  if [ ! -x "$py" ]; then
-    # Linked worktrees usually carry no venv; the durable helper root does.
-    py="${LC_DURABLE_HELPER_ROOT:-$LC_SESSION_ROOT}/.venv/bin/python"
-  fi
   [ -x "$py" ] || return 0
   agent_type="$(cd "$LC_SESSION_ROOT" && "$py" -m scripts.orchestration.driver_agent_type --lane "$LC_EPIC" 2>/dev/null || true)"
   if [ -z "$agent_type" ]; then
@@ -1097,6 +1234,8 @@ launcher_main() {
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode
   launcher_validate_driver_certification
+  # Before any adapter check, plane probe or deploy: no core, no launch.
+  launcher_load_rules_core
   # shellcheck disable=SC1090
   source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate

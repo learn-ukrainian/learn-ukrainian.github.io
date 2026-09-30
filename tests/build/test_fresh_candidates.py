@@ -301,7 +301,7 @@ def test_rendered_prompt_includes_store_candidate_bank(words: dict) -> None:
     )
     assert "A finite verb slot names `VerbForm: Fin` in `requires`; a plural slot omits `Gender`" in prompt
     _assert_no_stress_leak([bank], [record])
-    assert check_rendered_prompt(prompt, plan, ROOT / "docs/style-cards/a1.md").passed
+    assert check_rendered_prompt(prompt, plan, ROOT / "docs/style-cards/a1.md", learner_state=state).passed
     pending_bank = _render_form_candidates(plan, {"W-102": words["words"][1]})
     assert "`W-102`: `читати`" in pending_bank
     _assert_no_stress_leak([pending_bank], [words["words"][1]])

@@ -55,8 +55,7 @@ def resolve_chunk_attribution(chunk_id: str, corpus: str) -> dict:
         }
 
     try:
-        with sqlite3.connect(str(_effective_db_path())) as conn:
-            conn.row_factory = sqlite3.Row
+        with connect_sources_db() as conn:
             attribution = _resolve_chunk_attribution_with_conn(conn, raw_chunk_id, normalized_corpus)
     except sqlite3.Error:
         attribution = None
@@ -386,8 +385,8 @@ def _effective_db_path() -> Path:
     if db_path.exists() and db_path.stat().st_size > 0:
         return db_path
 
-    # In a dispatch worktree, data/ is sparse-excluded (or an empty 0-byte
-    # placeholder that sqlite auto-creates) — fall back to the main checkout's
+    # In a dispatch worktree, data/ is sparse-excluded (or holds an empty 0-byte
+    # placeholder a read-write opener once created) — fall back to the main checkout's
     # populated DB. Worktrees nest arbitrarily deep: delegate.py uses
     # `.worktrees/dispatch/<agent>/<name>`, so the old `PROJECT_ROOT.parent.name
     # == ".worktrees"` check (which only matched the shallow `.worktrees/<name>`
@@ -409,7 +408,10 @@ def connect_sources_db() -> sqlite3.Connection:
     ``LU_SOURCES_DB`` overrides the resolved path (network locations refused);
     this is the only supported way to redirect a test at a scratch database
     without writing into the repository tree.
+
+    The connection is read-only: a missing database raises ``sqlite3.OperationalError``
+    instead of SQLite creating an empty ``data/sources.db`` in the checkout (#9158).
     """
-    conn = sqlite3.connect(str(_effective_db_path()))
+    conn = sqlite3.connect(f"{_effective_db_path().resolve().as_uri()}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn

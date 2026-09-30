@@ -69,9 +69,10 @@ except ImportError as exc:
     if __package__ or (isinstance(exc, ModuleNotFoundError) and exc.name != "scripts"):
         raise
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-    import context_canary
     import task_identity
     import thread_handoff_canary
+
+    import context_canary
     from common.repo_root import project_interpreter
     from orchestration.task_family import codex_state as task_family_codex_state
     from orchestration.task_family import rollover as task_family_rollover

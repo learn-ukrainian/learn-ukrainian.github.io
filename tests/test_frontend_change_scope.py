@@ -19,6 +19,7 @@ pytestmark = pytest.mark.repo_invariant
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github/workflows/ci.yml"
 _ACTION = _REPO_ROOT / ".github/actions/python-ci-env/action.yml"
+_LOCK = _REPO_ROOT / "requirements-lock.txt"
 _DENOMINATOR = _REPO_ROOT / scope.DENOMINATOR_REL
 
 
@@ -403,12 +404,21 @@ def test_removing_denominator_entry_fails_hydrate_guard(tmp_path: Path) -> None:
         scope.assert_hydrate_entrypoints_in_denominator(denominator=loaded)
 
 
-def test_ci_yml_frontend_job_is_gated_by_changes_output() -> None:
+def test_ci_yml_frontend_job_runs_only_through_the_scope_step() -> None:
+    """Every frontend step after the scope decision is gated on its `run` output."""
     workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
     jobs = workflow["jobs"]
     assert "frontend-e2e" not in jobs
-    assert "needs.changes.outputs.frontend == 'true'" in str(jobs["frontend"].get("if"))
+    frontend = jobs["frontend"]
+    # Skipped only when the merge queue reuses a green full run of the identical tree.
+    assert frontend["if"] == "${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}"
     assert "frontend" in jobs["ci-gate"]["needs"]
+    steps = frontend["steps"]
+    scope_index = next(index for index, step in enumerate(steps) if step.get("id") == "scope")
+    assert "scripts/ci/frontend_change_scope.py" in steps[scope_index]["run"]
+    assert "github.event.merge_group.base_sha" in steps[scope_index]["env"]["BASE_SHA"]
+    for step in steps[scope_index + 1 :]:
+        assert step.get("if") == "steps.scope.outputs.run == 'true'", step
 
 
 def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
@@ -431,8 +441,14 @@ def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
     assert uv["with"]["enable-cache"] is True
     assert uv["with"]["cache-dependency-glob"] == "requirements-lock.txt"
     install = next(step["run"] for step in steps if step.get("name") == "Install Python deps")
-    assert "python -m venv .venv" in install
-    assert "grep -viE '^(torch|torchvision|open_clip_torch|stanza)==' requirements-lock.txt" in install
+    # No ensurepip: pip/setuptools/wheel come from the lock (#9062).
+    assert "python -m venv --without-pip .venv" in install
+    lock_lines = _LOCK.read_text(encoding="utf-8").splitlines()
+    assert all(any(line.startswith(f"{pkg}==") for line in lock_lines) for pkg in ("pip", "setuptools", "wheel"))
+    assert "-e '^(torch|torchvision|open_clip_torch|stanza)=='" in install
+    # v4-runtime is built once after the lock install, not also from the lock.
+    assert "-e '^\\./packages/v4-runtime$'" in install
+    assert "uv pip install --python .venv/bin/python --no-deps --no-build-isolation ./packages/v4-runtime" in install
     assert 'uv pip install --python .venv/bin/python --no-deps -r "${RUNNER_TEMP}/requirements-ci.txt"' in install
     assert "--upgrade" not in install
     setup_python = next(

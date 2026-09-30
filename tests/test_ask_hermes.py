@@ -20,6 +20,7 @@ from scripts.agent_runtime.result import ParseResult, Result
 from scripts.ai_agent_bridge._hermes import HERMES_DEFAULT_MODEL, _invoke_hermes
 from scripts.entire import cursor_native_hook_shim as shim
 from scripts.entire import fleet_capture as capture
+from scripts.lib import rules_core
 
 
 def _repo_root(tmp_path: Path) -> Path:
@@ -496,14 +497,14 @@ def test_exact_owned_host_lifecycle_is_private_and_ephemeral(tmp_path: Path, mon
         host_harness="hermes",
         runner_agent="deepseek",
         entrypoint="bridge",
-        requested_model="deepseek-v4-flash",
+        requested_model="deepseek-v4.1-flash",
         prompt="private-prompt-canary",
         repo_path=tmp_path,
         runtime_repo_root=tmp_path,
         plan_metadata={
             "hermes": {
                 "requested_provider": "deepseek",
-                "requested_model": "deepseek-v4-flash",
+                "requested_model": "deepseek-v4.1-flash",
             }
         },
     )
@@ -558,7 +559,7 @@ def test_missing_entire_cli_has_no_spool_side_effects(tmp_path: Path, monkeypatc
             host_harness="hermes",
             runner_agent="deepseek",
             entrypoint="dispatch",
-            requested_model="deepseek-v4-flash",
+            requested_model="deepseek-v4.1-flash",
             prompt="fixture",
             repo_path=tmp_path,
             runtime_repo_root=tmp_path,
@@ -591,7 +592,7 @@ def test_missing_fleet_hook_agent_never_invokes_entire(tmp_path: Path, monkeypat
         host_harness="hermes",
         runner_agent="deepseek",
         entrypoint="bridge",
-        requested_model="deepseek-v4-flash",
+        requested_model="deepseek-v4.1-flash",
         prompt="fixture",
         repo_path=tmp_path,
         runtime_repo_root=tmp_path,
@@ -737,16 +738,16 @@ def test_stale_cleanup_removes_only_exact_session_directories(tmp_path: Path) ->
 
 def test_resolved_route_preserves_truthful_substitution() -> None:
     actual, metadata = capture.resolved_route(
-        requested_model="deepseek-v4-flash",
+        requested_model="deepseek-v4.1-flash",
         plan_metadata={
             "hermes": {
                 "requested_provider": "deepseek",
-                "requested_model": "deepseek-v4-flash",
+                "requested_model": "deepseek-v4.1-flash",
             }
         },
         substitution={
             "requested_provider": "deepseek",
-            "requested_model": "deepseek-v4-flash",
+            "requested_model": "deepseek-v4.1-flash",
             "actual_provider": "openrouter",
             "actual_model": "deepseek/deepseek-v4.1",
         },
@@ -754,7 +755,7 @@ def test_resolved_route_preserves_truthful_substitution() -> None:
     assert actual == "deepseek/deepseek-v4.1"
     assert metadata == {
         "requested_provider": "deepseek",
-        "requested_model": "deepseek-v4-flash",
+        "requested_model": "deepseek-v4.1-flash",
         "actual_provider": "openrouter",
         "actual_model": "deepseek/deepseek-v4.1",
     }
@@ -794,7 +795,7 @@ def test_runner_starts_after_spawn_and_always_finishes(tmp_path: Path, monkeypat
         prompt="fixture",
         mode="read-only",
         cwd=tmp_path,
-        model="deepseek-v4-flash",
+        model="deepseek-v4.1-flash",
         task_id="fixture",
         session_id=None,
         entrypoint="bridge",
@@ -848,7 +849,7 @@ def _hermes_result(*, ok: bool = True, response: str = "response body") -> Resul
     return Result(
         ok=ok,
         agent="deepseek",
-        model="deepseek-v4-flash",
+        model="deepseek-v4.1-flash",
         mode="read-only",
         response=response,
         stderr_excerpt=None,
@@ -870,10 +871,11 @@ def test_invoke_hermes_uses_shared_runtime():
         "scripts.agent_runtime.runner.invoke",
         return_value=_hermes_result(),
     ) as invoke_mock:
-        assert _invoke_hermes("hello", "deepseek-v4-flash", task_id="task-1") == "response body"
+        assert _invoke_hermes("hello", "deepseek-v4.1-flash", task_id="task-1") == "response body"
     args, kwargs = invoke_mock.call_args
-    assert args == ("hermes-deepseek", "hello")
-    assert kwargs["model"] == "deepseek-v4-flash"
+    # The rules core leads the prompt when the checkout carries it.
+    assert args == ("hermes-deepseek", rules_core.with_core("hello"))
+    assert kwargs["model"] == "deepseek-v4.1-flash"
     assert kwargs["task_id"] == "task-1"
     assert kwargs["entrypoint"] == "bridge"
     assert kwargs["mode"] == "read-only"
@@ -887,7 +889,7 @@ def test_invoke_hermes_attaches_data_file(tmp_path):
         "scripts.agent_runtime.runner.invoke",
         return_value=_hermes_result(response="ok"),
     ) as invoke_mock:
-        _invoke_hermes("review this", "deepseek-v4-flash", data=str(data_file))
+        _invoke_hermes("review this", "deepseek-v4.1-flash", data=str(data_file))
     prompt = invoke_mock.call_args.args[1]
     assert "Some content." in prompt
     assert "review this" in prompt
@@ -899,7 +901,7 @@ def test_invoke_hermes_raises_when_binary_missing():
         side_effect=AgentUnavailableError("missing"),
     ):
         with pytest.raises(SystemExit, match="AgentUnavailableError"):
-            _invoke_hermes("hello", "deepseek-v4-flash")
+            _invoke_hermes("hello", "deepseek-v4.1-flash")
 
 
 def test_invoke_hermes_raises_on_nonzero_exit():
@@ -908,4 +910,4 @@ def test_invoke_hermes_raises_on_nonzero_exit():
         return_value=_hermes_result(ok=False, response=""),
     ):
         with pytest.raises(SystemExit, match="no usable response"):
-            _invoke_hermes("hello", "deepseek-v4-flash")
+            _invoke_hermes("hello", "deepseek-v4.1-flash")

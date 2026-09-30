@@ -21,6 +21,8 @@ from pathlib import Path
 
 import pytest
 
+from tests.helpers.python import project_python
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
@@ -111,33 +113,7 @@ raise SystemExit(pytest.main([
     assert result.returncode == 0, result.stdout + result.stderr
 
 
-def _resolve_project_python() -> Path:
-    local = REPO_ROOT / ".venv" / "bin" / "python"
-    if local.exists():
-        return local
-
-    common_dir = subprocess.check_output(
-        [
-            "git",
-            "-C",
-            str(REPO_ROOT),
-            "rev-parse",
-            "--path-format=absolute",
-            "--git-common-dir",
-        ],
-        text=True,
-        timeout=30,
-    ).strip()
-    canonical = Path(common_dir).parent / ".venv" / "bin" / "python"
-    if canonical.exists():
-        return canonical
-
-    raise RuntimeError(
-        f"Project interpreter missing from this checkout and its canonical Git checkout: {local}, {canonical}"
-    )
-
-
-PROJECT_PYTHON = _resolve_project_python()
+PROJECT_PYTHON = Path(project_python())
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 DEPLOY_WORKFLOW = Path(".github/workflows/rules-deployment-check.yml")
@@ -167,6 +143,8 @@ UNSCOPED_RULE_FILES = (
     "cli-help-standard.md",
     "model-assignment.md",
     "fleet-driver-routing.md",
+    "core.md",
+    "core-curriculum.md",
 )
 CLAUDE_RULE_FILES = (
     "_load-via-api.md",
@@ -233,6 +211,9 @@ _NAMED_DEPLOY_PATHS: dict[str, tuple[str, ...]] = {
     "test_agent_transient_briefs_are_preserved": (),
     "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime": (),
     "test_claude_epic_dirs_are_preserved": (),
+    "test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs": (
+        "agents_extensions/shared/skills/drive-epic",
+    ),
     "test_drift_is_caught": ("agents_extensions/shared/rules/pipeline.md",),
     # Every top-level SKILL.md, plus one nested script so the legacy inventory
     # recurses. The migrator shells out to git once per file; copying the rest
@@ -1488,6 +1469,74 @@ def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:
         assert handoff.exists(), f".claude/{epic}/ was wiped by rsync --delete"
 
 
+@pytest.mark.repo_wide
+def test_claude_deploy_ships_epic_named_skills_and_keeps_epic_handoffs(tmp_path: Path) -> None:
+    """The root-level ``*-epic`` exclusion must not reach ``skills/drive-epic``.
+
+    Regression: the unanchored rsync exclude ``*-epic`` matched every path
+    component, so ``.claude/skills/drive-epic`` was never deployed while the
+    Codex and Gemini targets had it. The drift checker used the same basename
+    exclusion and stayed silent. Runtime ``.claude/<name>-epic/`` handoff dirs
+    must still survive ``rsync --delete``.
+    """
+    repo = _init_checkout(tmp_path)
+    handoff = repo / ".claude/foo-epic/CLAUDE-DRIVER-HANDOFF.md"
+    handoff.parent.mkdir(parents=True)
+    handoff.write_text("runtime handoff\n", encoding="utf-8")
+
+    result = _run(repo, DEPLOY_SCRIPT)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+    source = repo / "agents_extensions/shared/skills/drive-epic"
+    references = sorted(source.glob("references/*.md"))
+    assert references, "drive-epic has no references to deploy"
+    for path in (source / "SKILL.md", *references):
+        relative = path.relative_to(source)
+        deployed = repo / ".claude/skills/drive-epic" / relative
+        assert deployed.read_bytes() == path.read_bytes(), f"{deployed} not deployed"
+    assert handoff.read_text(encoding="utf-8") == "runtime handoff\n"
+    assert _run(repo, CHECK_SCRIPT).returncode == 0
+
+    # The checker must see a missing drive-epic file in .claude/.
+    (repo / ".claude/skills/drive-epic" / references[0].relative_to(source)).unlink()
+    check = _run(repo, CHECK_SCRIPT)
+    assert check.returncode != 0
+    assert references[0].name in check.stdout + check.stderr
+
+
+@pytest.mark.repo_wide
+def test_claude_diff_excludes_do_not_mask_shipped_source() -> None:
+    """``diff --exclude`` matches basenames anywhere; none may shadow a shipped file.
+
+    Deploy's preview and the drift checker compare trees with ``diff``, whose
+    excludes cannot be anchored. A declared name that equals a nested source
+    basename would hide that path from the drift gate.
+    """
+    bash = """
+set -euo pipefail
+source scripts/deploy_orphan_paths.sh
+shared=agents_extensions/shared
+emit() { declared_diff_excludes "$1" "$2" "$3" | sed "s|^|$1\t$3\t|"; }
+emit "$shared" .claude "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
+emit "$shared" .codex "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS $CODEX_DISCOVERY_EXCLUDES"
+emit "$shared/skills" .agents/skills "$ORPHAN_PATHS_AGENTS"
+emit gemini_extensions .gemini "$ORPHAN_PATHS_GEMINI $GEMINI_SHARED_SKILL_OVERLAY_PATHS"
+"""
+    result = subprocess.run(
+        ["bash", "-c", bash], cwd=REPO_ROOT, capture_output=True, check=True, text=True, timeout=30
+    )
+    rows = [line.split("\t") for line in result.stdout.splitlines() if line]
+    assert rows
+    shadowed = []
+    for source, entries, name in rows:
+        declared = {entry.rstrip("/") for entry in entries.split()}
+        for path in (REPO_ROOT / source).rglob(name):
+            relative = path.relative_to(REPO_ROOT / source).as_posix()
+            if "/" in relative and relative not in declared:
+                shadowed.append(f"{source}: {relative} (exclude {name!r})")
+    assert not shadowed, shadowed
+
+
 def test_drift_is_caught(tmp_path: Path) -> None:
     """Post-deploy edits to a target tree must be reported as drift."""
     repo = _init_checkout(tmp_path)
@@ -1515,7 +1564,7 @@ def test_drift_is_caught(tmp_path: Path) -> None:
 def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_path: Path) -> None:
     """Walk every top-level skill, including ``*-epic`` names and one nested script.
 
-    Two flat SKILL.md files never reach the Claude ``*-epic`` skip or the nested
+    Two flat SKILL.md files never reach a ``*-epic`` skill name or the nested
     directory the legacy inventory recurses into. Each SKILL.md is still compared
     on every mirror. The remaining skill files are not named by an assertion, and
     the migrator pays one git subprocess per file.
@@ -1531,10 +1580,6 @@ def test_codex_skills_have_one_discovery_root_and_migrate_verified_legacy(tmp_pa
     for skill in source.glob("*/SKILL.md"):
         relative = skill.relative_to(source)
         for mirror in (".agents/skills", ".claude/skills", ".agent/skills", ".gemini/skills"):
-            # Existing Claude orphan exclusion '*-epic' also excludes these
-            # nested names; this migration preserves that harness's policy.
-            if mirror == ".claude/skills" and skill.parent.name.endswith("-epic"):
-                continue
             assert (repo / mirror / relative).read_bytes() == skill.read_bytes()
     assert _run(repo, CHECK_SCRIPT).returncode == 0
     assert "No changes to deploy" in _run(repo, DEPLOY_SCRIPT).stdout

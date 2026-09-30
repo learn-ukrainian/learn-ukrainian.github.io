@@ -108,6 +108,21 @@ class TestSlovnykMeLookup:
         assert result["challenge"] is True
         assert result["http_status"] == 403
 
+    def test_cloudflare_200_challenge_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """An HTTP 200 Cloudflare page containing <h1> is detected as a challenge, not a found article (#9016)."""
+        html = (
+            "<html><head><title>Just a moment...</title></head>"
+            "<body><h1>Just a moment...</h1>"
+            "Checking your browser before accessing slovnyk.me. "
+            "cf-browser-verification cf-chl-widget</body></html>"
+        )
+        _patch_get(monkeypatch, DummyResponse(200, html))
+        result = slovnyk_me_lookup("хата", "vts")
+        assert result["status"] == "unavailable"
+        assert result["challenge"] is True
+        assert result["http_status"] == 200
+        assert "text" not in result
+
     def test_429_is_unavailable(self, monkeypatch: pytest.MonkeyPatch) -> None:
         _patch_get(monkeypatch, DummyResponse(429, "Too Many Requests"))
         result = slovnyk_me_lookup("хата", "vts")
@@ -194,7 +209,7 @@ class TestGracConcordanceCollocationsUnavailable:
 # --- slovnyk.me search path: scripts/wiki/slovnyk_me.fetch_entries (#9005 residual) ---------------
 
 
-@pytest.mark.parametrize("status", [403, 429, 503])
+@pytest.mark.parametrize("status", [200, 403, 429, 503])
 def test_fetch_entries_records_an_http_outage_instead_of_dropping_it(monkeypatch, status):
     from wiki import slovnyk_me
 
@@ -235,6 +250,34 @@ def test_search_slovnyk_me_with_status_carries_live_outages(monkeypatch, tmp_pat
     rows, outages = sources_db.search_slovnyk_me_with_status("тест", 5, ["vts"], live=True)
     assert rows == [] and outages
     # the list-returning name keeps its contract
+    assert sources_db.search_slovnyk_me("тест", 5, ["vts"], live=True) == []
+
+
+def test_search_slovnyk_me_200_challenge_reports_unavailable_not_miss(monkeypatch):
+    """An HTTP 200 Cloudflare challenge page through search fallback reports unavailable and records nothing (#9016)."""
+    from wiki import slovnyk_me, sources_db
+
+    challenge_html = (
+        "<!DOCTYPE html><html><head><title>Just a moment...</title></head>"
+        "<body><h1>Just a moment...</h1>Checking your browser before accessing slovnyk.me.</body></html>"
+    )
+    monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
+    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(200, challenge_html))
+
+    outages: list[dict] = []
+    rows = slovnyk_me.fetch_entries("тест", dictionaries=["vts"], outages=outages)
+    assert rows == []
+    assert len(outages) == 1
+    assert outages[0]["dictionary_slug"] == "vts"
+    assert outages[0]["error"] == "HTTP 200"
+
+    rows, outages = sources_db.search_slovnyk_me_with_status("тест", 5, ["vts"], live=True)
+    assert rows == []
+    assert len(outages) == 1
+    assert outages[0]["dictionary_slug"] == "vts"
+    assert outages[0]["error"] == "HTTP 200"
+
+    # search_slovnyk_me without status returns empty list (nothing recorded / returned)
     assert sources_db.search_slovnyk_me("тест", 5, ["vts"], live=True) == []
 
 
@@ -304,6 +347,18 @@ def test_search_heritage_reports_live_slovnyk_outages(monkeypatch):
     outages: list[dict] = []
     sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
     assert outages and all(o["error"] == "HTTP 403" for o in outages)
+
+
+def test_search_heritage_200_challenge_reports_outage(monkeypatch):
+    """An HTTP 200 Cloudflare challenge page in heritage live fallback reports outage (#9016)."""
+    from wiki import slovnyk_me, sources_db
+
+    challenge_html = "<!DOCTYPE html><html><title>Just a moment...</title><body>Checking your browser</body></html>"
+    monkeypatch.setattr(sources_db, "_search_slovnyk_me_db", lambda *a, **k: [])
+    monkeypatch.setattr(slovnyk_me.requests, "get", lambda *a, **k: DummyResponse(200, challenge_html))
+    outages: list[dict] = []
+    sources_db.search_heritage("тест", 5, include_live_slovnyk=True, outages=outages)
+    assert outages and all(o["error"] == "HTTP 200" for o in outages)
 
 
 # --- Wikipedia HTTP 200 error documents (#9005 r4: Grok r2) ------------------------------------

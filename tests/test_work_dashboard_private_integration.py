@@ -6,6 +6,7 @@ real private repository or live adapter process.
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import socket
@@ -603,6 +604,23 @@ def _port_free(host: str, port: int) -> bool:
     return True
 
 
+@pytest.fixture
+def fixed_ports_lock(tmp_path_factory: pytest.TempPathFactory):
+    """Serialize the two fixed-port smokes across xdist workers.
+
+    Under ``--dist=worksteal`` they can run at once on two workers of one
+    shard; the second would find 8765/8769 taken and skip. The lock file sits
+    in the run's shared temp root (the parent of every worker's basetemp).
+    """
+    lock_path = tmp_path_factory.getbasetemp().parent / "fixed-ports-8765-8769.lock"
+    with lock_path.open("w") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+
+
 def _start_server(
     host: str,
     port: int,
@@ -793,6 +811,7 @@ def _browser_scenario(
     private_status: int = 200,
     private_delay_ms: int = 0,
     private_hang_json: bool = False,
+    trigger_private_timeout: bool = False,
     assert_early_public: bool = False,
     private_raw: bytes | None = None,
     public_raw: bytes | None = None,
@@ -828,7 +847,7 @@ def _browser_scenario(
     public_handler = _make_handler(state, role="public", allowed_origins={"http://127.0.0.1", "http://localhost"})
     public_server = ThreadingHTTPServer(("127.0.0.1", 0), public_handler)
     public_port = public_server.server_address[1]
-    thread = threading.Thread(target=public_server.serve_forever, daemon=True)
+    thread = threading.Thread(target=public_server.serve_forever, kwargs={"poll_interval": 0.01}, daemon=True)
     thread.start()
 
     # Ephemeral private server is NOT used for the fixed URL — browser uses 8769.
@@ -847,6 +866,7 @@ const PUBLIC_STATUS = {state.public_status};
 const PRIVATE_STATUS = {state.private_status};
 const PRIVATE_DELAY_MS = {private_delay_ms};
 const PRIVATE_HANG_JSON = {hang_json_js};
+const TRIGGER_PRIVATE_TIMEOUT = {str(trigger_private_timeout).lower()};
 const PUBLIC_JSON = {json.dumps(public_json)};
 const PRIVATE_JSON = {json.dumps(private_json)};
 const PAGE_URL = {json.dumps(page_url)};
@@ -862,6 +882,33 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
     if (msg.type() === 'error') observed.consoleErrors.push(msg.text());
   }});
   page.on('pageerror', (err) => observed.pageErrors.push(String(err && err.message ? err.message : err)));
+
+  // Capture only the private 5s timer. The test fires its real abort callback
+  // after public rows paint, avoiding a race with a slow CI browser.
+  if (TRIGGER_PRIVATE_TIMEOUT) {{
+    await page.evaluateOnNewDocument(() => {{
+      const nativeSetTimeout = window.setTimeout;
+      window.__testPrivateTimeoutCount = 0;
+      let pendingTimeout = null;
+      window.__firePrivateTimeout = () => {{
+        if (!pendingTimeout) return false;
+        const {{ id, callback, args }} = pendingTimeout;
+        pendingTimeout = null;
+        clearTimeout(id);
+        callback(...args);
+        return true;
+      }};
+      window.setTimeout = function(callback, delay, ...args) {{
+        if (delay === 5000) {{
+          window.__testPrivateTimeoutCount += 1;
+          const id = nativeSetTimeout.call(this, callback, delay, ...args);
+          pendingTimeout = {{ id, callback, args }};
+          return id;
+        }}
+        return nativeSetTimeout.call(this, callback, delay, ...args);
+      }};
+    }});
+  }}
 
   // Source-blind body-stall mock: fulfilled 200 Response whose json() never
   // settles unless AbortSignal fires. Proves the private 5s budget covers body
@@ -976,6 +1023,13 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
     const pending = await page.$eval('#source-private-meta', el => el.textContent);
     if (pending !== 'Checking capability…') throw new Error('Public rows did not paint while private was pending');
   }}
+  if (TRIGGER_PRIVATE_TIMEOUT) {{
+    await page.waitForFunction(() =>
+      document.querySelectorAll('.work-row').length > 0 && window.__testPrivateTimeoutCount === 1,
+      {{ timeout: 2000 }});
+    const fired = await page.evaluate(() => window.__firePrivateTimeout());
+    if (!fired) throw new Error('private abort timer was not pending');
+  }}
   // Wait until dual-source settlement replaces the loading placeholders.
   const settleBudget = Math.max({settle_floor_ms}, PRIVATE_DELAY_MS + 3000);
   await page.waitForFunction(() => {{
@@ -1034,6 +1088,7 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
       localStorageKeys: Object.keys(localStorage || {{}}),
       sessionStorageKeys: Object.keys(sessionStorage || {{}}),
       cookie: document.cookie || '',
+      privateTimeoutCount: window.__testPrivateTimeoutCount || 0,
       bodyText: document.body.innerText || '',
       hasCanary: (document.documentElement.outerHTML || '').includes(canary),
       overflow,
@@ -1210,22 +1265,23 @@ def test_browser_private_unreachable_leaves_public_usable():
 
 def test_browser_private_timeout_leaves_public_usable():
     """FX-06: private AbortController timeout is typed; public remains usable."""
-    # AbortController budget is 5s; delay beyond that.
+    # Fire the private timer after proving public rows painted while it was pending.
     result = _browser_scenario(
         public_doc=_public_min(),
         private_doc=_private_ok(),
         private_delay_ms=5500,
+        trigger_private_timeout=True,
         assert_early_public=True,
     )
     snap = result["snapshot"]
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
-    assert "unavailable · timeout" in snap["privateMeta"]
+    assert ("unavailable · timeout" in snap["privateMeta"], snap["privateTimeoutCount"]) == (True, 1)
     assert snap["errorHidden"] is True
 
 
 def test_browser_private_stalled_json_body_is_typed_timeout():
-    """FX-06: fulfilled headers + never-settling json() must still hit the 5s budget.
+    """FX-06: fulfilled headers + never-settling json() must hit the abort budget.
 
     Source-blind page fetch mock only — no real private adapter process.
     """
@@ -1234,22 +1290,23 @@ def test_browser_private_stalled_json_body_is_typed_timeout():
         public_doc=_public_min(),
         private_doc=_private_ok(),
         private_hang_json=True,
+        trigger_private_timeout=True,
     )
     elapsed = time.monotonic() - started
     snap = result["snapshot"]
     obs = result["observed"]
     assert snap["rowCount"] == 1
     assert "Public attention item" in snap["listText"]
-    assert "unavailable · timeout" in snap["privateMeta"]
+    assert ("unavailable · timeout" in snap["privateMeta"], snap["privateTimeoutCount"]) == (True, 1)
     assert snap["errorHidden"] is True
     # Typed meta only — never raw abort/exception text in banner or strip.
     assert "AbortError" not in snap["privateMeta"]
     assert "AbortError" not in snap["error"]
     assert "TypeError" not in snap["error"]
     assert "Failed to fetch" not in snap["error"]
-    # Budget is 5s; allow Chromium/settle overhead but refuse unbounded hang.
+    # The page clock fires the production abort callback after public rows paint.
     assert elapsed < 12.0, f"stalled-body timeout took too long: {elapsed:.2f}s"
-    assert elapsed >= 4.0, f"stalled-body timed out too early: {elapsed:.2f}s"
+    assert elapsed >= 0.1, f"stalled-body timed out too early: {elapsed:.2f}s"
     assert not any("AbortError" in e for e in obs.get("pageErrors") or [])
     assert not any("AbortError" in e for e in obs.get("consoleErrors") or [])
 
@@ -1673,7 +1730,7 @@ def _cors_handler_factory(hits: dict[str, Any], allowed: set[str], body: bytes):
     return Handler
 
 
-def test_real_fixed_port_cors_http_and_browser_smoke():
+def test_real_fixed_port_cors_http_and_browser_smoke(fixed_ports_lock):
     """Live CORS on fixed ports 8765/8769 with real browser GET (no preflight)."""
     if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free("127.0.0.1", FIXED_PRIVATE_PORT):
         pytest.skip("fixed ports 8765/8769 busy; interception proofs already cover behavior")
@@ -1791,7 +1848,7 @@ def test_real_fixed_port_cors_http_and_browser_smoke():
         private_server.server_close()
 
 
-def test_real_fixed_port_cors_localhost_origin_smoke():
+def test_real_fixed_port_cors_localhost_origin_smoke(fixed_ports_lock):
     """Second smoke: page addressed as http://localhost:8765 admits that origin."""
     if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free("127.0.0.1", FIXED_PRIVATE_PORT):
         pytest.skip("fixed ports 8765/8769 busy; interception proofs already cover behavior")

@@ -3063,6 +3063,13 @@ def _invoke_impl(
             f"Agent {agent_name!r} does not support mode {mode!r}. Supported modes: {sorted(adapter.supported_modes)}"
         )
 
+    # ---------- 2b. Refuse catalog-retired models on every adapter ----------
+    from scripts.review.model_catalog import retired_model_refusal
+
+    retired_refusal = retired_model_refusal(model)
+    if retired_refusal:
+        raise ValueError(f"Agent {agent_name!r}: {retired_refusal}")
+
     # ---------- 3. Validate cwd for write modes ----------
     if mode in _WRITE_CAPABLE_MODES:
         if cwd is None:
@@ -3597,6 +3604,15 @@ def invoke_inter_agent(
         "idempotency_key", idempotency_key, adapter_label="InterAgentTransport"
     )
     route = resolve_inter_agent_route(agent, model=model, effort=effort)
+    # Every ACP ask, discussion leg and sealed review starts with the rules core
+    # (seat from $LU_RULES_SEAT); without it the call is refused as a typed
+    # transport error, before any provenance is bound or a process is spawned.
+    from scripts.lib import rules_core
+
+    try:
+        prompt = rules_core.with_core(prompt)
+    except rules_core.RulesCoreMissing as exc:
+        raise InterAgentTransportError(f"inter-agent call refused: {exc}; the rules core is required") from exc
     trusted_source = _resolve_trusted_transport_source(
         source=source,
         task_id=validated_task_id,

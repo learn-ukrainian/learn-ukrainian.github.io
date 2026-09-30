@@ -20,6 +20,7 @@ import weakref
 from collections.abc import Collection, Generator
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import Any
 from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
@@ -48,6 +49,9 @@ SESSION_IDENTITY_ENV_VARS = (
     # Launcher driver identity (scripts/lib/launcher_core.sh).
     "SESSION_EPIC",
     "SESSION_HANDOFF_AGENT",
+    # Rules-core seat of the launched session (scripts/lib/rules_core.sh); its
+    # delegate.py workers and ACP calls inherit it.
+    "LU_RULES_SEAT",
     # Stream lease capsule (scripts/lib/session_supervisor.sh).
     "SESSION_STREAM_ID",
     "SESSION_STREAM_SESSION_ID",
@@ -330,6 +334,13 @@ _CONTENT_TREE_SNAPSHOT_KEY = "_content_tree_snapshot"
 # test rewrite tracked files under this tree.
 _LEXICON_FIXTURE_PATHSPEC = "tests/fixtures/lexicon/"
 _LEXICON_FIXTURE_SNAPSHOT_KEY = "_lexicon_fixture_snapshot"
+# Gitignored corpus databases (#9158). SQLite creates a missing file on a
+# read-write connect, so a reader without ``mode=ro`` leaves an empty
+# ``data/sources.db`` in a checkout that has no corpus (CI, sparse worktrees),
+# and later tests take the empty file for a real database. The connect wrapper
+# ``_checkout_corpus_db_guarded_connect`` reports the creation in this process;
+# the session snapshot catches creators it cannot see (subprocesses).
+_CHECKOUT_CORPUS_DB_SNAPSHOT_KEY = "_checkout_corpus_db_snapshot"
 
 
 def _git_pathspec_snapshot(root: Path, pathspecs: tuple[str, ...]) -> frozenset[str] | None:
@@ -375,10 +386,25 @@ def _content_tree_changes(before: frozenset[str] | None, after: frozenset[str] |
     return sorted(after - before), sorted(before - after)
 
 
+def _checkout_corpus_db_paths() -> tuple[Path, Path]:
+    """The checkout's corpus databases, read from ``_REPO_ROOT`` at call time.
+
+    Literal joins, so the CI test-area invariant resolves them as static repo
+    paths rather than computed ones.
+    """
+    return (_REPO_ROOT / "data" / "sources.db", _REPO_ROOT / "data" / "vesum.db")
+
+
+def _checkout_corpus_db_snapshot() -> frozenset[str]:
+    """The corpus databases present in the checkout."""
+    return frozenset(path.relative_to(_REPO_ROOT).as_posix() for path in _checkout_corpus_db_paths() if path.exists())
+
+
 def pytest_sessionstart(session: pytest.Session) -> None:
     config = session.config
     if hasattr(config, "workerinput"):
         return
+    setattr(config, _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY, _checkout_corpus_db_snapshot())
     setattr(config, _CONTENT_TREE_SNAPSHOT_KEY, _content_tree_snapshot(_REPO_ROOT))
     setattr(
         config,
@@ -431,11 +457,31 @@ def _enforce_lexicon_fixture_seal(session: pytest.Session) -> None:
         session.exitstatus = pytest.ExitCode.TESTS_FAILED
 
 
+def _enforce_no_checkout_corpus_db_created(session: pytest.Session) -> None:
+    """Fail the session if it created a corpus database in the checkout (#9158)."""
+    before = getattr(session.config, _CHECKOUT_CORPUS_DB_SNAPSHOT_KEY, None)
+    if before is None:
+        return
+    created = sorted(_checkout_corpus_db_snapshot() - before)
+    if not created:
+        return
+    print(
+        "checkout corpus-db guard: the test session created "
+        f"{', '.join(created)} in {_REPO_ROOT}, which had none at session start. "
+        "A read-write sqlite3.connect creates a missing file: open corpus databases "
+        "read-only (file:...?mode=ro, uri=True) and point tests at tmp_path "
+        "(LU_SOURCES_DB). Delete the stray file before the next run (#9158)."
+    )
+    if session.exitstatus == pytest.ExitCode.OK:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     """Report this session's temp usage and optionally enforce a CI budget."""
     config = session.config
     if hasattr(config, "workerinput"):
         return
+    _enforce_no_checkout_corpus_db_created(session)
     _enforce_content_tree_clean(session)
     _enforce_lexicon_fixture_seal(session)
 
@@ -481,11 +527,10 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
 # =============================================================================
 # CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
 # =============================================================================
-# GitHub Actions collects through one initial `tests` path instead of ~337
-# positional file arguments per shard (1,345 test files total on the baseline
-# head; collection cost, not test selection); this hook
-# narrows that single-path collection back down to one shard's files. See
-# scripts/ci/pytest_shards.py `plan-files` and docs/runbooks/ci-gate.md.
+# GitHub Actions collects through one initial `tests` path instead of ~100
+# positional file arguments per shard (collection cost, not test selection);
+# this hook narrows that single-path collection back down to one shard's
+# files. See scripts/ci/split_tests.py and docs/runbooks/ci-gate.md.
 
 LU_PYTEST_SHARD_FILES_ENV_VAR = "LU_PYTEST_SHARD_FILES"
 
@@ -876,6 +921,48 @@ def _task_store_write_hook(event: str, args: tuple[object, ...]) -> None:
 
 
 sys.addaudithook(_task_store_write_hook)
+
+
+_REAL_SQLITE3_CONNECT = sqlite3.connect
+
+
+@functools.wraps(_REAL_SQLITE3_CONNECT)
+def _checkout_corpus_db_guarded_connect(*args: object, **kwargs: object) -> sqlite3.Connection:
+    """Fail a sqlite connect that created a corpus database in the checkout (#9158).
+
+    The guard judges the connect by its effect, not by its arguments: a corpus
+    database path with no directory entry before the call and one after it
+    fails the test, whatever the path form, URI ``mode`` or flags, and even if
+    the connect raised. Another process may have created the entry meanwhile,
+    so the guard only reports: it never deletes or moves a file, and closes
+    only the connection this call opened. A dangling symlink counts as an
+    existing entry. Installed at conftest import, it also covers module-level
+    probes that run while test modules are collected. ``pytest.fail`` raises a
+    ``BaseException``, so a caller's ``except sqlite3.Error`` / ``except
+    Exception`` cannot swallow the report. Existing entries and every other
+    path pass untouched.
+    """
+    missing = [target for target in _checkout_corpus_db_paths() if not os.path.lexists(target)]
+    connection = None
+    try:
+        connection = _REAL_SQLITE3_CONNECT(*args, **kwargs)
+        return connection
+    finally:
+        created = [target for target in missing if os.path.lexists(target)]
+        if created:
+            if connection is not None:
+                connection.close()
+            node = os.environ.get("PYTEST_CURRENT_TEST") or "test collection or session setup"
+            pytest.fail(
+                f"{node}: {', '.join(map(str, created))} created during this sqlite3.connect call "
+                "(possibly by another process). A file-creating sqlite3.connect creates a missing "
+                "database. Open corpus databases read-only (file:...?mode=ro, uri=True) and point "
+                "tests at tmp_path via LU_SOURCES_DB (#9158)",
+                pytrace=False,
+            )
+
+
+sqlite3.connect = _checkout_corpus_db_guarded_connect
 
 
 def _retarget_api_batch_state(monkeypatch: pytest.MonkeyPatch, batch_state: Path) -> None:
@@ -1544,11 +1631,26 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     selected = rerun_node_ids(
         load_registry(),
         today=datetime.now(UTC).date(),
-        event_name="schedule" if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1" else os.environ.get("GITHUB_EVENT_NAME"),
+        event_name="schedule"
+        if os.environ.get("LU_FLAKE_DISABLE_RERUN") == "1"
+        else os.environ.get("GITHUB_EVENT_NAME"),
     )
     for item in items:
         if item.nodeid in selected:
             item.add_marker(pytest.mark.flaky(reruns=1, rerun_except=[TIMEOUT_PATTERN]))
+    # The marker's fixture lives in tests/rules_core_view.py (it links the whole
+    # checkout, so this conftest must not import it); a module that forgets the
+    # import would silently run a marked test with the core.
+    unserved = [
+        item.nodeid
+        for item in items
+        if item.get_closest_marker("rules_core_absent") is not None
+        and "rules_core_absent_when_marked" not in getattr(item, "fixturenames", ())
+    ]
+    if unserved:
+        raise pytest.UsageError(
+            f"rules_core_absent tests whose module does not import the rules_core_absent_when_marked fixture: {unserved}"
+        )
     missing = _sparse_missing_trees()
     if not missing:
         return
@@ -1579,7 +1681,12 @@ class _FlakeRerunReporter:
             self.call_passed.discard(report.nodeid)
         elif report.when == "call" and report.passed:
             self.call_passed.add(report.nodeid)
-        elif report.when == "teardown" and report.passed and report.nodeid in self.first_failures and report.nodeid in self.call_passed:
+        elif (
+            report.when == "teardown"
+            and report.passed
+            and report.nodeid in self.first_failures
+            and report.nodeid in self.call_passed
+        ):
             self.recovered.add(report.nodeid)
             from _pytest.junitxml import xml_key
 
@@ -1604,11 +1711,51 @@ class _FlakeRerunReporter:
                 output.write(summary)
 
 
+LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR = "LU_PYTEST_NEEDS_ARTIFACT_COLLECTED"
+
+
+class _NeedsArtifactCollection:
+    """Write every collected ``needs_artifact`` test before ``-m`` deselects any.
+
+    scripts/ci/pytest_report.py compares this set with
+    registry/artifacts/needs-artifact-expected.txt, independently of the
+    tests that skipped at run time, so a marked test the tier deselects
+    (``slow``) or skips for another reason fails the audit. Under xdist every
+    worker collects the same items and gw0 writes them; the controller
+    collects nothing.
+
+    The path reaches workers through ``workerinput``, never the environment:
+    a test that runs a child pytest would inherit the variable and overwrite
+    this run's list with the child's.
+    """
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+
+    @pytest.hookimpl(optionalhook=True)
+    def pytest_configure_node(self, node: Any) -> None:
+        node.workerinput[LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR] = str(self.path)
+
+    @pytest.hookimpl(tryfirst=True)
+    def pytest_collection_modifyitems(self, config: pytest.Config, items: list[pytest.Item]) -> None:
+        if getattr(config, "workerinput", {}).get("workerid", "gw0") != "gw0":
+            return
+        marked = sorted(item.nodeid for item in items if item.get_closest_marker("needs_artifact"))
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        self.path.write_text("".join(f"{node_id}\n" for node_id in marked), encoding="utf-8")
+
+
 def pytest_configure(config: pytest.Config) -> None:
     load_registry()
     if config.getoption("reruns", default=0):
         raise pytest.UsageError("blanket --reruns is forbidden; use tests/flake_quarantine.yaml")
     config.pluginmanager.register(_FlakeRerunReporter(config), "flake-rerun-reporter")
+    if hasattr(config, "workerinput"):
+        collected_path = config.workerinput.get(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR)
+    else:
+        collected_path = os.environ.pop(LU_PYTEST_NEEDS_ARTIFACT_COLLECTED_ENV_VAR, None)
+    if collected_path:
+        config.pluginmanager.register(_NeedsArtifactCollection(Path(collected_path)), "needs-artifact-collection")
     _install_socket_guard()
     config.addinivalue_line(
         "markers",

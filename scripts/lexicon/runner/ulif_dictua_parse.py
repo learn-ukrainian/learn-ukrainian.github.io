@@ -34,7 +34,7 @@ from scripts.verification.stress import pedagogical_stressed_form
 ULIF_STRUCTURED_SCHEMA_VERSION = "ulif-structured-v1"
 # Keep in lockstep with scripts.rag.source_query.ULIF_PARSER_VERSION.
 ULIF_PARSER_VERSION = "ulif-dictua-v2"
-ULIF_FORMS_PARSER_VERSION = "ulif-forms-v1"
+ULIF_FORMS_PARSER_VERSION = "ulif-forms-v4"
 ULIF_NORMALIZER_VERSION = "ulif-strip-raw-html-v1"
 ULIF_SOURCE_ID = "ulif_dictua"
 ULIF_OFFICIAL_URL = "https://lcorp.ulif.org.ua/dictua/"
@@ -384,9 +384,9 @@ def summarize_artifacts(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
 _ACUTE = "\u0301"
 _SELECT_RE = re.compile(r"Select\$(\d+)")
 # Fixture paradigm cells attest only ``на/у``. Also accept the locative
-# prepositions named for this parser. Longer alternatives come first so
-# ``на/у`` is not consumed as ``на``.
-_PREPOSITION_RE = re.compile(r"^(на/у|у/в|в/у|на|по|в|у)\s+")
+# prepositions named for this parser (including ``на/в`` and ``при``).
+# Longer alternatives come first so ``на/у`` is not consumed as ``на``.
+_PREPOSITION_RE = re.compile(r"^(на/у|на/в|у/в|в/у|при|на|по|в|у)\s+")
 _LEADING_DASH_RE = re.compile(r"^[–—-]\s*")
 _NUMBER_TAGS = frozenset({"s", "p"})
 _PERSON_TAGS = frozenset({"1", "2", "3"})
@@ -504,16 +504,18 @@ def _stress_record(stressed: str) -> dict[str, Any]:
 def _split_cell_surface(text: str) -> list[dict[str, Any]]:
     """Split one paradigm cell into variant rows.
 
-    A leading ``на/у``, ``у/в``, ``в/у``, ``на``, ``в``, ``у``, or ``по``
-    and a trailing ``*`` are fields, not part of the form. Commas separate
-    variants.
+    A leading preposition (e.g. ``на/у``, ``на/в``, ``у/в``, ``в/у``, ``при``,
+    ``на``, ``по``, ``в``, ``у``) and a trailing ``*`` are fields, not part of
+    the form. Commas separate variants. Prepositions can also be specified per
+    comma-separated variant (e.g. ``на/в X, по Y``); later variants inherit the
+    cell preposition when they do not specify their own.
     """
     surface = re.sub(r"\s+", " ", text).strip()
-    preposition = ""
+    cell_prefix = ""
     prefix = _PREPOSITION_RE.match(surface)
     if prefix:
-        preposition = prefix.group(1)
-        surface = surface[prefix.end() :]
+        cell_prefix = prefix.group(1)
+
     pieces = [piece.strip() for piece in surface.split(",")]
     rows: list[dict[str, Any]] = []
     for order, piece in enumerate((piece for piece in pieces if piece), start=1):
@@ -521,10 +523,17 @@ def _split_cell_surface(text: str) -> list[dict[str, Any]]:
         form = piece[:-1].strip() if marked else piece
         if not form:
             continue
+        variant_prefix = cell_prefix
+        var_match = _PREPOSITION_RE.match(form)
+        if var_match:
+            variant_prefix = var_match.group(1)
+            form = form[var_match.end() :].strip()
+        if not form:
+            continue
         rows.append(
             {
                 "variant_order": order,
-                "preposition": preposition,
+                "preposition": variant_prefix,
                 "marked_asterisk": marked,
                 **_stress_record(form),
             }
@@ -539,6 +548,7 @@ class _GridCell:
     colspan: int
     origin_row: int
     origin_col: int
+    is_data: bool
 
 
 def _cell_text(cell: Tag) -> str:
@@ -564,6 +574,7 @@ def _expand_table(table: Tag) -> list[list[_GridCell | None]]:
                 colspan=colspan,
                 origin_row=row_index,
                 origin_col=col,
+                is_data=bool({"td_inner_style", "td_inner_center_style"}.intersection(td.get("class", []))),
             )
             for d_row in range(rowspan):
                 for d_col in range(colspan):
@@ -592,10 +603,14 @@ def _is_column_header_row(cells: list[tuple[int, _GridCell]]) -> bool:
     texts = [cell.text for _col, cell in cells if cell.text]
     if not texts:
         return False
-    mappings = [lookup_ulif_label(text) for text in texts]
-    if any(mapping is None or mapping.role not in _HEADER_ROLES for mapping in mappings):
+    if any(cell.is_data for _col, cell in cells):
         return False
-    return any(mapping is not None and mapping.role in {"number", "gender", "axis"} for mapping in mappings)
+    if any(_ACUTE in text or text.endswith("*") for text in texts):
+        return False
+    mappings = [lookup_ulif_label(text) for text in texts]
+    if not any(mapping is not None and mapping.role in _HEADER_ROLES for mapping in mappings):
+        return False
+    return not any(mapping is not None and mapping.role in {"case", "verbform"} for mapping in mappings)
 
 
 def _section_label(cells: list[tuple[int, _GridCell]], width: int) -> str | None:
@@ -758,6 +773,11 @@ def _article_identity(html: str) -> dict[str, Any]:
     soup = BeautifulSoup(html, "html.parser")
     article = soup.find(id="ContentPlaceHolder1_article")
     if article is None:
+        body = soup.body if soup.body is not None else soup
+        for tag in body.find_all(["style", "script", "noscript"]):
+            tag.decompose()
+        visible_text = body.get_text(" ", strip=True)
+        is_empty_visible = not bool(visible_text)
         return {
             "canonical_headword": "",
             "grammatical_label": "",
@@ -766,6 +786,7 @@ def _article_identity(html: str) -> dict[str, Any]:
             "paradigm_table": None,
             "content_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
             "printed_homonym_number": None,
+            "is_empty_visible_article": is_empty_visible,
         }
     word_node = article.select_one(".word_style")
     gram_node = article.select_one(".gram_style")
@@ -780,6 +801,7 @@ def _article_identity(html: str) -> dict[str, Any]:
         if note:
             notes.append(note)
     article_text = _ulif_text(article)
+    is_empty_visible = not bool(article_text.strip())
     return {
         "canonical_headword": headword,
         "grammatical_label": grammar,
@@ -788,6 +810,7 @@ def _article_identity(html: str) -> dict[str, Any]:
         "paradigm_table": _find_paradigm_table(article),
         "content_sha256": hashlib.sha256(str(article).encode("utf-8")).hexdigest(),
         "printed_homonym_number": printed,
+        "is_empty_visible_article": is_empty_visible,
     }
 
 
@@ -861,10 +884,7 @@ def _paradigm_form_rows(table: Tag, entry_key: str) -> list[dict[str, Any]]:
         if (
             first_text
             and _ACUTE not in first_text
-            and (
-                (first_mapping is not None and first_mapping.role in _ROW_ROLES)
-                or len(origins) > 1
-            )
+            and ((first_mapping is not None and first_mapping.role in _ROW_ROLES) or len(origins) > 1)
         ):
             label = first_text
             form_cells = origins[1:]
@@ -910,6 +930,39 @@ def _paradigm_form_rows(table: Tag, entry_key: str) -> list[dict[str, Any]]:
     return forms
 
 
+def base_lemma_row(
+    headword: str,
+    grammar: str,
+    *,
+    homonym_index: int = 1,
+    entry_key: str | None = None,
+    is_invariable: bool = False,
+) -> dict[str, Any]:
+    """Emit a single lemma form row from headword and grammar labels.
+
+    Used when an entry has no paradigm table or when constructing a base
+    assertion from stored columns.
+    """
+    if not entry_key:
+        normalized = normalize_ulif_spelling(headword)
+        entry_key = ulif_entry_key(normalized, homonym_index)
+    grammar_tags, grammar_unmapped = _grammar_tags(grammar)
+    surface = {
+        "variant_order": 1,
+        "preposition": "",
+        "marked_asterisk": False,
+        **_stress_record(headword),
+    }
+    return _form_row(
+        entry_key=entry_key,
+        surface=surface,
+        grammatical_tags=grammar_tags,
+        unmapped_labels=grammar_unmapped,
+        is_lemma=True,
+        is_invariable=is_invariable,
+    )
+
+
 def parse_ulif_entry(
     html: str,
     *,
@@ -928,24 +981,18 @@ def parse_ulif_entry(
     normalized = normalize_ulif_spelling(headword)
     key = ulif_entry_key(normalized, homonym_index)
     table = identity["paradigm_table"]
-    invariable = bool(identity["invariable_phrase"] or table is None)
-    grammar_tags, grammar_unmapped = _grammar_tags(str(identity["grammatical_label"]))
-    base_surface = {
-        "variant_order": 1,
-        "preposition": "",
-        "marked_asterisk": False,
-        **_stress_record(headword),
-    }
-    forms = [
-        _form_row(
-            entry_key=key,
-            surface=base_surface,
-            grammatical_tags=grammar_tags,
-            unmapped_labels=grammar_unmapped,
-            is_lemma=True,
-            is_invariable=invariable,
+    invariable = bool(identity["invariable_phrase"])
+    forms: list[dict[str, Any]] = []
+    if headword:
+        forms.append(
+            base_lemma_row(
+                headword,
+                str(identity["grammatical_label"]),
+                homonym_index=homonym_index,
+                entry_key=key,
+                is_invariable=invariable,
+            )
         )
-    ]
     if isinstance(table, Tag):
         forms.extend(_paradigm_form_rows(table, key))
     return {
@@ -959,6 +1006,7 @@ def parse_ulif_entry(
         "register_position": register_position,
         "printed_homonym_number": identity.get("printed_homonym_number"),
         "is_invariable": invariable,
+        "is_empty_visible_article": identity.get("is_empty_visible_article", False),
         "parser_version": ULIF_FORMS_PARSER_VERSION,
         "forms": forms,
     }

@@ -371,7 +371,7 @@ def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
     assert dispatch[dispatch.index("--branch") + 1] == "agy/impl-8419-stall-clock"
 
 
-def test_run_ask_review_dispatch_without_verdict_is_no_deliverable(monkeypatch, tmp_path):
+def test_run_ask_review_dispatch_without_verdict_fails_with_reason(monkeypatch, tmp_path):
     """A verdict-less review reply must not report ok even when wait exits 0 (#8421)."""
     result_file = tmp_path / "result.md"
     result_file.write_text("I will wait for the background command to finish.\n", encoding="utf-8")
@@ -390,8 +390,8 @@ def test_run_ask_review_dispatch_without_verdict_is_no_deliverable(monkeypatch, 
     monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
     state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
     assert state["ok"] is False
-    assert state["status"] == "no_deliverable"
-    assert state["no_deliverable_reason"] == "review_missing_verdict_line"
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == "review_missing_verdict_line"
 
 
 def test_run_ask_review_dispatch_with_approve_verdict_stays_done(monkeypatch, tmp_path):
@@ -501,8 +501,8 @@ def test_run_ask_review_dispatch_ignores_quoted_verdict_example(monkeypatch, tmp
         response="I will report `VERDICT: APPROVE` later.\n```\nVERDICT: APPROVE\n```\n",
     )
     assert state["ok"] is False
-    assert state["status"] == "no_deliverable"
-    assert state["no_deliverable_reason"] == "review_missing_verdict_line"
+    assert state["status"] == "failed"
+    assert state["failure_reason"] == "review_missing_verdict_line"
 
 
 def test_run_ask_review_dispatch_last_verdict_line_wins(monkeypatch, tmp_path):

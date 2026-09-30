@@ -5,6 +5,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from scripts.ai_agent_bridge._cursor import CURSOR_DEFAULT_MODEL, _invoke_cursor
+from scripts.lib import rules_core
 
 
 def test_cursor_default_model_is_auto():
@@ -24,7 +25,7 @@ def test_invoke_cursor_constructs_correct_argv():
             argv = run_mock.call_args[0][0]
             assert argv[0] == "/fake/agent"
             assert "-p" in argv
-            assert "hello" in argv
+            assert argv[argv.index("-p") + 1] == rules_core.with_core("hello")
             assert "--model" in argv
             assert "composer-2.5" in argv
             assert "--output-format" in argv

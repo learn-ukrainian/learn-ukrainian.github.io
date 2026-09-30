@@ -41,25 +41,28 @@ def _load_hook():
 guard = _load_hook()
 
 
-@pytest.mark.parametrize("shape", [
-    "echo $((1 << EOF))\n{payload}\nEOF",
-    "((1 << EOF))\n{payload}\nEOF",
-    "echo ${x#<<EOF }\n{payload}\nEOF",
-    "let 'x=1<<EOF'\n{payload}\nEOF",
-    "true # <<EOF\n{payload}\nEOF",
-    ": <<EOF; \\\n{payload}\nnote\nEOF",
-    ": <<EOF\n$({payload})\nEOF",
-    ": <<EOF\n`{payload}`\nEOF",
-    "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
-    ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
-    "echo foo # comment \\\n{payload}",
-    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
-    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
-    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
-    ": <<EOF\n$(echo ')'; {payload})\nEOF",
-    "x[1 << EOF ]=1\n{payload}\nEOF",
-    "echo $[1 << EOF ]\n{payload}\nEOF",
-])
+@pytest.mark.parametrize(
+    "shape",
+    [
+        "echo $((1 << EOF))\n{payload}\nEOF",
+        "((1 << EOF))\n{payload}\nEOF",
+        "echo ${x#<<EOF }\n{payload}\nEOF",
+        "let 'x=1<<EOF'\n{payload}\nEOF",
+        "true # <<EOF\n{payload}\nEOF",
+        ": <<EOF; \\\n{payload}\nnote\nEOF",
+        ": <<EOF\n$({payload})\nEOF",
+        ": <<EOF\n`{payload}`\nEOF",
+        "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
+        ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+        "echo foo # comment \\\n{payload}",
+        ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+        ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+        ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+        ": <<EOF\n$(echo ')'; {payload})\nEOF",
+        "x[1 << EOF ]=1\n{payload}\nEOF",
+        "echo $[1 << EOF ]\n{payload}\nEOF",
+    ],
+)
 def test_issue_9102_executable_payload_stays_visible(monkeypatch, shape):
     command = shape.replace("{payload}", "gh pr merge 5 --admin")
     assert _any_admin(command)
@@ -70,25 +73,62 @@ def test_issue_9102_real_let_heredoc_body_is_inert():
     assert not _any_admin("let x=1<<EOF\ngh pr merge 5 --admin\nEOF")
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo $(echo foo # comment \\\ngh pr merge 5 --admin)",
+        "echo `gh pr merge 5 --admin`",
+        'echo "`gh pr merge 5 --admin`"',
+        "echo `echo foo # comment \\\ngh pr merge 5 --admin`",
+        "echo $(echo foo # comment \\\n`gh pr merge 5 --admin`)",
+    ],
+)
+def test_issue_9115_nested_and_backtick_admin_merges_blocked(monkeypatch, command):
+    assert _any_admin(command)
+    assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
+
+
+def test_issue_9115_escaped_nested_backtick_admin_merge_is_visible():
+    assert _any_admin(r"echo `echo \`gh pr merge 5 --admin\``")
+
+
+def test_issue_9115_backtick_depth_limit_blocks_in_hook(monkeypatch):
+    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    body = "gh pr merge 5 --admin"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    assert _run(monkeypatch, "echo " + body, failing=[]) == 2
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 
 
-@pytest.mark.parametrize("opener,closer", [
-    ("<<'EOF'", "EOF"),
-    ('<<"EOF"', "EOF"),
-    ("<<EOF", "EOF"),
-    ("<<-EOF", "\tEOF"),
-])
+@pytest.mark.parametrize(
+    "opener,closer",
+    [
+        ("<<'EOF'", "EOF"),
+        ('<<"EOF"', "EOF"),
+        ("<<EOF", "EOF"),
+        ("<<-EOF", "\tEOF"),
+    ],
+)
 def test_issue_9088_standard_heredoc_delimiters(opener, closer):
     assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
     assert not _any_admin(f"cat {opener}\ngh pr merge 5 --admin\n{closer}")
     assert _any_admin(f"cat {opener}\nnote\n{closer}\ngh pr merge 5 --admin")
 
 
-@pytest.mark.parametrize("first", [
-    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
-])
+@pytest.mark.parametrize(
+    "first",
+    [
+        "true <<<EOF",
+        "true <<< EOF",
+        "true <<<'EOF'",
+        'true <<<"EOF"',
+        "true<<<EOF",
+    ],
+)
 def test_issue_9088_here_strings_keep_admin_merge_visible(monkeypatch, first):
     command = f"{first}\ngh pr merge 5 --admin\nEOF"
     assert guard._heredoc_delimiters(first) == []
@@ -108,17 +148,20 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(monkeypatch):
     assert _run(monkeypatch, command, failing=["Test (pytest)"]) == 2
 
 
-@pytest.mark.parametrize("opener,closer", [
-    (r'<<"EO\"F"', 'EO"F'),
-    (r"<<$'EOF'", "EOF"),
-    ('<<$"EOF"', "EOF"),
-    (r"<<$'EO\x22F'", 'EO"F'),
-    (r"<<EO$'F'", "EOF"),
-    (r"<<E\OF", "EOF"),
-    (r"<<-$'EOF'", "\tEOF"),
-    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
-    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
-])
+@pytest.mark.parametrize(
+    "opener,closer",
+    [
+        (r'<<"EO\"F"', 'EO"F'),
+        (r"<<$'EOF'", "EOF"),
+        ('<<$"EOF"', "EOF"),
+        (r"<<$'EO\x22F'", 'EO"F'),
+        (r"<<EO$'F'", "EOF"),
+        (r"<<E\OF", "EOF"),
+        (r"<<-$'EOF'", "\tEOF"),
+        (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+        (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+    ],
+)
 def test_issue_9088_exotic_heredoc_keeps_admin_merge_visible(monkeypatch, opener, closer):
     command = f"cat {opener}\ngh pr merge 5 --admin\n{closer}"
     assert guard._heredoc_delimiters(f"cat {opener}") is None
@@ -138,7 +181,10 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     result = subprocess.run(
         [sys.executable, str(guard_copy)],
         input=json.dumps({"tool_input": {"command": "gh pr merge 1 --admin"}}),
-        text=True, capture_output=True, check=False, timeout=30,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
     )
     assert result.returncode == 2
     assert "guard dependency unavailable: shell_shlex" in result.stderr

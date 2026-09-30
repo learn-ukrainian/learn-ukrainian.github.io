@@ -19,6 +19,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import yaml
+
 from audit.config import (
     VALID_ACTIVITY_TYPES,
     get_b1_immersion_range,

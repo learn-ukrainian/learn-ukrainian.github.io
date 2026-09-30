@@ -33,9 +33,7 @@ HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-branch-swi
 
 
 def _load_hook():
-    spec = importlib.util.spec_from_file_location(
-        "guard_branch_switch_in_main", HOOK_PATH
-    )
+    spec = importlib.util.spec_from_file_location("guard_branch_switch_in_main", HOOK_PATH)
     assert spec and spec.loader, f"could not load hook at {HOOK_PATH}"
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
@@ -45,25 +43,28 @@ def _load_hook():
 guard = _load_hook()
 
 
-@pytest.mark.parametrize("shape", [
-    "echo $((1 << EOF))\n{payload}\nEOF",
-    "((1 << EOF))\n{payload}\nEOF",
-    "echo ${x#<<EOF }\n{payload}\nEOF",
-    "let 'x=1<<EOF'\n{payload}\nEOF",
-    "true # <<EOF\n{payload}\nEOF",
-    ": <<EOF; \\\n{payload}\nnote\nEOF",
-    ": <<EOF\n$({payload})\nEOF",
-    ": <<EOF\n`{payload}`\nEOF",
-    "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
-    ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
-    "echo foo # comment \\\n{payload}",
-    ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
-    ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
-    ": <<EOF\n`echo x\n{payload}\n`\nEOF",
-    ": <<EOF\n$(echo ')'; {payload})\nEOF",
-    "x[1 << EOF ]=1\n{payload}\nEOF",
-    "echo $[1 << EOF ]\n{payload}\nEOF",
-])
+@pytest.mark.parametrize(
+    "shape",
+    [
+        "echo $((1 << EOF))\n{payload}\nEOF",
+        "((1 << EOF))\n{payload}\nEOF",
+        "echo ${x#<<EOF }\n{payload}\nEOF",
+        "let 'x=1<<EOF'\n{payload}\nEOF",
+        "true # <<EOF\n{payload}\nEOF",
+        ": <<EOF; \\\n{payload}\nnote\nEOF",
+        ": <<EOF\n$({payload})\nEOF",
+        ": <<EOF\n`{payload}`\nEOF",
+        "echo '\n: <<EOF\n'\n" + "{payload}" + "\nEOF",
+        ": << -EOF\nnote\n-EOF\n{payload}\nEOF",
+        "echo foo # comment \\\n{payload}",
+        ": <<EOF\n$(echo x\n{payload}\n)\nEOF",
+        ": <<EOF\n$(echo x # )\n{payload}\n)\nEOF",
+        ": <<EOF\n`echo x\n{payload}\n`\nEOF",
+        ": <<EOF\n$(echo ')'; {payload})\nEOF",
+        "x[1 << EOF ]=1\n{payload}\nEOF",
+        "echo $[1 << EOF ]\n{payload}\nEOF",
+    ],
+)
 def test_issue_9102_executable_payload_stays_visible(repos, shape):
     command = shape.replace("{payload}", "git checkout -b feature")
     assert _dangerous(command) is not None
@@ -74,25 +75,66 @@ def test_issue_9102_real_let_heredoc_body_is_inert():
     assert _dangerous("let x=1<<EOF\ngit checkout -b feature\nEOF") is None
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "echo $(echo foo # comment \\\ngit checkout -b feature)",
+        "echo `git checkout -b feature`",
+        'echo "`git checkout -b feature`"',
+        "echo `echo foo # comment \\\ngit checkout -b feature`",
+        "echo $(echo foo # comment \\\n`git checkout -b feature`)",
+    ],
+)
+def test_issue_9115_nested_and_backtick_switches_blocked(repos, command):
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9115_escaped_nested_backtick_switch_is_visible(repos):
+    command = r"echo `echo \`git checkout -b feature\``"
+    assert _dangerous(command) is not None
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9115_backtick_depth_limit_blocks_branch_hook(repos, monkeypatch):
+    monkeypatch.setattr(sys.modules["shell_shlex"], "_MAX_BACKTICK_DEPTH", 2)
+    monkeypatch.chdir(repos["public"])
+    body = "git checkout -b feature"
+    for _ in range(3):
+        body = "`" + body.replace("\\", "\\\\").replace("`", r"\`") + "`"
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": "echo " + body}})))
+    assert guard.main() == 2
+
+
 def test_issue_9088_heredoc_opener_after_escaped_quote_is_found():
     assert guard._heredoc_delimiters(r'echo "a \" b" <<EOF') == [("EOF", False)]
 
 
-@pytest.mark.parametrize("opener,closer", [
-    ("<<'EOF'", "EOF"),
-    ('<<"EOF"', "EOF"),
-    ("<<EOF", "EOF"),
-    ("<<-EOF", "\tEOF"),
-])
+@pytest.mark.parametrize(
+    "opener,closer",
+    [
+        ("<<'EOF'", "EOF"),
+        ('<<"EOF"', "EOF"),
+        ("<<EOF", "EOF"),
+        ("<<-EOF", "\tEOF"),
+    ],
+)
 def test_issue_9088_standard_heredoc_delimiters(opener, closer):
     assert guard._heredoc_delimiters(f"cat {opener}") == [("EOF", opener == "<<-EOF")]
     assert _dangerous(f"cat {opener}\ngit checkout -b feature\n{closer}") is None
     assert _dangerous(f"cat {opener}\nnote\n{closer}\ngit checkout -b feature") is not None
 
 
-@pytest.mark.parametrize("first", [
-    "true <<<EOF", "true <<< EOF", "true <<<'EOF'", 'true <<<"EOF"', "true<<<EOF",
-])
+@pytest.mark.parametrize(
+    "first",
+    [
+        "true <<<EOF",
+        "true <<< EOF",
+        "true <<<'EOF'",
+        'true <<<"EOF"',
+        "true<<<EOF",
+    ],
+)
 def test_issue_9088_here_strings_keep_branch_switch_visible(repos, first):
     command = f"{first}\ngit checkout -b feature\nEOF"
     assert guard._heredoc_delimiters(first) == []
@@ -115,17 +157,20 @@ def test_issue_9088_reviewer_heredoc_bypass_blocks(repos, monkeypatch):
     assert guard.main() == 2
 
 
-@pytest.mark.parametrize("opener,closer", [
-    (r'<<"EO\"F"', 'EO"F'),
-    (r"<<$'EOF'", "EOF"),
-    ('<<$"EOF"', "EOF"),
-    (r"<<$'EO\x22F'", 'EO"F'),
-    (r"<<EO$'F'", "EOF"),
-    (r"<<E\OF", "EOF"),
-    (r"<<-$'EOF'", "\tEOF"),
-    (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
-    (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
-])
+@pytest.mark.parametrize(
+    "opener,closer",
+    [
+        (r'<<"EO\"F"', 'EO"F'),
+        (r"<<$'EOF'", "EOF"),
+        ('<<$"EOF"', "EOF"),
+        (r"<<$'EO\x22F'", 'EO"F'),
+        (r"<<EO$'F'", "EOF"),
+        (r"<<E\OF", "EOF"),
+        (r"<<-$'EOF'", "\tEOF"),
+        (r"<<$'EOF' <<SAFE", "EOF\nSAFE"),
+        (r"<<SAFE <<$'EOF'", "SAFE\nEOF"),
+    ],
+)
 def test_issue_9088_exotic_heredoc_keeps_branch_switch_visible(repos, opener, closer):
     command = f"cat {opener}\ngit checkout -b x\n{closer}"
     assert guard._heredoc_delimiters(f"cat {opener}") is None
@@ -145,7 +190,10 @@ def test_issue_9088_missing_shell_helper_blocks(tmp_path):
     result = subprocess.run(
         [sys.executable, str(guard_copy)],
         input=json.dumps({"tool_input": {"command": "git checkout -b feature"}}),
-        text=True, capture_output=True, check=False, timeout=30,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=30,
     )
     assert result.returncode == 2
     assert "guard dependency unavailable: shell_shlex" in result.stderr
@@ -364,10 +412,7 @@ def test_branch_force_reason_unit():
         "true 2>&1 | head -1; git branch -D main",
         "gh pr view 9 --json s --jq '{state, mergedAt}'; git branch -D main",
         "cmd1\ngit branch -D main",
-        (
-            "git worktree remove --force .worktrees/x 2>&1 | head -1; "
-            "git branch -D main 2>/dev/null | head -1"
-        ),
+        ("git worktree remove --force .worktrees/x 2>&1 | head -1; git branch -D main 2>/dev/null | head -1"),
         "true;git checkout -b feature",
         "true&&git switch -c feature",
     ],

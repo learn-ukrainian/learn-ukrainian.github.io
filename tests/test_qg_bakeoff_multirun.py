@@ -235,7 +235,7 @@ def test_cell_artifact_path_round_trips_all_arms_and_mismatch_fails(tmp_path: Pa
         "deepseek-deepseek-flash__vesnianky__bare__opencode__r3.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, subscription, fixture, qg_bakeoff.BARE_ARM, 2).name == (
-        "gpt-6-astra__vesnianky__bare__runtime-codex__r2.json"
+        "gpt-6-1-sol__vesnianky__bare__runtime-codex__r2.json"
     )
 
     mismatched = tmp_path / "openrouter-test-m__vesnianky.json"

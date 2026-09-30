@@ -1,0 +1,11 @@
+[Unit]
+Description=Learn Ukrainian nightly host data-tier test timer
+
+[Timer]
+OnCalendar=*-*-* 02:15:00 UTC
+Persistent=true
+RandomizedDelaySec=10min
+Unit=learn-ukrainian-data-tier.service
+
+[Install]
+WantedBy=timers.target

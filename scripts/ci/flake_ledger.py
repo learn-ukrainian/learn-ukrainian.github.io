@@ -46,7 +46,8 @@ def fetch_queue_junit(destination: Path, *, since: date) -> tuple[dict[int, list
         try:
             _gh("run", "download", str(run_id), "--pattern", "pytest-junit-shard-*", "--dir", str(run_dir))
         except subprocess.CalledProcessError:
-            missing.append(run_id)
+            if not _reused_pytest(run_id):
+                missing.append(run_id)
             continue
         paths = sorted(run_dir.rglob("*.xml"))
         if paths:
@@ -54,6 +55,20 @@ def fetch_queue_junit(destination: Path, *, since: date) -> tuple[dict[int, list
         else:
             missing.append(run_id)
     return artifacts, missing
+
+
+def _reused_pytest(run_id: int) -> bool:
+    """A queue run that reused a green pull_request run of the same tree executed no tests.
+
+    ci.yml's Reuse check then succeeds and every pytest shard is skipped; such a
+    run is outside the denominator, not a run with missing evidence.
+    """
+    jobs = json.loads(_gh("run", "view", str(run_id), "--json", "jobs"))["jobs"]
+    shards = [job for job in jobs if job["name"].startswith("pytest (")]
+    reuse = [job for job in jobs if job["name"] == "Reuse check"]
+    return bool(shards) and all(job["conclusion"] == "skipped" for job in shards) and [
+        job["conclusion"] for job in reuse
+    ] == ["success"]
 
 
 def make_ledger(

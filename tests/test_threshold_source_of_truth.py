@@ -72,6 +72,8 @@ _THRESHOLD_CONTEXT_WORDS: tuple[str, ...] = (
 # (relative_posix_path, compiled_regex) matched against ``line.strip()``.
 # Keep this short; prefer migrating over extending.
 _FLOAT_LITERAL_ALLOWLIST: tuple[tuple[str, re.Pattern[str]], ...] = (
+    # Host dispatch memory floor, not a pipeline quality threshold (#8860).
+    ("config.py", re.compile(r"^DISPATCH_MIN_MEM_AVAILABLE_GIB = 6\.0$")),
     # scoring/report.py display heuristic: "show criteria below 9" —
     # not a pipeline pass/fail threshold, belongs to a separate scoring
     # domain. One regex covers both occurrences (lines 205 and 400 in

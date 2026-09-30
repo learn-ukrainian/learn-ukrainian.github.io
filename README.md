@@ -153,7 +153,7 @@ isolation when needed. Read `CLAUDE.md` + `docs/best-practices/` before
 touching pipeline code.
 
 Back up gitignored epic handoffs/plans, local fleet state, SQLite databases,
-and MLX-encoded dense shards as encrypted, versioned restic snapshots:
+and BGE-M3 dense embedding shards as encrypted, versioned restic snapshots:
 
 ```bash
 ./scripts/backup-data.sh doctor

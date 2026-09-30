@@ -223,7 +223,9 @@ launcher_session_epic() {
 }
 
 # _handoff_slot_registry "<args for handoff_slot_registry.py>"
-# Run the slot-registry helper with the durable interpreter.  The registry is
+# Run the slot-registry helper with the durable interpreter: the launcher's
+# validated LC_DURABLE_HELPER_ROOT or, when sourced outside a launcher, the
+# shared project_interpreter.sh resolver (never a worktree .venv, #9121).  The registry is
 # scripts/config/area_assignments.yaml, read only through the bridge helpers
 # that build the inbox `--for` choices (no second parser here).  Returns the
 # helper's exit code (0 registered, 3 not registered, anything else means the
@@ -231,8 +233,15 @@ launcher_session_epic() {
 # fail closed.
 _handoff_slot_registry() {
   local repo_root="$_HANDOFF_IDENTITY_DIR/../.."
-  local py="${LC_DURABLE_HELPER_ROOT:-$repo_root}/.venv/bin/python"
-  [ -x "$py" ] || return 2
+  local py=""
+  if [ -n "${LC_DURABLE_HELPER_ROOT:-}" ]; then
+    py="$LC_DURABLE_HELPER_ROOT/.venv/bin/python"
+  elif [ -f "$_HANDOFF_IDENTITY_DIR/project_interpreter.sh" ]; then
+    # shellcheck source=scripts/lib/project_interpreter.sh
+    source "$_HANDOFF_IDENTITY_DIR/project_interpreter.sh"
+    py="$(project_interpreter_resolve "$repo_root" 2>/dev/null)" || return 2
+  fi
+  [ -n "$py" ] && [ -x "$py" ] || return 2
   (cd "$repo_root" && "$py" -m scripts.orchestration.handoff_slot_registry "$@")
 }
 

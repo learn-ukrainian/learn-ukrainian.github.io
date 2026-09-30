@@ -1080,59 +1080,6 @@ Some prose.
     assert yaml.safe_load(artifacts["activities.yaml"])[0]["id"] == "act-1"
 
 
-def test_parse_writer_output_handles_real_m20_plan_reasoning_prefix() -> None:
-    """Replay the 2026-05-13 m20 prefix that triggered #1956."""
-    repo_root = Path(__file__).resolve().parents[2]
-    raw_path = (
-        repo_root
-        / ".worktrees/builds/a1-my-morning-20260513-122043/"
-        "curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md"
-    )
-    if not raw_path.exists():
-        worktrees_root = next(
-            (parent for parent in repo_root.parents if parent.name == ".worktrees"),
-            None,
-        )
-        if worktrees_root is not None:
-            raw_path = (
-                worktrees_root
-                / "builds/a1-my-morning-20260513-122043/"
-                "curriculum/l2-uk-en/a1/my-morning/writer_output.raw.md"
-            )
-    if not raw_path.exists():
-        pytest.skip(
-            "Failed m20 build worktree not present; this optional replay "
-            "fixture preserves the real-world repro for #1956"
-        )
-
-    raw = raw_path.read_text(encoding="utf-8")
-    module_start = raw.find("```markdown file=module.md")
-    module_end = raw.find("\n```\n", module_start)
-    if module_start == -1 or module_end == -1:
-        pytest.skip("Real m20 artifact shape changed; refresh fixture")
-    prefix = raw[: module_end + len("\n```\n")]
-    completion = (
-        '\n```json file=activities.yaml\n'
-        '[{"id":"a","title":"x","type":"match-up",'
-        '"instruction":"x","pairs":[{"left":"x","right":"y"}]}]\n'
-        '```\n\n'
-        '```json file=vocabulary.yaml\n'
-        '[{"lemma":"ранок","translation":"morning","pos":"noun","usage":"x"}]\n'
-        '```\n\n'
-        '```json file=resources.yaml\n'
-        '[{"title":"x","role":"textbook"}]\n'
-        '```\n'
-    )
-
-    artifacts = linear_pipeline.parse_writer_output_strict_json(prefix + completion)
-    assert set(artifacts) == {
-        "module.md",
-        "activities.yaml",
-        "vocabulary.yaml",
-        "resources.yaml",
-    }
-
-
 def test_activity_type_field_whitelist_uses_authoring_shape() -> None:
     """The per-type whitelist holds **authoring YAML** field names (what
     the writer emits, what `ActivityParser._parse_*` reads), NOT React
@@ -4583,8 +4530,8 @@ def test_vesum_gate_hyphenated_compound_accepted_when_only_short_parts() -> None
 
 
 def test_codex_writer_and_reviewer_defaults_use_astra_with_explicit_effort():
-    assert linear_pipeline.WRITER_DEFAULTS["codex-tools"] == {"model": "gpt-6-sol", "effort": "high"}
-    assert linear_pipeline.REVIEWER_DEFAULTS["codex-tools"] == {"model": "gpt-6-sol", "effort": "high"}
+    assert linear_pipeline.WRITER_DEFAULTS["codex-tools"] == {"model": "gpt-6.1-sol", "effort": "high"}
+    assert linear_pipeline.REVIEWER_DEFAULTS["codex-tools"] == {"model": "gpt-6.1-sol", "effort": "high"}
 
 
 def test_agy_writer_and_reviewer_defaults_use_live_flash_with_preserved_effort():

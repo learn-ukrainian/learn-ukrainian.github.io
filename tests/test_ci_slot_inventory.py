@@ -48,41 +48,38 @@ jobs:
     assert report["workflows"] == [{"workflow": str(tmp_path / "pr.yml"), "jobs": {"test": 4}, "total": 4}]
 
 
-def test_inventory_reads_ten_shards_from_workflow_env_for_runtime_matrix(tmp_path: Path) -> None:
+def test_inventory_counts_the_static_pytest_shard_list(tmp_path: Path) -> None:
     _write_workflow(
         tmp_path,
         "ci.yml",
         """on: [pull_request, merge_group]
-env:
-  PYTEST_SHARD_COUNT: ${{ inputs.shards || '10' }}
 jobs:
   pytest:
     strategy:
       matrix:
-        shard: ${{ fromJSON(needs.changes.outputs.shards) }}
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    runs-on: ubuntu-latest
+  ci-gate:
     runs-on: ubuntu-latest
 """,
     )
 
     report = slot_inventory.inventory_report(tmp_path)
 
-    assert report["total"] == 10
-    assert report["pytest_shard_ceiling"] == 10
+    assert report["total"] == 11
 
 
-def test_dynamic_matrix_check_fails_when_total_exceeds_ceiling(tmp_path: Path, capsys, monkeypatch) -> None:
+def test_check_fails_when_total_exceeds_ceiling(tmp_path: Path, capsys, monkeypatch) -> None:
     monkeypatch.setattr(slot_inventory, "CI_SLOT_CEILING", 31)
     _write_workflow(
         tmp_path,
         "ci.yml",
         """on: pull_request
-env:
-  PYTEST_SHARD_COUNT: ${{ inputs.shards || '10' }}
 jobs:
   pytest:
     strategy:
       matrix:
-        shard: ${{ fromJSON(needs.changes.outputs.shards) }}
+        shard: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
     runs-on: ubuntu-latest
   baseline:
     strategy:
@@ -98,45 +95,26 @@ jobs:
     assert '"pass": false' in capsys.readouterr().out
 
 
-def test_dynamic_matrix_fails_closed_without_readable_workflow_env(tmp_path: Path) -> None:
+def test_runtime_matrix_fails_closed(tmp_path: Path) -> None:
+    """A matrix computed at run time cannot be counted, so the inventory refuses it."""
     _write_workflow(
         tmp_path,
         "ci.yml",
         """on: pull_request
-env:
-  PYTEST_SHARD_COUNT: ${{ vars.SHARD_COUNT }}
 jobs:
   pytest:
     strategy:
       matrix:
-        shard: ${{ fromJSON(needs.changes.outputs.shards) }}
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
     runs-on: ubuntu-latest
 """,
     )
 
-    with pytest.raises(ValueError, match=r"env\.PYTEST_SHARD_COUNT"):
+    with pytest.raises(ValueError, match="static YAML list"):
         slot_inventory.inventory_report(tmp_path)
 
 
-def test_static_pytest_shards_cannot_exceed_workflow_default(tmp_path: Path) -> None:
-    _write_workflow(
-        tmp_path,
-        "ci.yml",
-        """on: pull_request
-env:
-  PYTEST_SHARD_COUNT: ${{ inputs.shards || '4' }}
-jobs:
-  pytest:
-    strategy:
-      matrix:
-        shard: [1, 2, 3, 4, 5]
-    runs-on: ubuntu-latest
-""",
-    )
+def test_repository_workflows_fit_the_ceiling() -> None:
+    report = slot_inventory.inventory_report(Path(__file__).resolve().parents[1] / ".github/workflows")
 
-    try:
-        slot_inventory.inventory_report(tmp_path)
-    except ValueError as exc:
-        assert "env.PYTEST_SHARD_COUNT" in str(exc)
-    else:
-        raise AssertionError("expected an over-ceiling pytest shard matrix to fail")
+    assert report["pass"], report

@@ -26,7 +26,6 @@ from research_quality import (
     get_dimensions,
     get_rubric,
 )
-
 from scripts.audit.llm_qg_store import (
     current_payload_for_module,
     llm_qg_file_is_current_for_module,

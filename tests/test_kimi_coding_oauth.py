@@ -11,35 +11,12 @@ import time
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 
-import pytest
+from tests.helpers.python import project_python
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HELPER = _REPO_ROOT / "scripts" / "lib" / "kimi_coding_oauth.py"
 
-
-def _resolve_venv_python() -> Path | None:
-    """Project venv; falls back to the main worktree when run from a linked worktree."""
-    candidates = [_REPO_ROOT / ".venv" / "bin" / "python"]
-    try:
-        common = subprocess.run(
-            ["git", "-C", str(_REPO_ROOT), "rev-parse", "--path-format=absolute", "--git-common-dir"],
-            capture_output=True,
-            text=True,
-            timeout=10,
-        )
-        if common.returncode == 0 and common.stdout.strip():
-            candidates.append(Path(common.stdout.strip()).parent / ".venv" / "bin" / "python")
-    except (OSError, subprocess.SubprocessError):
-        pass
-    for candidate in candidates:
-        if candidate.is_file():
-            return candidate
-    return None
-
-
-_PYTHON = _resolve_venv_python()
-
-pytestmark = pytest.mark.skipif(_PYTHON is None, reason="project .venv python required")
+_PYTHON = project_python()
 
 
 def _write_credentials(path: Path, *, expires_in: int, with_refresh: bool = True) -> dict:

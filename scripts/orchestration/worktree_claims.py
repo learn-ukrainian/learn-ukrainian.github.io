@@ -29,7 +29,7 @@ import subprocess
 import sys
 import threading
 import time
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from pathlib import Path
 from typing import Any
 
@@ -48,6 +48,14 @@ _LOCK_POLL_S = 0.05
 # lock file is the resolved ``<lock_dir>/<key>.lock``, so holding a path's lock
 # in one lock directory never counts as holding it in another (#8663).
 _HELD_LOCKS: set[tuple[str, int]] = set()
+
+# ``needs_finalize`` is the one unfinished status a caller may prove settled: see
+# ``settled_claim`` on :func:`active_worktree_claim_refusal`.
+NEEDS_FINALIZE_STATUS = "needs_finalize"
+# ``<task>.<stamp>[.<pid>].archived.json``: the prior run of a re-dispatched task
+# id, moved aside by ``delegate --force-new``. It sits in the hot directory but is
+# history: the run was superseded, so it claims nothing.
+_SUPERSEDED_RECORD_RE = re.compile(r"\.\d{8}T\d{6}\d*Z(?:\.\d+)?\.archived\.json$")
 
 # Every status a finished task persists. Any other value, including
 # ``needs_finalize``, ``spawning``, ``running``, ``""``, a missing status, or
@@ -229,6 +237,11 @@ def record_may_claim_worktree(raw: bytes, needles: frozenset[bytes]) -> bool:
     return not released_status_seen
 
 
+def is_superseded_record(state_file: Path) -> bool:
+    """Return whether ``state_file`` is a re-dispatched task's archived prior run."""
+    return _SUPERSEDED_RECORD_RE.search(state_file.name) is not None
+
+
 def active_worktree_claim_refusal(
     worktree: Path,
     *,
@@ -236,6 +249,7 @@ def active_worktree_claim_refusal(
     repo_root: Path,
     owner_task_id: str | None = None,
     owner_state_file: Path | None = None,
+    settled_claim: Callable[[dict[str, Any]], bool] | None = None,
 ) -> str | None:
     """Return a skip reason when an unfinished task record still claims ``worktree``.
 
@@ -282,6 +296,8 @@ def active_worktree_claim_refusal(
     except OSError as exc:
         return f"task claims unreadable ({type(exc).__name__}); refusing worktree removal"
     for state_file in state_files:
+        if is_superseded_record(state_file):
+            continue
         try:
             raw = state_file.read_bytes()
         except FileNotFoundError:
@@ -315,6 +331,12 @@ def active_worktree_claim_refusal(
         except (OSError, RuntimeError, ValueError):
             return refused(state_file, "worktree_path unresolvable")
         if claimed == target:
+            if status == NEEDS_FINALIZE_STATUS and settled_claim is not None:
+                try:
+                    if settled_claim(record):
+                        continue
+                except Exception:
+                    pass
             return f"worktree claimed by active task {record.get('task_id') or state_file.stem}"
     return None
 
@@ -445,6 +467,7 @@ def git_worktree_remove(
     *,
     force: bool,
     timeout: float | None = None,
+    approved_temp_roots: Iterable[Path] = (),
 ) -> str | None:
     """Run the repository's only raw ``git worktree remove``; return an error or ``None``.
 
@@ -463,7 +486,11 @@ def git_worktree_remove(
     target = worktree
     if force:
         try:
-            target = assert_delete_target(worktree, repo_root=repo_root)
+            target = assert_delete_target(
+                worktree,
+                repo_root=repo_root,
+                approved_temp_roots=approved_temp_roots,
+            )
         except ValueError as exc:
             return f"delete guard refused worktree target: {exc}"
     argv = ["git", "worktree", "remove", *(["--force"] if force else []), str(target)]

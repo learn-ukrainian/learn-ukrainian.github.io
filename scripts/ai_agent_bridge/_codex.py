@@ -24,7 +24,7 @@ from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_as
 from ._config import REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
-from ._prompts import build_codex_prompt
+from ._prompts import build_codex_prompt, require_core_or_exit
 from ._review_safety import (
     ReviewSafetyError,
     assert_formal_review_ask_payload,
@@ -125,6 +125,7 @@ def ask_codex(
     review_pr_lifecycle: bool = False,
     ):
     """Send message to Codex AND invoke Codex to process it."""
+    require_core_or_exit("ask-codex")
     try:
         has_target = review_branch is not None or review_pr_number is not None
         formal_review = assert_formal_review_ask_payload(
@@ -143,11 +144,11 @@ def ask_codex(
     )
     from_llm = _resolve_codex_from_llm(from_llm)
     effective_model = resolve_model_selection(
-        lane="ask-codex", to_model=to_model, model=None, default="gpt-6-sol"
+        lane="ask-codex", to_model=to_model, model=None, default="gpt-6.1-sol"
     )
-    if effective_model not in {"gpt-6-astra", "gpt-6-luna", "gpt-6-sol"}:
+    if effective_model not in {"gpt-6-luna", "gpt-6.1-sol"}:
         raise ValueError(
-            "ask-codex: approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol"
+            "ask-codex: approved models are gpt-6-luna, gpt-6.1-sol"
         )
     msg_id = send_message(
         content,
@@ -242,7 +243,7 @@ def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
     """Return whether Codex has quota headroom for a new bridge call."""
     from agent_runtime.usage import has_headroom
 
-    effective_model = model or "gpt-6-sol"
+    effective_model = model or "gpt-6.1-sol"
     return has_headroom("codex", effective_model)
 
 
@@ -304,11 +305,11 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     timeout_val = _resolve_codex_bridge_timeout(no_timeout)
     model = _extract_target_model(msg)
     effort = _extract_effort(msg)
-    if model is not None and model not in {"gpt-6-astra", "gpt-6-luna", "gpt-6-sol"}:
+    if model is not None and model not in {"gpt-6-luna", "gpt-6.1-sol"}:
         _handle_codex_error(
             msg,
             message_id,
-            f"Codex model {model!r} rejected; approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol",
+            f"Codex model {model!r} rejected; approved models are gpt-6-luna, gpt-6.1-sol",
         )
         return
     has_room, reason = has_codex_headroom(model)
@@ -426,7 +427,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     effort_applied, effort_reason = _reported_codex_effort(result)
     provenance_data, configured_model = response_provenance(
         msg,
-        actual_model=getattr(result, "model", None) or model or "gpt-6-sol",
+        actual_model=getattr(result, "model", None) or model or "gpt-6.1-sol",
         harness="codex",
         effort_applied=effort_applied,
         effort_reason=effort_reason,

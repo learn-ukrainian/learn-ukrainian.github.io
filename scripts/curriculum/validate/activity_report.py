@@ -19,7 +19,9 @@ what that stage can know:
 A field a stage cannot know is the string ``"not_available_at_this_stage"``,
 never a guessed number and never silently omitted. :func:`compare_v1` prints
 a v1 module's workbook activities and response opportunities beside a fresh
-module's report of any stage, for the plan-review v1 comparison (§A3).
+module's report of any stage, for the plan-review v1 comparison (§A3);
+:func:`v1_totals` is the one v1 counter it and the plan-review manifest's
+v1 totals input (#9166) share.
 
 Every function here is pure: dicts and lists in, a plain (YAML/JSON
 serialisable) dict out. Nothing here reads or writes a file — the callers
@@ -514,20 +516,61 @@ def rendered_report(plan: dict, built_pages: list[dict]) -> dict:
     return {"stage": "rendered", "module_slug": plan.get("slug"), "lessons": lessons, "module": module}
 
 
-def load_v1_activities(path: Path) -> dict[str, list[dict]]:
-    """A v1 module's activities.yaml as ``{"inline": [...], "workbook": [...]}``.
+def v1_placements(data: object, source: object) -> dict[str, list[dict]]:
+    """A parsed v1 activities.yaml as ``{"inline": [...], "workbook": [...]}``.
 
     Most v1 modules use the dict shape (``inline``/``workbook`` keys); a few
     (e.g. ``sounds-letters-and-hello``) are a flat list with no placement
     marker at all — treated as entirely ``inline`` (that module ships no
     workbook, matching the baseline survey of issue #8889 r5 "Why").
+    ``source`` only names the file in the error.
     """
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if isinstance(data, list):
         return {"inline": list(data), "workbook": []}
     if isinstance(data, dict):
         return {"inline": list(data.get("inline") or []), "workbook": list(data.get("workbook") or [])}
-    raise ValueError(f"{path} holds neither a list nor a mapping at the top level")
+    raise ValueError(f"{source} holds neither a list nor a mapping at the top level")
+
+
+def load_v1_activities(path: Path) -> dict[str, list[dict]]:
+    """A v1 module's activities.yaml read from ``path`` (see :func:`v1_placements`)."""
+    return v1_placements(yaml.safe_load(path.read_text(encoding="utf-8")), path)
+
+
+def _counted(counter: Counter[str]) -> dict:
+    return {"total": sum(counter.values()), "by_type": dict(sorted(counter.items()))}
+
+
+def v1_totals(v1: dict[str, list[dict]]) -> dict:
+    """A v1 module's activities and response opportunities by placement and type (#9166).
+
+    ``v1`` is the :func:`v1_placements` shape. Per placement (and for ``all``,
+    both together): the activity count, the response-opportunity count per
+    :data:`RESPONSE_UNIT_TABLE`, and the activities whose payload lacks the
+    field their type needs — those add no units and are counted, never
+    guessed. Each count is ``{"total": int, "by_type": {type: int}}``.
+    """
+    placements: dict[str, dict] = {}
+    all_counts: dict[str, Counter[str]] = {
+        "activities": Counter(),
+        "response_opportunities": Counter(),
+        "uncounted_activities": Counter(),
+    }
+    for placement in ("inline", "workbook"):
+        counts: dict[str, Counter[str]] = {key: Counter() for key in all_counts}
+        for activity in v1[placement]:
+            activity_type = activity.get("type", "")
+            counts["activities"][activity_type] += 1
+            units = _response_units(activity_type, activity)
+            if units is None:
+                counts["uncounted_activities"][activity_type] += 1
+            else:
+                counts["response_opportunities"][activity_type] += units
+        for key, counter in counts.items():
+            all_counts[key].update(counter)
+        placements[placement] = {key: _counted(counter) for key, counter in counts.items()}
+    placements["all"] = {key: _counted(counter) for key, counter in all_counts.items()}
+    return placements
 
 
 def _v1_activities_file(v1_module_path: Path) -> Path:
@@ -553,13 +596,8 @@ def compare_v1(fresh_module_report: dict, v1_module_path: Path) -> dict:
     ``workbook_response_opportunities_total``, not its all-activities total.
     """
     v1 = load_v1_activities(_v1_activities_file(v1_module_path))
-    v1_by_type: Counter[str] = Counter()
-    v1_units = 0
-    for activity in v1["workbook"]:
-        units = _response_units(activity.get("type", ""), activity)
-        if units is not None:
-            v1_units += units
-            v1_by_type[activity.get("type", "")] += units
+    v1_workbook_units = v1_totals(v1)["workbook"]["response_opportunities"]
+    v1_units = v1_workbook_units["total"]
 
     fresh_module = fresh_module_report.get("module", {})
     fresh_workbook_activities = fresh_module.get("workbook_activities")
@@ -578,7 +616,7 @@ def compare_v1(fresh_module_report: dict, v1_module_path: Path) -> dict:
             "workbook_activities": len(v1["workbook"]),
             "inline_activities": len(v1["inline"]),
             "workbook_response_opportunities": v1_units,
-            "workbook_response_opportunities_by_type": dict(sorted(v1_by_type.items())),
+            "workbook_response_opportunities_by_type": v1_workbook_units["by_type"],
         },
         "fresh": {
             "stage": fresh_module_report.get("stage"),

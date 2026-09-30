@@ -124,9 +124,9 @@
   "overrides": {
     "uuid": "11.1.1",
     "js-yaml": "^4.3.2",
-    "brace-expansion@1": "1.1.18",
-    "brace-expansion@2": "2.1.4",
-    "markdown-it": ">=14.2.0",
+    "brace-expansion@1": "1.1.21",
+    "brace-expansion@2": "2.1.7",
+    "markdown-it": "^14.3.1",
     "adm-zip": "0.6.0"
   }
 }

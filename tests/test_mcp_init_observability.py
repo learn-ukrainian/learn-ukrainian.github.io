@@ -13,7 +13,6 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime import tool_config as wiki_tool_config_mod
-
 from scripts.agent_runtime import tool_config as tool_config_mod
 from scripts.agent_runtime.runner import _MCP_TOOL_EVENT_RE, _McpRuntimeObserver
 from scripts.build import linear_pipeline

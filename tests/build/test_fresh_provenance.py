@@ -84,7 +84,7 @@ def _run_with_fixture_receipts(
 
 
 def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path) -> None:
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     lesson = {"level": "a1", "slug": "sample", "n": 1}
     inputs = {"plan_sha256": "a" * 64, "words_lock": "b" * 64}
     demand = {"Case": "Acc", "Number": "Sing"}
@@ -125,7 +125,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
     checked = receipts.read_requirement_receipts(path)
     assert checked == doc
     forged = copy.deepcopy(doc)
-    forged["items"][0]["reviewer"]["seat"] = "codex@gpt-6-sol"
+    forged["items"][0]["reviewer"]["seat"] = "codex@gpt-6.1-sol"
     with pytest.raises(ResolverError, match="seat and family disagree"):
         receipts.validate_requirement_receipts(forged)
     (tmp_path / "lesson-1.writer.yaml").write_text("model: claude-sonnet-4-5\n", encoding="utf-8")
@@ -164,7 +164,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
             )
             == "requires_writer_unresolved"
         )
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     assert (
         receipts.requirement_status(
             checked,
@@ -263,7 +263,7 @@ def test_requirement_receipts_are_locked_current_and_cross_family(tmp_path: Path
 
 
 def test_requirement_receipt_status_binds_each_payload_field(tmp_path: Path) -> None:
-    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6-sol\n", encoding="utf-8")
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n", encoding="utf-8")
     lesson = {"level": "a1", "slug": "sample", "n": 1}
     inputs = {"draft_semantic_sha256": "a" * 64}
     original = ("Можна ___?", ["хліб", "хліба"], 0, {"Case": "Acc", "Number": "Sing"})

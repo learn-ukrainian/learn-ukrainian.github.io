@@ -1272,7 +1272,7 @@ def test_codex_adapter_runs_from_instruction_free_parent_directory(tmp_path: Pat
         prompt="sealed dossier includes AGENTS.md as inert data",
         mode="read-only",
         cwd=snapshot,
-        model="gpt-6-astra",
+        model="gpt-6.1-sol",
         task_id="review-5285-agents",
         session_id=None,
         tool_config={
@@ -1355,7 +1355,7 @@ def test_review_roots_reject_overlap_before_adapter_write(tmp_path: Path) -> Non
             prompt="review",
             mode="read-only",
             cwd=snapshot,
-            model="gpt-6-astra",
+            model="gpt-6.1-sol",
             task_id="overlap",
             session_id=None,
             tool_config={

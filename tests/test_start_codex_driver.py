@@ -11,6 +11,10 @@ from pathlib import Path
 
 import pytest
 
+from tests.rules_core_view import (
+    install_loader_bypass,
+    rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
+)
 from tests.test_launcher_contract import REPO, run_launcher
 
 
@@ -49,6 +53,7 @@ def _runtime_launcher(tmp_path: Path) -> tuple[Path, Path]:
         target = root / relative
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, target)
+    install_loader_bypass(root)
 
     probe = root / ".venv" / "bin" / "python"
     probe.parent.mkdir(parents=True)
@@ -112,7 +117,7 @@ def _run_runtime_governor(
 
 def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> None:
     result = run_launcher(
-        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-astra"
+        "start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol"
     )
     assert result.returncode == 0, result.stderr
     assert "would probe" in result.stdout
@@ -121,6 +126,7 @@ def test_sustained_driver_probes_then_claims_lease_then_binds_drive_epic() -> No
     assert result.stdout.index("would mint and bootstrap") < result.stdout.index("would bind drive-epic")
 
 
+@pytest.mark.rules_core_absent
 def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> None:
     result = run_launcher(
         "start-codex-driver.sh",
@@ -131,7 +137,7 @@ def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> No
     assert result.returncode == 0, result.stderr
     argv = _would_exec_argv(result)
     model_index = argv.index("--model")
-    assert argv[model_index + 1] == "gpt-6-sol"
+    assert argv[model_index + 1] == "gpt-6.1-sol"
     assert argv[model_index + 2 : model_index + 4] == ["-c", "model_reasoning_effort=high"]
     # Mutation guard: removing this seed leaves the bounded Astra invocation
     # without the operator-ordered supervision instruction.
@@ -176,7 +182,7 @@ def test_codex_driver_rejects_unknown_selector_in_default_and_governor_modes(
 
 def test_default_driver_forwards_epic_binding_and_extra_provider_flags() -> None:
     result = run_launcher(
-        "start-codex-driver.sh", "devops", "--model", "gpt-6-astra", "--verbose", "--foo=bar"
+        "start-codex-driver.sh", "devops", "--model", "gpt-6.1-sol", "--verbose", "--foo=bar"
     )
     assert result.returncode == 0, result.stderr
     assert "would claim lease" in result.stdout
@@ -206,17 +212,17 @@ def test_governor_execs_astra_after_healthy_transport_probe(tmp_path: Path) -> N
     assert result.returncode == 0, result.stderr
     assert '{"status":"healthy","fresh":true}' in result.stdout
     assert "CODEX_EXEC" in result.stdout
-    assert "--model gpt-6-sol" in result.stdout
+    assert "--model gpt-6.1-sol" in result.stdout
     assert "model_reasoning_effort=high" in result.stdout
     assert "dynamic-area-epic-fleet-governor.md" in result.stdout
 
 
 def test_sustained_codex_driver_revalidates_certification() -> None:
     rejected = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-unknown")
-    astra = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-astra")
+    astra = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol")
     assert rejected.returncode == 4
     assert astra.returncode == 0, astra.stderr
-    assert "--model gpt-6-astra" in astra.stdout
+    assert "--model gpt-6.1-sol" in astra.stdout
 
 
 def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
@@ -226,7 +232,7 @@ def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
         capture_output=True, text=True, check=False, timeout=30,
     )
     assert result.returncode == 2
-    assert "approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol" in result.stderr
+    assert "approved models are gpt-6-luna, gpt-6.1-sol" in result.stderr
 
 
 @pytest.mark.parametrize("harness", ["codex", "claude-code"])
@@ -247,7 +253,7 @@ def test_forwarded_model_overrides_rejected_before_preflight(harness, forwarded)
 def test_non_model_passthrough_remains_available(harness):
     result = run_launcher("start-codex.sh", "--harness", harness, "--", "--verbose", "inspect this")
     assert result.returncode == 0, result.stderr
-    assert "--model gpt-6-sol" in result.stdout
+    assert "--model gpt-6.1-sol" in result.stdout
     assert "--verbose" in result.stdout
 
 

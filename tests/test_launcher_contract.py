@@ -21,9 +21,17 @@ from agents_extensions.shared.session_streams.model import LeaseHolder, utc_now
 from agents_extensions.shared.session_streams.store import SessionStreamStore
 from scripts.session_supervisor import LaunchRole, SessionSupervisor
 from tests.epics_monitor_stub import epics_monitor_stub
+from tests.helpers.python import require_repo_venv
 from tests.launcher_sandbox import copy_slot_registry
+from tests.rules_core_view import (
+    install_loader_bypass,
+    rules_core_absent_when_marked,  # noqa: F401  (autouse: serves @rules_core_absent)
+)
 
 REPO = Path(__file__).resolve().parents[1]
+# The checkout run_launcher starts launchers from; rules_core_absent tests get a
+# view of REPO whose launcher loader loads nothing (tests/rules_core_view.py).
+LAUNCH_ROOT = REPO
 PUBLIC = (
     "start-claude.sh",
     "start-claude-driver.sh",
@@ -57,8 +65,8 @@ def run_launcher(
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
     return subprocess.run(
-        [str(REPO / name), *args],
-        cwd=REPO,
+        [str(LAUNCH_ROOT / name), *args],
+        cwd=LAUNCH_ROOT,
         env=launch_env,
         text=True,
         capture_output=True,
@@ -158,12 +166,8 @@ def test_driver_requires_certified_model_and_valid_epic() -> None:
     assert invalid.returncode == 2
 
 
-@pytest.mark.skipif(
-    not (REPO / ".venv" / "bin" / "python").exists(),
-    reason="start-claude.sh preflight resolves the context profile via the checkout's "
-    ".venv python; dispatch worktrees have no .venv by the shared-interpreter policy (#6858)",
-)
 def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
+    require_repo_venv()
     shell = shutil.which("bash")
     assert shell is not None
     bin_dir = tmp_path / "bin"
@@ -181,7 +185,7 @@ def test_dry_run_does_not_require_a_provider_binary(tmp_path: Path) -> None:
 
 
 def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
-    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-astra")
+    sustained = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6.1-sol")
     assert sustained.returncode == 0, sustained.stderr
     assert "would probe" in sustained.stdout
     assert sustained.stdout.index("would claim lease") < sustained.stdout.index("would mint and bootstrap")
@@ -189,7 +193,7 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 
     governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", env={"SESSION_EPIC": "foreign"})
     assert governor.returncode == 0, governor.stderr
-    assert "--model gpt-6-sol" in governor.stdout
+    assert "--model gpt-6.1-sol" in governor.stdout
     assert "governor SESSION_EPIC=<unset>" in governor.stdout
     assert "would claim lease" not in governor.stdout
 
@@ -197,9 +201,9 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 @pytest.mark.parametrize(
     ("launcher", "args", "model", "effort"),
     [
-        ("start-codex.sh", [], "gpt-6-sol", "high"),
-        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6-sol", "high"),
-        ("start-codex.sh", ["--model", "gpt-6-astra", "--effort", "max"], "gpt-6-astra", "max"),
+        ("start-codex.sh", [], "gpt-6.1-sol", "high"),
+        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6.1-sol", "high"),
+        ("start-codex.sh", ["--model", "gpt-6.1-sol", "--effort", "max"], "gpt-6.1-sol", "max"),
     ],
 )
 def test_codex_launchers_pin_roles_and_preserve_explicit_effort(launcher, args, model, effort):
@@ -207,6 +211,18 @@ def test_codex_launchers_pin_roles_and_preserve_explicit_effort(launcher, args, 
     assert result.returncode == 0, result.stderr
     assert f"--model {model}" in result.stdout
     assert f"model_reasoning_effort={effort}" in result.stdout
+
+
+# The fail-open pre-lease rollover import is not under test in the sandboxed
+# driver fixtures: their closure lacks its imports, so the real call only cost a
+# failed interpreter start. The launcher call site is covered by
+# tests/test_start_codex_profiles.py and tests/test_launcher_helper_root.py; the
+# import itself by tests/test_rollover_bundles.py.
+_ROLLOVER_IMPORT_STUB = """\
+if [[ "${1:-}" == */scripts/orchestration/thread_handoff.py && "$*" == *" import-bundle "* ]]; then
+  exit 0
+fi
+"""
 
 
 def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
@@ -227,6 +243,7 @@ def _core_canary_failure_fixture(tmp_path: Path) -> tuple[Path, Path, Path]:
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -251,7 +268,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
-exec {sys.executable!r} "$@"
+{_ROLLOVER_IMPORT_STUB}exec {sys.executable!r} "$@"
 """,
         encoding="utf-8",
     )
@@ -389,6 +406,7 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     if forward_ready is not None:
         _append_forward_ready_hook(root / "scripts/lib/launcher_core.sh", forward_ready)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
@@ -425,7 +443,7 @@ if [[ "${{1:-}}" == "-m" && "${{2:-}}" == "scripts.session_supervisor" && "${{3:
   touch {os.fspath(close_marker)!r}
   exit 0
 fi
-exec {sys.executable!r} "$@"
+{_ROLLOVER_IMPORT_STUB}exec {sys.executable!r} "$@"
 """,
         encoding="utf-8",
     )
@@ -724,6 +742,7 @@ def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) 
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    install_loader_bypass(root)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -957,19 +976,23 @@ def test_compat_kimicc_and_glmcc_dry_run(tmp_path: Path) -> None:
 
 @pytest.mark.repo_wide
 def test_retired_names_are_absent_from_tracked_content() -> None:
-    tracked = subprocess.run(
-        ["git", "ls-files"], cwd=REPO, text=True, capture_output=True, check=True, timeout=30
-    ).stdout.splitlines()
     for retired in RETIRED:
         assert not (REPO / retired).exists()
-    for relative in tracked:
-        path = REPO / relative
-        if path.is_file() and path.suffix not in {".png", ".jpg", ".jpeg", ".gif", ".pdf"}:
-            content = path.read_text(encoding="utf-8", errors="ignore")
-            for retired in RETIRED:
-                assert retired not in content, relative
+    # One pass over the tracked working-tree files (images and PDFs excluded).
+    patterns = [arg for retired in RETIRED for arg in ("-e", retired)]
+    excluded = [f":(exclude)*{suffix}" for suffix in (".png", ".jpg", ".jpeg", ".gif", ".pdf")]
+    found = subprocess.run(
+        ["git", "grep", "-l", "-F", *patterns, "--", ".", *excluded],
+        cwd=REPO,
+        text=True,
+        capture_output=True,
+        check=False,
+        timeout=60,
+    )
+    assert found.returncode == 1, found.stdout + found.stderr
 
 
+@pytest.mark.rules_core_absent
 def test_claude_driver_injects_lane_agent_type() -> None:
     """--epic <lane> selects the lane's driver_agent_type from area_assignments.yaml (#F1, prompt audit)."""
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")
@@ -1087,7 +1110,7 @@ def test_hermes_help_never_probes_or_claims(provider: str) -> None:
 
 
 @pytest.mark.parametrize("provider,model,route", (
-    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6-sol", "openai-codex"),
+    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6.1-sol", "openai-codex"),
 ))
 def test_hermes_real_exec_preserves_literal_prompt_argv(
     tmp_path: Path, provider: str, model: str, route: str,
@@ -1173,9 +1196,14 @@ def test_watcher_exit_recovery_preserves_provider_and_rejects_false_wakes(
     completed = tmp_path / "provider-completed"
     restarted = tmp_path / "watcher-restarted"
     first = tmp_path / "watcher-first"
+    # The provider outlives the first watcher by up to one second, as before, but
+    # finishes as soon as a recovered watcher has restarted.
     launcher, _, closed, _ = _core_driver_exit_fixture(
         tmp_path,
-        provider_body=f"sleep 1\ntouch {str(completed)!r}\nexit 0",
+        provider_body=(
+            f"for _ in $(seq 100); do [ -f {str(restarted)!r} ] && break; sleep 0.01; done\n"
+            f"touch {str(completed)!r}\nexit 0"
+        ),
     )
     watcher = launcher.parent / "scripts/ai_agent_bridge/inbox_watch.sh"
     watcher.write_text(

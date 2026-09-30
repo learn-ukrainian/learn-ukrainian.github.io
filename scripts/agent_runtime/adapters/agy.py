@@ -7,14 +7,15 @@ seminar-track writer ADR at
 `docs/decisions/pending/2026-05-20-seminar-track-writer-assignment.md`
 adds it as candidate D pending empirical testing.
 
-Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
+Known behavioral facts (verify against the installed CLI when changing transport):
 
-- Headless prompt mode is ``agy -p "<prompt>"``. Stdin prompts are ignored.
+- ``--input-format stream-json --output-format stream-json`` accepts one
+  NDJSON user message on stdin and returns a terminal ``result`` event.
 - Resume/new conversation is ``--conversation=<uuid>``.
 - Write-capable modes use ``--dangerously-skip-permissions``. Read-only
   hangs on interactive permission prompts; callers must force
   ``mode="danger"`` for headless dispatch (mirrors the codex protection).
-- Print-mode stdout is the final answer only. Tool-call telemetry is stored
+- Stream-json stdout carries the final answer in ``result.response``. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
   ``--log-file`` path for each invocation: the conversation id that log names
   is the only binding (no fallback; see ``_transcript_path_from_plan``).
@@ -501,11 +502,12 @@ class AgyAdapter:
                 "AgyAdapter: review_isolation forbids agy_skip_permissions / --dangerously-skip-permissions"
             )
 
-        cmd: list[str] = [
-            agy_bin,
-            "-p",
-            prompt,
-        ]
+        # The prompt must never occupy one argv element: Linux rejects an
+        # argument above MAX_ARG_STRLEN before agy can start (#8992).
+        cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
+        stdin_payload = json.dumps(
+            {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}},
+        ) + "\n"
         if review_isolation:
             # Isolation path: no --dangerously-skip-permissions.
             if tc.get("agy_review_sandbox", True):
@@ -547,7 +549,7 @@ class AgyAdapter:
 
         output_schema = load_output_schema(tc)
         if output_schema is not None:
-            cmd.extend(["--output-format", "json", "--json-schema", json.dumps(output_schema, separators=(",", ":"))])
+            cmd.extend(["--json-schema", json.dumps(output_schema, separators=(",", ":"))])
 
         env_overrides = {_AGY_LOG_ENV: str(log_path)}
         agy_home = tc.get("agy_home_override")
@@ -565,7 +567,7 @@ class AgyAdapter:
         return InvocationPlan(
             cmd=cmd,
             cwd=cwd,
-            stdin_payload="",
+            stdin_payload=stdin_payload,
             output_file=None,
             env_overrides=env_overrides,
             env_unsets=(),
@@ -609,18 +611,31 @@ class AgyAdapter:
         plan: InvocationPlan | None = None,
         call_start_time: float | None = None,
     ) -> ParseResult:
-        """Parse ``agy -p`` output.
+        """Parse AGY output.
 
-        Stdout is the canonical final response. Tool-call telemetry is parsed
+        The terminal stream result is the canonical final response. Tool-call telemetry is parsed
         from either optional stdout markers or Antigravity's JSONL transcript.
         """
         _ = output_file
         _ = call_start_time
 
-        stdout_response = (stdout or "").strip()
+        stream_mode = plan is not None and "stream-json" in plan.cmd
+        stream_result, stream_problem = _stream_result(stdout) if stream_mode else (None, None)
+        stdout_response = (
+            str(stream_result.get("response") or "").strip()
+            if stream_result is not None
+            else ("" if stream_mode else (stdout or "").strip())
+        )
         stderr_text = (stderr or "").strip()
+        stream_error = str(stream_result.get("error") or "") if stream_result else ""
         incomplete_reason = _incomplete_run_reason(stderr_text)
         language_warning: str | None = None
+        if incomplete_reason is None and stream_result is not None and stream_problem is None:
+            # The log selects the transcript used for completion and tool
+            # evidence. A different stream conversation must never borrow it.
+            bound = _bound_conversation(plan)
+            if bound is None or stream_result.get("conversation_id") != bound[0]:
+                incomplete_reason = AGY_TRANSCRIPT_UNBOUND
         if incomplete_reason is None and returncode == 0:
             # A non-zero exit already fails the run; only an apparent success
             # needs proof that the work actually finished.
@@ -628,11 +643,12 @@ class AgyAdapter:
         if incomplete_reason is not None:
             # A reply written before the agent's own command finished is an
             # interim status, never a result — even when agy exits 0.
+            excerpt = "\n".join(filter(None, (incomplete_reason, stream_error, stderr_text or stdout_response)))
             return ParseResult(
                 ok=False,
                 response="",
-                stderr_excerpt=f"{incomplete_reason}\n{stderr_text or stdout_response}"[:500],
-                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stderr_text}")),
+                stderr_excerpt=excerpt[:500],
+                rate_limited=bool(_RATE_LIMIT_RE.search(f"{stdout_response}\n{stream_error}\n{stderr_text}")),
                 tool_calls=_parse_transcript_tool_calls(plan)
                 or _parse_stdout_marker_tool_calls(f"{stdout_response}\n{stderr_text}"),
             )
@@ -640,26 +656,30 @@ class AgyAdapter:
         if output_schema is not None:
             # https://antigravity.google/docs/cli/headless/ specifies the
             # terminal JSON envelope. Free-text response is never a substitute.
-            envelope = json_value(stdout_response)
+            envelope = stream_result if stream_mode else json_value(stdout_response)
             envelope = envelope if isinstance(envelope, dict) else {}
             structured = structured_result(
                 envelope.get("structured_output"), output_schema, returncode=returncode,
                 terminal_ok=("structured_output" in envelope and envelope.get("status") == "SUCCESS"
-                             and not envelope.get("error")),
+                             and not envelope.get("error") and stream_problem is None),
                 session_id=envelope.get("conversation_id"),
                 tool_calls=_parse_transcript_tool_calls(plan),
             )
+            if stream_problem is not None:
+                structured = dataclasses.replace(structured, stderr_excerpt=stream_problem)
+            if structured.ok:
+                structured = dataclasses.replace(structured, tokens=_stream_total_tokens(stream_result))
             if structured.ok and language_warning is not None:
                 structured = dataclasses.replace(
                     structured, stderr_excerpt=_with_language_warning(language_warning, structured.stderr_excerpt)
                 )
             return structured
-        combined = f"{stdout_response}\n{stderr_text}"
+        combined = f"{stdout_response}\n{stream_error}\n{stderr_text}"
         hard_limit_hit = bool(_RATE_LIMIT_RE.search(combined))
-        call_failed = returncode != 0 or not bool(stdout_response)
+        call_failed = returncode != 0 or not bool(stdout_response) or stream_problem is not None
         rate_limited = hard_limit_hit and call_failed
 
-        ok = returncode == 0 and bool(stdout_response) and not rate_limited
+        ok = returncode == 0 and bool(stdout_response) and not rate_limited and stream_problem is None
         response = stdout_response if ok else ""
 
         # `stderr_excerpt` follows the documented convention in result.py:
@@ -669,7 +689,7 @@ class AgyAdapter:
         # an error-presence signal by some callers).
         stderr_excerpt: str | None = None
         if not ok:
-            excerpt_source = stderr_text or stdout_response
+            excerpt_source = stream_problem or stream_error or stderr_text or stdout_response
             stderr_excerpt = excerpt_source[:500] or None
         elif stderr_text:
             stderr_excerpt = stderr_text[:500]
@@ -685,8 +705,8 @@ class AgyAdapter:
             response=response,
             stderr_excerpt=stderr_excerpt,
             rate_limited=rate_limited,
-            session_id=None,
-            tokens=None,
+            session_id=stream_result.get("conversation_id") if stream_result else None,
+            tokens=_stream_total_tokens(stream_result),
             tool_calls=tool_calls,
         )
 
@@ -704,6 +724,42 @@ class AgyAdapter:
             return
         with contextlib.suppress(FileNotFoundError):
             path.unlink()
+
+
+def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
+    """Read exactly one terminal result from AGY's NDJSON event stream."""
+    result: dict[str, Any] | None = None
+    if not stdout or not stdout.strip():
+        return None, "agy_stream_output_invalid: missing terminal result"
+    for line in stdout.split("\n"):
+        if not line.strip():
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            return None, "agy_stream_output_invalid: malformed NDJSON event"
+        if not isinstance(event, dict) or not isinstance(event.get("event"), str):
+            return None, "agy_stream_output_invalid: malformed NDJSON event"
+        if event["event"] == "result":
+            if result is not None or not isinstance(event.get("result"), dict):
+                return None, "agy_stream_output_invalid: duplicate or malformed terminal result"
+            result = event["result"]
+    if result is None:
+        return None, "agy_stream_output_invalid: missing terminal result"
+    if "response" in result and not isinstance(result["response"], str):
+        return result, "agy_stream_output_invalid: terminal response is not text"
+    if result.get("status") != "SUCCESS" or result.get("error"):
+        error = result.get("error")
+        return result, f"agy_stream_result_error: {error}" if isinstance(error, str) and error else "agy_stream_result_error"
+    if not result.get("response", "").strip() and "structured_output" not in result:
+        return result, "agy_stream_output_invalid: empty terminal response"
+    return result, None
+
+
+def _stream_total_tokens(result: Mapping[str, Any] | None) -> int | None:
+    usage = result.get("usage") if result else None
+    tokens = usage.get("total_tokens") if isinstance(usage, dict) else None
+    return tokens if isinstance(tokens, int) and not isinstance(tokens, bool) and tokens >= 0 else None
 
 
 def _incomplete_run_reason(stderr_text: str) -> str | None:

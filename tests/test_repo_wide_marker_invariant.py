@@ -1,19 +1,13 @@
 """``repo_wide`` marker invariant (#8707).
 
-The selected CI tier picks test files by import-graph candidates: the Changes
-job maps a changed ``scripts/foo.py`` to ``tests/**/test_foo*.py`` and a changed
-``tests/test_x.py`` to itself. A test that scans the repository's own trees has
-no such import link, so selection can never pick it. That is how PR #8692
-merged green on the selected tier and then turned ``main`` red:
-``tests/test_lint_test_assertions.py::test_repo_test_suite_is_clean`` scans all
-of ``tests/`` for hard-coded epic assertions and was never selected for a
-``tests/orchestration/test_thread_handoff.py`` change.
-
-Every test that enforces a repository-wide invariant by scanning files it does
-not import must therefore carry ``repo_wide``, and the selected tier always
-runs the marker (``ci.yml`` adds a ``-m repo_wide`` invocation). The docs lane
-runs it too, because several repo-wide tests read ``docs/``. This module is
-itself ``repo_wide``.
+A test that scans the repository's own trees (rather than importing the code
+it checks) must carry ``repo_wide``. The marker names the repository
+invariants so a worker can run them alone before pushing
+(``pytest -m repo_wide``; the dispatch sparse checkout keeps that command
+working, see ``scripts/delegate.py``). CI runs every test, marked or not.
+PR #8692 is why it exists: ``tests/test_lint_test_assertions.py`` scans all of
+``tests/`` for hard-coded epic assertions and had no import link to the change
+that broke it. This module is itself ``repo_wide``.
 
 Two checks keep the marker honest:
 
@@ -45,6 +39,7 @@ import ast
 import re
 import textwrap
 from collections.abc import Iterator
+from functools import lru_cache
 from pathlib import Path
 
 import pytest
@@ -53,7 +48,6 @@ pytestmark = [pytest.mark.repo_invariant, pytest.mark.repo_wide]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TESTS_ROOT = _REPO_ROOT / "tests"
-_CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
 
 # Whole-tree scanners over tests/, scripts/, agents_extensions/ (or a stable
 # subtree of them) that carry the marker at module scope.
@@ -66,7 +60,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/orchestration/test_worktree_removal_invariant.py",
         "tests/test_agent_fleet_tooling_guardrails.py",
         "tests/test_ask_opencode.py",
-        "tests/test_ci_test_areas_invariant.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
         "tests/test_fleet_routing_open_model_data_import_guard.py",
@@ -79,7 +72,6 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_post_processor_mutation_invariant.py",
         "tests/test_public_tree_no_baked_host_run_root.py",
         "tests/test_pytest_plugins_not_test_modules.py",
-        "tests/test_reads_content_marker_invariant.py",
         "tests/test_session_identity_env_isolation.py",
         "tests/test_session_state_retired.py",
         "tests/test_sparse_collection_guard.py",
@@ -98,10 +90,6 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/audit/test_post_build_review.py::test_prompt_versions_match_track_policy",
     "tests/build/test_fresh_style_cards.py::test_the_three_bands_and_nothing_else",
     "tests/projects/open_model_data/test_v4_per_slot_factory.py::test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_validator",
-    "tests/test_a1_review_scores.py::TestA1ReviewScores.test_all_modules_have_review_files",
-    "tests/test_a1_review_scores.py::TestA1ReviewScores.test_latest_scores_at_least_8",
-    "tests/test_a1_review_scores.py::TestA1ReviewScores.test_review_files_contain_score_pattern",
-    "tests/test_aggregate_findings.py::TestCollectFindings.test_with_real_a1_data",
     "tests/test_dashboards.py::TestApiEndpoints.test_endpoints_defined_in_router",
     "tests/test_landings_use_levellanding.py::test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter",
     "tests/test_launcher_contract.py::test_retired_names_are_absent_from_tracked_content",
@@ -118,11 +106,10 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
 # actually repo-wide. Each entry needs a concrete reason; the registry is kept
 # fresh by ``test_not_repo_wide_entries_are_justified``.
 NOT_REPO_WIDE = {
-    "tests/test_ci_shard_partition.py::test_planned_shard_collects_build_tests_through_directory": (
-        "Runs `git ls-files -- tests` and a pytest --collect-only over the planned "
-        "allowlist, but every file it depends on (tests/conftest.py, scripts/ci/*, the "
-        "duration snapshot) is on the shared-root denylist, so any change that could "
-        "affect it already forces the full tier."
+    "tests/test_ci_split.py::test_planned_shard_collects_build_tests_through_directory": (
+        "Runs `git ls-files -- tests` to plan the CI shards and a pytest --collect-only "
+        "over one shard's allowlist; it checks the split and the conftest allowlist hook, "
+        "not a repository invariant."
     ),
     "tests/test_fleet_comms_launcher_awareness.py::test_no_launcher_starts_an_acp_process_at_cold_start": (
         "Reads only scripts/lib/launcher_core.sh plus the repository root's start-*.sh. "
@@ -266,45 +253,47 @@ NOT_REPO_WIDE = {
 # They assert deployment behavior in the temporary tree, not an invariant
 # across the live repository. Keep each name explicit so the registry's
 # stale-entry check catches a renamed or removed test.
-NOT_REPO_WIDE.update({
-    f"tests/test_deploy_script_idempotency.py::{name}": (
-        "Copies declared source paths into a temporary checkout; the scanning "
-        "helper's whole-tree branch is not taken by this test."
-    )
-    for name in (
-        "test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees",
-        "test_codex_legacy_migration_preserves_modified_content",
-        "test_agent_manifest_rejects_symlinked_intermediate_component",
-        "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills",
-        "test_agent_manifest_reaps_retired_hook_without_touching_agent_state",
-        "test_agent_manifest_unlinks_symlink_leaf_without_following_target",
-        "test_agent_manifest_reaps_legitimate_nested_file",
-        "test_codex_legacy_migration_recognizes_committed_source_before_edits",
-        "test_codex_legacy_python_cache_does_not_block_driver_deployment",
-        "test_agent_transient_briefs_are_preserved",
-        "test_gemini_shared_skill_name_collision_fails_closed",
-        "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime",
-        "test_tracked_mirror_drift_is_detected_before_deploy",
-        "test_second_deploy_is_noop_for_codex_target",
-        "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
-        "test_tracked_mirror_resolves_each_deploy_source",
-        "test_claude_epic_dirs_are_preserved",
-        "test_tracked_agents_skill_declared_orphan_is_skipped",
-        "test_tracked_claude_glob_orphan_is_skipped",
-        "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",
-        "test_drift_is_caught",
-        "test_agent_manifest_keeps_lexically_unsafe_entries_rejected",
-        "test_agent_manifest_migration_defers_reaping_verified_legacy_artifact",
-        "test_codex_orphan_is_caught",
-        "test_codex_legacy_migration_works_after_updated_sources_are_committed",
-        "test_missing_codex_hooks_json_is_drift",
-        "test_agent_overlay_write_stays_in_held_directory_after_root_swap",
-        "test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content",
-        "test_codex_retained_capture_survives_full_redeploy_with_late_writes",
-        "test_bytecode_cache_is_not_an_orphan_and_is_not_declared",
-        "test_pyc_named_symlink_is_deployed",
-    )
-})
+NOT_REPO_WIDE.update(
+    {
+        f"tests/test_deploy_script_idempotency.py::{name}": (
+            "Copies declared source paths into a temporary checkout; the scanning "
+            "helper's whole-tree branch is not taken by this test."
+        )
+        for name in (
+            "test_deploy_preflight_preserves_declared_glob_and_trailing_slash_subtrees",
+            "test_codex_legacy_migration_preserves_modified_content",
+            "test_agent_manifest_rejects_symlinked_intermediate_component",
+            "test_gemini_shared_skill_overlay_is_checked_without_deleting_provider_skills",
+            "test_agent_manifest_reaps_retired_hook_without_touching_agent_state",
+            "test_agent_manifest_unlinks_symlink_leaf_without_following_target",
+            "test_agent_manifest_reaps_legitimate_nested_file",
+            "test_codex_legacy_migration_recognizes_committed_source_before_edits",
+            "test_codex_legacy_python_cache_does_not_block_driver_deployment",
+            "test_agent_transient_briefs_are_preserved",
+            "test_gemini_shared_skill_name_collision_fails_closed",
+            "test_agent_source_managed_subtrees_propagate_deletions_without_wiping_runtime",
+            "test_tracked_mirror_drift_is_detected_before_deploy",
+            "test_second_deploy_is_noop_for_codex_target",
+            "test_gemini_shared_skill_exclusion_does_not_mask_root_drift",
+            "test_tracked_mirror_resolves_each_deploy_source",
+            "test_claude_epic_dirs_are_preserved",
+            "test_tracked_agents_skill_declared_orphan_is_skipped",
+            "test_tracked_claude_glob_orphan_is_skipped",
+            "test_codex_orphan_prefix_siblings_abort_deploy_and_preserve_user_content",
+            "test_drift_is_caught",
+            "test_agent_manifest_keeps_lexically_unsafe_entries_rejected",
+            "test_agent_manifest_migration_defers_reaping_verified_legacy_artifact",
+            "test_codex_orphan_is_caught",
+            "test_codex_legacy_migration_works_after_updated_sources_are_committed",
+            "test_missing_codex_hooks_json_is_drift",
+            "test_agent_overlay_write_stays_in_held_directory_after_root_swap",
+            "test_codex_legacy_migration_requires_provenance_and_preserves_unsafe_content",
+            "test_codex_retained_capture_survives_full_redeploy_with_late_writes",
+            "test_bytecode_cache_is_not_an_orphan_and_is_not_declared",
+            "test_pyc_named_symlink_is_deployed",
+        )
+    }
+)
 
 # Repository-root path constants. A walk rooted at one of these (or a join into
 # tests/scripts/agents_extensions) is repo-wide, not a temp fixture. The
@@ -363,6 +352,16 @@ _GIT_TREE_TOKENS = frozenset({"ls-files", "ls-tree"})
 _TMP_RECEIVER_TOKENS = ("tmp_path", "tmpdir")
 
 _WALK_ATTRS = frozenset({"glob", "rglob", "iterdir"})
+_SCAN_SOURCE_TOKENS = _WALK_ATTRS | {"walk", "scandir"} | _KNOWN_SCANNER_CALLS
+
+
+def _could_contain_scan(source: str) -> bool:
+    # A subprocess argv may be module-bound or split across string tokens.
+    return (
+        any(token in source for token in _SCAN_SOURCE_TOKENS)
+        or ("ls" in source and ("files" in source or "tree" in source))
+        or "subprocess" in source
+    )
 
 
 def _test_module_paths() -> list[Path]:
@@ -585,13 +584,26 @@ def _function_marked(tree: ast.Module, function: str) -> bool:
     )
 
 
-def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
+def _implicated_test_functions(tree: ast.Module, source: str | None = None) -> dict[str, list[str]]:
     """Test functions that scan a repo tree directly or via a scanning helper."""
     functions = _top_level_functions(tree)
     repo_root_names = _module_repo_root_names(tree)
     module_bindings = _scope_bindings(tree.body)
+    lines = source.splitlines(keepends=True) if source is not None else None
+    function_source = (
+        {
+            name: "".join(
+                lines[min((d.lineno for d in node.decorator_list), default=node.lineno) - 1 : node.end_lineno]
+            )
+            for name, (node, _owner) in functions.items()
+        }
+        if lines is not None
+        else {}
+    )
     direct: dict[str, list[str]] = {}
     for name, (node, _owner) in functions.items():
+        if lines is not None and not _could_contain_scan(function_source[name]):
+            continue
         bindings = {**module_bindings, **_scope_bindings(node.body)}
         root_names = repo_root_names | _bindings_repo_root_names(bindings, repo_root_names)
         if sites := _direct_scan_sites(node, root_names, bindings):
@@ -604,13 +616,21 @@ def _implicated_test_functions(tree: ast.Module) -> dict[str, list[str]]:
     # scanning helper is itself a scanner, even when the chain passes through
     # helpers that do not scan on their own. Method keys are ``Class.method``, so
     # compare on the bare callable name.
+    function_calls: dict[str, set[str]] = {}
     implicated_all = set(direct)
     changed = True
     while changed:
         changed = False
         bare = {name.rsplit(".", 1)[-1] for name in implicated_all}
         for name, (node, _owner) in functions.items():
-            if name not in implicated_all and calls(node) & bare:
+            if name in implicated_all:
+                continue
+            if lines is not None and not any(called in function_source[name] for called in bare):
+                continue
+            if name not in function_calls:
+                function_calls[name] = calls(node)
+            called = function_calls[name]
+            if called & bare:
                 implicated_all.add(name)
                 changed = True
 
@@ -637,6 +657,17 @@ def _module_level_scan_sites(tree: ast.Module) -> list[str]:
     )
 
 
+@lru_cache(maxsize=128)
+def _cached_scan_facts(filename: str, source: str) -> tuple[frozenset[str], frozenset[str], tuple[str, ...]]:
+    """Reuse call-graph facts for identical module content without retaining ASTs."""
+    tree = ast.parse(source, filename=filename)
+    return (
+        frozenset(_top_level_functions(tree)),
+        frozenset(_implicated_test_functions(tree, source)),
+        tuple(_module_level_scan_sites(tree)),
+    )
+
+
 def test_repo_tree_scanners_carry_the_marker() -> None:
     """A test that scans a repo tree or runs a repo lint must be ``repo_wide``.
 
@@ -645,10 +676,16 @@ def test_repo_tree_scanners_carry_the_marker() -> None:
     """
     missing: list[str] = []
     for module in _test_module_paths():
+        source = module.read_text(encoding="utf-8")
+        # Every supported direct scanner contains one of these names or the
+        # literal git argv prefix. Skip modules that cannot have a scan site;
+        # the AST pass remains authoritative for every possible candidate.
+        if not _could_contain_scan(source):
+            continue
         relative = module.relative_to(_REPO_ROOT).as_posix()
-        tree = _parse(module)
+        tree = ast.parse(source, filename=str(module))
         module_marked = _module_marked(tree)
-        for function, sites in _implicated_test_functions(tree).items():
+        for function, sites in _implicated_test_functions(tree, source).items():
             node_id = f"{relative}::{function}"
             if node_id in NOT_REPO_WIDE:
                 continue
@@ -699,44 +736,20 @@ def test_not_repo_wide_entries_are_justified() -> None:
         module_rel, _, function = node_id.partition("::")
         module = _REPO_ROOT / module_rel
         assert module.is_file(), f"{node_id}: module {module_rel} no longer exists"
-        tree = _parse(module)
+        functions, implicated, module_sites = _cached_scan_facts(str(module), module.read_text(encoding="utf-8"))
         if function:
-            assert function in _top_level_functions(tree), f"{node_id}: function no longer exists"
-            assert function in _implicated_test_functions(tree), (
-                f"{node_id}: no longer looks like a repo scanner; remove the stale entry"
-            )
+            assert function in functions, f"{node_id}: function no longer exists"
+            assert function in implicated, f"{node_id}: no longer looks like a repo scanner; remove the stale entry"
         else:
-            assert _module_level_scan_sites(tree), (
-                f"{node_id}: no longer has a module-level repo scan; remove the stale entry"
-            )
+            assert module_sites, f"{node_id}: no longer has a module-level repo scan; remove the stale entry"
 
 
-def test_selected_tier_command_always_runs_repo_wide() -> None:
-    """The selected tier must include a ``-m repo_wide`` pytest invocation."""
-    ci_text = _CI.read_text(encoding="utf-8")
-    selected_blocks = re.findall(
-        r'if \[ "\$PYTEST_MODE" = "selected" \]; then\n(.*?)\n\s*fi',
-        ci_text,
-        re.DOTALL,
-    )
-    assert selected_blocks, "ci.yml has no selected-mode pytest block"
-    assert any(re.search(r"-m [^\n]*repo_wide", block) for block in selected_blocks), (
-        "the selected tier must run `-m repo_wide` so repo-wide tests always run (#8707)"
-    )
-
-
-def test_docs_lane_also_runs_repo_wide() -> None:
-    """Docs-only PRs only get the docs lane, and repo-wide scanners read docs/."""
-    ci_text = _CI.read_text(encoding="utf-8")
-    docs_blocks = re.findall(
-        r'if \[ "\$DOCS_ONLY" = "true" \]; then\n(.*?)\n\s*exit 0',
-        ci_text,
-        re.DOTALL,
-    )
-    assert docs_blocks, "ci.yml has no docs-only pytest block"
-    assert any(re.search(r"-m [^\n]*repo_wide", block) for block in docs_blocks), (
-        "the docs lane must also run `-m repo_wide`: repo-wide tests read docs/ (#8707)"
-    )
+def test_cached_scan_facts_recompute_after_source_changes() -> None:
+    first = "def test_scan():\n    pass\n"
+    second = "def test_changed():\n    pass\n"
+    assert "test_scan" in _cached_scan_facts("changed.py", first)[0]
+    assert "test_changed" in _cached_scan_facts("changed.py", second)[0]
+    assert "test_scan" not in _cached_scan_facts("changed.py", second)[0]
 
 
 def _synthetic(source: str) -> ast.Module:
@@ -889,6 +902,34 @@ def test_heuristic_follows_named_argv_and_derived_repo_root_constants() -> None:
         """
     )
     assert "test_scan" in _implicated_test_functions(derived_root)
+
+
+def test_heuristic_prefilter_keeps_module_bound_git_argv() -> None:
+    source = textwrap.dedent(
+        """
+        import subprocess
+
+        GIT_CMD = ["git", "ls-files", "*.py"]
+
+        def test_scan():
+            subprocess.run(GIT_CMD, capture_output=True, check=True)
+        """
+    )
+    assert _could_contain_scan(source)
+    assert "test_scan" in _implicated_test_functions(ast.parse(source), source)
+
+
+def test_heuristic_prefilter_keeps_split_git_argv_literal() -> None:
+    source = textwrap.dedent(
+        """
+        import subprocess
+
+        def test_scan():
+            subprocess.run(["git", "ls-fi" "les", "*.py"], capture_output=True, check=True)
+        """
+    )
+    assert _could_contain_scan(source)
+    assert "test_scan" in _implicated_test_functions(ast.parse(source), source)
 
 
 def test_heuristic_roots_function_local_and_nested_bindings() -> None:

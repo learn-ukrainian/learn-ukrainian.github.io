@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import os
 import zipfile
 from collections import Counter
 from pathlib import Path
@@ -13,7 +12,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import model_view_exporter
-from scripts.projects.ua_open_weight_eval import run_mlx_model, suite_cli
+from scripts.projects.ua_open_weight_eval import suite_cli
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -203,7 +202,6 @@ def test_publication_package_is_complete_rights_mapped_and_reproducible(tmp_path
     assert "cases.jsonl" in file_names
     assert "THIRD_PARTY_NOTICES.md" in file_names
     assert "README.md" in file_names
-    assert "run_mlx_model.py" in file_names
     assert manifest["case_rights"]["rules"] == [
         {
             "case_id_prefix": "uaw-011-",
@@ -259,119 +257,3 @@ def test_hugging_face_card_declares_test_split_and_discovery_metadata() -> None:
         }
     ]
     assert "evaluation" in metadata["tags"]
-
-
-def test_mlx_runner_loads_only_source_packet_and_resumes(tmp_path: Path) -> None:
-    requests_path = tmp_path / "requests.jsonl"
-    suite_cli.prepare_requests(requests_path)
-    packet = run_mlx_model.read_jsonl(requests_path)
-    packet[0]["case_count"] = 2
-    packet = packet[:3]
-    packet[0]["case_count"] = 4000
-    fixture_request = packet[1]
-    packet.extend({**fixture_request, "item_id": f"fixture-{index:04d}"} for index in range(3998))
-    for row in packet[3:]:
-        row["source_sha256"] = run_mlx_model.sha256_text(row["source"])
-        payload = {
-            "item_id": row["item_id"],
-            "source": row["source"],
-            "source_sha256": row["source_sha256"],
-            "instruction_sha256": row["instruction_sha256"],
-        }
-        row["request_sha256"] = run_mlx_model.sha256_text(run_mlx_model.canonical_json(payload))
-    _write_jsonl(requests_path, packet)
-
-    model = tmp_path / "model"
-    model.mkdir()
-    (model / "config.json").write_text("{}\n", encoding="utf-8")
-    state = tmp_path / "state.jsonl"
-    responses = tmp_path / "responses.jsonl"
-    args = run_mlx_model.parse_args(
-        [
-            "--requests",
-            str(requests_path),
-            "--responses",
-            str(responses),
-            "--state",
-            str(state),
-            "--model",
-            str(model),
-            "--model-id",
-            "fixture/model",
-            "--model-revision",
-            "a" * 40,
-            "--model-sha256",
-            run_mlx_model.sha256_path(model),
-            "--progress-every",
-            "4000",
-        ]
-    )
-    generated = 0
-
-    def generator(_: str) -> str:
-        nonlocal generated
-        generated += 1
-        return '{"action":"preserve","output_text":"fixture"}'
-
-    assert run_mlx_model.run(args, generator=generator)["responses"] == 4000
-    assert generated == 4000
-    assert run_mlx_model.run(args, generator=generator)["responses"] == 4000
-    assert generated == 4000
-    response_rows = run_mlx_model.read_jsonl(responses)
-    assert response_rows[0]["closed_api_used"] is False
-    assert len(response_rows) == 4001
-
-
-def test_mlx_runner_rejects_gold_and_ambiguous_model_replies(tmp_path: Path) -> None:
-    assert run_mlx_model.parse_model_reply('```json\n{"action":"preserve","output_text":"Текст."}\n```') == {
-        "action": "preserve",
-        "output_text": "Текст.",
-    }
-    with pytest.raises(run_mlx_model.RunnerError, match="exactly one JSON object"):
-        run_mlx_model.parse_model_reply(
-            '{"action":"preserve","output_text":"A"} {"action":"correct","output_text":"B"}'
-        )
-    prompt = run_mlx_model.format_prompt("Текст.")
-    assert "correct_control" not in prompt
-    assert "uaw-request" not in prompt
-
-    request_path = tmp_path / "gold.jsonl"
-    instruction = "fixture"
-    header = {
-        "type": "request_run",
-        "schema_version": run_mlx_model.REQUEST_SCHEMA,
-        "release_id": "fixture",
-        "case_count": 4000,
-        "gold_fields_supplied": [],
-        "input_fields": ["item_id", "source", "source_sha256", "instruction_sha256"],
-        "instruction": instruction,
-        "instruction_sha256": run_mlx_model.sha256_text(instruction),
-    }
-    source = "Текст."
-    payload = {
-        "item_id": "fixture-0000",
-        "source": source,
-        "source_sha256": run_mlx_model.sha256_text(source),
-        "instruction_sha256": header["instruction_sha256"],
-    }
-    requests = []
-    for index in range(4000):
-        item_payload = {**payload, "item_id": f"fixture-{index:04d}"}
-        requests.append(
-            {
-                "type": "request",
-                **item_payload,
-                "request_sha256": run_mlx_model.sha256_text(run_mlx_model.canonical_json(item_payload)),
-                "expected": "secret",
-            }
-        )
-    _write_jsonl(request_path, [header, *requests])
-    with pytest.raises(run_mlx_model.RunnerError, match="gold field"):
-        run_mlx_model.load_requests(request_path)
-
-
-def test_mlx_runner_forces_offline_environment(monkeypatch: pytest.MonkeyPatch) -> None:
-    for name in run_mlx_model.OFFLINE_ENVIRONMENT:
-        monkeypatch.setenv(name, "unsafe-value")
-    run_mlx_model.enforce_offline_environment()
-    assert {name: os.environ[name] for name in run_mlx_model.OFFLINE_ENVIRONMENT} == (run_mlx_model.OFFLINE_ENVIRONMENT)

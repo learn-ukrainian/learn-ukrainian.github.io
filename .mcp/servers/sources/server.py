@@ -46,9 +46,8 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
-from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
-
 from scripts.verification.check_ru_morph import is_russian_pattern
+from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
 
 try:
     from mcp.server import Server
@@ -825,6 +824,36 @@ async def list_tools() -> list[Tool]:
                 "type": "object",
                 "properties": {"word": {"type": "string"}},
                 "required": ["word"],
+            },
+        ),
+        _tool(
+            name="query_ulif_records",
+            description=(
+                "Query complete ULIF source word records for one or more Ukrainian words from the local "
+                "canonical cache. Exposes all harvested homonyms, grammatical labels, complete sense glosses, "
+                "every paradigm/form/stress alternative, every synonym group, every antonym group, and every "
+                "phraseology group with its full text/examples/labels/source ordering and provenance. "
+                "Never fetches live."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "words": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "List of Ukrainian words to look up (max 200 words).",
+                    },
+                    "detail": {
+                        "type": "string",
+                        "enum": ["full", "compact"],
+                        "default": "full",
+                        "description": (
+                            "Detail level: 'full' returns complete payloads including raw_html; "
+                            "'compact' drops only raw_html keys to reduce payload size."
+                        ),
+                    },
+                },
+                "required": ["words"],
             },
         ),
         _tool(
@@ -1795,6 +1824,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             "query_ulif_synonyms": lambda: handle_query_ulif_synonyms(arguments),
             "query_ulif_antonyms": lambda: handle_query_ulif_antonyms(arguments),
             "query_ulif_phraseology": lambda: handle_query_ulif_phraseology(arguments),
+            "query_ulif_records": lambda: handle_query_ulif_records(arguments),
             "query_r2u": lambda: handle_query_r2u(arguments),
             "query_e2u": lambda: handle_query_e2u(arguments),
             "query_sum20": lambda: handle_query_sum20(arguments),
@@ -2109,10 +2139,11 @@ async def handle_get_chunk_context(args: dict):
     chunk_id = args["chunk_id"]
     query_obj = {"chunk_id": chunk_id}
 
+    from scripts.storage.topology import ActiveDatabaseNetworkError
     from wiki.sources_db import _get_conn
     try:
         conn = _get_conn()
-    except FileNotFoundError:
+    except (FileNotFoundError, ActiveDatabaseNetworkError):
         prose = "Sources database not found."
         envelope = build_search_envelope(
             tool="get_chunk_context",
@@ -2217,8 +2248,11 @@ async def handle_mcp_server_identity(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
 
     server_path = Path(__file__).resolve()
-    sources_db_path = PROJECT_ROOT / "data" / "sources.db"
-    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
+    from scripts.rag.config import VESUM_DB_PATH
+    from wiki.sources_db import _read_db_path
+
+    sources_db_path = _read_db_path()
+    vesum_db_path = Path(VESUM_DB_PATH).resolve()
 
     def _identity() -> dict[str, Any]:
         from scripts.curriculum.evidence.db_identity import sources_db_meta_identity
@@ -2349,7 +2383,6 @@ async def handle_vet_vocabulary(args: dict) -> list[TextContent]:
     include_definitions = bool(args.get("include_definitions", False))
 
     import wiki.sources_db as sdb
-
     from scripts.verification.check_ru_morph import check_russian_patterns_batch
     from scripts.verification.vesum import verify_words
 
@@ -2567,14 +2600,19 @@ def _lookup_wikipedia_in_db(query: str) -> dict | None:
     """
     import contextlib
     import sqlite3
-    from pathlib import Path as _Path
 
-    db = _Path(__file__).resolve().parents[3] / "data" / "sources.db"
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from wiki.sources_db import _read_db_path
+
+    try:
+        db = _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return None
     if not db.exists():
         return None
     conn: sqlite3.Connection | None = None
     try:
-        conn = sqlite3.connect(str(db))
+        conn = sqlite3.connect(f"{db.as_uri()}?mode=ro", uri=True)
         conn.row_factory = sqlite3.Row
         # 1. Exact title match (case-insensitive) — the common case after
         #    fetch_wikipedia.py has ingested a batch from plan topics.
@@ -3005,7 +3043,24 @@ async def handle_query_grac(args: dict) -> list[TextContent]:
         return [TextContent(type="text", text="\n".join(lines))]
 
 
+def _ulif_unavailable_text(word: str) -> str:
+    """Outage wording for ULIF DictUA lookups (#9005, #9016)."""
+    return (
+        f"ULIF DictUA (lcorp.ulif.org.ua) is unavailable for '{word}' (network "
+        "error or HTTP failure). Treat as unknown, not a negative — do not cite "
+        "this as 'no paradigm'."
+    )
+
+
 async def handle_query_ulif(args: dict) -> list[TextContent]:
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from wiki.sources_db import _read_db_path
+
+    try:
+        _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return [TextContent(type="text", text="Sources database not found.")]
+
     word = args["word"]
     if args.get("cache_only"):
         # Cache-only: never a live ULIF fetch. A missing/unreadable cache
@@ -3049,15 +3104,8 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
                     + (f" {detail}" if detail else "")
                 )
             return [TextContent(type="text", text="\n".join(lines))]
-        if isinstance(result, dict) and result.get("status") == "unavailable":
-            return [TextContent(
-                type="text",
-                text=(
-                    f"ULIF DictUA (lcorp.ulif.org.ua) is unavailable for '{word}' (network "
-                    "error or HTTP failure). Treat as unknown, not a negative — do not cite "
-                    "this as 'no paradigm'."
-                ),
-            )]
+        if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
+            return [TextContent(type="text", text=_ulif_unavailable_text(word))]
         if not result or "rows" not in result:
             return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
 
@@ -3068,6 +3116,8 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
 
     from rag.source_query import query_ulif
     result = await asyncio.to_thread(query_ulif, word, args["sections"])
+    if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
+        return [TextContent(type="text", text=_ulif_unavailable_text(word))]
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 
 
@@ -3090,6 +3140,8 @@ def _render_ulif_relation_records(records: list[dict], kind: str) -> str:
 async def _handle_ulif_relation(word: str, kind: str, lookup) -> list[TextContent]:
     """Render every cached homonym that has *kind*, or the single lookup record."""
     result = await asyncio.to_thread(lookup, word)
+    if isinstance(result, dict) and result.get("status") in {"unavailable", "transient_error"}:
+        return [TextContent(type="text", text=_ulif_unavailable_text(word))]
     if isinstance(result, dict) and result.get("status") == "ambiguous":
         from wiki.sources_db import search_ulif_dictua_sections
 
@@ -3115,6 +3167,71 @@ async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
     from rag.source_query import query_ulif_phraseology
 
     return await _handle_ulif_relation(args["word"], "phraseology", query_ulif_phraseology)
+
+
+async def handle_query_ulif_records(args: dict) -> list[TextContent]:
+    from scripts.lexicon.runner.ulif_dictua_parse import strip_raw_html
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+    from wiki.sources_db import (
+        ULIF_DICTUA_ATTRIBUTION_LABEL,
+        ULIF_DICTUA_OFFICIAL_URL,
+        ULIF_DICTUA_SOURCE_ID,
+        _read_db_path,
+        get_ulif_word_records,
+    )
+
+    try:
+        _read_db_path()
+    except ActiveDatabaseNetworkError:
+        return [TextContent(type="text", text="Sources database not found.")]
+
+    words = args.get("words") if isinstance(args, dict) else None
+    if isinstance(words, str):
+        words = [words]
+    if not isinstance(words, list) or not words or not all(isinstance(w, str) for w in words):
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: words must be a nonempty list of strings. Expected arguments: words.",
+            "expected_arguments": ["words"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+    detail = str(args.get("detail") or "full").lower()
+    if detail not in {"full", "compact"}:
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": f"invalid_input: detail must be 'full' or 'compact', got {detail!r}.",
+            "expected_arguments": ["words", "detail"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+
+    warning = None
+    if len(words) > 200:
+        warning = f"Requested {len(words)} words; truncated to maximum 200 words."
+        words = words[:200]
+
+    records = await asyncio.to_thread(get_ulif_word_records, words)
+    if detail == "compact":
+        records = strip_raw_html(records)
+
+    response: dict[str, Any] = {
+        "source": {
+            "source_id": ULIF_DICTUA_SOURCE_ID,
+            "official_url": ULIF_DICTUA_OFFICIAL_URL,
+            "attribution_label": ULIF_DICTUA_ATTRIBUTION_LABEL,
+        },
+        "detail": detail,
+        "record_count": len(records),
+        "records": records,
+    }
+    if detail == "compact":
+        response["detail_note"] = "Compact detail drops only raw_html keys from section payloads."
+    if warning:
+        response["warning"] = warning
+
+    return [TextContent(type="text", text=json.dumps(response, ensure_ascii=False))]
 
 
 async def handle_query_r2u(args: dict) -> list[TextContent]:

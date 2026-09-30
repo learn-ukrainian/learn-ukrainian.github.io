@@ -22,7 +22,10 @@ shared across all linked worktrees without a per-worktree install. It runs the
 configured pre-commit, commit-message, and pre-push gates; preserves the
 pytest-stamp and Git LFS hooks; and restores the primary-checkout guards after
 checkout or merge. The installer also materializes `.githooks` in existing sparse
-worktrees without broadening their checkout.
+worktrees without broadening their checkout. Where Entire CLI owns a hook, the
+delegator sits at `<name>.pre-entire` and the installer makes Entire's wrapper
+chain to it. `scripts/install_git_hooks.sh --check` (read-only) fails when a hook
+stage declared in `.pre-commit-config.yaml` has no reachable delegator.
 
 ---
 
@@ -51,6 +54,32 @@ Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
 `~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback).
 Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
 Use `./start-kimicc.sh` or `./start-kimi.sh --harness claude-code` for Kimi through Claude Code.
+
+### Rules core loading
+
+Every launcher starts its seat with the rules core
+(`agents_extensions/shared/rules/core.md`; curriculum driver lanes add
+`core-curriculum.md`), read offline by `scripts/lib/rules_core.py` through
+`scripts/lib/rules_core.sh`. The core always comes from the checkout the code
+runs from; no environment variable moves it. Claude Code routes get `--append-system-prompt`,
+native Codex `-c developer_instructions=…`, Grok `--rules`, native Kimi an
+`--agent-file` that keeps its default prompt; AGY, Cursor, OpenCode and Hermes
+receive the core at the head of the initial prompt. Native Kimi refuses
+`--continue`, `--session`, `--resume`, `--agent` and `--agent-file` (exit 2): a
+resumed or custom agent would not carry the core, and Kimi seats take fresh
+web/UI/backend coding tasks. `delegate.py dispatch`
+(`--rules-seat core|content`, default `$LU_RULES_SEAT`), ACP calls and the
+legacy bridge prompts prepend the same block unless the prompt already starts
+with it. An absent, unreadable or empty core (or, for a content seat, addendum) refuses: a launcher exits 1 before
+any adapter check or deploy, `delegate.py dispatch` exits 2 before any check or task record, an ACP call raises
+`InterAgentTransportError`, a discussion raises `AcpxDiscussionError` before admission, an `ask-*` prompt exits, and
+the loader CLI exits 3; each message names the path. `LAUNCHER_DRY_RUN=1` prints the seat
+and size; `LAUNCHER_DRY_RUN_ARGV_FILE=<path>` also writes the exact argv.
+
+```bash
+.venv/bin/python scripts/lib/rules_core.py --format json          # seat, bytes, first/last pillar anchors
+.venv/bin/python scripts/lib/rules_core.py --lane core --format seat   # content
+```
 
 ### Parallel routes and original Claude config
 
@@ -227,7 +256,14 @@ CODEX_DISPATCH_MODE=workspace-write CODEX_BRIDGE_MODE=safe ./start-codex.sh
 For a repository created with `--separate-git-dir`, Git cannot recover the
 primary checkout path from a linked worktree. In that uncommon layout, set
 `CODEX_CANONICAL_REPO_ROOT=/absolute/path/to/main`; the launcher verifies that
-the path is this repository's root on the `main` branch before using it.
+the path is this repository's primary checkout (not a linked worktree) on the
+`main` branch, then runs every launcher helper from it. Only Codex launches read
+this override; it is the one accepted way to name a primary that Git cannot
+prove from the worktree (#9121). When the repository records `core.worktree`,
+the override must be that directory. Otherwise Git keeps no back-pointer to a
+separate-git-dir primary, so another directory holding a copy of its `.git`
+gitfile also passes: an operator who sets `CODEX_CANONICAL_REPO_ROOT` vouches
+for that directory.
 
 Implementation work still follows `AGENTS.md`: create a scoped dispatch
 worktree instead of editing or committing from the primary checkout. The
@@ -818,8 +854,8 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 
 | Check | Refused when | Default |
 | --- | --- | --- |
-| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 6 |
-| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 3.5 GiB |
+| `DISPATCH_MAX_LIVE_WRITE_WORKERS` | live write workers (`spawning`/`running`, pid alive) reach the cap | 12 |
+| `DISPATCH_MIN_MEM_AVAILABLE_GIB` | `MemAvailable` in `/proc/meminfo` is below the floor | 6 GiB |
 | `DISPATCH_MAX_LOAD_PER_CPU` | the 1-minute load average divided by the CPU count is above the limit | 1.5 |
 
 A refusal exits 3 and prints one line that names each failed check with its measured value
@@ -838,7 +874,7 @@ process the worker reaped, from `getrusage(RUSAGE_CHILDREN)`. Use both fields to
 thresholds.
 
 **Worker isolation (#8645 part C):** the detached worker runs in the user slice
-`lu-dispatch.slice` (`MemoryMax=11G`, `MemoryHigh=10G`, `MemorySwapMax=1G`) via
+`lu-dispatch.slice` (`MemoryMax=20G`, `MemoryHigh=18G`, `MemorySwapMax=1G`) via
 `systemd-run --user --scope --expand-environment=no`. The scope execs the worker in place, so the recorded pid
 is the worker and `delegate.py cancel` still signals it. The flag keeps `$NAME` and `${NAME}` in worker
 arguments (a `--cwd` path, for example) literal; scope mode otherwise expands them before exec. The task record's `launch_mode`
@@ -856,6 +892,61 @@ and the linger/cgroup prerequisites are in
 `packaging/systemd/README.md`. When the slice is active, the admission line adds its
 current memory use against `MemoryMax`. An inactive or missing slice is left off the
 line. `peak_rss_mib` is unchanged.
+
+**Background jobs at exit (#8991):** a headless worker cannot be woken by a
+background-task notification, so when its CLI exits the worker checks for its own
+processes that are still alive: the scope unit's `cgroup.procs` for `launch_mode: scope`,
+or, on `popen-fallback`, processes carrying its `LEARN_UKRAINIAN_DISPATCH_TASK_ID` plus its
+own session. A scope launch is scanned only through its own cgroup; if that cgroup was not
+recorded or is not the unit's, the scan is `unknown` and nothing is signalled later. The
+fallback marker counts whatever the process's real uid, since a job can change it through
+a privileged helper. The record's `leftovers_scan` is `clear`, `live` or `unknown`. `live` adds a
+`background_jobs_alive_at_exit` entry (pids, truncated command lines). `unknown` means the
+scan could not read something it needed (a `cgroup.procs` file, or the environment of a
+process started after the worker that is of this user or shares the worker's cgroup) and adds `leftovers_scan_error`; it is not
+treated as clear. Both set `incomplete_run_reason` (`background_jobs_alive_at_exit` or
+`leftovers_scan_unknown`), record the worker's scope as `leftovers_scope`, and make the run
+`needs_finalize`, never `done`, in every mode, read-only included. Such a run is never
+auto-finalized. Detection does not kill anything.
+
+When that worktree is later removed (settle, `reap_worktrees.py`,
+`fleet/post_task_reap.py`), those processes are stopped first, and only inside the worker's
+own scope. The recorded scope must match the task's launch record (task id, `run_nonce`,
+`launch_mode`, `launch_unit`); a scope unit must carry the name
+`dispatch_isolation.scope_unit_name` derives from that task id and nonce, and its cgroup
+must be that unit's scope under `lu-dispatch.slice` for this user. Anything else is refused
+and nothing is signalled. If any process in the boundary has another real uid, nothing is
+stopped or signalled (not even the scope unit) and removal is refused. Otherwise a scope the
+reaper is not inside is stopped with `systemctl --user stop`. Anything left gets SIGTERM,
+then SIGKILL, each sent through a pidfd opened on the process and re-verified (start time,
+scope membership and real uid) after opening, so a reused pid, or a process that changed
+its uid before that re-check, is never signalled. Where pidfds are unavailable nothing is
+signalled. If any process survives or cannot be signalled, removal is refused.
+Guaranteed: a process seen with another user id at the UID scan blocks both the scope unit
+stop and every signal, and each pidfd target's user id is re-checked after its pidfd opens.
+Not guaranteed (accepted residual): a process that changes its identity after the UID scan
+and before the scope unit stop or the pidfd signal lands. That window begins at the UID scan
+and covers both the unit stop and the per-process pidfd path. A unit stop cannot be made
+atomic with the scan; closing the window needs a privileged helper inside the worker's own
+scope.
+
+**Auto-finalize owned paths (#8991):** auto-finalize commits only under the task's explicit
+`--owned-path` values (repeatable), recorded verbatim at dispatch as `owned_paths`. It is
+never derived from `--research-owned-path`, which classifies research context. Claims are
+read like the write-path admission guard reads them: `dir/` and `dir/**` own the subtree,
+a plain path owns itself and anything below it, and other wildcards are globs. Dispatch
+refuses an empty, `.` or absolute value, any value with a `..` segment, and any glob whose
+first segment is a wildcard (`**`, `./**`, `*`, `*/**`, `*.py`), which would own the whole
+repository or every top-level entry. Without any `--owned-path`, auto-finalize
+commits nothing and the task stays `needs_finalize` (`no_owned_paths_declared`). With them,
+only changed files under those paths are staged and committed. Every other changed file
+stays uncommitted and is listed in `finalize_skipped_paths`. A move across the owned-path
+boundary is never split, whatever Git's 50 % rename similarity would say: while any file
+outside the owned paths is deleted, no owned addition is committed, and while any outside
+file is added, no owned deletion is. Those paths are listed in
+`auto_finalize.cross_boundary_moves`. If any skipped change remains, the task ends
+`needs_finalize`, not `done`. When no change falls under the owned paths, nothing is
+committed (`no_changes_under_owned_paths`).
 
 **Task-record hygiene (#8625):** `python -m scripts.orchestration.stale_task_records` keeps
 `batch_state/tasks/` small. Every command is a dry run until you pass `--apply`.
@@ -1092,6 +1183,11 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
 | `scripts/ci/ci_timings.py` | Measure per-event and per-job CI durations and merge-queue timings (#7174). BEFORE snapshot for the 2026-09-02 sweet-spot drive: [`docs/plans/2026-09-02-ci-sweet-spot.md`](plans/2026-09-02-ci-sweet-spot.md) | `.venv/bin/python scripts/ci/ci_timings.py --event merge_group --since 2026-08-22` |
+| `scripts/ci/split_tests.py` | Static duration-balanced split of test files across the CI pytest shards; pins `scripts/ci/history-tests.txt` (tests that need git history or fetch) to shard 1, the only full-history shard; `durations` refreshes `scripts/ci/pytest-file-durations.json` from a full run's JUnit | `git ls-files -- tests \| grep -E '/test_[^/]+\.py$' \| .venv/bin/python -m scripts.ci.split_tests split --shard 1 --of 16` |
+| `scripts/ci/pytest_report.py` | CI whole-run check over every shard: file partition, executed tests, needs_artifact collected and skip sets; writes the tested-tree record | `.venv/bin/python -m scripts.ci.pytest_report --results ci-artifacts/shards --record ci-artifacts/tested-tree.json` |
+| `scripts/ci/reuse_green_run.py` | Merge queue: reuse a green full run (pytest, secret scan, Checks, Frontend) of the identical tree, bound to the queued PR, its tested merge commit and the complete job inventory of one attempt, else run everything | run by ci.yml's `reuse` job |
+| `scripts/ci/metadata_commit.py` | Merge queue: an empty-diff commit carrying the queue commit's metadata, so TruffleHog scans message, author and committer alone | run by ci.yml's `queue-metadata-scan` job |
+| `scripts/ci/checks.sh` | Every lint/content-contract gate of ci.yml's Checks job; runs all, fails if any failed | `bash scripts/ci/checks.sh` |
 | `scripts/projects/open_model_data/v4_mine_stem_controls.py` | Phase 3.3 STEM `PRESERVE` miner + polysemy typing (#8007). Receipts are hash-only; shards stay local. | `python -m scripts.projects.open_model_data.v4_mine_stem_controls --sources-db "$SOURCES_DB" --vesum-db "$VESUM_DB" --output-dir "$STEM_CONTROLS_OUT"` |
 
 ---

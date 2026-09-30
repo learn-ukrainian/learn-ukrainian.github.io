@@ -140,11 +140,11 @@ def test_native_codex_rejects_old_model_before_subprocess(monkeypatch):
         pytest.fail("unapproved Codex model reached subprocess")
     monkeypatch.setattr(matrix, "run_subprocess", forbidden)
     cell = matrix.Cell("openai", "gpt-5.5", "native_cli", "medium", "with_mcp")
-    with pytest.raises(ValueError, match="only gpt-6-astra"):
+    with pytest.raises(ValueError, match=r"only gpt-6\.1-sol"):
         matrix.run_native_cli(cell, "prompt")
 
 
 def test_native_codex_accepts_approved_model():
-    cell = matrix.Cell("openai", "gpt-6-astra", "native_cli", "medium", "with_mcp")
+    cell = matrix.Cell("openai", "gpt-6.1-sol", "native_cli", "medium", "with_mcp")
     command = matrix.build_native_command(cell, "prompt")
-    assert command[command.index("--model") + 1] == "gpt-6-astra"
+    assert command[command.index("--model") + 1] == "gpt-6.1-sol"

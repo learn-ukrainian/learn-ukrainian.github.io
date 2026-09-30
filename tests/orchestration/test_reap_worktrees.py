@@ -6,6 +6,7 @@ import inspect
 import json
 import os
 import shutil
+import signal
 import sqlite3
 import subprocess
 import threading
@@ -228,6 +229,243 @@ def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
     )
     assert worktree.exists()
     assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+def _dead_pid() -> int:
+    proc = subprocess.Popen(["true"])
+    proc.wait()
+    return proc.pid
+
+
+def test_superseded_archived_record_no_longer_claims_the_finished_tasks_worktree(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A done task re-dispatched with --force-new leaves its old needs_finalize run beside it; that run claims nothing."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/ci-v3", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-ci-r4")
+    patch_gh(monkeypatch, {"claude/ci-v3": [{"number": 9259, "state": "MERGED"}]})
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    old_run = {"task_id": "impl-ci-r4", "status": "needs_finalize", "worktree_path": str(worktree), "pid": _dead_pid()}
+    (tasks / "impl-ci-r4.20260930T022748759089Z.archived.json").write_text(json.dumps(old_run), encoding="utf-8")
+    (tasks / "impl-ci-r4.20260930T022833947211Z.7.archived.json").write_text(
+        json.dumps({**old_run, "status": "failed"}), encoding="utf-8"
+    )
+    _write_task_record(
+        repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid()
+    )
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_archived_needs_finalize_record_never_claims_even_for_another_task(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/archived-claim")
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True)
+    (tasks / "old.20260930T022748759089Z.archived.json").write_text(
+        json.dumps({"task_id": "old", "status": "running", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+    (tasks / "live.json").write_text(
+        json.dumps({"task_id": "live", "status": "running", "worktree_path": str(worktree)}), encoding="utf-8"
+    )
+
+    assert worktree_claims.active_worktree_claim_refusal(worktree, tasks_dir=tasks, repo_root=repo) == (
+        "worktree claimed by active task live"
+    )
+    (tasks / "live.json").unlink()
+    assert worktree_claims.active_worktree_claim_refusal(worktree, tasks_dir=tasks, repo_root=repo) is None
+
+
+def _needs_finalize_claim_case(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    pr_state: str,
+    pr_head: str | None,
+    pid: int | None,
+) -> tuple[Path, Path, Any]:
+    """A worktree of a merged branch that a later, reusing task still records as ``needs_finalize``."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
+    head = git(repo, "rev-parse", "claude/impl-9230")
+    patch_gh(
+        monkeypatch,
+        {"claude/impl-9230": [{"number": 9237, "state": pr_state, "headRefOid": pr_head or head}]},
+    )
+    _write_task_record(
+        repo,
+        "impl-9230-r3",
+        status="needs_finalize",
+        run_nonce="n3",
+        worktree_path=str(worktree),
+        worktree_branch="claude/impl-9230",
+        final_branch_head_commit=head,
+        worktree_reused=True,
+        pid=pid,
+    )
+    return repo, worktree, result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+
+def test_needs_finalize_claim_with_merged_pr_and_dead_worker_is_released(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, worktree, result = _needs_finalize_claim_case(
+        tmp_path, monkeypatch, pr_state="MERGED", pr_head=None, pid=_dead_pid()
+    )
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+@pytest.mark.parametrize(
+    ("pr_state", "pr_head", "live_pid"),
+    [
+        ("MERGED", None, True),
+        ("MERGED", "f" * 40, False),
+    ],
+)
+def test_needs_finalize_claim_stays_unless_merged_head_matches_and_worker_is_gone(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    pr_state: str,
+    pr_head: str | None,
+    live_pid: bool,
+) -> None:
+    _, worktree, result = _needs_finalize_claim_case(
+        tmp_path,
+        monkeypatch,
+        pr_state=pr_state,
+        pr_head=pr_head,
+        pid=os.getpid() if live_pid else _dead_pid(),
+    )
+
+    assert result.action == "skipped"
+    assert "worktree claimed by active task impl-9230-r3" in result.reason
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize(
+    ("states", "error", "settled"),
+    [
+        ([rw.PullRequestState(1, "MERGED", "abc")], None, True),
+        ([rw.PullRequestState(1, "OPEN", "abc")], None, False),
+        ([rw.PullRequestState(1, "CLOSED", "abc")], None, False),
+        ([rw.PullRequestState(1, "MERGED", "other")], None, False),
+        ([], None, False),
+        ([rw.PullRequestState(1, "MERGED", "abc")], "gh outage", False),
+    ],
+)
+def test_needs_finalize_claim_proof_requires_a_proven_merge_of_the_recorded_head(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    states: list[rw.PullRequestState],
+    error: str | None,
+    settled: bool,
+) -> None:
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: (states, error))
+    record = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc", "pid": _dead_pid()}
+
+    assert (rw._needs_finalize_claim_proven_settled(tmp_path, record) is not None) is settled
+    for missing in ("task_id", "worktree_branch", "final_branch_head_commit"):
+        assert rw._needs_finalize_claim_proven_settled(tmp_path, {**record, missing: None}) is None
+
+
+@pytest.mark.parametrize("bad_pid", [None, "missing", "123", 12.0, True, 0, -1, -4242])
+def test_needs_finalize_claim_proof_keeps_the_claim_without_a_valid_positive_dead_pid(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    bad_pid: object,
+) -> None:
+    """A merged PR alone never releases the claim: the worker must be proven absent by its recorded PID."""
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None))
+    record: dict[str, Any] = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc"}
+    if bad_pid != "missing":
+        record["pid"] = bad_pid
+
+    assert rw._needs_finalize_claim_proven_settled(tmp_path, record) is None
+
+
+def test_needs_finalize_claim_with_no_pid_in_the_record_blocks_the_reap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _, worktree, result = _needs_finalize_claim_case(tmp_path, monkeypatch, pr_state="MERGED", pr_head=None, pid=None)
+
+    assert result.action == "skipped"
+    assert "worktree claimed by active task impl-9230-r3" in result.reason
+    assert worktree.exists()
+
+
+def test_needs_finalize_pr_lookup_runs_before_the_dispatch_lock_is_taken(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
+    head = git(repo, "rev-parse", "claude/impl-9230")
+    patch_gh(monkeypatch, {"claude/impl-9230": [{"number": 9237, "state": "MERGED", "headRefOid": head}]})
+    _write_task_record(
+        repo,
+        "impl-9230-r3",
+        status="needs_finalize",
+        worktree_path=str(worktree),
+        worktree_branch="claude/impl-9230",
+        final_branch_head_commit=head,
+        pid=_dead_pid(),
+    )
+    real_query = rw._query_pr_states
+    lookups_under_lock: list[bool] = []
+
+    def spy(repo_root: Path, branch: str) -> Any:
+        lookups_under_lock.append(any(thread == threading.get_ident() for _, thread in worktree_claims._HELD_LOCKS))
+        return real_query(repo_root, branch)
+
+    monkeypatch.setattr(rw, "_query_pr_states", spy)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert lookups_under_lock
+    assert not any(lookups_under_lock)
+
+
+def test_needs_finalize_claim_changed_after_the_proof_keeps_the_claim(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """The record is re-validated against the precomputed proof under the lock; a changed head keeps the claim."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "claude/impl-9230", path=repo / ".worktrees" / "dispatch" / "claude" / "impl-9230-r2")
+    head = git(repo, "rev-parse", "claude/impl-9230")
+    patch_gh(monkeypatch, {"claude/impl-9230": [{"number": 9237, "state": "MERGED", "headRefOid": head}]})
+    fields = {
+        "status": "needs_finalize",
+        "worktree_path": str(worktree),
+        "worktree_branch": "claude/impl-9230",
+        "final_branch_head_commit": head,
+        "pid": _dead_pid(),
+    }
+    _write_task_record(repo, "impl-9230-r3", **fields)
+    real_query = rw._query_pr_states
+
+    def query_then_record_moves_on(repo_root: Path, branch: str) -> Any:
+        result = real_query(repo_root, branch)
+        _write_task_record(repo, "impl-9230-r3", **{**fields, "final_branch_head_commit": "f" * 40})
+        return result
+
+    monkeypatch.setattr(rw, "_query_pr_states", query_then_record_moves_on)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert "worktree claimed by active task impl-9230-r3" in result.reason
+    assert worktree.exists()
 
 
 def _fleet_layout(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> tuple[Path, Path]:
@@ -2566,7 +2804,7 @@ def test_unreadable_branch_query_retains_even_when_the_sha_lookup_succeeds(
     monkeypatch.setattr(
         rw,
         "_query_prs_by_head_sha",
-        lambda _repo, _sha: [rw.PullRequestState(number=42, state="MERGED", head_sha="abc")],
+        lambda _repo, _sha: ([rw.PullRequestState(number=42, state="MERGED", head_sha="abc")], None),
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
 
@@ -2622,7 +2860,7 @@ def test_unreadable_branch_query_retains_in_the_legacy_class(
     monkeypatch.setattr(
         rw,
         "_query_prs_by_head_sha",
-        lambda _repo, sha: [rw.PullRequestState(number=42, state="MERGED", head_sha=sha or head)],
+        lambda _repo, sha: ([rw.PullRequestState(number=42, state="MERGED", head_sha=sha or head)], None),
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
 
@@ -3398,7 +3636,7 @@ def test_review_issue_number_does_not_block_merged_pr(
     monkeypatch.setattr(
         rw,
         "_query_prs_by_head_sha",
-        lambda _repo, _sha: [rw.PullRequestState(number=8243, state="MERGED", head_sha=head)],
+        lambda _repo, _sha: ([rw.PullRequestState(number=8243, state="MERGED", head_sha=head)], None),
     )
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
@@ -3430,7 +3668,7 @@ def test_review_issue_number_without_exact_head_pr_reaps_merged_tree(
         else "gh pr view failed: GraphQL: Could not resolve to a PullRequest with the number of 8201"
     )
     monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _n: ([], err))
-    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: [])
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], None))
     monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: True)
     monkeypatch.setattr(rw, "_is_head_reachable_from_remote", lambda _path, _head=None: True)
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
@@ -5471,3 +5709,796 @@ def test_detached_clean_contained_preserves_when_probe_fails_between_qualify_and
     assert result.action == "skipped"
     assert "active-task probe unavailable during cleanup" in result.reason
     assert worktree.exists()
+
+
+# --- #8991: a settled worker's leftover background jobs die with its worktree ---
+
+_BG_JOB = 5_000_201
+_DEAD_WORKER_PID = 5_000_299
+
+
+def _settled_task_with_leftover_job(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    job_ignores: frozenset[int],
+    foreign_holder: bool,
+    scan: str = "live",
+    **record_overrides: object,
+):
+    from tests.worker_leftovers_fakes import FakeProc, FakeProcs, patch_stop
+
+    repo = init_repo(tmp_path)
+    task_id = "bg-orphans"
+    branch = f"claude/{task_id}"
+    worktree = repo / ".worktrees" / "dispatch" / "claude" / task_id
+    add_worktree(repo, branch, path=worktree)
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    scope = {"task_id": task_id, "launch_mode": "popen-fallback", "run_nonce": "n0nce"}
+    record = {
+        "status": "done",
+        "pid": _DEAD_WORKER_PID,
+        "run_nonce": "n0nce",
+        "launch_mode": "popen-fallback",
+        "leftovers_scan": scan,
+        "leftovers_scope": scope,
+        **record_overrides,
+    }
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps(record), encoding="utf-8")
+    procs = {
+        _BG_JOB: FakeProc(task=task_id, cwd=worktree.resolve(), ignores=job_ignores),
+        _BG_JOB + 1: FakeProc(task="another-task", cwd=worktree.resolve() if foreign_holder else tmp_path),
+    }
+    fake = FakeProcs(procs=procs)
+    monkeypatch.setattr(rw, "_process_reader", lambda: fake)
+    patch_stop(monkeypatch, fake)
+
+    def live_cwds(_repo: Path) -> set[Path]:
+        return {proc.cwd for proc in fake.procs.values() if proc.cwd is not None}
+
+    monkeypatch.setattr(rw, "_live_cwd_paths", live_cwds)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {branch: []})
+    return repo, worktree, fake, live_cwds
+
+
+def _reap_terminal(repo: Path, live_cwds) -> list[rw.ReapResult]:
+    return rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=live_cwds(repo),
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+    )
+
+
+def test_reap_stops_settled_workers_leftover_job_then_removes_worktree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, worktree, fake, live_cwds = _settled_task_with_leftover_job(
+        tmp_path, monkeypatch, job_ignores=frozenset(), foreign_holder=False
+    )
+
+    result = result_for(_reap_terminal(repo, live_cwds), worktree)
+
+    assert result.action == "removed", result.reason
+    assert not worktree.exists()
+    assert fake.signals == [(_BG_JOB, signal.SIGTERM)]
+    assert _BG_JOB + 1 in fake.procs
+
+
+def test_reap_refuses_when_leftover_job_cannot_be_stopped(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    from tests.worker_leftovers_fakes import UNKILLABLE
+
+    repo, worktree, fake, live_cwds = _settled_task_with_leftover_job(
+        tmp_path, monkeypatch, job_ignores=UNKILLABLE, foreign_holder=False
+    )
+
+    result = result_for(_reap_terminal(repo, live_cwds), worktree)
+
+    assert result.action == "skipped"
+    assert "background jobs of task-id=bg-orphans could not be stopped" in result.reason
+    assert worktree.exists()
+    assert fake.signalled() == {_BG_JOB}
+
+
+def test_reap_kills_nothing_when_a_foreign_process_holds_the_worktree(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo, worktree, fake, live_cwds = _settled_task_with_leftover_job(
+        tmp_path, monkeypatch, job_ignores=frozenset(), foreign_holder=True
+    )
+
+    result = result_for(_reap_terminal(repo, live_cwds), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("live process cwd=")
+    assert worktree.exists()
+    assert fake.signals == []
+
+
+def test_reap_stops_jobs_after_an_unknown_exit_scan_too(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """An exit scan that could not tell is not a clear one: reaping still stops the scope first."""
+    repo, worktree, fake, live_cwds = _settled_task_with_leftover_job(
+        tmp_path, monkeypatch, job_ignores=frozenset(), foreign_holder=False, scan="unknown"
+    )
+
+    result = result_for(_reap_terminal(repo, live_cwds), worktree)
+
+    assert result.action == "removed", result.reason
+    assert fake.signals == [(_BG_JOB, signal.SIGTERM)]
+
+
+@pytest.mark.parametrize(
+    "overrides",
+    [
+        {"run_nonce": "another-run"},
+        {"launch_mode": "scope", "launch_unit": "lu-worker-bg-orphans-n0nce-0123abcd"},
+        {"leftovers_scope": {"task_id": "someone-else", "launch_mode": "popen-fallback", "run_nonce": "n0nce"}},
+        {
+            "launch_mode": "scope",
+            "launch_unit": "app-firefox-1234.scope",
+            "leftovers_scope": {
+                "task_id": "bg-orphans",
+                "launch_mode": "scope",
+                "run_nonce": "n0nce",
+                "unit": "app-firefox-1234.scope",
+            },
+        },
+        {"leftovers_scope": "not-a-scope"},
+    ],
+)
+def test_reap_refuses_and_signals_nothing_when_the_recorded_scope_is_not_the_launch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, overrides: dict
+) -> None:
+    repo, worktree, fake, live_cwds = _settled_task_with_leftover_job(
+        tmp_path, monkeypatch, job_ignores=frozenset(), foreign_holder=False, **overrides
+    )
+
+    result = result_for(_reap_terminal(repo, live_cwds), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert fake.signals == []
+    assert fake.stopped_units == []
+
+
+# --- Review checkouts: superseded, unrecorded and foreign (#9129) ---------------
+
+_OLD_PR = 9237
+
+
+@pytest.fixture(autouse=True)
+def _no_default_foreign_scratch_roots(monkeypatch: pytest.MonkeyPatch) -> None:
+    """pytest's own tmp_path lives under /tmp; only the #9129 tests opt in to scratch roots."""
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: ())
+
+
+def _reap_review(
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    apply: bool = True,
+    live_cwds: set[Path] | None = None,
+    now: float | None = None,
+) -> list[rw.ReapResult]:
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    patch_gh(monkeypatch, {})
+    return rw.reap_worktrees(
+        repo_root=repo,
+        apply=apply,
+        preserve_then_reap=True,
+        safe_only=True,
+        merged_pr_only=True,
+        include_terminal_dispatches=True,
+        live_cwds=set() if live_cwds is None else live_cwds,
+        now=now,
+    )
+
+
+def _pr_with_two_heads(
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    current: str,
+    review_dir: str = "review-9230",
+) -> tuple[Path, str, str]:
+    """A detached review checkout at PR head A, after the PR moved on to B.
+
+    ``current`` is ``"new"`` (the PR head is B, so the checkout is superseded)
+    or ``"same"`` (the PR head is still A). Returns ``(worktree, A, B)``.
+    """
+    feature = add_worktree(repo, "codex/feature")
+    git(feature, "commit", "--allow-empty", "-m", "review head A")
+    old = git(feature, "rev-parse", "HEAD")
+    git(feature, "push", "origin", "HEAD:refs/heads/codex/feature")
+    git(feature, "commit", "--allow-empty", "-m", "review head B")
+    new = git(feature, "rev-parse", "HEAD")
+    git(feature, "push", "origin", "HEAD:refs/heads/codex/feature")
+    git(repo, "worktree", "remove", "--force", str(feature))
+    git(repo, "fetch", "origin")
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / review_dir
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), old)
+    head = old if current == "same" else new
+    prs = {
+        _OLD_PR: rw.PullRequestState(_OLD_PR, "OPEN", head),
+        9230: rw.PullRequestState(9230, "MERGED", old),
+    }
+    monkeypatch.setattr(
+        rw,
+        "_query_prs_by_head_sha",
+        lambda _repo, sha: ([rw.PullRequestState(_OLD_PR, "OPEN", sha)], None),
+    )
+    monkeypatch.setattr(
+        rw,
+        "_query_pr_by_number",
+        lambda _repo, number: ([prs[number]], None) if number in prs else ([], "not found"),
+    )
+    return worktree, old, new
+
+
+def test_superseded_pr_checkout_is_reaped_and_keeps_its_rescue_ref(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, old, new = _pr_with_two_heads(repo, monkeypatch, current="new")
+
+    dry = result_for(_reap_review(repo, monkeypatch, apply=False), worktree)
+    assert dry.action == "would_remove"
+    assert dry.reason == f"superseded PR #{_OLD_PR} head {old[:12]} (current {new[:12]})"
+    assert worktree.exists()
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+    assert result.action == "removed"
+    assert result.reason == dry.reason
+    assert result.recovery_ref
+    assert not worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_checkout_at_the_current_open_pr_head_stays(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="same")
+
+    result = result_for(_reap_review(repo, monkeypatch, now=time.time() + 5 * 3600), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == f"open PR #{_OLD_PR}"
+    assert worktree.exists()
+
+
+def test_superseded_pr_checkout_stays_when_the_pr_head_is_unreadable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    original = rw._query_pr_by_number
+    monkeypatch.setattr(
+        rw,
+        "_query_pr_by_number",
+        lambda repo_root, number: ([], "boom") if number == _OLD_PR else original(repo_root, number),
+    )
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_superseded_pr_checkout_with_dirty_tree_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    (worktree / "notes.txt").write_text("unsaved review notes\n", encoding="utf-8")
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert not result.reason.startswith("superseded")
+    assert (worktree / "notes.txt").exists()
+
+
+def test_superseded_pr_checkout_with_process_cwd_inside_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+
+    result = result_for(
+        _reap_review(repo, monkeypatch, live_cwds={worktree.resolve() / "sub"}),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("live process cwd=")
+    assert worktree.exists()
+
+
+def test_superseded_pr_checkout_with_unpushed_head_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    git(worktree, "commit", "--allow-empty", "-m", "local-only review fix")
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert not result.reason.startswith("superseded")
+    assert worktree.exists()
+
+
+def _unrecorded_worktree(repo: Path, name: str = "review-native") -> Path:
+    """A detached checkout outside the dispatch layout, so no task id can exist."""
+    worktree = repo / ".worktrees" / name
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    return worktree
+
+
+def test_unrecorded_detached_checkout_older_than_two_hours_is_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _unrecorded_worktree(repo)
+    later = time.time() + 3 * 3600
+
+    result = result_for(_reap_review(repo, monkeypatch, now=later), worktree)
+
+    assert result.action == "removed"
+    assert result.reason == "unrecorded detached checkout"
+    assert result.recovery_ref
+    assert not worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_unrecorded_detached_checkout_younger_than_two_hours_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _unrecorded_worktree(repo)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=time.time() + 3600), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == "detached HEAD unknown"
+    assert worktree.exists()
+
+
+def test_unrecorded_detached_checkout_with_dirty_tree_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _unrecorded_worktree(repo)
+    (worktree / "notes.txt").write_text("unsaved\n", encoding="utf-8")
+
+    result = result_for(_reap_review(repo, monkeypatch, now=time.time() + 30 * 3600), worktree)
+
+    assert result.action == "skipped"
+    assert (worktree / "notes.txt").exists()
+
+
+def test_unrecorded_detached_checkout_with_process_cwd_inside_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _unrecorded_worktree(repo)
+
+    result = result_for(
+        _reap_review(repo, monkeypatch, live_cwds={worktree.resolve()}, now=time.time() + 3 * 3600),
+        worktree,
+    )
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("live process cwd=")
+    assert worktree.exists()
+
+
+def test_unrecorded_detached_checkout_with_unpushed_head_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _unrecorded_worktree(repo)
+    git(worktree, "commit", "--allow-empty", "-m", "local-only work")
+
+    result = result_for(_reap_review(repo, monkeypatch, now=time.time() + 3 * 3600), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == "detached HEAD unknown"
+    assert worktree.exists()
+
+
+def test_unrecorded_detached_checkout_with_an_unfinished_task_is_skipped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = repo / ".worktrees" / "dispatch" / "codex" / "review-live"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    _write_task_record(repo, "review-live", status="running", worktree_path=str(worktree), pid=None)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=time.time() + 3 * 3600), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def _foreign_worktree(tmp_path: Path, repo: Path, *, under: str = "scratch") -> Path:
+    worktree = tmp_path / under / "code-8889"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), "main")
+    return worktree
+
+
+def test_foreign_registered_checkout_under_a_scratch_root_is_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "removed"
+    assert result.reason == "foreign registered checkout"
+    assert result.recovery_ref
+    assert not worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_foreign_registered_checkout_under_a_scratchpad_directory_is_reaped(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo, under="session/scratchpad")
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "removed"
+    assert result.reason == "foreign registered checkout"
+    assert not worktree.exists()
+
+
+def test_foreign_registered_checkout_outside_scratch_roots_is_only_reported(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == "outside repo .worktrees/"
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("problem", ["dirty", "cwd", "unpushed"])
+def test_foreign_registered_checkout_keeps_every_safety_check(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    problem: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = _foreign_worktree(tmp_path, repo)
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+    live_cwds: set[Path] | None = None
+    if problem == "dirty":
+        (worktree / "notes.txt").write_text("unsaved\n", encoding="utf-8")
+    elif problem == "cwd":
+        live_cwds = {worktree.resolve() / "sub"}
+    else:
+        git(worktree, "commit", "--allow-empty", "-m", "local-only work")
+
+    result = result_for(_reap_review(repo, monkeypatch, live_cwds=live_cwds), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason != "foreign registered checkout"
+    assert worktree.exists()
+
+
+def test_foreign_scratch_root_never_covers_the_repository_or_its_root(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+
+    assert rw._foreign_scratch_root(repo, tmp_path / "elsewhere" / "wt") == tmp_path.resolve()
+    assert rw._foreign_scratch_root(repo, tmp_path) is None
+    assert rw._foreign_scratch_root(repo, repo / "nested" / "wt") is None
+    assert rw._foreign_scratch_root(repo, Path("/home/someone/work/wt")) is None
+    assert rw._foreign_scratch_root(repo, Path("/home/someone/scratchpad/wt")) == Path("/home/someone/scratchpad")
+    assert rw._foreign_scratch_root(repo, Path("/home/someone/scratchpad")) is None
+
+
+# --- Review checkouts: exhaustive residue guard and locked re-proof (#9129) ------
+
+
+def _track_node_modules_file(repo: Path) -> None:
+    """Commit a tracked ``node_modules`` file to main, before any checkout exists."""
+    target = repo / "node_modules" / "pkg.js"
+    target.parent.mkdir(parents=True)
+    target.write_text("original\n", encoding="utf-8")
+    git(repo, "add", "-f", "node_modules/pkg.js")
+    git(repo, "commit", "-m", "track a node_modules file")
+    git(repo, "push", "origin", "main")
+
+
+def _review_class_worktree(
+    kind: str,
+    tmp_path: Path,
+    repo: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> tuple[Path, float | None]:
+    """One qualifying checkout per new class, and the ``now`` that makes it qualify."""
+    if kind == "superseded":
+        worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+        return worktree, None
+    if kind == "unrecorded":
+        return _unrecorded_worktree(repo), time.time() + 3 * 3600
+    monkeypatch.setattr(rw, "_foreign_scratch_roots", lambda: (tmp_path.resolve(),))
+    return _foreign_worktree(tmp_path, repo), None
+
+
+_REVIEW_KINDS = ["superseded", "unrecorded", "foreign"]
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+@pytest.mark.parametrize("residue", ["venv_only_copy", "tracked_node_modules_change", "ignored_non_cache"])
+def test_review_checkout_classes_preserve_residue_the_detached_guard_preserves(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+    residue: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".git" / "info" / "exclude").write_text(".venv/\n*.log\n", encoding="utf-8")
+    if residue == "tracked_node_modules_change":
+        _track_node_modules_file(repo)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    target = {
+        "venv_only_copy": worktree / ".venv" / "notes.txt",
+        "tracked_node_modules_change": worktree / "node_modules" / "pkg.js",
+        "ignored_non_cache": worktree / "review-notes.log",
+    }[residue]
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text("only copy\n", encoding="utf-8")
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert worktree.exists()
+    assert target.read_text(encoding="utf-8") == "only copy\n"
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+def test_review_checkout_recheck_preserves_residue_that_appears_under_the_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    (repo / ".git" / "info" / "exclude").write_text(".venv/\n", encoding="utf-8")
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    original = rw._review_checkout_recheck
+    target = worktree / ".venv" / "notes.txt"
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text("only copy\n", encoding="utf-8")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert "proof changed during cleanup" in result.reason
+    assert target.read_text(encoding="utf-8") == "only copy\n"
+
+
+def test_superseded_checkout_stays_when_the_pr_head_returns_to_it_before_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        monkeypatch.setattr(
+            rw,
+            "_query_pr_by_number",
+            lambda _repo, number: ([rw.PullRequestState(number, "OPEN", old)], None),
+        )
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert "proof changed during cleanup" in result.reason
+    assert worktree.exists()
+
+
+def test_superseded_checkout_stays_when_the_pr_head_is_unreadable_before_removal(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, _old, _new = _pr_with_two_heads(repo, monkeypatch, current="new")
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        monkeypatch.setattr(rw, "_query_pr_by_number", lambda _repo, _number: ([], "boom"))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch), worktree)
+
+    assert result.action == "skipped"
+    assert "PR guard unavailable during cleanup" in result.reason
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("kind", ["superseded", "unrecorded"])
+def test_detached_review_class_stays_when_a_branch_is_checked_out_at_the_same_sha(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        git(worktree, "checkout", "-b", "review/same-sha")
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert "proof changed during cleanup" in result.reason
+    assert worktree.exists()
+    assert git(worktree, "branch", "--show-current") == "review/same-sha"
+
+
+# --- Review checkouts: a failed PR lookup keeps the worktree (fail closed) --------
+
+
+def _force_sha_search_to_run(kind: str, monkeypatch: pytest.MonkeyPatch) -> None:
+    """The unrecorded and foreign fixtures sit on main, which skips the SHA search."""
+    if kind != "superseded":
+        monkeypatch.setattr(rw, "_is_ancestor_of_origin_main", lambda _path: False)
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+def test_review_checkout_classes_stay_when_the_pr_lookup_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    _force_sha_search_to_run(kind, monkeypatch)
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], rw._PR_LOOKUP_FAILED))
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert rw._PR_LOOKUP_FAILED in result.reason
+    assert worktree.exists()
+
+
+@pytest.mark.parametrize("kind", _REVIEW_KINDS)
+def test_review_checkout_classes_stay_when_the_pr_lookup_fails_under_the_lock(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    kind: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree(kind, tmp_path, repo, monkeypatch)
+    _force_sha_search_to_run(kind, monkeypatch)
+    original = rw._review_checkout_recheck
+
+    def recheck(*args: Any, **kwargs: Any) -> str | None:
+        monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], rw._PR_LOOKUP_FAILED))
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(rw, "_review_checkout_recheck", recheck)
+    if kind != "superseded":
+        monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], None))
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "skipped"
+    assert "PR guard unavailable during cleanup" in result.reason
+    assert rw._PR_LOOKUP_FAILED in result.reason
+    assert worktree.exists()
+
+
+def test_a_reachable_pr_lookup_still_reaps_an_unrecorded_checkout(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree, now = _review_class_worktree("unrecorded", tmp_path, repo, monkeypatch)
+    _force_sha_search_to_run("unrecorded", monkeypatch)
+    monkeypatch.setattr(rw, "_query_prs_by_head_sha", lambda _repo, _sha: ([], None))
+
+    result = result_for(_reap_review(repo, monkeypatch, now=now), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+class _GhSearch:
+    def __init__(self, *, returncode: int = 0, stdout: str = "[]", raises: Exception | None = None) -> None:
+        self.returncode = returncode
+        self.stdout = stdout
+        self.raises = raises
+
+    def __call__(self, *_args: Any, **_kwargs: Any) -> Any:
+        if self.raises is not None:
+            raise self.raises
+        return subprocess.CompletedProcess([], self.returncode, self.stdout, "")
+
+
+@pytest.mark.parametrize(
+    "search",
+    [
+        _GhSearch(raises=FileNotFoundError("gh")),
+        _GhSearch(raises=subprocess.TimeoutExpired("gh", 30)),
+        _GhSearch(returncode=1),
+        _GhSearch(stdout="{not json"),
+        _GhSearch(stdout='{"number": 1}'),
+    ],
+)
+def test_sha_search_failures_are_reported_not_swallowed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    search: _GhSearch,
+) -> None:
+    monkeypatch.setattr(rw, "_run", search)
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert states == []
+    assert error is not None
+    assert rw._PR_LOOKUP_FAILED in error
+
+
+def test_sha_search_success_returns_states_without_error(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(rw, "_run", _GhSearch(stdout='[{"number": 7, "state": "open"}]'))
+
+    states, error = rw._query_prs_by_head_sha(tmp_path, "abc123")
+
+    assert error is None
+    assert [(pr.number, pr.state, pr.head_sha) for pr in states] == [(7, "OPEN", "abc123")]
+    assert rw._query_prs_by_head_sha(tmp_path, None) == ([], None)

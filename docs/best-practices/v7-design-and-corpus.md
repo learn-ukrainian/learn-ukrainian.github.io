@@ -179,7 +179,7 @@ From `.claude/rules/mcp-sources-and-dictionaries.md`:
 - `translate_en_uk` — EN→UK (Балла)
 
 **Degradable Enhancements**:
-Dense rerank (used by `search_sources` unified retrieval) is designed as a degradable enhancement rather than a load-bearing requirement. If the MLX embedding worker refuses to spawn (e.g. on low-RAM machines under 32GB or when explicitly disabled via `SOURCES_MCP_NO_MLX=1`), the retrieval path degrades gracefully to standard SQLite FTS5-only ranking instead of raising an error.
+Dense rerank (used by `search_sources` unified retrieval) is designed as a degradable enhancement rather than a load-bearing requirement. It runs when an index exists and the host has CUDA or MPS; on a CPU-only host it is opt-in via `SOURCES_MCP_DENSE=1`. If the in-process FlagEmbedding BGE-M3 encoder cannot load or fails while encoding (e.g. the ML stack is not installed, a device or memory failure), or is explicitly disabled via `SOURCES_MCP_NO_DENSE=1`, the retrieval path degrades gracefully to standard SQLite FTS5-only ranking instead of raising an error. That path needs no model or tokenizer assets.
 
 ---
 

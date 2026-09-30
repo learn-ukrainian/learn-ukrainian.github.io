@@ -22,7 +22,7 @@ def task(**updates):
         "repository": REPOSITORY,
         "worktree_branch": BRANCH,
         "worktree_base_sha": SHA,
-        "model": "gpt-6-sol",
+        "model": "gpt-6.1-sol",
         "agent": "codex",
         "started_at": "2026-09-23T12:00:00.000001+00:00",
         "status": "done",
@@ -210,7 +210,7 @@ def test_mixed_or_unknown_author_family_refused(monkeypatch, tmp_path):
         return {"commit": {"message": f"work\n\nX-Agent: {trailer}"}}
 
     monkeypatch.setattr(
-        recorder, "_pages", lambda args: [commit("codex/gpt-6-sol"), commit("agy/gemini-3.8-flash-high")]
+        recorder, "_pages", lambda args: [commit("codex/gpt-6.1-sol"), commit("agy/gemini-3.8-flash-high")]
     )
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai", "google"}
     monkeypatch.setattr(recorder, "_pages", lambda args: [commit("cursor/task-without-record")])
@@ -268,7 +268,7 @@ def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_pa
 
 def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
-    write_task(tasks, task_id="author-task", model="gpt-6-sol", agent="agy")
+    write_task(tasks, task_id="author-task", model="gpt-6.1-sol", agent="agy")
     monkeypatch.setattr(
         recorder,
         "_pages",
@@ -291,7 +291,7 @@ def test_archived_review_task_and_reply_are_loadable(tmp_path):
 def test_archived_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     """#8625: an old author task moved into tasks/archive/ still proves its family."""
     tasks = tmp_path / "tasks"
-    write_task(tasks / "archive", task_id="author-task", model="gpt-6-sol", agent="agy")
+    write_task(tasks / "archive", task_id="author-task", model="gpt-6.1-sol", agent="agy")
     monkeypatch.setattr(
         recorder,
         "_pages",
@@ -306,7 +306,7 @@ def test_invalid_author_model_is_rejected_before_task_file_read(monkeypatch, tmp
     harness, model = trailer.split("/", 1)
     decoy = tasks / f"{model}.json"
     decoy.parent.mkdir(parents=True, exist_ok=True)
-    decoy.write_text(json.dumps({"repository": REPOSITORY, "agent": harness, "model": "gpt-6-sol"}))
+    decoy.write_text(json.dumps({"repository": REPOSITORY, "agent": harness, "model": "gpt-6.1-sol"}))
     attempted_reads = []
     original_read_text = Path.read_text
 
@@ -328,7 +328,7 @@ def test_invalid_author_model_is_rejected_before_task_file_read(monkeypatch, tmp
 
 def test_kimi_task_record_conflict_is_checked_before_single_family_fallback(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
-    write_task(tasks, task_id="author-task", model="gpt-6-sol", agent="codex")
+    write_task(tasks, task_id="author-task", model="gpt-6.1-sol", agent="codex")
     monkeypatch.setattr(
         recorder,
         "_pages",
@@ -367,7 +367,7 @@ def test_comment_truncation_retains_marker():
         task_id="review-one",
         started="2026-09-23T12:00:00.000001+00:00",
         verdict="APPROVED",
-        model="gpt-6-sol",
+        model="gpt-6.1-sol",
         family="openai",
         reply="x" * 70_000,
     )

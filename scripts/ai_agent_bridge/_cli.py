@@ -53,6 +53,7 @@ from ._opencode import (
     POOL_MODEL,
 )
 from ._process import process_message_for_recipient
+from ._prompts import require_core_or_exit
 
 _CALLER_IDENTITY_ENV_HINTS = (
     # Order mirrors _detect_caller_identity_from_env; SESSION_HANDOFF_AGENT is
@@ -363,7 +364,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         bucket["avg_duration_s"] = round(float(bucket["total_duration_s"]) / count, 1) if count else 0.0
         bucket["total_duration_s"] = round(float(bucket["total_duration_s"]), 1)
 
-    has_room, headroom_reason = has_codex_headroom("gpt-6-sol")
+    has_room, headroom_reason = has_codex_headroom("gpt-6.1-sol")
     return {
         "window": window,
         "entrypoint": entrypoint,
@@ -373,7 +374,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         "by_entrypoint": dict(sorted(by_entrypoint.items())),
         "recent_rate_limits": sorted(recent_rate_limits),
         "headroom": {
-            "model": "gpt-6-sol",
+            "model": "gpt-6.1-sol",
             "has_headroom": has_room,
             "reason": headroom_reason,
         },
@@ -1633,6 +1634,9 @@ def _review_target_kwargs(args) -> dict[str, str | int | None]:
 
 def _handle_acp_compat(args, target: str) -> None:
     """Route a legacy ask command through the single ACP compatibility shim."""
+    # The rules core first: before a PR head is resolved, a review is
+    # dispatched or an ACP job is forwarded or enqueued.
+    require_core_or_exit(f"ask-{target}")
     if getattr(args, "background", False):
         raise SystemExit("legacy ask --background is retired; enqueue through fleet-comms")
     content = sys.stdin.read() if args.content == "-" else args.content

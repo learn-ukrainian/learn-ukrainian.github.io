@@ -11,7 +11,7 @@ SKILLS = ROOT / "agents_extensions/shared/skills"
 
 @pytest.mark.repo_wide
 def test_split_skill_references_are_reachable_from_their_entrypoint() -> None:
-    for name in ("entire-context", "task-family-manager", "thread-rollover", "track-completion"):
+    for name in ("drive-epic", "entire-context", "task-family-manager", "thread-rollover", "track-completion"):
         entry = SKILLS / name / "SKILL.md"
         links = re.findall(r"\]\((references/[^)]+)\)", entry.read_text())
         assert links, name

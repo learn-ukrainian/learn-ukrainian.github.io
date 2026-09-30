@@ -38,6 +38,7 @@ from ._ask_lifecycle import (
     register_ask,
 )
 from ._messaging import acknowledge, send_message
+from ._prompts import require_core_or_exit, with_core_or_exit
 
 CURSOR_DEFAULT_MODEL = "auto"
 CURSOR_DEFAULT_TIMEOUT_S = 900
@@ -57,6 +58,7 @@ def ask_cursor(
     background: bool = False,
 ) -> int:
     """Send message to Cursor Agent AND invoke Cursor one-shot to process it."""
+    require_core_or_exit("ask-cursor")
     effective_model = resolve_model_selection(
         lane="ask-cursor", to_model=to_model, model=model, default=CURSOR_DEFAULT_MODEL
     )
@@ -171,7 +173,7 @@ def _invoke_cursor(
 
     argv = [
         agent_bin,
-        "-p", prompt,
+        "-p", with_core_or_exit(prompt, "ask-cursor"),
         "--model", model,
         "--output-format", "text",
         "--trust"

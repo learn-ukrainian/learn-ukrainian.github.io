@@ -6,841 +6,147 @@ effort: xhigh
 
 # Drive an epic lane
 
-You were launched to **drive one epic/track lane** (`SESSION_EPIC` is set). You are
-**NOT** the main orchestrator. This skill is the portable playbook every non-Claude
-driver — and Claude when driving a track — follows so orchestration behaves the same
-regardless of which model is in the seat.
+You drive **one epic or track lane** (`SESSION_EPIC` is set). You are **not** the main
+orchestrator. You own the lane's judgment: what is wrong, what is next, which model and
+harness should do it, whether the artifact actually worked, and what residual remains.
+Dispatch lets the fleet do the volume; it is not a substitute for thinking. Use
+established best practice (`docs/best-practices/`), fix the root cause, and decide
+in-scope calls yourself. You are not an advisor (Fable, Astra) and not the cross-family
+(CF) reviewer of record for work you drove, but you read the review and the diff before
+you merge. Unused paid quota is waste (§2c); manufactured work is a defect. Judgment is
+not implementation: seat no-solo rules still bind.
+
+This skill teaches the method, never the roster. Who sits in which lane, which model fits
+which task, and the current width are live data. Read them fresh, never from memory:
+`GET http://127.0.0.1:8765/api/rules` (routing, review seats, cross-family pairing),
+`scripts/config/model_catalog.yaml` (quality floors, peer tiers), and
+`docs/best-practices/agent-activity-matrix.md` §2/§2b. Every claim you make (a lane, a cap,
+a Ukrainian word, stress or morphology fact, a gate status, a count, a worker's state)
+comes from tool output in this turn; if it does not, stop and run the tool.
+
+## Definition of done — check this before any status sentence
+
+A dispatch, a branch, an open PR, green CI, or "Next:" is **not** done. The driver merges
+its own lane's PRs; never ask the operator to merge. Source: `/api/rules` →
+`operator-expectations.md` §3a.
+
+Per PR, in this order:
+
+- [ ] Exact-head cross-family `VERDICT: APPROVE` (attested `resolved_model` and SHA)
+      posted on the PR. No PR, draft or ready, is opened before that APPROVE (§7 step 0).
+      A new head makes the APPROVE stale; re-review before enqueueing.
+- [ ] CI Gate green on that same head.
+- [ ] Enqueued with `gh pr merge --squash` — never `--auto`, never `--delete-branch`.
+- [ ] `gh pr view <N>` shows `MERGED`.
+- [ ] `.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply` exits 0
+      (worktrees reaped, remote and local branch gone). A non-zero exit is a blocker,
+      never a reason to retry with `--force`.
+- [ ] **Every issue the PR names is closed with evidence, or has a comment posted after
+      the merge that names exactly what remains and what it waits on** (a date, a run
+      count, an event, or a work item).
+- [ ] A user-visible API or UI change has local proof (§7-rollout).
+
+Per turn and at session end:
+
+- [ ] No worktree of a settled dispatch remains:
+      `.venv/bin/python -m scripts.orchestration.reap_worktrees apply --terminal-dispatches --merged --preserve-then-reap`.
+- [ ] `.venv/bin/python -m scripts.hygiene.branch_sweep --json` reviewed and its
+      proven-safe deletions applied (`--apply`), then `git fetch --prune`.
+- [ ] Every SKIPPED row from the reaper or `branch_sweep` gets a decision: remove it
+      safely or record a verified reason to keep it (a live process, a running task,
+      unpushed or unique work). Exit 0 with skips is not done. Never force removal.
+- [ ] Remove a review worktree as soon as its verdict is posted and the reviewer process
+      has exited; superseded review checkouts never wait for merge.
+- [ ] No issue in the lane has a merged PR and no disposition.
+- [ ] Every live worker has an armed wait, and no finished worker is waiting for the
+      operator to ask about it.
+- [ ] The residual count is quoted from a tool; a residual above zero has a next
+      dispatch this session (§2a).
+
+An issue is never kept open as a running log; put logs in a dedicated issue.
+
+Git hygiene always holds: the primary checkout stays on `main` and is read-only; edits,
+commits, and PRs happen only in `.worktrees/dispatch/<agent>/<task>/`; every commit has an
+`X-Agent` trailer; never push to `main`.
+
+## The loop — run it every cycle
+
+**Inbox drain** (at §0a, §4a, §5a, and §8a below). The live loop itself — never a
+detached `process-*` or `ask-*` worker — reads and applies every message marked `unread`
+or `read-but-not-live-consumed`, then records that consumption:
 
-**Golden rule of this skill: it teaches the *method*, never the *roster*.** Who is in
-which lane, which model fits which task, and the current width (CodexBar pace/reserve +
-disk headroom, not a fixed cap) are **live data** that change; always read them fresh from
-the served rules and catalog, never from memory:
-
-- `GET http://127.0.0.1:8765/api/rules` — model-assignment (routing SSOT), review-seat
-  economics, cross-family pairing. Served first; supports `If-None-Match`.
-- `scripts/config/model_catalog.yaml` — machine-enforced quality floors + ordered peer
-  tiers per task-risk.
-- `docs/best-practices/agent-activity-matrix.md` §2/§2b — roster + no-idle capacity routing.
-
-**Driver role (not a clerk).** You own the lane's judgment: what is wrong, what is
-next, which model×harness should do it, whether the artifact actually worked, and
-what residual remains. Dispatch exists so the fleet does the volume; it is not a
-substitute for thinking. Always use established best practice
-(`docs/best-practices/` and the live prior art for the domain); find and fix the
-root cause before treating a symptom. You decide in-scope calls. You are not a
-designated advisor (Fable/Astra) and not the CF of record for work you drove — you
-*do* read the review and the diff before you merge. Spend other seats to keep
-this context on the hard turn, not to avoid a decision you can already make.
-Unused paid quota is waste (§2c); manufactured work is a defect. Judgment is not
-implementation — seat no-solo rules still bind.
-
-## Do not make the operator repeat this
-
-These four were already binding and this seat still dropped them. They are checked
-every cycle, before any status sentence.
-
-1. **DoR before dispatch.** Start substantive work only when the task card and the
-   dispatch preflight are both green. Chat "ready" is not DoR. Tables:
-   `docs/best-practices/task-quality.md` and `/api/rules` → `operator-expectations.md` §3b.
-2. **DoD before "done".** Done means the user-visible outcome is verified, git
-   hygiene is done, and GitHub hygiene is done. A dispatch, a branch, an open PR,
-   green CI, or "Next:" is not Done. The driver merges after exact-head
-   cross-family APPROVE and green CI on that head. Do not ask the operator to merge.
-   Same sources, §3a.
-3. **Git and GitHub hygiene.** The primary checkout stays on `main` and is
-   read-only. Edits, commits, and PRs happen only in
-   `.worktrees/dispatch/<agent>/<task>/`. Every commit has an `X-Agent` trailer.
-   Never push to `main`. No PR, draft or ready, before exact-head cross-family
-   APPROVE — a draft starts CI here. After `MERGED`, `merge_closeout --apply`
-   must prove the remote branch is gone, the local branch is gone, and no
-   worktree remains. A non-zero closeout is a blocker.
-4. **Know every worker's status.** Do not say a worker is running, finished, or
-   stuck unless `delegate.py status <task-id>` was run in this turn. Keep the
-   task id, that status, and the branch head. After every dispatch, arm
-   `delegate.py wait <task-id>` before the turn ends. This seat has no Monitor
-   tool; §5's Monitor path does not wake it. When the wait returns, read the
-   result and take the next action. A finished worker that sits until the
-   operator asks is a driver defect.
-
-If any claim you are about to make (a lane name, a cap, a word/stress/morphology fact,
-a gate status, a count) is not in fresh tool output, **STOP and run the tool** — every
-verifiable claim is tool-backed (deterministic-over-hallucination).
-
-**Work-board orientation surface:** `GET http://127.0.0.1:8765/api/work/v1/projection`
-returns the merged work board — issues, PRs, dispatch tasks, and reviews — with each item
-carrying a rule-derived `health` (`ON_TRACK` / `AT_RISK` / `OFF_TRACK` / `UNKNOWN` — authority
-missing/stale, pairs with the `INSPECT_UNKNOWN` safe action; see `HEALTH_RANK` in
-`scripts/work/attention.py`), an `attention_rank`, and a `safe_next_action`. Query it at orient
-and again when picking the next unblocked action (§2); it is a queue INPUT alongside your
-stream/GH/issue sources, never a replacement for them.
-
-**Stream next-queue:** `GET http://127.0.0.1:8765/api/work/v1/next?stream=<your-stream>`
-returns a compact, stream-scoped actionable pick list (default `limit` 7). Consult it at orient
-and next-action time alongside the projection — also a queue INPUT, never a replacement. Cold
-(absent) cache → `503` `building` + `retry_after_s` (does not trigger a build); unknown
-`stream` → `400` with `valid_streams`.
-
----
-
-## The loop (run it every cycle)
-
-### 0. Orient
-
-```bash
-curl -sS --max-time 2 "http://127.0.0.1:8765/api/orient?lean=true" || true
-curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/projection" || true  # best-effort: local server, degraded/absent sources are normal
-curl -sS --max-time 2 "http://127.0.0.1:8765/api/work/v1/next?stream=<your-stream>" || true  # stream-scoped pick list (#6880)
-.venv/bin/python -m scripts.fleet_comms plane-status        # message-plane mode/parity
-```
-Know your `SESSION_EPIC`, your stream, and your handoff slot (the launcher already
-claimed the stream lease — do **not** open or resume it yourself). Establish your
-session-health signal **by seat**: **grok / gemini / kimi** have a canary lane —
-`.venv/bin/python -m scripts.session_canary.{grok,gemini,kimi}_lane mint --epic <epic>`;
-**Claude / Sonnet** have **no** canary lane and use the native SessionStart / PostCompact
-hook chain + thread-handoff instead (do not call a non-existent `<model>_lane`).
-
-### 0a. Required live-driver inbox drain — cycle start
-
-At the start of **every** cycle, inspect this driver's legacy inbox. The live loop —
-not a detached `process-*` / `ask-*` worker — must read and apply every message marked
-`unread` or `read-but-not-live-consumed`, then record that consumption explicitly:
-```bash
-.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
-.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
-```
-Never use a plain `ack` for messages this live loop has consumed: plain acknowledgement
-also records one-shot/headless processing and is not delivery proof for the live driver.
-
-### 0b. Optional Monitor inbox-watcher wakeup — cold start only
-
-At cold-start, **if your harness has a Monitor-equivalent**, invoke it once with that
-harness's `persistent`/timeout option, pointed at this one shell command:
-
-```bash
-scripts/ai_agent_bridge/inbox_watch.sh "$SESSION_HANDOFF_AGENT"
-```
-
-This is a **wakeup signal only**: each stdout line says that an unconsumed legacy
-message exists, with its id, sender, request id, and a bounded preview. It never reads
-the full body into your context and never marks a message consumed. You still must run
-the existing required `0a` / `4a` / `5a` / `8a` inbox-drain steps to read, apply, and
-explicitly live-consume everything the signal points at; those steps remain the
-universal fallback for every seat, watcher or not.
-
-Direct confirmation exists only for **Claude Code, Gemini/AGY, and Grok CLI**. For any
-other harness, ask the running agent directly whether it has an equivalent before using
-one; do not infer it from documentation or `--help`. Stop a running watcher cleanly
-with `scripts/ai_agent_bridge/inbox_watch.sh --stop "$SESSION_HANDOFF_AGENT"`; if a
-crashed process leaves a stale pidfile, the operating system releases its advisory lock
-and the next watcher replaces the recorded pid safely.
-
-### 0c. Hramatka epic — dual-repo queue (epic #4542 only)
-
-If `SESSION_EPIC` is Hramatka (public #4542), the priority/ownership queue is
-private BOARD `learn-ukrainian-infra-private#349`, not the public epic body. Cold-start
-read order: **private #349 → private open PRs → public PRs linked from #4542 only.**
-Public #4542 is charter + bare pointer — never generate or mirror a public checklist
-from the private board (leak + dual-write). GitHub issue/PR state in either repo
-remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
-status feed. Host actions on the Hramatka host follow item 10's split: routine
-maintenance there is driver work, done then reported, and it includes using
-sudo where the host requires it — pull merged `main`; restart an updated or
-broken service (system or user unit) after checking no active dispatch depends
-on it; install or enable a reviewed systemd unit or timer that lives in the
-repo; clean agent-generated caches, logs, and worktrees; install OS packages a
-reviewed repo change needs. A production release rollover on the live-serving
-host (running `hramatka/ops/deploy.sh` or anything that swaps live
-`/opt/hramatka/current`, including rebuilding or swapping the read-only release
-checkout — private #360 class) is a **production cutover** and needs a
-present-tense operator GO for that rollover; a GO recorded on an earlier or
-closed issue does not count, and the private deploy runbook (including the
-sudo steps inside it) applies only after that GO (it stays **ESCALATE** without
-that present-tense GO). Host access and security configuration stays
-operator-only (**ESCALATE**, not solo) — sshd configuration (e.g.
-`PermitRootLogin`), sudoers, user accounts, SSH keys and other credentials, and
-firewall changes that could cut off operator access — because of lock-out risk
-and because accounts/credentials are an operator stop condition. If #349 and
-any other queue view disagree, **#349 wins** — correct the other view the same
-session. Full contract: `docs/runbooks/hramatka-driver-queue.md`.
-
-Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
-as specified in that runbook; only `ALLOW` permits the new action.
-
-### 0d. Core fresh lesson-based build (epic #7994, sub-epic #8397)
-
-A1–B2 core modules are built fresh from new lesson plans by the fresh-build engine;
-`--upgrade` is abandoned (`docs/epics/fresh-build-requirements.md` §1). Same
-`$drive-epic` loop — **not** a second driver skill, and **not** `$track-completion`.
-
-Read first: [`docs/epics/fresh-build-build-program.md`](../../../../docs/epics/fresh-build-build-program.md)
-(§1–§3, §5, §6), then the requirements, plan schema, writer contract and review
-contracts as the phase needs. Seats live in `model-assignment.md` (Ukrainian
-content authoring row) — do not freeze a roster here.
-
-**Done** is the learner URL on the level's track (`/<level>/<slug>/`, e.g. `/a1/<slug>/`), with Pages only
-on present-tense operator GO (§7-rollout), and the LU QA sweep triaged (build
-program §5 step 10). Engine-on-`main` and gates green in a worktree are **not**
-done.
-
-Binding for this lane:
-
-1. **Nothing typed**: every Ukrainian string is a tool copy or the writer's
-   resolved text; a defect is fixed at its layer (plan, pack, word store, prompt,
-   gate or code), never by hand-editing a lesson or a generated file (R-12, R-35).
-2. A module has as many lessons as its content needs (R-02). The arc's
-   `est_lessons` is an estimate, never a target; nobody pads or squeezes a module.
-3. The plan fixes each lesson's activities (count, type, placement); the writer
-   cannot add or change them. Activity volume, correctness and workbook variety
-   are acceptance criteria (teacher feedback, operator 2026-09-27).
-4. The **driver does not decide Ukrainian**; the sources override any model
-   (R-35). Language work and its reviews go only to sanctioned language lanes,
-   cross-family to the author; Gemini seats review Ukrainian only, never code.
-   If an AGY run ends `agy_background_task_canceled` (#8771), retry once, then
-   reroute.
-5. Review at scale is automated (review tooling WP 14–16, LU QA sweep); the
-   operator reviews the pilot module and spot-checks after it (2026-09-27).
-6. Content PRs are **scripts-free**. While CF/CI runs on unit N, prepare N+1.
-   After gates pass in a worktree, **open the PR the same session**.
-
-### 1. Read topology + metrics (don't hold state — query it)
-
-```bash
-.venv/bin/python -m scripts.fleet_comms metrics        # efficiency metrics (no content)
-.venv/bin/python -m scripts.fleet_comms backlog        # pending/dispatched delivery
-.venv/bin/python -m scripts.fleet_comms dead-letters   # stuck deliveries
-```
-Fleet-comms externalizes topology + usage so you decide against fresh state, not a
-stale in-context snapshot. For per-lane budget health before dispatch:
-`.venv/bin/python -m scripts.fleet.capacity_pick` then
-`scripts/delegate.py dispatch --check-budget` (or `LU_DISPATCH_CHECK_BUDGET=1`)
-(+ `/api/state/routing-budget` for subscription lanes).
-**Pre-dispatch pace check (binding):** read `.venv/bin/python -m scripts.fleet.usage show`
-(or the `capacity_pick` pace column) before every implement dispatch — a deficit is
-visible pace, projected to run out before reset, and more than 2 points ahead of pace
-(near_cap ≥ 90% unchanged), and is not a dispatch target while a cool lane has reserve.
-
-### 2. Pick the next unblocked action
-
-Source of next work: your epic's stream tail / handoff, open GH issues for the epic, the
-build/review queue, the Work API projection's ranked attention list (§0), and
-`GET /api/work/v1/next?stream=<your-stream>` — cross-check against them before committing to
-an action. **Step 0 of any dispatch:** `gh pr list --state all
---search "<issue-nr>"` by issue reference (an open issue ≠ unfixed; a sibling PR may already
-carry it). If nothing genuinely fits a free lane, log it and leave it idle — never
-manufacture busywork (quality > utilization).
-
-### 2-epic. Epic issue ownership cycle (binding — operator 2026-08-28)
-
-You are an **epic orchestrator**, not a clerk waiting on one PR. Every cycle must advance
-the epic's open issue set:
-
-1. **Inventory** — open GitHub issues for this epic/stream (plus Work API `/next` +
-   grok-bot QA issues per §2b). Quote the count.
-2. **Disposition each item** — for every open issue, exactly one of:
-   - **in_flight** (named PR/task id + head),
-   - **dispatch now** (ROUTING_CARD + `capacity_pick` / `/api/state/routing-budget` +
-     `--check-budget`),
-   - **named hold** with one §2c code (`dependency_blocked | authoring_wip_cap |
-     review_wip_cap | ci_capacity | worktree_wip_cap | disk_capacity |
-     integration_wip_cap | human_decision | no_ready_work`).
-3. **Silence is a defect** — an open epic issue with no disposition is a driver failure.
-4. **Closeout** — after merge: close the issue (or prove residual), then follow §7a order
-   (P0 reaper first, then branch deletion). Merge alone is not done.
-
-**Anti-passive (all seats, Cursor especially):** while CF or CI runs on unit N, you
-**must** either dispatch the next ready epic child or emit a §2c disposition code in the
-same turn. Ending a turn with only "waiting on review/CI" and no fill/disposition is
-forbidden. Overnight/session gaps do not excuse an unfinished CLEAN/MERGEABLE PR —
-re-read checks and finish merge/hygiene on the next live turn.
-
-### 2a. NO FABRICATED DONE (binding all epic drivers)
-
-- Never invent acceptance thresholds the operator, issue, or epic goal did not set.
-- Never declare a goal done while measured residual remains in the same mandate unless
-  tools prove it impossible or the operator accepted it on the issue.
-- Never end with "when you want" or an "optional next" for in-scope residual — dispatch it.
-- Never relabel unfinished work as an intentional skip without issue text or tool proof.
-- Before "done" or handback, quote the tool residual count; `residual > 0` requires a
-  next dispatch in the same session.
-
-### 2b. Grok-bot QA findings — queue input, not a fleet seat
-
-Grok Bot (`app/cursor`) is an **external QA observer** — it reads CI/site signals and files
-labeled GitHub issues; drivers consume those issues through the normal loop above like any
-other open issue. It is **never** a dispatch target: no `--agent grok-bot`, no `ask-grok-bot`,
-no fleet-comms seat. If Grok Bot ever authors a PR, same-family Grok must not CF it — route to
-an outside-family reviewer per §6. Full contract: `docs/runbooks/grok-bot-qa-observer.md`.
-
-### 2c. No idle lanes — subscription min-max (binding, all driver seats)
-
-Idle paid lanes are direct financial loss (operator 2026-08-17). This generalizes the
-Grok-seat fleet-first *utilization* rule to **every** driver seat.
-
-**Definitions.** *Free lane* — healthy, budget-eligible seat with no live assignment.
-*Ready item* — queued work that is valuable, unblocked, and has an integration path.
-*Compatible / independent* — the item fits the free lane and does not collide with
-in-flight units (paths, review identity, or a hard dependency). *Settle event* — any
-dispatch/review/CI terminal or decision point. *Grace period* — the short fill window
-after a settle event before a hold is allowed. *Epic done* — operator goal met with
-tool-backed residual 0, or operator-accepted residual on the issue.
-
-**Precedence (strict):** correctness/quality → safety/resource bounds →
-dependency/critical-path → utilization. Later items never override earlier ones.
-
-1. **Waits are dispatch windows.** After any dispatch or review ask, **before** holding,
-   fill every free lane with a compatible ready item (unblocked work, banked follow-ups,
-   or prep the next program child whose dependency allows it). Idle free lane + ready
-   item = utilization failure.
-2. **Authorized idle is not a utilization failure.** A settle-hold must name one code:
-   `dependency_blocked | authoring_wip_cap | review_wip_cap | ci_capacity |
-   worktree_wip_cap | disk_capacity | integration_wip_cap | human_decision |
-   no_ready_work`. Silence is not a disposition. A free lane with nothing compatible
-   is `no_ready_work`; `dependency_blocked` names a real blocker, never a mismatch.
-3. **Pipeline with a depth limit.** While CF/CI runs on unit N, author N+1 only up to
-   the WIP/resource cap. Unit N **regains priority** the moment review feedback returns.
-   Never serialize implement → review → delta with idle gaps.
-4. **Ready-work forecast.** An unfinished epic needs a current ready-work forecast. An
-   empty ready queue requires an explicit disposition, not silence. File banked
-   follow-ups as GitHub issues when identified. Empty stream `/next` is a driver defect
-   unless the epic is done or a disposition applies.
-5. **Anti-gaming.** No placeholder agents, artificial task splitting, premature PRs, or
-   speculative work without an integration path. §2 still binds: never manufacture
-   busywork (quality > utilization). Disk wins every conflict (#M-14 — `df` + `du` of
-   `.worktrees` before fan-out; reap first).
-
-Mechanical reminder + disposition telemetry (#6976/#6998). At every
-dispatch/review settle, evaluate eligible ready items and first-class admission
-WIP limits (authoring / review / CI / worktrees / disk / integration) plus
-queue readiness. The reminder fires only when something is eligible; then
-dispatch or pass a structured code. Unknown codes are rejected. Do not add a
-raw idle-time threshold. Guardrail-authorized idle is not a failure.
-`driver_breadth_report --enforce` fails the breadth floor (unless NOTE-waived)
-and MISSING/DISHONEST idle dispositions — never opportunity-seconds.
-
-```bash
-.venv/bin/python -m scripts.orchestration.dispatch_settle task --task-id <id> \
-  --idle-snapshot-json <snap.json> [--dispatched | --disposition <code>]
-.venv/bin/python -m scripts.fleet.idle_settle evaluate \
-  --snapshot-json <snap.json> --kind dispatch --task-id <id> \
-  [--dispatched | --disposition <code>]
-.venv/bin/python -m scripts.fleet.idle_settle report
-.venv/bin/python -m scripts.fleet.idle_settle admission --snapshot-json <snap.json>
-.venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --since-hours 24 --enforce
-```
-
-### 3. Route by model × harness fit
-
-Decide the lane from `/api/rules` + `model_catalog.yaml`, **never** from the provider
-name. Respect the live caps (in-flight ceilings), the language-lane restriction
-(UK authoring / linguistic / content review route only to the sanctioned language lanes
-per the served rules), folk carve-outs (cross-family only), and the judge-seat rules.
-On limit: note the substitution and reroute per the fallback table — never block on one lane.
-
-**Live capacity (binding every implement / CF settle):** before picking a seat, read
-fresh tool output from **both**:
-
-```bash
-curl -sS --max-time 3 "http://127.0.0.1:8765/api/state/routing-budget"
-.venv/bin/python -m scripts.fleet.capacity_pick
-```
-
-Prefer cooler / higher-headroom seats from that data. Do **not** habit-route to a hot or
-in-flight-saturated lane when a cooler eligible seat exists. CodexBar is an **input to
-the API**, not a separate driver app workflow — if both surfaces are empty/stale, probe
-and record that in the ROUTING_CARD (`NOTE: routing_budget_empty`), then use `/api/rules`
-fallback tables. Never invent burn % from memory.
-
-### 3-routing. Mandatory ROUTING_CARD_V1 + breadth (operator GO 2026-08-06)
-
-**Binding full text:** `agents_extensions/shared/rules/fleet-driver-routing.md` (served at
-`/api/rules` after model-assignment).
-
-Before **every** implement `delegate.py dispatch`:
-
-1. Emit a **ROUTING_CARD_V1** (handoff / issue / `batch_state/` receipt) with:
-   `tier` (authority|practical|heap) · `model_x_harness` · `why_this_tier` ·
-   `advisor_packet` (required if tier=heap) · `owned_paths` · `acceptance_cmd` ·
-   ≥2 `alternatives_considered` · `parallel_free_seats` · quoted
-   `routing_budget_primary` + `capacity_pick_order` (tool evidence).
-2. **No card = no dispatch.** Skipping the card is a process defect; do not launch the
-   worker and "write the card later." The runtime runs the issue-card checker
-   `--strict` for implementation briefs naming GitHub issues. A WARN refuses
-   dispatch unless urgent in-flight work uses `--allow-dor-warn <reason>`;
-   the task JSON records that reason. GitHub/API lookup and checker failures
-   also refuse dispatch unless that override is supplied. PR references are
-   skipped after API resolution. Briefs without issue references are not gated.
-   Opening or editing an issue updates one advisory checker comment.
-3. **Default bounded work:** Fable or Astra **brief** → heap/practical **worker(s)** —
-   not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
-4. **Fable path:** native `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
-   lockfiles / pointer / smoke jobs.
-5. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a
-   written `NOTE: fleet_breadth` with tool-backed blockers.
-6. Before handoff, run and attach:
-   ```bash
-   .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator "$SESSION_HANDOFF_AGENT" --since-hours 24
-   # optional hard check:
-   .venv/bin/python -m scripts.fleet.driver_breadth_report --initiator grok --since-hours 24 --enforce
-   ```
-
-Fixation on one practical seat while free lanes sit idle = utilization failure
-(§2c — all driver seats, not Grok-only).
-
-### 3a. Pre-dispatch outcome adequacy (required before substantive phase/epic kickoff)
-
-Freeze the exact prompt before presenting or routing it. Record its SHA-256, user-visible
-outcome, real-world or source denominator, non-goals, role map, independent held-out evaluation,
-stop/residual policy, and completion vocabulary. For high-stakes domain work, obtain a
-domain-fit review and a distinct adversarial scope/circularity critique; for smaller
-consequential work, obtain at least one fast critic. A genuinely trivial bounded prompt is
-explicitly exempt. The prompt author counts as neither reviewer. Choose these roles from live
-`model-assignment.md` routing, not a
-permanent reviewer identity; collect explicit checklist verdicts/findings and reconcile them
-before dispatch.
-
-Re-review after a material change to outcome, scope, denominator, role map, acceptance
-criteria, or independent evaluation. A non-goal that shrinks the actual mission needs
-operator/advisor approval. Prompt review is pre-dispatch quality control only: it never
-replaces exact-head implementation review or the cross-family PR review gate. Discovery,
-seeds, prototypes, schemas, transport checks, and self-authored canaries may prove research or
-engine readiness, never product completion. On handback, name the verified user-visible outcome,
-denominator, held-out proof, and residual gap. For normative language evidence, establish the
-source's pedagogical or evidential role before consuming an occurrence.
-
-### 4. Dispatch
-
-**Capacity-first (binding — operator 2026-08-12 / #4707):** Before every implement
-dispatch, run `capacity_pick` and pass `--check-budget` (or export
-`LU_DISPATCH_CHECK_BUDGET=1` in the launcher):
-
-```bash
-.venv/bin/python -m scripts.fleet.capacity_pick
-.venv/bin/python scripts/delegate.py dispatch --check-budget --agent <lane> --worktree ...
-```
-
-Refuse habit-routing to hot / near_cap / CodexBar-deficit lanes when cooler seats
-are listed. `--check-budget` hard-subs via `dispatch_fallbacks` when mapped
-(e.g. `codex → cursor`); otherwise exits non-zero unless `--force-agent` + NOTE.
-Before claiming who authored work, read the `🔄 HARD AUTO-SUBSTITUTE` line (stderr) and
-the task record's `agent`/`model` in `batch_state/tasks/<id>.json` (2026-09-25). Never
-filter dispatch output down to the base-SHA line or drop stderr; that hides the substitution.
-
-Then dispatch with a numbered brief
-(worktree → work → tests → ruff → conventional commit → push → PR → **no auto-merge by
-the worker**) and the `#M-4` evidence preamble (each claim + its deterministic tool +
-quoted raw evidence). Classify the task and pass the research flags
-(`--research-role/-task-family/-track/-owned-path`). Stagger same-lane spawns ~10s.
-The brief's test step names only the test files that cover the changed files,
-including tests of code that imports a changed shared helper; never
-collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
-or `-n` above 2, and run those tests in the foreground and wait. The full suite
-runs in the PR's CI (and again in the merge queue on the merged tree) — that is
-the proof; do not trigger extra full runs. Use `gh workflow run ci.yml --ref <branch>`
-only when the brief explicitly asks for it (a branch with no PR yet, a baseline
-capture, or diagnosis).
-
-### 4a. Required live-driver inbox drain — immediately before dispatch
-
-Immediately before each dispatch, repeat the drain so new instructions or a reply cannot
-be missed between routing and worker launch. Read and apply every `unread` or
-`read-but-not-live-consumed` entry before dispatching, then run:
 ```bash
 .venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
 .venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
 ```
 
-### 5. Settle-loop (never poll by hand)
-
-A dispatch returning is not a settle. Arm a wait in the same turn (`delegate.py
-wait <task-id>` where this seat has no Monitor tool; otherwise the Monitor
-tool). Ending the turn with a live worker and no wait is a driver defect.
-
-Watch the task's `batch_state/tasks/<id>.json` `status` with the **Monitor** tool.
-This wait is a §2c fill window, not an idle period: fill free lanes before holding.
-Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
-other terminal/attention states: `failed | timeout | rate_limited | cancelled |
-crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
-status NOT in `{spawning, running, ""}`. The task file is truth; `/api/delegate/active`
-can omit live tasks. **Before declaring a dispatch dead:** `gh pr list --state open`
-first, then check the worktree for finished-but-unpushed work. **After terminal status,**
-run `.venv/bin/python -m scripts.fleet.post_task_reap --task-id <id>` (dry-run by default;
-pass `--apply` to reap the bound dispatch worktree). `post_task_reap` delegates removal to
-the P0 reaper; do not substitute a direct Git removal path.
-
-**Wait-loop hygiene (2026-09-24).** Before arming a wait on a tool's output, grep the
-tool's source or one real output for the exact string — a loop on text the tool never
-prints (`would ADMIT` vs `would admit now`) waits forever. Never `pkill -f` a pattern
-that also appears in your own command line; it kills your shell.
-
-### 5a. Required live-driver inbox drain — after settle
-
-Once the settle-loop reaches its decision point, drain again before choosing the next
-action. Read and apply every `unread` or `read-but-not-live-consumed` entry, then run:
-```bash
-.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
-.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
-```
-
-### 6. Cross-family review gate (load-bearing — discussion ≠ review)
-
-A review of record is **independent and cross-family** (outside the author's model
-family; never self-review, never same-family). The CF of record must be
-**exact-head**: attested `resolved_model`, `VERDICT: APPROVE` (or equivalent),
-and the attested SHA equals the current PR head. Discussion on the thread is not CF.
-
-- **Execution and comms layers:** CF, design, and plan use toolful seats (`delegate.py` or native harnesses); ACP is toolless intercomm only, and caveman lite is style (never persisted review text).
-
-**Reviewer family is live data.** Pick the reviewer from the live Cursor Cloud
-catalog and the served `/api/rules` reviewer-seat rule. Do **not** hardcode Claude
-Sonnet (or any one model). The writer's family is never eligible.
-
-**Cursor Cloud-authored PRs:** CF is another Cloud seat on a **different family**,
-chosen from the "Code review" row of `model-assignment.md`
-(GLM from the Cloud catalog, Grok, GPT, Kimi K3, … — whatever the
-live catalog lists that is outside the author's family and meets
-that Code review routing). Gemini/AGY reviews Ukrainian only, never code
-(operator 2026-09-25). **VPS drivers** may still
-use the existing `ask-<lane>` / `delegate.py` review path below; the landing order
-in §7 is the same.
-
-**Shielded formal CF is RETIRED (operator 2026-08-07).** Do **not** run
-`review-pr` / sealed `lu-review-*` / `shielded-reviews` clones — the CLI fails
-closed. Use lightweight direct review:
-
-```bash
-printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
-  .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
-    --task-id review-<N> --type review
-# Post the exact-head verdict on the PR (attest resolved_model + SHA).
-# Do not enqueue or auto-merge here — landing order is §7.
-```
-
-This command line is unchanged, but the transport underneath it is not ACP
-(operator 2026-08-23, #7155): `--type review` / `--review` / `--pr` / `--branch`
-route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
---worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
---no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
-
-**Read-only review asks can be refused on brief wording (#8703).** The write-shape check
-in `delegate.py` still refuses a read-only ask when a sentence or list item starts with a
-write verb (`Fix …`, `- Remove …`). Wrapped continuation lines, questions ending in `?`,
-and fenced or `>`-quoted text pass. Quote the brief under review; phrase your own asks as
-questions. After launching any `ask-*`, confirm `batch_state/tasks/<id>.json` exists.
-
-Read the review CONTENT (not just pass/fail), apply deltas,
-re-probe gate-driving data yourself. If the head moves after APPROVE, the CF is
-stale — re-run exact-head CF before any enqueue.
-
-Reviewers do not re-run test suites that the PR's CI runs: review the diff, run at
-most the specific tests that reproduce a finding you are checking, and cite CI run
-ids for suite results.
-
-### 7. Merge discipline
-
-PRs only — never commit or merge to `main` directly.
-
-**Binding public landing order (operator 2026-08-30 / #7450; CF-attest retired
-2026-09-03; CF-before-CI clarified 2026-09-18):** GitHub
-`required_approving_review_count` is 0 and the sole required check is CI Gate.
-Auto-merge / enqueue is **not** review. That is how PRs #7447–#7449 hit `main`
-with empty reviews. Drivers follow this order:
-
-0. **CF review-fix before CI (binding).** Push the branch. Run exact-head CF
-   via `ask-<lane> --branch <name>` (or equivalent). Fix → re-CF until
-   `VERDICT: APPROVE` on the tip. **Do not open any PR** (draft or ready)
-   while CF is open or while iterating findings — CI runs on draft
-   `opened`/`synchronize` with no draft guard in this repo, so a draft still
-   burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
-   runs once on that tip.
-1. **Independent cross-family exact-head CF** — attested `resolved_model`,
-   different family from the author, APPROVE on the tip (post on the PR once
-   open, bound to that SHA).
-2. **Open the PR** → **CI Gate green** on that **same** head.
-3. **Merge queue only after both.** Enqueue then; never before.
-
-**Never auto-merge or enqueue first.** Never treat `gh pr merge --auto` as a
-substitute for CF. Do **not** arm `--auto` and wait for Gate. Enqueue / MQ only
-after CF APPROVE on the exact head **and** Gate is green:
-
-```bash
-# Only after §7 steps 1 and 2 on this exact head. Never --auto.
-gh pr merge --squash
-
-# Check merge-queue status / position / ETA after enqueue (#7814 item 13):
-.venv/bin/python -m scripts.gh_merge_queue_status <pr>
-```
-
-**Merge-queue visibility after enqueue (#7814 item 13).** After `gh pr merge`, GitHub
-prints `! The merge strategy for main is set by the merge queue` while the PR stays
-`OPEN` / `CLEAN`. Do not stall or query raw GraphQL by hand — run
-`.venv/bin/python -m scripts.gh_merge_queue_status <pr>` (or `--line` / `--json`) to
-inspect queue membership (`queued=yes/no`), position in line, ETA, and the active
-`merge_group` CI run URL if building (or clear `in queue, position unknown`).
-
-Do **not** pass `--delete-branch` here while this repo uses a merge queue — deleting the
-head mid-queue can close the PR without landing. Delete the remote branch only after
-`gh pr view` shows `MERGED`, as part of §7a cleanup. Never enqueue a **draft** and never
-merge ahead of the review verdict. Blocking CI red → never `--admin`-bypass. A
-track/infra driver **self-enqueues its own lane's PR** after exact-head CF + Gate
-green (lane model — there is no promoting orchestrator). Flag another lane's PR with
-`needs=merge` rather than merging it.
-Skill- or docs-only landings classify as merge_group `docs_skills` (#7018):
-the four pytest shards and coverage combine are no-op **success**, not skipped.
-
-**If the head moves, re-run exact-head review before re-queue.** A new SHA makes the
-prior APPROVE stale.
-
-**Merge-queue kick is same-hour work (#7042).** A **kick** is `merge_group` CI Gate
-going red and GitHub dequeuing the PR — it lands back on the branch looking CLEAN,
-with no visible failure unless you go look. CI Gate now comments the source PR with
-the run URL and per-job `RESULTS` on a kick; that comment is the trigger, not a
-courtesy. On seeing it: read the failed jobs from the run, fix or rebase, re-run
-exact-head CF review if the head moved, then re-queue — same hour, never left
-overnight. Do not stand up a bot or recovery workflow for this; it is driver work
-like any other red CI.
-
-**Before enqueue: use `full-ci` only for a classifier blind spot (#9066).** Do not
-add the label by habit when a PR touches `tests/` or runs the selected tier.
-The merge queue runs the full required Python tier for code, frontend-only,
-and docs changes outside curriculum/wiki (#9073); the selected tier runs
-repo-wide tests (#8707). Add `full-ci` only when a change affects tests the
-path classifier cannot see, and explain why in the PR. #8692 exposed the old
-gap when a shard-3 lint test escaped.
-
-**Before opening a PR that touches launchers or hooks, run every real-launcher test
-(2026-09-25).** A worker's targeted tests are not the CI suite. Most launcher tests call
-the shared `run_launcher` helper (`tests/test_launcher_contract.py`) instead of
-`subprocess`, so select on launcher names and helpers, never on `subprocess`. Run it from
-the checkout root; dispatch worktrees have no `.venv`, so resolve the primary checkout's
-interpreter:
-
-```bash
-PRIMARY_REPO="$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")"
-"$PRIMARY_REPO/.venv/bin/python" -m pytest -q $(grep -rlE 'start-[a-z0-9{}*-]+\.sh|launcher_core\.sh|scripts/launchers/|\brun_launcher\b' tests/)
-```
-
-**Diagnose pytest failures from the junit artifact first (#8701, #8705).**
-`gh run view --log-failed` and the live log truncate or stall — that read as a "silent
-shard death", cost a closed PR and 3 review rounds, and was wrong. When the run has
-`pytest-junit-*` artifacts, download them to a scratch dir (never the primary checkout)
-and parse `<failure>`; a FAILED test there is a test failure, so confirm any new failure
-mode in the artifact before naming it. Lint, setup, and other jobs without that artifact:
-read `gh run view <run> --log-failed`.
-
-```bash
-gh run download <run> --pattern 'pytest-junit-*' -D "$(mktemp -d)"
-```
-
-**Main red: fix main first.** Find the breaking commit (`git log` of the failing test's
-inputs) and fix main before re-enqueueing anything. Refresh blocked PRs with
-`gh pr update-branch <pr>` (always pass the number; bare, it targets the current
-branch's PR) — never close/reopen, which reuses stale merge refs and fails again. Verify parent1 == the approved head and the PR patch-id is unchanged, then get
-one batched exact-head re-CF per reviewer family.
-
-### 7-rollout. Local / production proof (when the epic requires it)
-
-Do **not** make every epic driver a standing release owner. Gate rollout by charter:
-
-| Kind | Driver owns? |
-| --- | --- |
-| **Local / service proof** after a change (restart Monitor API, smoke `/api/…`, UI check) | **Yes** — part of verifying the artifact |
-| **Routine host maintenance** (pull merged `main`; restart an updated or broken service after checking no active dispatch depends on it; install or enable a reviewed systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and worktrees; install OS packages a reviewed repo change needs), including sudo where the host needs it | **Yes** — do it, then report. Never ask the operator |
-| **Production / Pages / public cutover** | **Only on present-tense operator GO** — listing it in the epic establishes scope, not a green light |
-| **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
-| **Host access / security configuration** (sshd configuration such as `PermitRootLogin`, sudoers, user accounts, SSH keys and other credentials, firewall changes that could cut off operator access) | **Escalate** — operator-only; lock-out risk and accounts/credentials are an operator stop condition |
-
-Missing local proof on a user-visible API/UI change is incomplete closeout. Issue or PR wording
-never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
-cutover. Claiming prod HA without the operator or advisor GO is out of scope.
-
-### 7a. Post-merge cleanup is mandatory (binding — operator 2026-08-07)
-
-**A squash-merge is not done until cleanup proves free of that PR's residue.** Chat
-promises do not bind; this section does. Leaving dispatch worktrees or tmp residue
-after merge is a process defect (ENOSPC / disk full is the known failure mode).
-**Never pass `--delete-branch` to `gh pr merge` when the repo uses a merge queue** —
-deleting the head ref mid-queue can close the PR without landing (known failure mode).
-After `MERGED`, follow the numbered order below: reaper first, then branch deletion.
-
-**Order after `gh pr view <N>` shows `MERGED`:**
-
-1. **Confirm** merge SHA.
-2. **`merge_closeout` first** — after all processes have left the target worktree(s), run:
-   ```bash
-   .venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply
-   ```
-   This one command proves the PR is `MERGED`, finds every worktree tied to it (by
-   branch or exact merged head SHA — detached review-checkout siblings included),
-   reaps each through the P0 reaper (`--merged`/`merged_pr_only`, exact `--worktree`,
-   no second deletion hand, no `--force`), and proves the remote and local branch are
-   both gone. It exits non-zero on any residual — treat that exit as a blocker, not
-   permission to retry with `--force`.
-3. **Manual fallback only** — if `merge_closeout` cannot run, follow
-   [`worktree-cleanup.md`](../../../../docs/runbooks/worktree-cleanup.md) for the
-   kill switch, rescue restore, and allowlisted dual paths before using
-   `git worktree remove`.
-4. **Branches** — `merge_closeout --apply` deletes the pull request's remote and
-   local branch. A squash merge still counts: the old tip is the PR head, not a
-   commit on `main`. Agent scratch refs (`*/review-*`, `rescue/*`, `pr-*`) are not
-   a pull request head; the hygiene sweep deletes them when they have no open PR,
-   and a later review round deletes the earlier round's branch. Do not leave those
-   refs behind. Then run `git fetch --prune`.
-   Use `.venv/bin/python -m scripts.hygiene.branch_sweep --json` for the session branch sweep; add `--apply` only after reviewing its receipts.
-5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
-
-**Do not** treat merge alone as closeout. **Do not** run sealed formal CF.
-
-### 8. Handoff — dual-write, cutover-aware (see §Fleet-comms state below)
-
-End the session on your seat's handoff signal (canary FAIL-HANDOFF for grok/gemini/kimi;
-the SessionStart / thread-handoff for Claude/Sonnet), not on a compact count. Keep the
-file handoff current — it stays authoritative through every plane mode (below).
-
-On a Hramatka epic (#4542) drive, before declaring the handoff verified-clean run
-`.venv/bin/python -m scripts.fleet.hramatka_hygiene_check` — only exit 0 is a pass;
-exit 2 (`unknown`, GitHub unreachable) is never a clean handoff either (`docs/runbooks/hramatka-driver-queue.md`).
-
-**Evidence hygiene.** Every timestamp in a handoff comes from `date -u`, never from
-memory or a clock guess (a handoff once said "18:0xZ" at 17:55Z).
-
-**Skill source of truth is git, not deploy trees.** Edit only
-`agents_extensions/shared/skills/drive-epic/SKILL.md` (this file). Never implement or
-“fix” process in `.claude/skills/` or other deploy-rsync targets — those copies are
-overwritten on the next agents_extensions deploy and are not durable.
-
-**Entire dual-write (Option A — operator GO 2026-08-02; file remains SSOT):** on every
-session handoff, also project public continuity into entire-context. This is
-**supplemental** (ADR-018): body-free locators only; never store residual narratives,
-task ids, or OPSEC-sensitive prose only in Entire; never treat Entire as handoff
-authority or retire the file on your own.
-
-Durable sinks for the dual-write (not private deploy trees):
-
-| Sink | What to write | Survives |
-| --- | --- | --- |
-| **File handoff** (local operational SSOT; gitignored `.claude/<epic>-epic/*` or `docs/session-state/` when the epic uses a tracked pointer) | Next queue, residual narrative | Local session / tracked pointer as applicable |
-| **entire-context projection** (`batch_state/entire-context/…` via CLI) | `bootstrap-git` + capsule via `handoff` + `record-use` | Rebuildable local projection |
-| **Fleet-comms channel** | Issue/PR numbers only | Plane authority |
-| **GitHub issues** | Residual / next work | Public queue SSOT |
-
-```bash
-# 1) Index merge SHAs from this drive (idempotent) — writes the local projection
-.venv/bin/python -m scripts.entire_context bootstrap-git <40-hex-sha>   # repeat per merge
-
-# 2) Body-free capsule to stdout (≤5 items). Optional: --locator-id clink_… from bootstrap.
-#    Do NOT treat a tee into .claude/ as durable process storage (deploy-wiped).
-#    Optional scratch only: batch_state/ (gitignored runtime), never skills trees.
-.venv/bin/python -m scripts.entire_context handoff --query "<epic keywords>"
-
-# 3) Attest consumption when locators informed the handoff
-.venv/bin/python -m scripts.entire_context record-use \
-  --task-id <epic-or-stream-id> --consumer <harness> --purpose handoff \
-  --locator-id clink_…   # repeat up to the locators used
-
-# 4) Fleet receipt: issue/PR numbers only (no residual tables, no secrets)
-.venv/bin/python -m scripts.fleet_comms channel publish <stream-channel> \
-  "handoff dual-write: file=SSOT entire=capsule. Next issues #… Merged PRs #…" \
-  --sender "$SESSION_HANDOFF_AGENT" --source <harness> --kind state \
-  --idempotency-key "handoff-<epic>-<date>"
-```
-
-**Cold-start companion (not a substitute for the file):** after §0 orient,
-`status` + `search --query "<path-or-sha-needle>"` (and optional `handoff --query`)
-so promoted SHAs surface before dispatch. Ranking is **one substring** (prefer path
-tokens like `practice` or a full SHA — not multi-word sentences). Empty search =
-nothing indexed for that needle; `handoff --query` with zero hits may return
-`seed_invalid` — use `--locator-id` from bootstrap/search instead. Fall through to
-GH issues + file handoff.
-
-### 8a. Required live-driver inbox drain — before handoff
-
-Immediately before writing or signalling handoff, make one final live-loop drain. Read
-and apply every `unread` or `read-but-not-live-consumed` entry, then run:
-```bash
-.venv/bin/python -m scripts.ai_agent_bridge inbox --for "$SESSION_HANDOFF_AGENT"
-.venv/bin/python -m scripts.ai_agent_bridge ack --consumed-by-live-driver <message-id> [<message-id> ...]
-```
-Record any action or unresolved request in the authoritative file handoff after this
-drain; never claim the handoff is complete because a one-shot worker acknowledged it.
-Then run the Entire file-handoff steps in §8.
-
----
-
-## Fleet-comms state — dual-aware, cutover is closed
-
-The message plane's `authority` cutover is **done**: mode `authority` is the production
-default (operator GO 2026-08-01, closed with evidence on
-[#6159](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6159)).
-Fleet-comms is now durable authority for messages/jobs; legacy broker/channel file
-stores are read-only migration/projection inputs, not a live write target.
-
-- **Cold-start first action:**
-  `.venv/bin/python -m scripts.fleet_comms cold-start-board` — probes fleet/plane/stream
-  state so you orient from live data, never memory.
-- **Check plane state:** `.venv/bin/python -m scripts.fleet_comms plane-status` and
-  `.venv/bin/python -m agents_extensions.shared.session_streams dual-write-status`.
-  Implemented modes are `off | shadow | dual_write | authority` — do not hard-code a
-  mode in prose; always query it fresh.
-- **File handoff still matters:** fleet-comms is durable authority for messages/jobs,
-  but you still write file continuity where the epic uses one (`.claude/<epic>-epic/
-  *DRIVER-HANDOFF.md` — gitignored local state — or `docs/session-state/` for infra); see
-  the file-handoff steps in §8. Live-driver diagnostics use `session_streams
-  handoff-status` (#5530). Live drivers never run `handoff-claim`: the launcher
-  has already claimed the lease. `handoff-claim` belongs to the successor
-  launcher / proof-gated dead-holder recovery in the local/offline contract
-  only; it cannot recover a remote lease. Remote recovery uses Monitor TTL/CAS
-  or an attributed operator release, never local PID observations or `--local`.
-- **Sealed formal CF is retired** — CF is the direct `ask-<lane>` + PR-post flow in §6,
-  not `review-pr` / sealed `lu-review-*`.
-- **ACP provider transport:** ACP is toolless intercomm only (state transfer / ordinary asks and `discuss` with 2 to 4 enabled seats; every other participant count rejects); CF, design, and plan use toolful seats (`delegate.py` or native harnesses), and caveman lite is style.
-- **Never** flip the plane, enable retention apply, or invent a competing comms design
-  from this skill — those remain the infra lane's gated actions, even post-cutover.
-
----
-
-## Per-model capability delta
-
-Same playbook; each seat adjusts on the axes the fleet has measured. This is the ONLY
-model-specific section — everything above is identical across seats. **§2c (no idle
-lanes / subscription min-max) is not a per-model delta** — it binds every driver seat.
-The Grok row's remaining seat-specific rule is no-solo *implementation* (driver-only),
-not the utilization half.
-
-| Seat | Delta |
-| --- | --- |
-| **Grok 4.6** | Tool-backed claims still bind on this seat (operator 2026-07-27): never assert a word/stress/gate/count/SHA without the raw tool output quoted — that is policy, not a 4.6 quality ranking. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. **No-solo means you do not implement; it does not mean you stop thinking.** Utilization (idle free lane + open work) is §2c and binds every driver seat — not a Grok-only delta. |
-| **Sonnet 5.5** | Use this practical seat for well-scoped work, bug fixes, and polished English reports, runbooks, write-ups, PR/issue prose, decks, spreadsheets, and design review of pages/artifacts; keep Ukrainian curriculum content with sanctioned language lanes (Fable 5.1 for Claude). Route security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions) to Opus 5.5 or Codex Sol, never Sonnet 5.5. Escalate hard, open-ended judgment to Opus 5.5 and designated authority decisions to Fable 5.1. CF reviews you route must go to a **non-Anthropic** family (you are Anthropic-family — avoid self/same-family review). |
-| **Gemini / AGY (gemini-3.8-flash-high)** | Ukrainian work and well-defined implementation with a complete one-unit brief and acceptance criteria. MCP-leading tool use supports bounded execution. Do not self-decompose into serial micro-PRs; the accountable orchestrator owns sequencing. |
-| **Kimi K3** | Frontier coder/reviewer + cross-family escalation authority (independent of Anthropic & OpenAI). Dispatch defaults to the faster `k3-256k` with no forced effort; full K3 defaults to `high` through the `kimicc` harness. Kimi cannot be a read-only review seat via `ask-kimi --type review` / `delegate.py --mode read-only` (the tooling refuses because headless Kimi auto-approves mutations), so pick another family for cross-family review; still a good implementer and non-Ukrainian design consult; drive when assigned. |
-| **Claude (when driving a track)** | Use **Opus 5.5** for hard Claude-lane coding, deep code review where relevant, and security-sensitive code (hooks/guards, launchers, credentials/secrets, dispatch admission, sandbox/permissions); use **Sonnet 5.5** for well-scoped everyday track work, bug fixes, and polished English deliverables; keep Ukrainian curriculum content with sanctioned language lanes (**Fable 5.1** for Claude). Fable 5.1 remains the advisor and authority seat. |
-| **Claude Fable 5.1 (when in the driver seat)** | Apply the Fable 5.1 section of the `claude-api` skill's migration guide (`shared/model-migration.md`) and the fleet effort topology in `docs/best-practices/fleet-shared-doctrine.md` § Fable 5.1 `/effort`. Essentials: thinking is always on (never send `thinking: disabled`); default **`high`**, step to **`medium`/`low`** for routine (do not keep an Opus/`xhigh` habit); **`xhigh`** for hard multi-file / long autonomous turns **and** for curriculum/linguistic skills that pin `effort: xhigh` (do not step those down); **`max` almost never**. Long deliverables stay at **`high`** unless a measured quality gain says otherwise; at `xhigh`/`max` leave output-budget room. Quirks: high+ on simple tasks over-gathers (lower effort); low searches less (bump for retrieval); effort ≠ shorter replies. Keep test-before-report and progress-grounding (Opus 5 “delete verification scaffolding” does not apply); delegate independent subtasks asynchronously; no context-budget countdowns; final summaries re-ground (outcome first, plain identifiers). Corrections: state plainly and briefly, then continue. |
-| **Claude Opus 5 (when in the driver seat)** | Apply the Opus 5 section of the same migration guide. Thinking stays on; control cost with `effort` (`medium`/`low` for routine driving). Disabling thinking on Opus 5 can turn tool calls into plain text and leak internal tags, and a Claude Code seat cannot set it anyway. |
-| **Codex / GPT-6** | Sol @ `high` handles coding and review; Luna @ `high` handles routine bounded work and scouting; Astra @ `high` is reserved for hard consequential advisory judgment. The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits. |
-| **Cursor (Auto / `grok-4.7` pin)** | Launched via `./start-cursor-driver.sh --epic <epic>` (#6956). Catalog seat stays Auto; launcher/registry default pin is `grok-4.7` (#8464). Use `composer-2.5` when Moonshot identity must be frozen. Driver-of-record requires attested `resolved_model` (unattested Auto cannot be driver-of-record). **Concurrency 1:** this driver session **is** the Cursor lane — do **not** `delegate.py dispatch --agent cursor` from inside it (deadlock / quota contention). Runtime note: stream leases serialize one **driver** per epic stream (`already has live session`); `delegate.py` does **not** fail-closed against a live Cursor driver lease — capacity is a non-blocking hint only. GUI Cursor IDE remains human supervision, not a second driver protocol. **Never leave an owned PR sitting.** Merge it, close it, or keep a same-session fix in flight. A status report is not a stopping point. **Anti-passive (Cursor):** this seat has repeatedly failed by stopping at "CF/CI pending" overnight, and by reporting worker status from memory. Binding: every turn that does not merge/hygiene a CLEAN gate must §2-epic-dispose the next issue or name a §2c code; a CLEAN/MERGEABLE PR with CF APPROVE must be merge-queued the same turn (no `--delete-branch` until MERGED). After every dispatch, arm `delegate.py wait` before the turn ends, and do not state a worker's status without `delegate.py status` in that turn. Session end without that closeout is a driver defect. |
-
----
+Never use a plain `ack` for these: it also records one-shot or headless processing and is
+not delivery proof for the live driver.
+
+1. **§0 Orient.** Run the cold-start board, lean orient, the Work API projection and your
+   stream's `next` list, and `plane-status`. The launcher already holds your lease; never
+   claim it. Detail and the optional §0b inbox watcher: [orient](references/orient.md).
+2. **§0a Inbox drain — cycle start.**
+3. **§0c / §0d Epic-specific rules.** Hramatka (#4542) and the core fresh build (#7994)
+   add binding rules; read [epic-specific](references/epic-specific.md) before acting on
+   those epics.
+4. **§1 Topology and metrics.** Query `fleet_comms metrics`, `backlog`, and
+   `dead-letters`; never hold fleet state in context (orient.md).
+5. **§2 Pick the next action and dispose every open issue** (§2-epic): each one is in
+   flight, dispatched now, or on a named §2c hold. Silence is a defect. Before dispatching
+   for an issue, look for a sibling PR (`gh pr list --state all --search "<issue>"`). No
+   fabricated done (§2a); no idle paid lane while ready work exists (§2c). While CF or CI
+   runs, dispatch the next ready item or record a §2c code in the same turn:
+   [queue-and-capacity](references/queue-and-capacity.md).
+6. **§3 Route** by model and harness fit from live capacity (`routing-budget`,
+   `capacity_pick`, usage pace). Write a ROUTING_CARD_V1 before every implement dispatch;
+   no card, no dispatch (§3-routing). Substantive phase or epic prompts first pass §3a
+   pre-dispatch outcome adequacy: [routing-and-dispatch](references/routing-and-dispatch.md).
+7. **§4a Inbox drain — immediately before dispatch.** Apply every message before the
+   launch.
+8. **§4 Dispatch** only when the task card and dispatch preflight are both green; chat
+   "ready" is not DoR. Use `--check-budget`, research flags, and `--owned-path`.
+9. **§5 Settle.** Arm `delegate.py wait <task-id>` (or the Monitor tool) in the same turn
+   as the dispatch. State a worker's status only after `delegate.py status <task-id>` in
+   this turn, and keep its task id, status, and branch head. When the wait returns, act on
+   the result. After a terminal status, run `post_task_reap`.
+10. **§5a Inbox drain — after settle.**
+11. **§6 Cross-family review, §7 merge, §7a closeout, §7-rollout proof** — in the order of
+    the Definition of done above. The mechanics (review commands, merge-queue status,
+    queue kicks, red main, junit diagnosis, launcher tests, rollout authority):
+    [review-merge-cleanup](references/review-merge-cleanup.md).
+12. **§8a Inbox drain — before handoff.**
+13. **§8 Handoff.** The file handoff stays authoritative; add the Entire dual-write and
+    fleet receipt; take every timestamp from `date -u`:
+    [handoff](references/handoff.md).
+
+Seat-specific adjustments for your model and for the seats you route to:
+[model-deltas](references/model-deltas.md).
 
 ## Escalate — do NOT decide these solo
 
-Route to the **operator + advisors (Fable, Astra)** — never resolve from the loop:
+Route to the **operator and advisors (Fable, Astra)**; never resolve them from the loop:
 
-1. Any **architecture / layout / process** change.
+1. Any **architecture, layout, or process** change.
 2. A **contested CF verdict** (reviewer and author disagree, or two reviewers split).
-3. A **fragile-fix** situation — challenge the premise, root-cause it, then escalate the
-   design if the right layer is unclear.
-4. A **high-risk route** that would trip the `risk_quality_floor` in `model_catalog.yaml`.
-5. Anything requiring **repo-wide safety** interruption of another lane (generated
-   artifacts, linter/Python-version bumps, cross-track architecture conflict).
+3. A **fragile fix**: challenge the premise and root-cause it, then escalate the design if
+   the right layer is unclear.
+4. A **high-risk route** that would trip `risk_quality_floor` in `model_catalog.yaml`.
+5. A **repo-wide safety** interruption of another lane (generated artifacts, linter or
+   Python-version bumps, cross-track architecture conflict).
+6. A **production, Pages, or public cutover** without a present-tense operator GO; HA,
+   Patroni, new-VPS, or fenced cutovers; host access and security configuration
+   (§7-rollout).
 
-Enforce the risk floor **on yourself**, not only on the work you dispatch. Gates passing
-is necessary, not sufficient — verify the real artifact renders/runs before "ready".
+Enforce the risk floor on yourself, not only on the work you dispatch. Passing gates is
+necessary, not sufficient: verify the real artifact renders or runs before "ready".
 
 ## This skill is NOT
 
-- A replacement for the served rules (`/api/rules`) — it points to them; it never
-  restates the live roster.
-- The main-orchestrator cold-start (that has its own SessionStart hook / handoff chain).
+- A replacement for the served rules (`/api/rules`); it points to them and never restates
+  the live roster.
+- The main-orchestrator cold start (that has its own SessionStart hook and handoff chain).
 - A single-module writer (V7 module: `$track-completion`; core fresh build: §0d).
-- A second orchestrator skill for curriculum — do not fork this file.
-- Authority to flip the plane cutover, self-merge a fleet-wide process change, or
-  self-review your own dispatched work.
+- A second curriculum orchestrator skill; do not fork it.
+- Authority to flip the fleet-comms plane, self-merge a fleet-wide process change, or
+  self-review work you dispatched.
