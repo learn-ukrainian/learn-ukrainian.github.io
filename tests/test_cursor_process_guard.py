@@ -1,6 +1,7 @@
 """Execution tripwires and detached-process session failure regressions (#9241)."""
 from __future__ import annotations
 
+import builtins
 import contextlib
 import json
 import os
@@ -16,6 +17,83 @@ import pytest
 
 from tests import cursor_exec_tripwire as tripwire
 from tests import cursor_process_guard as guard
+
+
+def test_plugin_import_does_not_load_psutil():
+    probe = """
+import importlib.abc
+import sys
+
+class NoPsutil(importlib.abc.MetaPathFinder):
+    def find_spec(self, fullname, path=None, target=None):
+        if fullname.partition(".")[0] == "psutil":
+            raise AssertionError("plugin import attempted to load psutil")
+
+assert "psutil" not in sys.modules
+sys.meta_path.insert(0, NoPsutil())
+from tests import cursor_process_guard
+assert "psutil" not in sys.modules
+"""
+    result = subprocess.run([sys.executable, "-c", probe], capture_output=True, text=True, timeout=10)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+@pytest.mark.parametrize("error", [ImportError, ModuleNotFoundError])
+@pytest.mark.parametrize("missing_at_start", [False, True])
+def test_missing_psutil_warns_without_failing_session(monkeypatch, capsys, error, missing_at_start):
+    monkeypatch.setattr(tripwire, "active", tripwire.active)
+    monkeypatch.setattr(tripwire, "session_token", tripwire.session_token)
+    session = SimpleNamespace(config=SimpleNamespace(), exitstatus=pytest.ExitCode.OK)
+    if not missing_at_start:
+        guard.pytest_sessionstart(session)
+    original_import = builtins.__import__
+
+    def unavailable(name, *args, **kwargs):
+        if name == "psutil":
+            raise error("psutil unavailable")
+        return original_import(name, *args, **kwargs)
+
+    with monkeypatch.context() as imports:
+        imports.setattr(builtins, "__import__", unavailable)
+        assert guard.process_snapshot() == {}
+        if missing_at_start:
+            guard.pytest_sessionstart(session)
+        guard.pytest_sessionfinish(session, 0)
+        assert session.exitstatus == pytest.ExitCode.OK
+        assert session.config._cursor_process_token
+        assert os.environ[tripwire.SESSION_TOKEN_ENV] == session.config._cursor_process_token
+    if missing_at_start:
+        # A later successful import cannot prove a diff without a baseline.
+        guard.pytest_sessionfinish(session, 0)
+        assert session.exitstatus == pytest.ExitCode.OK
+    output = capsys.readouterr().out
+    assert "warning: psutil unavailable; process scan skipped" in output
+    assert "baseline diff empty" not in output
+
+
+def test_smoke_without_psutil_preserves_result_and_reaps_process_group(monkeypatch, fake_cursor_bin, capsys):
+    original_import = builtins.__import__
+
+    def unavailable(name, *args, **kwargs):
+        if name == "psutil":
+            raise ImportError("psutil unavailable")
+        return original_import(name, *args, **kwargs)
+
+    original_killpg = os.killpg
+    killed = []
+
+    def record_killpg(pid, sig):
+        killed.append((pid, sig))
+        original_killpg(pid, sig)
+
+    monkeypatch.setattr(os, "killpg", record_killpg)
+    with monkeypatch.context() as imports:
+        imports.setattr(builtins, "__import__", unavailable)
+        result = guard.bounded_cursor_smoke(str(fake_cursor_bin / "cursor-agent"), timeout=5)
+    assert result.returncode == 0
+    assert "PONG" in result.stdout
+    assert len(killed) == 1
+    assert "warning: psutil unavailable; process scan skipped" in capsys.readouterr().out
 
 
 @pytest.fixture(autouse=True)

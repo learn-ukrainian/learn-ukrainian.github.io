@@ -16,8 +16,8 @@ import sys
 import time
 import uuid
 from pathlib import Path
+from types import ModuleType
 
-import psutil
 import pytest
 
 from tests import cursor_exec_tripwire as tripwire
@@ -35,8 +35,21 @@ REAL_ROOTS = (str(Path.home() / ".local/share/cursor-agent"),)
 _DISPATCH_OR_CI = bool(os.environ.get("CI") or os.environ.get("LEARN_UKRAINIAN_DISPATCH_TASK_ID"))
 
 
+def _load_psutil() -> ModuleType | None:
+    """Keep optional process inspection outside pytest's setup imports."""
+    try:
+        import psutil
+    except ImportError:
+        print("cursor process guard: warning: psutil unavailable; process scan skipped")
+        return None
+    return psutil
+
+
 def process_snapshot() -> dict[tuple[int, float], str]:
     """Snapshot live Cursor/LSP processes, including detached node workers."""
+    psutil = _load_psutil()
+    if psutil is None:
+        return {}
     found = {}
     for proc in psutil.process_iter():
         try:
@@ -66,12 +79,16 @@ def pytest_sessionstart(session: pytest.Session) -> None:
         # Linux /proc start times use boot time rounded to whole seconds,
         # plus clock ticks. Wall time can be almost a second ahead of that
         # epoch. Compare in the same clock and resolution as create_time().
-        ticks = os.sysconf("SC_CLK_TCK")
-        config._cursor_process_started = psutil.boot_time() + int(
-            time.clock_gettime(time.CLOCK_BOOTTIME) * ticks
-        ) / ticks
+        psutil = _load_psutil()
+        config._cursor_process_started = None
+        config._cursor_process_baseline = {}
+        if psutil is not None:
+            ticks = os.sysconf("SC_CLK_TCK")
+            config._cursor_process_started = psutil.boot_time() + int(
+                time.clock_gettime(time.CLOCK_BOOTTIME) * ticks
+            ) / ticks
+            config._cursor_process_baseline = process_snapshot()
         config._cursor_process_uid = os.getuid()
-        config._cursor_process_baseline = process_snapshot()
         token = uuid.uuid4().hex
     config._cursor_process_token = token
     os.environ[tripwire.SESSION_TOKEN_ENV] = token
@@ -90,6 +107,12 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     if hasattr(session.config, "workerinput"):
         # The controller scans after all workers finish; their descendants carry
         # its token. Worker-local snapshots and exit overrides are unnecessary.
+        return
+    psutil = _load_psutil()
+    if psutil is None:
+        return
+    if session.config._cursor_process_started is None:
+        print("cursor process guard: warning: initial process scan unavailable; final scan skipped")
         return
     baseline = getattr(session.config, "_cursor_process_baseline", {})
     current = process_snapshot()
@@ -177,7 +200,8 @@ def real_cursor_binary(request):
 
 
 def bounded_cursor_smoke(binary: str, *, timeout: float = 60) -> subprocess.CompletedProcess:
-    """Always reap the process group and any detached Cursor/LSP survivors."""
+    """Reap the process group; inspect detached survivors when psutil is available."""
+    psutil = _load_psutil()
     token = uuid.uuid4().hex
     proc = subprocess.Popen(
         [binary, "-p", "--model", "auto", "--output-format", "stream-json", "--trust"],
@@ -193,14 +217,15 @@ def bounded_cursor_smoke(binary: str, *, timeout: float = 60) -> subprocess.Comp
             with contextlib.suppress(ProcessLookupError):
                 os.killpg(proc.pid, signal.SIGKILL)
             proc.wait(timeout=5)
-            detached = []
-            for child in psutil.process_iter():
-                try:
-                    if child.status() != psutil.STATUS_ZOMBIE and child.environ().get("LU_TEST_CURSOR_SMOKE_TOKEN") == token:
-                        child.kill()
-                        detached.append(child)
-                except (psutil.NoSuchProcess, psutil.AccessDenied):
-                    pass
-            _, alive = psutil.wait_procs(detached, timeout=5)
-            if any(child.status() != psutil.STATUS_ZOMBIE for child in alive):
-                raise RuntimeError("Cursor smoke teardown left a live process")
+            if psutil is not None:
+                detached = []
+                for child in psutil.process_iter():
+                    try:
+                        if child.status() != psutil.STATUS_ZOMBIE and child.environ().get("LU_TEST_CURSOR_SMOKE_TOKEN") == token:
+                            child.kill()
+                            detached.append(child)
+                    except (psutil.NoSuchProcess, psutil.AccessDenied):
+                        pass
+                _, alive = psutil.wait_procs(detached, timeout=5)
+                if any(child.status() != psutil.STATUS_ZOMBIE for child in alive):
+                    raise RuntimeError("Cursor smoke teardown left a live process")
