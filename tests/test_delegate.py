@@ -11,6 +11,7 @@ Issue: #1184.
 from __future__ import annotations
 
 import argparse
+import builtins
 import contextlib
 import errno
 import fcntl
@@ -5746,6 +5747,59 @@ def test_run_worker_refuses_a_kimi_review_before_invocation(tmp_tasks_dir, tmp_p
     mock_invoke.assert_not_called()
     assert "KIMI CODING-ONLY" in capsys.readouterr().err
     assert delegate._read_state(delegate._state_path(task_id)) == initial
+
+
+def test_run_worker_refuses_an_unscoped_kimi_write_without_any_filesystem_write(tmp_tasks_dir, tmp_path, capsys):
+    """The empty-ownership refusal reads the task record without creating its directory or any file."""
+    task_id = "worker-kimicc-unscoped"
+    assert not tmp_tasks_dir.exists()
+    writes: list[str] = []
+    real_open, real_os_open = builtins.open, os.open
+    write_flags = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_APPEND | os.O_TRUNC
+
+    def record(kind):
+        def _recorder(*args, **kwargs):
+            writes.append(f"{kind}{args!r}")
+
+        return _recorder
+
+    def spying_open(file, mode="r", *args, **kwargs):
+        if set(str(mode)) & set("wax+"):
+            writes.append(f"open({file!r}, {mode!r})")
+        return real_open(file, mode, *args, **kwargs)
+
+    def spying_os_open(path, flags, *args, **kwargs):
+        if flags & write_flags:
+            writes.append(f"os.open({path!r}, {flags})")
+        return real_os_open(path, flags, *args, **kwargs)
+
+    with (
+        patch("agent_runtime.runner.invoke") as mock_invoke,
+        patch.object(os, "mkdir", record("os.mkdir")),
+        patch.object(os, "makedirs", record("os.makedirs")),
+        patch.object(Path, "mkdir", record("Path.mkdir")),
+        patch.object(Path, "touch", record("Path.touch")),
+        patch.object(Path, "write_text", record("Path.write_text")),
+        patch.object(Path, "write_bytes", record("Path.write_bytes")),
+        patch.object(builtins, "open", spying_open),
+        patch.object(os, "open", spying_os_open),
+    ):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Build the widget.",
+            mode="workspace-write",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            harness="kimicc",
+        )
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    assert "KIMI CODING-ONLY" in capsys.readouterr().err
+    assert writes == []
+    assert not tmp_tasks_dir.exists()
 
 
 def _codex_worker_result():

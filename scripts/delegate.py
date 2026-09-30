@@ -418,11 +418,16 @@ DEFAULT_GH_CLI_TIMEOUT_S: float = 180.0
 # ---------------------------------------------------------------------------
 
 
-def _state_path(task_id: str) -> Path:
-    tasks_dir().mkdir(parents=True, exist_ok=True)
+def _state_path_no_create(task_id: str) -> Path:
+    """The task record's path, without creating the task directory (for readers that must not write)."""
     # task-ids with slashes would break paths; sanitize
     safe = task_id.replace("/", "_").replace("\\", "_")
     return tasks_dir() / f"{safe}.json"
+
+
+def _state_path(task_id: str) -> Path:
+    tasks_dir().mkdir(parents=True, exist_ok=True)
+    return _state_path_no_create(task_id)
 
 
 def _result_path(task_id: str) -> Path:
@@ -5394,7 +5399,8 @@ def _kimi_worker_refusal(
         if mode != ADMITTED_MODE or review:
             # Refused by mode or review alone: no need to read the task record (or create its directory).
             refuse_kimi_if_disallowed((agent,), (model,), mode=mode, review=review)
-        launch = _read_state(_state_path(task_id)) or {}
+        # Read-only: a refused worker must leave no task directory or file behind.
+        launch = _read_state_json(_state_path_no_create(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
         refuse_kimi_if_disallowed(
             (agent,),
