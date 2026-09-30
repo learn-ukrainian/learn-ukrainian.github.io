@@ -1342,6 +1342,8 @@ def _compute_dispatch_routing_budget(
         else:
             cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
         if isinstance(cb_data, dict):
+            for field in ("credit_balance", "reset_credits", "fable_weekly", "claude_gpt_windows"):
+                agents[lane][field] = cb_data.get(field)
             agents[lane]["freshness"] = cb_data.get("freshness", "unavailable")
             agents[lane]["age_s"] = cb_data.get("age_s")
             if cb_data.get("error_kind") == "need_login" or cb_data.get("failure_kind") == "need_login":
@@ -1408,6 +1410,10 @@ def _compute_dispatch_routing_budget(
                 "weekly_remaining_pct": cb_data.get("weekly_remaining_pct"),
                 "windows": cb_data.get("windows"),
                 "provider_windows": cb_data.get("provider_windows"),
+                "credit_balance": cb_data.get("credit_balance"),
+                "reset_credits": cb_data.get("reset_credits"),
+                "fable_weekly": cb_data.get("fable_weekly"),
+                "claude_gpt_windows": cb_data.get("claude_gpt_windows"),
                 "probe_state": cb_data.get("probe_state"),
                 "login_state": cb_data.get("login_state"),
                 "monthly_cap_usd": cb_data.get("monthly_cap_usd"),

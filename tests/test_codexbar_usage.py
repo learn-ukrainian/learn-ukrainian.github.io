@@ -738,7 +738,8 @@ def test_codexbar_unavailable_nonzero_exit(monkeypatch):
     res = codexbar_usage_mod.fetch_codexbar_usage("codex", timeout_s=1.0)
     assert res["status"] == "unavailable"
     assert res["error_kind"] == "fetch_error"
-    assert "fatal upstream error" in res["auth_error"]
+    assert res["auth_error"] == "Codex usage HTTP 500"
+    assert "fatal upstream error" not in res["auth_error"]
 
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     record = CostRecord(
