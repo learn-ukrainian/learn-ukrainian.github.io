@@ -82,7 +82,7 @@ Never use a fixed unordered list that can pick the author’s family.
 |---|---|
 | date | 2026-07-19 |
 | task_family | infra-fix / ui / language / cf-review / orchestrate |
-| model | `gpt-5.6-terra` |
+| model | `gpt-6.1-sol` |
 | family | OpenAI |
 | harness | codex |
 | effort | xhigh |

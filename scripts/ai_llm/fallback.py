@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import contextlib
 import os
-import subprocess
 import tempfile
 import time
 from collections.abc import Callable, Mapping
@@ -13,8 +12,8 @@ from typing import Literal
 
 PRIMARY_GEMINI_MODEL = "gemini-3.1-pro-preview"
 AGY_GEMINI_MODEL = "gemini-3.8-flash-high"
-FLASH_GEMINI_MODEL = "gemini-3-flash-preview"
-FINAL_GEMINI_MODEL = "gemini-2.5-pro"
+FLASH_GEMINI_MODEL = "gemini-3.8-flash-high"
+FINAL_GEMINI_MODEL = "gemini-3.8-flash-low"
 GEMINI_MODEL_LADDER = (
     PRIMARY_GEMINI_MODEL,
     FLASH_GEMINI_MODEL,
@@ -568,170 +567,25 @@ def call_gemini_with_fallback(
     recover_response: Callable[[float, str], str | None] | None = None,
     agy_runner: Callable[[str, int | None], AttemptOutcome] | None = None,
 ) -> CallResult:
-    """Call the Gemini CLI through the shared rung ladder."""
-    # Default-timeout changed 2026-04-24 from `min(300 + len//500, 900)` to
-    # 1 day. The 900s ceiling was a hidden override on the production 24h
-    # hard_timeout policy set in scripts/batch/batch_gemini_config.py —
-    # flagged by Codex + Gemini in bridge architecture thread 0f94b8c0.
-    # If a caller really wants a shorter budget (e.g. a liveness probe),
-    # they pass `per_rung_timeout_s=300` explicitly; no silent clamp here.
-    _ONE_DAY = 24 * 60 * 60
-    effective_timeout = per_rung_timeout_s or _ONE_DAY
-    workdir = cwd or Path.cwd()
-    emit = logger or print
+    """Return a terminal refusal for the frozen Gemini CLI transport.
 
-    def _attempt_runner(rung: GeminiRung, _attempt_index: int, timeout_s: int | None) -> AttemptOutcome:
-        if rung.cli == "agy-cli":
-            if agy_runner is not None:
-                return agy_runner(prompt, timeout_s)
-            return _run_agy_via_runtime(
-                prompt,
-                task_name=task_name,
-                timeout_s=timeout_s,
-                cwd=workdir,
-            )
+    Keep the result shape for historical callers. The AGY writer uses its
+    own explicit runtime route; this compatibility entrypoint never reroutes.
+    """
+    from scripts.review.model_catalog import ModelCatalogError, require_execution_model
 
-        call_start_wall = time.time()
-        call_start_mono = time.monotonic()
-        if rung.auth_mode is None:
-            return AttemptOutcome(
-                status="fatal",
-                elapsed_s=0.0,
-                stderr_excerpt="gemini-cli rung missing auth_mode",
-            )
-        env = build_gemini_subprocess_env(rung.auth_mode, base_env=base_env)
-        prompt_arg, prompt_file = _gemini_prompt_arg(prompt)
-        cmd = [
-            gemini_cli,
-            "-m",
-            rung.model,
-            "--approval-mode=yolo",
-            "--skip-trust",
-            "-p",
-            prompt_arg,
-        ]
-        try:
-            proc = subprocess.Popen(
-                cmd,
-                stdin=subprocess.DEVNULL,
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-                cwd=str(workdir),
-                env=env,
-            )
-            try:
-                stdout, stderr = proc.communicate(timeout=timeout_s or effective_timeout)
-            except subprocess.TimeoutExpired:
-                proc.kill()
-                proc.communicate()
-                recovered = (
-                    recover_response(call_start_wall, prompt[:200])
-                    if recover_response is not None
-                    else None
-                )
-                if recovered:
-                    return AttemptOutcome(
-                        status="success",
-                        elapsed_s=time.monotonic() - call_start_mono,
-                        response_text=recovered,
-                        note="recovered from Gemini session after timeout",
-                    )
-                return AttemptOutcome(
-                    status="timeout",
-                    elapsed_s=time.monotonic() - call_start_mono,
-                    stderr_excerpt=f"Timed out after {timeout_s or effective_timeout}s",
-                )
-
-            elapsed_s = time.monotonic() - call_start_mono
-            if proc.returncode != 0:
-                recovered = (
-                    recover_response(call_start_wall, prompt[:200])
-                    if recover_response is not None
-                    else None
-                )
-                if recovered:
-                    return AttemptOutcome(
-                        status="success",
-                        elapsed_s=elapsed_s,
-                        response_text=recovered,
-                        returncode=proc.returncode,
-                        note="recovered from Gemini session after subprocess error",
-                    )
-                stderr_text = stderr or ""
-                status: AttemptStatus = "rate_limited" if is_gemini_rate_limited(stderr_text) else "retryable_error"
-                return AttemptOutcome(
-                    status=status,
-                    elapsed_s=elapsed_s,
-                    stderr_excerpt=stderr_text or None,
-                    returncode=proc.returncode,
-                )
-
-            response = stdout.strip()
-            if len(response) < 100:
-                recovered = (
-                    recover_response(call_start_wall, prompt[:200])
-                    if recover_response is not None
-                    else None
-                )
-                if recovered:
-                    return AttemptOutcome(
-                        status="success",
-                        elapsed_s=elapsed_s,
-                        response_text=recovered,
-                        note="recovered from Gemini session after short stdout response",
-                    )
-                return AttemptOutcome(
-                    status="retryable_error",
-                    elapsed_s=elapsed_s,
-                    stderr_excerpt=f"Very short response ({len(response)} chars)",
-                    returncode=proc.returncode,
-                )
-
-            return AttemptOutcome(
-                status="success",
-                elapsed_s=elapsed_s,
-                response_text=response,
-                returncode=proc.returncode,
-            )
-        except FileNotFoundError:
-            return AttemptOutcome(
-                status="fatal",
-                elapsed_s=time.monotonic() - call_start_mono,
-                stderr_excerpt="gemini CLI not found. Install: https://github.com/google-gemini/gemini-cli",
-            )
-        except Exception as exc:
-            recovered = (
-                recover_response(call_start_wall, prompt[:200])
-                if recover_response is not None
-                else None
-            )
-            if recovered:
-                return AttemptOutcome(
-                    status="success",
-                    elapsed_s=time.monotonic() - call_start_mono,
-                    response_text=recovered,
-                    note=f"recovered from Gemini session after {type(exc).__name__}",
-                )
-            return AttemptOutcome(
-                status="retryable_error",
-                elapsed_s=time.monotonic() - call_start_mono,
-                stderr_excerpt=f"{type(exc).__name__}: {exc}",
-            )
-        finally:
-            _cleanup_gemini_prompt_file(prompt_file)
-
-    emit(f"  🤖 Gemini ladder call ({len(prompt):,} prompt chars)...")
-    return run_gemini_fallback_ladder(
-        task_name=task_name,
-        preferred_model=preferred_model,
-        per_rung_timeout_s=effective_timeout,
-        overall_timeout_s=overall_timeout_s,
-        max_retries=max_retries,
-        attempt_runner=_attempt_runner,
-        logger=emit,
-        sleep_fn=sleep_fn,
-        allowed_auth_modes=resolve_allowed_auth_modes(base_env),
+    try:
+        require_execution_model(preferred_model, transport="native_gemini")
+    except ModelCatalogError as exc:
+        error = str(exc)
+    else:
+        error = "Gemini CLI runner is retired; select the AGY writer explicitly"
+    return CallResult(
+        response_text=None,
+        model_used=None,
+        auth_mode_used=None,
+        elapsed_s=0.0,
+        error_message=error,
     )
 
 

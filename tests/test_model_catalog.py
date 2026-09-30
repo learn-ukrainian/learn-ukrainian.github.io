@@ -25,6 +25,7 @@ from scripts.review.model_catalog import (
     kimi_model_aliases,
     load_model_catalog,
     model_aliases,
+    require_execution_model,
     resolve_catalog_model_id,
     resolve_glm_model,
     resolve_kimi_model,
@@ -42,6 +43,36 @@ def test_committed_catalog_is_structurally_valid_and_current():
     assert catalog_age_days(catalog, as_of=date(2026, 9, 24)) == 0
     assert not catalog_is_stale(catalog, as_of=date(2026, 10, 23))
     assert catalog_is_stale(catalog, as_of=date(2026, 10, 25))
+
+
+@pytest.mark.parametrize("model_id", [
+    model_id for model_id, entry in load_model_catalog()["models"].items()
+    if entry["lifecycle"] == "retired"
+])
+def test_retired_models_cannot_retain_any_transport(model_id):
+    catalog = deepcopy(load_model_catalog())
+    catalog["models"][model_id]["transports"] = ["native_grok"]
+    with pytest.raises(ModelCatalogError, match="transports must be empty for retired models"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize(("model", "transport", "message"), [
+    ("cursor:grok-4.5-high", "cursor", "is retired"),
+    ("claude-opus-4.6", "native_claude", "not in the model catalog"),
+    ("claude-opus-5-5", "hermes", "no admitted hermes transport"),
+    ("gemini-3.8-flash-high", "native_gemini", "no admitted native_gemini transport"),
+])
+def test_execution_defaults_refused_by_catalog_identity_and_transport(model, transport, message):
+    with pytest.raises(ModelCatalogError, match=message):
+        require_execution_model(model, transport=transport)
+
+
+def test_execution_default_resolves_active_alias_and_rejects_hold():
+    catalog = deepcopy(load_model_catalog())
+    assert require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog) == "gemini-3.8-flash-high"
+    catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] = "hold"
+    with pytest.raises(ModelCatalogError, match="not admitted for execution"):
+        require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog)
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -751,7 +782,7 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
 
 def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
     broken = deepcopy(load_model_catalog())
-    broken["models"]["grok-4.6"]["transports"].append("hermes")
+    broken["models"]["grok-4.7"]["transports"].append("hermes")
     with pytest.raises(ModelCatalogError, match="must not route"):
         validate_catalog(broken)
 

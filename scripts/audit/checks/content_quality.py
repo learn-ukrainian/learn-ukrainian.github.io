@@ -560,6 +560,9 @@ def extract_module_metadata(content: str) -> dict:
 
 def call_gemini_api(lesson_content: str, metadata: dict) -> dict | None:
     """Call Gemini API to evaluate content quality."""
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model("gemini-2.0-flash-exp", transport="google_api")
     try:
         import google.generativeai as genai
 

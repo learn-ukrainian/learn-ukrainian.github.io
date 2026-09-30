@@ -216,9 +216,9 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Primary** | DeepSeek-pro hermes | uses `sources` MCP proactively (verify_words×N, query_cefr_level, russian_shadow); PR #2107 shipped, PR #2112 validated write-mode | 2026-05-17 | PRs #2107, #2112 | New primary as of 2026-05-17. |
-| Runner-up 1 | Claude Opus xhigh | "fast pass" | ongoing | MEMORY #M-0 | Inline by orchestrator for ad-hoc verification. |
-| Runner-up 2 | DeepSeek-flash | "cheap" pass | ongoing | MEMORY #M-0 | When budget is tight. |
+| Historical result | DeepSeek-pro hermes | uses `sources` MCP proactively (verify_words×N, query_cefr_level, russian_shadow); PR #2107 shipped, PR #2112 validated write-mode | 2026-05-17 | PRs #2107, #2112 | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
+| Historical result | Claude Opus xhigh | "fast pass" | ongoing | MEMORY #M-0 | Historical observation; current Ukrainian review follows `model-assignment.md`. |
+| Historical result | DeepSeek-flash | "cheap" pass | ongoing | MEMORY #M-0 | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
 
 ---
 

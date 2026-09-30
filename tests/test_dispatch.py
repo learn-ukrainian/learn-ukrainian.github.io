@@ -322,7 +322,7 @@ class TestDispatchAgent:
             Result(
                 ok=True,
                 agent="gemini",
-                model="gemini-3-flash-preview",
+                model="gemini-3.8-flash-high",
                 mode="workspace-write",
                 response="flash fallback reply",
                 stderr_excerpt=None,
@@ -362,7 +362,7 @@ class TestDispatchAgent:
         assert mock_invoke.call_args_list[1].args[0] == "agy"
         assert second_call["tool_config"] is None
         # Rung 3: gemini-cli flash + oauth
-        assert third_call["model"] == "gemini-3-flash-preview"
+        assert third_call["model"] == "gemini-3.8-flash-high"
         assert third_call["tool_config"] == {
             "mcp_server_names": ["sources"],
             "auth_mode": "subscription",
