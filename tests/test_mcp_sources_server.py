@@ -1345,6 +1345,23 @@ class TestSearchSourcesHandler:
             assert envelope["hits"][0]["ranking"] == "keyword_rrf"
             assert envelope["ranking"] == "keyword_rrf"
 
+    def test_top_level_ranking_is_mixed_when_hits_differ(self, server_module):
+        mock_hits = [
+            {"corpus": "textbook_sections", "text": "Textbook hit", "ranking": "dense"},
+            {"corpus": "modern_literary", "text": "Literary hit", "ranking": "keyword_rrf"},
+        ]
+        with patch("wiki.sources_db.search_sources", return_value=mock_hits):
+            _, envelope = _run(server_module.handle_search_sources({"query": "слово"}))
+
+        assert envelope["ranking"] == "mixed"
+
+    def test_top_level_ranking_is_omitted_without_hit_metadata(self, server_module):
+        archaic_hit = {"corpus": "archaic_literary", "text": "Archaic hit"}
+        with patch("wiki.sources_db.search_sources", return_value=[archaic_hit]):
+            _, envelope = _run(server_module.handle_search_sources({"query": "слово"}))
+
+        assert "ranking" not in envelope
+
 
 class TestCheckRussianShadowHandler:
     def test_handle_check_russian_shadow(self, server_module):

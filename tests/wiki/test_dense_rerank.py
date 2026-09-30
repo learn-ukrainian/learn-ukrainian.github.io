@@ -165,6 +165,29 @@ def test_rerank_candidates_degrades_to_fts_order_when_encoder_unavailable(monkey
     assert {row["cosine_score"] for row in results} == {0.0}
 
 
+def test_rerank_candidates_truncates_by_keyword_rank_when_encoder_unavailable(monkeypatch):
+    monkeypatch.setenv(dense_rerank.NO_DENSE_ENV, "1")
+    index = dense_rerank.CorpusEmbeddingIndex(
+        corpus="test_corpus",
+        shards={0: np.zeros((2, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)},
+        unit_rows={"1": (0, 0), "2": (0, 1)},
+    )
+    monkeypatch.setattr(dense_rerank, "load_corpus_index", lambda *a, **kw: index)
+
+    results = dense_rerank.rerank_candidates(
+        "query",
+        [
+            {"unit_key": "1", "keyword_rank": 2, "fts_score": -1.0},
+            {"unit_key": "2", "keyword_rank": 1, "fts_score": -100.0},
+        ],
+        corpus="test_corpus",
+        limit=1,
+    )
+
+    assert [row["unit_key"] for row in results] == ["2"]
+    assert results[0]["keyword_rank"] == 1
+
+
 def _two_row_index(monkeypatch) -> None:
     shard = np.zeros((2, dense_rerank.EMBEDDING_DIMS), dtype=np.float16)
     shard[0, 0] = 1.0

@@ -592,13 +592,12 @@ def _keyword_order(candidates: list[dict[str, Any]], limit: int) -> list[dict[st
             **candidate,
             "dense_score": 0.0,
             "cosine_score": 0.0,
-            "ranking": "keyword_rrf",
         }
         for candidate in candidates
     ]
     scored.sort(
         key=lambda row: (
-            float(row.get("fts_score", row.get("rank", 0.0)) or 0.0),
+            float(row.get("keyword_rank", row.get("fts_score", row.get("rank", 0.0))) or 0.0),
             str(row.get("unit_key", "")),
         )
     )
@@ -627,7 +626,6 @@ def rerank_candidates(
                     **candidate,
                     "dense_score": 0.0,
                     "cosine_score": 0.0,
-                    "ranking": "keyword_rrf",
                 }
                 for candidate in candidates[:limit]
             ]
@@ -646,7 +644,6 @@ def rerank_candidates(
                         **candidate,
                         "dense_score": 0.0,
                         "cosine_score": 0.0,
-                        "ranking": "keyword_rrf",
                     }
                 )
                 continue
@@ -666,7 +663,6 @@ def rerank_candidates(
                 **candidate,
                 "dense_score": float(score),
                 "cosine_score": float(score),
-                "ranking": "dense",
             }
             for candidate, score in zip(present, scores, strict=True)
         ]

@@ -2407,6 +2407,9 @@ def _dispatch_corpus_search(
     else:
         return []
 
+    # Textbook keyword_rank follows _search_sections_fts5 order: section_score
+    # first, then best BM25. In mixed sets, dense scores (~0.3–0.8 × prior)
+    # outrank keyword RRF scores (~0.016 × prior) by design.
     for idx, candidate in enumerate(candidates, start=1):
         candidate.setdefault("keyword_rank", idx)
 

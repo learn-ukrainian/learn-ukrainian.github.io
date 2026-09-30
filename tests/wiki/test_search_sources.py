@@ -218,7 +218,9 @@ def test_search_sources_uses_track_weighted_rrf_without_dense_index(monkeypatch)
     assert results[0]["fts_score"] > results[1]["fts_score"]
 
     monkeypatch.setattr(sources_db, "_corpus_prior", lambda track, corpus: 1.0)
-    monkeypatch.setattr(sources_db, "_CORPORA", ("modern_literary", "textbook_sections"))
+    # The corpus enumeration puts textbook first, so this proves the documented
+    # corpus tie-break wins over stable input order.
+    monkeypatch.setattr(sources_db, "_CORPORA", ("textbook_sections", "modern_literary"))
     tied_results = sources_db.search_sources("відмінок", track="a1", limit=2)
     assert [(hit["corpus"], hit["unit_key"]) for hit in tied_results] == [
         ("modern_literary", "modern_literary:1"),

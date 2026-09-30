@@ -125,7 +125,9 @@ async def list_tools() -> list[Tool]:
                 "(compiled Ukrainian textbook pedagogy). Use this for general retrieval "
                 "when you want all relevant Ukrainian-source content in one query. "
                 "Use the corpus-specific tools (search_text, search_literary, etc.) "
-                "only when you need to scope to a single source."
+                "only when you need to scope to a single source. The structured result "
+                "envelope may include top-level `ranking` for a shared hit ranking, "
+                "`mixed` for different hit rankings, or omit it when hits have no ranking metadata."
             ),
             inputSchema={
                 "type": "object",
