@@ -35,7 +35,7 @@ If a scorecard row conflicts with LANGUAGE-LANES, egress, or review-gate rules �
 | **Egress** | Where prompt/code data may leave (Western lab, China-route, local-only). |
 | **CF review** | Cross-**family** formal review of a change; discussion/panel alone does **not** satisfy the gate. |
 | **Consequential** | Work that can merge to `main`, change learner-facing Atlas/curriculum, alter security/CI gates, or spend non-trivial quota on multi-agent implementation. |
-| **Ceiling model** | Astra, Fable 5, and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. Since operator 2026-09-29 (#9230) the Astra seat is held by GPT-6.1 Sol (`gpt-6.1-sol`); `gpt-6-astra` is not routable. |
+| **Ceiling model** | Astra, Fable 5.1 (`claude-fable-5-1`), and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. Since operator 2026-09-29 (#9230) the Astra seat is held by GPT-6.1 Sol (`gpt-6.1-sol`); `gpt-6-astra` is not routable. |
 | **Provisional / validated / deprecated** | Scorecard assignment confidence (see scorecard § evidence). |
 
 ---

@@ -203,10 +203,10 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Policy route** | Risk-specific catalog ladder | current quality floor + live health/capacity | 2026-09-25 | `scripts/config/model_catalog.yaml` | Resolve by risk and follow `model-assignment.md` Code review row; Gemini is excluded. |
-| Current practical seat | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `scripts/config/model_catalog.yaml` · Arena Code leaderboard | Frontier-practical frontend/code lane: OpenCode high for Entire-aware review, Hermes high for rich tool execution; not critical authority. |
+| Historical result | DeepSeek V4 Flash High | Arena Code/WebDev rank 7 (preliminary) plus the historical E:A+ 15s repo probe | 2026-08-02 | `scripts/config/model_catalog.yaml` · Arena Code leaderboard | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
 | Historical result | Codex | architectural catches | 2026-05-09 | MEMORY #M-0 row reference | Strong architectural evidence, subject to cross-family review independence. |
 
-**Known weakness (DeepSeek-flash):** current promotion evidence is preliminary and frontend-specific;
+**Known weakness (DeepSeek-flash):** historical promotion evidence is preliminary and frontend-specific;
 repo-native long-tail and non-frontend evaluation remain incomplete.
 **Known strength:** top-7 Arena frontend coding result, 15-second historical turnaround, and very low cost.
 

@@ -175,7 +175,7 @@ the canonical reviewer resolver. A routing-table change must never grant approva
 or count as a formal review.
 
 **Lane updates (user-reported 2026-07-18):**
-* **grok**: the lane now offers **grok-4.7** (4.6 still allowed for explicit pins), with selectable reasoning effort
+* **grok**: the lane now offers **grok-4.7** (4.6 is retired and refused, including explicit pins), with selectable reasoning effort
   (`low`/`mid`/`high`) — set effort explicitly per dispatch; code/infra authoring and review seats run `high`.
 * **cursor** (operator 2026-09-22; Auto scope operator decision 2026-09-30, #9274): pass an
   explicit `--model`. `auto` is allowed only for a well-defined coding task — a write-capable
@@ -709,10 +709,8 @@ bare `ab` resolves to ApacheBench (`/usr/sbin/ab`) outside the user's shell (AGE
 `ask-deepseek` is consult-only for non-language work (added 2026-08-16, #6805), never implementation or review. Bridge asks ride the
 `acpx-deepseek-shadow` ACP seat — native `opencode acp --pure` pinned to first-party
 `deepseek/deepseek-flash` (identity `deepseek-v4.1-flash`) at high effort, deny-all tools (the `ask-hermes` alias
-resolves to the same seat; Hermes itself was permanently removed 2026-08-16). Direct one-shot
-review/research outside the bridge still defaults to
-`opencode run --model deepseek/deepseek-flash --variant high` (Flash) so the host gets native
-Entire capture (the legacy generic `ask-opencode` ACP route stays retired — named seats only).
+resolves to the same seat; Hermes itself was permanently removed 2026-08-16).
+The legacy generic `ask-opencode` ACP route stays retired — named consult seats only.
 DeepSeek is excluded from dispatch, implementation and review. The active
 `deepseek-v4.1-flash` catalog entry does not authorize execution; Pro is retired.
 `openrouter/deepseek/*` is **guard-REFUSED** (user order

@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
 from copy import deepcopy
 from datetime import date
 from pathlib import Path
@@ -1195,6 +1197,36 @@ def test_catalog_cli_help_explains_lookup_and_side_effects(monkeypatch, capsys):
     output = capsys.readouterr().out
     for text in ("--resolve-kimi-model", "--resolve-glm-model", "default", "Examples:", "no writes", "Exit codes:", "Related:"):
         assert text in output
+
+
+@pytest.mark.parametrize(("model", "retired_id", "successor"), [
+    ("gpt-6-sol", "gpt-6-sol", "gpt-6.1-sol"),
+    ("gpt-5.6-sol", "gpt-5.6-sol", "gpt-6.1-sol"),
+    ("claude-fable-5", "claude-fable-5", "claude-fable-5-1"),
+    ("claude-fable-5[1m]", "claude-fable-5", "claude-fable-5-1"),
+])
+def test_catalog_cli_retired_model_prints_only_refusal(model, retired_id, successor):
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", model],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True, text=True, check=False, timeout=10,
+    )
+    assert result.returncode == 2
+    assert result.stdout == ""
+    assert result.stderr == (
+        f"model {model!r} is retired in the model catalog ({retired_id}); use {successor}\n"
+    )
+
+
+@pytest.mark.parametrize("model", ["gpt-6.1-sol", "claude-fable-5-1", "unknown-model"])
+def test_catalog_cli_non_retired_model_exits_silently(model):
+    result = subprocess.run(
+        [sys.executable, "-m", "scripts.review.model_catalog", "--check-retired-model", model],
+        cwd=Path(__file__).resolve().parents[1],
+        capture_output=True, text=True, check=False, timeout=10,
+    )
+    assert result.returncode == 0
+    assert result.stdout == result.stderr == ""
 
 
 @pytest.mark.parametrize("model", [

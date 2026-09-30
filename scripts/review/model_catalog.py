@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
@@ -970,7 +971,8 @@ def _main() -> int:
         except ModelCatalogError as exc:
             parser.error(str(exc))
         if refusal:
-            parser.error(refusal)
+            print(refusal, file=sys.stderr)
+            return 2
     elif args.resolve_kimi_model:
         try:
             model_id, routes = resolve_kimi_model(args.resolve_kimi_model)
