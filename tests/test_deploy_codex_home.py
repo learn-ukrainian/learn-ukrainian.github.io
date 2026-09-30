@@ -304,14 +304,56 @@ def test_root_effort_does_not_replace_nested_effort():
     assert deployer.merge_config(merged) == merged
 
 
-def test_advisor_profile_uses_xhigh_without_changing_regular_roles():
+def test_advisor_profile_uses_high_without_changing_regular_roles():
     root = Path(__file__).resolve().parents[1] / "agents_extensions/codex-home"
     assets = deployer.source_assets(root)
     assert assets
     for name, (_, effort, _) in deployer.PROFILE_ROLES.items():
         profile = tomllib.loads((root / f"agents/{name}.toml").read_text())
         assert profile["model_reasoning_effort"] == effort
-        if name == "astra_advisor_high":
-            assert effort == "xhigh"
-        elif name != "luna_explorer_medium":
+        if name != "luna_explorer_medium":
             assert effort == "high"
+
+
+def test_canonical_cli_deploy_preserves_config_and_replays(tmp_path):
+    home = tmp_path / "home"
+    home.mkdir()
+    sentinel = (
+        '# sentinel comment\n[features.multi_agent_v2]\nenabled = true\n'
+        'tool_namespace = "agents"\n'
+        '[agents]\nmax_threads = 9\n[profiles.custom]\n'
+        'model_reasoning_effort = "xhigh" # nested sentinel\n'
+    )
+    (home / "config.toml").write_text(sentinel)
+    cli = [sys.executable, str(Path(deployer.__file__)), "--codex-home", str(home)]
+    result = subprocess.run(cli, capture_output=True, text=True, check=True, timeout=60)
+    assert "agents/astra_advisor_high.toml: changed" in result.stdout
+    config = tomllib.loads((home / "config.toml").read_text())
+    assert config["model"] == "gpt-6.1-sol"
+    assert config["model_reasoning_effort"] == "high"
+    assert config["agents"] == {
+        "max_threads": 9, "default_subagent_model": "gpt-6-luna",
+        "default_subagent_reasoning_effort": "high",
+    }
+    assert config["features"]["multi_agent_v2"] == {"enabled": True, "tool_namespace": "agents"}
+    assert config["profiles"]["custom"]["model_reasoning_effort"] == "xhigh"
+    assert '# sentinel comment\n' in (home / "config.toml").read_text()
+    assert '"xhigh" # nested sentinel\n' in (home / "config.toml").read_text()
+    expected = {
+        "astra_advisor_high": ("gpt-6.1-sol", "high", "read-only"),
+        "sol_coder_high": ("gpt-6.1-sol", "high", "workspace-write"),
+        "sol_red_team_high": ("gpt-6.1-sol", "high", "read-only"),
+        "sol_ukrainian_content_high": ("gpt-6.1-sol", "high", "workspace-write"),
+        "luna_coder_high": ("gpt-6-luna", "high", "workspace-write"),
+        "luna_explorer_high": ("gpt-6-luna", "high", "read-only"),
+        "luna_explorer_medium": ("gpt-6-luna", "medium", "read-only"),
+    }
+    for name, role in expected.items():
+        profile = tomllib.loads((home / f"agents/{name}.toml").read_text())
+        assert tuple(profile[k] for k in ("model", "model_reasoning_effort", "sandbox_mode")) == role
+    before = snapshot(home)
+    for args in (cli, [*cli, "--check"]):
+        assert "status: matched" in subprocess.run(
+            args, capture_output=True, text=True, check=True, timeout=60
+        ).stdout
+        assert snapshot(home) == before

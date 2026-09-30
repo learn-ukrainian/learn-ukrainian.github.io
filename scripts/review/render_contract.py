@@ -15,7 +15,8 @@ made dynamically (``importlib``) are not seen; the server makes none. An import 
 library or third-party) is not traced. ``requirements-lock.txt``: the sha256 of the checkout's lock file, which
 pins every third-party package the project environment is built from; a checkout without it refuses.
 
-The digest is taken three times per attempt: at render, at admission (``check_render_contract``) and at launch
+Digests are recomputed at render, at admission (``check_render_contract`` checks both the recorded render
+checkout and the actual server checkout), and at launch
 (``check_launch_contract``, called by ``review_mcp.prepare_review_attempt`` on the exact checkout and interpreter
 it writes into the seat's MCP configuration), so an update of the primary checkout between admission and launch
 refuses too.
@@ -40,7 +41,7 @@ SERVER_ENTRY = ".mcp/servers/sources/server.py"
 LOCK_FILE = "requirements-lock.txt"
 #: Key of the render record inside the prompt's ``<prompt>.files_read.json`` sidecar.
 RENDER_RECORD_KEY = "render_contract"
-RENDER_RECORD_VERSION = 3
+RENDER_RECORD_VERSION = 4
 _SERVER_DIGEST_VERSION = b"lu-review-server-code-digest-v3"
 _REPOSITORY_DIGEST_VERSION = b"lu-review-server-repository-digest-v1"
 _TEMPLATE_DIGEST_VERSION = b"lu-review-template-digest-v1"
@@ -241,18 +242,22 @@ def current_templates(prompts_dir: Path, names: Iterable[str]) -> dict[str, str]
 
 
 def render_record(
-    render_checkout: Path, prompts_dir: Path, loaded_templates: Mapping[str, str], prompt_sha256: str
+    render_checkout: Path, prompts_dir: Path, loaded_templates: Mapping[str, str], prompt_sha256: str,
+    *, review_id: str | None = None, attempt_id: str | None = None, input_root: Path | None = None,
 ) -> dict[str, Any]:
     """The record a render writes beside its prompt: where it rendered, what it loaded, the server it matched."""
     checkout = Path(render_checkout).resolve()
     return {
         "version": RENDER_RECORD_VERSION,
         "render_checkout": str(checkout),
+        "input_root": str(Path(input_root or checkout).resolve()),
         "prompts_dir": str(Path(prompts_dir).resolve()),
         "templates": dict(sorted(loaded_templates.items())),
         "template_digest": template_digest(loaded_templates),
         **_server_fields(server_code(checkout)),
         "prompt_sha256": prompt_sha256,
+        "review_id": review_id,
+        "attempt_id": attempt_id,
     }
 
 
@@ -287,7 +292,7 @@ def _read_render_record(prompt_file: Path | None) -> dict[str, Any]:
         raise ReviewContractError(
             f"review attempt refused: review_render_record_missing: cannot read {sidecar}: {exc}; {_RERENDER} (#9163)"
         ) from exc
-    fields = ("render_checkout", "prompts_dir", "template_digest", "server_digest", "prompt_sha256")
+    fields = ("render_checkout", "input_root", "prompts_dir", "template_digest", "server_digest", "prompt_sha256")
     if (
         not isinstance(record, dict)
         or record.get("version") != RENDER_RECORD_VERSION
@@ -295,6 +300,11 @@ def _read_render_record(prompt_file: Path | None) -> dict[str, Any]:
         or not isinstance(record.get("templates"), dict)
         or not record["templates"]
         or not isinstance(record.get("server_components"), dict)
+        or any(
+            not isinstance(key, str) or not isinstance(value, str)
+            for field in ("templates", "server_components")
+            for key, value in record[field].items()
+        )
     ):
         raise ReviewContractError(
             f"review attempt refused: review_render_record_missing: {sidecar} holds no version "
@@ -304,7 +314,8 @@ def _read_render_record(prompt_file: Path | None) -> dict[str, Any]:
 
 
 def check_render_contract(
-    prompt_file: Path | None, prompt_text: str, server_checkout: Path, interpreter: Path | None = None
+    prompt_file: Path | None, prompt_text: str, server_checkout: Path, interpreter: Path | None = None,
+    *, review_id: str | None = None, attempt_id: str | None = None,
 ) -> dict[str, Any]:
     """Refuse a review attempt whose prompt was rendered against other code than the attempt would run (#9163).
 
@@ -314,8 +325,18 @@ def check_render_contract(
     digests compared, and the server components and interpreter ``check_launch_contract`` checks again at launch.
     """
     recorded = _read_render_record(prompt_file)
+    if (review_id is not None or attempt_id is not None) and (
+        recorded.get("review_id"), recorded.get("attempt_id")
+    ) != (review_id, attempt_id):
+        raise ReviewContractError(
+            f"review attempt refused: review_render_record_attempt_mismatch: render record belongs to another attempt; {_RERENDER}"
+        )
     prompt_sha256 = hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
-    if prompt_sha256 != recorded["prompt_sha256"]:
+    try:
+        file_sha256 = hashlib.sha256(Path(prompt_file).read_bytes()).hexdigest() if prompt_file else prompt_sha256
+    except OSError as exc:
+        raise ReviewContractError("review attempt refused: review_render_record_stale: prompt bytes are unavailable") from exc
+    if prompt_sha256 != recorded["prompt_sha256"] or file_sha256 != prompt_sha256:
         raise ReviewContractError(
             "review attempt refused: review_render_record_stale: the prompt file hashes to "
             f"{prompt_sha256}, its render record names {recorded['prompt_sha256']}; {_RERENDER} (#9163)"
@@ -323,9 +344,40 @@ def check_render_contract(
     server = Path(server_checkout).resolve()
     python = Path(interpreter) if interpreter is not None else project_interpreter()
     code = server_code(server)
-    templates_now = current_templates(Path(recorded["prompts_dir"]), recorded["templates"])
+    try:
+        render_code = server_code(Path(recorded["render_checkout"]))
+    except ReviewContractError as exc:
+        raise ReviewContractError(
+            "review attempt refused: review_render_record_digest_mismatch: recorded render checkout cannot be verified"
+        ) from exc
+    prompts_dir = Path(recorded["render_checkout"]) / "scripts/review/prompts"
+    if Path(recorded["prompts_dir"]) != prompts_dir:
+        raise ReviewContractError(
+            "review attempt refused: review_render_record_prompts_dir_mismatch: recorded templates must come "
+            f"from the render checkout's scripts/review/prompts directory; {_RERENDER}"
+        )
+    templates_now = current_templates(prompts_dir, recorded["templates"])
+    inconsistent = [
+        what for what, then, now in (
+            ("server code", recorded["server_digest"], render_code.digest),
+            ("server code", recorded["server_components"], render_code.components()),
+            ("templates", recorded["template_digest"], template_digest(templates_now)),
+            ("templates", recorded["templates"], templates_now),
+        ) if then != now
+    ]
+    if _MISSING in templates_now.values():
+        inconsistent.append("templates")
+    if inconsistent:
+        raise ReviewContractError(
+            "review attempt refused: review_render_record_digest_mismatch: the prompt was rendered against different "
+            f"{' and '.join(sorted(set(inconsistent)))} than this attempt would run; "
+            "recorded digests do not match the render checkout; "
+            f"differing server components: {_component_changes(recorded['server_components'], render_code.components())}; "
+            f"{_RERENDER}"
+        )
     contract = {
         "render_checkout": recorded["render_checkout"],
+        "input_root": recorded["input_root"],
         "server_checkout": str(server),
         "server_interpreter": str(python),
         "render_server_digest": recorded["server_digest"],
@@ -334,6 +386,9 @@ def check_render_contract(
         "template_digest": template_digest(templates_now),
         "templates": sorted(recorded["templates"]),
         "prompt_sha256": prompt_sha256,
+        "review_id": recorded.get("review_id"),
+        "attempt_id": recorded.get("attempt_id"),
+        "prompts_dir": recorded["prompts_dir"],
     }
     differing = [
         what

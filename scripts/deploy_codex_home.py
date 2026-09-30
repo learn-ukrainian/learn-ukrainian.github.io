@@ -34,7 +34,7 @@ PROFILE_ROLES = {
     "sol_coder_high": ("gpt-6.1-sol", "high", "workspace-write"),
     "sol_red_team_high": ("gpt-6.1-sol", "high", "read-only"),
     "sol_ukrainian_content_high": ("gpt-6.1-sol", "high", "workspace-write"),
-    "astra_advisor_high": ("gpt-6.1-sol", "xhigh", "read-only"),
+    "astra_advisor_high": ("gpt-6.1-sol", "high", "read-only"),
 }
 SUPERSEDED_PROFILES = ("astra_worker_low", "astra_red_team_high")
 ROOT_SETTINGS = {key: value for key, value in EXPECTED.items() if key != "agents"}

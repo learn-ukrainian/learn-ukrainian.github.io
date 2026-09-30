@@ -7,6 +7,10 @@ effort: xhigh
 
 # Seminar Content Review: $ARGUMENTS
 
+For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
+escalation turns. This overrides the shared effort above for Sol only;
+other providers retain their effort rules and explicit overrides.
+
 **Scope: BUILT seminar CONTENT** (FOLK, HIST, BIO, ISTORIO, LIT + subtracks, OES, RUTH). For seminar PLANS use `/plan-review-seminar`; for core-level content use `/content-review`.
 
 **Why this exists (the gap it closes):** seminar quality = **factual accuracy + decolonization + source grounding** — none of which the deterministic linguistic gates (VESUM validity, russicism rate, immersion policy) can measure. A model that *sounds* scholarly can be **confidently fabricating** — and the linguistic gates pass it just the same. This reviewer verifies **every factual claim against real sources** so "sounds authoritative" is never mistaken for "is accurate." (Origin: the 2026-07-04 UK-writing bakeoff ranked a writer #1 for seminars on scholarly *tone* before any fact-check — `audit/2026-07-04-uk-writing-probe/REPORT.md`.)

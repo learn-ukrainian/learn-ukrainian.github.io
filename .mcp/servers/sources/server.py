@@ -1991,9 +1991,26 @@ async def handle_search_sources(args: dict):
         )
         return [TextContent(type="text", text=prose)], envelope
 
-    prose = json.dumps(hits, ensure_ascii=False, indent=2)
+    # Keep source bodies in the structured hits only. Neither the summary
+    # nor an equal full_text alias should serialize those bodies again.
+    compact_hits = []
+    for hit in hits:
+        compact_hit = dict(hit)
+        if "text" in compact_hit and compact_hit.get("full_text") == compact_hit["text"]:
+            compact_hit.pop("full_text", None)
+        compact_hits.append(compact_hit)
+    lines = [f"Found {len(hits)} results (returned ranking order):"]
+    for rank, hit in enumerate(hits[:5], 1):
+        source_id = hit.get("chunk_id") or hit.get("section_id") or hit.get("source_file") or hit.get("id") or "unknown"
+        title = " ".join(str(hit.get("title") or "Untitled").split())[:80]
+        source_id = " ".join(str(source_id).split())[:80]
+        ranking = " ".join(str(hit.get("ranking") or "unspecified").split())[:40]
+        lines.append(f"{rank}. {source_id} — {title} ({ranking})")
+    if len(hits) > 5:
+        lines.append(f"{len(hits) - 5} more results in structured hits.")
+    prose = "\n".join(lines)
     envelope = build_search_envelope(
-        tool="search_sources", query=query_obj, hits=list(hits), summary_prose=prose
+        tool="search_sources", query=query_obj, hits=compact_hits, summary_prose=prose
     )
     hit_rankings = {
         hit["ranking"]

@@ -7,6 +7,10 @@ effort: xhigh
 
 # Content Review: $ARGUMENTS
 
+For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
+escalation turns. This overrides the shared effort above for Sol only;
+other providers retain their effort rules and explicit overrides.
+
 This skill covers plans under `curriculum/l2-uk-en/plans/{track}/` and V7-built modules.
 Fresh-build lessons are reviewed under Contract 2
 (`docs/epics/fresh-build-review-contracts.md`) — the `lesson-review` skill (WP 24)

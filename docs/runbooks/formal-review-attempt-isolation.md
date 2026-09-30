@@ -60,6 +60,41 @@ app-data directory under the same OS boundary. AGY's separate sealed code-review
 `review_isolation` mode remains refused; formal content attempts use the
 runner-owned manifest boundary, rather than enabling that unsupported mode.
 
+## Artifact binding at admission and recording
+
+Issues #9012, #9025 and #9242 bind each artifact to the same attempt. A render
+manifest prompt is admitted through `check_prompt` with the dispatch review and
+attempt IDs: its bytes must equal a fresh render of the authorized manifest.
+Custom prompts retain the ID parser, which checks every attempt declaration
+and refuses conflicting or unreadable later IDs, including prose and nested
+mappings, lists, anchors and merge keys within each attempt or schema. YAML schema
+examples nested inside `data_fence` blocks remain pinned data, not return schemas.
+An invalid render refuses as `prompt_render_invalid` before provisioning or launch.
+
+The version-4 render record includes the review ID, attempt ID, prompt hash,
+input root and render checkout. Dispatch recomputes the recorded server components
+and template hashes from that checkout's canonical `scripts/review/prompts`
+directory. A different recorded template directory refuses as
+`review_render_record_prompts_dir_mismatch`, even with matching template hashes. A
+record copied from another attempt refuses as `review_render_record_attempt_mismatch`;
+edited or stale digests refuse as `review_render_record_digest_mismatch`. The
+existing prompt-hash, server-code and launch-time checks still apply. Older
+render records require a fresh render; they cannot authorize a new attempt.
+
+Dispatch stores the manifest hash supplied by `prepare_review_attempt`'s plan;
+it does not reopen the manifest to construct the task's binding. The runner's
+terminal task record also stores `result_sha256` for the UTF-8 bytes saved in
+its canonical task result file. Before attesting a placeholder or admitting a
+formal bound return with a real prompt hash, the recorder requires a `done`
+task with matching review/attempt/manifest IDs, the canonical result pointer,
+the recorded result hash, and byte equality with the saved result. Copying the
+result unchanged to a separate return file is allowed. Editing, extracting or
+substituting other bytes refuses as `review_return_task_mismatch`, before any
+saved return or attempt row is written. Use the raw saved task result;
+do not strip fences or normalize it before recording. Placeholder substitution
+happens only after this binding succeeds. Existing custom returns without a
+formal task binding retain their validator path; failure recording is unchanged.
+
 ## Parent read boundary and site inventory
 
 Seat-writable names remain untrusted after exit. `safe_read_attempt_file` in

@@ -251,7 +251,7 @@ execution_routing:
   sol_advised_bounded:
     advisor:
       model_id: gpt-6.1-sol
-      effort: xhigh
+      effort: high
       role: bounded_advisory_envelope
       output_fields:
         - task_contract
@@ -317,8 +317,8 @@ models:
     notes: >-
       Operator 2026-09-29 (#9230): the only Sol and the only GPT-6 frontier seat.
       Codex orchestrator, coder, reviewer, and the hard advisory seat that GPT-6
-      Astra held. Orchestration, coding and review use high; the advisory seat
-      uses xhigh (#9301). GPT-6 Luna stays the scouting and bounded-work seat.
+      Astra held. Orchestration, coding, review and the advisory seat
+      use high (#9360). GPT-6 Luna stays the scouting and bounded-work seat.
       API id gpt-6.1-sol (official model page). Context window 1,050,000 tokens,
       max input 922,000, max output 128,000; knowledge cutoff 2026-04-30;
       reasoning effort low, medium (default), high, xhigh, max. Standard price
@@ -1092,7 +1092,7 @@ orchestrator_seats:
     model_id: claude-opus-5-5
     effort: high
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: xhigh
+    escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     note: >-
       Operator 2026-09-22: Opus 5.5 is the Claude orchestrator seat and executes
@@ -1105,7 +1105,7 @@ orchestrator_seats:
       authority. Non-binding Anthropic advisory consultations still
       route to Opus 5.5 under the 2026-07-31 directive. grok-4.7 owns the daily epic
       loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
-      Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ xhigh; Claude is an escalation TARGET,
+      Escalation stays CROSS-FAMILY to GPT-6.1 Sol @ high; Claude is an escalation TARGET,
       not an escalator. Driving default is `high` (Opus 5.5 API default is medium;
       step down to medium/low for routine turns; xhigh for hard turns and pinned
       curriculum/linguistic review skills; max almost never) — see
@@ -1114,11 +1114,11 @@ orchestrator_seats:
     model_id: gpt-6.1-sol
     effort: high
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: xhigh
+    escalate_effort: high
     escalate_when: consequential_advisory
     note: >
       Operator 2026-09-29 (#9230): GPT-6.1 Sol @ high is the Codex orchestrator,
-      advanced seat; advisory escalation uses xhigh (the former Astra seat). GPT-6
+      advanced seat; advisory escalation uses high (the former Astra seat). GPT-6
       Luna @ high does scouting and bounded work and is not this seat. Named alternate on
       harness/infra and DevOps — never a concurrent same-stream co-owner.
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
@@ -1145,7 +1145,7 @@ orchestrator_seats:
     model_id: grok-4.7
     effort: high
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: xhigh
+    escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     auto_allowlist:
       - grok-4.7
@@ -1183,7 +1183,7 @@ formal_cf_defaults:
     # Advisory escalation. The one-shot Codex ACP participant does not expose
     # reasoning effort, so previously review-pr pinned the model only.
     escalate_model_id: gpt-6.1-sol
-    escalate_effort: xhigh
+    escalate_effort: high
   claude:
     model_id: claude-sonnet-5-5
     effort: high
