@@ -93,6 +93,15 @@ def env(monkeypatch, tmp_path):
             return _Health()
         raise AssertionError(f"unexpected urlopen {url}")
 
+    # Same seam as tests/test_delegate.py: the base resolver fetches and
+    # resolves origin/main, which a CI checkout (shallow merge ref, no
+    # origin/main) cannot. Pin it to the checkout's own HEAD so the dry-run
+    # worktree plan still sees a real commit; the resolver's guard is
+    # covered in tests/test_delegate.py.
+    head_sha = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=REPO_ROOT, check=True, capture_output=True, text=True, timeout=30
+    ).stdout.strip()
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: head_sha)
     monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", health_only)
     telemetry = type("_Telemetry", (), {"model": "fixture-model", "effort": "high", "cli_version": "fixture"})()
