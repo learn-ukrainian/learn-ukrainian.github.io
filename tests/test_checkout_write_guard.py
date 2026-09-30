@@ -24,20 +24,37 @@ WATCHED_PATHS = [
     for root in (".claude", ".codex", ".agent", ".gemini")
     for child in (
         "agents/test.md", "skills/test/SKILL.md", "rules/test.md", "hooks/test.sh",
-        "settings.json", "settings.local.json",
+        "settings.json",
     )
 ] + [
+    f"{root}/{child}"
+    for root in (".claude", ".codex")
+    for child in (
+        "commands/test.md", "prompts/test.md", "memory/test.md", "contracts/test.json",
+        "docs/test.md", "quick-ref/test.md", "statusline/test.sh",
+        "session_streams/test.py", "schemas/test.json", "NON-NEGOTIABLE-RULES.md",
+        "skills/test/runtime-epic/SKILL.md", "docs/settings.local.json",
+    )
+] + [
+    ".agent/settings.local.json", ".gemini/settings.local.json",
     ".agents/skills/test/SKILL.md",
     ".agents/skills/test/references/test.md",
     ".claude/skills/drive-epic/SKILL.md",
     ".codex/config.toml", ".codex/hooks.json", "data/corpus_audit/report.md",
-    "data/telemetry-other/report.md", "data/lexicon/cache-other/report.md",
+    "data/corpus_audit/nested/report.md",
 ]
 
 LIVE_RUNTIME_PATHS = [
     ".agent/sessions/test.json", ".agent/runtime/test.json",
     ".agent/thread-rollovers/test.json", ".claude/infra-epic/briefs/test.md",
+    ".codex/infra-epic/briefs/test.md",
+    ".claude/settings.local.json", ".codex/settings.local.json",
+    ".claude/worktrees/test/state.json", ".codex/worktrees/test/state.json",
+    ".claude/scheduled_tasks.lock", ".codex/retired-skills/test/SKILL.md",
     "data/telemetry/test.json", "data/lexicon/cache/test.json",
+    "data/x.db", "data/x.db-wal", "data/x.db-shm", "data/sub/cache.json",
+    "data/telemetry-other/report.md", "data/lexicon/cache-other/report.md",
+    "data/corpus_audit-other/report.md",
 ]
 
 
@@ -189,11 +206,14 @@ def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malforme
         None,
         "logs/mcp-sources-requests.jsonl",
         ".claude/agents/curriculum-writer.md",
+        ".claude/commands/test.md",
         ".codex/agents/test.toml",
+        ".codex/memory/test.md",
         ".agent/skills/test.md",
         ".agents/skills/test/SKILL.md",
         ".gemini/agents/test.md",
         "data/corpus_audit/section_extraction_report.md",
+        "data/tracked.txt",
         "external-tmp",
         *LIVE_RUNTIME_PATHS,
     ],
@@ -213,10 +233,13 @@ def test_registered_guard_enforces_normal_pytest_session(
         encoding="utf-8",
     )
     (tmp_path / "conftest.py").write_text('pytest_plugins = ["checkout_write_guard"]\n', encoding="utf-8")
-    if write_path in LIVE_RUNTIME_PATHS:
+    if write_path in LIVE_RUNTIME_PATHS or write_path == "data/tracked.txt":
         existing = tmp_path / write_path
         existing.parent.mkdir(parents=True, exist_ok=True)
         existing.write_text("baseline", encoding="utf-8")
+    if write_path == "data/tracked.txt":
+        subprocess.run(["git", "add", "-f", write_path], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+        subprocess.run(["git", "commit", "-m", "tracked data"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
     if write_path == "external-tmp":
         sample = "def test_sample(tmp_path):\n    (tmp_path / 'unrelated.txt').write_text('sample')\n"
     elif write_path is None:
@@ -228,8 +251,9 @@ def test_registered_guard_enforces_normal_pytest_session(
             f"    output = Path({write_path!r})\n"
             "    output.parent.mkdir(parents=True, exist_ok=True)\n"
             "    output.write_text('sample')\n"
-            "    output.with_name('new-' + output.name).write_text('new')\n"
         )
+        if Path(write_path).name not in ("settings.local.json", "scheduled_tasks.lock"):
+            sample += "    output.with_name('new-' + output.name).write_text('new')\n"
     (tmp_path / "test_sample.py").write_text(sample, encoding="utf-8")
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "test_sample.py", *(["-n", str(workers)] if workers else [])],
@@ -240,7 +264,8 @@ def test_registered_guard_enforces_normal_pytest_session(
         assert result.returncode == 1, result.stdout + result.stderr
         assert "ERROR: checkout mutations detected by checkout_write_guard" in result.stdout
         label = "artifact" if write_path.startswith("logs/") else "file"
-        assert f"guarded checkout {label} created: {write_path}" in result.stdout
+        change = "modified/appended" if write_path == "data/tracked.txt" else "created"
+        assert f"guarded checkout {label} {change}: {write_path}" in result.stdout
     else:
         assert result.returncode == 0, result.stdout + result.stderr
         assert "checkout mutations detected" not in result.stdout
@@ -278,8 +303,77 @@ def test_guard_baselines_ignored_deploy_and_data_files(tmp_path: Path, rel: str,
         guard.verify()
 
 
+@pytest.mark.parametrize("ignored", [False, True], ids=["unignored", "ignored"])
+@pytest.mark.parametrize("rel", LIVE_RUNTIME_PATHS)
+@pytest.mark.parametrize("change", ["create", "rewrite", "delete"])
+def test_guard_accepts_untracked_runtime_changes(
+    tmp_path: Path, ignored: bool, rel: str, change: str,
+) -> None:
+    """Real Git status must not turn permitted service state into a violation."""
+    _init_git_repo(tmp_path)
+    if ignored:
+        (tmp_path / ".gitignore").write_text(f"{Path(rel).parts[0]}/\n", encoding="utf-8")
+    output = tmp_path / rel
+    output.parent.mkdir(parents=True)
+    if change != "create":
+        output.write_text("baseline", encoding="utf-8")
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    if change == "delete":
+        output.unlink()
+    else:
+        output.write_text("service changed this file", encoding="utf-8")
+    assert guard.check() == []
+    guard.verify()
+
+
+@pytest.mark.parametrize("dirty", [False, True], ids=["clean", "preexisting-change"])
+@pytest.mark.parametrize("rel", [
+    "data/tracked.txt", "data/x.db", "data/telemetry/report.json",
+    "data/lexicon/cache/report.json", "data/corpus_audit-other/report.md",
+    "data/sub/tracked file\nwith newline.json",
+])
+@pytest.mark.parametrize("change", ["unchanged", "rewrite", "delete"])
+def test_guard_watches_every_tracked_data_file(
+    tmp_path: Path, dirty: bool, rel: str, change: str,
+) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / rel
+    output.parent.mkdir(parents=True)
+    output.write_text("tracked baseline", encoding="utf-8")
+    subprocess.run(["git", "add", "--", rel], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+    subprocess.run(["git", "commit", "-m", "tracked data"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+    if dirty:
+        output.write_text("preexisting change", encoding="utf-8")
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    if change == "unchanged":
+        assert guard.check() == []
+        return
+    if change == "delete":
+        output.unlink()
+        expected = f"guarded checkout file deleted: {rel}"
+    else:
+        output.write_text("test changed tracked data", encoding="utf-8")
+        expected = f"guarded checkout file modified/appended: {rel}"
+    assert expected in guard.check()
+    with pytest.raises(CheckoutWriteError):
+        guard.verify()
+
+
+def test_guard_accounts_for_sparse_tracked_data(tmp_path: Path) -> None:
+    _init_git_repo(tmp_path)
+    output = tmp_path / "data/tracked.txt"
+    output.parent.mkdir()
+    output.write_text("tracked", encoding="utf-8")
+    subprocess.run(["git", "add", "data"], cwd=tmp_path, capture_output=True, check=True, timeout=30)
+    output.unlink()
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    assert guard.check() == []
+    output.write_text("materialized during test", encoding="utf-8")
+    assert "guarded checkout file created: data/tracked.txt" in guard.check()
+
+
 @pytest.mark.parametrize("phase", ["start", "finish"])
-@pytest.mark.parametrize("root", ["data", "logs"])
+@pytest.mark.parametrize("root", ["data/corpus_audit", "logs"])
 @pytest.mark.parametrize("vanished", ["file", "directory"])
 def test_session_hooks_skip_vanished_files_and_directories(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, phase: str, root: str, vanished: str,
@@ -343,7 +437,8 @@ def test_guard_prunes_runtime_directories_before_scanning(
         path = tmp_path / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text("live", encoding="utf-8")
-        excluded.add(path.parent)
+        if path.parent != tmp_path / Path(rel).parts[0]:
+            excluded.add(path.parent)
     original_scandir = os.scandir
 
     def forbid_runtime_scan(path):

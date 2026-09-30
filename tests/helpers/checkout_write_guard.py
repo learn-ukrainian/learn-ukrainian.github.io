@@ -14,6 +14,7 @@ import subprocess
 from collections.abc import Iterator
 from dataclasses import dataclass
 from fnmatch import fnmatchcase
+from itertools import chain
 from pathlib import Path
 from typing import Any
 
@@ -25,17 +26,18 @@ MONITORED_CHECKOUT_PATHS: tuple[str, ...] = (
 )
 
 # Root -> (watched immediate children, live-runtime exclusions relative to root).
-# Agent roots are allowlisted to deploy outputs from scripts/deploy_prompts.sh;
-# other scratch/driver state is outside the watched set. Exclusions are pruned
-# before traversal, so continuous writers do not affect the session baseline.
+# Watch .claude/ and .codex/ fully except runtime entries and the non-owned
+# orphans in scripts/deploy_orphan_paths.sh. Keep .agent/ allowlisted because
+# its top level holds live leases and audits; .agents/ watches deployed skills.
+# Exclusions are root-anchored and pruned before traversal.
 MONITORED_CHECKOUT_TREES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     ".claude": (
-        ("agents", "skills", "rules", "hooks", "settings*.json"),
-        ("*-epic",),  # Live lane-driver briefs, handoffs and state.
+        ("*",),
+        ("*-epic", "worktrees", "settings.local.json", "scheduled_tasks.lock"),
     ),
     ".codex": (
-        ("agents", "skills", "rules", "hooks", "settings*.json", "config.toml", "hooks.json"),
-        (),
+        ("*",),
+        ("*-epic", "worktrees", "settings.local.json", "retired-skills"),
     ),
     ".agent": (
         ("agents", "skills", "rules", "hooks", "settings*.json"),
@@ -48,11 +50,10 @@ MONITORED_CHECKOUT_TREES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     ".gemini": (("agents", "skills", "rules", "hooks", "settings*.json"), ()),
     ".agents": (("skills",), ()),
     "data": (
-        ("*",),
         (
-            "telemetry",  # Continuously updated service/agent observations.
-            "lexicon/cache",  # Live dictionary lookup cache.
+            "corpus_audit",  # Section-extraction tests write reports here.
         ),
+        (),  # Other data files are watched only if git-tracked (see below).
     ),
 }
 
@@ -92,6 +93,21 @@ def _hash_file(path: Path) -> _FileSig:
 def _is_exempt_path(relpath: str) -> bool:
     parts = set(Path(relpath).parts)
     return bool(parts & EXEMPT_DIR_PARTS)
+
+
+def _is_unwatched_runtime_path(relpath: str) -> bool:
+    """Keep untracked live state out of the Git-status mutation check too."""
+    parts = Path(relpath).parts
+    if len(parts) < 2:
+        return False
+    root, child = parts[:2]
+    if root == "data":
+        watched, _ = MONITORED_CHECKOUT_TREES[root]
+        return not any(fnmatchcase(child, pattern) for pattern in watched)
+    if root in (".claude", ".codex", ".agent"):
+        _, excluded = MONITORED_CHECKOUT_TREES[root]
+        return any(fnmatchcase(child, pattern) for pattern in excluded)
+    return False
 
 
 def _walk_files(
@@ -179,7 +195,8 @@ class CheckoutWriteGuard:
         self._before_porcelain = self._query_git_porcelain()
         self._before_tracked_sigs = {
             path: _hash_file(self.root / path)
-            for path in self._before_porcelain
+            for path, code in self._before_porcelain.items()
+            if not (code.startswith("??") and _is_unwatched_runtime_path(path))
         }
         self._before_logs = self._log_signatures()
         self._before_tree_files = self._tree_signatures()
@@ -187,15 +204,27 @@ class CheckoutWriteGuard:
     def _tree_signatures(self) -> dict[str, tuple[int, int]]:
         """Watch deploy/data files cheaply, without reading large corpus payloads."""
         signatures = {}
-        for rel_root, (watched, excluded) in MONITORED_CHECKOUT_TREES.items():
-            for path in _walk_files(self.root / rel_root, watched, excluded):
-                rel = path.relative_to(self.root).as_posix()
-                try:
-                    file_stat = path.stat()
-                except FileNotFoundError:
-                    continue
-                if stat.S_ISREG(file_stat.st_mode):
-                    signatures[rel] = (file_stat.st_mtime_ns, file_stat.st_size)
+        paths = (
+            path
+            for rel_root, (watched, excluded) in MONITORED_CHECKOUT_TREES.items()
+            for path in _walk_files(self.root / rel_root, watched, excluded)
+        )
+        if self._is_git_repo:
+            tracked = subprocess.run(
+                ["git", "ls-files", "-z", "--", "data"],
+                cwd=self.root, capture_output=True, check=True, timeout=30,
+            )
+            paths = chain(paths, (
+                self.root / os.fsdecode(raw) for raw in tracked.stdout.split(b"\0") if raw
+            ))
+        for path in paths:
+            rel = path.relative_to(self.root).as_posix()
+            try:
+                file_stat = path.stat()
+            except FileNotFoundError:
+                continue
+            if stat.S_ISREG(file_stat.st_mode):
+                signatures[rel] = (file_stat.st_mtime_ns, file_stat.st_size)
         return signatures
 
     def _log_signatures(self) -> dict[str, _FileSig]:
@@ -246,6 +275,8 @@ class CheckoutWriteGuard:
             after_porcelain = self._query_git_porcelain()
             for path, code in after_porcelain.items():
                 if _is_exempt_path(path):
+                    continue
+                if code.startswith("??") and _is_unwatched_runtime_path(path):
                     continue
 
                 if path not in self._before_porcelain:
