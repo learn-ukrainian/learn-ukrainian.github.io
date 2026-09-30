@@ -2908,7 +2908,19 @@ def test_run_worker_persists_attempt_boundary_refusal_code(tmp_tasks_dir, tmp_pa
 
     task_id = "attempt-boundary-refusal"
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(state_path, {"task_id": task_id, "cli_version": "fixture"})
+    # A formal Flash review attempt is dispatched with ``--review-profile ukrainian``,
+    # which records the #9275 exemption its worker re-verifies before the boundary.
+    exemption = {
+        "model_id": "gemini-3.8-flash-high", "task_family": None, "review_profile": "ukrainian",
+        "mode": "read-only", "classified_paths": [],
+    }  # fmt: skip
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id, "cli_version": "fixture", "mode": "read-only", "review_profile": "ukrainian",
+            "advisory_exemption": exemption,
+        },
+    )  # fmt: skip
 
     def unexpected(*args, **kwargs):
         pytest.fail("boundary refusal must precede provider planning or launch")

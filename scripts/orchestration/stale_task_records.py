@@ -27,7 +27,10 @@ finalized; they only inflate every scan and read as open attention items.
 
 Only class C is written. ``done`` needs a merged pull request tied to the task
 by commit identity: its head or merge commit is a recorded commit, or its head
-descends from one. A pull request that only reuses the branch name may belong
+descends from one. A record with a #9275 completion gate (a bounded worker's
+envelope ceilings, a content exemption's changed paths) never settles ``done``:
+its worktree is gone, so the gate cannot re-measure the worker's changes, and it
+settles ``failed`` with the gate's typed unmeasured cause. A pull request that only reuses the branch name may belong
 to a later task, so that record moves to D instead. A clean exit with no
 commits settles ``no_deliverable``; anything else settles ``failed``. Evidence
 comes from one fetch per repository of every remote branch into the private
@@ -576,6 +579,8 @@ class Candidate:
     outcome: str | None = None
     settle_reason: str | None = None
     merged_pr: dict[str, Any] | None = None
+    # The typed cause a ``failed`` settlement records, when it has one.
+    failure_reason: str | None = None
     skip_reason: str | None = None
     action: str = "report"
     # Full shas of the recorded commits, set once no ref is proven to hold them.
@@ -797,11 +802,21 @@ def _decide_outcome(candidate: Candidate, index: PullIndex | None, checkout: Pat
             and any(_is_ancestor(checkout, sha, pull["head_sha"]) for sha in candidate.work_commits)
         ]
     record = candidate.record
+    gate_unmeasured = delegate._completion_gate_unmeasured_code(record)
     if tied:
         pull = max(tied, key=lambda item: str(item.get("merged_at") or ""))
-        candidate.outcome = "done"
         candidate.merged_pr = pull
         candidate.settle_reason = f"orphaned: PR #{pull.get('number')} merged this task's recorded commit"
+        if gate_unmeasured is None:
+            candidate.outcome = "done"
+        else:
+            # #9275: ``done`` needs the completion gate run on the worker's changes,
+            # and its worktree is gone; a merged pull request does not measure them.
+            candidate.outcome = "failed"
+            candidate.failure_reason = gate_unmeasured
+            candidate.settle_reason += (
+                f", but its completion gate cannot measure the worker's changes ({gate_unmeasured})"
+            )
     elif same_branch:
         candidate.klass = "D"
         candidate.evidence["untied_merged_prs"] = [pull.get("number") for pull in same_branch]
@@ -880,6 +895,9 @@ def _settled_record(candidate: Candidate, current: dict[str, Any], settled_at: s
     }
     if candidate.merged_pr is not None:
         updated["merged_pr"] = candidate.merged_pr
+    if candidate.failure_reason is not None:
+        updated["failure_reason"] = candidate.failure_reason
+        updated["last_error"] = candidate.settle_reason
     if candidate.outcome == delegate._NO_DELIVERABLE_STATUS and not updated.get("no_deliverable_reason"):
         updated["no_deliverable_reason"] = candidate.settle_reason
     return updated

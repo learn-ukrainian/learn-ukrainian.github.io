@@ -5628,6 +5628,11 @@ def _advisory_worker_diff(
     return output, None
 
 
+# #9275: the record keys the completion gates write their measurement to.
+_ADVISORY_GATE_KEYS = ("advisory_ceiling_check", "advisory_exempt_change_check")
+_INTERRUPTED_BEFORE_COMPLETION_GATES = "interrupted before the completion gates ran"
+
+
 def _advisory_completion_gate(
     record: Mapping[str, Any], worktree: Path | None
 ) -> tuple[str, dict[str, Any], str | None, str] | None:
@@ -5657,6 +5662,21 @@ def _advisory_completion_gate(
         )
         detail = "; ".join(check.get("problems") or []) or str(check.get("error") or "unmeasured")
         return "advisory_exempt_change_check", check, failure, detail
+    return None
+
+
+def _completion_gate_unmeasured_code(record: Mapping[str, Any]) -> str | None:
+    """The typed failure for a record whose #9275 completion gate can no longer measure its changes.
+
+    None when the record calls for no gate. Recovery that has lost the worker's
+    tree (its worktree is gone) uses this instead of settling ``done``.
+    """
+    if record.get("mode") not in _WRITE_CAPABLE_MODES:
+        return None
+    if isinstance(record.get("advisory_envelope"), dict):
+        return bounded_advisory.CEILING_UNMEASURED
+    if isinstance(record.get("advisory_exemption"), dict):
+        return bounded_advisory.EXEMPT_CHANGES_UNMEASURED
     return None
 
 
@@ -8283,6 +8303,11 @@ def _run_worker(
     leftovers_scan: worker_leftovers.ExitScan | None = None
     leftovers_unconfirmed = False
     telemetry_settled = False
+    # #9275: set only once every applicable completion gate (delivery, review
+    # verdict, advisory ceiling or exemption) has run on the current tree and
+    # the outcome is final. Before that the interrupt fallback never persists
+    # ``done``: an interrupted gate is not a passed gate.
+    completion_gates_settled = False
     rescue_status: str | None = None
     kimi_worker = is_kimi_seat(agent, model=model)
     kimi_content_refusal: str | None = None
@@ -8538,6 +8563,9 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        # #9275: gate evidence is this run's measurement, never an earlier record's.
+        for gate_key in _ADVISORY_GATE_KEYS:
+            final_state.pop(gate_key, None)
         final_state["require_review_verdict"] = require_review_verdict
         final_state["review_verdict_failure"] = None
         if advisory_prompt_sha256 is not None:
@@ -8874,6 +8902,9 @@ def _run_worker(
         elif no_deliverable:
             final_status = _NO_DELIVERABLE_STATUS
             ok_outcome = False
+        # Every completion gate has run and the outcome is final: from here an
+        # interrupt persists it with its gate evidence, as the checkpoint would.
+        completion_gates_settled = True
 
         last_error = _first_error_line(stderr_excerpt) if final_status != "done" else None
         if leftovers_scan is not None and leftovers_scan.reason and final_status == "needs_finalize":
@@ -8956,6 +8987,16 @@ def _run_worker(
                 ),
                 returncode,
             )
+            interrupted_gate_error: str | None = None
+            if interrupted_status == "done" and not completion_gates_settled:
+                # #9275: success needs every applicable completion gate run on the
+                # current tree. A write dispatch interrupted before that boundary is
+                # left for finalization; a read-only one is a typed failure.
+                interrupted_gate_error = _INTERRUPTED_BEFORE_COMPLETION_GATES
+                if mode in _WRITE_CAPABLE_MODES:
+                    interrupted_needs_finalize = True
+                else:
+                    interrupted_status = "failed"
             if interrupted_needs_finalize:
                 interrupted_status = "needs_finalize"
             _write_state_atomic(
@@ -8983,6 +9024,7 @@ def _run_worker(
                         finalize_error=(f"interrupted during finalize: {type(interrupt_exc).__name__}"),
                         last_error=(
                             no_deliverable_reason
+                            or interrupted_gate_error
                             or (_first_error_line(stderr_excerpt) if interrupted_status != "done" else None)
                         ),
                     ),

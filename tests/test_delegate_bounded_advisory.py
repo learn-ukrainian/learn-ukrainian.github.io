@@ -836,7 +836,7 @@ def _admitted_worker(
     return record, prompt
 
 
-def _run_bounded_worker(tmp_path, monkeypatch, files: dict[str, str]) -> dict:
+def _run_bounded_worker(tmp_path, monkeypatch, files: dict[str, str], *, seed: dict | None = None) -> dict:
     monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
     worktree = _bounded_worktree(tmp_path, monkeypatch)
     (worktree / "src").mkdir()
@@ -857,6 +857,7 @@ def _run_bounded_worker(tmp_path, monkeypatch, files: dict[str, str]) -> dict:
             **record,
             "worktree_branch": "codex/luna-worker",
             "worktree_base": "main",
+            **(seed or {}),
         },
     )
     result = type(
@@ -1854,6 +1855,7 @@ def _exempt_writer_run(
     mode: str = "workspace-write",
     commit: bool = True,
     finalize_open_pr: bool = False,
+    seed: dict | None = None,
 ) -> dict:
     """The reviewer's probe: a real Ukrainian-authoring admission owning ``docs/new-lessons/``, then its worker.
 
@@ -1895,6 +1897,7 @@ def _exempt_writer_run(
             "worktree_path": str(worktree),
             "worktree_branch": "codex/luna-worker",
             "worktree_base": "main",
+            **(seed or {}),
         },
     )
     spy = _Spy("Committed and pushed the change.")
@@ -2049,3 +2052,183 @@ def test_b3_uncommitted_pycache_beside_a_content_commit_settles_done(env, tmp_pa
     assert check["ignored_residue"] == ["docs/new-lessons/__pycache__/gen.cpython-312.pyc"]
     assert check["problems"] == []
     assert state.get("failure_reason") != bounded_advisory.EXEMPT_CODE_CHANGE
+
+
+# --- Round 5: success only after every completion gate has durably passed ----------
+#
+# Fault injection for both gates, each with a passing, a failing and an
+# unmeasurable tree. An interrupt (the worker's SIGTERM handler raises
+# KeyboardInterrupt) lands during the measurement, between the measurement and
+# its recording, or at the terminal write; the persisted record is what counts.
+
+_GATE_KEY = {"ceiling": "advisory_ceiling_check", "exempt": "advisory_exempt_change_check"}
+_GATE_INPUTS = {
+    "ceiling": {
+        "pass": ({"src/a.py": "x = 1\n" * 4}, None),
+        "fail": ({"src/a.py": "x = 1\n" * 11}, bounded_advisory.CEILING_EXCEEDED),
+        "unmeasurable": ({"src/a.py": "x = 1\n"}, bounded_advisory.CEILING_UNMEASURED),
+    },
+    "exempt": {
+        "pass": ({"docs/new-lessons/lesson-1.md": "# Урок\n"}, None),
+        "fail": ({"docs/new-lessons/generate.py": "print('lesson')\n"}, bounded_advisory.EXEMPT_CODE_CHANGE),
+        "unmeasurable": ({"docs/new-lessons/lesson-1.md": "# Урок\n"}, bounded_advisory.EXEMPT_CHANGES_UNMEASURED),
+    },
+}
+# An earlier run's passing measurement: it must never stand as this run's evidence.
+_STALE_PASS = {
+    "advisory_ceiling_check": {"measured": True, "changed_files": 0, "non_test_loc": 0, "exceeded": []},
+    "advisory_exempt_change_check": {"measured": True, "changed_paths": [], "ignored_residue": [], "problems": []},
+}
+
+
+def _gate_run(gate: str, verdict: str, env, tmp_path, monkeypatch, capsys, *, seed: dict | None = _STALE_PASS) -> dict:
+    files, _code = _GATE_INPUTS[gate][verdict]
+    if verdict == "unmeasurable":
+        monkeypatch.setattr(delegate, "_worktree_diff_output", lambda *_a, **_k: None)
+    if gate == "ceiling":
+        return _run_bounded_worker(tmp_path, monkeypatch, files, seed=seed)
+    return _exempt_writer_run(env, tmp_path, monkeypatch, capsys, files, seed=seed)
+
+
+def _interrupt_after(monkeypatch, name: str, fired: list[str]) -> None:
+    """Run ``delegate.<name>`` for real, then raise the SIGTERM handler's KeyboardInterrupt (once)."""
+    real = getattr(delegate, name)
+
+    def interrupted(*args, **kwargs):
+        result = real(*args, **kwargs)
+        if not fired:
+            fired.append(name)
+            raise KeyboardInterrupt(f"SIGTERM after {name}")
+        return result
+
+    monkeypatch.setattr(delegate, name, interrupted)
+
+
+@pytest.mark.parametrize("verdict", ["pass", "fail", "unmeasurable"])
+@pytest.mark.parametrize("gate", ["ceiling", "exempt"])
+@pytest.mark.parametrize(
+    "point",
+    [
+        # Inside the measurement: the diff was read, no verdict exists yet.
+        "_advisory_worker_diff",
+        # The verdict exists but is not yet on the record.
+        "_advisory_completion_gate",
+    ],
+    ids=["during-measurement", "between-measurement-and-recording"],
+)
+def test_r5_an_interrupt_before_the_gate_is_recorded_never_persists_done(
+    env, tmp_path, monkeypatch, capsys, point, gate, verdict
+):
+    """The review's reproduction: an interrupt inside the gate persisted ``done`` with no gate record."""
+    fired: list[str] = []
+    _interrupt_after(monkeypatch, point, fired)
+    with pytest.raises(KeyboardInterrupt):
+        _gate_run(gate, verdict, env, tmp_path, monkeypatch, capsys)
+    assert fired == [point]
+    state = delegate._read_state(delegate._state_path(WORKER_ID))
+    assert (state["status"], state["needs_finalize"]) == ("needs_finalize", True)
+    assert state["last_error"] == delegate._INTERRUPTED_BEFORE_COMPLETION_GATES
+    assert "KeyboardInterrupt" in state["finalize_error"]
+    # Neither this run's unrecorded verdict nor the earlier run's pass is evidence.
+    assert _GATE_KEY[gate] not in state
+    assert state.get("failure_reason") is None
+
+
+@pytest.mark.parametrize("verdict", ["pass", "fail", "unmeasurable"])
+@pytest.mark.parametrize("gate", ["ceiling", "exempt"])
+@pytest.mark.parametrize("written", [False, True], ids=["before-the-write", "after-the-write"])
+def test_r5_an_interrupt_at_the_terminal_write_persists_the_gated_outcome_with_its_evidence(
+    env, tmp_path, monkeypatch, capsys, written, gate, verdict
+):
+    """Past the gate the outcome is decided: status and this run's evidence land in one write."""
+    real_write = delegate._write_state_atomic
+    fired: list[bool] = []
+
+    def interrupt_checkpoint(path, state):
+        # The worker's checkpoint, not the admission dry run's record.
+        if not fired and "duration_s" in state and state.get("status") != "dry_run":
+            fired.append(True)
+            if written:
+                real_write(path, state)
+            raise KeyboardInterrupt("SIGTERM at the checkpoint")
+        return real_write(path, state)
+
+    monkeypatch.setattr(delegate, "_write_state_atomic", interrupt_checkpoint)
+    with pytest.raises(KeyboardInterrupt):
+        _gate_run(gate, verdict, env, tmp_path, monkeypatch, capsys)
+    assert fired
+    state = delegate._read_state(delegate._state_path(WORKER_ID))
+    check = state[_GATE_KEY[gate]]
+    code = _GATE_INPUTS[gate][verdict][1]
+    if code is None:
+        assert (state["status"], state["needs_finalize"], state.get("failure_reason")) == ("done", False, None)
+        assert check["measured"] is True
+        assert check != _STALE_PASS[_GATE_KEY[gate]], "the earlier run's pass was persisted as evidence"
+    else:
+        assert (state["status"], state["failure_reason"]) == ("failed", code)
+        assert state["last_error"].startswith(code)
+        assert check["measured"] is (verdict == "fail")
+
+
+@pytest.mark.parametrize("gate", ["ceiling", "exempt"])
+def test_r5_abrupt_termination_during_the_gate_leaves_a_recoverable_non_success_record(
+    env, tmp_path, monkeypatch, capsys, gate
+):
+    """A SIGKILL runs no handler: what is on disk while the gate measures must already be non-success."""
+    on_disk: list[dict] = []
+    real = delegate._advisory_worker_diff
+
+    def snapshot(*args, **kwargs):
+        on_disk.append(json.loads(delegate._state_path(WORKER_ID).read_text()))
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(delegate, "_advisory_worker_diff", snapshot)
+    state = _gate_run(gate, "pass", env, tmp_path, monkeypatch, capsys, seed=None)
+    assert state["status"] == "done", state.get("last_error")
+    killed = on_disk[0]
+    assert killed["status"] == "running"
+    assert _GATE_KEY[gate] not in killed
+    # Recovery: the dead-worker probe settles it as non-success, and stays there.
+    path = tmp_path / "killed.json"
+    path.write_text(json.dumps(killed))
+    monkeypatch.setattr(delegate, "_pid_alive", lambda _pid: False)
+    for _ in range(2):
+        delegate._heal_dead_task(path, json.loads(path.read_text()), source="test")
+        assert json.loads(path.read_text())["status"] == "crashed"
+
+
+def test_r5_a_read_only_review_interrupted_before_its_verdict_check_is_a_typed_failure(tmp_path, monkeypatch):
+    """The same boundary on the read-only side: no verdict check, no ``done``."""
+    monkeypatch.setenv("LU_TASKS_DIR", str(tmp_path / "tasks"))
+    state_path = delegate._state_path("review-interrupt")
+    delegate._write_state_atomic(state_path, {"task_id": "review-interrupt", "status": "running", "mode": "read-only"})
+    result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": "VERDICT: APPROVE", "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-6.1-sol", "effort": "high", "cli_version": "fixture",
+        },
+    )()  # fmt: skip
+    monkeypatch.setattr("agent_runtime.runner.invoke", lambda *_a, **_k: result)
+    monkeypatch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: None)
+    monkeypatch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+
+    def interrupt(_response):
+        raise KeyboardInterrupt("SIGTERM during the verdict check")
+
+    monkeypatch.setattr(delegate, "_review_verdict_failure_reason", interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        delegate._run_worker(
+            task_id="review-interrupt",
+            agent="codex",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            require_review_verdict=True,
+        )
+    state = delegate._read_state(state_path)
+    assert (state["status"], state["needs_finalize"]) == ("failed", False)
+    assert state["last_error"] == delegate._INTERRUPTED_BEFORE_COMPLETION_GATES

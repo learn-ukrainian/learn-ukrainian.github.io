@@ -1291,3 +1291,32 @@ def test_archive_double_collision_on_a_sidecar_keeps_it_hot_and_reports_it(tasks
     assert (tasks_dir / "split.result").read_text() == "reply\n"
     assert json.loads((tasks_dir / "archive" / "split.json").read_text())["status"] == "done"
     assert _no_staging_left(tasks_dir)
+
+
+@pytest.mark.parametrize(
+    ("gate_field", "code"),
+    [
+        ("advisory_envelope", "advisory_ceiling_unmeasured"),
+        ("advisory_exemption", "advisory_exempt_changes_unmeasured"),
+    ],
+)
+def test_a_gated_record_is_never_settled_done_even_when_a_merged_pr_carries_its_work(tasks_dir, repo, gate_field, code):
+    """#9275: its worktree is gone, so the completion gate cannot re-measure the worker's changes.
+
+    Repeated recovery keeps the typed failure: the second run finds nothing
+    left to settle and never promotes the record.
+    """
+    sha = _orphan_commit(repo, "gated")
+    _record(tasks_dir, "gated", worktree_dirty_on_exit=True, auto_finalize=_auto_finalized(sha), **{gate_field: {}})
+    pulls = [_merged("codex/gated", 31, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["gated.json"]
+
+    assert (row["class"], row["action"], row["outcome"]) == ("C", "settled", "failed")
+    record = json.loads((tasks_dir / "gated.json").read_text())
+    assert (record["status"], record["failure_reason"], record["needs_finalize"]) == ("failed", code, False)
+    assert record["merged_pr"]["number"] == 31
+    assert code in record["last_error"]
+
+    _settle(tasks_dir, repo, pulls, apply=True)
+    assert json.loads((tasks_dir / "gated.json").read_text())["status"] == "failed"

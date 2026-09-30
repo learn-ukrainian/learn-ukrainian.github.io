@@ -864,6 +864,16 @@ offered as a PR.
   `__pycache__`, `.pytest_cache`, `*.pyc`) is listed as `ignored_residue` instead. A
   content-only diff settles `done`.
 
+`done` is reachable only after every applicable completion gate (these two, the delivery
+check and the review-verdict check) has run on the current tree, and the gate's measurement
+is written in the same record write as the outcome. Only this run's measurement counts:
+evidence left on the record by an earlier run is dropped first. An interrupt before that
+point settles a write dispatch `needs_finalize` and a read-only one `failed`, never `done`;
+a worker killed outright leaves its record `running`, which the dead-worker probes settle
+as non-success. `stale_task_records settle-stale` never settles a gated record `done`
+either: its worktree is gone, so the gate cannot re-measure the worker's changes, and a
+merged pull request settles it `failed` with the gate's `*_unmeasured` cause.
+
 Admission classifies a path by its resolved target as well: a `.md` symlink to a file whose
 git attributes mark it as code (for example `diff=python`) is not content.
 
