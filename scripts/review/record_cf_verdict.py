@@ -20,7 +20,7 @@ if __package__ in (None, ""):
 
 from scripts.fleet_comms.review_publication import DEFAULT_STATUS_CONTEXT
 from scripts.fleet_comms.review_publisher import post_commit_status
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
 from scripts.orchestration.integration_sweep import (
     MARKER_PREFIX,
     SHA,
@@ -63,6 +63,7 @@ def normalize_verdict(reply: str) -> str:
     return tokens.pop()
 
 
+@publication_boundary(RecordError)
 def _run_json(args: list[str], *, input_text: str | None = None) -> Any:
     try:
         process = checked_run(args, input=input_text, capture_output=True, text=True, check=False, timeout=60)
@@ -248,6 +249,7 @@ def _pr(repository: str, branch: str, number: int | None) -> dict[str, Any]:
     return data
 
 
+@publication_boundary(RecordError)
 def record(
     task_id: str, *, pr_number: int | None = None, task_root: Path | None = None, lock_root: Path | None = None
 ) -> dict[str, Any]:
@@ -367,6 +369,7 @@ def record(
     }
 
 
+@publication_cli(RecordError)
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Publish a completed exact-head cross-family verdict.\nUse after the reviewer exits; not to author or approve your own review.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/review/record_cf_verdict.py --task-id review-unit --pr 1\nOutputs and exit codes: Local publication receipt and GitHub review text/status. 0: recorded; 1: refused.\nRelated: #9297")
     parser.add_argument("--task-id", required=True, help="Completed branch-pinned review task id")

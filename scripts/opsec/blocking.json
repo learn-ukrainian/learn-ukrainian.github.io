@@ -1,4 +1,9 @@
 {
-  "class6_block_ids": ["operator_quote", "operator_reported_speech", "operator_personal_detail"],
-  "class6_allow_ids": ["operator_decision_attribution"]
+  "class6_block_ids": [
+    "6-quote-attribution",
+    "6-reported-speech",
+    "6-present-speech",
+    "6-uk-reported-speech",
+    "6-personal-details"
+  ]
 }

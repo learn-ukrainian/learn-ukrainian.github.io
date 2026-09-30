@@ -51,7 +51,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.api.config import LIVE_REPO_ROOT
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_cli
 
 ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
@@ -1764,6 +1764,7 @@ def human_summary(report: dict) -> str:
     return "\n".join(lines)
 
 
+@publication_cli()
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Audit GitHub issue membership in registered streams.\nUse read-only reporting before any authorized repair.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/orchestration/issue_stream_audit.py --help\nOutputs and exit codes: Membership report and authorized repair receipts. 0: successful command; >=1: audit or runtime error.\nRelated: #9297")
     parser.add_argument("--json", action="store_true")

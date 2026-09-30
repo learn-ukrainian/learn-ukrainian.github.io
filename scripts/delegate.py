@@ -150,7 +150,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
-from scripts.opsec.prepublish import checked_run
 
 # Resolve repo root from this file's location so we work from any cwd —
 # then hop to the primary checkout so worktree copies behave identically.
@@ -178,6 +177,7 @@ from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threate
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.lib import rules_core
+from scripts.opsec.prepublish import checked_run, publication_boundary
 from scripts.orchestration import (
     dispatch_admission,
     dispatch_isolation,
@@ -5613,6 +5613,7 @@ def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
         raise RuntimeError(f"git push failed: {_format_process_failure(proc)}")
 
 
+@publication_boundary(RuntimeError)
 def _create_auto_finalize_pr(
     worktree: Path,
     *,

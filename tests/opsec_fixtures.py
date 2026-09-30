@@ -14,12 +14,32 @@ import pytest
 TOKEN = "SENTINEL-HOST-TOKEN"
 ROOT = Path(__file__).resolve().parents[1]
 MATCHER = """import re
-
-def scan_text(text, rules):
-    return [{"rule_id": row["id"], "class": row["class"], "start": hit.start()}
-            for row in rules["rules"] for hit in re.finditer(row["pattern"], text)]
+from dataclasses import dataclass
+@dataclass(frozen=True)
+class Hit:
+    class_id: int
+    rule_id: str
+    span: tuple[int,int]
+class Matcher:
+    def __init__(self, rules):
+        self.rules = rules
+    def scan(self, text):
+        return [Hit(int(level), row["id"], hit.span())
+                for level, group in self.rules.items() for row in group["patterns"]
+                for hit in re.finditer(row["regex"], text)]
 """
-RULES = {"rules": [{"id": "synthetic-rule", "class": 1, "pattern": TOKEN}]}
+
+
+def synthetic_rules(rule="synthetic-rule", level=1, pattern=TOKEN):
+    policy = json.loads((ROOT / "scripts/opsec/blocking.json").read_text())
+    rules = {"6": {"patterns": [{"id": name, "regex": r"(?!)"} for name in policy["class6_block_ids"]]}}
+    rows = rules.setdefault(str(level), {"patterns": []})["patterns"]
+    rows[:] = [row for row in rows if row["id"] != rule]
+    rows.append({"id": rule, "regex": pattern})
+    return rules
+
+
+RULES = synthetic_rules()
 CATALOG = {
     "public": {"github": "unit/public", "default": True, "local_name": "public-fixture", "role": "public-monorepo"},
     "infra-private": {

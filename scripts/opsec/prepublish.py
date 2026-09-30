@@ -17,6 +17,7 @@ import subprocess
 import sys
 from collections.abc import Mapping
 from datetime import UTC, datetime
+from functools import wraps
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -27,6 +28,39 @@ POLICY = Path(__file__).with_name("blocking.json")
 
 class PublishBlocked(RuntimeError):
     """A safe diagnostic, with no source text or private exception detail."""
+
+
+def publication_boundary(error_type):
+    """Translate a safe policy refusal to a publisher's established typed failure."""
+
+    def decorate(function):
+        @wraps(function)
+        def wrapped(*args, **kwargs):
+            try:
+                return function(*args, **kwargs)
+            except PublishBlocked as exc:
+                raise error_type(f"publish_blocked: {exc}") from None
+
+        return wrapped
+
+    return decorate
+
+
+def publication_cli(*error_types):
+    """Render publishing failures at CLI boundaries without a traceback."""
+
+    def decorate(function):
+        @wraps(function)
+        def wrapped(*args, **kwargs):
+            try:
+                return function(*args, **kwargs)
+            except (PublishBlocked, *error_types) as exc:
+                print(f"publish_blocked: {exc}", file=sys.stderr)
+                return 2
+
+        return wrapped
+
+    return decorate
 
 
 def primary_root(cwd: Path = ROOT) -> Path:
@@ -78,29 +112,60 @@ def private_tooling() -> Path:
     return primary_root().parent / catalog()["infra-private"]["local_name"] / "tools/public_opsec_scan"
 
 
-def _matches(text: str, tooling: Path) -> list[dict]:
-    """Load the private scan_text(text, rules) contract, refusing incompatible tooling."""
+def _load_matcher(tooling: Path):
+    """Load the class scanner and validate public policy before scanning any text."""
+    import contextlib
+    import io
+
     try:
         rules = json.loads((tooling / "rules.json").read_bytes())
+        policy = json.loads(POLICY.read_bytes())
+        identities = {row["id"]: int(level) for level, group in rules.items() for row in group["patterns"]}
+        blocked = set(policy["class6_block_ids"])
+        if not blocked <= {rule for rule, level in identities.items() if level == 6}:
+            raise PublishBlocked("OPSEC: configured policy IDs absent from class-6 rules; load refused.")
         spec = importlib.util.spec_from_file_location("_lu_private_opsec_matcher", tooling / "matcher.py")
         if spec is None or spec.loader is None:
             raise ValueError
         module = importlib.util.module_from_spec(spec)
         sys.modules[spec.name] = module
-        import contextlib
-        import io
-
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
             source = (tooling / "matcher.py").read_bytes()
             exec(compile(source, "<private-opsec-matcher>", "exec"), module.__dict__)
-            findings = module.scan_text(text, rules)
-        if isinstance(findings, Mapping):
-            findings = findings["findings"]
-        if not isinstance(findings, list) or not all(isinstance(item, dict) for item in findings):
-            raise ValueError
-        return findings
+            matcher = module.Matcher(rules)
+        return matcher, identities, blocked
+    except PublishBlocked:
+        raise
     except Exception:
         raise PublishBlocked("OPSEC: private matcher or rules unavailable/incompatible; write refused.") from None
+
+
+def _scan(text: str, loaded) -> list[dict]:
+    import contextlib
+    import io
+
+    matcher, identities, _ = loaded
+    try:
+        with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
+            hits = matcher.scan(text)
+        findings = []
+        for hit in hits:
+            rule, level, (start, end) = hit.rule_id, hit.class_id, hit.span
+            if (
+                not re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", rule)
+                or identities.get(rule) != level
+                or level not in range(1, 7)
+                or not 0 <= start <= end <= len(text)
+            ):
+                raise ValueError
+            findings.append({"rule_id": rule, "class": level, "start": start})
+        return findings
+    except Exception:
+        raise PublishBlocked("OPSEC: private matcher result incompatible; write refused.") from None
+
+
+def _matches(text: str, tooling: Path) -> list[dict]:
+    return _scan(text, _load_matcher(tooling))
 
 
 def check_texts(
@@ -110,39 +175,36 @@ def check_texts(
     environment: dict[str, str] | None = None,
     tooling: Path | None = None,
     log_path: Path | None = None,
+    field_names: list[str] | None = None,
 ) -> None:
-    """Scan final text; consume one override, logging before permitting any send."""
+    """Scan final fields; an override permits policy hits only after a durable log."""
     environment = os.environ if environment is None else environment
     reason = environment.pop("LU_OPSEC_OVERRIDE", "")
     if is_private(destination):
         if reason.strip():
             _record_override(destination, [], reason, log_path)
         return
-    try:
-        policy = json.loads(POLICY.read_bytes())
-        findings = _matches("\n".join(texts), tooling or private_tooling())
-        blocks = []
-        for finding in findings:
-            rule = str(finding["rule_id"])
-            level = int(finding["class"])
-            if not re.fullmatch(r"[A-Za-z0-9_.-]{1,80}", rule) or level not in range(1, 7):
-                raise ValueError
-            if level <= 5 or rule in policy["class6_block_ids"]:
+    loaded = _load_matcher(tooling or private_tooling())
+    blocks = []
+    locations = []
+    for index, text in enumerate(texts):
+        for finding in _scan(text, loaded):
+            rule, level = finding["rule_id"], finding["class"]
+            if level <= 5 or rule in loaded[2]:
                 blocks.append((rule, level))
-            elif rule not in policy["class6_allow_ids"]:
-                raise ValueError
-    except PublishBlocked:
-        raise
-    except Exception:
-        raise PublishBlocked("OPSEC: unknown matcher finding/policy; write refused.") from None
+                # Names come from option/JSON keys, never from field values.
+                name = field_names[index] if field_names and index < len(field_names) else f"text[{index + 1}]"
+                if not re.fullmatch(r"[A-Za-z0-9_.\[\]-]{1,80}", name):
+                    name = f"text[{index + 1}]"
+                line = text.count("\n", 0, finding["start"]) + 1
+                locations.append(f"rule={rule} class={level} field={name} line={line}")
     if reason.strip():
         _record_override(destination, blocks, reason, log_path)
         return
     if not blocks:
         return
-    details = "; ".join(f"rule={rule} class={level} position=[masked]" for rule, level in blocks)
     raise PublishBlocked(
-        f"OPSEC blocked: {details}. Remove the flagged detail; for a false positive, "
+        f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "
         "set LU_OPSEC_OVERRIDE to a reason for this command only."
     )
 
@@ -198,7 +260,13 @@ def real_gh(environment: Mapping[str, str]) -> str:
         if not item:
             continue
         path = Path(item).resolve()
-        if path.is_absolute() and path.is_file() and os.access(path, os.X_OK) and path.parent.name != "shims":
+        if (
+            path.is_absolute()
+            and path.is_file()
+            and os.access(path, os.X_OK)
+            and path != (ROOT / "scripts/agent_runtime/shims/gh").resolve()
+            and path.parts[-4:] != ("scripts", "agent_runtime", "shims", "gh")
+        ):
             return str(path)
     raise PublishBlocked("OPSEC: real gh executable unavailable; write refused.")
 
@@ -235,7 +303,7 @@ def checked_run(args, *, runner=None, **kwargs):
             reason = os.environ.pop("LU_OPSEC_OVERRIDE", "")
             if reason:
                 environment["LU_OPSEC_OVERRIDE"] = reason
-            check_texts(frozen.destination, frozen.texts, environment=environment)
+            check_texts(frozen.destination, frozen.texts, environment=environment, field_names=frozen.field_names)
             kwargs["env"] = environment
             if frozen.stdin is not None:
                 kwargs["input"] = (

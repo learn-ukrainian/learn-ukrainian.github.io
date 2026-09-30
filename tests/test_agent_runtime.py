@@ -4561,7 +4561,7 @@ def test_gh_shim_blocks_pr_merge_without_opt_in(tmp_path, gh_shim_sandbox):
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "merge", "1234", "--subject", "clean", "--body", "clean"],
+        [str(shim), "pr", "merge", "1234"],
         cwd=root,
         capture_output=True,
         text=True,
@@ -4639,7 +4639,7 @@ def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox):
     fake_gh.chmod(0o755)
 
     proc = subprocess.run(
-        [str(shim), "pr", "merge", "1234", "--subject", "clean", "--body", "clean"],
+        [str(shim), "pr", "merge", "1234"],
         cwd=root,
         capture_output=True,
         text=True,
@@ -4653,7 +4653,7 @@ def test_gh_shim_allows_pr_merge_with_opt_in(tmp_path, gh_shim_sandbox):
     )
 
     assert proc.returncode == 0
-    assert proc.stdout.strip() == "real-gh pr merge 1234 --subject clean --body clean --repo github.com/unit/public"
+    assert proc.stdout.strip() == "real-gh pr merge 1234 --repo github.com/unit/public"
 
 
 def test_gh_shim_retries_mocked_secondary_rate_limit_replays_scanned_stdin(tmp_path, gh_shim_sandbox):

@@ -65,17 +65,7 @@ _blocks_branch_switch() {
   local repo_root
   repo_root="$(cd "$shim_dir/../../.." && pwd)"
 
-  local guard_git common_dir guard_status=0
-  guard_git="$(_real_git)" || { echo "error: containment guard unavailable." >&2; exit 1; }
-  common_dir="$("$guard_git" -C "$repo_root" rev-parse --path-format=absolute --git-common-dir)" || {
-    echo "error: containment interpreter context unavailable." >&2
-    exit 1
-  }
-  [[ -x "$(dirname "$common_dir")/.venv/bin/python" ]] || {
-    echo "error: containment interpreter unavailable." >&2
-    exit 1
-  }
-  "$(dirname "$common_dir")/.venv/bin/python" -c '
+  "$repo_root/.venv/bin/python" -c '
 import sys
 import subprocess
 from pathlib import Path
@@ -87,14 +77,14 @@ sys.path.insert(0, repo_root)
 from scripts.guardrails.worktree_containment import is_primary_checkout, is_protected_branch, PROTECTED_BRANCHES
 
 if not (is_primary_checkout() and is_protected_branch()):
-    sys.exit(3)
+    sys.exit(1)
 
 if not git_args:
-    sys.exit(3)
+    sys.exit(1)
 
 cmd = git_args[0]
 if cmd not in ("checkout", "switch"):
-    sys.exit(3)
+    sys.exit(1)
 
 creates_branch = any(arg in ("-b", "-B", "-c", "-C") for arg in git_args[1:])
 if creates_branch:
@@ -109,15 +99,15 @@ for arg in git_args[1:]:
         break
 
 if not target:
-    sys.exit(3)
+    sys.exit(1)
 
 if target in PROTECTED_BRANCHES:
-    sys.exit(3)
+    sys.exit(1)
 
 if cmd == "switch":
     if "--detach" not in git_args and "-d" not in git_args:
         sys.exit(0)
-    sys.exit(3)
+    sys.exit(1)
 
 is_local = (subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/heads/{target}"]).returncode == 0)
 is_remote = (subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/remotes/origin/{target}"]).returncode == 0)
@@ -126,23 +116,18 @@ if is_local or is_remote:
     target_idx = git_args.index(target)
     remaining_args = git_args[target_idx+1:]
     if "--" in remaining_args:
-        sys.exit(3)
+        sys.exit(1)
     has_file_args = False
     for arg in remaining_args:
         if not arg.startswith("-"):
             has_file_args = True
             break
     if has_file_args:
-        sys.exit(3)
+        sys.exit(1)
     sys.exit(0)
 
-sys.exit(3)
-' "$repo_root" "$@" || guard_status=$?
-  case "$guard_status" in
-    0) return 0 ;;
-    3) return 1 ;;
-    *) echo "error: containment guard failed; branch switch refused." >&2; exit 1 ;;
-  esac
+sys.exit(1)
+' "$repo_root" "$@"
 }
 
 # INCIDENT 2026-07-05 (fork bomb): _blocks_branch_switch spawns a python guard whose

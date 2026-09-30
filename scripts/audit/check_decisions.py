@@ -27,7 +27,7 @@ import yaml
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import PublishBlocked, checked_run, publication_cli
 
 DECISIONS_FILE = PROJECT_ROOT / "docs" / "decisions" / "decisions.yaml"
 
@@ -144,11 +144,14 @@ def create_issue(dec: dict) -> str | None:
         )
         if result.returncode == 0:
             return result.stdout.strip()
+    except PublishBlocked as exc:
+        print(f"publish_blocked: {exc}", file=sys.stderr)
     except (subprocess.TimeoutExpired, FileNotFoundError):
         pass
     return None
 
 
+@publication_cli()
 def main() -> int:
     parser = argparse.ArgumentParser(description="Check decision journal for staleness.\nUse during decision audits; writes require --create-issues.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/audit/check_decisions.py --quiet\nOutputs and exit codes: Report stdout; optional issue and label writes. 0: no stale decisions; 1: stale decisions.\nRelated: #9297")
     parser.add_argument("--quiet", action="store_true", help="One-liner output for session-setup")

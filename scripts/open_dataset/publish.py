@@ -16,7 +16,7 @@ from urllib.parse import quote
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DATASET_ROOT = ROOT / "data" / "lexicon-dataset"
@@ -146,6 +146,7 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
     temp_path.replace(pointer_path)
 
 
+@publication_boundary(OpenDatasetPublishError)
 def ensure_release(release_tag: str, repo: str) -> None:
     try:
         existing = checked_run(
@@ -227,6 +228,7 @@ def publish_open_dataset(
     return pointer
 
 
+@publication_cli(OpenDatasetPublishError)
 def main() -> int:
     parser = argparse.ArgumentParser(description="Publish the open Word Atlas dataset as a release asset.\nUse --dry-run before publishing; not for practice decks.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/open_dataset/publish.py --dry-run\nOutputs and exit codes: Package and pointer files; release writes unless dry-run. 0: success; >=1: failed.\nRelated: #9297")
     parser.add_argument("--dataset-root", type=Path, default=DEFAULT_DATASET_ROOT, help="Dataset directory (default: %(default)s).")

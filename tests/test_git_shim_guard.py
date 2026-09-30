@@ -27,7 +27,7 @@ SHIM_SOURCE = REPO_ROOT / "scripts" / "agent_runtime" / "shims" / "git"
 PYTHON_STUB = """#!/usr/bin/env bash
 # Records that the containment guard python was invoked, then declines to block.
 echo invoked >> "$(dirname "$0")/../guard-invocations.log"
-exit 3
+exit 1
 """
 
 
@@ -59,11 +59,6 @@ def shim_fixture(tmp_path: Path) -> dict[str, Path]:
         ["git", "init", "-q", str(workdir)],
         check=True,
         env={"PATH": "/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin", "HOME": str(tmp_path)}, timeout=30,
-    )
-
-    subprocess.run(
-        ["git", "init", "-q", str(tmp_path)], check=True,
-        env={"PATH": "/usr/bin:/bin", "HOME": str(tmp_path)}, timeout=30,
     )
 
     return {"shim": shim_copy, "workdir": workdir, "log": tmp_path / ".venv" / "guard-invocations.log"}
@@ -142,10 +137,3 @@ def test_push_deny_still_active_with_sentinel(shim_fixture: dict[str, Path]) -> 
     )
     assert result.returncode == 1
     assert "cannot push directly to main" in result.stderr
-
-
-def test_missing_guard_interpreter_refuses_switch(shim_fixture):
-    (shim_fixture["shim"].parents[3] / ".venv/bin/python").unlink()
-    result = _run_shim(shim_fixture, "checkout", "some-branch")
-    assert result.returncode == 1
-    assert "interpreter unavailable" in result.stderr

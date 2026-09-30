@@ -41,7 +41,7 @@ from scripts.fleet_comms.review_publication import (
     publication_idempotency_key,
     validate_review_gate_input,
 )
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_boundary
 
 Runner = Callable[..., subprocess.CompletedProcess[str]]
 
@@ -138,6 +138,7 @@ def fetch_pr_head_sha(
     return head.lower() if len(head) == 40 else head
 
 
+@publication_boundary(ReviewPublisherError)
 def post_pr_comment(
     *,
     repository: str,
@@ -172,6 +173,7 @@ def post_pr_comment(
     return _single_line(completed.stdout or "(posted)", label="comment_url")
 
 
+@publication_boundary(ReviewPublisherError)
 def post_commit_status(
     *,
     repository: str,

@@ -11,6 +11,26 @@ import sys
 from pathlib import Path
 
 
+def invokes_gh(command: str) -> bool:
+    """Recognize gh at command positions, leaving ordinary prefix rules intact."""
+    try:
+        lexer = shlex.shlex(command, posix=True, punctuation_chars=";|&()")
+        lexer.whitespace_split = True
+        expecting_command = True
+        for word in lexer:
+            if word and all(char in ";|&()" for char in word):
+                expecting_command = True
+            elif expecting_command:
+                if "=" in word or word in {"env", "command", "exec", "sudo"}:
+                    continue
+                if Path(word).name == "gh":
+                    return True
+                expecting_command = False
+    except ValueError:
+        pass
+    return False
+
+
 def main() -> int:
     try:
         payload = json.load(sys.stdin)
@@ -21,6 +41,8 @@ def main() -> int:
         from scripts.opsec.prepublish import PublishBlocked, check_texts, real_gh
 
         command = payload.get("tool_input", {}).get("command", "")
+        if not invokes_gh(command):
+            return 0
         # Early warning only: the final argv/files/stdin are enforced by the shim.
         warning = ""
         if "gh" in command:

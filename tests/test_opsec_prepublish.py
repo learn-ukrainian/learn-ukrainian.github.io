@@ -15,7 +15,7 @@ import pytest
 
 from scripts.opsec import prepublish as gate
 from scripts.opsec.gh_snapshot import graphql_write, snapshot
-from tests.opsec_fixtures import CATALOG, ROOT, TOKEN
+from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, synthetic_rules
 
 
 @pytest.fixture(autouse=True)
@@ -25,28 +25,26 @@ def fake_catalog(monkeypatch):
 
 @pytest.mark.parametrize("level", range(1, 6))
 def test_classes_block_with_masked_diagnostics(synthetic_opsec, level):
-    (synthetic_opsec / "rules.json").write_text(
-        json.dumps({"rules": [{"id": "synthetic-rule", "class": level, "pattern": TOKEN}]})
-    )
+    (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(level=level)))
     with pytest.raises(gate.PublishBlocked) as error:
         gate.check_texts("github.com/unit/public", [TOKEN])
     assert f"class={level}" in str(error.value)
     assert "rule=synthetic-rule" in str(error.value)
-    assert "position=[masked]" in str(error.value)
+    assert "field=text[1] line=1" in str(error.value)
     assert TOKEN not in str(error.value)
 
 
 @pytest.mark.parametrize(
     "rule,blocks",
     [
-        ("operator_quote", True),
-        ("operator_reported_speech", True),
-        ("operator_personal_detail", True),
-        ("operator_decision_attribution", False),
+        ("6-quote-attribution", True),
+        ("6-reported-speech", True),
+        ("6-personal-details", True),
+        ("6-personal-attribution", False),
     ],
 )
 def test_class6_policy(synthetic_opsec, rule, blocks):
-    (synthetic_opsec / "rules.json").write_text(json.dumps({"rules": [{"id": rule, "class": 6, "pattern": TOKEN}]}))
+    (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(rule=rule, level=6)))
     if blocks:
         with pytest.raises(gate.PublishBlocked):
             gate.check_texts("github.com/unit/public", [TOKEN])
@@ -244,7 +242,6 @@ def test_reads_do_not_require_matcher(args, tmp_path):
         ["issue", "create"],
         ["pr", "comment", "1", "--editor"],
         ["pr", "create", "--editor", "--title", "clean", "--body", "clean"],
-        ["pr", "merge", "1"],
         ["api", "graphql", "-f", "query=unresolved"],
     ],
 )
@@ -317,7 +314,7 @@ Path({str(outbound)!r}).write_bytes(Path(body).read_bytes())
     )
     if text == TOKEN:
         assert result.returncode == 2 and not outbound.exists()
-        assert "position=[masked]" in result.stderr and TOKEN not in result.stderr
+        assert "field=body-file line=1" in result.stderr and TOKEN not in result.stderr
     else:
         assert result.returncode == 0, result.stderr
         assert outbound.read_bytes() == text.encode()
@@ -354,7 +351,10 @@ def test_direct_review_publisher_blocks_before_send(synthetic_opsec):
         def send(*args, **kwargs):
             pytest.fail("outbound call")
 
-        with pytest.raises(gate.PublishBlocked):
+        with pytest.raises(
+            __import__("scripts.fleet_comms.review_publisher", fromlist=["ReviewPublisherError"]).ReviewPublisherError,
+            match="publish_blocked",
+        ):
             call()
 
 
@@ -383,17 +383,46 @@ def test_budget_median_20_10kb_bodies(synthetic_opsec):
     assert median < 200
 
 
-def test_real_matcher_contract_when_available():
-    # Deliberately restore the actual config: fixture catalog cannot stand in
-    # for proof of compatibility with the independently owned private tooling.
+def real_tooling():
     import yaml
 
+    override = os.environ.get("LU_OPSEC_TEST_TOOLING")
     repos = yaml.safe_load((ROOT / "scripts/config/fleet_repos.yaml").read_text())["repos"]
-    path = gate.primary_root().parent / repos["infra-private"]["local_name"] / "tools/public_opsec_scan"
+    path = (
+        Path(override)
+        if override
+        else gate.primary_root().parent / repos["infra-private"]["local_name"] / "tools/public_opsec_scan"
+    )
     if not (path / "matcher.py").exists() or not (path / "rules.json").exists():
-        pytest.skip("private matcher/rules unavailable; live contract unverified")
-    findings = gate._matches("A synthetic neutral public sentence.", path)
-    assert isinstance(findings, list)
+        pytest.skip("private matcher/rules absent; provide detached origin/main tooling via LU_OPSEC_TEST_TOOLING")
+    return path
+
+
+def test_real_matcher_contract_when_available():
+    path = real_tooling()
+    matcher, identities, blocked = gate._load_matcher(path)
+    assert blocked and blocked <= {rule for rule, level in identities.items() if level == 6}
+    # Real scanner implementation with synthetic rules: no private pattern/text is exported.
+    synthetic = type(matcher)(synthetic_rules())
+    hits = synthetic.scan(TOKEN)
+    assert len(hits) == 1
+    assert hits[0].rule_id == "synthetic-rule" and hits[0].class_id == 1
+    assert hits[0].span == (0, len(TOKEN))
+    assert gate._scan(TOKEN, (synthetic, {"synthetic-rule": 1}, set())) == [
+        {"rule_id": "synthetic-rule", "class": 1, "start": 0}
+    ]
+
+
+def test_real_matcher_budget_median_20_10kb_bodies():
+    path = real_tooling()
+    timings = []
+    for _ in range(20):
+        start = time.perf_counter()
+        gate.check_texts("github.com/unit/public", ["a" * 10_240], tooling=path, environment={})
+        timings.append((time.perf_counter() - start) * 1000)
+    median = statistics.median(timings)
+    print(f"real matcher median 20 x 10KB: {median:.3f} ms")
+    assert median < 200
 
 
 @pytest.mark.parametrize("fill", ["--fill", "--fill-first", "--fill-verbose"])
@@ -721,6 +750,7 @@ def test_fill_scans_only_commit_text_that_will_be_sent(fill, blocks, synthetic_o
 @pytest.mark.parametrize(
     "path",
     [
+        "scripts/delegate.py",
         "scripts/review/record_cf_verdict.py",
         "scripts/orchestration/dispatch_settle.py",
         "scripts/orchestration/task_closeout.py",
@@ -734,3 +764,386 @@ def test_publish_consumer_cli_help_runs_as_script(path):
     )
     assert result.returncode == 0, result.stderr.splitlines()[-1:] if result.stderr else ""
     assert "usage:" in result.stdout.lower()
+
+
+@pytest.mark.parametrize("group", ["issue", "pr"])
+@pytest.mark.parametrize("verb", ["close", "reopen"])
+@pytest.mark.parametrize("flag", ["--comment", "-c", "-c="])
+def test_close_reopen_short_comments_cannot_escape(group, verb, flag, synthetic_opsec):
+    args = ["gh", group, verb, "1", "--repo", "unit/public"]
+    args += [flag + TOKEN] if flag.endswith("=") else [flag, TOKEN]
+    with pytest.raises(gate.PublishBlocked, match="field="):
+        gate.checked_run(args, runner=lambda *a, **kw: pytest.fail("outbound"))
+
+
+@pytest.mark.parametrize("group", ["issue", "pr"])
+@pytest.mark.parametrize("verb", ["close", "reopen"])
+def test_short_comment_value_never_classifies_destination(group, verb, synthetic_opsec):
+    from scripts.opsec.gh_snapshot import destination, options
+
+    args = [group, verb, "1", "-c", "https://github.com/unit/private/issues/1"]
+    found, positional = options(args)
+    assert positional == [group, verb, "1"]
+    assert (
+        destination(args, found, positional, cwd=ROOT, environment={"GH_REPO": "unit/public"}, reader=None)
+        == "github.com/unit/public"
+    )
+
+
+@pytest.mark.parametrize("args", [["pr", "checkout", "1", "-f"], ["workflow", "list", "-a"], ["pr", "list", "-d"]])
+def test_boolean_read_flags_never_load_matcher(args, monkeypatch):
+    monkeypatch.setattr(gate, "private_tooling", lambda: pytest.fail("matcher on read"))
+    calls = []
+    gate.checked_run(["gh", *args], runner=lambda *a, **kw: calls.append(a))
+    assert calls == [(["gh", *args],)]
+
+
+def test_pr_create_draft_does_not_consume_title(synthetic_opsec):
+    calls = []
+    gate.checked_run(
+        ["gh", "pr", "create", "-d", "--title", "clean", "--body", "clean", "--repo", "unit/public"],
+        runner=lambda *a, **kw: calls.append(a),
+    )
+    assert calls[0][0][3:] == ["-d", "--title", "clean", "--body", "clean", "--repo", "unit/public"]
+
+
+@pytest.mark.parametrize("flags", [[], ["--subject", "clean"], ["-t", "clean", "-b", "clean"]])
+def test_merge_scans_only_supplied_text(flags, synthetic_opsec):
+    calls = []
+    gate.checked_run(
+        ["gh", "pr", "merge", "1", "--squash", "--repo", "unit/public", *flags], runner=lambda *a, **kw: calls.append(a)
+    )
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("flag", ["--subject", "-t", "--body", "-b"])
+def test_merge_supplied_text_blocks(flag, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked):
+        gate.checked_run(
+            ["gh", "pr", "merge", "1", "--repo", "unit/public", flag, TOKEN],
+            runner=lambda *a, **kw: pytest.fail("outbound"),
+        )
+
+
+@pytest.mark.parametrize("verb", ["comment", "merge", "review"])
+def test_current_branch_pr_commands_pin_environment_without_repo_argument(verb, synthetic_opsec):
+    def send(args, **kwargs):
+        assert "--repo" not in args and kwargs["env"]["GH_REPO"] == "github.com/unit/public"
+        return subprocess.CompletedProcess(args, 0, "sent", "")
+
+    gate.checked_run(["gh", "pr", verb, "--body", "clean"], env={"GH_REPO": "unit/public"}, runner=send)
+
+
+@pytest.mark.parametrize("command", ["printf hello", "git status", "printf '%s' gh", "echo ghastly"])
+def test_non_gh_hook_preserves_prefix_allow_rules(command, monkeypatch, capsys):
+    spec = importlib.util.spec_from_file_location(
+        "non_gh_hook", ROOT / "agents_extensions/shared/hooks/guard-public-github-text.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    monkeypatch.setattr(
+        sys, "stdin", __import__("io").StringIO(json.dumps({"tool_name": "Bash", "tool_input": {"command": command}}))
+    )
+    assert module.main() == 0
+    assert capsys.readouterr().out == ""
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["repo", "edit", "unit/public", "--description", TOKEN],
+        ["workflow", "run", "unit.yml", "-f", "value=" + TOKEN],
+        ["project", "item-create", "1", "--title", TOKEN, "--body", "clean"],
+        ["project", "item-create", "1", "--title", "clean", "--body", TOKEN],
+        ["api", "repos/unit/public/issues/1/comments", "-if", "body=" + TOKEN],
+    ],
+)
+def test_extended_public_text_commands_block(args, synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked):
+        gate.checked_run(["gh", *args], env={"GH_REPO": "unit/public"}, runner=lambda *a, **kw: pytest.fail("outbound"))
+
+
+@pytest.mark.parametrize("text", [TOKEN, "clean"])
+def test_gist_description_and_file_scanned(text, synthetic_opsec, tmp_path):
+    body = tmp_path / "gist.txt"
+    body.write_text("clean")
+    calls = []
+
+    def send(args, **kwargs):
+        assert Path(args[args.index("create") + 1]).read_text() == "clean"
+        calls.append(args)
+
+    if text == TOKEN:
+        with pytest.raises(gate.PublishBlocked):
+            gate.checked_run(["gh", "gist", "create", str(body), "-d", text], runner=send)
+    else:
+        gate.checked_run(["gh", "gist", "create", str(body), "-d", text], runner=send)
+    assert len(calls) == (text == "clean")
+
+
+def test_unknown_policy_id_fails_at_load_even_without_hits(synthetic_opsec, monkeypatch, tmp_path):
+    policy = tmp_path / "policy.json"
+    policy.write_text(json.dumps({"class6_block_ids": ["absent-id"]}))
+    monkeypatch.setattr(gate, "POLICY", policy)
+    with pytest.raises(gate.PublishBlocked, match="load refused"):
+        gate._load_matcher(synthetic_opsec)
+
+
+def test_class6_block_override_consulted(synthetic_opsec, tmp_path):
+    (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(rule="6-quote-attribution", level=6)))
+    gate.check_texts(
+        "github.com/unit/public",
+        [TOKEN],
+        environment={"LU_OPSEC_OVERRIDE": "synthetic policy exception"},
+        log_path=tmp_path / "override.jsonl",
+    )
+    assert json.loads((tmp_path / "override.jsonl").read_text())["rule_ids"] == ["6-quote-attribution"]
+
+
+def test_location_reports_field_and_line_without_text(synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked, match="field=body line=2") as error:
+        gate.checked_run(
+            ["gh", "issue", "comment", "1", "--repo", "unit/public", "--body", "clean\n" + TOKEN],
+            runner=lambda *a, **kw: pytest.fail("send"),
+        )
+    assert TOKEN not in str(error.value)
+
+
+def test_attached_body_file_preserves_flag(synthetic_opsec, tmp_path):
+    body = tmp_path / "body.txt"
+    body.write_text("clean")
+
+    def send(args, **kwargs):
+        flag = next(a for a in args if a.startswith("-F="))
+        assert Path(flag[3:]).read_text() == "clean"
+
+    gate.checked_run(["gh", "issue", "comment", "1", "--repo", "unit/public", "-F=" + str(body)], runner=send)
+
+
+def test_contents_base64_payload_is_scanned(synthetic_opsec):
+    import base64
+
+    with pytest.raises(gate.PublishBlocked):
+        gate.checked_run(
+            [
+                "gh",
+                "api",
+                "repos/unit/public/contents/unit.txt",
+                "-f",
+                "content=" + base64.b64encode(TOKEN.encode()).decode(),
+            ],
+            runner=lambda *a, **kw: pytest.fail("send"),
+        )
+
+
+def test_nonagent_shims_directory_can_supply_real_gh(tmp_path):
+    path = tmp_path / "shims" / "gh"
+    path.parent.mkdir()
+    path.write_text("#!/bin/sh\nexit 0\n")
+    path.chmod(0o755)
+    assert gate.real_gh({"PATH": str(path.parent)}) == str(path)
+
+
+def test_keeper_enqueue_and_closeout_auto_merge_pass_gate(synthetic_opsec, monkeypatch, tmp_path):
+    from scripts.orchestration import merge_queue_keeper as keeper
+    from scripts.orchestration import task_closeout as closeout
+
+    calls = []
+
+    def send(args, **kwargs):
+        calls.append(args)
+        return subprocess.CompletedProcess(args, 0, "null", "")
+
+    monkeypatch.setattr(subprocess, "run", send)
+    keeper.GitHub(tmp_path, "unit/public").enqueue(1, "a" * 40)
+    adapter = closeout.GhGitHubAdapter(tmp_path, runner=lambda args, stdin=None: send(args).stdout)
+    adapter.arm_auto_merge("unit/public", 1)
+    assert len(calls) == 2
+    assert all(args[:3] == ["gh", "pr", "merge"] and "--body" not in args for args in calls)
+
+
+def test_stdin_shim_replay_works_outside_git(gh_shim_sandbox, tmp_path):
+    _root, shim, _tooling = gh_shim_sandbox
+    spy = tmp_path / "real-gh"
+    spy.write_text("#!/bin/sh\ncat\n")
+    spy.chmod(0o755)
+    result = subprocess.run(
+        [str(shim), "issue", "comment", "1", "--repo", "unit/public", "-F", "-"],
+        cwd=tmp_path,
+        input="clean bytes\n",
+        env={"PATH": os.defpath, "AGENT_REAL_GH": str(spy)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout == "clean bytes\n"
+
+
+def test_cli_block_is_typed_without_traceback(capsys):
+    @gate.publication_cli()
+    def command():
+        raise gate.PublishBlocked("synthetic refusal")
+
+    assert command() == 2
+    assert capsys.readouterr().err == "publish_blocked: synthetic refusal\n"
+
+
+@pytest.mark.parametrize(
+    "module,function,args,error_type",
+    [
+        ("scripts.orchestration.dispatch_settle", "_run", (["gh", "pr", "merge", "1"],), ValueError),
+        ("scripts.review.record_cf_verdict", "_run_json", (["gh", "pr", "merge", "1"],), RuntimeError),
+        ("scripts.practice_deck.publish", "ensure_release", ("unit", "unit/public"), RuntimeError),
+        ("scripts.open_dataset.publish", "ensure_release", ("unit", "unit/public"), RuntimeError),
+        ("scripts.delegate", "_create_auto_finalize_pr", (), RuntimeError),
+    ],
+)
+def test_publishers_translate_policy_refusals(module, function, args, error_type, monkeypatch, tmp_path):
+    import importlib
+
+    publisher = importlib.import_module(module)
+
+    def refuse(*args, **kwargs):
+        raise gate.PublishBlocked("synthetic refusal")
+
+    monkeypatch.setattr(publisher, "checked_run", refuse)
+    kwargs = {}
+    if module == "scripts.delegate":
+        args = (tmp_path,)
+        kwargs = {"branch": "unit", "base_branch": "main", "title": "clean", "body": "clean"}
+    with pytest.raises(error_type, match=r"publish_blocked:.*synthetic refusal") as error:
+        getattr(publisher, function)(*args, **kwargs)
+    assert not isinstance(error.value, gate.PublishBlocked)
+    assert error.value.__suppress_context__
+
+
+def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path):
+    from scripts.orchestration import merge_queue_keeper as keeper
+    from scripts.orchestration import task_closeout as closeout
+    from scripts.orchestration import task_lifecycle
+
+    def refuse(*args, **kwargs):
+        raise gate.PublishBlocked("synthetic refusal")
+
+    for publisher in [keeper, closeout]:
+        monkeypatch.setattr(publisher, "checked_run", refuse)
+    with pytest.raises(keeper.KeeperError, match="publish_blocked"):
+        keeper.GitHub(tmp_path, "unit/public").enqueue(1, "a" * 40)
+    for runner in [None, lambda *a: pytest.fail("outbound")]:
+        with pytest.raises(task_lifecycle.LifecycleError, match="publish_blocked"):
+            closeout.GhGitHubAdapter(tmp_path, runner=runner).arm_auto_merge("unit/public", 1)
+
+
+def test_bridge_comment_refusal_is_rendered_and_returns_false(monkeypatch, capsys):
+    from scripts.ai_agent_bridge import _github
+
+    def refuse(*args, **kwargs):
+        raise gate.PublishBlocked("synthetic refusal")
+
+    monkeypatch.setattr(_github, "checked_run", refuse)
+    assert not _github._gh_comment(1, "clean")
+    assert "publish_blocked: synthetic refusal" in capsys.readouterr().out
+
+
+def test_real_matcher_process_budget_20_10kb_bodies():
+    path = real_tooling()
+    timings = []
+    script = (
+        "import sys; from pathlib import Path; from scripts.opsec.prepublish import check_texts; "
+        "check_texts('github.com/unit/public', ['a'*10240], tooling=Path(sys.argv[1]), environment={})"
+    )
+    for _ in range(20):
+        start = time.perf_counter()
+        result = subprocess.run([sys.executable, "-c", script, str(path)], cwd=ROOT, capture_output=True, timeout=10)
+        assert result.returncode == 0, "real matcher subprocess refused neutral synthetic payload"
+        timings.append((time.perf_counter() - start) * 1000)
+    median = statistics.median(timings)
+    print(f"real matcher process median 20 x 10KB: {median:.3f} ms")
+    assert median < 200
+
+
+def test_attached_short_body_file_is_scanned(synthetic_opsec, tmp_path):
+    body = tmp_path / "body.txt"
+    body.write_text(TOKEN)
+    with pytest.raises(gate.PublishBlocked):
+        gate.checked_run(
+            ["gh", "issue", "comment", "1", "--repo", "unit/public", "-F" + str(body)],
+            runner=lambda *a, **kw: pytest.fail("send"),
+        )
+
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        ["repo", "edit", "unit/public", "--description", "clean"],
+        ["workflow", "run", "unit.yml", "-f", "value=clean"],
+        ["project", "item-create", "1", "--title", "clean", "--body", "clean"],
+        ["api", "repos/unit/public/issues/1/comments", "-if", "body=clean"],
+    ],
+)
+def test_extended_public_text_commands_deliver_clean_snapshot(args, synthetic_opsec):
+    calls = []
+    gate.checked_run(["gh", *args], env={"GH_REPO": "unit/public"}, runner=lambda *a, **kw: calls.append(a))
+    assert len(calls) == 1
+    if args[0] == "repo":
+        assert calls[0][0] == ["gh", *args]
+
+
+def test_api_global_flags_do_not_hide_write(synthetic_opsec):
+    with pytest.raises(gate.PublishBlocked):
+        gate.checked_run(
+            [
+                "gh",
+                "--hostname",
+                "github.com",
+                "-Runit/public",
+                "api",
+                "repos/unit/public/issues/1/comments",
+                "-f",
+                "body=" + TOKEN,
+            ],
+            runner=lambda *a, **kw: pytest.fail("send"),
+        )
+
+
+def test_gist_snapshot_preserves_filename(synthetic_opsec, tmp_path):
+    body = tmp_path / "unit.txt"
+    body.write_text("clean")
+
+    def send(args, **kwargs):
+        target = Path(args[args.index("create") + 1])
+        assert target.name == body.name and target.read_bytes() == body.read_bytes()
+
+    gate.checked_run(["gh", "gist", "create", str(body), "-d", "clean"], runner=send)
+
+
+def test_real_matcher_shim_budget_20_10kb_bodies(gh_shim_sandbox, tmp_path):
+    path = real_tooling()
+    root, shim, _synthetic = gh_shim_sandbox
+    repos = {key: dict(row) for key, row in CATALOG.items()}
+    repos["infra-private"]["local_name"] = "real-private-fixture"
+    (root / "scripts/config/fleet_repos.yaml").write_text(json.dumps({"repos": repos}))
+    tooling = root.parent / "real-private-fixture/tools/public_opsec_scan"
+    tooling.parent.mkdir(parents=True)
+    tooling.symlink_to(path, target_is_directory=True)
+    spy = tmp_path / "real-gh"
+    spy.write_text("#!/bin/sh\nexit 0\n")
+    spy.chmod(0o755)
+    body = tmp_path / "body"
+    body.write_text("a" * 10_240)
+    timings = []
+    for _ in range(20):
+        start = time.perf_counter()
+        result = subprocess.run(
+            [str(shim), "issue", "comment", "1", "--body-file", str(body)],
+            cwd=root,
+            env={"PATH": os.defpath, "AGENT_REAL_GH": str(spy)},
+            capture_output=True,
+            timeout=10,
+        )
+        assert result.returncode == 0, "real matcher shim refused neutral synthetic payload"
+        timings.append((time.perf_counter() - start) * 1000)
+    median = statistics.median(timings)
+    print(f"real matcher shim median 20 x 10KB: {median:.3f} ms")
+    assert median < 200

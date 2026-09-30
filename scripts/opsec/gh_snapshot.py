@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 import subprocess
@@ -28,6 +29,7 @@ VALUE_OPTIONS = {
     "--title",
     "-t",
     "--comment",
+    "-c",
     "--subject",
     "--notes",
     "--notes-file",
@@ -81,6 +83,7 @@ TEXT_OPTIONS = {
     "--title",
     "-t",
     "--comment",
+    "-c",
     "--subject",
     "--notes",
     "-n",
@@ -95,13 +98,64 @@ class FrozenCommand:
     texts: list[str] = field(default_factory=list)
     write: bool = False
     stdin: bytes | None = None
+    field_names: list[str] = field(default_factory=list)
+
+    def add_text(self, text: str, name: str = "payload") -> None:
+        self.texts.append(text)
+        self.field_names.append(name)
+
+    def add_json(self, value, name: str = "input") -> None:
+        for text in json_strings(value):
+            self.add_text(text, name)
+
+
+def command_parts(argv: list[str]) -> tuple[str, str]:
+    """Locate the command after global repository/host selectors."""
+    i = 0
+    while i < len(argv):
+        arg = argv[i]
+        if arg in {"--repo", "-R", "--hostname"}:
+            i += 2
+        elif arg.startswith("-"):
+            i += 1
+        else:
+            return arg, argv[i + 1] if i + 1 < len(argv) else ""
+    return "", ""
+
+
+def expand_api_clusters(argv: list[str]) -> list[str]:
+    """Split boolean API shorts before an attached value option, preserving replay."""
+    if command_parts(argv)[0] != "api":
+        return argv
+    result = []
+    for arg in argv:
+        if len(arg) > 2 and arg.startswith("-") and not arg.startswith("--"):
+            tail = arg[1:]
+            while tail and tail[0] in "is":
+                result.append("-" + tail[0])
+                tail = tail[1:]
+            if tail:
+                result.append("-" + tail)
+        else:
+            result.append(arg)
+    return result
 
 
 def options(argv: list[str]) -> tuple[list[tuple[int, str, str]], list[str]]:
     """Parse value flags including attached short flags; retain argv indexes for rewriting."""
     found, positional = [], []
-    api = "api" in argv[:3]
-    review = "review" in argv[:3] and "pr" in argv[:2]
+    group, verb = command_parts(argv)
+    api = group == "api"
+    review = (group, verb) == ("pr", "review")
+    value_options = set(VALUE_OPTIONS)
+    if not api and (group, verb) != ("workflow", "run"):
+        value_options -= {"-f", "--field", "--raw-field"}
+    if group not in {"label", "gist"}:
+        value_options.discard("-d")
+    if (group, verb) == ("workflow", "list"):
+        value_options.discard("-a")
+    if review:
+        value_options.discard("-a")
     i = 0
     while i < len(argv):
         arg = argv[i]
@@ -109,17 +163,23 @@ def options(argv: list[str]) -> tuple[list[tuple[int, str, str]], list[str]]:
         if review and arg in {"--comment", "-c"}:
             i += 1
             continue
-        if not api and name == "-F":
+        if not api and (group, verb) != ("workflow", "run") and name == "-F":
             name = "--body-file"
-        if name in VALUE_OPTIONS:
+        if name in value_options:
             if not sep:
                 i += 1
                 if i >= len(argv):
                     raise PublishBlocked("OPSEC: option value missing; write refused.")
                 value = argv[i]
             found.append((i, name, value))
-        elif len(arg) > 2 and arg[:2] in VALUE_OPTIONS and not arg.startswith("--"):
-            found.append((i, arg[:2], arg[2:]))
+        elif len(arg) > 2 and arg[:2] in value_options and not arg.startswith("--"):
+            found.append(
+                (
+                    i,
+                    "--body-file" if not api and (group, verb) != ("workflow", "run") and arg[:2] == "-F" else arg[:2],
+                    arg[2:],
+                )
+            )
         elif not arg.startswith("-"):
             positional.append(arg)
         i += 1
@@ -225,6 +285,8 @@ def destination(argv: list[str], found: list, positional: list[str], *, cwd: Pat
         return normalize_repository(f"{match[1]}/{match[2]}", host)
     if api and not match:
         return "unknown"
+    if not api and len(positional) > 2 and positional[:2] == ["repo", "edit"]:
+        return normalize_repository(positional[2], host)
     urls = [p for p in positional if p.startswith(("https://", "http://"))]
     if urls:
         return normalize_repository(urls[-1], host)
@@ -260,6 +322,22 @@ def snapshot(
     argv: list[str], *, cwd: Path, environment: dict, stdin=None, reader=subprocess.run
 ) -> Iterator[FrozenCommand]:
     """Read each file/stdin once and forward controlled copies of precisely those bytes."""
+    group, verb = command_parts(argv)
+    # Reads return before value parsing: their option meanings cannot refuse publication.
+    writes = {
+        "issue": {"create", "edit", "comment", "close", "reopen"},
+        "pr": {"create", "edit", "comment", "review", "close", "reopen", "merge"},
+        "release": {"create", "edit"},
+        "label": {"create", "edit"},
+        "repo": {"edit"},
+        "workflow": {"run"},
+        "project": {"item-create"},
+        "gist": {"create"},
+    }
+    if group != "api" and verb not in writes.get(group, set()):
+        yield FrozenCommand(list(argv))
+        return
+    argv = expand_api_clusters(argv)
     frozen = FrozenCommand(list(argv))
     found, positional = options(argv)
     if not positional:
@@ -282,14 +360,7 @@ def snapshot(
         ).upper()
         frozen.write = method not in {"GET", "HEAD", "OPTIONS"}
     else:
-        frozen.write = group in {"issue", "pr", "release", "label"} and verb in {
-            "create",
-            "edit",
-            "comment",
-            "review",
-            "close",
-            "merge",
-        }
+        frozen.write = verb in writes.get(group, set())
     if not frozen.write and not (graphql):
         yield frozen
         return
@@ -299,7 +370,7 @@ def snapshot(
         return
     with tempfile.TemporaryDirectory(prefix="lu-publish-") as temp:
         if group == "label" and len(positional) > 2:
-            frozen.texts.append(positional[2])
+            frozen.add_text(positional[2], "name")
         copies: dict[str, tuple[bytes, str]] = {}
 
         def copy_file(value: str) -> tuple[bytes, str]:
@@ -317,7 +388,11 @@ def snapshot(
                     else:
                         content = (cwd / value).read_bytes()
                     content.decode("utf-8")
-                    target = str(Path(temp) / str(len(copies)))
+                    target_path = Path(temp) / str(len(copies))
+                    if group == "gist":
+                        target_path = target_path / (Path(value).name if value != "-" else "gistfile.txt")
+                        target_path.parent.mkdir()
+                    target = str(target_path)
                     Path(target).write_bytes(content)
                     copies[value] = (content, target)
                 except Exception:
@@ -326,7 +401,9 @@ def snapshot(
 
         def replace(index: int, name: str, value: str):
             original = frozen.argv[index]
-            if original.startswith(name + "="):
+            if name == "--body-file" and original.startswith("-F"):
+                frozen.argv[index] = "-F=" + value if original.startswith("-F=") else "-F" + value
+            elif original.startswith(name + "="):
                 frozen.argv[index] = name + "=" + value
             elif original.startswith(name) and len(name) == 2 and original != name:
                 frozen.argv[index] = name + value
@@ -348,10 +425,10 @@ def snapshot(
                 content, target = copy_file(value)
                 replace(index, name, target)
                 decoded = content.decode("utf-8")
-                frozen.texts.append(decoded)
+                frozen.add_text(decoded, name.lstrip("-"))
                 if name == "--input":
                     with suppress(ValueError):
-                        frozen.texts.extend(json_strings(json.loads(decoded)))
+                        frozen.add_json(json.loads(decoded))
                 if name == "--input" and graphql:
                     try:
                         payload = json.loads(content)
@@ -359,8 +436,8 @@ def snapshot(
                     except Exception:
                         raise PublishBlocked("OPSEC: GraphQL input must be JSON; write refused.") from None
             elif name in TEXT_OPTIONS:
-                frozen.texts.append(value)
-            elif api and name in {"-F", "--field", "-f", "--raw-field"}:
+                frozen.add_text(value, name.lstrip("-"))
+            elif (api or (group, verb) == ("workflow", "run")) and name in {"-F", "--field", "-f", "--raw-field"}:
                 key, _, content = value.partition("=")
                 if name in {"-F", "--field"} and content.startswith("@"):
                     data, target = copy_file(content[1:])
@@ -378,14 +455,26 @@ def snapshot(
                         raise PublishBlocked("OPSEC: field placeholder unresolved; use a literal field value.")
                     replace(index, name, key + "=" + content)
                 fields[key] = content
-                frozen.texts.append(content)
+                frozen.add_text(content, "api-field")
+        if api and "/contents/" in verb:
+            payload = fields
+            if "--input" in values:
+                try:
+                    payload = json.loads(copies[values["--input"]][0])
+                except (ValueError, TypeError):
+                    raise PublishBlocked("OPSEC: contents input unresolved; use JSON fields.") from None
+            if "content" in payload:
+                try:
+                    frozen.add_text(base64.b64decode(payload["content"], validate=True).decode("utf-8"), "content")
+                except (ValueError, UnicodeDecodeError):
+                    raise PublishBlocked("OPSEC: contents payload must be base64 UTF-8 text; write refused.") from None
         if graphql:
             document = fields.get("query", "")
             frozen.write = graphql_write(document)
-            frozen.texts.extend(json_strings(fields))
+            frozen.add_json(fields, "graphql")
             for quoted in re.findall(r'"(?:\\.|[^"\\])*"', document):
                 with suppress(ValueError):
-                    frozen.texts.append(json.loads(quoted))
+                    frozen.add_text(json.loads(quoted), "graphql")
         if not frozen.write:
             # GraphQL queries forward file snapshots too, without invoking matcher.
             yield frozen
@@ -401,8 +490,12 @@ def snapshot(
                 frozen.argv[frozen.argv.index(verb)] = endpoint
         else:
             if frozen.destination != "unknown":
-                frozen.argv.extend(["--repo", frozen.destination])
-            elif group != "release":
+                selector_present = len(positional) > 2
+                if group == "pr" and verb in {"comment", "merge", "review"} and not selector_present:
+                    environment["GH_REPO"] = frozen.destination
+                elif group not in {"project", "gist", "repo"} and not any(name in values for name in {"--repo", "-R"}):
+                    frozen.argv.extend(["--repo", frozen.destination])
+            elif group not in {"release", "project", "gist"}:
                 raise PublishBlocked("OPSEC: destination unresolved; use --repo OWNER/REPO.")
             if (
                 any(arg in {"-e", "--web", "-w", "--generate-notes"} or arg.startswith("--editor") for arg in argv)
@@ -465,21 +558,31 @@ def snapshot(
                 frozen.argv = [a for a in frozen.argv if a not in {"--fill", "-f", "--fill-first", "--fill-verbose"}]
                 if not any(name in values for name in {"--title", "-t"}):
                     frozen.argv.extend(["--title", title])
-                    frozen.texts.append(title)
+                    frozen.add_text(title, "title")
                     values["--title"] = title
                 if not any(name in values for name in {"--body", "-b", "--body-file"}):
                     frozen.argv.extend(["--body", body])
-                    frozen.texts.append(body)
+                    frozen.add_text(body, "body")
                     values["--body"] = body
             body_present = any(
                 name in values for name in {"--body", "-b", "--body-file", "--notes", "-n", "--notes-file"}
             )
             if verb == "edit" and not found:
                 raise PublishBlocked("OPSEC: interactive edit refused; use --title or --body-file.")
-            if group != "label" and verb in {"comment", "review", "create"} and not body_present:
+            if group in {"issue", "pr", "release"} and verb in {"comment", "review", "create"} and not body_present:
                 raise PublishBlocked("OPSEC: interactive body refused; use --body-file (empty files are allowed).")
-            if group != "label" and verb == "create" and not any(name in values for name in {"--title", "-t"}):
+            if (
+                group in {"issue", "pr", "release"}
+                and verb == "create"
+                and not any(name in values for name in {"--title", "-t"})
+            ):
                 raise PublishBlocked("OPSEC: interactive title refused; use --title.")
-            if verb == "merge" and "--disable-auto" not in argv and not {"--body", "--subject"} <= values.keys():
-                raise PublishBlocked("OPSEC: merge message unresolved; use --subject and --body explicitly.")
+            if group == "gist":
+                for value in positional[2:] or ["-"]:
+                    content, target = copy_file(value)
+                    frozen.add_text(content.decode("utf-8"), "gist-file")
+                    if value in frozen.argv:
+                        frozen.argv[frozen.argv.index(value)] = target
+                    else:
+                        frozen.argv.append(target)
         yield frozen

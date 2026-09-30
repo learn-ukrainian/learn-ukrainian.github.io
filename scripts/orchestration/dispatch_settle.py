@@ -31,7 +31,7 @@ from scripts.guardrails.delegate_ownership import (
     OwnershipLedger,
     default_ledger_path,
 )
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
 from scripts.orchestration.dead_worker_state import mark_dead_worker_terminal
 
 
@@ -59,6 +59,7 @@ def _pid_alive(pid: int | None) -> bool:
 DEFAULT_COMMAND_TIMEOUT_SECONDS = 60.0
 
 
+@publication_boundary(ValueError)
 def _run(
     args: list[str],
     *,
@@ -576,6 +577,7 @@ def _build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@publication_cli(ValueError)
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)

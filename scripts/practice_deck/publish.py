@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parents[2]
 # scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
 from scripts.storage.paths import REGISTRY_ROOT
 
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
@@ -329,6 +329,7 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
     temp_path.replace(pointer_path)
 
 
+@publication_boundary(PracticeDeckPublishError)
 def ensure_release(
     release_tag: str,
     repo: str,
@@ -636,6 +637,7 @@ def publish_practice_deck(
     return pointer
 
 
+@publication_cli(PracticeDeckPublishError)
 def main() -> int:
     parser = argparse.ArgumentParser(
         description=(

@@ -56,7 +56,7 @@ def main() -> int:
         environment["AGENT_REAL_GH"] = real
         with snapshot(argv, cwd=Path.cwd(), environment=environment) as frozen:
             if frozen.write:
-                check_texts(frozen.destination, frozen.texts, environment=environment)
+                check_texts(frozen.destination, frozen.texts, environment=environment, field_names=frozen.field_names)
             environment.pop("LU_OPSEC_OVERRIDE", None)
             # All retries use the same scanned files/stdin. The Bash helper still
             # owns its established rate-limit and merge/approval behavior.

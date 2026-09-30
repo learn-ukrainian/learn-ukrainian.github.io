@@ -44,7 +44,7 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_cli
 from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
@@ -349,6 +349,7 @@ def _resolve_target(args: argparse.Namespace):
     return repo_root, target
 
 
+@publication_cli()
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)

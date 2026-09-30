@@ -19,7 +19,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.gh_merge_queue_status import extract_pr_number
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
 from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup_verdict, parse_marker
 
 FLOOR = 500
@@ -42,6 +42,7 @@ class GitHub:
     def __init__(self, root: Path, repository: str) -> None:
         self.root, self.repository = root, repository
 
+    @publication_boundary(KeeperError)
     def call(self, *args: str) -> str:
         try:
             result = checked_run(
@@ -623,6 +624,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@publication_cli(KeeperError)
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     root = args.repo_root.resolve()

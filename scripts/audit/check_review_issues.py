@@ -29,7 +29,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 from scripts.common.repo_root import project_interpreter
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_cli
 
 CURRICULUM_BASE = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 VENV_PYTHON = str(project_interpreter())
@@ -139,6 +139,7 @@ def _comment_issue(number: int, comment: str) -> None:
     _run_gh(["issue", "comment", str(number), "--body", comment])
 
 
+@publication_cli()
 def main() -> None:
     parser = argparse.ArgumentParser(description="Audit open module review issues.\nUse --dry-run to inspect or --close to publish verified results.", formatter_class=argparse.RawDescriptionHelpFormatter, epilog="Examples:\n  .venv/bin/python scripts/audit/check_review_issues.py --dry-run\nOutputs and exit codes: Report stdout; optional issue comments and close operations. 0: report complete; >=1: error.\nRelated: #9297")
     parser.add_argument("--close", action="store_true",

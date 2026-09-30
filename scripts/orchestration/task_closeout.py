@@ -22,7 +22,7 @@ if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from scripts.github_check_rollup import collapse_status_rollup
-from scripts.opsec.prepublish import checked_run
+from scripts.opsec.prepublish import checked_run, publication_boundary, publication_cli
 from scripts.orchestration import task_identity, task_lifecycle
 
 Runner = Callable[[list[str], str | None], str]
@@ -50,6 +50,7 @@ DEFAULT_COMMAND_TIMEOUT_SECONDS = 60.0
 
 
 def _default_runner(repo_root: Path) -> Runner:
+    @publication_boundary(task_lifecycle.LifecycleError)
     def run(args: list[str], stdin: str | None = None) -> str:
         try:
             completed = checked_run(
@@ -143,15 +144,18 @@ class GhGitHubAdapter:
 
     def __init__(self, repo_root: Path, *, runner: Runner | None = None) -> None:
         self.repo_root = repo_root.resolve()
-        self._custom_runner = runner
-        self._run = runner or _default_runner(self.repo_root)
+        if runner is None:
+            self._run = _default_runner(self.repo_root)
+        else:
+            @publication_boundary(task_lifecycle.LifecycleError)
+            def checked(command, stdin=None):
+                def send(args, **kwargs):
+                    return subprocess.CompletedProcess(args, 0, runner(args, kwargs.get("input")), "")
+                return checked_run(command, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
+            self._run = checked
 
     def _json(self, args: list[str], stdin: str | None = None) -> Any:
-        def send(command, **kwargs):
-            return subprocess.CompletedProcess(command, 0, self._run(command, kwargs.get("input")), "")
-
-        raw = (checked_run(args, runner=send, cwd=self.repo_root, input=stdin, text=True).stdout
-               if self._custom_runner is not None else self._run(args, stdin))
+        raw = self._run(args, stdin)
         try:
             return json.loads(raw or "null")
         except json.JSONDecodeError as exc:
@@ -1118,6 +1122,7 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+@publication_cli(task_lifecycle.LifecycleError)
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:

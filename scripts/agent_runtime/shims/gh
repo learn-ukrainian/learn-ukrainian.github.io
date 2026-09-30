@@ -174,7 +174,7 @@ _run_with_secondary_rate_limit_retry() {
   local retries_exhausted=false
   while :; do
     if [[ "${LU_OPSEC_REPLAY_STDIN:-}" == "1" ]]; then
-      "$(dirname "$(git rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python" -c 'import os; os.lseek(0, 0, 0)'
+      "$(dirname "$(git -C "$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)" rev-parse --path-format=absolute --git-common-dir)")/.venv/bin/python" -c 'import os; os.lseek(0, 0, 0)'
     fi
     if "$real_gh" "$@" >"$_agent_gh_retry_stdout_file" 2>"$_agent_gh_retry_stderr_file"; then
       exit_status=0
