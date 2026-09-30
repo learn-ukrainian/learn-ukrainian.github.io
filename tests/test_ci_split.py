@@ -415,17 +415,15 @@ def test_report_fails_when_a_shard_uploaded_no_junit_or_collection(
     assert problem in capsys.readouterr().err
 
 
-def test_conftest_records_marked_tests_before_deselection(tmp_path: Path) -> None:
-    """A real pytest run under xdist: ``-m 'not needs_artifact'`` deselects every marked test,
-    yet the collected list still names them (so a ``slow`` marked test cannot drop out)."""
+def _collected_under_xdist(tmp_path: Path, *args: str) -> tuple[set[str], set[str]]:
+    """Run pytest under xdist on the first expected module plus ``args``; return (collected, expected) ids."""
     expected = pytest_report.read_expected_skips(_REPO_ROOT / pytest_report.EXPECTED_ARTIFACT_SKIPS)
     module = sorted(expected)[0].split("::", 1)[0]
-    test_file = module.replace(".", "/") + ".py"
     collected = tmp_path / "collected.txt"
     result = subprocess.run(
         [
-            sys.executable, "-m", "pytest", test_file, "-n", "2", "-p", "no:cacheprovider",
-            "-m", "not needs_artifact", "--override-ini", "addopts=-q",
+            sys.executable, "-m", "pytest", module.replace(".", "/") + ".py", *args,
+            "-n", "2", "-p", "no:cacheprovider", "--override-ini", "addopts=-q",
         ],
         cwd=_REPO_ROOT,
         env={**os.environ, "LU_PYTEST_NEEDS_ARTIFACT_COLLECTED": str(collected)},
@@ -438,7 +436,22 @@ def test_conftest_records_marked_tests_before_deselection(tmp_path: Path) -> Non
     ids = {
         pytest_report.nodeid_to_junit_id(line) for line in collected.read_text(encoding="utf-8").splitlines() if line
     }
-    assert ids == {test_id for test_id in expected if test_id.startswith(f"{module}::")}
+    return ids, {test_id for test_id in expected if test_id.startswith(f"{module}::")}
+
+
+def test_conftest_records_marked_tests_before_deselection(tmp_path: Path) -> None:
+    """A real pytest run under xdist: ``-m 'not needs_artifact'`` deselects every marked test,
+    yet the collected list still names them (so a ``slow`` marked test cannot drop out)."""
+    collected, expected = _collected_under_xdist(tmp_path, "-m", "not needs_artifact")
+    assert collected == expected
+
+
+def test_nested_pytest_leaves_the_collected_list_intact(tmp_path: Path) -> None:
+    """A test that runs a child pytest (here with the inherited environment) must not
+    replace the shard's collected list with the child's (CI run 36658788394 lost 77 ids)."""
+    nested = "tests/test_conftest_worktree_guard.py::test_acp_redirect_is_active_when_module_was_not_preimported"
+    collected, expected = _collected_under_xdist(tmp_path, nested)
+    assert collected == expected
 
 
 # =============================================================================

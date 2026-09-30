@@ -6,6 +6,7 @@ real private repository or live adapter process.
 
 from __future__ import annotations
 
+import fcntl
 import json
 import os
 import socket
@@ -601,6 +602,23 @@ def _port_free(host: str, port: int) -> bool:
         except OSError:
             return False
     return True
+
+
+@pytest.fixture
+def fixed_ports_lock(tmp_path_factory: pytest.TempPathFactory):
+    """Serialize the two fixed-port smokes across xdist workers.
+
+    Under ``--dist=worksteal`` they can run at once on two workers of one
+    shard; the second would find 8765/8769 taken and skip. The lock file sits
+    in the run's shared temp root (the parent of every worker's basetemp).
+    """
+    lock_path = tmp_path_factory.getbasetemp().parent / "fixed-ports-8765-8769.lock"
+    with lock_path.open("w") as handle:
+        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
 
 
 def _start_server(
@@ -1712,7 +1730,7 @@ def _cors_handler_factory(hits: dict[str, Any], allowed: set[str], body: bytes):
     return Handler
 
 
-def test_real_fixed_port_cors_http_and_browser_smoke():
+def test_real_fixed_port_cors_http_and_browser_smoke(fixed_ports_lock):
     """Live CORS on fixed ports 8765/8769 with real browser GET (no preflight)."""
     if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free("127.0.0.1", FIXED_PRIVATE_PORT):
         pytest.skip("fixed ports 8765/8769 busy; interception proofs already cover behavior")
@@ -1830,7 +1848,7 @@ def test_real_fixed_port_cors_http_and_browser_smoke():
         private_server.server_close()
 
 
-def test_real_fixed_port_cors_localhost_origin_smoke():
+def test_real_fixed_port_cors_localhost_origin_smoke(fixed_ports_lock):
     """Second smoke: page addressed as http://localhost:8765 admits that origin."""
     if not _port_free("127.0.0.1", FIXED_PUBLIC_PORT) or not _port_free("127.0.0.1", FIXED_PRIVATE_PORT):
         pytest.skip("fixed ports 8765/8769 busy; interception proofs already cover behavior")

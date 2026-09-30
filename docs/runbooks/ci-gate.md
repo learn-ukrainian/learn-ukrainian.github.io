@@ -64,11 +64,24 @@ The needs_artifact audit makes two independent comparisons with the expected
 list. The collected set comes from collection, before `-m` deselects anything:
 each shard sets `LU_PYTEST_NEEDS_ARTIFACT_COLLECTED` and `tests/conftest.py`
 writes every marked test it collected (xdist worker gw0 writes; all workers
-collect the same items). The skip set comes from the JUnit reports. In CI no
+collect the same items). The outer pytest removes the variable from its
+environment and hands the path to its workers through xdist's `workerinput`,
+so a test that starts a child pytest cannot overwrite the shard's list with
+the child's. Run 36658788394 lost 77 ids that way, in the three shards holding
+such tests; `test_nested_pytest_leaves_the_collected_list_intact` covers it.
+The skip set comes from the JUnit reports. In CI no
 artifact store is present, so every marked test must run in the tier and skip
 with the `needs_artifact:` message. A marked test deselected as `slow`, skipped
 for another reason, or passing is in the collected set but not the skip set,
 and fails the report.
+
+Executed outcomes were compared test by test with the old workflow on the same
+base: the old run 36648511336 (merge-queue run of `252ea0fa64`) against the new
+run 36658788394. 36,322 test ids ran in both. Every one of them had the same
+outcome, except the fixed-port dashboard smoke described under pytest shards.
+Both runs skipped all 368 expected needs_artifact tests. The 192 ids found
+only in the old run and the 124 found only in the new run all belong to CI
+test files this change deleted or rewrote.
 
 ## CI Gate
 
@@ -143,7 +156,12 @@ entry.
 - The shard collects through one `tests` path; the `LU_PYTEST_SHARD_FILES`
   allowlist hook in `tests/conftest.py` keeps collection to the shard's files.
 - Within a shard, `-n logical --dist=worksteal` spreads single tests over the
-  runner's cores, so one long file no longer pins a shard.
+  runner's cores, so one long file no longer pins a shard. The old workflow
+  used `--dist=loadfile`, so tests of one file never overlapped. Tests that
+  share a fixed resource must now serialize themselves: the two fixed-port
+  smokes in `tests/test_work_dashboard_private_integration.py` take a file
+  lock in the run's shared temp root. Without the lock, one of them skipped
+  with "ports busy" in every new-workflow run.
 - A stale durations file only costs balance, never coverage. Refresh it from a
   full run's JUnit when shard times drift:
 
@@ -165,9 +183,11 @@ with full history (`fetch-depth: 0`). Shards 2..N check out only the tested
 commit (`fetch-depth: 1`) and run pytest with `GIT_ALLOW_PROTOCOL=file`. A
 listed file that is no longer tracked fails the split.
 
-The list is measured, not guessed. One run had every shard shallow with
-network git blocked, and it was compared test by test with a full-history run
-of the same code. Only these seven files changed outcome. None of them skipped:
+The list is measured, not guessed. Run 36654595606 had every shard shallow
+with network git blocked in the pytest step. It was compared test by test with
+the full-history run 36650655215. Only these seven files changed outcome (28
+tests, passed to failed). The one other change is a `test_ci_split` workflow
+assertion that failed on the experiment's own `GIT_ALLOW_PROTOCOL` edit. None of them skipped:
 each failed loudly, with git exit 128 or a blocked https transport. Without the
 block, the network fetch in the two delegate tests pulled main's history into
 their shard and hid two of the five history files. A new test that needs
