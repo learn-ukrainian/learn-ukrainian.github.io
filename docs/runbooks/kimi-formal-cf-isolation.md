@@ -4,6 +4,8 @@
 
 Design spikes closed **Option C fail-closed residual**. For **fleet-comms v1 (#5512)**,
 Kimi is not a sealed formal CF reviewer; substitute seats remain the product path.
+**Kimi takes web, UI and backend coding only, so the flip criteria below are retired:
+no review lane is planned for it.**
 
 | Capability | Native Kimi Code CLI | Formal CF sealed path |
 | --- | --- | --- |
@@ -15,10 +17,9 @@ Kimi is not a sealed formal CF reviewer; substitute seats remain the product pat
 | Registry `formal_review_eligible` | `false` | **v1 complete residual** |
 | Wire #5618 / enable #5619 | Residual closeout | Reopen only with Option A/B proof |
 
-## Live lane (non-formal)
+## Live lane (implementation only)
 
 - `delegate.py --agent kimi` (default `k2.7-coding`; K3 via model override)
-- `ai_agent_bridge ask-kimi` / `process-kimi`
 - `./start-kimi.sh` (native Kimi Code interactive session)
 - `./start-kimi.sh --harness claude-code` (Claude Code UI → Kimi API route)
 
@@ -30,12 +31,12 @@ Kimi is not a sealed formal CF reviewer; substitute seats remain the product pat
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex - --type review --pr <N> --task-id review-<N> < prompt.md
 ```
 
-## Flip criteria (do not skip)
+## Retired flip criteria (historical; Kimi takes no review role)
 
 1. Isolation capability matrix with proven CLI flags or sandbox profile.
 2. `prepare_isolated_review_launch` positive path + ambient-instruction negative test.
-3. Direct `ask-kimi --type review` or sealed transport registration.
+3. (Retired) `ask-kimi --type review` is refused by `kimi_admission`.
 4. Real smoke formal CF on a PR.
-5. Then flip `formal_review_eligible: true`.
+5. `formal_review_eligible` stays `false`.
 
 Parent: #5556 · stream #4707 · product #5512.

@@ -147,8 +147,9 @@ E13, E19, E23, Eh02, Eh10, Eo03, Ed19.
   V4.1 Flash row. The catalog entries and adapter code remain; only routing is stale.
 - **Kimi.** The core limits Kimi to web, UI and backend coding. Kimi does no Ukrainian-language content,
   reviews, consults, ACP discussions, design sign-off or rules. This was an approved policy change on
-  2026-09-29 (driver-attested). The Kimi admission PR updates `operator-expectations.md` (item 12,
-  which still lets Kimi consult on non-Ukrainian design) and `model-assignment.md` (Kimi as advisor).
+  2026-09-29 (driver-attested). The Kimi admission PR updated `operator-expectations.md` (item 12),
+  `model-assignment.md`, the drive-epic model deltas, the role scorecard and the runbooks, so no
+  live text routes Kimi to reviews, consults or design.
 - **Grok 4.6.** The core states that Grok 4.6 is not admitted, as the catalog's comments say. Its
   catalog entry still reads `lifecycle: active`, and `model-assignment.md` still lists it among the
   advisors; both are stale.
@@ -174,9 +175,7 @@ E13, E19, E23, Eh02, Eh10, Eo03, Ed19.
 | Daily driver | Sol and Opus 5.5 first, `grok-4.7` as fallback | Catalog roles: `gpt-6.1-sol` and `claude-opus-5-5` carry `orchestration`; `grok-4.7` does not |
 | drive-epic split | Load-when points at `drive-epic/references/*.md` | The skill is now a 9 KB core plus references |
 
-Stale text that Phase C must update to match: the DeepSeek routing above; Kimi as consultant or
-reviewer in `model-assignment.md`, `operator-expectations.md` item 12 and the entry files (the Kimi
-admission PR covers the first two); `gpt-6-sol` and `gpt-6-astra` in rule prose; the S11 recommendation
+Stale text that Phase C must update to match: the DeepSeek routing above; `gpt-6-sol` and `gpt-6-astra` in rule prose; the S11 recommendation
 rows in `fleet-role-scorecard.md`; the `MEMORY.md` lines behind S32–S35.
 
 ## Needs decision (policy conflicts; the core does not pick)

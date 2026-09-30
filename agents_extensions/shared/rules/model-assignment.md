@@ -45,7 +45,7 @@ merge / do not jump MQ ahead of Foundry #7102.**
 | Fable (`claude-fable-5`) | **S+** | `frontier_authority` | operator lock (no Wave 1 public CF cell required) |
 | Historical `gpt-5.6-sol` / Codex (retired; not a route) | **A** / hard advisory in the 2026-08-23 scorecard | `frontier_authority` at the time | #7142 thorough/confirmational on docs; live hard advice now routes to GPT-6 Astra @ high |
 | Grok (`grok-4.6`) | **≥B, NOT C** — do not demote | `frontier_practical` | #7133 pass with nits; residual-positional finding |
-| Kimi (native `kimi` CLI) | strong root-cause; densest useful CI nits | `frontier_practical` | #7143 pass with nits |
+| Kimi (native `kimi` CLI) | historical evidence only; Kimi no longer reviews (coding only) | `frontier_practical` | #7143 pass with nits |
 | AGY (`gemini-3.7-flash-high`) | historical fast scoped CF; no current code-review route | `frontier_practical` | #7137 pass, wall ~47s, low noise, concrete finding |
 | GLM-5.3 | ships-heavier; **LOCAL-ONLY** (zai-coding-plan) | `frontier_practical` | #7144 pass with nits; solid root-cause; also #7121 fetch refspecs |
 
@@ -170,7 +170,7 @@ or count as a formal review.
   a formal-review identity. **Gate history #6469:**
   workspace-write defaulted to `--mode plan` (read-only) — fixed in the same utilization PR
   so Auto can execute. If a future adapter regression returns plan-only rc=0, substitute with
-  NOTE to AGY / DeepSeek Flash / Kimi k3-256k / Z.AI GLM. `composer-2.5-fast` stays retired.
+  NOTE to AGY / DeepSeek Flash / Kimi k3-256k (web, UI and backend paths only) / Z.AI GLM. `composer-2.5-fast` stays retired.
 * **deepseek** (operator 2026-08-02; hold 2026-08-06; reaffirmed 2026-08-08; **Pro hold lifted for
   hard tasks 2026-08-13**, operator GO; canary Pro #6703 merged `9c44e63f63` @ high, Flash #6702
   canary shipped): first-party OpenCode `deepseek/*` at `high` — the dispatch
@@ -310,15 +310,16 @@ headroom, not unavailability. Shed load only to models that meet the same task-r
 **Kimi lane:** native `kimi` CLI subscription path only — never OpenRouter, never an
 OpenRouter-for-subscribed-models fallback. Dispatch/native default is **`k3-256k`** (`kimi-code/k3-256k`,
 everyday coding/impl, no forced effort — operator 2026-08-13). Use K3 (`kimi-code/k3`, high/max
-effort) for consequential coding, strong cross-family review, long-context debugging, and deep
-asks. Use `k2.7-coding` / `k2.7-coding-highspeed` only as legacy routine/bulk pins. Do not demote K3 merely
+effort) for consequential web, UI and backend coding and long-context debugging within
+the allowlisted paths. Use `k2.7-coding` / `k2.7-coding-highspeed` only as legacy routine/bulk pins. Do not demote K3 merely
 because the cheaper model exists; risk and fit establish the quality floor first. Kimi is Moonshot
 family. Composer 2.5 is Cursor-trained from a Kimi K2.5 checkpoint, so conservatively treat Composer
-and Kimi as the same Moonshot independence family. Neither is currently a Ukrainian factual/folk gate.
+and Kimi as the same Moonshot independence family. Neither is a Ukrainian factual/folk gate.
 K3 is **not a QG judge**; the standing judge pairing remains Gemini↔GPT.
-**Supersession (user directive 2026-07-17):** K3 is now operator-classified as a top model and is
-eligible for automatic cross-family code-review ladders. This replaces the 2026-07-16 canary-only /
-zero-automatic-weight restriction; continued local bakeoffs refine its ordering but do not erase it.
+**Supersession (Kimi admission policy):** K3 is a top coding model but is in no review ladder,
+advisory panel or consult (web, UI and backend coding only). This supersedes the 2026-07-17 directive
+that made it eligible for automatic cross-family code-review ladders; local bakeoffs may still
+refine its implementation ordering.
 
 ## Fleet topology — orchestrator · advisor · workers (user directive 2026-07-11; multi-orchestrator 2026-07-21)
 

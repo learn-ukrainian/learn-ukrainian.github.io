@@ -21,7 +21,7 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **harness / infra** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic infra` |
 | **devops** | Gemini (AGY) | `./start-gemini-driver.sh --epic devops` |
 | **devops** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic devops` |
-| **ops-api** (Operator API + UI; stream key `monitor`) | Cursor or Gemini (AGY); **Kimi for UI/design** | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
+| **ops-api** (Operator API + UI; stream key `monitor`) | Cursor or Gemini (AGY); **Kimi for UI implementation only** | `./start-cursor-driver.sh --epic ops-api` (alias: `--epic monitor`) |
 | **ops-api** (named alternate) | Codex / gpt-6.1-sol @ high | `./start-codex-driver.sh --epic ops-api` |
 | **corpus** (acquisition & ingestion) | Gemini (AGY) | `./start-gemini-driver.sh --epic corpus` |
 | **atlas** (Word Atlas + Practice Hub product) | Grok 4.6 | `./start-grok-driver.sh --epic atlas` |
@@ -118,7 +118,7 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
   hydrate change the rollover-cost calculus. Codex remains a formal-CF **review** seat + coding lane;
   each stream's lease prevents concurrent co-ownership.
-- **Kimi K3** — frontier coder/reviewer + cross-family escalation authority. Dispatch defaults to the faster `k3-256k` with no forced effort; full K3 defaults to `high` through the `kimicc` harness. Kimi cannot be a read-only review seat via `ask-kimi --type review` / `delegate.py --mode read-only` (the tooling refuses because headless Kimi auto-approves mutations), so pick another family for cross-family review; still a good implementer and non-Ukrainian design consult; drive when assigned.
+- **Kimi K3** — web, UI and backend coding only, on allowlisted paths (workspace-write). Never a reviewer, cross-family escalation authority, consult, advisor, design sign-off, ACP participant or stream driver. Dispatch defaults to the faster `k3-256k` with no forced effort; full K3 defaults to `high` through the `kimicc` harness. Pick another family for every review; Kimi's own output needs independent cross-family review.
 
 ### Machine-authority projection (lint #5642)
 

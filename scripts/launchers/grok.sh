@@ -36,7 +36,11 @@ launcher_adapter_exec() {
   if [ -n "${LC_EFFORT:-}" ]; then
     cmd+=(--reasoning-effort "$LC_EFFORT")
   fi
+  # --rules appends to Grok's system prompt; native AGENTS.md loading is unproven.
+  if [ -n "${LC_RULES_CORE:-}" ]; then
+    cmd+=(--rules "$LC_RULES_CORE")
+  fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
-  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; printf '%q ' "${cmd[@]}"; printf '\n'; return 0; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
   launcher_exec_command "${cmd[@]}"
 }

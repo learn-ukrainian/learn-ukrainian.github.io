@@ -53,7 +53,7 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "prompt_chars": int,
         "prompt_sha256": str,        # sha256 of the prompt as given (--prompt/--prompt-file), before appended blocks
         "effective_prompt_sha256": str,  # sha256 of the final prompt handed to the worker, after every appended block
-        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "worktree", "lifecycle", "research"
+        "prompt_blocks": [str],      # kinds of the blocks delegate added, in prompt order: "rules_core", "worktree", "lifecycle", "research"
         "review_attempt": {review_id, attempt_id, manifest_sha256} | absent,  # --review-attempt dispatches only (#9022)
         "review_contract": {render_checkout, server_checkout, server_interpreter, render_server_digest, server_digest, server_components, render_template_digest, template_digest, templates, prompt_sha256} | absent,  # (#9163)
         "dispatch_args_sha256": str,  # sha256 of every parsed `dispatch` arg except DISPATCH_ARGS_HASH_EXCLUDED_FIELDS
@@ -176,6 +176,7 @@ from scripts.config import (
 from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
+from scripts.lib import rules_core
 from scripts.orchestration import (
     dispatch_admission,
     dispatch_isolation,
@@ -10634,6 +10635,13 @@ def _dispatch(
             if research_block:
                 prompt_blocks.append("research")
             prompt = prompt + research_block
+
+        # Every worker and review seat starts with the rules core, read from this
+        # checkout; a checkout without it warns and dispatches unchanged.
+        cored_prompt = rules_core.with_core(prompt, getattr(args, "rules_seat", None))
+        if cored_prompt != prompt:
+            prompt_blocks.insert(0, "rules_core")
+            prompt = cored_prompt
         effective_prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
 
         start_telemetry = resolve_dispatch_start_telemetry(
@@ -12969,6 +12977,15 @@ def build_parser() -> argparse.ArgumentParser:
             "ADR-011 P3 research context: an owned/changed path for the task. "
             "Repeatable. Matched against each record's owned_paths globs. "
             "Also feeds the writable-path admission guard (#5643)."
+        ),
+    )
+    d.add_argument(
+        "--rules-seat",
+        choices=rules_core.SEATS,
+        default=None,
+        help=(
+            "Rules core the worker starts with: core, or content (core plus the curriculum "
+            f"addendum) for curriculum seats. Default: ${rules_core.SEAT_ENV}, else core."
         ),
     )
     d.add_argument(

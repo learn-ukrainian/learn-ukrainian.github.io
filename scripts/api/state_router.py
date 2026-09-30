@@ -2937,6 +2937,8 @@ async def manifest(request: Request, ctx: MonitorContext = Depends(get_ctx)):
         {
           "generated_at": "2026-04-17T10:15:00Z",
           "rules":   {"hash": "...", "url": "/api/rules?format=markdown"},
+          "rules_core":    {"hash": "...", "url": "/api/rules?scope=core&format=markdown"},
+          "rules_content": {"hash": "...", "url": "/api/rules?scope=content&format=markdown"},
           "session": {"hash": "...", "url": "/api/session/current?agent=orchestrator&format=markdown"},
           "orient":  {"url": "/api/orient"},
           "inbox":   {"url_template": "/api/comms/inbox?agent={name}"},
@@ -2962,6 +2964,15 @@ async def manifest(request: Request, ctx: MonitorContext = Depends(get_ctx)):
             "url": "/api/rules?format=markdown",
             "format": "markdown",
             "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
+        },
+        # Scoped rules carry their own hash; content = core + curriculum addendum.
+        "rules_core": {
+            "hash": rules_hash(project_root=ctx.roots.project_root, scope="core"),
+            "url": "/api/rules?scope=core&format=markdown",
+        },
+        "rules_content": {
+            "hash": rules_hash(project_root=ctx.roots.project_root, scope="content"),
+            "url": "/api/rules?scope=content&format=markdown",
         },
         "session": {
             "hash": session_hash(project_root=ctx.roots.project_root),

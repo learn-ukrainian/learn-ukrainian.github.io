@@ -48,7 +48,7 @@ curl -s http://localhost:8765/api/orient   # parse git, health, delegate, govern
 
 Fleet launchers route eligible 2-to-4-seat read-only `ab discuss` calls through
 the durable ACP controller automatically. Enabled participants are Codex,
-Grok, Claude, Kimi, KimiCC K3, Cursor, and Pool. Bridge transport is a named,
+Grok, Claude, Cursor, and Pool (Kimi seats are refused: web, UI and backend coding only). Bridge transport is a named,
 durably recorded exception for unsupported participants/counts, model
 overrides, formal review, or non-read-only semantics; an ACP failure never
 silently replays provider calls over bridge. ACP does not replace fleet

@@ -35,6 +35,7 @@ markers = [
     "reads_content: tests that read curriculum/site-content/wiki files (content CI class lane, #8399)",
     "repo_wide: tests that scan repository trees (tests/, scripts/, agents_extensions/) or run a repo lint, so import-graph selection can never pick them; always run in the selected CI tier (#8707)",
     "needs_artifact(group, rel): test requires data/<rel> from artifact group; skips when unavailable",
+    "rules_core_absent: pins an exact argv or prompt block order, so runs without the rules core (tests/rules_core_view.py)",
 ]
 
 [tool.ruff]

@@ -61,6 +61,9 @@ def test_selection_listed_unlisted_schedule_and_expired(monkeypatch):
         def add_marker(self, marker):
             self.markers.append(marker)
 
+        def get_closest_marker(self, name):
+            return None
+
     entry["expires_on"] = today
     listed = Item(entry["node_id"])
     unlisted = Item("tests/test_sample.py::test_other")

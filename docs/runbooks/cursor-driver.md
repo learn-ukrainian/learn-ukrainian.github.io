@@ -40,7 +40,7 @@ Cross-family independence checks evaluate either the **attested concrete model f
 - **Attested Cursor `composer-2.5`:** Belongs to the **Moonshot** family (Composer 2.5 derives from Kimi 2.5; native Kimi K3 diverged, recorded for future reassessment. Composer 2.5 conservatively shares Moonshot independence lineage with Kimi; not native Kimi).
 - **Attested Cursor `grok-4.7`:** Belongs to the **xAI** family (xAI via Cursor; distinct transport from the native Grok seat).
 - **Unknown `cursor:auto`:** Belongs to the **union family {xAI, Moonshot}**. Reviewers must be strictly outside both families.
-- **Same-Family / Union-Family Refusal:** A review of a Cursor-authored head must refuse if the reviewer belongs to the same attested family (e.g. Kimi reviewing Composer 2.5, or Grok reviewing Cursor `grok-4.7`) or if an unknown-Auto head is reviewed by any member of {xAI, Moonshot}.
+- **Same-Family / Union-Family Refusal:** A review of a Cursor-authored head must refuse if the reviewer belongs to the same attested family (e.g. a Moonshot-family seat and Composer 2.5, or Grok reviewing Cursor `grok-4.7`; Kimi itself is never a reviewer) or if an unknown-Auto head is reviewed by any member of {xAI, Moonshot}.
 
 ## Operating Constraints & Concurrency
 

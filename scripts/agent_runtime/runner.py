@@ -3622,6 +3622,11 @@ def invoke_inter_agent(
         "idempotency_key", idempotency_key, adapter_label="InterAgentTransport"
     )
     route = resolve_inter_agent_route(agent, model=model, effort=effort)
+    # Every ACP ask, discussion leg and sealed review starts with the rules core
+    # (seat from $LU_RULES_SEAT); a checkout without it warns and sends unchanged.
+    from scripts.lib import rules_core
+
+    prompt = rules_core.with_core(prompt)
     trusted_source = _resolve_trusted_transport_source(
         source=source,
         task_id=validated_task_id,

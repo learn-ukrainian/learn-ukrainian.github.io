@@ -1,5 +1,7 @@
 """Prompt building for Gemini and Claude interactions."""
 
+from scripts.lib import rules_core
+
 from ._config import REPO_ROOT
 
 
@@ -59,6 +61,11 @@ def _prepend_review_protocol(
     )
 
 
+def bridge_prompt(prompt: str, review: bool, **review_target) -> str:
+    """Finish a bridge prompt: the rules core first, then any review protocol."""
+    return rules_core.with_core(_prepend_review_protocol(prompt, review, **review_target))
+
+
 def _load_gemini_context() -> str:
     """Load .gemini/docs/ context files and return as a single block.
 
@@ -105,7 +112,7 @@ def build_gemini_prompt(msg: dict, stdout_only: bool, output_path: str | None,
         prompt = _build_orchestrated_prompt(msg, output_path)
     else:
         prompt = _build_standard_prompt(msg)
-    return _prepend_review_protocol(prompt, review)
+    return bridge_prompt(prompt, review)
 
 
 def _build_full_execution_prompt(msg: dict, delimiters: str | None) -> str:
@@ -250,7 +257,7 @@ Respond directly to this message. Be concise and helpful.
 Your response will be automatically sent back to the sender via the message broker.
 Do NOT use MCP tools to send your response - just output your response directly.
 """
-    return _prepend_review_protocol(
+    return bridge_prompt(
         prompt,
         review,
         review_branch=review_branch,
@@ -370,7 +377,7 @@ Standing rules for bridge Q&A:
   them via your native plugin surface; only fall back to run_command +
   curl if the plugin isn't loaded.
 """
-    return _prepend_review_protocol(
+    return bridge_prompt(
         prompt,
         review,
         review_branch=review_branch,
@@ -411,7 +418,7 @@ Respond directly to this message. Be concise and helpful.
 This bridge is for quick questioning and short coordination, not long-running task execution.
 Do NOT use broker or MCP messaging tools to send your response - just output your response directly.
 """
-    return _prepend_review_protocol(
+    return bridge_prompt(
         prompt,
         review,
         review_branch=review_branch,
