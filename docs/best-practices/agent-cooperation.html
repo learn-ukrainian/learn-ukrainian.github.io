@@ -1074,7 +1074,7 @@ runtime init show the expected <code>sources</code> server.</li>
 </code></pre>
 <p>Post on the relevant GH issue explaining what was stuck and why.</p>
 <h2>Dispatch handoff: GPT-6 Luna workers + fleet settle</h2>
-<p><strong>Luna (<code>gpt-6-luna</code> @ high)</strong> is a high-volume <strong>bounded coding worker</strong>, not a solo epic driver.
+<p><strong>Luna (<code>gpt-6-luna</code> @ high)</strong> is a high-volume <strong>bounded coding worker</strong>, not a solo epic driver. Every Luna dispatch needs a complete GPT-6.1 Sol advisory envelope bound to it (<code>--advisory-task</code>; operator decision 2026-09-30, #9275).
 Orchestrators keep acceptance (CF, merge, residual truth).</p>
 <h3>Briefing Luna</h3>
 <p>Append <a href="../dispatch-briefs/luna-max-closeout-contract.md"><code>docs/dispatch-briefs/luna-max-closeout-contract.md</code></a>

@@ -3,12 +3,25 @@
 Use `scripts.fleet.sibling_git` from the repository root owning the deployed
 primary-checkout hook. From a dispatch root, use the shared project's absolute
 interpreter and that worktree's own deployed hook copy; a hook copy in another
-root does not satisfy its cwd rule. Set `PYTHONDONTWRITEBYTECODE=1` in the session environment before
+root does not satisfy its cwd rule. The shipped Claude settings provide
+`PYTHONDONTWRITEBYTECODE=1` through the `env` block in
+`agents_extensions/shared/settings.json`, deployed to `.claude/settings.json`.
+Other harness seats must set and export it in their session environment before
 invoking the helper: Python imports packages before module code can prevent
 cache writes. Invoke each command separately, with no environment prefix,
 redirect, shell composition or interpreter options.
 The usability check reads Python environment settings from the hook process.
 It assumes the hook and command inherit the same session environment.
+
+The source checks below do not prove runtime inheritance; verify that both the
+hook process and command receive the variable in the seat being used.
+
+| Other harness seat | Verified source check | Runtime inheritance |
+| --- | --- | --- |
+| Codex | No explicit setting in `scripts/launchers/codex.sh`, `scripts/lib/`, `agents_extensions/codex/config.toml` or `agents_extensions/codex-home/config.toml`. | Unverified |
+| Grok | No explicit setting in `scripts/launchers/grok.sh` or `scripts/lib/`. | Unverified |
+| Gemini/AGY | No explicit setting in `scripts/launchers/gemini.sh`, `scripts/lib/`, `scripts/agent_runtime/` or `gemini_extensions/settings.json`. | Unverified |
+| Kimi | No explicit setting in `scripts/launchers/kimi.sh` or `scripts/lib/`. | Unverified |
 
 The examples below use the project interpreter; replace its spelling with the
 absolute project interpreter path when sending a command through the hook.

@@ -335,14 +335,19 @@ before dispatching:
 
 1. Use `gpt-6.1-sol` at `high` for Codex coding and code review.
 2. Use `gpt-6-luna` at `high` for routine bounded implementation, scouting, and
-   recon with exact owned paths and an objective scope ceiling.
-3. Reserve `gpt-6.1-sol` at `high` for hard consequential advisory judgment.
-   When an advisory envelope is needed, include the task contract, exact owned
-   paths, maximum changed-file and non-test-LOC ceilings, constraints, risk
-   boundaries, acceptance evidence, and escalation triggers. Astra is an advisor,
-   not the default implementer or reviewer.
-4. The accountable orchestrator checks owned paths and ceilings before dispatch
-   and against the returned diff. Luna escalates any ceiling overrun,
+   recon, always under a complete Sol advisory envelope (operator decision 2026-09-30, #9275). There is no direct bounded dispatch;
+   the same holds for the `gemini-3.8-flash-high` fallback unless the dispatch is
+   classified Ukrainian authoring or review.
+3. `gpt-6.1-sol` at `high` (the Astra seat) issues that envelope read-only with
+   `--advisory-role bounded_advisory_envelope --advisory-binding <digest>`, where the
+   digest is the worker dispatch's `--print-advisory-binding` output. The envelope
+   holds the task contract, exact owned paths, maximum changed-file and
+   non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence, and
+   escalation triggers. Astra is an advisor, not the default implementer or reviewer.
+4. The worker is dispatched with `--advisory-task <advisor task id>` and an
+   `--owned-path` set equal to the envelope's. `delegate.py` refuses a bounded
+   dispatch without a complete bound envelope and fails the worker at finalize when
+   its diff exceeds the ceilings. Luna escalates any ceiling overrun,
    consequential architecture, security, release, high-risk go/no-go, unresolved
    consequential ambiguity, broader integration, and final disposition. An
    Astra advisory is same-family context and never replaces required independent

@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-reading-ukrainian"
+  attempt_id: "agy-att-7"
+  manifest_sha256: "217c19ca26cde45cf340e624d8b422df5b92d029d29ffbc706e6f5f9a2da94d9"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "gemini"
+  prompt_sha256: "b1a8d2d3a6ee4477cb91f4376b84f79e6a72abc54d6a86840b87e182bf073947"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean
+  sequencing: clean
+  sizing: clean
+  inventory: clean
+  activities: clean
+  evidence_fit: clean
+  standard_and_ulp: clean
+findings: []

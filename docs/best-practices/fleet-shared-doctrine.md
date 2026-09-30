@@ -90,7 +90,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | Model | Effort |
 |---|---|
 | GPT-6.1 Sol (coding, review, and the Astra advisory seat) | **`high`** for accountable driving, coding, adversarial review and consequential advisory judgment |
-| GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling; never sole authority |
+| GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling from a complete Sol advisory envelope (always required, #9275); never sole authority |
 | **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
 | **Sonnet 5.5** (provisional Claude practical seat) | Fleet dispatches **`high`** by default. Well-specified agentic coding may use `medium`; harder or longer coding and reviews use `high`. See subsection below. |
 | **Fable 5.1** (advisor / authority seat) | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |

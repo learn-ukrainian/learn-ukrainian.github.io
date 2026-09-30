@@ -1291,3 +1291,271 @@ def test_archive_double_collision_on_a_sidecar_keeps_it_hot_and_reports_it(tasks
     assert (tasks_dir / "split.result").read_text() == "reply\n"
     assert json.loads((tasks_dir / "archive" / "split.json").read_text())["status"] == "done"
     assert _no_staging_left(tasks_dir)
+
+
+# #9275, operator decision 2026-09-30 (option A): recovery never settles a record
+# with a completion gate beyond delivery ``done``. It settles it ``failed`` with
+# ``recovery_requires_rerun`` (or the failure it already carries) for the driver
+# to re-run or finalize by hand; a delivery-only record keeps its recovery.
+
+_NO_VERDICT = "Reviewed the change; the background check is still running.\n"
+_APPROVE = "Findings: none blocking.\nVERDICT: APPROVE\n"
+RERUN = delegate.RECOVERY_REQUIRES_RERUN
+
+
+def _real_worker_orphan(
+    tmp_path: Path,
+    repo: Path,
+    name: str,
+    response: str,
+    *,
+    require_review_verdict: bool = False,
+    exit_scan: Any = None,
+) -> str:
+    """Run the real worker for a write task whose run is left ``needs_finalize``, then lose its tree.
+
+    A verdict-gated run is interrupted inside its verdict check; any other run
+    is left unconfirmed by its ``exit_scan``. Returns the worker's pushed
+    commit, which no ref holds afterwards: the worktree, the local branch and
+    the remote branch are all gone.
+    """
+    branch = f"codex/{name}"
+    worktree = tmp_path / f"wt-{name}"
+    _git(repo, "worktree", "add", "-b", branch, str(worktree), "main")
+    (worktree / f"{name}.txt").write_text("work\n")
+    _git(worktree, "add", f"{name}.txt")
+    _git(worktree, "commit", "-m", name)
+    _git(worktree, "push", "-u", "origin", branch)
+    sha = _git(worktree, "rev-parse", "HEAD")
+    state_path = delegate._state_path(name)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": name,
+            "agent": "codex",
+            "mode": "workspace-write",
+            "status": "running",
+            "repository": SLUG,
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "worktree_reused": True,
+        },
+    )
+    result = type(
+        "_Result",
+        (),
+        {
+            "ok": True, "response": response, "stderr_excerpt": None, "returncode": 0,
+            "rate_limited": False, "model": "gpt-6.1-sol", "effort": "high", "cli_version": "fixture",
+        },
+    )()  # fmt: skip
+    patch = pytest.MonkeyPatch()
+    try:
+        patch.setattr("agent_runtime.runner.invoke", lambda *_a, **_k: result)
+        patch.setattr(delegate, "_background_jobs_at_exit", lambda *_a, **_k: exit_scan)
+        patch.setattr(delegate, "_emit_terminal_dispatch_event", lambda **_kwargs: None)
+        run = lambda: delegate._run_worker(  # noqa: E731
+            task_id=name,
+            agent="codex",
+            prompt="review and fix",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model="gpt-6.1-sol",
+            hard_timeout=60,
+            keep_worktree=True,
+            require_review_verdict=require_review_verdict,
+        )
+        if require_review_verdict:
+
+            def interrupt(_response):
+                raise KeyboardInterrupt("SIGTERM during the verdict check")
+
+            patch.setattr(delegate, "_review_verdict_failure_reason", interrupt)
+            with pytest.raises(KeyboardInterrupt):
+                run()
+        else:
+            run()
+    finally:
+        patch.undo()
+    record = json.loads(state_path.read_text())
+    assert (record["status"], record["final_branch_head_commit"]) == ("needs_finalize", sha)
+    assert state_path.with_suffix(".result").read_text() == response
+    # The tree is lost and the record ages past --min-age-days.
+    _git(repo, "worktree", "remove", "--force", str(worktree))
+    _git(repo, "branch", "-D", branch)
+    _git(repo, "push", "origin", "--delete", branch)
+    record.update(started_at=OLD_START.isoformat(), finished_at=OLD_FINISH.isoformat())
+    state_path.write_text(json.dumps(record, indent=2))
+    return sha
+
+
+def _assert_rerun_settled(tasks_dir: Path, name: str, gate: str, failure: str = RERUN) -> dict[str, Any]:
+    record = json.loads((tasks_dir / f"{name}.json").read_text())
+    assert (record["status"], record["failure_reason"], record["needs_finalize"]) == ("failed", failure, False)
+    assert record["settle_evidence"]["completion_gate"] == {"gate": gate, "failure": failure}
+    assert failure in record["last_error"] and "re-run the task or finalize it by hand" in record["last_error"]
+    assert "merged_pr" not in record
+    return record
+
+
+def test_r9_the_r6_probe_an_unresolved_leftovers_scan_settles_rerun_across_repeated_recovery(tmp_path, tasks_dir, repo):
+    """A real worker's exit scan came back unknown; a merged PR carries its commit, yet it never settles done."""
+    from scripts.orchestration import worker_leftovers
+
+    scan = worker_leftovers.ExitScan(
+        status=worker_leftovers.SCAN_UNKNOWN,
+        scope=worker_leftovers.WorkerScope(task_id="leftovers"),
+        error="cgroup unreadable",
+    )
+    sha = _real_worker_orphan(tmp_path, repo, "leftovers", "Pushed the change.\n", exit_scan=scan)
+    record = json.loads((tasks_dir / "leftovers.json").read_text())
+    assert (record["leftovers_scan"], record["incomplete_run_reason"]) == ("unknown", "leftovers_scan_unknown")
+    pulls = [_merged("codex/leftovers", 40, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    for _ in range(2):
+        row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))
+        _assert_rerun_settled(tasks_dir, "leftovers", "background_leftovers")
+    assert "leftovers.json" not in row  # the second run finds nothing left to settle
+
+
+@pytest.mark.parametrize(
+    "response",
+    [_NO_VERDICT, _APPROVE, "x" * (len(_NO_VERDICT) - len(_APPROVE)) + _APPROVE],
+    ids=["missing-verdict", "passing-verdict", "same-length-replacement"],
+)
+def test_r9_the_r6_probes_a_verdict_gated_worker_interrupted_in_its_verdict_check_settles_rerun(
+    tmp_path, tasks_dir, repo, response
+):
+    """The saved response is never read: a missing, a passing and a same-length replaced verdict all settle rerun."""
+    sha = _real_worker_orphan(tmp_path, repo, "probe", _NO_VERDICT, require_review_verdict=True)
+    # The r6 probe replaces the saved 60-character response with one of equal length.
+    (tasks_dir / "probe.result").write_text(response)
+    pulls = [_merged("codex/probe", 41, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    for _ in range(2):
+        _settle(tasks_dir, repo, pulls, apply=True)
+        record = _assert_rerun_settled(tasks_dir, "probe", "review_verdict")
+        assert record.get("review_verdict_failure") is None
+
+
+def _orphan_record(tasks_dir: Path, repo: Path, name: str, *, response: str | None, **fields: Any) -> str:
+    base = _git(repo, "rev-parse", "HEAD")
+    sha = _orphan_commit(repo, name)
+    record = {"commits_ahead": 1, "worktree_base_sha": base, "final_branch_head_commit": sha, **fields}
+    _record(tasks_dir, name, worktree_dirty_on_exit=True, **record)
+    if response is not None:
+        (tasks_dir / f"{name}.result").write_text(response)
+    return sha
+
+
+@pytest.mark.parametrize(
+    ("name", "fields", "gate", "failure"),
+    [
+        ("verdict", {"require_review_verdict": True, "response_chars": len(_APPROVE)}, "review_verdict", RERUN),
+        ("ceiling", {"advisory_envelope": {}}, "advisory_ceiling", RERUN),
+        ("exempt", {"advisory_exemption": {}}, "advisory_exempt_change", RERUN),
+        (
+            "live",
+            {"leftovers_scan": "live", "incomplete_run_reason": "background_jobs_alive_at_exit"},
+            "background_leftovers",
+            RERUN,
+        ),
+        ("unknown", {"leftovers_scan": "unknown"}, "background_leftovers", RERUN),
+        # A failure the record already carries is kept, never replaced by the rerun cause.
+        (
+            "recorded",
+            {"advisory_envelope": {}, "failure_reason": "advisory_ceiling_exceeded"},
+            "advisory_ceiling",
+            "advisory_ceiling_exceeded",
+        ),
+        (
+            "recorded-verdict",
+            {"require_review_verdict": True, "review_verdict_failure": "review_missing_verdict_line"},
+            "review_verdict",
+            "review_missing_verdict_line",
+        ),
+    ],
+)
+def test_r9_each_gate_type_settles_rerun_and_stays_so(tasks_dir, repo, name, fields, gate, failure):
+    sha = _orphan_record(tasks_dir, repo, name, response=_APPROVE, **fields)
+    pulls = [_merged(f"codex/{name}", 51, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    for _ in range(2):
+        _settle(tasks_dir, repo, pulls, apply=True)
+        _assert_rerun_settled(tasks_dir, name, gate, failure)
+
+
+def test_r9_a_gated_record_settles_rerun_without_a_pull_request_lookup(tasks_dir, repo):
+    """No merged PR can make a gated record done, so none is looked up for it."""
+    _orphan_record(tasks_dir, repo, "nolist", response=None, advisory_envelope={})
+    pager = FakePager([])
+    report = str_mod.settle_stale(tasks_dir, repo_checkouts={SLUG: repo}, pager=pager, now=NOW, apply=True)
+
+    assert pager.calls == []
+
+    row = _by_file(report)["nolist.json"]
+    assert (row["class"], row["action"], row["outcome"], row["failure_reason"]) == ("C", "settled", "failed", RERUN)
+    _assert_rerun_settled(tasks_dir, "nolist", "advisory_ceiling")
+
+
+def test_r9_a_delivery_only_record_still_settles_done_when_its_merged_pr_carries_its_commit(tasks_dir, repo):
+    sha = _orphan_record(tasks_dir, repo, "delivered", response=None, leftovers_scan="clear")
+    pulls = [_merged("codex/delivered", 52, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["delivered.json"]
+
+    assert (row["class"], row["action"], row["outcome"]) == ("C", "settled", "done")
+    record = json.loads((tasks_dir / "delivered.json").read_text())
+    assert (record["status"], record.get("failure_reason"), record["merged_pr"]["number"]) == ("done", None, 52)
+    assert "completion_gate" not in record["settle_evidence"]
+
+
+@pytest.mark.parametrize(
+    ("name", "response", "fields", "outcome", "gate", "failure"),
+    [
+        # The tied PR merged before the task started (the base the worker started
+        # from), so the recorded zero commits stand and nothing was declared.
+        (
+            "delivery",
+            "Looked around; nothing to change.\n",
+            {"commits_ahead": 0, "response_chars": 34},
+            "no_deliverable",
+            "delivery",
+            "no_commits_no_changes",
+        ),
+        # A failure a delivery-only record already carries is never overwritten.
+        (
+            "recorded",
+            _APPROVE,
+            {"failure_reason": "kimi_content_refused", "response_chars": len(_APPROVE)},
+            "failed",
+            "recorded_failure",
+            "kimi_content_refused",
+        ),
+    ],
+)
+def test_r9_a_delivery_only_record_keeps_its_delivery_check_and_recorded_failure(
+    tasks_dir, repo, name, response, fields, outcome, gate, failure
+):
+    sha = _orphan_record(tasks_dir, repo, name, response=response, **fields)
+    merged_at = OLD_START - timedelta(days=2) if gate == "delivery" else OLD_FINISH + timedelta(days=1)
+    pulls = [_merged(f"codex/{name}", 51, merged_at, head_sha=sha)]
+
+    for _ in range(2):
+        _settle(tasks_dir, repo, pulls, apply=True)
+        record = json.loads((tasks_dir / f"{name}.json").read_text())
+        assert (record["status"], record["failure_reason"]) == (outcome, failure)
+        assert record["settle_evidence"]["completion_gate"] == {"gate": gate, "failure": failure}
+        if outcome == "no_deliverable":
+            assert record["no_deliverable_reason"] == failure
+
+
+def test_r7_delivery_counts_a_pull_request_merged_since_the_task_started(tasks_dir, repo):
+    """The merged commit is delivery evidence even when the worker exited before committing it itself."""
+    sha = _orphan_record(tasks_dir, repo, "finalized", response=None, commits_ahead=0)
+    pulls = [_merged("codex/finalized", 52, OLD_FINISH + timedelta(days=1), head_sha=sha)]
+
+    row = _by_file(_settle(tasks_dir, repo, pulls, apply=True))["finalized.json"]
+
+    assert (row["outcome"], json.loads((tasks_dir / "finalized.json").read_text())["status"]) == ("done", "done")

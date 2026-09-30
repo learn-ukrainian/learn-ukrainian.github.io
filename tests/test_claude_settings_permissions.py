@@ -64,6 +64,11 @@ def _is_interpreter_head(head: str) -> bool:
     return head in INTERPRETERS or bool(_INTERPRETER_HEAD_RE.search(head))
 
 
+def test_session_env_disables_bytecode_for_sibling_git() -> None:
+    settings = json.loads(SETTINGS.read_text(encoding="utf-8"))
+    assert settings["env"]["PYTHONDONTWRITEBYTECODE"] == "1"
+
+
 def test_allow_list_is_present_and_bash_scoped() -> None:
     allow = _permissions()["allow"]
     assert len(allow) >= 50

@@ -4,7 +4,12 @@
 Walks ``batch_state/tasks/*.json``, and the ``archive/`` that old terminal
 records move into (#8625), and revisits any task currently marked
 ``rate_limited`` using the current adapter parsing logic plus whatever saved
-signals we still have in the task file / usage logs.
+signals we still have in the task file / usage logs. A record with a
+completion gate beyond delivery is never promoted to ``done``: it settles
+``failed`` with ``recovery_requires_rerun``, or the failure it already carries
+(``delegate.recovery_requires_rerun``, #9275, operator decision 2026-09-30). Any
+other record is promoted only when its delivery gate passes on the saved
+evidence (``delegate.completion_gate_recovery_failure``).
 
 Issue: #1404
 """
@@ -147,8 +152,34 @@ def _reclassify_task(
         return None
     if new_status != "done":
         return "skipped", task_id, f"reclassified to {new_status}, left unchanged"
-
     previous_status = task_state["status"]
+    # #9275: a gated record is never promoted; it settles failed for the driver
+    # to re-run or finalize by hand.
+    refusal = delegate.recovery_requires_rerun(task_state)
+    if refusal is not None:
+        detail = f"{previous_status} -> failed ({refusal.failure}: {refusal.detail})"
+        if dry_run:
+            return "changed", task_id, f"{detail} (dry-run)"
+        backup_path = _backup_task_file(task_path)
+        task_state["status"] = "failed"
+        task_state["failure_reason"] = task_state.get("failure_reason") or refusal.failure
+        _write_json(task_path, task_state)
+        return "changed", task_id, f"{detail} (backup: {backup_path.name})"
+    # A delivery-only record needs its delivery gate to pass on the saved
+    # evidence; a gate that refuses leaves the failure in place.
+    gate_failure = delegate.completion_gate_recovery_failure(
+        task_state,
+        response=delegate.saved_task_response(task_state, task_path),
+        commits_ahead=task_state.get("commits_ahead"),
+    )
+    if gate_failure is not None:
+        return (
+            "skipped",
+            task_id,
+            f"reclassified to done, but its {gate_failure.gate} completion gate refuses done "
+            f"({gate_failure.failure}); left unchanged",
+        )
+
     if dry_run:
         return "changed", task_id, f"{previous_status} -> {new_status} (dry-run)"
 

@@ -7,3 +7,6 @@
 - id: G-a1-003
   point: The two Ukrainian vowel letters introduced here represent different sounds and are not interchangeable.
   introduced_at: {position: 1, lesson: vowels-and-first-syllables}
+- id: G-a1-004
+  point: The two new consonant letters represent different sounds and must be distinguished when reading.
+  introduced_at: {position: 2, lesson: two-g-sounds}

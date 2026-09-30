@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
@@ -37,13 +38,14 @@ GLM_ROUTE_FIELDS = (
 )
 VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
 EXECUTION_ROUTE_KEYS = frozenset(
-    {"advisor", "preferred_worker", "direct_worker", "autonomous_fallback", "review_boundary"}
+    {"advisor", "preferred_worker", "bounded_fallback_worker", "autonomous_fallback", "review_boundary"}
 )
 ADVISOR_KEYS = frozenset({"model_id", "effort", "role", "output_fields"})
 PREFERRED_WORKER_KEYS = frozenset(
     {"model_id", "effort", "requires", "task_types", "escalate_to", "prohibited_decisions", "escalation_triggers"}
 )
-DIRECT_WORKER_KEYS = frozenset({"model_id", "effort", "task_types", "constraints"})
+BOUNDED_FALLBACK_WORKER_KEYS = frozenset({"model_id", "effort", "requires", "non_bounded_task_families"})
+BOUNDED_WORKER_REQUIRES = frozenset({"complete_advisory_envelope", "objective_scope_ceiling"})
 FALLBACK_KEYS = frozenset({"model_id", "effort", "when"})
 REVIEW_BOUNDARY_KEYS = frozenset(
     {"advisory_family", "advisory_satisfies_cross_family_review", "independent_cross_family_review_required"}
@@ -179,7 +181,7 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
     _require_execution_effort(preferred["effort"], "execution_routing.sol_advised_bounded.preferred_worker.effort")
     for field in ("requires", "task_types", "prohibited_decisions", "escalation_triggers"):
         _require_string_list(preferred[field], f"execution_routing.sol_advised_bounded.preferred_worker.{field}")
-    if set(preferred["requires"]) != {"complete_advisory_envelope", "objective_scope_ceiling"}:
+    if set(preferred["requires"]) != BOUNDED_WORKER_REQUIRES:
         raise ModelCatalogError(
             "execution_routing.sol_advised_bounded.preferred_worker.requires must bind a complete envelope "
             "and objective scope ceiling"
@@ -201,16 +203,40 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
         "execution_routing.sol_advised_bounded.preferred_worker.escalate_to",
     )
 
-    direct = _require_mapping(route["direct_worker"], "execution_routing.sol_advised_bounded.direct_worker")
-    _require_exact_keys(direct, DIRECT_WORKER_KEYS, "execution_routing.sol_advised_bounded.direct_worker")
-    _require_active_execution_model(
-        models,
-        direct["model_id"],
-        "execution_routing.sol_advised_bounded.direct_worker.model_id",
+    # Operator decision 2026-09-30 (#9275): no bounded worker is dispatched without
+    # a complete advisory envelope, so the catalog carries no direct-worker route.
+    bounded_fallback = _require_mapping(
+        route["bounded_fallback_worker"],
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker",
     )
-    _require_execution_effort(direct["effort"], "execution_routing.sol_advised_bounded.direct_worker.effort")
-    for field in ("task_types", "constraints"):
-        _require_string_list(direct[field], f"execution_routing.sol_advised_bounded.direct_worker.{field}")
+    _require_exact_keys(
+        bounded_fallback,
+        BOUNDED_FALLBACK_WORKER_KEYS,
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker",
+    )
+    bounded_fallback_model_id = _require_active_execution_model(
+        models,
+        bounded_fallback["model_id"],
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker.model_id",
+    )
+    _require_execution_effort(
+        bounded_fallback["effort"],
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker.effort",
+    )
+    for field in ("requires", "non_bounded_task_families"):
+        _require_string_list(
+            bounded_fallback[field],
+            f"execution_routing.sol_advised_bounded.bounded_fallback_worker.{field}",
+        )
+    if set(bounded_fallback["requires"]) != BOUNDED_WORKER_REQUIRES:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.bounded_fallback_worker.requires must bind a complete "
+            "envelope and objective scope ceiling"
+        )
+    if advisor_model_id in {preferred["model_id"], bounded_fallback_model_id}:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.advisor.model_id must not be a bounded worker model"
+        )
 
     fallback = _require_mapping(
         route["autonomous_fallback"],
@@ -748,6 +774,61 @@ def _model_id_candidates(model: str) -> list[str]:
     return candidates
 
 
+def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """The catalog id ``model`` names, or None when it names no catalog model.
+
+    Matches case-insensitively through catalog aliases and harness prefixes
+    (``codex:gpt-6-luna``, ``openai/gpt-6-luna``), drops a bracketed context
+    suffix (``claude-opus-5-5[1m]``), and resolves a provider variant such as
+    ``gpt-6-luna-high`` to the longest catalog id it extends.
+    """
+    text = str(model or "").strip().split("[", 1)[0].strip()
+    if not text:
+        return None
+    catalog = catalog or load_model_catalog()
+    lookup = {alias.casefold(): model_id for alias, model_id in model_aliases(catalog).items()}
+    candidates = [candidate.casefold() for candidate in _model_id_candidates(text)]
+    model_id = next((lookup[candidate] for candidate in candidates if candidate in lookup), None)
+    if model_id is None:
+        extended = [
+            (len(alias), owner)
+            for candidate in candidates
+            for alias, owner in lookup.items()
+            if candidate.startswith(f"{alias}-")
+        ]
+        model_id = max(extended)[1] if extended else None
+    return model_id
+
+
+@dataclass(frozen=True)
+class BoundedExecutionPolicy:
+    """The catalog's bounded-worker admission facts (``execution_routing.sol_advised_bounded``)."""
+
+    advisor_model_id: str
+    advisor_role: str
+    advisor_output_fields: tuple[str, ...]
+    bounded_worker_model_id: str
+    bounded_fallback_model_id: str
+    non_bounded_task_families: frozenset[str]
+
+
+ADVISOR_ROUTE = "execution_routing.sol_advised_bounded.advisor"
+
+
+def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedExecutionPolicy:
+    """The validated bounded-worker policy: who advises, which models need an envelope, and what it holds."""
+    route = (catalog or load_model_catalog())["execution_routing"]["sol_advised_bounded"]
+    fallback = route["bounded_fallback_worker"]
+    return BoundedExecutionPolicy(
+        advisor_model_id=route["advisor"]["model_id"],
+        advisor_role=route["advisor"]["role"],
+        advisor_output_fields=tuple(route["advisor"]["output_fields"]),
+        bounded_worker_model_id=route["preferred_worker"]["model_id"],
+        bounded_fallback_model_id=fallback["model_id"],
+        non_bounded_task_families=frozenset(family.strip() for family in fallback["non_bounded_task_families"]),
+    )
+
+
 def is_cursor_auto_selector(model: Any) -> bool:
     """True when ``model`` asks Cursor to choose the model (Auto) instead of naming one.
 
@@ -793,23 +874,8 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
 
 
 def resolve_catalog_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
-    """Resolve aliases, harness prefixes, effort suffixes and bracket overrides."""
-    text = str(model or "").strip()
-    if not text:
-        return None
-    catalog = catalog or load_model_catalog()
-    lookup = {alias.casefold(): model_id for alias, model_id in model_aliases(catalog).items()}
-    candidates = [candidate.casefold() for candidate in _model_id_candidates(text)]
-    model_id = next((lookup[candidate] for candidate in candidates if candidate in lookup), None)
-    if model_id is None:
-        extended = [
-            (len(alias), owner)
-            for candidate in candidates
-            for alias, owner in lookup.items()
-            if candidate.startswith((f"{alias}-", f"{alias}["))
-        ]
-        model_id = max(extended)[1] if extended else None
-    return model_id
+    """Resolve aliases, harness prefixes, effort suffixes and bracket overrides (one identity: ``canonical_model_id``)."""
+    return canonical_model_id(model, catalog)
 
 
 def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:

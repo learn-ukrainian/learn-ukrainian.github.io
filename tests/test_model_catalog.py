@@ -16,6 +16,8 @@ from scripts.audit import model_families
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     ModelCatalogError,
+    bounded_execution_policy,
+    canonical_model_id,
     catalog_age_days,
     catalog_is_stale,
     cursor_non_dispatch_model_refusal,
@@ -889,22 +891,13 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         "final_disposition",
     }
 
-    direct = route["direct_worker"]
-    assert direct == {
-        "model_id": "gpt-6-luna",
+    # Operator decision 2026-09-30 (#9275): no direct bounded dispatch route.
+    assert "direct_worker" not in route
+    assert route["bounded_fallback_worker"] == {
+        "model_id": "gemini-3.8-flash-high",
         "effort": "high",
-        "task_types": [
-            "bounded_implementation",
-            "bounded_investigation",
-            "recon",
-            "bounded_checks",
-            "log_triage",
-        ],
-        "constraints": [
-            "objective_scope_ceiling",
-            "no_consequential_decisions",
-            "no_final_disposition",
-        ],
+        "requires": ["complete_advisory_envelope", "objective_scope_ceiling"],
+        "non_bounded_task_families": ["ukrainian-authoring", "ukrainian-review"],
     }
     assert route["autonomous_fallback"] == {
         "model_id": "gpt-6.1-sol",
@@ -947,12 +940,34 @@ def test_catalog_rejects_luna_safety_set_member_removal(field, member):
     [
         ("advisor", "model_id", "set", "missing-model", "advisor.model_id references unknown model"),
         ("preferred_worker", "model_id", "set", "poolside/laguna-m.1", "preferred_worker.model_id must reference an active model"),
-        ("direct_worker", "model_id", "set", "missing-model", "direct_worker.model_id references unknown model"),
+        (
+            "bounded_fallback_worker",
+            "model_id",
+            "set",
+            "missing-model",
+            "bounded_fallback_worker.model_id references unknown model",
+        ),
+        ("bounded_fallback_worker", "model_id", "set", "gpt-6.1-sol", "must not be a bounded worker model"),
+        (
+            "bounded_fallback_worker",
+            "requires",
+            "set",
+            ["objective_scope_ceiling"],
+            "bounded_fallback_worker.requires must bind",
+        ),
+        (
+            "bounded_fallback_worker",
+            "non_bounded_task_families",
+            "set",
+            [],
+            "non_bounded_task_families must be a non-empty list",
+        ),
+        ("bounded_fallback_worker", "requires", "delete", None, "bounded_fallback_worker must define exactly"),
         ("autonomous_fallback", "model_id", "set", "missing-model", "autonomous_fallback.model_id references unknown model"),
         ("preferred_worker", "escalate_to", "set", "missing-model", "preferred_worker.escalate_to references unknown model"),
         ("advisor", "effort", "set", "ultra", "advisor.effort must be one of"),
         ("preferred_worker", "effort", "set", "ultra", "preferred_worker.effort must be one of"),
-        ("direct_worker", "effort", "set", "ultra", "direct_worker.effort must be one of"),
+        ("bounded_fallback_worker", "effort", "set", "ultra", "bounded_fallback_worker.effort must be one of"),
         ("autonomous_fallback", "effort", "set", "ultra", "autonomous_fallback.effort must be one of"),
         ("advisor", "role", "set", "unbounded", "advisor.role must be"),
         (
@@ -995,6 +1010,47 @@ def test_catalog_rejects_malformed_sol_advised_route(
 
     with pytest.raises(ModelCatalogError, match=message):
         validate_catalog(broken)
+
+
+def test_catalog_refuses_a_direct_bounded_worker_route():
+    """#9275: a restored ``direct_worker`` route fails validation (operator decision 2026-09-30)."""
+    broken = deepcopy(load_model_catalog())
+    broken["execution_routing"]["sol_advised_bounded"]["direct_worker"] = {
+        "model_id": "gpt-6-luna",
+        "effort": "high",
+        "task_types": ["recon"],
+        "constraints": ["objective_scope_ceiling"],
+    }
+    with pytest.raises(ModelCatalogError, match="sol_advised_bounded must define exactly"):
+        validate_catalog(broken)
+
+
+def test_bounded_execution_policy_names_the_envelope_population():
+    policy = bounded_execution_policy()
+    assert policy.advisor_model_id == "gpt-6.1-sol"
+    assert policy.advisor_role == "bounded_advisory_envelope"
+    assert policy.bounded_worker_model_id == "gpt-6-luna"
+    assert policy.bounded_fallback_model_id == "gemini-3.8-flash-high"
+    assert policy.non_bounded_task_families == {"ukrainian-authoring", "ukrainian-review"}
+
+
+@pytest.mark.parametrize(
+    ("spelling", "expected"),
+    [
+        ("gpt-6-luna", "gpt-6-luna"),
+        ("GPT-6-Luna", "gpt-6-luna"),
+        ("codex:gpt-6-luna", "gpt-6-luna"),
+        ("openai/gpt-6-luna", "gpt-6-luna"),
+        ("gpt-6-luna-high", "gpt-6-luna"),
+        ("gemini-3.8-flash", "gemini-3.8-flash-high"),
+        ("gemini-3.8-flash-low", "gemini-3.8-flash-high"),
+        ("claude-opus-5-5[1m]", "claude-opus-5-5"),
+        ("not-a-model", None),
+        (None, None),
+    ],
+)
+def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, expected):
+    assert canonical_model_id(spelling) == expected
 
 
 def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():

@@ -93,6 +93,11 @@ RECEIPT_EVIDENCE_STORES = {
 }
 
 
+def _normalize_text_evidence(text: str) -> str:
+    """Remove soft typesetting breaks, preserving spaces without a newline."""
+    return re.sub(r"\u00ad(?:[ \t]*\r?\n[ \t]*)?", "", normalize_evidence_form(text)).replace("\u2011", "-")
+
+
 def _contains_evidence_form(text: str, form: str) -> bool:
     """Match a whole word or exact phrase independent of typesetting breaks.
 
@@ -103,9 +108,10 @@ def _contains_evidence_form(text: str, form: str) -> bool:
     both joined and kept. Collapse whitespace in the witness and option so
     phrase identity preserves adjacent words rather than PDF line wrapping.
     """
-    text = re.sub(r"\u00ad[ \t]*\r?\n?[ \t]*", "", normalize_evidence_form(text)).replace("\u2011", "-")
+    text = _normalize_text_evidence(text)
     line_end_hyphen = r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])"
     texts = [re.sub(line_end_hyphen, replacement, text) for replacement in ("", "-")]
+    form = _normalize_text_evidence(form)
     form = re.sub(r"\s+", " ", form)
     return bool(
         sum(char.isalpha() for char in form) >= 2
@@ -574,8 +580,14 @@ class Sources:
                                     numbers.get(str(row["entry_id"])),
                                     locations.get(row["source_location"]),
                                 } - {None}
+                                # Derived lookup keys are not source evidence.
+                                # Preserve cited-row digests across store versions.
+                                source_row = {
+                                    key: value for key, value in dict(row).items()
+                                    if key not in {"word_form_folded", "lemma_folded"}
+                                }
                                 for eid in matches:
-                                    result[eid].append(dict(row))
+                                    result[eid].append(source_row)
                 self._vesum_identity()
                 self._receipt_evidence.update(result)
         for eid in pending:
@@ -627,11 +639,11 @@ class Sources:
     ) -> SourceResult[dict[str, list[dict]]]:
         """Read attested analyses or paradigms using Unicode word identity.
 
-        Use indexed exact given, casefolded, upper, title, capitalised and
-        per-hyphen-part capitalised candidates, then normalized filtering through
-        the marker-filtered compatibility view. 1,490 forms and 297 lemmas remain
-        unreachable by these candidates and fail closed; a folded store is a
-        separate follow-up. Cache within the checked static identity.
+        Prefer build-time indexed folded keys; retain the compatibility view's
+        marker exclusions and original four-column shape. Older stores use exact
+        given, casefolded, upper, title, capitalised and per-hyphen-part capitalised
+        candidates, then normalized filtering. Unreachable spellings in older
+        stores fail closed. Cache within the checked static identity.
         """
         requested = list(dict.fromkeys(values))
         digest, metadata = self._vesum_identity()
@@ -640,9 +652,11 @@ class Sources:
         column = "lemma" if paradigm else "word_form"
         if pending:
             with closing(open_readonly(self.vesum_db)) as conn:
+                folded_column = f"{column}_folded"
+                has_folded = folded_column in {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
                 for start in range(0, len(pending), BATCH_SIZE):
                     batch = pending[start : start + BATCH_SIZE]
-                    candidates = sorted({
+                    candidates = batch if has_folded else sorted({
                         candidate for value in batch
                         for candidate in (
                             value, value.casefold(), value.upper(), value.title(), value.capitalize(),
@@ -650,9 +664,13 @@ class Sources:
                         )
                     })
                     slots = ','.join('?' for _ in candidates)
+                    condition = (
+                        f"{column} IN (SELECT {column} FROM forms_all WHERE {folded_column} IN ({slots}))"
+                        if has_folded else f"{column} IN ({slots})"
+                    )
                     rows = conn.execute(
                         f"SELECT word_form, lemma, pos, tags FROM forms "
-                        f"WHERE {column} IN ({slots}) "
+                        f"WHERE {condition} "
                         "ORDER BY word_form, lemma, pos, tags", candidates,
                     )
                     found = {value: [] for value in batch}
@@ -696,7 +714,8 @@ class Sources:
         pending = {}
         for eid, text in dict.fromkeys(citations):
             kind = eid.partition(":")[0]
-            form = normalize_evidence_form(text)
+            is_text = kind in {"pravopys", "textbook"}
+            form = _normalize_text_evidence(text) if is_text else normalize_evidence_form(text)
             witnesses = [
                 normalize_evidence_form(row[field])
                 for row in resolved.raw[eid]
@@ -704,7 +723,6 @@ class Sources:
                 for field in fields.get(kind, ())
                 if isinstance(row.get(field), str)
             ]
-            is_text = kind in {"pravopys", "textbook"}
             supported = any(
                 _contains_evidence_form(value, form) if is_text else bool(form and value == form)
                 for value in witnesses
