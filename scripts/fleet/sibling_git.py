@@ -20,7 +20,7 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from scripts.orchestration import worktree_claims
-from scripts.orchestration.fleet_repos import FleetRepoError, load_fleet_repos, resolve_fleet_repo
+from scripts.orchestration.fleet_repos import load_fleet_repos, resolve_fleet_repo
 
 _GIT = "/usr/bin/git"
 _SOURCE_ROOT = Path(__file__).resolve().parents[2]
@@ -431,7 +431,7 @@ def main(argv: list[str] | None = None) -> int:
                 result = status(repo, git)
         print(json.dumps(result, sort_keys=True))
         return 0
-    except (Refusal, FleetRepoError, OSError, RuntimeError, subprocess.SubprocessError) as exc:
+    except (ValueError, OSError, RuntimeError, subprocess.SubprocessError) as exc:
         reason = str(exc) if isinstance(exc, Refusal) else "dependency or repository validation failed"
         print(
             f"Refused: {reason}.\nRun from this repository root, using the project interpreter:\n{examples()}",

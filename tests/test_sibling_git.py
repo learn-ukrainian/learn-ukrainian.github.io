@@ -184,6 +184,17 @@ def test_registry_refusals(world, repo):
     assert invoke("status", repo=repo)[0] == 2
 
 
+@pytest.mark.parametrize("content", [b"invalid pointer", b"\xff\xfe"])
+def test_malformed_pointer_refuses_without_traceback_or_paths(world, content):
+    _, sibling, _ = world
+    (sibling / ".git").rename(sibling / "saved-git")
+    (sibling / ".git").write_bytes(content)
+    code, out, err = invoke("status")
+    assert code == 2 and not out
+    assert "Traceback" not in err and str(sibling) not in err
+    assert "scripts.fleet.sibling_git status" in err
+
+
 @pytest.mark.parametrize(
     "kind",
     [
