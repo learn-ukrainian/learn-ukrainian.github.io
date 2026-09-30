@@ -28,6 +28,37 @@
 
 ## Local databases (no RAG needed)
 
+VTS receipt citations use bounded retained snapshots in
+`sources.db:slovnyk_me_entries` (#9296). Import existing schema-v4 cache files
+offline with `scripts/ingest/slovnyk_me_ingest.py --cache-dir
+data/lexicon/slovnyk_cache --dict vts --db <sources.db>` using the project
+interpreter. Add `--dry-run` to preview; optional positional words restrict
+the import. This follows the [bounded per-word recipe](audits/slovnyk-me-ingestion-feasibility.md):
+200-character text cap by default, original URL and fetch timestamp retained,
+upsert without deleting cache or corpus. It is neither a bulk crawl nor a full
+dictionary mirror. `vts:<id>` refers to the imported row's local SQLite id.
+
+Receipt ids bind to the option's **word**, for `valid` and `invalid`
+judgements alike; this proves source identity, never judgement correctness.
+Canonical VESUM citations use the exact `vesum:N-M` source location. Legacy
+bare integers bind if either entry-id or form-id namespace binds. Comparison
+normalizes stress accents, apostrophe variants and Unicode casefolding;
+whitespace and letters remain exact. Option lemmas come only from attested
+VESUM analyses, never suffix rules or guessed lemmas. Dictionary kinds
+(`vesum`, `sum20`, `ulif`, `grinchenko`, `vts`) require the row's
+real witness fields to equal the option or one of those lemmas: VESUM
+`word_form`/`lemma`, СУМ-20 `headword`/`stressed_headword`, Грінченко and VTS
+`word`, ULIF `canonical_headword`. Only ULIF rows with `status='ok'` bind,
+including for invalid options; a negative lookup is not a word witness.
+Definitions and metadata cannot bind. VESUM analyses and paradigms use indexed
+exact candidates (given, casefolded, upper, title and capitalised), followed
+by normalized filtering; mixed-case forms outside those candidates fail closed.
+Text kinds (`pravopys`, `textbook`)
+require a whole-word match of the option or any attested VESUM paradigm form
+of its lemmas. Case correctness is checked by the language judgement elsewhere.
+Other existing rows refuse with `evidence_form_mismatch`. Live Pravopys
+receipts use `pravopys-live-section-v1` identities.
+
 | Resource | File | Size |
 |---------|------|------|
 | VESUM | `data/vesum.db` | 409K lemmas, 6.7M forms |
