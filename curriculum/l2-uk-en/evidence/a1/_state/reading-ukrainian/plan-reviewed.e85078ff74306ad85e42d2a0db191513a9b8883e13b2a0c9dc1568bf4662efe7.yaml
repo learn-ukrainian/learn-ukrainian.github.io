@@ -36,7 +36,7 @@ arc_ref:
   position: 2
 evidence_ref:
   path: evidence/a1/reading-ukrainian.yaml
-  sha256: 434724cb67dbfbc88d12945fc165ff7bd9eaba1563085c963173f0d5cf249234
+  sha256: 83cb54cbcc140bd06e3d70865e9d6b7fadfdc78e601ffbe6d3bd8b8c3f27af35
 lessons:
 - n: 1
   slug: t-and-e

@@ -44,7 +44,7 @@
       "position": 2,
       "slug": "reading-ukrainian",
       "phase": "A1.1",
-      "title_uk": null,
+      "title_uk": "читати",
       "title_en": "Reading ukrainian",
       "job": "Read words, then short sentences aloud, with most of the alphabet",
       "skills": [
@@ -53,12 +53,30 @@
       ],
       "is_checkpoint": false,
       "est_lessons": 5,
-      "lessons": null,
+      "lessons": 6,
       "built_lessons": [],
-      "lesson_numbers": [],
-      "lesson_titles": [],
-      "scope": null,
-      "state": "planned",
+      "lesson_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "lesson_titles": [
+        "Т, Е",
+        "Д, З, Б",
+        "Г, Ґ",
+        "Ч, Й, Х",
+        "Ж, Ш",
+        "повторення"
+      ],
+      "scope": {
+        "letters": 12,
+        "grammar_points": 1,
+        "core_lemmas": 5
+      },
+      "state": "plan_reviewed",
       "previous_edition_href": "/a1-v1/reading-ukrainian/"
     },
     {
