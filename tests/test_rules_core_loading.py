@@ -31,6 +31,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lib import rules_core
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.rules_core_view import absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO, hermes_stub_env
 
@@ -580,6 +581,7 @@ def test_delegate_content_seat_without_the_addendum_refuses(
 
 
 # (row, adapter "module:Class", mode, tool_config) — review dispatches reuse these adapters read-only
+# (Kimi rows are workspace-write: the coding-only gate admits nothing else)
 WORKER_ROWS = (
     ("codex", "scripts.agent_runtime.adapters.codex:CodexAdapter", "read-only", None),
     ("claude", "scripts.agent_runtime.adapters.claude:ClaudeAdapter", "read-only", None),
@@ -588,7 +590,7 @@ WORKER_ROWS = (
     ("grok", "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter", "read-only", None),
     ("cursor", "scripts.agent_runtime.adapters.cursor:CursorAdapter", "read-only", None),
     ("kimi-native", "scripts.agent_runtime.adapters.kimi:KimiAdapter", "workspace-write", None),
-    ("kimicc", "scripts.agent_runtime.adapters.kimi:KimiAdapter", "read-only", {"harness": "kimicc"}),
+    ("kimicc", "scripts.agent_runtime.adapters.kimi:KimiAdapter", "workspace-write", {"harness": "kimicc"}),
     ("glm", "scripts.agent_runtime.adapters.glm:GlmAdapter", "read-only", None),
     ("deepseek", "scripts.agent_runtime.adapters.deepseek:DeepSeekAdapter", "read-only", None),
     ("hermes-deepseek", "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter", "read-only", None),
@@ -651,6 +653,8 @@ def test_worker_row_carries_the_core(
     _, prompt = _dispatched_worker_prompt(tmp_path, monkeypatch, [])
     _stub_worker_clis(tmp_path, monkeypatch)
     module, cls = adapter.split(":")
+    if row.startswith("kimi"):
+        tool_config = admitted_tool_config(tmp_path, tool_config)
     plan = getattr(importlib.import_module(module), cls)().build_invocation(
         prompt=prompt,
         mode=mode,
@@ -754,7 +758,7 @@ def _msg() -> dict:
 
 
 def _legacy_rows():
-    from scripts.ai_agent_bridge import _grok_build, _kimi, _prompts
+    from scripts.ai_agent_bridge import _grok_build, _prompts
 
     return (
         ("bridge-claude", lambda: _prompts.build_claude_prompt(_msg())),
@@ -762,12 +766,11 @@ def _legacy_rows():
         ("bridge-codex", lambda: _prompts.build_codex_prompt(_msg())),
         ("bridge-agy", lambda: _prompts.build_agy_prompt(_msg())),
         ("bridge-gemini", lambda: _prompts.build_gemini_prompt(_msg(), False, None, False, None)),
-        ("bridge-kimi", lambda: _kimi._build_kimi_prompt(_msg())),
         ("bridge-grok-build", lambda: _grok_build._build_grok_build_prompt(_msg())),
     )
 
 
-@pytest.mark.parametrize("index", range(7))
+@pytest.mark.parametrize("index", range(6))
 def test_legacy_bridge_builder_leads_with_the_core(index: int) -> None:
     row, build = _legacy_rows()[index]
     prompt = build()
@@ -786,7 +789,7 @@ def test_legacy_inline_digests_are_kept_alongside_the_core() -> None:
     assert review.index("</rules-core>") < review.index(_prompts.review_protocol_prefix().strip()[:40])
 
 
-@pytest.mark.parametrize("index", range(7))
+@pytest.mark.parametrize("index", range(6))
 def test_legacy_bridge_builder_without_the_core_refuses(index: int, missing_core: Path) -> None:
     _, build = _legacy_rows()[index]
     with pytest.raises(SystemExit, match=r"bridge: refused: .*core\.md"):
@@ -837,7 +840,8 @@ def _spy_side_effects(monkeypatch: pytest.MonkeyPatch, modules, names) -> list[s
 
 
 def _bridge_asks():
-    from scripts.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _hermes, _kimi, _opencode
+    # No ask-kimi: Kimi is not a bridge recipient and is refused before any rules-core step.
+    from scripts.ai_agent_bridge import _agy, _claude, _codex, _cursor, _gemini, _grok_build, _hermes, _opencode
 
     return (
         ("ask-cursor", _cursor, "ask_cursor"),
@@ -850,13 +854,12 @@ def _bridge_asks():
         ("ask-codex", _codex, "ask_codex"),
         ("ask-agy", _agy, "ask_agy"),
         ("ask-grok", _grok_build, "ask_grok_build"),
-        ("ask-kimi", _kimi, "ask_kimi"),
         ("ask-gemini", _gemini, "ask_gemini"),
     )
 
 
 @pytest.mark.parametrize("background", [False, True], ids=["foreground", "background"])
-@pytest.mark.parametrize("index", range(12))
+@pytest.mark.parametrize("index", range(11))
 def test_bridge_ask_without_the_core_refuses_before_any_send(
     index: int, background: bool, monkeypatch: pytest.MonkeyPatch, missing_core: Path
 ) -> None:

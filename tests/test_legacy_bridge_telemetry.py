@@ -166,14 +166,14 @@ def test_wrapper_records_false_result_and_exception_as_failures(
         "_run_compat_ask_impl",
         lambda *_args, **_kwargs: SimpleNamespace(ok=False),
     )
-    assert _acp_compat.run_compat_ask("kimi", "prompt", task_id="false-result").ok is False
+    assert _acp_compat.run_compat_ask("glm", "prompt", task_id="false-result").ok is False
 
     def fail(*_args, **_kwargs):
         raise RuntimeError("private-provider-error-6106")
 
     monkeypatch.setattr(_acp_compat, "_run_compat_ask_impl", fail)
     with pytest.raises(RuntimeError, match="private-provider-error-6106"):
-        _acp_compat.run_compat_ask("kimi", "prompt", task_id="exception")
+        _acp_compat.run_compat_ask("glm", "prompt", task_id="exception")
 
     payload = legacy_bridge.bridge_usage_summary("1h", db_path=telemetry_db)
     assert payload["started"] == 2
@@ -187,6 +187,7 @@ def test_wrapper_records_false_result_and_exception_as_failures(
     [
         {"command_target": "retired", "content": "prompt", "task_id": "task"},
         {"command_target": "glm", "content": "prompt", "task_id": ""},
+        {"command_target": "kimi", "content": "prompt", "task_id": "task"},
     ],
 )
 def test_refused_invocations_do_not_start_coverage_or_usage(

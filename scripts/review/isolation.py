@@ -3794,9 +3794,9 @@ def prepare_isolated_review_launch(
     engine_key = normalize_engine_name(engine)
     if engine_key == "kimi":
         raise ReviewIsolationError(
-            "kimi_isolated_review_unsupported: sealed formal CF isolation is not proven "
-            "for native Kimi Code (project instructions / MCP / hooks / nested reviewers). "
-            "Use direct ask-* cross-family review on the PR (sealed review-pr was removed in #8520). "
+            "kimi_isolated_review_unsupported: Kimi never reviews (Kimi: web, UI and backend "
+            "coding only). Use direct ask-* cross-family review on another seat "
+            "(sealed review-pr was removed in #8520). "
             "See #5556 / docs/runbooks/kimi-formal-cf-isolation.md."
         )
     if engine_key == "agy":

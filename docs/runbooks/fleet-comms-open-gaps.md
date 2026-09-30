@@ -215,7 +215,7 @@ not erase routing evidence.
 Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
 
 - Resolve-reviewer: use the live `scripts/config/model_catalog.yaml` ladders. **Critical** keeps Sol/Fable authority first, with Sonnet 5.5 as the Anthropic practical fallback; **high/medium/low** walk Sol → Opus 5.5 → Sonnet 5.5 before later practical and volume rungs.
-- Grok uses the proven exact-head source-blind ACP path. Kimi K3's adapter is implemented but stays fail-closed until an authenticated sealed canary passes. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
+- Grok uses the proven exact-head source-blind ACP path. Kimi is not a review or ACP seat (web, UI and backend coding only); its adapter is refused by `kimi_admission`. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 
 ## Closeout checklist
@@ -231,7 +231,7 @@ Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and
   by the operator-approved `authority` cutover in #6159; `dual_write` is now a
   compatibility rollback mode
 - [ ] operator: retention plan dry-run × ≥7 days before scheduled apply (auto-logged by `retention_engine.py plan`; apply still OFF; 3/7 as of 2026-07-23)
-- [x] exact-head ACP sealed review: Claude, Codex, GLM, and Grok eligible; Kimi K3 adapter present but fail-closed pending its authenticated canary; AGY structurally fail-closed
+- [x] exact-head ACP sealed review: Claude, Codex, GLM, and Grok eligible; Kimi is out of scope (web, UI and backend coding only, never a reviewer); AGY structurally fail-closed
 - [ ] operator: Claude + Grok + Codex + AGY cold-start stream smoke (launchers dual-aware; live multi-CLI soak optional)
 - [x] planned `dual_write`-default step superseded by #6159 authority cutover
 

@@ -1089,8 +1089,9 @@ current content specifies GPT-6 Luna @ high. Require the <code>CLOSEOUT</code> l
 <p>Formal CF and auto-merge stay with the orchestrator.</p>
 <h3>Formal CF budget rotation (Codex-authored PRs)</h3>
 <p>Current sealed reviewer routes are <code>codex|claude|glm|grok</code>; the canonical
-<code>review_scheduler.endpoints</code> catalog remains authoritative. <code>agy</code> and
-<code>kimi</code> are recognized request identities but are not yet formally eligible.
+<code>review_scheduler.endpoints</code> catalog remains authoritative. <code>agy</code> is a
+recognized request identity that is not formally eligible. Kimi is not a
+reviewer: Kimi seats take web, UI and backend coding only.
 For <strong>Codex/Luna-authored</strong> PRs, use the deterministic routing budget rather
 than default-stacking one provider. An explicit <code>--model</code> may select another
 formally eligible model on the requested native route, but still requires

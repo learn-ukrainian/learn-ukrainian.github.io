@@ -49,7 +49,9 @@ Project-local wrappers for interactive agent sessions:
 ```
 
 Native Kimi Code (separate app/CLI, OAuth subscription) is the **headless / fleet**
-lane via `scripts/delegate.py --agent kimi` or the project bridge/runtime. Interactive native
+coding lane via `scripts/delegate.py dispatch --agent kimi --mode workspace-write` (web, UI
+and backend coding only). The bridge is not a Kimi route: it refuses every Kimi recipient,
+ask, inbox and discussion. Interactive native
 Kimi is `kimi` (user npm global at `~/.local/bin/kimi` is preferred;
 `~/.kimi-code/bin/kimi` is the legacy standalone binary and last-resort fallback).
 Do not use `~/.hermes/node/bin` — that Node tree is Hermes-private only.
@@ -173,8 +175,9 @@ and `launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.learnukrainian.
 | `k2.7` | `kimi-k2.7-code` | 262 144 | 249 036 |
 | `k2.7-highspeed` | `kimi-k2.7-code-highspeed` | 262 144 | 249 036 |
 
-**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py --agent kimi`
-or the project bridge/runtime). Do not point headless jobs at kimicc.
+**Headless / fleet Kimi stays on the native Kimi Code app** (`scripts/delegate.py dispatch
+--agent kimi --mode workspace-write`; the bridge is not a Kimi route). Do not point headless
+jobs at kimicc.
 
 K2.7 requires **Thinking ON** in the Claude Code TUI (`Tab`) or the endpoint
 rejects requests. Official guide: [Use Kimi in Claude Code](https://platform.kimi.ai/docs/guide/claude-code-kimi).
@@ -1683,7 +1686,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **Direct `ask-* --type review` + PR comment** (sealed `review-pr` / `publish-review-verdict` removed in #8520) | No (review evidence) |
-| Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
+| Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (never Kimi/K3, which takes web, UI and backend coding only; feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
 | Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |

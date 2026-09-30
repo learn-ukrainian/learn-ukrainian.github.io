@@ -4,7 +4,7 @@ Kimi has no certified public driver entrypoint. `start-kimi.sh` is therefore
 interactive-only: it never claims a stream lease and rejects `--epic`.
 
 ```bash
-./start-kimi.sh --model k3 "review the open PR"
+./start-kimi.sh --model k3 "fix the site card layout"
 ./start-kimi.sh --harness claude-code --model k2.7
 LAUNCHER_DRY_RUN=1 ./start-kimi.sh --harness claude-code --endpoint coding
 ```

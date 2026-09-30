@@ -53,6 +53,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from agent_runtime.kimi_admission import is_kimi_seat
+
 from . import _channels
 from ._channels_watch import watch_channel_events
 from ._config import REPO_ROOT
@@ -929,7 +931,9 @@ def _pending_backlog_rows() -> list[dict[str, Any]]:
     Uses the same authority query as ``inbox show``
     (``_channels.live_pending_by_agent``): only within-TTL ``pending``
     rows. Dead lanes are excluded (#5113) — expire them via
-    ``cleanup --expire`` instead of nagging every CLI invocation.
+    ``cleanup --expire`` instead of nagging every CLI invocation. Reads
+    query-only: the banner runs before the command's own checks, so it
+    never creates, migrates or writes the broker DB.
     """
     dead = _channels.dead_lane_agents()
     return [
@@ -938,7 +942,7 @@ def _pending_backlog_rows() -> list[dict[str, Any]]:
             "count": int(row["count"]),
             "oldest_created_at": str(row["oldest_created_at"]),
         }
-        for row in _channels.live_pending_by_agent()
+        for row in _channels.live_pending_by_agent(query_only=True)
         if row["oldest_created_at"] and row["agent"] not in dead
     ]
 
@@ -1259,10 +1263,16 @@ def _normalize_priority(raw: str | None, *, review: bool) -> str:
 
 def _broadcast_recipients(channel: dict[str, Any]) -> list[str]:
     """All live seats for a channel — its subscribers, or every valid agent
-    if the channel has none configured — minus current dead lanes (#4837)."""
+    if the channel has none configured — minus current dead lanes (#4837)
+    and Kimi seats, which are not bridge recipients."""
     live = set(_channels.live_agents())
     base = channel["subscribers"] or list(_channels.get_valid_agents())
-    return [a for a in base if a in live]
+    return [a for a in base if a in live and not is_kimi_seat(a)]
+
+
+def _subscriber_recipients(channel: dict[str, Any]) -> list[str]:
+    """A channel's default recipients: its subscribers, minus Kimi seats, which are not bridge recipients."""
+    return [agent for agent in channel["subscribers"] if not is_kimi_seat(agent)]
 
 
 def _handle_post(args) -> int:
@@ -1283,7 +1293,9 @@ def _handle_post(args) -> int:
 
     # Default recipients = channel subscribers; --broadcast overrides with
     # all live seats (subscribers or every valid agent, minus dead lanes).
-    to_agents = _broadcast_recipients(ch) if broadcast else (_parse_csv(args.to) if args.to else ch["subscribers"])
+    to_agents = (
+        _broadcast_recipients(ch) if broadcast else (_parse_csv(args.to) if args.to else _subscriber_recipients(ch))
+    )
     review_error = _gemini_review_request_error(
         channel=args.channel,
         agents=to_agents,
@@ -1376,8 +1388,17 @@ def _handle_p(args) -> int:
 
 def _handle_inbox_run(args) -> int:
     """Handle `ab inbox run <agent>`."""
+    from agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused
+    from agent_runtime.target_admission import resolve_and_admit
+
     from ._inbox import run_inbox
 
+    # Inbox replies are consults and discussions: a Kimi inbox is refused before housekeeping writes.
+    try:
+        resolve_and_admit((args.agent,), mode=ACP_MODE)
+    except KimiAdmissionRefused as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
     if _reject_non_cli_agent(args.agent, "ab inbox run"):
         return 1
 
@@ -1538,8 +1559,13 @@ def _handle_sync(args) -> int:
         print("❌ sync requires an agent or --all", file=sys.stderr)
         return 2
 
+    # Kimi seats never drain an inbox (consults and discussions are refused), so --all skips them.
     agents = (
-        [agent for agent in _channels.get_valid_agents() if _cli_available_agent(agent)]
+        [
+            agent
+            for agent in _channels.get_valid_agents()
+            if _cli_available_agent(agent) and not is_kimi_seat(agent)
+        ]
         if args.all
         else [args.agent]
     )
@@ -1636,6 +1662,22 @@ def _handle_discuss(args) -> int:
         ACPX_SUPPORTED_PARTICIPANTS if acp_routine else {}
     )
     with_agents = _parse_csv(args.with_agents)
+    agent_models: dict[str, str] = {}
+    if getattr(args, "models", None):
+        try:
+            agent_models = _parse_agent_models(args.models)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 1
+    # Kimi seats never join discussions: one gate on the effective seats and
+    # models (--models overrides included) before any channel write.
+    from agent_runtime.acpx_discuss import AcpxDiscussionError, refuse_kimi_discussion
+
+    try:
+        refuse_kimi_discussion(with_agents, agent_models)
+    except AcpxDiscussionError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
     review_error = _gemini_review_request_error(
         channel=args.channel,
         agents=with_agents,
@@ -1691,13 +1733,7 @@ def _handle_discuss(args) -> int:
         )
         return 1
 
-    agent_models: dict[str, str] = {}
-    if getattr(args, "models", None):
-        try:
-            agent_models = _parse_agent_models(args.models)
-        except ValueError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 1
+    if agent_models:
         unknown_models = [a for a in agent_models if a not in with_agents]
         if unknown_models:
             print(

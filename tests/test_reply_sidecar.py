@@ -182,8 +182,8 @@ def test_pending_backlog_skips_dead_lane(monkeypatch):
         def close(self):
             return None
 
-    # live_pending_by_agent binds get_db on the _channels module (#6864).
-    with patch("scripts.ai_agent_bridge._channels.get_db", return_value=_Conn()):
+    # The banner reads live_pending_by_agent query-only via _channels.connect_readonly (#6864).
+    with patch("scripts.ai_agent_bridge._channels.connect_readonly", return_value=_Conn()):
         rows = _channels_cli._pending_backlog_rows()
     agents = {r["agent"] for r in rows}
     assert "gemini" not in agents

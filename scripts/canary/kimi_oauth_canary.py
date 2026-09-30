@@ -29,7 +29,8 @@ from scripts.ai_agent_bridge import _channels
 from scripts.lib import kimi_coding_oauth
 
 ALERT_CHANNEL = "fleet-comms"
-ALERT_RECIPIENTS = ["kimi", "claude-infra"]
+# Kimi is not a bridge recipient; the infra seat owns credential alerts.
+ALERT_RECIPIENTS = ["claude-infra"]
 
 
 @dataclass(frozen=True, slots=True)

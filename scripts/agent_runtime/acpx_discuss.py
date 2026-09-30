@@ -40,6 +40,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_discussion_scope,
 )
 from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
+from scripts.agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.result import Result
 from scripts.agent_runtime.runner import (
     _invoke_native_once,
@@ -1238,7 +1239,30 @@ class AcpxDiscussionController:
         }
 
 
+def refuse_kimi_discussion(participants: Sequence[str], models: Mapping[str, str] | None) -> None:
+    """Raise ``AcpxDiscussionError`` when any effective seat or model of a discussion is Kimi.
+
+    The effective selection is every participant, its registered adapter
+    agent and pinned model, and every ``models`` override, resolved and
+    admitted in one step (``resolve_and_admit``). Kimi seats never join
+    discussions, so this runs before any plane, store or channel is opened.
+    """
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+
+    if models is not None and not isinstance(models, Mapping):
+        raise AcpxDiscussionError("models must be a participant-keyed mapping")
+    try:
+        resolve_and_admit(
+            tuple(str(item).strip().lower() for item in participants),
+            mode=ACP_MODE,
+            also_models=tuple(str(value) for value in (models or {}).values()),
+        )
+    except KimiAdmissionRefused as exc:
+        raise AcpxDiscussionError(str(exc)) from exc
+
+
 def run_discussion(**kwargs: Any) -> dict[str, Any]:
+    refuse_kimi_discussion(kwargs.get("participants") or PARTICIPANTS, kwargs.get("models"))
     root_arg = kwargs.pop("root", None)
     root = Path(root_arg) if root_arg is not None else default_plane_root(repo_root=Path(kwargs["cwd"]))
     controller = AcpxDiscussionController(root=root)

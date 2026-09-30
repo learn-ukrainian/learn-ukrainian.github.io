@@ -10,7 +10,6 @@ title: RB4 Red-CI triage — receipt-bound signature, currency, and non-rerun ro
 seats:
   - grok
   - glm-local
-  - kimi
 parameters:
   pr_number: integer
   triage_facts_receipt: string

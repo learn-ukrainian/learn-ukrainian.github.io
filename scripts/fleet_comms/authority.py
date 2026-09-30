@@ -21,13 +21,21 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
+from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
+from scripts.agent_runtime.target_admission import (
+    AdmittedTarget,
+    require_admitted,
+    resolve_and_admit,
+    stored_kimi_request,
+    stored_kimi_row,
+)
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
     StoreId,
     assert_component_supported,
 )
-from scripts.fleet_comms.artifacts import ArtifactRecord, ArtifactStore
+from scripts.fleet_comms.artifacts import ArtifactRecord, ArtifactStore, ArtifactStoreError
 from scripts.fleet_comms.contracts import new_id
 from scripts.fleet_comms.formal_review_jobs import (
     FormalReviewJob,
@@ -114,6 +122,32 @@ def _normalize_recipients(recipients: Iterable[str] | None) -> tuple[str, ...]:
         return ()
     normalized = {_nonempty(recipient, field="recipient") for recipient in recipients}
     return tuple(sorted(normalized))
+
+
+def _admit_recipients(
+    recipients: Iterable[str | None],
+    *,
+    mode: str,
+    attachments: Iterable[Any] = (),
+) -> tuple[AdmittedTarget, ...]:
+    """Resolve and admit recipients in one step (whitespace-normalized names, as rows store them).
+
+    Raises ``KimiAdmissionRefused`` for a Kimi seat or model before any write.
+    """
+    names = tuple(" ".join(str(item or "").split()) for item in recipients)
+    return resolve_and_admit(names, mode=mode, attachments=attachments)
+
+
+def _admitted_subscribers(names: Iterable[str]) -> list[AdmittedTarget]:
+    """Admitted fan-out targets for stored subscribers; a stored Kimi subscriber gets no delivery."""
+    admitted: list[AdmittedTarget] = []
+    for name in names:
+        try:
+            admitted.extend(resolve_and_admit((name,), mode=BRIDGE_MODE))
+        except KimiAdmissionRefused:
+            continue
+    return admitted
+
 
 
 def _safe_json_mapping(value: Mapping[str, Any] | None) -> dict[str, Any]:
@@ -290,6 +324,8 @@ class AuthorityService:
         self.store = store or ArtifactStore(root=root)
         self._owns_store = store is None
         self._conn = self.store.connection
+        # payload_artifact_id -> addressed to Kimi; payloads are immutable.
+        self._kimi_payloads: dict[str, bool] = {}
         if self._owns_store:
             apply_migrations(self._conn)
         self._require_authority_schema()
@@ -314,7 +350,12 @@ class AuthorityService:
         subscribers: Iterable[str] = (),
         metadata: Mapping[str, Any] | None = None,
     ) -> AuthorityChannel:
-        """Create a channel once; exact repeats are idempotent."""
+        """Create a channel once; exact repeats are idempotent.
+
+        A Kimi subscriber is kept as given (the legacy import replays history
+        through here) but never receives a delivery: ``publish_message`` skips
+        it. New Kimi subscriptions are refused by ``subscribe`` and the CLI.
+        """
         channel_name = _nonempty(name, field="channel")
         normalized_subscribers = _normalize_recipients(subscribers)
         meta = _safe_json_mapping(metadata)
@@ -352,39 +393,53 @@ class AuthorityService:
         *,
         metadata: Mapping[str, Any] | None = None,
     ) -> AuthorityChannel:
-        """Add durable future fan-out subscribers without rewriting history."""
+        """Add durable future fan-out subscribers without rewriting history.
+
+        A Kimi subscriber is refused before any write: Kimi is not a bridge recipient.
+        """
+        targets = _admit_recipients(recipients, mode=BRIDGE_MODE)
         channel_name = _nonempty(channel, field="channel")
-        recipients_norm = _normalize_recipients(recipients)
-        if not recipients_norm:
+        if not _normalize_recipients(target.recipient for target in targets):
             raise AuthorityServiceError("subscriber_required")
         subscriber_metadata = _safe_json_mapping(metadata)
         with self._write_transaction():
             channel_row = self._require_channel_tx(channel_name)
-            for recipient in recipients_norm:
-                existing = self._conn.execute(
-                    """SELECT metadata_json FROM authority_channel_subscribers
-                       WHERE channel_id = ? AND recipient = ?""",
-                    (str(channel_row["channel_id"]), recipient),
-                ).fetchone()
-                if existing is not None:
-                    existing_metadata = self._decode_mapping(
-                        existing["metadata_json"], field="subscriber_metadata"
-                    )
-                    if metadata is not None and existing_metadata != subscriber_metadata:
-                        raise AuthorityServiceError("subscriber_metadata_conflict")
-                    continue
-                self._conn.execute(
-                    """INSERT INTO authority_channel_subscribers(
-                        channel_id, recipient, metadata_json, created_at
-                    ) VALUES (?, ?, ?, ?)""",
-                    (
-                        str(channel_row["channel_id"]),
-                        recipient,
-                        _canonical_json(subscriber_metadata),
-                        _iso(),
-                    ),
-                )
+            # A repeated recipient finds its own row and is skipped.
+            for target in targets:
+                self._subscribe_tx(channel_row, target, metadata=metadata, subscriber_metadata=subscriber_metadata)
         return self.get_channel(channel_name)
+
+    def _subscribe_tx(
+        self,
+        channel_row: sqlite3.Row,
+        target: AdmittedTarget,
+        *,
+        metadata: Mapping[str, Any] | None,
+        subscriber_metadata: dict[str, Any],
+    ) -> None:
+        """Insert one admitted subscriber unless it is already subscribed with the same metadata."""
+        recipient = require_admitted(target).recipient
+        existing = self._conn.execute(
+            """SELECT metadata_json FROM authority_channel_subscribers
+               WHERE channel_id = ? AND recipient = ?""",
+            (str(channel_row["channel_id"]), recipient),
+        ).fetchone()
+        if existing is not None:
+            existing_metadata = self._decode_mapping(existing["metadata_json"], field="subscriber_metadata")
+            if metadata is not None and existing_metadata != subscriber_metadata:
+                raise AuthorityServiceError("subscriber_metadata_conflict")
+            return
+        self._conn.execute(
+            """INSERT INTO authority_channel_subscribers(
+                channel_id, recipient, metadata_json, created_at
+            ) VALUES (?, ?, ?, ?)""",
+            (
+                str(channel_row["channel_id"]),
+                recipient,
+                _canonical_json(subscriber_metadata),
+                _iso(),
+            ),
+        )
 
     def get_channel(self, name: str) -> AuthorityChannel:
         channel_name = _nonempty(name, field="channel")
@@ -492,14 +547,19 @@ class AuthorityService:
         created_at: str | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityMessage:
-        """Append an immutable message and atomically fan it out to subscribers."""
+        """Append an immutable message and atomically fan it out to subscribers.
+
+        An explicit Kimi recipient is refused before any write, and a Kimi
+        subscriber gets no delivery: Kimi is not a bridge recipient.
+        """
+        targets = _admit_recipients(recipients, mode=BRIDGE_MODE) if recipients is not None else None
         message_key = idempotency_key or new_id("authority-message-key")
         with self._write_transaction():
             return self._publish_message_tx(
                 sender=sender,
                 body=body,
                 channel=channel,
-                recipients=recipients,
+                targets=targets,
                 kind=kind,
                 conversation_id=conversation_id,
                 in_reply_to=in_reply_to,
@@ -596,9 +656,14 @@ class AuthorityService:
         metadata: Mapping[str, Any] | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityJob:
-        """Queue an ordinary request atomically with its immutable message."""
+        """Queue an ordinary request atomically with its immutable message.
+
+        A Kimi recipient (or a Kimi ``requested_model``) is refused before any
+        write: Kimi seats take web, UI and backend coding only.
+        """
+        (target,) = _admit_recipients((recipient,), mode=ACP_MODE, attachments=(metadata,))
         key = idempotency_key or new_id("authority-request-key")
-        recipient_name = _nonempty(recipient, field="recipient")
+        recipient_name = _nonempty(target.recipient, field="recipient")
         self._ensure_channel(channel)
         request_metadata = _safe_json_mapping(metadata)
         payload = {
@@ -623,7 +688,7 @@ class AuthorityService:
                 sender=sender,
                 body=body,
                 channel=channel,
-                recipients=(recipient_name,),
+                targets=(target,),
                 kind="request",
                 provenance=provenance,
                 deadline_at=deadline_at,
@@ -653,10 +718,15 @@ class AuthorityService:
         task_id: str | None = None,
         idempotency_key: str | None = None,
     ) -> AuthorityJob:
-        """Queue a bounded (one-to-three round) discussion without invoking it."""
+        """Queue a bounded (one-to-three round) discussion without invoking it.
+
+        A Kimi participant is refused before any write: Kimi seats never join
+        discussions.
+        """
+        targets = _admit_recipients(participants, mode=ACP_MODE)
         key = idempotency_key or new_id("authority-discussion-key")
         channel_name = _nonempty(channel, field="channel")
-        participants_norm = _normalize_recipients(participants)
+        participants_norm = _normalize_recipients(target.recipient for target in targets)
         if not participants_norm:
             raise AuthorityServiceError("discussion_participants_required")
         if rounds not in {1, 2, 3}:
@@ -734,7 +804,7 @@ class AuthorityService:
                 sender="authority-service",
                 body=prompt,
                 channel=channel_name,
-                recipients=participants_norm,
+                targets=targets,
                 kind="discussion",
                 conversation_id=conversation_id,
                 correlation_id=correlation,
@@ -854,7 +924,10 @@ class AuthorityService:
         lease_seconds: int = 300,
         now: str | None = None,
     ) -> AuthorityJobLease | None:
-        """Claim exactly one eligible durable job under a fenced lease."""
+        """Claim exactly one eligible durable job under a fenced lease.
+
+        A stored Kimi job (legacy) is passed over unwritten (``_stored_kimi_job``).
+        """
         worker = _nonempty(worker_id, field="worker_id")
         if lease_seconds <= 0:
             raise AuthorityServiceError("lease_seconds_must_be_positive")
@@ -868,12 +941,13 @@ class AuthorityService:
             if kinds:
                 clauses.append("job_kind IN (" + ", ".join("?" for _ in kinds) + ")")
                 params.extend(sorted(kinds))
-            row = self._conn.execute(
+            candidates = self._conn.execute(
                 """SELECT * FROM authority_jobs WHERE """
                 + " AND ".join(clauses)
-                + " ORDER BY created_at ASC, job_id ASC LIMIT 1",
+                + " ORDER BY created_at ASC, job_id ASC",
                 params,
-            ).fetchone()
+            )
+            row = next((job for job in candidates if not self._stored_kimi_job(job)), None)
             if row is None:
                 return None
             token = int(row["fence_token"]) + 1
@@ -909,6 +983,8 @@ class AuthorityService:
         A retry by the same still-live worker returns its original fenced lease
         unchanged.  That lets a synchronous caller replay a receipt rather
         than duplicate provider work after a response was lost locally.
+        A stored Kimi job (legacy) is refused unwritten, and the reclaim
+        this runs first leaves other stored Kimi jobs as they are.
         """
         jid = _nonempty(job_id, field="job_id")
         worker = _nonempty(worker_id, field="worker_id")
@@ -917,6 +993,9 @@ class AuthorityService:
         now_value = self._now_string(now)
         lease_until = _iso(_parse_iso(now_value, field="now") + timedelta(seconds=lease_seconds))
         with self._write_transaction():
+            row = self._require_job_tx(jid)
+            if self._stored_kimi_job(row):
+                raise AuthorityServiceError("kimi_job_not_claimable")
             self._reclaim_expired_jobs_tx(now_value)
             row = self._require_job_tx(jid)
             state = str(row["state"])
@@ -1068,6 +1147,9 @@ class AuthorityService:
         now_value = self._now_string(now)
         with self._write_transaction():
             row = self._require_job_tx(jid)
+            if self._stored_kimi_job(row):
+                # Requeueing would address Kimi again; the legacy job stays as it is.
+                raise AuthorityServiceError("kimi_job_not_retryable")
             previous_state = str(row["state"])
             if previous_state not in allowed_states:
                 raise AuthorityServiceError("job_not_retryable")
@@ -1120,8 +1202,14 @@ class AuthorityService:
         max_attempts: int = 3,
         now: str | None = None,
     ) -> AuthorityDeliveryLease | None:
-        """Claim one recipient delivery; a stale worker cannot later acknowledge it."""
-        recipient_name = _nonempty(recipient, field="recipient")
+        """Claim one recipient delivery; a stale worker cannot later acknowledge it.
+
+        A Kimi recipient is refused before any write: Kimi is not a bridge
+        recipient. A stored delivery of a request pinned to a Kimi model
+        (legacy) is passed over unwritten (``_stored_kimi_delivery``).
+        """
+        (target,) = _admit_recipients((recipient,), mode=BRIDGE_MODE)
+        recipient_name = _nonempty(target.recipient, field="recipient")
         worker = _nonempty(worker_id, field="worker_id")
         if lease_seconds <= 0 or max_attempts <= 0:
             raise AuthorityServiceError("lease_and_max_attempts_must_be_positive")
@@ -1129,14 +1217,15 @@ class AuthorityService:
         lease_until = _iso(_parse_iso(now_value, field="now") + timedelta(seconds=lease_seconds))
         with self._write_transaction():
             self._reclaim_expired_deliveries_tx(now_value, max_attempts=max_attempts)
-            row = self._conn.execute(
+            candidates = self._conn.execute(
                 """SELECT * FROM authority_deliveries
                    WHERE recipient = ? AND state = 'queued'
                      AND attempt_count < ?
                      AND (deadline_at IS NULL OR deadline_at > ?)
-                   ORDER BY created_at ASC, delivery_id ASC LIMIT 1""",
+                   ORDER BY created_at ASC, delivery_id ASC""",
                 (recipient_name, max_attempts, now_value),
-            ).fetchone()
+            )
+            row = next((item for item in candidates if not self._stored_kimi_delivery(item)), None)
             if row is None:
                 return None
             token = int(row["fence_token"]) + 1
@@ -1643,7 +1732,8 @@ class AuthorityService:
                     sender=record["sender"],
                     body=record["body"],
                     channel=record["channel"],
-                    recipients=record["recipients"],
+                    targets=None,
+                    imported_recipients=record["recipients"],
                     kind=record["kind"],
                     conversation_id=record["conversation_id"],
                     in_reply_to=record["in_reply_to"],
@@ -1720,8 +1810,9 @@ class AuthorityService:
         sender: str,
         body: str,
         channel: str | None,
-        recipients: Iterable[str] | None,
+        targets: Iterable[AdmittedTarget] | None,
         kind: str,
+        imported_recipients: Iterable[str] | None = None,
         conversation_id: str | None = None,
         in_reply_to: str | None = None,
         correlation_id: str | None = None,
@@ -1742,15 +1833,20 @@ class AuthorityService:
         kind_name = _nonempty(kind, field="kind")
         key = _nonempty(idempotency_key, field="idempotency_key")
         channel_row = self._require_channel_tx(channel) if channel is not None else None
-        if recipients is None and channel_row is not None:
+        if imported_recipients is not None:
+            # Historical records keep the recipients they were written with.
+            recipients_norm = _normalize_recipients(imported_recipients)
+        elif targets is None and channel_row is not None:
             subscriber_rows = self._conn.execute(
                 """SELECT recipient FROM authority_channel_subscribers
                    WHERE channel_id = ? AND recipient != ? ORDER BY recipient ASC""",
                 (str(channel_row["channel_id"]), sender_name),
             ).fetchall()
-            recipients_norm = tuple(str(row["recipient"]) for row in subscriber_rows)
+            recipients_norm = tuple(
+                target.recipient for target in _admitted_subscribers(str(row["recipient"]) for row in subscriber_rows)
+            )
         else:
-            recipients_norm = _normalize_recipients(recipients)
+            recipients_norm = _normalize_recipients(require_admitted(target).recipient for target in targets or ())
         revisions = self._normalize_context_revisions(context_revisions, channel_row)
         provenance_data = _safe_json_mapping(provenance)
         deadline = self._normalize_deadline(deadline_at)
@@ -1979,14 +2075,17 @@ class AuthorityService:
             raise AuthorityServiceError("idempotency_key_reused_with_different_payload")
 
     def _reclaim_expired_jobs_tx(self, now: str) -> int:
+        """Expire or requeue abandoned jobs; a stored Kimi job (legacy) is left as it is."""
         reclaimed = 0
         expired_rows = self._conn.execute(
-            """SELECT job_id, fence_token FROM authority_jobs
+            """SELECT job_id, fence_token, payload_artifact_id FROM authority_jobs
                WHERE state IN ('queued', 'running') AND deadline_at IS NOT NULL
                  AND deadline_at <= ?""",
             (now,),
         ).fetchall()
         for row in expired_rows:
+            if self._stored_kimi_job(row):
+                continue
             self._conn.execute(
                 """UPDATE authority_jobs
                    SET state = 'expired', lease_owner = NULL, lease_expires_at = NULL,
@@ -1999,13 +2098,15 @@ class AuthorityService:
             self._dead_letter_job_tx(str(row["job_id"]), reason_code="deadline_expired")
             reclaimed += 1
         stale_rows = self._conn.execute(
-            """SELECT job_id, fence_token FROM authority_jobs
+            """SELECT job_id, fence_token, payload_artifact_id FROM authority_jobs
                WHERE state = 'running' AND lease_expires_at IS NOT NULL
                  AND lease_expires_at <= ?
                  AND (deadline_at IS NULL OR deadline_at > ?)""",
             (now, now),
         ).fetchall()
         for row in stale_rows:
+            if self._stored_kimi_job(row):
+                continue
             self._conn.execute(
                 """UPDATE authority_jobs
                    SET state = 'queued', lease_owner = NULL, lease_expires_at = NULL,
@@ -2019,14 +2120,17 @@ class AuthorityService:
         return reclaimed
 
     def _reclaim_expired_deliveries_tx(self, now: str, *, max_attempts: int) -> int:
+        """Expire or requeue abandoned deliveries; a stored Kimi delivery (legacy) is left as it is."""
         reclaimed = 0
         expired = self._conn.execute(
-            """SELECT delivery_id, fence_token FROM authority_deliveries
+            """SELECT delivery_id, fence_token, recipient, message_id FROM authority_deliveries
                WHERE state IN ('queued', 'running') AND deadline_at IS NOT NULL
                  AND deadline_at <= ?""",
             (now,),
         ).fetchall()
         for row in expired:
+            if self._stored_kimi_delivery(row):
+                continue
             delivery_id = str(row["delivery_id"])
             self._conn.execute(
                 """UPDATE authority_deliveries
@@ -2043,13 +2147,15 @@ class AuthorityService:
             self._dead_letter_delivery_tx(delivery_id, reason_code="deadline_expired")
             reclaimed += 1
         stale = self._conn.execute(
-            """SELECT delivery_id, fence_token, attempt_count FROM authority_deliveries
+            """SELECT delivery_id, fence_token, attempt_count, recipient, message_id FROM authority_deliveries
                WHERE state = 'running' AND lease_expires_at IS NOT NULL
                  AND lease_expires_at <= ?
                  AND (deadline_at IS NULL OR deadline_at > ?)""",
             (now, now),
         ).fetchall()
         for row in stale:
+            if self._stored_kimi_delivery(row):
+                continue
             delivery_id = str(row["delivery_id"])
             terminal = int(row["attempt_count"]) >= max_attempts
             next_state = "dead_lettered" if terminal else "queued"
@@ -2070,6 +2176,44 @@ class AuthorityService:
                 self._dead_letter_delivery_tx(delivery_id, reason_code="attempts_exhausted")
             reclaimed += 1
         return reclaimed
+
+    def _stored_kimi_job(self, row: sqlite3.Row) -> bool:
+        """True when a stored job is addressed to a Kimi seat or model (legacy: enqueue refuses Kimi).
+
+        Every generic reclaim, expiry, requeue, dead-letter and claim path
+        skips such a job before any write. The target is read, never written,
+        from the job's immutable payload artifact: a request's ``recipient``
+        and ``metadata`` (a ``requested_model``), a discussion's
+        ``participants``; a formal review names none. A payload that cannot be
+        read is not provably non-Kimi, so it is skipped too (fail closed).
+        """
+        artifact_id = str(row["payload_artifact_id"])
+        cached = self._kimi_payloads.get(artifact_id)
+        if cached is not None:
+            return cached
+        try:
+            payload = json.loads(self.store.read_bytes(artifact_id).decode("utf-8"))
+        except (ArtifactStoreError, UnicodeDecodeError, json.JSONDecodeError):
+            return True
+        if not isinstance(payload, dict):
+            return True
+        recipients = [payload.get("recipient"), *(payload.get("participants") or ())]
+        addressed = stored_kimi_request(
+            (name for name in recipients if name), attachments=(payload.get("metadata") or {},)
+        )
+        self._kimi_payloads[artifact_id] = addressed
+        return addressed
+
+    def _stored_kimi_delivery(self, row: sqlite3.Row) -> bool:
+        """True when a stored delivery is to a Kimi seat, or delivers a request job pinned to a Kimi model (legacy)."""
+        if stored_kimi_row(row["recipient"]):
+            return True
+        jobs = self._conn.execute(
+            """SELECT payload_artifact_id FROM authority_jobs
+               WHERE job_kind = 'request' AND subject_id = ?""",
+            (str(row["message_id"]),),
+        ).fetchall()
+        return any(self._stored_kimi_job(job) for job in jobs)
 
     def _record_wake_receipt_tx(
         self,

@@ -20,7 +20,13 @@ from agent_runtime.errors import (
 )
 
 from ._ask_contract import resolve_model_selection, response_provenance
-from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
+from ._ask_lifecycle import (
+    launch_background_ask,
+    record_ask_failure,
+    record_ask_reply,
+    register_ask,
+    skip_stored_kimi_row,
+)
 from ._config import REPO_ROOT
 from ._db import get_db, get_session, set_session
 from ._messaging import acknowledge, send_message
@@ -567,7 +573,7 @@ def process_all_codex(new_session: bool = False):
     conn = get_db()
     cursor = conn.cursor()
     cursor.execute("""
-        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50)
+        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50), to_llm, data
         FROM messages
         WHERE to_llm = 'codex' AND acknowledged = 0
         ORDER BY id ASC
@@ -582,11 +588,15 @@ def process_all_codex(new_session: bool = False):
     print(f"📬 Processing {len(rows)} unread message(s) for Codex...\n")
     success = 0
     failed = 0
+    skipped = 0
 
     for row in rows:
-        msg_id, _task_id, from_llm, _msg_type, preview = row
+        msg_id, _task_id, from_llm, _msg_type, preview, to_llm, data = row
         preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+        if skip_stored_kimi_row({"to": to_llm, "data": data}, msg_id):
+            skipped += 1
+            continue
         try:
             from ._ask_lifecycle import _process_target
 
@@ -601,4 +611,4 @@ def process_all_codex(new_session: bool = False):
             print(f"    ❌ Failed: {e}\n")
 
     print(f"\n{'═' * 50}")
-    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+    print(f"📊 Results: {success} succeeded, {failed} failed, {skipped} skipped out of {len(rows)} total")

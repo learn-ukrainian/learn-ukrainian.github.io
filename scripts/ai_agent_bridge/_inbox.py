@@ -262,7 +262,12 @@ def _claim_next_thread(
     delivery_budget: int | None,
     now: str,
 ) -> tuple[_ClaimedThread | None, bool]:
-    """Claim one whole thread so #1192 never invokes per delivery row."""
+    """Claim one whole thread so #1192 never invokes per delivery row.
+
+    A stored delivery addressed to a Kimi seat or model (legacy: Kimi is not a
+    bridge recipient) is never selected, counted or claimed: the ``kimi_row``
+    filter leaves it as it is, with no lease, attempt, status or telemetry.
+    """
 
     lease_until = _iso_after(now, seconds=lease_seconds)
     conn = get_db()
@@ -274,6 +279,7 @@ def _claim_next_thread(
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.to_agent = ?
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND d.attempt_count < ?
               AND (d.retry_after IS NULL OR d.retry_after <= ?)
               AND (
@@ -307,6 +313,7 @@ def _claim_next_thread(
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.to_agent = ?
               AND cm.thread_id = ?
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND d.attempt_count < ?
               AND (d.retry_after IS NULL OR d.retry_after <= ?)
               AND (
@@ -336,6 +343,7 @@ def _claim_next_thread(
                 JOIN channel_messages cm ON cm.message_id = d.message_id
                 WHERE d.to_agent = ?
                   AND cm.thread_id = ?
+                  AND NOT kimi_row(d.to_agent, d.to_model)
                   AND d.attempt_count < ?
                   AND (d.retry_after IS NULL OR d.retry_after <= ?)
                   AND (
@@ -724,6 +732,13 @@ def _invoke_thread(
     mode = _resolve_mode(claimed)
     if agent == "gemini" and requested_model is None:
         requested_model = PRO_MODEL
+    # The seat and the model the thread's deliveries pin are admitted together,
+    # before any reply telemetry or invocation.
+    from agent_runtime.kimi_admission import ACP_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
+    (target,) = resolve_and_admit((agent,), mode=ACP_MODE, model=requested_model)
+    requested_model = target.model
 
     if agent == "claude":
         tool_config = {"cmd_prefix": CLAUDE_CMD, "is_new_session": False}
@@ -772,11 +787,11 @@ def _invoke_thread(
             )
         else:
             result = runtime_invoke(
-                agent,
+                target.recipient,
                 prompt,
                 mode=mode,
                 cwd=REPO_ROOT,
-                model=requested_model,
+                model=target.model,
                 task_id=task_id,
                 initiator=claimed.deliveries[-1].from_agent,
                 session_id=session_id if resumable_agent else None,
@@ -817,14 +832,19 @@ def _invoke_gemini_thread_with_fallback(
         mode=mode,
     )
 
+    from agent_runtime.kimi_admission import ACP_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
     while True:
+        # Each capacity-cascade hop is a new model: admit it before it is invoked.
+        (hop,) = resolve_and_admit(("gemini",), mode=ACP_MODE, model=current_model)
         try:
             result = runtime_invoke(
-                "gemini",
+                hop.recipient,
                 prompt,
                 mode=mode,
                 cwd=REPO_ROOT,
-                model=current_model,
+                model=hop.model,
                 task_id=task_id,
                 initiator=claimed.deliveries[-1].from_agent,
                 session_id=None,
@@ -896,6 +916,12 @@ def run_inbox(
             "Install it or add scripts/ to PYTHONPATH."
         )
 
+    # Inbox replies are consults and discussions; a Kimi inbox is refused
+    # before any claim, lease, telemetry or delivery write.
+    from agent_runtime.kimi_admission import ACP_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
+    resolve_and_admit((agent,), mode=ACP_MODE)
     _validate_agent(agent)
     if max_messages is not None and max_messages <= 0:
         raise ValueError("max_messages must be > 0 when provided")

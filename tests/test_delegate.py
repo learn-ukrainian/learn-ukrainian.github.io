@@ -11,6 +11,7 @@ Issue: #1184.
 from __future__ import annotations
 
 import argparse
+import builtins
 import contextlib
 import errno
 import fcntl
@@ -27,7 +28,7 @@ import urllib.error
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -41,6 +42,7 @@ from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 from tests.rules_core_view import rules_core_absent_when_marked  # noqa: F401  (autouse: serves @rules_core_absent)
 
 
@@ -2977,7 +2979,18 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     runtime_runner._ADAPTER_CACHE.pop("kimi", None)
 
     task_id = "kimi-instant-exit"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    # A Kimi workspace-write worker runs only in its dispatch worktree.
+    _sanitize_git_env_for_test(monkeypatch)
+    worktree = _agy_dispatch_worktree(tmp_path, f"kimi/{task_id}")
+    delegate._write_state_atomic(
+        delegate._state_path(task_id),
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "owned_paths": ["site/src/components/Widget.tsx"],
+        },
+    )
     stderr_log = tmp_path / "kimi-instant-exit.stderr.log"
     with stderr_log.open("w", encoding="utf-8") as handle, contextlib.redirect_stderr(handle):
         rc = delegate._run_worker(
@@ -2985,7 +2998,7 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
             agent="kimi",
             prompt="Inspect the target.",
             mode="workspace-write",
-            cwd_str=str(tmp_path),
+            cwd_str=str(worktree),
             model=None,
             hard_timeout=60,
         )
@@ -2997,7 +3010,8 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     assert state["exit_code"] == 2
     assert state["last_error"] == "error: Cannot combine --prompt with --yolo."
     assert state["stderr_excerpt"] == state["last_error"]
-    assert stderr_log.read_text(encoding="utf-8") == ("error: Cannot combine --prompt with --yolo.\n")
+    # The CLI's own error is the first line of the log; the worktree summary line follows it.
+    assert stderr_log.read_text(encoding="utf-8").splitlines()[0] == "error: Cannot combine --prompt with --yolo."
 
 
 def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
@@ -5626,19 +5640,14 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
-def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypatch):
-    """ask-kimi --review is dispatch parsing through to the kimicc argv."""
-    claude = tmp_path / "claude"
-    claude.write_text("#!/bin/sh\n", encoding="utf-8")
-    claude.chmod(0o755)
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
-        lambda _: None,
-    )
-    from scripts.agent_runtime.adapters.kimicc import REVIEW_VERDICT_MARKER_KEY, KimiccHarness
-
-    dispatch = delegate.build_parser().parse_args(
+def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """ask-kimi --review (dispatch --agent kimi --harness kimicc --mode read-only --require-review-verdict)
+    formerly reached a sources grant; Kimi seats now admit web, UI and backend coding only."""
+    popen = MagicMock(side_effect=AssertionError("refused dispatch spawned a process"))
+    monkeypatch.setattr(delegate.subprocess, "Popen", popen)
+    rc = delegate.main(
         [
             "dispatch",
             "--agent",
@@ -5654,296 +5663,147 @@ def test_kimicc_read_only_review_dispatch_argv_grants_sources(tmp_path, monkeypa
             "--require-review-verdict",
         ]
     )
-    worker = delegate.build_parser().parse_args(
-        [
-            "_worker",
-            "--task-id",
-            dispatch.task_id,
-            "--agent",
-            dispatch.agent,
-            "--mode",
-            dispatch.mode,
-            "--cwd",
-            str(tmp_path),
-            *delegate._dispatch_worker_identity_flags(dispatch, dispatch.harness),
-        ]
-    )
-    grant = delegate._kimicc_read_only_review_grant(
-        harness=worker.harness,
-        mode=worker.mode,
-        require_review_verdict=worker.require_review_verdict,
-    )
-    plan = KimiccHarness().build_invocation(
-        prompt="Review the diff and call mcp__sources__verify_word once.",
-        mode=worker.mode,
-        cwd=tmp_path,
-        model="k3",
-        task_id=worker.task_id,
-        session_id=None,
-        tool_config={"harness": worker.harness, **grant},
-    )
-    allowed = plan.cmd[plan.cmd.index("--allowedTools") + 1]
-    assert "mcp__sources__verify_words" in allowed.split(",")
-    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(delegate._REPO_ROOT / ".mcp.json")
-    assert "--strict-mcp-config" in plan.cmd
-    assert grant[REVIEW_VERDICT_MARKER_KEY] is True
-    # The wrapper runs this profile in dontAsk, not plan mode, which refuses MCP calls (#8652).
-    assert "--read-only-review" in plan.cmd
-
-    plain = delegate.build_parser().parse_args(
-        [
-            "dispatch",
-            "--agent",
-            "kimi",
-            "--harness",
-            "kimicc",
-            "--mode",
-            "read-only",
-            "--task-id",
-            "kimi-not-a-review",
-            "--prompt",
-            "What does this function do?",
-        ]
-    )
-    assert (
-        delegate._kimicc_read_only_review_grant(
-            harness=plain.harness,
-            mode=plain.mode,
-            require_review_verdict=plain.require_review_verdict,
-        )
-        == {}
-    )
-    plain_plan = KimiccHarness().build_invocation(
-        prompt="What does this function do?",
-        mode=plain.mode,
-        cwd=tmp_path,
-        model="k3",
-        task_id=plain.task_id,
-        session_id=None,
-        tool_config={"harness": plain.harness},
-    )
-    assert "--read-only-review" not in plain_plan.cmd
-    write_review = delegate._kimicc_read_only_review_grant(
-        harness="kimicc",
-        mode="workspace-write",
-        require_review_verdict=True,
-    )
-    assert write_review == {}
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "KIMI CODING-ONLY" in err
+    assert "--mode read-only" in err
+    assert "review dispatches" in err
+    popen.assert_not_called()
+    assert not (tmp_tasks_dir / "kimi-review-sources.json").exists()
 
 
-def test_kimicc_read_only_review_grant_uses_trusted_mcp_not_worktree(tmp_path, monkeypatch):
-    """A dispatch worktree's .mcp.json never reaches the kimicc review argv."""
+def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monkeypatch):
+    """Formerly the review grant named the trusted .mcp.json; now no bare MCP grant is forwarded at all."""
     import json
 
     from scripts.agent_runtime.adapters.kimicc import KimiccHarness
-    from scripts.guardrails.worktree_containment import is_dispatch_worktree
 
-    # Throwaway repo: is_dispatch_worktree resolves the primary root from git,
-    # and the grant names delegate._REPO_ROOT / ".mcp.json". Both point here,
-    # never at the live checkout.
-    repo = tmp_path / "repo"
-    repo.mkdir()
-    _init_git_repo_for_test(repo, monkeypatch)
-    trusted = repo / ".mcp.json"
-    trusted.write_text(
-        json.dumps({"mcpServers": {"sources": {"command": "trusted-stdio"}}}),
-        encoding="utf-8",
-    )
-    worktree = repo / ".worktrees" / "dispatch" / "cursor" / "grant-fixture"
-    worktree.mkdir(parents=True)
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
     malicious = worktree / ".mcp.json"
-    malicious.write_text(
-        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio", "args": ["--forge"]}}}),
-        encoding="utf-8",
-    )
-    assert is_dispatch_worktree(worktree) is True
-    monkeypatch.setattr(delegate, "_REPO_ROOT", repo)
-
-    grant = delegate._kimicc_read_only_review_grant(
-        harness="kimicc",
-        mode="read-only",
-        require_review_verdict=True,
-        cwd=worktree,
-    )
-    assert grant["mcp_config_path"] == str(trusted)
-    assert grant["mcp_config_path"] != str(malicious)
-    assert grant["strict_mcp_config"] is True
-
+    malicious.write_text(json.dumps({"mcpServers": {"sources": {"command": "evil-stdio"}}}), encoding="utf-8")
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
     monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
-    monkeypatch.setattr(
-        "scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version",
-        lambda _: None,
-    )
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
     plan = KimiccHarness().build_invocation(
-        prompt="Review the diff and call mcp__sources__verify_word once.",
-        mode="read-only",
+        prompt="Implement the helper.",
+        mode="workspace-write",
         cwd=worktree,
         model="k3",
-        task_id="kimi-review-trusted-mcp",
+        task_id="kimi-no-grant",
         session_id=None,
-        tool_config={"harness": "kimicc", **grant},
+        tool_config=admitted_tool_config(
+            worktree,
+            {
+                "harness": "kimicc",
+                "mcp_config_path": str(malicious),
+                "allowed_tools": "mcp__sources__verify_word",
+            },
+        ),
     )
-    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(trusted)
+    assert "--mcp-config" not in plan.cmd
     assert str(malicious) not in plan.cmd
-    assert "--strict-mcp-config" in plan.cmd
-    # The adapter trusts only the primary .mcp.json; here the fixture repo stands in for it.
     assert "--read-only-review" not in plan.cmd
-    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc.trusted_mcp_config_path", lambda: trusted)
-    trusted_plan = KimiccHarness().build_invocation(
-        prompt="Review the diff and call mcp__sources__verify_word once.",
-        mode="read-only",
-        cwd=worktree,
-        model="k3",
-        task_id="kimi-review-trusted-mcp",
-        session_id=None,
-        tool_config={"harness": "kimicc", **grant},
-    )
-    assert "--read-only-review" in trusted_plan.cmd
-
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (outside / ".mcp.json").write_text(
-        json.dumps({"mcpServers": {"sources": {"command": "evil-stdio"}}}),
-        encoding="utf-8",
-    )
-    outside_grant = delegate._kimicc_read_only_review_grant(
-        harness="kimicc",
-        mode="read-only",
-        require_review_verdict=True,
-        cwd=outside,
-    )
-    assert outside_grant["mcp_config_path"] == str(trusted)
 
 
-def test_kimicc_read_only_review_grant_refuses_missing_trusted_mcp(tmp_path, monkeypatch):
-    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
-    with pytest.raises(ValueError, match="trusted MCP config is missing"):
-        delegate._kimicc_read_only_review_grant(
-            harness="kimicc",
-            mode="read-only",
-            require_review_verdict=True,
-            cwd=tmp_path,
-        )
+def test_kimicc_read_only_review_grant_is_retired():
+    assert not hasattr(delegate, "_kimicc_read_only_review_grant")
 
 
-def _kimicc_worker_result(response: str):
-    return type(
-        "_Result",
-        (),
-        {
-            "ok": True,
-            "response": response,
-            "stderr_excerpt": None,
-            "returncode": 0,
-            "rate_limited": False,
-            "model": "fixture",
-            "effort": "unknown",
-            "cli_version": "fixture",
-        },
-    )()
+@pytest.mark.parametrize(
+    ("mode", "review"),
+    [
+        pytest.param("read-only", {"require_review_verdict": True}, id="ask-kimi-review"),
+        pytest.param(
+            "read-only",
+            {"require_review_verdict": True, "review_id": "rev-sealed", "attempt_id": "att-sealed"},
+            id="sealed-review-attempt",
+        ),
+        pytest.param("workspace-write", {"require_review_verdict": True}, id="write-mode-review"),
+        pytest.param("danger", {}, id="danger"),
+    ],
+)
+def test_run_worker_refuses_a_kimi_review_before_invocation(tmp_tasks_dir, tmp_path, capsys, mode, review):
+    """Formerly a read-only Kimi review ran here with rc 0; Kimi seats now take web, UI and backend coding only.
 
+    The refusal goes to the caller only: the parent's state record is left untouched.
+    """
+    task_id = f"worker-kimicc-refused-{mode}"
+    initial = {"task_id": task_id, "status": "spawning"}
+    delegate._write_state_atomic(delegate._state_path(task_id), initial)
 
-def test_run_worker_kimicc_read_only_review_grants_sources(tmp_tasks_dir, tmp_path):
-    """The _run_worker update seam, not a hand-built grant, sets the sources tools."""
-    task_id = "worker-kimicc-review-grant"
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
-
-    with patch(
-        "agent_runtime.runner.invoke",
-        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
-    ) as mock_invoke:
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
         rc = delegate._run_worker(
             task_id=task_id,
             agent="kimi",
             prompt="Review the diff and call mcp__sources__verify_word once.",
-            mode="read-only",
+            mode=mode,
             cwd_str=str(tmp_path),
             model=None,
             hard_timeout=60,
             harness="kimicc",
-            require_review_verdict=True,
+            **review,
         )
 
-    assert rc == 0
-    tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert "mcp__sources__verify_words" in tool_config["allowed_tools"].split(",")
-    assert tool_config["mcp_config_path"] == str(delegate._REPO_ROOT / ".mcp.json")
-    assert tool_config["strict_mcp_config"] is True
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    assert "KIMI CODING-ONLY" in capsys.readouterr().err
+    assert delegate._read_state(delegate._state_path(task_id)) == initial
 
 
-def test_run_worker_kimicc_review_attempt_keeps_sealed_mcp(tmp_tasks_dir, tmp_path):
-    """A sealed review-attempt config is not replaced by the kimicc grant."""
-    task_id = "worker-kimicc-sealed-review"
-    sealed = tmp_path / "sealed.mcp.json"
-    sealed.write_text('{"mcpServers":{"sources":{"url":"http://127.0.0.1/sealed"}}}\n', encoding="utf-8")
-    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+def test_run_worker_refuses_an_unscoped_kimi_write_without_any_filesystem_write(tmp_tasks_dir, tmp_path, capsys):
+    """The empty-ownership refusal reads the task record without creating its directory or any file."""
+    task_id = "worker-kimicc-unscoped"
+    assert not tmp_tasks_dir.exists()
+    writes: list[str] = []
+    real_open, real_os_open = builtins.open, os.open
+    write_flags = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_APPEND | os.O_TRUNC
 
-    with patch(
-        "agent_runtime.runner.invoke",
-        return_value=_kimicc_worker_result("Reviewed.\nVERDICT: APPROVE\n"),
-    ) as mock_invoke:
-        rc = delegate._run_worker(
-            task_id=task_id,
-            agent="kimi",
-            prompt="Review the diff.",
-            mode="read-only",
-            cwd_str=str(tmp_path),
-            model=None,
-            hard_timeout=60,
-            harness="kimicc",
-            require_review_verdict=True,
-            review_id="rev-sealed",
-            attempt_id="att-sealed",
-            mcp_config_path=str(sealed),
-            strict_mcp_config=True,
-        )
+    def record(kind):
+        def _recorder(*args, **kwargs):
+            writes.append(f"{kind}{args!r}")
 
-    assert rc == 0
-    tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert tool_config["mcp_config_path"] == str(sealed)
-    assert tool_config["strict_mcp_config"] is True
-    assert tool_config["review_id"] == "rev-sealed"
-    assert tool_config["attempt_id"] == "att-sealed"
-    assert "allowed_tools" not in tool_config
+        return _recorder
 
+    def spying_open(file, mode="r", *args, **kwargs):
+        if set(str(mode)) & set("wax+"):
+            writes.append(f"open({file!r}, {mode!r})")
+        return real_open(file, mode, *args, **kwargs)
 
-def test_run_worker_kimicc_workspace_write_review_grants_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
-    task_id = "worker-kimicc-write-review"
-    worktree = tmp_path / "worktree"
-    worktree.mkdir()
-    _init_git_repo_for_test(worktree, monkeypatch)
-    delegate._write_state_atomic(
-        delegate._state_path(task_id),
-        {"task_id": task_id, "worktree_path": str(worktree), "worktree_base": "main"},
-    )
-    response = (
-        "VERDICT: APPROVE\n"
-        'DELIVERABLE: {"outcome":"no_change","reason":"write mode must not receive the sources grant"}\n'
-    )
+    def spying_os_open(path, flags, *args, **kwargs):
+        if flags & write_flags:
+            writes.append(f"os.open({path!r}, {flags})")
+        return real_os_open(path, flags, *args, **kwargs)
 
     with (
-        patch("agent_runtime.runner.invoke", return_value=_kimicc_worker_result(response)) as mock_invoke,
-        patch.object(delegate, "_count_commits_ahead", return_value=0),
+        patch("agent_runtime.runner.invoke") as mock_invoke,
+        patch.object(os, "mkdir", record("os.mkdir")),
+        patch.object(os, "makedirs", record("os.makedirs")),
+        patch.object(Path, "mkdir", record("Path.mkdir")),
+        patch.object(Path, "touch", record("Path.touch")),
+        patch.object(Path, "write_text", record("Path.write_text")),
+        patch.object(Path, "write_bytes", record("Path.write_bytes")),
+        patch.object(builtins, "open", spying_open),
+        patch.object(os, "open", spying_os_open),
     ):
         rc = delegate._run_worker(
             task_id=task_id,
             agent="kimi",
-            prompt="Review the diff.",
+            prompt="Build the widget.",
             mode="workspace-write",
-            cwd_str=str(worktree),
+            cwd_str=str(tmp_path),
             model=None,
             hard_timeout=60,
             harness="kimicc",
-            require_review_verdict=True,
         )
 
-    assert rc == 0
-    tool_config = mock_invoke.call_args.kwargs["tool_config"]
-    assert "allowed_tools" not in tool_config
-    assert "mcp_config_path" not in tool_config
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    assert "KIMI CODING-ONLY" in capsys.readouterr().err
+    assert writes == []
+    assert not tmp_tasks_dir.exists()
 
 
 def _codex_worker_result():
@@ -6361,15 +6221,30 @@ def test_run_worker_ordinary_agy_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, 
     assert not any(line.split()[:1] == ["mcp"] for line in recorded), recorded
 
 
-def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
+def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path, monkeypatch):
+    worktree = tmp_path / "worktree"
+    worktree.mkdir()
+    _init_git_repo_for_test(worktree, monkeypatch)
+    # The Kimi finalize content check diffs from the merge base with origin/main.
+    for args in (["commit", "--allow-empty", "-m", "base"], ["update-ref", "refs/remotes/origin/main", "HEAD"]):
+        subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
     state_path = delegate._state_path("worker-kimicc")
-    delegate._write_state_atomic(state_path, {"task_id": "worker-kimicc", "harness": "kimicc"})
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": "worker-kimicc",
+            "harness": "kimicc",
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "owned_paths": ["site/src/components/Widget.tsx"],
+        },
+    )
     mock_result = type(
         "_Result",
         (),
         {
             "ok": True,
-            "response": "done",
+            "response": 'DELIVERABLE: {"outcome":"no_change","reason":"fixture"}\n',
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
@@ -6379,13 +6254,16 @@ def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks
         },
     )()
 
-    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+    with (
+        patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke,
+        patch.object(delegate, "_count_commits_ahead", return_value=0),
+    ):
         rc = delegate._run_worker(
             task_id="worker-kimicc",
             agent="kimi",
             prompt="hi",
-            mode="read-only",
-            cwd_str=str(tmp_path),
+            mode="workspace-write",
+            cwd_str=str(worktree),
             model=None,
             hard_timeout=60,
             harness="kimicc",
@@ -6393,7 +6271,11 @@ def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks
 
     assert rc == 0
     assert mock_invoke.call_args.args[:2] == ("kimi", "hi")
-    assert mock_invoke.call_args.kwargs["tool_config"] == {"harness": "kimicc"}
+    # The declared ownership travels to the runner and the adapters, which run the same gate on it.
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "harness": "kimicc",
+        "kimi_owned_paths": ["site/src/components/Widget.tsx"],
+    }
 
 
 def test_kimicc_harness_rejects_other_agent_seats():
@@ -15782,6 +15664,136 @@ def test_run_worker_without_owned_paths_never_auto_commits(tmp_tasks_dir, tmp_pa
     }
     assert pushed == []
     assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
+
+
+def _kimi_run(tmp_path, monkeypatch, task_id: str, text: str, *, worker_git=None):
+    """A Kimi workspace-write worker that writes ``text`` into an owned file, then exits 0.
+
+    ``worker_git`` runs inside the worker, after the file is written, with the
+    worktree: it stands for git commands the worker itself attempts. Delegate's
+    own push goes to the real bare ``origin``.
+    """
+    branch = f"kimi/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    label = worktree / "site" / "src" / "components" / "Label.tsx"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "cli_version": "test",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["site/src/components/"],
+            "keep_worktree": True,
+        },
+    )
+    worker_saw: dict[str, object] = {}
+
+    def worker(*_args, **_kwargs):
+        from scripts.agent_runtime import kimi_boundary
+
+        worker_saw["boundary"] = kimi_boundary.is_installed(worktree)
+        label.parent.mkdir(parents=True, exist_ok=True)
+        label.write_text(text, encoding="utf-8")
+        if worker_git is not None:
+            worker_git(worktree, worker_saw)
+        return _bg_mock_result("")
+
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_a: 0)
+    with patch("agent_runtime.runner.invoke", side_effect=worker):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Implement the label.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+            keep_worktree=True,
+        )
+    state = delegate._read_state(state_path)
+    assert state is not None
+    return rc, state, worktree, worker_saw
+
+
+def _remote_branches(worktree: Path) -> list[str]:
+    return _git_out(worktree, "ls-remote", "--heads", "origin").split()[1::2]
+
+
+def test_run_worker_refuses_a_kimi_diff_that_adds_cyrillic_and_commits_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Kimi takes no Ukrainian content: the finalize check refuses before auto-finalize stages anything."""
+    _sanitize_git_env_for_test(monkeypatch)
+
+    rc, state, worktree, worker_saw = _kimi_run(tmp_path, monkeypatch, "kimi-cyrillic", "export const t = 'Урок';\n")
+
+    assert worker_saw["boundary"] is True  # the boundary was in place while the worker ran
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
+    assert "site/src/components/Label.tsx" in state["kimi_content_refusal"]
+    assert state["auto_finalize"] is None
+    assert _remote_branches(worktree) == ["refs/heads/main"]
+    assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
+    assert _git_out(worktree, "diff", "--cached", "--name-only") == ""
+    assert (worktree / "site" / "src" / "components" / "Label.tsx").is_file()
+
+
+def test_a_kimi_worker_cannot_commit_or_push_cyrillic_itself(tmp_tasks_dir, tmp_path, monkeypatch):
+    """The worker's own commit is refused by the hook and its push fails; delegate then refuses the diff."""
+    _sanitize_git_env_for_test(monkeypatch)
+
+    def worker_git(worktree: Path, saw: dict[str, object]) -> None:
+        subprocess.run(["git", "add", "-A"], cwd=worktree, check=True, capture_output=True, timeout=30)
+        commit = subprocess.run(
+            ["git", "commit", "-m", "worker commit"], cwd=worktree, capture_output=True, text=True, timeout=60
+        )
+        push = subprocess.run(
+            ["git", "push", "origin", "HEAD"], cwd=worktree, capture_output=True, text=True, timeout=60
+        )
+        saw.update(commit=commit, push=push)
+
+    rc, state, worktree, worker_saw = _kimi_run(
+        tmp_path, monkeypatch, "kimi-worker-git", "export const t = 'Урок';\n", worker_git=worker_git
+    )
+
+    commit, push = worker_saw["commit"], worker_saw["push"]
+    assert commit.returncode != 0 and "commit refused by the Kimi worktree boundary" in commit.stderr
+    assert push.returncode != 0 and "kimi-push-disabled" in push.stderr
+    assert rc == 1
+    assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
+    assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
+    assert _remote_branches(worktree) == ["refs/heads/main"]
+
+
+def test_run_worker_auto_finalizes_a_cyrillic_free_kimi_diff(tmp_tasks_dir, tmp_path, monkeypatch):
+    """After its check passes, delegate's own commit and push go through: the boundary is taken down first."""
+    from scripts.agent_runtime import kimi_boundary
+
+    _sanitize_git_env_for_test(monkeypatch)
+
+    rc, state, worktree, worker_saw = _kimi_run(tmp_path, monkeypatch, "kimi-clean", "export const t = 'Lesson';\n")
+
+    assert worker_saw["boundary"] is True
+    assert state.get("kimi_content_refusal") is None
+    assert state["auto_finalize"]["ok"] is True, state["auto_finalize"]
+    assert state["auto_finalize"]["changed_files"] == ["site/src/components/Label.tsx"]
+    assert state["status"] == "done"
+    assert rc == 0
+    assert _git_out(worktree, "show", "--name-only", "--format=", "HEAD").split() == ["site/src/components/Label.tsx"]
+    assert "refs/heads/kimi/kimi-clean" in _remote_branches(worktree)
+    assert not kimi_boundary.is_installed(worktree)
+
+
+def test_kimi_worktree_prompt_hands_the_commit_to_delegate():
+    text = delegate._augment_prompt_with_worktree(
+        "Implement it.", Path("/tmp/wt"), mode="workspace-write", delegate_commits=True
+    )
+    assert "Do not commit or push." in text
+    assert "Cyrillic" in text
+    assert "Commit your work" not in text
 
 
 def test_auto_finalize_refuses_when_every_change_is_outside_owned_paths(tmp_path, monkeypatch):

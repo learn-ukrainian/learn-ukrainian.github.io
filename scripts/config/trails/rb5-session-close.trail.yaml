@@ -4,7 +4,7 @@ schema_version: trailspec.v1.1
 trail_id: rb5-session-close
 version: "1.0.0"
 title: RB5 Session close — receipt observations and closure-gate handoff
-seats: [grok, glm-local, kimi]
+seats: [grok, glm-local]
 parameters:
   handoff_agent: string
   handoff_file: string

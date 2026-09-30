@@ -97,7 +97,8 @@ def test_cursor_cold_start_points_to_same_acp_contract() -> None:
     body = CURSOR_COLD_START.read_text(encoding="utf-8")
     assert "agent-seat-onboarding.md" in body
     assert "route eligible 2-to-4-seat read-only" in body
-    assert "Codex" in body and "KimiCC K3" in body and "Pool" in body
+    assert "Codex" in body and "Pool" in body
+    assert "KimiCC K3" not in body and "Kimi seats are refused" in body
     assert "automatically" in body
     assert "never\nsilently replays" in body
     assert "does not replace fleet\ncoordination or formal" in body

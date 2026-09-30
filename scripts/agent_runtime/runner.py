@@ -92,9 +92,11 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
+from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
+from .target_admission import resolve_and_admit
 from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
 from .trail_isolation import prepare_trail_isolation
 from .usage import has_headroom, write_record
@@ -3347,7 +3349,14 @@ def invoke(
     planning. Unsupported adapters refuse before spawn, while supported
     profiles receive a private one-server MCP configuration that is removed
     after success, refusal, timeout, or adapter error.
+
+    A Kimi seat is admitted only for workspace-write implementation with no
+    review marker, at least one owned path in
+    ``tool_config["kimi_owned_paths"]``, and no Cyrillic text in the owned
+    files read in ``cwd``; anything else raises ``KimiAdmissionRefused``
+    before attribution, trail provisioning, or adapter planning.
     """
+    refuse_kimi_execution((agent_name,), (model,), mode=mode, cwd=cwd, tool_config=tool_config)
     attribution = resolve_invocation_attribution(
         explicit=initiator,
         task_id=task_id,
@@ -3478,6 +3487,11 @@ def resolve_inter_agent_route(
     presence from inventing a new ACP provider route.
     """
     participant = str(agent).strip().lower()
+    try:
+        # The participant, its registered adapter agent and pin, and the override, admitted together.
+        resolve_and_admit((participant,), mode=ACP_MODE, model=model)
+    except KimiAdmissionRefused as exc:
+        raise InterAgentTransportError(str(exc)) from exc
     try:
         raw_route = ACPX_SUPPORTED_PARTICIPANTS[participant]
         seat = raw_route["seat"]
@@ -3683,6 +3697,10 @@ def _invoke_direct_only(
     routing/failover/catalog selection, or choose its own entrypoint. The
     bounded ACPX comparison pilot is the only supported caller.
     """
+    try:
+        resolve_and_admit((agent_name,), mode=ACP_MODE, model=model)
+    except KimiAdmissionRefused as exc:
+        raise AgentUnavailableError(str(exc)) from exc
     try:
         entry = get_agent_entry(agent_name)
     except KeyError:

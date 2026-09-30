@@ -126,7 +126,7 @@ def test_failure_alert_uses_action_required_fleet_comms_message() -> None:
     assert args[0] == "fleet-comms"
     assert args[1] == "kimi"
     assert "failure_kind=refresh" in args[2]
-    assert kwargs["to_agents"] == ["kimi", "claude-infra"]
+    assert kwargs["to_agents"] == ["claude-infra"]
     assert kwargs["kind"] == "system"
     assert kwargs["priority"] == "action_required"
     assert kwargs["auto_snapshot"] is False

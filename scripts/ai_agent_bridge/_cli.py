@@ -9,12 +9,21 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from agent_runtime import usage as runtime_usage
+from agent_runtime.adapters.kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from agent_runtime.attribution import resolve_invocation_attribution
 from agent_runtime.errors import AgentTimeoutError, RateLimitedError
+from agent_runtime.kimi_admission import KimiAdmissionRefused
 from agent_runtime.runner import InterAgentTransportError
 
 from ._ask_contract import EFFORT_CHOICES
-from ._ask_lifecycle import _process_target, maybe_print_timeout_notice, print_asks, process_background_ask
+from ._ask_lifecycle import (
+    _process_target,
+    mark_timeout_notices_shown,
+    print_asks,
+    print_timeout_notice,
+    process_background_ask,
+    skip_stored_kimi_row,
+)
 from ._broker import bridge_status, broker_cleanup
 from ._codex import (
     has_codex_headroom,
@@ -34,7 +43,6 @@ from ._grok_build import (
     GROK_BUILD_DEFAULT_MODEL,
 )
 from ._hermes import HERMES_DEFAULT_MODEL
-from ._kimi import KIMI_BRIDGE_DEFAULT_MODEL
 from ._messaging import (
     acknowledge,
     acknowledge_all,
@@ -194,7 +202,7 @@ def process_all_gemini(model: str | None = None):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50)
+        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50), to_llm, data
         FROM messages
         WHERE to_llm = 'gemini' AND acknowledged = 0
         ORDER BY id ASC
@@ -211,11 +219,15 @@ def process_all_gemini(model: str | None = None):
 
     success = 0
     failed = 0
+    skipped = 0
 
     for row in rows:
-        msg_id, _task_id, from_llm, _msg_type, preview = row
+        msg_id, _task_id, from_llm, _msg_type, preview, to_llm, data = row
         preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+        if skip_stored_kimi_row({"to": to_llm, "data": data}, msg_id):
+            skipped += 1
+            continue
 
         try:
             if process_message_for_recipient(msg_id, model=model):
@@ -229,7 +241,7 @@ def process_all_gemini(model: str | None = None):
             print(f"    ❌ Failed: {e}\n")
 
     print(f"\n{'═' * 50}")
-    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+    print(f"📊 Results: {success} succeeded, {failed} failed, {skipped} skipped out of {len(rows)} total")
 
 
 def process_all_claude(new_session: bool = False):
@@ -238,7 +250,7 @@ def process_all_claude(new_session: bool = False):
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50)
+        SELECT id, task_id, from_llm, message_type, substr(content, 1, 50), to_llm, data
         FROM messages
         WHERE to_llm = 'claude' AND acknowledged = 0
         ORDER BY id ASC
@@ -255,11 +267,15 @@ def process_all_claude(new_session: bool = False):
 
     success = 0
     failed = 0
+    skipped = 0
 
     for row in rows:
-        msg_id, _task_id, from_llm, _msg_type, preview = row
+        msg_id, _task_id, from_llm, _msg_type, preview, to_llm, data = row
         preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
+        if skip_stored_kimi_row({"to": to_llm, "data": data}, msg_id):
+            skipped += 1
+            continue
 
         try:
             if _process_target(msg_id, "claude", {"new_session": new_session}) is False:
@@ -273,7 +289,7 @@ def process_all_claude(new_session: bool = False):
             print(f"    ❌ Failed: {e}\n")
 
     print(f"\n{'═' * 50}")
-    print(f"📊 Results: {success} succeeded, {failed} failed out of {len(rows)} total")
+    print(f"📊 Results: {success} succeeded, {failed} failed, {skipped} skipped out of {len(rows)} total")
 
 
 def _parse_usage_window(window: str) -> int:
@@ -640,7 +656,9 @@ def _build_parser() -> argparse.ArgumentParser:
     proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     proc_kimi_parser = subparsers.add_parser(
-        "process-kimi", help="Drain a queued ask via ACP; explicit reviews remain toolful"
+        "process-kimi",
+        help="Refused: Kimi: web, UI and backend coding only — no Ukrainian-language content, "
+        "no reviews, consults, design or rules",
     )
     proc_kimi_parser.add_argument("message_id", type=int, help="Message ID for kimi to process")
     proc_kimi_parser.add_argument(
@@ -991,7 +1009,9 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
     ask_kimi_parser = subparsers.add_parser(
-        "ask-kimi", help="Ordinary ask via two-seat ACP; reviews via toolful dispatch (use '-' for stdin)"
+        "ask-kimi",
+        help="Refused: Kimi: web, UI and backend coding only — no Ukrainian-language content, "
+        "no reviews, consults, design or rules (use delegate.py dispatch --agent kimi --mode workspace-write)",
     )
     ask_kimi_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_kimi_parser.add_argument("--task-id", required=True, help="Task ID")
@@ -1371,9 +1391,16 @@ def _dispatch_command(args):
     elif args.command == "thread":
         resolve_thread(args.identifier)
     elif args.command == "process":
-        process_message_for_recipient(args.message_id, model=args.model, no_timeout=args.no_timeout)
+        try:
+            process_message_for_recipient(args.message_id, model=args.model, no_timeout=args.no_timeout)
+        except KimiAdmissionRefused as exc:
+            raise SystemExit(f"❌ {exc}") from exc
     elif args.command in {"process-claude", "process-codex", "process-grok", "process-grok-build", "process-kimi"}:
-        if _process_target(args.message_id, args.command.removeprefix("process-"), vars(args)) is False:
+        try:
+            processed = _process_target(args.message_id, args.command.removeprefix("process-"), vars(args))
+        except KimiAdmissionRefused as exc:
+            raise SystemExit(f"❌ {exc}") from exc
+        if processed is False:
             raise SystemExit("ACP processing failed; message left unconsumed")
     elif args.command == "process-ask":
         process_background_ask(args.message_id, args.target)
@@ -1639,9 +1666,21 @@ def _handle_acp_compat(args, target: str) -> None:
     require_core_or_exit(f"ask-{target}")
     if getattr(args, "background", False):
         raise SystemExit("legacy ask --background is retired; enqueue through fleet-comms")
-    content = sys.stdin.read() if args.content == "-" else args.content
-    data = Path(args.data).read_text(encoding="utf-8") if getattr(args, "data", None) else None
     model = getattr(args, "to_model", None) or getattr(args, "model", None)
+    # Seat admission first: a refused seat (every Kimi seat) stops before stdin,
+    # PR-head resolution, telemetry, or any dispatch.
+    from ._acp_compat import require_compat_target
+
+    try:
+        require_compat_target(target, model=model)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    data = Path(args.data).read_text(encoding="utf-8") if getattr(args, "data", None) else None
+    try:
+        require_compat_target(target, model=model, data=data)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    content = sys.stdin.read() if args.content == "-" else args.content
     task_id = getattr(args, "task_id", None)
     if not task_id:
         raise SystemExit(f"ask-{target} requires --task-id")
@@ -1718,13 +1757,11 @@ def _handle_acp_compat(args, target: str) -> None:
     from ._acp_compat import (
         ASK_HARD_TIMEOUT_DEFAULT_S,
         ask_hard_timeout,
-        require_compat_target,
         run_compat_ask,
     )
     from ._job_host_forward import AskForwardError
 
     try:
-        require_compat_target(target)
         result = run_compat_ask(
             target,
             content,
@@ -1792,7 +1829,7 @@ def _dispatch_headless_review(
     try:
         # Same legacy-alias resolution as the ACP path (e.g. hermes→deepseek,
         # gemini→agy) so `--agent` is a name `delegate.py dispatch` accepts.
-        dispatch_agent = require_compat_target(target)
+        dispatch_agent = require_compat_target(target, model=model, data=data)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 
@@ -1906,10 +1943,10 @@ def _handle_ask_gemini(args):
 
 
 def _handle_slot_holder(args):
-    """Handle slot-holder subcommand."""
-    from scripts.orchestration.slot_routing import resolve_slot_holder
+    """Handle slot-holder subcommand (read-only lease facts; nothing is delivered)."""
+    from agent_runtime.target_admission import describe_slot_holder
 
-    res = resolve_slot_holder(args.slot)
+    res = describe_slot_holder(args.slot)
     if getattr(args, "json", False):
         print(json.dumps(res.to_dict(), indent=2))
     else:
@@ -1940,15 +1977,95 @@ def _resolve_backlog_warn_agent(args) -> str | None:
     return os.environ.get("SESSION_HANDOFF_AGENT") or None
 
 
+def _attachment_text(args) -> str | None:
+    """The ``--data`` attachment's text for the Kimi gate; None when absent or unreadable.
+
+    The command handler reads the same file and reports a read error itself,
+    before any effect; the gate only needs the text when there is some.
+    """
+    path = getattr(args, "data", None)
+    if not path:
+        return None
+    try:
+        return Path(path).read_text(encoding="utf-8")
+    except (OSError, ValueError):
+        return None
+
+
+def _kimi_request_error(args) -> str | None:
+    """The Kimi refusal for a bridge command, decided from its arguments alone; None when admitted.
+
+    Kimi is not a bridge recipient: no ask, send, post, channel subscription,
+    inbox command, drain or discussion may name a Kimi seat or model. Every
+    seat and model on the command line is checked against the static route
+    registry, with no broker access, so a refusal leaves the broker DB and its
+    ``-wal``/``-shm`` sidecars exactly as they were. A message already
+    addressed to a Kimi seat or model is skipped by the drain after its read.
+    """
+    from agent_runtime.acpx_discuss import AcpxDiscussionError, refuse_kimi_discussion
+
+    from ._acp_compat import refuse_kimi_compat, refuse_kimi_recipients
+    from ._channels_cli import _parse_agent_models, _parse_csv
+
+    command = args.command or ""
+    model = getattr(args, "to_model", None) or getattr(args, "model", None)
+    inbox_command = getattr(args, "inbox_command", None)
+    data = _attachment_text(args)
+    try:
+        if command.startswith("ask-"):
+            refuse_kimi_compat(command.removeprefix("ask-"), model=model, data=data)
+        elif command == "process-ask":
+            refuse_kimi_compat(args.target, model=model, data=data)
+        elif command.startswith("process"):
+            refuse_kimi_compat(command.removeprefix("process").removeprefix("-"), model=model, data=data)
+        elif command == "send":
+            refuse_kimi_recipients((args.to_llm,), (model,), attachments=(data,))
+        elif command == "inbox":
+            refuse_kimi_recipients(
+                (getattr(args, "for_llm", None), getattr(args, "agent", None) if inbox_command else None)
+            )
+        elif command in {"ack-all", "sync"}:
+            refuse_kimi_recipients((args.agent,))
+        elif command == "post":
+            refuse_kimi_recipients(_parse_csv(args.to) if args.to else (), (model,))
+        elif command == "p":
+            refuse_kimi_recipients(_parse_csv(args.agent) if args.agent else ())
+        elif command == "channel" and getattr(args, "channel_command", None) == "new":
+            refuse_kimi_recipients(_parse_csv(args.agents) if args.agents else ())
+        elif command == "discuss":
+            try:
+                models = _parse_agent_models(args.models) if getattr(args, "models", None) else {}
+            except ValueError:  # the handler reports a malformed --models; the seats are still checked
+                models = {}
+            refuse_kimi_discussion(_parse_csv(args.with_agents), models)
+    except (KimiAdmissionRefused, AcpxDiscussionError) as exc:
+        return f"❌ {exc}"
+    return None
+
+
 def main():
     """CLI entry point."""
     parser = _build_parser()
     args = parser.parse_args()
+    # A Kimi request stops here, before the backlog warning, the timeout
+    # notices, telemetry or any broker connection: an existing WAL-mode broker
+    # DB would otherwise gain -wal/-shm sidecars before the refusal.
+    refusal = _kimi_request_error(args)
+    if refusal:
+        raise SystemExit(refusal)
     if args.command == "inbox":
         from ._channels_cli import _maybe_print_backlog_warnings
 
         _maybe_print_backlog_warnings(_resolve_backlog_warn_agent(args))
-    if args.command is not None:
-        maybe_print_timeout_notice()
-    if not _dispatch_command(args):
+    # The notices are read query-only and marked shown only once the command
+    # succeeds, so a command its own handler refuses leaves the rows as they were.
+    notices = print_timeout_notice() if args.command is not None else []
+    try:
+        handled = _dispatch_command(args)
+    except SystemExit as exc:
+        if exc.code in (None, 0):
+            mark_timeout_notices_shown(notices)
+        raise
+    mark_timeout_notices_shown(notices)
+    if not handled:
         parser.print_help()

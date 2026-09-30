@@ -20,7 +20,6 @@ from scripts.review.reviewer_resolver import (
     GLM,
     GROK_4_7,
     GROK_4_7_CURSOR_FALLBACK,
-    KIMI_K3,
     OPENAI_FRONTIER,
     POOL,
     QWEN,
@@ -761,8 +760,9 @@ def test_deterministic_stress_follows_capacity_only_for_equally_suitable_authori
     assert assigned_bytes == {"codex": 40_000, "claude": 80_000}
 
 
-def test_ineligible_kimi_k3_never_receives_automatic_review_load():
-    counts = {"grok-4.7": 0, "kimi-k3": 0}
+def test_kimi_never_receives_automatic_review_load():
+    """Kimi seats admit web, UI and backend coding only: no Kimi candidate is ever evaluated or selected."""
+    counts = {"grok-4.7": 0}
     assigned_bytes = {"grok": 0, "kimi": 0}
 
     for index in range(20):
@@ -788,11 +788,9 @@ def test_ineligible_kimi_k3_never_receives_automatic_review_load():
         assert selected.name == "grok-4.7"
         counts[selected.name] += 1
         assigned_bytes[selected.quota_bucket] += 1_000
-        kimi_trace = next(item for item in resolution.trace if item.name == "kimi-k3")
-        assert kimi_trace.status == "excluded"
-        assert "authenticated K3 sealed MCP canary" in kimi_trace.reason
+        assert not [item for item in resolution.trace if item.quota_bucket == "kimi"]
 
-    assert counts == {"grok-4.7": 20, "kimi-k3": 0}
+    assert counts == {"grok-4.7": 20}
     assert assigned_bytes == {"grok": 20_000, "kimi": 0}
 
 
@@ -929,16 +927,15 @@ def test_unknown_explicit_pin_fails_closed_before_candidate_walk():
     assert "unknown explicit reviewer pin" in resolution.fail_closed_reason
 
 
-def test_formal_k3_participant_identity_is_explicit():
-    k3 = REVIEW_CANDIDATES["kimi-k3"]
-    assert k3.route == "kimicc"
-    resolution = resolve_reviewer(ResolverInputs(author_model="codex"), ladder=((k3,),))
+def test_kimi_k3_is_not_a_review_candidate_and_its_pin_fails_closed():
+    """Formerly the explicit kimicc ACPX review participant; Kimi seats now admit web, UI and backend coding only."""
+    assert "kimi-k3" not in REVIEW_CANDIDATES
+    assert not [c for c in REVIEW_CANDIDATES.values() if c.family == "moonshot" and c.route in {"kimi", "kimicc"}]
+    resolution = resolve_reviewer(
+        ResolverInputs(author_model="codex", pinned_candidate="kimi-k3", pressure_override_reason="test pin")
+    )
     assert resolution.selected is None
-    result = resolution.trace[0]
-    assert result.name == "kimi-k3"
-    assert result.transport == "native_kimi"
-    assert result.participant == "kimicc"
-    assert "authenticated K3 sealed MCP canary" in result.reason
+    assert "unknown explicit reviewer pin" in resolution.fail_closed_reason
 
 
 def test_glm_on_ladder_is_skipped_unless_explicitly_pinned():
@@ -991,12 +988,8 @@ def test_sealed_acpx_receipt_exposes_participant_and_credential_bucket_sharing()
     assert selected.credential_bucket == "codex"
     assert selected.quota_limit == selected.credential_limit == 1
 
-    # K3 is the explicit kimicc ACPX participant, and it shares Kimi's
-    # credential/quota buckets rather than creating a fictitious account.
-    kimi = REVIEW_CANDIDATES["kimi-k3"]
-    assert kimi.participant == "kimicc"
-    assert kimi.quota_bucket == kimi.credential_bucket == "kimi"
-    assert kimi.quota_limit == kimi.credential_limit == 1
+    # Kimi seats admit web, UI and backend coding only: no review candidate binds a Kimi participant.
+    assert not [c for c in REVIEW_CANDIDATES.values() if c.participant in {"kimi", "kimicc"}]
 
 
 def test_every_risk_ladder_has_unique_candidates_and_a_cross_family_outcome():
@@ -1057,8 +1050,7 @@ def test_old_sonnet_record_still_resolves_anthropic_family():
 
 def test_candidate_constants_preserve_expected_identity():
     assert OPENAI_FRONTIER.concrete_model == "gpt-6.1-sol"
-    assert KIMI_K3.concrete_model == "kimi-code/k3"
-    assert KIMI_K3.transport == "native_kimi"
+    assert "kimi-k3" not in REVIEW_CANDIDATES
     assert POOL.concrete_model == "poolside/laguna-s-2.1"
     assert POOL.invocation.endswith("ask-pool")
     assert GLM.requires_data_egress_policy == "local_interactive"
@@ -1295,10 +1287,8 @@ def test_resolve_reviewer_subject_seat_kimi_does_not_exclude_composer():
             owned_paths=("scripts/agent_runtime/adapters/kimi.py", "scripts/agent_runtime/adapters/kimicc.py"),
         )
     )
-    kimi = next(entry for entry in resolution.trace if entry.name == "kimi-k3")
+    assert not [entry for entry in resolution.trace if entry.quota_bucket == "kimi"]
     composer = next(entry for entry in resolution.trace if entry.name == "composer-2.5")
-    assert kimi.status == "excluded"
-    assert "subject seat kimi" in kimi.reason
     assert "subject exclusion" not in (composer.reason or "")
 
 

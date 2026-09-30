@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import asyncio
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -24,6 +23,7 @@ from agent_runtime.runner import invoke
 from agent_runtime.trail_isolation import TrailIsolationError, prepare_trail_isolation
 from scripts.common.repo_root import project_interpreter
 from scripts.orchestration.trails import trail_mcp
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 FAKE_GROK = "/usr/local/bin/grok"
 FAKE_CLAUDE = "/usr/local/bin/claude"
@@ -154,101 +154,29 @@ def test_grok_profile_refuses_conflicting_or_unknown_tool_config() -> None:
         launch.cleanup()
 
 
-def test_kimicc_profile_forwards_strict_three_tool_admission() -> None:
-    launch = _prepared_profile("kimi", harness="kimicc")
-    assert launch is not None
-    try:
-        with (
-            patch("agent_runtime.adapters.kimicc._default_claude_bin", return_value=FAKE_CLAUDE),
-            patch("agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version"),
-        ):
-            plan = KimiccHarness().build_invocation(
+@pytest.mark.parametrize("harness", [None, "kimicc"])
+def test_kimi_trail_sessions_are_refused_at_every_boundary(tmp_path: Path, harness: str | None) -> None:
+    """Kimi: web, UI and backend coding only — no trail profile, runner call, or adapter plan is admitted."""
+    extra = {"harness": harness} if harness else {}
+    with pytest.raises(TrailIsolationError, match="KIMI CODING-ONLY"):
+        _prepared_profile("kimi", **extra)
+    with patch("agent_runtime.runner._load_adapter", side_effect=AssertionError("spawn attempted")):
+        with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
+            invoke("kimi", "Run the trail.", tool_config={"trail_isolation": True, **extra})
+    # Admitted coding work (owned, Cyrillic-free paths) still refuses a trail session.
+    admitted = admitted_tool_config(tmp_path, {"trail_isolation": True, **extra})
+    for adapter in (KimiAdapter(), KimiccHarness()):
+        with pytest.raises(TrailIsolationError, match="trail sessions"):
+            adapter.build_invocation(
                 prompt="Run the trail.",
-                mode="read-only",
-                cwd=Path.cwd(),
+                mode="workspace-write",
+                cwd=tmp_path,
                 model=None,
-                task_id="p5-test",
+                task_id=None,
                 session_id=None,
-                tool_config=launch.tool_config,
+                tool_config=admitted,
             )
-
-        assert _values_after(plan.cmd, "--tools") == [launch.tool_config["tools"]]
-        assert _values_after(plan.cmd, "--allowedTools") == [launch.tool_config["allowed_tools"]]
-        assert "--strict-mcp-config" in plan.cmd
-        assert _values_after(plan.cmd, "--setting-sources") == [""]
-        assert _values_after(plan.cmd, "--mcp-config") == [launch.tool_config["mcp_config_path"]]
-        assert "Bash" not in launch.tool_config["tools"]
-        assert "Write" not in launch.tool_config["tools"]
-    finally:
-        launch.cleanup()
-
-
-def test_kimicc_profile_refuses_conflicting_or_unknown_tool_config() -> None:
-    launch = _prepared_profile("kimi", harness="kimicc")
-    assert launch is not None
-    try:
-        for extra in ({"agent": "untrusted"}, {"max_budget_usd": 1}):
-            with pytest.raises(TrailIsolationError, match="incompatible tool_config"):
-                KimiccHarness().build_invocation(
-                    prompt="Run the trail.",
-                    mode="read-only",
-                    cwd=Path.cwd(),
-                    model=None,
-                    task_id="p5-conflict",
-                    session_id=None,
-                    tool_config={**launch.tool_config, **extra},
-                )
-    finally:
-        launch.cleanup()
-
-
-def test_kimicc_wrapper_accepts_the_strict_trail_flags(tmp_path: Path) -> None:
-    launch = _prepared_profile("kimi", harness="kimicc")
-    assert launch is not None
-    try:
-        fake_claude = tmp_path / "claude"
-        fake_claude.write_text(
-            "#!/usr/bin/env bash\nprintf 'arg=%s\\n' \"$@\"\n",
-            encoding="utf-8",
-        )
-        fake_claude.chmod(0o755)
-        home = tmp_path / "home"
-        home.mkdir()
-        env = os.environ.copy()
-        env.update({"HOME": str(home), "KIMICC_CLAUDE_BIN": str(fake_claude), "KIMICC_AUTH_TOKEN": "test"})
-        result = subprocess.run(
-            [
-                str(trail_isolation.PROJECT_ROOT / "scripts/agent_runtime/kimicc_headless.sh"),
-                "--model",
-                "k3",
-                "--mode",
-                "read-only",
-                "--prompt",
-                "Run the trail.",
-                "--mcp-config",
-                str(launch.tool_config["mcp_config_path"]),
-                "--allowedTools",
-                str(launch.tool_config["allowed_tools"]),
-                "--tools",
-                str(launch.tool_config["tools"]),
-                "--strict-mcp-config",
-                "--setting-sources",
-                "",
-            ],
-            cwd=trail_isolation.PROJECT_ROOT,
-            env=env,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=20,
-        )
-
-        assert result.returncode == 0, result.stderr
-        assert f"arg={launch.tool_config['tools']}" in result.stdout
-        assert "arg=--strict-mcp-config" in result.stdout
-        assert "arg=--setting-sources" in result.stdout
-    finally:
-        launch.cleanup()
+    assert not hasattr(trail_isolation, "KIMICC_TRAIL_TOOLS")
 
 
 @pytest.mark.parametrize("adapter", ["glm", "grok-hermes", "claude"])
@@ -269,7 +197,7 @@ def test_glm_and_native_kimi_refuse_the_profile_at_adapter_boundary(tmp_path: Pa
             session_id=None,
             tool_config={"trail_isolation": True},
         )
-    with pytest.raises(TrailIsolationError, match="native Kimi"):
+    with pytest.raises(ValueError, match="KIMI CODING-ONLY"):
         KimiAdapter().build_invocation(
             prompt="Run the trail.",
             mode="read-only",

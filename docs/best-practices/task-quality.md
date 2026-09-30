@@ -128,7 +128,7 @@ Record pass/fail with timestamp + receipt for each command above.
 
 Keep the DoR fields current. Material scope change → re-DoR + comment.
 Mission-shrinking non-goals need operator/advisor approval (Fable / Astra;
-Kimi may consult on non-Ukrainian design/coding only).
+Kimi: web, UI and backend coding only).
 Re-run **dispatch preflight immediately before each dispatch wave and before
 each CF request** (not only when conditions “might” have moved).
 

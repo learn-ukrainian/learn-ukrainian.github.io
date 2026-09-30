@@ -12,13 +12,14 @@ separately from the fail-open research registry.
 
 from __future__ import annotations
 
+import fnmatch
 import json
 import os
 import posixpath
 import sqlite3
 import time
 import unicodedata
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from enum import StrEnum
 from pathlib import Path
@@ -165,6 +166,40 @@ def normalize_claim(raw: str) -> PathClaim:
         return PathClaim(raw=raw, kind=ClaimKind.SUBTREE, norm=norm)
 
     return PathClaim(raw=raw, kind=ClaimKind.FILE, norm=norm)
+
+
+def owned_path_matcher(raw: str) -> Callable[[str], bool] | None:
+    """How one ``--owned-path`` claim matches a repo-relative path; None when it owns nothing.
+
+    Claims are read the way :func:`normalize_claim` reads them: a plain path
+    owns itself and everything below it, ``dir/`` and ``dir/**`` own the
+    subtree, and a claim with other wildcards is a case-sensitive glob. An
+    empty, ``.`` or absolute claim owns nothing, nor does one with a ``..``
+    segment anywhere (``scripts/../docs`` would own ``docs``). A glob must
+    start with a literal top-level name: ``fnmatch``'s ``*`` also matches
+    ``/``, so ``**``, ``./**``, ``*``, ``*/**`` or ``*.py`` would own the whole
+    repository or every top-level entry.
+    """
+    if ".." in (raw or "").strip().replace("\\", "/").split("/"):
+        return None
+    claim = normalize_claim(raw)
+    if claim.kind is not ClaimKind.UNKNOWN:
+        norm = claim.norm
+        return lambda path: path == norm or path.startswith(norm + "/")
+    pattern = claim.norm
+    while pattern.startswith("./"):
+        pattern = pattern[2:]
+    segments = pattern.split("/")
+    if not any(ch in pattern for ch in "*?[") or any(segment in {"", "."} for segment in segments):
+        return None
+    if any(ch in segments[0] for ch in "*?["):
+        return None
+    return lambda path: fnmatch.fnmatchcase(path, pattern)
+
+
+def path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
+    """Whether a repo-relative changed ``path`` falls under a declared owned path."""
+    return any(matcher(path) for raw in owned_paths if (matcher := owned_path_matcher(raw)) is not None)
 
 
 _DISPLAY_LIMIT = 120

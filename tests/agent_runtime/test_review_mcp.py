@@ -223,7 +223,7 @@ def test_prepare_review_attempt_refuses_grok(manifest_file: Path, tmp_path: Path
 
 
 def test_prepare_review_attempt_refuses_kimicc(manifest_file: Path, tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match=r"review attempt refused for kimicc: not yet supported \(#8517\)"):
+    with pytest.raises(ValueError, match=r"review attempt refused for kimicc: Kimi: web, UI and backend coding only"):
         prepare_review_attempt(
             review_id="rev-001",
             attempt_id="att-001",
@@ -297,7 +297,9 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
     )
     assert rc == 2
     captured = capsys.readouterr()
-    assert "review attempt refused for kimi: not yet supported (#8517)" in captured.err
+    # Kimi admission refuses before the review-attempt harness check.
+    assert "KIMI CODING-ONLY" in captured.err
+    assert "review dispatches" in captured.err
 
 
 def test_delegate_dispatch_incomplete_review_attempt_flags(
@@ -454,7 +456,9 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
         },
     }
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
-    monkeypatch.setattr("scripts.delegate._load_dispatch_fallbacks", lambda: {"claude": "codex"})
+    monkeypatch.setattr(
+        "scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: {"claude": "codex"}
+    )
 
     rc = delegate_cli.main(
         [

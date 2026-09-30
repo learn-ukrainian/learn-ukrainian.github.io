@@ -10,7 +10,6 @@ from scripts.review.closeout_cli import main
 from scripts.review.reviewer_resolver import (
     GLM,
     GROK_4_7,
-    KIMI_K3,
     REVIEW_CANDIDATES,
     ResolverInputs,
     evaluate_candidate,
@@ -101,9 +100,10 @@ def test_content_code_review_uses_only_cross_family_claude_or_gpt(author, expect
 
 def test_non_language_candidates_and_explicit_pin_are_excluded():
     inputs = ResolverInputs(author_model="codex", changed_paths=("curriculum/A1/lesson.mdx",))
+    # Kimi is no longer a review candidate at all (web, UI and backend coding only).
+    assert "kimi-k3" not in REVIEW_CANDIDATES
     for candidate in (
         GROK_4_7,
-        KIMI_K3,
         GLM,
         REVIEW_CANDIDATES["composer-2.5"],
         REVIEW_CANDIDATES["deepseek-v4.1-flash"],
