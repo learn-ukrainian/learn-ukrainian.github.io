@@ -41,6 +41,7 @@ from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
 from scripts.orchestration import job_host_exec, worktree_claims
 from scripts.review.receipts.ledger import REVIEW_TOOLS
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 
 @pytest.fixture
@@ -2978,7 +2979,12 @@ def test_run_worker_surfaces_instant_exit_stderr_in_task_state_and_log(
     worktree = _agy_dispatch_worktree(tmp_path, f"kimi/{task_id}")
     delegate._write_state_atomic(
         delegate._state_path(task_id),
-        {"task_id": task_id, "worktree_path": str(worktree), "worktree_base": "main"},
+        {
+            "task_id": task_id,
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "owned_paths": ["site/src/components/Widget.tsx"],
+        },
     )
     stderr_log = tmp_path / "kimi-instant-exit.stderr.log"
     with stderr_log.open("w", encoding="utf-8") as handle, contextlib.redirect_stderr(handle):
@@ -5683,11 +5689,14 @@ def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monk
         model="k3",
         task_id="kimi-no-grant",
         session_id=None,
-        tool_config={
-            "harness": "kimicc",
-            "mcp_config_path": str(malicious),
-            "allowed_tools": "mcp__sources__verify_word",
-        },
+        tool_config=admitted_tool_config(
+            worktree,
+            {
+                "harness": "kimicc",
+                "mcp_config_path": str(malicious),
+                "allowed_tools": "mcp__sources__verify_word",
+            },
+        ),
     )
     assert "--mcp-config" not in plan.cmd
     assert str(malicious) not in plan.cmd
@@ -6164,7 +6173,13 @@ def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks
     state_path = delegate._state_path("worker-kimicc")
     delegate._write_state_atomic(
         state_path,
-        {"task_id": "worker-kimicc", "harness": "kimicc", "worktree_path": str(worktree), "worktree_base": "main"},
+        {
+            "task_id": "worker-kimicc",
+            "harness": "kimicc",
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "owned_paths": ["site/src/components/Widget.tsx"],
+        },
     )
     mock_result = type(
         "_Result",
@@ -6198,7 +6213,11 @@ def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks
 
     assert rc == 0
     assert mock_invoke.call_args.args[:2] == ("kimi", "hi")
-    assert mock_invoke.call_args.kwargs["tool_config"] == {"harness": "kimicc"}
+    # The declared ownership travels to the runner and the adapters, which run the same gate on it.
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "harness": "kimicc",
+        "kimi_owned_paths": ["site/src/components/Widget.tsx"],
+    }
 
 
 def test_kimicc_harness_rejects_other_agent_seats():

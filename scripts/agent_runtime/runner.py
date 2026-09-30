@@ -92,7 +92,7 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
-from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
+from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution, refuse_kimi_if_disallowed
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
@@ -3343,10 +3343,12 @@ def invoke(
     after success, refusal, timeout, or adapter error.
 
     A Kimi seat is admitted only for workspace-write implementation with no
-    review marker; anything else raises ``KimiAdmissionRefused`` before
-    attribution, trail provisioning, or adapter planning.
+    review marker, at least one owned path in
+    ``tool_config["kimi_owned_paths"]``, and no Cyrillic text in the owned
+    files read in ``cwd``; anything else raises ``KimiAdmissionRefused``
+    before attribution, trail provisioning, or adapter planning.
     """
-    refuse_kimi_if_disallowed((agent_name,), (model,), mode=mode, tool_config=tool_config)
+    refuse_kimi_execution((agent_name,), (model,), mode=mode, cwd=cwd, tool_config=tool_config)
     attribution = resolve_invocation_attribution(
         explicit=initiator,
         task_id=task_id,

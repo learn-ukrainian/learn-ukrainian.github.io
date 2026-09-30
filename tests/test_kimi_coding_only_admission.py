@@ -19,6 +19,7 @@ import delegate
 from scripts.agent_runtime import kimi_admission
 from scripts.fleet_comms.endpoints import load_endpoint_registry
 from scripts.fleet_comms.request_executor import RequestExecutor
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _TOKEN = "KIMI CODING-ONLY"
@@ -497,9 +498,15 @@ def test_finalize_fails_closed_when_the_base_is_unknown(kimi_worktree):
 
 
 @pytest.mark.parametrize("participant", ["kimi", "kimicc"])
-@pytest.mark.parametrize("owned", [_BACKEND_OWNED, _UI_OWNED, ()])
+@pytest.mark.parametrize("owned", [_BACKEND_OWNED, _UI_OWNED])
 def test_web_ui_and_backend_coding_is_admitted(participant, owned):
     assert _refusal(participants=(participant,), paths=owned) is None
+
+
+@pytest.mark.parametrize("participant", ["kimi", "kimicc"])
+def test_workspace_write_without_an_owned_path_is_refused(participant):
+    message = _refusal(participants=(participant,), paths=())
+    assert message and _TOKEN in message and "without an owned path" in message
 
 
 @pytest.mark.parametrize("agent", ["claude", "codex", "grok", "agy", "cursor"])
@@ -652,6 +659,9 @@ def _assert_refused(no_spawn, capsys, argv, reason, *, policy=_TOKEN):
         (_dispatch(*_WRITE, "--research-track", "core"), _TOKEN, "--research-track 'core' is a curriculum track"),
         (_dispatch(*_WRITE, "--repo", "infra-private"), _TOKEN, "is a private repository"),
         (_dispatch(*_WRITE, "--repo", "hramatka"), _TOKEN, "is a private repository"),
+        (_dispatch(*_WRITE), _TOKEN, "without an owned path"),
+        # A research path classifies context; it never stands in for ownership.
+        (_dispatch(*_WRITE, "--research-owned-path", "scripts/ci/x.py"), _TOKEN, "without an owned path"),
     ],
 )
 def test_dispatch_refuses_before_any_side_effect(no_spawn, capsys, argv, policy, reason):
@@ -872,8 +882,8 @@ def test_web_ui_and_backend_dispatches_pass_admission(tmp_path, monkeypatch, own
 def test_worker_refuses_with_zero_side_effects(tmp_path, monkeypatch, capsys, mode, review):
     tasks = tmp_path / "tasks"
     monkeypatch.setenv("LU_TASKS_DIR", str(tasks))
-    for sentinel in ("_state_path", "_read_state", "_write_state_atomic"):
-        monkeypatch.setattr(delegate, sentinel, _fail)
+    # Reading the task record is not an effect; a write is.
+    monkeypatch.setattr(delegate, "_write_state_atomic", _fail)
     monkeypatch.setattr(delegate.signal, "signal", _fail)
     monkeypatch.setattr("agent_runtime.runner.invoke", _fail)
 
@@ -996,6 +1006,109 @@ def test_kimi_adapters_refuse_read_only_and_danger_before_planning(tmp_path, mon
         )
 
 
+# --- unscoped workspace-write through the runtime and the native adapters ------------
+
+_UKRAINIAN_FEEDBACK = "Give the learners Ukrainian feedback in the syllable counter."
+_UKRAINIAN_COMPONENT = "site/src/components/CountSyllables.tsx"
+_ADMITTED_COMPONENT = "site/src/components/LiveStatus.tsx"
+
+
+def _owned_config(*paths: str, harness: str | None = None) -> dict:
+    config: dict = {kimi_admission.OWNED_PATHS_KEY: list(paths)}
+    if harness:
+        config["harness"] = harness
+    return config
+
+
+@pytest.fixture
+def launch_probe(monkeypatch):
+    """Record every launch plan the runtime builds; nothing is spawned."""
+    from scripts.agent_runtime import runner
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+
+    class _Reached(Exception):
+        pass
+
+    planned: list[str] = []
+
+    def impl(agent_name, *_args, **_kwargs):
+        planned.append(agent_name)
+        raise _Reached
+
+    monkeypatch.setattr(runner, "_invoke_impl", impl)
+    monkeypatch.setattr(kimi_adapter, "_resolve_kimi_binary", lambda: "/bin/true")
+    return planned, _Reached
+
+
+@pytest.mark.parametrize("owned", [(), (_UKRAINIAN_COMPONENT,)])
+def test_the_runtime_refuses_kimi_workspace_write_without_admitted_ownership(launch_probe, owned):
+    from scripts.agent_runtime import runner
+
+    planned, _ = launch_probe
+    with pytest.raises(kimi_admission.KimiAdmissionRefused, match=_TOKEN) as refused:
+        runner.invoke(
+            "kimi", _UKRAINIAN_FEEDBACK, mode="workspace-write", cwd=_REPO_ROOT, tool_config=_owned_config(*owned)
+        )
+    assert ("Ukrainian content" if owned else "without an owned path") in str(refused.value)
+    assert planned == []
+
+
+def test_the_runtime_admits_kimi_workspace_write_that_owns_a_cyrillic_free_file(launch_probe):
+    from scripts.agent_runtime import runner
+
+    planned, reached = launch_probe
+    with pytest.raises(reached):
+        runner.invoke(
+            "kimi",
+            "Add a tooltip.",
+            mode="workspace-write",
+            cwd=_REPO_ROOT,
+            tool_config=_owned_config(_ADMITTED_COMPONENT),
+        )
+    assert planned == ["kimi"]
+
+
+@pytest.mark.parametrize("harness", [None, "kimicc"])
+@pytest.mark.parametrize("owned", [(), (_UKRAINIAN_COMPONENT,)])
+def test_the_native_adapters_refuse_unscoped_or_cyrillic_workspace_write_before_a_launch_plan(
+    tmp_path, monkeypatch, harness, owned
+):
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+    from scripts.agent_runtime.adapters import kimicc as kimicc_adapter
+
+    monkeypatch.setattr(kimi_adapter, "_resolve_kimi_binary", _fail)
+    monkeypatch.setattr(kimicc_adapter, "_default_claude_bin", _fail)
+    config = _owned_config(*owned, harness=harness)
+    for adapter in (kimi_adapter.KimiAdapter(), kimicc_adapter.KimiccHarness()):
+        with pytest.raises(ValueError, match=_TOKEN) as refused:
+            adapter.build_invocation(
+                prompt=_UKRAINIAN_FEEDBACK,
+                mode="workspace-write",
+                cwd=_REPO_ROOT,
+                model=None,
+                task_id="t",
+                session_id=None,
+                tool_config=config,
+            )
+        assert ("Ukrainian content" if owned else "without an owned path") in str(refused.value)
+
+
+def test_the_native_adapter_plans_workspace_write_that_owns_a_cyrillic_free_file(monkeypatch):
+    from scripts.agent_runtime.adapters import kimi as kimi_adapter
+
+    monkeypatch.setattr(kimi_adapter, "_resolve_kimi_binary", lambda: "/bin/true")
+    plan = kimi_adapter.KimiAdapter().build_invocation(
+        prompt="Add a tooltip.",
+        mode="workspace-write",
+        cwd=_REPO_ROOT,
+        model=None,
+        task_id="t",
+        session_id=None,
+        tool_config=_owned_config(_ADMITTED_COMPONENT),
+    )
+    assert plan.cmd[0] == "/bin/true"
+
+
 def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(tmp_path, monkeypatch):
     from scripts.agent_runtime import runner
     from scripts.agent_runtime.adapters import kimi as kimi_adapter
@@ -1003,11 +1116,26 @@ def test_a_kimi_launch_without_credential_isolation_is_refused_before_any_spawn(
     def no_tempdir(*_args, **_kwargs):
         raise OSError("no temporary directory")
 
+    config = admitted_tool_config(tmp_path)
     monkeypatch.setattr(kimi_adapter, "_resolve_kimi_binary", lambda: "/bin/true")
     monkeypatch.setattr("tempfile.mkdtemp", no_tempdir)
-    monkeypatch.setattr(subprocess, "Popen", _fail)
+
+    def git_only(cmd, *args, **kwargs):
+        # The gate reads the execution tree with git plumbing; nothing else may spawn.
+        if list(cmd[:1]) != ["git"]:
+            _fail()
+        return _REAL_POPEN(cmd, *args, **kwargs)
+
+    monkeypatch.setattr(subprocess, "Popen", git_only)
     with pytest.raises(ValueError, match=_TOKEN) as refused:
-        runner.invoke("kimi", "Implement it.", mode="workspace-write", cwd=tmp_path, task_id="kimi-isolation")
+        runner.invoke(
+            "kimi",
+            "Implement it.",
+            mode="workspace-write",
+            cwd=tmp_path,
+            task_id="kimi-isolation",
+            tool_config=config,
+        )
     assert "credential isolation could not be established" in str(refused.value)
 
 

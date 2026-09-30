@@ -23,6 +23,7 @@ from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
 from scripts.audit.lint_agent_trailer import _TRAILER_RE
 from scripts.delegate import build_parser
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 
 def _build(
@@ -45,7 +46,7 @@ def _build(
         model=model,
         task_id="kimi-test",
         session_id=None,
-        tool_config=tool_config,
+        tool_config=admitted_tool_config(tmp_path, tool_config),
         effort=effort,
     )
 
@@ -116,7 +117,7 @@ def test_native_kimi_skills_override_is_explicit_deduplicated_and_can_disable_de
     configured = _build(
         tmp_path,
         monkeypatch,
-        tool_config={"kimi_skills_dirs": [str(override), str(override)]},
+        tool_config=admitted_tool_config(tmp_path, {"kimi_skills_dirs": [str(override), str(override)]}),
     )
     disabled = _build(tmp_path, monkeypatch, tool_config={"kimi_skills_dirs": []})
 
@@ -139,7 +140,7 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
         model=None,
         task_id="kimi-kimicc-test",
         session_id=None,
-        tool_config={"harness": "kimicc"},
+        tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
     )
 
     assert native.cmd[0] == str(tmp_path / "kimi")
@@ -176,7 +177,7 @@ def test_kimicc_refuses_model_that_is_not_a_routable_kimicc_alias(tmp_path, monk
             model="k3-256k",
             task_id="kimicc-reject-256k",
             session_id=None,
-            tool_config={"harness": "kimicc"},
+            tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
         )
 
 
@@ -194,7 +195,7 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
         model="k3",
         task_id="kimi-kimicc-default-effort",
         session_id=None,
-        tool_config=None,
+        tool_config=admitted_tool_config(tmp_path),
     )
     override = KimiccHarness().build_invocation(
         prompt="Inspect the target.",
@@ -203,7 +204,7 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
         model="k3",
         task_id="kimi-kimicc-override-effort",
         session_id=None,
-        tool_config=None,
+        tool_config=admitted_tool_config(tmp_path),
         effort="max",
     )
     k2_7 = KimiccHarness().build_invocation(
@@ -213,7 +214,7 @@ def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_
         model="k2.7",
         task_id="kimi-kimicc-k2-7-effort",
         session_id=None,
-        tool_config=None,
+        tool_config=admitted_tool_config(tmp_path),
     )
 
     # Operator 2026-08-13: native dispatch no longer forces max; effort is
@@ -240,7 +241,7 @@ def test_kimicc_harness_uses_claude_stream_json_parser(tmp_path, monkeypatch):
         model="k3",
         task_id="kimi-kimicc-parser",
         session_id=None,
-        tool_config={"harness": "kimicc"},
+        tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
     )
 
     parsed = KimiAdapter().parse_response(
@@ -279,15 +280,18 @@ def test_kimicc_accepts_delegate_attempt_keys_on_workspace_write(tmp_path, monke
         model="k3",
         task_id="kimicc-write",
         session_id=None,
-        tool_config={
-            "harness": "kimicc",
-            "mcp_config_path": str(tmp_path / "writer.mcp.json"),
-            "strict_mcp_config": True,
-            "mcp_server_names": ["sources"],
-            "attempt_id": "att-1",
-            "codex_home_override": str(tmp_path / "codex-home"),
-            "agy_home_override": str(tmp_path / "agy-home"),
-        },
+        tool_config=admitted_tool_config(
+            tmp_path,
+            {
+                "harness": "kimicc",
+                "mcp_config_path": str(tmp_path / "writer.mcp.json"),
+                "strict_mcp_config": True,
+                "mcp_server_names": ["sources"],
+                "attempt_id": "att-1",
+                "codex_home_override": str(tmp_path / "codex-home"),
+                "agy_home_override": str(tmp_path / "agy-home"),
+            },
+        ),
     )
 
     assert plan.cmd[plan.cmd.index("--mode") + 1] == "workspace-write"
@@ -309,7 +313,7 @@ def test_kimicc_refuses_a_review_attempt_and_read_only_lease_keys(tmp_path, monk
             model="k3",
             task_id="kimicc-review-id",
             session_id=None,
-            tool_config={"review_id": "rev-1"},
+            tool_config=admitted_tool_config(tmp_path, {"review_id": "rev-1"}),
         )
     with pytest.raises(ValueError, match="unsupported tool_config keys"):
         KimiccHarness().build_invocation(
@@ -319,7 +323,7 @@ def test_kimicc_refuses_a_review_attempt_and_read_only_lease_keys(tmp_path, monk
             model="k3",
             task_id="kimicc-lease",
             session_id=None,
-            tool_config={"read_only_tmp_root": str(tmp_path / "lease")},
+            tool_config=admitted_tool_config(tmp_path, {"read_only_tmp_root": str(tmp_path / "lease")}),
         )
 
 
@@ -336,10 +340,13 @@ def test_kimicc_does_not_forward_a_non_strict_sources_grant(tmp_path, monkeypatc
         model="k3",
         task_id="kimicc-sources",
         session_id=None,
-        tool_config={
-            "mcp_config_path": str(tmp_path / ".mcp.json"),
-            "allowed_tools": "mcp__sources__verify_word",
-        },
+        tool_config=admitted_tool_config(
+            tmp_path,
+            {
+                "mcp_config_path": str(tmp_path / ".mcp.json"),
+                "allowed_tools": "mcp__sources__verify_word",
+            },
+        ),
     )
     assert "--mcp-config" not in plan.cmd
     assert "--allowedTools" not in plan.cmd
@@ -379,7 +386,7 @@ def test_kimicc_refuses_the_review_profile_in_every_mode(tmp_path, monkeypatch, 
             model="k3",
             task_id=f"kimicc-review-profile-{mode}",
             session_id=None,
-            tool_config=_former_review_grant(tmp_path),
+            tool_config=admitted_tool_config(tmp_path, _former_review_grant(tmp_path)),
         )
     assert probed == []
 
@@ -401,7 +408,7 @@ def test_kimicc_refuses_read_only_and_danger_before_any_probe(tmp_path, monkeypa
             model="k3",
             task_id=f"kimicc-{mode}",
             session_id=None,
-            tool_config={"harness": "kimicc"},
+            tool_config=admitted_tool_config(tmp_path, {"harness": "kimicc"}),
         )
     assert probed == []
     assert not hasattr(kimicc_adapter, "read_only_review_refusal")
@@ -418,7 +425,7 @@ def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):
             model="k3",
             task_id="kimicc-unknown",
             session_id=None,
-            tool_config={"some_future_field": "no"},
+            tool_config=admitted_tool_config(tmp_path, {"some_future_field": "no"}),
         )
 
 

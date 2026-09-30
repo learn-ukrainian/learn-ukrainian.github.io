@@ -5375,6 +5375,7 @@ def _kimi_worker_refusal(
     """
     from scripts.agent_runtime import kimi_boundary
     from scripts.agent_runtime.kimi_admission import (
+        ADMITTED_MODE,
         KimiAdmissionRefused,
         format_refusal,
         is_kimi_seat,
@@ -5390,7 +5391,9 @@ def _kimi_worker_refusal(
                 return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}"
         return None
     try:
-        refuse_kimi_if_disallowed((agent,), (model,), mode=mode, review=review)
+        if mode != ADMITTED_MODE or review:
+            # Refused by mode or review alone: no need to read the task record (or create its directory).
+            refuse_kimi_if_disallowed((agent,), (model,), mode=mode, review=review)
         launch = _read_state(_state_path(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
         refuse_kimi_if_disallowed(
@@ -7824,7 +7827,7 @@ def _run_worker(
     if kimi_refusal:
         print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 1
-    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+    from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
     # through the runtime's finally block (see handler docstring).
@@ -8046,6 +8049,9 @@ def _run_worker(
 
                 verify_review_attempt_paths(mcp_config_path)
 
+            if is_kimi_seat(agent, model=model):
+                # The runner and the adapters run the same gate on these paths and this tree.
+                tool_config[OWNED_PATHS_KEY] = list(_declared_owned_paths(state.get("owned_paths")) or ())
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -11171,12 +11177,9 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
 
 def _kimi_worktree_trees(worktree: Path) -> list[Any]:
     """An existing worktree as a Kimi worker sees it: its files on disk and the commit checked out there."""
-    from scripts.agent_runtime.kimi_admission import CommitTree, DirectoryTree
+    from scripts.agent_runtime.kimi_admission import worktree_trees
 
-    head = _resolve_sha(worktree)
-    if head is None:
-        raise RuntimeError(f"cannot resolve the commit checked out in {worktree}")
-    return [DirectoryTree(worktree), CommitTree(worktree, head, env=_sanitized_git_env())]
+    return worktree_trees(worktree, env=_sanitized_git_env())
 
 
 def _resolve_local_base_sha(*, base: str, branch: str | None, pinned_head_sha: str | None) -> str:
@@ -11306,16 +11309,21 @@ def _kimi_admission_refusal(
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_if_disallowed
 
-    owned: list[str] = []
-    for attr in ("owned_path", "research_owned_path"):
+    def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
-        owned.extend([value] if isinstance(value, str) else value)
+        return [value] if isinstance(value, str) else list(value)
+
+    # Only ``--owned-path`` is ownership (the worker's boundary and scan use it); a
+    # ``--research-owned-path`` is checked like one but never stands in for it.
+    declared = flag_paths("owned_path")
+    owned = declared + flag_paths("research_owned_path")
     try:
         refuse_kimi_if_disallowed(
             (agent,),
             (getattr(args, "model", None),),
             mode=str(getattr(args, "mode", "") or ""),
             paths=owned,
+            declared_paths=declared,
             repo=repo_role,
             review=bool(getattr(args, "review", False))
             or bool(getattr(args, "review_attempt", None))

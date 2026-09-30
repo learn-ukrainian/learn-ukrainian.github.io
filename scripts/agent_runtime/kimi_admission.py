@@ -50,6 +50,9 @@ _POLICY = "KIMI CODING-ONLY"
 # Modes. Only workspace-write implementation is admitted; the other labels
 # name the activity an entry point is about to perform.
 ADMITTED_MODE = "workspace-write"
+# ``tool_config`` key carrying the task's declared owned paths from dispatch to the
+# runner and the adapters, which hand them to the same gate.
+OWNED_PATHS_KEY = "kimi_owned_paths"
 ACP_MODE = "acp"
 REVIEW_MODE = "review"
 _MODE_ACTIVITIES = {
@@ -141,6 +144,19 @@ _GLOB_CHARS = frozenset("*?[")
 _SCOPE_SKIPPED_DIRS = frozenset({".git", "node_modules", "__pycache__", ".pytest_cache", ".astro", "dist"})
 _DIFF_SAMPLE_LIMIT = 5
 _GIT_TIMEOUT_S = 60
+_GIT_REDIRECT_ENV = frozenset(
+    {
+        "GIT_DIR",
+        "GIT_WORK_TREE",
+        "GIT_INDEX_FILE",
+        "GIT_OBJECT_DIRECTORY",
+        "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+        "GIT_NAMESPACE",
+        "GIT_CEILING_DIRECTORIES",
+        "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+        "GIT_COMMON_DIR",
+    }
+)
 
 
 class KimiAdmissionRefused(ValueError):
@@ -515,6 +531,7 @@ def refuse_kimi_if_disallowed(
     prompt_file: str | None = None,
     repo_root: Path | None = None,
     trees: Sequence[ContentTree] | Callable[[], Sequence[ContentTree]] = (),
+    declared_paths: Iterable[str] | None = None,
 ) -> None:
     """Raise ``KimiAdmissionRefused`` when any effective seat or model is Kimi and the work is not admitted.
 
@@ -522,7 +539,9 @@ def refuse_kimi_if_disallowed(
     models after every override, pin and substitution. ``mode`` is the
     runtime mode (only ``workspace-write`` is admitted) or an activity label
     (``ACP_MODE``, ``REVIEW_MODE``). ``paths`` are the owned paths, each of
-    which must be on the allowlist. ``repo`` is the fleet repository role and
+    which must be on the allowlist; a workspace-write call must declare at
+    least one (``declared_paths``, default ``paths``, is what counts as
+    declared ownership) and empty ownership is refused. ``repo`` is the fleet repository role and
     ``repo_root`` holds the curriculum manifest read for ``research_track``.
 
     Only when every one of those checks admits are the owned paths read in
@@ -536,9 +555,14 @@ def refuse_kimi_if_disallowed(
     if seat is None:
         return
     owned = tuple(paths)
+    declared = owned if declared_paths is None else tuple(declared_paths)
     reasons: list[str] = []
     if mode != ADMITTED_MODE:
         reasons.append(_MODE_ACTIVITIES.get(mode) or f"--mode {mode} (only {ADMITTED_MODE} implementation is admitted)")
+    elif not declared:
+        reasons.append(
+            f"{ADMITTED_MODE} without an owned path (declare at least one allowlisted owned file or directory)"
+        )
     config = tool_config or {}
     if review or any(config.get(key) for key in _REVIEW_TOOL_CONFIG_KEYS):
         reasons.append("review dispatches")
@@ -556,6 +580,79 @@ def refuse_kimi_if_disallowed(
         reasons.extend(_content_reasons(owned, trees))
     if reasons:
         raise KimiAdmissionRefused(format_refusal(seat, reasons))
+
+
+def _git_env() -> dict[str, str]:
+    """The environment without repo-redirecting Git variables, so ``cwd`` names the repository."""
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if key not in _GIT_REDIRECT_ENV and not key.startswith("PRE_COMMIT")
+    }
+
+
+def worktree_trees(worktree: Path, *, env: Mapping[str, str] | None = None) -> list[ContentTree]:
+    """A worktree as a Kimi worker sees it: its files on disk and the commit checked out there.
+
+    Raises ``RuntimeError`` when the checked-out commit cannot be resolved.
+    """
+    git_env = _git_env() if env is None else env
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", "HEAD^{commit}"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=dict(git_env),
+            timeout=_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError(f"cannot resolve the commit checked out in {worktree} ({exc})") from exc
+    head = (proc.stdout or "").strip() if proc.returncode == 0 else ""
+    if not head:
+        raise RuntimeError(f"cannot resolve the commit checked out in {worktree}")
+    return [DirectoryTree(worktree), CommitTree(worktree, head, env=git_env)]
+
+
+def owned_paths_from_config(tool_config: Mapping[str, Any] | None) -> tuple[str, ...]:
+    """The owned paths dispatch declared in ``tool_config`` (``OWNED_PATHS_KEY``); empty when absent."""
+    raw = (tool_config or {}).get(OWNED_PATHS_KEY)
+    if isinstance(raw, str):
+        raw = [raw]
+    if not isinstance(raw, (list, tuple)):
+        return ()
+    return tuple(str(item) for item in raw if isinstance(item, str) and item.strip())
+
+
+def refuse_kimi_execution(
+    participants: Iterable[str | None],
+    models: Iterable[str | None] = (),
+    *,
+    mode: str,
+    cwd: Path | None,
+    tool_config: Mapping[str, Any] | None,
+) -> None:
+    """The runtime and adapter form of the gate: ownership from ``tool_config``, content read in ``cwd``.
+
+    Calls ``refuse_kimi_if_disallowed`` with the declared owned paths and the
+    execution tree (``cwd`` on disk and at its checked-out commit); no cwd is
+    a refusal. Runs before any launch plan, attribution or provisioning.
+    """
+
+    def trees() -> list[ContentTree]:
+        if cwd is None:
+            raise RuntimeError("no execution tree (no cwd)")
+        return worktree_trees(Path(cwd))
+
+    refuse_kimi_if_disallowed(
+        participants,
+        models,
+        mode=mode,
+        paths=owned_paths_from_config(tool_config),
+        tool_config=tool_config,
+        trees=trees,
+    )
 
 
 def _content_reasons(

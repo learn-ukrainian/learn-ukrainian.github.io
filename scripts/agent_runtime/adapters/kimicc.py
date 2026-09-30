@@ -21,7 +21,7 @@ from scripts.review.model_catalog import (
     resolve_kimi_model,
 )
 
-from ..kimi_admission import ADMITTED_MODE, format_refusal, refuse_kimi_if_disallowed
+from ..kimi_admission import ADMITTED_MODE, OWNED_PATHS_KEY, format_refusal, refuse_kimi_execution
 from ..result import ParseResult
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
 from .base import InvocationPlan
@@ -141,7 +141,7 @@ class KimiccHarness:
         effort: str | None = None,
     ) -> InvocationPlan:
         tc: dict[str, Any] = tool_config or {}
-        refuse_kimi_if_disallowed(("kimicc",), (model,), mode=mode, tool_config=tc)
+        refuse_kimi_execution(("kimicc",), (model,), mode=mode, cwd=cwd, tool_config=tc)
         if trail_isolation_requested(tc):
             raise TrailIsolationError(f"KimiccHarness: {format_refusal('kimicc', ['trail sessions'])}")
         if session_id is not None:
@@ -167,7 +167,7 @@ class KimiccHarness:
         if not isinstance(coding_model_id, str) or not coding_model_id.strip():
             raise ValueError(f"KimiccHarness: catalog model {model_id!r} has no coding_model_id")
 
-        unsupported = sorted(set(tc) - _SUPPORTED_TOOL_CONFIG_KEYS - {"harness"})
+        unsupported = sorted(set(tc) - _SUPPORTED_TOOL_CONFIG_KEYS - {"harness", OWNED_PATHS_KEY})
         if unsupported:
             raise ValueError(f"KimiccHarness: unsupported tool_config keys: {unsupported}")
 

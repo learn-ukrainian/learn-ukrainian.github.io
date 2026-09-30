@@ -24,7 +24,7 @@ from typing import Any
 from scripts.review.model_catalog import kimi_model_aliases
 
 from ..failover import GH_AUTH_FAILURE_RE
-from ..kimi_admission import ADMITTED_MODE, format_refusal, refuse_kimi_if_disallowed
+from ..kimi_admission import ADMITTED_MODE, format_refusal, refuse_kimi_execution
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from ..trail_isolation import TrailIsolationError, trail_isolation_requested
@@ -87,7 +87,7 @@ class KimiAdapter:
     ) -> InvocationPlan:
         config = tool_config or {}
         harness = config.get("harness")
-        refuse_kimi_if_disallowed(("kimi",), (model,), mode=mode, tool_config=config)
+        refuse_kimi_execution(("kimi",), (model,), mode=mode, cwd=cwd, tool_config=config)
         if trail_isolation_requested(config):
             raise TrailIsolationError(f"KimiAdapter: {format_refusal('kimi', ['trail sessions'])}")
         if harness == "kimicc":

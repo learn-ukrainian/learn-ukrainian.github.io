@@ -9,6 +9,7 @@ from pathlib import Path
 import pytest
 
 from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+from tests.agent_runtime.adapters.kimi_admitted import admitted_tool_config
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 _WRAPPER = _REPO_ROOT / "scripts" / "agent_runtime" / "kimicc_headless.sh"
@@ -70,7 +71,7 @@ def _adapter_plan(
         model=model,
         task_id="kimicc-headless-contract",
         session_id=None,
-        tool_config=tool_config,
+        tool_config=admitted_tool_config(tmp_path, tool_config),
         effort=effort,
     )
 
