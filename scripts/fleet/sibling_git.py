@@ -101,6 +101,7 @@ class Git:
             }
         )
         self.options = [
+            "--no-pager",
             "-c",
             f"core.hooksPath={hooks}",
             "-c",
@@ -118,7 +119,33 @@ class Git:
             "-c",
             "core.pager=cat",
             "-c",
+            "core.editor=/usr/bin/false",
+            "-c",
+            "sequence.editor=/usr/bin/false",
+            "-c",
+            "core.askPass=/usr/bin/false",
+            "-c",
+            "merge.verifySignatures=false",
+            "-c",
+            "merge.gpgSign=false",
+            "-c",
+            "gpg.program=/usr/bin/false",
+            "-c",
+            "gpg.openpgp.program=/usr/bin/false",
+            "-c",
+            "gpg.x509.program=/usr/bin/false",
+            "-c",
+            "gpg.ssh.program=/usr/bin/false",
+            "-c",
+            "diff.external=/usr/bin/false",
+            "-c",
             "credential.helper=",
+            "-c",
+            "credential.interactive=false",
+            "-c",
+            "protocol.allow=never",
+            "-c",
+            "protocol.ssh.allow=always",
             "-c",
             "fetch.writeCommitGraph=false",
         ]
@@ -173,9 +200,18 @@ def _safe_config(git: Git, path: Path) -> None:
             key in {"core.worktree", "core.sshcommand", "core.attributesfile"}
             or (key == "core.bare" and value != "false")
             or key.startswith(("include.", "includeif.", "url."))
-            or key in {"core.gitproxy", "extensions.refstorage"}
-            or (key.startswith("remote.") and key.endswith((".uploadpack", ".vcs")))
+            or key in {
+                "core.gitproxy", "core.alternaterefscommand", "extensions.refstorage",
+                "extensions.partialclone", "gc.recentobjectshook", "gpg.ssh.defaultkeycommand",
+            }
+            or (key.startswith("remote.") and key.endswith((".uploadpack", ".vcs", ".proxy", ".proxyauthmethod", ".promisor")))
             or key.startswith("uploadpack.")
+            or key.startswith("http.")
+            or (key.startswith("credential.") and key.endswith(".helper") and key != "credential.helper")
+            or (key.startswith("diff.") and key.endswith((".command", ".textconv")))
+            or (key.startswith("gpg.") and key.endswith("program") and key not in {
+                "gpg.program", "gpg.openpgp.program", "gpg.x509.program", "gpg.ssh.program",
+            })
             or (key.startswith("branch.") and key.endswith(".mergeoptions"))
         ):
             raise Refusal("unsupported redirect, transport, or executable configuration")
@@ -300,7 +336,16 @@ def sync_main(repo: Repository, primary: Path, git: Git) -> dict:
     _checkout_safe(git, repo.checkout, fetched)
     if preflight() != old:
         raise Refusal("checkout changed during fetch")
-    git.text(repo.checkout, "merge", "--ff-only", "--no-edit", "--no-stat", fetched)
+    added = set(git.text(
+        repo.checkout, "diff", "--no-ext-diff", "--no-textconv", "--no-renames",
+        "--name-only", "--diff-filter=A", "-z", old, fetched, "--",
+    ).split("\0")) - {""}
+    ignored = set(git.text(
+        repo.checkout, "ls-files", "--others", "--ignored", "--exclude-standard", "-z",
+    ).split("\0")) - {""}
+    if added & ignored:
+        raise Refusal("fast-forward would overwrite ignored local files; preserve local work")
+    git.text(repo.checkout, "merge", "--ff-only", "--no-edit", "--no-stat", "--no-overwrite-ignore", fetched)
     if git.text(repo.checkout, "rev-parse", "HEAD") != fetched:
         raise Refusal("fast-forward verification failed")
     _clean(git, repo.checkout)

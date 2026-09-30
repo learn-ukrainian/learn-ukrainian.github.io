@@ -2,10 +2,13 @@
 
 Use `scripts.fleet.sibling_git` from the repository root owning the deployed
 primary-checkout hook. From a dispatch root, use the shared project's absolute
-interpreter. Set `PYTHONDONTWRITEBYTECODE=1` in the session environment before
+interpreter and that worktree's own deployed hook copy; a hook copy in another
+root does not satisfy its cwd rule. Set `PYTHONDONTWRITEBYTECODE=1` in the session environment before
 invoking the helper: Python imports packages before module code can prevent
 cache writes. Invoke each command separately, with no environment prefix,
 redirect, shell composition or interpreter options.
+The usability check reads Python environment settings from the hook process.
+It assumes the hook and command inherit the same session environment.
 
 The examples below use the project interpreter; replace its spelling with the
 absolute project interpreter path when sending a command through the hook.
@@ -26,6 +29,9 @@ uses the existing removal lock and claim policy, never force, unlock, branch
 pruning or recovery writes. The dispatch lock must already exist; unmanaged
 checkouts go through the existing cleanup workflow. No public repository
 files, index, refs or worktree metadata are written by these verbs.
+Before fast-forwarding, the helper compares added paths against ignored local
+files and refuses any collision. Git's `--no-overwrite-ignore` also protects
+ignored files, including directory/file collisions and changes after the probe.
 
 Repository identities come only from `scripts/config/fleet_repos.yaml`.
 The public/default repository and unknown names are refused. The supported
@@ -47,11 +53,36 @@ executable with a controlled environment, empty hooks, disabled fsmonitor,
 submodule recursion and automatic maintenance. Raw sibling Git receives no
 new guard exemption.
 
+Execution-related configuration is handled as follows. The fixed options apply
+to every Git verb and probe, including the cleanup runner; installed global and
+system configuration is inspected but excluded from execution.
+
+| Configuration | Handling |
+| --- | --- |
+| `merge.verifySignatures`, `merge.gpgSign` | Fixed `false`; fast-forward does not verify or create signatures. |
+| `gpg.program`, `gpg.openpgp.program`, `gpg.x509.program`, `gpg.ssh.program` | Fixed `/usr/bin/false`; other `gpg.*program` keys and `gpg.ssh.defaultKeyCommand` refused. |
+| `gpg.ssh.allowedSignersFile` | Inert with signature verification disabled. |
+| `core.pager`, `pager.*` | Fixed `core.pager=cat` plus global `--no-pager`, covering command-specific pagers too. |
+| `core.editor`, `sequence.editor`, `core.askPass` | Fixed `/usr/bin/false`; terminal and credential prompts disabled. |
+| `diff.external` | Fixed `/usr/bin/false`; the added-path diff also uses `--no-ext-diff --no-textconv`. |
+| `diff.*.command`, `diff.*.textconv` | Refused, including unused drivers. |
+| `credential.helper` | Empty fixed override resets the helper list; URL-scoped `credential.*.helper` refused. |
+| `protocol.allow`, `protocol.*.allow` | Fixed default `never`, SSH `always`; controlled `GIT_ALLOW_PROTOCOL=ssh` excludes every other protocol, including remote helpers. |
+| `http.*`, `remote.*.proxy`, `remote.*.proxyAuthMethod` | Refused; only the registered SSH transport is supported. |
+| `core.hooksPath`, `core.fsmonitor` | Empty hook directory and fixed `false`. |
+| `core.sshCommand`, `core.gitProxy`, `url.*`, `remote.*.uploadpack`, `remote.*.vcs`, `uploadpack.*` | Refused; SSH and upload-pack selection are fixed by the runner. |
+| `core.alternateRefsCommand`, `extensions.partialClone`, `remote.*.promisor`, `gc.recentObjectsHook` | Refused; implicit fetches and object enumeration commands are unsupported. |
+| `filter.*` | Applicable attribute-declared filters refused before status/checkout; unused filter settings are inert. |
+| `submodule.recurse`, `fetch.recurseSubmodules`, `maintenance.auto`, `gc.auto`, `fetch.writeCommitGraph` | Disabled; submodule trees refused and fetch explicitly disables recursion and maintenance. |
+
 Exit code `0` means the verb succeeded; `2` means invalid usage, a dependency
 failure or a refusal. Refusals preserve local work and include examples. Never
 fall back to force, a shell-parsing exemption or an emergency override.
 
-The hook validates literal command identity and module location; the helper
-validates effect boundaries. Installed host tooling and the repository's own
-code are trusted. This interface is not a sandbox for a compromised host or
+The module and its primary-root checks enforce the effect boundary. The hook's
+literal-command and module-location checks are a usability rail, not a security
+boundary: alternate interpreter invocations follow the existing hook policy.
+Only a shlex word pair `-m scripts.fleet.sibling_git` triggers this rail;
+read-only searches and pytest selections mentioning the name follow normal policy.
+Installed host tooling and the repository's own code are trusted. This interface is not a sandbox for a compromised host or
 concurrent malicious replacement of trusted code or repository metadata.

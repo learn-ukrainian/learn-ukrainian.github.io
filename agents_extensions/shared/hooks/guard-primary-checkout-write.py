@@ -2433,10 +2433,10 @@ def _block_uncertain(reason: str) -> int:
 
 
 def _sibling_git_invocation(command: str, cwd: str) -> bool:
-    """Accept one literal argv in the source root owning this hook (#9309).
+    """Usability rail for literal argv in the root owning this hook (#9309).
 
     This intentionally does not extend the shell parser. It runs before that
-    parser and never authorizes a shell composition or a nested invocation.
+    parser; the module's primary-root and effect checks provide the boundary.
     """
     if any(c in command for c in "\n\r;$`&|<>(){}[]*?~\\"):
         return False
@@ -2495,7 +2495,8 @@ def _sibling_git_invocation(command: str, cwd: str) -> bool:
 
 def _sibling_git_refusal() -> int:
     sys.stderr.write(
-        "BLOCKED: sibling maintenance requires one complete literal invocation from the root owning this hook.\n"
+        "BLOCKED: the sibling maintenance usability rail requires one complete literal invocation from the root owning this hook.\n"
+        "The module and its primary-root checks provide the security boundary; this hook is a usability rail.\n"
         "Set PYTHONDONTWRITEBYTECODE=1 in the session first; use the shared project's absolute interpreter.\n"
         "No interpreter options, PYTHONPATH, prefixes, nested shells, redirects or trailing commands.\n"
         "Copyable examples from the primary root (use the shared absolute interpreter from a dispatch root):\n"
@@ -2528,7 +2529,11 @@ def main() -> int:
         command = raw_command
         if not command.strip(" \t\n"):
             return 0
-        if "scripts.fleet.sibling_git" in command:
+        try:
+            words = shlex.split(command)
+        except ValueError:
+            words = []  # The existing shell parser handles malformed commands.
+        if any(words[i:i + 2] == ["-m", "scripts.fleet.sibling_git"] for i in range(len(words) - 1)):
             return 0 if _sibling_git_invocation(command, cwd) else _sibling_git_refusal()
         raw_targets = []
     else:

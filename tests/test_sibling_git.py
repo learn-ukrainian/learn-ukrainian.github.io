@@ -122,6 +122,23 @@ def advance(world, tmp_path, filename="file.txt", text="fetched\n"):
     return sha
 
 
+def signed_advance(world, tmp_path, kind):
+    """Real commit object with a signature header to trigger Git verification."""
+    sha = advance(world, tmp_path)
+    writer = tmp_path / "writer"
+    armor = "SSH SIGNATURE" if kind == "ssh" else "PGP SIGNATURE"
+    signature = f"gpgsig -----BEGIN {armor}-----\n Zml4dHVyZQ==\n -----END {armor}-----"
+    raw = git(writer, "cat-file", "commit", sha)
+    # Add a signed child of the already-pushed tip; never rewrite the fixture remote.
+    raw = "\n".join(f"parent {sha}" if line.startswith("parent ") else line for line in raw.split("\n"))
+    payload = tmp_path / "signed-commit"
+    payload.write_text(raw.replace("\n\n", f"\n{signature}\n\n", 1) + "\n")
+    signed = git(writer, "hash-object", "-t", "commit", "-w", str(payload))
+    git(writer, "update-ref", "refs/heads/main", signed)
+    git(writer, "push", "origin", "main")
+    return signed
+
+
 def tree(world, task="finished task"):
     primary, sibling, _ = world
     path = sibling / ".worktrees/dispatch/codex" / task
@@ -286,10 +303,15 @@ def tripwire(world, tmp_path):
         "url-rewrite",
         "ssh-command",
         "global-filter",
+        "gpg",
+        "ssh-signature",
     ],
 )
 def test_executable_configuration_never_runs(world, tmp_path, monkeypatch, kind):
-    advance(world, tmp_path)
+    if kind in {"gpg", "ssh-signature"}:
+        sha = signed_advance(world, tmp_path, "ssh" if kind == "ssh-signature" else "gpg")
+    else:
+        advance(world, tmp_path)
     _, sibling, _ = world
     script = tripwire(world, tmp_path)
     if kind == "hooks":
@@ -311,14 +333,188 @@ def test_executable_configuration_never_runs(world, tmp_path, monkeypatch, kind)
         git(sibling, "config", "url.ext::trip.insteadOf", "git@github.com:")
     elif kind == "ssh-command":
         git(sibling, "config", "core.sshCommand", str(script))
+    elif kind in {"gpg", "ssh-signature"}:
+        git(sibling, "config", "merge.verifySignatures", "true")
+        if kind == "gpg":
+            git(sibling, "config", "gpg.program", str(script))
+        else:
+            git(sibling, "config", "gpg.format", "ssh")
+            git(sibling, "config", "gpg.ssh.program", str(script))
+            signers = tmp_path / "allowed-signers"
+            signers.write_text("fixture@example.invalid ssh-ed25519 Zml4dHVyZQ==\n")
+            git(sibling, "config", "gpg.ssh.allowedSignersFile", str(signers))
     else:
         home = Path(os.environ["HOME"])
         home.mkdir()
         (home / ".gitconfig").write_text(f'[filter "trip"]\n process = {script}\n required = true\n')
         (sibling / ".gitattributes").write_text("*.txt filter=trip\n")
     code, _, err = invoke("sync-main")
-    assert code == (0 if kind in {"hooks", "fsmonitor"} else 2), err
+    assert code == (0 if kind in {"hooks", "fsmonitor", "gpg", "ssh-signature"} else 2), err
+    if kind in {"gpg", "ssh-signature"}:
+        assert git(sibling, "rev-parse", "HEAD") == sha
     assert not (world[0] / "tripwire").exists()
+
+
+@pytest.mark.parametrize("verb", ["status", "sync-main", "worktree-remove"])
+@pytest.mark.parametrize(
+    "key,refused",
+    [
+        ("gpg.program", False),
+        ("gpg.openpgp.program", False),
+        ("gpg.x509.program", False),
+        ("gpg.ssh.program", False),
+        ("gpg.future.program", True),
+        ("gpg.ssh.defaultKeyCommand", True),
+        ("merge.verifySignatures", False),
+        ("merge.gpgSign", False),
+        ("core.pager", False),
+        ("pager.status", False),
+        ("pager.fetch", False),
+        ("pager.merge", False),
+        ("pager.worktree", False),
+        ("pager.diff", False),
+        ("core.editor", False),
+        ("sequence.editor", False),
+        ("diff.external", False),
+        ("diff.trip.command", True),
+        ("diff.trip.textconv", True),
+        ("credential.helper", False),
+        ("credential.ssh://git@github.com.helper", True),
+        ("core.askPass", False),
+        ("core.gitProxy", True),
+        ("http.proxy", True),
+        ("http.ssh://git@github.com.proxy", True),
+        ("remote.origin.proxy", True),
+        ("remote.origin.proxyAuthMethod", True),
+        ("core.alternateRefsCommand", True),
+        ("gc.recentObjectsHook", True),
+        ("extensions.partialClone", True),
+        ("remote.hidden.promisor", True),
+    ],
+)
+def test_swept_executable_keys_never_run(world, managed, tmp_path, key, refused, verb):
+    sha = advance(world, tmp_path)
+    sibling = world[1]
+    script = tripwire(world, tmp_path)
+    command = shlex.quote(str(script))
+    value = command
+    if key == "credential.helper" or key.startswith("http."):
+        value = "!" + command
+    elif key.endswith(".promisor"):
+        value = "true"
+        git(sibling, "config", "remote.hidden.url", "ext::" + command)
+    elif key.startswith("merge."):
+        value = "true"
+        git(sibling, "config", "gpg.program", str(script))
+    git(sibling, "config", "--add", key, value)
+    if key == "credential.helper":
+        # Empty helper override must clear every value, not just the last one.
+        git(sibling, "config", "--add", key, "!" + command)
+    if key.startswith("diff.trip."):
+        (sibling / ".git/info/attributes").write_text("*.txt diff=trip\n")
+    before = git(sibling, "rev-parse", "HEAD")
+    code, _, err = invoke(verb, managed if verb == "worktree-remove" else None)
+    assert code == (2 if refused else 0), err
+    assert not (world[0] / "tripwire").exists()
+    if refused:
+        assert managed.exists()
+        assert git(sibling, "rev-parse", "HEAD") == before
+    elif verb == "sync-main":
+        assert git(sibling, "rev-parse", "HEAD") == sha
+    elif verb == "worktree-remove":
+        assert not managed.exists()
+
+
+@pytest.mark.parametrize("key", ["protocol.allow", "protocol.ext.allow", "protocol.file.allow", "protocol.ssh.allow"])
+def test_protocol_configuration_cannot_enable_tripwire(world, tmp_path, key):
+    advance(world, tmp_path)
+    script = tripwire(world, tmp_path)
+    git(world[1], "config", key, "always")
+    assert invoke("sync-main")[0] == 0
+    with sg.git_session() as runner:
+        probe = runner.run(world[1], ["fetch", "--", "ext::" + shlex.quote(str(script)), "refs/heads/main"])
+    assert probe.returncode != 0
+    assert "transport 'ext' not allowed" in probe.stderr
+    assert not (world[0] / "tripwire").exists()
+
+
+@pytest.mark.parametrize("kind", ["gpg", "ssh"])
+def test_signed_fixture_triggers_unprotected_verifier(world, tmp_path, kind):
+    sha = signed_advance(world, tmp_path, kind)
+    sibling = world[1]
+    git(sibling, "fetch", str(world[2]), "main")
+    fired = tmp_path / "unprotected-verifier-fired"
+    script = tmp_path / "unprotected verifier"
+    script.write_text(f"#!/bin/sh\ntouch {shlex.quote(str(fired))}\nexit 1\n")
+    script.chmod(0o700)
+    git(sibling, "config", "merge.verifySignatures", "true")
+    git(sibling, "config", "gpg.program" if kind == "gpg" else "gpg.ssh.program", str(script))
+    if kind == "ssh":
+        git(sibling, "config", "gpg.format", "ssh")
+        git(sibling, "config", "gpg.ssh.allowedSignersFile", str(tmp_path / "signers"))
+        (tmp_path / "signers").write_text("fixture@example.invalid ssh-ed25519 Zml4dHVyZQ==\n")
+    with pytest.raises(subprocess.CalledProcessError):
+        git(sibling, "merge", "--ff-only", sha)
+    assert fired.exists(), "signed fixture did not reach the configured verifier"
+
+
+@pytest.mark.parametrize("name", ["notes.txt", " leading.txt", "line\nbreak.txt"])
+def test_sync_preserves_ignored_local_file(world, tmp_path, name):
+    sibling = world[1]
+    (sibling / ".git/info/exclude").write_text("*.txt\n")
+    local = sibling / name
+    local.write_text("ignored local work\n")
+    advance(world, tmp_path, name, "upstream\n")
+    old = git(sibling, "rev-parse", "HEAD")
+    code, _, err = invoke("sync-main")
+    assert code == 2
+    assert ("control or formatting characters" if "\n" in name else "overwrite ignored local files") in err
+    assert git(sibling, "rev-parse", "HEAD") == old
+    assert local.read_text() == "ignored local work\n"
+
+
+def test_sync_allows_unrelated_ignored_local_file(world, tmp_path):
+    sibling = world[1]
+    (sibling / ".git/info/exclude").write_text("notes.txt\n")
+    (sibling / "notes.txt").write_text("ignored local work\n")
+    sha = advance(world, tmp_path)
+    code, _, err = invoke("sync-main")
+    assert code == 0, err
+    assert git(sibling, "rev-parse", "HEAD") == sha
+    assert (sibling / "notes.txt").read_text() == "ignored local work\n"
+
+
+@pytest.mark.parametrize("kind", ["file-to-directory", "directory-to-file", "after-probe"])
+def test_merge_guard_preserves_ignored_local_collisions(world, tmp_path, monkeypatch, kind):
+    sibling = world[1]
+    (sibling / ".git/info/exclude").write_text("notes\n")
+    advance(world, tmp_path)
+    writer = tmp_path / "writer"
+    incoming = "notes/item.txt" if kind == "file-to-directory" else "notes"
+    if "/" in incoming:
+        (writer / "notes").mkdir()
+    commit(writer, incoming, "incoming\n")
+    git(writer, "push", "origin", "main")
+    local = sibling / ("notes/item.txt" if kind == "directory-to-file" else "notes")
+    local.parent.mkdir(parents=True, exist_ok=True)
+    if kind != "after-probe":
+        local.write_text("ignored local work\n")
+    else:
+        original = sg.Git.text
+
+        def inject_after_probe(self, path, *args):
+            if args[0] == "merge":
+                local.write_text("ignored local work\n")
+            return original(self, path, *args)
+
+        monkeypatch.setattr(sg.Git, "text", inject_after_probe)
+    old = git(sibling, "rev-parse", "HEAD")
+    old_content = (sibling / "file.txt").read_bytes()
+    code, _, err = invoke("sync-main")
+    assert code == 2 and "Git merge failed" in err
+    assert git(sibling, "rev-parse", "HEAD") == old
+    assert (sibling / "file.txt").read_bytes() == old_content
+    assert local.read_text() == "ignored local work\n"
 
 
 def test_new_commit_filter_attribute_refused(world, tmp_path):
@@ -460,8 +656,6 @@ def test_documented_verbs_through_deployed_hook(world, managed, tmp_path, monkey
 
 
 ATTACKS = [
-    "bash -c {quoted}",
-    "eval {quoted}",
     "true && {cmd}",
     "false && cd x; {cmd}",
     "cd missing/..; {cmd}",
@@ -483,9 +677,7 @@ ATTACKS = [
     "{cmd} --force",
     "{cmd} --repo public",
     "{interpreter} -I -m scripts.fleet.sibling_git sync-main --repo test",
-    "{interpreter} -c 'import scripts.fleet.sibling_git'",
     "python -m scripts.fleet.sibling_git sync-main --repo test",
-    "{interpreter} -m scripts.fleet.sibling_gitx sync-main --repo test",
 ]
 
 
@@ -501,6 +693,36 @@ def test_invocation_attacks_refused(world, monkeypatch, shape):
     assert snapshot(primary) == before
     shutil.rmtree(primary / "scripts")
     shutil.rmtree(primary / "agents_extensions")
+
+
+@pytest.mark.parametrize(
+    "shape",
+    [
+        "rg scripts.fleet.sibling_git scripts",
+        "{interpreter} -m pytest -k scripts.fleet.sibling_git",
+        "bash -c {quoted}",
+        "eval {quoted}",
+        "{interpreter} -c 'import scripts.fleet.sibling_git'",
+        "{interpreter} -m scripts.fleet.sibling_gitx sync-main --repo test",
+    ],
+)
+def test_module_mentions_without_word_pair_match_main(world, monkeypatch, shape):
+    primary = world[0]
+    hook = fixture_hook(primary, monkeypatch)
+    interpreter = shlex.quote(str(primary / ".venv/bin/python"))
+    cmd = f"{interpreter} -m scripts.fleet.sibling_git sync-main --repo test"
+    command = shape.format(interpreter=interpreter, quoted=shlex.quote(cmd))
+    baseline = types.ModuleType("main_guard_baseline")
+    baseline.__file__ = hook.__file__
+    source = git(ROOT, "show", "origin/main:agents_extensions/shared/hooks/guard-primary-checkout-write.py")
+    exec(compile(source, baseline.__file__, "exec"), baseline.__dict__)
+    before = snapshot(primary)
+    try:
+        assert decide(hook, command, primary) == decide(baseline, command, primary) == 0
+        assert snapshot(primary) == before
+    finally:
+        shutil.rmtree(primary / "scripts")
+        shutil.rmtree(primary / "agents_extensions")
 
 
 @pytest.mark.parametrize(
