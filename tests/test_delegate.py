@@ -3737,6 +3737,38 @@ def test_parse_review_verdict_accepts_commonmark_paragraph_lines(label, response
     assert delegate.parse_review_verdict(response) == expected
 
 
+@pytest.mark.parametrize(
+    ("label", "response", "expected"),
+    [
+        ("h2-plain", "Findings.\n\n## VERDICT: REQUEST_CHANGES\n", "REQUEST_CHANGES"),
+        ("h1-bold", "# **VERDICT: APPROVE**\n", "APPROVE"),
+        ("h6-blocked", "###### VERDICT: BLOCKED\n", "BLOCKED"),
+        ("three-space-indent-heading", "   ## VERDICT: APPROVE\n", "APPROVE"),
+    ],
+)
+def test_parse_review_verdict_accepts_atx_heading_lines(label, response, expected):
+    """#9305: a verdict rendered as a Markdown heading is still the verdict."""
+    assert delegate.parse_review_verdict(response) == expected
+    assert delegate._review_verdict_failure_reason(response) is None
+
+
+@pytest.mark.parametrize(
+    ("label", "response"),
+    [
+        ("quoted-heading", "> ## VERDICT: APPROVE\n"),
+        ("fenced-heading", "```\n## VERDICT: APPROVE\n```\n"),
+        ("four-space-indented-heading", "Example:\n\n    ## VERDICT: APPROVE\n"),
+        # CommonMark requires a space after the ``#`` run, so this is a paragraph.
+        ("heading-marker-without-space", "##VERDICT: APPROVE\n"),
+        ("seven-hashes-is-not-a-heading", "####### VERDICT: APPROVE\n"),
+        ("heading-with-prose-prefix", "## The VERDICT: APPROVE\n"),
+    ],
+)
+def test_parse_review_verdict_rejects_non_verdict_heading_lines(label, response):
+    """#9305: headings that are quoted, code, malformed, or not label-first are not verdicts."""
+    assert delegate.parse_review_verdict(response) is None
+
+
 def test_run_worker_non_review_read_only_without_verdict_stays_done(
     tmp_tasks_dir,
     tmp_path,
