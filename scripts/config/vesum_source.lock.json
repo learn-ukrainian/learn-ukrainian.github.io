@@ -11,19 +11,15 @@
     "license": "CC BY-NC-SA 4.0"
   },
   "pipeline": {
-    "importer_version": "v2",
+    "importer_version": "v1",
     "marker_policy_version": "v1",
     "parser_module": {
       "path": "scripts/rag/vesum_reingest.py",
-      "sha256": "66cbe31330ccbca8d03928fb18e46dced9033995e1db1bbde4b75fca63567536"
+      "sha256": "d98ffb7f3dfd7503c901e554e02dbef61c728672ba554a2d2d8c50fc01059477"
     },
     "operator_entrypoint": {
       "path": "scripts/rag/build_vesum_shadow.py",
       "sha256": "780653661f447727a6498cbde9f9ac0bfd9b78dbfeb241b46ce08ce425c58ced"
-    },
-    "word_identity": {
-      "path": "scripts/rag/word_identity.py",
-      "sha256": "91093b910480ce783cd58f0213e3c3130aa2c7e41a8bb7cf2c4b19c3754dccdb"
     }
   },
   "marker_policy": {
@@ -72,6 +68,6 @@
       "vulg": 4710
     },
     "canonical_jsonl_sha256": "53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680",
-    "fixture_manifest_sha256": "87ee0dd73035b002617b8db5af96ac074551ada1814ebef7760ba9c9a6b4d8dc"
+    "fixture_manifest_sha256": "3379450633465c7082a02b549d10b4881842051fbecf88e799ba4a2613e847d4"
   }
 }

@@ -627,11 +627,11 @@ class Sources:
     ) -> SourceResult[dict[str, list[dict]]]:
         """Read attested analyses or paradigms using Unicode word identity.
 
-        Prefer build-time indexed folded keys; retain the compatibility view's
-        marker exclusions and original four-column shape. Older stores use exact
-        given, casefolded, upper, title, capitalised and per-hyphen-part capitalised
-        candidates, then normalized filtering. Unreachable spellings in older
-        stores fail closed. Cache within the checked static identity.
+        Use indexed exact given, casefolded, upper, title, capitalised and
+        per-hyphen-part capitalised candidates, then normalized filtering through
+        the marker-filtered compatibility view. 1,490 forms and 297 lemmas remain
+        unreachable by these candidates and fail closed; a folded store is a
+        separate follow-up. Cache within the checked static identity.
         """
         requested = list(dict.fromkeys(values))
         digest, metadata = self._vesum_identity()
@@ -640,11 +640,9 @@ class Sources:
         column = "lemma" if paradigm else "word_form"
         if pending:
             with closing(open_readonly(self.vesum_db)) as conn:
-                folded_column = f"{column}_folded"
-                has_folded = folded_column in {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
                 for start in range(0, len(pending), BATCH_SIZE):
                     batch = pending[start : start + BATCH_SIZE]
-                    candidates = batch if has_folded else sorted({
+                    candidates = sorted({
                         candidate for value in batch
                         for candidate in (
                             value, value.casefold(), value.upper(), value.title(), value.capitalize(),
@@ -652,13 +650,9 @@ class Sources:
                         )
                     })
                     slots = ','.join('?' for _ in candidates)
-                    condition = (
-                        f"{column} IN (SELECT {column} FROM forms_all WHERE {folded_column} IN ({slots}))"
-                        if has_folded else f"{column} IN ({slots})"
-                    )
                     rows = conn.execute(
                         f"SELECT word_form, lemma, pos, tags FROM forms "
-                        f"WHERE {condition} "
+                        f"WHERE {column} IN ({slots}) "
                         "ORDER BY word_form, lemma, pos, tags", candidates,
                     )
                     found = {value: [] for value in batch}

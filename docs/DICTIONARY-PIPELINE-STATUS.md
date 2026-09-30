@@ -127,13 +127,12 @@ real witness fields to equal the option or one of those lemmas: VESUM
 `word_form`/`lemma`, СУМ-20 `headword`/`stressed_headword`, Грінченко and VTS
 `word`, ULIF `canonical_headword`. Only ULIF rows with `status='ok'` bind,
 including for invalid options; a negative lookup is not a word witness.
-Definitions and metadata cannot bind. The VESUM shadow builder writes indexed
-`word_form_folded` and `lemma_folded` columns using the receipt identity
-normalizer; analyses and paradigms query these keys through the unchanged,
-marker-filtered `forms` view. Source bytes and canonical JSONL stay unchanged.
-Older stores use indexed exact candidates (given, casefolded, upper, title,
+Definitions and metadata cannot bind. VESUM lookups use indexed exact
+candidates (given, casefolded, upper, title,
 capitalised and per-hyphen-part capitalised), followed by normalized filtering;
-spellings outside those candidates fail closed until a rebuilt store is activated.
+1,490 VESUM forms and 297 lemmas remain unreachable by those candidates and
+fail closed. A folded, indexed store is a separate follow-up; the builder and
+source lock remain unchanged here to preserve the frozen evaluation release.
 Text kinds (`pravopys`, `textbook`)
 require a whole-word match of the option or any attested VESUM paradigm form
 of its lemmas. Soft hyphens (U+00AD), including a following line break, are

@@ -1,4 +1,4 @@
-"""Shared citation identity for VESUM build keys and receipt comparisons."""
+"""Citation identity for receipt comparisons."""
 
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
 
