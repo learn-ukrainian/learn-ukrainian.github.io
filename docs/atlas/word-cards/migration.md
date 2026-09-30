@@ -32,6 +32,24 @@
 
 ## 3. Gate 1 — pilot inventory, then the A1–B1 vertical slice (before C1 touches the full store)
 
+### Foundation preparation (#9293)
+
+The module `scripts.atlas.word_card_foundation` exposes `freeze`, `allocate`, and `verify`; use the shared project interpreter. All paths are explicit;
+`freeze` requires exactly one sibling `*source-admission-receipt.json` binding
+the selection bytes and independent report digest. Selection serialization is
+UTF-8 JSON, sorted keys, two-space indentation, with a trailing newline.
+The freeze retains immutable literal selected-row captures, their selected-row
+digests, source-local partitions, separate counts, and DB file fingerprints.
+Reuse checks the captures and the current canonical source register; it does
+not re-query live databases. Registry and manifest use one logical record per line for review. `allocate` mints only enumerated legacy article and selected
+source-record IDs. It preserves aliases without inferring lexical equivalence;
+source-only MWE card mappings remain unresolved. Replay leaves registry bytes
+unchanged. No source DB is writable through these operations.
+Optional held-out membership is `{"heldout":["source:key"],"replay":[]}`;
+without it isolation is unverified. `verify --for-evaluation` refuses pending
+an established authenticated operator authority and acceptance thresholds.
+Exit 0 proves only the requested preparation operation, never either pilot gate.
+
 - **Denominator, first pilot:** the frozen pilot manifest (~150 lexemes with their MWEs and aspect pairs, including ordinary controls and cards that must stay ineligible). **Later coverage obligation, not a first-pilot gate:** all 4,512 PULS A1–B1 rows (962 + 1,386 + 2,164 in `puls_cefr`; 3,274 of today's articles carry a PULS A1–B1 level). VESUM accounting (Q-I5): every VESUM entry in scope is reported as *covered by a card*, *merged variant*, or *unresolved mapping*; source entries and cards are many-to-many and are counted separately.
 - **Pass criteria:** every pilot card renders; **every applicable mode works and every ineligible combination stays excluded** (not "every card produces practice in every live mode"): an ineligible field never yields an item, an ambiguous spelling-level assertion never satisfies a level rule (`mapping_evidenced`), a `medium`-identity card never feeds meaning practice; each exercise records `card_version` and generator version; withdrawal, changed-snapshot reimport and rollback (M8) behave as specified with current suppressions enforced; redirect/split checks (M9) pass; rebuild is byte-identical; language-lane sample review of generated items passes; zero model-written Ukrainian.
 - **Cut from the first pilot (kept as later obligations):** the full PULS slice before the first end-to-end proof; full proper-name/MWE expansion; dependencies on unrelated feature completion. **Not cut:** withdrawal, rollback, redirect/progress checks, semantic review, held-out evaluation.
