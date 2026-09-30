@@ -116,6 +116,27 @@ def read_message(message_id: int, quiet: bool = False):
     return msg
 
 
+def peek_message_route(message_id: int) -> dict | None:
+    """The recipient seat and ask metadata of one message, read without writing.
+
+    Admission checks use this instead of ``read_message``: it opens the
+    broker DB query-only, so it never migrates the schema or touches a
+    consumption flag. Returns None when the DB or the message is missing.
+    """
+    from ._db import connect_readonly
+
+    conn = connect_readonly()
+    if conn is None:
+        return None
+    try:
+        row = conn.execute("SELECT to_llm, data FROM messages WHERE id = ?", (message_id,)).fetchone()
+    finally:
+        conn.close()
+    if not row:
+        return None
+    return {"id": message_id, "to": row[0], "data": row[1]}
+
+
 OSASCRIPT_NOTIFICATION_TIMEOUT_SECONDS: float = 10.0
 
 

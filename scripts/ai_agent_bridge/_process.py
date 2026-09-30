@@ -17,7 +17,7 @@ from ._acp_compat import refuse_kimi_compat, require_compat_target, resolve_comp
 from ._ask_contract import requested_effort
 from ._ask_lifecycle import ask_target_model, record_ask_failure, record_ask_reply
 from ._db import get_db
-from ._messaging import acknowledge, read_message, send_message
+from ._messaging import acknowledge, peek_message_route, read_message, send_message
 
 _NO_TIMEOUT_CEILING_S = 86400
 
@@ -94,9 +94,14 @@ def process_message_for_recipient(
     failure, leaving the message unacknowledged and retryable.
 
     A Kimi recipient or target model raises ``KimiAdmissionRefused`` to the
-    caller before any reply, failure record or acknowledgement: the message
-    stays exactly as it was.
+    caller before any reply, failure record or acknowledgement: a Kimi
+    ``model`` is refused before any lookup, and the recipient is resolved
+    through a query-only read, so the database stays exactly as it was.
     """
+    refuse_kimi_compat("", model=model)
+    route = peek_message_route(message_id)
+    if route:
+        refuse_kimi_compat(str(route.get("to") or "").strip().lower(), model=model or ask_target_model(route))
     msg = read_message(message_id)
     if not msg:
         return None

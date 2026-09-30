@@ -883,13 +883,16 @@ def refuse_kimi_target(message_id: int, target: str) -> None:
     """The Kimi gate for draining one message: its target seat and the model it was sent to.
 
     Raises ``KimiAdmissionRefused`` before any reply, failure record or
-    acknowledgement; reading the message is the only access.
+    acknowledgement. A Kimi target is refused before any lookup; otherwise
+    the target model is read query-only, so the check never writes.
     """
     from ._acp_compat import refuse_kimi_compat
-    from ._messaging import read_message
+    from ._messaging import peek_message_route
 
-    msg = read_message(message_id, quiet=True)
-    refuse_kimi_compat(target, model=ask_target_model(msg) if msg else None)
+    refuse_kimi_compat(target)
+    route = peek_message_route(message_id)
+    if route:
+        refuse_kimi_compat(target, model=ask_target_model(route))
 
 
 def _process_target(message_id: int, target: str, options: dict[str, Any]) -> bool | None:

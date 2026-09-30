@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
+import re
+import sqlite3
 import subprocess
 import sys
 import types
@@ -20,7 +23,7 @@ from scripts.fleet_comms.request_executor import RequestExecutor
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _TOKEN = "KIMI CODING-ONLY"
 _BACKEND_OWNED = ("scripts/agent_runtime/runner.py", "tests/agent_runtime/test_runner.py")
-_UI_OWNED = ("site/src/components/Card.astro", "site/src/styles/course.css", "site/astro.config.mjs")
+_UI_OWNED = ("site/src/components/LiveStatus.tsx", "site/src/styles/match-up.css", "site/vitest.config.ts")
 
 
 def _fail(*_args, **_kwargs):
@@ -39,21 +42,23 @@ def _refusal(participants=("kimi",), models=(), **overrides) -> str | None:
 
 # --- the allowlist ---------------------------------------------------------------
 
-# Admitted: UI code, the named site/src/lib helpers, site config, verified backend
-# packages with their tests, CI and Dagger. Paths are normalized first.
+# Admitted: Cyrillic-free UI code, the named site/src/lib helpers, site config,
+# verified backend packages with their tests, CI and Dagger, and new files there.
+# Paths are normalized first.
 ADMITTED_PATHS = (
     "site/src/components/Card.astro",
-    "site/src/components/practice/SettingsDrawer.tsx",
-    "site/src/layouts/CourseLayout.astro",
+    "site/src/components/LiveStatus.tsx",
+    "site/src/components/practice/NewPanel.tsx",
+    "site/src/layouts/NewLayout.astro",
     "site/src/pages/index.astro",
-    "site/src/styles/course.css",
+    "site/src/styles/match-up.css",
     "site/src/css/x.css",
     "site/src/assets/logo.svg",
+    "site/src/assets/houston.webp",
     "site/src/lib/arc.ts",
     "site/src/lib/doc-nav.ts",
     "site/src/lib/readings.ts",
     "site/src/lib/a1-archive-routes.ts",
-    "site/astro.config.mjs",
     "site/vitest.config.ts",
     "scripts/agent_runtime/runner.py",
     "scripts/api/state_router.py",
@@ -69,6 +74,12 @@ ADMITTED_PATHS = (
     ".dagger/src/learn_ukrainian_ci/main.py",
     "./scripts/api/x.py",
     "scripts//ci/x.py",
+    # Directory and glob scopes whose every file is allowlisted and Cyrillic-free.
+    "scripts/storage/**",
+    "scripts/ci/",
+    "scripts/fleet_comms",
+    "site/src/pages/api/**",
+    "site/src/components/Live*.tsx",
 )
 
 # Refused: everything not on the allowlist (Ukrainian dataset exporters, wiki
@@ -191,6 +202,149 @@ def test_absolute_and_escaping_paths_are_refused(path):
     assert kimi_admission.normalize_owned_path(path) is None
     message = _refusal(paths=(path,))
     assert message and "is not a repository-relative path" in message
+
+
+# --- the content rule: Cyrillic text is Ukrainian content -----------------------------
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "site/src/components/CountSyllables.tsx",
+        "site/src/components/practice/SettingsDrawer.tsx",
+        "site/src/styles/course.css",
+        "site/src/layouts/CourseLayout.astro",
+        "site/astro.config.mjs",
+    ],
+)
+def test_an_allowlisted_file_with_cyrillic_text_is_refused(path):
+    assert kimi_admission.owned_path_reason(path) is None  # on the allowlist by path
+    message = _refusal(paths=(path,))
+    assert message and "Ukrainian content" in message and path in message
+
+
+def test_a_cyrillic_free_component_is_admitted():
+    path = "site/src/components/LiveStatus.tsx"
+    assert not kimi_admission.CYRILLIC.search((_REPO_ROOT / path).read_text(encoding="utf-8"))
+    assert _refusal(paths=(path,)) is None
+
+
+@pytest.mark.parametrize(
+    ("scope", "excluded"),
+    [
+        ("scripts/api/**", "scripts/api/hramatka_"),
+        ("scripts/api", "scripts/api/sources_router.py"),
+        ("scripts/api/", "scripts/api/hramatka_"),
+        ("scripts/orchestration/**", "scripts/orchestration/curriculum_"),
+        ("scripts/agent_runtime/**", "scripts/agent_runtime/adapters/kimi.py"),
+        ("tests/api/test_*.py", "tests/api/test_hramatka_"),
+    ],
+)
+def test_a_broad_scope_that_contains_an_excluded_file_is_refused(scope, excluded):
+    message = _refusal(paths=(scope,))
+    assert message and f"owned scope {kimi_admission.normalize_owned_path(scope)!r} contains" in message
+    assert excluded in message and "narrow it to specific files or clean subdirectories" in message
+
+
+def test_a_glob_scope_reaching_off_allowlist_files_is_refused():
+    message = _refusal(paths=("site/src/*/index.astro",))
+    assert message and "owned path" in message
+
+
+def _scratch_repo(tmp_path: Path) -> Path:
+    components = tmp_path / "site" / "src" / "components"
+    (components / "clean").mkdir(parents=True)
+    (components / "clean" / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
+    (components / "Lesson.tsx").write_text('export const title = "Урок";\n', encoding="utf-8")
+    (components / "logo.png").write_bytes(b"\x89PNG\r\n\x1a\n\xd0\x9f\xd1\x80\x00\xff")
+    return tmp_path
+
+
+@pytest.mark.parametrize(
+    ("scope", "refused"),
+    [
+        ("site/src/components/**", True),
+        ("site/src/components", True),
+        ("site/src/components/*.tsx", True),
+        ("site/src/components/clean/**", False),
+        ("site/src/components/clean/Button.tsx", False),
+        ("site/src/components/logo.png", False),  # a binary asset carries no text
+        ("site/src/components/New.tsx", False),  # a new file: the finalize check covers what it adds
+    ],
+)
+def test_a_scope_holding_any_cyrillic_file_is_refused(tmp_path, scope, refused):
+    message = _refusal(paths=(scope,), repo_root=_scratch_repo(tmp_path), research_track=None)
+    assert bool(message) is refused
+    if refused:
+        assert "site/src/components/Lesson.tsx" in message and "Ukrainian content" in message
+
+
+def test_owned_paths_fail_closed_without_a_repository_root():
+    message = _refusal(paths=("site/src/components/LiveStatus.tsx",), repo_root=None)
+    assert message and "cannot be checked for Ukrainian content" in message
+
+
+@pytest.mark.parametrize(
+    ("diff", "added"),
+    [
+        ("+++ b/site/src/x.tsx\n@@ -0,0 +1 @@\n+const label = 'Привіт';\n", True),
+        ("+++ b/scripts/x.py\n@@ -1 +1 @@\n-old = 'Привіт'\n+old = 'hello'\n", False),  # removing Cyrillic is fine
+        ("+++ b/site/src/Урок.tsx\n@@ -0,0 +1 @@\n+export {};\n", True),  # a Cyrillic file name
+        ("+++ b/site/src/x.tsx\n@@ -0,0 +1 @@\n+const a = 'ԑ';\n", True),  # Cyrillic Supplement
+        ("+++ b/site/src/x.tsx\n@@ -0,0 +1 @@\n+const a = 'hello';\n", False),
+    ],
+)
+def test_a_diff_that_adds_cyrillic_text_is_refused(diff, added):
+    assert bool(kimi_admission.cyrillic_additions(diff)) is added
+    if added:
+        with pytest.raises(kimi_admission.KimiAdmissionRefused, match=_TOKEN):
+            kimi_admission.refuse_cyrillic_diff("kimi", diff)
+    else:
+        kimi_admission.refuse_cyrillic_diff("kimi", diff)
+
+
+def _git(repo: Path, *args: str) -> str:
+    return subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, text=True, timeout=30).stdout
+
+
+@pytest.fixture
+def kimi_worktree(tmp_path, monkeypatch):
+    for key in tuple(os.environ):
+        if key.startswith("GIT_"):
+            monkeypatch.delenv(key, raising=False)
+    repo = tmp_path / "wt"
+    repo.mkdir()
+    _git(repo, "init", "--initial-branch=kimi/task")
+    _git(repo, "config", "user.email", "test@example.com")
+    _git(repo, "config", "user.name", "test")
+    (repo / "legacy.py").write_text("GREETING = 'Привіт'\n", encoding="utf-8")
+    _git(repo, "add", "-A")
+    _git(repo, "commit", "-m", "base")
+    _git(repo, "branch", "base")
+    return repo
+
+
+@pytest.mark.parametrize("committed", [False, True])
+def test_finalize_refuses_a_kimi_diff_that_adds_cyrillic(kimi_worktree, committed):
+    (kimi_worktree / "site").mkdir()
+    (kimi_worktree / "site" / "Label.tsx").write_text("export const label = 'Урок';\n", encoding="utf-8")
+    if committed:
+        _git(kimi_worktree, "add", "-A")
+        _git(kimi_worktree, "commit", "-m", "worker commit")
+    message = delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi")
+    assert message and _TOKEN in message and "site/Label.tsx" in message
+
+
+def test_finalize_admits_a_cyrillic_free_kimi_diff(kimi_worktree):
+    (kimi_worktree / "Button.tsx").write_text("export const Button = () => null;\n", encoding="utf-8")
+    (kimi_worktree / "legacy.py").write_text("GREETING = 'hello'\n", encoding="utf-8")  # a removal
+    assert delegate._kimi_diff_refusal(kimi_worktree, "base", "kimi") is None
+    assert _git(kimi_worktree, "status", "--porcelain").splitlines() == [" M legacy.py", "?? Button.tsx"]
+
+
+def test_finalize_fails_closed_when_the_base_is_unknown(kimi_worktree):
+    message = delegate._kimi_diff_refusal(kimi_worktree, "origin/missing", "kimi")
+    assert message and "could not be read" in message
 
 
 # --- the gate ------------------------------------------------------------------------
@@ -322,12 +476,17 @@ def no_spawn(tmp_path, monkeypatch):
     return tasks
 
 
+_LANGUAGE_LANES_RULE = "LANGUAGE-LANES RULE"
+
+
 def _assert_refused(no_spawn, capsys, argv, reason):
     rc = delegate.main(argv)
     err = capsys.readouterr().err
     assert rc == 2, err
-    assert _TOKEN in err
-    assert reason in err
+    # Ukrainian-language work reaches the language-lanes rule first, which refuses every
+    # seat outside claude, codex and agy — Kimi included — just as early.
+    assert _TOKEN in err or _LANGUAGE_LANES_RULE in err, err
+    assert reason in err or _LANGUAGE_LANES_RULE in err, err
     assert not no_spawn.exists() or not any(no_spawn.iterdir())
 
 
@@ -338,8 +497,8 @@ def _assert_refused(no_spawn, capsys, argv, reason):
         (_dispatch("--mode", "danger", "--worktree"), "--mode danger"),
         (_dispatch("--harness", "kimicc", "--require-review-verdict"), "review dispatches"),
         (_dispatch(*_WRITE, "--review-profile", "code"), "review dispatches"),
-        (_dispatch(*_WRITE, "--language-lane"), "Ukrainian-language work"),
-        (_dispatch(*_WRITE, "--research-track", "l2-uk-en"), "Ukrainian-language work"),
+        (_dispatch(*_WRITE, "--language-lane"), _LANGUAGE_LANES_RULE),
+        (_dispatch(*_WRITE, "--research-track", "l2-uk-en"), _LANGUAGE_LANES_RULE),
         (_dispatch(*_WRITE, "--research-track", "core"), "curriculum track"),
         (_dispatch(*_WRITE, "--repo", "infra-private"), "private repository"),
         (_dispatch(*_WRITE, "--repo", "hramatka"), "private repository"),
@@ -353,6 +512,33 @@ def test_dispatch_refuses_before_any_side_effect(no_spawn, capsys, argv, reason)
 @pytest.mark.parametrize("path", REFUSED_PATHS)
 def test_dispatch_refuses_every_off_allowlist_path_through_either_ownership_flag(no_spawn, capsys, flag, path):
     _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, flag, "scripts/ci/x.py", flag, path), "owned path")
+
+
+@pytest.mark.parametrize(
+    ("extra", "reason"),
+    [
+        (("--mode", "read-only"), "--mode read-only"),
+        ((*_WRITE, "--owned-path", "site/src/components/CountSyllables.tsx"), "Ukrainian content"),
+    ],
+)
+def test_a_budget_substitution_onto_kimi_is_refused_before_cleanup_and_archiving(
+    no_spawn, capsys, monkeypatch, extra, reason
+):
+    """The gate runs on the effective route, after substitution and before any sweep or archive."""
+    monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    substituted: list[str] = []
+
+    def substitute(agent, **_kwargs):
+        substituted.append(agent)
+        return "kimi"
+
+    monkeypatch.setattr(delegate, "_resolve_agent_with_budget_guard", substitute)
+    monkeypatch.setattr(delegate, "_resolve_substitution_model", lambda *_a: ("kimi-code/k3", "catalog-default"))
+    for effect in ("_sweep_runtime_tmp_orphans", "_archive_task_artifacts", "_read_state", "_run_preflight_triage"):
+        monkeypatch.setattr(delegate, effect, _fail)
+    argv = ["dispatch", "--agent", "codex", "--task-id", "kimi-substitute", "--prompt", "Implement it.", *extra]
+    _assert_refused(no_spawn, capsys, argv, reason)
+    assert substituted == ["codex"]
 
 
 def test_dispatch_refuses_a_kimi_model_on_another_seat(no_spawn, capsys):
@@ -671,11 +857,52 @@ def test_inbox_worker_refuses_kimi_before_any_claim(monkeypatch):
 # --- broker drain paths: refusal returns an error and records nothing ------------------
 
 
-@pytest.fixture
-def broker_sentinels(monkeypatch):
-    """Every write, telemetry and broker call on the drain paths fails the test."""
-    from scripts.ai_agent_bridge import _ask_lifecycle, _messaging, _process
+_MUTATION = re.compile(
+    r"^\s*(INSERT|UPDATE|DELETE|REPLACE|ALTER|CREATE|DROP)\b|PRAGMA\s+(journal_mode|user_version)", re.I
+)
 
+
+@pytest.fixture
+def broker_db(tmp_path, monkeypatch):
+    """A real in-memory broker DB on a pre-migration schema; every SQL statement is recorded.
+
+    ``get_db`` would migrate this schema (ALTER TABLE, a consumption-flag
+    backfill UPDATE, CREATE TABLE), so any path that reaches it before the
+    refusal shows up as a mutation. Broker writes and telemetry also fail the test.
+    """
+    from scripts.ai_agent_bridge import _ask_lifecycle, _db, _messaging, _process
+
+    uri = f"file:kimi-broker-{tmp_path.name}?mode=memory&cache=shared"
+    real_connect = sqlite3.connect
+    keeper = real_connect(uri, uri=True)
+    keeper.executescript(
+        """
+        CREATE TABLE messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT, task_id TEXT, from_llm TEXT NOT NULL, to_llm TEXT NOT NULL,
+            message_type TEXT DEFAULT 'message', content TEXT NOT NULL, data TEXT, timestamp TEXT NOT NULL,
+            acknowledged INTEGER DEFAULT 0
+        );
+        """
+    )
+    keeper.executemany(
+        "INSERT INTO messages (id, task_id, from_llm, to_llm, message_type, content, data, timestamp, acknowledged)"
+        " VALUES (?, 't', 'codex', ?, 'query', 'q', ?, '2026-09-30T00:00:00+00:00', ?)",
+        [(7, "kimi", None, 0), (8, "claude", json.dumps({"to_model": "kimi-code/k3"}), 0), (9, "claude", None, 1)],
+    )
+    keeper.commit()
+    before = list(keeper.iterdump())
+    statements: list[str] = []
+
+    def connect(_database, *args, **kwargs):
+        kwargs["uri"] = True
+        conn = real_connect(uri, *args, **kwargs)
+        conn.set_trace_callback(statements.append)
+        return conn
+
+    db_file = tmp_path / "messages.db"
+    db_file.touch()
+    monkeypatch.setattr(_db, "DB_PATH", db_file)
+    monkeypatch.setattr(sqlite3, "connect", connect)
     for module, names in (
         (_process, ("send_message", "acknowledge", "record_ask_failure", "record_ask_reply", "run_compat_ask")),
         (_process, ("_notify_processing_failure", "_message_acknowledged")),
@@ -685,40 +912,72 @@ def broker_sentinels(monkeypatch):
         for name in names:
             monkeypatch.setattr(module, name, _fail)
 
-    def message(to: str, data: str | None = None) -> None:
-        msg = {"id": 7, "to": to, "from": "codex", "task_id": "t", "type": "query", "content": "q", "data": data}
-        monkeypatch.setattr(_process, "read_message", lambda _id, **_k: msg)
-        monkeypatch.setattr(_messaging, "read_message", lambda _id, **_k: msg)
+    def mutations() -> list[str]:
+        assert list(keeper.iterdump()) == before
+        return [statement for statement in statements if _MUTATION.search(statement)]
 
-    return message
+    yield types.SimpleNamespace(statements=statements, mutations=mutations)
+    keeper.close()
 
 
-@pytest.mark.parametrize(("to", "data"), [("kimi", None), ("claude", json.dumps({"to_model": "kimi-code/k3"}))])
-def test_process_message_refuses_with_zero_side_effects(broker_sentinels, to, data):
+@pytest.mark.parametrize("message_id", [7, 8])
+def test_process_message_refuses_with_zero_sql_mutations(broker_db, message_id):
     from scripts.ai_agent_bridge import _process
 
-    broker_sentinels(to, data)
     with pytest.raises(ValueError, match=_TOKEN):
-        _process.process_message_for_recipient(7)
+        _process.process_message_for_recipient(message_id)
+    assert broker_db.statements, "the recipient was resolved from the real DB"
+    assert broker_db.mutations() == []
     assert not _process.recipient_has_acp_route("kimi")
 
 
-def test_process_cli_commands_refuse_with_zero_side_effects(broker_sentinels):
+def test_process_message_refuses_a_kimi_model_before_any_lookup(broker_db):
+    from scripts.ai_agent_bridge import _process
+
+    with pytest.raises(ValueError, match=_TOKEN):
+        _process.process_message_for_recipient(9, model="kimi-code/k3")
+    assert broker_db.statements == []
+
+
+@pytest.mark.parametrize(("argv", "looked_up"), [(["process", "7"], True), (["process-kimi", "7"], False)])
+def test_process_cli_commands_refuse_with_zero_sql_mutations(broker_db, argv, looked_up):
     from scripts.ai_agent_bridge import _cli
 
-    broker_sentinels("kimi")
-    for argv in (["process", "7"], ["process-kimi", "7"]):
-        with pytest.raises(SystemExit, match=_TOKEN):
-            _cli._dispatch_command(_cli._build_parser().parse_args(argv))
+    with pytest.raises(SystemExit, match=_TOKEN):
+        _cli._dispatch_command(_cli._build_parser().parse_args(argv))
+    assert bool(broker_db.statements) is looked_up  # a known Kimi target is refused before any lookup
+    assert broker_db.mutations() == []
 
 
-def test_detached_ask_worker_refuses_with_zero_side_effects(broker_sentinels, monkeypatch):
+@pytest.mark.parametrize(("message_id", "target", "looked_up"), [(7, "kimi", False), (8, "claude", True)])
+def test_detached_ask_worker_refuses_with_zero_sql_mutations(broker_db, monkeypatch, message_id, target, looked_up):
     from scripts.ai_agent_bridge import _ask_lifecycle
 
-    broker_sentinels("kimi")
     monkeypatch.setattr(_ask_lifecycle.atexit, "register", _fail)
     with pytest.raises(SystemExit, match=_TOKEN):
-        _ask_lifecycle.process_background_ask(7, "kimi")
+        _ask_lifecycle.process_background_ask(message_id, target)
+    assert bool(broker_db.statements) is looked_up
+    assert broker_db.mutations() == []
+
+
+def test_the_admission_lookup_cannot_write(broker_db):
+    from scripts.ai_agent_bridge import _db, _messaging
+
+    assert _messaging.peek_message_route(8) == {"id": 8, "to": "claude", "data": '{"to_model": "kimi-code/k3"}'}
+    assert _messaging.peek_message_route(404) is None
+    conn = _db.connect_readonly()
+    with pytest.raises(sqlite3.OperationalError):
+        conn.execute("UPDATE messages SET acknowledged = 1")
+    conn.close()
+    assert broker_db.mutations() == ["UPDATE messages SET acknowledged = 1"]
+
+
+def test_the_admission_lookup_never_creates_the_db(tmp_path, monkeypatch):
+    from scripts.ai_agent_bridge import _db, _messaging
+
+    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "absent.db")
+    assert _messaging.peek_message_route(7) is None
+    assert not (tmp_path / "absent.db").exists()
 
 
 # --- capacity hint -----------------------------------------------------------------

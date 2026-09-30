@@ -73,7 +73,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "leftovers_scan_error": str | absent,       # why the scan was unknown
         "incomplete_run_reason": "background_jobs_alive_at_exit" | "leftovers_scan_unknown" | absent,
         "background_jobs_alive_at_exit": {reason, count, processes: [{pid, cmdline}], scope} | absent,
-        "finalize_skipped_paths": [str] | absent    # changed files auto-finalize left out of its commit
+        "finalize_skipped_paths": [str] | absent,   # changed files auto-finalize left out of its commit
+        "kimi_content_refusal": str | absent        # a Kimi diff added Cyrillic text; nothing was committed
     }
 
 Design notes:
@@ -5300,15 +5301,12 @@ def _path_is_owned(path: str, owned_paths: Sequence[str]) -> bool:
     return any(matcher(path) for raw in owned_paths if (matcher := _owned_path_matcher(raw)) is not None)
 
 
-def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
-    """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
+def _worktree_diff_output(worktree: Path, diff_args: Sequence[str], *, git_options: Sequence[str] = ()) -> str | None:
+    """``git diff <diff_args>`` as if every change, untracked files included, were committed; None when unknown.
 
     Untracked files are marked intent-to-add in a throwaway copy of the index
     (no file content is written to the object store) so they show up as
-    additions; the real index is never touched. Renames are not detected:
-    git pairs a move only above a similarity threshold, so a caller that
-    must not split a move treats every deletion as a possible source of every
-    addition.
+    additions; the real index is never touched.
     """
     env = _sanitized_git_env()
     try:
@@ -5341,10 +5339,12 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
             if add_proc.returncode != 0:
                 return None
             diff_proc = subprocess.run(
-                ["git", "diff", "--no-renames", "--name-status", "-z", "HEAD", "--"],
+                ["git", *git_options, "diff", *diff_args],
                 cwd=worktree,
                 capture_output=True,
                 text=True,
+                encoding="utf-8",
+                errors="replace",
                 check=False,
                 env=scratch_env,
                 timeout=DEFAULT_GIT_TIMEOUT_S,
@@ -5353,7 +5353,20 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
         return None
     if diff_proc.returncode != 0:
         return None
-    fields = diff_proc.stdout.split("\0")
+    return diff_proc.stdout
+
+
+def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...], tuple[str, ...]] | None:
+    """Files added and deleted relative to ``HEAD`` if every change were committed; None when unknown.
+
+    Renames are not detected: git pairs a move only above a similarity
+    threshold, so a caller that must not split a move treats every deletion
+    as a possible source of every addition.
+    """
+    output = _worktree_diff_output(worktree, ["--no-renames", "--name-status", "-z", "HEAD", "--"])
+    if output is None:
+        return None
+    fields = output.split("\0")
     added: list[str] = []
     deleted: list[str] = []
     for index in range(0, len(fields) - 1, 2):
@@ -5365,6 +5378,45 @@ def _auto_finalize_additions_deletions(worktree: Path) -> tuple[tuple[str, ...],
         elif status == "D":
             deleted.append(path)
     return tuple(added), tuple(deleted)
+
+
+def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
+    """The refusal when a Kimi worker's changes add Cyrillic text; None when they add none.
+
+    The diff runs from the merge base with ``base_ref`` to the working tree,
+    so it covers the worker's own commits and its uncommitted and untracked
+    files. Fails closed: a diff that cannot be read is a refusal.
+    """
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, format_refusal, refuse_cyrillic_diff
+
+    unreadable = format_refusal(agent, ["the finalized diff could not be read for Ukrainian content"])
+    try:
+        base_proc = subprocess.run(
+            ["git", "merge-base", base_ref, "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return unreadable
+    merge_base = (base_proc.stdout or "").strip()
+    if base_proc.returncode != 0 or not merge_base:
+        return unreadable
+    diff = _worktree_diff_output(
+        worktree,
+        ["--no-color", "--no-ext-diff", "--no-renames", "-U0", merge_base, "--"],
+        git_options=("-c", "core.quotePath=false"),
+    )
+    if diff is None:
+        return unreadable
+    try:
+        refuse_cyrillic_diff(agent, diff)
+    except KimiAdmissionRefused as exc:
+        return str(exc)
+    return None
 
 
 def _cross_boundary_moves(added: Sequence[str], deleted: Sequence[str], owned: Sequence[str]) -> set[str]:
@@ -7247,8 +7299,14 @@ def _augment_prompt_with_worktree(
     *,
     mode: str = "read-only",
     sparse_telemetry: dict[str, Any] | None = None,
+    delegate_commits: bool = False,
 ) -> str:
-    """Inject worktree context into the delegated prompt when relevant."""
+    """Inject worktree context into the delegated prompt when relevant.
+
+    ``delegate_commits`` (Kimi seats) replaces the commit-and-push closeout:
+    the worker leaves its changes in the tree and delegate commits the owned
+    paths after checking that the diff adds no Cyrillic text.
+    """
     if worktree_path is None:
         return prompt
     sparse_note = ""
@@ -7265,7 +7323,15 @@ def _augment_prompt_with_worktree(
                 + "Do not invent content for missing paths.\n"
             )
     delivery_note = ""
-    if mode in _WRITE_CAPABLE_MODES:
+    if mode in _WRITE_CAPABLE_MODES and delegate_commits:
+        delivery_note = (
+            "\n[write-mode closeout]\n"
+            "Do not commit or push. Leave your changes in this worktree, inside the owned paths.\n"
+            "After you exit, delegate checks the diff and commits and pushes the owned paths; "
+            "a diff that adds any Cyrillic character is refused and nothing is committed.\n"
+            "Delete scratch files before you finish.\n"
+        )
+    elif mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
             "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
@@ -7705,7 +7771,7 @@ def _run_worker(
     # The worker is a second entry point: a worker argv built by hand or a
     # stale parent must not invoke a Kimi seat outside web, UI and backend
     # coding. The refusal goes to the caller only; no state is written.
-    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_if_disallowed
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, is_kimi_seat, refuse_kimi_if_disallowed
 
     try:
         refuse_kimi_if_disallowed(
@@ -7835,6 +7901,8 @@ def _run_worker(
     leftovers_unconfirmed = False
     telemetry_settled = False
     rescue_status: str | None = None
+    kimi_worker = is_kimi_seat(agent, model=model)
+    kimi_content_refusal: str | None = None
     cursor_mcp_path: Path | None = None
     cursor_mcp_backup: bytes | None = None
     cursor_mcp_existed = False
@@ -8193,7 +8261,8 @@ def _run_worker(
             # (``timeouts-B3``, ``timeouts-B6``, ``timeouts-B4-orig``: dirty worktrees,
             # zero commits, ``status: done``) and 31 files of finished work were one agent
             # restart away from being lost. Detection now runs for the whole write-capable
-            # set; the riskier auto-finalize action stays scoped to ``danger``.
+            # set; the riskier auto-finalize action stays scoped to ``danger``, except for
+            # Kimi, whose work delegate always commits after the content check below.
             if worktree_path and mode in _WRITE_CAPABLE_MODES:
                 base_branch = str(final_state.get("worktree_base") or "main")
                 base_ref = _commit_count_base_ref(Path(worktree_path), base_branch)
@@ -8201,6 +8270,10 @@ def _run_worker(
                     Path(worktree_path),
                     base_ref,
                 )
+                # Kimi takes no Ukrainian content: a diff that adds Cyrillic text is
+                # refused before auto-finalize can stage or commit anything.
+                if kimi_worker:
+                    kimi_content_refusal = _kimi_diff_refusal(Path(worktree_path), base_ref, agent)
                 # Fail CLOSED on BOTH unknowns — they are the same bug in two variables.
                 #
                 # ``_count_commits_ahead`` returns None when it cannot count, and
@@ -8253,7 +8326,8 @@ def _run_worker(
                     needs_finalize
                     and rescue_status is None
                     and returncode == 0
-                    and mode == "danger"
+                    and (mode == "danger" or kimi_worker)
+                    and kimi_content_refusal is None
                     and not run_incomplete
                 ):
                     auto_finalize = _auto_finalize_dirty_worktree(
@@ -8350,6 +8424,13 @@ def _run_worker(
             needs_finalize = False
             final_status = "failed"
             ok_outcome = False
+        elif kimi_content_refusal:
+            # Nothing was committed for the worker; its changes stay in the tree.
+            needs_finalize = False
+            final_status = "failed"
+            ok_outcome = False
+            final_state["kimi_content_refusal"] = kimi_content_refusal
+            stderr_excerpt = f"{kimi_content_refusal}\n{stderr_excerpt}" if stderr_excerpt else kimi_content_refusal
         elif needs_finalize:
             final_status = "needs_finalize"
         elif no_deliverable:
@@ -9096,13 +9177,140 @@ def _dispatch(
     from agent_runtime.routes import is_retired_gpt56_model
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
-    # Kimi seats admit web, UI and backend coding only; refuse before any check that can
-    # run an external command, write a record, or create a worktree.
-    kimi_refusal = _kimi_admission_refusal(
-        args,
-        agent=resolve_retired_agent_alias(args.agent) or args.agent,
-        repo_role=fleet_repo.role,
+    # Resolve the effective route first: --model, the retired-CLI alias and any budget
+    # substitution (#8517: a review attempt never takes a substitute).
+    review_attempt = getattr(args, "review_attempt", None)
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.ai_agent_bridge.routing_guard import (
+        RoutingGuardError,
+        assert_agent_routing_allowed,
+        assert_model_routing_allowed,
     )
+
+    try:
+        assert_agent_routing_allowed(args.agent, context="delegate dispatch")
+        assert_model_routing_allowed(getattr(args, "model", None), context="delegate dispatch --model")
+    except RoutingGuardError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+    if is_retired_gpt56_model(getattr(args, "model", None)):
+        print(f"❌ retired GPT-5.6 model {args.model!r} is not a dispatch route", file=sys.stderr)
+        return 2
+
+    # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
+    # BEFORE the budget guard and unconditionally — a hot/cool budget reading
+    # for a retired lane is not proof its binary still exists (CodexBar showed
+    # gemini ~99% remaining the same night `--agent gemini` failed with
+    # `FileNotFoundError: 'gemini'`). --force-agent bypasses the budget guard,
+    # not this — there is no CLI left to force.
+    original_agent = args.agent
+    original_model = getattr(args, "model", None)
+    model_resolution: dict[str, Any] = {}
+    agent_alias_note: str | None = None
+    retired_target = resolve_retired_agent_alias(args.agent)
+    requested_agent = args.agent
+    if retired_target:
+        if review_attempt:
+            print(
+                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+        try:
+            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        _remember_agent_substitution(
+            model_resolution,
+            source="retired-cli",
+            requested_agent=original_agent,
+            requested_model=original_model,
+            actual_agent=retired_target,
+            actual_model=retired_model,
+            how=retired_how,
+        )
+        agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
+        print(
+            f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
+            f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
+            f"({agent_alias_note}; the {requested_agent} CLI is not installed/supported).",
+            file=sys.stderr,
+        )
+        requested_agent = retired_target
+
+    language_lane = _dispatch_is_language_lane(args)
+    if language_lane and requested_agent not in _LANGUAGE_LANES:
+        print(
+            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"--agent {requested_agent} cannot author, review, critique, settle, or judge "
+            "Ukrainian language, culture, or heritage content; "
+            "allowed lanes are claude, codex (GPT), and agy (Gemini).",
+            file=sys.stderr,
+        )
+        return 2
+
+    if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
+        try:
+            dispatch_agent = (
+                _resolve_agent_with_budget_guard(
+                    requested_agent,
+                    provider="openrouter",
+                    language_lane=language_lane,
+                    requested_model=original_model,
+                    model_resolution=model_resolution,
+                    origin_agent=original_agent,
+                )
+                if getattr(args, "provider", None) == "openrouter"
+                else _resolve_agent_with_budget_guard(
+                    requested_agent,
+                    language_lane=language_lane,
+                    requested_model=original_model,
+                    model_resolution=model_resolution,
+                    origin_agent=original_agent,
+                )
+            )
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+    else:
+        dispatch_agent = requested_agent
+
+    agent_substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
+    if dispatch_agent != original_agent and agent_substitution is None:
+        try:
+            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
+        except BudgetGuardRefuseError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+        _remember_agent_substitution(
+            model_resolution,
+            source="budget-guard",
+            requested_agent=original_agent,
+            requested_model=original_model,
+            actual_agent=dispatch_agent,
+            actual_model=chosen_model,
+            how=chosen_how,
+        )
+        agent_substitution = model_resolution["record"]
+    if agent_substitution is not None:
+        args.model = agent_substitution["actual_model"]
+
+    if language_lane and dispatch_agent not in _LANGUAGE_LANES:
+        print(
+            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+            f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini).",
+            file=sys.stderr,
+        )
+        return 2
+
+    # The single Kimi gate runs on the effective route — after --model, the retired-CLI
+    # alias and any budget substitution resolve — and before any check that can run an
+    # external command, write a record, sweep runtime tmp, archive a task or create a worktree.
+    kimi_refusal = _kimi_admission_refusal(args, agent=dispatch_agent, repo_role=fleet_repo.role)
     if kimi_refusal:
         print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 2
@@ -9162,9 +9370,6 @@ def _dispatch(
             return 2
 
     task_id = args.task_id
-    if is_retired_gpt56_model(getattr(args, "model", None)):
-        print(f"❌ retired GPT-5.6 model {args.model!r} is not a dispatch route", file=sys.stderr)
-        return 2
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
     except ValueError as exc:
@@ -9216,7 +9421,7 @@ def _dispatch(
         pr_number=pr_number,
         branch=getattr(args, "branch", None),
         repo_root=str(_REPO_ROOT),
-        model=getattr(args, "model", None),
+        model=original_model,
         review=bool(getattr(args, "review", False))
         or str(getattr(args, "type", "") or "").strip().casefold() == "review",
         head_out=gemini_checked_heads,
@@ -9237,7 +9442,6 @@ def _dispatch(
             print("❌ --force-admission requires a non-empty reason", file=sys.stderr)
             return 2
 
-    review_attempt = getattr(args, "review_attempt", None)
     review_id = getattr(args, "review_id", None)
     attempt_id = getattr(args, "attempt_id", None)
     review_plan = None
@@ -9251,14 +9455,6 @@ def _dispatch(
         manifest_path = Path(review_attempt)
         if not manifest_path.is_file():
             print(f"❌ review manifest file not found: {manifest_path}", file=sys.stderr)
-            return 2
-
-        retired_target = resolve_retired_agent_alias(args.agent)
-        if retired_target:
-            print(
-                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
-                file=sys.stderr,
-            )
             return 2
 
         effective_harness = requested_harness or args.agent
@@ -9561,134 +9757,6 @@ def _dispatch(
         research_ctx = _build_research_context(args)
     except ResearchContextError as exc:
         print(f"❌ {exc}", file=sys.stderr)
-        return 2
-
-    if str(_REPO_ROOT) not in sys.path:
-        sys.path.insert(0, str(_REPO_ROOT))
-    from scripts.ai_agent_bridge.routing_guard import (
-        RoutingGuardError,
-        assert_agent_routing_allowed,
-        assert_model_routing_allowed,
-    )
-
-    try:
-        assert_agent_routing_allowed(args.agent, context="delegate dispatch")
-        assert_model_routing_allowed(getattr(args, "model", None), context="delegate dispatch --model")
-    except RoutingGuardError as exc:
-        print(f"❌ {exc}", file=sys.stderr)
-        return 2
-
-    # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
-    # BEFORE the budget guard and unconditionally — a hot/cool budget reading
-    # for a retired lane is not proof its binary still exists (CodexBar showed
-    # gemini ~99% remaining the same night `--agent gemini` failed with
-    # `FileNotFoundError: 'gemini'`). --force-agent bypasses the budget guard,
-    # not this — there is no CLI left to force.
-    original_agent = args.agent
-    original_model = getattr(args, "model", None)
-    model_resolution: dict[str, Any] = {}
-    agent_alias_note: str | None = None
-    retired_target = resolve_retired_agent_alias(args.agent)
-    requested_agent = args.agent
-    if retired_target:
-        if review_attempt:
-            print(
-                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
-                file=sys.stderr,
-            )
-            return 2
-        try:
-            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-        _remember_agent_substitution(
-            model_resolution,
-            source="retired-cli",
-            requested_agent=original_agent,
-            requested_model=original_model,
-            actual_agent=retired_target,
-            actual_model=retired_model,
-            how=retired_how,
-        )
-        agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
-        print(
-            f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
-            f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
-            f"({agent_alias_note}; the {requested_agent} CLI is not installed/supported).",
-            file=sys.stderr,
-        )
-        requested_agent = retired_target
-
-    language_lane = _dispatch_is_language_lane(args)
-    if language_lane and requested_agent not in _LANGUAGE_LANES:
-        print(
-            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
-            f"--agent {requested_agent} cannot author, review, critique, settle, or judge "
-            "Ukrainian language, culture, or heritage content; "
-            "allowed lanes are claude, codex (GPT), and agy (Gemini).",
-            file=sys.stderr,
-        )
-        return 2
-
-    if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
-        try:
-            dispatch_agent = (
-                _resolve_agent_with_budget_guard(
-                    requested_agent,
-                    provider="openrouter",
-                    language_lane=language_lane,
-                    requested_model=original_model,
-                    model_resolution=model_resolution,
-                    origin_agent=original_agent,
-                )
-                if getattr(args, "provider", None) == "openrouter"
-                else _resolve_agent_with_budget_guard(
-                    requested_agent,
-                    language_lane=language_lane,
-                    requested_model=original_model,
-                    model_resolution=model_resolution,
-                    origin_agent=original_agent,
-                )
-            )
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-    else:
-        dispatch_agent = requested_agent
-
-    agent_substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
-    if dispatch_agent != original_agent and agent_substitution is None:
-        try:
-            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-        _remember_agent_substitution(
-            model_resolution,
-            source="budget-guard",
-            requested_agent=original_agent,
-            requested_model=original_model,
-            actual_agent=dispatch_agent,
-            actual_model=chosen_model,
-            how=chosen_how,
-        )
-        agent_substitution = model_resolution["record"]
-    if agent_substitution is not None:
-        args.model = agent_substitution["actual_model"]
-
-    if language_lane and dispatch_agent not in _LANGUAGE_LANES:
-        print(
-            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
-            f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini).",
-            file=sys.stderr,
-        )
-        return 2
-
-    # A budget substitution or --model can land on a Kimi seat after the early check.
-    kimi_refusal = _kimi_admission_refusal(args, agent=dispatch_agent, repo_role=fleet_repo.role)
-    if kimi_refusal:
-        print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 2
 
     if dispatch_agent == "agy" and getattr(args, "model", None):
@@ -10420,6 +10488,7 @@ def _dispatch(
             sparse_telemetry=worktree_telemetry.get("sparse")
             if isinstance(worktree_telemetry.get("sparse"), dict)
             else None,
+            delegate_commits=is_kimi_seat(dispatch_agent, model=getattr(args, "model", None)),
         )
         if worktree_path is not None:
             prompt_blocks.insert(0, "worktree")

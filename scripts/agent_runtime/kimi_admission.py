@@ -13,10 +13,15 @@ first, after resolving the effective seats and models (overrides, pins and
 substitutes) and before any telemetry, broker message, failure record, state
 write, artifact store or channel write. A refusal raises
 ``KimiAdmissionRefused`` to the caller and records nothing.
+
+Ukrainian content is recognised by content, not by path: an owned file, or any
+file under an owned directory or glob, that contains a Cyrillic character is
+refused, and ``cyrillic_additions`` rejects a finalized Kimi diff that adds one.
 """
 
 from __future__ import annotations
 
+import os
 import posixpath
 import re
 from collections.abc import Iterable, Mapping
@@ -111,6 +116,12 @@ _CURRICULUM_TRACK_PREFIXES = ("l2-uk",)
 _REVIEW_TOOL_CONFIG_KEYS = ("review_verdict_required", "review_isolation", "review_id")
 # Components of a prompt-file path that mark agent-private state.
 _PRIVATE_STATE_COMPONENTS = frozenset({".claude", ".agent", ".codex"})
+# The Cyrillic and Cyrillic Supplement blocks: any such character marks Ukrainian content.
+CYRILLIC = re.compile("[Ѐ-ӿԀ-ԯ]")
+_GLOB_CHARS = frozenset("*?[")
+# Build and dependency output skipped when a directory or glob scope is expanded.
+_SCOPE_SKIPPED_DIRS = frozenset({".git", "node_modules", "__pycache__", ".pytest_cache", ".astro", "dist"})
+_DIFF_SAMPLE_LIMIT = 5
 
 
 class KimiAdmissionRefused(ValueError):
@@ -184,6 +195,114 @@ def owned_path_reason(path: str) -> str | None:
     return None
 
 
+def _walk_files(repo_root: Path, base: str) -> Iterable[str]:
+    for directory, subdirs, files in os.walk(repo_root / base):
+        subdirs[:] = sorted(name for name in subdirs if name not in _SCOPE_SKIPPED_DIRS)
+        rel_dir = Path(directory).relative_to(repo_root).as_posix()
+        for name in sorted(files):
+            yield f"{rel_dir}/{name}" if rel_dir != "." else name
+
+
+def scope_files(normalized: str, *, repo_root: Path) -> tuple[bool, list[str]]:
+    """Whether ``normalized`` is a directory or glob scope, and the existing files it owns.
+
+    Ownership is read as dispatch reads it: a directory owns its subtree and a
+    glob is a case-sensitive ``fnmatch`` pattern whose ``*`` also crosses
+    ``/``. A single file owns itself; a path that does not exist yet owns no
+    existing file.
+    """
+    import fnmatch
+
+    if _GLOB_CHARS.intersection(normalized):
+        literal: list[str] = []
+        for segment in normalized.split("/"):
+            if _GLOB_CHARS.intersection(segment):
+                break
+            literal.append(segment)
+        base = "/".join(literal)
+        if not base or not (repo_root / base).is_dir():
+            return True, []
+        return True, [rel for rel in _walk_files(repo_root, base) if fnmatch.fnmatchcase(rel, normalized)]
+    target = repo_root / normalized
+    if target.is_dir():
+        return True, list(_walk_files(repo_root, normalized))
+    return False, [normalized] if target.is_file() else []
+
+
+def _has_cyrillic(path: Path) -> bool:
+    try:
+        text = path.read_bytes().decode("utf-8")
+    except UnicodeDecodeError:  # a binary asset carries no text content
+        return False
+    return CYRILLIC.search(text) is not None
+
+
+def _sample(paths: list[str]) -> str:
+    shown = ", ".join(repr(path) for path in paths[:_DIFF_SAMPLE_LIMIT])
+    return shown + (f" and {len(paths) - _DIFF_SAMPLE_LIMIT} more" if len(paths) > _DIFF_SAMPLE_LIMIT else "")
+
+
+def owned_scope_reasons(path: str, *, repo_root: Path | None) -> list[str]:
+    """Why an allowlisted owned path is still refused for its content or its descendants.
+
+    Any owned file, or file under an owned directory or glob, that contains a
+    Cyrillic character is Ukrainian content. A directory or glob scope that
+    also covers an excluded or off-allowlist file must be narrowed to specific
+    files or clean subdirectories. Fails closed without a repository root.
+    """
+    normalized = normalize_owned_path(path)
+    if normalized is None:
+        return []
+    if repo_root is None:
+        return [f"owned path {normalized!r} cannot be checked for Ukrainian content (no repository root)"]
+    is_scope, files = scope_files(normalized, repo_root=repo_root)
+    reasons: list[str] = []
+    if is_scope:
+        blocked = [rel for rel in files if owned_path_reason(rel)]
+        if blocked:
+            reasons.append(
+                f"owned scope {normalized!r} contains excluded or off-allowlist paths ({_sample(blocked)}); "
+                "narrow it to specific files or clean subdirectories"
+            )
+    try:
+        cyrillic = [rel for rel in files if _has_cyrillic(repo_root / rel)]
+    except OSError as exc:
+        return [*reasons, f"owned path {normalized!r} cannot be checked for Ukrainian content ({exc})"]
+    if cyrillic:
+        where = f"owned scope {normalized!r} holds" if is_scope else "owned file holds"
+        reasons.append(f"{where} Ukrainian content (Cyrillic text in {_sample(cyrillic)})")
+    return reasons
+
+
+def cyrillic_additions(diff_text: str) -> list[str]:
+    """``path: text`` samples of the lines a unified diff adds that contain a Cyrillic character.
+
+    A new file whose name is Cyrillic counts too. Read with
+    ``core.quotePath=false`` so names reach this check unescaped.
+    """
+    samples: list[str] = []
+    current = "?"
+    for line in diff_text.splitlines():
+        if line.startswith("+++ "):
+            current = line[4:].removeprefix("b/")
+            if CYRILLIC.search(current):
+                samples.append(f"{current}: (file name)")
+        elif line.startswith("+") and CYRILLIC.search(line):
+            samples.append(f"{current}: {line[1:].strip()[:80]}")
+    return samples
+
+
+def refuse_cyrillic_diff(agent: str, diff_text: str) -> None:
+    """Raise ``KimiAdmissionRefused`` when a Kimi worker's finalized diff adds Cyrillic text."""
+    samples = cyrillic_additions(diff_text)
+    if samples:
+        shown = "; ".join(samples[:_DIFF_SAMPLE_LIMIT])
+        more = f"; and {len(samples) - _DIFF_SAMPLE_LIMIT} more" if len(samples) > _DIFF_SAMPLE_LIMIT else ""
+        raise KimiAdmissionRefused(
+            format_refusal(agent, [f"the finalized diff adds Ukrainian content (Cyrillic text: {shown}{more})"])
+        )
+
+
 def _curriculum_level_keys(repo_root: Path) -> frozenset[str] | None:
     manifest = repo_root / "curriculum" / "l2-uk-en" / "curriculum.yaml"
     try:
@@ -249,9 +368,11 @@ def refuse_kimi_if_disallowed(
     models after every override, pin and substitution. ``mode`` is the
     runtime mode (only ``workspace-write`` is admitted) or an activity label
     (``ACP_MODE``, ``REVIEW_MODE``). ``paths`` are the owned paths, each of
-    which must be on the allowlist. ``repo`` is the fleet repository role.
-    Pure: it reads only the curriculum manifest (for ``research_track``) and
-    never writes. Returns None for every non-Kimi call.
+    which must be on the allowlist, free of Cyrillic text and, for a directory
+    or glob, free of excluded descendants (read under ``repo_root``). ``repo``
+    is the fleet repository role. It reads only the owned files and the
+    curriculum manifest (for ``research_track``) and never writes. Returns
+    None for every non-Kimi call.
     """
     seat = _kimi_seat_name(tuple(effective_participants), tuple(effective_models))
     if seat is None:
@@ -271,6 +392,8 @@ def refuse_kimi_if_disallowed(
         path_reason = owned_path_reason(path)
         if path_reason:
             reasons.append(path_reason)
+        else:
+            reasons.extend(owned_scope_reasons(path, repo_root=repo_root))
     if prompt_file and _PRIVATE_STATE_COMPONENTS.intersection(Path(str(prompt_file)).expanduser().parts):
         reasons.append(f"--prompt-file {prompt_file!r} lives in agent-private state")
     if repo is not None and repo not in CODING_REPO_ROLES:
@@ -283,6 +406,7 @@ def format_refusal(agent: str, reasons: Iterable[Any]) -> str:
     joined = "; ".join(str(reason) for reason in reasons)
     return (
         f"ROUTING REFUSED: {_POLICY}: {POLICY_LINE} {agent} seats take workspace-write implementation of "
-        f"allowlisted UI and backend paths only (KIMI_OWNED_ROOTS in scripts/agent_runtime/kimi_admission.py). "
+        f"allowlisted UI and backend paths without Cyrillic text only "
+        f"(KIMI_OWNED_ROOTS in scripts/agent_runtime/kimi_admission.py). "
         f"Refused: {joined}. Alternative seats: {KIMI_ALTERNATIVES}."
     )

@@ -506,6 +506,23 @@ def get_db():
     return conn
 
 
+def connect_readonly() -> sqlite3.Connection | None:
+    """A query-only connection to the broker DB, or None when it does not exist.
+
+    Unlike ``get_db`` it never creates the file, runs no migration, sets no
+    persistent PRAGMA and refuses every write (``mode=ro`` plus
+    ``query_only``), so admission checks can read a message without changing
+    the database.
+    """
+    if not DB_PATH.exists():
+        return None
+    conn = sqlite3.connect(f"{DB_PATH.resolve().as_uri()}?mode=ro", uri=True)
+    conn.execute("PRAGMA query_only=ON")
+    conn.execute("PRAGMA busy_timeout=5000")
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
 def get_session(task_id: str) -> dict:
     """Get session IDs for a task."""
     if not task_id:

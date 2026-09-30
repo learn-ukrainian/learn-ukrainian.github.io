@@ -44,7 +44,14 @@ Kimi seats take web, UI and backend coding only: `workspace-write`
 implementation of paths on the allowlist in
 `scripts/agent_runtime/kimi_admission.py` (`KIMI_OWNED_ROOTS`). Asks, consults,
 discussions, reviews, trail sessions and read-only or danger modes are refused
-by `refuse_kimi_if_disallowed` before any side effect.
+by `refuse_kimi_if_disallowed` before any side effect. Ukrainian content is
+recognised by content: an owned file, or any file under an owned directory or
+glob, that contains a Cyrillic character is refused, and so is a directory or
+glob scope that covers an excluded file (narrow it to specific files or clean
+subdirectories). A Kimi worker does not commit: `delegate.py` checks its diff
+from the merge base and commits the owned paths only when the diff adds no
+Cyrillic character; otherwise the task ends `failed` with
+`kimi_content_refusal` and nothing is committed.
 
 **Native Kimi is the default** interactive and headless/fleet route
 (`./start-kimi.sh`, `delegate.py --agent kimi --mode workspace-write`). Native

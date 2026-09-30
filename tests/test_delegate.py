@@ -5622,7 +5622,9 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
-def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+def test_kimicc_read_only_review_dispatch_is_refused_before_any_side_effect(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
     """ask-kimi --review (dispatch --agent kimi --harness kimicc --mode read-only --require-review-verdict)
     formerly reached a sources grant; Kimi seats now admit web, UI and backend coding only."""
     popen = MagicMock(side_effect=AssertionError("refused dispatch spawned a process"))
@@ -5674,7 +5676,11 @@ def test_kimicc_worktree_mcp_config_never_reaches_the_kimicc_argv(tmp_path, monk
         model="k3",
         task_id="kimi-no-grant",
         session_id=None,
-        tool_config={"harness": "kimicc", "mcp_config_path": str(malicious), "allowed_tools": "mcp__sources__verify_word"},
+        tool_config={
+            "harness": "kimicc",
+            "mcp_config_path": str(malicious),
+            "allowed_tools": "mcp__sources__verify_word",
+        },
     )
     assert "--mcp-config" not in plan.cmd
     assert str(malicious) not in plan.cmd
@@ -6145,6 +6151,9 @@ def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks
     worktree = tmp_path / "worktree"
     worktree.mkdir()
     _init_git_repo_for_test(worktree, monkeypatch)
+    # The Kimi finalize content check diffs from the merge base with origin/main.
+    for args in (["commit", "--allow-empty", "-m", "base"], ["update-ref", "refs/remotes/origin/main", "HEAD"]):
+        subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
     state_path = delegate._state_path("worker-kimicc")
     delegate._write_state_atomic(
         state_path,
@@ -15370,6 +15379,102 @@ def test_run_worker_without_owned_paths_never_auto_commits(tmp_tasks_dir, tmp_pa
     }
     assert pushed == []
     assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
+
+
+def _kimi_run(tmp_path, monkeypatch, task_id: str, text: str, *, committed: bool = False):
+    """A Kimi workspace-write worker that leaves ``text`` in an owned file, then exits 0."""
+    branch = f"kimi/{task_id}"
+    worktree = _agy_dispatch_worktree(tmp_path, branch)
+    (worktree / "site" / "src" / "components").mkdir(parents=True)
+    (worktree / "site" / "src" / "components" / "Label.tsx").write_text(text, encoding="utf-8")
+    if committed:
+        for args in (["add", "-A"], ["commit", "-m", "worker commit"]):
+            subprocess.run(["git", *args], cwd=worktree, check=True, capture_output=True, timeout=30)
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "cli_version": "test",
+            "worktree_path": str(worktree),
+            "worktree_branch": branch,
+            "worktree_base": "main",
+            "owned_paths": ["site/src/components/"],
+            "keep_worktree": True,
+        },
+    )
+    pushed: list[str] = []
+    monkeypatch.setattr(delegate, "_push_auto_finalize_branch", lambda _wt, b: pushed.append(b))
+    monkeypatch.setattr(delegate, "_count_unpushed_commits", lambda *_a: 0)
+    with patch("agent_runtime.runner.invoke", return_value=_bg_mock_result("")):
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="kimi",
+            prompt="Implement the label.",
+            mode="workspace-write",
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort=None,
+            keep_worktree=True,
+        )
+    state = delegate._read_state(state_path)
+    assert state is not None
+    return rc, state, worktree, pushed
+
+
+def test_run_worker_refuses_a_kimi_diff_that_adds_cyrillic_and_commits_nothing(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Kimi takes no Ukrainian content: the finalize check refuses before auto-finalize stages anything."""
+    _sanitize_git_env_for_test(monkeypatch)
+
+    rc, state, worktree, pushed = _kimi_run(tmp_path, monkeypatch, "kimi-cyrillic", "export const t = 'Урок';\n")
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
+    assert "site/src/components/Label.tsx" in state["kimi_content_refusal"]
+    assert state["auto_finalize"] is None
+    assert pushed == []
+    assert _git_out(worktree, "rev-list", "--count", "main..HEAD").strip() == "0"
+    assert _git_out(worktree, "diff", "--cached", "--name-only") == ""
+    assert (worktree / "site" / "src" / "components" / "Label.tsx").is_file()
+
+
+def test_run_worker_refuses_a_kimi_worker_commit_that_adds_cyrillic(tmp_tasks_dir, tmp_path, monkeypatch):
+    _sanitize_git_env_for_test(monkeypatch)
+
+    rc, state, _worktree, pushed = _kimi_run(
+        tmp_path, monkeypatch, "kimi-cyrillic-commit", "export const t = 'Урок';\n", committed=True
+    )
+
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert "KIMI CODING-ONLY" in state["kimi_content_refusal"]
+    assert pushed == []
+
+
+def test_run_worker_auto_finalizes_a_cyrillic_free_kimi_diff(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Delegate commits Kimi's owned paths in workspace-write once the diff adds no Cyrillic text."""
+    _sanitize_git_env_for_test(monkeypatch)
+
+    rc, state, worktree, pushed = _kimi_run(tmp_path, monkeypatch, "kimi-clean", "export const t = 'Lesson';\n")
+
+    assert state.get("kimi_content_refusal") is None
+    assert state["auto_finalize"]["ok"] is True, state["auto_finalize"]
+    assert state["auto_finalize"]["changed_files"] == ["site/src/components/Label.tsx"]
+    assert state["status"] == "done"
+    assert rc == 0
+    assert pushed == ["kimi/kimi-clean"]
+    assert _git_out(worktree, "show", "--name-only", "--format=", "HEAD").split() == ["site/src/components/Label.tsx"]
+
+
+def test_kimi_worktree_prompt_hands_the_commit_to_delegate():
+    text = delegate._augment_prompt_with_worktree(
+        "Implement it.", Path("/tmp/wt"), mode="workspace-write", delegate_commits=True
+    )
+    assert "Do not commit or push." in text
+    assert "Cyrillic" in text
+    assert "Commit your work" not in text
 
 
 def test_auto_finalize_refuses_when_every_change_is_outside_owned_paths(tmp_path, monkeypatch):
