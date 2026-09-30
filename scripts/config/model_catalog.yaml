@@ -112,7 +112,7 @@ review_scheduler:
     claude:
       formal_review_eligible: true
       # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
-      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
+      models: [claude-fable-5-1, claude-sonnet-5-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -405,9 +405,10 @@ models:
   claude-fable-5:
     family: anthropic
     tier: frontier_authority
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: claude-fable-5-1
     roles: [architecture, critical_review, long_horizon_coding]
-    transports: [native_claude, cursor]
+    transports: []
     strengths: [highest_anthropic_capability, long_horizon_work]
     weaknesses: [stricter_refusal_surface, cursor_fallback_no_zdr]
     notes: >-
@@ -437,8 +438,8 @@ models:
       Quirks: high+ on simple tasks over-gathers (lower effort, do not prompt
       around it); low searches less (bump for retrieval-heavy named products);
       effort does not shorten visible output. Keep verification scaffolding —
-      the Opus 5 guidance to delete it does not apply. claude-fable-5 remains as
-      the legacy alias id pinned by existing callers and tests. Full prose:
+      the Opus 5 guidance to delete it does not apply. claude-fable-5 is retired
+      with no executable routes; historical attribution remains unchanged. Full prose:
       docs/best-practices/fleet-shared-doctrine.md § Effort.
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
@@ -486,7 +487,7 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
   # Retained alongside claude-opus-5. Opus is the non-binding Anthropic advisory-
   # consultation seat; designated approval authority remains identity-scoped and the
-  # current advisor roster uses claude-fable-5 + gpt-6.1-sol. This legacy id
+  # current advisor roster uses claude-fable-5-1 + gpt-6.1-sol. This legacy id
   # is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
   # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
   # broke collection with KeyError: 'claude-opus-4-8'.
@@ -621,11 +622,12 @@ models:
   grok-4.6:
     family: xai
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: retired
+    replaced_by: grok-4.7
     # Prior pin (operator order 2026-08-16 / #6865). Not admitted by the
     # adapter. Defaults and ladders use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
-    transports: [native_grok, cursor]
+    transports: []
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window, superseded_as_default_by_grok_4_7]
     notes: >-
@@ -641,7 +643,7 @@ models:
     # in favor of grok-4.6; kept here (not deleted) only so the disabled
     # grok-hermes registry seat's frozen default_model still resolves against
     # the catalog. Never referenced by any active review_candidate, ladder,
-    # orchestrator_seat, or formal_cf_default — those are grok-4.6 only.
+    # orchestrator_seat, or formal_cf_default — live routes use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: [native_grok]
     strengths: [strong_coding, sharp_review, agentic_work]
@@ -996,18 +998,11 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5-1
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
-  claude-fable-5:
-    model_id: claude-fable-5
-    route: claude
-    transport: native_claude
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
-  claude-fable-5-cursor-fallback:
-    model_id: claude-fable-5
+  claude-fable-5-1-cursor-fallback:
+    model_id: claude-fable-5-1
     route: cursor
     transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-fable-5-1-thinking-high
     review_profiles: [code, infra]
     capabilities: [code_review]
   grok-4.7:
@@ -1025,14 +1020,6 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7
     review_profiles: [code, infra]
     capabilities: [code_review]
-  grok-4.6:
-    # Historical row. The adapter does not admit this id.
-    model_id: grok-4.6
-    route: grok
-    transport: native_grok
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.6
-    review_profiles: [code, infra]
-    capabilities: [code_review, isolation, sealed_evidence]
   glm-5.3:
     model_id: glm-5.3
     route: glm
@@ -1076,17 +1063,6 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-sonnet-5
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
-  deepseek-v4-pro:
-    model_id: deepseek-v4-pro
-    route: deepseek
-    transport: opencode
-    # Hard implement only (complex multi-file, hard lookup) — not default, not a
-    # routine review-ladder rung (operator GO 2026-08-13, canary #6703).
-    invocation: opencode run --model deepseek/deepseek-v4-pro --variant high
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-    requires_silence_timeout: true
-    domain_excluded_from: [folk_content]
   composer-2.5:
     model_id: composer-2.5
     route: cursor
@@ -1112,14 +1088,6 @@ review_candidates:
     invocation: .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool --model poolside/poolside/laguna-xs-2.1
     review_profiles: [code, infra]
     capabilities: [code_review]
-  deepseek-v4.1-flash:
-    model_id: deepseek-v4.1-flash
-    route: deepseek
-    transport: opencode
-    invocation: opencode run --model deepseek/deepseek-flash --variant high
-    review_profiles: [code, infra]
-    capabilities: [code_review]
-    domain_excluded_from: [folk_content]
 
 # Fleet-comms stream orchestrator seats (#5512 / #4707 / #5703). These lanes may own a
 # cold-start loop (prioritize → delegate → CF → merge-in-lane). Formal *sealed*
@@ -1230,12 +1198,12 @@ formal_cf_defaults:
     effort: high
     # Sealed Claude ACP: Sonnet 5.5 default; Fable / Opus 5.5 / Opus 5 / Opus 4.8 via --model pin
     # (operator 2026-08-06 formal pin). Effort fixed high on sealed participant.
-    escalate_model_id: claude-fable-5
+    escalate_model_id: claude-fable-5-1
     escalate_effort: high
     family_models:
       - claude-sonnet-5-5
       - claude-sonnet-5
-      - claude-fable-5
+      - claude-fable-5-1
       - claude-opus-5-5
       - claude-opus-5
       - claude-opus-4-8
@@ -1277,22 +1245,18 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Sol high → Opus 5.5 → Sonnet 5.5 → Grok / DS / pool.
+  # high/medium/low: Sol high → Opus 5.5 → Sonnet 5.5 → Grok / pool.
   # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
     - [openai_frontier]
-    # Fable 5 is the Anthropic authority rung (operator 2026-07-26 — Opus 5
+    # Fable 5.1 is the Anthropic authority rung (operator 2026-07-26 — Opus 5
     # de-advisored: weak in the role, over-verbose; reverses 2026-07-24). Opus is
     # NOT on the authority ladder at all; it remains a practical/coding seat.
-    - [claude-fable-5]
-    - [claude-fable-5-cursor-fallback]
-    - [claude-sonnet-5-5]
+    - [claude-fable-5-1]
+    - [claude-fable-5-1-cursor-fallback]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
-    # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
-    # (volume). Pro hold lifted for hard implement only — never a routine review rung.
-    - [deepseek-v4.1-flash]
     - [composer-2.5]
     - [pool]
     - [pool-xs]
@@ -1305,9 +1269,6 @@ review_ladders:
     - [claude-sonnet-5-5]
     - [grok-4.7]
     - [grok-4.7-cursor-fallback]
-    # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
-    # (volume). Pro hold lifted for hard implement only — never a routine review rung.
-    - [deepseek-v4.1-flash]
     - [composer-2.5]
     - [pool]
     - [pool-xs]
@@ -1331,6 +1292,6 @@ budget_substitution_models:
     gpt-6-luna: gpt-6-luna
   cursor:
     claude-opus-5-5: claude-opus-5-5-high
-    claude-fable-5: claude-fable-5
+    claude-fable-5-1: claude-fable-5-1-thinking-high
     grok-4.7: grok-4.7
     composer-2.5: composer-2.5

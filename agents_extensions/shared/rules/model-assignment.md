@@ -2,6 +2,20 @@
 
 <critical>
 
+**Review admission:** `claude-fable-5` and `grok-4.6` are retired; use
+`claude-fable-5-1` and `grok-4.7`. DeepSeek is excluded from every dispatch and
+review, and Sonnet is excluded from critical security review. Historical
+capability and transport descriptions below confer no routing permission.
+
+**Resolver preference:** after hard gates, `review_scheduler.profile_risk_role_order`
+ranks semantic suitability before quality tier; health and quota break ties
+within that suitability and tier. YAML rung order is a fallback inventory.
+For `code/high`, Opus 5.5 currently matches `critical_review` at rank 3;
+Sonnet 5.5 matches `strong_review` at rank 0. Thus an eligible Opus seat can
+lose to Sonnet on this profile. When both match the requested role equally,
+Opus's authority tier wins. Inspect the returned suitability and selection
+trace rather than inferring eligibility or priority from rung position.
+
 Match the EXACT command — not a principle. Memory does not enforce; the dispatch tool does. Established 2026-05-06 after repeated drift on cost discipline.
 
 ## Canonical model catalog and refresh contract
@@ -50,7 +64,7 @@ merge / do not jump MQ ahead of Foundry #7102.**
 
 | Seat | Provisional lock | Catalog tier (unchanged) | Wave 1 CF evidence |
 | --- | --- | --- | --- |
-| Fable (`claude-fable-5`) | **S+** | `frontier_authority` | operator lock (no Wave 1 public CF cell required) |
+| Fable (`claude-fable-5`, historical scorecard) | **S+** | `frontier_authority` | operator lock (no Wave 1 public CF cell required) |
 | Historical `gpt-5.6-sol` / Codex (retired; not a route) | **A** / hard advisory in the 2026-08-23 scorecard | `frontier_authority` at the time | #7142 thorough/confirmational on docs; live hard advice now routes to GPT-6 Astra @ high |
 | Grok (`grok-4.6`) | **≥B, NOT C** — do not demote | `frontier_practical` | #7133 pass with nits; residual-positional finding |
 | Kimi (native `kimi` CLI) | historical evidence only; Kimi no longer reviews (coding only) | `frontier_practical` | #7143 pass with nits |
@@ -73,8 +87,8 @@ conflict. Resolved-model attestation (or pinned `composer-2.5` / `grok-4.7` auth
 the primary provenance path.
 
 **Fable transport order (user directive 2026-07-20):** always dispatch the exact
-`claude-fable-5` model through the native Claude harness first:
-`.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5`.
+`claude-fable-5-1` model through the native Claude harness first:
+`.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5-1`.
 Use Cursor with the same pinned model only when native Claude does not expose Fable or
 rejects that model before inference. Quota pressure alone does not invert this order.
 Record the harness fallback explicitly; it is a transport fallback, not a model substitution.
@@ -138,7 +152,7 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
     advisor seats. GPT-6.1 Sol holds the Astra seat, pinned at `high` for advisory and escalation. Fable's cost is accepted for advisor turns:
     they are rare, short, and decision-bearing; never spend them on queue grind.
   * **Other advisors**: `gemini-3.8-flash-high` (default for routine and deep; `gemini-3.1-pro-high` only on explicit request) ·
-    `glm-5.3` @ `max` (advisory) · `grok-4.6` @ `high`. (Kimi: web, UI and backend coding only —
+    `glm-5.3` @ `max` (advisory) · `grok-4.7` @ `high`. (Kimi: web, UI and backend coding only —
     no Ukrainian-language content, no reviews, consults, design or rules.)
   * Legacy Terra qualification does not authorize a current Codex fallback; use
     the GPT-6 seat that fits the assigned role.
@@ -245,7 +259,7 @@ or count as a formal review.
 | Content Review with VESUM verification (load-bearing) | **LANGUAGE-LANES RULE binds (operator 2026-09-27): claude / codex (GPT) / agy (Gemini) only** — dispatch the reviewer on one of these three with the `sources` MCP (`verify_words`, `query_cefr_level`, `check_russian_shadow`). ~~deepseek-v4-pro default (#4358)~~ RETIRED for language seats by the same order; the #2112/# 4358 validation history stands as evidence only |
 | Wiki / content writing · content / pedagogy / factual **review** | agy — `delegate.py dispatch --agent agy` (write) or `ab ask-agy --to-model gemini-3.8-flash-high` (review default for routine and deep; `gemini-3.1-pro-high` only on explicit request). **Use agy actively here** (user 2026-06-24): the §7/factual-fabrication fence is LIFTED (cleared 2026-06-13 — it grounds in the `sources` MCP and abstains "NO SOURCE"), and its pedagogy/CEFR review is strong — it LED the 2026-06-24 practice-hub panel. **Metered** → be cost-aware, but do NOT under-use it where it's strong. NOT for cross-file architecture / security-concurrency / auth-heavy git / mass-mechanical (→ codex/claude). Caveat: agy `--data` truncates large/binary attachments → paste trimmed content or use codex `--data`. |
 | Ukrainian CONTENT (authoring · russicism/quality review) — **we AUTHOR UK content, we do NOT translate EN→UK** | Written in Ukrainian, immersion-first, grounded in VESUM/`sources` MCP. **Per-profile authoring — BAKEOFF-BACKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/`, deterministic VESUM + russian-shadow, 5 candidates):** all of codex (historical benchmark models: gpt-5.6-terra and gpt-5.5)/agy/claude/deepseek/cursor wrote **0-russicism, 95-100%-VESUM** content on all 3 profiles → **gpt-5.5 is not uniquely best; it can and should delegate.** A1-A2 English-support → **agy** (best immersion teaching-voice) ≈ **codex**; B1-C2 pure → **codex ≈ agy ≈ claude**. **Seminars — FACT-CHECKED (2026-07-04, `audit/2026-07-04-uk-writing-probe/SEMINAR-SCORECARD.md`; tool-backed vs uk.wikipedia + VESUM, cross-verified by an independent 3-family review codex/agy/deepseek):** the probe can't rank seminar content (all clean), so the «Веснянки» sample was fact-verified. **Writers → codex + claude + agy** (all factually clean, mutually cross-family). **deepseek + cursor are NOT seminar writers:** deepseek made 1 hard error (царинні conflated with юр'ївські cattle-drive songs — confident scholarly specificity that was wrong; it conceded on review), cursor made 2 (веснянки «від хати до хати» = over-generalised риндзівки/волочебні; «мелодії легкі, м'які, співочі» = inverted musicology). **Seminar review → claude / codex / agy ONLY (LANGUAGE-LANES RULE, operator 2026-09-27; the former deepseek seat is retired — its царинні hard error stands as supporting evidence)**, **always paired with a source-enforced fact-check gate** (`seminar-content-review` skill + `sources` MCP) — never a bare LLM pass. FOLK pairing stays GPT↔Claude per `docs/folk-epic/folk-review-rubric.md`. **Lesson: "sounds scholarly" ≠ "is accurate" — verify confident specificity, don't trust it.** **Review (russicism/surzhyk/CEFR):** one of the three language lanes + `sources` MCP (`verify_words`, `check_russian_shadow`, `query_cefr_level`); agy strong here. ⚠️ **cursor: EXCLUDED from all language seats (LANGUAGE-LANES RULE)** — its bakeoff history (non-canonical apostrophes U+2019, text-dependent russicism «перекатні») stands as supporting evidence only. **Never pool/glm/gemma/kimi/deepseek for UK content either** (same rule). |
-| Adversarial review of design / ADR / architecture / code — the **Claude reviewer seat** | **Prefer IN-SESSION INLINE for cost** — the interactive orchestrator reads the artifact, verifies claims, writes the verdict + fix notes on the main quota (cheapest path; economics below). When the requested model is Fable, route `claude-fable-5` through native Claude first and use pinned Cursor Fable only if native Claude does not expose it. Dispatching Claude (`claude -p` / `--agent claude` / `review-deep` / an `Agent` review subagent) **is permitted when it adds value or inline isn't feasible** — the `-p` sunset was cancelled (user 2026-06-22). For routine reviews still prefer inline or a non-Claude lane; reserve dispatched Claude for catches that need it. Context heavy → DEFER to the next interactive session, or dispatch if it must clear now. |
+| Adversarial review of design / ADR / architecture / code — the **Claude reviewer seat** | **Prefer IN-SESSION INLINE for cost** — the interactive orchestrator reads the artifact, verifies claims, writes the verdict + fix notes on the main quota (cheapest path; economics below). When the requested model is Fable, route `claude-fable-5-1` through native Claude first and use pinned Cursor Fable only if native Claude does not expose it. Dispatching Claude (`claude -p` / `--agent claude` / `review-deep` / an `Agent` review subagent) **is permitted when it adds value or inline isn't feasible** — the `-p` sunset was cancelled (user 2026-06-22). For routine reviews still prefer inline or a non-Claude lane; reserve dispatched Claude for catches that need it. Context heavy → DEFER to the next interactive session, or dispatch if it must clear now. |
 | Q&A or single-shot Ukrainian language/content review without commit | `ab ask-codex` / `ab ask-agy --to-model gemini-3.8-flash-high` for routine AND deep (top AGY default; `gemini-3.1-pro-high` only on explicit request; gemini-cli retired → agy) |
 | Live web fact-check (current version / pricing / URL & citation currency, "is this API still live") | **opencode + lightpanda-MCP HARNESS capability — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); it is NOT model-specific. Route by fit: `ab ask-pool` (poolside.ai, **free**) · `ab ask-glm` (⚠️ LOCAL-ONLY, China-egress) · or an opencode-hosted deepseek. |
 | Search / grep / "find me X" across files | Native Codex subagent, default `gpt-6-luna` @ `high`, with explicit owned paths and an objective scope ceiling |
@@ -687,7 +701,7 @@ in `/api/rules`):
   judgment is needed) → qualified practical implementer (Luna @ high for routine bounded
   Codex work, or another fit worker). A complete advisor packet defines the work; it does not
   turn Astra into an implementer.
-- **Fable reachability** under a small Claude subscription: native pin `claude-fable-5`, or
+- **Fable reachability** under a small Claude subscription: native pin `claude-fable-5-1`, or
   **Cursor → Fable** (multi-model pin; use composite identity for CF bookkeeping when required).
 - **Session breadth:** after ≥3 implement dispatches, ≥2 agents and ≥2 tiers, or a tool-backed
   `NOTE: fleet_breadth`. Handoff must attach

@@ -73,6 +73,16 @@ def test_explicit_legacy_sonnet_driver_pin_remains_accepted() -> None:
     assert "would exec claude --model claude-sonnet-5" in result.stdout
 
 
+def test_short_fable_5_alias_follows_live_seat_but_retired_id_is_refused() -> None:
+    alias = run_launcher("start-claude.sh", "--model", "fable-5")
+    assert alias.returncode == 0, alias.stderr
+    assert "would exec claude --model claude-fable-5-1" in alias.stdout
+    retired = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "claude-fable-5")
+    assert retired.returncode != 0
+    assert "would claim lease" not in retired.stdout
+    assert "would exec claude" not in retired.stdout
+
+
 OPUS_5_5_1M = "claude-opus-5-5\\[1m\\]"  # printf %q form of claude-opus-5-5[1m]
 
 

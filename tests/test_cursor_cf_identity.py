@@ -5,7 +5,7 @@ cross-family review gate:
 
 1. An attested ``cursor:composer-2.5`` author + same-family reviewer -> refuse
    (same-family checks use the ATTESTED model family: Cursor ``composer-2.5``
-   is Moonshot, Cursor ``grok-4.6`` is xAI — neither may be reviewed by its
+   is Moonshot, Cursor ``grok-4.7`` is xAI — neither may be reviewed by its
    native sibling).
 2. An attested Cursor author + eligible other-family exact-head -> allowed.
 3. ``cursor:auto`` with ``resolved_model=null`` -> not driver-of-record and
@@ -69,12 +69,12 @@ def test_cursor_attested_composer_author_refuses_same_family_review():
 
 
 def test_cursor_attested_grok_author_refuses_same_family_review():
-    """Attested cursor:grok-4.6 is xAI: neither native Grok nor the Cursor
+    """Attested cursor:grok-4.7 is xAI: neither native Grok nor the Cursor
     grok fallback may review it — the attested family binds, not the harness."""
-    inputs = ResolverInputs(author_model="cursor:grok-4.6", risk="medium")
+    inputs = ResolverInputs(author_model="cursor:grok-4.7", risk="medium")
     assert resolve_author_family(inputs.author_model) == "xai"
 
-    for name in ("grok-4.6", "grok-4.7-cursor-fallback"):
+    for name in ("grok-4.7", "grok-4.7-cursor-fallback"):
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
         assert result.status == "excluded", (name, result.status)
         assert "same family" in result.reason
@@ -89,7 +89,7 @@ def test_cursor_attested_grok_author_refuses_same_family_review():
 
 
 def test_cursor_attested_author_allows_other_family_exact_head_review():
-    for token, forbidden_family in (("cursor:composer-2.5", "moonshot"), ("cursor:grok-4.6", "xai")):
+    for token, forbidden_family in (("cursor:composer-2.5", "moonshot"), ("cursor:grok-4.7", "xai")):
         inputs = ResolverInputs(author_model=token, risk="medium", exact_head=_EXACT_HEAD)
         resolution = resolve_reviewer(inputs)
         assert resolution.fail_closed_reason is None, token

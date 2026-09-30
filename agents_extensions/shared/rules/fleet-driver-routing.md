@@ -29,7 +29,7 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ high; advisory turns only), Opus-class when roster says so |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible route, never from an advisory turn | **claude-fable-5-1** (Fable), **gpt-6.1-sol** (GPT-6.1 Sol in the Astra seat @ high; advisory turns only), Opus-class when roster says so |
 | **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6.1 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3 (web, UI and backend coding only), Grok 4.7 (review/CF, not judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
@@ -42,9 +42,9 @@ not spend advisory turns on ordinary implementation or review.
 **Standing operator preference (2026-08-06):** Fable remains the Anthropic
 authority seat even if the operator shrinks the Claude subscription. Reach Fable via:
 
-1. Native Claude seat with model pin **claude-fable-5** (preferred when available), or
+1. Native Claude seat with model pin **claude-fable-5-1** (preferred when available), or
 2. **Cursor** multi-model pin to Fable (use composite identity for CF author/review
-   bookkeeping, e.g. `cursor:claude-fable-5` per `resolve_author_family` rules).
+   bookkeeping, e.g. `cursor:claude-fable-5-1` per `resolve_author_family` rules).
 
 Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rsync gates, or smoke
 `--limit 5` jobs.

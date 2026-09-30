@@ -489,7 +489,7 @@ launcher_normalize_model() {
   # normalize to roster identifiers when a model is provided.
   case "$LC_PROVIDER:$LC_MODEL" in
     claude:fable) LC_MODEL='claude-fable-5-1' ;;
-    claude:fable-5|claude:claude-fable-5) LC_MODEL='claude-fable-5' ;;  # legacy alias
+    claude:fable-5) LC_MODEL='claude-fable-5-1' ;;  # short alias follows the live seat
     claude:sonnet) LC_MODEL='claude-sonnet-5-5' ;;
     claude:opus|claude:opus-5-5|claude:opus-5.5) LC_MODEL='claude-opus-5-5[1m]' ;;
     claude:opus-5) LC_MODEL='claude-opus-5' ;;
@@ -699,7 +699,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5-1|claude:claude-sonnet-5-5|claude:claude-sonnet-5|codex:gpt-6.1-sol|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)

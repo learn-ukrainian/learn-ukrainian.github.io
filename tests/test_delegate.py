@@ -1084,7 +1084,7 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
 
 @pytest.mark.parametrize("agent", ["cursor", "codex"])
 @pytest.mark.parametrize(
-    "model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra"]
+    "model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra", "gpt-6-sol", "gpt-6-astra", "claude-fable-5", "grok-4.6"]
 )
 def test_dispatch_rejects_catalog_retired_model_before_spawn(tmp_tasks_dir, capsys, agent, model):
     args = delegate.build_parser().parse_args(
@@ -3414,7 +3414,7 @@ def _finalize_mock_result():
             "stderr_excerpt": None,
             "returncode": 0,
             "rate_limited": False,
-            "model": "grok-4.6",
+            "model": "grok-4.7",
             "effort": "high",
             "cli_version": "0.2.111",
         },

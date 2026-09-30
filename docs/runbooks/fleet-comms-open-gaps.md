@@ -151,7 +151,7 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 # Exceptional pin: still passes every hard gate and uses the same reservation ledger.
 .venv/bin/python scripts/delegate.py dispatch \
   --agent claude --mode read-only --worktree --branch <branch> \
-  --task-id review-<N> --model claude-fable-5 --effort high \
+  --task-id review-<N> --model claude-fable-5-1 --effort high \
   --prompt-file prompt.md
 
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-pool ...  # default Laguna S 2.1
