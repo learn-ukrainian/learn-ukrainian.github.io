@@ -68,6 +68,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_communication_scope,
 )
 from scripts.agent_runtime.adapters.acpx import TRANSPORT_ENV as ACPX_TRANSPORT_ENV
+from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
 from scripts.entire.fleet_capture import FleetCapture, resolved_route
 
 from .adapters.base import AgentAdapter
@@ -522,17 +523,23 @@ def _prepare_stdin_handle(
         dir=str(directory) if directory is not None else None,
     )
     path = Path(path_str)
+    handle = None
     try:
-        with os.fdopen(fd, "wb") as handle:
-            handle.write(stdin_payload.encode("utf-8"))
+        handle = os.fdopen(fd, "w+", encoding="utf-8")
+        handle.write(stdin_payload)
+        handle.flush()
+        handle.seek(0)
     except OSError:
+        if handle is not None:
+            handle.close()
+        else:
+            os.close(fd)
         with contextlib.suppress(OSError):
             path.unlink()
         raise
 
     # Ownership transfers to the subprocess lifecycle; _cleanup_stdin_temp
     # closes it in the runner finally block.
-    handle = open(path, encoding="utf-8")  # noqa: SIM115
     if unlink_after_open:
         path.unlink()
         return handle, None
@@ -1836,14 +1843,17 @@ def _execute_invocation_plan(
         # the finally clause doesn't try to close them again.
         stdout_master_fd = None
         stderr_master_fd = None
-        parse = adapter.parse_response(
-            stdout=stdout_text,
-            stderr=stderr_text,
-            returncode=final_returncode if final_returncode is not None else -1,
-            output_file=plan.output_file,
-            plan=plan,
-            call_start_time=start_time,
-        )
+        try:
+            parse = adapter.parse_response(
+                stdout=stdout_text,
+                stderr=stderr_text,
+                returncode=final_returncode if final_returncode is not None else -1,
+                output_file=plan.output_file,
+                plan=plan,
+                call_start_time=start_time,
+            )
+        except AttemptReadError as exc:
+            parse = ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
         if (
             not parse.ok
             and final_returncode not in (None, 0)
@@ -2006,8 +2016,8 @@ def _finalize_v4_runner_origin(
     output_bytes = b""
     if getattr(plan, "output_file", None) is not None:
         output_path = Path(plan.output_file)
-        if output_path.is_file():
-            output_bytes = output_path.read_bytes()
+        with contextlib.suppress(FileNotFoundError):
+            output_bytes = safe_read_attempt_file(output_path)
     with RequestExecutor() as executor:
         executor.finalize_v4_runner_execution(
             request_id=authorization_id,

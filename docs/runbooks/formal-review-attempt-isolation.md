@@ -11,7 +11,8 @@ proven boundary. Other unsupported harnesses remain refused.
 Formal attempts on Linux have a private network namespace (`--unshare-net`),
 private PID namespace and private procfs. The host network and its loopback,
 interface listeners and abstract Unix sockets are unreachable, even when proxy
-variables are cleared or overridden. Ordinary dispatches are unchanged.
+variables are cleared or overridden. Ordinary dispatches retain their launch
+and network settings; their parent file reads also use the shared safe reader.
 Platforms without the network namespace mechanism are refused for formal
 attempts; the former macOS filesystem-only capability is insufficient here.
 
@@ -56,6 +57,61 @@ sandbox, which otherwise cancels stdio MCP calls. AGY uses a fresh home and
 app-data directory under the same OS boundary. AGY's separate sealed code-review
 `review_isolation` mode remains refused; formal content attempts use the
 runner-owned manifest boundary, rather than enabling that unsupported mode.
+
+## Parent read boundary and site inventory
+
+Seat-writable names remain untrusted after exit. `safe_read_attempt_file` in
+`scripts/agent_runtime/attempt_boundary.py` walks every component from the trusted
+filesystem root with `openat` directory descriptors and `O_NOFOLLOW | O_DIRECTORY`,
+then opens the leaf with `O_NOFOLLOW | O_NONBLOCK | O_NOCTTY`. It checks the opened
+fd for a regular file, runner UID ownership, exactly one hard link and a 64 MiB
+maximum total size, including resumed prefixes. Reads use that fd only, with a
+bounded read and a second metadata check. Missing optional telemetry remains
+absent; unsafe reads raise body-free `AttemptReadError` codes. Runner parsing
+converts refusals to failed `ParseResult` values with no response, without
+rollout, stdout or provider fallback. Diagnostic tail refusals yield no text.
+
+This uses the directory-fd method described in the
+[Linux open/openat reference](https://man7.org/linux/man-pages/man2/open.2.html);
+`O_NOFOLLOW` on the leaf alone does not protect preceding components.
+
+| Parent read site | Disposition |
+| --- | --- |
+| Codex `parse_response`: final output file | Shared reader; unsafe output returns typed failure immediately. |
+| Shared `_output_schema.load_output_schema` and Codex `_tool_config_flags`: caller-supplied output schema | Shared reader before JSON/hash validation; adapter planning cannot read it through an earlier unsafe loader. |
+| Codex `_read_rollout_segment`: completion, prompt binding and tool trace | Shared reader with invocation offset; unsafe reads cannot be swallowed by matching/recovery. |
+| Codex `_read_rollout_session_id`: session metadata | Shared reader before metadata parsing. |
+| AGY `_read_transcript_events`: transcript events | Shared reader with invocation offset; a shortened resumed transcript remains unbound. |
+| AGY `_transcript_baseline`: resumed prefix sizing | Shared reader; size derived from checked bytes. |
+| AGY `_conversation_id_from_log`: invocation log | Shared reader before UUID extraction. |
+| AGY `_inline_saved_tool_result_pointer`: saved result | Lexical conversation steps containment plus shared reader; no resolve/check/reopen race. |
+| Runner `_finalize_v4_runner_origin`: output observation | Shared reader before recording; refusal cannot persist host bytes. |
+| Runner failure diagnostics via watchdog `tail_liveness_file_for_debug` | Shared reader before tail extraction; unsafe files yield no diagnostic bytes. |
+| Runner `_prepare_stdin_handle`: prompt input | Retains the original parent-created descriptor through spawn, without reopening its name. |
+
+Codex rollout timestamps, snapshot sizes, liveness mtime polling and runner
+cleanup size checks inspect metadata only; they never read target bytes.
+Attempt provisioning reads manifest pins, MCP configuration, installed runtime
+headers and parent-created proxy configuration before any seat launches. These
+are authorized inputs or parent-owned setup, not post-launch seat output reads.
+Stdout/stderr are existing parent-held pipes or PTYs, not reopened names.
+
+The Claude adapter is unchanged in this branch and remains refused for formal
+attempts. The separate Claude follow-up owns this complete read audit:
+
+| Claude site | Required follow-up |
+| --- | --- |
+| `_tool_calls_from_claude_session_jsonl` | Route seat-writable session telemetry through the shared reader. |
+| `_mcp_server_names` | Use the shared reader for scoped MCP configuration; runs before launch today. |
+| `build_invocation` sources-only MCP bytes check | Preserve containment and use the shared reader for writable scoped configuration. |
+| `_worker_guard_settings` | Reads tracked settings before launch; retain trusted source provenance. |
+
+The regression denominator includes sandboxed seat swaps of both Codex output
+and AGY transcript with outside-boundary sentinel controls, plus hard links,
+FIFOs, a device, oversized/growing files, wrong owners, directory symlinks and
+swaps immediately before/after descriptor opens. These are boundary integrity
+proofs, not semantic curriculum-review acceptance. Infra owns exact-head
+cross-family re-review and landing; the Claude follow-up owns its deferred sites.
 
 ## Claude adapter follow-up
 
@@ -140,7 +196,22 @@ merged dispatch checkout. These are scoped foreground tests; no provider/model
 request is made by the host probes:
 
 ```bash
-"$PROJECT_PYTHON" -m pytest tests/agent_runtime/test_attempt_boundary.py tests/agent_runtime/test_attempt_network.py -q
+"$PROJECT_PYTHON" -m pytest \
+  tests/agent_runtime/test_attempt_safe_read.py \
+  tests/agent_runtime/test_attempt_boundary.py \
+  tests/agent_runtime/test_attempt_network.py \
+  tests/agent_runtime/test_codex_adapter.py \
+  tests/agent_runtime/test_codex_rollout_match.py \
+  tests/agent_runtime/test_codex_hook_probe.py \
+  tests/agent_runtime/adapters/test_agy_adapter.py \
+  tests/agent_runtime/test_review_mcp.py \
+  tests/agent_runtime/test_stdin_tempfile_spawn.py \
+  tests/agent_runtime/test_runner_failover.py \
+  tests/test_agent_runtime.py \
+  tests/test_agent_runtime_tool_calls.py \
+  tests/test_agent_runtime_json_parse.py \
+  tests/test_agent_runtime_rate_limit.py \
+  tests/build/test_reviewer_schema_transport.py -q
 LU_REVIEW_HOST_PROBES=1 "$PROJECT_PYTHON" -m pytest \
   tests/agent_runtime/test_attempt_boundary.py -q
 ```

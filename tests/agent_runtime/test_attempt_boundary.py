@@ -714,3 +714,72 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
         linux_claude_auth()
     monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", access)
     assert linux_claude_auth() == {}  # existing selected env wins
+
+
+@pytest.mark.parametrize("agent", ["codex", "agy"])
+def test_sandboxed_seat_swap_is_refused_by_parent(world, tmp_path, monkeypatch, agent):
+    """Reproduce B1/B1b through the real sandbox and runner parse boundary."""
+    from scripts.agent_runtime.adapters import agy as agy_module
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+
+    root, home = world
+    forbidden = home / "forbidden.jsonl"
+    sentinel = "FORBIDDEN_PARENT_READ_SENTINEL"
+    forbidden.write_text(json.dumps({"type": "USER_INPUT", "content": sentinel}) + "\n")
+    assert sentinel in forbidden.read_text()  # outside-boundary positive control
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent)
+    observed = []
+    parsed = []
+    conversation_id = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee"
+    real_adapter = {"codex": CodexAdapter, "agy": AgyAdapter}[agent]()
+
+    class SwapAdapter:
+        default_model = "fixture-model"
+        supported_modes = frozenset({"read-only"})
+
+        def build_invocation(self, **kwargs):
+            attempt = kwargs["tool_config"]["review_attempt_boundary"]
+            observed.append(attempt)
+            app_data = attempt.write_root / "app-data"
+            output = attempt.write_root / "tmp" / "output.txt"
+            transcript = agy_module._brain_transcript_path(app_data, conversation_id)
+            target = output if agent == "codex" else transcript
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text("own return")
+            log = attempt.write_root / "tmp" / "agy.log"
+            log.write_text(f"Created conversation {conversation_id}\n")
+            script = (
+                "import pathlib\n"
+                f"forbidden=pathlib.Path({str(forbidden)!r})\n"
+                "try: forbidden.read_bytes()\n"
+                "except OSError: print('DENIED:direct-host-read',flush=True)\n"
+                "else: raise AssertionError('host file readable')\n"
+                f"target=pathlib.Path({str(target)!r})\n"
+                "target.unlink()\n"
+                "target.symlink_to(forbidden)\n"
+                "print('SWAPPED:seat-name',flush=True)\n"
+            )
+            return InvocationPlan(
+                cmd=[sys.executable, "-c", script], cwd=kwargs["cwd"],
+                output_file=output if agent == "codex" else None,
+                env_overrides={agy_module._AGY_LOG_ENV: str(log), "AGY_APP_DATA_DIR": str(app_data)},
+            )
+
+        def parse_response(self, **kwargs):
+            assert kwargs["returncode"] == 0
+            assert kwargs["stdout"].splitlines() == ["DENIED:direct-host-read", "SWAPPED:seat-name"]
+            parsed.append(True)
+            return real_adapter.parse_response(**kwargs)
+
+        def liveness_signal_paths(self, plan):
+            return ()
+
+    monkeypatch.setattr(runner, "_load_adapter", lambda *a, **k: SwapAdapter())
+    monkeypatch.setattr(runner, "has_headroom", lambda *a, **k: (True, "fixture"))
+    monkeypatch.setattr(runner, "write_record", lambda record: None)
+    result = runner.invoke(agent, "probe", cwd=root, tool_config=tc, model="fixture-model", hard_timeout=30)
+    assert parsed and not result.ok and result.response == ""
+    assert result.stderr_excerpt == "attempt_read_unsafe_path"
+    assert sentinel not in repr(result)
+    assert observed and not observed[0].workspace.exists()

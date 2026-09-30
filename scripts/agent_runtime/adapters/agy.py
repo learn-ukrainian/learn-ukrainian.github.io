@@ -96,6 +96,8 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any, NamedTuple
 
+from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+
 from ..result import ParseResult
 from ..tool_calls import summarize_tool_output
 from ._output_schema import json_value, load_output_schema, plan_output_schema, schema_metadata, structured_result
@@ -1079,9 +1081,11 @@ def _read_transcript_events(transcript_path: Path, *, offset: int = 0) -> tuple[
     line means; nothing is silently dropped.
     """
     try:
-        with transcript_path.open("rb") as handle:
-            handle.seek(offset)
-            raw_lines = handle.read().splitlines()
+        raw_lines = safe_read_attempt_file(transcript_path, offset=offset).splitlines()
+    except AttemptReadError as exc:
+        if str(exc) == "attempt_read_invalid_offset":
+            return None
+        raise
     except OSError:
         return None
 
@@ -1360,11 +1364,6 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
         offset = raw_offset if isinstance(raw_offset, int) and raw_offset >= 0 else None
     if offset is None:
         return None
-    try:
-        if transcript.stat().st_size < offset:
-            return None
-    except OSError:
-        return None
     parsed = _read_transcript_events(transcript, offset=offset)
     if parsed is None:
         return None
@@ -1383,7 +1382,7 @@ def _transcript_baseline(app_data: Path, session_id: str) -> dict[str, Any]:
     offset: int | None = None
     if re.fullmatch(_AGY_UUID, session_id):
         try:
-            offset = _brain_transcript_path(app_data, session_id).stat().st_size
+            offset = len(safe_read_attempt_file(_brain_transcript_path(app_data, session_id)))
         except FileNotFoundError:
             offset = 0
         except OSError:
@@ -1402,11 +1401,11 @@ def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:
 def _conversation_id_from_log(log_file: Path) -> str | None:
     latest: str | None = None
     try:
-        with log_file.open(encoding="utf-8", errors="replace") as handle:
-            for line in handle:
-                match = _AGY_CONVERSATION_RE.search(line)
-                if match:
-                    latest = match.group("id")
+        lines = safe_read_attempt_file(log_file).decode("utf-8", errors="replace").splitlines()
+        for line in lines:
+            match = _AGY_CONVERSATION_RE.search(line)
+            if match:
+                latest = match.group("id")
     except OSError:
         return None
     return latest
@@ -1471,24 +1470,18 @@ def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> st
         return text
 
     path = Path(urllib.parse.unquote(parsed.path))
-    try:
-        resolved_path = path.resolve(strict=True)
-    except OSError:
-        _logger.warning("agy tool result pointer missing: %s", path)
-        return text
-
     allowed_roots = _allowed_tool_result_roots(transcript_path)
-    if not any(_is_relative_to(resolved_path, root) for root in allowed_roots):
-        _logger.warning("agy refused unsafe tool result pointer: %s", resolved_path)
+    root = next((root for root in allowed_roots if _is_relative_to(path, root)), None)
+    if root is None:
+        _logger.warning("agy refused unsafe tool result pointer")
         return text
-
     try:
-        size = resolved_path.stat().st_size
-        with resolved_path.open("rb") as handle:
-            raw = handle.read(_MAX_INLINE_TOOL_RESULT_BYTES + 1)
-    except OSError:
-        _logger.warning("agy failed to read tool result pointer: %s", resolved_path)
+        raw = safe_read_attempt_file(path, trusted_root=root)
+    except FileNotFoundError:
+        _logger.warning("agy tool result pointer missing")
         return text
+    size = len(raw)
+    resolved_path = path  # Logging only; never resolve a seat-controlled name.
 
     truncated = len(raw) > _MAX_INLINE_TOOL_RESULT_BYTES
     if truncated:
@@ -1519,11 +1512,7 @@ def _allowed_tool_result_roots(transcript_path: Path) -> tuple[Path, ...]:
         conversation_root / "steps",
         conversation_root / ".system_generated" / "steps",
     )
-    roots: list[Path] = []
-    for candidate in candidates:
-        with contextlib.suppress(OSError):
-            roots.append(candidate.resolve())
-    return tuple(roots)
+    return candidates
 
 
 def _is_relative_to(path: Path, root: Path) -> bool:

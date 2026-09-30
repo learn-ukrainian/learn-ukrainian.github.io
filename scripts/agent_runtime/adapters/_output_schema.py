@@ -15,6 +15,8 @@ from typing import Any
 
 from jsonschema import Draft202012Validator
 
+from scripts.agent_runtime.attempt_boundary import safe_read_attempt_file
+
 from ..result import ParseResult
 from .base import InvocationPlan
 
@@ -32,7 +34,7 @@ def load_output_schema(tool_config: dict[str, Any] | None) -> dict[str, Any] | N
         raise ValueError("output_schema_path must be a non-empty absolute path")
     if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
         raise ValueError("output_schema_sha256 must be a lowercase SHA-256")
-    payload = Path(path).read_bytes()
+    payload = safe_read_attempt_file(Path(path))
     if hashlib.sha256(payload).hexdigest() != digest:
         raise ValueError("output schema SHA-256 changed after dispatch validation")
     schema = json.loads(payload)

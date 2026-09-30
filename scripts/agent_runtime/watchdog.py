@@ -44,6 +44,8 @@ from pathlib import Path
 
 import psutil
 
+from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+
 # Poll interval for the mtime fallback thread. 5s is a good balance — fast
 # enough to extend the stall clock promptly, slow enough that the overhead
 # is negligible (at most 5 stat calls per 5s = ~1 per second).
@@ -783,13 +785,7 @@ def tail_liveness_file_for_debug(
     _, newest = candidates[0]
 
     try:
-        size = newest.stat().st_size
-        if size == 0:
-            return ""
-        with open(newest, "rb") as f:
-            if size > max_bytes:
-                f.seek(-max_bytes, os.SEEK_END)
-            tail_bytes = f.read()
+        tail_bytes = safe_read_attempt_file(newest)[-max_bytes:]
         return tail_bytes.decode("utf-8", errors="replace")
-    except OSError:
+    except (OSError, AttemptReadError):
         return ""

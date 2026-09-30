@@ -43,6 +43,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+from scripts.agent_runtime.attempt_boundary import AttemptReadError, safe_read_attempt_file
+
 from ..read_only_tmp import validate_read_only_tmp_root
 from ..result import ParseResult
 from ..tool_calls import normalize_tool_calls, parse_json_events
@@ -506,7 +508,7 @@ class CodexAdapter:
             if not isinstance(expected_sha256, str) or not re.fullmatch(r"[0-9a-f]{64}", expected_sha256):
                 raise ValueError("CodexAdapter: output_schema_sha256 must be a lowercase SHA-256")
             try:
-                payload = schema_path.read_bytes()
+                payload = safe_read_attempt_file(schema_path)
                 schema = _json.loads(payload.decode("utf-8"))
             except (OSError, UnicodeDecodeError, _json.JSONDecodeError) as exc:
                 raise ValueError(f"CodexAdapter: invalid output schema JSON: {exc}") from exc
@@ -559,13 +561,14 @@ class CodexAdapter:
         from this invocation's bound rollout. This preserves completed-turn
         recovery after early reap without treating partial output as success.
         """
-        # Read the output file if it exists. Tolerate all errors.
         file_output = ""
-        if output_file is not None and output_file.exists():
+        if output_file is not None:
             try:
-                file_output = output_file.read_text("utf-8", errors="replace").strip()
-            except OSError:
-                file_output = ""
+                file_output = safe_read_attempt_file(output_file).decode("utf-8", errors="replace").strip()
+            except AttemptReadError as exc:
+                return ParseResult(ok=False, response="", failure_code=str(exc), stderr_excerpt=str(exc))
+            except FileNotFoundError:
+                pass
 
         output_schema = plan_output_schema(plan)
 
@@ -937,6 +940,8 @@ class CodexAdapter:
                     last_message = msg
 
             return last_message
+        except AttemptReadError:
+            raise
         except Exception:
             # Last-resort fallback: never let a rollout-parse error
             # bubble out of parse_response. Swallow everything and
@@ -1008,9 +1013,7 @@ class CodexAdapter:
         offsets: dict[Path, int] = getattr(self, "_rollout_start_offsets", {})
         start_offset = offsets.get(rollout, 0)
         try:
-            with open(rollout, "rb") as stream:
-                stream.seek(start_offset)
-                return stream.read().decode("utf-8", errors="replace")
+            return safe_read_attempt_file(rollout, offset=start_offset).decode("utf-8", errors="replace")
         except OSError:
             return ""
 
@@ -1031,24 +1034,24 @@ class CodexAdapter:
     def _read_rollout_session_id(rollout: Path) -> str | None:
         """Read one validated session UUID from a rollout's opening metadata."""
         try:
-            with open(rollout, encoding="utf-8", errors="replace") as stream:
-                for line_number, line in enumerate(stream, start=1):
-                    if line_number > 25:
-                        break
-                    try:
-                        event = _json.loads(line)
-                    except (TypeError, ValueError):
-                        continue
-                    if event.get("type") != "session_meta":
-                        continue
-                    payload = event.get("payload")
-                    if not isinstance(payload, dict):
-                        return None
-                    for key in ("session_id", "id"):
-                        candidate = payload.get(key)
-                        if isinstance(candidate, str) and _SESSION_ID_VALUE_RE.fullmatch(candidate):
-                            return candidate
+            lines = safe_read_attempt_file(rollout).decode("utf-8", errors="replace").splitlines()
+            for line_number, line in enumerate(lines, start=1):
+                if line_number > 25:
+                    break
+                try:
+                    event = _json.loads(line)
+                except (TypeError, ValueError):
+                    continue
+                if event.get("type") != "session_meta":
+                    continue
+                payload = event.get("payload")
+                if not isinstance(payload, dict):
                     return None
+                for key in ("session_id", "id"):
+                    candidate = payload.get(key)
+                    if isinstance(candidate, str) and _SESSION_ID_VALUE_RE.fullmatch(candidate):
+                        return candidate
+                return None
         except OSError:
             return None
         return None
@@ -1108,6 +1111,8 @@ class CodexAdapter:
                             ):
                                 return True
             return False
+        except AttemptReadError:
+            raise
         except Exception:
             return False
 
