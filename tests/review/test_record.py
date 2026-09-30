@@ -212,6 +212,10 @@ class World:
     ) -> record.Outcome:
         if register and kwargs.get("seed_id"):
             self.register_unit(kwargs["seed_id"], made["n"])
+        task_path = self.tasks_dir / f"{task_id}.json"
+        task = json.loads(task_path.read_bytes()) if task_path.exists() else {}
+        if task.get("review_attempt") is not None and "result_file" not in task:
+            self.capture_result(made, task_id)
         return record.record_return(
             made["review"],
             manifest_path=self.manifest(made["n"]),
@@ -223,6 +227,16 @@ class World:
             tasks_dir=self.tasks_dir,
             **kwargs,
         )
+
+    def capture_result(self, made: dict[str, Any], task_id: str) -> None:
+        """Simulate the parent runner saving the bytes and terminal result hash."""
+        path = self.tasks_dir / f"{task_id}.json"
+        task = json.loads(path.read_bytes())
+        data = made["review"].read_bytes()
+        result = path.with_suffix(".result")
+        result.write_bytes(data)
+        task.update(result_file=str(result), result_sha256=hashlib.sha256(data).hexdigest())
+        path.write_text(json.dumps(task), encoding="utf-8")
 
     def db_rows(self, table: str, where: str = "1=1") -> list[sqlite3.Row]:
         conn = findings_db.connect(self.db)
@@ -1814,6 +1828,7 @@ def _attestable_placeholder_return(world: World) -> dict[str, Any]:
     sent = _rendered(world, made)
     world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
     _with_placeholder_prompt_sha(made)
+    world.capture_result(made, "review-attested")
     made["sent"] = sent
     return made
 
