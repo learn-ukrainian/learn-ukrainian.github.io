@@ -391,10 +391,10 @@ def validate_requirement_receipts(doc: Any, *, sources: Any = None) -> Any:
 
 def resolve_requirement_evidence(doc: dict[str, Any], *, sources: Any = None) -> Any:
     """Resolve every citation; convert store failures to a typed receipt refusal."""
-    from scripts.curriculum.evidence.sources import Sources
+    from scripts.curriculum.evidence.sources import SourceResult, Sources
 
-    cited = {
-        eid: (row["activity"], row["item"])
+    cited_forms = {
+        (eid, option["text"]): (row["activity"], row["item"])
         for row in doc["items"]
         for option in row["options"]
         for eid in option["evidence"]
@@ -403,14 +403,28 @@ def resolve_requirement_evidence(doc: dict[str, Any], *, sources: Any = None) ->
         with Sources() as client:
             return resolve_requirement_evidence(doc, sources=client)
     try:
-        resolved = sources.resolve_evidence_ids(cited)
+        resolved = sources.resolve_evidence_ids(eid for eid, _ in cited_forms)
     except (OSError, sqlite3.Error, ValueError, RuntimeError) as exc:
         # Do not copy store paths or provider diagnostics into public gate reports.
         raise ResolverError(codes.SOURCE_UNAVAILABLE, "requirement evidence source unavailable") from exc
-    for eid, locator in cited.items():
+    for (eid, _), locator in cited_forms.items():
         if not resolved.raw.get(eid):
             raise ResolverError(codes.EVIDENCE_ID_UNRESOLVED, f"requirement item {locator!r}: unresolved evidence {eid!r}")
-    return resolved
+    try:
+        bindings = sources.bind_evidence_forms(resolved, cited_forms)
+    except (OSError, sqlite3.Error, ValueError, RuntimeError) as exc:
+        raise ResolverError(codes.SOURCE_UNAVAILABLE, "requirement evidence form source unavailable") from exc
+    for (eid, text), locator in cited_forms.items():
+        if not bindings.raw[eid, text]:
+            raise ResolverError(
+                codes.EVIDENCE_FORM_MISMATCH,
+                f"requirement item {locator!r}: evidence {eid!r} does not support option {text!r}",
+            )
+    # Keep the source-row digest intact and record the separate form-binding
+    # proof, including any VESUM lemma lookup identity.
+    return SourceResult(resolved.raw, resolved.content_hash, {
+        **resolved.metadata, "form_binding": {"sha256": bindings.content_hash, **bindings.metadata},
+    })
 
 
 def write_requirement_receipts(path: Path, doc: dict[str, Any], *, sources: Any = None) -> str:

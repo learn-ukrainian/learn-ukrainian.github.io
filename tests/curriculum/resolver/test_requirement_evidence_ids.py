@@ -29,7 +29,7 @@ def pravopys_fixture(monkeypatch):
     from scripts.rag import source_query
 
     def section(number, **kwargs):
-        return {"section": number, "url": f"fixture/sections/{number}/", "text": "fixture rule"} if number == 53 else None
+        return {"section": number, "url": f"fixture/sections/{number}/", "text": "one two fixture rule"} if number == 53 else None
 
     monkeypatch.setattr(source_query, "pravopys_section", section)
 
@@ -65,7 +65,7 @@ def record(doc, state, sources):
     row = doc["items"][0]
     batch = {"lesson": doc["lesson"], "inputs": doc["inputs"], "questions": [{
         "activity": "a1", "item": 0, "requires": row["requires"], "payload_sha256": row["payload_sha256"],
-        "options": ["one", "two"], "key_index": 0,
+        "options": [option["text"] for option in row["options"]], "key_index": 0,
     }]}
     answers = {"answers": [{k: row[k] for k in ("activity", "item", "decision", "reason", "requires_forced", "options")}]}
     return record_answers(
@@ -192,7 +192,7 @@ def test_pravopys_section_is_read_once_per_session(monkeypatch):
 
     def section(number, **kwargs):
         calls.append(number)
-        return {"section": number, "text": "source bytes"}
+        return {"section": number, "text": "one two source bytes"}
 
     monkeypatch.setattr(source_query, "pravopys_section", section)
     with Sources() as api:
@@ -228,3 +228,77 @@ def test_missing_vts_table_is_source_unavailable(request):
     with Sources() as api, pytest.raises(ResolverError) as caught:
         receipts.validate_requirement_receipts(document(IDS["vts"]), sources=api)
     assert caught.value.code == codes.SOURCE_UNAVAILABLE
+
+
+@pytest.mark.parametrize("kind", IDS)
+def test_existing_id_cannot_support_unrelated_form_at_any_entry_point(tmp_path, kind):
+    doc = document(IDS[kind])
+    doc["items"][0]["options"][1]["text"] = "unrelated"
+    path = receipts.requirement_receipt_path(tmp_path, 1)
+    (tmp_path / "lesson-1.writer.yaml").write_text("model: gpt-6.1-sol\n")
+    lock.write(path, lock.yaml_bytes(doc))
+    with Sources() as api:
+        for action in (
+            lambda: record(doc, tmp_path, api),
+            lambda: receipts.validate_requirement_receipts(doc, sources=api),
+            lambda: receipts.write_requirement_receipts(path, doc, sources=api),
+            lambda: receipts.read_requirement_receipts(path, sources=api),
+            lambda: status(doc, tmp_path, api),
+        ):
+            with pytest.raises(ResolverError) as caught:
+                action()
+            assert caught.value.code == codes.EVIDENCE_FORM_MISMATCH
+
+
+@pytest.mark.parametrize("text", ["One", "stone", "o ne", "\u0301", "оne"])
+def test_form_comparison_never_folds_case_letters_whitespace_or_substrings(text):
+    doc = document(IDS["vesum"])
+    doc["items"][0]["options"][0]["text"] = text
+    with Sources() as api, pytest.raises(ResolverError) as caught:
+        receipts.validate_requirement_receipts(doc, sources=api)
+    assert caught.value.code == codes.EVIDENCE_FORM_MISMATCH
+
+
+@pytest.mark.parametrize("kind", IDS)
+def test_stress_and_apostrophes_are_the_only_comparison_normalization(kind):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    with Sources() as api:
+        eid = IDS[kind]
+        field = {"vesum": "word_form", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "text")
+        resolved = SourceResult({eid: [{field: "м'яч"}]}, "a" * 64)
+        result = api.bind_evidence_forms(resolved, [(eid, "м’я\u0301ч"), (eid, "мʼя\u0300ч")])
+        assert all(result.raw.values())
+
+
+@pytest.mark.parametrize("kind", IDS)
+def test_lemma_binding_comes_from_vesum_lookup(kind, request):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    _, db = request.getfixturevalue("receipt_sources")
+    with sqlite3.connect(db) as conn:
+        conn.execute("INSERT INTO forms_all VALUES (999, 999, '999-1000', 'inflected', 'lemma', 'noun', 'noun')")
+    eid = IDS[kind]
+    field = {"vesum": "lemma", "grinchenko": "word", "sum20": "headword", "ulif": "canonical_headword"}.get(kind, "text")
+    with Sources() as api:
+        result = api.bind_evidence_forms(SourceResult({eid: [{field: "lemma"}]}, "a" * 64), [(eid, "inflected")])
+        assert result.raw[eid, "inflected"] is True
+        assert "analyses_sha256" in result.metadata
+
+
+def test_pravopys_identity_names_live_origin():
+    with Sources() as api:
+        result = receipts.validate_requirement_receipts(document(IDS["pravopys"]), sources=api)
+    assert result.metadata["pravopys"] == {
+        "scheme": "pravopys-live-section-v1", "origin": "https://2019.pravopys.net",
+    }
+
+
+@pytest.mark.parametrize("source_text", ["stone", "one's", "one-two", "two-one", "two’one", "_one"])
+def test_word_components_and_metadata_cannot_supply_form_support(source_text):
+    from scripts.curriculum.evidence.sources import SourceResult
+
+    eid = IDS["textbook"]
+    resolved = SourceResult({eid: [{"text": source_text, "title": "one", "source_url": "one"}]}, "a" * 64)
+    with Sources() as api:
+        assert api.bind_evidence_forms(resolved, [(eid, "one")]).raw[eid, "one"] is False

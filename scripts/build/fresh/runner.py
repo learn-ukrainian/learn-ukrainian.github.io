@@ -1408,6 +1408,7 @@ def run_lesson(
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
+    owns_sources = sources is None
     with ExitStack() as source_session:
         try:
             expanded_obj = ExpandedDocument.from_data(expanded)
@@ -1439,6 +1440,12 @@ def run_lesson(
             return finish(failure(8, "question_seat_invalid", "driver"))
         try:
             if batch["questions"]:
+                # Resolution rows already have their identities in the stream.
+                # Release our pinned snapshot during the slow provider call;
+                # the receipt gate opens a fresh snapshot lazily through _db().
+                # Injected sessions belong to their caller and stay untouched.
+                if owns_sources:
+                    sources.close()
                 answer_doc = (question_dispatch or (lambda b, s: dispatch_questions(b, s, repo_root=repo_root)))(
                     batch, question_seat
                 )

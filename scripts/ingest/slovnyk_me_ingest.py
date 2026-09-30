@@ -4,19 +4,24 @@
 from __future__ import annotations
 
 import argparse
+import json
 import sqlite3
 import sys
 import time
 from pathlib import Path
+from urllib.parse import urlparse
 
 if __package__ in {None, ""}:
-    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from wiki.slovnyk_me import (
+from scripts.wiki.slovnyk_me import (
     DEFAULT_SLOVNYK_ME_DICTS,
     DEFAULT_USER_AGENT,
     OVERLAP_BLOCKED_DICTS,
     SLOVNYK_ME_DICTS,
+    _classify_flags,
+    _source_type,
+    _truncate,
     db_row_values,
     ensure_slovnyk_me_schema,
     fetch_entries,
@@ -133,6 +138,62 @@ def ingest_words(
         conn.close()
 
 
+def ingest_cache(
+    db_path: Path, cache_dir: Path, *, words: list[str], dictionaries: list[str],
+    dry_run: bool, max_text_chars: int,
+) -> int:
+    """Upsert bounded retained snapshots without fetching or changing the cache.
+
+    Follows the #1715 per-word recipe; schema-v4 identifies current cache
+    semantics. Original source URLs and fetched_at survive the import. Misses
+    are omitted, malformed/stale snapshots refuse before any database writes.
+    """
+    if not cache_dir.is_dir():
+        raise ValueError("cache directory unavailable")
+    allowed = {resolve_dict_slug(slug) for slug in dictionaries} - OVERLAP_BLOCKED_DICTS.keys()
+    selected = set(words)
+    rows = []
+    for path in sorted(cache_dir.glob("*.json")):
+        cache = json.loads(path.read_text(encoding="utf-8"))
+        if selected and cache.get("lemma") not in selected:
+            continue
+        if cache.get("schema_version") != 4 or not isinstance(cache.get("lookups"), dict):
+            raise ValueError("cache snapshot needs schema_version 4 and lookups")
+        for slug, lookup in cache["lookups"].items():
+            if slug not in allowed or lookup is None:
+                continue
+            if not isinstance(lookup, dict) or lookup.get("dictionary_slug") != slug:
+                raise ValueError("cache dictionary identity mismatch")
+            if not all(isinstance(lookup.get(key), str) and lookup[key] for key in ("word", "text", "source_url")):
+                raise ValueError("cache snapshot lacks word, text or source URL")
+            url = urlparse(lookup["source_url"])
+            if url.scheme != "https" or url.netloc != "slovnyk.me" or not url.path.startswith(f"/dict/{slug}/"):
+                raise ValueError("cache source URL is not a direct dictionary entry")
+            if not isinstance(cache.get("fetched_at"), str) or not cache["fetched_at"]:
+                raise ValueError("cache snapshot lacks original fetch timestamp")
+            text = _truncate(lookup["text"], max_text_chars)
+            modern, dialect, russianism, risk, keywords = _classify_flags(slug, lookup["text"])
+            rows.append({
+                **lookup, "query": cache.get("lemma", lookup["word"]),
+                "text": text, "snippet": text, "fetched_at": cache["fetched_at"],
+                "is_modern": modern, "is_dialect": dialect, "is_russianism": russianism,
+                "sovietization_risk": risk, "sovietization_keywords": keywords,
+                "source_type": _source_type(slug, modern, dialect, russianism),
+            })
+    if dry_run:
+        print(f"[dry-run] would upsert {len(rows)} cached row(s)")
+        return len(rows)
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(db_path))
+    try:
+        ensure_slovnyk_me_schema(conn)
+        with conn:
+            conn.executemany(INSERT_SQL, [db_row_values(row) for row in rows])
+    finally:
+        conn.close()
+    return len(rows)
+
+
 def build_parser() -> argparse.ArgumentParser:
     dict_list = ", ".join(DEFAULT_SLOVNYK_ME_DICTS)
     parser = argparse.ArgumentParser(
@@ -145,6 +206,7 @@ def build_parser() -> argparse.ArgumentParser:
   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py блакитний кобета гаразд
   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --words-file data/slovnyk-me-seed.txt --dict newsum --dict slang_lviv
   .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --dry-run --dict newsum блакитний
+  .venv/bin/python scripts/ingest/slovnyk_me_ingest.py --cache-dir data/lexicon/slovnyk_cache --dict vts
 
 Outputs:
   Creates/updates the slovnyk_me_entries table plus FTS5 index in data/sources.db by default.
@@ -162,6 +224,12 @@ Related:
         "words",
         nargs="*",
         help="Explicit Ukrainian headwords to fetch, e.g. блакитний кобета гаразд.",
+    )
+    parser.add_argument(
+        "--cache-dir",
+        type=Path,
+        help="Import existing schema-v4 per-word JSON snapshots offline; no network requests. "
+        "Positional words/--words-file optionally restrict the imported words.",
     )
     parser.add_argument(
         "--words-file",
@@ -187,7 +255,7 @@ Related:
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Fetch and report rows but do not create or update the SQLite database.",
+        help="Report fetched or cached rows without creating/updating SQLite. Default: false.",
     )
     parser.add_argument(
         "--sleep",
@@ -212,7 +280,7 @@ Related:
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     words = _read_words(args)
-    if not words:
+    if not words and args.cache_dir is None:
         print("No words supplied. Pass positional words or --words-file.", file=sys.stderr)
         return 2
     dicts = args.dicts or list(DEFAULT_SLOVNYK_ME_DICTS)
@@ -224,6 +292,13 @@ def main(argv: list[str] | None = None) -> int:
                 f"`{OVERLAP_BLOCKED_DICTS[canonical]}` instead.",
                 file=sys.stderr,
             )
+    if args.cache_dir is not None:
+        loaded = ingest_cache(
+            args.db, args.cache_dir, words=words, dictionaries=dicts,
+            dry_run=args.dry_run, max_text_chars=max(1, args.max_text_chars),
+        )
+        print(f"Loaded {loaded} cached slovnyk.me row(s).")
+        return 0
     loaded = ingest_words(
         args.db,
         words,

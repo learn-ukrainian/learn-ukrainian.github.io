@@ -28,6 +28,23 @@
 
 ## Local databases (no RAG needed)
 
+VTS receipt citations use bounded retained snapshots in
+`sources.db:slovnyk_me_entries` (#9296). Import existing schema-v4 cache files
+offline with `scripts/ingest/slovnyk_me_ingest.py --cache-dir
+data/lexicon/slovnyk_cache --dict vts --db <sources.db>` using the project
+interpreter. Add `--dry-run` to preview; optional positional words restrict
+the import. This follows the [bounded per-word recipe](audits/slovnyk-me-ingestion-feasibility.md):
+200-character text cap by default, original URL and fetch timestamp retained,
+upsert without deleting cache or corpus. It is neither a bulk crawl nor a full
+dictionary mirror. `vts:<id>` refers to the imported row's local SQLite id.
+
+Receipt ids require form support in addition to existence. Canonical VESUM
+citations use the exact `vesum:N-M` source location. Legacy bare integers can
+resolve entry or form ids used by rev 6.5, but must support each cited option.
+Comparison removes stress accents and apostrophe variants only; case,
+whitespace and letters remain exact. Lemma mappings come from VESUM, never
+suffix rules. Live Pravopys receipts use `pravopys-live-section-v1` identities.
+
 | Resource | File | Size |
 |---------|------|------|
 | VESUM | `data/vesum.db` | 409K lemmas, 6.7M forms |

@@ -79,10 +79,11 @@ STORE_POS = {
 ALPHABET_GUARD_POS = {"prep", "conj", "part"}
 
 # Requirement-receipt locators. Numeric dictionary ids name source rows, not
-# headword guesses. VESUM also accepts the entry and form locators already used
-# by the evaluation receipts; ranges are exact source_location keys.
+# headword guesses. Canonical VESUM locators are exact N-M source_location
+# keys. Legacy bare N may name an entry_id or forms_all.id (both occur in
+# rev 6.5 receipts); neither namespace grants admission without form binding.
 RECEIPT_EVIDENCE_STORES = {
-    "vesum": ("forms_all", "entry_id / id / source_location"),
+    "vesum": ("forms_all", "source_location (canonical); entry_id / id (legacy)"),
     "pravopys": ("2019.pravopys.net/sections/<number>/", "section"),
     "textbook": ("textbooks", "chunk_id"),
     "grinchenko": ("grinchenko", "id"),
@@ -90,6 +91,20 @@ RECEIPT_EVIDENCE_STORES = {
     "vts": ("slovnyk_me_entries", "id (dictionary_slug=vts)"),
     "ulif": ("ulif_dictua_entries", "id"),
 }
+
+
+def normalize_evidence_form(text: str) -> str:
+    """Receipt comparison removes only stress accents and apostrophe variants.
+
+    Case, whitespace, letters (including Ukrainian і/ї/й) and punctuation stay
+    exact. This is comparison normalization, never a lemmatization rule.
+    """
+    return normalize_spelling(text).replace("\u0301", "").replace("\u0300", "")
+
+
+def _contains_evidence_form(text: str, form: str) -> bool:
+    """Match a complete form/phrase, never a substring of another word."""
+    return bool(form and re.search(r"(?<![\w'-])" + re.escape(form) + r"(?![\w'-])", normalize_evidence_form(text)))
 
 
 def is_alphabet_letter_gloss(row: dict) -> bool:
@@ -567,7 +582,9 @@ class Sources:
                 if section and section.get("status") == "unavailable":
                     raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
                 self._receipt_evidence[eid] = [section] if section else []
-                self._receipt_identities["pravopys"] = {"scheme": SOURCES_DB_SCHEME}
+                self._receipt_identities["pravopys"] = {
+                    "scheme": "pravopys-live-section-v1", "origin": "https://2019.pravopys.net",
+                }
                 continue
             if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
                 self._receipt_evidence[eid] = []
@@ -591,6 +608,51 @@ class Sources:
             or (kind == "sources_db" and any(eid.partition(":")[0] not in {"vesum", "pravopys"} for eid in requested))
         }
         return SourceResult(raw, batch_digest(raw), identities)
+
+    def bind_evidence_forms(
+        self, resolved: SourceResult[dict[str, list[dict]]], citations: Iterable[tuple[str, str]],
+    ) -> SourceResult[dict[tuple[str, str], bool]]:
+        """Bind every numeric row citation to its option, directly or via VESUM.
+
+        Headwords and source text are witnesses; ids, URLs, titles, hashes and
+        arbitrary metadata are not. This checks form support, not whether a
+        rule establishes the option's contextual grammatical judgement.
+        """
+        fields = {
+            "vesum": ("word_form", "lemma"),
+            "pravopys": ("text",),
+            "textbook": ("text",),
+            "grinchenko": ("word", "definition"),
+            "sum20": ("headword", "stressed_headword", "article_text", "definition_text"),
+            "vts": ("word", "snippet", "text"),
+            "ulif": ("canonical_headword", "sense_gloss"),
+        }
+        raw = {}
+        pending = {}
+        for eid, text in dict.fromkeys(citations):
+            kind = eid.partition(":")[0]
+            form = normalize_evidence_form(text)
+            witnesses = [
+                row[field] for row in resolved.raw[eid] for field in fields.get(kind, ())
+                if isinstance(row.get(field), str)
+            ]
+            supported = any(_contains_evidence_form(value, form) for value in witnesses)
+            raw[eid, text] = supported
+            if not supported:
+                pending[eid, text] = (form, witnesses)
+        # Only attested VESUM analyses can supply an option's lemma. No suffix
+        # stripping, case folding or cross-dictionary/headword guessing.
+        analyses = self.verify_words(form for form, _ in pending.values()) if pending else None
+        for citation, (form, witnesses) in pending.items():
+            raw[citation] = any(
+                _contains_evidence_form(value, normalize_evidence_form(analysis["lemma"]))
+                for analysis in analyses.raw[form] for value in witnesses
+            )
+        metadata = {"normalization": "stress-apostrophes-v1"}
+        if analyses is not None:
+            metadata["vesum"] = {"content_hash": analyses.content_hash, **analyses.metadata}
+            metadata["analyses_sha256"] = batch_digest(analyses.raw)
+        return SourceResult(raw, batch_digest(raw), metadata)
 
     def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""
