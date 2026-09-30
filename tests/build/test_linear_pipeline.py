@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable
+from functools import partial
 from pathlib import Path
 
 import pytest
@@ -241,8 +242,15 @@ def test_invoke_writer_routes_supported_writers(
     tmp_path: Path,
     writer: str,
     agent_name: str,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     calls = []
+    deploy_target = tmp_path / ".claude/agents/curriculum-writer.md"
+    monkeypatch.setattr(
+        linear_pipeline,
+        "ensure_claude_writer_agent_deployed",
+        partial(linear_pipeline.ensure_claude_writer_agent_deployed, target_path=deploy_target),
+    )
 
     class Result:
         response = "writer output"
@@ -273,6 +281,10 @@ def test_invoke_writer_routes_supported_writers(
     if writer == "claude-tools":
         assert tool_config["mcp_config_path"].endswith(".mcp.json")
         assert tool_config["allowed_tools"] == "mcp__sources__*"
+        assert tool_config["agent"] == "curriculum-writer"
+        assert deploy_target.read_text(encoding="utf-8") == linear_pipeline.CLAUDE_WRITER_AGENT_SOURCE.read_text(
+            encoding="utf-8",
+        )
 
 
 def test_invoke_writer_rejects_unknown_writer(tmp_path: Path) -> None:

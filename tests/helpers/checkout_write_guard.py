@@ -2,7 +2,7 @@
 
 Monitors repository checkout state to prevent tests from modifying tracked files
 or creating/appending checkout artifacts (e.g., site/src/data/lexicon-manifest.json,
-logs/mcp-sources-requests.jsonl).
+logs/mcp-sources-requests.jsonl), including ignored deploy targets and data outputs.
 """
 
 from __future__ import annotations
@@ -18,6 +18,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 MONITORED_CHECKOUT_PATHS: tuple[str, ...] = (
     "site/src/data/lexicon-manifest.json",
     "logs/mcp-sources-requests.jsonl",
+)
+
+MONITORED_CHECKOUT_ROOTS: tuple[str, ...] = (
+    ".claude",
+    ".codex",
+    ".agent",
+    ".gemini",
+    "data",
 )
 
 EXEMPT_DIR_PARTS: frozenset[str] = frozenset(
@@ -72,6 +80,7 @@ class CheckoutWriteGuard:
         self._before_porcelain: dict[str, str] = {}
         self._before_tracked_sigs: dict[str, _FileSig] = {}
         self._before_logs: dict[str, _FileSig] = {}
+        self._before_tree_files: dict[str, tuple[int, int]] = {}
         self._is_git_repo = (self.root / ".git").exists()
         self.snapshot()
 
@@ -115,6 +124,18 @@ class CheckoutWriteGuard:
             for path in self._before_porcelain
         }
         self._before_logs = self._log_signatures()
+        self._before_tree_files = self._tree_signatures()
+
+    def _tree_signatures(self) -> dict[str, tuple[int, int]]:
+        """Watch deploy/data files cheaply, without reading large corpus payloads."""
+        signatures = {}
+        for rel_root in MONITORED_CHECKOUT_ROOTS:
+            for path in (self.root / rel_root).rglob("*"):
+                rel = path.relative_to(self.root).as_posix()
+                if path.is_file() and not _is_exempt_path(rel):
+                    stat = path.stat()
+                    signatures[rel] = (stat.st_mtime_ns, stat.st_size)
+        return signatures
 
     def _log_signatures(self) -> dict[str, _FileSig]:
         """Include ignored, pre-existing logs in the session baseline."""
@@ -127,6 +148,15 @@ class CheckoutWriteGuard:
     def check(self) -> list[str]:
         """Compare current checkout state against baseline and return violations."""
         violations: list[str] = []
+
+        after_tree_files = self._tree_signatures()
+        for rel in sorted(self._before_tree_files.keys() | after_tree_files.keys()):
+            if rel not in self._before_tree_files:
+                violations.append(f"guarded checkout file created: {rel}")
+            elif rel not in after_tree_files:
+                violations.append(f"guarded checkout file deleted: {rel}")
+            elif self._before_tree_files[rel] != after_tree_files[rel]:
+                violations.append(f"guarded checkout file modified/appended: {rel}")
 
         # 1. Monitored checkout artifacts (manifest, sources request log)
         for rel in MONITORED_CHECKOUT_PATHS:

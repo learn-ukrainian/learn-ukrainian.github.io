@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -157,11 +158,26 @@ def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malforme
 
 
 @pytest.mark.parametrize("workers", [0, 2], ids=["serial", "xdist"])
-@pytest.mark.parametrize("write", [False, True], ids=["unchanged", "planted-write"])
-def test_registered_guard_enforces_normal_pytest_session(tmp_path: Path, write: bool, workers: int) -> None:
+@pytest.mark.parametrize(
+    "write_path",
+    [
+        None,
+        "logs/mcp-sources-requests.jsonl",
+        ".claude/agents/curriculum-writer.md",
+        ".codex/agents/test.toml",
+        ".agent/skills/test.md",
+        ".gemini/agents/test.md",
+        "data/corpus_audit/section_extraction_report.md",
+        "external-tmp",
+    ],
+    ids=["unchanged", "request-log", "claude", "codex", "agent", "gemini", "corpus-audit", "external-tmp"],
+)
+def test_registered_guard_enforces_normal_pytest_session(
+    tmp_path: Path, write_path: str | None, workers: int,
+) -> None:
     """No -p: temporary conftest registration must fail a passing writer test."""
     _init_git_repo(tmp_path)
-    (tmp_path / ".gitignore").write_text("logs/\n", encoding="utf-8")
+    (tmp_path / ".gitignore").write_text("logs/\n.claude/\n.codex/\n.agent/\n.gemini/\ndata/\n", encoding="utf-8")
     logs = tmp_path / "logs"
     logs.mkdir()
     (logs / "existing.jsonl").write_text('{}\n', encoding="utf-8")
@@ -171,25 +187,77 @@ def test_registered_guard_enforces_normal_pytest_session(tmp_path: Path, write: 
         encoding="utf-8",
     )
     (tmp_path / "conftest.py").write_text('pytest_plugins = ["checkout_write_guard"]\n', encoding="utf-8")
-    (tmp_path / "test_sample.py").write_text(
-        "from pathlib import Path\n"
-        "def test_sample():\n" + (
-            "    Path('logs/mcp-sources-requests.jsonl').write_text('{}\\n')\n" if write else "    assert True\n"
-        ),
-        encoding="utf-8",
-    )
+    if write_path == "external-tmp":
+        sample = "def test_sample(tmp_path):\n    (tmp_path / 'unrelated.txt').write_text('sample')\n"
+    elif write_path is None:
+        sample = "def test_sample():\n    assert True\n"
+    else:
+        sample = (
+            "from pathlib import Path\n"
+            "def test_sample():\n"
+            f"    output = Path({write_path!r})\n"
+            "    output.parent.mkdir(parents=True, exist_ok=True)\n"
+            "    output.write_text('sample')\n"
+        )
+    (tmp_path / "test_sample.py").write_text(sample, encoding="utf-8")
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "-q", "test_sample.py", *(["-n", str(workers)] if workers else [])],
         cwd=tmp_path, capture_output=True, text=True, timeout=60,
     )
     assert "1 passed" in result.stdout, result.stdout + result.stderr
-    if write:
+    if write_path not in (None, "external-tmp"):
         assert result.returncode == 1, result.stdout + result.stderr
         assert "ERROR: checkout mutations detected by checkout_write_guard" in result.stdout
-        assert "guarded checkout artifact created: logs/mcp-sources-requests.jsonl" in result.stdout
+        label = "artifact" if write_path.startswith("logs/") else "file"
+        assert f"guarded checkout {label} created: {write_path}" in result.stdout
     else:
         assert result.returncode == 0, result.stdout + result.stderr
         assert "checkout mutations detected" not in result.stdout
+
+
+@pytest.mark.parametrize("root", [".claude", ".codex", ".agent", ".gemini", "data"])
+@pytest.mark.parametrize("change", ["unchanged", "create", "rewrite", "append", "delete"])
+def test_guard_baselines_ignored_deploy_and_data_files(tmp_path: Path, root: str, change: str) -> None:
+    _init_git_repo(tmp_path)
+    (tmp_path / ".gitignore").write_text(f"{root}/\n", encoding="utf-8")
+    rel = f"{root}/nested/output.txt"
+    output = tmp_path / rel
+    output.parent.mkdir(parents=True)
+    if change != "create":
+        output.write_text("before", encoding="utf-8")
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    if change == "create":
+        output.write_text("new", encoding="utf-8")
+        expected = f"guarded checkout file created: {rel}"
+    elif change == "delete":
+        output.unlink()
+        expected = f"guarded checkout file deleted: {rel}"
+    elif change in ("rewrite", "append"):
+        before_stat = output.stat()
+        output.write_text("after!" if change == "rewrite" else "before appended", encoding="utf-8")
+        # Deterministic mtime evidence even for a same-size rewrite on fast filesystems.
+        os.utime(output, ns=(before_stat.st_atime_ns, before_stat.st_mtime_ns + 1_000_000_000))
+        expected = f"guarded checkout file modified/appended: {rel}"
+    else:
+        assert guard.check() == []
+        guard.verify()
+        return
+    assert guard.check() == [expected]
+    with pytest.raises(CheckoutWriteError, match="guarded checkout file"):
+        guard.verify()
+
+
+def test_guard_snapshots_watched_trees_without_hashing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    output = tmp_path / "data/corpus_audit/report.md"
+    output.parent.mkdir(parents=True)
+    output.write_text("report", encoding="utf-8")
+
+    def forbid_content_read(_path: Path) -> bytes:
+        raise AssertionError("watched trees must not be hashed")
+
+    monkeypatch.setattr(Path, "read_bytes", forbid_content_read)
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    assert guard.check() == []
 
 
 @pytest.mark.parametrize("change", ["unchanged", "append", "new"], ids=["unchanged-log", "append-log", "new-log"])

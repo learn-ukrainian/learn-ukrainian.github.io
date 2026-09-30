@@ -44,6 +44,9 @@ def test_builder_schema_and_insert_include_literary_metadata(tmp_path, monkeypat
 
     monkeypatch.setattr(build_sources_db, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(build_sources_db, "LOG_DIR", tmp_path / "logs")
+    # The report default is imported before PROJECT_ROOT is overridden.
+    report_path = tmp_path / "section_extraction_report.md"
+    monkeypatch.setattr(build_sources_db, "DEFAULT_REPORT_PATH", report_path)
     db_path = tmp_path / "sources.db"
     build_sources_db.build(
         db_path=db_path,
@@ -51,6 +54,8 @@ def test_builder_schema_and_insert_include_literary_metadata(tmp_path, monkeypat
         textbook_dir=textbook_dir,
         gdrive_dir=gdrive_dir,
     )
+    assert report_path.is_file()
+    assert "Status: **OK**" in report_path.read_text(encoding="utf-8")
 
     conn = sqlite3.connect(str(db_path))
     try:
