@@ -2,11 +2,16 @@
 
 from __future__ import annotations
 
+import json
 from types import SimpleNamespace
 
 import pytest
 
-from scripts.ai_agent_bridge._agy import gemini_review_profile_error
+from scripts.ai_agent_bridge._agy import (
+    gemini_content_paths_error,
+    gemini_review_profile_error,
+    is_content_class_path,
+)
 from scripts.ai_agent_bridge._channels_cli import _gemini_review_request_error
 from scripts.ai_agent_bridge._cli import _handle_acp_compat
 from scripts.audit import llm_reviewer_dispatch
@@ -30,6 +35,46 @@ def test_code_profile_cites_the_operator_rule() -> None:
 
 def test_ukrainian_profile_is_allowed() -> None:
     assert gemini_review_profile_error("ukrainian") is None
+
+
+@pytest.mark.parametrize("level", ["a1", "a2", "b1", "b2"])
+def test_generated_arc_data_is_content(level: str) -> None:
+    path = f"site/src/data/arc-{level}.json"
+    assert is_content_class_path(path)
+    assert gemini_content_paths_error(["site/src/content/docs/a1/index.mdx", path]) is None
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "site/src/data/other.json",
+        "site/src/data/arc-a1.json.bak",
+        "site/src/data/arc-x9.json",
+        "site/src/data/sub/arc-a1.json",
+        "site/src/data/arc-a1.json/x",
+        "scripts/build/build_arc_landing.py",
+    ],
+)
+def test_other_data_and_code_paths_remain_non_content(path: str) -> None:
+    assert not is_content_class_path(path)
+    message = gemini_content_paths_error(["site/src/content/docs/a1/index.mdx", path])
+    assert message is not None
+    assert "gemini_code_review_forbidden" in message
+    assert f"first non-content path: {path}" in message
+
+
+def test_arc_content_paths_match_landing_generator() -> None:
+    """Bind the fixed allowlist to the generator's validated inputs and outputs."""
+    from scripts.ai_agent_bridge._agy import _CONTENT_ARC_PATHS
+    from scripts.build import build_arc_landing as generator
+    from scripts.curriculum.arc.loader import SCHEMA_PATH
+
+    schema = json.loads((generator.REPO_ROOT / SCHEMA_PATH).read_text(encoding="utf-8"))
+    generated_paths = {
+        generator.Roots(generator.REPO_ROOT, level).data_json.relative_to(generator.REPO_ROOT).as_posix()
+        for level in schema["properties"]["level"]["enum"]
+    }
+    assert generated_paths == _CONTENT_ARC_PATHS
 
 
 def test_ask_agy_review_without_profile_is_refused() -> None:
