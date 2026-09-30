@@ -9284,10 +9284,25 @@ def _dispatch(
             resolve_fleet_repo,
         )
 
+    from scripts.agent_runtime.kimi_admission import is_kimi_seat
+
     try:
-        fleet_repo, target_repo_root = resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
+        fleet_repo, target_repo_root = resolve_fleet_repo(
+            fleet_repo_key, primary_root=_REPO_ROOT, require_checkout=False
+        )
     except FleetRepoError as exc:
         print(f"❌ {exc}", file=sys.stderr)
+        return 2
+    # Kimi admission turns on the repository's catalog role, not on which sibling
+    # checkouts this host has: a Kimi request reports a missing checkout only after
+    # the Kimi gate. Every other request is refused for it here, as before.
+    try:
+        resolve_fleet_repo(fleet_repo_key, primary_root=_REPO_ROOT)
+        checkout_error = None
+    except FleetRepoError as exc:
+        checkout_error = f"❌ {exc}"
+    if checkout_error and not is_kimi_seat(args.agent, model=getattr(args, "model", None)):
+        print(checkout_error, file=sys.stderr)
         return 2
     if not re.fullmatch(r"[\w.-]+/[\w.-]+", fleet_repo.github):
         print(f"❌ --repo {fleet_repo.key!r} has no valid owner/name in fleet_repos", file=sys.stderr)
@@ -9316,7 +9331,6 @@ def _dispatch(
     # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
     # the original request before the route probes anything and the resolved route after it.
     review_attempt = getattr(args, "review_attempt", None)
-    from scripts.agent_runtime.kimi_admission import is_kimi_seat
     from scripts.agent_runtime.target_admission import launch_seat
 
     if str(_REPO_ROOT) not in sys.path:
@@ -9397,6 +9411,9 @@ def _dispatch(
     )
     if kimi_refusal:
         print(f"❌ {kimi_refusal}", file=sys.stderr)
+        return 2
+    if checkout_error:
+        print(checkout_error, file=sys.stderr)
         return 2
     # Everything below launches the admitted route; nothing resolves it again.
     dispatch_agent, args.model = launch_target.recipient, launch_target.model

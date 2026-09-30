@@ -669,6 +669,44 @@ def test_dispatch_refuses_before_any_side_effect(no_spawn, capsys, argv, policy,
     _assert_refused(no_spawn, capsys, argv, reason, policy=policy)
 
 
+@pytest.mark.parametrize("repo", ["infra-private", "hramatka"])
+def test_a_private_repo_refusal_does_not_depend_on_sibling_checkouts(no_spawn, capsys, monkeypatch, tmp_path, repo):
+    """Without the sibling checkout, Kimi still gets the Kimi refusal; any other seat gets the checkout refusal."""
+    primary = tmp_path / "learn-ukrainian.github.io"
+    primary.mkdir()
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
+    monkeypatch.setattr(sys, "path", [*sys.path])  # dispatch prepends _REPO_ROOT entries
+    _assert_refused(no_spawn, capsys, _dispatch(*_WRITE, "--repo", repo), "is a private repository")
+
+    argv = ["dispatch", "--agent", "codex", "--task-id", "codex-sibling", "--prompt", "Fix it.", *_WRITE]
+    rc = delegate.main([*argv, "--repo", repo])
+    err = capsys.readouterr().err
+    assert rc == 2, err
+    assert f"--repo {repo} expects sibling checkout at {tmp_path}" in err and _TOKEN not in err, err
+    assert not no_spawn.exists() or not any(no_spawn.iterdir())
+
+
+def _isolate_host_state(monkeypatch) -> None:
+    """Stub the dispatch probes that read this host (primary checkout, installs, runtime tmp, placement)."""
+    from scripts.orchestration import job_host_exec
+
+    for name in ("_resolve_dirty_primary_checkout_error", "_resolve_primary_integrity_error"):
+        monkeypatch.setattr(delegate, name, lambda **_kwargs: None)
+    for name in (
+        "_warn_node_modules_integrity",
+        "_warn_venv_integrity",
+        "_warn_worktree_cleanup_integrity",
+        "_warn_if_monitor_api_unreachable",
+    ):
+        monkeypatch.setattr(delegate, name, lambda: None)
+    monkeypatch.setattr(
+        delegate,
+        "_sweep_runtime_tmp_orphans",
+        lambda: {"leases_reaped": 0, "bytes_freed": 0, "errors": 0, "error_details": []},
+    )
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("local", "test", None))
+
+
 def _is_language_lane_path(flag: str, path: str) -> bool:
     """Only a --research-owned-path under curriculum/ marks a dispatch as Ukrainian-language work."""
     return flag == "--research-owned-path" and path.startswith(("curriculum/", "scripts/curriculum/"))
@@ -866,6 +904,7 @@ def test_dispatch_refuses_a_worktree_base_that_moved_after_the_gate(tmp_path, mo
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda *_a, **_k: (None, None))
     monkeypatch.setattr(delegate, "_check_capacity_hint", lambda *_a, **_k: None)
     monkeypatch.setattr(delegate, "_report_dispatch_admission", lambda *_a, **_k: None)
+    _isolate_host_state(monkeypatch)
     gate_base = _head()
     calls: list[bool] = []
 
@@ -916,7 +955,10 @@ def test_web_ui_and_backend_dispatches_pass_admission(tmp_path, monkeypatch, own
     monkeypatch.delenv("LU_DISPATCH_CHECK_BUDGET", raising=False)
     monkeypatch.delenv("LEARN_UKRAINIAN_DISPATCH_TASK_ID", raising=False)
     monkeypatch.setattr(delegate, "_run_dor_preflight", lambda *_a, **_k: (None, None))
+    _isolate_host_state(monkeypatch)
+    # The gate reads the owned paths in HEAD's committed tree, the base the worktree is created from.
     base = _head()
+    monkeypatch.setattr(delegate, "_resolve_local_base_sha", lambda **_kwargs: base)
     monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: base)
     seen: list[str] = []
 
