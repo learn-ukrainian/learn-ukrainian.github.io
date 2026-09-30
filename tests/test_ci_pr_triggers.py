@@ -316,73 +316,20 @@ def test_merge_queue_reuse_skips_every_reused_job() -> None:
     assert results["queue-metadata-scan"] == "success"
 
 
-def test_only_the_history_shard_fetches_full_history() -> None:
+def test_only_the_history_shard_checks_out_full_history() -> None:
     from scripts.ci.split_tests import HISTORY_SHARD
 
     pytest_job = _load("ci.yml")["jobs"]["pytest"]
     checkout = next(step for step in pytest_job["steps"] if step.get("uses", "").startswith("actions/checkout@"))
-    assert checkout["with"]["fetch-depth"] == 1
-    history = next(step for step in pytest_job["steps"] if step.get("name") == "Fetch history for the history shard")
-    for shard in pytest_job["strategy"]["matrix"]["shard"]:
-        assert _evaluate(history["if"], {"matrix": {"shard": float(shard)}}) == (shard == HISTORY_SHARD)
-    assert pytest_job["steps"].index(history) == pytest_job["steps"].index(checkout) + 1
+    depths = {
+        shard: _interpolate(checkout["with"]["fetch-depth"], {"matrix": {"shard": float(shard)}})
+        for shard in pytest_job["strategy"]["matrix"]["shard"]
+    }
+    # fetch-depth 0 is full history; 1 is a shallow checkout of the tested commit.
+    assert depths == {shard: "0" if shard == HISTORY_SHARD else "1" for shard in depths}
     # Shallow shards block network git, so a fetch cannot hide a history need.
     script = next(step["run"] for step in pytest_job["steps"] if step.get("name") == "Run pytest")
     assert f'[ "$SHARD" = {HISTORY_SHARD} ] || export GIT_ALLOW_PROTOCOL=file' in script
-
-
-@pytest.mark.parametrize("tested_ref", ["refs/heads/feature", "refs/pull/7/merge", "refs/heads/gh-readonly-queue/main/test"])
-def test_history_fetch_keeps_old_blobs_and_tested_ancestry_without_other_refs(tmp_path: Path, tested_ref: str) -> None:
-    """Execute the workflow fetch on a shallow commit, including synthetic merge refs."""
-    remote, checkout = tmp_path / "remote", tmp_path / "checkout"
-    remote.mkdir()
-    checkout.mkdir()
-    env = {**os.environ, "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_NOSYSTEM": "1", "GIT_ALLOW_PROTOCOL": "file"}
-
-    def git(cwd: Path, *args: str, check: bool = True) -> subprocess.CompletedProcess:
-        result = subprocess.run(["git", *args], cwd=cwd, env=env, capture_output=True, text=True, timeout=30)
-        if check:
-            assert result.returncode == 0, result.stderr
-        return result
-
-    git(remote, "init", "-b", "main")
-    git(remote, "config", "user.email", "test@example.com")
-    git(remote, "config", "user.name", "Test")
-    (remote / "old.txt").write_text("historical blob\n")
-    git(remote, "add", "old.txt")
-    git(remote, "commit", "-m", "base")
-    base = git(remote, "rev-parse", "HEAD").stdout.strip()
-    tree = git(remote, "rev-parse", "HEAD^{tree}").stdout.strip()
-    unrelated = git(remote, "commit-tree", tree, "-p", base, "-m", "unrelated").stdout.strip()
-    git(remote, "update-ref", "refs/heads/unrelated", unrelated)
-    git(remote, "tag", "unrelated-tag", unrelated)
-    git(remote, "rm", "old.txt")
-    feature_tree = git(remote, "write-tree").stdout.strip()
-    feature = git(remote, "commit-tree", feature_tree, "-p", base, "-m", "feature").stdout.strip()
-    main = git(remote, "commit-tree", tree, "-p", base, "-m", "main advances").stdout.strip()
-    tested = feature
-    if tested_ref != "refs/heads/feature":
-        tested = git(remote, "commit-tree", feature_tree, "-p", main, "-p", feature, "-m", "synthetic merge").stdout.strip()
-    git(remote, "update-ref", tested_ref, tested)
-    # Keep main independent of the synthetic PR/queue merge.
-    git(remote, "update-ref", "refs/heads/main", main)
-    git(checkout, "init")
-    git(checkout, "remote", "add", "origin", remote.as_uri())
-    git(checkout, "fetch", "--no-tags", "--depth=1", "origin", tested_ref)
-    git(checkout, "checkout", "--detach", "FETCH_HEAD")
-    assert git(checkout, "rev-parse", "--is-shallow-repository").stdout.strip() == "true"
-    step = next(step for step in _load("ci.yml")["jobs"]["pytest"]["steps"] if step.get("name") == "Fetch history for the history shard")
-    subprocess.run(["bash", "-e", "-o", "pipefail", "-c", step["run"]], cwd=checkout,
-                   env={**env, "GITHUB_SHA": tested}, capture_output=True, text=True, check=True, timeout=30)
-    assert git(checkout, "rev-parse", "--is-shallow-repository").stdout.strip() == "false"
-    assert git(checkout, "rev-parse", "HEAD").stdout.strip() == tested
-    assert git(checkout, "rev-parse", "origin/main").stdout.strip() == main
-    assert git(checkout, "show", f"{base}:old.txt").stdout == "historical blob\n"
-    git(checkout, "merge-base", "--is-ancestor", base, "HEAD")
-    git(checkout, "merge-base", "--is-ancestor", base, "origin/main")
-    assert git(checkout, "tag", "--list").stdout == ""
-    assert git(checkout, "cat-file", "-e", unrelated, check=False).returncode != 0
-    git(checkout, "fetch", "origin", "main")  # The delegate dry run still works.
 
 
 def test_pr_runs_share_one_group_per_pr_number() -> None:

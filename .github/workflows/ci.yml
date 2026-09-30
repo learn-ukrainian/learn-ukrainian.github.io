@@ -15,6 +15,8 @@ permissions:
   contents: read
 
 env:
+  # Exact hosted tool-cache pin; also selects the matching setup-uv cache key.
+  UV_PYTHON: '3.12.14'
   UV_HTTP_RETRIES: '6'
   UV_HTTP_TIMEOUT: '60'
   PIP_RETRIES: '6'
@@ -134,7 +136,7 @@ jobs:
           fetch-depth: 0  # origin/main merge-base diffs
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version-file: '.python-version'
+          python-version: ${{ env.UV_PYTHON }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'
@@ -179,7 +181,7 @@ jobs:
       - if: steps.scope.outputs.run == 'true'
         uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version-file: '.python-version'
+          python-version: ${{ env.UV_PYTHON }}
       - if: steps.scope.outputs.run == 'true'
         name: Python CI environment
         uses: ./.github/actions/python-ci-env
@@ -212,21 +214,15 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-          fetch-depth: 1
-      - name: Fetch history for the history shard
-        if: matrix.shard == 1
-        run: |
-          # All blobs and ancestors needed by scripts/ci/history-tests.txt,
-          # without checkout's full-depth fetch of every branch and tag.
-          # Include the tested commit (PR merge, queue merge or branch tip)
-          # as well as main; never defer a fetch until Run pytest (#9062).
-          git fetch --no-tags --no-recurse-submodules --unshallow origin \
-            +refs/heads/main:refs/remotes/origin/main "$GITHUB_SHA"
+          # Shard 1 alone gets full history for the files in
+          # scripts/ci/history-tests.txt (split_tests.py pins them there);
+          # every other shard is shallow. Never fetched lazily (#9062).
+          fetch-depth: ${{ matrix.shard != 1 && 1 || 0 }}
       # PostgreSQL 16/bubblewrap and npm ci run in the background during the Python install.
       - run: bash scripts/ci/test_env.sh start postgres
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version-file: '.python-version'
+          python-version: ${{ env.UV_PYTHON }}
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '22'

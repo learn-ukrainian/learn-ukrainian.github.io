@@ -454,5 +454,5 @@ def test_ci_gate_pytest_installer_preserves_locked_dependency_scope() -> None:
     setup_python = next(
         step for step in jobs["pytest"]["steps"] if step.get("uses", "").startswith("actions/setup-python@")
     )
-    assert setup_python["with"]["python-version-file"] == ".python-version"
+    assert setup_python["with"]["python-version"] == "${{ env.UV_PYTHON }}"
     assert "cache" not in setup_python["with"]  # uv owns the wheel cache now.

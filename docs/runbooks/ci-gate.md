@@ -178,11 +178,8 @@ commit, a frozen base commit, and `origin/main` ancestry. Two run a
 `--dry-run` `delegate.py dispatch --worktree`, which fetches `main` from
 GitHub. On a shallow checkout that fetch downloads all of main's history, 65-77
 s per test instead of 0.3 s. `split_tests.py` pins the listed files to shard 1
-and balances the other files around them. All shards check out at depth 1.
-Before running tests, shard 1 alone unshallows `main` and the tested commit
-with all blobs, without fetching unrelated branches or tags. This preserves
-the old commits and `origin/main` ancestry without lazy fetches during pytest.
-Shards 2..N check out only the tested
+and balances the other files around them. Shard 1 is the only shard checked out
+with full history (`fetch-depth: 0`). Shards 2..N check out only the tested
 commit (`fetch-depth: 1`) and run pytest with `GIT_ALLOW_PROTOCOL=file`. A
 listed file that is no longer tracked fails the split.
 
@@ -204,8 +201,8 @@ jobs, two reserved).
 
 ## Shard setup
 
-Per shard: checkout (shallow; targeted full history on the history shard), Python
-3.12.8, then `scripts/ci/test_env.sh start` runs `npm ci` and
+Per shard: checkout (shallow; full history on the history shard), Python
+3.12.14, then `scripts/ci/test_env.sh start` runs `npm ci` and
 `scripts/ci/start_postgres.sh` (bubblewrap, PostgreSQL 16 cluster, DSN
 verification) in the background while `python-ci-env` installs the locked
 environment from main's exact-key uv cache; `test_env.sh wait` fails the job if
@@ -213,12 +210,14 @@ either background task failed. A container image was not adopted: the checkout
 cannot be inside an image, and pulling a prebuilt environment of this size
 costs about what the cache restore does (see the measurements in the ci-v3 PR).
 
-Python remains pinned by `.python-version`. The hosted Ubuntu 24.04 image
-`20260920.314` caches Python 3.12.14, not 3.12.8; `setup-python` therefore
-downloads 3.12.8. Disabling `check-latest` (already the default) cannot make
-an absent exact version a tool-cache hit. Changing that pin requires matching
-the uv cache warmer and every environment consumer as well as verifying the
-new interpreter; it is separate from narrowing the history fetch.
+The required CI, advisory CI and uv cache warmer share the same `UV_PYTHON`
+pin in their workflow environments. `setup-python` uses that exact version,
+and setup-uv's Python detection uses `UV_PYTHON`, so the cache reader and writer
+agree even though the local `.python-version` remains unchanged. Python
+3.12.14 is preinstalled in the hosted Ubuntu 24.04 tool cache (image
+`20260920.314`); 3.12.8 was downloaded on every shard. Keep `check-latest`
+disabled (the default). A pin update changes the uv key, so until main warms
+the new key the composite's existing online install fallback handles the miss.
 
 ## Cloud advisory runner dependency parity (#6977 slice A)
 

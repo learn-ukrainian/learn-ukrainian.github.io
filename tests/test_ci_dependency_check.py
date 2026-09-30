@@ -95,9 +95,30 @@ def test_main_push_publishes_the_uv_cache_merge_group_can_read() -> None:
         step for step in pytest_steps if str(step.get("uses", "")).startswith("actions/setup-python@")
     )
     assert setup["uses"] == ci_setup["uses"]
-    assert setup["with"] == {"python-version-file": ".python-version"}
+    assert setup["with"] == {"python-version": "${{ env.UV_PYTHON }}"}
     ci_env = next(step for step in job["steps"] if step.get("uses") == "./.github/actions/python-ci-env")
     assert job["outputs"]["uv-cache-key"] == f"${{{{ steps.{ci_env['id']}.outputs.uv-cache-key }}}}"
+
+
+def test_ci_interpreter_pin_matches_the_warmer_and_advisory_cache() -> None:
+    """A pin change cannot leave the cache writer or setup-uv on another Python."""
+    workflow = yaml.safe_load(_CI.read_text(encoding="utf-8"))
+    pin = workflow["env"]["UV_PYTHON"]
+    assert pin == "3.12.14"
+    for path in (_CI, _WARM, _REPO_ROOT / ".github/workflows/ci-advisory.yml"):
+        document = yaml.safe_load(path.read_text(encoding="utf-8"))
+        assert document["env"]["UV_PYTHON"] == pin
+        setups = [step for job in document["jobs"].values() for step in job["steps"]
+                  if step.get("uses", "").startswith("actions/setup-python@")]
+        assert setups
+        for setup in setups:
+            assert setup["with"]["python-version"] == "${{ env.UV_PYTHON }}"
+            assert "python-version-file" not in setup["with"]
+            assert setup["with"].get("check-latest", False) is False
+    # setup-uv's `uv python find` consumes UV_PYTHON, and installs target the
+    # venv made by setup-python. No second interpreter is selected by the action.
+    assert "python-version" not in _action_step("Set up uv")["with"]
+    assert "python -m venv --without-pip .venv" in _action_step("Install Python deps")["run"]
 
 
 def test_warm_workflow_fails_loudly_when_main_has_no_uv_entry() -> None:

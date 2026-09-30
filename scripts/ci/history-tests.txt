@@ -1,6 +1,6 @@
 # Test files that need git history or the network. scripts/ci/split_tests.py
-# pins them to pytest shard 1, the only shard ci.yml fetches full history for
-# (main and the tested commit, with all blobs). Every other shard is a shallow checkout
+# pins them to pytest shard 1, the only shard ci.yml checks out with full
+# history (fetch-depth: 0). Every other shard is a shallow checkout
 # (fetch-depth: 1) and runs pytest with GIT_ALLOW_PROTOCOL=file. There, a test
 # that reads history fails with git exit 128, and a test that fetches from
 # GitHub fails on the blocked https transport. Neither can pass silently; add
