@@ -1,0 +1,26 @@
+scope_schema: 1
+level: a1
+module: special-signs
+letters:
+  count: 8
+  list:
+  - ь
+  - Ї
+  - Я
+  - Ю
+  - Є
+  - Ц
+  - Щ
+  - Ф
+grammar:
+  count: 7
+  ids:
+  - G-a1-005
+  - G-a1-006
+  - G-a1-007
+  - G-a1-008
+  - G-a1-009
+  - G-a1-010
+  - G-a1-011
+vocabulary:
+  core_count: 2

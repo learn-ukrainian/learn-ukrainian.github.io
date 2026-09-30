@@ -10,3 +10,42 @@
 - id: G-a1-004
   point: The two new consonant letters represent different sounds and must be distinguished when reading.
   introduced_at: {position: 2, lesson: two-g-sounds}
+- id: G-a1-005
+  point: The soft sign has no sound of its own and marks the preceding consonant as soft; hard and soft consonant
+    sounds are distinguished by ear.
+  introduced_at:
+    position: 3
+    lesson: soft-sign-and-sound-pairs
+- id: G-a1-006
+  point: The letter with the two dots always represents two sounds and never softens a preceding consonant.
+  introduced_at:
+    position: 3
+    lesson: yi-and-ya
+- id: G-a1-007
+  point: Three vowel letters represent a vowel with preceding consonant softness after a consonant, or two sounds
+    at word start and after a vowel, apostrophe or soft sign where applicable.
+  introduced_at:
+    position: 3
+    lesson: yi-and-ya
+- id: G-a1-008
+  point: The last hushing letter introduced here always represents two consonant sounds.
+  introduced_at:
+    position: 3
+    lesson: ts-shch-f
+- id: G-a1-009
+  point: The two new digraphs each represent a joined consonant sound in these source words; the second has a paired
+    soft sound and the first has no paired soft consonant.
+  introduced_at:
+    position: 3
+    lesson: joined-digraphs
+- id: G-a1-010
+  point: 'The apostrophe marks separate pronunciation: the consonant remains hard and the following vowel letter
+    represents two sounds.'
+  introduced_at:
+    position: 3
+    lesson: apostrophe-and-whole-sentence
+- id: G-a1-011
+  point: The alphabet has a fixed dictionary order and letter names that are distinct from sound models.
+  introduced_at:
+    position: 3
+    lesson: alphabet-order-and-names
