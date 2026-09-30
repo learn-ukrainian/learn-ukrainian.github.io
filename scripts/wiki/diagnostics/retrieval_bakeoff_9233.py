@@ -413,7 +413,9 @@ def _embedder_passage_stats(rows: list[dict[str, Any]], model: Any, meta: dict[s
     tokenizer = model.tokenizer
     prefix = meta.get("prefixes", {}).get("passage", EMBEDDERS[repo]["passage_prefix"])
     if EMBEDDERS[repo]["kind"] == "jina":
-        prefix = model.prompts.get("document", "")
+        # Jina's frozen prefix describes native dispatch, not literal text.
+        # Its named document prompt is the actual token overhead.
+        prefix = model.prompts.get("document") or ""
     overhead = len(tokenizer.encode(prefix, add_special_tokens=False))
     if hasattr(tokenizer, "num_special_tokens_to_add"):
         overhead += tokenizer.num_special_tokens_to_add(pair=False)
@@ -984,18 +986,27 @@ def _new_encoder(repo: str, work: Path) -> tuple[Any, dict[str, Any]]:
         model = BGEM3FlagModel(snapshot, use_fp16=False, devices="cpu", cache_dir=str(work / "model-cache"))
         max_tokens = 8192
         model.tokenizer.truncation_side = "right"
-        return model, {"kind": "flag", "max_tokens": max_tokens, "prefixes": {"query": "", "passage": ""}}
+        return model, {"kind": "flag", "max_tokens": max_tokens,
+                       "prefixes": {"query": spec["query_prefix"], "passage": spec["passage_prefix"]},
+                       "prompt_names": {"query": None, "passage": None}}
     from sentence_transformers import SentenceTransformer
 
     model = SentenceTransformer(repo, device="cpu", cache_folder=str(work / "model-cache"), trust_remote_code=spec["kind"] == "jina", **options)
     max_tokens = int(model.max_seq_length)
     model.tokenizer.truncation_side = "right"
     prompts = model.prompts
-    prefixes = {"query": prompts.get("query", spec["query_prefix"]), "passage": prompts.get("document", spec["passage_prefix"])}
-    if spec["kind"] == "jina":
-        prefixes = {"query": spec["query_prefix"], "passage": spec["passage_prefix"]}
+    prefixes = {"query": spec["query_prefix"], "passage": spec["passage_prefix"]}
+    prompt_names = {}
+    for side, name in (("query", "query"), ("passage", "document")):
+        prompt = prompts.get(name)
+        usable = prompt is not None and bool(prompt.strip())
+        # Sentence Transformers supplies empty default keys even for models
+        # without prompts. Jina's frozen selectors remain native dispatch.
+        if spec["kind"] == "sentence" and usable and prompt != prefixes[side]:
+            raise ValueError(f"Loaded tokenizer/prefix configuration mismatch for {repo}: {name} prompt")
+        prompt_names[side] = name if usable else None
     return model, {"kind": spec["kind"], "max_tokens": max_tokens, "prefixes": prefixes,
-                   "prompt_names": {"query": "query" if "query" in prompts else None, "passage": "document" if "document" in prompts else None}}
+                   "prompt_names": prompt_names}
 
 
 def _encode_batch(model: Any, meta: dict[str, Any], texts: list[str], repo: str, batch_size: int) -> Any:
