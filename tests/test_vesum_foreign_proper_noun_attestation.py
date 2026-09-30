@@ -71,8 +71,10 @@ def test_folk_vesum_gate_rejects_invalid_foreign_proper_noun_case_forms() -> Non
 def test_folk_vesum_gate_rejects_mixed_case_foreign_proper_noun_surfaces(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    # Corpus-absent heritage result. A local vesum.db classifies lowercase
-    # "іран" as the proper noun Іран and would accept mixed-case ІРан.
+    # Corpus-absent coverage boundary (#9343, #9344). A local vesum.db
+    # classifies lowercase "іран" as the proper noun Іран and would accept
+    # mixed-case ІРан through the heritage fallback (#9344). This test does
+    # not cover that corpus-present hit, nor the full-corpus writer prompt (#9343).
     monkeypatch.setattr(linear_pipeline, "_engine_classifies_authentic", lambda _candidate: False)
     monkeypatch.setattr(linear_pipeline, "_engine_flags_russianism", lambda _candidate: False)
 
