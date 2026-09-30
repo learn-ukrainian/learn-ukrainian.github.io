@@ -2437,12 +2437,12 @@ def _dispatch_corpus_search(
             expanded
             for candidate in textbook_candidates
             for expanded in (
-                [candidate]
-                if candidate.get("section_id") is None
-                else _expand_to_chunk_candidates(
+                _expand_to_chunk_candidates(
                     [candidate],
                     corpus="textbook_sections",
-                    parent_id_field="section_id",
+                    parent_id_field=(
+                        "section_id" if candidate.get("section_id") is not None else "chunk_id"
+                    ),
                 )
             )
         ]
