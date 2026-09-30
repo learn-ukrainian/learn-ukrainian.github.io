@@ -153,9 +153,11 @@ No group could be resolved from that evidence and no index was reassigned:
 | ялівник | 1,2 | 2,3 | Unresolved |
 
 There was no recoverable identity to apply. One bounded replay through the
-fixed parser was a no-op. The per-row report covers all 77 residual rows and
-retains source-response/request digests and fetch timestamps in ignored task
-state; raw responses remain in the canonical ULIF cache.
+fixed parser was a no-op. The per-row disposition table for all 77 residual
+rows is posted on [issue #9347](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/9347#issuecomment-5918274959).
+Source-response digests are recorded in that table; raw responses remain in
+canonical ULIF cache objects with their `stored_at` times. Per-row request
+digests were not retained.
 
 | Measurement | Before | After |
 |-------------|--------|-------|
