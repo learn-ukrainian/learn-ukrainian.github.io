@@ -61,6 +61,7 @@ MONITORED_CHECKOUT_TREES: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
     "data": (
         (
             "corpus_audit",  # Section-extraction tests write reports here.
+            "embeddings",  # Sources rebuilds reserve a manifest and wiki shard.
         ),
         (),  # Other data files are watched only if git-tracked (see below).
     ),
