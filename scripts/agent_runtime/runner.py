@@ -451,7 +451,7 @@ def _resolve_plan_telemetry(
     version remains explicitly unknown; the exact binary is instead hashed and
     help/version-probed inside the verified sandbox by the isolation layer.
     """
-    if tool_config and tool_config.get("review_isolation"):
+    if tool_config and (tool_config.get("review_isolation") or tool_config.get("review_attempt_boundary")):
         return InvocationTelemetry(
             model=requested_model,
             effort=requested_effort or "unknown",
@@ -1491,7 +1491,17 @@ def _execute_invocation_plan(
     isolation_capability_digest: str | None = None
     isolation_prompt_digest: str | None = None
     isolation_prompt_transport: str | None = None
-    if tool_config and tool_config.get("review_isolation"):
+    if tool_config and tool_config.get("review_attempt_boundary"):
+        boundary = tool_config["review_attempt_boundary"]
+        review_cwd = boundary.workspace
+        try:
+            review_cmd, env = boundary.wrap(review_cmd, plan.env_overrides)
+        except (OSError, ValueError, RuntimeError) as exc:
+            raise AgentUnavailableError("formal attempt filesystem boundary refused") from exc
+        for key in plan.env_unsets:
+            env.pop(key, None)
+        env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+    elif tool_config and tool_config.get("review_isolation"):
         try:
             from scripts.review.isolation import (
                 ReviewIsolationError,
@@ -3354,21 +3364,29 @@ def invoke(
     )
     attribution_token = _INVOCATION_ATTRIBUTION.set(attribution)
     launch = None
+    attempt = None
     try:
+        from .attempt_boundary import prepare_attempt_boundary
+
+        try:
+            attempt = prepare_attempt_boundary(agent_name, mode, session_id, tool_config)
+        except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
+            raise AgentUnavailableError("formal attempt filesystem boundary refused") from exc
+        prepared_config = attempt.tool_config if attempt is not None else tool_config
         launch = prepare_trail_isolation(
             agent_name=agent_name,
             mode=mode,
-            tool_config=tool_config,
+            tool_config=prepared_config,
         )
         return _invoke_impl(
             agent_name,
             prompt,
             mode=mode,
-            cwd=cwd,
+            cwd=attempt.workspace if attempt is not None else cwd,
             model=model,
             task_id=task_id,
             session_id=session_id,
-            tool_config=launch.tool_config if launch is not None else tool_config,
+            tool_config=launch.tool_config if launch is not None else prepared_config,
             entrypoint=entrypoint,
             hard_timeout=hard_timeout,
             stall_timeout=stall_timeout,
@@ -3377,10 +3395,13 @@ def invoke(
             event_sink=event_sink,
             effort=effort,
             v4_authorization_id=v4_authorization_id,
+            allow_runner_failover=attempt is None,
         )
     finally:
         if launch is not None:
             launch.cleanup()
+        if attempt is not None:
+            attempt.cleanup()
         _INVOCATION_ATTRIBUTION.reset(attribution_token)
 
 

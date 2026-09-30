@@ -427,7 +427,7 @@ def test_delegate_dispatch_cursor_refuses_primary_checkout(
     )
     assert rc == 2
     captured = capsys.readouterr()
-    assert "review attempt for cursor requires a dispatch worktree; refusing primary checkout (#8517)" in captured.err
+    assert "Cursor is not admitted (#9251)" in captured.err
 
 
 def test_delegate_dispatch_refuses_budget_guard_substitution(

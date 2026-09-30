@@ -473,7 +473,7 @@ class AgyAdapter:
 
         tc = tool_config or {}
         review_isolation = bool(tc.get("review_isolation"))
-        if review_isolation:
+        if review_isolation and not tc.get("review_attempt_boundary"):
             raise ValueError(
                 "agy_isolated_review_unsupported: AGY cannot yet prove native "
                 "project-instruction, MCP, hook, and nested-reviewer suppression"
@@ -484,7 +484,7 @@ class AgyAdapter:
         with contextlib.suppress(OSError):
             agy_bin = str(Path(agy_bin).resolve())
         _require_background_wait_support(agy_bin)
-        if review_isolation and tc.get("review_write_root"):
+        if (review_isolation or tc.get("review_attempt_boundary")) and tc.get("review_write_root"):
             log_dir = Path(str(tc["review_write_root"])) / "tmp"
             log_dir.mkdir(parents=True, exist_ok=True)
             safe_task = "".join(c if c.isalnum() or c in "-_." else "_" for c in (task_id or "review"))[:48]

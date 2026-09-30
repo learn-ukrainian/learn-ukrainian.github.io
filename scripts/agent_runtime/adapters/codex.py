@@ -321,7 +321,7 @@ class CodexAdapter:
             # --ignore-rules. Run from the parent-created instruction-free
             # directory; complete changed content remains in the sealed prompt.
             execution_cwd = review_write_root / "exec"
-        if tc_early.get("review_isolation") and write_root is not None:
+        if (tc_early.get("review_isolation") or tc_early.get("attempt_os_sandbox")) and write_root is not None:
             out_dir = write_root / "tmp"
             output_path = out_dir / f"codex-runtime{safe_suffix}-{os.getpid()}.txt"
             fd = os.open(
@@ -380,6 +380,10 @@ class CodexAdapter:
             # when approval_policy=never. The verified parent OS sandbox is
             # the review boundary, so bypass only the nested Codex sandbox to
             # keep the sole sealed read-only MCP tool usable.
+            cmd.append("--dangerously-bypass-approvals-and-sandbox")
+        elif tc.get("attempt_os_sandbox"):
+            # Parent runner owns the manifest filesystem boundary. Keeping a
+            # nested read-only sandbox cancels the authorized stdio sources.
             cmd.append("--dangerously-bypass-approvals-and-sandbox")
         elif read_only_tmp_root is not None:
             cmd.extend(_read_only_tmp_flags(read_only_tmp_root))
