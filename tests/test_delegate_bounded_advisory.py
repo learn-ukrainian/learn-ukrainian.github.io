@@ -50,6 +50,25 @@ class _Health:
         return False
 
 
+@pytest.fixture(autouse=True)
+def _stub_primary_integrity_sweep(monkeypatch):
+    """Keep dispatch and worker tests hermetic from the ambient checkout.
+
+    Same seam as tests/test_delegate.py: the primary-integrity watchdog runs
+    real git against delegate._REPO_ROOT, and a CI checkout (a merge ref, not
+    ``main``) reads as drift, so every write-capable dispatch here would be
+    refused. The guard itself is covered against fixture repos in
+    tests/test_delegate_primary_integrity.py.
+    """
+    import scripts.audit.check_primary_integrity as cpi
+
+    monkeypatch.setattr(
+        cpi,
+        "check_primary_integrity",
+        lambda *_args, **_kwargs: (True, "primary on main (test stub)"),
+    )
+
+
 @pytest.fixture
 def env(monkeypatch, tmp_path):
     """Tasks in ``tmp_path``; worker spawns and the prompts they receive are recorded."""
