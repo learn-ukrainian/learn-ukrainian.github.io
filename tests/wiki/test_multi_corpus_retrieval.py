@@ -338,6 +338,7 @@ def test_search_sources_merges_corpora_with_track_priors(tmp_path: Path, monkeyp
     assert c2_results[0]["corpus"] == "modern_literary"
     assert lit_results[0]["corpus"] == "archaic_literary"
     assert a1_results[0]["final_score"] > a1_results[1]["final_score"]
+    assert all(results[0]["ranking"] == "dense" for results in (a1_results, c2_results, lit_results))
 
     conn.close()
 
