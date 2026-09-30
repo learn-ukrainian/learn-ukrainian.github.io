@@ -122,51 +122,93 @@ def test_guard_accounts_for_preexisting_changes_and_sparse_files(tmp_path: Path)
     assert guard.check() == []
 
 
-def test_sparse_prerequisite_skip_when_words_yaml_missing(tmp_path: Path) -> None:
-    # In an environment where curriculum/l2-uk-en/evidence/a1/_words.yaml does not exist:
-    code = (
-        "import pytest\n"
+@pytest.mark.parametrize("malformed", [False, True], ids=["missing", "malformed"])
+def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malformed: bool) -> None:
+    """Exercise the actual lazy reader, rather than a copied skip implementation."""
+    store = tmp_path / "_words.yaml"
+    if malformed:
+        store.write_text("invalid: yaml: [unclosed\n", encoding="utf-8")
+    sample = tmp_path / "test_store.py"
+    sample.write_text(
+        "import sys\n"
+        f"sys.path.insert(0, {str(PROJECT_ROOT)!r})\n"
         "from pathlib import Path\n"
-        "ROOT = Path('/tmp/empty_fake_sparse_root')\n"
-        "A1_STORE = ROOT / 'curriculum/l2-uk-en/evidence/a1/_words.yaml'\n"
-        "if not A1_STORE.is_file():\n"
-        "    pytest.skip(f'Missing repository-relative prerequisite: {A1_STORE}', allow_module_level=True)\n"
+        "from tests.build import test_fresh_a1_choice_checks as choices\n"
+        f"choices.A1_STORE = Path({str(store)!r})\n"
+        "def test_independent():\n"
+        "    assert choices._record(1, 'sample', [])['id'] == 'W-1'\n"
+        "def test_store():\n"
+        "    choices._store_record('W-061')\n",
+        encoding="utf-8",
     )
-    test_script = tmp_path / "test_skip.py"
-    test_script.write_text(code, encoding="utf-8")
-    res = subprocess.run(
-        [sys.executable, "-m", "pytest", "-rs", str(test_script)],
-        capture_output=True,
-        text=True,
-        timeout=60,
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", "-rs", str(sample)],
+        cwd=tmp_path, capture_output=True, text=True, timeout=60,
     )
-    # Pytest returns 5 (ExitCode.NO_TESTS_COLLECTED) when an entire module is skipped at module level
-    assert res.returncode in (0, 5)
-    assert "skipped" in res.stdout
-    assert "Missing repository-relative prerequisite:" in res.stdout
+    assert "collected 2 items" in result.stdout, result.stdout + result.stderr
+    if malformed:
+        assert result.returncode == 1, result.stdout + result.stderr
+        assert "1 failed, 1 passed" in result.stdout
+        assert "ScannerError" in result.stdout or "ParserError" in result.stdout
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert "1 passed, 1 skipped" in result.stdout
+        assert "Missing repository-relative prerequisite: curriculum/l2-uk-en/evidence/a1/_words.yaml" in result.stdout
 
 
-def test_sparse_prerequisite_fails_when_words_yaml_malformed(tmp_path: Path) -> None:
-    code = (
-        "import pytest, yaml\n"
+@pytest.mark.parametrize("write", [False, True], ids=["unchanged", "planted-write"])
+def test_registered_guard_enforces_normal_pytest_session(tmp_path: Path, write: bool) -> None:
+    """No -p: temporary conftest registration must fail a passing writer test."""
+    _init_git_repo(tmp_path)
+    (tmp_path / ".gitignore").write_text("logs/\n", encoding="utf-8")
+    logs = tmp_path / "logs"
+    logs.mkdir()
+    (logs / "existing.jsonl").write_text('{}\n', encoding="utf-8")
+    plugin = (PROJECT_ROOT / "tests/helpers/checkout_write_guard.py").read_text(encoding="utf-8")
+    (tmp_path / "checkout_write_guard.py").write_text(
+        plugin.replace("Path(__file__).resolve().parents[2]", "Path(__file__).resolve().parent"),
+        encoding="utf-8",
+    )
+    (tmp_path / "conftest.py").write_text('pytest_plugins = ["checkout_write_guard"]\n', encoding="utf-8")
+    (tmp_path / "test_sample.py").write_text(
         "from pathlib import Path\n"
-        f"A1_STORE = Path(r'{tmp_path / '_words.yaml'}')\n"
-        "if not A1_STORE.is_file():\n"
-        "    pytest.skip('missing', allow_module_level=True)\n"
-        "STORE_WORDS = yaml.safe_load(A1_STORE.read_text(encoding='utf-8'))['words']\n"
+        "def test_sample():\n" + (
+            "    Path('logs/mcp-sources-requests.jsonl').write_text('{}\\n')\n" if write else "    assert True\n"
+        ),
+        encoding="utf-8",
     )
-    bad_yaml = tmp_path / "_words.yaml"
-    bad_yaml.write_text("invalid: yaml: [unclosed\n", encoding="utf-8")
-    test_script = tmp_path / "test_malformed.py"
-    test_script.write_text(code, encoding="utf-8")
-    res = subprocess.run(
-        [sys.executable, "-m", "pytest", str(test_script)],
-        capture_output=True,
-        text=True,
-        timeout=60,
+    result = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "test_sample.py"],
+        cwd=tmp_path, capture_output=True, text=True, timeout=60,
     )
-    assert res.returncode != 0
-    assert "ScannerError" in res.stdout or "ParserError" in res.stdout
+    assert "1 passed" in result.stdout, result.stdout + result.stderr
+    if write:
+        assert result.returncode == 1, result.stdout + result.stderr
+        assert "ERROR: checkout mutations detected by checkout_write_guard" in result.stdout
+        assert "guarded checkout artifact created: logs/mcp-sources-requests.jsonl" in result.stdout
+    else:
+        assert result.returncode == 0, result.stdout + result.stderr
+        assert "checkout mutations detected" not in result.stdout
+
+
+@pytest.mark.parametrize("change", ["unchanged", "append", "new"], ids=["unchanged-log", "append-log", "new-log"])
+def test_guard_baselines_preexisting_ignored_logs(tmp_path: Path, change: str) -> None:
+    _init_git_repo(tmp_path)
+    (tmp_path / ".gitignore").write_text("logs/\n", encoding="utf-8")
+    logs = tmp_path / "logs/nested"
+    logs.mkdir(parents=True)
+    existing = logs / "existing.jsonl"
+    existing.write_text('{}\n', encoding="utf-8")
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    if change == "append":
+        with existing.open("a", encoding="utf-8") as stream:
+            stream.write('{}\n')
+        assert guard.check() == ["pre-existing checkout log modified/appended: logs/nested/existing.jsonl"]
+    elif change == "new":
+        (logs / "new.jsonl").write_text('{}\n', encoding="utf-8")
+        assert guard.check() == ["unexpected file created in checkout logs/: logs/nested/new.jsonl"]
+    else:
+        assert guard.check() == []
 
 
 def test_guard_active_during_fresh_build_and_sources_samples() -> None:
@@ -177,14 +219,11 @@ def test_guard_active_during_fresh_build_and_sources_samples() -> None:
                 sys.executable,
                 "-m",
                 "pytest",
-                "-p",
-                "tests.helpers.checkout_write_guard",
+                "--trace-config",
                 "tests/build/test_fresh_runner.py",
-                "-k",
-                "test_runner_real_draft_report_has_numeric_single_lesson_totals",
                 "tests/test_mcp_sources_server.py",
                 "-k",
-                "test_unknown_tool_returns_error",
+                "test_runner_real_draft_report_has_numeric_single_lesson_totals or test_unknown_tool_returns_error",
             ],
             capture_output=True,
             text=True,
@@ -192,4 +231,6 @@ def test_guard_active_during_fresh_build_and_sources_samples() -> None:
             timeout=60,
         )
         assert res.returncode == 0, f"pytest failed:\n{res.stdout}\n{res.stderr}"
+        assert "2 passed" in res.stdout
+        assert "module 'tests.helpers.checkout_write_guard'" in res.stdout
     assert guard.check() == []

@@ -71,6 +71,7 @@ class CheckoutWriteGuard:
         self._before_monitored: dict[str, _FileSig] = {}
         self._before_porcelain: dict[str, str] = {}
         self._before_tracked_sigs: dict[str, _FileSig] = {}
+        self._before_logs: dict[str, _FileSig] = {}
         self._is_git_repo = (self.root / ".git").exists()
         self.snapshot()
 
@@ -79,7 +80,7 @@ class CheckoutWriteGuard:
             return {}
         try:
             res = subprocess.run(
-                ["git", "status", "--porcelain=v1"],
+                ["git", "status", "--porcelain=v1", "--untracked-files=all"],
                 cwd=self.root,
                 capture_output=True,
                 text=True,
@@ -113,6 +114,15 @@ class CheckoutWriteGuard:
             path: _hash_file(self.root / path)
             for path in self._before_porcelain
         }
+        self._before_logs = self._log_signatures()
+
+    def _log_signatures(self) -> dict[str, _FileSig]:
+        """Include ignored, pre-existing logs in the session baseline."""
+        return {
+            path.relative_to(self.root).as_posix(): _hash_file(path)
+            for path in (self.root / "logs").rglob("*")
+            if path.is_file() and not _is_exempt_path(path.relative_to(self.root).as_posix())
+        }
 
     def check(self) -> list[str]:
         """Compare current checkout state against baseline and return violations."""
@@ -130,16 +140,15 @@ class CheckoutWriteGuard:
             elif before_sig.exists and after_sig.exists and before_sig.sha256 != after_sig.sha256:
                 violations.append(f"guarded checkout artifact modified/appended: {rel}")
 
-        # Check logs directory for any other new files
-        logs_dir = self.root / "logs"
-        if logs_dir.is_dir():
-            try:
-                for entry in logs_dir.iterdir():
-                    rel_entry = f"logs/{entry.name}"
-                    if rel_entry not in MONITORED_CHECKOUT_PATHS and rel_entry not in self._before_porcelain:
-                        violations.append(f"unexpected file created in checkout logs/: {rel_entry}")
-            except OSError:
-                pass
+        # Compare all logs, including ignored files, against their real baseline.
+        for rel, after_sig in self._log_signatures().items():
+            if rel in MONITORED_CHECKOUT_PATHS:
+                continue
+            before_sig = self._before_logs.get(rel)
+            if before_sig is None:
+                violations.append(f"unexpected file created in checkout logs/: {rel}")
+            elif before_sig != after_sig:
+                violations.append(f"pre-existing checkout log modified/appended: {rel}")
 
         # 2. Git status against baseline (tracked changes and non-exempt untracked files)
         if self._is_git_repo:
@@ -179,12 +188,9 @@ class CheckoutWriteGuard:
             self.verify()
 
 
-def pytest_configure(config: Any) -> None:
-    """Register hook when used as a standalone plugin via -p tests.helpers.checkout_write_guard."""
-    if not hasattr(config, "_checkout_write_guard"):
-        guard = CheckoutWriteGuard()
-        guard.snapshot()
-        config._checkout_write_guard = guard
+def pytest_sessionstart(session: Any) -> None:
+    """Baseline once per normal session, loaded through tests/conftest.py."""
+    session.config._checkout_write_guard = CheckoutWriteGuard()
 
 
 def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
