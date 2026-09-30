@@ -246,14 +246,19 @@ def test_bundle_uri_listener_receives_no_request(world, foreign, tmp_path):
         thread = Thread(target=server.serve_forever, daemon=True)
         thread.start()
         try:
-            uri = f"http://localhost:{server.server_port}/foreign.bundle"
+            uri = f"http://127.0.0.1:{server.server_port}/foreign.bundle"
             # Control proves the listener and bundle exercise Git's download path.
             control = tmp_path / "control"
             git(tmp_path, "clone", "--no-hardlinks", str(world[1]), str(control))
             git(control, "config", "fetch.bundleURI", uri)
             with sg.git_session() as runner:
-                assert runner.run(control, ["fetch", "--", "git@github.com:fixture/sibling.git", "main"]).returncode == 0
-            assert requests == ["/foreign.bundle"]
+                # Git's SSH-only session needs explicit HTTP permission for
+                # this fixture download; the refusal below uses a new session.
+                runner.env["GIT_ALLOW_PROTOCOL"] = "ssh:http"
+                result = runner.run(control, ["fetch", "--", "git@github.com:fixture/sibling.git", "main"])
+            assert result.returncode == 0, result.stderr
+            assert "failed to fetch bundles" not in result.stderr, result.stderr
+            assert requests == ["/foreign.bundle"], result.stderr
             assert git(control, "cat-file", "-t", foreign[1]) == "commit"
             requests.clear()
             git(world[1], "config", "fetch.bundleURI", uri)
