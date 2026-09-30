@@ -87,37 +87,75 @@ def _partition_rows(rows: list[dict[str, object]]) -> list[dict[str, object]]:
     return built
 
 
-def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
+_PRODUCTION_MATERIALIZATION_COUNT = transport.MATERIALIZATION_COUNT
+_PRODUCTION_ROW_COUNT = transport.ROW_COUNT
+# The two full-scale tests rebuild the same 67,041-row materialization. Bytes are
+# deterministic, so the second test in a process writes the first test's copy.
+_CACHED_FULL_INPUTS: tuple[bytes, bytes, bytes, bytes] | None = None
+
+
+def _input_bytes() -> tuple[bytes, bytes, bytes, bytes]:
+    """Materialization, its receipt, the partition, and the freeze receipt."""
     rows = [_row(number) for number in range(transport.MATERIALIZATION_COUNT)]
-    materialization = tmp_path / "inputs" / "source.jsonl"
-    materialization.parent.mkdir(parents=True)
-    materialization.write_bytes(b"".join((transport.canonical_json(row) + "\n").encode() for row in rows))
-    materialization_receipt = tmp_path / "inputs" / "materialization-receipt.json"
-    _write(
-        materialization_receipt,
-        {
-            "schema_version": "phase3_source_unit_materialization_receipt_v1",
-            "private_record_count": transport.MATERIALIZATION_COUNT,
-            "private_jsonl_sha256": transport.sha256_file(materialization),
-        },
-    )
+    materialization = b"".join((transport.canonical_json(row) + "\n").encode() for row in rows)
+    materialization_receipt = (
+        json.dumps(
+            {
+                "schema_version": "phase3_source_unit_materialization_receipt_v1",
+                "private_record_count": transport.MATERIALIZATION_COUNT,
+                "private_jsonl_sha256": transport.sha256_bytes(materialization),
+            },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
+    ).encode()
     partition_rows = _partition_rows(rows)
     selected = [row for row in partition_rows if row["candidate_lane"] == "clean_modern"]
     assert len(selected) == transport.ROW_COUNT and len(partition_rows) == _FROZEN_PARTITION_COUNT
-    partition = tmp_path / "inputs" / "partition.jsonl"
-    partition.write_bytes(b"".join((transport.canonical_json(row) + "\n").encode() for row in partition_rows))
-    freeze_receipt = tmp_path / "inputs" / "freeze-receipt.json"
-    _write(
-        freeze_receipt,
-        {
-            "schema_version": "phase3_evaluation_partition_receipt_v1",
-            "input_bindings": {
-                "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
-                "source_materialization_jsonl_sha256": transport.sha256_file(materialization),
+    partition = b"".join((transport.canonical_json(row) + "\n").encode() for row in partition_rows)
+    freeze_receipt = (
+        json.dumps(
+            {
+                "schema_version": "phase3_evaluation_partition_receipt_v1",
+                "input_bindings": {
+                    "evaluation_cycle_id": "phase3-v2-1-evaluation-cycle-001",
+                    "source_materialization_jsonl_sha256": transport.sha256_bytes(materialization),
+                },
+                "artifact_hashes": {"partition_manifest_sha256": transport.sha256_bytes(partition)},
             },
-            "artifact_hashes": {"partition_manifest_sha256": transport.sha256_file(partition)},
-        },
+            ensure_ascii=False,
+            sort_keys=True,
+            separators=(",", ":"),
+        )
+        + "\n"
+    ).encode()
+    return materialization, materialization_receipt, partition, freeze_receipt
+
+
+def _inputs(tmp_path: Path) -> tuple[Path, Path, Path, Path, Path]:
+    global _CACHED_FULL_INPUTS
+    production = (
+        transport.MATERIALIZATION_COUNT == _PRODUCTION_MATERIALIZATION_COUNT
+        and transport.ROW_COUNT == _PRODUCTION_ROW_COUNT
     )
+    if production and _CACHED_FULL_INPUTS is not None:
+        materialization_bytes, receipt_bytes, partition_bytes, freeze_bytes = _CACHED_FULL_INPUTS
+    else:
+        materialization_bytes, receipt_bytes, partition_bytes, freeze_bytes = _input_bytes()
+        if production:
+            _CACHED_FULL_INPUTS = (materialization_bytes, receipt_bytes, partition_bytes, freeze_bytes)
+    inputs = tmp_path / "inputs"
+    inputs.mkdir(parents=True)
+    materialization = inputs / "source.jsonl"
+    materialization.write_bytes(materialization_bytes)
+    materialization_receipt = inputs / "materialization-receipt.json"
+    materialization_receipt.write_bytes(receipt_bytes)
+    partition = inputs / "partition.jsonl"
+    partition.write_bytes(partition_bytes)
+    freeze_receipt = inputs / "freeze-receipt.json"
+    freeze_receipt.write_bytes(freeze_bytes)
     return partition, materialization, materialization_receipt, freeze_receipt, tmp_path / "private"
 
 

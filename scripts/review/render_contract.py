@@ -173,6 +173,10 @@ def server_code(checkout: Path) -> ServerCode:
 
     The entry and each repository module it imports, recursively (a symlink is followed and its target's bytes
     hashed), and the checkout's ``LOCK_FILE``. Modules found outside the roots are not traced.
+
+    Parsed import lists are cached for the process by the sha256 of the file's bytes. Package layout
+    (``__init__.py``, a module file, or a namespace directory) is read on every walk, so a new ``__init__.py``
+    changes the closure.
     """
     root = Path(checkout).resolve()
     entry = root / SERVER_ENTRY
