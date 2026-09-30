@@ -269,20 +269,28 @@ def test_redact_text_handles_quoted_and_spaced_assignments():
     assert redacted.count(REDACTION) == 2
 
 
-def test_github_comment_redacts_body_before_subprocess():
-    from scripts.ai_agent_bridge._github import _gh_comment
+def test_github_comment_redacts_body_before_subprocess(monkeypatch):
+    from scripts.ai_agent_bridge import _github
+    from scripts.publish.github import request_run
 
-    mock_result = MagicMock()
-    mock_result.returncode = 0
-    with patch("subprocess.run", return_value=mock_result) as mock_run:
-        assert _gh_comment(
-            123,
-            "OPENAI_API_KEY=sk-abcdefghijklmnopqrstuvwxyz123456",
-        ) is True
+    posted = []
+    def send(args, **kwargs):
+        body = Path(args[args.index("--body-file") + 1]).read_text()
+        assert "sk-" not in body
+        assert REDACTION in body
+        posted.append(body)
+        return MagicMock(returncode=0)
 
-    posted_body = mock_run.call_args.kwargs["input"]
-    assert "sk-" not in posted_body
-    assert REDACTION in posted_body
+    def bridge(request, **kwargs):
+        assert "sk-" not in request.fields["body"]
+        assert REDACTION in request.fields["body"]
+        return request_run(request, runner=send, **kwargs)
+
+    monkeypatch.setattr(_github, "request_run", bridge)
+    assert _github._gh_comment(123, "OPENAI_API_KEY=sk-abcdefghijklmnopqrstuvwxyz123456") is True
+    assert len(posted) == 1
+    assert "sk-" not in posted[0]
+    assert REDACTION in posted[0]
 
 
 def test_send_message_redacts_content_and_data(msg_db):
@@ -348,6 +356,6 @@ def test_read_message_redacts_existing_unredacted_rows(msg_db):
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")

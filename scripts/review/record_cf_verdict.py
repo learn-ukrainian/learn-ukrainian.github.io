@@ -127,9 +127,9 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
                     author_task = json.loads(task_file.read_text(encoding="utf-8"))
                 except (OSError, ValueError) as exc:
                     raise RecordError("author task provenance unavailable") from exc
-                if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
-                    harness
-                ):
+                if author_task.get("repository") != repository or not str(
+                    author_task.get("agent") or ""
+                ).startswith(harness):
                     raise RecordError("author task provenance conflicts with commit trailer")
                 if harness.startswith("cursor"):
                     if author_task.get("resolved_model_known") is not True:

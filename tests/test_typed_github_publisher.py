@@ -22,10 +22,15 @@ from tests.opsec_fixtures import CATALOG, ROOT, TOKEN
 @pytest.fixture(autouse=True)
 def catalog(monkeypatch):
     monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
 
 
 def spy(calls):
     def send(args, **kwargs):
+        if args[:3] == ["gh", "pr", "view"] and "--json" in args and args[args.index("--json") + 1] == "number,isDraft,headRefOid":
+            return subprocess.CompletedProcess(args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), "")
+        if args[:3] == ["gh", "pr", "checks"] and "--json" in args and args[args.index("--json") + 1] == "name,bucket,state":
+            return subprocess.CompletedProcess(args, 0, "[]", "")
         record = {"argv": args, "env": kwargs.get("env", {})}
         for flag in ("--body-file", "--notes-file", "--input"):
             if flag in args:
@@ -369,8 +374,8 @@ def test_typed_reads_refuse_arbitrary_documents_paths_and_fields(operation, fiel
 
 def test_publisher_cli_closed_schema_and_stdin(synthetic_opsec, monkeypatch):
     calls = []
-    monkeypatch.setattr(subprocess, "run", spy(calls))
-    assert pub.main(["issue-comment", "--repo", "unit/public", "--number", "1", "--body", "clean"]) == 0
+    monkeypatch.setattr(pub, "_run_transport", spy(calls))
+    assert pub.main(["issue-comment", "--repo", "unit/public", "--number", "1", "--body", "clean"], runner=spy(calls)) == 0
     with pytest.raises(SystemExit) as exc:
         pub.main(["issue-comment", "--number", "1", "--raw-argv", "unit"])
     assert exc.value.code == 2
@@ -461,6 +466,12 @@ def test_production_transport_retains_worker_merge_approval_guard(synthetic_opse
     output = tmp_path / "outbound"
     executable.write_text(f"#!/bin/sh\nprintf sent > '{output}'\n")
     executable.chmod(0o755)
+    if verb == "pr-merge":
+        with pytest.raises(gate.PublishBlocked, match="AGENT_NO_MERGE"):
+            pub.publish(verb, repo="unit/public", env={"AGENT_NO_MERGE": "1"},
+                        runner=lambda *a, **k: pytest.fail("send"), **fields)
+        assert not output.exists()
+        return
     result = pub.publish(
         verb,
         repo="unit/public",
@@ -576,7 +587,7 @@ def test_verified_host_is_pinned_in_transport(synthetic_opsec):
     ],
 )
 def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
-    synthetic_opsec, tmp_path, monkeypatch, consumer
+    synthetic_opsec, publisher_transport, tmp_path, monkeypatch, consumer
 ):
     """Invoke each caller with a transport spy; gate failures cannot become sends."""
     import importlib
@@ -590,6 +601,8 @@ def test_each_inventory_publisher_uses_module_and_never_sends_blocked_text(
     def transport(args, **kwargs):
         if args[:3] == ["gh", "release", "view"]:
             return subprocess.CompletedProcess(args, 1, "", "missing")
+        if args[:3] == ["gh", "repo", "view"]:
+            return subprocess.CompletedProcess(args, 0, '{"defaultBranchRef":{"name":"trunk"}}', "")
         if args[0] == "git":
             return subprocess.CompletedProcess(args, 0, "https://github.com/unit/public.git", "")
         calls.append(args)

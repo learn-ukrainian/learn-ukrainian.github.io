@@ -45,6 +45,12 @@ SCHEMAS = {
         {"number"},
         {**COMMON, "number": "number", "subject": "text", "body": "text", "body_file": "file", "match_head": "sha"},
     ),
+    "pr-update-branch": ({"number"}, {**COMMON, "number": "number"}),
+    "pr-ready": ({"number"}, {**COMMON, "number": "number"}),
+    "pr-close": ({"number"}, {**COMMON, "number": "number"}),
+    "issue-reopen": ({"number"}, {**COMMON, "number": "number"}),
+    "run-rerun": ({"number"}, {**COMMON, "number": "number"}),
+    "workflow-run": ({"workflow", "ref"}, {**COMMON, "workflow": "workflow", "ref": "ref", "inputs": "workflow_inputs"}),
     "pr-disarm": ({"number"}, {**COMMON, "number": "number"}),
     "pr-dequeue": ({"node_id"}, {**COMMON, "node_id": "node"}),
     "release-create": (
@@ -91,7 +97,10 @@ SCHEMAS = {
     ),
     "issue-link": ({"parent_id", "child_id"}, {**COMMON, "parent_id": "node", "child_id": "node"}),
 }
+WORKFLOWS = {"ci.yml": {}, "deploy-pages.yml": {}}
+
 ENUMS = {
+    "workflow": set(WORKFLOWS),
     "reason": {"completed", "not planned"},
     "verdict": {"approve", "comment", "request-changes"},
     "state": {"open", "closed"},
@@ -99,6 +108,7 @@ ENUMS = {
 }
 PATTERNS = {
     "repo": r"(?:[A-Za-z0-9.-]+/)?[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+",
+    "ref": r"[A-Za-z0-9_][A-Za-z0-9_./-]*",
     "sha": r"[0-9a-fA-F]{40}",
     "node": r"[A-Za-z0-9_=-]+",
     "color": r"[0-9a-fA-F]{6}",
@@ -127,6 +137,8 @@ def _validate(verb, fields):
             valid = isinstance(value, (str, Path))
         elif kind == "texts":
             valid = isinstance(value, (list, tuple)) and all(isinstance(x, str) for x in value)
+        elif kind == "workflow_inputs":
+            valid = isinstance(value, dict) and not value  # admitted workflows have no inputs
         elif kind == "assets":
             valid = isinstance(value, (list, tuple)) and bool(value) and all(isinstance(x, Asset) for x in value)
         elif kind in ENUMS:
@@ -174,11 +186,7 @@ def _read_file(path, cwd, stdin):
 def _send(argv, *, environment, runner, cwd, **kwargs):
     """Use the existing merge guard/retry helper only for the production transport."""
     environment.pop("LU_OPSEC_OVERRIDE", None)
-    if runner is None and getattr(subprocess.run, "__module__", "") != "subprocess":
-        runner = subprocess.run
-    if runner is None or (
-        getattr(runner, "__module__", "") == "subprocess" and getattr(runner, "__name__", "") == "run"
-    ):
+    if runner is None:
         from scripts.opsec.gh_entry import guarded_command
 
         real = gate.real_gh(environment)
@@ -322,6 +330,15 @@ def publish(
                 frozen.write_bytes(fields[key].encode("utf-8"))
                 argv.extend(["--" + key + "-file", str(frozen)])
 
+        if verb == "pr-merge":
+            from scripts.publish.merge_guard import ensure_merge_ready
+            def readiness_runner(args, **kwargs):
+                return _send(args, environment=kwargs.pop("env"), runner=runner,
+                             cwd=kwargs.pop("cwd"), **kwargs)
+            fields["match_head"] = ensure_merge_ready(gh_repo, fields["number"],
+                runner=readiness_runner, cwd=cwd, environment=environment,
+                match_head=fields.get("match_head"))
+
         if verb in {"issue-create", "issue-edit", "pr-create", "pr-edit", "issue-comment", "pr-comment", "pr-review"}:
             option("title")
             body_file("body")
@@ -349,6 +366,13 @@ def publish(
             option("subject")
             option("match_head", "--match-head-commit")
             body_file("body")
+        elif verb in {"pr-update-branch", "pr-ready", "pr-close", "issue-reopen"}:
+            pass
+        elif verb == "run-rerun":
+            argv.append("--failed")
+        elif verb == "workflow-run":
+            argv.insert(3, fields["workflow"])
+            option("ref")
         elif verb == "pr-disarm":
             argv = ["gh", "pr", "merge", str(fields["number"]), "--repo", gh_repo, "--disable-auto"]
         elif verb.startswith("release-"):
@@ -425,7 +449,7 @@ class PublisherParser(argparse.ArgumentParser):
         self.exit(2, "OPSEC: invalid publisher arguments; use --help.\n")
 
 
-def main(argv=None):
+def main(argv=None, *, runner=None):
     parser = PublisherParser(
         description="Publish GitHub changes through closed, scanned fields.\nUse for public writes; raw gh is reserved for allowlisted reads.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -442,16 +466,36 @@ def main(argv=None):
             elif kind in {"texts", "assets"}:
                 kwargs["action"] = "append"
                 if kind == "assets":
-                    kwargs["type"] = Asset
+                    def asset_arg(value):
+                        try:
+                            return Asset(value)
+                        except gate.PublishBlocked:
+                            raise argparse.ArgumentTypeError("invalid artifact") from None
+                    kwargs["type"] = asset_arg
             elif kind == "number":
                 kwargs["type"] = int
+            if kind == "workflow_inputs":
+                kwargs["type"] = json.loads
             if kind in ENUMS:
                 kwargs["choices"] = sorted(ENUMS[kind])
             sub.add_argument("--" + key.replace("_", "-"), **kwargs)
+    read_parser = verbs.add_parser("read", help="Named REST and GraphQL reads", allow_abbrev=False)
+    read_parser.add_argument("name", choices=sorted(set(REST_READS) | set(GQL_READS) | {"queue-snapshot", "subissue-batch", "issue-states", "merge-facts"}))
+    read_parser.add_argument("--repo")
+    for key in ("number",):
+        read_parser.add_argument("--" + key, type=int, default=argparse.SUPPRESS)
+    for key in ("sha", "start", "end", "branch", "cursor"):
+        read_parser.add_argument("--" + key, default=argparse.SUPPRESS)
+    for key in ("branches", "cursors", "body_roots", "numbers", "batch"):
+        read_parser.add_argument("--" + key.replace("_", "-"), type=json.loads, default=argparse.SUPPRESS)
+    read_parser.add_argument("--paginate", action="store_true")
+    read_parser.add_argument("--slurp", action="store_true")
     args = vars(parser.parse_args(argv))
     verb = args.pop("verb")
     try:
-        return publish(verb, **args).returncode
+        if verb == "read":
+            return read(args.pop("name"), runner=runner, **args).returncode
+        return publish(verb, runner=runner, **args).returncode
     except gate.PublishBlocked as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -495,6 +539,10 @@ REST_READS = {
     "deployment-statuses": ("repos/{repo}/deployments/{number}/statuses", {"number": "number"}),
 }
 GQL_READS = {
+    "budget": "query { rateLimit { limit remaining used resetAt } }",
+    "queue-status": '\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n',
+    "pr-bases": '\nquery($owner: String!, $name: String!, $cursor: String) {\n  repository(owner: $owner, name: $name) {\n    pullRequests(states: OPEN, first: 100, after: $cursor) {\n      totalCount\n      pageInfo { hasNextPage endCursor }\n      nodes { number baseRefOid }\n    }\n  }\n}\n',
+    "issue-scope": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){number body labels(first:100){nodes{name}} parent{number}}}}",
     "membership-head": "query($owner:String!,$name:String!,$number:Int!,$branch:String!){repository(owner:$owner,name:$name){pullRequest(number:$number){headRefOid isInMergeQueue} mergeQueue(branch:$branch){url}}}",
     "issue-parent": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){nameWithOwner issue(number:$number){number state url parent{number url}}}}",
     "membership": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){pullRequest(number:$number){isInMergeQueue}}}",
@@ -523,8 +571,8 @@ def read(
     """Specific API reads with fixed GET endpoints or internally built query documents."""
     environment = dict(os.environ if env is None else env)
     cwd = Path(cwd or Path.cwd())
-    dest = repository(cwd, environment, repo)
-    if dest == "unknown" and operation != "identity":
+    dest = "unknown" if operation == "budget" else repository(cwd, environment, repo)
+    if dest == "unknown" and operation not in {"identity", "budget", "merge-facts"}:
         raise gate.PublishBlocked("OPSEC: read repository unresolved.")
     if dest != "unknown":
         environment["GH_HOST"] = dest.split("/", 1)[0]
@@ -552,7 +600,7 @@ def read(
     else:
         variables = dict(zip(("owner", "name"), gh_repo.split("/", 1), strict=True)) if "/" in gh_repo else {}
         if operation in GQL_READS:
-            expected = (
+            expected = (set() if operation == "budget" else {"cursor"} if operation == "pr-bases" else {"number", "branch"} if operation == "queue-status" else
                 {"number", "cursor"}
                 if operation == "subissues-next"
                 else {"number", "branch"}
@@ -561,12 +609,37 @@ def read(
             )
             if (
                 set(fields) != expected
-                or ("cursor" in fields and not isinstance(fields["cursor"], str))
+                or ("cursor" in fields and not isinstance(fields["cursor"], str) and not (operation == "pr-bases" and fields["cursor"] is None))
                 or ("branch" in fields and not isinstance(fields["branch"], str))
             ):
                 raise gate.PublishBlocked("OPSEC: invalid query fields.")
             query = GQL_READS[operation]
             variables.update(fields)
+        elif operation == "issue-states" and set(fields) == {"numbers"}:
+            numbers = fields["numbers"]
+            if (not isinstance(numbers, (list, tuple)) or not 1 <= len(numbers) <= 100
+                    or any(type(n) is not int or n <= 0 for n in numbers)):
+                raise gate.PublishBlocked("OPSEC: invalid issue batch.")
+            aliases = "\n".join(f"i{n}: issue(number: {n}) {{ number state }}" for n in numbers)
+            query = "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){" + aliases + "}}"
+        elif operation == "merge-facts" and set(fields) == {"batch"}:
+            batch = fields["batch"]
+            if not isinstance(batch, (list, tuple)) or not 1 <= len(batch) <= 50:
+                raise gate.PublishBlocked("OPSEC: invalid merge batch.")
+            grouped = {}
+            for item in batch:
+                if (not isinstance(item, (list, tuple)) or len(item) != 2
+                        or not isinstance(item[0], str) or not re.fullmatch(r"[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+", item[0])
+                        or type(item[1]) is not int or item[1] <= 0):
+                    raise gate.PublishBlocked("OPSEC: invalid merge selector.")
+                grouped.setdefault(item[0], []).append(item[1])
+            selections = []
+            for i, (slug, numbers) in enumerate(grouped.items()):
+                owner, name = slug.split("/")
+                selections.append(f"r{i}:repository(owner:{json.dumps(owner)},name:{json.dumps(name)}){{" +
+                    " ".join(f"p{n}:pullRequest(number:{n}){{mergedAt}}" for n in numbers) + "}")
+            query = "query {" + " ".join(selections) + "}"
+            variables = {}
         elif operation == "queue-snapshot" and set(fields) == {"branches"}:
             branches = fields["branches"]
             if not isinstance(branches, (list, tuple, set)) or not all(isinstance(b, str) for b in branches):

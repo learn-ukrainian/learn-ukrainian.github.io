@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — VESUM gate: skip true-false statements when answer=false (#2104)
 
 ## Root cause (m20 build #19)
@@ -34,7 +40,7 @@ Implementation hint: follow the same pattern as `walk_answer_options` at the exi
 # venv symlinked into worktree by delegate.py
 .venv/bin/pytest tests/build/test_linear_pipeline.py -k vesum -v
 git diff --stat main
-.venv/bin/python -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
+"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
 ```
 
 ## Regression test

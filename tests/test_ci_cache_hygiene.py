@@ -220,6 +220,7 @@ def test_list_caches_rejects_duplicated_entries() -> None:
 
 def test_open_pr_base_shas_follows_cursors() -> None:
     seen: list[list[str]] = []
+    documents = []
     pages = iter(
         [
             _pr_page(3, [1, 2], [_sha(1), _sha(1)], "c1"),
@@ -228,13 +229,17 @@ def test_open_pr_base_shas_follows_cursors() -> None:
     )
 
     def fake_gh_api(args: list[str]) -> str:
+        from pathlib import Path
+        documents.append(json.loads(Path(args[args.index("--input") + 1]).read_text()))
         seen.append(args)
         return next(pages)
 
     assert open_pr_base_shas("owner/repo", gh_api=fake_gh_api) == {_sha(1), _sha(2)}
     assert "cursor=c1" not in seen[0]
-    assert seen[1][-2:] == ["-f", "cursor=c1"]
-    assert seen[0][3:7] == ["-f", "owner=owner", "-f", "name=repo"]
+    assert documents[0]["variables"]["cursor"] is None
+    assert documents[1]["variables"]["cursor"] == "c1"
+    assert seen[1][:3] == ["--method", "POST", "graphql"]
+    assert documents[0]["variables"] == {"owner": "owner", "name": "repo", "cursor": None}
 
 
 def test_open_pr_base_shas_rejects_a_short_listing() -> None:

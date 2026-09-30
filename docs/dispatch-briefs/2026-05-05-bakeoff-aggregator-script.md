@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch — bakeoff aggregator script
 
 ## Goal
@@ -16,7 +22,7 @@ Bare `--worktree`. Auto-derived at `.worktrees/dispatch/codex/bakeoff-aggregator
 
 2. **Design the aggregator CLI:**
     ```
-    .venv/bin/python scripts/audit/bakeoff_aggregate.py \
+    "$PROJECT_PYTHON" scripts/audit/bakeoff_aggregate.py \
       --bakeoff-dir audit/bakeoff-2026-05-05 \
       --writers gemini,claude,gpt55 \
       --output audit/bakeoff-2026-05-05/REPORT.md
@@ -91,7 +97,7 @@ Bare `--worktree`. Auto-derived at `.worktrees/dispatch/codex/bakeoff-aggregator
     - Assert column counts match expected agents
     - Assert min-dim and weighted-score calculations are correct against fixture inputs
 
-7. **Run tests.** `.venv/bin/python -m pytest tests/test_bakeoff_aggregate.py -x -v`
+7. **Run tests.** `"$PROJECT_PYTHON" -m pytest tests/test_bakeoff_aggregate.py -x -v`
 
 8. **Run ruff.** `.venv/bin/ruff check scripts/audit/`
 

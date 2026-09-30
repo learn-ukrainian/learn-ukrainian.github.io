@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Gemini dispatch brief — CodeQL cleanup, real fixes vs false-positive dismissals
 
 > **Branch base:** `origin/main` (this dispatch fires AFTER #1711 merges so the gemini-cli adapter is fixed)
@@ -89,7 +95,7 @@ Valid `dismissed_reason` values: `false positive`, `won't fix`, `used in tests`.
    ```bash
    git add -A
    git diff --cached > /tmp/codeql-cleanup-diff.txt
-   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
+   "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-claude \
        "Adversarial review for CodeQL cleanup dispatch. Read /tmp/codeql-cleanup-diff.txt and docs/audits/codeql-2026-05-05-triage.md. For each REAL fix: is the patch sufficient? For each dismissal: is the reasoning sound, or is this actually a real bug being papered over? Cite specific alert numbers." \
        --task-id codeql-cleanup-review
    ```

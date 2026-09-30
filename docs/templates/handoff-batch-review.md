@@ -5,7 +5,7 @@ Use this template when creating issues for large-scale audits or quality reviews
 ## Usage
 
 ```bash
-gh issue create \
+.venv/bin/python -m scripts.publish issue-create \
   --title "review(level): Batch quality review - scope description" \
   --body-file /tmp/issue-body.md \
   --label "enhancement" \

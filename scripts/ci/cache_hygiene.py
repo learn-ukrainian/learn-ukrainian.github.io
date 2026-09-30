@@ -54,18 +54,6 @@ COMMIT_SHA_RE = re.compile(r"[0-9a-f]{40}")
 
 GhApi = Callable[[list[str]], str]
 
-OPEN_PR_BASES_QUERY = """
-query($owner: String!, $name: String!, $cursor: String) {
-  repository(owner: $owner, name: $name) {
-    pullRequests(states: OPEN, first: 100, after: $cursor) {
-      totalCount
-      pageInfo { hasNextPage endCursor }
-      nodes { number baseRefOid }
-    }
-  }
-}
-"""
-
 KEEP_TRAP_NEWEST = "newest TRAP per family"
 KEEP_TRAP_PR_BASE = "TRAP at an open PR base"
 KEEP_UV_CURRENT = "uv for the current lock"
@@ -175,16 +163,19 @@ def open_pr_base_shas(repo: str, gh_api: GhApi = _gh_api) -> set[str]:
     pull request must yield a 40-hex base SHA: one without it would leave its
     TRAP entry unprotected, so it fails the listing like a missing page.
     """
-    owner, name = repo.split("/", 1)
     shas: set[str] = set()
     numbers: set[int] = set()
     totals: set[int] = set()
     cursor: str | None = None
     for _ in range(MAX_PAGES):
-        args = ["graphql", "-f", f"query={OPEN_PR_BASES_QUERY}", "-f", f"owner={owner}", "-f", f"name={name}"]
-        if cursor:
-            args += ["-f", f"cursor={cursor}"]
-        prs = json.loads(gh_api(args))["data"]["repository"]["pullRequests"]
+        from scripts.publish.github import read
+        def transport(args, **kwargs):
+            return subprocess.CompletedProcess(args, 0, gh_api(args[2:]), "")
+        result = read("pr-bases", repo=repo, cursor=cursor, runner=transport if gh_api is not _gh_api else None,
+                      text=True, capture_output=True)
+        if result.returncode:
+            raise IncompleteListingError("open PR base read failed")
+        prs = json.loads(result.stdout)["data"]["repository"]["pullRequests"]
         totals.add(int(prs["totalCount"]))
         for node in prs["nodes"]:
             base = node["baseRefOid"]

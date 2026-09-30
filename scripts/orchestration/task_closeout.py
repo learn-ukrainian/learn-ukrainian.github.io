@@ -172,9 +172,13 @@ class GhGitHubAdapter:
         try:
             from scripts.orchestration import issue_stream_audit
 
-            registry = issue_stream_audit.load_registry(self.repo_root / "scripts" / "config" / "issue_streams.yaml")
+            registry = issue_stream_audit.load_registry(
+                self.repo_root / "scripts" / "config" / "issue_streams.yaml"
+            )
         except (OSError, ValueError) as exc:
-            raise task_lifecycle.LifecycleError(f"cannot load the issue-stream registry: {exc}") from exc
+            raise task_lifecycle.LifecycleError(
+                f"cannot load the issue-stream registry: {exc}"
+            ) from exc
         return sorted({epic for epics in registry.values() for epic in epics})
 
     def membership_audit_report(self) -> dict[str, Any]:
@@ -196,7 +200,9 @@ class GhGitHubAdapter:
         try:
             return issue_stream_audit.run_audit(self.repo_root)
         except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as exc:
-            raise task_lifecycle.LifecycleError(f"cannot run the issue-stream membership audit: {exc}") from exc
+            raise task_lifecycle.LifecycleError(
+                f"cannot run the issue-stream membership audit: {exc}"
+            ) from exc
 
     @staticmethod
     def _owner_name(repository: str) -> tuple[str, str]:
@@ -341,8 +347,8 @@ class GhGitHubAdapter:
         follow_up = self.read_issue(repository, int(follow_up_number))
         original_ref = f"#{original_issue}"
         follow_up_ref = f"#{follow_up_number}"
-        follow_up["reciprocal_links_verified"] = follow_up_ref in original_body and original_ref in str(
-            follow_up.get("body") or ""
+        follow_up["reciprocal_links_verified"] = (
+            follow_up_ref in original_body and original_ref in str(follow_up.get("body") or "")
         )
         return follow_up
 
@@ -462,7 +468,7 @@ class GhGitHubAdapter:
             None,
         )
 
-    def arm_auto_merge(self, repository: str, pr_number: int) -> None:
+    def enqueue_pr(self, repository: str, pr_number: int) -> None:
         self._run(
             Request("pr-merge", number=int(str(pr_number)), repo=repository),
             None,
@@ -497,7 +503,9 @@ def _replace_checkbox(body: str, ac_id: str) -> str:
     return "\n".join(lines) + suffix
 
 
-def evidenced_issue_body(ledger: Mapping[str, Any], observation: Mapping[str, Any]) -> tuple[str, list[str]]:
+def evidenced_issue_body(
+    ledger: Mapping[str, Any], observation: Mapping[str, Any]
+) -> tuple[str, list[str]]:
     evaluation = task_lifecycle.evaluate(ledger, observation)
     valid = {key: set(value) for key, value in evaluation["valid_evidence"].items()}
     body = str(observation["github"]["issue"].get("body") or "")
@@ -550,10 +558,9 @@ def _assert_mutation_ready(
         _assert_closing_references_match_disposition(ledger, observation)
         if hard:
             raise task_lifecycle.LifecycleError("auto-merge blocked: " + "; ".join(hard))
-        if (
-            task_lifecycle.STATE_RANK.get(evaluation["last_success_state"], -1)
-            < task_lifecycle.STATE_RANK["REVIEW_PASSED"]
-        ):
+        if task_lifecycle.STATE_RANK.get(evaluation["last_success_state"], -1) < task_lifecycle.STATE_RANK[
+            "REVIEW_PASSED"
+        ]:
             raise task_lifecycle.LifecycleError("auto-merge requires verified current-head outside-family review")
         if str(observation["github"]["pr"].get("state") or "").upper() != "OPEN":
             raise task_lifecycle.LifecycleError("auto-merge requires an open PR")
@@ -568,27 +575,37 @@ def _assert_mutation_ready(
             raise task_lifecycle.LifecycleError("issue close has missing pre-close AC evidence")
         if evaluation["preclose_unchecked"]:
             raise task_lifecycle.LifecycleError(
-                "issue close requires evidenced AC checkboxes: " + ", ".join(evaluation["preclose_unchecked"])
+                "issue close requires evidenced AC checkboxes: "
+                + ", ".join(evaluation["preclose_unchecked"])
             )
         if ledger["remaining_scope"]["status"] == "open":
             raise task_lifecycle.LifecycleError("issue close is blocked by untransferred remaining scope")
     return evaluation
 
 
-def _assert_closing_references_match_disposition(ledger: Mapping[str, Any], observation: Mapping[str, Any]) -> None:
+def _assert_closing_references_match_disposition(
+    ledger: Mapping[str, Any], observation: Mapping[str, Any]
+) -> None:
     """Fail closed when GitHub closing references contradict retained scope."""
 
     raw_numbers = observation["github"]["pr"].get("closing_issue_numbers")
-    if not isinstance(raw_numbers, list) or any(not isinstance(number, int) or number < 1 for number in raw_numbers):
+    if not isinstance(raw_numbers, list) or any(
+        not isinstance(number, int) or number < 1 for number in raw_numbers
+    ):
         raise task_lifecycle.LifecycleError("authoritative PR closing references are unavailable or malformed")
     closing_numbers = set(raw_numbers)
     remaining_scope = ledger["remaining_scope"]["status"]
-    expected = {int(ledger["identity"]["github_issue_number"])} if remaining_scope == "none" else set()
+    expected = (
+        {int(ledger["identity"]["github_issue_number"])}
+        if remaining_scope == "none"
+        else set()
+    )
     unexpected = sorted(closing_numbers - expected)
     if unexpected:
         rendered = ", ".join(f"#{number}" for number in unexpected)
         raise task_lifecycle.LifecycleError(
-            f"GitHub closing references contradict the declared remaining-scope disposition: {rendered}"
+            "GitHub closing references contradict the declared remaining-scope disposition: "
+            f"{rendered}"
         )
 
 
@@ -671,7 +688,9 @@ def perform_mutation(
         operation_id = task_lifecycle.mutation_operation_id(ledger, action)
         prior_status = task_lifecycle.mutation_status(ledger, operation_id)
 
-        if prior_status == "complete" and _desired_remote_state(action, ledger, before):
+        if prior_status == "complete" and _desired_remote_state(
+            action, ledger, before
+        ):
             return {
                 "action": action,
                 "operation_id": operation_id,
@@ -714,7 +733,9 @@ def perform_mutation(
                 requested_at=now,
                 detail=f"mutation gate rejected the action: {exc}",
             )
-            raise task_lifecycle.LifecycleError(f"mutation blocked with durable receipt {failed['id']}: {exc}") from exc
+            raise task_lifecycle.LifecycleError(
+                f"mutation blocked with durable receipt {failed['id']}: {exc}"
+            ) from exc
 
         ledger, intent, _ = task_lifecycle.append_mutation_event(
             ledger,
@@ -734,9 +755,11 @@ def perform_mutation(
                 identity = ledger["identity"]
                 if action == "sync-acs":
                     body, _ = evidenced_issue_body(ledger, before)
-                    adapter.update_issue_body(identity["repository"], identity["github_issue_number"], body)
+                    adapter.update_issue_body(
+                        identity["repository"], identity["github_issue_number"], body
+                    )
                 elif action == "arm-auto-merge":
-                    adapter.arm_auto_merge(identity["repository"], ledger["pr"]["number"])
+                    adapter.enqueue_pr(identity["repository"], ledger["pr"]["number"])
                 else:
                     adapter.close_issue(identity["repository"], identity["github_issue_number"])
                 remote_performed = True
@@ -783,7 +806,9 @@ def perform_mutation(
                 remote_mutation_performed=remote_performed,
                 detail=f"mutation/readback failed: {exc}",
             )
-            raise task_lifecycle.LifecycleError(f"mutation failed with durable receipt {failed['id']}: {exc}") from exc
+            raise task_lifecycle.LifecycleError(
+                f"mutation failed with durable receipt {failed['id']}: {exc}"
+            ) from exc
 
 
 def _state_file(args: argparse.Namespace, identity: Mapping[str, Any] | None = None) -> Path:
@@ -826,7 +851,9 @@ def cmd_init(args: argparse.Namespace) -> int:
     # Native precedence needs no audit at all: any native parent — matching or
     # not — decides the outcome alone in resolve_membership. Only fetch the
     # live audit snapshot when native parentage is absent.
-    membership_report = None if issue["parent_epic"] is not None else adapter.membership_audit_report()
+    membership_report = (
+        None if issue["parent_epic"] is not None else adapter.membership_audit_report()
+    )
     membership = task_lifecycle.resolve_membership(
         issue_number=identity["github_issue_number"],
         stream_epic=identity["stream_epic"],
@@ -836,10 +863,13 @@ def cmd_init(args: argparse.Namespace) -> int:
     )
     if not membership["valid"]:
         raise task_lifecycle.LifecycleError(
-            f"issue membership does not resolve to the identity's exact registered stream epic: {membership['reason']}"
+            "issue membership does not resolve to the identity's exact registered "
+            f"stream epic: {membership['reason']}"
         )
     now = args.now or utc_now()
-    snapshot = task_lifecycle.build_ac_snapshot(issue["body"], _load_policy(Path(args.ac_policy)), finalized_at=now)
+    snapshot = task_lifecycle.build_ac_snapshot(
+        issue["body"], _load_policy(Path(args.ac_policy)), finalized_at=now
+    )
     ledger = task_lifecycle.build_lifecycle(
         identity,
         author_family=args.author_family,
@@ -915,7 +945,9 @@ def cmd_reconcile(args: argparse.Namespace) -> int:
     with task_lifecycle.lifecycle_lock(path):
         ledger = task_lifecycle.load_lifecycle(path)
         adapter = _adapter(args, ledger)
-        observation = adapter.observe(ledger, now=now, branch=args.branch, worktree=args.worktree)
+        observation = adapter.observe(
+            ledger, now=now, branch=args.branch, worktree=args.worktree
+        )
         ledger, receipt, replayed = task_lifecycle.reconcile(ledger, observation, now=now)
         return _write_and_print(
             path,
@@ -955,7 +987,9 @@ def cmd_mutate(args: argparse.Namespace) -> int:
 
 def cmd_carrier(args: argparse.Namespace) -> int:
     path = _state_file(args)
-    carrier = task_lifecycle.carrier_projection(task_lifecycle.load_lifecycle(path), state_file=str(path))
+    carrier = task_lifecycle.carrier_projection(
+        task_lifecycle.load_lifecycle(path), state_file=str(path)
+    )
     print(json.dumps(carrier, ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 

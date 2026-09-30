@@ -69,9 +69,7 @@ def _load_metadata(dataset_root: Path) -> dict[str, Any]:
     return metadata
 
 
-def collect_dataset(
-    dataset_root: Path = DEFAULT_DATASET_ROOT,
-) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, str]]]:
+def collect_dataset(dataset_root: Path = DEFAULT_DATASET_ROOT) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, str]]]:
     """Collect dataset files and metadata for a deterministic package."""
 
     if not dataset_root.exists():
@@ -238,9 +236,7 @@ def main() -> int:
         help="Release tag, e.g. atlas-open-dataset (default: %(default)s).",
     )
     parser.add_argument("--repo", default=DEFAULT_REPO, help="Destination OWNER/REPO (default: %(default)s).")
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Build package metadata without uploading/writing pointer"
-    )
+    parser.add_argument("--dry-run", action="store_true", help="Build package metadata without uploading/writing pointer")
     args = parser.parse_args()
     pointer = publish_open_dataset(
         dataset_root=args.dataset_root,

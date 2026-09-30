@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1828 strip dark-theme CSS from playground HTMLs (post-#1839)
 
 **Background:** PR #1839 fixed `playgrounds/index.html` by replacing inline dark CSS with the shared `/monitor.css` parchment palette. Three other files still carry the legacy pattern and rely on `!important` overrides in `monitor.css`. This is a maintenance trap. See full issue body via `gh issue view 1828`.

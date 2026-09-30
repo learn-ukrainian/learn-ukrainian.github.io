@@ -306,8 +306,16 @@ def push_and_maybe_open_pr(
     pr_body = body or (
         "Auto-opened by `python -m scripts.orchestration.dispatch_settle` after a worker left commits without a PR.\n"
     )
+    base_result = _run(["gh", "repo", "view", "--json", "defaultBranchRef"], cwd=worktree)
+    try:
+        base = json.loads(base_result.stdout)["defaultBranchRef"]["name"]
+        if base_result.returncode or not isinstance(base, str) or not base:
+            raise ValueError
+    except (ValueError, KeyError, TypeError):
+        actions.append("pr_create_failed:default_branch_unresolved")
+        return actions
     create = _run(
-        Request("pr-create", head=branch, base="main", title=pr_title, body=pr_body),
+        Request("pr-create", head=branch, base=base, title=pr_title, body=pr_body),
         cwd=worktree,
     )
     if create.returncode != 0:

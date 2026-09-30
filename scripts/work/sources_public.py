@@ -452,7 +452,6 @@ def fetch_issue_states_batched(
     if runner is None:
         return _fetch_issue_states_rest(repo, unique_numbers, timeout_s)
 
-    owner, name = repo.split("/", 1)
 
     from scripts.work.relations import issue_work_id
 
@@ -478,14 +477,13 @@ def fetch_issue_states_batched(
     if not needed:
         return states
 
-    aliases = "\n".join(f"    i{num}: issue(number: {num}) {{ number state }}" for num in needed)
-    query = f"query {{\n  repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{\n{aliases}\n  }}\n}}"
-
-    run = runner or _run_gh
-    code, stdout, _stderr = run(
-        ["gh", "api", "graphql", "-f", f"query={query}"],
-        timeout_s,
-    )
+    from scripts.publish.github import read
+    def transport(args, **kwargs):
+        code, stdout, stderr = runner(args, kwargs["timeout"])
+        return subprocess.CompletedProcess(args, code, stdout, stderr)
+    result = read("issue-states", repo=repo, numbers=needed, runner=transport,
+                  capture_output=True, text=True, timeout=timeout_s)
+    code, stdout = result.returncode, result.stdout
     if code == 124 or not stdout:
         return states
 

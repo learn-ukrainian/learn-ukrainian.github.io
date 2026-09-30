@@ -207,9 +207,7 @@ def _shard_metadata(path: Path, *, kind: str, level: str, deck_version: str | No
 
 
 def collect_shards(
-    practice_dir: Path = DEFAULT_PRACTICE_DIR,
-    *,
-    kinds: dict[str, tuple[str, str]] = KINDS,
+    practice_dir: Path = DEFAULT_PRACTICE_DIR, *, kinds: dict[str, tuple[str, str]] = KINDS,
 ) -> tuple[str, list[dict[str, Any]], list[dict[str, str]]]:
     deck_version: str | None = None
     pointer_files: list[dict[str, Any]] = []
@@ -241,9 +239,7 @@ def build_package(deck_version: str, files: list[dict[str, str]]) -> bytes:
 
 
 def withdraw_synonyms_from_pinned_package(
-    source_gzip: Path,
-    source_pointer: dict[str, Any],
-    practice_dir: Path,
+    source_gzip: Path, source_pointer: dict[str, Any], practice_dir: Path,
 ) -> str:
     """Build the #8714 withdrawal from the verified published source package.
 
@@ -257,10 +253,8 @@ def withdraw_synonyms_from_pinned_package(
 
     if SYNONYM_MODE_ENABLED:
         raise PracticeDeckPublishError("withdrawal requires synonym mode disabled")
-    if (
-        source_pointer.get("deck_version") != WITHDRAWAL_SOURCE_VERSION
-        or source_pointer.get("gz_sha256") != WITHDRAWAL_SOURCE_GZ_SHA256
-    ):
+    if (source_pointer.get("deck_version") != WITHDRAWAL_SOURCE_VERSION or
+            source_pointer.get("gz_sha256") != WITHDRAWAL_SOURCE_GZ_SHA256):
         raise PracticeDeckPublishError("withdrawal source is not the pinned #8714 deck")
     compressed = source_gzip.read_bytes()
     if _sha256(compressed) != WITHDRAWAL_SOURCE_GZ_SHA256:

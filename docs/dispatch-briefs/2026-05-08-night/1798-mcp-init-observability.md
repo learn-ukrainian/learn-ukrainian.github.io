@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1798 MCP init observability
 
 **Issue:** https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/1798
@@ -89,7 +95,7 @@ Add a short section to `docs/best-practices/agent-cooperation.md` (or create `do
 - [ ] Three events above are emitted on the writer JSONL stream (`mcp_config_resolved`, `mcp_runtime_init` ready, `mcp_runtime_init` failed/timeout)
 - [ ] Pre-flight assertion fires when MCP is requested but unconfigured
 - [ ] Test fixture exercises the failure path and asserts the `LinearPipelineError` + the `mcp_config_resolved` event
-- [ ] No regression on existing bakeoff runs that DO have MCP wired correctly (smoke-test by running `.venv/bin/python scripts/audit/bakeoff_run.py --bakeoff-dir /tmp/bakeoff-smoke --level a1 --slug my-morning --writers codex-tools --writers-only` — expect it to FAIL on the same `.mcp.json` config we have today, but to fail FAST at pre-flight with the new error, NOT 4 minutes into a tool-less writer pass)
+- [ ] No regression on existing bakeoff runs that DO have MCP wired correctly (smoke-test by running `"$PROJECT_PYTHON" scripts/audit/bakeoff_run.py --bakeoff-dir /tmp/bakeoff-smoke --level a1 --slug my-morning --writers codex-tools --writers-only` — expect it to FAIL on the same `.mcp.json` config we have today, but to fail FAST at pre-flight with the new error, NOT 4 minutes into a tool-less writer pass)
 - [ ] Doc note added
 
 ## Numbered execution steps
@@ -101,7 +107,7 @@ Add a short section to `docs/best-practices/agent-cooperation.md` (or create `do
 5. **Add tests** per §4. Run `.venv/bin/pytest tests/test_mcp_init_observability.py -v` until green.
 6. **Smoke-test** the negative path against the current real `.mcp.json` (which still points at `/sse`):
    ```bash
-   .venv/bin/python scripts/audit/bakeoff_run.py \
+   "$PROJECT_PYTHON" scripts/audit/bakeoff_run.py \
      --bakeoff-dir /tmp/bakeoff-smoke-1798 \
      --level a1 --slug my-morning \
      --writers codex-tools --writers-only 2>&1 | head -40

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Writer-output parser preceding-label-line tightening (#1956)
 
 > **Issue:** #1956 — `[v7_build] Writer-output parser refuses Card 1 writer's fence-info-string format`
@@ -12,7 +18,7 @@
 
 ## ⚠️ CRITICAL — fresh-shell behavior
 
-Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via `.venv/bin/python`.
+Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/parser-label-tightening-2026-05-13 && ...` or absolute path. Inside the worktree, `.venv/` is gitignored — use MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 

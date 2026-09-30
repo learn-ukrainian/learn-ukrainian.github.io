@@ -80,9 +80,7 @@ def _gh_issue_exists(dec_id: str) -> bool:
     try:
         result = subprocess.run(
             ["gh", "issue", "list", "--label", STALE_LABEL, "--search", dec_id, "--json", "number"],
-            capture_output=True,
-            text=True,
-            timeout=15,
+            capture_output=True, text=True, timeout=15,
         )
         return bool(result.stdout.strip() and result.stdout.strip() != "[]")
     except (subprocess.TimeoutExpired, FileNotFoundError):
@@ -118,21 +116,21 @@ def create_issue(dec: dict) -> str | None:
     body = f"""## Stale Decision
 
 **ID:** {dec_id}
-**Decided:** {dec["date"]}
-**Expired:** {dec["expires"]}
-**Scope:** {dec.get("scope", "unknown")}
+**Decided:** {dec['date']}
+**Expired:** {dec['expires']}
+**Scope:** {dec.get('scope', 'unknown')}
 
 ## Original Reasoning
 
-{dec.get("reasoning", "No reasoning recorded.")}
+{dec.get('reasoning', 'No reasoning recorded.')}
 
 ## Evidence
 
-{dec.get("evidence", "None recorded.")}
+{dec.get('evidence', 'None recorded.')}
 
 ## Alternatives Considered
 
-{alternatives_text or "None recorded."}
+{alternatives_text or 'None recorded.'}
 
 ## Action Required
 

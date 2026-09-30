@@ -197,7 +197,7 @@ already wrote a formal review wastes work (sealed `review-pr` and `publish-revie
 **Size caps remain fail-closed** for oversized bodies/attachments. Silence the
 steering warning with `BRIDGE_ALLOW_LEGACY_REVIEW_ASK=1`.
 
-**Formal CF PR review:** request formal CF via direct `ask-<lane> - --type review --pr <N>` or `ask-<lane> - --task-id review-<N> --type review`, then post the resulting verdict and findings as a PR comment (`gh pr comment` or `gh pr review`) bound to the exact head SHA (sealed `review-pr` and `publish-review-verdict` were removed in #8520). `ask-agy --review` is not a code-review route
+**Formal CF PR review:** request formal CF via direct `ask-<lane> - --type review --pr <N>` or `ask-<lane> - --task-id review-<N> --type review`, then post the resulting verdict and findings as a PR comment (`.venv/bin/python -m scripts.publish pr-comment --number <N>` or `.venv/bin/python -m scripts.publish pr-review --number <N>`) bound to the exact head SHA (sealed `review-pr` and `publish-review-verdict` were removed in #8520). `ask-agy --review` is not a code-review route
 (operator 2026-09-25): a missing `--review-profile` is refused, `code` is
 refused, and Ukrainian content review must pass `--review-profile ukrainian`.
 `scripts/audit/llm_reviewer_dispatch.py` content-review routes remain

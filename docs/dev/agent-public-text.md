@@ -27,6 +27,8 @@ scanned. Transport paths are never published or scanned as public text.
 | `pr-create`, `pr-edit`, `pr-comment` | Title, body, labels, milestone, head/base names when present |
 | `pr-review` | Optional body; verdict is approve, comment or request-changes |
 | `pr-merge` | Optional subject and body; squash is fixed |
+| `pr-update-branch`, `pr-ready`, `pr-close`, `issue-reopen`, `run-rerun` | No text; rerun always selects failed jobs |
+| `workflow-run` | Only `ci.yml` and `deploy-pages.yml`, explicit validated ref; both have no inputs |
 | `pr-disarm`, `pr-dequeue`, `issue-link` | No text; identifiers have closed validation |
 | `release-create`, `release-edit` | Tag, title, notes, target, artifact names and UTF-8 content |
 | `release-upload` | Tag, artifact names and UTF-8 content |
@@ -64,7 +66,10 @@ routing; it does not classify payloads or scan shell literals.
 Raw reads require the entire argv to match `READ_GRAMMARS` in
 `scripts/opsec/gh_snapshot.py`: exact group/verb, known flags with fixed arity,
 and bounded positional operands. Unknown flags, aliases, extensions, commands,
-extra operands and public generic `gh api` (including GraphQL) are refused.
+extra operands and raw GraphQL are refused. REST `gh api` is admitted only with
+an implicit GET or GET in every method flag, no field/input flags, and a path
+in the closed read-endpoint allowlist. Pagination and read formatting flags
+are supported. `gh auth status -t` and `--show-token` are always refused.
 Exact `gh version` and `gh --version` are also allowed; neither accepts extra operands.
 
 | Group | Allowed read verbs |
@@ -78,12 +83,17 @@ Exact `gh version` and `gh --version` are also allowed; neither accepts extra op
 | `auth` | status |
 | `gist` | view, list |
 | `label` | list |
+| `search` | prs |
 
-Specific API reads use named `read()` operations: identity, issue, comments,
+Specific API reads also have a shell interface,
+`python -m scripts.publish read <name> --repo <owner/repo> ...`.
+`gh pr checkout <N>` is permitted only inside a real dispatch worktree.
+Named `read()` operations include: identity, issue, comments,
 labels, timeline, reviews, commits, comment, checks, jobs, issues, runs,
 deployments and deployment-statuses. GraphQL helpers build their own read-only
 documents for issue-parent, membership, subissues, subissues-next,
-subissue-batch, membership-head and queue-snapshot. Caller values are variables or JSON-escaped
+subissue-batch, membership-head, queue-snapshot, queue-status, budget,
+issue-scope, issue-states, merge-facts and pr-bases. Caller values are variables or JSON-escaped
 selectors, never documents or endpoints.
 
 A raw write is admitted only under a known write grammar to an allowlisted
@@ -92,7 +102,8 @@ endpoint under a known resource, rejects encoded or traversing paths, and uses
 the last explicit hostname. GraphQL remains unavailable through the raw shim. The last explicit repository selector wins over `GH_REPO`
 and the local origin; a resource URL selects its actual repository. Other
 hosts and unresolved destinations receive no private exemption. Gists have no
-repository exemption. Public refusal messages name the typed publisher verb.
+repository exemption. Forwarded private writes explicitly pin `--repo` to the proven destination.
+Public refusal messages name the typed publisher verb.
 
 ## Posting inventory
 
@@ -121,6 +132,21 @@ This boundary protects cooperative agents. Absolute executables, raw HTTP,
 PATH resets and processes launched outside the project environment remain
 outside shell interception. A credential-isolated publishing service would
 require a separate operator decision.
+
+`pr-merge` checks the current draft status and every non-advisory check before
+sending a write, for public and private repositories alike. Unknown, red or
+pending check states refuse the merge. `AGENT_NO_MERGE=1` refuses it before
+any transport. A ready merge pins the observed head with `--match-head-commit`.
+The hook recognises the publisher command and uses the same readiness parser.
+
+Residual S1: `git push` does not scan commit messages, branch names or tag
+names. A squash merge without an explicit subject/body can publish those
+commit messages. This is outside Design B's GitHub text boundary; the
+accountable driver owns filing and resolving the separate follow-up issue.
+
+Historical dispatch briefs, session records and autopsies retain their original
+commands as evidence. For current execution, replace their raw writes with the
+typed verbs above and their GraphQL reads with named read operations.
 
 Payload transport follows the [GitHub CLI merge manual](https://cli.github.com/manual/gh_pr_merge),
 [comment manual](https://cli.github.com/manual/gh_issue_comment) and

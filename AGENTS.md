@@ -87,7 +87,7 @@ non-skippable:
   independent cross-family CF APPROVE/fix/re-CF on the branch **before opening
   any PR** (draft or ready; drafts still start CI here); then CI green on that
   same head; then the accountable orchestrator MUST merge (or enqueue via
-  `gh pr merge <N> --squash`). Never leave an approved, green PR unmerged
+  `.venv/bin/python -m scripts.publish pr-merge --number <N>`). Never leave an approved, green PR unmerged
   waiting for operator action. Resolve material findings and re-review before
   merge.
 - Treat unavailable telemetry as unknown, not policy proof. Do not close

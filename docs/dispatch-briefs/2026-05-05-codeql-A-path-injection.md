@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Gemini Dispatch Brief — CodeQL Batch A: py/path-injection (11 errors)
 
 **Issue tracker:** filed inline in PR description
@@ -75,9 +81,9 @@ CodeQL `py/path-injection` fires when a user-controlled string flows into a path
 
 1. **Read each affected file fully** before editing. Understand the surrounding pattern and what the user input represents.
 2. **Apply fixes** per the priority above. Prefer `safe_join` where it fits.
-3. **Run tests** for affected files (use ./.venv/bin/python from main checkout if worktree lacks it; #1685's fix uses sys.executable):
+3. **Run tests** for affected files (use ./"$PROJECT_PYTHON" from main checkout if worktree lacks it; #1685's fix uses sys.executable):
    ```bash
-   .venv/bin/python -m pytest tests/ -k 'research_quality or image_review or consultation_router or path_safety' -x -q
+   "$PROJECT_PYTHON" -m pytest tests/ -k 'research_quality or image_review or consultation_router or path_safety' -x -q
    ```
 4. **Run ruff** on each modified file:
    ```bash

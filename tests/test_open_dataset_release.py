@@ -107,6 +107,6 @@ def test_open_dataset_gh_download_missing_binary_falls_back(monkeypatch: pytest.
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")

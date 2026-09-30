@@ -16002,6 +16002,6 @@ def test_dispatch_refuses_an_owned_path_that_could_never_own_a_file(tmp_tasks_di
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")

@@ -325,7 +325,7 @@ def test_keeper_and_closeout_native_refusal_types(monkeypatch, tmp_path):
         keeper.GitHub(tmp_path, "unit/public").enqueue(1, "a" * 40)
     for runner in [None, lambda *a: pytest.fail("outbound")]:
         with pytest.raises(task_lifecycle.LifecycleError, match="publish_blocked"):
-            closeout.GhGitHubAdapter(tmp_path, runner=runner).arm_auto_merge("unit/public", 1)
+            closeout.GhGitHubAdapter(tmp_path, runner=runner).enqueue_pr("unit/public", 1)
 
 
 def test_bridge_comment_refusal_is_rendered_and_returns_false(monkeypatch, capsys):
@@ -406,8 +406,8 @@ PRIOR_RAW_WRITES = [
     ["api", "graphql", "-F", "query=@gql"],
     ["release", "create", "unit-tag", "--title", "clean", "--notes-file", "@file"],
     ["release", "edit", "unit-tag", "--notes", "{text}"],
-    ["api", "repos/unit/public/issues"],
-    ["api", "-X", "GET", "repos/unit/public/issues"],
+    ["api", "repos/unit/public/issues", "--input", "-"],
+    ["api", "-X", "GET", "repos/unit/public/issues", "--input", "-"],
     ["issue", "create"],
     ["pr", "comment", "1", "--editor"],
     ["pr", "create", "--editor", "--title", "clean", "--body", "clean"],

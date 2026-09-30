@@ -671,6 +671,6 @@ def test_publish_refuses_missing_vesum_before_gzip(tmp_path: Path, monkeypatch: 
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")

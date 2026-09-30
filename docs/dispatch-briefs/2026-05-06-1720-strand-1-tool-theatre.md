@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1720 strand 1 (tool-theatre detection)
 
 > **Worktree:** `.worktrees/dispatch/codex/1720-strand-1`
@@ -33,7 +39,7 @@ git fetch origin main                          # avoid stale base — #1472 less
 git worktree add -b codex/1720-strand-1 .worktrees/dispatch/codex/1720-strand-1 origin/main
 cd .worktrees/dispatch/codex/1720-strand-1
 git log --oneline HEAD..origin/main            # MUST be empty (branch == origin/main)
-.venv/bin/python -c "import scripts.build.linear_pipeline" # smoke
+"$PROJECT_PYTHON" -c "import scripts.build.linear_pipeline" # smoke
 ```
 
 If `git log HEAD..origin/main` returns ANY commit, STOP and rebase before starting work — that's the #1472 stale-base trap.
@@ -148,14 +154,14 @@ In `tests/test_prompt_cot_tier1_scaffolding.py`:
 
 ```bash
 cd .worktrees/dispatch/codex/1720-strand-1
-.venv/bin/python -m pytest \
+"$PROJECT_PYTHON" -m pytest \
   tests/test_writer_correction_no_op_diagnostic.py \
   tests/test_prompt_template_render.py \
   tests/test_prompt_cot_tier1_scaffolding.py \
   tests/test_no_rewrite_contract.py
 .venv/bin/ruff check scripts/build/linear_pipeline.py
 git diff --check
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer claude-tools --dry-run | tail -40
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer claude-tools --dry-run | tail -40
 ```
 
 All four MUST pass. The dry-run must emit `phase_writer_summary` with the new `tool_theatre_violations` field present (empty list is fine — the dry-run won't have a real trace).
@@ -163,7 +169,7 @@ All four MUST pass. The dry-run must emit `phase_writer_summary` with the new `t
 Also: run the existing aggregator against the prior bakeoff JSONLs to confirm new fields don't crash it:
 
 ```bash
-.venv/bin/python scripts/audit/bakeoff_aggregate.py audit/bakeoff-2026-05-05/ --dry-run 2>&1 | tail -20
+"$PROJECT_PYTHON" scripts/audit/bakeoff_aggregate.py audit/bakeoff-2026-05-05/ --dry-run 2>&1 | tail -20
 ```
 
 If `bakeoff_aggregate.py` lacks a `--dry-run` flag, run it without args; it must complete without TypeError on the new fields.
@@ -179,7 +185,7 @@ git -C .worktrees/dispatch/codex/1720-strand-1 \
   diff origin/main..HEAD > /tmp/strand-1-diff.txt
 
 cd .
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
+"$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-claude \
   "Adversarial review for #1720 strand 1. Read /tmp/strand-1-diff.txt. Focus: (A) does _TOOL_CITATION_RE correctly scope to <plan_reasoning> blocks only and not catch backticks in module.md prose? (B) is the canonical-only normalization choice (no family map) defensible vs the cleaner behavior promised by family aliases? (C) is the correction-pass binary choice (call-or-remove) prompted clearly enough that a writer won't pick a third path or game it? (D) does the new tool_theatre gate enter the existing correction-loop without ordering bugs vs the existing word_count / plan_sections / mdx_render gates? (E) test gaps — specifically: does test #4 (only_scans_plan_reasoning_blocks) actually exercise prose-backticks-outside-block? (F) telemetry shape — would the new tool_theatre_violations field break bakeoff_aggregate.py? Be adversarial." \
   --task-id 1720-strand-1-review \
   --model claude-opus-4-7

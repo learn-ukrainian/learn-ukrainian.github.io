@@ -32,12 +32,12 @@ def _split_content(content: str, limit: int = GH_CHAR_LIMIT) -> list[str]:
             chunks.append(content[pos:])
             break
         # Find last newline before limit
-        split_at = content.rfind("\n", pos, end)
+        split_at = content.rfind('\n', pos, end)
         if split_at <= pos:
             split_at = end  # No newline found, hard split
         chunks.append(content[pos:split_at])
         # Skip past the newline
-        pos = split_at + 1 if content[split_at] == "\n" else split_at
+        pos = split_at + 1 if content[split_at] == '\n' else split_at
     return chunks
 
 
@@ -70,7 +70,6 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
 
     try:
         from ._messaging import _extract_issue_number
-
         issue_num = _extract_issue_number(task_id)
         chunks = _split_content(content)
         total_parts = len(chunks)
@@ -82,9 +81,7 @@ def _post_review_to_github(task_id: str, content: str, model: str) -> int | None
             # Review artifacts live in orchestration/ folders. GH issues are for
             # work items only. See #970.
             safe_task_id = redact_text(task_id) or ""
-            print(
-                f"   ℹ️  No issue number in task_id '{safe_task_id}' — skipping GH posting (review saved to orchestration/)"
-            )
+            print(f"   ℹ️  No issue number in task_id '{safe_task_id}' — skipping GH posting (review saved to orchestration/)")
             return None
 
     except FileNotFoundError:

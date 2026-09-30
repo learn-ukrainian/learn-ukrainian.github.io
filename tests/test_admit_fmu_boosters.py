@@ -205,7 +205,7 @@ def test_fmu_booster_existing_entry_metadata_and_provenance_preserved():
     assert existing_entry["definition_cards"][0]["source_dict"] == "sum20"
 
 
-def test_release_publication_freezes_binary_and_scans_text(tmp_path, synthetic_opsec, monkeypatch):
+def test_release_publication_freezes_binary_and_scans_text(tmp_path, synthetic_opsec, publisher_transport, monkeypatch):
     import subprocess
 
     import pytest

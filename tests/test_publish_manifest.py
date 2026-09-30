@@ -555,5 +555,5 @@ def test_publish_manifest_cli_verify_only_dry_run(
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport):
     """Exercise artifact uploads with the matcher, including gzip content."""

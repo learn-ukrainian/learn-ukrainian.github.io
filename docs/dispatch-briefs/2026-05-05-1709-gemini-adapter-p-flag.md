@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1709 + #1710 Gemini adapter: -p flag + API-first auth
 
 > **Issues:** #1709 (stdin-pipe → -p flag) and #1710 (auth-mode priority flip — API first). Both fixed in this single PR.
@@ -115,11 +121,11 @@ If feasible without making a real LLM call: parametrize `gemini-tools` writer di
 5. Add unit tests. Run `.venv/bin/pytest tests/test_agent_runtime_gemini_adapter.py -v` (or whatever the file ends up named).
 6. Smoke test:
    ```bash
-   .venv/bin/python scripts/build/v7_build.py a1 my-morning --writer gemini-tools --dry-run
+   "$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer gemini-tools --dry-run
    ```
    Then the actual write (small wall-time risk; user has authorized this fix to verify):
    ```bash
-   .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer gemini-tools --out /tmp/v7-gemini-smoke --telemetry-out /tmp/v7-gemini-smoke.jsonl
+   "$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 my-morning --writer gemini-tools --out /tmp/v7-gemini-smoke --telemetry-out /tmp/v7-gemini-smoke.jsonl
    ```
    Expected: completes within 15 min wall, emits `phase_writer_summary` event, exit 0. If hangs >15 min, kill and report.
 7. `.venv/bin/ruff check scripts/agent_runtime/ tests/`
@@ -127,7 +133,7 @@ If feasible without making a real LLM call: parametrize `gemini-tools` writer di
    ```bash
    git add -A
    git diff --cached > /tmp/issue-1709-diff.txt
-   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude \
+   "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-claude \
        "Adversarial review for #1709. Read /tmp/issue-1709-diff.txt. Focus: (1) does the adapter still preserve --approval-mode/--allowed-mcp-server-names/auth-mode semantics? (2) is the temp-file lifecycle leak-safe? (3) are the unit tests sufficient — do they exercise the failure modes (large prompts, missing file, MCP config)? (4) any subtle env or runner changes that could break claude or codex adapters?" \
        --task-id issue-1709-review
    ```

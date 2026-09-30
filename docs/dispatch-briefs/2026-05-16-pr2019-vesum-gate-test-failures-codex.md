@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Fix PR #2019's 3 vesum-gate test failures (unblocks m20)
 
 > **Owner:** Codex
@@ -190,7 +196,7 @@ into PR #2019's branch, #2019 itself becomes mergeable into main.
 ### 2. Reproduce the failures locally first
 
 ```bash
-.venv/bin/python -m pytest \
+"$PROJECT_PYTHON" -m pytest \
     tests/test_vesum_gate_distractor_and_phonetic.py::test_pronunciation_transcription_stripped_in_prose \
     tests/test_vesum_verified_postfix.py::test_vesum_gate_normalizes_stress_and_markdown_before_lookup \
     tests/test_vesum_verified_postfix.py::test_vesum_gate_missing_report_preserves_decorated_surface \
@@ -221,7 +227,7 @@ cross-project blast radius.
 ### 5. Re-run the 3 failing tests + their full files
 
 ```bash
-.venv/bin/python -m pytest \
+"$PROJECT_PYTHON" -m pytest \
     tests/test_vesum_gate_distractor_and_phonetic.py \
     tests/test_vesum_verified_postfix.py \
     -v
@@ -232,7 +238,7 @@ Quote the final summary line.
 ### 6. Wider regression sweep
 
 ```bash
-.venv/bin/python -m pytest tests/ -x -q --ignore=tests/test_pipeline_runtime.py
+"$PROJECT_PYTHON" -m pytest tests/ -x -q --ignore=tests/test_pipeline_runtime.py
 ```
 
 (Ignore `test_pipeline_runtime.py` if it's slow / requires services we

@@ -92,3 +92,13 @@ def gh_shim_sandbox(tmp_path):
         timeout=30,
     )
     return root, shim, tooling
+
+
+@pytest.fixture
+def publisher_transport(monkeypatch):
+    """Explicitly inject existing subprocess spies at the typed transport boundary."""
+    from scripts.publish import github
+    original = github._send
+    def send(argv, *, runner, **kwargs):
+        return original(argv, runner=subprocess.run if runner is None else runner, **kwargs)
+    monkeypatch.setattr(github, "_send", send)

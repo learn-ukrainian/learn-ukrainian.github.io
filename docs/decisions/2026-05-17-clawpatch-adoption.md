@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # DECISION REQUIRED — clawpatch adoption (supervised evaluation results)
 
 > **Historical note:** this document was written when the fleet used a fixed
@@ -98,7 +104,7 @@ Findings raw (markdown table form, from `clawpatch report`):
 #### Live reproduction of finding #3 (proof-by-execution per #M-4)
 
 ```text
-$ .venv/bin/python \
+$ "$PROJECT_PYTHON" \
     scripts/audit/audit_external_resources.py --stats
 Traceback (most recent call last):
   File ".../scripts/audit/audit_external_resources.py", line 216, in <module>

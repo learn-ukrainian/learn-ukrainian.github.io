@@ -25,7 +25,7 @@ cd ../learn-ukrainian-wt-817
 git push -u origin fix/817-fix-v4-terminology
 
 # 3. Create PR after exact-head cross-family CF review (see model-assignment.md)
-gh pr create --title "fix: v4 terminology in logs (#817)"
+.venv/bin/python -m scripts.publish pr-create --title "fix: v4 terminology in logs (#817)"
 
 # 4. Get reviews on the PR
 # - Code review agent reviews automatically
@@ -241,8 +241,8 @@ close the gap:
 
 | Hook | Owns | Blocks |
 | --- | --- | --- |
-| `guard-admin-merge.py` | `gh pr merge --admin` | a blocking check is red (#M-0.5) |
-| `guard-pr-merge.py` | every `gh pr merge`, including `--admin` | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
+| `guard-admin-merge.py` | `gh pr merge --admin` (raw command refused by the shim) | a blocking check is red (#M-0.5) |
+| `guard-pr-merge.py` | every `.venv/bin/python -m scripts.publish pr-merge --number <N>` and raw merge attempts | draft PR · any red non-advisory check · checks still running without `--auto` · `--auto` on a base branch with no required status checks |
 
 Both guards judge `--admin` merges. They fail **closed**: if the PR, its checks, or the base branch's
 protection can't be read (gh error/timeout), the merge is refused rather than
@@ -259,7 +259,7 @@ with none configured it merges the moment the PR is mergeable, red or not. The
 guard reads `repos/{owner}/{repo}/branches/{base}/protection` per merge — allowed
 against a base with required checks (this repo's `main`), refused where the API
 403s or lists none (the private repo). There, read the checks green yourself and
-merge manually. `gh pr merge --disable-auto` is never blocked; disarming
+merge manually. `.venv/bin/python -m scripts.publish pr-disarm --number <N>` is never blocked; disarming
 auto-merge is the remedy, not the offence.
 
 **Escape hatch:** a human runs the merge outside the agent harness. The hooks

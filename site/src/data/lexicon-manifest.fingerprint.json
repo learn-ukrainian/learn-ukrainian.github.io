@@ -323,7 +323,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "85413e1c4554748b6e96deb9acf9d2bcc6b43644fea85105dcb567068ab5694d"
+        "sha256": "08a662ea5fc36e00847328fc899f8aaa6872d6cf104a4d47d70ab689c87bbad0"
       },
       {
         "path": "scripts/lexicon/reconcile_calque_clusters.py",

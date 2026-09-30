@@ -249,7 +249,7 @@ input and transcripts. It does **not** satisfy independent cross-family review.
 
 Formal CF uses one direct `ask-<lane> --type review` request to a qualified
 reviewer outside the author's model family, followed by a verdict and findings
-posted as a PR comment (`gh pr comment` or `gh pr review`) bound to the exact
+posted as a PR comment (`.venv/bin/python -m scripts.publish pr-comment --number <N>` or `.venv/bin/python -m scripts.publish pr-review --number <N>`) bound to the exact
 head SHA. Review requests route to a native toolful worktree seat; ordinary
 ACP/ACPX transport is toolless and cannot ground a tree review. Follow the canonical
 [fleet-comms review method](../../agents_extensions/shared/rules/fleet-comms-coordination.md#required-primitives-tool-backed)

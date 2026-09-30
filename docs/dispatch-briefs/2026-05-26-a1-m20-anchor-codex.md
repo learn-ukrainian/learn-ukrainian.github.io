@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — A1 m20 anchor build (a1/my-morning)
 
 **Agent**: codex
@@ -48,7 +54,7 @@ Every claim in the PR description and finalize comment MUST be tool-backed. Quot
 | "INLINE 4-6 / WORKBOOK 6-9 respected" | `grep -c 'INJECT_ACTIVITY' curriculum/.../my-morning/my-morning.md` (inline count) + `wc -l curriculum/.../my-morning/activities.yaml` (workbook count) — quote raw |
 | "Vocab in range" | `python -c "import yaml; print(len(yaml.safe_load(open('curriculum/.../my-morning/vocabulary.yaml'))))"` — 25-40 inclusive |
 | "Lint clean" | `.venv/bin/ruff check scripts curriculum` final summary line |
-| "Tests pass" | `.venv/bin/python -m pytest tests/test_yaml_activities_v7_types.py tests/test_v7_build_reviewer_assert.py -q` final summary line |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/test_yaml_activities_v7_types.py tests/test_v7_build_reviewer_assert.py -q` final summary line |
 | "CI green on PR" | `gh pr checks <N> --watch --interval 10` final summary, plus `gh pr view <N> --json statusCheckRollup` parsed for `conclusion=="SUCCESS"` per check |
 
 ## Steps (numbered, do in order)
@@ -66,7 +72,7 @@ Every claim in the PR description and finalize comment MUST be tool-backed. Quot
 3. **Fire the build** (writer = claude-tools default, build runs in its OWN worktree per PR #1952):
    ```bash
    # venv symlinked into the dispatch worktree by _provision_data_symlinks per #2275
-   .venv/bin/python -u scripts/build/v7_build.py a1 my-morning --worktree 2>&1 | tee build.log
+   "$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 my-morning --worktree 2>&1 | tee build.log
    ```
    - Exit code 0 required to proceed. If non-zero: capture last 50 lines, name the failure event (writer_correction_unparseable / reviewer_fixes_anchor_unmatched / phase_done with failed_dim / etc.), STOP and report.
    - Build wall-clock estimate: 15-25 min on claude-tools at A1.
@@ -103,7 +109,7 @@ Every claim in the PR description and finalize comment MUST be tool-backed. Quot
 6. **Tests + lint**:
    ```bash
    # venv symlinked per #2275 (Phase 2 prerequisite)
-   .venv/bin/python -m pytest tests/test_yaml_activities_v7_types.py tests/test_v7_build_reviewer_assert.py tests/test_learner_state_v7_layout.py -q
+   "$PROJECT_PYTHON" -m pytest tests/test_yaml_activities_v7_types.py tests/test_v7_build_reviewer_assert.py tests/test_learner_state_v7_layout.py -q
    .venv/bin/ruff check scripts curriculum
    ```
    Quote final summary lines. ALL must be green to proceed.
@@ -111,7 +117,7 @@ Every claim in the PR description and finalize comment MUST be tool-backed. Quot
 7. **Smoke verify the learner_state plan-fallback worked** (#2272 consumer):
    ```bash
    # venv symlinked per #2275 (Phase 2 prerequisite)
-   .venv/bin/python -c "from scripts.pipeline.learner_state import _load_vocab; print(len(_load_vocab('a1', 'happy-numbers')))"
+   "$PROJECT_PYTHON" -c "from scripts.pipeline.learner_state import _load_vocab; print(len(_load_vocab('a1', 'happy-numbers')))"
    ```
    For m20 the pre-build state should reflect m01-m19 cumulative vocab from plans — not zero, not the entire VESUM. Spot-check that `compute_immersion_band` returned a sensible band (e.g. `advisory_pct_min ≥ 30`, `advisory_pct_max ≤ 60` for mid-A1).
 

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: ab discuss + ask-* infrastructure bugs (#1786)
 
 > **Issue:** #1786. Single PR closes the issue (preferred for atomicity).
@@ -8,7 +14,7 @@
 ## Worktree instructions (mandatory)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent codex --mode danger --worktree --base origin/main \
     --task-id codex-1786-ab-discuss-bugs \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/1786-ab-discuss-bugs.md

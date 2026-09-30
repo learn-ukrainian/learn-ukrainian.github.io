@@ -151,9 +151,13 @@ def _load_behavior_proof_state(
     try:
         state = json.loads(state_file.read_text(encoding="utf-8"))
     except (OSError, UnicodeDecodeError) as exc:
-        raise ContractError(f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID) from exc
+        raise ContractError(
+            f"behavior_proof_state_unreadable:{exc}", exit_code=EXIT_INVALID
+        ) from exc
     except json.JSONDecodeError as exc:
-        raise ContractError(f"behavior_proof_state_invalid_json:{exc.msg}", exit_code=EXIT_INVALID) from exc
+        raise ContractError(
+            f"behavior_proof_state_invalid_json:{exc.msg}", exit_code=EXIT_INVALID
+        ) from exc
     if not isinstance(state, dict):
         raise ContractError("behavior_proof_state_must_be_object", exit_code=EXIT_INVALID)
     baseline = state.get("baseline")
@@ -178,7 +182,10 @@ def _load_behavior_proof_state(
     }
     if any(field not in saved_target for field in stable_target_fields):
         raise ContractError("behavior_proof_state_target_invalid", exit_code=EXIT_INVALID)
-    if any(saved_target[field] != expected_value for field, expected_value in stable_target_fields.items()):
+    if any(
+        saved_target[field] != expected_value
+        for field, expected_value in stable_target_fields.items()
+    ):
         raise ContractError("behavior_proof_state_target_mismatch", exit_code=EXIT_INVALID)
     return proof, intended_behavior
 
@@ -386,8 +393,12 @@ def main(argv: list[str] | None = None) -> int:
     try:
         scope = _load_json_arg(args.scope_json or None, label="--scope-json")
         tests = _load_json_arg(args.tests_json or None, label="--tests-json")
-        dispositions = _load_json_arg(args.dispositions_json or None, label="--dispositions-json")
-        routing_lineage = _load_json_arg(args.routing_lineage_json or None, label="--routing-lineage-json")
+        dispositions = _load_json_arg(
+            args.dispositions_json or None, label="--dispositions-json"
+        )
+        routing_lineage = _load_json_arg(
+            args.routing_lineage_json or None, label="--routing-lineage-json"
+        )
     except ContractError as exc:
         print(
             json.dumps(
@@ -426,7 +437,9 @@ def main(argv: list[str] | None = None) -> int:
                 target=target,
             )
         else:
-            behavior_proof = _load_json_arg(args.behavior_proof_json or None, label="--behavior-proof-json")
+            behavior_proof = _load_json_arg(
+                args.behavior_proof_json or None, label="--behavior-proof-json"
+            )
             frozen_intended_behavior = ""
     except ContractError as exc:
         print(
@@ -466,7 +479,10 @@ def main(argv: list[str] | None = None) -> int:
         tests=tests,
         behavior_proof=behavior_proof,
         frozen_intended_behavior=frozen_intended_behavior,
-        dispositions={str(k): v if isinstance(v, dict) else {"disposition": str(v)} for k, v in dispositions.items()},
+        dispositions={
+            str(k): v if isinstance(v, dict) else {"disposition": str(v)}
+            for k, v in dispositions.items()
+        },
         routing_lineage={str(k): str(v) for k, v in routing_lineage.items()},
     )
 

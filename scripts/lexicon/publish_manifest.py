@@ -302,13 +302,7 @@ def download_published_manifest(
     try:
         manifest_bytes = gzip.decompress(_download_release_asset(ASSET_NAME, release_tag=release_tag, repo=repo))
         manifest = json.loads(manifest_bytes.decode("utf-8"))
-    except (
-        subprocess.CalledProcessError,
-        subprocess.TimeoutExpired,
-        OSError,
-        UnicodeDecodeError,
-        json.JSONDecodeError,
-    ) as exc:
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired, OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
         excerpt = _stderr_excerpt(exc) if isinstance(exc, subprocess.CalledProcessError) else ""
         detail = f" (gh stderr: {excerpt})" if excerpt else ""
         raise ManifestPublishError(

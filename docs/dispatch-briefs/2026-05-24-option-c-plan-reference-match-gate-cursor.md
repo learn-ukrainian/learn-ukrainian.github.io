@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Option C — Plan-reference-match gate (close the `packet_chunk_id` bypass)
 
 **Date**: 2026-05-24
@@ -71,7 +77,7 @@ Additional edge-case test (combined into `test_plan_reference_match_gate.py` for
 
 ## Out of scope
 
-- Do NOT modify `_citation_gate` itself. Add a separate gate; existing tests for `citations_resolve` MUST keep passing unchanged. Run `.venv/bin/python -m pytest tests/test_citation_matcher.py tests/test_textbook_grounding_gate.py -x` to confirm.
+- Do NOT modify `_citation_gate` itself. Add a separate gate; existing tests for `citations_resolve` MUST keep passing unchanged. Run `"$PROJECT_PYTHON" -m pytest tests/test_citation_matcher.py tests/test_textbook_grounding_gate.py -x` to confirm.
 - Do NOT modify writer prompts (`scripts/build/phases/linear-write.md`). The gate is a defensive backstop; prompt iteration is a separate concern handled elsewhere.
 - Do NOT modify ADR-008 correction logic itself. The new gate emits its `reason` string and the existing correction infrastructure consumes it.
 - Do NOT touch `scripts/build/citation_matcher.py` unless adding a new utility function specifically for chunk_id extraction (and if you do, name it `extract_chunk_id_from_notes(notes: str) -> str | None` and add it AFTER `extract_plan_reference_titles`).

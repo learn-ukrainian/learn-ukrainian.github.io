@@ -162,6 +162,8 @@ def test_settle_push_opens_pr_only_with_explicit_flag(
 
     def fake_run(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
         calls.append(command)
+        if command == ["gh", "repo", "view", "--json", "defaultBranchRef"]:
+            return subprocess.CompletedProcess(command, 0, '{"defaultBranchRef":{"name":"trunk"}}', "")
         return subprocess.CompletedProcess(command, 0, "https://example.invalid/pr/1", "")
 
     monkeypatch.setattr(ds, "_run", fake_run)
@@ -175,6 +177,7 @@ def test_settle_push_opens_pr_only_with_explicit_flag(
     assert len(creates) == int(open_pr)
     if creates:
         assert creates[0].verb == "pr-create"
+        assert creates[0].fields["base"] == "trunk"
         assert creates[0].fields["title"] == "chore(dispatch): settle codex/t1"
         assert creates[0].fields["body"].startswith("Auto-opened")
     assert actions == (["pushed", "pr_created:https://example.invalid/pr/1"] if open_pr else ["pushed"])
@@ -486,6 +489,6 @@ def test_settle_task_worktree_present_path_unchanged(tmp_path: Path, monkeypatch
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")

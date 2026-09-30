@@ -174,7 +174,7 @@ class FakeAdapter:
         self.calls.append("sync-acs")
         self.observation["github"]["issue"]["body"] = body
 
-    def arm_auto_merge(self, _repository: str, _pr_number: int) -> None:
+    def enqueue_pr(self, _repository: str, _pr_number: int) -> None:
         self.calls.append("arm-auto-merge")
         self.observation["github"]["pr"]["auto_merge_enabled_at"] = NOW
 
@@ -896,6 +896,6 @@ def test_cross_workflow_in_progress_is_not_green():
 
 
 @pytest.fixture(autouse=True)
-def _synthetic_publishing_rules(synthetic_opsec, monkeypatch):
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")

@@ -2756,4 +2756,4 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
     monkeypatch.setenv("LU_TEST_ACP_SCRATCH_ROOT", str(tmp_path_factory.getbasetemp()))
 
 # Opt-in synthetic private tooling for tests of public publishing consumers.
-from tests.opsec_fixtures import gh_shim_sandbox, synthetic_opsec  # noqa: F401
+from tests.opsec_fixtures import gh_shim_sandbox, publisher_transport, synthetic_opsec  # noqa: F401

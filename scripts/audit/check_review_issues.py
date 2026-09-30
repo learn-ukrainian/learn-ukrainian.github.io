@@ -54,20 +54,13 @@ def _run_gh(args: list[str], check: bool = True, timeout: float = DEFAULT_GH_TIM
 
 def _get_open_review_issues() -> list[dict]:
     """Fetch open issues with 'Review:' in the title."""
-    raw = _run_gh(
-        [
-            "issue",
-            "list",
-            "--state",
-            "open",
-            "--search",
-            "Review: in:title",
-            "--json",
-            "number,title,labels",
-            "--limit",
-            "50",
-        ]
-    )
+    raw = _run_gh([
+        "issue", "list",
+        "--state", "open",
+        "--search", "Review: in:title",
+        "--json", "number,title,labels",
+        "--limit", "50",
+    ])
     if not raw:
         return []
     return json.loads(raw)
@@ -154,8 +147,10 @@ def main() -> None:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python scripts/audit/check_review_issues.py --dry-run\nOutputs and exit codes: Report stdout; optional issue comments and close operations. 0: report complete; >=1: error.\nRelated: #9297",
     )
-    parser.add_argument("--close", action="store_true", help="Actually close passing issues")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would happen without running audit")
+    parser.add_argument("--close", action="store_true",
+                        help="Actually close passing issues")
+    parser.add_argument("--dry-run", action="store_true",
+                        help="Show what would happen without running audit")
     args = parser.parse_args()
 
     issues = _get_open_review_issues()
@@ -204,7 +199,10 @@ def main() -> None:
         else:
             print("  ❌ Audit gate failures remain")
             # Extract failing gates for summary
-            failing_lines = [line for line in audit_output.splitlines() if "❌" in line or "FAIL" in line.upper()]
+            failing_lines = [
+                line for line in audit_output.splitlines()
+                if "❌" in line or "FAIL" in line.upper()
+            ]
             for line in failing_lines[:5]:
                 print(f"    {line.strip()}")
             if args.close:

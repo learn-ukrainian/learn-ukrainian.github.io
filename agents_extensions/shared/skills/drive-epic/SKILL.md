@@ -36,7 +36,7 @@ Per PR, in this order:
       posted on the PR. No PR, draft or ready, is opened before that APPROVE (§7 step 0).
       A new head makes the APPROVE stale; re-review before enqueueing.
 - [ ] CI Gate green on that same head.
-- [ ] Enqueued with `gh pr merge --squash` — never `--auto`, never `--delete-branch`.
+- [ ] Enqueued with `.venv/bin/python -m scripts.publish pr-merge --number <N>` — never `--auto`, never `--delete-branch`.
 - [ ] `gh pr view <N>` shows `MERGED`.
 - [ ] `.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply` exits 0
       (worktrees reaped, remote and local branch gone). A non-zero exit is a blocker,

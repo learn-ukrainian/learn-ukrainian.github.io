@@ -6,7 +6,7 @@ that requires structured investigation (not simple fixes).
 ## Usage
 
 ```bash
-gh issue create \
+.venv/bin/python -m scripts.publish issue-create \
   --title "bug: Brief description of the problem" \
   --body-file /tmp/issue-body.md \
   --label "bug" \

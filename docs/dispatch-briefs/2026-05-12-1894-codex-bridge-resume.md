@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Codex bridge warm-cache (mirror Gemini #1887)
 
 > **Issue:** #1894
@@ -14,7 +20,7 @@
 
 **Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks.** Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/1894-codex-bridge-resume && ...` (or absolute path).
 
-Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via `.venv/bin/python`.
+Inside the worktree, `.venv/` exists ONLY because git worktrees do not copy gitignored dirs. Use the MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -117,7 +123,7 @@ cd .worktrees/dispatch/codex/1894-codex-bridge-resume && echo "say hi" | codex e
 
 6. **Run the full agent-runtime suite** + relevant ones:
    ```bash
-   cd .worktrees/dispatch/codex/1894-codex-bridge-resume && .venv/bin/python -m pytest tests/test_agent_runtime.py tests/test_channels_discuss_resume.py -v 2>&1 | tail -30
+   cd .worktrees/dispatch/codex/1894-codex-bridge-resume && "$PROJECT_PYTHON" -m pytest tests/test_agent_runtime.py tests/test_channels_discuss_resume.py -v 2>&1 | tail -30
    ```
    Quote the raw final summary line in your response (e.g. `192 passed in 27.95s`). Bare "tests pass" is not acceptable per #M-4.
 
@@ -149,7 +155,7 @@ From `AGENTS.md:11-26`. PRs failing this checklist are rejected.
 - [ ] `.python-version` unchanged (must be `3.12.8`)
 - [ ] `.yamllint` and `.markdownlint.json` unchanged
 - [ ] No `status/*.json`, `audit/*-review.md`, or `review/*-review.md` files in the diff (generated artifacts)
-- [ ] No `sys.executable` anywhere in code — use `.venv/bin/python`
+- [ ] No `sys.executable` anywhere in code — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertions weakened (e.g. `is True` → `isinstance(..., bool)`)
 - [ ] Every changed file directly related to #1894

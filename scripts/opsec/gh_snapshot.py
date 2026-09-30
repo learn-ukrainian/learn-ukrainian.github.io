@@ -1,8 +1,7 @@
 """Strict raw-gh admission. Public writes belong to scripts.publish.github.
 
 No raw argv token is interpreted as public text. A command is a permitted read
-only if its entire argv matches one closed grammar. API and extension commands
-are never admitted as reads.
+only if its entire argv matches one closed grammar. REST API reads use a closed GET-only endpoint grammar. Extensions are refused.
 """
 
 from __future__ import annotations
@@ -171,7 +170,7 @@ READ_GRAMMARS = {
             "--skip-existing": False,
         },
     ),
-    ("auth", "status"): (0, 0, {**FORMAT, "--hostname": True, "-h": True, "--active": False}),
+    ("auth", "status"): (0, 0, {"--json": True, "--jq": True, "-q": True, "--hostname": True, "-h": True, "--active": False}),
     ("gist", "view"): (
         1,
         1,
@@ -180,6 +179,24 @@ READ_GRAMMARS = {
     ("gist", "list"): (0, 0, {"--limit": True, "-L": True, "--public": False, "--secret": False}),
     ("label", "list"): (0, 0, {**LIST, **REPO, "--search": True, "-S": True, "--order": True, "--sort": True}),
 }
+READ_GRAMMARS[("search", "prs")] = (1, 1, {**LIST, **REPO, "--state": True, "--owner": True, "--merged": False})
+
+# No fields/input: gh cannot infer POST. All method occurrences must be GET.
+REST_GET = (1, 1, {"--method": True, "-X": True, "--paginate": False,
+    "--slurp": False, "--include": False, "-i": False, "--jq": True, "-q": True,
+    "--header": True, "-H": True, "--hostname": True, "--cache": True})
+_SEGMENT = r"(?:[A-Za-z0-9_.{}-]|%[0-9A-Fa-f]{2})+"
+_READ_SUFFIX = (
+    r"(?:issues(?:/\d+(?:/(?:comments|labels|timeline|sub_issues))?|/comments/\d+)?"
+    r"|pulls(?:/\d+(?:/(?:reviews|commits|files))?)?"
+    r"|branches(?:/" + _SEGMENT + r"(?:/protection)?)?"
+    r"|commits/" + _SEGMENT + r"(?:/(?:check-runs|status|statuses))?"
+    r"|actions/(?:runs(?:/\d+(?:/(?:jobs|artifacts))?)?|caches|workflows(?:/" + _SEGMENT + r"(?:/runs)?)?)"
+    r"|releases(?:/(?:latest|\d+|assets/\d+|tags/" + _SEGMENT + r"))?"
+    r"|compare/" + _SEGMENT + r"|deployments(?:/\d+/statuses)?|labels|milestones(?:/\d+)?)"
+)
+REST_READ_PATH = re.compile(r"(?:user|rate_limit|repos/" + _SEGMENT + r"/" + _SEGMENT + r"(?:/" + _READ_SUFFIX + r")?)(?:\?[^\s#\x00-\x1f]*)?")
+
 READ_VERBS = {g: {v for group, v in READ_GRAMMARS if group == g} for g, _ in READ_GRAMMARS}
 
 # Raw writes are only forwarded for a proven private destination. Closed flags
@@ -412,6 +429,15 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
     if len(argv) < 2:
         raise PublishBlocked("OPSEC: use python -m scripts.publish <verb>; raw gh command refused.")
     if argv[0] == "api":
+        try:
+            found, positional = parse(argv[1:], REST_GET)
+        except PublishBlocked:
+            pass
+        else:
+            if (all(value == "GET" for flag, value in found if flag in {"--method", "-X"})
+                    and REST_READ_PATH.fullmatch(positional[0].removeprefix("https://api.github.com/").lstrip("/"))):
+                return FrozenCommand(list(argv), "unknown", False)
+            raise PublishBlocked("OPSEC: API read refused; use python -m scripts.publish read <name>.")
         found, positional = parse(argv[1:], PRIVATE_API)
         endpoint = positional[0]
         match = re.fullmatch(
@@ -423,9 +449,11 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         dest = normalize_repository(f"{host}/{match[1]}/{match[2]}") if match else "unknown"
         if not is_private(dest):
             raise PublishBlocked(
-                "OPSEC: raw API refused; use python -m scripts.publish issue-comment-json or a named read helper."
+                "OPSEC: raw API refused; use python -m scripts.publish issue-comment-json or python -m scripts.publish read <name>."
             )
-        return FrozenCommand(list(argv), dest, True)
+        pinned = [arg for arg in argv]
+        pinned += ["--hostname", dest.split("/", 1)[0]]
+        return FrozenCommand(pinned, dest, True)
     # Globals can precede a builtin; only the two repository selector forms.
     start, globals_ = 0, []
     while start < len(argv) and argv[start] in REPO:
@@ -434,6 +462,24 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         globals_.extend(argv[start : start + 2])
         start += 2
     key = tuple(argv[start : start + 2])
+    if key == ("pr", "checkout"):
+        parse(globals_ + argv[start + 2:], (1, 1, {**REPO, "--branch": True, "-b": True, "--detach": False, "--force": False}))
+        import unicodedata
+        from pathlib import Path
+        supplied = Path(cwd).absolute()
+        resolved = supplied.resolve()
+        if (supplied != resolved or any(unicodedata.category(c).startswith("C") for c in str(supplied))
+                or not re.search(r"/\.worktrees/dispatch/[^/]+/[^/]+(?:/|$)", str(resolved))):
+            raise PublishBlocked("OPSEC: pr checkout requires a dispatch worktree.")
+        try:
+            root = reader(["git", "rev-parse", "--show-toplevel"], cwd=cwd, env=environment,
+                          text=True, capture_output=True, check=False, timeout=5)
+            top = Path(root.stdout.strip()).resolve()
+            if root.returncode or not re.search(r"/\.worktrees/dispatch/[^/]+/[^/]+$", str(top)) or not resolved.is_relative_to(top):
+                raise ValueError
+        except Exception:
+            raise PublishBlocked("OPSEC: pr checkout requires a verified dispatch repository.") from None
+        return FrozenCommand(list(argv), "unknown", False)
     if key in READ_GRAMMARS:
         parse(globals_ + argv[start + 2 :], READ_GRAMMARS[key])
         return FrozenCommand(list(argv), "unknown", False)
@@ -456,4 +502,10 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
             dest = "unknown"
     if not is_private(dest):
         raise PublishBlocked(f"OPSEC: raw public write refused; use python -m scripts.publish {key[0]}-{key[1]}.")
-    return FrozenCommand(list(argv), dest, True)
+    # Pin the same repository and host whose private exemption was proven.
+    pinned = [*key, *positional]
+    for flag, value in found:
+        if flag not in REPO:
+            pinned.append(flag + "=" + value if WRITE_GRAMMARS[key][2][flag] else flag)
+    pinned += ["--repo", dest]
+    return FrozenCommand(pinned, dest, True)

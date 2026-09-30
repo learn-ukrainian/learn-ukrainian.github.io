@@ -109,7 +109,7 @@ initialPrompt: |
     unpushed work before declaring a dispatch dead (silent-exit class).
   - Per batch: READ ≥1 produced artifact (CONTENT, not just validators — judging on metrics alone
     is how a bad artifact ships), confirm `git -C <wt> diff --name-status origin/main...HEAD` rows
-    are expected, then `gh pr create` → MERGE it once a cross-family review passes + CI is green
+    are expected, then `.venv/bin/python -m scripts.publish pr-create` → MERGE it once a cross-family review passes + CI is green
     (#0H; don't let a ready PR sit — auto-merge on green).
   - Collaborate, don't drive solo: involve ≥1 other agent
     (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-* / discuss`) on substantive
