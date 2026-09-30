@@ -366,95 +366,19 @@ def _mirror_tier(artifact: ce.EvidenceArtifact) -> None:
             canonical[key] = copy.deepcopy(value)
 
 
-# Readiness re-reads these contracts on every certification call. The memo key is their bytes.
-_READINESS_CONTRACTS = (
-    "agents_extensions/shared/curriculum-lifecycle/config/readiness-profiles.v1.yaml",
-    "agents_extensions/shared/curriculum-lifecycle/schema/preparation-result.v1.schema.json",
-    "agents_extensions/shared/curriculum-lifecycle/schema/readiness-profiles.v1.schema.json",
-    "agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v1.yaml",
-    "agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v2.yaml",
-    "agents_extensions/shared/prompt-contracts/manifests/curriculum-lifecycle.module.v3.yaml",
-    "agents_extensions/shared/prompt-contracts/profiles/curriculum-lifecycle.v1.yaml",
-    "agents_extensions/shared/prompt-contracts/registry.v1.yaml",
-    "agents_extensions/shared/prompt-contracts/schema/prompt-manifest.v1.schema.json",
-    "agents_extensions/shared/prompt-contracts/schema/prompt-profile.v1.schema.json",
-    "agents_extensions/shared/prompt-contracts/schema/prompt-registry.v1.schema.json",
-    "curriculum/l2-uk-en/curriculum.yaml",
-)
 # Identity inputs are hashed, not executed. Their size is not the property under test.
 _HASH_ONLY_STUB = b"# synthetic certification identity input\n"
 _HASH_ONLY_STUB_MIN_BYTES = 32_000
 
 
-def _file_token(path: Path) -> tuple[str, str | None]:
-    if not path.is_file():
-        return ("missing", None)
-    data = path.read_bytes()
-    return ("file", hashlib.sha256(data).hexdigest())
+def _install_config_read_cache() -> Any:
+    """Memoize track-completion config parses. Callers receive deep copies.
 
-
-def _readiness_cache_key(
-    track: str,
-    slug: str,
-    consumed_preparation_identity: str | None,
-    repo_root: Path,
-    validators: Any,
-    active_manifest: Any,
-) -> tuple[Any, ...] | None:
-    """Return None when a call passes inputs this memo does not cover."""
-    if validators is not curriculum_readiness.VALIDATORS or active_manifest is not None:
-        return None
-    repo = Path(repo_root)
-    parts: list[Any] = [track, slug, consumed_preparation_identity]
-    for relative in _READINESS_CONTRACTS:
-        parts.append(_file_token(repo / relative))
-    for artifact in ("plan", "wiki-document", "wiki-sources"):
-        parts.append(_file_token(curriculum_readiness.artifact_path(artifact, repo, track, slug)))
-    module_dir = repo / "curriculum" / "l2-uk-en" / track / slug
-    parts.append(tuple((name, (module_dir / name).is_file()) for name in curriculum_readiness.MODULE_BUNDLE_FILES))
-    return tuple(parts)
-
-
-def _install_repeated_read_cache() -> Any:
-    """Memoize deterministic reads. A changed input byte is a cache miss."""
-    readiness_cache: dict[tuple[Any, ...], dict[str, Any]] = {}
+    The key is the config file bytes plus the config schema bytes. Readiness
+    evaluation is never memoized: every call goes to production.
+    """
     config_cache: dict[tuple[bytes, bytes], dict[str, Any]] = {}
-    original_evaluate = curriculum_readiness.evaluate_preparation
     original_load_config = tc.load_config
-
-    def cached_evaluate(
-        track: str,
-        slug: str,
-        *,
-        consumed_preparation_identity: str | None = None,
-        repo_root: Path = curriculum_readiness.PROJECT_ROOT,
-        validators: Any = curriculum_readiness.VALIDATORS,
-        active_manifest: Any = None,
-    ) -> dict[str, Any]:
-        key = _readiness_cache_key(track, slug, consumed_preparation_identity, repo_root, validators, active_manifest)
-        if key is None:
-            return original_evaluate(
-                track,
-                slug,
-                consumed_preparation_identity=consumed_preparation_identity,
-                repo_root=repo_root,
-                validators=validators,
-                active_manifest=active_manifest,
-            )
-        cached = readiness_cache.get(key)
-        if cached is None:
-            cached = copy.deepcopy(
-                original_evaluate(
-                    track,
-                    slug,
-                    consumed_preparation_identity=consumed_preparation_identity,
-                    repo_root=repo_root,
-                    validators=validators,
-                    active_manifest=active_manifest,
-                )
-            )
-            readiness_cache[key] = cached
-        return copy.deepcopy(cached)
 
     def cached_load_config(path: Path = tc.DEFAULT_CONFIG_PATH) -> dict[str, Any]:
         config_bytes = Path(path).read_bytes()
@@ -466,11 +390,9 @@ def _install_repeated_read_cache() -> Any:
             config_cache[key] = cached
         return copy.deepcopy(cached)
 
-    curriculum_readiness.evaluate_preparation = cached_evaluate
     tc.load_config = cached_load_config
 
     def restore() -> None:
-        curriculum_readiness.evaluate_preparation = original_evaluate
         tc.load_config = original_load_config
 
     return restore
@@ -614,8 +536,8 @@ CompletionCase = tuple[Path, Path, Path, dict[str, Any], dict[str, Any]]
 
 @pytest.fixture(scope="module", autouse=True)
 def _shared_certification_reads() -> Any:
-    """Share unchanged readiness and config parses. Callers receive copies."""
-    restore = _install_repeated_read_cache()
+    """Share unchanged config parses. Callers receive deep copies."""
+    restore = _install_config_read_cache()
     yield
     restore()
 
@@ -1276,7 +1198,7 @@ def test_live_qg_dependency_drift_changes_qg_identity_only(completion_case: Comp
 def test_changed_plan_bytes_and_config_reload_are_not_cached(
     completion_case: CompletionCase,
 ) -> None:
-    """Memoized readiness and config must miss when the source bytes change."""
+    """Production readiness re-reads plan bytes, and config parses miss on byte changes."""
     repo, config_path, _ledger_root, _ledger, inputs = completion_case
     before = curriculum_readiness.evaluate_preparation(
         "b1",
@@ -1301,6 +1223,52 @@ def test_changed_plan_bytes_and_config_reload_are_not_cached(
     original = config_path.read_text(encoding="utf-8")
     config_path.write_text(original.replace("lease_seconds: 86400", "lease_seconds: 86401", 1), encoding="utf-8")
     assert tc.load_config(config_path)["lease_seconds"] == 86401
+
+
+def test_active_hold_registered_mid_test_rejects_certification(
+    completion_case: CompletionCase,
+) -> None:
+    """A hold written after a current evaluation rejects production certification."""
+    repo, config_path, _ledger_root, ledger, inputs = completion_case
+    current = tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
+    assert current["preparation_identity"] == inputs["preparation_identity"]
+
+    registry_path = repo / "curriculum/l2-uk-en/b1/promotion-evidence.yaml"
+    registry_path.write_text(
+        yaml.safe_dump(
+            {
+                "version": 1,
+                "entries": {
+                    "adjectives-comparative": {
+                        "hold": {
+                            "status": "pass",
+                            "reviewer_family": "codex",
+                            "date": "2026-07-19",
+                            "evidence_url": "https://example.test/reviewed-hold",
+                            "active": True,
+                            "reason": "The terminal factual review found an unresolved source conflict.",
+                            "owner": "core-preparation-controller",
+                            "checked_evidence": ["immutable packet review and adopted source set"],
+                            "unblock_condition": "A stable authoritative source resolves the conflict.",
+                        }
+                    }
+                },
+            },
+            sort_keys=False,
+        ),
+        encoding="utf-8",
+    )
+
+    held = curriculum_readiness.evaluate_preparation(
+        "b1",
+        "adjectives-comparative",
+        consumed_preparation_identity=inputs["preparation_identity"],
+        repo_root=repo,
+    )
+    assert held["state"] == "preparation-required"
+    assert "PREPARATION_HOLD_ACTIVE" in {item["id"] for item in held["findings"]}
+    with pytest.raises(tc.CompletionError, match=r"PREPARATION_HOLD_ACTIVE"):
+        tc.certification_inputs(inputs["target"], repo_root=repo, config_path=config_path, ledger=ledger)
 
 
 def test_learner_mutation_stales_both_pbr_and_qg_inputs(completion_case: CompletionCase) -> None:
