@@ -357,7 +357,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
   | claude | claude-opus-5-5 | high | gpt-6.1-sol | xhigh |
-  | codex | gpt-6.1-sol | xhigh | gpt-6.1-sol | xhigh |
+  | codex | gpt-6.1-sol | high | gpt-6.1-sol | xhigh |
   | cursor | grok-4.7 | high | gpt-6.1-sol | xhigh |
   | grok | grok-4.7 | high | grok-4.7 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
