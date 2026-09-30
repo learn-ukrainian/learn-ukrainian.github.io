@@ -32,10 +32,38 @@ launcher_adapter_canary() {
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'kimi adapter: would run provider canary'; fi
   return 0
 }
+# Kimi Code binds an agent at session creation: --agent-file conflicts with an
+# explicit agent and with resuming (a resumed session restores its bound agent).
+_kimi_forward_args_bind_agent() {
+  local arg
+  for arg in "${LC_FORWARD_ARGS[@]}"; do
+    case "$arg" in
+      --agent|--agent=*|--agent-file|--agent-file=*|-c|--continue|-S|--session|--session=*|-r|--resume|--resume=*) return 0 ;;
+    esac
+  done
+  return 1
+}
 launcher_adapter_exec() {
-  local cmd
-  if [ "$LC_HARNESS" = kimi-code ]; then cmd=(kimi --model "$LC_MODEL"); else cmd=(claude --model "$LEAD_MODEL"); fi
+  local cmd agent_file
+  if [ "$LC_HARNESS" = kimi-code ]; then
+    cmd=(kimi --model "$LC_MODEL")
+    # The agent file renders Kimi's default prompt (${base_prompt}) and appends the core.
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      if _kimi_forward_args_bind_agent; then
+        rules_core_warn "the forwarded arguments already bind a Kimi agent or resume a session"
+      elif agent_file="$(rules_core_kimi_agent_file "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT")"; then
+        cmd+=(--agent-file "$agent_file")
+      else
+        rules_core_warn "Kimi agent file could not be written"
+      fi
+    fi
+  else
+    cmd=(claude --model "$LEAD_MODEL")
+    if [ -n "${LC_RULES_CORE:-}" ]; then
+      cmd+=(--append-system-prompt "$LC_RULES_CORE")
+    fi
+  fi
   cmd+=("${LC_FORWARD_ARGS[@]}")
-  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; printf '%q ' "${cmd[@]}"; printf '\n'; return 0; fi
+  if [ "$LC_DRY_RUN" = 1 ]; then printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"; launcher_print_argv "${cmd[@]}"; printf '\n'; return 0; fi
   exec "${cmd[@]}"
 }

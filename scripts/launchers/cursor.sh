@@ -24,10 +24,27 @@ launcher_adapter_exec() {
   if [ -n "${LC_MODEL:-}" ]; then
     cmd+=(--model "$LC_MODEL")
   fi
-  cmd+=("${LC_FORWARD_ARGS[@]}")
+  # cursor-agent has no system-prompt flag and its AGENTS.md loading is
+  # unproven: the rules core leads the drive-epic binding (or an ack).
+  local arg core_placed=0
+  if [ -n "${LC_RULES_CORE:-}" ]; then
+    for arg in "${LC_FORWARD_ARGS[@]}"; do
+      if [ "$core_placed" = 0 ] && [ -n "${LC_DRIVER_PROMPT:-}" ] && [ "$arg" = "$LC_DRIVER_PROMPT" ]; then
+        cmd+=("$(rules_core_prefix "$arg")")
+        core_placed=1
+      else
+        cmd+=("$arg")
+      fi
+    done
+    if [ "$core_placed" = 0 ]; then
+      cmd+=("$(rules_core_prefix "")")
+    fi
+  else
+    cmd+=("${LC_FORWARD_ARGS[@]}")
+  fi
   if [ "$LC_DRY_RUN" = 1 ]; then
     printf 'LAUNCHER_DRY_RUN=1: credential_source=%s\nwould exec ' "$LC_AUTH_SOURCE"
-    printf '%q ' "${cmd[@]}"
+    launcher_print_argv "${cmd[@]}"
     printf '\n'
     return 0
   fi

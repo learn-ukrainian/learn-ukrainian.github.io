@@ -1032,6 +1032,20 @@ def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: p
     return isolated
 
 
+@pytest.fixture(autouse=True)
+def _rules_core_absent_by_default(tmp_path_factory: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Keep the rules core out of prompts and launcher argv unless a test opts in.
+
+    Launchers, ``delegate.py``, ACP calls and bridge builders prepend the rules core
+    (``scripts/lib/rules_core.py``); a missing core is a warning, not a failure. Pointing
+    ``LU_RULES_CORE_DIR`` at an empty directory keeps exact prompt/argv assertions
+    independent of whether the checkout carries the core. Subprocess launchers
+    inherit it. ``tests/test_rules_core_loading.py`` sets its own directory.
+    """
+    monkeypatch.setenv("LU_RULES_CORE_DIR", str(tmp_path_factory.getbasetemp() / "rules-core-absent"))
+    monkeypatch.delenv("LU_RULES_SEAT", raising=False)
+
+
 class SocketBlockedError(RuntimeError):
     """Raised when a unit test attempts an un-opted outbound network connection (#6968)."""
 
