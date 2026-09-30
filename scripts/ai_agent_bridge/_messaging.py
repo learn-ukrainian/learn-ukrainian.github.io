@@ -6,10 +6,14 @@ import re
 import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from secret_redactor import redact_text, redact_value
 
 from ._db import get_db
+
+if TYPE_CHECKING:
+    from agent_runtime.target_admission import AdmittedTarget
 
 
 def check_inbox(for_llm: str = "gemini"):
@@ -132,16 +136,49 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
     excerpt plus an explicit ``TRUNCATED`` footer (path + sha256 + bytes) so
     consumers never mistake a transport clip for a short model reply.
 
-    Kimi is not a bridge recipient: a Kimi ``to_llm``, or a Kimi model or
+    Kimi is not a bridge recipient: the recipient is resolved and admitted in
+    one step (``resolve_and_admit``), so a Kimi ``to_llm``, or a Kimi model or
     recipient in the final merged metadata (an explicit ``to_model`` replaces
     the ``data`` one), raises ``KimiAdmissionRefused`` before the sidecar or
     any broker connection.
     """
+    from agent_runtime.kimi_admission import BRIDGE_MODE
+    from agent_runtime.target_admission import resolve_and_admit
+
+    (target,) = resolve_and_admit((to_llm,), mode=BRIDGE_MODE, model=to_model, attachments=(data,))
+    return _insert_message(
+        target,
+        content=content,
+        task_id=task_id,
+        msg_type=msg_type,
+        data=data,
+        from_llm=from_llm,
+        from_model=from_model,
+        effort=effort,
+        review_target=review_target,
+        quiet=quiet,
+    )
+
+
+def _insert_message(
+    target: "AdmittedTarget",
+    *,
+    content: str,
+    task_id: str | None,
+    msg_type: str,
+    data: str | None,
+    from_llm: str,
+    from_model: str | None,
+    effort: str | None,
+    review_target: dict | None,
+    quiet: bool,
+):
+    """Store one bridge message for the admitted ``target`` (sidecar, row, notification)."""
     from agent_runtime.kimi_admission import attachment_metadata
+    from agent_runtime.target_admission import require_admitted
 
-    from ._acp_compat import refuse_kimi_recipients
-
-    refuse_kimi_recipients((to_llm,), (to_model,), attachments=(data,))
+    target = require_admitted(target)
+    to_llm, to_model = target.recipient, target.model
     content = redact_text(content) or ""
     data = redact_text(data) if data is not None else None
 

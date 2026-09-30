@@ -1388,13 +1388,14 @@ def _handle_p(args) -> int:
 
 def _handle_inbox_run(args) -> int:
     """Handle `ab inbox run <agent>`."""
-    from agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
+    from agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused
+    from agent_runtime.target_admission import resolve_and_admit
 
     from ._inbox import run_inbox
 
     # Inbox replies are consults and discussions: a Kimi inbox is refused before housekeeping writes.
     try:
-        refuse_kimi_if_disallowed((args.agent,), mode=ACP_MODE)
+        resolve_and_admit((args.agent,), mode=ACP_MODE)
     except KimiAdmissionRefused as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2

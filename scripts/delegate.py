@@ -147,7 +147,7 @@ from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
@@ -193,6 +193,9 @@ from scripts.orchestration.dead_worker_state import (
     task_state_lock,
     write_state_unlocked,
 )
+
+if TYPE_CHECKING:
+    from scripts.agent_runtime.target_admission import AdmittedTarget
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
@@ -5369,8 +5372,11 @@ def _kimi_worker_refusal(
     mode: str,
     cwd: Path,
     review: bool,
-) -> str | None:
-    """The worker-side Kimi gate; installs the worktree boundary when it admits.
+) -> tuple[str | None, Any]:
+    """The worker-side gate: ``(refusal, admitted target)``; installs the Kimi worktree boundary when it admits.
+
+    The worker's seat and model are resolved and admitted in one step
+    (``resolve_and_admit``); the worker invokes the admitted target.
 
     A Kimi seat is refused unless its mode and review flags are admitted (read
     first, from the argv alone), the task's owned paths pass admission read in
@@ -5386,8 +5392,8 @@ def _kimi_worker_refusal(
         KimiAdmissionRefused,
         format_refusal,
         is_kimi_seat,
-        refuse_kimi_if_disallowed,
     )
+    from scripts.agent_runtime.target_admission import resolve_and_admit
 
     boundary_errors = (kimi_boundary.BoundaryError, OSError, subprocess.SubprocessError)
     if not is_kimi_seat(agent, model=model):
@@ -5395,18 +5401,19 @@ def _kimi_worker_refusal(
             try:
                 kimi_boundary.remove(cwd, env=_sanitized_git_env())
             except boundary_errors as exc:
-                return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}"
-        return None
+                return f"the Kimi worktree boundary left in {cwd} could not be removed: {exc}", None
+        (target,) = resolve_and_admit((agent,), model=model, mode=mode, review=review)
+        return None, target
     try:
         if mode != ADMITTED_MODE or review:
             # Refused by mode or review alone: no need to read the task record (or create its directory).
-            refuse_kimi_if_disallowed((agent,), (model,), mode=mode, review=review)
+            resolve_and_admit((agent,), model=model, mode=mode, review=review)
         # Read-only: a refused worker must leave no task directory or file behind.
         launch = _read_state_json(_state_path_no_create(task_id)) or {}
         owned = _declared_owned_paths(launch.get("owned_paths")) or ()
-        refuse_kimi_if_disallowed(
+        (target,) = resolve_and_admit(
             (agent,),
-            (model,),
+            model=model,
             mode=mode,
             review=review,
             paths=owned,
@@ -5414,16 +5421,16 @@ def _kimi_worker_refusal(
             trees=lambda: _kimi_worktree_trees(cwd),
         )
     except KimiAdmissionRefused as exc:
-        return str(exc)
+        return str(exc), None
     worktree = launch.get("worktree_path")
     if not worktree or Path(worktree).resolve() != cwd.resolve():
-        return format_refusal(agent, [f"workspace-write outside the task's dispatch worktree (cwd {str(cwd)!r})"])
+        return format_refusal(agent, [f"workspace-write outside the task's dispatch worktree (cwd {str(cwd)!r})"]), None
     base_ref = _commit_count_base_ref(cwd, str(launch.get("worktree_base") or "main"))
     try:
         kimi_boundary.install(cwd, agent=agent, base_ref=base_ref, owned_paths=owned, env=_sanitized_git_env())
     except boundary_errors as exc:
-        return format_refusal(agent, [f"the worktree boundary could not be installed ({exc})"])
-    return None
+        return format_refusal(agent, [f"the worktree boundary could not be installed ({exc})"]), None
+    return None, target
 
 
 def _kimi_diff_refusal(worktree: Path, base_ref: str, agent: str) -> str | None:
@@ -7824,7 +7831,7 @@ def _run_worker(
     # coding. It reads the task's owned paths in the tree it is about to run
     # in, then installs the worktree boundary (hooks and push block), before
     # any state write or invocation. A refusal goes to the caller only.
-    kimi_refusal = _kimi_worker_refusal(
+    kimi_refusal, worker_target = _kimi_worker_refusal(
         task_id,
         agent=agent,
         model=model,
@@ -7835,6 +7842,8 @@ def _run_worker(
     if kimi_refusal:
         print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 1
+    # The worker runs the admitted seat and model; nothing resolves them again.
+    agent, model = worker_target.recipient, worker_target.model
     from scripts.agent_runtime.kimi_admission import OWNED_PATHS_KEY, is_kimi_seat
 
     # Install SIGTERM handler so `delegate.py cancel` unwinds cleanly
@@ -9468,7 +9477,7 @@ def _dispatch(
     # starts from: a reused worktree on disk and at its commit, a new one at its creation
     # base commit (fetched and read with git plumbing). The worktree must start from
     # ``kimi_start_commit``; two checks below refuse one that does not.
-    kimi_refusal, kimi_start_commit = _kimi_dispatch_gate(
+    kimi_refusal, kimi_start_commit, launch_target = _kimi_dispatch_gate(
         args,
         agent=dispatch_agent,
         repo_role=fleet_repo.role,
@@ -9479,6 +9488,8 @@ def _dispatch(
     if kimi_refusal:
         print(f"❌ {kimi_refusal}", file=sys.stderr)
         return 2
+    # Everything below launches the admitted route; nothing resolves it again.
+    dispatch_agent, args.model = launch_target.recipient, launch_target.model
 
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
@@ -10806,8 +10817,7 @@ def _dispatch(
             "_worker",
             "--task-id",
             task_id,
-            "--agent",
-            dispatch_agent,
+            *_worker_route_argv(launch_target),
             "--mode",
             args.mode,
             "--cwd",
@@ -10839,8 +10849,6 @@ def _dispatch(
                     str(output_schema_sha256),
                 ]
             )
-        if args.model:
-            cmd.extend(["--model", args.model])
         if getattr(args, "provider", None):
             cmd.extend(["--provider", args.provider])
         effort = getattr(args, "effort", None)
@@ -11322,6 +11330,17 @@ def _kimi_start_trees(
     return [CommitTree(_REPO_ROOT, base_sha, env=_sanitized_git_env())], base_sha
 
 
+def _worker_route_argv(target: AdmittedTarget) -> list[str]:
+    """The worker's ``--agent``/``--model`` arguments, taken from the admitted launch target only."""
+    from scripts.agent_runtime.target_admission import require_admitted
+
+    target = require_admitted(target)
+    argv = ["--agent", target.recipient]
+    if target.model:
+        argv.extend(["--model", target.model])
+    return argv
+
+
 def _kimi_dispatch_gate(
     args: argparse.Namespace,
     *,
@@ -11330,13 +11349,15 @@ def _kimi_dispatch_gate(
     target_repo_root: Path,
     validated_worktree: Path | None,
     validated_cwd: Path | None,
-) -> tuple[str | None, str | None]:
-    """The dispatch-side Kimi gate: ``(refusal, start commit)``.
+) -> tuple[str | None, str | None, Any]:
+    """The dispatch-side gate: ``(refusal, start commit, admitted target)``.
 
-    The start commit is the commit the owned paths were read at, which the
-    worker's worktree must be created from or checked out at; None when the
-    call is refused, is not Kimi, or owns no paths. The tree is resolved only
-    after every policy check admits.
+    The admitted target (``resolve_and_admit``) is the seat and model the
+    worker is launched with; None when refused. The start commit is the
+    commit the owned paths were read at, which the worker's worktree must be
+    created from or checked out at; None when the call is refused, is not
+    Kimi, or owns no paths. The tree is resolved only after every policy check
+    admits.
     """
     start: list[str] = []
 
@@ -11351,8 +11372,8 @@ def _kimi_dispatch_gate(
         start.append(commit)
         return resolved
 
-    refusal = _kimi_admission_refusal(args, agent=agent, repo_role=repo_role, trees=trees)
-    return refusal, (start[0] if start and refusal is None else None)
+    refusal, target = _admit_dispatch_target(args, agent=agent, repo_role=repo_role, trees=trees)
+    return refusal, (start[0] if start and refusal is None else None), target
 
 
 def _kimi_admission_refusal(
@@ -11362,13 +11383,27 @@ def _kimi_admission_refusal(
     trees: Any,
     repo_role: str | None = None,
 ) -> str | None:
-    """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted.
+    """Refusal message when ``agent`` or ``--model`` is a Kimi seat and the dispatch is not admitted."""
+    return _admit_dispatch_target(args, agent=agent, trees=trees, repo_role=repo_role)[0]
 
+
+def _admit_dispatch_target(
+    args: argparse.Namespace,
+    *,
+    agent: str,
+    trees: Any,
+    repo_role: str | None = None,
+) -> tuple[str | None, Any]:
+    """``(refusal, admitted target)`` for launching ``agent`` with ``--model``; exactly one is None.
+
+    The effective route (``agent`` after aliases and budget substitution,
+    ``--model``) is resolved and admitted in one step (``resolve_and_admit``).
     ``--owned-path`` and ``--research-owned-path`` both declare task ownership,
     so every path from either flag must be on the Kimi allowlist and is read
     for Ukrainian content in ``trees`` (see ``refuse_kimi_if_disallowed``).
     """
-    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused, refuse_kimi_if_disallowed
+    from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
+    from scripts.agent_runtime.target_admission import resolve_and_admit
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -11379,9 +11414,9 @@ def _kimi_admission_refusal(
     declared = flag_paths("owned_path")
     owned = declared + flag_paths("research_owned_path")
     try:
-        refuse_kimi_if_disallowed(
+        (target,) = resolve_and_admit(
             (agent,),
-            (getattr(args, "model", None),),
+            model=getattr(args, "model", None),
             mode=str(getattr(args, "mode", "") or ""),
             paths=owned,
             declared_paths=declared,
@@ -11398,8 +11433,8 @@ def _kimi_admission_refusal(
             trees=trees,
         )
     except KimiAdmissionRefused as exc:
-        return str(exc)
-    return None
+        return str(exc), None
+    return None, target
 
 
 def _discard_model_probe_output(plan: object) -> None:

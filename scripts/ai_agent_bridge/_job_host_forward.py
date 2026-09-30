@@ -24,12 +24,15 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from scripts.fleet_comms.paths import (
     RETIRED_LOCAL_PLANE_MESSAGE,
     local_plane_is_retired,
 )
+
+if TYPE_CHECKING:
+    from agent_runtime.target_admission import AdmittedTarget
 
 # Loop-prevention: set on the remote ask so a misconfigured job-host retire
 # marker cannot bounce forever.
@@ -411,21 +414,25 @@ def maybe_forward_compat_ask(
     content: str,
     *,
     task_id: str,
+    target: AdmittedTarget,
     source: str | None = None,
-    model: str | None = None,
     effort: str | None = None,
     data: str | None = None,
     output_path: str | None = None,
     stdout_only: bool = False,
     hard_timeout: int | None = None,
-    participant: str | None = None,
     repo_root: Path | None = None,
 ) -> Any | None:
     """Forward when the local plane is retired; otherwise return None.
 
+    ``target`` is the ``AdmittedTarget`` ``resolve_and_admit`` produced for
+    ``command_target``; the forwarded ask carries its participant and model.
     When retired but forward config is missing, raises ``AskForwardError`` with
     a human message so callers never surface a raw ``PlaneRootAnchorError``.
     """
+    from agent_runtime.target_admission import require_admitted
+
+    target = require_admitted(target)
     if not should_attempt_ask_forward(repo_root=repo_root):
         # Already on the job-host leg with a retire marker still present: refuse
         # cleanly rather than recurse or open a stub.
@@ -437,11 +444,11 @@ def maybe_forward_compat_ask(
         content,
         task_id=task_id,
         source=source,
-        model=model,
+        model=target.model,
         effort=effort,
         data=data,
         output_path=output_path,
         stdout_only=stdout_only,
         hard_timeout=hard_timeout,
-        participant=participant,
+        participant=target.recipient,
     )

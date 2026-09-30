@@ -58,13 +58,16 @@ import urllib.request
 import uuid
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from secret_redactor import redact_text, redact_value
 
 from ._config import REPO_ROOT
 from ._db import connect_readonly, get_db
 from ._prompts import review_protocol_prefix
+
+if TYPE_CHECKING:
+    from agent_runtime.target_admission import AdmittedTarget
 
 
 class StaleClaimError(Exception):
@@ -376,62 +379,6 @@ def _validate_recipient_agent(agent: str, *, assignments_path: Path | None = Non
         raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {valids}.")
 
 
-def _resolve_delivery_agent(
-    agent: str,
-    *,
-    warnings: list[str],
-    warn_if_unheld: bool,
-) -> str:
-    """Resolve a slot to its live holder, retaining unheld slots unchanged.
-
-    Two distinct failure categories, both surfaced (#5889):
-
-    - **Resolver/import failure** (``resolve_slot_holder`` raises, or the
-      module cannot be imported): an infrastructure problem, NOT a "no live
-      holder" state. Always appended to ``warnings`` — never silent-dropped
-      — and the slot identity is returned so the post still queues.
-    - **No live holder** (resolver returned ``has_holder=False``): the
-      normal bounce. Appended to ``warnings`` only when ``warn_if_unheld``
-      is set (recipient side); the ``from_agent`` side stays quiet because
-      an unheld sender is not a delivery concern.
-    """
-    if "-" not in agent or agent in STATIC_VALID_AGENTS:
-        return agent
-
-    try:
-        from scripts.orchestration.slot_routing import resolve_slot_holder
-
-        res = resolve_slot_holder(agent)
-    except Exception as exc:
-        # Never silent-drop a resolver/import failure (#5889 item 2). It is
-        # a distinct category from "no live holder": the resolver itself
-        # broke or could not be imported. Surface it as a warning and keep
-        # the slot identity so the post can still queue at identity.
-        msg = (
-            f"⚠️ channel-bridge: slot resolver failed for '{agent}' "
-            f"({type(exc).__name__}: {exc}) — queued at identity"
-        )
-        warnings.append(msg)
-        import sys as _sys
-
-        print(msg, file=_sys.stderr)
-        return agent
-
-    if res.has_holder:
-        return res.holder_agent or agent
-
-    if warn_if_unheld:
-        msg = (
-            f"⚠️ channel-bridge: recipient slot '{agent}' has no live holder "
-            f"(queued at {res.queue_location})"
-        )
-        warnings.append(msg)
-        import sys as _sys
-
-        print(msg, file=_sys.stderr)
-    return agent
-
-
 def _validate_priority(priority: str) -> None:
     if priority not in VALID_MESSAGE_PRIORITIES:
         raise ValueError(f"Unknown priority '{priority}'. Expected one of {VALID_MESSAGE_PRIORITIES}.")
@@ -466,13 +413,16 @@ def _validate_error_kind(error_kind: str) -> None:
         raise ValueError(f"Unknown delivery error kind '{error_kind}'. Expected one of {VALID_DELIVERY_ERROR_KINDS}.")
 
 
-def _touch_wake_file(agent: str) -> None:
-    """Best-effort wake hint for #1192 OS-level inbox watchers.
+def _touch_wake_file(target: AdmittedTarget) -> None:
+    """Best-effort wake hint for #1192 OS-level inbox watchers, for one admitted ``target``.
 
     The file is replaced atomically per recipient after the post
     transaction commits, so watchers never observe a partially-written
     wake file and a wake failure never rolls back the message insert.
     """
+    from agent_runtime.target_admission import require_admitted
+
+    agent = require_admitted(target).recipient
     try:
         WAKE_ROOT.mkdir(parents=True, exist_ok=True)
         wake_path = WAKE_ROOT / agent
@@ -1071,6 +1021,44 @@ def set_channel_ttl(name: str, hours: int) -> dict[str, Any]:
 # ── Posting ───────────────────────────────────────────────────────────
 
 
+def _insert_delivery(
+    conn: Any,
+    target: AdmittedTarget,
+    *,
+    message_id: str,
+    created_at: str,
+    pre_delivered: bool,
+    mode: str,
+    deadline_seconds: int | None,
+) -> str:
+    """Insert one delivery row for the admitted ``target`` inside the caller's transaction; return its id."""
+    from agent_runtime.target_admission import require_admitted
+
+    target = require_admitted(target)
+    dlv_id = _new_id()
+    if pre_delivered:
+        conn.execute(
+            """
+            INSERT INTO deliveries (
+                delivery_id, message_id, to_agent, to_model, status,
+                delivered_at, deadline_seconds
+            ) VALUES (?, ?, ?, ?, 'delivered', ?, ?)
+            """,
+            (dlv_id, message_id, target.recipient, target.model, created_at, deadline_seconds),
+        )
+    else:
+        conn.execute(
+            """
+            INSERT INTO deliveries (
+                delivery_id, message_id, to_agent, to_model, status, mode,
+                deadline_seconds
+            ) VALUES (?, ?, ?, ?, 'pending', ?, ?)
+            """,
+            (dlv_id, message_id, target.recipient, target.model, mode, deadline_seconds),
+        )
+    return dlv_id
+
+
 def post(
     channel: str,
     from_agent: str,
@@ -1139,28 +1127,31 @@ def post(
     ``verify_citations=False`` for synthetic test posts or system kinds
     where citation verification is not relevant.
 
-    Kimi is not a bridge recipient: a Kimi ``to_agents`` entry or ``to_model``,
-    or a Kimi model or recipient in ``attachments``, raises
-    ``KimiAdmissionRefused`` before any broker access.
+    Kimi is not a bridge recipient. Recipients are resolved to their live
+    slot holders and admitted in one step (``resolve_and_admit``), so a Kimi
+    ``to_agents`` entry or ``to_model``, a Kimi model or recipient in
+    ``attachments``, or a slot whose live holder is a Kimi seat raises
+    ``KimiAdmissionRefused`` before any snapshot, broker access, insert or wake.
     """
-    from ._acp_compat import refuse_kimi_recipients
+    from agent_runtime.kimi_admission import BRIDGE_MODE
+    from agent_runtime.target_admission import resolve_and_admit, resolve_sender
 
-    refuse_kimi_recipients(to_agents or (), (to_model,), attachments=(attachments,))
+    warnings: list[str] = []
+    recipients = list(to_agents or [])
+    delivery_targets = resolve_and_admit(
+        recipients,
+        mode=BRIDGE_MODE,
+        model=to_model,
+        attachments=(attachments,),
+        slots=STATIC_VALID_AGENTS,
+        warnings=warnings,
+    )
     _validate_post_agent(from_agent)
     _validate_kind(kind)
     _validate_priority(priority)
-    warnings: list[str] = []
-    resolved_from_agent = _resolve_delivery_agent(
-        from_agent,
-        warnings=warnings,
-        warn_if_unheld=False,
-    )
-    delivery_targets: list[str] = []
-    for agent in to_agents or []:
+    for agent in recipients:
         _validate_recipient_agent(agent)
-        delivery_targets.append(
-            _resolve_delivery_agent(agent, warnings=warnings, warn_if_unheld=True)
-        )
+    resolved_from_agent = resolve_sender(from_agent, static_agents=STATIC_VALID_AGENTS, warnings=warnings)
     body = redact_text(body) or ""
     attachments = redact_value(attachments)
     monitor_state_snapshot = redact_value(monitor_state_snapshot)
@@ -1301,57 +1292,32 @@ def post(
         )
 
         delivery_ids = []
-        delivery_agents = []
+        woken = []
         seen_delivery_agents: set[str] = set()
-        for agent in delivery_targets:
+        for target in delivery_targets:
             # Skip sender self-fanout: an agent does not need to "process"
             # its own reply. Channel deliveries are for other subscribers.
-            if agent == resolved_from_agent or agent in seen_delivery_agents:
+            if target.recipient == resolved_from_agent or target.recipient in seen_delivery_agents:
                 continue
-            seen_delivery_agents.add(agent)
-            delivery_agents.append(agent)
-            dlv_id = _new_id()
-            delivery_ids.append(dlv_id)
-            if pre_delivered:
-                conn.execute(
-                    """
-                    INSERT INTO deliveries (
-                        delivery_id, message_id, to_agent, to_model, status,
-                        delivered_at, deadline_seconds
-                    ) VALUES (?, ?, ?, ?, 'delivered', ?, ?)
-                    """,
-                    (
-                        dlv_id,
-                        message_id,
-                        agent,
-                        to_model,
-                        created_at,
-                        deadline_seconds,
-                    ),
+            seen_delivery_agents.add(target.recipient)
+            woken.append(target)
+            delivery_ids.append(
+                _insert_delivery(
+                    conn,
+                    target,
+                    message_id=message_id,
+                    created_at=created_at,
+                    pre_delivered=pre_delivered,
+                    mode=mode,
+                    deadline_seconds=deadline_seconds,
                 )
-            else:
-                conn.execute(
-                    """
-                    INSERT INTO deliveries (
-                        delivery_id, message_id, to_agent, to_model, status, mode,
-                        deadline_seconds
-                    ) VALUES (?, ?, ?, ?, 'pending', ?, ?)
-                    """,
-                    (
-                        dlv_id,
-                        message_id,
-                        agent,
-                        to_model,
-                        mode,
-                        deadline_seconds,
-                    ),
-                )
+            )
 
         conn.commit()
 
         if not pre_delivered:
-            for agent in set(delivery_agents):
-                _touch_wake_file(agent)
+            for target in woken:
+                _touch_wake_file(target)
 
         return {
             "message_id": message_id,

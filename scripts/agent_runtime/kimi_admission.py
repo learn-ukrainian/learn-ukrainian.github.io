@@ -8,11 +8,15 @@ Every Kimi seat (``kimi``, ``kimicc``, the ``acpx-kimi*`` ACP seats, and any
 implementation of paths on an explicit allowlist. Anything not on the
 allowlist is refused.
 
-``refuse_kimi_if_disallowed`` is the one gate. Every entry point calls it
-first, after resolving the effective seats and models (overrides, pins and
-substitutes) and before any telemetry, broker message, failure record, state
-write, artifact store or channel write. A refusal raises
-``KimiAdmissionRefused`` to the caller and records nothing.
+``refuse_kimi_if_disallowed`` is the one gate. Entry points reach it through
+``target_admission.resolve_and_admit``, which resolves the effective seats and
+models (attachments, compat names, route pins, slot holders, substitutes) and
+gates them in the same step, before any telemetry, broker message, failure
+record, state write, artifact store or channel write; delivery, insertion,
+wake and launch sinks take the ``AdmittedTarget`` it returns. Execution-time
+re-checks (``refuse_kimi_execution``) gate exactly the seat, model and tree
+being run. A refusal raises ``KimiAdmissionRefused`` to the caller and records
+nothing.
 
 Content is admitted only as plain text: valid UTF-8 with no control
 characters other than tab, LF and CR, and no Cyrillic character (Ukrainian
@@ -105,6 +109,7 @@ _SITE_CONFIG_FILE = re.compile(r"^site/[^/]+\.config\.[^/]+$")
 KIMI_EXCLUDED_PATHS: dict[str, str] = {
     "scripts/agent_runtime/kimi_admission.py": "the Kimi admission gate is routing policy",
     "scripts/agent_runtime/kimi_boundary.py": "the Kimi worktree boundary is routing policy",
+    "scripts/agent_runtime/target_admission.py": "target resolution and admission is routing policy",
     "scripts/agent_runtime/kimi_hooks/": "the Kimi worktree boundary is routing policy",
     "scripts/agent_runtime/env_sanitize.py": "the agent credential boundary, including Kimi's push block",
     "scripts/agent_runtime/adapters/kimi.py": "Kimi's own runtime refusal is routing policy",
@@ -564,6 +569,8 @@ def effective_request_targets(
     *attachments: Any,
 ) -> tuple[list[str | None], list[str | None]]:
     """The final ``(seats, models)`` a request addresses after its attachments are merged.
+
+    A resolver: called only by ``target_admission.resolve_and_admit``.
 
     Precedence is the one ``send_message`` stores: an explicit ``model`` replaces
     an attachment's ``to_model``; every other model or recipient key an

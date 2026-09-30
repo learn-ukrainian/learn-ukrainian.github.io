@@ -53,6 +53,15 @@ from the merge base and commits the owned paths only when the diff adds no
 Cyrillic character; otherwise the task ends `failed` with
 `kimi_content_refusal` and nothing is committed.
 
+Targets are admitted in the same step they are resolved:
+`scripts/agent_runtime/target_admission.py` `resolve_and_admit` performs every
+resolution a request goes through (explicit recipients and model, `data`
+attachments, compat names, ACP route pins, slot holders, registry lookups,
+quota substitution) and then runs the Kimi gate. Delivery, insertion, wake and
+launch sinks in the bridge, channels, ACP, fleet-comms and `delegate.py` take
+the `AdmittedTarget` it returns, never a raw name, and the resolvers are
+called from that module only (`tests/test_target_admission_structure.py`).
+
 **Native Kimi is the default** interactive and headless/fleet route
 (`./start-kimi.sh`, `delegate.py --agent kimi --mode workspace-write`). Native
 **Kimi K3 is max-only** — the native adapter does not accept a non-max effort

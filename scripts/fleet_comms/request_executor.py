@@ -18,7 +18,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
-from scripts.agent_runtime.kimi_admission import ACP_MODE, refuse_kimi_if_disallowed
+from scripts.agent_runtime.kimi_admission import ACP_MODE
+from scripts.agent_runtime.target_admission import resolve_and_admit
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -153,11 +154,18 @@ class RequestExecutor:
         conversation_id: str | None = None,
         metadata: dict[str, Any] | None = None,
     ) -> RequestRecord:
-        endpoint, matched_name = self.registry.resolve(recipient)
-        refuse_kimi_if_disallowed((recipient, endpoint.name), mode=ACP_MODE)
         # resolve(): live → (endpoint, endpoint.name); retired → (successor, retired_name).
-        requested = matched_name
-        resolved = endpoint.name
+        # The endpoint lookup runs inside resolve_and_admit, which gates the requested and resolved seats.
+        lookup: dict[str, Any] = {}
+
+        def _endpoint_name(name: str) -> str:
+            lookup["endpoint"], lookup["matched"] = self.registry.resolve(name)
+            return lookup["endpoint"].name
+
+        (target,) = resolve_and_admit((recipient,), mode=ACP_MODE, resolver=_endpoint_name)
+        endpoint = lookup["endpoint"]
+        requested = lookup["matched"]
+        resolved = target.recipient
         ttl = ttl_seconds
         if ttl is None:
             ttl = self.default_ttl_seconds if self.default_ttl_seconds is not None else endpoint.default_ttl_seconds

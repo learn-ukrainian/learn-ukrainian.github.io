@@ -40,7 +40,7 @@ from scripts.agent_runtime.adapters.acpx import (
     active_discussion_scope,
 )
 from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
-from scripts.agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
+from scripts.agent_runtime.kimi_admission import ACP_MODE, KimiAdmissionRefused
 from scripts.agent_runtime.result import Result
 from scripts.agent_runtime.runner import (
     _invoke_native_once,
@@ -1243,19 +1243,19 @@ def refuse_kimi_discussion(participants: Sequence[str], models: Mapping[str, str
     """Raise ``AcpxDiscussionError`` when any effective seat or model of a discussion is Kimi.
 
     The effective selection is every participant, its registered adapter
-    agent and pinned model, and every ``models`` override. Kimi seats never
-    join discussions, so this runs before any plane, store or channel is
-    opened.
+    agent and pinned model, and every ``models`` override, resolved and
+    admitted in one step (``resolve_and_admit``). Kimi seats never join
+    discussions, so this runs before any plane, store or channel is opened.
     """
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+
     if models is not None and not isinstance(models, Mapping):
         raise AcpxDiscussionError("models must be a participant-keyed mapping")
-    names = tuple(str(item).strip().lower() for item in participants)
-    routes = [ACPX_SUPPORTED_PARTICIPANTS.get(name) or {} for name in names]
     try:
-        refuse_kimi_if_disallowed(
-            (*names, *(route.get("agent") for route in routes)),
-            (*(route.get("model") for route in routes), *(str(value) for value in (models or {}).values())),
+        resolve_and_admit(
+            tuple(str(item).strip().lower() for item in participants),
             mode=ACP_MODE,
+            also_models=tuple(str(value) for value in (models or {}).values()),
         )
     except KimiAdmissionRefused as exc:
         raise AcpxDiscussionError(str(exc)) from exc

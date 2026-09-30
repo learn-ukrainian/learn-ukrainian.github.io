@@ -92,10 +92,11 @@ from .failover import (
     substitution_for_route,
     tool_config_with_route,
 )
-from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution, refuse_kimi_if_disallowed
+from .kimi_admission import ACP_MODE, KimiAdmissionRefused, refuse_kimi_execution
 from .primary_tree_watch import PrimaryTreeWatch
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
+from .target_admission import resolve_and_admit
 from .telemetry import InvocationTelemetry, codex_model_identity, resolve_invocation_telemetry
 from .trail_isolation import prepare_trail_isolation
 from .usage import has_headroom, write_record
@@ -3486,14 +3487,9 @@ def resolve_inter_agent_route(
     presence from inventing a new ACP provider route.
     """
     participant = str(agent).strip().lower()
-    raw_entry = ACPX_SUPPORTED_PARTICIPANTS.get(participant)
-    raw_fields = raw_entry if isinstance(raw_entry, dict) else {}
     try:
-        refuse_kimi_if_disallowed(
-            (participant, raw_fields.get("agent")),
-            (raw_fields.get("model"), model),
-            mode=ACP_MODE,
-        )
+        # The participant, its registered adapter agent and pin, and the override, admitted together.
+        resolve_and_admit((participant,), mode=ACP_MODE, model=model)
     except KimiAdmissionRefused as exc:
         raise InterAgentTransportError(str(exc)) from exc
     try:
@@ -3702,7 +3698,7 @@ def _invoke_direct_only(
     bounded ACPX comparison pilot is the only supported caller.
     """
     try:
-        refuse_kimi_if_disallowed((agent_name,), (model,), mode=ACP_MODE)
+        resolve_and_admit((agent_name,), mode=ACP_MODE, model=model)
     except KimiAdmissionRefused as exc:
         raise AgentUnavailableError(str(exc)) from exc
     try:

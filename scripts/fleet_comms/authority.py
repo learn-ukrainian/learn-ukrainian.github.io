@@ -21,13 +21,8 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.agent_runtime.kimi_admission import (
-    ACP_MODE,
-    BRIDGE_MODE,
-    effective_request_targets,
-    is_kimi_seat,
-    refuse_kimi_if_disallowed,
-)
+from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
+from scripts.agent_runtime.target_admission import AdmittedTarget, require_admitted, resolve_and_admit
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -121,6 +116,32 @@ def _normalize_recipients(recipients: Iterable[str] | None) -> tuple[str, ...]:
         return ()
     normalized = {_nonempty(recipient, field="recipient") for recipient in recipients}
     return tuple(sorted(normalized))
+
+
+def _admit_recipients(
+    recipients: Iterable[str | None],
+    *,
+    mode: str,
+    attachments: Iterable[Any] = (),
+) -> tuple[AdmittedTarget, ...]:
+    """Resolve and admit recipients in one step (whitespace-normalized names, as rows store them).
+
+    Raises ``KimiAdmissionRefused`` for a Kimi seat or model before any write.
+    """
+    names = tuple(" ".join(str(item or "").split()) for item in recipients)
+    return resolve_and_admit(names, mode=mode, attachments=attachments)
+
+
+def _admitted_subscribers(names: Iterable[str]) -> list[AdmittedTarget]:
+    """Admitted fan-out targets for stored subscribers; a stored Kimi subscriber gets no delivery."""
+    admitted: list[AdmittedTarget] = []
+    for name in names:
+        try:
+            admitted.extend(resolve_and_admit((name,), mode=BRIDGE_MODE))
+        except KimiAdmissionRefused:
+            continue
+    return admitted
+
 
 
 def _safe_json_mapping(value: Mapping[str, Any] | None) -> dict[str, Any]:
@@ -368,40 +389,49 @@ class AuthorityService:
 
         A Kimi subscriber is refused before any write: Kimi is not a bridge recipient.
         """
-        recipients = tuple(recipients)
-        refuse_kimi_if_disallowed(tuple(str(item or "") for item in recipients), mode=BRIDGE_MODE)
+        targets = _admit_recipients(recipients, mode=BRIDGE_MODE)
         channel_name = _nonempty(channel, field="channel")
-        recipients_norm = _normalize_recipients(recipients)
-        if not recipients_norm:
+        if not _normalize_recipients(target.recipient for target in targets):
             raise AuthorityServiceError("subscriber_required")
         subscriber_metadata = _safe_json_mapping(metadata)
         with self._write_transaction():
             channel_row = self._require_channel_tx(channel_name)
-            for recipient in recipients_norm:
-                existing = self._conn.execute(
-                    """SELECT metadata_json FROM authority_channel_subscribers
-                       WHERE channel_id = ? AND recipient = ?""",
-                    (str(channel_row["channel_id"]), recipient),
-                ).fetchone()
-                if existing is not None:
-                    existing_metadata = self._decode_mapping(
-                        existing["metadata_json"], field="subscriber_metadata"
-                    )
-                    if metadata is not None and existing_metadata != subscriber_metadata:
-                        raise AuthorityServiceError("subscriber_metadata_conflict")
-                    continue
-                self._conn.execute(
-                    """INSERT INTO authority_channel_subscribers(
-                        channel_id, recipient, metadata_json, created_at
-                    ) VALUES (?, ?, ?, ?)""",
-                    (
-                        str(channel_row["channel_id"]),
-                        recipient,
-                        _canonical_json(subscriber_metadata),
-                        _iso(),
-                    ),
-                )
+            # A repeated recipient finds its own row and is skipped.
+            for target in targets:
+                self._subscribe_tx(channel_row, target, metadata=metadata, subscriber_metadata=subscriber_metadata)
         return self.get_channel(channel_name)
+
+    def _subscribe_tx(
+        self,
+        channel_row: sqlite3.Row,
+        target: AdmittedTarget,
+        *,
+        metadata: Mapping[str, Any] | None,
+        subscriber_metadata: dict[str, Any],
+    ) -> None:
+        """Insert one admitted subscriber unless it is already subscribed with the same metadata."""
+        recipient = require_admitted(target).recipient
+        existing = self._conn.execute(
+            """SELECT metadata_json FROM authority_channel_subscribers
+               WHERE channel_id = ? AND recipient = ?""",
+            (str(channel_row["channel_id"]), recipient),
+        ).fetchone()
+        if existing is not None:
+            existing_metadata = self._decode_mapping(existing["metadata_json"], field="subscriber_metadata")
+            if metadata is not None and existing_metadata != subscriber_metadata:
+                raise AuthorityServiceError("subscriber_metadata_conflict")
+            return
+        self._conn.execute(
+            """INSERT INTO authority_channel_subscribers(
+                channel_id, recipient, metadata_json, created_at
+            ) VALUES (?, ?, ?, ?)""",
+            (
+                str(channel_row["channel_id"]),
+                recipient,
+                _canonical_json(subscriber_metadata),
+                _iso(),
+            ),
+        )
 
     def get_channel(self, name: str) -> AuthorityChannel:
         channel_name = _nonempty(name, field="channel")
@@ -514,16 +544,14 @@ class AuthorityService:
         An explicit Kimi recipient is refused before any write, and a Kimi
         subscriber gets no delivery: Kimi is not a bridge recipient.
         """
-        if recipients is not None:
-            recipients = tuple(recipients)
-            refuse_kimi_if_disallowed(tuple(str(item or "") for item in recipients), mode=BRIDGE_MODE)
+        targets = _admit_recipients(recipients, mode=BRIDGE_MODE) if recipients is not None else None
         message_key = idempotency_key or new_id("authority-message-key")
         with self._write_transaction():
             return self._publish_message_tx(
                 sender=sender,
                 body=body,
                 channel=channel,
-                recipients=recipients,
+                targets=targets,
                 kind=kind,
                 conversation_id=conversation_id,
                 in_reply_to=in_reply_to,
@@ -625,10 +653,9 @@ class AuthorityService:
         A Kimi recipient (or a Kimi ``requested_model``) is refused before any
         write: Kimi seats take web, UI and backend coding only.
         """
-        seats, models = effective_request_targets((str(recipient or ""),), None, metadata)
-        refuse_kimi_if_disallowed(seats, models, mode=ACP_MODE)
+        (target,) = _admit_recipients((recipient,), mode=ACP_MODE, attachments=(metadata,))
         key = idempotency_key or new_id("authority-request-key")
-        recipient_name = _nonempty(recipient, field="recipient")
+        recipient_name = _nonempty(target.recipient, field="recipient")
         self._ensure_channel(channel)
         request_metadata = _safe_json_mapping(metadata)
         payload = {
@@ -653,7 +680,7 @@ class AuthorityService:
                 sender=sender,
                 body=body,
                 channel=channel,
-                recipients=(recipient_name,),
+                targets=(target,),
                 kind="request",
                 provenance=provenance,
                 deadline_at=deadline_at,
@@ -688,10 +715,10 @@ class AuthorityService:
         A Kimi participant is refused before any write: Kimi seats never join
         discussions.
         """
-        refuse_kimi_if_disallowed(tuple(str(participant or "") for participant in participants), mode=ACP_MODE)
+        targets = _admit_recipients(participants, mode=ACP_MODE)
         key = idempotency_key or new_id("authority-discussion-key")
         channel_name = _nonempty(channel, field="channel")
-        participants_norm = _normalize_recipients(participants)
+        participants_norm = _normalize_recipients(target.recipient for target in targets)
         if not participants_norm:
             raise AuthorityServiceError("discussion_participants_required")
         if rounds not in {1, 2, 3}:
@@ -769,7 +796,7 @@ class AuthorityService:
                 sender="authority-service",
                 body=prompt,
                 channel=channel_name,
-                recipients=participants_norm,
+                targets=targets,
                 kind="discussion",
                 conversation_id=conversation_id,
                 correlation_id=correlation,
@@ -1159,8 +1186,8 @@ class AuthorityService:
 
         A Kimi recipient is refused before any write: Kimi is not a bridge recipient.
         """
-        refuse_kimi_if_disallowed((str(recipient or ""),), mode=BRIDGE_MODE)
-        recipient_name = _nonempty(recipient, field="recipient")
+        (target,) = _admit_recipients((recipient,), mode=BRIDGE_MODE)
+        recipient_name = _nonempty(target.recipient, field="recipient")
         worker = _nonempty(worker_id, field="worker_id")
         if lease_seconds <= 0 or max_attempts <= 0:
             raise AuthorityServiceError("lease_and_max_attempts_must_be_positive")
@@ -1682,7 +1709,8 @@ class AuthorityService:
                     sender=record["sender"],
                     body=record["body"],
                     channel=record["channel"],
-                    recipients=record["recipients"],
+                    targets=None,
+                    imported_recipients=record["recipients"],
                     kind=record["kind"],
                     conversation_id=record["conversation_id"],
                     in_reply_to=record["in_reply_to"],
@@ -1759,8 +1787,9 @@ class AuthorityService:
         sender: str,
         body: str,
         channel: str | None,
-        recipients: Iterable[str] | None,
+        targets: Iterable[AdmittedTarget] | None,
         kind: str,
+        imported_recipients: Iterable[str] | None = None,
         conversation_id: str | None = None,
         in_reply_to: str | None = None,
         correlation_id: str | None = None,
@@ -1781,17 +1810,20 @@ class AuthorityService:
         kind_name = _nonempty(kind, field="kind")
         key = _nonempty(idempotency_key, field="idempotency_key")
         channel_row = self._require_channel_tx(channel) if channel is not None else None
-        if recipients is None and channel_row is not None:
+        if imported_recipients is not None:
+            # Historical records keep the recipients they were written with.
+            recipients_norm = _normalize_recipients(imported_recipients)
+        elif targets is None and channel_row is not None:
             subscriber_rows = self._conn.execute(
                 """SELECT recipient FROM authority_channel_subscribers
                    WHERE channel_id = ? AND recipient != ? ORDER BY recipient ASC""",
                 (str(channel_row["channel_id"]), sender_name),
             ).fetchall()
             recipients_norm = tuple(
-                str(row["recipient"]) for row in subscriber_rows if not is_kimi_seat(str(row["recipient"]))
+                target.recipient for target in _admitted_subscribers(str(row["recipient"]) for row in subscriber_rows)
             )
         else:
-            recipients_norm = _normalize_recipients(recipients)
+            recipients_norm = _normalize_recipients(require_admitted(target).recipient for target in targets or ())
         revisions = self._normalize_context_revisions(context_revisions, channel_row)
         provenance_data = _safe_json_mapping(provenance)
         deadline = self._normalize_deadline(deadline_at)

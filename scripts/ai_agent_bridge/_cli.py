@@ -1943,10 +1943,10 @@ def _handle_ask_gemini(args):
 
 
 def _handle_slot_holder(args):
-    """Handle slot-holder subcommand."""
-    from scripts.orchestration.slot_routing import resolve_slot_holder
+    """Handle slot-holder subcommand (read-only lease facts; nothing is delivered)."""
+    from agent_runtime.target_admission import describe_slot_holder
 
-    res = resolve_slot_holder(args.slot)
+    res = describe_slot_holder(args.slot)
     if getattr(args, "json", False):
         print(json.dumps(res.to_dict(), indent=2))
     else:

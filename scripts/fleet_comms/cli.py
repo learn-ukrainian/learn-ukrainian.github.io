@@ -787,10 +787,11 @@ def _authority_root(args: argparse.Namespace) -> Path | None:
 
 def _refuse_kimi_recipients(recipients: list[str] | tuple[str, ...]) -> None:
     """Kimi is not a bridge recipient: refuse from the arguments alone, before the authority DB is opened."""
-    from scripts.agent_runtime.kimi_admission import BRIDGE_MODE, KimiAdmissionRefused, refuse_kimi_if_disallowed
+    from scripts.agent_runtime.kimi_admission import BRIDGE_MODE, KimiAdmissionRefused
+    from scripts.agent_runtime.target_admission import resolve_and_admit
 
     try:
-        refuse_kimi_if_disallowed(tuple(recipients), mode=BRIDGE_MODE)
+        resolve_and_admit(tuple(recipients), mode=BRIDGE_MODE)
     except KimiAdmissionRefused as exc:
         raise FleetCommsCliError(str(exc)) from exc
 

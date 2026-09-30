@@ -277,7 +277,7 @@ def test_a_cyrillic_free_component_is_admitted():
         ("scripts/api", "scripts/api/sources_router.py"),
         ("scripts/api/", "scripts/api/hramatka_"),
         ("scripts/orchestration/**", "scripts/orchestration/curriculum_"),
-        ("scripts/agent_runtime/**", "scripts/agent_runtime/adapters/kimi.py"),
+        ("scripts/agent_runtime/**", "scripts/agent_runtime/kimi_admission.py"),
         ("tests/api/test_*.py", "tests/api/test_hramatka_"),
     ],
 )
@@ -1322,15 +1322,20 @@ def test_compat_ask_impl_refuses_before_the_job_host_forward(monkeypatch):
         _acp_compat._run_compat_ask_impl("kimi", "Consult.", task_id="kimi-forward")
 
 
-def test_a_kimi_quota_substitute_is_refused_before_its_job_is_enqueued(monkeypatch):
+def test_a_kimi_quota_substitute_is_refused_before_its_job_is_enqueued(monkeypatch, tmp_path):
     from scripts.ai_agent_bridge import _acp_compat
     from scripts.fleet_comms import authority
 
+    config = tmp_path / "agent_fallback_substitutions.yaml"
+    config.write_text("dispatch_fallbacks:\n  codex: kimi\n", encoding="utf-8")
+    monkeypatch.setattr(_acp_compat, "_FALLBACK_SUBS_PATH", config)
     monkeypatch.setattr(authority, "AuthorityService", _fail)
+    # The substitute is resolved and admitted in one step: a Kimi substitute never becomes a target.
     with pytest.raises(ValueError, match=_TOKEN):
-        _acp_compat._run_single_acp_job(
-            "kimi", "Consult.", task_id="t", source=None, model=None, effort=None, review=False, hard_timeout=60
-        )
+        _acp_compat._resolve_quota_substitution("codex", "rate_limited", already_substituted=False)
+    # The job sink takes only an admitted target; a raw seat name is refused before the authority.
+    with pytest.raises(TypeError, match="AdmittedTarget"):
+        _acp_compat._run_single_acp_job("kimi", "Consult.", task_id="t", source=None, effort=None, review=False, hard_timeout=60)
 
 
 @pytest.mark.parametrize("extra", [[], ["--pr", "9158"], ["--review"]])
@@ -1358,11 +1363,12 @@ def test_ask_review_dispatch_refuses_before_the_temporary_prompt(monkeypatch):
 
 
 def test_ask_review_dispatch_command_never_selects_a_kimi_harness(tmp_path):
+    from scripts.agent_runtime.kimi_admission import REVIEW_MODE
+    from scripts.agent_runtime.target_admission import resolve_and_admit
     from scripts.ai_agent_bridge import _dispatch_wrappers
 
-    cmd = _dispatch_wrappers.build_ask_review_dispatch_command(
-        "claude", "t", tmp_path / "p.md", model=None, effort=None
-    )
+    (target,) = resolve_and_admit(("claude",), mode=REVIEW_MODE, review=True)
+    cmd = _dispatch_wrappers.build_ask_review_dispatch_command(target, "t", tmp_path / "p.md", effort=None)
     assert "--harness" not in cmd
 
 
