@@ -1139,12 +1139,13 @@ def post(
     ``verify_citations=False`` for synthetic test posts or system kinds
     where citation verification is not relevant.
 
-    Kimi is not a bridge recipient: a Kimi ``to_agents`` entry or ``to_model``
-    raises ``KimiAdmissionRefused`` before any broker access.
+    Kimi is not a bridge recipient: a Kimi ``to_agents`` entry or ``to_model``,
+    or a Kimi model or recipient in ``attachments``, raises
+    ``KimiAdmissionRefused`` before any broker access.
     """
     from ._acp_compat import refuse_kimi_recipients
 
-    refuse_kimi_recipients(to_agents or (), (to_model,))
+    refuse_kimi_recipients(to_agents or (), (to_model,), attachments=(attachments,))
     _validate_post_agent(from_agent)
     _validate_kind(kind)
     _validate_priority(priority)

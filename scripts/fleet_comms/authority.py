@@ -21,7 +21,13 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any, Literal
 
-from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, is_kimi_seat, refuse_kimi_if_disallowed
+from scripts.agent_runtime.kimi_admission import (
+    ACP_MODE,
+    BRIDGE_MODE,
+    effective_request_targets,
+    is_kimi_seat,
+    refuse_kimi_if_disallowed,
+)
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -619,11 +625,8 @@ class AuthorityService:
         A Kimi recipient (or a Kimi ``requested_model``) is refused before any
         write: Kimi seats take web, UI and backend coding only.
         """
-        refuse_kimi_if_disallowed(
-            (str(recipient or ""),),
-            ((metadata or {}).get("requested_model"),),
-            mode=ACP_MODE,
-        )
+        seats, models = effective_request_targets((str(recipient or ""),), None, metadata)
+        refuse_kimi_if_disallowed(seats, models, mode=ACP_MODE)
         key = idempotency_key or new_id("authority-request-key")
         recipient_name = _nonempty(recipient, field="recipient")
         self._ensure_channel(channel)

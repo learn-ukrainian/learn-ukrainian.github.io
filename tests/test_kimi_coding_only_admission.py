@@ -2050,6 +2050,136 @@ def test_every_kimi_recipient_entry_leaves_existing_wal_databases_untouched(writ
             writer.close()
 
 
+# --- a Kimi model or recipient named in request data is refused like an explicit one ------------
+
+_DATA_PAYLOADS = {
+    "to-model": {"to_model": "kimi-code/k3"},
+    "to-model-alias": {"to_model": "k3"},
+    "model": {"model": "kimi-code/k3"},
+    "target-model": {"target_model": "kimi-code/k3"},
+    "requested-model": {"requested_model": "kimi-code/k3"},
+    "to": {"to": "kimi"},
+    "to-llm": {"to_llm": "kimicc"},
+    "to-agent": {"to_agent": "kimi"},
+    "to-agents": {"to_agents": ["claude", "kimi"]},
+    "agent": {"agent": "acpx-kimi"},
+    "target": {"target": "kimi"},
+    "route": {"route": "acpx-kimi"},
+    "recipients": {"recipients": ["claude", "kimicc"]},
+    "participant": {"participant": "kimi"},
+}
+
+
+def _entry_send_message(_trap, payload, _path):
+    from scripts.ai_agent_bridge import _messaging
+
+    return _messaging.send_message("Consult.", to_llm="claude", data=json.dumps(payload))
+
+
+def _entry_send_cli(trap, _payload, path):
+    return _bridge("send", "Consult.", "--to", "claude", "--data", path)(trap)
+
+
+def _entry_ask_cli(trap, _payload, path):
+    return _bridge("ask-claude", "Consult.", "--task-id", "t", "--data", path)(trap)
+
+
+def _entry_post(_trap, payload, _path):
+    from scripts.ai_agent_bridge import _channels
+
+    return _channels.post("ops", "claude", "Consult.", to_agents=["claude"], attachments=[payload])
+
+
+def _entry_acp(_trap, payload, _path):
+    from scripts.ai_agent_bridge import _acp_compat
+
+    return _acp_compat.run_compat_ask("claude", "Consult.", task_id="t", data=json.dumps(payload))
+
+
+_DATA_ENTRIES = {
+    "send-message": _entry_send_message,
+    "send-cli": _entry_send_cli,
+    "ask-cli": _entry_ask_cli,
+    "channel-post": _entry_post,
+    "acp-ask": _entry_acp,
+}
+
+
+@pytest.mark.parametrize("live_wal", [False, True], ids=["wal-checkpointed", "wal-live"])
+@pytest.mark.parametrize("entry", _DATA_ENTRIES)
+@pytest.mark.parametrize("payload", _DATA_PAYLOADS)
+def test_kimi_named_in_request_data_refuses_with_zero_effects(write_trap, capsys, payload, entry, live_wal):
+    """The gate reads the merged metadata: data naming Kimi leaves every database and sidecar untouched."""
+    writers = _seed_broker(live_wal)
+    try:
+        attachment = write_trap.work / "attachment.json"
+        attachment.write_text(json.dumps(_DATA_PAYLOADS[payload]), encoding="utf-8")
+        before = _stat_tree(write_trap.state)
+        with write_trap.armed() as attempts:
+            try:
+                outcome = _DATA_ENTRIES[entry](write_trap, _DATA_PAYLOADS[payload], str(attachment))
+            except _WriteAttempt as exc:
+                outcome = exc
+            except SystemExit as exc:
+                outcome = exc.code
+            except Exception as exc:  # each entry point refuses with its own error type
+                outcome = exc
+        captured = capsys.readouterr()
+
+        assert attempts == []
+        assert _TOKEN in f"{outcome}\n{captured.out}\n{captured.err}"
+        assert _stat_tree(write_trap.state) == before
+    finally:
+        for writer in writers:
+            writer.close()
+
+
+def test_send_message_stores_no_kimi_row_for_data_supplied_model(write_trap):
+    """The probe that found the gap: neutral recipient, Kimi model only in ``data``."""
+    from scripts.ai_agent_bridge import _db, _messaging
+
+    with pytest.raises(ValueError, match=_TOKEN):
+        _messaging.send_message("q", to_llm="claude", data='{"to_model":"kimi-code/k3"}', quiet=True)
+    assert not _db.DB_PATH.exists()
+
+
+def test_explicit_model_replaces_the_data_model_as_before(write_trap, monkeypatch):
+    """An explicit non-Kimi model overrides a data ``to_model``: admitted, and the explicit model is stored."""
+    from scripts.ai_agent_bridge import _db, _messaging
+
+    monkeypatch.setattr(_messaging.subprocess, "run", lambda *_a, **_k: None)
+    msg_id = _messaging.send_message(
+        "q", to_llm="claude", to_model="claude-opus-5-5", data='{"to_model":"kimi-code/k3"}', quiet=True
+    )
+    conn = _db.get_db()
+    try:
+        stored = json.loads(conn.execute("SELECT data FROM messages WHERE id = ?", (msg_id,)).fetchone()[0])
+    finally:
+        conn.close()
+    assert stored["to_model"] == "claude-opus-5-5"
+
+
+def test_non_json_and_neutral_data_stay_admitted():
+    """Plain text, JSON arrays and neutral selector values are not refused."""
+    from scripts.ai_agent_bridge import _acp_compat
+
+    for data in (None, "plain text naming kimi in prose", "[\"kimi\"]", '{"to_model":"claude-opus-5-5","note":"kimi"}'):
+        assert _acp_compat.require_compat_target("claude", data=data) == "claude"
+    _acp_compat.refuse_kimi_recipients(("claude",), ("claude-opus-5-5",), attachments=({"to_model": "kimi-code/k3"},))
+
+
+def test_authority_request_metadata_is_gated(tmp_path):
+    """``enqueue_request`` refuses a Kimi model under any model key before writing."""
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with AuthorityService(root=tmp_path / "plane") as service:
+        for key in kimi_admission.MODEL_SELECTOR_KEYS:
+            with pytest.raises(kimi_admission.KimiAdmissionRefused):
+                service.enqueue_request(recipient="claude", body="q", metadata={key: "kimi-code/k3"})
+        job = service.enqueue_request(recipient="claude", body="q", metadata={"requested_model": "claude-opus-5-5"})
+    assert job.job_id
+
+
 class _KimiEffect(BaseException):
     """A Kimi-specific effect. A ``BaseException``, so no drain's ``except Exception`` can swallow it."""
 

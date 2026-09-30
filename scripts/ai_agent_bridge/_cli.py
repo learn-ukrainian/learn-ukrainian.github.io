@@ -1675,8 +1675,12 @@ def _handle_acp_compat(args, target: str) -> None:
         require_compat_target(target, model=model)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
-    content = sys.stdin.read() if args.content == "-" else args.content
     data = Path(args.data).read_text(encoding="utf-8") if getattr(args, "data", None) else None
+    try:
+        require_compat_target(target, model=model, data=data)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from exc
+    content = sys.stdin.read() if args.content == "-" else args.content
     task_id = getattr(args, "task_id", None)
     if not task_id:
         raise SystemExit(f"ask-{target} requires --task-id")
@@ -1825,7 +1829,7 @@ def _dispatch_headless_review(
     try:
         # Same legacy-alias resolution as the ACP path (e.g. hermes→deepseek,
         # gemini→agy) so `--agent` is a name `delegate.py dispatch` accepts.
-        dispatch_agent = require_compat_target(target, model=model)
+        dispatch_agent = require_compat_target(target, model=model, data=data)
     except ValueError as exc:
         raise SystemExit(str(exc)) from exc
 
@@ -1973,6 +1977,21 @@ def _resolve_backlog_warn_agent(args) -> str | None:
     return os.environ.get("SESSION_HANDOFF_AGENT") or None
 
 
+def _attachment_text(args) -> str | None:
+    """The ``--data`` attachment's text for the Kimi gate; None when absent or unreadable.
+
+    The command handler reads the same file and reports a read error itself,
+    before any effect; the gate only needs the text when there is some.
+    """
+    path = getattr(args, "data", None)
+    if not path:
+        return None
+    try:
+        return Path(path).read_text(encoding="utf-8")
+    except (OSError, ValueError):
+        return None
+
+
 def _kimi_request_error(args) -> str | None:
     """The Kimi refusal for a bridge command, decided from its arguments alone; None when admitted.
 
@@ -1991,15 +2010,16 @@ def _kimi_request_error(args) -> str | None:
     command = args.command or ""
     model = getattr(args, "to_model", None) or getattr(args, "model", None)
     inbox_command = getattr(args, "inbox_command", None)
+    data = _attachment_text(args)
     try:
         if command.startswith("ask-"):
-            refuse_kimi_compat(command.removeprefix("ask-"), model=model)
+            refuse_kimi_compat(command.removeprefix("ask-"), model=model, data=data)
         elif command == "process-ask":
-            refuse_kimi_compat(args.target, model=model)
+            refuse_kimi_compat(args.target, model=model, data=data)
         elif command.startswith("process"):
-            refuse_kimi_compat(command.removeprefix("process").removeprefix("-"), model=model)
+            refuse_kimi_compat(command.removeprefix("process").removeprefix("-"), model=model, data=data)
         elif command == "send":
-            refuse_kimi_recipients((args.to_llm,), (model,))
+            refuse_kimi_recipients((args.to_llm,), (model,), attachments=(data,))
         elif command == "inbox":
             refuse_kimi_recipients(
                 (getattr(args, "for_llm", None), getattr(args, "agent", None) if inbox_command else None)

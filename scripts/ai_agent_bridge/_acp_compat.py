@@ -35,49 +35,69 @@ _TARGETS = {
 }
 
 
-def require_compat_target(command_target: str, *, model: str | None = None) -> str:
+def require_compat_target(command_target: str, *, model: str | None = None, data: object = None) -> str:
     """Resolve a legacy command name before any sender or payload work.
 
-    A Kimi seat, or a Kimi model on any seat, raises ``KimiAdmissionRefused``
-    (a ``ValueError``): Kimi seats take web, UI and backend coding only, never
+    A Kimi seat, or a Kimi model on any seat or in the ``data`` attachment's
+    model/recipient keys, raises ``KimiAdmissionRefused`` (a ``ValueError``): Kimi seats take web, UI and backend coding only, never
     ACP asks, consults, discussions or reviews.
     """
-    refuse_kimi_compat(command_target, model=model)
+    refuse_kimi_compat(command_target, model=model, data=data)
     try:
         return _TARGETS[command_target]
     except KeyError as exc:
         raise ValueError(f"legacy ask target {command_target!r} has no enabled ACP route") from exc
 
 
-def refuse_kimi_compat(command_target: str, *, model: str | None = None) -> None:
-    """The Kimi gate for one ACP ask: the command target, its participant, adapter agent, pin and override."""
+def refuse_kimi_compat(command_target: str, *, model: str | None = None, data: object = None) -> None:
+    """The Kimi gate for one ACP ask: the command target, its participant, adapter agent, pin, override and attachment."""
     from agent_runtime.kimi_admission import ACP_MODE
 
-    _refuse_kimi_seats((command_target,), (model,), mode=ACP_MODE)
+    _refuse_kimi_seats((command_target,), (model,), mode=ACP_MODE, attachments=(data,))
 
 
-def refuse_kimi_recipients(recipients: Iterable[str | None], models: Iterable[str | None] = ()) -> None:
+def refuse_kimi_recipients(
+    recipients: Iterable[str | None],
+    models: Iterable[str | None] = (),
+    *,
+    attachments: Iterable[object] = (),
+) -> None:
     """Kimi is not a bridge recipient: refuse any Kimi recipient seat, its registered route, or a Kimi model.
 
-    Raises ``KimiAdmissionRefused`` (a ``ValueError``). Decided from the names
-    and the static route registry alone, so every send, post, channel and
-    inbox entry calls it before any broker access.
+    ``attachments`` are the request's ``data`` payloads (JSON strings, mappings
+    or lists of mappings): the model and recipient keys they carry are gated
+    with the explicit names, after the explicit model overrides an attached
+    ``to_model`` as ``send_message`` stores it. Raises ``KimiAdmissionRefused``
+    (a ``ValueError``). Decided from the names and the static route registry
+    alone, so every send, post, channel and inbox entry calls it before any
+    broker access.
     """
     from agent_runtime.kimi_admission import BRIDGE_MODE
 
-    _refuse_kimi_seats(recipients, models, mode=BRIDGE_MODE)
+    _refuse_kimi_seats(recipients, models, mode=BRIDGE_MODE, attachments=attachments)
 
 
-def _refuse_kimi_seats(seats: Iterable[str | None], models: Iterable[str | None], *, mode: str) -> None:
+def _refuse_kimi_seats(
+    seats: Iterable[str | None],
+    models: Iterable[str | None],
+    *,
+    mode: str,
+    attachments: Iterable[object] = (),
+) -> None:
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-    from agent_runtime.kimi_admission import refuse_kimi_if_disallowed
+    from agent_runtime.kimi_admission import effective_request_targets, refuse_kimi_if_disallowed
 
-    names = [str(seat or "").strip().lower() for seat in seats]
+    explicit_models = [model for model in models if model]
+    effective_seats, effective_models = effective_request_targets(
+        seats, explicit_models[0] if explicit_models else None, *attachments
+    )
+    effective_models.extend(explicit_models[1:])
+    names = [str(seat or "").strip().lower() for seat in effective_seats]
     participants = [_TARGETS.get(name) or name for name in names]
     routes = [ACPX_SUPPORTED_PARTICIPANTS.get(participant) or {} for participant in participants]
     refuse_kimi_if_disallowed(
         (*names, *participants, *(route.get("agent") for route in routes)),
-        (*(route.get("model") for route in routes), *models),
+        (*(route.get("model") for route in routes), *effective_models),
         mode=mode,
     )
 
@@ -634,7 +654,7 @@ def run_compat_ask(
     hard_timeout: int | None = None,
 ) -> object:
     """Execute one normal ACP ask with fail-open body-free usage telemetry."""
-    participant = require_compat_target(command_target, model=model)
+    participant = require_compat_target(command_target, model=model, data=data)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
     # Every ACP ask starts with the rules core: refuse before telemetry, the
@@ -718,7 +738,7 @@ def _run_compat_ask_impl(
     itself out of quota fails loudly with no second hop. Every other failure
     class is unchanged.
     """
-    participant = require_compat_target(command_target, model=model)
+    participant = require_compat_target(command_target, model=model, data=data)
     if not task_id or not task_id.strip():
         raise ValueError("ACP ask requires a non-empty task_id")
     if hard_timeout is None:

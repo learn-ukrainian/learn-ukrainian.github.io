@@ -28,6 +28,7 @@ live in ``kimi_boundary``.
 from __future__ import annotations
 
 import fnmatch
+import json
 import os
 import posixpath
 import re
@@ -507,6 +508,85 @@ def curriculum_track_reason(track: str | None, *, repo_root: Path | None) -> str
     if text in levels:
         return f"--research-track {track!r} is a curriculum track"
     return None
+
+
+# Metadata keys that can name the model or the recipient of a request. A stored
+# ``data`` payload is merged into a message's metadata, so the gate reads these
+# keys from every attachment, not just the explicit arguments.
+MODEL_SELECTOR_KEYS = ("to_model", "model", "target_model", "requested_model")
+SEAT_SELECTOR_KEYS = (
+    "to",
+    "to_llm",
+    "to_agent",
+    "to_agents",
+    "agent",
+    "agents",
+    "target",
+    "route",
+    "recipient",
+    "recipients",
+    "participant",
+    "participants",
+)
+
+
+def attachment_metadata(data: Any) -> dict[str, Any]:
+    """The metadata a ``data`` attachment carries.
+
+    A JSON-object string (or a mapping) is the metadata; any other text is
+    stored as ``{"raw": text}``, exactly as ``send_message`` merges it.
+    """
+    if isinstance(data, Mapping):
+        return dict(data)
+    if not data or not isinstance(data, str):
+        return {}
+    if data.startswith("{"):
+        try:
+            loaded = json.loads(data)
+        except (json.JSONDecodeError, ValueError):
+            return {"raw": data}
+        if isinstance(loaded, dict):
+            return loaded
+    return {"raw": data}
+
+
+def _selector_names(value: Any) -> list[str]:
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, (list, tuple, set, frozenset)):
+        return [name for item in value for name in _selector_names(item)]
+    return []
+
+
+def effective_request_targets(
+    recipients: Iterable[str | None],
+    model: str | None = None,
+    *attachments: Any,
+) -> tuple[list[str | None], list[str | None]]:
+    """The final ``(seats, models)`` a request addresses after its attachments are merged.
+
+    Precedence is the one ``send_message`` stores: an explicit ``model`` replaces
+    an attachment's ``to_model``; every other model or recipient key an
+    attachment carries (``MODEL_SELECTOR_KEYS``, ``SEAT_SELECTOR_KEYS``) is kept
+    as written. Attachments may be JSON strings, mappings or lists of mappings.
+    A selector value is read as both a seat and a model, so an alias under any
+    key is caught.
+    """
+    seats: list[str | None] = list(recipients)
+    models: list[str | None] = [model]
+    for attachment in attachments:
+        items = attachment if isinstance(attachment, (list, tuple)) else (attachment,)
+        for item in items:
+            metadata = attachment_metadata(item)
+            for key in MODEL_SELECTOR_KEYS:
+                if key == "to_model" and model:
+                    continue  # the explicit model overrides the attached one
+                models.extend(_selector_names(metadata.get(key)))
+            for key in SEAT_SELECTOR_KEYS:
+                names = _selector_names(metadata.get(key))
+                seats.extend(names)
+                models.extend(names)
+    return seats, models
 
 
 def _kimi_seat_name(participants: Iterable[str | None], models: Iterable[str | None]) -> str | None:

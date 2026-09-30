@@ -132,12 +132,16 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
     excerpt plus an explicit ``TRUNCATED`` footer (path + sha256 + bytes) so
     consumers never mistake a transport clip for a short model reply.
 
-    Kimi is not a bridge recipient: a Kimi ``to_llm`` or ``to_model`` raises
-    ``KimiAdmissionRefused`` before the sidecar or any broker connection.
+    Kimi is not a bridge recipient: a Kimi ``to_llm``, or a Kimi model or
+    recipient in the final merged metadata (an explicit ``to_model`` replaces
+    the ``data`` one), raises ``KimiAdmissionRefused`` before the sidecar or
+    any broker connection.
     """
+    from agent_runtime.kimi_admission import attachment_metadata
+
     from ._acp_compat import refuse_kimi_recipients
 
-    refuse_kimi_recipients((to_llm,), (to_model,))
+    refuse_kimi_recipients((to_llm,), (to_model,), attachments=(data,))
     content = redact_text(content) or ""
     data = redact_text(data) if data is not None else None
 
@@ -159,12 +163,7 @@ def send_message(content: str, task_id: str | None = None, msg_type: str = "resp
     timestamp = datetime.now(UTC).isoformat()
 
     # Store model info in data as JSON if provided
-    metadata = {}
-    if data:
-        try:
-            metadata = json.loads(data) if isinstance(data, str) and data.startswith('{') else {"raw": data}
-        except (json.JSONDecodeError, ValueError):
-            metadata = {"raw": data}
+    metadata = attachment_metadata(data)
     if from_model:
         metadata["from_model"] = from_model
     if to_model:
