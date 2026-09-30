@@ -202,7 +202,7 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
     lines: list[str] = []
     native = info.get("codexbar") if isinstance(info.get("codexbar"), dict) else {}
 
-    # Claude: interactive weekly + agentic monthly (Fable/dispatch burns agentic).
+    # Claude: interactive weekly, scoped Fable weekly, and separate agentic monthly.
     interactive = info.get("interactive") if isinstance(info.get("interactive"), dict) else None
     agentic = info.get("agentic_pool") if isinstance(info.get("agentic_pool"), dict) else None
     if interactive is not None:
@@ -221,12 +221,34 @@ def _named_allotments(lane: str, info: dict[str, Any]) -> list[str]:
         spent = agentic.get("spent_cycle_usd")
         cap = agentic.get("monthly_cap_usd")
         lines.append(
-            "  agentic/Fable (monthly): "
+            "  agentic (monthly): "
             f"status={agentic.get('status', 'unknown')} "
             f"burn={_pct(agentic.get('burn_pct_cycle'))} "
             f"spent={_usd(spent)}/{_usd(cap)} "
             f"active={agentic.get('active')}"
         )
+
+    if lane == "codex":
+        balance = info.get("credit_balance", native.get("credit_balance"))
+        inventory = info.get("reset_credits", native.get("reset_credits")) or {}
+        count = inventory.get("available_count")
+        expirations = inventory.get("expires_at")
+        lines.append(f"  credits: balance={balance if _is_number(balance) else 'unknown'}")
+        lines.append(
+            f"  free full resets: available={count if _is_number(count) else 'unknown'} "
+            f"expires={', '.join(_resets_text(value) if value is not None else 'no expiry' for value in expirations) if isinstance(expirations, list) and expirations else 'unknown'}"
+        )
+    extra = {}
+    if lane == "claude":
+        extra["Fable only (weekly)"] = info.get("fable_weekly", native.get("fable_weekly"))
+    elif lane == "gemini":
+        third_party = info.get("claude_gpt_windows", native.get("claude_gpt_windows")) or {}
+        extra = {"Claude/GPT (5h)": third_party.get("five_hour"),
+                 "Claude/GPT (weekly)": third_party.get("weekly")}
+    for label, block in extra.items():
+        block = block if isinstance(block, dict) else {}
+        lines.append(f"  {label}: used={_pct(block.get('used_pct'))} "
+                     f"rem={_pct(block.get('remaining_pct'))} resets={_resets_text(block.get('resets_at'))}")
 
     # Cursor / named provider pools (Cursor Models, Other Models, Grok Bot).
     provider = info.get("provider_windows")

@@ -6,7 +6,6 @@ Provides background-threaded asynchronous caching of provider dashboard metrics.
 
 from __future__ import annotations
 
-import contextlib
 import json
 import math
 import os
@@ -354,16 +353,16 @@ def _http_json_request(
                 return resp.status, None, None
             return resp.status, json.loads(raw.decode("utf-8")), None
     except urllib.error.HTTPError as exc:
-        err_body = ""
-        with contextlib.suppress(Exception):
-            err_body = exc.read(4096).decode("utf-8", errors="replace")
-        parsed = None
-        if err_body:
-            with contextlib.suppress(json.JSONDecodeError, ValueError):
-                parsed = json.loads(err_body)
-        return exc.code, parsed, err_body or exc.reason
+        # Provider bodies/reasons may echo credentials and identifiers. Keep only
+        # the numeric status, including when the body happens to be valid JSON.
+        return exc.code, None, f"HTTP {exc.code}"
     except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, ValueError) as exc:
-        return 0, None, str(exc)
+        if isinstance(exc, TimeoutError) or (
+            isinstance(exc, urllib.error.URLError) and isinstance(exc.reason, TimeoutError)
+        ):
+            return 0, None, "request timed out"
+        return 0, None, "request failed"
+
 
 
 def _read_json_file(path: Path) -> dict[str, Any] | None:
@@ -957,7 +956,7 @@ def _window_from_used_pct(used_pct: float, *, window_minutes: int, resets_at: st
     return {
         "windowMinutes": window_minutes,
         "usedPercent": used_pct,
-        "resetsAt": resets_at,
+        "resetsAt": resets_at if _parse_resets_at_any(resets_at) is not None else None,
     }
 
 
@@ -986,7 +985,7 @@ def _probe_claude_native(*, timeout_s: float) -> dict[str, Any]:
     if status != 200 or not isinstance(payload, dict):
         return _normalize_provider_error(
             "claude",
-            {"message": err or f"Claude usage HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
+            {"message": "Claude usage request timed out" if status == 0 and "timed out" in (err or "") else f"Claude usage HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
         )
     limits = payload.get("limits") if isinstance(payload.get("limits"), list) else []
     primary = None
@@ -995,7 +994,7 @@ def _probe_claude_native(*, timeout_s: float) -> dict[str, Any]:
         if not isinstance(item, dict):
             continue
         window_type = str(item.get("type") or item.get("window_type") or "").lower()
-        used = item.get("utilization") or item.get("used_percent") or item.get("usedPercent")
+        used = next((item[k] for k in ("utilization", "used_percent", "usedPercent") if item.get(k) is not None), None)
         if used is None and isinstance(item.get("used"), (int, float)):
             total = item.get("limit") or item.get("total")
             if isinstance(total, (int, float)) and total:
@@ -1022,11 +1021,54 @@ def _probe_claude_native(*, timeout_s: float) -> dict[str, Any]:
                     primary = target
                 else:
                     weekly = target
-    usage = {"primary": primary, "secondary": weekly}
+    fable = None
+    for item in limits:
+        if not isinstance(item, dict) or item.get("kind") != "weekly_scoped" or item.get("group") != "weekly":
+            continue
+        scope = item.get("scope") if isinstance(item.get("scope"), dict) else {}
+        model = scope.get("model") if isinstance(scope.get("model"), dict) else {}
+        if model.get("display_name") != "Fable":
+            continue
+        used = _coerce_float(item.get("percent"))
+        if used is not None:
+            fable = _window_from_used_pct(used, window_minutes=WEEKLY_WINDOW_MINUTES, resets_at=item.get("resets_at"))
+            break
+    usage = {"primary": primary, "secondary": weekly, "fable_weekly": fable}
     return _normalize_provider_data(
         "claude",
         {"provider": "claude", "source": "claude_oauth", "usage": usage},
     )
+
+
+def _codex_reset_inventory(payload: Any, *, now: datetime | None = None) -> dict[str, Any] | None:
+    """Read CodexBar's GET inventory; discard identifiers and expired credits.
+
+    The provider count alone cannot prove availability after expiry. Malformed
+    inventory stays unknown; an explicit empty inventory is a valid zero.
+    """
+    if not isinstance(payload, dict) or not isinstance(payload.get("credits"), list):
+        return None
+    count = payload.get("available_count")
+    if not isinstance(count, int) or isinstance(count, bool) or count < 0:
+        return None
+    current = now or datetime.now(UTC)
+    expirations = []
+    for credit in payload["credits"]:
+        if not isinstance(credit, dict):
+            return None
+        if not isinstance(credit.get("status"), str):
+            return None
+        if credit.get("status") != "available":
+            continue
+        raw_expiry = credit.get("expires_at")
+        expiry = _parse_resets_at_any(raw_expiry)
+        if raw_expiry is not None and expiry is None:
+            return None
+        if expiry is None or expiry > current:
+            expirations.append(expiry.isoformat().replace("+00:00", "Z") if expiry else None)
+    expirations = sorted(expirations, key=lambda value: value or "9999")
+    return {"available_count": len(expirations), "expires_at": expirations,
+            "fetched_at": current.isoformat().replace("+00:00", "Z")}
 
 
 def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
@@ -1050,7 +1092,7 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
     if status != 200 or not isinstance(payload, dict):
         return _normalize_provider_error(
             "codex",
-            {"message": err or f"Codex usage HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
+            {"message": "Codex usage request timed out" if status == 0 and "timed out" in (err or "") else f"Codex usage HTTP {status}", "kind": "fetch_error", "code": status or "FETCH_ERROR"},
         )
     rate = payload.get("rate_limit") if isinstance(payload.get("rate_limit"), dict) else payload
     primary = rate.get("primary_window") if isinstance(rate, dict) else None
@@ -1065,7 +1107,7 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
         """
         if not isinstance(win, dict):
             return None
-        used = win.get("used_percent") or win.get("usedPercent")
+        used = win.get("used_percent") if win.get("used_percent") is not None else win.get("usedPercent")
         if used is None and isinstance(win.get("used"), (int, float)):
             limit = win.get("limit")
             if isinstance(limit, (int, float)) and limit:
@@ -1110,6 +1152,16 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
             primary_mapped = secondary_mapped
             secondary_mapped = None
 
+    reset_status, reset_payload, _ = _http_json_request(
+        "GET",
+        "https://chatgpt.com/backend-api/wham/rate-limit-reset-credits",
+        headers={"Authorization": f"Bearer {token}", "Accept": "application/json",
+                 "OpenAI-Beta": "codex-1", "originator": "Codex Desktop"},
+        timeout_s=timeout_s,
+    )
+    reset_credits = _codex_reset_inventory(reset_payload if reset_status == 200 else None)
+    credits = payload.get("credits") if isinstance(payload.get("credits"), dict) else {}
+    credit_balance = _coerce_float(credits.get("balance"))
     usage = {"primary": primary_mapped, "secondary": secondary_mapped}
     if usage["primary"] is None and usage["secondary"] is None:
         return _normalize_provider_error(
@@ -1122,7 +1174,8 @@ def _probe_codex_native(*, timeout_s: float) -> dict[str, Any]:
         )
     return _normalize_provider_data(
         "codex",
-        {"provider": "codex", "source": "codex_oauth", "usage": usage, "openaiDashboard": {}},
+        {"provider": "codex", "source": "codex_oauth", "usage": usage, "openaiDashboard": {},
+         "reset_credits": reset_credits, "credit_balance": credit_balance},
     )
 
 
@@ -1388,6 +1441,21 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
                 "code": "NEED_LOGIN",
             },
         )
+    claude_gpt = {"five_hour": None, "weekly": None}
+    for group in groups:
+        if not isinstance(group, dict):
+            continue
+        name = str(group.get("name") or "").lower()
+        if "claude" not in name and "gpt" not in name:
+            continue
+        buckets = _agy_usage_buckets_by_window(group)
+        for key, aliases, minutes in (("five_hour", ("5h", "five_hour", "session"), 300),
+                                     ("weekly", ("weekly",), WEEKLY_WINDOW_MINUTES)):
+            bucket = next((buckets[k] for k in aliases if k in buckets), {})
+            used = _used_pct_from_remaining_fraction(bucket.get("remaining_fraction"))
+            if used is not None:
+                claude_gpt[key] = _window_from_used_pct(used, window_minutes=minutes, resets_at=bucket.get("reset_time"))
+        break
     by_window = _agy_usage_buckets_by_window(gemini_group)
     five_h = by_window.get("5h") or by_window.get("five_hour") or by_window.get("session")
     weekly = by_window.get("weekly")
@@ -1425,7 +1493,7 @@ def _probe_antigravity_native(*, timeout_s: float) -> dict[str, Any]:
         {
             "provider": "gemini",
             "source": "agy_cli_usage",
-            "usage": {"primary": primary, "secondary": secondary},
+            "usage": {"primary": primary, "secondary": secondary, "claude_gpt_windows": claude_gpt},
         },
     )
 
@@ -2171,6 +2239,15 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
         "error_code": None,
         "source": data.get("source") or "native_probe",
         "fetched_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
+    }
+    result["credit_balance"] = _coerce_float(data.get("credit_balance"))
+    result["reset_credits"] = data.get("reset_credits")
+    fable = usage.get("fable_weekly")
+    result["fable_weekly"] = _window_block(fable, _used_pct(fable))
+    third_party = usage.get("claude_gpt_windows") or {}
+    result["claude_gpt_windows"] = {
+        key: _window_block(third_party.get(key), _used_pct(third_party.get(key)))
+        for key in ("five_hour", "weekly")
     }
     if cursor_provider_windows is not None:
         result["provider_windows"] = cursor_provider_windows
