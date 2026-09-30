@@ -278,3 +278,82 @@ def test_foreign_proper_noun_fallback_does_not_exempt_class_d_coinages(
     assert gate["passed"] is False
     assert gate["foreign_proper_noun_attested_words"] == ["Йоль"]
     assert {"дерево-явір", "першопочаток"} <= set(gate["missing"])
+
+
+def test_casefolded_fallback_casing_accepts_sentence_initial_hyphenated_compound() -> None:
+    """Sentence-initial hyphenation is one capital; later segment capitals are not.
+
+    «Кобзарсько-Лірницький» stays valid only because each hyphen segment is
+    already title case. The sentence-initial rule does not decide that form.
+    """
+    valid = linear_pipeline._vesum_casefolded_fallback_casing_is_valid
+    proper = linear_pipeline._is_titlecase_ukrainian_proper_noun_surface
+
+    assert valid("Кобзарсько-лірницький") is True
+    assert valid("кобзарсько-лірницький") is True
+    assert valid("Івано-Франківськ") is True
+    assert proper("Кобзарсько-Лірницький") is True
+    assert valid("Кобзарсько-Лірницький") is True
+    assert valid("ІРан") is False
+    assert valid("ЙОль") is False
+    assert valid("ГАГілка") is False
+    assert valid("ІРАН") is False
+    assert valid("кобзарсько-Лірницький") is False
+
+
+def _write_fixture_heritage(path: Path, lemma: str | None) -> None:
+    if lemma is None:
+        path.write_text("attestations: []\n", encoding="utf-8")
+        return
+    path.write_text(
+        "attestations:\n"
+        f"  - lemma: {lemma}\n"
+        "    is_russianism: false\n"
+        "    citations:\n"
+        "      - dictionary_slug: fixture\n"
+        f"        url: https://slovnyk.me/dict/fixture/{lemma}\n",
+        encoding="utf-8",
+    )
+
+
+def test_folk_vesum_gate_fixture_accepts_sentence_initial_hyphenated_compound(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """«Кобзарсько-лірницький» passes when the fixture heritage index attests it.
+
+    Fixture VESUM has no row for the compound or its parts (VESUM itself has
+    no whole-word entry either). An empty index leaves the surface missing.
+    A capital after the lowercase first segment stays missing (#9344).
+    """
+    passage = "Кобзарсько-лірницький дерево."
+    with _fixture_vesum_gate(tmp_path, monkeypatch) as (fixture, gate):
+        parts = ["кобзарсько-лірницький", "кобзарсько", "кобзарський", "лірницький"]
+        assert verify_words(parts, db_path=fixture) == {word: [] for word in parts}
+
+        empty_index = tmp_path / "empty-heritage.yaml"
+        _write_fixture_heritage(empty_index, None)
+        monkeypatch.setattr(linear_pipeline, "FOLK_HERITAGE_ATTESTATIONS_PATH", empty_index)
+        unattested = gate(passage)
+        assert unattested["passed"] is False
+        assert unattested["missing"] == ["Кобзарсько-лірницький"]
+        assert unattested["heritage_attested"] == 0
+
+        heritage_index = tmp_path / "heritage.yaml"
+        _write_fixture_heritage(heritage_index, "кобзарсько-лірницький")
+        monkeypatch.setattr(linear_pipeline, "FOLK_HERITAGE_ATTESTATIONS_PATH", heritage_index)
+
+        accepted = gate(passage)
+        assert accepted["passed"] is True
+        assert accepted["missing"] == []
+        assert accepted["heritage_attested_words"] == ["Кобзарсько-лірницький"]
+
+        lowercase = gate("кобзарсько-лірницький дерево")
+        assert lowercase["passed"] is True
+        assert lowercase["missing"] == []
+        assert lowercase["heritage_attested_words"] == ["кобзарсько-лірницький"]
+
+        internal_capital = gate("кобзарсько-Лірницький дерево")
+        assert internal_capital["passed"] is False
+        assert internal_capital["missing"] == ["кобзарсько-Лірницький"]
+        assert internal_capital["heritage_attested_words"] == []

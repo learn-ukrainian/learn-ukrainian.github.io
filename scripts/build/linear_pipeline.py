@@ -11329,14 +11329,18 @@ def _vesum_casefolded_fallback_casing_is_valid(surface: str) -> bool:
     """Whether ``surface`` may inherit a casefolded VESUM or heritage hit.
 
     Casefolded lookup treats «іран» and «Іран» as one lemma. A valid
-    realization of that lemma is the lowercase form or Ukrainian title case.
-    An internal capital («ІРан») is not a form of the attested lemma.
+    realization is lowercase, Ukrainian title case, or a sentence-initial
+    capital: the first letter uppercase and every later letter lowercase,
+    including across a hyphen («Кобзарсько-лірницький»). An internal
+    capital («ІРан», «кобзарсько-Лірницький») is not a form of that lemma.
     """
     token = _normalize_for_vesum(surface).strip().strip(_VESUM_WORD_EDGE_CHARS)
     if not token or not _CYRILLIC_LETTER_RE.search(token):
         return True
     letters = [char for char in token if char.isalpha()]
     if not letters or all(char.islower() for char in letters):
+        return True
+    if letters[0].isupper() and all(char.islower() for char in letters[1:]):
         return True
     return _is_titlecase_ukrainian_proper_noun_surface(token)
 
