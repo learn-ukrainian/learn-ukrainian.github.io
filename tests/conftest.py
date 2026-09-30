@@ -49,6 +49,9 @@ SESSION_IDENTITY_ENV_VARS = (
     # Launcher driver identity (scripts/lib/launcher_core.sh).
     "SESSION_EPIC",
     "SESSION_HANDOFF_AGENT",
+    # Rules-core seat of the launched session (scripts/lib/rules_core.sh); its
+    # delegate.py workers and ACP calls inherit it.
+    "LU_RULES_SEAT",
     # Stream lease capsule (scripts/lib/session_supervisor.sh).
     "SESSION_STREAM_ID",
     "SESSION_STREAM_SESSION_ID",
@@ -1032,36 +1035,6 @@ def _isolate_dispatch_task_store(_dispatch_task_store_base: Path, monkeypatch: p
     return isolated
 
 
-@pytest.fixture(scope="session")
-def _rules_core_absent_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    """A checkout view without the rules core (``tests/rules_core_view.py``)."""
-    from tests.rules_core_view import checkout_view
-
-    return checkout_view(tmp_path_factory.mktemp("rules-core-absent") / "checkout", None)
-
-
-@pytest.fixture(autouse=True)
-def _rules_core_absent_when_marked(request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Run a ``rules_core_absent`` test as if the checkout had no rules core.
-
-    Launchers, ``delegate.py``, ACP calls and bridge builders prepend the rules core
-    (``scripts/lib/rules_core.py``). Only tests that pin an exact argv or prompt block
-    order carry the marker; every other test runs with the checkout's real core.
-    In-process code sees the view's rules directory through the loader's
-    ``core_dir`` resolver; ``run_launcher`` starts subprocess launchers from the view.
-    A seat exported by a launched session never leaks into a test.
-    """
-    monkeypatch.delenv("LU_RULES_SEAT", raising=False)
-    if request.node.get_closest_marker("rules_core_absent") is None:
-        return
-    from scripts.lib import rules_core
-    from tests import test_launcher_contract
-
-    view = request.getfixturevalue("_rules_core_absent_root")
-    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: view / rules_core.RULES_DIR_REL)
-    monkeypatch.setattr(test_launcher_contract, "LAUNCH_ROOT", view)
-
-
 class SocketBlockedError(RuntimeError):
     """Raised when a unit test attempts an un-opted outbound network connection (#6968)."""
 
@@ -1665,6 +1638,19 @@ def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item
     for item in items:
         if item.nodeid in selected:
             item.add_marker(pytest.mark.flaky(reruns=1, rerun_except=[TIMEOUT_PATTERN]))
+    # The marker's fixture lives in tests/rules_core_view.py (it links the whole
+    # checkout, so this conftest must not import it); a module that forgets the
+    # import would silently run a marked test with the core.
+    unserved = [
+        item.nodeid
+        for item in items
+        if item.get_closest_marker("rules_core_absent") is not None
+        and "rules_core_absent_when_marked" not in getattr(item, "fixturenames", ())
+    ]
+    if unserved:
+        raise pytest.UsageError(
+            f"rules_core_absent tests whose module does not import the rules_core_absent_when_marked fixture: {unserved}"
+        )
     missing = _sparse_missing_trees()
     if not missing:
         return

@@ -73,7 +73,7 @@ EXPECTED_BODIES = {
     "unlp-2026-gec-minimal-edit": 3409,
 }
 EXPECTED_RESEARCH_COMPONENT_BYTES = 107
-EXPECTED_STATE_MANIFEST_BYTES = {"disabled": 1048, "enabled": 1167}
+EXPECTED_STATE_MANIFEST_BYTES = {"disabled": 1196, "enabled": 1315}
 
 
 @contextmanager

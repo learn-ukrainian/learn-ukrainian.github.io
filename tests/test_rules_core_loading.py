@@ -26,7 +26,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lib import rules_core
-from tests.rules_core_view import checkout_view
+from tests.rules_core_view import absent_checkout, checkout_view
 from tests.test_launcher_contract import REPO, hermes_stub_env
 
 REAL_CORE_DIR = REPO / rules_core.RULES_DIR_REL
@@ -53,6 +53,12 @@ def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
     if CORE_DIR == REAL_CORE_DIR:
         return REPO
     return checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", FIXTURE_CORE_DIR)
+
+
+@pytest.fixture
+def absent_root(request: pytest.FixtureRequest) -> Path:
+    """The checkout view without the rules core (shared with ``rules_core_absent`` tests)."""
+    return absent_checkout(request)
 
 
 def _hostile_core_dir(tmp_path: Path) -> Path:
@@ -162,7 +168,7 @@ def test_toml_and_kimi_forms_round_trip() -> None:
         rules_core.kimi_agent_file_text("x ${injected} y")
 
 
-def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, _rules_core_absent_root: Path) -> None:
+def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, absent_root: Path) -> None:
     script = core_root / "scripts" / "lib" / "rules_core.py"
     ok = subprocess.run(
         [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "json"],
@@ -174,7 +180,7 @@ def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, _rules_co
     assert ok.returncode == 0, ok.stderr
     payload = json.loads(ok.stdout)
     assert (payload["first_anchor"], payload["last_anchor"]) == _anchors("core")
-    absent = _rules_core_absent_root
+    absent = absent_root
     missing = subprocess.run(
         [sys.executable, os.fspath(absent / "scripts" / "lib" / "rules_core.py"), "--root", os.fspath(absent)],
         capture_output=True,
@@ -390,8 +396,8 @@ def test_launcher_ignores_the_old_env_override(tmp_path: Path, core_root: Path) 
     assert _carrier(argv, "--append-system-prompt") == rules_core.core_block("core")
 
 
-def test_launcher_without_the_core_warns_and_still_launches(tmp_path: Path, _rules_core_absent_root: Path) -> None:
-    result, argv = _launch(_rules_core_absent_root, "start-claude.sh", (), tmp_path, None)
+def test_launcher_without_the_core_warns_and_still_launches(tmp_path: Path, absent_root: Path) -> None:
+    result, argv = _launch(absent_root, "start-claude.sh", (), tmp_path, None)
     assert "--append-system-prompt" not in argv
     assert "WARNING: rules core not loaded" in result.stderr
 
@@ -478,6 +484,32 @@ def _plan_context(plan) -> str:
     return "\n".join(parts)
 
 
+# Every CLI a WORKER_ROWS adapter resolves at plan time; stubs keep the rows host-independent.
+_WORKER_CLIS = ("agy", "claude", "codex", "cursor-agent", "gemini", "grok", "hermes", "kimi", "opencode")
+
+
+def _stub_worker_clis(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Put stub CLIs first on PATH so ``build_invocation`` never needs a real binary.
+
+    Only the plan is built; nothing is executed except the Claude version probe,
+    which the stub answers with a supported version. GLM's China-egress guard
+    refuses under CI markers before any process runs; scrub them as the GLM
+    adapter tests do (the guard has its own tests).
+    """
+    bin_dir = tmp_path / "stub-bin"
+    bin_dir.mkdir()
+    for name in _WORKER_CLIS:
+        stub = bin_dir / name
+        stub.write_text('#!/bin/sh\necho "9.9.9 (stub)"\n', encoding="utf-8")
+        stub.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}")
+    monkeypatch.setenv("LEARN_UK_KIMI_BIN", str(bin_dir / "kimi"))
+    from scripts.agent_runtime.adapters.glm import _CI_ENV_VARS
+
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
+
+
 @pytest.mark.parametrize(("row", "adapter", "mode", "tool_config"), WORKER_ROWS, ids=[row[0] for row in WORKER_ROWS])
 def test_worker_row_carries_the_core(
     row, adapter, mode, tool_config, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
@@ -485,6 +517,7 @@ def test_worker_row_carries_the_core(
     import importlib
 
     _, prompt = _dispatched_worker_prompt(tmp_path, monkeypatch, [])
+    _stub_worker_clis(tmp_path, monkeypatch)
     module, cls = adapter.split(":")
     plan = getattr(importlib.import_module(module), cls)().build_invocation(
         prompt=prompt,
