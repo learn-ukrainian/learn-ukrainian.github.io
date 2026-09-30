@@ -10,6 +10,7 @@ The negation particle is the A1 word store's record W-061 (VESUM entry 226767).
 from __future__ import annotations
 
 import copy
+import hashlib
 import sqlite3
 from pathlib import Path
 from types import SimpleNamespace
@@ -19,7 +20,7 @@ import yaml
 
 from scripts.build.fresh import cli
 from scripts.build.fresh.candidates import item_candidates
-from scripts.build.fresh.requires_confirm import questions_from_draft, record_answers
+from scripts.build.fresh.requires_confirm import questions_from_draft, record_answers, write_questions
 from scripts.build.fresh.runner import NEGATION_PARTICLE_RECORD, check_4_activities, check_7_a1_choices
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import receipts
@@ -1244,6 +1245,39 @@ def test_requires_record_rejects_invalid_answers(tmp_path: Path) -> None:
         "options": [{**answer["options"][0], "judgement": "invalid"}, {**answer["options"][1], "judgement": "valid"}],
     }
     assert record(wrong_key)["items"][0]["decision"] == "deny"
+
+
+def test_requires_prompt_bytes_preserve_quotes_markup_and_ukrainian(tmp_path: Path) -> None:
+    batch = {
+        "lesson": {"level": "a1", "slug": "requires-confirm", "n": 1},
+        "inputs": {},
+        "questions": [
+            {
+                "activity": "choice",
+                "item": index,
+                "sentence": sentence,
+                "options": ["'книгу' < > &", '"книги" < > &'],
+                "key_index": index,
+                "requires": {"Case": "Acc", "Number": "Sing"},
+                "payload_sha256": str(index) * 64,
+            }
+            for index, sentence in enumerate(['Можна "___" < > &?', "Можна '___' < > &?"])
+        ],
+    }
+
+    write_questions(tmp_path, 1, batch)
+
+    raw = (tmp_path / "lesson-1.requires-confirm.prompt.md").read_bytes()
+    # Pin the complete output captured before sharing the Jinja environment.
+    assert hashlib.sha256(raw).hexdigest() == "98828c78e6ebb6a1c31c991868e940b2976baa0cae015d976600b6a5934f9998"
+    rendered = raw.decode("utf-8")
+    for question in batch["questions"]:
+        assert f"Sentence: {question['sentence']}" in rendered
+        for index, option in enumerate(question["options"]):
+            suffix = " [key]" if index == question["key_index"] else ""
+            assert f"- {index}: {option}{suffix}\n" in rendered
+    assert not any(entity in rendered for entity in ("&lt;", "&gt;", "&amp;", "&#39;", "&#34;", "&quot;"))
+    assert yaml.safe_load((tmp_path / "lesson-1.requires-questions.yaml").read_text(encoding="utf-8")) == batch
 
 
 def test_requires_cli_writes_questions_prompt_and_denial(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

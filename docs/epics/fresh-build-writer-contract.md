@@ -83,7 +83,7 @@ or `explanation` is subject to resolver, inventory, stress and immersion checks.
 
 `kind: form` tests one taught A1 group (`Gender`, `Number`, `Case`, `Person`, `VerbForm`).
 At A1, case-choice items after a negated verb are refused unless a preposition or an agreeing adjective directly before the blank fixes the form.
-The trigger is conservative for finite-verb homographs such as «не три» and «не стали».
+The trigger conservatively includes finite-verb homographs even when a non-verb reading is also possible.
 All options from one lemma force this kind. It supplies `tests_feature`, aligned
 `option_records` (or the fill-in `record`), and `requires`: **all** A1 group values imposed
 on the slot by the full sentence, not the key's features. A finite verb slot

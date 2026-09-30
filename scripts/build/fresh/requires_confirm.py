@@ -6,8 +6,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
+from scripts.build.fresh.prompt import _environment
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import codes, receipts
 from scripts.curriculum.resolver.inputs import ResolverError
@@ -61,7 +61,7 @@ def write_questions(state_dir: Path, n: int, batch: dict[str, Any]) -> None:
     questions_path = state_dir / f"lesson-{n}.requires-questions.yaml"
     lock.write(questions_path, lock.yaml_bytes(batch))
     prompt = (
-        Environment(loader=FileSystemLoader(PROMPTS_DIR), undefined=StrictUndefined, autoescape=False)
+        _environment(PROMPTS_DIR)
         .get_template("requires-confirm.md.j2")
         .render(batch=batch)
     )
