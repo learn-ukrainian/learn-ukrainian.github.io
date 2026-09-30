@@ -1,0 +1,101 @@
+request_schema: 1
+module: a1/special-signs
+texts:
+  - id: T-001
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100}
+    span: {first_words: "ь\nБачу ь (м’який знак).", last_words: 'рись [–• = ]'}
+    supports: 'Primer part 1, printed p. 102 (catalog heading p. 104): the soft sign and the sourced hard/soft pairs тин/тінь, син/синь and рис/рись. This held-back letter precedes the part-2 inventory.'
+  - id: T-002
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0035}
+    span: {first_words: 'Ї ї', last_words: '[ –•| =•|–•– ]'}
+    supports: 'Primer part 2, printed p. 36 (catalog heading p. 38): Ї represents [й] and [і], with the printed word row.'
+  - id: T-003
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0039}
+    span: {first_words: 'Я я', last_words: '[ ц и|б у|л′ а ]'}
+    supports: 'Primer part 2, printed p. 40 (catalog heading p. 42): Я has two sounds or one vowel, with word-start and post-consonant sound models.'
+  - id: T-004
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043}
+    span: {first_words: 'Ю ю', last_words: '[ л′ у|п и н ]'}
+    supports: 'Primer part 2, printed p. 44 (catalog heading p. 46): Ю has two sounds or one vowel, with the paired sound models for юрта and люпин.'
+  - id: T-005
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0047}
+    span: {first_words: 'Є є', last_words: '— єн єт єс'}
+    supports: 'Primer part 2, printed p. 48 (catalog heading p. 50): Є has two sounds or one vowel, with post-vowel and post-consonant word models and contrasting sound rows.'
+  - id: T-006
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0051}
+    span: {first_words: 'Ц ц Бачу Ц', last_words: 'іц'}
+    supports: 'Primer part 2, printed p. 52 (catalog heading p. 54): Ц follows Є, with hard and soft sound models and CV/VC reading rows.'
+  - id: T-007
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0055}
+    span: {first_words: 'Щ щ', last_words: 'щедрівка'}
+    supports: 'Primer part 2, printed p. 56 (catalog heading p. 58): Щ follows Ц and represents [шч], with the word and reading rows.'
+  - id: T-008
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0059}
+    span: {first_words: 'Ф ф', last_words: 'фонтан фініш ферма'}
+    supports: 'Primer part 2, printed p. 60 (catalog heading p. 62): the Ф glyph, name and [ф] sound, with reading rows. This is native-letter evidence, not an English visual look-alike claim.'
+  - id: T-009
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0063}
+    span: {first_words: "дж\nБачу Дж, дж (дж).", last_words: 'лина'}
+    supports: 'Primer part 2, printed p. 64 (catalog heading p. 66): дж follows Ф, with a single [дж] sound and word-building models.'
+  - id: T-010
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0065}
+    span: {first_words: "дз\nБачу Дз, дз (дз).", last_words: 'дзвонила'}
+    supports: 'Primer part 2, printed p. 66 (catalog heading p. 68): дз follows дж and has hard and soft sound models [дз] and [дз′].'
+  - id: T-011
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0067}
+    span: {first_words: "’\n’ е\nм ’ я", last_words: 'п’ють в’юнок п’ята'}
+    supports: 'Primer part 2, printed p. 68 (catalog heading p. 70): the apostrophe follows дз, with word contrasts and apostrophe-bearing reading models.'
+  - id: T-012
+    source: {table: textbooks, chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001}
+    span: {first_words: 'Буква А а', last_words: 'и С с ес Я я я'}
+    supports: 'Zabolotnyi grade-5 textbook, catalog p. 2: the full 33-letter alphabet table, uppercase and lowercase glyphs, dictionary order and letter names.'
+  - id: T-013
+    source: {table: textbooks, chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063}
+    span: {first_words: 'Букви та звуки', last_words: 'ь М’якість приголосного: день [ден′]'}
+    supports: 'Zabolotnyi, printed p. 84 (catalog heading p. 87): sound values of Ї and Щ; both values of Я, Ю and Є and their contexts; joined дж/дз sounds and the morpheme-boundary exception; the soft sign.'
+  - id: T-014
+    source: {table: textbooks, chunk_id: 5-klas-ukrmova-avramenko-2022_s0077}
+    span: {first_words: 'До речі… М’який знак', last_words: 'мальок [мал′ок].'}
+    supports: 'Avramenko, printed p. 76: the soft sign has no sound of its own and marks the preceding consonant as soft.'
+  - id: T-015
+    source: {table: textbooks, chunk_id: 5-klas-ukrmova-avramenko-2022_s0133}
+    span: {first_words: 'Апостроф позначає роздільну вимову', last_words: 'свято — зв’язок.'}
+    supports: 'Avramenko, printed p. 131: the apostrophe marks separate pronunciation of hard consonants before [йа], [йу], [йе], [йі], with whole source contrasts.'
+  - id: T-016
+    source: {table: textbooks, chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0056}
+    span: {first_words: 'Тверді приголосні М’які приголосні', last_words: '[г], [к], [х], [ґ]–'}
+    supports: 'Zabolotnyi, printed p. 75 (catalog heading p. 78): [дз] has a paired soft sound; [дж] belongs to the hushing class without a paired soft sound. Read together with T-017 rather than asserting an absolute absence of phonetic softening.'
+  - id: T-017
+    source: {table: textbooks, chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0057}
+    span: {first_words: 'Напівпом’якшені приголосні', last_words: '2. Перед [і] приголосні м’які або напівпом’якшені.'}
+    supports: 'Zabolotnyi, printed p. 76 (catalog heading p. 79): hushing consonants have no paired soft consonants but may be partly softened; this qualifies the hard/soft classification in T-016.'
+  - id: T-018
+    source: {table: textbooks, chunk_id: uni-ukrmova-orthography-strokal-2021_s0431}
+    span: {first_words: 'ІІІ. F і ph передаються літерою ф:', last_words: 'фая нс, федеративний тощо.'}
+    supports: 'Strokal, catalog p. 233, section 21: F and ph are rendered with ф in borrowed words. This correspondence does not establish a visual look-alike claim.'
+  - id: T-019
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0015_w005}
+    span: {first_words: 'are marked by [′]', last_words: '3    Soft consonants always happen before:'}
+    supports: 'ULP Season 1 lesson 15: English-supported hard/soft consonant sound pairs and an aloud-reading exercise; adult-L2 presentation evidence.'
+exercises:
+  - id: X-001
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100}
+    span: {first_words: 'тин [–• – ]', last_words: 'рись [–• = ]'}
+    pattern: 'Hear and read the printed hard/soft minimal pairs; do not compose replacements from memory.'
+standard:
+  - {id: S-001, lines: '571-572'}
+unsupported:
+  - id: U-001
+    claim: 'The required named English-speaker teaching point classifying Ф as a visual look-alike has no identified supporting T- or X- source. T-008 establishes the native glyph and sound, T-012 establishes the alphabet table, and T-018 establishes F/ph-to-ф correspondence, but none establishes visual similarity or an English-reader look-alike trap. These narrower claims are not substituted for the required claim. Planning stopped before lesson, word-request or grammar authoring.'
+    searches:
+      - {tool: 'sources.search_text', query: 'Ф English; Ф Latin; Ф латинська (subject ukrmova); Ф схожа (subject bukvar); Cyrillic alphabet; ф f (source_file uni-ukrmova-orthography-strokal-2021). Returned material did not establish the required visual look-alike point.'}
+      - {tool: 'sources.search_sources', query: 'літера Ф латинська F схожість (track a1). No supporting visual-comparison teaching record identified.'}
+      - {tool: 'sources.get_chunk_context', query: '1-klas-bukvar-zaharijchuk-2025-2_s0059; 5-klas-ukrmova-zabolotnyi-2023_s0001; uni-ukrmova-orthography-strokal-2021_s0431. Native-letter, alphabet and transliteration evidence respectively; no visual look-alike statement.'}
+      - {tool: 'read-only corpus query: textbooks', query: 'ULP seasons 1-6 and anna-ohoiko-*; regex look.like|similar.*letter|same.*letter|Latin.*letter|Cyrillic.*letter|letter.*English|Greek in chunks containing Ф or ф. Candidate passages concerned English lessons, letters as correspondence, Greek culture or generic Cyrillic learning, not the visual shape of Ф.'}
+      - {tool: 'sources.search_external', query: 'alphabet, channel ulp_youtube. Per-letter pronunciation transcripts retrieved; they do not supply a T- or X- visual-comparison record.'}
+  - id: U-002
+    claim: 'The required Standard alphabet citation at canonical newline-numbered lines 571-572 cannot be built correctly by this base. S-001 requested 571-572 but contains a blank line and the heading for Catalog V instead of the alphabet requirement. The canonical file hash is 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac. scripts/curriculum/evidence/sources.py get_standard_lines() uses str.splitlines(), which also treats the file form-feed page breaks as line separators. S-001 is retained as diagnostic evidence of the incorrect extraction, not as alphabet coverage. The request does not substitute another range; correcting the helper is outside this packet owned paths.'
+    searches:
+      - {tool: 'nl -ba on canonical Standard text', query: 'docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:571-572 contains section 4.1.1 on the Ukrainian alphabet, printed and handwritten letters, uppercase and lowercase letters.'}
+      - {tool: 'read-only canonical text comparison', query: 'read_text().split(newline) versus read_text().splitlines() at one-based indices 571-572: the first gives the alphabet requirement; the second gives a blank line and the Catalog V heading.'}
+      - {tool: 'read-only source inspection', query: 'scripts/curriculum/evidence/sources.py:992-997 get_standard_lines() calls content.splitlines(); build-pack writes the resulting wrong slice into S-001 and pack-verify confirms that same slice.'}
