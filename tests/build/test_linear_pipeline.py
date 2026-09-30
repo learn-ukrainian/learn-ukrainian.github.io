@@ -3,7 +3,6 @@ from __future__ import annotations
 import json
 import re
 from collections.abc import Callable
-from functools import partial
 from pathlib import Path
 
 import pytest
@@ -242,15 +241,9 @@ def test_invoke_writer_routes_supported_writers(
     tmp_path: Path,
     writer: str,
     agent_name: str,
-    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     calls = []
     deploy_target = tmp_path / ".claude/agents/curriculum-writer.md"
-    monkeypatch.setattr(
-        linear_pipeline,
-        "ensure_claude_writer_agent_deployed",
-        partial(linear_pipeline.ensure_claude_writer_agent_deployed, target_path=deploy_target),
-    )
 
     class Result:
         response = "writer output"

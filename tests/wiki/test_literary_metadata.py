@@ -44,9 +44,7 @@ def test_builder_schema_and_insert_include_literary_metadata(tmp_path, monkeypat
 
     monkeypatch.setattr(build_sources_db, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(build_sources_db, "LOG_DIR", tmp_path / "logs")
-    # The report default is imported before PROJECT_ROOT is overridden.
-    report_path = tmp_path / "section_extraction_report.md"
-    monkeypatch.setattr(build_sources_db, "DEFAULT_REPORT_PATH", report_path)
+    report_path = tmp_path / "corpus_audit" / "section_extraction_report.md"
     db_path = tmp_path / "sources.db"
     build_sources_db.build(
         db_path=db_path,

@@ -18,11 +18,20 @@ from itertools import chain
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 MONITORED_CHECKOUT_PATHS: tuple[str, ...] = (
     "site/src/data/lexicon-manifest.json",
     "logs/mcp-sources-requests.jsonl",
+)
+
+# Two small, known default outputs: inspect only these at test boundaries.
+# The complete watched set is still checked once at session completion.
+ATTRIBUTED_CHECKOUT_PATHS: tuple[str, ...] = (
+    ".claude/agents/curriculum-writer.md",
+    "data/corpus_audit/section_extraction_report.md",
 )
 
 # Root -> (watched immediate children, live-runtime exclusions relative to root).
@@ -155,6 +164,7 @@ class CheckoutWriteGuard:
         self._before_tracked_sigs: dict[str, _FileSig] = {}
         self._before_logs: dict[str, _FileSig] = {}
         self._before_tree_files: dict[str, tuple[int, int]] = {}
+        self._test_violations: list[str] = []
         self._is_git_repo = (self.root / ".git").exists()
         self.snapshot()
 
@@ -315,11 +325,41 @@ def pytest_sessionstart(session: Any) -> None:
     session.config._checkout_write_guard = CheckoutWriteGuard()
 
 
+def _attribution_signatures(root: Path) -> dict[str, tuple[int, int] | None]:
+    """Stat only the known targets; never scan trees or read corpus content."""
+    signatures = {}
+    for rel in ATTRIBUTED_CHECKOUT_PATHS:
+        try:
+            metadata = (root / rel).stat()
+        except FileNotFoundError:
+            signatures[rel] = None
+        else:
+            signatures[rel] = (metadata.st_mtime_ns, metadata.st_size) if stat.S_ISREG(metadata.st_mode) else None
+    return signatures
+
+
+@pytest.hookimpl(hookwrapper=True, tryfirst=True)
+def pytest_runtest_protocol(item: Any, nextitem: Any) -> Iterator[None]:
+    """Attribute known writes across a test's setup, call, and teardown."""
+    guard = getattr(item.config, "_checkout_write_guard", None)
+    before = _attribution_signatures(guard.root) if guard is not None else {}
+    yield
+    after = _attribution_signatures(guard.root) if guard is not None else {}
+    for rel, old in before.items():
+        new = after[rel]
+        if old == new:
+            continue
+        action = "created" if old is None else "deleted" if new is None else "modified/appended"
+        guard._test_violations.append(
+            f"guarded checkout file {action}: {rel} (test: {item.nodeid})",
+        )
+
+
 def pytest_sessionfinish(session: Any, exitstatus: int) -> None:
     """Check for checkout mutations at test session completion."""
     guard = getattr(session.config, "_checkout_write_guard", None)
     if guard is not None:
-        violations = guard.check()
+        violations = guard._test_violations + guard.check()
         if violations:
             session.exitstatus = 1
             terminal = session.config.pluginmanager.get_plugin("terminalreporter")

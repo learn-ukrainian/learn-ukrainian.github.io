@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import importlib
 import os
 import shutil
+import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -11,6 +13,8 @@ from types import SimpleNamespace
 
 import pytest
 
+from scripts.build.linear_pipeline import ensure_claude_writer_agent_deployed
+from scripts.wiki.extract_sections import extract_sections
 from tests.helpers import checkout_write_guard
 from tests.helpers.checkout_write_guard import (
     PROJECT_ROOT,
@@ -62,6 +66,163 @@ def _init_git_repo(path: Path) -> None:
     subprocess.run(["git", "init"], cwd=path, capture_output=True, check=True, timeout=30)
     subprocess.run(["git", "config", "user.name", "Test User"], cwd=path, capture_output=True, check=True, timeout=30)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=path, capture_output=True, check=True, timeout=30)
+
+
+@pytest.mark.parametrize("name", ["scripts.build.linear_pipeline", "build.linear_pipeline"])
+def test_shared_writer_default_deploys_outside_checkout(tmp_path: Path, name: str) -> None:
+    module = importlib.import_module(name)
+    deploy = ensure_claude_writer_agent_deployed if name.startswith("scripts.") else module.ensure_claude_writer_agent_deployed
+    result = deploy()
+    target = tmp_path / ".claude" / "agents" / "curriculum-writer.md"
+    assert result["path"] == str(target)
+    assert target.read_bytes() == module.CLAUDE_WRITER_AGENT_SOURCE.read_bytes()
+    assert deploy()["changed"] is False
+
+
+@pytest.mark.parametrize("prefix", ["scripts.wiki", "wiki"])
+@pytest.mark.parametrize("via_builder", [False, True], ids=["direct-default", "builder-global"])
+def test_shared_section_report_default_writes_outside_checkout(
+    tmp_path: Path, prefix: str, via_builder: bool,
+) -> None:
+    db = tmp_path / "sections.db"
+    with sqlite3.connect(db) as conn:
+        conn.execute("""CREATE TABLE textbooks (
+            id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT, text TEXT,
+            source_file TEXT, grade TEXT, author TEXT, author_uk TEXT, char_count INTEGER
+        )""")
+    if via_builder:
+        builder = importlib.import_module(f"{prefix}.build_sources_db")
+        report = builder._extract_sections_with_university_grade_adapter(db)
+    else:
+        extractor = importlib.import_module(f"{prefix}.extract_sections")
+        # The qualified alias was imported during collection, before fixtures.
+        extract = extract_sections if prefix.startswith("scripts.") else extractor.extract_sections
+        report = extract(db)
+    output = tmp_path / "corpus_audit" / "section_extraction_report.md"
+    assert output.is_file()
+    assert "Status: **OK**" in output.read_text(encoding="utf-8")
+    assert report.total_chunks == 0
+
+
+@pytest.mark.parametrize("rel", [
+    ".claude/agents/curriculum-writer.md",
+    "data/corpus_audit/section_extraction_report.md",
+])
+@pytest.mark.parametrize("change", ["create", "rewrite", "same-content", "delete", "unchanged"])
+def test_protocol_attributes_only_current_test_changes(
+    tmp_path: Path, rel: str, change: str,
+) -> None:
+    output = tmp_path / rel
+    output.parent.mkdir(parents=True)
+    if change != "create":
+        output.write_text("before", encoding="utf-8")
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    item = SimpleNamespace(config=SimpleNamespace(_checkout_write_guard=guard), nodeid="sample.py::test_writer")
+    protocol = checkout_write_guard.pytest_runtest_protocol(item, None)
+    next(protocol)
+    if change == "delete":
+        output.unlink()
+    elif change != "unchanged":
+        previous_mtime = output.stat().st_mtime_ns if output.exists() else 0
+        output.write_text("before" if change == "same-content" else "after", encoding="utf-8")
+        os.utime(output, ns=(previous_mtime + 1, previous_mtime + 1))
+    with pytest.raises(StopIteration):
+        next(protocol)
+    if change == "unchanged":
+        assert guard._test_violations == []
+    else:
+        action = {
+            "create": "created", "rewrite": "modified/appended",
+            "same-content": "modified/appended", "delete": "deleted",
+        }[change]
+        assert guard._test_violations == [
+            f"guarded checkout file {action}: {rel} (test: sample.py::test_writer)",
+        ]
+    # A later unchanged test must not inherit attribution from the first one.
+    item.nodeid = "sample.py::test_reader"
+    protocol = checkout_write_guard.pytest_runtest_protocol(item, None)
+    next(protocol)
+    with pytest.raises(StopIteration):
+        next(protocol)
+    assert not any("test_reader" in violation for violation in guard._test_violations)
+
+
+def test_protocol_without_session_guard() -> None:
+    protocol = checkout_write_guard.pytest_runtest_protocol(SimpleNamespace(config=SimpleNamespace()), None)
+    next(protocol)
+    with pytest.raises(StopIteration):
+        next(protocol)
+
+
+def test_protocol_stats_only_two_known_targets(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    guard = CheckoutWriteGuard(repo_root=tmp_path)
+    item = SimpleNamespace(config=SimpleNamespace(_checkout_write_guard=guard), nodeid="sample.py::test_reader")
+    inspected = []
+    original_stat = Path.stat
+
+    def recording_stat(path, *args, **kwargs):
+        inspected.append(path.relative_to(tmp_path).as_posix())
+        return original_stat(path, *args, **kwargs)
+
+    def forbid_io(*args, **kwargs):
+        raise AssertionError("per-test attribution must not read, scan, or invoke Git")
+
+    monkeypatch.setattr(Path, "stat", recording_stat)
+    monkeypatch.setattr(Path, "read_bytes", forbid_io)
+    monkeypatch.setattr(os, "walk", forbid_io)
+    monkeypatch.setattr(subprocess, "run", forbid_io)
+    protocol = checkout_write_guard.pytest_runtest_protocol(item, None)
+    next(protocol)
+    with pytest.raises(StopIteration):
+        next(protocol)
+    assert inspected == [
+        ".claude/agents/curriculum-writer.md", "data/corpus_audit/section_extraction_report.md",
+    ] * 2
+
+
+def test_protocol_names_setup_call_and_teardown_writers(tmp_path: Path) -> None:
+    """Exercise the real pytest hook order without writing to this checkout."""
+    sample = tmp_path / "test_sample.py"
+    sample.write_text('''from pathlib import Path
+import pytest
+
+@pytest.fixture
+def writer(request):
+    phase, rel = request.param
+    output = Path(__file__).parent / rel
+    output.parent.mkdir(parents=True, exist_ok=True)
+    if phase == "setup":
+        output.write_text(phase)
+    yield phase, output
+    if phase == "teardown":
+        output.write_text(phase)
+
+@pytest.mark.parametrize("writer", [
+    (phase, rel)
+    for rel in (".claude/agents/curriculum-writer.md", "data/corpus_audit/section_extraction_report.md")
+    for phase in ("setup", "call", "teardown")
+], indirect=True)
+def test_writes(writer):
+    phase, output = writer
+    if phase == "call":
+        output.write_text(phase)
+''', encoding="utf-8")
+    bootstrap = (
+        "import sys; from pathlib import Path; import pytest; "
+        "from tests.helpers import checkout_write_guard as plugin; "
+        f"plugin.PROJECT_ROOT = Path({str(tmp_path)!r}); "
+        f"sys.exit(pytest.main(['-q', '--confcutdir={tmp_path}', {str(sample)!r}], plugins=[plugin]))"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", bootstrap], cwd=PROJECT_ROOT,
+        capture_output=True, text=True, timeout=60,
+    )
+    assert result.returncode == 1, result.stdout + result.stderr
+    assert "6 passed" in result.stdout
+    attributed = [line for line in result.stdout.splitlines() if "(test:" in line]
+    assert len(attributed) == 6, result.stdout
+    for index in range(6):
+        assert any(f"test_sample.py::test_writes[writer{index}]" in line for line in attributed)
 
 
 def test_guard_detects_tracked_file_edit_in_fixture_repo(tmp_path: Path) -> None:
