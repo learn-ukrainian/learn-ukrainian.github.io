@@ -716,6 +716,67 @@ def test_a_budget_substitution_onto_kimi_is_refused_before_cleanup_and_archiving
     assert substituted == ["codex"]
 
 
+@pytest.mark.parametrize(
+    ("agent", "model"),
+    [
+        ("codex", "kimi-code/k3"),  # the reviewer's case: Codex→Cursor would replace the model with grok-4.7
+        ("codex", "k3"),  # a catalog alias of the Kimi model
+        ("gemini", "kimi-code/k3"),  # a retired CLI name, resolved to agy by the route
+        ("glm", "kimi-code/k3"),  # a retired CLI name, resolved to cursor by the route
+    ],
+)
+def test_an_explicit_kimi_model_is_refused_before_substitution_probes_records_or_worktrees(
+    no_spawn, capsys, monkeypatch, agent, model
+):
+    """The original request is gated before the route resolves: no Monitor or model probe, task file or worktree."""
+    monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    for effect in (
+        "_fetch_routing_budget",  # the Monitor budget probe
+        "_resolve_agent_with_budget_guard",
+        "_resolve_substitution_model",
+        "_adapter_model_rejection",  # the substitute adapter's model probe
+        "_ensure_worktree",
+        "_check_capacity_hint",
+        "_sweep_runtime_tmp_orphans",
+        "_archive_task_artifacts",
+        "_run_preflight_triage",
+    ):
+        monkeypatch.setattr(delegate, effect, _fail)
+    argv = ["dispatch", "--agent", agent, "--model", model, "--mode", "read-only", "--task-id", "kimi-model-sub"]
+    _assert_refused(no_spawn, capsys, [*argv, "--prompt", "Look at it."], "--mode read-only")
+    assert not (_REPO_ROOT / ".worktrees" / "dispatch" / "cursor" / "kimi-model-sub").exists()
+
+
+def test_an_admitted_route_substitutes_after_the_original_request_is_gated(no_spawn, monkeypatch):
+    """A non-Kimi request still takes its budget substitute, and the worker launches the substituted route."""
+    monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    seen: dict[str, object] = {}
+
+    def substitute(agent, **kwargs):
+        seen.update(agent=agent, fallbacks=kwargs["fallbacks"])
+        return "cursor"
+
+    monkeypatch.setattr(delegate, "_resolve_agent_with_budget_guard", substitute)
+    monkeypatch.setattr(delegate, "_resolve_substitution_model", lambda *_a: ("grok-4.7", "catalog-default"))
+
+    class Gated(Exception):
+        pass
+
+    gate = delegate._kimi_dispatch_gate
+
+    def stop_after_the_gate(*args, **kwargs):
+        raise Gated(gate(*args, **kwargs))
+
+    monkeypatch.setattr(delegate, "_kimi_dispatch_gate", stop_after_the_gate)
+    argv = ["dispatch", "--agent", "codex", "--model", "gpt-6.1-sol", "--mode", "read-only", "--task-id", "sub"]
+    with pytest.raises(Gated) as gated:
+        delegate.main([*argv, "--prompt", "Look at it."])
+    refusal, _start, target = gated.value.args[0]
+    assert refusal is None
+    assert delegate._worker_route_argv(target) == ["--agent", "cursor", "--model", "grok-4.7"]
+    assert seen["agent"] == "codex" and seen["fallbacks"].get("codex") == "cursor"
+
+
 def _commit_all(repo: Path, message: str) -> str:
     _git(repo, "add", "-A")
     _git(repo, "-c", "user.email=t@example.com", "-c", "user.name=t", "commit", "-q", "-m", message)
@@ -2449,3 +2510,204 @@ def test_channel_default_recipients_skip_kimi_seats(monkeypatch, broadcast):
         _channels_cli._broadcast_recipients(channel) if broadcast else _channels_cli._subscriber_recipients(channel)
     )
     assert recipients == ["claude", "codex"]
+
+
+# --- stored Kimi deliveries: generic drains and sweeps leave them untouched ----------
+
+_OLD = "2020-01-01T00:00:00+00:00"
+
+
+@pytest.fixture
+def delivery_db(tmp_path, monkeypatch):
+    """A channel broker with legacy Kimi deliveries (by seat and by model) and matching non-Kimi controls.
+
+    Kimi rows are older than their controls, so a drain that ignored the
+    filter would reach them first. Returns ``rows()``, the full deliveries
+    table keyed by id.
+    """
+    from scripts.ai_agent_bridge import _channels, _db
+
+    db_file = tmp_path / "messages.db"
+    monkeypatch.setattr("scripts.ai_agent_bridge._config.DB_PATH", db_file)
+    monkeypatch.setattr(_db, "DB_PATH", db_file)
+    monkeypatch.setattr(_channels, "WAKE_ROOT", tmp_path / "wake")
+    _db.init_db().close()
+    _channels.create_channel("topic")
+    conn = _db.get_db()
+    rows = [
+        # id, to_agent, to_model, status, lease_until, attempt_count, retry_after, created_at
+        ("kimi-model", "claude", "kimi-code/k3", "pending", None, 0, None, "2020-01-01T00:00:00+00:00"),
+        ("kimi-seat", "kimi", None, "pending", None, 0, None, "2020-01-01T00:00:01+00:00"),
+        ("kimi-alias-lease", "claude", "k3", "processing", _OLD, 1, None, "2020-01-01T00:00:02+00:00"),
+        ("kimi-exhausted", "claude", "kimi-code/k3", "pending", None, 9, _OLD, "2020-01-01T00:00:03+00:00"),
+        ("claude-pending", "claude", None, "pending", None, 0, None, "2020-01-02T00:00:00+00:00"),
+        ("claude-lease", "claude", None, "processing", _OLD, 1, None, "2020-01-02T00:00:01+00:00"),
+        ("claude-exhausted", "claude", None, "pending", None, 9, _OLD, "2020-01-02T00:00:02+00:00"),
+    ]
+    for delivery_id, to_agent, to_model, status, lease, attempts, retry_after, created_at in rows:
+        conn.execute(
+            "INSERT INTO channel_messages (message_id, channel, thread_id, from_agent, body, created_at)"
+            " VALUES (?, 'topic', ?, 'user', 'q', ?)",
+            (f"m-{delivery_id}", f"t-{delivery_id}", created_at),
+        )
+        conn.execute(
+            "INSERT INTO deliveries (delivery_id, message_id, to_agent, to_model, status, lease_until,"
+            " attempt_count, retry_after) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            (delivery_id, f"m-{delivery_id}", to_agent, to_model, status, lease, attempts, retry_after),
+        )
+    conn.commit()
+    conn.close()
+
+    def snapshot() -> dict[str, tuple]:
+        check = sqlite3.connect(db_file)
+        try:
+            return {row[0]: tuple(row) for row in check.execute("SELECT * FROM deliveries ORDER BY delivery_id")}
+        finally:
+            check.close()
+
+    return snapshot
+
+
+def _kimi_rows(snapshot: dict[str, tuple]) -> dict[str, tuple]:
+    return {key: row for key, row in snapshot.items() if key.startswith("kimi-")}
+
+
+def _changed(before: dict[str, tuple], after: dict[str, tuple]) -> set[str]:
+    return {key for key in before if before[key] != after[key]}
+
+
+def _sweep(name):
+    def call():
+        from scripts.ai_agent_bridge import _channels, _reconcile
+
+        return {
+            "claim": lambda: _channels.claim_next_delivery("claude"),
+            "release-leases": _channels.release_expired_leases,
+            "expire-stale": _channels.expire_stale_deliveries,
+            "expire-dead-lanes": lambda: _channels.bulk_expire_dead_lanes(frozenset({"claude", "kimi"})),
+            "reconcile": _reconcile.reconcile_deliveries,
+        }[name]()
+
+    return call
+
+
+@pytest.mark.parametrize(
+    ("sweep", "control"),
+    [
+        ("claim", {"claude-pending"}),  # the oldest eligible non-Kimi row, not the older Kimi rows
+        ("release-leases", {"claude-lease"}),
+        ("expire-stale", {"claude-pending", "claude-exhausted"}),
+        ("expire-dead-lanes", {"claude-pending", "claude-exhausted"}),
+        ("reconcile", {"claude-lease", "claude-exhausted"}),
+    ],
+)
+def test_channel_sweeps_leave_stored_kimi_deliveries_unwritten(delivery_db, sweep, control):
+    """Every generic channel drain and sweep excludes a stored Kimi delivery before it writes."""
+    before = delivery_db()
+    _sweep(sweep)()
+    after = delivery_db()
+    assert _kimi_rows(after) == _kimi_rows(before)
+    assert _changed(before, after) == control
+
+
+def test_the_inbox_drain_skips_a_stored_kimi_delivery_before_claim_writes_or_telemetry(delivery_db, monkeypatch):
+    """The reviewer's case: a delivery to Claude pinned to a Kimi model is never claimed, failed or reported.
+
+    The drain's own sweeps expire the old Claude rows and it delivers a fresh
+    one (non-Kimi paths unchanged).
+    """
+    from agent_runtime.result import Result
+    from scripts.ai_agent_bridge import _channels, _inbox
+
+    telemetry: list[tuple] = []
+    for name in ("emit_delivery_failed", "emit_delivery_delivered", "emit_reply_started", "emit_reply_complete"):
+        monkeypatch.setattr(_inbox, name, lambda *args, _name=name, **kwargs: telemetry.append((_name, args, kwargs)))
+    monkeypatch.setattr(
+        "scripts.fleet_comms.bottleneck_alerts.scan_bottlenecks_at_inbox_checkpoint", lambda **_kwargs: None
+    )
+    invoked: list[str] = []
+
+    def invoke(agent, prompt, **kwargs):
+        invoked.append(kwargs["task_id"])
+        return Result(
+            ok=True,
+            agent=agent,
+            model=kwargs.get("model") or "claude-opus-5-5",
+            mode=kwargs["mode"],
+            response="reply",
+            stderr_excerpt="",
+            duration_s=0.0,
+            session_id="s",
+            rate_limited=False,
+            stalled=False,
+            returncode=0,
+            usage_record={},
+        )
+
+    monkeypatch.setattr(_inbox, "runtime_invoke", invoke)
+    fresh = _channels.post("topic", "user", "q", to_agents=["claude"], auto_snapshot=False)
+    before = delivery_db()
+
+    summary = _inbox.run_inbox("claude")
+    after = delivery_db()
+
+    assert _kimi_rows(after) == _kimi_rows(before)
+    kimi_threads = {f"t-{key}" for key in _kimi_rows(before)}
+    assert not [event for event in telemetry if event[1] and event[1][0] in kimi_threads]
+    session = _inbox._thread_session_key
+    assert invoked == [session("topic", "t-claude-lease"), session("topic", str(fresh["thread_id"]))]
+    delivered = {key for key, row in after.items() if row[4] == "delivered"}
+    assert delivered == {"claude-lease", *(key for key in after if not key.startswith(("kimi-", "claude-")))}
+    assert (summary.deliveries_claimed, summary.deliveries_failed) == (2, 0)
+
+
+def test_fleet_comms_delivery_reclaim_leaves_a_stored_kimi_delivery_unwritten(tmp_path):
+    from scripts.fleet_comms.authority import AuthorityService
+
+    with AuthorityService(root=tmp_path / "plane") as service:
+        message = service.publish_message(sender="user", body="q", recipients=["claude"], deadline_at=_OLD)
+        conn = service._conn
+        conn.execute(
+            "INSERT INTO authority_deliveries (delivery_id, message_id, recipient, state, deadline_at,"
+            " created_at, updated_at) VALUES ('kimi-legacy', ?, 'kimi', 'queued', ?, ?, ?)",
+            (message.message_id, _OLD, _OLD, _OLD),
+        )
+        conn.commit()
+        dump = lambda: {row["delivery_id"]: tuple(row) for row in conn.execute("SELECT * FROM authority_deliveries")}  # noqa: E731
+        dead_letters = lambda: conn.execute("SELECT COUNT(*) FROM authority_dead_letters").fetchone()[0]  # noqa: E731
+        before, letters = dump(), dead_letters()
+
+        assert service.reclaim_expired_deliveries() == 1
+        after = dump()
+        assert after["kimi-legacy"] == before["kimi-legacy"]
+        assert [row[3] for key, row in after.items() if key != "kimi-legacy"] == ["expired"]
+        assert dead_letters() == letters + 1
+
+
+def test_the_stale_request_requeue_leaves_a_stored_kimi_request_running(tmp_path):
+    from scripts.fleet_comms.request_executor import RequestExecutor
+
+    with RequestExecutor(root=tmp_path) as executor:
+        kept = executor.create_request(recipient="codex", body="ping")
+        legacy = executor.create_request(recipient="claude", body="ping")
+        conn = executor.store.connection
+        conn.execute("UPDATE requests SET state = 'running', updated_at = '2000-01-01T00:00:00Z'")
+        conn.execute("UPDATE requests SET resolved_recipient = 'kimi' WHERE request_id = ?", (legacy.request_id,))
+        conn.commit()
+
+        assert executor.requeue_stale_running(stale_after_seconds=60) == [kept.request_id]
+        assert executor.get_request(legacy.request_id).state == "running"
+
+
+def test_the_ancient_message_sweep_leaves_a_stored_kimi_message_unacknowledged(broker_db, capsys):
+    from scripts.ai_agent_bridge import _broker, _db
+
+    check = sqlite3.connect(_db.DB_PATH)
+    check.execute("UPDATE messages SET timestamp = ?", (_OLD,))
+    check.execute("UPDATE messages SET acknowledged = 0")
+    check.commit()
+    assert _broker._cleanup_ancient_messages("force-ack", 1, dry_run=False) == 1
+    acknowledged = dict(check.execute("SELECT id, acknowledged FROM messages"))
+    check.close()
+    assert acknowledged == {7: 0, 8: 0, 9: 1}
+    assert capsys.readouterr().out.count(_SKIPPED) == 2

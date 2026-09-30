@@ -262,7 +262,12 @@ def _claim_next_thread(
     delivery_budget: int | None,
     now: str,
 ) -> tuple[_ClaimedThread | None, bool]:
-    """Claim one whole thread so #1192 never invokes per delivery row."""
+    """Claim one whole thread so #1192 never invokes per delivery row.
+
+    A stored delivery addressed to a Kimi seat or model (legacy: Kimi is not a
+    bridge recipient) is never selected, counted or claimed: the ``kimi_row``
+    filter leaves it as it is, with no lease, attempt, status or telemetry.
+    """
 
     lease_until = _iso_after(now, seconds=lease_seconds)
     conn = get_db()
@@ -274,6 +279,7 @@ def _claim_next_thread(
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.to_agent = ?
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND d.attempt_count < ?
               AND (d.retry_after IS NULL OR d.retry_after <= ?)
               AND (
@@ -307,6 +313,7 @@ def _claim_next_thread(
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.to_agent = ?
               AND cm.thread_id = ?
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND d.attempt_count < ?
               AND (d.retry_after IS NULL OR d.retry_after <= ?)
               AND (
@@ -336,6 +343,7 @@ def _claim_next_thread(
                 JOIN channel_messages cm ON cm.message_id = d.message_id
                 WHERE d.to_agent = ?
                   AND cm.thread_id = ?
+                  AND NOT kimi_row(d.to_agent, d.to_model)
                   AND d.attempt_count < ?
                   AND (d.retry_after IS NULL OR d.retry_after <= ?)
                   AND (

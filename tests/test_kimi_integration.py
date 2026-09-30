@@ -20,7 +20,9 @@ def test_delegate_accepts_kimi_and_does_not_create_a_fallback_mapping():
         ["dispatch", "--agent", "kimi", "--task-id", "kimi-probe", "--prompt", "noop", "--dry-run"]
     )
     assert args.agent == "kimi"
-    assert "kimi" not in delegate._load_dispatch_fallbacks()
+    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+
+    assert "kimi" not in load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
 
 
 def test_valid_agents_and_cli_registry_include_kimi():

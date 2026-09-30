@@ -1486,7 +1486,11 @@ def claim_next_delivery(
     max_attempts: int = DEFAULT_MAX_DELIVERY_ATTEMPTS,
     now: str | None = None,
 ) -> dict[str, Any] | None:
-    """Atomically claim the oldest eligible pending delivery for an agent."""
+    """Atomically claim the oldest eligible pending delivery for an agent.
+
+    A stored delivery addressed to a Kimi seat or model is never claimed
+    (``kimi_row``; Kimi is not a bridge recipient): it is left as it is.
+    """
     _validate_agent(agent)
     if lease_seconds <= 0:
         raise ValueError("lease_seconds must be > 0")
@@ -1505,6 +1509,7 @@ def claim_next_delivery(
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
             WHERE d.to_agent = ?
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND d.attempt_count < ?
               AND (d.retry_after IS NULL OR d.retry_after <= ?)
               AND (
@@ -1666,7 +1671,10 @@ def mark_delivery_failed(
 
 
 def release_expired_leases(now: str | None = None) -> int:
-    """Reclaim deliveries stuck in processing after their lease expires."""
+    """Reclaim deliveries stuck in processing after their lease expires.
+
+    Stored deliveries addressed to a Kimi seat or model are left as they are (``kimi_row``).
+    """
     now = now or _now_iso()
     conn = get_db()
     try:
@@ -1678,6 +1686,7 @@ def release_expired_leases(now: str | None = None) -> int:
                 lease_until=NULL
             WHERE status='processing'
               AND lease_until < ?
+              AND NOT kimi_row(to_agent, to_model)
             """,
             (now,),
         )
@@ -1712,6 +1721,9 @@ def expire_stale_deliveries(now: str | None = None) -> int:
     ``DEFAULT_ACTION_REQUIRED_TTL_HOURS`` instead, and their expiry error
     is tagged ``ESCALATION`` so a stalled review request stands out from
     routine drops (#4837 item 4) instead of silently disappearing.
+
+    Stored deliveries addressed to a Kimi seat or model are left as they are
+    (``kimi_row``; Kimi is not a bridge recipient).
     """
     now = now or _now_iso()
     conn = get_db()
@@ -1739,6 +1751,7 @@ def expire_stale_deliveries(now: str | None = None) -> int:
                 retry_after = NULL,
                 last_error_kind = NULL
             WHERE status = 'pending'
+              AND NOT kimi_row(to_agent, to_model)
               AND EXISTS (
                     SELECT 1
                     FROM channel_messages cm
@@ -1777,6 +1790,7 @@ def preview_stale_deliveries(now: str | None = None) -> list[dict[str, Any]]:
             JOIN channel_messages cm ON cm.message_id = d.message_id
             JOIN channels c ON c.name = cm.channel
             WHERE d.status = 'pending'
+              AND NOT kimi_row(d.to_agent, d.to_model)
               AND (
                     julianday(:now) - julianday(cm.created_at)
                   ) * 24.0 > {_effective_ttl_hours_sql()}
@@ -1807,6 +1821,8 @@ def bulk_expire_dead_lanes(dead_lanes: frozenset[str] | None = None) -> dict[str
     that agent's own inbox drain — would otherwise never touch its queue,
     letting it accumulate forever regardless of TTL (#4837 item 4). Returns
     a per-agent count of rows expired (agents with 0 pending are omitted).
+    Stored deliveries addressed to a Kimi seat or model are left as they are
+    (``kimi_row``).
     """
     dead = dead_lanes if dead_lanes is not None else dead_lane_agents()
     if not dead:
@@ -1837,7 +1853,7 @@ def bulk_expire_dead_lanes(dead_lanes: frozenset[str] | None = None) -> dict[str
                     lease_until = NULL,
                     retry_after = NULL,
                     last_error_kind = NULL
-                WHERE status = 'pending' AND to_agent = ?
+                WHERE status = 'pending' AND to_agent = ? AND NOT kimi_row(to_agent, to_model)
                 """,
                 (agent, agent, agent, agent),
             )
@@ -1871,7 +1887,7 @@ def preview_dead_lane_deliveries(dead_lanes: frozenset[str] | None = None) -> li
             f"""
             SELECT delivery_id, to_agent
             FROM deliveries
-            WHERE status = 'pending' AND to_agent IN ({placeholders})
+            WHERE status = 'pending' AND to_agent IN ({placeholders}) AND NOT kimi_row(to_agent, to_model)
             ORDER BY to_agent ASC
             """,
             tuple(sorted(dead)),

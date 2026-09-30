@@ -202,6 +202,19 @@ def _tune_connection(conn: sqlite3.Connection) -> None:
     conn.execute("PRAGMA cache_size=-20000")
     conn.execute("PRAGMA temp_store=MEMORY")
     conn.row_factory = sqlite3.Row
+    conn.create_function("kimi_row", 2, _kimi_row_sql, deterministic=True)
+
+
+def _kimi_row_sql(agent: object, model: object) -> int:
+    """SQL ``kimi_row(agent, model)``: 1 for a stored row addressed to a Kimi seat or model.
+
+    Generic drains and sweeps exclude these legacy rows in their ``WHERE``
+    clause, so no claim, lease, attempt, status, error or telemetry touches
+    them; reading them is allowed (``target_admission.stored_kimi_row``).
+    """
+    from scripts.agent_runtime.target_admission import stored_kimi_row
+
+    return int(stored_kimi_row(agent, model))
 
 
 def _apply_broker_index_migration(conn: sqlite3.Connection) -> None:

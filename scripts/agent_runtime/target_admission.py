@@ -5,27 +5,39 @@ fleet-comms and delegate code takes an ``AdmittedTarget``, and
 ``resolve_and_admit`` is the only producer of one. It performs every step that
 decides who a request reaches — the explicit recipients and model, the models
 and recipients its ``data`` attachments carry, legacy compat command names,
-the ACP route registry's adapter agent and model pin, role slots resolved to
-their live holder, and quota substitution — and only then runs the Kimi gate
-(``kimi_admission.refuse_kimi_if_disallowed``) on the final seats and models,
-raising ``KimiAdmissionRefused`` before it returns. A sink therefore receives
-exactly the target that was gated; nothing resolves after the gate.
+the ACP route registry's adapter agent and model pin, retired-CLI aliases,
+role slots resolved to their live holder, quota substitution, and a launch
+route (``delegate.py``'s budget substitution) — and runs the Kimi gate
+(``kimi_admission.refuse_kimi_if_disallowed``) twice: on the original request
+before any resolution step reads state or has an effect, and on the final
+seats and models together with the original request, raising
+``KimiAdmissionRefused`` before it returns. A sink therefore receives exactly
+the target that was gated; nothing resolves after the gate.
 
-The resolvers are called from this module only
-(``tests/test_target_admission_structure.py`` scans the callers).
+The named resolvers are called from this module only
+(``tests/test_target_admission_structure.py`` scans the callers). That scan is
+bounded — named calls and local bindings, not callbacks or aliased calls — so
+the execution-time re-check (``kimi_admission.refuse_kimi_execution``) stays
+the backstop.
 """
 
 from __future__ import annotations
 
 import sys
-from collections.abc import Callable, Collection, Iterable, Iterator
+from collections.abc import Callable, Collection, Iterable, Iterator, Mapping
 from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from .kimi_admission import ADMITTED_MODE, effective_request_targets, refuse_kimi_if_disallowed
+from .kimi_admission import (
+    BRIDGE_MODE,
+    KimiAdmissionRefused,
+    effective_request_targets,
+    refuse_kimi_if_disallowed,
+)
 
 # Legacy ``ask-<name>`` command names and the ACP participant each one selects.
 COMPAT_TARGETS: dict[str, str] = {
@@ -52,6 +64,26 @@ class SubstituteUnavailable(Exception):
 
 
 @dataclass(frozen=True)
+class RouteRequest:
+    """One requested seat, as a caller's launch ``route`` sees it inside ``resolve_and_admit``.
+
+    ``seat`` and ``model`` are what the request named; ``retired_successor``
+    is the live CLI a retired seat name resolves to (None: not retired);
+    ``fallbacks`` is the ``dispatch_fallbacks`` table, the only source of
+    budget substitutes. The route runs after the original request is gated.
+    """
+
+    seat: str
+    model: str | None
+    retired_successor: str | None
+    fallbacks: Mapping[str, str]
+
+
+# A launch route: the ``(seat, model, reason)`` a request is launched as.
+Route = Callable[[RouteRequest], tuple[str, str | None, str]]
+
+
+@dataclass(frozen=True)
 class AdmittedTarget:
     """A recipient and model that ``resolve_and_admit`` resolved and the Kimi gate admitted.
 
@@ -59,7 +91,8 @@ class AdmittedTarget:
     substitution); ``model`` is the model the request pins (None: the seat's
     registered pin applies); ``reason`` records how the recipient was reached
     (``explicit``, ``compat:<name>``, ``slot:<slot>``,
-    ``substitute:<seat>:<reason>``). Only ``resolve_and_admit`` constructs one.
+    ``substitute:<seat>:<reason>``, or the reason a launch route gives).
+    Only ``resolve_and_admit`` constructs one.
     """
 
     recipient: str
@@ -103,6 +136,7 @@ def resolve_and_admit(
     slots: Collection[str] | None = None,
     substitute: str | None = None,
     fallbacks_path: Path | None = None,
+    route: Route | None = None,
     resolver: Callable[[str], str] | None = None,
     warnings: list[str] | None = None,
     **gate: Any,
@@ -122,27 +156,36 @@ def resolve_and_admit(
       substitute (read from ``fallbacks_path``) for that typed capacity
       reason, whose registered pins apply (``model`` is dropped); none raises
       ``SubstituteUnavailable``.
+    - ``route``: a caller's launch route (``RouteRequest`` to ``(seat, model,
+      reason)``), given the seat's retired-CLI successor and the
+      ``dispatch_fallbacks`` table (read from ``fallbacks_path``); it may
+      replace both the seat and the model, and its errors propagate.
     - ``resolver``: a caller's registry lookup (e.g. a retired endpoint to its
       successor) maps the seat to the one it names; its errors propagate.
     - ``slots``: a role slot (a hyphenated name outside ``slots``) resolves to
       its live holder; an unheld slot, or a failed lookup, keeps the slot
       identity and appends a warning to ``warnings``.
 
-    Every name the request carries is refused first when it is Kimi, before
-    any lookup reads state. The gate then runs once on every seat and model
-    the resolution produced (each recipient, its compat participant, its ACP
-    route's adapter agent and model pin). Raises ``KimiAdmissionRefused``
+    The gate runs first on the original request — every seat and model it
+    carries, with their compat participants, retired-CLI successors and ACP
+    route pins — in every mode, before any step above reads state or has an
+    effect (a budget probe, a model probe). It runs again on the final seats
+    and models together with the original request, unless resolution added
+    no name the first run did not already gate. Raises ``KimiAdmissionRefused``
     before returning; writes nothing.
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
     seats, models = effective_request_targets(raw, explicit_model, *attachments)
     models.extend(item for item in also_models if item)
-    if mode != ADMITTED_MODE:
-        # Refuse an explicitly Kimi request before any slot, fallback or registry lookup. A mode
-        # other than workspace-write is itself a refusal reason, so no owned tree is read here.
-        refuse_kimi_if_disallowed((*seats, *_compat_names(seats)), models, mode=mode, **gate)
+    requested = _gate_names(seats, models)
+    refuse_kimi_if_disallowed(*requested, mode=mode, **gate)
 
+    fallbacks: Mapping[str, str] = {}
+    if route is not None and fallbacks_path is not None:
+        from scripts.common.fallback_substitutions import load_dispatch_fallbacks
+
+        fallbacks = load_dispatch_fallbacks(fallbacks_path)
     resolved: list[tuple[str, str | None, str]] = []
     for name in raw:
         recipient, target_model, reason = name, explicit_model, "explicit"
@@ -154,6 +197,10 @@ def resolve_and_admit(
         if substitute is not None:
             reason = f"substitute:{recipient}:{substitute}"
             recipient, target_model = _substitute_seat(recipient, substitute, fallbacks_path), None
+        if route is not None:
+            recipient, target_model, reason = route(
+                RouteRequest(recipient, target_model, _retired_successor(recipient), fallbacks)
+            )
         if resolver is not None:
             looked_up = resolver(recipient)
             if looked_up != recipient:
@@ -164,17 +211,36 @@ def resolve_and_admit(
                 recipient, reason = holder, f"slot:{recipient}"
         resolved.append((recipient, target_model, reason))
 
-    final_seats = [*seats, *(recipient for recipient, _, _ in resolved)]
-    final_seats.extend(_compat_names(final_seats))
-    routes = _acp_routes(final_seats)
-    refuse_kimi_if_disallowed(
-        (*final_seats, *(route.get("agent") for route in routes)),
-        (*models, *(target_model for _, target_model, _ in resolved), *(route.get("model") for route in routes)),
-        mode=mode,
-        **gate,
+    final = _gate_names(
+        [*seats, *(recipient for recipient, _, _ in resolved)],
+        [*models, *(target_model for _, target_model, _ in resolved)],
     )
+    if not (set(final[0]) <= set(requested[0]) and set(final[1]) <= set(requested[1])):
+        refuse_kimi_if_disallowed(*final, mode=mode, **gate)
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
+
+
+def stored_kimi_row(agent: object, model: object = None) -> bool:
+    """True when a stored row is addressed to a Kimi seat or model, which the bridge gate refuses.
+
+    For generic drains and sweeps only, never a delivery target: Kimi is not a
+    bridge recipient and nothing new can be addressed to it, but legacy rows
+    may remain. A drain skips them before any claim, lease, attempt, status,
+    error or telemetry write; reading them is allowed. Decided by
+    ``resolve_and_admit`` in bridge mode, from names and the static route
+    registry.
+    """
+    return _stored_kimi_row(str(agent or "").strip(), str(model or "").strip() or None)
+
+
+@lru_cache(maxsize=1024)
+def _stored_kimi_row(agent: str, model: str | None) -> bool:
+    try:
+        resolve_and_admit((agent,), mode=BRIDGE_MODE, model=model)
+    except KimiAdmissionRefused:
+        return True
+    return False
 
 
 def resolve_sender(agent: str, *, static_agents: Collection[str], warnings: list[str]) -> str:
@@ -191,6 +257,29 @@ def describe_slot_holder(slot: str) -> Any:
     from scripts.orchestration import slot_routing
 
     return slot_routing.resolve_slot_holder(slot)
+
+
+def launch_seat(agent: str) -> str:
+    """The seat a retired CLI name launches as (its successor), for naming its dispatch worktree only; never a launch target."""
+    return _retired_successor(agent) or agent
+
+
+def _retired_successor(seat: str | None) -> str | None:
+    from .agent_identity import resolve_retired_agent_alias
+
+    return resolve_retired_agent_alias(seat)
+
+
+def _gate_names(seats: Iterable[str | None], models: Iterable[str | None]) -> tuple[list[Any], list[Any]]:
+    """Every seat and model a request reaches: with compat participants, retired successors and ACP route pins."""
+    participants: list[Any] = list(seats)
+    participants.extend(_compat_names(participants))
+    participants.extend(successor for seat in participants if (successor := _retired_successor(seat)))
+    routes = _acp_routes(participants)
+    return (
+        [*participants, *(route.get("agent") for route in routes)],
+        [*models, *(route.get("model") for route in routes)],
+    )
 
 
 def _compat_names(seats: Iterable[str | None]) -> list[str]:

@@ -307,7 +307,7 @@ class TestBroker:
         conn = sqlite3.connect(str(db_path))
         conn.execute("""CREATE TABLE messages (
             id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT, to_llm TEXT,
-            timestamp TEXT, acknowledged INTEGER DEFAULT 0
+            data TEXT, timestamp TEXT, acknowledged INTEGER DEFAULT 0
         )""")
         old_ts = (datetime.now(UTC) - timedelta(hours=48)).isoformat()
         conn.execute("INSERT INTO messages (task_id, from_llm, to_llm, timestamp, acknowledged) VALUES (?, ?, ?, ?, 0)",
@@ -324,7 +324,7 @@ class TestBroker:
         conn = sqlite3.connect(str(db_path))
         conn.execute("""CREATE TABLE messages (
             id INTEGER PRIMARY KEY, task_id TEXT, from_llm TEXT, to_llm TEXT,
-            timestamp TEXT, acknowledged INTEGER DEFAULT 0
+            data TEXT, timestamp TEXT, acknowledged INTEGER DEFAULT 0
         )""")
         old_ts = (datetime.now(UTC) - timedelta(hours=48)).isoformat()
         conn.execute("INSERT INTO messages (task_id, from_llm, to_llm, timestamp, acknowledged) VALUES (?, ?, ?, ?, 0)",

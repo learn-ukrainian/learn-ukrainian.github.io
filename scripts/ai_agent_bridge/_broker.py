@@ -335,7 +335,13 @@ def _cleanup_stale_pids(action: str, max_age_hours: int, dry_run: bool) -> int:
 
 
 def _cleanup_ancient_messages(action: str, max_age_hours: int, dry_run: bool) -> int:
-    """Force-ack ancient unacknowledged messages. Returns count of cleaned items."""
+    """Force-ack ancient unacknowledged messages. Returns count of cleaned items.
+
+    A stored message addressed to a Kimi seat or model (legacy) is skipped and
+    left unacknowledged (``skip_stored_kimi_row``).
+    """
+    from ._ask_lifecycle import skip_stored_kimi_row
+
     cleaned = 0
     if not DB_PATH.exists():
         return 0
@@ -344,13 +350,15 @@ def _cleanup_ancient_messages(action: str, max_age_hours: int, dry_run: bool) ->
     db.row_factory = sqlite3.Row
     datetime.now(UTC).isoformat()
     rows = db.execute(
-        "SELECT id, task_id, from_llm, to_llm, timestamp FROM messages WHERE acknowledged=0"
+        "SELECT id, task_id, from_llm, to_llm, timestamp, data FROM messages WHERE acknowledged=0"
     ).fetchall()
     for row in rows:
         try:
             ts = datetime.fromisoformat(row["timestamp"].replace("Z", "+00:00"))
             age_h = (datetime.now(UTC) - ts).total_seconds() / 3600
             if age_h > max_age_hours:
+                if skip_stored_kimi_row({"to": row["to_llm"], "data": row["data"]}, row["id"]):
+                    continue
                 print(f"  {action} stuck msg #{row['id']}: {row['from_llm']}→{row['to_llm']} "
                       f"task={row['task_id']} ({age_h:.1f}h old)")
                 if not dry_run:

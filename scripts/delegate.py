@@ -195,7 +195,7 @@ from scripts.orchestration.dead_worker_state import (
 )
 
 if TYPE_CHECKING:
-    from scripts.agent_runtime.target_admission import AdmittedTarget
+    from scripts.agent_runtime.target_admission import AdmittedTarget, Route, RouteRequest
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
@@ -9295,7 +9295,6 @@ def _dispatch(
     fleet_repo_meta = fleet_repo_as_dict(fleet_repo, target_repo_root)
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
-    from agent_runtime.agent_identity import resolve_retired_agent_alias
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
     from scripts.review.model_catalog import retired_model_refusal
 
@@ -9313,10 +9312,12 @@ def _dispatch(
         print(f"❌ dispatch refused: {exc}; the rules core is required.", file=sys.stderr)
         return 2
 
-    # Resolve the effective route first: --model, the retired-CLI alias and any budget
-    # substitution (#8517: a review attempt never takes a substitute).
+    # The launch route (the retired-CLI alias and any budget substitution; #8517: a review
+    # attempt never takes a substitute) is resolved inside ``resolve_and_admit``, which gates
+    # the original request before the route probes anything and the resolved route after it.
     review_attempt = getattr(args, "review_attempt", None)
     from scripts.agent_runtime.kimi_admission import is_kimi_seat
+    from scripts.agent_runtime.target_admission import launch_seat
 
     if str(_REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT))
@@ -9333,109 +9334,15 @@ def _dispatch(
         print(f"❌ {exc}", file=sys.stderr)
         return 2
 
-    # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
-    # BEFORE the budget guard and unconditionally — a hot/cool budget reading
-    # for a retired lane is not proof its binary still exists (CodexBar showed
-    # gemini ~99% remaining the same night `--agent gemini` failed with
-    # `FileNotFoundError: 'gemini'`). --force-agent bypasses the budget guard,
-    # not this — there is no CLI left to force.
     original_agent = args.agent
     original_model = getattr(args, "model", None)
-    model_resolution: dict[str, Any] = {}
-    agent_alias_note: str | None = None
-    retired_target = resolve_retired_agent_alias(args.agent)
-    requested_agent = args.agent
-    if retired_target:
-        if review_attempt:
-            print(
-                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
-                file=sys.stderr,
-            )
-            return 2
-        try:
-            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-        _remember_agent_substitution(
-            model_resolution,
-            source="retired-cli",
-            requested_agent=original_agent,
-            requested_model=original_model,
-            actual_agent=retired_target,
-            actual_model=retired_model,
-            how=retired_how,
-        )
-        agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
-        print(
-            f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
-            f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
-            f"({agent_alias_note}; the {requested_agent} CLI is not installed/supported).",
-            file=sys.stderr,
-        )
-        requested_agent = retired_target
-
     language_lane = _dispatch_is_language_lane(args)
-    if language_lane and requested_agent not in _LANGUAGE_LANES:
+    if language_lane and launch_seat(original_agent) not in _LANGUAGE_LANES:
         print(
             "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
-            f"--agent {requested_agent} cannot author, review, critique, settle, or judge "
+            f"--agent {launch_seat(original_agent)} cannot author, review, critique, settle, or judge "
             "Ukrainian language, culture, or heritage content; "
             "allowed lanes are claude, codex (GPT), and agy (Gemini).",
-            file=sys.stderr,
-        )
-        return 2
-
-    if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
-        try:
-            dispatch_agent = (
-                _resolve_agent_with_budget_guard(
-                    requested_agent,
-                    provider="openrouter",
-                    language_lane=language_lane,
-                    requested_model=original_model,
-                    model_resolution=model_resolution,
-                    origin_agent=original_agent,
-                )
-                if getattr(args, "provider", None) == "openrouter"
-                else _resolve_agent_with_budget_guard(
-                    requested_agent,
-                    language_lane=language_lane,
-                    requested_model=original_model,
-                    model_resolution=model_resolution,
-                    origin_agent=original_agent,
-                )
-            )
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-    else:
-        dispatch_agent = requested_agent
-
-    agent_substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
-    if dispatch_agent != original_agent and agent_substitution is None:
-        try:
-            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
-        except BudgetGuardRefuseError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
-            return 2
-        _remember_agent_substitution(
-            model_resolution,
-            source="budget-guard",
-            requested_agent=original_agent,
-            requested_model=original_model,
-            actual_agent=dispatch_agent,
-            actual_model=chosen_model,
-            how=chosen_how,
-        )
-        agent_substitution = model_resolution["record"]
-    if agent_substitution is not None:
-        args.model = agent_substitution["actual_model"]
-
-    if language_lane and dispatch_agent not in _LANGUAGE_LANES:
-        print(
-            "❌ ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
-            f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini).",
             file=sys.stderr,
         )
         return 2
@@ -9456,7 +9363,7 @@ def _dispatch(
     if worktree_arg and worktree_arg != "auto":
         validated_worktree, path_error = _validate_explicit_worktree(
             worktree_arg,
-            agent=resolve_retired_agent_alias(args.agent) or args.agent,
+            agent=launch_seat(args.agent),
             repo_root=target_repo_root,
         )
         if path_error:
@@ -9470,16 +9377,19 @@ def _dispatch(
             return 2
         args.cwd = str(validated_cwd)
 
-    # The single Kimi gate runs on the effective route — after --model, the retired-CLI
-    # alias and any budget substitution resolve, and on the validated paths — before any
+    # The single Kimi gate runs on the original request (--agent, --model and their aliases)
+    # before the launch route probes the budget or a model, and on the route it resolves —
+    # the retired-CLI alias and any budget substitution — on the validated paths, before any
     # other check that can run an external command, write a record, sweep runtime tmp,
     # archive a task or create a worktree. Owned paths are read in the tree the worker
     # starts from: a reused worktree on disk and at its commit, a new one at its creation
     # base commit (fetched and read with git plumbing). The worktree must start from
     # ``kimi_start_commit``; two checks below refuse one that does not.
+    routing = _DispatchRouting()
     kimi_refusal, kimi_start_commit, launch_target = _kimi_dispatch_gate(
         args,
-        agent=dispatch_agent,
+        agent=original_agent,
+        route=_dispatch_route(args, routing, language_lane=language_lane, review_attempt=review_attempt),
         repo_role=fleet_repo.role,
         target_repo_root=target_repo_root,
         validated_worktree=validated_worktree,
@@ -9490,6 +9400,9 @@ def _dispatch(
         return 2
     # Everything below launches the admitted route; nothing resolves it again.
     dispatch_agent, args.model = launch_target.recipient, launch_target.model
+    requested_agent = routing.requested_agent or original_agent
+    agent_alias_note = routing.alias_note
+    agent_substitution = routing.substitution
 
     # Prompt is resolved early so forward failure records and sparse inference
     # have access to the raw prompt text.
@@ -11117,12 +11030,6 @@ def _fetch_routing_budget() -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
-def _load_dispatch_fallbacks() -> dict[str, str]:
-    from scripts.common.fallback_substitutions import load_dispatch_fallbacks
-
-    return load_dispatch_fallbacks(_FALLBACK_SUBS_PATH)
-
-
 def _budget_lane_status(agent: str, agent_info: dict[str, Any]) -> str | None:
     if agent == "claude":
         return (agent_info.get("interactive") or {}).get("status") or agent_info.get("status")
@@ -11341,10 +11248,115 @@ def _worker_route_argv(target: AdmittedTarget) -> list[str]:
     return argv
 
 
+@dataclass
+class _DispatchRouting:
+    """What a dispatch's launch route decided; filled in by :func:`_dispatch_route` inside ``resolve_and_admit``."""
+
+    requested_agent: str | None = None  # after the retired-CLI alias, before budget substitution
+    alias_note: str | None = None
+    substitution: dict[str, Any] | None = None
+
+
+class _DispatchRouteRefused(Exception):
+    """The launch route refused the dispatch; the message says why."""
+
+
+def _dispatch_route(
+    args: argparse.Namespace,
+    routing: _DispatchRouting,
+    *,
+    language_lane: bool,
+    review_attempt: Any,
+) -> Route:
+    """The launch route ``resolve_and_admit`` runs for a dispatch, after the original request is gated.
+
+    A retired CLI resolves to its successor (a review attempt refuses that,
+    #8517); with ``--check-budget`` and no ``--force-agent`` the budget guard
+    may substitute the seat from ``dispatch_fallbacks``; a substitute's model
+    is mapped or defaulted (``_resolve_substitution_model``). Refusals raise
+    ``_DispatchRouteRefused`` or ``BudgetGuardRefuseError``. Records what it
+    decided in ``routing``.
+    """
+
+    def route(request: RouteRequest) -> tuple[str, str | None, str]:
+        original_agent, original_model = request.seat, request.model
+        model_resolution: dict[str, Any] = {}
+        requested_agent = original_agent
+        retired_target = request.retired_successor
+        # Permanent CLI retirement (e.g. gemini→agy, operator 2026-08-18): resolve
+        # BEFORE the budget guard and unconditionally — a hot/cool budget reading
+        # for a retired lane is not proof its binary still exists. --force-agent
+        # bypasses the budget guard, not this — there is no CLI left to force.
+        if retired_target:
+            if review_attempt:
+                raise _DispatchRouteRefused(
+                    f"review attempt refused: agent substitution from {original_agent} to {retired_target} "
+                    "(retired CLI) is not allowed (#8517)"
+                )
+            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
+            _remember_agent_substitution(
+                model_resolution,
+                source="retired-cli",
+                requested_agent=original_agent,
+                requested_model=original_model,
+                actual_agent=retired_target,
+                actual_model=retired_model,
+                how=retired_how,
+            )
+            routing.alias_note = f"NOTE: {original_agent}→{retired_target} retired CLI"
+            print(
+                f"🔄 RETIRED CLI ALIAS: --agent {original_agent} → {retired_target} "
+                f"{_substitution_model_phrase(retired_model, retired_how, original_model)} "
+                f"({routing.alias_note}; the {original_agent} CLI is not installed/supported).",
+                file=sys.stderr,
+            )
+            requested_agent = retired_target
+        routing.requested_agent = requested_agent
+
+        if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
+            dispatch_agent = _resolve_agent_with_budget_guard(
+                requested_agent,
+                provider="openrouter" if getattr(args, "provider", None) == "openrouter" else None,
+                language_lane=language_lane,
+                requested_model=original_model,
+                model_resolution=model_resolution,
+                origin_agent=original_agent,
+                fallbacks=request.fallbacks,
+            )
+        else:
+            dispatch_agent = requested_agent
+
+        substitution = _applied_agent_substitution(model_resolution, dispatch_agent)
+        if dispatch_agent != original_agent and substitution is None:
+            chosen_model, chosen_how = _resolve_substitution_model(dispatch_agent, original_model)
+            _remember_agent_substitution(
+                model_resolution,
+                source="budget-guard",
+                requested_agent=original_agent,
+                requested_model=original_model,
+                actual_agent=dispatch_agent,
+                actual_model=chosen_model,
+                how=chosen_how,
+            )
+            substitution = model_resolution["record"]
+        if language_lane and dispatch_agent not in _LANGUAGE_LANES:
+            raise _DispatchRouteRefused(
+                "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-09-27): "
+                f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini)."
+            )
+        routing.substitution = substitution
+        if substitution is None:
+            return dispatch_agent, original_model, "explicit"
+        return dispatch_agent, substitution["actual_model"], f"route:{substitution['source']}"
+
+    return route
+
+
 def _kimi_dispatch_gate(
     args: argparse.Namespace,
     *,
     agent: str,
+    route: Route,
     repo_role: str | None,
     target_repo_root: Path,
     validated_worktree: Path | None,
@@ -11352,19 +11364,30 @@ def _kimi_dispatch_gate(
 ) -> tuple[str | None, str | None, Any]:
     """The dispatch-side gate: ``(refusal, start commit, admitted target)``.
 
-    The admitted target (``resolve_and_admit``) is the seat and model the
-    worker is launched with; None when refused. The start commit is the
-    commit the owned paths were read at, which the worker's worktree must be
-    created from or checked out at; None when the call is refused, is not
-    Kimi, or owns no paths. The tree is resolved only after every policy check
-    admits.
+    ``agent`` and ``--model`` are the original request; ``route`` (see
+    :func:`_dispatch_route`) resolves the launch route inside
+    ``resolve_and_admit``, which gates the request before it and the route
+    after it. The admitted target is the seat and model the worker is
+    launched with; None when refused. The start commit is the commit the
+    owned paths were last read at — in the worktree of the seat resolved so
+    far — which the worker's worktree must be created from or checked out at;
+    None when the call is refused, is not Kimi, or owns no paths. The tree is
+    resolved only after every policy check admits.
     """
+    from scripts.agent_runtime.target_admission import launch_seat
+
     start: list[str] = []
+    seat = [launch_seat(agent)]
+
+    def routed(request: RouteRequest) -> tuple[str, str | None, str]:
+        result = route(request)
+        seat[0] = result[0]
+        return result
 
     def trees() -> list[Any]:
         resolved, commit = _kimi_start_trees(
             args,
-            agent=agent,
+            agent=seat[0],
             target_repo_root=target_repo_root,
             validated_worktree=validated_worktree,
             validated_cwd=validated_cwd,
@@ -11372,8 +11395,8 @@ def _kimi_dispatch_gate(
         start.append(commit)
         return resolved
 
-    refusal, target = _admit_dispatch_target(args, agent=agent, repo_role=repo_role, trees=trees)
-    return refusal, (start[0] if start and refusal is None else None), target
+    refusal, target = _admit_dispatch_target(args, agent=agent, repo_role=repo_role, trees=trees, route=routed)
+    return refusal, (start[-1] if start and refusal is None else None), target
 
 
 def _kimi_admission_refusal(
@@ -11393,14 +11416,17 @@ def _admit_dispatch_target(
     agent: str,
     trees: Any,
     repo_role: str | None = None,
+    route: Route | None = None,
 ) -> tuple[str | None, Any]:
     """``(refusal, admitted target)`` for launching ``agent`` with ``--model``; exactly one is None.
 
-    The effective route (``agent`` after aliases and budget substitution,
-    ``--model``) is resolved and admitted in one step (``resolve_and_admit``).
-    ``--owned-path`` and ``--research-owned-path`` both declare task ownership,
-    so every path from either flag must be on the Kimi allowlist and is read
-    for Ukrainian content in ``trees`` (see ``refuse_kimi_if_disallowed``).
+    The original request (``agent``, ``--model``) and the launch ``route``
+    it resolves to (retired-CLI alias, budget substitution) are resolved and
+    admitted in one step (``resolve_and_admit``); a route refusal is returned
+    like a Kimi refusal. ``--owned-path`` and ``--research-owned-path`` both
+    declare task ownership, so every path from either flag must be on the
+    Kimi allowlist and is read for Ukrainian content in ``trees`` (see
+    ``refuse_kimi_if_disallowed``).
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
     from scripts.agent_runtime.target_admission import resolve_and_admit
@@ -11418,6 +11444,8 @@ def _admit_dispatch_target(
             (agent,),
             model=getattr(args, "model", None),
             mode=str(getattr(args, "mode", "") or ""),
+            route=route,
+            fallbacks_path=_FALLBACK_SUBS_PATH,
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
@@ -11432,7 +11460,7 @@ def _admit_dispatch_target(
             repo_root=_REPO_ROOT,
             trees=trees,
         )
-    except KimiAdmissionRefused as exc:
+    except (KimiAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
 
@@ -11638,12 +11666,14 @@ def _resolve_agent_with_budget_guard(
     requested_model: str | None = None,
     model_resolution: dict[str, Any] | None = None,
     origin_agent: str | None = None,
+    fallbacks: Mapping[str, str],
 ) -> str:
     """Return possibly-substituted agent.
 
     Hard auto-sub on fresh snapshot when chosen lane is near_cap, hot, or in
     CodexBar deficit (will_last_to_reset is False), if yaml dispatch_fallbacks
-    has a known target. Without a usable fallback: refuse (raise
+    (``fallbacks``, which ``resolve_and_admit`` reads and hands to the launch
+    route) has a known target. Without a usable fallback: refuse (raise
     BudgetGuardRefuseError) unless caller used --force-agent before this call.
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
@@ -11775,7 +11805,6 @@ def _resolve_agent_with_budget_guard(
     if not needs_action:
         return requested
 
-    fallbacks = _load_dispatch_fallbacks()
     sub = fallbacks.get(requested)
     # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
     # no inferred/hardcoded mappings (a deleted config entry must mean
@@ -11833,7 +11862,7 @@ def _resolve_agent_with_budget_guard(
 
 def _language_lane_substitute(
     requested: str,
-    fallbacks: dict[str, str],
+    fallbacks: Mapping[str, str],
     agents: dict[str, Any],
     *,
     is_stale: bool,

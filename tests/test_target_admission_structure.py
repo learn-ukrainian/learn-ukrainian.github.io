@@ -1,12 +1,13 @@
-"""Static proof that targets are admitted in the same step they are resolved.
+"""Bounded static check that targets are admitted in the same step they are resolved.
 
 ``scripts/agent_runtime/target_admission.py`` ``resolve_and_admit`` is the only
-producer of an ``AdmittedTarget``: it runs every resolution step and then the
-Kimi gate. This scan of the bridge, fleet-comms, agent runtime and
-``delegate.py`` fails when
+producer of an ``AdmittedTarget``: it gates the original request, runs every
+resolution step, and gates the result. This scan of the bridge, fleet-comms,
+agent runtime and ``delegate.py`` fails when
 
-- a resolver (slot holders, attachment merging, fallback substitution, ACP
-  route and compat lookups) is called or imported outside that module;
+- a named resolver (slot holders, attachment merging, fallback substitution and
+  the ``dispatch_fallbacks`` table, retired-CLI aliases, ACP route and compat
+  lookups) is called or imported outside that module;
 - the Kimi gate is called directly instead of through ``resolve_and_admit``
   (``kimi_admission`` keeps its execution-time re-check);
 - an ``AdmittedTarget`` is constructed outside that module;
@@ -18,6 +19,13 @@ The data flow is checked per function and flow-insensitively: a name is
 admitted only when every binding of it in the function is admitted (a
 greatest fixpoint, so a loop variable reused across loops over admitted
 targets stays admitted).
+
+Coverage is bounded, not exhaustive: it follows the named resolver, gate and
+sink calls and local name bindings. A resolver reached through a callback,
+a ``getattr`` or an aliased name, and data flow through attributes,
+containers other than local lists, or other modules, are not tracked. The
+runtime checks — ``resolve_and_admit`` gating before it returns and the
+execution-time ``refuse_kimi_execution`` — are the backstop.
 """
 
 from __future__ import annotations
@@ -41,7 +49,8 @@ def _scanned_files() -> list[Path]:
     return files
 
 
-# Functions that resolve who a request reaches. Called from target_admission.py only.
+# Functions that resolve who a request reaches. Called from target_admission.py only
+# (by name: a call through a callback or an aliased name is not seen).
 RESOLVERS = frozenset(
     {
         "resolve_slot_holder",  # a role slot to its live holder
@@ -51,6 +60,11 @@ RESOLVERS = frozenset(
         "_substitute_seat",
         "_acp_routes",
         "_compat_names",
+        "_gate_names",
+        "load_dispatch_fallbacks",  # the dispatch_fallbacks substitution table
+        "_load_dispatch_fallbacks",  # removed: delegate read the table before the gate
+        "resolve_retired_agent_alias",  # a retired CLI to its successor
+        "_retired_successor",
     }
 )
 # The gate itself; reached through resolve_and_admit (kimi_admission keeps its execution re-check).
@@ -287,7 +301,7 @@ def _admitted_names(path: Path, function: ast.AST | None, scan: Scan, cache: dic
     return cache[key]
 
 
-def test_every_required_sink_takes_an_admitted_target(scan):
+def test_every_required_sink_is_annotated_to_take_an_admitted_target(scan):
     missing = {
         name: param
         for name, param in REQUIRED_SINKS.items()
@@ -296,7 +310,7 @@ def test_every_required_sink_takes_an_admitted_target(scan):
     assert not missing, f"sinks without an AdmittedTarget-annotated parameter: {missing}"
 
 
-def test_every_admitter_is_built_on_resolve_and_admit(scan):
+def test_every_named_admitter_calls_resolve_and_admit_or_another_admitter(scan):
     defined: dict[str, list[ast.AST]] = {}
     for _path, node in scan.functions():
         if node.name in ADMITTERS:
@@ -313,7 +327,7 @@ def test_every_admitter_is_built_on_resolve_and_admit(scan):
     assert not ungrounded, f"admitters that never call resolve_and_admit or another admitter: {ungrounded}"
 
 
-def test_sinks_are_called_only_with_admitted_targets(scan):
+def test_named_sink_calls_pass_locally_admitted_targets(scan):
     violations = []
     cache: dict = {}
     for path, tree in scan.trees.items():
@@ -340,7 +354,7 @@ def test_sinks_are_called_only_with_admitted_targets(scan):
     assert not violations, "\n".join(violations)
 
 
-def test_resolvers_and_the_gate_are_called_only_through_resolve_and_admit(scan):
+def test_named_resolver_and_gate_calls_appear_only_in_target_admission(scan):
     violations = []
     for path, tree in scan.trees.items():
         if path == HOME:
@@ -361,7 +375,7 @@ def test_resolvers_and_the_gate_are_called_only_through_resolve_and_admit(scan):
     assert not violations, "\n".join(violations)
 
 
-def test_compat_targets_are_looked_up_only_in_resolve_and_admit(scan):
+def test_imported_compat_targets_are_read_only_in_target_admission(scan):
     violations = []
     for path, tree in scan.trees.items():
         if path == HOME:
@@ -404,5 +418,30 @@ def _admitted_in(source: str, expr: str) -> bool:
         ("def f(x):\n    return 0\n", "require_admitted(x)", False),
     ],
 )
-def test_the_scanner_tells_admitted_values_from_raw_ones(source, expr, admitted):
+def test_the_bounded_scanner_tells_admitted_local_values_from_raw_ones(source, expr, admitted):
     assert _admitted_in(source, expr) is admitted
+
+
+def _named_resolver_calls(source: str) -> list[str]:
+    return [
+        name
+        for node in ast.walk(ast.parse(source))
+        if isinstance(node, ast.Call) and (name := _call_name(node) or "") in RESOLVERS
+    ]
+
+
+@pytest.mark.parametrize(
+    ("source", "seen"),
+    [
+        ("load_dispatch_fallbacks(path)\n", ["load_dispatch_fallbacks"]),
+        ("fallback_substitutions.load_dispatch_fallbacks(path)\n", ["load_dispatch_fallbacks"]),
+        ("resolve_retired_agent_alias(agent)\n", ["resolve_retired_agent_alias"]),
+        # The bound: an aliased name, a callback or a getattr lookup is not seen. The
+        # runtime gate in resolve_and_admit and the execution re-check cover these.
+        ("load = load_dispatch_fallbacks\nload(path)\n", []),
+        ("run(callback=resolve_retired_agent_alias)\n", []),
+        ("getattr(module, 'load_dispatch_fallbacks')(path)\n", []),
+    ],
+)
+def test_the_resolver_scan_sees_named_calls_only(source, seen):
+    assert _named_resolver_calls(source) == seen

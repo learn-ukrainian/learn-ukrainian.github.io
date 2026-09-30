@@ -456,7 +456,9 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
         },
     }
     monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
-    monkeypatch.setattr("scripts.delegate._load_dispatch_fallbacks", lambda: {"claude": "codex"})
+    monkeypatch.setattr(
+        "scripts.common.fallback_substitutions.load_dispatch_fallbacks", lambda _path: {"claude": "codex"}
+    )
 
     rc = delegate_cli.main(
         [

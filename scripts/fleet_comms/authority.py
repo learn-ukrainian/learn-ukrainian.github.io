@@ -22,7 +22,12 @@ from pathlib import Path
 from typing import Any, Literal
 
 from scripts.agent_runtime.kimi_admission import ACP_MODE, BRIDGE_MODE, KimiAdmissionRefused
-from scripts.agent_runtime.target_admission import AdmittedTarget, require_admitted, resolve_and_admit
+from scripts.agent_runtime.target_admission import (
+    AdmittedTarget,
+    require_admitted,
+    resolve_and_admit,
+    stored_kimi_row,
+)
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -2092,14 +2097,17 @@ class AuthorityService:
         return reclaimed
 
     def _reclaim_expired_deliveries_tx(self, now: str, *, max_attempts: int) -> int:
+        """Expire or requeue abandoned deliveries; a stored Kimi delivery (legacy) is left as it is."""
         reclaimed = 0
         expired = self._conn.execute(
-            """SELECT delivery_id, fence_token FROM authority_deliveries
+            """SELECT delivery_id, fence_token, recipient FROM authority_deliveries
                WHERE state IN ('queued', 'running') AND deadline_at IS NOT NULL
                  AND deadline_at <= ?""",
             (now,),
         ).fetchall()
         for row in expired:
+            if stored_kimi_row(row["recipient"]):
+                continue
             delivery_id = str(row["delivery_id"])
             self._conn.execute(
                 """UPDATE authority_deliveries
@@ -2116,13 +2124,15 @@ class AuthorityService:
             self._dead_letter_delivery_tx(delivery_id, reason_code="deadline_expired")
             reclaimed += 1
         stale = self._conn.execute(
-            """SELECT delivery_id, fence_token, attempt_count FROM authority_deliveries
+            """SELECT delivery_id, fence_token, attempt_count, recipient FROM authority_deliveries
                WHERE state = 'running' AND lease_expires_at IS NOT NULL
                  AND lease_expires_at <= ?
                  AND (deadline_at IS NULL OR deadline_at > ?)""",
             (now, now),
         ).fetchall()
         for row in stale:
+            if stored_kimi_row(row["recipient"]):
+                continue
             delivery_id = str(row["delivery_id"])
             terminal = int(row["attempt_count"]) >= max_attempts
             next_state = "dead_lettered" if terminal else "queued"

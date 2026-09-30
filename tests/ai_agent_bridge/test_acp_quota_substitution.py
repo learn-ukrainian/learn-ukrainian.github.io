@@ -1067,9 +1067,20 @@ def test_retry_after_crash_replays_the_stored_reason_and_completes(
 
 
 def test_delegate_dispatch_fallbacks_use_the_same_shared_table() -> None:
-    """delegate.py and the ACP ask path read one loader, not two copies."""
+    """delegate.py's launch route and the ACP ask path read one loader, not two copies."""
+    import argparse
+
     import delegate
     from scripts.common.fallback_substitutions import load_dispatch_fallbacks
 
-    assert delegate._load_dispatch_fallbacks() == load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)
-    assert delegate._load_dispatch_fallbacks()["codex"] == "cursor"
+    received: list[object] = []
+
+    def route(request):
+        received.append(request.fallbacks)
+        return request.seat, request.model, "explicit"
+
+    args = argparse.Namespace(agent="codex", model=None, mode="read-only")
+    refusal, _target = delegate._admit_dispatch_target(args, agent="codex", trees=(), route=route)
+    assert refusal is None
+    assert received == [load_dispatch_fallbacks(delegate._FALLBACK_SUBS_PATH)]
+    assert received[0]["codex"] == "cursor"

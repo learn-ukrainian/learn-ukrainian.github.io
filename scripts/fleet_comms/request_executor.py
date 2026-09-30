@@ -19,7 +19,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.agent_runtime.kimi_admission import ACP_MODE
-from scripts.agent_runtime.target_admission import resolve_and_admit
+from scripts.agent_runtime.target_admission import resolve_and_admit, stored_kimi_row
 from scripts.control_plane.storage import (
     Authority,
     ControlPlaneUnsupportedComponentError,
@@ -559,18 +559,21 @@ class RequestExecutor:
         a slow-but-alive capture inside the runtime's bounds can never be
         swept (#7504 CF r2); a claimant that legitimately runs longer must
         heartbeat via ``touch_claim()``.
+
+        A stored request resolved to a Kimi seat (legacy: Kimi is refused
+        before a request is recorded) is left as it is.
         """
         now = _utc_now()
         now_s = _iso(now)
         cutoff = _iso(now - timedelta(seconds=max(0, stale_after_seconds)))
         ph = "%s" if self._is_pg else "?"
         rows = self._conn.execute(
-            f"""SELECT request_id FROM requests
+            f"""SELECT request_id, resolved_recipient FROM requests
                WHERE state = 'running' AND updated_at <= {ph} AND expires_at >= {ph}
                ORDER BY updated_at""",
             (cutoff, now_s),
         ).fetchall()
-        stale_ids = [str(r["request_id"]) for r in rows]
+        stale_ids = [str(r["request_id"]) for r in rows if not stored_kimi_row(r["resolved_recipient"])]
         requeued: list[str] = []
         for request_id in stale_ids:
             cursor = self._conn.execute(
