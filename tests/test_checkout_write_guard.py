@@ -47,6 +47,8 @@ WATCHED_PATHS = [
     ".claude/skills/drive-epic/SKILL.md",
     ".codex/config.toml", ".codex/hooks.json", "data/corpus_audit/report.md",
     "data/corpus_audit/nested/report.md",
+    "data/embeddings/manifest.db",
+    "data/embeddings/ukrainian_wiki/shard-000001.npy",
 ]
 
 LIVE_RUNTIME_PATHS = [
@@ -60,6 +62,7 @@ LIVE_RUNTIME_PATHS = [
     "data/x.db", "data/x.db-wal", "data/x.db-shm", "data/sub/cache.json",
     "data/telemetry-other/report.md", "data/lexicon/cache-other/report.md",
     "data/corpus_audit-other/report.md",
+    "data/embeddings-other/manifest.db",
 ]
 
 
@@ -87,6 +90,7 @@ _COLLECTION_BUILDERS = tuple(_source_alias("build_sources_db.py", "guard_collect
 @pytest.mark.parametrize("builder", _COLLECTION_BUILDERS, ids=["replaced-alias", "current-alias"])
 def test_collection_file_alias_report_default(tmp_path: Path, builder) -> None:
     assert tmp_path / "corpus_audit/section_extraction_report.md" == builder.DEFAULT_REPORT_PATH
+    assert tmp_path / "embeddings/manifest.db" == builder.DEFAULT_MANIFEST_DB
 
 
 @pytest.mark.parametrize("filename", ["linear_pipeline.py", "extract_sections.py", "build_sources_db.py"])
@@ -112,6 +116,11 @@ def test_late_file_alias_defaults(tmp_path: Path, filename: str, monkeypatch: py
             report = module.extract_sections(db)
         else:
             report = module._extract_sections_with_university_grade_adapter(db)
+            manifest = tmp_path / "embeddings/manifest.db"
+            assert manifest == module.DEFAULT_MANIFEST_DB
+            module.ensure_ukrainian_wiki_manifest(module.DEFAULT_MANIFEST_DB)
+            assert manifest.is_file()
+            assert (manifest.parent / "ukrainian_wiki/shard-000001.npy").is_file()
         assert report.total_chunks == 0
         assert "Status: **OK**" in expected.read_text(encoding="utf-8")
 
@@ -120,17 +129,24 @@ def test_default_redirect_matches_exact_file_and_restores_alias(tmp_path: Path) 
     defaults = WriteDefaults()
     module = _COLLECTION_BUILDERS[0]
     original = module.DEFAULT_REPORT_PATH
+    original_manifest = module.DEFAULT_MANIFEST_DB
     defaults.loaded(module)
     with pytest.MonkeyPatch.context() as patches:
         defaults.patches = patches
         defaults.tmp_path = tmp_path / "inner"
         defaults.loaded(module)
         assert tmp_path / "inner/corpus_audit/section_extraction_report.md" == module.DEFAULT_REPORT_PATH
-        unrelated = SimpleNamespace(__file__=str(tmp_path / "build_sources_db.py"), DEFAULT_REPORT_PATH=original)
+        assert tmp_path / "inner/embeddings/manifest.db" == module.DEFAULT_MANIFEST_DB
+        unrelated = SimpleNamespace(
+            __file__=str(tmp_path / "build_sources_db.py"), DEFAULT_REPORT_PATH=original,
+            DEFAULT_MANIFEST_DB=original_manifest,
+        )
         defaults.loaded(unrelated)
         assert original == unrelated.DEFAULT_REPORT_PATH
+        assert original_manifest == unrelated.DEFAULT_MANIFEST_DB
         defaults.loaded(SimpleNamespace())
     assert original == module.DEFAULT_REPORT_PATH
+    assert original_manifest == module.DEFAULT_MANIFEST_DB
 
 
 @pytest.mark.parametrize("name", ["scripts.build.linear_pipeline", "build.linear_pipeline"])
@@ -463,6 +479,8 @@ def test_sparse_store_is_loaded_only_by_dependent_tests(tmp_path: Path, malforme
         ".agents/skills/test/SKILL.md",
         ".gemini/agents/test.md",
         "data/corpus_audit/section_extraction_report.md",
+        "data/embeddings/manifest.db",
+        "data/embeddings/ukrainian_wiki/shard-000001.npy",
         "data/tracked.txt",
         "external-tmp",
         *LIVE_RUNTIME_PATHS,
@@ -483,6 +501,8 @@ def test_registered_guard_enforces_normal_pytest_session(
         encoding="utf-8",
     )
     (tmp_path / "conftest.py").write_text('pytest_plugins = ["checkout_write_guard"]\n', encoding="utf-8")
+    # A session must start cleanly even when the named output directory is absent.
+    assert not (tmp_path / "data/embeddings").exists()
     if write_path in LIVE_RUNTIME_PATHS or write_path == "data/tracked.txt":
         existing = tmp_path / write_path
         existing.parent.mkdir(parents=True, exist_ok=True)

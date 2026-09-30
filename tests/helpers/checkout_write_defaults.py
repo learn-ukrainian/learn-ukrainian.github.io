@@ -54,6 +54,8 @@ class WriteDefaults:
             self.patches.setattr(module, "DEFAULT_REPORT_PATH", report)
             if name == "extract_sections.py":
                 self.patches.setitem(module.extract_sections.__kwdefaults__, "report_path", report)
+            else:
+                self.patches.setattr(module, "DEFAULT_MANIFEST_DB", self.tmp_path / "embeddings/manifest.db")
 
 
 def pytest_configure(config: pytest.Config) -> None:

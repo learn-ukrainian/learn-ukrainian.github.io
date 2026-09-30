@@ -57,6 +57,7 @@ except ModuleNotFoundError:
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 EXTERNAL_DIR = PROJECT_ROOT / "data" / "external_articles"
 DB_PATH = PROJECT_ROOT / "data" / "sources.db"
+DEFAULT_MANIFEST_DB = PROJECT_ROOT / "data" / "embeddings" / "manifest.db"
 LOG_DIR = PROJECT_ROOT / "logs"
 
 # File-size primary guard for `_db_is_populated()` — see #1563.
@@ -1083,7 +1084,7 @@ def build(db_path: Path | None = None,
     declare_wal(db)
 
     db_size = db.stat().st_size / 1024 / 1024
-    ensure_ukrainian_wiki_manifest(PROJECT_ROOT / "data" / "embeddings" / "manifest.db")
+    ensure_ukrainian_wiki_manifest(DEFAULT_MANIFEST_DB)
     print(f"\n  ✅ Built {db.name}: {total:,} entries, {db_size:.1f} MB")
     return db
 
