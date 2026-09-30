@@ -30,6 +30,7 @@ def scripts_only_tree(tmp_path_factory):
     return root
 
 
+@pytest.mark.repo_wide
 @pytest.mark.parametrize("module", [
     "scripts.agent_runtime.attempt_safe_read",
     "scripts.agent_runtime.attempt_boundary",
