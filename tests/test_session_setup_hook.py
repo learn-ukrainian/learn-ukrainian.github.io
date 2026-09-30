@@ -321,9 +321,12 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
     canonical_dir.mkdir()
     venv_bin = canonical_dir / ".venv" / "bin"
     venv_bin.mkdir(parents=True)
-    (venv_bin / "python").write_text("#!/bin/sh\necho 'Python 3.12.8'", encoding="utf-8")
+    # The gate runs through the real bounded-runner interpreter below. Give
+    # this fixture its exact version instead of coupling it to the local pin.
+    version = subprocess.check_output([_canonical_python(), "--version"], text=True, timeout=30).strip().removeprefix("Python ")
+    (venv_bin / "python").write_text(f"#!/bin/sh\necho 'Python {version}'", encoding="utf-8")
     (venv_bin / "python").chmod(0o755)
-    (canonical_dir / ".python-version").write_text("3.12.8\n", encoding="utf-8")
+    (canonical_dir / ".python-version").write_text(f"{version}\n", encoding="utf-8")
 
     db_dir = project_dir / ".mcp" / "servers" / "message-broker"
     db_dir.mkdir(parents=True)

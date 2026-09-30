@@ -481,9 +481,12 @@ def test_import_bundle_runs_before_detect_and_is_fail_open(monkeypatch: pytest.M
     assert result["rollover_detect"] == {"status": "ok", "detect_status": "none"}
 
 
-def test_python_version_matches_pin() -> None:
-    # The suite runs on the canonical venv python, which must match the pin.
-    result = gate.phase_python_version(_args())
+def test_python_version_matches_pin(tmp_path: Path) -> None:
+    # Check the real interpreter against the declared execution pin: CI's
+    # tool-cache pin or the local canonical pin. The production guard stays exact.
+    version = os.environ.get("UV_PYTHON") or (REPO_ROOT / ".python-version").read_text().strip()
+    (tmp_path / ".python-version").write_text(f"{version}\n")
+    result = gate.phase_python_version(_args(repo_root=str(tmp_path)))
     assert result == {"status": "ok"}
 
 
