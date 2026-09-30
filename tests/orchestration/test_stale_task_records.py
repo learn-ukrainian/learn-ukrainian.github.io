@@ -233,6 +233,20 @@ def _by_file(report: dict[str, Any]) -> dict[str, dict[str, Any]]:
     return {row["file"]: row for row in report["records"]}
 
 
+def test_settle_stale_help_states_gated_record_recovery_requires_rerun(capsys):
+    with pytest.raises(SystemExit) as exc:
+        str_mod.main(["settle-stale", "--help"])
+
+    assert exc.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "done (+merged_pr) only for delivery-only records when a merged" in help_text
+    assert "same-repository PR carries a recorded commit" in help_text
+    assert (
+        "A gated orphaned record (verdict, ceiling, exemption or leftovers gate) settles "
+        "failed with recovery_requires_rerun" in help_text
+    )
+
+
 def test_classifies_every_class_like_the_report(tasks_dir, mixed):
     report = _run(tasks_dir, mixed)
     rows = _by_file(report)
