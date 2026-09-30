@@ -3,6 +3,10 @@
 launcher_adapter_validate() {
   case "$LC_HARNESS" in kimi-code|claude-code) ;; *) launcher_error 'Kimi supports --harness kimi-code|claude-code.'; exit 2 ;; esac
   case "$LC_ENDPOINT" in coding|platform) ;; *) launcher_error 'Kimi endpoint must be coding or platform.'; exit 2 ;; esac
+  if [ "$LC_HARNESS" = kimi-code ] && _kimi_forward_args_bind_agent; then
+    launcher_error "Kimi Code starts fresh sessions only: $_KIMI_BOUND_ARG would restore or pick an agent without the rules core. Kimi seats take fresh web/UI/backend coding tasks; start a new session."
+    exit 2
+  fi
 }
 launcher_adapter_preflight() {
   if [ "$LC_HARNESS" = kimi-code ]; then
@@ -32,13 +36,18 @@ launcher_adapter_canary() {
   if [ "$LC_DRY_RUN" = 1 ]; then echo 'kimi adapter: would run provider canary'; fi
   return 0
 }
-# Kimi Code binds an agent at session creation: --agent-file conflicts with an
-# explicit agent and with resuming (a resumed session restores its bound agent).
+# Kimi Code binds an agent at session creation, and the rules core rides in on
+# that agent (--agent-file). A resumed session restores its old agent and a custom
+# agent replaces ours, so neither would carry the core; the launcher refuses both.
 _kimi_forward_args_bind_agent() {
   local arg
-  for arg in "${LC_FORWARD_ARGS[@]}"; do
+  _KIMI_BOUND_ARG=""
+  for arg in ${LC_FORWARD_ARGS[@]+"${LC_FORWARD_ARGS[@]}"}; do
     case "$arg" in
-      --agent|--agent=*|--agent-file|--agent-file=*|-c|--continue|-S|--session|--session=*|-r|--resume|--resume=*) return 0 ;;
+      --agent|--agent=*|--agent-file|--agent-file=*|-c|--continue|-S|--session|--session=*|-r|--resume|--resume=*)
+        _KIMI_BOUND_ARG="${arg%%=*}"
+        return 0
+        ;;
     esac
   done
   return 1
@@ -49,9 +58,7 @@ launcher_adapter_exec() {
     cmd=(kimi --model "$LC_MODEL")
     # The agent file renders Kimi's default prompt (${base_prompt}) and appends the core.
     if [ -n "${LC_RULES_CORE:-}" ]; then
-      if _kimi_forward_args_bind_agent; then
-        rules_core_warn "the forwarded arguments already bind a Kimi agent or resume a session"
-      elif agent_file="$(rules_core_kimi_agent_file "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT")"; then
+      if agent_file="$(rules_core_kimi_agent_file "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT")"; then
         cmd+=(--agent-file "$agent_file")
       else
         rules_core_warn "Kimi agent file could not be written"

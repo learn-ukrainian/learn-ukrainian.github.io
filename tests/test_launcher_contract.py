@@ -25,6 +25,9 @@ from tests.helpers.python import require_repo_venv
 from tests.launcher_sandbox import copy_slot_registry
 
 REPO = Path(__file__).resolve().parents[1]
+# The checkout run_launcher starts launchers from; rules_core_absent tests get a
+# view of REPO without the rules core (tests/conftest.py).
+LAUNCH_ROOT = REPO
 PUBLIC = (
     "start-claude.sh",
     "start-claude-driver.sh",
@@ -58,8 +61,8 @@ def run_launcher(
     launch_env["LAUNCHER_DRY_RUN"] = "1" if dry_run else "0"
     launch_env.update(env or {})
     return subprocess.run(
-        [str(REPO / name), *args],
-        cwd=REPO,
+        [str(LAUNCH_ROOT / name), *args],
+        cwd=LAUNCH_ROOT,
         env=launch_env,
         text=True,
         capture_output=True,
@@ -982,6 +985,7 @@ def test_retired_names_are_absent_from_tracked_content() -> None:
     assert found.returncode == 1, found.stdout + found.stderr
 
 
+@pytest.mark.rules_core_absent
 def test_claude_driver_injects_lane_agent_type() -> None:
     """--epic <lane> selects the lane's driver_agent_type from area_assignments.yaml (#F1, prompt audit)."""
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")

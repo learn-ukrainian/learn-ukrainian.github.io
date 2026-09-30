@@ -7,8 +7,10 @@ a legacy bridge prompt — and asserts that the core's first and last pillar anc
 are in it. Bytes carried per row are printed (``pytest -s``).
 
 The core is ``agents_extensions/shared/rules/core.md`` when this checkout has it;
-otherwise ``tests/fixtures/rules_core/`` stands in, through the loader's
-``LU_RULES_CORE_DIR`` seam.
+otherwise ``tests/fixtures/rules_core/`` stands in: in-process through the loader's
+``core_dir`` resolver, and for launcher and CLI subprocesses through a checkout view
+(``tests/rules_core_view.py``) whose rules directory holds the fixture. Nothing in the
+environment can move the core.
 """
 
 from __future__ import annotations
@@ -24,6 +26,7 @@ from pathlib import Path
 import pytest
 
 from scripts.lib import rules_core
+from tests.rules_core_view import checkout_view
 from tests.test_launcher_contract import REPO, hermes_stub_env
 
 REAL_CORE_DIR = REPO / rules_core.RULES_DIR_REL
@@ -33,13 +36,31 @@ CORE_DIR = (
     if (REAL_CORE_DIR / "core.md").is_file() and (REAL_CORE_DIR / "core-curriculum.md").is_file()
     else FIXTURE_CORE_DIR
 )
+CHECKOUT_CORE_DIR = rules_core.core_dir
+OLD_OVERRIDE_ENV = "LU_RULES_CORE_DIR"
 
 
 @pytest.fixture(autouse=True)
 def _core_present(monkeypatch: pytest.MonkeyPatch) -> None:
-    """Opt back in to the core (tests/conftest.py keeps it out of other tests)."""
-    monkeypatch.setenv(rules_core.CORE_DIR_ENV, str(CORE_DIR))
-    monkeypatch.delenv(rules_core.SEAT_ENV, raising=False)
+    """In-process code reads CORE_DIR (the fixture stands in for a checkout without the core)."""
+    if CORE_DIR != REAL_CORE_DIR:
+        monkeypatch.setattr(rules_core, "core_dir", lambda root=None: CORE_DIR)
+
+
+@pytest.fixture(scope="module")
+def core_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """The checkout launchers and the CLI run from: this one, or a view carrying the fixture."""
+    if CORE_DIR == REAL_CORE_DIR:
+        return REPO
+    return checkout_view(tmp_path_factory.mktemp("rules-core-present") / "checkout", FIXTURE_CORE_DIR)
+
+
+def _hostile_core_dir(tmp_path: Path) -> Path:
+    hostile = tmp_path / "hostile"
+    hostile.mkdir()
+    for name in ("core.md", "core-curriculum.md"):
+        (hostile / name).write_text("## P1 — HOSTILE REPLACEMENT\n", encoding="utf-8")
+    return hostile
 
 
 def _anchors(seat: str) -> tuple[str, ...]:
@@ -99,9 +120,36 @@ def test_with_core_prepends_once_and_fails_open(monkeypatch: pytest.MonkeyPatch,
     once = rules_core.with_core("task")
     assert once == rules_core.core_block("core") + "\n\ntask"
     assert rules_core.with_core(once) == once
-    monkeypatch.setenv(rules_core.CORE_DIR_ENV, str(tmp_path / "missing"))
+    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: tmp_path / "missing")
     assert rules_core.with_core("task") == "task"
     assert "continuing without the rules core" in capsys.readouterr().err
+
+
+def test_a_core_quoted_in_an_attachment_does_not_replace_the_preamble() -> None:
+    block = rules_core.core_block("core")
+    attached = f"Review the attached file.\n\n```markdown\n{block}\n```\n"
+    assert rules_core.with_core(attached) == f"{block}\n\n{attached}"
+
+
+def test_the_old_env_override_has_no_effect(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, core_root: Path) -> None:
+    monkeypatch.setenv(OLD_OVERRIDE_ENV, str(_hostile_core_dir(tmp_path)))
+    monkeypatch.chdir(tmp_path)
+    assert CHECKOUT_CORE_DIR() == REPO / rules_core.RULES_DIR_REL
+    assert CHECKOUT_CORE_DIR(core_root) == core_root / rules_core.RULES_DIR_REL
+    monkeypatch.setattr(rules_core, "core_dir", CHECKOUT_CORE_DIR)
+    text = rules_core.core_text("content", core_root)
+    assert "HOSTILE" not in text
+    assert text.startswith((CORE_DIR / "core.md").read_text(encoding="utf-8").rstrip())
+    script = REPO / "scripts" / "lib" / "rules_core.py"
+    cli = subprocess.run(
+        [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "text"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert cli.returncode == 0, cli.stderr
+    assert cli.stdout == rules_core.core_text("core", core_root)
 
 
 def test_toml_and_kimi_forms_round_trip() -> None:
@@ -114,17 +162,25 @@ def test_toml_and_kimi_forms_round_trip() -> None:
         rules_core.kimi_agent_file_text("x ${injected} y")
 
 
-def test_cli_reports_anchors_and_exits_3_when_missing(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
-    script = REPO / "scripts" / "lib" / "rules_core.py"
+def test_cli_reports_anchors_and_exits_3_when_missing(core_root: Path, _rules_core_absent_root: Path) -> None:
+    script = core_root / "scripts" / "lib" / "rules_core.py"
     ok = subprocess.run(
-        [sys.executable, os.fspath(script), "--format", "json"], capture_output=True, text=True, check=False, timeout=60
+        [sys.executable, os.fspath(script), "--root", os.fspath(core_root), "--format", "json"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
     )
     assert ok.returncode == 0, ok.stderr
     payload = json.loads(ok.stdout)
     assert (payload["first_anchor"], payload["last_anchor"]) == _anchors("core")
-    monkeypatch.setenv(rules_core.CORE_DIR_ENV, str(tmp_path / "missing"))
+    absent = _rules_core_absent_root
     missing = subprocess.run(
-        [sys.executable, os.fspath(script)], capture_output=True, text=True, check=False, timeout=60
+        [sys.executable, os.fspath(absent / "scripts" / "lib" / "rules_core.py"), "--root", os.fspath(absent)],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
     )
     assert missing.returncode == 3
     assert "rules source unavailable" in missing.stderr
@@ -170,7 +226,14 @@ LAUNCHER_ROWS = (
 
 
 def _launch(
-    name: str, args: tuple[str, ...], tmp_path: Path, env_kind: str | None, extra_env: dict[str, str] | None = None
+    root: Path,
+    name: str,
+    args: tuple[str, ...],
+    tmp_path: Path,
+    env_kind: str | None,
+    extra_env: dict[str, str] | None = None,
+    *,
+    expect_launch: bool = True,
 ) -> tuple[subprocess.CompletedProcess[str], list[str]]:
     argv_file = tmp_path / "argv.bin"
     env = {**os.environ, "LAUNCHER_DRY_RUN": "1", "LAUNCHER_DRY_RUN_ARGV_FILE": str(argv_file), "TMPDIR": str(tmp_path)}
@@ -182,8 +245,11 @@ def _launch(
         env.update({**_GLM_CREDENTIALS, "HOME": str(tmp_path / "home")})
     env.update(extra_env or {})
     result = subprocess.run(
-        [str(REPO / name), *args], cwd=REPO, env=env, text=True, capture_output=True, check=False, timeout=120
+        [str(root / name), *args], cwd=root, env=env, text=True, capture_output=True, check=False, timeout=120
     )
+    if not expect_launch:
+        assert not argv_file.exists(), "a refused launch must not reach exec"
+        return result, []
     assert result.returncode == 0, result.stderr
     assert argv_file.is_file(), result.stdout
     argv = argv_file.read_bytes().decode("utf-8").split("\0")[:-1]
@@ -214,8 +280,8 @@ def _carrier(argv: list[str], carrier: str) -> str:
 @pytest.mark.parametrize(
     ("row", "name", "args", "env_kind", "carrier", "seat"), LAUNCHER_ROWS, ids=[row[0] for row in LAUNCHER_ROWS]
 )
-def test_launcher_row_carries_the_core(row, name, args, env_kind, carrier, seat, tmp_path: Path) -> None:
-    result, argv = _launch(name, args, tmp_path, env_kind)
+def test_launcher_row_carries_the_core(row, name, args, env_kind, carrier, seat, tmp_path: Path, core_root) -> None:
+    result, argv = _launch(core_root, name, args, tmp_path, env_kind)
     text = _carrier(argv, carrier)
     _assert_core(text, seat, row)
     assert text.startswith(rules_core.core_block(seat)) or carrier == "--agent-file"
@@ -226,33 +292,62 @@ def test_launcher_row_carries_the_core(row, name, args, env_kind, carrier, seat,
     assert _anchors("core")[0] not in result.stdout
 
 
-def test_launcher_seat_env_makes_an_interactive_seat_content(tmp_path: Path) -> None:
-    _, argv = _launch("start-claude.sh", (), tmp_path, None, {rules_core.SEAT_ENV: "content"})
+def test_launcher_seat_env_makes_an_interactive_seat_content(tmp_path: Path, core_root: Path) -> None:
+    _, argv = _launch(core_root, "start-claude.sh", (), tmp_path, None, {rules_core.SEAT_ENV: "content"})
     _assert_core(_carrier(argv, "--append-system-prompt"), "content", "claude-interactive-content-env")
 
 
-def test_driver_binding_follows_the_core_in_initial_prompt_harnesses(tmp_path: Path) -> None:
-    _, argv = _launch("start-gemini-driver.sh", ("--epic", "infra"), tmp_path, None)
+def test_driver_binding_follows_the_core_in_initial_prompt_harnesses(tmp_path: Path, core_root: Path) -> None:
+    _, argv = _launch(core_root, "start-gemini-driver.sh", ("--epic", "infra"), tmp_path, None)
     seed = _carrier(argv, "-i")
     assert seed.startswith(
         rules_core.core_block("core") + "\n\nLoad agents_extensions/shared/skills/drive-epic/SKILL.md"
     )
 
 
-def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path) -> None:
-    _, argv = _launch("start-gemini.sh", ("--", "-p", "hello"), tmp_path, None)
+def test_agy_forwarded_prompt_is_prefixed_not_duplicated(tmp_path: Path, core_root: Path) -> None:
+    _, argv = _launch(core_root, "start-gemini.sh", ("--", "-p", "hello"), tmp_path, None)
     assert argv.count("-i") == 0 and argv.count("-p") == 1
     assert argv[argv.index("-p") + 1] == rules_core.core_block("core") + "\n\nhello"
 
 
-def test_kimi_resume_keeps_its_bound_agent(tmp_path: Path) -> None:
-    result, argv = _launch("start-kimi.sh", ("--", "--continue"), tmp_path, None)
-    assert "--agent-file" not in argv
-    assert "already bind a Kimi agent or resume a session" in result.stderr
+@pytest.mark.parametrize(
+    "forwarded",
+    (
+        ("--continue",),
+        ("-c",),
+        ("--session",),
+        ("-S", "abc"),
+        ("--session=abc",),
+        ("--resume",),
+        ("--agent", "okabe"),
+        ("--agent=okabe",),
+        ("--agent-file", "/tmp/custom.md"),
+    ),
+    ids=lambda forwarded: forwarded[0],
+)
+def test_kimi_code_refuses_resumed_and_custom_agent_sessions(forwarded, tmp_path: Path, core_root: Path) -> None:
+    result, _ = _launch(core_root, "start-kimi.sh", ("--", *forwarded), tmp_path, None, expect_launch=False)
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "Kimi Code starts fresh sessions only" in result.stderr
+    assert forwarded[0].split("=")[0] in result.stderr
+    assert "fresh web/UI/backend coding tasks" in result.stderr
 
 
-def test_launcher_without_the_core_warns_and_still_launches(tmp_path: Path) -> None:
-    result, argv = _launch("start-claude.sh", (), tmp_path, None, {rules_core.CORE_DIR_ENV: str(tmp_path / "missing")})
+def test_kimi_on_claude_code_keeps_the_core_when_resuming(tmp_path: Path, core_root: Path) -> None:
+    _, argv = _launch(core_root, "start-kimicc.sh", ("--", "--continue"), tmp_path, "kimi")
+    assert "--continue" in argv
+    _assert_core(_carrier(argv, "--append-system-prompt"), "core", "kimicc-continue")
+
+
+def test_launcher_ignores_the_old_env_override(tmp_path: Path, core_root: Path) -> None:
+    hostile = {OLD_OVERRIDE_ENV: str(_hostile_core_dir(tmp_path))}
+    _, argv = _launch(core_root, "start-claude.sh", (), tmp_path, None, hostile)
+    assert _carrier(argv, "--append-system-prompt") == rules_core.core_block("core")
+
+
+def test_launcher_without_the_core_warns_and_still_launches(tmp_path: Path, _rules_core_absent_root: Path) -> None:
+    result, argv = _launch(_rules_core_absent_root, "start-claude.sh", (), tmp_path, None)
     assert "--append-system-prompt" not in argv
     assert "WARNING: rules core not loaded" in result.stderr
 
@@ -486,7 +581,7 @@ def test_task_scope_serves_its_row_sources(api_client) -> None:
 
 
 def test_missing_core_scope_is_unavailable_not_empty(api_client, monkeypatch, tmp_path: Path) -> None:
-    monkeypatch.setenv(rules_core.CORE_DIR_ENV, str(tmp_path / "missing"))
+    monkeypatch.setattr(rules_core, "core_dir", lambda root=None: tmp_path / "missing")
     assert api_client.get("/api/rules?scope=core").status_code == 503
     assert api_client.get("/api/rules").status_code == 200
 

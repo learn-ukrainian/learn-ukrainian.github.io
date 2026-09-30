@@ -4,7 +4,8 @@ One loader for every seat: launchers (``scripts/lib/rules_core.sh``), ``delegate
 workers and review dispatches, ACP asks and discussion legs
 (``agent_runtime.runner.invoke_inter_agent``), the legacy bridge prompt builders,
 and ``GET /api/rules?scope=...``. Everything here is offline: files come from the
-checkout, never from the Monitor API.
+checkout this module runs from (or an explicit ``root``), never from the environment,
+the working directory or the Monitor API.
 
 Seats:
     core     ``agents_extensions/shared/rules/core.md``
@@ -45,9 +46,6 @@ CORE_REL = f"{RULES_DIR_REL}/core.md"
 CONTENT_ADDENDUM_REL = f"{RULES_DIR_REL}/core-curriculum.md"
 SEATS = ("core", "content")
 SEAT_ENV = "LU_RULES_SEAT"
-# Test seam: a directory holding core.md (and core-curriculum.md) that replaces
-# the checkout's rules directory for the two core files only.
-CORE_DIR_ENV = "LU_RULES_CORE_DIR"
 CONTENT_AGENT_TYPES = frozenset({"curriculum-orchestrator"})
 # Same separator as the legacy /api/rules bundle, so a scope assembles alike.
 FILE_SEP = "\n\n---\n\n"
@@ -135,11 +133,9 @@ def resolve_seat(
     return "core"
 
 
-def _core_file(rel: str, root: Path) -> Path:
-    override = os.environ.get(CORE_DIR_ENV)
-    if override:
-        return Path(override) / Path(rel).name
-    return root / rel
+def core_dir(root: Path | None = None) -> Path:
+    """Directory holding the core files: the rules directory of ``root``, else of this checkout."""
+    return (ROOT if root is None else Path(root)) / RULES_DIR_REL
 
 
 def seat_sources(seat: str) -> tuple[str, ...]:
@@ -163,10 +159,9 @@ def scope_sources(scope: str) -> tuple[str, ...]:
 
 
 def source_path(rel: str, root: Path | None = None) -> Path:
-    base = ROOT if root is None else Path(root)
     if rel in (CORE_REL, CONTENT_ADDENDUM_REL):
-        return _core_file(rel, base)
-    return base / rel
+        return core_dir(root) / Path(rel).name
+    return (ROOT if root is None else Path(root)) / rel
 
 
 def assemble(sources: tuple[str, ...], root: Path | None = None) -> str:
@@ -193,7 +188,10 @@ def core_block(seat: str = "core", root: Path | None = None) -> str:
 
 
 def with_core(prompt: str, seat: str | None = None, root: Path | None = None) -> str:
-    """Prepend the core block to ``prompt``; unchanged if it already carries that block.
+    """Prepend the core block to ``prompt``; unchanged if the prompt already starts with it.
+
+    Only a leading block counts: a core quoted further down (an attachment, a
+    fenced file) does not stand in for the preamble.
 
     Fails open: a missing core leaves the prompt as it was and warns on stderr, so a
     checkout without the core never blocks a dispatch.
@@ -203,7 +201,7 @@ def with_core(prompt: str, seat: str | None = None, root: Path | None = None) ->
     except RulesCoreMissing as exc:
         print(f"WARNING: {exc}; continuing without the rules core.", file=sys.stderr)
         return prompt
-    if block in prompt:
+    if prompt.startswith(block):
         return prompt
     return f"{block}\n\n{prompt}"
 
