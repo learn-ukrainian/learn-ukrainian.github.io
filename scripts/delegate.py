@@ -7052,6 +7052,7 @@ def _resolve_worktree_base_sha(
         resolved = _resolve_sha(worktree_path)
         if resolved is None:
             raise RuntimeError(f"could not resolve HEAD for existing worktree {worktree_path}")
+        _refuse_if_gate_head_moved(resolved, pinned_head_sha)
         return resolved
 
     if requested_branch:
@@ -9235,6 +9236,10 @@ def _dispatch(
     ``admission_holds`` releases this run's admission hold on any return or
     exception before the task record replaces it.
     """
+    if getattr(args, "pinned_head", None) and not (getattr(args, "branch", None) or getattr(args, "pr", None)):
+        print("❌ PINNED_HEAD_TARGET_REQUIRED: --pinned-head requires --branch or --pr", file=sys.stderr)
+        return 2
+
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -10206,6 +10211,10 @@ def _dispatch(
                 harness=requested_harness,
             )
             dry_run_state = {
+                "pinned_head": pinned_head,
+                "review_author_model": getattr(args, "review_author_model", None),
+                "review_risk": getattr(args, "review_risk", None),
+                "review_profile": getattr(args, "review_profile", None),
                 "task_id": task_id,
                 "run_nonce": run_nonce,
                 "repository": _resolve_dispatch_repository(
@@ -10609,6 +10618,10 @@ def _dispatch(
         # the parent PID as a placeholder (overwritten by worker).
         worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
         initial_state = {
+            "pinned_head": pinned_head,
+            "review_author_model": getattr(args, "review_author_model", None),
+            "review_risk": getattr(args, "review_risk", None),
+            "review_profile": getattr(args, "review_profile", None),
             "task_id": task_id,
             "run_nonce": run_nonce,
             # Authoritative repository identity for the Work projection's scoped
@@ -11293,8 +11306,10 @@ def _dispatch_route(
 
     A retired CLI resolves to its successor (a review attempt refuses that,
     #8517); with ``--check-budget`` and no ``--force-agent`` the budget guard
-    may substitute the seat from ``dispatch_fallbacks``; a substitute's model
-    is mapped or defaulted (``_resolve_substitution_model``). Refusals raise
+    may substitute a coding seat from ``dispatch_fallbacks``; its model is
+    mapped or defaulted (``_resolve_substitution_model``). Review routes use
+    ``request.review_select`` instead, retaining the resolver's exact model.
+    Refusals raise
     ``_DispatchRouteRefused`` or ``BudgetGuardRefuseError``. Records what it
     decided in ``routing``.
     """
@@ -11334,6 +11349,21 @@ def _dispatch_route(
             requested_agent = retired_target
         routing.requested_agent = requested_agent
 
+        if request.review_select is not None:
+            selected_agent, selected_model = request.review_select(None, requested_agent)
+            if (selected_agent, selected_model) != (requested_agent, original_model):
+                _remember_agent_substitution(
+                    model_resolution,
+                    source="reviewer-resolver",
+                    requested_agent=original_agent,
+                    requested_model=original_model,
+                    actual_agent=selected_agent,
+                    actual_model=selected_model,
+                    how="reviewer-resolver",
+                )
+            requested_agent = selected_agent
+            original_model = selected_model
+
         if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
             dispatch_agent = _resolve_agent_with_budget_guard(
                 requested_agent,
@@ -11343,6 +11373,7 @@ def _dispatch_route(
                 model_resolution=model_resolution,
                 origin_agent=original_agent,
                 fallbacks=request.fallbacks,
+                review_select=request.review_select,
             )
         else:
             dispatch_agent = requested_agent
@@ -11366,6 +11397,8 @@ def _dispatch_route(
                 f"effective --agent {dispatch_agent} is outside claude, codex (GPT), and agy (Gemini)."
             )
         routing.substitution = substitution
+        if substitution is not None:
+            substitution["requested_model"] = request.model
         if substitution is None:
             return dispatch_agent, original_model, "explicit"
         return dispatch_agent, substitution["actual_model"], f"route:{substitution['source']}"
@@ -11450,7 +11483,7 @@ def _admit_dispatch_target(
     ``refuse_kimi_if_disallowed``).
     """
     from scripts.agent_runtime.kimi_admission import KimiAdmissionRefused
-    from scripts.agent_runtime.target_admission import resolve_and_admit
+    from scripts.agent_runtime.target_admission import ReviewAdmissionRefused, resolve_and_admit
 
     def flag_paths(attr: str) -> list[str]:
         value = getattr(args, attr, None) or []
@@ -11467,6 +11500,11 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
+            review_dispatch=bool(getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)),
+            review_author_model=getattr(args, "review_author_model", None),
+            review_risk=getattr(args, "review_risk", None),
+            review_profile=getattr(args, "review_profile", None),
+            review_attempt=bool(getattr(args, "review_attempt", None)),
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
@@ -11481,7 +11519,7 @@ def _admit_dispatch_target(
             repo_root=_REPO_ROOT,
             trees=trees,
         )
-    except (KimiAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
+    except (KimiAdmissionRefused, ReviewAdmissionRefused, _DispatchRouteRefused, BudgetGuardRefuseError) as exc:
         return str(exc), None
     return None, target
 
@@ -11688,6 +11726,7 @@ def _resolve_agent_with_budget_guard(
     model_resolution: dict[str, Any] | None = None,
     origin_agent: str | None = None,
     fallbacks: Mapping[str, str],
+    review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -11698,6 +11737,7 @@ def _resolve_agent_with_budget_guard(
     BudgetGuardRefuseError) unless caller used --force-agent before this call.
     Subscription stale/empty: advisory only. Prepaid requires fresh verified
     funding independently of the subscription ledger and never auto-substitutes.
+    Review routes use ``review_select`` before either coding fallback path.
     """
     requested = (agent or "").strip().lower()
     if language_lane and requested not in _LANGUAGE_LANES:
@@ -11825,6 +11865,31 @@ def _resolve_agent_with_budget_guard(
     )
     if not needs_action:
         return requested
+
+    if review_select is not None:
+        sub, chosen = review_select(payload, requested)
+        if sub == requested and chosen == requested_model:
+            print(
+                "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer; "
+                "--review-author-model and --review-risk are required for budget substitution",
+                file=sys.stderr,
+            )
+            return requested
+        print(
+            f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} --model {chosen} "
+            f"({reason}; reviewer resolver).",
+            file=sys.stderr,
+        )
+        _remember_agent_substitution(
+            model_resolution,
+            source="reviewer-resolver",
+            requested_agent=origin_agent or requested,
+            requested_model=requested_model,
+            actual_agent=sub,
+            actual_model=chosen,
+            how="reviewer-resolver",
+        )
+        return sub
 
     sub = fallbacks.get(requested)
     # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
@@ -12825,7 +12890,8 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="SHA",
         help=(
             "Exact commit the worktree must check out. A fetched branch tip that "
-            "differs from this SHA refuses the dispatch."
+            "differs from this SHA refuses the dispatch. Requires --branch or --pr; "
+            "without either, refuses before probes or task/worktree creation. Default: None."
         ),
     )
     d.add_argument(
@@ -12874,6 +12940,26 @@ def build_parser() -> argparse.ArgumentParser:
             "Required with --require-review-verdict when --agent is agy or gemini. "
             "code is refused (Gemini reviews Ukrainian only, never code — "
             "operator 2026-09-25). Ukrainian content review must pass ukrainian."
+        ),
+    )
+    d.add_argument(
+        "--review-author-model",
+        default=None,
+        metavar="MODEL",
+        help=(
+            "Author's concrete model for cross-family reviewer resolution (e.g. gpt-6.1-sol). "
+            "Review budget substitution requires this and --review-risk; the reviewer's model "
+            "is never the author identity. Default: None (keep eligible requested reviewer)."
+        ),
+    )
+    d.add_argument(
+        "--review-risk",
+        default=None,
+        choices=("low", "medium", "high", "critical"),
+        help=(
+            "Risk passed to the canonical reviewer resolver with --review-author-model. "
+            "Uses --review-profile (code by default). Default: None (no review budget substitution). "
+            "Example: critical for admission or launcher changes."
         ),
     )
     d.add_argument(

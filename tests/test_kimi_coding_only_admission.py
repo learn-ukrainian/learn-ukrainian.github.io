@@ -599,6 +599,14 @@ def test_refusal_states_the_policy_and_names_the_alternative_seats():
     assert "--mode read-only" in message and "review dispatches" in message and "docs/x.md" in message
 
 
+def test_kimi_refusal_distinguishes_reviewers_from_consult_and_discussion_seats():
+    message = kimi_admission.format_refusal("kimi", ["review dispatches"])
+    reviews, consultations = message.split("reviews → ", 1)[1].split("; consults and discussions → ", 1)
+    assert "claude" in reviews and "codex" in reviews and "reviewer resolver" in reviews
+    assert "grok" not in reviews and "kimi" not in reviews and "agy" not in reviews
+    assert "grok" in consultations
+
+
 # --- delegate dispatch admission --------------------------------------------------
 
 

@@ -65,6 +65,9 @@ RESOLVERS = frozenset(
         "_load_dispatch_fallbacks",  # removed: delegate read the table before the gate
         "resolve_retired_agent_alias",  # a retired CLI to its successor
         "_retired_successor",
+        "resolve_reviewer",  # review dispatch substitutions use the canonical resolver in-process
+        "evaluate_candidate",  # intrinsic eligibility when trusted author/risk inputs are absent
+        "_resolve_review_target",
     }
 )
 # The gate itself; reached through resolve_and_admit (kimi_admission keeps its execution re-check).

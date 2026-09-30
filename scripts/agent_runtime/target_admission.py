@@ -63,14 +63,24 @@ class SubstituteUnavailable(Exception):
     """No enabled ACP seat substitutes for an over-quota seat; the message says why."""
 
 
+class ReviewAdmissionRefused(Exception):
+    """A review cannot retain its requested identity or resolve an eligible substitute."""
+
+
+ReviewSelector = Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]]
+
+
 @dataclass(frozen=True)
 class RouteRequest:
     """One requested seat, as a caller's launch ``route`` sees it inside ``resolve_and_admit``.
 
     ``seat`` and ``model`` are what the request named; ``retired_successor``
     is the live CLI a retired seat name resolves to (None: not retired);
-    ``fallbacks`` is the ``dispatch_fallbacks`` table, the only source of
-    budget substitutes. The route runs after the original request is gated.
+    ``fallbacks`` is the coding ``dispatch_fallbacks`` table. For a review,
+    ``review_select`` instead selects or retains a reviewer using trusted
+    author/profile/risk inputs and the canonical resolver. Pass the current
+    over-budget seat with the snapshot, or a None snapshot for the initial check.
+    The route runs after the original request is gated.
 
     Known limitation: a route's own probes (a Monitor budget probe) run
     before the final gate, so a non-Kimi request that a fallback row mapped
@@ -83,6 +93,7 @@ class RouteRequest:
     model: str | None
     retired_successor: str | None
     fallbacks: Mapping[str, str]
+    review_select: ReviewSelector | None = None
 
 
 # A launch route: the ``(seat, model, reason)`` a request is launched as.
@@ -145,6 +156,11 @@ def resolve_and_admit(
     route: Route | None = None,
     resolver: Callable[[str], str] | None = None,
     warnings: list[str] | None = None,
+    review_dispatch: bool = False,
+    review_author_model: str | None = None,
+    review_risk: str | None = None,
+    review_profile: str | None = None,
+    review_attempt: bool = False,
     **gate: Any,
 ) -> tuple[AdmittedTarget, ...]:
     """Resolve every recipient to its final seat, gate the result, and return one target per recipient.
@@ -179,6 +195,10 @@ def resolve_and_admit(
     and models together with the original request, unless resolution added
     no name the first run did not already gate. Raises ``KimiAdmissionRefused``
     before returning; writes nothing.
+
+    Review dispatches additionally constrain routes to ``review_select``'s
+    admitted identities. Budget substitutions require both ``review_author_model``
+    and ``review_risk``; review attempts never change identity.
     """
     raw = ["" if item is None else str(item) for item in recipients]
     explicit_model = model or None
@@ -195,6 +215,30 @@ def resolve_and_admit(
     resolved: list[tuple[str, str | None, str]] = []
     for name in raw:
         recipient, target_model, reason = name, explicit_model, "explicit"
+        approved_review_targets: set[tuple[str, str | None]] = set()
+
+        def review_select(
+            snapshot: Mapping[str, Any] | None,
+            budget_seat: str,
+            *,
+            requested_seat: str = name,
+            approved: set[tuple[str, str | None]] = approved_review_targets,
+        ) -> tuple[str, str | None]:
+            selected = _resolve_review_target(
+                requested_seat,
+                explicit_model,
+                author_model=review_author_model,
+                risk=review_risk,
+                profile=review_profile or "code",
+                attempt=review_attempt,
+                snapshot=snapshot,
+                budget_seat=budget_seat,
+            )
+            approved.add(selected)
+            return selected
+
+        if review_dispatch:
+            review_select(None, name)  # Refuse ineligible requests before a route can probe or print a substitute.
         if compat:
             participant = COMPAT_TARGETS.get(name.strip().lower())
             if participant is None:
@@ -205,7 +249,13 @@ def resolve_and_admit(
             recipient, target_model = _substitute_seat(recipient, substitute, fallbacks_path), None
         if route is not None:
             recipient, target_model, reason = route(
-                RouteRequest(recipient, target_model, _retired_successor(recipient), fallbacks)
+                RouteRequest(
+                    recipient,
+                    target_model,
+                    _retired_successor(recipient),
+                    fallbacks,
+                    review_select if review_dispatch else None,
+                )
             )
         if resolver is not None:
             looked_up = resolver(recipient)
@@ -216,6 +266,10 @@ def resolve_and_admit(
             if holder != recipient:
                 recipient, reason = holder, f"slot:{recipient}"
         resolved.append((recipient, target_model, reason))
+        if review_dispatch and (recipient, target_model) not in approved_review_targets:
+            raise ReviewAdmissionRefused(
+                "REVIEW_ROUTE_REFUSED: resolved review identity was not admitted by the reviewer resolver"
+            )
 
     final = _gate_names(
         [*seats, *(recipient for recipient, _, _ in resolved)],
@@ -225,6 +279,92 @@ def resolve_and_admit(
         refuse_kimi_if_disallowed(*final, mode=mode, **gate)
     with _minting():
         return tuple(AdmittedTarget(recipient, target_model, reason) for recipient, target_model, reason in resolved)
+
+
+def _resolve_review_target(
+    seat: str,
+    model: str | None,
+    *,
+    author_model: str | None,
+    risk: str | None,
+    profile: str,
+    attempt: bool,
+    snapshot: Mapping[str, Any] | None,
+    budget_seat: str,
+) -> tuple[str, str | None]:
+    """Keep an eligible reviewer or select the canonical cross-family seat, never a coding fallback.
+
+    A snapshot means the budget guard requires a substitute. Without both trusted
+    inputs, only intrinsic eligibility can be proven and the requested identity is
+    retained. This does not attest cross-family independence for those legacy calls.
+    An existing attempt's seat AND model are immutable.
+    """
+    from scripts.review.reviewer_resolver import (
+        REVIEW_CANDIDATES,
+        UNKNOWN_AUTHOR_FAMILY,
+        ResolverInputs,
+        evaluate_candidate,
+        resolve_family,
+        resolve_reviewer,
+    )
+
+    from .telemetry import _default_model_for
+
+    concrete = (model or _default_model_for(seat) or "").split("[", 1)[0]
+    family = resolve_family(concrete or "")
+    forbidden = {"xai", "moonshot"}
+    if profile != "ukrainian":
+        forbidden.add("google")
+    trusted = bool(author_model and risk)
+    if attempt and snapshot is not None:
+        raise ReviewAdmissionRefused(
+            "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt substitution is not allowed (#8517)"
+        )
+    inputs = ResolverInputs(
+        author_model=author_model or "",
+        review_profile=profile,
+        domain=profile,
+        risk=risk or "medium",
+        # The dispatch rules prohibit judging by these families, including catalogued old routes.
+        subject_families=frozenset(forbidden),
+        routing_snapshot=snapshot if trusted else None,
+    )
+    resolution = (
+        resolve_reviewer(inputs, excluded_quota_buckets=frozenset({budget_seat}) if snapshot else frozenset())
+        if trusted
+        else None
+    )
+    if resolution is not None and resolution.fail_closed_reason:
+        raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
+    if profile == "ukrainian" and not trusted:
+        eligible = seat in {"claude", "codex", "agy", "gemini"} and family in {"anthropic", "openai", "google"}
+    elif resolution is not None:
+        eligible = any(
+            candidate.route == seat
+            and candidate.concrete_model == concrete
+            and candidate.status in {"eligible", "selected"}
+            for candidate in resolution.trace
+        )
+    else:
+        eligible = family not in forbidden and any(
+            candidate.route == seat
+            and candidate.concrete_model == concrete
+            and evaluate_candidate(candidate, inputs, author_family=UNKNOWN_AUTHOR_FAMILY).status == "eligible"
+            for candidate in REVIEW_CANDIDATES.values()
+        )
+    if attempt and (snapshot is not None or not eligible):
+        raise ReviewAdmissionRefused(
+            "REVIEW_ATTEMPT_IDENTITY_REFUSED: review attempt substitution is not allowed (#8517)"
+        )
+    if eligible and (snapshot is None or not trusted):
+        return seat, model
+    selected = resolution.selected if resolution else None
+    if selected is None or selected.family in forbidden:
+        raise ReviewAdmissionRefused(
+            f"REVIEW_ROUTE_REFUSED: no eligible reviewer for --review-profile {profile}; substitution requires "
+            "--review-author-model and --review-risk and a resolver-selected seat"
+        )
+    return selected.route, selected.concrete_model
 
 
 def stored_kimi_row(agent: object, model: object = None) -> bool:

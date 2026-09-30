@@ -8095,6 +8095,7 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
         cwd=None,
         worktree=str(worktree),
         branch=branch,
+        pinned_head="branch-head",
         base="main",
         hard_timeout=3600,
         dry_run=True,
@@ -8109,6 +8110,7 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
     state = delegate._read_state(delegate._state_path("branch-reuse-dry-run"))
     assert state is not None
     assert lines[1] == state["run_nonce"]
+    assert state["pinned_head"] == state["worktree_base_sha"] == "branch-head"
 
 
 def test_branch_reuse_refuses_protected_branch_after_name_check(tmp_path, monkeypatch):
