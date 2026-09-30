@@ -12471,7 +12471,9 @@ def _dispatch_route(
                     f"review attempt refused: agent substitution from {original_agent} to {retired_target} "
                     "(retired CLI) is not allowed (#8517)"
                 )
-            retired_model, retired_how = _resolve_substitution_model(retired_target, original_model)
+            retired_model, retired_how = request.retired_model_resolution or _resolve_substitution_model(
+                retired_target, original_model
+            )
             _remember_agent_substitution(
                 model_resolution,
                 source="retired-cli",
@@ -12489,6 +12491,8 @@ def _dispatch_route(
                 file=sys.stderr,
             )
             requested_agent = retired_target
+            if request.review_select is not None:
+                original_model = retired_model
         routing.requested_agent = requested_agent
 
         if request.review_select is not None:
@@ -12652,6 +12656,10 @@ def _admit_dispatch_target(
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
             review_attempt=bool(getattr(args, "review_attempt", None)),
+            review_alias_model_resolver=_resolve_substitution_model,
+            review_owned_paths=tuple(declared),
+            review_subject_seats=frozenset(flag_paths("subject_seat")),
+            review_subject_families=frozenset(flag_paths("subject_family")),
             paths=owned,
             declared_paths=declared,
             repo=repo_role,
@@ -13018,6 +13026,20 @@ def _resolve_agent_with_budget_guard(
                 file=sys.stderr,
             )
             return requested
+        sub_info = agents.get(sub, {}) or {}
+        sub_dict = sub_info if isinstance(sub_info, dict) else {}
+        sub_blocked, sub_reason = _budget_needs_hard_capacity_action(
+            status=_budget_lane_status(sub, sub_dict),
+            will_last=_budget_will_last_to_reset(sub_dict),
+            is_stale=is_stale,
+            records_loaded=records_loaded,
+            pace=_budget_pace(sub_dict),
+            headroom_blocked=_budget_headroom_blocked(sub_dict),
+        )
+        if sub_blocked:
+            raise BudgetGuardRefuseError(
+                f"REVIEW_ROUTE_REFUSED: resolver-selected substitute --agent {sub} is {sub_reason}; refusing before spawn"
+            )
         print(
             f"🔄 HARD AUTO-SUBSTITUTE: REVIEW_IDENTITY_SUBSTITUTED: --agent {requested} → {sub} --model {chosen} "
             f"({reason}; reviewer resolver).",
@@ -14106,6 +14128,26 @@ def build_parser() -> argparse.ArgumentParser:
             "Risk passed to the canonical reviewer resolver with --review-author-model. "
             "Code profile only (--review-profile code, the default). Default: None (no review budget substitution). "
             "Example: critical for admission or launcher changes."
+        ),
+    )
+    d.add_argument(
+        "--subject-seat",
+        action="append",
+        default=None,
+        metavar="SEAT",
+        help=(
+            "Seat governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
+            "Default: none. Example: --subject-seat codex for a shared adapter change."
+        ),
+    )
+    d.add_argument(
+        "--subject-family",
+        action="append",
+        default=None,
+        metavar="FAMILY",
+        help=(
+            "Family governed by the reviewed change (repeatable); excluded by the reviewer resolver. "
+            "Unknown families fail closed. Default: none. Example: --subject-family openai."
         ),
     )
     d.add_argument(
