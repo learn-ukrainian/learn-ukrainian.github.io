@@ -61,9 +61,17 @@ def _prepend_review_protocol(
     )
 
 
+def with_core_or_exit(prompt: str, who: str) -> str:
+    """Lead ``prompt`` with the rules core, or exit naming the missing path (nothing is sent without it)."""
+    try:
+        return rules_core.with_core(prompt)
+    except rules_core.RulesCoreMissing as exc:
+        raise SystemExit(f"{who}: refused: {exc}; the rules core is required") from exc
+
+
 def bridge_prompt(prompt: str, review: bool, **review_target) -> str:
     """Finish a bridge prompt: the rules core first, then any review protocol."""
-    return rules_core.with_core(_prepend_review_protocol(prompt, review, **review_target))
+    return with_core_or_exit(_prepend_review_protocol(prompt, review, **review_target), "bridge")
 
 
 def _load_gemini_context() -> str:

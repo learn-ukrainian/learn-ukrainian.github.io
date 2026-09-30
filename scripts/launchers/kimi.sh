@@ -104,7 +104,8 @@ launcher_adapter_exec() {
       if agent_file="$(rules_core_kimi_agent_file "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT")"; then
         cmd+=(--agent-file "$agent_file")
       else
-        rules_core_warn "Kimi agent file could not be written"
+        rules_core_refuse "Kimi agent file could not be written"
+        exit 1
       fi
     fi
   else

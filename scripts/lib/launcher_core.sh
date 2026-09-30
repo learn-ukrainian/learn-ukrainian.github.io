@@ -257,21 +257,21 @@ launcher_print_argv() {
 }
 
 # Every seat starts with the rules core (scripts/lib/rules_core.sh). A driver on
-# a curriculum lane is a content seat and also gets the curriculum addendum.
+# a curriculum lane is a content seat and also gets the curriculum addendum. An
+# absent or unreadable core refuses the launch (exit 1), naming the path.
 launcher_load_rules_core() {
   local lane=""
   LC_RULES_CORE_TOML=""
   if [ ! -r "$LC_ROOT/scripts/lib/rules_core.sh" ]; then
-    printf 'WARNING: rules core not loaded (scripts/lib/rules_core.sh missing); launching without it.\n' >&2
-    LC_RULES_SEAT="" LC_RULES_CORE="" LC_RULES_CORE_BYTES=0
-    return 0
+    launcher_error "refusing to launch ${LC_PROVIDER}: rules core unavailable ($LC_ROOT/scripts/lib/rules_core.sh is missing)."
+    exit 1
   fi
   # shellcheck source=scripts/lib/rules_core.sh
   source "$LC_ROOT/scripts/lib/rules_core.sh"
   if [ "$LC_MODE" = driver ] && [ "$LC_GOVERNOR" = 0 ]; then
     lane="$LC_EPIC"
   fi
-  rules_core_load "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT" "$lane" "$LC_PROVIDER"
+  rules_core_load "$LC_DURABLE_HELPER_ROOT/.venv/bin/python" "$LC_ROOT" "$lane" "$LC_PROVIDER" || exit 1
   if [ -n "$LC_RULES_CORE" ] && [ "$LC_DRY_RUN" = 1 ]; then
     printf 'launcher: rules core seat=%s bytes=%s\n' "$LC_RULES_SEAT" "$LC_RULES_CORE_BYTES"
   fi
@@ -1234,6 +1234,8 @@ launcher_main() {
   source "$LC_ROOT/scripts/lib/handoff_identity.sh"
   launcher_validate_mode
   launcher_validate_driver_certification
+  # Before any adapter check, plane probe or deploy: no core, no launch.
+  launcher_load_rules_core
   # shellcheck disable=SC1090
   source "$LC_ROOT/scripts/launchers/${LC_PROVIDER}.sh"
   launcher_adapter_validate
@@ -1259,7 +1261,6 @@ launcher_main() {
       exit 1
     fi
   fi
-  launcher_load_rules_core
 
   if [ "$LC_MODE" = "driver" ] && [ "$LC_GOVERNOR" = "0" ]; then
     local canary_rc=0

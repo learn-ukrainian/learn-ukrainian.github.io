@@ -22,8 +22,6 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from scripts.lib import rules_core
-
 from ._ask_contract import (
     requested_effort,
     resolve_model_selection,
@@ -40,6 +38,7 @@ from ._ask_lifecycle import (
     register_ask,
 )
 from ._messaging import acknowledge, send_message
+from ._prompts import with_core_or_exit
 
 CURSOR_DEFAULT_MODEL = "auto"
 CURSOR_DEFAULT_TIMEOUT_S = 900
@@ -173,7 +172,7 @@ def _invoke_cursor(
 
     argv = [
         agent_bin,
-        "-p", rules_core.with_core(prompt),
+        "-p", with_core_or_exit(prompt, "ask-cursor"),
         "--model", model,
         "--output-format", "text",
         "--trust"

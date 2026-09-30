@@ -9198,6 +9198,14 @@ def _dispatch(
         print(f"❌ dispatch refused: {retired_refusal}", file=sys.stderr)
         return 2
 
+    # Every worker and review seat starts with the rules core: without it nothing
+    # is dispatched, and this runs before any check, worktree or task record.
+    try:
+        rules_core.require_core(getattr(args, "rules_seat", None))
+    except rules_core.RulesCoreMissing as exc:
+        print(f"❌ dispatch refused: {exc}; the rules core is required.", file=sys.stderr)
+        return 2
+
     # #8775: validate caller-supplied paths once, before the DoR check, PR
     # resolution, or anything else that can run an external command, and
     # before any use reaches a check, a subprocess cwd, a task record, or the
@@ -10500,7 +10508,7 @@ def _dispatch(
             prompt = prompt + research_block
 
         # Every worker and review seat starts with the rules core, read from this
-        # checkout; a checkout without it warns and dispatches unchanged.
+        # checkout (its presence was required at the top of the dispatch).
         cored_prompt = rules_core.with_core(prompt, getattr(args, "rules_seat", None))
         if cored_prompt != prompt:
             prompt_blocks.insert(0, "rules_core")
