@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_forms
 from scripts.wiki import sources_db
@@ -179,7 +181,8 @@ def test_manifest_without_paradigm_key_handles_weaker_provenance(tmp_path):
     """Hazard 4: Entries with no paradigm key in manifest.
 
     If nonempty stored headword exists: base row only from stored columns, flagged
-    raw_entry_page_absent, weaker provenance, is_invariable=False (do not infer invariable).
+    raw_entry_page_absent, never forms-complete, is_invariable=False (do not infer invariable).
+    Done/failed accounting does not double-count entries with both base assertion and failure.
     """
     db_path = tmp_path / "sources.db"
     syn_html = "<html>synonyms only</html>"
@@ -200,8 +203,9 @@ def test_manifest_without_paradigm_key_handles_weaker_provenance(tmp_path):
 
     rep = ulif_forms.build_ulif_forms(db_path=db_path)
     assert rep["state"] == "complete"
-    assert rep["entries_done"] == 1
-    assert rep["entries_failed"] == 0
+    assert rep["entries_done"] == 0
+    assert rep["entries_failed"] == 1
+    assert rep["failures_by_reason"].get("raw_entry_page_absent") == 1
 
     records = sources_db.get_ulif_word_records(["академічний"], db_path=db_path)
     first_entry = records[0]["entries"][0]
@@ -210,6 +214,10 @@ def test_manifest_without_paradigm_key_handles_weaker_provenance(tmp_path):
     assert base_form["is_lemma"] is True
     assert base_form["is_invariable"] is False  # Must NOT infer invariable status
     assert base_form["form_stressed"] == "академі́чний"
+
+    # Never forms-complete when raw entry page is absent
+    assert first_entry["forms_state"] == "raw_entry_page_absent"
+    assert first_entry["forms_failure"]["reason"] == "raw_entry_page_absent"
 
     raw_id = first_entry["identity_from_raw"]
     assert raw_id["raw_entry_page_absent"] is True
@@ -372,3 +380,161 @@ def test_cli_help_standard():
     assert "Outputs:" in out
     assert "Exit codes:" in out
     assert "Related:" in out
+
+
+def test_f1_preposition_variant_splitting():
+    """F1: Split per comma-variant, override or inherit cell prefix, strip from form surface."""
+    from scripts.lexicon.runner.ulif_dictua_parse import _split_cell_surface
+
+    # Case 1: comma variant with overriding preposition (e.g. Абакан #1629)
+    rows1 = _split_cell_surface("на/в Абака́ні, по Абака́ну")
+    assert len(rows1) == 2
+    assert rows1[0]["form_stressed"] == "Абака́ні"
+    assert rows1[0]["form_unstressed"] == "Абакані"
+    assert rows1[0]["preposition"] == "на/в"
+    assert rows1[1]["form_stressed"] == "Абака́ну"
+    assert rows1[1]["form_unstressed"] == "Абакану"
+    assert rows1[1]["preposition"] == "по"
+
+    # Case 2: при preposition (e.g. Євграфов #85)
+    rows2 = _split_cell_surface("при Євгра́фові, Євгра́фову")
+    assert len(rows2) == 2
+    assert rows2[0]["form_stressed"] == "Євгра́фові"
+    assert rows2[0]["preposition"] == "при"
+    assert rows2[1]["form_stressed"] == "Євгра́фову"
+    assert rows2[1]["preposition"] == "при"  # Inherits cell prefix при
+
+
+def test_f3_verify_detects_source_modification(tmp_path):
+    """F3: verify_ulif_forms detects post-build modifications to ulif_dictua_entries."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    ulif_forms.build_ulif_forms(db_path=db_path)
+    assert ulif_forms.verify_ulif_forms(db_path)["verified"] is True
+
+    # Mutate canonical_headword directly in database
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("UPDATE ulif_dictua_entries SET canonical_headword = 'За́мок-інший' WHERE id = 1")
+    conn.commit()
+    conn.close()
+
+    # Verify fails with stale source_fingerprint
+    ver = ulif_forms.verify_ulif_forms(db_path)
+    assert ver["verified"] is False
+    assert "stale source_fingerprint" in ver["error"]
+
+
+def test_f6_batch_validation_and_parser_exception_isolation(tmp_path):
+    """F6: Rejects invalid batch_size and isolates parser exceptions without corrupting state."""
+    db_path = tmp_path / "sources.db"
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": "<html>bad</html>"},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    # Rejects invalid batch size
+    with pytest.raises(ValueError, match="batch_size must be positive"):
+        ulif_forms.build_ulif_forms(db_path=db_path, batch_size=0)
+
+
+def test_f9_full_mismatches_itemization_and_sidecar(tmp_path):
+    """F9: Itemize all mismatches with locators and write .mismatches.jsonl sidecar."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="Неправильний",
+        grammatical_label="неправильна граматика",
+        sense_gloss="неправильний глос",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+
+    report_path = tmp_path / "build_report.json"
+    rep = ulif_forms.build_ulif_forms(db_path=db_path, report_path=report_path)
+    assert rep["mismatches_count"] == 1
+    mismatch = rep["mismatches"][0]
+    assert mismatch["locator"] == "ulif:entry:1"
+    assert "canonical_headword" in mismatch["fields"]
+    assert "grammatical_label" in mismatch["fields"]
+    assert "sense_gloss" in mismatch["fields"]
+
+    sidecar = report_path.with_suffix(".mismatches.jsonl")
+    assert sidecar.is_file()
+    lines = sidecar.read_text(encoding="utf-8").splitlines()
+    assert len(lines) == 1
+    parsed_sidecar = json.loads(lines[0])
+    assert parsed_sidecar["locator"] == "ulif:entry:1"
+
+
+def test_f12_disagreement_report_separates_oracle_not_applicable(tmp_path, monkeypatch):
+    """F12: Oracle invalid_input is classified as oracle_not_applicable and excluded from disagreed_count."""
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(str(db_path))
+    sources_db.ensure_ulif_dictua_schema(conn)
+    conn.execute(
+        """
+        INSERT INTO ulif_dictua_entries (
+            id, normalized_query, homonym_index, canonical_headword, grammatical_label,
+            sense_gloss, raw_response_ref, status, homonym_checked, retrieved_at, parser_version
+        ) VALUES (1, 'тест', 1, 'тест', 'іменник', '', '', 'ok', 1, '2026-09-30T00:00:00Z', 'ulif-dictua-v2')
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO ulif_forms (
+            id, entry_id, entry_key, form_unstressed, form_stressed,
+            stress_vowel_indices, grammatical_tags, unmapped_labels,
+            variant_order, preposition, marked_asterisk, is_lemma,
+            is_invariable, dual_stress_flag, pedagogical_stressed_form,
+            source_page_sha256, parser_version, source_entry_fingerprint
+        ) VALUES (
+            1, 1, 'тест#1', '123-abc', '123-abc',
+            '[]', '[]', '[]',
+            1, '', 0, 1,
+            0, 0, '123-abc',
+            'sha', 'ulif-forms-v2', 'fp'
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    out_path = tmp_path / "disagreements.json"
+    res = ulif_forms.generate_disagreement_report(db_path=db_path, out_path=out_path)
+    assert res["total_checked"] == 1
+    assert res["not_applicable_count"] == 1
+    assert res["disagreed_count"] == 0  # Not counted as a stress disagreement!
+
+    data = json.loads(out_path.read_text(encoding="utf-8"))
+    assert data["records"][0]["disagreement_type"] == "oracle_not_applicable"
+    assert data["records"][0]["agrees"] is None

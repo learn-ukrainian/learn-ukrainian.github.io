@@ -82,21 +82,22 @@ Stores parsed paradigm and inflectional rows derived from verified entries:
 | --- | --- | --- |
 | `id` | `INTEGER PRIMARY KEY AUTOINCREMENT` | Internal row id |
 | `entry_id` | `INTEGER NOT NULL REFERENCES ulif_dictua_entries(id)` | Foreign key to stored entry |
-| `entry_key` | `TEXT NOT NULL` | Parser entry key (e.g. `замок:noun:1`) |
+| `entry_key` | `TEXT NOT NULL` | Parser entry key (e.g. `замок#1`) |
 | `form_unstressed` | `TEXT NOT NULL` | Unstressed surface form (indexed) |
 | `form_stressed` | `TEXT NOT NULL` | Stressed surface form (combining acute U+0301) |
 | `stress_vowel_indices` | `TEXT NOT NULL` | JSON array of 0-based vowel indices under stress |
 | `grammatical_tags` | `TEXT NOT NULL` | JSON array of grammatical tags (e.g. `["noun", "inanim", "m", "v_naz"]`) |
 | `unmapped_labels` | `TEXT NOT NULL` | JSON array of raw source labels not mapped to canonical tags |
 | `variant_order` | `INTEGER NOT NULL DEFAULT 1` | 1-based order for variant forms in the same cell |
-| `preposition` | `TEXT NOT NULL DEFAULT ''` | Attested preposition prefix separated from form (e.g. `на`, `в`) |
+| `preposition` | `TEXT NOT NULL DEFAULT ''` | Attested preposition prefix separated from form (e.g. `на`, `в`, `на/в`, `при`, `по`) |
 | `marked_asterisk` | `INTEGER NOT NULL DEFAULT 0` | 1 if form was marked with an asterisk in ULIF (rare/archaic) |
 | `is_lemma` | `INTEGER NOT NULL DEFAULT 0` | 1 if row represents the dictionary lemma |
 | `is_invariable` | `INTEGER NOT NULL DEFAULT 0` | 1 if lexeme is invariable (adverb, interjection, invariant noun) |
 | `dual_stress_flag` | `INTEGER NOT NULL DEFAULT 0` | 1 if form exhibits dual stress (stress doublet) |
 | `pedagogical_stressed_form` | `TEXT NOT NULL DEFAULT ''` | Standardized pedagogical stressed form for doublets |
 | `source_page_sha256` | `TEXT NOT NULL DEFAULT ''` | SHA-256 of the raw paradigm HTML blob parsed |
-| `parser_version` | `TEXT NOT NULL` | Parser version string (e.g. `ulif-dictua-v2`) |
+| `parser_version` | `TEXT NOT NULL` | Parser version string (e.g. `ulif-forms-v2`) |
+| `source_entry_fingerprint` | `TEXT NOT NULL DEFAULT ''` | Deterministic SHA-256 fingerprint of source entry columns and sections |
 
 ### 3.2 `ulif_forms_failures` Table
 Explicit, auditable record of verified entries that could not yield paradigm forms:
@@ -114,13 +115,14 @@ One-row metadata ledger tracking build lifecycle and integrity:
 | --- | --- | --- |
 | `id` | `INTEGER PRIMARY KEY CHECK (id = 1)` | Singleton row constraint |
 | `state` | `TEXT NOT NULL` | Lifecycle state: `'building'`, `'complete'`, or `'failed'` |
-| `parser_version` | `TEXT NOT NULL` | Parser version used during the build |
+| `parser_version` | `TEXT NOT NULL` | Parser version used during the build (`ulif-forms-v2`) |
 | `total_entries` | `INTEGER NOT NULL` | Total verified entries eligible (`homonym_checked=1`) |
-| `entries_done` | `INTEGER NOT NULL` | Count of entries yielding form rows |
+| `entries_done` | `INTEGER NOT NULL` | Count of entries yielding complete form rows (excluding failures) |
 | `entries_failed` | `INTEGER NOT NULL` | Count of entries recorded in `ulif_forms_failures` |
 | `total_forms` | `INTEGER NOT NULL` | Total form rows inserted into `ulif_forms` |
 | `started_at` | `TEXT NOT NULL` | ISO 8601 build start timestamp |
 | `finished_at` | `TEXT NOT NULL` | ISO 8601 build finish timestamp |
+| `source_fingerprint` | `TEXT NOT NULL DEFAULT ''` | Deterministic SHA-256 snapshot hash of all verified entries and sections |
 
 ---
 
@@ -161,12 +163,14 @@ When an entry cannot yield standard paradigm forms, it is categorized determinis
 | Reason Code | Condition | Action / Accounting |
 | --- | --- | --- |
 | `missing_raw_manifest` | Raw response ref missing in `ulif_raw.sqlite` | Logged to `ulif_forms_failures` |
+| `corrupt_raw_manifest` | Malformed hash or corrupt manifest blob | Logged to `ulif_forms_failures` |
 | `missing_raw_paradigm_blob` | Manifest exists, but paradigm blob hash is missing in cache | Logged to `ulif_forms_failures` |
+| `corrupt_raw_paradigm_blob` | Paradigm blob hash mismatch / corrupt cache row | Logged to `ulif_forms_failures` |
 | `extraction_failed: empty_article` | Raw page captured empty container (e.g. *хто*, *абихто* class: 0 word/grammar styles) | Logged to `ulif_forms_failures`; never emitted as empty lemma or invariable |
 | `extraction_failed` | HTML malformed or parsing threw an exception | Logged to `ulif_forms_failures` with exception detail |
-| `raw_entry_page_absent` | Manifest has no `paradigm` tab key, but stored headword is present | Synthesizes a base lemma row with weaker provenance (`source_page_sha256=''`, flagged explicitly); if stored headword is also empty, fails as `raw_entry_page_absent` |
+| `raw_entry_page_absent` | Manifest has no `paradigm` tab key | Retains a single base lemma row if stored headword is present (`is_invariable=False`), but reported as `raw_entry_page_absent` failure and counted in `entries_failed` (never forms-complete); fails if stored headword is also empty |
 
-**Invariant:** `total_entries == entries_done + entries_failed`. Partial progress or in-flight builds never report partial tables as complete.
+**Invariant:** `total_entries == entries_done + entries_failed`. Entries with both a weaker base assertion and a source gap are counted in `entries_failed` and excluded from `entries_done` so no entry is double counted.
 
 ---
 
@@ -182,25 +186,23 @@ Builds `ulif_forms` and `ulif_forms_failures` into the target SQLite database:
     --db /path/to/sources-isolated.db \
     --raw-cache /home/ops/learn-ukrainian/data/lexicon/cache/ulif_raw.sqlite \
     --report /path/to/build-report.json \
-    --batch-size 2000
+    --batch-size 500
 ```
-- `--db`: Path to target SQLite database containing `ulif_dictua_entries`.
-- `--raw-cache`: Path to external raw cache SQLite database.
-- `--batch-size`: Batch size for SQLite inserts (default: 2000).
-- `--limit`: Optional limit for testing/dry-runs.
-- `--force`: Rebuild even if `ulif_forms_build` reports complete.
-- `--report`: Optional path to output JSON summary report.
+- `--db`: Path to target SQLite database containing `ulif_dictua_entries` (required).
+- `--raw-cache`: Path to external raw cache SQLite database (optional; defaults to cache next to `--db` or primary repository cache).
+- `--batch-size`: Batch size for SQLite inserts (default: 500).
+- `--report`: Optional path to output JSON summary report. If mismatches are detected, writes a companion `.mismatches.jsonl` sidecar.
 
 ### 7.2 Verifying Integrity (`verify`)
-Verifies table counts, schema constraints, and foreign key integrity:
+Verifies table counts, schema constraints, parser version, and source snapshot fingerprint:
 
 ```bash
 /home/ops/learn-ukrainian/.venv/bin/python -m scripts.lexicon.runner.ulif_forms verify \
-    --db /path/to/sources-isolated.db \
-    --raw-cache /home/ops/learn-ukrainian/data/lexicon/cache/ulif_raw.sqlite
+    --db /path/to/sources-isolated.db
 ```
 Returns 0 if:
-- `ulif_forms_build` is `complete` and parser version matches.
+- `ulif_forms_build` is `complete` and parser version matches `ulif-forms-v2`.
+- `source_fingerprint` matches recomputed snapshot hash over all verified entries and sections.
 - `total_entries == entries_done + entries_failed`.
 - Every row in `ulif_forms` references a valid verified `ulif_dictua_entries` row.
 
@@ -210,9 +212,14 @@ Compares ULIF derived form stresses against the independent stress trie:
 ```bash
 /home/ops/learn-ukrainian/.venv/bin/python -m scripts.lexicon.runner.ulif_forms disagreement-report \
     --db /path/to/sources-isolated.db \
-    --output /path/to/stress-disagreements.tsv
+    --out /path/to/stress-disagreements.tsv \
+    --all
 ```
-This comparison is read-only, informational, and never used to overwrite source stresses.
+- `--db`: Path to target SQLite database (required).
+- `--out`: Output file path (`.tsv` or `.json`, required).
+- `--all`: Include all checked form rows in the report instead of only disagreements (default: False).
+
+This comparison is read-only, informational, and never used to overwrite source stresses. Inputs classified by the oracle as `invalid_input` are reported as `oracle_not_applicable` and separated from true stress disagreements.
 
 ---
 
@@ -223,23 +230,25 @@ Available via the existing `sources` MCP server (`.mcp/servers/sources/server.py
 ### 8.1 Tool Interface
 - **Tool Name**: `query_ulif_records`
 - **Arguments**:
-  - `words` (`list[str]`, required): List of Ukrainian words/queries to look up.
-  - `detail` (`str`, optional): `'compact'` (default) or `'full'`. Compact mode strips large `raw_html` strings from section payloads; `'full'` returns byte-complete payloads.
-  - `db_path` (`str`, optional): Explicit database override (used in testing and dry runs).
+  - `words` (`list[str]`, required): List of Ukrainian words/queries to look up (max 200 words).
+  - `detail` (`str`, optional): `'full'` (default) or `'compact'`. Compact mode drops only `raw_html` keys from nested section payloads to reduce payload size.
 
 ### 8.2 Constraints & Guardrails
 - **Query Cap**: Maximum 200 words per request. Exceeding words are truncated with a prominent `warning` note in the metadata.
 - **Top-Level Provenance**:
   ```json
   {
-    "source": "ulif_dictua",
-    "schema_version": "2.0",
-    "parser_version": "ulif-dictua-v2",
-    "total_queried": 1,
+    "source": {
+      "source_id": "ulif_dictua",
+      "official_url": "https://lcorp.ulif.org.ua/dictua/",
+      "attribution_label": "«Словники України on-line» (DictUA), Український мовно-інформаційний фонд НАН України"
+    },
+    "detail": "full",
+    "record_count": 1,
     "records": [...]
   }
   ```
-- **Homonym Preservation**: Returns all homonyms in `entries` and `homonyms` arrays. Single-entry queries have top-level convenience aliases (`canonical_headword`, `sections`, `forms`, etc.).
+- **Single Canonical Array**: Every record provides a single `entries` array containing all homonyms and sections. No redundant `homonyms` alias and no top-level single-entry clones (F7).
 - **Unverified Rows**: Unverified entries (`homonym_checked=0`) return `verified: false`, `status: "unverified"`, and empty `sections` / `forms`.
 
 ---

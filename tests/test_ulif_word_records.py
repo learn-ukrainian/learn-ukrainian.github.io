@@ -240,8 +240,12 @@ def test_forms_state_transitions_and_failure_reporting(tmp_path):
 
     # 1. Before build: forms_state is unbuilt
     rec1 = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
-    assert rec1[0]["forms_state"] == "unbuilt"
-    assert rec1[0]["forms"] == []
+    assert rec1[0]["entries"][0]["forms_state"] == "unbuilt"
+    assert rec1[0]["entries"][0]["forms"] == []
+    # F7: No top-level homonyms alias or single-entry clones
+    assert "homonyms" not in rec1[0]
+    assert "canonical_headword" not in rec1[0]
+    assert "forms_state" not in rec1[0]
 
     # 2. Simulate building state
     conn = sqlite3.connect(str(db_path))
@@ -254,7 +258,7 @@ def test_forms_state_transitions_and_failure_reporting(tmp_path):
     conn.commit()
     conn.close()
     rec2 = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
-    assert rec2[0]["forms_state"] == "building"
+    assert rec2[0]["entries"][0]["forms_state"] == "building"
 
     # 3. Simulate stale parser version
     conn = sqlite3.connect(str(db_path))
@@ -262,13 +266,13 @@ def test_forms_state_transitions_and_failure_reporting(tmp_path):
     conn.commit()
     conn.close()
     rec3 = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
-    assert rec3[0]["forms_state"] == "stale_parser_version"
+    assert rec3[0]["entries"][0]["forms_state"] == "stale_parser_version"
 
     # 4. Actual complete build
     ulif_forms.build_ulif_forms(db_path=db_path)
     rec4 = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
-    assert rec4[0]["forms_state"] == "complete"
-    assert len(rec4[0]["forms"]) > 0
+    assert rec4[0]["entries"][0]["forms_state"] == "complete"
+    assert len(rec4[0]["entries"][0]["forms"]) > 0
 
 
 def test_batch_query_returns_ordered_records(tmp_path):
@@ -306,3 +310,99 @@ def test_batch_query_returns_ordered_records(tmp_path):
     assert records[0]["status"] == "ok"
     assert records[1]["status"] == "ok"
     assert records[2]["status"] == "not_found"
+
+
+def test_missing_tables_reported_explicitly(tmp_path):
+    """F4: Missing forms/failures/sections tables report explicit missing_table state."""
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(str(db_path))
+    conn.execute(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT,
+            homonym_index INTEGER,
+            canonical_headword TEXT,
+            grammatical_label TEXT,
+            sense_gloss TEXT,
+            raw_response_ref TEXT,
+            status TEXT,
+            homonym_checked INTEGER,
+            retrieved_at TEXT,
+            parser_version TEXT
+        )
+        """
+    )
+    conn.execute(
+        """
+        INSERT INTO ulif_dictua_entries VALUES
+        (1, 'тест', 1, 'тест', 'іменник', '', '', 'ok', 1, '2026-09-30T00:00:00Z', 'ulif-dictua-v2')
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    records = sources_db.get_ulif_word_records(["тест"], db_path=db_path)
+    assert len(records) == 1
+    entry = records[0]["entries"][0]
+    assert entry["forms_state"] == "missing_table"
+    assert entry["sections_state"] == "missing_table"
+
+
+def test_corrupt_manifest_and_stale_fingerprint_isolation(tmp_path):
+    """F2/F3/F5: Isolate corrupt raw refs per-entry and detect stale entry fingerprints."""
+    db_path = tmp_path / "sources.db"
+    par_html = _read_fixture("zamok-entry-1.html")
+
+    # Entry 1: healthy entry
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="За́мок",
+        sections={"paradigm": {"rows": [["Називний", "За́мок"]]}},
+        raw_responses={"paradigm": par_html},
+        retrieved_at="2026-09-28T00:00:00Z",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=1,
+        homonym_checked=1,
+        db_path=db_path,
+    )
+    # Entry 2: corrupt raw response ref
+    conn = sqlite3.connect(str(db_path))
+    conn.execute(
+        """
+        INSERT INTO ulif_dictua_entries (
+            id, normalized_query, homonym_index, canonical_headword,
+            grammatical_label, sense_gloss, raw_response_ref, status,
+            homonym_checked, retrieved_at, parser_version
+        ) VALUES (2, 'битий', 1, 'би́тий', 'прикметник', '', 'sha256:corruptbadhash', 'ok', 1, '2026-09-30T00:00:00Z', 'ulif-dictua-v2')
+        """
+    )
+    conn.commit()
+    conn.close()
+
+    ulif_forms.build_ulif_forms(db_path=db_path)
+
+    # Batch query containing both healthy and corrupt entries
+    records = sources_db.get_ulif_word_records(["замок", "битий"], db_path=db_path)
+    assert len(records) == 2
+
+    # Healthy entry has complete forms
+    rec_healthy = records[0]
+    assert rec_healthy["entries"][0]["forms_state"] == "complete"
+    assert rec_healthy["entries"][0]["identity_from_raw"]["source_page_sha256"] != ""
+
+    # Corrupt entry does not fail batch; returns isolated raw error
+    rec_corrupt = records[1]
+    assert rec_corrupt["entries"][0]["identity_from_raw"]["error"] == "raw_manifest_corrupt"
+    assert rec_corrupt["entries"][0]["identity_from_raw"]["stored_matches_raw"] is None
+
+    # F3: Mutate canonical_headword of entry 1 in source database
+    conn = sqlite3.connect(str(db_path))
+    conn.execute("UPDATE ulif_dictua_entries SET canonical_headword = 'За́мок-змінений' WHERE id = 1")
+    conn.commit()
+    conn.close()
+
+    # Querying again immediately flags stale_source_snapshot
+    records_after_mutation = sources_db.get_ulif_word_records(["замок"], db_path=db_path)
+    assert records_after_mutation[0]["entries"][0]["forms_state"] == "stale_source_snapshot"

@@ -409,10 +409,6 @@ class TestQueryUlifRecordsHandler:
                 "status": "ok",
                 "verified": True,
                 "entry_count": 1,
-                "canonical_headword": "сті́л",
-                "sections": {
-                    "paradigm": [{"rows": [["Називний", "сті́л"]], "raw_html": "<table>...</table>"}],
-                },
                 "entries": [
                     {
                         "entry_id": 1,
@@ -434,7 +430,7 @@ class TestQueryUlifRecordsHandler:
         assert data["record_count"] == 1
         assert "source" in data
         assert data["source"]["source_id"] == "ulif_dictua"
-        assert data["records"][0]["sections"]["paradigm"][0]["raw_html"] == "<table>...</table>"
+        assert data["records"][0]["entries"][0]["sections"]["paradigm"][0]["raw_html"] == "<table>...</table>"
 
     def test_query_ulif_records_compact_detail_strips_raw_html(self, server_module):
         mock_records = [
@@ -443,9 +439,6 @@ class TestQueryUlifRecordsHandler:
                 "normalized_query": "стіл",
                 "status": "ok",
                 "verified": True,
-                "sections": {
-                    "paradigm": [{"rows": [["Називний", "сті́л"]], "raw_html": "<table>...</table>"}],
-                },
                 "entries": [
                     {
                         "entry_id": 1,
@@ -462,7 +455,6 @@ class TestQueryUlifRecordsHandler:
         data = json.loads(result[0].text)
         assert data["detail"] == "compact"
         assert "detail_note" in data
-        assert "raw_html" not in data["records"][0]["sections"]["paradigm"][0]
         assert "raw_html" not in data["records"][0]["entries"][0]["sections"]["paradigm"][0]
 
     def test_query_ulif_records_truncates_at_200(self, server_module):
