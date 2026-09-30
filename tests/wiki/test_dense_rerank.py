@@ -177,8 +177,8 @@ def test_rerank_candidates_truncates_by_keyword_rank_when_encoder_unavailable(mo
     results = dense_rerank.rerank_candidates(
         "query",
         [
-            {"unit_key": "1", "keyword_rank": 2, "fts_score": -1.0},
-            {"unit_key": "2", "keyword_rank": 1, "fts_score": -100.0},
+            {"unit_key": "1", "keyword_rank": 2, "fts_score": -100.0},
+            {"unit_key": "2", "keyword_rank": 1, "fts_score": -1.0},
         ],
         corpus="test_corpus",
         limit=1,
