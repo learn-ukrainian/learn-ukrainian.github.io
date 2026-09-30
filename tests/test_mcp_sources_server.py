@@ -231,6 +231,7 @@ class TestListTools:
             "query_ulif_synonyms",
             "query_ulif_antonyms",
             "query_ulif_phraseology",
+            "query_ulif_records",
             "query_r2u",
             "query_e2u",
             "query_sum20",
@@ -380,6 +381,93 @@ class TestUlifHandlers:
         assert "unavailable" in text
         assert "lcorp.ulif.org.ua" in text
         assert "transient_error" not in text
+
+
+class TestQueryUlifRecordsHandler:
+    def test_query_ulif_records_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        record_tool = next(t for t in tools if t.name == "query_ulif_records")
+        assert record_tool.input_schema["required"] == ["words"]
+        assert record_tool.input_schema["properties"]["words"]["type"] == "array"
+        assert record_tool.input_schema["properties"]["detail"]["enum"] == ["full", "compact"]
+
+    def test_query_ulif_records_invalid_inputs(self, server_module):
+        res1 = _run(server_module.handle_query_ulif_records({}))
+        assert "invalid_input" in res1[0].text
+
+        res2 = _run(server_module.handle_query_ulif_records({"words": []}))
+        assert "invalid_input" in res2[0].text
+
+        res3 = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "invalid"}))
+        assert "invalid_input" in res3[0].text
+
+    def test_query_ulif_records_full_detail(self, server_module):
+        mock_records = [
+            {
+                "word": "стіл",
+                "normalized_query": "стіл",
+                "status": "ok",
+                "verified": True,
+                "entry_count": 1,
+                "entries": [
+                    {
+                        "entry_id": 1,
+                        "homonym_index": 1,
+                        "canonical_headword": "сті́л",
+                        "sections": {
+                            "paradigm": [{"rows": [["Називний", "сті́л"]], "raw_html": "<table>...</table>"}],
+                        },
+                    }
+                ],
+            }
+        ]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records) as mock_fn:
+            result = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "full"}))
+            mock_fn.assert_called_once_with(["стіл"])
+
+        data = json.loads(result[0].text)
+        assert data["detail"] == "full"
+        assert data["record_count"] == 1
+        assert "source" in data
+        assert data["source"]["source_id"] == "ulif_dictua"
+        assert data["records"][0]["entries"][0]["sections"]["paradigm"][0]["raw_html"] == "<table>...</table>"
+
+    def test_query_ulif_records_compact_detail_strips_raw_html(self, server_module):
+        mock_records = [
+            {
+                "word": "стіл",
+                "normalized_query": "стіл",
+                "status": "ok",
+                "verified": True,
+                "entries": [
+                    {
+                        "entry_id": 1,
+                        "sections": {
+                            "paradigm": [{"rows": [["Називний", "сті́л"]], "raw_html": "<table>...</table>"}],
+                        },
+                    }
+                ],
+            }
+        ]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records):
+            result = _run(server_module.handle_query_ulif_records({"words": ["стіл"], "detail": "compact"}))
+
+        data = json.loads(result[0].text)
+        assert data["detail"] == "compact"
+        assert "detail_note" in data
+        assert "raw_html" not in data["records"][0]["entries"][0]["sections"]["paradigm"][0]
+
+    def test_query_ulif_records_truncates_at_200(self, server_module):
+        words = [f"word_{i}" for i in range(250)]
+        mock_records = [{"word": w, "status": "not_found", "verified": False, "entries": []} for w in words[:200]]
+        with patch("wiki.sources_db.get_ulif_word_records", return_value=mock_records) as mock_fn:
+            result = _run(server_module.handle_query_ulif_records({"words": words}))
+            assert len(mock_fn.call_args[0][0]) == 200
+
+        data = json.loads(result[0].text)
+        assert data["record_count"] == 200
+        assert "warning" in data
+        assert "truncated" in data["warning"]
 
     def test_search_text_subject_schema(self, server_module):
         tools = _run(server_module.list_tools())
