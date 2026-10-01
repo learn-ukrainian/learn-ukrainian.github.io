@@ -70,7 +70,7 @@ DESCRIPTIONS: dict[str, str] = {
     REVIEW_UNREADABLE: "failure: the review file is missing or not a YAML mapping",
     REVIEW_YAML_FENCE_MISSING: "failure: the return is not a bare YAML mapping and has no yaml/yml fenced block",
     REVIEW_YAML_FENCE_MULTIPLE: "failure: the return contains more than one yaml/yml fenced block",
-    REVIEW_YAML_FENCE_NOT_MAPPING: "failure: the yaml/yml fenced block is unclosed or does not parse as one YAML mapping",
+    REVIEW_YAML_FENCE_NOT_MAPPING: "failure: the return is not one complete YAML mapping, or has ambiguous/unclosed fences",
     MANIFEST_KIND_MISMATCH: "failure: the review's kind (lesson or plan) is not the kind of the manifest it echoes",
     PLAN_MANIFEST_INVALID: "failure: a kind: plan manifest does not match schemas/plan-review-manifest-v1.schema.json",
     PLAN_UNREADABLE: "failure: the plan document pinned by the manifest is missing or not a YAML mapping with lessons",
