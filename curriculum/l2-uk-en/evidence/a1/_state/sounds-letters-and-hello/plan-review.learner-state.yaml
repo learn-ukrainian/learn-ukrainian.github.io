@@ -79,5 +79,14 @@ learner_state:
   lesson_n: 1
   letters: {}
   level: a1
-  name_ids: {}
+  name_ids:
+    W-091:
+      lesson: 1
+      position: 1
+    W-093:
+      lesson: 1
+      position: 1
+    W-099:
+      lesson: 1
+      position: 1
   position: 1

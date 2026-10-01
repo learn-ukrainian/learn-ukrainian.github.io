@@ -211,16 +211,16 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "a1fc185346cb212c89114a18e2e8c7f1c40b43bc98f4d14cdfdf7e886f408373",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2383b4a9044e1ef418db1e98ce93a8a4fb0768a674365314be9e601a63ebbb5b",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "96b696344c3bb5ba94463718cafc55df5aecf13955f1e1d8c16d9a34709c5515",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "160e4aa600e8fd2f091ffd7d07aa5ab31a1daded4de56c162d286908b29c492c",
-    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "13b67ca757968e8037b112f54fddc96275414f1fbcebcf04653f24d763ad6004",
-    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "812f5cfb2dae62b9feea54ab7ed96e7a24680dc37854637da4bd31ceec7f79f7",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "7a383ea319f0d3e418372224bc0adc0d8898c32b1ebaf83ee27574eb4ae19973",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "b7aa142f59f3b84faaa4459fdb2e038f5d0de5694c621828c4960ed83280e533",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "805a24cd4a0ef7c9a2910c7c6c9df3eeb72e0cba82cd03d0879d9b44eb60e767",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "8db2e2a32c23b623be9c0818b0bf69fc5d841f57b2c1e7df807994a3c68251b6",
+    "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
+    "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "b33075d716373139104577b6318bb700064de97a1bbf180801e9775360bae3e4",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832",
-    "docs/epics/fresh-build-a1-arc.md": "5a1e7190500683fb9134642f993288f4a79dc2c6348440f1d94dec31f4f109b7",
-    "schemas/activities-a1.schema.json": "cc185c5286a7dbe6a4c65d1e0668fd9f2d53ed9d5032182edb4e2db7d98fc8aa",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "8e0d11db868bafc39dd2d9bb51e7b914cf9f06818540b2cbfff54548f5408943",
+    "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
+    "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
     "schemas/module-plan-v2.schema.json": "587b90fe0f15bffd9187e9987cb44a5a94aea9196ca4cc71154386dc99d96fed",
     "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
@@ -257,9 +257,52 @@
       "lesson": null,
       "message": "subtitle digits: 1, 3; digit quantities are not parsed — the plan review checks stated quantities against the scope sidecar (§2a)",
       "step": null
+    },
+    {
+      "code": "mechanical_rule_not_checked",
+      "lesson": null,
+      "message": "gate M5 was not checked: core word records carry no CEFR level: W-074",
+      "step": null
     }
   ],
-  "notes": [],
+  "notes": [
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 2,
+      "message": "core lemma 'звук' (W-077) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 2,
+      "message": "core lemma 'літера' (W-078) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 3,
+      "message": "core lemma 'голосний' (W-079) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 3,
+      "message": "core lemma 'приголосний' (W-080) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'малина' (W-082) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    },
+    {
+      "code": "core_cefr_above_module",
+      "lesson": 4,
+      "message": "core lemma 'слива' (W-083) is A2 in the word store, 1 band above the module's level A1 (gate M5)",
+      "step": null
+    }
+  ],
   "slug": "sounds-letters-and-hello",
   "status": "pass",
   "validator": "plan-validate: the §6 gate of docs/epics/fresh-build-plan-schema.md — §2 rules 1–7 with the semantics of §2a (single-plan and cross-plan). not_checked items are reported, never passed silently.",

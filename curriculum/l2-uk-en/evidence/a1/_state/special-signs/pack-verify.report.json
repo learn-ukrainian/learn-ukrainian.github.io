@@ -6,10 +6,10 @@
     "exercises_count": 5,
     "notes_count": 0,
     "standard_count": 1,
-    "texts_count": 26,
+    "texts_count": 36,
     "unsupported_open_count": 0,
-    "unsupported_resolved_count": 2,
-    "videos_count": 5
+    "unsupported_resolved_count": 7,
+    "videos_count": 12
   },
   "errors": [],
   "kind": "pack-verify",
@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/special-signs.yaml",
-    "sha256": "a637dc9c37ffb8be028c2d249e7bbde75ae490f753fc817eef6bc72c08c27ab6"
+    "sha256": "889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock",
-    "sha256": "750764090570b6c7cfd7aa5c6e4e4b88968c4301f8b101cf073cd62537ff814c"
+    "sha256": "974afc8b5a4f6859c9ae7cb238cf91a98708b5f22924f4421df7ea4d1188ede1"
   },
   "report_schema": 1,
   "reports": [],

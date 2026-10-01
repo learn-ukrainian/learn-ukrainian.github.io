@@ -6,26 +6,26 @@
         "activities": {
           "inline": {
             "by_type": {
+              "fill-in": 1,
               "letter-grid": 1,
               "observe": 1,
-              "quiz": 1,
               "watch-and-repeat": 1
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
-              "match-up": 1,
-              "quiz": 1
+              "fill-in": 1,
+              "match-up": 1
             },
             "total": 2
           }
         },
         "distinct_types": [
+          "fill-in",
           "letter-grid",
           "match-up",
           "observe",
-          "quiz",
           "watch-and-repeat"
         ],
         "has_workbook": true,
@@ -37,22 +37,24 @@
         "activities": {
           "inline": {
             "by_type": {
+              "fill-in": 1,
               "letter-grid": 2,
-              "quiz": 2
+              "quiz": 1
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
               "anagram": 1,
-              "pick-syllables": 1,
-              "quiz": 1
+              "fill-in": 1,
+              "pick-syllables": 1
             },
             "total": 3
           }
         },
         "distinct_types": [
           "anagram",
+          "fill-in",
           "letter-grid",
           "pick-syllables",
           "quiz"
@@ -66,25 +68,23 @@
         "activities": {
           "inline": {
             "by_type": {
-              "letter-grid": 2,
-              "quiz": 2
+              "fill-in": 2,
+              "letter-grid": 2
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
               "count-syllables": 1,
-              "odd-one-out": 1,
-              "quiz": 1
+              "fill-in": 2
             },
             "total": 3
           }
         },
         "distinct_types": [
           "count-syllables",
-          "letter-grid",
-          "odd-one-out",
-          "quiz"
+          "fill-in",
+          "letter-grid"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -103,14 +103,15 @@
           "workbook": {
             "by_type": {
               "divide-words": 1,
-              "match-up": 1,
-              "quiz": 1
+              "fill-in": 1,
+              "match-up": 1
             },
             "total": 3
           }
         },
         "distinct_types": [
           "divide-words",
+          "fill-in",
           "letter-grid",
           "match-up",
           "quiz"
@@ -124,25 +125,25 @@
         "activities": {
           "inline": {
             "by_type": {
-              "observe": 2,
-              "quiz": 2
+              "fill-in": 2,
+              "observe": 2
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
               "anagram": 1,
-              "pick-syllables": 1,
-              "quiz": 1
+              "fill-in": 1,
+              "pick-syllables": 1
             },
             "total": 3
           }
         },
         "distinct_types": [
           "anagram",
+          "fill-in",
           "observe",
-          "pick-syllables",
-          "quiz"
+          "pick-syllables"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -153,26 +154,26 @@
         "activities": {
           "inline": {
             "by_type": {
+              "fill-in": 1,
               "letter-grid": 2,
-              "observe": 1,
-              "quiz": 1
+              "observe": 1
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
+              "fill-in": 1,
               "odd-one-out": 1,
-              "quiz": 1,
               "unjumble": 1
             },
             "total": 3
           }
         },
         "distinct_types": [
+          "fill-in",
           "letter-grid",
           "observe",
           "odd-one-out",
-          "quiz",
           "unjumble"
         ],
         "has_workbook": true,
@@ -240,6 +241,7 @@
         "anagram",
         "count-syllables",
         "divide-words",
+        "fill-in",
         "letter-grid",
         "match-up",
         "observe",
@@ -251,10 +253,10 @@
         "watch-and-repeat"
       ],
       "inline_activities": 33,
-      "largest_workbook_type": "quiz",
+      "largest_workbook_type": "fill-in",
       "largest_workbook_type_share": 0.35,
-      "longest_same_type_workbook_run": 1,
-      "longest_same_type_workbook_run_type": "quiz",
+      "longest_same_type_workbook_run": 2,
+      "longest_same_type_workbook_run_type": "fill-in",
       "non_recap_lessons": 7,
       "non_recap_lessons_with_workbook": 7,
       "workbook_activities": 20,
@@ -262,6 +264,7 @@
         "anagram",
         "count-syllables",
         "divide-words",
+        "fill-in",
         "match-up",
         "odd-one-out",
         "order",
@@ -278,18 +281,18 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6f72cce390d271216573a13c5ee19872617d8a1fa4751fa8aca16e25de4ee0d3",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "32537c89f0f9383257d31a6f2603139f50e0f8dc66adead5a18e0eb18331d233",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "a637dc9c37ffb8be028c2d249e7bbde75ae490f753fc817eef6bc72c08c27ab6",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "750764090570b6c7cfd7aa5c6e4e4b88968c4301f8b101cf073cd62537ff814c",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "7a383ea319f0d3e418372224bc0adc0d8898c32b1ebaf83ee27574eb4ae19973",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "b7aa142f59f3b84faaa4459fdb2e038f5d0de5694c621828c4960ed83280e533",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "974afc8b5a4f6859c9ae7cb238cf91a98708b5f22924f4421df7ea4d1188ede1",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "cb82dd1b510dd1071e162c169156c936e4188174c5ea817610b9aee0ecef2486",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "6397a2eef6ed23f2f2b381925b7d282fda3d7b70bd9d34ef8bbd63fa5edad832",
-    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "9526417c496b4ac2e1439ee60c1b54af9e3c79281b5e2888b2a7ab3b4c44ccc0",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "5303eeb2fec34de3ce83ec54cb40d69df9f0b0617c0140bce17062ba43b61085",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "8e0d11db868bafc39dd2d9bb51e7b914cf9f06818540b2cbfff54548f5408943",
+    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "f82d302663330a2b73dc35002dbd9a663133f85e7c34cc526ce433e3f6c12ef0",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
-    "schemas/activities-a1.schema.json": "cc185c5286a7dbe6a4c65d1e0668fd9f2d53ed9d5032182edb4e2db7d98fc8aa",
+    "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
     "schemas/module-plan-v2.schema.json": "587b90fe0f15bffd9187e9987cb44a5a94aea9196ca4cc71154386dc99d96fed",
     "scripts/curriculum/validate/placement_table.yaml": "c1c52672d76d54ac1c097e179a11bd9d68cfca201e132ccadcfe1b5bdb570387"
