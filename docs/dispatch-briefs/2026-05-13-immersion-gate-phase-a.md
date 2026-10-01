@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Card 1 Phase A — split immersion gate into 4 structural gates
 
 > **Decision card:** `docs/decisions/2026-05-13-immersion-gate-tab-aware-structural.md` (ACCEPTED)
@@ -16,7 +22,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/immersion-gate-phase-a-2026-05-13 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -39,7 +45,7 @@ After this Phase A merges, `python_qg` on existing bakeoff artifacts (`audit/bak
 |---|---|---|
 | "Old _immersion_gate renamed/demoted to advisory" | `grep -n 'def _advisory_immersion_pct\|def _immersion_gate' scripts/build/linear_pipeline.py` | quote both grep lines (old absent, new present) |
 | "Three new gate functions exist" | `grep -n 'def _l2_exposure_floor_gate\|def _long_uk_ceiling_gate\|def _component_density_gate' scripts/build/linear_pipeline.py` | quote 3 grep lines |
-| "IMMERSION_POLICIES schema extended" | `.venv/bin/python -c "from scripts.config import IMMERSION_POLICIES; b = IMMERSION_POLICIES['a1'][3]; print(sorted(b.keys()))"` | quote stdout |
+| "IMMERSION_POLICIES schema extended" | `"$PROJECT_PYTHON" -c "from scripts.config import IMMERSION_POLICIES; b = IMMERSION_POLICIES['a1'][3]; print(sorted(b.keys()))"` | quote stdout |
 | "Advisory pct still computed" | new `_advisory_immersion_pct()` returns dict with `pct`, `min_pct`, `max_pct`, `policy`, `passed=True` (always) | quote a test assertion + result |
 | "All three new gates pass on a synthetic happy-path fixture" | a new test in `tests/test_immersion_gates.py` (new file) using a synthetic markdown that meets placeholder thresholds | quote final `pytest` summary |
 | "All three new gates fail on synthetic adversarial fixtures" | each gate has at least one fixture that exercises its specific failure mode | quote final `pytest` summary |
@@ -282,7 +288,7 @@ Also update existing tests that reference `min_pct`/`max_pct` or the old `_immer
 - [ ] `.python-version` unchanged
 - [ ] `.yamllint` and `.markdownlint.json` unchanged
 - [ ] No `status/*.json` or `audit/*-review.md` files in diff
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertion-weakening
 - [ ] Every changed file directly related to gate split + schema extension

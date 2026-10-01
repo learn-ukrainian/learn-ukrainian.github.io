@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch queue — 2026-05-06 afternoon (14:00-20:00 CET peak window)
 
 **Purpose:** Claude (Opus) goes minimal during peak. Codex + Gemini grind through this stack. Each row is a copy-paste dispatch command.
@@ -26,7 +32,7 @@ Each command generates `--prompt-file` from the GitHub issue body. Copy-paste ve
 ### 1. ADR round 3 — Codex self-review findings (FIRES NOW)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id 1731-adr-r3 --mode danger --worktree \
   --base codex/1731-adr-r2 \
   --prompt-file /tmp/codex-1731-adr-r3-brief.md
@@ -37,7 +43,7 @@ Brief at `/tmp/codex-1731-adr-r3-brief.md` lists Codex's own 6 REVISE findings (
 ### 2. `ab review-deep` + `ab dispatch-fix` wrapper commands (model enforcement)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id ab-review-deep-wrapper --mode danger --worktree \
   --base origin/main \
   --prompt-file /tmp/codex-ab-review-deep-brief.md
@@ -51,7 +57,7 @@ Issue has the AC. Codex writes a bounded-subprocess wrapper around the writer-ph
 
 ```bash
 gh issue view 1708 --json body --jq .body > /tmp/brief-1708.md
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id 1708-writer-subprocess-timeout --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1708.md
 ```
@@ -62,7 +68,7 @@ Small fix in `scripts/agent_runtime/adapters/gemini.py`. Issue has the AC.
 
 ```bash
 gh issue view 1710 --json body --jq .body > /tmp/brief-1710.md
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id 1710-gemini-auth-priority --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1710.md
 ```
@@ -73,7 +79,7 @@ Resume logic should look for `module_done` JSONL event, not file size.
 
 ```bash
 gh issue view 1707 --json body --jq .body > /tmp/brief-1707.md
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id 1707-resume-terminal-event --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1707.md
 ```
@@ -88,7 +94,7 @@ Spawned child CLIs receive full `os.environ` including secrets. Whitelist allowe
 
 ```bash
 gh issue view 1701 --json body --jq .body > /tmp/brief-1701.md
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id 1701-os-env-scrub --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1701.md
 ```
@@ -99,7 +105,7 @@ Sandbox the agent subprocess writes to `.worktrees/` only.
 
 ```bash
 gh issue view 1702 --json body --jq .body > /tmp/brief-1702.md
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id 1702-ab-fs-sandbox --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1702.md
 ```
@@ -117,7 +123,7 @@ Investigate and fix #1570, #1571, #1573 in scripts/ingest_ukrainian_wiki.py:
 
 Read all three issues. Reproduce each. Fix in one PR with three commits (one per bug). Tests + ruff + commit + push + gh pr create. Worktree: codex/wiki-ingest-3-bugs.
 EOF
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id wiki-ingest-3-bugs --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-wiki-ingest.md
 ```
@@ -129,7 +135,7 @@ EOF
 ```bash
 # Step 1: create issue (Claude does this when back online)
 # Step 2: dispatch the framework code
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --task-id strand0-bakeoff-framework --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-strand0.md
 ```
@@ -148,7 +154,7 @@ Pre-Soviet style guide, ~169 pages. Ingest into `data/sources.db` FTS5 with chun
 
 ```bash
 gh issue view 1663 --json body --jq .body > /tmp/brief-1663.md
-.venv/bin/python scripts/delegate.py dispatch --agent gemini \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent gemini \
   --task-id 1663-antonenko-ingest --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1663.md
 ```
@@ -159,7 +165,7 @@ Bilingual lexicon for translation lookups.
 
 ```bash
 gh issue view 1664 --json body --jq .body > /tmp/brief-1664.md
-.venv/bin/python scripts/delegate.py dispatch --agent gemini \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent gemini \
   --task-id 1664-karavansky-r2u --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1664.md
 ```
@@ -170,7 +176,7 @@ Modern usage reference.
 
 ```bash
 gh issue view 1665 --json body --jq .body > /tmp/brief-1665.md
-.venv/bin/python scripts/delegate.py dispatch --agent gemini \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent gemini \
   --task-id 1665-holovashchuk-ingest --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1665.md
 ```
@@ -181,7 +187,7 @@ Paronym lookup — critical for V7 reviewer's paronym gate.
 
 ```bash
 gh issue view 1666 --json body --jq .body > /tmp/brief-1666.md
-.venv/bin/python scripts/delegate.py dispatch --agent gemini \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent gemini \
   --task-id 1666-paronyms-ingest --mode danger --worktree \
   --base origin/main --prompt-file /tmp/brief-1666.md
 ```

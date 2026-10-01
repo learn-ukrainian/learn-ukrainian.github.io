@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Path 3 PR2: `wiki_coverage_gate` emits structured `<fix_proposals>` on failure
 
 **Agent:** Codex gpt-5.5 xhigh
@@ -240,7 +246,7 @@ why.
 | Existing gate tests still pass | `.venv/bin/pytest tests/test_wiki_coverage_gate.py -q` final summary line raw |
 | Full audit + build tests still green | `.venv/bin/pytest tests/audit/ tests/build/ -q` final summary line raw (NO `-x` per #1942) |
 | Ruff clean | `.venv/bin/ruff check scripts/audit/wiki_coverage_gate.py tests/audit/test_wiki_coverage_gate_fix_proposals.py scripts/build/linear_pipeline.py` raw output |
-| m20 real-world gate produces ≥1 fix_proposal | one-shot: `.venv/bin/python -c "from pathlib import Path; from scripts.audit.wiki_coverage_gate import check_wiki_coverage_paths; from scripts.build.phases.implementation_map import read_implementation_map; mp = read_implementation_map(Path('docs/path3-test-m20/implementation_map.json')) if Path('docs/path3-test-m20/implementation_map.json').exists() else None; r = check_wiki_coverage_paths(manifest='wiki/pedagogy/a1/my-morning.md', implementation_map='', module_dir=Path('curriculum/l2-uk-en/a1/m20-my-morning'), seeded_map=mp); print(f'passed={r[\"passed\"]} fix_proposals={len(r.get(\"fix_proposals\", []))}')"` raw output (gracefully degrade if m20 dir doesn't exist) |
+| m20 real-world gate produces ≥1 fix_proposal | one-shot: `"$PROJECT_PYTHON" -c "from pathlib import Path; from scripts.audit.wiki_coverage_gate import check_wiki_coverage_paths; from scripts.build.phases.implementation_map import read_implementation_map; mp = read_implementation_map(Path('docs/path3-test-m20/implementation_map.json')) if Path('docs/path3-test-m20/implementation_map.json').exists() else None; r = check_wiki_coverage_paths(manifest='wiki/pedagogy/a1/my-morning.md', implementation_map='', module_dir=Path('curriculum/l2-uk-en/a1/m20-my-morning'), seeded_map=mp); print(f'passed={r[\"passed\"]} fix_proposals={len(r.get(\"fix_proposals\", []))}')"` raw output (gracefully degrade if m20 dir doesn't exist) |
 | Pipeline JSONL event added | `git diff scripts/build/linear_pipeline.py` showing the `wiki_coverage_fix_proposals` emit |
 | Commit landed + PR opened | `git log -1 --oneline` raw + `gh pr view --json url` raw URL |
 
@@ -272,7 +278,7 @@ Branch name: `feat/path3-pr2-fix-proposals`.
                     tests/audit/test_wiki_coverage_gate_fix_proposals.py \
                     scripts/build/linear_pipeline.py
 # venv symlinked from main; run from worktree root
-.venv/bin/python -m pre_commit run --files \
+"$PROJECT_PYTHON" -m pre_commit run --files \
     scripts/audit/wiki_coverage_gate.py \
     tests/audit/test_wiki_coverage_gate_fix_proposals.py \
     scripts/build/linear_pipeline.py

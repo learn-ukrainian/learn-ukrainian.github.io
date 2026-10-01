@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Gemini dispatch — Cursor runtime adapter (Phase 2 of 3)
 
 ## Mission
@@ -37,9 +43,9 @@ Phase 3 sections (§3, §4, §5, §6 Phase 3 rows) are **out of scope** for this
 | "Gemini adapter's writer-path arg list is X" | `grep -n 'build_invocation' scripts/agent_runtime/adapters/gemini.py` + paste raw |
 | "Codex adapter handles per-invocation MCP via Y" | `grep -n 'tool_config\|CODEX_HOME' scripts/agent_runtime/adapters/codex.py` + paste raw |
 | "Registry entry shape mirrors X" | `grep -A8 '"codex":\|"gemini":\|"opencode":' scripts/agent_runtime/registry.py` + paste raw |
-| "Adapter tests pass" | `.venv/bin/python -m pytest tests/agent_runtime/adapters/ tests/test_agent_runtime.py -q` final summary |
+| "Adapter tests pass" | `"$PROJECT_PYTHON" -m pytest tests/agent_runtime/adapters/ tests/test_agent_runtime.py -q` final summary |
 | "Tests touching files I changed all run" | `discover_tests_for_files.sh` (Step 2 below) — paste the output list, then run them |
-| "Smoke works" | `.venv/bin/python scripts/delegate.py dispatch --agent cursor --model composer-2.5 --dry-run --task "echo OK"` — paste raw |
+| "Smoke works" | `"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent cursor --model composer-2.5 --dry-run --task "echo OK"` — paste raw |
 | "Lint clean" | `.venv/bin/ruff check <files>` + raw `All checks passed!` line |
 | "Commit landed" | `git log -1 --oneline` raw |
 | "PR opened" | `gh pr view --json url` raw URL |
@@ -135,7 +141,7 @@ Phase 3 sections (§3, §4, §5, §6 Phase 3 rows) are **out of scope** for this
 
     ```bash
     # venv symlinked from main checkout — see docs/best-practices/code-quality.md
-    .venv/bin/python -m pytest \
+    "$PROJECT_PYTHON" -m pytest \
       tests/agent_runtime/ \
       tests/test_agent_runtime.py \
       tests/test_cursor_integration.py \
@@ -149,7 +155,7 @@ Phase 3 sections (§3, §4, §5, §6 Phase 3 rows) are **out of scope** for this
 12. Dry-run smoke:
     ```bash
     # venv symlinked
-    .venv/bin/python scripts/delegate.py dispatch --agent cursor --model composer-2.5 --dry-run --task "echo OK" 2>&1 | tail -20
+    "$PROJECT_PYTHON" scripts/delegate.py dispatch --agent cursor --model composer-2.5 --dry-run --task "echo OK" 2>&1 | tail -20
     ```
     Paste raw. Expect clean parse — no traceback.
 

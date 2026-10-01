@@ -59,7 +59,7 @@ def test_core_leads_with_the_definition_of_done_checklist() -> None:
     order = [
         checklist.index("VERDICT: APPROVE"),
         checklist.index("CI Gate green"),
-        checklist.index("gh pr merge --squash"),
+        checklist.index("scripts.publish pr-merge --number <N>"),
         checklist.index("shows `MERGED`"),
         checklist.index("merge_closeout"),
         checklist.index("Every issue the PR names"),

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Bio epic #2309 / R1b: Block C émigré, sub-batches C.3+C.4+C.5 (Claude)
 
 **Agent:** claude `claude-opus-4-8`, `--effort xhigh` (deep-research), `--mode danger`, `--worktree`.

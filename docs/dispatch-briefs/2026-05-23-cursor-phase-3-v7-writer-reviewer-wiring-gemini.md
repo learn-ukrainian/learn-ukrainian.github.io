@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Gemini dispatch — Cursor V7 writer + reviewer wiring (Phase 3 of 3)
 
 ## Mission
@@ -56,7 +62,7 @@ Phase 3 scope:
 | "Tests touching every file I changed all run" | Step 2 discovery output + raw pytest summary |
 | "SELF_REVIEW_DETECTED hardening works" | `pytest tests/test_coverage_audit_pipeline.py::TestCheckCrossAgentReview -v` raw, must show composer+composer FAILS the gate post-change |
 | "Scoped workspace lands under tmp_path, not repo root" | `pytest tests/test_mcp_init_observability.py::test_runtime_tool_config_cursor_tools_scoped_workspace -v` raw |
-| "V7 dry-run accepts --writer cursor-tools" | `.venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run --writer cursor-tools 2>&1 \| tail -30` raw |
+| "V7 dry-run accepts --writer cursor-tools" | `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --dry-run --writer cursor-tools 2>&1 \| tail -30` raw |
 | "Lint clean" | `.venv/bin/ruff check <files>` + raw `All checks passed!` |
 
 ## Steps
@@ -162,7 +168,7 @@ Phase 3 scope:
 15. Run **all** tests discovered in Step 2 + new test additions:
     ```bash
     # venv symlinked from main checkout
-    .venv/bin/python -m pytest \
+    "$PROJECT_PYTHON" -m pytest \
       tests/test_v7_writer_dispatch.py \
       tests/test_mcp_init_observability.py \
       tests/build/test_linear_pipeline.py \
@@ -179,7 +185,7 @@ Phase 3 scope:
 16. Dry-run smoke (spec L468–473):
     ```bash
     # venv symlinked
-    .venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run --writer cursor-tools 2>&1 | tail -50
+    "$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --dry-run --writer cursor-tools 2>&1 | tail -50
     ```
     Paste raw. Expect clean — `cursor-tools` recognized, scoped workspace event emitted in dry-run trace, no traceback.
 

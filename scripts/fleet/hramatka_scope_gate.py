@@ -113,6 +113,9 @@ class GateDecision:
         return payload
 
 
+from scripts.publish.github import read
+
+
 class IssueLookupUnavailable(RuntimeError):
     """GitHub did not return a trusted issue observation."""
 
@@ -134,28 +137,8 @@ def _gh_issue_observation(issue: IssueRef) -> IssueObservation:
     trusted observation and allow fresh work.
     """
 
-    owner, name = issue.repository.split("/", 1)
-    query = (
-        "query($owner:String!,$name:String!,$number:Int!){"
-        "repository(owner:$owner,name:$name){issue(number:$number){"
-        "number body labels(first:100){nodes{name}} parent{number}"
-        "}}}"
-    )
     try:
-        proc = subprocess.run(
-            [
-                "gh",
-                "api",
-                "graphql",
-                "-F",
-                f"owner={owner}",
-                "-F",
-                f"name={name}",
-                "-F",
-                f"number={issue.number}",
-                "-f",
-                f"query={query}",
-            ],
+        proc = read("issue-scope", repo=issue.repository, number=issue.number,
             cwd=REPO_ROOT,
             capture_output=True,
             check=False,

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # 2026-05-27 — Antigravity UI bridge: `ab send-agy-ui` (Codex)
 
 > Dispatch target: `codex --mode danger --worktree`, model `gpt-5.5` (default), effort `xhigh`.
@@ -67,7 +73,7 @@ Wire it into `_cli.py` analogous to lines 782-820 (subparser setup) and 921 (dis
 4. **Build `scripts/ai_agent_bridge/_ui_agy.py`** mirroring `_ui_codex.py` shape: docstring with empirical findings + `find_session_file` + `_extract_final_message` + `send` function + `main` argparse handler. Target size ~250-350 LOC. Keep the public `send(...)` signature identical to `_ui_codex.send(...)` so callers can swap one for the other.
 5. **Wire into `_cli.py`**: add a `send-agy-ui` subparser around line 820 (after `send-codex-ui`); add a dispatch branch around line 925 (after `send-codex-ui`).
 6. **Tests**: add `tests/ai_agent_bridge/test_ui_agy.py` covering: (a) `find_session_file` happy path + missing-file, (b) `_extract_final_message` with synthetic event stream, (c) `send()` with subprocess mocked to return a known event stream, (d) `send()` timeout behavior. Mirror existing patterns from `tests/ai_agent_bridge/test_ui_codex*.py` if any exist; otherwise model after a sibling adapter test like `tests/test_agent_runtime_adapters_codex.py`.
-7. **Lint + tests**: `.venv/bin/ruff check scripts/ai_agent_bridge/_ui_agy.py scripts/ai_agent_bridge/_cli.py tests/ai_agent_bridge/test_ui_agy.py` then `.venv/bin/python -m pytest tests/ai_agent_bridge/ -q --no-header`. Quote raw final lines in the PR body.
+7. **Lint + tests**: `.venv/bin/ruff check scripts/ai_agent_bridge/_ui_agy.py scripts/ai_agent_bridge/_cli.py tests/ai_agent_bridge/test_ui_agy.py` then `"$PROJECT_PYTHON" -m pytest tests/ai_agent_bridge/ -q --no-header`. Quote raw final lines in the PR body.
 8. **Smoke test against a real agy session**: run `ab send-agy-ui --thread <ID> --from-file /tmp/agy-smoke.md --timeout 600 --json`, capture the JSON output, paste in the PR body. (You may need to start a fresh agy conversation first to have a valid ID.)
 9. **Commit** with conventional message: `feat(bridge): agy UI relay (ab send-agy-ui) mirroring send-codex-ui`. Include `X-Agent: codex/agy-ui-bridge-2026-05-27` trailer.
 10. **Push** via `git push -u origin codex/agy-ui-bridge-2026-05-27` then `gh pr create` with title `feat(bridge): ab send-agy-ui — drive Antigravity UI thread analogous to send-codex-ui`. Body must include: (a) the empirical investigation findings (where agy stores conversation state, what command resumes a conversation), (b) per-test pass summary, (c) smoke-test JSON output. Tag the PR with `bridge` if such a label exists.

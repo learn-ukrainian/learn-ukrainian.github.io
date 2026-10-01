@@ -1,0 +1,72 @@
+# Audited suppression list for pip-audit dependency vulnerability scanning.
+# Reference issue: learn-ukrainian-infra-private#703
+#
+# Every suppressed vulnerability requires:
+# - id: CVE or PYSEC identifier
+# - package: affected package name
+# - version: currently pinned version in requirements-lock.txt
+# - status: upstream-unpatched | upstream-fix-pending | accepted-risk
+# - reason: technical justification why the vulnerability cannot be exploited in this repository
+#
+# Unsuppressed Critical or High vulnerabilities will fail the blocking gate.
+
+vulnerabilities:
+  - id: PYSEC-2026-3804
+    package: accelerate
+    version: 1.14.0
+    status: upstream-unpatched
+    reason: "Path traversal in load_checkpoint_in_model; upstream 1.14.0 has no released patch yet. Model weights are not loaded from untrusted user inputs in this repository."
+
+  - id: PYSEC-2026-1325
+    package: ecdsa
+    version: 0.19.2
+    status: accepted-risk
+    reason: "Minerva timing attack on P-256 curve; upstream considers side-channel attacks out of scope with no planned fix. ECDSA signature verification is unaffected."
+
+  - id: CVE-2026-97687
+    package: urllib3
+    version: 2.7.0
+    status: upstream-fix-pending
+    reason: "Proxy TLS configuration bleed; our runners do not use HTTPS forwarding proxies."
+
+  - id: CVE-2026-97688
+    package: urllib3
+    version: 2.7.0
+    status: upstream-fix-pending
+    reason: "Decompression infinite loop on truncated chunked deflate; our clients do not stream chunked deflate from untrusted servers."
+
+  - id: CVE-2026-97689
+    package: urllib3
+    version: 2.7.0
+    status: upstream-fix-pending
+    reason: "Chunk size buffer memory allocation on non-newline streams; our clients connect only to trusted APIs."
+
+  - id: CVE-2026-101918
+    package: pyjwt
+    version: 2.14.0
+    status: upstream-fix-pending
+    reason: "RecursionError on deeply nested JSON payloads during unverified decoding; no untrusted JWTs are decoded."
+
+  - id: PYSEC-2026-4011
+    package: virtualenv
+    version: 21.7.3
+    status: upstream-fix-pending
+    reason: "Wheel download integrity check in periodic updater; virtual environments in CI are built from locked wheels."
+
+  - id: PYSEC-2026-4012
+    package: virtualenv
+    version: 21.7.3
+    status: upstream-fix-pending
+    reason: "pyvenv.cfg prompt injection; prompts are not constructed from untrusted user inputs."
+
+  - id: PYSEC-2026-4013
+    package: virtualenv
+    version: 21.7.3
+    status: upstream-fix-pending
+    reason: "Double quoting in activate scripts; activation scripts are run in fixed developer/CI paths."
+
+  - id: PYSEC-2026-4014
+    package: virtualenv
+    version: 21.7.3
+    status: upstream-fix-pending
+    reason: "BatchActivator quote escaping on Windows; our infrastructure runs exclusively on Linux."

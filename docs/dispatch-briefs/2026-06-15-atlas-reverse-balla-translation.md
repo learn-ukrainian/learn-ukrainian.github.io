@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Atlas translation fill: UK→EN reverse-Балла fallback (#2882)
 
 Close the ~535-word core-vocab **translation** gap in the Word Atlas. Strategy:
@@ -13,7 +19,7 @@ matches `word` directly → ~33% of core vocab has no translation. The fix is to
 ## #M-4 preamble — tool-back every claim
 Report each verifiable claim with the literal command + cwd + raw output. Specifically:
 - inspect the real `balla_en_uk` schema + a few rows BEFORE coding (`sqlite3 data/sources.db`
-  or a `.venv/bin/python` snippet) — paste the raw columns + 3 sample rows.
+  or a `"$PROJECT_PYTHON"` snippet) — paste the raw columns + 3 sample rows.
 - "tests pass" → `pytest` final line raw; "ruff clean" → `ruff check` final line raw.
 
 ## Implementation (numbered)
@@ -30,7 +36,7 @@ Report each verifiable claim with the literal command + cwd + raw output. Specif
 5. Tests: add unit tests in `tests/test_lexicon_enrich_manifest.py` — reverse lookup
    hits a known UK word, misses a nonsense word, dedupes/cleans the EN side. Mirror the
    existing test fixtures there (`_conn()` / in-memory sqlite with a `balla_en_uk` table).
-6. `.venv/bin/python -m pytest tests/test_lexicon_enrich_manifest.py -q` → green.
+6. `"$PROJECT_PYTHON" -m pytest tests/test_lexicon_enrich_manifest.py -q` → green.
 7. `.venv/bin/ruff check scripts/lexicon/enrich_manifest.py tests/` → clean.
 8. **Code-only — do NOT run `make atlas` and do NOT commit `site/src/data/lexicon-manifest.json`
    or the fingerprint.** The orchestrator regenerates the manifest after merge.

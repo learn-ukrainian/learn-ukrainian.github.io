@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: fully populate Word Atlas per POC — fill remaining gaps (#2882)
 
 Bring the Word Atlas (Лексикон) detail pages up to the POC design
@@ -9,7 +15,7 @@ before acting.**
   СУМ синонімів) via #3116/#3098 work merged 2026-06-15. Re-measure live.
 - Paths moved: manifest is now **`site/src/data/lexicon-manifest.json`** (not `starlight/...`); astro page is
   **`site/src/pages/lexicon/[lemma].astro`**. The issue's `starlight/` paths are stale.
-- Step 1 of your work: run `.venv/bin/python -m scripts.lexicon.verify_manifest` and compute per-POC-section
+- Step 1 of your work: run `"$PROJECT_PYTHON" -m scripts.lexicon.verify_manifest` and compute per-POC-section
   coverage on CURRENT main. Report a fresh coverage table. Then fill only the GENUINELY thin sections.
 
 ## Likely remaining gaps (confirm against your fresh measurement)
@@ -29,7 +35,7 @@ commits the manifest after merge. Your tests must prove the enrichment logic on 
 1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Re-measure coverage; implement the genuinely-thin sections in `scripts/lexicon/enrich_manifest.py`
    (+ helpers); add unit tests proving each new/improved section on fixtures.
-3. `cd . && .venv/bin/python -m pytest -k "lexicon or enrich or etymolog or phrase" -q` → paste summary.
+3. `cd . && "$PROJECT_PYTHON" -m pytest -k "lexicon or enrich or etymolog or phrase" -q` → paste summary.
 4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no manifest staged: `git status --short` shows NO `site/src/data/lexicon-manifest.json`.
 6. Commit `feat(lexicon): populate Atlas POC sections — etymology variant-match + phraseology + antonyms (#2882)`.

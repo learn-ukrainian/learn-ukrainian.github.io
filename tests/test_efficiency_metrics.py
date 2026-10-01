@@ -129,8 +129,11 @@ def test_legacy_collectors_stay_on_broker_when_authority_is_pg(tmp_path, monkeyp
 
 def test_merge_fact_query_uses_injected_github_runner() -> None:
     calls: list[tuple[list[str], float]] = []
+    documents = []
 
     def fake_gh(args: list[str], *, timeout: float) -> subprocess.CompletedProcess[str]:
+        from pathlib import Path
+        documents.append(json.loads(Path(args[args.index("--input") + 1]).read_text()))
         calls.append((args, timeout))
         return subprocess.CompletedProcess(
             args,
@@ -147,11 +150,6 @@ def test_merge_fact_query_uses_injected_github_runner() -> None:
 
     assert result[("learn-ukrainian/learn-ukrainian.github.io", 123)][0] is not None
     assert len(calls) == 1
-    assert calls[0][0][0:3] == [
-        "gh-test-double", "api", "graphql",
-    ]
-    assert calls[0][0][3] == "-f"
-    assert calls[0][0][4] == (
-        'query=query { r0: repository(owner: "learn-ukrainian", name: '
-        '"learn-ukrainian.github.io") { p123: pullRequest(number: 123) { mergedAt } } }'
-    )
+    assert calls[0][0][:5] == ["gh-test-double", "api", "--method", "POST", "graphql"]
+    assert documents[0]["variables"] == {}
+    assert documents[0]["query"] == 'query {r0:repository(owner:"learn-ukrainian",name:"learn-ukrainian.github.io"){p123:pullRequest(number:123){mergedAt}}}'

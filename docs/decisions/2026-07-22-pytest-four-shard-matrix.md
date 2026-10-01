@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/runbooks/ci-gate.md
+---
+
 # Decision: required pytest uses four verified shards
+
+> **Superseded by:** [docs/runbooks/ci-gate.md](../runbooks/ci-gate.md)
 
 - **Date:** 2026-07-22
 - **Decided by:** Sol (`gpt-5.6-sol`, bridge `advise-pytest-ci-speed-sol`, ask #4342 → #4343)

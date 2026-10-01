@@ -35,6 +35,12 @@ W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
 HEADING = "Combined Master Vocabulary Table (#3)"
 
 
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Exercise the real publisher using synthetic policy and send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")
+
+
 # ----------------------------------------------------------------------------- table sync
 
 
@@ -726,9 +732,13 @@ def test_checker_matrix_and_residual_lists(world: dict[str, Path]) -> None:
 class FakeGh:
     """The `gh release` CLI in memory (no network); every other command runs for real."""
 
-    def __init__(self, monkeypatch: pytest.MonkeyPatch, *, release_exists: bool = False, fail_upload: bool = False):
+    def __init__(
+        self, monkeypatch: pytest.MonkeyPatch, *, release_exists: bool = False,
+        fail_upload: bool = False, fail_at: str | None = None,
+    ):
         self.assets: dict[str, bytes] | None = {} if release_exists else None
         self.fail_upload = fail_upload
+        self.fail_at = fail_at
         self.calls: list[str] = []
         self.titles: list[str] = []
         self._run = subprocess.run
@@ -738,13 +748,24 @@ class FakeGh:
         if command[:2] != ["gh", "release"]:
             return self._run(command, *args, **kwargs)
         verb = command[2]
-        assert command[3] == teacher_deck.RELEASE_TAG
+        if verb in {"create", "upload"}:
+            # Typed writes pin the repository, freeze payloads and put the tag
+            # after --; reads retain their existing positional shape.
+            operands = command[command.index("--") + 1:]
+            assert operands[0] == teacher_deck.RELEASE_TAG
+            assert command[3:5] == ["--repo", teacher_deck.release.DEFAULT_REPO]
+        else:
+            assert command[3] == teacher_deck.RELEASE_TAG
         self.calls.append(verb + (" --json" if "--json" in command else ""))
+        if self.calls[-1] == self.fail_at:
+            raise subprocess.CalledProcessError(1, command)
         missing = self.assets is None
         if verb == "view" and "--json" not in command:
             return subprocess.CompletedProcess(command, 1 if missing else 0)
         if verb == "create":
-            self.titles.append(command[command.index("--title") + 1])
+            title = next(arg.removeprefix("--title=") for arg in command if arg.startswith("--title="))
+            self.titles.append(title)
+            assert Path(command[command.index("--notes-file") + 1]).read_text() == teacher_deck.RELEASE_NOTES
             self.assets = {}
             return subprocess.CompletedProcess(command, 0)
         if missing or (verb == "upload" and self.fail_upload):
@@ -753,7 +774,8 @@ class FakeGh:
             names = [{"name": name} for name in self.assets]
             return subprocess.CompletedProcess(command, 0, stdout=json.dumps({"assets": names}))
         if verb == "upload":
-            path = Path(command[4])
+            path = Path(operands[1])
+            assert len(operands) == 2 and "--clobber" not in command
             self.assets[path.name] = path.read_bytes()
             return subprocess.CompletedProcess(command, 0)
         if verb == "download":
@@ -826,6 +848,7 @@ def test_first_publish_creates_the_release_then_uploads_then_pins_the_pointer(
     assert "publish: uploaded lexicon-teacher-deck-teacher-v1-" in capsys.readouterr().out
     assert fake.titles == [teacher_deck.RELEASE_TITLE]
     assert fake.calls.index("create") < fake.calls.index("view --json") < fake.calls.index("upload")
+    assert fake.calls == ["view", "create", "view --json", "view", "upload"]
     pointer = json.loads(world["pointer"].read_text(encoding="utf-8"))
     gz_bytes = fake.assets[teacher_deck.asset_name(pointer["deck_version"])]
     assert hashlib.sha256(gz_bytes).hexdigest() == pointer["gz_sha256"]
@@ -858,12 +881,33 @@ def test_a_failed_publish_changes_nothing_committed_facing(
     _write_docx(world["docx"], [*TABLE, ("Лампа", "Lamp")])
     _review_all(world, tmp_path / "scratch")
     capsys.readouterr()
-    FakeGh(monkeypatch, release_exists=True, fail_upload=True)
+    fake = FakeGh(monkeypatch, release_exists=True, fail_upload=True)
     assert _refresh(world, "--publish", "--skip-ingest") == 2
     assert "cannot read inputs or reach the release" in capsys.readouterr().err
+    assert fake.calls == ["view", "view --json", "view", "upload"]
     assert _committed(world) == before and before["pointer.json"] is None
     leftovers = [path.name for path in world["out"].parent.iterdir() if path.name.startswith(".")]
     assert leftovers == []
+
+
+@pytest.mark.parametrize("step,expected", [
+    ("create", ["view", "create"]),
+    ("view --json", ["view", "view --json"]),
+    ("upload", ["view", "view --json", "view", "upload"]),
+])
+def test_release_publish_failure_preserves_the_set_and_stops_the_sequence(
+    world, tmp_path, monkeypatch, capsys, step, expected,
+):
+    assert _refresh(world) == 0
+    before = _committed(world)
+    _review_all(world, tmp_path / "scratch")
+    capsys.readouterr()
+    fake = FakeGh(monkeypatch, release_exists=step != "create", fail_at=step)
+    assert _refresh(world, "--publish", "--skip-ingest") == 2
+    assert "cannot read inputs or reach the release" in capsys.readouterr().err
+    assert fake.calls == expected
+    assert fake.assets in (None, {})
+    assert _committed(world) == before
 
 
 # Every filesystem mutation the commit and the recovery make (the kill points below).

@@ -19,7 +19,7 @@ from jsonschema import Draft202012Validator
 from scripts.verification import stress
 from scripts.wiki.sources_db import using_connection
 
-from . import codes, lock, pack, registry, sources
+from . import codes, lock, pack, publication, registry, sources
 from .words import (
     cefr_field,
     cited_rows,
@@ -764,6 +764,10 @@ def verify_pack(
             # quote fallback: a missing or changed row is drift even when the quote
             # survives elsewhere in the file (chunk_id_moved stays an extra report).
             cited_row_check(item_id, source, chunk)
+            if item_id in quote_refs and chunk is not None and chunk.get("source_file") != source_file:
+                errors.append(f"{codes.PUBLICATION_RIGHT}: {item_id} source file differs from its cited row")
+            if item_id in quote_refs and chunk is not None and chunk.get("page") != source.get("page"):
+                errors.append(f"{codes.PUBLICATION_ATTRIBUTION}: {item_id} page differs from its cited row")
 
             found_in_chunk = False
             if chunk is not None:
@@ -789,8 +793,34 @@ def verify_pack(
                     )
 
         # 4. Texts
+        plans_base = (
+            Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
+        )
+        plan_path = plans_base / f"{slug}.yaml"
+        quote_refs = {}
+        try:
+            plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+            if not isinstance(plan_doc, dict):
+                raise ValueError("plan must be a mapping")
+            quote_refs = publication.quoted_records(plan_doc)
+        except (OSError, ValueError, yaml.YAMLError, AttributeError, TypeError) as exc:
+            errors.append(
+                f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {type(exc).__name__}"
+            )
+        try:
+            publication_registry = publication.load_registry()
+        except ValueError as exc:
+            errors.append(str(exc))
+            publication_registry = {}
         for t in pack_doc.get("texts", []):
             verify_quote(t["id"], t["quote"], t["sha256"], t["source"], table="textbooks")
+            if t["id"] in quote_refs:
+                try:
+                    publication.quote_attribution(t, publication_registry)
+                except ValueError as exc:
+                    errors.append(str(exc))
+        for ref in quote_refs.keys() - {t["id"] for t in pack_doc.get("texts", [])}:
+            errors.append(f"{codes.PUBLICATION_RIGHT}: planned quote {ref} missing from pack")
 
         # 5. Exercises
         for x in pack_doc.get("exercises", []):

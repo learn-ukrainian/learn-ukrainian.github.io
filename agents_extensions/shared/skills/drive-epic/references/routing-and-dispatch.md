@@ -122,7 +122,7 @@ including tests of code that imports a changed shared helper; never
 collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
 or `-n` above 2, and run those tests in the foreground and wait. The full suite
 runs in the PR's CI (and again in the merge queue on the merged tree) — that is
-the proof; do not trigger extra full runs. Use `gh workflow run ci.yml --ref <branch>`
+the proof; do not trigger extra full runs. Use `.venv/bin/python -m scripts.publish workflow-run --workflow ci.yml --ref <branch>`
 only when the brief explicitly asks for it (a branch with no PR yet, a baseline
 capture, or diagnosis).
 

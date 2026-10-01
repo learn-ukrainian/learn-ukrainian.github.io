@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Writer-prompt Option B fixes — apply the 3 audit-identified changes
 
 **Date**: 2026-05-24
@@ -80,7 +86,7 @@ This tells the writer to call `search_text` FIRST for each plan ref, which:
    .venv/bin/pytest tests/build/test_writer_pre_emit_checklist.py tests/build/test_linear_pipeline.py -v 2>&1 | tail -20
    ```
    All must pass.
-7. Run writer-prompt-size check: `.venv/bin/python scripts/audit/check_writer_prompt_size.py 2>&1 | tail -5` — must stay under the 130KB ceiling (current is ~120KB; these changes are ADDITIVE so verify).
+7. Run writer-prompt-size check: `"$PROJECT_PYTHON" scripts/audit/check_writer_prompt_size.py 2>&1 | tail -5` — must stay under the 130KB ceiling (current is ~120KB; these changes are ADDITIVE so verify).
 8. Three separate commits (one per fix). Conventional: `feat(writer-prompt): add citation-authority hierarchy`, `fix(writer-prompt): exclude knowledge packet anchors from resources.yaml`, `fix(writer-prompt): chunk_id-first protocol replaces search_text-first`.
 9. `git push -u origin fix/writer-prompt-option-b-fixes-2026-05-24`
 10. `gh pr create --base main --title "fix(writer-prompt): close 3 competing rules vs #R-TEXTBOOK-30W (Option B)" --body "Implements the 3 fixes from audit/2026-05-24-writer-prompt-competing-rules.md. Companion to PR #2257 (Option C deterministic gate)."`

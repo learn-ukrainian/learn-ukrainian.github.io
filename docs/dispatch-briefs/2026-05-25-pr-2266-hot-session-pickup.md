@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Hot-session pickup prompt for codex UI
 
 **Paste the block below into the running codex UI session.** Codex has context — this is short on purpose.
@@ -25,10 +31,10 @@ For each worktree, in this order:
    - PR-B: `adjectives-comparative.mdx` has NO `chunk_id` or `writer telemetry` strings (`grep -c "chunk_id\|writer telemetry" starlight/src/content/docs/b1/adjectives-comparative.mdx` returns `0`). The Tab 4 (Ресурси) bullets are clean Ukrainian descriptions, not pipeline metadata.
 
 2. **Run verification per #M-4** in EACH worktree:
-   - `.venv/bin/python -m pytest tests/ -q --no-header` — must show all-green summary
+   - `"$PROJECT_PYTHON" -m pytest tests/ -q --no-header` — must show all-green summary
    - `.venv/bin/ruff check scripts tests` — must show "All checks passed!"
    - PR-B only: `cd starlight && npm run build` — must build successfully
-   - PR-A only: `.venv/bin/python scripts/audit/lint_agent_trailer.py` — must pass
+   - PR-A only: `"$PROJECT_PYTHON" scripts/audit/lint_agent_trailer.py` — must pass
 
 3. **Commit + push + open the PRs.** Conventional commits. PR-A first:
    ```

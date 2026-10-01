@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Path 3 PR3: batched wiki_coverage correction pass
 
 **Agent:** Codex gpt-5.5 xhigh
@@ -279,9 +285,9 @@ already supports it via `batched_corrector` / `narrow_corrector` /
 | New unit tests pass | `.venv/bin/pytest tests/build/test_wiki_coverage_corrections.py -v` final summary line raw |
 | Existing wiki_coverage tests still pass | `.venv/bin/pytest tests/audit/test_wiki_coverage_gate_fix_proposals.py tests/test_wiki_coverage_gate.py -q` final summary line raw |
 | Full `tests/audit/ tests/build/` green | `.venv/bin/pytest tests/audit/ tests/build/ -q` final summary line raw (NO `-x` per #1942) |
-| v7_build smoke test | `.venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run 2>&1 | grep -E '^(wiki_coverage|phase_done)' | head -20` raw output (validates wiring) |
+| v7_build smoke test | `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --dry-run 2>&1 | grep -E '^(wiki_coverage|phase_done)' | head -20` raw output (validates wiring) |
 | Ruff clean | `.venv/bin/ruff check scripts/build/linear_pipeline.py scripts/build/v7_build.py tests/build/test_wiki_coverage_corrections.py scripts/build/phases/linear-correction-wiki-coverage.md scripts/build/phases/linear-correction-wiki-coverage-narrow.md` raw output (`.md` files lint-ignored; ruff will skip them — that's expected) |
-| Pre-commit clean | `.venv/bin/python -m pre_commit run --files scripts/build/linear_pipeline.py scripts/build/v7_build.py tests/build/test_wiki_coverage_corrections.py scripts/build/phases/linear-correction-wiki-coverage.md scripts/build/phases/linear-correction-wiki-coverage-narrow.md` raw output |
+| Pre-commit clean | `"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/linear_pipeline.py scripts/build/v7_build.py tests/build/test_wiki_coverage_corrections.py scripts/build/phases/linear-correction-wiki-coverage.md scripts/build/phases/linear-correction-wiki-coverage-narrow.md` raw output |
 | Commit landed + PR opened | `git log -1 --oneline` raw + `gh pr view --json url` raw URL |
 
 **No claim allowed without its raw output line.** Per #M-4.
@@ -308,12 +314,12 @@ Branch name: `feat/path3-pr3-batched-correction`.
 .venv/bin/pytest tests/build/test_wiki_coverage_corrections.py -v
 .venv/bin/pytest tests/audit/test_wiki_coverage_gate_fix_proposals.py tests/test_wiki_coverage_gate.py -q
 .venv/bin/pytest tests/audit/ tests/build/ -q
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run 2>&1 | grep -E '^(wiki_coverage|phase_done)' | head -20
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --dry-run 2>&1 | grep -E '^(wiki_coverage|phase_done)' | head -20
 .venv/bin/ruff check scripts/build/linear_pipeline.py \
                     scripts/build/v7_build.py \
                     tests/build/test_wiki_coverage_corrections.py
 # venv symlinked from main; run from worktree root
-.venv/bin/python -m pre_commit run --files \
+"$PROJECT_PYTHON" -m pre_commit run --files \
     scripts/build/linear_pipeline.py \
     scripts/build/v7_build.py \
     tests/build/test_wiki_coverage_corrections.py \

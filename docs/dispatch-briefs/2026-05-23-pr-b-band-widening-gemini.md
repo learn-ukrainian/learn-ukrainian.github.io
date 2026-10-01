@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — PR-B: word_count tolerance + engagement_floor callout_min
 
 **Agent:** gemini
@@ -13,7 +19,7 @@ Every verifiable claim MUST be tool-backed with command + cwd + raw output. Requ
 
 | Claim | Evidence |
 |---|---|
-| Tests pass | `.venv/bin/python -m pytest tests/test_pr_b_band_widening.py tests/test_pipeline_helpers.py -v` + raw final line |
+| Tests pass | `"$PROJECT_PYTHON" -m pytest tests/test_pr_b_band_widening.py tests/test_pipeline_helpers.py -v` + raw final line |
 | Lint clean | `.venv/bin/ruff check scripts/build/linear_pipeline.py tests/test_pr_b_band_widening.py` + raw final line |
 | Commit landed | `git log -1 --oneline` raw |
 | PR opened | `gh pr view --json url --jq .url` raw URL |
@@ -232,7 +238,7 @@ def test_engagement_floor_callout_min_is_1() -> None:
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/test_pr_b_band_widening.py -v
+"$PROJECT_PYTHON" -m pytest tests/test_pr_b_band_widening.py -v
 ```
 
 Expect 9 passes. If the engagement_floor test fails on missing dependencies (it's a partial fixture), revisit the test — the load-bearing assertions are `callout_min == 1`.
@@ -241,7 +247,7 @@ Expect 9 passes. If the engagement_floor test fails on missing dependencies (it'
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/test_pipeline_helpers.py tests/test_pipeline_v5.py tests/test_pipeline_parsing.py -v --timeout=120 2>&1 | tail -30
+"$PROJECT_PYTHON" -m pytest tests/test_pipeline_helpers.py tests/test_pipeline_v5.py tests/test_pipeline_parsing.py -v --timeout=120 2>&1 | tail -30
 ```
 
 Existing tests that assert the word_count gate's report shape may need updates if they did `assert report == {"passed": True, "count": 1200, "target": 1200}` exactly. Update to include the new keys, or use `>=` style assertions.

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Bakeoff blocker: `{X}` literal in `linear-write.md`
 
 > **Issue:** #1705 (already filed). Reference it in the commit and PR.
@@ -157,7 +163,7 @@ git log --oneline HEAD..origin/main  # must be empty
 2. Edit `scripts/build/phases/linear-write.md:34` per Section 1.
 3. Run sibling-hunt grep: `grep -rEn '\{[A-Z][A-Z0-9_]*\}' scripts/build/phases/`. Cross-reference each match against `prompt_builder.PLACEHOLDERS` keys + `prompt_builder.DOWNSTREAM_TOKENS` set. Fix every unregistered match. List findings in the PR body.
 4. Add `tests/test_prompt_template_render.py` per Section 3. Run `.venv/bin/pytest tests/test_prompt_template_render.py -v` — must pass before commit.
-5. Smoke test the fix: `.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer claude-tools --dry-run` (still passes, sanity check).
+5. Smoke test the fix: `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer claude-tools --dry-run` (still passes, sanity check).
 6. `.venv/bin/ruff check scripts/build/ tests/`
 7. Get review BEFORE commit — see "Review protocol" below.
 8. Apply feedback or argue back in writing.
@@ -173,7 +179,7 @@ reviewer is Gemini per project policy):
 ```bash
 git add scripts/build/phases/linear-write.md tests/test_prompt_template_render.py
 git diff --cached > /tmp/issue-1705-diff.txt
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+"$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-gemini \
     "Adversarial review for issue #1705. Read /tmp/issue-1705-diff.txt. Focus: (1) does the rewording at linear-write.md:34 preserve the writer-prompt's pedagogical intent? (2) is the new render-guard test sufficient — does it catch every offender today? (3) any sibling templates I missed? Cite line numbers." \
     --task-id issue-1705-review --model gemini-3.1-pro-preview
 ```

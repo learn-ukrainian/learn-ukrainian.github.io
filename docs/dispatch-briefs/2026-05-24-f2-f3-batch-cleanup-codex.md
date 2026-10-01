@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # F2 + F3 batch cleanup — codex
 
 **Date**: 2026-05-24
@@ -12,7 +18,7 @@ Two carryover P2 items from the 2026-05-24 overnight handoff. Both mechanical, n
 
 ## F2 — Fix .venv cd-guard lint on 5 archived dispatch briefs
 
-The project has a lint rule that flags shell snippets where the `.venv/bin/python` invocation is preceded by an explicit `cd .worktrees/...` without an exemption marker. 5 dispatch briefs under `docs/dispatch-briefs/` fail this lint:
+The project has a lint rule that flags shell snippets where the `"$PROJECT_PYTHON"` invocation is preceded by an explicit `cd .worktrees/...` without an exemption marker. 5 dispatch briefs under `docs/dispatch-briefs/` fail this lint:
 
 - `docs/dispatch-briefs/2026-05-23-issue-2239-codex-rollout-binding-fix.md`
 - `docs/dispatch-briefs/2026-05-23-pr-a-llm-dim-demote-resume-default-codex.md`
@@ -26,7 +32,7 @@ Per the handoff, the fix is: "add `# venv symlinked` inside offending fences + d
 
 1. Run the lint locally to see exactly what fires:
    ```
-   .venv/bin/python scripts/audit/lint_dispatch_briefs.py 2>&1 | head -60
+   "$PROJECT_PYTHON" scripts/audit/lint_dispatch_briefs.py 2>&1 | head -60
    ```
    (If that script doesn't exist, look for the pre-commit hook that enforces this — `grep -rn "venv\|cd-guard" .pre-commit-config.yaml claude_extensions/hooks/ scripts/audit/`.)
 2. For each flagged shell fence in each file, add a `# venv symlinked` comment INSIDE the fence (on the line above the offending `cd`/`.venv` invocation). The marker tells the lint that the brief author has acknowledged the venv-symlink convention is in use.

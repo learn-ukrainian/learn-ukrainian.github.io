@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — OpenAI-compatible HTTP proxy for the agent fleet
 
 > **Owner:** Codex
@@ -54,7 +60,7 @@ raw output quoted (not paraphrased):
 | "Grok backend works" | Same curl with `"model":"grok-4.3"`, raw response showing a non-empty assistant message |
 | "Gemini backend works" | Same curl with `"model":"gemini-3.0-flash-preview"` (or whatever model id the bridge currently routes to), raw response |
 | "Claude backend works" | Same curl with `"model":"claude-opus-4-7"` or `"model":"claude-sonnet-4-7"`, raw response |
-| "Tests pass" | `.venv/bin/python -m pytest tests/ai_agent_bridge/test_openai_proxy.py -v` final summary line raw |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/ai_agent_bridge/test_openai_proxy.py -v` final summary line raw |
 | "Ruff clean" | `.venv/bin/ruff check scripts/ai_agent_bridge/openai_proxy.py tests/ai_agent_bridge/test_openai_proxy.py` raw output (`All checks passed!` or zero-error count) |
 | "Commit landed" | `git log -1 --oneline` raw |
 | "PR opened" | `gh pr view --json url -q '.url'` raw URL |
@@ -235,7 +241,7 @@ Quote raw output in the PR body.
 ### 6. Pytest (full bridge subtree, not just the new file)
 
 ```bash
-.venv/bin/python -m pytest tests/ai_agent_bridge/ -v
+"$PROJECT_PYTHON" -m pytest tests/ai_agent_bridge/ -v
 ```
 
 Two reasons not just the new test file: (a) ensures `ab` CLI changes
@@ -249,7 +255,7 @@ each backend (where the CLI is installed and authenticated). Quote
 each curl + raw JSON response in the PR body.
 
 ```bash
-.venv/bin/python -c "from scripts.ai_agent_bridge.openai_proxy import app; import uvicorn; uvicorn.run(app, host='127.0.0.1', port=8767)" &
+"$PROJECT_PYTHON" -c "from scripts.ai_agent_bridge.openai_proxy import app; import uvicorn; uvicorn.run(app, host='127.0.0.1', port=8767)" &
 SERVER_PID=$!
 sleep 2
 

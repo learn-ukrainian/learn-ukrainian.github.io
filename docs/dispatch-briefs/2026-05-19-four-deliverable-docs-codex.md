@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch Brief — 4 deliverable documentation files (Codex)
 
 **Filed:** 2026-05-19
@@ -187,7 +193,7 @@ Hard ceiling per file: 1000 lines. If you're trending past 800, reconsider wheth
 
 1. `git worktree add .worktrees/dispatch/codex/four-deliverable-docs-2026-05-19 -b codex/four-deliverable-docs-2026-05-19`
 2. File-level work: 4 new files at the paths above
-3. **Tests:** none required (docs-only PR); but if you change `scripts/` for any reason, run `.venv/bin/python -m pytest tests/` against the affected scope
+3. **Tests:** none required (docs-only PR); but if you change `scripts/` for any reason, run `"$PROJECT_PYTHON" -m pytest tests/` against the affected scope
 4. Ruff: `.venv/bin/ruff check` if you touch any Python (you should not for this PR)
 5. Commit: conventional message — `docs(specs): close gap audit §1.1, §1.2, §1.8, §1.9 — v7 preservation + bakeoff methodology + v7-pipeline spec + claude-dispatch-sunset plan`
 6. Push: `git push -u origin codex/four-deliverable-docs-2026-05-19`

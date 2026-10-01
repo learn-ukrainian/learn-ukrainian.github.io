@@ -84,23 +84,23 @@ way with empty reviews. Drivers follow this order:
 2. **Open the PR** → **CI Gate green** on that **same** head.
 3. **Merge queue only after both.** Enqueue then; never before.
 
-**Never auto-merge or enqueue first.** Never treat `gh pr merge --auto` as a
+**Never auto-merge or enqueue first.** Never treat `.venv/bin/python -m scripts.publish pr-merge --auto` as a
 substitute for CF. Do **not** arm `--auto` and wait for Gate. Never enqueue a
 **draft**. Blocking CI red → never `--admin`-bypass.
 
 ```bash
 # Only after §7 steps 1 and 2 on this exact head. Never --auto.
-gh pr merge --squash
+.venv/bin/python -m scripts.publish pr-merge --number <N>
 
 # Check merge-queue status / position / ETA after enqueue (#7814 item 13):
 .venv/bin/python -m scripts.gh_merge_queue_status <pr>
 ```
 
-**Never pass `--delete-branch` to `gh pr merge` while this repo uses a merge queue** —
+**Never pass `--delete-branch` to `.venv/bin/python -m scripts.publish pr-merge --number <N>` while this repo uses a merge queue** —
 deleting the head ref mid-queue can close the PR without landing (known failure mode).
 The remote branch is deleted only after `gh pr view` shows `MERGED`, by §7a closeout.
 
-**Merge-queue visibility after enqueue (#7814 item 13).** After `gh pr merge`, GitHub
+**Merge-queue visibility after enqueue (#7814 item 13).** After `.venv/bin/python -m scripts.publish pr-merge --number <N>`, GitHub
 prints `! The merge strategy for main is set by the merge queue` while the PR stays
 `OPEN` / `CLEAN`. Do not stall or query raw GraphQL by hand — run
 `.venv/bin/python -m scripts.gh_merge_queue_status <pr>` (or `--line` / `--json`) to
@@ -156,7 +156,7 @@ gh run download <run> --pattern 'pytest-junit-*' -D "$(mktemp -d)"
 
 **Main red: fix main first.** Find the breaking commit (`git log` of the failing test's
 inputs) and fix main before re-enqueueing anything. Refresh blocked PRs with
-`gh pr update-branch <pr>` (always pass the number; bare, it targets the current
+`.venv/bin/python -m scripts.publish pr-update-branch --number <pr>` (always pass the number; bare, it targets the current
 branch's PR) — never close/reopen, which reuses stale merge refs and fails again. Verify
 parent1 == the approved head and the PR patch-id is unchanged, then get
 one batched exact-head re-CF per reviewer family.

@@ -64,8 +64,15 @@ def test_heal_zombie_review_names_dead_worker_reason(tmp_path: Path) -> None:
     task_id = "dead-review"
     path = task_dir / f"{task_id}.json"
     path.write_text(
-        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999_999,
-                    "require_review_verdict": True, "failure_reason": None}),
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "running",
+                "pid": 999_999_999,
+                "require_review_verdict": True,
+                "failure_reason": None,
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -81,9 +88,16 @@ def test_settle_missing_worktree_review_names_reason(tmp_path: Path) -> None:
     task_id = "missing-review"
     path = task_dir / f"{task_id}.json"
     path.write_text(
-        json.dumps({"task_id": task_id, "status": "running", "pid": 999_999_999,
-                    "worktree_path": str(tmp_path / "missing"),
-                    "require_review_verdict": True, "failure_reason": None}),
+        json.dumps(
+            {
+                "task_id": task_id,
+                "status": "running",
+                "pid": 999_999_999,
+                "worktree_path": str(tmp_path / "missing"),
+                "require_review_verdict": True,
+                "failure_reason": None,
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -148,6 +162,8 @@ def test_settle_push_opens_pr_only_with_explicit_flag(
 
     def fake_run(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
         calls.append(command)
+        if command == ["gh", "repo", "view", "--json", "defaultBranchRef"]:
+            return subprocess.CompletedProcess(command, 0, '{"defaultBranchRef":{"name":"trunk"}}', "")
         return subprocess.CompletedProcess(command, 0, "https://example.invalid/pr/1", "")
 
     monkeypatch.setattr(ds, "_run", fake_run)
@@ -155,9 +171,15 @@ def test_settle_push_opens_pr_only_with_explicit_flag(
     actions = ds.push_and_maybe_open_pr(tmp_path, "codex/t1", open_pr=parsed.open_pr, title=None, body=None)
 
     assert calls[0] == ["git", "push", "-u", "origin", "HEAD"]
-    assert [call[:3] for call in calls if call[:3] == ["gh", "pr", "create"]] == (
-        [["gh", "pr", "create"]] if open_pr else []
-    )
+    from scripts.publish.github import Request
+
+    creates = [call for call in calls if isinstance(call, Request)]
+    assert len(creates) == int(open_pr)
+    if creates:
+        assert creates[0].verb == "pr-create"
+        assert creates[0].fields["base"] == "trunk"
+        assert creates[0].fields["title"] == "chore(dispatch): settle codex/t1"
+        assert creates[0].fields["body"].startswith("Auto-opened")
     assert actions == (["pushed", "pr_created:https://example.invalid/pr/1"] if open_pr else ["pushed"])
 
 
@@ -464,3 +486,9 @@ def test_settle_task_worktree_present_path_unchanged(tmp_path: Path, monkeypatch
     assert report.closeout["blocker"] == "none"
     state = json.loads((task_dir / f"{task_id}.json").read_text(encoding="utf-8"))
     assert state["status"] == "done"
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

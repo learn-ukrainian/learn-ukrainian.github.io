@@ -6,7 +6,7 @@ This is a high-leverage point - catching issues here prevents costly rework late
 ## Usage
 
 ```bash
-gh issue create \
+.venv/bin/python -m scripts.publish issue-create \
   --title "review(plans): Level/module plan review - scope" \
   --body-file /tmp/issue-body.md \
   --label "enhancement" \

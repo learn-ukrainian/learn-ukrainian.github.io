@@ -598,3 +598,9 @@ def test_dispatch_settle_run_timeout() -> None:
     ):
         with pytest.raises(subprocess.TimeoutExpired):
             ds._run(["git", "rev-parse", "HEAD"], check=True)
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")

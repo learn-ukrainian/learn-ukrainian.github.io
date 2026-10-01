@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: Opus-4.7 xhigh follow-up (2 cells)
 
 **Agent:** Claude headless (claude-opus-4-7)
@@ -59,7 +65,7 @@ git rev-parse origin/pr-2006 >/dev/null 2>&1 || git fetch origin 'refs/pull/2006
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python scripts/audit/judge_calibration_matrix.py \
+"$PROJECT_PYTHON" scripts/audit/judge_calibration_matrix.py \
   --families anthropic \
   --models claude-opus-4-7 \
   --harnesses native_cli \
@@ -91,7 +97,7 @@ grep -c "xhigh" audit/2026-05-17-judge-calibration-matrix/REPORT.html
 
 ```
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -m pytest tests/audit/test_judge_calibration_matrix.py -q
+"$PROJECT_PYTHON" -m pytest tests/audit/test_judge_calibration_matrix.py -q
 .venv/bin/ruff check scripts/audit/judge_calibration_matrix.py
 ```
 

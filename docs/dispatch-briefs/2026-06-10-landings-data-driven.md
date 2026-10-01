@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — unify ALL track landings on the LevelLanding pattern (A2 is the reference)
 
 ## Problem (verified)
@@ -18,7 +24,7 @@ Add `tests/test_landings_use_levellanding.py`: for every `{track}/index.mdx` tha
 
 ## #M-4 verification (screenshots are MANDATORY — one per track)
 - **A screenshot of EVERY migrated track landing in BOTH light and dark** (a1, folk, …), each showing the LevelLanding hero card + module list — proving none was skipped. (You cited "LLMs are lazy" — prove every track, not just one.)
-- `npm run build:full --prefix starlight` final line raw (green); `npm test --prefix starlight` + `.venv/bin/python -m pytest tests/test_landings_use_levellanding.py -q` final lines raw.
+- `npm run build:full --prefix starlight` final line raw (green); `npm test --prefix starlight` + `"$PROJECT_PYTHON" -m pytest tests/test_landings_use_levellanding.py -q` final lines raw.
 
 ## Numbered steps
 1. Confirm `pwd` is the dispatch worktree (base origin/main).
