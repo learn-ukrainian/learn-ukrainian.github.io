@@ -33,6 +33,8 @@ world = world_fixture
 
 _REAL_INIT = sg.Git.__init__
 _REAL_REGISTRY = sg._REGISTRY_PATH
+INTENDED_PRIVATE_SLUG = "learn-ukrainian/learn-ukrainian-infra-private"
+INTENDED_PRIVATE_URL = "https://github.com/learn-ukrainian/learn-ukrainian-infra-private.git"
 TOKEN = "synthetic-credential"
 HEADER = "Basic " + base64.b64encode(f"x-access-token:{TOKEN}".encode()).decode()
 
@@ -488,10 +490,11 @@ def test_registry_opts_in_exactly_the_private_sibling(https_world, tmp_path, mon
             "infra-private": dataclasses.replace(shipped, local_name=https_world[1].name),
         },
     )
-    canonical = f"https://github.com/{shipped.github}.git"
-    git(https_world[1], "remote", "set-url", "origin", canonical)
+    # The intended slug and URL are pinned as literals, independent of the registry value.
+    assert shipped.github == INTENDED_PRIVATE_SLUG
+    git(https_world[1], "remote", "set-url", "origin", INTENDED_PRIVATE_URL)
     repo = sg.resolve_repository("infra-private", https_world[0], runner(tmp_path, "https://unused.invalid", None))
-    assert (repo.transport, repo.remote, repo.github) == ("https", canonical, shipped.github)
+    assert (repo.transport, repo.remote, repo.github) == ("https", INTENDED_PRIVATE_URL, INTENDED_PRIVATE_SLUG)
 
 
 @pytest.mark.parametrize("credential_state", ["valid", "wrong-repository", "expired"])
