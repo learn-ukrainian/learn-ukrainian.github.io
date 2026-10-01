@@ -552,8 +552,8 @@
         },
         "target_record": {
           "type": "string",
-          "pattern": "^[WT]-[0-9]*[1-9][0-9]*$",
-          "description": "Optional listening model: the pack use must explicitly identify this word or primer letter."
+          "pattern": "^(?:W-[0-9]*[1-9][0-9]*|(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]|[Дд][ЖЗжз]))$",
+          "description": "Optional explicit letter/sound or word ID declared in the pack video models."
         }
       }
     },

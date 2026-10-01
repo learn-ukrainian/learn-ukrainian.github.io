@@ -731,8 +731,19 @@ def check_7_a1_choices(
             texts = [_choice_text(option) for option in options]
             if kind == "listening":
                 target_ref = item.get("target_record")
-                cited = {ref for step in lesson.get("steps") or [] for ref in step.get("evidence") or []}
-                if isinstance(target_ref, str) and target_ref.startswith("T-") and target_ref not in cited:
+                planned_letters = (
+                    set(allowlist.letters)
+                    if allowlist
+                    else {
+                        letter.casefold()
+                        for letter in (lesson.get("inventory", {}).get("phonetics") or {}).get("letters") or []
+                    }
+                )
+                if (
+                    isinstance(target_ref, str)
+                    and not target_ref.startswith("W-")
+                    and target_ref.casefold() not in planned_letters
+                ):
                     return bad("listening_target_not_planned", aid, index)
                 target, error = listening_model_target(target_ref, item["host"]["ref"], pack or {}, words)
                 if error:
@@ -743,9 +754,7 @@ def check_7_a1_choices(
                     key,
                     target,
                     words,
-                    letters=set(allowlist.letters)
-                    if allowlist
-                    else set((lesson.get("inventory", {}).get("phonetics") or {}).get("letters") or []),
+                    letters=planned_letters,
                     record_ids=set(allowlist.records) if allowlist else set(by_id),
                 )
                 if error:
@@ -1478,8 +1487,14 @@ def run_lesson(
     rows.append(_pass(1))
     if draft["status"] == "evidence_gap":
         gap = draft["gaps"][0]
-        return finish(failure(2, "evidence_gap: " + json.dumps(draft["gaps"], ensure_ascii=False),
-                              _gap_layer(draft["gaps"], lesson), step=gap.get("step")))
+        return finish(
+            failure(
+                2,
+                "evidence_gap: " + json.dumps(draft["gaps"], ensure_ascii=False),
+                _gap_layer(draft["gaps"], lesson),
+                step=gap.get("step"),
+            )
+        )
     rows.append(_pass(2))
     row = check_3_structure(draft, lesson)
     if row["status"] == "failed":

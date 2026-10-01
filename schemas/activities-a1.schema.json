@@ -1703,7 +1703,8 @@
               },
               "target_record": {
                 "type": "string",
-                "pattern": "^[WT]-[0-9]*[1-9][0-9]*$"
+                "pattern": "^(?:W-[0-9]*[1-9][0-9]*|(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]|[Дд][ЖЗжз]))$",
+                "description": "A listening target is an explicit Ukrainian letter/sound or a taught W-… ID declared in the host models."
               },
               "host": {
                 "type": "object",

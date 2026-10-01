@@ -20,7 +20,7 @@ from tests.curriculum.resolver.evidence_helpers import receipt_sources  # noqa: 
 
 def _listening_fixture(*, letter: bool = False):
     draft, plan, pack, words = _fixture()
-    value, target = ("Д", "T-1") if letter else ("слово", "W-1")
+    value, target = ("Д", "Д") if letter else ("слово", "W-1")
     pack["videos"] = [
         make_video_record(
             1,
@@ -29,6 +29,11 @@ def _listening_fixture(*, letter: bool = False):
             use=f"Pronunciation model for {value} before its rows.",
         )
     ]
+    pack["videos"][0]["models"] = {
+        "letters": [value] if letter else [],
+        "words": [] if letter else [target],
+        "segment": None,
+    }
     lesson = plan["lessons"][0]
     lesson["videos"] = [{"evidence": "V-1", "use": "Listen before choosing."}]
     lesson["steps"][0]["evidence"].append("V-1")
@@ -36,7 +41,7 @@ def _listening_fixture(*, letter: bool = False):
     lesson["activities"] = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Listen and choose."}]
     draft["steps"][0]["blocks"] += [{"kind": "video", "ref": "V-1"}, {"kind": "activity", "ref": "a1"}]
     if letter:
-        pack["texts"] = [make_text_record(1, "Д д")]
+        pack["texts"] = [make_text_record(1, "Бачу Д, д. Чую [д].")]
         lesson["steps"][0]["evidence"].append("T-1")
         draft["steps"][0]["blocks"][0]["explains"].append("T-1")
         lesson["inventory"]["phonetics"] = {"letters": ["Д", "З", "Б"], "sounds": []}
@@ -92,6 +97,103 @@ def test_listening_word_and_primer_letter_are_admitted(tmp_path, letter):
     assert _check(tmp_path, fixture)["status"] == "passed"
 
 
+@pytest.mark.reads_content
+@pytest.mark.parametrize("declared", [False, True])
+def test_committed_a1_pack_listening_admission_requires_models(tmp_path, declared):
+    """Real V-004/T-006 prose needs no parsing, only an explicit model declaration."""
+    pack_path = Path(__file__).resolve().parents[2] / "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml"
+    original = pack_path.read_bytes()
+    real_pack = yaml.safe_load(original)
+    video = next(v for v in real_pack["videos"] if v["id"] == "V-004")
+    assert "models" not in video
+    assert next(t for t in real_pack["texts"] if t["id"] == "T-006")["quote"] == "Бачу А, а. Чую [а]."
+    if declared:
+        video["models"] = {"letters": ["А"], "words": [], "segment": None}
+    temporary_pack = tmp_path / "pack.yaml"
+    temporary_pack.write_text(yaml.safe_dump(real_pack, allow_unicode=True))
+    fixture = _listening_fixture(letter=True)
+    draft, plan, _, words = fixture
+    lesson = plan["lessons"][0]
+    lesson["videos"][0]["evidence"] = "V-004"
+    lesson["steps"][0]["evidence"].append("V-004")
+    lesson["inventory"]["phonetics"]["letters"] = ["А", "О", "У"]
+    draft["steps"][0]["blocks"][1]["ref"] = "V-004"
+    item = draft["activities"][0]["items"][0]
+    item.update(target_record="А", options=["А", "О", "У"], host={"kind": "video", "ref": "V-004"})
+    assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
+    result = _check(tmp_path, (draft, plan, yaml.safe_load(temporary_pack.read_text()), words))
+    if declared:
+        assert result["status"] == "passed", result
+    else:
+        assert result["status"] == "failed", result
+        assert (result["code"], result["layer"]) == ("listening_model_undeclared", "pack")
+    assert pack_path.read_bytes() == original
+
+
+@pytest.mark.parametrize("letter", [False, True])
+def test_listening_ignores_free_text_when_models_are_declared(tmp_path, letter):
+    fixture = _listening_fixture(letter=letter)
+    fixture[2]["videos"][0]["use"] = "An arbitrary description with no model prefix."
+    fixture[2]["texts"] = []
+    assert _check(tmp_path, fixture)["status"] == "passed"
+
+
+@pytest.mark.parametrize(
+    ("target", "distractor"),
+    [
+        ("щ", "ш"),
+        ("щ", "ч"),
+        ("я", "й"),
+        ("я", "а"),
+        ("ю", "й"),
+        ("ю", "у"),
+        ("є", "й"),
+        ("є", "е"),
+        ("ї", "й"),
+        ("ї", "і"),
+    ],
+)
+def test_listening_refuses_contained_sound_distractors(tmp_path, target, distractor):
+    fixture = _listening_fixture(letter=True)
+    draft, plan, pack, _ = fixture
+    item = draft["activities"][0]["items"][0]
+    item.update(target_record=target.upper(), options=[target.upper(), distractor, "б"])
+    plan["lessons"][0]["inventory"]["phonetics"]["letters"] = [target, distractor, "б"]
+    pack["videos"][0]["models"]["letters"] = [target]
+    assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
+    result = _check(tmp_path, fixture)
+    assert (result["code"], result["layer"]) == ("listening_key_not_unique", "writer")
+
+
+@pytest.mark.parametrize(("target", "options"), [("дж", ["дж", "д", "ж"]), ("дз", ["дз", "д", "з"])])
+def test_listening_digraphs_are_single_sounds(tmp_path, target, options):
+    fixture = _listening_fixture(letter=True)
+    draft, plan, pack, _ = fixture
+    draft["activities"][0]["items"][0].update(target_record=target, options=options)
+    plan["lessons"][0]["inventory"]["phonetics"]["letters"] = options
+    pack["videos"][0]["models"]["letters"] = [target]
+    assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
+    assert _check(tmp_path, fixture)["status"] == "passed"
+
+
+@pytest.mark.parametrize("target", ["ь", "Ь", "'", "’", "ʼ", "T-1"])
+def test_listening_refuses_soundless_targets_and_prose_record_ids(target):
+    _, _, pack, words = _listening_fixture(letter=True)
+    pack["videos"][0]["models"]["letters"] = [target]
+    assert model_target(target, "V-1", pack, words) == (None, "listening_target_invalid")
+
+
+def test_listening_models_can_declare_multiple_letters_and_words():
+    _, _, pack, words = _listening_fixture()
+    pack["videos"][0]["models"]["letters"] = ["А", "О"]
+    assert model_target("а", "V-1", pack, words) == ("а", None)
+    assert model_target("О", "V-1", pack, words) == ("О", None)
+    assert model_target("W-1", "V-1", pack, words) == ("слово", None)
+    assert model_target("У", "V-1", pack, words) == (None, "listening_model_unverified")
+    words["words"].append({**copy.deepcopy(words["words"][0]), "id": "W-3"})
+    assert model_target("W-3", "V-1", pack, words) == (None, "listening_model_unverified")
+
+
 @pytest.mark.parametrize(
     ("mutation", "code", "layer"),
     [
@@ -103,6 +205,7 @@ def test_listening_word_and_primer_letter_are_admitted(tmp_path, letter):
         ("wrong_ref", "listening_host_ineligible", "writer"),
         ("untaught", "listening_letter_not_taught", "writer"),
         ("wrong_model", "listening_model_unverified", "pack"),
+        ("missing_models", "listening_model_undeclared", "pack"),
         ("missing_video", "listening_video_missing", "pack"),
         ("unplanned_target", "listening_target_not_planned", "writer"),
     ],
@@ -126,11 +229,13 @@ def test_listening_refuses_mutations(tmp_path, mutation, code, layer):
     elif mutation == "untaught":
         item["options"][1] = "Ж"
     elif mutation == "wrong_model":
-        pack["videos"][0]["use"] = "Pronunciation model for З before its rows."
+        pack["videos"][0]["models"]["letters"] = ["З"]
+    elif mutation == "missing_models":
+        pack["videos"][0].pop("models")
     elif mutation == "missing_video":
         pack["videos"] = []
     elif mutation == "unplanned_target":
-        lesson["steps"][0]["evidence"].remove("T-1")
+        lesson["inventory"]["phonetics"]["letters"].remove("Д")
     result = _check(tmp_path, fixture)
     assert (result["code"], result["layer"]) == (code, layer)
 
@@ -170,7 +275,7 @@ def test_video_opening_requires_attested_word_model():
     assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
     row, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack, level="a1")
     assert row["status"] == "passed"
-    pack["videos"][0]["use"] = "Season 1 story, heard by ear."
+    pack["videos"][0]["models"]["words"] = []
     row, _ = runner.check_4_activities(draft, plan["lessons"][0], words, pack, level="a1")
     assert (row["code"], row["layer"]) == ("listening_model_unverified", "pack")
 
@@ -183,7 +288,7 @@ def test_missing_model_target_stays_a_pack_gap(target):
 
 def test_nontext_listening_option_is_refused():
     assert (
-        choice_error({"target_record": "T-1"}, [None], 0, "Д", {}, letters={"Д"}, record_ids=set())
+        choice_error({"target_record": "Д"}, [None], 0, "Д", {}, letters={"Д"}, record_ids=set())
         == "listening_option_invalid"
     )
 
@@ -191,7 +296,7 @@ def test_nontext_listening_option_is_refused():
 @pytest.mark.parametrize("key", [-1, 1])
 def test_listening_key_must_be_an_option_index(key):
     assert (
-        choice_error({"target_record": "T-1"}, ["Д"], key, "Д", {}, letters={"Д"}, record_ids=set())
+        choice_error({"target_record": "Д"}, ["Д"], key, "Д", {}, letters={"Д"}, record_ids=set())
         == "listening_key_not_unique"
     )
 
@@ -211,7 +316,8 @@ def test_model_metadata_does_not_admit_unproved_words(mutation):
     elif mutation == "target_form":
         words["words"][0]["forms"][0]["learner"] = False
     else:
-        pack["videos"][0]["use"] = "Story about a word: слово."
+        pack["videos"][0].pop("models")
+        pack["videos"][0]["use"] = "Pronunciation model for слово."
     assert model_target("W-1", "V-1", pack, words)[1]
 
 
@@ -221,8 +327,11 @@ def test_unlisted_video_is_typed_before_generic_evidence_arithmetic():
     assert runner.check_3_structure(draft, plan["lessons"][0])["code"] == "listening_host_ineligible"
 
 
-def test_listening_renderer_keeps_host_beside_options_and_is_shippable(tmp_path: Path, monkeypatch):
+@pytest.mark.parametrize("channel", [True, False])
+def test_listening_renderer_keeps_host_beside_options_and_is_shippable(tmp_path: Path, monkeypatch, channel):
     draft, plan, pack, words = _listening_fixture()
+    if not channel:
+        pack["videos"][0].pop("channel")
     (tmp_path / "sample-slug.yaml").write_text(yaml.safe_dump(plan, allow_unicode=True))
 
     def render_fixture(level, slug, **kwargs):
@@ -235,6 +344,11 @@ def test_listening_renderer_keeps_host_beside_options_and_is_shippable(tmp_path:
     assert report["checks"][-1]["details"]["verify_shippable"]["shippable"] is True
     mdx = (tmp_path / "site" / "1.mdx").read_text()
     # Both the step's model and the quiz's item host resolve to the locked media URL.
-    assert '<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=g4Bh-lqzd48"' in mdx
+    if channel:
+        assert '<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=g4Bh-lqzd48"' in mdx
+    else:
+        assert "[V-1](https://www.youtube.com/watch?v=g4Bh-lqzd48)" in mdx
     assert '"host": {"kind": "video", "ref": "V-1", "url": "https://www.youtube.com/watch?v=g4Bh-lqzd48"' in mdx
     assert '"target_record": "W-1"' in mdx
+
+    assert f'"label": "{pack["videos"][0].get("channel", "V-1")}"' in mdx

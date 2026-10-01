@@ -2664,7 +2664,12 @@ def check_9_stress_and_render(
                 video = next((v for v in pack.get("videos", []) if v.get("id") == host.get("ref")), None)
                 if host.get("kind") != "video" or video is None:
                     return CheckResult(check=9, passed=False, reason="listening_video_missing", layer="pack")
-                item["host"] = {"kind": "video", "ref": video["id"], "url": video["url"], "label": video["channel"]}
+                item["host"] = {
+                    "kind": "video",
+                    "ref": video["id"],
+                    "url": video["url"],
+                    "label": video.get("channel") or video["id"],
+                }
 
         try:
             act_obj = activity_parser._parse_activity(act_payload)
