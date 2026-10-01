@@ -1751,7 +1751,7 @@ def run_lesson(
     (repo_root / "batch_state" / "verify_shippable").mkdir(parents=True, exist_ok=True)
     try:
         rendered_check = render_check(
-            level, slug, astro_build=True, module_dir=site_dir, plan_path=plans_dir / f"{slug}.yaml"
+            level, slug, astro_build=True, module_dir=site_dir, plan_path=plans_dir / f"{slug}.yaml", through_lesson=n
         )
     except Exception as err:
         return finish(failure(11, f"verify_shippable_error: {err}", "engine"))
