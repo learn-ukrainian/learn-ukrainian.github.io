@@ -1,0 +1,185 @@
+request_schema: 1
+level: a1
+words:
+- lemma: тин
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 386404
+  want: W-119
+  note: T-001/X-001 hard member of sourced minimal pair; decoding only.
+- lemma: тінь
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 387271
+  want: W-120
+  note: T-001/X-001 soft member of sourced minimal pair.
+- lemma: їжа
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 157273
+  want: W-121
+  note: T-002 Ї word.
+- lemma: яма
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 441397
+  want: W-122
+  note: T-013 word-initial Я model.
+- lemma: маля
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 194971
+  want: W-123
+  note: T-013 post-consonant Я model.
+- lemma: юрта
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 436374
+  want: W-124
+  note: T-004 word-initial Ю model.
+- lemma: люпин
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 191790
+  want: W-125
+  note: T-004 post-consonant Ю model.
+- lemma: синій
+  pos: adj
+  entry:
+    source: vesum
+    entry_id: 357936
+  want: W-126
+  note: T-005 post-consonant Є model; source form is neuter, no agreement teaching.
+- lemma: єнот
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 114516
+  want: W-127
+  note: 'Primer part 2 printed p. 49: word-initial Є decoding model.'
+- lemma: цимбали
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 416897
+  want: W-128
+  note: 'Primer part 2 printed p. 53: unfragmented Ц model, incidental instrument.'
+- lemma: щука
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 435773
+  want: W-129
+  note: T-007 Щ word.
+- lemma: дощ
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 104727
+  want: W-130
+  note: T-007 final Щ word.
+- lemma: ферма
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 405406
+  want: W-131
+  note: T-008 Ф word; no visual comparison.
+- lemma: джміль
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 94631
+  want: W-132
+  note: T-009 дж word.
+- lemma: джем
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 94367
+  want: W-133
+  note: T-009 дж syllable-built word.
+- lemma: дзиґа
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 95003
+  want: W-134
+  note: T-010/T-013 inanimate spinning-top sense, not the person sense.
+- lemma: дзюрчати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 95183
+  want: W-135
+  note: T-010 source present form for soft дз; no conjugation explanation.
+- lemma: пір'я
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 283111
+  want: W-136
+  note: T-011 apostrophe with Я.
+- lemma: пити
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 275992
+  want: W-137
+  note: T-011 present source forms for apostrophe with Ю and Є; no conjugation explanation.
+- lemma: сім'я
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 359284
+  want: W-138
+  note: 'Primer part 2 printed p. 69: family sense for whole reading sentence; not the seed sense.'
+- lemma: м'яч
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 210131
+  want: W-139
+  note: T-013 apostrophe before Я model.
+- lemma: радіти
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 330035
+  want: W-140
+  note: 'Primer part 2 printed p. 44: post-vowel Ю source form.'
+- lemma: Марія
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 195995
+  want: W-141
+  note: T-003 personal-name model for post-vowel Я, not place sense.
+- lemma: мільярд
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 203988
+  want: W-142
+  note: T-013 two-sound Я after soft sign; incidental decoding, no counting lesson.
+- lemma: пюре
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 328423
+  want: W-143
+  note: T-015 sourced no-apostrophe contrast with the present first-person form of W-137.
+- lemma: пір'їна
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 282993
+  want: W-144
+  note: Avramenko printed p. 131, apostrophe before Ї, source decoding only.

@@ -1,0 +1,1335 @@
+built_with:
+  mcp_commit: 841d037dbde436aa7c73c4e8f61cc444322ce934
+  overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
+  russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
+  sources_db: 4abc3c4028b0d28069a418e6e0ed544b00b3836724b0c021fb15f3504d3b2401
+  sources_db_scheme: rows-v2
+  standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
+  ulif_forms: pending
+  vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
+evidence_schema: 1
+examples:
+- id: EX-001
+  sentence_ref:
+    words:
+    - W-065
+    - W-004
+    - W-011
+    - W-138
+  sha256: 2dd73a744b66128e903176c1f751e90bf91dd00f4dd1bcc33a43be989f4f9f12
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0068
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 71
+    row_sha256: 7e9f0d80ce9d67748c97262bd409d99e3a8c5862e8821957d5ee2d4bf8be252a
+    section_id: 13130
+  text: Ось вона — твоя сім’я!
+exercises:
+- id: X-001
+  items_sample:
+  - 'тин [–• – ] син [–• – ] рис [–• – ]
+
+    тінь [=• = ] синь [–• =] рись [–• = ]'
+  pattern: Hear and read the printed hard/soft minimal pairs; do not compose replacements from memory.
+  quote: 'тин [–• – ] син [–• – ] рис [–• – ]
+
+    тінь [=• = ] синь [–• =] рись [–• = ]'
+  sha256: eacb0509d3d61eaf052350d940d8b78d220b4e8a1842c81dd9632f57ddb6f9f7
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 104
+    row_sha256: da3dce9c12bc826b835fd0312ca0a4cc9c8f6a1e60574034e1d1bae065ae942f
+    section_id: 13051
+- id: X-002
+  items_sample:
+  - 'та
+
+    то
+
+    ту
+
+    ти
+
+    ті
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    Т
+
+    ат
+
+    от
+
+    ут
+
+    ит
+
+    іт'
+  pattern: Read a new consonant in CV and VC rows, then read a short decodable word and copy the model offline.
+  quote: 'та
+
+    то
+
+    ту
+
+    ти
+
+    ті
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    Т
+
+    ат
+
+    от
+
+    ут
+
+    ит
+
+    іт'
+  sha256: 7644e70f08544c77603aca1a0366016956b48925fc0d0028243eead59c7e9c16
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 88
+    row_sha256: 3d99901d08c101c5efaea24ceaebc0d231698cbc5b20df24af6e5265fed04da9
+    section_id: 13035
+- id: X-003
+  items_sample:
+  - 'Перепиши в зошит.
+
+    Поліна помила коси.
+
+    Панас ловив лини.'
+  pattern: Copy sourced printed words, whole decodable sentences and a personal name model into a notebook; no keyboard response.
+  quote: 'Перепиши в зошит.
+
+    Поліна помила коси.
+
+    Панас ловив лини.'
+  sha256: 8499c3ee33395e1722e77fc60b6f852e22383e299dae5abdb7d3100473e0e7cb
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 81
+    row_sha256: 2a4c2b840e2a5bc794451ea9a284196148f90f875721779a18a163fed2d8447e
+    section_id: 13028
+- id: X-004
+  items_sample:
+  - 'Збери «розгублені» букви в словах — назвах
+
+    намальованих предметів.
+
+    оюрк аекпхлю ючкл крюзка'
+  pattern: Assemble a sourced word from shuffled letters; use only the current taught inventory.
+  quote: 'Збери «розгублені» букви в словах — назвах
+
+    намальованих предметів.
+
+    оюрк аекпхлю ючкл крюзка'
+  sha256: 94bc816f12cbd3ece3219bb98706f95f8784fc934014fd5a874db3156f696dc7
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+- id: X-005
+  items_sample:
+  - 'Випиши з вірша підкреслені слова з апо-
+
+    строфом.'
+  pattern: Locate apostrophe-bearing words in a source text and copy them offline after whole-sentence reading.
+  quote: 'Випиши з вірша підкреслені слова з апо-
+
+    строфом.'
+  sha256: 009462615ff5d5190b182bd33cdc28ace9e4598cda0e992bfe0117b8190eb4aa
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0068
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 71
+    row_sha256: 7e9f0d80ce9d67748c97262bd409d99e3a8c5862e8821957d5ee2d4bf8be252a
+    section_id: 13130
+module: a1/special-signs
+standard:
+- file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
+  id: S-001
+  lines: 585-586
+  text: '      4.1.1. Український алфавіт. Друковані та писані літери. Великі і малі
+
+    літери: Київ, київський, Олена, олівець, Україна, українець.'
+texts:
+- id: T-001
+  quote: 'ь
+
+    Бачу ь (м’який знак).
+
+    т * л ь п а н и л ь о н
+
+    л * л ь к а
+
+    [ = • – ]
+
+    кі
+
+    ті
+
+    лі
+
+    нь
+
+    сі
+
+    мі
+
+    ро
+
+    ль
+
+    де
+
+    пе
+
+    о-ле
+
+    нь
+
+    тин [–• – ] син [–• – ] рис [–• – ]
+
+    тінь [=• = ] синь [–• =] рись [–• = ]'
+  sha256: b024d813f4ca058875c5bf28821343e4ea197b3cf3340775829372b8880a568c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0100
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 104
+    row_sha256: da3dce9c12bc826b835fd0312ca0a4cc9c8f6a1e60574034e1d1bae065ae942f
+    section_id: 13051
+  supports: 'Primer part 1, printed p. 102 (catalog heading p. 104): the soft sign and the sourced hard/soft pairs тин/тінь,
+    син/синь and рис/рись. This held-back letter precedes the part-2 inventory.'
+- id: T-002
+  quote: 'Ї ї
+
+    Бачу Ї, ї. Чую [й], [і].
+
+    У к р а ї *
+
+    н а і
+
+    К и ї в
+
+    у к р а ї
+
+    н
+
+    [ –•| = •– ]
+
+    жак
+
+    сво
+
+    тво
+
+    мо
+
+    Ї
+
+    м
+
+    ж
+
+    жа
+
+    сти
+
+    їжа мої доїхав
+
+    [ =•|–• ] [ –•| =•] [ –•| =•|–•– ]'
+  sha256: d4634dc73bf1e37c4fe193698fbe3002b08d16ff4bbff8b45f52443fb79e6c12
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0035
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 38
+    row_sha256: 4323f2510c107fef3e3824d9b9af679016966fbd8d6d197de412123914d3cd86
+    section_id: 13097
+  supports: 'Primer part 2, printed p. 36 (catalog heading p. 38): Ї represents [й] and [і], with the printed word row.'
+- id: T-003
+  quote: 'Я я
+
+    Бачу Я, я. Чую [й а] або [а].
+
+    я в і р т л
+
+    о п о л
+
+    я я
+
+    к в а с о
+
+    [ =•| =•– ] мрі
+
+    ві
+
+    Марі
+
+    я л и н а [ –•|–• | =•] [ – –•|–•| =•]
+
+    я
+
+    кір
+
+    йце
+
+    мка
+
+    [ =• | –•| –•] [ й а|л и|н а ] Утвори слова.
+
+    Pidruchnyk.com.ua
+
+    ц и б у л я
+
+    [ –•| –•| =•]
+
+    [ ц и|б у|л′ а ]'
+  sha256: 845c788267b9bd5702dd7223f5d8048638568c48d75dc7bafe1d20c589007907
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0039
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 42
+    row_sha256: 65fd94236424adf4ce840ff7d9854c17552d516523c13a79c7e8121fa7651680
+    section_id: 13101
+  supports: 'Primer part 2, printed p. 40 (catalog heading p. 42): Я has two sounds or one vowel, with word-start and post-consonant
+    sound models.'
+- id: T-004
+  quote: 'Ю ю
+
+    Бачу Ю, ю. Чую [й у] або [у].
+
+    ю н г а л ю ч
+
+    к ю д
+
+    в е р б л
+
+    [ =•–|–•] [ – =• –] [ –• – – | =• –]
+
+    ю р т а [ =• –|–•]
+
+    [ й у р|т а ] л ю п и н
+
+    [ =•|–•– ]
+
+    [ л′ у|п и н ]'
+  sha256: 847ec484304e60e31485a381f3d83d68d7f14b8309f53b4ab9ee681e2bb97aca
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+  supports: 'Primer part 2, printed p. 44 (catalog heading p. 46): Ю has two sounds or one vowel, with the paired sound models
+    for юрта and люпин.'
+- id: T-005
+  quote: 'Є є
+
+    Бачу Є, є. Чую [йе] або [е].
+
+    к є а є *
+
+    о л ь
+
+    з ь г
+
+    є д и н о р і
+
+    [ –•|= = • ] [ –•|=•= ]
+
+    кує квітує
+
+    синє
+
+    [–•|=•] [– =•|–•|=•]
+
+    [–•|=•]
+
+    [ к у|й е ]
+
+    [ с и|н′ е ]
+
+    [ к в′ і|т у| й е ]
+
+    [–•]
+
+    [•–]
+
+    [=•]
+
+    [=•–]
+
+    — не те се
+
+    — ен ет ес
+
+    — нє тє сє
+
+    — єн єт єс'
+  sha256: 19f61db88ec5e1040484b8eff71ca005ed3d0d004544ce607f4109abd55774a8
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0047
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 50
+    row_sha256: 2752514386dfd25119d07b7099f614373475f848aaa326e6142ecc0567467a3a
+    section_id: 13109
+  supports: 'Primer part 2, printed p. 48 (catalog heading p. 50): Є has two sounds or one vowel, with post-vowel and post-consonant
+    word models and contrasting sound rows.'
+- id: T-006
+  quote: 'Ц ц Бачу Ц, ц (це). Чую [ц], [ц′ ].
+
+    ц к и м б
+
+    в і р
+
+    у г о р о б е
+
+    н
+
+    л и
+
+    ц а ц
+
+    ь
+
+    [ – =•– |–•– ] Ц
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    ца
+
+    цо
+
+    цу
+
+    ци
+
+    ці
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    [ –• | –•| –•= ]
+
+    Ц
+
+    ац
+
+    оц
+
+    уц
+
+    иц
+
+    іц'
+  sha256: f37472a98b145aa879b5906e2f213257e2e4e594b07ff696a56b0cc601fe03fd
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0051
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 54
+    row_sha256: f87409fa04c6eb3fc06024d9080701203a1899055ecd738e3fa46b3876f8a840
+    section_id: 13113
+  supports: 'Primer part 2, printed p. 52 (catalog heading p. 54): Ц follows Є, with hard and soft sound models and CV/VC
+    reading rows.'
+- id: T-007
+  quote: 'Щ щ
+
+    Бачу Щ, щ (ща). Чую [шч].
+
+    щ и г л и щ и п ц і
+
+    к
+
+    щ а в е
+
+    л ь
+
+    [ – –•| –•= ] [ – –• – | =• ]
+
+    щука
+
+    щит
+
+    Щ
+
+    [– –•|–•]
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    ща
+
+    що
+
+    щу
+
+    щи
+
+    щі
+
+    [– –•– ]
+
+    хру
+
+    плю
+
+    лящ
+
+    кущ
+
+    дощ
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    Щ
+
+    лі- -ина
+
+    Pidruchnyk.com.ua
+
+    гор- -ик
+
+    щавель
+
+    щастя
+
+    щока
+
+    ащ
+
+    ощ
+
+    ущ
+
+    ищ
+
+    іщ
+
+    ще
+
+    щедро
+
+    щедрівка'
+  sha256: e6d7e6b01bac1c16e789d44beead9fe43ea8ae465f34e0860d73b566dd7acd24
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0055
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 58
+    row_sha256: 929022bdca40d8d523597a2600626528ae0b291028ecb016f666009b2fa99a47
+    section_id: 13117
+  supports: 'Primer part 2, printed p. 56 (catalog heading p. 58): Щ follows Ц and represents [шч], with the word and reading
+    rows.'
+- id: T-008
+  quote: 'Ф ф
+
+    Бачу Ф, ф (еф). Чую [ф].
+
+    ф а з а н ф л е й т
+
+    ф л а м
+
+    і н г о а
+
+    [ –•|–•– ] Ф
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    фа
+
+    фо
+
+    фу
+
+    фи
+
+    фі
+
+    а
+
+    о
+
+    у
+
+    и
+
+    і
+
+    фа- фу-
+
+    фі-
+
+    [ – –• = | –•]
+
+    аф
+
+    оф
+
+    Ф
+
+    уф
+
+    иф
+
+    іф
+
+    фон фінал фея
+
+    фонтан фініш ферма'
+  sha256: 584189c684b8ea91d26bc2fd47e6b7914ecbf4d4ef1e4d10a613092e2f800a96
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0059
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 62
+    row_sha256: d17f89a65e38d363a13449cfbef5991166f48af8210432f368535c5f3823420f
+    section_id: 13121
+  supports: 'Primer part 2, printed p. 60 (catalog heading p. 62): the Ф glyph, name and [ф] sound, with reading rows. This
+    is native-letter evidence, not an English visual look-alike claim.'
+- id: T-009
+  quote: 'дж
+
+    Бачу Дж, дж (дж).
+
+    Чую [дж].
+
+    д ж м і ь б д ж
+
+    л д ж е р е
+
+    о л а л о
+
+    [ – =•= ] [ – –• | –•]
+
+    инси ин ем
+
+    дже- рело
+
+    джміль
+
+    рела бджо
+
+    Утвори слова.
+
+    Pidruchnyk.com.ua
+
+    дж міль
+
+    дже м
+
+    дже рело
+
+    бджо ла
+
+    бджіл ка
+
+    ла
+
+    лина'
+  sha256: 187ca021a9986fd3d92ecd26fcc8d1f1e737b175a56a84959fc9cd45d2f3fab2
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0063
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 66
+    row_sha256: 5ac0ec309b6e72245d6da46f09c79398f2c95c4740791f5c6f00a1b1a83f5e8e
+    section_id: 13125
+  supports: 'Primer part 2, printed p. 64 (catalog heading p. 66): дж follows Ф, with a single [дж] sound and word-building
+    models.'
+- id: T-010
+  quote: 'дз
+
+    Бачу Дз, дз (дз).
+
+    Чую [дз], [дз′].
+
+    д з и ґ а д з в о н
+
+    д з
+
+    б а н и к
+
+    [ – •| –•] [ – –• – ]
+
+    [ – –• | –• –]
+
+    еркало ґу ики кукуру а
+
+    дзвінкий
+
+    дзюрчить
+
+    дзвонити
+
+    дзвонила'
+  sha256: 8040d4de268e8cfa497b651bae705b3c1fe69945149ae62af957da7c7656abf7
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0065
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 68
+    row_sha256: 624ace710093c120dcf03df13eaadec8e8b83220a248ddbc8f361272de0c44c0
+    section_id: 13127
+  supports: 'Primer part 2, printed p. 66 (catalog heading p. 68): дз follows дж and has hard and soft sound models [дз] and
+    [дз′].'
+- id: T-011
+  quote: '’
+
+    ’ е
+
+    м ’ я
+
+    к о м п ю т р а о л о в ’
+
+    т
+
+    с ї
+
+    [ – =• | – • ]
+
+    зоря — пір’я мюслі — м’який
+
+    рясно — подвір’я пюпітр — п’ють
+
+    п’ю в’ю п’ять
+
+    п’є в’юн п’ятак
+
+    п’ють в’юнок п’ята'
+  sha256: 94e83f3c86fbb8dc6044fab20eec2b59699aa91c755c89d0f8e1e6b51ba9799b
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0067
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 70
+    row_sha256: f6c9216546783cec35f2fe2e1aec97b6dfacbff8a58c71143c02b479ca0a047f
+    section_id: 13129
+  supports: 'Primer part 2, printed p. 68 (catalog heading p. 70): the apostrophe follows дз, with word contrasts and apostrophe-bearing
+    reading models.'
+- id: T-012
+  quote: 'Буква А а Б б В в Г г Ґ ґ Д д Е е Є є Ж ж З з И и АЛФАВІТ Назва
+
+    букви Буква Назва
+
+    букви Буква Назва
+
+    букви
+
+    а І і і Т т те
+
+    бе Ї ї ї У у у
+
+    ве Й й йот Ф ф еф
+
+    ге К к ка Х х ха
+
+    ґе Л л ел Ц ц це
+
+    де М м ем Ч ч че
+
+    е Н н ен Ш ш ша
+
+    є О о о Щ щ ща
+
+    же П п пе Ь ь знак
+
+    м’якшення
+
+    зе Р р ер Ю ю ю
+
+    и С с ес Я я я'
+  sha256: f24c757bc8b9317381fb07c32654c34e90d75f162aa2a854ba8ca958d77a6f88
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: 'Zabolotnyi grade-5 textbook, catalog p. 2: the full 33-letter alphabet table, uppercase and lowercase glyphs,
+    dictionary order and letter names.'
+- id: T-013
+  quote: 'Букви та звуки
+
+    В українській мові здебільшого одній букві відповідає
+
+    один звук. НАПРИКЛАД: будинок [будинок].
+
+    Але є букви, які можуть позначати по два звуки. Або ж
+
+    дві букви позначають один звук.
+
+    Букви щ ї дж дз
+
+    Звуки [шч] [йі] [дж] [дз]
+
+    Букви я, ю, є можуть позначати два звуки або один:
+
+    Букви я ю є
+
+    Звуки [йа] [а] [йу] [у] [йе] [е]
+
+    СПІВВІДНОШЕННЯ ЗВУКІВ І БУКВ
+
+    Букви Що позначають
+
+    щ Два звуки [шч] : щука [шчука]
+
+    ї Два звуки [йі] : їсти [йѕсти]
+
+    я, ю, є
+
+    1. ОДИН звук [а], [у], [е] та м’якість (напівпом’якшеність)
+
+    приголосного, ЯКЩО стоять піс-
+
+    ля букви на позначення приголосного: маля
+
+    [мал′а].
+
+    2. ДВА звуки [йа], [йу], [йе], ЯКЩО стоять
+
+    на початку слова, а також після букви на по-
+
+    значення голосного, апострофа чи м’якого
+
+    знака: яма [йама], моє [мойе], м’яч [мйач],
+
+    мільярд [м’іл′йард]
+
+    дж
+
+    дз
+
+    1. Злиті звуки [дж], [дз]: ходжу [ходжу],
+
+    дзиґа [дзиґа].
+
+    2. Окремі звуки [д] і [ж], [д] і [з], якщо [д]
+
+    належить до префікса, а [ж], [з] – до кореня:
+
+    підземний [п’ідземний]
+
+    ь М’якість приголосного: день [ден′]'
+  sha256: b9c2ca037389d591212d53778d66e5265482b322c8d03145a6d8dcd1b1690792
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0063
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 87
+    row_sha256: d9720d45c51439ad17a1553fb1a4543a1b221f5c3e6293ea01e43e7319bd6a39
+    section_id: 38993
+  supports: 'Zabolotnyi, printed p. 84 (catalog heading p. 87): sound values of Ї and Щ; both values of Я, Ю and Є and their
+    contexts; joined дж/дз sounds and the morpheme-boundary exception; the soft sign.'
+- id: T-014
+  quote: 'До речі… М’який знак у транскрипції не вживають, оскільки він не позначає
+
+    звука, а вказує на м’якість попереднього приголосного: ось [ос′],
+
+    мальок [мал′ок].'
+  sha256: 0700669dab01cd66e35d95c0956c7d422904de032c93263ae0219b11c321a4b2
+  source:
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0077
+    file: 5-klas-ukrmova-avramenko-2022
+    grade: '5'
+    kind: textbook
+    page: 76
+    row_sha256: e993a40a00063b777dbeb07bb6375848aa727bea19afbb9cef947d88a8a44fdd
+    section_id: 26254
+  supports: 'Avramenko, printed p. 76: the soft sign has no sound of its own and marks the preceding consonant as soft.'
+- id: T-015
+  quote: 'Апостроф позначає роздільну вимову твердих приголосних із такими
+
+    звукосполученнями: [йа], [йу], [йе], [йі] (на письмі — букви я, ю, є, ї).
+
+    Порівняйте пари слів: бюро — б’ю, пюре — п’ю, свято — зв’язок.'
+  sha256: 122c6ce15ebf2b35056d28bca0b50057fb34a6444799867ab1302338fb885fbd
+  source:
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0133
+    file: 5-klas-ukrmova-avramenko-2022
+    grade: '5'
+    kind: textbook
+    page: 131
+    row_sha256: d241a7f71b8484e12c267c59bfb37923824eb28cd4cbd18a08514b1bc2d1ea70
+    section_id: 26309
+  supports: 'Avramenko, printed p. 131: the apostrophe marks separate pronunciation of hard consonants before [йа], [йу],
+    [йе], [йі], with whole source contrasts.'
+- id: T-016
+  quote: 'Тверді приголосні М’які приголосні
+
+    [д], [дз], [т], [з], [с],
+
+    [ц], [л], [н], [р]
+
+    [д′], [дз′], [т′], [з′], [с′],
+
+    [ц′], [л′], [н′], [р′]
+
+    – [й]
+
+    Губні: [б], [п], [в], [м], [ф]–
+
+    Шиплячі: [ж], [ш], [ч], [дж]–
+
+    [г], [к], [х], [ґ]–'
+  sha256: 39349aef892760d6c15022d0bd5e93509eafd9b0d24b5ff01e872fd4eae60bf6
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0056
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 78
+    row_sha256: 150907fc42316f566e86f406ad16da6bb1a0720995732aaf1ad2f1cad732ee10
+    section_id: 38986
+  supports: 'Zabolotnyi, printed p. 75 (catalog heading p. 78): [дз] has a paired soft sound; [дж] belongs to the hushing
+    class without a paired soft sound. Read together with T-017 rather than asserting an absolute absence of phonetic softening.'
+- id: T-017
+  quote: 'Напівпом’якшені приголосні
+
+    Не мають парних м’яких:
+
+    
+
+    губні приголосні;
+
+    
+
+    шиплячі приголосні;
+
+    
+
+    звуки [г], [к], [х], [ґ].
+
+    Ці звуки можемо лише напівпом’якшувати. НАПРИКЛАД:
+
+    гілка [г’¾лка], пюре [п’уре].
+
+    Транскрипція
+
+    У транскрипції м’які приголосні позначаємо скісною ри-
+
+    сочкою вгорі [ ′ ], а напівпом’якшеність твердих – знаком [ ’ ].
+
+    Приголосні [дж], [дз], [дз′] у транскрипції позначаємо
+
+    двома буквами з дужкою над ними: [дзиґа].
+
+    Зверніть увагу!
+
+    1. Приголосний [й] – м’який. Він не має парного твер-
+
+    дого.
+
+    2. Перед [і] приголосні м’які або напівпом’якшені.'
+  sha256: d0c722ae3f53c7891b2d873e3fbcd0900c28ec8b52c54bb828b9c9f3a208a7ef
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0057
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 79
+    row_sha256: 009cce084f22b37f5e538d9ada8f35e2f2f41ecd801afeb49501f9a5054f64aa
+    section_id: 38987
+  supports: 'Zabolotnyi, printed p. 76 (catalog heading p. 79): hushing consonants have no paired soft consonants but may
+    be partly softened; this qualifies the hard/soft classification in T-016.'
+- id: T-018
+  quote: 'ІІІ. F і ph передаються літерою ф: фáбрика, факт, фартýх, фах,
+
+    фая нс, федеративний тощо.'
+  sha256: 3b3c2a866d4735ee8a39a62ff052c4e92dba84028c2b5660b58ad70aedf552c0
+  source:
+    author: strokal
+    chunk_id: uni-ukrmova-orthography-strokal-2021_s0431
+    file: uni-ukrmova-orthography-strokal-2021
+    grade: university
+    kind: textbook
+    page: 233
+    row_sha256: d21383377439b81b065efc7c39b411f65a330d77ef7e2ad0142ecdead1e0ed83
+    section_id: 52400
+  supports: 'Strokal, catalog p. 233, section 21: F and ph are rendered with ф in borrowed words. This correspondence does
+    not establish a visual look-alike claim.'
+- id: T-019
+  quote: "are marked by [′] (only for the phonetic reference,                   Please read the words aloud, then underline\n\
+    not in the spelling):                                                 the words with one soft consonant once, the\n  \
+    \                                                                    ones with two soft consonants twice, and the\n  \
+    \                     [д] — [д′]                                     ones with three soft consonants three times.\n\n\
+    \                       [т] — [т′]                                     Тиждень, субота, вівторок, рік,\n\n           \
+    \                                                           весна, осінь, місяць, січень,\n                       [з]\
+    \ — [з′]\n                                                                      листопад, грудень, квітень,\n\nThree main\
+    \ rules to pronounce                                         вихідні, читати, гуляти,\n\n     the soft consonants    \
+    \                                          подорожувати, кататися,\n\n                                               \
+    \                       велосипед, дідусь, дякувати,\n     1    Your tongue tightens and goes back.\n                \
+    \                                                      привіт, сьогодні.\n     2    Your mouth gets wider and you smile.\n\
+    \n     3    Soft consonants always happen before:"
+  sha256: 3cc672a26e2b261256a8dd281039fc46b2da816aa008c8fca3a28283c7c8f01d
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0015_w005
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 6c3577010bcd28f3f4533213b3698cc64b68a83496b28a4a82c9db1701f73998
+    section_id: null
+  supports: 'ULP Season 1 lesson 15: English-supported hard/soft consonant sound pairs and an aloud-reading exercise; adult-L2
+    presentation evidence.'
+- id: T-020
+  quote: "Here is my story about я і моя́ сім’я́ from the lesson.\n\n                                          Я і моя сім’я\n\
+    Приві́т! Як спра́ви? У ме́не — чудо́во. Мене́ зва́ти Hi! How are you? I am great. My name is Anna\nА́нна Ого́йко, я вчи́телька\
+    \ украї́нської мо́ви.      Ohoiko. I am a Ukrainian teacher.\n\nМоя́ ма́ма — теж вчи́телька. Вчи́телька літерату́ри. \
+    \               My mom is also a teacher. A literature teacher."
+  sha256: 993fedc5e36ba2d36a2c36ff46a178ac7a0772eb293b006bbd4062775998a9f8
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0010_w001
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 8e20831c40bd3220377f8938974d54137be1eead194837919a1a3a35c79d982e
+    section_id: null
+  supports: 'ULP recap methodology only: bilingual first-person story shape.'
+- id: T-021
+  quote: "Запитання — questions                                           Відповіді — answers\n1.   Як у мене справи?    \
+    \                                    1.    Чудово!\n2.   Ким я працюю?                                            2. \
+    \   Ти — вчителька української мови.\n3.   Ким працює моя мама?                                     3.    Твоя мама —\
+    \ теж (також) вчителька.\n4.   Ким працює мій тато?                                     4.    Твій тато — інженер.\n5.\
+    \   Де живуть мої батьки?                                    5.    Твої батьки живуть у місті Полонне в\n6.   У мене є\
+    \ брати чи сестри? Скільки?                             Хмельницькій області.\n7.   У мене є бабуся чи дідусь?       \
+    \                        6.    Так, у тебе є один брат. Його звати Микола.\n     Скільки?                            \
+    \                     7.    Так, у тебе є дві бабусі. Вони пенсіонерки."
+  sha256: c2ab959dabe52db59af17f56f377b20480fcac58858654206c70ef67b98153b2
+  source:
+    author: Ukrainian Lessons Podcast
+    chunk_id: ulp-1-00-lesson-notes_l0010_w002
+    file: ulp-1-00-lesson-notes
+    grade: ''
+    kind: textbook
+    page: null
+    row_sha256: 0a424a3efb96ed9bda6393e09537553612db3e281459c3df0c9c8f0d749614f7
+    section_id: null
+  supports: 'ULP recap methodology only: Ukrainian-only questions with diverse answers; do not transplant the source story
+    or its vocabulary.'
+- id: T-022
+  quote: 'Єноти
+
+    У крамниці єноти
+
+    за­ пи­ та­ ли: — Є но­ ти?
+
+    —
+
+    Є но­ ти, є но­ ти,
+
+    шановні єно­ ти!'
+  sha256: 3b568314b369823dc61f118669932f877ea5501c4dbce6c9b13305ab1e981cc2
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0048
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 51
+    row_sha256: 01ca8beb5e210a70d1d7a9af8ccabc443292a689451c4a41b71a2b1ff56d4c45
+    section_id: 13110
+  supports: 'Primer printed p. 49: word-initial Є model; the source plural is decoded, not taught as a plural rule.'
+- id: T-023
+  quote: '— Ти знаєш, що таке цимбали?
+
+    — Так, знаю. Ми були в Музеї ста-
+
+    ровинних музичних інструментів,
+
+    і
+
+    я там бачив цимбали.'
+  sha256: 0f78eb0251270048ef461e4ced1678ee43fe0e6451b9eb61430c43994a9b03a7
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0052
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 55
+    row_sha256: ea0a29eea850d311bcebc62bb929d0fc44d3da66eabd9d3cdd514428a11110e1
+    section_id: 13114
+  supports: 'Primer printed p. 53: the intact Ц word in a sourced reading-page exchange.'
+- id: T-024
+  quote: 'Прочитай вірш, правильно вимовляючи сло-
+
+    ва з апострофом.
+
+    — Буквам я усім рідня...
+
+    Може, не потрібен я?
+
+    — Не журись, малюче, так.
+
+    Просто ти — друкарський знак.
+
+    Мусиш бути у словах:
+
+    М’яз, прислів’я, м’яч, під’їзд,
+
+    В’юн, м’якуш, бар’єр та з’їзд,
+
+    П’ятниця, п’ята, ім’я.
+
+    Ось вона — твоя сім’я!'
+  sha256: f9c8747a612c76d4203e9e4415b2703c299514e3ad3d47e657e65a5b8742cf68
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0068
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 71
+    row_sha256: 7e9f0d80ce9d67748c97262bd409d99e3a8c5862e8821957d5ee2d4bf8be252a
+    section_id: 13130
+  supports: 'Primer printed p. 69: a whole apostrophe-bearing sentence for reading aloud after the apostrophe is taught; attributed
+    poem context.'
+- id: T-025
+  quote: 'Прочитай самостійно.
+
+    юний
+
+    Юрій Юстина радію юнак'
+  sha256: 08137c31040d81573d31c6f992861a5f0a0c069fe92ed584b1fb4160da316d33
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+  supports: 'Primer printed p. 44: the post-vowel Ю model in the independent reading row.'
+- id: T-026
+  quote: 'бур’ян [бурйан], подвір’я,
+
+    пір’їна'
+  sha256: 7798f3ab266752975007b1d3f076e7bcdfb0b4127bd2e05d9b211a6e3995105a
+  source:
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0133
+    file: 5-klas-ukrmova-avramenko-2022
+    grade: '5'
+    kind: textbook
+    page: 131
+    row_sha256: d241a7f71b8484e12c267c59bfb37923824eb28cd4cbd18a08514b1bc2d1ea70
+    section_id: 26309
+  supports: 'Avramenko printed p. 131: source model of apostrophe before Ї; use only the attested feather word, not the full
+    spelling-rule table.'
+unsupported:
+- claim: The required named English-speaker teaching point classifying Ф as a visual look-alike has no identified supporting
+    T- or X- source. T-008 establishes the native glyph and sound, T-012 establishes the alphabet table, and T-018 establishes
+    F/ph-to-ф correspondence, but none establishes visual similarity or an English-reader look-alike trap. These narrower
+    claims are not substituted for the required claim. Planning stopped before lesson, word-request or grammar authoring.
+  id: U-001
+  resolved_by: 'Requirement withdrawn by the accountable driver (issue #8425, driver update 2026-09-30): no identified source
+    supports a visual look-alike claim about Ф, so the module asserts none. Ф''s glyph, sound and decodable words remain taught
+    from T-008, T-012, T-013 and T-018.'
+  searches:
+  - query: Ф English; Ф Latin; Ф латинська (subject ukrmova); Ф схожа (subject bukvar); Cyrillic alphabet; ф f (source_file
+      uni-ukrmova-orthography-strokal-2021). Returned material did not establish the required visual look-alike point.
+    tool: sources.search_text
+  - query: літера Ф латинська F схожість (track a1). No supporting visual-comparison teaching record identified.
+    tool: sources.search_sources
+  - query: 1-klas-bukvar-zaharijchuk-2025-2_s0059; 5-klas-ukrmova-zabolotnyi-2023_s0001; uni-ukrmova-orthography-strokal-2021_s0431.
+      Native-letter, alphabet and transliteration evidence respectively; no visual look-alike statement.
+    tool: sources.get_chunk_context
+  - query: ULP seasons 1-6 and anna-ohoiko-*; regex look.like|similar.*letter|same.*letter|Latin.*letter|Cyrillic.*letter|letter.*English|Greek
+      in chunks containing Ф or ф. Candidate passages concerned English lessons, letters as correspondence, Greek culture
+      or generic Cyrillic learning, not the visual shape of Ф.
+    tool: 'read-only corpus query: textbooks'
+  - query: alphabet, channel ulp_youtube. Per-letter pronunciation transcripts retrieved; they do not supply a T- or X- visual-comparison
+      record.
+    tool: sources.search_external
+  status: resolved
+- claim: The required Standard alphabet citation at canonical newline-numbered lines 571-572 cannot be built correctly by
+    this base. S-001 requested 571-572 but contains a blank line and the heading for Catalog V instead of the alphabet requirement.
+    The canonical file hash is 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac. scripts/curriculum/evidence/sources.py
+    get_standard_lines() uses str.splitlines(), which also treats the file form-feed page breaks as line separators. S-001
+    is retained as diagnostic evidence of the incorrect extraction, not as alphabet coverage. The request does not substitute
+    another range; correcting the helper is outside this packet owned paths.
+  id: U-002
+  resolved_by:
+    record: S-001
+  searches:
+  - query: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:571-572 contains section 4.1.1 on the Ukrainian alphabet, printed
+      and handwritten letters, uppercase and lowercase letters.
+    tool: nl -ba on canonical Standard text
+  - query: 'read_text().split(newline) versus read_text().splitlines() at one-based indices 571-572: the first gives the alphabet
+      requirement; the second gives a blank line and the Catalog V heading.'
+    tool: read-only canonical text comparison
+  - query: scripts/curriculum/evidence/sources.py:992-997 get_standard_lines() calls content.splitlines(); build-pack writes
+      the resulting wrong slice into S-001 and pack-verify confirms that same slice.
+    tool: read-only source inspection
+  status: resolved
+videos:
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-30'
+    final_url: https://www.youtube.com/watch?v=cJlal8XKBxo
+    http_status: 200
+  id: V-001
+  url: https://www.youtube.com/watch?v=cJlal8XKBxo
+  use: Soft-sign sound model; restrict practice to the taught-letter word pair, not the video vocabulary.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-30'
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
+  id: V-002
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: Native pronunciation models for the taught letters, then the full alphabet after all letters; no ASR transcription
+    is printed.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-30'
+    final_url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    http_status: 200
+  id: V-003
+  url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+  use: Native Ю sound model before its two primer word values.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-30'
+    final_url: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    http_status: 200
+  id: V-004
+  url: https://www.youtube.com/watch?v=u44eCjR2Oz8
+  use: Native Ц sound model before primer reading rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-09-30'
+    final_url: https://www.youtube.com/watch?v=haHRsFFZRQI
+    http_status: 200
+  id: V-005
+  url: https://www.youtube.com/watch?v=haHRsFFZRQI
+  use: Native Ф sound model; no visual look-alike claim.
