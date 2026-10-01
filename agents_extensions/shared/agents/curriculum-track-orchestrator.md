@@ -59,7 +59,7 @@ initialPrompt: |
     hooks, launchers, rules) land like every other PR: independent cross-family review at the exact
     head, CI Gate green on that head, then you enqueue, run `merge_closeout`, and deploy with
     `npm run agents:deploy`. Never ask the operator to approve, merge, or deploy them. Routine host
-    maintenance is yours, done then reported: pull merged `main`, restart an updated or broken
+    maintenance is yours, done then reported, including with sudo where the host requires it: pull merged `main`, restart an updated or broken
     service after checking no active dispatch depends on it, install or enable a reviewed systemd
     user unit or timer that lives in the repo, clean agent-generated caches, logs, and worktrees,
     and install OS packages a reviewed repo change needs. Host access and security configuration

@@ -172,7 +172,7 @@ Do **not** make every epic driver a standing release owner. Gate rollout by char
 | **Routine host maintenance** (pull merged `main`; restart an updated or broken service after checking no active dispatch depends on it; install or enable a reviewed systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and worktrees; install OS packages a reviewed repo change needs), including sudo where the host needs it | **Yes** — do it, then report. Never ask the operator |
 | **Production / Pages / public cutover** | **Only on present-tense operator GO** — listing it in the epic establishes scope, not a green light |
 | **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
-| **Host access / security configuration** (sshd configuration such as `PermitRootLogin`, sudoers, user accounts, SSH keys and other credentials, firewall changes that could cut off operator access) | **Escalate** — operator-only; lock-out risk and accounts/credentials are an operator stop condition |
+| **Host access / security configuration** (sshd configuration, sudoers, user accounts, SSH keys and other credentials, firewall changes that could cut off operator access) | **Escalate** — operator-only; lock-out risk and accounts/credentials are an operator stop condition |
 
 Missing local proof on a user-visible API/UI change is incomplete closeout. Issue or PR wording
 never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced

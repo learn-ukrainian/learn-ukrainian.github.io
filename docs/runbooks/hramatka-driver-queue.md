@@ -15,7 +15,7 @@ spine). Scope gate ships with PR-2; settle reaper with PR-3; closeout
 | --- | --- |
 | Public `learn-ukrainian/learn-ukrainian.github.io` | Shared curriculum/UI/contracts; fleet control plane (`delegate.py`, Monitor, batch_state). |
 | Private infra repository | Non-public operations material only. |
-| Private `learn-ukrainian/hramatka` | Secret-free teacher product (app, API, lesson engine, product CI). Shell created in P2.0; history migration is P2.2. |
+| Private product repository | Secret-free teacher product (app, API, lesson engine, product CI). Shell created in P2.0; history migration is P2.2. |
 
 Dispatch into a sibling product/infra checkout with first-class
 `--repo hramatka` or `--repo infra-private` (see
