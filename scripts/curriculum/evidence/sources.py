@@ -24,6 +24,7 @@ from collections.abc import Callable, Iterable, Mapping
 from contextlib import closing, suppress
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -583,7 +584,8 @@ class Sources:
                                 # Derived lookup keys are not source evidence.
                                 # Preserve cited-row digests across store versions.
                                 source_row = {
-                                    key: value for key, value in dict(row).items()
+                                    key: value
+                                    for key, value in dict(row).items()
                                     if key not in {"word_form_folded", "lemma_folded"}
                                 }
                                 for eid in matches:
@@ -608,7 +610,8 @@ class Sources:
                     raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
                 self._receipt_evidence[eid] = [section] if section else []
                 self._receipt_identities["pravopys"] = {
-                    "scheme": "pravopys-live-section-v1", "origin": PRAVOPYS_BASE,
+                    "scheme": "pravopys-live-section-v1",
+                    "origin": PRAVOPYS_BASE,
                 }
                 continue
             if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
@@ -627,7 +630,8 @@ class Sources:
             self._receipt_identities["sources_db"] = {"scheme": SOURCES_DB_SCHEME}
         raw = {eid: self._receipt_evidence[eid] for eid in requested}
         identities = {
-            kind: value for kind, value in self._receipt_identities.items()
+            kind: value
+            for kind, value in self._receipt_identities.items()
             if (kind == "vesum" and any(eid.startswith("vesum:") for eid in requested))
             or (kind == "pravopys" and any(eid.startswith("pravopys:") for eid in requested))
             or (kind == "sources_db" and any(eid.partition(":")[0] not in {"vesum", "pravopys"} for eid in requested))
@@ -635,7 +639,10 @@ class Sources:
         return SourceResult(raw, batch_digest(raw), identities)
 
     def _receipt_vesum_rows(
-        self, values: Iterable[str], *, paradigm: bool = False,
+        self,
+        values: Iterable[str],
+        *,
+        paradigm: bool = False,
     ) -> SourceResult[dict[str, list[dict]]]:
         """Read attested analyses or paradigms using Unicode word identity.
 
@@ -656,22 +663,35 @@ class Sources:
                 has_folded = folded_column in {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
                 for start in range(0, len(pending), BATCH_SIZE):
                     batch = pending[start : start + BATCH_SIZE]
-                    candidates = batch if has_folded else sorted({
-                        candidate for value in batch
-                        for candidate in (
-                            value, value.casefold(), value.upper(), value.title(), value.capitalize(),
-                            "-".join(part.capitalize() for part in value.split("-")),
+                    candidates = (
+                        batch
+                        if has_folded
+                        else sorted(
+                            {
+                                candidate
+                                for value in batch
+                                for candidate in (
+                                    value,
+                                    value.casefold(),
+                                    value.upper(),
+                                    value.title(),
+                                    value.capitalize(),
+                                    "-".join(part.capitalize() for part in value.split("-")),
+                                )
+                            }
                         )
-                    })
-                    slots = ','.join('?' for _ in candidates)
+                    )
+                    slots = ",".join("?" for _ in candidates)
                     condition = (
                         f"{column} IN (SELECT {column} FROM forms_all WHERE {folded_column} IN ({slots}))"
-                        if has_folded else f"{column} IN ({slots})"
+                        if has_folded
+                        else f"{column} IN ({slots})"
                     )
                     rows = conn.execute(
                         f"SELECT word_form, lemma, pos, tags FROM forms "
                         f"WHERE {condition} "
-                        "ORDER BY word_form, lemma, pos, tags", candidates,
+                        "ORDER BY word_form, lemma, pos, tags",
+                        candidates,
                     )
                     found = {value: [] for value in batch}
                     for row in rows:
@@ -683,7 +703,9 @@ class Sources:
         return SourceResult({value: cache[value] for value in requested}, digest, metadata)
 
     def bind_evidence_forms(
-        self, resolved: SourceResult[dict[str, list[dict]]], citations: Iterable[tuple[str, str]],
+        self,
+        resolved: SourceResult[dict[str, list[dict]]],
+        citations: Iterable[tuple[str, str]],
     ) -> SourceResult[dict[tuple[str, str], bool]]:
         """Bind citations to the option's word, for valid and invalid judgements.
 
@@ -724,8 +746,7 @@ class Sources:
                 if isinstance(row.get(field), str)
             ]
             supported = any(
-                _contains_evidence_form(value, form) if is_text else bool(form and value == form)
-                for value in witnesses
+                _contains_evidence_form(value, form) if is_text else bool(form and value == form) for value in witnesses
             )
             raw[eid, text] = supported
             if not supported and (
@@ -735,16 +756,19 @@ class Sources:
         analyses = self._receipt_vesum_rows(form for form, _, _ in pending.values()) if pending else None
         text_lemmas = {
             normalize_evidence_form(row["lemma"])
-            for form, _, is_text in pending.values() if is_text for row in analyses.raw[form]
+            for form, _, is_text in pending.values()
+            if is_text
+            for row in analyses.raw[form]
         }
         paradigms = self._receipt_vesum_rows(text_lemmas, paradigm=True) if text_lemmas else None
         for citation, (form, witnesses, is_text) in pending.items():
             lemmas = {normalize_evidence_form(row["lemma"]) for row in analyses.raw[form]}
             if is_text:
-                forms = {
-                    normalize_evidence_form(row["word_form"])
-                    for lemma in lemmas for row in paradigms.raw[lemma]
-                } if paradigms is not None else set()
+                forms = (
+                    {normalize_evidence_form(row["word_form"]) for lemma in lemmas for row in paradigms.raw[lemma]}
+                    if paradigms is not None
+                    else set()
+                )
                 raw[citation] = any(_contains_evidence_form(value, variant) for value in witnesses for variant in forms)
             else:
                 raw[citation] = any(value in lemmas for value in witnesses)
@@ -1020,36 +1044,72 @@ def heritage_hit_digest(hit: Mapping[str, Any]) -> str:
     return row_digest({key: value for key, value in hit.items() if key != "row_sha256"})
 
 
+# Same honest identifying form used by LinkChecker (its FAQ). This is a robot,
+# not a claim to be a particular browser. RFC 9110 §10.2.3 defines Retry-After.
+LINKCHECK_USER_AGENT = (
+    "Mozilla/5.0 (compatible; learn-ukrainian-linkcheck/1.0; "
+    "+https://github.com/learn-ukrainian/learn-ukrainian.github.io)"
+)
+URL_CHECK_ATTEMPTS = 3
+URL_RETRY_CAP = 5.0
+
+
+def _url_retry_delay(retry_after: str | None, attempt: int) -> float:
+    """Bound backoff and either Retry-After representation to five seconds."""
+    delay = 0.5 * 2**attempt
+    if retry_after:
+        try:
+            if retry_after.isascii() and retry_after.isdecimal():
+                requested = float(retry_after)
+            else:
+                requested = (parsedate_to_datetime(retry_after) - datetime.now(UTC)).total_seconds()
+            delay = max(delay, requested)
+        except (ValueError, TypeError, OverflowError):
+            pass
+    return min(delay, URL_RETRY_CAP)
+
+
 def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
-    """Check a video URL with a hard timeout and one retry; follows redirects."""
+    """GET with robot identification, redirects and bounded transient retries.
+
+    Return only the existing pack ``checked`` fields. Verification classifies
+    final statuses; only 200 passes. Exhausted connection failures raise.
+    """
     if timeout is None or timeout <= 0:
         raise ValueError("check_url requires a positive timeout")
-    headers = {"User-Agent": "learn-ukrainian-evidence-pack/1.0"}
-    req = urllib.request.Request(url, headers=headers)
-    last_exc = None
-    for attempt in range(2):
+    req = urllib.request.Request(url, headers={"User-Agent": LINKCHECK_USER_AGENT})
+    for attempt in range(URL_CHECK_ATTEMPTS):
+        retry_after = None
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
-                date_str = datetime.now(UTC).strftime("%Y-%m-%d")
-                return {
+                result = {
                     "http_status": resp.status,
                     "final_url": resp.geturl(),
                     "content_type": resp.headers.get_content_type() if resp.headers else None,
-                    "date": date_str,
+                    "date": datetime.now(UTC).strftime("%Y-%m-%d"),
                 }
+                retry_after = resp.headers.get("Retry-After") if resp.headers else None
         except urllib.error.HTTPError as exc:
-            date_str = datetime.now(UTC).strftime("%Y-%m-%d")
-            return {
-                "http_status": exc.code,
-                "final_url": exc.geturl(),
-                "content_type": exc.headers.get_content_type() if exc.headers else None,
-                "date": date_str,
-            }
+            try:
+                result = {
+                    "http_status": exc.code,
+                    "final_url": exc.geturl(),
+                    "content_type": exc.headers.get_content_type() if exc.headers else None,
+                    "date": datetime.now(UTC).strftime("%Y-%m-%d"),
+                }
+                retry_after = exc.headers.get("Retry-After") if exc.headers else None
+            finally:
+                exc.close()
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            last_exc = exc
-            if attempt == 0:
-                time.sleep(0.5)
-    raise ConnectionError(f"Failed to check URL {url} after retry: {last_exc}")
+            if attempt == URL_CHECK_ATTEMPTS - 1:
+                raise ConnectionError(f"Failed to check URL {url} after {URL_CHECK_ATTEMPTS} attempts: {exc}") from exc
+            time.sleep(_url_retry_delay(None, attempt))
+            continue
+        if result["http_status"] != 429 and not 500 <= result["http_status"] <= 599:
+            return result
+        if attempt == URL_CHECK_ATTEMPTS - 1:
+            return result
+        time.sleep(_url_retry_delay(retry_after, attempt))
 
 
 @lru_cache(maxsize=1)

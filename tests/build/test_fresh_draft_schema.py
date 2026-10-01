@@ -540,3 +540,14 @@ def test_assert_valid_draft_raises_with_every_error() -> None:
     with pytest.raises(DraftValidationError) as info:
         assert_valid_draft(draft, "b1")
     assert info.value.errors and info.value.errors[0].as_dict()["check"] == "schema"
+
+
+@pytest.mark.parametrize("level", LEVELS)
+@pytest.mark.parametrize("kind", ["prose", "table", "pronunciation", "culture"])
+def test_standard_records_can_ground_explanations(level, kind):
+    draft, _ = load_fixture(level)
+    _, _, block = _find_block(draft, kind)
+    block["explains"] = ["S-001", "S-002", "S-003"]
+    assert validate_draft(draft, level) == []
+    block["explains"] = ["S-invalid"]
+    assert validate_draft(draft, level)

@@ -922,7 +922,9 @@ def test_runner_keeps_owned_source_snapshot_through_choice_gate(tmp_path, monkey
     draft, plan, pack, words = _fixture()
     # Exercise the owned-session path rather than the injected source double.
     monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
-    monkeypatch.setattr(Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64))
+    monkeypatch.setattr(
+        Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64)
+    )
     resolve = runner.resolve
     choices = runner.check_7_a1_choices
     captured = []
@@ -970,7 +972,9 @@ def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, 
 
     draft, plan, pack, words = _fixture(two_senses=True)
     monkeypatch.setattr(sys.modules[__name__], "_FixtureSources", lambda: None)
-    monkeypatch.setattr(Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64))
+    monkeypatch.setattr(
+        Sources, "verify_words", lambda self, words: SourceResult({word: [] for word in words}, "f" * 64)
+    )
     captured = []
     original_resolve = runner.resolve
     original_choices = runner.check_7_a1_choices
@@ -995,7 +999,9 @@ def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, 
         sources, old = captured[0]
         assert kwargs["sources"] is sources and sources._conn is None
         assert sources._db() is not old
-        assert sources._db().execute("SELECT definition FROM grinchenko WHERE id=99").fetchone()[0] == "post-dispatch row"
+        assert (
+            sources._db().execute("SELECT definition FROM grinchenko WHERE id=99").fetchone()[0] == "post-dispatch row"
+        )
         return original_choices(*args, **kwargs)
 
     monkeypatch.setattr(runner, "resolve", resolve)
@@ -1003,3 +1009,19 @@ def test_runner_releases_snapshot_before_dispatch_and_reopens_at_gate(tmp_path, 
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, question_dispatch=dispatch)
     assert report["passed"] is not dispatch_fails, report
     assert captured[0][0]._conn is None
+
+
+@pytest.mark.parametrize("kind", ["prose", "table"])
+def test_standard_citation_is_required_and_plan_bound(kind):
+    draft, plan, _, _ = _fixture()
+    lesson = plan["lessons"][0]
+    lesson["steps"][0]["evidence"].append("S-001")
+    block = draft["steps"][0]["blocks"][0]
+    block["explains"].append("S-001")
+    if kind == "table":
+        block.update(kind="table", rows=[[block.pop("text")]])
+    assert runner.check_3_structure(draft, lesson)["status"] == "passed"
+    block["explains"].remove("S-001")
+    assert runner.check_3_structure(draft, lesson)["status"] == "failed"
+    block["explains"].append("S-999")
+    assert runner.check_3_structure(draft, lesson)["status"] == "failed"

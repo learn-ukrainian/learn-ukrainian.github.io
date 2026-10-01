@@ -881,6 +881,7 @@ def verify_pack(
                 known_words = set()
             for ref in sorted(modeled_words - known_words):
                 errors.append(f"{codes.FORM_MISMATCH}: video model word {ref} not in level word store")
+        url_checks: list[dict[str, Any]] = []
         for vid_rec in pack_doc.get("videos", []):
             if offline:
                 not_checked.append(vid_rec["id"])
@@ -888,18 +889,24 @@ def verify_pack(
             else:
                 try:
                     res = sources_instance.check_url(vid_rec["url"], timeout=10.0)
-                    if res["http_status"] != 200:
-                        msg = f"video {vid_rec['id']} url {vid_rec['url']} returned status {res['http_status']}"
-                        if strict:
-                            errors.append(f"{codes.INVALID_REQUEST}: {msg}")
-                        else:
-                            warnings.append(f"{codes.NOT_CHECKED}: {msg}")
+                    status = res["http_status"]
+                    outcome = (
+                        "ok"
+                        if status == 200
+                        else codes.BOT_BLOCKED
+                        if status in {401, 403}
+                        else codes.DEAD_LINK
+                        if status in {404, 410}
+                        else codes.UNVERIFIABLE
+                    )
+                    url_checks.append({"id": vid_rec["id"], "outcome": outcome, **res})
+                    if outcome != "ok":
+                        msg = f"{outcome}: video {vid_rec['id']} url {vid_rec['url']} returned status {status}"
+                        (errors if strict else warnings).append(msg)
                 except Exception as exc:
-                    msg = f"video {vid_rec['id']} url check failed: {exc}"
-                    if strict:
-                        errors.append(f"{codes.INVALID_REQUEST}: {msg}")
-                    else:
-                        warnings.append(f"{codes.NOT_CHECKED}: {msg}")
+                    url_checks.append({"id": vid_rec["id"], "outcome": codes.UNVERIFIABLE})
+                    msg = f"{codes.UNVERIFIABLE}: video {vid_rec['id']} url check failed: {exc}"
+                    (errors if strict else warnings).append(msg)
 
         # 11. Unsupported
         open_unsupported = [
@@ -930,6 +937,7 @@ def verify_pack(
             "errors_count": len(pack_doc.get("errors", [])),
             "notes_count": len(pack_doc.get("notes", [])),
             "videos_count": len(pack_doc.get("videos", [])),
+            "url_checks": url_checks,
             "standard_count": len(pack_doc.get("standard", [])),
             "unsupported_open_count": len(open_unsupported),
             "unsupported_resolved_count": len(resolved_unsupported),

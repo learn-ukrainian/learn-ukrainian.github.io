@@ -16,6 +16,9 @@ PENDING_ULIF = "pending_ulif"
 UNRESOLVED_ENTRY = "unresolved_entry"
 OVERRIDE_PRESENT = "override_present"
 NOT_CHECKED = "not_checked"
+BOT_BLOCKED = "bot_blocked"
+DEAD_LINK = "dead_link"
+UNVERIFIABLE = "unverifiable"
 GLOSS_MISMATCH = "gloss_mismatch"
 CEFR_MISMATCH = "cefr_mismatch"
 SPAN_MISMATCH = "span_mismatch"
@@ -51,6 +54,9 @@ DESCRIPTIONS = {
     UNRESOLVED_ENTRY: "open: an entry requires an explicit source choice",
     OVERRIDE_PRESENT: "report: the oracle applied an exact-form override",
     NOT_CHECKED: "report: a fact could not be checked",
+    BOT_BLOCKED: "failure: the identifying link checker received HTTP 401/403",
+    DEAD_LINK: "failure: the link returned HTTP 404/410",
+    UNVERIFIABLE: "failure: link liveness could not be verified after bounded retries",
     GLOSS_MISMATCH: "failure: stored gloss differs from the source",
     CEFR_MISMATCH: "failure: stored CEFR level differs from the source",
     SPAN_MISMATCH: "failure: span does not match source chunk exactly once",
