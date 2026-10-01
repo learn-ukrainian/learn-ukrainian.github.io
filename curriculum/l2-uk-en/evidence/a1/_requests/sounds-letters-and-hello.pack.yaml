@@ -264,45 +264,115 @@ videos:
 - {id: V-003, url: 'https://www.ukrainianlessons.com/episode5/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-05 public
     episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator ext-ulp_youtube-299; compare with
     the native І model V-009, not English spelling.'}
-- {id: V-004, url: 'https://www.youtube.com/watch?v=hvB3VpcR3ZE', channel: Ukrainian Lessons, use: Pronunciation model
-    for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native letter-sound demonstration;
-    exact playback/timecode confirmation remains driver-owned.}
-- {id: V-005, url: 'https://www.youtube.com/watch?v=gJFxRIPRZbI', channel: Ukrainian Lessons, use: Pronunciation model
-    for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native letter-sound demonstration;
-    exact playback/timecode confirmation remains driver-owned.}
-- {id: V-006, url: 'https://www.youtube.com/watch?v=VB1O6PmtYRU', channel: Ukrainian Lessons, use: Pronunciation model
-    for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native letter-sound demonstration;
-    exact playback/timecode confirmation remains driver-owned.}
-- {id: V-007, url: 'https://www.youtube.com/watch?v=W-1rCu0indE', channel: Ukrainian Lessons, use: Pronunciation model
-    for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native letter-sound demonstration;
-    exact playback/timecode confirmation remains driver-owned.}
+- id: V-004
+  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  channel: Ukrainian Lessons
+  use: Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - А
+    words: []
+    segment: null
+- id: V-005
+  url: https://www.youtube.com/watch?v=gJFxRIPRZbI
+  channel: Ukrainian Lessons
+  use: Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - О
+    words: []
+    segment: null
+- id: V-006
+  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  channel: Ukrainian Lessons
+  use: Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - У
+    words: []
+    segment: null
+- id: V-007
+  url: https://www.youtube.com/watch?v=W-1rCu0indE
+  channel: Ukrainian Lessons
+  use: Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - И
+    words: []
+    segment: null
 - {id: V-008, url: 'https://www.youtube.com/watch?v=Ez95H4ibuJo', channel: Ukrainian Lessons, use: Pronunciation model
     for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.}
-- {id: V-009, url: 'https://www.youtube.com/watch?v=Z9TH0H4ShGo', channel: Ukrainian Lessons, use: Pronunciation model
-    for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native letter-sound demonstration;
-    exact playback/timecode confirmation remains driver-owned.}
-- {id: V-010, url: 'https://www.youtube.com/watch?v=vNUfiKHPYaU', channel: Ukrainian Lessons, use: Pronunciation model
-    for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.}
-- {id: V-011, url: 'https://www.youtube.com/watch?v=aFcvYfvQ2X4', channel: Ukrainian Lessons, use: Pronunciation model
-    for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.}
-- {id: V-012, url: 'https://www.youtube.com/watch?v=v6-3Xg52Buk', channel: Ukrainian Lessons, use: Pronunciation model
-    for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.}
-- {id: V-013, url: 'https://www.youtube.com/watch?v=7UsFBgSL91E', channel: Ukrainian Lessons, use: Pronunciation model
-    for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.}
+- id: V-009
+  url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  channel: Ukrainian Lessons
+  use: Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - І
+    words: []
+    segment: null
+- id: V-010
+  url: https://www.youtube.com/watch?v=vNUfiKHPYaU
+  channel: Ukrainian Lessons
+  use: Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Н
+    words: []
+    segment: null
+- id: V-011
+  url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+  channel: Ukrainian Lessons
+  use: Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - В
+    words: []
+    segment: null
+- id: V-012
+  url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  channel: Ukrainian Lessons
+  use: Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Л
+    words: []
+    segment: null
+- id: V-013
+  url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  channel: Ukrainian Lessons
+  use: Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - С
+    words: []
+    segment: null
 - {id: V-014, url: 'https://www.youtube.com/watch?v=J7sGEI4-xJo', channel: Ukrainian Lessons, use: Pronunciation model
     for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.}
 - {id: V-015, url: 'https://www.youtube.com/watch?v=JksSjjxyW5Y', channel: Ukrainian Lessons, use: Pronunciation model
     for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.}
-- {id: V-016, url: 'https://www.youtube.com/watch?v=fMGsQ5KPQgg', channel: Ukrainian Lessons, use: Pronunciation model
-    for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native letter-sound
-    demonstration; exact playback/timecode confirmation remains driver-owned.}
+- id: V-016
+  url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+  channel: Ukrainian Lessons
+  use: Pronunciation model for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native
+    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Р
+    words: []
+    segment: null
 standard:
 - {id: S-001, lines: '351-353'}
 - {id: S-002, lines: '357-359'}

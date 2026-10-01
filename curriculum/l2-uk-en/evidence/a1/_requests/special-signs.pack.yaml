@@ -475,9 +475,9 @@ unsupported:
     authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted print conversion, not evidence that an audio recording exists.
     mode: audio-to-print
     lessons: [2, 3, 4]
-    records: ['T-002', 'T-003', 'T-004', 'T-005', 'T-006', 'T-007', 'T-008', 'T-013', 'T-022', 'T-023', 'T-025']
+    records: ['T-002', 'T-003', 'T-004', 'T-005', 'T-006', 'T-007', 'T-008', 'T-013', 'T-022', 'T-023', 'T-025', 'T-030', 'T-033', 'T-034']
     words: ['W-121', 'W-122', 'W-123', 'W-124', 'W-125', 'W-126', 'W-127', 'W-128', 'W-129', 'W-130', 'W-131', 'W-010', 'W-140', 'W-141', 'W-142']
-    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md; print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md; print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step. Additional composite-letter bindings P3 L2 a2 and L4 a4 use print discrimination plus offline teacher pronunciation; see _requests/integrate-a1-p1-p3-listening.md. No timed model is declared.
     teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline; no machine speaking or acoustic equivalence claim.
     remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof inferred from resolved status.
 - id: U-005
@@ -573,13 +573,23 @@ videos:
 - id: V-004
   url: https://www.youtube.com/watch?v=u44eCjR2Oz8
   channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Ц. Native Ц sound model before primer reading rows. Scored segment is the
-    publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for Ц. Native Ц sound model before primer reading rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Ц
+    words: []
+    segment: null
 - id: V-005
   url: https://www.youtube.com/watch?v=haHRsFFZRQI
   channel: Ukrainian Lessons Podcast
-  use: Pronunciation model for Ф. Native Ф sound model; no visual look-alike claim. Scored segment is the
-    publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for Ф. Native Ф sound model; no visual look-alike claim. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Ф
+    words: []
+    segment: null
 - id: V-006
   url: https://www.ukrainianlessons.com/episode2/
   channel: Ukrainian Lessons Podcast

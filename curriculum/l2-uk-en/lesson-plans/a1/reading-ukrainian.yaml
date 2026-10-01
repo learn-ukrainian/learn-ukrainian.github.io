@@ -3,7 +3,7 @@ module: reading-ukrainian
 level: a1
 sequence: 2
 slug: reading-ukrainian
-version: '2'
+version: '3'
 title: читати
 subtitle: Twelve more letters, then whole words and short sourced sentences read aloud
 focus: 'Continue the primer sequence after position 1: hear each new sound, read its syllable or word row and a decodable word, then
@@ -33,12 +33,13 @@ changelog:
   native single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored
   print discrimination. Letters, grammar, lesson count, core vocabulary and word targets unchanged. Integrated-engine acceptance remains
   driver-owned.'
+- 'Integration, #8425: version 3 declares source glyph engine targets with attested whole single-letter video models; unsupported composite-video bindings use attributed print discrimination plus offline teacher practice. Source ledger: evidence/a1/_requests/integrate-a1-p1-p3-listening.md.'
 arc_ref:
   level: a1
   position: 2
 evidence_ref:
   path: evidence/a1/reading-ukrainian.yaml
-  sha256: 63d3e8afd51fdbccdcfa62391bcc9a9b9aa38fca0fecae824a4b5c5ec0e63202
+  sha256: 746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845
 lessons:
 - n: 1
   slug: t-and-e
@@ -176,13 +177,7 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'Choose the Т letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-001/T-022. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Т letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-001/T-022. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a3
     type: letter-grid
     placement: inline
@@ -192,13 +187,7 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: 'Choose the Е letter after hearing its primer sound; contrast it with earlier taught vowels and consonants, and include the
-      Latin-shape check against the English letter name. Required item kind: listening; each item binds host {kind: video, ref: V-id}
-      and one T-id target_record using these aligned pairs: V-005/T-023. Present its video block before the item; choices are taught
-      single glyphs, never words, sound-class labels, letter names or a whole greeting. Independent segment playback remains driver-owned.
-      Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening
-      key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword
-      response; classification and Latin-shape discussion remain offline teaching.'
+    focus: "Choose the Е letter after hearing its primer sound; contrast it with earlier taught vowels and consonants, and include the Latin-shape check against the English letter name. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-005/T-023. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a5
     type: watch-and-repeat
     placement: inline
@@ -409,13 +398,7 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'Choose the Д letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-006/T-024. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Д letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-006/T-024. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a3
     type: letter-grid
     placement: inline
@@ -425,13 +408,7 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: 'Choose the З letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-007/T-025. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the З letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-007/T-025. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a5
     type: letter-grid
     placement: inline
@@ -441,13 +418,7 @@ lessons:
   - id: a6
     type: quiz
     placement: inline
-    focus: 'Choose the Б letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-008/T-026. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Б letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-008/T-026. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a7
     type: observe
     placement: inline
@@ -461,12 +432,7 @@ lessons:
   - id: a9
     type: quiz
     placement: workbook
-    focus: 'Choose the letter for a heard Д, З or Б sound across a balanced mixed set; the answer is not the same for every item, and
-      the contrast differs from syllable division. Required item kind: listening; each item binds host {kind: video, ref: V-id} and
-      one T-id target_record using these aligned pairs: V-006/T-024, V-007/T-025, V-008/T-026. Present its video block before the item;
-      choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Independent segment playback
-      remains driver-owned. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word
-      meaning or multiword response; classification and Latin-shape discussion remain offline teaching.'
+    focus: "Choose the letter for a heard Д, З or Б sound across a balanced mixed set; the answer is not the same for every item, and the contrast differs from syllable division. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-006/T-024, V-007/T-025, V-008/T-026. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   practice:
     vocabulary: core
     stress: []
@@ -597,7 +563,7 @@ lessons:
     needs:
     - video
     - example
-  - id: s2-print
+  - id: "s3"
     kind: practice
     teach: 'Display only the following attributed public-textbook quotes before these print-choice activities: T-035. Keep all other
       T/X records as explains-only grounding. Read the declared taught-letter stimuli aloud and copy their models offline with teacher
@@ -614,7 +580,7 @@ lessons:
     - a4
     needs:
     - quote
-  - id: s3
+  - id: "s4"
     kind: practice
     teach: Move from the separate sound rows to the sourced decodable words. The learner reads each printed word aloud after
       hearing it; incidental decoding words are never drilled for meaning. Exact primer syllables, whole words, minimal pairs,
@@ -648,13 +614,7 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'Choose the Г letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-009/T-027. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Г letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-009/T-027. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a3
     type: letter-grid
     placement: inline
@@ -869,13 +829,7 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'Choose the Ч letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-010/T-029. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Ч letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-010/T-029. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a3
     type: letter-grid
     placement: inline
@@ -885,13 +839,7 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: 'Choose the Й letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-003/T-030. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Й letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-003/T-030. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a5
     type: letter-grid
     placement: inline
@@ -901,13 +849,7 @@ lessons:
   - id: a6
     type: quiz
     placement: inline
-    focus: 'Choose the Ukrainian sound for the displayed Х from the primer model, rejecting the Latin-shape guess, and classify it as
-      a consonant. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using these
-      aligned pairs: V-011/T-031. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Ukrainian sound for the displayed Х from the primer model, rejecting the Latin-shape guess, and classify it as a consonant. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-011/T-031. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a7
     type: watch-and-repeat
     placement: inline
@@ -1068,7 +1010,7 @@ lessons:
     practice:
     - a5
     - a6
-  - id: s3-print
+  - id: "s4"
     kind: practice
     teach: 'Display only the following attributed public-textbook quotes before these print-choice activities: T-036, T-037. Keep all
       other T/X records as explains-only grounding. Read the declared taught-letter stimuli aloud and copy their models offline with
@@ -1110,13 +1052,7 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'Choose the Ж letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-012/T-032. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Ж letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-012/T-032. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a3
     type: letter-grid
     placement: inline
@@ -1126,13 +1062,7 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: 'Choose the Ш letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant
-      answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using
-      these aligned pairs: V-013/T-033. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Choose the Ш letter after hearing its primer sound; contrast it with earlier taught sounds, with both vowel and consonant answers represented. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-013/T-033. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a5
     type: observe
     placement: inline
@@ -1160,14 +1090,7 @@ lessons:
   - id: a9
     type: quiz
     placement: workbook
-    focus: 'Choose the letter for a heard Ж, Ш, Ч or Х sound across a balanced mixed set, keeping the vowel/consonant classification;
-      it extends the lesson-2 and lesson-3 sound-to-letter quizzes to the last four consonants. Required item kind: listening; each
-      item binds host {kind: video, ref: V-id} and one T-id target_record using these aligned pairs: V-012/T-032, V-013/T-033, V-010/T-029,
-      V-011/T-031. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter
-      names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary is English-supported
-      offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph,
-      never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion
-      remain offline teaching.'
+    focus: "Choose the letter for a heard Ж, Ш, Ч or Х sound across a balanced mixed set, keeping the vowel/consonant classification; it extends the lesson-2 and lesson-3 sound-to-letter quizzes to the last four consonants. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-012/T-032, V-013/T-033, V-010/T-029, V-011/T-031. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a10
     type: pick-syllables
     placement: workbook

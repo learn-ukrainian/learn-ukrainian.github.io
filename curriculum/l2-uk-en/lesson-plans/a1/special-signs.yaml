@@ -3,7 +3,7 @@ module: special-signs
 level: a1
 sequence: 3
 slug: special-signs
-version: '2'
+version: '3'
 title: літери
 subtitle: 'Finish the alphabet: eight remaining letters, two digraphs, the apostrophe, hard/soft sounds and dictionary order'
 focus: Finish the primer letter sequence, practise each new item in source words by listening, reading aloud and notebook copying,
@@ -29,12 +29,13 @@ changelog:
   native single-letter bindings; exact-row/word/sentence/name audio gaps converted to print with offline teacher modeling and scored
   print discrimination. Letters, grammar, lesson count, core vocabulary and word targets unchanged. Integrated-engine acceptance remains
   driver-owned.'
+- 'Integration, #8425: version 3 declares source glyph engine targets with attested whole single-letter video models; unsupported composite-video bindings use attributed print discrimination plus offline teacher practice. Source ledger: evidence/a1/_requests/integrate-a1-p1-p3-listening.md.'
 arc_ref:
   level: a1
   position: 3
 evidence_ref:
   path: evidence/a1/special-signs.yaml
-  sha256: f9ce651009517f4f322a212cb16b70a1a5d40b102e0cfb0d4b5bede6c9bccaa3
+  sha256: 889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315
 lessons:
 - n: 1
   slug: soft-sign-and-sound-pairs
@@ -248,13 +249,13 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is
-      known; never analyse or split it. Hear the Ї segment of V-002; T-002 and T-013 show always [йі], never a consonant-softening
-      value. Read and copy W-121, then the post-vowel plural model of W-010 from T-002, without explaining possession or plural.
-      Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is
-      inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud
-      from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored
-      print substitutions are declared in the activity focus and coverage ledger.
+    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse
+      or split it. Use the source glyph model with offline teacher pronunciation; V-002 is unscored by-ear support, with no asserted timed segment;
+      T-002 and T-013 show always [йі], never a consonant-softening value. Read and copy W-121, then the post-vowel plural model of W-010 from T-002,
+      without explaining possession or plural. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer
+      syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read
+      aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions
+      are declared in the activity focus and coverage ledger.
     uses:
       grammar:
       - G-a1-002
@@ -276,7 +277,6 @@ lessons:
     - T-030
     practice:
     - a1
-    - a2
     introduces:
       letters:
       - Ї
@@ -288,12 +288,24 @@ lessons:
     - video
   - id: s2
     kind: teach
-    teach: Hear the Я segment of V-002. Read and copy W-122 at word start and W-123 after a consonant; compare the two source
-      sound models in T-013. Then read and copy W-141 after a vowel and W-142 after the soft sign, preserving their source senses.
-      T-013 names apostrophe context, but its actual examples are deferred until lesson 6; do not read any apostrophe word here.
-      Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print
-      with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print
-      substitutions are declared in the activity focus and coverage ledger.
+    teach: Display the attributed capital/small source glyph models, then discriminate their printed shapes. Teacher pronunciation and learner repetition
+      remain offline; no machine-scored recording is asserted.
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-030
+    practice:
+    - a2
+    needs:
+    - quote
+  - id: s3
+    kind: teach
+    teach: Use V-002 as unscored by-ear support for Я; no timed segment is asserted. Read and copy W-122 at word start and W-123 after a consonant; compare the two source sound models in T-013.
+      Then read and copy W-141 after a vowel and W-142 after the soft sign, preserving their source senses. T-013 names apostrophe context, but
+      its actual examples are deferred until lesson 6; do not read any apostrophe word here. Exact primer syllables, whole words, minimal pairs,
+      positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic
+      letter video is their recording. Scored print substitutions are declared in the activity focus and coverage ledger.
     uses:
       grammar:
       - G-a1-005
@@ -324,12 +336,7 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'Hear the Ї model and select its letter among taught vowels; include earlier single-vowel sounds so answers vary. Required
-      item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using these aligned pairs: V-008/T-030.
-      Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a
-      whole greeting. Independent segment playback remains driver-owned. The scored answer is only the supported taught glyph, never
-      a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain
-      offline teaching.'
+    focus: "Scored print discrimination of the displayed capital/small glyph models in T-030. Required item kind: comprehension; each item uses its exact host {kind: quote, ref: T-id} from these refs: T-030. Display the attributed source before the activity; keys depend on the displayed glyph, never a guessed recording. The teacher models the corresponding sounds and the learner repeats offline. U-004 conversion: the composite alphabet ASR has no timestamps and no timed chapter source was available; these targets are not declared as scored audio models. Retain the source-backed teaching points, print copying and offline sound practice."
   - id: a3
     type: letter-grid
     placement: inline
@@ -376,10 +383,9 @@ lessons:
   - a7
   videos:
   - evidence: V-002
-    use: Steps s1/s2 native Ї and Я sound models; other letters and video examples remain by-ear only.
+    use: "Unscored by-ear alphabet support only. No timed target segment is attested; scored glyph discrimination uses the attributed print host, with offline teacher pronunciation and learner repetition."
   - evidence: V-008
-    use: Replay its explicitly named single-letter segment before the corresponding listening choice; driver confirms exact
-      segment independently.
+    use: "Unscored by-ear alphabet support only. No timed target segment is attested; scored glyph discrimination uses the attributed print host, with offline teacher pronunciation and learner repetition."
 - n: 3
   slug: yu-and-ye
   title: Ю, Є
@@ -601,13 +607,12 @@ lessons:
   steps:
   - id: s1
     kind: teach
-    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is
-      known; never analyse or split it. Hear V-004 and the Ц models in T-006, including hard and soft sounds. Read the CV/VC row
-      and read and copy W-128 from T-023 as an incidental word, not an instrument-knowledge test. Replay the lesson-listed V/T
-      single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred. Exact primer
-      syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print with teacher
-      modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions are
-      declared in the activity focus and coverage ledger.
+    teach: Open by reading W-074 whole. Read and copy W-075 plus W-076 only as one intact greeting chunk after the soft sign is known; never analyse
+      or split it. Hear V-004 and the Ц models in T-006, including hard and soft sounds. Read the CV/VC row and read and copy W-128 from T-023 as
+      an incidental word, not an instrument-knowledge test. Replay the lesson-listed V/T single-letter target pairs before the scored items; no
+      exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this
+      step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored
+      print substitutions are declared in the activity focus and coverage ledger.
     uses:
       grammar:
       - G-a1-002
@@ -640,12 +645,12 @@ lessons:
     - video
   - id: s2
     kind: teach
-    teach: Hear the Щ segment of V-002. T-007/T-013 show always [шч]; read the row, then read and copy W-129 and W-130. W-129 is
-      B2 decoding material only; W-130 is the useful A1 rain word. Replay the lesson-listed V/T single-letter target pairs before
-      the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs,
-      positional values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed
-      source nor a generic letter video is their recording. Scored print substitutions are declared in the activity focus and
-      coverage ledger.
+    teach: Use V-002 as unscored by-ear support for Щ; no timed segment is asserted. T-007/T-013 show always [шч]; read the row, then read and copy W-129 and W-130. W-129 is B2 decoding material
+      only; W-130 is the useful A1 rain word. Replay the lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable
+      or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud
+      from print with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print substitutions
+      are declared in the activity focus and coverage ledger. The scored contrast is printed; the composite video has no attested timed target segment
+      and is unscored support only.
     uses:
       grammar:
       - G-a1-002
@@ -662,7 +667,6 @@ lessons:
     - T-034
     practice:
     - a3
-    - a4
     introduces:
       letters:
       - Щ
@@ -674,12 +678,25 @@ lessons:
     - video
   - id: s3
     kind: teach
-    teach: Hear V-005, see Ф and its source name in T-008/T-012, read the CV/VC row, then read and copy W-131. Teach the glyph and
-      [ф] sound; T-018 supplies only the F/ph correspondence if mentioned, never any visual look-alike claim. Replay the
-      lesson-listed V/T single-letter target pairs before the scored items; no exact primer syllable or word audio is inferred.
-      Exact primer syllables, whole words, minimal pairs, positional values and sentences in this step are read aloud from print
-      with teacher modeling offline; neither a printed source nor a generic letter video is their recording. Scored print
-      substitutions are declared in the activity focus and coverage ledger.
+    teach: Display the attributed capital/small source glyph models, then discriminate their printed shapes. Teacher pronunciation and learner repetition
+      remain offline; no machine-scored recording is asserted.
+    uses:
+      grammar: []
+      vocabulary: []
+    evidence:
+    - T-033
+    - T-034
+    practice:
+    - a4
+    needs:
+    - quote
+  - id: s4
+    kind: teach
+    teach: Hear V-005, see Ф and its source name in T-008/T-012, read the CV/VC row, then read and copy W-131. Teach the glyph and [ф] sound; T-018
+      supplies only the F/ph correspondence if mentioned, never any visual look-alike claim. Replay the lesson-listed V/T single-letter target pairs
+      before the scored items; no exact primer syllable or word audio is inferred. Exact primer syllables, whole words, minimal pairs, positional
+      values and sentences in this step are read aloud from print with teacher modeling offline; neither a printed source nor a generic letter video
+      is their recording. Scored print substitutions are declared in the activity focus and coverage ledger.
     uses:
       grammar:
       - G-a1-002
@@ -712,13 +729,7 @@ lessons:
   - id: a2
     type: quiz
     placement: inline
-    focus: 'Choose Ц for its heard sound among earlier sounds, then distinguish the hard and soft Ц source models; rotate correct answers.
-      Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using these aligned pairs:
-      V-004/T-028. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter
-      names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary is English-supported
-      offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph,
-      never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion
-      remain offline teaching.'
+    focus: "Choose Ц for its heard sound among earlier sounds, then distinguish the hard and soft Ц source models; rotate correct answers. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-004/T-028. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a3
     type: letter-grid
     placement: inline
@@ -727,13 +738,7 @@ lessons:
   - id: a4
     type: quiz
     placement: inline
-    focus: 'Choose Щ or the earlier Ш after hearing the native models; include both so the two-consonant Щ reading is actually tested.
-      Required item kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using these aligned pairs:
-      V-011/T-033, V-012/T-034. Present its video block before the item; choices are taught single glyphs, never words, sound-class
-      labels, letter names or a whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary
-      is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported
-      taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape
-      discussion remain offline teaching.'
+    focus: "Scored print discrimination of the displayed capital/small glyph models in T-033, T-034. Required item kind: comprehension; each item uses its exact host {kind: quote, ref: T-id} from these refs: T-033, T-034. Display the attributed source before the activity; keys depend on the displayed glyph, never a guessed recording. The teacher models the corresponding sounds and the learner repeats offline. U-004 conversion: the composite alphabet ASR has no timestamps and no timed chapter source was available; these targets are not declared as scored audio models. Retain the source-backed teaching points, print copying and offline sound practice."
   - id: a5
     type: letter-grid
     placement: inline
@@ -742,13 +747,7 @@ lessons:
   - id: a6
     type: quiz
     placement: inline
-    focus: 'Choose Ф or another taught consonant after hearing its native sound; no English visual-comparison option. Required item
-      kind: listening; each item binds host {kind: video, ref: V-id} and one T-id target_record using these aligned pairs: V-005/T-029.
-      Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a
-      whole greeting. Independent segment playback remains driver-owned. Classification/hard-soft/shape commentary is English-supported
-      offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph,
-      never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion
-      remain offline teaching.'
+    focus: "Choose Ф or another taught consonant after hearing its native sound; no English visual-comparison option. Required item kind: listening; each item binds host {kind: video, ref: V-id} and a target_record equal to the source glyph (not the T-id); the aligned video/print-evidence pairs are: V-005/T-029. Present its video block before the item; choices are taught single glyphs, never words, sound-class labels, letter names or a whole greeting. Each dedicated single-letter recording uses segment: null for the whole letter model; independent replay remains driver-owned. Classification/hard-soft/shape commentary is English-supported offline practice from the primer, not a second unsupported listening key. The scored answer is only the supported taught glyph, never a sound-class label, English letter name, word meaning or multiword response; classification and Latin-shape discussion remain offline teaching."
   - id: a7
     type: divide-words
     placement: workbook
@@ -784,13 +783,11 @@ lessons:
   - evidence: V-002
     use: Step s2 Щ sound model.
   - evidence: V-005
-    use: Step s3 Ф sound model.
+    use: Step s4 Ф sound model.
   - evidence: V-011
-    use: Replay its explicitly named single-letter segment before the corresponding listening choice; driver confirms exact
-      segment independently.
+    use: "Unscored by-ear alphabet support only. No timed target segment is attested; scored glyph discrimination uses the attributed print host, with offline teacher pronunciation and learner repetition."
   - evidence: V-012
-    use: Replay its explicitly named single-letter segment before the corresponding listening choice; driver confirms exact
-      segment independently.
+    use: "Unscored by-ear alphabet support only. No timed target segment is attested; scored glyph discrimination uses the attributed print host, with offline teacher pronunciation and learner repetition."
 - n: 5
   slug: joined-digraphs
   title: дж, дз
@@ -1092,7 +1089,7 @@ lessons:
     - a4
     needs:
     - example
-  - id: s-print-workbook
+  - id: "s3"
     kind: practice
     teach: 'Before workbook consolidation, display these attributed public-textbook quote hosts: T-036. Work only with the named taught-letter
       stimuli; other source prose is explains-only. Read aloud offline with a teacher; scored answers concern the displayed print. Exact
@@ -1150,10 +1147,7 @@ lessons:
   - id: a7
     type: odd-one-out
     placement: workbook
-    focus: 'Inspect the complete printed contrast пюре — п’ю in T-036 and identify presence versus absence of the apostrophe. Required
-      item kind: comprehension; host: {kind: quote, ref: T-036}. Display the attributed public-textbook quote in s-print-workbook before
-      workbook consolidation. Rotate the key position; meaning and acoustic discrimination are not scored. Read the contrast aloud offline
-      after the teacher models its pronunciation.'
+    focus: "Inspect the complete printed contrast пюре — п’ю in T-036 and identify presence versus absence of the apostrophe. Required item kind: comprehension; host: {kind: quote, ref: T-036}. Display the attributed public-textbook quote in s3 before workbook consolidation. Rotate the key position; meaning and acoustic discrimination are not scored. Read the contrast aloud offline after the teacher models its pronunciation."
   practice:
     vocabulary: core
     stress: []
@@ -1250,7 +1244,7 @@ lessons:
       vocabulary: []
     needs:
     - video
-  - id: s1-print
+  - id: "s2"
     kind: practice
     teach: 'Display only the following attributed public-textbook quotes before these print-choice activities: T-012. Keep all other
       T/X records as explains-only grounding. Read the declared taught-letter stimuli aloud and copy their models offline with teacher
@@ -1267,7 +1261,7 @@ lessons:
     - a2
     needs:
     - quote
-  - id: s2
+  - id: "s3"
     kind: practice
     teach: Find taught W-076, W-081, W-101, W-121 and W-130 in dictionary order from T-012; read each aloud and copy their printed
       models. Copy W-141 as a sourced personal name model and write one’s own name from an existing written personal model; the

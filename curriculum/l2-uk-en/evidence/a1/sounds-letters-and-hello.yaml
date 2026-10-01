@@ -847,6 +847,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DhvB3VpcR3ZE&q=EhAqAQT4HBvflAAAAAAAAAABGOaE-dUGIjBA0v42dywXw_IlXbaRB_enLpNg_XGwHSFPRwHPYt8r7-dMjsgXVk8VsgXIwrzp1LoyAnJSWgFD
     http_status: 429
   id: V-004
+  models:
+    letters:
+    - А
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
   use: Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -857,6 +862,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DgJFxRIPRZbI&q=EhAqAQT4HBvflAAAAAAAAAABGOaE-dUGIjDTTpn-P4YOKwRUO1T6uprSCfyPnk5WdOxWV4S74ch-sthlJ9rXhM-8Lorto7YVMSoyAnJSWgFD
     http_status: 429
   id: V-005
+  models:
+    letters:
+    - О
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=gJFxRIPRZbI
   use: Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -867,6 +877,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DVB1O6PmtYRU&q=EhAqAQT4HBvflAAAAAAAAAABGOeE-dUGIjBzdLskn7HHVIvLZh0h-gky22NHf1xUVflE2p_Cfq4lPJ09NHwuwbaGHFNmI6PrfXcyAnJSWgFD
     http_status: 429
   id: V-006
+  models:
+    letters:
+    - У
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=VB1O6PmtYRU
   use: Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -877,6 +892,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DW-1rCu0indE&q=EhAqAQT4HBvflAAAAAAAAAABGOeE-dUGIjBfmelE7ElmMzGRrqw72WSOXpnYTTIMntLgEztK-ACyheOVzqdMx0dnMN4-9Kgf9F8yAnJSWgFD
     http_status: 429
   id: V-007
+  models:
+    letters:
+    - И
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=W-1rCu0indE
   use: Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -897,6 +917,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DZ9TH0H4ShGo&q=EhAqAQT4HBvflAAAAAAAAAABGOiE-dUGIjDxLHotsqc9uRpp0YK3O38TiaEHcl0zi3ZvWTazvUFnombPjS5WlXFAiT2Sd0wP1HkyAnJSWgFD
     http_status: 429
   id: V-009
+  models:
+    letters:
+    - І
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
   use: Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -907,6 +932,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DvNUfiKHPYaU&q=EhAqAQT4HBvflAAAAAAAAAABGOiE-dUGIjAaE4c7Fz3rodyglpojUOrMxOvzpT7hzlQuRQDXh8UBYo7eSWqKgxT4l7BeylM7rZoyAnJSWgFD
     http_status: 429
   id: V-010
+  models:
+    letters:
+    - Н
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=vNUfiKHPYaU
   use: Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -917,6 +947,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DaFcvYfvQ2X4&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjBirrmELLb3on-ciUiiTfcRWUsUGcU0hyMV0XPYOBjGyBvYy_9EhB0xpYcgK-1AFkQyAnJSWgFD
     http_status: 429
   id: V-011
+  models:
+    letters:
+    - В
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
   use: Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -927,6 +962,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dv6-3Xg52Buk&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjA1IOalDx1uS6ibsnTuCs3JngeB35CImkkM6FqGi4v5JQ7fRuWzd4Y9O6tl5ENzK74yAnJSWgFD
     http_status: 429
   id: V-012
+  models:
+    letters:
+    - Л
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=v6-3Xg52Buk
   use: Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -937,6 +977,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D7UsFBgSL91E&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjDWyUDtCzY9xOsh9fsZWC9Er4sIbL_MrJv8duh0wsCbLj6vBhskLagn3LVLLbz7W_kyAnJSWgFD
     http_status: 429
   id: V-013
+  models:
+    letters:
+    - С
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=7UsFBgSL91E
   use: Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -967,6 +1012,11 @@ videos:
     final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DfMGsQ5KPQgg&q=EhAqAQT4HBvflAAAAAAAAAABGOuE-dUGIjBEG65aQuzCQ5Xl8yDwybAqfy_O36flDr-opt2W3aOx1CN3s5Iz21clTDCL6f6V6vwyAnJSWgFD
     http_status: 429
   id: V-016
+  models:
+    letters:
+    - Р
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
   use: Pronunciation model for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.

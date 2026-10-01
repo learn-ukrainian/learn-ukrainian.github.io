@@ -2,6 +2,8 @@
 
 Refs #8425. Curated against the fresh `lesson-plans/a1/` plans, with those plans unchanged. This is a source-selection handoff, not lesson-build approval. Record IDs below are local to their module pack. No synthetic speech or new premium-note quotations are introduced.
 
+Integration update: [current declarations and U-004 conversions](integrate-a1-p1-p3-listening.md) supersede the original open-gap disposition below. The tables below preserve the discovery evidence and its limitations.
+
 The search read every tracked JSON/YAML and raw list under `docs/resources/podcasts/`, including all 300 podcast entries and all three complete raw lists; the six accompanying Markdown documents; all 672 modules in `external_resources.yaml`; and the complete `ulp-resources.yaml`, `ulp-articles-index.yaml`, `ulp-article-mappings.yaml` and `trusted_sources.yaml`. The additional public-corpus read covered all 480 ULP YouTube/blog rows. MCP searches included `search_external` for greetings, formal greetings, alphabet, soft consonants and the exact hard/soft/digraph words, plus `search_text` for the primer's complete T-018 list. No other channel was selected: `trusted_sources.yaml` lists no additional video channel.
 
 Public ASR transcripts are recording-discovery evidence, not Ukrainian spelling, stress or grammatical authority. A broken ASR boundary resembling the first member of the hard/soft pair was rejected; a band-name occurrence of the second member did not establish the primer pair. Unrelated startup-name, electronics and poetry occurrences did not establish the required intended-sense word sets or complete sentences. VESUM and the evidence builder determine the word entries and forms.
