@@ -105,7 +105,7 @@ def test_write_and_verify_manifest_success(tmp_path: Path):
     repo, manifest_path = _setup_mock_repo(tmp_path)
     payload = write_manifest(manifest_path, repo)
     assert manifest_path.exists()
-    assert payload["total_files"] == 10
+    assert len(payload["files"]) == 10
 
     res = verify_manifest(manifest_path, repo)
     assert res["valid"] is True

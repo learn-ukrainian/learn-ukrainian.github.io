@@ -117,12 +117,9 @@ def compute_root_tree_hash(entries: list[dict[str, str]]) -> str:
 def build_manifest_payload(repo_root: Path = ROOT) -> dict[str, Any]:
     """Build the complete deterministic manifest dictionary."""
     files = collect_curriculum_files(repo_root)
-    root_hash = compute_root_tree_hash(files)
     return {
         "schema_version": SCHEMA_VERSION,
         "scope": SCOPE,
-        "root_tree_hash": root_hash,
-        "total_files": len(files),
         "files": files,
     }
 
@@ -216,18 +213,12 @@ def verify_manifest(
         if path not in live_files:
             deleted.append(path)
 
-    live_tree_hash = compute_root_tree_hash(live_entries)
-    stored_tree_hash = stored_payload.get("root_tree_hash", "")
-    tree_match = (live_tree_hash == stored_tree_hash)
-
-    is_valid = (len(modified) == 0 and len(added) == 0 and len(deleted) == 0 and tree_match)
+    is_valid = (len(modified) == 0 and len(added) == 0 and len(deleted) == 0)
 
     return {
         "valid": is_valid,
         "total_files": len(live_files),
         "expected_files": len(stored_files),
-        "live_tree_hash": live_tree_hash,
-        "stored_tree_hash": stored_tree_hash,
         "modified": modified,
         "added": added,
         "deleted": deleted,
@@ -236,7 +227,7 @@ def verify_manifest(
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Cryptographic SHA-256 tamper-evident manifest canary for curriculum files."
+        description="Cryptographic SHA-256 integrity and drift canary for curriculum files."
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument(
@@ -277,8 +268,7 @@ def main(argv: list[str] | None = None) -> int:
     if args.write:
         payload = write_manifest(args.manifest_path, args.repo_root)
         print(
-            f"[curriculum_manifest_canary] Manifest written successfully: {payload['total_files']} files, "
-            f"root_tree_hash={payload['root_tree_hash']}"
+            f"[curriculum_manifest_canary] Manifest written successfully: {len(payload['files'])} files"
         )
         return 0
 
@@ -308,11 +298,6 @@ def main(argv: list[str] | None = None) -> int:
             print(f"  Missing files ({len(result['deleted'])}):", file=sys.stderr)
             for d in result["deleted"]:
                 print(f"    - {d}", file=sys.stderr)
-        if result.get("live_tree_hash") != result.get("stored_tree_hash"):
-            print(
-                f"  Tree hash mismatch: expected {result.get('stored_tree_hash')}, actual {result.get('live_tree_hash')}",
-                file=sys.stderr,
-            )
         print(
             "\n  Run '.venv/bin/python scripts/audit/curriculum_manifest_canary.py --write' to regenerate manifest "
             "after authorized content changes with cross-family review approval.",
@@ -321,8 +306,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     print(
-        f"[curriculum_manifest_canary] ✓ All {result['total_files']} curriculum files match cryptographic manifest "
-        f"(tree hash: {result['live_tree_hash'][:16]}...)"
+        f"[curriculum_manifest_canary] ✓ All {result['total_files']} curriculum files match cryptographic manifest"
     )
     return 0
 

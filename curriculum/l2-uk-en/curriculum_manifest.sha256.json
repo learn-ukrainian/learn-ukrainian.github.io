@@ -15581,8 +15581,6 @@
       "sha256": "9a33ff0ec401e51495be35092f63aa49ae5460f20c6ddaf847c104c2eddbb70a"
     }
   ],
-  "root_tree_hash": "1e4e39fdeedad5011595ff44180bb58e193cbf78de1f4c2489c20109ec4b47d8",
   "schema_version": 1,
-  "scope": "Learner-facing published MDX lessons and readings, curriculum lesson plans, module plans, module prose, and vocabulary/activities/resources datasets",
-  "total_files": 3895
+  "scope": "Learner-facing published MDX lessons and readings, curriculum lesson plans, module plans, module prose, and vocabulary/activities/resources datasets"
 }

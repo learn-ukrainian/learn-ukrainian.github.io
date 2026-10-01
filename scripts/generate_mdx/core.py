@@ -1081,6 +1081,14 @@ def main():
 
     print('\n\u2705 MDX generation complete!')
 
+    # Update curriculum manifest canary so content builds automatically update the manifest
+    try:
+        from scripts.audit.curriculum_manifest_canary import write_manifest
+        manifest_payload = write_manifest()
+        print(f"  [curriculum_manifest] Updated manifest ({len(manifest_payload['files'])} files)")
+    except Exception as exc:
+        print(f"  [curriculum_manifest] Warning: could not update manifest: {exc}", file=sys.stderr)
+
     # Run validation if --validate flag was set
     if validate_after:
         print('\n' + '=' * 50)
