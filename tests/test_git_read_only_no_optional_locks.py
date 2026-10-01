@@ -956,8 +956,9 @@ def _shell_line_offenders(source: str, *, env_state: str = _ABSENT, wrapped: boo
     offenders: list[tuple[int, str]] = []
     # The call's env= counts only when the text never touches the variable itself.
     inherited = env_state if _LOCKS_ENV not in source else _UNKNOWN
-    for lineno, line in enumerate(source.splitlines(), start=1):
-        code = line.split("#", 1)[0]
+    # Every character is read: no comment is stripped, since telling a comment from a quoted
+    # or expanded ``#`` needs a shell parser. A git word in a real comment counts as a command.
+    for lineno, code in enumerate(source.splitlines(), start=1):
         if _COMMAND_PLACEHOLDER.search(code) or _SHELL_INDIRECT.search(code):
             offenders.append((lineno, _UNRESOLVED_SHELL))
         # Each git command read below, from its ``git`` to the end of its words.
@@ -1743,10 +1744,35 @@ def test_lint_skips_only_named_data_tuples() -> None:
         ('git --no-optional-locks "$@"', []),
         ('git -C "$R"', [(1, "<dynamic>")]),
         ("out=$(git rev-parse HEAD)", [(1, "rev-parse")]),
-        ("git commit -m x # git status in a comment", []),
         ("sh -c 'git status'", [(1, "status")]),
         ('bash -c "git log -1"', [(1, "log")]),
     ],
 )
 def test_shell_lint_cases(line: str, expected: list[tuple[int, str]]) -> None:
     assert shell_git_calls_without_flag(line + "\n") == expected
+
+
+@pytest.mark.parametrize(
+    "text,expected",
+    [
+        # Review r6: a ``#`` that starts no comment hides none of the code after it.
+        ('echo "# Working tree"; git status --porcelain', [(1, "status")]),
+        ("echo '# Working tree'; git status --porcelain", [(1, "status")]),
+        (r"echo \# Working tree; git status --porcelain", [(1, "status")]),
+        ('echo "args: $#"; git status --porcelain', [(1, "status")]),
+        ("n=${#files}; git status --porcelain", [(1, "status")]),
+        ("cat <<EOF\nItem #1: $(git status --porcelain)\nEOF", [(2, "status")]),
+        # A real comment is read too: the code before it, and a git word inside it.
+        ("git status --porcelain  # refresh", [(1, "status")]),
+        ("git commit -m x  # git status in a comment", [(1, "status")]),
+        ("# git status", [(1, "status")]),
+        ("# Git status, reworded", []),
+    ],
+)
+def test_shell_lint_reads_text_after_a_hash(text: str, expected: list[tuple[int, str]]) -> None:
+    assert shell_git_calls_without_flag(text + "\n") == expected
+
+
+def test_lint_reads_shell_text_after_a_quoted_hash() -> None:
+    source = "import subprocess\n\nsubprocess.run('echo \"# Working tree\"; git status --porcelain', shell=True)\n"
+    assert git_calls_without_flag(source) == [(3, "status")]
