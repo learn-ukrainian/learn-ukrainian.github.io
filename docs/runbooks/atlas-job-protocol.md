@@ -8,7 +8,7 @@ Plan a long-running Atlas job, **register it**, run it on a named host, then
 “finished” without a receipt. No empty-summary success.
 
 This wraps `launch_reenrich_class_b_remote.sh`. It is not a second message bus
-and not a Hetzner snapshot.
+and not a host volume snapshot.
 
 ## Hosts
 

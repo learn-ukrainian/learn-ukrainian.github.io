@@ -192,11 +192,11 @@ The binding landing order (operator 2026-08-30, #7450; CF-attest retired 2026-09
 2. Open the PR (CI starts) and obtain **CI Gate green** on that **same** head.
 3. Only then enqueue. Never arm auto-merge ahead of either gate —
 early-armed auto-merge is how #7447–#7449 landed with empty reviews, and a moved head
-makes a prior APPROVE stale. `auto-arm-merge.yml` and the `automerge-ok` label pipeline
-are retired; enqueue with `python -m scripts.publish pr-merge` after both gates (never `--auto` as a
+makes a prior APPROVE stale. Automated merge pipelines cannot replace review gates; enqueue
+with `python -m scripts.publish pr-merge` after both gates (never `--auto` as a
 substitute for review). Do **not** pass `--delete-branch` while this repo uses a
 merge queue (head deletion mid-queue can close without landing); delete the remote branch
-only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or self-label.
+only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge.
 `--auto` never bypasses blocking checks (#M-0.5 semantics unchanged).
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the

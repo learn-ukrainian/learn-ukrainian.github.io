@@ -198,46 +198,29 @@ This makes AI-assisted commits transparent and attributable.
 source of truth for plans, prompts, curriculum.yaml, and pipeline code. Treat
 it accordingly.
 
-### Required rules (configure in GitHub → Settings → Branches → main)
+### Required branch invariants for `main`
 
-1. **Require a pull request before merging** — disabled only for the
-   maintainer's direct commits of content. Code changes go through PRs via
-   the worktree workflow above.
-2. **Require status checks to pass before merging** — must include:
-   - `CI / lint` (ruff on scripts/)
-   - `CI / test` (pytest)
-   - `CI / Secret Scanning (gitleaks)`
-   - `CI / schema-check` (plan / activity YAML schemas)
-3. **Require branches to be up to date before merging** — prevents silent
-   merge-time regressions.
-4. **Require conversation resolution before merging** — no unresolved review
-   comments on merge.
-5. **Require signed commits** — off today because Claude/Gemini/Codex commits
-   aren't signed. Revisit once we gate on GitHub-hosted signing keys.
-6. **Require linear history** — yes. No merge commits on `main`.
-7. **Do not allow bypassing the above settings** — yes, even for admins.
-8. **Restrict who can push to matching branches** — maintainer + release bot
-   only. No collaborators with direct push.
-9. **Rules applied to force pushes** — blocked for everyone.
-10. **Rules applied to deletions** — blocked for everyone.
+1. **Require a pull request before merging** — all code changes land via Pull Request.
+2. **Require status checks to pass before merging** — required CI Gate checks must pass.
+3. **Require branches to be up to date before merging** — prevents merge-time regressions.
+4. **Require conversation resolution before merging** — no unresolved review comments on merge.
+5. **Require linear history** — squash or rebase merge only; no merge commits on `main`.
+6. **Uniform protection enforcement** — invariants apply without administrative bypass.
+7. **Restrict direct branch pushes** — direct push to `main` is disallowed.
+8. **Block force pushes and deletions** — `main` cannot be force-pushed or deleted.
 
-### Auto-deletion
+### Branch and worktree cleanup
 
-- Head branches of merged PRs are deleted automatically (Settings → General →
-  Pull Requests → "Automatically delete head branches").
-- Worktree branches that never land on `main` get cleaned by
-  `scripts/wt.sh clean {issue}`.
+- Remote feature branches are deleted following merge completion.
+- Temporary dispatch worktrees are reaped after task completion.
 
-### Merge guards (the hook layer, where GitHub can't enforce)
+### Local pre-tool merge guards
 
-Branch protection is a paid feature for **private** repos: on a free-plan private
-repo the protection API answers 403, so **no check is ever "required"** there.
-That gap is not theoretical — it cost us a draft PR squash-merged before review,
-plus two merges that landed with the test job red, because `--auto` only ever
-waits for *required* checks and there were none. (This public repo is the lucky
-case: `main` is protected, with `CI Gate` required. The fleet works across both,
-so the guards decide per-repo rather than assuming either.) Two PreToolUse hooks
-close the gap:
+To enforce invariants deterministically across all environments, local client hooks
+and CLI merge wrappers validate that:
+1. Exact-head independent cross-family review approval exists.
+2. Required CI Gate checks have succeeded on that exact commit head.
+3. PR is not in draft status.
 
 | Hook | Owns | Blocks |
 | --- | --- | --- |

@@ -451,7 +451,7 @@ At the start of a driver session, apply this short binding prompt after loading
 
 > Drive the V4 Ukrainian dataset epic under outcome SHA
 > `78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20`.
-> Treat public #7423 and private #622 as the paired control surfaces. Preserve
+> Treat public #7423 and the paired private tracking surface as the control surfaces. Preserve
 > the frozen 100-row denominator and all Ukrainian literary, dialectal,
 > archaic/historical, contact-mixing, quotation/interference, and abstention
 > distinctions. Assign functional roles, enforce leave-one-out/no-self-vote,
