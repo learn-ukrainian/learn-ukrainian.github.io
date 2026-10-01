@@ -33,9 +33,9 @@ FixtureKind = Literal["isolated", "skip"]
 
 # Filled from the current exact route tree after the implementation is
 # assembled.  The count and digest are intentionally independent checks.
-FROZEN_HTTP_OPERATION_COUNT = 271
+FROZEN_HTTP_OPERATION_COUNT = 272
 FROZEN_WEBSOCKET_ROUTE_COUNT = 1
-FROZEN_DENOMINATOR_SHA256 = "0dc41e484783c3eb02350a6f9ac1f39fd5530376faf184560be54130ad81d009"
+FROZEN_DENOMINATOR_SHA256 = "1f26bfe8b1e2deae281c8c745517d6bb56fa7d53f6616b5538ca99ab780be07d"
 
 # The OpenAPI document records the successful response for most operations,
 # while the isolated fixture deliberately exercises empty stores, denied
@@ -80,6 +80,7 @@ EXERCISED_READ_5XX_REASONS: dict[str, str] = {
     "GET /api/dashboard/comms/conversation/{task_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/message/{message_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/messages": "isolated fixture has no dashboard comms store",
+    "GET /api/knowledge/find": "isolated fixture root is not a Git repository, so the locator returns its typed 503",
     "GET /api/rules": "isolated fixture has no deployed rule files",
     "GET /api/state/preparation": "sparse isolated fixture omits the curriculum tree",
     "GET /api/state/preparation/{track}/{slug}": "sparse isolated fixture omits the curriculum tree",
@@ -381,7 +382,7 @@ def _query_for(path_template: str) -> dict[str, Any]:
         return {"dry_run": "true"}
     if path_template == "/api/work/v1/next":
         return {"stream": "infra-harness", "limit": "1"}
-    if path_template == "/api/ops/entire-context/search":
+    if path_template in {"/api/ops/entire-context/search", "/api/knowledge/find"}:
         return {"q": "opsec synthetic", "limit": "1"}
     if path_template in {"/api/sources/search_text", "/api/sources/search_literary"}:
         return {"q": "opsec synthetic", "limit": "1"}

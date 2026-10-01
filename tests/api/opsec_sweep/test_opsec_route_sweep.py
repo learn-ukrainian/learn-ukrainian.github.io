@@ -42,6 +42,7 @@ from scripts.api import (
 )
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
+from scripts.docs import catalogue as docs_catalogue
 from scripts.fleet_comms import message_plane
 from scripts.orchestration import reap_worktrees
 from scripts.wiki import sources_db
@@ -266,6 +267,11 @@ def _fixture_run_command(args: Any, **_kwargs: Any) -> subprocess.CompletedProce
     return _fixture_completed_process(args)
 
 
+def _fixture_catalogue_git(repo: Path, *args: str) -> NoReturn:
+    """Fail exactly as real Git does in the fixture root, which is not a repository."""
+    raise subprocess.CalledProcessError(128, ["git", "-C", str(repo), *args])
+
+
 def _fixture_reap_run(
     args: list[str],
     *,
@@ -417,6 +423,9 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
     # NOTE (#7269 step 12c): collect_adr_governance now short-circuits on a
     # fixture context (ctx.root is not None), so the sweep no longer stubs it.
     monkeypatch.setattr(reap_worktrees, "_run", _fixture_reap_run)
+    # GET /api/knowledge/find reads Git's index of the live repository root;
+    # the fixture root has none, so the route takes its typed-503 path.
+    monkeypatch.setattr(docs_catalogue, "git", _fixture_catalogue_git)
     monkeypatch.setattr(api_main, "build_repository_authority", lambda **_kwargs: None)
 
     # The route sweep also traverses diagnostics that import their own local
