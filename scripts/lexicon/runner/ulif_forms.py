@@ -11,7 +11,6 @@ import contextlib
 import json
 import sqlite3
 import sys
-from collections import defaultdict
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -98,7 +97,6 @@ def build_ulif_forms(
         )
         conn.commit()
 
-        failures_by_reason: dict[str, int] = defaultdict(int)
         mismatches: list[dict[str, Any]] = []
         unavailable_relation_blobs: list[dict[str, Any]] = []
         has_extraction_defect = False
@@ -112,6 +110,7 @@ def build_ulif_forms(
 
             for entry in batch:
                 entry_id = int(entry["id"])
+                entry_infrastructure_failure = False
                 ref = str(entry["raw_response_ref"] or "")
                 homonym_index = int(entry["homonym_index"] or 1)
                 stored_headword = str(entry["canonical_headword"] or "")
@@ -133,14 +132,12 @@ def build_ulif_forms(
                     reason = "missing_raw_manifest"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
 
                 if not ref.startswith("sha256:") or len(ref) != 71:
                     reason = "corrupt_raw_manifest"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
 
                 manifest_sha = ref.removeprefix("sha256:")
@@ -151,20 +148,17 @@ def build_ulif_forms(
                     reason = "missing_cache_file"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     has_infrastructure_failure = True
                     continue
                 except ValueError:
                     reason = "corrupt_raw_manifest"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
                 except Exception:
                     reason = "raw_cache_error"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     has_infrastructure_failure = True
                     continue
 
@@ -172,7 +166,6 @@ def build_ulif_forms(
                     reason = "missing_raw_manifest"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
 
                 manifest = None
@@ -185,7 +178,6 @@ def build_ulif_forms(
                     reason = "malformed_manifest"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
 
                 for rel_kind in ("synonyms", "antonyms", "phraseology"):
@@ -227,6 +219,7 @@ def build_ulif_forms(
                                 )
                             except FileNotFoundError:
                                 has_infrastructure_failure = True
+                                entry_infrastructure_failure = True
                                 batch_failure_rows.append(
                                     (entry_id, "missing_cache_file", f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}")
                                 )
@@ -241,6 +234,7 @@ def build_ulif_forms(
                                 )
                             except Exception:
                                 has_infrastructure_failure = True
+                                entry_infrastructure_failure = True
                                 batch_failure_rows.append(
                                     (entry_id, "raw_cache_error", f"ulif:entry:{entry_id}:{rel_kind}:{rel_ref}")
                                 )
@@ -258,8 +252,7 @@ def build_ulif_forms(
                     reason = "raw_entry_page_absent"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
-                    if stored_headword:
+                    if stored_headword and not entry_infrastructure_failure:
                         row = ulif_dictua_parse.base_lemma_row(
                             stored_headword,
                             stored_grammar,
@@ -299,7 +292,6 @@ def build_ulif_forms(
                     reason = "corrupt_raw_paradigm_blob"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
 
                 par_sha = par_ref.removeprefix("sha256:")
@@ -310,20 +302,17 @@ def build_ulif_forms(
                     reason = "missing_cache_file"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     has_infrastructure_failure = True
                     continue
                 except ValueError:
                     reason = "corrupt_raw_paradigm_blob"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
                 except Exception:
                     reason = "raw_cache_error"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     has_infrastructure_failure = True
                     continue
 
@@ -331,7 +320,6 @@ def build_ulif_forms(
                     reason = "missing_raw_paradigm_blob"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     continue
 
                 par_html = par_bytes.decode("utf-8", errors="replace")
@@ -341,7 +329,6 @@ def build_ulif_forms(
                     reason = f"extraction_failed: {type(ex).__name__}: {ex}"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     has_extraction_defect = True
                     continue
 
@@ -353,13 +340,11 @@ def build_ulif_forms(
                         reason = "empty_visible_article"
                         locator = f"ulif:entry:{entry_id}"
                         batch_failure_rows.append((entry_id, reason, locator))
-                        failures_by_reason[reason] += 1
                         continue
                     else:
                         reason = "extraction_defect: unrecognized_article"
                         locator = f"ulif:entry:{entry_id}"
                         batch_failure_rows.append((entry_id, reason, locator))
-                        failures_by_reason[reason] += 1
                         has_extraction_defect = True
                         continue
 
@@ -367,7 +352,6 @@ def build_ulif_forms(
                     reason = "extraction_defect: label_row_as_form"
                     locator = f"ulif:entry:{entry_id}"
                     batch_failure_rows.append((entry_id, reason, locator))
-                    failures_by_reason[reason] += 1
                     has_extraction_defect = True
                     continue
 
@@ -446,6 +430,9 @@ def build_ulif_forms(
                     ON CONFLICT(entry_id) DO UPDATE SET
                         reason = excluded.reason,
                         locator = excluded.locator
+                    WHERE ulif_forms_failures.reason NOT IN ('raw_cache_error', 'missing_cache_file')
+                      AND ulif_forms_failures.reason NOT LIKE 'extraction_failed:%'
+                      AND ulif_forms_failures.reason NOT LIKE 'extraction_defect:%'
                     """,
                     batch_failure_rows,
                 )
@@ -459,6 +446,11 @@ def build_ulif_forms(
             """
         ).fetchone()[0]
         failed_count = conn.execute("SELECT count(*) FROM ulif_forms_failures").fetchone()[0]
+        # UNIQUE(entry_id) selects one primary reason and its own locator. Count
+        # persisted entries, while relation-tab details remain in the report.
+        failures_by_reason = dict(
+            conn.execute("SELECT reason, count(*) FROM ulif_forms_failures GROUP BY reason").fetchall()
+        )
         total_forms = conn.execute("SELECT count(*) FROM ulif_forms").fetchone()[0]
         finished_at = datetime.now(UTC).isoformat()
 
