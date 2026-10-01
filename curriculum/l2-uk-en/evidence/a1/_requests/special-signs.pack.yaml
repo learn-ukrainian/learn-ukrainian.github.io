@@ -578,6 +578,11 @@ videos:
   channel: Ukrainian Lessons Podcast
   use: Pronunciation model for Ю. Native Ю sound model before its two primer word values. Scored segment is the
     publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Ю
+    words: []
+    segment: null
 - id: V-004
   url: https://www.youtube.com/watch?v=u44eCjR2Oz8
   channel: Ukrainian Lessons Podcast

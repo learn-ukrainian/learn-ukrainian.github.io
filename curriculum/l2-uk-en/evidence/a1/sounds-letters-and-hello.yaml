@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: ec77282ddc285ce0e78f799b215bc0f3770754cf
+  mcp_commit: eb433290e11075ac6e0f297b5bcb5b8399ef19a2
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: a434c92f06f5b6f20173eec2e0334d9f02518f0fd084ff35406fbb560d6c4393
@@ -851,9 +851,15 @@ videos:
     final_url: https://www.ukrainianlessons.com/episode5/
     http_status: 200
   id: V-003
+  models:
+    letters:
+    - И
+    segment: null
+    words: []
   url: https://www.ukrainianlessons.com/episode5/
   use: 'ULP 1-05 public episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator ext-ulp_youtube-299;
-    compare with the native І model V-009, not English spelling.'
+    compare with the native І model V-009, not English spelling. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.'
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
@@ -921,6 +927,11 @@ videos:
     final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
     http_status: 200
   id: V-008
+  models:
+    letters:
+    - М
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=Ez95H4ibuJo
   use: Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -1006,6 +1017,11 @@ videos:
     final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
     http_status: 200
   id: V-014
+  models:
+    letters:
+    - К
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=J7sGEI4-xJo
   use: Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
@@ -1016,6 +1032,11 @@ videos:
     final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
     http_status: 200
   id: V-015
+  models:
+    letters:
+    - П
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=JksSjjxyW5Y
   use: Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.

@@ -311,9 +311,16 @@ videos:
     - Т
     words: []
     segment: null
-- {id: V-002, url: 'https://www.youtube.com/watch?v=gNjHqjTW9WQ', channel: Ukrainian Lessons Podcast, use: Pronunciation
-    model for Ґ. Pronunciation model for Ґ after hearing Г from the primer. Scored segment is the publisher-labelled
-    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.}
+- id: V-002
+  url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+  channel: Ukrainian Lessons Podcast
+  use: Pronunciation model for Ґ. Pronunciation model for Ґ after hearing Г from the primer. Scored segment is the
+    publisher-labelled native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Ґ
+    words: []
+    segment: null
 - id: V-003
   url: https://www.youtube.com/watch?v=aq0cjB90s3w
   channel: Ukrainian Lessons Podcast

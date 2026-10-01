@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: ec77282ddc285ce0e78f799b215bc0f3770754cf
+  mcp_commit: eb433290e11075ac6e0f297b5bcb5b8399ef19a2
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 119ce14124b6fa18e37d844a17ce87e967692b9d9bc26fd7fceb7ef8348cf080
@@ -1606,6 +1606,11 @@ videos:
     final_url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
     http_status: 200
   id: V-002
+  models:
+    letters:
+    - Ґ
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
   use: Pronunciation model for Ґ. Pronunciation model for Ґ after hearing Г from the primer. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.

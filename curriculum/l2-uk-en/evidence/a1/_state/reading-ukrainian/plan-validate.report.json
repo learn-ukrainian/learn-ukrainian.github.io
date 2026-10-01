@@ -225,8 +225,8 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b9b2da5302a7322d42b6ed103e171bf3ac6365daae1d69499eb2541dbcf6b74",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2ad317deeb586e88cf478bd20da8a71a70adf91b067819f8d7bd7c207c70b57e",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "b64cba18f655eb47c07091a40724c8d390a2fedb9bd67c0ae144406749234cf5",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "39b9d7ef49f2e00a2fde8a50c9a619ebb5d7906eed87d5538b12cccf203c1042",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "8c399ab615aa65a4eabd367d85a920e5a3b3aae181f4a8111674222b3b890cfe",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "f6e78be38199c4b123eb45ca0d884c2dce5d25d785e95bda6f951732cdcbb5e0",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "b23bdc16fd922893bab5e9415061234d1c658385f0f0610ec73282ebdfafaa02",
@@ -274,7 +274,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845 and the provisional pack's sha256 is b64cba18f655eb47c07091a40724c8d390a2fedb9bd67c0ae144406749234cf5; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845 and the provisional pack's sha256 is 8c399ab615aa65a4eabd367d85a920e5a3b3aae181f4a8111674222b3b890cfe; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

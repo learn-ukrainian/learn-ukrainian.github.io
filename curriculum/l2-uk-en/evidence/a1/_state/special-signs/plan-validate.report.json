@@ -283,8 +283,8 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b9b2da5302a7322d42b6ed103e171bf3ac6365daae1d69499eb2541dbcf6b74",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2ad317deeb586e88cf478bd20da8a71a70adf91b067819f8d7bd7c207c70b57e",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "942eb869706049cd978e34e5dde93c2d40e6f9678f33032792a08c0b5abf118d",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "323fbb9af5c56d0d42ec0a10df04fec64b6777a17d4571c96c91aa388c2d95ea",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "a4ef1592721d60a404f8c2c84063b5d8ee3b4b8bde20b486bc6a3670f5f0ee97",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "bf2042902706c8963d25d47abb705687df5ca5cb495b979e351c0809f6795536",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a",
@@ -333,7 +333,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315 and the provisional pack's sha256 is 942eb869706049cd978e34e5dde93c2d40e6f9678f33032792a08c0b5abf118d; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315 and the provisional pack's sha256 is a4ef1592721d60a404f8c2c84063b5d8ee3b4b8bde20b486bc6a3670f5f0ee97; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

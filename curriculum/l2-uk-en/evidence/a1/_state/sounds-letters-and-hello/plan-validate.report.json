@@ -213,8 +213,8 @@
   "inputs": {
     "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b9b2da5302a7322d42b6ed103e171bf3ac6365daae1d69499eb2541dbcf6b74",
     "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2ad317deeb586e88cf478bd20da8a71a70adf91b067819f8d7bd7c207c70b57e",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "9cf11c8f9d0e917421d9e413a9ac06c76ac4f00a2365b2d1b66239f3069594c8",
-    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "1d32fe0b8f97f9d28685183c204fb68ac952558367d4517c08d9f8675a31b5e8",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml": "62b963cf3f0b2af3bba513ddb7a5c0b21d0c34986cdbdde7adea59e79032bda6",
+    "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock": "267a9cb0794e3f8b7a907267dfa2e1dfb03b5ac91118ab6ba8202ba7835bcb7c",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/sounds-letters-and-hello.yaml": "b33075d716373139104577b6318bb700064de97a1bbf180801e9775360bae3e4",
@@ -261,7 +261,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 805a24cd4a0ef7c9a2910c7c6c9df3eeb72e0cba82cd03d0879d9b44eb60e767 and the provisional pack's sha256 is 9cf11c8f9d0e917421d9e413a9ac06c76ac4f00a2365b2d1b66239f3069594c8; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 805a24cd4a0ef7c9a2910c7c6c9df3eeb72e0cba82cd03d0879d9b44eb60e767 and the provisional pack's sha256 is 62b963cf3f0b2af3bba513ddb7a5c0b21d0c34986cdbdde7adea59e79032bda6; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     },
     {

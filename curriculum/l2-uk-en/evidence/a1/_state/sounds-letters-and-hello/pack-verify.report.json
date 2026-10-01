@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml",
-    "sha256": "9cf11c8f9d0e917421d9e413a9ac06c76ac4f00a2365b2d1b66239f3069594c8"
+    "sha256": "62b963cf3f0b2af3bba513ddb7a5c0b21d0c34986cdbdde7adea59e79032bda6"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml.lock",
-    "sha256": "1d32fe0b8f97f9d28685183c204fb68ac952558367d4517c08d9f8675a31b5e8"
+    "sha256": "267a9cb0794e3f8b7a907267dfa2e1dfb03b5ac91118ab6ba8202ba7835bcb7c"
   },
   "report_schema": 1,
   "reports": [],
