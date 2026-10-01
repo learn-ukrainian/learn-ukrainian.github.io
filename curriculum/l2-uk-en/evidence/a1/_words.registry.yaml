@@ -1006,3 +1006,66 @@
   id: W-144
   lemma: пір'їна
   pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 16017
+    source: vesum
+  id: W-145
+  lemma: бак
+  pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 23245
+    source: vesum
+  id: W-146
+  lemma: біб
+  pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 187686
+    source: vesum
+  id: W-147
+  lemma: лід
+  pos: noun
+- allocated_at_build: d984ab4c168320534e9f84e8335e361868b80a1d3fa3bce4e09b58707055e4ed
+  entry:
+    entry_id: 31628
+    source: vesum
+  id: W-148
+  lemma: бук
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 83141
+    source: vesum
+  id: W-149
+  lemma: грати
+  pos: verb
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 86858
+    source: vesum
+  id: W-150
+  lemma: ґрати
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 157965
+    source: vesum
+  id: W-151
+  lemma: кава
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 84094
+    source: vesum
+  id: W-152
+  lemma: грім
+  pos: noun
+- allocated_at_build: d38ff0fca20f9526d4822465ee175f858e75adb3de80ce367e753782f63c90d6
+  entry:
+    entry_id: 86930
+    source: vesum
+  id: W-153
+  lemma: ґрунт
+  pos: noun

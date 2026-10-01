@@ -115,20 +115,59 @@ examples:
     source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0029}
     span: {first_words: 'Ви не бачили', last_words: 'жабок?'}
     words: [W-007, W-061, W-087, W-115]
+  - id: EX-003
+    source:
+      table: textbooks
+      chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0105
+    span:
+      first_words: 'зуб
+
+        бак
+
+        біб'
+      last_words: 'лід
+
+        бук
+
+        над'
+    words:
+    - W-118
+    - W-145
+    - W-146
+    - W-147
+    - W-148
+    - W-035
+  - id: EX-004
+    source:
+      table: textbooks
+      chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007
+    span:
+      first_words: грати кава грім
+      last_words: ґрати ґава ґрунт
+    words:
+    - W-149
+    - W-151
+    - W-152
+    - W-150
+    - W-107
+    - W-153
+
 videos:
-  - {id: V-001, url: 'https://www.youtube.com/watch?v=m-jcLR_gK0k', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Т before CV and VC reading.'}
-  - {id: V-002, url: 'https://www.youtube.com/watch?v=gNjHqjTW9WQ', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ґ after hearing Г from the primer.'}
-  - {id: V-003, url: 'https://www.youtube.com/watch?v=aq0cjB90s3w', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Й in short final-letter reading.'}
-  - {id: V-004, url: 'https://www.youtube.com/watch?v=z8NucPzHLhE', channel: 'Ukrainian Lessons Podcast', use: 'Source audio for the Season 1 lesson 10 first-person recap story, heard by ear.'}
-  - {id: V-005, url: 'https://www.youtube.com/watch?v=KFlsroBW0dk', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Е before its sound rows.'}
-  - {id: V-006, url: 'https://www.youtube.com/watch?v=g4Bh-lqzd48', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Д before its sound rows.'}
-  - {id: V-007, url: 'https://www.youtube.com/watch?v=BhASNxitC1A', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for З before its sound rows.'}
-  - {id: V-008, url: 'https://www.youtube.com/watch?v=V1hxBE_JbGg', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Б before its word row.'}
-  - {id: V-009, url: 'https://www.youtube.com/watch?v=gVnclpSI0DU', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Г before the Г/Ґ contrast.'}
-  - {id: V-010, url: 'https://www.youtube.com/watch?v=UsJkbdsY2RA', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ч before its sound rows.'}
-  - {id: V-011, url: 'https://www.youtube.com/watch?v=vpr58zJSJKc', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Х before its sound rows.'}
-  - {id: V-012, url: 'https://www.youtube.com/watch?v=dIrGVcqPwqM', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ж before its sound rows.'}
-  - {id: V-013, url: 'https://www.youtube.com/watch?v=1D-6MIw3OXY', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ш before its sound rows.'}
+  - {id: V-001, url: 'https://www.youtube.com/watch?v=m-jcLR_gK0k', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Т before CV and VC reading.}
+  - {id: V-002, url: 'https://www.youtube.com/watch?v=gNjHqjTW9WQ', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Ґ after hearing Г from the primer.}
+  - {id: V-003, url: 'https://www.youtube.com/watch?v=aq0cjB90s3w', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Й in short final-letter reading.}
+  - {id: V-004, url: 'https://www.ukrainianlessons.com/episode10/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-10 public episode: the by-ear first-person review story and its first three questions and spoken answers, modeled in public transcript ext-ulp_youtube-294. T-016/T-017 premium notes are grounding only, never learner-facing source text.'}
+  - {id: V-005, url: 'https://www.youtube.com/watch?v=KFlsroBW0dk', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Е before its sound rows.}
+  - {id: V-006, url: 'https://www.youtube.com/watch?v=g4Bh-lqzd48', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Д before its sound rows.}
+  - {id: V-007, url: 'https://www.youtube.com/watch?v=BhASNxitC1A', channel: Ukrainian Lessons Podcast, use: Pronunciation model for З before its sound rows.}
+  - {id: V-008, url: 'https://www.youtube.com/watch?v=V1hxBE_JbGg', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Б before its word row.}
+  - {id: V-009, url: 'https://www.youtube.com/watch?v=gVnclpSI0DU', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Г before the Г/Ґ contrast.}
+  - {id: V-010, url: 'https://www.youtube.com/watch?v=UsJkbdsY2RA', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Ч before its sound rows.}
+  - {id: V-011, url: 'https://www.youtube.com/watch?v=vpr58zJSJKc', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Х before its sound rows.}
+  - {id: V-012, url: 'https://www.youtube.com/watch?v=dIrGVcqPwqM', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Ж before its sound rows.}
+  - {id: V-013, url: 'https://www.youtube.com/watch?v=1D-6MIw3OXY', channel: Ukrainian Lessons Podcast, use: Pronunciation model for Ш before its sound rows.}
+  - {id: V-014, url: 'https://www.ukrainianlessons.com/episode2/', channel: Ukrainian Lessons Podcast, use: 'Lessons 1 s1 and 6 s1: W-075+W-076 intact formal opening greeting, from the greeting practice and shop example in public transcript ext-ulp_youtube-302. Replay the whole chunk; the single-letter videos do not establish this greeting.'}
+  - {id: V-015, url: 'https://www.youtube.com/watch?v=ksXIXj7CXwc', channel: Ukrainian Lessons Podcast, use: 'Full alphabet pronunciation video, identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304: whole-word models for W-118, W-109 and W-110. Restrict each excerpt to letters already taught; this is not evidence for the other primer word lists or whole sentences.'}
 unsupported:
   - id: U-001
     claim: 'An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or a typical English-reader difficulty for each). The sources give each Ukrainian sound (primer "Чую [ж]" lines, T-010 to T-014) and a native pronunciation video per letter (V-003, V-010 to V-013), and T-021 shows only that English h is written х in some borrowed words; no textbook record describes these five sounds for an English speaker, so the plan teaches them by the native model and states no English comparison.'
@@ -141,3 +180,37 @@ unsupported:
       - {tool: 'mcp sources search_sources', query: 'вимова звуків ж ш ч х й для англомовних'}
       - {tool: 'sqlite textbooks (source_file ulp-1..6-00-lesson-notes)', query: 'text like %ronunciation% (Pronunciation Trainer sections cover only the sound и, soft consonants, rolled Р and question words; none covers Ж, Ш, Ч, Х or Й)'}
     resolved_by: 'Not taught as an English-comparison claim, because no source supports one. The five letters are taught from the native audio models instead: Ж by V-012, Ш by V-013, Ч by V-010, Х by V-011 and Й by V-003 (Ukrainian Lessons "Ukrainian Alphabet: How to pronounce <letter> in Ukrainian").'
+  - id: U-002
+    claim: No confirmed free recording covers all exact whole-word choices required by lessons 1 s3/a8, 3 s3/a7 and
+      4 a10. Public letter videos use different example words. V-014 supports W-074, V-004 supports W-081/W-101, and
+      V-015 supports W-118/W-109/W-110; these do not establish the remaining word sets. Lesson 3 a4 also needs exact
+      primer Г/Ґ syllable recordings. Each remaining required word or syllable needs an exact-form recording before
+      a by-ear item can be written.
+    searches:
+    - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+        scan
+      query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+        ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+        for exact requirements and rejected partial matches.
+  - id: U-003
+    claim: No confirmed free recording says either whole primer sentence EX-001 or EX-002 required by lesson 5 s3/a7.
+      Printed T-015 and X-003 establish reading material, not recorded speech. V-004 supplies the recap story and
+      questions only.
+    searches:
+    - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+        scan
+      query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+        ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+        for exact requirements and rejected partial matches.
+  - id: U-004
+    claim: The complete T-018 and X-002 rows are bound to word records by EX-003 and EX-004. Lesson 2 s3/a5 still
+      lacks W-145/W-146/W-147/W-148 in its core/incidental/recycled allowlist, and lesson 3 s2 lacks W-149/W-150/W-151/W-152/W-153.
+      W-035 is the existing base preposition. The pack and word store cannot change the frozen plan allowlists; the
+      plan author must admit all nine new incidental decoding records before the complete rows can pass inventory
+      checks.
+    searches:
+    - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+        scan
+      query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+        ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+        for exact requirements and rejected partial matches.

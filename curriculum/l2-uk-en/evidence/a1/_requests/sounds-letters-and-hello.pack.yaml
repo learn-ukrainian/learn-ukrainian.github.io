@@ -107,23 +107,34 @@ exercises:
     span: {first_words: 'Перепиши в зошит.', last_words: 'Панас ловив лини.'}
     pattern: 'Copy printed model words or short lines into a notebook; the fresh lesson uses only its own taught-letter models.'
 videos:
-  - {id: V-001, url: 'https://www.youtube.com/watch?v=FUF9Za-1bzY', channel: 'Ukrainian Lessons Podcast', use: 'Listening model for the informal greeting in lesson 1.'}
-  - {id: V-002, url: 'https://www.youtube.com/watch?v=GMcB5rsb3HM', channel: 'Ukrainian Lessons Podcast', use: 'Listening model for the formal greeting in lesson 1.'}
-  - {id: V-003, url: 'https://www.youtube.com/watch?v=5J9ZaM3-rrI', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation trainer for И in lesson 3.'}
-  - {id: V-004, url: 'https://www.youtube.com/watch?v=hvB3VpcR3ZE', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter А.'}
-  - {id: V-005, url: 'https://www.youtube.com/watch?v=gJFxRIPRZbI', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter О.'}
-  - {id: V-006, url: 'https://www.youtube.com/watch?v=VB1O6PmtYRU', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter У.'}
-  - {id: V-007, url: 'https://www.youtube.com/watch?v=W-1rCu0indE', channel: 'Ukrainian Lessons', use: 'Pronunciation model for letter И.'}
-  - {id: V-008, url: 'https://www.youtube.com/watch?v=Ez95H4ibuJo', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant М.'}
-  - {id: V-009, url: 'https://www.youtube.com/watch?v=Z9TH0H4ShGo', channel: 'Ukrainian Lessons', use: 'Pronunciation model for vowel І.'}
-  - {id: V-010, url: 'https://www.youtube.com/watch?v=vNUfiKHPYaU', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant Н.'}
-  - {id: V-011, url: 'https://www.youtube.com/watch?v=aFcvYfvQ2X4', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant В.'}
-  - {id: V-012, url: 'https://www.youtube.com/watch?v=v6-3Xg52Buk', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant Л.'}
-  - {id: V-013, url: 'https://www.youtube.com/watch?v=7UsFBgSL91E', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant С.'}
-  - {id: V-014, url: 'https://www.youtube.com/watch?v=J7sGEI4-xJo', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant К.'}
-  - {id: V-015, url: 'https://www.youtube.com/watch?v=JksSjjxyW5Y', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant П.'}
-  - {id: V-016, url: 'https://www.youtube.com/watch?v=fMGsQ5KPQgg', channel: 'Ukrainian Lessons', use: 'Pronunciation model for consonant Р.'}
+  - {id: V-001, url: 'https://www.ukrainianlessons.com/episode1/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-01 public episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section. Public transcript locator ext-ulp_youtube-303; premium notes are grounding only.'}
+  - {id: V-002, url: 'https://www.ukrainianlessons.com/episode2/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-02 public episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting section and shop example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk.'}
+  - {id: V-003, url: 'https://www.ukrainianlessons.com/episode5/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-05 public episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator ext-ulp_youtube-299; compare with the native І model V-009, not English spelling.'}
+  - {id: V-004, url: 'https://www.youtube.com/watch?v=hvB3VpcR3ZE', channel: Ukrainian Lessons, use: Pronunciation model for letter А.}
+  - {id: V-005, url: 'https://www.youtube.com/watch?v=gJFxRIPRZbI', channel: Ukrainian Lessons, use: Pronunciation model for letter О.}
+  - {id: V-006, url: 'https://www.youtube.com/watch?v=VB1O6PmtYRU', channel: Ukrainian Lessons, use: Pronunciation model for letter У.}
+  - {id: V-007, url: 'https://www.youtube.com/watch?v=W-1rCu0indE', channel: Ukrainian Lessons, use: Pronunciation model for letter И.}
+  - {id: V-008, url: 'https://www.youtube.com/watch?v=Ez95H4ibuJo', channel: Ukrainian Lessons, use: Pronunciation model for consonant М.}
+  - {id: V-009, url: 'https://www.youtube.com/watch?v=Z9TH0H4ShGo', channel: Ukrainian Lessons, use: Pronunciation model for vowel І.}
+  - {id: V-010, url: 'https://www.youtube.com/watch?v=vNUfiKHPYaU', channel: Ukrainian Lessons, use: Pronunciation model for consonant Н.}
+  - {id: V-011, url: 'https://www.youtube.com/watch?v=aFcvYfvQ2X4', channel: Ukrainian Lessons, use: Pronunciation model for consonant В.}
+  - {id: V-012, url: 'https://www.youtube.com/watch?v=v6-3Xg52Buk', channel: Ukrainian Lessons, use: Pronunciation model for consonant Л.}
+  - {id: V-013, url: 'https://www.youtube.com/watch?v=7UsFBgSL91E', channel: Ukrainian Lessons, use: Pronunciation model for consonant С.}
+  - {id: V-014, url: 'https://www.youtube.com/watch?v=J7sGEI4-xJo', channel: Ukrainian Lessons, use: Pronunciation model for consonant К.}
+  - {id: V-015, url: 'https://www.youtube.com/watch?v=JksSjjxyW5Y', channel: Ukrainian Lessons, use: Pronunciation model for consonant П.}
+  - {id: V-016, url: 'https://www.youtube.com/watch?v=fMGsQ5KPQgg', channel: Ukrainian Lessons, use: Pronunciation model for consonant Р.}
 standard:
   - {id: S-001, lines: '351-353'}
   - {id: S-002, lines: '357-359'}
   - {id: S-003, lines: '430-432'}
+unsupported:
+  - id: U-001
+    claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson
+      3 s1 and lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos
+      establish their named sounds, not those complete primer combinations or word pairs.
+    searches:
+    - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+        scan
+      query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+        ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md
+        for exact requirements and rejected partial matches.

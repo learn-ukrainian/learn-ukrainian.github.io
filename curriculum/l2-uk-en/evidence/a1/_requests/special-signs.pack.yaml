@@ -354,6 +354,55 @@ unsupported:
     tool: read-only source inspection
   resolved_by:
     record: S-001
+- id: U-003
+  claim: No confirmed free recording models both W-119 and W-120 as the intact T-001/X-001 hard/soft pair required
+    by lesson 1 s1/a1/a3/a5. V-001 has other example words and V-007 is generic hard/soft support; the corpus occurrence
+    resembling W-119 is a broken ASR boundary, not the intended noun.
+  searches:
+  - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+      scan
+    query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for
+      exact requirements and rejected partial matches.
+- id: U-004
+  claim: No confirmed free recording covers all exact Ї/Я and Ю/Є primer word values and whole-word choices in lessons
+    2 a4/a6 and 3 a2/a4/a5/a6, or all Ц/Щ/Ф word choices in lesson 4 a9. V-002/V-003/V-004/V-005 establish the named
+    sounds, not the complete required word sets or positional contrasts.
+  searches:
+  - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+      scan
+    query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for
+      exact requirements and rejected partial matches.
+- id: U-005
+  claim: No confirmed free recording models the T-009/T-010 joined дж/дз words and hard/soft дз contrast required
+    by lesson 5 s1/s2/a1/a2/a3/a4/a6. V-002 recalls letter sounds only; it cannot establish the joined digraph words
+    or rule.
+  searches:
+  - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+      scan
+    query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for
+      exact requirements and rejected partial matches.
+- id: U-006
+  claim: No confirmed free recording covers the exact T-015 W-143/W-137 apostrophe contrast, T-011/T-026 word forms
+    and EX-001 whole sentence required by lesson 6 s1/a2/a6. Printed source forms are not audio; V-002 supplies
+    vowel sounds only.
+  searches:
+  - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+      scan
+    query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for
+      exact requirements and rejected partial matches.
+- id: U-007
+  claim: No confirmed free recording models all T-012 letter names required by lesson 7 a2. V-002 models letter
+    sounds and example words, not the complete letter-name inventory; sounds cannot substitute for names.
+  searches:
+  - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus
+      scan
+    query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for
+      exact requirements and rejected partial matches.
 examples:
 - id: EX-001
   source:
@@ -389,3 +438,15 @@ videos:
   url: https://www.youtube.com/watch?v=haHRsFFZRQI
   channel: Ukrainian Lessons Podcast
   use: Native Ф sound model; no visual look-alike claim.
+- id: V-006
+  url: https://www.ukrainianlessons.com/episode2/
+  channel: Ukrainian Lessons Podcast
+  use: 'Lesson 1 s1: native model for the intact W-075+W-076 formal greeting before it becomes a reading/copying
+    chunk after ь is taught; public transcript ext-ulp_youtube-302. Also supports greeting recall in lessons 2–7.
+    It does not record the T-001 minimal pair.'
+- id: V-007
+  url: https://www.ukrainianlessons.com/episode15/
+  channel: Ukrainian Lessons Podcast
+  use: 'ULP 1-15 public pronunciation trainer: native hard/soft consonant support, including the W-076 day word;
+    public transcript ext-ulp_youtube-289. Support only: it does not say the exact T-001 W-119/W-120 pair and does
+    not close those word-choice requirements.'

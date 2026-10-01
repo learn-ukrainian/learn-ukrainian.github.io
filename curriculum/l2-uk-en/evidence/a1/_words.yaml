@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 841d037dbde436aa7c73c4e8f61cc444322ce934
+  mcp_commit: af6d6c680ac84c7eb72524ea39571bd341a940f4
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: cae253d7fe799fb4813f2b7a0fcdc4890431da577e0aeb22b6ea5bd6dd60a4a9
+  sources_db: 328e3d62dcfb71934f01bfc4a129e39c179d65b1b45f6bfb31302ef1076edb54
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: pending
@@ -293,12 +293,7 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif:
-    key:
-    - він
-    - 1
-    row_sha256: 5ead709071ccb3d78222b83d05e0a2ebfc72832858f6bab561a5823ed6d485da
-    source: ulif
+  ulif: pending
 - cefr:
     level: A1
     row_id: 5139
@@ -385,12 +380,7 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif:
-    key:
-    - вона
-    - 1
-    row_sha256: e8f0130edbb445212c51050187f0d7c5c01aba98fce07d8d7bcc0f90a494a6c1
-    source: ulif
+  ulif: pending
 - cefr:
     level: A1
     row_id: 5137
@@ -451,12 +441,7 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif:
-    key:
-    - воно
-    - 1
-    row_sha256: 3f5314caae804d502892d8db762f7d69f8f01965648e61a3580c4456cb6e76f0
-    source: ulif
+  ulif: pending
 - cefr:
     level: A1
     row_id: 3250
@@ -514,12 +499,7 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif:
-    key:
-    - ми
-    - 1
-    row_sha256: 507043d560bdd3beb1460399edda6ef5006b88a604cd387fa3785bde9fb08779
-    source: ulif
+  ulif: pending
 - cefr:
     level: A1
     row_id: 5488
@@ -584,12 +564,7 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif:
-    key:
-    - ви
-    - 1
-    row_sha256: f077d52023c7b8936d93c8763c26504e14205364f5dddd38dcd4853540eaf034
-    source: ulif
+  ulif: pending
 - cefr:
     level: A1
     row_id: 5138
@@ -663,12 +638,7 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif:
-    key:
-    - вони
-    - 1
-    row_sha256: 7b6390b14a0a131cfef7c2a2aaf853b0e95c009a9ed5db0fc78758823bda9095
-    source: ulif
+  ulif: pending
 - cefr:
     level: A2
     row_id: 1266
@@ -3374,9 +3344,9 @@ words:
     score: 0.0
   ulif:
     key:
-    - підо
+    - пі́до
     - 1
-    row_sha256: e01d7793595a0ebc34e6f92ca576d04a2f5ca3415ab79a1763d4e10ef3b55fba
+    row_sha256: 8a81fc02c876db0d8c370c49724dd70c580664ae6dc8e1d7983083e8f774dfa5
     source: ulif
 - cefr:
     level: A2
@@ -4321,7 +4291,7 @@ words:
     key:
     - вже
     - 1
-    row_sha256: f84e421555755cc7ea4fdffda6aa5e853b551ff5cddcbeda02ef8d70e224cdc0
+    row_sha256: c708f037c24f5d115ad0ad7e7abfd414fff78bbead0f8026395409ed2bac9857
     source: ulif
 - entry:
     entry_id: 396274
@@ -4555,9 +4525,9 @@ words:
     score: 0.0
   ulif:
     key:
-    - привіт
+    - приві́т
     - 1
-    row_sha256: 4252700993ed084e730e097a6423b4b97c567046898b11e10463f449ce87752e
+    row_sha256: 22694ba7d93f20a03805475d093d66ce25b5a1b1cbf0742d8fae5b686eb4ea99
     source: ulif
 - cefr:
     level: A1
@@ -6135,9 +6105,9 @@ words:
     score: 0.0
   ulif:
     key:
-    - ріка
+    - ріка́
     - 1
-    row_sha256: 575c0a8842d91826819fd0c8252e8ea2d14f9ed8851dd443824374dae86caeb2
+    row_sha256: 4d3e10ef4c8a5e1bcc3464f1e0c8143bff6361150b0a0114b57b6fcdd1842aca
     source: ulif
 - cefr:
     level: A1
@@ -6493,9 +6463,9 @@ words:
     score: 0.0
   ulif:
     key:
-    - бачити
+    - ба́чити
     - 1
-    row_sha256: 95f35fe6c79600569531167996d2c9820d1b763f004f3352308dd1a2a9e25270
+    row_sha256: 3e5e93c9fb5e5a9a3b137635e25b3a3dfba3ca23672df7cbc0e5b78b34c14dda
     source: ulif
 - cefr:
     level: A1
@@ -10157,9 +10127,9 @@ words:
     score: 0.0
   ulif:
     key:
-    - прилетіти
+    - прилеті́ти
     - 1
-    row_sha256: 688081392132610c32135c0e6673e3a7ab067b845c5e49c562c9fc1683b7279c
+    row_sha256: c5d58740b028e8fd460784d1100ee0a8e5e59e59ff52d34adf4cb18c4350f6f4
     source: ulif
 - cefr:
     level: A1
@@ -14330,4 +14300,1135 @@ words:
     - пір'ї́на
     - 1
     row_sha256: e7f9fefd42b371dc96bb6df18024990399485dcd57a19dffc7c54102e652524e
+    source: ulif
+- entry:
+    entry_id: 16017
+    source: vesum
+  forms:
+  - form: бакові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́кові
+    tags: noun:inanim:m:v_dav
+  - form: баку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ку
+    tags: noun:inanim:m:v_dav
+  - form: баку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ку
+    tags: noun:inanim:m:v_kly
+  - form: бакові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́кові
+    tags: noun:inanim:m:v_mis
+  - form: баку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ку
+    tags: noun:inanim:m:v_mis
+  - form: баці
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ці
+    tags: noun:inanim:m:v_mis
+  - form: бак
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: бак
+    tags: noun:inanim:m:v_naz
+  - form: баком
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ком
+    tags: noun:inanim:m:v_oru
+  - form: бака
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ка
+    tags: noun:inanim:m:v_rod
+  - form: бак
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: бак
+    tags: noun:inanim:m:v_zna
+  - form: бакам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́кам
+    tags: noun:inanim:p:v_dav
+  - form: баки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ки
+    tags: noun:inanim:p:v_kly
+  - form: баках
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ках
+    tags: noun:inanim:p:v_mis
+  - form: баки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ки
+    tags: noun:inanim:p:v_naz
+  - form: баками
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ками
+    tags: noun:inanim:p:v_oru
+  - form: баків
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ків
+    tags: noun:inanim:p:v_rod
+  - form: баки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ба́ки
+    tags: noun:inanim:p:v_zna
+  gloss_en: tank (closed container for fluids)
+  gloss_ref:
+    id: 6807
+    row_sha256: b952f36d7d5ef48b5466bc80d49f0ab5fe3b0bb7f827c4723491d76384f308d8
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-145
+  lemma: бак
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 23245
+    source: vesum
+  forms:
+  - form: бобові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бо́бові
+    tags: noun:inanim:m:v_dav
+  - form: бобу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бо́бу
+    tags: noun:inanim:m:v_dav
+  - form: бобе
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бо́бе
+    tags: noun:inanim:m:v_kly
+  - form: бобові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бо́бові
+    tags: noun:inanim:m:v_mis
+  - form: бобу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бо́бу
+    tags: noun:inanim:m:v_mis
+  - form: бобі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бо́бі
+    tags: noun:inanim:m:v_mis
+  - form: біб
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: біб
+    tags: noun:inanim:m:v_naz
+  - form: бобом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бо́бом
+    tags: noun:inanim:m:v_oru
+  - form: бобу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бо́бу
+    tags: noun:inanim:m:v_rod
+  - form: біб
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: біб
+    tags: noun:inanim:m:v_zna
+  - form: бобам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: боба́м
+    tags: noun:inanim:p:v_dav
+  - form: боби
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: боби́
+    tags: noun:inanim:p:v_kly
+  - form: бобах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: боба́х
+    tags: noun:inanim:p:v_mis
+  - form: боби
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: боби́
+    tags: noun:inanim:p:v_naz
+  - form: бобами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: боба́ми
+    tags: noun:inanim:p:v_oru
+  - form: бобів
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бобі́в
+    tags: noun:inanim:p:v_rod
+  - form: боби
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: боби́
+    tags: noun:inanim:p:v_zna
+  gloss_en: bean (seed)
+  gloss_ref:
+    id: 16001
+    row_sha256: dc192976ba79ea1b96650634bda1be1a7b16ac1e240f4efbd8c52250ac33f9a1
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-146
+  lemma: біб
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - біб
+    - 1
+    row_sha256: 3957cb39c61aff6eae0e0b01283114ad6b22089ece0a05c111cdc231e1f51920
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 3449
+    row_sha256: 2e84b160bc7633ded828df4e52d5340ec489a7b13e491387ae575890ff47f78d
+    source: puls
+  entry:
+    entry_id: 187686
+    source: vesum
+  forms:
+  - form: льодові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льо́дові
+    tags: noun:inanim:m:v_dav
+  - form: льоду
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льо́ду
+    tags: noun:inanim:m:v_dav
+  - form: леду
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: trie
+    stressed: ле́ду
+    tags: noun:inanim:m:v_dav:subst
+  - form: льоде
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: льо́де
+    tags: noun:inanim:m:v_kly
+  - form: льодові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льо́дові
+    tags: noun:inanim:m:v_mis
+  - form: льоду
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льо́ду
+    tags: noun:inanim:m:v_mis
+  - form: льоді
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: noun:inanim:m:v_mis
+  - form: леду
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: trie
+    stressed: ле́ду
+    tags: noun:inanim:m:v_mis:subst
+  - form: лід
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: лід
+    tags: noun:inanim:m:v_naz
+  - form: льодом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льо́дом
+    tags: noun:inanim:m:v_oru
+  - form: льоду
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льо́ду
+    tags: noun:inanim:m:v_rod
+  - form: леду
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: trie
+    stressed: ле́ду
+    tags: noun:inanim:m:v_rod:subst
+  - form: лід
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: лід
+    tags: noun:inanim:m:v_zna
+  - form: льодам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льода́м
+    tags: noun:inanim:p:v_dav
+  - form: льоди
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льоди́
+    tags: noun:inanim:p:v_kly
+  - form: льодах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льода́х
+    tags: noun:inanim:p:v_mis
+  - form: льоди
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льоди́
+    tags: noun:inanim:p:v_naz
+  - form: льодами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льода́ми
+    tags: noun:inanim:p:v_oru
+  - form: льодів
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льоді́в
+    tags: noun:inanim:p:v_rod
+  - form: льоди
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: льоди́
+    tags: noun:inanim:p:v_zna
+  gloss_en: ice (water in frozen form)
+  gloss_ref:
+    id: 8978
+    row_sha256: df52a556dc7975e0892e8dd3b69f194fde02e8f821b5d9bfd5da3ee9015d1ae5
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-147
+  lemma: лід
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - лід
+    - 1
+    row_sha256: b9d7c0306d337738d8a828cca2fd20488f3030197ba5c7f5ff4ec10256c8ade1
+    source: ulif
+- entry:
+    entry_id: 31628
+    source: vesum
+  forms:
+  - form: букові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́кові
+    tags: noun:inanim:m:v_dav
+  - form: буку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ку
+    tags: noun:inanim:m:v_dav
+  - form: буку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ку
+    tags: noun:inanim:m:v_kly
+  - form: букові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́кові
+    tags: noun:inanim:m:v_mis
+  - form: буку
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ку
+    tags: noun:inanim:m:v_mis
+  - form: буці
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ці
+    tags: noun:inanim:m:v_mis
+  - form: бук
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: бук
+    tags: noun:inanim:m:v_naz
+  - form: буком
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ком
+    tags: noun:inanim:m:v_oru
+  - form: бука
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ка
+    tags: noun:inanim:m:v_rod
+  - form: бук
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: бук
+    tags: noun:inanim:m:v_zna
+  - form: бука
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ка
+    tags: noun:inanim:m:v_zna:var
+  - form: букам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́кам
+    tags: noun:inanim:p:v_dav
+  - form: буки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ки
+    tags: noun:inanim:p:v_kly
+  - form: буках
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ках
+    tags: noun:inanim:p:v_mis
+  - form: буки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ки
+    tags: noun:inanim:p:v_naz
+  - form: буками
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ками
+    tags: noun:inanim:p:v_oru
+  - form: буків
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ків
+    tags: noun:inanim:p:v_rod
+  - form: буки
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: бу́ки
+    tags: noun:inanim:p:v_zna
+  gloss_en: beech (tree of genus Fagus)
+  gloss_ref:
+    id: 13571
+    row_sha256: 0076f1942f00cd2546b838068c58aef09eeed8bb47917ce269f2d5e9f6ccf373
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-148
+  lemma: бук
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete read list for lesson 2 s3/a5; incidental
+    decoding only, no meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: A1
+    row_id: 4902
+    row_sha256: bc6f59f55cc71b1c2fc3dcc544f55a5bcfd21b53df87a1ffca32b82845b74c6e
+    source: puls
+  entry:
+    entry_id: 83141
+    source: vesum
+  forms:
+  - form: гратимем
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́тимем
+    tags: verb:imperf:futr:p:1
+  - form: гратимемо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́тимемо
+    tags: verb:imperf:futr:p:1
+  - form: гратимете
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́тимете
+    tags: verb:imperf:futr:p:2
+  - form: гратимуть
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́тимуть
+    tags: verb:imperf:futr:p:3
+  - form: гратиму
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́тиму
+    tags: verb:imperf:futr:s:1
+  - form: гратимеш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́тимеш
+    tags: verb:imperf:futr:s:2
+  - form: гратиме
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́тиме
+    tags: verb:imperf:futr:s:3
+  - form: граймо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ймо
+    tags: verb:imperf:impr:p:1
+  - form: грайте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́йте
+    tags: verb:imperf:impr:p:2
+  - form: грай
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: грай
+    tags: verb:imperf:impr:s:2
+  - form: грати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ти
+    tags: verb:imperf:inf
+  - form: грать
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: грать
+    tags: verb:imperf:inf:short
+  - form: грала
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ла
+    tags: verb:imperf:past:f
+  - form: грав
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: грав
+    tags: verb:imperf:past:m
+  - form: грало
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ло
+    tags: verb:imperf:past:n
+  - form: грали
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ли
+    tags: verb:imperf:past:p
+  - form: граємо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ємо
+    tags: verb:imperf:pres:p:1
+  - form: граєм
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: ulif
+    stressed: гра́єм
+    tags: verb:imperf:pres:p:1:subst
+  - form: граєте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́єте
+    tags: verb:imperf:pres:p:2
+  - form: грають
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ють
+    tags: verb:imperf:pres:p:3
+  - form: граю
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́ю
+    tags: verb:imperf:pres:s:1
+  - form: граєш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́єш
+    tags: verb:imperf:pres:s:2
+  - form: грає
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гра́є
+    tags: verb:imperf:pres:s:3
+  id: W-149
+  lemma: грати
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+  pos: verb
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - гра́ти
+    - 1
+    row_sha256: e42959905e61175fb82b58f389cbb34354646b494fd81e09ee0a02f67d216fe9
+    source: ulif
+- entry:
+    entry_id: 86858
+    source: vesum
+  forms:
+  - form: ґратам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґра́там
+    tags: noun:inanim:p:v_dav:ns
+  - form: ґрати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґра́ти
+    tags: noun:inanim:p:v_kly:ns
+  - form: ґратах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґра́тах
+    tags: noun:inanim:p:v_mis:ns
+  - form: ґрати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґра́ти
+    tags: noun:inanim:p:v_naz:ns
+  - form: ґратами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґра́тами
+    tags: noun:inanim:p:v_oru:ns
+  - form: ґрат
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: ґрат
+    tags: noun:inanim:p:v_rod:ns
+  - form: ґратів
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: pending
+    tags: noun:inanim:p:v_rod:ns:subst
+  - form: ґрати
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґра́ти
+    tags: noun:inanim:p:v_zna:ns
+  gloss_en: grid, bars
+  gloss_source: kaikki_wiktionary
+  id: W-150
+  lemma: ґрати
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - ґра́ти
+    - 1
+    row_sha256: b1412036742cc8c2009aabe681839cf77a5204c2905c0d1c9575ea0a0272639c
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 3931
+    row_sha256: 7e794c515bc4869201b7e2fb78738d62178225c9796979eb3711741b2bc29c57
+    source: puls
+  entry:
+    entry_id: 157965
+    source: vesum
+  forms:
+  - form: каві
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ві
+    tags: noun:inanim:f:v_dav
+  - form: каво
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́во
+    tags: noun:inanim:f:v_kly
+  - form: каві
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ві
+    tags: noun:inanim:f:v_mis
+  - form: кава
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ва
+    tags: noun:inanim:f:v_naz
+  - form: кавою
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́вою
+    tags: noun:inanim:f:v_oru
+  - form: кави
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ви
+    tags: noun:inanim:f:v_rod
+  - form: каву
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ву
+    tags: noun:inanim:f:v_zna
+  - form: кавам
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́вам
+    tags: noun:inanim:p:v_dav
+  - form: кави
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ви
+    tags: noun:inanim:p:v_kly
+  - form: кавах
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́вах
+    tags: noun:inanim:p:v_mis
+  - form: кави
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ви
+    tags: noun:inanim:p:v_naz
+  - form: кавами
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́вами
+    tags: noun:inanim:p:v_oru
+  - form: кав
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: кав
+    tags: noun:inanim:p:v_rod
+  - form: кави
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ка́ви
+    tags: noun:inanim:p:v_zna
+  gloss_en: coffee (beverage)
+  gloss_source: kaikki_wiktionary
+  id: W-151
+  lemma: кава
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: A2
+    row_id: 4892
+    row_sha256: 01455eb8e10d33bf945b71e6011c2cdb8668622ecc0e3b65abece141af1e41ae
+    source: puls
+  entry:
+    entry_id: 84094
+    source: vesum
+  forms:
+  - form: громові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гро́мові
+    tags: noun:inanim:m:v_dav
+  - form: грому
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гро́му
+    tags: noun:inanim:m:v_dav
+  - form: громе
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: гро́ме
+    tags: noun:inanim:m:v_kly
+  - form: громові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гро́мові
+    tags: noun:inanim:m:v_mis
+  - form: грому
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гро́му
+    tags: noun:inanim:m:v_mis
+  - form: громі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гро́мі
+    tags: noun:inanim:m:v_mis
+  - form: грім
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: грім
+    tags: noun:inanim:m:v_naz
+  - form: громом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гро́мом
+    tags: noun:inanim:m:v_oru
+  - form: грому
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: гро́му
+    tags: noun:inanim:m:v_rod
+  - form: грім
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: грім
+    tags: noun:inanim:m:v_zna
+  - form: громам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: грома́м
+    tags: noun:inanim:p:v_dav
+  - form: громи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: громи́
+    tags: noun:inanim:p:v_kly
+  - form: громах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: грома́х
+    tags: noun:inanim:p:v_mis
+  - form: громи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: громи́
+    tags: noun:inanim:p:v_naz
+  - form: громами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: грома́ми
+    tags: noun:inanim:p:v_oru
+  - form: громів
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: громі́в
+    tags: noun:inanim:p:v_rod
+  - form: громи
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: громи́
+    tags: noun:inanim:p:v_zna
+  gloss_en: thunder (sound caused by lightning)
+  gloss_ref:
+    id: 8020
+    row_sha256: 04dd6d7ccd34e8f77879222a37fb551b33e9a65645b9a350b4ba12f7fce98fb8
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-152
+  lemma: грім
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - грім
+    - 1
+    row_sha256: 5f7b8ea0f95fc7a8d8083aa6148429fd40ea11e2e7edaddd4dceb81687d3ab04
+    source: ulif
+- cefr:
+    level: B2
+    row_id: 4879
+    row_sha256: a182e53c7155917a32465f94107788fc4469186c8d56646a367b458f0e7e312a
+    source: puls
+  entry:
+    entry_id: 86930
+    source: vesum
+  forms:
+  - form: ґрунтові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґру́нтові
+    tags: noun:inanim:m:v_dav
+  - form: ґрунту
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґру́нту
+    tags: noun:inanim:m:v_dav
+  - form: ґрунте
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ґру́нте
+    tags: noun:inanim:m:v_kly
+  - form: ґрунтові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґру́нтові
+    tags: noun:inanim:m:v_mis
+  - form: ґрунту
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґру́нту
+    tags: noun:inanim:m:v_mis
+  - form: ґрунті
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґру́нті
+    tags: noun:inanim:m:v_mis
+  - form: ґрунт
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: ґрунт
+    tags: noun:inanim:m:v_naz
+  - form: ґрунтом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґру́нтом
+    tags: noun:inanim:m:v_oru
+  - form: ґрунту
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґру́нту
+    tags: noun:inanim:m:v_rod
+  - form: ґрунт
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: ґрунт
+    tags: noun:inanim:m:v_zna
+  - form: ґрунтам
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґрунта́м
+    tags: noun:inanim:p:v_dav
+  - form: ґрунти
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґрунти́
+    tags: noun:inanim:p:v_kly
+  - form: ґрунтах
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґрунта́х
+    tags: noun:inanim:p:v_mis
+  - form: ґрунти
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґрунти́
+    tags: noun:inanim:p:v_naz
+  - form: ґрунтами
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґрунта́ми
+    tags: noun:inanim:p:v_oru
+  - form: ґрунтів
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґрунті́в
+    tags: noun:inanim:p:v_rod
+  - form: ґрунти
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ґрунти́
+    tags: noun:inanim:p:v_zna
+  gloss_en: ground (surface of the Earth)
+  gloss_ref:
+    id: 2347
+    row_sha256: baf8d8834e5289f9d8245992e7cdc9ba16c276b9a334c992ae7f527260a049c2
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-153
+  lemma: ґрунт
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ word-pair row in lesson 3 s2; incidental
+    decoding only, not a grammar or meaning drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - ґрунт
+    - 1
+    row_sha256: 445d58a238b441375b5fda2a0c8df5a43b7a7b6e1736c8cef7d117bc8e90f9c9
     source: ulif

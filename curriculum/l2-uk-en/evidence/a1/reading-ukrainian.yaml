@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: 61ab0f55318ceb6d7f696f000a20320da9967936
+  mcp_commit: af6d6c680ac84c7eb72524ea39571bd341a940f4
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 5cc86cdb59fee1f79f70f29698bf397aa151c37677d8d7f1ee0fe6d942c66ac5
@@ -45,6 +45,58 @@ examples:
     row_sha256: 0a83910fbbda649d136e35d3d4afa001ba1bdd6fbd24afb658a6ec79b451bd5e
     section_id: 13091
   text: Ви не бачили жабок?
+- id: EX-003
+  sentence_ref:
+    words:
+    - W-118
+    - W-145
+    - W-146
+    - W-147
+    - W-148
+    - W-035
+  sha256: 0eb98765e8bdfe5915c028fc5eb5c9fba470d3b963c33fbe4156916dc5162804
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0105
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 109
+    row_sha256: bd828b32ba22aa0fbefdd1b34677bb019dec8af511b21837a5cb14f27d359542
+    section_id: 13056
+  text: 'зуб
+
+    бак
+
+    біб
+
+    лід
+
+    бук
+
+    над'
+- id: EX-004
+  sentence_ref:
+    words:
+    - W-149
+    - W-151
+    - W-152
+    - W-150
+    - W-107
+    - W-153
+  sha256: 38bcf1f3e6cdf06dc874c24b8368fef21ffa3d6038452903059ef833e299ce49
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 10
+    row_sha256: 5362b6349fe72bfa9782b30474bb8ea1a5f6d7da9ee503b0d67659b4dd9dfb28
+    section_id: 13069
+  text: 'грати кава грім
+
+    ґрати ґава ґрунт'
 exercises:
 - id: X-001
   items_sample:
@@ -1200,121 +1252,174 @@ unsupported:
       question words; none covers Ж, Ш, Ч, Х or Й)
     tool: sqlite textbooks (source_file ulp-1..6-00-lesson-notes)
   status: resolved
+- claim: No confirmed free recording covers all exact whole-word choices required by lessons 1 s3/a8, 3 s3/a7 and 4 a10. Public
+    letter videos use different example words. V-014 supports W-074, V-004 supports W-081/W-101, and V-015 supports W-118/W-109/W-110;
+    these do not establish the remaining word sets. Lesson 3 a4 also needs exact primer Г/Ґ syllable recordings. Each remaining
+    required word or syllable needs an exact-form recording before a by-ear item can be written.
+  id: U-002
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
+      and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
+      partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
+  status: open
+- claim: No confirmed free recording says either whole primer sentence EX-001 or EX-002 required by lesson 5 s3/a7. Printed
+    T-015 and X-003 establish reading material, not recorded speech. V-004 supplies the recap story and questions only.
+  id: U-003
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
+      and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
+      partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
+  status: open
+- claim: The complete T-018 and X-002 rows are bound to word records by EX-003 and EX-004. Lesson 2 s3/a5 still lacks W-145/W-146/W-147/W-148
+    in its core/incidental/recycled allowlist, and lesson 3 s2 lacks W-149/W-150/W-151/W-152/W-153. W-035 is the existing
+    base preposition. The pack and word store cannot change the frozen plan allowlists; the plan author must admit all nine
+    new incidental decoding records before the complete rows can pass inventory checks.
+  id: U-004
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
+      and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
+      partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
+  status: open
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=m-jcLR_gK0k
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dm-jcLR_gK0k&q=EhAqAQT4HBvflAAAAAAAAAABGOPo-NUGIjB9U9Rfue8-kTQox_pJvnrojZL36HrH6SjRyNy895tmTw6C299czdpztxglKa3q4L8yAnJSWgFD
+    http_status: 429
   id: V-001
   url: https://www.youtube.com/watch?v=m-jcLR_gK0k
   use: Pronunciation model for Т before CV and VC reading.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DgNjHqjTW9WQ&q=EhAqAQT4HBvflAAAAAAAAAABGOPo-NUGIjDOFT5YslwhCZBc9ZruxDLBV5gD0KH_TyAyNx9Yrsi7JU6GBTsSqs2_gtO5Ir7L7yAyAnJSWgFD
+    http_status: 429
   id: V-002
   url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
   use: Pronunciation model for Ґ after hearing Г from the primer.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=aq0cjB90s3w
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Daq0cjB90s3w&q=EhAqAQT4HBvflAAAAAAAAAABGOTo-NUGIjB4vyOnXz6cOvpaJiQO9hvU-lBk2lCql2JR3RyTXZsITgELybHmLTKZLBX88Bkum9wyAnJSWgFD
+    http_status: 429
   id: V-003
   url: https://www.youtube.com/watch?v=aq0cjB90s3w
   use: Pronunciation model for Й in short final-letter reading.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=z8NucPzHLhE
+    date: '2026-10-01'
+    final_url: https://www.ukrainianlessons.com/episode10/
     http_status: 200
   id: V-004
-  url: https://www.youtube.com/watch?v=z8NucPzHLhE
-  use: Source audio for the Season 1 lesson 10 first-person recap story, heard by ear.
+  url: https://www.ukrainianlessons.com/episode10/
+  use: 'ULP 1-10 public episode: the by-ear first-person review story and its first three questions and spoken answers, modeled
+    in public transcript ext-ulp_youtube-294. T-016/T-017 premium notes are grounding only, never learner-facing source text.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=KFlsroBW0dk
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DKFlsroBW0dk&q=EhAqAQT4HBvflAAAAAAAAAABGOTo-NUGIjCDSNF9hhz8f8NjhVa0_YKfjOb1IcEbyms8CSxe88wFNsrxJ7_I4FScen2dTcU_38oyAnJSWgFD
+    http_status: 429
   id: V-005
   url: https://www.youtube.com/watch?v=KFlsroBW0dk
   use: Pronunciation model for Е before its sound rows.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dg4Bh-lqzd48&q=EhAqAQT4HBvflAAAAAAAAAABGOXo-NUGIjCRb8vy1xtNPyBRbhpAucS3mz7rRBnS5y-2BsU3XauV3_I9Pz5A76HqZLDLoatyTYUyAnJSWgFD
+    http_status: 429
   id: V-006
   url: https://www.youtube.com/watch?v=g4Bh-lqzd48
   use: Pronunciation model for Д before its sound rows.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DBhASNxitC1A&q=EhAqAQT4HBvflAAAAAAAAAABGOXo-NUGIjCoIvA4HLLX2cgmHIe5Ltjc1gOb8w3cmw7cyhSZfrp62C-PXJmCG2bro71n3qpybiQyAnJSWgFD
+    http_status: 429
   id: V-007
   url: https://www.youtube.com/watch?v=BhASNxitC1A
   use: Pronunciation model for З before its sound rows.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=V1hxBE_JbGg
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DV1hxBE_JbGg&q=EhAqAQT4HBvflAAAAAAAAAABGObo-NUGIjDGrrYFBE9kj1NlmSukOTm0jsYzqnfCWDv4-ThBQ1gJUwc73QNRIF07CXLFq4u7tqMyAnJSWgFD
+    http_status: 429
   id: V-008
   url: https://www.youtube.com/watch?v=V1hxBE_JbGg
   use: Pronunciation model for Б before its word row.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DgVnclpSI0DU&q=EhAqAQT4HBvflAAAAAAAAAABGObo-NUGIjADLlvkQVQgw_EcL2TMhAQ1nBx1bluwDR7ZLRcWwE7s_VSdjmL66e6jXe7mGzM5WeMyAnJSWgFD
+    http_status: 429
   id: V-009
   url: https://www.youtube.com/watch?v=gVnclpSI0DU
   use: Pronunciation model for Г before the Г/Ґ contrast.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=UsJkbdsY2RA
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DUsJkbdsY2RA&q=EhAqAQT4HBvflAAAAAAAAAABGOfo-NUGIjDCNI7feuNt73S4plOb3xaMWE1cQAZa1r9Fqk-gigxQkZV3_Q4kjHDhTVPKnImz2HQyAnJSWgFD
+    http_status: 429
   id: V-010
   url: https://www.youtube.com/watch?v=UsJkbdsY2RA
   use: Pronunciation model for Ч before its sound rows.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dvpr58zJSJKc&q=EhAqAQT4HBvflAAAAAAAAAABGOfo-NUGIjCrEDq7PX2z3kJvQ4nklZSleadEpd6Y9snKu5FCwSHUo-pwpOyMEPoxOlXeqXtrzJYyAnJSWgFD
+    http_status: 429
   id: V-011
   url: https://www.youtube.com/watch?v=vpr58zJSJKc
   use: Pronunciation model for Х before its sound rows.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=dIrGVcqPwqM
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DdIrGVcqPwqM&q=EhAqAQT4HBvflAAAAAAAAAABGOjo-NUGIjCneH98P5TxR4lcXeyBBqMFzrgyQKPnPI-Lrs7VDnnpIcGfW2Pqd_pQop-4lYATxlYyAnJSWgFD
+    http_status: 429
   id: V-012
   url: https://www.youtube.com/watch?v=dIrGVcqPwqM
   use: Pronunciation model for Ж before its sound rows.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=1D-6MIw3OXY
-    http_status: 200
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D1D-6MIw3OXY&q=EhAqAQT4HBvflAAAAAAAAAABGOjo-NUGIjDHwWH2u_SzRprAkVEgtNv8-b6v_J5ZvRj2Map9Je0edecEliPurparNbfQ4Te8trkyAnJSWgFD
+    http_status: 429
   id: V-013
   url: https://www.youtube.com/watch?v=1D-6MIw3OXY
   use: Pronunciation model for Ш before its sound rows.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-01'
+    final_url: https://www.ukrainianlessons.com/episode2/
+    http_status: 200
+  id: V-014
+  url: https://www.ukrainianlessons.com/episode2/
+  use: 'Lessons 1 s1 and 6 s1: W-075+W-076 intact formal opening greeting, from the greeting practice and shop example in
+    public transcript ext-ulp_youtube-302. Replay the whole chunk; the single-letter videos do not establish this greeting.'
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOno-NUGIjBq8Xpwd9TStWDeqkfkbJseiw8X-S7kFBil33kslyhGFavz5_10IYg1Au_M8BmeYu8yAnJSWgFD
+    http_status: 429
+  id: V-015
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: 'Full alphabet pronunciation video, identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304:
+    whole-word models for W-118, W-109 and W-110. Restrict each excerpt to letters already taught; this is not evidence for
+    the other primer word lists or whole sentences.'

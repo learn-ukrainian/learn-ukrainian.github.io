@@ -1,5 +1,5 @@
 built_with:
-  mcp_commit: 76b67afbc03a4c3ce97be162e17bd8423c592393
+  mcp_commit: af6d6c680ac84c7eb72524ea39571bd341a940f4
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 169f97c6b3c428efbaf4ee523a4e373285efde04ef65888baa144e859a49b306
@@ -512,38 +512,52 @@ texts:
     row_sha256: 512edd684d21769cbe302f5cf25cdac7bf1aae69f2c5dd60c05b45332d0a7b34
     section_id: null
   supports: Adult L2 formal social situation (teacher); ULP Season 1 lesson 2.
+unsupported:
+- claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and
+    lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named
+    sounds, not those complete primer combinations or word pairs.
+  id: U-001
+  searches:
+  - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
+      and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
+      partial matches.
+    tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
+  status: open
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=FUF9Za-1bzY
+    date: '2026-10-01'
+    final_url: https://www.ukrainianlessons.com/episode1/
     http_status: 200
   id: V-001
-  url: https://www.youtube.com/watch?v=FUF9Za-1bzY
-  use: Listening model for the informal greeting in lesson 1.
+  url: https://www.ukrainianlessons.com/episode1/
+  use: 'ULP 1-01 public episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section. Public
+    transcript locator ext-ulp_youtube-303; premium notes are grounding only.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=GMcB5rsb3HM
+    date: '2026-10-01'
+    final_url: https://www.ukrainianlessons.com/episode2/
     http_status: 200
   id: V-002
-  url: https://www.youtube.com/watch?v=GMcB5rsb3HM
-  use: Listening model for the formal greeting in lesson 1.
+  url: https://www.ukrainianlessons.com/episode2/
+  use: 'ULP 1-02 public episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting section
+    and shop example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
-    date: '2026-09-29'
-    final_url: https://www.youtube.com/watch?v=5J9ZaM3-rrI
+    date: '2026-10-01'
+    final_url: https://www.ukrainianlessons.com/episode5/
     http_status: 200
   id: V-003
-  url: https://www.youtube.com/watch?v=5J9ZaM3-rrI
-  use: Pronunciation trainer for И in lesson 3.
+  url: https://www.ukrainianlessons.com/episode5/
+  use: 'ULP 1-05 public episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator ext-ulp_youtube-299;
+    compare with the native І model V-009, not English spelling.'
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
     http_status: 200
   id: V-004
@@ -552,7 +566,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
     http_status: 200
   id: V-005
@@ -561,7 +575,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
     http_status: 200
   id: V-006
@@ -570,7 +584,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=W-1rCu0indE
     http_status: 200
   id: V-007
@@ -579,7 +593,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
     http_status: 200
   id: V-008
@@ -588,7 +602,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
     http_status: 200
   id: V-009
@@ -597,7 +611,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
     http_status: 200
   id: V-010
@@ -606,7 +620,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
     http_status: 200
   id: V-011
@@ -615,7 +629,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
     http_status: 200
   id: V-012
@@ -624,7 +638,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
     http_status: 200
   id: V-013
@@ -633,7 +647,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
     http_status: 200
   id: V-014
@@ -642,7 +656,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
     http_status: 200
   id: V-015
@@ -651,7 +665,7 @@ videos:
 - channel: Ukrainian Lessons
   checked:
     content_type: text/html
-    date: '2026-09-29'
+    date: '2026-10-01'
     final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
     http_status: 200
   id: V-016

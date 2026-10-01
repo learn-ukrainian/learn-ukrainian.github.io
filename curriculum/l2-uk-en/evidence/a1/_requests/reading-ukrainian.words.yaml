@@ -88,12 +88,89 @@ words:
   entry:
     source: vesum
     entry_id: 167620
-  want: new
+  want: W-117
   note: Decodable common noun for Е on primer part 1 printed page 90 (key-word letter strip and the syllabified text).
 - lemma: зуб
   pos: noun
   entry:
     source: vesum
     entry_id: 150592
-  want: new
+  want: W-118
   note: Decodable Б-page word in the read list on primer part 1 printed page 107.
+- lemma: бак
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 16017
+  want: W-145
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete
+    read list for lesson 2 s3/a5; incidental decoding only, no meaning drill.'
+- lemma: біб
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 23245
+  want: W-146
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete
+    read list for lesson 2 s3/a5; incidental decoding only, no meaning drill.'
+- lemma: лід
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 187686
+  want: W-147
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete
+    read list for lesson 2 s3/a5; incidental decoding only, no meaning drill.'
+- lemma: бук
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 31628
+  want: W-148
+  note: 'T-018, primer part 1 printed page 107: required whole word in the complete
+    read list for lesson 2 s3/a5; incidental decoding only, no meaning drill.'
+- lemma: грати
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 83141
+  want: W-149
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ
+    word-pair row in lesson 3 s2; incidental decoding only, not a grammar or meaning
+    drill.'
+- lemma: ґрати
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 86858
+  want: W-150
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ
+    word-pair row in lesson 3 s2; incidental decoding only, not a grammar or meaning
+    drill.'
+- lemma: кава
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 157965
+  want: W-151
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ
+    word-pair row in lesson 3 s2; incidental decoding only, not a grammar or meaning
+    drill.'
+- lemma: грім
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 84094
+  want: W-152
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ
+    word-pair row in lesson 3 s2; incidental decoding only, not a grammar or meaning
+    drill.'
+- lemma: ґрунт
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 86930
+  want: W-153
+  note: 'X-002, primer part 2 printed page 8: required member of the complete Г/Ґ
+    word-pair row in lesson 3 s2; incidental decoding only, not a grammar or meaning
+    drill.'
