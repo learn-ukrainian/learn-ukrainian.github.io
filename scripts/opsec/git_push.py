@@ -2,8 +2,8 @@
 
 The agent git shim executes this file for push commands. A dry run asks git
 which refs the push names and where it sends them. For every public
-destination the ref names, annotated tag messages and the messages of every
-commit reachable from the pushed tips are scanned through check_texts, except
+destination the ref names, annotated tag names and messages and the whole raw
+messages of every commit reachable from the pushed tips are scanned through check_texts, except
 commits that this machine's earlier push scans found clean (CleanCache, kept
 in the repository's common git directory). A commit whose message has a
 blocking finding is excused only when the catalogue's canonical public
@@ -197,14 +197,17 @@ class Repository:
             timeout=timeout,
         )
 
-    def text(self, *args: str, stdin: str | None = None, environment: dict[str, str] | None = None) -> str:
+    def raw(self, *args: str, stdin: str | None = None, environment: dict[str, str] | None = None) -> bytes:
         result = self.run(*args, stdin=stdin, environment=environment)
         if result.returncode:
             # Fixed text only: git output can quote ref names and messages.
             raise gate.PublishBlocked(
                 f"OPSEC: push scan step git {args[0]} failed (exit {result.returncode}); push refused."
             )
-        return result.stdout.decode("utf-8", "replace")
+        return result.stdout
+
+    def text(self, *args: str, stdin: str | None = None, environment: dict[str, str] | None = None) -> str:
+        return self.raw(*args, stdin=stdin, environment=environment).decode("utf-8", "replace")
 
     def object(self, revision: str) -> str | None:
         result = self.run("rev-parse", "--verify", "--quiet", revision)
@@ -368,10 +371,15 @@ class CanonicalPublicRepository:
         """True if sha is head or its ancestor, False if not, None without an answer.
 
         GET /repos/{owner}/{repo}/compare/{base}...{head} (REST "Compare two
-        commits") reports head relative to base: "behind" or "identical" with
-        merge_base_commit equal to head means head is an ancestor of base. The
-        commits and files lists are paginated and capped, so they are never read.
-        An unknown commit is a 404 and a definite no.
+        commits", schema commit-comparison) reports the compare head relative to
+        base: status (diverged, ahead, behind, identical), ahead_by, behind_by,
+        and base_commit and merge_base_commit, each a commit with its sha. A yes
+        must be about the question asked: base_commit is the queried public
+        head, merge_base_commit is sha, ahead_by is 0, and either "behind" by at
+        least one commit with sha not the head, or "identical" with sha the head
+        and behind_by 0. Any other yes-shaped reply is no answer. The commits
+        and files lists are paginated and capped, so they are never read. An
+        unknown commit is a 404 and a definite no.
         """
         try:
             status, body = self._read("compare", base=head, head=sha)
@@ -381,10 +389,23 @@ class CanonicalPublicRepository:
             return None
         if status:
             return False if body.get("status") == "404" and body.get("message") == "Not Found" else None
-        merge_base = body.get("merge_base_commit")
-        if body.get("status") in {"behind", "identical"}:
-            return True if isinstance(merge_base, dict) and merge_base.get("sha") == sha else None
-        return False if body.get("status") in {"ahead", "diverged"} else None
+        verdict = body.get("status")
+        if verdict in {"ahead", "diverged"}:
+            return False
+        if verdict not in {"behind", "identical"}:
+            return None
+        base, merge_base = body.get("base_commit"), body.get("merge_base_commit")
+        ahead, behind = body.get("ahead_by"), body.get("behind_by")
+        bound = (
+            isinstance(base, dict)
+            and base.get("sha") == head
+            and isinstance(merge_base, dict)
+            and merge_base.get("sha") == sha
+        )
+        counted = type(ahead) is int and ahead == 0 and type(behind) is int and behind >= 0
+        identical = verdict == "identical"
+        consistent = counted and (behind == 0) == identical and (sha == head) == identical
+        return True if bound and consistent else None
 
 
 def already_public(repository: Repository, hits: list[str], client) -> set[str]:
@@ -423,8 +444,65 @@ def _short_ref(target: str) -> tuple[str, str]:
     return "ref", target
 
 
+def split_object(raw: bytes) -> tuple[list[tuple[bytes, bytes]], str]:
+    """Header fields and the whole message of a raw commit or tag object.
+
+    The message is everything after the first blank line, as git reads it,
+    NUL bytes included. It is decoded as UTF-8 and, when an encoding header
+    names another codec that decodes it differently, that reading follows, so
+    the scan covers what either kind of reader shows.
+    """
+    header, _, body = raw.partition(b"\n\n")
+    # A continuation line starts with a space, so its key is empty and it is skipped.
+    fields = [(key, value) for key, _, value in (line.partition(b" ") for line in header.split(b"\n")) if key]
+    message = body.decode("utf-8", "replace")
+    declared = next((value for key, value in fields if key == b"encoding"), None)
+    if declared is not None:
+        try:
+            other = body.decode(declared.decode("ascii"))
+        except (LookupError, UnicodeError, ValueError):
+            other = message
+        if other != message:
+            message += "\n" + other
+    return fields, message
+
+
+def commit_messages(repository: Repository, shas: list[str]) -> list[tuple[str, str]]:
+    """(id, whole message) of each commit, read from the raw objects.
+
+    %B in a --format stops at the first NUL, so a message with a NUL would be
+    scanned only up to it and then cached clean. Reading the raw object scans
+    every byte of the message at no more cost than refusing such messages,
+    which would also need the raw object to see the NUL.
+    """
+    output = repository.raw("cat-file", "--batch", stdin="".join(f"{sha}\n" for sha in shas))
+    found: list[tuple[str, str]] = []
+    position = 0
+    try:
+        for sha in shas:
+            end = output.index(b"\n", position)
+            name, kind, size = output[position:end].decode("ascii").split(" ")
+            start = end + 1
+            stop = start + int(size)
+            if name != sha or kind != "commit" or output[stop : stop + 1] != b"\n":
+                raise ValueError
+            found.append((sha, split_object(output[start:stop])[1]))
+            position = stop + 1
+    except (ValueError, UnicodeError):
+        raise gate.PublishBlocked("OPSEC: push scan commit read malformed; push refused.") from None
+    if position != len(output):
+        raise gate.PublishBlocked("OPSEC: push scan commit read malformed; push refused.")
+    return found
+
+
 def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[str], list[str], list[str]]:
-    """Ref names and annotated tag messages one destination receives, and the commits its refs name."""
+    """Ref names and annotated tag names and messages one destination receives, and the commits its refs name.
+
+    The name inside a tag object (its tag header) is published with it and can
+    differ from the ref it is pushed to, so every tag object on the way from
+    a pushed ref to its target, nested tags included, has its name scanned.
+    Only commit messages can ever be excused; these texts never are.
+    """
     texts: list[str] = []
     names: list[str] = []
     tips: list[str] = []
@@ -439,13 +517,17 @@ def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[s
         if current is None:
             raise gate.PublishBlocked("OPSEC: pushed object unresolved; push refused.")
         while repository.text("cat-file", "-t", current).strip() == "tag":
-            raw = repository.text("cat-file", "tag", current)
-            header, _, message = raw.partition("\n\n")
+            fields, message = split_object(repository.raw("cat-file", "tag", current))
             if current not in seen_tags:
                 seen_tags.add(current)
+                texts.append("\n".join(value.decode("utf-8", "replace") for key, value in fields if key == b"tag"))
+                names.append(f"tag[{current[:12]}].tagname")
                 texts.append(message)
                 names.append(f"tag[{current[:12]}].message")
-            current = re.search(r"^object ([0-9a-f]+)$", header, re.M)[1]
+            targets = [value.decode("ascii", "replace") for key, value in fields if key == b"object"]
+            if len(targets) != 1 or not COMMIT_ID.fullmatch(targets[0]):
+                raise gate.PublishBlocked("OPSEC: pushed tag object malformed; push refused.")
+            current = targets[0]
         if repository.text("cat-file", "-t", current).strip() == "commit":
             tips.append(current)
     return texts, names, tips
@@ -503,20 +585,10 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
         # Messages already public need no scan; the two caches never share an id by construction.
         skipped_public = sum(sha in known_public for sha in reachable)
         pending = [sha for sha in reachable if sha not in cached and sha not in known_public]
-        if pending:
-            output = repository.text(
-                "rev-list",
-                "--no-walk=unsorted",
-                "--no-commit-header",
-                "--format=%x00%H%x00%B",
-                "--stdin",
-                stdin="".join(f"{sha}\n" for sha in pending),
-            )
-            fields = output.split("\x00")[1:]
-            for sha, message in zip(fields[0::2], fields[1::2], strict=True):
-                commits.append(sha)
-                texts.append(message)
-                names.append(f"commit[{sha[:12]}].message")
+        for sha, message in commit_messages(repository, pending):
+            commits.append(sha)
+            texts.append(message)
+            names.append(f"commit[{sha[:12]}].message")
     first = len(texts) - len(commits)
 
     def excuse(indices: set[int]) -> set[int]:

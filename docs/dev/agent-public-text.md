@@ -125,7 +125,7 @@ posting searches at the exact head.
 | `scripts/lexicon/publish_manifest.py`, `scripts/lexicon/admit_fmu_boosters.py` | Artifact upload |
 | `agents_extensions/shared/hooks/guard-public-github-text.py` | Routing only |
 | `scripts/agent_runtime/shims/gh` | Closed raw admission; public writes refused |
-| `scripts/agent_runtime/shims/git` push, via `scripts/opsec/git_push.py` | New commit messages (hits already on the public default branch excused), branch and tag names, annotated tag messages |
+| `scripts/agent_runtime/shims/git` push, via `scripts/opsec/git_push.py` | New commit messages (hits already on the public default branch excused), branch and tag names, annotated tag names and messages |
 | `scripts/ci/data_tier.py`, `scripts/ci/flake_ledger.py`, `scripts/ci/comment_issue_task_quality.py` | Separate bot/CI workflows, outside the cooperative-agent inventory |
 | Printed templates and `scripts/wt.sh` | No outbound publication; executed public writes require publisher verbs |
 
@@ -163,9 +163,16 @@ printed without userinfo. For each destination that `is_private` does not
 exempt, these are scanned through `check_texts`:
 
 - every named branch, tag or other ref name, except deletions;
-- annotated tag messages;
+- the name inside every annotated tag object on the way from a pushed ref to
+  its target, nested tags included (it can differ from the ref it is pushed
+  to), and each such tag's message;
 - the message of every commit reachable from the named tips, except commits
   this machine already scanned clean or already found public (below).
+
+Messages are read from the raw objects (`git cat-file`), everything after
+the first blank line, so a NUL byte cannot hide the rest of a message the way
+`%B` would. Each message is decoded as UTF-8 and, when its `encoding` header
+names a codec that reads it differently, that reading is scanned too.
 
 Nothing the destination reports counts as evidence of what it already has:
 no `ls-remote`, no tracking refs, and no old tips or up-to-date or rejected
@@ -198,13 +205,17 @@ configuration. One `default-head` read returns the commit the default branch
 names now. If that commit is present locally, local ancestry decides every hit
 at once: commit ids name their parents, and replacement objects and grafts are
 off. Otherwise each hit, newest first, is checked with GitHub's "Compare two
-commits" (`compare` read, `{public head}...{hit}`): only status `behind` or
-`identical` with `merge_base_commit` equal to the hit counts, and that hit's
-ancestors are excused with it. A 404, `ahead` or `diverged` is a no for that
-hit. Any other failure, rate limit, timeout (10 seconds per call), or truncated
-or malformed body stops the questions, and every unanswered hit is refused.
-One push asks at most 20 compare questions. Ref names and tag messages are
-never excused. Refusals are unchanged: rule, class, field and line of each
+commits" (`compare` read, `{public head}...{hit}`): a yes counts only when
+the reply is about the question asked and consistent with itself:
+`base_commit.sha` is the public head that was queried, `merge_base_commit.sha`
+is the hit, `ahead_by` is 0, and either status `behind` with `behind_by` of at
+least 1, or status `identical` with `behind_by` 0 and the hit equal to the
+head. That hit's ancestors are excused with it. A 404, `ahead` or `diverged`
+is a no for that hit. Any other reply, including a yes-shaped one that fails
+those checks, a failure, rate limit, timeout (10 seconds per call), or a
+truncated or malformed body, stops the questions, and every unanswered hit is
+refused and nothing is cached. One push asks at most 20 compare questions.
+Ref names, tag names and tag messages are never excused. Refusals are unchanged: rule, class, field and line of each
 unexcused hit, with the same single-use logged override. Excused messages are
 never printed. With nothing cached, this repository's 385 published hits took
 one call when the public head was present locally and two when it was not.

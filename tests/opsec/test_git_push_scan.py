@@ -831,7 +831,7 @@ def test_unreadable_public_head_refuses(push_sandbox, monkeypatch, capfd, head_r
 def test_real_client_excuses_on_a_well_formed_behind_answer(push_sandbox, monkeypatch, capfd):
     hit = push_sandbox.commit("published subject " + TOKEN)
     calls = []
-    reply = _reply(0, {"status": "behind", "merge_base_commit": {"sha": hit}})
+    reply = _reply(0, _consistent(hit))
     client = git_push.CanonicalPublicRepository(
         "github.com/unit/public", _env(GH_REPO="unit/forged"), runner=compare_runner(reply, calls=calls)
     )
@@ -855,3 +855,188 @@ def test_ref_name_hits_are_never_excused(push_sandbox, monkeypatch, capfd):
         push_sandbox, monkeypatch, FakePublic(None, fail=True), "push", "origin", f"HEAD:refs/heads/x-{TOKEN}"
     )
     assert status == 2 and "field=branch[1].name" in capfd.readouterr().err
+
+
+# --- Round 5: embedded tag names, whole messages, compare replies bound to the queried head ---
+
+
+def _object(cwd, kind, data: bytes):
+    """Write a raw object without git's format checks, as a careless or hand-made object would be."""
+    return (
+        subprocess.run(
+            [REAL_GIT, "hash-object", "-t", kind, "--literally", "-w", "--stdin"],
+            cwd=cwd,
+            env=_env(),
+            input=data,
+            capture_output=True,
+            check=True,
+            timeout=30,
+        )
+        .stdout.decode()
+        .strip()
+    )
+
+
+def _tag(cwd, target, kind, name, message=b"clean release\n"):
+    header = f"object {target}\ntype {kind}\ntag {name}\ntagger unit <unit@example.invalid> 0 +0000\n\n"
+    return _object(cwd, "tag", header.encode() + message)
+
+
+def _commit(cwd, message: bytes):
+    tree, parent = _git(cwd, "rev-parse", "HEAD^{tree}"), _git(cwd, "rev-parse", "HEAD")
+    identity = "unit <unit@example.invalid> 0 +0000"
+    header = f"tree {tree}\nparent {parent}\nauthor {identity}\ncommitter {identity}\n\n"
+    return _object(cwd, "commit", header.encode() + message)
+
+
+def test_annotated_tag_embedded_name_hit_is_refused_under_a_clean_alias(push_sandbox):
+    before = push_sandbox.remote_refs()
+    tag = _tag(push_sandbox.work, _git(push_sandbox.work, "rev-parse", "HEAD"), "commit", f"v1-{TOKEN}")
+    result = push_sandbox.push("push", "origin", f"{tag}:refs/tags/clean-alias")
+    assert_blocked(result, push_sandbox, before, f"tag[{tag[:12]}].tagname")
+
+
+def test_nested_tag_embedded_name_hit_is_refused(push_sandbox):
+    before = push_sandbox.remote_refs()
+    inner = _tag(push_sandbox.work, _git(push_sandbox.work, "rev-parse", "HEAD"), "commit", f"v1-{TOKEN}")
+    outer = _tag(push_sandbox.work, inner, "tag", "clean-outer")
+    result = push_sandbox.push("push", "origin", f"{outer}:refs/tags/clean-alias")
+    assert_blocked(result, push_sandbox, before, f"tag[{inner[:12]}].tagname")
+
+
+def test_clean_embedded_tag_name_passes(push_sandbox):
+    inner = _tag(push_sandbox.work, _git(push_sandbox.work, "rev-parse", "HEAD"), "commit", "v1-clean")
+    outer = _tag(push_sandbox.work, inner, "tag", "clean-outer")
+    result = push_sandbox.push("push", "origin", f"{outer}:refs/tags/clean-alias")
+    assert result.returncode == 0, result.stderr
+    assert push_sandbox.remote_refs()["refs/tags/clean-alias"] == outer
+
+
+def test_embedded_tag_name_hit_is_never_excused(push_sandbox, monkeypatch, capfd):
+    """A public commit excuses its own message, never the name of a tag pointing at it."""
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    tag = _tag(push_sandbox.work, hit, "commit", f"v1-{TOKEN}")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(hit), "push", "origin", f"{tag}:refs/tags/v1")
+    err = capfd.readouterr().err
+    assert status == 2 and not executed
+    assert f"field=tag[{tag[:12]}].tagname" in err and f"field=commit[{hit[:12]}].message" not in err, err
+
+
+def test_commit_message_hit_after_a_nul_is_refused_and_never_cached(push_sandbox):
+    before = push_sandbox.remote_refs()
+    sha = _commit(push_sandbox.work, b"clean subject\x00 " + TOKEN.encode() + b"\n")
+    result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
+    cache = push_sandbox.work / CACHE
+    assert not cache.exists() or sha not in cache.read_text().split()
+
+
+@pytest.mark.parametrize("message", [b"clean subject\n\nclean body\n", b"clean subject\x00clean tail\n"])
+def test_wholly_scanned_clean_raw_commit_is_cached(push_sandbox, message):
+    sha = _commit(push_sandbox.work, message)
+    result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
+    assert result.returncode == 0, result.stderr
+    assert sha in (push_sandbox.work / CACHE).read_text().split()
+
+
+def test_tag_message_hit_after_a_nul_is_refused(push_sandbox):
+    before = push_sandbox.remote_refs()
+    head = _git(push_sandbox.work, "rev-parse", "HEAD")
+    tag = _tag(push_sandbox.work, head, "commit", "v1", b"clean release\x00 " + TOKEN.encode() + b"\n")
+    result = push_sandbox.push("push", "origin", f"{tag}:refs/tags/v1")
+    assert_blocked(result, push_sandbox, before, f"tag[{tag[:12]}].message")
+
+
+def _consistent(hit, head="e" * 40):
+    return {
+        "status": "behind",
+        "ahead_by": 0,
+        "behind_by": 3,
+        "base_commit": {"sha": head},
+        "merge_base_commit": {"sha": hit},
+    }
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda body, hit: body.update(base_commit={"sha": "d" * 40}), id="other-base-commit"),
+        pytest.param(lambda body, hit: body.pop("base_commit"), id="no-base-commit"),
+        pytest.param(lambda body, hit: body.update(base_commit="e" * 40), id="malformed-base-commit"),
+        pytest.param(lambda body, hit: body.update(merge_base_commit={"sha": "d" * 40}), id="other-merge-base"),
+        pytest.param(lambda body, hit: body.update(ahead_by=1), id="behind-yet-ahead"),
+        pytest.param(lambda body, hit: body.update(behind_by=0), id="behind-by-nothing"),
+        pytest.param(lambda body, hit: body.pop("behind_by"), id="no-behind-by"),
+        pytest.param(lambda body, hit: body.update(status="identical"), id="identical-but-different"),
+        pytest.param(lambda body, hit: body.update(status="identical", behind_by=0), id="identical-other-commit"),
+    ],
+)
+def test_compare_reply_not_bound_to_the_queried_head_excuses_nothing(push_sandbox, monkeypatch, capfd, mutate):
+    hit = push_sandbox.commit("subject " + TOKEN)
+    body = _consistent(hit)
+    mutate(body, hit)
+    client = git_push.CanonicalPublicRepository(
+        "github.com/unit/public", _env(), runner=compare_runner(_reply(0, body))
+    )
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err
+    assert not (push_sandbox.work / PUBLIC_CACHE).exists()
+
+
+@pytest.mark.parametrize(
+    ("head", "body"),
+    [
+        pytest.param("e" * 40, _consistent, id="behind"),
+        pytest.param(
+            None,
+            lambda hit, head=None: {
+                "status": "identical",
+                "ahead_by": 0,
+                "behind_by": 0,
+                "base_commit": {"sha": hit},
+                "merge_base_commit": {"sha": hit},
+            },
+            id="identical",
+        ),
+    ],
+)
+def test_contains_accepts_only_a_consistent_reply_about_the_queried_head(head, body):
+    hit = "a" * 40
+    head = head or hit
+    client = git_push.CanonicalPublicRepository(
+        "github.com/unit/public", _env(), runner=compare_runner(_reply(0, body(hit)), head=head)
+    )
+    assert client.contains(head, hit) is True
+    assert client.contains("f" * 40, hit) is None  # The same reply about another head is no answer.
+
+
+@pytest.mark.parametrize(
+    ("raw", "fields", "expected"),
+    [
+        pytest.param(b"tag v1\n\nclean\x00" + TOKEN.encode(), [(b"tag", b"v1")], ["clean\x00" + TOKEN], id="nul"),
+        pytest.param(
+            b"tag v1\nmergetag object x\n tag continuation-is-not-a-field\n\nbody " + TOKEN.encode(),
+            [(b"tag", b"v1"), (b"mergetag", b"object x")],
+            ["body " + TOKEN],
+            id="continuation",
+        ),
+        pytest.param(
+            b"encoding ISO-8859-1\n\ncaf\xe9 " + TOKEN.encode(),
+            [(b"encoding", b"ISO-8859-1")],
+            ["caf� " + TOKEN, "caf\xe9 " + TOKEN],
+            id="declared-latin-1",
+        ),
+        pytest.param(
+            b"encoding UTF-16\n\nab" + TOKEN.encode(), [(b"encoding", b"UTF-16")], ["ab" + TOKEN], id="declared-utf-16"
+        ),
+        pytest.param(
+            b"encoding no-such-codec\n\n" + TOKEN.encode(), [(b"encoding", b"no-such-codec")], [TOKEN], id="unknown"
+        ),
+    ],
+)
+def test_split_object_keeps_every_reading_of_the_whole_message(raw, fields, expected):
+    found_fields, message = git_push.split_object(raw)
+    assert found_fields == fields
+    assert message.split("\n")[: len(expected)] == expected
+    assert TOKEN in message
