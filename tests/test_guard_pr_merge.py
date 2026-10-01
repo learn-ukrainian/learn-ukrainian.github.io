@@ -367,6 +367,9 @@ def test_issue_9461_dynamic_or_malformed_redirect_blocks(monkeypatch, command, r
 @pytest.mark.parametrize(
     "command",
     [
+        "cat <(cat .env)",
+        "echo ok >(cat .env)",
+        'source <(cat .env); printf %s "$FOO"',
         "diff <(a) <(b)",
         "cat <(cat file)",
         "echo ok >(cat file)",
@@ -376,127 +379,61 @@ def test_issue_9461_dynamic_or_malformed_redirect_blocks(monkeypatch, command, r
         "cat > $(cmd)",
         'cat > "$FILE"',
         "cat >",
-        "cat <(cmd) gh pr merge 5",
+        "cat > > file",
         "bash -c 'cat <(cmd)'",
     ],
 )
-def test_issue_9461_non_merge_redirects_do_not_create_merges(monkeypatch, command):
+def test_issue_9461_no_merge_text_redirects_do_not_create_merges(monkeypatch, command):
     assert not _any_judged_merge(command)
     assert not _any_merge(command)
     assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 0
 
 
-@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
-@pytest.mark.parametrize("redirect", ["<(cmd)", ">(cmd)", "> $(cmd)"])
-@pytest.mark.parametrize("wrapper", ["{command}", "env {command}", "bash -c '{command}'"])
-def test_issue_9461_merge_substitutions_stay_unreadable(monkeypatch, command, redirect, wrapper):
-    assert _run(monkeypatch, wrapper.format(command=command + " " + redirect)) == 2
-    assert _run(monkeypatch, wrapper.format(command=redirect + " " + command)) == 2
-
-
-@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
-@pytest.mark.parametrize("redirect", ["<(cmd)", ">(cmd)", "> $(cmd)", '> "$FILE"', ">"])
-def test_issue_9461_shell_wrapper_redirect_taints_merge_payload(monkeypatch, command, redirect):
-    wrapped = f"bash -c '{command}'"
-    assert _run(monkeypatch, wrapped + " " + redirect) == 2
-    if redirect != ">":
-        assert _run(monkeypatch, redirect + " " + wrapped) == 2
-
-
-@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
-@pytest.mark.parametrize("other", ["diff <(a) <(b)", "cat > $(cmd)", 'cat > "$FILE"'])
-@pytest.mark.parametrize("separator", [";", "&&", "|", "\n"])
-def test_issue_9461_non_merge_redirect_does_not_taint_adjacent_merge(monkeypatch, command, other, separator):
-    assert _run(monkeypatch, f"{other} {separator} {command}") == 0
-    assert _run(monkeypatch, f"{other} {separator} {command}", checks=(["CI Gate"], [])) == 2
-
-
-@pytest.mark.parametrize("command", ["cat <(gh pr merge 5)", "cat > $(gh pr merge 5)"])
-def test_issue_9461_merge_inside_non_merge_substitution_is_judged(monkeypatch, command):
-    assert _any_judged_merge(command)
-    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
-
-
-@pytest.mark.parametrize(
-    "shape",
-    [
-        "echo $(case x in x) {merge};; esac)",
-        "printf %s $(case x in\n  x) {merge} ;;\nesac)",
-        "cat <(case x in x) {merge};; esac)",
-        "echo $(case x in x) {merge} --admin;; esac)",
-        "cat >(case x in x) {merge};; esac)",
-        "echo $(case x in y) true;; x|z) {merge};; *) true;; esac)",
-        "echo $(case x in (x|z) {merge};; esac)",
-        "echo $(case x in @(x|z)) {merge};; esac)",
-        "echo $(case x in @(x|@(y|z))) {merge};; esac)",
-        "case x in x) {merge};; esac",
-        "echo $(case x in x) echo $(case y in y) {merge};; esac);; esac)",
-        "echo $(case x in x) case y in y) {merge};; esac;; esac)",
-        "echo $(case $(case y in y) printf x;; esac) in x) {merge};; esac)",
-        "echo $(case x in $(case y in y) {merge};; esac)) true;; esac)",
-        "echo $(case y in x) echo $(true) esac;; y) {merge};; esac)",
-        "echo $(if case x in x) {merge};; esac; then true; fi)",
-    ],
-)
-@pytest.mark.parametrize("merge", _ISSUE_9461_MERGES)
-@pytest.mark.parametrize("wrapper", ["{merge}", "env {merge}", "bash -c '{merge}'"])
-def test_issue_9461_case_pattern_does_not_hide_merge(monkeypatch, shape, merge, wrapper):
-    command = shape.format(merge=wrapper.format(merge=merge))
-    assert _any_judged_merge(command)
-    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
-
-
 @pytest.mark.parametrize(
     "command",
     [
-        "echo $(case x in x) printf fixture;; esac)",
-        "cat <(case x in y) true;; x|z) printf fixture;; esac)",
-        "echo $(case x in @(x|z)) printf fixture;; esac)",
-        "echo $(case x in x) echo $(case y in y) printf fixture;; esac);; esac)",
+        "gh pr merge 5 <(cmd)",
+        "gh pr merge <(echo 5)",
+        "gh pr merge $(cat f) 2>&1",
+        "gh pr merge 5 > $(cmd)",
+        "gh pr merge 5 <<< $(cmd)",
+        "python -m scripts.publish pr-merge --number 5 <(cmd)",
+        "python -m scripts.publish pr-merge --number <(echo 5)",
+        "python -m scripts.publish pr-merge --number $(cat f) 2>&1",
+        "python -m scripts.publish pr-merge --number 5 > $(cmd)",
+        "python -m scripts.publish pr-merge --number 5 <<< $(cmd)",
+        # The raw command mentions merge: round 1's conservative refusal applies
+        # to the whole command, including the preceding non-merge substitution.
+        "diff <(a) <(b); gh pr merge 5",
     ],
 )
-def test_issue_9461_benign_case_substitution_stays_allowed(monkeypatch, command):
-    assert not _any_judged_merge(command)
-    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 0
+def test_issue_9461_merge_text_redirects_stay_unreadable(monkeypatch, capsys, command):
+    original_ref = guard._pr_ref
+    _run(monkeypatch, "true")
+    monkeypatch.setattr(guard, "_pr_ref", original_ref)
+
+    def snapshot(pr, repo=None, cwd=None):
+        pytest.fail(f"unreadable redirect reached PR lookup: {pr}")
+
+    monkeypatch.setattr(guard, "_pr_snapshot", snapshot)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert "cannot be read" in capsys.readouterr().err
 
 
-@pytest.mark.parametrize(
-    "shape",
-    [
-        "echo $(case x in x) true;; esac); {merge}",
-        "cat <(case x in x) true;; esac); {merge}",
-        "case x in x) true;; esac; {merge}",
-    ],
-)
-def test_issue_9461_case_scope_preserves_adjacent_pr_judgment(monkeypatch, shape):
-    command = shape.format(merge="gh pr merge 5")
-    assert _run(monkeypatch, command) == 0
-    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
-    assert _judged_cwds(monkeypatch, command) == [("5", None)]
+@pytest.mark.parametrize("mention", ["merge", "MERGE", "MeRgE"])
+@pytest.mark.parametrize("separator", ["; ", "\n"])
+def test_issue_9461_redirect_marker_uses_entire_raw_command(mention, separator):
+    command = f"cat <(cmd){separator}echo {mention}"
+    assert _any_judged_merge(command)
+    assert any(guard._UNREADABLE_MARKER in segment for segment in guard._segments(command))
 
 
-@pytest.mark.parametrize(
-    "shape",
-    [
-        "echo $(case x in x) {merge};; esac)",
-        "printf %s $(case x in\n  x) {merge} ;;\nesac)",
-        "cat <(case x in x) {merge};; esac)",
-        "echo $(case x in x) {merge} --admin;; esac)",
-    ],
-)
-def test_issue_9461_case_merges_block_through_hook_entrypoint(tmp_path, shape):
-    stub = tmp_path / "gh"
-    stub.write_text("#!/bin/sh\nexit 1\n")
-    stub.chmod(0o755)
-    result = subprocess.run(
-        [sys.executable, str(HOOK_PATH)],
-        input=json.dumps({"tool_input": {"command": shape.format(merge="gh pr merge 5")}}),
-        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"]},
-        capture_output=True,
-        text=True,
-        timeout=10,
-    )
-    assert result.returncode == 2, result.stderr
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("checks,expected", [(([], []), 0), ((["CI Gate"], []), 2)])
+def test_issue_9461_literal_here_string_still_judges_pr(monkeypatch, capsys, command, checks, expected):
+    # A literal here-string is readable in round 1; it still judges PR 5.
+    test_issue_9461_redirect_matrix_uses_pr_state(monkeypatch, capsys, command, " <<< 'fixture text'", checks, expected)
 
 
 @pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
@@ -1848,9 +1785,9 @@ def test_repo_option_is_honoured_when_cwd_is_unreadable(monkeypatch):
     `gh pr view 9 --repo cli/cli --json number` -> rc=0 `{"number":9}`. cwd is never
     consulted once --repo names the repo.
 
-    An unmatched `)` makes the cwd unreadable here (see N1 below).
+    The `case` arm's bare `)` is what makes the cwd unreadable here (see N1 below).
     """
-    assert _judged_cwds(monkeypatch, "true ); gh pr merge 9 --squash -R owner/repo") == [("9", None)]
+    assert _judged_cwds(monkeypatch, "case x in y) true;; esac; gh pr merge 9 --squash -R owner/repo") == [("9", None)]
 
 
 def test_repo_option_under_unreadable_cwd_is_judged_not_waved_through(monkeypatch):
@@ -1859,7 +1796,7 @@ def test_repo_option_under_unreadable_cwd_is_judged_not_waved_through(monkeypatc
     A draft PR named with `-R` is still a draft.
     """
     monkeypatch.setattr(guard, "_pr_meta", lambda pr, repo=None, cwd=None: {"isDraft": True})
-    payload = json.dumps({"tool_input": {"command": "true ); gh pr merge 9 -R owner/repo"}})
+    payload = json.dumps({"tool_input": {"command": "case x in y) true;; esac; gh pr merge 9 -R owner/repo"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
     assert guard.main() == 2
 
@@ -1918,11 +1855,10 @@ def test_escaped_paren_is_not_a_scope_boundary(monkeypatch):
 
 
 def test_bare_unmatched_paren_still_fails_closed(monkeypatch):
-    """N1: an unmatched `)` is still an unattributable boundary.
-
-    A case pattern's `)` is now recognized; a genuinely unmatched close still
-    fails closed unless a literal `cd` or explicit repository recovers.
-    """
-    payload = json.dumps({"tool_input": {"command": "true ); gh pr merge 9"}})
+    """N1, accepted fail-closed: a GENUINELY bare `)` (a `case` arm) is still an
+    unattributable boundary. The r2 fix narrows what counts as bare — it does not make
+    the guard `case`-aware. Blocking a `case`-plus-merge one-liner is the accepted cost;
+    a literal `cd` (or `-R`, above) recovers."""
+    payload = json.dumps({"tool_input": {"command": "case x in y) true;; esac; gh pr merge 9"}})
     monkeypatch.setattr("sys.stdin", io.StringIO(payload))
     assert guard.main() == 2
