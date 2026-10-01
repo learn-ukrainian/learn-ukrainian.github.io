@@ -225,21 +225,15 @@ def _join_line_continuations(text: str) -> str:
     return text.replace("\\\n", "")
 
 
-_PUNCTUATION = ";|&()<>"
-# The parens are split out of the raw line by _split_scopes BEFORE a chunk is tokenized,
-# so any paren still inside a chunk is quoted or escaped text, never an operator (#5333 r2).
-_ARGV_PUNCTUATION = ";|&<>"
-
-
-def _is_operator(tok: str, punctuation: str = _PUNCTUATION) -> bool:
-    """A token that is nothing but shell punctuation — a separator, not argv."""
-    return bool(tok) and all(c in punctuation for c in tok)
+# Longest redirect spellings come first; `>&` is one operator, not `>` then `&`.
+_REDIRECT_OPERATOR = re.compile(r"&>>?|<<<|<<-?|[<>]&|<>|>\||>>?|<")
 
 
 def _tokenize(line: str) -> list[str] | None:
     """Quote-aware tokens of one logical line, or None when it does not lex."""
     try:
-        lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
+        # Real operators were separated while quote context was still available.
+        lexer = shlex.shlex(line, posix=True)
         lexer.whitespace_split = True
         return list(lexer)
     except ValueError:
@@ -247,7 +241,7 @@ def _tokenize(line: str) -> list[str] | None:
 
 
 def _split_scopes(line: str) -> list[tuple[str, str]]:
-    """One raw line as ("text"|"open"|"close", raw) pieces, split at its REAL parens.
+    """Split raw shell operators from text before removing quotes.
 
     A real paren is one the shell would act on: unquoted and unescaped. This scan runs on
     the RAW line because that is the only place quote context still exists — shlex strips
@@ -269,7 +263,9 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
     buf: list[str] = []
     quote: str | None = None
     escaped = False
-    for ch in line:
+    i = 0
+    while i < len(line):
+        ch = line[i]
         if escaped:
             buf.append(ch)
             escaped = False
@@ -283,14 +279,53 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
         elif ch in "'\"":
             buf.append(ch)
             quote = ch
-        elif ch in "()":
+        elif ch == "#" and (not buf or buf[-1].isspace()):
+            # Comment punctuation has no scope or redirect meaning.
+            buf.extend(line[i:])
+            break
+        elif redirect := _REDIRECT_OPERATOR.match(line, i):
+            # An unquoted numeric word glued to a redirect is a descriptor,
+            # whereas `5 >file` retains 5 as a command argument.
+            raw = "".join(buf)
+            descriptor = re.search(r"(?<!\S)[0-9]+$", raw)
+            if descriptor and not redirect.group().startswith("&"):
+                raw = raw[: descriptor.start()]
+            pieces.append(("text", raw))
+            pieces.append(("redirect", redirect.group()))
+            buf = []
+            i = redirect.end()
+            continue
+        elif ch in "();|&":
             pieces.append(("text", "".join(buf)))
-            pieces.append(("open" if ch == "(" else "close", ch))
+            kind = "open" if ch == "(" else "close" if ch == ")" else "separator"
+            pieces.append((kind, ch))
             buf = []
         else:
             buf.append(ch)
+        i += 1
     pieces.append(("text", "".join(buf)))
     return pieces
+
+
+def _redirect_target_dynamic(raw: str) -> bool:
+    """Whether the first raw word expands, preserving literal quoted/escaped `$`."""
+    quote: str | None = None
+    escaped = False
+    for ch in raw.lstrip():
+        if escaped:
+            escaped = False
+        elif ch == "\\" and quote != "'":
+            escaped = True
+        elif ch in "$`" and quote != "'":
+            return True
+        elif quote:
+            if ch == quote:
+                quote = None
+        elif ch in "'\"":
+            quote = ch
+        elif ch.isspace():
+            break
+    return False
 
 
 def _scope_events(command: str) -> list[tuple[str, list[str]]]:
@@ -308,11 +343,11 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
     false-ALLOW off whatever PR #5 is there.
 
     Boundaries come from _split_scopes' scan of the RAW line, which is the only reader that
-    still has quote context; the pieces between them are then tokenized. Glue (`&&(`, `)&&`)
-    needs no special handling — the raw split cuts at the paren, leaving `&&` in the
-    neighbouring chunk, so boundaries stay in sequence with the segments. A paren surviving
-    INSIDE a chunk is quoted or escaped text, so `_ARGV_PUNCTUATION` (parens excluded) is
-    what separates segments there: `echo ')'` keeps its `)` as the argument it is (#5333 r2).
+    still has quote context; the pieces between them are then tokenized. Glued operators
+    (`&&(`, `)&&`) remain separate events. Operator characters surviving INSIDE a chunk
+    are quoted or escaped text and stay arguments (#5333 r2).
+    Redirect operators and their first operand are removed from argv; dynamic
+    or missing operands mark that command unreadable instead of guessing.
 
     `(` also opens a command substitution (`cd $(cat f)`), which reads here as a subshell
     scope. That is not a coincidence to paper over: `$(...)` really does run in a
@@ -329,25 +364,50 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
     for line in preprocess_shell_command(command).splitlines():
         line_events: list[tuple[str, list[str]]] = []
         readable = True
+        cur: list[str] = []
+        redirect_pending = False
+        segment_unreadable = False
         for kind, raw in _split_scopes(line):
-            if kind != "text":
-                line_events.append((kind, []))
+            if kind == "redirect":
+                segment_unreadable |= redirect_pending
+                redirect_pending = True
+                continue
+            if kind in {"open", "close", "separator"}:
+                # The `$` before a real open paren belongs to a command
+                # substitution, not to a statically readable PR/cd target.
+                dynamic = bool(cur and cur[-1].endswith("$"))
+                if kind == "open" and (segment_unreadable or redirect_pending):
+                    # A dynamic prefix redirect may precede the command word.
+                    # Keep an explicit refusal across the substitution's scope.
+                    line_events.append(("segment", list(_UNPARSED)))
+                if segment_unreadable or redirect_pending or dynamic:
+                    cur.append(_UNREADABLE_MARKER)
+                if cur:
+                    line_events.append(("segment", cur))
+                cur = []
+                redirect_pending = segment_unreadable = False
+                if kind != "separator":
+                    line_events.append((kind, []))
                 continue
             tokens = _tokenize(raw)
             if tokens is None:
                 readable = False
                 break
-            cur: list[str] = []
-            for tok in tokens:
-                if not _is_operator(tok, _ARGV_PUNCTUATION):
-                    cur.append(tok)
-                    continue
-                if cur:
-                    line_events.append(("segment", cur))
-                    cur = []
-            if cur:
-                line_events.append(("segment", cur))
-        events.extend(line_events if readable else [("unreadable", [])])
+            if redirect_pending and tokens:
+                tokens.pop(0)
+                segment_unreadable |= _redirect_target_dynamic(raw)
+                redirect_pending = False
+            cur.extend(tokens)
+        if segment_unreadable or redirect_pending:
+            cur.append(_UNREADABLE_MARKER)
+        if cur:
+            line_events.append(("segment", cur))
+        if readable:
+            events.extend(line_events)
+        else:
+            events.append(("unreadable", []))
+            if _may_merge(line):
+                events.append(("segment", list(_UNPARSED)))
     return events
 
 
@@ -568,6 +628,8 @@ def _cd_target(seg: list[str]):
     i = _skip_command_prefix(seg, 0)
     if i >= len(seg) or seg[i] != "cd":
         return None
+    if _UNREADABLE_MARKER in seg:
+        return _CD_UNREADABLE
     rest: list[str] = []
     options_done = False
     for tok in seg[i + 1 :]:
