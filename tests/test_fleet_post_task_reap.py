@@ -178,6 +178,32 @@ def test_no_task_state(hermetic_reap):
     assert "no task state" in report["main_worktree"]["reason"]
 
 
+@pytest.mark.parametrize("runtime", [False, True])
+def test_post_task_reap_preserves_ignored_artifacts(hermetic_reap, runtime):
+    repo, tasks = hermetic_reap
+    task_id = "preserve-post-task"
+    worktree = _add_acp_runtime_worktree(repo, task_id) if runtime else _add_dispatch_worktree(repo, "kimi", task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("batch_state/\n")
+    artifact = worktree / "batch_state/report.txt"
+    artifact.parent.mkdir()
+    artifact.write_bytes(b"post-task evidence")
+    _write_task_state(
+        tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
+    )
+
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+
+    row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
+    assert row["action"] == "removed", row
+    assert not worktree.exists()
+    state = json.loads((tasks / f"{task_id}.json").read_text())
+    assert state["preserved_artifacts"]["count"] == 1
+    assert (
+        Path(state["preserved_artifacts"]["location"]) / "batch_state/report.txt"
+    ).read_bytes() == b"post-task evidence"
+
+
 def test_running_skip(hermetic_reap):
     repo_root, tasks_dir = hermetic_reap
     worktree = _add_dispatch_worktree(repo_root, "kimi", "running-task")

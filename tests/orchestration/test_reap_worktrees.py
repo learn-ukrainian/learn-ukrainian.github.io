@@ -211,6 +211,43 @@ def _write_task_record(repo: Path, task_id: str, **fields: Any) -> None:
     (tasks / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, **fields}, indent=2), encoding="utf-8")
 
 
+@pytest.mark.parametrize("copy_fails", [False, True])
+def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, copy_fails):
+    from scripts.orchestration import worktree_artifacts
+
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "preserve-batch"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    artifact = worktree / "batch_state/reports/evidence.bin"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_bytes(b"independent evidence\x00\xff")
+    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree))
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
+    if copy_fails:
+
+        def fail_copy(_source, _destination):
+            raise OSError("injected reaper copy failure")
+
+        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+    if copy_fails:
+        assert result.action == "skipped"
+        assert "injected reaper copy failure" in result.reason
+        assert artifact.exists()
+        assert "injected reaper copy failure" in state["artifact_preservation_error"]
+    else:
+        assert result.action == "removed", result
+        assert not worktree.exists()
+        assert state["preserved_artifacts"]["count"] == 1
+        assert (
+            Path(state["preserved_artifacts"]["location"]) / "batch_state/reports/evidence.bin"
+        ).read_bytes() == b"independent evidence\x00\xff"
+
+
 def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -252,9 +289,7 @@ def test_superseded_archived_record_no_longer_claims_the_finished_tasks_worktree
     (tasks / "impl-ci-r4.20260930T022833947211Z.7.archived.json").write_text(
         json.dumps({**old_run, "status": "failed"}), encoding="utf-8"
     )
-    _write_task_record(
-        repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid()
-    )
+    _write_task_record(repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid())
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -383,7 +418,9 @@ def test_needs_finalize_claim_proof_keeps_the_claim_without_a_valid_positive_dea
     bad_pid: object,
 ) -> None:
     """A merged PR alone never releases the claim: the worker must be proven absent by its recorded PID."""
-    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None))
+    monkeypatch.setattr(
+        rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None)
+    )
     record: dict[str, Any] = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc"}
     if bad_pid != "missing":
         record["pid"] = bad_pid
@@ -2623,12 +2660,16 @@ def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -
         monkeypatch,
         rest=_gh_stdout(
             json.dumps(
-                [[{
-                    "number": 8536,
-                    "state": "closed",
-                    "merged_at": "2026-09-22T10:00:00Z",
-                    "head": {"sha": "rest-sha"},
-                }]]
+                [
+                    [
+                        {
+                            "number": 8536,
+                            "state": "closed",
+                            "merged_at": "2026-09-22T10:00:00Z",
+                            "head": {"sha": "rest-sha"},
+                        }
+                    ]
+                ]
             )
         ),
         graphql=_gh_stdout("GraphQL: API rate limit exceeded", returncode=1),
@@ -2648,7 +2689,9 @@ def test_query_pr_states_rest_pages_preserve_later_closed_head(monkeypatch) -> N
     ]
     later = [{"number": 101, "state": "closed", "merged_at": None, "head": {"sha": "held-head"}}]
     calls = _patch_gh_transports(
-        monkeypatch, rest=_gh_stdout(json.dumps([first, later])), graphql=_gh_stdout("down", returncode=1),
+        monkeypatch,
+        rest=_gh_stdout(json.dumps([first, later])),
+        graphql=_gh_stdout("down", returncode=1),
     )
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")

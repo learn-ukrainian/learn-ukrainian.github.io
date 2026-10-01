@@ -68,7 +68,12 @@ def _worktree_add_via_run(monkeypatch):
 
     def via_run(add_command, *, cwd, worktree_path, env=None, **_callbacks):
         return delegate.subprocess.run(
-            add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env,
+            add_command,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
             timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
         )
 
@@ -300,7 +305,14 @@ def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
     )
 
     assert env["VIRTUAL_ENV"] == str(project_venv)
-    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(project_venv / "bin"), "/usr/local/bin", "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join(
+        (
+            str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"),
+            str(project_venv / "bin"),
+            "/usr/local/bin",
+            "/usr/bin",
+        )
+    )
     assert "PYTHONHOME" not in env
 
 
@@ -310,7 +322,9 @@ def test_pinned_worker_venv_env_uses_canonical_path_even_before_venv_exists(tmp_
     env = delegate._pinned_worker_venv_env({"PATH": "/usr/bin"})
 
     assert env["VIRTUAL_ENV"] == str(tmp_path / ".venv")
-    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(tmp_path / ".venv" / "bin"), "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join(
+        (str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(tmp_path / ".venv" / "bin"), "/usr/bin")
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -6971,6 +6985,9 @@ def _make_run_stub(
             return subprocess.CompletedProcess(cmd, 0, rev_parse_head_sha, "")
         if cmd[:2] == ["git", "status"]:
             return subprocess.CompletedProcess(cmd, 0, status_porcelain, "")
+        if cmd[:2] == ["git", "ls-files"]:
+            # The removal guard inventories bytes with NUL delimiters.
+            return subprocess.CompletedProcess(cmd, 0, b"", b"")
         if cmd[:2] == ["git", "rev-list"]:
             return subprocess.CompletedProcess(cmd, 0, rev_list_count, "")
         if cmd[:3] == ["git", "worktree", "add"]:
@@ -7557,7 +7574,13 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
 
     env = recorded["env"]
     assert env["VIRTUAL_ENV"] == str(delegate._REPO_ROOT / ".venv")
-    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join(
+        (
+            str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"),
+            str(delegate._REPO_ROOT / ".venv" / "bin"),
+            "/usr/bin",
+        )
+    )
 
 
 def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
@@ -9809,8 +9832,13 @@ def _add_local_bare_origin(main: Path) -> Path:
     remote = main.parent / "origin.git"
     for args in (["clone", "--bare", str(main), str(remote)], ["remote", "add", "origin", str(remote)]):
         subprocess.run(
-            ["git", *args], cwd=main, check=True, capture_output=True, text=True,
-            env=delegate._sanitized_git_env(), timeout=30,
+            ["git", *args],
+            cwd=main,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
         )
     return remote
 
@@ -11840,6 +11868,7 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
 
 def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_tasks_dir, monkeypatch):
     """A step that raises inside the shared chokepoint is an ``error`` record, never an exception."""
+    _init_git_repo_for_test(tmp_path, monkeypatch)
 
     def raising_remove(_repo_root, _worktree, *, force):
         raise RuntimeError("simulated removal crash")
@@ -12242,6 +12271,74 @@ def test_read_only_clean_settle_removes_worktree_and_keeps_branch(tmp_tasks_dir,
     assert state["worktree_reap"]["branch"] == branch
     assert not worktree.exists()
     assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize("copy_fails", [False, True])
+def test_settle_preserves_ignored_artifacts_before_removal(tmp_tasks_dir, tmp_path, monkeypatch, copy_fails):
+    from scripts.orchestration import worktree_artifacts
+
+    task_id = "reap-preserve-artifacts"
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    with (primary / ".git" / "info" / "exclude").open("a") as exclude:
+        exclude.write("batch_state/\n")
+    artifact = worktree / "batch_state" / "reports" / "result.patch"
+    artifact.parent.mkdir(parents=True)
+    payload = b"unapplied patch\x00\xff\n"
+    artifact.write_bytes(payload)
+    record = {"task_id": task_id, "status": "done", "response": f"Capture `{artifact}`."}
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+    if copy_fails:
+
+        def fail_copy(_source, _destination):
+            raise OSError("injected copy failure")
+
+        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+
+    out = delegate._settle_worktree_reap(
+        worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
+    )
+
+    state = delegate._read_state(delegate._state_path(task_id))
+    if copy_fails:
+        assert out["action"] == "skipped"
+        assert "injected copy failure" in out["reason"]
+        assert "injected copy failure" in state["artifact_preservation_error"]
+        assert artifact.read_bytes() == payload
+    else:
+        assert out["action"] == "removed", out
+        assert not worktree.exists()
+        location = primary / "batch_state" / "preserved" / task_id
+        assert (location / "batch_state/reports/result.patch").read_bytes() == payload
+        assert state["preserved_artifacts"] == record["preserved_artifacts"] == {"count": 1, "location": str(location)}
+    assert _branch_ref_present(primary, branch)
+
+
+def test_settle_final_state_keeps_preservation_receipt(tmp_tasks_dir, tmp_path, monkeypatch):
+    # Seed evidence before the worker starts so the read-only snapshot is stable.
+    original_checkout = _settle_reap_checkout
+
+    def checkout_with_evidence(*args, **kwargs):
+        primary, worktree, branch = original_checkout(*args, **kwargs)
+        with (primary / ".git" / "info" / "exclude").open("a") as exclude:
+            exclude.write("batch_state/\n")
+        artifact = worktree / "batch_state/report.txt"
+        artifact.parent.mkdir()
+        artifact.write_bytes(b"evidence")
+        return primary, worktree, branch
+
+    monkeypatch.setattr(sys.modules[__name__], "_settle_reap_checkout", checkout_with_evidence)
+    primary, worktree, _branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-receipt",
+        mode="read-only",
+        response="Capture `batch_state/report.txt`.",
+    )
+    assert state["worktree_reap"]["action"] == "removed", state["worktree_reap"]
+    assert state["preserved_artifacts"]["count"] == 1
+    assert Path(state["preserved_artifacts"]["location"]) == primary / "batch_state/preserved/reap-receipt"
+    assert not worktree.exists()
 
 
 def test_read_only_clean_settle_removes_detached_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
@@ -13206,6 +13303,7 @@ def test_stale_branch_holder_release_goes_through_the_guarded_chokepoint(
     """#8610 r4: a stale holder is kept while its lock is held or another task still claims it."""
     holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
     holder.mkdir(parents=True)
+    _init_git_repo_for_test(holder, monkeypatch)
     monkeypatch.setattr(delegate, "_WORKTREE_LOCK_DEFAULT_TIMEOUT_S", 0.2)
     proofs: list[bool] = []
 
@@ -13248,6 +13346,7 @@ def test_stale_branch_holder_release_removes_under_the_lock(tmp_tasks_dir, tmp_p
     """#8610 r4: a releasable holder with no live claim is removed without force while its lock is held."""
     holder = tmp_path / ".worktrees" / "dispatch" / "codex" / "impl-holder"
     holder.mkdir(parents=True)
+    _init_git_repo_for_test(holder, monkeypatch)
     monkeypatch.setattr(delegate, "_stale_branch_holder_releasable", lambda _path, _branch: (True, "clean+synced"))
     removals: list[tuple[list[str], bool]] = []
     real_run = subprocess.run
@@ -15054,7 +15153,11 @@ def test_review_attempt_auto_target_is_reused_after_admission(
     remote = _add_local_bare_origin(main)
     assert subprocess.run(
         ["git", "--git-dir", str(remote), "rev-parse", "codex/task-1"],
-        cwd=target, check=True, capture_output=True, text=True, timeout=30,
+        cwd=target,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
     ).stdout.strip() == delegate._resolve_sha(target)
     head = delegate._resolve_sha(target)
     render_checkout = target if dependency == "render_checkout" else main
