@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/best-practices/agent-activity-matrix.md
+---
+
 # Agent Capability Matrix
+
+> **Superseded by:** [docs/best-practices/agent-activity-matrix.md](../best-practices/agent-activity-matrix.md)
 
 > **Historical capability snapshot.** Last full pass: 2026-05-17 evening. Re-run the role probes
 > whenever a new model variant lands. Raw evidence preserved at

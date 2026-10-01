@@ -28,8 +28,6 @@ from typing import Any
 
 from bs4 import BeautifulSoup, Tag
 
-from scripts.verification.stress import pedagogical_stressed_form
-
 # Structured reduce schema (independent of fetch status stubs).
 ULIF_STRUCTURED_SCHEMA_VERSION = "ulif-structured-v1"
 # Keep in lockstep with scripts.rag.source_query.ULIF_PARSER_VERSION.
@@ -486,18 +484,19 @@ def _stress_record(stressed: str) -> dict[str, Any]:
             continue
         unstressed_chars.append(char)
     unstressed = "".join(unstressed_chars)
-    match = {
-        "stressed_form": stressed,
-        "unstressed_form": unstressed,
-        "vowel_indices": indices,
-        "override_applied": False,
-    }
+    # Legacy display heuristic stored by parser v4; it is NOT a source choice.
+    # Keep its bytes stable for existing stores. The oracle ignores this field
+    # and resolves teaching/audio choice from the pronunciation dictionary.
+    heuristic = stressed
+    if len(indices) > 1 and "-" not in unstressed:
+        keep = indices[-1]
+        heuristic = unstressed[: keep + 1] + _ACUTE + unstressed[keep + 1 :]
     return {
         "form_unstressed": unstressed,
         "form_stressed": stressed,
         "stress_vowel_indices": indices,
         "dual_stress_flag": len(indices) > 1,
-        "pedagogical_stressed_form": pedagogical_stressed_form(match),
+        "pedagogical_stressed_form": heuristic,
     }
 
 

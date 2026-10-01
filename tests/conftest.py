@@ -34,7 +34,10 @@ from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
 pytest_plugins = [
-    "tests.helpers.checkout_write_guard", "tests.helpers.checkout_write_defaults", "tests.cursor_process_guard",
+    "tests.helpers.checkout_write_guard",
+    "tests.helpers.checkout_write_defaults",
+    "tests.cursor_process_guard",
+    "tests.helpers.stress_fixtures",
 ]
 
 

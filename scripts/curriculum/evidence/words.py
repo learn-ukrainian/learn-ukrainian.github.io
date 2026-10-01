@@ -21,6 +21,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.verification import stress
+from scripts.wiki.sources_db import using_connection
 
 from . import codes, lock, registry, sources
 
@@ -48,7 +49,11 @@ def is_learner_form(tags: str, markers: list[Any]) -> bool:
 
 
 def packed_stress_reason(match: dict[str, Any]) -> str | None:
-    """A packed trie reading is not a single pedagogical stress choice."""
+    """Reject packed accents unless checked ULIF attests the teaching choice."""
+    if match.get("pedagogical_conflict"):
+        return "conflicting_pedagogical_choices"
+    if match.get("pedagogical_source") and match.get("dual_stress") and stress.spoken_stressed_form(match):
+        return None
     if not match.get("override_applied") and len(match.get("vowel_indices") or []) > 1:
         return "multiple_stressed_vowels"
     return None
@@ -92,45 +97,6 @@ def store_scheme(store_doc: dict[str, Any]) -> str:
     if not isinstance(built_with, dict):
         return sources.LEGACY_SOURCES_DB_SCHEME
     return str(built_with.get("sources_db_scheme") or sources.LEGACY_SOURCES_DB_SCHEME)
-
-
-def extract_ulif_paradigm_forms(entry: dict[str, Any] | None) -> dict[str, str]:
-    """Extract form -> stressed_form mapping from ULIF entry's paradigm sections."""
-    if not entry:
-        return {}
-    mapping: dict[str, str] = {}
-    sections = entry.get("sections", [])
-    for sec in sections:
-        if sec.get("kind") == "paradigm":
-            raw_payload = sec.get("payload_json")
-            if not raw_payload:
-                continue
-            try:
-                payload = json.loads(raw_payload) if isinstance(raw_payload, str) else raw_payload
-            except Exception:
-                continue
-            if isinstance(payload, dict):
-                if "rows" in payload and isinstance(payload["rows"], list):
-                    for row in payload["rows"]:
-                        if isinstance(row, list):
-                            for cell in row:
-                                if isinstance(cell, str):
-                                    for token in cell.split():
-                                        tok = token.strip(" ,;:.!?()[]\"'")
-                                        if tok:
-                                            unstressed = sources.normalize_spelling(strip_combining_stress(tok))
-                                            if (
-                                                "\u0301" in tok
-                                                or "\u0300" in tok
-                                                or unicodedata.normalize("NFD", tok)
-                                                != unicodedata.normalize("NFD", unstressed)
-                                            ):
-                                                mapping.setdefault(unstressed, tok)
-                else:
-                    for k, v in payload.items():
-                        if isinstance(k, str) and isinstance(v, str):
-                            mapping[sources.normalize_spelling(k)] = v
-    return mapping
 
 
 def get_mcp_commit(repo_root: Path = REPO_ROOT) -> str:
@@ -211,6 +177,7 @@ def build_words(
 
     request_raw = yaml.safe_load(request_path.read_text(encoding="utf-8"))
     validate_request_data(request_raw)
+    reading_fields = load_schema("evidence-words-v1.schema.json")["$defs"]["reading"]["properties"]
 
     if request_raw.get("level") != level:
         raise ValueError(
@@ -253,7 +220,9 @@ def build_words(
     try:
         commit_sha = mcp_commit if mcp_commit is not None else get_mcp_commit()
         vesum_hash = sources_instance._vesum_identity()[0]
-        trie_hash = stress.source_info()["digest"]
+        with using_connection(sources_instance._db()):
+            stress_identity = stress.source_info()
+        trie_hash = stress_identity["trie_digest"]
 
         overrides_hash = (
             sources._file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
@@ -285,7 +254,7 @@ def build_words(
         # append-only, so existing allocations are never rewritten by that.
         built_fingerprint = hashlib.sha256(
             f"{ulif_result.content_hash}:{cefr_result.content_hash}:{gloss_result.content_hash}:"
-            f"{kaikki_result.content_hash}:{vesum_hash}:{trie_hash}:{commit_sha}".encode()
+            f"{kaikki_result.content_hash}:{vesum_hash}:{trie_hash}:{stress_identity['ulif']['digest']}:{commit_sha}".encode()
         ).hexdigest()
 
         words_out: dict[str, dict[str, Any]] = dict(existing_words)
@@ -434,7 +403,6 @@ def build_words(
                 forms_source = forms_by_entry[selected_entry_id]
                 pronoun_entry = any("pron" in f["tags"].split(":") for f in forms_source)
                 forms_list: list[dict[str, Any]] = []
-                ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
 
                 for f in forms_source:
                     form_str = f["word_form"]
@@ -467,27 +435,17 @@ def build_words(
                             "markers": markers,
                             "learner": is_learner,
                         }
-                    elif ulif_checked and matching_entry and form_str in ulif_forms:
-                        stress_source = "ulif"
-                        stressed = ulif_forms[form_str]
-                        f_entry = {
-                            "form": form_str,
-                            "tags": tags_str,
-                            "stressed": stressed,
-                            "stress_source": stress_source,
-                            "markers": markers,
-                            "learner": is_learner,
-                        }
                     else:
-                        # b. trie oracle
-                        stress_res = sources_instance.stress_for_form(form_str, tags_str)
-                        raw_stress = stress_res.raw
+                        # One oracle for overrides, checked per-form ULIF and trie fallback.
+                        raw_stress = sources_instance.stress_for_form(form_str, tags_str, lemma=lemma).raw
                         status = raw_stress.get("status")
                         matches = raw_stress.get("matches", [])
 
                         if status == "ok" and len(matches) == 1 and not packed_stress_reason(matches[0]):
-                            stress_source = "trie"
-                            stressed = matches[0]["stressed_form"]
+                            # v1 stores express overrides with the existing override flag.
+                            selected_source = matches[0].get("source", "trie")
+                            stress_source = "trie" if selected_source == "override" else selected_source
+                            stressed = stress.pedagogical_stressed_form(matches[0])
                             f_entry = {
                                 "form": form_str,
                                 "tags": tags_str,
@@ -508,7 +466,12 @@ def build_words(
                                 "learner": is_learner,
                             }
                             if matches:
-                                f_entry["stress_candidates"] = matches
+                                # v1 pending diagnostics keep every reading and
+                                # its tags; the ULIF receipt identifies their source.
+                                f_entry["stress_candidates"] = [
+                                    {key: value for key, value in match.items() if key in reading_fields}
+                                    for match in matches
+                                ]
                             if raw_stress.get("unresolvable_by_tags"):
                                 f_entry["unresolvable_by_tags"] = True
                             if len(matches) == 1 and (reason := packed_stress_reason(matches[0])):
@@ -612,7 +575,7 @@ def build_words(
             "sources_db_scheme": sources.SOURCES_DB_SCHEME,
             "vesum": vesum_hash,
             "trie": trie_hash,
-            "ulif_forms": "pending",
+            "ulif_forms": stress_identity["ulif"]["digest"],
         }
         if overrides_hash is not None:
             built_with["overrides_sha256"] = overrides_hash

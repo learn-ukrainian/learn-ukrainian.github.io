@@ -711,7 +711,8 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "via the P1 validator primitives (scripts/audit/check_research_registry.py).",
         "No route cache; per-request deterministic registry load. Strong ETags: a "
         "context-scoped ETag on /manifest and the P1 content_hash on /record/{id}. "
-        "Disabled by default behind the research_registry kill switch.",
+        "Registry-serving endpoints obey the research_registry kill switch; /find and "
+        "consumption metadata remain ungated.",
         ("agents", "dispatch", "cold-start tooling"),
         "Pointer index for /api/state/manifest's research component; bodies never enter cold start.",
         "low; disabled or a failed load degrades to an empty/disabled projection",

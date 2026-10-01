@@ -390,6 +390,18 @@ The other 13 store entries were confirmed unchanged.
 
 - Coverage, counts and lifecycle distribution come from the validator over Git's index, so
   they are sparse-checkout safe and reproducible from a fresh clone.
+- The store-name scan (`store_literals` in `scripts/docs/catalogue.py`, enforced by the
+  catalogue check) reads every file Git's index lists under `scripts/`, whatever its
+  extension, as the index blob behind the privacy gate. Binary blobs are skipped; an
+  unreadable or privacy-withheld file fails the check. A name is
+  `data/<segments>.db|.sqlite|.sqlite3|.duckdb`; segments may hold any characters except
+  whitespace, controls, quotes, `<>|`, `;&()`, `{}$*?[]` and `\`, plus a backslash-escaped
+  space in a shell word and inner spaces inside a single-line quoted span. Comments count.
+  Python path joins are read from the AST. Limits: names assembled at run time (f-string
+  fields, concatenation, variables, shell expansion, globs) are not literals and rely on the
+  producers each store entry declares; a spaced name split across lines or inside
+  mismatched quotes can be missed. Re-run on 2026-10-01 over 2,084 text files: 18 store
+  names, the same set the Python-only scan found; no new store.
 - Store entries record names and producers. Store sizes, row counts and file dates come from
   inventory d and were not re-measured; this census opened no database.
 - Lifecycle defaults are family-level judgements; per-file overrides exist only where a file

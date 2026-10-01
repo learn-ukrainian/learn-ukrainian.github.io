@@ -1238,3 +1238,61 @@ def test_publication_quote_and_listening_models_verify_and_assemble_together(
     assert publication.quote_attribution(quote) in markdown
     assert pack_doc["videos"][0]["url"] in markdown
     assert {"T-001", "V-001"} <= {span["ref"] for span in provenance["spans"]}
+
+
+@pytest.mark.parametrize(
+    "statuses,outcome,expected",
+    [
+        ([200], "ok", "ok"),
+        ([403], "bot_blocked", "failed"),
+        ([401], "bot_blocked", "failed"),
+        ([429, 200], "ok", "ok"),
+        ([503], "unverifiable", "failed"),
+        ([429], "unverifiable", "failed"),
+        ([404], "dead_link", "failed"),
+        ([410], "dead_link", "failed"),
+        ([204], "unverifiable", "failed"),
+    ],
+)
+def test_strict_url_checks_report_distinct_outcome(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, monkeypatch, statuses, outcome, expected
+):
+    from tests.curriculum.evidence.test_linkcheck import link_server
+
+    monkeypatch.setattr(sources.time, "sleep", lambda delay: None)
+    with link_server(statuses, reject_old_agent=True) as (url, _):
+        req = {
+            "request_schema": 1,
+            "module": "a1/test-mod",
+            "videos": [{"id": "V-001", "url": url, "channel": "test", "use": "Local test"}],
+        }
+        request = tmp_path / "request.yaml"
+        request.write_text(yaml.safe_dump(req))
+        assert _build(synthetic_sources, synthetic_standard, synthetic_word_store, request)["status"] == "ok"
+        result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert result["status"] == expected, result
+    assert result["url_checks"][0]["outcome"] == outcome
+    if expected == "failed":
+        assert any(error.startswith(outcome + ":") for error in result["errors"]), result
+
+
+def test_strict_timeout_is_unverifiable(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, monkeypatch
+):
+    req = {
+        "request_schema": 1,
+        "module": "a1/test-mod",
+        "videos": [{"id": "V-001", "url": "https://example.com/video", "channel": "test", "use": "Test"}],
+    }
+    request = tmp_path / "request.yaml"
+    request.write_text(yaml.safe_dump(req))
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, request)
+
+    def timeout(*args, **kwargs):
+        raise ConnectionError("synthetic timeout after retries")
+
+    monkeypatch.setattr(sources, "check_url", timeout)
+    result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=True)
+    assert result["status"] == "failed"
+    assert result["url_checks"] == [{"id": "V-001", "outcome": "unverifiable"}]
+    assert any(error.startswith("unverifiable:") for error in result["errors"])

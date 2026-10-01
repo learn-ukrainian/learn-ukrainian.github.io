@@ -51,7 +51,7 @@ itself and is refreshed only after a staged checksum-equivalent Drive copy is
 ready.
 
 ```bash
-DRIVE_RECOVERY_ROOT="/absolute/path/to/My Drive/Projects/learn-ukrainian-incident-recovery/2026-07-30/atlas-epic-dual-write/teacher-curated-seed"
+DRIVE_RECOVERY_ROOT="/path/to/recovery/atlas-epic-dual-write/teacher-curated-seed"
 
 .venv/bin/python -m scripts.atlas.rebuild_teacher_curated_seed \
   --package-root .claude/atlas-epic/plans/curated-seed \
@@ -75,8 +75,8 @@ Drive destination. The destination below is a per-recovery directory, so it
 does not overwrite the prior incident backup.
 
 ```bash
-DRIVE_CURRICULUM_ROOT="/absolute/path/to/My Drive/Projects/learn-ukrainian-data/private_curriculum"
-DRIVE_RECOVERY_ROOT="/absolute/path/to/My Drive/Projects/learn-ukrainian-incident-recovery/2026-07-30/atlas-epic-dual-write/teacher-curated-seed"
+DRIVE_CURRICULUM_ROOT="/path/to/bulk-sources/private_curriculum"
+DRIVE_RECOVERY_ROOT="/path/to/recovery/atlas-epic-dual-write/teacher-curated-seed"
 
 .venv/bin/python -m scripts.atlas.rebuild_teacher_curated_seed \
   --package-root .claude/atlas-epic/plans/curated-seed \

@@ -1898,6 +1898,7 @@ def build_resursy_entries(
 
     cited_text_ids: list[str] = []
     cited_video_ids: list[str] = []
+    cited_standard_ids: list[str] = []
     for st in lesson_plan.get("steps", []):
         if isinstance(st, dict):
             for ev in [*st.get("evidence", []), *st.get("explains", []), *([st["ref"]] if st.get("ref") else [])]:
@@ -1906,6 +1907,17 @@ def build_resursy_entries(
                         cited_text_ids.append(ev)
                     elif ev.startswith("V-") and ev not in cited_video_ids:
                         cited_video_ids.append(ev)
+                    elif ev.startswith("S-") and ev not in cited_standard_ids:
+                        cited_standard_ids.append(ev)
+    # Standard records carry line locators and a file digest, but no citable
+    # bibliographic metadata (evidence-pack-v1). Apply contract §1a's explicit
+    # omission warning rather than silently dropping the citation or inventing it.
+    standard_ids = {record["id"] for record in pack.get("standard", [])}
+    for cid in cited_standard_ids:
+        if cid not in standard_ids:
+            raise AssemblerError("standard_not_found", f"cited standard record {cid} not found in pack")
+        if warnings is not None:
+            warnings.append({"code": "resource_citation_omitted", "record": cid, "reason": "citable_metadata_missing"})
     for v_entry in lesson_plan.get("videos", []):
         if isinstance(v_entry, dict):
             ev = v_entry.get("evidence")
@@ -2629,7 +2641,7 @@ def check_9_stress_and_render(
         # The parser already preserves host metadata in each quiz question. Resolve
         # media here from the locked pack rather than accepting a writer-supplied URL.
         for item in act_payload.get("items") or []:
-            if item.get("kind") == "listening":
+            if isinstance(item, dict) and item.get("kind") == "listening":
                 host = item.get("host") or {}
                 video = next((v for v in pack.get("videos", []) if v.get("id") == host.get("ref")), None)
                 if host.get("kind") != "video" or video is None:

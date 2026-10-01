@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/architecture/v7-pipeline.md
+---
+
 # Learn Ukrainian — System Architecture
+
+> **Superseded by:** [docs/architecture/v7-pipeline.md](v7-pipeline.md)
 
 > Last updated: 2026-03-15 | Issue: #892
 >
