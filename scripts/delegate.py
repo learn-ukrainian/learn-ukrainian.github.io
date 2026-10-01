@@ -9816,7 +9816,11 @@ def _review_attempt_prompt_admission(
             contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
             checked = check_prompt(
                 prompt, Path(args.review_attempt), repo_root=Path(contract["input_root"]),
-                prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
+                prompts_dir=Path(contract["server_checkout"]) / "scripts/review/prompts",
+                recorded_prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
+                files_read=contract["recorded_files_read"],
+                template_sha256=contract["recorded_template_sha256"],
+                recorded_templates=contract["recorded_templates"],
                 review_id=review_id, attempt_id=attempt_id,
             )
             if not checked.passed:

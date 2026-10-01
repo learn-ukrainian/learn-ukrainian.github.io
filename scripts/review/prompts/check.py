@@ -185,7 +185,7 @@ def _return_schemas(prompt_text: str) -> list[dict[str, Any]]:
 
 
 def _load_id_document(body: str) -> Any:
-    """Refuse duplicate declarations and conflicting scalar ids throughout the YAML graph.
+    """Refuse duplicate declarations, non-scalar ids and conflicting ids throughout the YAML graph.
 
     Walking the nodes also visits anchored mappings and merge-key values, including
     declarations that a later key would override when the document is loaded.
@@ -205,7 +205,9 @@ def _load_id_document(body: str) -> Any:
                     if key.value in seen:
                         raise AttemptIdsUnreadableError(f"duplicate {key.value} declaration")
                     seen.add(key.value)
-                    if key.value in id_values and isinstance(value, yaml.nodes.ScalarNode):
+                    if key.value in id_values:
+                        if not isinstance(value, yaml.nodes.ScalarNode):
+                            raise AttemptIdsUnreadableError(f"non_scalar_attempt_id: {key.value} must be a scalar")
                         id_values[key.value].add(value.value)
                         if len(id_values[key.value]) > 1:
                             raise AttemptIdsUnreadableError(f"conflicting {key.value} declarations")
@@ -502,6 +504,8 @@ def check_prompt(
     files_read: list[Path | str] | None = None,
     recorded_sha256: str | None = None,
     template_sha256: dict[str, str] | None = None,
+    recorded_prompts_dir: Path | None = None,
+    recorded_templates: dict[str, str] | None = None,
     prompts_dir: Path | None = None,
     review_id: str | None = None,
     attempt_id: str | None = None,
@@ -602,14 +606,29 @@ def check_prompt(
                 f"{rendering.prompt_sha256}"
             )
 
+    # Relocate only exact loader paths between checkouts. Input pins retain their
+    # original containment checks; resolving template paths here would erase aliases.
+    def recorded_path(value: Path | str) -> Path:
+        path = root / value
+        if recorded_prompts_dir is not None and path.parent == recorded_prompts_dir:
+            return (prompts_dir or PROMPTS_DIR).resolve() / path.name
+        resolved = path.resolve()
+        if recorded_prompts_dir is not None and resolved in used_templates:
+            errors.append("template_identity_mismatch: a recorded template path is not an exact loader path")
+        return resolved
+
+    # The dependency set comes from our render, never from the record's claim.
+    if recorded_templates is not None and recorded_templates != {p.name: sha for p, sha in used_templates.items()}:
+        errors.append("template_sha256_mismatch: the recorded loader names/hashes differ from the templates the render used")
+
     # The recorded reads are the verified pins and the templates the render used, each template with its sha256
     if files_read is not None:
-        recorded_paths = {(root / f).resolve() for f in files_read}
+        recorded_paths = {recorded_path(f) for f in files_read}
         for fp in sorted(recorded_paths - set(verified) - set(used_templates)):
             errors.append(f"unauthorized_file_read: file {fp.as_posix()} was read but is not in manifest inputs")
         for fp in sorted(set(used_templates) - recorded_paths):
             errors.append(f"template_read_not_recorded: the render used template {fp.as_posix()}, the reads omit it")
-    if template_sha256 is not None and {(root / k).resolve(): v for k, v in template_sha256.items()} != used_templates:
+    if template_sha256 is not None and {recorded_path(k): v for k, v in template_sha256.items()} != used_templates:
         errors.append(
             "template_sha256_mismatch: the recorded template hashes differ from the templates the render used"
         )
