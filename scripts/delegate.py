@@ -13157,12 +13157,15 @@ def _resolve_agent_with_budget_guard(
     if review_select is not None:
         sub, chosen = review_select(payload, requested)
         if sub == requested and chosen == requested_model:
-            note = (
-                "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer "
-                "on pace-only deficit."
-                if status in {"cool", "warm"} and "deficit" in reason
-                else "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer;"
-            )
+            if status in {"cool", "warm"} and "deficit" in reason:
+                note = (
+                    "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer "
+                    "on pace-only deficit."
+                )
+            else:
+                note = "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer" + (
+                    ";" if not review_trusted_inputs else "."
+                )
             if not review_trusted_inputs:
                 note += (
                     " Legacy calls without trusted author/risk inputs prove only intrinsic eligibility. "
