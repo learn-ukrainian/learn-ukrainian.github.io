@@ -45,7 +45,11 @@ proof and treats every expression it cannot prove as an offender.
   before the subcommand, or when ``env=`` is a dict display, ``dict(...)``
   or ``| {...}`` written in the call (or a once-assigned, once-read local
   name bound to one) whose last ``GIT_OPTIONAL_LOCKS`` entry, after every
-  ``**`` unpack, is ``"0"``; or a shell ``GIT_OPTIONAL_LOCKS=0`` prefix.
+  ``**`` unpack, is ``"0"``; or a shell ``GIT_OPTIONAL_LOCKS=0`` prefix. The
+  environment proofs hold only for a git that starts its own command: a git
+  reached through a wrapper program (``env``, ``timeout``, ``xargs``,
+  ``sh -c``, any program with ``git`` as a later word) may run in a changed
+  environment (``env -u``, ``env -i``), so only the flag covers it.
 
 A literal read subcommand without locks off is never exempt. Any other
 offender (a dynamic subcommand or command, an unresolved shell command, a
@@ -722,14 +726,15 @@ class _Lint:
             verdict = _git_verdict(["git", *tokens[1:]], env_disables_locks=env == _ZERO)
             return [verdict] if verdict is not None else []
         if program in _SHELLS:
-            return _shell_argv_verdicts(items, tokens, env)
+            return _shell_argv_verdicts(items, tokens)
         # A wrapper (``timeout 5 git status``, ``env X=1 git log``) runs the git it names.
         # The program word is proven by its basename above; any argument may be a command.
+        # The wrapper may change the environment first (``env -u``), so only the flag covers it.
         for index, token in enumerate(tokens[1:], start=1):
             if token is not None and _basename(token) == "git":
                 if _carries_git(items[1:index]):
                     return [_UNPROVEN]
-                verdict = _git_verdict(["git", *tokens[index + 1 :]], env_disables_locks=env == _ZERO)
+                verdict = _git_verdict(["git", *tokens[index + 1 :]])
                 return [verdict] if verdict is not None else []
         if _carries_git(items[1:]):
             return [_UNPROVEN]
@@ -904,6 +909,8 @@ _SHELL_INDIRECT = re.compile(
 )
 # Where the words of the git command a match starts end.
 _SHELL_COMMAND_END = re.compile(r"[;&|)`\n]")
+# Text that ends where a simple command starts (a separator, a group or a reserved word).
+_COMMAND_START = re.compile(r"(?:^|[;&|(`{!\n]|(?<![\w.-])(?:then|do|else|elif|if|while|until))\s*$")
 
 
 def _shell_word(word: str | None) -> str | None:
@@ -932,7 +939,20 @@ def _lone_command(code: str, word: re.Match[str]) -> bool:
     return not before[begin:].strip(" \t\"'") and not after.strip(" \t\"'")
 
 
-def _shell_line_offenders(source: str, *, env_state: str = _ABSENT) -> list[tuple[int, str]]:
+def _runs_directly(code: str, match: re.Match[str]) -> bool:
+    """The git of ``match`` starts its simple command outside quotes, so no wrapper program
+    (``env -i``, ``timeout``, ``xargs``, ``sh -c '...'``) can change its environment first."""
+    head = code[: match.start("env")]
+    if head.endswith(("'", '"')):
+        head = head[:-1]  # a quoted program word: ``"git" status``
+    if not _COMMAND_START.search(head):
+        return False
+    inner = re.split(r"\$\(|`", head)[-1]  # a substitution opens a new quoting context
+    return inner.count("'") % 2 == 0 and inner.count('"') % 2 == 0
+
+
+def _shell_line_offenders(source: str, *, env_state: str = _ABSENT, wrapped: bool = False) -> list[tuple[int, str]]:
+    """Offenders of shell text; ``wrapped`` text (``sh -c <text>``) runs every git through a wrapper."""
     offenders: list[tuple[int, str]] = []
     # The call's env= counts only when the text never touches the variable itself.
     inherited = env_state if _LOCKS_ENV not in source else _UNKNOWN
@@ -953,8 +973,11 @@ def _shell_line_offenders(source: str, *, env_state: str = _ABSENT) -> list[tupl
         ):
             offenders.append((lineno, _UNRESOLVED_SHELL))
         for match in _SHELL_GIT.finditer(code):
-            prefix = _prefix_state(match.group("env"))
-            effective = inherited if prefix == _ABSENT else prefix
+            if wrapped or not _runs_directly(code, match):
+                effective = _ABSENT  # only the flag covers a git a wrapper runs
+            else:
+                prefix = _prefix_state(match.group("env"))
+                effective = inherited if prefix == _ABSENT else prefix
             options = [option.strip("\"'") for option in match.group("options").split()]
             tokens = ["git", *options, _shell_word(match.group("verb")), _shell_word(match.group("action"))]
             verdict = _git_verdict(tokens, env_disables_locks=effective == _ZERO)
@@ -973,9 +996,10 @@ def shell_git_calls_without_flag(source: str) -> list[tuple[int, str]]:
 
 
 # --- Python source ---------------------------------------------------------
-def _shell_argv_verdicts(items: list[_Item], tokens: list[str | None], env_state: str) -> list[str]:
+def _shell_argv_verdicts(items: list[_Item], tokens: list[str | None]) -> list[str]:
     """Verdicts for ``sh [options] -c <text>``; a script file runs no inline git.
 
+    The shell is a wrapper: each git in its text needs the flag, whatever the environment.
     Any other element that carries a ``git`` word (``sh -c '"$@"' _ git status``) is unproven.
     """
     verdicts: list[str] = []
@@ -987,7 +1011,7 @@ def _shell_argv_verdicts(items: list[_Item], tokens: list[str | None], env_state
         if "c" in token.lstrip("-") and not token.startswith("--"):
             text_index = index + 1
             text = _shell_text(items[text_index]) if text_index < len(items) else "\0"
-            verdicts = [verdict for _line, verdict in _shell_line_offenders(text, env_state=env_state)]
+            verdicts = [verdict for _line, verdict in _shell_line_offenders(text, wrapped=True)]
             break
     if _carries_git([item for index, item in enumerate(items[1:], start=1) if index != text_index]):
         verdicts.append(_UNPROVEN)
@@ -1000,7 +1024,7 @@ def _literal_argv_verdicts(items: list[_Item], env_state: str) -> list[str]:
     if _program(items[0]) == "git":
         verdict = _git_verdict(tokens, env_disables_locks=env_state == _ZERO)
         return [verdict] if verdict is not None else []
-    return _shell_argv_verdicts(items, tokens, env_state)
+    return _shell_argv_verdicts(items, tokens)
 
 
 def _python_markers(source: str) -> dict[int, str]:
@@ -1466,6 +1490,55 @@ def test_review_r3_reproductions_are_flagged() -> None:
     assert git_calls_without_flag(alias) == [(7, "status")]
 
 
+_LOCKS_OFF = 'env=dict(os.environ, GIT_OPTIONAL_LOCKS="0")'
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        # Review r5: the wrapper changes the environment the call's env= proved.
+        '["env", "GIT_OPTIONAL_LOCKS=1", "git", "status", "--porcelain"]',
+        '["env", "-u", "GIT_OPTIONAL_LOCKS", "git", "status", "--porcelain"]',
+        '["env", "GIT_OPTIONAL_LOCKS=0", "git", "status"]',
+        '["env", "-i", "git", "status"]',
+        '["timeout", "5", "git", "status"]',
+        '["nice", "git", "status"]',
+        '["xargs", "git", "status"]',
+        '["sh", "-c", "git status"]',
+        '["sh", "-c", "GIT_OPTIONAL_LOCKS=0 git status"]',
+        '["bash", "-c", "cd x && git log -1"]',
+        '"env -u GIT_OPTIONAL_LOCKS git status"',
+        '"env -i git status"',
+        '"timeout 5 git status"',
+        '"nice git status"',
+        '"echo HEAD | xargs git rev-parse"',
+        "\"sh -c 'git status'\"",
+        "\"cd x && bash -c 'cd y && git status'\"",
+    ],
+)
+def test_review_r5_wrapper_programs_need_the_flag(argv: str) -> None:
+    shell = ", shell=True" if argv.startswith('"') else ""
+    assert len(git_calls_without_flag(f"cmd = subprocess.run({argv}, {_LOCKS_OFF}{shell})\n")) == 1
+    flagged = argv.replace("git ", "git --no-optional-locks ").replace('"git", ', '"git", "--no-optional-locks", ')
+    assert git_calls_without_flag(f"cmd = subprocess.run({flagged}, {_LOCKS_OFF}{shell})\n") == []
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        '["git", "status"]',
+        '"git status"',
+        '"cd x && git status"',
+        '"if git diff --quiet; then :; fi"',
+        '"head=\\"$(git rev-parse HEAD)\\""',
+        '"echo \\"a b\\" && \\"git\\" status"',
+    ],
+)
+def test_lint_accepts_env_for_a_git_that_starts_its_command(command: str) -> None:
+    shell = ", shell=True" if command.startswith('"') else ""
+    assert git_calls_without_flag(f"cmd = subprocess.run({command}, {_LOCKS_OFF}{shell})\n") == []
+
+
 @pytest.mark.parametrize(
     "imports,call",
     [
@@ -1658,7 +1731,12 @@ def test_lint_skips_only_named_data_tuples() -> None:
         ("GIT_OPTIONAL_LOCKS=0 git status", []),
         ("FOO=1 git status", [(1, "status")]),
         ("GIT_OPTIONAL_LOCKS=0 GIT_OPTIONAL_LOCKS=1 git status", [(1, "status")]),
-        ("env GIT_OPTIONAL_LOCKS=0 git status", []),
+        # A wrapper program runs git: only the flag covers it.
+        ("env GIT_OPTIONAL_LOCKS=0 git status", [(1, "status")]),
+        ("timeout 5 env GIT_OPTIONAL_LOCKS=0 git status", [(1, "status")]),
+        ("env -u FOO git --no-optional-locks status", []),
+        ("if GIT_OPTIONAL_LOCKS=0 git diff --quiet; then :; fi", []),
+        ("x && GIT_OPTIONAL_LOCKS=0 git status", []),
         ("git check-attr -a x", [(1, "check-attr")]),
         ("git frobnicate", [(1, "frobnicate (unknown subcommand)")]),
         ('git "$@"', [(1, "<dynamic>")]),
