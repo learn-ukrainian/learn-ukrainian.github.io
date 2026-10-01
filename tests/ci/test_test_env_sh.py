@@ -53,6 +53,65 @@ def test_missing_marker_fails_within_limit_and_names_task(tmp_path: Path) -> Non
     assert "starting postgres" in result.stdout
 
 
+def test_huge_log_cannot_hold_step_past_deadline_and_error_comes_first(tmp_path: Path) -> None:
+    env_dir = _seed(tmp_path, {"postgres": (None, "")})
+    with (env_dir / "postgres.log").open("wb") as handle:
+        handle.write(b"x" * (50 * 1024 * 1024))
+    started = time.monotonic()
+    result = _wait(tmp_path, "2")
+    elapsed = time.monotonic() - started
+    assert result.returncode == 1
+    assert elapsed < 6
+    assert result.stdout.startswith("::error::postgres setup did not finish within 2s\n")
+    assert len(result.stdout) < 70_000
+
+
+def test_finished_huge_log_is_bounded_to_last_200_lines(tmp_path: Path) -> None:
+    log = "".join(f"line {i}\n" for i in range(5000))
+    _seed(tmp_path, {"npm": ("0", log)})
+    result = _wait(tmp_path, None)
+    assert result.returncode == 0
+    assert "line 4999\n" in result.stdout
+    assert "line 4800\n" in result.stdout
+    assert "line 4799\n" not in result.stdout
+
+
+def test_missing_log_still_names_task(tmp_path: Path) -> None:
+    env_dir = _seed(tmp_path, {"postgres": (None, "")})
+    (env_dir / "postgres.log").unlink()
+    result = _wait(tmp_path, "2")
+    assert result.returncode == 1
+    assert "::error::postgres setup did not finish within 2s" in result.stdout
+    assert "(no log)" in result.stdout
+
+
+def test_empty_marker_is_not_finished_yet(tmp_path: Path) -> None:
+    env_dir = _seed(tmp_path, {"postgres": (None, "pg log\n")})
+    (env_dir / "postgres.rc").write_text("")
+    result = _wait(tmp_path, "2")
+    assert result.returncode == 1
+    assert "exit )" not in result.stdout
+    assert "::error::postgres setup did not finish within 2s" in result.stdout
+
+
+def test_start_publishes_marker_atomically(tmp_path: Path) -> None:
+    env = {**os.environ, "RUNNER_TEMP": str(tmp_path)}
+    started = subprocess.run(
+        ["bash", str(SCRIPT), "start", "bogus"],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert started.returncode == 0
+    result = _wait(tmp_path, "20")
+    assert result.returncode == 1
+    assert "::group::bogus setup (exit 2)" in result.stdout
+    assert "unknown task: bogus" in result.stdout
+    assert not (tmp_path / "test-env" / "bogus.rc.tmp").exists()
+
+
 def test_one_deadline_covers_all_tasks_and_finished_ones_still_report(tmp_path: Path) -> None:
     _seed(
         tmp_path,

@@ -27,6 +27,25 @@ run_task() {
   esac
 }
 
+# Print at most the last 200 lines / 64 KiB of a task log, so a huge log can
+# never hold the step past its deadline. A missing log must not abort the script.
+print_log() {
+  if [ -f "$1" ]; then
+    tail -c 65536 -- "$1" | tail -n 200 || true
+  else
+    echo "(no log)"
+  fi
+}
+
+# Succeeds only when the task's completion marker holds a whole integer; an
+# empty or partial marker means "not finished yet".
+rc_ready() {
+  [ -f "$dir/$1.rc" ] || return 1
+  case "$(cat "$dir/$1.rc" 2> /dev/null)" in
+    '' | *[!0-9]*) return 1 ;;
+  esac
+}
+
 case "${1:-}" in
   start)
     shift
@@ -35,8 +54,9 @@ case "${1:-}" in
       echo "$task" >> "$dir/tasks"
       # Each subshell always records its exit code (`|| rc=$?` keeps set -e
       # from ending it first) and must not hold the step's stdout/stderr, or
-      # the runner waits for it before starting the next step.
-      (rc=0; run_task "$task" || rc=$?; echo "$rc" > "$dir/$task.rc") > "$dir/$task.log" 2>&1 < /dev/null &
+      # the runner waits for it before starting the next step. The marker is
+      # written to a temp file and renamed, so `wait` never sees it empty.
+      (rc=0; run_task "$task" || rc=$?; echo "$rc" > "$dir/$task.rc.tmp" && mv -f "$dir/$task.rc.tmp" "$dir/$task.rc") > "$dir/$task.log" 2>&1 < /dev/null &
     done
     ;;
   wait)
@@ -53,18 +73,18 @@ case "${1:-}" in
     deadline=$((SECONDS + limit))
     status=0
     while read -r task; do
-      while [ ! -f "$dir/$task.rc" ] && [ "$SECONDS" -lt "$deadline" ]; do sleep 1; done
-      if [ ! -f "$dir/$task.rc" ]; then
-        echo "::group::${task} setup (no exit code yet)"
-        cat "$dir/$task.log"
-        echo "::endgroup::"
+      while ! rc_ready "$task" && [ "$SECONDS" -lt "$deadline" ]; do sleep 1; done
+      if ! rc_ready "$task"; then
         echo "::error::${task} setup did not finish within ${limit}s"
+        echo "::group::${task} setup (no exit code yet)"
+        print_log "$dir/$task.log"
+        echo "::endgroup::"
         status=1
         continue
       fi
       rc="$(cat "$dir/$task.rc")"
       echo "::group::${task} setup (exit ${rc})"
-      cat "$dir/$task.log"
+      print_log "$dir/$task.log"
       echo "::endgroup::"
       if [ "$rc" != 0 ]; then
         echo "::error::${task} setup failed (exit ${rc}); see its log group above"
