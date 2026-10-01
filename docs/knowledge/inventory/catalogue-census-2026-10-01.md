@@ -283,7 +283,7 @@ At least ten status judgements per inventory were re-read against the files. The
 ## Draft-marker scan
 
 `.venv/bin/python -m scripts.docs.catalogue draft-scan` reads the first 30 lines of every
-catalogued path from Git's index and looks for draft markers: a heading that starts with
+content-readable catalogued path from Git's index and looks for draft markers: a heading that starts with
 "Draft", an upper-case `DRAFT`, `Status: draft`, `Status: proposed`, `lifecycle: draft`,
 "work in progress"/`WIP` and "proposal". `Original status:` lines do not count.
 
@@ -294,6 +294,11 @@ catalogued path from Git's index and looks for draft markers: a heading that sta
 | … resolving to `active` | 52 | 29 |
 | … resolving to `draft` / `residual` / `archive` / `superseded` | 12 / 0 / 35 / 4 | 30 / 5 / 35 / 4 |
 | `draft` paths with no marker | 2 | 1 |
+
+Both columns predate the scan's privacy gate. The scan now reads only paths that resolve to a
+content-searchable family and have no inventory-excluded component; it withholds the 7
+session-state router paths unread and reads 3,262 paths (one binary skipped). The marker
+counts above are unchanged by the gate (still 103 paths with a marker).
 
 Dispositions of the 23 `active` paths whose marker held:
 
@@ -393,4 +398,6 @@ The other 13 store entries were confirmed unchanged.
   validator: literals, `*` and `?` within a segment, and `**` as a whole segment. Character
   classes, braces, empty, `.` and `..` segments are schema errors. A glob whose first segment
   below its tracked root is not literal is a catch-all error. Every brace glob was rewritten as
-  an explicit list; path resolution is unchanged (all 3,270 paths resolve to the same family).
+  an explicit list. The brace-to-list rewrite on its own changed zero path-to-family
+  assignments; separately, 12 paths intentionally moved to the new
+  `registry-corpus-audit-draft-tickets` family (see the draft-marker scan below).

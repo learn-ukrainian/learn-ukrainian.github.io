@@ -1,4 +1,5 @@
 """Validator behaviour of the document and data catalogue (#9412) on small fixtures, plus the real tree."""
+import ast
 import copy
 import json
 import subprocess
@@ -8,14 +9,21 @@ import pytest
 import yaml
 from jsonschema import Draft202012Validator
 
+from scripts.docs import catalogue as catalogue_module
 from scripts.docs.catalogue import (
     DRAFT_MARKERS,
+    MAX_CATALOGUE_BYTES,
+    MAX_CATALOGUE_DEPTH,
+    MAX_CATALOGUE_NODES,
+    CatalogueLoadError,
+    body_readable,
     coverage,
     draft_scan,
     glob_error,
     glob_regex,
     is_catch_all,
     main,
+    parse,
     suggest,
     validate,
 )
@@ -503,6 +511,232 @@ def test_draft_scan_reports_both_kinds_of_mismatch(repo, capsys):
     assert 'DRAFT WITHOUT MARKER docs/guide/late.md' in out
     assert main(['draft-scan', '--repo', str(repo), '--json']) == 0
     assert json.loads(capsys.readouterr().out)['with_marker'] == 1
+
+
+# ------------------------------------------------------------------ YAML shapes: the loader is total
+
+def fixture_text(paths_yaml='["docs/guide/**"]'):
+    """The CLI fixture catalogue as JSON (a YAML subset) with the guide paths replaced verbatim."""
+    text = json.dumps(catalogue(family('knowledge', ['docs/knowledge/**'], owner='docs-knowledge'),
+                                family('guide', ['__GUIDE__'])))
+    return text.replace('["__GUIDE__"]', paths_yaml)
+
+
+def run_check(repo, tmp_path, text, capsys):
+    path = tmp_path / 'candidate.yaml'
+    path.write_bytes(text if isinstance(text, bytes) else text.encode('utf-8'))
+    status = main(['check', '--repo', str(repo), '--catalogue', str(path), '--json'])
+    return status, json.loads(capsys.readouterr().out)
+
+
+BILLION_LAUGHS = 'a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]\n' + ''.join(
+    f'{chr(98 + i)}: &{chr(98 + i)} [*{chr(97 + i)},*{chr(97 + i)},*{chr(97 + i)},*{chr(97 + i)},'
+    f'*{chr(97 + i)},*{chr(97 + i)},*{chr(97 + i)},*{chr(97 + i)},*{chr(97 + i)}]\n' for i in range(8))
+
+
+@pytest.mark.parametrize('text, code', [
+    (fixture_text('[&a [*a], &b [*b]]'), 'anchor'),  # recursive aliases (review case 1)
+    (fixture_text('[' * 10_000 + ']' * 10_000), 'too_deep'),  # deep flow nesting (review case 2)
+    ('entries:\n' + '- ' * 10_000 + 'x\n', 'too_deep'),  # deep block nesting on one line
+    (BILLION_LAUGHS, 'anchor'),
+    ('entries: *undefined\n', 'alias'),  # an alias is rejected before it is resolved
+    ('base: {a: 1}\nentry:\n  <<: {a: 1}\n', 'merge_key'),
+    ('entries: !!python/object/apply:os.system ["true"]\n', 'tag'),
+    ('entries: !custom x\n', 'tag'),
+    ('schema_version: !!int 1\n', 'tag'),
+    ('entries: []\nentries: []\n', 'duplicate_key'),
+    ('1: x\n', 'non_string_key'),
+    ('~: x\n', 'non_string_key'),
+    ('? [a]\n: x\n', 'non_string_key'),
+    ('- just\n- a list\n', 'not_mapping'),
+    ('just a scalar\n', 'not_mapping'),
+    ('', 'not_mapping'),
+    ('a: 1\n---\nb: 2\n', 'syntax'),
+    ('a: [1, 2\n', 'syntax'),
+    (b'a: \xff\n', 'encoding'),
+    ('[' + 'a,' * MAX_CATALOGUE_NODES + 'a]', 'too_many_nodes'),
+], ids=['recursive-aliases', 'deep-flow', 'deep-block', 'billion-laughs', 'alias', 'merge-key', 'python-tag',
+        'custom-tag', 'core-tag', 'duplicate-key', 'int-key', 'null-key', 'sequence-key', 'list-root',
+        'scalar-root', 'empty', 'two-documents', 'unclosed', 'not-utf8', 'too-many-nodes'])
+def test_catalogue_outside_the_yaml_subset_is_a_typed_rejection(repo, tmp_path, capsys, text, code):
+    raw = text if isinstance(text, bytes) else text.encode('utf-8')
+    with pytest.raises(CatalogueLoadError) as caught:
+        parse(raw)
+    assert caught.value.code == code
+    status, out = run_check(repo, tmp_path, raw, capsys)
+    assert status == 3
+    assert out == {'error': {'kind': 'catalogue_rejected', 'code': code, 'message': out['error']['message']}}
+    assert out['error']['message'].startswith(f'{code}: ')
+
+
+def test_oversized_catalogue_is_rejected_after_a_bounded_read(repo, tmp_path, capsys):
+    path = tmp_path / 'huge.yaml'
+    with path.open('wb') as handle:  # 50 MB of an otherwise valid comment
+        handle.write(b'#' * (50 * 1024 * 1024))
+    reads = []
+    original = Path.open
+
+    def recording_open(self, *args, **kwargs):
+        handle = original(self, *args, **kwargs)
+        if self == path:
+            read = handle.read
+            handle.read = lambda size=-1: reads.append(size) or read(size)  # type: ignore[method-assign]
+        return handle
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setattr(Path, 'open', recording_open)
+        assert main(['check', '--repo', str(repo), '--catalogue', str(path), '--json']) == 3
+    assert json.loads(capsys.readouterr().out)['error']['code'] == 'too_large'
+    assert reads and all(0 <= size <= MAX_CATALOGUE_BYTES + 1 for size in reads)
+
+
+def test_bounds_admit_the_repository_catalogue_with_headroom():
+    raw = (REPO / 'docs/knowledge/catalogue.yaml').read_bytes()
+    assert len(raw) * 10 < MAX_CATALOGUE_BYTES
+    depth = nodes = top = 0
+    for event in yaml.parse(raw.decode('utf-8')):
+        nodes += isinstance(event, (yaml.ScalarEvent, yaml.SequenceStartEvent, yaml.MappingStartEvent))
+        depth += isinstance(event, (yaml.SequenceStartEvent, yaml.MappingStartEvent))
+        depth -= isinstance(event, (yaml.SequenceEndEvent, yaml.MappingEndEvent))
+        top = max(top, depth)
+    assert nodes * 10 < MAX_CATALOGUE_NODES and top * 2 < MAX_CATALOGUE_DEPTH
+    assert parse(raw)['schema_version'] == 1
+
+
+def test_depth_bound_is_exact():
+    nested = lambda n: '[' * n + ']' * n  # noqa: E731
+    assert parse(f'a: {nested(MAX_CATALOGUE_DEPTH - 1)}'.encode())  # the root mapping is one level
+    with pytest.raises(CatalogueLoadError, match='too_deep'):
+        parse(f'a: {nested(MAX_CATALOGUE_DEPTH)}'.encode())
+
+
+@pytest.mark.parametrize('paths_yaml', ['null', '[null]', '"docs/guide/**"', '{"a": 1}', '[["docs/guide/**"]]',
+                                        '[1]', '[true]', '[2026-10-01]'])
+def test_wrong_shapes_that_parse_are_schema_errors(repo, tmp_path, capsys, paths_yaml):
+    status, out = run_check(repo, tmp_path, fixture_text(paths_yaml), capsys)
+    assert status == 1
+    assert out['errors'] and all(e.startswith('schema: entries/1') for e in out['errors'])
+
+
+@pytest.mark.parametrize('replace, where', [
+    (('"entries": [', '"entries": [null, '), 'schema: entries/0'),
+    (('"entries": [', '"entries": ["an entry", '), 'schema: entries/0'),
+    (('"residual": []', '"residual": [null]'), 'schema: residual/0'),
+    (('"residual": []', '"residual": null'), 'schema: residual'),
+    (('"schema_version": 1', '"schema_version": null'), 'schema: schema_version'),
+])
+def test_null_and_scalar_entries_are_schema_errors_without_a_crash(repo, tmp_path, capsys, replace, where):
+    text = fixture_text()
+    assert replace[0] in text
+    (repo / 'data').mkdir()  # store reconciliation must not run on a schema-invalid catalogue
+    status, out = run_check(repo, tmp_path, text.replace(*replace), capsys)
+    assert status == 1
+    assert any(e.startswith(where) for e in out['errors']), out['errors']
+    assert out['local_stores'] is None
+
+
+@pytest.mark.parametrize('as_json', [True, False])
+def test_unexpected_failure_is_a_typed_internal_error_not_a_traceback(repo, capsys, monkeypatch, as_json):
+    def explode(*_args, **_kwargs):
+        raise RecursionError('maximum recursion depth exceeded')
+    monkeypatch.setattr(catalogue_module, 'validate', explode)
+    args = ['check', '--repo', str(repo)] + (['--json'] if as_json else [])
+    assert main(args) == 4
+    monkeypatch.setattr(catalogue_module, 'draft_scan', explode)
+    assert main(['draft-scan', '--repo', str(repo)] + (['--json'] if as_json else [])) == 4
+    captured = capsys.readouterr()
+    assert 'Traceback' not in captured.out + captured.err
+    if as_json:
+        first, second = (json.loads(part) for part in captured.out.replace('}\n{', '}\0{').split('\0'))
+        assert first == second == {'error': {'kind': 'internal_error', 'code': 'RecursionError',
+                                             'message': 'maximum recursion depth exceeded'}}
+    else:
+        assert captured.out.count('could not run (internal_error): RecursionError') == 2
+
+
+# ------------------------------------------------------------------ privacy boundary for body reads
+
+SENTINEL = 'docs/guide/sub/private/sentinel.md'
+
+
+def add_and_catalogue(repo, files, *entries):
+    for rel, text in files.items():
+        (repo / rel).parent.mkdir(parents=True, exist_ok=True)
+        (repo / rel).write_text(text, encoding='utf-8')
+    data = yaml.safe_load((repo / 'docs/knowledge/catalogue.yaml').read_text())
+    data['entries'].extend(entries)
+    (repo / 'docs/knowledge/catalogue.yaml').write_text(yaml.safe_dump(data))
+    git(repo, 'add', '.')
+
+
+def recorded_blob_reads(monkeypatch):
+    requested = []
+    original = catalogue_module._index_blobs
+
+    def recording(repo, paths):
+        requested.extend(paths)
+        return original(repo, paths)
+    monkeypatch.setattr(catalogue_module, '_index_blobs', recording)
+    return requested
+
+
+def test_draft_scan_never_reads_an_excluded_path_of_a_valid_private_family(repo, capsys, monkeypatch):
+    add_and_catalogue(repo, {SENTINEL: '# Draft — private sentinel\n', 'docs/guide/open.md': '# Draft\n'},
+                      family('guide-private', ['docs/guide/sub/private/**'], content_searchable=False))
+    assert main(['check', '--repo', str(repo)]) == 0  # the catalogue is valid
+    capsys.readouterr()
+    requested = recorded_blob_reads(monkeypatch)
+    scan = draft_scan(repo, coverage(repo))
+    assert SENTINEL not in requested and 'docs/guide/open.md' in requested
+    assert scan['skipped_private'] == 1
+    assert scan['active_with_marker'] == {'docs/guide/open.md': ['draft-heading']}
+    requested.clear()
+    assert main(['draft-scan', '--repo', str(repo), '--json']) == 0
+    out = capsys.readouterr().out
+    assert SENTINEL not in requested and 'sentinel' not in out
+    assert json.loads(out)['skipped_private'] == 1
+
+
+def test_excluded_path_stays_unread_even_when_its_family_wrongly_claims_searchable(repo, monkeypatch):
+    add_and_catalogue(repo, {SENTINEL: '# Draft — private sentinel\n'})  # owned by the searchable 'guide'
+    report = coverage(repo)
+    assert any('content_searchable must be false' in e for e in report.errors)
+    requested = recorded_blob_reads(monkeypatch)
+    scan = draft_scan(repo, report)
+    assert SENTINEL not in requested and scan['skipped_private'] == 1 and scan['with_marker'] == 0
+
+
+def test_non_searchable_family_is_unread_without_an_excluded_component(repo, monkeypatch):
+    add_and_catalogue(repo, {'docs/guide/notes/n.md': 'status: draft\n'},
+                      family('guide-notes', ['docs/guide/notes/**'], lifecycle='draft', content_searchable=False))
+    report = coverage(repo)
+    assert report.ok, report.errors
+    requested = recorded_blob_reads(monkeypatch)
+    scan = draft_scan(repo, report)
+    assert 'docs/guide/notes/n.md' not in requested and scan['skipped_private'] == 1
+    assert scan['draft_without_marker'] == []  # an unread path is never reported as lacking a marker
+
+
+def test_body_gate_fails_closed():
+    data = base()
+    data['entries'].append(family('guide', ['docs/guide/old/**'], content_searchable=False))  # duplicate id
+    report = check(data)
+    assert 'guide' not in report.searchable_entries
+    assert not body_readable(report, 'docs/guide/a.md')
+    assert not body_readable(report, 'docs/unknown.md')  # unresolved
+    assert body_readable(check(base()), 'docs/guide/a.md')
+
+
+def test_only_the_gated_reader_reads_blob_bodies():
+    tree = ast.parse(Path(catalogue_module.__file__).read_text(encoding='utf-8'))
+    callers = [fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)
+               for call in ast.walk(fn) if isinstance(call, ast.Call)
+               and getattr(call.func, 'id', None) == '_index_blobs']
+    assert callers == ['read_heads']
+    # Git commands that print blob contents appear only in the gated reader and in
+    # owner_keys, which reads the two fixed owner registries, never a catalogued path.
+    readers = [fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)
+               for node in ast.walk(fn) if isinstance(node, ast.Constant) and node.value in ('cat-file', 'show')]
+    assert sorted(readers) == ['_index_blobs', 'owner_keys']
 
 
 # ------------------------------------------------------------------ the repository's own tree

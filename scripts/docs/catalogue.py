@@ -22,7 +22,7 @@ import yaml
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import best_match
 
-from scripts.docs.docs_inventory import EXCLUDED_PARTS, UniqueLoader
+from scripts.docs.docs_inventory import EXCLUDED_PARTS
 
 CATALOGUE_PATH = 'docs/knowledge/catalogue.yaml'
 SCHEMA_PATH = 'docs/knowledge/catalogue.schema.json'
@@ -144,12 +144,104 @@ def compile_globs(entry_id: str, patterns: list[str]) -> list[Glob]:
 
 # ---------------------------------------------------------------- loading
 
-def load(path: Path) -> dict:
-    """Parse the catalogue with duplicate-key rejection (same loader as the inventory)."""
-    data = yaml.load(path.read_text(encoding='utf-8'), Loader=UniqueLoader)
+# Parsing bounds, checked before schema validation. The catalogue is ~110 KB,
+# ~5,700 nodes and 5 collections deep; each bound leaves room for ~20x growth.
+MAX_CATALOGUE_BYTES = 2 * 1024 * 1024
+MAX_CATALOGUE_NODES = 100_000
+MAX_CATALOGUE_DEPTH = 16
+MERGE_TAG = 'tag:yaml.org,2002:merge'
+
+
+class CatalogueLoadError(ValueError):
+    """The catalogue file is outside the accepted YAML subset; ``code`` names the rule."""
+
+    def __init__(self, code: str, message: str, mark: yaml.Mark | None = None):
+        where = f' (line {mark.line + 1}, column {mark.column + 1})' if mark is not None else ''
+        super().__init__(f'{code}: {message}{where}')
+        self.code = code
+
+
+class CatalogueLoader(yaml.SafeLoader):
+    """Plain-data YAML only: no anchors, aliases, merge keys or explicit tags; unique string
+    keys; at most MAX_CATALOGUE_NODES nodes and MAX_CATALOGUE_DEPTH nested collections.
+
+    The bounds are enforced while composing, before the (recursive) composer descends,
+    so no input can exhaust the stack or expand into a large object graph.
+    """
+
+    def __init__(self, stream):
+        super().__init__(stream)
+        self.nodes = 0
+        self.depth = 0
+
+    def compose_node(self, parent, index):
+        event = self.peek_event()
+        if isinstance(event, yaml.AliasEvent):
+            raise CatalogueLoadError('alias', 'aliases are not allowed in the catalogue', event.start_mark)
+        if event.anchor is not None:
+            raise CatalogueLoadError('anchor', 'anchors are not allowed in the catalogue', event.start_mark)
+        if event.tag is not None:
+            raise CatalogueLoadError('tag', f'explicit tag {event.tag!r} is not allowed in the catalogue',
+                                     event.start_mark)
+        self.nodes += 1
+        if self.nodes > MAX_CATALOGUE_NODES:
+            raise CatalogueLoadError('too_many_nodes', f'more than {MAX_CATALOGUE_NODES} YAML nodes',
+                                     event.start_mark)
+        if not isinstance(event, (yaml.SequenceStartEvent, yaml.MappingStartEvent)):
+            return super().compose_node(parent, index)
+        self.depth += 1
+        if self.depth > MAX_CATALOGUE_DEPTH:
+            raise CatalogueLoadError('too_deep', f'more than {MAX_CATALOGUE_DEPTH} nested collections',
+                                     event.start_mark)
+        try:
+            return super().compose_node(parent, index)
+        finally:
+            self.depth -= 1
+
+    def flatten_mapping(self, node):
+        for key_node, _ in node.value:
+            if key_node.tag == MERGE_TAG:
+                raise CatalogueLoadError('merge_key', 'merge keys (<<) are not allowed in the catalogue',
+                                         key_node.start_mark)
+        super().flatten_mapping(node)
+
+    def construct_mapping(self, node, deep=False):
+        self.flatten_mapping(node)
+        seen = set()
+        for key_node, _ in node.value:
+            key = self.construct_object(key_node, deep=deep)
+            if not isinstance(key, str):
+                raise CatalogueLoadError('non_string_key', f'mapping key {key!r} is not a string',
+                                         key_node.start_mark)
+            if key in seen:
+                raise CatalogueLoadError('duplicate_key', f'duplicate mapping key {key!r}', key_node.start_mark)
+            seen.add(key)
+        return super().construct_mapping(node, deep=deep)
+
+
+def parse(raw: bytes) -> dict:
+    """Parse catalogue bytes with the restricted loader; raises CatalogueLoadError only."""
+    if len(raw) > MAX_CATALOGUE_BYTES:
+        raise CatalogueLoadError('too_large', f'file exceeds {MAX_CATALOGUE_BYTES} bytes')
+    try:
+        text = raw.decode('utf-8')
+    except UnicodeDecodeError as exc:
+        raise CatalogueLoadError('encoding', f'not UTF-8 at byte {exc.start}') from None
+    try:
+        data = yaml.load(text, Loader=CatalogueLoader)
+    except yaml.YAMLError as exc:
+        mark = getattr(exc, 'problem_mark', None)
+        problem = getattr(exc, 'problem', None) or type(exc).__name__
+        raise CatalogueLoadError('syntax', str(problem), mark) from None
     if not isinstance(data, dict):
-        raise ValueError('catalogue must be a mapping')
+        raise CatalogueLoadError('not_mapping', 'the catalogue must be a YAML mapping')
     return data
+
+
+def load(path: Path) -> dict:
+    """Read at most MAX_CATALOGUE_BYTES + 1 bytes and parse them (see ``parse``)."""
+    with path.open('rb') as handle:
+        return parse(handle.read(MAX_CATALOGUE_BYTES + 1))
 
 
 def owner_keys(repo: Path) -> set[str]:
@@ -185,6 +277,8 @@ class Report:
     entry_counts: dict[str, int] = field(default_factory=dict)
     residual_paths: set[str] = field(default_factory=set)
     data_stores: int = 0
+    schema_ok: bool = False
+    searchable_entries: set[str] = field(default_factory=set)  # families whose bodies may be read
 
     @property
     def ok(self) -> bool:
@@ -230,6 +324,7 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
     report.errors.extend(schema_errors(catalogue, schema))
     if report.errors:
         return report
+    report.schema_ok = True
     tracked = set(files)
     denominator = [p for p in files if under_roots(p, roots)]
     report.denominator = len(denominator)
@@ -239,6 +334,9 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
         if entry['id'] in by_id:
             report.errors.append(f"duplicate entry id {entry['id']!r}")
         by_id[entry['id']] = entry
+    # Fail closed: an id stays private if any entry using it is not content-searchable.
+    report.searchable_entries = ({e['id'] for e in entries if e['content_searchable']}
+                                 - {e['id'] for e in entries if not e['content_searchable']})
 
     globs: list[Glob] = []
     for entry in entries:
@@ -458,12 +556,24 @@ DRAFT_MARKERS = (
 )
 
 
-def index_heads(repo: Path, paths: list[str], lines: int = DRAFT_SCAN_LINES) -> dict[str, str]:
-    """The first ``lines`` lines of each path's index blob (sparse-safe); binary blobs are skipped."""
+def body_readable(report: Report, path: str) -> bool:
+    """The privacy boundary for content reads: may this path's body be read at all?
+
+    True only for a path that resolves to a content-searchable family and has no
+    inventory-excluded component (docs_inventory.EXCLUDED_PARTS). Everything else,
+    including unresolved paths, stays unread. ``read_heads`` is the only body reader
+    and applies this gate itself, so a scanner cannot bypass it.
+    """
+    owner = report.resolved.get(path)
+    return owner is not None and owner[0] in report.searchable_entries and not is_excluded(path)
+
+
+def _index_blobs(repo: Path, paths: list[str]) -> dict[str, bytes]:
+    """Index blobs of ``paths`` (sparse-safe); missing paths are absent. Call only via read_heads."""
     request = ''.join(f':{p}\n' for p in paths).encode('utf-8')
     out = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch'], input=request,
                          capture_output=True, check=True, timeout=300).stdout
-    heads, offset = {}, 0
+    blobs, offset = {}, 0
     for path in paths:
         header_end = out.index(b'\n', offset)
         header = out[offset:header_end].split()
@@ -471,21 +581,35 @@ def index_heads(repo: Path, paths: list[str], lines: int = DRAFT_SCAN_LINES) -> 
             offset = header_end + 1
             continue
         size = int(header[2])
-        blob = out[header_end + 1:header_end + 1 + size]
+        blobs[path] = out[header_end + 1:header_end + 1 + size]
         offset = header_end + 1 + size + 1
+    return blobs
+
+
+def read_heads(repo: Path, report: Report, paths: list[str],
+               lines: int = DRAFT_SCAN_LINES) -> tuple[dict[str, str], int]:
+    """The first ``lines`` lines of each body-readable path; binary blobs are skipped.
+
+    Returns (heads, number of paths withheld by ``body_readable``).
+    """
+    readable = [p for p in paths if body_readable(report, p)]
+    heads = {}
+    for path, blob in _index_blobs(repo, readable).items():
         if b'\0' not in blob[:8192]:
             heads[path] = '\n'.join(blob.decode('utf-8', 'replace').splitlines()[:lines])
-    return heads
+    return heads, len(paths) - len(readable)
 
 
 def draft_scan(repo: Path, report: Report) -> dict:
-    """Draft markers in the first lines of every resolved path, set against its lifecycle.
+    """Draft markers in the first lines of every readable resolved path, set against its lifecycle.
 
     ``active_with_marker`` lists paths that state a draft-like marker yet resolve to
-    ``active``; ``draft_without_marker`` lists paths that resolve to ``draft`` with no
+    ``active``; ``draft_without_marker`` lists read paths that resolve to ``draft`` with no
     marker. Both need a reviewed disposition; ``proposal`` alone is a weak marker.
+    Paths that ``body_readable`` withholds are counted in ``skipped_private``, never named.
     """
-    heads = index_heads(repo, sorted(report.resolved))
+    paths = sorted(report.resolved)
+    heads, skipped = read_heads(repo, report, paths)
     hits: dict[str, list[str]] = {}
     for path, text in heads.items():
         found = [name for name, pattern in DRAFT_MARKERS if pattern.search(text)]
@@ -494,12 +618,13 @@ def draft_scan(repo: Path, report: Report) -> dict:
     by_lifecycle = Counter(report.resolved[p][1] for p in hits)
     by_marker = Counter(name for found in hits.values() for name in found)
     return {
-        'scanned': len(heads), 'binary_or_missing': len(report.resolved) - len(heads),
+        'scanned': len(heads), 'skipped_private': skipped,
+        'binary_or_missing': len(paths) - skipped - len(heads),
         'with_marker': len(hits), 'by_marker': dict(sorted(by_marker.items())),
         'with_marker_by_lifecycle': dict(sorted(by_lifecycle.items())),
         'active_with_marker': {p: hits[p] for p in sorted(hits) if report.resolved[p][1] == 'active'},
         'draft_without_marker': sorted(p for p, (_, life) in report.resolved.items()
-                                       if life == 'draft' and p not in hits),
+                                       if life == 'draft' and p not in hits and body_readable(report, p)),
     }
 
 
@@ -578,7 +703,10 @@ def main(argv: list[str] | None = None) -> int:
                'Outputs: a report on stdout only; never writes files and reads data/ names, not contents.\n'
                'Exit codes: 0 no errors, full coverage and no unmatched local store (or --report-only; '
                'draft-scan always reports with 0); 1 errors, uncovered paths or unmatched stores; '
-               '2 invalid arguments; 3 unreadable repository or catalogue.\n'
+               '2 invalid arguments; 3 unreadable repository or catalogue, or a catalogue outside the '
+               'accepted YAML subset (anchors, aliases, merge keys, tags, duplicate or non-string keys, '
+               'over 2 MiB, 100,000 nodes or 16 nesting levels); 4 internal error. Failures print a typed '
+               'error (JSON with --json), never a traceback.\n'
                'Related: #9412; docs/knowledge/catalogue.yaml; docs/knowledge/catalogue.schema.json; '
                'scripts/docs/docs_inventory.py; docs/architecture/docs-authority-lifecycle.md.')
     sub = parser.add_subparsers(dest='command', required=True)
@@ -597,33 +725,59 @@ def main(argv: list[str] | None = None) -> int:
                             'exists; skipped otherwise, as in CI); e.g. ../primary-checkout/data.')
     check.add_argument('--json', action='store_true',
                        help='Print the full report as JSON, including per-entry counts (default: text).')
-    drafts = sub.add_parser('draft-scan', help='List draft markers in the first 30 lines of every catalogued '
-                            'path against the lifecycle it resolves to (review aid, not a gate).',
+    drafts = sub.add_parser('draft-scan', help='List draft markers in the first 30 lines of every content-readable '
+                            'catalogued path against the lifecycle it resolves to (review aid, not a gate).',
                             description='Read each catalogued path from the Git index of --repo and report '
-                                        'draft-like markers that disagree with the resolved lifecycle.')
+                                        'draft-like markers that disagree with the resolved lifecycle. '
+                                        'Inventory-excluded paths and content_searchable: false families '
+                                        'are never read; they are counted as withheld.')
     drafts.add_argument('--repo', type=Path, default=Path('.'),
                         help='Repository or worktree root (default: current directory); e.g. ../my-worktree.')
     drafts.add_argument('--json', action='store_true', help='Print the scan as JSON (default: text).')
     args = parser.parse_args(argv)
     if args.command == 'draft-scan':
-        return _draft_scan_command(args)
+        return _run('Draft scan', _draft_scan_command, args)
+    return _run('Catalogue check', _check_command, args)
+
+
+EXIT_UNREADABLE = 3
+EXIT_INTERNAL = 4
+UNREADABLE = (OSError, CatalogueLoadError, json.JSONDecodeError, UnicodeDecodeError, yaml.YAMLError,
+              subprocess.SubprocessError)
+
+
+def _run(label: str, command, args: argparse.Namespace) -> int:
+    """The CLI's totality boundary: any failure becomes a typed report and exit code, never a traceback."""
     try:
-        repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
-        catalogue_path = args.catalogue or repo / CATALOGUE_PATH
-        report = coverage(repo, catalogue_path)
-        catalogue = load(catalogue_path)
-        data_root = args.data_root or repo / 'data'
-        stores = local_store_gaps(data_root, catalogue) if data_root.is_dir() else None
-    except (OSError, ValueError, yaml.YAMLError, subprocess.SubprocessError) as exc:
-        print(f'Catalogue check could not run: {type(exc).__name__}: {exc}')
-        return 3
+        return command(args)
+    except UNREADABLE as exc:
+        kind = 'catalogue_rejected' if isinstance(exc, CatalogueLoadError) else 'unreadable'
+        code, message, status = getattr(exc, 'code', type(exc).__name__), str(exc), EXIT_UNREADABLE
+    except Exception as exc:  # deliberate catch-all at the process boundary
+        kind, code, message, status = 'internal_error', type(exc).__name__, str(exc), EXIT_INTERNAL
+    message = message[:500]
     if args.json:
-        data = report.to_json()
+        print(json.dumps({'error': {'kind': kind, 'code': code, 'message': message}}, indent=2,
+                         sort_keys=True, ensure_ascii=False))
+    else:
+        print(f'{label} could not run ({kind}): {code}: {message}')
+    return status
+
+
+def _check_command(args: argparse.Namespace) -> int:
+    repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
+    catalogue_path = args.catalogue or repo / CATALOGUE_PATH
+    report = coverage(repo, catalogue_path)
+    catalogue = load(catalogue_path)
+    data_root = args.data_root or repo / 'data'
+    # Store names are reconciled only against a schema-valid catalogue.
+    stores = local_store_gaps(data_root, catalogue) if data_root.is_dir() and report.schema_ok else None
+    data = report.to_json()
+    if args.json:
         data['local_stores'] = (None if stores is None
                                 else {'checked': stores[0], 'unmatched': stores[1]})
         print(json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False))
     else:
-        data = report.to_json()
         print(f"denominator {data['denominator']}; covered {data['covered']}; "
               f"uncovered {len(report.uncovered)}; errors {len(report.errors)}; "
               f"families {len(report.entry_counts)}; data stores {report.data_stores}; "
@@ -635,7 +789,8 @@ def main(argv: list[str] | None = None) -> int:
         for path in report.uncovered:
             print(f'UNCOVERED {path}')
         if stores is None:
-            print('local stores: skipped (no data directory)')
+            reason = 'catalogue failed schema validation' if data_root.is_dir() else 'no data directory'
+            print(f'local stores: skipped ({reason})')
         else:
             print(f'local stores: {stores[0]} names checked; {len(stores[1])} unmatched')
             for logical in stores[1]:
@@ -647,17 +802,13 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _draft_scan_command(args: argparse.Namespace) -> int:
-    try:
-        repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
-        scan = draft_scan(repo, coverage(repo))
-    except (OSError, ValueError, yaml.YAMLError, subprocess.SubprocessError) as exc:
-        print(f'Draft scan could not run: {type(exc).__name__}: {exc}')
-        return 3
+    repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
+    scan = draft_scan(repo, coverage(repo))
     if args.json:
         print(json.dumps(scan, indent=2, sort_keys=True, ensure_ascii=False))
         return 0
-    print(f"scanned {scan['scanned']}; binary or missing {scan['binary_or_missing']}; "
-          f"with a marker {scan['with_marker']}")
+    print(f"scanned {scan['scanned']}; withheld by the privacy gate {scan['skipped_private']}; "
+          f"binary or missing {scan['binary_or_missing']}; with a marker {scan['with_marker']}")
     print('by marker: ' + ', '.join(f'{k} {v}' for k, v in scan['by_marker'].items()))
     print('by lifecycle: ' + ', '.join(f'{k} {v}' for k, v in scan['with_marker_by_lifecycle'].items()))
     for path, found in scan['active_with_marker'].items():
