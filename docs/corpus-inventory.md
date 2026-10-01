@@ -167,6 +167,50 @@ to `unified_dense` → `rerank_candidates` → `data/embeddings/manifest.db` + s
 | `external_articles` / `external_fts` | 1,205 | `search_external` | Curated external articles + YouTube/blog transcripts (register/decolonization tagged). |
 | `wikipedia` / `_fts` | 1,029 | `query_wikipedia` | Cached Ukrainian Wikipedia articles (+ a separate negative cache). |
 
+### Curated listening and reading catalogues (#9409)
+
+`resource_catalogue` / `resource_catalogue_fts` indexes metadata from every entry
+in these files under `docs/resources/`: `podcasts/podcast_db.json`, all three
+`podcasts/raw_lists/*.txt` lists, `podcasts/ulp_mapping.yaml`,
+`external_resources.yaml`, `ulp-resources.yaml`, `ulp-articles-index.yaml`,
+`ulp-article-mappings.yaml`, `trusted_sources.yaml`, and the `dobraforma`,
+`talkukrainian` and `verba` article catalogues. Internal trusted-source collections
+use `sources://collection/...` locators; they have no HTTP link check.
+
+Run the incremental metadata ingestion with an explicit **local** database:
+
+```bash
+<shared-project-python> -m scripts.ingest.resource_catalogue_ingest \
+  --ingest --db data/sources-copy.db
+```
+
+For rehearsals, first create a consistent SQLite backup of the active database;
+do not copy a running WAL database's main file alone. `--no-network` skips new
+HTTP requests and retains previous checks. The script creates the table and FTS
+idempotently, replaces only catalogue rows in one transaction, and reports each
+file's input entries and distinct output URLs. Every original locator, title and
+module mapping survives URL deduplication. `rows_out` per file overlaps other
+files; only the global count represents distinct resources. After a full corpus
+rebuild, rerun this incremental ingest as for the separately ingested ZNO tables.
+Activation of the live database remains a separate driver operation after merge.
+
+Use **`mcp__sources__search_resources`** with `query`, `kind`, `level`, `module`,
+`free_only` and optionally `live_only`. Empty queries browse using filters.
+Levels reflect explicit catalogue levels and module prefixes; absence stays
+unknown. Module IDs preserve existing catalogue mappings rather than claiming
+they match a current lesson plan. Results use `sources.tool-result.v1` and carry
+source-entry provenance, HTTP status and UTC check date. `free_only` selects
+catalogued free resources; it does not prove present availability. `live_only`
+requires a recorded successful HTTP check, whose date remains visible.
+
+ULP/FMU episode audio is free; lesson notes are marked premium separately.
+Podcast page aliases (`/lesson/2/`, `/episode2/`) share a canonical URL.
+The `добрий день` discovery alias for ULP 1-02 is attributed to the public
+[ULP greetings article](https://www.ukrainianlessons.com/greetings/), which links
+to that episode. Catalogue discovery establishes a candidate resource, not a
+transcript, word-level timestamp, or independent verification of audio content.
+No media, article bodies or premium material are downloaded into the catalogue.
+
 ### Dictionaries & lexical resources
 
 | Table | Rows | MCP tool | What it is |
