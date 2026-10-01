@@ -5,12 +5,12 @@ Read before the first action on the named epic. Other epics skip this file.
 ## §0c. Hramatka epic — dual-repo queue (epic #4542 only)
 
 If `SESSION_EPIC` is Hramatka (public #4542), the priority/ownership queue is
-private BOARD `learn-ukrainian-infra-private#349`, not the public epic body. Cold-start
-read order: **private #349 → private open PRs → public PRs linked from #4542 only.**
+the private priority board, not the public epic body. Cold-start
+read order: **private priority board → private open PRs → public PRs linked from #4542 only.**
 Public #4542 is charter + bare pointer — never generate or mirror a public checklist
 from the private board (leak + dual-write). GitHub issue/PR state in either repo
-remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
-status feed. If #349 and any other queue view disagree, **#349 wins** — correct the other
+remains the factual SSOT for open/closed; the private board is the priority queue, not a duplicate
+status feed. If the private board and any other queue view disagree, **the private board wins** — correct the other
 view the same session. Full contract: `docs/runbooks/hramatka-driver-queue.md`.
 
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`

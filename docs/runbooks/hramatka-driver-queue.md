@@ -14,7 +14,7 @@ spine). Scope gate ships with PR-2; settle reaper with PR-3; closeout
 | Repo | Role |
 | --- | --- |
 | Public `learn-ukrainian/learn-ukrainian.github.io` | Shared curriculum/UI/contracts; fleet control plane (`delegate.py`, Monitor, batch_state). |
-| Private `learn-ukrainian/learn-ukrainian-infra-private` | Non-public infra only (deploy inventory, credentials wiring, host ops). |
+| Private infra repository | Non-public operations material only. |
 | Private `learn-ukrainian/hramatka` | Secret-free teacher product (app, API, lesson engine, product CI). Shell created in P2.0; history migration is P2.2. |
 
 Dispatch into a sibling product/infra checkout with first-class
@@ -26,13 +26,13 @@ dispatch). Do not invent a fourth coordination plane.
 
 | Queue | Role |
 | --- | --- |
-| Private BOARD [learn-ukrainian-infra-private#349](https://github.com/learn-ukrainian/learn-ukrainian-infra-private/issues/349) | **Planning/priority queue.** Ownership + ordering for active Hramatka work (until product issues move with P2.2). |
+| Private priority board (in the private infra repository) | **Planning/priority queue.** Ownership + ordering for active Hramatka work (until product issues move with P2.2). |
 | Public [#4542](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4542) | **Charter + bare pointer.** Narrative/authorization record, not a live operational checklist. Never auto-generate or mirror a public checklist from the private board — leak + dual-write, explicitly rejected by the consult. |
-| GitHub issue/PR state (any of the three repos) | Factual SSOT for what is actually open or closed. #349 is the priority queue, not a duplicate status feed — an item can be closed on GitHub while still ranked on #349, and the reverse. |
+| GitHub issue/PR state (any of the three repos) | Factual SSOT for what is actually open or closed. The private board is the priority queue, not a duplicate status feed — an item can be closed on GitHub while still ranked on the private board, and the reverse. |
 
 ## Cold-start read order
 
-1. Private #349 (priority/ownership)
+1. Private priority board (priority/ownership)
 2. Private open PRs
 3. Public PRs linked from #4542 only
 
@@ -58,7 +58,7 @@ surface the item to the operator. The gate is deliberately not applied to
 cleanup, review, escalation, or unblocking the driver's own already-open PR.
 
 Public work must have exact stream membership through Hramatka epic #4542.
-Private work must be tracked by private board #349, carry the exact `hramatka`
+Private work must be tracked by the private priority board, carry the exact `hramatka`
 label, or use an explicit `stream:hramatka` body tag. Ordinary mentions of
 Hramatka and any 50%/majority heuristic are not membership evidence. A private
 API failure is `UNKNOWN` and therefore `HOLD` for every new-scope action; it
@@ -101,7 +101,7 @@ never mutates GitHub or the filesystem. Only exit 0 (`verified`) is a clean
 handoff:
 
 - **stale** (exit 1) — the public epic #4542 still carries a live (unchecked)
-  checklist item, is missing its pointer to private board #349, a registered
+  checklist item, is missing its pointer to the private priority board, a registered
   dispatch worktree is bound to an already-terminal task
   (`.worktrees/dispatch/` vs. `batch_state/tasks/`), or local disk use is at
   or above the configured high-water mark (default 95%, `--high-water-percent`).
@@ -143,8 +143,8 @@ new-scope gate section above) — it is not part of this escalate class.
 
 ## Same-session correction rule
 
-If #349 and any other view of the queue (a cached handoff note, a stale reading
-of #4542, an out-of-date driver's own memory) disagree, **#349 wins**. Correct
+If the private board and any other view of the queue (a cached handoff note, a stale reading
+of #4542, an out-of-date driver's own memory) disagree, **the private board wins**. Correct
 the other view in the same session — do not carry the disagreement forward or
 defer the fix to a later PR.
 
