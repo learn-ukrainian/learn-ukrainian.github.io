@@ -115,6 +115,19 @@ PATTERNS = {
 }
 
 
+def _hostname_flag(dest: str) -> list[str]:
+    """Select an API host from a resolved destination using ASCII hostname labels."""
+    if dest == "unknown":
+        return []
+    host, separator, rest = dest.partition("/")
+    # Validate ASCII before lowercasing so Unicode look-alikes cannot normalize in.
+    label = r"[a-z0-9](?:[a-z0-9-]*[a-z0-9])?"
+    if not separator or not rest or not host.isascii() or not re.fullmatch(rf"{label}(?:\.{label})*", host.lower()):
+        raise gate.PublishBlocked("OPSEC: invalid publisher hostname.")
+    host = host.lower()
+    return [] if host == "github.com" else ["--hostname", host]
+
+
 def _validate(verb, fields):
     if verb not in SCHEMAS:
         raise gate.PublishBlocked("OPSEC: unknown publisher verb.")
@@ -426,8 +439,8 @@ def publish(
             frozen = temp / "request.json"
             frozen.write_bytes(json.dumps(payload, ensure_ascii=False).encode("utf-8"))
             argv = ["gh", "api", "--method", method, endpoint, "--input", str(frozen)]
-            if endpoint == "graphql" and not dest.startswith("github.com/"):
-                argv += ["--hostname", dest.split("/", 1)[0]]
+            if endpoint == "graphql":
+                argv += _hostname_flag(dest)
         return _send(
             argv,
             environment=environment,
@@ -680,8 +693,7 @@ def read(
             frozen = Path(directory) / "query.json"
             frozen.write_bytes(json.dumps({"query": query, "variables": variables}).encode("utf-8"))
             argv = ["gh", "api", "--method", "POST", "graphql", "--input", str(frozen)]
-            if dest != "unknown" and not dest.startswith("github.com/"):
-                argv += ["--hostname", dest.split("/", 1)[0]]
+            argv += _hostname_flag(dest)
             return _send(
                 argv,
                 environment=environment,
@@ -694,8 +706,7 @@ def read(
                 stdout=stdout,
                 stderr=stderr,
             )
-    if dest != "unknown" and not dest.startswith("github.com/"):
-        argv += ["--hostname", dest.split("/", 1)[0]]
+    argv += _hostname_flag(dest)
     return _send(
         argv,
         environment=environment,
