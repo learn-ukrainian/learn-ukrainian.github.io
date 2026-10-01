@@ -202,10 +202,12 @@ def _contains_hostname(body: str) -> bool:
             continue
         following = body[match.end() : match.end() + 2]
         preceding = body[max(0, match.start() - 2) : match.start()]
+        # A following separator marks a directory or host, never a final file.
+        # Conservatively reject host-shaped local directories in either spelling.
         host_context = (
             token.endswith(".")
             or preceding.endswith(("//", "\\\\", "/\\", "\\/", ":/", ":\\", "@"))
-            or following.startswith(("/", "?", "#"))
+            or following.startswith(("/", "\\", "?", "#"))
             or (following.startswith(":") and following[1:].isdigit())
         )
         extension = labels[-1].lower()

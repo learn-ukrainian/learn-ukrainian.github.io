@@ -843,6 +843,12 @@ def test_filename_exemption_rejects_embedded_hosts(tmp_path: Path, extension: st
                 r"file:\\fileserver.md\public",
                 r"FILE:/\SERVER.SH/share",
                 r"file:\/BOX.PY",
+                r"\Device\Mup\server.sh\share",
+                r"\Device\LanmanRedirector\server.sh\share",
+                r"\\?\GLOBALROOT\??\UNC\server.sh\share",
+                r"\\?\GLOBALROOT\GLOBAL??\UNC\server.sh\share",
+                r"\\?\GLOBALROOT\Device\LanmanRedirector\;Z:00000000000003e7\server.sh\share",
+                r"\Device\Mup\;Z:00000000000003e7\server.sh\share",
                 "file:///server.sh",
                 "https:/core.md",
                 r"\\store.py",
@@ -923,6 +929,48 @@ def test_namespace_network_roots_cannot_exempt_hosts(namespace: str, network_roo
             validate_entry_body(body)
 
 
+@pytest.mark.parametrize(
+    "root",
+    [
+        r"\Device\Mup",
+        r"\Device\LanmanRedirector",
+        r"\Device\OtherRedirector",
+        r"\\?\GLOBALROOT\??\UNC",
+        r"\\?\GLOBALROOT\GLOBAL??\UNC",
+        r"\\?\GLOBALROOT\Device\Mup",
+        r"\\?\GLOBALROOT\Device\LanmanRedirector",
+        r"\\?\GLOBALROOT\Device\OtherRedirector",
+        r"\\.\GLOBALROOT\Device\OtherRedirector",
+        r"\??\GLOBALROOT\Device\OtherRedirector",
+    ],
+)
+def test_following_separator_rejects_hosts_under_any_device_root(root: str) -> None:
+    # Arbitrary device roots and session segments must not need prefix entries.
+    for separator, upper, host, session, ending in product(
+        ["\\", "/", "\\/", "/\\", "\\\\", "//"],
+        [False, True],
+        ["server.sh", "fileserver.md", "box.py", "docs.rs"],
+        ["", ";Z:", ";Z:00000000000003e7\\"],
+        ["\\", "\\share"],
+    ):
+        path = root + "\\" + session + host + ending
+        path = path.swapcase() if upper else path
+        path = path.replace("\\", separator)
+        body = f"Changed `{path}`"
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+
+
+@pytest.mark.parametrize("separator", ["/", "\\"])
+@pytest.mark.parametrize("name", ["server.sh", "core.md", "store.py", "docs.rs"])
+def test_host_shaped_directory_segments_are_conservatively_rejected(separator: str, name: str) -> None:
+    # Intentionally reject even local directories: only the final segment can
+    # use the filename exemption, so a host-shaped directory cannot hide a host.
+    validate_entry_body(separator.join(["scripts", name]))
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        validate_entry_body(separator.join(["scripts", name, "x"]))
+
+
 @pytest.fixture
 def repository_filename_paths() -> tuple[str, ...]:
     # Snapshot of the explicit exceptions, checked against Git only in tests.
@@ -957,6 +1005,33 @@ def test_embedded_host_filter_accepts_every_tracked_basename() -> None:
     assert tracked, "the guard must inspect the tracked Git index"
     rejected = [path for path in tracked if _filename_contains_hostname(Path(path).name)]
     assert rejected == [], "remove conflicting labels from _EMBEDDED_HOST_SUFFIXES: " + repr(rejected)
+
+
+@pytest.mark.repo_wide
+def test_backslash_tracked_paths_add_no_hostname_rejections() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
+    )
+    tracked = [path for path in result.stdout.split("\0") if path]
+    assert tracked, "the guard must inspect the tracked Git index"
+    # Existing bare-name and unsupported-extension rejections apply equally
+    # to either spelling; backslashes must introduce no new full-path rejection.
+    newly_rejected = [
+        path for path in tracked if _contains_hostname(path.replace("/", "\\")) and not _contains_hostname(path)
+    ]
+    assert newly_rejected == [], repr(newly_rejected)
+    # Independently guard file-shaped directory segments, including paths whose
+    # final basename is already rejected, against losing the file exemption.
+    rejected_directories = [
+        path
+        for path in tracked
+        if any(
+            segment.rpartition(".")[2].lower() in _FILE_EXTENSIONS and _contains_hostname(segment + "\\")
+            for segment in path.split("/")[:-1]
+        )
+    ]
+    assert rejected_directories == [], repr(rejected_directories)
 
 
 @pytest.mark.parametrize("suffix", sorted(_EMBEDDED_HOST_SUFFIXES))
