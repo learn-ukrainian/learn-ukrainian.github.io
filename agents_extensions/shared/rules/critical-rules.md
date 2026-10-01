@@ -107,6 +107,11 @@ forbidden is the middle path that caused the incident: replying with a question 
 > **Orchestrators:** verify a pushed PR, never a status field. Prior art:
 > `docs/bug-autopsies/codex-dispatch-stall.md` (#2985).
 
+**Local secret scan.** Run `scripts/audit/secret_scan_local.py` (offline TruffleHog) before opening a PR
+that changes credential, identity, transport or hook code, and after any suspected leak; never run
+TruffleHog in verified mode without an operator decision and never paste raw findings anywhere.
+Runbook: `docs/runbooks/secret-scanning.md`.
+
 **8.4 — Before merge, both must hold: (A) required CI green on the merge candidate, and (B) a review
 artifact from a model family different from the author's.** It must be **independent** (never review
 your own work) and an actual review — *discussion does not satisfy it*. Resolve the seat with

@@ -212,3 +212,8 @@ after merge is a process defect (ENOSPC / disk full is the known failure mode).
    session branch sweep; add `--apply` only after reviewing its receipts. Then run
    `git fetch --prune`.
 6. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
+
+**After a suspected secret leak:** run `scripts/audit/secret_scan_local.py tree` and `history`
+(offline), hand any finding to the operator privately with detector, file, short commit and line
+only, delete the local report, and never rotate, revoke or rewrite history yourself. Runbook:
+[`secret-scanning.md`](../../../../../docs/runbooks/secret-scanning.md).

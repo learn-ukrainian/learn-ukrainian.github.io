@@ -22,6 +22,10 @@ Slow tests (`@pytest.mark.slow`) run in `pytest-slow-nightly.yml`.
 checks: TypeSafe triage (#8232), Atlas POC richness (#3930) and the diff-scoped
 Atlas vocabulary coverage report.
 
+For an offline local TruffleHog scan of the work tree or the whole public history
+(before a credential, identity, transport or hook change, or after a suspected leak),
+see [`secret-scanning.md`](secret-scanning.md).
+
 ## Gate inventory
 
 Every gate of the previous `ci.yml` and where it lives now. Only the machinery

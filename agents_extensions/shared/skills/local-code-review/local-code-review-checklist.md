@@ -95,6 +95,10 @@ must never mutate the source tree:
   prep. A fix is a finding like any other; applying it is Step 6's job,
   done explicitly, by the accountable agent.
 - TypeScript/JS: `npx tsc --noEmit`, `npx eslint {files}` (no `--fix`).
+- Credential, identity, transport or hook changes: confirm the author ran
+  `scripts/audit/secret_scan_local.py tree` (offline) or run it yourself; quote
+  only counts and detector/file/line rows, never raw values. Runbook:
+  `docs/runbooks/secret-scanning.md`.
 - Do not run formatters, code generators, migrations, package installs, or
   any other command that changes files on disk as part of preparing this
   review. If a deterministic check has an autofix flag, run it in
