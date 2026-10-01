@@ -33,7 +33,12 @@ def test_full_review_kind_and_family_matrix(world, tmp_path, agent, kind):
     tc.pop("allowed_tools", None)
     if agent == "claude":
         tc["reviewer_tools"] = True
-    assert prepare_attempt_boundary(agent, "read-only", None, tc) is None
+    boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
+    try:
+        assert boundary.full and boundary.workspace == root
+        assert not boundary.egress
+    finally:
+        boundary.cleanup()
     assert (root / manifest["inputs"]["plan"]["path"]).is_file()
     assert (
         json.loads(Path(tc["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]["env"]["LU_REVIEW_ATTEMPT_ID"]
@@ -56,7 +61,9 @@ def test_full_review_checks_actual_cwd_not_render_copy(world, tmp_path, kind):
     import shutil
 
     shutil.copytree(root, other, dirs_exist_ok=True)
-    assert prepare_attempt_boundary("claude", "read-only", None, tc) is None
+    boundary = prepare_attempt_boundary("claude", "read-only", None, tc)
+    assert boundary.workspace == other
+    boundary.cleanup()
     (other / manifest["inputs"]["plan"]["path"]).write_text("changed")
     with pytest.raises(ReviewIsolationError, match="full_review_tree_mismatch"):
         verify_full_review_tree(Path(tc["review_manifest"]), other)
@@ -211,3 +218,161 @@ def test_full_review_requires_git_checkout_and_eligible_manifest(world, tmp_path
     Path(tc["review_manifest"]).write_bytes(lock.yaml_bytes(manifest))
     with pytest.raises(ReviewIsolationError, match="full_review_manifest_ineligible"):
         verify_full_review_tree(Path(tc["review_manifest"]), root)
+
+
+@pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
+def test_full_seat_adapter_host_write_and_process_denial(world, tmp_path, monkeypatch, agent):
+    """Real adapter argv, fake seat payload, actual Bubblewrap and detached child."""
+    import os
+    import sys
+    import time
+    from dataclasses import replace
+
+    from scripts.agent_runtime.adapters.claude import ClaudeAdapter
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+
+    root, _home = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent)
+    tc.update(review_access="full", review_cwd=str(root), reviewer_tools=True)
+    tc.pop("allowed_tools", None)
+    boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
+    try:
+        adapter = {"claude": ClaudeAdapter, "codex": CodexAdapter, "agy": AgyAdapter}[agent]()
+        monkeypatch.setattr("scripts.agent_runtime.adapters.agy._require_background_wait_support", lambda *a: None)
+        plan = adapter.build_invocation(
+            prompt="probe",
+            mode="read-only",
+            cwd=root,
+            model=adapter.default_model,
+            task_id="full-probe",
+            session_id=None,
+            tool_config=boundary.tool_config,
+            effort="high",
+        )
+        config = json.loads(Path(tc["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]
+        ledger = Path(config["env"]["LU_REVIEW_LEDGER_PATH"])
+        targets = [
+            ledger,
+            ledger.parent / "forged.jsonl",
+            root / "reviewed.txt",
+            root / "batch_state/tasks/task.json",
+            root / "batch_state/tasks/task.result",
+        ]
+        for target in targets:
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if target != ledger:
+                target.write_text("host-sentinel")
+        original = [p.read_bytes() for p in targets]
+        private = boundary.write_root / "return.yaml"
+        child_marker = boundary.write_root / "child-alive"
+        # The child detaches its session and closes streams so ordinary pipe cleanup
+        # cannot accidentally be the reason it exits. The PID namespace must kill it.
+        child = (
+            "import time,pathlib; time.sleep(1); pathlib.Path("
+            + repr(str(child_marker))
+            + ").write_text('escaped'); time.sleep(30)"
+        )
+        payload = (
+            "import pathlib,os,subprocess,time,json\n"
+            f"targets={list(map(str, targets))!r}\n"
+            "for target in targets:\n"
+            " p=pathlib.Path(target); p.read_bytes()\n"
+            " try: p.write_text('FORGED')\n"
+            " except OSError: pass\n"
+            " else: raise AssertionError('host write allowed')\n"
+            f"pathlib.Path({str(private)!r}).write_text('own return')\n"
+            "assert os.readlink('/proc/self/ns/net') == " + repr(os.readlink("/proc/self/ns/net")) + "\n"
+            "assert os.readlink('/proc/self/ns/pid') != " + repr(os.readlink("/proc/self/ns/pid")) + "\n"
+            f"child=subprocess.Popen({[sys.executable, '-c', child]!r},start_new_session=True,stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)\n"
+            "print(json.dumps({'denied':len(targets),'host_read':len(targets),'network_shared':True,'private_pid':True}),flush=True)\n"
+        )
+        plan = replace(plan, cmd=[sys.executable, "-c", payload], stdin_payload=None)
+        cmd, env = boundary.wrap(plan.cmd, plan.env_overrides)
+        assert cmd[1:4] == ["--ro-bind", "/", "/"]
+        assert "--unshare-net" not in cmd and "--die-with-parent" in cmd
+        result = subprocess.run(cmd, cwd=root, env=env, capture_output=True, text=True, timeout=10)
+        assert result.returncode == 0, result.stderr
+        assert json.loads(result.stdout) == {"denied": 5, "host_read": 5, "network_shared": True, "private_pid": True}
+        assert private.read_text() == "own return"
+        time.sleep(1.3)
+        assert not child_marker.exists(), "detached child survived seat exit"
+        assert [p.read_bytes() for p in targets] == original
+        print(f"{agent}: 5 denied writes, 5 readable host controls, detached child killed, network shared")
+    finally:
+        boundary.cleanup()
+    assert root.exists() and not boundary.write_root.exists()
+
+
+def test_full_bwrap_unavailable_and_failed_probe_refuse(tmp_path, monkeypatch):
+    from scripts.review import isolation
+
+    write = tmp_path / "runtime"
+    write.mkdir()
+    monkeypatch.setattr(
+        isolation,
+        "_resolve_fixed_system_executable",
+        lambda *a, **k: (_ for _ in ()).throw(ReviewIsolationError("missing")),
+    )
+    with pytest.raises(ReviewIsolationError, match="full_review_bwrap_unavailable"):
+        isolation.prepare_full_host_sandbox(write_root=write, cwd=tmp_path)
+    monkeypatch.setattr(isolation, "_resolve_fixed_system_executable", lambda *a, **k: Path("/usr/bin/bwrap"))
+    monkeypatch.setattr(isolation.subprocess, "run", lambda *a, **k: subprocess.CompletedProcess([], 1))
+    with pytest.raises(ReviewIsolationError, match="full_review_bwrap_probe_failed"):
+        isolation.prepare_full_host_sandbox(write_root=write, cwd=tmp_path)
+
+
+@pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
+def test_full_cli_compatibility_and_mcp_probes_are_sandboxed(world, tmp_path, agent):
+    import shlex
+
+    from scripts.agent_runtime.review_mcp import verify_agy_review_effective_mcp, verify_codex_review_effective_mcp
+
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent)
+    tc.update(review_access="full", review_cwd=str(root), reviewer_tools=True)
+    tc.pop("allowed_tools", None)
+    boundary = prepare_attempt_boundary(agent, "read-only", None, tc)
+    sentinel = root / "version-probe-target"
+    sentinel.write_text("original")
+    try:
+        proxy = json.loads(Path(boundary.tool_config["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]
+        if agent == "codex":
+            rows = json.dumps(
+                [{"name": "sources", "enabled": True, "transport": {"type": "stdio", **proxy, "env": {}}}]
+            )
+        else:
+            rows = f"{'NAME':<12}{'TYPE':<10}{'STATUS':<12}COMMAND/URL\n"
+            rows += f"{'sources':<12}{'stdio':<10}{'enabled':<12}{proxy['command']} {' '.join(proxy['args'])}\n"
+        binary = root / "fake-seat"
+        binary.write_text(
+            "#!/bin/sh\n"
+            f"if (printf forged > {shlex.quote(str(sentinel))}) 2>/dev/null; then exit 99; fi\n"
+            'if test "$1" = --version; then echo \''
+            + ("2.1.200" if agent == "claude" else "1.2.10")
+            + "'; else printf '%s' "
+            + shlex.quote(rows)
+            + "; fi\n"
+        )
+        binary.chmod(0o700)
+        boundary.verify_seat([str(binary)], {})
+        assert sentinel.read_text() == "original"
+        if agent != "claude":
+            # Extra effective servers still fail closed through the wrapped gate.
+            binary.write_text("#!/bin/sh\nprintf '%s' " + shlex.quote(rows.replace("sources", "foreign")) + "\n")
+            binary.chmod(0o700)
+            gate = verify_codex_review_effective_mcp if agent == "codex" else verify_agy_review_effective_mcp
+            kw = {"codex_bin": str(binary)} if agent == "codex" else {"agy_bin": str(binary), "env": boundary.env}
+            with pytest.raises(ValueError, match="exactly"):
+                gate(config_path=boundary.config_path, cwd=root, boundary=boundary, **kw)
+    finally:
+        boundary.cleanup()
+
+
+def test_full_dispatch_telemetry_does_not_execute_cli(monkeypatch):
+    from scripts.agent_runtime import telemetry
+
+    monkeypatch.setattr(telemetry, "_resolve_cli_version", lambda *a: pytest.fail("unconfined CLI probe"))
+    result = telemetry.resolve_dispatch_start_telemetry(
+        agent_name="codex", requested_model="gpt-6.1-sol", requested_effort="high", probe_cli_version=False
+    )
+    assert result.cli_version == "unknown" and result.model == "gpt-6.1-sol"

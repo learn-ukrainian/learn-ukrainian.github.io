@@ -1,6 +1,6 @@
 """Review access: full matching checkout or isolated copied manifest evidence.
 
-Full attempts retain native write denial and the attempt-scoped sources ledger.
+Full attempts use a verified host read-only mount and the attempt-scoped sources ledger.
 For explicit isolated mode, the runner owns the boundary until response parsing
 finishes: sources runs outside the sandbox, connected by a byte-stream socket,
 and the original repository, Git objects, receipt store and home are unmounted.
@@ -252,12 +252,14 @@ class AttemptBoundary:
 
         # Claude's adapter must land with its own eligible cross-family review
         # before formal attempts can stage credentials or launch any process.
-        if agent == "claude":
+        self.full = tool_config.get("review_access") == "full"
+        if agent == "claude" and not self.full:
             raise ReviewIsolationError("attempt_boundary_claude_adapter_pending")
         if agent not in SUPPORTED_HARNESSES:
             raise ReviewIsolationError("attempt_harness_unsupported")
         config = Path(tool_config["mcp_config_path"])
         verify_review_attempt_paths(config)
+        self.config_path = config
         server = json.loads(config.read_bytes())["mcpServers"]["sources"]
         manifest_path = Path(tool_config["review_manifest"])
         data = manifest_path.read_bytes()
@@ -266,7 +268,7 @@ class AttemptBoundary:
         if server["env"]["LU_REVIEW_ATTEMPT_ID"] != tool_config["attempt_id"]:
             raise ReviewIsolationError("attempt_identity_mismatch")
         root = Path(tool_config["review_input_root"]).resolve(strict=True)
-        closure = authorized_closure(yaml.safe_load(data), root)
+        closure = {} if self.full else authorized_closure(yaml.safe_load(data), root)
         temporary_parent = tool_config.get("read_only_tmp_root")
         self.temp = tempfile.TemporaryDirectory(prefix="attempt-", dir=temporary_parent)
         self.connection = None
@@ -274,11 +276,14 @@ class AttemptBoundary:
         self.agent = agent
         try:
             if platform.system() != "Linux":
-                raise ReviewIsolationError("attempt_network_namespace_unavailable")
+                raise ReviewIsolationError(
+                    "full_review_bwrap_unavailable" if self.full else "attempt_network_namespace_unavailable"
+                )
             base = Path(self.temp.name).resolve()
-            self.workspace = base / "inputs"
+            self.workspace = Path(tool_config["review_cwd"]).resolve(strict=True) if self.full else base / "inputs"
             self.write_root = base / "runtime"
-            self.workspace.mkdir(mode=0o700)
+            if not self.full:
+                self.workspace.mkdir(mode=0o700)
             self.write_root.mkdir(mode=0o700)
             for name, content in closure.items():
                 destination = self.workspace / name
@@ -301,7 +306,8 @@ class AttemptBoundary:
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
             self.egress_endpoint = self.write_root / "egress.sock"
-            self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
+            if not self.full:
+                self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
             self.forwarder = self.write_root / "forwarder.py"
             self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
             proxy_server = {
@@ -341,7 +347,8 @@ class AttemptBoundary:
                 self.tool_config["agy_home_override"] = str(home)
                 self.env["AGY_APP_DATA_DIR"] = str(target.parent)
             else:
-                self.tool_config["allowed_tools"] = "Read,Glob,Grep," + str(tool_config.get("allowed_tools", ""))
+                if not self.full:
+                    self.tool_config["allowed_tools"] = "Read,Glob,Grep," + str(tool_config.get("allowed_tools", ""))
         except BaseException:
             self.cleanup()
             raise
@@ -350,6 +357,14 @@ class AttemptBoundary:
         from scripts.review.isolation import ReviewIsolationError, prepare_host_sandbox, wrap_argv_with_sandbox
 
         binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
+        if self.full:
+            from scripts.review.isolation import prepare_full_host_sandbox
+
+            if not hasattr(self, "sandbox"):
+                self.sandbox = prepare_full_host_sandbox(write_root=self.write_root, cwd=self.workspace)
+            env = {**self.env, **env_overrides}
+            env.update(HOME=self.env["HOME"], TMPDIR=self.env["TMPDIR"])
+            return wrap_argv_with_sandbox([str(binary), *cmd[1:]], self.sandbox), env
         runtime = runtime_files(binary)
         reject = Path(self.tool_config["review_input_root"]).resolve()
         if any(p.is_relative_to(reject) or reject.is_relative_to(p) for p in runtime):
@@ -384,6 +399,46 @@ class AttemptBoundary:
             # exposing host processes, descriptors, cwd or environment.
             wrapped[-len(argv) : -len(argv)] = ["--proc", "/proc", "--chdir", str(self.workspace)]
         return wrapped, env
+
+    def verify_seat(self, cmd: list[str], env_overrides: dict[str, str]) -> None:
+        """Probe CLI compatibility and effective MCP inside the full OS boundary."""
+        if not self.full:
+            return
+        from scripts.review.isolation import CLAUDE_MIN_SUPPORTED_CLI_VERSION, ReviewIsolationError
+
+        from .review_mcp import _config_flags, verify_agy_review_effective_mcp, verify_codex_review_effective_mcp
+
+        if self.agent == "codex":
+            verify_codex_review_effective_mcp(
+                config_path=self.config_path,
+                cwd=self.workspace,
+                codex_bin=cmd[0],
+                config_flags=_config_flags(cmd),
+                boundary=self,
+            )
+            return
+        version_cmd, env = self.wrap([cmd[0], "--version"], env_overrides)
+        version = subprocess.run(version_cmd, env=env, capture_output=True, text=True, timeout=5, check=False)
+        if self.agent == "claude":
+            from scripts.utils.claude_version import _parse_claude_semver
+
+            parsed = _parse_claude_semver(version.stdout + version.stderr)
+            if version.returncode != 0 or parsed is None or parsed < CLAUDE_MIN_SUPPORTED_CLI_VERSION:
+                raise ReviewIsolationError("full_review_claude_version_unverified")
+        else:
+            from .adapters.agy import _AGY_MIN_BACKGROUND_WAIT_VERSION, _AGY_VERSION_RE
+
+            match = _AGY_VERSION_RE.search(version.stdout)
+            parsed = tuple(int(match.group(name)) for name in ("major", "minor", "patch")) if match else None
+            if version.returncode != 0 or parsed is None or parsed < _AGY_MIN_BACKGROUND_WAIT_VERSION:
+                raise ReviewIsolationError("full_review_agy_version_unverified")
+            verify_agy_review_effective_mcp(
+                config_path=self.config_path,
+                cwd=self.workspace,
+                env=env,
+                agy_bin=cmd[0],
+                boundary=self,
+            )
 
     def cleanup(self) -> None:
         try:
@@ -435,7 +490,7 @@ def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
 
 
 def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool_config: dict | None):
-    """Keep isolated boundaries; validate full attempts without projecting a filesystem."""
+    """Keep isolated boundaries and enforce a host read-only boundary for full attempts."""
     tc = tool_config or {}
     if not (tc.get("review_id") or tc.get("attempt_id")):
         return None
@@ -472,4 +527,4 @@ def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool
     if agent == "claude" and (not tc.get("reviewer_tools") or tc.get("allowed_tools")):
         raise ReviewIsolationError("full_review_write_denial_missing")
     verify_full_review_tree(Path(tc["review_manifest"]), Path(tc["review_cwd"]))
-    return None
+    return AttemptBoundary(agent=agent, tool_config=tc)

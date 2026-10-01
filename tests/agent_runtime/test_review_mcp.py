@@ -187,7 +187,9 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
         "mcp_server_names": ["sources"],
     }
     if harness == "claude":
-        expected_options["allowed_tools"] = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+        expected_options["allowed_tools"] = ",".join(
+            f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS - {"search_resources"})
+        )
     if harness == "codex":
         expected_options["codex_home_override"] = str(plan.config_path.parent / f"{attempt_id}.codex-home")
     if harness == "agy":
@@ -365,7 +367,7 @@ def test_claude_adapter_command_line_contains_review_grant(
     assert plan.cmd[idx : idx + 3] == ["--strict-mcp-config", "--mcp-config", str(review_plan.config_path)]
     assert plan.cmd.count("--allowedTools") == 1
     allowed = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
-    assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS}
+    assert allowed == {f"mcp__sources__{name}" for name in REVIEW_TOOLS - {"search_resources"}}
     assert "--permission-mode" not in plan.cmd
 
 

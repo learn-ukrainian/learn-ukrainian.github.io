@@ -1689,8 +1689,10 @@ def _with_placeholder_prompt_sha(made: dict[str, Any]) -> None:
     path.write_text(text, encoding="utf-8")
 
 
-def _rendered(world: World, made: dict[str, Any]) -> str:
-    sha = record.rendered_prompt_sha256(world.manifest(made["n"]), world.root, made["review_id"], made["attempt_id"])
+def _rendered(world: World, made: dict[str, Any], access: str = "isolated") -> str:
+    sha = record.rendered_prompt_sha256(
+        world.manifest(made["n"]), world.root, made["review_id"], made["attempt_id"], access
+    )
     assert sha is not None
     return sha
 
@@ -1746,11 +1748,19 @@ def test_another_tasks_record_never_attests_this_return(world: World) -> None:
         _assert_unattestable_records_nothing(world, made, task_id=task_id, cause="not bound to review")
 
 
-def test_the_template_prompt_sha_placeholder_is_attested_from_a_bound_dispatch_record(world: World) -> None:
+@pytest.mark.parametrize("access", [None, "isolated", "full"])
+def test_the_template_prompt_sha_placeholder_is_attested_from_a_bound_dispatch_record(world: World, access) -> None:
     """#9022: a seat cannot hash its own prompt; the dispatch hash is attested when it equals this attempt's render."""
     made = world.make_return(2)
-    sent = _rendered(world, made)
-    world.task("review-attested", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=_bound(world, made))
+    sent = _rendered(world, made, access or "isolated")
+    world.task(
+        "review-attested",
+        "claude",
+        "claude-sonnet-5",
+        prompt_sha256=sent,
+        review_attempt=_bound(world, made),
+        **({"review_access": access} if access else {}),
+    )
     _with_placeholder_prompt_sha(made)
     outcome = world.record(made, task_id="review-attested")
     assert outcome.accepted, outcome.rejection_codes

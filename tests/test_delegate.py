@@ -17562,6 +17562,36 @@ def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_d
         review_id=review_id,
         attempt_id=attempt_id,
     )
+    # Refusal leaves the exclusive attempt id reusable, including its config and homes.
+    from scripts.review.isolation import ReviewIsolationError
+
+    with patch(
+        "scripts.agent_runtime.attempt_boundary.verify_full_review_tree",
+        side_effect=ReviewIsolationError("full_review_tree_mismatch"),
+    ):
+        assert delegate.cmd_dispatch(args) == 2
+    assert not (receipts / review_id / f"{attempt_id}.jsonl").exists()
+    assert not (receipts / review_id / f"{attempt_id}.mcp.json").exists()
+    assert not delegate._state_path(task_id).exists()
+    # A newly provisioned tree uses the common reaper before refusal returns.
+    import copy
+
+    auto_args = copy.copy(args)
+    auto_args.worktree = "auto"
+    auto_args.cwd = None
+    with (
+        patch(
+            "scripts.agent_runtime.attempt_boundary.verify_full_review_tree",
+            side_effect=ReviewIsolationError("full_review_tree_mismatch"),
+        ),
+        patch.object(delegate, "_resolve_invocation_git_root", return_value=env.root),
+        patch.object(delegate, "_resolve_worktree_base_sha", return_value="a" * 40),
+        patch.object(delegate, "_ensure_worktree", return_value=(env.root, None, {"reused": False})),
+        patch.object(delegate, "_settle_worktree_reap", return_value={"action": "removed"}) as reap,
+    ):
+        assert delegate.cmd_dispatch(auto_args) == 2
+    reap.assert_called_once_with(env.root, created_by_this_dispatch=True, settling_task_id=task_id)
+    assert not (receipts / review_id / f"{attempt_id}.jsonl").exists()
     assert delegate.cmd_dispatch(args) == 0
     task_path = delegate._state_path(task_id)
     task = json.loads(task_path.read_bytes())

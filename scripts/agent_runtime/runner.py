@@ -1502,6 +1502,7 @@ def _execute_invocation_plan(
         boundary = tool_config["review_attempt_boundary"]
         review_cwd = boundary.workspace
         try:
+            boundary.verify_seat(review_cmd, plan.env_overrides)
             review_cmd, env = boundary.wrap(review_cmd, plan.env_overrides)
         except (OSError, ValueError, RuntimeError) as exc:
             raise AgentUnavailableError(_attempt_boundary_refusal(exc, stage="wrap")) from exc

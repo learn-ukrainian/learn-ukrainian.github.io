@@ -514,14 +514,15 @@ class ReviewMcpPlan:
         return True
 
 
-def review_tools_allowed_csv(harness: str) -> str | None:
+def review_tools_allowed_csv(harness: str, review_access: str = "isolated") -> str | None:
     """Return the Claude Code ``--allowedTools`` names for the sources server.
 
     Only Claude Code understands these names.
     """
     if harness.lower().strip() != "claude":
         return None
-    return ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+    tools = REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS - {"search_resources"}
+    return ",".join(f"mcp__sources__{name}" for name in sorted(tools))
 
 
 def codex_review_home_path(config_path: Path | str) -> Path:
@@ -652,8 +653,12 @@ def review_server_checkout() -> Path:
 
 
 def check_review_contract(
-    prompt_file: Path | None, prompt_text: str, server_checkout: Path | None = None,
-    *, review_id: str | None = None, attempt_id: str | None = None,
+    prompt_file: Path | None,
+    prompt_text: str,
+    server_checkout: Path | None = None,
+    *,
+    review_id: str | None = None,
+    attempt_id: str | None = None,
 ) -> dict[str, Any]:
     """Refuse a review attempt whose prompt was rendered against other code than its seat would run (#9163).
 
@@ -662,8 +667,11 @@ def check_review_contract(
     sources server launches. See ``scripts.review.render_contract.check_render_contract``.
     """
     return check_render_contract(
-        prompt_file, prompt_text, Path(server_checkout or review_server_checkout()),
-        review_id=review_id, attempt_id=attempt_id,
+        prompt_file,
+        prompt_text,
+        Path(server_checkout or review_server_checkout()),
+        review_id=review_id,
+        attempt_id=attempt_id,
     )
 
 
@@ -876,6 +884,7 @@ def verify_codex_review_effective_mcp(
     config_flags: Sequence[str] = (),
     codex_bin: str | None = None,
     timeout: float = _CODEX_MCP_LIST_TIMEOUT_S,
+    boundary: Any = None,
 ) -> None:
     """Refuse a Codex review attempt unless its effective MCP set is exactly ``sources``.
 
@@ -887,7 +896,7 @@ def verify_codex_review_effective_mcp(
         CodexReviewMcpGateError: on any deviation, naming #8517.
     """
     config = Path(config_path)
-    codex_home = codex_review_home_path(config)
+    codex_home = (boundary.write_root / "home/.codex") if boundary else codex_review_home_path(config)
     log_unsafe = {"$CODEX_HOME": str(codex_home), "~": os.path.expanduser("~")}
     diagnostics = review_diagnostics_path(config)
 
@@ -904,14 +913,20 @@ def verify_codex_review_effective_mcp(
         raise refuse(
             f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc, diagnostics)}"
         ) from exc
+    if boundary:
+        expected = json.loads(Path(boundary.tool_config["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]
+        expected.setdefault("env", {})
     if not (codex_home / "config.toml").is_file():
         raise refuse("the scoped CODEX_HOME has no config.toml")
 
     binary = codex_bin or shutil.which("codex") or "codex"
     env = {**os.environ, "CODEX_HOME": str(codex_home)}
+    probe = [binary, "mcp", "list", "--json", *config_flags]
+    if boundary:
+        probe, env = boundary.wrap(probe, {})
     try:
         proc = subprocess.run(
-            [binary, "mcp", "list", "--json", *config_flags],
+            probe,
             cwd=str(cwd),
             env=env,
             capture_output=True,
@@ -1052,6 +1067,7 @@ def verify_agy_review_effective_mcp(
     env: Mapping[str, str],
     agy_bin: str,
     timeout: float = _AGY_MCP_LIST_TIMEOUT_S,
+    boundary: Any = None,
 ) -> None:
     """Refuse an AGY review attempt unless its effective MCP set is exactly ``sources``.
 
@@ -1088,10 +1104,13 @@ def verify_agy_review_effective_mcp(
         raise refuse(
             f"cannot read the attempt MCP config {_echo_identifier(config.name)!r}: {_exc_reason(exc, diagnostics)}"
         ) from exc
-    if not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
+    if boundary:
+        expected = json.loads(Path(boundary.tool_config["mcp_config_path"]).read_bytes())["mcpServers"]["sources"]
+        command, args = expected["command"], list(expected["args"])
+    elif not isinstance(expected.get("env"), dict) or set(expected["env"]) != set(ENV_KEYS):
         raise refuse("the attempt MCP config does not carry exactly the three LU_REVIEW_* variables")
 
-    agy_home = agy_review_home_path(config)
+    agy_home = (boundary.write_root / "home") if boundary else agy_review_home_path(config)
     app_data = agy_review_app_data_dir(agy_home)
     if env.get("HOME") != str(agy_home) or env.get("AGY_APP_DATA_DIR") != str(app_data):
         # Name the variables, never their values: the launch environment is not log-safe.
@@ -1107,9 +1126,12 @@ def verify_agy_review_effective_mcp(
         )
     expected_target = " ".join(parts)
 
+    probe = [agy_bin, "mcp", "list"]
+    if boundary:
+        probe, env = boundary.wrap(probe, {})
     try:
         proc = subprocess.run(
-            [agy_bin, "mcp", "list"],
+            probe,
             cwd=str(cwd),
             env=dict(env),
             capture_output=True,

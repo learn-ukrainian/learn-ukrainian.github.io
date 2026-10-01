@@ -8487,6 +8487,7 @@ def _run_worker(
             requested_model=model,
             requested_effort=effort,
             harness=harness,
+            probe_cli_version=not (review_manifest and review_access == "full"),
         )
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
@@ -8634,6 +8635,7 @@ def _run_worker(
                 and attempt_id is not None
                 and mcp_config_path is not None
                 and agent == "codex"
+                and review_access != "full"
             ):
                 # Codex has no --mcp-config: -c mcp_servers.* MERGES with global config, so
                 # the attempt runs under its scoped CODEX_HOME (sibling of the .mcp.json)
@@ -8659,6 +8661,7 @@ def _run_worker(
                 and attempt_id is not None
                 and mcp_config_path is not None
                 and agent == "agy"
+                and review_access != "full"
             ):
                 # agy has no per-invocation MCP flag and reads its servers from
                 # $HOME/.gemini/config, so the attempt runs under its scoped home (sibling
@@ -9924,6 +9927,7 @@ def _review_attempt_prompt_admission(
                 recorded_templates=contract["recorded_templates"],
                 review_id=review_id,
                 attempt_id=attempt_id,
+                review_access=getattr(args, "review_access", "full"),
             )
             if not checked.passed:
                 return "❌ review attempt refused: prompt_render_invalid: " + "; ".join(checked.errors), None
@@ -11057,6 +11061,7 @@ def _dispatch(
                 requested_model=args.model,
                 requested_effort=getattr(args, "effort", None),
                 harness=requested_harness,
+                probe_cli_version=not (review_attempt and review_access == "full"),
             )
             dry_run_state = {
                 "pinned_head": pinned_head,
@@ -11163,7 +11168,7 @@ def _dispatch(
             print(f"❌ {admission_refusal}", file=sys.stderr)
             return _ADMISSION_REFUSED_EXIT
 
-    if review_attempt:
+    if review_attempt and review_access != "full":
         from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
         effective_harness = requested_harness or dispatch_agent
@@ -11378,15 +11383,27 @@ def _dispatch(
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
 
-    if review_plan is not None and review_access == "full":
+    if review_attempt and review_access == "full":
         from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
+        from scripts.agent_runtime.review_mcp import prepare_review_attempt
         from scripts.review.isolation import ReviewIsolationError
 
         try:
+            # A refused tree must not reserve the attempt id or create its ledger.
             verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
-        except ReviewIsolationError as exc:
+            review_plan = prepare_review_attempt(
+                review_id=review_id,
+                attempt_id=attempt_id,
+                manifest_path=Path(review_attempt),
+                harness=requested_harness or dispatch_agent,
+                review_contract=review_contract,
+            )
+        except (ReviewIsolationError, ValueError, FileExistsError) as exc:
             stdout_fd.close()
             stderr_fd.close()
+            if worktree_path is not None and worktree_telemetry.get("reused") is False:
+                cleanup = _settle_worktree_reap(worktree_path, created_by_this_dispatch=True, settling_task_id=task_id)
+                print(f"   review refusal cleanup: {cleanup}", file=sys.stderr)
             print(f"❌ {exc}", file=sys.stderr)
             return 2
 
@@ -11471,6 +11488,7 @@ def _dispatch(
             requested_model=args.model,
             requested_effort=getattr(args, "effort", None),
             harness=requested_harness,
+            probe_cli_version=not (review_attempt and review_access == "full"),
         )
 
         # Write initial state BEFORE forking so a fast caller can see it.

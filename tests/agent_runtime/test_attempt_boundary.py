@@ -256,10 +256,12 @@ def test_runtime_files_does_not_grant_native_binary_parent():
 
 
 @pytest.mark.parametrize("agent", ["agy", "codex"])
-def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent):
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent, access):
     root, _ = world
     doc = manifest_world(root, "plan")
     tc = attempt_config(root, tmp_path, doc, agent)
+    tc.update(review_access=access, review_cwd=str(root))
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
     try:
         if agent == "codex":
@@ -312,7 +314,13 @@ def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent):
         assert ledger.read_bytes(), proc.stdout
         # The same boundary cannot read even its own runtime ledger.
         cmd, env = boundary.wrap(["/bin/cat", str(ledger)], {})
-        assert subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30).returncode != 0
+        read_result = subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30)
+        if access == "isolated":
+            assert read_result.returncode != 0
+        else:
+            assert read_result.returncode == 0
+            cmd, env = boundary.wrap(["/bin/sh", "-c", 'printf forged >> "$1"', "probe", str(ledger)], {})
+            assert subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30).returncode != 0
     finally:
         processes = boundary.connection.processes
         boundary.cleanup()
@@ -358,7 +366,7 @@ def test_runner_boundary_refusal_reports_only_code_or_exception_class(tmp_path, 
             monkeypatch.setattr(runner, "_load_adapter", unexpected)
             runner.invoke("agy", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
         else:
-            boundary = SimpleNamespace(workspace=tmp_path, wrap=refuse)
+            boundary = SimpleNamespace(workspace=tmp_path, verify_seat=lambda *a: None, wrap=refuse)
             runner._execute_invocation_plan(
                 agent_name="agy",
                 adapter=None,

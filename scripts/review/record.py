@@ -198,20 +198,26 @@ def dispatch_prompt_sha256(
     return value if isinstance(value, str) and HEX64.fullmatch(value) else None
 
 
-def _render_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> tuple[str | None, str]:
+def _render_prompt_sha256(
+    manifest_path: Path, root: Path, review_id: str, attempt_id: str, review_access: str = "isolated"
+) -> tuple[str | None, str]:
     """``(sha256, "")`` of this manifest's review prompt rendered with these ids, or ``(None, why it cannot be)``."""
     from scripts.review.prompts.render import RenderError, render
 
     try:
-        rendered = render(Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id)
+        rendered = render(
+            Path(manifest_path), repo_root=root, review_id=review_id, attempt_id=attempt_id, review_access=review_access
+        )
     except (RenderError, OSError, ValueError) as error:
         return None, str(error)
     return rendered.prompt_sha256, ""
 
 
-def rendered_prompt_sha256(manifest_path: Path, root: Path, review_id: str, attempt_id: str) -> str | None:
+def rendered_prompt_sha256(
+    manifest_path: Path, root: Path, review_id: str, attempt_id: str, review_access: str = "isolated"
+) -> str | None:
     """The sha256 of this manifest's review prompt rendered with these ids, or ``None`` when it cannot be rendered."""
-    return _render_prompt_sha256(manifest_path, root, review_id, attempt_id)[0]
+    return _render_prompt_sha256(manifest_path, root, review_id, attempt_id, review_access)[0]
 
 
 def attest_prompt_sha256(data: bytes, attested: str | None) -> bytes:
@@ -336,7 +342,10 @@ def attested_return(
     _verify_task_return(
         data, task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
     )
-    rendered, why = _render_prompt_sha256(manifest_path, root, review_id, attempt_id)
+    task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
+    rendered, why = _render_prompt_sha256(
+        manifest_path, root, review_id, attempt_id, task.get("review_access", "isolated")
+    )
     if rendered is None:
         raise refuse(f"the prompt cannot be rendered from {manifest_path} ({why})")
     if rendered != sent:

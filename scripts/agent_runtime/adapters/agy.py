@@ -488,7 +488,8 @@ class AgyAdapter:
         # Prefer absolute binary for isolation policy / sandbox argv0 rules.
         with contextlib.suppress(OSError):
             agy_bin = str(Path(agy_bin).resolve())
-        _require_background_wait_support(agy_bin)
+        if not (tc.get("review_attempt_boundary") and tc.get("review_access") == "full"):
+            _require_background_wait_support(agy_bin)
         if (review_isolation or tc.get("review_attempt_boundary")) and tc.get("review_write_root"):
             log_dir = Path(str(tc["review_write_root"])) / "tmp"
             log_dir.mkdir(parents=True, exist_ok=True)
@@ -524,7 +525,7 @@ class AgyAdapter:
             + "\n"
         )
         if review_isolation or full_review:
-            # Full content reviews retain native write denial without AttemptBoundary.
+            # The OS boundary owns full-review write denial; native sandbox is supplementary.
             if full_review or tc.get("agy_review_sandbox", True):
                 cmd.append("--sandbox")
         else:

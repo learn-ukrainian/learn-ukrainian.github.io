@@ -10,13 +10,27 @@ ordinary read/search tools, repository and git context. The actual working tree
 must match every manifest input hash; a mismatch refuses as
 `full_review_tree_mismatch`. The same check runs again before adapter launch.
 
-Full access drops only `AttemptBoundary`. `prepare_review_attempt` still creates
-the exclusive per-attempt sources server configuration, receipt ledger and
-scoped Codex/AGY homes, and effective-MCP launch gates still bind. Claude uses its
-ordinary reviewer permission profile (write deny list and hooks); Codex retains
-its native read-only sandbox and sources approval; AGY requires `--sandbox` and
-never uses permission bypass in full mode. These are native seat controls, not
-the isolated filesystem boundary described below.
+Full access uses the existing attempt boundary and socket forwarder. On Linux,
+Bubblewrap mounts the whole host read-only (`--ro-bind / /`) and shares the
+network so every seat can reach its provider. A private PID namespace, private
+procfs, `--new-session` and `--die-with-parent` contain the entire seat process
+tree, including detached children. Only private temporary storage and the
+attempt's return/transcript directory (including a fresh home staged with narrow
+CLI authentication) are writable. The reviewed checkout, receipt store, task
+records and saved results remain read-only. The sources process and ledger
+writer run outside the sandbox through the attempt-local socket forwarder.
+Missing Bubblewrap or a failed read/write capability probe refuses launch as
+`full_review_bwrap_unavailable` or `full_review_bwrap_probe_failed`; there is no
+unconfined fallback. CLI compatibility and effective-MCP probes run inside this
+same boundary. Codex defers its nested sandbox to the OS boundary so sources
+stdio remains usable. AGY's `--sandbox` is supplementary: OS write denial
+supersedes it, and no permission-bypass flag is used for AGY.
+
+The reviewed-tree check runs before `prepare_review_attempt` creates an
+exclusive ledger/config. A refused tree leaves its attempt id reusable; a
+newly provisioned checkout is removed through the common worktree reaper.
+Reused checkouts remain their owner's responsibility. The tree is checked
+again before the sandboxed adapter launch.
 
 `review_access` lives beside, never inside, the task's exact `review_attempt`
 binding. The recorder reads it from that task, verifies the saved result bytes,
@@ -27,7 +41,7 @@ task records and historical database rows retain `isolated`. Findings schema,
 verdict thresholds, stale checks, attempt budgets and failure counting stay the
 same. Version 5 adds only `attempts.access` to the findings database.
 
-The rendered prompts require ledgered sources checks for every Ukrainian claim
+Full-mode rendered prompts require ledgered sources checks for every Ukrainian claim
 relied on, including approval-critical clean checks, and allow `search_resources`
 for catalogue evidence. Repository/corpus/git reads are context: only sources
 receipts are citable. Other attempts' returns, verdict projections,
@@ -44,35 +58,53 @@ the return schema and verdict dimensions are unchanged.
   refusal for lessons through their writer record; the plan driver must retain
   author provenance and select an independent family until reliable plan writer
   records are available. A trailer alone is not that proof.
-- **Ledger reachability — review-harness driver:** full seats can read the receipt
-  store and implementation. Claude's shell remains available; deny lists/hooks
-  are not an OS boundary against arbitrary shell writes. Native Codex and AGY
-  sandbox behavior with the per-attempt sources writer needs a real-seat proof.
-  The ledger sidecar is consistency evidence, not protection against a hostile
-  same-user writer. A full review is a cooperative evidence-duty boundary.
+- **Runtime coverage — review-harness driver:** fake Claude, Codex and AGY seats
+  run their real adapter plans under Bubblewrap and must fail writes to the
+  receipt directory, ledger, reviewed tree, task record and saved result. A
+  detached child must die when the seat exits. These prove OS enforcement at
+  each adapter seam; they do not prove authenticated provider completion.
+  Real Claude/Codex probes are opt-in host checks; their recorded result, not
+  AGY's native flag, determines real-seat coverage. Real AGY provider completion
+  remains with the accountable driver in AC-04.
 - **AC-04 — accountable driver:** after landing, run a real bound full review
   with a short timeout. Require task binding plus `review_access: full`, a cited
   nonempty ledger, a trace of an outside-pin repo read or git command, recorder
   content disposition, status naming the same manifest, and one-input-change
   stale detection. A captured-return fixture proves the mechanism only.
 
+Full-mode boundary regressions and authenticated negative probes:
+
+```bash
+"$PROJECT_PYTHON" -m pytest tests/agent_runtime/test_full_review_access.py -q -s
+LU_FULL_REVIEW_REAL_PROBES=1 "$PROJECT_PYTHON" -m pytest tests/review/test_full_review_access.py -q -s
+```
+
+The fake-seat denominator is Claude, Codex and AGY, five protected targets per
+seat, with positive host-read/write controls and detached-child teardown.
+Authenticated Claude Opus 5.5 and Codex GPT-6.1 Sol probes additionally require
+captured shell arguments/output proving all five write attempts and unchanged
+protected bytes. These are negative filesystem probes, not the AC-04 linguistic
+review/recorder proof. AGY's real-provider row remains unverified until AC-04.
+
 ## Explicit isolated mode
 
 Issue #9251's filesystem boundary remains available with
 `--review-access isolated` for non-curriculum uses that require isolation.
 Curriculum review of record must use full mode. The existing isolated AGY/Codex
-route and its refusals are unchanged. Claude isolated attempts still refuse with
+route and its refusals are unchanged. Render and check with `--review-access
+isolated` to retain the main prompt bytes and original tool list; the evidence
+duty paragraph and `search_resources` are full-mode additions only. Claude isolated attempts still refuse with
 `attempt_boundary_claude_adapter_pending`; full Claude attempts do not. Cursor
 and other unsupported harnesses remain refused.
 
-Formal attempts on Linux have a private network namespace (`--unshare-net`),
+Isolated attempts on Linux have a private network namespace (`--unshare-net`),
 private PID namespace and private procfs. The host network and its loopback,
 interface listeners and abstract Unix sockets are unreachable, even when proxy
 variables are cleared or overridden. Ordinary dispatches retain their launch
 and network settings. Their parent file reads use trusted adapter roots resolved
 before launch, so legitimate symlinks above those roots remain supported.
 Rollout discovery treats a refused, unbound candidate as a non-match.
-Platforms without the network namespace mechanism are refused for formal
+Platforms without the network namespace mechanism are refused for isolated
 attempts; the former macOS filesystem-only capability is insufficient here.
 
 The authorized manifest closure is the complete set of eligible, hashed file

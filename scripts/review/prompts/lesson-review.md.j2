@@ -99,12 +99,12 @@ Optional checks:
 
 ## 3. Review Tools and Receipts
 
+{% if review_access == "full" %}
 ### Full access and evidence duty
 
 You have read access to the repository checkout, its git history, the textbook
 corpus and the resource catalogue (`docs/resources/` and `search_resources`).
-Use them as context to check the plan or lesson. In an explicitly isolated
-attempt, use the supplied pins and the ledgered sources tools instead.
+Use them as context to check the plan or lesson.
 
 Verify every Ukrainian word, form, stress, gloss and factual claim you rely on,
 including approval-critical checks: use `verify_words` (VESUM) for forms,
@@ -129,6 +129,7 @@ permitted despite their filenames. A lesson re-review may read only the previous
 attempt and ledger explicitly pinned by its manifest, and cite those receipts
 only under the existing resolved/persisting finding rule.
 
+{% endif %}
 The reviewer has tools from REVIEW_TOOLS:
 {% for tool in review_tools %}
 - `{{ tool }}`
