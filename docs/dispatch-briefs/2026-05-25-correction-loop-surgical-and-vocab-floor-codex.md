@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Correction loop: surgical per-gate prompts + deterministic vocab_floor path
 
 **Agent**: codex
@@ -133,8 +139,8 @@ m20 retry 2 (`a1-my-morning-20260525-210047`): correction round fixed `word_coun
 7. **Run tests + lint**:
    ```bash
    # venv symlinked per #2275 (Phase 2 prerequisite)
-   .venv/bin/python -m pytest tests/test_correction_loop_surgical.py tests/test_vocab_floor_correction.py -q
-   .venv/bin/python -m pytest tests/ -k "correction or vocab_floor or python_qg" -q
+   "$PROJECT_PYTHON" -m pytest tests/test_correction_loop_surgical.py tests/test_vocab_floor_correction.py -q
+   "$PROJECT_PYTHON" -m pytest tests/ -k "correction or vocab_floor or python_qg" -q
    .venv/bin/ruff check scripts tests
    ```
    ALL must be green. Quote raw outputs.
@@ -170,7 +176,7 @@ m20 retry 2 (`a1-my-morning-20260525-210047`): correction round fixed `word_coun
 Codex UI re-fires m20 retry from his existing worktree:
 1. `cd ~/.codex/worktrees/3a9a/learn-ukrainian/.worktrees/dispatch/codex/a1-m20-anchor-2026-05-26`
 2. `git pull` (gets surgical correction + vocab_floor path)
-3. `.venv/bin/python -u scripts/build/v7_build.py a1 my-morning --worktree --no-resume`
+3. `"$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 my-morning --worktree --no-resume`
 4. Writer's first pass produces 20 vocab → vocab_floor handler pads to 25-27 from plan.recommended → vocab gate passes.
 5. Writer's word_count + vesum_verified failures (if any) get per-gate surgical fix instructions → minimal token-level fix without regression.
 6. Module reaches module_done. §4 ten-check + ULP fidelity run. Anchor PR opens.

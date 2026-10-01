@@ -67,6 +67,7 @@ def test_ulif_forms_build_idempotent_and_verifies(tmp_path):
     assert report1["total_verified"] == 1
     assert report1["entries_done"] == 1
     assert report1["entries_failed"] == 0
+    assert report1["secondary_blocking_failures"] == []
     assert report1["total_forms"] > 0
 
     ver1 = ulif_forms.verify_ulif_forms(db_path)
@@ -938,3 +939,174 @@ def test_relation_probe_infrastructure_failure_is_persisted(tmp_path, monkeypatc
     verification = ulif_forms.verify_ulif_forms(db_path)
     assert verification["verified"] is False
     assert "infrastructure failures" in verification["error"]
+
+
+@pytest.mark.parametrize("error_type,reason", [
+    (sqlite3.OperationalError, "raw_cache_error"), (FileNotFoundError, "missing_cache_file"),
+])
+@pytest.mark.parametrize("gap", ["empty", "absent", "missing", "corrupt"])
+@pytest.mark.parametrize("mixed_errors", [False, True])
+def test_relation_infrastructure_reason_survives_source_gap(
+    tmp_path, monkeypatch, capsys, error_type, reason, gap, mixed_errors,
+):
+    """Synthetic structure: two failed relation tabs are one failed entry, even with a later gap."""
+    db_path = tmp_path / "sources.db"
+    raw_responses = {"synonyms": "<html>synthetic synonyms</html>", "phraseology": "<html>synthetic phraseology</html>"}
+    if gap != "absent":
+        raw_responses["paradigm"] = '<html><div id="ContentPlaceHolder1_article"></div></html>'
+    sources_db.store_ulif_dictua_entry(
+        word="placeholder", canonical_headword="placeholder", sections={}, raw_responses=raw_responses,
+        retrieved_at="2026-09-28T00:00:00Z", parser_version="ulif-dictua-v2", status="ok",
+        homonym_index=1, homonym_checked=1, db_path=db_path,
+    )
+    cache_path = ulif_raw_cache.cache_path(db_path)
+    with sqlite3.connect(db_path) as conn:
+        original_entries = conn.execute("SELECT * FROM ulif_dictua_entries").fetchall()
+        manifest_ref = conn.execute("SELECT raw_response_ref FROM ulif_dictua_entries").fetchone()[0]
+    manifest = json.loads(ulif_raw_cache.get(manifest_ref.removeprefix("sha256:"), path=cache_path))
+    relation_sha = manifest["synonyms"].removeprefix("sha256:")
+    other_error_type = FileNotFoundError if error_type is sqlite3.OperationalError else sqlite3.OperationalError
+    other_reason = "missing_cache_file" if reason == "raw_cache_error" else "raw_cache_error"
+    original_get = ulif_raw_cache.get
+
+    def faulty_get(sha, **kwargs):
+        if sha == relation_sha:
+            raise error_type("synthetic relation I/O failure")
+        if sha == manifest["phraseology"].removeprefix("sha256:"):
+            raise (other_error_type if mixed_errors else error_type)("synthetic second relation I/O failure")
+        if gap in {"missing", "corrupt"} and sha == manifest["paradigm"].removeprefix("sha256:"):
+            if gap == "corrupt":
+                raise ValueError("synthetic corrupt paradigm")
+            return None
+        return original_get(sha, **kwargs)
+
+    monkeypatch.setattr(ulif_raw_cache, "get", faulty_get)
+    report = ulif_forms.build_ulif_forms(db_path=db_path)
+    locator = f"ulif:entry:1:synonyms:{manifest['synonyms']}"
+    assert report["state"] == "failed"
+    assert (report["entries_done"], report["entries_failed"], report["total_forms"]) == (0, 1, 0)
+    assert report["failures_by_reason"] == {reason: 1}
+    assert report["unavailable_relation_blobs"] == [
+        {"entry_id": 1, "tab": tab, "ref": manifest[tab],
+         "error": other_reason if mixed_errors and tab == "phraseology" else reason,
+         "locator": f"ulif:entry:1:{tab}:{manifest[tab]}"}
+        for tab in ("synonyms", "phraseology")
+    ]
+    assert report["unavailable_relation_blobs_count"] == 2
+    assert report["secondary_blocking_failures"] == [
+        {"entry_id": 1, "reason": other_reason if mixed_errors else reason,
+         "locator": f"ulif:entry:1:phraseology:{manifest['phraseology']}"},
+    ]
+    assert ulif_forms.main(["build", "--db", str(db_path), "--raw-cache", str(cache_path)]) == 1
+    assert "Build failed: done=0, failed=1, forms=0" in capsys.readouterr().out
+    assert ulif_forms.verify_ulif_forms(db_path)["verified"] is False
+    with sqlite3.connect(db_path) as conn:
+        assert conn.execute("SELECT reason, locator FROM ulif_forms_failures").fetchall() == [(reason, locator)]
+        assert conn.execute("SELECT * FROM ulif_dictua_entries").fetchall() == original_entries
+        conn.execute("UPDATE ulif_forms_build SET state='complete'")
+    verification = ulif_forms.verify_ulif_forms(db_path)
+    assert verification["verified"] is False
+    assert "infrastructure failures" in verification["error"]
+    assert ulif_forms.main(["verify", "--db", str(db_path)]) == 1
+    assert "infrastructure failures" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("relation_error,primary_reason", [
+    (sqlite3.OperationalError, "raw_cache_error"), (FileNotFoundError, "missing_cache_file"),
+])
+@pytest.mark.parametrize("fault,secondary_reason", [
+    ("parser", "extraction_failed: RuntimeError: synthetic parser failure"),
+    ("missing_cache", "missing_cache_file"), ("cache_error", "raw_cache_error"),
+    ("unrecognized", "extraction_defect: unrecognized_article"),
+])
+@pytest.mark.parametrize("batch_size", [1, 500])
+def test_relation_and_later_blocking_failures_retain_report_details(
+    tmp_path, monkeypatch, relation_error, primary_reason, fault, secondary_reason, batch_size,
+):
+    """Literal fault expectations on isolated synthetic entries; not held-out driver proof."""
+    monkeypatch.delenv("LU_ULIF_RAW_CACHE", raising=False)
+    db_path = tmp_path / "sources.db"
+    raw = {"synonyms": "synthetic synonyms", "phraseology": "synthetic phraseology",
+           "paradigm": '<div id="ContentPlaceHolder1_article"></div>'}
+    for word in ("placeholder", "other-placeholder"):
+        sources_db.store_ulif_dictua_entry(
+            word=word, canonical_headword=word, sections={}, raw_responses=raw,
+            retrieved_at="2026-09-28T00:00:00Z", parser_version="ulif-dictua-v2", status="ok",
+            homonym_index=1, homonym_checked=1, db_path=db_path,
+        )
+    cache_path = ulif_raw_cache.cache_path(db_path)
+    with sqlite3.connect(db_path) as conn:
+        original_entries = conn.execute("SELECT * FROM ulif_dictua_entries").fetchall()
+        manifest_ref = conn.execute("SELECT raw_response_ref FROM ulif_dictua_entries LIMIT 1").fetchone()[0]
+    manifest = json.loads(ulif_raw_cache.get(manifest_ref.removeprefix("sha256:"), path=cache_path))
+    original_get = ulif_raw_cache.get
+    other_error = FileNotFoundError if relation_error is sqlite3.OperationalError else sqlite3.OperationalError
+    other_reason = "missing_cache_file" if primary_reason == "raw_cache_error" else "raw_cache_error"
+
+    def faulty_get(sha, **kwargs):
+        if sha == manifest["synonyms"].removeprefix("sha256:"):
+            raise relation_error("synthetic first relation failure")
+        if sha == manifest["phraseology"].removeprefix("sha256:"):
+            raise other_error("synthetic second relation failure")
+        if sha == manifest["paradigm"].removeprefix("sha256:"):
+            if fault == "missing_cache":
+                raise FileNotFoundError("synthetic paradigm cache failure")
+            if fault == "cache_error":
+                raise sqlite3.OperationalError("synthetic paradigm cache failure")
+        return original_get(sha, **kwargs)
+
+    def faulty_parse(*args, **kwargs):
+        if fault == "parser":
+            raise RuntimeError("synthetic parser failure")
+        return {"canonical_headword": "", "forms": [], "is_empty_visible_article": False}
+
+    monkeypatch.setattr(ulif_raw_cache, "get", faulty_get)
+    monkeypatch.setattr(ulif_forms.ulif_dictua_parse, "parse_ulif_entry", faulty_parse)
+    report_path = tmp_path / "report.json"
+    report = ulif_forms.build_ulif_forms(db_path, report_path=report_path, batch_size=batch_size)
+    expected_details = []
+    for entry_id in (1, 2):
+        expected_details.extend([
+            {"entry_id": entry_id, "reason": other_reason,
+             "locator": f"ulif:entry:{entry_id}:phraseology:{manifest['phraseology']}"},
+            {"entry_id": entry_id, "reason": secondary_reason, "locator": f"ulif:entry:{entry_id}"},
+        ])
+    assert report["secondary_blocking_failures"] == expected_details
+    assert json.loads(report_path.read_text())["secondary_blocking_failures"] == expected_details
+    assert report["failures_by_reason"] == {primary_reason: 2}
+    assert (report["state"], report["entries_done"], report["entries_failed"], report["total_forms"]) == ("failed", 0, 2, 0)
+    assert report["unavailable_relation_blobs"] == [
+        {"entry_id": entry_id, "tab": tab, "ref": manifest[tab],
+         "error": primary_reason if tab == "synonyms" else other_reason,
+         "locator": f"ulif:entry:{entry_id}:{tab}:{manifest[tab]}"}
+        for entry_id in (1, 2) for tab in ("synonyms", "phraseology")
+    ]
+    with sqlite3.connect(db_path) as conn:
+        assert conn.execute("SELECT entry_id, reason, locator FROM ulif_forms_failures ORDER BY entry_id").fetchall() == [
+            (entry_id, primary_reason, f"ulif:entry:{entry_id}:synonyms:{manifest['synonyms']}") for entry_id in (1, 2)
+        ]
+        assert conn.execute("SELECT * FROM ulif_dictua_entries").fetchall() == original_entries
+        conn.execute("UPDATE ulif_forms_build SET state='complete'")
+    assert ulif_forms.verify_ulif_forms(db_path)["verified"] is False
+
+
+def test_empty_data_gender_row_preserves_column_metadata_without_tag_leak():
+    """Synthetic English forms and verbatim existing map keys; no Ukrainian grammar claim."""
+    html = """
+    <div id="ContentPlaceHolder1_article"><span class="word_style">placehólder</span>
+    <table>
+      <tr><td colspan="3">Минулий час</td></tr>
+      <tr><td></td><td>однина</td><td>множина</td></tr>
+      <tr><td class="td_left_style">чол. р.</td>
+          <td class="td_inner_style">fírst</td><td class="td_inner_style" rowspan="3">plúral</td></tr>
+      <tr><td class="td_left_style">жін. р.</td><td class="td_inner_style"></td></tr>
+      <tr><td class="td_left_style">сер. р.</td><td class="td_inner_style">thírd</td></tr>
+      <tr><td colspan="3">Дієприслівник</td></tr>
+      <tr><td class="td_inner_style" colspan="3">láter</td></tr>
+    </table></div>
+    """
+    forms = ulif_forms.ulif_dictua_parse.parse_ulif_entry(html, homonym_index=1)["forms"]
+    assert [(row["form_stressed"], row["grammatical_tags"]) for row in forms if not row["is_lemma"]] == [
+        ("fírst", ["past", "m", "s"]), ("plúral", ["past", "p"]),
+        ("thírd", ["past", "n", "s"]), ("láter", ["past", "advp"]),
+    ]

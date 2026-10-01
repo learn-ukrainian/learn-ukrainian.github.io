@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Wiki Obligations Manifest + prompt restructure + reviewer pass + parser gate
 
 > **Decision:** User signoff 2026-05-13 on "ship all" (Codex's Option E synthesis from the `wiki-enforcement-2026-05-13` channel). Substance converged across Codex + Gemini + Claude-headless rounds; the architecture is yours from round 1 + round 2.
@@ -15,7 +21,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd .worktrees/dispatch/codex/wiki-obligations-manifest-2026-05-13 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -36,7 +42,7 @@ Ship the architecture you proposed in the channel: **Wiki Obligations Manifest**
 
 | Claim | Deterministic tool | Output format |
 |---|---|---|
-| "Manifest extractor exists and produces structured output for a1/my-morning" | `.venv/bin/python -c "from scripts.build.phases.wiki_manifest import extract_manifest; import json; print(json.dumps(extract_manifest('wiki/pedagogy/a1/my-morning.md'), indent=2, ensure_ascii=False)[:2000])"` | quote stdout — must show ≥6 l2_errors and ≥5 sequence_steps |
+| "Manifest extractor exists and produces structured output for a1/my-morning" | `"$PROJECT_PYTHON" -c "from scripts.build.phases.wiki_manifest import extract_manifest; import json; print(json.dumps(extract_manifest('wiki/pedagogy/a1/my-morning.md'), indent=2, ensure_ascii=False)[:2000])"` | quote stdout — must show ≥6 l2_errors and ≥5 sequence_steps |
 | "Parser handles wiki heading variants" | run extractor on at least 10 distinct A1 wiki pages; quote the per-page (l2_errors, sequence_steps, phonetic_rules) counts | table or per-page summary in PR body |
 | "Prompt restructure landed" | `grep -n 'LESSON SOURCE\|Wiki Obligations Manifest\|## Knowledge Packet' scripts/build/phases/linear-write.md` shows manifest section before `## Module Context` line | quote grep output |
 | "DEFERRED hatch is gone" | `grep -i 'DEFERRED' scripts/build/phases/linear-write.md` returns nothing | quote grep (empty) |
@@ -312,7 +318,7 @@ If the parser-side measurement on the existing my-morning correctly identifies 0
 - [ ] `.python-version` unchanged
 - [ ] `.yamllint` and `.markdownlint.json` unchanged
 - [ ] No `status/*.json` or `audit/*-review.md` files in diff (the baseline measurement report goes under `audit/wiki-coverage-baseline-2026-05-13/`, that path is expected)
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertion-weakening
 - [ ] Every changed file directly related to wiki obligations / prompt restructure / coverage enforcement

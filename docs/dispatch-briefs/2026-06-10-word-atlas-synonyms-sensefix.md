@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Word Atlas synonyms done RIGHT (supersedes #2895) + salvage cleanup
 
 PR #2895's WordNet synonyms were **polluted** and must NOT ship: `кава→Java/chocolate/умбра`,

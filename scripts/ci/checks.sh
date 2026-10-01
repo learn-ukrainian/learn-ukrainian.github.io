@@ -24,6 +24,9 @@ check() {
 # Lint only; `ruff format --check` is not a gate (~2,050 files differ).
 check "Ruff" .venv/bin/python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
 
+# Cryptographic curriculum manifest canary: runs before any generator to inspect untouched tree
+check "Curriculum manifest canary" .venv/bin/python scripts/audit/curriculum_manifest_canary.py --check
+
 plan_validate() {
   # pull_request: only when the v2 plan inputs changed; other events always.
   if [ "${EVENT_NAME:-}" = pull_request ] && [ -z "$(git diff --name-only origin/main...HEAD -- \

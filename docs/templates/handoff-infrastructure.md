@@ -5,7 +5,7 @@ Use this template when creating issues for new tools, scripts, or infrastructure
 ## Usage
 
 ```bash
-gh issue create \
+.venv/bin/python -m scripts.publish issue-create \
   --title "feat(scope): Brief description of tool/feature" \
   --body-file /tmp/issue-body.md \
   --label "enhancement" \

@@ -227,6 +227,7 @@ class TestListTools:
             "search_text",
             "search_literary",
             "search_external",
+            "search_resources",
             "get_full_text",
             "get_chunk_context",
             "collection_stats",

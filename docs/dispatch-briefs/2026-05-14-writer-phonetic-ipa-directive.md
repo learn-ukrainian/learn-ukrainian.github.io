@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — V7 writer phonetic-rule IPA directive + wiki-coverage gate hard-fail
 
 > **Issue:** #1924
@@ -14,7 +20,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd .worktrees/dispatch/codex/writer-phonetic-ipa-2026-05-14 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use `.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -141,7 +147,7 @@ Test — verify that `spoken_present=false` produces a failure regardless of the
 - [ ] `.python-version` unchanged
 - [ ] `.yamllint` / `.markdownlint.json` unchanged
 - [ ] No `status/*.json` / `audit/*-review.md` files in diff
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass`
 - [ ] Every changed file directly related to the directive + gate hard-fail
 - [ ] Total files changed < 8

@@ -96,6 +96,30 @@ const isActive = (href: string) => {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="light dark" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com/gsi/client; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://learn-ukrainian.goatcounter.com https://img.youtube.com; font-src 'self' data:; connect-src 'self' https://learn-ukrainian.goatcounter.com https://accounts.google.com https://www.googleapis.com; frame-src https://accounts.google.com https://www.youtube.com https://www.youtube-nocookie.com; media-src 'self'; object-src 'none'; base-uri 'self';"
+    />
+    <style id="lu-anti-clickjack" is:inline>
+      body {
+        display: none !important;
+      }
+    </style>
+    <script is:inline>
+      if (window.top === window.self) {
+        const antiClickjack = document.getElementById('lu-anti-clickjack');
+        if (antiClickjack && antiClickjack.parentNode) {
+          antiClickjack.parentNode.removeChild(antiClickjack);
+        }
+      } else {
+        try {
+          window.top.location = window.location.href;
+        } catch {
+          // Top navigation denied or sandboxed; body remains hidden via #lu-anti-clickjack
+        }
+      }
+    </script>
     <title>{title} · Learn Ukrainian</title>
     {description && <meta name="description" content={description} />}
     <link rel="icon" href="/favicon.svg" />

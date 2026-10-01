@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — PR-D1: `ab ask-hermes` + `ab ask-opencode` bridge subcommands
 
 **Agent:** gemini (mechanical mirror of existing ask-codex/ask-gemini patterns; codex busy on PR-C + #2239)
@@ -13,11 +19,11 @@ Every verifiable claim MUST be tool-backed with command + cwd + raw output tripl
 
 | Claim | Evidence |
 |---|---|
-| Bridge subcommands registered | `.venv/bin/python scripts/ai_agent_bridge/__main__.py --help` raw output showing `ask-hermes` + `ask-opencode` in subcommand list |
-| Tests pass | `.venv/bin/python -m pytest tests/test_ask_hermes.py tests/test_ask_opencode.py -v` + raw final line |
+| Bridge subcommands registered | `"$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py --help` raw output showing `ask-hermes` + `ask-opencode` in subcommand list |
+| Tests pass | `"$PROJECT_PYTHON" -m pytest tests/test_ask_hermes.py tests/test_ask_opencode.py -v` + raw final line |
 | Lint clean | `.venv/bin/ruff check scripts/ai_agent_bridge/_hermes.py scripts/ai_agent_bridge/_opencode.py scripts/ai_agent_bridge/_cli.py tests/test_ask_hermes.py tests/test_ask_opencode.py` + raw final line |
-| Smoke test (hermes) | `echo "say hello in 5 words" \| .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-hermes - --task-id smoke-hermes --model qwen/qwen3.6-plus` + raw output (must include hermes response) |
-| Smoke test (opencode) | `echo "say hello in 5 words" \| .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-opencode - --task-id smoke-opencode --model openrouter/qwen/qwen3.7-max` + raw output (must include opencode response) |
+| Smoke test (hermes) | `echo "say hello in 5 words" \| "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-hermes - --task-id smoke-hermes --model qwen/qwen3.6-plus` + raw output (must include hermes response) |
+| Smoke test (opencode) | `echo "say hello in 5 words" \| "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-opencode - --task-id smoke-opencode --model openrouter/qwen/qwen3.7-max` + raw output (must include opencode response) |
 | Commit landed | `git log -1 --oneline` raw |
 | PR opened | `gh pr view --json url --jq .url` raw URL |
 
@@ -62,7 +68,7 @@ hermes the same way they route through codex/gemini.
 
 Invocation pattern:
     # venv symlinked
-    .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-hermes <content> \\
+    "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-hermes <content> \\
       --task-id <task> --model qwen/qwen3.6-plus
 
 Under the hood: hermes -z "<content>" -m <model>
@@ -166,7 +172,7 @@ the 2026-05-23 strip-plan review).
 
 Invocation pattern:
     # venv symlinked
-    .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-opencode <content> \\
+    "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-opencode <content> \\
       --task-id <task> --model openrouter/qwen/qwen3.7-max [--data FILE]
 
 Under the hood: opencode run --model PROVIDER/MODEL [--file FILE] "CONTENT"
@@ -464,7 +470,7 @@ def test_invoke_opencode_raises_when_binary_missing():
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/test_ask_hermes.py tests/test_ask_opencode.py -v
+"$PROJECT_PYTHON" -m pytest tests/test_ask_hermes.py tests/test_ask_opencode.py -v
 ```
 
 Expect: all green (8-10 tests).
@@ -473,8 +479,8 @@ Expect: all green (8-10 tests).
 
 ```bash
 # venv symlinked
-echo "say hello in 5 words" | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-hermes - --task-id smoke-hermes-pr-d1 --model qwen/qwen3.6-plus 2>&1 | tail -20
-echo "say hello in 5 words" | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-opencode - --task-id smoke-opencode-pr-d1 --model openrouter/qwen/qwen3.7-max 2>&1 | tail -20
+echo "say hello in 5 words" | "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-hermes - --task-id smoke-hermes-pr-d1 --model qwen/qwen3.6-plus 2>&1 | tail -20
+echo "say hello in 5 words" | "$PROJECT_PYTHON" scripts/ai_agent_bridge/__main__.py ask-opencode - --task-id smoke-opencode-pr-d1 --model openrouter/qwen/qwen3.7-max 2>&1 | tail -20
 ```
 
 Both should print a 5-word hello-style response. If either fails, surface in PR body.
@@ -483,7 +489,7 @@ Both should print a 5-word hello-style response. If either fails, surface in PR 
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/ --timeout=120 -q 2>&1 | tail -30
+"$PROJECT_PYTHON" -m pytest tests/ --timeout=120 -q 2>&1 | tail -30
 ```
 
 Specifically watch tests in `tests/test_ai_*` and `tests/test_messaging*` — they might assert agent enumerations.

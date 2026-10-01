@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — #1822 test coverage for /artifacts/ docs router
 
 **Why this matters now:** `scripts/api/docs_router.py` shipped in commit `c17450a6c1` with **zero tests**. The orchestrator manually smoke-tested four scenarios before commit (root, file serve, traversal block) but a PR can break any of those without a test catching it. This is a routine post-merge hardening pass. No bug is masked — we're adding the regression net that should have shipped with the original PR.
@@ -83,7 +89,7 @@ Use `pytest.mark.parametrize` for the 8-root happy-path test and the 3 traversal
 
 3. **Find one existing HTML per allowed root** for the happy-path parametrize fixture. Run:
    ```
-   .venv/bin/python -c "
+   "$PROJECT_PYTHON" -c "
    from scripts.api.docs_router import ALLOWED_ROOTS
    from pathlib import Path
    for k, v in ALLOWED_ROOTS.items():

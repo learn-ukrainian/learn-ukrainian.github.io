@@ -15,6 +15,12 @@ references:
   - docs/references/private/ULP*.txt  # source corpus (6 seasons, gitignored)
   - AGENTS.md  # pre-submit checklist (lines 11-26 verbatim)
 ---
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 
 # Dispatch — ULP-derived immersion calibration replay (Phase 4)
 
@@ -66,7 +72,7 @@ The Decision Card sets Phase 4's acceptance criterion: "tune `_ULP_VOCAB_KNEE_PE
 | "ULP S1 lesson 1 UK density = X%" | raw lemma-count numerator + total-token-count denominator + the per-lesson JSONL line |
 | "Knee for `a1` family at cumulative-vocab=N" | scatter / regression output + the JSONL slice it was computed from |
 | "Recycle cadence for `a1` = M every Q lessons" | per-lemma revisit-lag distribution emit + summary statistics |
-| "Tests pass" | `.venv/bin/python -m pytest tests/test_ulp_immersion_calibration.py` final summary line raw |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/test_ulp_immersion_calibration.py` final summary line raw |
 | "Ruff clean" | `.venv/bin/ruff check scripts/config.py tests/test_ulp_immersion_calibration.py` "All checks passed!" raw |
 | "Backward compat on a1 m01-m03" | before/after `compute_immersion_band` output dump, side-by-side, both runs in the report |
 
@@ -74,7 +80,7 @@ The Decision Card sets Phase 4's acceptance criterion: "tune `_ULP_VOCAB_KNEE_PE
 
 1. **Worktree setup.** `git fetch origin && git worktree add -b codex/ulp-calibration-phase-4-2026-05-13 .worktrees/dispatch/codex/ulp-calibration-phase-4-2026-05-13 origin/main` — work inside this worktree exclusively. (Per `delegate.py --mode danger --worktree` your wrapper sets this; document the path in the commit body.)
 2. **File-level work.** Build extractor → build raw.jsonl → fit constants → write `scripts/config.py` edits → write `REPORT.html` → write tests.
-3. **Run the test suite** for affected paths: `.venv/bin/python -m pytest tests/test_ulp_immersion_calibration.py tests/test_audit_recycle_cadence.py -v` (the latter exists per PR #1943; confirm calibration doesn't regress).
+3. **Run the test suite** for affected paths: `"$PROJECT_PYTHON" -m pytest tests/test_ulp_immersion_calibration.py tests/test_audit_recycle_cadence.py -v` (the latter exists per PR #1943; confirm calibration doesn't regress).
 4. **Run ruff**: `.venv/bin/ruff check scripts/config.py tests/test_ulp_immersion_calibration.py` — zero warnings/errors.
 5. **Commit** with conventional message (subject ≤ 70 char): `feat(immersion): Phase 4 ULP calibration — fit constants + flip flag` and a body summarizing the empirical findings + the backward-compat verification. `Co-Authored-By: Codex <noreply@openai.com>` line.
 6. **Push** the branch: `git push -u origin codex/ulp-calibration-phase-4-2026-05-13`.
@@ -89,7 +95,7 @@ The Decision Card sets Phase 4's acceptance criterion: "tune `_ULP_VOCAB_KNEE_PE
 - [ ] No `status/*.json` files in the diff
 - [ ] No `audit/*-review.md` files in the diff (the calibration report at `audit/ulp-calibration-2026-05-13/REPORT.html` is fine — it's a calibration artifact, not a review artifact)
 - [ ] No `review/*-review.md` files in the diff
-- [ ] No `sys.executable` anywhere in code (use `.venv/bin/python`)
+- [ ] No `sys.executable` anywhere in code (use `"$PROJECT_PYTHON"`)
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertions weakened (e.g., `is True` → `isinstance(..., bool)`)
 - [ ] Every changed file is directly related to ULP calibration

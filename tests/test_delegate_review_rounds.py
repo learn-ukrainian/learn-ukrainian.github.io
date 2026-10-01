@@ -17,6 +17,7 @@ from __future__ import annotations
 import os
 import subprocess
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -70,6 +71,7 @@ def _git(cwd: Path, *args: str) -> str:
         for key, value in os.environ.items()
         if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
     }
+    env.update(GIT_TERMINAL_PROMPT="0", GIT_ALLOW_PROTOCOL="file")
     proc = subprocess.run(
         ["git", *args],
         cwd=cwd,
@@ -155,6 +157,42 @@ def test_review_series_round_numbers() -> None:
     assert delegate._review_series("review-gpt6-routing-r7") == ("review-gpt6-routing", 7)
     assert delegate._review_series("review-8340-cf-r10") == ("review-8340-cf", 10)
     assert delegate._review_series("impl-8414") is None
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+@pytest.mark.parametrize("release_reason", ["dirty", "live task", "tip not contained in main or a remote ref"])
+def test_superseded_review_dependency_is_kept_without_refusing_dispatch(
+    monkeypatch, tmp_path, capsys, dry_run, release_reason
+):
+    earlier = tmp_path / "review-topic-r2"
+    earlier.mkdir()
+    manifest = earlier / "manifest.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(earlier, "review-topic-r2")])
+
+    with (
+        patch.object(delegate, "_superseded_review_release_proof", return_value=(False, release_reason)) as proof,
+        patch.object(delegate, "_remove_dispatch_worktree") as remove,
+    ):
+        released = delegate._release_superseded_review_worktrees(
+            "review-topic-r4", dry_run=dry_run, review_dependencies=(("manifest", manifest),)
+        )
+
+    assert released == []
+    proof.assert_not_called()
+    remove.assert_not_called()
+    assert manifest.is_file()
+    err = capsys.readouterr().err
+    assert f"earlier review {earlier} kept: review dependency (manifest)" in err
+    assert "would remove" not in err
+
+
+def test_detached_review_dependency_refusal_remedy_requires_a_separate_retained_checkout(tmp_path):
+    holder = tmp_path / "detached-review"
+    with pytest.raises(ValueError) as exc:
+        delegate._refuse_review_attempt_branch_holders(None, [holder], (("input_root", holder),))
+    assert "render from a separate retained worktree at the exact commit" in str(exc.value)
+    assert "render from a detached worktree" not in str(exc.value)
 
 
 def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Path) -> None:

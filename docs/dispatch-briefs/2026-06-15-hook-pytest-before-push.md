@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — #1908 hook: #M-7 pytest-before-push guard (script + tests ONLY)
 
 Push the recurring "#M-7 run pytest locally before pushing to MAIN" rule down to the
@@ -14,7 +20,7 @@ sibling hook PRs). DO NOT run the deploy script.
 ## Two hooks
 1. `agents_extensions/shared/hooks/stamp-pytest.sh` — **PostToolUse(Bash)** stamper.
    Reads stdin JSON; if the executed command contained a real `pytest` invocation
-   (`.venv/bin/python -m pytest` / `pytest ` / `dagger call pytest`), `touch` a marker
+   (`"$PROJECT_PYTHON" -m pytest` / `pytest ` / `dagger call pytest`), `touch` a marker
    `"${TMPDIR:-/tmp}/learn-uk-pytest.$(git branch --show-current).stamp"`. Fire-and-forget
    (always exit 0; never block). Mirror `tool-timing.sh` for the PostToolUse payload shape.
 2. `agents_extensions/shared/hooks/guard-push-pytest.py` — **PreToolUse(Bash)** guard.
@@ -39,7 +45,7 @@ sibling hook PRs). DO NOT run the deploy script.
    `tests/test_guard_admin_merge.py`); monkeypatch branch/diff/marker; assert: push-to-main
    + test-trigger + stale marker → 2; fresh marker → 0; non-main branch → 0; non-push cmd
    → 0; `SKIP_PYTEST_HOOK=1` → 0; quoted-body → 0. Plus a bash smoke for the stamper.
-4. `.venv/bin/python -m pytest tests/test_guard_push_pytest.py -q` green. 5. `.venv/bin/ruff check` clean.
+4. `"$PROJECT_PYTHON" -m pytest tests/test_guard_push_pytest.py -q` green. 5. `.venv/bin/ruff check` clean.
 6. Commit `feat(harness): #M-7 pytest-before-push guard hook (#1908)` + `X-Agent: codex/hook-pytest-push`.
 7. `git push -u origin <branch>` + `gh pr create`. NO merge. NO settings.json edit.
 

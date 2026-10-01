@@ -14,11 +14,8 @@ demote a model into a lower-quality rung.
 The model inventory, candidate routes, and risk ladders are loaded from the
 versioned ``scripts/config/model_catalog.yaml`` catalog at import time
 (``REVIEW_CANDIDATES`` / ``REVIEW_LADDERS`` via ``_catalog_candidate`` /
-``_catalog_ladder``). **Policy changes to ladder order or formal CF seats are
-YAML edits** — this module must not hard-code a second ladder. As of the
-fleet-comms practical-CF pin (#5512): ``critical`` keeps authority-first
-(Sol/Fable/Opus); ``high|medium|low`` walk practical seats (Sol, Sonnet 5.5,
-Grok native + Cursor-explicit ``grok-4.7`` fallback, …).
+``_catalog_ladder``). Policy changes belong in YAML: critical prefers Sol / Opus;
+Fable is last resort, routine ladders keep practical seats, and Grok never judges.
 ``glm-5.3`` remains catalogued for an explicit ``--reviewer`` pin only.
 Its separate freshness lint forces a provider/CLI/source review every 30 days
 without making a stale catalog an operational outage at runtime.
@@ -144,6 +141,7 @@ class ReviewerCandidate:
     transport: str
     invocation: str
     quality_tier: str
+    last_resort: bool = False
     model_roles: frozenset[str] = field(default_factory=frozenset)
     health_keys: frozenset[str] = field(default_factory=frozenset)
     requires_silence_timeout: bool = False
@@ -199,6 +197,7 @@ def _catalog_candidate(name: str) -> ReviewerCandidate:
         transport=raw["transport"],
         invocation=raw["invocation"],
         quality_tier=model["tier"],
+        last_resort=raw.get("last_resort", False),
         model_roles=frozenset(model["roles"]),
         health_keys=frozenset(raw.get("health_keys", [])),
         requires_silence_timeout=bool(raw.get("requires_silence_timeout", False)),
@@ -672,6 +671,16 @@ def evaluate_candidate(
                 health=health,
             )
 
+    if candidate.family == "xai" or model_family == "xai":
+        return CandidateResult(
+            name=candidate.name, concrete_model=candidate.concrete_model,
+            family=candidate.family, route=candidate.route, transport=candidate.transport,
+            invocation=candidate.invocation, quality_tier=candidate.quality_tier,
+            requires_silence_timeout=candidate.requires_silence_timeout,
+            status="excluded", reason="Grok never judges: excluded from code and infra review by core.md P2",
+            health=health,
+        )
+
     # Operator 2026-09-25: Gemini reviews Ukrainian only, never code. Keep this
     # hard gate even for injected ladders and explicitly pinned candidates.
     if candidate.concrete_model.casefold().startswith("gemini-") or candidate.route == "agy":
@@ -897,11 +906,11 @@ def evaluate_candidate(
 
 
 def _best_eligible(
-    eligible_by_fit_and_tier: dict[tuple[int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]],
+    eligible_by_fit_and_tier: dict[tuple[bool, int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]],
     *,
     exclude_families: frozenset[str] = frozenset(),
 ) -> tuple[ReviewerCandidate, CandidateResult, int] | None:
-    """Pick the best eligible entry: best (suitability, tier) group first,
+    """Pick the best eligible entry: primary before last resort, then suitability and tier,
     deterministic selection_score inside it. ``exclude_families`` lets the
     dual-family quorum path pick a second seat outside the first seat's
     family without relaxing the fit-before-pressure ordering."""
@@ -1093,11 +1102,12 @@ def resolve_reviewer(
     advisory: list[CandidateResult] = []
     selected: CandidateResult | None = None
     selected_rung_index: int | None = None
+    # Last-resort candidates follow every eligible primary, after hard gates.
     # A ladder orders fallbacks, not traffic. Candidates in separate YAML
     # rungs with the same semantic suitability and catalog tier form one
     # balancing set, so insertion order cannot pin traffic or promote an idle
     # weaker model over a better task fit.
-    eligible_by_fit_and_tier: dict[tuple[int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]] = {}
+    eligible_by_fit_and_tier: dict[tuple[bool, int, int], list[tuple[ReviewerCandidate, CandidateResult, int]]] = {}
     tier_for_candidate = {
         name: _MODEL_CATALOG["quality_tiers"][candidate.quality_tier]
         for name, candidate in REVIEW_CANDIDATES.items()
@@ -1128,7 +1138,7 @@ def resolve_reviewer(
             if result.status == "advisory_only":
                 advisory.append(result)
             elif result.status == "eligible":
-                fit_key = (result.suitability_rank or 0, tier_for_candidate[candidate.name])
+                fit_key = (candidate.last_resort, result.suitability_rank or 0, tier_for_candidate[candidate.name])
                 eligible_by_fit_and_tier.setdefault(fit_key, []).append((candidate, result, rung_index))
 
     if quorum_required:
@@ -1219,6 +1229,8 @@ def resolve_reviewer(
         selected = promoted
 
     substitution_notes: list[str] = []
+    if selected is not None and candidate.last_resort:
+        substitution_notes.append(f"last resort selected {selected.name}: no eligible primary remained or an explicit pin was requested")
     if selected is not None and selected_rung_index is not None:
         higher_quality_tier_exists = any(
             _suitability_rank(candidate, inputs) == selected.suitability_rank

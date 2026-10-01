@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — PR-C: writer prompt strip + stale-constant fixes + per-rule firing telemetry
 
 **Agent:** codex (judgment-heavy prompt restructure, codex has the deepest knowledge of how this prompt is consumed)
@@ -15,8 +21,8 @@ Every verifiable claim MUST be tool-backed with command + cwd + raw output tripl
 | Claim | Evidence |
 |---|---|
 | Prompt size measured | `wc -c scripts/build/phases/linear-write.md` raw |
-| Rendered prompt size measured | `wc -c curriculum/l2-uk-en/a1/my-morning/writer_prompt.md` (or fresh render via `.venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run-prompt` if such flag exists; else render manually) |
-| Tests pass | `.venv/bin/python -m pytest tests/test_writer_prompt_size.py tests/test_linear_pipeline_telemetry.py -v` + raw final line |
+| Rendered prompt size measured | `wc -c curriculum/l2-uk-en/a1/my-morning/writer_prompt.md` (or fresh render via `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --dry-run-prompt` if such flag exists; else render manually) |
+| Tests pass | `"$PROJECT_PYTHON" -m pytest tests/test_writer_prompt_size.py tests/test_linear_pipeline_telemetry.py -v` + raw final line |
 | Lint clean | `.venv/bin/ruff check scripts/build/phases/linear-write.md scripts/audit/check_writer_prompt_size.py tests/test_writer_prompt_size.py` + raw final line |
 | Commit landed | `git log -1 --oneline` raw |
 | PR opened | `gh pr view --json url --jq .url` raw URL |
@@ -357,7 +363,7 @@ def test_writer_rule_fired_event_emitted_on_known_failure_class():
 
 ```bash
 # venv symlinked
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --no-resume --dry-run-prompt --out /tmp/pr-c-render 2>&1 | tail -10
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --no-resume --dry-run-prompt --out /tmp/pr-c-render 2>&1 | tail -10
 wc -c /tmp/pr-c-render/writer_prompt.md
 ```
 
@@ -369,8 +375,8 @@ Verify the rendered size is between 100KB and 130KB. If above 130KB: strip more.
 
 ```bash
 # venv symlinked
-.venv/bin/python -m pytest tests/test_writer_prompt_size.py tests/test_linear_pipeline_telemetry.py -v
-.venv/bin/python -m pytest tests/ --timeout=120 -q 2>&1 | tail -30
+"$PROJECT_PYTHON" -m pytest tests/test_writer_prompt_size.py tests/test_linear_pipeline_telemetry.py -v
+"$PROJECT_PYTHON" -m pytest tests/ --timeout=120 -q 2>&1 | tail -30
 .venv/bin/ruff check scripts/build/phases/linear-write.md scripts/audit/check_writer_prompt_size.py tests/test_writer_prompt_size.py
 ```
 

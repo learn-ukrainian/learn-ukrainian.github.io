@@ -2,10 +2,13 @@ from __future__ import annotations
 
 import os
 import sqlite3
+import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
+from itertools import product
 from pathlib import Path
 from threading import Barrier, Event
+from time import thread_time
 from typing import Any
 
 import pytest
@@ -23,10 +26,17 @@ from agents_extensions.shared.session_streams.model import (
     isoformat_z,
 )
 from agents_extensions.shared.session_streams.store import (
+    _EMBEDDED_HOST_SUFFIXES,
+    _FILE_EXTENSIONS,
+    _REPOSITORY_FILENAMES,
+    MAX_ENTRY_BYTES,
     ContentRejectedError,
     LeaseConflictError,
     LifecycleError,
     SessionStreamStore,
+    _contains_hostname,
+    _filename_contains_hostname,
+    validate_entry_body,
 )
 
 NOW = datetime(2026, 7, 18, 12, 0, tzinfo=UTC)
@@ -660,6 +670,502 @@ def test_append_rejects_sensitive_or_non_text_content(tmp_path: Path, body: str,
             idempotency_key="rejected",
             now=NOW + timedelta(seconds=1),
         )
+
+
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "sources.db",
+        "vesum.db",
+        "core.md",
+        "a1.yaml",
+        "lexicon-manifest.json",
+        "mcp-sources-requests.jsonl",
+        "scripts/store.py",
+        r"scripts\core.md",
+        r"scripts\store.py",
+        r"scripts\x.sh",
+        r"C:\scripts\core.md",
+        r"D:\x\server.sh",
+        r"scripts\server.sh",
+        r"scripts\docs.rs",
+        r"scripts\fileserver.md",
+        r"\\?\C:\scripts\core.md",
+        r"\\.\D:\x\server.sh",
+        r"\??\C:\scripts\store.py",
+        r"\\host\server.sh",
+        r"\\.\server.sh",
+        r"scripts\UNC\server.sh",
+        "scripts/x.sh",
+        "scripts/.hidden.py",
+        "README.md",
+        "store.py",
+    ],
+)
+def test_append_accepts_repository_filenames(tmp_path: Path, filename: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    body = f"Updated `{filename}`."
+    entry = store.append_entry(
+        lease, entry_type=EntryType.NOTE, body=body, idempotency_key="filename", now=NOW + timedelta(seconds=1)
+    ).entry
+    assert entry.body == body
+    assert store.dump_stream(lease.stream_id)["entries"][0]["body"] == body
+
+
+@pytest.mark.parametrize(
+    "extension",
+    [
+        "py",
+        "md",
+        "db",
+        "yaml",
+        "yml",
+        "json",
+        "sh",
+        "txt",
+        "toml",
+        "js",
+        "ts",
+        "tsx",
+        "css",
+        "html",
+        "csv",
+        "jsonl",
+        "lock",
+        "cfg",
+        "ini",
+        "rs",
+        "go",
+        "mjs",
+        "cjs",
+        "svg",
+        "png",
+        "jpg",
+        "gif",
+        "pdf",
+        "log",
+    ],
+)
+def test_filename_exemption_rejects_embedded_hosts(tmp_path: Path, extension: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    # A file extension cannot exempt a host-named file from handoff hygiene.
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body=f"Changed `example.com.{extension.upper()}`.",
+            idempotency_key="filename",
+            now=NOW + timedelta(seconds=1),
+        )
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body=f"example.{extension}.example.com",
+            idempotency_key="host",
+            now=NOW + timedelta(seconds=2),
+        )
+    assert store.dump_stream(lease.stream_id)["entries"] == []
+
+
+@pytest.mark.parametrize(
+    "body,rule",
+    [
+        # Synthetic domains and documentation addresses; no runtime configuration.
+        *[(f"example.{suffix}", "hostname") for suffix in ("com", "org", "net", "io", "dev", "ua", "ru")],
+        *[
+            (host, "hostname")
+            for host in (
+                "docs.rs",
+                "bun.sh",
+                "server.sh",
+                "box.py",
+                "host.md",
+                ".hidden.py",
+                "unknown.md",
+                "SERVER.SH",
+                "example.com.py",
+                "api.example.co.py",
+                "EXAMPLE.COM.PY",
+                "server.sh/admin",
+                "example.md/path",
+                "example.rs?x=1",
+                "example.py#frag",
+                "example.local",
+                "example.lan",
+                "example.internal",
+                "home.arpa",
+                "example.zip",
+                "example.mov",
+                "example.ai",
+                "example.io",
+                "example.so",
+                "example.to",
+                "example.am",
+                "example.cc",
+                "example.ps",
+                "example.pl",
+                "example.pm",
+                "example.sc",
+                "example.py-x",
+                "core.md:12",
+                "store.py:55",
+                "core.md/path",
+                "store.py?x=1",
+                "README.md#frag",
+                "https://core.md",
+                "//store.py",
+                "//example.db",
+                "https://example.json",
+                "core.md.",
+                "scripts/example.com.py",
+                "example.com/core.md",
+                "example.sh/core.md",
+                r"\\server.sh\share",
+                r"\\fileserver.md\public",
+                r"\\box.py",
+                r"\\SERVER.SH\SHARE",
+                r"\\FILESERVER.MD\PUBLIC",
+                r"\\BOX.PY",
+                r"\/server.sh\share",
+                r"/\FILESERVER.MD/public",
+                "https:/server.sh",
+                "HTTPS:/SERVER.SH",
+                r"https:\server.sh",
+                r"HTTPS:/\SERVER.SH",
+                "file:/server.sh",
+                "file://fileserver.md/public",
+                "FILE:/BOX.PY",
+                "FILE://SERVER.SH/share",
+                r"file:\box.py",
+                r"file:\\fileserver.md\public",
+                r"FILE:/\SERVER.SH/share",
+                r"file:\/BOX.PY",
+                r"\Device\Mup\server.sh\share",
+                r"\Device\LanmanRedirector\server.sh\share",
+                r"\\?\GLOBALROOT\??\UNC\server.sh\share",
+                r"\\?\GLOBALROOT\GLOBAL??\UNC\server.sh\share",
+                r"\\?\GLOBALROOT\Device\LanmanRedirector\;Z:00000000000003e7\server.sh\share",
+                r"\Device\Mup\;Z:00000000000003e7\server.sh\share",
+                "file:///server.sh",
+                "https:/core.md",
+                r"\\store.py",
+                "example.com.json",
+                "host_vars/web01.example.com.yml",
+                "nas.local.yaml",
+                "host.internal.json",
+                "EXAMPLE.COM.JSON",
+                r"host_vars\WEB01.EXAMPLE.COM.YML",
+                "web01.prod.example.net.yaml",
+                "db.example.org.log",
+                "example.com.txt",
+            )
+        ],
+        ("sources.db.example.com", "hostname"),
+        ("*.example.com", "hostname"),
+        (".example.com", "hostname"),
+        ("fixture_name.example.com", "hostname"),
+        ("_service._tcp.example.com", "hostname"),
+        ("EXAMPLE.COM", "hostname"),
+        ("example.com.", "hostname"),
+        ("example.py.", "hostname"),
+        ("example.com:443", "hostname"),
+        ("example.py:443", "hostname"),
+        ("https://example.com:443/core.md", "hostname"),
+        ("https://example.py/core.md", "hostname"),
+        ("//example.py/core.md", "hostname"),
+        ("https://reader@example.com/core.md", "email-address"),
+        ("https://reader@example.py/core.md", "email-address"),
+        ("https://reader:fixture@example.com/core.md", "email-address"),
+        ("xn--bcher-kva.example.com", "hostname"),
+        ("example.xn--p1ai", "hostname"),
+        ("EXAMPLE.XN--P1AI.:443", "hostname"),
+        ("example.pyx", "hostname"),
+        ("example.py.backup", "hostname"),
+        ("core.md.example", "hostname"),
+        ("`sources.db` and example.com", "hostname"),
+        ("192.0.2.1", "ipv4-address"),
+        ("192.0.2.1:443", "ipv4-address"),
+        ("https://192.0.2.1/core.md", "ipv4-address"),
+        ("2001:db8::1", "ipv6-address"),
+        ("[2001:DB8::1]:443", "ipv6-address"),
+        ("https://[2001:db8::1]/core.md", "ipv6-address"),
+        ("::1", "ipv6-address"),
+    ],
+)
+def test_filename_exemption_preserves_host_and_ip_rejection(tmp_path: Path, body: str, rule: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    with pytest.raises(ContentRejectedError, match=f"{rule} rule"):
+        store.append_entry(
+            lease, entry_type=EntryType.NOTE, body=body, idempotency_key="rejected", now=NOW + timedelta(seconds=1)
+        )
+    assert store.dump_stream(lease.stream_id)["entries"] == []
+
+
+@pytest.mark.parametrize("namespace", ["\\\\?\\", "\\\\.\\", "\\??\\"])
+@pytest.mark.parametrize(
+    "network_root",
+    ["UNC", r"GLOBALROOT\UNC", "GLOBALROOT", r"GLOBALROOT\Device\Mup", r"GLOBALROOT\Device\LanmanRedirector"],
+)
+def test_namespace_network_roots_cannot_exempt_hosts(namespace: str, network_root: str) -> None:
+    # Every namespace/root pair receives the same spelling and context probes.
+    # These cover the reviewed extended-UNC forms and NT network-device roots.
+    for separator, upper, host, ending, wrapper in product(
+        ["\\", "/", "\\/", "/\\", "\\\\", "//"],
+        [False, True],
+        ["server.sh", "fileserver.md", "box.py", "docs.rs"],
+        ["", "\\", "\\share", "\\share\\"],
+        [("", ""), ("`", "`"), ('"', '"'), ("[", "]"), ("(", ")")],
+    ):
+        path = namespace + network_root + "\\" + host + ending
+        path = path.swapcase() if upper else path
+        path = path.replace("\\", separator)
+        body = f"Changed {wrapper[0]}{path}{wrapper[1]}"
+        assert _contains_hostname(body), body
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+
+
+@pytest.mark.parametrize(
+    "root",
+    [
+        r"\Device\Mup",
+        r"\Device\LanmanRedirector",
+        r"\Device\OtherRedirector",
+        r"\\?\GLOBALROOT\??\UNC",
+        r"\\?\GLOBALROOT\GLOBAL??\UNC",
+        r"\\?\GLOBALROOT\Device\Mup",
+        r"\\?\GLOBALROOT\Device\LanmanRedirector",
+        r"\\?\GLOBALROOT\Device\OtherRedirector",
+        r"\\.\GLOBALROOT\Device\OtherRedirector",
+        r"\??\GLOBALROOT\Device\OtherRedirector",
+    ],
+)
+def test_following_separator_rejects_hosts_under_any_device_root(root: str) -> None:
+    # Arbitrary device roots and session segments must not need prefix entries.
+    for separator, upper, host, session, ending in product(
+        ["\\", "/", "\\/", "/\\", "\\\\", "//"],
+        [False, True],
+        ["server.sh", "fileserver.md", "box.py", "docs.rs"],
+        ["", ";Z:", ";Z:00000000000003e7\\"],
+        ["\\", "\\share"],
+    ):
+        path = root + "\\" + session + host + ending
+        path = path.swapcase() if upper else path
+        path = path.replace("\\", separator)
+        body = f"Changed `{path}`"
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+
+
+@pytest.mark.parametrize("separator", ["/", "\\"])
+@pytest.mark.parametrize("name", ["server.sh", "core.md", "store.py", "docs.rs"])
+def test_host_shaped_directory_segments_are_conservatively_rejected(separator: str, name: str) -> None:
+    # Intentionally reject even local directories: only the final segment can
+    # use the filename exemption, so a host-shaped directory cannot hide a host.
+    validate_entry_body(separator.join(["scripts", name]))
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        validate_entry_body(separator.join(["scripts", name, "x"]))
+
+
+@pytest.fixture
+def repository_filename_paths() -> tuple[str, ...]:
+    # Snapshot of the explicit exceptions, checked against Git only in tests.
+    # Runtime admission never depends on the caller's filesystem or Git state.
+    return (
+        "agents_extensions/shared/rules/core.md",
+        "README.md",
+        "agents_extensions/shared/session_streams/store.py",
+    )
+
+
+@pytest.mark.repo_wide
+def test_collision_exceptions_are_exact_tracked_repository_names(repository_filename_paths: tuple[str, ...]) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
+    )
+    tracked = set(result.stdout.split("\0"))
+    assert set(repository_filename_paths) <= tracked
+    assert {Path(path).name for path in repository_filename_paths} == _REPOSITORY_FILENAMES
+
+
+@pytest.mark.repo_wide
+def test_embedded_host_filter_accepts_every_tracked_basename() -> None:
+    # Check S1 independently: the existing collision-TLD rule intentionally
+    # rejects bare unknown .md/.py names, which still need directory context.
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
+    )
+    tracked = [path for path in result.stdout.split("\0") if path]
+    assert tracked, "the guard must inspect the tracked Git index"
+    rejected = [path for path in tracked if _filename_contains_hostname(Path(path).name)]
+    assert rejected == [], "remove conflicting labels from _EMBEDDED_HOST_SUFFIXES: " + repr(rejected)
+
+
+@pytest.mark.repo_wide
+def test_backslash_tracked_paths_add_no_hostname_rejections() -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
+    )
+    tracked = [path for path in result.stdout.split("\0") if path]
+    assert tracked, "the guard must inspect the tracked Git index"
+    # Existing bare-name and unsupported-extension rejections apply equally
+    # to either spelling; backslashes must introduce no new full-path rejection.
+    newly_rejected = [
+        path for path in tracked if _contains_hostname(path.replace("/", "\\")) and not _contains_hostname(path)
+    ]
+    assert newly_rejected == [], repr(newly_rejected)
+    # Independently guard file-shaped directory segments, including paths whose
+    # final basename is already rejected, against losing the file exemption.
+    rejected_directories = [
+        path
+        for path in tracked
+        if any(
+            segment.rpartition(".")[2].lower() in _FILE_EXTENSIONS and _contains_hostname(segment + "\\")
+            for segment in path.split("/")[:-1]
+        )
+    ]
+    assert rejected_directories == [], repr(rejected_directories)
+
+
+@pytest.mark.parametrize("suffix", sorted(_EMBEDDED_HOST_SUFFIXES))
+def test_closed_host_suffixes_cannot_be_hidden_in_filenames(suffix: str) -> None:
+    for filename in (f"example.{suffix}.json", f"host_vars/example.{suffix.upper()}.YML"):
+        assert _filename_contains_hostname(filename)
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(filename)
+
+
+@pytest.mark.parametrize(
+    "filename",
+    ["store.sources.yaml", "x.schema.json", "x.review.json", "x.test.ts", "x.locale.json"],
+)
+def test_repository_stem_labels_remain_files(filename: str) -> None:
+    assert not _filename_contains_hostname(filename)
+    validate_entry_body(filename)
+
+
+@pytest.mark.parametrize("extension", sorted(_FILE_EXTENSIONS))
+def test_uk_and_arpa_host_endings_cannot_be_hidden_in_filenames(extension: str) -> None:
+    filenames = [f"host.co.uk.{extension}", f"host.example.co.uk.{extension}", f"host.home.arpa.{extension}"]
+    if extension != "md":
+        filenames.extend([f"host.uk.{extension}", f"x.uk.{extension}"])
+    else:
+        # Preserve the embedded-label exemption used by tracked localization
+        # basenames; the separate collision-TLD rule still applies to bare names.
+        for filename in ("x.uk.md", "README.uk.md", "DATA_CARD.uk.md", "PHASE1.uk.md"):
+            assert not _filename_contains_hostname(filename)
+    for filename in filenames:
+        for body in (filename, f"host_vars/{filename.upper()}", f"`host_vars\\{filename}`"):
+            assert _filename_contains_hostname(filename), filename
+            with pytest.raises(ContentRejectedError, match="hostname rule"):
+                validate_entry_body(body)
+    # Even the two-label stem is a host; it cannot use the localization exception.
+    assert _filename_contains_hostname(f"co.uk.{extension}")
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "Opus 5.5",
+        "gpt-6.1-sol",
+        "Python 3.12",
+        "v1.2.3",
+        "0.5",
+        "4.6k",
+        "e.g.",
+        "i.e.",
+        "U.S.",
+        "foo.c",
+        "foo.h",
+        "package.json5",
+        "python -m scripts.fleet_comms",
+    ],
+)
+def test_append_accepts_ordinary_model_version_and_module_tokens(tmp_path: Path, body: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    entry = store.append_entry(
+        lease, entry_type=EntryType.NOTE, body=body, idempotency_key="ordinary", now=NOW + timedelta(seconds=1)
+    ).entry
+    assert entry.body == body
+
+
+@pytest.mark.parametrize(
+    "unit,rejected",
+    [
+        ("a", False),
+        ("0123456789abcdef", False),
+        ("YWJjZGVm+/", False),
+        ("a.py-", True),
+        ("a.", False),
+        ("a.1.", False),
+        ("a.py.", True),
+        ("\\", False),
+        ("/", False),
+        ("//?/UNC/a.1/", False),
+    ],
+)
+def test_entry_validation_handles_64_kib_tokens_without_rescanning(unit: str, rejected: bool) -> None:
+    body = (unit * (MAX_ENTRY_BYTES // len(unit) + 1))[:MAX_ENTRY_BYTES]
+    started = thread_time()
+    # Some dotted runs are hosts; timing covers both acceptance and rejection.
+    if rejected:
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+    else:
+        validate_entry_body(body)
+    elapsed = thread_time() - started
+    # CPU time avoids scheduler contention; this generous regression limit
+    # still rejects quadratic rescanning without a loaded-runner wall-clock flake.
+    assert elapsed < 2, f"64-KiB token validation used {elapsed:.3f}s CPU"
+
+
+def test_100_kb_token_has_bounded_scan_and_size_rejection() -> None:
+    body = "a." * 50_000
+    started = thread_time()
+    assert not _contains_hostname(body)
+    with pytest.raises(ContentRejectedError, match="64-KiB rule"):
+        validate_entry_body(body)
+    elapsed = thread_time() - started
+    assert elapsed < 2, f"100-KB token scan used {elapsed:.3f}s CPU"
+
+
+@pytest.mark.parametrize("body", ["contact test@example.com", "a.py-test@example.com", ".test@example.com"])
+def test_email_rejection_preserved_with_linear_token_boundary(body: str) -> None:
+    with pytest.raises(ContentRejectedError, match="email-address rule"):
+        validate_entry_body(body)
+
+
+@pytest.mark.parametrize(
+    "body",
+    ["ssh fixture", "scp fixture", "rsync fixture", "git@fixture:", "a.c-user@fixture:", "user-name@fixture:"],
+)
+def test_ssh_rejection_preserved_with_linear_token_boundary(body: str) -> None:
+    with pytest.raises(ContentRejectedError, match="ssh-alias rule"):
+        validate_entry_body(body)
+
+
+def test_mirror_handoff_accepts_issue_filenames(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    handoff = repo_root / "handoff.md"
+    body = "Updated `sources.db`, `vesum.db`, `core.md`, `a1.yaml`, `lexicon-manifest.json`, `mcp-sources-requests.jsonl`.\n"
+    handoff.write_text(body, encoding="utf-8")
+    store = _store(tmp_path / "runtime")
+    lease = _open(store)
+    result = mirror_atlas_handoff(
+        store, lease, repo_root=repo_root, stream_id=lease.stream_id, source_path=Path("handoff.md"), now=NOW
+    )
+    assert result.entry.body == body
+    assert handoff.read_text(encoding="utf-8") == body
+    assert store.dump_stream(lease.stream_id)["entries"][0]["body"] == body
 
 
 def test_ttl_heartbeat_and_expired_write_fencing(tmp_path: Path) -> None:

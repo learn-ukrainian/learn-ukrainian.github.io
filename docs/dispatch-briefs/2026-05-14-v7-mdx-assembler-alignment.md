@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — V7 MDX assembler alignment (a1/my-morning rendering)
 
 > **Issue:** none yet — file 1 after PR opens
@@ -14,7 +20,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Prefix every command with `cd .worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use `.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -52,7 +58,7 @@ Inline "I checked X" claims without quoted raw output = hallucination per #M-4. 
 
 **Evidence:**
 ```bash
-$ .venv/bin/python -c "from scripts.yaml_activities import ActivityParser; ActivityParser().parse('curriculum/l2-uk-en/a1/my-morning/activities.yaml')"
+$ "$PROJECT_PYTHON" -c "from scripts.yaml_activities import ActivityParser; ActivityParser().parse('curriculum/l2-uk-en/a1/my-morning/activities.yaml')"
 ValueError: Failed to parse activity 2 id='act-3' type='observe': unknown activity type 'observe'
 ```
 
@@ -252,7 +258,7 @@ Once Bug 1 is fixed, `yaml_activities_to_jsx()` will receive a 10-item list and 
 10. **End-to-end repro:**
     ```bash
     cd .worktrees/dispatch/codex/v7-mdx-assembler-alignment-2026-05-14 && \
-    .venv/bin/python -c "
+    "$PROJECT_PYTHON" -c "
     from pathlib import Path
     from scripts.build.linear_pipeline import assemble_mdx
     out = Path('/tmp/test-my-morning.mdx')
@@ -310,7 +316,7 @@ Plan file: `curriculum/l2-uk-en/plans/a1/my-morning.yaml` (committed, sacred).
 - [ ] `.python-version` unchanged (`3.12.8`)
 - [ ] `.yamllint` and `.markdownlint.json` unchanged
 - [ ] No `status/*.json`, `audit/*-review.md`, or `review/*-review.md` files in diff
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass`
 - [ ] No assertions weakened (`is True` → `isinstance(..., bool)`)
 - [ ] Every changed file directly related to the V7 assembler alignment

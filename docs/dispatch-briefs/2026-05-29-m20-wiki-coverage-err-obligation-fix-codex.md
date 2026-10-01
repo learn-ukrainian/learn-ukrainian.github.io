@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: fix wiki_coverage err-obligation seam so m20 (a1/my-morning) ships
 
 **Agent:** codex · **Mode:** danger (worktree) · **No auto-merge.**
@@ -33,7 +39,7 @@ slim/exemplar are explicitly OUT (fast-follow).
 | "err-1..err-6 now resolve (PASS or genuine substance-FAIL, not implementation_map_missing)" | new unit test asserting on a gate report built from the forensic m20 artifacts; `pytest` final summary line raw |
 | "no cosmetic pass" | test that a seeded-but-absent-substance obligation still FAILs (substance check runs) |
 | "correction YAML now valid" | unit test feeding the two bad strings; `yaml.safe_load` succeeds |
-| "tests pass" | `.venv/bin/python -m pytest <files> -q` final `N passed` line raw |
+| "tests pass" | `"$PROJECT_PYTHON" -m pytest <files> -q` final `N passed` line raw |
 | "lint clean" | `.venv/bin/ruff check scripts tests` final line raw |
 | "commit landed / PR opened" | `git log -1 --oneline` + `gh pr view --json url` raw |
 
@@ -87,7 +93,7 @@ slim/exemplar are explicitly OUT (fast-follow).
 2. Implement changes 1–4 above. Add/extend unit tests in
    `tests/audit/test_wiki_coverage_gate.py` (gate seam + no-cosmetic-pass +
    sentinel) and a correction-YAML test (use the two bad strings verbatim).
-3. `.venv/bin/python -m pytest tests/audit/test_wiki_coverage_gate.py <other touched test files> -q` → green.
+3. `"$PROJECT_PYTHON" -m pytest tests/audit/test_wiki_coverage_gate.py <other touched test files> -q` → green.
 4. `.venv/bin/ruff check scripts tests` → clean.
 5. Commit (conventional): `fix(wiki_coverage): seeded implementation_map is authoritative claim fallback for err-obligations + valid correction YAML + Goodhart sentinel`. Trailer `X-Agent: codex/m20-wiki-coverage-err-seam-2026-05-29`.
 6. `git push -u origin codex/m20-wiki-coverage-err-seam-2026-05-29`.

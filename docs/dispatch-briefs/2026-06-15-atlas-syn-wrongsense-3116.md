@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: Atlas §7 — exclude wrong-sense synonyms + preserve register qualifiers (#3116)
 
 After the 2026-06-14 re-enrich (synonyms 21→794 from Караванський + СУМ синонімів), a few entries carry a
@@ -27,7 +33,7 @@ cross-dispatch conflicts). The orchestrator regenerates + commits the manifest a
 ## Numbered steps
 1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Implement the sense-guard + qualifier preservation + tests.
-3. `cd . && .venv/bin/python -m pytest -k "synonym or lexicon or enrich" -q` → paste summary. Test must prove `шлях` drops `кам'яниця` and KEEPS `кам'янка`/`гостинець` (with tag).
+3. `cd . && "$PROJECT_PYTHON" -m pytest -k "synonym or lexicon or enrich" -q` → paste summary. Test must prove `шлях` drops `кам'яниця` and KEEPS `кам'янка`/`гостинець` (with tag).
 4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no manifest staged: `git status --short` shows NO `site/src/data/lexicon-manifest.json`.
 6. Commit `fix(lexicon): §7 drop wrong-sense synonyms + preserve register qualifiers (#3116)`.

@@ -97,7 +97,7 @@ core:
   M16: p2-select
   A08: p2-select
   Ed01: p2-select
-  # p2-table
+  # p2-table: Opus/Sol first; Fable/Astra last resort (#9394); #9275 unchanged.
   M04: p2-table
   M12: p2-table
   M14: p2-table

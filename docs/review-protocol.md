@@ -54,8 +54,8 @@ and non-JSON chatter **fail closed**.
 {
   "schema_version": "code-review-findings.v1",
   "overall": {
-    "correctness": "correct",
-    "explanation": "No defects found on the frozen target.",
+    "correctness": "incorrect",
+    "explanation": "A blocking defect was found on the frozen target.",
     "confidence": 0.9
   },
   "findings": [
@@ -83,6 +83,10 @@ and non-JSON chatter **fail closed**.
 
 Categories: `bug`, `security`, `correctness`, `regression`, `api`, `tests`,
 `docs`, `performance`, `style`, `other`.
+
+`overall.correctness: "correct"` with findings means the reviewer judges no
+finding blocking under `critical-rules.md` section 8.4. Findings remain in the
+receipt, and the runner still returns `actionable` / exit 1.
 
 ### Compatibility / removal decision
 
@@ -253,6 +257,21 @@ and is never the only durable proof path. Prefer stdout or `--receipt-path`.
 | 3 | `incomplete` | Empty input, overall `uncertain` with no findings, or incomplete envelope / missing expected fingerprint |
 | 4 | `stale` | Head SHA or target-input fingerprint mismatch |
 | 5 | `unverifiable` | `quote_missing`, `line_mismatch`, or `out_of_scope` on any finding |
+
+For typed lifecycle behavior evidence, `error` must be null. The receipt must
+be either `clean` / exit 0, or `actionable` / exit 1 with all of:
+
+- `reviewer_payload.overall.correctness` is `correct`;
+- receipt finding IDs equal `reviewer_payload.finding_ids`;
+- every finding outcome is `verified`;
+- every finding has a disposition and a non-empty rationale;
+- no finding has disposition `stop_and_escalate`.
+
+This accepts the reviewer's non-blocking judgment without removing findings or
+changing the receipt. An `in_scope_blocker` disposition is not itself a refusal:
+the reviewer's `correct` verdict carries the blocking judgment. All other
+lifecycle checks, including receipt digest, exact head, target-input fingerprint,
+reviewer independence, and passing behavior surfaces, still apply.
 
 ## Deterministic receipt (runner-built)
 

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: fix pre-commit hook env divergence (rapidfuzz import) (#2059)
 
 ## Why this matters
@@ -14,7 +20,7 @@ Read `gh issue view 2059` for full diagnosis. Summary:
 
 - Inside the hook subshell: `ModuleNotFoundError: No module named 'rapidfuzz'`
 # venv symlinked into worktree by delegate.py
-- Outside: `.venv/bin/python -c "import rapidfuzz"` → `3.10.1`
+- Outside: `"$PROJECT_PYTHON" -c "import rapidfuzz"` → `3.10.1`
 - Same Python, same `.venv`, different result.
 
 The hook isolates each entry in a sanitized subshell. Most likely
@@ -43,7 +49,7 @@ pre-commit's own venv shadow takes precedence over `.venv/`.
    .git/hooks/pre-commit  # see what fails
    ```
    # venv symlinked into worktree by delegate.py
-   Then run the offending entry's command directly with `.venv/bin/python`.
+   Then run the offending entry's command directly with `"$PROJECT_PYTHON"`.
    Paste the raw outputs side-by-side.
 
 3. **Diagnose.** Likely culprits, check in order:
@@ -56,7 +62,7 @@ pre-commit's own venv shadow takes precedence over `.venv/`.
          (cleanest if the hook is project-owned and small), OR
        * Switch the hook's `language` to `system` and have it call
          # venv symlinked into worktree by delegate.py
-         `.venv/bin/python -m pytest ...` directly (correct for hooks
+         `"$PROJECT_PYTHON" -m pytest ...` directly (correct for hooks
          that already depend on the project's full lockfile).
    - **b.** `PYTHONPATH` / `VIRTUAL_ENV` env-var stripping. Run the
      hook with `set -x` to see the env.

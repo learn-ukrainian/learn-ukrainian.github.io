@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — vocab → etymology linker (Astro remark plugin)
 
 **Agent**: codex (gpt-5.5, xhigh)
@@ -71,7 +77,7 @@ Build an Astro remark plugin that walks every MDX file at build time, finds voca
 
 ```bash
 cd . && .venv/bin/ruff check scripts/ tests/
-cd . && .venv/bin/python -m pytest tests/etymology/ -v --tb=short
+cd . && "$PROJECT_PYTHON" -m pytest tests/etymology/ -v --tb=short
 cd starlight && npm run build 2>&1 | tail -30
 # Spot-check a real lesson page for vocab links:
 cd . && grep -c 'href="/etymology/' starlight/dist/a1/*/index.html 2>&1 | head -10

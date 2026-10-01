@@ -40,7 +40,7 @@ Per PR, in this order:
       posted on the PR. No PR, draft or ready, is opened before that APPROVE (§7 step 0).
       A new head makes the APPROVE stale; re-review before enqueueing.
 - [ ] CI Gate green on that same head.
-- [ ] Enqueued with `gh pr merge --squash` — never `--auto`, never `--delete-branch`.
+- [ ] Enqueued with `.venv/bin/python -m scripts.publish pr-merge --number <N>` — never `--auto`, never `--delete-branch`.
 - [ ] `gh pr view <N>` shows `MERGED`.
 - [ ] `.venv/bin/python -m scripts.orchestration.merge_closeout <N> --apply` exits 0
       (worktrees reaped, remote and local branch gone). A non-zero exit is a blocker,
@@ -129,7 +129,9 @@ Seat-specific adjustments for your model and for the seats you route to:
 
 ## Escalate — do NOT decide these solo
 
-Route to the **operator and advisors (Fable, Astra)**; never resolve them from the loop:
+Seek **Opus 5.5 / Sol 6.1 first** for review, critique and design input; **Fable / Astra
+last resort**. Route the decisions below to the **operator and designated advisors
+(Fable, Astra)** for approval; never resolve them from the loop:
 
 1. Any **architecture, layout, or process** change.
 2. A **contested CF verdict** (reviewer and author disagree, or two reviewers split).

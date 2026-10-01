@@ -22,6 +22,11 @@ SPAN_MISMATCH = "span_mismatch"
 UNSUPPORTED_DROPPED = "unsupported_dropped"
 CHUNK_ID_MOVED = "chunk_id_moved"
 QUOTE_MISMATCH = "quote_mismatch"
+PUBLICATION_RIGHT = "publication_right"
+PUBLICATION_LIMIT = "publication_limit"
+PUBLICATION_ATTRIBUTION = "publication_attribution"
+PUBLICATION_PLAN_UNRESOLVED = "publication_plan_unresolved"
+PUBLICATION_REGISTRY_UNREADABLE = "publication_registry_unreadable"
 ERROR_MISMATCH = "error_mismatch"
 STANDARD_MISMATCH = "standard_mismatch"
 WORDS_FIELD_FORBIDDEN = "words_field_forbidden"
@@ -52,6 +57,11 @@ DESCRIPTIONS = {
     UNSUPPORTED_DROPPED: "failure: unsupported id from previous build dropped",
     CHUNK_ID_MOVED: "report: quote text found in source file but chunk id moved",
     QUOTE_MISMATCH: "failure: quote text no longer found in source file",
+    PUBLICATION_RIGHT: "gap: source has no explicit publication right",
+    PUBLICATION_LIMIT: "gap: quote exceeds the per-excerpt publication limit",
+    PUBLICATION_ATTRIBUTION: "gap: quote lacks the required source attribution",
+    PUBLICATION_PLAN_UNRESOLVED: "failure: cannot resolve the plan for publication checks",
+    PUBLICATION_REGISTRY_UNREADABLE: "failure: cannot read or parse the publication registry",
     ERROR_MISMATCH: "failure: error row differs from source",
     STANDARD_MISMATCH: "failure: standard text or file hash differs from source",
     WORDS_FIELD_FORBIDDEN: "failure: pack contains forbidden words field",

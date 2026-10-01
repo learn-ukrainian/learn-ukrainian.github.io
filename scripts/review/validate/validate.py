@@ -91,18 +91,23 @@ class ReviewReturnError(ValueError):
 def extract_review_yaml(data: bytes) -> bytes:
     """Keep a bare YAML mapping's bytes, or select one complete yaml/yml fence.
 
-    Scan top-level fences with matching markers and lengths; fence-like text
-    inside another code block is literal. Never concatenate blocks or include
-    surrounding prose. The caller must bind the *original* bytes to the task.
+    Scan top-level fences with matching markers and lengths. Refuse fence
+    openers outside the selected block: they can hide an early close inside
+    a YAML scalar. Surrounding prose is allowed. The caller must bind the
+    *original* bytes to the task.
     """
     try:
         if isinstance(yaml.safe_load(data), dict):
             return data
+    except ValueError as exc:
+        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, f"return has invalid YAML: {exc}") from exc
     except (yaml.YAMLError, UnicodeError):
         pass
 
     blocks: list[bytes] = []
     marker = b""
+    opening = b""
+    outside_fence = False
     selected = False
     body: list[bytes] = []
     count = 0
@@ -115,21 +120,34 @@ def extract_review_yaml(data: bytes) -> bytes:
                 marker, selected, body = b"", False, []
             elif selected:
                 body.append(line)
-        elif match and not (match[1].startswith(b"`") and b"`" in match[2]):
-            marker = match[1]
-            selected = match[2].strip(b" \t") in (b"yaml", b"yml")
-            count += int(selected)
+        elif match:
+            valid_opening = not (match[1].startswith(b"`") and b"`" in match[2])
+            selected = valid_opening and match[2].strip(b" \t") in (b"yaml", b"yml")
+            if valid_opening:
+                outside_fence |= not selected
+                marker = match[1]
+                opening = match[0].strip(b" \t")
+                count += int(selected)
 
     if count == 0:
-        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_MISSING, "return is not a bare mapping and has no yaml/yml fence")
+        raise ReviewReturnError(
+            codes.REVIEW_YAML_FENCE_MISSING, "return is not a bare mapping and has no yaml/yml fence"
+        )
     if count > 1:
         raise ReviewReturnError(codes.REVIEW_YAML_FENCE_MULTIPLE, "return contains more than one yaml/yml fence")
-    if len(blocks) != 1:
-        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not closed")
+    if marker:
+        label = opening.decode("utf-8", errors="replace")
+        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, f"the {label!r} fence is not closed")
+    if outside_fence or len(blocks) != 1:
+        raise ReviewReturnError(
+            codes.REVIEW_YAML_FENCE_NOT_MAPPING, "return contains fence markers outside the selected yaml/yml block"
+        )
     try:
         loaded = yaml.safe_load(blocks[0])
-    except (yaml.YAMLError, UnicodeError) as exc:
-        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not one YAML mapping") from exc
+    except (yaml.YAMLError, UnicodeError, ValueError) as exc:
+        raise ReviewReturnError(
+            codes.REVIEW_YAML_FENCE_NOT_MAPPING, f"the yaml/yml fence is not one YAML mapping: {exc}"
+        ) from exc
     if not isinstance(loaded, dict):
         raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not one YAML mapping")
     return blocks[0]

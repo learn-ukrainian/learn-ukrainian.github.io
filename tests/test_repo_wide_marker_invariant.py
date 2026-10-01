@@ -62,6 +62,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_ask_opencode.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
+        "tests/test_docs_catalogue.py",
         "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
@@ -100,6 +101,8 @@ KNOWN_REPO_WIDE_FUNCTIONS = (
     "tests/test_ohoiko_source_inventory_scope.py::test_ohoiko_abetka_inventory_covers_all_committed_key_words",
     "tests/test_prompt_template_render.py::test_phase_template_renders_without_unknown_tokens",
     "tests/test_schema_validation.py::TestPlanYamlSchemaCheck.test_a2_plans_match_module_schema",
+    "tests/test_session_streams.py::test_collision_exceptions_are_exact_tracked_repository_names",
+    "tests/test_session_streams.py::test_embedded_host_filter_accepts_every_tracked_basename",
     "tests/test_skill_instruction_routes.py::test_split_skill_references_are_reachable_from_their_entrypoint",
     "tests/test_skill_instruction_routes.py::test_task_scope_selector_keeps_canonical_sources_and_phase_gates_reachable",
 )
@@ -246,6 +249,10 @@ NOT_REPO_WIDE = {
     "tests/test_shared_hooks_deploy_depth.py::test_shell_shlex_importers_do_not_write_bytecode": (
         "Globs only agents_extensions/shared/hooks/*.py to check that shell_shlex "
         "is imported after dont_write_bytecode. It does not scan the repository tree."
+    ),
+    "tests/audit/test_secret_scan_local.py::test_tracked_file_beneath_a_symlinked_parent_is_not_scanned": (
+        "Runs `git ls-files` with cwd set to the tmp_path `repo` fixture to confirm a "
+        "staged path exists there; it never lists or reads the live repository tree."
     ),
 }
 

@@ -197,6 +197,7 @@ from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threate
 from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
 from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.lib import rules_core
+from scripts.opsec.prepublish import publication_boundary
 from scripts.orchestration import (
     dispatch_admission,
     dispatch_isolation,
@@ -213,6 +214,7 @@ from scripts.orchestration.dead_worker_state import (
     task_state_lock,
     write_state_unlocked,
 )
+from scripts.publish.github import Request, request_run
 
 if TYPE_CHECKING:
     from scripts.agent_runtime.target_admission import AdmittedTarget, Route, RouteRequest
@@ -4334,23 +4336,39 @@ def _superseded_review_release_proof(path: Path) -> tuple[bool, str]:
     return True, reason
 
 
-def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list[Path]:
+def _release_superseded_review_worktrees(
+    task_id: str,
+    *,
+    dry_run: bool,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
+) -> list[Path]:
     """Remove earlier rounds of this review series before the new checkout is made.
 
     Each removal goes through :func:`_remove_dispatch_worktree`, which runs the
     release proof while holding the earlier round's worktree lock (#8610).
+    Earlier rounds holding attempt dependencies are kept without release (#9417).
     """
     series = _review_series(task_id)
     if series is None:
         return []
     stem, current_round = series
-    released: list[Path] = []
+    candidates: list[tuple[Path, str]] = []
     for path, component in _dispatch_worktree_components():
         earlier = _review_series(component)
         if earlier is None:
             continue
         earlier_stem, earlier_round = earlier
         if earlier_stem != stem or earlier_round >= current_round:
+            continue
+        candidates.append((path, component))
+    released: list[Path] = []
+    for path, component in candidates:
+        dependencies = _review_attempt_dependency_names(path, review_dependencies)
+        if dependencies:
+            print(
+                f"ℹ️  earlier review {path} kept: review dependency ({', '.join(dependencies)})",
+                file=sys.stderr,
+            )
             continue
         if dry_run:
             ok, reason = _superseded_review_release_proof(path)
@@ -4443,11 +4461,66 @@ def _checked_out_branch_names() -> list[str]:
     return names
 
 
+def _review_attempt_worktree_dependencies(args: argparse.Namespace) -> tuple[tuple[str, Path], ...]:
+    """Locate attempt dependencies for retention only; prompt admission still validates the record."""
+    from scripts.review.render_contract import RENDER_RECORD_KEY, render_record_path
+
+    manifest = getattr(args, "review_attempt", None)
+    if not manifest:
+        return ()
+    paths = [("manifest", Path(manifest))]
+    prompt_file = getattr(args, "prompt_file", None)
+    if prompt_file:
+        try:
+            reads = json.loads(render_record_path(Path(prompt_file)).read_bytes())
+            record = reads.get(RENDER_RECORD_KEY)
+        except (OSError, ValueError, AttributeError):
+            record = None  # Existing admission refuses unreadable or malformed render records.
+        if isinstance(record, dict):
+            for name in ("input_root", "render_checkout"):
+                value = record.get(name)
+                if isinstance(value, str) and value:
+                    paths.append((name, Path(value)))
+    # Retain the supplied location as well as its target: removing a checkout
+    # containing a symlink would still break subsequent reads via that name.
+    return tuple(
+        dict.fromkeys((name, location) for name, path in paths for location in (path.absolute(), path.resolve()))
+    )
+
+
+def _review_attempt_dependency_names(path: Path, dependencies: Sequence[tuple[str, Path]]) -> list[str]:
+    """Name dependencies whose supplied or resolved locations lie in this checkout."""
+    if not dependencies:
+        return []
+    roots = (path.absolute(), path.resolve())
+    return sorted({name for name, location in dependencies if any(location.is_relative_to(root) for root in roots)})
+
+
+def _refuse_review_attempt_branch_holders(
+    branch: str | None,
+    holders: Sequence[Path],
+    dependencies: Sequence[tuple[str, Path]],
+) -> None:
+    """Refuse cleanup that can delete this attempt's dependencies (#9388, #9417)."""
+    if not dependencies:
+        return
+    for holder in holders:
+        conflicts = _review_attempt_dependency_names(holder, dependencies)
+        if conflicts:
+            context = f"branch {branch!r} holder" if branch is not None else "superseded review worktree"
+            raise ValueError(
+                "review_attempt_branch_holder_conflict: "
+                f"{context} {holder} contains this attempt's {', '.join(conflicts)}; "
+                "refusing to release it; render from a separate retained worktree at the exact commit and retry (#9388)"
+            )
+
+
 def _release_stale_branch_holders(
     *,
     branch: str,
     holders: list[Path],
     dry_run: bool,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> list[Path]:
     """Remove releasable holders of ``branch`` so a new worktree can attach.
 
@@ -4456,7 +4529,9 @@ def _release_stale_branch_holders(
     removal goes through :func:`_remove_dispatch_worktree`, which runs
     :func:`_stale_branch_holder_releasable` while holding the holder's
     worktree lock (#8610).
+    Attempt dependencies are checked across all holders before any removal (#9388).
     """
+    _refuse_review_attempt_branch_holders(branch, holders, review_dependencies)
     released: list[Path] = []
     for path in holders:
         if dry_run:
@@ -4803,12 +4878,14 @@ _GIT_ENV_DENYLIST = {
 
 
 def _sanitized_git_env() -> dict[str, str]:
-    """Drop repo-redirecting Git env so ``cwd=worktree`` resolves that repo."""
-    return {
+    """Select the explicit repository and refuse interactive credential prompts."""
+    env = {
         key: value
         for key, value in os.environ.items()
         if key not in _GIT_ENV_DENYLIST and not key.startswith("PRE_COMMIT")
     }
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return env
 
 
 def _is_virtualenv_bin_path(entry: str) -> bool:
@@ -4838,7 +4915,10 @@ def _pinned_worker_venv_env(source: dict[str, str]) -> dict[str, str]:
         for entry in inherited_path.split(os.pathsep)
         if entry and not _is_virtualenv_bin_path(entry) and os.path.normpath(entry) != inherited_venv_bin
     ]
+    from scripts.opsec.prepublish import publish_environment
+
     pinned["PATH"] = os.pathsep.join((str(venv_bin), *path_entries))
+    pinned = publish_environment(pinned, root=_REPO_ROOT)
     pinned["VIRTUAL_ENV"] = str(venv_root)
     # PYTHONHOME can override the interpreter's calculated prefix and make a
     # correctly pinned venv behave like an unrelated Python installation.
@@ -6021,6 +6101,7 @@ def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
         raise RuntimeError(f"git push failed: {_format_process_failure(proc)}")
 
 
+@publication_boundary(RuntimeError)
 def _create_auto_finalize_pr(
     worktree: Path,
     *,
@@ -6030,21 +6111,8 @@ def _create_auto_finalize_pr(
     body: str,
 ) -> str | None:
     try:
-        proc = subprocess.run(
-            [
-                "gh",
-                "pr",
-                "create",
-                "--draft",
-                "--base",
-                base_branch,
-                "--head",
-                branch,
-                "--title",
-                title,
-                "--body",
-                body,
-            ],
+        proc = request_run(
+            Request("pr-create", draft=True, base=base_branch, head=branch, title=title, body=body),
             cwd=worktree,
             capture_output=True,
             text=True,
@@ -7405,8 +7473,7 @@ def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> 
     """Refuse when a fetched or reused head differs from the required pinned SHA."""
     if pinned_head_sha is not None and origin_sha != pinned_head_sha:
         raise RuntimeError(
-            "refusing dispatch: fetched branch head "
-            f"{origin_sha} differs from the pinned head SHA {pinned_head_sha}"
+            f"refusing dispatch: fetched branch head {origin_sha} differs from the pinned head SHA {pinned_head_sha}"
         )
 
 
@@ -7421,6 +7488,7 @@ def _resolve_worktree_base_sha(
     pinned_head_sha: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -7449,7 +7517,9 @@ def _resolve_worktree_base_sha(
             # rewrite the PR's history. In particular, rebasing an attached
             # branch can flatten or replay merge commits. A stale attachment
             # must be synchronized deliberately by its owner.
-            allow_rebase=allow_rebase and requested_branch is None,
+            # Review admission already read these dependencies. A stale target
+            # must refuse rather than advance to different admitted bytes.
+            allow_rebase=allow_rebase and requested_branch is None and not review_dependencies,
         )
         if requested_branch:
             # Existing paths used to return before this check, allowing local
@@ -7545,6 +7615,7 @@ def _ensure_worktree(
     run_nonce: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
@@ -7552,6 +7623,8 @@ def _ensure_worktree(
     is recorded under (see :func:`_add_reserved_worktree`). ``validated_path``,
     when given, is used as is and never resolved again (#8775,
     :func:`_helper_worktree_path`).
+    ``review_dependencies`` retains attempt inputs before superseded-review or
+    stale-holder cleanup can run, including detached earlier review rounds (#9388, #9417).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -7577,7 +7650,13 @@ def _ensure_worktree(
         "sparse": None,
         "local_venv": None,
     }
-    _release_superseded_review_worktrees(task_id, dry_run=dry_run)
+    if requested_branch and review_dependencies:
+        _refuse_review_attempt_branch_holders(
+            requested_branch,
+            [path for path in _branch_worktree_paths(requested_branch) if path != worktree_path],
+            review_dependencies,
+        )
+    _release_superseded_review_worktrees(task_id, dry_run=dry_run, review_dependencies=review_dependencies)
 
     if requested_branch:
         if resolved_base_sha is None:
@@ -7592,6 +7671,7 @@ def _ensure_worktree(
                 branch=requested_branch,
                 holders=elsewhere,
                 dry_run=dry_run,
+                review_dependencies=review_dependencies,
             )
             occupied_paths = _branch_worktree_paths(requested_branch)
             elsewhere = [path for path in occupied_paths if path != worktree_path]
@@ -7630,7 +7710,7 @@ def _ensure_worktree(
                 # `--branch` is an explicit attach request. Never rewrite its
                 # history during provisioning; a stale worktree must be
                 # synchronized deliberately by its owner.
-                allow_rebase=not dry_run and requested_branch is None,
+                allow_rebase=not dry_run and requested_branch is None and not review_dependencies,
             )
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -7646,12 +7726,21 @@ def _ensure_worktree(
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
         _provision_data_symlinks(worktree_path, _REPO_ROOT)
-        # Re-apply sparse profile so pre-existing full trees shrink on reuse.
-        telemetry["sparse"] = _apply_dispatch_sparse_checkout(
-            worktree_path,
-            full_checkout=full_checkout,
-            sparse_include=sparse_include,
-        )
+        # Admission has already read these inputs. Preserve the current checkout
+        # when it holds any dependency; reapplying sparse mode can hide those bytes.
+        dependencies = _review_attempt_dependency_names(worktree_path, review_dependencies)
+        if dependencies:
+            print(
+                f"ℹ️  reused worktree {worktree_path} kept current checkout: review dependency "
+                f"({', '.join(dependencies)})",
+                file=sys.stderr,
+            )
+        else:
+            telemetry["sparse"] = _apply_dispatch_sparse_checkout(
+                worktree_path,
+                full_checkout=full_checkout,
+                sparse_include=sparse_include,
+            )
         _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
@@ -9815,13 +9904,16 @@ def _review_attempt_prompt_admission(
         if isinstance(manifest, dict) and any(key in manifest for key in ("manifest_schema", "kind", "inputs")):
             contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
             checked = check_prompt(
-                prompt, Path(args.review_attempt), repo_root=Path(contract["input_root"]),
+                prompt,
+                Path(args.review_attempt),
+                repo_root=Path(contract["input_root"]),
                 prompts_dir=Path(contract["server_checkout"]) / "scripts/review/prompts",
                 recorded_prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
                 files_read=contract["recorded_files_read"],
                 template_sha256=contract["recorded_template_sha256"],
                 recorded_templates=contract["recorded_templates"],
-                review_id=review_id, attempt_id=attempt_id,
+                review_id=review_id,
+                attempt_id=attempt_id,
             )
             if not checked.passed:
                 return "❌ review attempt refused: prompt_render_invalid: " + "; ".join(checked.errors), None
@@ -10071,6 +10163,23 @@ def _dispatch(
             return 2
         args.cwd = str(validated_cwd)
 
+    # Explicit-target retention precedes route/prompt admission and all cleanup.
+    # Auto targets depend on the admitted route and are checked just after routing.
+    # The sidecar's paths grant no authority; they only prevent destructive release.
+    try:
+        review_dependencies = _review_attempt_worktree_dependencies(args)
+        if review_dependencies and getattr(args, "branch", None) and worktree_arg != "auto":
+            # A validated target already registered on this branch is reused,
+            # never released. Later worktree validation still checks reuse safety.
+            _refuse_review_attempt_branch_holders(
+                args.branch,
+                [path for path in _branch_worktree_paths(args.branch) if path != validated_worktree],
+                review_dependencies,
+            )
+    except (OSError, ValueError, RuntimeError) as exc:
+        print(f"❌ review attempt refused: {exc}", file=sys.stderr)
+        return 2
+
     # The single Kimi gate runs on the original request (--agent, --model and their aliases)
     # before the launch route probes the budget or a model, and on the route it resolves —
     # the retired-CLI alias and any budget substitution — on the validated paths, before any
@@ -10100,6 +10209,21 @@ def _dispatch(
     requested_agent = routing.requested_agent or original_agent
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
+
+    if review_dependencies and getattr(args, "branch", None) and worktree_arg == "auto":
+        try:
+            reuse_target = _normalize_worktree_path(
+                str(_auto_worktree_path(dispatch_agent, args.task_id, repo_root=target_repo_root)),
+                repo_root=target_repo_root,
+            )
+            _refuse_review_attempt_branch_holders(
+                args.branch,
+                [path for path in _branch_worktree_paths(args.branch) if path != reuse_target],
+                review_dependencies,
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            print(f"❌ review attempt refused: {exc}", file=sys.stderr)
+            return 2
 
     # #9275 (operator decision 2026-09-30): a bounded worker is admitted only with a
     # complete advisory envelope bound to this dispatch. Checked on the admitted
@@ -10754,6 +10878,7 @@ def _dispatch(
                     detached=detached_read_only,
                     # A Kimi worktree is never rebased: it must stay at the commit the gate read.
                     allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
+                    review_dependencies=review_dependencies,
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
@@ -10890,6 +11015,7 @@ def _dispatch(
                     dry_run=True,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
+                    review_dependencies=review_dependencies,
                 )
             except (ValueError, RuntimeError) as exc:
                 print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
@@ -11087,6 +11213,7 @@ def _dispatch(
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
                     run_nonce=run_nonce,
+                    review_dependencies=review_dependencies,
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(
@@ -12529,6 +12656,9 @@ def _dispatch_route(
                 origin_agent=original_agent,
                 fallbacks=request.fallbacks,
                 review_select=request.review_select,
+                review_trusted_inputs=bool(
+                    getattr(args, "review_author_model", None) and getattr(args, "review_risk", None)
+                ),
             )
         else:
             dispatch_agent = requested_agent
@@ -12655,7 +12785,9 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
-            review_dispatch=bool(getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)),
+            review_dispatch=bool(
+                getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)
+            ),
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
@@ -12882,6 +13014,7 @@ def _resolve_agent_with_budget_guard(
     origin_agent: str | None = None,
     fallbacks: Mapping[str, str],
     review_select: Callable[[Mapping[str, Any] | None, str], tuple[str, str | None]] | None = None,
+    review_trusted_inputs: bool = False,
 ) -> str:
     """Return possibly-substituted agent.
 
@@ -13024,11 +13157,18 @@ def _resolve_agent_with_budget_guard(
     if review_select is not None:
         sub, chosen = review_select(payload, requested)
         if sub == requested and chosen == requested_model:
-            print(
-                "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer; "
-                "budget substitution requires --review-author-model and --review-risk (code profile only)",
-                file=sys.stderr,
+            note = (
+                "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer "
+                "on pace-only deficit."
+                if status in {"cool", "warm"} and "deficit" in reason
+                else "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer;"
             )
+            if not review_trusted_inputs:
+                note += (
+                    " Legacy calls without trusted author/risk inputs prove only intrinsic eligibility. "
+                    "budget substitution requires --review-author-model and --review-risk (code profile only)"
+                )
+            print(note, file=sys.stderr)
             return requested
         sub_info = agents.get(sub, {}) or {}
         sub_dict = sub_info if isinstance(sub_info, dict) else {}
@@ -14238,7 +14378,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Query /api/state/routing-budget before spawning; hard-sub or refuse "
-            "when the requested lane is near_cap/hot/deficit; prepaid DeepSeek/OpenRouter "
+            "when the requested lane is near_cap/hot/deficit. Code review admits a sole "
+            "eligible cross-family lane with a NOTE on pace-only deficit; hard capacity "
+            "and health gates still bind. Prepaid DeepSeek/OpenRouter "
             "also refuse unknown, stale or empty funding. Also enabled when "
             "LU_DISPATCH_CHECK_BUDGET=1 (launchers can force without flag churn)."
         ),
@@ -14589,7 +14731,9 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--mcp-config-path", default=None)
     wk.add_argument("--strict-mcp-config", action="store_true")
     wk.add_argument("--review-manifest", default=None, help="Formal attempt manifest path (default: none)")
-    wk.add_argument("--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)")
+    wk.add_argument(
+        "--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)"
+    )
     wk.set_defaults(func=cmd_worker)
 
     return p

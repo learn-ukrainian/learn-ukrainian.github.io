@@ -67,17 +67,16 @@ ids for suite results.
 PRs only — never commit or merge to `main` directly.
 
 **Binding public landing order (operator 2026-08-30 / #7450; CF-attest retired
-2026-09-03; CF-before-CI clarified 2026-09-18):** GitHub
-`required_approving_review_count` is 0 and the sole required check is CI Gate.
-Auto-merge / enqueue is **not** review. That is how PRs #7447–#7449 hit `main`
-with empty reviews. Drivers follow this order:
+2026-09-03; CF-before-CI clarified 2026-09-18):** The
+forge does not enforce independent review, so the driver verifies both gates
+itself. Auto-merge / enqueue is **not** review; PRs have reached `main` that
+way with empty reviews. Drivers follow this order:
 
 0. **CF review-fix before CI (binding).** Push the branch. Run exact-head CF
    via `ask-<lane> --branch <name>` (or equivalent). Fix → re-CF until
    `VERDICT: APPROVE` on the tip. **Do not open any PR** (draft or ready)
-   while CF is open or while iterating findings — CI runs on draft
-   `opened`/`synchronize` with no draft guard in this repo, so a draft still
-   burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
+   while CF is open or while iterating findings — CI also runs on
+   draft PRs, so a draft still burns Gate during the fix loop. Open the PR only after CF APPROVE; CI
    runs once on that tip.
 1. **Independent cross-family exact-head CF** — attested `resolved_model`,
    different family from the author, APPROVE on the tip (post on the PR once
@@ -85,23 +84,23 @@ with empty reviews. Drivers follow this order:
 2. **Open the PR** → **CI Gate green** on that **same** head.
 3. **Merge queue only after both.** Enqueue then; never before.
 
-**Never auto-merge or enqueue first.** Never treat `gh pr merge --auto` as a
+**Never auto-merge or enqueue first.** Never treat `.venv/bin/python -m scripts.publish pr-merge --auto` as a
 substitute for CF. Do **not** arm `--auto` and wait for Gate. Never enqueue a
 **draft**. Blocking CI red → never `--admin`-bypass.
 
 ```bash
 # Only after §7 steps 1 and 2 on this exact head. Never --auto.
-gh pr merge --squash
+.venv/bin/python -m scripts.publish pr-merge --number <N>
 
 # Check merge-queue status / position / ETA after enqueue (#7814 item 13):
 .venv/bin/python -m scripts.gh_merge_queue_status <pr>
 ```
 
-**Never pass `--delete-branch` to `gh pr merge` while this repo uses a merge queue** —
+**Never pass `--delete-branch` to `.venv/bin/python -m scripts.publish pr-merge --number <N>` while this repo uses a merge queue** —
 deleting the head ref mid-queue can close the PR without landing (known failure mode).
 The remote branch is deleted only after `gh pr view` shows `MERGED`, by §7a closeout.
 
-**Merge-queue visibility after enqueue (#7814 item 13).** After `gh pr merge`, GitHub
+**Merge-queue visibility after enqueue (#7814 item 13).** After `.venv/bin/python -m scripts.publish pr-merge --number <N>`, GitHub
 prints `! The merge strategy for main is set by the merge queue` while the PR stays
 `OPEN` / `CLEAN`. Do not stall or query raw GraphQL by hand — run
 `.venv/bin/python -m scripts.gh_merge_queue_status <pr>` (or `--line` / `--json`) to
@@ -157,7 +156,7 @@ gh run download <run> --pattern 'pytest-junit-*' -D "$(mktemp -d)"
 
 **Main red: fix main first.** Find the breaking commit (`git log` of the failing test's
 inputs) and fix main before re-enqueueing anything. Refresh blocked PRs with
-`gh pr update-branch <pr>` (always pass the number; bare, it targets the current
+`.venv/bin/python -m scripts.publish pr-update-branch --number <pr>` (always pass the number; bare, it targets the current
 branch's PR) — never close/reopen, which reuses stale merge refs and fails again. Verify
 parent1 == the approved head and the PR patch-id is unchanged, then get
 one batched exact-head re-CF per reviewer family.
@@ -172,7 +171,7 @@ Do **not** make every epic driver a standing release owner. Gate rollout by char
 | **Routine host maintenance** (pull merged `main`; restart an updated or broken service after checking no active dispatch depends on it; install or enable a reviewed systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and worktrees; install OS packages a reviewed repo change needs), including sudo where the host needs it | **Yes** — do it, then report. Never ask the operator |
 | **Production / Pages / public cutover** | **Only on present-tense operator GO** — listing it in the epic establishes scope, not a green light |
 | **HA / Patroni / new VPS / fenced cutover** | **Escalate** — operator/advisor GO; drive the checklist, do not solo mutate |
-| **Host access / security configuration** (sshd configuration such as `PermitRootLogin`, sudoers, user accounts, SSH keys and other credentials, firewall changes that could cut off operator access) | **Escalate** — operator-only; lock-out risk and accounts/credentials are an operator stop condition |
+| **Host access / security configuration** (sshd configuration, sudoers, user accounts, SSH keys and other credentials, firewall changes that could cut off operator access) | **Escalate** — operator-only; lock-out risk and accounts/credentials are an operator stop condition |
 
 Missing local proof on a user-visible API/UI change is incomplete closeout. Issue or PR wording
 never authorizes a production, Pages, or public cutover, or an HA, Patroni, new-VPS, or fenced
@@ -212,3 +211,10 @@ after merge is a process defect (ENOSPC / disk full is the known failure mode).
    session branch sweep; add `--apply` only after reviewing its receipts. Then run
    `git fetch --prune`.
 6. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
+
+**After a suspected secret leak:** run `scripts/audit/secret_scan_local.py tree` and `history`
+(offline); triage only through its `show-keys` and `count` subcommands (never `jq`, `cat` or
+`grep` over the report); tell the operator privately that a report needs inspection and where it is
+on the host, with counts only; delete the report directory once triage is finished; and never
+rotate, revoke or rewrite history yourself. Runbook:
+[`secret-scanning.md`](../../../../../docs/runbooks/secret-scanning.md).

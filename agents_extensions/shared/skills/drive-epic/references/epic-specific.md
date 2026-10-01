@@ -5,12 +5,12 @@ Read before the first action on the named epic. Other epics skip this file.
 ## §0c. Hramatka epic — dual-repo queue (epic #4542 only)
 
 If `SESSION_EPIC` is Hramatka (public #4542), the priority/ownership queue is
-private BOARD `learn-ukrainian-infra-private#349`, not the public epic body. Cold-start
-read order: **private #349 → private open PRs → public PRs linked from #4542 only.**
+the private priority board, not the public epic body. Cold-start
+read order: **private priority board → private open PRs → public PRs linked from #4542 only.**
 Public #4542 is charter + bare pointer — never generate or mirror a public checklist
 from the private board (leak + dual-write). GitHub issue/PR state in either repo
-remains the factual SSOT for open/closed; #349 is the priority queue, not a duplicate
-status feed. If #349 and any other queue view disagree, **#349 wins** — correct the other
+remains the factual SSOT for open/closed; the private board is the priority queue, not a duplicate
+status feed. If the private board and any other queue view disagree, **the private board wins** — correct the other
 view the same session. Full contract: `docs/runbooks/hramatka-driver-queue.md`.
 
 Before a new dispatch, scope, or PR, run `scripts.fleet.hramatka_scope_gate`
@@ -26,17 +26,16 @@ exit 2 (`unknown`, GitHub unreachable) is never a clean handoff either.
 - **Routine maintenance is driver work, done then reported**, including sudo where the
   host requires it: pull merged `main`; restart an updated or broken service (system or
   user unit) after checking no active dispatch depends on it; install or enable a reviewed
-  systemd unit or timer that lives in the repo; clean agent-generated caches, logs, and
+  systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and
   worktrees; install OS packages a reviewed repo change needs.
-- **A production release rollover** on the live-serving host (running
-  `hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`, including
-  rebuilding or swapping the read-only release checkout — private #360 class) is a
-  **production cutover** and needs a present-tense operator GO for that rollover; a GO
+- **A production release rollover** on the live-serving host (any step
+  that swaps what the live service serves; see the deployment runbook in the private
+  repository) is a **production cutover** and needs a present-tense operator GO for that rollover; a GO
   recorded on an earlier or closed issue does not count. The private deploy runbook
   (including the sudo steps inside it) applies only after that GO; without it the rollover
   stays **ESCALATE**.
 - **Host access and security configuration stays operator-only (ESCALATE, not solo)** —
-  sshd configuration (e.g. `PermitRootLogin`), sudoers, user accounts, SSH keys and other
+  sshd configuration, sudoers, user accounts, SSH keys and other
   credentials, and firewall changes that could cut off operator access — because of
   lock-out risk and because accounts/credentials are an operator stop condition.
 

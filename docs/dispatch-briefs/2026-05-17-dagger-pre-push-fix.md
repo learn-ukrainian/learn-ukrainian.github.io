@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: fix local Dagger so pre-push hook isn't dead weight (#2057)
 
 ## Why this matters
@@ -15,10 +21,10 @@ Read `gh issue view 2057` for the full diagnosis. Two distinct symptoms:
 1. **Container venv creation silently no-ops.** `python -m venv .venv`
    exits 0 in the `python:3.12.8-slim-bookworm` container, but
    # venv symlinked into worktree by delegate.py
-   `.venv/bin/python` doesn't exist when the next `withExec` tries to
+   `"$PROJECT_PYTHON"` doesn't exist when the next `withExec` tries to
    call it. Then everything downstream fails with
    # venv symlinked into worktree by delegate.py
-   `[Errno 2] No such file or directory: '/work/.venv/bin/python'`.
+   `[Errno 2] No such file or directory: '/work/"$PROJECT_PYTHON"'`.
 2. **16-minute "parsing command line arguments".** Dagger Cloud upload
    is retrying serially against `api.dagger.cloud` returning 401 (no
    `DAGGER_CLOUD_TOKEN` configured). Each retry takes minutes.

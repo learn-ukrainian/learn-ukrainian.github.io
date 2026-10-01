@@ -9,7 +9,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.preflight import preflight_lesson
-from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence import lock, publication
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -151,7 +151,7 @@ def test_preflight_example_need(clean_word_store, clean_pack):
 
 
 def test_preflight_quote_need_publication_right_gap(clean_word_store, clean_pack):
-    """WP 21 is not on main: every quote need is a publication_right gap, never a pass."""
+    """An unregistered source remains a publication_right gap."""
     plan_entry = {
         "steps": [{"id": "s1", "needs": ["quote"], "explains": ["T-002"]}],
         "inventory": {"vocabulary": {"core": []}},
@@ -164,7 +164,7 @@ def test_preflight_quote_need_publication_right_gap(clean_word_store, clean_pack
 
 
 def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word_store):
-    """Finding 2: until WP 21 lands, a quote need is ALWAYS a publication_right gap, whatever pack says."""
+    """Pack-provided publication rights cannot grant permission."""
     pack_with_allowed = {
         "texts": [
             {
@@ -185,6 +185,45 @@ def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word
     res = preflight_lesson(plan_entry, pack=pack_with_allowed, word_store=clean_word_store)
     assert res.passed is False
     assert any(g.need == "publication_right" for g in res.gaps)
+
+
+@pytest.mark.parametrize(
+    "file,quote,page,code",
+    [
+        ("1-klas-bukvar-zaharijchuk-2025-1", "x" * 800, 39, None),
+        ("1-klas-bukvar-zaharijchuk-2025-1", "x" * 801, 39, "publication_limit"),
+        ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "publication_right"),
+        ("not-registered", "Synthetic excerpt", 39, "publication_right"),
+        ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", None, "publication_attribution"),
+        ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", 0, "publication_attribution"),
+    ],
+)
+def test_preflight_registry_quote_policy(clean_word_store, clean_pack, file, quote, page, code):
+    rec = clean_pack["texts"][1]
+    rec["source"].update(file=file, page=page)
+    rec["quote"] = quote
+    lesson = {"steps": [{"id": "s1", "needs": ["quote"], "ref": "T-002"}]}
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store)
+    assert result.passed is (code is None)
+    if code:
+        assert result.gaps[0].need == "publication_right"
+        assert result.gaps[0].detail.startswith(code + ":")
+
+
+def test_preflight_explicit_empty_registry_refuses(clean_word_store, clean_pack):
+    clean_pack["texts"][1]["source"]["file"] = "1-klas-bukvar-zaharijchuk-2025-1"
+    lesson = {"steps": [{"id": "s1", "needs": ["quote"], "ref": "T-002"}]}
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store, source_registry={})
+    assert not result.passed
+    assert result.gaps[0].detail.startswith("publication_right:")
+
+
+def test_preflight_preserves_registry_unreadable_reason(clean_word_store, clean_pack, tmp_path, monkeypatch):
+    monkeypatch.setattr(publication, "REGISTRY_PATH", tmp_path / "missing.yaml")
+    lesson = {"steps": [{"id": "s1", "needs": ["quote"], "ref": "T-002"}]}
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store)
+    assert not result.passed
+    assert result.gaps[0].detail.startswith("publication_registry_unreadable:")
 
 
 def test_preflight_record_kind_mismatch_fails(clean_word_store, clean_pack):
@@ -389,7 +428,11 @@ def test_preflight_cited_forms_pending_stress(clean_pack):
     plan_entry = {
         "steps": [{"id": "s1"}],
         "inventory": {
-            "vocabulary": {"core": [{"evidence": "W-010", "lemma": "тест", "forms": ["noun:inanim:m:v_naz", "noun:inanim:m:v_rod"]}]}
+            "vocabulary": {
+                "core": [
+                    {"evidence": "W-010", "lemma": "тест", "forms": ["noun:inanim:m:v_naz", "noun:inanim:m:v_rod"]}
+                ]
+            }
         },
     }
     res = preflight_lesson(plan_entry, pack=clean_pack, word_store=store_pending)

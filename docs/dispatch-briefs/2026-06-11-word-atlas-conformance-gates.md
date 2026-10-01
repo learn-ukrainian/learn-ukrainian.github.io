@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Word Atlas §8 deterministic conformance gates
 
 **Owner lane:** Word Atlas (Claude). **Epic:** #2985 item 2. **Agent:** codex (gpt-5.5, xhigh).
@@ -60,7 +66,7 @@ New module `scripts/audit/validate_atlas_conformance.py` exposing `validate(mani
 ## #M-4 — verifiable claims (quote raw)
 | Claim | Check |
 |---|---|
-| Validator runs clean on current manifest | `.venv/bin/python -m scripts.audit.validate_atlas_conformance` → exit 0 + "0 violations" |
+| Validator runs clean on current manifest | `"$PROJECT_PYTHON" -m scripts.audit.validate_atlas_conformance` → exit 0 + "0 violations" |
 | Each gate fires on a violation | per-gate unit test names in pytest output |
 | Suite green | `.venv/bin/pytest tests/test_atlas_conformance.py` final summary line raw |
 | ruff clean | `.venv/bin/ruff check scripts/audit/validate_atlas_conformance.py tests/test_atlas_conformance.py` |

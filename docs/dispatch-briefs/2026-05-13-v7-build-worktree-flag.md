@@ -13,6 +13,12 @@ references:
   - claude_extensions/agents/curriculum-maintainer.md  # encoded rule; this is the implementation
   - PR #1949  # safety net (gitignore + rule encoded); land BEFORE this dispatch is reviewed
 ---
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 
 # Dispatch — Add `--worktree` flag to `scripts/build/v7_build.py`
 
@@ -115,20 +121,20 @@ The TIMESTAMP suffix is mandatory (not optional) — it makes parallel builds of
 
 | Claim | Required tool evidence |
 |---|---|
-| "Help text shows --worktree" | `.venv/bin/python scripts/build/v7_build.py --help` raw output, with the `--worktree` block visible |
-| "Tests pass" | `.venv/bin/python -m pytest tests/test_v7_build_worktree.py -v` final summary line raw (`N passed in M.MMs`) |
+| "Help text shows --worktree" | `"$PROJECT_PYTHON" scripts/build/v7_build.py --help` raw output, with the `--worktree` block visible |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/test_v7_build_worktree.py -v` final summary line raw (`N passed in M.MMs`) |
 | "Ruff clean" | `.venv/bin/ruff check scripts/build/v7_build.py tests/test_v7_build_worktree.py` "All checks passed!" raw |
 | "Worktree path collision errors cleanly" | The test's captured stderr from the collision case, quoted in the commit body |
-| "Backward-compat: existing flags still work" | `.venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run` — runs to completion without `--worktree` and produces the same dry-run output it did before |
+| "Backward-compat: existing flags still work" | `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --dry-run` — runs to completion without `--worktree` and produces the same dry-run output it did before |
 
 ## 8-step process (numbered, no exceptions)
 
 1. **Worktree setup for your own dispatch.** `git fetch origin && git worktree add -b codex/v7-build-worktree-flag-2026-05-13 .worktrees/dispatch/codex/v7-build-worktree-flag-2026-05-13 origin/main` — work inside this worktree exclusively. (Your `delegate.py --mode danger --worktree` invocation already arranges this; document the path in the commit body.)
 2. **Read first, code second.** Study `scripts/build/v7_build.py` end-to-end (it's <500 LOC; read it all). Study `scripts/delegate.py --worktree` for pattern. Sketch the changes BEFORE writing.
 3. **Implement** per the design above. Single coherent diff to `v7_build.py` + new test file + 1-line CLAUDE.md edit.
-4. **Run tests** — `.venv/bin/python -m pytest tests/test_v7_build_worktree.py tests/test_v7_build.py -v` (the latter if it exists — keeps regression coverage).
+4. **Run tests** — `"$PROJECT_PYTHON" -m pytest tests/test_v7_build_worktree.py tests/test_v7_build.py -v` (the latter if it exists — keeps regression coverage).
 5. **Ruff** — `.venv/bin/ruff check scripts/build/v7_build.py tests/test_v7_build_worktree.py`.
-6. **Manual smoke test** — `.venv/bin/python scripts/build/v7_build.py a1 my-morning --dry-run --worktree`. Should create `.worktrees/builds/a1-my-morning-{stamp}/`, run dry-run successfully inside it, print summary, exit 0. Then `git worktree remove .worktrees/builds/a1-my-morning-{stamp}/` to clean up after the test.
+6. **Manual smoke test** — `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --dry-run --worktree`. Should create `.worktrees/builds/a1-my-morning-{stamp}/`, run dry-run successfully inside it, print summary, exit 0. Then `git worktree remove .worktrees/builds/a1-my-morning-{stamp}/` to clean up after the test.
 7. **Commit + push + open PR** — conventional message; reference PR #1949 as the prerequisite.
 8. **DO NOT auto-merge.** Orchestrator reviews.
 
@@ -140,7 +146,7 @@ The TIMESTAMP suffix is mandatory (not optional) — it makes parallel builds of
 - [ ] No `status/*.json` files in the diff
 - [ ] No `audit/*-review.md` files in the diff
 - [ ] No `review/*-review.md` files in the diff
-- [ ] No `sys.executable` anywhere in code (use `.venv/bin/python`)
+- [ ] No `sys.executable` anywhere in code (use `"$PROJECT_PYTHON"`)
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertions weakened (e.g., `is True` → `isinstance(..., bool)`)
 - [ ] Every changed file is directly related to the `--worktree` flag

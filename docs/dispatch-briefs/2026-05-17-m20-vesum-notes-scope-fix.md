@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — m20 vesum_verified scope: exclude resources notes (#2098)
 
 ## Root cause (verified via grep)
@@ -70,7 +76,7 @@ Test name suggestion: `test_vesum_gate_skips_resource_notes_field`.
 git diff --stat main
 git diff --name-only main
 # Expected: scripts/build/linear_pipeline.py + tests/build/test_linear_pipeline.py
-.venv/bin/python -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
+"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
 ```
 
 Quote raw output in PR body.

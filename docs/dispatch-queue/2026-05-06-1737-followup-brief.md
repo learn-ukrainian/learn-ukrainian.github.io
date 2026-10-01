@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — #1737 second-pass (broader code review + dead-feature removal + structural fixes)
 
 **Status:** FIRED 2026-05-06 (~14:35 CET) — first-pass landed in PR #1739, branch `codex/1737-api-stability`.
@@ -146,7 +152,7 @@ The first pass adds one smoke test. Extend it: every dashboard's primary load (o
 ## Effort + tooling
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --agent codex \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch --agent codex \
   --mode danger --worktree --base origin/main \
   --task-id 1737-api-review --effort high \
   --prompt-file docs/dispatch-queue/2026-05-06-1737-followup-brief.md

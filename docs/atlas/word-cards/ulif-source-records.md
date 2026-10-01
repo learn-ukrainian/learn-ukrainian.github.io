@@ -184,9 +184,11 @@ When an entry cannot yield standard paradigm forms, it is categorized determinis
 | `extraction_failed: <ExceptionType>: <msg>` | HTML malformed or parsing threw an unexpected exception | Extraction failure; logged to `ulif_forms_failures` with exception detail; blocks build acceptance (`state: 'failed'`) |
 | `raw_cache_error` | Cache I/O or SQLite operational error during manifest/paradigm fetch or relation probe | Infrastructure failure; logged to `ulif_forms_failures`; blocks build acceptance (`state: 'failed'`) |
 | `missing_cache_file` | Raw cache SQLite file not found | Infrastructure failure; logged to `ulif_forms_failures`; blocks build acceptance (`state: 'failed'`) |
-| `raw_entry_page_absent` | Manifest has no `paradigm` tab key | Retains a single base lemma row if stored headword is present (`is_invariable=False`), but reported as `raw_entry_page_absent` failure and counted in `entries_failed` (never forms-complete); fails if stored headword is also empty |
+| `raw_entry_page_absent` | Manifest has no `paradigm` tab key | On its own, records a source gap and retains a single base lemma row if stored headword is present (`is_invariable=False`); counted in `entries_failed`, never forms-complete. Withholds the base row if stored headword is empty. Combined with a relation-probe infrastructure failure, persists that infrastructure reason and withholds the base row. |
 
-**Invariant:** `total_entries == entries_done + entries_failed`. Entries with both a weaker base assertion and a source gap are counted in `entries_failed` and excluded from `entries_done` so no entry is double counted. Extraction defects, parser exceptions, and cache infrastructure failures set `ulif_forms_build.state = 'failed'` and block verification. Nested relation cache gaps (`synonyms`, `antonyms`, `phraseology`) are tracked in `identity_from_raw.unavailable_relation_blobs` per-entry and in the build report's `unavailable_relation_blobs` list without dropping valid inflection forms. Relation-probe infrastructure errors also persist in `ulif_forms_failures` and fail the build. Concurrency is guarded via file locking (`<db>.build.lock`) to serialize runs and ensure safe restartability.
+**Invariant:** `total_entries == entries_done + entries_failed`. Entries with both a weaker base assertion and a source gap are counted in `entries_failed` and excluded from `entries_done` so no entry is double counted. Extraction defects, parser exceptions, and cache infrastructure failures set `ulif_forms_build.state = 'failed'` and block verification. Nested relation cache gaps (`synonyms`, `antonyms`, `phraseology`) are tracked in `identity_from_raw.unavailable_relation_blobs` per-entry and in the build report's `unavailable_relation_blobs` list without dropping valid inflection forms. Relation-probe infrastructure errors also persist in `ulif_forms_failures` and fail the build.
+
+Under `UNIQUE(entry_id)`, the first blocking reason and its own locator remain the primary failure; a later source gap cannot overwrite them. Without a blocking failure, the entry's sole source-gap row is persisted. `failures_by_reason` counts persisted failed entries by that selected reason, not failed relation tabs or secondary faults. All relation locators remain individually itemized in `unavailable_relation_blobs`, never packed into the persisted locator. Every additional blocking fault, including a later parser exception or paradigm cache failure, is retained with `entry_id`, `reason`, and its own `locator` in the report-only `secondary_blocking_failures` list (empty when none). Multiple blocking faults still have one persisted primary row (schema residual owner: codex-atlas); secondary report details do not change failed-entry counts. Verification rejects persisted infrastructure failures even if the build state is forced to `complete`. Concurrency is guarded via file locking (`<db>.build.lock`) to serialize runs and ensure safe restartability.
 
 ---
 
@@ -198,9 +200,9 @@ The CLI runner lives at `scripts/lexicon/runner/ulif_forms.py` and adheres stric
 Builds `ulif_forms` and `ulif_forms_failures` into the target SQLite database:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.lexicon.runner.ulif_forms build \
+.venv/bin/python -m scripts.lexicon.runner.ulif_forms build \
     --db /path/to/sources-isolated.db \
-    --raw-cache /home/ops/learn-ukrainian/data/lexicon/cache/ulif_raw.sqlite \
+    --raw-cache data/lexicon/cache/ulif_raw.sqlite \
     --report /path/to/build-report.json \
     --batch-size 500
 ```
@@ -213,7 +215,7 @@ Builds `ulif_forms` and `ulif_forms_failures` into the target SQLite database:
 Verifies table counts, schema constraints, parser version, and source snapshot fingerprint:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.lexicon.runner.ulif_forms verify \
+.venv/bin/python -m scripts.lexicon.runner.ulif_forms verify \
     --db /path/to/sources-isolated.db
 ```
 Returns 0 if:
@@ -230,7 +232,7 @@ Returns 0 if:
 Compares ULIF derived form stresses against the independent stress trie:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -m scripts.lexicon.runner.ulif_forms disagreement-report \
+.venv/bin/python -m scripts.lexicon.runner.ulif_forms disagreement-report \
     --db /path/to/sources-isolated.db \
     --out /path/to/stress-disagreements.tsv \
     --all
@@ -260,8 +262,8 @@ Available via the existing `sources` MCP server (`.mcp/servers/sources/server.py
   {
     "source": {
       "source_id": "ulif_dictua",
-      "official_url": "https://lcorp.ulif.org.ua/dictua/",
-      "attribution_label": "«Словники України on-line» (DictUA), Український мовно-інформаційний фонд НАН України"
+      "official_url": "https://lcorp.ulif.org.ua/dictua",
+      "attribution_label": "«Словники України» (Український мовно-інформаційний фонд НАН України)"
     },
     "detail": "full",
     "record_count": 1,
@@ -278,7 +280,7 @@ Available via the existing `sources` MCP server (`.mcp/servers/sources/server.py
 The suite enforces zero-network, isolated test runs:
 
 ```bash
-/home/ops/learn-ukrainian/.venv/bin/python -m pytest \
+.venv/bin/python -m pytest \
     tests/test_ulif_forms.py \
     tests/test_ulif_word_records.py \
     tests/test_mcp_sources_server.py \

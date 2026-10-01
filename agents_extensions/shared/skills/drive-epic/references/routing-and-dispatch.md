@@ -50,13 +50,14 @@ Before **every** implement `delegate.py dispatch`:
    also refuse dispatch unless that override is supplied. PR references are
    skipped after API resolution. Briefs without issue references are not gated.
    Opening or editing an issue updates one advisory checker comment.
-3. **Default bounded work:** a `gpt-6.1-sol` advisory **envelope** (the Astra seat,
+3. **Default bounded work:** a `gpt-6.1-sol` advisory **envelope** (the Sol advisor @ high,
    `--advisory-role bounded_advisory_envelope`) → bounded **worker(s)** dispatched with
    `--advisory-task` — not a Sonnet/Terra fixation solo. There is no direct bounded dispatch
    (operator decision 2026-09-30, #9275): `delegate.py` refuses Luna, and Flash not classified
    Ukrainian authoring/review, without a complete envelope bound to that dispatch. See
    `fleet-driver-routing.md` §2.
-4. **Fable path:** native `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
+4. **Last-resort Fable path:** Opus 5.5 / Sol 6.1 first; when Fable is required, use native
+   `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
    lockfiles / pointer / smoke jobs.
 5. After ≥3 implement dispatches this session, require ≥2 agents **and** ≥2 tiers **or** a
    written `NOTE: fleet_breadth` with tool-backed blockers.
@@ -121,7 +122,7 @@ including tests of code that imports a changed shared helper; never
 collect the whole `tests/` tree (`pytest tests`, `pytest tests -k …`) or use `-n auto`
 or `-n` above 2, and run those tests in the foreground and wait. The full suite
 runs in the PR's CI (and again in the merge queue on the merged tree) — that is
-the proof; do not trigger extra full runs. Use `gh workflow run ci.yml --ref <branch>`
+the proof; do not trigger extra full runs. Use `.venv/bin/python -m scripts.publish workflow-run --workflow ci.yml --ref <branch>`
 only when the brief explicitly asks for it (a branch with no PR yet, a baseline
 capture, or diagnosis).
 

@@ -107,6 +107,11 @@ forbidden is the middle path that caused the incident: replying with a question 
 > **Orchestrators:** verify a pushed PR, never a status field. Prior art:
 > `docs/bug-autopsies/codex-dispatch-stall.md` (#2985).
 
+**Local secret scan.** Run `scripts/audit/secret_scan_local.py` (offline TruffleHog) before opening a PR
+that changes credential, identity, transport or hook code, and after any suspected leak; never run
+TruffleHog in verified mode without an operator decision and never paste raw findings anywhere.
+Runbook: `docs/runbooks/secret-scanning.md`.
+
 **8.4 — Before merge, both must hold: (A) required CI green on the merge candidate, and (B) a review
 artifact from a model family different from the author's.** It must be **independent** (never review
 your own work) and an actual review — *discussion does not satisfy it*. Resolve the seat with
@@ -148,7 +153,7 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 - Enqueue **only** when all three hold (landing order #7450): exact-head cross-family CF APPROVE
   with **no BLOCKING finding outstanding** per §8.4 · PR is **not a draft** · **CI Gate green on
   that same head**. Pending is not green; a documented non-blocking finding does not hold enqueue.
-- Use `gh pr merge <N> --squash -R <owner/repo>` after both gates. The `automerge-ok` label and
+- Use `.venv/bin/python -m scripts.publish pr-merge --number <N> --repo <owner/repo>` after both gates. The `automerge-ok` label and
   auto-arm pipeline are retired; `--auto` is not a substitute for either gate. See
   [`workflow.md`](workflow.md) for the binding landing order.
 - Do **not** pass `--delete-branch` while the PR is queued. Delete the remote branch only after
@@ -163,7 +168,7 @@ everything" cannot survive this repo's merge rate and is corporate dual-control 
 - **Never `--admin`-bypass blocking CI** (pytest, ruff, frontend, schema-drift, gitleaks, radon,
   prompt-lint).
 - A **`cancelled`** required check is a gate failure, not a pass — re-run it. But after fixing the
-  **base branch**, use `gh pr update-branch`, **not** `gh run rerun`: rerun re-tests the original
+  **base branch**, use `.venv/bin/python -m scripts.publish pr-update-branch --number <N>`, **not** `.venv/bin/python -m scripts.publish run-rerun --number <N>`: rerun re-tests the original
   pinned merge SHA and reproduces the old result.
 - After any merge: delete the remote branch and remove the worktree (worktree first).
 

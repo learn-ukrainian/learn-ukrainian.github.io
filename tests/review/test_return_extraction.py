@@ -38,39 +38,142 @@ def test_real_yaml_parts_extract_without_rewriting(name, info):
     assert extract_review_yaml(fenced(data, info)) == data
 
 
+@pytest.mark.parametrize("name", REAL_RETURNS)
+@pytest.mark.parametrize("info", [b"yaml", b"yml"])
+@pytest.mark.parametrize("position", ["before", "after", "both"])
+@pytest.mark.parametrize("prose", [b"Here: ```inline```\n", b"```inline```\n", b"   ````info `inline`\n"])
+def test_inline_backtick_prose_keeps_whole_mapping(name, info, position, prose):
+    data = (FIXTURES / f"{name}.yaml").read_bytes()
+    raw = fenced(data, info)
+    if position in ("before", "both"):
+        raw = prose + raw
+    if position in ("after", "both"):
+        raw += prose
+    assert extract_review_yaml(raw) == data
+
+
 def test_bare_mapping_with_a_fence_in_a_scalar_is_unchanged():
     data = b"kind: plan\nnotes: |\n  ```yaml\n  example: true\n  ```\n"
     assert extract_review_yaml(data) == data
 
 
-@pytest.mark.parametrize("data,code", [
-    (b"Synthetic report only.\n", codes.REVIEW_YAML_FENCE_MISSING),
-    (b"- a\n- b\n", codes.REVIEW_YAML_FENCE_MISSING),
-    (fenced(b"kind: plan\n") + fenced(b"kind: lesson\n"), codes.REVIEW_YAML_FENCE_MULTIPLE),
-    (fenced(b"kind: plan\n") + b"Later prose:\n```yml\nextra: true\n```\n", codes.REVIEW_YAML_FENCE_MULTIPLE),
-    (fenced(b"- a\n- b\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-    (fenced(b"plain scalar\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-    (fenced(b""), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-    (fenced(b"kind: [\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-    (fenced(b"kind: plan\n---\nkind: lesson\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-    (b"```yaml\nkind: plan\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-    (b"```yaml\nkind: plan\n```\n```yml\n", codes.REVIEW_YAML_FENCE_MULTIPLE),
-    (fenced(b"kind: plan\n", b"yaml extra"), codes.REVIEW_YAML_FENCE_MISSING),
-    (fenced(b"kind: plan\n", b"YAML"), codes.REVIEW_YAML_FENCE_MISSING),
-    (b"````text\n```yaml\nkind: plan\n```\n````\n", codes.REVIEW_YAML_FENCE_MISSING),
-    (b"```yaml\n\xff\n```\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-])
+@pytest.mark.parametrize("indent", [1, 2, 3])
+def test_block_scalar_closing_fence_refuses_truncated_mapping(indent):
+    padding = b" " * indent
+    data = b"kind: plan\nnotes: |\n" + padding + b"before\n" + padding + b"```\n" + padding + b"after\nfindings: []\n"
+    assert isinstance(yaml.safe_load(data), dict)
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(fenced(data))
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+
+
+@pytest.mark.parametrize("stray_count", [2, 4])
+@pytest.mark.parametrize("indent", [1, 2, 3])
+@pytest.mark.parametrize("marker", [b"```", b"~~~"])
+@pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
+def test_even_block_scalar_fences_refuse_truncated_mapping(stray_count, indent, marker, newline):
+    padding = b" " * indent
+    data = (
+        b"kind: plan\nnotes: |\n"
+        + padding
+        + b"before\n"
+        + (padding + marker + b"\n" + padding + b"after\n") * stray_count
+        + b"findings: []\n"
+    )
+    raw = marker + b"yaml\n" + data + marker + b"\n"
+    raw = raw.replace(b"\n", newline)
+    assert isinstance(yaml.safe_load(data), dict)
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(raw)
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert "outside the selected yaml/yml block" in str(raised.value)
+
+
+@pytest.mark.parametrize("position", ["before", "after"])
+@pytest.mark.parametrize("marker", [b"```", b"~~~"])
+def test_unrelated_closed_fence_refuses_ambiguous_mapping(position, marker):
+    unrelated = marker + b"text\nexample\n" + marker + b"\n"
+    wrapped = fenced(b"kind: plan\n")
+    raw = unrelated + wrapped if position == "before" else wrapped + unrelated
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(raw)
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert "outside the selected yaml/yml block" in str(raised.value)
+
+
+@pytest.mark.parametrize("opening", [b"```python", b"~~~text"])
+def test_trailing_unrelated_open_fence_names_actual_opening(opening):
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(fenced(b"kind: plan\n") + opening + b"\n")
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert str(raised.value) == f"the {opening.decode()!r} fence is not closed"
+
+
+def test_unclosed_yaml_fence_names_actual_opening():
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(b"  ````yml\nkind: plan\n")
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert str(raised.value) == "the '````yml' fence is not closed"
+
+
+@pytest.mark.parametrize("outer,inner", [(b"````", b"```"), (b"```", b"~~~"), (b"~~~~", b"~~~"), (b"~~~", b"```")])
+def test_nonclosing_fence_inside_scalar_keeps_whole_mapping(outer, inner):
+    data = b"kind: plan\nnotes: |\n  before\n  " + inner + b"\n  after\nfindings: []\n"
+    assert extract_review_yaml(outer + b"yaml\n" + data + outer + b"\n") == data
+
+
+def test_block_scalar_four_space_fence_keeps_whole_mapping():
+    data = b"kind: plan\nnotes: |\n    before\n    ```\n    after\nfindings: []\n"
+    assert extract_review_yaml(fenced(data)) == data
+
+
+@pytest.mark.parametrize("wrapped", [False, True], ids=["bare-load", "fence-load"])
+def test_invalid_date_has_typed_refusal(wrapped):
+    data = b"kind: plan\ndate: 2026-13-45\n"
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(fenced(data) if wrapped else data)
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert "month must be in 1..12" in str(raised.value)
+
+
+def test_recorder_docstring_keeps_then_with_numbered_steps():
+    assert "then:\n\n1. reserves" in record.__doc__
+
+
+@pytest.mark.parametrize(
+    "data,code",
+    [
+        (b"Synthetic report only.\n", codes.REVIEW_YAML_FENCE_MISSING),
+        (b"- a\n- b\n", codes.REVIEW_YAML_FENCE_MISSING),
+        (fenced(b"kind: plan\n") + fenced(b"kind: lesson\n"), codes.REVIEW_YAML_FENCE_MULTIPLE),
+        (fenced(b"kind: plan\n") + b"Later prose:\n```yml\nextra: true\n```\n", codes.REVIEW_YAML_FENCE_MULTIPLE),
+        (fenced(b"- a\n- b\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (fenced(b"plain scalar\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (fenced(b""), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (fenced(b"kind: [\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (fenced(b"kind: plan\n---\nkind: lesson\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (b"```yaml\nkind: plan\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (b"```yaml\nkind: plan\n```\n```yml\n", codes.REVIEW_YAML_FENCE_MULTIPLE),
+        (fenced(b"kind: plan\n", b"yaml extra"), codes.REVIEW_YAML_FENCE_MISSING),
+        (fenced(b"kind: plan\n", b"YAML"), codes.REVIEW_YAML_FENCE_MISSING),
+        (b"````text\n```yaml\nkind: plan\n```\n````\n", codes.REVIEW_YAML_FENCE_MISSING),
+        (b"```yaml\n\xff\n```\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+    ],
+)
 def test_unusable_returns_have_typed_codes(data, code):
     with pytest.raises(ReviewReturnError) as raised:
         extract_review_yaml(data)
     assert raised.value.code == code
 
 
-@pytest.mark.parametrize("data", [
-    b"Before\n~~~yml\nkind: plan\n~~~\nAfter\n",
-    b"Before\n````yaml\nkind: plan\n`````\nAfter\n",
-    b"Before\r\n```yaml\r\nkind: plan\r\n```\r\nAfter\r\n",
-])
+@pytest.mark.parametrize(
+    "data",
+    [
+        b"Before\n~~~yml\nkind: plan\n~~~\nAfter\n",
+        b"Before\n````yaml\nkind: plan\n`````\nAfter\n",
+        b"Before\r\n```yaml\r\nkind: plan\r\n```\r\nAfter\r\n",
+    ],
+)
 def test_matching_fence_markers_and_line_endings(data):
     expected = b"kind: plan\r\n" if b"\r\n" in data else b"kind: plan\n"
     assert extract_review_yaml(data) == expected
@@ -107,14 +210,28 @@ def test_real_plan_shapes_record_from_bound_saved_result(plan_case, name, wrappe
     saved_result = tasks / "agy-review.result"
     raw = case.review.read_bytes()
     saved_result.write_bytes(raw)
-    (tasks / "agy-review.json").write_text(json.dumps({
-        "agent": "agy", "model": "gemini-3.8-flash-high", "status": "done",
-        "review_attempt": {key: review["attempt"][key] for key in ("review_id", "attempt_id", "manifest_sha256")},
-        "result_file": str(saved_result), "result_sha256": hashlib.sha256(raw).hexdigest(),
-    }))
+    (tasks / "agy-review.json").write_text(
+        json.dumps(
+            {
+                "agent": "agy",
+                "model": "gemini-3.8-flash-high",
+                "status": "done",
+                "review_attempt": {
+                    key: review["attempt"][key] for key in ("review_id", "attempt_id", "manifest_sha256")
+                },
+                "result_file": str(saved_result),
+                "result_sha256": hashlib.sha256(raw).hexdigest(),
+            }
+        )
+    )
     outcome = record.record_return(
-        saved_result, manifest_path=case.manifest, ledger_path=case.ledger,
-        task_id="agy-review", repo_root=case.env.root, db_path=tmp_path / "plan.sqlite", tasks_dir=tasks,
+        saved_result,
+        manifest_path=case.manifest,
+        ledger_path=case.ledger,
+        task_id="agy-review",
+        repo_root=case.env.root,
+        db_path=tmp_path / "plan.sqlite",
+        tasks_dir=tasks,
     )
     assert outcome.accepted and outcome.verdict == bare_payload["verdict"] == "APPROVE", outcome.rejection_codes
     assert (case.env.root / outcome.saved_return).read_bytes() == bare
@@ -122,11 +239,25 @@ def test_real_plan_shapes_record_from_bound_saved_result(plan_case, name, wrappe
 
 
 @pytest.mark.reads_content
-@pytest.mark.parametrize("data,code", [
-    (b"Synthetic report only.\n", codes.REVIEW_YAML_FENCE_MISSING),
-    (fenced(b"kind: plan\n") + fenced(b"kind: plan\n"), codes.REVIEW_YAML_FENCE_MULTIPLE),
-    (fenced(b"[a, b]\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-])
+@pytest.mark.parametrize(
+    "data,code",
+    [
+        (b"Synthetic report only.\n", codes.REVIEW_YAML_FENCE_MISSING),
+        (fenced(b"kind: plan\n") + fenced(b"kind: plan\n"), codes.REVIEW_YAML_FENCE_MULTIPLE),
+        (fenced(b"[a, b]\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (b"kind: plan\ndate: 2026-13-45\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (fenced(b"kind: plan\ndate: 2026-13-45\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+        (
+            fenced(b"kind: plan\nnotes: |\n  before\n  ```\n  after\nfindings: []\n"),
+            codes.REVIEW_YAML_FENCE_NOT_MAPPING,
+        ),
+        (
+            fenced(b"kind: plan\nnotes: |\n  a\n  ```\n  b\n  ```\n  c\nfindings: []\n"),
+            codes.REVIEW_YAML_FENCE_NOT_MAPPING,
+        ),
+        (fenced(b"kind: plan\n") + b"```python\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
+    ],
+)
 def test_validator_and_recorder_refuse_the_same_shape(plan_case, data, code, tmp_path):
     case = plan_case
     case.review.write_bytes(data)
@@ -135,9 +266,14 @@ def test_validator_and_recorder_refuse_the_same_shape(plan_case, data, code, tmp
     assert code in {item["code"] for item in payload["rejections"]}
     with pytest.raises(record.RecordError) as raised:
         record.record_return(
-            case.review, manifest_path=case.manifest, ledger_path=case.ledger,
-            task_id="unused", repo_root=case.env.root, db_path=tmp_path / "plan.sqlite",
-            review_id="review", attempt_id="attempt",
+            case.review,
+            manifest_path=case.manifest,
+            ledger_path=case.ledger,
+            task_id="unused",
+            repo_root=case.env.root,
+            db_path=tmp_path / "plan.sqlite",
+            review_id="review",
+            attempt_id="attempt",
         )
     assert raised.value.code == code
     assert not (tmp_path / "plan.sqlite").exists()

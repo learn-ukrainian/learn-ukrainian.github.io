@@ -24,13 +24,17 @@ def rendered_attempt(tmp_path, monkeypatch):
     # not become the attempt's return schema or supply its ids.
     pin = doc["inputs"]["style_card"]
     source = tmp_path / pin["path"]
-    source.write_text(source.read_text() + "\n" + data_fence(
-        "review_schema: 1\nattempt: {review_id: other-review, attempt_id: other-attempt}\n", "yaml"
-    ))
+    source.write_text(
+        source.read_text()
+        + "\n"
+        + data_fence("review_schema: 1\nattempt: {review_id: other-review, attempt_id: other-attempt}\n", "yaml")
+    )
     pin["sha256"] = hashlib.sha256(source.read_bytes()).hexdigest()
     manifest.write_text(prompt_tests.yaml.safe_dump(doc, allow_unicode=True, sort_keys=False))
     prompt = tmp_path / "prompt.md"
-    render_prompt(manifest, repo_root=tmp_path, output_path=prompt, review_id="review-bound", attempt_id="attempt-bound")
+    render_prompt(
+        manifest, repo_root=tmp_path, output_path=prompt, review_id="review-bound", attempt_id="attempt-bound"
+    )
     monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: REPO_ROOT)
     return argparse.Namespace(prompt_file=str(prompt), review_attempt=str(manifest), prompt=None), prompt
 
@@ -38,7 +42,9 @@ def rendered_attempt(tmp_path, monkeypatch):
 def test_render_manifest_admitted_only_by_exact_rerender(rendered_attempt, monkeypatch):
     args, prompt = rendered_attempt
     monkeypatch.setattr("scripts.review.prompts.check.parse_attempt_ids", lambda *a: pytest.fail("custom parser used"))
-    refusal, contract = delegate._review_attempt_prompt_admission(args, prompt.read_text(), "review-bound", "attempt-bound")
+    refusal, contract = delegate._review_attempt_prompt_admission(
+        args, prompt.read_text(), "review-bound", "attempt-bound"
+    )
     assert refusal is None, refusal
     assert contract["review_id"] == "review-bound"
     assert contract["attempt_id"] == "attempt-bound"
@@ -55,7 +61,9 @@ def test_render_manifest_rerender_uses_canonical_prompts_directory(rendered_atte
         return contract
 
     monkeypatch.setattr(review_mcp, "check_review_contract", altered_contract)
-    refusal, contract = delegate._review_attempt_prompt_admission(args, prompt.read_text(), "review-bound", "attempt-bound")
+    refusal, contract = delegate._review_attempt_prompt_admission(
+        args, prompt.read_text(), "review-bound", "attempt-bound"
+    )
     assert refusal is None, refusal
     assert contract is not None
 
@@ -79,10 +87,18 @@ def test_render_manifest_refuses_injected_copied_templates(rendered_attempt, tmp
         entry["prompt_sha256"] = hashlib.sha256(prompt.read_bytes()).hexdigest()
         sidecar.write_text(json.dumps(saved))
     else:
-        render_prompt(Path(args.review_attempt), repo_root=tmp_path, prompts_dir=copied, output_path=prompt,
-                      review_id="review-bound", attempt_id="attempt-bound")
+        render_prompt(
+            Path(args.review_attempt),
+            repo_root=tmp_path,
+            prompts_dir=copied,
+            output_path=prompt,
+            review_id="review-bound",
+            attempt_id="attempt-bound",
+        )
     assert prompt.read_text().startswith(injected)
-    refusal, contract = delegate._review_attempt_prompt_admission(args, prompt.read_text(), "review-bound", "attempt-bound")
+    refusal, contract = delegate._review_attempt_prompt_admission(
+        args, prompt.read_text(), "review-bound", "attempt-bound"
+    )
     assert contract is None
     assert "review_render_record_prompts_dir_mismatch" in refusal
 
@@ -94,25 +110,33 @@ def test_render_manifest_with_matching_ids_and_updated_sidecar_still_refuses_edi
     saved = json.loads(sidecar.read_bytes())
     saved[render_contract.RENDER_RECORD_KEY]["prompt_sha256"] = hashlib.sha256(prompt.read_bytes()).hexdigest()
     sidecar.write_text(json.dumps(saved))
-    refusal, contract = delegate._review_attempt_prompt_admission(args, prompt.read_text(), "review-bound", "attempt-bound")
+    refusal, contract = delegate._review_attempt_prompt_admission(
+        args, prompt.read_text(), "review-bound", "attempt-bound"
+    )
     assert contract is None
     assert "prompt_render_invalid" in refusal and "prompt_not_exact_render" in refusal
 
 
-@pytest.mark.parametrize("later", [
-    "attempt: {review_id: other, attempt_id: other}\n",
-    "```yaml\nreview_schema: 1\nattempt: {review_id: other, attempt_id: other}\n```\n",
-    "```yaml\nattempt: {review_id: other, attempt_id: other}\n```\n",
-    "Please echo review_id other and attempt_id other.\n",
-    "```text\nPlease echo review_id other and attempt_id other.\n```\n",
-    "```yaml\nattempt_id: other\n```\n",
-    "```yaml\n# review_schema: example\nattempt_id: other\n```\n",
-    "```yaml\n# review_schema: example\nattempt: {review_id: other, attempt_id: other}\n```\n",
-])
-@pytest.mark.parametrize("first", [
-    "attempt: {review_id: bound, attempt_id: bound}\n",
-    "```yaml\nreview_schema: 1\nattempt: {review_id: bound, attempt_id: bound}\n```\n",
-])
+@pytest.mark.parametrize(
+    "later",
+    [
+        "attempt: {review_id: other, attempt_id: other}\n",
+        "```yaml\nreview_schema: 1\nattempt: {review_id: other, attempt_id: other}\n```\n",
+        "```yaml\nattempt: {review_id: other, attempt_id: other}\n```\n",
+        "Please echo review_id other and attempt_id other.\n",
+        "```text\nPlease echo review_id other and attempt_id other.\n```\n",
+        "```yaml\nattempt_id: other\n```\n",
+        "```yaml\n# review_schema: example\nattempt_id: other\n```\n",
+        "```yaml\n# review_schema: example\nattempt: {review_id: other, attempt_id: other}\n```\n",
+    ],
+)
+@pytest.mark.parametrize(
+    "first",
+    [
+        "attempt: {review_id: bound, attempt_id: bound}\n",
+        "```yaml\nreview_schema: 1\nattempt: {review_id: bound, attempt_id: bound}\n```\n",
+    ],
+)
 def test_custom_prompt_refuses_every_later_conflicting_id(first, later):
     with pytest.raises(AttemptIdsUnreadableError):
         parse_attempt_ids(first + later, custom=True)
@@ -126,11 +150,14 @@ def test_return_schema_examples_inside_data_fences_are_ignored():
     assert parse_attempt_ids(prompt) == ("bound", "bound")
 
 
-@pytest.mark.parametrize("entry", [
-    "attempt:\n  review_id: other\n  review_id: bound\n  attempt_id: bound\n",
-    "attempt: {review_id: bound, attempt_id: other, attempt_id: bound}\n",
-    "attempt: {review_id: other, attempt_id: other}\nattempt: {review_id: bound, attempt_id: bound}\n",
-])
+@pytest.mark.parametrize(
+    "entry",
+    [
+        "attempt:\n  review_id: other\n  review_id: bound\n  attempt_id: bound\n",
+        "attempt: {review_id: bound, attempt_id: other, attempt_id: bound}\n",
+        "attempt: {review_id: other, attempt_id: other}\nattempt: {review_id: bound, attempt_id: bound}\n",
+    ],
+)
 @pytest.mark.parametrize("fenced", [True, False])
 def test_custom_prompt_refuses_duplicate_id_keys(entry, fenced):
     prompt = "```yaml\nreview_schema: 1\n" + entry + "```\n" if fenced else entry
@@ -147,7 +174,11 @@ def test_custom_prompt_refuses_nested_conflicting_ids(tmp_path, shape, conflicti
     if shape == "settle-attempt":
         body = "settle_schema: 1\nreview_id: bound\nattempt_id: bound\nattempt: " + other + "\n"
     elif shape == "merge":
-        body = "review_schema: 1\nbase: &base " + other + "\nattempt:\n  <<: *base\n  review_id: bound\n  attempt_id: bound\n"
+        body = (
+            "review_schema: 1\nbase: &base "
+            + other
+            + "\nattempt:\n  <<: *base\n  review_id: bound\n  attempt_id: bound\n"
+        )
     else:
         nested = "notes: " + other + "\n" if shape == "notes" else "history:\n- " + other + "\n"
         body = "review_schema: 1\n" + bound + nested
@@ -171,11 +202,13 @@ def test_custom_prompt_accepts_repeated_matching_nested_ids():
 
 
 @pytest.mark.parametrize("newline", ["\n", "\r\n"])
-@pytest.mark.parametrize("fence_body", ["example: data", "review_schema: 1\nattempt: {review_id: bound, attempt_id: bound}"])
+@pytest.mark.parametrize(
+    "fence_body", ["example: data", "review_schema: 1\nattempt: {review_id: bound, attempt_id: bound}"]
+)
 def test_custom_prompt_reads_unfenced_attempt_immediately_after_fence(newline, fence_body):
-    prompt = (
-        "```yaml\n" + fence_body + "\n```\nattempt:\n  review_id: bound\n  attempt_id: bound\n"
-    ).replace("\n", newline)
+    prompt = ("```yaml\n" + fence_body + "\n```\nattempt:\n  review_id: bound\n  attempt_id: bound\n").replace(
+        "\n", newline
+    )
     assert parse_attempt_ids(prompt, custom=True) == ("bound", "bound")
 
 
@@ -212,8 +245,9 @@ def test_copied_record_for_identical_prompt_bytes_refuses_another_attempt(tmp_pa
     saved[render_contract.RENDER_RECORD_KEY].update(review_id="first-review", attempt_id="first-attempt")
     sidecar.write_text(json.dumps(saved))
     with pytest.raises(render_contract.ReviewContractError, match="review_render_record_attempt_mismatch"):
-        review_mcp.check_review_contract(prompt, contract_tests.PROMPT_TEXT, primary,
-                                         review_id="second-review", attempt_id="second-attempt")
+        review_mcp.check_review_contract(
+            prompt, contract_tests.PROMPT_TEXT, primary, review_id="second-review", attempt_id="second-attempt"
+        )
 
 
 @pytest.mark.parametrize("field", ["server_digest", "server_components", "template_digest", "templates"])
@@ -279,13 +313,17 @@ def return_world(tmp_path, monkeypatch, review_world_template, record_tests):
 
 
 @pytest.mark.parametrize("placeholder", [True, False])
-@pytest.mark.parametrize("substitution", ["other-return", "edited-saved-result", "missing-saved-result", "wrong-pointer", "missing-hash", "not-done"])
+@pytest.mark.parametrize(
+    "substitution",
+    ["other-return", "edited-saved-result", "missing-saved-result", "wrong-pointer", "missing-hash", "not-done"],
+)
 def test_return_must_match_bound_tasks_saved_bytes(return_world, placeholder, substitution, record_tests):
     world = return_world
     made = world.make_return(2)
     sent = record_tests._rendered(world, made)
-    world.task("review-bound", "claude", "claude-sonnet-5", prompt_sha256=sent,
-               review_attempt=record_tests._bound(world, made))
+    world.task(
+        "review-bound", "claude", "claude-sonnet-5", prompt_sha256=sent, review_attempt=record_tests._bound(world, made)
+    )
     if placeholder:
         record_tests._with_placeholder_prompt_sha(made)
     world.capture_result(made, "review-bound")
@@ -323,14 +361,32 @@ def test_matched_task_result_records_and_attests(return_world, record_tests):
 def test_terminal_record_hashes_saved_utf8_result():
     response = "receipt: café\n"
     fields = delegate._core_terminal_fields(
-        status="done", duration_s=1, response=response, result_file="task.result", stderr_excerpt=None,
-        returncode=0, returncode_reason=None, dirty_on_exit=False, commits_ahead=0,
-        needs_finalize=False, finalize_error=None, last_error=None,
+        status="done",
+        duration_s=1,
+        response=response,
+        result_file="task.result",
+        stderr_excerpt=None,
+        returncode=0,
+        returncode_reason=None,
+        dirty_on_exit=False,
+        commits_ahead=0,
+        needs_finalize=False,
+        finalize_error=None,
+        last_error=None,
     )
     assert fields["result_sha256"] == hashlib.sha256(response.encode("utf-8")).hexdigest()
     fields = delegate._core_terminal_fields(
-        status="failed", duration_s=1, response=response, result_file=None, stderr_excerpt=None,
-        returncode=1, returncode_reason=None, dirty_on_exit=False, commits_ahead=0,
-        needs_finalize=False, finalize_error=None, last_error=None,
+        status="failed",
+        duration_s=1,
+        response=response,
+        result_file=None,
+        stderr_excerpt=None,
+        returncode=1,
+        returncode_reason=None,
+        dirty_on_exit=False,
+        commits_ahead=0,
+        needs_finalize=False,
+        finalize_error=None,
+        last_error=None,
     )
     assert fields["result_sha256"] is None

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — m20 GREEN: three small fixes (issue #2032)
 
 **Task ID**: `m20-three-fixes-2026-05-16`
@@ -20,10 +26,10 @@ For every claim this work produces, the PR body MUST quote the deterministic too
 | Claim you will assert | Deterministic tool | Required output to quote |
 |---|---|---|
 | "Fix 1 regex added to `_strip_metalinguistic`" | `git diff scripts/build/linear_pipeline.py` | Show the diff hunk including the new regex constant and its use in the function |
-| "Fix 1 test passes" | `.venv/bin/python -m pytest tests/build/test_linear_pipeline.py::<your-test-name> -v` | Raw pytest line `1 passed in N.Ns` |
+| "Fix 1 test passes" | `"$PROJECT_PYTHON" -m pytest tests/build/test_linear_pipeline.py::<your-test-name> -v` | Raw pytest line `1 passed in N.Ns` |
 | "Fix 2 corpus citation is real" | `mcp__sources__search_text` against the new source/page | Quote the chunk returned + cite chunk_id |
 | "Fix 3 anchor-unmatched no longer leaks" | New regression test in `tests/build/test_linear_pipeline.py` | Raw pytest pass line |
-| "Full pytest does not regress" | `.venv/bin/python -m pytest tests/build/test_linear_pipeline.py -q` | Raw final summary line `N passed in M.MMs` |
+| "Full pytest does not regress" | `"$PROJECT_PYTHON" -m pytest tests/build/test_linear_pipeline.py -q` | Raw final summary line `N passed in M.MMs` |
 | "Lint clean" | `.venv/bin/ruff check scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py` | `All checks passed!` line |
 | "PR opened" | `gh pr view <num> --json url --jq .url` | Raw URL line |
 
@@ -38,7 +44,7 @@ git fetch origin
 git worktree add -B codex/m20-three-fixes-2026-05-16 \
     .worktrees/dispatch/codex/m20-three-fixes-2026-05-16 origin/main
 cd .worktrees/dispatch/codex/m20-three-fixes-2026-05-16
-.venv/bin/python -m pytest tests/build/test_linear_pipeline.py -q   # baseline must be GREEN; if RED, STOP and report
+"$PROJECT_PYTHON" -m pytest tests/build/test_linear_pipeline.py -q   # baseline must be GREEN; if RED, STOP and report
 ```
 
 ---
@@ -108,9 +114,9 @@ PR body MUST quote the MCP chunk returned (or the empty result) as proof.
 ## Step 5 — Verify
 
 ```
-.venv/bin/python -m pytest tests/build/test_linear_pipeline.py -q     # both new tests + no regression
+"$PROJECT_PYTHON" -m pytest tests/build/test_linear_pipeline.py -q     # both new tests + no regression
 .venv/bin/ruff check scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py curriculum/l2-uk-en/plans/a1/my-morning.yaml
-.venv/bin/python scripts/audit_module.py curriculum/l2-uk-en/plans/a1/my-morning.yaml || true    # informational
+"$PROJECT_PYTHON" scripts/audit_module.py curriculum/l2-uk-en/plans/a1/my-morning.yaml || true    # informational
 ```
 
 YAML lint may flag formatting; only fix if the existing file would also have flagged. Do not reformat unrelated YAML.

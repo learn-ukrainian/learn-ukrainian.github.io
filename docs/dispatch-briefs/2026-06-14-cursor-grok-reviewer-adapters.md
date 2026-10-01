@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: fix cursor + grok-build so both work as wiki reviewers (#3087 bakeoff, #3151)
 
 Goal: make BOTH `cursor` and `grok-build` produce a valid dimensional-review verdict
@@ -47,7 +53,7 @@ Steps:
 Repro (orchestrator used this):
 ```
 cd . && \
-.venv/bin/python -c "import sys;sys.path.insert(0,'scripts');from pathlib import Path;from wiki.review import _run_single_dim as r;a=Path('wiki/pedagogy/a1/this-and-that.md').resolve();d=r(dim='register',article_path=a,article_text=a.read_text(),primary='cursor',fallbacks=(),cwd=Path.cwd());print(d.verdict,d.score,(d.error or '')[:400])"
+"$PROJECT_PYTHON" -c "import sys;sys.path.insert(0,'scripts');from pathlib import Path;from wiki.review import _run_single_dim as r;a=Path('wiki/pedagogy/a1/this-and-that.md').resolve();d=r(dim='register',article_path=a,article_text=a.read_text(),primary='cursor',fallbacks=(),cwd=Path.cwd());print(d.verdict,d.score,(d.error or '')[:400])"
 ```
 
 ## C. Smoke tests (both adapters) — prevent silent regression
@@ -62,7 +68,7 @@ check (registry id ∈ `grok models` for grok-build) can be a pure assertion.
    `ln -sfn data ./data` (do NOT commit it).
 3. Fix A (grok-build, 3 spots). Verify: a real grok-build review invoke returns a valid verdict (repro above with `primary='grok-build'`).
 4. Fix B (cursor MCP wiring). Verify: cursor review returns a valid verdict.
-5. Add smoke tests (C). Run `.venv/bin/python -m pytest tests/agent_runtime/ -q` (or the adapter test dir) → paste summary.
+5. Add smoke tests (C). Run `"$PROJECT_PYTHON" -m pytest tests/agent_runtime/ -q` (or the adapter test dir) → paste summary.
 6. `.venv/bin/ruff check scripts/ tests/` → paste `All checks passed!`.
 7. Commit conventional: `fix(agent-runtime): wire cursor sources-MCP + correct grok-build model id (#3151, #3087)`.
 8. `git push -u origin <branch>` ; `gh pr create` (NO auto-merge — orchestrator reviews + re-runs the bakeoff).

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — code-review benchmark harness for cross-model PR review
 
 **Agent:** codex
@@ -134,7 +140,7 @@ Per-cell row in REPORT.md leaderboard sorted by F1 desc, secondary sort by recal
 Run a SMOKE (single small cell) first to validate the pipeline end-to-end:
 
 ```bash
-.venv/bin/python scripts/audit/code_review_benchmark.py \
+"$PROJECT_PYTHON" scripts/audit/code_review_benchmark.py \
   --corpus audit/code-review-benchmark/corpus \
   --out audit/2026-05-17-code-review-benchmark-smoke \
   --family openai --harness hermes --case pr-2031-activity-schema

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: revise #1797 D4 lineage scanner (fixes Claude review's 1 BLOCKING + 2 IMPORTANT)
 
 > **PR to revise:** #1797 on branch `codex/1785-d4-decision-lineage`
@@ -9,7 +15,7 @@
 ## Worktree instructions (mandatory — note the --base)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent codex --mode danger --worktree --base origin/codex/1785-d4-decision-lineage \
     --task-id codex-1797-d4-fix \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/1797-d4-revise.md
@@ -32,7 +38,7 @@ PR #1797 picks up amendments automatically.
 
 **Repro** (verified by Claude review running scanner against live repo):
 ```
-$ .venv/bin/python scripts/audit/decision_lineage.py
+$ "$PROJECT_PYTHON" scripts/audit/decision_lineage.py
 count: 13
   INDEX                           commits=144  prs=173
   README                          commits= 30  prs= 29
@@ -126,7 +132,7 @@ All 3 reference commits in the existing test mention their alias in the **commit
 8. Add a comment above `/lineage` decorator (Issue 7).
 9. `.venv/bin/ruff check scripts/audit/decision_lineage.py tests/audit/test_decision_lineage.py`
 10. `.venv/bin/pytest tests/audit/test_decision_lineage.py -x`
-11. **Validation pass**: run `.venv/bin/python scripts/audit/decision_lineage.py` against live repo. Capture output for PR body. Confirm INDEX/README NOT in output and ADR-008 PR count is plausible (single-digit to mid-teens).
+11. **Validation pass**: run `"$PROJECT_PYTHON" scripts/audit/decision_lineage.py` against live repo. Capture output for PR body. Confirm INDEX/README NOT in output and ADR-008 PR count is plausible (single-digit to mid-teens).
 12. Commit: `fix(audit): D4 scanner skips non-decision MDs, word-boundary alias match, subject-line PR attribution (#1785)`
 13. **Push to ORIGINAL PR branch**: `git push origin HEAD:codex/1785-d4-decision-lineage --force-with-lease`
 14. **Delete new branch**: `git push origin --delete codex/1797-d4-fix`

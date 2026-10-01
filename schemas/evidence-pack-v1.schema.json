@@ -601,6 +601,222 @@
               "additionalProperties": false
             }
           ]
+        },
+        "models": {
+          "type": "object",
+          "description": "Explicit listening models; letters are Ukrainian letters or the atomic digraphs дж/дз, words are level-store IDs. Descriptions never establish models.",
+          "properties": {
+            "letters": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Є",
+                  "І",
+                  "Ї",
+                  "А",
+                  "Б",
+                  "В",
+                  "Г",
+                  "Д",
+                  "ДЖ",
+                  "ДЗ",
+                  "Е",
+                  "Ж",
+                  "З",
+                  "И",
+                  "Й",
+                  "К",
+                  "Л",
+                  "М",
+                  "Н",
+                  "О",
+                  "П",
+                  "Р",
+                  "С",
+                  "Т",
+                  "У",
+                  "Ф",
+                  "Х",
+                  "Ц",
+                  "Ч",
+                  "Ш",
+                  "Щ",
+                  "Ь",
+                  "Ю",
+                  "Я",
+                  "а",
+                  "б",
+                  "в",
+                  "г",
+                  "д",
+                  "дж",
+                  "дз",
+                  "е",
+                  "ж",
+                  "з",
+                  "и",
+                  "й",
+                  "к",
+                  "л",
+                  "м",
+                  "н",
+                  "о",
+                  "п",
+                  "р",
+                  "с",
+                  "т",
+                  "у",
+                  "ф",
+                  "х",
+                  "ц",
+                  "ч",
+                  "ш",
+                  "щ",
+                  "ь",
+                  "ю",
+                  "я",
+                  "є",
+                  "і",
+                  "ї",
+                  "Ґ",
+                  "ґ"
+                ]
+              },
+              "uniqueItems": true,
+              "$comment": "Isolated sounds, not letter names or word transcription. Правопис 2019 §10 (щ = шч) and §63.2 (atomic дж/дз): https://mon.gov.ua/static-objects/mon/sites/1/zagalna%20serednya/Pravopys.2019/ukr.pravopys-2019.pdf. Primer: 1-klas-bukvar-zaharijchuk-2025-2_s0035 (ї); 2-klas-ukrmova-bolshakova-2019-1_s0035 (я/ю/є); 5-klas-ukrmova-golub-2022_s0077, p.78 (щ). Verified through sources MCP query_pravopys/search_text and the official PDF. The soft sign is a valid letter but has no isolated sound.",
+              "x-sound-sequences": {
+                "а": [
+                  "а"
+                ],
+                "б": [
+                  "б"
+                ],
+                "в": [
+                  "в"
+                ],
+                "г": [
+                  "г"
+                ],
+                "ґ": [
+                  "ґ"
+                ],
+                "д": [
+                  "д"
+                ],
+                "е": [
+                  "е"
+                ],
+                "є": [
+                  "й",
+                  "е"
+                ],
+                "ж": [
+                  "ж"
+                ],
+                "з": [
+                  "з"
+                ],
+                "и": [
+                  "и"
+                ],
+                "і": [
+                  "і"
+                ],
+                "ї": [
+                  "й",
+                  "і"
+                ],
+                "й": [
+                  "й"
+                ],
+                "к": [
+                  "к"
+                ],
+                "л": [
+                  "л"
+                ],
+                "м": [
+                  "м"
+                ],
+                "н": [
+                  "н"
+                ],
+                "о": [
+                  "о"
+                ],
+                "п": [
+                  "п"
+                ],
+                "р": [
+                  "р"
+                ],
+                "с": [
+                  "с"
+                ],
+                "т": [
+                  "т"
+                ],
+                "у": [
+                  "у"
+                ],
+                "ф": [
+                  "ф"
+                ],
+                "х": [
+                  "х"
+                ],
+                "ц": [
+                  "ц"
+                ],
+                "ч": [
+                  "ч"
+                ],
+                "ш": [
+                  "ш"
+                ],
+                "щ": [
+                  "ш",
+                  "ч"
+                ],
+                "ю": [
+                  "й",
+                  "у"
+                ],
+                "я": [
+                  "й",
+                  "а"
+                ],
+                "дж": [
+                  "дж"
+                ],
+                "дз": [
+                  "дз"
+                ]
+              }
+            },
+            "words": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^W-[0-9]+$"
+              },
+              "uniqueItems": true
+            },
+            "segment": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[^\\s–]+–[^\\s–]+$"
+            }
+          },
+          "required": [
+            "letters",
+            "words",
+            "segment"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [

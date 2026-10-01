@@ -180,17 +180,13 @@ def test_cross_workflow_in_progress_is_pending():
 
 def test_single_green_row_without_timestamp_is_green():
     item = pr(
-        statusCheckRollup=[
-            {"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS", "workflowName": "CI"}
-        ]
+        statusCheckRollup=[{"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS", "workflowName": "CI"}]
     )
     assert sweep._check_blockers(item) == []
 
 
 def test_row_with_neither_status_nor_conclusion_is_unknown():
-    item = pr(
-        statusCheckRollup=[{"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-09-23T12:00:00Z"}]
-    )
+    item = pr(statusCheckRollup=[{"name": "CI Gate", "workflowName": "CI", "startedAt": "2026-09-23T12:00:00Z"}])
     assert sweep._check_blockers(item) == ["CI unknown CI Gate"]
 
 
@@ -211,7 +207,9 @@ def test_group_collapsed_by_name_drops_blanks_matrix_and_keeps_survivors():
         "startedAt": "2026-09-23T13:00:00Z",
     }
     ci = _gate("SUCCESS", "2026-09-23T12:00:00Z", "CI")
-    named, other = group_collapsed_by_name([blank_name, empty_name, blank_context, matrix, "not-a-dict", 7, nightly, ci])
+    named, other = group_collapsed_by_name(
+        [blank_name, empty_name, blank_context, matrix, "not-a-dict", 7, nightly, ci]
+    )
     assert list(named) == ["CI Gate"]
     assert named["CI Gate"] == [nightly, ci]
     assert other == [blank_name, empty_name, blank_context, "not-a-dict", 7]
@@ -231,7 +229,7 @@ def test_ci_red_pending_and_ready():
 
 def test_moved_head_between_observation_and_queue_lookup_reports_unknown():
     def runner(args):
-        if args[:3] == ["gh", "api", "graphql"]:
+        if isinstance(args, sweep.Request) and args.verb == "read-membership-head":
             return json.dumps({"data": {"repository": {"pullRequest": {"headRefOid": OTHER, "isInMergeQueue": False}}}})
         raise AssertionError(args)
 

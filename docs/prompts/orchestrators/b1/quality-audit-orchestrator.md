@@ -121,7 +121,7 @@ git add "$REPORT"
 git commit -m "docs: add B1 normalization quality audit" --trailer "X-Agent: codex/b1-quality-audit"
 .venv/bin/python scripts/audit/lint_agent_trailer.py
 git push -u origin codex/b1-quality-audit
-gh pr create --draft --fill --head codex/b1-quality-audit --base main
+.venv/bin/python -m scripts.publish pr-create --draft --title "<title>" --body-file <body.md> --head codex/b1-quality-audit --base main
 ```
 
 ## Expected Final Response

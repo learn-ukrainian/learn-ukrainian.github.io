@@ -18,6 +18,7 @@ import hashlib
 import json
 import os
 import sys
+from functools import partial
 from pathlib import Path
 from typing import Any
 
@@ -36,7 +37,7 @@ from scripts.build.fresh.prompt import (
     render_recap_prompt,
     style_card_info,
 )
-from scripts.build.fresh.writer import ALLOWED_WRITERS, dispatch_writer
+from scripts.build.fresh.writer import ALLOWED_WRITERS, WRITER_EFFORTS, dispatch_writer
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.evidence import pack as pack_module
 from scripts.curriculum.learner_state.planned import PlannedState, planned_state
@@ -205,6 +206,12 @@ def _build_parser() -> argparse.ArgumentParser:
         "--attempt", type=int, default=1, help="Attempt count for regeneration tracking (default: 1, e.g. 1 or 2)"
     )
     p_write.add_argument(
+        "--writer-effort",
+        choices=WRITER_EFFORTS,
+        default=None,
+        help="Writer reasoning effort (e.g. medium; default: retain the seat's configured effort)",
+    )
+    p_write.add_argument(
         "--fake-seat",
         type=Path,
         default=None,
@@ -308,6 +315,12 @@ def _build_parser() -> argparse.ArgumentParser:
     target.add_argument("--lesson", "-n", type=int, help="Lesson number (1-indexed), e.g. 1")
     target.add_argument("--module", action="store_true", help="Build every lesson in order, recap last")
     p_build.add_argument("--writer-seat", help="Explicit agent:model seat when a draft needs writing")
+    p_build.add_argument(
+        "--writer-effort",
+        choices=WRITER_EFFORTS,
+        default=None,
+        help="Writer reasoning effort (e.g. medium; default: retain the seat's configured effort)",
+    )
     p_build.add_argument(
         "--question-seat",
         default=None,
@@ -835,6 +848,9 @@ def main(argv: list[str] | None = None) -> int:
         from scripts.build.fresh.module import build_module
 
         try:
+            writer_options = {}
+            if args.writer_effort is not None:
+                writer_options["writer_dispatch"] = partial(dispatch_writer, effort=args.writer_effort)
             report = build_module(
                 args.level,
                 args.slug,
@@ -842,6 +858,7 @@ def main(argv: list[str] | None = None) -> int:
                 lesson_n=args.lesson,
                 writer_seat=args.writer_seat,
                 question_seat=args.question_seat,
+                **writer_options,
             )
             stopped = report["lessons"][-1] if report["lessons"] else None
             if args.lesson is not None and stopped and stopped["stopping_check"] == 0:
@@ -1182,6 +1199,7 @@ def main(argv: list[str] | None = None) -> int:
             attempt=args.attempt,
             plan_activity_types=plan_activity_types,
             fake_seat=args.fake_seat,
+            effort=args.writer_effort,
             repo_root=repo_root,
         )
 

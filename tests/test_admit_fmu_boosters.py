@@ -203,3 +203,32 @@ def test_fmu_booster_existing_entry_metadata_and_provenance_preserved():
     assert existing_entry["source_provenance"][0]["source_family"] == "textbook"
     assert len(existing_entry["source_provenance"]) >= 3  # 1 textbook + 2 FMU
     assert existing_entry["definition_cards"][0]["source_dict"] == "sum20"
+
+
+def test_release_publication_freezes_binary_and_scans_text(tmp_path, synthetic_opsec, publisher_transport, monkeypatch):
+    import subprocess
+
+    import pytest
+
+    from scripts.lexicon.admit_fmu_boosters import _publish_asset
+    from scripts.opsec import prepublish
+    from tests.opsec_fixtures import CATALOG, TOKEN
+
+    monkeypatch.setattr(prepublish, "catalog", lambda: CATALOG)
+    monkeypatch.setenv("GH_REPO", "unit/public")
+    asset = tmp_path / "unit.gz"
+    asset.write_bytes(b"\xffunit")
+    calls = []
+
+    def send(args, **kwargs):
+        calls.append(Path(args[-1]).read_bytes())
+        assert kwargs["timeout"] == 120 and kwargs["check"] is True
+        return subprocess.CompletedProcess(args, 0)
+
+    monkeypatch.setattr(subprocess, "run", send)
+    _publish_asset(asset)
+    assert calls == [b"\xffunit"]
+    asset.write_text(TOKEN)
+    with pytest.raises(prepublish.PublishBlocked):
+        _publish_asset(asset)
+    assert calls == [b"\xffunit"]

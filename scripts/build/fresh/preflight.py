@@ -3,8 +3,8 @@
 Before any paid writer call, verifies availability of evidence records:
 - for each step's needs:
   * example: EX- record exists with right kind ('example') and locked bytes
-  * quote: T- record exists with kind 'quote'; until WP 21 lands, every quote need
-    is ALWAYS a publication_right gap, whatever the pack record says
+  * quote: T- record exists and the source registry permits this excerpt
+    with its required attribution
   * error: E- record exists with right kind ('error') and locked bytes
   * video: V- record exists with right kind ('video') and locked bytes
   * culture: T- record exists with right kind ('culture') and locked bytes
@@ -22,7 +22,7 @@ from typing import Any
 
 import yaml
 
-from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence import pack as pack_module
 from scripts.curriculum.resolver.ambiguity import readings
 from scripts.curriculum.resolver.inputs import Allowlist
@@ -204,16 +204,12 @@ def preflight_lesson(
                 matching_records = [rid for rid in citation_candidates if record_list_map.get(rid) == expected_list]
 
                 if matching_records:
-                    # Finding 2: Until WP 21 lands, a quote need is ALWAYS a publication_right gap
                     if need == "quote":
                         for rid in matching_records:
-                            gaps.append(
-                                Gap(
-                                    step=step_id,
-                                    need="publication_right",
-                                    detail=f"source for quote {rid} in step {step_id} lacks verified publication right (WP 21 pending)",
-                                )
-                            )
+                            try:
+                                publication.quote_attribution(pack_records[rid], source_registry)
+                            except ValueError as exc:
+                                gaps.append(Gap(step=step_id, need="publication_right", detail=str(exc)))
                 else:
                     # No record found in expected_list
                     mismatched = [

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: Draft "Decision Graph view" ADR (kubedojo Action C)
 
 > **Tracking doc:** `docs/session-state/2026-05-07-kubedojo-paradigm-followups.md` Action C
@@ -8,7 +14,7 @@
 ## Worktree instructions (mandatory)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent gemini --mode danger --worktree --base origin/main \
     --task-id gemini-decision-graph-adr \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/decision-graph-adr-gemini.md

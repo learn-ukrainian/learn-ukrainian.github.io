@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — m20 italic-rule HARD REJECT prompt patch (#2095)
 
 Same shape as merged PR #2094 (which took wiki obligation coverage from 22% → 100% in one rebuild). The writer prompt at `scripts/build/phases/linear-write.md:76-80` already lists italic-bad-form patterns as "forbidden" but the writer keeps emitting them anyway (m20 build #17 had `*Я дивюся*` at line 65 and `*Я користуювася*` at line 85 — both should use `<!-- bad -->...<!-- /bad -->` markers per the same prompt). Convert the warning into a HARD REJECT contract + pre-emit self-check, identical pattern to #2094.
@@ -81,7 +87,7 @@ git diff --name-only main
 
 # 4. Pre-commit hooks (venv symlinked into worktree by delegate.py)
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -m pre_commit run --files scripts/build/phases/linear-write.md
+"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/phases/linear-write.md
 ```
 
 ## Commit + PR

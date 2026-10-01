@@ -103,15 +103,20 @@ export default function TranslationCritique({
     return styles.scoreLow;
   };
 
-  const highlightFocusPoints = (text: string) => {
-    let highlighted = text;
-    focusPoints.forEach(point => {
-      if (point) {
-        const regex = new RegExp(`(${point.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-        highlighted = highlighted.replace(regex, `<mark class="${styles.focusHighlight}">$1</mark>`);
+  const renderWithFocusPoints = (text: string): React.ReactNode => {
+    const activePoints = focusPoints.filter(p => p && p.trim().length > 0);
+    if (activePoints.length === 0) return text;
+
+    const pattern = new RegExp(`(${activePoints.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
+    const parts = text.split(pattern);
+
+    return parts.map((part, i) => {
+      const isMatch = activePoints.some(p => p.toLowerCase() === part.toLowerCase());
+      if (isMatch) {
+        return <mark key={i} className={styles.focusHighlight}>{part}</mark>;
       }
+      return part;
     });
-    return highlighted;
   };
 
   return (
@@ -131,12 +136,9 @@ export default function TranslationCritique({
         {/* Original text */}
         <div className={styles.originalTextSection}>
           <h4>{originalLabel}</h4>
-          <div
-            className={styles.archaicText}
-            dangerouslySetInnerHTML={{
-              __html: focusPoints.length > 0 ? highlightFocusPoints(original) : original
-            }}
-          />
+          <div className={styles.archaicText}>
+            {renderWithFocusPoints(original)}
+          </div>
         </div>
 
         {/* Focus points */}
@@ -169,12 +171,9 @@ export default function TranslationCritique({
                     </span>
                   )}
                 </div>
-                <div
-                  className={styles.translationText}
-                  dangerouslySetInnerHTML={{
-                    __html: focusPoints.length > 0 ? highlightFocusPoints(translation.text) : translation.text
-                  }}
-                />
+                <div className={styles.translationText}>
+                  {renderWithFocusPoints(translation.text)}
+                </div>
                 {(showExpertVerdict[index] || showAllVerdicts) && (
                   <div className={styles.expertVerdict}>
                     <strong>{expertNotesLabel}</strong>
