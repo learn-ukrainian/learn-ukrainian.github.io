@@ -32,7 +32,7 @@ from typing import Any
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
-from scripts.wiki.sources_db import using_connection
+from scripts.wiki.sources_db import normalize_ulif_dictua_query, using_connection
 
 from . import codes, config, db_identity, tags
 
@@ -803,12 +803,19 @@ class Sources:
         return result
 
     def ulif_entries(self, lemmas: Iterable[str]) -> SourceResult[dict[str, list[dict]]]:
-        """Raw entry rows + ordered raw sections. No unchecked group can be eligible."""
+        """Raw DictUA groups keyed by caller spelling, looked up by the oracle's key.
+
+        Case folding identifies the cache group only. Stress readings still
+        require the oracle's positive lemma and POS join to VESUM; a checked
+        common-word group cannot establish a proper-name stress reading.
+        """
         conn = self._db()
         requested = list(dict.fromkeys(map(normalize_spelling, lemmas)))
+        queries = list(dict.fromkeys(map(normalize_ulif_dictua_query, requested)))
+        groups: dict[str, list[dict]] = {query: [] for query in queries}
         result: dict[str, list[dict]] = {lemma: [] for lemma in requested}
-        for start in range(0, len(requested), BATCH_SIZE):
-            batch = requested[start : start + BATCH_SIZE]
+        for start in range(0, len(queries), BATCH_SIZE):
+            batch = queries[start : start + BATCH_SIZE]
             slots = ",".join("?" for _ in batch)
             rows = conn.execute(
                 f"SELECT * FROM ulif_dictua_entries WHERE normalized_query IN ({slots}) ORDER BY normalized_query, homonym_index, id",
@@ -817,7 +824,7 @@ class Sources:
             entries = {row["id"]: dict(row) for row in rows}
             for row in entries.values():
                 row["sections"] = []
-                result[row["normalized_query"]].append(row)
+                groups[row["normalized_query"]].append(row)
             if entries:
                 # Join on requested spellings to stay within SQLite's variable cap.
                 sections = conn.execute(
@@ -826,7 +833,9 @@ class Sources:
                 )
                 for section in sections:
                     entries[section["entry_id"]]["sections"].append(dict(section))
-            self._progress("ulif", min(start + BATCH_SIZE, len(requested)), len(requested))
+            self._progress("ulif", min(start + BATCH_SIZE, len(queries)), len(queries))
+        for lemma in requested:
+            result[lemma] = groups[normalize_ulif_dictua_query(lemma)]
         return self._db_result(result)
 
     @staticmethod
