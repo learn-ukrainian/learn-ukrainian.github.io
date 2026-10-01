@@ -41,7 +41,7 @@ def test_load_pip_audit_ignores_empty_file(tmp_path: Path):
 
 def test_audit_python_no_lockfile(tmp_path: Path):
     res = audit_python(tmp_path, tmp_path / "ignore.yaml")
-    assert res == 0
+    assert res == 1
 
 
 @patch("subprocess.run")
@@ -57,8 +57,10 @@ def test_audit_python_success(mock_run: MagicMock, tmp_path: Path):
     assert res == 0
     mock_run.assert_called_once()
     cmd = mock_run.call_args[0][0]
+    kwargs = mock_run.call_args[1]
     assert "--ignore-vuln" in cmd
     assert "CVE-TEST" in cmd
+    assert kwargs.get("timeout") == 300
 
 
 @patch("subprocess.run")
@@ -75,22 +77,28 @@ def test_audit_python_failure(mock_run: MagicMock, tmp_path: Path):
 
 def test_audit_node_no_package_json(tmp_path: Path):
     res = audit_node(tmp_path)
-    assert res == 0
+    assert res == 1
 
 
 @patch("subprocess.run")
 def test_audit_node_success(mock_run: MagicMock, tmp_path: Path):
+    (tmp_path / "package.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "package-lock.json").write_text("{}", encoding="utf-8")
     site_dir = tmp_path / "site"
     site_dir.mkdir()
     (site_dir / "package.json").write_text("{}", encoding="utf-8")
+    (site_dir / "package-lock.json").write_text("{}", encoding="utf-8")
 
     mock_run.return_value = MagicMock(returncode=0, stdout="found 0 vulnerabilities", stderr="")
 
     res = audit_node(tmp_path)
     assert res == 0
-    mock_run.assert_called_once()
-    cmd = mock_run.call_args[0][0]
-    assert cmd == ["npm", "audit", "--omit=dev", "--audit-level=high"]
+    assert mock_run.call_count == 2
+    for call_item in mock_run.call_args_list:
+        cmd = call_item[0][0]
+        kwargs = call_item[1]
+        assert cmd == ["npm", "audit", "--omit=dev", "--audit-level=high"]
+        assert kwargs.get("timeout") == 120
 
 
 @patch("scripts.ci.audit_dependencies.audit_python")

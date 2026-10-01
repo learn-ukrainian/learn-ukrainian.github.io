@@ -44,7 +44,7 @@ ARTIFACT = "ci-tested-tree"
 FULL_TIER = "full"
 WORKFLOW = ".github/workflows/ci.yml"
 # ci.yml job names a pull_request run must have succeeded in, besides pytest (N).
-EXPECTED_JOBS = ("Secret scan", "Checks", "Frontend", "pytest report", "CI Gate")
+EXPECTED_JOBS = ("Secret scan", "Checks", "Frontend", "Dependency audit", "pytest report", "CI Gate")
 # ci.yml jobs that run only in the merge queue.
 SKIPPED_ON_PULL_REQUEST = ("Reuse check", "Queue commit metadata scan")
 # refs/heads/gh-readonly-queue/<base>/pr-<number>-<parent sha>; the prefix is

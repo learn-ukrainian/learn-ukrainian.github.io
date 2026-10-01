@@ -311,11 +311,33 @@ jobs:
           if-no-files-found: error
           retention-days: 14
 
+  dependency-audit:
+    name: Dependency audit
+    needs: [reuse]
+    if: ${{ !cancelled() && needs.reuse.outputs.reuse != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '22'
+      - name: Run dependency vulnerability audit
+        run: |
+          python -m pip install --upgrade pip pip-audit PyYAML
+          python scripts/ci/audit_dependencies.py
+
   ci-gate:
     name: CI Gate
     # always(): a skipped required check would count as passing on GitHub.
     if: always()
-    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, pytest, pytest-report]
+    needs: [reuse, queue-metadata-scan, secret-scan, checks, frontend, dependency-audit, pytest, pytest-report]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -329,6 +351,7 @@ jobs:
           SECRET_SCAN: ${{ needs.secret-scan.result }}
           CHECKS: ${{ needs.checks.result }}
           FRONTEND: ${{ needs.frontend.result }}
+          DEPENDENCY_AUDIT: ${{ needs.dependency-audit.result }}
           PYTEST: ${{ needs.pytest.result }}
           PYTEST_REPORT: ${{ needs.pytest-report.result }}
         run: |
@@ -348,7 +371,15 @@ jobs:
             [ -n "$REUSED_RUN" ] || { echo "::error::reuse=true without a run id"; status=1; }
             expected=skipped
           fi
-          for job in secret-scan:SECRET_SCAN checks:CHECKS frontend:FRONTEND pytest:PYTEST pytest-report:PYTEST_REPORT; do
+          jobs=(
+            secret-scan:SECRET_SCAN
+            checks:CHECKS
+            frontend:FRONTEND
+            dependency-audit:DEPENDENCY_AUDIT
+            pytest:PYTEST
+            pytest-report:PYTEST_REPORT
+          )
+          for job in "${jobs[@]}"; do
             var="${job#*:}"; want "${job%%:*}" "${!var}" "$expected"
             [ "$expected" = success ] || echo "${job%%:*} reused from run ${REUSED_RUN}: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${REUSED_RUN}"
           done

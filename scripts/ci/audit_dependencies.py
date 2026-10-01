@@ -36,8 +36,8 @@ def audit_python(repo_root: Path, ignore_file: Path) -> int:
     """Run pip-audit on requirements-lock.txt with suppressions."""
     req_file = repo_root / "requirements-lock.txt"
     if not req_file.exists():
-        print(f"[audit_dependencies] Warning: {req_file} not found; skipping python audit.")
-        return 0
+        print(f"[audit_dependencies] Error: {req_file} not found; missing required inputs fail closed.", file=sys.stderr)
+        return 1
 
     ignored_ids = load_pip_audit_ignores(ignore_file)
     cmd = [
@@ -63,22 +63,33 @@ def audit_python(repo_root: Path, ignore_file: Path) -> int:
 
 
 def audit_node(repo_root: Path) -> int:
-    """Run npm audit on production dependencies in site/."""
-    site_dir = repo_root / "site"
-    pkg_file = site_dir / "package.json"
-    if not pkg_file.exists():
-        print(f"[audit_dependencies] Warning: {pkg_file} not found; skipping node audit.")
-        return 0
+    """Run npm audit on production dependencies in repository root and site/."""
+    targets = [
+        ("root", repo_root),
+        ("site", repo_root / "site"),
+    ]
+    exit_code = 0
+    for label, target_dir in targets:
+        pkg_file = target_dir / "package.json"
+        lock_file = target_dir / "package-lock.json"
+        if not pkg_file.exists() or not lock_file.exists():
+            print(
+                f"[audit_dependencies] Error: {pkg_file} or {lock_file} not found; missing required inputs fail closed.",
+                file=sys.stderr,
+            )
+            return 1
 
-    cmd = ["npm", "audit", "--omit=dev", "--audit-level=high"]
-    print("[audit_dependencies] Running npm audit --omit=dev --audit-level=high in site/...")
-    res = subprocess.run(cmd, cwd=site_dir, capture_output=True, text=True, timeout=120)
-    if res.stdout:
-        print(res.stdout)
-    if res.stderr:
-        print(res.stderr, file=sys.stderr)
+        cmd = ["npm", "audit", "--omit=dev", "--audit-level=high"]
+        print(f"[audit_dependencies] Running npm audit --omit=dev --audit-level=high in {label} ({target_dir})...")
+        res = subprocess.run(cmd, cwd=target_dir, capture_output=True, text=True, timeout=120)
+        if res.stdout:
+            print(res.stdout)
+        if res.stderr:
+            print(res.stderr, file=sys.stderr)
+        if res.returncode != 0:
+            exit_code = res.returncode
 
-    return res.returncode
+    return exit_code
 
 
 def main(argv: list[str] | None = None) -> int:
