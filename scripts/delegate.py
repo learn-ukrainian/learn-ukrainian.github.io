@@ -6858,8 +6858,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
     delegated worktree sees the same local files without copying multi-GB
     directories. The primary Python environment is deliberately excluded:
     workers invoke its absolute interpreter and must not receive a local
-    ``.venv`` symlink. Call it after :func:`_apply_dispatch_sparse_checkout`:
-    the cone reset removes ignored files under ``data/`` (#9122).
+    ``.venv`` symlink.
 
     Self-link guard: if ``worktree_path`` *is* the main checkout, provisioning
     would create ``node_modules -> node_modules`` (a self-referential loop) that
@@ -7644,16 +7643,15 @@ def _ensure_worktree(
         telemetry["base_sha"] = actual_sha
         if dry_run:
             return worktree_path, worktree_branch, telemetry
+        # Reused worktrees may predate this provisioning hook; the helper is
+        # idempotent and never clobbers existing files.
+        _provision_data_symlinks(worktree_path, _REPO_ROOT)
         # Re-apply sparse profile so pre-existing full trees shrink on reuse.
         telemetry["sparse"] = _apply_dispatch_sparse_checkout(
             worktree_path,
             full_checkout=full_checkout,
             sparse_include=sparse_include,
         )
-        # Reused worktrees may predate this provisioning hook; the helper is
-        # idempotent and never clobbers existing files. It runs after the
-        # sparse profile, which deletes ignored links under ``data/`` (#9122).
-        _provision_data_symlinks(worktree_path, _REPO_ROOT)
         _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
@@ -7759,15 +7757,12 @@ def _ensure_worktree(
         if upstream_proc.returncode != 0:
             detail = (upstream_proc.stderr or upstream_proc.stdout or "git branch failed").strip()
             raise RuntimeError(f"could not configure upstream origin/{requested_branch} for {worktree_path}: {detail}")
+    _provision_data_symlinks(worktree_path, _REPO_ROOT)
     telemetry["sparse"] = _apply_dispatch_sparse_checkout(
         worktree_path,
         full_checkout=full_checkout,
         sparse_include=sparse_include,
     )
-    # After the sparse profile: ``git sparse-checkout init --cone`` deletes
-    # ``data/`` with its ignored DB links, and a worker that then opens
-    # ``data/vesum.db`` relative to the worktree creates an empty file (#9122).
-    _provision_data_symlinks(worktree_path, _REPO_ROOT)
     _record_worktree_local_venv_warning(worktree_path, telemetry)
     return worktree_path, worktree_branch, telemetry
 
