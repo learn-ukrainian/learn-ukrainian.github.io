@@ -1,0 +1,672 @@
+{
+  "provenance": "Read-only ULIF/VESUM capture for issue #8398; source ids and fingerprints retained.",
+  "entry": {
+    "id": 137993,
+    "normalized_query": "ніна",
+    "homonym_index": 1,
+    "canonical_headword": "Ні́на",
+    "grammatical_label": "іменник жіночого роду, істота",
+    "sense_gloss": "",
+    "content_sha256": "4ef0b3a2c57ead0b7a03b080668d9d7b50c5df48b386a480337ee7691545342c",
+    "register_position": "5262:8",
+    "homonym_checked": 1,
+    "raw_response_ref": "sha256:691c85db354c87d6c753e5d2012a7b2ccec0bca4eb3338e4bcba3dab5fd274cd",
+    "retrieved_at": "2026-09-24T13:29:07.221866+00:00",
+    "response_sha256": "691c85db354c87d6c753e5d2012a7b2ccec0bca4eb3338e4bcba3dab5fd274cd",
+    "parser_version": "ulif-dictua-v2",
+    "status": "ok",
+    "sections": [
+      {
+        "id": 175046,
+        "entry_id": 137993,
+        "kind": "paradigm",
+        "source_order": 0,
+        "sense_or_group_id": "paradigm:1",
+        "payload_json": "{\"raw_html\": \"<table align=\\\"center\\\" border=\\\"1\\\" width=\\\"51%\\\">\\n<tr class=\\\"td_style\\\">\\n<td width=\\\"23%\\\">\\r\\n      відмінок</td>\\n<td width=\\\"40%\\\">\\r\\n     однина</td>\\n<td width=\\\"37%\\\">\\r\\n     множина</td>\\n</tr>\\n<tr>\\n<td class=\\\"td_left_style\\\" width=\\\"14%\\\"> \\r\\n      називний</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"40%\\\">\\r\\n   Ні́на</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"37%\\\">\\r\\n    Ні́ни</td>\\n</tr>\\n<tr>\\n<td class=\\\"td_left_style\\\" width=\\\"14%\\\"> \\r\\n     родовий</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"40%\\\">\\r\\n    Ні́ни</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"37%\\\">\\r\\n   Нін</td>\\n</tr>\\n<tr>\\n<td class=\\\"td_left_style\\\" width=\\\"14%\\\"> \\r\\n     давальний</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"40%\\\">\\r\\n    Ні́ні</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"37%\\\">\\r\\n   Ні́нам</td>\\n</tr>\\n<tr>\\n<td class=\\\"td_left_style\\\" width=\\\"14%\\\"> \\r\\n   знахідний</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"40%\\\">\\r\\n   Ні́ну</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"37%\\\">\\r\\n    Нін</td>\\n</tr>\\n<tr>\\n<td class=\\\"td_left_style\\\" width=\\\"14%\\\"> \\r\\n      орудний</td>\\n<td align=\\\"left\\\" class=\\\"td_inner_style\\\" width=\\\"40%\\\">\\r\\n    Ні́ною</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"37%\\\">\\r\\n    Ні́нами</td>\\n</tr>\\n<tr>\\n<td class=\\\"td_left_style\\\" width=\\\"14%\\\"> \\r\\n     місцевий</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"40%\\\">\\r\\n   на/у Ні́ні</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"37%\\\">\\r\\n    на/у Ні́нах</td>\\n</tr>\\n<tr>\\n<td class=\\\"td_left_style\\\" width=\\\"23%\\\">кличний </td>\\n<td class=\\\"td_inner_style\\\" width=\\\"40%\\\">\\r\\n    Ні́но</td>\\n<td class=\\\"td_inner_style\\\" width=\\\"37%\\\">\\r\\n    Ні́ни</td>\\n</tr>\\n</table>\", \"raw_response_ref\": \"sha256:56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281\", \"rows\": [[\"відмінок\", \"однина\", \"множина\"], [\"називний\", \"Ні́на\", \"Ні́ни\"], [\"родовий\", \"Ні́ни\", \"Нін\"], [\"давальний\", \"Ні́ні\", \"Ні́нам\"], [\"знахідний\", \"Ні́ну\", \"Нін\"], [\"орудний\", \"Ні́ною\", \"Ні́нами\"], [\"місцевий\", \"на/у Ні́ні\", \"на/у Ні́нах\"], [\"кличний\", \"Ні́но\", \"Ні́ни\"]], \"sense_or_group_id\": \"paradigm:1\", \"source_order\": 0}"
+      }
+    ]
+  },
+  "build": {
+    "id": 1,
+    "state": "complete",
+    "parser_version": "ulif-forms-v4",
+    "total_entries": 262812,
+    "entries_done": 262753,
+    "entries_failed": 59,
+    "total_forms": 4742272,
+    "started_at": "2026-09-30T04:35:49.190706+00:00",
+    "finished_at": "2026-09-30T06:22:48.886437+00:00",
+    "source_fingerprint": "d1d1a93417fe55ec1be950956138089d98d3604c9a85b22603ff577cc594bf12"
+  },
+  "ulif_forms": [
+    {
+      "id": 2333930,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніні",
+      "form_stressed": "Ні́ні",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_dav\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́ні",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333936,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніні",
+      "form_stressed": "Ні́ні",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_mis\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "на/у",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́ні",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333938,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніно",
+      "form_stressed": "Ні́но",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_kly\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́но",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333925,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніна",
+      "form_stressed": "Ні́на",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"іменник жіночого роду, істота\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́на",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333926,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніна",
+      "form_stressed": "Ні́на",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_naz\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́на",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333934,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніною",
+      "form_stressed": "Ні́ною",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_oru\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́ною",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333927,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніни",
+      "form_stressed": "Ні́ни",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_naz\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́ни",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333928,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніни",
+      "form_stressed": "Ні́ни",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_rod\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́ни",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333939,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніни",
+      "form_stressed": "Ні́ни",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_kly\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́ни",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333932,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Ніну",
+      "form_stressed": "Ні́ну",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_zna\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́ну",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333931,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Нінам",
+      "form_stressed": "Ні́нам",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_dav\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́нам",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333937,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Нінах",
+      "form_stressed": "Ні́нах",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_mis\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "на/у",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́нах",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333935,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Нінами",
+      "form_stressed": "Ні́нами",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_oru\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Ні́нами",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333929,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Нін",
+      "form_stressed": "Нін",
+      "stress_vowel_indices": "[]",
+      "grammatical_tags": "[\"v_rod\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Нін",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    },
+    {
+      "id": 2333933,
+      "entry_id": 137993,
+      "entry_key": "ніна#1",
+      "form_unstressed": "Нін",
+      "form_stressed": "Нін",
+      "stress_vowel_indices": "[]",
+      "grammatical_tags": "[\"v_zna\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Нін",
+      "source_page_sha256": "56b982ee4b6619cbb6c2b9f936e70080cfe7f167773dec99b77f967158d75281",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "fcf1d4788d684d45b001145f8ea45beda5a3675d043e967d6276c2301a645aac",
+      "normalized_query": "ніна",
+      "canonical_headword": "Ні́на",
+      "grammatical_label": "іменник жіночого роду, істота",
+      "homonym_index": 1
+    }
+  ],
+  "vesum_forms": [
+    {
+      "entry_id": 239577,
+      "word_form": "Ніні",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:f:v_dav:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніно",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:f:v_kly:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніні",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:f:v_mis:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніна",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:f:v_naz:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніною",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:f:v_oru:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніни",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:f:v_rod:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніну",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:f:v_zna:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Нінам",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:p:v_dav:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніни",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:p:v_kly:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Нінах",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:p:v_mis:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Ніни",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:p:v_naz:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Нінами",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:p:v_oru:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Нін",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:p:v_rod:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    },
+    {
+      "entry_id": 239577,
+      "word_form": "Нін",
+      "lemma": "Ніна",
+      "pos": "noun",
+      "tags": "noun:anim:p:v_zna:prop:fname",
+      "source_comment": null,
+      "source_location": "3780108-3780121",
+      "markers": []
+    }
+  ],
+  "analyses": {
+    "Ніні": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_dav:prop:fname"
+      },
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_mis:prop:fname"
+      }
+    ],
+    "Ніно": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_kly:prop:fname"
+      },
+      {
+        "lemma": "Ніно",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz:nv:prop:fname"
+      },
+      {
+        "lemma": "Ніно",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_rod:nv:prop:fname"
+      },
+      {
+        "lemma": "Ніно",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_dav:nv:prop:fname"
+      },
+      {
+        "lemma": "Ніно",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_zna:nv:prop:fname"
+      },
+      {
+        "lemma": "Ніно",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_oru:nv:prop:fname"
+      },
+      {
+        "lemma": "Ніно",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_mis:nv:prop:fname"
+      },
+      {
+        "lemma": "Ніно",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_kly:nv:prop:fname"
+      }
+    ],
+    "Ніна": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz:prop:fname"
+      }
+    ],
+    "Ніною": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_oru:prop:fname"
+      }
+    ],
+    "Ніни": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_rod:prop:fname"
+      },
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_naz:prop:fname"
+      },
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_kly:prop:fname"
+      }
+    ],
+    "Ніну": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_zna:prop:fname"
+      }
+    ],
+    "Нінам": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_dav:prop:fname"
+      }
+    ],
+    "Нінах": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_mis:prop:fname"
+      }
+    ],
+    "Нінами": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_oru:prop:fname"
+      }
+    ],
+    "Нін": [
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_rod:prop:fname"
+      },
+      {
+        "lemma": "Ніна",
+        "pos": "noun",
+        "tags": "noun:anim:p:v_zna:prop:fname"
+      }
+    ]
+  }
+}
