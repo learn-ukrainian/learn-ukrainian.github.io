@@ -310,7 +310,7 @@ def test_every_event_runs_every_job(event: str) -> None:
 
 def test_merge_queue_reuse_skips_every_reused_job() -> None:
     results, _ = _simulate(_EVENTS["merge_group"], reuse="true")
-    reused = {"secret-scan", "checks", "frontend", "pytest", "pytest-report"}
+    reused = {"secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"}
     assert {job for job, result in results.items() if result != "success"} == reused
     # The queue commit's message, author and committer are scanned even on reuse.
     assert results["queue-metadata-scan"] == "success"
@@ -391,6 +391,7 @@ _GREEN = {
     "SECRET_SCAN": "success",
     "CHECKS": "success",
     "FRONTEND": "success",
+    "DEPENDENCY_AUDIT": "success",
     "PYTEST": "success",
     "PYTEST_REPORT": "success",
 }
@@ -432,6 +433,8 @@ def test_gate_passes_a_green_pull_request_run() -> None:
         {"CHECKS": "cancelled"},
         {"SECRET_SCAN": ""},
         {"FRONTEND": "skipped"},
+        {"DEPENDENCY_AUDIT": "failure"},
+        {"DEPENDENCY_AUDIT": "skipped"},
         {"REUSE_JOB": "success", "REUSE": "true", "REUSED_RUN": "1"},  # reuse outside the queue
         {"METADATA_SCAN": "success"},  # a queue-only job outside the queue
     ],
@@ -453,7 +456,7 @@ _REUSED = {name: "skipped" for name in _GREEN}
 def test_gate_accepts_merge_queue_reuse_with_a_run_id() -> None:
     result = _run_gate("merge_group", REUSE_JOB="success", REUSE="true", REUSED_RUN="123", **_REUSED)
     assert result.returncode == 0, result.stdout
-    for job in ("secret-scan", "checks", "frontend", "pytest", "pytest-report"):
+    for job in ("secret-scan", "checks", "frontend", "dependency-audit", "pytest", "pytest-report"):
         assert f"{job} reused from run 123" in result.stdout
 
 
