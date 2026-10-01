@@ -21,11 +21,15 @@ _ERROR_HINT = re.compile(r"(?i)(?:traceback|exception|error[:\s]|stderr)")
 _PORT_HINT = re.compile(r"(?i)(?:^|[^0-9])(?:port|:[0-9]{2,5})(?:[^0-9]|$)")
 
 
+# A ``:port`` value, without the bare "port" keyword that _PORT_HINT also matches.
+_PORT_VALUE = re.compile(r"(?:^|[^0-9]):[0-9]{2,5}(?:[^0-9]|$)")
+
 # Fields whose WorkerRow validator admits only a closed identifier grammar (no
-# spaces, "=", "/" or "\\"). A host name, address, alias or ``:port`` still
-# fits that grammar and is rejected by the structural checks; error text, a
-# branch ref or a ``pid=``/``nonce=`` pair cannot, so the keyword hints would
-# only match a word of a task name ("report", "exporter", "stderr", "branch").
+# spaces, "=", "/" or "\\"). Inside that grammar the branch, error and bare
+# "port" keyword hints can only match a word of a task name ("report",
+# "exporter", "stderr", "branch"), so they are not applied there. The PID and
+# nonce hints and a ``:port`` value can still carry a value ("pid-1234",
+# "run-nonce-<hex>"), so they apply to every field.
 _IDENTIFIER_FIELDS = frozenset({"id", "agent", "harness", "run_id"})
 
 
@@ -38,18 +42,20 @@ def _worker_string_forbidden(text: str, *, allow_epic: bool = False, identifier:
         return True
     if _ALIAS_TOKEN.search(text):
         return True
-    if identifier:
-        return False
-    if not allow_epic and _PORT_HINT.search(text):
-        return True
-    if _BRANCH_HINT.search(text):
-        return True
     if _PID_HINT.search(text):
         return True
     if _NONCE_HINT.search(text):
         return True
-    if _ERROR_HINT.search(text):
-        return True
+    if identifier:
+        if _PORT_VALUE.search(text):
+            return True
+    else:
+        if not allow_epic and _PORT_HINT.search(text):
+            return True
+        if _BRANCH_HINT.search(text):
+            return True
+        if _ERROR_HINT.search(text):
+            return True
     return bool(_IPV4.search(text) or _FQDN.search(text))
 
 

@@ -67,14 +67,51 @@ def test_worker_row_still_rejects_structural_leaks_and_grammar_misses(field: str
         "8313-thin-page-report",
         "8672-exporter-memory",
         "fix-8889-branch-r2",
-        "test-kimi-dry-run-nonce",
-        "review-error-budget-pid-r1",
+        "triage-exception-budget",
+        "port-audit-r1",
     ],
 )
 def test_worker_row_accepts_task_names_that_contain_hint_words(task_id: str) -> None:
     """#8874: a task named after stderr or a report took down the whole reporter run."""
     assert validate_worker_row_dict(_row(id=task_id)).id == task_id
     assert [row.id for row in validate_workers_list([_row(), _row(id=task_id)])] == ["monitor-7187", task_id]
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("id", "run-nonce-1234abcd1234abcd"),
+        ("id", "pid-1234"),
+        ("id", "impl-8874-pid-1234"),
+        ("id", "fix-8874-run-nonce-1234abcd1234abcd"),
+        ("id", "report-run_nonce-deadbeef"),
+        ("id", "stderr-pid-42"),
+        ("id", "test-kimi-dry-run-nonce"),
+        ("id", "review-error-budget-pid-r1"),
+        ("id", "report-198.51.100.4"),
+        ("agent", "pid-1234"),
+        ("harness", "run-nonce-abcd"),
+    ],
+)
+def test_identifier_fields_still_reject_pid_and_nonce_values(field: str, value: str) -> None:
+    """#8874 review: the identifier exemption covers keyword hints only, never a PID or nonce."""
+    with pytest.raises(ProjectStateValidationError):
+        validate_worker_row_dict(_row(**{field: value}))
+    with pytest.raises(ProjectStateValidationError):
+        validate_workers_list([_row(), _row(**{field: value})])
+
+
+@pytest.mark.parametrize("task_id", ["run-nonce-1234abcd1234abcd", "pid-1234", "impl-8874-pid-1234"])
+def test_report_document_rejects_pid_and_nonce_identifiers(task_id: str) -> None:
+    document = _report_document(workers=[_row(), _row(id=task_id)])
+    with pytest.raises(ProjectStateValidationError):
+        validate_report_document(document)
+
+
+def test_report_document_keeps_task_name_with_keyword_hint() -> None:
+    document = _report_document(workers=[_row(), _row(id="impl-entropy-test-git-stderr")])
+    validate_report_document(document)
+    assert [row["id"] for row in document["workers"]] == ["monitor-7187", "impl-entropy-test-git-stderr"]
 
 
 def test_workers_list_cap_rejected() -> None:
@@ -89,8 +126,8 @@ def test_valid_worker_row_round_trip() -> None:
     assert row.run_id == "a1b2c3d4"
 
 
-def test_report_document_accepts_workers_block() -> None:
-    document = {
+def _report_document(*, workers: list[dict[str, object]]) -> dict[str, object]:
+    return {
         "host_id": "host-worker",
         "primary": {
             "head_sha": "a" * 40,
@@ -112,6 +149,9 @@ def test_report_document_accepts_workers_block() -> None:
             }
         ],
         "collected_at": "2026-08-24T12:00:00Z",
-        "workers": [_row()],
+        "workers": workers,
     }
-    validate_report_document(document)
+
+
+def test_report_document_accepts_workers_block() -> None:
+    validate_report_document(_report_document(workers=[_row()]))

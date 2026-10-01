@@ -20,24 +20,42 @@ from scripts.api import git_hygiene_router, project_state_collect, repository_au
 _FLAG = "--no-optional-locks"
 
 
+_GIT_ENV_DROP = (
+    "GIT_DIR",
+    "GIT_WORK_TREE",
+    "GIT_INDEX_FILE",
+    "GIT_OPTIONAL_LOCKS",
+    "GIT_CONFIG",
+    "GIT_CONFIG_COUNT",
+    "GIT_CONFIG_PARAMETERS",
+    "GIT_TEMPLATE_DIR",
+)
+
+
 def _git(repo: Path, *args: str) -> None:
-    subprocess.run(
-        ["git", "-c", "user.name=fixture", "-c", "user.email=fixture@example.invalid", *args],
-        cwd=repo,
-        check=True,
-        capture_output=True,
-        timeout=30,
-    )
+    subprocess.run(["git", *args], cwd=repo, check=True, capture_output=True, timeout=30)
 
 
-@pytest.fixture
-def stale_index_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
-    """A committed repo whose tracked file has a newer mtime than its index entry."""
-    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OPTIONAL_LOCKS"):
+def _isolate_git_env(monkeypatch: pytest.MonkeyPatch, home: Path) -> None:
+    """Run fixture and helper git calls with no inherited configuration or templates."""
+    for key in _GIT_ENV_DROP:
         monkeypatch.delenv(key, raising=False)
+    home.mkdir()
+    monkeypatch.setenv("HOME", str(home))
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(home / ".config"))
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", os.devnull)
+    monkeypatch.setenv("GIT_CONFIG_SYSTEM", os.devnull)
+    monkeypatch.setenv("GIT_CONFIG_NOSYSTEM", "1")
+    for role in ("AUTHOR", "COMMITTER"):
+        monkeypatch.setenv(f"GIT_{role}_NAME", "fixture")
+        monkeypatch.setenv(f"GIT_{role}_EMAIL", "fixture@example.invalid")
+
+
+def _build_stale_index_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    _isolate_git_env(monkeypatch, tmp_path / "home")
     repo = tmp_path / "repo"
     repo.mkdir()
-    _git(repo, "init", "-q")
+    _git(repo, "init", "-q", "--template=")
     tracked = repo / "tracked.txt"
     tracked.write_text("content\n", encoding="utf-8")
     _git(repo, "add", "tracked.txt")
@@ -48,6 +66,12 @@ def stale_index_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     future = past + 60
     os.utime(tracked, (future, future))
     return repo
+
+
+@pytest.fixture
+def stale_index_repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """A committed repo whose tracked file has a newer mtime than its index entry."""
+    return _build_stale_index_repo(tmp_path, monkeypatch)
 
 
 def _index_fingerprint(repo: Path) -> tuple[int, bytes]:
@@ -111,3 +135,31 @@ def test_repository_authority_git_passes_flag(monkeypatch: pytest.MonkeyPatch, t
     monkeypatch.setattr(repository_authority.subprocess, "run", _fake_run)
     assert repository_authority._git(tmp_path, "rev-parse", "HEAD") == "ok"
     assert seen == [["git", _FLAG, "rev-parse", "HEAD"]]
+
+
+def test_fixture_ignores_hostile_inherited_git_configuration(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Signing with a failing signer, a failing hook template or no identity never reach the fixture."""
+    hostile = tmp_path / "hostile"
+    hooks = hostile / "templates" / "hooks"
+    hooks.mkdir(parents=True)
+    (hooks / "pre-commit").write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    (hooks / "pre-commit").chmod(0o755)
+    config = hostile / "gitconfig"
+    config.write_text(
+        f"[commit]\n\tgpgsign = true\n[gpg]\n\tprogram = false\n[init]\n\ttemplateDir = {hostile / 'templates'}\n",
+        encoding="utf-8",
+    )
+    for key in ("GIT_AUTHOR_NAME", "GIT_AUTHOR_EMAIL", "GIT_COMMITTER_NAME", "GIT_COMMITTER_EMAIL"):
+        monkeypatch.delenv(key, raising=False)
+    monkeypatch.setenv("GIT_CONFIG_GLOBAL", str(config))
+    monkeypatch.setenv("GIT_CONFIG_COUNT", "1")
+    monkeypatch.setenv("GIT_CONFIG_KEY_0", "commit.gpgsign")
+    monkeypatch.setenv("GIT_CONFIG_VALUE_0", "true")
+    monkeypatch.setenv("GIT_TEMPLATE_DIR", str(hostile / "templates"))
+
+    repo = _build_stale_index_repo(tmp_path, monkeypatch)
+
+    assert not (repo / ".git" / "hooks").exists()
+    before = _index_fingerprint(repo)
+    assert project_state_collect._git(repo, "status", "--porcelain") == ""
+    assert _index_fingerprint(repo) == before
