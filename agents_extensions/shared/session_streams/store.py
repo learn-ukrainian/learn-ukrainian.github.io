@@ -52,8 +52,21 @@ EMAIL_RE = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
 PHONE_RE = re.compile(r"(?<!\w)\+[0-9][0-9 ()-]{7,}[0-9](?!\w)")
 IPV4_RE = re.compile(r"(?<![A-Za-z0-9])(?:\d{1,3}\.){3}\d{1,3}(?![A-Za-z0-9])")
 IPV6_RE = re.compile(r"(?i)(?<![A-Za-z0-9])(?:[0-9a-f]{0,4}:){2,}[0-9a-f:]{0,4}(?![A-Za-z0-9])")
+_HOST_LABEL = r"[A-Za-z0-9_](?:[A-Za-z0-9_-]{0,61}[A-Za-z0-9_])?"
+_DOTTED_HOST = rf"(?:{_HOST_LABEL}\.)+{_HOST_LABEL}(?![A-Za-z0-9_-]|\.[A-Za-z0-9-])"
+_FILE_EXTENSIONS = (
+    r"py|md|db|yaml|yml|json|sh|txt|toml|js|ts|tsx|css|html|csv|jsonl|lock|cfg|ini|"
+    r"rs|go|mjs|cjs|svg|png|jpg|gif|pdf|log"
+)
+# Only a complete token's final suffix in this closed list denotes a file.
+# Earlier extension-shaped labels never exempt a host; URL authorities, ports
+# and DNS trailing dots remain host context. Match whole tokens so backtracking
+# cannot reject a filename's host-shaped prefix. Labels include punycode and
+# underscores conservatively, retaining rejection of service-style names.
 HOSTNAME_RE = re.compile(
-    r"(?i)(?<![A-Za-z0-9_-])(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}(?![A-Za-z0-9_-])"
+    rf"(?i)(?:(?:[A-Za-z][A-Za-z0-9+.-]*:)?//(?:[^\s/?#@]*@)?{_DOTTED_HOST}"
+    rf"|(?<![A-Za-z0-9_-])(?!(?:{_HOST_LABEL}\.)+(?:{_FILE_EXTENSIONS})(?![A-Za-z0-9_.-]|:[0-9]))"
+    rf"{_DOTTED_HOST})"
 )
 HOME_PATH_RE = re.compile(r"(?<![A-Za-z0-9])(?:~|/home|/Users|/private/var|[A-Za-z]:\\Users)(?:[/\\]|$)")
 SSH_ALIAS_RE = re.compile(

@@ -662,6 +662,149 @@ def test_append_rejects_sensitive_or_non_text_content(tmp_path: Path, body: str,
         )
 
 
+@pytest.mark.parametrize(
+    "filename",
+    [
+        "sources.db",
+        "vesum.db",
+        "core.md",
+        "a1.yaml",
+        "lexicon-manifest.json",
+        "mcp-sources-requests.jsonl",
+        "example.com.py",
+        "EXAMPLE.COM.PY",
+        ".hidden.py",
+    ],
+)
+def test_append_accepts_repository_filenames(tmp_path: Path, filename: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    body = f"Updated `{filename}`."
+    entry = store.append_entry(
+        lease, entry_type=EntryType.NOTE, body=body, idempotency_key="filename", now=NOW + timedelta(seconds=1)
+    ).entry
+    assert entry.body == body
+    assert store.dump_stream(lease.stream_id)["entries"][0]["body"] == body
+
+
+@pytest.mark.parametrize(
+    "extension",
+    [
+        "py",
+        "md",
+        "db",
+        "yaml",
+        "yml",
+        "json",
+        "sh",
+        "txt",
+        "toml",
+        "js",
+        "ts",
+        "tsx",
+        "css",
+        "html",
+        "csv",
+        "jsonl",
+        "lock",
+        "cfg",
+        "ini",
+        "rs",
+        "go",
+        "mjs",
+        "cjs",
+        "svg",
+        "png",
+        "jpg",
+        "gif",
+        "pdf",
+        "log",
+    ],
+)
+def test_filename_exemption_uses_only_final_extension(tmp_path: Path, extension: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    store.append_entry(
+        lease,
+        entry_type=EntryType.NOTE,
+        body=f"Changed `example.com.{extension.upper()}`.",
+        idempotency_key="filename",
+        now=NOW + timedelta(seconds=1),
+    )
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body=f"example.{extension}.example.com",
+            idempotency_key="host",
+            now=NOW + timedelta(seconds=2),
+        )
+    assert len(store.dump_stream(lease.stream_id)["entries"]) == 1
+
+
+@pytest.mark.parametrize(
+    "body,rule",
+    [
+        # Synthetic domains and documentation addresses; no runtime configuration.
+        *[(f"example.{suffix}", "hostname") for suffix in ("com", "org", "net", "io", "dev", "ua", "ru")],
+        ("sources.db.example.com", "hostname"),
+        ("*.example.com", "hostname"),
+        (".example.com", "hostname"),
+        ("fixture_name.example.com", "hostname"),
+        ("_service._tcp.example.com", "hostname"),
+        ("EXAMPLE.COM", "hostname"),
+        ("example.com.", "hostname"),
+        ("example.py.", "hostname"),
+        ("example.com:443", "hostname"),
+        ("example.py:443", "hostname"),
+        ("https://example.com:443/core.md", "hostname"),
+        ("https://example.py/core.md", "hostname"),
+        ("//example.py/core.md", "hostname"),
+        ("https://reader@example.com/core.md", "email-address"),
+        ("https://reader@example.py/core.md", "email-address"),
+        ("https://reader:fixture@example.com/core.md", "email-address"),
+        ("xn--bcher-kva.example.com", "hostname"),
+        ("example.xn--p1ai", "hostname"),
+        ("EXAMPLE.XN--P1AI.:443", "hostname"),
+        ("example.pyx", "hostname"),
+        ("example.py.backup", "hostname"),
+        ("core.md.example", "hostname"),
+        ("`sources.db` and example.com", "hostname"),
+        ("192.0.2.1", "ipv4-address"),
+        ("192.0.2.1:443", "ipv4-address"),
+        ("https://192.0.2.1/core.md", "ipv4-address"),
+        ("2001:db8::1", "ipv6-address"),
+        ("[2001:DB8::1]:443", "ipv6-address"),
+        ("https://[2001:db8::1]/core.md", "ipv6-address"),
+        ("::1", "ipv6-address"),
+    ],
+)
+def test_filename_exemption_preserves_host_and_ip_rejection(tmp_path: Path, body: str, rule: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    with pytest.raises(ContentRejectedError, match=f"{rule} rule"):
+        store.append_entry(
+            lease, entry_type=EntryType.NOTE, body=body, idempotency_key="rejected", now=NOW + timedelta(seconds=1)
+        )
+    assert store.dump_stream(lease.stream_id)["entries"] == []
+
+
+def test_mirror_handoff_accepts_issue_filenames(tmp_path: Path) -> None:
+    repo_root = tmp_path / "repo"
+    repo_root.mkdir()
+    handoff = repo_root / "handoff.md"
+    body = "Updated `sources.db`, `vesum.db`, `core.md`, `a1.yaml`, `lexicon-manifest.json`, `mcp-sources-requests.jsonl`.\n"
+    handoff.write_text(body, encoding="utf-8")
+    store = _store(tmp_path / "runtime")
+    lease = _open(store)
+    result = mirror_atlas_handoff(
+        store, lease, repo_root=repo_root, stream_id=lease.stream_id, source_path=Path("handoff.md"), now=NOW
+    )
+    assert result.entry.body == body
+    assert handoff.read_text(encoding="utf-8") == body
+    assert store.dump_stream(lease.stream_id)["entries"][0]["body"] == body
+
+
 def test_ttl_heartbeat_and_expired_write_fencing(tmp_path: Path) -> None:
     store = _store(tmp_path)
     lease = _open(store)
