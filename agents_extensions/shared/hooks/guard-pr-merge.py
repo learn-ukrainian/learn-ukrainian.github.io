@@ -49,6 +49,38 @@ import sys
 from pathlib import Path
 from typing import NamedTuple
 
+
+def _read_payload() -> dict | None:
+    try:
+        payload = json.loads(sys.stdin.read() or "{}")
+    except (ValueError, RecursionError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _command(payload: dict) -> str:
+    return ((payload.get("tool_input") or {}).get("command") or "").strip()
+
+
+def _may_merge(command: str) -> bool:
+    # The shell drops quotes and backslashes before executing a command.
+    probe = command.replace("\\", "").replace("'", "").replace('"', "")
+    return ("gh" in probe or "scripts.publish" in probe) and "pr" in probe and "merge" in probe
+
+
+# Ordinary Bash commands must remain usable even if guard dependencies are absent.
+# Preserve the payload for main(), since stdin can only be consumed once.
+if __name__ == "__main__":
+    _CLI_PAYLOAD = _read_payload()
+    if (
+        _CLI_PAYLOAD is not None
+        and isinstance(_CLI_PAYLOAD.get("tool_input", {}), dict)
+        and isinstance(_CLI_PAYLOAD.get("tool_input", {}).get("command", ""), str)
+        and not _may_merge(_command(_CLI_PAYLOAD))
+    ):
+        sys.exit(0)
+
+
 for parent in Path(__file__).resolve().parents:
     if (parent / "scripts/publish").is_dir():
         sys.path.insert(0, str(parent))
@@ -150,20 +182,6 @@ def _flag_enabled(args: list[str], name: str) -> bool:
         elif a.startswith(f"--{name}="):
             enabled = a.split("=", 1)[1].strip().lower() not in _FALSE_VALUES
     return enabled
-
-
-
-
-def _read_payload() -> dict | None:
-    try:
-        payload = json.loads(sys.stdin.read() or "{}")
-    except (ValueError, RecursionError):
-        return None
-    return payload if isinstance(payload, dict) else None
-
-
-def _command(payload: dict) -> str:
-    return ((payload.get("tool_input") or {}).get("command") or "").strip()
 
 
 # --- Command segmentation hardened against glued shell operators (#4876). ---
@@ -649,12 +667,15 @@ def _merge_args(seg: list[str]) -> list[str] | None:
     ordinary PR checks still apply when a command contains ``--admin``.
     """
     i, via_xargs = _invoked_start(seg)
-    if (i + 3 < len(seg) and re.fullmatch(r"python(?:3(?:\.\d+)?)?", Path(seg[i]).name)
-            and seg[i + 1:i + 4] == ["-m", "scripts.publish", "pr-merge"]):
-        if "--help" in seg[i + 4:]:
+    if (
+        i + 3 < len(seg)
+        and re.fullmatch(r"python(?:3(?:\.\d+)?)?", Path(seg[i]).name)
+        and seg[i + 1 : i + 4] == ["-m", "scripts.publish", "pr-merge"]
+    ):
+        if "--help" in seg[i + 4 :]:
             return None
         args = []
-        rest = seg[i + 4:]
+        rest = seg[i + 4 :]
         j = 0
         while j < len(rest):
             key, sep, value = rest[j].partition("=")
@@ -896,18 +917,6 @@ _ROLLUP_PENDING = {"IN_PROGRESS", "QUEUED", "PENDING", "WAITING", "EXPECTED", "R
 _ROLLUP_PASS = {"SUCCESS", "SKIPPED", "NEUTRAL"}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 def _check_states_from_status_rollup(
     pr: str, repo: str | None = None, cwd: str | None = None
 ) -> tuple[list[str], list[str]] | None:
@@ -1115,7 +1124,7 @@ def _judge(args: list[str], cwd: str | None = None) -> str | None:
 
 
 def main() -> int:
-    payload = _read_payload()
+    payload = _CLI_PAYLOAD if __name__ == "__main__" else _read_payload()
     if payload is None or not isinstance(payload.get("tool_input", {}), dict):
         sys.stderr.write(_block_msg("malformed hook payload", "Provide a Bash command object for review."))
         return 2
@@ -1129,10 +1138,7 @@ def main() -> int:
     # `bash -c 'g\h --version'` prints gh's version). Testing the raw source would let a
     # merge past this early return before the real parser ever sees it. Normalizing only
     # ever sends MORE commands to the full parse — never fewer.
-    if not command:
-        return 0
-    probe = command.replace("\\", "").replace("'", "").replace('"', "")
-    if ("gh" not in probe and "scripts.publish" not in probe) or "pr" not in probe or "merge" not in probe:
+    if not _may_merge(command):
         return 0
     # Each segment arrives carrying the cwd it runs in, so a PR number is judged in the
     # repo the MERGE runs in, not the session's repo — `cd private-repo && gh pr merge 203`
