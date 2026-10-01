@@ -561,6 +561,7 @@ def search_resources(
     conn: sqlite3.Connection,
     query: str = "",
     *,
+    mode: str = "text",
     kind: str | None = None,
     level: str | None = None,
     module: str | None = None,
@@ -568,7 +569,7 @@ def search_resources(
     live_only: bool = False,
     limit: int = 10,
 ) -> list[dict]:
-    """Search single letters only by evidenced index; other queries use literal FTS."""
+    """Search literal FTS by default; explicit letter mode uses only the evidenced index."""
     if not conn.execute("SELECT 1 FROM sqlite_master WHERE name='resource_catalogue'").fetchone():
         raise ResourceCatalogueMissingError("Resource catalogue ingestion is required")
     columns = {row[1] for row in conn.execute("PRAGMA table_info(resource_catalogue)")}
@@ -576,12 +577,16 @@ def search_resources(
         raise ResourceCatalogueMissingError("Letter index ingestion is required")
     if kind is not None and kind not in KINDS:
         raise ValueError("Unknown resource kind")
+    if mode not in {"text", "letter"}:
+        raise ValueError("Unknown resource search mode")
     tokens = re.findall(r"[^\W_]+", query, re.UNICODE)
     clauses, parameters = [], []
     join = ""
     order = "r.title,r.url"
     letter = tokens[0].upper() if len(tokens) == 1 else ""
-    if len(letter) == 1 and letter.isalpha():
+    if mode == "letter":
+        if len(letter) != 1 or not letter.isalpha():
+            return []
         clauses.append("EXISTS (SELECT 1 FROM json_each(r.letters) WHERE value=?)")
         parameters.append(letter)
         # Dedicated lessons precede resources covering multiple letters.

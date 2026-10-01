@@ -67,7 +67,9 @@ def request_report(plan_path: Path, words_path: Path, source: Sources) -> dict[s
             else:
                 if unavailable is None:
                     try:
-                        hits = source.search_resources(query, free_only=True, limit=MAX_HITS)
+                        hits = source.search_resources(
+                            query, mode="letter" if kind == "letter" else "text", free_only=True, limit=MAX_HITS
+                        )
                     except (FileNotFoundError, ResourceCatalogueMissingError):
                         unavailable = {"code": "catalogue_unavailable"}
                         result["notes"].append(unavailable)

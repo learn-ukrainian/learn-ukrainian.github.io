@@ -103,6 +103,38 @@ def test_queries_cover_each_lesson_word_and_letter(curation):
         assert entries[index]["candidates"] == []
 
 
+@pytest.mark.parametrize("query", ["я", "і", "у", "в", "з", "о", "а", "й"])
+def test_one_letter_word_requirement_uses_text_and_letter_requirement_uses_index(curation, query):
+    plan, words, src = curation
+    plan.write_text(
+        yaml.safe_dump(
+            {
+                "lessons": [
+                    {
+                        "n": 1,
+                        "slug": "same-token",
+                        "inventory": {
+                            "vocabulary": {"core": [{"lemma": query}]},
+                            "phonetics": {"letters": [query]},
+                        },
+                    }
+                ]
+            }
+        )
+    )
+    with sqlite3.connect(src.sources_db) as conn:
+        conn.execute("UPDATE resource_catalogue SET search_text=?,letters='[]' WHERE id=1", (query,))
+        conn.execute(
+            "UPDATE resource_catalogue SET search_text='Letter lesson',letters=?,access='free' WHERE id=2",
+            (json.dumps([query.upper()]),),
+        )
+    word, letter = catalogue.request_report(plan, words, src)["queries"]
+    assert word["query_mode"] == "text"
+    assert [hit["url"] for hit in word["candidates"]] == ["https://example.org/1"]
+    assert letter["query_mode"] == "letter_index"
+    assert [hit["url"] for hit in letter["candidates"]] == ["https://example.org/2"]
+
+
 @pytest.mark.parametrize("missing_db", [False, True])
 def test_absent_catalogue_is_typed_and_preserves_queries(curation, tmp_path, missing_db):
     plan, words, src = curation

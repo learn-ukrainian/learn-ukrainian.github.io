@@ -269,6 +269,7 @@ def test_mcp_search_wire_shape(database, monkeypatch):
     tools = asyncio.run(server.list_tools())
     tool = next(t for t in tools if t.name == "search_resources")
     assert tool.annotations.read_only_hint
+    assert tool.input_schema["properties"]["mode"]["default"] == "text"
     assert "recorded free" in tool.input_schema["properties"]["free_only"]["description"]
     assert {"query", "kind", "level", "module", "free_only", "live_only"} <= tool.input_schema["properties"].keys()
     content, is_error, outcome = asyncio.run(
@@ -290,6 +291,43 @@ def test_mcp_search_wire_shape(database, monkeypatch):
     assert outcome["hits"][0]["episode"] == 2
     _, empty = asyncio.run(server.handle_search_resources({"query": "NonexistentResourceTerm"}))
     assert empty["status"] == "empty" and empty["match_count"] == 0
+
+
+@pytest.mark.parametrize("query", ["я", "і", "у", "в", "з", "о", "а", "й"])
+def test_one_letter_word_and_mcp_default_use_full_text(database, monkeypatch, query):
+    word_url = "https://www.ukrainianlessons.com/prepositions-u-na/"
+    with database:
+        # Isolate both FTS fields; letter titles can legitimately match text searches too.
+        database.execute("UPDATE resource_catalogue SET title='Fixture',search_text=''")
+        database.execute("UPDATE resource_catalogue SET search_text=? WHERE url=?", (query, word_url))
+    hits = catalogue.search_resources(database, query)
+    assert [hit["url"] for hit in hits] == [word_url]
+    assert catalogue.search_resources(database, query, mode="text") == hits
+    letter_hits = catalogue.search_resources(database, query, mode="letter")
+    assert len(letter_hits) == 1
+    assert letter_hits[0]["letters"] == [query.upper()]
+    assert letter_hits[0]["url"] != word_url
+
+    spec = importlib.util.spec_from_file_location("catalogue_sources_server", ROOT / ".mcp/servers/sources/server.py")
+    server = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(server)
+    from wiki import sources_db
+
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: database)
+    _, default = asyncio.run(server.handle_search_resources({"query": query}))
+    assert default["hits"] == hits
+    _, explicit = asyncio.run(server.handle_search_resources({"query": query, "mode": "letter"}))
+    assert explicit["hits"] == letter_hits
+
+
+@pytest.mark.parametrize("query", ["", "()", "two words", "Те", "1"])
+def test_letter_mode_rejects_non_letter_queries(database, query):
+    assert catalogue.search_resources(database, query, mode="letter") == []
+
+
+def test_unknown_search_mode_is_rejected(database):
+    with pytest.raises(ValueError, match="search mode"):
+        catalogue.search_resources(database, "Т", mode="auto")
 
 
 def test_invalid_catalogues_fail_closed(tmp_path, monkeypatch):
@@ -471,13 +509,13 @@ def test_letter_index_excludes_stray_transcript_words(database):
         ("Ь", "Ь"),
         ("ь", "Ь"),
     ]:
-        hits = catalogue.search_resources(database, query, free_only=True)
+        hits = catalogue.search_resources(database, query, mode="letter", free_only=True)
         assert len(hits) == 1
         assert hits[0]["letters"] == [letter]
         assert hits[0]["letter_evidence"]
-    assert catalogue.search_resources(database, "Q", free_only=True) == []
-    assert catalogue.search_resources(database, "Т", kind="podcast") == []
-    assert catalogue.search_resources(database, "Т", level="C2") == []
+    assert catalogue.search_resources(database, "Q", mode="letter", free_only=True) == []
+    assert catalogue.search_resources(database, "Т", mode="letter", kind="podcast") == []
+    assert catalogue.search_resources(database, "Т", mode="letter", level="C2") == []
 
 
 def test_old_schema_migrates_without_fts_fallback():
@@ -571,7 +609,7 @@ def test_all_33_publisher_pairings_are_free_and_preserve_source_hash(database):
         )
     )
     for letter, video in expected.items():
-        hits = catalogue.search_resources(database, letter, free_only=True)
+        hits = catalogue.search_resources(database, letter, mode="letter", free_only=True)
         assert hits[0]["url"] == f"https://www.youtube.com/watch?v={video}"
         assert hits[0]["letters"] == [letter]
         assert (
