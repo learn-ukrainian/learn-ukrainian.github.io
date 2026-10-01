@@ -1440,6 +1440,7 @@ def test_activities_render_real_components_in_mdx(tmp_path, monkeypatch):
     plan_activities = [
         {"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Fill-in focus"},
         {"id": "a2", "type": "true-false", "placement": "workbook", "focus": "True-false focus"},
+        {"id": "a3", "type": "order", "placement": "workbook", "focus": "Order focus"},
     ]
     plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=plan_activities)])
 
@@ -1476,8 +1477,18 @@ def test_activities_render_real_components_in_mdx(tmp_path, monkeypatch):
                 ],
             }
         ],
-        activities=[act_fill, act_tf],
-        consolidation={"activities": ["a2"]},
+        activities=[
+            act_fill,
+            act_tf,
+            {
+                "id": "a3",
+                "instruction": "Order the letters.",
+                "items": ["A", "B"],
+                "correct_order": [1, 0],
+                "explanation": "Follow the sequence.",
+            },
+        ],
+        consolidation={"activities": ["a2", "a3"]},
         lesson_lock_entry_sha256="abc" * 21 + "a",
     )
 
@@ -1522,6 +1533,8 @@ def test_activities_render_real_components_in_mdx(tmp_path, monkeypatch):
     mdx = res.artifacts["mdx"]
     assert "<FillIn client:only='react'" in mdx
     assert "<TrueFalse client:only='react'" in mdx
+    assert "<Order client:only='react'" in mdx
+    assert "Follow the sequence." in mdx
     assert "Це правильне слово." in mdx
     assert "Так, це одиниця мови." in mdx
 
@@ -2237,6 +2250,7 @@ def test_true_false_boolean_answer_and_correct_produce_no_answer_units_and_rende
         ("anna-ohoiko-500-verbs", "Anna Ohoiko — 500+ Ukrainian Verbs: Conjugation and Examples of Use"),
         ("9-klas-tekhnolohiyi-bilenko-2026", None),
         ("uni-unregistered", None),
+        ("standard", None),
     ],
 )
 def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monkeypatch, file, expected):
@@ -2246,19 +2260,26 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
     text["source"]["file"] = file
     text["supports"] = "PRIVATE SUPPORTS MUST NEVER PRINT"
     pack = make_pack(texts=[text])
+    record_id = "T-1"
+    if file == "standard":
+        record_id = "S-1"
+        pack = make_pack()
+        pack["standard"] = [
+            {"id": record_id, "lines": "1-3", "text": "PRIVATE STANDARD MUST NEVER PRINT", "file_sha256": "0" * 64}
+        ]
     words = make_words_store()
     step = {
         "id": "s1",
         "kind": "teach",
         "teach": "Explain",
-        "evidence": ["T-1"],
+        "evidence": [record_id],
         "introduces": {"letters": [], "grammar": [], "vocabulary": []},
         "uses": {"grammar": [], "vocabulary": []},
         "practice": [],
     }
     plan = make_plan(lessons=[make_plan_lesson(1, [step])])
     draft = make_draft(
-        steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": "Explanation", "explains": ["T-1"]}]}],
+        steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": "Explanation", "explains": [record_id]}]}],
         lesson_lock_entry_sha256="a" * 64,
     )
     monkeypatch.setattr(
@@ -2306,6 +2327,7 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
     else:
         assert resources == []
         assert file not in mdx
+        assert "PRIVATE STANDARD" not in mdx
         assert report["warnings"] == [
-            {"code": "resource_citation_omitted", "record": "T-1", "reason": "citable_metadata_missing"}
+            {"code": "resource_citation_omitted", "record": record_id, "reason": "citable_metadata_missing"}
         ]

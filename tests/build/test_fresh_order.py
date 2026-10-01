@@ -79,3 +79,62 @@ def test_b2_schema_has_no_order_activity() -> None:
         for ref in schema["items"]["oneOf"]
     }
     assert "order" not in allowed_types
+
+
+@pytest.mark.parametrize("level", ["a1", "a2", "b1"])
+def test_order_string_items_pass_full_draft_and_constraints(level):
+    from scripts.build.fresh.draft_schema import validate_draft
+    from tests.build.test_fresh_draft_schema import load_fixture
+
+    draft, _ = load_fixture(level)
+    # The integration case has all 33 letters; strings are schema-owned items.
+    items = list("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
+    draft["activities"] = [
+        {
+            "id": "a99",
+            "instruction": "Order the alphabet.",
+            "items": items,
+            "correct_order": list(range(33)),
+            "explanation": "Follow the alphabet.",
+        }
+    ]
+    if level != "a1":
+        draft["activities"][0].pop("explanation")
+    draft["steps"] = [{"id": "s1", "blocks": [{"kind": "activity", "ref": "a99"}]}]
+    draft.pop("dialogue", None)
+    draft["consolidation"] = {"activities": []}
+    assert validate_draft(draft, level, activity_types={"a99": "order"}) == []
+    for malformed in ("", 12, {"text": "broken"}):
+        draft["activities"][0]["items"][0] = malformed
+        assert validate_draft(draft, level, activity_types={"a99": "order"})
+
+
+@pytest.mark.parametrize("level", ["a1", "a2", "b1"])
+@pytest.mark.parametrize("order", [[1, 0], [0, 0], [0, "1"]])
+def test_schema_valid_order_key_keeps_semantic_gate(level, order):
+    from scripts.build.fresh.draft_schema import validate_draft
+    from tests.build.test_fresh_draft_schema import load_fixture
+
+    draft, _ = load_fixture(level)
+    draft["activities"] = [
+        {
+            "id": "a99",
+            "instruction": "Order.",
+            "items": ["first", "second"],
+            "correct_order": order,
+            "explanation": "Follow the sequence.",
+        }
+    ]
+    if level != "a1":
+        draft["activities"][0].pop("explanation")
+    draft["steps"] = [{"id": "s1", "blocks": [{"kind": "activity", "ref": "a99"}]}]
+    draft.pop("dialogue", None)
+    draft["consolidation"] = {"activities": []}
+    errors = validate_draft(draft, level, activity_types={"a99": "order"})
+    # A2/B1 schemas require integers. A1 permits strings, but check 4 refuses them.
+    if level == "a1" or all(type(i) is int for i in order):
+        assert errors == []
+    else:
+        assert errors
+    row, _ = check_4_activities(draft, {"activities": [{"id": "a99", "type": "order"}]}, {}, {}, level=level)
+    assert row["status"] == ("passed" if order == [1, 0] else "failed")

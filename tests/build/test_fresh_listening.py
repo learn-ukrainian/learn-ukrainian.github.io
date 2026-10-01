@@ -97,37 +97,26 @@ def test_listening_word_and_primer_letter_are_admitted(tmp_path, letter):
     assert _check(tmp_path, fixture)["status"] == "passed"
 
 
-@pytest.mark.reads_content
-@pytest.mark.parametrize("declared", [False, True])
-def test_committed_a1_pack_listening_admission_requires_models(tmp_path, declared):
-    """Real V-004/T-006 prose needs no parsing, only an explicit model declaration."""
-    pack_path = Path(__file__).resolve().parents[2] / "curriculum/l2-uk-en/evidence/a1/sounds-letters-and-hello.yaml"
-    original = pack_path.read_bytes()
-    real_pack = yaml.safe_load(original)
-    video = next(v for v in real_pack["videos"] if v["id"] == "V-004")
-    assert "models" not in video
-    assert next(t for t in real_pack["texts"] if t["id"] == "T-006")["quote"] == "Бачу А, а. Чую [а]."
-    if declared:
-        video["models"] = {"letters": ["А"], "words": [], "segment": None}
-    temporary_pack = tmp_path / "pack.yaml"
-    temporary_pack.write_text(yaml.safe_dump(real_pack, allow_unicode=True))
-    fixture = _listening_fixture(letter=True)
-    draft, plan, _, words = fixture
-    lesson = plan["lessons"][0]
-    lesson["videos"][0]["evidence"] = "V-004"
-    lesson["steps"][0]["evidence"].append("V-004")
-    lesson["inventory"]["phonetics"]["letters"] = ["А", "О", "У"]
-    draft["steps"][0]["blocks"][1]["ref"] = "V-004"
-    item = draft["activities"][0]["items"][0]
-    item.update(target_record="А", options=["А", "О", "У"], host={"kind": "video", "ref": "V-004"})
+@pytest.mark.parametrize("letter", [False, True])
+@pytest.mark.parametrize("declaration", ["absent", "target", "wrong_target"])
+def test_listening_admission_requires_target_model(tmp_path, letter, declaration):
+    """Every scored binding needs its target declared by its host, regardless of pack prose."""
+    fixture = _listening_fixture(letter=letter)
+    draft, _, pack, _ = fixture
+    video = pack["videos"][0]
+    video["use"] = "Arbitrary source prose: never a model declaration."
+    if declaration == "absent":
+        video.pop("models")
+    elif declaration == "wrong_target":
+        video["models"] = {"letters": ["З"] if letter else [], "words": [] if letter else ["W-2"], "segment": None}
     assert not validate_draft(draft, "a1", activity_types={"a1": "quiz"})
-    result = _check(tmp_path, (draft, plan, yaml.safe_load(temporary_pack.read_text()), words))
-    if declared:
+    result = _check(tmp_path, fixture)
+    if declaration == "target":
         assert result["status"] == "passed", result
     else:
         assert result["status"] == "failed", result
-        assert (result["code"], result["layer"]) == ("listening_model_undeclared", "pack")
-    assert pack_path.read_bytes() == original
+        expected = "listening_model_undeclared" if declaration == "absent" else "listening_model_unverified"
+        assert (result["code"], result["layer"]) == (expected, "pack")
 
 
 @pytest.mark.parametrize("letter", [False, True])
