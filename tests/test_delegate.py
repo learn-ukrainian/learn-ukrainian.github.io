@@ -2934,7 +2934,7 @@ def test_run_worker_persists_attempt_boundary_refusal_code(tmp_tasks_dir, tmp_pa
     state = delegate._read_state(state_path)
     assert rc == 1 and state["status"] == "failed"
     assert state["last_error"].startswith(
-        f"runtime error: AgentUnavailableError: formal attempt filesystem boundary refused: {code}"
+        f"runtime error: AgentUnavailableError: formal attempt filesystem boundary refused: prepare: {code}"
     )
 
 

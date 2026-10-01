@@ -271,7 +271,7 @@ def test_missing_is_optional_and_refusal_closes_all_fds(files, monkeypatch):
     assert not active
 
 
-@pytest.mark.parametrize("attack", ["symlink", "hardlink", "fifo", "oversized", "component"])
+@pytest.mark.parametrize("attack", ["symlink", "hardlink", "fifo", "oversized", "component", "nul"])
 def test_codex_output_swap_refuses_without_sentinel(files, attack):
     root, target, forbidden = files
     target.unlink()
@@ -284,6 +284,8 @@ def test_codex_output_swap_refuses_without_sentinel(files, attack):
     elif attack == "oversized":
         with target.open("wb") as writer:
             writer.truncate(boundary.MAX_ATTEMPT_READ_BYTES + 1)
+    elif attack == "nul":
+        target = root / "output\0.txt"
     else:
         root.rmdir()
         root.symlink_to(forbidden.parent, target_is_directory=True)
@@ -334,6 +336,23 @@ def test_agy_saved_result_component_swap_is_refused(tmp_path):
     assert match, "positive control: pointer recognized"
     with pytest.raises(AttemptReadError):
         agy._inline_saved_tool_result_pointer(text, transcript_path=transcript)
+
+
+@pytest.mark.parametrize("attempt", [False, True])
+@pytest.mark.parametrize("component", ["step%00/output.txt", "output%00.txt"])
+def test_agy_saved_result_nul_pointer_is_typed(tmp_path, monkeypatch, attempt, component):
+    conversation = tmp_path / "conversation"
+    transcript = conversation / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True)
+    (conversation / "steps").mkdir()
+    pointer = f"{(conversation / 'steps').as_uri()}/{component}"
+    text = f"The output was large and was saved to: {pointer}"
+    assert agy._SAVED_OUTPUT_POINTER_RE.search(text), "positive control: pointer recognized"
+    monkeypatch.setattr(boundary.os, "read", lambda *a: pytest.fail("malformed pointer must read no bytes"))
+    with pytest.raises(AttemptReadError, match=r"^attempt_read_unsafe_path$"):
+        agy._inline_saved_tool_result_pointer(
+            text, transcript_path=transcript, trusted_root=tmp_path if attempt else Path("/"),
+        )
 
 
 @pytest.mark.parametrize("steps_dir", ["steps", ".system_generated/steps"])
@@ -435,10 +454,14 @@ def test_agy_transcript_baseline_refuses_symlink(tmp_path):
 
 
 @pytest.mark.parametrize("parsed_failure", [False, True])
-def test_runner_v4_origin_finalizes_refusal_without_unsafe_output(files, monkeypatch, parsed_failure):
-    _, target, forbidden = files
+@pytest.mark.parametrize("attack", ["symlink", "nul"])
+def test_runner_v4_origin_finalizes_refusal_without_unsafe_output(files, monkeypatch, parsed_failure, attack):
+    root, target, forbidden = files
     target.unlink()
-    target.symlink_to(forbidden)
+    if attack == "nul":
+        target = root / "output\0.txt"
+    else:
+        target.symlink_to(forbidden)
     from scripts.fleet_comms.request_executor import RequestExecutor
 
     recorded = []

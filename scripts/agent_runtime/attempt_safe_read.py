@@ -42,7 +42,7 @@ def _checked_attempt_fd(path: Path, trusted_root: Path):
         _check_attempt_fd(file_fd)
     except FileNotFoundError:
         raise
-    except OSError as exc:
+    except (OSError, ValueError) as exc:
         raise AttemptReadError("attempt_read_unsafe_path") from exc
     finally:
         if file_fd is not None:
