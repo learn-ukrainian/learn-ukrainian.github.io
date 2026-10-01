@@ -83,7 +83,7 @@
       "position": 3,
       "slug": "special-signs",
       "phase": "A1.1",
-      "title_uk": null,
+      "title_uk": "літери",
       "title_en": "Special signs",
       "job": "Finish the alphabet; read and write words with the two-sound letters, ь, the apostrophe, дж / дз; hear hard vs soft",
       "skills": [
@@ -92,12 +92,34 @@
       ],
       "is_checkpoint": false,
       "est_lessons": 4,
-      "lessons": null,
+      "lessons": 8,
       "built_lessons": [],
-      "lesson_numbers": [],
-      "lesson_titles": [],
-      "scope": null,
-      "state": "planned",
+      "lesson_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "lesson_titles": [
+        "ь",
+        "Ї, Я",
+        "Ю, Є",
+        "Ц, Щ, Ф",
+        "дж, дз",
+        "’",
+        "літери",
+        "повторення"
+      ],
+      "scope": {
+        "letters": 8,
+        "grammar_points": 7,
+        "core_lemmas": 2
+      },
+      "state": "plan_reviewed",
       "previous_edition_href": "/a1-v1/special-signs/"
     },
     {
