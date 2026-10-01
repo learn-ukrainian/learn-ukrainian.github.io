@@ -148,6 +148,11 @@ composes the default itself, so for queued repositories the defaults are
 scanned as `default_subject` and `default_body` as well. A changed head or an
 unreadable default refuses the merge.
 
+Known race: the head pin freezes commits, not metadata. A PR title or body
+edited after the default squash text is read, but before GitHub composes a
+queued merge, is published unscanned. Explicit (non-queued) merges send the
+scanned text and are not affected.
+
 ## git push
 
 The git shim sends every `push` (after global options such as `-C` and `-c`)
@@ -157,25 +162,38 @@ push creates or updates and where. For each destination that `is_private`
 does not exempt, these are scanned through `check_texts`:
 
 - the published branch, tag or other ref name;
-- the message of every commit the destination does not already have, that is
-  not reachable from the old remote tip or from tracking refs of a remote
-  whose every URL names the same destination;
+- the message of every commit the destination does not already have;
 - annotated tag messages.
 
-Local paths and other URLs without a hosted identity are scanned (never
-private by default). Deletions publish no text. A hit, a missing or
-incompatible matcher, or an unreadable or failed preview refuses the push
-before anything is sent. Diagnostics name the rule, class, field and line only.
-The same single-use, logged `LU_OPSEC_OVERRIDE` applies; the real git does
-not receive it. File contents and history already on the remote are not
-scanned.
+What the destination already has is taken only from the destination itself:
+the old tip the preview reports and the refs one `git ls-remote` returns for
+the resolved push URL, through the same git options and environment. Local
+tracking refs are never evidence, because a changed URL or a forged ref would
+otherwise hide unpublished commits. When the destination cannot be queried or
+shares no local history, the whole history reachable from the pushed tips is
+scanned and a one-line note says so. Every enumeration and scan call runs with
+replacement objects disabled (`--no-replace-objects`,
+`GIT_NO_REPLACE_OBJECTS=1`), so the scan reads the objects the pack sends.
+
+The preview prints a push URL without userinfo (`host:path` for scp-like
+`user@host:path`), so the full URL is recovered from `git remote get-url
+--push --all` or the push arguments before classification. Scp-like, `ssh://`,
+`git://` and `https://` forms name a hosted destination; local paths, file
+URLs, remote helpers and unparseable text are scanned (never private by
+default). Deletions publish no text. A hit, a missing or incompatible matcher,
+or an unreadable or failed preview refuses the push before anything is sent.
+Diagnostics name the rule, class, field and line, or only the failing phase
+and exit code; git's own output from these steps is never replayed. The same
+single-use, logged `LU_OPSEC_OVERRIDE` applies; the real git does not receive
+it. File contents and history already on the remote are not scanned.
 
 Known gaps: git aliases that expand to push, absolute git paths, `git-push`
 called from the exec path, submodule pushes from `--recurse-submodules`,
 note blobs under `refs/notes/` and commit author identities are not scanned.
-Pushing by URL to a destination without tracking refs scans its whole
-reachable history (safe, but slower). A local ref moved by another process
-between the scan and the push is not rescanned.
+An ssh host alias that does not name the hosted domain is scanned as public.
+A local ref moved by another process between the scan and the push is not
+rescanned. The shim's behaviour without its guard interpreter for non-push
+commands is tracked in #9448.
 
 Historical dispatch briefs, session records and autopsies retain their original
 commands as evidence. For current execution, replace their raw writes with the

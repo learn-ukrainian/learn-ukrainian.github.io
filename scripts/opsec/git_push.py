@@ -2,11 +2,12 @@
 
 The agent git shim executes this file for push commands. A dry run asks git
 which refs the push creates or updates and where it sends them. For every
-public destination the published ref names, the messages of commits not
-already reachable from the remote's old tip or tracking refs, and annotated
-tag messages are scanned through check_texts. File contents are not scanned.
-Private remotes are exempt exactly as is_private decides. The real push runs
-only after a clean scan, without the command-scoped override.
+public destination the published ref names, the messages of commits the
+destination does not advertise as already reachable, and annotated tag
+messages are scanned through check_texts. Local tracking refs are never
+evidence. File contents are not scanned. Private remotes are exempt exactly as
+is_private decides. The real push runs only after a clean scan, without the
+command-scoped override. Git text from these steps is never replayed.
 """
 
 from __future__ import annotations
@@ -82,23 +83,56 @@ def parse_porcelain(output: str) -> list[dict]:
     return sections
 
 
+def _is_local(url: str) -> bool:
+    """git's url_is_local_not_ssh: no colon, or a slash before the first colon."""
+    colon, slash = url.find(":"), url.find("/")
+    return colon < 0 or 0 <= slash < colon
+
+
+def anonymize_url(url: str) -> str:
+    """git's transport_anonymize_url: the form a push preview prints (userinfo removed)."""
+    at = url.find("@")
+    if at < 0 or _is_local(url):
+        return url
+    rest = url[at + 1 :]
+    scheme = url.find("://")
+    if scheme < 0:
+        return rest if ":" in rest else url
+    slash = url.find("/", scheme + 3)
+    if not re.fullmatch(r"[A-Za-z0-9+.-]*", url[:scheme]) or 0 <= slash < at:
+        return url
+    return url[: scheme + 3] + rest
+
+
+HOSTED_URL = re.compile(r"(?:https?|ssh|git|git\+ssh|ssh\+git)://(?:[^@/]+@)?([^/:@]+)(?::\d*)?/(.+)", re.I)
+SCP_URL = re.compile(r"(?:[^@/]+@)?([^/:@]+):([^:].*)")
+
+
 def destination(url: str) -> str:
-    """Canonical host/owner/name for a push URL, or unknown (never private by default)."""
+    """Canonical host/owner/name for a push URL, or unknown (never private by default).
+
+    Accepts the URL, ssh and scp-like ([user@]host:path) forms git uses, with or
+    without userinfo. Local paths, file URLs, remote helpers and anything else
+    without a hosted identity are unknown, which counts as public.
+    """
     value = url.strip()
-    scp = re.fullmatch(r"[^@/:]+@([^/:]+):(.+)", value)
-    remote = re.fullmatch(r"(?:https?|ssh|git)://(?:[^@/]+@)?([^/:]+)(?::\d+)?/(.+)", value)
-    if not (scp or remote):
-        return "unknown"  # Local paths and file URLs have no hosted identity.
-    host, path = scp.groups() if scp else remote.groups()
-    return gate.normalize_repository(f"{host}/{path}")
+    if not value or _is_local(value):
+        return "unknown"
+    match = HOSTED_URL.fullmatch(value) or (None if "://" in value else SCP_URL.fullmatch(value))
+    if not match:
+        return "unknown"
+    host, path = match.groups()
+    return gate.normalize_repository(f"{host}/{path.strip('/')}")
 
 
 class Repository:
     """Read-only object queries through the real git with the caller's global options."""
 
     def __init__(self, real_git: str, global_options: list[str], environment: dict[str, str]):
-        self.base = [real_git, *global_options]
-        self.environment = environment
+        # Replacement objects change what readers see but not what a pack sends,
+        # so every query reads the original objects (the flag outranks config).
+        self.base = [real_git, "--no-replace-objects", *global_options]
+        self.environment = {**environment, "GIT_NO_REPLACE_OBJECTS": "1"}
 
     def run(self, *args: str, stdin: str | None = None, timeout: int = 60) -> subprocess.CompletedProcess[bytes]:
         return subprocess.run(
@@ -114,7 +148,10 @@ class Repository:
     def text(self, *args: str, stdin: str | None = None) -> str:
         result = self.run(*args, stdin=stdin)
         if result.returncode:
-            raise gate.PublishBlocked("OPSEC: push contents unreadable; push refused.")
+            # Fixed text only: git output can quote ref names and messages.
+            raise gate.PublishBlocked(
+                f"OPSEC: push scan step git {args[0]} failed (exit {result.returncode}); push refused."
+            )
         return result.stdout.decode("utf-8", "replace")
 
     def object(self, revision: str) -> str | None:
@@ -123,20 +160,30 @@ class Repository:
             return None
         return result.stdout.decode().strip() or None
 
-    def tracking_tips(self, url: str, dest: str) -> list[str]:
-        """Tips of tracking refs of remotes whose every URL is this destination."""
-        result = self.run("config", "--get-regexp", r"^remote\..*\.(url|pushurl)$")
-        urls: dict[str, list[str]] = {}
-        for line in result.stdout.decode("utf-8", "replace").splitlines():
-            key, _, value = line.partition(" ")
-            name = re.sub(r"\.(?:url|pushurl)$", "", key.removeprefix("remote."))
-            urls.setdefault(name, []).append(value)
-        tips: list[str] = []
-        for name, values in urls.items():
-            if all(v == url or (dest != "unknown" and destination(v) == dest) for v in values):
-                listing = self.text("for-each-ref", "--format=%(objectname)", f"refs/remotes/{name}/")
-                tips.extend(listing.split())
-        return tips
+    def push_urls(self, rest: list[str]) -> list[str]:
+        """Resolved push URLs of every remote, plus the push's own arguments."""
+        urls = [arg.removeprefix("--repo=") for arg in rest if not arg.startswith("-") or arg.startswith("--repo=")]
+        for name in self.text("remote").splitlines():
+            result = self.run("remote", "get-url", "--push", "--all", name)
+            if not result.returncode:
+                urls += result.stdout.decode("utf-8", "replace").splitlines()
+        return urls
+
+    def advertised(self, url: str) -> list[str] | None:
+        """Commits and tags the destination advertises that exist here; None if it cannot be queried."""
+        try:
+            result = self.run("ls-remote", "--", url, timeout=120)
+        except subprocess.TimeoutExpired:
+            return None
+        if result.returncode:
+            return None
+        listed = {line.split("\t", 1)[0] for line in result.stdout.decode("ascii", "replace").splitlines()}
+        if not listed:
+            return []
+        types = self.text("cat-file", "--batch-check=%(objectname) %(objecttype)", stdin="\n".join(listed) + "\n")
+        return [
+            sha for sha, _, kind in (line.partition(" ") for line in types.splitlines()) if kind in {"commit", "tag"}
+        ]
 
 
 def _short_ref(target: str) -> tuple[str, str]:
@@ -146,8 +193,13 @@ def _short_ref(target: str) -> tuple[str, str]:
     return "ref", target
 
 
-def published_texts(repository: Repository, url: str, dest: str, updates: list[tuple]) -> tuple[list[str], list[str]]:
-    """Ref names, new commit messages and annotated tag messages one destination receives."""
+def published_texts(repository: Repository, url: str, updates: list[tuple]) -> tuple[list[str], list[str]]:
+    """Ref names, new commit messages and annotated tag messages one destination receives.
+
+    Commits are excluded only on the destination's own evidence: the old tip the
+    preview reports and the refs it advertises to ls-remote at the push URL.
+    Without that evidence the whole reachable history is scanned.
+    """
     texts: list[str] = []
     names: list[str] = []
     positives: list[str] = []
@@ -177,7 +229,11 @@ def published_texts(repository: Repository, url: str, dest: str, updates: list[t
         if repository.text("cat-file", "-t", current).strip() == "commit":
             positives.append(current)
     if positives:
-        negatives += repository.tracking_tips(url, dest)
+        advertised = repository.advertised(url)
+        if not advertised:
+            reason = "unavailable" if advertised is None else "shares no local history"
+            print(f"OPSEC: destination refs {reason}; full reachable history scanned.", file=sys.stderr)
+        negatives += advertised or []
         revisions = "\n".join([*positives, *("^" + sha for sha in negatives)]) + "\n"
         output = repository.text("rev-list", "--no-commit-header", "--format=%x00%H%x00%B", "--stdin", stdin=revisions)
         fields = output.split("\x00")[1:]
@@ -197,19 +253,22 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str]) -> No
     preview = repository.run("push", *preview_arguments(rest), timeout=300)
     sections = parse_porcelain(preview.stdout.decode("utf-8", "replace"))
     if not sections:
-        sys.stderr.write(preview.stderr.decode("utf-8", "replace"))
-        raise gate.PublishBlocked("OPSEC: push preview unavailable; push refused.")
+        # git's own error text can quote the refspec; name only the phase.
+        raise gate.PublishBlocked(f"OPSEC: push preview failed (exit {preview.returncode}); push refused.")
+    candidates = repository.push_urls(rest)
     public: list[str] = []
     private: list[str] = []
     texts: list[str] = []
     names: list[str] = []
     for section in sections:
-        dest = destination(section["url"])
+        # The preview prints the push URL without userinfo; recover the full URL.
+        url = next((c for c in candidates if anonymize_url(c) == section["url"]), section["url"])
+        dest = destination(url)
         if gate.is_private(dest):
             private.append(dest)
             continue
         public.append(dest)
-        found, labels = published_texts(repository, section["url"], dest, section["updates"])
+        found, labels = published_texts(repository, url, section["updates"])
         texts += found
         names += labels
     label = ",".join(dict.fromkeys(public)) if public else private[0]
