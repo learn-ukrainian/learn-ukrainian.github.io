@@ -72,6 +72,9 @@ Per-output lock files stay in the ignored lock directory and are never unlinked.
 Immutable output conflicts and source/WAL mutation refuse before writing.
 Optional membership is `{"heldout":["source:key"],"replay":[]}`. Keys must resolve;
 conservative unit/locator/card/alias closure must remain disjoint from replay.
+Provenance prose (mint evidence, alias/source-key notes, `matched_by`, `hold`) links only through known
+keys it cites literally, delimited, or inside wholly JSON strings (object keys too); plain prose never
+links or resolves membership. Mid-prose escaped JSON and case/normalisation variants are not recognised.
 Every non-mint registry event counts as adjudication, with or without `overlay_id`.
 Expected/adjudicated answers are excluded from all inputs even without membership.
 Absent real membership, isolation remains unverified. `--for-evaluation` refuses

@@ -7,6 +7,7 @@ import os
 import sqlite3
 import subprocess
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 
 import pytest
@@ -394,7 +395,8 @@ def test_frozen_manifest_faults_discriminate(pilot, fault, reason, capsys):
 
 @pytest.mark.parametrize("fault,reason", [(None, None), ("unknown", "Unresolved membership"),
     ("overlap", "must be disjoint"), ("closure", "overlap after conservative alias closure"),
-    ("path", "Output must be separate"), ("sense", "overlap after conservative alias closure")])  # Sense vs owner key.
+    ("path", "Output must be separate"), ("sense", "overlap after conservative alias closure"),  # Sense vs owner key.
+    ("prose", "Unresolved membership")])  # A retained mint's plain evidence is never a membership key.
 def test_membership_resolution_and_output_paths(pilot, fault, reason, capsys):
     _manifest, registry = prepared(pilot)
     member = pilot["root"] / "membership.json"
@@ -402,7 +404,8 @@ def test_membership_resolution_and_output_paths(pilot, fault, reason, capsys):
     owned = retained(registry, locators[0], fault)[0]
     save(pilot["registry"], registry)
     replay = {"overlap": [locators[0]], "closure": [locators[1]], "sense": ["atlas0:slug:second"]}.get(fault, [])
-    save(member, dict(heldout=[{"unknown": "unknown", "sense": owned}.get(fault, locators[0])], replay=replay))
+    heldout = {"unknown": "unknown", "sense": owned, "prose": "Retained note 0."}.get(fault, locators[0])
+    save(member, dict(heldout=[heldout], replay=replay))
     if fault == "path":
         pilot["freeze"][pilot["freeze"].index("--output") + 1] = str(member)
         assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == 1
@@ -660,3 +663,43 @@ def test_phrase_dictionary_literal_word_key(pilot, word, valid, capsys):
     key = "frazeolohichnyi:record:<ID>1</ID>|English  phrase {{</fras>}} "
     assert [r["aliases"] for r in phrases] == [[dict(kind="table_row", key=key, snapshot_id=r["snapshot_id"])]
                                                for r in records]
+
+
+NOTE = "Archived bulk batch remark."  # Plain prose reused by every unrelated provenance field below.
+ENCODINGS = {  # name: (frozen text citing held-out key loc:h, independent decoder or None, cited?); last four: boundaries.
+    "literal": ("loc:h", None, True), "delimited": ("Imported via (loc:h).", None, True),
+    "value": (r'{"ref":"loc\u003ah"}', lambda t: json.loads(t)["ref"], True),  # Escapes hide the raw key.
+    "key": (r'{"loc\u003ah":1}', lambda t: next(iter(json.loads(t))), True),
+    "nested": (r'["{\"loc\\u003ah\":1}"]', lambda t: next(iter(json.loads(json.loads(t)[0]))), True),
+    "overlap": ("Per ledger evidence ledger.", None, True), "plain": (NOTE, None, False),  # Bare alias in overlaps.
+    "longer": ("Imported (loc:h0) and (xloc:h).", None, False), "unregistered": ("Imported via (loc:z).", None, False),
+    "case": ("LOC:H", None, False), "fragment": (r'Imported {"ref":"loc\u003ah"} later.', None, False),
+    "normalised": ("loc\uff1ah", None, False)}
+OWNERS = dict(mint="wc_f", sense_mint="ws_f", sense_owner="wc_f", source_record_mint="sr_f", note="sr_f",
+              matched_by="sr_f", hold="sr_f", match_note="wc_f", adjudication="ws_f", embedded="sr_e")  # Endpoint.
+
+
+@pytest.mark.parametrize("field,encoding", [(field, encoding) for field in OWNERS for encoding in ENCODINGS])
+def test_provenance_links_only_through_cited_known_keys(tmp_path, field, encoding):
+    (text, decode, cited), owner, member = ENCODINGS[encoding], OWNERS[field], tmp_path / "membership.json"
+    assert decode is None or (decode(text) == "loc:h" and "loc:h" not in text)  # Valid JSON hiding the key.
+    assert not any(key in NOTE for key in ("sr_", "wc_", "ws_", "k:", "loc:h", "evidence", "ledger"))
+    prose = dict.fromkeys(OWNERS, NOTE) | {field.replace("sense_owner", "sense_mint"): text}
+    inputs = [dict(source_record_id="sr_h", aliases=[dict(key="loc:h"), dict(key="evidence")]),  # Held out.
+              dict(card_id="wc_f", senses=[dict(sense_id="ws_f")],
+                   key_at_creation=dict(source_keys=[dict(key="k:f", match_note=prose["match_note"])])),
+              dict(source_record_id="sr_f", aliases=[dict(key="ledger evidence", note=prose["note"]),
+                   dict(key="evidence ledger")], correspondence=[dict(matched_by=prose["matched_by"], hold=prose["hold"])]),
+              *(dict(kind=kind, evidence=prose[kind], **{"cards" if kind == "mint" else "to": [OWNERS[kind]]})
+                for kind in ("mint", "sense_mint", "source_record_mint")),
+              dict(kind="source_record_mint", to=["sr_h"], evidence=NOTE),  # The held-out row reuses the note.
+              # Row sr_e and its object-valued note exist only inside a decoded attribute string.
+              dict(spelling=json.dumps(dict(source_record_id="sr_e", aliases=[dict(key="k:e", note={prose["embedded"]: 1})])))]
+    save(member, dict(heldout=["sr_h"], replay=[owner]))  # Replay direction, before any adjudication exists.
+    with pytest.raises(foundation.Refusal, match="overlap after") if cited and field != "adjudication" else nullcontext():
+        assert foundation.isolation(inputs, member) == "checked"
+    save(member, dict(heldout=["sr_h"], replay=[]))  # Endpoint-only adjudication; native field names never count.
+    event = dict(event_id="ie_1", kind="sense_split", evidence=prose["adjudication"], **{"from": [owner]})
+    inputs.append(event if field != "embedded" else dict(spelling=json.dumps(event)))  # Its decoded keys do count.
+    with pytest.raises(foundation.Refusal, match="adjudicated mapping touches") if cited or field == "embedded" else nullcontext():
+        assert foundation.isolation(inputs, member) == "checked"
