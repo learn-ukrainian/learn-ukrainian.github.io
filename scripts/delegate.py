@@ -4344,7 +4344,7 @@ def _release_superseded_review_worktrees(
 
     Each removal goes through :func:`_remove_dispatch_worktree`, which runs the
     release proof while holding the earlier round's worktree lock (#8610).
-    Attempt dependencies are checked across all candidates before any removal (#9417).
+    Earlier rounds holding attempt dependencies are kept without release (#9417).
     """
     series = _review_series(task_id)
     if series is None:
@@ -4359,9 +4359,15 @@ def _release_superseded_review_worktrees(
         if earlier_stem != stem or earlier_round >= current_round:
             continue
         candidates.append((path, component))
-    _refuse_review_attempt_branch_holders(None, [path for path, _ in candidates], review_dependencies)
     released: list[Path] = []
     for path, component in candidates:
+        dependencies = _review_attempt_dependency_names(path, review_dependencies)
+        if dependencies:
+            print(
+                f"ℹ️  earlier review {path} kept: review dependency ({', '.join(dependencies)})",
+                file=sys.stderr,
+            )
+            continue
         if dry_run:
             ok, reason = _superseded_review_release_proof(path)
             if not ok:
@@ -4480,6 +4486,14 @@ def _review_attempt_worktree_dependencies(args: argparse.Namespace) -> tuple[tup
     )
 
 
+def _review_attempt_dependency_names(path: Path, dependencies: Sequence[tuple[str, Path]]) -> list[str]:
+    """Name dependencies whose supplied or resolved locations lie in this checkout."""
+    if not dependencies:
+        return []
+    roots = (path.absolute(), path.resolve())
+    return sorted({name for name, location in dependencies if any(location.is_relative_to(root) for root in roots)})
+
+
 def _refuse_review_attempt_branch_holders(
     branch: str | None,
     holders: Sequence[Path],
@@ -4489,14 +4503,13 @@ def _refuse_review_attempt_branch_holders(
     if not dependencies:
         return
     for holder in holders:
-        roots = (holder.absolute(), holder.resolve())
-        conflicts = sorted({name for name, path in dependencies if any(path.is_relative_to(root) for root in roots)})
+        conflicts = _review_attempt_dependency_names(holder, dependencies)
         if conflicts:
             context = f"branch {branch!r} holder" if branch is not None else "superseded review worktree"
             raise ValueError(
                 "review_attempt_branch_holder_conflict: "
                 f"{context} {holder} contains this attempt's {', '.join(conflicts)}; "
-                "refusing to release it; render from a detached worktree at the exact commit and retry (#9388)"
+                "refusing to release it; render from a separate retained worktree at the exact commit and retry (#9388)"
             )
 
 
@@ -7715,12 +7728,21 @@ def _ensure_worktree(
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
         _provision_data_symlinks(worktree_path, _REPO_ROOT)
-        # Re-apply sparse profile so pre-existing full trees shrink on reuse.
-        telemetry["sparse"] = _apply_dispatch_sparse_checkout(
-            worktree_path,
-            full_checkout=full_checkout,
-            sparse_include=sparse_include,
-        )
+        # Admission has already read these inputs. Preserve the current checkout
+        # when it holds any dependency; reapplying sparse mode can hide those bytes.
+        dependencies = _review_attempt_dependency_names(worktree_path, review_dependencies)
+        if dependencies:
+            print(
+                f"ℹ️  reused worktree {worktree_path} kept current checkout: review dependency "
+                f"({', '.join(dependencies)})",
+                file=sys.stderr,
+            )
+        else:
+            telemetry["sparse"] = _apply_dispatch_sparse_checkout(
+                worktree_path,
+                full_checkout=full_checkout,
+                sparse_include=sparse_include,
+            )
         _record_worktree_local_venv_warning(worktree_path, telemetry)
         return worktree_path, worktree_branch, telemetry
 
@@ -10978,6 +11000,7 @@ def _dispatch(
                     dry_run=True,
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
+                    review_dependencies=review_dependencies,
                 )
             except (ValueError, RuntimeError) as exc:
                 print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)

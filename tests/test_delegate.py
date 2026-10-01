@@ -13301,7 +13301,7 @@ def test_review_attempt_stale_branch_holder_survives_before_admission(
     err = capsys.readouterr().err
     assert "review_attempt_branch_holder_conflict" in err
     assert dependency in err and branch in err and str(holder) in err
-    assert "detached worktree at the exact commit" in err
+    assert "separate retained worktree at the exact commit" in err
     admit.assert_not_called()
     prompt_admit.assert_not_called()
     prepare.assert_not_called()
@@ -13411,11 +13411,12 @@ def test_review_attempt_release_protects_detached_superseded_review(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
+    capsys,
     dependency,
     dry_run,
     entry,
 ):
-    """#9417 AC-01: check every earlier round before removing even an unrelated first candidate."""
+    """#9417 AC-01: keep protected rounds and continue cleanup of unrelated earlier rounds."""
     main, original = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
@@ -13432,35 +13433,104 @@ def test_review_attempt_release_protects_detached_superseded_review(
     manifest = state / "manifest.yaml"
     manifest.write_text("review_id: review-9417\n")
     dependencies = ((dependency, manifest if dependency == "manifest" else holder),)
+    target = original.parent / "review-9417-r2"
+    subprocess.run(
+        ["git", "worktree", "add", "-b", "codex/review-9417-r2", str(target), "HEAD"],
+        cwd=main,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
     assert delegate._worktree_is_clean(holder)
     assert delegate._branch_worktree_paths("codex/task-1") == []
-    assert delegate._dispatch_worktree_components() == [(first, "review-9417"), (holder, "review-9417-r1")]
+    assert delegate._dispatch_worktree_components() == [
+        (first, "review-9417"),
+        (holder, "review-9417-r1"),
+        (target, "review-9417-r2"),
+    ]
 
     with (
-        patch.object(delegate, "_remove_dispatch_worktree") as remove,
-        patch.object(delegate, "_superseded_review_release_proof") as proof,
-        pytest.raises(
-            ValueError, match=f"review_attempt_branch_holder_conflict: superseded review worktree .*{dependency}"
-        ),
+        patch.object(delegate, "_remove_dispatch_worktree", wraps=delegate._remove_dispatch_worktree) as remove,
+        patch.object(delegate, "_superseded_review_release_proof", return_value=(True, "clean")) as proof,
     ):
         if entry == "ensure":
-            delegate._ensure_worktree(
+            path, _branch, telemetry = delegate._ensure_worktree(
                 agent="codex",
                 task_id="review-9417-r2",
-                raw_path=str(original.parent / "review-9417-r2"),
-                detached=True,
+                raw_path=str(target),
+                resolved_base_sha=delegate._resolve_sha(target),
                 dry_run=dry_run,
+                full_checkout=True,
                 review_dependencies=dependencies,
             )
+            assert path == target and telemetry["reused"] is True
         else:
-            delegate._release_superseded_review_worktrees(
+            assert delegate._release_superseded_review_worktrees(
                 "review-9417-r2",
                 dry_run=dry_run,
                 review_dependencies=dependencies,
-            )
-    remove.assert_not_called()
-    proof.assert_not_called()
-    assert first.is_dir() and holder.is_dir() and manifest.is_file()
+            ) == [first]
+    proof.assert_called_once_with(first)
+    if dry_run:
+        remove.assert_not_called()
+    else:
+        assert remove.call_count == 1 and remove.call_args.args == (first,)
+    assert first.exists() is dry_run
+    assert holder.is_dir() and manifest.is_file() and target.is_dir()
+    err = capsys.readouterr().err
+    assert f"earlier review {holder} kept: review dependency ({dependency})" in err
+    assert f"would remove superseded review worktree {holder}" not in err
+
+
+@pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
+@pytest.mark.parametrize("initial_sparse", [False, True])
+def test_review_attempt_reuse_preserves_admitted_curriculum_bytes(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, dependency, initial_sparse
+):
+    """#9417 r2: real reuse must keep admitted bytes in full and previously widened trees."""
+    main, target = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    curriculum = target / "curriculum"
+    curriculum.mkdir()
+    input_file = curriculum / "input.md"
+    admitted_bytes = b"admitted review input\n"
+    input_file.write_bytes(admitted_bytes)
+    for args in (["add", "curriculum/input.md"], ["commit", "-m", "review input"]):
+        subprocess.run(["git", *args], cwd=target, check=True, capture_output=True, timeout=30)
+    if initial_sparse:
+        delegate._apply_dispatch_sparse_checkout(target, sparse_include=("curriculum",))
+    assert input_file.read_bytes() == admitted_bytes
+    head = delegate._resolve_sha(target)
+    sparse_file = Path(
+        subprocess.run(
+            ["git", "rev-parse", "--git-path", "info/sparse-checkout"],
+            cwd=target,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        ).stdout.strip()
+    )
+    before_sparse = sparse_file.read_bytes() if sparse_file.exists() else None
+    dependency_path = input_file if dependency == "manifest" else target
+
+    path, branch, telemetry = delegate._ensure_worktree(
+        agent="codex",
+        task_id="review-9417-r2",
+        raw_path=str(target),
+        branch="codex/task-1",
+        resolved_base_sha=head,
+        dry_run=False,
+        review_dependencies=((dependency, dependency_path),),
+    )
+
+    assert path == target and branch == "codex/task-1" and telemetry["reused"] is True
+    assert input_file.read_bytes() == admitted_bytes
+    assert delegate._resolve_sha(target) == head
+    assert (sparse_file.read_bytes() if sparse_file.exists() else None) == before_sparse
+    assert telemetry["sparse"] is None
+    assert f"kept current checkout: review dependency ({dependency})" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
@@ -14772,6 +14842,63 @@ def _rendered_attempt_prompt(checkout: Path, prompt_file: Path, *, input_root: P
     )
     render_record_path(prompt_file).write_text(json.dumps({RENDER_RECORD_KEY: record}), encoding="utf-8")
     return prompt_file
+
+
+def test_review_attempt_branch_dry_run_keeps_protected_superseded_round(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """#9417 r2: dispatch passes retention inputs to the dry-run cleanup path."""
+    main, target = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", target)
+    monkeypatch.chdir(target)
+    holder = target.parent / "review-9417-r1"
+    subprocess.run(
+        ["git", "worktree", "add", "--detach", str(holder), "HEAD"],
+        cwd=main,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    state_dir = holder / "local_state"
+    state_dir.mkdir()
+    manifest = state_dir / "manifest.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    _review_code(main)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    prompt_file = _rendered_attempt_prompt(main, tmp_path / "prompt.md", input_root=holder)
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda **_kwargs: delegate._resolve_sha(target))
+
+    with (
+        patch.object(delegate, "_ensure_worktree", wraps=delegate._ensure_worktree) as ensure,
+        patch.object(delegate, "_superseded_review_release_proof", return_value=(True, "clean")) as proof,
+        patch.object(delegate, "_remove_dispatch_worktree") as remove,
+    ):
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                task_id="review-9417-r2",
+                mode="read-only",
+                worktree=str(target),
+                branch="codex/task-1",
+                review_attempt=str(manifest),
+                prompt=None,
+                prompt_file=str(prompt_file),
+                review_id="rev-test",
+                attempt_id="att-test",
+                dry_run=True,
+            )
+        )
+
+    assert rc == 0
+    ensure.assert_called_once()
+    assert ensure.call_args.kwargs["dry_run"] is True
+    assert ("manifest", manifest) in ensure.call_args.kwargs["review_dependencies"]
+    assert ("input_root", holder) in ensure.call_args.kwargs["review_dependencies"]
+    proof.assert_not_called()
+    remove.assert_not_called()
+    err = capsys.readouterr().err
+    assert f"earlier review {holder} kept: review dependency (input_root, manifest)" in err
+    assert f"would remove superseded review worktree {holder}" not in err
+    assert holder.is_dir() and manifest.is_file()
 
 
 @pytest.mark.parametrize("manifest_mutation", ["unchanged", "changed", "removed"])
