@@ -33,11 +33,11 @@ def test_catalog_routes_bounded_codex_workers_to_luna_high() -> None:
     assert preferred["model_id"] == "gpt-6-luna"
     assert preferred["effort"] == "high"
 
-    direct = route["direct_worker"]
-    assert direct["model_id"] == "gpt-6-luna"
-    assert direct["effort"] == "high"
-    assert "objective_scope_ceiling" in direct["constraints"]
-    assert "no_final_disposition" in direct["constraints"]
+    # Operator decision 2026-09-30 (#9275): Luna is never dispatched directly;
+    # every bounded worker needs the advisor's complete envelope.
+    assert "direct_worker" not in route
+    assert preferred["requires"] == ["complete_advisory_envelope", "objective_scope_ceiling"]
+    assert route["bounded_fallback_worker"]["requires"] == ["complete_advisory_envelope", "objective_scope_ceiling"]
 
     fallback = route["autonomous_fallback"]
     assert fallback["model_id"] == "gpt-6.1-sol"

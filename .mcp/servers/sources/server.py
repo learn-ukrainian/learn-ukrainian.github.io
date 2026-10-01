@@ -206,6 +206,52 @@ async def list_tools() -> list[Tool]:
             },
         ),
         _tool(
+            name="search_resources",
+            description=(
+                "Search curated podcast, video, article and reference catalogues by topic or words. "
+                "Indexes catalogue metadata and linked existing article/transcript text, not audio verification. "
+                "ULP audio is free; lesson notes are premium. Link-check status is separate from access; "
+                "use live_only to require a successful recorded HTTP check."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Literal Ukrainian or English keywords; empty to browse.",
+                        "default": "",
+                    },
+                    "kind": {
+                        "type": "string",
+                        "enum": ["podcast", "video", "article", "reference"],
+                        "description": "Optional resource kind.",
+                    },
+                    "level": {"type": "string", "description": "Optional exact CEFR level, e.g. A1."},
+                    "module": {
+                        "type": "string",
+                        "description": "Optional exact catalogue module ID, e.g. a1-greetings-and-politeness.",
+                    },
+                    "free_only": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": "Require a recorded free resource or free audio fact; premium notes remain premium.",
+                    },
+                    "live_only": {
+                        "type": "boolean",
+                        "default": False,
+                        "description": "Require a recorded successful HTTP status; excludes unchecked/network-error links.",
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "default": 10,
+                        "minimum": 1,
+                        "maximum": 20,
+                        "description": "Maximum results (default 10, maximum 20).",
+                    },
+                },
+            },
+        ),
+        _tool(
             name="search_external",
             description=(
                 "Search the external articles corpus (YouTube transcripts + blogs: "
@@ -1802,6 +1848,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             "search_text": lambda: handle_search_text(arguments),
             "search_literary": lambda: handle_search_literary(arguments),
             "search_external": lambda: handle_search_external(arguments),
+            "search_resources": lambda: handle_search_resources(arguments),
             "get_full_text": lambda: handle_get_full_text(arguments),
             "get_chunk_context": lambda: handle_get_chunk_context(arguments),
             "collection_stats": lambda: handle_collection_stats(arguments),
@@ -1991,9 +2038,26 @@ async def handle_search_sources(args: dict):
         )
         return [TextContent(type="text", text=prose)], envelope
 
-    prose = json.dumps(hits, ensure_ascii=False, indent=2)
+    # Keep source bodies in the structured hits only. Neither the summary
+    # nor an equal full_text alias should serialize those bodies again.
+    compact_hits = []
+    for hit in hits:
+        compact_hit = dict(hit)
+        if "text" in compact_hit and compact_hit.get("full_text") == compact_hit["text"]:
+            compact_hit.pop("full_text", None)
+        compact_hits.append(compact_hit)
+    lines = [f"Found {len(hits)} results (returned ranking order):"]
+    for rank, hit in enumerate(hits[:5], 1):
+        source_id = hit.get("chunk_id") or hit.get("section_id") or hit.get("source_file") or hit.get("id") or "unknown"
+        title = " ".join(str(hit.get("title") or "Untitled").split())[:80]
+        source_id = " ".join(str(source_id).split())[:80]
+        ranking = " ".join(str(hit.get("ranking") or "unspecified").split())[:40]
+        lines.append(f"{rank}. {source_id} — {title} ({ranking})")
+    if len(hits) > 5:
+        lines.append(f"{len(hits) - 5} more results in structured hits.")
+    prose = "\n".join(lines)
     envelope = build_search_envelope(
-        tool="search_sources", query=query_obj, hits=list(hits), summary_prose=prose
+        tool="search_sources", query=query_obj, hits=compact_hits, summary_prose=prose
     )
     hit_rankings = {
         hit["ranking"]
@@ -2040,6 +2104,43 @@ async def handle_search_literary(args: dict):
     )
     return [TextContent(type="text", text=prose)], envelope
 
+
+
+async def handle_search_resources(args: dict):
+    from scripts.ingest.resource_catalogue_ingest import ResourceCatalogueMissingError, search_resources
+    from wiki.sources_db import _get_conn
+
+    query = {
+        "query": args.get("query", ""),
+        "kind": args.get("kind"),
+        "level": args.get("level"),
+        "module": args.get("module"),
+        "free_only": args.get("free_only", False),
+        "live_only": args.get("live_only", False),
+        "limit": min(max(int(args.get("limit", 10)), 1), 20),
+    }
+    try:
+        hits = await asyncio.to_thread(lambda: search_resources(_get_conn(), **query))
+    except ResourceCatalogueMissingError:
+        prose = "Resource catalogue ingestion is required before searching resources."
+        envelope = build_search_envelope(
+            tool="search_resources",
+            query=query,
+            hits=[],
+            summary_prose=prose,
+            status="error",
+            error_code="resource_catalogue_missing",
+        )
+        return [TextContent(type="text", text=prose)], envelope
+    lines = [f"Found {len(hits)} catalogue resources (returned ranking order):"] if hits else []
+    for rank, hit in enumerate(hits[:5], 1):
+        title = " ".join(hit["title"].split())[:80]
+        lines.append(f"{rank}. {hit['id']} — {title} (access: {hit['access']})")
+    if len(hits) > 5:
+        lines.append(f"{len(hits) - 5} more resources in structured hits.")
+    prose = "\n".join(lines) if hits else "No catalogue resources found."
+    envelope = build_search_envelope(tool="search_resources", query=query, hits=hits, summary_prose=prose)
+    return [TextContent(type="text", text=prose)], envelope
 
 
 async def handle_search_external(args: dict) -> list[TextContent]:

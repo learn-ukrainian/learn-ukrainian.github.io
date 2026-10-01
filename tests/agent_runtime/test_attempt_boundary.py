@@ -307,8 +307,28 @@ def test_runner_boundary_refusal_reports_only_code_or_exception_class(tmp_path, 
                 session_id=None, entrypoint="runtime", hard_timeout=30, stall_timeout=30,
                 tool_config={"review_attempt_boundary": boundary},
             )
-    assert str(caught.value) == f"formal attempt filesystem boundary refused: {detail}"
+    assert str(caught.value) == f"formal attempt filesystem boundary refused: {site}: {detail}"
     assert caught.value.__cause__ is error
+
+
+@pytest.mark.parametrize(("prefix", "diagnostic", "expected_identifier"), [
+    ("sandbox_probe_allow_failed", "seat_controlled_identifier", "sandbox_probe_allow_failed"),
+    ("sandbox_probe_allow_failed", "secret/path", "sandbox_probe_allow_failed"),
+    ("sandbox_probe_allow_failed", "wrap: spoofed", "sandbox_probe_allow_failed"),
+    ("sandbox_probe_allow_failed", "\nspoofed", "sandbox_probe_allow_failed"),
+    ("Seat Text", "x", "ReviewIsolationError"),
+])
+def test_runner_boundary_refusal_pins_identifier_before_colon(prefix, diagnostic, expected_identifier):
+    error = ReviewIsolationError(f"{prefix}:{diagnostic}")
+    refusal = runner._attempt_boundary_refusal(error, stage="prepare")
+    assert refusal == f"formal attempt filesystem boundary refused: prepare: {expected_identifier}"
+    identifier = refusal.removeprefix("formal attempt filesystem boundary refused: prepare: ")
+    if expected_identifier == "sandbox_probe_allow_failed":
+        assert identifier == str(error).partition(":")[0] == "sandbox_probe_allow_failed"
+    else:
+        assert identifier == "ReviewIsolationError"
+        assert prefix not in refusal
+    assert diagnostic not in refusal
 
 
 @pytest.mark.parametrize("error", [KeyError("private diagnostic"), TypeError("private diagnostic")])
@@ -319,7 +339,7 @@ def test_runner_preparation_error_redacts_exception_text(tmp_path, monkeypatch, 
     monkeypatch.setattr("scripts.agent_runtime.attempt_boundary.prepare_attempt_boundary", refuse)
     with pytest.raises(AgentUnavailableError) as caught:
         runner.invoke("agy", "probe", cwd=tmp_path, tool_config={"review_id": "review"})
-    assert str(caught.value) == f"formal attempt filesystem boundary refused: {type(error).__name__}"
+    assert str(caught.value) == f"formal attempt filesystem boundary refused: prepare: {type(error).__name__}"
     assert caught.value.__cause__ is error
 
 
@@ -336,7 +356,7 @@ def test_runner_reports_real_input_hash_refusal_before_provider_launch(world, tm
     monkeypatch.setattr(runner, "_spawn_pipe_subprocess", unexpected)
     with pytest.raises(AgentUnavailableError) as caught:
         runner.invoke("agy", "probe", cwd=root, tool_config=tc)
-    assert str(caught.value) == "formal attempt filesystem boundary refused: attempt_input_hash_mismatch"
+    assert str(caught.value) == "formal attempt filesystem boundary refused: prepare: attempt_input_hash_mismatch"
     assert isinstance(caught.value.__cause__, ReviewIsolationError)
 
 

@@ -6,6 +6,10 @@ effort: xhigh
 
 # Drive an epic lane
 
+For GPT-6.1 Sol (`gpt-6.1-sol`), use `high`, including advisory and
+escalation turns. This overrides the shared effort above for Sol only;
+other providers retain their effort rules and explicit overrides.
+
 You drive **one epic or track lane** (`SESSION_EPIC` is set). You are **not** the main
 orchestrator. You own the lane's judgment: what is wrong, what is next, which model and
 harness should do it, whether the artifact actually worked, and what residual remains.
@@ -125,7 +129,9 @@ Seat-specific adjustments for your model and for the seats you route to:
 
 ## Escalate — do NOT decide these solo
 
-Route to the **operator and advisors (Fable, Astra)**; never resolve them from the loop:
+Seek **Opus 5.5 / Sol 6.1 first** for review, critique and design input; **Fable / Astra
+last resort**. Route the decisions below to the **operator and designated advisors
+(Fable, Astra)** for approval; never resolve them from the loop:
 
 1. Any **architecture, layout, or process** change.
 2. A **contested CF verdict** (reviewer and author disagree, or two reviewers split).

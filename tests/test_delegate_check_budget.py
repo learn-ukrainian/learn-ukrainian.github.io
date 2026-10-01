@@ -394,7 +394,8 @@ def test_language_dispatch_admits_sanctioned_agents(monkeypatch, tmp_path, agent
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
-    args = _dispatch_args("--language-lane")
+    # #9275: agy without a Ukrainian authoring/review task family is the bounded fallback.
+    args = _dispatch_args("--language-lane", "--research-task-family", "ukrainian-authoring")
     args.agent = agent
     assert delegate.cmd_dispatch(args) == 0
 

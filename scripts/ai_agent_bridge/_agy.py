@@ -146,12 +146,18 @@ def gemini_review_profile_error(profile: str | None) -> str | None:
     return AGY_REVIEW_PROFILE_REQUIRED
 
 
-# Learner-content roots: a Gemini review may cover only paths under these.
+# Learner-content roots and the exact generated arc data files below are eligible
+# for Gemini review; other site/src/data paths remain code/data surface.
 _CONTENT_PREFIXES = (
     "curriculum/l2-uk-en/",
     "curriculum/l2-uk-direct/",
     "site/src/content/docs/",
     "wiki/",
+)
+# build_arc_landing.py consumes these schema-supported core levels. Its
+# ARC_LANDING_LEVELS tracks landing ownership, not the accepted input levels.
+_CONTENT_ARC_PATHS = frozenset(
+    f"site/src/data/arc-{level}.json" for level in ("a1", "a2", "b1", "b2")
 )
 # Track roots whose top level also carries code-imported manifests/data.
 _CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
@@ -193,9 +199,11 @@ def _is_code_load_bearing_content(path: str) -> bool:
 
 
 def is_content_class_path(path: str) -> bool:
-    """True when a path is learner content with no code-imported surface."""
+    """True for learner content or an exact generated core-level arc data path."""
     normalized = path.replace("\\", "/")
-    return normalized.startswith(_CONTENT_PREFIXES) and not _is_code_load_bearing_content(normalized)
+    return normalized in _CONTENT_ARC_PATHS or (
+        normalized.startswith(_CONTENT_PREFIXES) and not _is_code_load_bearing_content(normalized)
+    )
 
 
 class GeminiChangedPathListError(RuntimeError):

@@ -1073,13 +1073,25 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
         return []
     transcript_path, events = bound.path, bound.events
     _, trusted_root = _transcript_read_location(plan)
+    # Only ordinary invocations may translate the CLI's pre-launch app-data
+    # spelling to the captured root. Attempts retain their exact refusals.
+    app_data_alias = None
+    if not plan.metadata.get("attempt_read_root"):
+        app_data = _agy_app_data(plan.env_overrides)
+        if str(app_data) == plan.metadata.get("agy_app_data_path"):
+            app_data_alias = app_data
+    result_location = {
+        "transcript_path": transcript_path,
+        "trusted_root": trusted_root,
+        "app_data_alias": app_data_alias,
+    }
 
     has_step_index = any(_event_step_index(event) is not None for event in events)
     if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
-        return _pair_transcript_generic_results(events, transcript_path=transcript_path, trusted_root=trusted_root)
+        return _pair_transcript_generic_results(events, **result_location)
     if has_step_index:
-        return _pair_transcript_by_step_index(events, transcript_path=transcript_path, trusted_root=trusted_root)
-    return _pair_transcript_fifo(events, transcript_path=transcript_path, trusted_root=trusted_root)
+        return _pair_transcript_by_step_index(events, **result_location)
+    return _pair_transcript_fifo(events, **result_location)
 
 
 class _TranscriptSlice(NamedTuple):
@@ -1186,13 +1198,15 @@ def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any
 
 
 def _mcp_result_text(
-    event: Mapping[str, Any], *, transcript_path: Path, trusted_root: Path = Path("/")
+    event: Mapping[str, Any], *, transcript_path: Path, trusted_root: Path = Path("/"),
+    app_data_alias: Path | None = None,
 ) -> str:
     result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
     return _inline_saved_tool_result_pointer(
         result_text,
         transcript_path=transcript_path,
         trusted_root=trusted_root,
+        app_data_alias=app_data_alias,
     )
 
 
@@ -1201,6 +1215,7 @@ def _pair_transcript_fifo(
     *,
     transcript_path: Path,
     trusted_root: Path = Path("/"),
+    app_data_alias: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Legacy pairing: file order FIFO between planner intents and MCP results."""
     calls: list[dict[str, Any]] = []
@@ -1213,7 +1228,9 @@ def _pair_transcript_fifo(
         calls.append(
             _attach_tool_result(
                 call,
-                _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root),
+                _mcp_result_text(
+                    event, transcript_path=transcript_path, trusted_root=trusted_root, app_data_alias=app_data_alias,
+                ),
             )
         )
     calls.extend(pending)
@@ -1238,6 +1255,7 @@ def _pair_transcript_by_step_index(
     *,
     transcript_path: Path,
     trusted_root: Path = Path("/"),
+    app_data_alias: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Pair planner intents with MCP results in ``step_index`` (FIFO) order.
 
@@ -1271,7 +1289,9 @@ def _pair_transcript_by_step_index(
             pending_keys.add(key)
         if event.get("type") != "MCP_TOOL":
             continue
-        result_text = _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root)
+        result_text = _mcp_result_text(
+            event, transcript_path=transcript_path, trusted_root=trusted_root, app_data_alias=app_data_alias,
+        )
         if pending:
             call = pending.pop(0)
             pending_keys.discard(_intent_dedupe_key(call))
@@ -1295,6 +1315,7 @@ def _pair_transcript_generic_results(
     *,
     transcript_path: Path,
     trusted_root: Path = Path("/"),
+    app_data_alias: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Pair planner intents with ``GENERIC`` results (agy 2026-09 transcript shape).
 
@@ -1333,7 +1354,9 @@ def _pair_transcript_generic_results(
             calls.append(
                 _attach_tool_result(
                     call,
-                    _mcp_result_text(event, transcript_path=transcript_path, trusted_root=trusted_root),
+                    _mcp_result_text(
+                        event, transcript_path=transcript_path, trusted_root=trusted_root, app_data_alias=app_data_alias,
+                    ),
                 )
             )
     return calls
@@ -1509,7 +1532,7 @@ def _build_tool_call(tool_name: str, args: dict[str, Any], result_text: str) -> 
 
 
 def _inline_saved_tool_result_pointer(
-    text: str, *, transcript_path: Path, trusted_root: Path = Path("/")
+    text: str, *, transcript_path: Path, trusted_root: Path = Path("/"), app_data_alias: Path | None = None,
 ) -> str:
     """Inline agy's safe ``file://.../steps/.../output.txt`` tool-result pointer."""
     match = _SAVED_OUTPUT_POINTER_RE.search(text)
@@ -1521,6 +1544,10 @@ def _inline_saved_tool_result_pointer(
         return text
 
     path = Path(urllib.parse.unquote(parsed.path))
+    if app_data_alias is not None and _is_relative_to(path, app_data_alias):
+        # Map only the parent-captured prefix, never resolve descendants from
+        # the transcript. The no-follow read below still rejects swapped names.
+        path = trusted_root / path.relative_to(app_data_alias)
     allowed_roots = _allowed_tool_result_roots(transcript_path)
     if not any(_is_relative_to(path, root) for root in allowed_roots):
         _logger.warning("agy refused unsafe tool result pointer")
@@ -1532,7 +1559,6 @@ def _inline_saved_tool_result_pointer(
         _logger.warning("agy tool result pointer missing")
         return text
     size = len(raw)
-    resolved_path = path  # Logging only; never resolve a seat-controlled name.
 
     truncated = len(raw) > _MAX_INLINE_TOOL_RESULT_BYTES
     if truncated:
@@ -1541,14 +1567,12 @@ def _inline_saved_tool_result_pointer(
     if truncated:
         inline = inline.rstrip() + f"\n\n[agy tool result truncated at {_MAX_INLINE_TOOL_RESULT_BYTES} bytes]"
         _logger.warning(
-            "agy inlined truncated tool result pointer %s (%s bytes)",
-            resolved_path,
+            "agy inlined truncated tool result pointer (%s bytes)",
             size,
         )
     else:
         _logger.info(
-            "agy inlined tool result pointer %s (%s bytes)",
-            resolved_path,
+            "agy inlined tool result pointer (%s bytes)",
             size,
         )
     return text[: match.start()] + inline + text[match.end() :]

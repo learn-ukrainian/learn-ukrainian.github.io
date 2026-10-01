@@ -1,0 +1,143 @@
+request_schema: 1
+module: a1/reading-ukrainian
+texts:
+  - id: T-001
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084}
+    span: {first_words: 'Т т', last_words: '— На .'}
+    supports: 'Primer part 1 printed page 86: Т sound, CV and VC rows, and a syllabified first word.'
+  - id: T-002
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0088}
+    span: {first_words: 'Е е Бачу Е', last_words: 'При-ле-ті-ли , , .'}
+    supports: 'Primer part 1 printed page 90: Е sound, reading rows and word-to-text progression.'
+  - id: T-003
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0091}
+    span: {first_words: 'Евеліна дивилася', last_words: 'білі сніжинки.'}
+    supports: 'Primer part 1 printed page 93: decodable personal name for Е, used only as decoding material.'
+  - id: T-004
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0092}
+    span: {first_words: 'Д д', last_words: 'дро-ва'}
+    supports: 'Primer part 1 printed page 94: Д sound and decodable word дах in reading list.'
+  - id: T-005
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0096}
+    span: {first_words: 'З з', last_words: 'Зи-ма в лі-сі.'}
+    supports: 'Primer part 1 printed page 98: З sound and first decodable word зима.'
+  - id: T-006
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0104}
+    span: {first_words: 'Б б', last_words: 'б у з о к'}
+    supports: 'Primer part 1 printed page 106: Б sound and letters for білка and бузок before the reading passage.'
+  - id: T-007
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0003}
+    span: {first_words: 'Г г', last_words: 'іг'}
+    supports: 'Primer part 2 printed page 4: Г glyph and sound [г], distinct from the next page group for Ґ.'
+  - id: T-008
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0005}
+    span: {first_words: 'Що тобі відомо', last_words: 'гарбуз по городу»?'}
+    supports: 'Primer part 2 printed page 6: whole decodable word гарбуз in the reading-page prompt.'
+  - id: T-009
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007}
+    span: {first_words: 'Бачу Ґ, ґ (ґе).', last_words: 'ґрати ґава ґрунт'}
+    supports: 'Primer part 2 printed page 8: Ґ sound [ґ] contrasted with Г and decodable ґава; ґедзик is excluded by дз.'
+  - id: T-010
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0011}
+    span: {first_words: 'Ч ч Бачу Ч', last_words: 'че твер'}
+    supports: 'Primer part 2 printed page 12: Ч sound, CV rows and decodable plural чоботи in the word-building row.'
+  - id: T-011
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0015}
+    span: {first_words: 'Й й', last_words: 'чай- гай- чай-'}
+    supports: 'Primer part 2 printed page 16: Й sound, final-letter reading pattern and чай.'
+  - id: T-012
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0019}
+    span: {first_words: 'Х х', last_words: 'х м і л ь'}
+    supports: 'Primer part 2 printed page 20: Х glyph and [х], with decodable хліб; ь word withheld.'
+  - id: T-013
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0023}
+    span: {first_words: 'Ж ж', last_words: "Ж\nаж\nож\nуж\nиж\nіж"}
+    supports: 'Primer part 2 printed page 24: Ж sound and decodable жито.'
+  - id: T-014
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0027}
+    span: {first_words: 'Ш ш', last_words: "Ш\nаш\nош\nуш\nиш\nіш"}
+    supports: 'Primer part 2 printed page 28: Ш sound and spelling of комиш in its key-word row.'
+  - id: T-015
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0029}
+    span: {first_words: 'Прочитай речення.', last_words: '— Ви не бачили жабок?'}
+    supports: 'Primer part 2 printed page 30: whole short sentences for reading aloud, not recomposed fragments.'
+  - id: T-016
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0010_w001}
+    span: {first_words: 'Here is my story about', last_words: 'My mom is also a teacher. A literature teacher.'}
+    supports: 'ULP Season 1 lesson 10: short first-person recap story aligned with English.'
+  - id: T-017
+    source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0010_w002}
+    span: {first_words: 'Запитання — questions', last_words: '7.    Так, у тебе є дві бабусі. Вони пенсіонерки.'}
+    supports: 'ULP Season 1 lesson 10: whole Ukrainian-only recap questions and source answers, including open questions and an affirmative response.'
+  - id: T-018
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0105}
+    span: {first_words: 'Прочитай слова. Скільки', last_words: 'над'}
+    supports: 'Primer part 1 printed page 107: the Б-page read list of short decodable words, including зуб.'
+  - id: T-019
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0021}
+    span: {first_words: '-хи', last_words: 'горох'}
+    supports: 'Primer part 2 printed page 22: Х syllables and a read list of decodable Х words after the Х key-word page.'
+  - id: T-020
+    source: {table: textbooks, chunk_id: antonenko-davydovych-yak-my-hovorymo_p147}
+    span: {first_words: 'В українській мові є два різні звуки', last_words: 'літерами г (h) і ґ (g).'}
+    supports: 'Antonenko-Davydovych, Як ми говоримо, p. 147: Ukrainian has two different sounds, similar to Latin h and g, written г and ґ; the reader must not give г the g reading.'
+  - id: T-021
+    source: {table: textbooks, chunk_id: uni-ukrmova-orthography-strokal-2021_s0431}
+    span: {first_words: 'Сполучення Lе', last_words: 'теóрія.'}
+    supports: 'Strokal, orthography manual p. 233, § 21: Latin e is written е, Latin t (th) is written т, Latin g and h are written г (ґ for an imitated g), and English h is written х in some words; the Latin-shaped Е, Т and Х are checked against these correspondences.'
+exercises:
+  - id: X-001
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0084}
+    span: {first_words: "та\nто\nту\nти\nті", last_words: "ат\nот\nут\nит\nіт"}
+    pattern: 'Read a new consonant in CV and VC rows, then read a short decodable word and copy the model offline.'
+  - id: X-002
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007}
+    span: {first_words: 'грати кава грім', last_words: 'ґрати ґава ґрунт'}
+    pattern: 'Compare Г and Ґ in displayed word pairs, then select the written word matching the heard sound.'
+  - id: X-003
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0029}
+    span: {first_words: 'Прочитай речення.', last_words: '— Ви не бачили жабок?'}
+    pattern: 'Read whole short sourced sentences aloud, then answer a source-hosted comprehension question.'
+  - id: X-004
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077}
+    span: {first_words: 'Перепиши в зошит.', last_words: 'Панас ловив лини.'}
+    pattern: 'Copy a printed model into a notebook; fresh tasks restrict models to the 25 taught letters.'
+  - id: X-005
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0027}
+    span: {first_words: '«Збери» слова', last_words: 'на склади слово, у якому дві'}
+    pattern: 'Assemble a decodable written word from known letters; vary the workbook decision from sound selection.'
+examples:
+  - id: EX-001
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0029}
+    span: {first_words: 'Ми прилетіли', last_words: 'додому!'}
+    words: [W-006, W-113, W-114]
+  - id: EX-002
+    source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0029}
+    span: {first_words: 'Ви не бачили', last_words: 'жабок?'}
+    words: [W-007, W-061, W-087, W-115]
+videos:
+  - {id: V-001, url: 'https://www.youtube.com/watch?v=m-jcLR_gK0k', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Т before CV and VC reading.'}
+  - {id: V-002, url: 'https://www.youtube.com/watch?v=gNjHqjTW9WQ', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ґ after hearing Г from the primer.'}
+  - {id: V-003, url: 'https://www.youtube.com/watch?v=aq0cjB90s3w', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Й in short final-letter reading.'}
+  - {id: V-004, url: 'https://www.youtube.com/watch?v=z8NucPzHLhE', channel: 'Ukrainian Lessons Podcast', use: 'Source audio for the Season 1 lesson 10 first-person recap story, heard by ear.'}
+  - {id: V-005, url: 'https://www.youtube.com/watch?v=KFlsroBW0dk', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Е before its sound rows.'}
+  - {id: V-006, url: 'https://www.youtube.com/watch?v=g4Bh-lqzd48', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Д before its sound rows.'}
+  - {id: V-007, url: 'https://www.youtube.com/watch?v=BhASNxitC1A', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for З before its sound rows.'}
+  - {id: V-008, url: 'https://www.youtube.com/watch?v=V1hxBE_JbGg', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Б before its word row.'}
+  - {id: V-009, url: 'https://www.youtube.com/watch?v=gVnclpSI0DU', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Г before the Г/Ґ contrast.'}
+  - {id: V-010, url: 'https://www.youtube.com/watch?v=UsJkbdsY2RA', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ч before its sound rows.'}
+  - {id: V-011, url: 'https://www.youtube.com/watch?v=vpr58zJSJKc', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Х before its sound rows.'}
+  - {id: V-012, url: 'https://www.youtube.com/watch?v=dIrGVcqPwqM', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ж before its sound rows.'}
+  - {id: V-013, url: 'https://www.youtube.com/watch?v=1D-6MIw3OXY', channel: 'Ukrainian Lessons Podcast', use: 'Pronunciation model for Ш before its sound rows.'}
+unsupported:
+  - id: U-001
+    claim: 'An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or a typical English-reader difficulty for each). The sources give each Ukrainian sound (primer "Чую [ж]" lines, T-010 to T-014) and a native pronunciation video per letter (V-003, V-010 to V-013), and T-021 shows only that English h is written х in some borrowed words; no textbook record describes these five sounds for an English speaker, so the plan teaches them by the native model and states no English comparison.'
+    searches:
+      - {tool: 'sqlite textbooks (source_file ulp-1..6-00-lesson-notes, anna-ohoiko-1000-words-2nd-ed, anna-ohoiko-500-verbs, pohribnyi-ukrainska-literaturna-vymova-1992, private-teacher-lessons-a)', query: 'regex pleasure|measure|vision|shop|church|cheese|Bach|loch|boy|yes|like the English|pronounced like|sounds like near Ж Ш Ч Х Й Г'}
+      - {tool: 'sqlite textbooks (ulp, anna-ohoiko, private-teacher)', query: 'regex ʃ|ʒ|tʃ|[x]|[j]|ɦ|zh|kh|sh|ch|voiced|voiceless|дзвінк|глух'}
+      - {tool: 'sqlite textbooks (all subjects)', query: 'like the English | as in the English | in English words | English sound | Latin letter | English g | English h | [h] | [g]'}
+      - {tool: 'sqlite textbooks (pohribnyi-ukrainska-literaturna-vymova-1992)', query: 'шиплячі | [ж] | [ш] | [ч] | [х] | [й] | глотков | задньоязик (hits are OCR-garbled and give no English comparison)'}
+      - {tool: 'sqlite external_articles (ulp_youtube, ukrainianlessons.com, talkukrainian.com, opentext.ku.edu)', query: 'titles Pronunciation|Alphabet|How to pronounce; text pleasure|shop|church|Bach|loch|boy|yes (the per-letter video transcripts hold only example words; the talkukrainian alphabet table of English equivalents is not in the stored text; external_articles is not a T- source table)'}
+      - {tool: 'mcp sources search_sources', query: 'вимова звуків ж ш ч х й для англомовних'}
+      - {tool: 'sqlite textbooks (source_file ulp-1..6-00-lesson-notes)', query: 'text like %ronunciation% (Pronunciation Trainer sections cover only the sound и, soft consonants, rolled Р and question words; none covers Ж, Ш, Ч, Х or Й)'}
+    resolved_by: 'Not taught as an English-comparison claim, because no source supports one. The five letters are taught from the native audio models instead: Ж by V-012, Ш by V-013, Ч by V-010, Х by V-011 and Й by V-003 (Ukrainian Lessons "Ukrainian Alphabet: How to pronounce <letter> in Ukrainian").'

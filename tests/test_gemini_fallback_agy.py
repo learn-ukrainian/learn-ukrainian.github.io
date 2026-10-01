@@ -7,7 +7,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from ai_llm.fallback import (
     AGY_GEMINI_MODEL,
-    FLASH_GEMINI_MODEL,
     PRIMARY_GEMINI_MODEL,
     AttemptOutcome,
     build_gemini_ladder,
@@ -18,13 +17,12 @@ from ai_llm.fallback import (
 def test_shared_ladder_order_includes_agy_after_pro():
     ladder = build_gemini_ladder(allowed_auth_modes=("api", "oauth"))
 
-    assert [(r.cli, r.model, r.auth_mode) for r in ladder[:4]] == [
+    assert [(r.cli, r.model, r.auth_mode) for r in ladder] == [
         ("gemini-cli", PRIMARY_GEMINI_MODEL, "api"),
         ("gemini-cli", PRIMARY_GEMINI_MODEL, "oauth"),
         ("agy-cli", AGY_GEMINI_MODEL, None),
-        ("gemini-cli", FLASH_GEMINI_MODEL, "api"),
     ]
-    assert len(ladder) == 7
+    assert len(ladder) == 3
 
 
 def test_lint_agent_trailer_accepts_agy():
@@ -38,7 +36,7 @@ def test_lint_agent_trailer_accepts_agy():
     assert match.group("task") == "2739-gemini-takeover"
 
 
-def test_agy_retryable_error_advances_to_flash_rung():
+def test_agy_retryable_error_exhausts_ladder_without_flash_cli():
     outcomes = {
         (PRIMARY_GEMINI_MODEL, "api"): AttemptOutcome(
             status="rate_limited",
@@ -54,11 +52,6 @@ def test_agy_retryable_error_advances_to_flash_rung():
             status="retryable_error",
             elapsed_s=0.1,
             stderr_excerpt="agy unavailable",
-        ),
-        (FLASH_GEMINI_MODEL, "api"): AttemptOutcome(
-            status="success",
-            elapsed_s=0.1,
-            response_text="flash answer",
         ),
     }
     seen: list[tuple[str, str | None]] = []
@@ -76,12 +69,12 @@ def test_agy_retryable_error_advances_to_flash_rung():
         sleep_fn=lambda _seconds, _reason: None,
     )
 
-    assert result.ok is True
-    assert result.model_used == FLASH_GEMINI_MODEL
-    assert result.cli_used == "gemini-cli"
+    assert result.ok is False
+    assert result.model_used is None
+    assert result.cli_used is None
+    assert "all 3 Gemini fallback rungs exhausted" in result.error_message
     assert seen == [
         (PRIMARY_GEMINI_MODEL, "api"),
         (PRIMARY_GEMINI_MODEL, "oauth"),
         (AGY_GEMINI_MODEL, None),
-        (FLASH_GEMINI_MODEL, "api"),
     ]

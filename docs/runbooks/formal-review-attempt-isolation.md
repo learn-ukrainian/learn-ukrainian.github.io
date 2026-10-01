@@ -60,6 +60,78 @@ app-data directory under the same OS boundary. AGY's separate sealed code-review
 `review_isolation` mode remains refused; formal content attempts use the
 runner-owned manifest boundary, rather than enabling that unsupported mode.
 
+## Artifact binding at admission and recording
+
+For `--branch B --review-attempt <manifest>`, render from a detached worktree
+at the exact commit (`git worktree add --detach <render-worktree> <commit>`).
+The render worktree must not hold the dispatch's target branch. Dispatch
+protects a branch holder containing the attempt manifest or the render record's
+`input_root` or `render_checkout` and refuses before admission with
+`review_attempt_branch_holder_conflict`, suggesting a detached render worktree
+(#9388). Ordinary dispatches retain their stale-holder release behavior.
+
+Issues #9012, #9025 and #9242 bind each artifact to the same attempt. A render
+manifest prompt is admitted through `check_prompt` with the dispatch review and
+attempt IDs: its bytes must equal a fresh render of the authorized manifest.
+Custom prompts retain the ID parser, which checks every attempt declaration
+and refuses conflicting or unreadable later IDs, including prose and nested
+mappings, lists, anchors and merge keys within each attempt or schema. YAML schema
+examples nested inside `data_fence` blocks remain pinned data, not return schemas.
+An invalid render refuses as `prompt_render_invalid` before provisioning or launch.
+
+The version-4 render record includes the review ID, attempt ID, prompt hash,
+input root and render checkout. Dispatch recomputes the recorded server components
+and template hashes from that checkout's canonical `scripts/review/prompts`
+directory to check record integrity. Formal manifest admission then independently
+re-renders using the **server checkout's** templates, derived from the running
+admission code and runtime configuration, never from the render record. The
+record's `input_root` remains only the pinned-input locator: containment and
+pin-hash checks still apply. A different recorded template directory refuses as
+`review_render_record_prompts_dir_mismatch`, even with matching template hashes. A
+record copied from another attempt refuses as `review_render_record_attempt_mismatch`;
+edited or stale digests refuse as `review_render_record_digest_mismatch`. The
+existing prompt-hash, server-code and launch-time checks still apply. Older
+render records require a fresh render; they cannot authorize a new attempt.
+
+Issue #9378 adds server template authority at this pre-launch gate. Admission
+passes the recorded reads, path hashes and logical template map to `check_prompt`.
+The checker derives the complete loaded-template set from its own server render,
+then compares exact loader names and hashes and requires byte equality of the
+prompt. It relocates only exact template loader paths between checkouts; it does
+not relocate input pins or case-fold names. A copied tree with an injected template
+refuses as `prompt_render_invalid: prompt_not_exact_render`; omitted or substituted
+dependencies refuse as `template_read_not_recorded` or `template_sha256_mismatch`
+under the same admission code. A loaded template absent from the server refuses;
+missing templates on both sides still refuse as
+`review_render_record_digest_mismatch`. An unused added template is admissible.
+Absolute or traversal loader names refuse as `review_render_template_name_invalid`;
+the renderer refuses symlink aliases as `template_alias_refused`, and a sidecar
+path outside its declared template directory that resolves to a loaded server
+template refuses as `template_identity_mismatch`. Nested list or
+mapping IDs refuse as `non_scalar_attempt_id` through `attempt_ids_unreadable`
+(manifest prompts) or `prompt_attempt_ids_unreadable` (custom prompts).
+
+Clean worktrees at the server commit, plan worktrees behind it with unchanged
+used templates, fixture input roots and `previous_attempt` re-reviews remain
+admissible. If a legitimate flow cannot meet these checks, stop and report it;
+do not substitute render-checkout templates. Pinning tests live in
+`tests/review/test_template_admission.py` and
+`tests/test_delegate.py::test_render_manifest_server_authority_refuses_before_launch`.
+
+Dispatch stores the manifest hash supplied by `prepare_review_attempt`'s plan;
+it does not reopen the manifest to construct the task's binding. The runner's
+terminal task record also stores `result_sha256` for the UTF-8 bytes saved in
+its canonical task result file. Before attesting a placeholder or admitting a
+formal bound return with a real prompt hash, the recorder requires a `done`
+task with matching review/attempt/manifest IDs, the canonical result pointer,
+the recorded result hash, and byte equality with the saved result. Copying the
+result unchanged to a separate return file is allowed. Editing, extracting or
+substituting other bytes refuses as `review_return_task_mismatch`, before any
+saved return or attempt row is written. Use the raw saved task result;
+do not strip fences or normalize it before recording. Placeholder substitution
+happens only after this binding succeeds. Existing custom returns without a
+formal task binding retain their validator path; failure recording is unchanged.
+
 ## Parent read boundary and site inventory
 
 Seat-writable names remain untrusted after exit. `safe_read_attempt_file` in
@@ -69,8 +141,9 @@ component below it with `openat` directory descriptors and `O_NOFOLLOW | O_DIREC
 then opens the leaf with `O_NOFOLLOW | O_NONBLOCK | O_NOCTTY`. It checks the opened
 fd for a regular file, runner UID ownership and exactly one hard link. Full and
 invocation-suffix reads cap accepted data at 64 MiB, refusing overflow; session-ID
-reads consume only a 64 KiB prefix, irrespective of total rollout size. Checked
-fd metadata supplies resumed lengths, and diagnostic tails seek on that fd.
+reads consume up to a 1 MiB prefix and parse at most 25 lines, irrespective of
+total rollout size. Checked fd metadata supplies resumed lengths, and diagnostic
+tails seek on that fd.
 Reads use that fd only, with a bounded read and a second metadata check. Missing
 optional telemetry remains absent; unsafe reads raise body-free `AttemptReadError`
 codes. Runner parsing converts refusals to failed `ParseResult` values with no response, without
@@ -92,7 +165,7 @@ This uses the directory-fd method described in the
 | AGY `_read_transcript_events`: transcript events | `_transcript_read_location`: parent-owned attempt `write_root`; ordinary app-data root resolved before launch; `/` for changed ordinary overrides or direct calls. | Shared reader with invocation offset; a shortened resumed transcript remains unbound. |
 | AGY `_transcript_baseline`: resumed prefix sizing | App-data root resolved before launch, while still parent-controlled; formal attempts cannot resume. | Checked fd `fstat` size; no transcript bytes read. |
 | AGY `_conversation_id_from_log`: invocation log | Plan `log_read_root`: parent-owned attempt `write_root`; ordinary log parent resolved before launch; `/` for direct calls. | Shared reader before UUID extraction. |
-| AGY `_inline_saved_tool_result_pointer`: saved result | Plan's transcript read root carried through FIFO, indexed and generic result pairing; parent-owned attempt `write_root`, ordinary pre-launch app-data root, or `/` for direct calls. Conversation steps directories are lexical containment only, never walk anchors. | Shared reader refuses replaced conversation ancestors even after the transcript has been read. |
+| AGY `_inline_saved_tool_result_pointer`: saved result | Plan's transcript read root carried through FIFO, indexed and generic result pairing; parent-owned attempt `write_root`, ordinary pre-launch app-data root, or `/` for direct calls. Ordinary dispatches map a captured app-data alias lexically onto the pre-launch resolved root; attempts never get an alias. Conversation steps directories are lexical containment only, never walk anchors. | The no-follow read stays anchored at the resolved root; the shared reader refuses replaced conversation ancestors even after the transcript has been read. |
 | Runner `_finalize_v4_runner_origin`: output observation | Plan `parent_read_root` (parent-owned attempt `write_root` or ordinary pre-launch adapter root); `/` if absent. | Shared reader before recording; refusal cannot persist host bytes. |
 | Runner failure diagnostics via watchdog `tail_liveness_file_for_debug` | Default `/`: parent-owned filesystem root, with every descendant walked no-follow. | Checked fd seek and bounded tail read; unsafe files yield no diagnostic bytes. |
 | Runner `_prepare_stdin_handle`: prompt input | No named-file walk anchor. | Retains the original parent-created descriptor through spawn, without reopening its name. |
@@ -103,9 +176,12 @@ isolation claims. A fallback `/` is conservative and does not trust a replaced
 intermediate directory. The sandbox swap regression builds each plan with its
 real adapter and preserves these anchors while substituting the probe command.
 
-Residual N5: a Codex session-meta line exceeding the 64 KiB prefix can omit the
-session ID. The prefix bound is unchanged; infra owns any future change, with
-an oversized metadata-line regression and exact-head review before landing.
+Residual N5: the Codex session-ID prefix bound is raised from 64 KiB to 1 MiB,
+giving more headroom for session metadata containing instructions and configuration.
+Metadata truncated by that bound or beyond the first 25 lines remains unbound;
+partial JSON and unvalidated session IDs are not accepted. Infra owns any future
+change to these limits, with an oversized metadata-line regression and exact-head
+review before landing.
 
 Codex rollout timestamps, snapshot sizes, liveness mtime polling and runner
 cleanup size checks inspect metadata only; they never read target bytes.
@@ -137,6 +213,8 @@ The Claude adapter change is excluded from this branch so it can receive an
 eligible cross-family review: changing that adapter excludes Claude reviewers
 because it governs their own boundary. A Claude Opus worker owns the follow-up
 PR, reviewed by `gpt-6.1-sol`.
+
+The automatic bench (`scripts.review.bench_health`, #9394) currently gives Anthropic-authored code a single automatic cross-family reviewer, `openai_frontier`, and exits 1 for that shortfall; explicit-pin reserves never satisfy the two-seat minimum.
 
 Under `review_attempt_boundary`, replace the ordinary worker-guard `--settings`
 with `--setting-sources ""` and `--disable-slash-commands`. Empty setting sources

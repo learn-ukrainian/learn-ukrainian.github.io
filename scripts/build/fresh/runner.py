@@ -71,6 +71,8 @@ from scripts.build.fresh.assemble import (
 )
 from scripts.build.fresh.candidates import classify_form_analyses, item_candidates, option_record_bindings
 from scripts.build.fresh.draft_schema import validate_draft
+from scripts.build.fresh.listening import choice_error as listening_choice_error
+from scripts.build.fresh.listening import model_target as listening_model_target
 from scripts.build.fresh.manifest import unlink_current, write_manifest, write_manifest_error
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
@@ -154,6 +156,25 @@ def _lesson(plan: dict[str, Any], n: int) -> dict[str, Any]:
     return next(item for item in plan["lessons"] if item["n"] == n)
 
 
+def _gap_layer(gaps: list[dict[str, Any]], lesson: dict[str, Any]) -> str:
+    """A missing record belongs to the pack; a quote host outside the plan requires replanning.
+
+    A dialogue or T-record cited on the gap's own step is a possible host. Availability/rights gaps in
+    that record stay with the pack; this mapping never decides semantic host adequacy.
+    """
+    steps = lesson.get("steps") or []
+    for gap in gaps:
+        if gap["need"] not in {"quote", "publication_right"}:
+            continue
+        step = next(step for step in steps if step["id"] == gap["step"])
+        dialogue_step = (lesson.get("dialogue") or {}).get("step")
+        if dialogue_step == gap["step"]:
+            continue
+        if not any(ref.startswith("T-") for ref in step.get("evidence") or []):
+            return "plan"
+    return "pack"
+
+
 def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str, Any]:
     steps = lesson.get("steps") or []
     dsteps = draft.get("steps") or []
@@ -165,6 +186,20 @@ def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str
     expected_consolidation = lesson.get("consolidation") or []
     if draft["consolidation"]["activities"] != expected_consolidation:
         return failure(3, "consolidation_activities", "writer")
+    for activity in draft.get("activities") or []:
+        for index, item in enumerate(activity.get("items") or []):
+            if item.get("kind") == "listening" and (
+                (item.get("host") or {}).get("kind") != "video"
+                or not _host_eligible(item.get("host"), draft, lesson, activity["id"])
+            ):
+                return failure(
+                    3,
+                    "listening_host_ineligible",
+                    "writer",
+                    code="listening_host_ineligible",
+                    activity=activity["id"],
+                    token=str(index),
+                )
     used: set[str] = set()
     for planned, actual in zip(steps, dsteps, strict=True):
         sid = planned["id"]
@@ -576,7 +611,11 @@ def _independent_language_question(provenance: Any, state_dir: Path, lesson_n: i
 
 
 def _host_eligible(host: Any, draft: dict[str, Any], lesson: dict[str, Any], activity_id: str) -> bool:
-    if not isinstance(host, dict) or host.get("kind") not in {"dialogue", "quote"}:
+    if not isinstance(host, dict) or host.get("kind") not in {"dialogue", "quote", "video"}:
+        return False
+    if host["kind"] == "video" and host.get("ref") not in {
+        v.get("evidence") for v in lesson.get("videos") or [] if isinstance(v, dict)
+    }:
         return False
     if host["kind"] == "dialogue" and not lesson.get("dialogue"):
         return False
@@ -602,6 +641,8 @@ def check_7_a1_choices(
     requirement_inputs: dict[str, Any] | None = None,
     vesum_lookup: Callable[[list[str]], dict[str, list[dict[str, Any]]]] | None = None,
     sources: Any = None,
+    pack: dict[str, Any] | None = None,
+    allowlist: Allowlist | None = None,
 ) -> dict[str, Any]:
     """Check A1 choice uniqueness after resolution; never infer a slot's demand."""
     if sources is None:
@@ -609,11 +650,22 @@ def check_7_a1_choices(
 
         with Sources() as client:
             return check_7_a1_choices(
-                draft, lesson, words, stream, state_dir=state_dir, lesson_n=lesson_n,
-                requirement_inputs=requirement_inputs, vesum_lookup=vesum_lookup, sources=client,
+                draft,
+                lesson,
+                words,
+                stream,
+                state_dir=state_dir,
+                lesson_n=lesson_n,
+                requirement_inputs=requirement_inputs,
+                vesum_lookup=vesum_lookup,
+                sources=client,
+                pack=pack,
+                allowlist=allowlist,
             )
     by_id = {record["id"]: record for record in words.get("words") or []}
-    receipt_doc = receipts.read_requirement_receipts(receipts.requirement_receipt_path(state_dir, lesson_n), sources=sources)
+    receipt_doc = receipts.read_requirement_receipts(
+        receipts.requirement_receipt_path(state_dir, lesson_n), sources=sources
+    )
     completeness: list[dict[str, Any]] = []
     if vesum_lookup is None:
         from scripts.verification.vesum import verify_words
@@ -657,14 +709,57 @@ def check_7_a1_choices(
                 (act["type"] for act in lesson.get("activities") or [] if act["id"] == aid), None
             )
             options = [True, False] if typ == "true-false" else item.get("words" if typ == "odd-one-out" else "options")
-            if kind == "comprehension" and not _host_eligible(item.get("host"), draft, lesson, aid):
+            if kind == "comprehension" and (
+                (item.get("host") or {}).get("kind") not in {"dialogue", "quote"}
+                or not _host_eligible(item.get("host"), draft, lesson, aid)
+            ):
                 return bad("comprehension_host_ineligible", aid, index)
+            if kind == "listening":
+                if typ != "quiz":
+                    return bad("listening_type_invalid", aid, index)
+                if (item.get("host") or {}).get("kind") != "video" or not _host_eligible(
+                    item.get("host"), draft, lesson, aid
+                ):
+                    return bad("listening_host_ineligible", aid, index)
             if not isinstance(options, list) or not options:
+                if kind == "listening":
+                    return bad("listening_options_missing", aid, index)
                 continue
             key = _choice_key(item, typ, options)
             if key is None or key >= len(options):
                 return bad("answer_key_missing", aid, index)
             texts = [_choice_text(option) for option in options]
+            if kind == "listening":
+                target_ref = item.get("target_record")
+                planned_letters = (
+                    set(allowlist.letters)
+                    if allowlist
+                    else {
+                        letter.casefold()
+                        for letter in (lesson.get("inventory", {}).get("phonetics") or {}).get("letters") or []
+                    }
+                )
+                if (
+                    isinstance(target_ref, str)
+                    and not target_ref.startswith("W-")
+                    and target_ref.casefold() not in planned_letters
+                ):
+                    return bad("listening_target_not_planned", aid, index)
+                target, error = listening_model_target(target_ref, item["host"]["ref"], pack or {}, words)
+                if error:
+                    return failure(7, error, "pack", code=error, activity=aid, token=str(index))
+                error = listening_choice_error(
+                    item,
+                    texts,
+                    key,
+                    target,
+                    words,
+                    letters=planned_letters,
+                    record_ids=set(allowlist.records) if allowlist else set(by_id),
+                )
+                if error:
+                    return bad(error, aid, index)
+                continue
             if kind in {"form", "vocabulary"}:
                 ids = [item.get("record")] * len(options) if typ == "fill-in" else item.get("option_records")
                 if not isinstance(ids, list) or len(ids) != len(options) or any(rid not in by_id for rid in ids):
@@ -855,6 +950,15 @@ def check_4_activities(
     records = {w["id"]: w for w in words.get("words") or []}
     errors = {e["id"]: e for e in pack.get("errors") or []}
     planned = {a["id"]: a for a in lesson.get("activities") or []}
+    for step in draft.get("steps") or []:
+        for block in step.get("blocks") or []:
+            if block.get("kind") == "video" and block.get("target_record"):
+                ref = block.get("ref")
+                if ref not in {v.get("evidence") for v in lesson.get("videos") or []}:
+                    return failure(4, "listening_host_ineligible", "writer", code="listening_host_ineligible"), {}
+                _, error = listening_model_target(block["target_record"], ref, pack, words)
+                if error:
+                    return failure(4, error, "pack", code=error, step=step.get("id")), {}
     form_options: dict[tuple[str, int], list[dict[str, Any]]] = {}
     for activity in draft.get("activities") or []:
         aid = activity["id"]
@@ -1358,10 +1462,11 @@ def run_lesson(
             record_failure(ledger_path, slug, n, bad, ledger_inputs)
         return {**doc, "passed_through": bad["check"] if bad else 11, "manifest_sha256": None}
 
-    previous = load_ledger(ledger_path, slug, n)
+    previous = load_ledger(ledger_path, slug, n, ledger_inputs)
     if previous["terminal_layer"] is not None:
         return finish(failure(1, "regeneration_terminal", previous["terminal_layer"]))
-    if previous["attempts"]:
+    # A fresh input series still invalidates receipts left by earlier failures.
+    if load_ledger(ledger_path, slug, n)["attempts"]:
         invalidate_lesson_resolution(state_dir, n)
 
     lesson = _lesson(plan, n)
@@ -1372,13 +1477,24 @@ def run_lesson(
         return finish(failure(1, f"{err.check}: {err.reason}", "writer", token=err.path))
     if draft["lesson"] != {"module": f"{level}/{slug}", "n": n}:
         return finish(failure(1, "lesson_identity_mismatch", "writer"))
+    if draft["status"] == "evidence_gap" and any(
+        gap["step"] not in {step["id"] for step in lesson["steps"]} for gap in draft["gaps"]
+    ):
+        return finish(failure(1, "gap_step_not_in_plan", "writer"))
     for key, value in inputs.items():
         if key in draft["inputs"] and draft["inputs"][key] != value:
             return finish(failure(1, f"input_hash_mismatch: {key}", "writer"))
     rows.append(_pass(1))
     if draft["status"] == "evidence_gap":
         gap = draft["gaps"][0]
-        return finish(failure(2, gap.get("detail") or "evidence_gap", "pack", step=gap.get("step")))
+        return finish(
+            failure(
+                2,
+                "evidence_gap: " + json.dumps(draft["gaps"], ensure_ascii=False),
+                _gap_layer(draft["gaps"], lesson),
+                step=gap.get("step"),
+            )
+        )
     rows.append(_pass(2))
     row = check_3_structure(draft, lesson)
     if row["status"] == "failed":
@@ -1412,7 +1528,9 @@ def run_lesson(
     with ExitStack() as source_session:
         try:
             expanded_obj = ExpandedDocument.from_data(expanded)
-            selected_allowlist = allowlist or load_allowlist(level, slug, n, plans_dir=plans_dir, evidence_dir=evidence_dir)
+            selected_allowlist = allowlist or load_allowlist(
+                level, slug, n, plans_dir=plans_dir, evidence_dir=evidence_dir
+            )
             if sources is None:
                 sources = source_session.enter_context(Sources())
             stream = resolve(expanded_obj, selected_allowlist, sources)
@@ -1474,7 +1592,10 @@ def run_lesson(
         except (ResolverError, ValueError, RuntimeError, OSError) as err:
             return finish(
                 failure(
-                    8, str(err), "writer" if isinstance(err, ResolverError) else "driver", code=getattr(err, "code", None)
+                    8,
+                    str(err),
+                    "writer" if isinstance(err, ResolverError) else "driver",
+                    code=getattr(err, "code", None),
                 )
             )
         rows.append(_pass(8, {"questions": len(batch["questions"]), "answered": len(selections)}))
@@ -1488,6 +1609,8 @@ def run_lesson(
                     state_dir=state_dir,
                     lesson_n=n,
                     sources=sources,
+                    pack=pack,
+                    allowlist=selected_allowlist,
                     requirement_inputs=receipts.requirement_inputs(
                         receipt_doc["inputs"],
                         yaml.safe_load((state_dir / f"lesson-{n}.draft.yaml").read_text(encoding="utf-8")),

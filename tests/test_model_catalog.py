@@ -16,6 +16,8 @@ from scripts.audit import model_families
 from scripts.review.model_catalog import (
     VALID_REVIEW_PROFILES,
     ModelCatalogError,
+    bounded_execution_policy,
+    canonical_model_id,
     catalog_age_days,
     catalog_is_stale,
     cursor_non_dispatch_model_refusal,
@@ -25,6 +27,7 @@ from scripts.review.model_catalog import (
     kimi_model_aliases,
     load_model_catalog,
     model_aliases,
+    require_execution_model,
     resolve_catalog_model_id,
     resolve_glm_model,
     resolve_kimi_model,
@@ -42,6 +45,36 @@ def test_committed_catalog_is_structurally_valid_and_current():
     assert catalog_age_days(catalog, as_of=date(2026, 9, 24)) == 0
     assert not catalog_is_stale(catalog, as_of=date(2026, 10, 23))
     assert catalog_is_stale(catalog, as_of=date(2026, 10, 25))
+
+
+@pytest.mark.parametrize("model_id", [
+    model_id for model_id, entry in load_model_catalog()["models"].items()
+    if entry["lifecycle"] == "retired"
+])
+def test_retired_models_cannot_retain_any_transport(model_id):
+    catalog = deepcopy(load_model_catalog())
+    catalog["models"][model_id]["transports"] = ["native_grok"]
+    with pytest.raises(ModelCatalogError, match="transports must be empty for retired models"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize(("model", "transport", "message"), [
+    ("cursor:grok-4.5-high", "cursor", "is retired"),
+    ("claude-opus-4.6", "native_claude", "not in the model catalog"),
+    ("claude-opus-5-5", "hermes", "no admitted hermes transport"),
+    ("gemini-3.8-flash-high", "native_gemini", "no admitted native_gemini transport"),
+])
+def test_execution_defaults_refused_by_catalog_identity_and_transport(model, transport, message):
+    with pytest.raises(ModelCatalogError, match=message):
+        require_execution_model(model, transport=transport)
+
+
+def test_execution_default_resolves_active_alias_and_rejects_hold():
+    catalog = deepcopy(load_model_catalog())
+    assert require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog) == "gemini-3.8-flash-high"
+    catalog["models"]["gemini-3.8-flash-high"]["lifecycle"] = "hold"
+    with pytest.raises(ModelCatalogError, match="not admitted for execution"):
+        require_execution_model("gemini-3.8-flash-low", transport="agy", catalog=catalog)
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -449,24 +482,24 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["cursor"]["auto_scope"] == "write_implementation_dispatch_with_green_dor"
     assert seats["cursor"]["effort"] == "high"
     assert seats["cursor"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert seats["cursor"]["escalate_effort"] == "xhigh"
+    assert seats["cursor"]["escalate_effort"] == "high"
     assert seats["cursor"]["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     assert seats["cursor"]["attestation_rule"] == "driver_of_record_requires_attested_resolved_model"
     assert seats["cursor"]["unknown_auto_family_resolution"] == "union_family"
     assert seats["cursor"]["unknown_auto_union_families"] == ["xai", "moonshot"]
 
 
-def test_orchestrator_escalate_pins_astra_xhigh_and_agy_flash():
+def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     """Each seat has default + escalate like AGY Flash, same-SKU escalation, operator 2026-09-22."""
     seats = load_model_catalog()["orchestrator_seats"]
     assert seats["claude"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert seats["claude"]["escalate_effort"] == "xhigh"
+    assert seats["claude"]["escalate_effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["escalate_effort"] == "high"
-    # Codex reviewer escalation uses the same Astra xhigh advisor pin.
+    # Codex reviewer escalation uses the same Astra high advisor pin.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert fc["claude"]["escalate_model_id"] == "claude-fable-5-1"
+    assert fc["claude"]["escalate_model_id"] == "claude-opus-5-5"
 
 
 def test_practical_ladders_exclude_advisory_roles():
@@ -479,7 +512,8 @@ def test_practical_ladders_exclude_advisory_roles():
         assert "gpt-5.6-terra" not in names
         assert "claude-sonnet-5-5" in names
         assert "pool" in names
-        assert "grok-4.7-cursor-fallback" in names
+        assert "grok-4.7-cursor-fallback" not in names
+        assert "grok-4.7" not in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
     assert "claude-fable-5-1" in critical
@@ -751,7 +785,7 @@ def test_catalog_rejects_cursor_auto_as_formal_review_identity():
 
 def test_catalog_rejects_hermes_for_gpt_or_grok_even_if_model_lists_it():
     broken = deepcopy(load_model_catalog())
-    broken["models"]["grok-4.6"]["transports"].append("hermes")
+    broken["models"]["grok-4.7"]["transports"].append("hermes")
     with pytest.raises(ModelCatalogError, match="must not route"):
         validate_catalog(broken)
 
@@ -785,19 +819,15 @@ def test_catalog_rejects_future_review_date():
         catalog_age_days(validated, as_of=date(2026, 7, 17))
 
 
-def test_critical_ladder_anthropic_authority_is_fable_not_opus():
-    """Advisory consultation must not silently become approval authority.
-
-    The critical authority ladder routes Anthropic approval reviews to Fable.
-    Opus remains the separate, non-binding advisory-consultation seat.
-    """
-    ladder = load_model_catalog()["review_ladders"]["critical"]
-    flat = [model for rung in ladder for model in rung]
-    assert "claude-fable-5-1" in flat
+def test_critical_ladder_anthropic_authority_is_opus_with_fable_last_resort():
+    catalog = load_model_catalog()
+    flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
+    assert flat[:3] == ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback"]
+    assert flat[-2:] == ["claude-fable-5-1", "claude-fable-5-1-cursor-fallback"]
     assert "claude-opus-5" not in flat
-    # The Opus 5.5 orchestrator seat must not inherit approval authority either.
-    assert "claude-opus-5-5" not in flat
     assert "claude-sonnet-5-5" not in flat
+    for name in flat:
+        assert catalog["review_candidates"][name].get("last_resort", False) == name.startswith("claude-fable-")
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
@@ -822,7 +852,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
 
     advisor = route["advisor"]
     assert advisor["model_id"] == "gpt-6.1-sol"
-    assert advisor["effort"] == "xhigh"
+    assert advisor["effort"] == "high"
     assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
     assert advisor["output_fields"] == [
         "task_contract",
@@ -858,22 +888,13 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         "final_disposition",
     }
 
-    direct = route["direct_worker"]
-    assert direct == {
-        "model_id": "gpt-6-luna",
+    # Operator decision 2026-09-30 (#9275): no direct bounded dispatch route.
+    assert "direct_worker" not in route
+    assert route["bounded_fallback_worker"] == {
+        "model_id": "gemini-3.8-flash-high",
         "effort": "high",
-        "task_types": [
-            "bounded_implementation",
-            "bounded_investigation",
-            "recon",
-            "bounded_checks",
-            "log_triage",
-        ],
-        "constraints": [
-            "objective_scope_ceiling",
-            "no_consequential_decisions",
-            "no_final_disposition",
-        ],
+        "requires": ["complete_advisory_envelope", "objective_scope_ceiling"],
+        "non_bounded_task_families": ["ukrainian-authoring", "ukrainian-review"],
     }
     assert route["autonomous_fallback"] == {
         "model_id": "gpt-6.1-sol",
@@ -916,12 +937,34 @@ def test_catalog_rejects_luna_safety_set_member_removal(field, member):
     [
         ("advisor", "model_id", "set", "missing-model", "advisor.model_id references unknown model"),
         ("preferred_worker", "model_id", "set", "poolside/laguna-m.1", "preferred_worker.model_id must reference an active model"),
-        ("direct_worker", "model_id", "set", "missing-model", "direct_worker.model_id references unknown model"),
+        (
+            "bounded_fallback_worker",
+            "model_id",
+            "set",
+            "missing-model",
+            "bounded_fallback_worker.model_id references unknown model",
+        ),
+        ("bounded_fallback_worker", "model_id", "set", "gpt-6.1-sol", "must not be a bounded worker model"),
+        (
+            "bounded_fallback_worker",
+            "requires",
+            "set",
+            ["objective_scope_ceiling"],
+            "bounded_fallback_worker.requires must bind",
+        ),
+        (
+            "bounded_fallback_worker",
+            "non_bounded_task_families",
+            "set",
+            [],
+            "non_bounded_task_families must be a non-empty list",
+        ),
+        ("bounded_fallback_worker", "requires", "delete", None, "bounded_fallback_worker must define exactly"),
         ("autonomous_fallback", "model_id", "set", "missing-model", "autonomous_fallback.model_id references unknown model"),
         ("preferred_worker", "escalate_to", "set", "missing-model", "preferred_worker.escalate_to references unknown model"),
         ("advisor", "effort", "set", "ultra", "advisor.effort must be one of"),
         ("preferred_worker", "effort", "set", "ultra", "preferred_worker.effort must be one of"),
-        ("direct_worker", "effort", "set", "ultra", "direct_worker.effort must be one of"),
+        ("bounded_fallback_worker", "effort", "set", "ultra", "bounded_fallback_worker.effort must be one of"),
         ("autonomous_fallback", "effort", "set", "ultra", "autonomous_fallback.effort must be one of"),
         ("advisor", "role", "set", "unbounded", "advisor.role must be"),
         (
@@ -966,6 +1009,47 @@ def test_catalog_rejects_malformed_sol_advised_route(
         validate_catalog(broken)
 
 
+def test_catalog_refuses_a_direct_bounded_worker_route():
+    """#9275: a restored ``direct_worker`` route fails validation (operator decision 2026-09-30)."""
+    broken = deepcopy(load_model_catalog())
+    broken["execution_routing"]["sol_advised_bounded"]["direct_worker"] = {
+        "model_id": "gpt-6-luna",
+        "effort": "high",
+        "task_types": ["recon"],
+        "constraints": ["objective_scope_ceiling"],
+    }
+    with pytest.raises(ModelCatalogError, match="sol_advised_bounded must define exactly"):
+        validate_catalog(broken)
+
+
+def test_bounded_execution_policy_names_the_envelope_population():
+    policy = bounded_execution_policy()
+    assert policy.advisor_model_id == "gpt-6.1-sol"
+    assert policy.advisor_role == "bounded_advisory_envelope"
+    assert policy.bounded_worker_model_id == "gpt-6-luna"
+    assert policy.bounded_fallback_model_id == "gemini-3.8-flash-high"
+    assert policy.non_bounded_task_families == {"ukrainian-authoring", "ukrainian-review"}
+
+
+@pytest.mark.parametrize(
+    ("spelling", "expected"),
+    [
+        ("gpt-6-luna", "gpt-6-luna"),
+        ("GPT-6-Luna", "gpt-6-luna"),
+        ("codex:gpt-6-luna", "gpt-6-luna"),
+        ("openai/gpt-6-luna", "gpt-6-luna"),
+        ("gpt-6-luna-high", "gpt-6-luna"),
+        ("gemini-3.8-flash", "gemini-3.8-flash-high"),
+        ("gemini-3.8-flash-low", "gemini-3.8-flash-high"),
+        ("claude-opus-5-5[1m]", "claude-opus-5-5"),
+        ("not-a-model", None),
+        (None, None),
+    ],
+)
+def test_canonical_model_id_resolves_aliases_prefixes_and_variants(spelling, expected):
+    assert canonical_model_id(spelling) == expected
+
+
 def test_budget_substitution_table_admits_cursor_slugs_and_rejects_gpt6():
     """#8855: GPT-6 stays native Codex; the Opus cursor slug is the review-candidate invocation."""
     catalog = load_model_catalog()
@@ -991,7 +1075,7 @@ def test_sol_holds_the_astra_advisor_seat_and_runtime_review_pins():
     assert AGENTS["codex"]["default_model"] == "gpt-6.1-sol"
     assert AGENTS["codex"]["default_effort"] == "high"
     assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6.1-sol --effort high")
-    assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "xhigh"
+    assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
     for risk in ("low", "medium", "high"):
         assert catalog["review_ladders"][risk][0] == ["openai_frontier"]
 
@@ -1283,9 +1367,28 @@ def test_issue_9301_active_exceptions_and_advisory_effort():
     for section in ("orchestrator_seats", "formal_cf_defaults"):
         for spec in catalog[section].values():
             if spec.get("escalate_model_id") == "gpt-6.1-sol":
-                assert spec["escalate_effort"] == "xhigh"
+                assert spec["escalate_effort"] == "high"
     assert catalog["orchestrator_seats"]["codex"]["effort"] == "high"
     assert catalog["formal_cf_defaults"]["codex"]["effort"] == "high"
+
+
+def test_sol_defaults_and_escalations_use_high_across_catalog():
+    bindings = []
+
+    def visit(value, path):
+        if isinstance(value, dict):
+            for model_key, effort_key in (("model_id", "effort"), ("escalate_model_id", "escalate_effort")):
+                if value.get(model_key) == "gpt-6.1-sol" and effort_key in value:
+                    assert value[effort_key] == "high", f"{path}.{effort_key}"
+                    bindings.append(f"{path}.{effort_key}")
+            for key, child in value.items():
+                visit(child, f"{path}.{key}")
+        elif isinstance(value, list):
+            for index, child in enumerate(value):
+                visit(child, f"{path}[{index}]")
+
+    visit(load_model_catalog(), "catalog")
+    assert len(bindings) == 8
 
 
 def test_live_claude_caller_defaults_are_active_catalog_models():
@@ -1295,3 +1398,34 @@ def test_live_claude_caller_defaults_are_active_catalog_models():
     for model in (CLAUDE_DEFAULT_ASK_MODEL, CLAUDE_ADVISORY_MODEL, *CLAUDE_MODEL_LADDER):
         assert catalog["models"][model]["lifecycle"] == "active"
     assert CLAUDE_ADVISORY_MODEL == "claude-opus-5-5"
+
+
+@pytest.mark.parametrize("value", ["true", 1, None])
+def test_last_resort_marker_must_be_boolean(value):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["last_resort"] = value
+    with pytest.raises(ModelCatalogError, match="last_resort must be a boolean"):
+        validate_catalog(catalog)
+
+
+def test_primary_cannot_follow_last_resort_even_if_quality_is_equal():
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_ladders"]["critical"] = [["claude-fable-5-1"], ["claude-opus-5-5"]]
+    with pytest.raises(ModelCatalogError, match="improves quality in a later rung"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
+def test_grok_cannot_reenter_any_code_review_ladder(risk):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_ladders"][risk].append(["grok-4.7"])
+    with pytest.raises(ModelCatalogError, match="Grok never judges"):
+        validate_catalog(catalog)
+
+
+def test_catalog_selection_order_matches_last_resort_and_suitability_policy():
+    assert load_model_catalog()["policy"]["selection_order"] == [
+        "independence_and_hard_gates", "primary_before_last_resort",
+        "profile_risk_suitability", "review_quality_tier",
+        "health_and_quota_within_tier", "cost_within_equivalent_fit",
+    ]

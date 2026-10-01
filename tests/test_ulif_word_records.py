@@ -16,11 +16,64 @@ import json
 import sqlite3
 from pathlib import Path
 
+import pytest
+
 from scripts.lexicon import ulif_raw_cache
 from scripts.lexicon.runner import ulif_forms
 from scripts.wiki import sources_db
 
 FIXTURES_DIR = Path(__file__).parent / "fixtures" / "ulif_dictua"
+
+
+@pytest.mark.parametrize("gap", ["empty", "absent"])
+def test_reader_keeps_relation_infrastructure_reason_over_source_gap(tmp_path, monkeypatch, gap):
+    """The combined-fault reader withholds forms before and after forcing build complete."""
+    db_path = tmp_path / "sources.db"
+    relation = "<html>synthetic relation</html>"
+    raw = {"phraseology": relation}
+    if gap == "empty":
+        raw["paradigm"] = '<div id="ContentPlaceHolder1_article"></div>'
+    sources_db.store_ulif_dictua_entry(
+        word="placeholder", canonical_headword="placeholder", sections={}, raw_responses=raw,
+        retrieved_at="2026-09-28T00:00:00Z", parser_version="ulif-dictua-v2", status="ok",
+        homonym_index=1, homonym_checked=1, db_path=db_path,
+    )
+    original_get = ulif_raw_cache.get
+    relation_sha = hashlib.sha256(relation.encode()).hexdigest()
+
+    def faulty_get(sha, **kwargs):
+        if sha == relation_sha:
+            raise sqlite3.OperationalError("synthetic relation I/O failure")
+        return original_get(sha, **kwargs)
+
+    monkeypatch.setattr(ulif_raw_cache, "get", faulty_get)
+    report = ulif_forms.build_ulif_forms(db_path=db_path)
+    assert report["state"] == "failed"
+    locator = f"ulif:entry:1:phraseology:sha256:{relation_sha}"
+    for state in ("failed", "complete"):
+        with sqlite3.connect(db_path) as conn:
+            conn.execute("UPDATE ulif_forms_build SET state=?", (state,))
+        entry = sources_db.get_ulif_word_records(["placeholder"], db_path=db_path)[0]["entries"][0]
+        assert entry["canonical_headword"] == "placeholder"
+        assert entry["forms"] == []
+        assert entry["forms_state"] == "raw_cache_error"
+        assert entry["forms_failure"] == {"reason": "raw_cache_error", "locator": locator}
+
+
+def test_runbook_source_provenance_and_relative_examples():
+    """Pin literal supported provenance and all five formerly absolute host-path occurrences."""
+    text = (Path(__file__).parents[1] / "docs/atlas/word-cards/ulif-source-records.md").read_text()
+    expected_url = "https://lcorp.ulif.org.ua/dictua"
+    expected_label = "«Словники України» (Український мовно-інформаційний фонд НАН України)"
+    assert expected_url == sources_db.ULIF_DICTUA_OFFICIAL_URL
+    assert expected_label == sources_db.ULIF_DICTUA_ATTRIBUTION_LABEL
+    assert f'"official_url": "{expected_url}"' in text
+    assert f'"attribution_label": "{expected_label}"' in text
+    assert "/home/" not in text
+    assert text.count(".venv/bin/python -m ") == 4
+    assert "--raw-cache data/lexicon/cache/ulif_raw.sqlite" in text
+    for subcommand in ("build", "verify", "disagreement-report"):
+        assert f".venv/bin/python -m scripts.lexicon.runner.ulif_forms {subcommand}" in text
 
 
 def _read_fixture(name: str) -> str:

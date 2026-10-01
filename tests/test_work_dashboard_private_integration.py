@@ -1046,7 +1046,6 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
     if (!loadingPriv && pub.startsWith('status=')) return true;
     return false;
   }}, {{ timeout: settleBudget }});
-  await new Promise((r) => setTimeout(r, 150));
 
   for (const action of ACTIONS) {{
     if (action.type === 'select') {{
@@ -1059,7 +1058,6 @@ const observed = {{ public: [], private: [], options: 0, consoleErrors: [], page
       await new Promise((r) => setTimeout(r, action.ms || 200));
     }}
   }}
-  await new Promise((r) => setTimeout(r, 200));
 
   const snapshot = await page.evaluate((canary) => {{
     const rows = Array.from(document.querySelectorAll('.work-row')).map((row) => ({{

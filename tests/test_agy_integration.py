@@ -101,6 +101,9 @@ def test_delegate_dispatch_accepts_agy_agent():
             task_id,
             "--prompt",
             "noop",
+            # #9275: agy without a Ukrainian classification is the bounded fallback.
+            "--research-task-family",
+            "ukrainian-authoring",
             "--dry-run",
         ],
         capture_output=True,

@@ -2605,80 +2605,49 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
     assert "GEMINI_API_KEY" not in second_env
 
 
-def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
-    """If Gemini succeeds on a later model rung, Result.model must reflect that model."""
-    from unittest.mock import MagicMock
+def test_invoke_gemini_runtime_reports_actual_agy_fallback_model(tmp_path, monkeypatch):
+    """After Pro exhaustion, result and usage attribute Flash to AGY."""
+    from agent_runtime import runner
+    from ai_llm.fallback import AGY_GEMINI_MODEL, PRIMARY_GEMINI_MODEL
 
-    primary_proc = MagicMock()
-    primary_proc.poll = MagicMock(return_value=1)
-    primary_proc.returncode = 1
-    primary_proc.stdin = MagicMock()
-    primary_proc.stderr = MagicMock()
-    primary_proc.stderr.readline = MagicMock(side_effect=["429 RESOURCE_EXHAUSTED\n", ""])
-    primary_proc.stderr.close = MagicMock()
-    primary_proc.stdout = MagicMock()
-    primary_proc.stdout.readline = MagicMock(return_value="")
-    primary_proc.stdout.close = MagicMock()
-    primary_proc.pid = 30303
+    attempts = []
+    adapter = SimpleNamespace(build_invocation=lambda **kwargs: InvocationPlan(
+        cmd=["fixture", "--model", kwargs["model"]], cwd=tmp_path,
+    ))
 
-    flash_proc = MagicMock()
-    flash_proc.poll = MagicMock(return_value=0)
-    flash_proc.returncode = 0
-    flash_proc.stdin = MagicMock()
-    flash_proc.stderr = MagicMock()
-    flash_proc.stderr.readline = MagicMock(return_value="")
-    flash_proc.stderr.close = MagicMock()
-    flash_proc.stdout = MagicMock()
-    flash_proc.stdout.readline = MagicMock(side_effect=["Flash model answer\n", ""])
-    flash_proc.stdout.close = MagicMock()
-    flash_proc.pid = 40404
-    _popen_proc_for_subprocess_run(primary_proc)
-    _popen_proc_for_subprocess_run(flash_proc)
+    def execute(**kwargs):
+        attempts.append((kwargs["agent_name"], kwargs["model"]))
+        is_agy = kwargs["agent_name"] == "agy"
+        return SimpleNamespace(
+            parse=ParseResult(
+                ok=is_agy, response="AGY model answer" if is_agy else "",
+                rate_limited=not is_agy, stderr_excerpt=None if is_agy else "429 quota",
+            ),
+            duration_s=0.1, returncode=0 if is_agy else 1,
+            kill_reason=None, stderr_text="", liveness_paths=[],
+        )
 
-    mock_popen = MagicMock(side_effect=[primary_proc, flash_proc])
-
-    with (
-        patch.dict(
-            "os.environ",
-            {
-                "GEMINI_AUTH_MODE": "api",
-                "GEMINI_API_KEY": "secret-key",
-                "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
-                # Pipe-mode mocks (see ladder-fallback test above). #2071.
-                "DELEGATE_DISABLE_PTY": "1",
-            },
-            clear=False,
-        ),
-        patch(
-            "agent_runtime.runner.has_headroom",
-            return_value=(True, ""),
-        ),
-        patch(
-            "agent_runtime.runner.write_record",
-        ),
-        patch(
-            "agent_runtime.runner.subprocess.Popen",
-            _agent_only_popen(mock_popen),
-        ),
-        patch(
-            "agent_runtime.runner._POLL_INTERVAL_S",
-            0.01,
-        ),
-    ):
-        result = invoke(
-            "gemini",
-            "hello",
-            mode="workspace-write",
-            cwd=tmp_path,
-            task_id="gemini-model-fallback",
-            entrypoint="runtime",
+    monkeypatch.setattr(runner, "_load_adapter", lambda name: adapter)
+    monkeypatch.setattr(runner, "has_headroom", lambda *args: (True, ""))
+    monkeypatch.setattr(runner, "_execute_invocation_plan", execute)
+    monkeypatch.setattr(runner, "_resolve_plan_telemetry", lambda **kwargs: SimpleNamespace(
+        model=kwargs["requested_model"], effort="high", cli_version="fixture",
+    ))
+    monkeypatch.setattr(runner, "_resolve_gemini_ladder_auth_modes", lambda config: ("oauth",))
+    with patch("agent_runtime.runner.write_record") as write_record:
+        result = runner._invoke_gemini_with_fallback(
+            agent_name="gemini", adapter=adapter, prompt="hello", mode="workspace-write",
+            cwd=tmp_path, model=PRIMARY_GEMINI_MODEL, task_id="gemini-model-fallback",
+            session_id=None, tool_config=None, entrypoint="runtime",
+            hard_timeout=300, stall_timeout=60,
         )
 
     assert result.ok is True
-    assert result.model == "gemini-3-flash-preview"
-    assert result.usage_record["model"] == "gemini-3-flash-preview"
-    attempted_models = [call.args[0][2] for call in mock_popen.call_args_list]
-    assert attempted_models == ["gemini-3.1-pro-high", "gemini-3-flash-preview"]
+    assert result.response == "AGY model answer"
+    assert result.model == AGY_GEMINI_MODEL
+    assert result.usage_record["model"] == AGY_GEMINI_MODEL
+    assert write_record.call_args.args[0]["model"] == AGY_GEMINI_MODEL
+    assert attempts == [("gemini", PRIMARY_GEMINI_MODEL), ("agy", AGY_GEMINI_MODEL)]
 
 
 def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
@@ -2702,8 +2671,6 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
     mock_popen = MagicMock(
         side_effect=[
             make_rate_limited_proc(50001),
-            make_rate_limited_proc(50002),
-            make_rate_limited_proc(50003),
         ]
     )
 
@@ -2742,13 +2709,14 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
             mode="workspace-write",
             cwd=tmp_path,
             task_id="gemini-rate-limited",
+            model="gemini-3.1-pro-preview",
             entrypoint="runtime",
         )
 
-    assert mock_popen.call_count == 3
+    assert mock_popen.call_count == 1
     written = mock_write.call_args.args[0]
     assert written["outcome"] == "rate_limited"
-    assert written["model"] == "gemini-2.5-pro"
+    assert written["model"] == "gemini-3.1-pro-preview"
 
 
 def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):

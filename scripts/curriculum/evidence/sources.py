@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.rag.config import VESUM_DB_PATH
+from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
 
 from . import codes, config, db_identity, tags
@@ -38,7 +39,6 @@ SOURCES_DB_SCHEME = "rows-v2"
 SOURCES_DB_META_SCHEME = db_identity.SOURCES_DB_META_SCHEME
 LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
-APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
 journal_mode_from_header = db_identity.journal_mode_from_header
 # VESUM uses noun/adj for pronouns; dmklinger uses pronoun (and particle for
 # determiners). Preserve the requested VESUM POS as the result key.
@@ -93,18 +93,33 @@ RECEIPT_EVIDENCE_STORES = {
 }
 
 
-def normalize_evidence_form(text: str) -> str:
-    """Fold case, stress and apostrophes for word identity, never lemmatization.
-
-    Whitespace, letters (including Ukrainian і/ї/й) and punctuation stay exact.
-    Case correctness belongs to the language judgement, not citation binding.
-    """
-    return normalize_spelling(text).replace("\u0301", "").replace("\u0300", "").casefold()
+def _normalize_text_evidence(text: str) -> str:
+    """Remove soft typesetting breaks, preserving spaces without a newline."""
+    return re.sub(r"\u00ad(?:[ \t]*\r?\n[ \t]*)?", "", normalize_evidence_form(text)).replace("\u2011", "-")
 
 
 def _contains_evidence_form(text: str, form: str) -> bool:
-    """Match a complete form/phrase, never a substring of another word."""
-    return bool(form and re.search(r"(?<![\w'-])" + re.escape(form) + r"(?![\w'-])", normalize_evidence_form(text)))
+    """Match a whole word or exact phrase independent of typesetting breaks.
+
+    Witnesses need at least two letters, including paradigm variants; standalone
+    one-letter options cannot bind text kinds. Longer function words can bind by
+    occurrence: this establishes identity, never their contextual correctness.
+    Strip soft hyphens, fold non-breaking hyphens, and try line-end hyphens
+    both joined and kept. Collapse whitespace in the witness and option so
+    phrase identity preserves adjacent words rather than PDF line wrapping.
+    """
+    text = _normalize_text_evidence(text)
+    line_end_hyphen = r"(?<=[^\W\d_])-[ \t]*\r?\n[ \t]*(?=[^\W\d_])"
+    texts = [re.sub(line_end_hyphen, replacement, text) for replacement in ("", "-")]
+    form = _normalize_text_evidence(form)
+    form = re.sub(r"\s+", " ", form)
+    return bool(
+        sum(char.isalpha() for char in form) >= 2
+        and any(
+            re.search(r"(?<![\w'-])" + re.escape(form) + r"(?![\w'-])", re.sub(r"\s+", " ", candidate))
+            for candidate in texts
+        )
+    )
 
 
 def is_alphabet_letter_gloss(row: dict) -> bool:
@@ -565,8 +580,14 @@ class Sources:
                                     numbers.get(str(row["entry_id"])),
                                     locations.get(row["source_location"]),
                                 } - {None}
+                                # Derived lookup keys are not source evidence.
+                                # Preserve cited-row digests across store versions.
+                                source_row = {
+                                    key: value for key, value in dict(row).items()
+                                    if key not in {"word_form_folded", "lemma_folded"}
+                                }
                                 for eid in matches:
-                                    result[eid].append(dict(row))
+                                    result[eid].append(source_row)
                 self._vesum_identity()
                 self._receipt_evidence.update(result)
         for eid in pending:
@@ -618,10 +639,11 @@ class Sources:
     ) -> SourceResult[dict[str, list[dict]]]:
         """Read attested analyses or paradigms using Unicode word identity.
 
-        SQLite NOCASE handles ASCII only. Use indexed exact lookups for the
-        given, casefolded, upper, title and capitalised candidates, then filter
-        with citation-witness normalization. Mixed-case VESUM forms missed by
-        these candidates fail closed. Cache within the checked static identity.
+        Prefer build-time indexed folded keys; retain the compatibility view's
+        marker exclusions and original four-column shape. Older stores use exact
+        given, casefolded, upper, title, capitalised and per-hyphen-part capitalised
+        candidates, then normalized filtering. Unreachable spellings in older
+        stores fail closed. Cache within the checked static identity.
         """
         requested = list(dict.fromkeys(values))
         digest, metadata = self._vesum_identity()
@@ -630,15 +652,25 @@ class Sources:
         column = "lemma" if paradigm else "word_form"
         if pending:
             with closing(open_readonly(self.vesum_db)) as conn:
+                folded_column = f"{column}_folded"
+                has_folded = folded_column in {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
                 for start in range(0, len(pending), BATCH_SIZE):
                     batch = pending[start : start + BATCH_SIZE]
-                    candidates = sorted({
+                    candidates = batch if has_folded else sorted({
                         candidate for value in batch
-                        for candidate in (value, value.casefold(), value.upper(), value.title(), value.capitalize())
+                        for candidate in (
+                            value, value.casefold(), value.upper(), value.title(), value.capitalize(),
+                            "-".join(part.capitalize() for part in value.split("-")),
+                        )
                     })
+                    slots = ','.join('?' for _ in candidates)
+                    condition = (
+                        f"{column} IN (SELECT {column} FROM forms_all WHERE {folded_column} IN ({slots}))"
+                        if has_folded else f"{column} IN ({slots})"
+                    )
                     rows = conn.execute(
                         f"SELECT word_form, lemma, pos, tags FROM forms "
-                        f"WHERE {column} IN ({','.join('?' for _ in candidates)}) "
+                        f"WHERE {condition} "
                         "ORDER BY word_form, lemma, pos, tags", candidates,
                     )
                     found = {value: [] for value in batch}
@@ -663,6 +695,11 @@ class Sources:
         lemmas, definition matches, or metadata witnesses. Binding establishes
         word identity, never correctness of the contextual language judgement.
         Only ULIF rows with status='ok' provide witnesses, for both judgements.
+        Text soft hyphens are stripped and line-end hyphens tried joined and
+        kept before matching. Standalone
+        one-letter options and one-letter paradigm witnesses cannot bind text;
+        longer function words can bind by occurrence. Multi-word options require
+        the exact phrase after whitespace collapse, never independent token matches.
         """
         fields = {
             "vesum": ("word_form", "lemma"),
@@ -677,7 +714,8 @@ class Sources:
         pending = {}
         for eid, text in dict.fromkeys(citations):
             kind = eid.partition(":")[0]
-            form = normalize_evidence_form(text)
+            is_text = kind in {"pravopys", "textbook"}
+            form = _normalize_text_evidence(text) if is_text else normalize_evidence_form(text)
             witnesses = [
                 normalize_evidence_form(row[field])
                 for row in resolved.raw[eid]
@@ -685,13 +723,14 @@ class Sources:
                 for field in fields.get(kind, ())
                 if isinstance(row.get(field), str)
             ]
-            is_text = kind in {"pravopys", "textbook"}
             supported = any(
                 _contains_evidence_form(value, form) if is_text else bool(form and value == form)
                 for value in witnesses
             )
             raw[eid, text] = supported
-            if not supported:
+            if not supported and (
+                not is_text or (sum(char.isalpha() for char in form) >= 2 and not any(char.isspace() for char in form))
+            ):
                 pending[eid, text] = (form, witnesses, is_text)
         analyses = self._receipt_vesum_rows(form for form, _, _ in pending.values()) if pending else None
         text_lemmas = {

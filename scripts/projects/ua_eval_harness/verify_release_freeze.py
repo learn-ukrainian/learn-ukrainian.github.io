@@ -31,6 +31,7 @@ from scripts.projects.ua_eval_harness.evaluate_model import (
     load_manifest,
     load_saved_responses,
 )
+from scripts.projects.ua_eval_harness.release_sources import frozen_source_path
 
 SCHEMA_VERSION = "ua_eval_release_freeze.v1"
 RELEASE_VERSION = "0.1.0"
@@ -144,8 +145,10 @@ def _read_jsonl(path: Path) -> list[dict[str, Any]]:
 
 
 def _frozen_artifact_path(path: Path) -> Path:
-    """Resolve the one archived runner; all other artifact paths stay exact."""
-    return ROOT / (HISTORICAL_RUNNER_SOURCE if path == RUNNER else path)
+    """Resolve archived execution sources and the release-owned VESUM lock."""
+    if path == RUNNER:
+        return ROOT / HISTORICAL_RUNNER_SOURCE
+    return frozen_source_path(ROOT, path)
 
 
 def _artifact(path: Path, role: str) -> dict[str, str]:

@@ -560,6 +560,9 @@ def extract_module_metadata(content: str) -> dict:
 
 def call_gemini_api(lesson_content: str, metadata: dict) -> dict | None:
     """Call Gemini API to evaluate content quality."""
+    from scripts.review.model_catalog import require_execution_model
+
+    require_execution_model("gemini-2.0-flash-exp", transport="google_api")
     try:
         import google.generativeai as genai
 
@@ -683,7 +686,18 @@ def check_content_quality(
         })
         return violations
 
-    evaluation = call_gemini_api(lesson_content, metadata)
+    from scripts.review.model_catalog import ModelCatalogError
+
+    try:
+        evaluation = call_gemini_api(lesson_content, metadata)
+    except ModelCatalogError as exc:
+        violations.append({
+            'type': 'CONTENT_QUALITY',
+            'severity': 'info',
+            'issue': f'LLM evaluation refused: {exc}',
+            'fix': 'Use an admitted AGY evaluation route before enabling LLM content quality checks'
+        })
+        return violations
 
     if evaluation is None:
         # LLM evaluation unavailable
@@ -694,10 +708,6 @@ def check_content_quality(
             'fix': 'Set API key in environment to enable content quality checks'
         })
         return violations
-
-    if evaluation is None:
-        return violations
-
 
     # Check overall score
     overall_score = evaluation.get('overall_score', 0)

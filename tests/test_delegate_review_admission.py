@@ -56,6 +56,113 @@ def _admit(args, monkeypatch, budget=None):
     return result, routing
 
 
+def test_9312_alias_explicit_model_uses_alias_resolved_identity(monkeypatch):
+    args = _args("--agent", "gemini", "--model", "gemini-3.1-pro-high", "--review-profile", "ukrainian")
+    (refusal, target), routing = _admit(args, monkeypatch)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("agy", "gemini-3.8-flash-high")
+    assert routing.substitution["source"] == "retired-cli"
+
+
+def test_review_alias_model_is_resolved_once_before_selection(monkeypatch):
+    calls = []
+    real = delegate._resolve_substitution_model
+
+    def capture(seat, model):
+        calls.append((seat, model))
+        return real(seat, model)
+
+    monkeypatch.setattr(delegate, "_resolve_substitution_model", capture)
+    args = _args("--agent", "gemini", "--model", "gemini-3.1-pro-high", "--review-profile", "ukrainian")
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None and target.recipient == "agy"
+    assert calls == [("agy", "gemini-3.1-pro-high")]
+
+
+def test_9312_budget_substitute_is_checked_for_its_own_deficit(monkeypatch, capsys):
+    budget = _budget(claude="near_cap", codex="cool")
+    budget["agents"]["codex"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    args = _args(
+        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
+        "--review-author-model", "composer-2.5", "--review-risk", "critical",
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal and "REVIEW_ROUTE_REFUSED" in refusal and "deficit" in refusal
+    assert target is None and routing.substitution is None
+    assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("subject", [
+    ("--owned-path", "scripts/agent_runtime/adapters/codex.py"),
+    ("--subject-seat", "codex"),
+    ("--subject-family", "openai"),
+])
+def test_9312_budget_substitute_excludes_governed_seat(monkeypatch, subject):
+    args = _args(
+        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
+        "--review-author-model", "composer-2.5", "--review-risk", "critical", *subject,
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap", codex="cool"))
+    assert refusal and "REVIEW_ROUTE_REFUSED" in refusal
+    assert target is None and routing.substitution is None
+
+
+def test_requested_reviewer_is_also_subject_excluded_before_budget(monkeypatch):
+    args = _args(
+        "--owned-path", "scripts/agent_runtime/adapters/codex.py",
+        "--review-author-model", "composer-2.5", "--review-risk", "critical",
+    )
+    (refusal, target), _ = _admit(args, monkeypatch)
+    assert refusal is None and target.recipient == "claude"
+
+
+@pytest.mark.parametrize("subject", [
+    ("--owned-path", "scripts/agent_runtime/adapters/base.py"),
+    ("--subject-seat", "unknown-seat"),
+    ("--subject-family", "unknown-family"),
+])
+def test_review_subject_ambiguity_or_invalid_identity_refuses_before_budget(monkeypatch, subject):
+    def fail():
+        pytest.fail("invalid subject must refuse before budget probe")
+
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", fail)
+    args = _args("--check-budget", *subject)
+    refusal, target = delegate._admit_dispatch_target(
+        args, agent=args.agent, trees=None,
+        route=delegate._dispatch_route(args, delegate._DispatchRouting(), language_lane=False, review_attempt=None),
+    )
+    assert refusal and "REVIEW_ROUTE_REFUSED" in refusal and target is None
+
+
+def test_9312_alias_without_model_records_only_the_alias(monkeypatch, capsys):
+    args = _args("--agent", "gemini", "--review-profile", "ukrainian")
+    args.model = None
+    (refusal, target), routing = _admit(args, monkeypatch)
+    assert refusal is None and target.recipient == "agy"
+    assert "REVIEW_IDENTITY_SUBSTITUTED" not in capsys.readouterr().err
+    assert routing.substitution["source"] == "retired-cli"
+    assert routing.substitution["requested_model"] is None
+
+
+def test_9312_ineligible_ukrainian_reviewer_has_no_code_substitution_hint():
+    with pytest.raises(ReviewAdmissionRefused) as refused:
+        resolve_and_admit(
+            ("grok",), model="grok-4.7", mode="read-only", review_dispatch=True, review_profile="ukrainian"
+        )
+    assert "--review-profile ukrainian" in str(refused.value)
+    assert "--review-author-model" not in str(refused.value)
+
+
+def test_9312_merge_heading_is_followed_by_landing_policy():
+    workflow = Path("agents_extensions/shared/rules/workflow.md").read_text(encoding="utf-8")
+    merge = workflow.split("## Merge policy — ready PRs must not sit", 1)[1]
+    assert merge.split("\n\n", 1)[1].startswith("The binding landing order")
+
+
 @pytest.mark.parametrize(
     "inputs",
     [
@@ -103,12 +210,11 @@ def test_same_family_requested_reviewer_takes_resolvers_eligible_seat(monkeypatc
 
 
 @pytest.mark.parametrize(
-    "risk,model", [("critical", "claude-opus-5-5"), ("medium", "claude-fable-5-1")]
+    "risk,model", [("high", "claude-fable-5-1"), ("medium", "claude-fable-5-1")]
 )
 @pytest.mark.parametrize("flags", [(), ("--check-budget",), ("--check-budget", "--force-agent")])
 def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk, model, flags):
-    # #9301 puts Fable 5.1 on the critical ladder; Opus remains an eligible
-    # explicit pin outside that ladder. Keep testing the off-ladder premise.
+    # Fable stays off every routine ladder; an explicit eligible pin is still admitted.
     args = _args(
         "--agent", "claude", "--model", model,
         "--review-author-model", "gpt-6.1-sol", "--review-risk", risk, *flags,
@@ -126,8 +232,8 @@ def test_trusted_eligible_off_ladder_reviewer_is_kept(monkeypatch, capsys, risk,
 
 def test_off_ladder_reviewer_is_substituted_when_budget_requires_it(monkeypatch, capsys):
     args = _args(
-        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
-        "--review-author-model", "composer-2.5", "--review-risk", "critical",
+        "--agent", "claude", "--model", "claude-fable-5-1", "--check-budget",
+        "--review-author-model", "composer-2.5", "--review-risk", "medium",
     )
     assert all(
         candidate.concrete_model != args.model
@@ -223,16 +329,45 @@ def test_review_budget_substitute_pins_resolver_model(monkeypatch):
     assert routing.substitution["actual_model"] == target.model
 
 
-def test_review_cannot_reselect_a_newly_chosen_seat_in_budget_deficit(monkeypatch):
+def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsys):
     budget = _budget()
     budget["agents"]["claude"]["codexbar"] = {
         "will_last_to_reset": False,
         "weekly_pace_delta_pct": 12.0,
         "weekly_expected_pct": 40.0,
     }
-    args = _args("--check-budget", "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical")
+    args = _args("--check-budget", "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical", "--dry-run")
     (refusal, target), _ = _admit(args, monkeypatch, budget)
-    assert "REVIEW_ROUTE_REFUSED" in refusal and target is None
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert "NOTE: REVIEW_BUDGET_RETAINED" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("inputs", [
+    (),
+    ("--review-author-model", "gpt-6.1-sol"),
+    ("--review-risk", "critical"),
+    ("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical"),
+])
+def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, capsys, inputs):
+    budget = _budget()
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    args = _args("--agent", "claude", "--model", "claude-opus-5-5", "--check-budget", *inputs)
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert routing.substitution is None
+    output = capsys.readouterr().err
+    assert "NOTE: REVIEW_BUDGET_RETAINED" in output
+    missing_inputs = not (args.review_author_model and args.review_risk)
+    assert ("Legacy calls without trusted author/risk inputs" in output) == missing_inputs
+    assert ("budget substitution requires --review-author-model and --review-risk (code profile only)" in output) == (
+        missing_inputs
+    )
 
 
 def test_explicit_reviewer_context_window_keeps_its_model(monkeypatch):
@@ -359,3 +494,34 @@ def test_branch_pin_is_exact_for_new_and_reused_worktrees(monkeypatch, tmp_path,
             delegate._resolve_worktree_base_sha(**kwargs)
     else:
         assert delegate._resolve_worktree_base_sha(**kwargs) == "a" * 40
+
+
+@pytest.mark.parametrize("lane", [
+    {"status": "near_cap"}, {"status": "hot"},
+    {"status": "cool", "health": {"healthy": False}},
+    {"status": "cool", "runtime": {"headroom_blocked": True}},
+    {"status": "cool", "scheduler": {"circuit_open": True}},
+])
+def test_pace_exception_never_overrides_hard_capacity_or_health(monkeypatch, lane):
+    budget = _budget(codex="cool")
+    budget["agents"]["claude"] = dict(lane, codexbar={
+        "will_last_to_reset": False, "weekly_pace_delta_pct": 12.0, "weekly_expected_pct": 40.0,
+    })
+    args = _args("--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
+                 "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical", "--dry-run")
+    (refusal, target), _ = _admit(args, monkeypatch, budget)
+    assert refusal and "REVIEW_ROUTE_REFUSED" in refusal
+    assert target is None
+
+
+def test_pace_deficit_prefers_available_cross_family_alternative(monkeypatch):
+    budget = _budget(codex="cool")
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False, "weekly_pace_delta_pct": 12.0, "weekly_expected_pct": 40.0,
+    }
+    args = _args("--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
+                 "--review-author-model", "composer-2.5", "--review-risk", "critical")
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
+    assert routing.substitution["actual_agent"] == "codex"

@@ -881,7 +881,9 @@ Post on the relevant GH issue explaining what was stuck and why.
 ## Dispatch handoff: GPT-6 Luna workers + fleet settle
 
 **Luna (`gpt-6-luna` @ high)** is a high-volume **bounded coding worker**, not a solo epic driver.
-Orchestrators keep acceptance (CF, merge, residual truth).
+Orchestrators keep acceptance (CF, merge, residual truth). Every Luna dispatch needs a complete
+GPT-6.1 Sol advisory envelope bound to it (`--advisory-task`; operator decision 2026-09-30, #9275);
+see `agents_extensions/shared/rules/fleet-driver-routing.md` §2.
 
 ### Briefing Luna
 Append [`docs/dispatch-briefs/luna-max-closeout-contract.md`](../dispatch-briefs/luna-max-closeout-contract.md)

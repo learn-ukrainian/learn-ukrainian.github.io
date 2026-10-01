@@ -129,9 +129,9 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
-| claude | claude-opus-5-5 | high | gpt-6.1-sol | xhigh |
-| codex | gpt-6.1-sol | high | gpt-6.1-sol | xhigh |
-| cursor | grok-4.7 | high | gpt-6.1-sol | xhigh |
+| claude | claude-opus-5-5 | high | gpt-6.1-sol | high |
+| codex | gpt-6.1-sol | high | gpt-6.1-sol | high |
+| cursor | grok-4.7 | high | gpt-6.1-sol | high |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
@@ -232,7 +232,7 @@ teaches the message-plane and cross-family review loop.
 A driver escalates instead of deciding solo when it hits: (1) an architecture/layout/process
 change, (2) a contested cross-family verdict, (3) a fragile fix whose right layer is unclear,
 (4) a high-risk route that would trip the `model_catalog.yaml` risk floor, or (5) a repo-wide
-safety interruption of another lane. Advisors for those calls: **Fable @ high, Astra @ xhigh**.
+safety interruption of another lane. Advisors for those calls: **Fable @ high, Astra @ high**.
 
 Everything else the driver runs to completion and reports past-tense — no "should I?" menus.
 

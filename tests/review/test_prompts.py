@@ -18,6 +18,7 @@ import copy
 import hashlib
 import json
 import re
+import shutil
 from pathlib import Path
 
 import pytest
@@ -186,6 +187,28 @@ def _render_cache_key(
     return (manifest_bytes, tuple(pin_bytes), templates, template_name, str(root), review_id, attempt_id)
 
 
+def _refused_before_read(manifest_source: object, repo_root: object) -> bool:
+    """True when ``pin_refusals`` rejects the manifest without reading a pin.
+
+    The activity-data read runs only after every pin has passed, so a refusal
+    here has not touched a pinned file. A path manifest is read so it can be judged.
+    """
+    root = Path(repo_root)
+    try:
+        if isinstance(manifest_source, dict):
+            doc = manifest_source
+        elif isinstance(manifest_source, (str, Path)):
+            path = Path(manifest_source)
+            if not path.is_absolute():
+                path = root / path
+            doc = yaml.safe_load(path.read_bytes().decode("utf-8"))
+        else:
+            return False
+        return isinstance(doc, dict) and bool(pin_refusals(doc, root))
+    except (OSError, UnicodeError, yaml.YAMLError, TypeError, ValueError):
+        return False
+
+
 @pytest.fixture(scope="module", autouse=True)
 def _cache_repeated_exact_renders_and_template_lint():
     """Reuse a render and the static template lint when every input byte matches.
@@ -195,17 +218,27 @@ def _cache_repeated_exact_renders_and_template_lint():
     so a rewrite cannot be served from the previous text.
     """
     from scripts.review.prompts import check as prompt_check
+    from scripts.review.prompts import render as prompt_render
 
-    original_render = prompt_check.render
+    # ``render_prompt`` looks up ``render`` in the render module. ``check_prompt``
+    # looks up the name it imported. Both must share this cache, or each test pays
+    # the render twice.
+    original_render = prompt_render.render
     original_lint = prompt_check._lint_templates
     renders: dict[tuple, object] = {}
     lint_static: dict[tuple, tuple[list[str], list[str]]] = {}
 
     def cached_render(manifest_source, template_name=None, **kwargs):
+        # An ineligible manifest is refused before any pin is read. Hashing the
+        # pins for a cache key would be that read, so skip the key and let the
+        # real render raise.
+        repo_root = kwargs.get("repo_root")
+        if repo_root is not None and _refused_before_read(manifest_source, repo_root):
+            return original_render(manifest_source, template_name, **kwargs)
         key = _render_cache_key(
             manifest_source,
             template_name,
-            kwargs.get("repo_root"),
+            repo_root,
             kwargs.get("prompts_dir"),
             kwargs.get("review_id"),
             kwargs.get("attempt_id"),
@@ -245,11 +278,13 @@ def _cache_repeated_exact_renders_and_template_lint():
             )
 
     prompt_check.render = cached_render
+    prompt_render.render = cached_render
     prompt_check._lint_templates = cached_lint
     try:
         yield
     finally:
         prompt_check.render = original_render
+        prompt_render.render = original_render
         prompt_check._lint_templates = original_lint
 
 
@@ -299,22 +334,18 @@ def _write_module_manifest(root: Path, own_slug: str) -> None:
     path.write_text(yaml.safe_dump({"levels": {"a1": {"type": "core", "modules": modules}}}), encoding="utf-8")
 
 
-def _setup_lesson_fixture(root: Path, monkeypatch: pytest.MonkeyPatch, lesson_n: int = 2) -> tuple[Path, dict, str]:
+def _build_lesson_fixture(root: Path, lesson_n: int) -> tuple[Path, dict, str]:
     """A real lesson manifest from the engine's three-lesson fixture (lesson 3 is the recap)."""
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = lesson_fixture(root)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
     doc, digest = _write(level, slug, lesson_n, state_dir, plan_dir, evidence_dir, page_dir, root)
     _write_module_manifest(root, slug)
     return state_dir / f"lesson-{lesson_n}.manifest.yaml", doc, digest
 
 
-def _setup_plan_fixture(
-    root: Path, monkeypatch: pytest.MonkeyPatch, *, v1_module: bool = False
-) -> tuple[Path, dict, str]:
+def _build_plan_fixture(root: Path, *, v1_module: bool = False) -> tuple[Path, dict, str]:
     # git_repo stays on: validate_provisional runs check_append_only, which
     # needs `git merge-base HEAD origin/main`. A gitless tree fails that check.
     env = build_env(root)
-    monkeypatch.setattr(plan_manifest, "verify_pack_strict", fake_verify())
     assert validate_provisional(env) == 0
     if v1_module:
         write_v1_module(env)
@@ -322,6 +353,66 @@ def _setup_plan_fixture(
     manifest_path = env.state_dir / "plan-review.manifest.yaml"
     _write_module_manifest(root, SLUG)
     return manifest_path, doc, digest
+
+
+#: Built once per module: (tree, manifest path relative to that tree, document, digest).
+_LESSON_TEMPLATE: dict[int, tuple[Path, Path, dict, str]] = {}
+_PLAN_TEMPLATE: dict[bool, tuple[Path, Path, dict, str]] = {}
+
+
+def _copy_template(
+    root: Path, template: tuple[Path, Path, dict, str]
+) -> tuple[Path, dict, str]:
+    source, relative, doc, digest = template
+    shutil.copytree(source, root, dirs_exist_ok=True, symlinks=True)
+    return root / relative, copy.deepcopy(doc), digest
+
+
+@pytest.fixture(scope="module", autouse=True)
+def _reuse_built_prompt_fixtures(tmp_path_factory: pytest.TempPathFactory):
+    """Build each deterministic lesson and plan tree once and copy it per test.
+
+    The bytes do not depend on the directory they are written in. A test that
+    edits its copy cannot change the template or another test's tree.
+    """
+    original_state = manifest.planned_state
+    original_verify = plan_manifest.verify_pack_strict
+    manifest.planned_state = lambda *a, **kw: _fake_state(LEARNER_STATE)
+    plan_manifest.verify_pack_strict = fake_verify()
+    try:
+        for lesson_n in (2, 3):
+            tree = tmp_path_factory.mktemp(f"lesson-template-{lesson_n}")
+            manifest_path, doc, digest = _build_lesson_fixture(tree, lesson_n)
+            _LESSON_TEMPLATE[lesson_n] = (tree, manifest_path.relative_to(tree), doc, digest)
+        for v1_module in (False, True):
+            tree = tmp_path_factory.mktemp(f"plan-template-{int(v1_module)}")
+            manifest_path, doc, digest = _build_plan_fixture(tree, v1_module=v1_module)
+            _PLAN_TEMPLATE[v1_module] = (tree, manifest_path.relative_to(tree), doc, digest)
+    finally:
+        manifest.planned_state = original_state
+        plan_manifest.verify_pack_strict = original_verify
+    yield
+    _LESSON_TEMPLATE.clear()
+    _PLAN_TEMPLATE.clear()
+
+
+def _setup_lesson_fixture(root: Path, monkeypatch: pytest.MonkeyPatch, lesson_n: int = 2) -> tuple[Path, dict, str]:
+    """A real lesson manifest from the engine's three-lesson fixture (lesson 3 is the recap)."""
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state(LEARNER_STATE))
+    template = _LESSON_TEMPLATE.get(lesson_n)
+    if template is not None:
+        return _copy_template(root, template)
+    return _build_lesson_fixture(root, lesson_n)
+
+
+def _setup_plan_fixture(
+    root: Path, monkeypatch: pytest.MonkeyPatch, *, v1_module: bool = False
+) -> tuple[Path, dict, str]:
+    monkeypatch.setattr(plan_manifest, "verify_pack_strict", fake_verify())
+    template = _PLAN_TEMPLATE.get(v1_module)
+    if template is not None:
+        return _copy_template(root, template)
+    return _build_plan_fixture(root, v1_module=v1_module)
 
 
 # ---------------------------------------------------------------------------
@@ -1266,14 +1357,16 @@ def test_any_appended_text_fails_the_exact_render(tmp_path, monkeypatch):
     manifest_path, _doc, _ = _setup_lesson_fixture(tmp_path, monkeypatch, lesson_n=2)
     rendered, _sha, files_read = render_prompt(manifest_path, repo_root=tmp_path)
 
+    clean = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert clean.passed, clean.errors
     for appended, payload in _LESSON_APPENDS.items():
-        clean = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
-        assert clean.passed, (appended, clean.errors)
         res = check_prompt(rendered + payload, manifest_path, repo_root=tmp_path, files_read=files_read)
         assert not res.passed and any(err.startswith("prompt_not_exact_render") for err in res.errors), (
             appended,
             res.errors,
         )
+    again = check_prompt(rendered, manifest_path, repo_root=tmp_path, files_read=files_read)
+    assert again.passed, again.errors
 
 
 def test_altered_truncated_or_prefixed_prompts_fail_the_exact_render(tmp_path, monkeypatch):

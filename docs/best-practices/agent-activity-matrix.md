@@ -1,6 +1,6 @@
 # Agent activity matrix
 
-> **Status:** v1.10 — active routing refreshed 2026-09-29 for #9230. Codex uses GPT-6.1 Sol (`gpt-6.1-sol`) @ high for coding and review, and @ xhigh for the Astra advisory seat (hard advisory judgment), and Luna @ high for routine bounded work and scouting. Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8 Flash handles Ukrainian and well-defined work. Historical bakeoff SCORE cells retain the model/version used in each evaluation and are not active routing instructions; current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. See §10 Provenance for version history.
+> **Status:** v1.11 — active routing refreshed 2026-10-01 for #9394. Opus / Sol first for reviews, critiques, design input and Ukrainian work; Fable / Astra last resort. The mandatory #9275 Sol envelope is unchanged. Codex uses GPT-6.1 Sol (`gpt-6.1-sol`) @ high for coding and review, and ordinary advice @ high (Astra last resort), and Luna @ high for routine bounded work and scouting. Claude Opus 5.5 handles hard Claude-lane coding where applicable. Gemini 3.8 Flash handles Ukrainian and well-defined work. Historical bakeoff SCORE cells retain the model/version used in each evaluation and are not active routing instructions; current machine-enforced quality floors and ordered peer tiers live in `scripts/config/model_catalog.yaml`. See §10 Provenance for version history.
 > **Purpose:** one canonical place where a task type maps to *primary agent* + *runner-ups* + *eval metric* + *last verified* + *known weakness* + *known strength*. Replaces gut-routing.
 > **Audience:** dual — agents read the JSON projection at `/api/activity-matrix` (future endpoint), humans read this markdown.
 > **Cadence:** every cell has a `last_verified` date. If older than 30 days, the cell is stale and a re-bakeoff should be scheduled before relying on it.
@@ -26,11 +26,11 @@ Each cell carries:
 
 | Agent | Sub-models in use | Auth lane | Cost lane | Status |
 | --- | --- | --- | --- | --- |
-| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (advisor / authority seat; native Claude first, pinned Cursor fallback only), Sonnet 5.5 (strong practical) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Fable 5.1 handles advisor turns and Ukrainian-specific linguistic judgment; Sonnet handles routine Claude-lane work. |
-| **Codex** ⭐ | GPT-6.1 Sol (coding and review @ high; hard advisory @ xhigh), Luna (routine bounded work and scout @ high) | Native Codex CLI | Metered | GPT-6.1 Sol handles advanced coding and adversarial review and holds the Astra seat for hard consequential advisory judgment; Luna handles bounded routine implementation and scouting. |
-| **agy** | Gemini 3.8 Flash High | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian review and well-defined implementation tasks to Flash with a complete one-unit brief and acceptance criteria. Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
+| **Claude** ⭐ | Opus 5.5 (default Claude model + driver seat @ high, operator 2026-09-22), Fable 5.1 (last-resort advisor / authority seat; native Claude first, pinned Cursor fallback only), Sonnet 5.5 (strong practical) | Native Claude CLI; `start-claude-driver.sh` pins `claude-opus-5-5[1m]`; selected Claude models also appear in Cursor | Metered; interactive cap shared with user sessions | Opus 5.5 takes hard Claude-lane coding, architecture, and deep code review where relevant; Opus handles advice and Ukrainian judgment first, Fable 5.1 last resort; Sonnet handles routine Claude-lane work. |
+| **Codex** ⭐ | GPT-6.1 Sol (coding and review @ high; hard advisory @ high), Luna (routine bounded work and scout @ high) | Native Codex CLI | Metered | GPT-6.1 Sol handles advanced coding and adversarial review and handles ordinary advice first (Astra last resort); Luna handles bounded routine implementation and scouting, always under a complete Sol advisory envelope (`--advisory-task`; operator decision 2026-09-30, #9275). |
+| **agy** | Gemini 3.8 Flash High | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | Metered | Route Ukrainian review and well-defined implementation tasks to Flash with a complete one-unit brief and acceptance criteria. A Flash dispatch not classified Ukrainian authoring or review is the bounded fallback and needs a Sol advisory envelope (#9275). Code review follows `model-assignment.md` Code review row. The orchestrator owns sequencing; AGY does not self-decompose into serial micro-PRs. |
 | **DeepSeek** | `deepseek-v4.1-flash` catalog identity only | Historical transport evidence | Not an eligible route | Excluded from dispatch and review. |
-| **Grok** | **Grok 4.7** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active strong coding/review lane.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
+| **Grok** | **Grok 4.7** via native grok CLI (`scripts/delegate.py dispatch --agent grok`, alias `--agent grok-build`) | Native Grok CLI only for active routing | Subscription; CodexBar window | **Active coding lane; never judges code or infra.** Never route active Grok work through Hermes; `grok-hermes` is a historical compatibility seat, not a fallback. |
 | *Grok Bot (not a seat)* | Cursor/xAI cloud teammate (`app/cursor`) — **external QA observer only** | Not `delegate.py`; no registry adapter; never `--agent grok-bot` | — | Files labeled GitHub issues/comments for drivers to consume. See [`docs/runbooks/grok-bot-qa-observer.md`](../runbooks/grok-bot-qa-observer.md). |
 | **Kimi** (**keep** — operator 2026-08-08) | **`kimi-code/k3-256k`** everyday fast; **`kimi-code/k3`** @ high/max complex coding only | Native Kimi Code CLI OAuth: `delegate.py dispatch --agent kimi` | Subscription; CodexBar 5h + weekly | **First-class.** Split tiers so full k3 is not burned on routine. Web, UI and backend coding only (`workspace-write` on allowlisted paths); never a reviewer, CF gate, consult or language seat. |
 | **cursor** | `grok-4.7` (dispatch default; `--model grok-4.7-high` for mechanical work) · Composer 2.5 (pinned when family independence matters) · Auto only for a well-defined coding dispatch (owned paths, PASS DoR card; operator decision 2026-09-30) | `scripts/delegate.py dispatch --agent cursor` / `ask-cursor` (pins `grok-4.7` or `composer-2.5`) | Metered monthly pools; unused resets | **First-class code/infra worker.** First pick for mechanical + ordinary infra/code implement when fit allows; the driver seat, review, design, consults and recon never run Auto; never `auto` as formal CF identity. `concurrency_limit: 1`. Not a language seat. |
@@ -216,9 +216,9 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
-| **Primary** | DeepSeek-pro hermes | uses `sources` MCP proactively (verify_words×N, query_cefr_level, russian_shadow); PR #2107 shipped, PR #2112 validated write-mode | 2026-05-17 | PRs #2107, #2112 | New primary as of 2026-05-17. |
-| Runner-up 1 | Claude Opus xhigh | "fast pass" | ongoing | MEMORY #M-0 | Inline by orchestrator for ad-hoc verification. |
-| Runner-up 2 | DeepSeek-flash | "cheap" pass | ongoing | MEMORY #M-0 | When budget is tight. |
+| Historical result | DeepSeek-pro hermes | uses `sources` MCP proactively (verify_words×N, query_cefr_level, russian_shadow); PR #2107 shipped, PR #2112 validated write-mode | 2026-05-17 | PRs #2107, #2112 | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
+| Historical result | Claude Opus xhigh | "fast pass" | ongoing | MEMORY #M-0 | Historical observation; current Ukrainian review follows `model-assignment.md`. |
+| Historical result | DeepSeek-flash | "cheap" pass | ongoing | MEMORY #M-0 | Historical probe only; DeepSeek is excluded from dispatch, implementation and review. |
 
 ---
 
@@ -227,7 +227,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Primary (routine)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
-| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request); Codex/Claude high for higher stakes; Astra advisory xhigh. |
+| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request); Codex/Claude high for higher stakes; Opus / Sol advice first, Astra last resort. |
 | Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
 | Runner-up 2 | Claude inline | when orchestrator IS Claude | ongoing | same | The Q&A is me; no round-trip. |
 
@@ -492,6 +492,9 @@ Total bakeoff cost to close all current ❓ slots: **~$50-80** spread across 5 d
 ---
 
 ## 10. Provenance
+
+- v1.11: 2026-10-01 (#9394). Opus / Sol first for review, critique, design and
+  Ukrainian work; Fable / Astra last resort. Grok never judges. #9275 unchanged.
 
 - v1.10: 2026-09-29 (#9230). GPT-6.1 Sol is the only Sol and holds the former GPT-6
   Astra advisory seat; `gpt-6-sol` and `gpt-6-astra` are not routable. Luna unchanged.

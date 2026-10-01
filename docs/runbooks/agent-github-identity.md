@@ -19,7 +19,7 @@ service as:
 
 ```bash
 export LU_AGENT_GITHUB_APP_ID='…'
-export LU_AGENT_GITHUB_APP_PRIVATE_KEY='<configured signing material>'
+export LU_AGENT_GITHUB_APP_PRIVATE_KEY='<PKCS#8 PEM-encoded private key>'
 export LU_AGENT_GITHUB_APP_INSTALLATION_ID='…'
 ```
 

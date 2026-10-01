@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.orchestration import task_identity, task_lifecycle
+from scripts.orchestration import task_closeout, task_identity, task_lifecycle
 
 NOW = "2026-07-16T10:00:00Z"
 HEAD = "a" * 40
@@ -132,7 +132,7 @@ def _ready_evidence(ledger: dict) -> dict:
     )
 
 
-def _behavior_receipt_reference(tmp_path: Path) -> dict:
+def _behavior_receipt_reference(tmp_path: Path, *, receipt_updates: dict | None = None) -> dict:
     input_sha256 = "c" * 64
     receipt = {
         "schema_version": "code-review-receipt.v1",
@@ -153,7 +153,9 @@ def _behavior_receipt_reference(tmp_path: Path) -> dict:
         },
         "final_disposition": "clean",
         "exit_code": 0,
+        "error": None,
     }
+    receipt.update(receipt_updates or {})
     path = (tmp_path / "behavior-proof-receipt.json").resolve()
     receipt_bytes = (json.dumps(receipt, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
     path.write_bytes(receipt_bytes)
@@ -164,6 +166,32 @@ def _behavior_receipt_reference(tmp_path: Path) -> dict:
             "input_sha256": input_sha256,
             "target_sha": HEAD,
         }
+    }
+
+
+def _approved_actionable_receipt() -> dict:
+    return {
+        "final_disposition": "actionable",
+        "exit_code": 1,
+        "error": None,
+        "reviewer_payload": {
+            "overall": {"correctness": "correct"},
+            "finding_ids": ["F001", "F002"],
+        },
+        "findings": [
+            {
+                "id": "F001",
+                "outcome": "verified",
+                "disposition": "in_scope_blocker",
+                "disposition_rationale": "Acceptance record fulfilled without changing the head.",
+            },
+            {
+                "id": "F002",
+                "outcome": "verified",
+                "disposition": "follow_up",
+                "disposition_rationale": "Non-blocking hardening has a follow-up owner.",
+            },
+        ],
     }
 
 
@@ -505,6 +533,220 @@ def test_changed_behavior_receipt_fails_digest_validation(tmp_path: Path) -> Non
     ledger = _add(ledger, "AC-IMPL", "behavior_proof", details=reference)
     receipt_path = Path(reference["behavior_proof_receipt"]["receipt_path"])
     receipt_path.write_text("{}\n", encoding="utf-8")
+
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "digest" in " ".join(result["hard_blockers"])
+
+
+def test_approved_nonblocking_behavior_receipt_preserves_findings_and_snapshot(tmp_path: Path) -> None:
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=_approved_actionable_receipt())
+    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    original_bytes = path.read_bytes()
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL",
+        "behavior_proof",
+        details=reference,
+    )
+    original_ledger = deepcopy(ledger)
+
+    updated, receipt, replayed = task_lifecycle.reconcile(ledger, _observation(_body()), now=NOW)
+
+    assert receipt["state"] == "CI_PASSED"
+    assert not receipt["hard_blockers"]
+    assert replayed is False
+    assert updated["ac_snapshot"] == original_ledger["ac_snapshot"]
+    assert updated["evidence"] == original_ledger["evidence"]
+    assert ledger == original_ledger
+    assert path.read_bytes() == original_bytes
+
+
+@pytest.mark.parametrize(
+    ("field_path", "value"),
+    [
+        (("final_disposition",), "clean"),
+        (("final_disposition",), "incomplete"),
+        (("exit_code",), 0),
+        (("exit_code",), 2),
+        (("reviewer_payload", "overall", "correctness"), "incorrect"),
+        (("reviewer_payload", "overall", "correctness"), "uncertain"),
+        (("reviewer_payload",), None),
+        (("reviewer_payload", "overall"), None),
+        (("reviewer_payload", "finding_ids"), ["F001"]),
+        (("reviewer_payload", "finding_ids"), ["F001", "F003"]),
+        (("findings", 1, "id"), "F003"),
+        (("reviewer_payload", "finding_ids"), None),
+        (("findings",), None),
+        (("findings", 1), None),
+        (("findings", 1, "outcome"), "quote_missing"),
+        (("findings", 1, "outcome"), None),
+        (("findings", 1, "disposition"), None),
+        (("findings", 1, "disposition"), " "),
+        (("findings", 1, "disposition_rationale"), None),
+        (("findings", 1, "disposition_rationale"), " "),
+        (("findings", 1, "disposition"), "stop_and_escalate"),
+        (("findings", 1, "disposition"), "STOP_AND_ESCALATE"),
+        (("findings", 1, "disposition"), "stop_and_escalate "),
+        (("findings", 1, "disposition"), "whatever"),
+        (("error",), "envelope_proof_failed:tests_failed"),
+        (("error",), ""),
+        (("target", "head_sha"), "d" * 40),
+        (("target", "input_sha256"), "d" * 64),
+        (("reviewer", "family"), "openai"),
+        (("schema_version",), "other-receipt.v1"),
+        (("behavior_proof", "schema_version"), "other-proof.v1"),
+        (("behavior_proof", "source_aware", "status"), "fail"),
+        (("behavior_proof", "source_blind", "status"), "fail"),
+        (("behavior_proof", "source_aware", "clauses"), []),
+        (("behavior_proof", "source_blind", "clauses"), []),
+    ],
+    ids=[
+        "clean-exit-one", "incomplete", "actionable-exit-zero", "actionable-exit-two",
+        "incorrect", "uncertain", "missing-payload", "missing-overall",
+        "omitted-finding-id", "mismatched-finding-id", "mismatched-receipt-id", "missing-payload-ids",
+        "missing-findings", "malformed-finding", "unverified-second-finding",
+        "missing-outcome", "missing-disposition", "blank-disposition",
+        "missing-rationale", "blank-rationale", "stop-and-escalate",
+        "mixed-case-disposition", "padded-disposition", "unknown-disposition",
+        "forged-correct-with-error", "non-null-empty-error", "stale-target",
+        "stale-fingerprint", "same-family", "noncanonical-receipt", "noncanonical-proof",
+        "forged-correct-aware-failure", "forged-correct-blind-failure",
+        "unbound-aware", "unbound-blind",
+    ],
+)
+def test_actionable_behavior_receipt_refuses_each_failed_clause(
+    tmp_path: Path, field_path: tuple, value: object,
+) -> None:
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=_approved_actionable_receipt())
+    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    receipt = json.loads(path.read_bytes())
+    entry = receipt
+    for key in field_path[:-1]:
+        entry = entry[key]
+    entry[field_path[-1]] = value
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL", "behavior_proof", details=reference,
+    )
+
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
+    assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
+
+
+def test_actionable_behavior_receipt_without_findings_is_refused(tmp_path: Path) -> None:
+    receipt = _approved_actionable_receipt()
+    receipt["findings"] = []
+    receipt["reviewer_payload"]["finding_ids"] = []
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL", "behavior_proof", details=reference,
+    )
+
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
+    assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
+
+
+@pytest.mark.parametrize("actionable", [False, True], ids=["clean", "actionable"])
+def test_behavior_receipt_without_error_key_is_refused(tmp_path: Path, actionable: bool) -> None:
+    reference = _behavior_receipt_reference(
+        tmp_path, receipt_updates=_approved_actionable_receipt() if actionable else None,
+    )
+    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    receipt = json.loads(path.read_bytes())
+    del receipt["error"]
+    receipt_bytes = (json.dumps(receipt) + "\n").encode()
+    path.write_bytes(receipt_bytes)
+    reference["behavior_proof_receipt"]["receipt_sha256"] = "sha256:" + hashlib.sha256(receipt_bytes).hexdigest()
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL", "behavior_proof", details=reference,
+    )
+
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
+    assert any("behavior-proof" in blocker for blocker in result["hard_blockers"])
+
+
+def test_clean_behavior_receipt_with_error_is_refused(tmp_path: Path) -> None:
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates={"error": "runner failed"})
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL", "behavior_proof", details=reference,
+    )
+
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
+
+
+def test_forged_correct_without_receipt_finding_id_is_refused(tmp_path: Path) -> None:
+    receipt = _approved_actionable_receipt()
+    del receipt["findings"][1]["id"]
+    receipt["reviewer_payload"]["finding_ids"] = ["F001", None]
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=receipt)
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL", "behavior_proof", details=reference,
+    )
+
+    result = task_lifecycle.evaluate(ledger, _observation(_body()))
+
+    assert result["state"] == "BLOCKED_WITH_RECEIPT"
+    assert "behavior_proof" not in result["valid_evidence"]["AC-IMPL"]
+
+
+def test_closeout_cli_reconciles_original_actionable_receipt(
+    tmp_path: Path, capsys: pytest.CaptureFixture,
+) -> None:
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=_approved_actionable_receipt())
+    receipt_path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    receipt_bytes = receipt_path.read_bytes()
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL", "behavior_proof", details=reference,
+    )
+    state_file = tmp_path / "lifecycle.json"
+    task_lifecycle.write_lifecycle(state_file, ledger)
+    observation_file = tmp_path / "observation.json"
+    observation_file.write_text(json.dumps(_observation(_body())), encoding="utf-8")
+
+    code = task_closeout.main([
+        "reconcile", "--state-file", str(state_file),
+        "--observation-file", str(observation_file), "--now", NOW,
+    ])
+
+    assert code == 0
+    output = json.loads(capsys.readouterr().out)
+    assert output["receipt"]["state"] == "CI_PASSED"
+    assert output["receipt"]["hard_blockers"] == []
+    persisted = task_lifecycle.load_lifecycle(state_file)
+    assert persisted["current_state"] == "CI_PASSED"
+    assert persisted["ac_snapshot"] == ledger["ac_snapshot"]
+    assert persisted["evidence"] == ledger["evidence"]
+    assert receipt_path.read_bytes() == receipt_bytes
+
+
+def test_actionable_behavior_receipt_changed_bytes_fail_digest_validation(tmp_path: Path) -> None:
+    reference = _behavior_receipt_reference(tmp_path, receipt_updates=_approved_actionable_receipt())
+    path = Path(reference["behavior_proof_receipt"]["receipt_path"])
+    path.write_bytes(path.read_bytes() + b"\n")
+    ledger = _add(
+        _ready_evidence(_ledger(behavior_proof=True)),
+        "AC-IMPL", "behavior_proof", details=reference,
+    )
 
     result = task_lifecycle.evaluate(ledger, _observation(_body()))
 

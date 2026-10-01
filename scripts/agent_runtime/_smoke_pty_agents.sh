@@ -64,8 +64,8 @@ sys.path.insert(0, str(repo_root / "scripts"))
 
 MODEL_BY_AGENT = {
     "codex":    None,
-    "gemini":   "gemini-3-flash-preview",
-    "claude":   "claude-haiku-4-5-20251001",
+    "gemini":   "gemini-3.8-flash-high",
+    "claude":   "claude-sonnet-5-5",
     "deepseek": "deepseek-v4.1-flash",
     "grok":     None,
 }

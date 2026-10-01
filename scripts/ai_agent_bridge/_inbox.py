@@ -19,9 +19,9 @@ from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
+from batch_gemini_config import FLASH_MODEL, PRO_MODEL
 
-# Gemini capacity cascade: Pro → Flash → Flash-Lite. When a 429 /
+# Gemini capacity cascade: Pro → Flash. When a 429 /
 # capacity error comes back for one model, we retry the same prompt on
 # the next-smaller one before giving up. See #1231 / #1234 for the
 # original cascade design. This mapping is authoritative for
@@ -29,7 +29,6 @@ from batch_gemini_config import FLASH_LITE_MODEL, FLASH_MODEL, PRO_MODEL
 # extend the cascade.
 _GEMINI_CAPACITY_CASCADE: dict[str, str] = {
     PRO_MODEL: FLASH_MODEL,
-    FLASH_MODEL: FLASH_LITE_MODEL,
 }
 
 

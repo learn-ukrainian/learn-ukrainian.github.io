@@ -57,7 +57,7 @@ def test_governor_prompt_keeps_sol_bounded_and_v2_accountable() -> None:
 
     assert "Run on the native Codex CLI as `gpt-6.1-sol` at `high`" in prompt
     assert "summoned supervisor, not a resident polling loop" in prompt
-    assert "Escalate Sol to `xhigh` only for one concrete" in prompt
+    assert "Keep Sol at `high`, including advisory and escalation turns" in prompt
     assert prompt.count("list_agents") >= 3
     assert "native `agents.list_agents` and `agents.spawn_agent` tools" in prompt
     assert "healthy receipt applies only to its exact `model`" in prompt

@@ -1,5 +1,10 @@
 """Record a review attempt (#8430 r4, R2b-A): validate a return, then write everything that follows from it.
 
+The raw return must match the bound task's whole saved result (#9025). A bare
+YAML mapping is kept unchanged; otherwise one yaml/yml fenced mapping is
+extracted, and only that mapping (with any prompt-hash attestation) is saved.
+Missing, multiple or unusable YAML fences refuse before anything is recorded.
+
 ``python -m scripts.review.record <review.yaml> --manifest ... --lesson ... --ledger ...
 --task-id ...`` runs the active validator in-process (``validate_review``; nothing of its
 rejections is re-implemented), then:
@@ -81,7 +86,7 @@ from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.review import findings_db, fixloop, second_seat
 from scripts.review.seeds import manifest as seed_manifest
-from scripts.review.validate.validate import validate_review
+from scripts.review.validate.validate import ReviewReturnError, extract_review_yaml, validate_review
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TREE = "curriculum/l2-uk-en"
@@ -97,6 +102,7 @@ SEED_ID_UNRECOGNISED = "seed_id_unrecognised"
 SEED_UNSUPPORTED = "seed_unsupported"
 BUDGET_TERMINAL = "budget_terminal"
 PROMPT_SHA256_UNATTESTABLE = "prompt_sha256_unattestable"
+REVIEW_RETURN_TASK_MISMATCH = "review_return_task_mismatch"
 
 
 class RecordError(Exception):
@@ -248,6 +254,31 @@ def _carries_placeholder(data: bytes) -> bool:
     return isinstance(reviewer, dict) and reviewer.get("prompt_sha256") == PROMPT_SHA_PLACEHOLDER
 
 
+def _verify_task_return(
+    data: bytes, task_id: str, tasks_dir: Path, *, review_id: str, attempt_id: str, manifest_sha256: str
+) -> None:
+    """Match the raw return to the parent-saved result and its terminal dispatch hash."""
+    try:
+        task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
+        bound = {"review_id": review_id, "attempt_id": attempt_id, "manifest_sha256": manifest_sha256}
+        saved_path = Path(tasks_dir) / f"{task_id}.result"
+        matched = (
+            task.get("review_attempt") == bound
+            and task.get("status") == "done"
+            and isinstance(task.get("result_file"), str)
+            and Path(task["result_file"]).resolve() == saved_path.resolve()
+            and task.get("result_sha256") == hashlib.sha256(data).hexdigest()
+            and saved_path.read_bytes() == data
+        )
+    except (OSError, ValueError, TypeError, AttributeError):
+        matched = False
+    if not matched:
+        raise RecordError(
+            "the review return is not the bound task's saved result; nothing was recorded and the attempt id is unspent",
+            REVIEW_RETURN_TASK_MISMATCH,
+        )
+
+
 def attested_return(
     data: bytes,
     *,
@@ -259,14 +290,26 @@ def attested_return(
     attempt_id: str,
     manifest_sha256: str,
 ) -> bytes:
-    """The return with its prompt hash attested; a placeholder that cannot be attested refuses (nothing is recorded).
+    """Extract the mapping and attest its prompt hash, binding the original whole return first.
 
-    A return without the placeholder is passed through for the validator to judge. One with it would only be
+    A formal bound return must first match its task's saved result and terminal hash, including when it carries
+    a real prompt hash. An unbound custom return without the placeholder is passed to the validator. One with it would only be
     rejected as ``schema_invalid`` and spend the attempt id (ids are never reused, #8517), so each way the
     attestation can fail is named and raised here, before anything is saved or written.
     """
-    if not _carries_placeholder(data):
-        return data
+    try:
+        extracted = extract_review_yaml(data)
+    except ReviewReturnError as exc:
+        raise RecordError(str(exc), exc.code) from exc
+    if not _carries_placeholder(extracted):
+        # Older custom returns with a real hash retain their validator path. A
+        # formal attempt cannot bypass the task binding by supplying a real hash.
+        task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
+        if isinstance(task, dict) and task.get("review_attempt") is not None:
+            _verify_task_return(
+                data, task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
+            )
+        return extracted
 
     def refuse(cause: str) -> RecordError:
         return RecordError(
@@ -283,13 +326,16 @@ def attested_return(
             f"the dispatch record {task_id} is not bound to review {review_id} attempt {attempt_id} of this manifest "
             "or holds no prompt_sha256"
         )
+    _verify_task_return(
+        data, task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
+    )
     rendered, why = _render_prompt_sha256(manifest_path, root, review_id, attempt_id)
     if rendered is None:
         raise refuse(f"the prompt cannot be rendered from {manifest_path} ({why})")
     if rendered != sent:
         raise refuse(f"the dispatch hash {sent} is not the hash of this attempt's rendered prompt ({rendered})")
-    filled = attest_prompt_sha256(data, sent)
-    if filled == data:
+    filled = attest_prompt_sha256(extracted, sent)
+    if filled == extracted:
         raise refuse(
             "the placeholder line is not in the form the recorder can replace (an indented, matching-quoted line in reviewer:)"
         )
@@ -493,7 +539,10 @@ def record_return(
         if review_path is None or ledger_path is None:
             raise RecordError("a review return needs the review file and --ledger")
         data = Path(review_path).read_bytes()
-        loaded = _load_yaml_bytes(data)
+        try:
+            loaded = _load_yaml_bytes(extract_review_yaml(data))
+        except ReviewReturnError as exc:
+            raise RecordError(str(exc), exc.code) from exc
         attempt_block = loaded.get("attempt") if isinstance(loaded, dict) else None
         echoed = attempt_block if isinstance(attempt_block, dict) else {}
     ids = {"review_id": review_id or echoed.get("review_id"), "attempt_id": attempt_id or echoed.get("attempt_id")}
@@ -1041,7 +1090,9 @@ def build_parser() -> argparse.ArgumentParser:
             "\nOutputs: one JSON object on stdout. Writes the saved return, the findings database and, after the commit,\n"
             "the verdict file (a projection of the latest accepted first-seat attempt). Exit codes: 0 accepted or\n"
             "failure recorded; 1 rejected; 3 accepted or recorded and a terminal transition (operator) is reached;\n"
-            "2 not recorded (error on stderr), or recorded but the verdict file could not be written (projection_error)."
+            "2 not recorded (error on stderr), or recorded but the verdict file could not be written (projection_error).\n"
+            "Related: scripts.review.prompts.render; scripts.review.validate; "
+            "docs/runbooks/formal-review-attempt-isolation.md; #9025."
         ),
     )
     parser.add_argument("review", type=Path, nargs="?", help="the reviewer's review.yaml (omit with --failure)")
@@ -1064,7 +1115,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--task-id",
         required=True,
-        help="the dispatch task id: reviewer model and harness are read from batch_state/tasks/<task-id>.json",
+        help=(
+            "dispatch task id, e.g. review-a1-m-2: identity is read from its task record; "
+            "a formal return must match that done task's saved result bytes and recorded result_sha256"
+        ),
     )
     parser.add_argument("--review-id", default=None, help="needed only when the return does not state it (--failure)")
     parser.add_argument("--attempt-id", default=None, help="needed only when the return does not state it (--failure)")

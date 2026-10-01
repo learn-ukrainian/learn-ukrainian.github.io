@@ -1,0 +1,176 @@
+learner_state:
+  base_ids:
+  - W-001
+  - W-002
+  - W-003
+  - W-004
+  - W-005
+  - W-006
+  - W-007
+  - W-008
+  - W-009
+  - W-010
+  - W-011
+  - W-012
+  - W-013
+  - W-014
+  - W-015
+  - W-016
+  - W-017
+  - W-018
+  - W-019
+  - W-020
+  - W-021
+  - W-022
+  - W-023
+  - W-024
+  - W-025
+  - W-026
+  - W-027
+  - W-028
+  - W-029
+  - W-030
+  - W-031
+  - W-032
+  - W-033
+  - W-034
+  - W-035
+  - W-036
+  - W-037
+  - W-038
+  - W-039
+  - W-040
+  - W-041
+  - W-042
+  - W-043
+  - W-044
+  - W-045
+  - W-046
+  - W-047
+  - W-048
+  - W-049
+  - W-050
+  - W-051
+  - W-052
+  - W-053
+  - W-054
+  - W-055
+  - W-056
+  - W-057
+  - W-058
+  - W-059
+  - W-060
+  - W-061
+  - W-062
+  - W-063
+  - W-064
+  - W-065
+  - W-066
+  - W-067
+  - W-068
+  - W-069
+  - W-070
+  - W-071
+  - W-072
+  - W-073
+  core_ids:
+    W-074:
+      lesson: 1
+      position: 1
+    W-075:
+      lesson: 1
+      position: 1
+    W-076:
+      lesson: 1
+      position: 1
+    W-077:
+      lesson: 2
+      position: 1
+    W-078:
+      lesson: 2
+      position: 1
+    W-079:
+      lesson: 3
+      position: 1
+    W-080:
+      lesson: 3
+      position: 1
+    W-081:
+      lesson: 3
+      position: 1
+    W-082:
+      lesson: 4
+      position: 1
+    W-083:
+      lesson: 4
+      position: 1
+    W-084:
+      lesson: 5
+      position: 1
+    W-086:
+      lesson: 2
+      position: 1
+    W-087:
+      lesson: 2
+      position: 1
+    W-088:
+      lesson: 3
+      position: 1
+    W-089:
+      lesson: 4
+      position: 1
+  cumulative_core_count: 15
+  grammar_ids:
+    G-a1-001:
+      lesson: 2
+      position: 1
+    G-a1-002:
+      lesson: 3
+      position: 1
+    G-a1-003:
+      lesson: 3
+      position: 1
+  lesson_n: 1
+  letters:
+    А:
+      lesson: 2
+      position: 1
+    О:
+      lesson: 2
+      position: 1
+    У:
+      lesson: 2
+      position: 1
+    И:
+      lesson: 2
+      position: 1
+    М:
+      lesson: 3
+      position: 1
+    І:
+      lesson: 3
+      position: 1
+    Н:
+      lesson: 3
+      position: 1
+    В:
+      lesson: 4
+      position: 1
+    Л:
+      lesson: 4
+      position: 1
+    С:
+      lesson: 4
+      position: 1
+    К:
+      lesson: 5
+      position: 1
+    П:
+      lesson: 5
+      position: 1
+    Р:
+      lesson: 5
+      position: 1
+  level: a1
+  name_ids: {}
+  position: 2

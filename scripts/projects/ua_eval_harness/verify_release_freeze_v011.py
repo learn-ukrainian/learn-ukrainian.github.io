@@ -26,6 +26,7 @@ from scripts.projects.ua_eval_harness.evaluate_model import (
     load_saved_responses,
     score_saved_run,
 )
+from scripts.projects.ua_eval_harness.release_sources import frozen_source_path
 from scripts.projects.ua_eval_harness.run_model_batch import (
     load_run_config,
     load_source_only_packet,
@@ -241,10 +242,10 @@ HISTORICAL_VERIFIER_SOURCES = {
 
 
 def _frozen_artifact_path(path: Path) -> Path:
-    """Resolve only the three proven historical source artifacts for 0.1.1."""
+    """Resolve byte-preserved historical sources and release-owned VESUM inputs."""
     if path == v010.RUNNER:
         return ROOT / v010.HISTORICAL_RUNNER_SOURCE
-    return ROOT / HISTORICAL_VERIFIER_SOURCES.get(path, path)
+    return frozen_source_path(ROOT, HISTORICAL_VERIFIER_SOURCES.get(path, path))
 
 
 def _artifact(path: Path, role: str) -> dict[str, str]:
@@ -552,7 +553,7 @@ def build_freeze() -> dict[str, Any]:
     split_receipt = _read_json(ROOT / V011_SPLIT)
     split = validate_split_receipt(split_receipt)
     gemma = _validate_gemma_baseline()
-    vesum = _read_json(ROOT / VESUM_LOCK)["release_asset"]
+    vesum = _read_json(_frozen_artifact_path(VESUM_LOCK))["release_asset"]
     return {
         "schema_version": SCHEMA_VERSION,
         "release": {
@@ -736,6 +737,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "Historical source snapshots verified; active runner/verifier "
             "replacements are not certified by this release."
         )
+        print(f"Frozen VESUM lock SHA-256: {_sha256(_frozen_artifact_path(VESUM_LOCK))}")
         return 0
     except (FreezeError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)

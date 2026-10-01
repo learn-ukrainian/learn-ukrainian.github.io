@@ -59,6 +59,9 @@ _SESSION_ID_VALUE_RE = re.compile(
     r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
     re.IGNORECASE,
 )
+# session_meta includes instructions/configuration; 64 KiB can truncate it.
+# Read at most 1 MiB even when a resumed rollout has a much larger history.
+_SESSION_META_READ_BYTES = 1024 * 1024
 
 # Stderr phrases that indicate the provider rate-limited us. Ordered
 # roughly by specificity — specific phrases first, generic last.
@@ -1064,10 +1067,16 @@ class CodexAdapter:
 
     @staticmethod
     def _read_rollout_session_id(rollout: Path, *, trusted_root: Path = Path("/")) -> str | None:
-        """Read one validated session UUID from a rollout's opening metadata."""
+        """Read a UUID from the first 25 lines within a 1 MiB prefix.
+
+        Metadata truncated by that bound remains unbound; no partial JSON or
+        unvalidated session identifier is accepted.
+        """
         try:
             lines = (
-                safe_read_attempt_file(rollout, trusted_root=trusted_root, max_bytes=65536, prefix=True)
+                safe_read_attempt_file(
+                    rollout, trusted_root=trusted_root, max_bytes=_SESSION_META_READ_BYTES, prefix=True,
+                )
                 .decode("utf-8", errors="replace")
                 .splitlines()
             )
@@ -1076,9 +1085,9 @@ class CodexAdapter:
                     break
                 try:
                     event = _json.loads(line)
-                except (TypeError, ValueError):
+                except (TypeError, ValueError, RecursionError):
                     continue
-                if event.get("type") != "session_meta":
+                if not isinstance(event, dict) or event.get("type") != "session_meta":
                     continue
                 payload = event.get("payload")
                 if not isinstance(payload, dict):

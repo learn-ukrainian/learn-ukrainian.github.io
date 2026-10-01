@@ -135,3 +135,41 @@ def test_probe_regressions_include_false_collision_and_bounded_abstentions() -> 
     assert next(row for row in collision if row["source_span"] == ["була"])["disposition"] == "HEADLINE_CALQUE"
     assert next(row for row in speaker if row["source_span"] == ["Спікери"])["disposition"] == "CONTESTED"
     assert {row["disposition"] for row in red if row["source_span"] == ["рижого"]} == {"REGISTER_STANDARDIZATION"}
+
+
+@pytest.mark.parametrize("field,value,error", [
+    ("schema_version", "unrecognized", "unsupported disposition manifest schema"),
+    ("record_layout", [], "unexpected disposition record layout"),
+    ("manifest_id", "different", "disposition manifest ID mismatch"),
+    ("manifest_payload_sha256", "0" * 64, "disposition manifest payload mismatch"),
+    ("rows", {}, "disposition rows must be an array"),
+    ("rows", [[]], "invalid disposition row"),
+])
+def test_frozen_disposition_inventory_rejects_identity_and_shape_drift(field, value, error):
+    manifest, dispositions = _committed()
+    dispositions[field] = value
+    with pytest.raises(DispositionError, match=error):
+        validate_dispositions(dispositions, manifest=manifest)
+
+
+@pytest.mark.parametrize("mutation,error", [
+    ("duplicate", "duplicate disposition row"),
+    ("missing", "do not exactly cover upstream"),
+    ("headline", "headline flag contradicts disposition"),
+    ("evidence", "disposition evidence is missing"),
+    ("counts", "disposition counts are stale"),
+])
+def test_frozen_dispositions_reject_missing_or_contradictory_proof(mutation, error):
+    manifest, dispositions = _committed()
+    if mutation == "duplicate":
+        dispositions["rows"].append(copy.deepcopy(dispositions["rows"][0]))
+    elif mutation == "missing":
+        dispositions["rows"].pop()
+    elif mutation == "headline":
+        dispositions["rows"][0][8] = not dispositions["rows"][0][8]
+    elif mutation == "evidence":
+        dispositions["rows"][0][10] = None
+    else:
+        dispositions["counts"]["upstream_f_calque_annotations"] += 1
+    with pytest.raises(DispositionError, match=error):
+        validate_dispositions(dispositions, manifest=manifest)

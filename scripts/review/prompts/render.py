@@ -224,6 +224,8 @@ def template_sources(prompts_dir: Path) -> dict[str, tuple[str, str]]:
     root = prompts_dir.resolve()
     sources: dict[str, tuple[str, str]] = {}
     for path in sorted(root.glob("*.md.j2")):
+        if path.is_symlink():
+            raise TemplateReadError(f"template_alias_refused: template {path.name} is a symlink")
         resolved = path.resolve()
         if resolved.parent != root or not resolved.is_file():
             raise TemplateReadError(f"template {path.name} is not a regular file of {root.as_posix()}")
@@ -642,6 +644,9 @@ def render_prompt(
                 (prompts_dir or PROMPTS_DIR),
                 {path.name: sha for path, sha in rendering.template_sha256.items()},
                 prompt_sha256,
+                review_id=review_id,
+                attempt_id=attempt_id,
+                input_root=root,
             )
         except ReviewContractError as exc:
             raise RenderError(str(exc)) from exc
@@ -657,11 +662,29 @@ def render_prompt(
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Render reviewer prompt from manifest inputs.")
-    parser.add_argument("manifest", help="Path to attempt manifest YAML")
-    parser.add_argument("--template", "-t", default=None, help="Template name (default inferred)")
-    parser.add_argument("--output", "-o", default=None, help="Output prompt path")
-    parser.add_argument("--repo-root", default=None, help="Repository root path")
+    parser = argparse.ArgumentParser(
+        description=(
+            "Render a reviewer prompt from the attempt's authorized, hashed manifest inputs.\n"
+            "Use before formal review dispatch; keep the prompt and render record together for admission."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.review.prompts.render lesson-2.manifest.yaml --output prompt.md "
+            "--review-id R --attempt-id A\n"
+            "  .venv/bin/python -m scripts.review.prompts.render plan-review.manifest.yaml --output plan-prompt.md "
+            "--review-id plan-R --attempt-id plan-A\n\n"
+            "Outputs: prompt text (stdout by default); --output writes the prompt, .sha256 and .files_read.json, "
+            "including the attempt-bound render record.\n"
+            "Exit codes: 0 rendered; 1 refused; 2 invalid arguments.\n"
+            "Related: scripts.review.prompts.check; scripts/delegate.py --review-attempt; "
+            "docs/runbooks/formal-review-attempt-isolation.md; #9012 #9242."
+        ),
+    )
+    parser.add_argument("manifest", help="Attempt manifest YAML, e.g. lesson-2.manifest.yaml")
+    parser.add_argument("--template", "-t", default=None, help="Template name, e.g. lesson-review (default: inferred from manifest)")
+    parser.add_argument("--output", "-o", default=None, help="Output prompt path, e.g. prompt.md (default: stdout, without sidecars)")
+    parser.add_argument("--repo-root", default=None, help="Pinned input checkout root (default: this repository)")
     parser.add_argument(
         "--review-id",
         default=None,

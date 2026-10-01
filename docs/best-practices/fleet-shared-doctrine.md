@@ -35,7 +35,7 @@ If a scorecard row conflicts with LANGUAGE-LANES, egress, or review-gate rules �
 | **Egress** | Where prompt/code data may leave (Western lab, China-route, local-only). |
 | **CF review** | Cross-**family** formal review of a change; discussion/panel alone does **not** satisfy the gate. |
 | **Consequential** | Work that can merge to `main`, change learner-facing Atlas/curriculum, alter security/CI gates, or spend non-trivial quota on multi-agent implementation. |
-| **Ceiling model** | Astra, Fable 5.1 (`claude-fable-5-1`), and any future peer (e.g. expected xAI Fable/Astra-class) reserved for hard design/diagnostic/architecture. Historical “Sol” references in older evidence remain historical — live designated advisors are **Fable + Astra**. Since operator 2026-09-29 (#9230) the Astra seat is held by GPT-6.1 Sol (`gpt-6.1-sol`); `gpt-6-astra` is not routable. |
+| **Ceiling model** | Opus 5.5 / Sol 6.1 first for hard design/diagnostic/architecture; Fable 5.1 (`claude-fable-5-1`) / Astra last resort (#9394). Future peers require qualification. Historical “Sol” references in older evidence remain historical; designated approval stays with **Fable + Astra** or the operator. Since operator 2026-09-29 (#9230) the named Astra seat is held by GPT-6.1 Sol (`gpt-6.1-sol`); `gpt-6-astra` is not routable. |
 | **Provisional / validated / deprecated** | Scorecard assignment confidence (see scorecard § evidence). |
 
 ---
@@ -68,7 +68,7 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 ---
 
-## 4. Cost discipline (Astra / Fable / future xAI ceiling)
+## 4. Cost discipline (Opus / Sol first; Fable / Astra last resort; future xAI ceiling)
 
 - **Cursor (operator 2026-09-22; Auto scope operator decision 2026-09-30):** prefer **`--agent cursor --model grok-4.7-high`** for mechanical **and** ordinary infra/code implement when fit allows — not LANGUAGE-LANES, not advisor/authority. Cursor Auto runs only a well-defined coding task (`--research-role implementation` write dispatch, owned paths, PASS DoR card); the driver seat, design, consults, discussions and recon pin `grok-4.7` or `composer-2.5`, and a review runs the approved concrete model the reviewer resolver selects. `cursor:auto` never CF-of-record.
 - **Utilize, do not trim (operator 2026-08-08 / #6468):** free/behind seats (Cursor, AGY, Pool, **Z.AI/GLM**, **Kimi k3-256k**, Claude routine, Grok workers) with open in-scope work must be pulled before feeding Codex near_cap mechanical jobs. **Keep Kimi and Z.AI/GLM** — they are first-class. Cutting subscriptions is a last resort after sustained measured zero use, not a response to multi-driver complexity. Concurrent drivers (~2 Grok + 1 Claude + 1–4 Codex) share free pools; coordinate via `/api/delegate/active`.
@@ -89,18 +89,21 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 
 | Model | Effort |
 |---|---|
-| GPT-6.1 Sol (coding, review, and the Astra advisory seat) | **`high`** default for accountable driving, coding and adversarial review; **`xhigh`** for consequential advisory judgment |
-| GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling; never sole authority |
+| GPT-6.1 Sol (coding, review and ordinary advice; named Astra seat last resort) | **`high`** for accountable driving, coding, adversarial review and consequential advisory judgment |
+| GPT-6 Luna (bounded work and scouting) | **`high`** with exact owned paths and an objective scope ceiling from a complete Sol advisory envelope (always required, #9275); never sole authority |
 | **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
 | **Sonnet 5.5** (provisional Claude practical seat) | Fleet dispatches **`high`** by default. Well-specified agentic coding may use `medium`; harder or longer coding and reviews use `high`. See subsection below. |
-| **Fable 5.1** (advisor / authority seat) | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
-| Fable 5 (retired) | Historical identity only; use Fable 5.1 for current advisory work |
+| **Fable 5.1** (last-resort advisor / designated approval seat) | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
+| Fable 5 (retired) | Historical identity only; Opus 5.5 / Sol 6.1 first for current advice, Fable 5.1 last resort |
 | Opus 5.5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
 | Claude Haiku recon | **`medium`** default; never sole authority |
 
 #### Fable 5.1 `/effort` decision topology (operator 2026-09-09)
 
 Canonical short form of the bundled Claude API Fable 5.1 effort guidance (Claude Code `/effort` picker). Level names do **not** map to the same thinking depth across models.
+
+These effort settings apply only after selecting last-resort Fable; they do not change
+the Opus 5.5 / Sol 6.1 routing defaults or designated approval boundary.
 
 | Level | When |
 |---|---|
@@ -146,7 +149,7 @@ Sonnet 5.5 effort levels are recalibrated versus Sonnet 5; do not carry settings
 | **`low`** | Avoid for dispatched work: it can skip verification. |
 | **`xhigh` / `max`** | Only after a measured quality gain on the task family. |
 
-At `low` or `medium`, Sonnet 5.5 can check in before finishing. Make completion criteria and verification explicit even when choosing `medium`. Escalate complex, open-ended judgment to Opus 5.5 and authority decisions to Fable 5.1.
+At `low` or `medium`, Sonnet 5.5 can check in before finishing. Make completion criteria and verification explicit even when choosing `medium`. Escalate complex, open-ended judgment to Opus 5.5 / Sol 6.1 first, Fable / Astra last resort; designated authority decisions still require Fable/Astra or operator approval.
 
 ---
 

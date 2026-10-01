@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import sys
+from dataclasses import dataclass
 from datetime import date
 from functools import lru_cache
 from pathlib import Path
@@ -19,6 +20,8 @@ VALID_RISKS = frozenset({"low", "medium", "high", "critical"})
 VALID_REVIEW_PROFILES = frozenset({"code", "infra"})
 EXPECTED_SELECTION_ORDER = [
     "independence_and_hard_gates",
+    "primary_before_last_resort",
+    "profile_risk_suitability",
     "review_quality_tier",
     "health_and_quota_within_tier",
     "cost_within_equivalent_fit",
@@ -37,13 +40,14 @@ GLM_ROUTE_FIELDS = (
 )
 VALID_CODEX_EFFORTS = frozenset({"low", "medium", "high", "xhigh", "max"})
 EXECUTION_ROUTE_KEYS = frozenset(
-    {"advisor", "preferred_worker", "direct_worker", "autonomous_fallback", "review_boundary"}
+    {"advisor", "preferred_worker", "bounded_fallback_worker", "autonomous_fallback", "review_boundary"}
 )
 ADVISOR_KEYS = frozenset({"model_id", "effort", "role", "output_fields"})
 PREFERRED_WORKER_KEYS = frozenset(
     {"model_id", "effort", "requires", "task_types", "escalate_to", "prohibited_decisions", "escalation_triggers"}
 )
-DIRECT_WORKER_KEYS = frozenset({"model_id", "effort", "task_types", "constraints"})
+BOUNDED_FALLBACK_WORKER_KEYS = frozenset({"model_id", "effort", "requires", "non_bounded_task_families"})
+BOUNDED_WORKER_REQUIRES = frozenset({"complete_advisory_envelope", "objective_scope_ceiling"})
 FALLBACK_KEYS = frozenset({"model_id", "effort", "when"})
 REVIEW_BOUNDARY_KEYS = frozenset(
     {"advisory_family", "advisory_satisfies_cross_family_review", "independent_cross_family_review_required"}
@@ -179,7 +183,7 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
     _require_execution_effort(preferred["effort"], "execution_routing.sol_advised_bounded.preferred_worker.effort")
     for field in ("requires", "task_types", "prohibited_decisions", "escalation_triggers"):
         _require_string_list(preferred[field], f"execution_routing.sol_advised_bounded.preferred_worker.{field}")
-    if set(preferred["requires"]) != {"complete_advisory_envelope", "objective_scope_ceiling"}:
+    if set(preferred["requires"]) != BOUNDED_WORKER_REQUIRES:
         raise ModelCatalogError(
             "execution_routing.sol_advised_bounded.preferred_worker.requires must bind a complete envelope "
             "and objective scope ceiling"
@@ -201,16 +205,40 @@ def _validate_execution_routing(raw: Any, models: dict[str, Any]) -> None:
         "execution_routing.sol_advised_bounded.preferred_worker.escalate_to",
     )
 
-    direct = _require_mapping(route["direct_worker"], "execution_routing.sol_advised_bounded.direct_worker")
-    _require_exact_keys(direct, DIRECT_WORKER_KEYS, "execution_routing.sol_advised_bounded.direct_worker")
-    _require_active_execution_model(
-        models,
-        direct["model_id"],
-        "execution_routing.sol_advised_bounded.direct_worker.model_id",
+    # Operator decision 2026-09-30 (#9275): no bounded worker is dispatched without
+    # a complete advisory envelope, so the catalog carries no direct-worker route.
+    bounded_fallback = _require_mapping(
+        route["bounded_fallback_worker"],
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker",
     )
-    _require_execution_effort(direct["effort"], "execution_routing.sol_advised_bounded.direct_worker.effort")
-    for field in ("task_types", "constraints"):
-        _require_string_list(direct[field], f"execution_routing.sol_advised_bounded.direct_worker.{field}")
+    _require_exact_keys(
+        bounded_fallback,
+        BOUNDED_FALLBACK_WORKER_KEYS,
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker",
+    )
+    bounded_fallback_model_id = _require_active_execution_model(
+        models,
+        bounded_fallback["model_id"],
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker.model_id",
+    )
+    _require_execution_effort(
+        bounded_fallback["effort"],
+        "execution_routing.sol_advised_bounded.bounded_fallback_worker.effort",
+    )
+    for field in ("requires", "non_bounded_task_families"):
+        _require_string_list(
+            bounded_fallback[field],
+            f"execution_routing.sol_advised_bounded.bounded_fallback_worker.{field}",
+        )
+    if set(bounded_fallback["requires"]) != BOUNDED_WORKER_REQUIRES:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.bounded_fallback_worker.requires must bind a complete "
+            "envelope and objective scope ceiling"
+        )
+    if advisor_model_id in {preferred["model_id"], bounded_fallback_model_id}:
+        raise ModelCatalogError(
+            "execution_routing.sol_advised_bounded.advisor.model_id must not be a bounded worker model"
+        )
 
     fallback = _require_mapping(
         route["autonomous_fallback"],
@@ -546,6 +574,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
             )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
+        if lifecycle == "retired" and model["transports"]:
+            raise ModelCatalogError(f"models.{model_id}.transports must be empty for retired models")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:
             raise ModelCatalogError(f"models.{model_id}.transports must not route GPT/Grok families through Hermes")
         aliases = model.get("aliases", [])
@@ -643,6 +673,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                 f"review_candidates.{name}.review_profiles contains unsupported code-closeout "
                 f"profiles {unsupported_profiles}; expected only {sorted(VALID_REVIEW_PROFILES)}"
             )
+        if not isinstance(candidate.get("last_resort", False), bool):
+            raise ModelCatalogError(f"review_candidates.{name}.last_resort must be a boolean")
         health_keys = candidate.get("health_keys", [])
         if not isinstance(health_keys, list) or not all(isinstance(item, str) and item.strip() for item in health_keys):
             raise ModelCatalogError(f"review_candidates.{name}.health_keys must be a list of strings")
@@ -672,12 +704,12 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         if not isinstance(rungs, list) or not rungs:
             raise ModelCatalogError(f"review_ladders.{risk} must be a non-empty list")
         seen: set[str] = set()
-        previous_rank = 0
+        previous_rank = (False, 0)
         floor_rank = tiers[risk_floor[risk]]
         for rung in rungs:
             if not isinstance(rung, list) or not rung:
                 raise ModelCatalogError(f"review_ladders.{risk} rungs must be non-empty lists")
-            rung_ranks: set[int] = set()
+            rung_ranks: set[tuple[bool, int]] = set()
             for candidate_name in rung:
                 if candidate_name not in candidates:
                     raise ModelCatalogError(f"review_ladders.{risk} references unknown candidate {candidate_name!r}")
@@ -685,6 +717,8 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(f"review_ladders.{risk} repeats candidate {candidate_name!r}")
                 seen.add(candidate_name)
                 model_id = candidates[candidate_name]["model_id"]
+                if models[model_id]["family"] == "xai":
+                    raise ModelCatalogError(f"review_ladders.{risk}: Grok never judges code or infra")
                 if risk == "critical" and model_id.startswith("claude-sonnet-"):
                     raise ModelCatalogError(
                         f"review_ladders.{risk}: Sonnet is excluded from security review by core.md P2"
@@ -693,13 +727,13 @@ def validate_catalog(data: Any) -> dict[str, Any]:
                     raise ModelCatalogError(
                         f"review_ladders.{risk} candidate {candidate_name!r} must reference an active model"
                     )
-                rung_ranks.add(tiers[models[model_id]["tier"]])
+                rung_ranks.add((candidates[candidate_name].get("last_resort", False), tiers[models[model_id]["tier"]]))
             if len(rung_ranks) != 1:
                 raise ModelCatalogError(f"review_ladders.{risk} mixes quality tiers in one rung")
             rung_rank = next(iter(rung_ranks))
             if rung_rank < previous_rank:
                 raise ModelCatalogError(f"review_ladders.{risk} improves quality in a later rung")
-            if rung_rank > floor_rank:
+            if rung_rank[1] > floor_rank:
                 raise ModelCatalogError(f"review_ladders.{risk} falls below its {risk_floor[risk]!r} quality floor")
             previous_rank = rung_rank
     _validate_budget_substitution_models(catalog.get("budget_substitution_models"), catalog)
@@ -744,6 +778,61 @@ def _model_id_candidates(model: str) -> list[str]:
         if char in "/:" and model[index + 1 :]:
             candidates.append(model[index + 1 :])
     return candidates
+
+
+def canonical_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
+    """The catalog id ``model`` names, or None when it names no catalog model.
+
+    Matches case-insensitively through catalog aliases and harness prefixes
+    (``codex:gpt-6-luna``, ``openai/gpt-6-luna``), drops a bracketed context
+    suffix (``claude-opus-5-5[1m]``), and resolves a provider variant such as
+    ``gpt-6-luna-high`` to the longest catalog id it extends.
+    """
+    text = str(model or "").strip().split("[", 1)[0].strip()
+    if not text:
+        return None
+    catalog = catalog or load_model_catalog()
+    lookup = {alias.casefold(): model_id for alias, model_id in model_aliases(catalog).items()}
+    candidates = [candidate.casefold() for candidate in _model_id_candidates(text)]
+    model_id = next((lookup[candidate] for candidate in candidates if candidate in lookup), None)
+    if model_id is None:
+        extended = [
+            (len(alias), owner)
+            for candidate in candidates
+            for alias, owner in lookup.items()
+            if candidate.startswith(f"{alias}-")
+        ]
+        model_id = max(extended)[1] if extended else None
+    return model_id
+
+
+@dataclass(frozen=True)
+class BoundedExecutionPolicy:
+    """The catalog's bounded-worker admission facts (``execution_routing.sol_advised_bounded``)."""
+
+    advisor_model_id: str
+    advisor_role: str
+    advisor_output_fields: tuple[str, ...]
+    bounded_worker_model_id: str
+    bounded_fallback_model_id: str
+    non_bounded_task_families: frozenset[str]
+
+
+ADVISOR_ROUTE = "execution_routing.sol_advised_bounded.advisor"
+
+
+def bounded_execution_policy(catalog: dict[str, Any] | None = None) -> BoundedExecutionPolicy:
+    """The validated bounded-worker policy: who advises, which models need an envelope, and what it holds."""
+    route = (catalog or load_model_catalog())["execution_routing"]["sol_advised_bounded"]
+    fallback = route["bounded_fallback_worker"]
+    return BoundedExecutionPolicy(
+        advisor_model_id=route["advisor"]["model_id"],
+        advisor_role=route["advisor"]["role"],
+        advisor_output_fields=tuple(route["advisor"]["output_fields"]),
+        bounded_worker_model_id=route["preferred_worker"]["model_id"],
+        bounded_fallback_model_id=fallback["model_id"],
+        non_bounded_task_families=frozenset(family.strip() for family in fallback["non_bounded_task_families"]),
+    )
 
 
 def is_cursor_auto_selector(model: Any) -> bool:
@@ -791,23 +880,8 @@ def cursor_non_dispatch_model_refusal(model: Any, catalog: dict[str, Any] | None
 
 
 def resolve_catalog_model_id(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
-    """Resolve aliases, harness prefixes, effort suffixes and bracket overrides."""
-    text = str(model or "").strip()
-    if not text:
-        return None
-    catalog = catalog or load_model_catalog()
-    lookup = {alias.casefold(): model_id for alias, model_id in model_aliases(catalog).items()}
-    candidates = [candidate.casefold() for candidate in _model_id_candidates(text)]
-    model_id = next((lookup[candidate] for candidate in candidates if candidate in lookup), None)
-    if model_id is None:
-        extended = [
-            (len(alias), owner)
-            for candidate in candidates
-            for alias, owner in lookup.items()
-            if candidate.startswith((f"{alias}-", f"{alias}["))
-        ]
-        model_id = max(extended)[1] if extended else None
-    return model_id
+    """Resolve aliases, harness prefixes, effort suffixes and bracket overrides (one identity: ``canonical_model_id``)."""
+    return canonical_model_id(model, catalog)
 
 
 def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> str | None:
@@ -827,6 +901,29 @@ def retired_model_refusal(model: Any, catalog: dict[str, Any] | None = None) -> 
     replacement = models[model_id].get("replaced_by")
     advice = f"use {replacement}" if replacement else "use an active catalog model"
     return f"model {text!r} is retired in the model catalog ({model_id}); {advice}"
+
+
+def require_execution_model(
+    model: str, *, transport: str, catalog: dict[str, Any] | None = None,
+) -> str:
+    """Reject frozen audit defaults before provider or configuration side effects.
+
+    Historical model palettes remain readable; they do not authorize new runs.
+    Retirement uses the canonical refusal path shared with fleet admission.
+    """
+    catalog = catalog or load_model_catalog()
+    refusal = retired_model_refusal(model, catalog)
+    if refusal:
+        raise ModelCatalogError(refusal)
+    model_id = resolve_catalog_model_id(model, catalog)
+    if model_id is None:
+        raise ModelCatalogError(f"model {model!r} is not in the model catalog")
+    entry = catalog["models"][model_id]
+    if entry["lifecycle"] not in {"active", "fallback"}:
+        raise ModelCatalogError(f"model {model!r} is not admitted for execution")
+    if transport not in entry["transports"]:
+        raise ModelCatalogError(f"model {model!r} has no admitted {transport} transport")
+    return model_id
 
 
 def kimi_model_aliases(catalog: dict[str, Any] | None = None) -> dict[str, str]:
