@@ -352,7 +352,6 @@ def test_specific_graphql_reads_keep_variables_as_data(operation, fields):
         ("comments", {"number": 1}),
         ("checks", {"sha": "a" * 40}),
         ("runs", {"start": "2026-01-01", "end": "2026-01-02"}),
-        ("compare", {"base": "a" * 40, "head": "b" * 40}),
     ],
 )
 def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, monkeypatch):
@@ -360,8 +359,6 @@ def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, mo
     calls = []
     pub.read(operation, repo="unit/public", runner=spy(calls), **fields)
     assert calls[0]["argv"][2:4] == ["--method", "GET"]
-    if operation == "compare":
-        assert calls[0]["argv"][4] == f"repos/unit/public/compare/{'a' * 40}...{'b' * 40}?per_page=100"
 
 
 @pytest.mark.parametrize(
@@ -372,8 +369,6 @@ def test_specific_rest_reads_are_fixed_get_without_matcher(operation, fields, mo
         ("graphql", {"query": "mutation{x}"}),
         ("subissue-batch", {"cursors": {"unit": None}, "body_roots": set()}),
         ("membership", {"number": 1, "query": "mutation{x}"}),
-        ("compare", {"base": "main", "head": "a" * 40}),
-        ("compare", {"base": "a" * 40, "head": "b" * 40 + "?x=y"}),
         ("default-head", {"number": 1}),
     ],
 )

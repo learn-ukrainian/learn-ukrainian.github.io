@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import importlib.util
+import hashlib
 import json
 import os
 import shutil
@@ -96,11 +96,6 @@ def push_sandbox(tmp_path):
     return Sandbox()
 
 
-def _fingerprint(sandbox):
-    """The cache fingerprint a shim push in sandbox writes: its matcher and its (copied, identical) scanning code."""
-    return f"{gate.matcher_fingerprint(sandbox.tooling)} {git_push.code_digest()}"
-
-
 def assert_blocked(result, sandbox, before, field):
     assert result.returncode == 2, result.stderr
     assert "OPSEC blocked: rule=synthetic-rule" in result.stderr and f"field={field}" in result.stderr
@@ -176,7 +171,7 @@ def test_clean_push_delivers_unchanged(push_sandbox):
 
 
 def test_history_the_destination_already_has_is_still_scanned(push_sandbox):
-    """What the destination advertises is no evidence; only this machine's clean scans skip commits."""
+    """What the destination advertises is no evidence; only the canonical public head excludes commits."""
     old = push_sandbox.commit("old " + TOKEN)
     _git(push_sandbox.work, "push", "-q", "origin", "trunk")  # Pushed without the scan.
     before = push_sandbox.remote_refs()
@@ -237,20 +232,17 @@ def test_forged_tracking_ref_does_not_suppress_the_scan(push_sandbox):
     assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
 
 
-def test_incremental_push_enumerates_only_commits_not_yet_scanned_clean(push_sandbox, monkeypatch):
-    for number in range(4):
-        push_sandbox.commit(f"published {number}")
-    first = push_sandbox.push("push", "origin", "trunk")
-    assert first.returncode == 0 and "5 commit message(s) scanned, 0 skipped" in first.stderr, first.stderr
+def test_only_commits_outside_the_public_history_are_enumerated(push_sandbox, monkeypatch):
+    published = [push_sandbox.commit(f"published {number}") for number in range(4)]
     new = [push_sandbox.commit(f"new {number}") for number in range(2)]
     captured = []
-    monkeypatch.setattr(gate, "check_texts", lambda label, texts, **kw: captured.append(kw["field_names"]) or set())
-    fingerprint = gate.matcher_fingerprint(push_sandbox.tooling)  # The key the shim push cached under.
-    monkeypatch.setattr(gate, "matcher_fingerprint", lambda: fingerprint)
+    monkeypatch.setattr(gate, "check_texts", lambda label, texts, **kw: captured.append(kw["field_names"]))
     monkeypatch.chdir(push_sandbox.work)
-    git_push.scan_push(REAL_GIT, ["push", "origin", "HEAD:refs/heads/feature"], _env())
+    client = FakePublic(published[-1])
+    git_push.scan_push(REAL_GIT, ["push", "origin", "HEAD:refs/heads/feature"], _env(), public_repository=client)
     commits = [name for name in captured[0] if name.startswith("commit[")]
     assert sorted(commits) == sorted(f"commit[{sha[:12]}].message" for sha in new)
+    assert client.calls == 1
 
 
 @pytest.mark.parametrize("extra", [(), ("-c", "core.useReplaceRefs=true")])
@@ -418,9 +410,7 @@ def test_unparseable_preview_refuses(output):
         git_push.parse_porcelain(output)
 
 
-# --- Round 3: no destination evidence; local clean-commit cache; grafts and tracing disabled ---
-
-CACHE = Path(".git/lu-push-scan-clean")
+# --- No destination evidence; grafts, tracing and commit-graph files disabled ---
 
 
 def test_forged_advertisement_does_not_suppress_the_scan(push_sandbox, tmp_path):
@@ -472,28 +462,14 @@ def test_git_tracing_never_records_the_scan(ssh_sandbox, tmp_path, monkeypatch):
         GIT_CONFIG_GLOBAL=str(config),
         GIT_CURL_VERBOSE="1",
     )
-    monkeypatch.setattr(gate, "check_texts", lambda *args, **kwargs: set())
-    monkeypatch.setattr(gate, "matcher_fingerprint", lambda *args: "0" * 64, raising=False)
+    monkeypatch.setattr(gate, "check_texts", lambda *args, **kwargs: None)
     monkeypatch.chdir(ssh_sandbox.work)
-    git_push.scan_push(REAL_GIT, ["push", "hosted", "HEAD:refs/heads/feature"], environment)
+    git_push.scan_push(
+        REAL_GIT, ["push", "hosted", "HEAD:refs/heads/feature"], environment, public_repository=FakePublic(None)
+    )
     written = {path.name: path.read_text() for path in [*logs.values(), tmp_path / "config-perf.log"] if path.exists()}
     assert not any("synthetic-secret" in text for text in written.values())
     assert all(text == "" for text in written.values()), sorted(written)
-
-
-def test_cached_clean_commits_are_skipped_and_a_new_hit_is_refused(push_sandbox):
-    push_sandbox.commit("clean one")
-    first = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert first.returncode == 0, first.stderr
-    assert (
-        "OPSEC: push scan: 2 commit message(s) scanned, 0 skipped as already scanned clean here, 0 hit(s)"
-        in first.stderr
-    )
-    before = push_sandbox.remote_refs()
-    sha = push_sandbox.commit("subject " + TOKEN)
-    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
-    assert "1 commit message(s) scanned, 2 skipped as already scanned clean here, 0 hit(s)" in result.stderr
 
 
 def test_shallow_repository_is_refused(push_sandbox, tmp_path):
@@ -508,106 +484,79 @@ def test_shallow_repository_is_refused(push_sandbox, tmp_path):
     assert push_sandbox.remote_refs() == before
 
 
-def test_hit_commit_is_never_cached(push_sandbox):
-    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+def test_an_overridden_hit_is_scanned_again_on_the_next_push(push_sandbox):
     sha = push_sandbox.commit("subject " + TOKEN)
-    refused = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert refused.returncode == 2 and not (push_sandbox.work / CACHE).exists()
     overridden = push_sandbox.push(
         "push", "origin", "HEAD:refs/heads/feature", LU_OPSEC_OVERRIDE="synthetic false positive"
     )
     assert overridden.returncode == 0, overridden.stderr
-    cached = (push_sandbox.work / CACHE).read_text().splitlines()[1:]
-    assert cached == [base]
     again = push_sandbox.push("push", "origin", "HEAD:refs/heads/other")
     assert again.returncode == 2 and f"field=commit[{sha[:12]}].message" in again.stderr, again.stderr
 
 
-@pytest.mark.parametrize("damage", ["valid", "garbage", "partial", "foreign", "header-only-text", "unreadable"])
-def test_unusable_cache_scans_everything(push_sandbox, damage):
-    """Only a well-formed cache for the current matcher skips anything; every defect scans in full."""
-    if damage == "unreadable" and os.geteuid() == 0:
-        pytest.skip("root reads mode-000 files")
-    sha = push_sandbox.commit("subject " + TOKEN)
-    header = f"lu-push-scan-clean 2 {_fingerprint(push_sandbox)}\n"
-    content = {
-        "valid": f"{header}{sha}\n",
-        "garbage": f"{header}{sha}\nnot-a-commit\n",
-        "partial": f"{header}{sha}\n{sha[:20]}",
-        "foreign": f"lu-push-scan-clean 2 {'f' * 64} {git_push.code_digest()}\n{sha}\n",
-        "header-only-text": f"{sha}\n",
-        "unreadable": f"{header}{sha}\n",
-    }[damage]
-    path = push_sandbox.work / CACHE
-    path.write_text(content)
-    if damage == "unreadable":
-        path.chmod(0)
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    if damage == "valid":  # Positive control: the trusted cache entry is what skips the hit.
-        assert result.returncode == 0, result.stderr
-        return
-    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
-    assert "OPSEC: push scan cache unusable; every reachable commit scanned." in result.stderr
-
-
-def test_rules_update_rescans_cached_commits(push_sandbox):
-    """A cache entry is only as good as the matcher that produced it."""
+def test_rules_update_refuses_a_commit_an_earlier_push_passed(push_sandbox):
     sha = push_sandbox.commit("subject LATER-SENSITIVE")
     assert push_sandbox.push("push", "origin", "HEAD:refs/heads/feature").returncode == 0
     (push_sandbox.tooling / "rules.json").write_text(json.dumps(synthetic_rules(pattern="LATER-SENSITIVE")))
     before = push_sandbox.remote_refs()
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/other")
     assert result.returncode == 2 and f"field=commit[{sha[:12]}].message" in result.stderr, result.stderr
-    assert "push scan cache unusable" in result.stderr and push_sandbox.remote_refs() == before
+    assert push_sandbox.remote_refs() == before
 
 
-CONCURRENT_WRITER = """
-import sys
-from pathlib import Path
-sys.path.insert(0, sys.argv[1])
-from scripts.opsec.git_push import CleanCache
-cache = CleanCache(Path(sys.argv[2]), "f" * 64)
-writer = int(sys.argv[3])
-for batch in range(25):
-    if not cache.record([f"{writer:08x}{batch:04x}{item:028x}" for item in range(8)], full=True):
-        raise SystemExit(1)
-"""
+def _forge_commit_graph(work, child, parent):
+    """Rewrite the commit-graph so child's first parent is parent, with a valid trailing checksum."""
+    _git(work, "commit-graph", "write", "--reachable", "--no-progress")
+    path = work / ".git/objects/info/commit-graph"
+    data = bytearray(path.read_bytes())
+    assert data[:4] == b"CGPH" and data[5] == 1  # Version 1 with SHA-1 ids.
+    chunks = {
+        bytes(data[8 + 12 * n : 12 + 12 * n]): int.from_bytes(data[12 + 12 * n : 20 + 12 * n], "big")
+        for n in range(data[6])
+    }
+    count = int.from_bytes(data[chunks[b"OIDF"] + 255 * 4 : chunks[b"OIDF"] + 256 * 4], "big")
+    ids = [bytes(data[chunks[b"OIDL"] + 20 * n : chunks[b"OIDL"] + 20 * n + 20]).hex() for n in range(count)]
+    entry = chunks[b"CDAT"] + ids.index(child) * 36
+    data[entry + 20 : entry + 24] = ids.index(parent).to_bytes(4, "big")
+    data[-20:] = hashlib.sha1(bytes(data[:-20])).digest()
+    path.chmod(0o644)
+    path.write_bytes(bytes(data))
 
 
-def test_concurrent_records_append_without_corruption(tmp_path):
-    writers = [
-        subprocess.Popen([sys.executable, "-c", CONCURRENT_WRITER, str(ROOT), str(tmp_path), str(number)])
-        for number in range(6)
-    ]
-    assert [writer.wait(timeout=60) for writer in writers] == [0] * 6
-    ids, unusable = git_push.CleanCache(tmp_path, "f" * 64).read()
-    assert not unusable and len(ids) == 6 * 25 * 8
+@pytest.mark.parametrize("helper", ["commit-graph", "replace"])
+def test_local_parent_data_cannot_place_a_hit_inside_the_public_history(push_sandbox, monkeypatch, capfd, helper):
+    """Only parents recorded in the hashed commits decide ancestry: no commit-graph or replacement object."""
+    hit = push_sandbox.commit("subject " + TOKEN)
+    public_head = _git(push_sandbox.work, "rev-parse", "HEAD~1")
+    # Make the local view of the public head's history include the hit.
+    if helper == "replace":
+        tree = _git(push_sandbox.work, "rev-parse", f"{public_head}^{{tree}}")
+        forged = _git(push_sandbox.work, "commit-tree", tree, "-p", hit, "-m", "clean base")
+        _git(push_sandbox.work, "replace", public_head, forged)
+    else:
+        _forge_commit_graph(push_sandbox.work, public_head, hit)
+    # Positive control: plain git, honouring the forged data, would exclude the hit.
+    assert _git(push_sandbox.work, "rev-list", hit, f"^{public_head}") == ""
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(public_head))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err, err
 
 
-# --- Round 4: hits already public in the canonical repository are excused ---
-
-PUBLIC_CACHE = Path(".git/lu-push-scan-public")
+# --- History already on the public default branch is excluded by its authoritative head ---
 
 
 class FakePublic:
-    """The canonical public repository client: a default-branch head and the commits it contains."""
+    """The canonical public repository client seam: the default-branch head it reports."""
 
-    def __init__(self, head, public=(), *, fail=False):
-        self.head, self.public, self.fail = head, set(public), fail
+    def __init__(self, head, *, fail=False):
+        self.head, self.fail = head, fail
         self.calls = 0
-        self.asked: list[str] = []
 
     def default_head(self):
         if self.fail:
             pytest.fail("the public repository must not be asked")
         self.calls += 1
         return self.head
-
-    def contains(self, head, sha):
-        self.calls += 1
-        self.asked.append(sha)
-        return sha in self.public
 
 
 def run_main(sandbox, monkeypatch, client, *args, **extra):
@@ -626,7 +575,10 @@ def run_main(sandbox, monkeypatch, client, *args, **extra):
     return status, executed
 
 
-def test_hit_already_in_public_main_is_excused_and_the_push_proceeds(push_sandbox, monkeypatch, capfd):
+FETCH_HINT = "fetching the public default branch lets the scan skip history that is already public"
+
+
+def test_hit_in_public_main_history_is_neither_refused_nor_scanned(push_sandbox, monkeypatch, capfd):
     hit = push_sandbox.commit("published subject " + TOKEN)
     public_head = push_sandbox.commit("published clean")
     push_sandbox.commit("new clean work")
@@ -634,91 +586,81 @@ def test_hit_already_in_public_main_is_excused_and_the_push_proceeds(push_sandbo
     status, executed = run_main(push_sandbox, monkeypatch, client)
     err = capfd.readouterr().err
     assert status == 0 and executed, err
-    assert "1 hit(s) excused as already public (1 public repository call(s))" in err
+    assert "1 commit(s) scanned; public default-branch head present (1 public repository call(s))" in err
     assert "OPSEC blocked" not in err and TOKEN not in err and hit[:12] not in err
 
 
-def test_hit_excused_by_compare_when_the_public_head_is_not_local(push_sandbox, monkeypatch, capfd):
-    hit = push_sandbox.commit("published subject " + TOKEN)
-    push_sandbox.commit("new clean work")
-    client = FakePublic("e" * 40, public={hit})
-    status, executed = run_main(push_sandbox, monkeypatch, client)
-    assert status == 0 and executed, capfd.readouterr().err
-    assert client.asked == [hit] and client.calls == 2
-
-
-@pytest.mark.parametrize("head_is_local", [True, False])
-def test_hit_not_in_public_main_is_refused(push_sandbox, monkeypatch, capfd, head_is_local):
-    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+def test_new_hit_on_top_of_public_main_is_refused(push_sandbox, monkeypatch, capfd):
+    public_head = _git(push_sandbox.work, "rev-parse", "HEAD")
     hit = push_sandbox.commit("subject " + TOKEN)
-    client = FakePublic(base if head_is_local else "e" * 40)
+    client = FakePublic(public_head)
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and client.calls == 1
+    assert f"OPSEC blocked: rule=synthetic-rule class=1 field=commit[{hit[:12]}].message line=1" in err
+    assert TOKEN not in err and FETCH_HINT not in err
+
+
+def test_many_published_hits_and_one_new_hit_refuse_only_the_new_one(push_sandbox, monkeypatch, capfd):
+    published = [push_sandbox.commit(f"published {number} " + TOKEN) for number in range(30)]
+    new = push_sandbox.commit("new subject " + TOKEN)
+    client = FakePublic(published[-1])
     status, executed = run_main(push_sandbox, monkeypatch, client)
     err = capfd.readouterr().err
     assert status == 2 and not executed
-    assert f"OPSEC blocked: rule=synthetic-rule class=1 field=commit[{hit[:12]}].message line=1" in err
-    assert "0 hit(s) excused" in err and TOKEN not in err
+    assert err.count("rule=synthetic-rule") == 1 and f"field=commit[{new[:12]}].message" in err
+    assert "1 commit(s) scanned" in err and client.calls == 1
 
 
-def test_excused_hits_are_cached_as_public_and_never_as_clean(push_sandbox, monkeypatch, capfd):
+def test_absent_public_head_scans_all_history_and_names_the_fetch(push_sandbox, monkeypatch, capfd):
     hit = push_sandbox.commit("published subject " + TOKEN)
-    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(hit))
-    assert status == 0, capfd.readouterr().err
-    clean = (push_sandbox.work / CACHE).read_text().splitlines()
-    public = (push_sandbox.work / PUBLIC_CACHE).read_text().splitlines()
-    assert public == [f"lu-push-scan-public 2 {_fingerprint(push_sandbox)}", hit]
-    assert hit not in clean and len(clean) == 2  # Header and the clean base commit.
-    second = FakePublic(None, fail=True)
-    status, executed = run_main(push_sandbox, monkeypatch, second, "push", "origin", "HEAD:refs/heads/other")
+    push_sandbox.commit("new clean work")
+    client = FakePublic("e" * 40)  # Not an object in this repository.
+    status, executed = run_main(push_sandbox, monkeypatch, client)
     err = capfd.readouterr().err
-    assert status == 0 and executed and second.calls == 0, err
-    assert "0 commit message(s) scanned, 1 skipped as already scanned clean here, 1 hit(s) excused" in err
-    assert "(0 public repository call(s))" in err
+    assert status == 2 and not executed and client.calls == 1
+    assert f"field=commit[{hit[:12]}].message" in err and FETCH_HINT in err
+    assert "3 commit(s) scanned; public default-branch head absent here" in err
+    assert TOKEN not in err
 
 
-def test_a_lost_clean_cache_is_rebuilt_beside_the_public_cache(push_sandbox, monkeypatch, capfd):
-    base = _git(push_sandbox.work, "rev-parse", "HEAD")
-    hit = push_sandbox.commit("published subject " + TOKEN)
-    assert run_main(push_sandbox, monkeypatch, FakePublic(hit))[0] == 0, capfd.readouterr().err
-    (push_sandbox.work / CACHE).unlink()
-    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(None, fail=True))
-    assert status == 0, capfd.readouterr().err
-    assert (push_sandbox.work / CACHE).read_text().splitlines()[1:] == [base]
-
-
-@pytest.mark.parametrize("head_is_local", [True, False])
-def test_a_no_answer_is_never_cached(push_sandbox, monkeypatch, capfd, head_is_local):
-    base = _git(push_sandbox.work, "rev-parse", "HEAD")
-    push_sandbox.commit("subject " + TOKEN)
-    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(base if head_is_local else "e" * 40))
-    assert status == 2 and not (push_sandbox.work / PUBLIC_CACHE).exists()
-    again = FakePublic(base if head_is_local else "e" * 40)
-    status, _ = run_main(push_sandbox, monkeypatch, again)
-    assert status == 2 and again.calls >= 1, capfd.readouterr().err
-
-
-@pytest.mark.parametrize("damage", ["garbage", "foreign", "unreadable"])
-def test_unusable_public_cache_excuses_nothing_by_itself(push_sandbox, monkeypatch, capfd, damage):
-    if damage == "unreadable" and os.geteuid() == 0:
-        pytest.skip("root reads mode-000 files")
+def test_absent_public_head_hint_is_only_for_history_older_than_the_tips(push_sandbox, monkeypatch, capfd):
     hit = push_sandbox.commit("subject " + TOKEN)
-    header = f"lu-push-scan-public 2 {_fingerprint(push_sandbox)}\n"
-    path = push_sandbox.work / PUBLIC_CACHE
-    path.write_text(
-        {
-            "garbage": f"{header}{hit}\nnot-a-commit\n",
-            "foreign": f"lu-push-scan-public 2 {'f' * 64} {git_push.code_digest()}\n{hit}\n",
-        }.get(damage, f"{header}{hit}\n")
-    )
-    if damage == "unreadable":
-        path.chmod(0)
+    status, _ = run_main(push_sandbox, monkeypatch, FakePublic("e" * 40))
+    err = capfd.readouterr().err
+    assert status == 2 and f"field=commit[{hit[:12]}].message" in err and FETCH_HINT not in err
+
+
+def test_absent_public_head_and_clean_history_passes(push_sandbox, monkeypatch, capfd):
+    push_sandbox.commit("clean one")
+    push_sandbox.commit("clean two")
     status, executed = run_main(push_sandbox, monkeypatch, FakePublic("e" * 40))
     err = capfd.readouterr().err
-    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err
-    assert "OPSEC: push scan public cache unusable; hit commits rechecked." in err
+    assert status == 0 and executed, err
+    assert "3 commit(s) scanned; public default-branch head absent here (1 public repository call(s))" in err
 
 
-def test_forged_tracking_ref_and_insteadof_cannot_excuse_a_hit(push_sandbox, monkeypatch, capfd):
-    """Only the canonical repository client answers; local refs and URL rewriting are not consulted."""
+def test_one_public_repository_call_per_push(push_sandbox, monkeypatch, capfd):
+    """Several refs, tags and destinations still cost one read; a push that sends no commit costs none."""
+    head = _git(push_sandbox.work, "rev-parse", "HEAD")
+    push_sandbox.commit("clean one")
+    _git(push_sandbox.work, "tag", "-a", "v1", "-m", "clean release")
+    _git(push_sandbox.work, "remote", "set-url", "--add", "--push", "origin", str(push_sandbox.remote))
+    _git(push_sandbox.work, "remote", "set-url", "--add", "--push", "origin", str(push_sandbox.remote))
+    client = FakePublic(head)
+    status, _ = run_main(
+        push_sandbox, monkeypatch, client, "push", "origin", "HEAD:refs/heads/a", "HEAD~1:refs/heads/b", "v1"
+    )
+    assert status == 0 and client.calls == 1, capfd.readouterr().err
+    _git(push_sandbox.work, "push", "-q", str(push_sandbox.remote), "HEAD:refs/heads/gone")
+    deletion = FakePublic(None, fail=True)
+    status, _ = run_main(push_sandbox, monkeypatch, deletion, "push", "origin", ":refs/heads/gone")
+    assert status == 0 and deletion.calls == 0, capfd.readouterr().err
+
+
+@pytest.mark.parametrize("answer", [None, "local-hit"])
+def test_forged_tracking_ref_and_insteadof_cannot_exclude_a_hit(push_sandbox, monkeypatch, capfd, answer):
+    """Only the canonical repository client names the public head; local refs and URL rewriting are not read."""
     base = _git(push_sandbox.work, "rev-parse", "HEAD")
     hit = push_sandbox.commit("subject " + TOKEN)
     for ref in ("refs/remotes/origin/main", "refs/remotes/origin/HEAD", "refs/heads/main"):
@@ -726,43 +668,27 @@ def test_forged_tracking_ref_and_insteadof_cannot_excuse_a_hit(push_sandbox, mon
     # origin names the canonical repository; insteadOf serves it from the local remote.
     _git(push_sandbox.work, "remote", "set-url", "origin", "https://github.com/unit/public.git")
     _git(push_sandbox.work, "config", f"url.{push_sandbox.remote}.insteadOf", "https://github.com/unit/public.git")
-    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(base))
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(base if answer else None))
     assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in capfd.readouterr().err
 
 
-@pytest.mark.parametrize("head_is_local", [True, False])
-def test_many_published_hits_and_one_new_hit_refuse_only_the_new_one(push_sandbox, monkeypatch, capfd, head_is_local):
-    published = [push_sandbox.commit(f"published {number} " + TOKEN) for number in range(30)]
-    new = push_sandbox.commit("new subject " + TOKEN)
-    client = FakePublic(published[-1] if head_is_local else "e" * 40, public=published)
-    status, executed = run_main(push_sandbox, monkeypatch, client)
-    err = capfd.readouterr().err
-    assert status == 2 and not executed
-    assert err.count("rule=synthetic-rule") == 1 and f"field=commit[{new[:12]}].message" in err
-    assert "30 hit(s) excused as already public" in err
-    # A remote head costs one default-head read, a no for the new hit and one yes covering all 30.
-    assert client.calls == (1 if head_is_local else 3), err
-    assert (push_sandbox.work / PUBLIC_CACHE).read_text().splitlines()[1:] == sorted(published)
+def test_shim_push_without_a_reachable_api_scans_in_full(push_sandbox):
+    """The sandbox shim has no publisher read path and no gh, so its client answers nothing and nothing is excluded."""
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    push_sandbox.commit("clean follow-up")
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{hit[:12]}].message")
+    assert "public default-branch head unavailable (1 public repository call(s))" in result.stderr
 
 
-def test_compare_calls_are_bounded(push_sandbox, monkeypatch, capfd):
-    hits = [push_sandbox.commit(f"unpublished {number} " + TOKEN) for number in range(git_push.COMPARE_LIMIT + 5)]
-    client = FakePublic("e" * 40)
-    status, _ = run_main(push_sandbox, monkeypatch, client)
-    assert status == 2 and client.calls == 1 + git_push.COMPARE_LIMIT
-    assert capfd.readouterr().err.count("rule=synthetic-rule") == len(hits)
-
-
-def compare_runner(compare, *, head="e" * 40, calls=None):
-    """A gh transport answering the typed default-head and compare reads."""
+def head_runner(reply, *, calls):
+    """A gh transport answering only the typed default-head read; records (argv, kwargs, document)."""
 
     def run(argv, **kwargs):
-        if calls is not None:
-            calls.append((argv, kwargs))
-        if argv[:5] == ["gh", "api", "--method", "POST", "graphql"]:
-            body = {"data": {"repository": {"defaultBranchRef": {"target": {"oid": head}}}}}
-            return subprocess.CompletedProcess(argv, 0, json.dumps(body), "")
-        return compare(argv)
+        assert argv[:5] == ["gh", "api", "--method", "POST", "graphql"], argv
+        calls.append((argv, kwargs, json.loads(Path(argv[argv.index("--input") + 1]).read_text())))
+        return reply(argv)
 
     return run
 
@@ -777,74 +703,74 @@ def _timeout(argv):
     raise subprocess.TimeoutExpired(argv, git_push.API_TIMEOUT)
 
 
+def _head_body(head, *, name="unit/public", branch="main"):
+    return {
+        "data": {"repository": {"nameWithOwner": name, "defaultBranchRef": {"name": branch, "target": {"oid": head}}}}
+    }
+
+
 @pytest.mark.parametrize(
-    "compare",
+    "reply",
     [
-        pytest.param(_reply(1, ""), id="api-failure"),
-        pytest.param(_timeout, id="timeout"),
-        pytest.param(_reply(1, {"message": "Not Found", "status": "404"}), id="unknown-commit"),
-        pytest.param(_reply(1, {"message": "API rate limit exceeded", "status": "403"}), id="rate-limit"),
-        pytest.param(_reply(0, '{"status": "behind", "merge_base_co'), id="truncated"),
-        pytest.param(_reply(0, {"status": "behind"}), id="no-merge-base"),
-        pytest.param(_reply(0, {"status": "behind", "merge_base_commit": {"sha": "d" * 40}}), id="other-merge-base"),
-        pytest.param(_reply(0, {"status": "maybe", "merge_base_commit": {"sha": "d" * 40}}), id="unknown-status"),
-        pytest.param(_reply(0, ["behind"]), id="malformed"),
+        pytest.param(lambda head: _reply(1, ""), id="api-failure"),
+        pytest.param(lambda head: _timeout, id="timeout"),
+        pytest.param(lambda head: _reply(1, {"message": "Not Found", "status": "404"}), id="not-found"),
+        pytest.param(lambda head: _reply(1, {"message": "API rate limit exceeded", "status": "403"}), id="rate-limit"),
+        pytest.param(lambda head: _reply(0, json.dumps(_head_body(head))[:-7]), id="truncated"),
+        pytest.param(lambda head: _reply(0, [head]), id="malformed"),
+        pytest.param(
+            lambda head: _reply(
+                0, {"data": {"repository": {"nameWithOwner": "unit/public", "defaultBranchRef": None}}}
+            ),
+            id="no-branch",
+        ),
+        pytest.param(lambda head: _reply(0, _head_body(head, name="unit/forged")), id="wrong-repository"),
+        pytest.param(
+            lambda head: _reply(
+                0, {"data": {"repository": {"defaultBranchRef": {"name": "main", "target": {"oid": head}}}}}
+            ),
+            id="no-repository-identity",
+        ),
+        pytest.param(lambda head: _reply(0, _head_body(head, branch="release")), id="wrong-branch"),
+        pytest.param(lambda head: _reply(0, _head_body("main")), id="non-hex"),
+        pytest.param(lambda head: _reply(0, _head_body(head.upper())), id="uppercase-hex"),
+        pytest.param(lambda head: _reply(0, _head_body(head + "0" * 24)), id="long-hex"),
+        pytest.param(
+            lambda head: _reply(0, {**_head_body(head), "errors": [{"message": "partial"}]}), id="graphql-errors"
+        ),
+        pytest.param(lambda head: _reply(1, _head_body(head)), id="failed-exit"),
     ],
 )
-def test_every_failed_or_unclear_answer_refuses(push_sandbox, monkeypatch, capfd, compare):
-    hit = push_sandbox.commit("subject " + TOKEN)
+def test_every_failed_or_unbound_head_reply_excludes_nothing(push_sandbox, monkeypatch, capfd, reply):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    public_head = push_sandbox.commit("published clean")
+    push_sandbox.commit("new clean work")
     calls = []
     client = git_push.CanonicalPublicRepository(
-        "github.com/unit/public", _env(), runner=compare_runner(compare, calls=calls)
+        "github.com/unit/public", _env(), runner=head_runner(reply(public_head), calls=calls)
     )
     status, executed = run_main(push_sandbox, monkeypatch, client)
     err = capfd.readouterr().err
-    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err
-    assert not (push_sandbox.work / PUBLIC_CACHE).exists()
-    assert [argv[4] for argv, _ in calls[1:]] == [f"repos/unit/public/compare/{'e' * 40}...{hit}?per_page=100"]
-    assert all(kwargs["timeout"] == git_push.API_TIMEOUT for _, kwargs in calls)
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err, err
+    assert "public default-branch head unavailable (1 public repository call(s))" in err
+    assert len(calls) == 1 and calls[0][1]["timeout"] == git_push.API_TIMEOUT
 
 
-@pytest.mark.parametrize(
-    "head_reply",
-    [
-        _reply(1, ""),
-        _timeout,
-        _reply(0, {"data": {"repository": {"defaultBranchRef": None}}}),
-        _reply(0, {"data": {"repository": {"defaultBranchRef": {"target": {"oid": "main"}}}}}),
-    ],
-)
-def test_unreadable_public_head_refuses(push_sandbox, monkeypatch, capfd, head_reply):
-    hit = push_sandbox.commit("subject " + TOKEN)
+def test_real_client_excludes_on_a_bound_reply_from_the_catalogue_repository(push_sandbox, monkeypatch, capfd):
+    push_sandbox.commit("published subject " + TOKEN)
+    public_head = push_sandbox.commit("published clean")
+    push_sandbox.commit("new clean work")
     calls = []
-
-    def run(argv, **kwargs):
-        calls.append(argv)
-        return head_reply(argv)
-
-    client = git_push.CanonicalPublicRepository("github.com/unit/public", _env(), runner=run)
-    status, _ = run_main(push_sandbox, monkeypatch, client)
-    assert status == 2 and f"field=commit[{hit[:12]}].message" in capfd.readouterr().err
-    assert len(calls) == 1 and calls[0][:5] == [
-        "gh",
-        "api",
-        "--method",
-        "POST",
-        "graphql",
-    ]  # No compare without a head.
-
-
-def test_real_client_excuses_on_a_well_formed_behind_answer(push_sandbox, monkeypatch, capfd):
-    hit = push_sandbox.commit("published subject " + TOKEN)
-    calls = []
-    reply = _reply(0, _consistent(hit))
     client = git_push.CanonicalPublicRepository(
-        "github.com/unit/public", _env(GH_REPO="unit/forged"), runner=compare_runner(reply, calls=calls)
+        "github.com/unit/public",
+        _env(GH_REPO="unit/forged", LU_OPSEC_OVERRIDE="x"),
+        runner=head_runner(_reply(0, _head_body(public_head, name="Unit/Public")), calls=calls),
     )
     status, executed = run_main(push_sandbox, monkeypatch, client)
     assert status == 0 and executed, capfd.readouterr().err
-    assert calls[1][0][4] == f"repos/unit/public/compare/{'e' * 40}...{hit}?per_page=100"
-    assert "LU_OPSEC_OVERRIDE" not in calls[1][1]["env"]
+    ((_, kwargs, document),) = calls
+    assert document["variables"] == {"owner": "unit", "name": "public"}
+    assert "nameWithOwner" in document["query"] and "LU_OPSEC_OVERRIDE" not in kwargs["env"]
 
 
 def test_the_default_client_names_the_catalogue_public_repository(monkeypatch):
@@ -856,14 +782,46 @@ def test_the_default_client_names_the_catalogue_public_repository(monkeypatch):
     assert git_push.CanonicalPublicRepository.from_catalog({}) is None
 
 
-def test_ref_name_hits_are_never_excused(push_sandbox, monkeypatch, capfd):
-    status, _ = run_main(
-        push_sandbox, monkeypatch, FakePublic(None, fail=True), "push", "origin", f"HEAD:refs/heads/x-{TOKEN}"
-    )
+def test_ref_name_hits_are_scanned_even_when_the_commit_is_public(push_sandbox, monkeypatch, capfd):
+    head = _git(push_sandbox.work, "rev-parse", "HEAD")
+    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(head), "push", "origin", f"HEAD:refs/heads/x-{TOKEN}")
     assert status == 2 and "field=branch[1].name" in capfd.readouterr().err
 
 
-# --- Round 5: embedded tag names, whole messages, compare replies bound to the queried head ---
+STALE_CACHES = {
+    "lu-push-scan-clean": "lu-push-scan-clean 2 {fingerprint}\n{sha}\n",
+    "lu-push-scan-public": "lu-push-scan-public 2 {fingerprint}\n{sha}\n",
+}
+
+
+def _scan_files(sandbox):
+    return {
+        path.name: (path.read_bytes(), path.stat().st_mtime_ns)
+        for path in (sandbox.work / ".git").glob("lu-push-scan*")
+    }
+
+
+def test_no_scan_cache_is_created(push_sandbox):
+    push_sandbox.commit("clean one")
+    for ref in ("feature", "other"):
+        result = push_sandbox.push("push", "origin", f"HEAD:refs/heads/{ref}")
+        assert result.returncode == 0 and "2 commit(s) scanned" in result.stderr, result.stderr
+    assert _scan_files(push_sandbox) == {}
+
+
+def test_a_stale_cache_from_an_older_scanner_is_ignored_and_untouched(push_sandbox):
+    sha = push_sandbox.commit("subject " + TOKEN)
+    for name, content in STALE_CACHES.items():
+        (push_sandbox.work / ".git" / name).write_text(content.format(fingerprint="f" * 64 + " " + "c" * 64, sha=sha))
+        (push_sandbox.work / ".git" / f"{name}.lock").write_text("")
+    files = _scan_files(push_sandbox)
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
+    assert _scan_files(push_sandbox) == files
+
+
+# --- Embedded tag names, whole messages ---
 
 
 def _object(cwd, kind, data: bytes):
@@ -918,31 +876,37 @@ def test_clean_embedded_tag_name_passes(push_sandbox):
     assert push_sandbox.remote_refs()["refs/tags/clean-alias"] == outer
 
 
-def test_embedded_tag_name_hit_is_never_excused(push_sandbox, monkeypatch, capfd):
-    """A public commit excuses its own message, never the name of a tag pointing at it."""
+@pytest.mark.parametrize(
+    ("name", "message", "field"),
+    [
+        pytest.param(f"v1-{TOKEN}", b"clean release\n", "tagname", id="tag-name"),
+        pytest.param("v1", f"release {TOKEN}\n".encode(), "message", id="tag-message"),
+    ],
+)
+def test_annotated_tag_on_a_public_commit_is_still_scanned(push_sandbox, monkeypatch, capfd, name, message, field):
+    """A public commit excludes its own message, never the name or message of a tag pointing at it."""
     hit = push_sandbox.commit("published subject " + TOKEN)
-    tag = _tag(push_sandbox.work, hit, "commit", f"v1-{TOKEN}")
+    tag = _tag(push_sandbox.work, hit, "commit", name, message)
     status, executed = run_main(push_sandbox, monkeypatch, FakePublic(hit), "push", "origin", f"{tag}:refs/tags/v1")
     err = capfd.readouterr().err
     assert status == 2 and not executed
-    assert f"field=tag[{tag[:12]}].tagname" in err and f"field=commit[{hit[:12]}].message" not in err, err
+    assert f"field=tag[{tag[:12]}].{field}" in err and f"field=commit[{hit[:12]}].message" not in err, err
+    assert "0 commit(s) scanned" in err
 
 
-def test_commit_message_hit_after_a_nul_is_refused_and_never_cached(push_sandbox):
+def test_commit_message_hit_after_a_nul_is_refused(push_sandbox):
     before = push_sandbox.remote_refs()
     sha = _commit(push_sandbox.work, b"clean subject\x00 " + TOKEN.encode() + b"\n")
     result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
     assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
-    cache = push_sandbox.work / CACHE
-    assert not cache.exists() or sha not in cache.read_text().split()
 
 
 @pytest.mark.parametrize("message", [b"clean subject\n\nclean body\n", b"clean subject\x00clean tail\n"])
-def test_wholly_scanned_clean_raw_commit_is_cached(push_sandbox, message):
+def test_wholly_scanned_clean_raw_commit_is_delivered(push_sandbox, message):
     sha = _commit(push_sandbox.work, message)
     result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
     assert result.returncode == 0, result.stderr
-    assert sha in (push_sandbox.work / CACHE).read_text().split()
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
 
 
 def test_tag_message_hit_after_a_nul_is_refused(push_sandbox):
@@ -951,70 +915,6 @@ def test_tag_message_hit_after_a_nul_is_refused(push_sandbox):
     tag = _tag(push_sandbox.work, head, "commit", "v1", b"clean release\x00 " + TOKEN.encode() + b"\n")
     result = push_sandbox.push("push", "origin", f"{tag}:refs/tags/v1")
     assert_blocked(result, push_sandbox, before, f"tag[{tag[:12]}].message")
-
-
-def _consistent(hit, head="e" * 40):
-    return {
-        "status": "behind",
-        "ahead_by": 0,
-        "behind_by": 3,
-        "base_commit": {"sha": head},
-        "merge_base_commit": {"sha": hit},
-    }
-
-
-@pytest.mark.parametrize(
-    "mutate",
-    [
-        pytest.param(lambda body, hit: body.update(base_commit={"sha": "d" * 40}), id="other-base-commit"),
-        pytest.param(lambda body, hit: body.pop("base_commit"), id="no-base-commit"),
-        pytest.param(lambda body, hit: body.update(base_commit="e" * 40), id="malformed-base-commit"),
-        pytest.param(lambda body, hit: body.update(merge_base_commit={"sha": "d" * 40}), id="other-merge-base"),
-        pytest.param(lambda body, hit: body.update(ahead_by=1), id="behind-yet-ahead"),
-        pytest.param(lambda body, hit: body.update(behind_by=0), id="behind-by-nothing"),
-        pytest.param(lambda body, hit: body.pop("behind_by"), id="no-behind-by"),
-        pytest.param(lambda body, hit: body.update(status="identical"), id="identical-but-different"),
-        pytest.param(lambda body, hit: body.update(status="identical", behind_by=0), id="identical-other-commit"),
-    ],
-)
-def test_compare_reply_not_bound_to_the_queried_head_excuses_nothing(push_sandbox, monkeypatch, capfd, mutate):
-    hit = push_sandbox.commit("subject " + TOKEN)
-    body = _consistent(hit)
-    mutate(body, hit)
-    client = git_push.CanonicalPublicRepository(
-        "github.com/unit/public", _env(), runner=compare_runner(_reply(0, body))
-    )
-    status, executed = run_main(push_sandbox, monkeypatch, client)
-    err = capfd.readouterr().err
-    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err
-    assert not (push_sandbox.work / PUBLIC_CACHE).exists()
-
-
-@pytest.mark.parametrize(
-    ("head", "body"),
-    [
-        pytest.param("e" * 40, _consistent, id="behind"),
-        pytest.param(
-            None,
-            lambda hit, head=None: {
-                "status": "identical",
-                "ahead_by": 0,
-                "behind_by": 0,
-                "base_commit": {"sha": hit},
-                "merge_base_commit": {"sha": hit},
-            },
-            id="identical",
-        ),
-    ],
-)
-def test_contains_accepts_only_a_consistent_reply_about_the_queried_head(head, body):
-    hit = "a" * 40
-    head = head or hit
-    client = git_push.CanonicalPublicRepository(
-        "github.com/unit/public", _env(), runner=compare_runner(_reply(0, body(hit)), head=head)
-    )
-    assert client.contains(head, hit) is True
-    assert client.contains("f" * 40, hit) is None  # The same reply about another head is no answer.
 
 
 @pytest.mark.parametrize(
@@ -1049,7 +949,7 @@ def test_split_object_keeps_every_reading_of_the_whole_message(raw, fields, expe
     assert TOKEN in message
 
 
-# --- Round 6: text embedded in mergetag headers, objects without a header/body separator ---
+# --- Text embedded in mergetag headers, objects without a header/body separator ---
 
 
 def _signed_tag(cwd, target, name, message="clean release\n"):
@@ -1079,11 +979,6 @@ def _merge(sandbox, *tags):
     return merge
 
 
-def _cached(sandbox):
-    cache = sandbox.work / CACHE
-    return set(cache.read_text().split()) if cache.exists() else set()
-
-
 @pytest.mark.parametrize(
     ("name", "message", "field"),
     [
@@ -1091,22 +986,20 @@ def _cached(sandbox):
         pytest.param(f"v1-{TOKEN}", "clean release\n", "tagname", id="embedded-name"),
     ],
 )
-def test_mergetag_hit_under_a_clean_merge_message_is_refused_and_never_cached(push_sandbox, name, message, field):
+def test_mergetag_hit_under_a_clean_merge_message_is_refused(push_sandbox, name, message, field):
     before = push_sandbox.remote_refs()
     tag = _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), name, message)
     merge = _merge(push_sandbox, tag)
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert_blocked(result, push_sandbox, before, f"commit[{merge[:12]}].mergetag[1].{field}")
     assert f"commit[{merge[:12]}].message" not in result.stderr
-    assert merge not in _cached(push_sandbox)
 
 
-def test_clean_signed_tag_merge_still_delivers_and_is_cached(push_sandbox):
+def test_clean_signed_tag_merge_still_delivers(push_sandbox):
     merge = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), "v1"))
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert result.returncode == 0, result.stderr
     assert push_sandbox.remote_refs()["refs/heads/feature"] == merge
-    assert merge in _cached(push_sandbox)
 
 
 def test_octopus_merge_hit_in_the_second_mergetag_only_is_refused(push_sandbox):
@@ -1117,21 +1010,29 @@ def test_octopus_merge_hit_in_the_second_mergetag_only_is_refused(push_sandbox):
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert_blocked(result, push_sandbox, before, f"commit[{merge[:12]}].mergetag[2].message")
     assert "mergetag[1]" not in result.stderr
-    assert merge not in _cached(push_sandbox)
 
 
-def test_mergetag_hit_in_an_already_public_merge_is_excused(push_sandbox, monkeypatch, capfd):
+def test_public_merge_is_excluded_with_its_embedded_tag_text(push_sandbox, monkeypatch, capfd):
     """The merge commit carries the embedded tag, so a public merge has already published it."""
     merge = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), f"v1-{TOKEN}"))
     push_sandbox.commit("new clean work")
     status, executed = run_main(push_sandbox, monkeypatch, FakePublic(merge))
     err = capfd.readouterr().err
     assert status == 0 and executed, err
-    assert "1 hit(s) excused as already public" in err and TOKEN not in err
-    assert merge not in _cached(push_sandbox)
+    assert "1 commit(s) scanned" in err and TOKEN not in err and merge[:12] not in err
 
 
-def test_commit_without_a_header_body_separator_is_refused_and_never_cached(push_sandbox):
+def test_new_merge_on_top_of_public_main_has_its_mergetag_text_scanned(push_sandbox, monkeypatch, capfd):
+    public_head = _git(push_sandbox.work, "rev-parse", "HEAD")
+    merge = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), f"v1-{TOKEN}"))
+    # The new merge and its side commit are scanned; the merge's mergetag text is read with it.
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(public_head))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed
+    assert f"field=commit[{merge[:12]}].mergetag[1].tagname" in err and "2 commit(s) scanned" in err, err
+
+
+def test_commit_without_a_header_body_separator_is_refused(push_sandbox):
     before = push_sandbox.remote_refs()
     tree, parent = _git(push_sandbox.work, "rev-parse", "HEAD^{tree}"), _git(push_sandbox.work, "rev-parse", "HEAD")
     identity = "unit <unit@example.invalid> 0 +0000"
@@ -1142,7 +1043,6 @@ def test_commit_without_a_header_body_separator_is_refused_and_never_cached(push
     assert f"OPSEC: commit[{sha[:12]}] has no header/body separator; push refused." in result.stderr
     assert TOKEN not in result.stderr and TOKEN not in result.stdout
     assert push_sandbox.remote_refs() == before
-    assert sha not in _cached(push_sandbox)
 
 
 def test_tag_without_a_header_body_separator_is_refused(push_sandbox):
@@ -1170,7 +1070,6 @@ def test_mergetag_without_a_header_body_separator_is_refused(push_sandbox):
     assert result.returncode == 2, result.stderr
     assert f"OPSEC: commit[{sha[:12]}].mergetag[1] has no header/body separator; push refused." in result.stderr
     assert TOKEN not in result.stderr and push_sandbox.remote_refs() == before
-    assert sha not in _cached(push_sandbox)
 
 
 @pytest.mark.parametrize("raw", [b"tag v1\nno separator " + TOKEN.encode(), b" opening continuation\n\nbody"])
@@ -1180,14 +1079,13 @@ def test_split_object_refuses_text_outside_any_message(raw):
     assert str(raised.value).startswith("OPSEC: commit[unit] ") and TOKEN not in str(raised.value)
 
 
-# --- Round 7: cache entries are bound to the scanning code that wrote them; linear unfolding ---
+# --- Nothing an earlier push decided is trusted; linear unfolding ---
 
-# Each edit reverts one round-6 fix in the sandbox copy, giving its shim an older, weaker scanner.
+# Each edit reverts one mergetag/separator fix in the sandbox copy, giving its shim an older, weaker scanner.
 WEAKER_SCANNERS = {
     "mergetag": ('if key == b"mergetag"]', 'if key == b"weaker"]'),
     "separator": ("    if not separator:\n", "    if False:\n"),
 }
-COMMENT_ONLY = ("COMPARE_LIMIT = 20\n", "COMPARE_LIMIT = 20  # Any code change, however small.\n")
 
 
 def _with_scanner(sandbox, *edits):
@@ -1199,16 +1097,6 @@ def _with_scanner(sandbox, *edits):
     (sandbox.root / "scripts/opsec/git_push.py").write_text(original)
 
 
-def _trusted(sandbox, name=git_push.CACHE_NAME):
-    """Ids the reviewed scanner would take from a cache file."""
-    ids, _ = git_push.CleanCache(sandbox.work / ".git", _fingerprint(sandbox), name).read()
-    return ids
-
-
-def _mergetag_hit(sandbox):
-    return _merge(sandbox, _signed_tag(sandbox.work, _side(sandbox, "side"), f"v1-{TOKEN}"))
-
-
 def _unseparated_hit(sandbox):
     tree, parent = _git(sandbox.work, "rev-parse", "HEAD^{tree}"), _git(sandbox.work, "rev-parse", "HEAD")
     identity = "unit <unit@example.invalid> 0 +0000"
@@ -1217,171 +1105,25 @@ def _unseparated_hit(sandbox):
 
 
 @pytest.mark.parametrize("weakness", sorted(WEAKER_SCANNERS))
-def test_a_commit_an_older_scanner_cached_clean_is_rescanned_and_refused(push_sandbox, weakness):
-    """The review reproduction: an older scanner caches the hit clean, then the reviewed scanner is swapped in."""
-    sha = _mergetag_hit(push_sandbox) if weakness == "mergetag" else _unseparated_hit(push_sandbox)
+def test_a_commit_an_older_scanner_passed_is_rescanned_and_refused(push_sandbox, weakness):
+    """An older scanner's clean verdict is never carried into a later push."""
+    if weakness == "mergetag":
+        sha = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), f"v1-{TOKEN}"))
+    else:
+        sha = _unseparated_hit(push_sandbox)
     _with_scanner(push_sandbox, WEAKER_SCANNERS[weakness])
     older = push_sandbox.push("push", "origin", f"{sha}:refs/heads/older")
-    assert older.returncode == 0 and sha in _cached(push_sandbox), older.stderr
+    assert older.returncode == 0, older.stderr
     _with_scanner(push_sandbox)
     before = push_sandbox.remote_refs()
     result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
-    assert "OPSEC: push scan cache unusable; every reachable commit scanned." in result.stderr
     if weakness == "mergetag":
         assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].mergetag[1].tagname")
     else:
         assert result.returncode == 2, result.stderr
         assert f"OPSEC: commit[{sha[:12]}] has no header/body separator; push refused." in result.stderr
         assert TOKEN not in result.stderr and push_sandbox.remote_refs() == before
-    assert sha not in _trusted(push_sandbox)
-
-
-def test_unchanged_scanning_code_reuses_its_cache_and_any_change_rescans(push_sandbox):
-    push_sandbox.commit("clean one")
-    first = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert first.returncode == 0 and "2 commit message(s) scanned, 0 skipped" in first.stderr, first.stderr
-    assert "not updated" not in first.stderr
-    second = push_sandbox.push("push", "origin", "HEAD:refs/heads/other")
-    assert second.returncode == 0 and "0 commit message(s) scanned, 2 skipped" in second.stderr, second.stderr
-    assert "unusable" not in second.stderr
-    _with_scanner(push_sandbox, COMMENT_ONLY)
-    third = push_sandbox.push("push", "origin", "HEAD:refs/heads/third")
-    assert third.returncode == 0 and "2 commit message(s) scanned, 0 skipped" in third.stderr, third.stderr
-    assert "OPSEC: push scan cache unusable; every reachable commit scanned." in third.stderr
-    fourth = push_sandbox.push("push", "origin", "HEAD:refs/heads/fourth")
-    assert "0 commit message(s) scanned, 2 skipped" in fourth.stderr, fourth.stderr
-
-
-def test_a_public_excuse_recorded_by_other_scanning_code_is_rechecked(push_sandbox, monkeypatch, capfd):
-    hit = push_sandbox.commit("published subject " + TOKEN)
-    assert run_main(push_sandbox, monkeypatch, FakePublic(hit))[0] == 0, capfd.readouterr().err
-    assert (push_sandbox.work / PUBLIC_CACHE).read_text().split()[-1] == hit
-    # The shim's own client never answers (no gh), so only the cache can excuse the hit.
-    same = push_sandbox.push("push", "origin", "HEAD:refs/heads/same")
-    assert same.returncode == 0, same.stderr
-    assert "1 hit(s) excused as already public (0 public repository call(s))" in same.stderr
-    _with_scanner(push_sandbox, COMMENT_ONLY)
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert_blocked(result, push_sandbox, before, f"commit[{hit[:12]}].message")
-    assert "OPSEC: push scan public cache unusable; hit commits rechecked." in result.stderr
-
-
-@pytest.mark.parametrize("code", ["readable", "missing", "unreadable"])
-def test_unreadable_scanning_code_never_reuses_either_cache(push_sandbox, monkeypatch, capfd, tmp_path, code):
-    if code == "unreadable" and os.geteuid() == 0:
-        pytest.skip("root reads mode-000 files")
-    base = _git(push_sandbox.work, "rev-parse", "HEAD")
-    excused = push_sandbox.commit("published subject " + TOKEN)
-    cached = push_sandbox.commit("subject " + TOKEN)
-    fingerprint = _fingerprint(push_sandbox)
-    assert git_push.CleanCache(push_sandbox.work / ".git", fingerprint).record([base, cached], full=True)
-    public = git_push.CleanCache(push_sandbox.work / ".git", fingerprint, git_push.PUBLIC_CACHE_NAME)
-    assert public.record([excused], full=True)
-    files = {path: path.read_bytes() for path in (push_sandbox.work / CACHE, push_sandbox.work / PUBLIC_CACHE)}
-    if code != "readable":
-        extra = tmp_path / "scanner-part.py"
-        if code == "unreadable":
-            extra.write_text("# part of the scan\n")
-            extra.chmod(0)
-        monkeypatch.setattr(git_push, "SCAN_SOURCES", (*git_push.SCAN_SOURCES, extra))
-        # What the import-time read captures when part of the code cannot be read.
-        monkeypatch.setattr(git_push, "LOADED_CODE_DIGEST", git_push._source_digest(git_push.SCAN_SOURCES))
-    status, executed = run_main(push_sandbox, monkeypatch, FakePublic("e" * 40))
-    err = capfd.readouterr().err
-    if code == "readable":  # Positive control: while the code is readable both cached entries are honoured.
-        assert status == 0 and executed, err
-        return
-    assert status == 2 and not executed, err
-    assert "OPSEC: push scan code unreadable; caches unused." in err
-    assert "push scan cache unusable" in err and "push scan public cache unusable" in err
-    assert f"field=commit[{cached[:12]}].message" in err and TOKEN not in err
-    assert {path: path.read_bytes() for path in files} == files  # Never rewritten without a fingerprint.
-
-
-# --- Round 8: the fingerprint names the code that ran; no cache write once the code on disk changed ---
-
-SCAN_START = '    global_options, command, rest = split_command(argv)\n    if command != "push":\n'
-REVIEWED = ROOT / "scripts/opsec/git_push.py"
-# The checkout is updated to the reviewed code after this scanner loaded and before it scans.
-UPDATED_AFTER_LOAD = (SCAN_START, f"    Path(__file__).write_bytes(Path({str(REVIEWED)!r}).read_bytes())\n{SCAN_START}")
-# An older, wrong scanner whose public repository client says every hit is already public.
-ANSWERS_EVERY_HIT_PUBLIC = (
-    "public_repository = CanonicalPublicRepository.from_catalog(environment)",
-    'public_repository = type("Yes", (), {"calls": 0, "default_head": lambda self: "0" * 40, '
-    '"contains": lambda self, head, sha: True})()',
-)
-
-
-def _not_updated(name):
-    return f"OPSEC: push scan code changed or unreadable since load; {name} not updated."
-
-
-def test_a_scanner_updated_on_disk_mid_push_caches_nothing_and_the_reviewed_scanner_refuses(push_sandbox):
-    """The review reproduction: no forged header or reply, only a checkout update while an older push runs."""
-    sha = _mergetag_hit(push_sandbox)
-    _with_scanner(push_sandbox, WEAKER_SCANNERS["mergetag"], UPDATED_AFTER_LOAD)
-    older = push_sandbox.push("push", "origin", f"{sha}:refs/heads/older")
-    assert older.returncode == 0, older.stderr  # The older scanner still decides its own push.
-    assert (push_sandbox.root / "scripts/opsec/git_push.py").read_bytes() == REVIEWED.read_bytes()
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
-    assert "3 commit message(s) scanned, 0 skipped" in result.stderr, result.stderr
-    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].mergetag[1].tagname")
-    assert _not_updated(git_push.CACHE_NAME) in older.stderr and TOKEN not in older.stderr
-    assert not (push_sandbox.work / CACHE).exists()
-
-
-def test_a_public_excuse_by_a_scanner_updated_on_disk_mid_push_is_not_cached(push_sandbox):
-    hit = push_sandbox.commit("published subject " + TOKEN)
-    _with_scanner(push_sandbox, ANSWERS_EVERY_HIT_PUBLIC, UPDATED_AFTER_LOAD)
-    older = push_sandbox.push("push", "origin", "HEAD:refs/heads/older")
-    assert older.returncode == 0 and "1 hit(s) excused as already public" in older.stderr, older.stderr
-    # The reviewed shim's own client never answers (no gh), so only a cache entry could excuse the hit.
-    before = push_sandbox.remote_refs()
-    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert_blocked(result, push_sandbox, before, f"commit[{hit[:12]}].message")
-    assert _not_updated(git_push.PUBLIC_CACHE_NAME) in older.stderr and TOKEN not in older.stderr
-    assert not (push_sandbox.work / PUBLIC_CACHE).exists() and not (push_sandbox.work / CACHE).exists()
-
-
-@pytest.mark.parametrize("code", ["missing", "unreadable"])
-def test_scanning_code_unreadable_at_write_time_writes_neither_cache(push_sandbox, monkeypatch, capfd, tmp_path, code):
-    if code == "unreadable" and os.geteuid() == 0:
-        pytest.skip("root reads mode-000 files")
-    hit = push_sandbox.commit("published subject " + TOKEN)
-    push_sandbox.commit("clean one")
-    extra = tmp_path / "scanner-part.py"
-    extra.write_text("# part of the scan\n")
-    monkeypatch.setattr(git_push, "SCAN_SOURCES", (*git_push.SCAN_SOURCES, extra))
-    monkeypatch.setattr(git_push, "LOADED_CODE_DIGEST", git_push._source_digest(git_push.SCAN_SOURCES))
-    if code == "missing":
-        extra.unlink()
-    else:
-        extra.chmod(0)
-    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(hit))
-    err = capfd.readouterr().err
-    assert status == 0 and executed, err  # Only caching is skipped; the push result is unchanged.
-    assert "1 hit(s) excused as already public" in err and TOKEN not in err
-    assert _not_updated(git_push.CACHE_NAME) in err and _not_updated(git_push.PUBLIC_CACHE_NAME) in err
-    assert not (push_sandbox.work / CACHE).exists() and not (push_sandbox.work / PUBLIC_CACHE).exists()
-
-
-def test_the_cache_fingerprint_is_the_digest_captured_at_import(monkeypatch, tmp_path):
-    """Changing the source on disk after import changes neither the digest nor the header the process writes."""
-    copy = tmp_path / "git_push.py"
-    copy.write_bytes(REVIEWED.read_bytes())
-    monkeypatch.setattr(sys, "path", list(sys.path))
-    spec = importlib.util.spec_from_file_location("lu_git_push_loaded_copy", copy)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    loaded = git_push._source_digest((copy, Path(gate.__file__)))
-    copy.write_bytes(copy.read_bytes() + b"# Changed after import.\n")
-    monkeypatch.setattr(gate, "matcher_fingerprint", lambda: "m" * 64)
-    assert module.code_digest() == module.LOADED_CODE_DIGEST == loaded
-    assert git_push._source_digest((copy, Path(gate.__file__))) != loaded
-    assert module.CleanCache(tmp_path, module.cache_fingerprint()).header == f"lu-push-scan-clean 2 {'m' * 64} {loaded}"
-    assert not module.code_unchanged()
+    assert _scan_files(push_sandbox) == {}
 
 
 def _unfold_seconds(size, repeats=5):

@@ -27,7 +27,12 @@ POLICY = Path(__file__).with_name("blocking.json")
 
 
 class PublishBlocked(RuntimeError):
-    """A safe diagnostic, with no source text or private exception detail."""
+    """A safe diagnostic, with no source text or private exception detail.
+
+    indices names the texts of a check_texts refusal that had a blocking finding.
+    """
+
+    indices: frozenset[int] = frozenset()
 
 
 def publication_boundary(error_type):
@@ -171,19 +176,6 @@ def _matches(text: str, tooling: Path) -> list[dict]:
     return _scan(text, _load_matcher(tooling))
 
 
-def matcher_fingerprint(tooling: Path | None = None) -> str:
-    """SHA-256 over the inputs that decide a scan verdict: matcher, rules and blocking policy."""
-    tooling = tooling or private_tooling()
-    digest = hashlib.sha256()
-    try:
-        for source in (tooling / "matcher.py", tooling / "rules.json", POLICY):
-            data = source.read_bytes()
-            digest.update(len(data).to_bytes(8, "big") + data)
-    except OSError:
-        raise PublishBlocked("OPSEC: private matcher or rules unavailable/incompatible; write refused.") from None
-    return digest.hexdigest()
-
-
 def check_texts(
     destination: str,
     texts: list[str],
@@ -192,56 +184,47 @@ def check_texts(
     tooling: Path | None = None,
     log_path: Path | None = None,
     field_names: list[str] | None = None,
-    excuse=None,
-) -> set[int]:
-    """Scan final fields; an override permits policy hits only after a durable log.
-
-    excuse, when given, receives the indices of texts with a blocking finding
-    and returns those already public; their findings are dropped. Any error
-    from it excuses nothing. Returns the indices of unexcused texts with a
-    blocking finding, which is non-empty only when an override let them through.
-    """
+) -> None:
+    """Scan final fields; an override permits policy hits only after a durable log."""
     environment = os.environ if environment is None else environment
     reason = environment.pop("LU_OPSEC_OVERRIDE", "")
     if not texts:
         if reason.strip():
             _record_override(destination, [], reason, log_path)
-        return set()
+        return
     if is_private(destination):
         if reason.strip():
             _record_override(destination, [], reason, log_path)
-        return set()
+        return
     loaded = _load_matcher(tooling or private_tooling())
-    findings = []
+    blocks = []
+    locations = []
+    blocked = set()
     for index, text in enumerate(texts):
         for finding in _scan(text, loaded):
             rule, level = finding["rule_id"], finding["class"]
             if level <= 5 or rule in loaded[2]:
+                blocks.append((rule, level))
+                blocked.add(index)
                 # Names come from option/JSON keys, never from field values.
                 name = field_names[index] if field_names and index < len(field_names) else f"text[{index + 1}]"
                 if not re.fullmatch(r"[A-Za-z0-9_.\[\]-]{1,80}", name):
                     name = f"text[{index + 1}]"
                 line = text.count("\n", 0, finding["start"]) + 1
-                findings.append((index, rule, level, f"rule={rule} class={level} field={name} line={line}"))
-    excused: set[int] = set()
-    if excuse is not None and findings:
-        try:
-            excused = set(excuse({index for index, *_ in findings}))
-        except Exception:
-            excused = set()
-    findings = [finding for finding in findings if finding[0] not in excused]
-    blocks = [(rule, level) for _, rule, level, _ in findings]
-    blocked_texts = {index for index, *_ in findings}
-    locations = list(dict.fromkeys(location for *_, location in findings))
+                location = f"rule={rule} class={level} field={name} line={line}"
+                if location not in locations:
+                    locations.append(location)
     if reason.strip():
         _record_override(destination, blocks, reason, log_path)
-        return blocked_texts
+        return
     if not blocks:
-        return blocked_texts
-    raise PublishBlocked(
+        return
+    error = PublishBlocked(
         f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "
         "set LU_OPSEC_OVERRIDE to a reason for this command only."
     )
+    error.indices = frozenset(blocked)
+    raise error
 
 
 def _record_override(destination: str, blocks: list[tuple[str, int]], reason: str, log_path: Path | None) -> None:
