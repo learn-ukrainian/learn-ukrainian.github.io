@@ -209,6 +209,51 @@ def test_a1_letter_module_writer_prompt_stays_under_ceiling(
     assert _a1_letter_prompt_size() <= WRITER_PROMPT_CEILING_BYTES
 
 
+def test_a1_letter_prompt_keeps_six_distinct_corpus_excerpts_whole_under_ceiling(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+) -> None:
+    """Fixture corpus only: no excerpt is traded for the prompt's editorial history."""
+    from tests.test_textbook_grounding import _seed_textbook_db
+
+    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
+    plan_path = linear_pipeline.plan_path_for("a1", "sounds-letters-and-hello")
+    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+    references = [
+        {"title": f"Караман Grade 10, p.{page}", "notes": f"Fixture grounding {page}."}
+        for page in range(1, 7)
+    ]
+    plan["references"] = references
+    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    rows = [
+        {
+            "chunk_id": f"fixture-source-{page}_s{page:04d}",
+            "source_file": f"fixture-source-{page}",
+            "title": f"Fixture page {page}",
+            "grade": "10",
+            "author_uk": "Караман",
+            "text": f"BEGIN-{page} " + (f"whole excerpt {page} " * 70) + f"END-{page}",
+        }
+        for page in range(1, 7)
+    ]
+    db_path = tmp_path / "fixture-corpus.db"
+    _seed_textbook_db(db_path, rows)
+    monkeypatch.setattr(linear_pipeline, "TEXTBOOK_SOURCES_DB_PATH", db_path)
+
+    prompt = render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
+
+    assert prompt.count("\n## Plan References\n") == 1
+    for page, (reference, row) in enumerate(zip(references, rows, strict=True), start=1):
+        quote = "\n".join(f"> {line}" for line in row["text"].splitlines())
+        section = prompt.split(f"### {reference['title']}\n", 1)[1].split("\n##", 1)[0]
+        assert quote in section
+        assert f"Source: {row['title']} (Караман, Grade 10, p.{page}, {row['source_file']})" in section
+        assert prompt.count(quote) == 1
+    size = len(prompt.encode("utf-8"))
+    assert size <= WRITER_PROMPT_CEILING_BYTES, f"Fixture-corpus prompt: {size} bytes"
+    print(f"Fixture corpus: 6/6 whole distinct excerpts; {size}/{WRITER_PROMPT_CEILING_BYTES} bytes.")
+
+
 def _render_pinned_a1_letter_prompt(monkeypatch: pytest.MonkeyPatch, root: Path) -> str:
     _pin_a1_letter_prompt_inputs(monkeypatch, root)
     return render_fixture_writer_prompt("a1", "sounds-letters-and-hello")
@@ -340,7 +385,17 @@ def test_a1_letter_prompt_size_ignores_ambient_curriculum(
     assert _a1_letter_prompt_size() != pinned
 
 
-def test_a1_m20_writer_prompt_stays_under_ceiling() -> None:
+def test_a1_m20_writer_prompt_stays_under_ceiling(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    # Like the letter fixture, read only staged HEAD inputs and no ambient DB.
+    _pin_a1_letter_prompt_inputs(monkeypatch, tmp_path)
+    plan_path = _stage_checkout_file(tmp_path, "curriculum/l2-uk-en/plans/a1/my-morning.yaml")
+    article_path = _stage_checkout_file(tmp_path, "wiki/pedagogy/a1/my-morning.md")
+    _stage_checkout_file(tmp_path, "wiki/pedagogy/a1/my-morning.sources.yaml")
+    curriculum_root = _stage_learner_state_inputs(tmp_path, plan_path.read_text(encoding="utf-8"))
+    monkeypatch.setattr(linear_pipeline, "plan_path_for", lambda *_args: plan_path)
+    monkeypatch.setattr(linear_pipeline, "_wiki_article_paths", lambda *_args: [article_path])
+    monkeypatch.setattr(learner_state, "CURRICULUM_ROOT", curriculum_root)
+    _pin_base_level_manifest(monkeypatch, curriculum_root / "curriculum.yaml")
     prompt = render_fixture_writer_prompt("a1", "my-morning")
 
     assert len(prompt.encode("utf-8")) <= WRITER_PROMPT_CEILING_BYTES
