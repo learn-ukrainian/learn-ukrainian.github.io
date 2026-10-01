@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import os
 import sqlite3
+import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from threading import Barrier, Event
+from time import perf_counter
 from typing import Any
 
 import pytest
@@ -23,10 +25,13 @@ from agents_extensions.shared.session_streams.model import (
     isoformat_z,
 )
 from agents_extensions.shared.session_streams.store import (
+    _REPOSITORY_FILENAMES,
+    MAX_ENTRY_BYTES,
     ContentRejectedError,
     LeaseConflictError,
     LifecycleError,
     SessionStreamStore,
+    validate_entry_body,
 )
 
 NOW = datetime(2026, 7, 18, 12, 0, tzinfo=UTC)
@@ -671,9 +676,11 @@ def test_append_rejects_sensitive_or_non_text_content(tmp_path: Path, body: str,
         "a1.yaml",
         "lexicon-manifest.json",
         "mcp-sources-requests.jsonl",
-        "example.com.py",
-        "EXAMPLE.COM.PY",
-        ".hidden.py",
+        "scripts/store.py",
+        "scripts/x.sh",
+        "scripts/.hidden.py",
+        "README.md",
+        "store.py",
     ],
 )
 def test_append_accepts_repository_filenames(tmp_path: Path, filename: str) -> None:
@@ -724,13 +731,24 @@ def test_append_accepts_repository_filenames(tmp_path: Path, filename: str) -> N
 def test_filename_exemption_uses_only_final_extension(tmp_path: Path, extension: str) -> None:
     store = _store(tmp_path)
     lease = _open(store)
-    store.append_entry(
-        lease,
-        entry_type=EntryType.NOTE,
-        body=f"Changed `example.com.{extension.upper()}`.",
-        idempotency_key="filename",
-        now=NOW + timedelta(seconds=1),
-    )
+    # Domain-shaped names ending in a colliding TLD must remain rejected.
+    if extension in {"md", "py", "sh", "rs"}:
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            store.append_entry(
+                lease,
+                entry_type=EntryType.NOTE,
+                body=f"Changed `example.com.{extension.upper()}`.",
+                idempotency_key="filename",
+                now=NOW + timedelta(seconds=1),
+            )
+    else:
+        store.append_entry(
+            lease,
+            entry_type=EntryType.NOTE,
+            body=f"Changed `example.com.{extension.upper()}`.",
+            idempotency_key="filename",
+            now=NOW + timedelta(seconds=1),
+        )
     with pytest.raises(ContentRejectedError, match="hostname rule"):
         store.append_entry(
             lease,
@@ -739,7 +757,8 @@ def test_filename_exemption_uses_only_final_extension(tmp_path: Path, extension:
             idempotency_key="host",
             now=NOW + timedelta(seconds=2),
         )
-    assert len(store.dump_stream(lease.stream_id)["entries"]) == 1
+    expected_entries = 0 if extension in {"md", "py", "sh", "rs"} else 1
+    assert len(store.dump_stream(lease.stream_id)["entries"]) == expected_entries
 
 
 @pytest.mark.parametrize(
@@ -747,6 +766,56 @@ def test_filename_exemption_uses_only_final_extension(tmp_path: Path, extension:
     [
         # Synthetic domains and documentation addresses; no runtime configuration.
         *[(f"example.{suffix}", "hostname") for suffix in ("com", "org", "net", "io", "dev", "ua", "ru")],
+        *[
+            (host, "hostname")
+            for host in (
+                "docs.rs",
+                "bun.sh",
+                "server.sh",
+                "box.py",
+                "host.md",
+                ".hidden.py",
+                "unknown.md",
+                "SERVER.SH",
+                "example.com.py",
+                "api.example.co.py",
+                "EXAMPLE.COM.PY",
+                "server.sh/admin",
+                "example.md/path",
+                "example.rs?x=1",
+                "example.py#frag",
+                "example.local",
+                "example.lan",
+                "example.internal",
+                "home.arpa",
+                "example.zip",
+                "example.mov",
+                "example.ai",
+                "example.io",
+                "example.so",
+                "example.to",
+                "example.am",
+                "example.cc",
+                "example.ps",
+                "example.pl",
+                "example.pm",
+                "example.sc",
+                "example.py-x",
+                "core.md:12",
+                "store.py:55",
+                "core.md/path",
+                "store.py?x=1",
+                "README.md#frag",
+                "https://core.md",
+                "//store.py",
+                "//example.db",
+                "https://example.json",
+                "core.md.",
+                "scripts/example.com.py",
+                "example.com/core.md",
+                "example.sh/core.md",
+            )
+        ],
         ("sources.db.example.com", "hostname"),
         ("*.example.com", "hostname"),
         (".example.com", "hostname"),
@@ -787,6 +856,94 @@ def test_filename_exemption_preserves_host_and_ip_rejection(tmp_path: Path, body
             lease, entry_type=EntryType.NOTE, body=body, idempotency_key="rejected", now=NOW + timedelta(seconds=1)
         )
     assert store.dump_stream(lease.stream_id)["entries"] == []
+
+
+@pytest.fixture
+def repository_filename_paths() -> tuple[str, ...]:
+    # Snapshot of the explicit exceptions, checked against Git only in tests.
+    # Runtime admission never depends on the caller's filesystem or Git state.
+    return (
+        "agents_extensions/shared/rules/core.md",
+        "README.md",
+        "agents_extensions/shared/session_streams/store.py",
+    )
+
+
+def test_collision_exceptions_are_exact_tracked_repository_names(repository_filename_paths: tuple[str, ...]) -> None:
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
+    )
+    tracked = set(result.stdout.split("\0"))
+    assert set(repository_filename_paths) <= tracked
+    assert {Path(path).name for path in repository_filename_paths} == _REPOSITORY_FILENAMES
+
+
+@pytest.mark.parametrize(
+    "body",
+    [
+        "Opus 5.5",
+        "gpt-6.1-sol",
+        "Python 3.12",
+        "v1.2.3",
+        "0.5",
+        "4.6k",
+        "e.g.",
+        "i.e.",
+        "U.S.",
+        "foo.c",
+        "foo.h",
+        "package.json5",
+        "python -m scripts.fleet_comms",
+    ],
+)
+def test_append_accepts_ordinary_model_version_and_module_tokens(tmp_path: Path, body: str) -> None:
+    store = _store(tmp_path)
+    lease = _open(store)
+    entry = store.append_entry(
+        lease, entry_type=EntryType.NOTE, body=body, idempotency_key="ordinary", now=NOW + timedelta(seconds=1)
+    ).entry
+    assert entry.body == body
+
+
+@pytest.mark.parametrize(
+    "unit,rejected",
+    [
+        ("a", False),
+        ("0123456789abcdef", False),
+        ("YWJjZGVm+/", False),
+        ("a.py-", True),
+        ("a.", False),
+        ("a.1.", False),
+        ("a.py.", True),
+    ],
+)
+def test_entry_validation_handles_64_kib_tokens_without_rescanning(unit: str, rejected: bool) -> None:
+    body = (unit * (MAX_ENTRY_BYTES // len(unit) + 1))[:MAX_ENTRY_BYTES]
+    started = perf_counter()
+    # Some dotted runs are hosts; timing covers both acceptance and rejection.
+    if rejected:
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+    else:
+        validate_entry_body(body)
+    elapsed = perf_counter() - started
+    assert elapsed < 0.5, f"64-KiB token validation took {elapsed:.3f}s"
+
+
+@pytest.mark.parametrize("body", ["contact test@example.com", "a.py-test@example.com", ".test@example.com"])
+def test_email_rejection_preserved_with_linear_token_boundary(body: str) -> None:
+    with pytest.raises(ContentRejectedError, match="email-address rule"):
+        validate_entry_body(body)
+
+
+@pytest.mark.parametrize(
+    "body",
+    ["ssh fixture", "scp fixture", "rsync fixture", "git@fixture:", "a.c-user@fixture:", "user-name@fixture:"],
+)
+def test_ssh_rejection_preserved_with_linear_token_boundary(body: str) -> None:
+    with pytest.raises(ContentRejectedError, match="ssh-alias rule"):
+        validate_entry_body(body)
 
 
 def test_mirror_handoff_accepts_issue_filenames(tmp_path: Path) -> None:
