@@ -1,11 +1,11 @@
 built_with:
-  mcp_commit: 72dabe24945bd8a220d58a6d8518ca01b68cc5cb
-  overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
+  mcp_commit: ec77282ddc285ce0e78f799b215bc0f3770754cf
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 119ce14124b6fa18e37d844a17ce87e967692b9d9bc26fd7fceb7ef8348cf080
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
+  trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
   ulif_forms: pending
   vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
 evidence_schema: 1
@@ -1588,8 +1588,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dm-jcLR_gK0k&q=EhAqAQT4HBvflAAAAAAAAAABGP6E-dUGIjDKZHHWJQ_I8ofmcbNbxzSlrJp-Boq5yuj15fp-5tBEtRXinUD8GzewHK2wW4tAriUyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=m-jcLR_gK0k
+    http_status: 200
   id: V-001
   models:
     letters:
@@ -1603,8 +1603,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DgNjHqjTW9WQ&q=EhAqAQT4HBvflAAAAAAAAAABGP6E-dUGIjDonIhUFio-rTxvmykdsM4DE74XrG_b0Wp97xpA-7jHdlBH9UC_fJkqTeVpBKxXmJgyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+    http_status: 200
   id: V-002
   url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
   use: Pronunciation model for Ґ. Pronunciation model for Ґ after hearing Г from the primer. Scored segment is the publisher-labelled
@@ -1613,8 +1613,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Daq0cjB90s3w&q=EhAqAQT4HBvflAAAAAAAAAABGP6E-dUGIjDX1IAt2SviAcj2oSrHKyaf_SmarWvn3KFq8XZ0aPeNIhidF02CkziK8LlCyyfJFeMyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=aq0cjB90s3w
+    http_status: 200
   id: V-003
   models:
     letters:
@@ -1638,8 +1638,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DKFlsroBW0dk&q=EhAqAQT4HBvflAAAAAAAAAABGP-E-dUGIjDfGBk-69YSjZkgkDfh77a1vmBC2Pi14fFDvl3Y3sSbh_DAF3wSbI3J4-50QHVc3Z4yAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=KFlsroBW0dk
+    http_status: 200
   id: V-005
   models:
     letters:
@@ -1653,8 +1653,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dg4Bh-lqzd48&q=EhAqAQT4HBvflAAAAAAAAAABGP-E-dUGIjBvTjsDI3EFRR_BE_0he2YnzSJZioNa5ns93fZoIjN1Lq4YwXfBavbHlRw90BT5usUyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+    http_status: 200
   id: V-006
   models:
     letters:
@@ -1668,8 +1668,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DBhASNxitC1A&q=EhAqAQT4HBvflAAAAAAAAAABGICF-dUGIjBDikfGfNy6Y_RmZB9NedPimCDhztqiwXW9jIizUn9GgZRbYyCzqk4id7AgJS4inzgyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
+    http_status: 200
   id: V-007
   models:
     letters:
@@ -1683,8 +1683,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DV1hxBE_JbGg&q=EhAqAQT4HBvflAAAAAAAAAABGICF-dUGIjBS78sIInsYcK4H36FMfojxaRTQK1xNu1UiXSw2ZTilLm7L1ibjg6FGD_ovy1iVYKgyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+    http_status: 200
   id: V-008
   models:
     letters:
@@ -1698,8 +1698,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DgVnclpSI0DU&q=EhAqAQT4HBvflAAAAAAAAAABGIGF-dUGIjByiZn5-8ZhRZ-iCtJxGQnfinShbrM98w6UBzR9seZ2huB6pXS8lOx6JbMiG_94wnEyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
+    http_status: 200
   id: V-009
   models:
     letters:
@@ -1713,8 +1713,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DUsJkbdsY2RA&q=EhAqAQT4HBvflAAAAAAAAAABGIGF-dUGIjAXUmQlSwRyD4_puufrHzHuKnK75YUTIKoyV2l8LcIpLVXaSt49RlZwVNB2sd3iesQyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+    http_status: 200
   id: V-010
   models:
     letters:
@@ -1728,8 +1728,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dvpr58zJSJKc&q=EhAqAQT4HBvflAAAAAAAAAABGIKF-dUGIjAeOUTmWlfcsBoUpBLGyq4KBM_mmu4fY3Gz2c2Jht2xbcbkC16WZKfEeR09RocPbfcyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
+    http_status: 200
   id: V-011
   models:
     letters:
@@ -1743,8 +1743,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DdIrGVcqPwqM&q=EhAqAQT4HBvflAAAAAAAAAABGIKF-dUGIjCa3gG90PBCu0ADvAbtBMLLAVK1uSm9eYoR6EdyIbWoRUp4YYeV-ECxoEjppcd7G9kyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=dIrGVcqPwqM
+    http_status: 200
   id: V-012
   models:
     letters:
@@ -1758,8 +1758,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D1D-6MIw3OXY&q=EhAqAQT4HBvflAAAAAAAAAABGIOF-dUGIjBrzggSXSBE05HoBpQBLivFbU6G9dfvMGSUWa97KZppCHo8CdLn7BeuTeb0bqjByrEyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+    http_status: 200
   id: V-013
   models:
     letters:
@@ -1776,15 +1776,23 @@ videos:
     final_url: https://www.ukrainianlessons.com/episode2/
     http_status: 200
   id: V-014
+  models:
+    letters: []
+    segment: null
+    words:
+    - W-075
+    - W-076
   url: https://www.ukrainianlessons.com/episode2/
   use: 'Lessons 1 s1 and 6 s1: W-075+W-076 intact formal opening greeting, from the greeting practice and shop example in
-    public transcript ext-ulp_youtube-302. Replay the whole chunk; the single-letter videos do not establish this greeting.'
+    public transcript ext-ulp_youtube-302. Replay the whole chunk; the single-letter videos do not establish this greeting.
+    Structured targets are attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode
+    confirmation remains driver-owned.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGIOF-dUGIjAHmEyYo1-_95xRit58MJnv8ecXZywcjS87bY7S3kGpIjlR20RP5oEVGt2wKJGz8W0yAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-015
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: 'Full alphabet pronunciation video, identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304:

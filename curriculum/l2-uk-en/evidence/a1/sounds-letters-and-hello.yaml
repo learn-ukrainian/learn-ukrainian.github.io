@@ -1,11 +1,11 @@
 built_with:
-  mcp_commit: 72dabe24945bd8a220d58a6d8518ca01b68cc5cb
-  overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
+  mcp_commit: ec77282ddc285ce0e78f799b215bc0f3770754cf
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: a434c92f06f5b6f20173eec2e0334d9f02518f0fd084ff35406fbb560d6c4393
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
+  trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
   ulif_forms: pending
   vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
 evidence_schema: 1
@@ -817,9 +817,15 @@ videos:
     final_url: https://www.ukrainianlessons.com/episode1/
     http_status: 200
   id: V-001
+  models:
+    letters: []
+    segment: null
+    words:
+    - W-074
   url: https://www.ukrainianlessons.com/episode1/
   use: 'ULP 1-01 public episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section. Public
-    transcript locator ext-ulp_youtube-303; premium notes are grounding only.'
+    transcript locator ext-ulp_youtube-303; premium notes are grounding only. Structured targets are attested by public transcript
+    ext-ulp_youtube-303; no passage timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
@@ -827,9 +833,17 @@ videos:
     final_url: https://www.ukrainianlessons.com/episode2/
     http_status: 200
   id: V-002
+  models:
+    letters: []
+    segment: null
+    words:
+    - W-075
+    - W-076
   url: https://www.ukrainianlessons.com/episode2/
   use: 'ULP 1-02 public episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting section
-    and shop example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk.'
+    and shop example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk. Structured targets are
+    attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode confirmation
+    remains driver-owned.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
@@ -844,8 +858,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DhvB3VpcR3ZE&q=EhAqAQT4HBvflAAAAAAAAAABGOaE-dUGIjBA0v42dywXw_IlXbaRB_enLpNg_XGwHSFPRwHPYt8r7-dMjsgXVk8VsgXIwrzp1LoyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+    http_status: 200
   id: V-004
   models:
     letters:
@@ -859,8 +873,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DgJFxRIPRZbI&q=EhAqAQT4HBvflAAAAAAAAAABGOaE-dUGIjDTTpn-P4YOKwRUO1T6uprSCfyPnk5WdOxWV4S74ch-sthlJ9rXhM-8Lorto7YVMSoyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
+    http_status: 200
   id: V-005
   models:
     letters:
@@ -874,8 +888,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DVB1O6PmtYRU&q=EhAqAQT4HBvflAAAAAAAAAABGOeE-dUGIjBzdLskn7HHVIvLZh0h-gky22NHf1xUVflE2p_Cfq4lPJ09NHwuwbaGHFNmI6PrfXcyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+    http_status: 200
   id: V-006
   models:
     letters:
@@ -889,8 +903,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DW-1rCu0indE&q=EhAqAQT4HBvflAAAAAAAAAABGOeE-dUGIjBfmelE7ElmMzGRrqw72WSOXpnYTTIMntLgEztK-ACyheOVzqdMx0dnMN4-9Kgf9F8yAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=W-1rCu0indE
+    http_status: 200
   id: V-007
   models:
     letters:
@@ -904,8 +918,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DEz95H4ibuJo&q=EhAqAQT4HBvflAAAAAAAAAABGOiE-dUGIjCIayvfRTdJcazK-ztIzNWUEMzRTGNkWe1w9ean_CW05-3be2ku0JauM064PJtY0eAyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
+    http_status: 200
   id: V-008
   url: https://www.youtube.com/watch?v=Ez95H4ibuJo
   use: Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound
@@ -914,8 +928,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DZ9TH0H4ShGo&q=EhAqAQT4HBvflAAAAAAAAAABGOiE-dUGIjDxLHotsqc9uRpp0YK3O38TiaEHcl0zi3ZvWTazvUFnombPjS5WlXFAiT2Sd0wP1HkyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+    http_status: 200
   id: V-009
   models:
     letters:
@@ -929,8 +943,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DvNUfiKHPYaU&q=EhAqAQT4HBvflAAAAAAAAAABGOiE-dUGIjAaE4c7Fz3rodyglpojUOrMxOvzpT7hzlQuRQDXh8UBYo7eSWqKgxT4l7BeylM7rZoyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
+    http_status: 200
   id: V-010
   models:
     letters:
@@ -944,8 +958,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DaFcvYfvQ2X4&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjBirrmELLb3on-ciUiiTfcRWUsUGcU0hyMV0XPYOBjGyBvYy_9EhB0xpYcgK-1AFkQyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+    http_status: 200
   id: V-011
   models:
     letters:
@@ -959,8 +973,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Dv6-3Xg52Buk&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjA1IOalDx1uS6ibsnTuCs3JngeB35CImkkM6FqGi4v5JQ7fRuWzd4Y9O6tl5ENzK74yAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+    http_status: 200
   id: V-012
   models:
     letters:
@@ -974,8 +988,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D7UsFBgSL91E&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjDWyUDtCzY9xOsh9fsZWC9Er4sIbL_MrJv8duh0wsCbLj6vBhskLagn3LVLLbz7W_kyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
+    http_status: 200
   id: V-013
   models:
     letters:
@@ -989,8 +1003,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DJ7sGEI4-xJo&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjBrffbHIqRgDp1LGkOvv-6GxCERFVa90ExwWN31m7MgLwOM7DhWzTpbpW9IrR-AbzAyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+    http_status: 200
   id: V-014
   url: https://www.youtube.com/watch?v=J7sGEI4-xJo
   use: Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound
@@ -999,8 +1013,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DJksSjjxyW5Y&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjB64uJD450246hvrhPIYTneo0ZsiBYo2hyDNd-cCPjkZVCmJj7UtfXWHamT_XT2YJoyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
+    http_status: 200
   id: V-015
   url: https://www.youtube.com/watch?v=JksSjjxyW5Y
   use: Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound
@@ -1009,8 +1023,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DfMGsQ5KPQgg&q=EhAqAQT4HBvflAAAAAAAAAABGOuE-dUGIjBEG65aQuzCQ5Xl8yDwybAqfy_O36flDr-opt2W3aOx1CN3s5Iz21clTDCL6f6V6vwyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+    http_status: 200
   id: V-016
   models:
     letters:

@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml",
-    "sha256": "746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845"
+    "sha256": "b64cba18f655eb47c07091a40724c8d390a2fedb9bd67c0ae144406749234cf5"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock",
-    "sha256": "3b4b1e69dce8c370aab43b7e3e22f4a7d7c1e7984733555293ff31f5d79dcf14"
+    "sha256": "39b9d7ef49f2e00a2fde8a50c9a619ebb5d7906eed87d5538b12cccf203c1042"
   },
   "report_schema": 1,
   "reports": [],

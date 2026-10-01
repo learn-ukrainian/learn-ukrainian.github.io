@@ -563,8 +563,16 @@ videos:
 - id: V-002
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   channel: Ukrainian Lessons Podcast
-  use: Native pronunciation models for the taught letters, then the full alphabet after all letters; no ASR
-    transcription is printed.
+  use: Native pronunciation models for the taught letters, then the full alphabet after all letters; no ASR transcription
+    is printed. Structured targets are attested by public transcript ext-ulp_youtube-304; no passage timing is supplied.
+    Exact playback/timecode confirmation remains driver-owned.
+  models:
+    letters:
+    - Ю
+    - Я
+    - Ш
+    words: []
+    segment: null
 - id: V-003
   url: https://www.youtube.com/watch?v=9JdIBYCTWGw
   channel: Ukrainian Lessons Podcast
@@ -593,9 +601,16 @@ videos:
 - id: V-006
   url: https://www.ukrainianlessons.com/episode2/
   channel: Ukrainian Lessons Podcast
-  use: 'Lesson 1 s1: native model for the intact W-075+W-076 formal greeting before it becomes a reading/copying chunk after
-    ь is taught; public transcript ext-ulp_youtube-302. Also supports greeting recall in lessons 2–7. It does not record the
-    T-001 minimal pair.'
+  use: 'Lesson 1 s1: native model for the intact W-075+W-076 formal greeting before it becomes a reading/copying
+    chunk after ь is taught; public transcript ext-ulp_youtube-302. Also supports greeting recall in lessons 2–7.
+    It does not record the T-001 minimal pair. Structured targets are attested by public transcript ext-ulp_youtube-302;
+    no passage timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
+  models:
+    letters: []
+    words:
+    - W-075
+    - W-076
+    segment: null
 - id: V-007
   url: https://www.ukrainianlessons.com/episode15/
   channel: Ukrainian Lessons Podcast

@@ -17,11 +17,11 @@
   "not_checked": [],
   "pack": {
     "path": "curriculum/l2-uk-en/evidence/a1/special-signs.yaml",
-    "sha256": "889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315"
+    "sha256": "942eb869706049cd978e34e5dde93c2d40e6f9678f33032792a08c0b5abf118d"
   },
   "pack_lock": {
     "path": "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock",
-    "sha256": "974afc8b5a4f6859c9ae7cb238cf91a98708b5f22924f4421df7ea4d1188ede1"
+    "sha256": "323fbb9af5c56d0d42ec0a10df04fec64b6777a17d4571c96c91aa388c2d95ea"
   },
   "report_schema": 1,
   "reports": [],

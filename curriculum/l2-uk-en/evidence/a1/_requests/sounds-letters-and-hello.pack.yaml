@@ -255,12 +255,31 @@ exercises:
   span: {first_words: 'Перепиши в зошит.', last_words: 'Панас ловив лини.'}
   pattern: 'Copy printed model words or short lines into a notebook; the fresh lesson uses only its own taught-letter models.'
 videos:
-- {id: V-001, url: 'https://www.ukrainianlessons.com/episode1/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-01 public
-    episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section. Public transcript locator
-    ext-ulp_youtube-303; premium notes are grounding only.'}
-- {id: V-002, url: 'https://www.ukrainianlessons.com/episode2/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-02 public
-    episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting section and shop example.
-    Public transcript locator ext-ulp_youtube-302; never split or parse the chunk.'}
+- id: V-001
+  url: https://www.ukrainianlessons.com/episode1/
+  channel: Ukrainian Lessons Podcast
+  use: 'ULP 1-01 public episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section.
+    Public transcript locator ext-ulp_youtube-303; premium notes are grounding only. Structured targets are attested
+    by public transcript ext-ulp_youtube-303; no passage timing is supplied. Exact playback/timecode confirmation
+    remains driver-owned.'
+  models:
+    letters: []
+    words:
+    - W-074
+    segment: null
+- id: V-002
+  url: https://www.ukrainianlessons.com/episode2/
+  channel: Ukrainian Lessons Podcast
+  use: 'ULP 1-02 public episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting
+    section and shop example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk. Structured
+    targets are attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode
+    confirmation remains driver-owned.'
+  models:
+    letters: []
+    words:
+    - W-075
+    - W-076
+    segment: null
 - {id: V-003, url: 'https://www.ukrainianlessons.com/episode5/', channel: Ukrainian Lessons Podcast, use: 'ULP 1-05 public
     episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator ext-ulp_youtube-299; compare with
     the native І model V-009, not English spelling.'}

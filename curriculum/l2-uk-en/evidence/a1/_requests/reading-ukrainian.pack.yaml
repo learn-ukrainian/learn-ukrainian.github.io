@@ -417,9 +417,19 @@ videos:
     - Ш
     words: []
     segment: null
-- {id: V-014, url: 'https://www.ukrainianlessons.com/episode2/', channel: Ukrainian Lessons Podcast, use: 'Lessons 1 s1 and
-    6 s1: W-075+W-076 intact formal opening greeting, from the greeting practice and shop example in public transcript ext-ulp_youtube-302.
-    Replay the whole chunk; the single-letter videos do not establish this greeting.'}
+- id: V-014
+  url: https://www.ukrainianlessons.com/episode2/
+  channel: Ukrainian Lessons Podcast
+  use: 'Lessons 1 s1 and 6 s1: W-075+W-076 intact formal opening greeting, from the greeting practice and shop example
+    in public transcript ext-ulp_youtube-302. Replay the whole chunk; the single-letter videos do not establish
+    this greeting. Structured targets are attested by public transcript ext-ulp_youtube-302; no passage timing is
+    supplied. Exact playback/timecode confirmation remains driver-owned.'
+  models:
+    letters: []
+    words:
+    - W-075
+    - W-076
+    segment: null
 - {id: V-015, url: 'https://www.youtube.com/watch?v=ksXIXj7CXwc', channel: Ukrainian Lessons Podcast, use: 'Full alphabet
     pronunciation video, identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304: whole-word
     models for W-118, W-109 and W-110. Restrict each excerpt to letters already taught; this is not evidence for the other

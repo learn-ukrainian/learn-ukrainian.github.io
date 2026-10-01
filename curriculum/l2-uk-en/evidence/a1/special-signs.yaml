@@ -1,11 +1,11 @@
 built_with:
-  mcp_commit: 72dabe24945bd8a220d58a6d8518ca01b68cc5cb
-  overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
+  mcp_commit: ec77282ddc285ce0e78f799b215bc0f3770754cf
+  overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
   sources_db: 887f7e2aca645337f8ef935334827cd57980f69340c8d77dac775cc321f2b48d
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
-  trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
+  trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
   ulif_forms: pending
   vesum: 53923150073b4fc7bee419fe7b071acbe17b6a9aba76cfb2d0336c95f5188680
 evidence_schema: 1
@@ -1601,8 +1601,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DcJlal8XKBxo&q=EhAqAQT4HBvflAAAAAAAAAABGOiE-dUGIjAE5M76B33QZQWsbmO3GWxrLLypzCQFshicQnPXxzujw47OqtZrPcS1bfg3srYfdfkyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=cJlal8XKBxo
+    http_status: 200
   id: V-001
   url: https://www.youtube.com/watch?v=cJlal8XKBxo
   use: Soft-sign sound model; restrict practice to the taught-letter word pair, not the video vocabulary.
@@ -1610,18 +1610,26 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjB9X_Gs8JaTwbsVev5TBtP5kT0uTl6lgTnXVpaM7t4CtzBdtUZq6meJWHTzNtzb0kwyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-002
+  models:
+    letters:
+    - Ю
+    - Я
+    - Ш
+    segment: null
+    words: []
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Native pronunciation models for the taught letters, then the full alphabet after all letters; no ASR transcription
-    is printed.
+    is printed. Structured targets are attested by public transcript ext-ulp_youtube-304; no passage timing is supplied. Exact
+    playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D9JdIBYCTWGw&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjB3PS4u9u4xEfTy45Bjqpeh7RNCu7_hA5NFng177xuKl9ReVLN33DPyTvf9xJgfkQMyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+    http_status: 200
   id: V-003
   url: https://www.youtube.com/watch?v=9JdIBYCTWGw
   use: Pronunciation model for Ю. Native Ю sound model before its two primer word values. Scored segment is the publisher-labelled
@@ -1630,8 +1638,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Du44eCjR2Oz8&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjBbC3jH5wzFrKkwO3hZgGQdkLA3V-fkxAoblhew53bF5JyOSpPbdIvNQwbKxbY2CXQyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=u44eCjR2Oz8
+    http_status: 200
   id: V-004
   models:
     letters:
@@ -1645,8 +1653,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DhaHRsFFZRQI&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjAhlZ8ezU6oAl3BPAFiRuID5vzAmaTHlQuQk3swNkZF4vKsAs_9OKoNSGRahqjt0JEyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=haHRsFFZRQI
+    http_status: 200
   id: V-005
   models:
     letters:
@@ -1663,10 +1671,17 @@ videos:
     final_url: https://www.ukrainianlessons.com/episode2/
     http_status: 200
   id: V-006
+  models:
+    letters: []
+    segment: null
+    words:
+    - W-075
+    - W-076
   url: https://www.ukrainianlessons.com/episode2/
   use: 'Lesson 1 s1: native model for the intact W-075+W-076 formal greeting before it becomes a reading/copying chunk after
     ь is taught; public transcript ext-ulp_youtube-302. Also supports greeting recall in lessons 2–7. It does not record the
-    T-001 minimal pair.'
+    T-001 minimal pair. Structured targets are attested by public transcript ext-ulp_youtube-302; no passage timing is supplied.
+    Exact playback/timecode confirmation remains driver-owned.'
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
@@ -1682,8 +1697,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjCC21rsoFCRmSS_2OKU5V194xWRph26kUoWh8lbs5n22IXuDEMW90WlUSvWjRD1FDoyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-008
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Pronunciation model for Ї. Full-alphabet video, publisher-labelled Ї sound demonstration only; not its letter name
@@ -1692,8 +1707,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOuE-dUGIjCtkhhhyieUEplTOnD4WPwgMvSZ2PPcd1wPirKEWxkt35EGJl2RtnSqYbVlBM3n1f4yAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-009
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Pronunciation model for Я. Full-alphabet video, publisher-labelled Я sound demonstration only; not its letter name
@@ -1702,8 +1717,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOyE-dUGIjCDcGv_U5nD1LtlDK_rdADJL7Bu3jEo5xHj8RSViweUcP1aptskzq-jk0Ng4KhIluMyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-010
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Pronunciation model for Є. Full-alphabet video, publisher-labelled Є sound demonstration only; not its letter name
@@ -1712,8 +1727,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOyE-dUGIjCDcGv_U5nD1LtlDK_rdADJL7Bu3jEo5xHj8RSViweUcP1aptskzq-jk0Ng4KhIluMyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-011
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Pronunciation model for Щ. Full-alphabet video, publisher-labelled Щ sound demonstration only; not its letter name
@@ -1722,8 +1737,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOyE-dUGIjCDcGv_U5nD1LtlDK_rdADJL7Bu3jEo5xHj8RSViweUcP1aptskzq-jk0Ng4KhIluMyAnJSWgFD
-    http_status: 429
+    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+    http_status: 200
   id: V-012
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Pronunciation model for Ш. Full-alphabet video, publisher-labelled Ш sound demonstration only; not its letter name
