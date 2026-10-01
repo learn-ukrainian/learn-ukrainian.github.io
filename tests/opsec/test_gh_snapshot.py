@@ -158,3 +158,59 @@ def test_dot_only_segments_in_read_api_paths_are_refused(path):
 def test_dot_only_segments_in_read_commands_are_refused(cmd):
     with pytest.raises(PublishBlocked, match="dot-only segments refused"):
         admit(cmd, cwd=".", environment={})
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["issue", "list"],
+        ["pr", "view", "1"],
+    ],
+)
+def test_gh_repo_in_environment_refuses_non_github_host(cmd):
+    with pytest.raises(PublishBlocked, match=r"non-github\.com repository host refused"):
+        admit(cmd, cwd=".", environment={"GH_REPO": "ghe.example.com/unit/public"})
+
+
+def test_gh_host_github_com_remains_allowed_for_reads():
+    cmd = admit(["issue", "list"], cwd=".", environment={"GH_HOST": "github.com"})
+    assert not cmd.write
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["pr", "view", "https://ghe.example.com/unit/public/pull/1"],
+        ["pr", "diff", "https://ghe.example.com/unit/public/pull/1"],
+        ["pr", "checks", "https://ghe.example.com/unit/public/pull/1"],
+        ["issue", "view", "https://ghe.example.com/unit/public/issues/1"],
+    ],
+)
+def test_url_positional_arguments_refuse_non_github_hosts(cmd):
+    with pytest.raises(PublishBlocked, match=r"non-github\.com repository host refused"):
+        admit(cmd, cwd=".", environment={})
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["pr", "view", "https://github.com/unit/public/pull/1"],
+        ["issue", "view", "https://github.com/unit/public/issues/1"],
+    ],
+)
+def test_url_positional_arguments_allow_github_com(cmd):
+    cmd_admitted = admit(cmd, cwd=".", environment={})
+    assert not cmd_admitted.write
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["run", "view", "--job", ".."],
+        ["run", "view", "--job", "../../../../user"],
+        ["run", "view", "-j", ".."],
+    ],
+)
+def test_dot_only_segments_in_job_flag_are_refused(cmd):
+    with pytest.raises(PublishBlocked, match="dot-only segments refused"):
+        admit(cmd, cwd=".", environment={})

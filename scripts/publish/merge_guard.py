@@ -221,12 +221,16 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
                 else None
             )
         else:
+            raw_checks = None
             try:
-                states = parse_checks(json.loads(checks.stdout))
+                raw_checks = json.loads(checks.stdout)
+                states = parse_checks(raw_checks)
             except (json.JSONDecodeError, TypeError):
                 states = None
             if checks.returncode not in {0, 1, 8} or (
-                checks.returncode == 1 and states == ([], [])
+                checks.returncode == 1
+                and isinstance(raw_checks, list)
+                and not raw_checks
             ):
                 states = None
         if states is None:

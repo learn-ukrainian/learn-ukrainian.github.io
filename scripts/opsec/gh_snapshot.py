@@ -245,6 +245,16 @@ def _validate_read_repo(repo_str: str) -> None:
     elif len(parts) == 2 and ("." in parts[0] or ":" in parts[0]) and parts[0].lower() != "github.com":
         raise PublishBlocked("OPSEC: non-github.com repository host refused for reads.")
 
+
+def _validate_read_environment(environment: dict[str, str]) -> None:
+    gh_host = environment.get("GH_HOST")
+    if gh_host and gh_host.strip().lower() != "github.com":
+        raise PublishBlocked("OPSEC: non-github.com GH_HOST refused for reads.")
+    gh_repo = environment.get("GH_REPO")
+    if gh_repo:
+        _validate_read_repo(gh_repo)
+
+
 READ_VERBS = {g: {v for group, v in READ_GRAMMARS if group == g} for g, _ in READ_GRAMMARS}
 
 # Raw writes are only forwarded for a proven private destination. Closed flags
@@ -482,8 +492,7 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         except PublishBlocked:
             pass
         else:
-            if environment.get("GH_HOST"):
-                raise PublishBlocked("OPSEC: GH_HOST refused for reads; reads must target github.com.")
+            _validate_read_environment(environment)
             for flag, value in found:
                 if flag in {"--header", "-H"}:
                     name, separator, _ = value.partition(":")
@@ -523,8 +532,7 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         start += 2
     key = tuple(argv[start : start + 2])
     if key == ("pr", "checkout"):
-        if environment.get("GH_HOST"):
-            raise PublishBlocked("OPSEC: GH_HOST refused for reads; reads must target github.com.")
+        _validate_read_environment(environment)
         found, positional = parse(
             globals_ + argv[start + 2 :],
             (1, 1, {**REPO, "--branch": True, "-b": True, "--detach": False, "--force": False}),
@@ -532,8 +540,13 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         for flag, value in found:
             if flag in REPO:
                 _validate_read_repo(value)
+            elif value and _has_dot_only_segment(value):
+                raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
         if any(_has_dot_only_segment(arg) for arg in positional):
             raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
+        for arg in positional:
+            if arg.startswith(("http://", "https://")) or "://" in arg:
+                _validate_read_repo(arg)
         import unicodedata
         from pathlib import Path
 
@@ -566,14 +579,18 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
             raise PublishBlocked("OPSEC: pr checkout requires a verified dispatch repository.") from None
         return FrozenCommand(list(argv), "unknown", False)
     if key in READ_GRAMMARS:
-        if environment.get("GH_HOST"):
-            raise PublishBlocked("OPSEC: GH_HOST refused for reads; reads must target github.com.")
+        _validate_read_environment(environment)
         found, positional = parse(globals_ + argv[start + 2 :], READ_GRAMMARS[key])
         for flag, value in found:
             if flag in REPO:
                 _validate_read_repo(value)
+            elif value and _has_dot_only_segment(value):
+                raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
         if any(_has_dot_only_segment(arg) for arg in positional):
             raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
+        for arg in positional:
+            if arg.startswith(("http://", "https://")) or "://" in arg:
+                _validate_read_repo(arg)
         if key in {("repo", "view"), ("repo", "list")} and positional:
             _validate_read_repo(positional[0])
         return FrozenCommand(list(argv), "unknown", False)
