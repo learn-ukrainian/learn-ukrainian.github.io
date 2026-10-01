@@ -1,8 +1,8 @@
 access: full
-attempt_id: claude-full-att-1
+attempt_id: claude-full-att-2
 harness: claude
-manifest_sha256: 0e35c96d7287920ddaaafaaef7d7969a9d1bec9f46778f1b19b9d50e4499ea5c
+manifest_sha256: e04db3a17780342fd401a248d23885c10bd98c38d0d3251030274616f182fd3a
 reviewer_family: anthropic
 reviewer_model: claude-opus-5-5
-validated_at: '2026-10-01T22:01:41+00:00'
+validated_at: '2026-10-01T23:13:11+00:00'
 verdict: REVISE
