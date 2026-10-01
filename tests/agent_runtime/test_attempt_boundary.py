@@ -311,13 +311,23 @@ def test_runner_boundary_refusal_reports_only_code_or_exception_class(tmp_path, 
     assert caught.value.__cause__ is error
 
 
-@pytest.mark.parametrize("diagnostic", ["seat_controlled_identifier", "secret/path", "wrap: spoofed", "\nspoofed"])
-def test_runner_boundary_refusal_pins_identifier_before_colon(diagnostic):
-    error = ReviewIsolationError(f"sandbox_probe_allow_failed:{diagnostic}")
+@pytest.mark.parametrize(("prefix", "diagnostic", "expected_identifier"), [
+    ("sandbox_probe_allow_failed", "seat_controlled_identifier", "sandbox_probe_allow_failed"),
+    ("sandbox_probe_allow_failed", "secret/path", "sandbox_probe_allow_failed"),
+    ("sandbox_probe_allow_failed", "wrap: spoofed", "sandbox_probe_allow_failed"),
+    ("sandbox_probe_allow_failed", "\nspoofed", "sandbox_probe_allow_failed"),
+    ("Seat Text", "x", "ReviewIsolationError"),
+])
+def test_runner_boundary_refusal_pins_identifier_before_colon(prefix, diagnostic, expected_identifier):
+    error = ReviewIsolationError(f"{prefix}:{diagnostic}")
     refusal = runner._attempt_boundary_refusal(error, stage="prepare")
-    assert refusal == "formal attempt filesystem boundary refused: prepare: sandbox_probe_allow_failed"
+    assert refusal == f"formal attempt filesystem boundary refused: prepare: {expected_identifier}"
     identifier = refusal.removeprefix("formal attempt filesystem boundary refused: prepare: ")
-    assert identifier == str(error).partition(":")[0] == "sandbox_probe_allow_failed"
+    if expected_identifier == "sandbox_probe_allow_failed":
+        assert identifier == str(error).partition(":")[0] == "sandbox_probe_allow_failed"
+    else:
+        assert identifier == "ReviewIsolationError"
+        assert prefix not in refusal
     assert diagnostic not in refusal
 
 
