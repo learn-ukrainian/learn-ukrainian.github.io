@@ -59,4 +59,6 @@ def test_empty_canonical_headword_falls_back_to_lemma(synthetic_vesum, synthetic
     # Verify entry key fell back to lemma "тест" rather than empty string ""
     assert word_record["entry"]["source"] == "ulif"
     assert word_record["entry"]["key"][0] == "тест", f"Expected 'тест', got {word_record['entry']['key'][0]!r}"
-    assert word_record["ulif"]["key"][0] == "тест", f"Expected 'тест', got {word_record['ulif']['key'][0]!r}"
+    # An entry key can retain its lemma fallback, but an empty headword is not
+    # positive evidence for an exact-headword ULIF citation.
+    assert word_record["ulif"] == "pending"

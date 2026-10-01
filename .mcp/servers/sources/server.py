@@ -211,6 +211,9 @@ async def list_tools() -> list[Tool]:
             description=(
                 "Search curated podcast, video, article and reference catalogues by topic or words. "
                 "Indexes catalogue metadata and linked existing article/transcript text, not audio verification. "
+                "Includes ulp-alphabet.yaml; letters and letter_evidence record publisher-evidenced pairings. "
+                "Default text mode uses full-text search even for one-letter words; mode=letter uses only the index. "
+                "Free resource access requires access_evidence. "
                 "ULP audio is free; lesson notes are premium. Link-check status is separate from access; "
                 "use live_only to require a successful recorded HTTP check."
             ),
@@ -221,6 +224,12 @@ async def list_tools() -> list[Tool]:
                         "type": "string",
                         "description": "Literal Ukrainian or English keywords; empty to browse.",
                         "default": "",
+                    },
+                    "mode": {
+                        "type": "string",
+                        "enum": ["text", "letter"],
+                        "default": "text",
+                        "description": "Full-text search by default; letter mode requires a single letter and uses only the evidenced index.",
                     },
                     "kind": {
                         "type": "string",
@@ -2118,6 +2127,7 @@ async def handle_search_resources(args: dict):
 
     query = {
         "query": args.get("query", ""),
+        "mode": args.get("mode", "text"),
         "kind": args.get("kind"),
         "level": args.get("level"),
         "module": args.get("module"),

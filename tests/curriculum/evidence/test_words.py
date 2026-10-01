@@ -330,6 +330,7 @@ def test_unchecked_ulif_yields_no_ulif_stress(synthetic_vesum, synthetic_sources
 def test_checked_entry_without_per_form_rows_keeps_stress_pending(synthetic_vesum, synthetic_sources, tmp_path):
     # Setup checked ULIF entry with paradigm section
     with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE ulif_dictua_entries SET canonical_headword='synthetic-checked' WHERE id=2")
         conn.execute(
             "INSERT INTO ulif_dictua_sections VALUES (10, 2, 'paradigm', 0, '', ?)",
             (json.dumps({"synthetic-a": "synthetic-a-ulif-stressed"}),),
@@ -371,7 +372,7 @@ def test_checked_entry_without_per_form_rows_keeps_stress_pending(synthetic_vesu
 
     word = res["store"]["words"][0]
     assert word["ulif"]["source"] == "ulif"
-    assert word["ulif"]["key"] == ["synthetic-original", 1]
+    assert word["ulif"]["key"] == ["synthetic-checked", 1]
     assert len(word["ulif"]["row_sha256"]) == 64  # the entry row with its ordered sections
     assert len(word["forms"]) == 1
     assert word["forms"][0]["form"] == "synthetic-a"

@@ -362,7 +362,11 @@ def build_words(
             ulif_field: dict[str, Any] | str = "pending"
             matching_entry = None
             if ulif_checked:
-                # Find matching ULIF entry
+                # A checked cache group may include differently cased headwords.
+                # Only an exact headword can be cited for this lemma.
+                ulif_group = [
+                    e for e in ulif_group if strip_combining_stress(e.get("canonical_headword") or "") == lemma
+                ]
                 if entry_req is not None and entry_req.get("source") == "ulif":
                     matching_entry = next(
                         (e for e in ulif_group if e.get("homonym_index") == entry_req.get("homonym_index")), None

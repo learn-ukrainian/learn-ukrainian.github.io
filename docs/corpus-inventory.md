@@ -172,7 +172,7 @@ to `unified_dense` → `rerank_candidates` → `data/embeddings/manifest.db` + s
 `resource_catalogue` / `resource_catalogue_fts` indexes metadata from every entry
 in these files under `docs/resources/`: `podcasts/podcast_db.json`, all three
 `podcasts/raw_lists/*.txt` lists, `podcasts/ulp_mapping.yaml`,
-`external_resources.yaml`, `ulp-resources.yaml`, `ulp-articles-index.yaml`,
+`external_resources.yaml`, `ulp-resources.yaml`, `ulp-alphabet.yaml`, `ulp-articles-index.yaml`,
 `ulp-article-mappings.yaml`, `trusted_sources.yaml`, and the `dobraforma`,
 `talkukrainian` and `verba` article catalogues. Internal trusted-source collections
 use `sources://collection/...` locators; they have no HTTP link check.
@@ -195,7 +195,15 @@ rebuild, rerun this incremental ingest as for the separately ingested ZNO tables
 Activation of the live database remains a separate driver operation after merge.
 
 Use **`mcp__sources__search_resources`** with `query`, `kind`, `level`, `module`,
-`free_only` and optionally `live_only`. Empty queries browse using filters.
+`free_only` and optionally `live_only` and `mode`. The default `mode: text`
+searches full text even for one-letter words; empty text queries browse using filters.
+Only explicit `mode: letter` uses the evidenced letter index, accepting a single
+letter. Curriculum curation selects letter mode only for letter requirements.
+The `letters` and `letter_evidence` columns preserve publisher-evidenced pairings
+from `ulp-alphabet.yaml`; `access_evidence` records the evidence required for
+`access: free`. Databases missing these columns require re-ingestion before any
+resource search; the driver backs up and re-ingests the live database immediately
+after merge.
 Levels reflect explicit catalogue levels and module prefixes; absence stays
 unknown. Module IDs preserve existing catalogue mappings rather than claiming
 they match a current lesson plan. Results use `sources.tool-result.v1` and carry

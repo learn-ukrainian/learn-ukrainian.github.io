@@ -1314,6 +1314,7 @@ entries:
     paths:
       - docs/resources/trusted_sources.yaml
       - docs/resources/ulp-resources.yaml
+      - docs/resources/ulp-alphabet.yaml
       - docs/resources/ulp-articles-index.yaml
       - docs/resources/ulp-article-mappings.yaml
       - docs/resources/miyklas-resources.yaml

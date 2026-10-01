@@ -24,6 +24,7 @@ CATALOGUES = (
     "podcasts/ulp_mapping.yaml",
     "external_resources.yaml",
     "ulp-resources.yaml",
+    "ulp-alphabet.yaml",
     "ulp-articles-index.yaml",
     "ulp-article-mappings.yaml",
     "trusted_sources.yaml",
@@ -34,7 +35,13 @@ CATALOGUES = (
 KINDS = ("podcast", "video", "article", "reference")
 MAX_HITS = 20
 MAX_HIT_BYTES = 24576
-PROVENANCE_BUDGETS = {"source_files": 512, "source_entries": 2048, "discovery_evidence": 1024}
+PROVENANCE_BUDGETS = {
+    "source_files": 512,
+    "source_entries": 2048,
+    "discovery_evidence": 1024,
+    "letter_evidence": 4096,
+    "access_evidence": 2048,
+}
 
 
 class ResourceCatalogueMissingError(RuntimeError):
@@ -56,6 +63,9 @@ CREATE TABLE IF NOT EXISTS resource_catalogue (
     levels TEXT NOT NULL,
     modules TEXT NOT NULL,
     topics TEXT NOT NULL,
+    letters TEXT NOT NULL DEFAULT '[]',
+    letter_evidence TEXT NOT NULL DEFAULT '[]',
+    access_evidence TEXT NOT NULL DEFAULT '[]',
     source_files TEXT NOT NULL,
     source_entries TEXT NOT NULL,
     discovery_evidence TEXT NOT NULL,
@@ -237,6 +247,25 @@ def _resource_entry(item: dict, source_file: str, locator: str, context: dict) -
         access = "free"
     if podcast:
         access = "mixed"  # Free audio does not make premium notes free.
+    letters = item.get("letters", [])
+    letter_evidence = item.get("letter_evidence", [])
+    access_evidence = item.get("access_evidence", [])
+    if access == "free" and not access_evidence:
+        raise ValueError("Free catalogue access requires explicit evidence")
+    if not isinstance(letters, list) or any(
+        not isinstance(letter, str) or len(letter) != 1 or not letter.isalpha() for letter in letters
+    ):
+        raise ValueError("Catalogue letters must be single alphabetic characters")
+    if letters and (
+        not letter_evidence
+        or any(not any(letter in evidence.get("letters", []) for evidence in letter_evidence) for letter in letters)
+    ):
+        raise ValueError("Catalogue letters require explicit pairing evidence")
+    for evidence in [*letter_evidence, *access_evidence]:
+        if not evidence.get("locator") or not re.fullmatch(r"[0-9a-f]{64}", evidence.get("source_sha256", "")):
+            raise ValueError("Catalogue evidence requires a source hash and locator")
+        if not (evidence.get("source_url") or evidence.get("source_file")):
+            raise ValueError("Catalogue evidence requires a source URL or file")
     return {
         "url": url,
         "kind": kind,
@@ -250,6 +279,9 @@ def _resource_entry(item: dict, source_file: str, locator: str, context: dict) -
         "levels": [str(level).upper()] if level else [],
         "modules": [module] if module else [],
         "topics": topics,
+        "letters": sorted({letter.upper() for letter in letters}),
+        "letter_evidence": letter_evidence,
+        "access_evidence": access_evidence,
         "source_file": source_file,
         "source_entry": {
             "source_file": source_file,
@@ -277,21 +309,39 @@ def deduplicate(entries: list[dict]) -> list[dict]:
                 "levels": [],
                 "modules": [],
                 "topics": [],
+                "letters": [],
+                "letter_evidence": [],
+                "access_evidence": [],
+                "access_values": set(),
                 "discovery_evidence": [],
             }
         row = groups[url]
-        for key in ("levels", "modules", "topics"):
+        for key in ("levels", "modules", "topics", "letters"):
             row[key] = sorted(set(row[key]) | set(entry[key]))
+        for key in ("letter_evidence", "access_evidence"):
+            for evidence in entry[key]:
+                if evidence not in row[key]:
+                    row[key].append(evidence)
         row["source_entries"].append(entry["source_entry"])
         row["source_files"] = sorted(set(row["source_files"]) | {entry["source_file"]})
         row["titles"].append(entry["title"])
         if entry["kind"] == "podcast":
             for key in ("kind", "season", "episode", "audio_access", "notes_access"):
                 row[key] = entry[key]
-        # Contradictory access metadata must not pass free-only.
-        if row["access"] != entry["access"]:
+        if entry["access"] != "unknown":
+            row["access_values"].add(entry["access"])
+        # Unknown aliases do not override evidenced access.
+        if row["access"] == "unknown":
+            row["access"] = entry["access"]
+        elif entry["access"] != "unknown" and row["access"] != entry["access"]:
             row["access"] = "mixed"
+            # A metadata conflict is not the evidenced free-audio/premium-notes split.
+            row["audio_access"] = None
+            row["notes_access"] = None
     for row in groups.values():
+        access_values = row.pop("access_values")
+        if len(access_values) > 1:
+            row.update(access="mixed", audio_access=None, notes_access=None)
         row["search_text"] = " ".join(
             [
                 *row["titles"],
@@ -388,6 +438,10 @@ def ensure_schema(conn: sqlite3.Connection) -> None:
         if sqlite3.complete_statement(statement):
             conn.execute(statement)
             statement = ""
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(resource_catalogue)")}
+    for column in ("letters", "letter_evidence", "access_evidence"):
+        if column not in columns:
+            conn.execute(f"ALTER TABLE resource_catalogue ADD COLUMN {column} TEXT NOT NULL DEFAULT '[]'")
 
 
 def ingest(
@@ -402,7 +456,7 @@ def ingest(
     else:
         with ThreadPoolExecutor(max_workers=workers) as pool:
             checks = list(pool.map(lambda row: check_link(row["url"], timeout), rows))
-    json_fields = {"levels", "modules", "topics", "source_files", "source_entries", "discovery_evidence"}
+    json_fields = {"levels", "modules", "topics", "letters", *PROVENANCE_BUDGETS}
     fields = (
         "url",
         "kind",
@@ -416,6 +470,9 @@ def ingest(
         "levels",
         "modules",
         "topics",
+        "letters",
+        "letter_evidence",
+        "access_evidence",
         "source_files",
         "source_entries",
         "discovery_evidence",
@@ -487,7 +544,7 @@ def _compact_hit(row: sqlite3.Row) -> dict:
     """Bound every field, including provenance; leave the stored catalogue intact."""
     hit = dict(row)
     hit.pop("search_text")
-    for field in ("levels", "modules", "topics", *PROVENANCE_BUDGETS):
+    for field in ("levels", "modules", "topics", "letters", *PROVENANCE_BUDGETS):
         items = json.loads(hit[field])
         hit[field] = _bounded_list(items, PROVENANCE_BUDGETS.get(field, 512))
         hit[f"{field}_count"] = len(items)
@@ -504,6 +561,7 @@ def search_resources(
     conn: sqlite3.Connection,
     query: str = "",
     *,
+    mode: str = "text",
     kind: str | None = None,
     level: str | None = None,
     module: str | None = None,
@@ -511,16 +569,29 @@ def search_resources(
     live_only: bool = False,
     limit: int = 10,
 ) -> list[dict]:
-    """Search literal words with exact structured filters and stable relevance order."""
+    """Search literal FTS by default; explicit letter mode uses only the evidenced index."""
     if not conn.execute("SELECT 1 FROM sqlite_master WHERE name='resource_catalogue'").fetchone():
         raise ResourceCatalogueMissingError("Resource catalogue ingestion is required")
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(resource_catalogue)")}
+    if not {"letters", "letter_evidence", "access_evidence"} <= columns:
+        raise ResourceCatalogueMissingError("Letter index ingestion is required")
     if kind is not None and kind not in KINDS:
         raise ValueError("Unknown resource kind")
+    if mode not in {"text", "letter"}:
+        raise ValueError("Unknown resource search mode")
     tokens = re.findall(r"[^\W_]+", query, re.UNICODE)
     clauses, parameters = [], []
     join = ""
     order = "r.title,r.url"
-    if tokens:
+    letter = tokens[0].upper() if len(tokens) == 1 else ""
+    if mode == "letter":
+        if len(letter) != 1 or not letter.isalpha():
+            return []
+        clauses.append("EXISTS (SELECT 1 FROM json_each(r.letters) WHERE value=?)")
+        parameters.append(letter)
+        # Dedicated lessons precede resources covering multiple letters.
+        order = "json_array_length(r.letters),r.url"
+    elif tokens:
         join = "JOIN resource_catalogue_fts ON resource_catalogue_fts.rowid=r.id"
         clauses.append("resource_catalogue_fts MATCH ?")
         parameters.append(" AND ".join(f'"{token}"' for token in tokens))
