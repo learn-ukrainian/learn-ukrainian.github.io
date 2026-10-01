@@ -21,7 +21,15 @@ _ERROR_HINT = re.compile(r"(?i)(?:traceback|exception|error[:\s]|stderr)")
 _PORT_HINT = re.compile(r"(?i)(?:^|[^0-9])(?:port|:[0-9]{2,5})(?:[^0-9]|$)")
 
 
-def _worker_string_forbidden(text: str, *, allow_epic: bool = False) -> bool:
+# Fields whose WorkerRow validator admits only a closed identifier grammar (no
+# spaces, "=", "/" or "\\"). A host name, address, alias or ``:port`` still
+# fits that grammar and is rejected by the structural checks; error text, a
+# branch ref or a ``pid=``/``nonce=`` pair cannot, so the keyword hints would
+# only match a word of a task name ("report", "exporter", "stderr", "branch").
+_IDENTIFIER_FIELDS = frozenset({"id", "agent", "harness", "run_id"})
+
+
+def _worker_string_forbidden(text: str, *, allow_epic: bool = False, identifier: bool = False) -> bool:
     if not text:
         return True
     if "/" in text or "\\" in text:
@@ -30,6 +38,8 @@ def _worker_string_forbidden(text: str, *, allow_epic: bool = False) -> bool:
         return True
     if _ALIAS_TOKEN.search(text):
         return True
+    if identifier:
+        return False
     if not allow_epic and _PORT_HINT.search(text):
         return True
     if _BRANCH_HINT.search(text):
@@ -50,7 +60,7 @@ def _scan_worker_row(row: dict[str, Any]) -> bool:
         if isinstance(value, str):
             if key == "epic" and _EPIC_RE.fullmatch(value):
                 continue
-            if _worker_string_forbidden(value, allow_epic=key == "epic"):
+            if _worker_string_forbidden(value, allow_epic=key == "epic", identifier=key in _IDENTIFIER_FIELDS):
                 return True
         elif isinstance(value, (int, bool)):
             continue

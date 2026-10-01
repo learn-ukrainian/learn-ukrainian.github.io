@@ -46,7 +46,7 @@ SERVICE_DEFINITIONS: tuple[ServiceDefinition, ...] = (
 def _git(cwd: Path, *args: str) -> str | None:
     try:
         result = subprocess.run(
-            ["git", *args],
+            ["git", "--no-optional-locks", *args],
             cwd=cwd,
             capture_output=True,
             text=True,

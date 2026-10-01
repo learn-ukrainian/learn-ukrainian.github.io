@@ -91,10 +91,10 @@ def _git_invocation(args: list[str], cwd: Path) -> list[str]:
         if line.startswith("gitdir:"):
             raw_git_dir = Path(line.removeprefix("gitdir:").strip())
             git_dir = raw_git_dir if raw_git_dir.is_absolute() else cwd / raw_git_dir
-            return ["git", f"--git-dir={git_dir}", f"--work-tree={cwd}", *args]
+            return ["git", "--no-optional-locks", f"--git-dir={git_dir}", f"--work-tree={cwd}", *args]
     if git_path.is_dir():
-        return ["git", f"--git-dir={git_path}", f"--work-tree={cwd}", *args]
-    return ["git", *args]
+        return ["git", "--no-optional-locks", f"--git-dir={git_path}", f"--work-tree={cwd}", *args]
+    return ["git", "--no-optional-locks", *args]
 
 
 @dataclass(frozen=True)

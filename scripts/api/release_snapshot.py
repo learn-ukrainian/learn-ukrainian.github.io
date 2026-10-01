@@ -112,6 +112,7 @@ def _extract_archive(repo_root: Path, sha: str, staging_dir: Path) -> None:
         "git",
         "-C",
         str(repo_root),
+        "--no-optional-locks",
         "archive",
         "--format=tar",
         sha,

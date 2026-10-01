@@ -42,6 +42,41 @@ def test_worker_row_rejects_forbidden_string_classes(field: str, value: str) -> 
         validate_worker_row_dict(_row(**{field: value}))
 
 
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("id", "host.example.org"),
+        ("id", "svc:8765"),
+        ("id", "198.51.100.4-task"),
+        ("id", "vps-task"),
+        ("agent", "pid=1234"),
+        ("id", "traceback here"),
+        ("run_id", "stderr"),
+        ("note", "branch-name"),
+    ],
+)
+def test_worker_row_still_rejects_structural_leaks_and_grammar_misses(field: str, value: str) -> None:
+    with pytest.raises(ProjectStateValidationError):
+        validate_worker_row_dict(_row(**{field: value}))
+
+
+@pytest.mark.parametrize(
+    "task_id",
+    [
+        "impl-entropy-test-git-stderr",
+        "8313-thin-page-report",
+        "8672-exporter-memory",
+        "fix-8889-branch-r2",
+        "test-kimi-dry-run-nonce",
+        "review-error-budget-pid-r1",
+    ],
+)
+def test_worker_row_accepts_task_names_that_contain_hint_words(task_id: str) -> None:
+    """#8874: a task named after stderr or a report took down the whole reporter run."""
+    assert validate_worker_row_dict(_row(id=task_id)).id == task_id
+    assert [row.id for row in validate_workers_list([_row(), _row(id=task_id)])] == ["monitor-7187", task_id]
+
+
 def test_workers_list_cap_rejected() -> None:
     rows = [_row(id=f"t-{index}") for index in range(201)]
     with pytest.raises(ProjectStateValidationError):

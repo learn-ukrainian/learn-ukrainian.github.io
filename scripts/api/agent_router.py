@@ -173,7 +173,7 @@ def get_runtime(ctx: MonitorContext = Depends(get_ctx)):
 @router.get("/worktree")
 def get_worktree(ctx: MonitorContext = Depends(get_ctx)):
     try:
-        proc = _execute_command(["git", "status", "--porcelain"], cwd=ctx.roots.live_repo_root)
+        proc = _execute_command(["git", "--no-optional-locks", "status", "--porcelain"], cwd=ctx.roots.live_repo_root)
     except Exception:
         # Covers a real git timeout/missing binary and an isolated fixture's
         # denied subprocess call alike — this route is read-only diagnostics,

@@ -432,7 +432,7 @@ def _prepare_api_command(repo_root: Path, *, live_mode: bool, port: int) -> tupl
     else:
         try:
             head_sha = subprocess.run(
-                ["git", "-C", str(repo_root), "rev-parse", "--verify", "HEAD"],
+                ["git", "-C", str(repo_root), "--no-optional-locks", "rev-parse", "--verify", "HEAD"],
                 check=True,
                 capture_output=True,
                 text=True,
