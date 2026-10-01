@@ -46,14 +46,12 @@
           },
           "workbook": {
             "by_type": {
-              "divide-words": 1,
-              "quiz": 1
+              "quiz": 3
             },
-            "total": 2
+            "total": 3
           }
         },
         "distinct_types": [
-          "divide-words",
           "letter-grid",
           "observe",
           "quiz"
@@ -76,7 +74,7 @@
           "workbook": {
             "by_type": {
               "fill-in": 1,
-              "odd-one-out": 1
+              "quiz": 1
             },
             "total": 2
           }
@@ -84,7 +82,6 @@
         "distinct_types": [
           "fill-in",
           "letter-grid",
-          "odd-one-out",
           "quiz",
           "watch-and-repeat"
         ],
@@ -185,31 +182,27 @@
     "module": {
       "all_distinct_types": [
         "anagram",
-        "divide-words",
         "fill-in",
         "letter-grid",
         "match-up",
         "observe",
-        "odd-one-out",
         "pick-syllables",
         "quiz",
         "unjumble",
         "watch-and-repeat"
       ],
       "inline_activities": 35,
-      "largest_workbook_type": "fill-in",
-      "largest_workbook_type_share": 0.23076923076923078,
-      "longest_same_type_workbook_run": 1,
-      "longest_same_type_workbook_run_type": "pick-syllables",
+      "largest_workbook_type": "quiz",
+      "largest_workbook_type_share": 0.35714285714285715,
+      "longest_same_type_workbook_run": 4,
+      "longest_same_type_workbook_run_type": "quiz",
       "non_recap_lessons": 5,
       "non_recap_lessons_with_workbook": 5,
-      "workbook_activities": 13,
+      "workbook_activities": 14,
       "workbook_distinct_types": [
         "anagram",
-        "divide-words",
         "fill-in",
         "match-up",
-        "odd-one-out",
         "pick-syllables",
         "quiz",
         "unjumble"
@@ -223,15 +216,15 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b9b2da5302a7322d42b6ed103e171bf3ac6365daae1d69499eb2541dbcf6b74",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2ad317deeb586e88cf478bd20da8a71a70adf91b067819f8d7bd7c207c70b57e",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "8c399ab615aa65a4eabd367d85a920e5a3b3aae181f4a8111674222b3b890cfe",
-    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "f6e78be38199c4b123eb45ca0d884c2dce5d25d785e95bda6f951732cdcbb5e0",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "0f3e12063fa39b6ece140760b12ecc73d6a775894b29f358f90ee582cbc3c9b2",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "76929b09a49e45c1cadae515ef639694c866e6a4faa8d8de54111af0e40e14cc",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "3a0865140aedc87b384a7bc884d590837d5d553571e7274cedb784d1482d642c",
+    "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "e1c169fb2ca1bc9f6347b0bb26773b851cc7f503cb04a8aea36513fa0dbe1d42",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
-    "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "b23bdc16fd922893bab5e9415061234d1c658385f0f0610ec73282ebdfafaa02",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "5303eeb2fec34de3ce83ec54cb40d69df9f0b0617c0140bce17062ba43b61085",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "8e0d11db868bafc39dd2d9bb51e7b914cf9f06818540b2cbfff54548f5408943",
+    "curriculum/l2-uk-en/lesson-plans/a1/_scope/reading-ukrainian.yaml": "4ca7a2ac7f3b41306fecfe798207eb9d5c083e59aefdbc845a616d3865a209c4",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "75b12966b217fc8a9361833ee4e4ec1e9a2d4370f96a1c692ccee5e210b0cf9d",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "891254f9a960556a2d558e095a1067e47a1bc74026715c406093f9aa87d07489",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
     "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
@@ -274,7 +267,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845 and the provisional pack's sha256 is 8c399ab615aa65a4eabd367d85a920e5a3b3aae181f4a8111674222b3b890cfe; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845 and the provisional pack's sha256 is 3a0865140aedc87b384a7bc884d590837d5d553571e7274cedb784d1482d642c; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

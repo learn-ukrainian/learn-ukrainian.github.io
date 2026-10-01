@@ -8,16 +8,15 @@ texts:
 - id: T-002
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w001}
   span: {first_words: 'The basic informal “Hi!” in Ukrainian is:', last_words: 'to your boss or a cashier.'}
-  supports: 'Adult L2 informal greeting chunk and familiar-peer use versus formal boss/cashier situations; learned by ear
-    without parsing; ULP Season 1 lesson 1.'
+  supports: 'Adult L2 informal greeting chunk and familiar-peer use versus formal boss/cashier situations; learned by ear without parsing;
+    ULP Season 1 lesson 1.'
 - id: T-003
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
   span: {first_words: 'The most typical greeting that you can use at any', last_words: 'time of the day is: До́брий день!'}
   supports: 'Adult L2 formal greeting chunk for any time of day, not adjective or case analysis; ULP Season 1 lesson 2.'
 - id: T-004
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0005_w003}
-  span: {first_words: 'Here are the three piece of advice I gave during', last_words: 'the sound between і and у. Say iii
-      and try to'}
+  span: {first_words: 'Here are the three piece of advice I gave during', last_words: 'the sound between і and у. Say iii and try to'}
   supports: 'Adult L2 И sound and comparison with І for English speakers; ULP Season 1 lesson 5 trainer.'
 - id: T-005
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0010_w001}
@@ -85,8 +84,7 @@ texts:
   supports: 'Adult L2 formal greeting dialogue setting between a receptionist and a guest; ULP Season 1 lesson 2.'
 - id: T-021
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0002_w002}
-  span: {first_words: 'Here is the most common way to say goodbye in', last_words: 'a formal situation (to your colleague,
-      teacher, or in'}
+  span: {first_words: 'Here is the most common way to say goodbye in', last_words: 'a formal situation (to your colleague, teacher, or in'}
   supports: 'Adult L2 formal social situation (teacher); ULP Season 1 lesson 2.'
 - id: T-022
   source:
@@ -95,8 +93,8 @@ texts:
   span:
     first_words: А а
     last_words: А а
-  supports: Exact capital/small heading for taught letter А; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter А; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-023
   source:
     table: textbooks
@@ -104,8 +102,8 @@ texts:
   span:
     first_words: О о
     last_words: О о
-  supports: Exact capital/small heading for taught letter О; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter О; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-024
   source:
     table: textbooks
@@ -113,8 +111,8 @@ texts:
   span:
     first_words: У у
     last_words: У у
-  supports: Exact capital/small heading for taught letter У; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter У; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-025
   source:
     table: textbooks
@@ -122,8 +120,8 @@ texts:
   span:
     first_words: И и
     last_words: И и
-  supports: Exact capital/small heading for taught letter И; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter И; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-026
   source:
     table: textbooks
@@ -131,8 +129,8 @@ texts:
   span:
     first_words: М м
     last_words: М м
-  supports: Exact capital/small heading for taught letter М; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter М; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-027
   source:
     table: textbooks
@@ -140,8 +138,8 @@ texts:
   span:
     first_words: І і
     last_words: І і
-  supports: Exact capital/small heading for taught letter І; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter І; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-028
   source:
     table: textbooks
@@ -149,8 +147,8 @@ texts:
   span:
     first_words: Н н
     last_words: Н н
-  supports: Exact capital/small heading for taught letter Н; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter Н; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-029
   source:
     table: textbooks
@@ -158,8 +156,8 @@ texts:
   span:
     first_words: В в
     last_words: В в
-  supports: Exact capital/small heading for taught letter В; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter В; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-030
   source:
     table: textbooks
@@ -167,8 +165,8 @@ texts:
   span:
     first_words: Л л
     last_words: Л л
-  supports: Exact capital/small heading for taught letter Л; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter Л; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-031
   source:
     table: textbooks
@@ -176,8 +174,8 @@ texts:
   span:
     first_words: С с
     last_words: С с
-  supports: Exact capital/small heading for taught letter С; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter С; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-032
   source:
     table: textbooks
@@ -185,8 +183,8 @@ texts:
   span:
     first_words: К к
     last_words: К к
-  supports: Exact capital/small heading for taught letter К; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter К; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-033
   source:
     table: textbooks
@@ -194,8 +192,8 @@ texts:
   span:
     first_words: П п
     last_words: П п
-  supports: Exact capital/small heading for taught letter П; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter П; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-034
   source:
     table: textbooks
@@ -203,8 +201,8 @@ texts:
   span:
     first_words: Р р
     last_words: Р р
-  supports: Exact capital/small heading for taught letter Р; listening target and visible-glyph discrimination only, not
-    a whole-word recording.
+  supports: Exact capital/small heading for taught letter Р; listening target and visible-glyph discrimination only, not a whole-word
+    recording.
 - id: T-035
   source:
     table: textbooks
@@ -212,8 +210,8 @@ texts:
   span:
     first_words: "— Привіт,\nдівчата!"
     last_words: Михайле!
-  supports: 'Primer printed p.29 (chunk title p.31): attested peer greeting exchange; grounding only for the planned dialogue,
-    never a reading/copy task at lesson 1.'
+  supports: 'Primer printed p.29 (chunk title p.31): attested peer greeting exchange; grounding only for the planned dialogue, never a reading/copy
+    task at lesson 1.'
 - id: T-036
   source:
     table: textbooks
@@ -230,8 +228,17 @@ texts:
   span:
     first_words: "ма\nмо\nму\nми"
     last_words: "ам\nом\nум\nим"
-  supports: Complete sourced М CV/VC row for printed syllable discrimination, read aloud offline with teacher modeling;
-    no recording claim.
+  supports: Complete sourced М CV/VC row for printed syllable discrimination, read aloud offline with teacher modeling; no recording
+    claim.
+- id: T-038
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+  span:
+    first_words: Хто неправильно поділив слово
+    last_words: льованого предмета на склади?
+  supports: 'Primer printed p.15: find the incorrect analysis and repair it. Model methodology only; the fresh tasks correct source-symbol
+    assignments or vowel counts, never invent misspelled Ukrainian words or untaught cluster boundaries.'
 exercises:
 - id: X-001
   source: {table: textbooks, chunk_id: ulp-1-00-lesson-notes_l0001_w005}
@@ -239,8 +246,7 @@ exercises:
   pattern: 'Hear a greeting prompt and give the matching spoken response before reading it.'
 - id: X-002
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012}
-  span: {first_words: 'Вимов перший звук у словах — назвах предметів.', last_words: 'Який це звук? Голосний звук позначаємо
-      так: [•].'}
+  span: {first_words: 'Вимов перший звук у словах — назвах предметів.', last_words: 'Який це звук? Голосний звук позначаємо так: [•].'}
   pattern: 'Say and identify the first sound before choosing its sound class.'
 - id: X-003
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0044}
@@ -254,190 +260,196 @@ exercises:
   source: {table: textbooks, chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0077}
   span: {first_words: 'Перепиши в зошит.', last_words: 'Панас ловив лини.'}
   pattern: 'Copy printed model words or short lines into a notebook; the fresh lesson uses only its own taught-letter models.'
+- id: X-006
+  source:
+    table: textbooks
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+  span:
+    first_words: Хто неправильно поділив слово
+    last_words: льованого предмета на склади?
+  pattern: Find an incorrect language-mechanics analysis, then select its correction against the taught source model.
 videos:
 - id: V-001
   url: https://www.ukrainianlessons.com/episode1/
   channel: Ukrainian Lessons Podcast
-  use: 'ULP 1-01 public episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section.
-    Public transcript locator ext-ulp_youtube-303; premium notes are grounding only. Structured targets are attested
-    by public transcript ext-ulp_youtube-303; no passage timing is supplied. Exact playback/timecode confirmation
-    remains driver-owned.'
+  use: 'ULP 1-01 public episode: whole informal W-074 greeting in the two peer exchanges and repeat-after-me section. Public transcript locator
+    ext-ulp_youtube-303; premium notes are grounding only. Structured targets are attested by public transcript ext-ulp_youtube-303; no passage
+    timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
   models:
     letters: []
     words:
     - W-074
-    segment: null
+    segment:
 - id: V-002
   url: https://www.ukrainianlessons.com/episode2/
   channel: Ukrainian Lessons Podcast
-  use: 'ULP 1-02 public episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting
-    section and shop example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk. Structured
-    targets are attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode
-    confirmation remains driver-owned.'
+  use: 'ULP 1-02 public episode: W-075 and W-076 together as the intact formal greeting in the repeat-after-me greeting section and shop
+    example. Public transcript locator ext-ulp_youtube-302; never split or parse the chunk. Structured targets are attested by public transcript
+    ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
   models:
     letters: []
     words:
     - W-075
     - W-076
-    segment: null
+    segment:
 - id: V-003
   url: https://www.ukrainianlessons.com/episode5/
   channel: Ukrainian Lessons Podcast
-  use: 'ULP 1-05 public episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator
-    ext-ulp_youtube-299; compare with the native І model V-009, not English spelling. Scored segment is the publisher-labelled
-    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.'
+  use: 'ULP 1-05 public episode: the dedicated pronunciation trainer for the vowel И. Public transcript locator ext-ulp_youtube-299; compare
+    with the native І model V-009, not English spelling. Scored segment is the publisher-labelled native letter-sound demonstration; exact
+    playback/timecode confirmation remains driver-owned.'
   models:
     letters:
     - И
     words: []
-    segment: null
+    segment:
 - id: V-004
   url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
   channel: Ukrainian Lessons
-  use: Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - А
     words: []
-    segment: null
+    segment:
 - id: V-005
   url: https://www.youtube.com/watch?v=gJFxRIPRZbI
   channel: Ukrainian Lessons
-  use: Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - О
     words: []
-    segment: null
+    segment:
 - id: V-006
   url: https://www.youtube.com/watch?v=VB1O6PmtYRU
   channel: Ukrainian Lessons
-  use: Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - У
     words: []
-    segment: null
+    segment:
 - id: V-007
   url: https://www.youtube.com/watch?v=W-1rCu0indE
   channel: Ukrainian Lessons
-  use: Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - И
     words: []
-    segment: null
+    segment:
 - id: V-008
   url: https://www.youtube.com/watch?v=Ez95H4ibuJo
   channel: Ukrainian Lessons
-  use: Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled
-    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - М
     words: []
-    segment: null
+    segment:
 - id: V-009
   url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
   channel: Ukrainian Lessons
-  use: Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - І
     words: []
-    segment: null
+    segment:
 - id: V-010
   url: https://www.youtube.com/watch?v=vNUfiKHPYaU
   channel: Ukrainian Lessons
-  use: Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - Н
     words: []
-    segment: null
+    segment:
 - id: V-011
   url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
   channel: Ukrainian Lessons
-  use: Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - В
     words: []
-    segment: null
+    segment:
 - id: V-012
   url: https://www.youtube.com/watch?v=v6-3Xg52Buk
   channel: Ukrainian Lessons
-  use: Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - Л
     words: []
-    segment: null
+    segment:
 - id: V-013
   url: https://www.youtube.com/watch?v=7UsFBgSL91E
   channel: Ukrainian Lessons
-  use: Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - С
     words: []
-    segment: null
+    segment:
 - id: V-014
   url: https://www.youtube.com/watch?v=J7sGEI4-xJo
   channel: Ukrainian Lessons
-  use: Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled
-    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - К
     words: []
-    segment: null
+    segment:
 - id: V-015
   url: https://www.youtube.com/watch?v=JksSjjxyW5Y
   channel: Ukrainian Lessons
-  use: Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled
-    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - П
     words: []
-    segment: null
+    segment:
 - id: V-016
   url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
   channel: Ukrainian Lessons
-  use: Pronunciation model for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native
-    letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
+  use: Pronunciation model for Р. Pronunciation model for consonant Р. Scored segment is the publisher-labelled native letter-sound
+    demonstration; exact playback/timecode confirmation remains driver-owned.
   models:
     letters:
     - Р
     words: []
-    segment: null
+    segment:
 standard:
 - {id: S-001, lines: '351-353'}
 - {id: S-002, lines: '357-359'}
 - {id: S-003, lines: '430-432'}
 unsupported:
 - id: U-001
-  claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1
-    and lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish
-    their named sounds, not those complete primer combinations or word pairs.
+  claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and lesson 5
+    s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named sounds, not those
+    complete primer combinations or word pairs.
   searches:
   - tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
     query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index,
-      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact
-      requirements and rejected partial matches.
+      ulp-article-mappings and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements
+      and rejected partial matches.
   - tool: sources.search_external + tracked docs/resources catalogs (round 2)
-    query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for
-      queries, returned locators, rejected partial matches and search_resources unavailability.
+    query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
   resolved_by: |
     authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted print conversion, not evidence that an audio recording exists.
     mode: audio-to-print

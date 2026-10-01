@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 9bf1ffb052c6d3d8849657b446b321b6c15ed345
+  mcp_commit: 3fde66114438177228d094d1928a6936981f0f77
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 8055267ed9cb174bede2f071ae992274c418ad358e392f421f8f7a5a2d869646
+  sources_db: a33bc7f322dd87b0f73918a5829ad724f6596bb2e5eadccc427acef0cdb86ce7
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -17431,3 +17431,1319 @@ words:
     - 1
     row_sha256: 0ceb957d4d6d54e64966bae17fe3304e0e48b5a8ef850a27481ddf8341792768
     source: ulif
+- entry:
+    entry_id: 358199
+    source: vesum
+  forms:
+  - form: сині
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: си́ні
+    tags: noun:inanim:f:v_dav
+  - form: сине
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: си́не
+    tags: noun:inanim:f:v_kly
+  - form: сині
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: си́ні
+    tags: noun:inanim:f:v_mis
+  - form: синь
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: синь
+    tags: noun:inanim:f:v_naz
+  - form: синню
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: си́нню
+    tags: noun:inanim:f:v_oru
+  - form: сині
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: си́ні
+    tags: noun:inanim:f:v_rod
+  - form: синь
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: синь
+    tags: noun:inanim:f:v_zna
+  id: W-176
+  lemma: синь
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
+    only. Exact sense/POS and marker-free form required; no gloss drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - синь
+    - 1
+    row_sha256: 5fc5b8e4e9a13ed09a16337dac1012129a16876fb1158620690aff347e3af7bb
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 1481
+    row_sha256: 2d1ada97c1e8a191ef25f4aa9169a421cc4700da374ece7f53795645ef52a59d
+    source: puls
+  entry:
+    entry_id: 335541
+    source: vesum
+  forms:
+  - form: рисові
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сові
+    tags: noun:inanim:m:v_dav
+  - form: рису
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́су
+    tags: noun:inanim:m:v_dav
+  - form: рисе
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́се
+    tags: noun:inanim:m:v_kly
+  - form: рисові
+    learner: true
+    markers: []
+    stress_source: trie
+    stressed: ри́сові
+    tags: noun:inanim:m:v_mis
+  - form: рису
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́су
+    tags: noun:inanim:m:v_mis
+  - form: рисі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сі
+    tags: noun:inanim:m:v_mis
+  - form: рис
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: рис
+    tags: noun:inanim:m:v_naz
+  - form: рисом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сом
+    tags: noun:inanim:m:v_oru
+  - form: рису
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́су
+    tags: noun:inanim:m:v_rod
+  - form: рис
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: рис
+    tags: noun:inanim:m:v_zna
+  gloss_en: rice (plants)
+  gloss_ref:
+    id: 18667
+    row_sha256: fafb1cf59aa03a388b2da6731002d3f102f6dc80d8c363158b91dd4a89c134a0
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-177
+  lemma: рис
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
+    only. Exact sense/POS and marker-free form required; no gloss drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - рис
+    - 1
+    row_sha256: 670bbf1abfd6dbb2b74c58b68f7b93d4c11dca7c83327ca7e29f88ea7e7c24eb
+    source: ulif
+- cefr:
+    level: B2
+    row_id: 1478
+    row_sha256: 22d1756e07bdb3302b79a984dc462eb6b3a1e8877f06e25949f9f2e657dcd883
+    source: puls
+  entry:
+    entry_id: 335618
+    source: vesum
+  forms:
+  - form: рисі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сі
+    tags: noun:anim:f:v_dav
+  - form: рисе
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́се
+    tags: noun:anim:f:v_kly
+  - form: рисі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сі
+    tags: noun:anim:f:v_mis
+  - form: рись
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: рись
+    tags: noun:anim:f:v_naz
+  - form: риссю
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́ссю
+    tags: noun:anim:f:v_oru
+  - form: рисі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сі
+    tags: noun:anim:f:v_rod
+  - form: рись
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: рись
+    tags: noun:anim:f:v_zna
+  - form: рисям
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сям
+    tags: noun:anim:p:v_dav
+  - form: рисі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сі
+    tags: noun:anim:p:v_kly
+  - form: рисях
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сях
+    tags: noun:anim:p:v_mis
+  - form: рисі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сі
+    tags: noun:anim:p:v_naz
+  - form: рисями
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сями
+    tags: noun:anim:p:v_oru
+  - form: рисей
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сей
+    tags: noun:anim:p:v_rod
+  - form: рисей
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сей
+    tags: noun:anim:p:v_zna
+  - form: рисі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: ри́сі
+    tags: noun:anim:p:v_zna
+  gloss_en: lynx (wild cat)
+  gloss_ref:
+    id: 14763
+    row_sha256: 11c069fb1986c87a008789e50da0024a5bc0d4c59d2a5d0f5817953e47dc0f96
+    table: dmklinger_uk_en
+  gloss_source: dmklinger_uk_en
+  id: W-178
+  lemma: рись
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
+    only. Exact sense/POS and marker-free form required; no gloss drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- cefr:
+    level: B1
+    row_id: 5617
+    row_sha256: aeec0051da46c89711a6df863797e3cc96ce6000e25d6634ae6bbe55aaacb8d6
+    source: puls
+  entry:
+    entry_id: 33423
+    source: vesum
+  forms:
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:n:v_dav:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:n:v_kly:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:n:v_mis:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:n:v_naz:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:n:v_oru:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:n:v_rod:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:n:v_zna:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:p:v_dav:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:p:v_kly:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:p:v_mis:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:p:v_naz:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:p:v_oru:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:p:v_rod:nv
+  - form: бюро
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: бюро́
+    tags: noun:inanim:p:v_zna:nv
+  gloss_en: office, bureau, agency
+  gloss_source: kaikki_wiktionary
+  id: W-179
+  lemma: бюро
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
+    only. Exact sense/POS and marker-free form required; no gloss drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - бюро́
+    - 1
+    row_sha256: 2cc75ad29c02662685db891ff6ed83fbcc30d946d1588aaa64dce3e103e5cd84
+    source: ulif
+- cefr:
+    level: A2
+    row_id: 5738
+    row_sha256: ecd9b6058836282bcaee16c0543e8a9e191bc5314e68589ce5c727842ad2c032
+    source: puls
+  entry:
+    entry_id: 23129
+    source: vesum
+  forms:
+  - form: битимем
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́тимем
+    tags: verb:imperf:futr:p:1
+  - form: битимемо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́тимемо
+    tags: verb:imperf:futr:p:1
+  - form: битимете
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́тимете
+    tags: verb:imperf:futr:p:2
+  - form: битимуть
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́тимуть
+    tags: verb:imperf:futr:p:3
+  - form: битиму
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́тиму
+    tags: verb:imperf:futr:s:1
+  - form: битимеш
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́тимеш
+    tags: verb:imperf:futr:s:2
+  - form: битиме
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́тиме
+    tags: verb:imperf:futr:s:3
+  - form: бито
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́то
+    tags: verb:imperf:impers
+  - form: биймо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́ймо
+    tags: verb:imperf:impr:p:1
+  - form: бийте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́йте
+    tags: verb:imperf:impr:p:2
+  - form: бий
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: бий
+    tags: verb:imperf:impr:s:2
+  - form: бити
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́ти
+    tags: verb:imperf:inf
+  - form: бить
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: бить
+    tags: verb:imperf:inf:short
+  - form: била
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́ла
+    tags: verb:imperf:past:f
+  - form: бив
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: бив
+    tags: verb:imperf:past:m
+  - form: било
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́ло
+    tags: verb:imperf:past:n
+  - form: били
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: би́ли
+    tags: verb:imperf:past:p
+  - form: б'ємо
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: б'ємо́
+    tags: verb:imperf:pres:p:1
+  - form: б'єм
+    learner: false
+    markers:
+    - marker: subst
+      marker_class: nonstandard
+      origin: tag
+    stress_source: none
+    stressed: б'єм
+    tags: verb:imperf:pres:p:1:subst
+  - form: б'єте
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: б'єте́
+    tags: verb:imperf:pres:p:2
+  - form: б'ють
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: б'ють
+    tags: verb:imperf:pres:p:3
+  - form: б'ю
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: б'ю
+    tags: verb:imperf:pres:s:1
+  - form: б'єш
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: б'єш
+    tags: verb:imperf:pres:s:2
+  - form: б'є
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: б'є
+    tags: verb:imperf:pres:s:3
+  gloss_en: to beat, to hit, to strike
+  gloss_source: kaikki_wiktionary
+  id: W-180
+  lemma: бити
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
+    only. Exact sense/POS and marker-free form required; no gloss drill.'
+  pos: verb
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif:
+    key:
+    - би́ти
+    - 1
+    row_sha256: 3ed9307df83f475da13ab43b8cfa22c0d6898730eb4e4732bb46f6a5091da0aa
+    source: ulif
+- cefr:
+    level: A1
+    row_id: 1268
+    row_sha256: 0682b88ed88e0d388061774f7ed3dc9c31080cff347384f945775ef4359021cc
+    source: puls
+  entry:
+    entry_id: 354360
+    source: vesum
+  forms:
+  - form: святові
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: noun:inanim:n:v_dav
+  - form: святу
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: свя́ту
+    tags: noun:inanim:n:v_dav
+  - form: свято
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: свя́то
+    tags: noun:inanim:n:v_kly
+  - form: святові
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: noun:inanim:n:v_mis
+  - form: святу
+    learner: true
+    markers: []
+    stress_source: pending
+    tags: noun:inanim:n:v_mis
+  - form: святі
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: свя́ті
+    tags: noun:inanim:n:v_mis
+  - form: свято
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: свя́то
+    tags: noun:inanim:n:v_naz
+  - form: святом
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: свя́том
+    tags: noun:inanim:n:v_oru
+  - form: свята
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: свя́та
+    tags: noun:inanim:n:v_rod
+  - form: свято
+    learner: true
+    markers: []
+    stress_source: ulif
+    stressed: свя́то
+    tags: noun:inanim:n:v_zna
+  - form: святам
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Dat
+      - Gender=Neut
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: свя́та́м
+      unstressed_form: святам
+      vesum:
+        lemma: свято
+        pos: noun
+        tags: noun:inanim:p:v_dav
+      vowel_index: 2
+      vowel_indices:
+      - 2
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_dav
+  - form: свята
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Voc
+      - Gender=Neut
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: свя́та́
+      unstressed_form: свята
+      vesum:
+        lemma: свято
+        pos: noun
+        tags: noun:inanim:p:v_kly
+      vowel_index: 2
+      vowel_indices:
+      - 2
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_kly
+  - form: святах
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Loc
+      - Gender=Neut
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: свя́та́х
+      unstressed_form: святах
+      vesum:
+        lemma: свято
+        pos: noun
+        tags: noun:inanim:p:v_mis
+      vowel_index: 2
+      vowel_indices:
+      - 2
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_mis
+  - form: свята
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Nom
+      - Gender=Neut
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: свя́та́
+      unstressed_form: свята
+      vesum:
+        lemma: свято
+        pos: noun
+        tags: noun:inanim:p:v_naz
+      vowel_index: 2
+      vowel_indices:
+      - 2
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_naz
+  - form: святами
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Ins
+      - Gender=Neut
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: свя́та́ми
+      unstressed_form: святами
+      vesum:
+        lemma: свято
+        pos: noun
+        tags: noun:inanim:p:v_oru
+      vowel_index: 2
+      vowel_indices:
+      - 2
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_oru
+  - form: свят
+    learner: true
+    markers: []
+    stress_source: none
+    stressed: свят
+    tags: noun:inanim:p:v_rod
+  - form: свята
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Acc
+      - Gender=Neut
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: свя́та́
+      unstressed_form: свята
+      vesum:
+        lemma: свято
+        pos: noun
+        tags: noun:inanim:p:v_zna
+      vowel_index: 2
+      vowel_indices:
+      - 2
+      - 4
+    stress_source: pending
+    tags: noun:inanim:p:v_zna
+  id: W-181
+  lemma: свято
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
+    only. Exact sense/POS and marker-free form required; no gloss drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending
+- entry:
+    entry_id: 142397
+    source: vesum
+  forms:
+  - form: зв'язкові
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Dat
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зкові
+      unstressed_form: зв'язкові
+      vesum: &id003
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_dav
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Dat
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язко́ві
+      unstressed_form: зв'язкові
+      vesum: *id003
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:m:v_dav
+    unresolvable_by_tags: true
+  - form: зв'язку
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Dat
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зку
+      unstressed_form: зв'язку
+      vesum: &id004
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_dav
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Dat
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язку́
+      unstressed_form: зв'язку
+      vesum: *id004
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:m:v_dav
+    unresolvable_by_tags: true
+  - form: зв'язку
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Voc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зку
+      unstressed_form: зв'язку
+      vesum: &id005
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_kly
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Voc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язку́
+      unstressed_form: зв'язку
+      vesum: *id005
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:m:v_kly
+    unresolvable_by_tags: true
+  - form: зв'язкові
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Loc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зкові
+      unstressed_form: зв'язкові
+      vesum: &id006
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_mis
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Loc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язко́ві
+      unstressed_form: зв'язкові
+      vesum: *id006
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:m:v_mis
+    unresolvable_by_tags: true
+  - form: зв'язку
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Loc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зку
+      unstressed_form: зв'язку
+      vesum: &id007
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_mis
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Loc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язку́
+      unstressed_form: зв'язку
+      vesum: *id007
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:m:v_mis
+    unresolvable_by_tags: true
+  - form: зв'язок
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Nom
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зок
+      unstressed_form: зв'язок
+      vesum: &id008
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_naz
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Nom
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язо́к
+      unstressed_form: зв'язок
+      vesum: *id008
+      vowel_index: 5
+      vowel_indices:
+      - 5
+    stress_source: pending
+    tags: noun:inanim:m:v_naz
+    unresolvable_by_tags: true
+  - form: зв'язком
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Ins
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зком
+      unstressed_form: зв'язком
+      vesum: &id009
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_oru
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Ins
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язко́м
+      unstressed_form: зв'язком
+      vesum: *id009
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:m:v_oru
+    unresolvable_by_tags: true
+  - form: зв'язку
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Gen
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зку
+      unstressed_form: зв'язку
+      vesum: &id010
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_rod
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Gen
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язку́
+      unstressed_form: зв'язку
+      vesum: *id010
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:m:v_rod
+    unresolvable_by_tags: true
+  - form: зв'язок
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Acc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'я́зок
+      unstressed_form: зв'язок
+      vesum: &id011
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:m:v_zna
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Acc
+      - Gender=Masc
+      - Number=Sing
+      - upos=NOUN
+      stressed_form: зв'язо́к
+      unstressed_form: зв'язок
+      vesum: *id011
+      vowel_index: 5
+      vowel_indices:
+      - 5
+    stress_source: pending
+    tags: noun:inanim:m:v_zna
+    unresolvable_by_tags: true
+  - form: зв'язкам
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Dat
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'я́зкам
+      unstressed_form: зв'язкам
+      vesum: &id012
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:p:v_dav
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Dat
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'язка́м
+      unstressed_form: зв'язкам
+      vesum: *id012
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:p:v_dav
+    unresolvable_by_tags: true
+  - form: зв'язки
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Voc
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'я́зки
+      unstressed_form: зв'язки
+      vesum: &id013
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:p:v_kly
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Voc
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'язки́
+      unstressed_form: зв'язки
+      vesum: *id013
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:p:v_kly
+    unresolvable_by_tags: true
+  - form: зв'язках
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Loc
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'я́зках
+      unstressed_form: зв'язках
+      vesum: &id014
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:p:v_mis
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Loc
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'язка́х
+      unstressed_form: зв'язках
+      vesum: *id014
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:p:v_mis
+    unresolvable_by_tags: true
+  - form: зв'язки
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Nom
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'я́зки
+      unstressed_form: зв'язки
+      vesum: &id015
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:p:v_naz
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Nom
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'язки́
+      unstressed_form: зв'язки
+      vesum: *id015
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:p:v_naz
+    unresolvable_by_tags: true
+  - form: зв'язками
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Ins
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'я́зками
+      unstressed_form: зв'язками
+      vesum: &id016
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:p:v_oru
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Ins
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'язка́ми
+      unstressed_form: зв'язками
+      vesum: *id016
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:p:v_oru
+    unresolvable_by_tags: true
+  - form: зв'язків
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Gen
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'я́зків
+      unstressed_form: зв'язків
+      vesum: &id017
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:p:v_rod
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Gen
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'язкі́в
+      unstressed_form: зв'язків
+      vesum: *id017
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:p:v_rod
+    unresolvable_by_tags: true
+  - form: зв'язки
+    learner: true
+    markers: []
+    stress_candidates:
+    - override_applied: false
+      required_tags:
+      - Case=Acc
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'я́зки
+      unstressed_form: зв'язки
+      vesum: &id018
+        lemma: зв'язок
+        pos: noun
+        tags: noun:inanim:p:v_zna
+      vowel_index: 3
+      vowel_indices:
+      - 3
+    - override_applied: false
+      required_tags:
+      - Case=Acc
+      - Gender=Masc
+      - Number=Plur
+      - upos=NOUN
+      stressed_form: зв'язки́
+      unstressed_form: зв'язки
+      vesum: *id018
+      vowel_index: 6
+      vowel_indices:
+      - 6
+    stress_source: pending
+    tags: noun:inanim:p:v_zna
+    unresolvable_by_tags: true
+  gloss_en: relations, ties, links; connections; bond; communication; means of communication; bundle
+  gloss_source: kaikki_wiktionary
+  id: W-182
+  lemma: зв'язок
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding
+    only. Exact sense/POS and marker-free form required; no gloss drill.'
+  pos: noun
+  shadow:
+    russian_shadow: false
+    score: 0.0
+  ulif: pending

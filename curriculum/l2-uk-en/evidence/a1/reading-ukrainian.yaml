@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: eb433290e11075ac6e0f297b5bcb5b8399ef19a2
+  mcp_commit: 3fde66114438177228d094d1928a6936981f0f77
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 119ce14124b6fa18e37d844a17ce87e967692b9d9bc26fd7fceb7ef8348cf080
+  sources_db: 6d488159bc0ee7e78a2f40b7eb803fcc8046ec96c45fb68efff37930272edd91
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -273,6 +273,48 @@ exercises:
     page: 30
     row_sha256: 81e0613e8e332ba2f5b5462777cea61318125cb19dc5d1dac368387a24fd0a90
     section_id: 13089
+- id: X-006
+  items_sample:
+  - 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  pattern: Find an incorrect language-mechanics analysis, then select its correction against the taught source model.
+  quote: 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 17
+    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
+    section_id: 12965
+- id: X-007
+  items_sample:
+  - 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].
+
+    [ • ] [ • ]'
+  pattern: Classify the taught sound represented by a letter using the primer vowel and consonant symbols.
+  quote: 'Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].
+
+    [ • ] [ • ]'
+  sha256: eb41607e1ed8bf2677d02df65a5a962e114349c67746fdccd856c0c16ea9f21f
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 15
+    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
+    section_id: 12963
 module: a1/reading-ukrainian
 texts:
 - id: T-001
@@ -1172,21 +1214,19 @@ texts:
     section_id: 13083
   supports: 'Primer part 2 printed page 22: Х syllables and a read list of decodable Х words after the Х key-word page.'
 - id: T-020
-  quote: 'В українській мові є два різні звуки. подібні до латинських h і g. Раніш вони
-
-    позначались на письмі й друковано літерами г (h) і ґ (g).'
-  sha256: cae99bed838fbeab235abab06867c32da3e7451ac92db949f3a64441b9055e60
+  quote: Бачу Ґ, ґ (ґе). Чую [ґ].
+  sha256: 32ae76ab4d326e887f0d6ea70e16480e78d6df42cb311ffdbd2414be6588863a
   source:
-    author: Borys Antonenko-Davydovych
-    chunk_id: antonenko-davydovych-yak-my-hovorymo_p147
-    file: antonenko-davydovych-yak-my-hovorymo
-    grade: ''
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0007
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
     kind: textbook
-    page: null
-    row_sha256: 4a547be86afdc67ac4436e60be9e855e9e32e236fed4269a12b6382eb69091fc
-    section_id: 7191
-  supports: 'Antonenko-Davydovych, Як ми говоримо, p. 147: Ukrainian has two different sounds, similar to Latin h and g, written
-    г and ґ; the reader must not give г the g reading.'
+    page: 10
+    row_sha256: 5362b6349fe72bfa9782b30474bb8ea1a5f6d7da9ee503b0d67659b4dd9dfb28
+    section_id: 13069
+  supports: 'Current primer printed p.8: Ґ has the explicit [ґ] sound model. Contrast with the Г model T-007 and recordings
+    V-009/V-002. Modern Pravopys 2019 §6 independently corroborates the norm; Antonenko-Davydovych is not a phonetics authority.'
 - id: T-021
   quote: 'Сполучення Lе передається через ле: білéт, елéктрика, желé, Галілéй,
 
@@ -1446,6 +1486,74 @@ texts:
     section_id: 13091
   supports: Whole sourced decodable sentence, unchanged; scored printed comprehension and offline read-aloud, not a listening
     target.
+- id: T-039
+  quote: 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 17
+    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
+    section_id: 12965
+  supports: 'Primer printed p.15: find the incorrect analysis and repair it. Model methodology only; the fresh tasks correct
+    source-symbol assignments or vowel counts, never invent misspelled Ukrainian words or untaught cluster boundaries.'
+- id: T-040
+  quote: 'Мовні звуки: голосні та приголосні
+
+    Вимов перший звук у словах — назвах предметів.
+
+    Який це звук? Голосний звук позначаємо так: [•].
+
+    [ • ] [ • ]
+
+    Вимов перший звук у словах — назвах предме-
+
+    тів. Який це звук? Приголосний звук позначає-
+
+    мо так: [–].
+
+    [ – ] [ – ] [ – ]
+
+    [ – ]
+
+    Вимов голосні звуки в словах — назвах предме-
+
+    тів.
+
+    Вимов приголосні звуки в словах — назвах
+
+    предметів.'
+  sha256: ae3300211245b3d109c38fdd1a04874e4c5ff004376623b5c11ad8bd9b6e877b
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0012
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 15
+    row_sha256: 08b94515e5a3c8c8eb7f716c0e4c7002803687a510c51e45e516145108792741
+    section_id: 12963
+  supports: 'Primer printed p.13: vowel [•] and consonant [–] categories; classify already taught single-sound letters, not
+    silent signs or two-sound vowel letters.'
+- id: T-038
+  quote: А а
+  sha256: 1cde4efb0b1f662356daba1769544cb8f096ae13eac7396b41a0fcf6fe24a0a1
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact capital/small heading for taught letter А; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
 unsupported:
 - claim: An English-speaker description of the sounds Ж, Ш, Ч, Х and Й (an English sound comparison or a typical English-reader
     difficulty for each). The sources give each Ukrainian sound (primer "Чую [ж]" lines, T-010 to T-014) and a native pronunciation
@@ -1585,11 +1693,7 @@ unsupported:
   status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=m-jcLR_gK0k
-    http_status: 200
+  checked: null
   id: V-001
   models:
     letters:
@@ -1600,11 +1704,7 @@ videos:
   use: Pronunciation model for Т. Pronunciation model for Т before CV and VC reading. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
-    http_status: 200
+  checked: null
   id: V-002
   models:
     letters:
@@ -1615,11 +1715,7 @@ videos:
   use: Pronunciation model for Ґ. Pronunciation model for Ґ after hearing Г from the primer. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=aq0cjB90s3w
-    http_status: 200
+  checked: null
   id: V-003
   models:
     letters:
@@ -1630,21 +1726,13 @@ videos:
   use: Pronunciation model for Й. Pronunciation model for Й in short final-letter reading. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.ukrainianlessons.com/episode10/
-    http_status: 200
+  checked: null
   id: V-004
   url: https://www.ukrainianlessons.com/episode10/
   use: 'ULP 1-10 public episode: the by-ear first-person review story and its first three questions and spoken answers, modeled
     in public transcript ext-ulp_youtube-294. T-016/T-017 premium notes are grounding only, never learner-facing source text.'
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=KFlsroBW0dk
-    http_status: 200
+  checked: null
   id: V-005
   models:
     letters:
@@ -1655,11 +1743,7 @@ videos:
   use: Pronunciation model for Е. Pronunciation model for Е before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=g4Bh-lqzd48
-    http_status: 200
+  checked: null
   id: V-006
   models:
     letters:
@@ -1670,11 +1754,7 @@ videos:
   use: Pronunciation model for Д. Pronunciation model for Д before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=BhASNxitC1A
-    http_status: 200
+  checked: null
   id: V-007
   models:
     letters:
@@ -1685,11 +1765,7 @@ videos:
   use: Pronunciation model for З. Pronunciation model for З before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=V1hxBE_JbGg
-    http_status: 200
+  checked: null
   id: V-008
   models:
     letters:
@@ -1700,11 +1776,7 @@ videos:
   use: Pronunciation model for Б. Pronunciation model for Б before its word row. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=gVnclpSI0DU
-    http_status: 200
+  checked: null
   id: V-009
   models:
     letters:
@@ -1715,11 +1787,7 @@ videos:
   use: Pronunciation model for Г. Pronunciation model for Г before the Г/Ґ contrast. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=UsJkbdsY2RA
-    http_status: 200
+  checked: null
   id: V-010
   models:
     letters:
@@ -1730,11 +1798,7 @@ videos:
   use: Pronunciation model for Ч. Pronunciation model for Ч before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=vpr58zJSJKc
-    http_status: 200
+  checked: null
   id: V-011
   models:
     letters:
@@ -1745,11 +1809,7 @@ videos:
   use: Pronunciation model for Х. Pronunciation model for Х before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=dIrGVcqPwqM
-    http_status: 200
+  checked: null
   id: V-012
   models:
     letters:
@@ -1760,11 +1820,7 @@ videos:
   use: Pronunciation model for Ж. Pronunciation model for Ж before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=1D-6MIw3OXY
-    http_status: 200
+  checked: null
   id: V-013
   models:
     letters:
@@ -1775,11 +1831,7 @@ videos:
   use: Pronunciation model for Ш. Pronunciation model for Ш before its sound rows. Scored segment is the publisher-labelled
     native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.ukrainianlessons.com/episode2/
-    http_status: 200
+  checked: null
   id: V-014
   models:
     letters: []
@@ -1793,13 +1845,20 @@ videos:
     Structured targets are attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode
     confirmation remains driver-owned.'
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-    http_status: 200
+  checked: null
   id: V-015
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: 'Full alphabet pronunciation video, identified by the publisher’s public alphabet guide and public transcript ext-ulp_youtube-304:
     whole-word models for W-118, W-109 and W-110. Restrict each excerpt to letters already taught; this is not evidence for
     the other primer word lists or whole sentences.'
+- channel: Ukrainian Lessons
+  checked: null
+  id: V-016
+  models:
+    letters:
+    - А
+    segment: null
+    words: []
+  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  use: Previously taught А native sound, publisher-paired to the А heading; contrasts with new Т without reading an untaught
+    letter.

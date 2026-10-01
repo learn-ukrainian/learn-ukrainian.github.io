@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: eb433290e11075ac6e0f297b5bcb5b8399ef19a2
+  mcp_commit: 3fde66114438177228d094d1928a6936981f0f77
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: a434c92f06f5b6f20173eec2e0334d9f02518f0fd084ff35406fbb560d6c4393
+  sources_db: dca7883992555dbe3c0a58361ed951aba0b5cf699282aabd0715ec39c2efb4f7
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: 8e8c33664f22f5d4a15c3e7c20a7de2dab4c2f86c2f5d97802ce9bc59036aed0
@@ -171,6 +171,25 @@ exercises:
     page: 81
     row_sha256: 2a4c2b840e2a5bc794451ea9a284196148f90f875721779a18a163fed2d8447e
     section_id: 13028
+- id: X-006
+  items_sample:
+  - 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  pattern: Find an incorrect language-mechanics analysis, then select its correction against the taught source model.
+  quote: 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 17
+    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
+    section_id: 12965
 module: a1/sounds-letters-and-hello
 standard:
 - file_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
@@ -774,6 +793,22 @@ texts:
     section_id: 12995
   supports: Complete sourced М CV/VC row for printed syllable discrimination, read aloud offline with teacher modeling; no
     recording claim.
+- id: T-038
+  quote: 'Хто неправильно поділив слово — назву нама-
+
+    льованого предмета на склади?'
+  sha256: 50fc289cbafd0d73cc1eca3c144537d19cb9c965244eee51c92509b59c9b8c41
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0014
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: '1'
+    kind: textbook
+    page: 17
+    row_sha256: 26afdb9cd0f36a1e8d08159b9331d4e36679f33cd2aff26b5916644db1b2f2b8
+    section_id: 12965
+  supports: 'Primer printed p.15: find the incorrect analysis and repair it. Model methodology only; the fresh tasks correct
+    source-symbol assignments or vowel counts, never invent misspelled Ukrainian words or untaught cluster boundaries.'
 unsupported:
 - claim: No confirmed free recording models the exact primer CV/VC/CVC combinations required to be heard in lesson 3 s1 and
     lesson 5 s1, or the W-084/W-085 and before-І contrasts in lessons 4 s2 and 5 s2. The letter videos establish their named
@@ -811,11 +846,7 @@ unsupported:
   status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.ukrainianlessons.com/episode1/
-    http_status: 200
+  checked: null
   id: V-001
   models:
     letters: []
@@ -827,11 +858,7 @@ videos:
     transcript locator ext-ulp_youtube-303; premium notes are grounding only. Structured targets are attested by public transcript
     ext-ulp_youtube-303; no passage timing is supplied. Exact playback/timecode confirmation remains driver-owned.'
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.ukrainianlessons.com/episode2/
-    http_status: 200
+  checked: null
   id: V-002
   models:
     letters: []
@@ -845,11 +872,7 @@ videos:
     attested by public transcript ext-ulp_youtube-302; no passage timing is supplied. Exact playback/timecode confirmation
     remains driver-owned.'
 - channel: Ukrainian Lessons Podcast
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.ukrainianlessons.com/episode5/
-    http_status: 200
+  checked: null
   id: V-003
   models:
     letters:
@@ -861,11 +884,7 @@ videos:
     compare with the native І model V-009, not English spelling. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.'
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
-    http_status: 200
+  checked: null
   id: V-004
   models:
     letters:
@@ -876,11 +895,7 @@ videos:
   use: Pronunciation model for А. Pronunciation model for letter А. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=gJFxRIPRZbI
-    http_status: 200
+  checked: null
   id: V-005
   models:
     letters:
@@ -891,11 +906,7 @@ videos:
   use: Pronunciation model for О. Pronunciation model for letter О. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=VB1O6PmtYRU
-    http_status: 200
+  checked: null
   id: V-006
   models:
     letters:
@@ -906,11 +917,7 @@ videos:
   use: Pronunciation model for У. Pronunciation model for letter У. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=W-1rCu0indE
-    http_status: 200
+  checked: null
   id: V-007
   models:
     letters:
@@ -921,11 +928,7 @@ videos:
   use: Pronunciation model for И. Pronunciation model for letter И. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=Ez95H4ibuJo
-    http_status: 200
+  checked: null
   id: V-008
   models:
     letters:
@@ -936,11 +939,7 @@ videos:
   use: Pronunciation model for М. Pronunciation model for consonant М. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
-    http_status: 200
+  checked: null
   id: V-009
   models:
     letters:
@@ -951,11 +950,7 @@ videos:
   use: Pronunciation model for І. Pronunciation model for vowel І. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=vNUfiKHPYaU
-    http_status: 200
+  checked: null
   id: V-010
   models:
     letters:
@@ -966,11 +961,7 @@ videos:
   use: Pronunciation model for Н. Pronunciation model for consonant Н. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
-    http_status: 200
+  checked: null
   id: V-011
   models:
     letters:
@@ -981,11 +972,7 @@ videos:
   use: Pronunciation model for В. Pronunciation model for consonant В. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=v6-3Xg52Buk
-    http_status: 200
+  checked: null
   id: V-012
   models:
     letters:
@@ -996,11 +983,7 @@ videos:
   use: Pronunciation model for Л. Pronunciation model for consonant Л. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=7UsFBgSL91E
-    http_status: 200
+  checked: null
   id: V-013
   models:
     letters:
@@ -1011,11 +994,7 @@ videos:
   use: Pronunciation model for С. Pronunciation model for consonant С. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=J7sGEI4-xJo
-    http_status: 200
+  checked: null
   id: V-014
   models:
     letters:
@@ -1026,11 +1005,7 @@ videos:
   use: Pronunciation model for К. Pronunciation model for consonant К. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=JksSjjxyW5Y
-    http_status: 200
+  checked: null
   id: V-015
   models:
     letters:
@@ -1041,11 +1016,7 @@ videos:
   use: Pronunciation model for П. Pronunciation model for consonant П. Scored segment is the publisher-labelled native letter-sound
     demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons
-  checked:
-    content_type: text/html
-    date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
-    http_status: 200
+  checked: null
   id: V-016
   models:
     letters:

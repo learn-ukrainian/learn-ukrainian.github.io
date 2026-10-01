@@ -6,26 +6,26 @@
         "activities": {
           "inline": {
             "by_type": {
-              "fill-in": 1,
               "letter-grid": 1,
               "observe": 1,
+              "quiz": 1,
               "watch-and-repeat": 1
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
-              "fill-in": 1,
-              "match-up": 1
+              "match-up": 1,
+              "quiz": 1
             },
             "total": 2
           }
         },
         "distinct_types": [
-          "fill-in",
           "letter-grid",
           "match-up",
           "observe",
+          "quiz",
           "watch-and-repeat"
         ],
         "has_workbook": true,
@@ -37,26 +37,25 @@
         "activities": {
           "inline": {
             "by_type": {
-              "fill-in": 1,
               "letter-grid": 2,
-              "quiz": 1
+              "quiz": 2
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
               "anagram": 1,
-              "fill-in": 1,
-              "pick-syllables": 1
+              "count-syllables": 1,
+              "fill-in": 1
             },
             "total": 3
           }
         },
         "distinct_types": [
           "anagram",
+          "count-syllables",
           "fill-in",
           "letter-grid",
-          "pick-syllables",
           "quiz"
         ],
         "has_workbook": true,
@@ -68,15 +67,16 @@
         "activities": {
           "inline": {
             "by_type": {
-              "fill-in": 2,
-              "letter-grid": 2
+              "letter-grid": 2,
+              "quiz": 2
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
               "count-syllables": 1,
-              "fill-in": 2
+              "fill-in": 1,
+              "quiz": 1
             },
             "total": 3
           }
@@ -84,7 +84,8 @@
         "distinct_types": [
           "count-syllables",
           "fill-in",
-          "letter-grid"
+          "letter-grid",
+          "quiz"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -102,15 +103,16 @@
           },
           "workbook": {
             "by_type": {
-              "divide-words": 1,
+              "count-syllables": 1,
               "fill-in": 1,
-              "match-up": 1
+              "match-up": 1,
+              "quiz": 1
             },
-            "total": 3
+            "total": 4
           }
         },
         "distinct_types": [
-          "divide-words",
+          "count-syllables",
           "fill-in",
           "letter-grid",
           "match-up",
@@ -125,25 +127,27 @@
         "activities": {
           "inline": {
             "by_type": {
-              "fill-in": 2,
-              "observe": 2
+              "fill-in": 1,
+              "observe": 2,
+              "quiz": 1
             },
             "total": 4
           },
           "workbook": {
             "by_type": {
               "anagram": 1,
-              "fill-in": 1,
-              "pick-syllables": 1
+              "count-syllables": 1,
+              "fill-in": 1
             },
             "total": 3
           }
         },
         "distinct_types": [
           "anagram",
+          "count-syllables",
           "fill-in",
           "observe",
-          "pick-syllables"
+          "quiz"
         ],
         "has_workbook": true,
         "is_recap": false,
@@ -163,7 +167,7 @@
           "workbook": {
             "by_type": {
               "fill-in": 1,
-              "odd-one-out": 1,
+              "quiz": 1,
               "unjumble": 1
             },
             "total": 3
@@ -173,7 +177,7 @@
           "fill-in",
           "letter-grid",
           "observe",
-          "odd-one-out",
+          "quiz",
           "unjumble"
         ],
         "has_workbook": true,
@@ -194,9 +198,9 @@
             "by_type": {
               "odd-one-out": 1,
               "order": 1,
-              "quiz": 1
+              "quiz": 2
             },
-            "total": 3
+            "total": 4
           }
         },
         "distinct_types": [
@@ -240,35 +244,31 @@
       "all_distinct_types": [
         "anagram",
         "count-syllables",
-        "divide-words",
         "fill-in",
         "letter-grid",
         "match-up",
         "observe",
         "odd-one-out",
         "order",
-        "pick-syllables",
         "quiz",
         "unjumble",
         "watch-and-repeat"
       ],
       "inline_activities": 33,
-      "largest_workbook_type": "fill-in",
-      "largest_workbook_type_share": 0.35,
+      "largest_workbook_type": "quiz",
+      "largest_workbook_type_share": 0.2727272727272727,
       "longest_same_type_workbook_run": 2,
-      "longest_same_type_workbook_run_type": "fill-in",
+      "longest_same_type_workbook_run_type": "count-syllables",
       "non_recap_lessons": 7,
       "non_recap_lessons_with_workbook": 7,
-      "workbook_activities": 20,
+      "workbook_activities": 22,
       "workbook_distinct_types": [
         "anagram",
         "count-syllables",
-        "divide-words",
         "fill-in",
         "match-up",
         "odd-one-out",
         "order",
-        "pick-syllables",
         "quiz",
         "unjumble"
       ],
@@ -281,16 +281,16 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b9b2da5302a7322d42b6ed103e171bf3ac6365daae1d69499eb2541dbcf6b74",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2ad317deeb586e88cf478bd20da8a71a70adf91b067819f8d7bd7c207c70b57e",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "a4ef1592721d60a404f8c2c84063b5d8ee3b4b8bde20b486bc6a3670f5f0ee97",
-    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "bf2042902706c8963d25d47abb705687df5ca5cb495b979e351c0809f6795536",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "0f3e12063fa39b6ece140760b12ecc73d6a775894b29f358f90ee582cbc3c9b2",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "76929b09a49e45c1cadae515ef639694c866e6a4faa8d8de54111af0e40e14cc",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml": "8c56c8aba3451c171e038ba3a97ad682b1c6381677347b191ed0d4921001fd56",
+    "curriculum/l2-uk-en/evidence/a1/special-signs.yaml.lock": "75f53f3a97155605f0afa01bc4c9c0a6372d93343cdb8a76f8c35ef13ee3a16f",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",
     "curriculum/l2-uk-en/lesson-plans/a1/_grammar.yaml": "20953589ab3a66944713a2559530cc9429c84ed65968634062309bf04337a33f",
     "curriculum/l2-uk-en/lesson-plans/a1/_scope/special-signs.yaml": "5d45796b0a6fb52afb6c62c27ef9b47abede7c4e9bade3037a7a1e4e17331b5a",
-    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "5303eeb2fec34de3ce83ec54cb40d69df9f0b0617c0140bce17062ba43b61085",
-    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "8e0d11db868bafc39dd2d9bb51e7b914cf9f06818540b2cbfff54548f5408943",
-    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "f82d302663330a2b73dc35002dbd9a663133f85e7c34cc526ce433e3f6c12ef0",
+    "curriculum/l2-uk-en/lesson-plans/a1/reading-ukrainian.yaml": "75b12966b217fc8a9361833ee4e4ec1e9a2d4370f96a1c692ccee5e210b0cf9d",
+    "curriculum/l2-uk-en/lesson-plans/a1/sounds-letters-and-hello.yaml": "891254f9a960556a2d558e095a1067e47a1bc74026715c406093f9aa87d07489",
+    "curriculum/l2-uk-en/lesson-plans/a1/special-signs.yaml": "7e0d7cdff776908bf2d0c092a5a55334c41328d48707a36330700ccc3903718d",
     "docs/epics/fresh-build-a1-arc.md": "57faf9345686082cc88e32e865603babbdfbf23a2fb0043b0cd21264f78de371",
     "schemas/activities-a1.schema.json": "8aee7379c249125c87022d2d0ae78b630a52cdad7821ecdfb9594bd7ea77c590",
     "schemas/arc.schema.json": "8c596c43d583998f026fe6f81607457604374e98abf87eafbb52e3a217b5fcf6",
@@ -333,7 +333,7 @@
     {
       "code": "pending_promotion",
       "lesson": null,
-      "message": "evidence_ref.sha256 is 889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315 and the provisional pack's sha256 is a4ef1592721d60a404f8c2c84063b5d8ee3b4b8bde20b486bc6a3670f5f0ee97; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
+      "message": "evidence_ref.sha256 is 889a940c593caf344ba850361610b13130843148994d0a9acb9ba9e3ca5b4315 and the provisional pack's sha256 is 8c56c8aba3451c171e038ba3a97ad682b1c6381677347b191ed0d4921001fd56; plan-promote sets evidence_ref.sha256 to the pack's after the plan review approves",
       "step": null
     }
   ],

@@ -1223,3 +1223,52 @@
   id: W-175
   lemma: м'якшення
   pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 358199
+    source: vesum
+  id: W-176
+  lemma: синь
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 335541
+    source: vesum
+  id: W-177
+  lemma: рис
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 335618
+    source: vesum
+  id: W-178
+  lemma: рись
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 33423
+    source: vesum
+  id: W-179
+  lemma: бюро
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 23129
+    source: vesum
+  id: W-180
+  lemma: бити
+  pos: verb
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 354360
+    source: vesum
+  id: W-181
+  lemma: свято
+  pos: noun
+- allocated_at_build: 38c791676e2d76dad6562c35af42ede7e2b63f785e9c3c7306ff3fb950b5eee4
+  entry:
+    entry_id: 142397
+    source: vesum
+  id: W-182
+  lemma: зв'язок
+  pos: noun

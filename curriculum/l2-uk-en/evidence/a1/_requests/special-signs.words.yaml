@@ -189,8 +189,8 @@ words:
     source: vesum
     entry_id: 429017
   want: W-164
-  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and
-    exact forms in revise-a1-p1-p3.md.
+  note: Round-2 authentic primer recap reading / question word; incidental, no grammar or meaning drill. Source host and exact forms in
+    revise-a1-p1-p3.md.
 - lemma: любити
   pos: verb
   entry:
@@ -268,3 +268,59 @@ words:
     entry_id: 210040
   want: W-175
   note: Exact alphabet-table heading / soft-sign name, T-012; incidental print reading at lesson 7, no grammar teaching.
+- lemma: синь
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 358199
+  want: W-176
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: рис
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 335541
+  want: W-177
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: рись
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 335618
+  want: W-178
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: бюро
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 33423
+  want: W-179
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: бити
+  pos: verb
+  entry:
+    source: vesum
+    entry_id: 23129
+  want: W-180
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: свято
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 354360
+  want: W-181
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
+- lemma: зв'язок
+  pos: noun
+  entry:
+    source: vesum
+    entry_id: 142397
+  want: W-182
+  note: 'Full-access fix round 1: sourced primer constant-vowel pair or Avramenko apostrophe contrast; incidental decoding only. Exact sense/POS
+    and marker-free form required; no gloss drill.'
