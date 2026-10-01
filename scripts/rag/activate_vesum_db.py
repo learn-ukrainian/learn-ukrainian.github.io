@@ -46,6 +46,11 @@ class ActivationError(RuntimeError):
     """Raised when database activation or rollback validation fails."""
 
 
+def backup_path_for(target_path: Path, now: datetime) -> Path:
+    """Timestamped backup beside the target; ``.gitignore`` must cover this name."""
+    return target_path.with_name(f"{target_path.name}.bak.{now.strftime('%Y%m%d_%H%M%S')}")
+
+
 def verify_shadow_database(
     shadow_path: Path,
     lock: dict[str, Any],
@@ -162,8 +167,7 @@ def activate_database(
     backup_path: Path | None = None
 
     if target_path.exists() and backup:
-        timestamp = datetime.now(UTC).strftime("%Y%m%d_%H%M%S")
-        backup_path = target_path.with_name(f"{target_path.name}.bak.{timestamp}")
+        backup_path = backup_path_for(target_path, datetime.now(UTC))
         shutil.copy2(target_path, backup_path)
         # Maintain latest backup symlink/copy pointer
         latest_backup = target_path.with_name(f"{target_path.name}.bak")
