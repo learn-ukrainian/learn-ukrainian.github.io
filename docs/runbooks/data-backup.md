@@ -2,7 +2,7 @@
 
 `scripts/backup-data.sh` creates encrypted, versioned restic snapshots of the
 project's recovery-critical local state through an rclone remote. It does not
-write through the Google Drive Desktop mount, overwrite the previous backup,
+write through the cloud provider's desktop sync mount, overwrite the previous backup,
 or restore directly over live project data. Snapshot pruning exists only as
 the operator-approved weekly `retention` command described below.
 
@@ -95,7 +95,7 @@ SQLite documents why its [online backup API produces a consistent snapshot][sqli
 The scheduled backup job (`learn-ukrainian-backup` → `~/.local/bin/learn-ukrainian-backup`) requires
 an operator-configured OAuth client and periodic authorization refresh:
 
-- Config lives outside git (`<secrets-path>/backup.env`, dedicated rclone config).
+- Config lives outside git (`~/.secrets/learn-ukrainian-backup.env` via `LU_BACKUP_ENV_FILE`, dedicated rclone config).
 - Do **not** put client secrets, tokens, or password files in the repo, issues, or receipts.
 - Procedure: configure dedicated OAuth credentials,
   then re-auth the remote and prove `backup-data.sh doctor`, one `backup --execute`,
@@ -139,7 +139,7 @@ not keep the only copy in the same cloud account as the repository.
 Set the repository and password-file locations in the shell environment:
 
 ```bash
-export LU_BACKUP_REPOSITORY='rclone:<remote>:<path/to/backup-repo>'
+export LU_BACKUP_REPOSITORY='rclone:<backup-remote>:<path/to/backup-repo>'
 export RESTIC_PASSWORD_FILE="$HOME/.config/restic/learn-ukrainian.password"
 ```
 
@@ -320,7 +320,7 @@ checkout (preview by default; writes only with `--apply`):
 .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply --enable
 ```
 
-The units read the configured environment file (`<secrets-path>/backup.env`) via `EnvironmentFile=`.
+The units configure `LU_BACKUP_ENV_FILE=%h/.secrets/learn-ukrainian-backup.env` (as defined in `packaging/systemd/learn-ukrainian-backup.service`), which the wrapper validates (regular file, mode 0600, safe permissions) and sources.
 Validation errors name the variable and condition without its value. The
 scheduled wrapper replaces either configured repository value, its remote
 path, and the password-file path in backup and retention output

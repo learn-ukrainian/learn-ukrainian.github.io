@@ -196,7 +196,7 @@ makes a prior APPROVE stale. Automated merge pipelines cannot replace review gat
 with `python -m scripts.publish pr-merge` after both gates (never `--auto` as a
 substitute for review). Do **not** pass `--delete-branch` while this repo uses a
 merge queue (head deletion mid-queue can close without landing); delete the remote branch
-only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge.
+only after `MERGED`. Dispatched agents still do NOT self-enable auto-merge or apply merge-automation labels.
 `--auto` never bypasses blocking checks (#M-0.5 semantics unchanged).
 
 **Stream-scoped sweeps (user directive 2026-07-13 — parallel-stream chaos fix; supersedes the

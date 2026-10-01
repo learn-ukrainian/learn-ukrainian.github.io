@@ -15,9 +15,9 @@ This audit implements the operational security hardening required under issue #9
 
 ### Scanned Denominator
 The complete denominator consists of **375 tracked Markdown and YAML files** across three canonical roots:
-- `agents_extensions/shared/`: 254 files (235 Markdown, 19 YAML)
-- `docs/runbooks/`: 64 files (63 Markdown, 1 YAML)
-- `docs/best-practices/`: 57 files (56 Markdown, 1 YAML)
+- `agents_extensions/shared/`: 254 files (233 Markdown, 21 YAML)
+- `docs/runbooks/`: 64 files (64 Markdown, 0 YAML)
+- `docs/best-practices/`: 57 files (57 Markdown, 0 YAML)
 Total denominator: **375 files** (354 Markdown, 21 YAML).
 
 ---
@@ -57,7 +57,7 @@ Findings identified across the denominator were grouped into four distinct opera
 | `docs/runbooks/agent-seat-onboarding.md` | Cat D | Replaced internal tracker citation with public authorization under `#6943`. | Retained full agent seat onboarding authorization scope. |
 | `docs/runbooks/atlas-job-protocol.md` | Cat C | Neutralized explicit hosting provider references. | Retained atlas job execution protocol and failure isolation. |
 | `docs/runbooks/clear-stale-git-lock.md` | Cat C | Removed absolute local host path `/home/ops/learn-ukrainian/.venv/bin/python`. | Retained exact command invocation using standard `.venv/bin/python`. |
-| `docs/runbooks/data-backup.md` | Cat C | Neutralized backup provider names, lu-gdrive remote, OAuth retirement details, scheduled job label, and secrets file path. | Retained backup initialization and execution procedures using generic remote and environment placeholders. |
+| `docs/runbooks/data-backup.md` | Cat C | Neutralized cloud provider desktop sync mount name, lu-gdrive remote, OAuth renewal details, and scheduled job label. | Retained backup initialization and execution procedures using generic remote placeholder and documented LU_BACKUP_ENV_FILE path. |
 | `docs/runbooks/storage-topology.md` | Cat C | Neutralized NTFS share name (`Get-SmbShare -Name UkrainianData` -> `Get-SmbShare`), Drive path, listener counts, systemd dropin numbers, and Mac/Finder cache reclaim phrasing. | Retained full storage topology layout, migration window steps, and exit status 78 guard behavior. |
 | `docs/runbooks/teacher-curated-seed-rebuild.md` | Cat C | Neutralized concrete cloud drive recovery and curriculum paths (`/absolute/path/to/My Drive/Projects/...`). | Retained teacher-curated seed rebuild workflow using generic path placeholders. |
 | `agents_extensions/shared/hooks/guard-pr-merge.py` | Cat B | Neutralized historical private repo 403 API response disclosures in docstring and _FOOTER. | Retained fail-closed merge guard enforcement logic and exact command checking. |
@@ -79,6 +79,10 @@ During the denominator sweep, references to standard off-repo local secret paths
    - **Evaluated Files:** `launchd-inventory.md`, `local-api-server.md`, `archived-thread-cleanup.md`, `worktree-cleanup.md`, `recovery.md`.
    - **Evaluation & Rationale:** `com.learn-ukrainian.<service>` is the reverse-DNS bundle namespace standard for macOS LaunchAgent plists (`~/Library/LaunchAgents/`). It represents standard local service names (e.g. `monitor-api`, `worktree-cleanup`, `codex-archived-thread-cleanup`), disclosing no internal IP addresses, credentials, or private attack surfaces.
 
+3. **Standard Local Loopback Service Endpoints (`localhost:8765`, `127.0.0.1:8765`):**
+   - **Evaluated Files:** Appears across 25 denominator files (e.g. `docs/best-practices/universal-rules-registry.md`, `docs/best-practices/local-api-server.md`, `agents_extensions/shared/rules/mcp-server-registry.yaml`, etc.).
+   - **Evaluation & Rationale:** Port 8765 is the well-known local loopback daemon endpoint for the local MCP tool and Monitor API server running strictly on the host loopback interface (`127.0.0.1`). It is not routable externally, exposes no public IP addresses or wide-area network topology, and is required for local agent tool discovery and IPC. Retained as standard local loopback convention.
+
 ---
 
 ## 5. Recorded Residuals & Ownership
@@ -97,10 +101,28 @@ Per the issue residual policy, items outside the documentation sweep or belongin
    - **Description:** Normalization of publisher text scanning boundaries in the external publisher proxy.
    - **Owner:** Infra Driver.
 
-3. **PR Merge Guard Hook Alignment:**
-   - **Path:** `agents_extensions/shared/hooks/guard-pr-merge.py`
-   - **Category:** Category B (Merge Guard Wording)
-   - **Description:** Neutralized docstring lines 12–18 and `_FOOTER` message line 1020 in the worktree to remove historical private repo 403 API disclosures. Python hooks are maintained in lock-step with deployed copies by the infra driver.
+3. **Backup Shell Script Remote Name (`lu-gdrive`):**
+   - **Path:** `scripts/backup-data.sh:194`
+   - **Category:** Category C (Backup Remote Names)
+   - **Description:** `scripts/backup-data.sh` contains default remote name fallback `lu-gdrive`. Shell scripts are outside the documentation denominator scope of #9425.
+   - **Owner:** Infra Driver.
+
+4. **Systemd Service Environment File Path:**
+   - **Path:** `packaging/systemd/learn-ukrainian-backup.service:7` and `packaging/systemd/README.md:141`
+   - **Category:** Category C (Service Environment Paths)
+   - **Description:** Packaging unit definitions and packaging README outside the documentation denominator scope specify `%h/.secrets/learn-ukrainian-backup.env`.
+   - **Owner:** Infra Driver.
+
+5. **Windows Storage Documentation Share Name:**
+   - **Path:** `scripts/storage/windows/README.md`
+   - **Category:** Category C (Storage Share Names)
+   - **Description:** Storage scripts documentation outside the documentation denominator references share name `UkrainianData`.
+   - **Owner:** Infra Driver.
+
+6. **Branch Switch Hook Private Repository Path Reference:**
+   - **Path:** `agents_extensions/shared/hooks/guard-branch-switch-in-main.py:112`
+   - **Category:** Category B / D (Hook Repo References)
+   - **Description:** Python hook contains an exception handling path naming the private repository.
    - **Owner:** Infra Driver.
 
 ---
@@ -397,7 +419,7 @@ The following table records the verification disposition of every tracked file i
 | 266 | `docs/runbooks/codex-hooks.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 267 | `docs/runbooks/codex-rollout-state.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 268 | `docs/runbooks/cursor-driver.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
-| 269 | `docs/runbooks/data-backup.md` | `docs` | **NEUTRALIZED** | Cat C: Neutralized backup provider name, lu-gdrive remote, OAuth retirement details, scheduled job label, and secrets file path |
+| 269 | `docs/runbooks/data-backup.md` | `docs` | **NEUTRALIZED** | Cat C: Neutralized cloud provider desktop sync mount name, lu-gdrive remote, OAuth renewal details, and scheduled job label |
 | 270 | `docs/runbooks/driver-cold-start-board.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 271 | `docs/runbooks/entire-context-handoff-dualwrite.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 272 | `docs/runbooks/epic-orchestrator-roster.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
