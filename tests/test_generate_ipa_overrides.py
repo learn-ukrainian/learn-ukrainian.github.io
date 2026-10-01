@@ -17,10 +17,10 @@ def test_ipa_loader_uses_both_scripts_data_files(monkeypatch):
     assert isinstance(ipa_module._load_overrides("ipa_overrides.yaml"), dict)
 
     monkeypatch.setattr(ipa_module, "_ipa_overrides", None)
-    monkeypatch.setattr(ipa_module, "_stress_overrides", None)
-    monkeypatch.setattr(ipa_module, "_get_stressifier", lambda: lambda word: "лю́бов")
     received = []
-    monkeypatch.setitem(sys.modules, "ipa_uk", SimpleNamespace(ipa=lambda stressed: received.append(stressed) or "joˈɦo"))
+    monkeypatch.setitem(
+        sys.modules, "ipa_uk", SimpleNamespace(ipa=lambda stressed: received.append(stressed) or "joˈɦo")
+    )
     assert ipa_module.generate_ipa("любов") == "[jɔˈɦɔ]"
     assert received == ["любо́в"]
 
@@ -28,8 +28,6 @@ def test_ipa_loader_uses_both_scripts_data_files(monkeypatch):
 @pytest.mark.parametrize("form", ["його", "Його", "йому", "Йому", "нього", "переді", "піді"])
 def test_pending_form_never_reaches_ipa_or_stressifier(form, monkeypatch):
     monkeypatch.setattr(ipa_module, "_ipa_overrides", {form: "[invalid]"})
-    monkeypatch.setattr(ipa_module, "_stress_overrides", {form: "invalid"})
-    monkeypatch.setattr(ipa_module, "_get_stressifier", lambda: pytest.fail("pending reached Stressifier"))
     monkeypatch.setitem(sys.modules, "ipa_uk", SimpleNamespace(ipa=lambda _: pytest.fail("pending reached ipa_uk")))
     assert pending_stress_reason(form)
     assert ipa_module.generate_ipa(form) is None

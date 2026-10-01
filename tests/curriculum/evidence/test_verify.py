@@ -177,8 +177,9 @@ def test_verify_builder_ulif_dual_receipts_and_tampering(
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         result = words.build_words("a1", request, evidence_dir=tmp_path, sources_instance=api, mcp_commit="a" * 40)
         (form,) = result["store"]["words"][0]["forms"]
-        assert form["stress_source"] == "ulif"
-        assert form["stressed"] == "розбі́р"
+        assert form["stress_source"] == "pending"
+        assert "stressed" not in form
+        assert form["stress_candidates"][0]["stressed_form"] == "ро́збі́р"
         assert (
             verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api, strict=True)["status"] == "ok"
         )

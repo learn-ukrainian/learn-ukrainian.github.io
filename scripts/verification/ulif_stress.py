@@ -34,6 +34,10 @@ def _features(row: dict) -> set[str]:
     }
     atoms.update(labels.get(label, ()))
     features = set(TagMapper()(":".join(sorted(atoms))))
+    # ULIF marks proper headwords by case even under a generic noun label.
+    if "upos=NOUN" in features and row.get("canonical_headword", "")[:1].isupper():
+        features.discard("upos=NOUN")
+        features.add("upos=PROPN")
     if label == "присудкове слово":
         features.add("upos=X")
     return features
@@ -82,17 +86,17 @@ def joined_analyses(row: dict, vesum: list[dict]) -> list[dict]:
 
 def compatible(required: set[str], supplied: set[str]) -> bool:
     """No shared feature may conflict; unknown features cannot select a reading."""
-    wanted: dict[str, str] = {}
-    for tag in supplied:
-        if "=" in tag:
-            key, value = tag.split("=", 1)
-            if key in wanted and wanted[key] != value:
-                return False
-            wanted[key] = value
-    return all(
-        wanted.get(k, v) == v or (k == "upos" and {wanted.get(k), v} <= {"NOUN", "PROPN"})
-        for k, v in (tag.split("=", 1) for tag in required if "=" in tag)
-    )
+
+    def values(tags: set[str]) -> dict[str, set[str]]:
+        grouped: dict[str, set[str]] = {}
+        for tag in tags:
+            if "=" in tag:
+                key, value = tag.split("=", 1)
+                grouped.setdefault(key, set()).add(value)
+        return grouped
+
+    left, right = values(required), values(supplied)
+    return all(left[key] & right[key] for key in left.keys() & right.keys())
 
 
 def readings(form: str, *, supplied: set[str], lemma: str | None, vesum: list[dict]) -> list[dict[str, Any]]:
@@ -101,11 +105,10 @@ def readings(form: str, *, supplied: set[str], lemma: str | None, vesum: list[di
         _build_match,
         _stress_positions_in_marked_string,
         _strip_stress,
-        transfer_stress_marks,
     )
 
     rows = ulif_stress_rows(form)
-    if lemma:
+    if lemma or form != form.lower():
         for spelling in (form.lower(), form.title()):
             rows += [row for row in ulif_stress_rows(spelling) if row not in rows]
     selected: list[tuple[dict, set[str], list[dict]]] = []
@@ -164,21 +167,17 @@ def readings(form: str, *, supplied: set[str], lemma: str | None, vesum: list[di
         for witness in witnesses:
             if witness not in match["vesum_analyses"]:
                 match["vesum_analyses"].append(witness)
-        if row["pedagogical_stressed_form"]:
-            # Source capitalization does not create a different stress choice.
-            choice = row["pedagogical_stressed_form"]
-            if _strip_stress(choice).casefold() == form.casefold():
-                choice = transfer_stress_marks(choice, form)
-            previous = match.get("pedagogical_stressed_form")
-            if previous is None:
-                match["pedagogical_stressed_form"] = choice
-            elif previous != choice:
-                match["pedagogical_conflict"] = True
         if row["dual_stress_flag"] and "-" not in form:
             match["variants"] = [form[: i + 1] + "\u0301" + form[i + 1 :] for i in indices]
         else:
             match["variants"] = [match["stressed_form"]]
     for match in grouped.values():
+        if match["dual_stress"] and "-" not in form:
+            from scripts.verification.teaching_stress import sourced_teaching_choice
+
+            choice = sourced_teaching_choice(form, match["vowel_indices"])
+            if choice:
+                match.update(choice)
         witnesses = match["vesum_analyses"]
         match["vesum"] = witnesses[0] if len(witnesses) == 1 else None
     return list(grouped.values())

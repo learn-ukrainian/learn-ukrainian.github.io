@@ -76,7 +76,9 @@ def test_replaced_db_changes_source_version(server_module, tmp_path, monkeypatch
     ) != immutable_evidence_identifier(namespace="vesum", source_version=second, typed_result=typed)
 
 
-def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources_db(server_module, tmp_path, monkeypatch):
+def test_mcp_server_identity_default_uses_state_identity_without_hashing_sources_db(
+    server_module, tmp_path, monkeypatch
+):
     from scripts.curriculum.evidence.sources import Sources
 
     data = tmp_path / "data"
@@ -301,9 +303,13 @@ def test_stress_context_schema_and_handler_keep_source(server_module):
     batch = next(tool for tool in tools if tool.name == "verify_stresses")
     assert "lemma" in single.input_schema["properties"]
     assert {"lemma", "tags"} <= set(batch.input_schema["properties"])
-    payload = {"status": "ok", "input": "замок", "stress_source": "ulif",
-               "matches": [{"stressed_form": "за́мок", "source": "ulif", "vowel_indices": [1]}],
-               "source": {"digest": "a" * 64}}
+    payload = {
+        "status": "ok",
+        "input": "замок",
+        "stress_source": "ulif",
+        "matches": [{"stressed_form": "за́мок", "source": "ulif", "vowel_indices": [1]}],
+        "source": {"digest": "a" * 64},
+    }
     with patch("scripts.verification.stress.verify_stress", return_value=payload) as lookup:
         content, outcome = _run(server_module.handle_verify_stress({"word": "замок", "lemma": "за́мок"}))
     assert outcome["result"] == payload and outcome["success"]

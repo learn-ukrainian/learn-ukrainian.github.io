@@ -41,7 +41,10 @@ def corpus_forms(root: Path) -> tuple[list[str], list[dict]]:
 
 def compare_form(form: str) -> dict:
     """Compare identity-joined ULIF rows against raw trie, without choosing stress."""
+    oracle = stress.verify_stress(form)
     vesum = stress._vesum_lookup(form)
+    if form != form.lower():
+        vesum += [v for v in stress._vesum_lookup(form.lower()) if v not in vesum]
     trusted = ulif_stress_rows(form)
     rows = [row for row in trusted if joined_analyses(row, vesum)]
     value = stress._trie_value(stress._load_trie(), form)
@@ -84,20 +87,32 @@ def compare_form(form: str) -> dict:
         "unjoined_ulif": [row for row in trusted if row not in rows],
         "uncovered_vesum": [v for v in vesum if not any(v in joined_analyses(row, [v]) for row in rows)],
         "vesum": vesum,
-        "ambiguous": len(positions) > 1,
-        "dual": any(row["dual_stress_flag"] for row in rows),
+        "status": oracle["status"],
+        "oracle": oracle,
+        "ambiguous": oracle["status"] == "ambiguous",
+        "dual": any(m.get("dual_stress") for m in oracle["matches"]),
     }
 
 
-def write_report(root: Path, out: Path, *, seed: int = 8398) -> dict:
+def write_report(root: Path, out: Path, *, seed: int = 8398, forms_file: Path | None = None) -> dict:
     """Write the full corpus comparison, disagreements, sample and hashed denominator."""
     forms, inputs = corpus_forms(root)
+    if forms_file is not None:
+        forms = [json.loads(line)["form"] for line in forms_file.read_text().splitlines()]
+        if len(forms) != len(set(forms)):
+            raise ValueError("Replay denominator contains duplicate forms")
     out.mkdir(parents=True, exist_ok=True)
     counts = dict.fromkeys(("agree", "disagree", "ulif_only", "trie_only", "neither", "ambiguous", "dual"), 0)
+    statuses: dict[str, int] = {}
+    sourced_dual = 0
     disagreements = []
     with (out / "comparison.jsonl").open("w", encoding="utf-8") as stream:
         for form in forms:
             record = compare_form(form)
+            statuses[record["status"]] = statuses.get(record["status"], 0) + 1
+            sourced_dual += int(
+                any(m.get("dual_stress") and m.get("pedagogical_source") for m in record["oracle"]["matches"])
+            )
             counts[record["category"]] += 1
             counts["ambiguous"] += int(record["ambiguous"])
             counts["dual"] += int(record["dual"])
@@ -110,6 +125,9 @@ def write_report(root: Path, out: Path, *, seed: int = 8398) -> dict:
     summary = {
         "denominator": len(forms),
         "counts": counts,
+        "status_counts": statuses,
+        "sourced_dual_forms": sourced_dual,
+        "denominator_replay_sha256": hashlib.sha256(forms_file.read_bytes()).hexdigest() if forms_file else None,
         "sample_seed": seed,
         "sample_size": len(sample),
         "inputs": inputs,
@@ -148,9 +166,21 @@ Related: #8398 part B, #8400 steps 8-9; docs/verification/ulif-first-stress.md.
     parser.add_argument(
         "--seed", type=int, default=8398, help="Deterministic sample seed (default: 8398; example: 8400)."
     )
+    parser.add_argument(
+        "--forms-file",
+        type=Path,
+        help="Previous comparison JSONL to replay the exact denominator (default: current corpus; example: round3/comparison.jsonl).",
+    )
     args = parser.parse_args(argv)
-    result = write_report(args.root, args.out, seed=args.seed)
-    print(json.dumps({k: result[k] for k in ("denominator", "counts", "sample_seed", "sample_size")}))
+    result = write_report(args.root, args.out, seed=args.seed, forms_file=args.forms_file)
+    print(
+        json.dumps(
+            {
+                k: result[k]
+                for k in ("denominator", "counts", "status_counts", "sourced_dual_forms", "sample_seed", "sample_size")
+            }
+        )
+    )
     return 0
 
 

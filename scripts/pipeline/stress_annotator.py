@@ -194,13 +194,6 @@ def _oracle_choice(
     _, current = _stress_positions_in_marked_string(word)
     if len(current) == 1 and current[0] in allowed:
         return word
-    if (
-        matches[0].get("source") == "ulif"
-        and matches[0].get("dual_stress")
-        and "-" not in clean
-        and not matches[0].get("pedagogical_stressed_form")
-    ):
-        return None
     if matches[0].get("pedagogical_conflict"):
         return None
     return transfer_stress_marks(pedagogical_stressed_form(matches[0]), clean)

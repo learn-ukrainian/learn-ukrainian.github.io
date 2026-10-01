@@ -91,14 +91,15 @@ def test_rule_3_case_and_vesum_join(captured_db):
     assert stress.verify_stress("київ", lemma="Київ")["matches"][0]["stressed_form"] == "ки́їв"
 
 
-def test_rule_4_dual_variants_and_source_teaching_choice(captured_db):
+def test_rule_4_dual_variants_do_not_relabel_generated_choice(captured_db):
     result = stress.verify_stress("розбір")
     (match,) = result["matches"]
     assert result["status"] == "ok"
     assert match["dual_stress"]
     assert match["variants"] == ["ро́збір", "розбі́р"]
-    assert match["pedagogical_stressed_form"] == "розбі́р"
-    assert stress.pedagogical_stressed_form(match) == "розбі́р"
+    assert "pedagogical_stressed_form" not in match
+    assert stress.pedagogical_stressed_form(match) == "ро́збі́р"
+    assert stress.spoken_stressed_form(match) is None
     for variant in match["variants"]:
         assert stress.verify_stress(variant)["matches"][0]["input_mismatch"] is False
 
@@ -108,7 +109,6 @@ def test_rule_4_dual_variants_and_source_teaching_choice(captured_db):
     "form,expected",
     [
         ("село", "село́"),
-        ("розбір", "розбі́р"),
         ("воно", "воно́"),
         ("любов", "любо́в"),
         ("Київ", "ки́їв"),
@@ -162,6 +162,7 @@ def test_audio_callers_withhold_unresolved_readings(captured_db, caller, form, r
 @pytest.mark.parametrize("choice", ["", "ро́збі́р", "розбір", "ко́рисний", "розб́ір"])
 def test_spoken_choice_rejects_unsupported_teaching_form(captured_db, choice):
     (match,) = stress.verify_stress("розбір")["matches"]
+    match["pedagogical_source"] = [{"dictionary": "explicit synthetic source fixture"}]
     match["pedagogical_stressed_form"] = choice
     assert stress.spoken_stressed_form(match) is None
 
@@ -179,14 +180,11 @@ def test_rule_2_teaching_choice_case_agrees_but_positions_conflict(captured_db):
     )
     (match,) = stress.verify_stress("розбір")["matches"]
     assert not match.get("pedagogical_conflict")
-    assert match["pedagogical_stressed_form"] == "розбі́р"
-    assert stress.spoken_stressed_form(match) == "розбі́р"
-    captured_db.execute(
-        "UPDATE ulif_forms SET pedagogical_stressed_form='ро́збір' WHERE id=(SELECT min(id) FROM ulif_forms WHERE form_unstressed='розбір')"
-    )
-    (match,) = stress.verify_stress("розбір")["matches"]
-    assert match["pedagogical_conflict"] is True
+    assert "pedagogical_stressed_form" not in match
     assert stress.spoken_stressed_form(match) is None
+    captured_db.execute("UPDATE ulif_forms SET pedagogical_stressed_form='ро́збір' WHERE form_unstressed='розбір'")
+    (changed,) = stress.verify_stress("розбір")["matches"]
+    assert changed == match  # Neither generated heuristic is a source choice.
 
 
 def test_rule_5_only_fallback_pending_and_override(captured_db):
@@ -238,7 +236,8 @@ def test_batch_keeps_teaching_conflict(captured_db):
     single["pedagogical_conflict"] = True
     compact = stress._compact_stress_reading(single)
     assert compact["pedagogical_conflict"] is True
-    assert compact["pedagogical_stressed_form"] == single["pedagogical_stressed_form"]
+    assert "pedagogical_stressed_form" not in compact
+    assert compact["variants"] == single["variants"]
     assert stress.verify_stresses(["вікна"], tags="noun:n:p:v_naz")["words"][0]["status"] == "ok"
 
 
@@ -268,7 +267,7 @@ def test_annotator_refuses_meaning_guess_and_joins_context(captured_db, monkeypa
     assert annotator.annotate_stress("за́мок")[0] == "замок"
     assert annotator._oracle_choice("вікна", lemma="вікно", pos="NOUN", tags="Number=Plur|Case=Nom") == "ві́кна"
     assert annotator._oracle_choice("село́") == "село́"
-    assert annotator._oracle_choice("розбір") == "розбі́р"
+    assert annotator._oracle_choice("розбір") == "ро́збі́р"
 
 
 def test_context_model_loading_is_offline(monkeypatch):
@@ -318,7 +317,7 @@ def test_dual_without_teaching_choice_never_invents_one(captured_db):
     captured_db.execute("UPDATE ulif_forms SET pedagogical_stressed_form='' WHERE form_unstressed='розбір'")
     (match,) = stress.verify_stress("розбір")["matches"]
     assert stress.pedagogical_stressed_form(match) == "ро́збі́р"
-    assert annotator._oracle_choice("розбір") is None
+    assert annotator._oracle_choice("розбір") == "ро́збі́р"
     assert annotator._oracle_choice("розбі́р") == "розбі́р"
     assert packed_stress_reason(match) == "multiple_stressed_vowels"
 
@@ -444,7 +443,10 @@ def test_rule_2_partial_coverage_uses_trie_only_for_uncovered_analyses(identity_
 def test_rule_2_missing_fallback_cannot_promote_covered_reading(identity_db, monkeypatch):
     identity_db.execute("DELETE FROM ulif_forms WHERE entry_id=43407")
     monkeypatch.setattr(stress, "_trie_value", lambda *args: None)
-    assert stress.verify_stress("віку")["status"] == "pending"
+    result = stress.verify_stress("віку")
+    assert result["status"] == "ambiguous"
+    assert {m["stressed_form"] for m in result["matches"]} == {"ві́ку", "віку́"}
+    assert result["uncovered_vesum_analyses"]
     assert stress.verify_stress("віку", lemma="вік")["status"] == "ambiguous"
 
 
@@ -499,8 +501,8 @@ def test_rule_2_nominal_numeral_uses_vesum_noun_pos(identity_db, word):
     assert record["category"] == "agree" and record["uncovered_vesum"] == []
 
 
-def test_conflicting_features_never_depend_on_set_iteration_order():
+def test_multivalued_features_never_depend_on_set_iteration_order():
     from scripts.verification.ulif_stress import compatible
 
-    assert not compatible({"upos=NOUN"}, {"upos=NOUN", "upos=NUM"})
-    assert not compatible({"Case=Gen"}, {"Case=Gen", "Case=Acc"})
+    assert compatible({"upos=NOUN"}, {"upos=NOUN", "upos=NUM"})
+    assert compatible({"Case=Gen"}, {"Case=Gen", "Case=Acc"})

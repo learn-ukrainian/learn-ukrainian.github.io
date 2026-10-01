@@ -124,14 +124,14 @@ class TestHeteronymEnumeration:
 class TestPedagogicalForm:
     """Learner-facing single acute: collapse packed duals; honor overrides."""
 
-    def test_rozbir_collapses_to_last_vowel(self):
+    def test_rozbir_preserves_both_without_source_choice(self):
         match = verify_stress("розбір")["matches"][0]
         assert match["vowel_indices"] == [1, 4]
-        assert pedagogical_stressed_form(match) == f"розбі{STRESS}р"
+        assert pedagogical_stressed_form(match) == f"ро{STRESS}збі{STRESS}р"
 
-    def test_korysnyi_collapses_to_last_vowel(self):
+    def test_korysnyi_preserves_both_without_source_choice(self):
         match = verify_stress("корисний")["matches"][0]
-        assert pedagogical_stressed_form(match) == f"кори{STRESS}сний"
+        assert pedagogical_stressed_form(match) == match["stressed_form"]
 
     def test_zavzhdy_override_keeps_first_vowel(self):
         result = verify_stress("завжди")

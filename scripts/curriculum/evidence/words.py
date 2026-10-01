@@ -52,7 +52,7 @@ def packed_stress_reason(match: dict[str, Any]) -> str | None:
     """Reject packed accents unless checked ULIF attests the teaching choice."""
     if match.get("pedagogical_conflict"):
         return "conflicting_pedagogical_choices"
-    if match.get("source") == "ulif" and match.get("dual_stress") and match.get("pedagogical_stressed_form"):
+    if match.get("pedagogical_source") and match.get("dual_stress") and stress.spoken_stressed_form(match):
         return None
     if not match.get("override_applied") and len(match.get("vowel_indices") or []) > 1:
         return "multiple_stressed_vowels"

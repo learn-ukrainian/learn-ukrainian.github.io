@@ -31,9 +31,7 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 # Lazy-loaded singletons
 # ---------------------------------------------------------------------------
-_stressifier = None
 _ipa_overrides: dict | None = None
-_stress_overrides: dict | None = None
 
 DATA_DIR = STRESS_OVERRIDES_PATH.parent
 
@@ -41,14 +39,6 @@ STRESS_MARK = "\u0301"  # combining acute accent
 
 # IPA vowel characters (for context detection)
 IPA_VOWELS = set("aeiouɛɪɔɑɐəæɒʉʊ")
-
-
-def _get_stressifier():
-    global _stressifier
-    if _stressifier is None:
-        from ukrainian_word_stress import Stressifier, StressSymbol
-        _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent)
-    return _stressifier
 
 
 def _load_overrides(name: str) -> dict:
@@ -69,16 +59,10 @@ def _get_ipa_overrides() -> dict:
     return _ipa_overrides
 
 
-def _get_stress_overrides() -> dict:
-    global _stress_overrides
-    if _stress_overrides is None:
-        _stress_overrides = _load_overrides("stress_overrides.yaml")
-    return _stress_overrides
-
-
 # ---------------------------------------------------------------------------
 # Post-processing rules (align ipa-uk output with our conventions)
 # ---------------------------------------------------------------------------
+
 
 def _postprocess(raw: str) -> str:
     """Apply normalization rules to ipa-uk output.
@@ -99,7 +83,7 @@ def _postprocess(raw: str) -> str:
     # Rule 1: ɐ -> ɑ
     s = s.replace("ɐ", "ɑ")
     # Rule 2: i̯ (i + U+032F) -> j
-    s = s.replace("i\u032F", "j")
+    s = s.replace("i\u032f", "j")
     # Rule 3: ʊ -> u
     s = s.replace("ʊ", "u")
     # Rule 3b: o -> ɔ (ipa-uk distinguishes stressed/unstressed, we normalize)
@@ -109,13 +93,13 @@ def _postprocess(raw: str) -> str:
     # Rule 4: w -> ʋ
     s = s.replace("w", "ʋ")
     # Rule 5: u̯ʲ -> ʋʲ (onset before palatalized consonant)
-    s = s.replace("u\u032Fʲ", "ʋʲ")
+    s = s.replace("u\u032fʲ", "ʋʲ")
     # Rule 6: u̯ˈ -> ˈʋ (onset before primary stress)
-    s = s.replace("u\u032Fˈ", "ˈʋ")
+    s = s.replace("u\u032fˈ", "ˈʋ")
     # Rule 7: u̯ˌ -> ˌʋ (onset before secondary stress)
-    s = s.replace("u\u032Fˌ", "ˌʋ")
+    s = s.replace("u\u032fˌ", "ˌʋ")
     # Rule 8: u̯ + vowel -> ʋ + vowel (В before vowel is always onset)
-    _U_NONSYL = "u\u032F"
+    _U_NONSYL = "u\u032f"
     for v in IPA_VOWELS:
         s = s.replace(f"{_U_NONSYL}{v}", f"ʋ{v}")
     return s
@@ -125,6 +109,7 @@ def _postprocess(raw: str) -> str:
 # Core API
 # ---------------------------------------------------------------------------
 
+
 def generate_ipa(word: str) -> str | None:
     """Generate IPA for a Ukrainian word.
 
@@ -133,7 +118,7 @@ def generate_ipa(word: str) -> str | None:
     Pipeline (with hierarchical fallback):
     0. Refuse forms whose stress is pending source confirmation
     1. Check ipa_overrides.yaml for full IPA override
-    2. Check stress_overrides.yaml for stress override; else use Stressifier
+    2. Resolve stress through the shared oracle and sourced spoken selector
     3. Pass stressed form to ipa_uk.ipa()
     4. Post-process output
     5. Wrap in brackets
@@ -153,20 +138,23 @@ def generate_ipa(word: str) -> str | None:
     if ipa_ovr:
         return ipa_ovr
 
-    # 2. Stress: override or auto
-    stress_ovr = _get_stress_overrides().get(clean)
-    if stress_ovr:
-        stressed = stress_ovr
+    # 2. The same oracle and sourced audio selector as other pronunciation callers.
+    from scripts.verification.stress import spoken_stressed_form, verify_stress
+
+    result = verify_stress(clean)
+    if result["status"] == "invalid_input" and sum(c in "аеєиіїоуюяАЕЄИІЇОУЮЯ" for c in clean) == 1:
+        stressed = clean
+    elif result["status"] == "ok" and len(result["matches"]) == 1:
+        stressed = spoken_stressed_form(result["matches"][0])
     else:
-        try:
-            stressed = _get_stressifier()(clean)
-        except Exception:
-            logger.warning("Stressifier failed for %r", clean, exc_info=True)
-            return None
+        return None
+    if stressed is None:
+        return None
 
     # 3. Generate IPA via ipa-uk
     try:
         import ipa_uk
+
         raw = ipa_uk.ipa(stressed)
     except Exception:
         logger.warning("ipa_uk.ipa() failed for %r", clean, exc_info=True)
@@ -220,8 +208,7 @@ def regenerate_vocab_ipa(path: Path, dry_run: bool = False) -> int:
         entry_m = re.match(r"^(\s*)-\s+\w+:", lines[i])
         if entry_m:
             indent = entry_m.group(1)
-            entry = {"start": i, "indent": indent, "lemma": None,
-                     "ipa_line": None, "ipa_old": None}
+            entry = {"start": i, "indent": indent, "lemma": None, "ipa_line": None, "ipa_old": None}
             # Check if this first line has lemma or ipa
             _check_entry_line(lines[i], entry, i, is_first=True)
             j = i + 1
@@ -329,15 +316,13 @@ def _check_entry_line(line: str, entry: dict, idx: int, is_first: bool):
 # ---------------------------------------------------------------------------
 
 # IPA-specific chars that distinguish [IPA] from markdown [links]
-_IPA_CHARS = set("ˈˌɔɛɪʃʒʋŋθðæɑɐɜəɒɦɹɾʲʰ\u0361\u032F")
+_IPA_CHARS = set("ˈˌɔɛɪʃʒʋŋθðæɑɐɜəɒɦɹɾʲʰ\u0361\u032f")
 
 # Cyrillic + apostrophe + stress mark character class
-_CYR = r"А-ЯІЇЄҐа-яіїєґ'\u0027\u2019\u0301"
+_CYR = r"А-ЯІЇЄҐа-яіїєґ'\u0027\u2019\u02bc\u0301"
 
 # Pattern 1: **bold word** [IPA] or **bold word** — [IPA]
-_BOLD_IPA_RE = re.compile(
-    rf"\*\*(?P<word>[{_CYR} ]+?)\*\*\s*(?:(?:—|–|-)\s*)?\[(?P<ipa>[^\[\]]{{2,80}})\]"
-)
+_BOLD_IPA_RE = re.compile(rf"\*\*(?P<word>[{_CYR} ]+?)\*\*\s*(?:(?:—|–|-)\s*)?\[(?P<ipa>[^\[\]]{{2,80}})\]")
 
 # Pattern 2: plain word [IPA] or word — [IPA] (no bold)
 _PLAIN_IPA_RE = re.compile(
@@ -351,15 +336,11 @@ def _is_ipa_content(s: str) -> bool:
 
 
 def _stressify_word(word: str) -> str:
-    """Apply stress marks to a single Ukrainian word."""
-    # Strip existing stress marks first
-    clean = word.replace(STRESS_MARK, "")
-    if len(clean) <= 1:
-        return clean  # Single letter — no stress needed
-    try:
-        return _get_stressifier()(clean)
-    except Exception:
-        return clean
+    """Use the text oracle rather than selecting a trie's first reading."""
+    from scripts.pipeline.stress_annotator import _oracle_choice
+    from scripts.verification.stress import _strip_stress
+
+    return _oracle_choice(word) or _strip_stress(word)
 
 
 def _stressify_phrase(phrase: str) -> str:
@@ -414,14 +395,16 @@ def replace_prose_ipa(path: Path, dry_run: bool = False) -> int:
 # CLI
 # ---------------------------------------------------------------------------
 
+
 def main():
     parser = argparse.ArgumentParser(
         description="Deterministic IPA generator for Ukrainian vocabulary",
     )
     parser.add_argument("files", nargs="*", type=Path, help="YAML or MD files to process")
     parser.add_argument("--batch", type=Path, help="Process all vocab YAML in directory")
-    parser.add_argument("--replace-prose", action="store_true",
-                        help="Replace inline [IPA] with stress marks in .md files")
+    parser.add_argument(
+        "--replace-prose", action="store_true", help="Replace inline [IPA] with stress marks in .md files"
+    )
     parser.add_argument("--dry-run", action="store_true", help="Preview without writing")
     args = parser.parse_args()
 

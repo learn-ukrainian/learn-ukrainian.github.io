@@ -4,7 +4,7 @@ Exact-form overrides remain authoritative. Only homonym-checked ULIF rows
 from a complete forms build are evidence. All agreeing readings collapse
 with their row/entry ids; distinct stress choices remain ambiguous unless
 caller lemma or morphology resolves them. Dual stress retains both variants
-and the source's pedagogical choice. The packed ukrainian-word-stress trie
+and a teaching choice only when a pronunciation dictionary attests it. The packed ukrainian-word-stress trie
 is a labelled fallback. No dictionary reading means pending, never a guess.
 
 The legacy source envelope is preserved; its digest now covers both source
@@ -100,7 +100,7 @@ def _load_overrides() -> dict[str, str]:
 def pending_stress_reason(word: str) -> str | None:
     """Why an exact surface form must not use an unconfirmed trie reading."""
     pending = _load_override_data().get("stress_pending", {})
-    return pending.get(word) if isinstance(pending, dict) else None
+    return pending.get(word.translate(str.maketrans("’ʼ", "''"))) if isinstance(pending, dict) else None
 
 
 @lru_cache(maxsize=1)
@@ -152,17 +152,20 @@ def _package_version() -> str:
 
 def source_info() -> dict[str, Any]:
     """Both authority digests; the combined digest invalidates all stress caches."""
+    from scripts.verification.teaching_stress import source_info as teaching_source_info
     from scripts.wiki.sources_db import ulif_stress_build
 
     build = ulif_stress_build()
+    teaching = teaching_source_info()
     ulif_digest = hashlib.sha256(json.dumps(build, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     trie_digest = _trie_digest()
-    digest = hashlib.sha256(f"{ulif_digest}:{trie_digest}".encode()).hexdigest()
+    digest = hashlib.sha256(f"{ulif_digest}:{trie_digest}:{teaching['digest']}".encode()).hexdigest()
     return {
         "dictionary": "ukrainian-word-stress (ULIF-derived)",
         "package_version": _package_version(),
         "trie_entries": len(_load_trie()),
         "trie_digest": trie_digest,
+        "teaching": teaching,
         "ulif": {"dictionary": "ULIF ulif_forms (homonym_checked=1)", "build": build, "digest": ulif_digest},
         "digest": digest,
     }
@@ -260,7 +263,7 @@ def _vesum_lookup(word_form: str) -> list[dict]:
     try:
         from scripts.verification.vesum import verify_word
 
-        return verify_word(word_form)
+        return verify_word(word_form.translate(str.maketrans("’ʼ", "''")))
     except Exception:
         return []
 
@@ -323,30 +326,12 @@ def transfer_stress_marks(marked_src: str, dest_unstressed: str) -> str:
 
 
 def pedagogical_stressed_form(match: dict[str, Any]) -> str:
-    """Single-acute learner form for one ``verify_stress`` match.
-
-    The ULIF trie packs dual-acceptable positions (подвійний наголос) and
-    occasional primary+secondary into one ``stressed_form`` with two acutes
-    (``ро́збі́р``, ``за́вжди́``). A1/A2 pedagogy marks one vowel. Hyphenated
-    compounds keep every mark. Overrides already encode the intended form.
-
-    For non-hyphenated packed readings the last marked vowel is the
-    primary (``розбі́р``, ``кори́сний``). First-syllable duals such as
-    ``завжди`` / ``також`` belong in ``stress_overrides.yaml``.
-    """
-    if match.get("pedagogical_stressed_form") and not match.get("pedagogical_conflict"):
-        return transfer_stress_marks(match["pedagogical_stressed_form"], match["unstressed_form"])
-    form = match["stressed_form"]
-    unstressed = match["unstressed_form"]
-    if match.get("override_applied") or "-" in unstressed:
-        return form
-    indices = list(match.get("vowel_indices") or [])
-    if len(indices) <= 1:
-        return form
-    if match.get("source") == "ulif":
-        return form  # no source teaching choice: preserve both, never guess
-    keep = indices[-1]
-    return unstressed[: keep + 1] + "\u0301" + unstressed[keep + 1 :]
+    """Preserve source accents; a single dual-stress choice needs source evidence."""
+    if match.get("pedagogical_source") and not match.get("pedagogical_conflict"):
+        choice = spoken_stressed_form(match)
+        if choice:
+            return choice
+    return match["stressed_form"]
 
 
 def spoken_stressed_form(match: dict[str, Any]) -> str | None:
@@ -357,7 +342,7 @@ def spoken_stressed_form(match: dict[str, Any]) -> str | None:
     bare = match.get("unstressed_form", _strip_stress(form))
     packed = len(match.get("vowel_indices") or []) > 1 or form.count("\u0301") > 1
     if packed and "-" not in bare and not match.get("override_applied"):
-        if match.get("source") != "ulif" or not match.get("pedagogical_stressed_form"):
+        if not match.get("pedagogical_source") or not match.get("pedagogical_stressed_form"):
             return None
         choice_bare, indices = _stress_positions_in_marked_string(match["pedagogical_stressed_form"])
         _, allowed = _stress_positions_in_marked_string(form)
@@ -406,9 +391,11 @@ def verify_stress(
     if invalid is not None:
         result.update(status="invalid_input", error=invalid, stress_source=None)
         return result
-    override = _load_overrides().get(lookup_key)
+    override = _load_overrides().get(lookup_key.translate(str.maketrans("’ʼ", "''")))
     if override:
         base, indices = _stress_positions_in_marked_string(override)
+        if "’" in lookup_key or "ʼ" in lookup_key:
+            base = lookup_key
         matches = [_build_match(base, [i + 1 for i in indices], [], override_applied=True)]
         matches[0]["source"] = "override"
         result.update(stress_source="override", status="ok")
@@ -418,8 +405,8 @@ def verify_stress(
     else:
         supplied = _normalize_supplied_tags(pos, tags)
         vesum = _vesum_lookup(lookup_key)
-        if lemma:
-            # Explicit lemma context may identify a cased proper-name analysis.
+        if lemma or lookup_key != lookup_key.lower():
+            # Sentence-initial capitals also need their lowercase analyses.
             for spelling in (lookup_key.lower(), lookup_key.title()):
                 for analysis in _vesum_lookup(spelling):
                     if analysis not in vesum:
@@ -455,16 +442,17 @@ def verify_stress(
                 _attach_vesum(match, witnesses)
                 matches.append(match)
             # A covered reading cannot stand in for an analysis lacking both sources.
-            if any(not any(v in m["vesum_analyses"] for m in matches) for v in uncovered):
+            missing = [v for v in uncovered if not any(v in m["vesum_analyses"] for m in matches)]
+            if missing:
                 result["reason"] = "uncovered VESUM analysis has no compatible trie reading"
-                return result
+                result["uncovered_vesum_analyses"] = missing
         if not matches:
             result["reason"] = "no trusted dictionary reading matches supplied context"
             return result
         sources = {m["source"] for m in matches}
         result["stress_source"] = next(iter(sources)) if len(sources) == 1 else "mixed"
         choices = {tuple(m["vowel_indices"]) for m in matches}
-        result["status"] = "ok" if len(choices) == 1 else "ambiguous"
+        result["status"] = "ok" if len(choices) == 1 and not result.get("uncovered_vesum_analyses") else "ambiguous"
     _apply_input_mismatch(matches, word)
     if override:
         for match in matches:
@@ -528,6 +516,7 @@ def _compact_stress_reading(match: dict[str, Any]) -> dict[str, Any]:
         "dual_stress",
         "variants",
         "pedagogical_stressed_form",
+        "pedagogical_source",
         "pedagogical_conflict",
         "supporting_readings",
     ):

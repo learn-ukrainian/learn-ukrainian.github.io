@@ -9,7 +9,10 @@ fingerprint. It neither creates tables nor migrates the database.
 
 Each ULIF row must also join a VESUM analysis of the form by its entry-key
 lemma (without the homonym suffix), POS and compatible morphology. Pronouns
-retain their pronoun POS; proper-name analyses participate in the join too.
+retain their pronoun POS; NOUN and PROPN are distinct. Capitalized input also
+loads lowercase VESUM analyses and ULIF rows, so sentence-initial words do not
+inherit a proper-name reading. Apostrophes `’`, `ʼ` and straight apostrophes
+normalize identically for the dictionary join while output preserves spelling.
 Unknown POS or absent VESUM evidence cannot admit a ULIF row. Thus the noun
 `вон#1` never supplies stress for the personal pronouns `вона` or `вони`.
 
@@ -23,23 +26,38 @@ Unmatched supplied context returns pending; it never borrows another lemma.
 Source capitalization is normalized onto the requested form before comparing
 teaching choices; the same accent in different capitalization is agreement.
 
-Dual readings retain `vowel_indices`, both `variants`, and the source's
-`pedagogical_stressed_form`. A valid existing single mark on either allowed
-position is preserved. Without an attested teaching choice, the annotator does
-not invent one. Compound forms retain their source marks.
+Repeated feature keys represent sets of allowed values, including VESUM's
+interrogative/relative `PronType=Int` and `PronType=Rel` analyses. Shared feature
+sets must intersect; missing features do not establish a conflict.
+
+Dual readings retain `vowel_indices` and both `variants`. The legacy
+`ulif_forms.pedagogical_stressed_form` field is the parser's last-accent heuristic,
+not a dictionary choice, and is ignored by the oracle. `teaching_stress` reads
+explicitly attributed Pohribnyi `orthoepy` entries from the dictionary mirror.
+Only the first-listed, exactly matching, singly accented form on an allowed
+vowel can supply `pedagogical_stressed_form`, with `pedagogical_source` row, URL
+and text digest. Conflicting entries, lost OCR accents and different inflections
+cannot supply a choice. The 1992 pronunciation booklet ingested into `textbooks`
+is prose, not this dictionary's variant table.
+
+A valid existing single mark on either allowed position is preserved. Without
+an attested teaching choice, learner text retains both source accents and spoken
+selection is pending. Compound forms retain their source marks.
 
 ULIF settles a form only when joined readings cover every selected VESUM
 analysis. Uncovered analyses use compatible readings from the packed
 `ukrainian-word-stress` trie, labelled `source: trie`; trie readings incompatible
 with those analyses are excluded. Distinct stress choices across both sources
-remain ambiguous. If an analysis has neither source, the result is `pending`.
+remain ambiguous. If an analysis has neither source, proven readings remain `ambiguous`, with
+`uncovered_vesum_analyses` recording the gap. Only an empty set of proven readings
+is `pending`; caller context can still resolve a covered analysis.
 With VESUM unavailable, only the labelled trie fallback is eligible.
 An agreeing ULIF/trie choice is returned once with `source: trie`, since trie
 evidence is needed to cover the missing analysis. Its `supporting_readings`
 retain each authority's original evidence. An unlabelled packed trie reading
 cannot inherit a covered lemma's teaching choice; annotation stays withheld.
-Exact case is checked before spelling variants, since proper-name
-and lowercase forms can have different readings.
+Capitalized forms retain both proper and lowercase analyses unless caller
+context selects a POS or lemma. Declared proper names require proper-name context.
 
 ## API and provenance
 
@@ -51,7 +69,7 @@ that label and share one provenance envelope per batch. Both MCP tools accept
 optional contextual selectors.
 
 `source_info()` contains the trie digest, the full `ulif_forms_build` receipt
-and its canonical JSON digest, and a combined `digest`. Existing consumers of
+and its canonical JSON digest, the teaching dictionary identity, and a combined `digest`. Existing consumers of
 `source["digest"]` therefore invalidate when either source changes. The trie
 loader and digest cache are keyed by the file snapshot so a running MCP process
 also observes a replacement. ULIF readings cite row and entry fingerprints;
@@ -69,7 +87,7 @@ another VESUM lemma is not transferred to a learner word without context.
 New word-store builds use the oracle with the requested lemma and VESUM tags,
 and record separate `built_with.trie` and `built_with.ulif_forms` digests. The
 existing v1 override flag remains the representation for exact-form patches.
-An attested ULIF dual teaching choice can be stored as one learner accent;
+An attested pronunciation dictionary dual teaching choice can be stored as one learner accent;
 unsupported packed choices stay pending.
 Pending candidates retain the v1 reading fields and every distinct stress
 choice with its tags. The source identities remain in `built_with`; extended
@@ -95,7 +113,7 @@ paradigm sections never bypass this oracle during verification.
 
 Both audio callers provide the deck lemma and POS to the oracle and accept
 one resolved reading. For packed dual stress, `spoken_stressed_form()` uses
-the attested ULIF teaching choice only if it marks one allowed position of
+the attested pronunciation dictionary teaching choice only if it marks one allowed position of
 the same word. Missing or conflicting choices, homographs and pending
 readings are excluded. Trie packed duals stay excluded without an override;
 compound source marks and explicit overrides are preserved. Audio selection
@@ -120,7 +138,11 @@ The comparator decodes the trie directly and joins checked ULIF rows to VESUM
 identity without calling the stress oracle. Unjoined rows remain under
 `unjoined_ulif`, with missing coverage listed in `uncovered_vesum`. This compares
 eligible ULIF evidence with raw trie readings, excluding overrides and selection.
-Comparing against the ULIF-first oracle would be circular. `agree`, `disagree`,
+Every record also contains the actual oracle result and `status`.
+`status_counts` partitions the denominator by what callers receive; `ambiguous`
+and `dual` counts use the returned oracle readings. Raw source categories remain
+diagnostic and never stand in for oracle status or language adjudication.
+`sourced_dual_forms` counts dual forms with an attributed teaching choice. `agree`, `disagree`,
 `ulif_only`, `trie_only` and `neither` partition the denominator. `ambiguous` and
 `dual` overlap those categories. Reports preserve raw readings and VESUM analyses
 without choosing a winner. If fewer than 60 disagreements exist, the sample
@@ -134,3 +156,15 @@ acceptance.
 In a linked worktree, pass `--out` pointing to the durable ignored report
 directory provided by the dispatch. Worktree-local ignored reports disappear
 when the worktree is reaped. Keep the comparison and sample outside that tree.
+
+Use `--forms-file <previous-comparison.jsonl>` to replay an unchanged denominator
+when word-store inputs move. The receipt includes the replay file digest and
+current corpus input hashes; newly added corpus forms are outside that replay.
+Archive the previous report before regenerating it. A dry-run comparison of A1
+store values uses the builder's lemma, tags and packed-accent policy; it reports
+every old/new stress value without rebuilding or promoting the store.
+
+The imperative deck retains bare VESUM-attested forms when stress is pending,
+continues withholding ambiguous stresses, and compares normalized distractors
+against every accepted answer. IPA generation uses this same oracle and spoken
+selector; it never invokes a separate trie's first reading.

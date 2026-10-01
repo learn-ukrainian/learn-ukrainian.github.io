@@ -585,7 +585,9 @@ def test_curated_cloze_derives_missing_target_form_from_paradigm() -> None:
     withheld: list[dict[str, str]] = []
     shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=withheld)
     assert shards["A1"]["cloze"]["cloze"] == []
-    assert any(row["clozeId"] == candidates[0]["clozeId"] and row["reason"] == "no_unique_answer_evidence" for row in withheld)
+    assert any(
+        row["clozeId"] == candidates[0]["clozeId"] and row["reason"] == "no_unique_answer_evidence" for row in withheld
+    )
 
 
 def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
@@ -2323,7 +2325,15 @@ def test_cloze_emit_compacts_builder_diagnostics_without_dropping_runtime_fields
             "number": "singular",
             "cefr": "A1",
             "options": [
-                {"optionId": f"fixture:{index}:answer", "label": "книгу", "lemmaId": "knyha", "kind": "answer", "case": "accusative", "pos": "noun", "strategy": "no-pair"}
+                {
+                    "optionId": f"fixture:{index}:answer",
+                    "label": "книгу",
+                    "lemmaId": "knyha",
+                    "kind": "answer",
+                    "case": "accusative",
+                    "pos": "noun",
+                    "strategy": "no-pair",
+                }
             ],
         }
         for index in range(2)
@@ -2638,7 +2648,9 @@ def test_size_budget_skips_final_recompute_when_no_trim_occurs(monkeypatch: pyte
 
 
 def test_cli_fails_when_approved_synonyms_lack_ulif_data(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     # Reviewer probe (cf-8714-r3-codex): without sources.db the build warned and
     # wrote an empty synonym mode.
@@ -2910,7 +2922,9 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
         },
     ]
     before_withheld: list[dict[str, str]] = []
-    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=before_withheld)
+    shards = build_practice_shards(
+        entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=before_withheld
+    )
     cloze_ids = {item["lemmaId"] for level in shards.values() for item in level["cloze"]["cloze"]}
     assert "knyha" not in cloze_ids
     assert not any(row["lemma"] == "книга" for row in before_withheld)
@@ -2921,7 +2935,9 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
             break
 
     after_withheld: list[dict[str, str]] = []
-    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=after_withheld)
+    shards = build_practice_shards(
+        entries, allowlist, verifier, cloze_sources, BuildConfig(), cloze_withheld=after_withheld
+    )
     assert shards["A1"]["cloze"]["cloze"] == []
     assert any(row["lemma"] == "книга" and row["reason"] == "no_unique_answer_evidence" for row in after_withheld)
 
@@ -3010,7 +3026,9 @@ def test_sentence_inventory_emits_attested_nominative_cloze_with_provenance(
         cloze_withheld=withheld,
     )
     assert shards["A1"]["cloze"]["cloze"] == []
-    assert any(row["clozeId"] == "knyha:inventory:1" and row["reason"] == "no_unique_answer_evidence" for row in withheld)
+    assert any(
+        row["clozeId"] == "knyha:inventory:1" and row["reason"] == "no_unique_answer_evidence" for row in withheld
+    )
     assert cloze["provenance"] == {
         "status": "sentence_inventory",
         "path": str(inventory_path),
@@ -3472,9 +3490,7 @@ def test_sentence_inventory_identity_cloze_scales_across_levels_and_pos(
     monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "no-pair")
     candidates = read_sentence_inventory(inventory_path)
     creation_review = CreationReview(
-        frozenset(
-            frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates
-        )
+        frozenset(frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates)
     )
     withheld: list[dict[str, str]] = []
     shards = build_practice_shards(
@@ -3734,7 +3750,11 @@ def test_tatoeba_cloze_preserves_attribution_metadata() -> None:
     lexeme = next(row for row in _fixture_lexemes() if row["lemmaId"] == "knyha")
     source = _tatoeba_cloze_source()
     cloze = _build_cloze_items(
-        lexeme, [source], ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]), verifier, "fixture"
+        lexeme,
+        [source],
+        ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
+        verifier,
+        "fixture",
     )[0]
     shards = build_practice_shards(
         read_manifest(MANIFEST),
@@ -3767,7 +3787,11 @@ def test_tatoeba_cloze_uses_path_sentence_id_when_field_missing() -> None:
     verifier = JsonVesumVerifier.from_path(VESUM)
     lexeme = next(row for row in _fixture_lexemes() if row["lemmaId"] == "knyha")
     cloze = _build_cloze_items(
-        lexeme, [source], ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]), verifier, "fixture"
+        lexeme,
+        [source],
+        ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
+        verifier,
+        "fixture",
     )[0]
     shards = build_practice_shards(
         read_manifest(MANIFEST),
@@ -4925,9 +4949,10 @@ def test_imperative_coverage_threshold_and_zero_collision():
                             f"Normalized distractor collision in {it['id']}: {opt['text']}"
                         )
 
+    # The identity-joined oracle restores перейняти:1pl, withheld by the raw trie.
     assert len(lemmas_with_imperative) == 1050, f"Expected 1,050 unique lemmas, got {len(lemmas_with_imperative)}"
-    assert total_items == 3137, f"Expected 3,137 items, got {total_items}"
-    assert by_level == {"A1": 279, "A2": 655, "B1": 1089, "B2": 721, "C1": 393}, (
+    assert total_items == 3138, f"Expected 3,138 items, got {total_items}"
+    assert by_level == {"A1": 279, "A2": 655, "B1": 1090, "B2": 721, "C1": 393}, (
         f"Level distribution mismatch: {by_level}"
     )
 
@@ -5232,10 +5257,16 @@ def test_heritage_reversed_passage_cannot_key_the_form_it_rejects(capsys: pytest
         frames=[_fixture_heritage_pair()["frames"][0]],
     )
     passages = JsonSourcePassages(
-        {locator: reversed_passage, "5-klas-ukrmova-fixture-2000_s0003": "Неправильно: читаю кнігу. Правильно: читаю книгу."}
+        {
+            locator: reversed_passage,
+            "5-klas-ukrmova-fixture-2000_s0003": "Неправильно: читаю кнігу. Правильно: читаю книгу.",
+        }
     )
 
-    assert _build_heritage_items(pair, _fixture_lexemes()[0], _fixture_lexemes(), "deck-v1", source_passages=passages) == []
+    assert (
+        _build_heritage_items(pair, _fixture_lexemes()[0], _fixture_lexemes(), "deck-v1", source_passages=passages)
+        == []
+    )
     assert "frame 1 withheld (passage does not support this correction)" in capsys.readouterr().err
 
 
@@ -5275,7 +5306,9 @@ def test_live_heritage_normative_support_is_verbatim_and_names_every_frame() -> 
     all_pairs = [pair for pair in read_heritage_pairs(HERITAGE_REGISTRY) if pair.get("normativeSupport")]
     supported = [pair for pair in all_pairs if pair.get("currentNormSupport")]
     assert supported
-    assert all(not any("normativeJudgment" in frame for frame in pair["frames"]) for pair in all_pairs if pair not in supported)
+    assert all(
+        not any("normativeJudgment" in frame for frame in pair["frames"]) for pair in all_pairs if pair not in supported
+    )
     for pair in supported:
         verified, problems = verified_source_passages(
             pair["normativeSupport"], HERITAGE_NORMATIVE_SOURCES, passages, field="normativeSupport"
@@ -5295,9 +5328,7 @@ def test_live_heritage_normative_support_is_verbatim_and_names_every_frame() -> 
 def test_live_language_review_fixes_are_source_bound() -> None:
     passages, _ = _live_source_checkers()
     reviewed = {
-        pair["calqueLabel"]: pair
-        for pair in read_heritage_pairs(HERITAGE_REGISTRY)
-        if pair.get("normativeSupport")
+        pair["calqueLabel"]: pair for pair in read_heritage_pairs(HERITAGE_REGISTRY) if pair.get("normativeSupport")
     }
     assert "11-klas-istoriya-ukr-gisem-2024_s0320" in reviewed["присвоїти"]["currentNormWithheldReason"]
     assert "присвоєно звання" in passages.chunk_text("11-klas-istoriya-ukr-gisem-2024_s0320")
@@ -5327,7 +5358,8 @@ def test_live_language_review_fixes_are_source_bound() -> None:
     assert other["rationale"] in " ".join(passages.chunk_text("6-klas-ukrmova-avramenko-2023_s0193").split())
 
     medical = next(
-        pair for pair in read_paronym_pairs(PARONYM_REGISTRY)
+        pair
+        for pair in read_paronym_pairs(PARONYM_REGISTRY)
         if pair.get("slugA") == "лікарський" and pair.get("slugB") == "лікарняний"
     )
     assert "Лі́карський — який стосується лікаря" in medical["distinction_gloss_uk"]
@@ -5801,11 +5833,41 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
                 "schema": "atlas-sentence-inventory",
                 "schemaVersion": 1,
                 "rows": [
-                    row("узбіччя", "Налітає автомашина, звірятко прилягло до узбіччя.", "узбіччя", "A2", "7-klas-ukrlit-zabolotnyi-2024_s0318"),
-                    row("відповісти", "Подобається Відповісти 2 д.", "Відповісти", "A2", "8-klas-ukrmova-avramenko-2025_s0177"),
-                    row("вразити", "Дієслова: зобразити, звести, вразити.", "вразити", "B2", "8-klas-ukrmova-avramenko-2025_s0096"),
-                    row("геймер", "Геймер — важко хвора людина, вилікувати яку майже неможливо.", "Геймер", "C1", "10-klas-ukrmova-karaman-2018_s0057"),
-                    row("медіаграмотність", "Ним є медіаграмотність.", "медіаграмотність", "C1", "8-klas-hromadianska-osvita-vasylkiv-2025_s0137"),
+                    row(
+                        "узбіччя",
+                        "Налітає автомашина, звірятко прилягло до узбіччя.",
+                        "узбіччя",
+                        "A2",
+                        "7-klas-ukrlit-zabolotnyi-2024_s0318",
+                    ),
+                    row(
+                        "відповісти",
+                        "Подобається Відповісти 2 д.",
+                        "Відповісти",
+                        "A2",
+                        "8-klas-ukrmova-avramenko-2025_s0177",
+                    ),
+                    row(
+                        "вразити",
+                        "Дієслова: зобразити, звести, вразити.",
+                        "вразити",
+                        "B2",
+                        "8-klas-ukrmova-avramenko-2025_s0096",
+                    ),
+                    row(
+                        "геймер",
+                        "Геймер — важко хвора людина, вилікувати яку майже неможливо.",
+                        "Геймер",
+                        "C1",
+                        "10-klas-ukrmova-karaman-2018_s0057",
+                    ),
+                    row(
+                        "медіаграмотність",
+                        "Ним є медіаграмотність.",
+                        "медіаграмотність",
+                        "C1",
+                        "8-klas-hromadianska-osvita-vasylkiv-2025_s0137",
+                    ),
                     row("село", "Ти хотів у село?", "село", "A1", "3-klas-ukrainska-mova-savchuk-2020-2_s0052"),
                 ],
             },
@@ -5864,9 +5926,7 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
     candidates = read_sentence_inventory(inventory_path)
     # The live frames are grandfathered in the creation-review ledger.
     creation_review = CreationReview(
-        frozenset(
-            frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates
-        )
+        frozenset(frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates)
     )
     withheld: list[dict[str, str]] = []
     shards = build_practice_shards(
@@ -5881,9 +5941,7 @@ def test_sentence_inventory_issue_8724_8726_rows_build_case_free_or_withheld(
 
     emitted = {item["clozeId"]: item for level in shards.values() for item in level["cloze"]["cloze"]}
     assert emitted == {}
-    assert ("село:inventory:6", "no_unique_answer_evidence") in {
-        (row["clozeId"], row["reason"]) for row in withheld
-    }
+    assert ("село:inventory:6", "no_unique_answer_evidence") in {(row["clozeId"], row["reason"]) for row in withheld}
     assert {(row["clozeId"], row["reason"]) for row in withheld if row["rule"] == "inventory_prompt_context"} == {
         ("відповісти:inventory:2", "capitalized_mid_sentence"),
         ("вразити:inventory:3", "list_fragment"),
@@ -6037,9 +6095,7 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
     monkeypatch.setattr(generate_practice_deck, "_option_strategy_for_level", lambda _level, _rng: "no-pair")
     candidates = read_sentence_inventory(inventory_path)
     creation_review = CreationReview(
-        frozenset(
-            frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates
-        )
+        frozenset(frame_identity("cloze", row["sentence"], row["form"], _plain(row["lemma"])) for row in candidates)
     )
     withheld: list[dict[str, str]] = []
     shards = build_practice_shards(
@@ -6077,7 +6133,15 @@ def test_sentence_inventory_issue_8724_out_of_level_prompt_is_withheld(
 def test_cloze_withheld_report_counts_distinct_items_by_mechanism(tmp_path: Path) -> None:
     path = tmp_path / "withheld.json"
     withheld = [
-        {"clozeId": "lexical-1", "lemma": "x", "level": "A1", "mechanism": "lexical", "rule": rule, "reason": rule, "sentence": "___"}
+        {
+            "clozeId": "lexical-1",
+            "lemma": "x",
+            "level": "A1",
+            "mechanism": "lexical",
+            "rule": rule,
+            "reason": rule,
+            "sentence": "___",
+        }
         for rule in ("cloze_unique_answer_evidence", "inventory_prompt_level")
     ]
     shards = {
