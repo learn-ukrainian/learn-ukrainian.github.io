@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styles from './Activities.module.css';
 import ActivityHelp from './ActivityHelp';
+import { parseMarkdown } from './utils';
 
 interface ObserveProps {
   /**
@@ -29,7 +30,7 @@ export function ObserveActivity({ examples, prompt = "What pattern do you notice
         {examples.map((example, idx) => (
           <div key={idx} className={styles.observeExample}>
             <span className={styles.exampleNumber}>{idx + 1}.</span>
-            <span dangerouslySetInnerHTML={{ __html: example }} />
+            <span>{parseMarkdown(example)}</span>
           </div>
         ))}
       </div>
