@@ -52,7 +52,7 @@ def repo_layout(tmp_path: Path):
 
     return Layout()
 
-def run_git_shim(repo: Path, *args: str, agent_no_merge: bool = True):
+def run_git_shim(repo: Path, *args: str, agent_no_merge: bool = True, python_bin: str | None = None):
     repo_root = Path(__file__).resolve().parent.parent
     shim_path = repo_root / "scripts" / "agent_runtime" / "shims" / "git"
 
@@ -61,6 +61,9 @@ def run_git_shim(repo: Path, *args: str, agent_no_merge: bool = True):
         env["AGENT_NO_MERGE"] = "1"
     else:
         env.pop("AGENT_NO_MERGE", None)
+
+    if python_bin is not None:
+        env["AGENT_GIT_SHIM_PYTHON"] = python_bin
 
     # To avoid the shim blocking push due to missing AGENT_REAL_GIT,
     # we can set AGENT_REAL_GIT or let it find it.
@@ -118,3 +121,27 @@ def test_git_shim_human_operator_unaffected(repo_layout):
     # When AGENT_NO_MERGE=1 is not set, block should not occur
     proc = run_git_shim(repo_layout.main, "checkout", "feature-1", agent_no_merge=False)
     assert proc.returncode == 0
+
+
+@pytest.mark.parametrize("verb,args", [
+    ("checkout", ("feature-1",)),
+    ("switch", ("feature-1",)),
+    ("checkout", ("-b", "new-branch")),
+    ("switch", ("-c", "new-branch")),
+    ("checkout", ("--", "tracked.txt")),
+])
+def test_git_shim_fails_closed_when_guard_interpreter_absent(repo_layout, verb, args, tmp_path):
+    nonexistent = str(tmp_path / "missing-python")
+    proc = run_git_shim(repo_layout.main, verb, *args, python_bin=nonexistent)
+    assert proc.returncode == 1
+    assert "error: git shim guard interpreter unavailable" in proc.stderr
+    assert "Cannot verify branch containment; failing closed." in proc.stderr
+
+
+def test_git_shim_fails_closed_when_guard_interpreter_fails(repo_layout, tmp_path):
+    failing_python = tmp_path / "failing-python"
+    failing_python.write_text("#!/usr/bin/env bash\nexit 1\n")
+    failing_python.chmod(0o755)
+    proc = run_git_shim(repo_layout.main, "checkout", "feature-1", python_bin=str(failing_python))
+    assert proc.returncode == 1
+    assert "failing closed" in proc.stderr
