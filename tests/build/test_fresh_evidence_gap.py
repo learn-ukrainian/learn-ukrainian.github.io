@@ -17,7 +17,7 @@ import yaml
 
 from scripts.build.fresh import cli, module
 from scripts.build.fresh.draft_schema import validate_draft
-from scripts.build.fresh.regeneration import load_ledger, record_failure, record_writer_call
+from scripts.build.fresh.regeneration import INPUT_KEYS, load_ledger, record_failure, record_success, record_writer_call
 from scripts.build.fresh.runner import run_lesson
 from scripts.build.fresh.writer import parse_and_validate_reply
 from scripts.curriculum.evidence import lock
@@ -65,14 +65,35 @@ def test_gap_need_routes_to_pack(tmp_path, need):
 
 
 @pytest.mark.parametrize("dialogue", [False, True])
-def test_quote_host_outside_plan_routes_to_plan(tmp_path, dialogue):
+def test_multi_step_quote_gaps_require_each_step_to_have_a_host(tmp_path, dialogue):
     plan = _plan()
     for step in plan["lessons"][0]["steps"]:
         step["evidence"] = ["X-001", "V-001"]
     if dialogue:
         plan["lessons"][0]["dialogue"] = {"step": "s1"}
     bad = next(row for row in _run(tmp_path, yaml.safe_load(_raw(2)), plan)["checks"] if row["status"] == "failed")
-    assert (bad["check"], bad["layer"]) == (2, "pack" if dialogue else "plan")
+    assert (bad["check"], bad["layer"]) == (2, "plan")
+
+
+@pytest.mark.parametrize("need", ["quote", "publication_right"])
+@pytest.mark.parametrize("host", ["record", "dialogue"])
+@pytest.mark.parametrize("host_step", ["s1", "s2"])
+@pytest.mark.parametrize("gap_step", ["s1", "s2"])
+def test_quote_host_must_belong_to_gap_step(tmp_path, need, host, host_step, gap_step):
+    plan = _plan()
+    lesson = plan["lessons"][0]
+    for step in lesson["steps"]:
+        step["evidence"] = ["X-001"]
+        if host == "record" and step["id"] == host_step:
+            step["evidence"].append("T-002")
+    if host == "dialogue":
+        lesson["dialogue"] = {"step": host_step}
+    draft = yaml.safe_load(_raw(2))
+    draft["gaps"] = [{"step": gap_step, "need": need, "detail": "Missing quote or publication right."}]
+    for step in draft["steps"]:
+        step["blocks"] = [] if step["id"] == gap_step else [{"kind": "tip", "text": "tip"}]
+    bad = next(row for row in _run(tmp_path, draft, plan)["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (2, "pack" if host_step == gap_step else "plan")
 
 
 @pytest.mark.parametrize("defect", ["empty_gaps", "unknown_need", "missing_hash", "bad_hash", "unknown_step",
@@ -144,11 +165,15 @@ def module_build(tmp_path, monkeypatch):
     state = ev / "_state" / slug
     calls = []
 
-    def build(*, invalid_second=False, runner=run_lesson, writer_seat="codex:gpt-6.1-sol"):
+    def build(*, invalid_second=False, runner=run_lesson, writer_seat="codex:gpt-6.1-sol",
+              successful=False, prompt="fixture prompt"):
+        monkeypatch.setattr(module, "render_lesson_prompt", lambda *a, **kw: prompt)
+
         def writer(**kw):
             calls.append(kw["attempt"])
-            assert len(calls) <= 2, "a repeated evidence gap must stop before a third writer call"
-            raw = _raw(len(calls))
+            if not successful:
+                assert len(calls) <= 2, "a repeated evidence gap must stop before a third writer call"
+            raw = _raw(1 if successful else len(calls))
             if invalid_second and len(calls) == 2:
                 raw = raw.replace("status: evidence_gap", "status: unknown")
             draft = parse_and_validate_reply(raw, "a1", plan_activity_types=kw["plan_activity_types"])
@@ -208,3 +233,80 @@ def test_regeneration_limit_counts_calls_without_double_counting(tmp_path):
         assert after["regenerations"] == attempt - 1
     assert after["terminal_layer"] == "driver"
     assert record_writer_call(path, "sample", 1) == after
+
+
+@pytest.mark.parametrize("with_snapshot", [False, True])
+def test_rewrite_after_success_never_burns_regeneration_budget(tmp_path, with_snapshot):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    inputs = {key: "a" * 64 for key in INPUT_KEYS}
+    for _ in range(4):
+        before = record_writer_call(path, "sample", 1)
+        assert (before["regenerations"], before["terminal_layer"]) == (0, None)
+        after = record_success(path, "sample", 1, {**inputs, "draft_sha256": "b" * 64} if with_snapshot else None)
+        assert (after["regenerations"], after["terminal_layer"]) == (0, None)
+
+
+def test_retry_after_failure_counts_once_even_when_successful(tmp_path):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    inputs = {key: "a" * 64 for key in INPUT_KEYS}
+    record_writer_call(path, "sample", 1, inputs)
+    record_failure(path, "sample", 1, {"check": 1, "layer": "writer", "reason": "failure"}, inputs)
+    assert record_writer_call(path, "sample", 1, inputs)["regenerations"] == 1
+    after = record_success(path, "sample", 1, {**inputs, "draft_sha256": "b" * 64})
+    assert (after["regenerations"], after["terminal_layer"]) == (1, None)
+    assert record_writer_call(path, "sample", 1, inputs)["regenerations"] == 0
+    failed = record_failure(path, "sample", 1, {"check": 1, "layer": "writer", "reason": "new failure"}, inputs)
+    assert (failed["regenerations"], failed["terminal_layer"], len(failed["attempts"])) == (0, None, 1)
+
+
+@pytest.mark.parametrize("changed_key", INPUT_KEYS)
+@pytest.mark.parametrize("terminal", [False, True])
+@pytest.mark.parametrize("record_call", [False, True])
+def test_changed_inputs_start_fresh_failure_series(tmp_path, changed_key, terminal, record_call):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    inputs = {key: "a" * 64 for key in INPUT_KEYS}
+    failure = {"check": 2, "layer": "pack", "reason": "gap"}
+    record_failure(path, "sample", 1, failure, inputs)
+    if terminal:
+        assert record_failure(path, "sample", 1, failure, inputs)["terminal_layer"] == "pack"
+    changed = {**inputs, changed_key: "b" * 64}
+    if record_call:
+        before = record_writer_call(path, "sample", 1, changed)
+        assert (before["regenerations"], before["terminal_layer"]) == (0, None)
+    after = record_failure(path, "sample", 1, failure, changed)
+    assert (after["regenerations"], after["terminal_layer"], len(after["attempts"])) == (0, None, 1)
+    assert record_failure(path, "sample", 1, failure, changed)["regenerations"] == 1
+
+
+def test_module_rewrite_after_success_starts_each_call_at_one(module_build):
+    build, state, calls = module_build
+
+    def successful_runner(*args, **kw):
+        expected = kw["expected_inputs"]
+        inputs = {key: expected["style_card_sha256" if key == "card_sha256" else key] for key in INPUT_KEYS}
+        inputs["draft_sha256"] = hashlib.sha256((state / "lesson-1.draft.yaml").read_bytes()).hexdigest()
+        record_success(state / "lesson-1.regeneration.yaml", "sounds-letters-and-hello", 1, inputs)
+        return {"passed": True, "manifest_sha256": "a" * 64}
+
+    for number in range(4):
+        report = build(successful=True, runner=successful_runner, prompt=f"fixture prompt {number}")
+        assert report["complete"]
+        assert report["lessons"][0]["regenerations"] == 0
+        assert report["lessons"][0]["terminal_layer"] is None
+        assert yaml.safe_load((state / "module.build.yaml").read_text(encoding="utf-8")) == report
+    assert calls == [1, 1, 1, 1]
+
+
+def test_runner_changed_inputs_restart_terminal_gap_series(tmp_path):
+    draft = yaml.safe_load(_raw(2))
+    inputs = dict(draft["inputs"])
+    _run(tmp_path, draft, expected_inputs=inputs)
+    _run(tmp_path, draft, expected_inputs=inputs)
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    assert load_ledger(path, "sounds-letters-and-hello", 1)["terminal_layer"] == "pack"
+    inputs["plan_sha256"] = "b" * 64
+    draft["inputs"] = dict(inputs)
+    bad = next(row for row in _run(tmp_path, draft, expected_inputs=inputs)["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (2, "pack")
+    ledger = load_ledger(path, "sounds-letters-and-hello", 1)
+    assert (ledger["regenerations"], ledger["terminal_layer"], len(ledger["attempts"])) == (0, None, 1)

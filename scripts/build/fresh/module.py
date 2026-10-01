@@ -113,10 +113,10 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                                                "curriculum/l2-uk-en/evidence")
             ledger_path = checked_existing_path(repo_root, state_dir / f"lesson-{n}.regeneration.yaml",
                                                 "curriculum/l2-uk-en/evidence")
-            ledger = load_ledger(ledger_path, slug, n)
             current = {"plan_sha256": expected["plan_sha256"], "pack_lock": expected["pack_lock"],
                        "words_lock": expected["words_lock"], "card_sha256": card_sha,
                        "prompt_sha256": prompt_sha}
+            ledger = load_ledger(ledger_path, slug, n, current)
             fresh = draft_is_current(ledger, draft_path, current)
             if ledger["terminal_layer"] is not None:
                 last = ledger["attempts"][-1] if ledger["attempts"] else {}
@@ -143,7 +143,7 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                     if not preflight.passed:
                         results.append(_stop(n, "preflight_failed"))
                         break
-                    ledger = record_writer_call(ledger_path, slug, n)
+                    ledger = record_writer_call(ledger_path, slug, n, current)
                     if ledger["terminal_layer"] is not None:
                         stopped = _stop(n, "regeneration_limit")
                         stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])

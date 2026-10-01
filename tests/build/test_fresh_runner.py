@@ -308,7 +308,6 @@ def test_regeneration_repeated_check_uses_second_layer_and_invalidates_only_less
     first = {"check": 4, "code": "4", "reason": "bad", "layer": "writer"}
     one = record_failure(path, "sample-slug", 1, first, inputs, at="2026-01-01T00:00:00Z")
     assert one["regenerations"] == 0 and one["terminal_layer"] is None
-    inputs["plan_sha256"] = "b" * 64
     two = record_failure(path, "sample-slug", 1, first, inputs, at="2026-01-02T00:00:00Z")
     assert two["regenerations"] == 1 and two["terminal_layer"] == "plan"
     assert load_ledger(path, "sample-slug", 1) == two
@@ -714,6 +713,12 @@ def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatc
     second, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
     assert first["checks"][2]["status"] == second["checks"][2]["status"] == "failed"
+    assert ledger["regenerations"] == 0 and ledger["terminal_layer"] is None
+    assert not receipt.exists()
+    lock.write(receipt, b"old")
+    third, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
+    assert third["checks"][2]["status"] == "failed"
     assert ledger["regenerations"] == 1 and ledger["terminal_layer"] == "plan"
     assert not receipt.exists()
 

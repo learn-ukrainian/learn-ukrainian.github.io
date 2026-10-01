@@ -157,18 +157,18 @@ def _lesson(plan: dict[str, Any], n: int) -> dict[str, Any]:
 def _gap_layer(gaps: list[dict[str, Any]], lesson: dict[str, Any]) -> str:
     """A missing record belongs to the pack; a quote host outside the plan requires replanning.
 
-    A planned dialogue or cited T-record is a possible host. Availability/rights gaps in
+    A dialogue or T-record cited on the gap's own step is a possible host. Availability/rights gaps in
     that record stay with the pack; this mapping never decides semantic host adequacy.
     """
     steps = lesson.get("steps") or []
     for gap in gaps:
         if gap["need"] not in {"quote", "publication_right"}:
             continue
-        preceding = steps[:next(index for index, step in enumerate(steps) if step["id"] == gap["step"]) + 1]
+        step = next(step for step in steps if step["id"] == gap["step"])
         dialogue_step = (lesson.get("dialogue") or {}).get("step")
-        if dialogue_step in {step["id"] for step in preceding}:
+        if dialogue_step == gap["step"]:
             continue
-        if not any(ref.startswith("T-") for step in preceding for ref in step.get("evidence") or []):
+        if not any(ref.startswith("T-") for ref in step.get("evidence") or []):
             return "plan"
     return "pack"
 
@@ -1377,10 +1377,11 @@ def run_lesson(
             record_failure(ledger_path, slug, n, bad, ledger_inputs)
         return {**doc, "passed_through": bad["check"] if bad else 11, "manifest_sha256": None}
 
-    previous = load_ledger(ledger_path, slug, n)
+    previous = load_ledger(ledger_path, slug, n, ledger_inputs)
     if previous["terminal_layer"] is not None:
         return finish(failure(1, "regeneration_terminal", previous["terminal_layer"]))
-    if previous["attempts"]:
+    # A fresh input series still invalidates receipts left by earlier failures.
+    if load_ledger(ledger_path, slug, n)["attempts"]:
         invalidate_lesson_resolution(state_dir, n)
 
     lesson = _lesson(plan, n)
