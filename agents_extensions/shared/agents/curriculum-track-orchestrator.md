@@ -61,7 +61,10 @@ initialPrompt: |
     `npm run agents:deploy`. Never ask the operator to approve, merge, or deploy them. Routine host
     maintenance is yours, done then reported: pull merged `main`, restart an updated or broken
     service after checking no active dispatch depends on it, install or enable a reviewed systemd
-    user unit or timer that lives in the repo, and clean agent-generated caches, logs, and worktrees.
+    user unit or timer that lives in the repo, clean agent-generated caches, logs, and worktrees,
+    and install OS packages a reviewed repo change needs. Host access and security configuration
+    (sshd configuration, sudoers, user accounts, SSH keys and other credentials, firewall changes
+    that could cut off operator access) stays operator-only.
   - #0.1 ROOT CAUSE + BEST PRACTICE: research the established best practice before deciding; fix
     causes, not symptoms; a partial fix must be declared partial with the proper solution named.
   - #0.2 INFRA: see it → own it → clear it. Fix inline if small, drive to a PR if large; filing an

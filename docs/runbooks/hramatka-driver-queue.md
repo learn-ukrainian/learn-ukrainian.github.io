@@ -73,15 +73,14 @@ restart an updated or broken service (system or user unit) after checking no
 active dispatch depends on it; install or enable a reviewed systemd user unit or
 timer that lives in the repo; clean agent-generated caches, logs, and
 worktrees; install OS packages a reviewed repo change needs. A production
-release rollover on the live-serving Hramatka host (running
-`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
-including rebuilding or swapping the read-only release checkout — private #360
-class) is a production cutover under operator-expectations item 10 and needs a
+release rollover on the live-serving Hramatka host (any step that swaps what the
+live service serves; see the deployment runbook in the private repository) is a
+production cutover under operator-expectations item 10 and needs a
 present-tense operator GO for that rollover; a GO recorded on an earlier or
 closed issue does not count; the private deploy runbook (including the sudo
 steps inside it) applies only after that GO (it remains `ESCALATE` without that
 present-tense GO). Host access and security configuration stays operator-only
-(`ESCALATE`, not solo) — sshd configuration (e.g. `PermitRootLogin`), sudoers,
+(`ESCALATE`, not solo) — sshd configuration, sudoers,
 user accounts, SSH keys and other credentials, and firewall changes that could
 cut off operator access — because of lock-out risk and because
 accounts/credentials are an operator stop condition.
@@ -125,10 +124,9 @@ reports.
 
 ## Production cutover and host access/security — escalate, never action solo
 
-A production release rollover on the live-serving Hramatka host (running
-`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
-including rebuilding or swapping the read-only release checkout — private #360
-class) is a production cutover under operator-expectations item 10 and needs a
+A production release rollover on the live-serving Hramatka host (any step
+that swaps what the live service serves; see the deployment runbook in the
+private repository) is a production cutover under operator-expectations item 10 and needs a
 present-tense operator GO for that rollover; a GO recorded on an earlier or
 closed issue does not count; the private deploy runbook (including the sudo
 steps inside it) applies only after that GO (it must **ESCALATE** without that
@@ -136,7 +134,7 @@ present-tense GO). Only after a present-tense operator GO is granted may
 drivers with SSH access follow the private deploy runbook and record evidence
 on the private issue (never freestyling host changes outside that documented
 deploy path). Host access and security configuration stays operator-only
-(**ESCALATE**, not solo) — sshd configuration (e.g. `PermitRootLogin`),
+(**ESCALATE**, not solo) — sshd configuration,
 sudoers, user accounts, SSH keys and other credentials, and firewall changes
 that could cut off operator access — because of lock-out risk and because
 accounts/credentials are an operator stop condition. Routine host maintenance,

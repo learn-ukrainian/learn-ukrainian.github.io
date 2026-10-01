@@ -28,15 +28,14 @@ exit 2 (`unknown`, GitHub unreachable) is never a clean handoff either.
   user unit) after checking no active dispatch depends on it; install or enable a reviewed
   systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and
   worktrees; install OS packages a reviewed repo change needs.
-- **A production release rollover** on the live-serving host (running
-  `hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`, including
-  rebuilding or swapping the read-only release checkout — private #360 class) is a
-  **production cutover** and needs a present-tense operator GO for that rollover; a GO
+- **A production release rollover** on the live-serving host (any step
+  that swaps what the live service serves; see the deployment runbook in the private
+  repository) is a **production cutover** and needs a present-tense operator GO for that rollover; a GO
   recorded on an earlier or closed issue does not count. The private deploy runbook
   (including the sudo steps inside it) applies only after that GO; without it the rollover
   stays **ESCALATE**.
 - **Host access and security configuration stays operator-only (ESCALATE, not solo)** —
-  sshd configuration (e.g. `PermitRootLogin`), sudoers, user accounts, SSH keys and other
+  sshd configuration, sudoers, user accounts, SSH keys and other
   credentials, and firewall changes that could cut off operator access — because of
   lock-out risk and because accounts/credentials are an operator stop condition.
 
