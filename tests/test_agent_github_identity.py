@@ -5,6 +5,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.agent_github_identity import resolve_agent_github_identity
@@ -147,6 +149,7 @@ def test_configured_key_file_and_existing_inline_call_contract(tmp_path, monkeyp
         serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()
     ).decode()
     configured_file.write_text(material)
+    configured_file.chmod(0o600)
     captured = []
     monkeypatch.setattr(module, "mint_installation_token", lambda **kw: captured.append(kw) or "synthetic")
     result = module.resolve_agent_github_identity(
@@ -179,6 +182,7 @@ def test_partial_file_configuration_cannot_fall_back(tmp_path, monkeypatch):
 
     configured_file = tmp_path / "material"
     configured_file.write_text("synthetic")
+    configured_file.chmod(0o600)
     with pytest.raises(module.GitHubIdentityError, match="incomplete"):
         module.resolve_agent_github_identity(
             environment={
@@ -305,4 +309,139 @@ def test_restricted_mint_excludes_parent_tls_overrides(tmp_path, monkeypatch):
         with pytest.raises(module.GitHubIdentityError, match="minting failed"):
             module.mint_installation_token(app_id="fixture", private_key="synthetic", installation_id="fixture",
                                            repository="org/repo", permissions={"contents": "read"}, api_base_url=url)
+        assert requests == []
+
+
+@pytest.mark.parametrize("kind", ["symlink", "directory", "fifo", "group-read", "group-write", "world-read", "world-execute"])
+def test_configured_key_file_refuses_unsafe_type_or_permissions(tmp_path, monkeypatch, capsys, kind):
+    import os
+
+    from scripts.agent_runtime import agent_github_identity as module
+
+    path = tmp_path / "material"
+    if kind == "directory":
+        path.mkdir()
+    elif kind == "fifo":
+        os.mkfifo(path, 0o600)
+    elif kind == "symlink":
+        target = tmp_path / "target"
+        target.write_text("generated-material")
+        target.chmod(0o600)
+        path.symlink_to(target)
+    else:
+        path.write_text("generated-material")
+        path.chmod({"group-read": 0o640, "group-write": 0o620, "world-read": 0o604, "world-execute": 0o601}[kind])
+    opened = []
+    original = module.os.open
+
+    def capture(*args, **kwargs):
+        opened.append(args)
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(module.os, "open", capture)
+    with pytest.raises(module.GitHubIdentityError, match="configured key file") as error:
+        module.resolve_agent_github_identity(environment={"LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE": str(path)})
+    assert opened == []  # In particular, a FIFO is refused before opening it.
+    assert str(path) not in str(error.value) and "generated-material" not in str(error.value)
+    assert error.value.__suppress_context__ is True
+    output = capsys.readouterr()
+    assert output.out + output.err == ""
+
+
+@pytest.mark.parametrize("changed", ["permissions", "inode", "fifo"])
+def test_configured_key_file_revalidates_opened_descriptor(tmp_path, monkeypatch, changed):
+    import os
+
+    from scripts.agent_runtime import agent_github_identity as module
+
+    path = tmp_path / "material"
+    path.write_text("generated-material")
+    path.chmod(0o600)
+    original = module.os.open
+
+    def replace_before_open(filename, flags):
+        if changed == "permissions":
+            path.chmod(0o640)
+        else:
+            replacement = tmp_path / "replacement"
+            if changed == "fifo":
+                os.mkfifo(replacement, 0o600)
+            else:
+                replacement.write_text("different-generated-material")
+                replacement.chmod(0o600)
+            replacement.replace(path)
+        return original(filename, flags)
+
+    monkeypatch.setattr(module.os, "open", replace_before_open)
+    with pytest.raises(module.GitHubIdentityError, match="configured key file"):
+        module.resolve_agent_github_identity(environment={"LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE": str(path)})
+
+
+@pytest.mark.parametrize("status", [204, 500, 200])
+def test_revoke_uses_same_token_and_safe_request_settings(tmp_path, monkeypatch, capsys, status):
+    import ssl
+
+    from scripts.agent_runtime import agent_github_identity as module
+    from tests.test_sibling_git_https import TOKEN, tls_server
+
+    def respond(handler):
+        handler.send_response(status)
+        handler.end_headers()
+        handler.wfile.write(TOKEN.encode())
+
+    # A poisoned proxy would prevent reaching this local endpoint if inherited.
+    monkeypatch.setenv("HTTPS_PROXY", "http://unreachable.invalid:1")
+    monkeypatch.setenv("NO_PROXY", "")
+    with tls_server(tmp_path, respond) as (url, ca, requests):
+        kwargs = {"api_base_url": url, "ssl_context": ssl.create_default_context(cafile=str(ca))}
+        if status == 204:
+            assert module.revoke_installation_token(TOKEN, **kwargs) is None
+        else:
+            with pytest.raises(module.GitHubIdentityError, match="revocation failed") as error:
+                module.revoke_installation_token(TOKEN, **kwargs)
+            assert TOKEN not in str(error.value)
+            assert error.value.__suppress_context__ is True
+        assert requests == [("/installation/token", f"Bearer {TOKEN}")]
+    output = capsys.readouterr()
+    assert output.out + output.err == ""
+
+
+def test_revoke_redirect_never_delivers_token(tmp_path):
+    import socket
+    import ssl
+
+    from scripts.agent_runtime import agent_github_identity as module
+    from tests.test_sibling_git_https import TOKEN, tls_server
+
+    def target(handler):
+        handler.send_response(204)
+        handler.end_headers()
+
+    with tls_server(tmp_path, target, family=socket.AF_INET6) as (target_url, target_ca, target_requests):
+        def redirect(handler):
+            handler.send_response(302)
+            handler.send_header("Location", target_url + "/other")
+            handler.end_headers()
+
+        with tls_server(tmp_path, redirect) as (url, ca, requests):
+            ca.write_bytes(ca.read_bytes() + target_ca.read_bytes())
+            with pytest.raises(module.GitHubIdentityError, match="revocation failed"):
+                module.revoke_installation_token(TOKEN, api_base_url=url, ssl_context=ssl.create_default_context(cafile=str(ca)))
+            assert requests == [("/installation/token", f"Bearer {TOKEN}")]
+            assert target_requests == []
+
+
+def test_revoke_excludes_parent_tls_overrides(tmp_path, monkeypatch):
+    from scripts.agent_runtime import agent_github_identity as module
+    from tests.test_sibling_git_https import TOKEN, tls_server
+
+    def respond(handler):
+        handler.send_response(204)
+        handler.end_headers()
+
+    with tls_server(tmp_path, respond) as (url, ca, requests):
+        monkeypatch.setenv("SSL_CERT_FILE", str(ca))
+        monkeypatch.setenv("SSL_CERT_DIR", str(tmp_path))
+        with pytest.raises(module.GitHubIdentityError, match="revocation failed"):
+            module.revoke_installation_token(TOKEN, api_base_url=url)
         assert requests == []

@@ -52,6 +52,7 @@ def https_world(world, tmp_path, monkeypatch):
     monkeypatch.setattr(sg.Git, "__init__", isolated_init)
     monkeypatch.setenv("LU_AGENT_GITHUB_APP_ID", "fixture")
     monkeypatch.setattr(sg, "resolve_agent_github_identity", lambda **kw: identity.GitHubIdentity(TOKEN, "app"))
+    monkeypatch.setattr(sg, "revoke_installation_token", lambda *_a, **_kw: None)
     git(sibling, "remote", "set-url", "origin", "https://github.com/org/repo.git")
     return world
 
@@ -62,6 +63,10 @@ def tls_server(tmp_path, respond, *, family=socket.AF_INET):
 
     class Handler(BaseHTTPRequestHandler):
         def do_GET(self):
+            requests.append((self.path, self.headers.get("Authorization")))
+            respond(self)
+
+        def do_DELETE(self):
             requests.append((self.path, self.headers.get("Authorization")))
             respond(self)
 
@@ -452,6 +457,7 @@ def test_generated_app_credential_end_to_end(https_world, tmp_path, monkeypatch,
             serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8, serialization.NoEncryption()
         )
     )
+    configured_file.chmod(0o600)
     monkeypatch.setenv("LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE", str(configured_file))
     monkeypatch.setenv("LU_AGENT_GITHUB_APP_INSTALLATION_ID", "fixture")
     monkeypatch.delenv("LU_AGENT_GITHUB_APP_PRIVATE_KEY", raising=False)
@@ -462,7 +468,13 @@ def test_generated_app_credential_end_to_end(https_world, tmp_path, monkeypatch,
     elif credential_state == "expired":
         payload["expires_at"] = "2000-01-01T00:00:00Z"
 
+    monkeypatch.setattr(sg, "revoke_installation_token", identity.revoke_installation_token)
+
     def mint_response(handler):
+        if handler.command == "DELETE":
+            handler.send_response(204)
+            handler.end_headers()
+            return
         assertion = handler.headers["Authorization"].removeprefix("Bearer ")
         claims = identity.jwt.decode(assertion, signing_key.public_key(), algorithms=["RS256"])
         assert claims["iss"] == "fixture"
@@ -495,7 +507,9 @@ def test_generated_app_credential_end_to_end(https_world, tmp_path, monkeypatch,
                 assert fetch_requests == []
                 assert snapshot(https_world[1]) == before
                 assert TOKEN not in str(error.value)
-            assert len(api_requests) == 1
+            assert len(api_requests) == (2 if credential_state == "valid" else 1)
+            if credential_state == "valid":
+                assert api_requests[1] == ("/installation/token", f"Bearer {TOKEN}")
             assert api_requests[0][0] == {"repositories": ["repo"], "permissions": {"contents": "read"}}
 
 
@@ -526,3 +540,97 @@ def test_signing_failure_is_a_safe_typed_refusal(https_world, tmp_path, monkeypa
     assert TOKEN not in str(error.value)
     assert error.value.__suppress_context__ is True
     assert snapshot(https_world[1]) == before
+
+
+@pytest.mark.parametrize("setting", ["sslVerify", "proxy", "followRedirects", "sslCAInfo"])
+def test_url_scoped_transport_settings_win_after_probe(https_world, tmp_path, monkeypatch, setting):
+    git(https_world[2], "update-server-info")
+
+    def respond(handler):
+        if setting == "followRedirects":
+            handler.send_response(302)
+            handler.send_header("Location", "/other")
+            handler.end_headers()
+        else:
+            static_response(https_world[2])(handler)
+
+    with tls_server(tmp_path, respond) as (url, ca, requests):
+        client = runner(tmp_path, url, None if setting == "sslVerify" else ca)
+        repo = resolved(https_world, client)
+        value = {
+            "sslVerify": "false", "proxy": "http://unreachable.invalid:1",
+            "followRedirects": "true", "sslCAInfo": str(tmp_path / "absent-ca"),
+        }[setting]
+
+        def mint(**_kwargs):
+            # Simulate a config write after both probes but before the child.
+            git(https_world[1], "config", f"http.{url}/org/repo.git.{setting}", value)
+            return identity.GitHubIdentity(TOKEN, "app")
+
+        monkeypatch.setattr(sg, "resolve_agent_github_identity", mint)
+        if setting in {"sslVerify", "followRedirects"}:
+            with pytest.raises(sg.Refusal, match="HTTPS fetch failed"):
+                client.fetch(repo)
+            assert requests == ([] if setting == "sslVerify" else [
+                ("/org/repo.git/info/refs?service=git-upload-pack", HEADER)
+            ])
+        else:
+            client.fetch(repo)
+            assert requests and all(header == HEADER for _, header in requests)
+
+
+def test_direct_fetch_rechecks_configuration_before_credential(https_world, tmp_path, monkeypatch):
+    client = runner(tmp_path, None, None)
+    repo = resolved(https_world, client)
+    git(https_world[1], "config", "credential.helper", "unsafe")
+    calls = []
+
+    def unexpected_mint(**kwargs):
+        calls.append(kwargs)
+        raise RuntimeError("credential should not be requested")
+
+    monkeypatch.setattr(sg, "resolve_agent_github_identity", unexpected_mint)
+    with pytest.raises(sg.Refusal, match="unsupported redirect"):
+        client.fetch(repo)
+    assert calls == []
+
+
+@pytest.mark.parametrize("fetch_state", ["success", "failure", "timeout"])
+@pytest.mark.parametrize("revoke_fails", [False, True])
+def test_fetch_revokes_same_token_once_without_changing_outcome(
+    https_world, tmp_path, monkeypatch, capsys, fetch_state, revoke_fails,
+):
+    client = runner(tmp_path, None, None)
+    repo = resolved(https_world, client)
+    events = []
+    original = sg.subprocess.run
+
+    def fetch(args, **kwargs):
+        if "fetch" not in args:
+            return original(args, **kwargs)
+        events.append("fetch")
+        if fetch_state == "timeout":
+            raise subprocess.TimeoutExpired(args, 120, output=TOKEN, stderr=TOKEN)
+        return subprocess.CompletedProcess(args, 0 if fetch_state == "success" else 1, TOKEN, TOKEN)
+
+    def revoke(token, **kwargs):
+        events.append("revoke")
+        assert token == TOKEN
+        assert kwargs == {"api_base_url": client.api_base_url, "ssl_context": client.ssl_context}
+        if revoke_fails:
+            raise RuntimeError(TOKEN)
+
+    monkeypatch.setattr(sg.subprocess, "run", fetch)
+    monkeypatch.setattr(sg, "revoke_installation_token", revoke)
+    if fetch_state == "success":
+        assert client.fetch(repo) is None
+    else:
+        with pytest.raises(sg.Refusal, match="HTTPS fetch failed") as error:
+            client.fetch(repo)
+        assert TOKEN not in str(error.value)
+        assert error.value.__suppress_context__ is True or fetch_state == "failure"
+    assert events == ["fetch", "revoke"]
+    output = capsys.readouterr()
+    assert output.out == ""
+    assert output.err == ("Installation credential revocation failed\n" if revoke_fails else "")
+    assert TOKEN not in output.out + output.err

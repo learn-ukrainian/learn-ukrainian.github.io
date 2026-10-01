@@ -59,17 +59,23 @@ only `contents: read` for the registered repository. The mint response must
 identify exactly that repository, have no wider permissions (implicit metadata
 read is accepted), and contain a future expiry. Existing identity callers keep
 their defaults. The configured key file can supply the signing key instead of
-the inline configuration. Dedicated-token and legacy identity sources cannot
-be used by this transport; there is no broader-credential fallback.
+the inline configuration. The configured file must be regular, have no group or
+world permissions, and pass descriptor validation; symlinks are refused.
+Dedicated-token and legacy identity sources cannot be used by this transport; there is no broader-credential fallback.
 
 The authorization header is URL-scoped and supplied through freshly built Git
 configuration environment entries for the fetch process only. It is absent from
 argv, repository files and subsequent Git environments. Redirects are disabled,
-TLS verification is enabled, protocols are restricted to HTTPS, and credential
-interaction is disabled. Fetch has a scratch HOME and no inherited proxy, TLS,
+TLS verification is enabled, and HTTP security settings also bind the exact
+fetch URL so URL-specific repository settings cannot override them. Protocols
+are restricted to HTTPS, and credential interaction is disabled. Fetch has a
+scratch HOME and no inherited proxy, TLS,
 askpass, tracing, loader or Git configuration environment. Ambient `.netrc`
 credentials are excluded. Endpoint and test CA overrides are constructor-only
 test seams, unavailable through environment variables or the command interface.
+After the fetch succeeds or fails, the helper attempts to revoke that same
+installation credential through the restricted API client. Revocation failure
+emits a fixed diagnostic and preserves the fetch outcome.
 Fetch uses the reserved `sibling-git-canonical` remote with its URL supplied
 by the module for that command; no remote configuration is written to disk.
 There are no user-supplied Git flags, remotes, refs, configuration or executables.

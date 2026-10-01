@@ -13,6 +13,7 @@ import json
 import os
 import shlex
 import ssl
+import stat
 import subprocess
 import sys
 import time
@@ -93,6 +94,44 @@ def _repository_name(repo_root: Path = _REPO_ROOT) -> str:
     return remote.rsplit("/", 1)[1]
 
 
+def _restricted_opener(ssl_context=None):
+    """Exclude ambient proxies, redirects and environment-selected TLS trust."""
+    if ssl_context is None:
+        trust = ssl.get_default_verify_paths()
+        cafile = trust.openssl_cafile if Path(trust.openssl_cafile).is_file() else None
+        capath = trust.openssl_capath if Path(trust.openssl_capath).is_dir() else None
+        if not cafile and not capath:
+            raise ValueError("default TLS trust unavailable")
+        ssl_context = ssl.create_default_context(cafile=cafile, capath=capath)
+    return urllib.request.build_opener(
+        urllib.request.ProxyHandler({}),
+        _NoRedirect(),
+        urllib.request.HTTPSHandler(context=ssl_context),
+    )
+
+
+def revoke_installation_token(
+    token: str, *, api_base_url: str = _GITHUB_API_URL, ssl_context=None,
+) -> None:
+    """Revoke this installation credential without exposing response diagnostics."""
+    try:
+        request = urllib.request.Request(
+            f"{api_base_url}/installation/token",
+            headers={
+                "Accept": "application/vnd.github+json",
+                "Authorization": f"Bearer {token}",
+                "User-Agent": "learn-ukrainian-agent-runtime",
+                "X-GitHub-Api-Version": "2022-11-28",
+            },
+            method="DELETE",
+        )
+        with _restricted_opener(ssl_context).open(request, timeout=15) as response:
+            if response.status != 204:
+                raise ValueError("unexpected revocation response")
+    except Exception:
+        raise GitHubIdentityError("GitHub App installation token revocation failed") from None
+
+
 def mint_installation_token(
     *,
     app_id: str,
@@ -134,23 +173,7 @@ def mint_installation_token(
         method="POST",
     )
     try:
-        # Restricted requests exclude ambient proxies and credential redirects.
-        if permissions is not None and ssl_context is None:
-            trust = ssl.get_default_verify_paths()
-            cafile = trust.openssl_cafile if Path(trust.openssl_cafile).is_file() else None
-            capath = trust.openssl_capath if Path(trust.openssl_capath).is_dir() else None
-            if not cafile and not capath:
-                raise ValueError("default TLS trust unavailable")
-            ssl_context = ssl.create_default_context(cafile=cafile, capath=capath)
-        open_request = (
-            urllib.request.urlopen
-            if permissions is None
-            else urllib.request.build_opener(
-                urllib.request.ProxyHandler({}),
-                _NoRedirect(),
-                urllib.request.HTTPSHandler(context=ssl_context),
-            ).open
-        )
+        open_request = urllib.request.urlopen if permissions is None else _restricted_opener(ssl_context).open
         with open_request(request, timeout=15) as response:
             payload: dict[str, Any] = json.loads(response.read().decode("utf-8"))
         if not isinstance(payload, dict):
@@ -207,9 +230,27 @@ def resolve_agent_github_identity(
     key_file = env.get("LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE")
     if key_file and not private_key:
         try:
-            private_key = Path(key_file).read_text(encoding="utf-8")
-        except (OSError, UnicodeError) as exc:
-            raise GitHubIdentityError("cannot read the configured key file") from exc
+            info = os.stat(key_file, follow_symlinks=False)
+            if not stat.S_ISREG(info.st_mode) or stat.S_IMODE(info.st_mode) & 0o077:
+                raise OSError("key file is not private and regular")
+            flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+            fd = os.open(key_file, flags)
+            try:
+                opened = os.fstat(fd)
+                if (
+                    not stat.S_ISREG(opened.st_mode)
+                    or stat.S_IMODE(opened.st_mode) & 0o077
+                    or (opened.st_dev, opened.st_ino) != (info.st_dev, info.st_ino)
+                ):
+                    raise OSError("key file changed or is not private and regular")
+                with os.fdopen(fd, encoding="utf-8") as stream:
+                    fd = None
+                    private_key = stream.read()
+            finally:
+                if fd is not None:
+                    os.close(fd)
+        except (OSError, UnicodeError):
+            raise GitHubIdentityError("cannot read the configured key file") from None
     app_fields = {
         "LU_AGENT_GITHUB_APP_ID": env.get("LU_AGENT_GITHUB_APP_ID"),
         "LU_AGENT_GITHUB_APP_PRIVATE_KEY": private_key,

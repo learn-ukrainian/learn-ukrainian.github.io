@@ -22,7 +22,7 @@ from pathlib import Path
 
 import yaml
 
-from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity
+from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity, revoke_installation_token
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.fleet_repos import load_fleet_repos, resolve_fleet_repo
 
@@ -245,48 +245,64 @@ class Git:
             raise Refusal("restricted installation credential unavailable") from None
         if identity.source != "app" or not identity.token:
             raise Refusal("HTTPS transport requires an App installation identity")
-        url = repo.remote if self.https_base_url is None else self.https_base_url + repo.remote.removeprefix("https://github.com")
-        header = "Authorization: Basic " + base64.b64encode(f"x-access-token:{identity.token}".encode()).decode("ascii")
-        env = {
-            "PATH": "/usr/bin:/bin",
-            "LANG": "C",
-            "LC_ALL": "C",
-            "HOME": str(self.scratch),
-            "GIT_OPTIONAL_LOCKS": "0",
-            "GIT_TERMINAL_PROMPT": "0",
-            "GIT_CONFIG_NOSYSTEM": "1",
-            "GIT_CONFIG_GLOBAL": os.devnull,
-            "GIT_ALLOW_PROTOCOL": "https",
-            "GIT_PROTOCOL_FROM_USER": "0",
-        }
-        settings = [
-            (f"remote.{_FETCH_REMOTE}.url", url),
-            ("protocol.https.allow", "always"),
-            ("http.followRedirects", "false"),
-            ("http.proxy", ""),
-            ("http.sslVerify", "true"),
-            ("credential.helper", ""),
-            ("credential.useHttpPath", "true"),
-            ("credential.interactive", "false"),
-            ("transfer.credentialsInUrl", "die"),
-            (f"http.{url}.extraHeader", header),
-        ]
-        if self.ca_file is not None:
-            settings.append(("http.sslCAInfo", str(self.ca_file)))
-        env["GIT_CONFIG_COUNT"] = str(len(settings))
-        for index, (key, value) in enumerate(settings):
-            env[f"GIT_CONFIG_KEY_{index}"] = key
-            env[f"GIT_CONFIG_VALUE_{index}"] = value
-        result = subprocess.run(
-            [_GIT, *self.options, "-C", str(repo.checkout), *args[2:]],
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=120,
-            check=False,
-        )
-        if result.returncode:
-            raise Refusal("HTTPS fetch failed; maintenance stopped")
+        try:
+            url = repo.remote if self.https_base_url is None else self.https_base_url + repo.remote.removeprefix("https://github.com")
+            header = "Authorization: Basic " + base64.b64encode(f"x-access-token:{identity.token}".encode()).decode("ascii")
+            env = {
+                "PATH": "/usr/bin:/bin",
+                "LANG": "C",
+                "LC_ALL": "C",
+                "HOME": str(self.scratch),
+                "GIT_OPTIONAL_LOCKS": "0",
+                "GIT_TERMINAL_PROMPT": "0",
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": os.devnull,
+                "GIT_ALLOW_PROTOCOL": "https",
+                "GIT_PROTOCOL_FROM_USER": "0",
+            }
+            settings = [
+                (f"remote.{_FETCH_REMOTE}.url", url),
+                ("protocol.https.allow", "always"),
+                ("http.followRedirects", "false"),
+                ("http.proxy", ""),
+                ("http.sslVerify", "true"),
+                ("credential.helper", ""),
+                ("credential.useHttpPath", "true"),
+                ("credential.interactive", "false"),
+                ("transfer.credentialsInUrl", "die"),
+                (f"http.{url}.extraHeader", header),
+            ]
+            if self.ca_file is not None:
+                settings.append(("http.sslCAInfo", str(self.ca_file)))
+            # Match the exact fetch URL so repository URL-specific entries cannot
+            # override our transport settings after the last configuration probe.
+            settings.extend(
+                (f"http.{url}.{key.removeprefix('http.')}", value)
+                for key, value in tuple(settings)
+                if key.startswith("http.") and not key.startswith(f"http.{url}.")
+            )
+            env["GIT_CONFIG_COUNT"] = str(len(settings))
+            for index, (key, value) in enumerate(settings):
+                env[f"GIT_CONFIG_KEY_{index}"] = key
+                env[f"GIT_CONFIG_VALUE_{index}"] = value
+            try:
+                result = subprocess.run(
+                    [_GIT, *self.options, "-C", str(repo.checkout), *args[2:]],
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    check=False,
+                )
+            except (OSError, subprocess.SubprocessError):
+                raise Refusal("HTTPS fetch failed; maintenance stopped") from None
+            if result.returncode:
+                raise Refusal("HTTPS fetch failed; maintenance stopped")
+        finally:
+            try:
+                revoke_installation_token(identity.token, api_base_url=self.api_base_url, ssl_context=self.ssl_context)
+            except Exception:
+                print("Installation credential revocation failed", file=sys.stderr)
 
     def config(self, path: Path, *, inherited: bool = False) -> list[tuple[str, str, str]]:
         env = self.env.copy()
