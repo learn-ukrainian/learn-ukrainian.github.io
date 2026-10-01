@@ -177,9 +177,10 @@ Core technical requirements for protected branch workflows:
 
 1. **Branch controls on `main`:** require pull request · required status check · no force-push · no deletions ·
    **no bypass for agent identities.** Stops the direct-push class outright.
-2. **Deterministic check completion.** A required check that reports `cancelled` fails the gate (correctly),
-   while uncoordinated `cancel-in-progress` cancels active validation. Concurrency groups must avoid cancelling
-   in-flight validation on merge candidates.
+2. **Fix the cancellation lie.** A required check that reports `cancelled` fails the gate (correctly),
+   while `cancel-in-progress` *manufactures* cancellations on every push. Together they deadlock the
+   queue: no PR can hold a green gate under load. Fix by keying concurrency to the PR number or SHA and
+   cancelling **only** for `pull_request`.
 3. **Merge queue serialization.** Merge queues validate the exact combination intended for landing,
    preventing the regression where individually green PRs combine into an unvalidated state. Wire `merge_group`
    into required workflows and set maximum group size 1 for per-PR failure attribution.
@@ -192,7 +193,6 @@ Core technical requirements for protected branch workflows:
 
 **Explicitly NOT worth it at this scale** (named so nobody rebuilds them): Kubernetes OWNERS/Prow or
 Chromium CQ ceremony · chasing Scorecard/SLSA badge levels that require multiple humans · paid merge
-products before trying the native queue · classifying a full test suite before cancellation and
-merge-queue fixes land.
+products before trying the native queue · classifying a full 12k-test suite without serialized landing.
 
 </critical>

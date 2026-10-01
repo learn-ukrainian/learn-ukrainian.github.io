@@ -228,3 +228,23 @@ def test_commit_range_mode_keeps_union_of_touched_public_paths(monkeypatch, tmp_
 
     assert opsec_linter.main(["--commit-range", f"{base}..{head}", "--public-identifiers"]) == 0
     assert scanned_paths == ["site/src/data/changed.json"]
+
+
+def test_private_tracker_citation_detected_in_public_docs():
+    findings = check_content(
+        "Reference issue: private #622\nOr infra-private #710.",
+        "docs/runbooks/agent-seat-onboarding.md",
+    )
+    assert len(findings) == 2
+    assert findings[0][1] == "private #622"
+    assert "Private tracker citation" in findings[0][2]
+    assert findings[1][1] == "infra-private #710"
+    assert "Private tracker citation" in findings[1][2]
+
+
+def test_private_tracker_citation_not_flagged_in_private_code_or_tests():
+    findings = check_content(
+        "Reference issue: private #622\nOr infra-private #710.",
+        "tests/test_something.py",
+    )
+    assert findings == []

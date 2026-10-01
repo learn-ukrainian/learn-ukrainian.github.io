@@ -218,9 +218,9 @@ it accordingly.
 
 To enforce invariants deterministically across all environments, local client hooks
 and CLI merge wrappers validate that:
-1. Exact-head independent cross-family review approval exists.
-2. Required CI Gate checks have succeeded on that exact commit head.
-3. PR is not in draft status.
+1. PR is not in draft status.
+2. No non-advisory status check is red or failing.
+3. Automated merge is refused against a base branch that lacks verified required status checks.
 
 | Hook | Owns | Blocks |
 | --- | --- | --- |
@@ -231,19 +231,17 @@ Both guards judge `--admin` merges. They fail **closed**: if the PR, its checks,
 protection can't be read (gh error/timeout), the merge is refused rather than
 assumed safe.
 
-A red check blocks whether or not GitHub calls it required: "required" is a
-config accident (absent entirely on the private repo), while red is red. So every
-check counts unless its name says `advisory` — which is why the two advisory
-jobs, `pip-audit (advisory)` and `npm-audit (advisory)`, carry that word.
+A red check blocks regardless of whether the forge marks it required: red is red. Every
+check counts unless its name says `advisory` — which is why advisory
+jobs carry that word.
 
-`--auto` is the one verdict that does consult protection, because it is the one
-thing protection actually changes: auto-merge waits for *required* checks, so
-with none configured it merges the moment the PR is mergeable, red or not. The
-guard reads `repos/{owner}/{repo}/branches/{base}/protection` per merge — allowed
-against a base with required checks (this repo's `main`), refused where the API
-403s or lists none (the private repo). There, read the checks green yourself and
-merge manually. `.venv/bin/python -m scripts.publish pr-disarm --number <N>` is never blocked; disarming
-auto-merge is the remedy, not the offence.
+`--auto` is the one verdict that does consult branch protection, because auto-merge
+relies on configured required checks to delay merging: with none configured, auto-merge
+merges immediately regardless of check states. The guard inspects branch protection
+per merge — allowed against a base with verified required checks (such as `main`),
+refused when protection cannot be verified or lists no required checks. In that case,
+verify checks green and merge manually. `.venv/bin/python -m scripts.publish pr-disarm --number <N>` is never blocked;
+disarming auto-merge is the remedy, not the offence.
 
 **Escape hatch:** a human runs the merge outside the agent harness. The hooks
 gate the agent fleet, not the maintainer — but see the override log below.

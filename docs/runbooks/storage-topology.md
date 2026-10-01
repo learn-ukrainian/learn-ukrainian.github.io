@@ -75,28 +75,28 @@ Rebuild consumers (`scripts/wiki/config.py` → `GDRIVE_DATA`) use the same
 resolver: `LU_BULK_ROOT` → SMB → `LU_GDRIVE_DATA` → auto Drive → unavailable.
 The legacy name `GDRIVE_DATA` is retained for call-site compatibility.
 
-## Windows maintenance
+## Mirror maintenance
 
 Tracked scripts (manual, non-destructive):
 
 1. `scripts/storage/windows/Copy-BulkSourcesFromDrive.ps1` — `rclone copy` only
-   (never `sync` / purge / delete) into the share’s **local NTFS** path from
-   `Get-SmbShare -Name UkrainianData`.
+   (never `sync` / purge / delete) into the mirror's local path via
+   `Get-SmbShare`.
 2. `scripts/storage/windows/Verify-BulkSources.ps1` — marker check and optional
    exact-file JSONL manifest; writes a success receipt **only** on pass.
 
 See `scripts/storage/windows/README.md`. Scheduled Task install is optional and
 opt-in; default is a manual run.
 
-## Mac cache (report-only)
+## Local cache (report-only)
 
-When the bulk root is the Drive File Provider path, `status` samples dataless
-flags without opening file bodies. To free SSD space after SMB is verified:
+When the bulk root is a cloud provider path, `status` samples dataless
+flags without opening file bodies. To free local disk space after mirrors are verified:
 
-1. In **Finder**, select cloud-only items under the Drive project folder.
-2. **File → Remove Download**.
+1. Select cloud-only items under the provider project folder.
+2. Free local storage via provider interface or file manager.
 
-Do not invent eviction CLIs, delete cloud objects, or delete the SMB mirror as
+Do not invent eviction CLIs, delete cloud objects, or delete bulk mirrors as
 part of routine cache reclaim.
 
 ## Journal mode (WAL) — declared by writers, relied on by readers

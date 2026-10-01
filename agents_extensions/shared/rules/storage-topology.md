@@ -30,12 +30,12 @@ as directories. If roots are missing or ambiguous, treat bulk as **unavailable**
    a network share.
 4. **Never** delete, move, or auto-evict bulk corpus, Drive objects, or SMB
    payloads unless a separate operator-authorized task says so.
-5. **Mac cache:** report-only. Supported reclaim is Finder **Remove Download**.
+5. **Local cache:** report-only. Use standard operating system or cloud provider tools to free space.
    Do not invent eviction commands.
-6. **Windows mirror maintenance:** only
+6. **Bulk mirror maintenance:** only
    `scripts/storage/windows/Copy-BulkSourcesFromDrive.ps1` (`rclone copy`, never
    sync) and `Verify-BulkSources.ps1` (receipt only after successful verify), on
-   **local NTFS** via `Get-SmbShare`.
+   a verified mirror path via `Get-SmbShare`.
 
 ## Env overrides (optional)
 

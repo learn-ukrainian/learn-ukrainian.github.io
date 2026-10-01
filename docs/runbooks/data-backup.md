@@ -141,7 +141,7 @@ not keep the only copy in the same cloud account as the repository.
 Set the repository and password-file locations in the shell environment:
 
 ```bash
-export LU_BACKUP_REPOSITORY='rclone:lu-gdrive:Projects/learn-ukrainian-restic'
+export LU_BACKUP_REPOSITORY='rclone:<remote>:<path/to/backup-repo>'
 export RESTIC_PASSWORD_FILE="$HOME/.config/restic/learn-ukrainian.password"
 ```
 
