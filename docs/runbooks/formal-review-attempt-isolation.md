@@ -73,6 +73,20 @@ task records and historical database rows retain `isolated`. Findings schema,
 verdict thresholds, stale checks, attempt budgets and failure counting stay the
 same. Version 5 adds only `attempts.access` to the findings database.
 
+Every attempt's stdio sources process receives `LU_REVIEW_ACCESS`: full mode
+advertises and accepts exactly `FULL_REVIEW_TOOLS`, including `search_resources`;
+isolated mode retains exactly `REVIEW_TOOLS`. Calls outside the set are refused
+and ledgered. Missing or invalid access advertises no tools and refuses before
+execution. Ordinary non-review sources sessions keep their full catalog. Full
+Claude seats grant these exact MCP names alongside their ordinary reviewer tools, preserving the
+write-denial profile and hooks; they use no MCP wildcard. Codex and AGY reach
+the same attempt-specific server and recording gate.
+
+After landing a server change, the accountable driver must restart the running
+sources service to load it, after confirming no live dispatch depends on that
+service. Fixture probes launch the candidate worktree server without changing
+the running service.
+
 Full-mode rendered prompts require ledgered sources checks for every Ukrainian claim
 relied on, including approval-critical clean checks, and allow `search_resources`
 for catalogue evidence. Repository/corpus/git reads are context: only sources
@@ -112,6 +126,8 @@ Full-mode boundary regressions and authenticated negative probes:
 ```bash
 "$PROJECT_PYTHON" -m pytest tests/agent_runtime/test_full_review_access.py -q -s
 LU_FULL_REVIEW_REAL_PROBES=1 "$PROJECT_PYTHON" -m pytest tests/review/test_full_review_access.py -q -s
+# Scratch Claude catalogue proof; never records a curriculum review verdict:
+LU_FULL_REVIEW_REAL_PROBES=1 "$PROJECT_PYTHON" -m pytest tests/review/test_full_review_access.py -k claude_full_review_search_resources -q -s
 ```
 
 The fake-seat denominator is Claude, Codex and AGY across the must-fail and

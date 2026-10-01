@@ -1665,6 +1665,7 @@ _REVIEW_ENV_KEYS = (
     "LU_REVIEW_ATTEMPT_ID",
     "LU_REVIEW_MANIFEST_SHA256",
     "LU_REVIEW_LEDGER_PATH",
+    "LU_REVIEW_ACCESS",
 )
 
 _HTTP_MODE = False
@@ -1712,7 +1713,7 @@ def _review_env_engaged() -> bool:
     """True when the dispatch set any review-recording variable on this process."""
     import os
 
-    has_env = any(os.environ.get(key) for key in _REVIEW_ENV_KEYS)
+    has_env = any(os.environ.get(key) for key in _REVIEW_ENV_KEYS) or "LU_REVIEW_ACCESS" in os.environ
     if not has_env:
         return False
     if _HTTP_MODE:
@@ -1731,7 +1732,7 @@ def _review_env_engaged() -> bool:
 def _review_recorder():
     """The local review ledger session, or None when recording is fully off.
 
-    All three variables unset keeps every tool result byte-identical to a
+    All recording variables unset keeps every tool result byte-identical to a
     server without this mode. A partial set is an incomplete session: the
     call is refused and nothing is written. This is not the V4 recorder.
     """
@@ -1815,12 +1816,12 @@ def _review_before_handler(
     """Refuse a call that must not run. None means the handler may run."""
     if recorder is None:
         return None
-    from scripts.review.receipts.ledger import REVIEW_TOOLS
+    from scripts.review.receipts.ledger import review_tools
 
     if recorder.mode != "on":
         text = f"Review receipt recording is misconfigured: {recorder.error}"
         return [TextContent(type="text", text=text)], True
-    if name not in REVIEW_TOOLS:
+    if name not in review_tools(recorder.review_access):
         text = f"Tool {name} is not in the review tool list."
         content, _rec_err, _receipt, _outcome = _review_record(
             recorder, name, arguments, [TextContent(type="text", text=text)], status="refused"
@@ -1975,7 +1976,14 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 
 async def _on_list_tools(_ctx: Any, _params: Any) -> ListToolsResult:
     """MCP 2.0 registered handler for tools/list."""
-    return ListToolsResult(tools=await list_tools())
+    tools = await list_tools()
+    recorder = _review_recorder()
+    if recorder is not None:
+        from scripts.review.receipts.ledger import review_tools
+
+        allowed = review_tools(recorder.review_access) if recorder.mode == "on" else frozenset()
+        tools = [tool for tool in tools if tool.name in allowed]
+    return ListToolsResult(tools=tools)
 
 
 async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolResult:

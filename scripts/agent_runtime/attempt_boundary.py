@@ -261,6 +261,9 @@ class AttemptBoundary:
         verify_review_attempt_paths(config)
         self.config_path = config
         server = json.loads(config.read_bytes())["mcpServers"]["sources"]
+        access = "full" if self.full else "isolated"
+        if server["env"].get("LU_REVIEW_ACCESS") != access:
+            raise ReviewIsolationError("attempt_review_access_mismatch")
         manifest_path = Path(tool_config["review_manifest"])
         data = manifest_path.read_bytes()
         if hashlib.sha256(data).hexdigest() != server["env"]["LU_REVIEW_MANIFEST_SHA256"]:

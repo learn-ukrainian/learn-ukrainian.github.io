@@ -133,17 +133,19 @@ def world(tmp_path, monkeypatch):
     return root, home
 
 
-def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str) -> dict:
+def attempt_config(root: Path, tmp_path: Path, manifest: dict, agent: str, *, review_access: str = "isolated") -> dict:
     path = root / "attempt.yaml"
     path.write_text(yaml.safe_dump(manifest))
-    plan = prepare_review_attempt("review", "current", path, agent, receipts_root=tmp_path / "receipts")
+    plan = prepare_review_attempt(
+        "review", "current", path, agent, receipts_root=tmp_path / "receipts", review_access=review_access
+    )
     return {
         **plan.adapter_options,
         "review_id": "review",
         "attempt_id": "current",
         "review_manifest": str(path),
         "review_input_root": str(root),
-        "review_access": "isolated",
+        "review_access": review_access,
     }
 
 
@@ -261,7 +263,7 @@ def test_runtime_files_does_not_grant_native_binary_parent():
 def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent, access):
     root, _ = world
     doc = manifest_world(root, "plan")
-    tc = attempt_config(root, tmp_path, doc, agent)
+    tc = attempt_config(root, tmp_path, doc, agent, review_access=access)
     tc.update(review_access=access, review_cwd=str(root))
     if access == "full":
         subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
@@ -762,7 +764,7 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
     from scripts.agent_runtime.attempt_network import load_allowlist
 
     root, _ = world
-    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent)
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent, review_access=access)
     tc.update(review_access=access, review_cwd=str(root))
     if access == "full":
         subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
