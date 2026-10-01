@@ -209,6 +209,8 @@ def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Pa
     monkeypatch.setattr(delegate, "_superseded_review_releasable", lambda _path: (True, "clean; task status=done"))
 
     def fake_run(cmd, **_kwargs):
+        if cmd[:2] == ["git", "ls-files"]:
+            return subprocess.CompletedProcess(cmd, 0, b"", b"")
         if "worktree" in cmd and "remove" in cmd:
             removed.append(cmd[-1])
 
@@ -260,7 +262,7 @@ def test_later_round_keeps_an_earlier_round_another_task_still_claims(monkeypatc
 
 
 class _Proc:
-    def __init__(self, returncode: int = 0, stdout: str = "", stderr: str = "") -> None:
+    def __init__(self, returncode: int = 0, stdout: str | bytes = "", stderr: str | bytes = "") -> None:
         self.returncode = returncode
         self.stdout = stdout
         self.stderr = stderr
@@ -268,6 +270,8 @@ class _Proc:
 
 def _git_reply(cmd: list[str], *, contained: bool | None) -> _Proc:
     """``contained=True`` is an ancestor of origin/main; ``None`` is a git error."""
+    if cmd[:2] == ["git", "ls-files"]:
+        return _Proc(stdout=b"", stderr=b"")
     if cmd[:3] == ["git", "rev-parse", "--abbrev-ref"]:
         return _Proc(stdout="codex/review-topic-r2\n")
     if cmd[:2] == ["git", "rev-parse"]:

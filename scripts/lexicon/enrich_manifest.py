@@ -58,7 +58,8 @@ import sqlite3
 import sys
 import time
 import unicodedata
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
+from contextlib import contextmanager
 from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
@@ -1091,6 +1092,20 @@ def _unescape_html_entities(text: str) -> str:
 
 def _phase1_offline_mode() -> bool:
     return os.environ.get("LEXICON_SLOVNYK_OFFLINE", "").strip().casefold() in _OFFLINE_VALUES
+
+
+@contextmanager
+def slovnyk_offline_env() -> Iterator[None]:
+    """Force slovnyk offline mode for one CLI run, restoring the prior value on exit."""
+    previous = os.environ.get("LEXICON_SLOVNYK_OFFLINE")
+    os.environ["LEXICON_SLOVNYK_OFFLINE"] = "1"
+    try:
+        yield
+    finally:
+        if previous is None:
+            os.environ.pop("LEXICON_SLOVNYK_OFFLINE", None)
+        else:
+            os.environ["LEXICON_SLOVNYK_OFFLINE"] = previous
 
 
 def clean_html_entities(text: str) -> str:

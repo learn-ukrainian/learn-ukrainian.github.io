@@ -4917,6 +4917,32 @@ def test_git_shim_blocks_push_to_main_without_opt_in(tmp_path):
     assert "#1403" in proc.stderr
 
 
+@pytest.mark.parametrize("verb", ["checkout", "switch"])
+def test_git_shim_refuses_when_guard_interpreter_is_absent(tmp_path, verb):
+    shim = Path(__file__).resolve().parent.parent / "scripts" / "agent_runtime" / "shims" / "git"
+    fake_git = tmp_path / "real-git"
+    fake_git.write_text("#!/usr/bin/env bash\nprintf 'real-git %s\\n' \"$*\"\n")
+    fake_git.chmod(0o755)
+
+    proc = subprocess.run(
+        [str(shim), verb, "feature-1"],
+        capture_output=True,
+        text=True,
+        env={
+            "AGENT_NO_MERGE": "1",
+            "AGENT_REAL_GIT": str(fake_git),
+            "AGENT_GIT_SHIM_PYTHON": str(tmp_path / "nonexistent-python"),
+            "PATH": os.environ.get("PATH", ""),
+        },
+        check=False,
+        timeout=15,
+    )
+
+    assert proc.returncode != 0
+    assert "error: git shim guard interpreter unavailable" in proc.stderr
+    assert "Cannot verify branch containment; failing closed." in proc.stderr
+
+
 def test_acpx_direct_route_output_limit_kills_child_and_raises_typed_error(tmp_path, monkeypatch):
     from agent_runtime import runner as runtime_runner
 

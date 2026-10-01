@@ -227,7 +227,7 @@ def _fenced_blocks(prompt_text: str) -> list[tuple[int, int, str, str]]:
             match = FENCE_OPEN.fullmatch(line.rstrip("\r\n"))
             if match:
                 fence = match.group("fence")
-                opening = (offset, offset + len(line), len(fence), line.strip()[len(fence):].strip())
+                opening = (offset, offset + len(line), len(fence), line.strip()[len(fence) :].strip())
         elif re.fullmatch(rf" {{0,3}}`{{{opening[2]},}}[ \t]*", line.rstrip("\r\n")):
             start, body_start, _, language = opening
             blocks.append((start, offset + len(line), language, prompt_text[body_start:offset]))
@@ -276,7 +276,9 @@ def parse_attempt_ids(prompt_text: str, *, custom: bool = False) -> tuple[str | 
             if is_attempt and not is_schema:
                 found.add(_ids_from(_load_id_document(body)["attempt"], "fenced attempt"))
         if custom and ID_KEY_MENTION.search(body) and not (is_schema or is_attempt):
-            raise AttemptIdsUnreadableError("a custom prompt names ids outside a readable fenced attempt or return schema")
+            raise AttemptIdsUnreadableError(
+                "a custom prompt names ids outside a readable fenced attempt or return schema"
+            )
         blanked = re.sub(r"[^\r\n]", " ", remaining[start:end])
         remaining = remaining[:start] + blanked + remaining[end:]
     for entry in list(ATTEMPT_ENTRY.finditer(remaining)):
@@ -509,6 +511,7 @@ def check_prompt(
     prompts_dir: Path | None = None,
     review_id: str | None = None,
     attempt_id: str | None = None,
+    review_access: str = "full",
 ) -> RenderedPromptCheckResult:
     """Validate a rendered reviewer prompt: eligible pins, exact re-render, clean templates.
 
@@ -585,6 +588,7 @@ def check_prompt(
             prompts_dir=prompts_dir,
             review_id=effective_review_id,
             attempt_id=effective_attempt_id,
+            review_access=review_access,
         )
     except RenderError as err:
         errors.append(f"render_failed: {type(err).__name__}: {err}")
@@ -619,7 +623,9 @@ def check_prompt(
 
     # The dependency set comes from our render, never from the record's claim.
     if recorded_templates is not None and recorded_templates != {p.name: sha for p, sha in used_templates.items()}:
-        errors.append("template_sha256_mismatch: the recorded loader names/hashes differ from the templates the render used")
+        errors.append(
+            "template_sha256_mismatch: the recorded loader names/hashes differ from the templates the render used"
+        )
 
     # The recorded reads are the verified pins and the templates the render used, each template with its sha256
     if files_read is not None:
@@ -670,7 +676,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("prompt_file", help="Rendered prompt markdown file, e.g. prompt.md")
     parser.add_argument("--manifest", "-m", required=True, help="Attempt manifest YAML, e.g. lesson-2.manifest.yaml")
-    parser.add_argument("--template", "-t", default=None, help="Template name, e.g. lesson-review (default: inferred from manifest)")
+    parser.add_argument(
+        "--template", "-t", default=None, help="Template name, e.g. lesson-review (default: inferred from manifest)"
+    )
     parser.add_argument("--repo-root", default=None, help="Pinned input checkout root (default: this repository)")
     parser.add_argument("--prompts-dir", default=None, help="Test template directory (default: scripts/review/prompts)")
     parser.add_argument(
@@ -695,6 +703,9 @@ def main(argv: list[str] | None = None) -> int:
             "fails with attempt_id_mismatch. Default: None (read from the prompt's own attempt block instead). "
             "Example: --attempt-id claude-att-1"
         ),
+    )
+    parser.add_argument(
+        "--review-access", choices=("full", "isolated"), default="full", help="Prompt access policy (default: full)."
     )
     args = parser.parse_args(argv)
 
@@ -759,6 +770,7 @@ def main(argv: list[str] | None = None) -> int:
         template_sha256=sidecar.get("template_sha256"),
         review_id=args.review_id,
         attempt_id=args.attempt_id,
+        review_access=args.review_access,
         prompts_dir=Path(args.prompts_dir) if args.prompts_dir else None,
     )
 

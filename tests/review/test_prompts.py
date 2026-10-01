@@ -245,6 +245,7 @@ def _cache_repeated_exact_renders_and_template_lint():
         )
         if key is None:
             return original_render(manifest_source, template_name, **kwargs)
+        key = (*key, kwargs.get("review_access", "full"))
         cached = renders.get(key)
         if cached is None:
             cached = original_render(manifest_source, template_name, **kwargs)
@@ -255,7 +256,12 @@ def _cache_repeated_exact_renders_and_template_lint():
         paths = tuple(prompt_check._template_paths(Path(prompts_dir)))
         fingerprint = tuple((str(path), hashlib.sha256(_prompt_bytes(path)).hexdigest()) for path in paths)
         slug = manifest_doc.get("slug") if isinstance(manifest_doc, dict) else None
-        key = (fingerprint, slug, tuple(sorted(foreign_slugs, key=str)))
+        key = (
+            fingerprint,
+            slug,
+            tuple(sorted(foreign_slugs, key=str)),
+            hashlib.sha256((used_text or "").encode()).hexdigest(),
+        )
         static = lint_static.get(key)
         if static is None:
             static_errors: list[str] = []
@@ -360,9 +366,7 @@ _LESSON_TEMPLATE: dict[int, tuple[Path, Path, dict, str]] = {}
 _PLAN_TEMPLATE: dict[bool, tuple[Path, Path, dict, str]] = {}
 
 
-def _copy_template(
-    root: Path, template: tuple[Path, Path, dict, str]
-) -> tuple[Path, dict, str]:
+def _copy_template(root: Path, template: tuple[Path, Path, dict, str]) -> tuple[Path, dict, str]:
     source, relative, doc, digest = template
     shutil.copytree(source, root, dirs_exist_ok=True, symlinks=True)
     return root / relative, copy.deepcopy(doc), digest
@@ -2227,3 +2231,61 @@ def test_review_prompts_check_one_sentence_one_language(template: str) -> None:
     text = (Path(__file__).resolve().parents[2] / "scripts/review/prompts" / template).read_text(encoding="utf-8")
     assert "one language, Ukrainian or English, never a mix" in text
     assert "about that item" in text
+
+
+@pytest.mark.parametrize("template", ["plan-review.md.j2", "lesson-review.md.j2", "lesson-rereview.md.j2"])
+def test_review_prompt_requires_full_context_and_ledgered_claims_without_new_schema(template):
+    text = (Path(__file__).resolve().parents[2] / "scripts/review/prompts" / template).read_text()
+    for requirement in (
+        "git history",
+        "textbook",
+        "search_resources",
+        "verify_words",
+        "verify_stress",
+        "query_sum20",
+        "source_file='antonenko-davydovych-yak-my-hovorymo'",
+        "approval-critical",
+        "YAML comments",
+        "Only ledgered sources receipts",
+        "other attempts' returns",
+        "findings database",
+        "previous",
+    ):
+        assert requirement in text
+    assert "do not add a field or verdict dimension" in text
+
+
+@pytest.mark.parametrize("kind", ["plan", "lesson", "rereview"])
+def test_isolated_prompt_bytes_equal_main_before_9464(tmp_path, monkeypatch, kind):
+    """Frozen main templates from 1a0207b784; independent of the modified templates."""
+    from scripts.review.prompts.render import render
+
+    if kind == "plan":
+        path, _, _ = _setup_plan_fixture(tmp_path, monkeypatch)
+    elif kind == "rereview":
+        path, _ = _write_rereview(tmp_path, monkeypatch)
+    else:
+        path, _, _ = _setup_lesson_fixture(tmp_path, monkeypatch)
+    template = "lesson-rereview" if kind == "rereview" else None
+    baseline = tmp_path / "main-templates"
+    shutil.copytree(_SHIPPED_PROMPTS, baseline)
+    frozen = Path(__file__).parent / "fixtures/isolated-main-prompts"
+    for source in frozen.glob("*.md.j2"):
+        shutil.copyfile(source, baseline / source.name)
+    kw = dict(
+        repo_root=tmp_path,
+        review_id=TEST_REVIEW_ID,
+        attempt_id=TEST_ATTEMPT_ID,
+        review_access="isolated",
+        template_name=template,
+    )
+    main = render(path, prompts_dir=baseline, **kw)
+    isolated = render(path, **kw)
+    assert isolated.prompt.encode() == main.prompt.encode()
+    assert "search_resources" not in isolated.prompt
+    assert "Full access and evidence duty" not in isolated.prompt
+    assert check_prompt(
+        isolated.prompt, path, repo_root=tmp_path, template_name=template, review_access="isolated"
+    ).passed
+    full = render(path, **{**kw, "review_access": "full"})
+    assert "search_resources" in full.prompt and "Full access and evidence duty" in full.prompt

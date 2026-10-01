@@ -123,7 +123,7 @@ def _wt_status(path: Path) -> dict[str, Any]:
     if not path.is_dir():
         return {"error": "worktree path missing on disk"}
 
-    code, stdout, stderr = _run(["git", "status", "--porcelain=v1"], cwd=path)
+    code, stdout, stderr = _run(["git", "--no-optional-locks", "status", "--porcelain=v1"], cwd=path)
     if code != 0:
         out["status_error"] = stderr.strip()
     else:
@@ -136,7 +136,7 @@ def _wt_status(path: Path) -> dict[str, Any]:
         out["change_types"] = sorted(types)
 
     code, stdout, stderr = _run(
-        ["git", "log", "-1", "--format=%h %cI %s"],
+        ["git", "--no-optional-locks", "log", "-1", "--format=%h %cI %s"],
         cwd=path,
     )
     if code == 0 and stdout.strip():
@@ -186,7 +186,7 @@ async def list_worktrees(ctx: MonitorContext = Depends(get_ctx)):
 
     def _compute() -> dict:
         code, stdout, stderr = _run(
-            ["git", "worktree", "list", "--porcelain"],
+            ["git", "--no-optional-locks", "worktree", "list", "--porcelain"],
             cwd=live_repo_root,
         )
         if code != 0:

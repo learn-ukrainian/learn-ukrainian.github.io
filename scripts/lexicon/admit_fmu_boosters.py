@@ -18,7 +18,6 @@ import argparse
 import gzip
 import hashlib
 import json
-import os
 import re
 import sqlite3
 import sys
@@ -27,8 +26,6 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-
-os.environ["LEXICON_SLOVNYK_OFFLINE"] = "1"
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
@@ -939,7 +936,8 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="Do not write changes to disk")
     args = parser.parse_args()
 
-    summary = admit_fmu_boosters(dry_run=args.dry_run)
+    with enrich_manifest.slovnyk_offline_env():
+        summary = admit_fmu_boosters(dry_run=args.dry_run)
     print("Summary:", json.dumps(summary, indent=2, ensure_ascii=False))
     return 0
 

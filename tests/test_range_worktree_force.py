@@ -184,6 +184,9 @@ def test_worktrees_parses_porcelain_output(monkeypatch, tmp_path):
 
     def fake_run(cmd, cwd, timeout_s=2.0):
         calls.append(cmd)
+        # Read-only git runs carry --no-optional-locks (#8874); match on the
+        # subcommand, not on the flag's position.
+        cmd = [part for part in cmd if part != "--no-optional-locks"]
         if cmd[:2] == ["git", "worktree"]:
             return 0, porcelain, ""
         if cmd[:2] == ["git", "status"]:

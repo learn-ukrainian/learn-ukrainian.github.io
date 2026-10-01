@@ -200,17 +200,17 @@ def _last_deploy_commit(ctx: MonitorContext | None = None) -> dict[str, Any]:
     failure → ``error`` string, not a 500.
     """
     for ref in ("refs/heads/gh-pages", "refs/remotes/origin/gh-pages"):
-        proc = _run(["git", "rev-parse", "--verify", "--short=9", ref], ctx=ctx)
+        proc = _run(["git", "--no-optional-locks", "rev-parse", "--verify", "--short=9", ref], ctx=ctx)
         if proc.returncode == 0 and proc.stdout.strip():
             sha = proc.stdout.strip()
             ts_proc = _run([
-                "git", "show", "-s", "--format=%cI", sha,
+                "git", "--no-optional-locks", "show", "-s", "--format=%cI", sha,
             ], ctx=ctx)
             ts = ts_proc.stdout.strip() if ts_proc.returncode == 0 else None
             return {"sha": sha, "committed_at": ts, "source": ref}
 
     # Last resort: ask the remote.
-    proc = _run(["git", "ls-remote", "origin", "gh-pages"], timeout_s=5.0, ctx=ctx)
+    proc = _run(["git", "--no-optional-locks", "ls-remote", "origin", "gh-pages"], timeout_s=5.0, ctx=ctx)
     if proc.returncode == 0 and proc.stdout:
         sha = proc.stdout.split()[0][:9]
         return {"sha": sha, "committed_at": None, "source": "remote ls-remote"}

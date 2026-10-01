@@ -41,6 +41,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common import task_store_paths
 from scripts.common.acp_runtime_lock import (
     holds_only_git_pointer,
 )
@@ -53,6 +54,7 @@ from scripts.common.acp_runtime_lock import (
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle, worker_leftovers, worktree_claims, worktree_prep
+from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
 from scripts.path_safety import assert_delete_target
 
 DEFAULT_BUILD_AGE_HOURS = 6
@@ -3554,6 +3556,23 @@ def _reap_qualified_worktree(
         # (120s). A waiter that hits its 30s lock timeout retries.
         # ``_worktree_clean`` accepts disposable ignored residue such as a
         # worker's ``.venv``; git still counts it, so force is required.
+        control_root = control_plane_root(repo_root)
+        artifacts_ok, artifact_refusal, _artifacts = preserve_worktree_artifacts(
+            info.path,
+            primary=control_root,
+            task_id=_dispatch_task_id(repo_root, info),
+            tasks_dir=task_store_paths.tasks_dir(),
+        )
+        if not artifacts_ok:
+            return ReapResult(
+                path=str(info.path),
+                branch=info.branch,
+                action="skipped",
+                reason=artifact_refusal,
+                dirty=dirty,
+                pr=_pr_dict(pr_state),
+                recovery_ref=recovery_ref,
+            )
         foreign_root = (
             None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
         )

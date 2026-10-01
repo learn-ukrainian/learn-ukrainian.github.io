@@ -255,7 +255,8 @@ def _fixture_completed_process(
 
 def _fixture_run_command(args: Any, **_kwargs: Any) -> subprocess.CompletedProcess[str]:
     """Return bounded, non-sensitive results for route-local command seams."""
-    argv = [str(value) for value in args]
+    # Read-only git calls carry --no-optional-locks (#8874); match the subcommand.
+    argv = [str(value) for value in args if value != "--no-optional-locks"]
     if argv[:3] == ["git", "rev-parse", "HEAD"]:
         return _fixture_completed_process(args, stdout=("0" * 40) + "\n")
     if argv[:2] == ["git", "rev-parse"] and any("short" in value for value in argv):

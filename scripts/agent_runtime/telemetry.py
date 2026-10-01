@@ -595,6 +595,7 @@ def resolve_dispatch_start_telemetry(
     requested_model: str | None,
     requested_effort: str | None,
     harness: str | None = None,
+    probe_cli_version: bool = True,
 ) -> InvocationTelemetry:
     """Best-effort telemetry for task-state initialization before spawn."""
     model = _resolve_model_from_defaults(agent_name, requested_model, harness=harness)
@@ -612,7 +613,7 @@ def resolve_dispatch_start_telemetry(
         _warn_unknown("effort", agent_name, "no explicit override or readable default")
         effort = _UNKNOWN
 
-    cli_version = _resolve_cli_version(agent_name)
+    cli_version = _resolve_cli_version(agent_name) if probe_cli_version else _UNKNOWN
     if not cli_version:
         _warn_unknown("cli_version", agent_name, "version probe failed")
         cli_version = _UNKNOWN

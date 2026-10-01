@@ -6668,6 +6668,7 @@ def _remove_dispatch_worktree(
     releasable: Callable[[], tuple[bool, str]],
     force: bool = False,
     lock_timeout_s: float | None = None,
+    task_record: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Remove one dispatch worktree. Every removal in this module comes here (#8610).
 
@@ -6682,6 +6683,24 @@ def _remove_dispatch_worktree(
     Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
     ``skipped``, or ``error``; this never raises.
     """
+    from scripts.orchestration.worktree_artifacts import preserve_worktree_artifacts
+
+    preserved_artifacts = None
+
+    def preserve_before_remove() -> tuple[bool, str]:
+        nonlocal preserved_artifacts
+        ok, detail = releasable()
+        if not ok:
+            return ok, detail
+        ok, refusal, preserved_artifacts = preserve_worktree_artifacts(
+            worktree,
+            primary=_REPO_ROOT,
+            task_id=owner_task_id,
+            tasks_dir=tasks_dir(),
+            task_record=task_record,
+        )
+        return (True, detail) if ok else (False, refusal)
+
     removal = worktree_claims.remove_unclaimed_worktree(
         worktree,
         # A ``--repo`` sibling worktree is git-operated in its own repository,
@@ -6690,13 +6709,16 @@ def _remove_dispatch_worktree(
         control_root=_REPO_ROOT,
         reason=reason,
         owner_task_id=owner_task_id,
-        releasable=releasable,
+        releasable=preserve_before_remove,
         force=force,
         tasks_dir=tasks_dir(),
         lock_dir=_worktree_lock_dir(),
         lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
     )
-    return {**removal.as_record(), "pr": None}
+    record = {**removal.as_record(), "pr": None}
+    if preserved_artifacts is not None:
+        record["preserved_artifacts"] = preserved_artifacts
+    return record
 
 
 def _stop_worker_background_jobs(task_record: Mapping[str, Any], *, task_id: str) -> tuple[bool, str]:
@@ -6760,6 +6782,7 @@ def _settle_worktree_reap(
         releasable=releasable,
         force=True,
         lock_timeout_s=lock_timeout_s,
+        task_record=task_record,
     )
     branch = removal["branch"]
     if removal["action"] == "removed" and branch is not None and not _branch_ref_exists(owning_repo, branch):
@@ -8394,6 +8417,7 @@ def _run_worker(
     strict_mcp_config: bool = False,
     review_manifest: str | None = None,
     review_input_root: str | None = None,
+    review_access: str = "isolated",
     finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
@@ -8486,6 +8510,7 @@ def _run_worker(
             requested_model=model,
             requested_effort=effort,
             harness=harness,
+            probe_cli_version=not (review_manifest and review_access == "full"),
         )
         state.setdefault("model", start_telemetry.model)
         state.setdefault("effort", start_telemetry.effort)
@@ -8612,7 +8637,16 @@ def _run_worker(
             if review_manifest is not None:
                 tool_config["review_manifest"] = review_manifest
                 tool_config["review_input_root"] = review_input_root
-            if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
+            if review_manifest is not None:
+                tool_config["review_access"] = review_access
+                tool_config["review_cwd"] = str(cwd)
+            if (
+                strict_mcp_config
+                and review_id is not None
+                and attempt_id is not None
+                and agent == "claude"
+                and review_access == "isolated"
+            ):
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
@@ -8624,6 +8658,7 @@ def _run_worker(
                 and attempt_id is not None
                 and mcp_config_path is not None
                 and agent == "codex"
+                and review_access != "full"
             ):
                 # Codex has no --mcp-config: -c mcp_servers.* MERGES with global config, so
                 # the attempt runs under its scoped CODEX_HOME (sibling of the .mcp.json)
@@ -8649,6 +8684,7 @@ def _run_worker(
                 and attempt_id is not None
                 and mcp_config_path is not None
                 and agent == "agy"
+                and review_access != "full"
             ):
                 # agy has no per-invocation MCP flag and reads its servers from
                 # $HOME/.gemini/config, so the attempt runs under its scoped home (sibling
@@ -9914,6 +9950,7 @@ def _review_attempt_prompt_admission(
                 recorded_templates=contract["recorded_templates"],
                 review_id=review_id,
                 attempt_id=attempt_id,
+                review_access=getattr(args, "review_access", "full"),
             )
             if not checked.passed:
                 return "❌ review attempt refused: prompt_render_invalid: " + "; ".join(checked.errors), None
@@ -10350,6 +10387,7 @@ def _dispatch(
     review_id = getattr(args, "review_id", None)
     attempt_id = getattr(args, "attempt_id", None)
     review_plan = None
+    review_access = getattr(args, "review_access", "full")
     review_contract: dict[str, Any] | None = None
     if review_attempt or review_id or attempt_id:
         if not (review_attempt and review_id and attempt_id):
@@ -10357,6 +10395,12 @@ def _dispatch(
                 "❌ --review-attempt, --review-id, and --attempt-id must be used together",
                 file=sys.stderr,
             )
+            return 2
+        if review_access == "full" and not getattr(args, "full_checkout", False):
+            print("❌ full_review_requires_full_checkout: use --full-checkout", file=sys.stderr)
+            return 2
+        if review_access == "full" and args.mode != "read-only":
+            print("❌ attempt_requires_fresh_read_only_sources: use --mode read-only", file=sys.stderr)
             return 2
         manifest_path = Path(review_attempt)
         if not manifest_path.is_file():
@@ -11040,6 +11084,7 @@ def _dispatch(
                 requested_model=args.model,
                 requested_effort=getattr(args, "effort", None),
                 harness=requested_harness,
+                probe_cli_version=not (review_attempt and review_access == "full"),
             )
             dry_run_state = {
                 "pinned_head": pinned_head,
@@ -11146,7 +11191,7 @@ def _dispatch(
             print(f"❌ {admission_refusal}", file=sys.stderr)
             return _ADMISSION_REFUSED_EXIT
 
-    if review_attempt:
+    if review_attempt and review_access != "full":
         from scripts.agent_runtime.review_mcp import prepare_review_attempt
 
         effective_harness = requested_harness or dispatch_agent
@@ -11361,6 +11406,30 @@ def _dispatch(
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
 
+    if review_attempt and review_access == "full":
+        from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
+        from scripts.agent_runtime.review_mcp import prepare_review_attempt
+        from scripts.review.isolation import ReviewIsolationError
+
+        try:
+            # A refused tree must not reserve the attempt id or create its ledger.
+            verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
+            review_plan = prepare_review_attempt(
+                review_id=review_id,
+                attempt_id=attempt_id,
+                manifest_path=Path(review_attempt),
+                harness=requested_harness or dispatch_agent,
+                review_contract=review_contract,
+            )
+        except (ReviewIsolationError, ValueError, FileExistsError) as exc:
+            stdout_fd.close()
+            stderr_fd.close()
+            if worktree_path is not None and worktree_telemetry.get("reused") is False:
+                cleanup = _settle_worktree_reap(worktree_path, created_by_this_dispatch=True, settling_task_id=task_id)
+                print(f"   review refusal cleanup: {cleanup}", file=sys.stderr)
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+
     if review_plan is not None and worktree_path is not None:
         try:
             _mark_review_attempt_worktree(worktree_path, task_id)
@@ -11442,6 +11511,7 @@ def _dispatch(
             requested_model=args.model,
             requested_effort=getattr(args, "effort", None),
             harness=requested_harness,
+            probe_cli_version=not (review_attempt and review_access == "full"),
         )
 
         # Write initial state BEFORE forking so a fast caller can see it.
@@ -11528,6 +11598,7 @@ def _dispatch(
             }
             # The render-time and dispatch-time digests compared (#9163): what the review of record ran against.
             initial_state["review_contract"] = review_contract
+            initial_state["review_access"] = review_access
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -11673,6 +11744,8 @@ def _dispatch(
         if review_plan is not None:
             cmd.extend(
                 [
+                    "--review-access",
+                    review_access,
                     "--review-id",
                     str(review_id),
                     "--attempt-id",
@@ -13924,6 +13997,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
         review_manifest=getattr(args, "review_manifest", None),
         review_input_root=getattr(args, "review_input_root", None),
+        review_access=getattr(args, "review_access", "isolated"),
         finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
@@ -14307,6 +14381,12 @@ def build_parser() -> argparse.ArgumentParser:
             "stdio sources MCP server with ledger receipts. Default: None. "
             "Example: --review-attempt batch_state/manifests/rev-1.yaml"
         ),
+    )
+    d.add_argument(
+        "--review-access",
+        choices=("full", "isolated"),
+        default="full",
+        help="Review access mode: full checkout (requires --full-checkout), or manifest isolation. Default: full.",
     )
     d.add_argument(
         "--review-id",
@@ -14729,6 +14809,7 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.add_argument("--run-nonce", default=None)
+    wk.add_argument("--review-access", choices=("full", "isolated"), default="isolated")
     wk.add_argument("--review-id", default=None)
     wk.add_argument("--attempt-id", default=None)
     wk.add_argument("--mcp-config-path", default=None)
