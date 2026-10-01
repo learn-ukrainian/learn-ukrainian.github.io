@@ -3768,6 +3768,31 @@ def _render_section_word_budgets(plan: Mapping[str, Any]) -> str:
     return "\n".join(lines)
 
 
+WRITER_PLAN_OMIT_KEYS = frozenset({
+    "plan_fixes", "changelog", "review_notes", "reviewed_by", "reviewed_at",
+    "lifecycle", "version", "references",
+})
+
+
+def _writer_plan_content_for_prompt(
+    plan: Mapping[str, Any], *, references_rendered: bool = False,
+) -> str:
+    """Omit editorial history only from the writer's embedded plan (#9343).
+
+    Unknown keys stay by default. References stay unless the knowledge packet
+    already renders them separately; reviewers and the plan file keep all keys.
+    Preserve the existing alphabet-module filtering and title normalization.
+    """
+    projected = {
+        key: value for key, value in plan.items()
+        if key not in WRITER_PLAN_OMIT_KEYS
+        or (key == "references" and not references_rendered)
+    }
+    return _plan_content_for_prompt(
+        projected, yaml.safe_dump(projected, allow_unicode=True, sort_keys=False),
+    )
+
+
 def writer_context(
     plan: Mapping[str, Any],
     plan_content: str,
@@ -3780,7 +3805,9 @@ def writer_context(
     use_generator: bool = False,
     obligation_checklist: Mapping[str, Any] | None = None,
 ) -> dict[str, str]:
-    plan_content = _plan_content_for_prompt(plan, plan_content)
+    plan_content = _writer_plan_content_for_prompt(
+        plan, references_rendered="## Plan References" in knowledge_packet.splitlines(),
+    )
     plan = filter_line_break_plan(plan)
     level = str(plan["level"])
     sequence = int(plan["sequence"])
