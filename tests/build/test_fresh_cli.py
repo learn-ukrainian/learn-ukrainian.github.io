@@ -422,9 +422,7 @@ def test_cli_write_refuses_cited_pending_form_before_prompt_render(tmp_path, cap
     lock.write(words_path, lock.yaml_bytes(words_data))
     lesson_lock.write_lesson_lock("a1", "synthetic-mod", repo_root=tmp_path)
 
-    code = main(
-        ["write", "a1", "synthetic-mod", "--lesson", "1", "--writer", "agy", "--repo-root", str(tmp_path)]
-    )
+    code = main(["write", "a1", "synthetic-mod", "--lesson", "1", "--writer", "agy", "--repo-root", str(tmp_path)])
 
     assert code == 1
     assert "cited_form_stress_pending" in capsys.readouterr().err
@@ -444,7 +442,8 @@ def test_cli_preflight_passes_on_synthetic_tree(tmp_path, capsys):
     assert "Homographs detected: 0" in captured.out
 
 
-def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys):
+@pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
+def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys, effort):
     """MAJOR C: CLI write reaches the fake seat on a synthetic tree where preflight passes."""
     paths = _build_synthetic_tree(tmp_path)
     valid_draft_template, _ = load_fixture("a1")
@@ -468,7 +467,9 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--task-id", required=True)
 parser.add_argument("--prompt-file", required=True)
 parser.add_argument("--result-file", required=True)
+parser.add_argument("--effort", default=None)
 args = parser.parse_args()
+assert args.effort == {effort!r}
 
 result_path = Path(args.result_file)
 result_path.parent.mkdir(parents=True, exist_ok=True)
@@ -492,6 +493,7 @@ result_path.write_text('''```yaml
             str(fake_seat),
             "--repo-root",
             str(tmp_path),
+            *(["--writer-effort", effort] if effort else []),
         ]
     )
     assert code == 0
@@ -500,6 +502,9 @@ result_path.write_text('''```yaml
 
     draft_file = paths["state_dir"] / "synthetic-mod" / "lesson-1.draft.yaml"
     assert draft_file.is_file()
+    meta = yaml.safe_load(draft_file.with_name("lesson-1.writer.yaml").read_text())
+    assert meta["effort"] == "unknown"
+    assert meta["task_id"] == "write-a1-synthetic-mod-1-1" + (f"-{effort}" if effort else "")
 
 
 def test_cli_recap_render_prompt_and_write(tmp_path, capsys):
@@ -592,6 +597,50 @@ result_path.write_text('''```yaml
     )
     assert code_write == 0
     assert (state_dir / "lesson-2.draft.yaml").is_file()
+
+
+@pytest.mark.parametrize("effort", [None, "low", "medium", "high", "xhigh"])
+def test_cli_build_writer_effort(tmp_path, effort):
+    from scripts.build.fresh import cli
+
+    def build(level, slug, **kwargs):
+        if effort is None:
+            assert "writer_dispatch" not in kwargs
+        else:
+            kwargs["writer_dispatch"](writer="codex")
+        return {"lessons": [], "complete": False}
+
+    with (
+        patch("scripts.build.fresh.module.build_module", side_effect=build),
+        patch.object(cli, "dispatch_writer") as writer,
+    ):
+        assert (
+            main(
+                [
+                    "build",
+                    "a1",
+                    "fixture-module",
+                    "--lesson",
+                    "1",
+                    "--writer-seat",
+                    "codex:gpt-6.1-sol",
+                    "--repo-root",
+                    str(tmp_path),
+                    *(["--writer-effort", effort] if effort else []),
+                ]
+            )
+            == 1
+        )
+        if effort is None:
+            writer.assert_not_called()
+        else:
+            writer.assert_called_once_with(writer="codex", effort=effort)
+
+
+@pytest.mark.parametrize("command,seat", [("write", ["--writer", "codex"]), ("build", [])])
+def test_cli_rejects_invalid_writer_effort(command, seat):
+    with pytest.raises(SystemExit, match="2"):
+        _build_parser().parse_args([command, "a1", "fixture-module", "--lesson", "1", *seat, "--writer-effort", "max"])
 
 
 def test_cli_recap_flag_disagreement_fails(tmp_path, capsys):

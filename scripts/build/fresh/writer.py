@@ -6,6 +6,7 @@ The writer call:
 - runs scripts/delegate.py dispatch --agent <writer> --mode read-only --worktree
   --task-id write-<level>-<slug>-<n>-<attempt> --prompt-file ... --research-role writer
 - runs delegate.py wait <task-id> (wait is mandatory before reading result)
+- forwards explicit effort only when supplied; completed task effort is recorded or unknown
 - fails if wait reports non-done status
 - saves raw reply and writer metadata (including seat model and prompt hash) with atomic writes (0o644)
   even if schema validation fails
@@ -33,10 +34,12 @@ from scripts.build.fresh.draft_schema import (
     validate_draft,
 )
 from scripts.build.fresh.preflight import PreflightResult
+from scripts.build.fresh.regeneration import writer_task_id
 from scripts.curriculum.evidence import lock
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy")
+WRITER_EFFORTS: tuple[str, ...] = ("low", "medium", "high", "xhigh")
 
 
 class WriterCallError(Exception):
@@ -108,12 +111,14 @@ def dispatch_writer(
     delegate_script: Path | None = None,
     schemas_dir: Path | None = None,
     model: str | None = None,
+    effort: str | None = None,
 ) -> dict[str, Any]:
     """Execute the writer call, wait for completion, parse and validate the draft.
 
     Structurally refuses if preflight_result did not pass (#8431 §7 row 0, Finding 4).
     Saves raw reply and seat metadata before schema validation so provenance is preserved
     even on schema failure (#8431 §1, Finding 11).
+    Fake seats may write <task-id>.json beside their result to supply resolved model/effort.
     """
     # 0. Structural preflight gate (#8431 §7 row 0, Finding 4)
     if preflight_result is None or not preflight_result.passed:
@@ -121,9 +126,11 @@ def dispatch_writer(
 
     if writer not in ALLOWED_WRITERS:
         raise ValueError(f"Invalid writer {writer!r}. Explicit writer seat must be one of {ALLOWED_WRITERS}.")
+    if effort is not None and effort not in WRITER_EFFORTS:
+        raise ValueError(f"Invalid writer effort {effort!r}. Expected one of {WRITER_EFFORTS}.")
 
     root = repo_root or REPO_ROOT
-    task_id = f"write-{level}-{slug}-{lesson_n}-{attempt}"
+    task_id = writer_task_id(level, slug, lesson_n, attempt, effort)
     del_script = delegate_script or (root / "scripts/delegate.py")
 
     output_dir = Path(output_dir)
@@ -133,6 +140,7 @@ def dispatch_writer(
     writer_meta_file = output_dir / f"lesson-{lesson_n}.writer.yaml"
 
     seat_model = model
+    wait_state: dict[str, Any] = {}
 
     # 1. Execute task (either through fake seat or real delegate.py)
     if fake_seat is not None:
@@ -152,9 +160,17 @@ def dispatch_writer(
                 "--result-file",
                 str(result_file),
             ]
+            if effort is not None:
+                cmd.extend(("--effort", effort))
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=False)
             if proc.returncode != 0:
                 raise WriterCallError(f"Fake seat script failed with exit code {proc.returncode}: {proc.stderr}")
+        # Fake seats may emit the same task-record sidecar as delegate.py.
+        task_record = result_file.with_suffix(".json")
+        if task_record.is_file():
+            record = json.loads(task_record.read_text(encoding="utf-8"))
+            if isinstance(record, dict):
+                wait_state = record
     else:
         # Real delegate dispatch (#8431 §1, Finding 7)
         dispatch_cmd = [
@@ -175,6 +191,8 @@ def dispatch_writer(
         ]
         if model is not None:
             dispatch_cmd.extend(("--model", model))
+        if effort is not None:
+            dispatch_cmd.extend(("--effort", effort))
         disp_proc = subprocess.run(dispatch_cmd, capture_output=True, text=True, timeout=60, check=False)
         if disp_proc.returncode != 0:
             raise WriterCallError(
@@ -216,8 +234,11 @@ def dispatch_writer(
             raise WriterCallError(f"delegate.py wait state missing 'result_file': {wait_state}")
 
         result_file = Path(result_path_str)
-        if seat_model is None:
-            seat_model = wait_state.get("resolved_model") or wait_state.get("model")
+
+    seat_model = wait_state.get("resolved_model") or wait_state.get("model") or seat_model
+    seat_effort = wait_state.get("resolved_effort") or wait_state.get("effort")
+    if not isinstance(seat_effort, str) or not seat_effort.strip():
+        seat_effort = "unknown"
 
     # 2. Read result file
     if not result_file.is_file():
@@ -236,6 +257,7 @@ def dispatch_writer(
     meta = {
         "writer": writer,
         "model": seat_model,
+        "effort": seat_effort,
         "prompt_sha256": prompt_sha256,
         "task_id": task_id,
         "attempt": attempt,
@@ -259,6 +281,7 @@ def dispatch_writer(
         "task_id": task_id,
         "writer": writer,
         "model": seat_model,
+        "effort": seat_effort,
         "prompt_sha256": prompt_sha256,
         "draft_file": draft_file,
         "raw_file": raw_file,
