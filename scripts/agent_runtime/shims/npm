@@ -6,7 +6,8 @@
 # in a worktree empties the primary's real folder through the link. This shim
 # (and `npx`, a symlink to it) asks scripts/agent_runtime/npm_guard.py first:
 # in a worktree where such a link resolves outside the worktree, only clearly
-# read-only calls run and everything else is refused with the safe alternative;
+# read-only calls (and npx/npm exec that name no package manager and no install
+# word) run and everything else is refused with the safe alternative;
 # anywhere else every call passes through. Calls that run exec the real tool
 # with their arguments, stdin, stdout, stderr and exit code intact.
 

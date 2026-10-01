@@ -362,18 +362,31 @@ worktree resolves outside it (the symlinks into the primary checkout that
 dispatch worktrees receive), only clearly read-only calls run — `--version`
 or `--help`, and an allowlisted subcommand such as `run`, `test`, `ls`,
 `view` or `config get` with no install-like word (`ci`, `install`, `update`,
-`prune`, …) anywhere in the arguments. Everything else is refused, including
-`npx`, `npm exec` and global installs (`npm i -g`), and so are read-only
-calls the guard cannot classify, such as `npm view ci` or options with a
-separate value before the subcommand (write `--key=value`; `--prefix` and
-`--workspace` are understood). To install, `unlink` the link inside the
-worktree first so npm creates a worktree-local folder, or run the command
-outside the worktree. Without such a link every call passes through
-untouched. The decision lives in `scripts/agent_runtime/npm_guard.py`;
-`AGENT_REAL_NPM`/`AGENT_REAL_NPX` optionally pin the real tool. Not covered:
-calling npm by absolute path or through `node`, a `node_modules/.bin/npm`,
-a stripped `PATH`, pnpm/yarn directly, and a working directory outside any
-git worktree.
+`prune`, …) anywhere in the arguments. `npx`, `npm exec` and `npm x` also run
+(`npm --prefix site exec -- vitest run`, `npx @anthropic-ai/claude-code`):
+they launch an existing binary or fetch one into npm's own cache, not into
+the project's `node_modules`. They are refused only when an argument names a
+package manager (`npm`, `npx`, `pnpm`, `yarn`, `yarnpkg`, `corepack`, `bun`,
+`npm-cli.js`, `pnpm.cjs`, … as a name, version spec, scope or path, in a
+`--key=value` or in the shell command of `-c`/`--call`) or is an install word
+from the same list; `npx some-tool install` is therefore refused although the
+tool may not install anything. Everything else is refused, including global
+installs (`npm i -g`), and so are read-only calls the guard cannot classify,
+such as `npm view ci` or options with a separate value before the subcommand
+(write `--key=value`; `--prefix` and `--workspace` are understood). To
+install, `unlink` the link inside the worktree first so npm creates a
+worktree-local folder, or run the command outside the worktree. Without such
+a link every call passes through untouched. The decision lives in
+`scripts/agent_runtime/npm_guard.py`; `AGENT_REAL_NPM`/`AGENT_REAL_NPX`
+optionally pin the real tool. Not covered: calling npm by absolute path or
+through `node`, a `node_modules/.bin/npm`, a stripped `PATH`, pnpm/yarn
+directly, a working directory outside any git worktree, a tool launched by
+`npx`/`npm exec` that starts a package manager itself (an inner `npm` on
+`PATH` still reaches the shim; pnpm, yarn or an npm by path do not), npm
+config such as `npm_config_call` or an `.npmrc` `call=` supplying the
+command, and running from a checkout with a real `node_modules`, such as the
+primary, with `--prefix`/`-C` pointing into a dispatch worktree (that call
+passes through; workers do not run from there).
 
 ## Context file conventions
 

@@ -190,7 +190,76 @@ FALSE_REFUSALS = {
     "unknown-command": (["pkg", "get", "name"], "`pkg` is not on the guard's read-only allowlist"),
     "version-bump": (["version", "patch"], "`version patch` is not on the guard's read-only allowlist"),
     "config-set": (["config", "set", "x=y"], "`config set` is not on the guard's read-only allowlist"),
-    "exec": (["exec", "eslint"], "`npm exec` can launch any package manager"),
+    "exec-after-bare-option": (["--json", "exec", "vitest"], "could not tell whether `vitest`"),
+}
+
+# The Claude adapter's npx fallback: its prompt and settings arguments mention
+# npm, paths and install words in free text, which must not trip the guard.
+CLAUDE_FALLBACK = [
+    "@anthropic-ai/claude-code@latest",
+    "-p",
+    "--settings",
+    '{"hooks":{"PreToolUse":[{"command":"/opt/tools/npm guard"}]}}',
+    "--output-format",
+    "stream-json",
+    "--verbose",
+    "--",
+    "Fix the build: run npm ci, then /usr/bin/npm install and yarn add x.",
+]
+
+# npx and npm exec launching a tool that is not a package manager: they run an
+# existing binary or fetch one into npm's own cache, never rewriting node_modules.
+LAUNCHES = [
+    ("npm", ["--prefix", "site", "exec", "--", "vitest", "run"]),
+    ("npm", ["--prefix", "site", "exec", "--", "vitest", "run", "-t", "adds it"]),
+    ("npm", ["--prefix", "site", "exec", "--", "tsc", "--noEmit"]),
+    ("npm", ["--prefix", "site", "exec", "--", "playwright", "test", "e2e/atlas-practice.spec.ts"]),
+    ("npm", ["x", "eslint", "."]),
+    ("npx", ["playwright", "--version"]),
+    ("npx", ["vitest", "-c", "vitest.config.ts"]),
+    ("npx", ["@anthropic-ai/claude-code", "--version"]),
+    ("npx", CLAUDE_FALLBACK),
+]
+
+# npx and npm exec naming a package manager (as a name, spec, scope or path, in
+# a --key=value or in a -c/--call shell command) or an install word.
+LAUNCH_REFUSALS = {
+    "npx-npm-ci": ("npx", ["npm", "ci"], "`npm` names a package manager"),
+    "npx-npx": ("npx", ["npx", "pnpm"], "`npx` names a package manager"),
+    "npx-npm-install": ("npx", ["npm", "install"], "`npm` names a package manager"),
+    "npx-npm-version-spec": ("npx", ["npm@10", "install"], "`npm@10` names a package manager"),
+    "npx-yes-npm-ci": ("npx", ["--yes", "npm", "ci", "--ignore-scripts"], "`npm` names a package manager"),
+    "npx-absolute-npm": ("npx", ["/usr/bin/npm", "ci"], "`/usr/bin/npm` names a package manager"),
+    "npx-node-npm-cli": (
+        "npx",
+        ["node", "/usr/lib/node_modules/npm/bin/npm-cli.js", "ci"],
+        "names a package manager",
+    ),
+    "npx-pnpm-cjs": ("npx", ["./tools/pnpm.cjs", "store", "path"], "`./tools/pnpm.cjs` names a package manager"),
+    "npx-scoped-pnpm": ("npx", ["@pnpm/exe", "list"], "`@pnpm/exe` names a package manager"),
+    "npx-corepack": ("npx", ["corepack", "pnpm", "i"], "`corepack` names a package manager"),
+    "npx-yarn": ("npx", ["yarn"], "`yarn` names a package manager"),
+    "npx-yarnpkg": ("npx", ["yarnpkg", "--frozen-lockfile"], "`yarnpkg` names a package manager"),
+    "npx-bun": ("npx", ["bun", "x", "vite"], "`bun` names a package manager"),
+    "npx-package-option": ("npx", ["-p", "npm", "-c", "npm ci"], "`npm` names a package manager"),
+    "npx-call-shell": ("npx", ["-c", "echo start && npm ci"], "`npm` names a package manager"),
+    "npx-call-shell-pnpm": ("npx", ["--call=cd site; pnpm i"], "`pnpm` names a package manager"),
+    "npx-call-subshell": ("npx", ["-c", "node $(which npm) ci"], "`npm` names a package manager"),
+    "npx-version-then-pnpm": ("npx", ["--version", "pnpm", "install"], "`pnpm` names a package manager"),
+    "npx-install-word": ("npx", ["some-tool", "install"], "`install` is an install word"),
+    "npx-call-install-word": ("npx", ["-c", "some-tool add left-pad"], "`add` is an install word"),
+    "exec-pnpm-install": ("npm", ["exec", "--", "pnpm", "install"], "`pnpm` names a package manager"),
+    "exec-yarn-add": ("npm", ["exec", "--", "yarn", "add", "x"], "`yarn` names a package manager"),
+    "exec-package-npm": ("npm", ["exec", "--package=npm", "--", "npm", "ci"], "`npm` names a package manager"),
+    "x-npm-ci": ("npm", ["x", "npm", "ci"], "`npm` names a package manager"),
+    "exec-call-install": ("npm", ["exec", "-c", "npm install"], "`npm` names a package manager"),
+    "exec-yarn": ("npm", ["exec", "yarn"], "`yarn` names a package manager"),
+    "exec-yarn-version": ("npm", ["exec", "--", "yarn", "--version"], "`yarn` names a package manager"),
+    "exec-prefix-install-word": (
+        "npm",
+        ["--prefix", "site", "exec", "--", "some-tool", "ci"],
+        "`ci` is an install word",
+    ),
 }
 
 
@@ -352,32 +421,12 @@ def test_global_installs_are_refused_while_the_link_exists(layout, case):
     assert "run the command outside this worktree" in proc.stderr
 
 
-@pytest.mark.parametrize(
-    "tool,args",
-    [
-        ("npx", ["npm", "ci"]),
-        ("npx", ["npm@10", "install"]),
-        ("npx", ["--yes", "npm", "ci", "--ignore-scripts"]),
-        ("npx", ["-p", "npm", "-c", "npm ci"]),
-        ("npx", ["-c", "echo start && npm ci"]),
-        ("npx", ["yarn"]),
-        ("npx", ["pnpm", "install"]),
-        ("npx", ["eslint", "."]),
-        ("npx", ["eslint", "--version"]),
-        ("npx", ["--version", "pnpm", "install"]),
-        ("npm", ["exec", "--", "npm", "ci"]),
-        ("npm", ["x", "npm", "ci"]),
-        ("npm", ["exec", "-c", "npm install"]),
-        ("npm", ["exec", "yarn"]),
-        ("npm", ["--prefix", "site", "exec", "--", "vitest"]),
-        ("npm", ["exec", "--", "yarn", "--version"]),
-    ],
-    ids=lambda value: value if isinstance(value, str) else " ".join(value),
-)
-def test_npx_and_npm_exec_are_refused(layout, tool, args):
+@pytest.mark.parametrize("case", sorted(LAUNCH_REFUSALS))
+def test_npx_and_npm_exec_launching_a_package_manager_are_refused(layout, case):
+    tool, args, reason = LAUNCH_REFUSALS[case]
     proc = _run(layout, tool, args, layout["worktree"])
     _assert_refused(layout, proc)
-    assert "can launch any package manager" in proc.stderr or "rewrites node_modules" in proc.stderr
+    assert reason in proc.stderr
 
 
 @pytest.mark.parametrize("case", sorted(FALSE_REFUSALS))
@@ -441,6 +490,39 @@ def test_read_only_calls_pass_through_in_a_protected_worktree(layout, args, rela
 def test_npx_version_and_help_pass_through(layout, args):
     proc = _run(layout, "npx", args, layout["worktree"])
     _assert_passed_through(layout, proc, "npx", args, layout["worktree"], 0)
+
+
+def _launch_id(value):
+    return value if isinstance(value, str) else " ".join(value)[:60]
+
+
+@pytest.mark.parametrize("tool,args", LAUNCHES, ids=_launch_id)
+@pytest.mark.parametrize("relative_cwd", [".", "site"])
+def test_npx_and_npm_exec_launching_a_tool_pass_through(layout, tool, args, relative_cwd):
+    """Arguments, stdin, stdout, stderr and the exit code reach the real tool unchanged."""
+    for name in ("npm", "npx"):
+        (layout["fake_bin"] / name).write_text(
+            '#!/usr/bin/env bash\nprintf "%s\\0" "$@" > "$FAKE_NPM_LOG"\ncat\necho "fake-stderr" >&2\nexit 9\n',
+            encoding="utf-8",
+        )
+    cwd = layout["worktree"] / relative_cwd
+    proc = subprocess.run(
+        [str(layout["shim_dir"] / tool), *args],
+        cwd=cwd,
+        env={
+            "PATH": f"{layout['shim_dir']}:{layout['fake_bin']}:/usr/bin:/bin",
+            "HOME": str(layout["tmp"]),
+            "FAKE_NPM_LOG": str(layout["log"]),
+        },
+        input="piped\n",
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert (proc.returncode, proc.stdout, proc.stderr) == (9, "piped\n", "fake-stderr\n")
+    assert layout["log"].read_text(encoding="utf-8").split("\0")[:-1] == args
+    assert _sentinels_intact(layout)
 
 
 ANYTHING = [
@@ -660,8 +742,22 @@ def test_pinned_real_tool_is_used(layout):
         ("npm", ["cache", "clean"], False),
         ("npm", ["LS"], False),
         ("npx", ["--version"], True),
-        ("npx", ["-y", "--version"], False),
-        ("npx", [], False),
+        ("npx", ["-y", "--version"], True),
+        ("npx", [], True),
+        ("npx", ["vitest", "--reporter=verbose"], True),
+        ("npx", ["--package=@scope/tool@1.2.3", "tool"], True),
+        ("npx", ["--package=npm@10", "tool"], False),
+        ("npx", ["-c=npm ci"], False),
+        ("npx", ["NPM"], False),
+        ("npx", ["pnpm.exe"], False),
+        ("npx", ["npm:pnpm@9"], False),
+        ("npx", ["npm-check-updates"], True),
+        ("npx", ["tool", "--save=install"], False),
+        ("npx", ["-c", "tool run build"], True),
+        ("npm", ["exec"], True),
+        ("npm", ["--json", "exec", "ls"], True),
+        ("npm", ["exec", "--", "tool", "audit", "fix"], False),
+        ("npm", ["run", "x", "ci"], False),
     ],
     ids=lambda value: value if isinstance(value, str) else (" ".join(value) if isinstance(value, list) else str(value)),
 )

@@ -18,9 +18,18 @@ resolution are deliberately not modelled, so none of them can steer the guard:
 * No protected path of the current git worktree resolves outside it: every call
   passes through untouched, without looking at the arguments.
 * At least one does: only clearly read-only calls pass, namely a version/help
-  early exit, or an allowlisted read-only subcommand with no destructive command
-  word anywhere in the arguments. Everything else is refused, including
-  ``npx``, ``npm exec`` and global installs.
+  early exit, an allowlisted read-only subcommand with no destructive command
+  word anywhere in the arguments, or ``npx``/``npm exec`` whose arguments name
+  no package manager and no install word. Everything else is refused, including
+  global installs.
+
+``npx`` and ``npm exec`` run an existing binary or fetch a package into npm's
+own cache; they do not rewrite the project's node_modules. The hazard is the
+tool they launch: a package manager (or an install through some other tool)
+writes through the link, and pnpm, yarn or an npm reached by path bypass this
+shim. So any argument naming a package manager, as a name, spec, scope or path,
+in a ``--key=value`` or in the shell command of ``-c``/``--call``, refuses the
+call, and so does any argument that is an install word.
 
 Standard library only: the shim runs it with ``-I -S``.
 """
@@ -28,6 +37,7 @@ Standard library only: the shim runs it with ``-I -S``.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import sys
 from collections.abc import Sequence
@@ -78,6 +88,17 @@ READ_ONLY_COMMANDS: dict[str, frozenset[str] | None] = {
     "cache": frozenset({"ls", "verify"}),
     "version": frozenset(),  # bare ``npm version`` only prints versions
 }  # fmt: skip
+
+EXEC_COMMANDS = frozenset({"exec", "x"})
+
+# Package managers and their entry scripts (compared without a script extension).
+PACKAGE_MANAGERS = frozenset(
+    {"npm", "npx", "npm-cli", "npx-cli", "pnpm", "pnpx", "yarn", "yarnpkg", "corepack", "bun", "bunx"}
+)
+SCRIPT_EXTENSIONS = frozenset({"js", "cjs", "mjs", "cmd", "exe", "ps1"})
+
+# npx/npm exec options whose value is a shell command line.
+SHELL_OPTIONS = frozenset({"-c", "--call"})
 
 
 def worktree_root(cwd: Path) -> Path | None:
@@ -176,13 +197,65 @@ def _early_exit(tool: str, args: Sequence[str], kinds: Sequence[str]) -> bool:
     )
 
 
+def _names_package_manager(word: str) -> bool:
+    """True for a package-manager name, spec, scope or path (``npm@10``, ``@pnpm/exe``, ``/usr/bin/npm``).
+
+    Text with whitespace (a prompt passed to the launched tool) names nothing.
+    """
+    if not word or any(char.isspace() for char in word):
+        return False
+    for part in re.split(r"[/\\:]", word.lower()):
+        name = part.lstrip("@").split("@", 1)[0]
+        stem, dot, extension = name.rpartition(".")
+        if (stem if dot and extension in SCRIPT_EXTENSIONS else name) in PACKAGE_MANAGERS:
+            return True
+    return False
+
+
+def _launch_words(args: Sequence[str]) -> list[str]:
+    """The arguments, ``--key=value`` values and the words of ``-c``/``--call`` shell commands."""
+    words: list[str] = []
+    shell_next = False
+    for token in args:
+        key, equals, value = token.partition("=")
+        if shell_next:
+            words += re.split(r"[\s;&|()<>`'\"$]+", token)
+        elif token.startswith("-") and equals:
+            words += re.split(r"[\s;&|()<>`'\"$]+", value) if key in SHELL_OPTIONS else [value]
+        else:
+            words.append(token)
+        shell_next = not shell_next and token in SHELL_OPTIONS
+    return words
+
+
+def _launch_refusal(launcher: str, args: Sequence[str]) -> str | None:
+    """Why ``npx``/``npm exec`` with ``args`` could reach a package manager, or None."""
+    for word in _launch_words(args):
+        if _names_package_manager(word):
+            return (
+                f"`{word}` names a package manager; {launcher} may launch other tools here, but a "
+                "package manager would write through the link."
+            )
+        if word in DESTRUCTIVE_WORDS:
+            return (
+                f"`{word}` is an install word; {launcher} is refused when any argument is one rather "
+                "than guess whether the launched tool installs."
+            )
+    return None
+
+
 def refusal_reason(tool: str, args: Sequence[str]) -> str | None:
     """Why ``tool ARGS`` is not clearly read-only, or None when it is."""
     kinds = _kinds(args)
     if _early_exit(tool, args, kinds):
         return None
     if tool == "npx":
-        return "npx can launch any package manager, which would write through the link."
+        return _launch_refusal("npx", args)
+    words = [index for index, kind in enumerate(kinds) if kind in ("positional", "maybe-value")]
+    if any(args[index] in EXEC_COMMANDS for index in words):
+        reason = _launch_refusal("npm exec", args)
+        if reason:
+            return reason
     destructive = [token for token in args if token in DESTRUCTIVE_WORDS]
     if destructive:
         return (
@@ -191,11 +264,13 @@ def refusal_reason(tool: str, args: Sequence[str]) -> str | None:
         )
     if "audit" in args and "fix" in args:
         return "`audit fix` rewrites node_modules."
-    words = [index for index, kind in enumerate(kinds) if kind in ("positional", "maybe-value")]
     for position, index in enumerate(words):
         word = args[index]
-        if word in ("exec", "x"):
-            return "`npm exec` can launch any package manager, which would write through the link."
+        if word in EXEC_COMMANDS and position == 0:
+            # Its arguments passed the launch check; as a maybe-value the next word decides.
+            if kinds[index] == "positional":
+                return None
+            continue
         if word not in READ_ONLY_COMMANDS:
             if kinds[index] == "maybe-value" or position > 0:
                 return (
@@ -220,8 +295,8 @@ def refusal_message(tool: str, args: Sequence[str], root: Path, links: Sequence[
     unlinks = " && ".join(f"unlink {link}" for link, _ in links)
     lines += [
         "       While such a link exists only clearly read-only npm commands run here; installs,",
-        "       global installs (-g), npx and npm exec are refused because they could empty the",
-        "       shared folder through the link.",
+        "       global installs (-g), and npx or npm exec naming a package manager or an install",
+        "       word are refused because they could empty the shared folder through the link.",
         f"       Safe alternative: remove the link inside this worktree first (`{unlinks}`",
         "       deletes only the link, never its target), then install here so npm creates a",
         "       worktree-local node_modules; or run the command outside this worktree.",
