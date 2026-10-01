@@ -8,10 +8,12 @@ deterministically without data/, MCP, or Node.
 from __future__ import annotations
 
 import pytest
+import yaml
 
 import scripts.build.linear_pipeline as lp
 import scripts.build.verify_shippable as vs
 from scripts.build import promote_quality_gate as pqg
+from scripts.generate_mdx.core import generate_mdx
 
 pytestmark = pytest.mark.reads_content
 
@@ -194,21 +196,40 @@ def test_fresh_path_resolution(tmp_path):
     assert legacy_mod == tmp_path / "curriculum" / "l2-uk-en" / "a1" / "my-module"
 
 
-def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch):
-    """Test verify with fresh=True validates mdx files in site/src/content/docs."""
-    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
+def _mk_fresh(tmp_path, *, ids=(1, 2), level="a1"):
+    site_mod = tmp_path / "site" / "src" / "content" / "docs" / level / "greetings"
     site_mod.mkdir(parents=True)
-    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
-
-    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    for n in ids:
+        (site_mod / f"{n}.mdx").write_text(
+            generate_mdx(
+                md_content=f"# Lesson {n}\n", module_num=n, meta_data={"title": f"Lesson {n}"}, level=level, fresh=True
+            ),
+            encoding="utf-8",
+        )
+    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / level
     plan_dir.mkdir(parents=True)
     plan_file = plan_dir / "greetings.yaml"
-    plan_file.write_text("module: greetings\n", encoding="utf-8")
+    plan_file.write_text(
+        yaml.safe_dump({"plan_schema": 2, "slug": "greetings", "lessons": [{"n": n} for n in ids]}), encoding="utf-8"
+    )
+    return site_mod, plan_file
 
-    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
+
+@pytest.mark.parametrize("level,ids", [("a1", (1, 2)), ("a2", (1,)), ("a2", (9,)), ("b1", (1,))])
+def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch, level, ids):
+    """Test verify with fresh=True validates mdx files in site/src/content/docs."""
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=ids, level=level)
+    (site_mod / "index.mdx").write_text("# Landing\n", encoding="utf-8")
+    rendered = []
+
+    def render(text):
+        rendered.append(text)
+        return {"passed": True, "message": "ok", "failures": []}
+
+    monkeypatch.setattr(lp, "run_mdx_render_gate", render)
 
     rep = vs.verify(
-        "a1",
+        level,
         "greetings",
         module_dir=site_mod,
         plan_path=plan_file,
@@ -217,21 +238,25 @@ def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch):
     assert rep["shippable"] is True
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["mdx_render"] is True
+    assert steps["fresh_lessons"] is True
+    assert all(steps[f"fresh_tabs.{n}"] for n in ids)
+    assert len(rendered) == len(ids) + 1
 
 
 def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
     """Test verify with fresh=True and astro_build=True sets render_fully_validated."""
-    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
-    site_mod.mkdir(parents=True)
-    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
-
-    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
-    plan_dir.mkdir(parents=True)
-    plan_file = plan_dir / "greetings.yaml"
-    plan_file.write_text("module: greetings\n", encoding="utf-8")
+    site_mod, plan_file = _mk_fresh(tmp_path)
 
     monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
-    monkeypatch.setattr(vs, "_astro_build", lambda log_path: True)
+    monkeypatch.setattr(vs, "PROJECT_ROOT", tmp_path)
+    log_dir = tmp_path / "batch_state" / "verify_shippable"
+    assert not log_dir.exists()
+
+    def astro(log_path):
+        log_path.write_text("fixture build green\n", encoding="utf-8")
+        return True
+
+    monkeypatch.setattr(vs, "_astro_build", astro)
 
     rep = vs.verify(
         "a1",
@@ -245,18 +270,12 @@ def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
     assert rep["render_fully_validated"] is True
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["astro_build"] is True
+    assert (log_dir / "a1-greetings.astro-build.log").read_text() == "fixture build green\n"
 
 
 def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
     """Test verify with fresh=True reports not shippable when render gate fails."""
-    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
-    site_mod.mkdir(parents=True)
-    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
-
-    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
-    plan_dir.mkdir(parents=True)
-    plan_file = plan_dir / "greetings.yaml"
-    plan_file.write_text("module: greetings\n", encoding="utf-8")
+    site_mod, plan_file = _mk_fresh(tmp_path)
 
     monkeypatch.setattr(
         lp,
@@ -274,6 +293,101 @@ def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
     assert rep["shippable"] is False
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["mdx_render"] is False
+
+
+@pytest.mark.parametrize("missing", [(2,), (2, 3)])
+def test_verify_fresh_missing_planned_lessons(tmp_path, monkeypatch, missing):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1, 2, 3))
+    for n in missing:
+        (site_mod / f"{n}.mdx").rename(site_mod / f"lesson-{n}.mdx")
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)
+    assert rep["shippable"] is False
+    step = next(s for s in rep["steps"] if s["step"] == "fresh_lessons")
+    assert step["reason"] == "missing_planned_lessons"
+    assert step["planned_count"] == 3
+    assert step["missing_count"] == len(missing)
+    assert step["missing_lesson_ids"] == list(missing)
+    assert step["detail"] == f"missing {len(missing)} of 3 planned lessons: ids {list(missing)}"
+
+
+def test_verify_fresh_landing_only(tmp_path, monkeypatch):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1,))
+    (site_mod / "1.mdx").rename(site_mod / "index.mdx")
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)
+    assert rep["shippable"] is False
+    by_step = {s["step"]: s for s in rep["steps"]}
+    assert by_step["fresh_lessons"]["reason"] == "missing_planned_lessons"
+    assert by_step["fresh_lessons"]["missing_lesson_ids"] == [1]
+    assert by_step["fresh_landing"]["reason"] == "landing_only"
+    assert by_step["mdx_render"]["passed"] is True
+
+
+@pytest.mark.parametrize(
+    "uk,en", [("Урок", "Lesson"), ("Словник", "Vocabulary"), ("Вправи", "Activities"), ("Ресурси", "Resources")]
+)
+def test_verify_fresh_missing_lesson_tab(tmp_path, monkeypatch, uk, en):
+    site_mod, plan_file = _mk_fresh(tmp_path)
+    page = site_mod / "2.mdx"
+    page.write_text(page.read_text().replace(f'label="{uk} — {en}"', 'label="Other"'), encoding="utf-8")
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)
+    assert rep["shippable"] is False
+    by_step = {s["step"]: s for s in rep["steps"]}
+    assert by_step["fresh_tabs.1"]["passed"] is True
+    assert by_step["fresh_tabs.2"]["reason"] == "missing_lesson_tabs"
+    assert by_step["fresh_tabs.2"]["lesson_id"] == 2
+    assert by_step["fresh_tabs.2"]["missing_tabs"] == [uk]
+
+
+@pytest.mark.parametrize("wrapper", ["<!-- {} -->", "{{/* {} */}}", "```mdx\n{}\n```", "~~~mdx\n{}\n~~~"])
+def test_verify_fresh_tab_examples_do_not_count(tmp_path, monkeypatch, wrapper):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1,))
+    page = site_mod / "1.mdx"
+    tab_markup = page.read_text().split('<Tabs syncKey="module-tab">', 1)[1].split("</Tabs>", 1)[0]
+    page.write_text(
+        "# Урок Словник Вправи Ресурси\n" + wrapper.format('<Tabs syncKey="module-tab">' + tab_markup + "</Tabs>"),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)
+    assert rep["shippable"] is False
+    step = next(s for s in rep["steps"] if s["step"] == "fresh_tabs.1")
+    assert step["missing_tabs"] == ["Урок", "Словник", "Вправи", "Ресурси"]
+
+
+@pytest.mark.parametrize(
+    "plan",
+    [
+        "[invalid",
+        "[]",
+        "module: old",
+        "plan_schema: 2\nlessons: []",
+        "plan_schema: 2\nlessons: [{n: 1}, {n: 1}]",
+        "plan_schema: 2\nlessons: [{n: true}]",
+        "plan_schema: 2\nlessons: [{n: ../index}]",
+        "plan_schema: 2\nlessons: [{n: 0}]",
+        "plan_schema: 2\nlessons: [null]",
+    ],
+)
+def test_verify_fresh_invalid_plan_fails_closed(tmp_path, monkeypatch, plan):
+    site_mod, plan_file = _mk_fresh(tmp_path)
+    plan_file.write_text(plan, encoding="utf-8")
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)
+    assert rep["shippable"] is False
+    assert rep["steps"][0]["reason"] == "invalid_lesson_plan"
+
+
+def test_verify_fresh_skipped_lesson_render_blocks_even_green_astro(tmp_path, monkeypatch):
+    site_mod, plan_file = _mk_fresh(tmp_path)
+    monkeypatch.setattr(vs, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(vs, "_astro_build", lambda p: True)
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": None})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, astro_build=True)
+    assert rep["render_fully_validated"] is True
+    assert rep["shippable"] is False
 
 
 def test_verify_shippable_no_flag_default_paths(monkeypatch):
