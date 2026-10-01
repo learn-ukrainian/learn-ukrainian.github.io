@@ -4,6 +4,11 @@
 --task-id ...`` runs the active validator in-process (``validate_review``; nothing of its
 rejections is re-implemented), then:
 
+The raw return must match the bound task's whole saved result (#9025). A bare
+YAML mapping is kept unchanged; otherwise one yaml/yml fenced mapping is
+extracted, and only that mapping (with any prompt-hash attestation) is saved.
+Missing, multiple or unusable YAML fences refuse before anything is recorded.
+
 1. reserves ``lesson-<n>.review.<attempt_id>.yaml`` (a plan review: ``plan-review.<attempt_id>.yaml``) in the
    module's ``_state`` directory with create-exclusive semantics and writes the return's bytes to it (fsynced
    before the name appears). The bytes validated, hashed (``return_sha256``) and stored are the in-memory
@@ -81,7 +86,7 @@ from scripts.build.fresh.manifest import changed_inputs
 from scripts.build.fresh.path_guard import checked_existing_path
 from scripts.review import findings_db, fixloop, second_seat
 from scripts.review.seeds import manifest as seed_manifest
-from scripts.review.validate.validate import validate_review
+from scripts.review.validate.validate import ReviewReturnError, extract_review_yaml, validate_review
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 TREE = "curriculum/l2-uk-en"
@@ -285,14 +290,18 @@ def attested_return(
     attempt_id: str,
     manifest_sha256: str,
 ) -> bytes:
-    """The return with its prompt hash attested; a placeholder that cannot be attested refuses (nothing is recorded).
+    """Extract the mapping and attest its prompt hash, binding the original whole return first.
 
     A formal bound return must first match its task's saved result and terminal hash, including when it carries
     a real prompt hash. An unbound custom return without the placeholder is passed to the validator. One with it would only be
     rejected as ``schema_invalid`` and spend the attempt id (ids are never reused, #8517), so each way the
     attestation can fail is named and raised here, before anything is saved or written.
     """
-    if not _carries_placeholder(data):
+    try:
+        extracted = extract_review_yaml(data)
+    except ReviewReturnError as exc:
+        raise RecordError(str(exc), exc.code) from exc
+    if not _carries_placeholder(extracted):
         # Older custom returns with a real hash retain their validator path. A
         # formal attempt cannot bypass the task binding by supplying a real hash.
         task = json.loads((Path(tasks_dir) / f"{task_id}.json").read_bytes())
@@ -300,7 +309,7 @@ def attested_return(
             _verify_task_return(
                 data, task_id, tasks_dir, review_id=review_id, attempt_id=attempt_id, manifest_sha256=manifest_sha256
             )
-        return data
+        return extracted
 
     def refuse(cause: str) -> RecordError:
         return RecordError(
@@ -325,8 +334,8 @@ def attested_return(
         raise refuse(f"the prompt cannot be rendered from {manifest_path} ({why})")
     if rendered != sent:
         raise refuse(f"the dispatch hash {sent} is not the hash of this attempt's rendered prompt ({rendered})")
-    filled = attest_prompt_sha256(data, sent)
-    if filled == data:
+    filled = attest_prompt_sha256(extracted, sent)
+    if filled == extracted:
         raise refuse(
             "the placeholder line is not in the form the recorder can replace (an indented, matching-quoted line in reviewer:)"
         )
@@ -530,7 +539,10 @@ def record_return(
         if review_path is None or ledger_path is None:
             raise RecordError("a review return needs the review file and --ledger")
         data = Path(review_path).read_bytes()
-        loaded = _load_yaml_bytes(data)
+        try:
+            loaded = _load_yaml_bytes(extract_review_yaml(data))
+        except ReviewReturnError as exc:
+            raise RecordError(str(exc), exc.code) from exc
         attempt_block = loaded.get("attempt") if isinstance(loaded, dict) else None
         echoed = attempt_block if isinstance(attempt_block, dict) else {}
     ids = {"review_id": review_id or echoed.get("review_id"), "attempt_id": attempt_id or echoed.get("attempt_id")}

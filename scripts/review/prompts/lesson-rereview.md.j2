@@ -145,9 +145,12 @@ Either `"no"` or `"yes — <what a script would check>"` (matching `^yes .+$`).
 
 ### Rules the validator enforces on the return
 
-A return that breaks any of these is recorded as REJECTED and the attempt is spent, however good the review is. Check the finished return against every line before answering:
+A return that breaks these rules is refused before recording or recorded as REJECTED; a recorded rejection spends the attempt, however good the review is. Check the finished return against every line before answering:
 
-- The return is one YAML mapping.
+- The return is one YAML mapping, either bare or inside exactly one fenced `yaml` block (`yml` is also accepted). Prose outside the block is ignored and never recorded.
+- A return that is not a bare mapping must contain a fenced YAML block whose info string is exactly `yaml` or `yml`; no such block is refused.
+- More than one fenced YAML block is refused, including another block in the prose after the first.
+- The fenced YAML block must be closed and parse as one mapping; empty, scalar, sequence, malformed or multiple-document content is refused.
 - The return conforms to `schemas/review-v1.schema.json`: every required field is present, no field the schema does not define is added, and each finding `id` has the form `F-<number>`. Each finding has `id`, `status` (`active`, `resolved` or `persisting`), `locations`, `dimension` (`job`, `language`, `learner_fit`, `activity`, `evidence_use`, `english`, `fact`, `recap`, `evidence_gap`, `plan_defect` or `engine_or_gate`), `severity` (`BLOCKER`, `MAJOR` or `MINOR`) and `claim`. The one field you do not fill is `reviewer.prompt_sha256`: keep the return template's line `prompt_sha256: "<prompt_sha256>"` exactly as printed (the placeholder, in quotes); the recorder replaces it with the attested prompt hash before validation.
 - `kind` is `lesson`, the kind of the manifest this prompt was rendered from.
 - `attempt.manifest_sha256` is exactly the Manifest SHA256 printed at the top of this prompt.
