@@ -133,10 +133,10 @@ Per the issue residual policy, items outside the documentation sweep or belongin
    - **Description:** Delivery plan document outside denominator roots contains cross-references to internal operational board tracker issues at lines 17 and 181.
    - **Owner:** Open-Model-Data Driver.
 
-8. **V4 Runtime Python Package Private Tracker Citations:**
-   - **Path:** `packages/v4-runtime/src/learn_ukrainian_v4_runtime/` (~15 Python modules including `v4_a3_builder_packet.py`, `v4_a4`–`v4_a13`, `v4_per_slot_private_factory.py`, `v4_public_slot_commitment_assignment.py`, `v4_source_byte_ingestion_admission.py`, `v4_a3_heldout_family_assignment.py`, and 13 provenance JSON blobs)
+8. **V4 Runtime Python Package & Open-Model-Data Test Fixture Citations:**
+   - **Path:** `packages/v4-runtime/src/learn_ukrainian_v4_runtime/` (14 Python modules: `v4_a10_pilot_review_gate.py`, `v4_a11_silver_release_gate.py`, `v4_a12_gold_overlay_gate.py`, `v4_a13_cleanup_recovery.py`, `v4_a3_builder_packet.py`, `v4_a4_deterministic_extraction.py`, `v4_a5_evidence_enrichment.py`, `v4_a6_blind_arena.py`, `v4_a7_original_row_factory.py`, `v4_a8_admission_assembly.py`, `v4_a9_evaluation_package.py`, `v4_per_slot_private_factory.py`, `v4_public_slot_commitment_assignment.py`, `v4_source_byte_ingestion_admission.py`; and 13 provenance JSON blobs) plus 11 test modules under `tests/projects/open_model_data/`
    - **Category:** Category D (Private Tracker Citations)
-   - **Description:** Python package runtime modules and provenance JSON blobs outside denominator roots carry `"private_operational_board": 622`.
+   - **Description:** Python package runtime modules, provenance JSON blobs, and test fixture definitions outside denominator roots carry `"private_operational_board": 622`.
    - **Owner:** Open-Model-Data Driver.
 
 9. **Historical Design Document Private Tracker Citations:**
@@ -144,6 +144,19 @@ Per the issue residual policy, items outside the documentation sweep or belongin
    - **Category:** Category D (Private Tracker Citations)
    - **Description:** Historical architectural design documents outside denominator roots cite internal issue tracker numbers at line 27 and lines 1 and 88.
    - **Owner:** Infra Driver.
+
+10. **Workflows, Scripts, Planning Documents & Test Fixtures Outside Denominator Roots:**
+    - **Path / Repeatable Search:** `git grep -nI -iE 'private.*#[0-9]'` (outside the swept denominator roots `agents_extensions/shared/`, `docs/runbooks/`, `docs/best-practices/`, and `docs/audits/`):
+      - `docs/plans/2026-09-02-ci-sweet-spot.md:5`: historical CI plan cites private issue tracker with URL
+      - `.github/workflows/security-audit.yml:8`, `scripts/ci/audit_dependencies.py:6`, `scripts/config/pip-audit-ignore.yaml:2`: dependency audit workflow and scripts cite private security audit tracking issue
+      - `scripts/audit/curriculum_manifest_canary.py:19`: curriculum manifest canary script cites private canary tracking issue
+      - `scripts/control_plane/storage.py:3`, `scripts/fleet_comms/artifacts.py:10`: control plane storage and fleet comms scripts cite private storage seam issue
+      - `scripts/fleet_comms/cli.py:227`, `scripts/fleet_comms/fleet_overview.py:1`: fleet comms tools cite private seat issue
+      - `scripts/orchestration/reconcile_sweep.py:237`: reconciliation sweep script cites private issue
+      - `tests/test_hramatka_scope_gate.py:188`: test fixture assertion string cites private board number
+    - **Category:** Category D (Private Tracker Citations)
+    - **Description:** Operational Python scripts, CI GitHub workflows, planning documents, and test fixture strings outside the documentation sweep denominator contain internal tracker references.
+    - **Owner:** Infra Driver.
 
 ---
 

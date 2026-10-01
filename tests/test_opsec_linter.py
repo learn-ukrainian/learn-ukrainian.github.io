@@ -243,12 +243,15 @@ def test_private_tracker_citation_detected_in_public_docs():
         "private board [#622](https://github.com)\n"
         "private [#622](https://github.com)\n"
         "private hramatka #451–#458\n"
+        "private Hramatka board #349\n"
+        "private repo issue #5\n"
+        "private hramatka issue #451\n"
     )
     findings = check_content(
         sample_text,
         "docs/runbooks/agent-seat-onboarding.md",
     )
-    assert len(findings) == 11
+    assert len(findings) == 14
     for _line_idx, _matched, desc in findings:
         assert "Private tracker citation" in desc
 
