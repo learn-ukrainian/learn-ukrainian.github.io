@@ -19,6 +19,34 @@
 | style_guide | 279 | Антоненко-Давидович — style guide |
 | **TOTAL** | **663,673** | |
 
+## Curated resource discovery (#9409)
+
+The Sources MCP tool `search_resources` searches `resource_catalogue` and its
+FTS5 index. Incremental ingestion reads all podcast/raw-list/module-mapping,
+external-resource, ULP article, trusted-source, Dobra Forma, Talk Ukrainian and
+Verba catalogues; no media or premium content is downloaded. Existing
+`external_articles` text is linked by URL or ULP/FMU episode identity and indexed
+for Ukrainian-word discovery, with chunk provenance and a `linked_resources` count.
+
+```bash
+<shared-project-python> -m scripts.ingest.resource_catalogue_ingest \
+  --ingest --db data/sources-copy.db
+```
+
+`--ingest` enables the metadata ingestion; `--no-network` supports offline tests
+and preserves prior link checks. Every file is reconciled by source-entry locator
+and normalized URL. Unspecified access remains `unknown`; `free_only` needs a
+recorded free resource or audio fact. ULP/FMU top-level access is `mixed`, with
+free audio and premium notes recorded separately. Responses cap hits and
+provenance without truncating stored catalogue entries; before ingest the tool
+returns a typed `resource_catalogue_missing` error.
+HTTP status and UTC date track link availability. The full-corpus rebuild does
+not create these rows: rerun this incremental ingest afterward. Rehearsal on a
+local backup precedes independent review and merge; the accountable
+driver activates and verifies the live database separately. See
+[corpus inventory](corpus-inventory.md#curated-listening-and-reading-catalogues-9409)
+for the denominator, access caveats and search interface.
+
 ## Need ingestion
 
 | Dictionary | JSONL | Entries | Command |
