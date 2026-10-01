@@ -95,17 +95,18 @@ tie-breakers.
    limits; cost is never a reason to hold back — passivity is the failure mode, not spend).
    **Driver routing is enforced** (operator GO 2026-08-06): every dispatch needs a
    `ROUTING_CARD_V1` (tier · model×harness · advisor packet · alternatives); default bounded
-   work is **authority brief (Fable or Astra) → heap/practical implement**, not a mid-brain
-   solo marathon. Session breadth floor + handoff report:
+   work is **Sol 6.1 advisory envelope → bounded worker** (#9275); Sol is the default brief
+   author. Fable/Astra are last-resort design advisors; their briefs do not admit bounded
+   workers. Session breadth floor + handoff report:
    `fleet-driver-routing.md` + `python -m scripts.fleet.driver_breadth_report`.
 5. **Know each model's strengths and weaknesses; route by fit.** The canonical per-task routing
    table is `model-assignment.md` (served at `/api/rules`). Model names are examples, not
    constants — confirm current capability before relying on a specific string. Distinguish the
    MODEL from the HARNESS it rides in (see "Harness vs model" in `model-assignment.md`):
    hermes and opencode each host many models and add their own capabilities.
-   **Tiers:** authority (Fable/Astra) · practical (Terra/Sonnet/Flash-high) · heap (Luna and
-   weaker with a complete advisor packet). Fable remains the Anthropic authority seat even
-   under a small Claude sub — reach via native Claude pin or **Cursor → Fable**.
+   **Tiers:** authority (Opus 5.5 / Sol 6.1 first; Fable/Astra last resort) · practical
+   (Terra/Sonnet/Flash-high) · heap (Luna and weaker with a complete Sol advisory envelope).
+   Last-resort Fable uses a native Claude pin first, then **Cursor → Fable**.
    **Kimi: web, UI and backend coding only — no Ukrainian-language content, no reviews,
    consults, design or rules.**
 6. **Limits happen — handle them.** Providers rate-limit and quota out; that is normal
