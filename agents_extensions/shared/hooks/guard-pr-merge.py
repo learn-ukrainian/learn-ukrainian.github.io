@@ -347,7 +347,9 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
     (`&&(`, `)&&`) remain separate events. Operator characters surviving INSIDE a chunk
     are quoted or escaped text and stay arguments (#5333 r2).
     Redirect operators and their first operand are removed from argv; dynamic
-    or missing operands mark that command unreadable instead of guessing.
+    or missing operands mark only their owning command unreadable. Substitution
+    scopes retain the outer argv so a redirect never invents a merge command,
+    and a merge after a prefix redirect still carries the unreadable marker.
 
     `(` also opens a command substitution (`cd $(cat f)`), which reads here as a subshell
     scope. That is not a coincidence to paper over: `$(...)` really does run in a
@@ -361,6 +363,7 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
     Only a `segment` event carries argv; the rest carry [].
     """
     events: list[tuple[str, list[str]]] = []
+    substitution_prefixes: list[list[str] | None] = []
     for line in preprocess_shell_command(command).splitlines():
         line_events: list[tuple[str, list[str]]] = []
         readable = True
@@ -376,10 +379,12 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
                 # The `$` before a real open paren belongs to a command
                 # substitution, not to a statically readable PR/cd target.
                 dynamic = bool(cur and cur[-1].endswith("$"))
-                if kind == "open" and (segment_unreadable or redirect_pending):
-                    # A dynamic prefix redirect may precede the command word.
-                    # Keep an explicit refusal across the substitution's scope.
-                    line_events.append(("segment", list(_UNPARSED)))
+                if kind == "open":
+                    # Retain the command owning a substitution across its scope.
+                    # A bare subshell starts a new command instead.
+                    substitution_prefixes.append(
+                        cur.copy() if segment_unreadable or redirect_pending or dynamic else None
+                    )
                 if segment_unreadable or redirect_pending or dynamic:
                     cur.append(_UNREADABLE_MARKER)
                 if cur:
@@ -388,6 +393,11 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
                 redirect_pending = segment_unreadable = False
                 if kind != "separator":
                     line_events.append((kind, []))
+                if kind == "close" and substitution_prefixes:
+                    prefix = substitution_prefixes.pop()
+                    if prefix is not None:
+                        cur = prefix
+                        segment_unreadable = True
                 continue
             tokens = _tokenize(raw)
             if tokens is None:
@@ -712,7 +722,13 @@ def _judged_segments(
         if depth >= _MAX_SHELL_DEPTH:
             out.append(_JudgedSegment(list(_UNPARSED), cwd, cwd_unreadable))
             continue
-        out.extend(_judged_segments(payload, depth + 1, cwd, cwd_unreadable))
+        nested = _judged_segments(payload, depth + 1, cwd, cwd_unreadable)
+        if _UNREADABLE_MARKER in argv:
+            # A wrapper's dynamic redirect belongs to its payload too. Keep the
+            # refusal on actual merge segments, never invent a merge for prose.
+            for segment in nested:
+                segment.argv.append(_UNREADABLE_MARKER)
+        out.extend(nested)
     return out
 
 

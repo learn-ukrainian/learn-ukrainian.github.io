@@ -364,6 +364,59 @@ def test_issue_9461_dynamic_or_malformed_redirect_blocks(monkeypatch, command, r
         assert _run(monkeypatch, redirect + " " + command) == 2
 
 
+@pytest.mark.parametrize(
+    "command",
+    [
+        "diff <(a) <(b)",
+        "cat <(cat file)",
+        "echo ok >(cat file)",
+        "source <(cmd); echo x",
+        "cat <<< 'fixture text'",
+        "cat <<'EOF'\nfixture text\nEOF",
+        "cat > $(cmd)",
+        'cat > "$FILE"',
+        "cat >",
+        "cat <(cmd) gh pr merge 5",
+        "bash -c 'cat <(cmd)'",
+    ],
+)
+def test_issue_9461_non_merge_redirects_do_not_create_merges(monkeypatch, command):
+    assert not _any_judged_merge(command)
+    assert not _any_merge(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 0
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("redirect", ["<(cmd)", ">(cmd)", "> $(cmd)"])
+@pytest.mark.parametrize("wrapper", ["{command}", "env {command}", "bash -c '{command}'"])
+def test_issue_9461_merge_substitutions_stay_unreadable(monkeypatch, command, redirect, wrapper):
+    assert _run(monkeypatch, wrapper.format(command=command + " " + redirect)) == 2
+    assert _run(monkeypatch, wrapper.format(command=redirect + " " + command)) == 2
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("redirect", ["<(cmd)", ">(cmd)", "> $(cmd)", '> "$FILE"', ">"])
+def test_issue_9461_shell_wrapper_redirect_taints_merge_payload(monkeypatch, command, redirect):
+    wrapped = f"bash -c '{command}'"
+    assert _run(monkeypatch, wrapped + " " + redirect) == 2
+    if redirect != ">":
+        assert _run(monkeypatch, redirect + " " + wrapped) == 2
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("other", ["diff <(a) <(b)", "cat > $(cmd)", 'cat > "$FILE"'])
+@pytest.mark.parametrize("separator", [";", "&&", "|", "\n"])
+def test_issue_9461_non_merge_redirect_does_not_taint_adjacent_merge(monkeypatch, command, other, separator):
+    assert _run(monkeypatch, f"{other} {separator} {command}") == 0
+    assert _run(monkeypatch, f"{other} {separator} {command}", checks=(["CI Gate"], [])) == 2
+
+
+@pytest.mark.parametrize("command", ["cat <(gh pr merge 5)", "cat > $(gh pr merge 5)"])
+def test_issue_9461_merge_inside_non_merge_substitution_is_judged(monkeypatch, command):
+    assert _any_judged_merge(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 2
+
+
 @pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
 @pytest.mark.parametrize("quote", ["'", '"'])
 def test_issue_9461_quoted_redirect_is_argument(monkeypatch, command, quote):
