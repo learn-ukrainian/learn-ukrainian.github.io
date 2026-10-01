@@ -6,6 +6,7 @@ from scripts.build.fresh.assemble import (
     AssemblerError,
     _render_urok_markdown,
     assemble_expanded_document,
+    build_resursy_entries,
     build_resursy_tab,
 )
 from scripts.curriculum.resolver.classify import classify_unit
@@ -33,6 +34,8 @@ def test_rendered_quote_is_verbatim_and_attributed():
     [
         ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "publication_right"),
         ("not-registered", "Synthetic excerpt", 39, "publication_right"),
+        ("9-klas-tekhnolohiyi-bilenko-2026", "Synthetic excerpt", 39, "publication_right"),
+        ("anna-ohoiko-500-verbs", "Synthetic excerpt", 39, "publication_right"),
         (BOOK, "x" * 801, 39, "publication_limit"),
         (BOOK, "Synthetic excerpt", None, "publication_attribution"),
     ],
@@ -82,11 +85,14 @@ def test_quote_and_resources_show_same_human_citation(file, citation):
     assert file not in str(tab)
 
 
-@pytest.mark.parametrize("file", ["9-klas-tekhnolohiyi-bilenko-2026", "unregistered"])
-def test_resources_refuse_unconfirmed_title(file):
+@pytest.mark.parametrize("file", ["9-klas-tekhnolohiyi-bilenko-2026", "uni-unregistered"])
+def test_resources_omit_unconfirmed_title_with_warning(file):
     pack = {"texts": [{"id": "T-001", "source": {"kind": "textbook", "file": file, "page": 12}}]}
-    with pytest.raises(AssemblerError, match="publication_attribution"):
-        build_resursy_tab({"steps": [{"evidence": ["T-001"]}]}, pack)
+    warnings = []
+    lesson = {"steps": [{"explains": ["T-001"]}]}
+    assert build_resursy_entries(lesson, pack, warnings=warnings) == []
+    assert build_resursy_tab(lesson, pack) == {}
+    assert warnings == [{"code": "resource_citation_omitted", "record": "T-001", "reason": "citable_metadata_missing"}]
 
 
 def test_bibliography_is_metadata_while_quote_prose_stays_checked():
@@ -103,3 +109,33 @@ def test_bibliography_is_metadata_while_quote_prose_stays_checked():
     assert all(token.needs_lookup for token in classify_unit(quote, allowlist))
     resource_span = next(span for span in provenance["spans"] if span["tab"] == "resursy")
     assert resource_span["ref"] == "T-001" and resource_span["source"] == "record"
+
+
+def test_ulp_resource_renders_homepage_and_episode_without_private_text():
+    from scripts.generate_mdx.resources import format_resources_for_mdx
+
+    record = {
+        "id": "T-001",
+        "source": {"kind": "textbook", "file": "ulp-1-00-lesson-notes", "page": 12},
+        "episode_url": "https://www.ukrainianlessons.com/episode1/",
+        "quote": "PRIVATE QUOTE",
+        "supports": "PRIVATE SUPPORTS",
+    }
+    resources = build_resursy_tab({"steps": [{"explains": ["T-001"]}]}, {"texts": [record]})
+    rendered = format_resources_for_mdx(resources, True)
+    assert "[Ukrainian Lessons Podcast — Анна Огойко](https://www.ukrainianlessons.com/)" in rendered
+    assert "<https://www.ukrainianlessons.com/episode1/>" in rendered
+    assert "PRIVATE" not in rendered
+
+
+def test_missing_resource_record_and_registry_still_fail(tmp_path, monkeypatch):
+    from scripts.curriculum.evidence import publication
+
+    with pytest.raises(AssemblerError, match="text_not_found"):
+        build_resursy_tab({"steps": [{"explains": ["T-001"]}]}, {"texts": []})
+    monkeypatch.setattr(publication, "REGISTRY_PATH", tmp_path / "absent")
+    with pytest.raises(AssemblerError, match="publication_registry_unreadable"):
+        build_resursy_tab(
+            {"steps": [{"explains": ["T-001"]}]},
+            {"texts": [{"id": "T-001", "source": {"kind": "textbook", "file": BOOK, "page": 12}}]},
+        )

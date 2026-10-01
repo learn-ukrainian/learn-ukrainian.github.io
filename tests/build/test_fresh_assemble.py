@@ -2226,3 +2226,81 @@ def test_true_false_boolean_answer_and_correct_produce_no_answer_units_and_rende
     assert tf_items[1]["statement"] == "Це сло́во неправда."
     assert tf_items[1]["isTrue"] is False
     assert tf_items[1]["explanation"] == "Ні, це неправда."
+
+
+@pytest.mark.parametrize(
+    "file,expected",
+    [
+        ("1-klas-bukvar-zaharijchuk-2025-1", "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 12"),
+        ("ulp-1-00-lesson-notes", "Ukrainian Lessons Podcast — Анна Огойко"),
+        ("anna-ohoiko-500-verbs", "Anna Ohoiko — 500+ Ukrainian Verbs: Conjugation and Examples of Use"),
+        ("9-klas-tekhnolohiyi-bilenko-2026", None),
+        ("uni-unregistered", None),
+    ],
+)
+def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monkeypatch, file, expected):
+    from scripts.build.fresh.assemble import CheckResult
+
+    text = make_text_record(1, "PRIVATE TEXT MUST NEVER PRINT", page=12)
+    text["source"]["file"] = file
+    text["supports"] = "PRIVATE SUPPORTS MUST NEVER PRINT"
+    pack = make_pack(texts=[text])
+    words = make_words_store()
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Explain",
+        "evidence": ["T-1"],
+        "introduces": {"letters": [], "grammar": [], "vocabulary": []},
+        "uses": {"grammar": [], "vocabulary": []},
+        "practice": [],
+    }
+    plan = make_plan(lessons=[make_plan_lesson(1, [step])])
+    draft = make_draft(
+        steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": "Explanation", "explains": ["T-1"]}]}],
+        lesson_lock_entry_sha256="a" * 64,
+    )
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.resolve", lambda *a, **k: type("Stream", (), {"tokens": [], "failures": []})()
+    )
+    monkeypatch.setattr("scripts.build.fresh.assemble.Sources", lambda: None)
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.planned_state", lambda *a, **k: type("State", (), {"cumulative_core_count": 10})()
+    )
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *a, **k: (True, ""))
+    monkeypatch.setattr(
+        lesson_lock, "compute_lesson_lock", lambda *a, **k: {"lessons": [{"n": 1, "entry_sha256": "a" * 64}]}
+    )
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.check_11_render", lambda *a, **k: CheckResult(check=11, passed=True)
+    )
+    report = assemble_lesson(
+        "a1",
+        "sample-slug",
+        1,
+        repo_root=tmp_path,
+        draft_dict=draft,
+        plan_dict=plan,
+        pack_dict=pack,
+        words_dict=words,
+        output_dir=tmp_path / "state",
+        site_dir=tmp_path / "site",
+    )
+    assert report["ok"], report
+    mdx = (tmp_path / "site" / "1.mdx").read_text()
+    assert "PRIVATE TEXT" not in mdx
+    expanded = yaml.safe_load((tmp_path / "state" / "lesson-1.expanded.yaml").read_text())
+    resources = [unit for unit in expanded["units"] if unit["tab"] == "resursy"]
+    if expected:
+        assert expected in mdx
+        assert resources[0]["text"] == expected
+        assert report["warnings"] == []
+        if file.startswith(("ulp-", "anna-")):
+            assert "https://www.ukrainianlessons.com/" in mdx
+            assert "PRIVATE SUPPORTS" not in mdx
+    else:
+        assert resources == []
+        assert file not in mdx
+        assert report["warnings"] == [
+            {"code": "resource_citation_omitted", "record": "T-1", "reason": "citable_metadata_missing"}
+        ]

@@ -266,3 +266,74 @@ def test_invalid_bibliography_cannot_reach_learner(field, value):
     entries[BOOK][field] = value
     with pytest.raises(ValueError, match=r"^publication_attribution:"):
         publication.quote_attribution(record(), entries)
+
+
+@pytest.mark.parametrize("file", PRIVATE)
+def test_private_credits_are_registry_owned_and_never_quote_rights(file):
+    entries = publication.load_registry()
+    rec = record(file)
+    rec["supports"] = rec["quote"] = "PRIVATE TEXT MUST NEVER PRINT"
+    rec["source"]["resource_credit"] = {"title": "Spoof", "url": "https://example.com/"}
+    citation = publication.resource_citation(rec)
+    assert citation["title"] == entries[file]["resource_credit"]["title"]
+    assert citation["url"] == entries[file]["resource_credit"]["url"]
+    assert citation["description"] == ""
+    assert "PRIVATE" not in str(citation)
+    with pytest.raises(ValueError, match="publication_right"):
+        publication.quote_attribution(rec)
+
+
+@pytest.mark.parametrize("field", ["episode_url", "url"])
+def test_ulp_episode_link_keeps_homepage_credit(field):
+    rec = record("ulp-1-00-lesson-notes")
+    rec[field] = "https://www.ukrainianlessons.com/episode1/"
+    citation = publication.resource_citation(rec)
+    assert citation == {
+        "title": "Ukrainian Lessons Podcast — Анна Огойко",
+        "url": "https://www.ukrainianlessons.com/",
+        "description": "<https://www.ukrainianlessons.com/episode1/>",
+    }
+
+
+@pytest.mark.parametrize("file", ["uni-unregistered", "9-klas-tekhnolohiyi-bilenko-2026"])
+def test_grounding_without_citation_metadata_needs_no_right(file):
+    assert publication.resource_citation(record(file)) is None
+
+
+def test_resource_registry_failure_is_not_silently_omitted(tmp_path, monkeypatch):
+    monkeypatch.setattr(publication, "REGISTRY_PATH", tmp_path / "absent")
+    with pytest.raises(ValueError, match="publication_registry_unreadable"):
+        publication.resource_citation(record())
+
+
+def test_resource_bibliography_survives_quote_right_withdrawal():
+    entries = publication.load_registry()
+    entries[BOOK]["publish"]["allowed"] = False
+    assert publication.resource_citation(record(), entries)["title"] == publication.source_attribution(
+        record(), entries
+    )
+
+
+@pytest.mark.parametrize("credit", [{}, {"title": "", "url": "https://example.com/"}, {"title": "Credit", "url": None}])
+def test_incomplete_resource_credit_is_omitted(credit):
+    entries = publication.load_registry()
+    entries[PRIVATE[0]]["resource_credit"] = credit
+    assert publication.resource_citation(record(PRIVATE[0]), entries) is None
+
+
+def test_resource_credit_is_bound_to_source_identity():
+    rec = record(PRIVATE[0])
+    rec["source"]["kind"] = "literary"
+    assert publication.resource_citation(rec) is None
+    entries = publication.load_registry()
+    entries[PRIVATE[0]]["file"] = "other"
+    assert publication.resource_citation(record(PRIVATE[0]), entries) is None
+
+
+@pytest.mark.parametrize(
+    "url", ["https://example.com/episode1/", "javascript:alert(1)", "https://www.ukrainianlessons.com/a>bad"]
+)
+def test_invalid_episode_url_does_not_reach_resource_description(url):
+    rec = record(PRIVATE[0])
+    rec["episode_url"] = url
+    assert publication.resource_citation(rec)["description"] == ""

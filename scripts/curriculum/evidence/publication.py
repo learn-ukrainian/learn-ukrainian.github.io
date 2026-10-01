@@ -41,7 +41,7 @@ def load_registry(path: Path | None = None) -> dict[str, Any]:
 
 
 def source_attribution(record: dict, registry: dict | None = None) -> str:
-    """One Ukrainian bibliographic citation for quotes and grounding resources.
+    """One strict Ukrainian textbook citation, required for printed quotes.
 
     Metadata is registry-owned. This formats a citation, never grants quote rights.
     Grade ranges keep two positive integer endpoints rather than a string grade.
@@ -82,6 +82,41 @@ def source_attribution(record: dict, registry: dict | None = None) -> str:
         return f"{author}, «{title}», {grades} клас{part_label}, {year}, с. {page}"
     except (TypeError, ValueError, AttributeError) as exc:
         raise ValueError(f"{codes.PUBLICATION_ATTRIBUTION}: {record.get('id')} incomplete source attribution") from exc
+
+
+def resource_citation(record: dict, registry: dict | None = None) -> dict[str, str] | None:
+    """Return registry-owned resource metadata without requiring quote permission.
+
+    Sources without citable metadata are omitted; registry read failures still
+    propagate. A credit never admits the record's quote or supports text.
+    """
+    entries = load_registry() if registry is None else registry
+    source = record.get("source") or {}
+    entry = entries.get(source.get("file"))
+    if isinstance(entry, dict) and entry.get("file") == source.get("file") and entry.get("kind") == source.get("kind"):
+        credit = entry.get("resource_credit")
+        if isinstance(credit, dict):
+            title, url = credit.get("title"), credit.get("url")
+            if isinstance(title, str) and title.strip() and isinstance(url, str) and url.startswith("https://"):
+                episode = (
+                    record.get("episode_url") or record.get("url") or source.get("episode_url") or source.get("url")
+                )
+                description = ""
+                if (
+                    credit.get("episode_links")
+                    and isinstance(episode, str)
+                    and re.fullmatch(r"https://www\.ukrainianlessons\.com/[^\s<>\[\]()]*", episode)
+                ):
+                    description = f"<{episode}>"
+                return {"title": title, "url": url, "description": description}
+    try:
+        return {
+            "title": source_attribution(record, entries),
+            "url": "",
+            "description": str(record.get("supports") or ""),
+        }
+    except ValueError:
+        return None
 
 
 def quote_attribution(record: dict, registry: dict | None = None) -> str:

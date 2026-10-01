@@ -5349,45 +5349,82 @@ sources:
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Ukrainian Lessons Podcast — Анна Огойко"
+      url: https://www.ukrainianlessons.com/
+      episode_links: true
+
   ulp-2-00-lesson-notes:
     kind: textbook
     file: ulp-2-00-lesson-notes
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Ukrainian Lessons Podcast — Анна Огойко"
+      url: https://www.ukrainianlessons.com/
+      episode_links: true
+
   ulp-3-00-lesson-notes:
     kind: textbook
     file: ulp-3-00-lesson-notes
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Ukrainian Lessons Podcast — Анна Огойко"
+      url: https://www.ukrainianlessons.com/
+      episode_links: true
+
   ulp-4-00-lesson-notes:
     kind: textbook
     file: ulp-4-00-lesson-notes
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Ukrainian Lessons Podcast — Анна Огойко"
+      url: https://www.ukrainianlessons.com/
+      episode_links: true
+
   ulp-5-00-lesson-notes:
     kind: textbook
     file: ulp-5-00-lesson-notes
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Ukrainian Lessons Podcast — Анна Огойко"
+      url: https://www.ukrainianlessons.com/
+      episode_links: true
+
   ulp-6-00-lesson-notes:
     kind: textbook
     file: ulp-6-00-lesson-notes
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Ukrainian Lessons Podcast — Анна Огойко"
+      url: https://www.ukrainianlessons.com/
+      episode_links: true
+
   anna-ohoiko-1000-words-2nd-ed:
     kind: textbook
     file: anna-ohoiko-1000-words-2nd-ed
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Anna Ohoiko — 1000 Most Useful Ukrainian Words"
+      url: https://www.ukrainianlessons.com/1000words/
+
   anna-ohoiko-500-verbs:
     kind: textbook
     file: anna-ohoiko-500-verbs
     publish:
       allowed: false
     title: null
+    resource_credit:
+      title: "Anna Ohoiko — 500+ Ukrainian Verbs: Conjugation and Examples of Use"
+      url: https://www.ukrainianlessons.com/verbs/
