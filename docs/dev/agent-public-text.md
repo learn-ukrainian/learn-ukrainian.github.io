@@ -176,7 +176,8 @@ the first blank line, so a NUL byte cannot hide the rest of a message the way
 `%B` would. Each message is decoded as UTF-8 and, when its `encoding` header
 names a codec that reads it differently, that reading is scanned too. A
 `mergetag` value is unfolded (each continuation line loses its one leading
-space) and read with the same tag-object parser; its fields are reported as
+space; unfolding is linear in the header size) and read with the same
+tag-object parser; its fields are reported as
 `commit[<id>].mergetag[<n>].tagname` and `.message`. A commit or tag object,
 including an embedded one, that has no blank line after its headers, or whose
 headers open with a continuation line, refuses the push naming only the
@@ -190,13 +191,22 @@ shrink the scan.
 
 **Clean-commit cache.** `<git-common-dir>/lu-push-scan-clean` lists the
 commits whose messages a push scan on this machine found clean. Its first line
-binds it to a SHA-256 fingerprint of the matcher, rules and blocking policy;
-each further line is one commit id. Commit ids are content-addressed, so an id
-always names the same message. An id is written only after `check_texts`
+binds it to a SHA-256 fingerprint of the matcher, rules and blocking policy and
+to a SHA-256 digest of the scanning code's source (`scripts/opsec/git_push.py`
+and `scripts/opsec/prepublish.py`, read once per push); each further line is
+one commit id. An entry is the verdict of the code that wrote it, so a commit
+an older, weaker scanner found clean (for example one that did not read
+mergetag text) must be scanned again by the current one. Hashing the source
+does that on every code change without a version constant someone has to
+remember to bump; the cost is one first-push-sized scan (cost below) after
+each change to those files. If either file cannot be read, both caches are
+unused for that push: every commit is scanned and nothing is written.
+Commit ids are content-addressed, so an id always names the same message. An id is written only after `check_texts`
 accepts the push, and only for commits none of whose scanned texts (message
 and mergetag fields) had a blocking finding. A hit that an override let through is never cached and is scanned
 again on the next push. An unreadable, malformed or partly written file, or
-one written under another fingerprint (for example after a rules update),
+one written under another fingerprint (for example after a rules update
+or a change to the scanning code),
 holds nothing: every reachable commit is scanned, a one-line note says so,
 and a scan that skipped nothing replaces the file. Writers take an exclusive
 `flock` on `lu-push-scan-clean.lock` and readers a shared one, so concurrent
@@ -230,9 +240,9 @@ never printed. With nothing cached, this repository's 385 published hits took
 one call when the public head was present locally and two when it was not.
 
 **Public-commit cache.** `<git-common-dir>/lu-push-scan-public` records the
-excused commit ids. It uses the clean cache's format, matcher fingerprint
-header, lock and fail-closed reading: an unusable file holds nothing, a
-one-line note says so, and every hit is asked again. Only yes answers are
+excused commit ids. It uses the clean cache's format, fingerprint header
+(matcher and scanning code), lock and fail-closed reading: an unusable file
+holds nothing, a one-line note says so, and every hit is asked again. Only yes answers are
 recorded. A refused, unanswered or overridden hit is never recorded, and an
 excused commit is never recorded as clean. Commits in this cache are skipped
 without scanning, as their text is already public, so a later push asks

@@ -22,6 +22,8 @@ from __future__ import annotations
 
 import contextlib
 import fcntl
+import functools
+import hashlib
 import json
 import os
 import re
@@ -48,6 +50,8 @@ COMMIT_ID = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
 # Bounds on asking the canonical public repository during one push.
 API_TIMEOUT = 10
 COMPARE_LIMIT = 20
+# The code that decides what a push scan reads and how it judges it; see code_digest.
+SCAN_SOURCES = (Path(__file__), Path(gate.__file__))
 
 
 def split_command(argv: list[str]) -> tuple[list[str], str | None, list[str]]:
@@ -235,12 +239,47 @@ class Repository:
         return Path(common), _grafts_present(grafts), shallow == "true"
 
 
+@functools.cache
+def _source_digest(sources: tuple[Path, ...]) -> str | None:
+    """SHA-256 over the bytes of sources, read once per process; None if any is unreadable."""
+    digest = hashlib.sha256()
+    try:
+        for source in sources:
+            data = source.read_bytes()
+            digest.update(len(data).to_bytes(8, "big") + data)
+    except OSError:
+        return None
+    return digest.hexdigest()
+
+
+def code_digest() -> str | None:
+    """Digest of the scanning code (SCAN_SOURCES), or None when it cannot be read.
+
+    A cache entry is a verdict of the code that wrote it. When a later version
+    reads more of an object (as mergetag text and objects without a separator
+    once showed), entries an older, weaker scanner wrote must not stand in for
+    the new scan. A hash of the source changes with every code change by
+    itself; a hand-maintained version constant is one more step a fix can
+    forget, and forgetting it would keep the closed bypass open in every
+    existing cache.
+    """
+    return _source_digest(SCAN_SOURCES)
+
+
+def cache_fingerprint() -> str | None:
+    """What both caches are bound to: the matcher fingerprint and the scanning code digest, or None."""
+    matcher, code = gate.matcher_fingerprint(), code_digest()
+    return None if code is None else f"{matcher} {code}"
+
+
 class CleanCache:
     """Commit ids whose messages this machine's push scans found clean.
 
-    A header line binds the file to the matcher fingerprint, then one commit id
-    per line. Commits are content-addressed, so an id always names the same
-    message. An unreadable, malformed or foreign-matcher file holds nothing:
+    A header line binds the file to the cache fingerprint (matcher, rules,
+    policy and scanning code), then one commit id per line. A None fingerprint
+    (the scanning code unreadable) disables the cache: nothing is read or
+    written. Commits are content-addressed, so an id always names the same
+    message. An unreadable, malformed or foreign-fingerprint file holds nothing:
     every reachable commit is scanned, and a scan that skipped nothing replaces
     the file. Writers hold an exclusive lock on a sidecar file and readers a
     shared one, so concurrent pushes never interleave or read half a line.
@@ -248,11 +287,11 @@ class CleanCache:
     public repository reported already public.
     """
 
-    def __init__(self, directory: Path, fingerprint: str, name: str = CACHE_NAME):
+    def __init__(self, directory: Path, fingerprint: str | None, name: str = CACHE_NAME):
         self.name = name
         self.path = directory / name
         self.lock_path = directory / f"{name}.lock"
-        self.header = f"{name} 1 {fingerprint}"
+        self.header = None if fingerprint is None else f"{name} 2 {fingerprint}"
 
     @contextlib.contextmanager
     def _locked(self, mode: int):
@@ -279,6 +318,8 @@ class CleanCache:
 
     def read(self) -> tuple[set[str], bool]:
         """(cached ids, unusable). An absent file is empty and usable; any defect is unusable."""
+        if self.header is None:
+            return set(), True
         try:
             with self._locked(fcntl.LOCK_SH):
                 ids = self._load()
@@ -290,6 +331,8 @@ class CleanCache:
 
     def record(self, ids: list[str], *, full: bool) -> bool:
         """Append clean ids; an absent or unusable file is replaced only by a scan that skipped nothing."""
+        if self.header is None:
+            return False
         with self._locked(fcntl.LOCK_EX):
             try:
                 current = self._load()
@@ -461,16 +504,17 @@ def split_object(raw: bytes, position: str) -> tuple[list[tuple[bytes, bytes]], 
     header, separator, body = (b"\n" + raw).partition(b"\n\n")
     if not separator:
         raise gate.PublishBlocked(f"OPSEC: {position} has no header/body separator; push refused.")
-    fields: list[tuple[bytes, bytes]] = []
+    # Lines are collected and joined once per field, so unfolding stays linear in the object size.
+    folded: list[tuple[bytes, list[bytes]]] = []
     for line in header[1:].split(b"\n"):
         if line.startswith(b" "):
-            if not fields:
+            if not folded:
                 raise gate.PublishBlocked(f"OPSEC: {position} headers malformed; push refused.")
-            key, value = fields[-1]
-            fields[-1] = (key, value + b"\n" + line[1:])
+            folded[-1][1].append(line[1:])
         elif line:
             key, _, value = line.partition(b" ")
-            fields.append((key, value))
+            folded.append((key, [value]))
+    fields = [(key, b"\n".join(lines)) for key, lines in folded]
     message = body.decode("utf-8", "replace")
     declared = next((value for key, value in fields if key == b"encoding"), None)
     if declared is not None:
@@ -605,7 +649,9 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
             raise gate.PublishBlocked("OPSEC: grafted history present; push refused.")
         if shallow:
             raise gate.PublishBlocked("OPSEC: shallow history cannot be scanned in full; push refused.")
-        fingerprint = gate.matcher_fingerprint()
+        fingerprint = cache_fingerprint()
+        if fingerprint is None:
+            print("OPSEC: push scan code unreadable; caches unused.", file=sys.stderr)
         cache = CleanCache(common_dir, fingerprint)
         cached, unusable = cache.read()
         if unusable:

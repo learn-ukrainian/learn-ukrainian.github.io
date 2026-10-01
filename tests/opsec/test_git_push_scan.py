@@ -95,6 +95,11 @@ def push_sandbox(tmp_path):
     return Sandbox()
 
 
+def _fingerprint(sandbox):
+    """The cache fingerprint a shim push in sandbox writes: its matcher and its (copied, identical) scanning code."""
+    return f"{gate.matcher_fingerprint(sandbox.tooling)} {git_push.code_digest()}"
+
+
 def assert_blocked(result, sandbox, before, field):
     assert result.returncode == 2, result.stderr
     assert "OPSEC blocked: rule=synthetic-rule" in result.stderr and f"field={field}" in result.stderr
@@ -523,12 +528,12 @@ def test_unusable_cache_scans_everything(push_sandbox, damage):
     if damage == "unreadable" and os.geteuid() == 0:
         pytest.skip("root reads mode-000 files")
     sha = push_sandbox.commit("subject " + TOKEN)
-    header = f"lu-push-scan-clean 1 {gate.matcher_fingerprint(push_sandbox.tooling)}\n"
+    header = f"lu-push-scan-clean 2 {_fingerprint(push_sandbox)}\n"
     content = {
         "valid": f"{header}{sha}\n",
         "garbage": f"{header}{sha}\nnot-a-commit\n",
         "partial": f"{header}{sha}\n{sha[:20]}",
-        "foreign": f"lu-push-scan-clean 1 {'f' * 64}\n{sha}\n",
+        "foreign": f"lu-push-scan-clean 2 {'f' * 64} {git_push.code_digest()}\n{sha}\n",
         "header-only-text": f"{sha}\n",
         "unreadable": f"{header}{sha}\n",
     }[damage]
@@ -659,8 +664,7 @@ def test_excused_hits_are_cached_as_public_and_never_as_clean(push_sandbox, monk
     assert status == 0, capfd.readouterr().err
     clean = (push_sandbox.work / CACHE).read_text().splitlines()
     public = (push_sandbox.work / PUBLIC_CACHE).read_text().splitlines()
-    fingerprint = gate.matcher_fingerprint(push_sandbox.tooling)
-    assert public == [f"lu-push-scan-public 1 {fingerprint}", hit]
+    assert public == [f"lu-push-scan-public 2 {_fingerprint(push_sandbox)}", hit]
     assert hit not in clean and len(clean) == 2  # Header and the clean base commit.
     second = FakePublic(None, fail=True)
     status, executed = run_main(push_sandbox, monkeypatch, second, "push", "origin", "HEAD:refs/heads/other")
@@ -696,12 +700,13 @@ def test_unusable_public_cache_excuses_nothing_by_itself(push_sandbox, monkeypat
     if damage == "unreadable" and os.geteuid() == 0:
         pytest.skip("root reads mode-000 files")
     hit = push_sandbox.commit("subject " + TOKEN)
-    header = f"lu-push-scan-public 1 {gate.matcher_fingerprint(push_sandbox.tooling)}\n"
+    header = f"lu-push-scan-public 2 {_fingerprint(push_sandbox)}\n"
     path = push_sandbox.work / PUBLIC_CACHE
     path.write_text(
-        {"garbage": f"{header}{hit}\nnot-a-commit\n", "foreign": f"lu-push-scan-public 1 {'f' * 64}\n{hit}\n"}.get(
-            damage, f"{header}{hit}\n"
-        )
+        {
+            "garbage": f"{header}{hit}\nnot-a-commit\n",
+            "foreign": f"lu-push-scan-public 2 {'f' * 64} {git_push.code_digest()}\n{hit}\n",
+        }.get(damage, f"{header}{hit}\n")
     )
     if damage == "unreadable":
         path.chmod(0)
@@ -1172,3 +1177,139 @@ def test_split_object_refuses_text_outside_any_message(raw):
     with pytest.raises(gate.PublishBlocked) as raised:
         git_push.split_object(raw, "commit[unit]")
     assert str(raised.value).startswith("OPSEC: commit[unit] ") and TOKEN not in str(raised.value)
+
+
+# --- Round 7: cache entries are bound to the scanning code that wrote them; linear unfolding ---
+
+# Each edit reverts one round-6 fix in the sandbox copy, giving its shim an older, weaker scanner.
+WEAKER_SCANNERS = {
+    "mergetag": ('if key == b"mergetag"]', 'if key == b"weaker"]'),
+    "separator": ("    if not separator:\n", "    if False:\n"),
+}
+COMMENT_ONLY = ("COMPARE_LIMIT = 20\n", "COMPARE_LIMIT = 20  # Any code change, however small.\n")
+
+
+def _with_scanner(sandbox, edit=None):
+    """Swap the scanner source the sandbox shim runs: one (old, new) edit, or None for the reviewed code."""
+    original = (ROOT / "scripts/opsec/git_push.py").read_text()
+    if edit is not None:
+        assert original.count(edit[0]) == 1, edit[0]
+        original = original.replace(*edit)
+    (sandbox.root / "scripts/opsec/git_push.py").write_text(original)
+
+
+def _trusted(sandbox, name=git_push.CACHE_NAME):
+    """Ids the reviewed scanner would take from a cache file."""
+    ids, _ = git_push.CleanCache(sandbox.work / ".git", _fingerprint(sandbox), name).read()
+    return ids
+
+
+def _mergetag_hit(sandbox):
+    return _merge(sandbox, _signed_tag(sandbox.work, _side(sandbox, "side"), f"v1-{TOKEN}"))
+
+
+def _unseparated_hit(sandbox):
+    tree, parent = _git(sandbox.work, "rev-parse", "HEAD^{tree}"), _git(sandbox.work, "rev-parse", "HEAD")
+    identity = "unit <unit@example.invalid> 0 +0000"
+    raw = f"tree {tree}\nparent {parent}\nauthor {identity}\ncommitter {identity}\nclean subject {TOKEN}\n"
+    return _object(sandbox.work, "commit", raw.encode())
+
+
+@pytest.mark.parametrize("weakness", sorted(WEAKER_SCANNERS))
+def test_a_commit_an_older_scanner_cached_clean_is_rescanned_and_refused(push_sandbox, weakness):
+    """The review reproduction: an older scanner caches the hit clean, then the reviewed scanner is swapped in."""
+    sha = _mergetag_hit(push_sandbox) if weakness == "mergetag" else _unseparated_hit(push_sandbox)
+    _with_scanner(push_sandbox, WEAKER_SCANNERS[weakness])
+    older = push_sandbox.push("push", "origin", f"{sha}:refs/heads/older")
+    assert older.returncode == 0 and sha in _cached(push_sandbox), older.stderr
+    _with_scanner(push_sandbox)
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
+    assert "OPSEC: push scan cache unusable; every reachable commit scanned." in result.stderr
+    if weakness == "mergetag":
+        assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].mergetag[1].tagname")
+    else:
+        assert result.returncode == 2, result.stderr
+        assert f"OPSEC: commit[{sha[:12]}] has no header/body separator; push refused." in result.stderr
+        assert TOKEN not in result.stderr and push_sandbox.remote_refs() == before
+    assert sha not in _trusted(push_sandbox)
+
+
+def test_unchanged_scanning_code_reuses_its_cache_and_any_change_rescans(push_sandbox):
+    push_sandbox.commit("clean one")
+    first = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert first.returncode == 0 and "2 commit message(s) scanned, 0 skipped" in first.stderr, first.stderr
+    second = push_sandbox.push("push", "origin", "HEAD:refs/heads/other")
+    assert second.returncode == 0 and "0 commit message(s) scanned, 2 skipped" in second.stderr, second.stderr
+    assert "unusable" not in second.stderr
+    _with_scanner(push_sandbox, COMMENT_ONLY)
+    third = push_sandbox.push("push", "origin", "HEAD:refs/heads/third")
+    assert third.returncode == 0 and "2 commit message(s) scanned, 0 skipped" in third.stderr, third.stderr
+    assert "OPSEC: push scan cache unusable; every reachable commit scanned." in third.stderr
+    fourth = push_sandbox.push("push", "origin", "HEAD:refs/heads/fourth")
+    assert "0 commit message(s) scanned, 2 skipped" in fourth.stderr, fourth.stderr
+
+
+def test_a_public_excuse_recorded_by_other_scanning_code_is_rechecked(push_sandbox, monkeypatch, capfd):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    assert run_main(push_sandbox, monkeypatch, FakePublic(hit))[0] == 0, capfd.readouterr().err
+    assert (push_sandbox.work / PUBLIC_CACHE).read_text().split()[-1] == hit
+    # The shim's own client never answers (no gh), so only the cache can excuse the hit.
+    same = push_sandbox.push("push", "origin", "HEAD:refs/heads/same")
+    assert same.returncode == 0, same.stderr
+    assert "1 hit(s) excused as already public (0 public repository call(s))" in same.stderr
+    _with_scanner(push_sandbox, COMMENT_ONLY)
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{hit[:12]}].message")
+    assert "OPSEC: push scan public cache unusable; hit commits rechecked." in result.stderr
+
+
+@pytest.mark.parametrize("code", ["readable", "missing", "unreadable"])
+def test_unreadable_scanning_code_never_reuses_either_cache(push_sandbox, monkeypatch, capfd, tmp_path, code):
+    if code == "unreadable" and os.geteuid() == 0:
+        pytest.skip("root reads mode-000 files")
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    excused = push_sandbox.commit("published subject " + TOKEN)
+    cached = push_sandbox.commit("subject " + TOKEN)
+    fingerprint = _fingerprint(push_sandbox)
+    assert git_push.CleanCache(push_sandbox.work / ".git", fingerprint).record([base, cached], full=True)
+    public = git_push.CleanCache(push_sandbox.work / ".git", fingerprint, git_push.PUBLIC_CACHE_NAME)
+    assert public.record([excused], full=True)
+    files = {path: path.read_bytes() for path in (push_sandbox.work / CACHE, push_sandbox.work / PUBLIC_CACHE)}
+    if code != "readable":
+        extra = tmp_path / "scanner-part.py"
+        if code == "unreadable":
+            extra.write_text("# part of the scan\n")
+            extra.chmod(0)
+        monkeypatch.setattr(git_push, "SCAN_SOURCES", (*git_push.SCAN_SOURCES, extra))
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic("e" * 40))
+    err = capfd.readouterr().err
+    if code == "readable":  # Positive control: while the code is readable both cached entries are honoured.
+        assert status == 0 and executed, err
+        return
+    assert status == 2 and not executed, err
+    assert "OPSEC: push scan code unreadable; caches unused." in err
+    assert "push scan cache unusable" in err and "push scan public cache unusable" in err
+    assert f"field=commit[{cached[:12]}].message" in err and TOKEN not in err
+    assert {path: path.read_bytes() for path in files} == files  # Never rewritten without a fingerprint.
+
+
+def _unfold_seconds(size, repeats=5):
+    """Best time to split a commit whose mergetag header continues over size bytes of 256-byte lines."""
+    line = b" " + b"x" * 255
+    raw = b"tree 0\nmergetag object 0" + (b"\n" + line) * (size // 256) + b"\n\nclean\n"
+    best = float("inf")
+    for _ in range(repeats):
+        started = time.perf_counter()
+        fields, _ = git_push.split_object(raw, "commit[unit]")
+        best = min(best, time.perf_counter() - started)
+    assert len(fields[1][1]) == len(b"object 0") + (size // 256) * 256
+    return best
+
+
+def test_continuation_unfolding_is_linear_in_the_header_size():
+    """Four times the continuation costs about four times as long (quadratic unfolding costs sixteen)."""
+    small, large = _unfold_seconds(512 << 10), _unfold_seconds(2 << 20)
+    assert large < 8 * small, (small, large)
+    assert _unfold_seconds(8 << 20, repeats=1) < 5  # Generous: quadratic unfolding took over 25 s here.
