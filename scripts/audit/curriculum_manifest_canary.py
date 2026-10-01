@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""Cryptographic SHA-256 tamper-evident manifest canary for published curriculum.
+"""Cryptographic SHA-256 integrity and drift canary for published curriculum.
 
-Maintains a cryptographic inventory of all learner-facing curriculum files:
+Maintains a deterministic inventory of all learner-facing curriculum artifacts:
 - Published MDX lessons in site/src/content/docs/
+- Published readings in site/src/content/readings/
 - Curriculum manifest and module mapping in curriculum/l2-uk-en/
 - Lesson plans in curriculum/l2-uk-en/lesson-plans/
 - Module plans in curriculum/l2-uk-en/plans/
 - Module prose in curriculum/l2-uk-en/**/module.md
-- Vocabulary and activity datasets in curriculum/l2-uk-en/**/{vocabulary,activities}/*.yaml
-- Vocabulary database curriculum/l2-uk-en/vocabulary.db
+- Vocabulary, activities, and resources datasets:
+  curriculum/l2-uk-en/**/{vocabulary,activities,resources}.yaml
+- Vocabulary database: curriculum/l2-uk-en/vocabulary.db
+
+Provides an integrity and drift detection boundary for curriculum content:
+any modified, added, or deleted curriculum file without a corresponding
+manifest update will cause the canary gate to fail in CI Checks.
 
 Reference: learn-ukrainian-infra-private#705
 """
@@ -27,33 +33,35 @@ DEFAULT_MANIFEST_PATH = ROOT / "curriculum" / "l2-uk-en" / "curriculum_manifest.
 
 SCHEMA_VERSION = 1
 SCOPE = (
-    "Learner-facing published MDX lessons, curriculum lesson plans, "
-    "module plans, module prose, and vocabulary/activities datasets"
+    "Learner-facing published MDX lessons and readings, curriculum lesson plans, "
+    "module plans, module prose, and vocabulary/activities/resources datasets"
 )
 
 CURRICULUM_PATTERNS = (
     "site/src/content/docs/**/*.mdx",
+    "site/src/content/readings/**/*.mdx",
     "curriculum/l2-uk-en/curriculum.yaml",
     "curriculum/l2-uk-en/module-mapping.json",
     "curriculum/l2-uk-en/lesson-plans/**/*.yaml",
     "curriculum/l2-uk-en/plans/**/*.yaml",
     "curriculum/l2-uk-en/**/module.md",
-    "curriculum/l2-uk-en/**/vocabulary/*.yaml",
-    "curriculum/l2-uk-en/**/activities/*.yaml",
+    "curriculum/l2-uk-en/**/vocabulary.yaml",
+    "curriculum/l2-uk-en/**/activities.yaml",
+    "curriculum/l2-uk-en/**/resources.yaml",
     "curriculum/l2-uk-en/vocabulary.db",
 )
 
-EXCLUDED_PATH_PREFIXES = (
-    "curriculum/l2-uk-en/_archive/",
-    "curriculum/l2-uk-en/.backup/",
-    "curriculum/l2-uk-en/stuck/",
-)
-
-EXCLUDED_PATH_SUBSTRINGS = (
-    "/orchestration/",
-    "/status/",
-    "/audit/",
-    "/review/",
+EXCLUDED_DIR_NAMES = frozenset(
+    {
+        "orchestration",
+        "status",
+        "audit",
+        "review",
+        "reviews",
+        "_archive",
+        ".backup",
+        "stuck",
+    }
 )
 
 
@@ -63,10 +71,13 @@ def _sha256_bytes(data: bytes) -> str:
 
 
 def _is_path_included(rel_path: str) -> bool:
-    """Check whether a repository-relative path should be included in the manifest."""
-    if any(rel_path.startswith(prefix) or f"/{prefix}" in rel_path for prefix in EXCLUDED_PATH_PREFIXES):
-        return False
-    return not any(sub in rel_path for sub in EXCLUDED_PATH_SUBSTRINGS)
+    """Check whether a repository-relative path should be included in the manifest.
+
+    Matches directory segments exactly to prevent false exclusions of module slugs
+    that contain substrings like 'review' (e.g. 'motion-base-review').
+    """
+    parts = Path(rel_path).parts
+    return not any(part in EXCLUDED_DIR_NAMES for part in parts[:-1])
 
 
 def collect_curriculum_files(repo_root: Path = ROOT) -> list[dict[str, str]]:
@@ -155,7 +166,28 @@ def verify_manifest(
             "error": f"Failed to parse manifest JSON at {manifest_path}: {exc}",
         }
 
-    stored_files: dict[str, str] = {f["path"]: f["sha256"] for f in stored_payload.get("files", [])}
+    if not isinstance(stored_payload, dict):
+        return {
+            "valid": False,
+            "error": f"Malformed manifest JSON at {manifest_path}: root must be a JSON object.",
+        }
+
+    raw_files = stored_payload.get("files")
+    if not isinstance(raw_files, list):
+        return {
+            "valid": False,
+            "error": f"Malformed manifest JSON at {manifest_path}: 'files' field must be a list.",
+        }
+
+    stored_files: dict[str, str] = {}
+    for idx, item in enumerate(raw_files):
+        if not isinstance(item, dict) or "path" not in item or "sha256" not in item:
+            return {
+                "valid": False,
+                "error": f"Malformed manifest entry at index {idx} in {manifest_path}: missing required 'path' or 'sha256' field.",
+            }
+        stored_files[item["path"]] = item["sha256"]
+
     live_entries = collect_curriculum_files(repo_root)
     live_files: dict[str, str] = {f["path"]: f["sha256"] for f in live_entries}
 
