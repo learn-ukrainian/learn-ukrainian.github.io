@@ -385,6 +385,7 @@ def test_push_url_destinations(url, expected):
         (["-C", "push", "push"], (["-C", "push"], "push", [])),
         (["-c", "a=b", "--no-pager", "status"], (["-c", "a=b", "--no-pager"], "status", [])),
         (["--version"], (["--version"], None, [])),
+        (["--shallow-file", "x", "push"], (["--shallow-file", "x"], "push", [])),
     ],
 )
 def test_split_command(argv, expected):
@@ -472,16 +473,229 @@ def test_git_tracing_never_records_the_scan(ssh_sandbox, tmp_path, monkeypatch):
     assert all(text == "" for text in written.values()), sorted(written)
 
 
-def test_shallow_repository_is_refused(push_sandbox, tmp_path):
+# --- Shallow boundaries: refused only inside the scan set ---
+
+SHALLOW_REFUSAL = "OPSEC: shallow boundary inside the scanned range"
+
+
+def _orphan(cwd, message):
+    """A parentless commit object no ref names."""
+    return _git(cwd, "commit-tree", _git(cwd, "rev-parse", "HEAD^{tree}"), "-m", message)
+
+
+def _shallow(work, *commits):
+    """Mark commits as shallow boundaries, as a shallow clone (or a forger) would."""
+    (work / ".git/shallow").write_text("".join(f"{sha}\n" for sha in commits))
+
+
+def test_real_shallow_clone_with_its_boundary_pushed_is_refused(push_sandbox, tmp_path):
     push_sandbox.commit("subject " + TOKEN)
     push_sandbox.commit("clean follow-up")
     _git(push_sandbox.work, "push", "-q", "origin", "trunk")
     shallow = tmp_path / "shallow"
     _git(tmp_path, "clone", "-q", "--depth", "1", f"file://{push_sandbox.remote}", str(shallow), "-b", "trunk")
+    boundary = _git(shallow, "rev-parse", "HEAD")
     before = push_sandbox.remote_refs()
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", cwd=shallow)
-    assert result.returncode == 2 and "OPSEC: shallow history cannot be scanned in full" in result.stderr
+    assert result.returncode == 2 and f"{SHALLOW_REFUSAL} (commit[{boundary[:12]}])" in result.stderr, result.stderr
+    assert "git fetch --unshallow" in result.stderr and "git fetch --deepen=<n>" in result.stderr
+    assert TOKEN not in result.stderr and push_sandbox.remote_refs() == before
+
+
+def test_real_shallow_clone_with_its_boundary_inside_public_history_passes(push_sandbox, monkeypatch, tmp_path, capfd):
+    """A depth-2 clone whose boundary is an ancestor of the public head; the hit behind it is public."""
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    push_sandbox.commit("published clean one")
+    public_head = push_sandbox.commit("published clean two")
+    _git(push_sandbox.work, "push", "-q", "origin", "trunk")
+    clone = tmp_path / "shallow"
+    _git(tmp_path, "clone", "-q", "--depth", "2", f"file://{push_sandbox.remote}", str(clone), "-b", "trunk")
+    for key, value in (("user.email", "unit@example.invalid"), ("user.name", "unit")):
+        _git(clone, "config", key, value)
+    assert (clone / ".git/shallow").read_text().split() == [_git(clone, "rev-parse", "HEAD~1")]
+    (clone / "file.txt").write_text("new\n")
+    _git(clone, "commit", "-q", "-am", "new clean work")
+    push_sandbox.work = clone
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(public_head))
+    err = capfd.readouterr().err
+    assert status == 0 and executed, err
+    assert "1 commit(s) scanned" in err and hit[:12] not in err and TOKEN not in err
+
+
+def test_boundaries_outside_the_scan_set_do_not_refuse_a_clean_push(push_sandbox):
+    """The shared repository shape: two boundary commits that are not ancestors of the pushed tip."""
+    _shallow(
+        push_sandbox.work, _orphan(push_sandbox.work, "unrelated one"), _orphan(push_sandbox.work, "unrelated two")
+    )
+    sha = push_sandbox.commit("clean subject")
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert result.returncode == 0, result.stderr
+    assert "2 commit(s) scanned" in result.stderr and push_sandbox.remote_refs()["refs/heads/feature"] == sha
+
+
+def test_boundary_ancestor_of_the_tip_and_not_of_the_public_head_is_refused(push_sandbox, monkeypatch, capfd):
+    public_head = _git(push_sandbox.work, "rev-parse", "HEAD")
+    boundary = push_sandbox.commit("clean one")
+    push_sandbox.commit("clean two")
+    _shallow(push_sandbox.work, boundary, _orphan(push_sandbox.work, "unrelated"))
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(public_head))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and f"{SHALLOW_REFUSAL} (commit[{boundary[:12]}])" in err, err
+
+
+def test_boundary_inside_the_excluded_public_history_hides_only_public_history(push_sandbox, monkeypatch, capfd):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    boundary = push_sandbox.commit("published clean one")
+    public_head = push_sandbox.commit("published clean two")
+    push_sandbox.commit("new clean work")
+    _shallow(push_sandbox.work, boundary)
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(public_head))
+    err = capfd.readouterr().err
+    assert status == 0 and executed, err
+    assert "1 commit(s) scanned" in err and "OPSEC blocked" not in err
+    assert hit[:12] not in err and TOKEN not in err
+
+
+def test_forged_boundary_on_a_new_commit_hiding_a_hit_is_refused(push_sandbox, monkeypatch, capfd):
+    public_head = _git(push_sandbox.work, "rev-parse", "HEAD")
+    hit = push_sandbox.commit("subject " + TOKEN)
+    forged = push_sandbox.commit("clean cover")
+    tip = push_sandbox.commit("clean tip")
+    _shallow(push_sandbox.work, forged)
+    # Positive control: git honours the forged entry and no longer walks to the hit.
+    assert _git(push_sandbox.work, "rev-list", tip, f"^{public_head}").split() == [tip, forged]
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(public_head))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and f"{SHALLOW_REFUSAL} (commit[{forged[:12]}])" in err, err
+    assert hit[:12] not in err and TOKEN not in err
+
+
+def test_forged_boundary_on_a_new_commit_is_never_delivered(push_sandbox):
+    hit = push_sandbox.commit("subject " + TOKEN)
+    forged = push_sandbox.commit("clean cover")
+    _shallow(push_sandbox.work, forged)
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert result.returncode == 2 and f"{SHALLOW_REFUSAL} (commit[{forged[:12]}])" in result.stderr, result.stderr
+    assert hit[:12] not in result.stderr and TOKEN not in result.stderr and push_sandbox.remote_refs() == before
+
+
+@pytest.mark.parametrize("forged", [["head"], ["middle"], ["base"], ["base", "middle", "head"]])
+def test_forged_boundary_in_public_history_cannot_shrink_the_scan_set(push_sandbox, monkeypatch, capfd, forged):
+    commits = {"base": _git(push_sandbox.work, "rev-parse", "HEAD")}
+    commits["middle"] = push_sandbox.commit("published clean one")
+    commits["head"] = push_sandbox.commit("published clean two")
+    hit = push_sandbox.commit("new subject " + TOKEN)
+    _shallow(push_sandbox.work, *(commits[name] for name in forged))
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(commits["head"]))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err, err
+    assert TOKEN not in err
+
+
+def test_forged_public_boundary_truncating_the_exclusion_scans_more(push_sandbox, monkeypatch, capfd):
+    """A boundary on the public head stops the exclusion there: older public history reached another way is scanned."""
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    push_sandbox.commit("published clean one")
+    public_head = push_sandbox.commit("published clean two")
+    _git(push_sandbox.work, "checkout", "-q", "-b", "side", base)
+    (push_sandbox.work / "side.txt").write_text("side\n")
+    _git(push_sandbox.work, "add", "side.txt")
+    _git(push_sandbox.work, "commit", "-q", "-m", "new subject " + TOKEN)
+    hit = _git(push_sandbox.work, "rev-parse", "HEAD")
+    _git(push_sandbox.work, "checkout", "-q", "trunk")
+    _git(push_sandbox.work, "merge", "-q", "--no-ff", "-m", "clean merge", "side")
+    _shallow(push_sandbox.work, public_head)
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(public_head))
+    err = capfd.readouterr().err
+    # Without the boundary the scan set is {merge, hit}; with it, base (public) joins it.
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err, err
+    assert "3 commit(s) scanned" in err and TOKEN not in err
+
+
+@pytest.mark.parametrize(
+    "content",
+    ["{sha}\n\n", "{sha}\r\n", "{short}\n", "not an id\n"],
+    ids=["blank-line", "crlf", "short", "text"],
+)
+def test_malformed_shallow_file_is_refused(push_sandbox, monkeypatch, capfd, content):
+    sha = _orphan(push_sandbox.work, "unrelated")
+    push_sandbox.commit("clean subject")
+    (push_sandbox.work / ".git/shallow").write_text(content.format(sha=sha, short=sha[:39]))
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed, err
+    # git itself rejects some shapes in the preview; ours are the ones it would read differently.
+    assert "OPSEC: shallow file malformed; push refused." in err or "OPSEC: push preview failed" in err, err
+
+
+@pytest.mark.parametrize("content", ["{sha} trailing\n", "{upper}\n"], ids=["trailing-text", "uppercase"])
+def test_shallow_lines_git_reads_loosely_are_refused_by_the_scan(push_sandbox, monkeypatch, capfd, content):
+    """git accepts these lines and reads a boundary from them; the scan refuses rather than guess."""
+    sha = _orphan(push_sandbox.work, "unrelated")
+    (push_sandbox.work / ".git/shallow").write_text(content.format(sha=sha, upper=sha.upper()))
+    push_sandbox.commit("clean subject")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and "OPSEC: shallow file malformed; push refused." in err, err
+
+
+def test_shallow_directory_is_refused_as_unreadable(push_sandbox, monkeypatch, capfd):
+    (push_sandbox.work / ".git/shallow").mkdir()
+    push_sandbox.commit("clean subject")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(None))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and "OPSEC: shallow file unreadable; push refused." in err, err
+
+
+def test_shallow_boundaries_reader(tmp_path):
+    path = tmp_path / "shallow"
+    assert git_push.shallow_boundaries(str(path), 40) == set()  # Not shallow.
+    path.write_text("")
+    assert git_push.shallow_boundaries(str(path), 40) == set()
+    path.write_text(f"{'a' * 40}\n{'b' * 40}")  # git reads a last line without its newline.
+    assert git_push.shallow_boundaries(str(path), 40) == {"a" * 40, "b" * 40}
+    with pytest.raises(gate.PublishBlocked, match="shallow file malformed"):
+        git_push.shallow_boundaries(str(path), 64)  # Ids of another object format.
+    fifo = tmp_path / "fifo"
+    os.mkfifo(fifo)
+    with pytest.raises(gate.PublishBlocked, match="shallow file unreadable"):
+        git_push.shallow_boundaries(str(fifo), 40)
+
+
+@pytest.mark.skipif(os.geteuid() == 0, reason="root reads any file")
+def test_unreadable_shallow_file_is_refused(tmp_path):
+    path = tmp_path / "shallow"
+    path.write_text(f"{'a' * 40}\n")
+    path.chmod(0)
+    try:
+        with pytest.raises(gate.PublishBlocked, match="shallow file unreadable"):
+            git_push.shallow_boundaries(str(path), 40)
+    finally:
+        path.chmod(0o600)
+
+
+def test_linked_worktree_reads_the_shared_shallow_file(push_sandbox, tmp_path):
+    linked = tmp_path / "linked"
+    _git(push_sandbox.work, "worktree", "add", "-q", "-b", "linked", str(linked))
+    (linked / "file.txt").write_text("linked\n")
+    _git(linked, "commit", "-q", "-am", "clean linked work")
+    boundary = _git(linked, "rev-parse", "HEAD")
+    _shallow(push_sandbox.work, boundary)
+    assert not (linked / ".git").is_dir()
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", cwd=linked)
+    assert result.returncode == 2 and f"{SHALLOW_REFUSAL} (commit[{boundary[:12]}])" in result.stderr, result.stderr
     assert push_sandbox.remote_refs() == before
+
+
+def test_alternate_shallow_file_option_is_refused(push_sandbox):
+    """git --shallow-file takes a value: it must neither hide the push subcommand nor swap the file read."""
+    push_sandbox.commit("subject " + TOKEN)
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("--shallow-file", os.devnull, "push", "origin", "HEAD:refs/heads/feature")
+    assert result.returncode == 2 and "--shallow-file is not supported for a scanned push" in result.stderr
+    assert TOKEN not in result.stderr and push_sandbox.remote_refs() == before
 
 
 def test_an_overridden_hit_is_scanned_again_on_the_next_push(push_sandbox):

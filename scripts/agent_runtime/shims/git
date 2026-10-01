@@ -253,7 +253,7 @@ _git_subcommand() {
       continue
     fi
     case "$arg" in
-      -C|-c|--git-dir|--work-tree|--namespace|--config-env|--attr-source) skip=1 ;;
+      -C|-c|--git-dir|--work-tree|--namespace|--config-env|--attr-source|--shallow-file) skip=1 ;;
       -*) ;;
       *) printf '%s\n' "$arg"; return 0 ;;
     esac

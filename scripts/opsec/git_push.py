@@ -10,8 +10,9 @@ the catalogue's canonical public repository (already public). That head comes
 from one GitHub API read per push; nothing is cached between pushes, and
 nothing the destination reports is evidence of what it already has.
 Enumeration ignores replacement objects, grafts and commit-graph files, a
-grafted or shallow repository is refused, and the scan's own git calls run
-without tracing or prompts. File contents are not scanned. Private remotes are
+grafted repository is refused, a shallow one is refused when a boundary commit
+is inside the scan set, and the scan's own git calls run without tracing or
+prompts. File contents are not scanned. Private remotes are
 exempt exactly as is_private decides. The real push runs only after a clean
 scan, without the command-scoped override. Git text from these steps is never
 replayed.
@@ -32,7 +33,16 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from scripts.opsec import prepublish as gate
 
 # Global git options whose value may be the next argument (git.c handle_options).
-GLOBAL_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env", "--attr-source"}
+GLOBAL_WITH_VALUE = {
+    "-C",
+    "-c",
+    "--git-dir",
+    "--work-tree",
+    "--namespace",
+    "--config-env",
+    "--attr-source",
+    "--shallow-file",
+}
 # Push options whose value may be the next argument.
 PUSH_WITH_VALUE = {"-o", "--push-option", "--repo", "--receive-pack", "--exec", "--recurse-submodules"}
 # Fast-forward, forced update, new ref, up to date, rejected, deleted. Only a
@@ -40,6 +50,8 @@ PUSH_WITH_VALUE = {"-o", "--push-option", "--repo", "--receive-pack", "--exec", 
 # is not evidence of what the real push will send.
 KNOWN_FLAGS = {" ", "+", "*", "=", "!", "-"}
 COMMIT_ID = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
+# Hex length of a commit id per repository object format.
+ID_LENGTH = {"sha1": 40, "sha256": 64}
 # The canonical public repository's default branch and the id form GitHub reports for its head.
 PUBLIC_DEFAULT_BRANCH = "main"
 PUBLIC_HEAD = re.compile(r"[0-9a-f]{40}")
@@ -163,6 +175,36 @@ def _grafts_present(path: str) -> bool:
     return not stat.S_ISREG(info.st_mode) or info.st_size > 0
 
 
+def shallow_boundaries(path: str, length: int) -> set[str]:
+    """The commit ids the shallow file at path lists; none when it is absent.
+
+    git reads one id per line and treats each as parentless. Anything git might
+    read differently (a non-regular or unreadable file, a line that is not
+    exactly one lowercase id of this repository's length) refuses the push.
+    """
+    try:
+        # Non-blocking: a FIFO here must not stall the scan; fstat then refuses it.
+        descriptor = os.open(path, os.O_RDONLY | os.O_NONBLOCK)
+    except FileNotFoundError:
+        return set()
+    except OSError:
+        raise gate.PublishBlocked("OPSEC: shallow file unreadable; push refused.") from None
+    try:
+        with os.fdopen(descriptor, "rb") as handle:
+            if not stat.S_ISREG(os.fstat(handle.fileno()).st_mode):
+                raise gate.PublishBlocked("OPSEC: shallow file unreadable; push refused.")
+            data = handle.read()
+    except OSError:
+        raise gate.PublishBlocked("OPSEC: shallow file unreadable; push refused.") from None
+    lines = data.split(b"\n")
+    if lines[-1] == b"":
+        lines.pop()  # The newline ending the last id.
+    identity = re.compile(rb"[0-9a-f]{%d}" % length)
+    if not all(identity.fullmatch(line) for line in lines):
+        raise gate.PublishBlocked("OPSEC: shallow file malformed; push refused.")
+    return {line.decode("ascii") for line in lines}
+
+
 class Repository:
     """Read-only object queries through the real git with the caller's global options."""
 
@@ -216,8 +258,12 @@ class Repository:
             return None
         return result.stdout.decode().strip() or None
 
-    def layout(self) -> tuple[bool, bool]:
-        """Whether grafts alter commit parents, whether history is shallow."""
+    def layout(self) -> tuple[bool, set[str]]:
+        """Whether grafts alter commit parents, and the shallow boundary commits.
+
+        git's own path resolution names both files, so a linked worktree reads
+        the shallow file of the shared repository.
+        """
         # Resolve the grafts path with the caller's GIT_GRAFT_FILE: the file the real push reads.
         environment = {key: value for key, value in self.environment.items() if key != "GIT_GRAFT_FILE"}
         if "GIT_GRAFT_FILE" in self.caller:
@@ -227,11 +273,15 @@ class Repository:
             "--path-format=absolute",
             "--git-path",
             "info/grafts",
-            "--is-shallow-repository",
+            "--git-path",
+            "shallow",
+            "--show-object-format",
             environment=environment,
         )
-        grafts, shallow = output.splitlines()
-        return _grafts_present(grafts), shallow == "true"
+        grafts, shallow, object_format = output.splitlines()
+        if object_format not in ID_LENGTH:
+            raise gate.PublishBlocked("OPSEC: repository object format unknown; push refused.")
+        return _grafts_present(grafts), shallow_boundaries(shallow, ID_LENGTH[object_format])
 
 
 class CanonicalPublicRepository:
@@ -428,7 +478,9 @@ def public_history(repository: Repository, client) -> tuple[str | None, bool]:
     so every commit reachable from the authoritative public head is public, and
     no local ref, URL rewrite or object can make a commit look reachable from
     it without a hash collision (replacement objects, grafts and commit-graph
-    files are off; shallow repositories are refused). No answer, or a head
+    files are off). A shallow boundary only removes parents, so it can only
+    make the excluded history smaller and the scan set larger (see
+    scan_push). No answer, or a head
     that is not here (never fetched, as GIT_NO_LAZY_FETCH holds), excludes
     nothing.
     """
@@ -446,6 +498,12 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
     global_options, command, rest = split_command(argv)
     if command != "push":
         return
+    index = 0
+    while index < len(global_options):
+        if global_options[index] == "--shallow-file":
+            # The scan reads the repository's own shallow file; another one would go unchecked.
+            raise gate.PublishBlocked("OPSEC: --shallow-file is not supported for a scanned push; push refused.")
+        index += 2 if global_options[index] in GLOBAL_WITH_VALUE else 1
     repository = Repository(real_git, global_options, environment)
     preview = repository.run("push", *preview_arguments(rest), timeout=300)
     sections = parse_porcelain(preview.stdout.decode("utf-8", "replace"))
@@ -471,17 +529,31 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
     owners: list[str] = []  # The commit each commit text belongs to, from texts[first] on.
     head, present = None, False
     if tips:
-        grafted, shallow = repository.layout()
+        grafted, boundaries = repository.layout()
         if grafted:
             raise gate.PublishBlocked("OPSEC: grafted history present; push refused.")
-        if shallow:
-            raise gate.PublishBlocked("OPSEC: shallow history cannot be scanned in full; push refused.")
         if public_repository is None:
             public_repository = CanonicalPublicRepository.from_catalog(environment)
         head, present = public_history(repository, public_repository)
         exclusion = f"^{head}\n" if present else ""
         stdin = "".join(f"{sha}\n" for sha in tips) + exclusion
         pending = repository.text("rev-list", "--stdin", stdin=stdin).split()
+        # git walks a shallow boundary commit as parentless. That truncates the
+        # excluded history as much as the scanned one, so the excluded set is
+        # never larger than the true public history, and a forged entry cannot
+        # shrink the scan set. A commit the push sends but this walk misses
+        # therefore sits behind a boundary that is itself in the scan set: on a
+        # path from a pushed tip to that commit, the first boundary is reached
+        # and is not public, or the hidden commit, its ancestor, would be public
+        # too. A boundary outside the scan set hides nothing the push sends.
+        inside = sorted(boundaries.intersection(pending))
+        if inside:
+            positions = ",".join(f"commit[{sha[:12]}]" for sha in inside)
+            raise gate.PublishBlocked(
+                f"OPSEC: shallow boundary inside the scanned range ({positions}): history behind it "
+                "cannot be scanned; deepen the clone (git fetch --deepen=<n>) or unshallow it "
+                "(git fetch --unshallow); push refused."
+            )
         for sha, parts in commit_texts(repository, pending):
             for field, text in parts:
                 texts.append(text)

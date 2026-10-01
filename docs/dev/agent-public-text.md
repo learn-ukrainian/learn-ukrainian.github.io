@@ -210,7 +210,8 @@ authoritative public head is public; no local ref, URL rewrite or object can
 put a commit inside that history without a hash collision. Ancestry is read
 from the commit objects themselves: replacement objects, grafts and
 commit-graph files (a local cache of parents that git does not rehash) are
-off, a grafted or shallow repository is refused, and objects are never fetched
+off, a grafted repository is refused, a shallow one is refused only when a
+boundary commit is inside the scan set (below), and objects are never fetched
 lazily. A merge commit in the public history is excluded with the tag text
 embedded in its `mergetag` headers, because publishing the merge published
 that text. Ref names, tag names (embedded `tag` headers included) and annotated
@@ -231,9 +232,27 @@ unavailable, and the number of public-repository calls (one).
 `-c core.useReplaceRefs=false`), grafts (`GIT_GRAFT_FILE` set to the null
 device) and commit-graph files (`-c core.commitGraph=false`) disabled, so reachability follows the parents recorded in the commits
 the destination receives. A push is refused while a non-empty grafts file
-exists (`info/grafts`, or the caller's `GIT_GRAFT_FILE`) or the repository is
-shallow. Refusal is simpler than proving that a grafted pack and the scanned
-history agree, and grafts are deprecated in favour of `git replace`.
+exists (`info/grafts`, or the caller's `GIT_GRAFT_FILE`). Refusal is simpler
+than proving that a grafted pack and the scanned history agree, and grafts are
+deprecated in favour of `git replace`.
+
+**Shallow clones.** git walks every commit listed in the shallow file as
+parentless, so history behind it is invisible to the scan. The scan reads that
+file once per push, through `git rev-parse --git-path shallow` (a linked
+worktree resolves to the shared file), and refuses the push only when a listed
+boundary commit is in the scan set: reachable from the pushed tips and not
+excluded by the public head. The refusal names the rule and the boundary's
+position (`commit[<id>]`) and says to deepen (`git fetch --deepen=<n>`) or
+unshallow (`git fetch --unshallow`) the clone. A boundary outside the scan set
+(not reachable from the tips, or reachable only through the excluded public
+history) hides nothing the push sends and does not refuse. A forged entry
+cannot shrink the scan set: a boundary only removes parents, so the excluded
+history it truncates is never larger than the true public history, and any
+commit the push sends but the walk misses lies behind a boundary that is itself
+in the scan set. An unreadable, non-regular or malformed shallow file (any line
+that is not exactly one lowercase commit id of the repository's object format)
+refuses the push, and so does git's `--shallow-file` option, which would swap
+the file the push reads.
 
 **What the scan writes.** The scan's own git calls drop `GIT_TRACE*` and
 `GIT_CURL_VERBOSE`, set `GIT_TRACE2`, `GIT_TRACE2_EVENT` and `GIT_TRACE2_PERF`
