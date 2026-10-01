@@ -2253,6 +2253,27 @@ def _search_literary_hits(query: str, *, level: str, limit: int = 1) -> list[dic
     return literary_hits[:limit]
 
 
+def _textbook_excerpt_identity(hit: Mapping[str, Any]) -> tuple[str, ...] | None:
+    """Stable id of a resolved excerpt chunk.
+
+    Direct lookup and textbook search both carry ``chunk_id``. A hit with no
+    chunk id is the same chunk as another when both carry the same source file
+    and page. Equal excerpt text is not an identity: different chunks can
+    truncate to the same prompt text.
+    """
+    chunk_id = str(hit.get("chunk_id") or "").strip()
+    if chunk_id:
+        return ("chunk_id", chunk_id)
+    source_file = str(hit.get("source_file") or hit.get("source") or "").strip()
+    page = hit.get("page")
+    if page is None:
+        return None
+    page_text = str(page).strip()
+    if source_file and page_text:
+        return ("source_page", source_file, page_text)
+    return None
+
+
 def _build_textbook_excerpt_context(
     plan: Mapping[str, Any],
     level: str,
@@ -2270,6 +2291,7 @@ def _build_textbook_excerpt_context(
         if isinstance(ref, Mapping)
     }
     found_any = False
+    seen_excerpts: dict[tuple[str, ...], str] = {}
     for title in references:
         reference = references_by_title.get(title, {})
         is_primary_reference = str(reference.get("type") or "").casefold() == "primary"
@@ -2309,6 +2331,15 @@ def _build_textbook_excerpt_context(
             lines.append("*Textbook search returned metadata without excerpt text.*")
             lines.append("")
             continue
+        identity = _textbook_excerpt_identity(hit)
+        if identity is not None:
+            first_title = seen_excerpts.get(identity)
+            if first_title is not None:
+                lines.append(f"see {first_title}")
+                lines.append("")
+                found_any = True
+                continue
+            seen_excerpts[identity] = title
         found_any = True
         if hit_source == "literary":
             lines.append("Primary text (literary corpus)")
