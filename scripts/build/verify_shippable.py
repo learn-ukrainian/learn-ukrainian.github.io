@@ -166,8 +166,8 @@ def _site_mdx_path(level: str, slug: str) -> Path:
     return SITE_DOCS / level / f"{slug}.mdx"
 
 
-def _fresh_lesson_checks(module_dir: Path, plan_path: Path) -> list[dict]:
-    """Require the plan's <n>.mdx pages and the renderer's four learner tabs."""
+def _fresh_lesson_checks(module_dir: Path, plan_path: Path, through_lesson: int | None = None) -> list[dict]:
+    """Require planned pages and four tabs, optionally through a planned number."""
     from scripts.curriculum.validate.loader import PlanError, load_plan
 
     try:
@@ -183,13 +183,30 @@ def _fresh_lesson_checks(module_dir: Path, plan_path: Path) -> list[dict]:
     except (OSError, PlanError, ValueError) as exc:
         return [{"step": "fresh_lessons", "passed": False, "reason": "invalid_lesson_plan", "detail": str(exc)}]
 
+    planned_count = len(ids)
+    if through_lesson is not None:
+        if type(through_lesson) is not int or through_lesson not in ids:
+            return [
+                {
+                    "step": "fresh_lessons",
+                    "passed": False,
+                    "reason": "invalid_lesson_scope",
+                    "through_lesson": through_lesson,
+                    "planned_lesson_ids": ids,
+                    "detail": f"through lesson {through_lesson} is not a planned lesson number; ids {ids}",
+                }
+            ]
+        ids = [n for n in ids if n <= through_lesson]
+
     missing = [n for n in ids if not (module_dir / f"{n}.mdx").is_file()]
     steps = [
         {
             "step": "fresh_lessons",
             "passed": not missing,
             "reason": "missing_planned_lessons" if missing else "planned_lessons_present",
-            "planned_count": len(ids),
+            "planned_count": planned_count,
+            "required_count": len(ids),
+            "required_lesson_ids": ids,
             "missing_count": len(missing),
             "missing_lesson_ids": missing,
             "detail": f"missing {len(missing)} of {len(ids)} planned lessons: ids {missing}"
@@ -280,6 +297,7 @@ def verify(
     plan_path: Path | None = None,
     astro_build: bool = False,
     fresh: bool = False,
+    through_lesson: int | None = None,
 ) -> dict:
     """Run the shippability predicate. Returns a structured report dict."""
     # Import lazily — linear_pipeline pulls in a heavy graph.
@@ -298,6 +316,17 @@ def verify(
     def add(name: str, passed: bool | None, detail: str) -> None:
         steps.append({"step": name, "passed": passed, "detail": detail})
 
+    if through_lesson is not None and not fresh:
+        steps.append(
+            {
+                "step": "inputs",
+                "passed": False,
+                "reason": "invalid_lesson_scope",
+                "detail": "through_lesson requires fresh=True",
+            }
+        )
+        return _finalize(level, slug, steps)
+
     # --- preconditions ---
     if not module_dir.exists():
         add("inputs", False, f"module dir not found: {module_dir}")
@@ -307,8 +336,17 @@ def verify(
         return _finalize(level, slug, steps)
 
     if fresh:
-        steps.extend(_fresh_lesson_checks(module_dir, plan_path))
-        mdx_files = sorted(module_dir.glob("*.mdx"))
+        steps.extend(_fresh_lesson_checks(module_dir, plan_path, through_lesson))
+        if through_lesson is not None:
+            if steps[0].get("reason") in {"invalid_lesson_scope", "invalid_lesson_plan"}:
+                return _finalize(level, slug, steps)
+            mdx_files = [
+                module_dir / f"{n}.mdx" for n in steps[0]["required_lesson_ids"] if (module_dir / f"{n}.mdx").is_file()
+            ]
+            if (module_dir / "index.mdx").is_file():
+                mdx_files.append(module_dir / "index.mdx")
+        else:
+            mdx_files = sorted(module_dir.glob("*.mdx"))
         if not mdx_files:
             add("inputs", False, f"no MDX files found in {module_dir}")
             return _finalize(level, slug, steps)
@@ -506,13 +544,13 @@ def main(argv: list[str] | None = None) -> int:
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="Examples:\n  .venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --lesson\n"
         "  .venv/bin/python -m scripts.build.verify_shippable a1 sounds-letters-and-hello --fresh\n"
-        "  .venv/bin/python -m scripts.build.verify_shippable a1 things-have-gender --json\n\n"
+        "  .venv/bin/python -m scripts.build.verify_shippable a1 sounds-letters-and-hello --fresh --through-lesson 1\n"
         "Outputs: human or JSON gate report; temporary assembled MDX. --astro-build writes a build log.\n"
         "Exit codes: 0 shippable, 1 failed/incomplete gate, 2 invalid arguments.\n"
         "Related: scripts/build/v7_build.py; docs/epics/curriculum-upgrade-phase1-spec.md; #7994.",
     )
     ap.add_argument("level", help="track/level token, e.g. folk, a1, b1")
-    ap.add_argument("slug", help="module slug")
+    ap.add_argument("slug", help="module slug, e.g. sounds-letters-and-hello")
     ap.add_argument(
         "--module-dir",
         type=Path,
@@ -526,20 +564,35 @@ def main(argv: list[str] | None = None) -> int:
         dest="plan_path",
         help="Existing plan YAML (default under curriculum/l2-uk-en: plans/{level}/{slug}.yaml; lesson-plans/{level}/{slug}.yaml with --fresh; base A1 with --lesson)",
     )
-    ap.add_argument("--astro-build", action="store_true", help="also run the full astro build (catch-all)")
-    ap.add_argument("--json", action="store_true", help="emit the raw report as JSON")
+    ap.add_argument(
+        "--astro-build", action="store_true", help="Also run the full Astro build (catch-all; default: off)"
+    )
+    ap.add_argument("--json", action="store_true", help="Emit the raw report as JSON (default: human report)")
     ap.add_argument(
         "--lesson",
         action="store_true",
-        help="verify all lesson pages plus cross-lesson preservation (a1; plans/a1 and archived source a1-v1)",
+        help="Verify all lesson pages plus cross-lesson preservation (a1; plans/a1 and archived source a1-v1; default: off)",
     )
-    ap.add_argument("--source-dir", type=Path, help="original built module directory for --lesson")
+    ap.add_argument(
+        "--source-dir",
+        type=Path,
+        help="Original built module directory for --lesson, e.g. curriculum/l2-uk-en/a1-v1/greetings (default: archived a1-v1 module directory)",
+    )
     ap.add_argument(
         "--fresh",
         action="store_true",
         help="require every planned <n>.mdx with four tabs and render fresh-build pages in site/src/content/docs/<level>/<slug>/ against lesson-plans/ (default: off)",
     )
+    ap.add_argument(
+        "--through-lesson",
+        type=int,
+        default=None,
+        metavar="N",
+        help="With --fresh, require and render planned lessons whose numbers are <= N, plus the landing if present. N must be a planned number (recap included); gaps are allowed. Later lessons are excluded. Default: all planned lessons. Example: --through-lesson 1",
+    )
     args = ap.parse_args(argv)
+    if args.through_lesson is not None and not args.fresh:
+        ap.error("--through-lesson requires --fresh")
     if args.fresh and args.lesson:
         ap.error("--fresh cannot be combined with --lesson")
     if args.lesson and args.astro_build:
@@ -561,6 +614,7 @@ def main(argv: list[str] | None = None) -> int:
             plan_path=args.plan_path,
             astro_build=args.astro_build,
             fresh=args.fresh,
+            through_lesson=args.through_lesson,
         )
     )
     if args.json:

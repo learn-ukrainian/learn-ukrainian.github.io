@@ -2777,11 +2777,20 @@ def check_11_render(
     astro_build: bool = False,
     module_dir: Path | None = None,
     plan_path: Path | None = None,
+    through_lesson: int | None = None,
 ) -> CheckResult:
     """Check 11: verify_shippable --fresh on assembled site docs."""
     from scripts.build.verify_shippable import verify as vs_verify
 
-    rep = vs_verify(level, slug, module_dir=module_dir, plan_path=plan_path, astro_build=astro_build, fresh=True)
+    rep = vs_verify(
+        level,
+        slug,
+        module_dir=module_dir,
+        plan_path=plan_path,
+        astro_build=astro_build,
+        fresh=True,
+        through_lesson=through_lesson,
+    )
     passed = bool(rep.get("shippable"))
     return CheckResult(
         check=11,

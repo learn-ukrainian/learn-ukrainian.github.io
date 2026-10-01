@@ -311,11 +311,14 @@ def test_verify_fresh_missing_planned_lessons(tmp_path, monkeypatch, missing):
     assert step["detail"] == f"missing {len(missing)} of 3 planned lessons: ids {list(missing)}"
 
 
-def test_verify_fresh_landing_only(tmp_path, monkeypatch):
+@pytest.mark.parametrize("through_lesson", [None, 1])
+def test_verify_fresh_landing_only(tmp_path, monkeypatch, through_lesson):
     site_mod, plan_file = _mk_fresh(tmp_path, ids=(1,))
     (site_mod / "1.mdx").rename(site_mod / "index.mdx")
     monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
-    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)
+    rep = vs.verify(
+        "a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, through_lesson=through_lesson
+    )
     assert rep["shippable"] is False
     by_step = {s["step"]: s for s in rep["steps"]}
     assert by_step["fresh_lessons"]["reason"] == "missing_planned_lessons"
@@ -371,11 +374,14 @@ def test_verify_fresh_tab_examples_do_not_count(tmp_path, monkeypatch, wrapper):
         "plan_schema: 2\nlessons: [null]",
     ],
 )
-def test_verify_fresh_invalid_plan_fails_closed(tmp_path, monkeypatch, plan):
+@pytest.mark.parametrize("through_lesson", [None, 1])
+def test_verify_fresh_invalid_plan_fails_closed(tmp_path, monkeypatch, plan, through_lesson):
     site_mod, plan_file = _mk_fresh(tmp_path)
     plan_file.write_text(plan, encoding="utf-8")
     monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
-    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)
+    rep = vs.verify(
+        "a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, through_lesson=through_lesson
+    )
     assert rep["shippable"] is False
     assert rep["steps"][0]["reason"] == "invalid_lesson_plan"
 
@@ -390,25 +396,30 @@ def test_verify_fresh_skipped_lesson_render_blocks_even_green_astro(tmp_path, mo
     assert rep["shippable"] is False
 
 
-def test_verify_shippable_no_flag_default_paths(monkeypatch):
-    """Pin the no-flag verify_shippable path (uses default legacy paths, fresh=False)."""
+@pytest.mark.parametrize("args,through_lesson", [([], None), (["--fresh", "--through-lesson", "1"], 1)])
+def test_verify_shippable_no_flag_default_paths(monkeypatch, args, through_lesson):
+    """Pin default path arguments and forwarding of the optional fresh scope."""
     seen = {}
 
-    def fake_verify(level, slug, *, module_dir=None, plan_path=None, astro_build=False, fresh=False):
+    def fake_verify(
+        level, slug, *, module_dir=None, plan_path=None, astro_build=False, fresh=False, through_lesson=None
+    ):
         seen["level"] = level
         seen["slug"] = slug
         seen["module_dir"] = module_dir
         seen["plan_path"] = plan_path
         seen["astro_build"] = astro_build
         seen["fresh"] = fresh
+        seen["through_lesson"] = through_lesson
         return {"level": level, "slug": slug, "shippable": True, "steps": []}
 
     monkeypatch.setattr(vs, "verify", fake_verify)
-    ret = vs.main(["a1", "greetings"])
+    ret = vs.main(["a1", "greetings", *args])
     assert ret == 0
     assert seen["level"] == "a1"
     assert seen["slug"] == "greetings"
-    assert seen["fresh"] is False
+    assert seen["fresh"] is bool(args)
+    assert seen["through_lesson"] == through_lesson
     assert seen["module_dir"] is None
     assert seen["plan_path"] is None
 
@@ -420,3 +431,118 @@ def test_verify_shippable_fresh_and_lesson_is_ap_error():
     with pytest.raises(SystemExit) as exc_info:
         vs.main(["a1", "greetings", "--fresh", "--lesson"])
     assert exc_info.value.code == 2
+
+
+@pytest.mark.parametrize("ids,through_lesson", [((1, 2), 1), ((1, 3, 5), 3)])
+def test_verify_fresh_scoped_pass_with_later_lessons_missing(tmp_path, monkeypatch, ids, through_lesson):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=ids)
+    for n in ids:
+        if n > through_lesson:
+            (site_mod / f"{n}.mdx").unlink()
+    # Recaps participate in the same numeric scope as teaching lessons.
+    plan = yaml.safe_load(plan_file.read_text())
+    plan["lessons"][-1]["kind"] = "recap"
+    plan_file.write_text(yaml.safe_dump(plan))
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
+    rep = vs.verify(
+        "a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, through_lesson=through_lesson
+    )
+    assert rep["shippable"] is True
+    lessons = rep["steps"][0]
+    assert lessons["planned_count"] == len(ids)
+    assert lessons["required_lesson_ids"] == [n for n in ids if n <= through_lesson]
+    assert vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True)["shippable"] is False
+
+
+@pytest.mark.parametrize("defect", ["missing", "tab", "render"])
+def test_verify_fresh_scoped_earlier_lesson_defect_blocks(tmp_path, monkeypatch, defect):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1, 3, 5))
+    (site_mod / "5.mdx").unlink()
+    page = site_mod / "1.mdx"
+    if defect == "missing":
+        page.unlink()
+    elif defect == "tab":
+        page.write_text(page.read_text().replace('label="Ресурси — Resources"', 'label="Other"'))
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": defect != "render"})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, through_lesson=3)
+    assert rep["shippable"] is False
+    by_step = {s["step"]: s for s in rep["steps"]}
+    if defect == "missing":
+        assert by_step["fresh_lessons"]["missing_lesson_ids"] == [1]
+    elif defect == "tab":
+        assert by_step["fresh_tabs.1"]["missing_tabs"] == ["Ресурси"]
+    else:
+        assert by_step["mdx_render"]["passed"] is False
+
+
+@pytest.mark.parametrize("through_lesson", [0, 2, 6, True])
+def test_verify_fresh_scoped_out_of_plan_number(tmp_path, monkeypatch, through_lesson):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1, 3, 5))
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: pytest.fail("invalid scope must stop before rendering"))
+    rep = vs.verify(
+        "a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, through_lesson=through_lesson
+    )
+    assert rep["shippable"] is False
+    assert rep["steps"][0]["reason"] == "invalid_lesson_scope"
+    assert rep["steps"][0]["planned_lesson_ids"] == [1, 3, 5]
+
+
+def test_verify_fresh_scoped_ignores_later_page_defects_but_renders_landing(tmp_path, monkeypatch):
+    site_mod, plan_file = _mk_fresh(tmp_path)
+    (site_mod / "2.mdx").write_text("broken later page")
+    (site_mod / "index.mdx").write_text("landing")
+    seen = []
+
+    def render(text):
+        seen.append(text)
+        return {"passed": text != "broken later page"}
+
+    monkeypatch.setattr(lp, "run_mdx_render_gate", render)
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, through_lesson=1)
+    assert rep["shippable"] is True
+    assert len(seen) == 2 and "landing" in seen and "broken later page" not in seen
+
+
+def test_verify_scoped_requires_fresh(tmp_path):
+    rep = vs.verify("a1", "greetings", through_lesson=1)
+    assert rep["shippable"] is False
+    assert rep["steps"][0]["reason"] == "invalid_lesson_scope"
+    with pytest.raises(SystemExit) as exc:
+        vs.main(["a1", "greetings", "--through-lesson", "1"])
+    assert exc.value.code == 2
+
+
+def test_verify_fresh_scoped_requires_recap_endpoint(tmp_path, monkeypatch):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1, 3))
+    plan = yaml.safe_load(plan_file.read_text())
+    plan["lessons"][-1]["kind"] = "recap"
+    plan_file.write_text(yaml.safe_dump(plan))
+    (site_mod / "3.mdx").unlink()
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True})
+    rep = vs.verify("a1", "greetings", module_dir=site_mod, plan_path=plan_file, fresh=True, through_lesson=3)
+    assert rep["shippable"] is False
+    assert rep["steps"][0]["missing_lesson_ids"] == [3]
+    assert rep["steps"][0]["required_lesson_ids"] == [1, 3]
+
+
+def test_verify_fresh_scoped_cli_out_of_plan_is_typed_failure(tmp_path, capsys):
+    site_mod, plan_file = _mk_fresh(tmp_path, ids=(1, 3))
+    result = vs.main(
+        [
+            "a1",
+            "greetings",
+            "--fresh",
+            "--through-lesson",
+            "2",
+            "--module-dir",
+            str(site_mod),
+            "--plan",
+            str(plan_file),
+            "--json",
+        ]
+    )
+    assert result == 1
+    import json
+
+    report = json.loads(capsys.readouterr().out)
+    assert report["steps"][0]["reason"] == "invalid_lesson_scope"
