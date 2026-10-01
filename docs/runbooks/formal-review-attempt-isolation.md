@@ -10,21 +10,42 @@ ordinary read/search tools, repository and git context. The actual working tree
 must match every manifest input hash; a mismatch refuses as
 `full_review_tree_mismatch`. The same check runs again before adapter launch.
 
-Full access uses the existing attempt boundary and socket forwarder. On Linux,
-Bubblewrap mounts the whole host read-only (`--ro-bind / /`) and shares the
-network so every seat can reach its provider. A private PID namespace, private
-procfs, `--new-session` and `--die-with-parent` contain the entire seat process
-tree, including detached children. Only private temporary storage and the
-attempt's return/transcript directory (including a fresh home staged with narrow
-CLI authentication) are writable. The reviewed checkout, receipt store, task
-records and saved results remain read-only. The sources process and ledger
-writer run outside the sandbox through the attempt-local socket forwarder.
-Missing Bubblewrap or a failed read/write capability probe refuses launch as
-`full_review_bwrap_unavailable` or `full_review_bwrap_probe_failed`; there is no
-unconfined fallback. CLI compatibility and effective-MCP probes run inside this
-same boundary. Codex defers its nested sandbox to the OS boundary so sources
-stdio remains usable. AGY's `--sandbox` is supplementary: OS write denial
-supersedes it, and no permission-bypass flag is used for AGY.
+Full access uses the same isolated attempt boundary, sources socket forwarder
+and `AttemptEgress` allowlist proxy as isolated mode. Its only wider grant is
+read-only access to the verified full checkout, the Git metadata and object
+store needed by that checkout, and the repository's shared `data/` corpus.
+A linked checkout gets its own Git metadata plus common objects, refs and
+configuration; the owning checkout and sibling worktrees are not mounted.
+`batch_state/`, nested dispatch checkouts and other worktrees' Git metadata are
+hidden. External Git object alternates are refused with
+`full_review_git_alternates_unsupported`. Read sets containing sockets, FIFOs
+or device files are refused with `full_review_special_file_refused`: a
+read-only socket mount would still allow host command execution.
+
+Bubblewrap starts from an empty root, with private network, PID, IPC and UTS
+namespaces, a private procfs, `--new-session`, `--die-with-parent` and dropped
+capabilities. A synthetic single-account passwd/group pair supports native shell discovery
+without exposing the host account databases. The real home, host `/run`, user
+D-Bus, host loopback services,
+abstract Unix listeners, receipt store, task records and saved results are
+unmounted or unreachable. Only the attempt's private runtime/home/return tree
+is writable; checkout and corpus files are read-only. The sources server and
+ledger writer remain outside and are reached through the attempt socket.
+The namespace-local TCP forwarder sends provider traffic through the parent
+CONNECT-only proxy to exact allowlisted API hosts. Clearing proxy variables
+does not create a host network route. Claude stages only selected provider
+authentication, including a fresh Linux OAuth access token, into the private
+seat environment; it receives no real-home credential directory.
+
+Missing Bubblewrap refuses with `sandbox_unavailable:linux_bwrap_missing`;
+failed namespace/read/write probes refuse with `sandbox_probe_*`, and a
+missing proxy refuses with `attempt_egress_unavailable`. There is no weaker
+fallback. CLI compatibility and effective-MCP probes run inside the same
+boundary. Codex defers its nested sandbox to the OS boundary so sources stdio
+remains usable. AGY's native sandbox is supplementary; its permission bypass
+remains forbidden. Detached children of the seat are killed with the PID
+namespace. This statement does not certify authenticated provider completion:
+use the captured runtime probes below for each actual seat.
 
 The reviewed-tree check runs before `prepare_review_attempt` creates an
 exclusive ledger/config. A refused tree leaves its attempt id reusable; a
@@ -59,13 +80,16 @@ the return schema and verdict dimensions are unchanged.
   author provenance and select an independent family until reliable plan writer
   records are available. A trailer alone is not that proof.
 - **Runtime coverage — review-harness driver:** fake Claude, Codex and AGY seats
-  run their real adapter plans under Bubblewrap and must fail writes to the
-  receipt directory, ledger, reviewed tree, task record and saved result. A
-  detached child must die when the seat exits. These prove OS enforcement at
-  each adapter seam; they do not prove authenticated provider completion.
-  Real Claude/Codex probes are opt-in host checks; their recorded result, not
-  AGY's native flag, determines real-seat coverage. Real AGY provider completion
-  remains with the accountable driver in AC-04.
+  execute the same escape script under their real adapter's OS boundary. It
+  attempts systemd/D-Bus command access, host TCP ports 22 and 8765, a host
+  abstract Unix listener, private-home credentials and writes to five protected
+  targets. Git log/show and corpus reads must work; detached children must die.
+  Separate per-seat tests perform a real sources handshake, verify the outside
+  server's ledger receipt, and prove allowed TLS proxy traffic with a
+  deterministic provider fixture. Fake seats prove the mechanism, not paid
+  provider completion. Real Claude/Codex checks are opt-in and require captured
+  shell execution and sources receipts. Real AGY completion remains unverified
+  until the accountable driver completes AC-04.
 - **AC-04 — accountable driver:** after landing, run a real bound full review
   with a short timeout. Require task binding plus `review_access: full`, a cited
   nonempty ledger, a trace of an outside-pin repo read or git command, recorder
@@ -79,12 +103,14 @@ Full-mode boundary regressions and authenticated negative probes:
 LU_FULL_REVIEW_REAL_PROBES=1 "$PROJECT_PYTHON" -m pytest tests/review/test_full_review_access.py -q -s
 ```
 
-The fake-seat denominator is Claude, Codex and AGY, five protected targets per
-seat, with positive host-read/write controls and detached-child teardown.
-Authenticated Claude Opus 5.5 and Codex GPT-6.1 Sol probes additionally require
-captured shell arguments/output proving all five write attempts and unchanged
-protected bytes. These are negative filesystem probes, not the AC-04 linguistic
-review/recorder proof. AGY's real-provider row remains unverified until AC-04.
+The fake-seat denominator is Claude, Codex and AGY across the must-fail and
+must-succeed matrix above. Host listeners have outside-sandbox positive
+controls. Shared Git/corpus access has a linked-worktree regression that also
+proves neighboring checkout denial. Authenticated probes reuse the same script
+and require captured command/output, unchanged protected bytes, an outside
+sources receipt and detached-child teardown. Actual provider completion proves
+allowlisted provider connectivity. These are runtime boundary probes; the
+linguistic review and recorder acceptance proof remains AC-04.
 
 ## Explicit isolated mode
 
@@ -279,8 +305,8 @@ headers and parent-created proxy configuration before any seat launches. These
 are authorized inputs or parent-owned setup, not post-launch seat output reads.
 Stdout/stderr are existing parent-held pipes or PTYs, not reopened names.
 
-The Claude adapter is unchanged in this branch and remains refused for formal
-attempts. The separate Claude follow-up owns this complete read audit:
+The Claude adapter is unchanged in this branch. Only isolated Claude
+attempts remain refused; full attempts use the private boundary above. The separate Claude follow-up owns the remaining parent-read audit:
 
 | Claude site | Required follow-up |
 | --- | --- |
@@ -298,7 +324,7 @@ cross-family re-review and landing; the Claude follow-up owns its deferred sites
 
 ## Claude adapter follow-up
 
-The Claude adapter change is excluded from this branch so it can receive an
+The isolated Claude adapter change is excluded from this branch so it can receive an
 eligible cross-family review: changing that adapter excludes Claude reviewers
 because it governs their own boundary. A Claude Opus worker owns the follow-up
 PR, reviewed by `gpt-6.1-sol`.
@@ -311,7 +337,7 @@ prevent host/project settings and hooks from loading; disabling slash commands
 prevents command expansion. Keep the instruction-free fresh home and OS closure.
 Do not add `--bare`: it disables subscription authentication, as documented in the
 [Claude authentication reference](https://code.claude.com/docs/en/authentication#generate-a-long-lived-token).
-The follow-up must remove the typed refusal, restore Claude's launch-proof test
+The follow-up must remove the isolated-only typed refusal, restore Claude's isolated launch-proof test
 matrix, and establish its own exact-head provider compatibility proof.
 
 ## Provider egress boundary

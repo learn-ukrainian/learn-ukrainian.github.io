@@ -689,6 +689,7 @@ def record_return(
                         previous_ledger_path,
                         echoed,
                         ids,
+                        identity["access"],
                     ),
                 ]
             )
@@ -838,6 +839,7 @@ def _rejection_codes(
     previous_ledger_path: Path | None,
     echoed: dict[str, Any],
     ids: dict[str, Any],
+    review_access: str = "isolated",
 ) -> list[str]:
     codes: list[str] = []
     for name in ("review_id", "attempt_id"):
@@ -853,6 +855,7 @@ def _rejection_codes(
         ledger_path=Path(ledger_path),
         previous_ledger_path=previous_ledger_path,
         repo_root=root,
+        review_access=review_access,
     )
     codes += [item.code for item in result.rejections]
     return list(dict.fromkeys(codes))

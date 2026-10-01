@@ -52,7 +52,6 @@ REVIEW_TOOLS = frozenset(
         "query_pravopys",
         "search_style_guide",
         "search_text",
-        "search_resources",
         "query_r2u",
         "search_heritage",
         "check_russian_shadow",
@@ -62,6 +61,15 @@ REVIEW_TOOLS = frozenset(
         "verify_quote",
     }
 )
+FULL_REVIEW_TOOLS = REVIEW_TOOLS | {"search_resources"}
+
+
+def review_tools(review_access: str = "isolated") -> frozenset[str]:
+    """Keep the original isolated tool contract; catalogue evidence is full-only."""
+    if review_access not in {"isolated", "full"}:
+        raise ValueError("review_access_invalid")
+    return FULL_REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS
+
 
 _TOKEN = r"^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
 _LOCK = threading.Lock()

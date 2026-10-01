@@ -1,9 +1,9 @@
 """Review access: full matching checkout or isolated copied manifest evidence.
 
-Full attempts use a verified host read-only mount and the attempt-scoped sources ledger.
-For explicit isolated mode, the runner owns the boundary until response parsing
-finishes: sources runs outside the sandbox, connected by a byte-stream socket,
-and the original repository, Git objects, receipt store and home are unmounted.
+Both modes use the isolated launcher, private network and attempt-scoped sources
+ledger. Full mode widens only the read set to the verified checkout, Git objects
+and corpus. Sources runs outside the sandbox, connected by a byte-stream socket;
+the receipt store, host services and real home remain unmounted.
 This is separate from code-review isolation (#9251).
 """
 
@@ -53,15 +53,15 @@ def linux_claude_auth() -> dict[str, str]:
     """
     from scripts.review.isolation import ReviewIsolationError
 
-    if platform.system() != "Linux" or any(
-        os.environ.get(k)
-        for k in (
-            "ANTHROPIC_API_KEY",
-            "ANTHROPIC_AUTH_TOKEN",
-            "CLAUDE_API_KEY",
-            "CLAUDE_CODE_OAUTH_TOKEN",
-        )
+    for key in (
+        "ANTHROPIC_API_KEY",
+        "ANTHROPIC_AUTH_TOKEN",
+        "CLAUDE_API_KEY",
+        "CLAUDE_CODE_OAUTH_TOKEN",
     ):
+        if value := os.environ.get(key):
+            return {key: value}
+    if platform.system() != "Linux":
         return {}
     path = Path.home() / ".claude" / ".credentials.json"
     try:
@@ -298,6 +298,13 @@ class AttemptBoundary:
             if agent == "claude":
                 self.env.update(linux_claude_auth())
             self.env.update(HOME=str(home), TMPDIR=str(self.write_root / "tmp"))
+            # Native CLI shell discovery calls getpwuid. Supply only this
+            # namespace's account, never the host's passwd/group databases.
+            self.passwd = self.write_root / "passwd"
+            self.group = self.write_root / "group"
+            self.passwd.write_text(f"review:x:{os.getuid()}:{os.getgid()}:Review seat:{home}:/bin/bash\n")
+            self.group.write_text(f"review:x:{os.getgid()}:\n")
+            self.env.update(USER="review", LOGNAME="review", SHELL="/bin/bash")
             self.env.pop("GIT_DIR", None)
             self.env.pop("GIT_WORK_TREE", None)
             proxy = self.write_root / "stdio.py"
@@ -306,8 +313,7 @@ class AttemptBoundary:
             self.endpoint = endpoint
             self.connection = SourcesConnection(endpoint, server)
             self.egress_endpoint = self.write_root / "egress.sock"
-            if not self.full:
-                self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
+            self.egress = AttemptEgress(self.egress_endpoint, load_allowlist(agent))
             self.forwarder = self.write_root / "forwarder.py"
             self.forwarder.write_bytes(Path(__file__).with_name("attempt_forwarder.py").read_bytes())
             proxy_server = {
@@ -357,24 +363,17 @@ class AttemptBoundary:
         from scripts.review.isolation import ReviewIsolationError, prepare_host_sandbox, wrap_argv_with_sandbox
 
         binary = Path(shutil.which(cmd[0]) or cmd[0]).resolve(strict=True)
-        if self.full:
-            from scripts.review.isolation import prepare_full_host_sandbox
-
-            if not hasattr(self, "sandbox"):
-                self.sandbox = prepare_full_host_sandbox(write_root=self.write_root, cwd=self.workspace)
-            env = {**self.env, **env_overrides}
-            env.update(HOME=self.env["HOME"], TMPDIR=self.env["TMPDIR"])
-            return wrap_argv_with_sandbox([str(binary), *cmd[1:]], self.sandbox), env
         runtime = runtime_files(binary)
         reject = Path(self.tool_config["review_input_root"]).resolve()
-        if any(p.is_relative_to(reject) or reject.is_relative_to(p) for p in runtime):
+        if not self.full and any(p.is_relative_to(reject) or reject.is_relative_to(p) for p in runtime):
             raise ReviewIsolationError("attempt_runtime_overlaps_repository")
+        full_reads, hidden = full_review_reads(self.workspace) if self.full else ([], [])
         self.sandbox = prepare_host_sandbox(
             engine=self.agent,
             snapshot_root=self.workspace,
             write_root=self.write_root,
             reject_root=Path(self.tool_config["review_input_root"]),
-            runtime_reads=[*runtime, self.endpoint],
+            runtime_reads=[*runtime, *full_reads, self.endpoint],
             network_allowed=False,
         )
         if self.egress is None or not self.egress.thread.is_alive():
@@ -397,7 +396,22 @@ class AttemptBoundary:
         if self.sandbox.mechanism == "linux-bwrap":
             # A private procfs supports native executable discovery without
             # exposing host processes, descriptors, cwd or environment.
-            wrapped[-len(argv) : -len(argv)] = ["--proc", "/proc", "--chdir", str(self.workspace)]
+            masks = [argument for path in hidden for argument in ("--tmpfs", str(path), "--remount-ro", str(path))]
+            wrapped[-len(argv) : -len(argv)] = [
+                *masks,
+                "--ro-bind",
+                str(self.passwd),
+                "/etc/passwd",
+                "--ro-bind",
+                str(self.group),
+                "/etc/group",
+                "--cap-drop",
+                "ALL",
+                "--proc",
+                "/proc",
+                "--chdir",
+                str(self.workspace),
+            ]
         return wrapped, env
 
     def verify_seat(self, cmd: list[str], env_overrides: dict[str, str]) -> None:
@@ -489,8 +503,62 @@ def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
         raise ReviewIsolationError("full_review_tree_mismatch") from exc
 
 
+def full_review_reads(workspace: Path) -> tuple[list[Path], list[Path]]:
+    """Exact linked-worktree Git context and corpus, never the owning checkout.
+
+    Git follows the checkout's .git file to its own metadata and the shared
+    objects/refs. Do not grant the shared metadata's other worktrees or its
+    checkout. Host task/receipt stores and nested checkouts are masked even
+    when present in the reviewed tree. External object alternates are refused.
+    """
+    from scripts.review.isolation import ReviewIsolationError
+
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--path-format=absolute", "--git-dir", "--git-common-dir"],
+            cwd=workspace,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if result.returncode:
+            raise ReviewIsolationError("full_review_git_context_unavailable")
+        git_dir, common = (Path(p).resolve(strict=True) for p in result.stdout.splitlines())
+        alternates = common / "objects/info/alternates"
+        if alternates.exists() and alternates.read_bytes().strip():
+            raise ReviewIsolationError("full_review_git_alternates_unsupported")
+        reads = []
+        if not git_dir.is_relative_to(workspace):
+            reads.append(git_dir)
+        if not common.is_relative_to(workspace):
+            reads.extend(
+                path
+                for name in ("objects", "refs", "packed-refs", "config", "shallow")
+                if (path := common / name).exists()
+            )
+        # Corpus can be absent in a fixture; linked checkouts normally share it.
+        corpus = common.parent / "data"
+        if common.name == ".git" and corpus.is_dir() and not corpus.is_relative_to(workspace):
+            reads.append(corpus.resolve(strict=True))
+        hidden = [
+            p for p in (workspace / "batch_state", workspace / ".worktrees", workspace / ".git/worktrees") if p.is_dir()
+        ]
+        for root in (workspace, *reads):
+            if root.is_dir():
+                for directory, subdirs, files in os.walk(root, followlinks=False):
+                    subdirs[:] = [name for name in subdirs if Path(directory) / name not in hidden]
+                    for name in (*subdirs, *files):
+                        mode = (Path(directory) / name).lstat().st_mode
+                        if not (stat.S_ISREG(mode) or stat.S_ISDIR(mode) or stat.S_ISLNK(mode)):
+                            raise ReviewIsolationError("full_review_special_file_refused")
+        return reads, hidden
+    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+        raise ReviewIsolationError("full_review_git_context_unavailable") from exc
+
+
 def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool_config: dict | None):
-    """Keep isolated boundaries and enforce a host read-only boundary for full attempts."""
+    """Use the isolated boundary with only a wider read set for full attempts."""
     tc = tool_config or {}
     if not (tc.get("review_id") or tc.get("attempt_id")):
         return None

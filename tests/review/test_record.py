@@ -1921,6 +1921,36 @@ def test_full_same_family_lesson_is_rejected(world):
     assert not world.verdict_file(2).exists()
 
 
+@pytest.mark.parametrize("access", ["full", "isolated"])
+@pytest.mark.parametrize("branch", ["evidence", "unsupported_by_source"])
+def test_catalogue_receipt_requires_bound_full_access(world, access, branch):
+    item = finding("F-01", severity="MINOR")
+    made = world.make_return(2, [item])
+    receipt = _record(
+        made["ledger"],
+        manifest=world.digest(2),
+        result="No catalogue resources found.",
+        attempt_id=made["attempt_id"],
+        review_id=made["review_id"],
+        tool="search_resources",
+    )
+    document = yaml.safe_load(made["review"].read_bytes())
+    changed = document["findings"][0]
+    changed["expected"] = "No catalogue"
+    changed.pop("evidence")
+    changed[branch] = (
+        {"receipt": receipt} if branch == "evidence" else {"searches": [{"receipt": receipt, "outcome": "no_hits"}]}
+    )
+    made["review"].write_text(yaml.safe_dump(document))
+    world.task(
+        "catalogue-review", "claude", "claude-opus-5-5", review_access=access, review_attempt=_bound(world, made)
+    )
+    outcome = world.record(made, task_id="catalogue-review")
+    assert outcome.accepted is (access == "full"), outcome.rejection_codes
+    if access == "isolated":
+        assert codes.EVIDENCE_RECEIPT_INVALID in outcome.rejection_codes
+
+
 def test_full_return_must_equal_saved_terminal_result(world):
     made = world.make_return(2)
     world.task("review-bound", "claude", "claude-opus-5-5", review_access="full", review_attempt=_bound(world, made))

@@ -31,7 +31,7 @@ from jinja2.sandbox import ImmutableSandboxedEnvironment
 from scripts.build.fresh.cli import _load_cited_records
 from scripts.build.fresh.manifest import ATTEMPT_TOKEN, learner_state_sha256, pinned_entries
 from scripts.review.prompts.eligibility import Refusal, pin_refusals
-from scripts.review.receipts import REVIEW_TOOLS
+from scripts.review.receipts.ledger import review_tools
 from scripts.review.render_contract import RENDER_RECORD_KEY, ReviewContractError, render_record
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -441,7 +441,7 @@ def _build_context(
     context: dict[str, Any] = {
         "manifest": manifest,
         "manifest_sha256": manifest_sha256,
-        "review_tools": sorted(REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS - {"search_resources"}),
+        "review_tools": sorted(review_tools(review_access)),
         "review_access": review_access,
         "review_id": review_id,
         "attempt_id": attempt_id,

@@ -37,7 +37,7 @@ import tempfile
 import time
 import urllib.parse
 from collections.abc import Iterable, Mapping, Sequence
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -3377,52 +3377,6 @@ def prepare_host_sandbox(
     raise ReviewIsolationError(f"sandbox_unavailable:unsupported_os:{system}")
 
 
-def prepare_full_host_sandbox(*, write_root: Path, cwd: Path) -> SandboxCapability:
-    """Verify the full-read Linux boundary before executing any seat binary."""
-    if platform.system() != "Linux":
-        raise ReviewIsolationError("full_review_bwrap_unavailable")
-    try:
-        binary = _resolve_fixed_system_executable("bwrap", reject_roots=(write_root, cwd))
-    except ReviewIsolationError as exc:
-        raise ReviewIsolationError("full_review_bwrap_unavailable") from exc
-    write = write_root.resolve(strict=True)
-    capability = SandboxCapability(
-        mechanism="linux-bwrap-full",
-        binary=binary,
-        profile_path=None,
-        read_roots=("/",),
-        write_root=str(write),
-        verified=True,
-        probe_detail="full_probe_pending",
-        network_allowed=True,
-    )
-    # A new existing host file distinguishes denied writes from missing parents.
-    with tempfile.TemporaryDirectory(prefix="full-boundary-probe-") as temporary:
-        host = Path(temporary) / "host"
-        host.write_text("host-sentinel")
-        writable = write / "sandbox-write-probe"
-        command = [
-            "/bin/sh",
-            "-c",
-            'test "$(cat "$1")" = host-sentinel && ! (printf bad > "$1") && printf w > "$2" && test "$(cat "$2")" = w',
-            "full-probe",
-            str(host),
-            str(writable),
-        ]
-        # /tmp is private; expose this read-only probe at its own exact path.
-        argv = wrap_argv_with_sandbox(command, capability)
-        argv[-len(command) : -len(command)] = ["--ro-bind", temporary, temporary]
-        try:
-            result = subprocess.run(argv, capture_output=True, timeout=5, check=False)
-        except (OSError, subprocess.TimeoutExpired) as exc:
-            raise ReviewIsolationError("full_review_bwrap_probe_failed") from exc
-        finally:
-            writable.unlink(missing_ok=True)
-        if result.returncode != 0 or host.read_text() != "host-sentinel":
-            raise ReviewIsolationError("full_review_bwrap_probe_failed")
-    return replace(capability, probe_detail="allow_host_read+deny_host_write+allow_return_write")
-
-
 def wrap_argv_with_sandbox(argv: Sequence[str], sandbox: SandboxCapability) -> list[str]:
     """Prefix argv with the verified OS sandbox launcher."""
     if not sandbox.verified:
@@ -3442,33 +3396,6 @@ def wrap_argv_with_sandbox(argv: Sequence[str], sandbox: SandboxCapability) -> l
             str(sandbox.binary),
             "-f",
             str(sandbox.profile_path),
-            *inner,
-        ]
-    if sandbox.mechanism == "linux-bwrap-full":
-        if sandbox.binary is None:
-            raise ReviewIsolationError("sandbox_binary_missing")
-        return [
-            str(sandbox.binary),
-            "--ro-bind",
-            "/",
-            "/",
-            "--unshare-pid",
-            "--unshare-ipc",
-            "--unshare-uts",
-            "--unshare-cgroup-try",
-            "--new-session",
-            "--die-with-parent",
-            "--cap-drop",
-            "ALL",
-            "--proc",
-            "/proc",
-            "--dev",
-            "/dev",
-            "--tmpfs",
-            "/tmp",
-            "--bind",
-            sandbox.write_root,
-            sandbox.write_root,
             *inner,
         ]
     if sandbox.mechanism == "linux-bwrap":

@@ -1631,7 +1631,13 @@ def test_refused_call_prints_a_bare_receipt_line(
     ],
 )
 def test_resource_catalogue_checks_are_ledgered_review_evidence(tmp_path, text, outcome):
-    assert "search_resources" in REVIEW_TOOLS
+    from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, review_tools
+
+    assert "search_resources" not in REVIEW_TOOLS
+    assert "search_resources" in FULL_REVIEW_TOOLS
+    assert review_tools() == REVIEW_TOOLS and review_tools("full") == FULL_REVIEW_TOOLS
+    with pytest.raises(ValueError, match="review_access_invalid"):
+        review_tools("unknown")
     ledger = tmp_path / "review" / "attempt.jsonl"
     create_empty_ledger(ledger)
     receipt = _record(

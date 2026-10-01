@@ -255,13 +255,16 @@ def test_runtime_files_does_not_grant_native_binary_parent():
     assert binary.parent not in runtime_files(binary)
 
 
-@pytest.mark.parametrize("agent", ["agy", "codex"])
-@pytest.mark.parametrize("access", ["isolated", "full"])
+@pytest.mark.parametrize(
+    "agent,access", [("agy", "isolated"), ("codex", "isolated"), ("agy", "full"), ("codex", "full"), ("claude", "full")]
+)
 def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent, access):
     root, _ = world
     doc = manifest_world(root, "plan")
     tc = attempt_config(root, tmp_path, doc, agent)
     tc.update(review_access=access, review_cwd=str(root))
+    if access == "full":
+        subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
     boundary = AttemptBoundary(agent=agent, tool_config=tc)
     try:
         if agent == "codex":
@@ -315,12 +318,9 @@ def test_sources_proxy_records_receipts_outside_seat(world, tmp_path, agent, acc
         # The same boundary cannot read even its own runtime ledger.
         cmd, env = boundary.wrap(["/bin/cat", str(ledger)], {})
         read_result = subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30)
-        if access == "isolated":
-            assert read_result.returncode != 0
-        else:
-            assert read_result.returncode == 0
-            cmd, env = boundary.wrap(["/bin/sh", "-c", 'printf forged >> "$1"', "probe", str(ledger)], {})
-            assert subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30).returncode != 0
+        assert read_result.returncode != 0
+        cmd, env = boundary.wrap(["/bin/sh", "-c", 'printf forged >> "$1"', "probe", str(ledger)], {})
+        assert subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, timeout=30).returncode != 0
     finally:
         processes = boundary.connection.processes
         boundary.cleanup()
@@ -753,18 +753,21 @@ def test_proxy_crash_refuses_launch_and_never_shares_network(world, tmp_path):
         boundary.cleanup()
 
 
-@pytest.mark.parametrize("denial", ["hostname", "loopback", "mixed", "non_connect", "redirect"])
-def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch, denial):
+@pytest.mark.parametrize("agent,access", [("agy", "isolated"), ("agy", "full"), ("codex", "full"), ("claude", "full")])
+@pytest.mark.parametrize("denial", ["hostname", "loopback", "mixed", "non_connect", "redirect", "allowed"])
+def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch, denial, agent, access):
     import asyncio
     import ssl
 
     from scripts.agent_runtime.attempt_network import load_allowlist
 
     root, _ = world
-    boundary = AttemptBoundary(
-        agent="agy", tool_config=attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
-    )
-    allowed = sorted(load_allowlist("agy"))[0]
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent)
+    tc.update(review_access=access, review_cwd=str(root))
+    if access == "full":
+        subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=30)
+    boundary = AttemptBoundary(agent=agent, tool_config=tc)
+    allowed = sorted(load_allowlist(agent))[0]
 
     class Forbidden(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
@@ -790,7 +793,7 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
 
         monkeypatch.setattr(boundary.egress, "_resolve", resolve)
         url = "https://not-allowed.example/" if denial == "hostname" else f"https://{allowed}/"
-        if denial == "redirect":
+        if denial in {"redirect", "allowed"}:
             # A provider-shaped TLS fixture redirects the native HTTP client
             # toward a forbidden host service; the redirect never reaches it.
             cert, key = tmp_path / "cert.pem", tmp_path / "key.pem"
@@ -818,6 +821,8 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
 
             class Redirect(Forbidden):
                 def do_GET(self):
+                    if denial == "allowed":
+                        return super().do_GET()
                     self.send_response(302)
                     self.send_header("Location", f"https://127.0.0.1:{server.server_port}/forbidden")
                     self.end_headers()
@@ -847,6 +852,12 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
                 " assert client.recv(1024).startswith(b'HTTP/1.1 403')\n"
                 "print('DENIED:proxy_method')\n"
             )
+        elif denial == "allowed":
+            script = (
+                "import urllib.request,ssl\n"
+                f"assert urllib.request.urlopen({url!r},context=ssl._create_unverified_context(),timeout=3).read() == b'FORBIDDEN_HTTP_SENTINEL'\n"
+                "print('ALLOWED:provider')\n"
+            )
         else:
             script = (
                 "import urllib.request,urllib.error,ssl\n"
@@ -862,8 +873,8 @@ def test_seat_proxy_denials_have_successful_oracles(world, tmp_path, monkeypatch
         cmd, env = boundary.wrap([sys.executable, "-c", script], {})
         proc = subprocess.run(cmd, cwd=boundary.workspace, env=env, capture_output=True, text=True, timeout=15)
         assert proc.returncode == 0, proc.stderr
-        assert proc.stdout.strip().startswith("DENIED:")
-        if denial == "redirect":
+        assert proc.stdout.strip().startswith("ALLOWED:" if denial == "allowed" else "DENIED:")
+        if denial in {"redirect", "allowed"}:
             assert any(record["bytes"] > 0 for record in boundary.egress.records)
     finally:
         if tls_server is not None:
@@ -923,7 +934,7 @@ def test_linux_claude_auth_selects_only_fresh_token(world, monkeypatch):
     with pytest.raises(ReviewIsolationError, match="invalid"):
         linux_claude_auth()
     monkeypatch.setenv("CLAUDE_CODE_OAUTH_TOKEN", access)
-    assert linux_claude_auth() == {}  # existing selected env wins
+    assert linux_claude_auth() == {"CLAUDE_CODE_OAUTH_TOKEN": access}  # selected token reaches the private seat
 
 
 @pytest.mark.parametrize("agent", ["codex", "agy"])

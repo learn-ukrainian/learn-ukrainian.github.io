@@ -97,7 +97,7 @@ from typing import Any
 
 from scripts.common.repo_root import project_interpreter, resolve_repo_root
 from scripts.common.safe_open import UnsafeEntryError, safe_open_below
-from scripts.review.receipts.ledger import REVIEW_TOOLS
+from scripts.review.receipts.ledger import review_tools
 from scripts.review.render_contract import check_launch_contract, check_render_contract
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
@@ -521,7 +521,7 @@ def review_tools_allowed_csv(harness: str, review_access: str = "isolated") -> s
     """
     if harness.lower().strip() != "claude":
         return None
-    tools = REVIEW_TOOLS if review_access == "full" else REVIEW_TOOLS - {"search_resources"}
+    tools = review_tools(review_access)
     return ",".join(f"mcp__sources__{name}" for name in sorted(tools))
 
 
