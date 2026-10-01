@@ -549,6 +549,11 @@
         },
         "lead_in": {
           "$ref": "#/$defs/text"
+        },
+        "target_record": {
+          "type": "string",
+          "pattern": "^[WT]-[0-9]*[1-9][0-9]*$",
+          "description": "Optional listening model: the pack use must explicitly identify this word or primer letter."
         }
       }
     },

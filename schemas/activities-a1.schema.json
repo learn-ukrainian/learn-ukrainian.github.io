@@ -1567,6 +1567,33 @@
                     }
                   }
                 ]
+              },
+              {
+                "if": {
+                  "properties": {
+                    "kind": {
+                      "const": "listening"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "host",
+                    "target_record"
+                  ],
+                  "properties": {
+                    "host": {
+                      "properties": {
+                        "kind": {
+                          "const": "video"
+                        }
+                      }
+                    }
+                  }
+                }
               }
             ],
             "properties": {
@@ -1628,7 +1655,8 @@
                   "form",
                   "orthography",
                   "vocabulary",
-                  "comprehension"
+                  "comprehension",
+                  "listening"
                 ]
               },
               "option_why": {
@@ -1675,7 +1703,7 @@
               },
               "target_record": {
                 "type": "string",
-                "pattern": "^W-[0-9]*[1-9][0-9]*$"
+                "pattern": "^[WT]-[0-9]*[1-9][0-9]*$"
               },
               "host": {
                 "type": "object",
@@ -1687,12 +1715,13 @@
                     "type": "string",
                     "enum": [
                       "dialogue",
-                      "quote"
+                      "quote",
+                      "video"
                     ]
                   },
                   "ref": {
                     "type": "string",
-                    "pattern": "^T-[0-9]+$"
+                    "pattern": "^[TV]-[0-9]+$"
                   }
                 },
                 "allOf": [
@@ -1710,7 +1739,34 @@
                     "then": {
                       "required": [
                         "ref"
+                      ],
+                      "properties": {
+                        "ref": {
+                          "pattern": "^T-[0-9]+$"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "if": {
+                      "properties": {
+                        "kind": {
+                          "const": "video"
+                        }
+                      },
+                      "required": [
+                        "kind"
                       ]
+                    },
+                    "then": {
+                      "required": [
+                        "ref"
+                      ],
+                      "properties": {
+                        "ref": {
+                          "pattern": "^V-[0-9]+$"
+                        }
+                      }
                     }
                   }
                 ],
