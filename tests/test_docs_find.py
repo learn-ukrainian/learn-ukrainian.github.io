@@ -6,6 +6,7 @@ real-tree checks, including the dev-set lookups, live in
 """
 import ast
 import json
+import os
 import subprocess
 import sys
 import time
@@ -377,6 +378,59 @@ def test_a_failed_search_never_leaves_its_process_running(monkeypatch):
     assert started[0].poll() is not None and time.monotonic() - tick < 5
 
 
+def _alive(pid):
+    try:
+        os.kill(pid, 0)  # succeeds for a running or an unreaped (zombie) child
+    except ProcessLookupError:
+        return False
+    return True
+
+
+def _recording_popen(monkeypatch, argv=None):
+    """Record every process the runner starts; ``argv`` swaps in a stand-in command."""
+    started = []
+    real_popen = find_module.subprocess.Popen
+
+    def popen(real_argv, **kwargs):
+        started.append(proc := real_popen(argv or real_argv, **kwargs))
+        return proc
+    monkeypatch.setattr(find_module.subprocess, 'Popen', popen)
+    return started
+
+
+def test_a_timer_that_cannot_be_built_leaves_no_search_process(fresh_repo, monkeypatch):
+    # The defect: the timer was built after the process started and outside the cleanup,
+    # so a MemoryError there left every started git grep running behind a typed result.
+    def no_memory(*_args, **_kwargs):
+        raise MemoryError
+    started = _recording_popen(monkeypatch)
+    monkeypatch.setattr(find_module.threading, 'Timer', no_memory)
+    result = find('zzqq', repo=fresh_repo)
+    assert result['outcome'] == 'incomplete'
+    assert result['coverage']['incomplete_reasons'] == ["error: the search for 'zzqq' did not finish (MemoryError)"]
+    assert all(proc.returncode is not None and not _alive(proc.pid) for proc in started)
+
+
+@pytest.mark.parametrize('error', [MemoryError, KeyboardInterrupt, SystemExit])
+def test_any_failure_after_the_process_starts_kills_and_reaps_it(monkeypatch, error):
+    class FailingStart:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def start(self):
+            raise error
+
+        def cancel(self):
+            pass
+    started = _recording_popen(monkeypatch, [sys.executable, '-c', 'import time; time.sleep(60)'])
+    monkeypatch.setattr(find_module.threading, 'Timer', FailingStart)
+    tick = time.monotonic()
+    with pytest.raises(error):  # the runner surfaces it; _total_grep types the Exception subclasses
+        find_module._git_grep(Path('.'), [], time.monotonic() + 30, 1)
+    assert len(started) == 1 and started[0].returncode is not None and not _alive(started[0].pid)
+    assert time.monotonic() - tick < 5
+
+
 def test_any_worker_exception_becomes_an_error_run(monkeypatch):
     def boom(*_args, **_kwargs):
         raise RuntimeError('unexpected')
@@ -630,10 +684,36 @@ def test_route_validates_its_parameters(client, params):
     assert client.get('/api/knowledge/find', params=params).status_code == 422
 
 
-@pytest.mark.parametrize('limit', ['nan', 'inf', '-inf', '1e100', str(10 ** 30), '-1', '0', '1.5', 'true', 'abc', ''])
+NON_DIGIT_LIMITS = ['5.0', '5e0', '+5', ' 5', '5 ', '-0', '５', '0x5', '5_0']
+
+
+@pytest.mark.parametrize('limit', ['nan', 'inf', '-inf', '1e100', str(10 ** 30), '-1', '0', '1.5', 'true', 'abc', '',
+                                   *NON_DIGIT_LIMITS])
 def test_route_rejects_bad_limits_before_any_search(client, no_search_starts, limit):
     response = client.get('/api/knowledge/find', params={'q': 'guide', 'limit': limit})
     assert response.status_code == 422
+    assert response.json()['detail'] == {'code': 'limit', 'message': f'limit: {find_module.LIMIT_MESSAGE}'}
+
+
+def test_route_checks_every_repeated_limit_before_any_search(client, no_search_starts):
+    response = client.get('/api/knowledge/find?q=guide&limit=5.0&limit=5')
+    assert response.status_code == 422 and response.json()['detail']['code'] == 'limit'
+
+
+@pytest.mark.parametrize('limit', ['5', '05', str(find_module.MAX_LIMIT)])
+def test_route_accepts_the_digit_limits_the_library_accepts(client, limit):
+    assert find_module.limit_from_text(limit) == int(limit)
+    response = client.get('/api/knowledge/find', params={'q': 'guide', 'limit': limit})
+    assert response.status_code == 200
+    assert len(response.json()['hits']) <= int(limit)
+
+
+@pytest.mark.parametrize('value', NON_DIGIT_LIMITS)
+def test_cli_and_library_reject_the_same_non_digit_limits(repo, no_search_starts, capsys, value):
+    with pytest.raises(FindError):
+        find_module.limit_from_text(value)
+    assert main(['guide', '--repo', str(repo), f'--limit={value}']) == 2
+    assert capsys.readouterr().out == f'Find could not run (invalid_request): limit: {find_module.LIMIT_MESSAGE}\n'
 
 
 def test_route_maps_a_library_limit_error_to_a_typed_422(client, monkeypatch):

@@ -103,6 +103,21 @@ def checked_limit(limit: object) -> int:
     return limit
 
 
+INTEGER_TEXT = re.compile(r'[0-9]{1,6}')
+
+
+def limit_from_text(text: str) -> int:
+    """A limit typed as text (CLI argument, query string) as an int in 1..MAX_LIMIT.
+
+    Only ASCII digits are a whole number: a sign, a decimal point, an exponent,
+    whitespace or an empty value is FindError('limit') with the fixed message, before
+    any conversion, so the CLI and the Monitor API accept exactly the same texts.
+    """
+    if not INTEGER_TEXT.fullmatch(text):
+        raise FindError('limit', LIMIT_MESSAGE)
+    return checked_limit(int(text))
+
+
 def checked_budget(budget: object) -> float:
     """``budget`` in seconds as a float when it is an int or float (not a bool) in (0, MAX_BUDGET_SECONDS].
 
@@ -271,16 +286,20 @@ def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
     if remaining <= 0:
         return GitRun(b'', 'timeout')
     env = {**os.environ, 'LC_ALL': 'C', 'GIT_TERMINAL_PROMPT': '0'}
-    proc = subprocess.Popen(['git', '-C', str(repo), '--no-pager', 'grep', '--cached', *args],
-                            stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=env)
     killed = threading.Event()
+    proc: subprocess.Popen | None = None
 
     def kill() -> None:
         killed.set()
-        proc.kill()
+        if proc is not None:
+            proc.kill()
+    # Everything that can fail is built before the process exists or runs inside the try,
+    # so no failure (including a BaseException) leaves a search running or unreaped.
     timer = threading.Timer(remaining, kill)
     chunks, size, over = [], 0, False
     try:
+        proc = subprocess.Popen(['git', '-C', str(repo), '--no-pager', 'grep', '--cached', *args],
+                                stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, env=env)
         timer.start()
         while chunk := proc.stdout.read1(1 << 16):
             size += len(chunk)
@@ -290,12 +309,16 @@ def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
                 break
             chunks.append(chunk)
     except BaseException:
-        proc.kill()  # never leave a search running behind a failure
+        if proc is not None:
+            proc.kill()  # never leave a search running behind a failure
         raise
     finally:
         timer.cancel()
-        proc.stdout.close()
-        status = proc.wait(timeout=5)
+        if proc is not None:
+            try:
+                proc.stdout.close()
+            finally:
+                status = proc.wait(timeout=5)
     if over:
         return GitRun(b''.join(chunks), 'output_budget')
     if killed.is_set():
@@ -812,7 +835,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('--json', action='store_true', help='Print the full result as JSON (default: text).')
     args = parser.parse_args(argv)
     try:
-        result = find(args.query, _cli_limit(args.limit), family=args.family, repo=args.repo,
+        result = find(args.query, limit_from_text(args.limit), family=args.family, repo=args.repo,
                       budget_seconds=_cli_budget(args.budget))
     except FindError as exc:
         return _fail(args.json, 'invalid_request', exc.code, exc.message, 2)
@@ -822,16 +845,6 @@ def main(argv: list[str] | None = None) -> int:
         return _fail(args.json, 'internal_error', type(exc).__name__, str(exc), 4)
     print(json.dumps(result, indent=2, ensure_ascii=False) if args.json else format_text(result))
     return {'found': 0, 'no_match': 1, 'incomplete': 5}[result['outcome']]
-
-
-INTEGER_TEXT = re.compile(r'[+-]?[0-9]{1,6}\Z')
-
-
-def _cli_limit(text: str) -> int:
-    """The --limit text as an int; FindError('limit') with the fixed message for anything else."""
-    if not INTEGER_TEXT.match(text.strip()):
-        raise FindError('limit', LIMIT_MESSAGE)
-    return int(text)
 
 
 def _cli_budget(text: str) -> float:

@@ -194,8 +194,12 @@ def knowledge_record(
 
 @router.get("/find")
 def knowledge_find(
+    request: Request,
     q: str = Query(min_length=1, max_length=docs_find.MAX_QUERY_CHARS),
-    limit: int = Query(default=docs_find.DEFAULT_LIMIT, ge=1, le=docs_find.MAX_LIMIT),
+    limit: str = Query(
+        default=str(docs_find.DEFAULT_LIMIT),
+        description=f"Maximum hits, ASCII digits only, 1..{docs_find.MAX_LIMIT}.",
+    ),
     family: str | None = Query(default=None, max_length=64, pattern=docs_find.FAMILY_ID_PATTERN),
     monitor_ctx: MonitorContext = Depends(get_ctx),
 ):
@@ -212,10 +216,16 @@ def knowledge_find(
     **Ungated**: a locator that a kill switch can turn off fails its purpose, so this
     route never consults ``research_registry``. Read-only; nothing is persisted.
     An empty query, a bad limit or an unknown family is a typed 422; an unreadable
-    repository is a typed 503; neither is a 500.
+    repository is a typed 503; neither is a 500. ``limit`` is read as raw text and
+    checked by the library's own validator (digits only) before any search starts, so
+    ``5.0``, ``5e0`` or ``+5`` is rejected here exactly as the CLI rejects it; every
+    repeated ``limit`` value is checked, not only the one used.
     """
     try:
-        return docs_find.find(q, limit, family=family, repo=monitor_ctx.roots.live_repo_root)
+        for raw in request.query_params.getlist("limit"):
+            docs_find.limit_from_text(raw)
+        checked = docs_find.limit_from_text(limit)
+        return docs_find.find(q, checked, family=family, repo=monitor_ctx.roots.live_repo_root)
     except docs_find.FindError as exc:
         raise HTTPException(status_code=422, detail={"code": exc.code, "message": str(exc)}) from None
     except docs_find.UNREADABLE as exc:
