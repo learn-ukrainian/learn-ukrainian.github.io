@@ -38,6 +38,20 @@ def test_real_yaml_parts_extract_without_rewriting(name, info):
     assert extract_review_yaml(fenced(data, info)) == data
 
 
+@pytest.mark.parametrize("name", REAL_RETURNS)
+@pytest.mark.parametrize("info", [b"yaml", b"yml"])
+@pytest.mark.parametrize("position", ["before", "after", "both"])
+@pytest.mark.parametrize("prose", [b"Here: ```inline```\n", b"```inline```\n", b"   ````info `inline`\n"])
+def test_inline_backtick_prose_keeps_whole_mapping(name, info, position, prose):
+    data = (FIXTURES / f"{name}.yaml").read_bytes()
+    raw = fenced(data, info)
+    if position in ("before", "both"):
+        raw = prose + raw
+    if position in ("after", "both"):
+        raw += prose
+    assert extract_review_yaml(raw) == data
+
+
 def test_bare_mapping_with_a_fence_in_a_scalar_is_unchanged():
     data = b"kind: plan\nnotes: |\n  ```yaml\n  example: true\n  ```\n"
     assert extract_review_yaml(data) == data

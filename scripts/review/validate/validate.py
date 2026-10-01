@@ -92,7 +92,7 @@ def extract_review_yaml(data: bytes) -> bytes:
     """Keep a bare YAML mapping's bytes, or select one complete yaml/yml fence.
 
     Scan top-level fences with matching markers and lengths. Refuse fence
-    markers outside the selected block: they can hide an early close inside
+    openers outside the selected block: they can hide an early close inside
     a YAML scalar. Surrounding prose is allowed. The caller must bind the
     *original* bytes to the task.
     """
@@ -123,8 +123,8 @@ def extract_review_yaml(data: bytes) -> bytes:
         elif match:
             valid_opening = not (match[1].startswith(b"`") and b"`" in match[2])
             selected = valid_opening and match[2].strip(b" \t") in (b"yaml", b"yml")
-            outside_fence |= not selected
             if valid_opening:
+                outside_fence |= not selected
                 marker = match[1]
                 opening = match[0].strip(b" \t")
                 count += int(selected)
