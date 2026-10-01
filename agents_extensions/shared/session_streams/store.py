@@ -92,6 +92,36 @@ _FILE_EXTENSIONS = frozenset(
 )
 # Intersection of the closed extension list with IANA's root-zone TLD list.
 _TLD_FILE_EXTENSIONS = frozenset({"md", "py", "sh", "rs"})
+# Closed host-suffix labels checked immediately before a file extension. This
+# protects host-named files without treating repository labels such as schema,
+# sources, review or test as host suffixes. The repo-wide basename guard checks
+# this list; uk is omitted because tracked localization filenames use that label.
+_EMBEDDED_HOST_SUFFIXES = frozenset(
+    {
+        "com",
+        "net",
+        "org",
+        "io",
+        "dev",
+        "app",
+        "cloud",
+        "local",
+        "internal",
+        "lan",
+        "corp",
+        "home",
+        "intranet",
+        "private",
+        "edu",
+        "gov",
+        "ru",
+        "ua",
+        "de",
+        "nl",
+        "fr",
+        "us",
+    }
+)
 # Explicit repository basenames, never a runtime filesystem/Git lookup. Unknown
 # collision names need a directory prefix; multi-label collision names remain
 # hosts. Even these exceptions cannot exempt URL, port or trailing-dot context.
@@ -134,6 +164,12 @@ def process_exists(process_id: int) -> bool:
     return True
 
 
+def _filename_contains_hostname(filename: str) -> bool:
+    """Check the final stem label against the closed embedded-host suffix list."""
+    labels = filename.strip(".").rsplit(".", 2)
+    return len(labels) == 3 and labels[-1].lower() in _FILE_EXTENSIONS and labels[-2].lower() in _EMBEDDED_HOST_SUFFIXES
+
+
 def _contains_hostname(body: str) -> bool:
     """Reject host-shaped tokens without rescanning overlapping dotted suffixes."""
     for match in _HOST_TOKEN_RE.finditer(body):
@@ -147,12 +183,14 @@ def _contains_hostname(body: str) -> bool:
         preceding = body[max(0, match.start() - 2) : match.start()]
         host_context = (
             token.endswith(".")
-            or preceding.endswith(("//", "@"))
+            or preceding.endswith(("//", "\\\\", "/\\", "\\/", ":/", ":\\", "@"))
             or following.startswith(("/", "?", "#"))
             or (following.startswith(":") and following[1:].isdigit())
         )
         extension = labels[-1].lower()
-        directory_prefix = preceding.endswith(("/", "\\")) and preceding != "//"
+        if _filename_contains_hostname(token):
+            return True
+        directory_prefix = preceding.endswith(("/", "\\")) and not host_context
         collision_file = len(labels) == 2 and (token in _REPOSITORY_FILENAMES or directory_prefix)
         if (
             not host_context

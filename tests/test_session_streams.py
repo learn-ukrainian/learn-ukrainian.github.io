@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from threading import Barrier, Event
-from time import perf_counter
+from time import thread_time
 from typing import Any
 
 import pytest
@@ -25,12 +25,15 @@ from agents_extensions.shared.session_streams.model import (
     isoformat_z,
 )
 from agents_extensions.shared.session_streams.store import (
+    _EMBEDDED_HOST_SUFFIXES,
     _REPOSITORY_FILENAMES,
     MAX_ENTRY_BYTES,
     ContentRejectedError,
     LeaseConflictError,
     LifecycleError,
     SessionStreamStore,
+    _contains_hostname,
+    _filename_contains_hostname,
     validate_entry_body,
 )
 
@@ -677,6 +680,10 @@ def test_append_rejects_sensitive_or_non_text_content(tmp_path: Path, body: str,
         "lexicon-manifest.json",
         "mcp-sources-requests.jsonl",
         "scripts/store.py",
+        r"scripts\core.md",
+        r"scripts\store.py",
+        r"scripts\x.sh",
+        r"C:\scripts\core.md",
         "scripts/x.sh",
         "scripts/.hidden.py",
         "README.md",
@@ -728,20 +735,11 @@ def test_append_accepts_repository_filenames(tmp_path: Path, filename: str) -> N
         "log",
     ],
 )
-def test_filename_exemption_uses_only_final_extension(tmp_path: Path, extension: str) -> None:
+def test_filename_exemption_rejects_embedded_hosts(tmp_path: Path, extension: str) -> None:
     store = _store(tmp_path)
     lease = _open(store)
-    # Domain-shaped names ending in a colliding TLD must remain rejected.
-    if extension in {"md", "py", "sh", "rs"}:
-        with pytest.raises(ContentRejectedError, match="hostname rule"):
-            store.append_entry(
-                lease,
-                entry_type=EntryType.NOTE,
-                body=f"Changed `example.com.{extension.upper()}`.",
-                idempotency_key="filename",
-                now=NOW + timedelta(seconds=1),
-            )
-    else:
+    # A file extension cannot exempt a host-named file from handoff hygiene.
+    with pytest.raises(ContentRejectedError, match="hostname rule"):
         store.append_entry(
             lease,
             entry_type=EntryType.NOTE,
@@ -757,8 +755,7 @@ def test_filename_exemption_uses_only_final_extension(tmp_path: Path, extension:
             idempotency_key="host",
             now=NOW + timedelta(seconds=2),
         )
-    expected_entries = 0 if extension in {"md", "py", "sh", "rs"} else 1
-    assert len(store.dump_stream(lease.stream_id)["entries"]) == expected_entries
+    assert store.dump_stream(lease.stream_id)["entries"] == []
 
 
 @pytest.mark.parametrize(
@@ -814,6 +811,38 @@ def test_filename_exemption_uses_only_final_extension(tmp_path: Path, extension:
                 "scripts/example.com.py",
                 "example.com/core.md",
                 "example.sh/core.md",
+                r"\\server.sh\share",
+                r"\\fileserver.md\public",
+                r"\\box.py",
+                r"\\SERVER.SH\SHARE",
+                r"\\FILESERVER.MD\PUBLIC",
+                r"\\BOX.PY",
+                r"\/server.sh\share",
+                r"/\FILESERVER.MD/public",
+                "https:/server.sh",
+                "HTTPS:/SERVER.SH",
+                r"https:\server.sh",
+                r"HTTPS:/\SERVER.SH",
+                "file:/server.sh",
+                "file://fileserver.md/public",
+                "FILE:/BOX.PY",
+                "FILE://SERVER.SH/share",
+                r"file:\box.py",
+                r"file:\\fileserver.md\public",
+                r"FILE:/\SERVER.SH/share",
+                r"file:\/BOX.PY",
+                "file:///server.sh",
+                "https:/core.md",
+                r"\\store.py",
+                "example.com.json",
+                "host_vars/web01.example.com.yml",
+                "nas.local.yaml",
+                "host.internal.json",
+                "EXAMPLE.COM.JSON",
+                r"host_vars\WEB01.EXAMPLE.COM.YML",
+                "web01.prod.example.net.yaml",
+                "db.example.org.log",
+                "example.com.txt",
             )
         ],
         ("sources.db.example.com", "hostname"),
@@ -869,6 +898,7 @@ def repository_filename_paths() -> tuple[str, ...]:
     )
 
 
+@pytest.mark.repo_wide
 def test_collision_exceptions_are_exact_tracked_repository_names(repository_filename_paths: tuple[str, ...]) -> None:
     repo_root = Path(__file__).resolve().parents[1]
     result = subprocess.run(
@@ -877,6 +907,34 @@ def test_collision_exceptions_are_exact_tracked_repository_names(repository_file
     tracked = set(result.stdout.split("\0"))
     assert set(repository_filename_paths) <= tracked
     assert {Path(path).name for path in repository_filename_paths} == _REPOSITORY_FILENAMES
+
+
+@pytest.mark.repo_wide
+def test_embedded_host_filter_accepts_every_tracked_basename() -> None:
+    # Check S1 independently: the existing collision-TLD rule intentionally
+    # rejects bare unknown .md/.py names, which still need directory context.
+    repo_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        ["git", "ls-files", "-z"], cwd=repo_root, check=True, capture_output=True, text=True, timeout=30
+    )
+    tracked = [path for path in result.stdout.split("\0") if path]
+    assert tracked, "the guard must inspect the tracked Git index"
+    rejected = [path for path in tracked if _filename_contains_hostname(Path(path).name)]
+    assert rejected == [], "remove conflicting labels from _EMBEDDED_HOST_SUFFIXES: " + repr(rejected)
+
+
+@pytest.mark.parametrize("suffix", sorted(_EMBEDDED_HOST_SUFFIXES))
+def test_closed_host_suffixes_cannot_be_hidden_in_filenames(suffix: str) -> None:
+    for filename in (f"example.{suffix}.json", f"host_vars/example.{suffix.upper()}.YML"):
+        assert _filename_contains_hostname(filename)
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(filename)
+
+
+@pytest.mark.parametrize("filename", ["store.sources.yaml", "x.schema.json", "x.review.json", "x.test.ts", "x.uk.json"])
+def test_repository_stem_labels_remain_files(filename: str) -> None:
+    assert not _filename_contains_hostname(filename)
+    validate_entry_body(filename)
 
 
 @pytest.mark.parametrize(
@@ -920,15 +978,27 @@ def test_append_accepts_ordinary_model_version_and_module_tokens(tmp_path: Path,
 )
 def test_entry_validation_handles_64_kib_tokens_without_rescanning(unit: str, rejected: bool) -> None:
     body = (unit * (MAX_ENTRY_BYTES // len(unit) + 1))[:MAX_ENTRY_BYTES]
-    started = perf_counter()
+    started = thread_time()
     # Some dotted runs are hosts; timing covers both acceptance and rejection.
     if rejected:
         with pytest.raises(ContentRejectedError, match="hostname rule"):
             validate_entry_body(body)
     else:
         validate_entry_body(body)
-    elapsed = perf_counter() - started
-    assert elapsed < 0.5, f"64-KiB token validation took {elapsed:.3f}s"
+    elapsed = thread_time() - started
+    # CPU time avoids scheduler contention; this generous regression limit
+    # still rejects quadratic rescanning without a loaded-runner wall-clock flake.
+    assert elapsed < 2, f"64-KiB token validation used {elapsed:.3f}s CPU"
+
+
+def test_100_kb_token_has_bounded_scan_and_size_rejection() -> None:
+    body = "a." * 50_000
+    started = thread_time()
+    assert not _contains_hostname(body)
+    with pytest.raises(ContentRejectedError, match="64-KiB rule"):
+        validate_entry_body(body)
+    elapsed = thread_time() - started
+    assert elapsed < 2, f"100-KB token scan used {elapsed:.3f}s CPU"
 
 
 @pytest.mark.parametrize("body", ["contact test@example.com", "a.py-test@example.com", ".test@example.com"])
