@@ -49,6 +49,9 @@ def _per_kind(plan: str | None, lesson: str) -> dict[str, str]:
 #:          {template: function of validate.py that raises the code for that template's review kind}).
 RULES: dict[str, tuple[str, dict[str, str]]] = {
     codes.REVIEW_UNREADABLE: ("The return is one YAML mapping", _everywhere(_REVIEW)),
+    codes.REVIEW_YAML_FENCE_MISSING: ("must contain a fenced YAML block", _everywhere("extract_review_yaml")),
+    codes.REVIEW_YAML_FENCE_MULTIPLE: ("More than one fenced YAML block", _everywhere("extract_review_yaml")),
+    codes.REVIEW_YAML_FENCE_NOT_MAPPING: ("must be closed and parse as one mapping", _everywhere("extract_review_yaml")),
     codes.SCHEMA_INVALID: ("no field the schema does not define", _everywhere(_REVIEW)),
     codes.MANIFEST_KIND_MISMATCH: ("the kind of the manifest this prompt was rendered from", _everywhere(_REVIEW)),
     codes.MANIFEST_HASH_MISMATCH: (
@@ -127,12 +130,14 @@ def _validator_source() -> ast.Module:
 
 
 def _enforced_codes() -> dict[str, set[str]]:
-    """Rejection code -> functions of validate.py holding a ``check.add(codes.<CODE>, ...)`` call for it."""
+    """Code -> functions that add a rejection or raise the extractor's typed refusal."""
     found: dict[str, set[str]] = {}
     for function in (node for node in _validator_source().body if isinstance(node, ast.FunctionDef)):
         for call in (node for node in ast.walk(function) if isinstance(node, ast.Call)):
             target, args = call.func, call.args
-            if not (isinstance(target, ast.Attribute) and target.attr == "add" and args):
+            adds_rejection = isinstance(target, ast.Attribute) and target.attr == "add"
+            raises_extraction_error = isinstance(target, ast.Name) and target.id == "ReviewReturnError"
+            if not (args and (adds_rejection or raises_extraction_error)):
                 continue
             first = args[0]
             if isinstance(first, ast.Attribute) and isinstance(first.value, ast.Name) and first.value.id == "codes":

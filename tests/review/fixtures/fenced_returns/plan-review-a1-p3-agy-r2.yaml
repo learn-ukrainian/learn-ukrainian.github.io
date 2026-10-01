@@ -1,0 +1,25 @@
+review_schema: 1
+taxonomy: 1
+kind: plan
+attempt:
+  review_id: "plan-a1-special-signs"
+  attempt_id: "agy-att-2"
+  manifest_sha256: "db619776b2c86847e583410a68780f4ed57c20810013a29a9cb9ecd25c9a9e78"
+  previous_attempt_id: null
+reviewer:
+  resolved_model: "gemini-3.8-flash-high"
+  harness: "agy"
+  family: "gemini"
+  prompt_sha256: "<prompt_sha256>"
+checks:
+  closing_shape: clean
+  title_describes_job: clean
+  title_quantities: clean
+  quoted_forms: clean
+  sequencing: clean
+  sizing: clean
+  inventory: clean
+  activities: clean
+  evidence_fit: clean
+  standard_and_ulp: clean
+findings: []

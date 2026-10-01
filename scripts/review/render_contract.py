@@ -5,7 +5,9 @@ checkout. The prompt tells the seat what the server prints, so the prompt's temp
 answers the seat must come from the same code. At render time ``render_record`` records, beside the prompt, the
 checkout that rendered it, the templates that render actually loaded and that checkout's server-code digest. At
 dispatch ``check_render_contract`` compares that record with the server code the attempt would run and with the
-render checkout's templates as they are now, and refuses on any difference.
+render checkout's templates as they are now, and refuses on any difference. Formal manifest admission then
+re-renders against server templates with ``check_prompt``; the recorded reads, hashes and logical names returned
+here must match that independently observed dependency set (#9378).
 
 The server-code digest has two components. ``repository``: the server entry plus every repository module it
 imports, found by a static walk of its ``import`` statements resolved the way the server's own ``sys.path``
@@ -279,7 +281,7 @@ def render_record_path(prompt_file: Path) -> Path:
     return prompt_file.with_name(f"{prompt_file.name}.files_read.json")
 
 
-def _read_render_record(prompt_file: Path | None) -> dict[str, Any]:
+def _read_render_record(prompt_file: Path | None) -> tuple[dict[str, Any], dict[str, Any]]:
     if prompt_file is None:
         raise ReviewContractError(
             "review attempt refused: review_render_record_missing: a --review-attempt prompt must come from "
@@ -287,7 +289,8 @@ def _read_render_record(prompt_file: Path | None) -> dict[str, Any]:
         )
     sidecar = render_record_path(Path(prompt_file))
     try:
-        record = json.loads(sidecar.read_text(encoding="utf-8")).get(RENDER_RECORD_KEY)
+        reads = json.loads(sidecar.read_text(encoding="utf-8"))
+        record = reads.get(RENDER_RECORD_KEY)
     except (OSError, ValueError, AttributeError) as exc:
         raise ReviewContractError(
             f"review attempt refused: review_render_record_missing: cannot read {sidecar}: {exc}; {_RERENDER} (#9163)"
@@ -310,7 +313,24 @@ def _read_render_record(prompt_file: Path | None) -> dict[str, Any]:
             f"review attempt refused: review_render_record_missing: {sidecar} holds no version "
             f"{RENDER_RECORD_VERSION} {RENDER_RECORD_KEY} record; {_RERENDER} (#9163)"
         )
-    return record
+    if any(
+        Path(name).name != name or not name.endswith(".md.j2") or name in {".", ".."}
+        for name in record["templates"]
+    ):
+        raise ReviewContractError(
+            "review attempt refused: review_render_template_name_invalid: template names must be exact loader basenames"
+        )
+    if (
+        not isinstance(reads.get("files_read", []), list)
+        or any(not isinstance(path, str) for path in reads.get("files_read", []))
+        or not isinstance(reads.get("template_sha256", {}), dict)
+        or any(
+            not isinstance(path, str) or not isinstance(sha, str)
+            for path, sha in reads.get("template_sha256", {}).items()
+        )
+    ):
+        raise ReviewContractError("review attempt refused: review_render_record_missing: malformed recorded reads")
+    return record, reads
 
 
 def check_render_contract(
@@ -324,7 +344,7 @@ def check_render_contract(
     template digest with the render checkout's loaded templates now. Returns the record the task stores: the
     digests compared, and the server components and interpreter ``check_launch_contract`` checks again at launch.
     """
-    recorded = _read_render_record(prompt_file)
+    recorded, reads = _read_render_record(prompt_file)
     if (review_id is not None or attempt_id is not None) and (
         recorded.get("review_id"), recorded.get("attempt_id")
     ) != (review_id, attempt_id):
@@ -389,6 +409,9 @@ def check_render_contract(
         "review_id": recorded.get("review_id"),
         "attempt_id": recorded.get("attempt_id"),
         "prompts_dir": recorded["prompts_dir"],
+        "recorded_templates": recorded["templates"],
+        "recorded_files_read": reads.get("files_read", []),
+        "recorded_template_sha256": reads.get("template_sha256", {}),
     }
     differing = [
         what

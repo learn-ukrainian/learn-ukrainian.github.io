@@ -31,6 +31,9 @@ EVIDENCE_BRANCH_COUNT = "evidence_branch_count"
 SCHEMA_INVALID = "schema_invalid"
 LESSON_UNREADABLE = "lesson_unreadable"
 REVIEW_UNREADABLE = "review_unreadable"
+REVIEW_YAML_FENCE_MISSING = "review_yaml_fence_missing"
+REVIEW_YAML_FENCE_MULTIPLE = "review_yaml_fence_multiple"
+REVIEW_YAML_FENCE_NOT_MAPPING = "review_yaml_fence_not_mapping"
 MANIFEST_KIND_MISMATCH = "manifest_kind_mismatch"
 PLAN_MANIFEST_INVALID = "plan_manifest_invalid"
 PLAN_UNREADABLE = "plan_unreadable"
@@ -65,6 +68,9 @@ DESCRIPTIONS: dict[str, str] = {
     SCHEMA_INVALID: "failure: the review document does not match schemas/review-v1.schema.json",
     LESSON_UNREADABLE: "failure: the expanded lesson is missing or has no units list",
     REVIEW_UNREADABLE: "failure: the review file is missing or not a YAML mapping",
+    REVIEW_YAML_FENCE_MISSING: "failure: the return is not a bare YAML mapping and has no yaml/yml fenced block",
+    REVIEW_YAML_FENCE_MULTIPLE: "failure: the return contains more than one yaml/yml fenced block",
+    REVIEW_YAML_FENCE_NOT_MAPPING: "failure: the yaml/yml fenced block is unclosed or does not parse as one YAML mapping",
     MANIFEST_KIND_MISMATCH: "failure: the review's kind (lesson or plan) is not the kind of the manifest it echoes",
     PLAN_MANIFEST_INVALID: "failure: a kind: plan manifest does not match schemas/plan-review-manifest-v1.schema.json",
     PLAN_UNREADABLE: "failure: the plan document pinned by the manifest is missing or not a YAML mapping with lessons",
