@@ -629,6 +629,38 @@ def _schema_errors(draft: object, level: str | None, schemas_dir: Path | None) -
     return out
 
 
+def _gap_errors(draft: dict) -> list[DraftError]:
+    """Validate the contract's declared-gap step invariants, without lesson payload checks."""
+    errors: list[DraftError] = []
+    steps = draft["steps"]
+    step_ids = [step["id"] for step in steps]
+    if len(step_ids) != len(set(step_ids)):
+        errors.append(DraftError("step_ids_unique", "/steps", "step ids must be unique"))
+    for index, gap in enumerate(draft["gaps"]):
+        if gap["step"] not in step_ids:
+            errors.append(DraftError("gap_steps_exist", f"/gaps/{index}/step", "gap names an unknown step"))
+    empty_steps = {step["id"] for step in steps if not step["blocks"]}
+    gap_steps = {gap["step"] for gap in draft["gaps"]}
+    if empty_steps != gap_steps:
+        errors.append(DraftError("gap_steps_empty", "/steps", "empty steps must equal the steps named in gaps"))
+    return errors
+
+
+def _validate_gap(draft: dict, level: str | None, schemas_dir: Path | None) -> list[DraftError]:
+    """Reuse the contract's identity, step and gap shapes; an incomplete lesson is not a payload."""
+    base = load_schema(draft_schema_filename(level), schemas_dir)
+    keys = ("draft_schema", "lesson", "inputs", "status", "steps", "gaps")
+    schema = {
+        "type": "object", "required": list(keys), "$defs": base["$defs"],
+        "properties": {key: base["properties"][key] for key in keys},
+    }
+    schema["properties"]["gaps"] = {**schema["properties"]["gaps"], "minItems": 1}
+    validator = Draft202012Validator(schema, registry=_registry_for(str(schemas_dir or SCHEMAS_DIR)))
+    errors = [DraftError("schema", _pointer(error.absolute_path), error.message) for error in
+              sorted(validator.iter_errors(draft), key=lambda error: [str(part) for part in error.absolute_path])]
+    return errors or _gap_errors(draft)
+
+
 def _code_errors(
     draft: dict, level: str | None, schemas_dir: Path | None, activity_types: Mapping[str, str] | None
 ) -> list[DraftError]:
@@ -822,6 +854,8 @@ def validate_draft(
     """
     if level is not None and level not in LEVELS:
         raise ValueError(f"unknown level {level!r}; expected one of {LEVELS}")
+    if isinstance(draft, dict) and draft.get("status") == "evidence_gap":
+        return _validate_gap(draft, level, schemas_dir)
     errors = _schema_errors(draft, level, schemas_dir)
     if not isinstance(draft, dict):
         return errors

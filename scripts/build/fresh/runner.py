@@ -154,6 +154,25 @@ def _lesson(plan: dict[str, Any], n: int) -> dict[str, Any]:
     return next(item for item in plan["lessons"] if item["n"] == n)
 
 
+def _gap_layer(gaps: list[dict[str, Any]], lesson: dict[str, Any]) -> str:
+    """A missing record belongs to the pack; a quote host outside the plan requires replanning.
+
+    A dialogue or T-record cited on the gap's own step is a possible host. Availability/rights gaps in
+    that record stay with the pack; this mapping never decides semantic host adequacy.
+    """
+    steps = lesson.get("steps") or []
+    for gap in gaps:
+        if gap["need"] not in {"quote", "publication_right"}:
+            continue
+        step = next(step for step in steps if step["id"] == gap["step"])
+        dialogue_step = (lesson.get("dialogue") or {}).get("step")
+        if dialogue_step == gap["step"]:
+            continue
+        if not any(ref.startswith("T-") for ref in step.get("evidence") or []):
+            return "plan"
+    return "pack"
+
+
 def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str, Any]:
     steps = lesson.get("steps") or []
     dsteps = draft.get("steps") or []
@@ -1358,10 +1377,11 @@ def run_lesson(
             record_failure(ledger_path, slug, n, bad, ledger_inputs)
         return {**doc, "passed_through": bad["check"] if bad else 11, "manifest_sha256": None}
 
-    previous = load_ledger(ledger_path, slug, n)
+    previous = load_ledger(ledger_path, slug, n, ledger_inputs)
     if previous["terminal_layer"] is not None:
         return finish(failure(1, "regeneration_terminal", previous["terminal_layer"]))
-    if previous["attempts"]:
+    # A fresh input series still invalidates receipts left by earlier failures.
+    if load_ledger(ledger_path, slug, n)["attempts"]:
         invalidate_lesson_resolution(state_dir, n)
 
     lesson = _lesson(plan, n)
@@ -1372,13 +1392,18 @@ def run_lesson(
         return finish(failure(1, f"{err.check}: {err.reason}", "writer", token=err.path))
     if draft["lesson"] != {"module": f"{level}/{slug}", "n": n}:
         return finish(failure(1, "lesson_identity_mismatch", "writer"))
+    if draft["status"] == "evidence_gap" and any(
+        gap["step"] not in {step["id"] for step in lesson["steps"]} for gap in draft["gaps"]
+    ):
+        return finish(failure(1, "gap_step_not_in_plan", "writer"))
     for key, value in inputs.items():
         if key in draft["inputs"] and draft["inputs"][key] != value:
             return finish(failure(1, f"input_hash_mismatch: {key}", "writer"))
     rows.append(_pass(1))
     if draft["status"] == "evidence_gap":
         gap = draft["gaps"][0]
-        return finish(failure(2, gap.get("detail") or "evidence_gap", "pack", step=gap.get("step")))
+        return finish(failure(2, "evidence_gap: " + json.dumps(draft["gaps"], ensure_ascii=False),
+                              _gap_layer(draft["gaps"], lesson), step=gap.get("step")))
     rows.append(_pass(2))
     row = check_3_structure(draft, lesson)
     if row["status"] == "failed":
