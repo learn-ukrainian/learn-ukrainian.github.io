@@ -220,7 +220,10 @@ def projection_name(kind: str, n: int | None) -> str:
 
 def projection_document(attempt: sqlite3.Row) -> dict[str, Any]:
     """What the verdict file of a target holds: the latest accepted attempt's own fields."""
-    return {name: attempt[name] for name in PROJECTION_FIELDS}
+    document = {name: attempt[name] for name in PROJECTION_FIELDS}
+    if attempt["access"] == "full":
+        document.update({name: attempt[name] for name in ("access", "reviewer_model", "reviewer_family", "harness")})
+    return document
 
 
 def projection_problem(directory: Path, kind: str, n: int | None, latest: sqlite3.Row | None) -> str | None:

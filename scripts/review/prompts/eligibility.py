@@ -1,11 +1,11 @@
 """Pin eligibility: which documents a reviewer may receive (#8430 Part R2 item 1).
 
-``docs/epics/fresh-build-review-contracts.md`` principle 4 says the reviewer never sees the
-writer's prompt, reasoning or self-assessment, no earlier edition and no other module's content,
-and "The review attempt manifest (r4)" makes the manifest "the complete, transitive input set".
-So the question this module answers is about *documents*, never about text: is every file the
-manifest pins one of the inputs the contract lists for this manifest kind, at this module's own
-path for the current build? It never judges a file's text; the one file it opens is the pinned lesson,
+``docs/epics/fresh-build-review-contracts.md`` defines the pinned artifact input set.
+Full-access review additionally permits repository/corpus/catalogue/git context;
+that does not make arbitrary context files eligible manifest pins or citable evidence.
+This module checks *pinned documents*, never text: is every file the manifest pins
+one of the inputs listed for this kind, at this module's own path for the current
+build? It never judges a file's text; the one file it opens is the pinned lesson,
 to list the activity files that lesson imports.
 
 Each manifest kind has one table below (kind -> pin location -> the one path that location may

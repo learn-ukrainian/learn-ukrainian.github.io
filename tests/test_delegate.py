@@ -68,7 +68,12 @@ def _worktree_add_via_run(monkeypatch):
 
     def via_run(add_command, *, cwd, worktree_path, env=None, **_callbacks):
         return delegate.subprocess.run(
-            add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env,
+            add_command,
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=env,
             timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
         )
 
@@ -300,7 +305,14 @@ def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
     )
 
     assert env["VIRTUAL_ENV"] == str(project_venv)
-    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(project_venv / "bin"), "/usr/local/bin", "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join(
+        (
+            str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"),
+            str(project_venv / "bin"),
+            "/usr/local/bin",
+            "/usr/bin",
+        )
+    )
     assert "PYTHONHOME" not in env
 
 
@@ -310,7 +322,9 @@ def test_pinned_worker_venv_env_uses_canonical_path_even_before_venv_exists(tmp_
     env = delegate._pinned_worker_venv_env({"PATH": "/usr/bin"})
 
     assert env["VIRTUAL_ENV"] == str(tmp_path / ".venv")
-    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(tmp_path / ".venv" / "bin"), "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join(
+        (str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(tmp_path / ".venv" / "bin"), "/usr/bin")
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -5907,6 +5921,7 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
             strict_mcp_config=True,
             review_manifest=str(tmp_path / "manifest.yaml"),
             review_input_root=str(tmp_path),
+            review_access="isolated",
         )
 
     assert rc == 0
@@ -5918,6 +5933,8 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
         "attempt_id": "att-test",
         "review_manifest": str(tmp_path / "manifest.yaml"),
         "review_input_root": str(tmp_path),
+        "review_access": "isolated",
+        "review_cwd": str(tmp_path),
         "allowed_tools": ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
     }
 
@@ -7557,7 +7574,13 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
 
     env = recorded["env"]
     assert env["VIRTUAL_ENV"] == str(delegate._REPO_ROOT / ".venv")
-    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin"))
+    assert env["PATH"] == os.pathsep.join(
+        (
+            str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"),
+            str(delegate._REPO_ROOT / ".venv" / "bin"),
+            "/usr/bin",
+        )
+    )
 
 
 def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
@@ -9809,8 +9832,13 @@ def _add_local_bare_origin(main: Path) -> Path:
     remote = main.parent / "origin.git"
     for args in (["clone", "--bare", str(main), str(remote)], ["remote", "add", "origin", str(remote)]):
         subprocess.run(
-            ["git", *args], cwd=main, check=True, capture_output=True, text=True,
-            env=delegate._sanitized_git_env(), timeout=30,
+            ["git", *args],
+            cwd=main,
+            check=True,
+            capture_output=True,
+            text=True,
+            env=delegate._sanitized_git_env(),
+            timeout=30,
         )
     return remote
 
@@ -9920,6 +9948,7 @@ def _write_args(**overrides):
     import argparse
 
     base = {
+        "review_access": "isolated",
         "agent": "codex",
         "task_id": "wt-guard",
         "prompt": "do it",
@@ -15054,7 +15083,11 @@ def test_review_attempt_auto_target_is_reused_after_admission(
     remote = _add_local_bare_origin(main)
     assert subprocess.run(
         ["git", "--git-dir", str(remote), "rev-parse", "codex/task-1"],
-        cwd=target, check=True, capture_output=True, text=True, timeout=30,
+        cwd=target,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
     ).stdout.strip() == delegate._resolve_sha(target)
     head = delegate._resolve_sha(target)
     render_checkout = target if dependency == "render_checkout" else main
@@ -17449,3 +17482,251 @@ def test_dispatch_refuses_an_owned_path_that_could_never_own_a_file(tmp_tasks_di
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def test_full_review_default_requires_full_checkout_before_provisioning(tmp_tasks_dir, tmp_path, capsys):
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "claude",
+            "--model",
+            "claude-opus-5-5",
+            "--mode",
+            "read-only",
+            "--task-id",
+            "full-needs-tree",
+            "--prompt",
+            "review",
+            "--review-attempt",
+            str(tmp_path / "missing"),
+            "--review-id",
+            "full",
+            "--attempt-id",
+            "first",
+        ]
+    )
+    assert args.review_access == "full"
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare:
+        assert delegate.cmd_dispatch(args) == 2
+    assert "full_review_requires_full_checkout" in capsys.readouterr().err
+    prepare.assert_not_called()
+    assert not delegate._state_path("full-needs-tree").exists()
+
+
+def test_full_claude_fixture_render_dispatch_ledger_record_and_stale(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
+    """Captured return proof: real renderer/admission/ledger/validator/recorder/promotion, no model run."""
+    import yaml
+
+    from scripts.agent_runtime import review_mcp
+    from scripts.build.fresh import plan_manifest as pm
+    from scripts.build.fresh.plan_promote import promote_plan
+    from scripts.review import findings_db, record
+    from scripts.review.prompts.render import render_prompt
+    from tests.build.test_fresh_plan_review import fake_verify, make_manifest
+    from tests.curriculum.test_plan_validate import LEVEL as level
+    from tests.curriculum.test_plan_validate import SLUG as slug
+    from tests.helpers.plan_review_world import build_env
+    from tests.review.test_r1_schema_ledger import PLAN_CHECKS, _dump, _record, _review
+
+    monkeypatch.setattr(pm, "verify_pack_strict", fake_verify())
+    env = build_env(tmp_path / "fixture")
+    digest = make_manifest(env, capsys)
+    from tests.review.test_prompts import _write_module_manifest
+
+    _write_module_manifest(env.root, slug)
+    manifest = env.state_dir / "plan-review.manifest.yaml"
+    prompt_file = tmp_path / "prompt.md"
+    review_id, attempt_id, task_id = "full-plan", "claude-first", "full-claude-fixture"
+    _, prompt_sha, _ = render_prompt(
+        manifest, repo_root=env.root, output_path=prompt_file, review_id=review_id, attempt_id=attempt_id
+    )
+    source_checkout = Path(__file__).resolve().parents[1]
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: source_checkout)
+    prepare = review_mcp.prepare_review_attempt
+    receipts = tmp_path / "receipts"
+    monkeypatch.setattr(review_mcp, "prepare_review_attempt", lambda **kw: prepare(**kw, receipts_root=receipts))
+    monkeypatch.setattr(delegate, "_REPO_ROOT", env.root)
+    _patch_worker_popen(monkeypatch)
+    args = _write_args(
+        agent="claude",
+        model="claude-opus-5-5",
+        task_id=task_id,
+        mode="read-only",
+        review_access="full",
+        full_checkout=True,
+        cwd=str(env.root),
+        prompt=None,
+        prompt_file=str(prompt_file),
+        review_attempt=str(manifest),
+        review_id=review_id,
+        attempt_id=attempt_id,
+    )
+    # Refusal leaves the exclusive attempt id reusable, including its config and homes.
+    from scripts.review.isolation import ReviewIsolationError
+
+    with patch(
+        "scripts.agent_runtime.attempt_boundary.verify_full_review_tree",
+        side_effect=ReviewIsolationError("full_review_tree_mismatch"),
+    ):
+        assert delegate.cmd_dispatch(args) == 2
+    assert not (receipts / review_id / f"{attempt_id}.jsonl").exists()
+    assert not (receipts / review_id / f"{attempt_id}.mcp.json").exists()
+    assert not delegate._state_path(task_id).exists()
+    # A newly provisioned tree uses the common reaper before refusal returns.
+    import copy
+
+    auto_args = copy.copy(args)
+    auto_args.worktree = "auto"
+    auto_args.cwd = None
+    with (
+        patch(
+            "scripts.agent_runtime.attempt_boundary.verify_full_review_tree",
+            side_effect=ReviewIsolationError("full_review_tree_mismatch"),
+        ),
+        patch.object(delegate, "_resolve_invocation_git_root", return_value=env.root),
+        patch.object(delegate, "_resolve_worktree_base_sha", return_value="a" * 40),
+        patch.object(delegate, "_ensure_worktree", return_value=(env.root, None, {"reused": False})),
+        patch.object(delegate, "_settle_worktree_reap", return_value={"action": "removed"}) as reap,
+    ):
+        assert delegate.cmd_dispatch(auto_args) == 2
+    reap.assert_called_once_with(env.root, created_by_this_dispatch=True, settling_task_id=task_id)
+    assert not (receipts / review_id / f"{attempt_id}.jsonl").exists()
+    assert delegate.cmd_dispatch(args) == 0
+    task_path = delegate._state_path(task_id)
+    task = json.loads(task_path.read_bytes())
+    assert task["review_attempt"] == {"review_id": review_id, "attempt_id": attempt_id, "manifest_sha256": digest}
+    assert task["review_access"] == "full" and task["prompt_sha256"] == prompt_sha
+    ledger = receipts / review_id / f"{attempt_id}.jsonl"
+    receipt = _record(
+        ledger,
+        manifest=digest,
+        result="fixture evidence for the plan title",
+        review_id=review_id,
+        attempt_id=attempt_id,
+        tool="search_resources",
+    )
+    title = yaml.safe_load(env.plan_path.read_bytes())["title"]
+    checks = {name: "clean" for name in PLAN_CHECKS}
+    checks["title_describes_job"] = ["F-01"]
+    returned = tmp_path / "captured-return.yaml"
+    _dump(
+        returned,
+        _review(
+            kind="plan",
+            manifest_hash=digest,
+            review_id=review_id,
+            attempt_id=attempt_id,
+            checks=checks,
+            findings=[
+                {
+                    "id": "F-01",
+                    "status": "active",
+                    "locations": [{"field": "title", "quote": title}],
+                    "dimension": "job",
+                    "severity": "MINOR",
+                    "claim": "Fixture catalogue context for the title.",
+                    "evidence": {"receipt": receipt},
+                }
+            ],
+        ),
+    )
+    # The seat leaves the printed placeholder; the recorder attests it from this dispatch's real rendered hash.
+    doc = yaml.safe_load(returned.read_bytes())
+    doc["reviewer"] = {
+        "resolved_model": "claude-opus-5-5",
+        "family": "anthropic",
+        "harness": "claude",
+        "prompt_sha256": "PLACEHOLDER",
+    }
+    raw = yaml.safe_dump(doc, allow_unicode=True, sort_keys=False).replace(
+        "prompt_sha256: PLACEHOLDER", 'prompt_sha256: "<prompt_sha256>"'
+    )
+    returned.write_text(raw)
+    data = returned.read_bytes()
+    result_path = tmp_tasks_dir / f"{task_id}.result"
+    result_path.write_bytes(data)
+    task.update(status="done", result_file=str(result_path), result_sha256=hashlib.sha256(data).hexdigest())
+    task_path.write_text(json.dumps(task))
+    db_path = tmp_path / "findings.sqlite"
+    outcome = record.record_return(
+        returned,
+        manifest_path=manifest,
+        ledger_path=ledger,
+        task_id=task_id,
+        tasks_dir=tmp_tasks_dir,
+        repo_root=env.root,
+        db_path=db_path,
+    )
+    assert outcome.accepted and outcome.verdict == "APPROVE", outcome.rejection_codes
+    status = pm.plan_review_status(level, slug, repo_root=env.root)
+    assert status["state"] == "reviewed_pending_promotion" and status["manifest_sha256"] == digest
+    assert status["review_access"] == "full"
+    with contextlib.closing(findings_db.connect(db_path)) as conn:
+        row = findings_db.get_attempt(conn, review_id, attempt_id)
+        assert (row["access"], row["reviewer_model"], row["reviewer_family"], row["harness"]) == (
+            "full",
+            "claude-opus-5-5",
+            "anthropic",
+            "claude",
+        )
+    promotion = promote_plan(level, slug, repo_root=env.root)
+    assert promotion["review_access"] == "full" and promotion["reviewer_model"] == "claude-opus-5-5"
+    assert pm.plan_review_status(level, slug, repo_root=env.root)["state"] == "reviewed_promoted"
+    env.plan_path.write_bytes(env.plan_path.read_bytes() + b"# one input changed\n")
+    stale = pm.plan_review_status(level, slug, repo_root=env.root)
+    assert stale["state"] == "stale" and stale["manifest_sha256"] == digest
+    with pytest.raises(pm.PlanReviewError, match=pm.INPUTS_CHANGED_SINCE_REVIEW):
+        promote_plan(level, slug, repo_root=env.root)
+    proof = {
+        "proof": "captured_return_fixture",
+        "real_seat_run": False,
+        "manifest_sha256": digest,
+        "prompt_sha256": prompt_sha,
+        "review_access": task["review_access"],
+        "ledger_receipt": receipt,
+        "outcome": outcome.payload(),
+        "status_before_change": status,
+        "promotion": promotion,
+        "status_after_change": stale,
+        "residual": "AC-04 real-seat proof remains with the driver",
+    }
+    proof_path = os.environ.get("LU_FULL_REVIEW_FIXTURE_PROOF")
+    if proof_path:
+        Path(proof_path).write_text(json.dumps(proof, indent=2) + "\n")
+
+
+def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_path):
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("kind: plan\n")
+    plan = prepare_review_attempt("full-worker", "a", manifest, "claude", receipts_root=tmp_path / "receipts")
+    task_id = "full-claude-tools"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id, "cli_version": "fixture"})
+    result = _finalize_mock_result()
+    result.model = "claude-opus-5-5"
+    with patch("agent_runtime.runner.invoke", return_value=result) as invoke:
+        assert (
+            delegate._run_worker(
+                task_id=task_id,
+                agent="claude",
+                prompt="review",
+                mode="read-only",
+                cwd_str=str(tmp_path),
+                model="claude-opus-5-5",
+                hard_timeout=30,
+                review_id="full-worker",
+                attempt_id="a",
+                mcp_config_path=str(plan.config_path),
+                strict_mcp_config=True,
+                review_manifest=str(manifest),
+                review_input_root=str(tmp_path),
+                review_access="full",
+            )
+            == 0
+        )
+    tc = invoke.call_args.kwargs["tool_config"]
+    assert tc["review_access"] == "full" and tc["review_cwd"] == str(tmp_path)
+    assert tc["reviewer_tools"] is True and "allowed_tools" not in tc
+    assert tc["strict_mcp_config"] is True
