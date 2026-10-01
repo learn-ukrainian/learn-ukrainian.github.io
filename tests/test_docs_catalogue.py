@@ -2,8 +2,10 @@
 import ast
 import copy
 import json
+import shlex
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 import yaml
@@ -11,19 +13,25 @@ from jsonschema import Draft202012Validator
 
 from scripts.docs import catalogue as catalogue_module
 from scripts.docs.catalogue import (
+    CONTROL_CHARS,
     DRAFT_MARKERS,
     MAX_CATALOGUE_BYTES,
     MAX_CATALOGUE_DEPTH,
     MAX_CATALOGUE_NODES,
     CatalogueLoadError,
+    GitProtocolError,
+    Report,
     body_readable,
+    control_path_error,
     coverage,
     draft_scan,
     glob_error,
     glob_regex,
+    index_entries,
     is_catch_all,
     main,
     parse,
+    read_heads,
     suggest,
     validate,
 )
@@ -380,7 +388,8 @@ ODD_GLOBS = [
     '', '/', '//', 'docs', 'docs/', 'docs//a.md', '/docs/a.md', 'docs/./a.md', 'docs/../a.md',
     'docs/guide/..', 'docs/guide/[!]].md', 'docs/guide/[a-z].md', 'docs/guide/[', 'docs/guide/]',
     'docs/{a,b}.md', 'docs/{a', 'docs/a}', 'docs/guide/***', 'docs/guide/**x', 'docs/guide/x**',
-    'docs/guide/**/**', 'docs/guide/a.md\n', 'docs/guide/\x00', 'docs/guide/\x7f', 'docs/guide/\\',
+    'docs/guide/**/**', 'docs/guide/a.md\n', 'docs/guide/\x00', 'docs/guide/\x7f', 'docs/guide/\x85', 'docs/guide/\x9f',
+    'docs/guide/\xa0', 'docs/guide/\\',
     'docs/guide/(a|b).md', 'docs/guide/a+.md', 'docs/guide/^a$.md', 'docs/guide/.*', 'docs/guide/?',
     'docs/guide/??*?', 'docs/guide/a.md#x', 'docs/guide/ü.md', 'docs/guide/ a.md', 'docs/guide/ ',
     'docs/guide/%2e%2e', 'docs/guide/~', 'docs/guide/$HOME', '**', '*', '?', 'docs/**', 'docs/*/**',
@@ -410,7 +419,8 @@ def test_validator_is_total_and_schema_agrees_with_code(pattern):
 
 
 @pytest.mark.parametrize('name', ['data/a.db', 'data/a/', 'data/a/*.json', 'data/a.db.bak.*', 'data/[a].db',
-                                  'data/{a,b}.db', 'data//a.db', 'data/../x', 'data/a/**x', 'data/a.db\n'])
+                                  'data/{a,b}.db', 'data//a.db', 'data/../x', 'data/a/**x', 'data/a.db\n',
+                                  'data/a\x85.db'])
 def test_store_name_schema_agrees_with_code(name):
     in_schema = Draft202012Validator(SCHEMA['$defs']['storeName']).is_valid(name)
     assert in_schema == (glob_error(name, subtree=True) is None)
@@ -422,11 +432,11 @@ def git(repo, *args):
     return subprocess.check_output(['git', '-C', str(repo), *args], stderr=subprocess.DEVNULL, timeout=30)
 
 
-@pytest.fixture
-def repo(tmp_path):
-    git(tmp_path, 'init', '-q')
-    git(tmp_path, 'config', 'user.email', 'fixture@example.invalid')
-    git(tmp_path, 'config', 'user.name', 'Fixture')
+def make_repo(root):
+    root.mkdir(parents=True, exist_ok=True)
+    git(root, 'init', '-q')
+    git(root, 'config', 'user.email', 'fixture@example.invalid')
+    git(root, 'config', 'user.name', 'Fixture')
     files = {
         'docs/knowledge/catalogue.schema.json': json.dumps(SCHEMA),
         'docs/knowledge/catalogue.yaml': yaml.safe_dump(catalogue(
@@ -437,12 +447,17 @@ def repo(tmp_path):
         'scripts/config/area_assignments.yaml': 'assignments:\n  infra-harness: {slots: []}\n',
     }
     for rel, text in files.items():
-        path = tmp_path / rel
+        path = root / rel
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(text, encoding='utf-8')
-    git(tmp_path, 'add', '.')
-    git(tmp_path, 'commit', '-qm', 'fixture')
-    return tmp_path
+    git(root, 'add', '.')
+    git(root, 'commit', '-qm', 'fixture')
+    return root
+
+
+@pytest.fixture
+def repo(tmp_path):
+    return make_repo(tmp_path)
 
 
 def test_cli_passes_clean_tree_and_reads_only_the_index(repo, capsys):
@@ -555,9 +570,12 @@ BILLION_LAUGHS = 'a: &a ["lol","lol","lol","lol","lol","lol","lol","lol","lol"]\
     ('a: [1, 2\n', 'syntax'),
     (b'a: \xff\n', 'encoding'),
     ('[' + 'a,' * MAX_CATALOGUE_NODES + 'a]', 'too_many_nodes'),
+    ('a: 2026-99-99\n', 'scalar'),  # a timestamp-shaped scalar with no such date
+    ('a: ' + '1' * 5_000 + '\n', 'scalar'),  # over Python's integer-string digit limit
 ], ids=['recursive-aliases', 'deep-flow', 'deep-block', 'billion-laughs', 'alias', 'merge-key', 'python-tag',
         'custom-tag', 'core-tag', 'duplicate-key', 'int-key', 'null-key', 'sequence-key', 'list-root',
-        'scalar-root', 'empty', 'two-documents', 'unclosed', 'not-utf8', 'too-many-nodes'])
+        'scalar-root', 'empty', 'two-documents', 'unclosed', 'not-utf8', 'too-many-nodes', 'bad-date',
+        'huge-int'])
 def test_catalogue_outside_the_yaml_subset_is_a_typed_rejection(repo, tmp_path, capsys, text, code):
     raw = text if isinstance(text, bytes) else text.encode('utf-8')
     with pytest.raises(CatalogueLoadError) as caught:
@@ -669,12 +687,13 @@ def add_and_catalogue(repo, files, *entries):
 
 
 def recorded_blob_reads(monkeypatch):
-    requested = []
+    """Every path -> object ID the gated reader requests."""
+    requested = {}
     original = catalogue_module._index_blobs
 
-    def recording(repo, paths):
-        requested.extend(paths)
-        return original(repo, paths)
+    def recording(repo, objects):
+        requested.update(objects)
+        return original(repo, objects)
     monkeypatch.setattr(catalogue_module, '_index_blobs', recording)
     return requested
 
@@ -737,6 +756,201 @@ def test_only_the_gated_reader_reads_blob_bodies():
     readers = [fn.name for fn in ast.walk(tree) if isinstance(fn, ast.FunctionDef)
                for node in ast.walk(fn) if isinstance(node, ast.Constant) and node.value in ('cat-file', 'show')]
     assert sorted(readers) == ['_index_blobs', 'owner_keys']
+
+
+# ------------------------------------------------------------------ pathnames are data, never protocol text
+
+def blob_oid(repo, text):
+    return subprocess.run(['git', '-C', str(repo), 'hash-object', '--stdin'], input=text.encode('utf-8'),
+                          capture_output=True, check=True, timeout=30).stdout.decode('ascii').strip()
+
+
+CONTROL_NAMES = ['docs/guide/a\nb.md', 'docs/guide/a\rb.md', 'docs/guide/a\tb.md', 'docs/guide/a\x01b.md',
+                 'docs/guide/a\x1bb.md', 'docs/guide/a\x7fb.md', 'docs/guide/a\x85b.md', 'docs/guide/a\x9fb.md']
+SAFE_NAMES = ['docs/guide/-rf.md', 'docs/guide/--help', 'docs/guide/with space.md', 'docs/guide/ґанок.md',
+              'docs/guide/a\\000b.md', 'docs/guide/a\\nb.md', 'docs/guide/%00.md', "docs/guide/it's \"q\".md",
+              'docs/guide/:colon.md', 'docs/guide/nbsp .md']
+
+
+def test_newline_in_a_tracked_name_cannot_smuggle_a_private_blob_into_a_public_read(repo, capsys, monkeypatch):
+    # The review reproduction: a tracked name '<public path>\n<private blob id>'.
+    private_text = '# Draft — private sentinel\n'
+    private_oid = blob_oid(repo, private_text)
+    injected = f'docs/guide/000.md\n{private_oid}'
+    add_and_catalogue(repo, {SENTINEL: private_text, injected: '# Public\n', 'docs/guide/z.md': '# Public z\n'},
+                      family('guide-private', ['docs/guide/sub/private/**'], content_searchable=False))
+    assert injected in index_entries(repo)  # Git really tracks the hostile name
+    report = coverage(repo)
+    assert report.errors == [control_path_error(injected)]
+    assert repr(injected) in report.errors[0] and not CONTROL_CHARS.search(report.errors[0])
+    assert injected not in report.resolved and injected not in report.uncovered
+    requested = recorded_blob_reads(monkeypatch)
+    scan = draft_scan(repo, report)
+    assert private_oid not in requested.values() and SENTINEL not in requested and injected not in requested
+    assert 'docs/guide/z.md' in requested
+    assert scan['with_marker'] == 0 and scan['active_with_marker'] == {}
+    assert main(['check', '--repo', str(repo)]) == 1
+    out = capsys.readouterr().out
+    assert f'ERROR {control_path_error(injected)}' in out
+    assert not any(line.startswith(private_oid) for line in out.splitlines())
+    assert main(['draft-scan', '--repo', str(repo), '--json']) == 0
+    out = capsys.readouterr().out
+    assert 'sentinel' not in out and json.loads(out)['with_marker'] == 0
+
+
+@pytest.mark.parametrize('name', CONTROL_NAMES[:1] + SAFE_NAMES)
+def test_blob_reader_answers_each_path_with_its_own_index_blob(repo, name):
+    # Below the validator: even a newline name read directly cannot shift another path's response.
+    private_text = '# Draft — private sentinel\n'
+    private_oid = blob_oid(repo, private_text)
+    hostile = name.replace('\nb', f'\n{private_oid}')
+    files = {SENTINEL: private_text, hostile: f'body of {hostile!r}\n', 'docs/guide/z.md': 'body of z\n'}
+    add_and_catalogue(repo, files)
+    entries = index_entries(repo)
+    objects = {p: entries[p].oid for p in (hostile, 'docs/guide/z.md')}
+    blobs = catalogue_module._index_blobs(repo, objects)
+    assert blobs == {p: files[p].encode('utf-8') for p in objects}
+
+
+@pytest.mark.parametrize('name', SAFE_NAMES)
+def test_unusual_but_safe_names_are_catalogued_and_read(repo, name):
+    add_and_catalogue(repo, {name: f'# Draft {name!r}\n'})
+    report = coverage(repo)
+    assert report.ok, report.errors
+    assert report.resolved[name] == ('guide', 'active')
+    heads, withheld = read_heads(repo, report, [name, 'docs/guide/a.md'])
+    assert withheld == 0 and heads == {name: f'# Draft {name!r}', 'docs/guide/a.md': '# A'}
+
+
+@pytest.mark.parametrize('name', CONTROL_NAMES)
+def test_control_characters_in_a_tracked_name_are_an_error_and_never_catalogued(repo, name):
+    add_and_catalogue(repo, {name: '# Draft\n'})
+    report = coverage(repo)
+    assert report.errors == [control_path_error(name)]
+    assert not CONTROL_CHARS.search(report.errors[0])  # the path is printed escaped
+    assert name not in report.resolved and name not in report.uncovered
+    assert report.denominator == 3
+    heads, withheld = read_heads(repo, report, [name])
+    assert heads == {} and withheld == 1
+
+
+@pytest.mark.parametrize('char', ['\n', '\r', '\t', '\x00', '\x01', '\x1f', '\x7f', '\x80', '\x85', '\x9f'])
+def test_validator_drops_control_paths_everywhere(char):
+    hostile = [f'docs/guide/x{char}y.md', f'scripts/x{char}y.py']  # inside and outside the roots
+    report = check(base(), FILES + hostile)
+    assert report.errors == [control_path_error(p) for p in hostile]
+    assert report.denominator == 5 and not set(hostile) & set(report.resolved)
+    data = base()
+    data['entries'][1]['entrypoints'] = [{'topic': 'guide', 'path': hostile[0]}]
+    assert any(e.startswith('schema: entries/1/entrypoints/0/path') for e in check(data, FILES + hostile).errors)
+
+
+def test_validator_accepts_non_control_unicode():
+    names = ['docs/guide/ґанок.md', 'docs/guide/nbsp .md', 'docs/guide/  .md']
+    report = check(base(), FILES + names)
+    assert report.ok, report.errors
+    assert all(report.resolved[n] == ('guide', 'active') for n in names)
+
+
+def test_body_gate_refuses_a_resolved_control_path():
+    report = Report(resolved={'docs/guide/a\nb.md': ('guide', 'active'), 'docs/guide/a.md': ('guide', 'active')},
+                    searchable_entries={'guide'})
+    assert not body_readable(report, 'docs/guide/a\nb.md')
+    assert body_readable(report, 'docs/guide/a.md')
+
+
+OID = 'a' * 40
+OTHER = 'b' * 40
+
+
+def fake_cat_file(monkeypatch, stdout):
+    calls = []
+
+    def run(*args, **kwargs):
+        calls.append(kwargs['input'])
+        return SimpleNamespace(stdout=stdout)
+    monkeypatch.setattr(catalogue_module.subprocess, 'run', run)
+    return calls
+
+
+@pytest.mark.parametrize('stdout, code', [
+    (f'{OTHER} blob 3\nhi\n\n'.encode(), 'response_mismatch'),
+    (f'{OID} tree 3\nhi\n\n'.encode(), 'not_blob'),
+    (f'{OID} commit 3\nhi\n\n'.encode(), 'not_blob'),
+    (f'{OID} ambiguous\n'.encode(), 'not_blob'),
+    (f'{OID} blob x\nhi\n'.encode(), 'not_blob'),
+    (f'{OID} blob 9\nhi\n'.encode(), 'truncated'),
+    (f'{OID} blob 2\nhi!'.encode(), 'truncated'),
+    (b'', 'truncated'),
+    (f'{OID} blob 2\nhi\n{OTHER} blob 2\nho\n'.encode(), 'trailing_output'),
+])
+def test_blob_reader_rejects_any_response_that_is_not_the_requested_blob(monkeypatch, stdout, code):
+    calls = fake_cat_file(monkeypatch, stdout)
+    with pytest.raises(GitProtocolError) as caught:
+        catalogue_module._index_blobs(Path('.'), {'docs/guide/a.md': OID})
+    assert caught.value.code == code
+    assert calls == [f'{OID}\n'.encode()]  # the request is the object ID alone
+
+
+def test_blob_reader_accepts_missing_and_sha256_objects(monkeypatch):
+    long_oid = 'c' * 64
+    fake_cat_file(monkeypatch, f'{OID} missing\n{long_oid} blob 2\nhi\n'.encode())
+    assert catalogue_module._index_blobs(Path('.'), {'gone.md': OID, 'kept.md': long_oid}) == {'kept.md': b'hi'}
+
+
+@pytest.mark.parametrize('oid', ['HEAD', ':docs/guide/a.md', OID[:39], f'{OID}\n{OTHER}', OID.upper(),
+                                 OID + '0', 'c' * 63, ' ' + OID, ''])
+def test_blob_reader_refuses_anything_but_a_full_object_id(monkeypatch, oid):
+    calls = fake_cat_file(monkeypatch, b'')
+    with pytest.raises(GitProtocolError) as caught:
+        catalogue_module._index_blobs(Path('.'), {'docs/guide/a.md': oid})
+    assert caught.value.code == 'object_id' and calls == []
+
+
+@pytest.mark.parametrize('record, code', [
+    (f'100644 {OID} 0 docs/a.md\0', 'index_record'),  # no tab before the path
+    (f'100644 {OID[:-1]} 0\tdocs/a.md\0', 'index_record'),
+    (f'1006x4 {OID} 0\tdocs/a.md\0', 'index_record'),
+    (f'100644 {OID}\tdocs/a.md\0', 'index_record'),
+    (f'100644 {OID} 2\tdocs/a.md\0', 'unmerged_index'),
+])
+def test_index_reader_validates_every_record(monkeypatch, record, code):
+    monkeypatch.setattr(catalogue_module, 'git', lambda *_args: record.encode())
+    with pytest.raises(GitProtocolError) as caught:
+        index_entries(Path('.'))
+    assert caught.value.code == code
+
+
+def test_unmerged_index_is_a_typed_unreadable_repository(repo, capsys):
+    oid = blob_oid(repo, 'x\n')
+    subprocess.run(['git', '-C', str(repo), 'hash-object', '-w', '--stdin'], input=b'x\n', check=True,
+                   capture_output=True, timeout=30)
+    subprocess.run(['git', '-C', str(repo), 'update-index', '--index-info'], check=True, timeout=30,
+                   input=f'100644 {oid} 1\tdocs/guide/c.md\n100644 {oid} 2\tdocs/guide/c.md\n'.encode())
+    assert main(['check', '--repo', str(repo), '--json']) == 3
+    assert json.loads(capsys.readouterr().out)['error']['code'] == 'unmerged_index'
+
+
+def test_repository_path_keeps_trailing_whitespace(tmp_path, capsys):
+    root = make_repo(tmp_path / 'repo ')
+    assert main(['check', '--repo', str(root)]) == 0
+    assert 'uncovered 0; errors 0' in capsys.readouterr().out
+
+
+def test_stub_query_quotes_the_path_for_the_shell():
+    uncovered = "docs/new dir/it's.md"
+    stub = yaml.safe_load(suggest(check(base(), [*FILES, uncovered]), base()))[0]
+    assert shlex.split(stub['query'][0]['how'])[-1] == 'docs/new dir'
+
+
+def test_unmatched_store_names_are_printed_escaped(repo, capsys, tmp_path):
+    data_root = tmp_path / 'local-data'
+    data_root.mkdir()
+    (data_root / 'odd\nUNMATCHED STORE forged').write_text('x')
+    assert main(['check', '--repo', str(repo), '--data-root', str(data_root)]) == 1
+    lines = capsys.readouterr().out.splitlines()
+    assert "UNMATCHED STORE 'data/odd\\nUNMATCHED STORE forged'" in lines
+    assert 'UNMATCHED STORE forged' not in lines
 
 
 # ------------------------------------------------------------------ the repository's own tree

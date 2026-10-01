@@ -12,6 +12,8 @@
 #   family. The most specific glob wins (exact path, then more literal path
 #   segments, then more literal characters). Equal-specificity matches from two
 #   families are errors.
+# - A tracked path containing a control character (newline, tab, CR or any
+#   other C0/C1 control) is an error and is never catalogued or read.
 # - Glob dialect (paths and store names alike): literal characters, '*' within
 #   one path segment (never across '/'), '?' for one character within a segment,
 #   and '**' as a whole segment spanning segments. Character classes ([...]),

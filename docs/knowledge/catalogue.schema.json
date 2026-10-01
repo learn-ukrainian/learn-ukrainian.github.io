@@ -59,18 +59,18 @@
       "description": "Repository-relative POSIX path; never absolute, never parent-relative.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\u0000-\\u001f\\u007f]+$"
+      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\u0000-\\u001f\\u007f-\\u009f]+$"
     },
     "glob": {
       "description": "Catalogue glob dialect (also used by scripts/docs/catalogue.py): literal characters; '*' matches within one path segment, never '/'; '?' matches one character within a segment; '**' is a whole segment spanning one or more segments (zero or more when a segment follows). Character classes ('[...]'), braces ('{a,b}'), empty, '.' and '..' segments, a leading or trailing '/' and control characters are rejected: list each path instead. Catch-all rule (validator): the first segment below the tracked root must be literal, so 'docs/**', 'docs/*/**', 'docs/a*/**' and '**' are errors.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?![^\\u0000-\\u001f\\u007f]*[\\u0000-\\u001f\\u007f])(?!/)(?!.*//)(?!.*/$)(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f]+$"
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!/)(?!.*//)(?!.*/$)(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+$"
     },
     "storeName": {
       "description": "A logical store under data/ in the catalogue glob dialect (see $defs/glob); a trailing '/' claims the subtree.",
       "type": "string",
-      "pattern": "^(?![^\\u0000-\\u001f\\u007f]*[\\u0000-\\u001f\\u007f])(?!.*//)data/(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f]+$"
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!.*//)data/(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+$"
     },
     "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"},
     "owner": {
@@ -83,7 +83,7 @@
       "description": "A tracked repository path (optionally with #section) or id:<catalogue entry id>.",
       "type": "string",
       "minLength": 3,
-      "pattern": "^(id:[a-z0-9][a-z0-9-]*[a-z0-9]|(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\u0000-\\u001f\\u007f]+)$"
+      "pattern": "^(id:[a-z0-9][a-z0-9-]*[a-z0-9]|(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\u0000-\\u001f\\u007f-\\u009f]+)$"
     },
     "query": {
       "type": "array",

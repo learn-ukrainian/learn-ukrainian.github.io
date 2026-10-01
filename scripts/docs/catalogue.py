@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import shlex
 import subprocess
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
@@ -34,16 +35,72 @@ SQLITE_SIDECARS = ('-shm', '-wal', '-journal')
 PLACEHOLDER_NAMES = frozenset({'.gitkeep', '.gitignore'})
 WILDCARD = re.compile(r'[*?]')
 # Characters outside the glob dialect: class/brace syntax and control characters.
-FORBIDDEN_GLOB_CHARS = re.compile(r'[\[\]{}\x00-\x1f\x7f]')
+FORBIDDEN_GLOB_CHARS = re.compile(r'[\[\]{}\x00-\x1f\x7f-\x9f]')
+# C0, DEL and C1 controls (Unicode category Cc). A tracked path containing one is a
+# validation error and is never catalogued, read or printed unescaped.
+CONTROL_CHARS = re.compile(r'[\x00-\x1f\x7f-\x9f]')
+# A full SHA-1 or SHA-256 object ID, the only thing ever written to a Git request.
+OBJECT_ID = re.compile(r'(?:[0-9a-f]{40}|[0-9a-f]{64})\Z')
+REGULAR_MODES = frozenset({'100644', '100755'})
+
+
+class GitProtocolError(subprocess.SubprocessError):
+    """Git output is not the shape the reader requested; ``code`` names the rule."""
+
+    def __init__(self, code: str, message: str):
+        super().__init__(f'{code}: {message}')
+        self.code = code
 
 
 def git(repo: Path, *args: str) -> bytes:
     return subprocess.check_output(['git', '-C', str(repo), *args], stderr=subprocess.DEVNULL, timeout=60)
 
 
+def toplevel(repo: Path) -> Path:
+    """The worktree root; only Git's record terminator is removed, never path characters."""
+    return Path(git(repo, 'rev-parse', '--show-toplevel').decode('utf-8').removesuffix('\n'))
+
+
+@dataclass(frozen=True)
+class IndexEntry:
+    mode: str
+    oid: str
+
+
+def index_entries(repo: Path) -> dict[str, IndexEntry]:
+    """Every path in Git's index (includes skip-worktree sparse paths) with its mode and object ID.
+
+    Records come from NUL-separated ``ls-files -z --stage``; pathnames are data, split on
+    NUL only and never written back to Git. Object IDs are validated before use.
+    """
+    entries = {}
+    for record in git(repo, 'ls-files', '-z', '--stage').split(b'\0'):
+        if not record:
+            continue
+        header, tab, raw_path = record.partition(b'\t')
+        fields = header.decode('ascii', 'replace').split(' ')
+        if not tab or len(fields) != 3 or not fields[0].isdigit() or not OBJECT_ID.match(fields[1]):
+            raise GitProtocolError('index_record', 'malformed ls-files --stage record')
+        mode, oid, stage = fields
+        if stage != '0':
+            raise GitProtocolError('unmerged_index', 'the index has unmerged entries; resolve conflicts first')
+        entries[raw_path.decode('utf-8')] = IndexEntry(mode, oid)
+    return dict(sorted(entries.items()))
+
+
 def tracked_files(repo: Path) -> list[str]:
-    """Every regular path in Git's index (includes skip-worktree sparse paths)."""
-    return sorted(p.decode('utf-8') for p in git(repo, 'ls-files', '-z').split(b'\0') if p)
+    """Every path in Git's index, sorted."""
+    return list(index_entries(repo))
+
+
+def shown(path: str) -> str:
+    """A path for one line of text output: escaped (repr) when it holds control characters."""
+    return repr(path) if CONTROL_CHARS.search(path) else path
+
+
+def control_path_error(path: str) -> str:
+    return (f'tracked path {path!r} contains control characters; rename it '
+            '(such paths are never catalogued or read)')
 
 
 def under_roots(path: str, roots=TRACKED_ROOTS) -> bool:
@@ -229,10 +286,14 @@ def parse(raw: bytes) -> dict:
         raise CatalogueLoadError('encoding', f'not UTF-8 at byte {exc.start}') from None
     try:
         data = yaml.load(text, Loader=CatalogueLoader)
+    except CatalogueLoadError:
+        raise
     except yaml.YAMLError as exc:
         mark = getattr(exc, 'problem_mark', None)
         problem = getattr(exc, 'problem', None) or type(exc).__name__
         raise CatalogueLoadError('syntax', str(problem), mark) from None
+    except (ValueError, OverflowError) as exc:  # a scalar that matches a YAML type but cannot be built
+        raise CatalogueLoadError('scalar', f'unconstructible scalar: {str(exc)[:200]}') from None
     if not isinstance(data, dict):
         raise CatalogueLoadError('not_mapping', 'the catalogue must be a YAML mapping')
     return data
@@ -319,10 +380,17 @@ def schema_errors(catalogue: dict, schema: dict) -> list[str]:
 
 def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
              roots: tuple[str, ...] = TRACKED_ROOTS) -> Report:
-    """Check structure, coverage, supersession and references; never raises on bad data."""
+    """Check structure, coverage, supersession and references; never raises on bad data.
+
+    A tracked path with a control character is an error and is dropped before anything
+    else sees it, so it is never resolved, counted, matched or read.
+    """
     report = Report()
-    report.errors.extend(schema_errors(catalogue, schema))
-    if report.errors:
+    report.errors.extend(control_path_error(p) for p in files if CONTROL_CHARS.search(p))
+    files = [p for p in files if not CONTROL_CHARS.search(p)]
+    found = schema_errors(catalogue, schema)
+    if found:
+        report.errors.extend(found)
         return report
     report.schema_ok = True
     tracked = set(files)
@@ -560,29 +628,52 @@ def body_readable(report: Report, path: str) -> bool:
     """The privacy boundary for content reads: may this path's body be read at all?
 
     True only for a path that resolves to a content-searchable family and has no
-    inventory-excluded component (docs_inventory.EXCLUDED_PARTS). Everything else,
-    including unresolved paths, stays unread. ``read_heads`` is the only body reader
-    and applies this gate itself, so a scanner cannot bypass it.
+    inventory-excluded component (docs_inventory.EXCLUDED_PARTS) and no control
+    character. Everything else, including unresolved paths, stays unread.
+    ``read_heads`` is the only body reader and applies this gate itself, so a
+    scanner cannot bypass it.
     """
     owner = report.resolved.get(path)
-    return owner is not None and owner[0] in report.searchable_entries and not is_excluded(path)
+    return (owner is not None and owner[0] in report.searchable_entries and not is_excluded(path)
+            and not CONTROL_CHARS.search(path))
 
 
-def _index_blobs(repo: Path, paths: list[str]) -> dict[str, bytes]:
-    """Index blobs of ``paths`` (sparse-safe); missing paths are absent. Call only via read_heads."""
-    request = ''.join(f':{p}\n' for p in paths).encode('utf-8')
+def _index_blobs(repo: Path, objects: dict[str, str]) -> dict[str, bytes]:
+    """Blob contents keyed by path, requested by index object ID. Call only via read_heads.
+
+    ``objects`` maps each path to its index object ID. The ``cat-file --batch`` request
+    holds validated object IDs only, never pathnames, and each response header must name
+    the requested ID with type ``blob``, so no request can answer for another. A missing
+    object is absent from the result; any other mismatch raises GitProtocolError.
+    """
+    order = list(objects.items())
+    for _, oid in order:
+        if not OBJECT_ID.match(oid):
+            raise GitProtocolError('object_id', f'{oid[:80]!r} is not a full object ID')
+    request = b''.join(oid.encode('ascii') + b'\n' for _, oid in order)
     out = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch'], input=request,
                          capture_output=True, check=True, timeout=300).stdout
     blobs, offset = {}, 0
-    for path in paths:
-        header_end = out.index(b'\n', offset)
-        header = out[offset:header_end].split()
-        if header[-1] == b'missing':
+    for path, oid in order:
+        header_end = out.find(b'\n', offset)
+        if header_end < 0:
+            raise GitProtocolError('truncated', f'no response header for {oid}')
+        header = out[offset:header_end].split(b' ')
+        if header[0] != oid.encode('ascii'):
+            raise GitProtocolError('response_mismatch', f'response names {header[0][:80]!r}, requested {oid}')
+        if header[1:] == [b'missing']:
             offset = header_end + 1
             continue
-        size = int(header[2])
-        blobs[path] = out[header_end + 1:header_end + 1 + size]
-        offset = header_end + 1 + size + 1
+        if len(header) != 3 or header[1] != b'blob' or not header[2].isdigit():
+            raise GitProtocolError('not_blob', f'{oid} answered {b" ".join(header[1:])[:80]!r}, not a blob')
+        start = header_end + 1
+        end = start + int(header[2])
+        if out[end:end + 1] != b'\n':
+            raise GitProtocolError('truncated', f'blob {oid} is shorter than its header size')
+        blobs[path] = out[start:end]
+        offset = end + 1
+    if offset != len(out):
+        raise GitProtocolError('trailing_output', 'more responses than requests')
     return blobs
 
 
@@ -590,11 +681,14 @@ def read_heads(repo: Path, report: Report, paths: list[str],
                lines: int = DRAFT_SCAN_LINES) -> tuple[dict[str, str], int]:
     """The first ``lines`` lines of each body-readable path; binary blobs are skipped.
 
-    Returns (heads, number of paths withheld by ``body_readable``).
+    Blobs are requested by the object ID in the index entry of each readable regular
+    file. Returns (heads, number of paths withheld by ``body_readable``).
     """
     readable = [p for p in paths if body_readable(report, p)]
+    entries = index_entries(repo)
+    objects = {p: entries[p].oid for p in readable if p in entries and entries[p].mode in REGULAR_MODES}
     heads = {}
-    for path, blob in _index_blobs(repo, readable).items():
+    for path, blob in _index_blobs(repo, objects).items():
         if b'\0' not in blob[:8192]:
             heads[path] = '\n'.join(blob.decode('utf-8', 'replace').splitlines()[:lines])
     return heads, len(paths) - len(readable)
@@ -659,7 +753,7 @@ def suggest(report: Report, catalogue: dict, roots: tuple[str, ...] = TRACKED_RO
                 'keywords': sorted(set(re.findall(r'[a-z0-9]{3,}', key.split('/', 1)[-1].lower()))) or ['todo'],
                 'lifecycle': 'active', 'owner': nearest.get('owner', 'docs-knowledge'),
                 'query': [{'surface': 'git_grep',
-                           'how': f"git grep -n -i -F '<term>' -- {key}"}],
+                           'how': f"git grep -n -i -F '<term>' -- {shlex.quote(key)}"}],
                 # The stub owns every path in its group, so one excluded path makes it private.
                 'content_searchable': not any(is_excluded(p) for p in paths)}
         body = yaml.safe_dump([stub], sort_keys=False, allow_unicode=True, width=1000)
@@ -702,10 +796,11 @@ def main(argv: list[str] | None = None) -> int:
                '  .venv/bin/python -m scripts.docs.catalogue draft-scan --json\n'
                'Outputs: a report on stdout only; never writes files and reads data/ names, not contents.\n'
                'Exit codes: 0 no errors, full coverage and no unmatched local store (or --report-only; '
-               'draft-scan always reports with 0); 1 errors, uncovered paths or unmatched stores; '
-               '2 invalid arguments; 3 unreadable repository or catalogue, or a catalogue outside the '
-               'accepted YAML subset (anchors, aliases, merge keys, tags, duplicate or non-string keys, '
-               'over 2 MiB, 100,000 nodes or 16 nesting levels); 4 internal error. Failures print a typed '
+               'draft-scan always reports with 0); 1 errors (including a tracked path with control '
+               'characters), uncovered paths or unmatched stores; 2 invalid arguments; 3 unreadable '
+               'repository or catalogue, an unmerged index or unexpected Git output, or a catalogue outside '
+               'the accepted YAML subset (anchors, aliases, merge keys, tags, duplicate or non-string keys, '
+               'unconstructible scalars, over 2 MiB, 100,000 nodes or 16 nesting levels); 4 internal error. Failures print a typed '
                'error (JSON with --json), never a traceback.\n'
                'Related: #9412; docs/knowledge/catalogue.yaml; docs/knowledge/catalogue.schema.json; '
                'scripts/docs/docs_inventory.py; docs/architecture/docs-authority-lifecycle.md.')
@@ -743,7 +838,7 @@ def main(argv: list[str] | None = None) -> int:
 EXIT_UNREADABLE = 3
 EXIT_INTERNAL = 4
 UNREADABLE = (OSError, CatalogueLoadError, json.JSONDecodeError, UnicodeDecodeError, yaml.YAMLError,
-              subprocess.SubprocessError)
+              subprocess.SubprocessError)  # GitProtocolError is a SubprocessError
 
 
 def _run(label: str, command, args: argparse.Namespace) -> int:
@@ -765,7 +860,7 @@ def _run(label: str, command, args: argparse.Namespace) -> int:
 
 
 def _check_command(args: argparse.Namespace) -> int:
-    repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
+    repo = toplevel(args.repo)
     catalogue_path = args.catalogue or repo / CATALOGUE_PATH
     report = coverage(repo, catalogue_path)
     catalogue = load(catalogue_path)
@@ -794,7 +889,7 @@ def _check_command(args: argparse.Namespace) -> int:
         else:
             print(f'local stores: {stores[0]} names checked; {len(stores[1])} unmatched')
             for logical in stores[1]:
-                print(f'UNMATCHED STORE {logical}')
+                print(f'UNMATCHED STORE {shown(logical)}')
     if args.suggest and report.uncovered:
         print(suggest(report, catalogue))
     store_gaps = bool(stores and stores[1])
@@ -802,7 +897,7 @@ def _check_command(args: argparse.Namespace) -> int:
 
 
 def _draft_scan_command(args: argparse.Namespace) -> int:
-    repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
+    repo = toplevel(args.repo)
     scan = draft_scan(repo, coverage(repo))
     if args.json:
         print(json.dumps(scan, indent=2, sort_keys=True, ensure_ascii=False))
