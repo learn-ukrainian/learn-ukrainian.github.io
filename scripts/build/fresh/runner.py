@@ -187,6 +187,10 @@ def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str
     if draft["consolidation"]["activities"] != expected_consolidation:
         return failure(3, "consolidation_activities", "writer")
     for activity in draft.get("activities") or []:
+        # Only quiz has listening items in the A1 schema. Other families may
+        # have non-object items, and their shape is owned by schema/check 4.
+        if plan_acts[activity["id"]]["type"] != "quiz":
+            continue
         for index, item in enumerate(activity.get("items") or []):
             if item.get("kind") == "listening" and (
                 (item.get("host") or {}).get("kind") != "video"
@@ -244,6 +248,32 @@ _A1_GROUPS = frozenset({"Gender", "Number", "Case", "Person", "VerbForm"})
 _CHOICE_TYPES = frozenset(
     {"quiz", "multiple-choice", "fill-in", "odd-one-out", "error-correction", "translate", "image-to-letter"}
 )
+# Every activities-a1.schema.json family has an explicit check-7 owner/container.
+# check_4 delegates schema/structural/key validation; these families have no
+# per-item kind or single-choice semantics (order.items, for example, are strings).
+_A1_CHECK_7_RULES = {
+    "anagram": "check_4",
+    "classify": "check_4",  # Schema-allowed, but forbidden by the fresh A1 contract.
+    "count-syllables": "check_4",
+    "divide-words": "check_4",
+    "error-correction": "options",
+    "fill-in": "options",
+    "group-sort": "groups",
+    "image-to-letter": "options",
+    "letter-grid": "check_4",
+    "match-up": "check_4",
+    "observe": "check_4",
+    "odd-one-out": "words",
+    "order": "check_4",
+    "phrase-table": "check_4",
+    "pick-syllables": "check_4",  # Multiple indices, not one choice key.
+    "quiz": "options",
+    "translate": "options",  # Free production without options stays with check 4/review.
+    "true-false": "boolean",
+    "unjumble": "check_4",
+    "watch-and-repeat": "check_4",
+    "multiple-choice": "options",  # Existing resolved-plan alias of quiz.
+}
 
 
 def _normal_letters(value: str) -> str:
@@ -678,7 +708,17 @@ def check_7_a1_choices(
 
     for activity in draft.get("activities") or []:
         aid = activity["id"]
-        if activity.get("grouping_feature"):
+        typ = activity.get("type") or next(
+            (act["type"] for act in lesson.get("activities") or [] if act["id"] == aid), None
+        )
+        rule = _A1_CHECK_7_RULES.get(typ)
+        if rule is None:
+            return failure(
+                7, "choice_activity_type_invalid", "writer", code="choice_activity_type_invalid", activity=aid
+            )
+        if rule == "check_4":
+            continue
+        if rule == "groups" and activity.get("grouping_feature"):
             feature = activity["grouping_feature"]
             for group_idx, group in enumerate(activity.get("groups") or []):
                 value = group.get("value")
@@ -701,14 +741,13 @@ def check_7_a1_choices(
                         )
                         if not confirmed:
                             return bad("group_entry_ambiguous_without_receipt", aid, index)
+        if rule == "groups":
+            continue
         for index, item in enumerate(activity.get("items") or []):
             kind = item.get("kind")
             if kind is None:
                 continue
-            typ = activity.get("type") or next(
-                (act["type"] for act in lesson.get("activities") or [] if act["id"] == aid), None
-            )
-            options = [True, False] if typ == "true-false" else item.get("words" if typ == "odd-one-out" else "options")
+            options = [True, False] if rule == "boolean" else item.get(rule)
             if kind == "comprehension" and (
                 (item.get("host") or {}).get("kind") not in {"dialogue", "quote"}
                 or not _host_eligible(item.get("host"), draft, lesson, aid)
@@ -977,7 +1016,10 @@ def check_4_activities(
             if len(corr_indices) != len(set(corr_indices)):
                 return failure(4, "answer_key_ambiguous", "writer", activity=aid), {}
 
-        for idx, item in enumerate(activity.get("items") or []):
+        # order.items are strings; its permutation is checked below rather
+        # than by the per-object answer-key and choice rules.
+        items = [] if typ == "order" else activity.get("items") or []
+        for idx, item in enumerate(items):
             if typ == "fill-in" and item.get("mode") == "form-choice":
                 record = records.get(item.get("record"))
                 forms = _forms(record) if record else {}
