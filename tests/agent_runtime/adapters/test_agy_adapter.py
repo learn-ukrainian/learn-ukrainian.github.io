@@ -10,6 +10,7 @@ import pytest
 from scripts.agent_runtime.adapters import agy as agy_module
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.adapters.base import InvocationPlan
+from scripts.agent_runtime.attempt_safe_read import AttemptReadError
 from scripts.build import linear_pipeline
 
 FIXTURES = Path(__file__).resolve().parents[2] / "fixtures" / "agy"
@@ -184,6 +185,72 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
     )
 
 
+@pytest.mark.parametrize("attempt", [False, True], ids=["ordinary", "attempt"])
+@pytest.mark.parametrize("shape", ["fifo", "step_index", "generic"])
+@pytest.mark.parametrize("steps_dir", ["steps", ".system_generated/steps"])
+@pytest.mark.parametrize("swap", [False, True], ids=["regular", "swapped"])
+def test_saved_result_with_unresolved_app_data_ancestor(
+    tmp_path: Path, monkeypatch, attempt: bool, shape: str, steps_dir: str, swap: bool,
+) -> None:
+    real = tmp_path / "real"
+    real.mkdir()
+    alias = tmp_path / "alias"
+    alias.symlink_to(real, target_is_directory=True)
+    home = alias / "home"
+    monkeypatch.setattr(agy_module, "_require_background_wait_support", lambda *a: None)
+    monkeypatch.setattr(agy_module, "_build_log_path", lambda *a: real / "agy.log")
+    config = {"agy_home_override": str(home)}
+    if attempt:
+        config["review_write_root"] = str(real)
+    plan = AgyAdapter().build_invocation(
+        prompt="prompt", mode="workspace-write", cwd=tmp_path,
+        model=None, task_id=None, session_id=None, tool_config=config,
+    )
+    app_data = Path(plan.env_overrides["AGY_APP_DATA_DIR"])
+    conversation = app_data / "brain" / CONVERSATION_ID
+    output = conversation / steps_dir / "output.txt"
+    output.parent.mkdir(parents=True)
+    output.write_text("own saved result", encoding="utf-8")
+    transcript = conversation / ".system_generated" / "logs" / "transcript.jsonl"
+    transcript.parent.mkdir(parents=True, exist_ok=True)
+    pointer = f"The output was large and was saved to: {output.as_uri()}"
+    events = [
+        {"tool_calls": [{"name": "call_mcp_tool", "args": {
+            "ServerName": "sources", "ToolName": "search_text", "Arguments": {},
+        }}]},
+        {"type": "GENERIC" if shape == "generic" else "MCP_TOOL", "content": pointer},
+    ]
+    if shape != "fifo":
+        for index, event in enumerate(events):
+            event["step_index"] = index
+    transcript.write_text("\n".join(json.dumps(event) for event in events) + "\n", encoding="utf-8")
+    Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"]).write_text(
+        f"Created conversation {CONVERSATION_ID}\n", encoding="utf-8",
+    )
+    original = agy_module._read_transcript_events
+    forbidden = tmp_path / "forbidden"
+    forbidden_output = forbidden / steps_dir / "output.txt"
+    forbidden_output.parent.mkdir(parents=True)
+    forbidden_output.write_text("FORBIDDEN_SAVED_RESULT", encoding="utf-8")
+
+    def read_then_swap(*args, **kwargs):
+        result = original(*args, **kwargs)
+        if swap:
+            conversation.rename(conversation.with_name("old-conversation"))
+            conversation.symlink_to(forbidden, target_is_directory=True)
+        return result
+
+    monkeypatch.setattr(agy_module, "_read_transcript_events", read_then_swap)
+    if swap and not attempt:
+        with pytest.raises(AttemptReadError, match=r"^attempt_read_unsafe_path$"):
+            agy_module._parse_transcript_tool_calls(plan)
+    else:
+        calls = agy_module._parse_transcript_tool_calls(plan)
+        expected = pointer if attempt else "own saved result"
+        assert calls[0]["result"] == [{"type": "text", "text": expected}]
+        assert "FORBIDDEN_SAVED_RESULT" not in str(calls)
+
+
 def test_parse_response_pairs_duplicate_planner_intents_by_step_index(
     tmp_path: Path,
 ) -> None:
@@ -234,6 +301,46 @@ def test_parse_response_pairs_duplicate_planner_intents_by_step_index(
         "grinchenko-output",
         "literary-output",
     ]
+
+
+@pytest.mark.parametrize("truncated", [False, True])
+def test_saved_tool_result_logs_only_size_and_truncation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture,
+    truncated: bool,
+) -> None:
+    app_data = tmp_path / "app-data"
+    alias = tmp_path / "private-env-value"
+    plan = _plan(tmp_path, log_file=tmp_path / "agy.log", app_data=alias)
+    relative_output = Path("brain") / CONVERSATION_ID / "steps" / "103" / "output.txt"
+    output = app_data / relative_output
+    output.parent.mkdir(parents=True)
+    raw = b"PRIVATE_TOOL_RESULT"
+    output.write_bytes(raw)
+    limit = len(raw) - int(truncated)
+    monkeypatch.setattr(agy_module, "_MAX_INLINE_TOOL_RESULT_BYTES", limit)
+    caplog.set_level("INFO", logger=agy_module._logger.name)
+    transcript = app_data / "brain" / CONVERSATION_ID / ".system_generated" / "logs" / "transcript.jsonl"
+    pointer = f"The output was large and was saved to: {(alias / relative_output).as_uri()}"
+
+    result = agy_module._inline_saved_tool_result_pointer(
+        pointer, transcript_path=transcript, trusted_root=app_data,
+        app_data_alias=agy_module._agy_app_data(plan.env_overrides),
+    )
+
+    expected = raw[:limit].decode("utf-8")
+    if truncated:
+        expected += f"\n\n[agy tool result truncated at {limit} bytes]"
+    assert result == expected
+    records = [record for record in caplog.records if record.name == agy_module._logger.name]
+    assert len(records) == 1
+    record = records[0]
+    assert record.levelname == ("WARNING" if truncated else "INFO")
+    assert record.msg == (
+        "agy inlined truncated tool result pointer (%s bytes)" if truncated
+        else "agy inlined tool result pointer (%s bytes)"
+    )
+    assert record.args == (len(raw),)
+    assert record.getMessage() == record.msg % len(raw)
 
 
 def _planner_intent(tool: str, query: str, *, step_index: int) -> dict[str, object]:
