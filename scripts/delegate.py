@@ -4443,11 +4443,56 @@ def _checked_out_branch_names() -> list[str]:
     return names
 
 
+def _review_attempt_worktree_dependencies(args: argparse.Namespace) -> tuple[tuple[str, Path], ...]:
+    """Locate attempt dependencies for retention only; prompt admission still validates the record."""
+    from scripts.review.render_contract import RENDER_RECORD_KEY, render_record_path
+
+    manifest = getattr(args, "review_attempt", None)
+    if not manifest:
+        return ()
+    paths = [("manifest", Path(manifest))]
+    prompt_file = getattr(args, "prompt_file", None)
+    if prompt_file:
+        try:
+            reads = json.loads(render_record_path(Path(prompt_file)).read_bytes())
+            record = reads.get(RENDER_RECORD_KEY)
+        except (OSError, ValueError, AttributeError):
+            record = None  # Existing admission refuses unreadable or malformed render records.
+        if isinstance(record, dict):
+            for name in ("input_root", "render_checkout"):
+                value = record.get(name)
+                if isinstance(value, str) and value:
+                    paths.append((name, Path(value)))
+    # Retain the supplied location as well as its target: removing a checkout
+    # containing a symlink would still break subsequent reads via that name.
+    return tuple(dict.fromkeys(
+        (name, location) for name, path in paths for location in (path.absolute(), path.resolve())
+    ))
+
+
+def _refuse_review_attempt_branch_holders(
+    branch: str, holders: Sequence[Path], dependencies: Sequence[tuple[str, Path]],
+) -> None:
+    """Refuse branch attachment before cleanup can delete this attempt's dependencies (#9388)."""
+    if not dependencies:
+        return
+    for holder in holders:
+        roots = (holder.absolute(), holder.resolve())
+        conflicts = sorted({name for name, path in dependencies if any(path.is_relative_to(root) for root in roots)})
+        if conflicts:
+            raise ValueError(
+                "review_attempt_branch_holder_conflict: "
+                f"branch {branch!r} holder {holder} contains this attempt's {', '.join(conflicts)}; "
+                "refusing to release it; render from a detached worktree at the exact commit and retry (#9388)"
+            )
+
+
 def _release_stale_branch_holders(
     *,
     branch: str,
     holders: list[Path],
     dry_run: bool,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> list[Path]:
     """Remove releasable holders of ``branch`` so a new worktree can attach.
 
@@ -4456,7 +4501,9 @@ def _release_stale_branch_holders(
     removal goes through :func:`_remove_dispatch_worktree`, which runs
     :func:`_stale_branch_holder_releasable` while holding the holder's
     worktree lock (#8610).
+    Attempt dependencies are checked across all holders before any removal (#9388).
     """
+    _refuse_review_attempt_branch_holders(branch, holders, review_dependencies)
     released: list[Path] = []
     for path in holders:
         if dry_run:
@@ -7545,6 +7592,7 @@ def _ensure_worktree(
     run_nonce: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> tuple[Path, str | None, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
@@ -7552,6 +7600,8 @@ def _ensure_worktree(
     is recorded under (see :func:`_add_reserved_worktree`). ``validated_path``,
     when given, is used as is and never resolved again (#8775,
     :func:`_helper_worktree_path`).
+    ``review_dependencies`` retains attempt inputs before superseded-review or
+    stale-holder cleanup can run (#9388).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -7577,6 +7627,10 @@ def _ensure_worktree(
         "sparse": None,
         "local_venv": None,
     }
+    if requested_branch and review_dependencies:
+        _refuse_review_attempt_branch_holders(
+            requested_branch, _branch_worktree_paths(requested_branch), review_dependencies,
+        )
     _release_superseded_review_worktrees(task_id, dry_run=dry_run)
 
     if requested_branch:
@@ -7592,6 +7646,7 @@ def _ensure_worktree(
                 branch=requested_branch,
                 holders=elsewhere,
                 dry_run=dry_run,
+                review_dependencies=review_dependencies,
             )
             occupied_paths = _branch_worktree_paths(requested_branch)
             elsewhere = [path for path in occupied_paths if path != worktree_path]
@@ -10071,6 +10126,18 @@ def _dispatch(
             return 2
         args.cwd = str(validated_cwd)
 
+    # Retention check precedes route/prompt admission and all worktree cleanup.
+    # The sidecar's paths grant no authority; they only prevent destructive release.
+    try:
+        review_dependencies = _review_attempt_worktree_dependencies(args)
+        if review_dependencies and getattr(args, "branch", None):
+            _refuse_review_attempt_branch_holders(
+                args.branch, _branch_worktree_paths(args.branch), review_dependencies,
+            )
+    except (OSError, ValueError, RuntimeError) as exc:
+        print(f"❌ review attempt refused: {exc}", file=sys.stderr)
+        return 2
+
     # The single Kimi gate runs on the original request (--agent, --model and their aliases)
     # before the launch route probes the budget or a model, and on the route it resolves —
     # the retired-CLI alias and any budget substitution — on the validated paths, before any
@@ -11087,6 +11154,7 @@ def _dispatch(
                     full_checkout=full_checkout,
                     sparse_include=sparse_include,
                     run_nonce=run_nonce,
+                    review_dependencies=review_dependencies,
                 )
             else:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_sibling_repo_worktree(

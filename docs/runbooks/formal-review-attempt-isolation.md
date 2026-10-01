@@ -62,6 +62,14 @@ runner-owned manifest boundary, rather than enabling that unsupported mode.
 
 ## Artifact binding at admission and recording
 
+For `--branch B --review-attempt <manifest>`, render from a detached worktree
+at the exact commit (`git worktree add --detach <render-worktree> <commit>`).
+The render worktree must not hold the dispatch's target branch. Dispatch
+protects a branch holder containing the attempt manifest or the render record's
+`input_root` or `render_checkout` and refuses before admission with
+`review_attempt_branch_holder_conflict`, suggesting a detached render worktree
+(#9388). Ordinary dispatches retain their stale-holder release behavior.
+
 Issues #9012, #9025 and #9242 bind each artifact to the same attempt. A render
 manifest prompt is admitted through `check_prompt` with the dispatch review and
 attempt IDs: its bytes must equal a fresh render of the authorized manifest.
