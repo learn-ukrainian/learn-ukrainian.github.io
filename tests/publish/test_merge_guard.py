@@ -40,3 +40,16 @@ def test_valid_json_with_transport_failure_is_refused(returncode):
 def test_known_nonzero_check_statuses_still_block(returncode, bucket):
     with pytest.raises(PublishBlocked):
         merge_with_checks(json.dumps([{"name": "CI Gate", "bucket": bucket}]), returncode)
+
+
+def test_empty_json_check_list_with_exit_code_1_is_refused():
+    with pytest.raises(PublishBlocked, match="cannot establish check state"):
+        merge_with_checks("[]", returncode=1)
+
+
+def test_failing_advisory_check_with_exit_code_1_allows_merge():
+    checks = [
+        {"name": "CI Gate", "bucket": "pass"},
+        {"name": "Lint (advisory)", "bucket": "fail"},
+    ]
+    assert merge_with_checks(json.dumps(checks), returncode=1) == "a" * 40
