@@ -113,12 +113,13 @@ A full spec-gap audit + reorganization plan exists at `audit/2026-05-18-docs-gap
 
 <!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run python -m scripts.docs.catalogue readme -->
 
-118 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
+119 document families and 28 local data stores, generated from `docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.
 
 ### Document families
 
 | Family | Kind | Status | Paths | Purpose |
 | --- | --- | --- | --- | --- |
+| `ulif-first-stress-contract` | doc_family | current | `docs/verification/ulif-first-stress.md` | ULIF-first stress oracle contract, source identity joins, labelled trie fallback and consumer verification. |
 | `docs-entry-map` | doc_family | current | `docs/README.md` | Cold-start documentation map for humans and agents. It names the one search entry point (python -m scripts.docs.find, mirrored at GET /api/knowledge/find) and ends with the family and store tables generated from this catalogue; its topic prose still dates from the V7 era. |
 | `docs-knowledge-system` | doc_family | current | `docs/knowledge/**`, `docs/architecture/docs-authority-lifecycle.md`, `docs/plans/2026-09-17-docs-knowledge-rollout.md` | Repository knowledge system - this catalogue and its schema, the deterministic docs inventory contract, the authority and lifecycle contract, and the docs-knowledge rollout plan. |
 | `corpus-inventory` | doc_family | current | `docs/corpus-inventory.md` | Prose inventory of data/sources.db tables and the local versus bulk-root storage layout; table counts were last refreshed 2026-07-31 and are stale against the live store. |
