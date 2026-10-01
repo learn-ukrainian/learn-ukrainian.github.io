@@ -160,7 +160,7 @@ pydantic_core==2.46.5
 pydantic-settings==2.15.0
 pyee==13.0.1
 Pygments==2.21.0
-PyJWT==2.14.0
+PyJWT==2.15.0
 pymorphy2==0.9.1
 pymorphy2-dicts-ru==2.4.417127.4579844
 pymorphy2-dicts-uk==2.4.1.1.1460299261
@@ -234,9 +234,9 @@ udapi==0.5.2
 udtools==0.2.8
 ukrainian_word_stress==2.1.0
 unlzw3==0.2.3
-urllib3==2.7.0
+urllib3==2.8.0
 uvicorn==0.48.0
-virtualenv==21.7.3
+virtualenv==21.7.12
 vulture==2.16
 warc3-wet==0.2.5
 warc3-wet-clueweb09==0.2.5
