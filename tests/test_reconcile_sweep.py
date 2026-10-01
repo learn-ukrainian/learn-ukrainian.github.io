@@ -617,3 +617,45 @@ def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
     healed = json.loads(task_file.read_text(encoding="utf-8"))
     assert healed["status"] == "crashed"
     assert healed["returncode_reason"] == "dispatch_died_after_admission"
+
+
+@pytest.mark.parametrize("prior", [None, "1"])
+def test_reconcile_sweep_runs_git_children_without_optional_locks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, prior: str | None
+) -> None:
+    """#8874: settle and the status heal path run git; none may take index.lock.
+
+    An explicit operator value wins and is left as it was.
+    """
+    if prior is None:
+        monkeypatch.delenv("GIT_OPTIONAL_LOCKS", raising=False)
+    else:
+        monkeypatch.setenv("GIT_OPTIONAL_LOCKS", prior)
+    task_dir = tmp_path / "tasks"
+    task_dir.mkdir()
+    (task_dir / "dead-task-locks.json").write_text(
+        json.dumps({"task_id": "dead-task-locks", "status": "running", "pid": 999_999_999}),
+        encoding="utf-8",
+    )
+    seen: dict[str, str | None] = {}
+
+    def _release(_ledger: object) -> list[str]:
+        seen["settle"] = os.environ.get("GIT_OPTIONAL_LOCKS")
+        return []
+
+    def _heal(_args: object) -> int:
+        seen["heal"] = os.environ.get("GIT_OPTIONAL_LOCKS")
+        return 0
+
+    monkeypatch.setattr(reconcile_sweep.dispatch_settle, "release_inactive_claims", _release)
+    monkeypatch.setattr(reconcile_sweep.delegate, "cmd_status", _heal)
+    report = reconcile_sweep.run_reconcile_sweep(
+        apply=True,
+        task_dir=task_dir,
+        ledger=OwnershipLedger(tmp_path / "own.sqlite3", task_state_dir=task_dir),
+    )
+
+    assert report.zombie_tasks == ["dead-task-locks"]
+    expected = prior or "0"
+    assert seen == {"settle": expected, "heal": expected}
+    assert os.environ.get("GIT_OPTIONAL_LOCKS") == prior

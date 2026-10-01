@@ -61,7 +61,7 @@ def cwd_role(root: Path) -> str:
 def _git(cwd: Path, *args: str) -> str:
     try:
         result = subprocess.run(
-            ["git", *args],
+            ["git", "--no-optional-locks", *args],
             cwd=cwd,
             capture_output=True,
             text=True,
