@@ -170,7 +170,7 @@ def test_real_matcher_contract_when_available():
     assert hits[0].rule_id == "synthetic-rule" and hits[0].class_id == 1
     assert hits[0].span == (0, len(TOKEN))
     assert gate._scan(TOKEN, (synthetic, {"synthetic-rule": 1}, set())) == [
-        {"rule_id": "synthetic-rule", "class": 1, "start": 0}
+        {"rule_id": "synthetic-rule", "class": 1, "start": 0, "line": 1}
     ]
 
 
@@ -478,3 +478,186 @@ def real_tooling():
     if not (path / "matcher.py").exists() or not (path / "rules.json").exists():
         pytest.skip("private matcher/rules absent; provide detached origin/main tooling via LU_OPSEC_TEST_TOOLING")
     return path
+
+
+@pytest.mark.parametrize(
+    "ignorable",
+    [
+        "\u200b",  # Zero-width space (Cf)
+        "\u200c",  # Zero-width non-joiner (Cf)
+        "\u200d",  # Zero-width joiner (Cf)
+        "\xad",  # Soft hyphen (Cf)
+        "\u200e",  # Left-to-right mark (Cf)
+        "\u202e",  # Right-to-left override (Cf)
+        "\u2065",  # Unassigned in General Punctuation / controls (Cn)
+        "\u2066",  # Left-to-right isolate (Cf)
+        "\u202b",  # Right-to-left embedding (Cf)
+        "\u034f",  # Combining grapheme joiner (Mn)
+        "\ufe0f",  # Variation selector 16 (Mn)
+        "\U000e0000",  # Plane 14 tag start
+        "\U000e0080",  # Plane 14 unassigned tag
+        "\U000e0100",  # Variation selector 17 (Mn)
+        "\U000e01f0",  # Plane 14 unassigned VS
+        "\U000e0fff",  # Plane 14 ignorable end
+        "\u180b",  # Mongolian free variation selector 1 (Mn)
+        "\u3164",  # Hangul filler (Lo)
+        "\u115f",  # Hangul choseong filler (Lo)
+        "\u1160",  # Hangul jungseong filler (Lo)
+        "\uffa0",  # Halfwidth Hangul filler (Lo)
+        "\u2800",  # Braille pattern blank (So)
+    ],
+)
+def test_synthetic_normalization_ignorables(synthetic_opsec, ignorable):
+    (synthetic_opsec / "rules.json").write_text(json.dumps(synthetic_rules(rule="synthetic-rule", level=1)))
+    obfuscated = TOKEN[:4] + ignorable + TOKEN[4:]
+
+    # Verify failing-before on raw unnormalized matcher
+    spec = importlib.util.spec_from_file_location("_matcher", synthetic_opsec / "matcher.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    matcher = module.Matcher(json.loads((synthetic_opsec / "rules.json").read_text()))
+    assert not matcher.scan(obfuscated), f"expected raw {obfuscated!r} to evade unnormalized matcher"
+
+    # Verify passing-after via prepublish check_texts
+    with pytest.raises(gate.PublishBlocked) as error:
+        gate.check_texts("github.com/unit/public", [obfuscated])
+    assert "class=1" in str(error.value)
+    assert "rule=synthetic-rule" in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "raw_target,obfuscated",
+    [
+        ("TOKEN-1234", "ＴＯＫＥＮ-1234"),  # Fullwidth Latin
+        ("TOKEN-1234", "TOKEN-１２３４"),  # Fullwidth digits
+        ("TOKEN-1234", "TOKEN-١٢٣٤"),  # Arabic-Indic digits
+        ("TOKEN-1234", "TOKEN-۱۲۳۴"),  # Eastern Arabic digits
+        ("TOKEN-1234", "TOKEN-१२३४"),  # Devanagari digits
+        ("TOKEN-1234", "TOKEN-①②③④"),  # Circled digits
+        ("TOKEN-1234", "TOKEN-𝟏𝟐𝟑𝟒"),  # Mathematical bold digits
+        ("TOKEN-1234", "TOKEN-𝟙𝟚𝟛𝟜"),  # Mathematical double-struck digits
+        ("TOKEN-1234", "TOKEN-𝟣𝟤𝟥𝟦"),  # Mathematical sans-serif digits
+    ],
+)
+def test_synthetic_normalization_fullwidth_and_decimal_digits(synthetic_opsec, raw_target, obfuscated):
+    (synthetic_opsec / "rules.json").write_text(
+        json.dumps(synthetic_rules(rule="synthetic-digits", level=2, pattern=raw_target))
+    )
+
+    # Raw obfuscated string evades unnormalized matcher
+    spec = importlib.util.spec_from_file_location("_matcher", synthetic_opsec / "matcher.py")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    matcher = module.Matcher(json.loads((synthetic_opsec / "rules.json").read_text()))
+    assert not matcher.scan(obfuscated), f"expected raw {obfuscated!r} to evade unnormalized matcher"
+
+    # Prepublish normalizes and blocks
+    with pytest.raises(gate.PublishBlocked) as error:
+        gate.check_texts("github.com/unit/public", [obfuscated])
+    assert "class=2" in str(error.value)
+    assert "rule=synthetic-digits" in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "token",
+    [
+        "ghp_1234567890abcdefghijklmnopqrstuvwxyz12",
+        "github_pat_11AAAAAAA01234567890abcdefghijklmnopqrstuvwxyz",
+        "gho_1234567890abcdefghijklmnopqrstuvwxyz12",
+        "ghu_1234567890abcdefghijklmnopqrstuvwxyz12",
+        "ghs_1234567890abcdefghijklmnopqrstuvwxyz12",
+        "ghr_1234567890abcdefghijklmnopqrstuvwxyz12",
+        "sk-ant-api03-abcdefghijklmnopqrstuvwxyz1234567890",
+        "sk-proj-abcdefghijklmnopqrstuvwxyz1234567890",
+        "sk-1234567890abcdefghijklmnopqrstuvwxyz123456",
+        "xoxb-" + "1234567890-abcdefghijklmnopqrstuvwxyz",
+        "AKIA" + "IOSFODNN7EXAMPLE",
+        "-----BEGIN " + "RSA PRIVATE KEY-----",
+        "-----BEGIN " + "OPENSSH PRIVATE KEY-----",
+        "-----BEGIN " + "PRIVATE KEY-----",
+        "ghp_1234\u034f567890abcdefghijklmnopqrstuvwxyz12",
+        "ghp_1234\u200b567890abcdefghijklmnopqrstuvwxyz12",
+        "ghp_1234\ufe0f567890abcdefghijklmnopqrstuvwxyz12",
+    ],
+)
+def test_credential_tokens_are_blocked_even_with_synthetic_rules(synthetic_opsec, token):
+    with pytest.raises(gate.PublishBlocked) as error:
+        gate.check_texts("github.com/unit/public", [token])
+    assert "class=5" in str(error.value)
+    assert "rule=5-credential-token" in str(error.value)
+    assert "field=text[1] line=1" in str(error.value)
+    assert token not in str(error.value)
+
+
+@pytest.mark.parametrize(
+    "safe_text",
+    [
+        "see sk-learn-preprocessing-pipeline-docs",
+        "task-sk-abcdefghijklmnopqrstuv",
+        "sk-SK language model documentation",
+        "regular text with -sk- infix",
+    ],
+)
+def test_ordinary_text_with_hyphenated_sk_is_not_blocked(synthetic_opsec, safe_text):
+    gate.check_texts("github.com/unit/public", [safe_text])
+
+
+def test_unnormalized_rules_fail_closed_at_load(synthetic_opsec):
+    rules = synthetic_rules()
+    # Add a pattern with an unnormalized character that NFKC rewrites (e.g. № -> No)
+    rules["1"]["patterns"].append({"id": "1-unnormalized", "regex": r"\b№\d+\b"})
+    (synthetic_opsec / "rules.json").write_text(json.dumps(rules))
+    with pytest.raises(gate.PublishBlocked, match="contains unnormalized characters"):
+        gate._load_matcher(synthetic_opsec)
+
+
+@pytest.mark.parametrize(
+    "obfuscated,expected_rule,expected_class",
+    [
+        ("192.0.2.\u200b7", "2-ipv4", 2),  # Zero-width space
+        ("192.0.2.\u200c7", "2-ipv4", 2),  # Zero-width non-joiner
+        ("192.0.2.\u200d7", "2-ipv4", 2),  # Zero-width joiner
+        ("192.0.2.\xad7", "2-ipv4", 2),  # Soft hyphen
+        ("192.0.2.\u20657", "2-ipv4", 2),  # Unassigned in General Punctuation
+        ("192.0.2.\u034f7", "2-ipv4", 2),  # Combining grapheme joiner
+        ("192.0.2.\ufe0f7", "2-ipv4", 2),  # Variation selector 16
+        ("192.0.2.\U000e00807", "2-ipv4", 2),  # Plane 14 tag
+        ("192.0.2.\U000e01007", "2-ipv4", 2),  # Variation selector 17
+        ("192.0.2.\u180b7", "2-ipv4", 2),  # Mongolian free variation selector 1
+        ("192.0.2.\u31647", "2-ipv4", 2),  # Hangul filler
+        ("192.0.2.\u115f7", "2-ipv4", 2),  # Hangul choseong filler
+        ("192.0.2.\u11607", "2-ipv4", 2),  # Hangul jungseong filler
+        ("192.0.2.\uffa07", "2-ipv4", 2),  # Halfwidth Hangul filler
+        ("192.0.2.\u28007", "2-ipv4", 2),  # Braille pattern blank
+        ("１９２.０.２.７", "2-ipv4", 2),  # Full-width digits
+        ("１９２．０．２．７", "2-ipv4", 2),  # Full-width digits and dots
+        ("١٩٢.٠.٢.٧", "2-ipv4", 2),  # Arabic-Indic digits
+        ("۱۲۳.۰.۲.۷", "2-ipv4", 2),  # Eastern Arabic digits
+        ("१९२.०.२.७", "2-ipv4", 2),  # Devanagari digits
+        ("192.0.2.\u202e7", "2-ipv4", 2),  # Right-to-left override
+        ("192.0.2.\u200e7", "2-ipv4", 2),  # Left-to-right mark
+        ("192.0.2.\u20667", "2-ipv4", 2),  # Left-to-right isolate
+        ("192.0.2.\u202b7", "2-ipv4", 2),  # Right-to-left embedding
+        ("𝟙𝟡𝟚.𝟘.𝟚.𝟟", "2-ipv4", 2),  # Mathematical double-struck homoglyphs
+        ("𝟏𝟗𝟐.𝟎.𝟐.𝟕", "2-ipv4", 2),  # Mathematical bold homoglyphs
+        ("𝟣𝟫𝟤.𝟢.𝟤.𝟩", "2-ipv4", 2),  # Mathematical sans-serif homoglyphs
+        ("①⑨②.⓪.②.⑦", "2-ipv4", 2),  # Circled digits
+        ("／home／ops／secret", "3-absolute-path", 3),  # Full-width slashes
+        ("оператор\u200b сказав: секрет", "6-uk-reported-speech", 6),  # Ukrainian operator speech with ZWSP
+    ],
+)
+def test_unicode_normalization_hardens_scanner(obfuscated, expected_rule, expected_class):
+    tooling = real_tooling()
+    matcher, _identities, _blocked = gate._load_matcher(tooling)
+
+    # Prove failing-before: raw unnormalized text completely evades the unnormalized matcher
+    raw_hits = matcher.scan(obfuscated)
+    assert not any(h.rule_id == expected_rule for h in raw_hits), (
+        f"expected raw {obfuscated!r} to evade {expected_rule}"
+    )
+
+    # Verify passing-after: prepublish scan normalizes and blocks the obfuscated text
+    with pytest.raises(gate.PublishBlocked) as error:
+        gate.check_texts("github.com/unit/public", [obfuscated], tooling=tooling)
+    assert f"class={expected_class}" in str(error.value)
+    assert f"rule={expected_rule}" in str(error.value)

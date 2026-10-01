@@ -15,6 +15,7 @@ import os
 import re
 import subprocess
 import sys
+import unicodedata
 from collections.abc import Mapping
 from datetime import UTC, datetime
 from functools import wraps
@@ -115,6 +116,59 @@ def private_tooling() -> Path:
     return primary_root().parent / catalog()["infra-private"]["local_name"] / "tools/public_opsec_scan"
 
 
+CREDENTIAL_TOKEN_PATTERN = re.compile(
+    r"\b("
+    r"ghp_[A-Za-z0-9]{20,}|"
+    r"github_pat_[A-Za-z0-9_]{20,}|"
+    r"gh[ours]_[A-Za-z0-9]{20,}|"
+    r"(?:AKIA|ABIA|ACCA|ASIA)[0-9A-Z]{16}"
+    r")\b|"
+    r"(?<![\w-])xox[baprs]-[A-Za-z0-9-]{10,}\b|"
+    r"(?<![\w-])(?:sk-(?:ant-|proj-)[A-Za-z0-9_-]{20,}|sk-[A-Za-z0-9]{20,})\b|"
+    r"-----BEGIN [A-Z ]*PRIVATE KEY-----"
+)
+
+
+def _is_ignorable_or_format(ch: str) -> bool:
+    cp = ord(ch)
+    if unicodedata.category(ch) == "Cf":
+        return True
+    if cp == 0x034F:  # Combining Grapheme Joiner (Mn)
+        return True
+    if 0x115F <= cp <= 0x1160 or cp == 0x3164 or cp == 0xFFA0:  # Hangul Fillers (Lo)
+        return True
+    if 0x17B4 <= cp <= 0x17B5:  # Khmer Vowel Inherent Aq / Aa (Mn)
+        return True
+    if 0x180B <= cp <= 0x180F:  # Mongolian Free Variation Selectors (Mn)
+        return True
+    if cp == 0x2065:  # Unassigned in General Punctuation / controls (Cn)
+        return True
+    if cp == 0x2800:  # Braille Pattern Blank (So)
+        return True
+    if 0xFE00 <= cp <= 0xFE0F:  # Variation Selectors 1..16 (Mn)
+        return True
+    if 0xFFF0 <= cp <= 0xFFF8:  # Specials unassigned (Cn)
+        return True
+    return 0xE0000 <= cp <= 0xE0FFF  # Tags, Variation Selectors, and Plane 14 ignorables
+
+
+def _map_decimal_digit(ch: str) -> str:
+    try:
+        return str(unicodedata.decimal(ch))
+    except (ValueError, TypeError):
+        return ch
+
+
+def normalize_for_scan(text: str) -> str:
+    """Normalize text: map decimal digits, strip format/ignorable chars, apply NFKC."""
+    if not text or text.isascii():
+        return text
+    mapped_digits = "".join(_map_decimal_digit(ch) for ch in text)
+    stripped = "".join(ch for ch in mapped_digits if not _is_ignorable_or_format(ch))
+    normalized = unicodedata.normalize("NFKC", stripped)
+    return "".join(ch for ch in normalized if not _is_ignorable_or_format(ch))
+
+
 def _load_matcher(tooling: Path):
     """Load the class scanner and validate public policy before scanning any text."""
     import contextlib
@@ -123,7 +177,13 @@ def _load_matcher(tooling: Path):
     try:
         rules = json.loads((tooling / "rules.json").read_bytes())
         policy = json.loads(POLICY.read_bytes())
-        identities = {row["id"]: int(level) for level, group in rules.items() for row in group["patterns"]}
+        identities = {}
+        for level, group in rules.items():
+            for row in group["patterns"]:
+                regex = row.get("regex", "")
+                if normalize_for_scan(regex) != regex:
+                    raise PublishBlocked(f"OPSEC: rule {row.get('id')} contains unnormalized characters; load refused.")
+                identities[row["id"]] = int(level)
         blocked = set(policy["class6_block_ids"])
         if not blocked <= {rule for rule, level in identities.items() if level == 6}:
             raise PublishBlocked("OPSEC: configured policy IDs absent from class-6 rules; load refused.")
@@ -147,6 +207,7 @@ def _scan(text: str, loaded) -> list[dict]:
     import contextlib
     import io
 
+    text = normalize_for_scan(text)
     matcher, identities, _ = loaded
     try:
         with contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(io.StringIO()):
@@ -161,7 +222,17 @@ def _scan(text: str, loaded) -> list[dict]:
                 or not 0 <= start <= end <= len(text)
             ):
                 raise ValueError
-            findings.append({"rule_id": rule, "class": level, "start": start})
+            findings.append({"rule_id": rule, "class": level, "start": start, "line": text.count("\n", 0, start) + 1})
+        for match in CREDENTIAL_TOKEN_PATTERN.finditer(text):
+            start = match.start()
+            findings.append(
+                {
+                    "rule_id": "5-credential-token",
+                    "class": 5,
+                    "start": start,
+                    "line": text.count("\n", 0, start) + 1,
+                }
+            )
         return findings
     except Exception:
         raise PublishBlocked("OPSEC: private matcher result incompatible; write refused.") from None
@@ -203,7 +274,7 @@ def check_texts(
                 name = field_names[index] if field_names and index < len(field_names) else f"text[{index + 1}]"
                 if not re.fullmatch(r"[A-Za-z0-9_.\[\]-]{1,80}", name):
                     name = f"text[{index + 1}]"
-                line = text.count("\n", 0, finding["start"]) + 1
+                line = finding["line"]
                 location = f"rule={rule} class={level} field={name} line={line}"
                 if location not in locations:
                     locations.append(location)
