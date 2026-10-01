@@ -240,7 +240,12 @@ def _tokenize(line: str) -> list[str] | None:
         return None
 
 
-def _split_scopes(line: str) -> list[tuple[str, str]]:
+class _CaseState(NamedTuple):
+    phase: str
+    pattern_depth: int = 0
+
+
+def _split_scopes(line: str, case_scopes: list[list[_CaseState]] | None = None) -> list[tuple[str, str]]:
     """Split raw shell operators from text before removing quotes.
 
     A real paren is one the shell would act on: unquoted and unescaped. This scan runs on
@@ -261,6 +266,34 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
     """
     pieces: list[tuple[str, str]] = []
     buf: list[str] = []
+    # Each real shell scope owns its case stack. Pattern parentheses must not
+    # open/pop a substitution, and nested substitutions cannot close an outer
+    # case. The caller retains this state across physical lines.
+    if case_scopes is None:
+        case_scopes = [[]]
+    word: list[str] = []
+    command_start = True
+
+    def finish_word() -> None:
+        nonlocal command_start
+        raw_word = "".join(word)
+        word.clear()
+        if not raw_word:
+            return
+        cases = case_scopes[-1]
+        case = cases[-1] if cases else None
+        if case and case.phase == "word":
+            cases[-1] = _CaseState("in")
+        elif case and case.phase == "in" and raw_word == "in":
+            cases[-1] = _CaseState("pattern")
+        elif case and raw_word == "esac" and not case.pattern_depth and (case.phase == "pattern" or command_start):
+            cases.pop()
+        elif raw_word == "case" and command_start and (case is None or case.phase == "arm"):
+            cases.append(_CaseState("word"))
+        # Only raw, unquoted reserved words have grammar meaning. Shell control
+        # prefixes can introduce a case without an intervening separator.
+        command_start = command_start and raw_word in {"if", "then", "do", "else", "elif", "while", "until", "!", "{"}
+
     quote: str | None = None
     escaped = False
     i = 0
@@ -268,22 +301,28 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
         ch = line[i]
         if escaped:
             buf.append(ch)
+            word.append(ch)
             escaped = False
         elif ch == "\\" and quote != "'":
             buf.append(ch)
+            word.append(ch)
             escaped = True
         elif quote:
             buf.append(ch)
+            word.append(ch)
             if ch == quote:
                 quote = None
         elif ch in "'\"":
             buf.append(ch)
+            word.append(ch)
             quote = ch
         elif ch == "#" and (not buf or buf[-1].isspace()):
+            finish_word()
             # Comment punctuation has no scope or redirect meaning.
             buf.extend(line[i:])
             break
         elif redirect := _REDIRECT_OPERATOR.match(line, i):
+            finish_word()
             # An unquoted numeric word glued to a redirect is a descriptor,
             # whereas `5 >file` retains 5 as a command argument.
             raw = "".join(buf)
@@ -296,13 +335,40 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
             i = redirect.end()
             continue
         elif ch in "();|&":
+            finish_word()
             pieces.append(("text", "".join(buf)))
             kind = "open" if ch == "(" else "close" if ch == ")" else "separator"
+            cases = case_scopes[-1]
+            case = cases[-1] if cases else None
+            raw_prefix = "".join(buf)
+            if case and case.phase == "pattern" and (ch == ")" or (ch == "(" and not raw_prefix.endswith("$"))):
+                # Bash permits an optional '(' before a case pattern. Its ')'
+                # starts the arm command rather than restoring an outer argv.
+                # Extended glob groups have their own balanced parentheses.
+                kind = "separator"
+                if ch == "(" and raw_prefix.endswith(("?", "*", "+", "@", "!")):
+                    cases[-1] = case._replace(pattern_depth=case.pattern_depth + 1)
+                elif ch == ")":
+                    cases[-1] = (
+                        case._replace(pattern_depth=case.pattern_depth - 1) if case.pattern_depth else _CaseState("arm")
+                    )
+            elif kind == "open":
+                case_scopes.append([])
+            elif kind == "close" and len(case_scopes) > 1:
+                case_scopes.pop()
+            elif case and case.phase == "arm" and line.startswith((";;", ";&"), i):
+                cases[-1] = _CaseState("pattern")
             pieces.append((kind, ch))
             buf = []
+            command_start = kind != "close"
         else:
             buf.append(ch)
+            if ch.isspace():
+                finish_word()
+            else:
+                word.append(ch)
         i += 1
+    finish_word()
     pieces.append(("text", "".join(buf)))
     return pieces
 
@@ -364,13 +430,14 @@ def _scope_events(command: str) -> list[tuple[str, list[str]]]:
     """
     events: list[tuple[str, list[str]]] = []
     substitution_prefixes: list[list[str] | None] = []
+    case_scopes: list[list[_CaseState]] = [[]]
     for line in preprocess_shell_command(command).splitlines():
         line_events: list[tuple[str, list[str]]] = []
         readable = True
         cur: list[str] = []
         redirect_pending = False
         segment_unreadable = False
-        for kind, raw in _split_scopes(line):
+        for kind, raw in _split_scopes(line, case_scopes):
             if kind == "redirect":
                 segment_unreadable |= redirect_pending
                 redirect_pending = True
