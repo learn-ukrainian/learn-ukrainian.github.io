@@ -26,7 +26,7 @@ scanned. Transport paths are never published or scanned as public text.
 | `issue-close` | Optional comment; reason is a closed enum |
 | `pr-create`, `pr-edit`, `pr-comment` | Title, body, labels, milestone, head/base names when present |
 | `pr-review` | Optional body; verdict is approve, comment or request-changes |
-| `pr-merge` | Optional subject and body; squash is fixed |
+| `pr-merge` | Subject and body, defaults included; squash is fixed |
 | `pr-update-branch`, `pr-ready`, `pr-close`, `issue-reopen`, `run-rerun` | No text; rerun always selects failed jobs |
 | `workflow-run` | Only `ci.yml` and `deploy-pages.yml`, explicit validated ref; both have no inputs |
 | `pr-disarm`, `pr-dequeue`, `issue-link` | No text; identifiers have closed validation |
@@ -125,6 +125,7 @@ posting searches at the exact head.
 | `scripts/lexicon/publish_manifest.py`, `scripts/lexicon/admit_fmu_boosters.py` | Artifact upload |
 | `agents_extensions/shared/hooks/guard-public-github-text.py` | Routing only |
 | `scripts/agent_runtime/shims/gh` | Closed raw admission; public writes refused |
+| `scripts/agent_runtime/shims/git` push, via `scripts/opsec/git_push.py` | New commit messages, branch and tag names, annotated tag messages |
 | `scripts/ci/data_tier.py`, `scripts/ci/flake_ledger.py`, `scripts/ci/comment_issue_task_quality.py` | Separate bot/CI workflows, outside the cooperative-agent inventory |
 | Printed templates and `scripts/wt.sh` | No outbound publication; executed public writes require publisher verbs |
 
@@ -139,10 +140,42 @@ pending check states refuse the merge. `AGENT_NO_MERGE=1` refuses it before
 any transport. A ready merge pins the observed head with `--match-head-commit`.
 The hook recognises the publisher command and uses the same readiness parser.
 
-Residual S1: `git push` does not scan commit messages, branch names or tag
-names. A squash merge without an explicit subject/body can publish those
-commit messages. This is outside Design B's GitHub text boundary; the
-accountable driver owns filing and resolving the separate follow-up issue.
+After readiness, `pr-merge` reads GitHub's default squash subject and body
+for the pinned head (`viewerMergeHeadlineText` and `viewerMergeBodyText`).
+An omitted subject or body is filled with that default and sent explicitly,
+so the scanned text is the sent text. A merge queue ignores explicit text and
+composes the default itself, so for queued repositories the defaults are
+scanned as `default_subject` and `default_body` as well. A changed head or an
+unreadable default refuses the merge.
+
+## git push
+
+The git shim sends every `push` (after global options such as `-C` and `-c`)
+to `scripts/opsec/git_push.py` before the real git runs. A dry run
+(`--dry-run --porcelain --no-verify --verbose`) reports exactly which refs the
+push creates or updates and where. For each destination that `is_private`
+does not exempt, these are scanned through `check_texts`:
+
+- the published branch, tag or other ref name;
+- the message of every commit the destination does not already have, that is
+  not reachable from the old remote tip or from tracking refs of a remote
+  whose every URL names the same destination;
+- annotated tag messages.
+
+Local paths and other URLs without a hosted identity are scanned (never
+private by default). Deletions publish no text. A hit, a missing or
+incompatible matcher, or an unreadable or failed preview refuses the push
+before anything is sent. Diagnostics name the rule, class, field and line only.
+The same single-use, logged `LU_OPSEC_OVERRIDE` applies; the real git does
+not receive it. File contents and history already on the remote are not
+scanned.
+
+Known gaps: git aliases that expand to push, absolute git paths, `git-push`
+called from the exec path, submodule pushes from `--recurse-submodules`,
+note blobs under `refs/notes/` and commit author identities are not scanned.
+Pushing by URL to a destination without tracking refs scans its whole
+reachable history (safe, but slower). A local ref moved by another process
+between the scan and the push is not rescanned.
 
 Historical dispatch briefs, session records and autopsies retain their original
 commands as evidence. For current execution, replace their raw writes with the

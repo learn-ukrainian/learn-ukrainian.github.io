@@ -162,4 +162,40 @@ real_git="$(_real_git)" || {
   exit 127
 }
 
+# Mirrors scripts/opsec/git_push.py split_command: skip global options (and the
+# values of those that take one) to find the subcommand.
+_git_subcommand() {
+  local arg skip=0
+  for arg in "$@"; do
+    if (( skip )); then
+      skip=0
+      continue
+    fi
+    case "$arg" in
+      -C|-c|--git-dir|--work-tree|--namespace|--config-env|--attr-source) skip=1 ;;
+      -*) ;;
+      *) printf '%s\n' "$arg"; return 0 ;;
+    esac
+  done
+  return 1
+}
+
+# Pushes publish commit messages and ref names: scan them before a public remote
+# receives them (#9339). Only push spawns Python, and the scanner calls the real
+# git by absolute path, so it cannot recurse through this shim.
+if [[ "$(_git_subcommand "$@" || true)" == "push" ]]; then
+  shim_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
+  python="$shim_root/.venv/bin/python"
+  if [[ ! -x "$python" ]]; then
+    common_dir="$(env -u GIT_DIR -u GIT_COMMON_DIR -u GIT_WORK_TREE "$real_git" -C "$shim_root" \
+      rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    python="${common_dir:+$(dirname "$common_dir")/.venv/bin/python}"
+  fi
+  if [[ -z "$python" || ! -x "$python" ]]; then
+    echo "OPSEC: project interpreter unavailable; push refused." >&2
+    exit 2
+  fi
+  exec "$python" "$shim_root/scripts/opsec/git_push.py" "$real_git" "$@"
+fi
+
 exec "$real_git" "$@"

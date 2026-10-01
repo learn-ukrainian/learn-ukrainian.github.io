@@ -31,6 +31,10 @@ def spy(calls):
             return subprocess.CompletedProcess(args, 0, json.dumps({"number": int(args[3]), "isDraft": False, "headRefOid": "a" * 40}), "")
         if args[:3] == ["gh", "pr", "checks"] and "--json" in args and args[args.index("--json") + 1] == "name,bucket,state":
             return subprocess.CompletedProcess(args, 0, "[]", "")
+        if args[:5] == ["gh", "api", "--method", "POST", "graphql"] and "viewerMergeHeadlineText" in Path(args[6]).read_text():
+            pull = {"headRefOid": "a" * 40, "isMergeQueueEnabled": False,
+                    "viewerMergeHeadlineText": "clean (#1)", "viewerMergeBodyText": "* clean"}
+            return subprocess.CompletedProcess(args, 0, json.dumps({"data": {"repository": {"pullRequest": pull}}}), "")
         record = {"argv": args, "env": kwargs.get("env", {})}
         for flag in ("--body-file", "--notes-file", "--input"):
             if flag in args:
@@ -191,7 +195,6 @@ def test_artifact_names_block_and_files_are_not_reread(synthetic_opsec, tmp_path
     "verb,fields",
     [
         ("issue-close", {"number": 1}),
-        ("pr-merge", {"number": 1}),
         ("pr-review", {"number": 1, "verdict": "approve"}),
         ("pr-disarm", {"number": 1}),
     ],

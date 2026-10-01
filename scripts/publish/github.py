@@ -241,6 +241,44 @@ def _run_transport(command, *, capture_output=False, check=False, timeout=None, 
                 signal.signal(signum, handler)
 
 
+SQUASH_TEXT_QUERY = (
+    "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){"
+    "pullRequest(number:$number){headRefOid isMergeQueueEnabled "
+    "viewerMergeHeadlineText(mergeType:SQUASH) viewerMergeBodyText(mergeType:SQUASH)}}}"
+)
+
+
+def _squash_text(gh_repo, fields, dest, temp, runner, cwd, environment):
+    """Read GitHub's default squash subject and body for the pinned head."""
+    owner, name = gh_repo.split("/", 1)
+    query = temp / "squash-text.json"
+    variables = {"owner": owner, "name": name, "number": fields["number"]}
+    query.write_bytes(json.dumps({"query": SQUASH_TEXT_QUERY, "variables": variables}).encode("utf-8"))
+    try:
+        result = runner(
+            ["gh", "api", "--method", "POST", "graphql", "--input", str(query), *_hostname_flag(dest)],
+            cwd=cwd,
+            env=dict(environment),
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=15,
+        )
+        pull = json.loads(result.stdout)["data"]["repository"]["pullRequest"] if result.returncode == 0 else None
+        subject, body = pull["viewerMergeHeadlineText"], pull["viewerMergeBodyText"]
+        if not (
+            isinstance(subject, str)
+            and isinstance(body, str)
+            and type(pull["isMergeQueueEnabled"]) is bool
+            and isinstance(pull["headRefOid"], str)
+            and pull["headRefOid"].lower() == fields["match_head"].lower()
+        ):
+            raise ValueError
+    except Exception:
+        raise gate.PublishBlocked("OPSEC: merge refused: squash text unverifiable.") from None
+    return {"subject": subject, "body": body, "queue": pull["isMergeQueueEnabled"]}
+
+
 def publish(
     verb: str,
     *,
@@ -291,6 +329,29 @@ def publish(
                     fields[field] = raw.decode("utf-8")
                 except UnicodeError:
                     raise gate.PublishBlocked("OPSEC: publisher text is not UTF-8.") from None
+        if verb == "pr-merge":
+            from scripts.publish.merge_guard import ensure_merge_ready
+
+            def readiness_runner(args, **kwargs):
+                return _send(args, environment=kwargs.pop("env"), runner=runner, cwd=kwargs.pop("cwd"), **kwargs)
+
+            fields["match_head"] = ensure_merge_ready(
+                gh_repo,
+                fields["number"],
+                runner=readiness_runner,
+                cwd=cwd,
+                environment=environment,
+                match_head=fields.get("match_head"),
+            )
+            # GitHub's default squash text carries the PR title and commit messages.
+            # Omitted fields are sent explicitly so the scanned text is the sent text;
+            # a merge queue ignores explicit text, so its defaults are scanned too.
+            default = _squash_text(gh_repo, fields, dest, temp, readiness_runner, cwd, environment)
+            for key in ("subject", "body"):
+                if key not in fields:
+                    fields[key] = default[key]
+                elif default["queue"]:
+                    scan("default_" + key, default[key])
         schema = SCHEMAS[verb][1]
         for key, value in fields.items():
             if schema[key] == "text":
@@ -342,15 +403,6 @@ def publish(
                 frozen = temp / (key + ".txt")
                 frozen.write_bytes(fields[key].encode("utf-8"))
                 argv.extend(["--" + key + "-file", str(frozen)])
-
-        if verb == "pr-merge":
-            from scripts.publish.merge_guard import ensure_merge_ready
-            def readiness_runner(args, **kwargs):
-                return _send(args, environment=kwargs.pop("env"), runner=runner,
-                             cwd=kwargs.pop("cwd"), **kwargs)
-            fields["match_head"] = ensure_merge_ready(gh_repo, fields["number"],
-                runner=readiness_runner, cwd=cwd, environment=environment,
-                match_head=fields.get("match_head"))
 
         if verb in {"issue-create", "issue-edit", "pr-create", "pr-edit", "issue-comment", "pr-comment", "pr-review"}:
             option("title")
