@@ -25,6 +25,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.fleet import post_task_reap
+from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import half_built_prep, leave_half_built
 
 
@@ -866,3 +867,37 @@ def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
     assert "injected ACP copy failure" in row["reason"]
     assert source.read_bytes() == b"must survive failed copy"
     assert not (repo / "batch_state/preserved" / task_id / "batch_state/report.txt").exists()
+
+
+@pytest.mark.parametrize("runtime", [False, True])
+@pytest.mark.parametrize("scenario", links.SCENARIOS)
+def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_path, runtime, scenario):
+    repo, tasks = hermetic_reap
+    task_id = "named-link"
+    worktree = _add_acp_runtime_worktree(repo, task_id) if runtime else _add_dispatch_worktree(repo, "kimi", task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n")
+    named, preserved, target = links.build_named_link(worktree, repo, tmp_path / "outside", scenario)
+    _write_task_state(
+        tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
+    )
+    path = tasks / f"{task_id}.json"
+    path.write_text(json.dumps({**json.loads(path.read_text()), "response": f"Wrote `{named}`."}))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
+    state = json.loads(path.read_text())
+    if preserved is None:  # Outbound targets outlive the checkout.
+        assert target.read_bytes() == links.PAYLOAD
+    location = repo / "batch_state/preserved" / task_id
+    if scenario == "outbound":
+        assert row["action"] == ("retained" if runtime else "skipped") and links.REFUSAL in row["reason"], row
+        assert links.REFUSAL in state["artifact_preservation_error"]
+        assert worktree.exists()
+        return
+    assert row["action"] == "removed", row
+    assert not worktree.exists()
+    if preserved is None:
+        assert not location.exists()
+    else:
+        assert (location / preserved).read_bytes() == links.PAYLOAD
+        assert state["preserved_artifacts"]["count"] == 1

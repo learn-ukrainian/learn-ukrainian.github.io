@@ -20,6 +20,7 @@ from scripts.common.acp_runtime_lock import build_lock_reason, process_start_tim
 from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
+from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
@@ -6566,3 +6567,33 @@ def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, referen
         assert saved["preserved_artifacts"]["count"] == 1
     else:
         assert not location.exists()
+
+
+@pytest.mark.parametrize("scenario", links.SCENARIOS)
+def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypatch, scenario):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "named-link"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n")
+    named, preserved, target = links.build_named_link(worktree, repo, tmp_path / "outside", scenario)
+    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree), response=f"Wrote `{named}`.")
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+    if preserved is None:  # Outbound targets outlive the checkout.
+        assert target.read_bytes() == links.PAYLOAD
+    location = repo / "batch_state/preserved" / task_id
+    if scenario == "outbound":
+        assert result.action == "skipped" and links.REFUSAL in result.reason
+        assert links.REFUSAL in state["artifact_preservation_error"]
+        assert worktree.exists()
+        return
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    if preserved is None:
+        assert not location.exists()
+    else:
+        assert (location / preserved).read_bytes() == links.PAYLOAD
+        assert state["preserved_artifacts"]["count"] == 1

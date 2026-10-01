@@ -5,11 +5,13 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import threading
 from pathlib import Path
 
 import pytest
 
 from scripts.orchestration import worktree_artifacts as wa
+from tests import _worktree_artifact_links as links
 
 
 @pytest.fixture
@@ -227,12 +229,72 @@ def test_missing_record_is_not_created(checkout):
     assert not (checkout[2] / "artifact-task.json").exists()
 
 
-def test_named_symlink_does_not_block(checkout, tmp_path):
+def test_named_external_symlink_refuses_removal(checkout, tmp_path):
     target = tmp_path / "outside.txt"
     target.write_bytes(b"lives outside the checkout")
     (checkout[0] / "ignored").mkdir()
     (checkout[0] / "ignored/link.txt").symlink_to(target)
-    assert guard(checkout, record={"response": "Wrote `ignored/link.txt`."}) == (True, "", None)
+    path = checkout[2] / "artifact-task.json"
+    path.write_text(json.dumps({"status": "done"}))
+    ok, reason, metadata = guard(checkout, record={"response": "Wrote `ignored/link.txt`."})
+    assert not ok and links.REFUSAL in reason and metadata is None
+    assert links.REFUSAL in json.loads(path.read_text())["artifact_preservation_error"]
+    assert target.read_bytes() == b"lives outside the checkout"
+    assert not (checkout[1] / "batch_state/preserved").exists()
+
+
+@pytest.mark.parametrize("scenario", links.SCENARIOS)
+def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
+    repo, primary, tasks = checkout
+    outside = tmp_path / "outside"
+    named, preserved, target = links.build_named_link(repo, primary, outside, scenario)
+    (tasks / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    ok, reason, metadata = guard(checkout, record={"response": f"Wrote `{named}`."})
+    saved = json.loads((tasks / "artifact-task.json").read_text())
+    assert target.read_bytes() == links.PAYLOAD
+    if scenario == "outbound":
+        assert not ok and links.REFUSAL in reason
+        assert links.REFUSAL in saved["artifact_preservation_error"]
+    elif preserved is None:
+        assert (ok, reason, metadata) == (True, "", None)
+        assert not (primary / "batch_state/preserved").exists()
+    else:
+        assert ok and not reason and metadata["count"] == 1
+        assert (Path(metadata["location"]) / preserved).read_bytes() == links.PAYLOAD
+        assert saved["preserved_artifacts"] == metadata
+
+
+def test_record_update_waits_for_the_shared_writer_lock(checkout):
+    """Removing ``task_state_lock`` from the update lets it race and lose the other writer's fields."""
+    from scripts.orchestration.dead_worker_state import task_state_lock
+
+    path = checkout[2] / "artifact-task.json"
+    path.write_text(json.dumps({"status": "running"}))
+    held, release = threading.Event(), threading.Event()
+
+    def other_writer():
+        # A locked read-modify-write: an unlocked update landing mid-section is overwritten.
+        with task_state_lock(path):
+            record = json.loads(path.read_text())
+            held.set()
+            release.wait(10)
+            path.write_text(json.dumps({**record, "status": "done", "other_writer": True}))
+
+    holder = threading.Thread(target=other_writer)
+    holder.start()
+    assert held.wait(10)
+    updater = threading.Thread(
+        target=wa._update_existing_task_record, args=(path, {"preserved_artifacts": {"count": 1}})
+    )
+    updater.start()
+    updater.join(0.5)
+    waited = updater.is_alive()
+    release.set()
+    holder.join(10)
+    updater.join(10)
+    assert waited, "update did not wait for the task-record writer lock"
+    saved = json.loads(path.read_text())
+    assert saved == {"status": "done", "other_writer": True, "preserved_artifacts": {"count": 1}}
 
 
 def test_success_clears_a_stale_preservation_error(checkout):

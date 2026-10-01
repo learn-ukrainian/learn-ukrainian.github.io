@@ -69,14 +69,19 @@ def _copy_verified(source: Path, destination: Path) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def _named_artifact_files(worktree: Path, record: Mapping[str, Any]) -> set[str]:
+def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary: Path) -> set[str]:
     """Inventory only explicitly named, non-empty ignored files outside caches.
 
-    Tracked files survive in Git; directories are not evidence inventories;
-    removal never destroys a symlink's target. Backticks/quotes and Markdown
-    links support spaced paths.
+    Tracked files survive in Git; directories are not evidence inventories.
+    A name reached through a symlink (itself or a parent directory) stands for
+    its resolved target: a target inside the checkout is inventoried under its
+    resolved path, because removal destroys it; a target file outside the
+    checkout cannot be preserved here and refuses removal, unless it already
+    lives under the primary's batch_state. Backticks/quotes and Markdown links
+    support spaced paths.
     """
     root = worktree.resolve()
+    shared_state = primary / "batch_state"
     files: set[str] = set()
     text = str(record.get("response") or "")
     result_file = record.get("result_file")
@@ -102,7 +107,19 @@ def _named_artifact_files(worktree: Path, record: Mapping[str, Any]) -> set[str]
             continue
         if ".." in relative.parts or _DISPOSABLE_DIRECTORIES.intersection(relative.parts):
             continue
-        if path.resolve() != root / relative or not path.is_file() or not path.stat().st_size:
+        resolved = path.resolve()
+        if resolved != root / relative:
+            if not resolved.is_relative_to(root):
+                # Never copied: following an outbound link would read outside the checkout.
+                if resolved.is_file() and resolved.stat().st_size and not resolved.is_relative_to(shared_state):
+                    raise ValueError(
+                        f"named artifact {relative.as_posix()} links outside the checkout and cannot be preserved"
+                    )
+                continue
+            relative = resolved.relative_to(root)
+            if _DISPOSABLE_DIRECTORIES.intersection(relative.parts):
+                continue
+        if not resolved.is_file() or not resolved.stat().st_size:
             continue
         name = relative.as_posix()
         ignored = _git_paths(worktree, "--others", "--ignored", "--exclude-standard", "--", name)
@@ -182,7 +199,7 @@ def preserve_worktree_artifacts(
                 raise ValueError(f"artifact is not a local regular file: {name}")
             if source.stat().st_size:
                 files.append(name)
-        for name in sorted(_named_artifact_files(worktree, record) - set(files)):
+        for name in sorted(_named_artifact_files(worktree, record, primary=primary) - set(files)):
             source = worktree / name
             if source.resolve() != source.absolute() or not stat.S_ISREG(source.lstat().st_mode):
                 raise ValueError(f"artifact is not a local regular file: {name}")
