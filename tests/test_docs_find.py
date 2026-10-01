@@ -649,6 +649,13 @@ def test_cli_help_meets_the_standard(capsys):
     out = capsys.readouterr().out
     for part in ('Examples:', 'Outputs:', 'Exit codes:', 'Related:', '--limit', '--family', '--json', 'default'):
         assert part in out
+    assert 'ASCII digits only (0-9): no sign, no spaces, no decimal point or exponent' in ' '.join(out.split())
+
+
+def test_openapi_limit_description_states_the_accepted_syntax():
+    params = api_main.app.openapi()['paths']['/api/knowledge/find']['get']['parameters']
+    limit = next(p for p in params if p['name'] == 'limit')
+    assert 'ASCII digits only (0-9): no sign, no spaces, no decimal point or exponent' in limit['description']
 
 
 # ------------------------------------------------------------------ Monitor route

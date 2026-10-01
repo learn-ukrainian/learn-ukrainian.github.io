@@ -2467,7 +2467,8 @@ named in `docs/README.md`); both call `scripts/docs/find.py`. It shares only the
   worker or an invalid catalogue cut the search short; absence is then not proven). A
   one-character word beside longer words is not searched alone in text and is reported
   as the reason `content_search_skipped`; a query of one-character words only is searched.
-- Errors: an empty query, a `limit` that is not a whole number in 1..200, a bad `family`,
+- Errors: an empty query, a `limit` outside 1..200 or not written as ASCII digits only
+  (`0-9`; a sign, a space, a decimal point or an exponent is rejected), a bad `family`,
   or an unknown family is a 422 with
   `{"code", "message"}`; an unreadable repository is a 503. Read-only; nothing persisted
   (an in-process memo of the validated catalogue is keyed by the exact index and

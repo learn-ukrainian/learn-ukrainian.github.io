@@ -198,7 +198,10 @@ def knowledge_find(
     q: str = Query(min_length=1, max_length=docs_find.MAX_QUERY_CHARS),
     limit: str = Query(
         default=str(docs_find.DEFAULT_LIMIT),
-        description=f"Maximum hits, ASCII digits only, 1..{docs_find.MAX_LIMIT}.",
+        description=(
+            f"Maximum hits, 1..{docs_find.MAX_LIMIT}, written as ASCII digits only (0-9): "
+            "no sign, no spaces, no decimal point or exponent."
+        ),
     ),
     family: str | None = Query(default=None, max_length=64, pattern=docs_find.FAMILY_ID_PATTERN),
     monitor_ctx: MonitorContext = Depends(get_ctx),

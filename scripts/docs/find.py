@@ -822,7 +822,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument('query', help='Words or a phrase to look for, e.g. "ULP 1-02" or "teacher deck rebuild"; '
                                       f'non-printable characters become spaces, at most {MAX_QUERY_CHARS} characters.')
     parser.add_argument('--limit', default=str(DEFAULT_LIMIT),
-                        help=f'Maximum hits to return, a whole number 1..{MAX_LIMIT} (default: {DEFAULT_LIMIT}).')
+                        help=f'Maximum hits to return, 1..{MAX_LIMIT}, written as ASCII digits only (0-9): no '
+                             f'sign, no spaces, no decimal point or exponent (default: {DEFAULT_LIMIT}).')
     parser.add_argument('--family', default=None,
                         help='Restrict the search to one catalogue family or store id, e.g. runbooks '
                              '(default: all).')

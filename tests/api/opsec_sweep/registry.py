@@ -80,11 +80,35 @@ EXERCISED_READ_5XX_REASONS: dict[str, str] = {
     "GET /api/dashboard/comms/conversation/{task_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/message/{message_id}": "isolated fixture has no dashboard comms store",
     "GET /api/dashboard/comms/messages": "isolated fixture has no dashboard comms store",
-    "GET /api/knowledge/find": "isolated fixture root is not a Git repository, so the locator returns its typed 503",
     "GET /api/rules": "isolated fixture has no deployed rule files",
     "GET /api/state/preparation": "sparse isolated fixture omits the curriculum tree",
     "GET /api/state/preparation/{track}/{slug}": "sparse isolated fixture omits the curriculum tree",
     "GET /api/work/v1/next": "isolated fixture has no warm work projection",
+}
+
+
+@dataclass(frozen=True)
+class ExactReadOutcome:
+    """The one status and typed error ``detail`` a read must return in the fixture.
+
+    Unlike ``EXERCISED_READ_5XX_REASONS`` (which opens the generic documented
+    allowance, 500 included), an exact outcome accepts nothing else, so an
+    unhandled failure on the route's typed error path fails the sweep.
+    """
+
+    status: int
+    detail: Mapping[str, str]
+    reason: str
+
+
+EXACT_READ_OUTCOMES: dict[str, ExactReadOutcome] = {
+    "GET /api/knowledge/find": ExactReadOutcome(
+        status=503,
+        # ``code`` is the exception type real Git raises in a non-repository
+        # root; the global handler replaces the message, so no path escapes.
+        detail={"code": "CalledProcessError", "message": "request rejected"},
+        reason="isolated fixture root is not a Git repository, so the locator returns its typed 503",
+    ),
 }
 
 _CONVERTER_RE = re.compile(r"\{(?P<name>[A-Za-z_][A-Za-z0-9_]*)(?::[^}]+)?\}")
@@ -121,6 +145,7 @@ class ExerciseRecord:
     expiry: str | None = None
     issue: int | None = None
     expected_statuses: tuple[int, ...] = ()
+    expected_detail: Mapping[str, str] | None = None
     setup: Callable[[MutationEnv], Prepared | None] | None = field(default=None, compare=False)
     verify: Callable[[MutationEnv, Any], None] | None = field(default=None, compare=False)
     loopback: bool = False
@@ -468,6 +493,20 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
 
     if operation.method in MUTATION_METHODS:
         return _mutation_record(operation, path_values, statuses)
+
+    exact = EXACT_READ_OUTCOMES.get(operation.key)
+    if exact is not None:
+        return ExerciseRecord(
+            method=operation.method,
+            path_template=operation.path_template,
+            classification="read",
+            fixture="isolated",
+            path_values=path_values,
+            query=_query_for(operation.path_template),
+            reason=exact.reason,
+            expected_statuses=(exact.status,),
+            expected_detail=exact.detail,
+        )
 
     classification: RouteClass = (
         "read-side-effect" if operation.path_template == "/api/session-streams/v1/drift" else "read"

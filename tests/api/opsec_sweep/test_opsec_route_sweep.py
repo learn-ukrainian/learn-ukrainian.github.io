@@ -679,6 +679,10 @@ def test_route_registry_matches_openapi_and_classifies_every_operation() -> None
     assert by_key["GET /api/epics/v1/{stream_id}/bundles"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/latest"].classification == "read"
     assert by_key["GET /api/epics/v1/{stream_id}/bundles/{upload_seq}"].classification == "read"
+    find_record = by_key["GET /api/knowledge/find"]
+    assert find_record.expected_statuses == (503,)
+    assert find_record.expected_detail == {"code": "CalledProcessError", "message": "request rejected"}
+    assert find_record.reason
     assert (
         route_contracts.contract_for_route("/api/session-streams/v1/health").response_schema_version
         == "session-streams.v2"
@@ -853,6 +857,17 @@ def test_exercised_read_registry_refuses_unexplained_5xx() -> None:
         and not record.reason
     ]
     assert unexplained == []
+
+
+def test_find_exact_outcome_code_matches_real_git_in_a_non_repository(tmp_path: Path) -> None:
+    outcome = registry.EXACT_READ_OUTCOMES["GET /api/knowledge/find"]
+    with pytest.raises(subprocess.CalledProcessError) as real:
+        docs_catalogue.git(tmp_path, "ls-files")
+    with pytest.raises(subprocess.CalledProcessError) as fixture:
+        _fixture_catalogue_git(tmp_path, "ls-files")
+    assert real.value.returncode == fixture.value.returncode == 128
+    assert type(real.value).__name__ == type(fixture.value).__name__ == outcome.detail["code"]
+    assert outcome.status == 503
 
 
 def test_family_one_fixture_reaches_dual_write_and_orient_git_happy_paths(
@@ -1181,6 +1196,13 @@ def test_opsec_route_sweep_isolated_and_bounded(
         )
         if record.expected_statuses and response.status_code not in record.expected_statuses:
             failures.append(f"{record.key} status={response.status_code}")
+        if record.expected_detail is not None:
+            payload = _response_payload(response)
+            detail = payload.get("detail") if isinstance(payload, dict) else None
+            if detail != record.expected_detail:
+                failures.append(f"{record.key} detail={detail!r}")
+            if str(isolated_fixture.root) in response.text:
+                failures.append(f"{record.key} leaked the fixture root path")
         if record.key in registry.FIXTURE_EMPTY_ROUTE_KEYS and response.status_code >= 500:
             failures.append(f"{record.key} real-database failure status={response.status_code}")
         if record.key in registry.FIXTURE_EMPTY_ROUTE_KEYS and response.status_code == 200:
