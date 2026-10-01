@@ -53,6 +53,61 @@ def test_block_scalar_closing_fence_refuses_truncated_mapping(indent):
     assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
 
 
+@pytest.mark.parametrize("stray_count", [2, 4])
+@pytest.mark.parametrize("indent", [1, 2, 3])
+@pytest.mark.parametrize("marker", [b"```", b"~~~"])
+@pytest.mark.parametrize("newline", [b"\n", b"\r\n"])
+def test_even_block_scalar_fences_refuse_truncated_mapping(stray_count, indent, marker, newline):
+    padding = b" " * indent
+    data = (
+        b"kind: plan\nnotes: |\n"
+        + padding
+        + b"before\n"
+        + (padding + marker + b"\n" + padding + b"after\n") * stray_count
+        + b"findings: []\n"
+    )
+    raw = marker + b"yaml\n" + data + marker + b"\n"
+    raw = raw.replace(b"\n", newline)
+    assert isinstance(yaml.safe_load(data), dict)
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(raw)
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert "outside the selected yaml/yml block" in str(raised.value)
+
+
+@pytest.mark.parametrize("position", ["before", "after"])
+@pytest.mark.parametrize("marker", [b"```", b"~~~"])
+def test_unrelated_closed_fence_refuses_ambiguous_mapping(position, marker):
+    unrelated = marker + b"text\nexample\n" + marker + b"\n"
+    wrapped = fenced(b"kind: plan\n")
+    raw = unrelated + wrapped if position == "before" else wrapped + unrelated
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(raw)
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert "outside the selected yaml/yml block" in str(raised.value)
+
+
+@pytest.mark.parametrize("opening", [b"```python", b"~~~text"])
+def test_trailing_unrelated_open_fence_names_actual_opening(opening):
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(fenced(b"kind: plan\n") + opening + b"\n")
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert str(raised.value) == f"the {opening.decode()!r} fence is not closed"
+
+
+def test_unclosed_yaml_fence_names_actual_opening():
+    with pytest.raises(ReviewReturnError) as raised:
+        extract_review_yaml(b"  ````yml\nkind: plan\n")
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert str(raised.value) == "the '````yml' fence is not closed"
+
+
+@pytest.mark.parametrize("outer,inner", [(b"````", b"```"), (b"```", b"~~~"), (b"~~~~", b"~~~"), (b"~~~", b"```")])
+def test_nonclosing_fence_inside_scalar_keeps_whole_mapping(outer, inner):
+    data = b"kind: plan\nnotes: |\n  before\n  " + inner + b"\n  after\nfindings: []\n"
+    assert extract_review_yaml(outer + b"yaml\n" + data + outer + b"\n") == data
+
+
 def test_block_scalar_four_space_fence_keeps_whole_mapping():
     data = b"kind: plan\nnotes: |\n    before\n    ```\n    after\nfindings: []\n"
     assert extract_review_yaml(fenced(data)) == data
@@ -63,8 +118,8 @@ def test_invalid_date_has_typed_refusal(wrapped):
     data = b"kind: plan\ndate: 2026-13-45\n"
     with pytest.raises(ReviewReturnError) as raised:
         extract_review_yaml(fenced(data) if wrapped else data)
-    expected = codes.REVIEW_YAML_FENCE_NOT_MAPPING if wrapped else codes.REVIEW_YAML_FENCE_MISSING
-    assert raised.value.code == expected
+    assert raised.value.code == codes.REVIEW_YAML_FENCE_NOT_MAPPING
+    assert "month must be in 1..12" in str(raised.value)
 
 
 def test_recorder_docstring_keeps_then_with_numbered_steps():
@@ -176,12 +231,17 @@ def test_real_plan_shapes_record_from_bound_saved_result(plan_case, name, wrappe
         (b"Synthetic report only.\n", codes.REVIEW_YAML_FENCE_MISSING),
         (fenced(b"kind: plan\n") + fenced(b"kind: plan\n"), codes.REVIEW_YAML_FENCE_MULTIPLE),
         (fenced(b"[a, b]\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
-        (b"kind: plan\ndate: 2026-13-45\n", codes.REVIEW_YAML_FENCE_MISSING),
+        (b"kind: plan\ndate: 2026-13-45\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
         (fenced(b"kind: plan\ndate: 2026-13-45\n"), codes.REVIEW_YAML_FENCE_NOT_MAPPING),
         (
             fenced(b"kind: plan\nnotes: |\n  before\n  ```\n  after\nfindings: []\n"),
             codes.REVIEW_YAML_FENCE_NOT_MAPPING,
         ),
+        (
+            fenced(b"kind: plan\nnotes: |\n  a\n  ```\n  b\n  ```\n  c\nfindings: []\n"),
+            codes.REVIEW_YAML_FENCE_NOT_MAPPING,
+        ),
+        (fenced(b"kind: plan\n") + b"```python\n", codes.REVIEW_YAML_FENCE_NOT_MAPPING),
     ],
 )
 def test_validator_and_recorder_refuse_the_same_shape(plan_case, data, code, tmp_path):
