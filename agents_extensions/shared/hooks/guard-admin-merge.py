@@ -26,7 +26,6 @@ from __future__ import annotations
 import json
 import os
 import re
-import shlex
 import subprocess
 import sys
 
@@ -36,12 +35,17 @@ sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
         ShellPreprocessLimit,
-        preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
     )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
+
+try:
+    from shell_redirects import segments_with_following_operator
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
 # Agent harnesses export CLICOLOR_FORCE/FORCE_COLOR, which beat NO_COLOR and make
@@ -157,35 +161,23 @@ def _join_line_continuations(text: str) -> str:
     return text.replace("\\\n", "")
 
 
-def _segments(command: str) -> list[list[str]]:
-    """Quote-aware argv segments, robust to glued shell operators (#4876).
+_UNREADABLE_MARKER = "--__guard_unreadable__"
 
-    A `--admin` inside a quoted commit body (`git commit -m "... --admin ..."`)
-    stays one argv element — no false block. A `; gh pr merge --admin` glued
-    to a preceding token (`…'; gh pr merge --admin`) is now split into its
-    own segment and inspected — no evasion. Heredoc bodies are stripped
-    (document text is not commands); `\\`-continuations are folded; each
-    logical line parses separately.
-    """
-    segs: list[list[str]] = []
-    for line in preprocess_shell_command(command).splitlines():
-        try:
-            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
-            lexer.whitespace_split = True
-            tokens = list(lexer)
-        except ValueError:
-            continue
-        cur: list[str] = []
-        for tok in tokens:
-            if tok and all(c in ";|&()<>" for c in tok):
-                if cur:
-                    segs.append(cur)
-                    cur = []
-            else:
-                cur.append(tok)
-        if cur:
-            segs.append(cur)
-    return segs
+
+def _segments(command: str) -> list[list[str]]:
+    """Read the argv Bash executes, removing redirects while quotes exist."""
+    return [argv for argv, _ in _segments_with_following_operator(command)]
+
+
+def _segments_with_following_operator(command: str) -> list[tuple[list[str], str | None]]:
+    """Keep command separators after removing redirect operators/operands."""
+    return segments_with_following_operator(
+        command,
+        mark_redirect_unreadable=True,
+        unreadable_marker=_UNREADABLE_MARKER,
+        unparsed=[_UNREADABLE_MARKER],
+        may_match=lambda line: False,
+    )
 
 
 def _is_env_assignment(tok: str) -> bool:
@@ -268,6 +260,8 @@ def _admin_merge_args(seg: list[str]) -> list[str] | None:
 
 def _pr_number(args: list[str]) -> str | None:
     """First numeric positional after `merge`; implicit discovery is refused."""
+    if _UNREADABLE_MARKER in args:
+        return None
     for a in args:
         if not a.startswith("-") and a.isdigit():
             return a
@@ -332,11 +326,12 @@ def main() -> int:
     except ShellPreprocessLimit:
         sys.stderr.write(_block_msg("nested shell command could not be parsed safely"))
         return 2
+    redirect_unreadable = any(_UNREADABLE_MARKER in seg for seg in segments)
     for seg in segments:
         args = _admin_merge_args(seg)
         if args is None:
             continue
-        pr = _pr_number(args)
+        pr = None if redirect_unreadable else _pr_number(args)
         if not pr:
             sys.stderr.write(_block_msg("could not determine the target PR number"))
             return 2

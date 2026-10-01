@@ -42,6 +42,107 @@ def _load_hook():
 
 guard = _load_hook()
 
+REDIRECTS_9479 = ["", "2>&1", ">file", "2>/dev/null", "&>file", "<file", "| cat"]
+
+
+@pytest.mark.parametrize("redirect", REDIRECTS_9479)
+@pytest.mark.parametrize("shape", ["cd", "admin-before", "admin-after", "implicit"])
+def test_issue_9479_redirect_denominator(repos, redirect, shape):
+    merge = {
+        "cd": "",
+        "admin-before": "gh pr merge --admin 5 && ",
+        "admin-after": "gh pr merge 5 --admin && ",
+        "implicit": "gh pr merge --admin && ",
+    }[shape]
+    # Merge option placement is irrelevant to this hook; its branch switch
+    # must still use the cwd and argv that Bash actually executes.
+    cd_redirect = redirect if redirect != "| cat" else ""
+    command = f"cd {repos['public']} {cd_redirect} && {merge}git switch -c fixture {redirect}"
+    assert guard._command_danger_reason(command, repos["other"]) is not None
+    assert ["git", "switch", "-c", "fixture"] in guard._segments(command)
+    safe = command.replace(str(repos["public"]), str(repos["public_worktree"]))
+    assert guard._command_danger_reason(safe, repos["other"]) is None
+
+
+@pytest.mark.parametrize("redirect,verb", [(">/dev/null", "checkout -b"), ("2>&1", "switch -c")])
+def test_issue_9479_reviewer_reproductions(repos, redirect, verb):
+    command = f"cd {repos['public']} {redirect} && git {verb} fixture"
+    assert guard._command_danger_reason(command, repos["other"]) is not None
+
+
+@pytest.mark.parametrize("redirect", REDIRECTS_9479)
+@pytest.mark.parametrize("verb", ["checkout -b", "switch -c"])
+def test_issue_9479_real_bash_cwd_and_argv(repos, tmp_path, redirect, verb):
+    recorder = tmp_path / "git"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    (tmp_path / "file").touch()
+    (repos["public"] / "file").touch()
+    record = tmp_path / "record"
+    cd_redirect = redirect if redirect != "| cat" else ""
+    command = f"cd {repos['public']} {cd_redirect} && git {verb} fixture {redirect}"
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=tmp_path,
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    actual = record.read_text().splitlines()
+    assert actual == [str(repos["public"]), *verb.split(), "fixture"]
+    segments = guard._segments_with_following_operator(command)
+    cd_argv, operator = segments[0]
+    assert operator == "&&"
+    assert str(guard._cd_target(cd_argv, tmp_path)) == actual[0]
+    assert ["git", *actual[1:]] in [argv for argv, _ in segments]
+    assert guard._command_danger_reason(command, repos["other"]) is not None
+
+
+@pytest.mark.parametrize(
+    "redirect,position",
+    [
+        (redirect, position)
+        for redirect in ['> "$FILE"', "> $(echo file)", "> `echo file`", ">"]
+        for position in ["prefix", "suffix", "cd"]
+        if (redirect, position) != (">", "prefix")
+    ],
+)
+def test_issue_9479_dynamic_redirect_refused(repos, redirect, position):
+    switch = f"git -C {repos['public']} switch -c fixture"
+    command = {
+        "prefix": f"{redirect} {switch}",
+        "suffix": f"{switch} {redirect}",
+        "cd": f"cd {repos['public']} {redirect} && git switch -c fixture",
+    }[position]
+    assert guard._command_danger_reason(command, repos["other"]) is not None
+
+
+@pytest.mark.parametrize("redirect", [">file", "2>&1", "<file", "&>file"])
+@pytest.mark.parametrize("target", ["$BRANCH", '"$BRANCH"', "$(cat selector)", "`cat selector`"])
+def test_issue_9479_redirect_never_launders_target(repos, redirect, target):
+    command = f"git checkout {target} {redirect}"
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git status >file",
+        'git status > "$FILE"',
+        "echo fixture > $(echo file)",
+        "echo 'git switch -c fixture' >file",
+        "git log 2>&1 | cat",
+    ],
+)
+def test_issue_9479_benign_commands_still_allowed(repos, command):
+    assert guard._command_danger_reason(command, repos["public"]) is None
+
+
+def test_issue_9479_quoted_redirect_stays_data():
+    assert guard._segments("cd '>' 2>&1 && git status") == [["cd", ">"], ["git", "status"]]
+
 
 @pytest.mark.parametrize(
     "shape",

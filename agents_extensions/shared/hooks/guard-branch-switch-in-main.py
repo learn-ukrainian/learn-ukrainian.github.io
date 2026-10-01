@@ -34,12 +34,12 @@ Allowed in the MAIN worktree:
   - non-git commands
   - git commit -m "...body mentioning git checkout -b... / git branch -D..."
 """
+
 from __future__ import annotations
 
 import json
 import os
 import re
-import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -50,12 +50,17 @@ sys.dont_write_bytecode = True
 try:
     from shell_shlex import (
         ShellPreprocessLimit,
-        preprocess_shell_command,
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
     )
 except ImportError as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
+    raise SystemExit(2) from exc
+
+try:
+    from shell_redirects import segments_with_following_operator
+except ImportError as exc:
+    print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
 # Words that, when seen as the FIRST token after `git`, indicate a branch
@@ -71,6 +76,7 @@ SAFE_TARGETS = frozenset({"main", "master", "HEAD", "-"})
 # Full-length or abbreviated object names (SHA-1/SHA-256 hex) that would
 # detach HEAD when used as ``git checkout <sha>``.
 _HEX_OBJECT_RE = re.compile(r"^(?:[0-9a-f]{7,40}|[0-9a-f]{64})$")
+
 
 def _git_probe_env() -> dict[str, str]:
     """Return an environment that lets git discover the requested repo."""
@@ -136,11 +142,19 @@ def _in_main_worktree(project_root: Path) -> bool:
     try:
         gd = subprocess.run(
             ["git", "rev-parse", "--git-dir"],
-            cwd=project_root, capture_output=True, text=True, check=True, env=_git_probe_env(),
+            cwd=project_root,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=_git_probe_env(),
         ).stdout.strip()
         cd = subprocess.run(
             ["git", "rev-parse", "--git-common-dir"],
-            cwd=project_root, capture_output=True, text=True, check=True, env=_git_probe_env(),
+            cwd=project_root,
+            capture_output=True,
+            text=True,
+            check=True,
+            env=_git_probe_env(),
         ).stdout.strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
         # Not a git repo or git missing → nothing to enforce.
@@ -192,71 +206,23 @@ def _join_line_continuations(text: str) -> str:
     return text.replace("\\\n", "")
 
 
-def _segments(command: str) -> list[list[str]]:
-    """Tokenize the command, split on shell command separators.
+_UNREADABLE_MARKER = "--__guard_unreadable__"
 
-    Returns argv-style segments (one per logical sub-command). Robust to
-    the #4876 evasion class: `punctuation_chars` makes shlex emit operator
-    runs (`;`, `|`, `&`, `(`, `)`, `<`, `>`) as their OWN tokens even when
-    glued to a neighbour (`head -1; git …` no longer hides the `;` inside
-    the `-1;` token), each logical line is parsed separately (a newline
-    separates commands; `\\`-continuations are folded first), and heredoc
-    bodies are stripped first (document text must not be parsed as
-    commands). Quoting still collapses `git commit -m "git checkout -b
-    foo"` into a single argv element — no false block. Default shlex
-    comment handling drops `# …` trailers, matching shell semantics:
-    commented-out text can neither trigger nor hide a verb.
-    """
-    segments: list[list[str]] = []
-    for line in preprocess_shell_command(command).splitlines():
-        try:
-            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
-            lexer.whitespace_split = True
-            tokens = list(lexer)
-        except ValueError:
-            # Unparseable line (unbalanced quotes) — skip just this line;
-            # the shell will fail the malformed command anyway. Other
-            # lines in the same command are still inspected.
-            continue
-        current: list[str] = []
-        for tok in tokens:
-            if tok and all(c in ";|&()<>" for c in tok):
-                if current:
-                    segments.append(current)
-                    current = []
-            else:
-                current.append(tok)
-        if current:
-            segments.append(current)
-    return segments
+
+def _segments(command: str) -> list[list[str]]:
+    """Read the argv Bash executes, removing redirects while quotes exist."""
+    return [argv for argv, _ in _segments_with_following_operator(command)]
 
 
 def _segments_with_following_operator(command: str) -> list[tuple[list[str], str | None]]:
-    """Tokenize commands and retain the separator after each segment.
-
-    The existing ``_segments`` helper deliberately exposes only argv lists for
-    its focused parser tests. Target resolution additionally needs to know
-    when ``cd <path> &&`` changes the effective cwd of the following command.
-    """
-    segments: list[tuple[list[str], str | None]] = []
-    for line in preprocess_shell_command(command).splitlines():
-        try:
-            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
-            lexer.whitespace_split = True
-            tokens = list(lexer)
-        except ValueError:
-            continue
-        current: list[str] = []
-        for tok in tokens:
-            if tok and all(c in ";|&()<>" for c in tok):
-                if current:
-                    segments.append((current, tok))
-                    current = []
-            else:
-                current.append(tok)
-        if current:
-            segments.append((current, None))
-    return segments
+    """Keep command separators after removing redirect operators/operands."""
+    return segments_with_following_operator(
+        command,
+        mark_redirect_unreadable=True,
+        unreadable_marker=_UNREADABLE_MARKER,
+        unparsed=[_UNREADABLE_MARKER],
+        may_match=lambda line: False,
+    )
 
 
 def _branch_force_reason(args: list[str], current_branch: str | None) -> str | None:
@@ -293,9 +259,7 @@ def _branch_force_reason(args: list[str], current_branch: str | None) -> str | N
 
     if force_delete and current_branch and current_branch in positions:
         return "git branch -D force-deletes the checked-out branch in the main worktree"
-    if force_rename and current_branch and (
-        len(positions) == 1 or positions[0] == current_branch
-    ):
+    if force_rename and current_branch and (len(positions) == 1 or positions[0] == current_branch):
         return "git branch -M force-renames the checked-out branch in the main worktree"
     return None
 
@@ -375,9 +339,7 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
     return i
 
 
-def _git_invocation(
-    seg: list[str], effective_cwd: Path
-) -> tuple[str, list[str], Path] | None:
+def _git_invocation(seg: list[str], effective_cwd: Path) -> tuple[str, list[str], Path] | None:
     """Return ``(verb, args, git_cwd)`` for a direct git invocation.
 
     Git applies repeated ``-C`` options from left to right, including relative
@@ -431,14 +393,17 @@ def _git_repo_root(git_cwd: Path) -> Path | None:
 
 def _checked_out_branch(repo_root: Path) -> str | None:
     try:
-        return subprocess.run(
-            ["git", "symbolic-ref", "--quiet", "--short", "HEAD"],
-            cwd=repo_root,
-            capture_output=True,
-            text=True,
-            check=True,
-            env=_git_probe_env(),
-        ).stdout.strip() or None
+        return (
+            subprocess.run(
+                ["git", "symbolic-ref", "--quiet", "--short", "HEAD"],
+                cwd=repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
+                env=_git_probe_env(),
+            ).stdout.strip()
+            or None
+        )
     except (subprocess.CalledProcessError, FileNotFoundError):
         return None
 
@@ -457,9 +422,7 @@ def _cd_target(seg: list[str], effective_cwd: Path) -> Path | None:
     return (directory if directory.is_absolute() else effective_cwd / directory).resolve()
 
 
-def _segment_is_dangerous(
-    seg: list[str], current_branch: str | None = "main"
-) -> str | None:
+def _segment_is_dangerous(seg: list[str], current_branch: str | None = "main") -> str | None:
     """Return a human-readable reason string if seg is a dangerous git op,
     else None."""
     invocation = _git_invocation(seg, Path.cwd())
@@ -487,10 +450,7 @@ def _segment_is_dangerous(
     # Detach / orphan always forbidden on primary (#4857 recurrence: agents
     # leave the tree on a raw SHA and every service silently reads wrong code).
     if "--detach" in args or "--orphan" in args:
-        return (
-            f"git {verb} --detach/--orphan detaches HEAD in the main worktree "
-            "(primary must stay attached to main)"
-        )
+        return f"git {verb} --detach/--orphan detaches HEAD in the main worktree (primary must stay attached to main)"
 
     # Flags we treat as "definitely creates / switches to a new branch":
     if "-b" in args or "--create" in args:
@@ -510,16 +470,31 @@ def _segment_is_dangerous(
         if a.startswith("-"):
             # Switches like `--track` take no value here; `-t` takes one.
             # ``--detach`` / ``--orphan`` already blocked above.
-            if a in {"--quiet", "-q", "--force", "-f",
-                     "--no-track", "--guess", "--no-guess", "--progress",
-                     "--no-progress", "--merge", "--theirs", "--ours",
-                     "--ignore-skip-worktree-bits", "--patch", "-p",
-                     "--ignore-other-worktrees", "--overlay", "--no-overlay",
-                     "--recurse-submodules", "--no-recurse-submodules"}:
+            if a in {
+                "--quiet",
+                "-q",
+                "--force",
+                "-f",
+                "--no-track",
+                "--guess",
+                "--no-guess",
+                "--progress",
+                "--no-progress",
+                "--merge",
+                "--theirs",
+                "--ours",
+                "--ignore-skip-worktree-bits",
+                "--patch",
+                "-p",
+                "--ignore-other-worktrees",
+                "--overlay",
+                "--no-overlay",
+                "--recurse-submodules",
+                "--no-recurse-submodules",
+            }:
                 continue
             # Two-arg flags: skip their value too.
-            if a in {"-t", "--track", "-B", "--start-point",
-                     "--conflict", "--pathspec-from-file"}:
+            if a in {"-t", "--track", "-B", "--start-point", "--conflict", "--pathspec-from-file"}:
                 skip_next = True
             continue
         target = a
@@ -537,10 +512,7 @@ def _segment_is_dangerous(
         )
     # origin/main is a remote-tracking ref → detaches when checked out bare
     if target.startswith("origin/") or target.startswith("refs/"):
-        return (
-            f"git {verb} {target} switches/detaches the main worktree "
-            "(stay on main; use worktrees for feature refs)"
-        )
+        return f"git {verb} {target} switches/detaches the main worktree (stay on main; use worktrees for feature refs)"
     return f"git {verb} {target} switches branch in the main worktree"
 
 
@@ -572,10 +544,7 @@ def _gh_pr_checkout_reason(seg: list[str], effective_cwd: Path) -> str | None:
             return None
         if not _in_main_worktree(repo_root):
             return None
-        return (
-            "gh pr checkout moves the primary checkout off main "
-            "(use a dispatch worktree or gh pr diff instead)"
-        )
+        return "gh pr checkout moves the primary checkout off main (use a dispatch worktree or gh pr diff instead)"
     return None
 
 
@@ -583,11 +552,21 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
     """Return a block reason only for a command targeting a protected root."""
     effective_cwd = (session_cwd or Path.cwd()).resolve()
     protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
-    for segment, following_operator in _segments_with_following_operator(command):
+    segments = _segments_with_following_operator(command)
+    redirect_unreadable = any(_UNREADABLE_MARKER in segment for segment, _ in segments)
+    for segment, following_operator in segments:
+        i = _skip_command_prefix(segment, 0)
+        if segment[i : i + 1] == ["cd"] and _UNREADABLE_MARKER in segment:
+            continue
         cd_target = _cd_target(segment, effective_cwd)
         if cd_target is not None and following_operator == "&&":
             effective_cwd = cd_target
             continue
+
+        # A dynamic redirect can execute substitutions; no readable target
+        # may be inferred from the remaining argv of a branch operation.
+        if redirect_unreadable and (_segment_is_dangerous(segment) or segment[i : i + 3] == ["gh", "pr", "checkout"]):
+            return "branch-switch target could not be parsed safely"
 
         gh_reason = _gh_pr_checkout_reason(segment, effective_cwd)
         if gh_reason:
@@ -622,21 +601,21 @@ def main() -> int:
     except ShellPreprocessLimit:
         reason = "nested shell command could not be parsed safely"
     if reason:
-            sys.stderr.write(
-                f"BLOCKED by guard-branch-switch-in-main: {reason}.\n\n"
-                "A protected PRIMARY worktree must stay on `main`. "
-                "All feature work happens in added worktrees so the main\n"
-                "tree is always reviewable.\n\n"
-                "Use this pattern instead (from the main project dir):\n\n"
-                "  git worktree add .worktrees/<purpose>/<branch-name> "
-                "-b <branch-name>\n"
-                "  cd .worktrees/<purpose>/<branch-name>\n"
-                "  # ...edits, commits, push, PR...\n"
-                "  # back in the main project dir:\n"
-                "  git worktree remove .worktrees/<purpose>/<branch-name>\n\n"
-                "Hook source: .claude/hooks/guard-branch-switch-in-main.py\n"
-            )
-            return 2
+        sys.stderr.write(
+            f"BLOCKED by guard-branch-switch-in-main: {reason}.\n\n"
+            "A protected PRIMARY worktree must stay on `main`. "
+            "All feature work happens in added worktrees so the main\n"
+            "tree is always reviewable.\n\n"
+            "Use this pattern instead (from the main project dir):\n\n"
+            "  git worktree add .worktrees/<purpose>/<branch-name> "
+            "-b <branch-name>\n"
+            "  cd .worktrees/<purpose>/<branch-name>\n"
+            "  # ...edits, commits, push, PR...\n"
+            "  # back in the main project dir:\n"
+            "  git worktree remove .worktrees/<purpose>/<branch-name>\n\n"
+            "Hook source: .claude/hooks/guard-branch-switch-in-main.py\n"
+        )
+        return 2
 
     return 0
 

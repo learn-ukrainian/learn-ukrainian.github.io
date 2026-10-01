@@ -19,6 +19,7 @@ from __future__ import annotations
 import importlib.util
 import io
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -39,6 +40,131 @@ def _load_hook():
 
 
 guard = _load_hook()
+
+REDIRECTS_9479 = ["", "2>&1", ">file", "2>/dev/null", "&>file", "<file", "| cat"]
+
+
+@pytest.mark.parametrize("redirect", REDIRECTS_9479)
+@pytest.mark.parametrize("shape", ["cd", "admin-before", "admin-after", "implicit"])
+def test_issue_9479_redirect_denominator(monkeypatch, redirect, shape):
+    args = {"cd": "5 --admin", "admin-before": "--admin 5", "admin-after": "5 --admin", "implicit": "--admin"}[shape]
+    command = {
+        "cd": f"cd fixture {redirect} && gh pr merge 5 --admin {redirect}",
+        "admin-before": f"gh pr merge --admin {redirect} 5",
+        "admin-after": f"gh pr merge 5 {redirect} --admin",
+        "implicit": f"gh pr merge --admin {redirect}",
+    }[shape]
+    if redirect == "| cat":
+        command = f"gh pr merge {args} {redirect}"
+        if shape == "cd":
+            command = "cd fixture && " + command
+    judged = [guard._admin_merge_args(seg) for seg in guard._segments(command)]
+    assert args.split() in judged
+    seen = []
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or ["Test (pytest)"])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert seen == ([] if shape == "implicit" else ["5"])
+
+
+@pytest.mark.parametrize("command", ["gh pr merge --admin 2>&1", "gh pr merge 2>&1 5 --admin"])
+def test_issue_9479_reviewer_reproductions(monkeypatch, command):
+    seen = []
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or ["Test (pytest)"])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert seen == ([] if command.endswith("2>&1") else ["5"])
+
+
+@pytest.mark.parametrize("redirect", REDIRECTS_9479)
+@pytest.mark.parametrize("placement", ["before-number", "after-number", "cd"])
+def test_issue_9479_real_bash_argv(tmp_path, monkeypatch, redirect, placement):
+    recorder = tmp_path / "gh"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    (tmp_path / "file").touch()
+    record = tmp_path / "record"
+    if placement == "before-number":
+        command = f"gh pr merge --admin {redirect} 5"
+        expected = ["--admin", "5"]
+    else:
+        command = f"gh pr merge 5 {redirect} --admin"
+        expected = ["5", "--admin"]
+    if redirect == "| cat":
+        command = "gh pr merge " + " ".join(expected) + " | cat"
+    if placement == "cd":
+        command = f"cd {tmp_path} {redirect if redirect != '| cat' else ''} && " + command
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=tmp_path,
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    actual = record.read_text().splitlines()
+    assert actual == [str(tmp_path), "pr", "merge", *expected]
+    judged = [guard._admin_merge_args(seg) for seg in guard._segments(command)]
+    assert actual[3:] in judged
+    seen = []
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or [])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 0
+    assert seen == ["5"]
+
+
+@pytest.mark.parametrize("redirect", [">file", "2>&1", "<file", "&>file"])
+@pytest.mark.parametrize("target", ["$PR", '"$PR"', "$(cat selector)", "`cat selector`"])
+def test_issue_9479_redirect_never_launders_target(monkeypatch, redirect, target):
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: pytest.fail("unreadable target reached lookup"))
+    command = f"gh pr merge --admin {target} {redirect}"
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+
+
+@pytest.mark.parametrize(
+    "redirect,position",
+    [
+        (redirect, position)
+        for redirect in ['> "$FILE"', "> $(echo file)", "> `echo file`", ">"]
+        for position in ["prefix", "suffix", "cd"]
+        if (redirect, position) != (">", "prefix")
+    ],
+)
+def test_issue_9479_dynamic_redirect_refused(monkeypatch, redirect, position):
+    command = {
+        "prefix": f"{redirect} gh pr merge 5 --admin",
+        "suffix": f"gh pr merge 5 --admin {redirect}",
+        "cd": f"cd fixture {redirect} && gh pr merge 5 --admin",
+    }[position]
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: pytest.fail("dynamic redirect reached lookup"))
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+
+
+@pytest.mark.parametrize("target", ["'>'", "'2>&1'", "'file$name'", r"file\$name"])
+def test_issue_9479_literal_redirect_target(monkeypatch, target):
+    command = f"gh pr merge 5 --admin > {target}"
+    assert guard._segments(command) == [["gh", "pr", "merge", "5", "--admin"]]
+    assert _run(monkeypatch, command, failing=[]) == 0
+
+
+@pytest.mark.parametrize("hook", ["guard-admin-merge.py", "guard-branch-switch-in-main.py", "guard-pr-merge.py"])
+def test_issue_9479_missing_shared_helper_fails_closed(tmp_path, hook):
+    hook_path = HOOK_PATH.parent / hook
+    shutil.copy2(hook_path, tmp_path / hook)
+    shutil.copy2(HOOK_PATH.parent / "shell_shlex.py", tmp_path / "shell_shlex.py")
+    command = "git switch -c fixture" if "branch" in hook else "gh pr merge 5 --admin"
+    result = subprocess.run(
+        [sys.executable, str(tmp_path / hook)],
+        input=json.dumps({"tool_input": {"command": command}}),
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 2
+    assert "guard dependency unavailable: shell_redirects" in result.stderr
 
 
 @pytest.mark.parametrize(
