@@ -187,6 +187,37 @@ def test_batch_state_symlink_cannot_hide_local_artifacts(checkout):
     assert source.exists()
 
 
+def test_batch_state_link_loop_is_a_recorded_refusal(checkout):
+    (checkout[2] / "artifact-task.json").write_text(json.dumps({"status": "done"}))
+    (checkout[0] / "batch_state").mkdir()
+    (checkout[0] / "batch_state/loop").symlink_to("loop")
+    ok, reason, metadata = guard(checkout)
+    assert not ok and "Symlink loop" in reason and metadata is None
+    assert reason == json.loads((checkout[2] / "artifact-task.json").read_text())["artifact_preservation_error"]
+
+
+@pytest.mark.parametrize(
+    ("reference", "refused"),
+    [
+        ("../outside.txt", False),
+        ("absolute", False),
+        ("ignored/sub/../../link", True),
+        ("ignored/dir/../../link", True),
+    ],
+)
+def test_outbound_refusal_needs_a_link_inside_the_checkout(checkout, tmp_path, reference, refused):
+    outside = tmp_path / "outside.txt"
+    outside.write_bytes(b"lives outside the checkout")
+    (checkout[0] / "ignored/sub").mkdir(parents=True)
+    (checkout[0] / "ignored/dir").symlink_to("sub", target_is_directory=True)
+    (checkout[0] / "link").symlink_to(outside)
+    reference = str(outside) if reference == "absolute" else reference
+    ok, reason, metadata = guard(checkout, record={"response": f"Read `{reference}`."})
+    assert (ok, metadata) == (not refused, None)
+    assert (links.REFUSAL in reason) is refused
+    assert outside.read_bytes() == b"lives outside the checkout"
+
+
 @pytest.mark.parametrize("reference", ["root", "./", "ignored", ".pytest_cache/cache.txt"])
 def test_named_directory_or_cache_does_not_block(checkout, reference):
     artifact(checkout, "ignored/report.txt")
@@ -251,10 +282,11 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
     (tasks / "artifact-task.json").write_text(json.dumps({"status": "done"}))
     ok, reason, metadata = guard(checkout, record={"response": f"Wrote `{named}`."})
     saved = json.loads((tasks / "artifact-task.json").read_text())
-    assert target.read_bytes() == links.PAYLOAD
-    if scenario == "outbound":
-        assert not ok and links.REFUSAL in reason
-        assert links.REFUSAL in saved["artifact_preservation_error"]
+    assert target is None or target.read_bytes() == links.PAYLOAD
+    if scenario in links.REFUSALS:
+        assert not ok and links.REFUSALS[scenario] in reason
+        assert links.REFUSALS[scenario] in saved["artifact_preservation_error"]
+        assert "\x00" not in reason and "x" * 300 not in reason
     elif preserved is None:
         assert (ok, reason, metadata) == (True, "", None)
         assert not (primary / "batch_state/preserved").exists()

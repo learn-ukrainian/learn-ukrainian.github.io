@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import contextlib
+import errno
 import hashlib
 import json
 import os
@@ -69,15 +70,54 @@ def _copy_verified(source: Path, destination: Path) -> None:
         temporary.unlink(missing_ok=True)
 
 
+_RESOLVER_ERRORS = {errno.ELOOP: "symlink loop", errno.ENAMETOOLONG: "name too long"}
+
+
+def _resolve_named(root: Path, parts: tuple[str, ...]) -> tuple[Path, os.stat_result] | None:
+    """Resolve a name as the filesystem does; ``None`` when nothing exists there.
+
+    No lexical normalization: ``..`` after a symlinked directory applies to the
+    link's target. Any other resolver failure refuses removal, naming only the
+    failure class, never the path text.
+    """
+    try:
+        resolved = Path(os.path.realpath(root.joinpath(*parts)))
+        return resolved, resolved.stat()
+    except (FileNotFoundError, NotADirectoryError):
+        return None
+    except RuntimeError:
+        kind = _RESOLVER_ERRORS[errno.ELOOP]
+    except ValueError:
+        kind = "embedded NUL"
+    except OSError as exc:
+        kind = _RESOLVER_ERRORS.get(exc.errno) or errno.errorcode.get(exc.errno or 0, type(exc).__name__)
+    raise ValueError(f"a named artifact path cannot be resolved ({kind})")
+
+
+def _leaves_through_link(root: Path, parts: tuple[str, ...]) -> bool:
+    """Whether resolving ``parts`` leaves the checkout through a link inside it.
+
+    Climbing out of the root with ``..`` is not a checkout name; removal
+    cannot take what such a name reaches.
+    """
+    current = root
+    for part in parts:
+        inside = current.is_relative_to(root)
+        current = current.parent if part == ".." else Path(os.path.realpath(current / part))
+        if part != ".." and inside and not current.is_relative_to(root):
+            return True
+    return False
+
+
 def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary: Path) -> set[str]:
     """Inventory only explicitly named, non-empty ignored files outside caches.
 
     Tracked files survive in Git; directories are not evidence inventories.
-    A name reached through a symlink (itself or a parent directory) stands for
-    its resolved target: a target inside the checkout is inventoried under its
-    resolved path, because removal destroys it; a target file outside the
-    checkout cannot be preserved here and refuses removal, unless it already
-    lives under the primary's batch_state. Backticks/quotes and Markdown links
+    A name stands for the file the filesystem resolves it to: a target inside
+    the checkout is inventoried under its resolved path, because removal
+    destroys it; a target file reached through a link out of the checkout
+    cannot be preserved here and refuses removal, unless it already lives
+    under the primary's batch_state. Backticks/quotes and Markdown links
     support spaced paths.
     """
     root = worktree.resolve()
@@ -98,28 +138,27 @@ def _named_artifact_files(worktree: Path, record: Mapping[str, Any], *, primary:
         if not candidate:
             continue
         path = Path(candidate)
-        if not path.is_absolute():
-            path = worktree / path
-        path = Path(os.path.normpath(path))
-        try:
-            relative = path.relative_to(worktree)
-        except ValueError:
-            continue
-        if ".." in relative.parts or _DISPOSABLE_DIRECTORIES.intersection(relative.parts):
-            continue
-        resolved = path.resolve()
-        if resolved != root / relative:
-            if not resolved.is_relative_to(root):
-                # Never copied: following an outbound link would read outside the checkout.
-                if resolved.is_file() and resolved.stat().st_size and not resolved.is_relative_to(shared_state):
-                    raise ValueError(
-                        f"named artifact {relative.as_posix()} links outside the checkout and cannot be preserved"
-                    )
+        if path.is_absolute():
+            base = next((base for base in (worktree, root) if path.is_relative_to(base)), None)
+            if base is None:
                 continue
-            relative = resolved.relative_to(root)
-            if _DISPOSABLE_DIRECTORIES.intersection(relative.parts):
-                continue
-        if not resolved.is_file() or not resolved.stat().st_size:
+            path = path.relative_to(base)
+        parts = path.parts
+        if _DISPOSABLE_DIRECTORIES.intersection(parts):
+            continue
+        found = _resolve_named(root, parts)
+        if found is None:
+            continue
+        resolved, status = found
+        if not stat.S_ISREG(status.st_mode) or not status.st_size:
+            continue
+        if not resolved.is_relative_to(root):
+            # Never copied: following an outbound link would read outside the checkout.
+            if not resolved.is_relative_to(shared_state) and _leaves_through_link(root, parts):
+                raise ValueError(f"named artifact {path.as_posix()} links outside the checkout and cannot be preserved")
+            continue
+        relative = resolved.relative_to(root)
+        if _DISPOSABLE_DIRECTORIES.intersection(relative.parts):
             continue
         name = relative.as_posix()
         ignored = _git_paths(worktree, "--others", "--ignored", "--exclude-standard", "--", name)
@@ -223,7 +262,7 @@ def preserve_worktree_artifacts(
                 task_record["preserved_artifacts"] = metadata
                 task_record.pop("artifact_preservation_error", None)
         return True, detail, metadata
-    except (OSError, ValueError, subprocess.SubprocessError) as exc:
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as exc:
         reason = f"artifact preservation failed: {exc}; refusing worktree removal"
         if isinstance(task_record, dict):
             task_record["artifact_preservation_error"] = reason

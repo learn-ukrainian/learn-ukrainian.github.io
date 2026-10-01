@@ -6582,12 +6582,12 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
     state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
-    if preserved is None:  # Outbound targets outlive the checkout.
+    if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
     location = repo / "batch_state/preserved" / task_id
-    if scenario == "outbound":
-        assert result.action == "skipped" and links.REFUSAL in result.reason
-        assert links.REFUSAL in state["artifact_preservation_error"]
+    if scenario in links.REFUSALS:
+        assert result.action == "skipped" and links.REFUSALS[scenario] in result.reason
+        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
         assert worktree.exists()
         return
     assert result.action == "removed", result

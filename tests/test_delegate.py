@@ -17566,12 +17566,12 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
     )
     state = delegate._read_state(delegate._state_path(task_id))
-    if preserved is None:  # Outbound targets outlive the checkout.
+    if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
     location = primary / "batch_state/preserved" / task_id
-    if scenario == "outbound":
-        assert result["action"] == "skipped" and links.REFUSAL in result["reason"], result
-        assert links.REFUSAL in state["artifact_preservation_error"]
+    if scenario in links.REFUSALS:
+        assert result["action"] == "skipped" and links.REFUSALS[scenario] in result["reason"], result
+        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
         assert worktree.exists()
         return
     assert result["action"] == "removed", result

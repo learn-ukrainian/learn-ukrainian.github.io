@@ -886,12 +886,13 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
     state = json.loads(path.read_text())
-    if preserved is None:  # Outbound targets outlive the checkout.
+    if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
     location = repo / "batch_state/preserved" / task_id
-    if scenario == "outbound":
-        assert row["action"] == ("retained" if runtime else "skipped") and links.REFUSAL in row["reason"], row
-        assert links.REFUSAL in state["artifact_preservation_error"]
+    if scenario in links.REFUSALS:
+        assert row["action"] == ("retained" if runtime else "skipped"), row
+        assert links.REFUSALS[scenario] in row["reason"], row
+        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
         assert worktree.exists()
         return
     assert row["action"] == "removed", row
