@@ -5,6 +5,7 @@ import sqlite3
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
+from itertools import product
 from pathlib import Path
 from threading import Barrier, Event
 from time import thread_time
@@ -26,6 +27,7 @@ from agents_extensions.shared.session_streams.model import (
 )
 from agents_extensions.shared.session_streams.store import (
     _EMBEDDED_HOST_SUFFIXES,
+    _FILE_EXTENSIONS,
     _REPOSITORY_FILENAMES,
     MAX_ENTRY_BYTES,
     ContentRejectedError,
@@ -684,6 +686,16 @@ def test_append_rejects_sensitive_or_non_text_content(tmp_path: Path, body: str,
         r"scripts\store.py",
         r"scripts\x.sh",
         r"C:\scripts\core.md",
+        r"D:\x\server.sh",
+        r"scripts\server.sh",
+        r"scripts\docs.rs",
+        r"scripts\fileserver.md",
+        r"\\?\C:\scripts\core.md",
+        r"\\.\D:\x\server.sh",
+        r"\??\C:\scripts\store.py",
+        r"\\host\server.sh",
+        r"\\.\server.sh",
+        r"scripts\UNC\server.sh",
         "scripts/x.sh",
         "scripts/.hidden.py",
         "README.md",
@@ -887,6 +899,30 @@ def test_filename_exemption_preserves_host_and_ip_rejection(tmp_path: Path, body
     assert store.dump_stream(lease.stream_id)["entries"] == []
 
 
+@pytest.mark.parametrize("namespace", ["\\\\?\\", "\\\\.\\", "\\??\\"])
+@pytest.mark.parametrize(
+    "network_root",
+    ["UNC", r"GLOBALROOT\UNC", "GLOBALROOT", r"GLOBALROOT\Device\Mup", r"GLOBALROOT\Device\LanmanRedirector"],
+)
+def test_namespace_network_roots_cannot_exempt_hosts(namespace: str, network_root: str) -> None:
+    # Every namespace/root pair receives the same spelling and context probes.
+    # These cover the reviewed extended-UNC forms and NT network-device roots.
+    for separator, upper, host, ending, wrapper in product(
+        ["\\", "/", "\\/", "/\\", "\\\\", "//"],
+        [False, True],
+        ["server.sh", "fileserver.md", "box.py", "docs.rs"],
+        ["", "\\", "\\share", "\\share\\"],
+        [("", ""), ("`", "`"), ('"', '"'), ("[", "]"), ("(", ")")],
+    ):
+        path = namespace + network_root + "\\" + host + ending
+        path = path.swapcase() if upper else path
+        path = path.replace("\\", separator)
+        body = f"Changed {wrapper[0]}{path}{wrapper[1]}"
+        assert _contains_hostname(body), body
+        with pytest.raises(ContentRejectedError, match="hostname rule"):
+            validate_entry_body(body)
+
+
 @pytest.fixture
 def repository_filename_paths() -> tuple[str, ...]:
     # Snapshot of the explicit exceptions, checked against Git only in tests.
@@ -931,10 +967,32 @@ def test_closed_host_suffixes_cannot_be_hidden_in_filenames(suffix: str) -> None
             validate_entry_body(filename)
 
 
-@pytest.mark.parametrize("filename", ["store.sources.yaml", "x.schema.json", "x.review.json", "x.test.ts", "x.uk.json"])
+@pytest.mark.parametrize(
+    "filename",
+    ["store.sources.yaml", "x.schema.json", "x.review.json", "x.test.ts", "x.locale.json"],
+)
 def test_repository_stem_labels_remain_files(filename: str) -> None:
     assert not _filename_contains_hostname(filename)
     validate_entry_body(filename)
+
+
+@pytest.mark.parametrize("extension", sorted(_FILE_EXTENSIONS))
+def test_uk_and_arpa_host_endings_cannot_be_hidden_in_filenames(extension: str) -> None:
+    filenames = [f"host.co.uk.{extension}", f"host.example.co.uk.{extension}", f"host.home.arpa.{extension}"]
+    if extension != "md":
+        filenames.extend([f"host.uk.{extension}", f"x.uk.{extension}"])
+    else:
+        # Preserve the embedded-label exemption used by tracked localization
+        # basenames; the separate collision-TLD rule still applies to bare names.
+        for filename in ("x.uk.md", "README.uk.md", "DATA_CARD.uk.md", "PHASE1.uk.md"):
+            assert not _filename_contains_hostname(filename)
+    for filename in filenames:
+        for body in (filename, f"host_vars/{filename.upper()}", f"`host_vars\\{filename}`"):
+            assert _filename_contains_hostname(filename), filename
+            with pytest.raises(ContentRejectedError, match="hostname rule"):
+                validate_entry_body(body)
+    # Even the two-label stem is a host; it cannot use the localization exception.
+    assert _filename_contains_hostname(f"co.uk.{extension}")
 
 
 @pytest.mark.parametrize(
@@ -974,6 +1032,9 @@ def test_append_accepts_ordinary_model_version_and_module_tokens(tmp_path: Path,
         ("a.", False),
         ("a.1.", False),
         ("a.py.", True),
+        ("\\", False),
+        ("/", False),
+        ("//?/UNC/a.1/", False),
     ],
 )
 def test_entry_validation_handles_64_kib_tokens_without_rescanning(unit: str, rejected: bool) -> None:

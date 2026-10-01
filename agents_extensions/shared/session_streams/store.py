@@ -57,6 +57,14 @@ IPV6_RE = re.compile(r"(?i)(?<![A-Za-z0-9])(?:[0-9a-f]{0,4}:){2,}[0-9a-f:]{0,4}(
 _HOST_TOKEN_RE = re.compile(r"[A-Za-z0-9_.-]+")
 _HOST_LABEL_RE = re.compile(r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?")
 _HOST_SUFFIX_RE = re.compile(r"(?i)(?:[A-Za-z]{2,63}|xn--[A-Za-z0-9-]{1,59})")
+# Normalize namespace roots once before scanning names. UNC (including its
+# GLOBALROOT spelling) and NT network-device roots carry the same host context
+# as a plain double separator. The left boundary avoids rescanning slash runs.
+_WINDOWS_NAMESPACE_RE = re.compile(
+    r"(?i)(?<![/\\])(?:[/\\]{2,}[?.][/\\]+|[/\\]+\?\?[/\\]+)"
+    r"(?P<network>(?:GLOBALROOT[/\\]+)?UNC[/\\]+|"
+    r"GLOBALROOT[/\\]+(?:Device[/\\]+(?:Mup|LanmanRedirector)[/\\]+)?)?"
+)
 _FILE_EXTENSIONS = frozenset(
     [
         "py",
@@ -95,7 +103,9 @@ _TLD_FILE_EXTENSIONS = frozenset({"md", "py", "sh", "rs"})
 # Closed host-suffix labels checked immediately before a file extension. This
 # protects host-named files without treating repository labels such as schema,
 # sources, review or test as host suffixes. The repo-wide basename guard checks
-# this list; uk is omitted because tracked localization filenames use that label.
+# this list; uk is exempt only for Markdown localization filenames, except co.uk.
+# Other country labels (S2) remain outside the closed list by driver decision;
+# broader coverage belongs to the existing follow-up issue.
 _EMBEDDED_HOST_SUFFIXES = frozenset(
     {
         "com",
@@ -110,6 +120,7 @@ _EMBEDDED_HOST_SUFFIXES = frozenset(
         "lan",
         "corp",
         "home",
+        "arpa",
         "intranet",
         "private",
         "edu",
@@ -120,6 +131,7 @@ _EMBEDDED_HOST_SUFFIXES = frozenset(
         "nl",
         "fr",
         "us",
+        "uk",
     }
 )
 # Explicit repository basenames, never a runtime filesystem/Git lookup. Unknown
@@ -166,12 +178,21 @@ def process_exists(process_id: int) -> bool:
 
 def _filename_contains_hostname(filename: str) -> bool:
     """Check the final stem label against the closed embedded-host suffix list."""
-    labels = filename.strip(".").rsplit(".", 2)
-    return len(labels) == 3 and labels[-1].lower() in _FILE_EXTENSIONS and labels[-2].lower() in _EMBEDDED_HOST_SUFFIXES
+    labels = filename.strip(".").rsplit(".", 3)
+    if len(labels) < 3 or labels[-1].lower() not in _FILE_EXTENSIONS:
+        return False
+    suffix = labels[-2].lower()
+    if suffix == "uk" and labels[-1].lower() == "md":
+        return labels[-3].lower() == "co"
+    return suffix in _EMBEDDED_HOST_SUFFIXES
 
 
 def _contains_hostname(body: str) -> bool:
     """Reject host-shaped tokens without rescanning overlapping dotted suffixes."""
+    # Preserve an ordinary directory separator for non-network namespaces so
+    # drive/device filenames retain their existing exemption. Network roots
+    # become a double separator regardless of case or slash spelling.
+    body = _WINDOWS_NAMESPACE_RE.sub(lambda match: "\\\\" if match["network"] else "\\", body)
     for match in _HOST_TOKEN_RE.finditer(body):
         token = match.group()
         if "." not in token:
