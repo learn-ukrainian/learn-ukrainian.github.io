@@ -20,6 +20,7 @@ from scripts.common.acp_runtime_lock import build_lock_reason, process_start_tim
 from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle, worktree_claims, worktree_prep
+from tests import _worktree_artifact_links as links
 from tests.worktree_prep_helpers import exited_process_identity, half_built_prep, leave_half_built
 
 _REAL_RUN = subprocess.run
@@ -209,6 +210,43 @@ def _write_task_record(repo: Path, task_id: str, **fields: Any) -> None:
     tasks = repo / "batch_state" / "tasks"
     tasks.mkdir(parents=True, exist_ok=True)
     (tasks / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, **fields}, indent=2), encoding="utf-8")
+
+
+@pytest.mark.parametrize("copy_fails", [False, True])
+def test_canonical_reaper_preserves_ignored_batch_state(tmp_path, monkeypatch, copy_fails):
+    from scripts.orchestration import worktree_artifacts
+
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "preserve-batch"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    artifact = worktree / "batch_state/reports/evidence.bin"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_bytes(b"independent evidence\x00\xff")
+    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree))
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
+    if copy_fails:
+
+        def fail_copy(_source, _destination):
+            raise OSError("injected reaper copy failure")
+
+        monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+    if copy_fails:
+        assert result.action == "skipped"
+        assert "injected reaper copy failure" in result.reason
+        assert artifact.exists()
+        assert "injected reaper copy failure" in state["artifact_preservation_error"]
+    else:
+        assert result.action == "removed", result
+        assert not worktree.exists()
+        assert state["preserved_artifacts"]["count"] == 1
+        assert (
+            Path(state["preserved_artifacts"]["location"]) / "batch_state/reports/evidence.bin"
+        ).read_bytes() == b"independent evidence\x00\xff"
 
 
 def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
@@ -6502,3 +6540,62 @@ def test_sha_search_success_returns_states_without_error(
     assert error is None
     assert [(pr.number, pr.state, pr.head_sha) for pr in states] == [(7, "OPEN", "abc123")]
     assert rw._query_prs_by_head_sha(tmp_path, None) == ([], None)
+
+
+@pytest.mark.parametrize("reference", ["root", "./", "ignored", ".pytest_cache/cache.txt", "ignored/report.txt"])
+def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, reference):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "named-file-scope"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.pytest_cache/\n")
+    for name in ["ignored/report.txt", ".pytest_cache/cache.txt"]:
+        source = worktree / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(b"named evidence")
+    named = str(worktree) if reference == "root" else reference
+    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree), response=f"Result: `{named}`.")
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    location = repo / "batch_state/preserved" / task_id
+    if reference == "ignored/report.txt":
+        assert (location / reference).read_bytes() == b"named evidence"
+        saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+        assert saved["preserved_artifacts"]["count"] == 1
+    else:
+        assert not location.exists()
+
+
+@pytest.mark.parametrize("scenario", links.SCENARIOS)
+def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypatch, scenario):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "named-link"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n")
+    named, preserved, target = links.build_named_link(worktree, repo, tmp_path / "outside", scenario)
+    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree), response=links.worker_response(named))
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    links.restore_access(worktree)
+    state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+    if preserved is None and target is not None:  # Outbound targets outlive the checkout.
+        assert target.read_bytes() == links.PAYLOAD
+    location = repo / "batch_state/preserved" / task_id
+    if scenario in links.REFUSALS:
+        assert result.action == "skipped" and links.REFUSALS[scenario] in result.reason
+        assert links.REFUSALS[scenario] in state["artifact_preservation_error"]
+        assert worktree.exists()
+        return
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    assert "artifact_preservation_error" not in state
+    if preserved is None:
+        assert not location.exists()
+    else:
+        assert (location / preserved).read_bytes() == links.PAYLOAD
+        assert state["preserved_artifacts"]["count"] == 1

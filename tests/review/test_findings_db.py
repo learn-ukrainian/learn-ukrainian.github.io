@@ -342,7 +342,10 @@ def _build_legacy_db(path: Path, *, version: int, include_budget_decisions: bool
             for statement in db._statements(db._TABLES_V3):
                 raw.execute(statement)
         raw.execute("INSERT INTO schema_version (version) VALUES (?)", (version,))
-        db.insert_attempt(raw, attempt_row())
+        row = attempt_row()
+        raw.execute(
+            f"INSERT INTO attempts ({', '.join(row)}) VALUES ({', '.join('?' for _ in row)})", tuple(row.values())
+        )
         db.bump_budget(raw, "a1", "m", 2, "revise_rounds")
         if include_budget_decisions:
             raw.execute(
@@ -376,7 +379,7 @@ def _build_legacy_db(path: Path, *, version: int, include_budget_decisions: bool
     ],
     ids=["v2-pre-8774", "v2-post-8774", "v3-pre-merge"],
 )
-def test_every_earlier_state_reaches_v4_with_budget_decisions_and_rows_intact(
+def test_every_earlier_state_reaches_v5_with_budget_decisions_and_rows_intact(
     tmp_path: Path, include_budget_decisions: bool, include_measurement: bool
 ) -> None:
     path = tmp_path / "a1.sqlite"
@@ -388,7 +391,7 @@ def test_every_earlier_state_reaches_v4_with_budget_decisions_and_rows_intact(
     )
     conn = db.connect(path)
     try:
-        assert [row[0] for row in conn.execute("SELECT version FROM schema_version")] == [4]
+        assert [row[0] for row in conn.execute("SELECT version FROM schema_version")] == [5]
         tables = {row[0] for row in conn.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
         assert set(db._TABLE_NAMES) <= tables
 
@@ -423,9 +426,29 @@ def test_opening_a_v4_file_twice_is_a_no_op(tmp_path: Path) -> None:
 
     second = db.connect(path)
     try:
-        assert [row[0] for row in second.execute("SELECT version FROM schema_version")] == [4]
+        assert [row[0] for row in second.execute("SELECT version FROM schema_version")] == [5]
         assert second.execute("SELECT COUNT(*) FROM schema_version").fetchone()[0] == 1
         assert second.execute("SELECT COUNT(*) FROM attempts").fetchone()[0] == 1
         assert second.execute("SELECT COUNT(*) FROM budget_decisions").fetchone()[0] == 1
     finally:
         second.close()
+
+
+def test_v4_migration_adds_isolated_access_without_changing_attempts(tmp_path):
+    path = tmp_path / "v4.sqlite"
+    conn = sqlite3.connect(path)
+    for statement in (*db._statements(db._TABLES), *db._statements(db._TABLES_V3)):
+        conn.execute(statement)
+    conn.execute("INSERT INTO schema_version VALUES (4)")
+    row = attempt_row()
+    conn.execute(f"INSERT INTO attempts ({', '.join(row)}) VALUES ({', '.join('?' for _ in row)})", tuple(row.values()))
+    conn.commit()
+    conn.close()
+    migrated = db.connect(path)
+    try:
+        [attempt] = migrated.execute("SELECT * FROM attempts").fetchall()
+        assert attempt["access"] == "isolated"
+        assert {key: attempt[key] for key in row} == row
+        assert migrated.execute("SELECT version FROM schema_version").fetchone()[0] == 5
+    finally:
+        migrated.close()

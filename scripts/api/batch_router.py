@@ -49,7 +49,7 @@ def _with_load_errors(payload: dict[str, Any], errors: list[str]) -> dict[str, A
 
 def _run_dispatcher_scan(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
-        cmd,
+        cmd,  # lock-lint: ok the dispatcher scan runs the project interpreter via asyncio.to_thread
         cwd=cwd,
         timeout=DISPATCHER_SCAN_TIMEOUT_S,
         check=False,
