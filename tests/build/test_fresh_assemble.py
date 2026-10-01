@@ -5,6 +5,7 @@ import json
 import re
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import jsonschema
 import pytest
@@ -2296,7 +2297,11 @@ def test_grounding_only_resource_reaches_render_and_build_report(tmp_path, monke
         assert resources[0]["text"] == expected
         assert report["warnings"] == []
         if file.startswith(("ulp-", "anna-")):
-            assert "https://www.ukrainianlessons.com/" in mdx
+            credit_links = re.findall(rf"\[{re.escape(expected)}\]\(([^)]+)\)", mdx)
+            assert len(credit_links) == 1
+            credit_url = urlsplit(credit_links[0])
+            assert credit_url.scheme == "https"
+            assert credit_url.hostname == "www.ukrainianlessons.com"
             assert "PRIVATE SUPPORTS" not in mdx
     else:
         assert resources == []
