@@ -98,7 +98,7 @@ def extract_review_yaml(data: bytes) -> bytes:
     try:
         if isinstance(yaml.safe_load(data), dict):
             return data
-    except (yaml.YAMLError, UnicodeError):
+    except (yaml.YAMLError, UnicodeError, ValueError):
         pass
 
     blocks: list[bytes] = []
@@ -121,15 +121,19 @@ def extract_review_yaml(data: bytes) -> bytes:
             count += int(selected)
 
     if count == 0:
-        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_MISSING, "return is not a bare mapping and has no yaml/yml fence")
+        raise ReviewReturnError(
+            codes.REVIEW_YAML_FENCE_MISSING, "return is not a bare mapping and has no yaml/yml fence"
+        )
     if count > 1:
         raise ReviewReturnError(codes.REVIEW_YAML_FENCE_MULTIPLE, "return contains more than one yaml/yml fence")
-    if len(blocks) != 1:
+    if marker or len(blocks) != 1:
         raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not closed")
     try:
         loaded = yaml.safe_load(blocks[0])
-    except (yaml.YAMLError, UnicodeError) as exc:
-        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not one YAML mapping") from exc
+    except (yaml.YAMLError, UnicodeError, ValueError) as exc:
+        raise ReviewReturnError(
+            codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not one YAML mapping"
+        ) from exc
     if not isinstance(loaded, dict):
         raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not one YAML mapping")
     return blocks[0]
