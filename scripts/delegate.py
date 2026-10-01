@@ -7493,6 +7493,7 @@ def _resolve_worktree_base_sha(
     pinned_head_sha: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -7521,7 +7522,9 @@ def _resolve_worktree_base_sha(
             # rewrite the PR's history. In particular, rebasing an attached
             # branch can flatten or replay merge commits. A stale attachment
             # must be synchronized deliberately by its owner.
-            allow_rebase=allow_rebase and requested_branch is None,
+            # Review admission already read these dependencies. A stale target
+            # must refuse rather than advance to different admitted bytes.
+            allow_rebase=allow_rebase and requested_branch is None and not review_dependencies,
         )
         if requested_branch:
             # Existing paths used to return before this check, allowing local
@@ -7712,7 +7715,7 @@ def _ensure_worktree(
                 # `--branch` is an explicit attach request. Never rewrite its
                 # history during provisioning; a stale worktree must be
                 # synchronized deliberately by its owner.
-                allow_rebase=not dry_run and requested_branch is None,
+                allow_rebase=not dry_run and requested_branch is None and not review_dependencies,
             )
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -10170,11 +10173,17 @@ def _dispatch(
     try:
         review_dependencies = _review_attempt_worktree_dependencies(args)
         if review_dependencies and getattr(args, "branch", None):
+            reuse_target = validated_worktree
+            if worktree_arg == "auto":
+                reuse_target = _normalize_worktree_path(
+                    str(_auto_worktree_path(launch_seat(args.agent), args.task_id, repo_root=target_repo_root)),
+                    repo_root=target_repo_root,
+                )
             # A validated target already registered on this branch is reused,
             # never released. Later worktree validation still checks reuse safety.
             _refuse_review_attempt_branch_holders(
                 args.branch,
-                [path for path in _branch_worktree_paths(args.branch) if path != validated_worktree],
+                [path for path in _branch_worktree_paths(args.branch) if path != reuse_target],
                 review_dependencies,
             )
     except (OSError, ValueError, RuntimeError) as exc:
@@ -10864,6 +10873,7 @@ def _dispatch(
                     detached=detached_read_only,
                     # A Kimi worktree is never rebased: it must stay at the commit the gate read.
                     allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
+                    review_dependencies=review_dependencies,
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)
