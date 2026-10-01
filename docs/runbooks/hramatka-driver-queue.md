@@ -14,8 +14,8 @@ spine). Scope gate ships with PR-2; settle reaper with PR-3; closeout
 | Repo | Role |
 | --- | --- |
 | Public `learn-ukrainian/learn-ukrainian.github.io` | Shared curriculum/UI/contracts; fleet control plane (`delegate.py`, Monitor, batch_state). |
-| Private `learn-ukrainian/learn-ukrainian-infra-private` | Non-public infra only (deploy inventory, credentials wiring, host ops). |
-| Private `learn-ukrainian/hramatka` | Secret-free teacher product (app, API, lesson engine, product CI). Shell created in P2.0; history migration is P2.2. |
+| Private infra repository | Non-public operations material only. |
+| Private product repository | Secret-free teacher product (app, API, lesson engine, product CI). Shell created in P2.0; history migration is P2.2. |
 
 Dispatch into a sibling product/infra checkout with first-class
 `--repo hramatka` or `--repo infra-private` (see
@@ -26,13 +26,13 @@ dispatch). Do not invent a fourth coordination plane.
 
 | Queue | Role |
 | --- | --- |
-| Private BOARD [learn-ukrainian-infra-private#349](https://github.com/learn-ukrainian/learn-ukrainian-infra-private/issues/349) | **Planning/priority queue.** Ownership + ordering for active Hramatka work (until product issues move with P2.2). |
+| Private priority board (in the private infra repository) | **Planning/priority queue.** Ownership + ordering for active Hramatka work (until product issues move with P2.2). |
 | Public [#4542](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4542) | **Charter + bare pointer.** Narrative/authorization record, not a live operational checklist. Never auto-generate or mirror a public checklist from the private board — leak + dual-write, explicitly rejected by the consult. |
-| GitHub issue/PR state (any of the three repos) | Factual SSOT for what is actually open or closed. #349 is the priority queue, not a duplicate status feed — an item can be closed on GitHub while still ranked on #349, and the reverse. |
+| GitHub issue/PR state (any of the three repos) | Factual SSOT for what is actually open or closed. The private board is the priority queue, not a duplicate status feed — an item can be closed on GitHub while still ranked on the private board, and the reverse. |
 
 ## Cold-start read order
 
-1. Private #349 (priority/ownership)
+1. Private priority board (priority/ownership)
 2. Private open PRs
 3. Public PRs linked from #4542 only
 
@@ -58,29 +58,29 @@ surface the item to the operator. The gate is deliberately not applied to
 cleanup, review, escalation, or unblocking the driver's own already-open PR.
 
 Public work must have exact stream membership through Hramatka epic #4542.
-Private work must be tracked by private board #349, carry the exact `hramatka`
+Private work must be tracked by the private priority board, carry the exact `hramatka`
 label, or use an explicit `stream:hramatka` body tag. Ordinary mentions of
 Hramatka and any 50%/majority heuristic are not membership evidence. A private
 API failure is `UNKNOWN` and therefore `HOLD` for every new-scope action; it
 never becomes an implicit allow. The gate has no environment-variable bypass.
 
 Host actions on the Hramatka host follow operator-expectations item 10's split
-(production cutover stays operator-only; routine maintenance is driver work).
+(a production cutover needs a present-tense operator GO; routine maintenance is
+driver work).
 Routine host maintenance there is driver work per item 10, done then reported,
 and it includes using sudo where the host requires it: pull merged `main`;
 restart an updated or broken service (system or user unit) after checking no
-active dispatch depends on it; install or enable a reviewed systemd unit or
+active dispatch depends on it; install or enable a reviewed systemd user unit or
 timer that lives in the repo; clean agent-generated caches, logs, and
 worktrees; install OS packages a reviewed repo change needs. A production
-release rollover on the live-serving Hramatka host (running
-`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
-including rebuilding or swapping the read-only release checkout — private #360
-class) is a production cutover under operator-expectations item 10 and needs a
+release rollover on the live-serving Hramatka host (any step that swaps what the
+live service serves; see the deployment runbook in the private repository) is a
+production cutover under operator-expectations item 10 and needs a
 present-tense operator GO for that rollover; a GO recorded on an earlier or
 closed issue does not count; the private deploy runbook (including the sudo
 steps inside it) applies only after that GO (it remains `ESCALATE` without that
 present-tense GO). Host access and security configuration stays operator-only
-(`ESCALATE`, not solo) — sshd configuration (e.g. `PermitRootLogin`), sudoers,
+(`ESCALATE`, not solo) — sshd configuration, sudoers,
 user accounts, SSH keys and other credentials, and firewall changes that could
 cut off operator access — because of lock-out risk and because
 accounts/credentials are an operator stop condition.
@@ -101,7 +101,7 @@ never mutates GitHub or the filesystem. Only exit 0 (`verified`) is a clean
 handoff:
 
 - **stale** (exit 1) — the public epic #4542 still carries a live (unchecked)
-  checklist item, is missing its pointer to private board #349, a registered
+  checklist item, is missing its pointer to the private priority board, a registered
   dispatch worktree is bound to an already-terminal task
   (`.worktrees/dispatch/` vs. `batch_state/tasks/`), or local disk use is at
   or above the configured high-water mark (default 95%, `--high-water-percent`).
@@ -124,10 +124,9 @@ reports.
 
 ## Production cutover and host access/security — escalate, never action solo
 
-A production release rollover on the live-serving Hramatka host (running
-`hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`,
-including rebuilding or swapping the read-only release checkout — private #360
-class) is a production cutover under operator-expectations item 10 and needs a
+A production release rollover on the live-serving Hramatka host (any step
+that swaps what the live service serves; see the deployment runbook in the
+private repository) is a production cutover under operator-expectations item 10 and needs a
 present-tense operator GO for that rollover; a GO recorded on an earlier or
 closed issue does not count; the private deploy runbook (including the sudo
 steps inside it) applies only after that GO (it must **ESCALATE** without that
@@ -135,7 +134,7 @@ present-tense GO). Only after a present-tense operator GO is granted may
 drivers with SSH access follow the private deploy runbook and record evidence
 on the private issue (never freestyling host changes outside that documented
 deploy path). Host access and security configuration stays operator-only
-(**ESCALATE**, not solo) — sshd configuration (e.g. `PermitRootLogin`),
+(**ESCALATE**, not solo) — sshd configuration,
 sudoers, user accounts, SSH keys and other credentials, and firewall changes
 that could cut off operator access — because of lock-out risk and because
 accounts/credentials are an operator stop condition. Routine host maintenance,
@@ -144,8 +143,8 @@ new-scope gate section above) — it is not part of this escalate class.
 
 ## Same-session correction rule
 
-If #349 and any other view of the queue (a cached handoff note, a stale reading
-of #4542, an out-of-date driver's own memory) disagree, **#349 wins**. Correct
+If the private board and any other view of the queue (a cached handoff note, a stale reading
+of #4542, an out-of-date driver's own memory) disagree, **the private board wins**. Correct
 the other view in the same session — do not carry the disagreement forward or
 defer the fix to a later PR.
 
