@@ -21,7 +21,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.verification import stress
 
-from . import codes, lock, sources
+from . import catalogue, codes, lock, sources
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -225,6 +225,13 @@ def build_pack(
         owns_sources = True
 
     try:
+        plans_base = (
+            Path(plans_dir) if plans_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/lesson-plans" / level
+        )
+        catalogue_report = catalogue.request_report(
+            plans_base / f"{slug}.yaml", evidence_base / "_words.yaml", sources_instance
+        )
+
         # 1. Texts
         texts_out: list[dict[str, Any]] = []
         raw_texts = request_raw.get("texts", [])
@@ -575,6 +582,7 @@ def build_pack(
             "unsupported_open_count": open_unsupported_count,
             "unsupported_resolved_count": len(unsupported_out) - open_unsupported_count,
             "snapshot": sources_instance.snapshot_report(),
+            "catalogue": catalogue_report,
             "pack": pack_doc,
         }
     finally:
@@ -643,7 +651,7 @@ def main(argv: list[str] | None = None) -> int:
         prog="python -m scripts.curriculum.evidence build-pack",
         description=(
             "Build a module evidence pack (<slug>.yaml) from a request YAML.\n"
-            "Grounds all module texts, exercises, examples, errors, videos, and standard lines in sources."
+            "Use during curation; catalogue suggestions require curator evidence before host binding."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -654,11 +662,14 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.curriculum.evidence build-pack a1 alphabet --request req.yaml --json\n\n"
             "Outputs:\n"
             "  curriculum/l2-uk-en/evidence/<level>/<slug>.yaml (+ .lock)\n\n"
+            "  Report on stdout includes per-lesson word/letter catalogue queries and suggestions.\n"
+            "  --dry-run writes no files; catalogue searches are read-only.\n\n"
             "Exit codes:\n"
             "  0: Build succeeded or dry-run complete without error\n"
             "  1: Request invalid, schema validation failed, or source unavailable\n\n"
             "Outcome Codes:\n"
             f"{codes.help_text()}\n"
+            "\nRelated: schemas/evidence-pack-request-v1.schema.json; issue #9463\n"
         ),
     )
     parser.add_argument("level", help="Target curriculum level slug (e.g. 'a1', 'a2')")
@@ -670,8 +681,18 @@ def main(argv: list[str] | None = None) -> int:
         "--stamp", action="store_true", help="Include built_at timestamp in built_with (breaks build determinism)"
     )
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON result to stdout")
-    parser.add_argument("--evidence-dir", type=Path, default=None, help="Override evidence output directory")
-    parser.add_argument("--plans-dir", type=Path, default=None, help="Override lesson plans directory")
+    parser.add_argument(
+        "--evidence-dir",
+        type=Path,
+        default=None,
+        help="Evidence output and word-store directory (default: curriculum/l2-uk-en/evidence/<level>)",
+    )
+    parser.add_argument(
+        "--plans-dir",
+        type=Path,
+        default=None,
+        help="Lesson plans for catalogue requirements (default: curriculum/l2-uk-en/lesson-plans/<level>)",
+    )
     parser.add_argument(
         "--sources-db", type=Path, default=None, help="Override sources database path (default: data/sources.db)"
     )
@@ -726,6 +747,8 @@ def main(argv: list[str] | None = None) -> int:
             f"standard={result['standard_count']}"
         )
         print(f"Unsupported: {result['unsupported_open_count']} open, {result['unsupported_resolved_count']} resolved")
+        print("Catalogue suggestions (curator evidence required):")
+        print(json.dumps(result["catalogue"], indent=2, ensure_ascii=False))
         if not result["dry_run"]:
             print(f"Pack written: {result['pack_path']} (lock: {result['pack_lock'][:16]}...)")
 
