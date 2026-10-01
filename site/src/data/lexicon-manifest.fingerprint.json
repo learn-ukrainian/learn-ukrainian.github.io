@@ -7,11 +7,11 @@
       },
       {
         "path": "scripts/lexicon/admit_fmu_boosters.py",
-        "sha256": "c7e72e3dd3ff2140dbcec0c7cae3e5e4094a62e81952dcf7453ba95e2e65190b"
+        "sha256": "0d4cda12165b99f93554c958cbff9912e7d12692050c2ac7a2ad25e60cf28b20"
       },
       {
         "path": "scripts/lexicon/admit_stem_slice_2a.py",
-        "sha256": "ba9544c600f9248424efe0bed2a851c07307b0618efce8f523bcd27c872f38e7"
+        "sha256": "01b25073d7f1b87d4499dc3c7eed71b86bf8b3c6d875e58f8bd8a39e7eba12f8"
       },
       {
         "path": "scripts/lexicon/admit_teacher_table.py",
@@ -179,7 +179,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "b1e60745ea136d8d579ffe7845d0970f12bd71633f0220b0c5fdcaf45b15fc09"
+        "sha256": "1a901eb5193e6edba25f8526074f93892135b8d22165013f32416ec95220645f"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
