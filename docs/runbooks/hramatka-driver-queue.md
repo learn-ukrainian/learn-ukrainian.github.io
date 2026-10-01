@@ -65,11 +65,12 @@ API failure is `UNKNOWN` and therefore `HOLD` for every new-scope action; it
 never becomes an implicit allow. The gate has no environment-variable bypass.
 
 Host actions on the Hramatka host follow operator-expectations item 10's split
-(production cutover stays operator-only; routine maintenance is driver work).
+(a production cutover needs a present-tense operator GO; routine maintenance is
+driver work).
 Routine host maintenance there is driver work per item 10, done then reported,
 and it includes using sudo where the host requires it: pull merged `main`;
 restart an updated or broken service (system or user unit) after checking no
-active dispatch depends on it; install or enable a reviewed systemd unit or
+active dispatch depends on it; install or enable a reviewed systemd user unit or
 timer that lives in the repo; clean agent-generated caches, logs, and
 worktrees; install OS packages a reviewed repo change needs. A production
 release rollover on the live-serving Hramatka host (running

@@ -167,8 +167,9 @@ tie-breakers.
     approve, merge, or deploy them. Routine host maintenance is driver work, done then
     reported, including with sudo where the host requires it: pull merged `main`, restart
     an updated or broken service after checking no active dispatch depends on it, install
-    or enable a reviewed systemd user unit or timer that lives in the repo, and clean
-    agent-generated caches, logs, and worktrees. Host access and security configuration
+    or enable a reviewed systemd user unit or timer that lives in the repo, clean
+    agent-generated caches, logs, and worktrees, and install OS packages a reviewed repo
+    change needs. Host access and security configuration
     (sshd configuration, sudoers, user accounts, SSH keys and other credentials, firewall
     changes that could cut off operator access) stays operator-only — lock-out risk, and
     accounts/credentials are an operator stop condition.

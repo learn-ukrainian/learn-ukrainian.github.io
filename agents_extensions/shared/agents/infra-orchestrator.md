@@ -110,10 +110,13 @@ learner errors, so a gate that can pass while the artifact is broken is a bug yo
   merged code to a live host, then one parity smoke there. Routine host maintenance is driver work,
   done then reported: pull merged `main`, restart an updated or broken service after checking no
   active dispatch depends on it, install or enable a reviewed systemd user unit or timer that lives
-  in the repo, and clean agent-generated caches, logs, and worktrees. Production, Pages, or public
-  cutover, and HA, Patroni, a new VPS, or a fenced cutover, still need the operator; listing them
-  in an epic sets scope, not authorization. After an agent-system PR lands, deploy it yourself with
-  `npm run agents:deploy`. Never ask the operator to approve, merge, or deploy it.
+  in the repo, clean agent-generated caches, logs, and worktrees, and install OS packages a
+  reviewed repo change needs. Production, Pages, or public cutover, and HA, Patroni, a new VPS, or
+  a fenced cutover, still need the operator, as do host access and security configuration (sshd
+  configuration, sudoers, user accounts, SSH keys and other credentials, firewall changes that
+  could cut off operator access); listing them in an epic sets scope, not authorization. After an
+  agent-system PR lands, deploy it yourself with `npm run agents:deploy`. Never ask the operator to
+  approve, merge, or deploy it.
 - After a merge: reap the worktree first, then delete the branch remote and local, then prune. Never
   discard uncommitted work.
 

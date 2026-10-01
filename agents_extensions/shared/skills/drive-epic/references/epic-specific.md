@@ -26,7 +26,7 @@ exit 2 (`unknown`, GitHub unreachable) is never a clean handoff either.
 - **Routine maintenance is driver work, done then reported**, including sudo where the
   host requires it: pull merged `main`; restart an updated or broken service (system or
   user unit) after checking no active dispatch depends on it; install or enable a reviewed
-  systemd unit or timer that lives in the repo; clean agent-generated caches, logs, and
+  systemd user unit or timer that lives in the repo; clean agent-generated caches, logs, and
   worktrees; install OS packages a reviewed repo change needs.
 - **A production release rollover** on the live-serving host (running
   `hramatka/ops/deploy.sh` or anything that swaps live `/opt/hramatka/current`, including
