@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import importlib.util
 import json
 import os
 import shutil
@@ -1189,10 +1190,10 @@ WEAKER_SCANNERS = {
 COMMENT_ONLY = ("COMPARE_LIMIT = 20\n", "COMPARE_LIMIT = 20  # Any code change, however small.\n")
 
 
-def _with_scanner(sandbox, edit=None):
-    """Swap the scanner source the sandbox shim runs: one (old, new) edit, or None for the reviewed code."""
+def _with_scanner(sandbox, *edits):
+    """Swap the scanner source the sandbox shim runs: (old, new) edits, or none for the reviewed code."""
     original = (ROOT / "scripts/opsec/git_push.py").read_text()
-    if edit is not None:
+    for edit in edits:
         assert original.count(edit[0]) == 1, edit[0]
         original = original.replace(*edit)
     (sandbox.root / "scripts/opsec/git_push.py").write_text(original)
@@ -1239,6 +1240,7 @@ def test_unchanged_scanning_code_reuses_its_cache_and_any_change_rescans(push_sa
     push_sandbox.commit("clean one")
     first = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert first.returncode == 0 and "2 commit message(s) scanned, 0 skipped" in first.stderr, first.stderr
+    assert "not updated" not in first.stderr
     second = push_sandbox.push("push", "origin", "HEAD:refs/heads/other")
     assert second.returncode == 0 and "0 commit message(s) scanned, 2 skipped" in second.stderr, second.stderr
     assert "unusable" not in second.stderr
@@ -1283,6 +1285,8 @@ def test_unreadable_scanning_code_never_reuses_either_cache(push_sandbox, monkey
             extra.write_text("# part of the scan\n")
             extra.chmod(0)
         monkeypatch.setattr(git_push, "SCAN_SOURCES", (*git_push.SCAN_SOURCES, extra))
+        # What the import-time read captures when part of the code cannot be read.
+        monkeypatch.setattr(git_push, "LOADED_CODE_DIGEST", git_push._source_digest(git_push.SCAN_SOURCES))
     status, executed = run_main(push_sandbox, monkeypatch, FakePublic("e" * 40))
     err = capfd.readouterr().err
     if code == "readable":  # Positive control: while the code is readable both cached entries are honoured.
@@ -1293,6 +1297,91 @@ def test_unreadable_scanning_code_never_reuses_either_cache(push_sandbox, monkey
     assert "push scan cache unusable" in err and "push scan public cache unusable" in err
     assert f"field=commit[{cached[:12]}].message" in err and TOKEN not in err
     assert {path: path.read_bytes() for path in files} == files  # Never rewritten without a fingerprint.
+
+
+# --- Round 8: the fingerprint names the code that ran; no cache write once the code on disk changed ---
+
+SCAN_START = '    global_options, command, rest = split_command(argv)\n    if command != "push":\n'
+REVIEWED = ROOT / "scripts/opsec/git_push.py"
+# The checkout is updated to the reviewed code after this scanner loaded and before it scans.
+UPDATED_AFTER_LOAD = (SCAN_START, f"    Path(__file__).write_bytes(Path({str(REVIEWED)!r}).read_bytes())\n{SCAN_START}")
+# An older, wrong scanner whose public repository client says every hit is already public.
+ANSWERS_EVERY_HIT_PUBLIC = (
+    "public_repository = CanonicalPublicRepository.from_catalog(environment)",
+    'public_repository = type("Yes", (), {"calls": 0, "default_head": lambda self: "0" * 40, '
+    '"contains": lambda self, head, sha: True})()',
+)
+
+
+def _not_updated(name):
+    return f"OPSEC: push scan code changed or unreadable since load; {name} not updated."
+
+
+def test_a_scanner_updated_on_disk_mid_push_caches_nothing_and_the_reviewed_scanner_refuses(push_sandbox):
+    """The review reproduction: no forged header or reply, only a checkout update while an older push runs."""
+    sha = _mergetag_hit(push_sandbox)
+    _with_scanner(push_sandbox, WEAKER_SCANNERS["mergetag"], UPDATED_AFTER_LOAD)
+    older = push_sandbox.push("push", "origin", f"{sha}:refs/heads/older")
+    assert older.returncode == 0, older.stderr  # The older scanner still decides its own push.
+    assert (push_sandbox.root / "scripts/opsec/git_push.py").read_bytes() == REVIEWED.read_bytes()
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
+    assert "3 commit message(s) scanned, 0 skipped" in result.stderr, result.stderr
+    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].mergetag[1].tagname")
+    assert _not_updated(git_push.CACHE_NAME) in older.stderr and TOKEN not in older.stderr
+    assert not (push_sandbox.work / CACHE).exists()
+
+
+def test_a_public_excuse_by_a_scanner_updated_on_disk_mid_push_is_not_cached(push_sandbox):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    _with_scanner(push_sandbox, ANSWERS_EVERY_HIT_PUBLIC, UPDATED_AFTER_LOAD)
+    older = push_sandbox.push("push", "origin", "HEAD:refs/heads/older")
+    assert older.returncode == 0 and "1 hit(s) excused as already public" in older.stderr, older.stderr
+    # The reviewed shim's own client never answers (no gh), so only a cache entry could excuse the hit.
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{hit[:12]}].message")
+    assert _not_updated(git_push.PUBLIC_CACHE_NAME) in older.stderr and TOKEN not in older.stderr
+    assert not (push_sandbox.work / PUBLIC_CACHE).exists() and not (push_sandbox.work / CACHE).exists()
+
+
+@pytest.mark.parametrize("code", ["missing", "unreadable"])
+def test_scanning_code_unreadable_at_write_time_writes_neither_cache(push_sandbox, monkeypatch, capfd, tmp_path, code):
+    if code == "unreadable" and os.geteuid() == 0:
+        pytest.skip("root reads mode-000 files")
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    push_sandbox.commit("clean one")
+    extra = tmp_path / "scanner-part.py"
+    extra.write_text("# part of the scan\n")
+    monkeypatch.setattr(git_push, "SCAN_SOURCES", (*git_push.SCAN_SOURCES, extra))
+    monkeypatch.setattr(git_push, "LOADED_CODE_DIGEST", git_push._source_digest(git_push.SCAN_SOURCES))
+    if code == "missing":
+        extra.unlink()
+    else:
+        extra.chmod(0)
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(hit))
+    err = capfd.readouterr().err
+    assert status == 0 and executed, err  # Only caching is skipped; the push result is unchanged.
+    assert "1 hit(s) excused as already public" in err and TOKEN not in err
+    assert _not_updated(git_push.CACHE_NAME) in err and _not_updated(git_push.PUBLIC_CACHE_NAME) in err
+    assert not (push_sandbox.work / CACHE).exists() and not (push_sandbox.work / PUBLIC_CACHE).exists()
+
+
+def test_the_cache_fingerprint_is_the_digest_captured_at_import(monkeypatch, tmp_path):
+    """Changing the source on disk after import changes neither the digest nor the header the process writes."""
+    copy = tmp_path / "git_push.py"
+    copy.write_bytes(REVIEWED.read_bytes())
+    monkeypatch.setattr(sys, "path", list(sys.path))
+    spec = importlib.util.spec_from_file_location("lu_git_push_loaded_copy", copy)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    loaded = git_push._source_digest((copy, Path(gate.__file__)))
+    copy.write_bytes(copy.read_bytes() + b"# Changed after import.\n")
+    monkeypatch.setattr(gate, "matcher_fingerprint", lambda: "m" * 64)
+    assert module.code_digest() == module.LOADED_CODE_DIGEST == loaded
+    assert git_push._source_digest((copy, Path(gate.__file__))) != loaded
+    assert module.CleanCache(tmp_path, module.cache_fingerprint()).header == f"lu-push-scan-clean 2 {'m' * 64} {loaded}"
+    assert not module.code_unchanged()
 
 
 def _unfold_seconds(size, repeats=5):

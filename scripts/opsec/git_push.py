@@ -22,7 +22,6 @@ from __future__ import annotations
 
 import contextlib
 import fcntl
-import functools
 import hashlib
 import json
 import os
@@ -239,9 +238,8 @@ class Repository:
         return Path(common), _grafts_present(grafts), shallow == "true"
 
 
-@functools.cache
 def _source_digest(sources: tuple[Path, ...]) -> str | None:
-    """SHA-256 over the bytes of sources, read once per process; None if any is unreadable."""
+    """SHA-256 over the bytes of sources as they are on disk now; None if any is unreadable."""
     digest = hashlib.sha256()
     try:
         for source in sources:
@@ -252,8 +250,17 @@ def _source_digest(sources: tuple[Path, ...]) -> str | None:
     return digest.hexdigest()
 
 
+# Read here, at import and before any scan, so the digest names the code this
+# process runs, not whatever a later pull leaves on disk. The remaining window
+# runs from the interpreter reading these files to compile them up to this line:
+# milliseconds of imports, against a push scan that lasts seconds to minutes
+# and is the interval a checkout update realistically lands in. Writes recheck
+# the files (code_unchanged) and skip caching after any change.
+LOADED_CODE_DIGEST = _source_digest(SCAN_SOURCES)
+
+
 def code_digest() -> str | None:
-    """Digest of the scanning code (SCAN_SOURCES), or None when it cannot be read.
+    """Digest of the scanning code (SCAN_SOURCES) captured at import, or None when it could not be read.
 
     A cache entry is a verdict of the code that wrote it. When a later version
     reads more of an object (as mergetag text and objects without a separator
@@ -263,7 +270,12 @@ def code_digest() -> str | None:
     forget, and forgetting it would keep the closed bypass open in every
     existing cache.
     """
-    return _source_digest(SCAN_SOURCES)
+    return LOADED_CODE_DIGEST
+
+
+def code_unchanged() -> bool:
+    """Whether the scanning code on disk still has the digest captured at import (unreadable is changed)."""
+    return LOADED_CODE_DIGEST is not None and _source_digest(SCAN_SOURCES) == LOADED_CODE_DIGEST
 
 
 def cache_fingerprint() -> str | None:
@@ -330,10 +342,20 @@ class CleanCache:
         return (set(), True) if ids is None else (ids, False)
 
     def record(self, ids: list[str], *, full: bool) -> bool:
-        """Append clean ids; an absent or unusable file is replaced only by a scan that skipped nothing."""
+        """Append clean ids; an absent or unusable file is replaced only by a scan that skipped nothing.
+
+        Nothing is written once the scanning code on disk differs from the code
+        this process loaded: the entry would carry a fingerprint that a process
+        running the other code could mistake for its own.
+        """
         if self.header is None:
             return False
         with self._locked(fcntl.LOCK_EX):
+            if not code_unchanged():
+                print(
+                    f"OPSEC: push scan code changed or unreadable since load; {self.name} not updated.", file=sys.stderr
+                )
+                return False
             try:
                 current = self._load()
             except OSError:

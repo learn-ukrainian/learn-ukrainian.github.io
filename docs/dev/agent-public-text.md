@@ -193,7 +193,7 @@ shrink the scan.
 commits whose messages a push scan on this machine found clean. Its first line
 binds it to a SHA-256 fingerprint of the matcher, rules and blocking policy and
 to a SHA-256 digest of the scanning code's source (`scripts/opsec/git_push.py`
-and `scripts/opsec/prepublish.py`, read once per push); each further line is
+and `scripts/opsec/prepublish.py`, read once when the scanner loads); each further line is
 one commit id. An entry is the verdict of the code that wrote it, so a commit
 an older, weaker scanner found clean (for example one that did not read
 mergetag text) must be scanned again by the current one. Hashing the source
@@ -201,6 +201,14 @@ does that on every code change without a version constant someone has to
 remember to bump; the cost is one first-push-sized scan (cost below) after
 each change to those files. If either file cannot be read, both caches are
 unused for that push: every commit is scanned and nothing is written.
+The digest is taken at import, before any scan, so it names the code the
+process runs rather than whatever is on disk later; a checkout updated while a
+push runs (a pull of the primary checkout, say) cannot lend the new code's
+fingerprint to the old code's verdicts. Before writing to either cache the
+process reads the source again; if it changed or cannot be read, nothing is
+written, a one-line note says so, and the push result is unchanged. What
+remains is the milliseconds between the interpreter reading the files to
+compile them and the digest read.
 Commit ids are content-addressed, so an id always names the same message. An id is written only after `check_texts`
 accepts the push, and only for commits none of whose scanned texts (message
 and mergetag fields) had a blocking finding. A hit that an override let through is never cached and is scanned
@@ -313,6 +321,16 @@ reply's URLs name the canonical repository. The request itself is made only
 to the catalogue repository through the typed publisher read, and no bypass of
 that authenticated ancestry has been shown; matching the reply's URLs would
 need host, case and rename normalisation, so it stays a recorded residual.
+
+Two further residuals are recorded. The cache fingerprint does not include the
+catalogue's canonical public repository, so public-cache entries survive a
+change of that repository in `scripts/config/fleet_repos.yaml` until the
+matcher, rules, policy or scanning code next changes. The scaling test for
+mergetag header unfolding compares wall-clock timings, so it can fail or pass
+on machine load rather than on the algorithm alone. The matcher fingerprint is
+read before the private matcher loads and is not rechecked at write time, so a
+private-tooling rollback during a push could still record a newer matcher's
+verdicts under the older fingerprint.
 
 Historical dispatch briefs, session records and autopsies retain their original
 commands as evidence. For current execution, replace their raw writes with the
