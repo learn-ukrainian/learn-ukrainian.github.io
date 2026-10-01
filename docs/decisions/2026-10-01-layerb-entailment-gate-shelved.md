@@ -21,7 +21,7 @@ The infrastructure backlog takes priority. A cutover would first need a cutover-
 ## Preserved
 
 - The design: [`layerb-entailment-gate-design.md`](../projects/qg-quality-gate/layerb-entailment-gate-design.md) (now bannered as shelved).
-- The public 23-case adversarial gold under `tests/fixtures/curriculum_qg/layer_b_adversarial/`.
+- The public adversarial gold under `tests/fixtures/curriculum_qg/layer_b_adversarial/`.
 
 ## Lapses
 

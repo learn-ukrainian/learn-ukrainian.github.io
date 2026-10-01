@@ -378,7 +378,7 @@ decisions:
       The infrastructure backlog takes priority. The Layer B entailment gate
       is shelved with no cutover; a cutover would first need a cutover-tier
       qualification and an explicit operator go. The shadow-tier attestation
-      lapses on 2026-10-12 on purpose. The design doc and the public 23-case
+      lapses on 2026-10-12 on purpose. The design doc and the public
       adversarial gold are preserved. Revisit only on a new operator decision,
       which would require a cutover-tier qualification again.
     evidence: >-
