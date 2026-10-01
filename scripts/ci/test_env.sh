@@ -6,7 +6,7 @@
 #   test_env.sh wait            block until every started task finished, print
 #                               its log, and fail if any failed or did not
 #                               finish within TEST_ENV_WAIT_TIMEOUT_S seconds
-#                               (default 600, one deadline for the whole call)
+#                               (default 240, one deadline for the whole call)
 #
 # Tasks:
 #   postgres  scripts/ci/start_postgres.sh (bubblewrap, PostgreSQL 16, DSN check)
@@ -40,7 +40,8 @@ case "${1:-}" in
     done
     ;;
   wait)
-    limit="${TEST_ENV_WAIT_TIMEOUT_S:-600}"
+    # The default must stay below the workflow step timeout (5 minutes) so this bound fires first.
+    limit="${TEST_ENV_WAIT_TIMEOUT_S:-240}"
     case "$limit" in
       '' | *[!0-9]* | 0*)
         echo "TEST_ENV_WAIT_TIMEOUT_S must be a positive integer, got: '$limit'" >&2

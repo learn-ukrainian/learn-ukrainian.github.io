@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import time
 from pathlib import Path
 
-SCRIPT = Path(__file__).resolve().parents[2] / "scripts" / "ci" / "test_env.sh"
+import yaml
+
+ROOT = Path(__file__).resolve().parents[2]
+SCRIPT = ROOT / "scripts" / "ci" / "test_env.sh"
+CI_WORKFLOW = ROOT / ".github" / "workflows" / "ci.yml"
 
 
 def _seed(tmp_path: Path, tasks: dict[str, tuple[str | None, str]]) -> Path:
@@ -98,3 +103,21 @@ def test_invalid_limit_exits_2(tmp_path: Path) -> None:
 def test_empty_limit_uses_default(tmp_path: Path) -> None:
     _seed(tmp_path, {"postgres": ("0", "pg ok\n")})
     assert _wait(tmp_path, "").returncode == 0
+
+
+def test_default_bound_is_below_workflow_step_timeout() -> None:
+    match = re.search(r"TEST_ENV_WAIT_TIMEOUT_S:-(\d+)\}", SCRIPT.read_text())
+    assert match, "default of TEST_ENV_WAIT_TIMEOUT_S not found in test_env.sh"
+    default_s = int(match.group(1))
+
+    workflow = yaml.safe_load(CI_WORKFLOW.read_text())
+    steps = [
+        step
+        for job in workflow["jobs"].values()
+        for step in job.get("steps", [])
+        if str(step.get("run", "")).strip() == "bash scripts/ci/test_env.sh wait"
+    ]
+    assert steps, "no `bash scripts/ci/test_env.sh wait` step in ci.yml"
+    for step in steps:
+        assert "timeout-minutes" in step, "wait step has no timeout-minutes"
+        assert step["timeout-minutes"] * 60 > default_s
