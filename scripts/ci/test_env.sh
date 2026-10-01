@@ -27,14 +27,29 @@ run_task() {
   esac
 }
 
-# Print at most the last 200 lines / 64 KiB of a task log, so a huge log can
-# never hold the step past its deadline. A missing log must not abort the script.
+# Print at most the last 200 lines / 32 KiB of a task log, so a huge log can
+# never hold the step past its deadline (32 KiB stays well inside a 64 KiB pipe
+# buffer, so a stalled reader cannot wedge the reports that follow). The whole
+# print also runs under one time bound, so a blocked reader or a slow
+# filesystem cannot hold the script either: ~12 s at most per print (#9450).
+# A missing log or a failed print must not abort the script.
 print_log() {
-  if [ -f "$1" ]; then
-    tail -c 65536 -- "$1" | tail -n 200 || true
-  else
+  if [ ! -f "$1" ]; then
     echo "(no log)"
+    return 0
   fi
+  local rc=0
+  if command -v timeout > /dev/null 2>&1; then
+    timeout --kill-after=2 10 bash -c 'tail -c 32768 -- "$1" | tail -n 200' _ "$1" || rc=$?
+  else
+    # Without coreutils `timeout` only the byte/line bound applies.
+    tail -c 32768 -- "$1" | tail -n 200 || rc=$?
+  fi
+  # 124: timeout fired; 137: it had to SIGKILL the print.
+  if [ "$rc" = 124 ] || [ "$rc" = 137 ]; then
+    echo "(log output truncated: timed out)" >&2
+  fi
+  return 0
 }
 
 # Succeeds only when the task's completion marker holds a whole integer; an

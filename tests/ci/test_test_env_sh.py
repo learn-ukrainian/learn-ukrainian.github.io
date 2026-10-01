@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import stat
 import subprocess
 import time
 from pathlib import Path
@@ -110,6 +111,106 @@ def test_start_publishes_marker_atomically(tmp_path: Path) -> None:
     assert "::group::bogus setup (exit 2)" in result.stdout
     assert "unknown task: bogus" in result.stdout
     assert not (tmp_path / "test-env" / "bogus.rc.tmp").exists()
+
+
+def test_marker_is_never_visible_while_its_write_is_in_flight(tmp_path: Path) -> None:
+    """Stall the writer between creating the temp file and publishing it."""
+    # `mv` is the publish step; a stand-in that sleeps first holds the writer in
+    # the window where `.rc.tmp` exists but `.rc` must not.
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    slow_mv = fake_bin / "mv"
+    slow_mv.write_text('#!/bin/sh\nsleep 5\nexec /bin/mv "$@"\n')
+    slow_mv.chmod(slow_mv.stat().st_mode | stat.S_IXUSR)
+    env = {
+        **os.environ,
+        "RUNNER_TEMP": str(tmp_path),
+        "PATH": f"{fake_bin}{os.pathsep}{os.environ['PATH']}",
+    }
+    started = subprocess.run(
+        ["bash", str(SCRIPT), "start", "bogus"],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert started.returncode == 0
+    env_dir = tmp_path / "test-env"
+    marker, temp = env_dir / "bogus.rc", env_dir / "bogus.rc.tmp"
+    deadline = time.monotonic() + 4
+    while not temp.exists() and time.monotonic() < deadline:
+        time.sleep(0.05)
+    # The writer is now stalled in `mv`: nothing may be published yet.
+    assert temp.exists(), "temp marker was never created"
+    assert not marker.exists(), "marker visible before it was published"
+    deadline = time.monotonic() + 30
+    while not marker.exists() and time.monotonic() < deadline:
+        time.sleep(0.1)
+    assert marker.read_text().strip() == "2"
+    assert not temp.exists()
+
+
+def test_unread_stdout_cannot_hold_script_and_later_task_is_reported(tmp_path: Path) -> None:
+    env_dir = _seed(tmp_path, {"postgres": (None, ""), "npm": ("0", "npm log\n")})
+    with (env_dir / "postgres.log").open("wb") as handle:
+        handle.write(b"x" * (50 * 1024 * 1024))
+    env = {**os.environ, "RUNNER_TEMP": str(tmp_path), "TEST_ENV_WAIT_TIMEOUT_S": "2"}
+    # Nobody reads the pipe until after the script has exited (backpressure).
+    proc = subprocess.Popen(
+        ["bash", str(SCRIPT), "wait"],
+        env=env,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+    )
+    try:
+        started = time.monotonic()
+        proc.wait(timeout=20)
+        elapsed = time.monotonic() - started
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        raise
+    finally:
+        assert proc.stdout is not None
+        output = proc.stdout.read()
+        proc.stdout.close()
+    assert proc.returncode == 1
+    assert elapsed < 20
+    assert output.startswith("::error::postgres setup did not finish within 2s\n")
+    assert "::group::npm setup (exit 0)\nnpm log\n::endgroup::" in output
+
+
+def test_stalled_log_print_is_time_bounded_and_next_task_still_reported(tmp_path: Path) -> None:
+    _seed(tmp_path, {"postgres": ("0", "pg log\n"), "npm": ("0", "npm log\n")})
+    # A `tail` that never returns stands in for a blocked reader or slow filesystem.
+    fake_bin = tmp_path / "bin"
+    fake_bin.mkdir()
+    fake_tail = fake_bin / "tail"
+    fake_tail.write_text("#!/bin/sh\nexec sleep 300\n")
+    fake_tail.chmod(fake_tail.stat().st_mode | stat.S_IXUSR)
+    env = {
+        **os.environ,
+        "RUNNER_TEMP": str(tmp_path),
+        "PATH": f"{fake_bin}{os.pathsep}{os.environ['PATH']}",
+    }
+    env.pop("TEST_ENV_WAIT_TIMEOUT_S", None)
+    started = time.monotonic()
+    result = subprocess.run(
+        ["bash", str(SCRIPT), "wait"],
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    elapsed = time.monotonic() - started
+    # Each stalled print is cut off after ~12 s; two prints, one script.
+    assert elapsed < 50
+    assert result.returncode == 0
+    assert result.stderr.count("(log output truncated: timed out)") == 2
+    assert "::group::postgres setup (exit 0)" in result.stdout
+    assert "::group::npm setup (exit 0)" in result.stdout
 
 
 def test_one_deadline_covers_all_tasks_and_finished_ones_still_report(tmp_path: Path) -> None:
