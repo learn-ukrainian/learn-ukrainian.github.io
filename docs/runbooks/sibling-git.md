@@ -47,11 +47,29 @@ files and refuses any collision. Git's `--no-overwrite-ignore` also protects
 ignored files, including directory/file collisions and changes after the probe.
 
 Repository identities come only from `scripts/config/fleet_repos.yaml`.
-The public/default repository and unknown names are refused. The supported
-transport is GitHub SSH, with the registry's exact owner and repository;
-`git@github.com:owner/repository.git` and
-`ssh://git@github.com/owner/repository.git` are accepted origin spellings.
-Authentication uses installed SSH and its normal trusted host configuration.
+The public/default repository and unknown names are refused.
+Each entry's `transport` is `ssh` (the default) or `https`. SSH accepts
+`git@github.com:<org>/<repo>.git` and
+`ssh://git@github.com/<org>/<repo>.git`, using installed SSH and its trusted
+configuration. HTTPS requires exactly `https://github.com/<org>/<repo>.git`
+or the same URL without `.git`; userinfo and alternative URL forms are refused.
+
+HTTPS obtains an App installation credential in the parent process, requesting
+only `contents: read` for the registered repository. The mint response must
+identify exactly that repository, have no wider permissions (implicit metadata
+read is accepted), and contain a future expiry. Existing identity callers keep
+their defaults. The configured key file can supply the signing key instead of
+the inline configuration. Dedicated-token and legacy identity sources cannot
+be used by this transport; there is no broader-credential fallback.
+
+The authorization header is URL-scoped and supplied through freshly built Git
+configuration environment entries for the fetch process only. It is absent from
+argv, repository files and subsequent Git environments. Redirects are disabled,
+TLS verification is enabled, protocols are restricted to HTTPS, and credential
+interaction is disabled. Fetch has a scratch HOME and no inherited proxy, TLS,
+askpass, tracing, loader or Git configuration environment. Ambient `.netrc`
+credentials are excluded. Endpoint and test CA overrides are constructor-only
+test seams, unavailable through environment variables or the command interface.
 Fetch uses the reserved `sibling-git-canonical` remote with its URL supplied
 by the module for that command; no remote configuration is written to disk.
 There are no user-supplied Git flags, remotes, refs, configuration or executables.
@@ -81,9 +99,9 @@ system configuration is inspected but excluded from execution.
 | `core.editor`, `sequence.editor`, `core.askPass` | Fixed `/usr/bin/false`; terminal and credential prompts disabled. |
 | `diff.external` | Fixed `/usr/bin/false`; the added-path diff also uses `--no-ext-diff --no-textconv`. |
 | `diff.*.command`, `diff.*.textconv` | Refused, including unused drivers. |
-| `credential.helper` | Empty fixed override resets the helper list; URL-scoped `credential.*.helper` accepted only in inherited global/system config (excluded from execution), and refused in local/worktree/command scope. Includes remain refused. |
-| `protocol.allow`, `protocol.*.allow` | Fixed default `never`, SSH `always`; controlled `GIT_ALLOW_PROTOCOL=ssh` excludes every other protocol, including remote helpers. |
-| `http.*`, `remote.*.proxy`, `remote.*.proxyAuthMethod` | Refused; only the registered SSH transport is supported. |
+| `credential.*` | HTTPS refuses every local/worktree/command key before credential acquisition. SSH retains its fixed helper reset; URL-scoped helpers in those scopes remain refused. Inherited global/system keys are inspected but excluded from execution; an empty helper override resets the list. Includes remain refused. |
+| `protocol.allow`, `protocol.*.allow` | Fixed default `never`, SSH `always`; HTTPS fetch adds HTTPS `always`. Controlled `GIT_ALLOW_PROTOCOL` permits only the selected transport, excluding remote helpers. |
+| `http.*`, `remote.*.proxy`, `remote.*.proxyAuthMethod` | Refused in inspected configuration; HTTPS fetch settings are supplied exclusively by the module. |
 | `remote.<name>.*` with `/` or `:` in `<name>`, or `<name>` equal to `sibling-git-canonical` | Refused; URL-like names cannot redirect fetch, and the module exclusively controls its reserved fetch remote. |
 | `fetch.bundleURI`, `transfer.bundleURI`, any `*.bundleURI`, `bundle.<id>.uri`, and `*.bundleCreationToken` (including `fetch.bundleCreationToken`) | Refused; bundle downloads, foreign object imports and incremental bundle state are unsupported. |
 | `core.hooksPath`, `core.fsmonitor` | Empty hook directory and fixed `false`. |
