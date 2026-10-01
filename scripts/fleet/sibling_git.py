@@ -8,6 +8,7 @@ configuration, caller environment, and path arguments are not. See
 from __future__ import annotations
 
 import argparse
+import base64
 import json
 import os
 import re
@@ -19,12 +20,16 @@ from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 
+import yaml
+
+from scripts.agent_runtime.agent_github_identity import resolve_agent_github_identity, revoke_installation_token
 from scripts.orchestration import worktree_claims
 from scripts.orchestration.fleet_repos import load_fleet_repos, resolve_fleet_repo
 
 _GIT = "/usr/bin/git"
 _FETCH_REMOTE = "sibling-git-canonical"
 _SOURCE_ROOT = Path(__file__).resolve().parents[2]
+_REGISTRY_PATH = _SOURCE_ROOT / "scripts/config/fleet_repos.yaml"
 
 
 class Refusal(ValueError):
@@ -79,12 +84,47 @@ class Repository:
     git_dir: Path
     common: Path
     remote: str
+    transport: str = "ssh"
+    github: str = ""
+
+
+def _registry_transport(key: str) -> str:
+    try:
+        document = yaml.safe_load(_REGISTRY_PATH.read_text(encoding="utf-8"))
+        transport = document["repos"].get(key, {}).get("transport", "ssh")
+    except (OSError, yaml.YAMLError, KeyError, TypeError, AttributeError) as exc:
+        raise Refusal("cannot inspect registered transport") from exc
+    if transport not in ("ssh", "https"):
+        raise Refusal("unsupported registered transport")
+    return transport
+
+
+def _https_url(remote: str, github: str) -> None:
+    if not re.fullmatch(r"[A-Za-z0-9_-][A-Za-z0-9_.-]*/[A-Za-z0-9_-][A-Za-z0-9_.-]*", github) or remote not in (
+        f"https://github.com/{github}.git",
+        f"https://github.com/{github}",
+    ):
+        raise Refusal("origin must be the registered canonical HTTPS remote")
 
 
 class Git:
     """One fixed executable and command configuration, including read probes."""
 
-    def __init__(self, hooks: Path):
+    def __init__(
+        self,
+        hooks: Path,
+        *,
+        https_base_url: str | None = None,
+        ca_file: Path | None = None,
+        api_base_url: str = "https://api.github.com",
+        ssl_context=None,
+    ):
+        # Constructor-only seams; the CLI never takes endpoint or CA overrides.
+        self.scratch = hooks
+        self.https_base_url = https_base_url
+        self.ca_file = ca_file
+        self.api_base_url = api_base_url
+        self.ssl_context = ssl_context
         # Drop all inherited Git redirects/config and loader/command injection.
         self.env = {k: os.environ[k] for k in ("HOME", "SSH_AUTH_SOCK") if k in os.environ}
         self.env.update(
@@ -167,6 +207,103 @@ class Git:
             raise Refusal(f"Git {args[0]} failed; maintenance stopped")
         return result.stdout if "-z" in args else result.stdout.strip()
 
+    def fetch(self, repo: Repository) -> None:
+        args = [
+            "-c",
+            f"remote.{_FETCH_REMOTE}.url={repo.remote}",
+            "fetch",
+            "--no-tags",
+            "--no-recurse-submodules",
+            "--no-auto-maintenance",
+            "--refmap=",
+            "--upload-pack=git-upload-pack",
+            "--",
+            _FETCH_REMOTE,
+            "refs/heads/main",
+        ]
+        if repo.transport == "ssh":
+            self.text(repo.checkout, *args)
+            return
+        _safe_config(self, repo.checkout, https=True)
+        _https_url(repo.remote, repo.github)
+        # Resolve in the parent; no credential material enters other Git verbs.
+        app_environment = {k: os.environ[k] for k in (
+            "LU_AGENT_GITHUB_APP_ID", "LU_AGENT_GITHUB_APP_INSTALLATION_ID",
+            "LU_AGENT_GITHUB_APP_PRIVATE_KEY", "LU_AGENT_GITHUB_APP_PRIVATE_KEY_FILE",
+        ) if k in os.environ}
+        if not any(app_environment.values()):
+            raise Refusal("HTTPS transport requires an App installation identity")
+        try:
+            identity = resolve_agent_github_identity(
+                environment=app_environment,
+                repository=repo.github,
+                permissions={"contents": "read"},
+                api_base_url=self.api_base_url,
+                ssl_context=self.ssl_context,
+            )
+        except Exception:
+            raise Refusal("restricted installation credential unavailable") from None
+        if identity.source != "app" or not identity.token:
+            raise Refusal("HTTPS transport requires an App installation identity")
+        try:
+            url = repo.remote if self.https_base_url is None else self.https_base_url + repo.remote.removeprefix("https://github.com")
+            header = "Authorization: Basic " + base64.b64encode(f"x-access-token:{identity.token}".encode()).decode("ascii")
+            env = {
+                "PATH": "/usr/bin:/bin",
+                "LANG": "C",
+                "LC_ALL": "C",
+                "HOME": str(self.scratch),
+                "GIT_OPTIONAL_LOCKS": "0",
+                "GIT_TERMINAL_PROMPT": "0",
+                "GIT_CONFIG_NOSYSTEM": "1",
+                "GIT_CONFIG_GLOBAL": os.devnull,
+                "GIT_ALLOW_PROTOCOL": "https",
+                "GIT_PROTOCOL_FROM_USER": "0",
+            }
+            settings = [
+                (f"remote.{_FETCH_REMOTE}.url", url),
+                ("protocol.https.allow", "always"),
+                ("http.followRedirects", "false"),
+                ("http.proxy", ""),
+                ("http.sslVerify", "true"),
+                ("credential.helper", ""),
+                ("credential.useHttpPath", "true"),
+                ("credential.interactive", "false"),
+                ("transfer.credentialsInUrl", "die"),
+                (f"http.{url}.extraHeader", header),
+            ]
+            if self.ca_file is not None:
+                settings.append(("http.sslCAInfo", str(self.ca_file)))
+            # Match the exact fetch URL so repository URL-specific entries cannot
+            # override our transport settings after the last configuration probe.
+            settings.extend(
+                (f"http.{url}.{key.removeprefix('http.')}", value)
+                for key, value in tuple(settings)
+                if key.startswith("http.") and not key.startswith(f"http.{url}.")
+            )
+            env["GIT_CONFIG_COUNT"] = str(len(settings))
+            for index, (key, value) in enumerate(settings):
+                env[f"GIT_CONFIG_KEY_{index}"] = key
+                env[f"GIT_CONFIG_VALUE_{index}"] = value
+            try:
+                result = subprocess.run(
+                    [_GIT, *self.options, "-C", str(repo.checkout), *args[2:]],
+                    env=env,
+                    capture_output=True,
+                    text=True,
+                    timeout=120,
+                    check=False,
+                )
+            except (OSError, subprocess.SubprocessError):
+                raise Refusal("HTTPS fetch failed; maintenance stopped") from None
+            if result.returncode:
+                raise Refusal("HTTPS fetch failed; maintenance stopped")
+        finally:
+            try:
+                revoke_installation_token(identity.token, api_base_url=self.api_base_url, ssl_context=self.ssl_context)
+            except Exception:
+                print("Installation credential revocation failed", file=sys.stderr)
+
     def config(self, path: Path, *, inherited: bool = False) -> list[tuple[str, str, str]]:
         env = self.env.copy()
         if inherited:
@@ -195,7 +332,7 @@ def git_session():
         yield Git(Path(scratch))
 
 
-def _safe_config(git: Git, path: Path) -> None:
+def _safe_config(git: Git, path: Path, *, https: bool = False) -> None:
     for scope, key, value in git.config(path, inherited=True):
         key = key.lower()
         remote_name = key[7:].rsplit(".", 1)[0] if key.startswith("remote.") else ""
@@ -219,8 +356,8 @@ def _safe_config(git: Git, path: Path) -> None:
             # Inherited helpers are inspected but excluded from execution;
             # repository and command scopes remain untrusted.
             or (
-                key.startswith("credential.") and key.endswith(".helper")
-                and key != "credential.helper" and scope not in {"global", "system"}
+                key.startswith("credential.") and scope not in {"global", "system"}
+                and (https or (key.endswith(".helper") and key != "credential.helper"))
             )
             or (key.startswith("diff.") and key.endswith((".command", ".textconv")))
             or (key.startswith("gpg.") and key.endswith("program") and key not in {
@@ -260,7 +397,8 @@ def resolve_repository(key: str, primary: Path, git: Git) -> Repository:
     if git_dir != common or not common.is_relative_to(checkout):
         raise Refusal("sibling must own independent metadata beneath its checkout")
     _metadata_safe(common, primary)
-    _safe_config(git, checkout)
+    transport = _registry_transport(key)
+    _safe_config(git, checkout, https=transport == "https")
     actual = git.text(
         checkout,
         "rev-parse",
@@ -274,11 +412,16 @@ def resolve_repository(key: str, primary: Path, git: Git) -> Repository:
     expected = [checkout, git_dir, common, git_dir / "index"]
     if len(actual) != 4 or [_plain_path(Path(p), exists=False) for p in actual] != expected:
         raise Refusal("Git paths do not match the independent registered checkout")
-    canonical = f"git@github.com:{spec.github}.git"
+    canonical = f"git@github.com:{spec.github}.git" if transport == "ssh" else f"https://github.com/{spec.github}.git"
     urls = [v for _, k, v in git.config(checkout) if k == "remote.origin.url"]
-    if urls not in ([canonical], [f"ssh://git@github.com/{spec.github}.git"]):
+    if transport == "https":
+        if len(urls) != 1:
+            raise Refusal("origin must have one registered canonical HTTPS remote")
+        _https_url(urls[0], spec.github)
+        canonical = urls[0]
+    elif urls not in ([canonical], [f"ssh://git@github.com/{spec.github}.git"]):
         raise Refusal("origin must be the registered canonical GitHub SSH remote")
-    return Repository(key, checkout, git_dir, common, canonical)
+    return Repository(key, checkout, git_dir, common, canonical, transport, spec.github)
 
 
 def _clean(git: Git, checkout: Path) -> None:
@@ -330,20 +473,7 @@ def sync_main(repo: Repository, primary: Path, git: Git) -> dict:
         return head
 
     old = preflight()
-    git.text(
-        repo.checkout,
-        "-c",
-        f"remote.{_FETCH_REMOTE}.url={repo.remote}",
-        "fetch",
-        "--no-tags",
-        "--no-recurse-submodules",
-        "--no-auto-maintenance",
-        "--refmap=",
-        "--upload-pack=git-upload-pack",
-        "--",
-        _FETCH_REMOTE,
-        "refs/heads/main",
-    )
+    git.fetch(repo)
     fetched = git.text(repo.checkout, "rev-parse", "--verify", "FETCH_HEAD^{commit}")
     if not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", fetched):
         raise Refusal("fetch did not return a commit")
@@ -425,7 +555,7 @@ def worktree_remove(repo: Repository, primary: Path, git: Git, raw: str) -> dict
         record = next((entry for entry in entries if f"worktree {target}" in entry), None)
         if record is None or any(line == "locked" or line.startswith("locked ") for line in record):
             return False, "target is unregistered or locked"
-        _safe_config(git, target)
+        _safe_config(git, target, https=repo.transport == "https")
         _checkout_safe(git, target, git.text(target, "rev-parse", "HEAD"))
         _clean(git, target)
         return True, "registered, clean and unlocked"
