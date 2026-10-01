@@ -62,43 +62,72 @@ fi
 _blocks_branch_switch() {
   local shim_dir
   shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-  local repo_root
-  repo_root="$(cd "$shim_dir/../../.." && pwd)"
-  local guard_python="${AGENT_GIT_SHIM_PYTHON:-$repo_root/.venv/bin/python}"
+  local shim_repo
+  shim_repo="$(cd "$shim_dir/../../.." && pwd)"
 
-  if [[ ! -x "$guard_python" ]]; then
-    cat >&2 <<EOF
-error: git shim guard interpreter unavailable ($guard_python).
-       Cannot verify branch containment; failing closed.
-EOF
-    return 126
+  local real_git_bin
+  real_git_bin="$(_real_git 2>/dev/null || true)"
+
+  # The shim itself might reside in a linked worktree (e.g. .worktrees/dispatch/...)
+  # Resolve the main checkout that owns the virtual environment and scripts.
+  local shim_main_root="$shim_repo"
+  if [[ -n "$real_git_bin" && -x "$real_git_bin" ]]; then
+    local shim_common_dir
+    shim_common_dir="$("$real_git_bin" -C "$shim_repo" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
+    if [[ -n "$shim_common_dir" ]]; then
+      shim_main_root="$(dirname "$shim_common_dir")"
+    fi
   fi
 
-  "$guard_python" -c '
+  local guard_python="${AGENT_GIT_SHIM_PYTHON:-}"
+  if [[ -z "$guard_python" ]]; then
+    if [[ -x "$shim_main_root/.venv/bin/python" ]]; then
+      guard_python="$shim_main_root/.venv/bin/python"
+    elif [[ -x "$shim_repo/.venv/bin/python" ]]; then
+      guard_python="$shim_repo/.venv/bin/python"
+    fi
+  fi
+
+  if [[ -z "$guard_python" || ! -x "$guard_python" ]]; then
+    cat >&2 <<EOF
+error: git shim guard interpreter unavailable (${guard_python:-$shim_main_root/.venv/bin/python}).
+       Cannot verify branch containment; failing closed.
+EOF
+    return 125
+  fi
+
+  local guard_status=0
+  local guard_out
+  guard_out="$("$guard_python" -c '
 import sys
 import subprocess
 from pathlib import Path
 
 # Exit codes:
-#   0 = ALLOW (safe to run)
+#   0 with stdout "GUARD_ALLOW" = ALLOW (safe to run)
 #   2 = BLOCKED (illegal branch switch in primary checkout)
 # Any unhandled exception or non-zero exit code fails closed.
 
 try:
-    repo_root = sys.argv[1]
+    shim_main_root = sys.argv[1]
     git_args = sys.argv[2:]
 
-    sys.path.insert(0, repo_root)
+    if shim_main_root and shim_main_root not in sys.path:
+        sys.path.insert(0, shim_main_root)
+
     from scripts.guardrails.worktree_containment import is_primary_checkout, is_protected_branch, PROTECTED_BRANCHES
 
     if not (is_primary_checkout() and is_protected_branch()):
+        print("GUARD_ALLOW")
         sys.exit(0)
 
     if not git_args:
+        print("GUARD_ALLOW")
         sys.exit(0)
 
     cmd = git_args[0]
     if cmd not in ("checkout", "switch"):
+        print("GUARD_ALLOW")
         sys.exit(0)
 
     creates_branch = any(arg in ("-b", "-B", "-c", "-C") for arg in git_args[1:])
@@ -114,14 +143,17 @@ try:
             break
 
     if not target:
+        print("GUARD_ALLOW")
         sys.exit(0)
 
     if target in PROTECTED_BRANCHES:
+        print("GUARD_ALLOW")
         sys.exit(0)
 
     if cmd == "switch":
         if "--detach" not in git_args and "-d" not in git_args:
             sys.exit(2)
+        print("GUARD_ALLOW")
         sys.exit(0)
 
     is_local = (subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/heads/{target}"]).returncode == 0)
@@ -131,6 +163,7 @@ try:
         target_idx = git_args.index(target)
         remaining_args = git_args[target_idx+1:]
         if "--" in remaining_args:
+            print("GUARD_ALLOW")
             sys.exit(0)
         has_file_args = False
         for arg in remaining_args:
@@ -138,16 +171,31 @@ try:
                 has_file_args = True
                 break
         if has_file_args:
+            print("GUARD_ALLOW")
             sys.exit(0)
         sys.exit(2)
 
+    print("GUARD_ALLOW")
     sys.exit(0)
 except SystemExit:
     raise
 except Exception as exc:
     print(f"error: branch containment check failed: {exc}", file=sys.stderr)
     sys.exit(3)
-' "$repo_root" "$@"
+' "$shim_main_root" "$@")" || guard_status=$?
+
+  if [[ "$guard_status" -ne 0 ]]; then
+    return "$guard_status"
+  fi
+
+  if [[ "$guard_out" == "GUARD_ALLOW" ]]; then
+    return 0
+  fi
+
+  cat >&2 <<EOF
+error: git shim guard did not verify containment; failing closed.
+EOF
+  return 124
 }
 
 # INCIDENT 2026-07-05 (fork bomb): _blocks_branch_switch spawns a python guard whose
@@ -180,7 +228,7 @@ error: agent cannot switch branches in the primary checkout.
 EOF
     exit 1
   elif [[ "$guard_rc" -ne 0 ]]; then
-    if [[ "$guard_rc" -ne 126 && "$guard_rc" -ne 3 ]]; then
+    if [[ "$guard_rc" -ne 125 && "$guard_rc" -ne 124 && "$guard_rc" -ne 3 ]]; then
       cat >&2 <<EOF
 error: git shim guard interpreter failed to run ($guard_rc).
        Cannot verify branch containment; failing closed.
