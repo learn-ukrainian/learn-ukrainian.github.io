@@ -1408,7 +1408,9 @@ blocked_candidates:
 
 # Per-source publication rights for evidence packs (WP 21, #8425).
 # Exact ingested source_file identities; absence grants no publication right.
-# Titles and parts are confirmed catalogue/title-page data with per-entry provenance.
+# Titles and parts use catalogue, title-page or colophon provenance.
+# Confirmed citation years use each book's imprint, never its file id or approval date.
+# year_provenance records both confirmed years and unresolved corpus gaps.
 # Private references remain available for grounding only.
 sources:
   1-klas-angliiska-mova-pukhta-2024:
@@ -1427,6 +1429,14 @@ sources:
       chunk_id: 1-klas-angliiska-mova-pukhta-2024_s0000
       page: 2
       title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 1-klas-angliiska-mova-pukhta-2024
+      chunk_id: 1-klas-angliiska-mova-pukhta-2024_s0001
+      page: 3
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'К. : Видавництво «Лінгвіст», 2024'
   1-klas-bukvar-zaharijchuk-2025-1:
     kind: textbook
     file: 1-klas-bukvar-zaharijchuk-2025-1
@@ -1443,6 +1453,14 @@ sources:
       url: https://pidruchnyk.com.ua/3028-bukvar-1-klas-zakhariichuk.html
       heading: Українська мова. Буквар (Захарійчук) 1 клас 2025
       part_label: Читати онлайн — 1 частина
+    year_provenance:
+      status: confirmed
+      source_file: 1-klas-bukvar-zaharijchuk-2025-1
+      chunk_id: 1-klas-bukvar-zaharijchuk-2025-1_s0002
+      page: 4
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2025'
   1-klas-bukvar-zaharijchuk-2025-2:
     kind: textbook
     file: 1-klas-bukvar-zaharijchuk-2025-2
@@ -1459,6 +1477,14 @@ sources:
       url: https://pidruchnyk.com.ua/3028-bukvar-1-klas-zakhariichuk.html
       heading: Українська мова. Буквар (Захарійчук) 1 клас 2025
       part_label: 2 частина
+    year_provenance:
+      status: confirmed
+      source_file: 1-klas-bukvar-zaharijchuk-2025-2
+      chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0002
+      page: 4
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2025'
   1-klas-matematyka-lystopad-2025:
     kind: textbook
     file: 1-klas-matematyka-lystopad-2025
@@ -1475,6 +1501,14 @@ sources:
       url: https://pidruchnyk.com.ua/1211-matematika-1-klas-lystopad.html
       heading: Математика (Листопад) 1 клас 2018, 2025
       part_label: 3 частина
+    year_provenance:
+      status: confirmed
+      source_file: 1-klas-matematyka-lystopad-2025
+      chunk_id: 1-klas-matematyka-lystopad-2025_s0000
+      page: 3
+      imprint_year: 2025
+      basis: title_page_imprint
+      year_text: Київ 2025
   1-klas-mystetstvo-rublia-2024:
     kind: textbook
     file: 1-klas-mystetstvo-rublia-2024
@@ -1489,6 +1523,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2719-mystetstvo-1-klas-rublia.html
       heading: Мистецтво (Рубля) 1 клас
+    year_provenance:
+      status: confirmed
+      source_file: 1-klas-mystetstvo-rublia-2024
+      chunk_id: 1-klas-mystetstvo-rublia-2024_s0001
+      page: 3
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Х. : Вид-во «Ранок», 2024'
   1-klas-ya-doslidzhuiu-svit-zharkova-2024-1:
     kind: textbook
     file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1
@@ -1506,6 +1548,14 @@ sources:
       heading: Я досліджую світ (Жаркова) 1 клас 2024
       part_label: 1 частина
       file_link: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1.pdf
+    year_provenance:
+      status: confirmed
+      source_file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1
+      chunk_id: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1_s0002
+      page: 5
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Підручники і посібники, 2024'
   1-klas-ya-doslidzhuiu-svit-zharkova-2024-2:
     kind: textbook
     file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2
@@ -1523,6 +1573,14 @@ sources:
       heading: Я досліджую світ (Жаркова) 1 клас 2024
       part_label: 2 частина
       file_link: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2.pdf
+    year_provenance:
+      status: confirmed
+      source_file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2
+      chunk_id: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2_s0003
+      page: 5
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Підручники і посібники, 2024'
   10-11-klas-mystectvo-nazarenko-2018:
     kind: textbook
     file: 10-11-klas-mystectvo-nazarenko-2018
@@ -1538,6 +1596,20 @@ sources:
       url: https://pidruchnyk.com.ua/3090-mystectvo-10-11-klas-nazarenko.html
       heading: Мистецтво (Назаренко) 10-11 клас
     grade_end: 11
+    year_provenance:
+      status: unconfirmed
+      source_file: 10-11-klas-mystectvo-nazarenko-2018
+      checked_chunk_ids:
+      - 10-11-klas-mystectvo-nazarenko-2018_s0000
+      - 10-11-klas-mystectvo-nazarenko-2018_s0001
+      - 10-11-klas-mystectvo-nazarenko-2018_s0002
+      - 10-11-klas-mystectvo-nazarenko-2018_s0003
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   10-11-klas-tekhnolohiyi-khodzycka-2019:
     kind: textbook
     file: 10-11-klas-tekhnolohiyi-khodzycka-2019
@@ -1553,6 +1625,14 @@ sources:
       url: https://pidruchnyk.com.ua/3085-tekhnologii-10-11-klas-khodzycka.html
       heading: Технології (Ходзицька) 10 (11) клас
     grade_end: 11
+    year_provenance:
+      status: confirmed
+      source_file: 10-11-klas-tekhnolohiyi-khodzycka-2019
+      chunk_id: 10-11-klas-tekhnolohiyi-khodzycka-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2019'
   10-klas-algebra-ister-2018:
     kind: textbook
     file: 10-klas-algebra-ister-2018
@@ -1567,6 +1647,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1223-algebra-10-klas-ister.html
       heading: Алгебра (Істер, Єргіна) 10 клас
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-algebra-ister-2018
+      chunk_id: 10-klas-algebra-ister-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2018'
   10-klas-angliiska-mova-burenko-2018:
     kind: textbook
     file: 10-klas-angliiska-mova-burenko-2018
@@ -1583,6 +1671,14 @@ sources:
       chunk_id: 10-klas-angliiska-mova-burenko-2018_s0000
       page: 2
       title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-angliiska-mova-burenko-2018
+      chunk_id: 10-klas-angliiska-mova-burenko-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-biologija-i-ekologija-zadorozhnij-2018-stand:
     kind: textbook
     file: 10-klas-biologija-i-ekologija-zadorozhnij-2018-stand
@@ -1597,18 +1693,43 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3113-biologiia-i-ekologiia-10-klas-zadorozhnyi-stan.html
       heading: Біологія і екологія (Задорожний) 10 клас 2018 (стандарт)
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-biologija-i-ekologija-zadorozhnij-2018-stand
+      chunk_id: 10-klas-biologija-i-ekologija-zadorozhnij-2018-stand_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-ekonomika-krupska-2018:
     kind: textbook
     file: 10-klas-ekonomika-krupska-2018
     author: Крупська
-    title: null
+    title: Економіка (профільний рівень)
     grade: 10
     year: 2018
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Крупська Лариса Пилипівна
+    - Тимченко Ірина Євгеніївна
+    - Чорна Тетяна Іванівна
+    publisher: Ранок
+    title_provenance:
+      source_file: 10-klas-ekonomika-krupska-2018
+      chunk_id: 10-klas-ekonomika-krupska-2018_s0429
+      page: 240
+      title_text: Економіка (профільний рівень)
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-ekonomika-krupska-2018
+      chunk_id: 10-klas-ekonomika-krupska-2018_s0429
+      page: 240
+      imprint_year: 2018
+      basis: colophon_print_date
+      year_text: Підписано до друку 06.07.2018
   10-klas-fizyka-barjakhtar-2018:
     kind: textbook
     file: 10-klas-fizyka-barjakhtar-2018
@@ -1623,6 +1744,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3079-fizyka-10-klas-bariakhtar.html
       heading: Фізика (Бар'яхтар) 10 клас
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-fizyka-barjakhtar-2018
+      chunk_id: 10-klas-fizyka-barjakhtar-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-geografija-bojko-2018:
     kind: textbook
     file: 10-klas-geografija-bojko-2018
@@ -1637,6 +1766,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1184-geografiya-10-klas-boyko.html
       heading: Географія (Бойко, Брайчевський, Яценко) 10 клас
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-geografija-bojko-2018
+      chunk_id: 10-klas-geografija-bojko-2018_s0324
+      page: 257
+      imprint_year: 2018
+      basis: colophon_print_date
+      year_text: Підп. до друку 02.08.2018
   10-klas-geometrija-ister-2018:
     kind: textbook
     file: 10-klas-geometrija-ister-2018
@@ -1651,6 +1788,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1178-geometriya-10-klas-ister.html
       heading: Геометрія (Істер, Єргіна) 10 клас 2018
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-geometrija-ister-2018
+      chunk_id: 10-klas-geometrija-ister-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2018'
   10-klas-himija-grygorovych-2018:
     kind: textbook
     file: 10-klas-himija-grygorovych-2018
@@ -1665,6 +1810,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3077-khimiia-10-klas-grygorovych.html
       heading: Хімія (Григорович) 10 клас
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-himija-grygorovych-2018
+      chunk_id: 10-klas-himija-grygorovych-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-hromadianska-gisem-2018:
     kind: textbook
     file: 10-klas-hromadianska-gisem-2018
@@ -1681,6 +1834,14 @@ sources:
       chunk_id: 10-klas-hromadianska-gisem-2018_s0000
       page: 2
       title_text: Громадянська освіта
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-hromadianska-gisem-2018
+      chunk_id: 10-klas-hromadianska-gisem-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-informatika-rudenko-2018-stand:
     kind: textbook
     file: 10-klas-informatika-rudenko-2018-stand
@@ -1696,6 +1857,14 @@ sources:
       url: https://pidruchnyk.com.ua/3099-informatyka-10-11-klas-rudenko-stand.html
       heading: Інформатика (Руденко) 10-11 клас 2018 (стан)
     grade_end: 11
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-informatika-rudenko-2018-stand
+      chunk_id: 10-klas-informatika-rudenko-2018-stand_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : / Вид-во «Ранок», 2018'
   10-klas-istorija-ukrajiny-gisem-2018:
     kind: textbook
     file: 10-klas-istorija-ukrajiny-gisem-2018
@@ -1712,6 +1881,14 @@ sources:
       chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0000
       page: 2
       title_text: Історія України
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-istorija-ukrajiny-gisem-2018
+      chunk_id: 10-klas-istorija-ukrajiny-gisem-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-matematika-merzljak-2018:
     kind: textbook
     file: 10-klas-matematika-merzljak-2018
@@ -1726,6 +1903,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1153-matematyka-10-klas-merzlyak.html
       heading: Математика (Мерзляк) 10 клас 2018
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-matematika-merzljak-2018
+      chunk_id: 10-klas-matematika-merzljak-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Х. : Гімназія, 2018'
   10-klas-ukrajinska-literatura-avramenko-2018:
     kind: textbook
     file: 10-klas-ukrajinska-literatura-avramenko-2018
@@ -1740,6 +1925,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/392-ukrayinska-lteratura-avramenko-paharenko-10-klas.html
       heading: Українська література (Авраменко, Пахаренко) 10 клас 2018
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-ukrajinska-literatura-avramenko-2018
+      chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'К. : Грамота, 2018'
   10-klas-ukrajinska-mova-avramenko-2018:
     kind: textbook
     file: 10-klas-ukrajinska-mova-avramenko-2018
@@ -1756,6 +1949,14 @@ sources:
       chunk_id: 10-klas-ukrajinska-mova-avramenko-2018_s0000
       page: 2
       title_text: Українська мова
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-ukrajinska-mova-avramenko-2018
+      chunk_id: 10-klas-ukrajinska-mova-avramenko-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'К. : Грамота, 2018'
   10-klas-ukrmova-glazova-2018:
     kind: textbook
     file: 10-klas-ukrmova-glazova-2018
@@ -1770,6 +1971,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3081-ukrmova-10-klas-glazova.html
       heading: Українська мова (Глазова) 10 клас
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-ukrmova-glazova-2018
+      chunk_id: 10-klas-ukrmova-glazova-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-ukrmova-karaman-2018:
     kind: textbook
     file: 10-klas-ukrmova-karaman-2018
@@ -1784,6 +1993,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3082-ukrmova-10-klas-karaman.html
       heading: Українська мова (Караман) 10 клас
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-ukrmova-karaman-2018
+      chunk_id: 10-klas-ukrmova-karaman-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-vsesvitnia-istoriia-gisem-2018-stand:
     kind: textbook
     file: 10-klas-vsesvitnia-istoriia-gisem-2018-stand
@@ -1798,6 +2015,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3109-vsesvitnia-istoriia-10-klas-gisem-stan.html
       heading: Всесвітня історія (Гісем) 10 клас 2018 (стандарт)
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-vsesvitnia-istoriia-gisem-2018-stand
+      chunk_id: 10-klas-vsesvitnia-istoriia-gisem-2018-stand_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2018'
   10-klas-zakhyst-fuka-2023:
     kind: textbook
     file: 10-klas-zakhyst-fuka-2023
@@ -1814,6 +2039,14 @@ sources:
       chunk_id: 10-klas-zakhyst-fuka-2023_s0000
       page: 2
       title_text: Захист України
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-zakhyst-fuka-2023
+      chunk_id: 10-klas-zakhyst-fuka-2023_s0001
+      page: 3
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2023'
   10-klas-zarubizhna-literatura-voloshhuk-2018:
     kind: textbook
     file: 10-klas-zarubizhna-literatura-voloshhuk-2018
@@ -1828,6 +2061,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1147-zarubizhna-10-klas-voloschuk.html
       heading: Зарубіжна література (Волощук, Звиняцьковський, Філенко) 10 клас 2018
+    year_provenance:
+      status: confirmed
+      source_file: 10-klas-zarubizhna-literatura-voloshhuk-2018
+      chunk_id: 10-klas-zarubizhna-literatura-voloshhuk-2018_s0000
+      page: 2
+      imprint_year: 2018
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2018'
   11-klas-algebra-ister-2019-prof:
     kind: textbook
     file: 11-klas-algebra-ister-2019-prof
@@ -1842,6 +2083,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1250-algebra-ister-11-klas.html
       heading: Алгебра (Істер, Єргіна) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-algebra-ister-2019-prof
+      chunk_id: 11-klas-algebra-ister-2019-prof_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2019'
   11-klas-angliiska-mova-kuchma-2019:
     kind: textbook
     file: 11-klas-angliiska-mova-kuchma-2019
@@ -1858,6 +2107,14 @@ sources:
       chunk_id: 11-klas-angliiska-mova-kuchma-2019_s0000
       page: 2
       title_text: Англійська мова. 7-й рік навчання
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-angliiska-mova-kuchma-2019
+      chunk_id: 11-klas-angliiska-mova-kuchma-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Навчальна книга – Богдан, 2019'
   11-klas-astronomiya-pryshliak-2019:
     kind: textbook
     file: 11-klas-astronomiya-pryshliak-2019
@@ -1874,6 +2131,14 @@ sources:
       chunk_id: 11-klas-astronomiya-pryshliak-2019_s0000
       page: 2
       title_text: Астрономія
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-astronomiya-pryshliak-2019
+      chunk_id: 11-klas-astronomiya-pryshliak-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Харків: Вид-во «Ранок», 2019'
   11-klas-biologiia-i-ekologia-shalamov-2019:
     kind: textbook
     file: 11-klas-biologiia-i-ekologia-shalamov-2019
@@ -1888,6 +2153,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3111-biologiia-ekologiia-11-klas-shalamov.html
       heading: Біологія і екологія (Шаламов) 11 клас 2019
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-biologiia-i-ekologia-shalamov-2019
+      chunk_id: 11-klas-biologiia-i-ekologia-shalamov-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Харків: Соняшник, 2019'
   11-klas-ekonomika-homiak-2019:
     kind: textbook
     file: 11-klas-ekonomika-homiak-2019
@@ -1904,6 +2177,14 @@ sources:
       chunk_id: 11-klas-ekonomika-homiak-2019_s0000
       page: 2
       title_text: Економіка
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-ekonomika-homiak-2019
+      chunk_id: 11-klas-ekonomika-homiak-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2019'
   11-klas-fizika-astronomiia-zasekina-2019-standart:
     kind: textbook
     file: 11-klas-fizika-astronomiia-zasekina-2019-standart
@@ -1918,6 +2199,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1277-fizyka-i-astronomiya-11-klas-zasekina.html
       heading: Фізика і астрономія (Засєкіна) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-fizika-astronomiia-zasekina-2019-standart
+      chunk_id: 11-klas-fizika-astronomiia-zasekina-2019-standart_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : УОВЦ «Оріон», 2019'
   11-klas-himia-grygorovych-2019:
     kind: textbook
     file: 11-klas-himia-grygorovych-2019
@@ -1932,6 +2221,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3059-khimiia-11-klas-grygorovych.html
       heading: Хімія (Григорович) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-himia-grygorovych-2019
+      chunk_id: 11-klas-himia-grygorovych-2019_s0003
+      page: 4
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2019'
   11-klas-informatyka-rudenko-2019:
     kind: textbook
     file: 11-klas-informatyka-rudenko-2019
@@ -1946,6 +2243,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3066-informatyka-11-klas-rudenko.html
       heading: Інформатика (Руденко) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-informatyka-rudenko-2019
+      chunk_id: 11-klas-informatyka-rudenko-2019_s0359
+      page: 257
+      imprint_year: 2019
+      basis: colophon_print_date
+      year_text: Підписано до друку 31.05.2019
   11-klas-istoriya-ukr-gisem-2024:
     kind: textbook
     file: 11-klas-istoriya-ukr-gisem-2024
@@ -1960,6 +2265,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3024-istoriia-ukrainy-gisem-11-klas-2024.html
       heading: Історія України (Гісем) 11 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-istoriya-ukr-gisem-2024
+      chunk_id: 11-klas-istoriya-ukr-gisem-2024_s0427
+      page: 322
+      imprint_year: 2024
+      basis: colophon_print_date
+      year_text: Підписано до друку 19.12.2024
   11-klas-istoriya-ukr-hlibovska-2024:
     kind: textbook
     file: 11-klas-istoriya-ukr-hlibovska-2024
@@ -1974,6 +2287,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3023-istoriia-ukrainy-khlibovska-11-klas-2024.html
       heading: Історія України (Хлібовська) 11 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-istoriya-ukr-hlibovska-2024
+      chunk_id: 11-klas-istoriya-ukr-hlibovska-2024_s0001
+      page: 3
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2024'
   11-klas-istoriya-vsesvit-schupak-2024:
     kind: textbook
     file: 11-klas-istoriya-vsesvit-schupak-2024
@@ -1988,6 +2309,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3027-vsesvitnia-istoriia-shchupak-11-klas-2024.html
       heading: Всесвітня історія (Щупак) 11 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-istoriya-vsesvit-schupak-2024
+      chunk_id: 11-klas-istoriya-vsesvit-schupak-2024_s0002
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Київ: УОВЦ «Оріон», 2024'
   11-klas-matematyka-nelin-2019:
     kind: textbook
     file: 11-klas-matematyka-nelin-2019
@@ -2002,6 +2331,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3065-matematyka-11-klas-nelin.html
       heading: Математика (Нелін) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-matematyka-nelin-2019
+      chunk_id: 11-klas-matematyka-nelin-2019_s0297
+      page: 304
+      imprint_year: 2019
+      basis: colophon_print_date
+      year_text: Підписано до друку 28.05.2019
   11-klas-pravoznavstvo-narovlianskyi-2019:
     kind: textbook
     file: 11-klas-pravoznavstvo-narovlianskyi-2019
@@ -2018,6 +2355,14 @@ sources:
       chunk_id: 11-klas-pravoznavstvo-narovlianskyi-2019_s0000
       page: 2
       title_text: Правознавство
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-pravoznavstvo-narovlianskyi-2019
+      chunk_id: 11-klas-pravoznavstvo-narovlianskyi-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : Грамота, 2019'
   11-klas-ukrajinska-literatura-avramenko-2019:
     kind: textbook
     file: 11-klas-ukrajinska-literatura-avramenko-2019
@@ -2032,6 +2377,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1237-ukrliteratura-avramenko-11klas.html
       heading: Українська література (Авраменко) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-ukrajinska-literatura-avramenko-2019
+      chunk_id: 11-klas-ukrajinska-literatura-avramenko-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : Грамота, 2019'
   11-klas-ukrajinska-mova-avramenko-2019:
     kind: textbook
     file: 11-klas-ukrajinska-mova-avramenko-2019
@@ -2046,6 +2399,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1239-ukrainska-mova-11-klas-avramenko.html
       heading: Українська мова (Авраменко) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-ukrajinska-mova-avramenko-2019
+      chunk_id: 11-klas-ukrajinska-mova-avramenko-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : Грамота, 2019'
   11-klas-ukrajinska-mova-glazova-2019:
     kind: textbook
     file: 11-klas-ukrajinska-mova-glazova-2019
@@ -2060,6 +2421,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1238-ukrmova-11-klas-glazova.html
       heading: Українська мова (Глазова) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-ukrajinska-mova-glazova-2019
+      chunk_id: 11-klas-ukrajinska-mova-glazova-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2019'
   11-klas-zakhist-vitchizni-gudima-2019-med:
     kind: textbook
     file: 11-klas-zakhist-vitchizni-gudima-2019-med
@@ -2074,6 +2443,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1270-zahyst-vitchyzny-11-klass-gudyma-med.html
       heading: Захист Вітчизни - Основи медичних знань (Гудима) 11 клас
+    year_provenance:
+      status: confirmed
+      source_file: 11-klas-zakhist-vitchizni-gudima-2019-med
+      chunk_id: 11-klas-zakhist-vitchizni-gudima-2019-med_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2019'
   11-klas-zarubizhna-literatura-voloshhuk-2019:
     kind: textbook
     file: 11-klas-zarubizhna-literatura-voloshhuk-2019
@@ -2088,18 +2465,50 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1279-zarubizhna-11-klas-voloschuk.html
       heading: Зарубіжна література (Волощук) 11 клас
+    year_provenance:
+      status: unconfirmed
+      source_file: 11-klas-zarubizhna-literatura-voloshhuk-2019
+      checked_chunk_ids:
+      - 11-klas-zarubizhna-literatura-voloshhuk-2019_s0000
+      - 11-klas-zarubizhna-literatura-voloshhuk-2019_s0001
+      - 11-klas-zarubizhna-literatura-voloshhuk-2019_s0002
+      - 11-klas-zarubizhna-literatura-voloshhuk-2019_s0003
+      - 11-klas-zarubizhna-literatura-voloshhuk-2019_s0230
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   2-klas-angliiska-mova-hubarieva-2024:
     kind: textbook
     file: 2-klas-angliiska-mova-hubarieva-2024
     author: Губарєва
-    title: null
+    title: Англійська мова
     grade: 2
     year: 2024
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Губарєва Світлана Сергіївна
+    - Павліченко Оксана Михайлівна
+    - Залюбовська Любов Володимирівна
+    publisher: Ранок
+    title_provenance:
+      source_file: 2-klas-angliiska-mova-hubarieva-2024
+      chunk_id: 2-klas-angliiska-mova-hubarieva-2024_s0160
+      page: 147
+      title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-angliiska-mova-hubarieva-2024
+      chunk_id: 2-klas-angliiska-mova-hubarieva-2024_s0160
+      page: 147
+      imprint_year: 2024
+      basis: colophon_print_date
+      year_text: Підписано до друку 03.10.2024
   2-klas-matematyka-ister-2025:
     kind: textbook
     file: 2-klas-matematyka-ister-2025
@@ -2114,6 +2523,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3034-matematyka-ister-2-klas.html
       heading: Математика (Істер) 2 клас
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-matematyka-ister-2025
+      chunk_id: 2-klas-matematyka-ister-2025_s0001
+      page: 2
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : ТОВ Генеза, 2025'
   2-klas-mystetstvo-rublia-2024:
     kind: textbook
     file: 2-klas-mystetstvo-rublia-2024
@@ -2128,6 +2545,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3051-mystectvo-2-klas-rublia.html
       heading: Мистецтво (Рубля) 2 клас
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-mystetstvo-rublia-2024
+      chunk_id: 2-klas-mystetstvo-rublia-2024_s0001
+      page: 3
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Х. : Вид-во «Ранок», 2024'
   2-klas-ukrmova-bolshakova-2019-1:
     kind: textbook
     file: 2-klas-ukrmova-bolshakova-2019-1
@@ -2144,6 +2569,14 @@ sources:
       url: https://pidruchnyk.com.ua/3037-ukrmova-bolshakova-2-klas.html
       heading: Українська мова та читання (Большакова) 2 клас 2019, 2025
       part_label: 1 частина 2019
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-ukrmova-bolshakova-2019-1
+      chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0096
+      page: 96
+      imprint_year: 2019
+      basis: colophon_print_date
+      year_text: Підписано до друку 17.05.2019
   2-klas-ukrmova-bolshakova-2019-2:
     kind: textbook
     file: 2-klas-ukrmova-bolshakova-2019-2
@@ -2160,6 +2593,14 @@ sources:
       url: https://pidruchnyk.com.ua/3037-ukrmova-bolshakova-2-klas.html
       heading: Українська мова та читання (Большакова) 2 клас 2019, 2025
       part_label: 2 частина 2019
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-ukrmova-bolshakova-2019-2
+      chunk_id: 2-klas-ukrmova-bolshakova-2019-2_s0093
+      page: 96
+      imprint_year: 2019
+      basis: colophon_print_date
+      year_text: Підписано до друку 19.06.2019
   2-klas-ukrmova-vashulenko-2019-1:
     kind: textbook
     file: 2-klas-ukrmova-vashulenko-2019-1
@@ -2176,6 +2617,14 @@ sources:
       url: https://pidruchnyk.com.ua/57-ukrayinska-mova-vashulenko-dubovyk-2-klas.html
       heading: Українська мова (Вашуленко, Дубовик) 2 клас 2019, 2025
       part_label: 1 частина 2019
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-ukrmova-vashulenko-2019-1
+      chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : Видавничий дім «Освіта», 2019'
   2-klas-ukrmova-vashulenko-2019-2:
     kind: textbook
     file: 2-klas-ukrmova-vashulenko-2019-2
@@ -2192,6 +2641,14 @@ sources:
       url: https://pidruchnyk.com.ua/57-ukrayinska-mova-vashulenko-dubovyk-2-klas.html
       heading: Українська мова (Вашуленко, Дубовик) 2 клас 2019, 2025
       part_label: 2 частина 2019
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-ukrmova-vashulenko-2019-2
+      chunk_id: 2-klas-ukrmova-vashulenko-2019-2_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : Видавничий дім «Освіта», 2019'
   2-klas-ya-doslidzhuiu-svit-hrushchynska-2019:
     kind: textbook
     file: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019
@@ -2210,6 +2667,14 @@ sources:
       part_chunk_id: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019_s0000
       part_page: 2
     part: 1
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019
+      chunk_id: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : УОВЦ «Оріон», 2019'
   2-klas-ya-doslidzhuiu-svit-morze-2019:
     kind: textbook
     file: 2-klas-ya-doslidzhuiu-svit-morze-2019
@@ -2228,6 +2693,14 @@ sources:
       part_chunk_id: 2-klas-ya-doslidzhuiu-svit-morze-2019_s0000
       part_page: 2
     part: 2
+    year_provenance:
+      status: confirmed
+      source_file: 2-klas-ya-doslidzhuiu-svit-morze-2019
+      chunk_id: 2-klas-ya-doslidzhuiu-svit-morze-2019_s0000
+      page: 2
+      imprint_year: 2019
+      basis: catalogue_entry
+      year_text: 'К. : УОВЦ «Оріон», 2019'
   3-klas-angliiska-mova-karpiuk-2020:
     kind: textbook
     file: 3-klas-angliiska-mova-karpiuk-2020
@@ -2244,6 +2717,14 @@ sources:
       chunk_id: 3-klas-angliiska-mova-karpiuk-2020_s0000
       page: 2
       title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-angliiska-mova-karpiuk-2020
+      chunk_id: 3-klas-angliiska-mova-karpiuk-2020_s0000
+      page: 2
+      imprint_year: 2020
+      basis: catalogue_entry
+      year_text: 'Тернопіль : „Видавництво Астон”, 2020'
   3-klas-informatyka-morze-2025:
     kind: textbook
     file: 3-klas-informatyka-morze-2025
@@ -2262,6 +2743,14 @@ sources:
       part_chunk_id: 3-klas-informatyka-morze-2025_s0094
       part_page: 85
     part: 2
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-informatyka-morze-2025
+      chunk_id: 3-klas-informatyka-morze-2025_s0003
+      page: 6
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2025'
   3-klas-matematyka-lystopad-2020-1:
     kind: textbook
     file: 3-klas-matematyka-lystopad-2020-1
@@ -2278,6 +2767,14 @@ sources:
       url: https://pidruchnyk.com.ua/1502-matematyka-3-klas-lystopad.html
       heading: Математика (Листопад) 3 клас 2020, 2025
       part_label: 1 частина 2020
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-matematyka-lystopad-2020-1
+      chunk_id: 3-klas-matematyka-lystopad-2020-1_s0000
+      page: 2
+      imprint_year: 2020
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2020'
   3-klas-matematyka-lystopad-2020-2:
     kind: textbook
     file: 3-klas-matematyka-lystopad-2020-2
@@ -2294,6 +2791,14 @@ sources:
       url: https://pidruchnyk.com.ua/1502-matematyka-3-klas-lystopad.html
       heading: Математика (Листопад) 3 клас 2020, 2025
       part_label: 2 частина 2020
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-matematyka-lystopad-2020-2
+      chunk_id: 3-klas-matematyka-lystopad-2020-2_s0000
+      page: 2
+      imprint_year: 2020
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2020'
   3-klas-mystetstvo-arystova-2025:
     kind: textbook
     file: 3-klas-mystetstvo-arystova-2025
@@ -2308,6 +2813,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3042-mystectvo-3-klas-arystova.html
       heading: Мистецтво (Аристова) 3 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-mystetstvo-arystova-2025
+      chunk_id: 3-klas-mystetstvo-arystova-2025_s0004
+      page: 6
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ: УОВЦ «Оріон», 2025'
   3-klas-ukrainska-mova-savchenko-2020-2:
     kind: textbook
     file: 3-klas-ukrainska-mova-savchenko-2020-2
@@ -2324,6 +2837,14 @@ sources:
       url: https://pidruchnyk.com.ua/1504-ukrmova-ta-chytannja-sachenko-3-klas-nush.html
       heading: Українська мова та читання (Савченко) 3 клас 2020, 2025
       part_label: Савченко 2 частина 2020
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-ukrainska-mova-savchenko-2020-2
+      chunk_id: 3-klas-ukrainska-mova-savchenko-2020-2_s0000
+      page: 2
+      imprint_year: 2020
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2020'
   3-klas-ya-doslidzhuiu-svit-zharkova-2020-1:
     kind: textbook
     file: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-1
@@ -2340,6 +2861,14 @@ sources:
       url: https://pidruchnyk.com.ua/1545-ya-doslidzhuyu-svit-3-klas-zharkova.html
       heading: Я досліджую світ (Жаркова, Мечник, Роговська) 3 клас
       part_label: 1 частина 2020
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-1
+      chunk_id: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-1_s0000
+      page: 2
+      imprint_year: 2020
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Підручники і посібники, 2020'
   3-klas-ya-doslidzhuiu-svit-zharkova-2020-2:
     kind: textbook
     file: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-2
@@ -2356,6 +2885,14 @@ sources:
       url: https://pidruchnyk.com.ua/1545-ya-doslidzhuyu-svit-3-klas-zharkova.html
       heading: Я досліджую світ (Жаркова, Мечник, Роговська) 3 клас
       part_label: 2 частина 2020
+    year_provenance:
+      status: confirmed
+      source_file: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-2
+      chunk_id: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-2_s0000
+      page: 2
+      imprint_year: 2020
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Підручники і посібники, 2020'
   4-klas-angliiska-mova-hubarieva-2021:
     kind: textbook
     file: 4-klas-angliiska-mova-hubarieva-2021
@@ -2372,6 +2909,14 @@ sources:
       chunk_id: 4-klas-angliiska-mova-hubarieva-2021_s0000
       page: 2
       title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-angliiska-mova-hubarieva-2021
+      chunk_id: 4-klas-angliiska-mova-hubarieva-2021_s0000
+      page: 2
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во « Ранок», 2021'
   4-klas-informatyka-vorontsova-2021:
     kind: textbook
     file: 4-klas-informatyka-vorontsova-2021
@@ -2386,6 +2931,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1592-nformatika-4-klas-voroncova.html
       heading: Інформатика (Воронцова) 4 клас
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-informatyka-vorontsova-2021
+      chunk_id: 4-klas-informatyka-vorontsova-2021_s0000
+      page: 2
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Київ : Видавництво «Алатон», 2021'
   4-klas-matematyka-ister-2021-1:
     kind: textbook
     file: 4-klas-matematyka-ister-2021-1
@@ -2402,6 +2955,14 @@ sources:
       url: https://pidruchnyk.com.ua/1570-matematika-4-klas-ster.html
       heading: Математика (Істер) 4 клас
       part_label: Читати онлайн — 1 частина
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-matematyka-ister-2021-1
+      chunk_id: 4-klas-matematyka-ister-2021-1_s0000
+      page: 2
+      imprint_year: 2021
+      basis: title_page_imprint
+      year_text: Київ «Генеза» 2021
   4-klas-matematyka-ister-2021-2:
     kind: textbook
     file: 4-klas-matematyka-ister-2021-2
@@ -2418,6 +2979,14 @@ sources:
       url: https://pidruchnyk.com.ua/1570-matematika-4-klas-ster.html
       heading: Математика (Істер) 4 клас
       part_label: 2 частина
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-matematyka-ister-2021-2
+      chunk_id: 4-klas-matematyka-ister-2021-2_s0000
+      page: 2
+      imprint_year: 2021
+      basis: title_page_imprint
+      year_text: Київ «Генеза» 2021
   4-klas-mystetstvo-rublia-2021:
     kind: textbook
     file: 4-klas-mystetstvo-rublia-2021
@@ -2432,6 +3001,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1610-mystectvo-4-klas-rublya.html
       heading: Мистецтво (Рубля) 4 клас
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-mystetstvo-rublia-2021
+      chunk_id: 4-klas-mystetstvo-rublia-2021_s0000
+      page: 2
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2021'
   4-klas-ukrayinska-mova-kravtsova-2021-1:
     kind: textbook
     file: 4-klas-ukrayinska-mova-kravtsova-2021-1
@@ -2450,6 +3027,14 @@ sources:
       page: 2
       title_text: Українська мова та читання
       part_label: Ч. 1
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-ukrayinska-mova-kravtsova-2021-1
+      chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0000
+      page: 2
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Підручники і посібники, 2021'
   4-klas-ukrayinska-mova-ponomarova-2021-1:
     kind: textbook
     file: 4-klas-ukrayinska-mova-ponomarova-2021-1
@@ -2468,6 +3053,14 @@ sources:
       page: 2
       title_text: Українська мова та читання
       part_label: Частина 1
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-ukrayinska-mova-ponomarova-2021-1
+      chunk_id: 4-klas-ukrayinska-mova-ponomarova-2021-1_s0000
+      page: 2
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2021'
   4-klas-ukrayinska-mova-savchenko-2021-2:
     kind: textbook
     file: 4-klas-ukrayinska-mova-savchenko-2021-2
@@ -2486,6 +3079,14 @@ sources:
       page: 2
       title_text: Українська мова та читання
       part_label: Частина 2
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-ukrayinska-mova-savchenko-2021-2
+      chunk_id: 4-klas-ukrayinska-mova-savchenko-2021-2_s0000
+      page: 2
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2021'
   4-klas-ukrayinska-mova-zaharijchuk-2021-1:
     kind: textbook
     file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1
@@ -2504,6 +3105,14 @@ sources:
       page: 2
       title_text: Українська мова та читання
       part_label: Частина 1
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1
+      chunk_id: 4-klas-ukrayinska-mova-zaharijchuk-2021-1_s0000
+      page: 2
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2021'
   4-klas-ya-doslidzhuiu-svit-zharkova-2021-1:
     kind: textbook
     file: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-1
@@ -2520,6 +3129,14 @@ sources:
       url: https://pidruchnyk.com.ua/1624-ya-doslidzhuyu-svit-4-klas-zharkova.html
       heading: Я досліджую світ (Жаркова) 4 клас
       part_label: Читати онлайн — 1 частина
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-1
+      chunk_id: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-1_s0001
+      page: 3
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Підручники і посібники, 2021'
   4-klas-ya-doslidzhuiu-svit-zharkova-2021-2:
     kind: textbook
     file: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-2
@@ -2536,6 +3153,14 @@ sources:
       url: https://pidruchnyk.com.ua/1624-ya-doslidzhuyu-svit-4-klas-zharkova.html
       heading: Я досліджую світ (Жаркова) 4 клас
       part_label: 2 частина
+    year_provenance:
+      status: confirmed
+      source_file: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-2
+      chunk_id: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-2_s0001
+      page: 3
+      imprint_year: 2021
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Підручники і посібники, 2021'
   5-klas-angliiska-mova-pakhomova-2022:
     kind: textbook
     file: 5-klas-angliiska-mova-pakhomova-2022
@@ -2552,6 +3177,14 @@ sources:
       chunk_id: 5-klas-angliiska-mova-pakhomova-2022_s0000
       page: 2
       title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-angliiska-mova-pakhomova-2022
+      chunk_id: 5-klas-angliiska-mova-pakhomova-2022_s0000
+      page: 2
+      imprint_year: 2022
+      basis: catalogue_entry
+      year_text: 'К. : Metodika Publishing, 2022'
   5-klas-etyka-meleshchenko-2022:
     kind: textbook
     file: 5-klas-etyka-meleshchenko-2022
@@ -2566,6 +3199,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1695-etyka-5-klas-meleshchenko.html
       heading: Етика (Мелещенко) 5 клас
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-etyka-meleshchenko-2022
+      chunk_id: 5-klas-etyka-meleshchenko-2022_s0000
+      page: 2
+      imprint_year: 2022
+      basis: title_page_imprint
+      year_text: Київ 2022
   5-klas-informatyka-morze-2022:
     kind: textbook
     file: 5-klas-informatyka-morze-2022
@@ -2582,6 +3223,14 @@ sources:
       chunk_id: 5-klas-informatyka-morze-2022_s0000
       page: 2
       title_text: Інформатика
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-informatyka-morze-2022
+      chunk_id: 5-klas-informatyka-morze-2022_s0001
+      page: 3
+      imprint_year: 2022
+      basis: catalogue_entry
+      year_text: 'Київ: УОВЦ «Оріон», 2022'
   5-klas-istoriya-schupak-2022:
     kind: textbook
     file: 5-klas-istoriya-schupak-2022
@@ -2596,6 +3245,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1668-vstup-do-istorii-5-klas-shchupak-2022.html
       heading: Вступ до історії України та громадянської освіти (Щупак) 5 клас 2022
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-istoriya-schupak-2022
+      chunk_id: 5-klas-istoriya-schupak-2022_s0000
+      page: 2
+      imprint_year: 2022
+      basis: title_page_imprint
+      year_text: Київ 2022
   5-klas-matematyka-ister-2022:
     kind: textbook
     file: 5-klas-matematyka-ister-2022
@@ -2610,6 +3267,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1632-matematyka-5-klas-ister-2022.html
       heading: Математика (Істер) 5 клас 2022
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-matematyka-ister-2022
+      chunk_id: 5-klas-matematyka-ister-2022_s0000
+      page: 2
+      imprint_year: 2022
+      basis: title_page_imprint
+      year_text: Київ «Генеза» 2022
   5-klas-mystetstvo-rublia-2022:
     kind: textbook
     file: 5-klas-mystetstvo-rublia-2022
@@ -2624,6 +3289,20 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1709-mystectvo-rublia-5-klas.html
       heading: Мистецтво (Рубля) 5 клас
+    year_provenance:
+      status: unconfirmed
+      source_file: 5-klas-mystetstvo-rublia-2022
+      checked_chunk_ids:
+      - 5-klas-mystetstvo-rublia-2022_s0000
+      - 5-klas-mystetstvo-rublia-2022_s0001
+      - 5-klas-mystetstvo-rublia-2022_s0002
+      - 5-klas-mystetstvo-rublia-2022_s0003
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   5-klas-piznaiemo-pryrodu-korshevniuk-2022:
     kind: textbook
     file: 5-klas-piznaiemo-pryrodu-korshevniuk-2022
@@ -2638,6 +3317,20 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1722-piznaiemo-pryrodu-korshevnuk-5-klas-2022.html
       heading: Пізнаємо природу (Коршевнюк) 5 клас 2022
+    year_provenance:
+      status: unconfirmed
+      source_file: 5-klas-piznaiemo-pryrodu-korshevniuk-2022
+      checked_chunk_ids:
+      - 5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0000
+      - 5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0001
+      - 5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0002
+      - 5-klas-piznaiemo-pryrodu-korshevniuk-2022_s0003
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   5-klas-tekhnolohiyi-bilenko-2023:
     kind: textbook
     file: 5-klas-tekhnolohiyi-bilenko-2023
@@ -2652,6 +3345,21 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2696-tehnologii-5-klas-bilenko.html
       heading: Технології (Біленко) 5 клас
+    year_provenance:
+      status: unconfirmed
+      source_file: 5-klas-tekhnolohiyi-bilenko-2023
+      checked_chunk_ids:
+      - 5-klas-tekhnolohiyi-bilenko-2023_s0000
+      - 5-klas-tekhnolohiyi-bilenko-2023_s0001
+      - 5-klas-tekhnolohiyi-bilenko-2023_s0002
+      - 5-klas-tekhnolohiyi-bilenko-2023_s0003
+      - 5-klas-tekhnolohiyi-bilenko-2023_s0212
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   5-klas-ukrlit-avramenko-2022:
     kind: textbook
     file: 5-klas-ukrlit-avramenko-2022
@@ -2666,6 +3374,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1685-5_ukrlit_avramenko.html
       heading: Українська література (Авраменко) 5 клас 2022
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-ukrlit-avramenko-2022
+      chunk_id: 5-klas-ukrlit-avramenko-2022_s0000
+      page: 2
+      imprint_year: 2022
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2022'
   5-klas-ukrmova-avramenko-2022:
     kind: textbook
     file: 5-klas-ukrmova-avramenko-2022
@@ -2680,6 +3396,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1643-ukrainska-mova-avramenko-5-klas-2022.html
       heading: Українська мова (Авраменко) 5 клас 2022
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-ukrmova-avramenko-2022
+      chunk_id: 5-klas-ukrmova-avramenko-2022_s0000
+      page: 2
+      imprint_year: 2022
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2022'
   5-klas-ukrmova-golub-2022:
     kind: textbook
     file: 5-klas-ukrmova-golub-2022
@@ -2694,18 +3418,45 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1649-ukrmova-5-klas-golub.html
       heading: Українська мова (Голуб) 5 клас
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-ukrmova-golub-2022
+      chunk_id: 5-klas-ukrmova-golub-2022_s0001
+      page: 2
+      imprint_year: 2022
+      basis: catalogue_entry
+      year_text: 'К. : Видавничий дім «Освіта», 2022'
   5-klas-ukrmova-zabolotnyi-2023:
     kind: textbook
     file: 5-klas-ukrmova-zabolotnyi-2023
     author: Заболотний
-    title: null
+    title: Українська мова
     grade: 5
-    year: 2023
+    year: 2022
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Заболотний О. В.
+    - Заболотний В. В.
+    publisher: Генеза
+    title_provenance:
+      source_file: 5-klas-ukrmova-zabolotnyi-2023
+      chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0003
+      page: 5
+      title_text: Українська мова
+      colophon_chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0207
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-ukrmova-zabolotnyi-2023
+      chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0003
+      page: 5
+      imprint_year: 2022
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2022'
+      file_id_year: 2023
+      note: Citation uses the book imprint year; the source_file identity is unchanged.
   5-klas-zarubizhna-literatura-voloshchuk-2022:
     kind: textbook
     file: 5-klas-zarubizhna-literatura-voloshchuk-2022
@@ -2720,6 +3471,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1693-5_zarlit_voloschuk.html
       heading: Зарубіжна література (Волощук) 5 клас 2022
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-zarubizhna-literatura-voloshchuk-2022
+      chunk_id: 5-klas-zarubizhna-literatura-voloshchuk-2022_s0000
+      page: 3
+      imprint_year: 2022
+      basis: title_page_imprint
+      year_text: Київ «Генеза» 2022
   5-klas-zdorovia-vorontsova-2022:
     kind: textbook
     file: 5-klas-zdorovia-vorontsova-2022
@@ -2734,6 +3493,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1707-zdorovia-bezpeka-ta-dobrobut-voroncova-5-klas.html
       heading: Здоров’я, безпека та добробут (Воронцова) 5 клас
+    year_provenance:
+      status: confirmed
+      source_file: 5-klas-zdorovia-vorontsova-2022
+      chunk_id: 5-klas-zdorovia-vorontsova-2022_s0001
+      page: 2
+      imprint_year: 2022
+      basis: title_page_imprint
+      year_text: Київ Видавництво «Алатон» 2022
   6-klas-angliiska-mova-pakhomova-2023:
     kind: textbook
     file: 6-klas-angliiska-mova-pakhomova-2023
@@ -2750,6 +3517,14 @@ sources:
       chunk_id: 6-klas-angliiska-mova-pakhomova-2023_s0000
       page: 2
       title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-angliiska-mova-pakhomova-2023
+      chunk_id: 6-klas-angliiska-mova-pakhomova-2023_s0000
+      page: 2
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'К. : Методика Паблішинг, 2023'
   6-klas-etyka-martyniuk-2023:
     kind: textbook
     file: 6-klas-etyka-martyniuk-2023
@@ -2764,30 +3539,79 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2632-etyka-6-klas-martyniuk.html
       heading: Етика (Мартинюк) 6 клас 2023
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-etyka-martyniuk-2023
+      chunk_id: 6-klas-etyka-martyniuk-2023_s0003
+      page: 4
+      imprint_year: 2023
+      basis: title_page_imprint
+      year_text: Харків Видавництво «Ранок» 2023
   6-klas-heohrafiya-zapotockyi-2023:
     kind: textbook
     file: 6-klas-heohrafiya-zapotockyi-2023
     author: Запотоцький
-    title: null
+    title: Географія
     grade: 6
     year: 2023
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Запотоцький С. П.
+    - Зінкевич М. В.
+    - Романишин О. М.
+    - Титар Н. М.
+    - Горовий О. В.
+    - Миколів І. М.
+    publisher: Астон
+    title_provenance:
+      source_file: 6-klas-heohrafiya-zapotockyi-2023
+      chunk_id: 6-klas-heohrafiya-zapotockyi-2023_s0001
+      page: 4
+      title_text: Географія
+      colophon_chunk_id: 6-klas-heohrafiya-zapotockyi-2023_s0287
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-heohrafiya-zapotockyi-2023
+      chunk_id: 6-klas-heohrafiya-zapotockyi-2023_s0001
+      page: 4
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2023'
   6-klas-informatyka-bondarenko-2023:
     kind: textbook
     file: 6-klas-informatyka-bondarenko-2023
     author: Бондаренко
-    title: null
+    title: Інформатика
     grade: 6
     year: 2023
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Бондаренко Олена Олександрівна
+    - Ластовецький Василь Васильович
+    - Пилипчук Олександр Павлович
+    - Шестопалов Євген Анатолійович
+    publisher: Ранок
+    title_provenance:
+      source_file: 6-klas-informatyka-bondarenko-2023
+      chunk_id: 6-klas-informatyka-bondarenko-2023_s0180
+      page: 259
+      title_text: Інформатика
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-informatyka-bondarenko-2023
+      chunk_id: 6-klas-informatyka-bondarenko-2023_s0180
+      page: 259
+      imprint_year: 2023
+      basis: colophon_print_date
+      year_text: Підписано до друку **.**.2023
+      note: 'The corpus holds a textbook project: the colophon gives 2023 with placeholder day/month and printing
+        quantities.'
   6-klas-istoriia-shchupak-2023:
     kind: textbook
     file: 6-klas-istoriia-shchupak-2023
@@ -2802,6 +3626,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2610-istoriia-6-klas-shchupak-2023.html
       heading: Історія (Щупак) 6 клас 2023
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-istoriia-shchupak-2023
+      chunk_id: 6-klas-istoriia-shchupak-2023_s0001
+      page: 4
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2023'
   6-klas-istoriya-gisem-2023:
     kind: textbook
     file: 6-klas-istoriya-gisem-2023
@@ -2816,30 +3648,82 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2606-istoriia-6-klas-gisem-2023.html
       heading: Історія України. Всесвітня історія (Гісем) 6 клас 2023
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-istoriya-gisem-2023
+      chunk_id: 6-klas-istoriya-gisem-2023_s0002
+      page: 3
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2023'
   6-klas-matematyka-tarasenkova-2023-1:
     kind: textbook
     file: 6-klas-matematyka-tarasenkova-2023-1
     author: Тарасенкова
-    title: null
+    title: Математика
     grade: 6
     year: 2023
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Тарасенкова Н. А.
+    - Богатирьова І. М.
+    - Коломієць О. М.
+    - Сердюк З. О.
+    - Рудніцька Ю. В.
+    publisher: УОВЦ «Оріон»
+    part: 1
+    title_provenance:
+      source_file: 6-klas-matematyka-tarasenkova-2023-1
+      chunk_id: 6-klas-matematyka-tarasenkova-2023-1_s0002
+      page: 4
+      title_text: Математика
+      part_label: Частина 1
+      colophon_chunk_id: 6-klas-matematyka-tarasenkova-2023-1_s0228
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-matematyka-tarasenkova-2023-1
+      chunk_id: 6-klas-matematyka-tarasenkova-2023-1_s0002
+      page: 4
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2023'
   6-klas-matematyka-tarasenkova-2023-2:
     kind: textbook
     file: 6-klas-matematyka-tarasenkova-2023-2
     author: Тарасенкова
-    title: null
+    title: Математика
     grade: 6
     year: 2023
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Тарасенкова Н. А.
+    - Богатирьова І. М.
+    - Коломієць О. М.
+    - Сердюк З. О.
+    - Рудніцька Ю. В.
+    publisher: УОВЦ «Оріон»
+    part: 2
+    title_provenance:
+      source_file: 6-klas-matematyka-tarasenkova-2023-2
+      chunk_id: 6-klas-matematyka-tarasenkova-2023-2_s0003
+      page: 4
+      title_text: Математика
+      part_label: Частина 2
+      colophon_chunk_id: 6-klas-matematyka-tarasenkova-2023-2_s0196
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-matematyka-tarasenkova-2023-2
+      chunk_id: 6-klas-matematyka-tarasenkova-2023-2_s0003
+      page: 4
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2023'
   6-klas-mystetstvo-rublia-2023:
     kind: textbook
     file: 6-klas-mystetstvo-rublia-2023
@@ -2854,6 +3738,20 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2687-mystetstvo-6-klas-rublia.html
       heading: Мистецтво (Рубля) 6 клас 2023
+    year_provenance:
+      status: unconfirmed
+      source_file: 6-klas-mystetstvo-rublia-2023
+      checked_chunk_ids:
+      - 6-klas-mystetstvo-rublia-2023_s0000
+      - 6-klas-mystetstvo-rublia-2023_s0001
+      - 6-klas-mystetstvo-rublia-2023_s0002
+      - 6-klas-mystetstvo-rublia-2023_s0003
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   6-klas-piznaemo-pryrodu-korshevniuk-2023:
     kind: textbook
     file: 6-klas-piznaemo-pryrodu-korshevniuk-2023
@@ -2868,6 +3766,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2651-piznaiemo-pryrodu-6-klas-korshevniuk.html
       heading: Пізнаємо природу (Коршевнюк) 6 клас
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-piznaemo-pryrodu-korshevniuk-2023
+      chunk_id: 6-klas-piznaemo-pryrodu-korshevniuk-2023_s0000
+      page: 2
+      imprint_year: 2023
+      basis: title_page_imprint
+      year_text: Київ 2023
   6-klas-tekhnolohiyi-bilenko-2023:
     kind: textbook
     file: 6-klas-tekhnolohiyi-bilenko-2023
@@ -2882,6 +3788,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2694-tehnologii-6-klas-bilenko.html
       heading: Технології (Біленко) 6 клас
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-tekhnolohiyi-bilenko-2023
+      chunk_id: 6-klas-tekhnolohiyi-bilenko-2023_s0001
+      page: 4
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2023'
   6-klas-ukrlit-avramenko-2023:
     kind: textbook
     file: 6-klas-ukrlit-avramenko-2023
@@ -2896,6 +3810,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html
       heading: Українська література (Авраменко) 6 клас 2023
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-ukrlit-avramenko-2023
+      chunk_id: 6-klas-ukrlit-avramenko-2023_s0002
+      page: 3
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2023'
   6-klas-ukrmova-avramenko-2023:
     kind: textbook
     file: 6-klas-ukrmova-avramenko-2023
@@ -2910,6 +3832,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2592-ukrmova-6-klas-avramenko.html
       heading: Українська мова (Авраменко) 6 клас 2023
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-ukrmova-avramenko-2023
+      chunk_id: 6-klas-ukrmova-avramenko-2023_s0001
+      page: 2
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2023'
   6-klas-ukrmova-golub-2023:
     kind: textbook
     file: 6-klas-ukrmova-golub-2023
@@ -2924,6 +3854,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2595-ukrmova-6-klas-golub.html
       heading: Українська мова (Голуб) 6 клас 2023
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-ukrmova-golub-2023
+      chunk_id: 6-klas-ukrmova-golub-2023_s0000
+      page: 2
+      imprint_year: 2023
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2023
   6-klas-ukrmova-litvinova-2023:
     kind: textbook
     file: 6-klas-ukrmova-litvinova-2023
@@ -2940,6 +3878,14 @@ sources:
       chunk_id: 6-klas-ukrmova-litvinova-2023_s0000
       page: 2
       title_text: Українська мова
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-ukrmova-litvinova-2023
+      chunk_id: 6-klas-ukrmova-litvinova-2023_s0000
+      page: 2
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2023'
   6-klas-zdorovia-vorontsova-2023:
     kind: textbook
     file: 6-klas-zdorovia-vorontsova-2023
@@ -2954,6 +3900,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2644-zdorovia-6-klas-vorontsova-2023.html
       heading: Здоров'я, безпека та добробут (Воронцова) 6 клас
+    year_provenance:
+      status: confirmed
+      source_file: 6-klas-zdorovia-vorontsova-2023
+      chunk_id: 6-klas-zdorovia-vorontsova-2023_s0001
+      page: 2
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Ê.: Видавництво «Ала тон», 2023'
   7-klas-algebra-merzliak-2024:
     kind: textbook
     file: 7-klas-algebra-merzliak-2024
@@ -2968,6 +3922,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2892-algebra-merzliak-7-klas-2024.html
       heading: Алгебра (Мерзляк) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-algebra-merzliak-2024
+      chunk_id: 7-klas-algebra-merzliak-2024_s0001
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Х. : Гімназія, 2024'
   7-klas-angliiska-mova-kosta-2024:
     kind: textbook
     file: 7-klas-angliiska-mova-kosta-2024
@@ -2984,18 +3946,41 @@ sources:
       chunk_id: 7-klas-angliiska-mova-kosta-2024_s0001
       page: 2
       title_text: Англійська мова
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-angliiska-mova-kosta-2024
+      chunk_id: 7-klas-angliiska-mova-kosta-2024_s0002
+      page: 3
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'К. : Видавництво «Лінгвіст», 2024'
   7-klas-biolohiya-sobol-2024:
     kind: textbook
     file: 7-klas-biolohiya-sobol-2024
     author: Соболь
-    title: null
+    title: Біологія
     grade: 7
     year: 2024
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Соболь В. І.
+    publisher: Видавництво Абетка
+    title_provenance:
+      source_file: 7-klas-biolohiya-sobol-2024
+      chunk_id: 7-klas-biolohiya-sobol-2024_s0002
+      page: 4
+      title_text: Біологія
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-biolohiya-sobol-2024
+      chunk_id: 7-klas-biolohiya-sobol-2024_s0002
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Кам’янець-Подільський : Видавництво Абетка, 2024'
   7-klas-fizyka-bariakhtar-2024:
     kind: textbook
     file: 7-klas-fizyka-bariakhtar-2024
@@ -3010,6 +3995,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2823-fizyka-bariakhtar-7-klas-2024.html
       heading: Фізика (Бар'яхтар) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-fizyka-bariakhtar-2024
+      chunk_id: 7-klas-fizyka-bariakhtar-2024_s0200
+      page: 275
+      imprint_year: 2024
+      basis: colophon_print_date
+      year_text: Підписано до друку 17.04.2024
   7-klas-heometriya-merzliak-2024:
     kind: textbook
     file: 7-klas-heometriya-merzliak-2024
@@ -3024,18 +4017,45 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2885-geometriia-merzliak-7-klas-2024.html
       heading: Геометрія (Мерзляк) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-heometriya-merzliak-2024
+      chunk_id: 7-klas-heometriya-merzliak-2024_s0001
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Х. : Гімназія, 2024'
   7-klas-informatyka-bondarenko-2024:
     kind: textbook
     file: 7-klas-informatyka-bondarenko-2024
     author: Бондаренко
-    title: null
+    title: Інформатика
     grade: 7
     year: 2024
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Бондаренко О. О.
+    - Ластовецький В. В.
+    - Пилипчук О. П.
+    - Шестопалов Є. А.
+    publisher: Ранок
+    title_provenance:
+      source_file: 7-klas-informatyka-bondarenko-2024
+      chunk_id: 7-klas-informatyka-bondarenko-2024_s0003
+      page: 5
+      title_text: Інформатика
+      colophon_chunk_id: 7-klas-informatyka-bondarenko-2024_s0215
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-informatyka-bondarenko-2024
+      chunk_id: 7-klas-informatyka-bondarenko-2024_s0215
+      page: 275
+      imprint_year: 2024
+      basis: colophon_print_date
+      year_text: Підписано до друку 22.04.2024
   7-klas-istoria-ukr-hlibovska-2024:
     kind: textbook
     file: 7-klas-istoria-ukr-hlibovska-2024
@@ -3052,18 +4072,45 @@ sources:
       chunk_id: 7-klas-istoria-ukr-hlibovska-2024_s0001
       page: 2
       title_text: Історія України
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-istoria-ukr-hlibovska-2024
+      chunk_id: 7-klas-istoria-ukr-hlibovska-2024_s0001
+      page: 2
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2024'
   7-klas-istoriya-shchupak-2024-full:
     kind: textbook
     file: 7-klas-istoriya-shchupak-2024-full
     author: Щупак
-    title: null
+    title: 'Історія: Україна і світ'
     grade: 7
     year: 2024
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Щупак І. Я.
+    - Секиринський Д. О.
+    - Власова Н. С.
+    - Кронгауз В. О.
+    publisher: УОВЦ «Оріон»
+    title_provenance:
+      source_file: 7-klas-istoriya-shchupak-2024-full
+      chunk_id: 7-klas-istoriya-shchupak-2024-full_s0000
+      page: 4
+      title_text: 'Історія: Україна і світ'
+      colophon_chunk_id: 7-klas-istoriya-shchupak-2024-full_s0588
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-istoriya-shchupak-2024-full
+      chunk_id: 7-klas-istoriya-shchupak-2024-full_s0000
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Київ: УОВЦ «Оріон», 2024'
   7-klas-khimiya-hryhorovych-2024:
     kind: textbook
     file: 7-klas-khimiya-hryhorovych-2024
@@ -3078,6 +4125,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2819-khimiia-grygorovych-7-klas-2024.html
       heading: Хімія (Григорович) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-khimiya-hryhorovych-2024
+      chunk_id: 7-klas-khimiya-hryhorovych-2024_s0164
+      page: 209
+      imprint_year: 2024
+      basis: colophon_print_date
+      year_text: Підписано до друку 17.04.2024
   7-klas-mystetstvo-masol-2024:
     kind: textbook
     file: 7-klas-mystetstvo-masol-2024
@@ -3092,13 +4147,21 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2804-mystectvo-masol-7-klas-2024.html
       heading: Мистецтво (Масол) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-mystetstvo-masol-2024
+      chunk_id: 7-klas-mystetstvo-masol-2024_s0002
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'К. : Видавничий дім «Освіта», 2024'
   7-klas-tekhnolohiyi-bilenko-2024:
     kind: textbook
     file: 7-klas-tekhnolohiyi-bilenko-2024
     author: Біленко
     title: Технології
     grade: 7
-    year: 2024
+    year: 2023
     publish:
       allowed: true
       limit_chars: 800
@@ -3108,6 +4171,17 @@ sources:
       chunk_id: 7-klas-tekhnolohiyi-bilenko-2024_s0000
       page: 2
       title_text: Технології
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-tekhnolohiyi-bilenko-2024
+      chunk_id: 7-klas-tekhnolohiyi-bilenko-2024_s0001
+      page: 3
+      imprint_year: 2023
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2023'
+      file_id_year: 2024
+      note: Citation uses the book imprint year; the source_file identity is unchanged. The catalogue entry prints 2023;
+        copyright and ministry approval print 2024.
   7-klas-ukrlit-avramenko-2024:
     kind: textbook
     file: 7-klas-ukrlit-avramenko-2024
@@ -3122,18 +4196,44 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2863-ukrainska-literatura-avramenko-7-klas-2024.html
       heading: Українська література (Авраменко) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-ukrlit-avramenko-2024
+      chunk_id: 7-klas-ukrlit-avramenko-2024_s0004
+      page: 5
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2024'
   7-klas-ukrlit-zabolotnyi-2024:
     kind: textbook
     file: 7-klas-ukrlit-zabolotnyi-2024
     author: Заболотний
-    title: null
+    title: Українська література
     grade: 7
     year: 2024
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Заболотний В. В.
+    - Заболотний О. В.
+    - Слоньовська О. В.
+    - Ярмульська І. В.
+    publisher: Літера ЛТД
+    title_provenance:
+      source_file: 7-klas-ukrlit-zabolotnyi-2024
+      chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0002
+      page: 4
+      title_text: Українська література
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-ukrlit-zabolotnyi-2024
+      chunk_id: 7-klas-ukrlit-zabolotnyi-2024_s0002
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Київ : Літера ЛТД, 2024'
   7-klas-ukrmova-avramenko-2024:
     kind: textbook
     file: 7-klas-ukrmova-avramenko-2024
@@ -3148,6 +4248,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2876-ukrainska-mova-avramenko-7-klas-2024.html
       heading: Українська мова (Авраменко) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-ukrmova-avramenko-2024
+      chunk_id: 7-klas-ukrmova-avramenko-2024_s0005
+      page: 5
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2024'
   7-klas-zdorovia-guschyna-2024:
     kind: textbook
     file: 7-klas-zdorovia-guschyna-2024
@@ -3162,6 +4270,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2813-zdorovia-bezpeka-ta-dobrobut-gushchyna-7-klas-2024.html
       heading: Здоров'я, безпека та добробут (Гущина) 7 клас 2024
+    year_provenance:
+      status: confirmed
+      source_file: 7-klas-zdorovia-guschyna-2024
+      chunk_id: 7-klas-zdorovia-guschyna-2024_s0002
+      page: 4
+      imprint_year: 2024
+      basis: catalogue_entry
+      year_text: 'К. : Видав ни чий дім «Освіта», 2024'
   8-klas-algebra-tarasenkova-2025:
     kind: textbook
     file: 8-klas-algebra-tarasenkova-2025
@@ -3176,6 +4292,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2909-algebra-tarasenkova-8-klas-2025.html
       heading: Алгебра (Тарасенкова) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-algebra-tarasenkova-2025
+      chunk_id: 8-klas-algebra-tarasenkova-2025_s0001
+      page: 4
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ: УОВЦ «Оріон», 2025'
   8-klas-biolohiya-anderson-2025:
     kind: textbook
     file: 8-klas-biolohiya-anderson-2025
@@ -3190,6 +4314,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2923-biologiia-anderson-8-klas-2025.html
       heading: Біологія (Андерсон) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-biolohiya-anderson-2025
+      chunk_id: 8-klas-biolohiya-anderson-2025_s0000
+      page: 2
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ: Школяр, 2025'
   8-klas-finans-plastun-2025:
     kind: textbook
     file: 8-klas-finans-plastun-2025
@@ -3204,6 +4336,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2950-pidpryiemnyctvo-i-finansova-gramotnist-plastun-8-klas-2025.html
       heading: Підприємництво і фінансова грамотність (Пластун) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-finans-plastun-2025
+      chunk_id: 8-klas-finans-plastun-2025_s0004
+      page: 5
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2025'
   8-klas-fizyka-bariakhtar-2025:
     kind: textbook
     file: 8-klas-fizyka-bariakhtar-2025
@@ -3218,18 +4358,44 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2971-fizyka-bariakhtar-8-klas-2025.html
       heading: Фізика (Бар’яхтар) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-fizyka-bariakhtar-2025
+      chunk_id: 8-klas-fizyka-bariakhtar-2025_s0249
+      page: 291
+      imprint_year: 2025
+      basis: colophon_print_date
+      year_text: Підписано до друку 28.05.2025
   8-klas-heohrafiya-hilberh-2025:
     kind: textbook
     file: 8-klas-heohrafiya-hilberh-2025
     author: Гільберг
-    title: null
+    title: Географія
     grade: 8
     year: 2025
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Гільберг Т. Г.
+    - Довгань А. І.
+    - Савчук І. Г.
+    publisher: Генеза
+    title_provenance:
+      source_file: 8-klas-heohrafiya-hilberh-2025
+      chunk_id: 8-klas-heohrafiya-hilberh-2025_s0001
+      page: 6
+      title_text: Географія
+      colophon_chunk_id: 8-klas-heohrafiya-hilberh-2025_s0322
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-heohrafiya-hilberh-2025
+      chunk_id: 8-klas-heohrafiya-hilberh-2025_s0001
+      page: 6
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2025'
   8-klas-hromadianska-osvita-vasylkiv-2025:
     kind: textbook
     file: 8-klas-hromadianska-osvita-vasylkiv-2025
@@ -3244,6 +4410,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2988-gromadianska-osvita-vasylkiv-8-klas-2025.html
       heading: Громадянська освіта (Васильків) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-hromadianska-osvita-vasylkiv-2025
+      chunk_id: 8-klas-hromadianska-osvita-vasylkiv-2025_s0001
+      page: 4
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2025'
   8-klas-informatyka-ryvkind-2025:
     kind: textbook
     file: 8-klas-informatyka-ryvkind-2025
@@ -3258,6 +4432,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3011-informatyka-ryvkind-8-klas-2025.html
       heading: Інформатика (Ривкінд) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-informatyka-ryvkind-2025
+      chunk_id: 8-klas-informatyka-ryvkind-2025_s0003
+      page: 5
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2025'
   8-klas-istoria-ukr-hlibovska-2025:
     kind: textbook
     file: 8-klas-istoria-ukr-hlibovska-2025
@@ -3274,6 +4456,14 @@ sources:
       chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0001
       page: 2
       title_text: Історія України
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-istoria-ukr-hlibovska-2025
+      chunk_id: 8-klas-istoria-ukr-hlibovska-2025_s0001
+      page: 2
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Тернопіль: Астон, 2025'
   8-klas-istoria-ukr-schupak-2025:
     kind: textbook
     file: 8-klas-istoria-ukr-schupak-2025
@@ -3288,6 +4478,21 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3020-istoriia-ukrainy-shchupak-8-klas-2025.html
       heading: Історія України (Щупак) 8 клас 2025
+    year_provenance:
+      status: unconfirmed
+      source_file: 8-klas-istoria-ukr-schupak-2025
+      checked_chunk_ids:
+      - 8-klas-istoria-ukr-schupak-2025_s0000
+      - 8-klas-istoria-ukr-schupak-2025_s0001
+      - 8-klas-istoria-ukr-schupak-2025_s0002
+      - 8-klas-istoria-ukr-schupak-2025_s0003
+      - 8-klas-istoria-ukr-schupak-2025_s0327
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   8-klas-istoria-vsesvitnia-ladychenko-2025:
     kind: textbook
     file: 8-klas-istoria-vsesvitnia-ladychenko-2025
@@ -3302,6 +4507,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2976-vsesvitnia-istoriia-ladychenko-8-klas-2025.html
       heading: Всесвітня історія (Ладиченко) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-istoria-vsesvitnia-ladychenko-2025
+      chunk_id: 8-klas-istoria-vsesvitnia-ladychenko-2025_s0001
+      page: 4
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Генеза, 2025'
   8-klas-khimiya-hryhorovych-2025:
     kind: textbook
     file: 8-klas-khimiya-hryhorovych-2025
@@ -3316,6 +4529,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2921-khimiia-grygorovych-8-klas-2025.html
       heading: Хімія (Григорович) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-khimiya-hryhorovych-2025
+      chunk_id: 8-klas-khimiya-hryhorovych-2025_s0239
+      page: 323
+      imprint_year: 2025
+      basis: colophon_print_date
+      year_text: Підписано до друку 22.05.2025
   8-klas-mystetstvo-komarovska-2025:
     kind: textbook
     file: 8-klas-mystetstvo-komarovska-2025
@@ -3332,6 +4553,14 @@ sources:
       chunk_id: 8-klas-mystetstvo-komarovska-2025_s0000
       page: 2
       title_text: Мистецтво
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-mystetstvo-komarovska-2025
+      chunk_id: 8-klas-mystetstvo-komarovska-2025_s0000
+      page: 2
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Харків: Вид-во «Ранок», 2025'
   8-klas-pryrodnychi-nauky-mandrenko-2025:
     kind: textbook
     file: 8-klas-pryrodnychi-nauky-mandrenko-2025
@@ -3346,6 +4575,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2958-pryrodnychi-nauky-mandrenko-8-klas-2025.html
       heading: Природничі науки (Мандренко) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-pryrodnychi-nauky-mandrenko-2025
+      chunk_id: 8-klas-pryrodnychi-nauky-mandrenko-2025_s0002
+      page: 5
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2025'
   8-klas-tekhnolohiyi-bilenko-2025:
     kind: textbook
     file: 8-klas-tekhnolohiyi-bilenko-2025
@@ -3360,6 +4597,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2953-tekhnologii-bilenko-8-klas-2025.html
       heading: Технології (Біленко) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-tekhnolohiyi-bilenko-2025
+      chunk_id: 8-klas-tekhnolohiyi-bilenko-2025_s0001
+      page: 4
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Астон, 2025'
   8-klas-ukrlit-avramenko-2025:
     kind: textbook
     file: 8-klas-ukrlit-avramenko-2025
@@ -3374,6 +4619,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2962-ukrainska-literatura-avramenko-8-klas-2025.html
       heading: Українська література (Авраменко) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-ukrlit-avramenko-2025
+      chunk_id: 8-klas-ukrlit-avramenko-2025_s0001
+      page: 2
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2025'
   8-klas-ukrlit-zabolotnyi-2025:
     kind: textbook
     file: 8-klas-ukrlit-zabolotnyi-2025
@@ -3388,6 +4641,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2964-ukrainska-literatura-zabolotnyi-8-klas-2025.html
       heading: Українська література (Заболотний) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-ukrlit-zabolotnyi-2025
+      chunk_id: 8-klas-ukrlit-zabolotnyi-2025_s0002
+      page: 4
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Літера ЛТД, 2025'
   8-klas-ukrmova-avramenko-2025:
     kind: textbook
     file: 8-klas-ukrmova-avramenko-2025
@@ -3402,6 +4663,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2899-ukrainska-mova-avramenko-8-klas-2025.html
       heading: Українська мова (Авраменко) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-ukrmova-avramenko-2025
+      chunk_id: 8-klas-ukrmova-avramenko-2025_s0002
+      page: 3
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Грамота, 2025'
   8-klas-ukrmova-zabolotnyi-2025:
     kind: textbook
     file: 8-klas-ukrmova-zabolotnyi-2025
@@ -3416,6 +4685,22 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2902-ukrainska-mova-zabolotnyi-8-klas-2025.html
       heading: Українська мова (Заболотний) 8 клас 2025
+    year_provenance:
+      status: unconfirmed
+      source_file: 8-klas-ukrmova-zabolotnyi-2025
+      checked_chunk_ids:
+      - 8-klas-ukrmova-zabolotnyi-2025_s0000
+      - 8-klas-ukrmova-zabolotnyi-2025_s0001
+      - 8-klas-ukrmova-zabolotnyi-2025_s0002
+      - 8-klas-ukrmova-zabolotnyi-2025_s0003
+      - 8-klas-ukrmova-zabolotnyi-2025_s0326
+      - 8-klas-ukrmova-zabolotnyi-2025_s0331
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   8-klas-zarlit-voloschuk-2025:
     kind: textbook
     file: 8-klas-zarlit-voloschuk-2025
@@ -3430,6 +4715,17 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2995-zarubizhna-literatura-voloshchuk-8-klas-2025.html
       heading: Зарубіжна література (Волощук) 8 клас 2025
+    year_provenance:
+      status: unconfirmed
+      source_file: 8-klas-zarlit-voloschuk-2025
+      checked_chunk_ids:
+      - 8-klas-zarlit-voloschuk-2025_s0373
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   8-klas-zdorovia-vasylenko-2025:
     kind: textbook
     file: 8-klas-zdorovia-vasylenko-2025
@@ -3444,6 +4740,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/2997-zdorovia-bezpeka-ta-dobrobut-vasylenko-8-klas-2025.html
       heading: Здоров’я, безпека та добробут (Василенко) 8 клас 2025
+    year_provenance:
+      status: confirmed
+      source_file: 8-klas-zdorovia-vasylenko-2025
+      chunk_id: 8-klas-zdorovia-vasylenko-2025_s0197
+      page: 208
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Київ : Літера ЛТД, 2025'
   9-klas-algebra-merzliak-2017:
     kind: textbook
     file: 9-klas-algebra-merzliak-2017
@@ -3458,18 +4762,47 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/982-algebra-merzlyak-9-klas-2017.html
       heading: Алгебра (Мерзляк) 9 клас 2017
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-algebra-merzliak-2017
+      chunk_id: 9-klas-algebra-merzliak-2017_s0000
+      page: 2
+      imprint_year: 2017
+      basis: catalogue_entry
+      year_text: 'Х. : Гімназія, 2017'
   9-klas-algebra-tarasenkova-2026:
     kind: textbook
     file: 9-klas-algebra-tarasenkova-2026
     author: Тарасенкова
-    title: null
+    title: Алгебра
     grade: 9
     year: 2026
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Тарасенкова Н. А.
+    - Акуленко І. А.
+    - Данько О. А.
+    - Коломієць О. М.
+    - Богатирьова І. М.
+    - Сердюк З. О.
+    publisher: УОВЦ «Оріон»
+    title_provenance:
+      source_file: 9-klas-algebra-tarasenkova-2026
+      chunk_id: 9-klas-algebra-tarasenkova-2026_s0001
+      page: 3
+      title_text: Алгебра
+      colophon_chunk_id: 9-klas-algebra-tarasenkova-2026_s0326
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-algebra-tarasenkova-2026
+      chunk_id: 9-klas-algebra-tarasenkova-2026_s0001
+      page: 3
+      imprint_year: 2026
+      basis: catalogue_entry
+      year_text: 'Київ: УОВЦ «Оріон», 2026'
   9-klas-biolohiya-zadorozhnyi-2026:
     kind: textbook
     file: 9-klas-biolohiya-zadorozhnyi-2026
@@ -3484,6 +4817,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3152-biologiia-9-klas-zadorozhnyi-2026.html
       heading: Біологія (Задорожний) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-biolohiya-zadorozhnyi-2026
+      chunk_id: 9-klas-biolohiya-zadorozhnyi-2026_s0001
+      page: 3
+      imprint_year: 2026
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2026
   9-klas-finansova-rolik-2026:
     kind: textbook
     file: 9-klas-finansova-rolik-2026
@@ -3498,6 +4839,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3215-pidpryiemnyctvo-9-klas-rolik-2026.html
       heading: Підприємництво і фінансова грамотність (Ролік) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-finansova-rolik-2026
+      chunk_id: 9-klas-finansova-rolik-2026_s0002
+      page: 3
+      imprint_year: 2026
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2026
   9-klas-fizyka-bariakhtar-2022:
     kind: textbook
     file: 9-klas-fizyka-bariakhtar-2022
@@ -3514,6 +4863,20 @@ sources:
       chunk_id: 9-klas-fizyka-bariakhtar-2022_s0000
       page: 2
       title_text: Фізика
+    year_provenance:
+      status: unconfirmed
+      source_file: 9-klas-fizyka-bariakhtar-2022
+      checked_chunk_ids:
+      - 9-klas-fizyka-bariakhtar-2022_s0000
+      - 9-klas-fizyka-bariakhtar-2022_s0001
+      - 9-klas-fizyka-bariakhtar-2022_s0002
+      - 9-klas-fizyka-bariakhtar-2022_s0003
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
   9-klas-fizyka-zasiekina-2026:
     kind: textbook
     file: 9-klas-fizyka-zasiekina-2026
@@ -3528,6 +4891,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3256-pidruchnyk-fizyka-9-klas-zasiekina-2026.html
       heading: Фізика (Засєкіна) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-fizyka-zasiekina-2026
+      chunk_id: 9-klas-fizyka-zasiekina-2026_s0003
+      page: 4
+      imprint_year: 2026
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2026
   9-klas-geografiia-boiko-2026:
     kind: textbook
     file: 9-klas-geografiia-boiko-2026
@@ -3542,6 +4913,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3162-geografiia-9-klas-boiko-2026.html
       heading: Географія (Бойко) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-geografiia-boiko-2026
+      chunk_id: 9-klas-geografiia-boiko-2026_s0002
+      page: 4
+      imprint_year: 2026
+      basis: catalogue_entry
+      year_text: 'Київ : Літера ЛТД, 2026'
   9-klas-heometriya-bevz-2026:
     kind: textbook
     file: 9-klas-heometriya-bevz-2026
@@ -3556,6 +4935,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3168-geometriia-9-klas-bevz-2026.html
       heading: Геометрія (Бевз) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-heometriya-bevz-2026
+      chunk_id: 9-klas-heometriya-bevz-2026_s0001
+      page: 3
+      imprint_year: 2026
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2026
   9-klas-heometriya-merzliak-2017:
     kind: textbook
     file: 9-klas-heometriya-merzliak-2017
@@ -3570,6 +4957,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/996-geometriya-merzlyak-9-klas-2017.html
       heading: Геометрія (Мерзляк) 9 клас 2017
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-heometriya-merzliak-2017
+      chunk_id: 9-klas-heometriya-merzliak-2017_s0000
+      page: 2
+      imprint_year: 2017
+      basis: catalogue_entry
+      year_text: 'Х. : Гімназія, 2017'
   9-klas-hromadianska-osvita-pometun-2026:
     kind: textbook
     file: 9-klas-hromadianska-osvita-pometun-2026
@@ -3584,6 +4979,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3174-gromadianska-osvita-9-klas-pometun-2026.html
       heading: Громадянська освіта (Пометун) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-hromadianska-osvita-pometun-2026
+      chunk_id: 9-klas-hromadianska-osvita-pometun-2026_s0000
+      page: 1
+      imprint_year: 2026
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2026
   9-klas-informatyka-morze-2026:
     kind: textbook
     file: 9-klas-informatyka-morze-2026
@@ -3600,6 +5003,14 @@ sources:
       chunk_id: 9-klas-informatyka-morze-2026_s0000
       page: 2
       title_text: Інформатика
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-informatyka-morze-2026
+      chunk_id: 9-klas-informatyka-morze-2026_s0001
+      page: 3
+      imprint_year: 2026
+      basis: catalogue_entry
+      year_text: 'Київ: УОВЦ «Оріон», 2026'
   9-klas-istorija-ukrajini-gisem-2017:
     kind: textbook
     file: 9-klas-istorija-ukrajini-gisem-2017
@@ -3614,6 +5025,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3127-istoriia-ukrainy-9-klas-gisem.html
       heading: Історія України (Гісем) 9 клас 2017
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-istorija-ukrajini-gisem-2017
+      chunk_id: 9-klas-istorija-ukrajini-gisem-2017_s0000
+      page: 2
+      imprint_year: 2017
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2017'
   9-klas-khimiya-popel-2017:
     kind: textbook
     file: 9-klas-khimiya-popel-2017
@@ -3628,18 +5047,43 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/1041-himiya-9-klas-popel-2017.html
       heading: Хімія (Попель, Крикля) 9 клас 2017
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-khimiya-popel-2017
+      chunk_id: 9-klas-khimiya-popel-2017_s0001
+      page: 2
+      imprint_year: 2017
+      basis: catalogue_entry
+      year_text: 'Київ : ВЦ «Академія», 2017'
   9-klas-khimiya-yaroshenko-2026:
     kind: textbook
     file: 9-klas-khimiya-yaroshenko-2026
     author: Ярошенко
-    title: null
+    title: Хімія
     grade: 9
     year: 2026
     publish:
-      allowed: false
+      allowed: true
       limit_chars: 800
       attribution: ukrainian-short
-      reason: title_unconfirmed
+    authors:
+    - Ярошенко О. Г.
+    - Коршевнюк Т. В.
+    publisher: УОВЦ «Оріон»
+    title_provenance:
+      source_file: 9-klas-khimiya-yaroshenko-2026
+      chunk_id: 9-klas-khimiya-yaroshenko-2026_s0001
+      page: 3
+      title_text: Хімія
+      colophon_chunk_id: 9-klas-khimiya-yaroshenko-2026_s0311
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-khimiya-yaroshenko-2026
+      chunk_id: 9-klas-khimiya-yaroshenko-2026_s0001
+      page: 3
+      imprint_year: 2026
+      basis: catalogue_entry
+      year_text: 'Київ : УОВЦ «Оріон», 2026'
   9-klas-mystetstvo-kondratova-2025:
     kind: textbook
     file: 9-klas-mystetstvo-kondratova-2025
@@ -3656,6 +5100,14 @@ sources:
       chunk_id: 9-klas-mystetstvo-kondratova-2025_s0000
       page: 1
       title_text: Мистецтво
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-mystetstvo-kondratova-2025
+      chunk_id: 9-klas-mystetstvo-kondratova-2025_s0001
+      page: 2
+      imprint_year: 2025
+      basis: catalogue_entry
+      year_text: 'Тернопіль : Навчальна книга — Богдан, 2025'
   9-klas-mystetstvo-masol-2017:
     kind: textbook
     file: 9-klas-mystetstvo-masol-2017
@@ -3672,6 +5124,14 @@ sources:
       chunk_id: 9-klas-mystetstvo-masol-2017_s0000
       page: 2
       title_text: Мистецтво
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-mystetstvo-masol-2017
+      chunk_id: 9-klas-mystetstvo-masol-2017_s0000
+      page: 2
+      imprint_year: 2017
+      basis: catalogue_entry
+      year_text: 'К.: Видавничий дім «Освіта», 2017'
   9-klas-pravoznavstvo-berendieiev-2026:
     kind: textbook
     file: 9-klas-pravoznavstvo-berendieiev-2026
@@ -3686,6 +5146,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3232-pravoznavstvo-9-klas-berendieiev-2026.html
       heading: Правознавство (Берендєєв) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-pravoznavstvo-berendieiev-2026
+      chunk_id: 9-klas-pravoznavstvo-berendieiev-2026_s0003
+      page: 4
+      imprint_year: 2026
+      basis: catalogue_entry
+      year_text: 'Харків : Вид-во «Ранок», 2026'
   9-klas-tekhnolohiyi-bilenko-2026:
     kind: textbook
     file: 9-klas-tekhnolohiyi-bilenko-2026
@@ -3698,6 +5166,48 @@ sources:
       limit_chars: 800
       attribution: ukrainian-short
       reason: title_unconfirmed
+    year_provenance:
+      status: unconfirmed
+      source_file: 9-klas-tekhnolohiyi-bilenko-2026
+      checked_chunk_ids:
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0000
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0001
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0002
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0003
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0226
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0227
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      note: No legible publication year in the retrieved imprint/colophon; citation year retained without claiming imprint
+        confirmation.
+    title_search:
+      source_file: 9-klas-tekhnolohiyi-bilenko-2026
+      status: unconfirmed
+      searches:
+      - УДК
+      - ISBN
+      - Навчальне видання
+      - Навчальне
+      - підруч
+      - Крупська
+      - Біленко
+      - видання
+      - Пелагейченко
+      - Технології
+      - Астон
+      - '2026'
+      - '2025'
+      checked_chunk_ids:
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0000
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0001
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0002
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0003
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0226
+      - 9-klas-tekhnolohiyi-bilenko-2026_s0227
+      note: Retrieved corpus starts with the contents page and ends with project examples; no imprint or colophon confirms
+        the title, authors, publisher or publication year.
   9-klas-ukrajinska-literatura-avramenko-2017:
     kind: textbook
     file: 9-klas-ukrajinska-literatura-avramenko-2017
@@ -3712,6 +5222,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/967-ukrliteratura-9-klas-avramenko-2017.html
       heading: Українська література (Авраменко) 9 клас 2017
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-ukrajinska-literatura-avramenko-2017
+      chunk_id: 9-klas-ukrajinska-literatura-avramenko-2017_s0000
+      page: 2
+      imprint_year: 2017
+      basis: catalogue_entry
+      year_text: 'К. : Грамота, 2017'
   9-klas-ukrajinska-mova-avramenko-2017:
     kind: textbook
     file: 9-klas-ukrajinska-mova-avramenko-2017
@@ -3726,6 +5244,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/970-ukrmova-9klas-avramenko.html
       heading: Українська мова (Авраменко) 9 клас 2017
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-ukrajinska-mova-avramenko-2017
+      chunk_id: 9-klas-ukrajinska-mova-avramenko-2017_s0000
+      page: 2
+      imprint_year: 2017
+      basis: catalogue_entry
+      year_text: 'К. : Грамота, 2017'
   9-klas-ukrlit-zabolotnyi-2026:
     kind: textbook
     file: 9-klas-ukrlit-zabolotnyi-2026
@@ -3740,6 +5266,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3244-ukr-literatura-9-klas-zabolotnyi-2026.html
       heading: Українська література (Заболотний) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-ukrlit-zabolotnyi-2026
+      chunk_id: 9-klas-ukrlit-zabolotnyi-2026_s0002
+      page: 4
+      imprint_year: 2026
+      basis: catalogue_entry
+      year_text: 'Київ : Літера ЛТД, 2026'
   9-klas-vsesvitnia-istoriia-pometun-2026:
     kind: textbook
     file: 9-klas-vsesvitnia-istoriia-pometun-2026
@@ -3754,13 +5288,21 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3159-vsesvitnia-istoriia-9-klas-pometun-2026.html
       heading: Всесвітня історія (Пометун) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-vsesvitnia-istoriia-pometun-2026
+      chunk_id: 9-klas-vsesvitnia-istoriia-pometun-2026_s0001
+      page: 4
+      imprint_year: 2026
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2026
   9-klas-zarubizhna-literatura-kovbasenko-2026:
     kind: textbook
     file: 9-klas-zarubizhna-literatura-kovbasenko-2026
     author: Ковбасенко
     title: Зарубіжна література
     grade: 9
-    year: 2026
+    year: 2025
     publish:
       allowed: true
       limit_chars: 800
@@ -3768,6 +5310,17 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3176-zarubizhna-literatura-9-klas-kovbasenko-2026.html
       heading: Зарубіжна література (Ковбасенко) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-zarubizhna-literatura-kovbasenko-2026
+      chunk_id: 9-klas-zarubizhna-literatura-kovbasenko-2026_s0000
+      page: 2
+      imprint_year: 2025
+      basis: title_page_imprint
+      year_text: Київ 2025
+      file_id_year: 2026
+      note: Citation uses the book imprint year; the source_file identity is unchanged. The title-page imprint prints
+        2025; ministry approval prints 2026.
   9-klas-zdorovia-gushchyna-2026:
     kind: textbook
     file: 9-klas-zdorovia-gushchyna-2026
@@ -3782,6 +5335,14 @@ sources:
     title_provenance:
       url: https://pidruchnyk.com.ua/3182-zdorovia-9-klas-gushchyna-2026.html
       heading: Здоров’я, безпека та добробут (Гущина) 9 клас 2026
+    year_provenance:
+      status: confirmed
+      source_file: 9-klas-zdorovia-gushchyna-2026
+      chunk_id: 9-klas-zdorovia-gushchyna-2026_s0001
+      page: 3
+      imprint_year: 2026
+      basis: title_page_imprint
+      year_text: Київ Видавничий дім «Освіта» 2026
   ulp-1-00-lesson-notes:
     kind: textbook
     file: ulp-1-00-lesson-notes

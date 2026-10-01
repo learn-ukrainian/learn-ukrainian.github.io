@@ -49,6 +49,12 @@ def test_renderer_cannot_bypass_quote_admission(file, quote, page, code):
         (BOOK, "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 12"),
         ("1-klas-bukvar-zaharijchuk-2025-2", "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 2, 2025, с. 12"),
         ("10-11-klas-mystectvo-nazarenko-2018", "Назаренко, «Мистецтво», 10–11 клас, 2018, с. 12"),
+        ("5-klas-ukrmova-zabolotnyi-2023", "Заболотний, «Українська мова», 5 клас, 2022, с. 12"),
+        ("7-klas-tekhnolohiyi-bilenko-2024", "Біленко, «Технології», 7 клас, 2023, с. 12"),
+        (
+            "9-klas-zarubizhna-literatura-kovbasenko-2026",
+            "Ковбасенко, «Зарубіжна література», 9 клас, 2025, с. 12",
+        ),
     ],
 )
 def test_quote_and_resources_show_same_human_citation(file, citation):
@@ -76,7 +82,7 @@ def test_quote_and_resources_show_same_human_citation(file, citation):
     assert file not in str(tab)
 
 
-@pytest.mark.parametrize("file", ["9-klas-algebra-tarasenkova-2026", "unregistered"])
+@pytest.mark.parametrize("file", ["9-klas-tekhnolohiyi-bilenko-2026", "unregistered"])
 def test_resources_refuse_unconfirmed_title(file):
     pack = {"texts": [{"id": "T-001", "source": {"kind": "textbook", "file": file, "page": 12}}]}
     with pytest.raises(AssemblerError, match="publication_attribution"):

@@ -19,9 +19,9 @@ def record(file=BOOK, quote="Synthetic excerpt", page=39):
 def test_policy_denominator_and_private_denials():
     entries = publication.load_registry()
     allowed = {key: entry for key, entry in entries.items() if entry["publish"]["allowed"]}
-    assert len(allowed) == 148
+    assert len(allowed) == 162
     unconfirmed = {key for key, entry in entries.items() if entry["publish"].get("reason") == "title_unconfirmed"}
-    assert len(unconfirmed) == 15
+    assert unconfirmed == {"9-klas-tekhnolohiyi-bilenko-2026"}
     assert len(allowed) + len(unconfirmed) == 163
     assert {entry["grade"] for entry in allowed.values()} == set(range(1, 12))
     assert {key for key, entry in entries.items() if not entry["publish"]["allowed"] and key not in unconfirmed} == set(
@@ -45,6 +45,68 @@ def test_attribution_and_exact_character_boundary():
     assert publication.quote_attribution(record(quote="é" * 800)) == attribution
     with pytest.raises(ValueError, match=r"^publication_limit:"):
         publication.quote_attribution(record(quote="é" * 800 + " "))
+
+
+@pytest.mark.parametrize(
+    "file,year,chunk,citation",
+    [
+        (
+            "5-klas-ukrmova-zabolotnyi-2023",
+            2022,
+            "s0003",
+            "Заболотний, «Українська мова», 5 клас, 2022, с. 12",
+        ),
+        (
+            "7-klas-tekhnolohiyi-bilenko-2024",
+            2023,
+            "s0001",
+            "Біленко, «Технології», 7 клас, 2023, с. 12",
+        ),
+        (
+            "9-klas-zarubizhna-literatura-kovbasenko-2026",
+            2025,
+            "s0000",
+            "Ковбасенко, «Зарубіжна література», 9 клас, 2025, с. 12",
+        ),
+    ],
+)
+def test_citation_uses_imprint_year_instead_of_file_or_pack_year(file, year, chunk, citation):
+    entries = publication.load_registry()
+    entry = entries[file]
+    proof = entry["year_provenance"]
+    assert entry["year"] == proof["imprint_year"] == year
+    assert proof["chunk_id"] == f"{file}_{chunk}"
+    assert proof["status"] == "confirmed"
+    assert proof["file_id_year"] != year
+    rec = record(file=file, page=12)
+    rec["source"]["year"] = proof["file_id_year"]
+    assert publication.quote_attribution(rec) == publication.source_attribution(rec) == citation
+
+
+def test_year_checks_cover_candidates_without_inventing_missing_imprints():
+    entries = publication.load_registry()
+    candidates = {key: entry for key, entry in entries.items() if key not in PRIVATE}
+    assert len(candidates) == 163
+    for key, entry in candidates.items():
+        proof = entry["year_provenance"]
+        assert proof["source_file"] == key
+        if proof["status"] == "confirmed":
+            assert proof["imprint_year"] == entry["year"]
+            assert proof["chunk_id"].startswith(f"{key}_s")
+            assert str(entry["year"]) in proof["year_text"]
+            assert proof["basis"] in {"catalogue_entry", "colophon_print_date", "title_page_imprint"}
+            assert proof["page"] > 0
+        else:
+            assert proof["status"] == "unconfirmed"
+            assert proof["checked_chunk_ids"]
+            assert proof["searches"] == ["УДК", "ISBN", "Навчальне видання"]
+            assert "imprint_year" not in proof
+    withheld = entries["9-klas-tekhnolohiyi-bilenko-2026"]
+    assert withheld["title"] is None
+    assert withheld["title_search"]["status"] == "unconfirmed"
+    assert "Пелагейченко" in withheld["title_search"]["searches"]
+    with pytest.raises(ValueError, match=r"^publication_right:"):
+        publication.quote_attribution(record(file=withheld["file"]))
 
 
 @pytest.mark.parametrize("file", [*PRIVATE, "unregistered", BOOK + ".txt"])
