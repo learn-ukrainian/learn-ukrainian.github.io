@@ -104,6 +104,7 @@ def tls_server(tmp_path, respond, *, family=socket.AF_INET):
             )
         )
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+        context.minimum_version = ssl.TLSVersion.TLSv1_2
         context.load_cert_chain(cert_file, key_file)
         server.socket = context.wrap_socket(server.socket, server_side=True)
         thread = Thread(target=server.serve_forever, daemon=True)
@@ -304,25 +305,44 @@ def test_ambient_netrc_cannot_authenticate(https_world, tmp_path, monkeypatch):
         # Control: the same TLS endpoint accepts credentials from ambient HOME.
         env = {
             "PATH": "/usr/bin:/bin",
+            "LANG": "C",
+            "LC_ALL": "C",
             "HOME": str(home),
             "GIT_CONFIG_GLOBAL": os.devnull,
             "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_SYSTEM": os.devnull,
             "GIT_TERMINAL_PROMPT": "0",
         }
         result = subprocess.run(
-            ["/usr/bin/git", "-c", f"http.sslCAInfo={ca}", "ls-remote", url + "/org/repo.git"],
+            [sg._GIT, "-c", "http.proxy=", "-c", f"http.sslCAInfo={ca}", "ls-remote", url + "/org/repo.git"],
             env=env,
             capture_output=True,
             text=True,
             timeout=30,
             check=False,
         )
-        assert result.returncode == 0
+        if (
+            result.returncode == 128
+            and "could not read Username" in result.stderr
+            and "terminal prompts disabled" in result.stderr
+        ):
+            pytest.skip("This Git HTTP backend does not read ambient .netrc credentials for the control request")
+        assert result.returncode == 0, result.stderr
         assert any(header == netrc_header for _, header in requests)
         requests.clear()
         client = runner(tmp_path, url, ca)
+        fetch_homes = []
+        original_run = subprocess.run
+
+        def capture(args, **kwargs):
+            if "fetch" in args:
+                fetch_homes.append(kwargs["env"]["HOME"])
+            return original_run(args, **kwargs)
+
+        monkeypatch.setattr(sg.subprocess, "run", capture)
         with pytest.raises(sg.Refusal, match="HTTPS fetch failed"):
             sg.sync_main(resolved(https_world, client), https_world[0], client)
+        assert fetch_homes == [str(client.scratch)]
         assert requests and all(header != netrc_header for _, header in requests)
 
 
