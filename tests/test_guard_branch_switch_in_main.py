@@ -724,6 +724,65 @@ def test_issue_9479_r2_subshell_cd_stays_local(repos):
     assert guard._command_danger_reason(command, repos["public"]) is not None
 
 
+def _assert_r3_bash_decision(repos, tmp_path, command, cwd, verb, expected_cwd):
+    recorder = tmp_path / "git"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=cwd,
+        env={
+            **os.environ,
+            "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"],
+            "GUARD_RECORD": str(record),
+            "TMPDIR": str(tmp_path),
+        },
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    actual = record.read_text().splitlines()
+    assert actual == [str(expected_cwd), *verb.split(), "fixture"]
+    assert (guard._command_danger_reason(command, cwd) is not None) == (actual[0] == str(repos["public"]))
+
+
+@pytest.mark.parametrize("parentheses", ["({body})", "( {body} )"])
+@pytest.mark.parametrize("target", [".worktrees/topic", "./.worktrees/topic", "absolute"])
+@pytest.mark.parametrize("verb", ["switch -c", "checkout -b", "checkout", "switch"])
+def test_issue_9479_r3_closed_subshell_cd(repos, tmp_path, parentheses, target, verb):
+    target = str(repos["public_worktree"]) if target == "absolute" else target
+    body = f"cd {target} >$(echo /dev/null)"
+    command = f"{parentheses.format(body=body)} && git {verb} fixture"
+    _assert_r3_bash_decision(repos, tmp_path, command, repos["public"], verb, repos["public"])
+
+
+@pytest.mark.parametrize("verb", ["switch -c", "checkout -b", "checkout", "switch"])
+def test_issue_9479_r3_pending_cd_before_new_subshell(repos, tmp_path, verb):
+    command = f"cd ../.. >$(echo /dev/null) &&(git {verb} fixture)"
+    _assert_r3_bash_decision(repos, tmp_path, command, repos["public_worktree"], verb, repos["public"])
+
+
+@pytest.mark.parametrize("verb", ["switch -c", "checkout -b", "checkout", "switch"])
+@pytest.mark.parametrize(
+    "shape,start,target,expected",
+    [
+        ("(cd {target}) && git {verb} fixture", "public", "public_worktree", "public"),
+        ("(cd {target}) && git {verb} fixture", "public_worktree", "public", "public_worktree"),
+        ("cd {target} >$(echo /dev/null) && git {verb} fixture", "public_worktree", "public", "public"),
+        ("cd {target} >$(echo /dev/null) && git {verb} fixture", "public", "public_worktree", "public_worktree"),
+        ('cd {target} 2>"$(mktemp)" && git {verb} fixture', "public_worktree", "public", "public"),
+        ('cd {target} 2>"$(mktemp)" && git {verb} fixture', "public", "public_worktree", "public_worktree"),
+        ('(cd {target} 2>"$(mktemp)") && git {verb} fixture', "public", "public_worktree", "public"),
+        ('(cd {target} 2>"$(mktemp)") && git {verb} fixture', "public_worktree", "public", "public_worktree"),
+    ],
+)
+def test_issue_9479_r3_scope_controls(repos, tmp_path, verb, shape, start, target, expected):
+    command = shape.format(target=repos[target], verb=verb)
+    _assert_r3_bash_decision(repos, tmp_path, command, repos[start], verb, repos[expected])
+
+
 @pytest.mark.parametrize(
     "command",
     [

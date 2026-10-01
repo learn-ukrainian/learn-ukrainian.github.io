@@ -570,13 +570,15 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
     scope_depth = 0
     previous_operator = ""
     for segment, following_operator in segments:
-        scope_depth += previous_operator.count("open") - previous_operator.count("close")
-        if pending_cd is not None and scope_depth < pending_cd[1]:
+        scope_depth -= previous_operator.count("close")
+        if pending_cd is not None and "close" in previous_operator and scope_depth < pending_cd[1]:
             # A redirect's substitution runs before cd. Apply the literal
-            # target only once that substitution closes and cd succeeds.
-            if previous_operator.endswith("&&"):
+            # target only if its substitution closed, its enclosing scope
+            # stayed open, and cd succeeded. Settle before opening a new scope.
+            if scope_depth == pending_cd[1] - 1 and "&&" in previous_operator.rsplit("close", 1)[-1]:
                 effective_cwd, cwd_unreadable = pending_cd[0], False
             pending_cd = None
+        scope_depth += previous_operator.count("open")
         previous_operator = following_operator or ""
         i = _skip_command_prefix(segment, 0)
         cd_target = _cd_target(segment, effective_cwd)
