@@ -882,9 +882,10 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
         tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
     )
     path = tasks / f"{task_id}.json"
-    path.write_text(json.dumps({**json.loads(path.read_text()), "response": f"Wrote `{named}`."}))
+    path.write_text(json.dumps({**json.loads(path.read_text()), "response": links.worker_response(named)}))
     report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
     row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
+    links.restore_access(worktree)
     state = json.loads(path.read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
@@ -897,6 +898,7 @@ def test_post_task_reap_named_symlink_preserves_or_refuses(hermetic_reap, tmp_pa
         return
     assert row["action"] == "removed", row
     assert not worktree.exists()
+    assert "artifact_preservation_error" not in state
     if preserved is None:
         assert not location.exists()
     else:

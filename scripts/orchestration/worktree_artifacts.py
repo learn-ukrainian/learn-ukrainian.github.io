@@ -70,27 +70,27 @@ def _copy_verified(source: Path, destination: Path) -> None:
         temporary.unlink(missing_ok=True)
 
 
-_RESOLVER_ERRORS = {errno.ELOOP: "symlink loop", errno.ENAMETOOLONG: "name too long"}
-
-
 def _resolve_named(root: Path, parts: tuple[str, ...]) -> tuple[Path, os.stat_result] | None:
     """Resolve a name as the filesystem does; ``None`` when nothing exists there.
 
     No lexical normalization: ``..`` after a symlinked directory applies to the
-    link's target. Any other resolver failure refuses removal, naming only the
-    failure class, never the path text.
+    link's target. A name too long for the filesystem or holding a NUL byte
+    cannot refer to a file, so it is no evidence (long URLs and tokens in a
+    worker response must not retain the checkout). Any other resolver failure
+    may hide an existing file and refuses removal, naming only the failure
+    class, never the path text.
     """
     try:
         resolved = Path(os.path.realpath(root.joinpath(*parts)))
         return resolved, resolved.stat()
-    except (FileNotFoundError, NotADirectoryError):
+    except (FileNotFoundError, NotADirectoryError, ValueError):
         return None
     except RuntimeError:
-        kind = _RESOLVER_ERRORS[errno.ELOOP]
-    except ValueError:
-        kind = "embedded NUL"
+        kind = "symlink loop"
     except OSError as exc:
-        kind = _RESOLVER_ERRORS.get(exc.errno) or errno.errorcode.get(exc.errno or 0, type(exc).__name__)
+        if exc.errno == errno.ENAMETOOLONG:
+            return None
+        kind = "symlink loop" if exc.errno == errno.ELOOP else errno.errorcode.get(exc.errno or 0, type(exc).__name__)
     raise ValueError(f"a named artifact path cannot be resolved ({kind})")
 
 

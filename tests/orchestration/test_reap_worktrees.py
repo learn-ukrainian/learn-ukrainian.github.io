@@ -6578,9 +6578,10 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
     with (repo / ".git/info/exclude").open("a") as exclude:
         exclude.write("ignored/\n")
     named, preserved, target = links.build_named_link(worktree, repo, tmp_path / "outside", scenario)
-    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree), response=f"Wrote `{named}`.")
+    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree), response=links.worker_response(named))
     patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    links.restore_access(worktree)
     state = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
@@ -6592,6 +6593,7 @@ def test_canonical_reaper_named_symlink_preserves_or_refuses(tmp_path, monkeypat
         return
     assert result.action == "removed", result
     assert not worktree.exists()
+    assert "artifact_preservation_error" not in state
     if preserved is None:
         assert not location.exists()
     else:

@@ -17560,11 +17560,12 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
     with (primary / ".git/info/exclude").open("a") as exclude:
         exclude.write("ignored/\n")
     named, preserved, target = links.build_named_link(worktree, primary, tmp_path / "outside", scenario)
-    record = {"task_id": task_id, "status": "done", "response": f"Wrote `{named}`."}
+    record = {"task_id": task_id, "status": "done", "response": links.worker_response(named)}
     delegate._write_state_atomic(delegate._state_path(task_id), record)
     result = delegate._settle_worktree_reap(
         worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
     )
+    links.restore_access(worktree)
     state = delegate._read_state(delegate._state_path(task_id))
     if preserved is None and target is not None:  # Outbound targets outlive the checkout.
         assert target.read_bytes() == links.PAYLOAD
@@ -17576,6 +17577,7 @@ def test_settle_named_symlink_preserves_or_refuses(tmp_tasks_dir, tmp_path, monk
         return
     assert result["action"] == "removed", result
     assert not worktree.exists()
+    assert "artifact_preservation_error" not in state
     if preserved is None:
         assert not location.exists()
     else:

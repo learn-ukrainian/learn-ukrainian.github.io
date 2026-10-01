@@ -9,7 +9,11 @@ names the returned path in the worker result and asserts the expectation:
   ``ignored/dir/../report.bin``, i.e. ``ignored/real/report.bin`` (preserved);
 * ``outbound``: ``ignored/link`` -> a file outside the checkout (refused);
 * ``outbound_batch_state``: ``ignored/link`` -> primary ``batch_state`` (removed, no copy);
-* ``link_loop``, ``nul_name``, ``overlong_name``: unresolvable names (refused).
+* ``link_loop``: a self-referencing link (refused);
+* ``permission_denied``: a name inside a mode-000 directory (refused; the file may exist);
+* ``nul_name``, ``overlong_name``, ``worker_tokens``: names that cannot refer to
+  any file, including a realistic response with a 2,000-byte URL and a
+  300-character slash-free token (removed, nothing recorded).
 
 Refused scenarios map to the reason text in ``REFUSALS``; their target is
 ``None`` when no file exists behind the name.
@@ -27,16 +31,33 @@ SCENARIOS = (
     "outbound",
     "outbound_batch_state",
     "link_loop",
+    "permission_denied",
     "nul_name",
     "overlong_name",
+    "worker_tokens",
 )
 REFUSAL = "links outside the checkout"
 REFUSALS = {
     "outbound": REFUSAL,
     "link_loop": "cannot be resolved (symlink loop)",
-    "nul_name": "cannot be resolved (embedded NUL)",
-    "overlong_name": "cannot be resolved (name too long)",
+    "permission_denied": "cannot be resolved (EACCES)",
 }
+URL_TOKEN = "https://example.org/search?q=" + "a" * (2000 - len("https://example.org/search?q="))
+WORKER_RESPONSE = (
+    f"Opened {URL_TOKEN} for the source list.\nChecksum token {'f' * 300} recorded; see `ignored/{'y' * 300}` too."
+)
+
+
+def worker_response(named: str) -> str:
+    """The worker result naming ``named``; the token scenario is a whole response."""
+    return named if named == WORKER_RESPONSE else f"Wrote `{named}`."
+
+
+def restore_access(worktree: Path) -> None:
+    """Undo ``permission_denied`` so the retained checkout can be cleaned up."""
+    locked = worktree / "ignored/locked"
+    if locked.is_dir() and not locked.is_symlink():
+        locked.chmod(0o700)
 
 
 def build_named_link(
@@ -69,6 +90,14 @@ def build_named_link(
         return "ignored/report\x00.bin", None, None
     if scenario == "overlong_name":
         return "ignored/" + "x" * 300, None, None
+    if scenario == "worker_tokens":
+        return WORKER_RESPONSE, None, None
+    if scenario == "permission_denied":
+        target = ignored / "locked/report.bin"
+        target.parent.mkdir()
+        target.write_bytes(PAYLOAD)
+        target.parent.chmod(0)
+        return "ignored/locked/report.bin", None, None
     if scenario == "outbound":
         target = outside / "report.bin"
     elif scenario == "outbound_batch_state":

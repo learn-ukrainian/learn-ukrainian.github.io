@@ -280,7 +280,8 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
     outside = tmp_path / "outside"
     named, preserved, target = links.build_named_link(repo, primary, outside, scenario)
     (tasks / "artifact-task.json").write_text(json.dumps({"status": "done"}))
-    ok, reason, metadata = guard(checkout, record={"response": f"Wrote `{named}`."})
+    ok, reason, metadata = guard(checkout, record={"response": links.worker_response(named)})
+    links.restore_access(repo)
     saved = json.loads((tasks / "artifact-task.json").read_text())
     assert target is None or target.read_bytes() == links.PAYLOAD
     if scenario in links.REFUSALS:
@@ -290,6 +291,7 @@ def test_named_symlink_preserves_or_refuses(checkout, tmp_path, scenario):
     elif preserved is None:
         assert (ok, reason, metadata) == (True, "", None)
         assert not (primary / "batch_state/preserved").exists()
+        assert "artifact_preservation_error" not in saved
     else:
         assert ok and not reason and metadata["count"] == 1
         assert (Path(metadata["location"]) / preserved).read_bytes() == links.PAYLOAD
