@@ -64,6 +64,8 @@ silent fallback to a same-family reviewer.
 
 ## Production factuality shadow run
 
+> **Status:** the Layer B entailment gate is shelved (dec-016, no cutover), and its shadow-tier attestation lapses on 2026-10-12 on purpose. See [`2026-10-01-layerb-entailment-gate-shelved.md`](../../decisions/2026-10-01-layerb-entailment-gate-shelved.md).
+
 `qg_shadow_run.py` captures one **fresh, live** Tier-2 review of a built folk
 module, including the full learner-facing module, activities, vocabulary, and
 resources surface. It does not invoke `qg_bakeoff` or create a fixture. The
