@@ -116,16 +116,16 @@ def _git_optional_locks_disabled() -> Iterator[None]:
     The sweep reaches git only through settle and the delegate status heal
     path. Read-only commands there (``git status`` refreshing the index) must
     not take ``index.lock``: a sweep killed mid-call would leave it behind.
+    An explicit operator value wins and is left untouched.
     """
-    saved = os.environ.get("GIT_OPTIONAL_LOCKS")
+    if "GIT_OPTIONAL_LOCKS" in os.environ:
+        yield
+        return
     os.environ["GIT_OPTIONAL_LOCKS"] = "0"
     try:
         yield
     finally:
-        if saved is None:
-            os.environ.pop("GIT_OPTIONAL_LOCKS", None)
-        else:
-            os.environ["GIT_OPTIONAL_LOCKS"] = saved
+        os.environ.pop("GIT_OPTIONAL_LOCKS", None)
 
 
 def run_reconcile_sweep(

@@ -623,7 +623,10 @@ def test_reconcile_sweep_crashes_admission_hold_whose_dispatcher_died(
 def test_reconcile_sweep_runs_git_children_without_optional_locks(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, prior: str | None
 ) -> None:
-    """#8874: settle and the status heal path run git; none may take index.lock."""
+    """#8874: settle and the status heal path run git; none may take index.lock.
+
+    An explicit operator value wins and is left as it was.
+    """
     if prior is None:
         monkeypatch.delenv("GIT_OPTIONAL_LOCKS", raising=False)
     else:
@@ -653,5 +656,6 @@ def test_reconcile_sweep_runs_git_children_without_optional_locks(
     )
 
     assert report.zombie_tasks == ["dead-task-locks"]
-    assert seen == {"settle": "0", "heal": "0"}
+    expected = prior or "0"
+    assert seen == {"settle": expected, "heal": expected}
     assert os.environ.get("GIT_OPTIONAL_LOCKS") == prior

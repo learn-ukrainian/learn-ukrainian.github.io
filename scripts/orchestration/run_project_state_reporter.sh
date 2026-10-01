@@ -2,8 +2,9 @@
 # Loopback POST wrapper for scripts/api/project_state_local.py (#7188).
 set -euo pipefail
 # Read-only Git children (status refreshing the index) must never take
-# index.lock: a reporter killed mid-call would leave it behind (#8874).
-export GIT_OPTIONAL_LOCKS=0
+# index.lock: a reporter killed mid-call would leave it behind (#8874). An
+# explicit operator value wins.
+export GIT_OPTIONAL_LOCKS="${GIT_OPTIONAL_LOCKS:-0}"
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 if [[ -n "${LEARN_UKRAINIAN_PYTHON:-}" ]]; then

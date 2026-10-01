@@ -117,6 +117,11 @@ from .work_router import drain_context_background_work, refresh_projection_cache
 from .work_router import router as work_router
 from .worktrees_router import router as worktrees_router
 
+# Read-only Git children (status refreshing the index) must never take
+# index.lock: a request killed mid-call would leave it behind (#8874). Every
+# child inherits this; an explicit operator value wins.
+os.environ.setdefault("GIT_OPTIONAL_LOCKS", "0")
+
 core_router = APIRouter()
 
 
