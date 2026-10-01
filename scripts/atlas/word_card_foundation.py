@@ -186,9 +186,13 @@ def isolation(inputs, heldout):
         group = set()
         if "source_record_id" in value:
             group = {value["source_record_id"]} | {a["key"] for a in value.get("aliases", [])}
-            group |= {c["locator"] for c in value.get("correspondence", []) if "locator" in c}
-        if "card_id" in value:
-            group = {value["card_id"]} | source_keys(value)
+            group |= {k for c in value.get("correspondence", []) for k in [c.get("locator"), *c.get("candidates", [])]}
+        if "card_id" in value:  # Owned senses and every creation source key; mwe_key is <source_locator>|<normalised form>.
+            creation = value.get("key_at_creation", {})
+            group = {value["card_id"], *source_keys(value), *(s["sense_id"] for s in value.get("senses", [])),
+                     creation.get("paradigm_key"), creation.get("mwe_key", "").rpartition("|")[0]}
+        if value.get("kind") in {"mint", "sense_mint", "source_record_mint"}:  # A sense's only creation evidence.
+            group = {*value.get("cards", []), *value.get("to", []), value.get("evidence")}
         if "unit_key" in value:
             group = {value["unit_key"], value["anchor_locator"], *value["source_record_keys"]}
             if value["atlas_slug"]:
@@ -199,7 +203,7 @@ def isolation(inputs, heldout):
             group = {"atlas0:slug:" + value["metadata"]["slug"]}
             group |= {a["alias"] for a in value["aliases"]}
         if group:
-            groups.append(group)
+            groups.append(group - {None, ""})
     known = set().union(*groups)
     require(boundary | replay <= known, "Unresolved membership keys; isolation cannot be checked")
     while True:

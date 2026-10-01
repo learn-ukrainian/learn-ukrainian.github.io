@@ -320,25 +320,44 @@ def test_changed_snapshot_and_history_retention(pilot, capsys):
 
 
 ADJUDICATIONS = ("split", "merge", "retire", "sense_split", "sense_merge")
+SENSES = ("owned", "foreign", "minted", "paradigm", "mwe", "candidate")  # Variants naming one sense or held row.
+
+
+def retained(registry, locator, reference):  # Foreign history: a sense on card 'second'; unrelated card, sense, row.
+    card, owned, foreign, row = "wc_" + "f" * 12, "ws_" + "a" * 12, "ws_" + "b" * 12, "sr_" + "c" * 12
+    creation = dict(paradigm=dict(paradigm_key=locator), mwe=dict(mwe_key=locator + "|english form")).get(reference, {})
+    registry["entries"][1]["senses"].append(dict(sense_id=owned, order=1))
+    registry["entries"].append(dict(card_id=card, card_kind="mwe", state="active", senses=[dict(sense_id=foreign, order=1)],
+                                    created_in_build="foreign", key_at_creation=dict(spelling="Other", pos="noun", **creation)))
+    held = dict(snapshot_id="s2", status="held", hold="conflict", candidates=[locator if reference == "candidate" else "s2:x"])
+    registry["source_records"].append(dict(source_record_id=row, source_id="ulif", correspondence=[held],
+                                           aliases=[dict(kind="content", key="ulif:content:s2", snapshot_id="s2")]))
+    mints = [("mint", "cards", card), ("sense_mint", "to", owned), ("source_record_mint", "to", row), ("sense_mint", "to", foreign)]
+    registry["events"] += [dict(event_id=f"ie_{9000 + n}", kind=kind, build_id="foreign", **{field: [target]},
+                                evidence=locator if (reference, target) == ("minted", foreign) else f"Retained note {n}.")
+                           for n, (kind, field, target) in enumerate(mints)]
+    return owned, foreign, {"from": [dict(owned=owned, candidate=row).get(reference, foreign)]} if reference in SENSES else {}
 
 
 @pytest.mark.parametrize("kind,reference", [(kind, ref) for kind in ADJUDICATIONS for ref in (None, "unit")] +
-                         [("sense_split", ref) for ref in ("card", "locator", "source", "alias", "prose", "encoded")])
+                         [("sense_split", ref) for ref in ("card", "locator", "source", "alias", "prose", "encoded")] +
+                         [(kind, ref) for kind in ("sense_split", "sense_merge") for ref in SENSES])
 def test_schema_valid_isolation_events(pilot, kind, reference, capsys):
     _manifest, registry = prepared(pilot)
     member, locator = pilot["root"] / "membership.json", pilot["candidate"]["source_records"][0]["locator"]
-    # Each variant reaches the held-out boundary through one gate only: no overlay_id, and cards stay
-    # empty except in the card variant. The escaped colon hides the locator from the prose scan.
+    _owned, foreign, endpoint = retained(registry, locator, reference)
+    # Each variant reaches the held-out boundary through one gate only: no overlay_id, cards stay empty except
+    # in the card variant, and only sense variants name one id. The escaped colon hides the locator from prose.
     evidence = dict(locator=locator, unit=pilot["candidate"]["units"][0]["unit_key"], alias="atlas0:slug:second",
                     source=registry["source_records"][0]["source_record_id"], prose=f"A reviewed note on ({locator}).",
                     encoded='{"reference":"' + locator.replace(":", "\\u003a") + '"}').get(reference, "Unrelated note.")
     registry["events"].append(dict(event_id="ie_9999", kind=kind, build_id="fixture-review", evidence=evidence,
-                                   cards=[registry["entries"][1]["card_id"]] if reference == "card" else []))
+                                   cards=[registry["entries"][1]["card_id"]] if reference == "card" else [], **endpoint))
     save(pilot["registry"], registry)
-    assert pilot["operation"]("verify") == 0  # Schema, history and mint binding all pass.
-    assert '"foreign_build_events": 1' in capsys.readouterr().out
-    save(member, dict(heldout=[locator], replay=[]))
-    before, refused = pilot["registry"].read_bytes(), int(reference is not None)
+    assert pilot["operation"]("verify") == 0  # Schema, history and mint binding pass; four retained mints are foreign.
+    assert '"foreign_build_events": 5, "heldout_isolation": "unverified"' in capsys.readouterr().out  # Sorted keys.
+    save(member, dict(heldout=[locator], replay=[foreign] if reference == "foreign" else []))  # Replay-only sense.
+    before, refused = pilot["registry"].read_bytes(), int(reference not in {None, "foreign"})
     assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == refused
     assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == refused
     assert pilot["registry"].read_bytes() == before
@@ -375,13 +394,15 @@ def test_frozen_manifest_faults_discriminate(pilot, fault, reason, capsys):
 
 @pytest.mark.parametrize("fault,reason", [(None, None), ("unknown", "Unresolved membership"),
     ("overlap", "must be disjoint"), ("closure", "overlap after conservative alias closure"),
-    ("path", "Output must be separate")])
+    ("path", "Output must be separate"), ("sense", "overlap after conservative alias closure")])  # Sense vs owner key.
 def test_membership_resolution_and_output_paths(pilot, fault, reason, capsys):
-    prepared(pilot)
+    _manifest, registry = prepared(pilot)
     member = pilot["root"] / "membership.json"
     locators = [r["locator"] for r in pilot["candidate"]["source_records"]]
-    save(member, dict(heldout=["unknown" if fault == "unknown" else locators[0]],
-                      replay=[locators[0] if fault == "overlap" else locators[1]] if fault in {"overlap", "closure"} else []))
+    owned = retained(registry, locators[0], fault)[0]
+    save(pilot["registry"], registry)
+    replay = {"overlap": [locators[0]], "closure": [locators[1]], "sense": ["atlas0:slug:second"]}.get(fault, [])
+    save(member, dict(heldout=[{"unknown": "unknown", "sense": owned}.get(fault, locators[0])], replay=replay))
     if fault == "path":
         pilot["freeze"][pilot["freeze"].index("--output") + 1] = str(member)
         assert pilot["operation"]("freeze", "--heldout-manifest", str(member)) == 1
