@@ -367,3 +367,30 @@ decisions:
           The lessons are the human-facing product.
     superseded_by: null
     depends_on: []
+
+  - id: dec-016
+    status: active
+    date: 2026-10-01
+    expires: 2026-12-30
+    scope: pipeline
+    title: "Layer B entailment gate shelved; no cutover"
+    reasoning: >-
+      The infrastructure backlog takes priority. The Layer B entailment gate
+      is shelved with no cutover; a cutover would first need a cutover-tier
+      qualification and an explicit operator go. The shadow-tier attestation
+      lapses on 2026-10-12 on purpose. The design doc and the public 23-case
+      adversarial gold are preserved. Revisit only on a new operator decision,
+      which would require a cutover-tier qualification again.
+    evidence: >-
+      Operator decision 2026-10-01; #8305 (open custody actions in section 2);
+      #4797; docs/decisions/2026-10-01-layerb-entailment-gate-shelved.md
+    alternatives:
+      - option: "Proceed to cutover now"
+        rejected_because: >-
+          Competes with the infrastructure backlog; no cutover-tier
+          qualification or operator go exists.
+      - option: "Renew the shadow-tier attestation"
+        rejected_because: >-
+          Spends effort on a gate that is not being cut over.
+    superseded_by: null
+    depends_on: []

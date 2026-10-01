@@ -1,5 +1,7 @@
 # QG Layer B entailment-gate design
 
+> **Shelved (2026-10-01).** The Layer B entailment gate is shelved with no cutover; this design is preserved for reference only. See [the decision record](../../decisions/2026-10-01-layerb-entailment-gate-shelved.md) (dec-016, #8305).
+
 **Version:** 2
 **Date:** 2026-07-10
 **Authors:** GPT-5.6 Sol (lead); revision panel: Codex/GPT-5.6, AGY/Gemini-3.5-Flash-High, and Claude-Infra
