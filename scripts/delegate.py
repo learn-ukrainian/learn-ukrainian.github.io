@@ -4334,17 +4334,23 @@ def _superseded_review_release_proof(path: Path) -> tuple[bool, str]:
     return True, reason
 
 
-def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list[Path]:
+def _release_superseded_review_worktrees(
+    task_id: str,
+    *,
+    dry_run: bool,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
+) -> list[Path]:
     """Remove earlier rounds of this review series before the new checkout is made.
 
     Each removal goes through :func:`_remove_dispatch_worktree`, which runs the
     release proof while holding the earlier round's worktree lock (#8610).
+    Attempt dependencies are checked across all candidates before any removal (#9417).
     """
     series = _review_series(task_id)
     if series is None:
         return []
     stem, current_round = series
-    released: list[Path] = []
+    candidates: list[tuple[Path, str]] = []
     for path, component in _dispatch_worktree_components():
         earlier = _review_series(component)
         if earlier is None:
@@ -4352,6 +4358,10 @@ def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list
         earlier_stem, earlier_round = earlier
         if earlier_stem != stem or earlier_round >= current_round:
             continue
+        candidates.append((path, component))
+    _refuse_review_attempt_branch_holders(None, [path for path, _ in candidates], review_dependencies)
+    released: list[Path] = []
+    for path, component in candidates:
         if dry_run:
             ok, reason = _superseded_review_release_proof(path)
             if not ok:
@@ -4465,24 +4475,27 @@ def _review_attempt_worktree_dependencies(args: argparse.Namespace) -> tuple[tup
                     paths.append((name, Path(value)))
     # Retain the supplied location as well as its target: removing a checkout
     # containing a symlink would still break subsequent reads via that name.
-    return tuple(dict.fromkeys(
-        (name, location) for name, path in paths for location in (path.absolute(), path.resolve())
-    ))
+    return tuple(
+        dict.fromkeys((name, location) for name, path in paths for location in (path.absolute(), path.resolve()))
+    )
 
 
 def _refuse_review_attempt_branch_holders(
-    branch: str, holders: Sequence[Path], dependencies: Sequence[tuple[str, Path]],
+    branch: str | None,
+    holders: Sequence[Path],
+    dependencies: Sequence[tuple[str, Path]],
 ) -> None:
-    """Refuse branch attachment before cleanup can delete this attempt's dependencies (#9388)."""
+    """Refuse cleanup that can delete this attempt's dependencies (#9388, #9417)."""
     if not dependencies:
         return
     for holder in holders:
         roots = (holder.absolute(), holder.resolve())
         conflicts = sorted({name for name, path in dependencies if any(path.is_relative_to(root) for root in roots)})
         if conflicts:
+            context = f"branch {branch!r} holder" if branch is not None else "superseded review worktree"
             raise ValueError(
                 "review_attempt_branch_holder_conflict: "
-                f"branch {branch!r} holder {holder} contains this attempt's {', '.join(conflicts)}; "
+                f"{context} {holder} contains this attempt's {', '.join(conflicts)}; "
                 "refusing to release it; render from a detached worktree at the exact commit and retry (#9388)"
             )
 
@@ -7452,8 +7465,7 @@ def _refuse_if_gate_head_moved(origin_sha: str, pinned_head_sha: str | None) -> 
     """Refuse when a fetched or reused head differs from the required pinned SHA."""
     if pinned_head_sha is not None and origin_sha != pinned_head_sha:
         raise RuntimeError(
-            "refusing dispatch: fetched branch head "
-            f"{origin_sha} differs from the pinned head SHA {pinned_head_sha}"
+            f"refusing dispatch: fetched branch head {origin_sha} differs from the pinned head SHA {pinned_head_sha}"
         )
 
 
@@ -7601,7 +7613,7 @@ def _ensure_worktree(
     when given, is used as is and never resolved again (#8775,
     :func:`_helper_worktree_path`).
     ``review_dependencies`` retains attempt inputs before superseded-review or
-    stale-holder cleanup can run (#9388).
+    stale-holder cleanup can run, including detached earlier review rounds (#9388, #9417).
 
     The telemetry dict (third tuple element) carries:
     - ``base_sha``: the SHA the worktree was branched from (or is currently
@@ -7629,9 +7641,11 @@ def _ensure_worktree(
     }
     if requested_branch and review_dependencies:
         _refuse_review_attempt_branch_holders(
-            requested_branch, _branch_worktree_paths(requested_branch), review_dependencies,
+            requested_branch,
+            [path for path in _branch_worktree_paths(requested_branch) if path != worktree_path],
+            review_dependencies,
         )
-    _release_superseded_review_worktrees(task_id, dry_run=dry_run)
+    _release_superseded_review_worktrees(task_id, dry_run=dry_run, review_dependencies=review_dependencies)
 
     if requested_branch:
         if resolved_base_sha is None:
@@ -9870,13 +9884,16 @@ def _review_attempt_prompt_admission(
         if isinstance(manifest, dict) and any(key in manifest for key in ("manifest_schema", "kind", "inputs")):
             contract = check_review_contract(prompt_file, prompt, review_id=review_id, attempt_id=attempt_id)
             checked = check_prompt(
-                prompt, Path(args.review_attempt), repo_root=Path(contract["input_root"]),
+                prompt,
+                Path(args.review_attempt),
+                repo_root=Path(contract["input_root"]),
                 prompts_dir=Path(contract["server_checkout"]) / "scripts/review/prompts",
                 recorded_prompts_dir=Path(contract["render_checkout"]) / "scripts/review/prompts",
                 files_read=contract["recorded_files_read"],
                 template_sha256=contract["recorded_template_sha256"],
                 recorded_templates=contract["recorded_templates"],
-                review_id=review_id, attempt_id=attempt_id,
+                review_id=review_id,
+                attempt_id=attempt_id,
             )
             if not checked.passed:
                 return "❌ review attempt refused: prompt_render_invalid: " + "; ".join(checked.errors), None
@@ -10131,8 +10148,12 @@ def _dispatch(
     try:
         review_dependencies = _review_attempt_worktree_dependencies(args)
         if review_dependencies and getattr(args, "branch", None):
+            # A validated target already registered on this branch is reused,
+            # never released. Later worktree validation still checks reuse safety.
             _refuse_review_attempt_branch_holders(
-                args.branch, _branch_worktree_paths(args.branch), review_dependencies,
+                args.branch,
+                [path for path in _branch_worktree_paths(args.branch) if path != validated_worktree],
+                review_dependencies,
             )
     except (OSError, ValueError, RuntimeError) as exc:
         print(f"❌ review attempt refused: {exc}", file=sys.stderr)
@@ -12723,7 +12744,9 @@ def _admit_dispatch_target(
             mode=str(getattr(args, "mode", "") or ""),
             route=route,
             fallbacks_path=_FALLBACK_SUBS_PATH,
-            review_dispatch=bool(getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)),
+            review_dispatch=bool(
+                getattr(args, "require_review_verdict", False) or getattr(args, "review_attempt", None)
+            ),
             review_author_model=getattr(args, "review_author_model", None),
             review_risk=getattr(args, "review_risk", None),
             review_profile=getattr(args, "review_profile", None),
@@ -14657,7 +14680,9 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--mcp-config-path", default=None)
     wk.add_argument("--strict-mcp-config", action="store_true")
     wk.add_argument("--review-manifest", default=None, help="Formal attempt manifest path (default: none)")
-    wk.add_argument("--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)")
+    wk.add_argument(
+        "--review-input-root", default=None, help="Manifest render checkout for input projection (default: none)"
+    )
     wk.set_defaults(func=cmd_worker)
 
     return p
