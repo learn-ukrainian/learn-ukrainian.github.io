@@ -58,7 +58,7 @@ except Exception as exc:
     raise SystemExit(2) from exc
 
 try:
-    from shell_redirects import segments_with_following_operator
+    from shell_redirects import scope_events, segments_with_following_operator
 except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
@@ -564,32 +564,52 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
     """Return a block reason only for a command targeting a protected root."""
     effective_cwd = (session_cwd or Path.cwd()).resolve()
     protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
-    segments = _segments_with_following_operator(command)
+    events = scope_events(
+        command,
+        mark_redirect_unreadable=True,
+        unreadable_marker=_UNREADABLE_MARKER,
+        unparsed=[_UNREADABLE_MARKER],
+        may_match=lambda line: False,
+        keep_separators=True,
+    )
     cwd_unreadable = False
-    pending_cd: tuple[Path, int] | None = None
-    scope_depth = 0
-    previous_operator = ""
-    for segment, following_operator in segments:
-        scope_depth -= previous_operator.count("close")
-        if pending_cd is not None and "close" in previous_operator and scope_depth < pending_cd[1]:
-            # A redirect's substitution runs before cd. Apply the literal
-            # target only if its substitution closed, its enclosing scope
-            # stayed open, and cd succeeded. Settle before opening a new scope.
-            if scope_depth == pending_cd[1] - 1 and "&&" in previous_operator.rsplit("close", 1)[-1]:
-                effective_cwd, cwd_unreadable = pending_cd[0], False
+    pending_cd: Path | None = None
+    # Same save/restore algorithm as guard-pr-merge._judged_segments (#5333):
+    # every open inherits cwd; every close restores it; an unmatched close
+    # makes cwd unknown. Keep pending cd in its owning frame as well: redirect
+    # substitutions execute BEFORE cd, and must not inherit its new cwd.
+    stack: list[tuple[Path, bool, Path | None]] = []
+    for kind, segment in events:
+        if kind == "open":
+            stack.append((effective_cwd, cwd_unreadable, pending_cd))
             pending_cd = None
-        scope_depth += previous_operator.count("open")
-        previous_operator = following_operator or ""
+            continue
+        if kind == "close":
+            if stack:
+                effective_cwd, cwd_unreadable, pending_cd = stack.pop()
+            else:
+                cwd_unreadable = True
+                pending_cd = None
+            continue
+        if kind == "unreadable":
+            cwd_unreadable = True
+            pending_cd = None
+            continue
+        if kind == "separator":
+            if segment == ["&&"] and pending_cd is not None:
+                effective_cwd = pending_cd
+            pending_cd = None
+            continue
+        # A new command in this frame ends any pending cd (including across
+        # a newline). Only && proves the literal cd succeeded, as before.
+        pending_cd = None
         i = _skip_command_prefix(segment, 0)
         cd_target = _cd_target(segment, effective_cwd)
         if segment[i : i + 1] == ["cd"]:
-            if cd_target is not None and (following_operator or "").startswith("&&"):
-                effective_cwd = cd_target
-                cwd_unreadable = False
-            elif cd_target is not None and previous_operator.startswith("open") and _UNREADABLE_MARKER in segment:
-                pending_cd = (cd_target, scope_depth + 1)
-            elif cd_target is None:
+            if cd_target is None:
                 cwd_unreadable = True
+            else:
+                pending_cd = cd_target
             continue
 
         # Expansion alone does not make a known dispatch cwd protected. Only

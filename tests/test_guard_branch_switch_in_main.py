@@ -846,6 +846,88 @@ def test_issue_9479_r2_operator_boundaries(repos):
     assert rows[1][1] == "close&&"
 
 
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("separator", [" && ", "; ", "\n", " || "])
+@pytest.mark.parametrize("redirect", ["", "2>/dev/null", ">$(echo /dev/null)", ">`echo /dev/null`"])
+@pytest.mark.parametrize(
+    "shape",
+    [
+        "WT=$(cd {target} {redirect} && pwd)",
+        "x=$(cd {target} {redirect} && pwd)",
+        "(cd {target} {redirect} && git status)",
+        "(cd {target} {redirect} && true)",
+        "WT=`cd {target} {redirect} && pwd`",
+        "echo $(cd {target} {redirect} && pwd)",
+        "echo `cd {target} {redirect} && pwd`",
+        "[ -d $(cd {target} {redirect} && pwd) ]",
+        "cat <(cd {target} {redirect} && pwd)",
+        "true >(cd {target} {redirect} && pwd)",
+        "( ( cd {target} {redirect} ) )",
+        # The inner pwd expands to a command name: ':' runs successfully.
+        "x=$(cd {target} {redirect} && $(cd {other} && echo :))",
+        "x=$(cd {target} {redirect} && $(cd {other} && pwd)); true",
+        "(cd {target} {redirect} && false || pwd)",
+        "(cd {target} {redirect} && pwd; true)",
+        "(cd {target} {redirect} && pwd\ntrue)",
+    ],
+)
+def test_issue_9479_r4_scope_stack_bash(repos, tmp_path, start, separator, redirect, shape):
+    target = "public_worktree" if start == "public" else "public"
+    if shape.count("`") == 2:
+        redirect = redirect.replace("`", "\\`")
+    directory = ".worktrees/topic" if target == "public_worktree" else "../.."
+    body = shape.format(target=directory, redirect=redirect, other=repos[start])
+    # All bodies succeed; make the OR-list run its branch operation too.
+    if separator == " || ":
+        body += " && false"
+    command = body + separator + "git checkout -b fixture"
+    _assert_r3_bash_decision(repos, tmp_path, command, repos[start], "checkout -b", repos[start])
+
+
+@pytest.mark.parametrize("start", ["public", "public_worktree"])
+@pytest.mark.parametrize("target", ["public", "public_worktree"])
+def test_issue_9479_r4_session_cd_bash(repos, tmp_path, start, target):
+    command = f"cd {repos[target]} && git switch -c fixture"
+    _assert_r3_bash_decision(repos, tmp_path, command, repos[start], "switch -c", repos[target])
+
+
+@pytest.mark.parametrize("shape", ["({body})", "x=$({body})", "x=`{body}`", "cat <({body})"])
+def test_issue_9479_r4_unreadable_cd_is_scoped(repos, tmp_path, shape):
+    body = 'cd "$ROOT" && git switch -c fixture'
+    command = shape.format(body=body)
+    # Bash executes a real primary cd, but the guard cannot read its target.
+    # Check the invocation with the same recording oracle used by the controls.
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setenv("ROOT", str(repos["public"]))
+        _assert_r3_bash_decision(repos, tmp_path, command, repos["public_worktree"], "switch -c", repos["public"])
+    closed = shape.format(body='cd "$ROOT" && true') + " && git switch -c fixture"
+    with pytest.MonkeyPatch.context() as patch:
+        patch.setenv("ROOT", str(repos["public"]))
+        _assert_r3_bash_decision(
+            repos, tmp_path, closed, repos["public_worktree"], "switch -c", repos["public_worktree"]
+        )
+
+
+def test_issue_9479_r4_unmatched_close_fails_closed(repos, tmp_path):
+    # A case arm is legal Bash but has no opening scope in this bounded reader.
+    command = "case fixture in fixture) git switch -c fixture ;; esac"
+    recorder = tmp_path / "git"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=repos["public_worktree"],
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert record.read_text().splitlines() == [str(repos["public_worktree"]), "switch", "-c", "fixture"]
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is not None
+
+
 @pytest.mark.parametrize("option", ["-C ", "-C"])
 @pytest.mark.parametrize("target", ["public", "public_worktree", "relative"])
 def test_issue_9479_r2_absolute_git_cwd_resolves_unreadable_cd(repos, option, target):
