@@ -13177,6 +13177,141 @@ def test_stale_branch_holder_release_removes_under_the_lock(tmp_tasks_dir, tmp_p
     assert _worktree_lock_is_free(holder)
 
 
+@pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_review_attempt_stale_branch_holder_survives_before_admission(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, dependency, dry_run,
+):
+    """#9388: a real clean, synced driver checkout is retained before route/prompt admission."""
+    from scripts.review.render_contract import RENDER_RECORD_KEY, render_record_path
+
+    main, holder = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", holder)
+    branch = "codex/task-1"
+    subprocess.run(
+        ["git", "update-ref", f"refs/remotes/origin/{branch}", "HEAD"],
+        cwd=holder, check=True, capture_output=True, timeout=30,
+    )
+    state = holder / "local_state"
+    state.mkdir()
+    manifest = (state if dependency == "manifest" else tmp_path) / "manifest.yaml"
+    manifest.write_text("review_id: review-9388\n")
+    prompt = tmp_path / "prompt.md"
+    prompt.write_text("review_id: review-9388\nattempt_id: attempt-9388\n")
+    record = {name: str(holder if name == dependency else tmp_path) for name in ("input_root", "render_checkout")}
+    render_record_path(prompt).write_text(json.dumps({RENDER_RECORD_KEY: record}))
+    assert delegate._worktree_is_clean(holder)
+    assert delegate._worktree_matches_origin_branch(holder, branch)
+
+    with (
+        patch("scripts.agent_runtime.target_admission.resolve_and_admit") as admit,
+        patch.object(delegate, "_review_attempt_prompt_admission") as prompt_admit,
+        patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare,
+        patch.object(delegate, "_release_stale_branch_holders") as release,
+    ):
+        admit.side_effect = AssertionError("route admission reached despite protected review branch holder")
+        rc = delegate.cmd_dispatch(_write_args(
+            task_id="review-9388", mode="read-only", worktree="auto", branch=branch,
+            review_attempt=str(manifest), prompt=None, prompt_file=str(prompt),
+            review_id="review-9388", attempt_id="attempt-9388", dry_run=dry_run,
+        ))
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert "review_attempt_branch_holder_conflict" in err
+    assert dependency in err and branch in err and str(holder) in err
+    assert "detached worktree at the exact commit" in err
+    admit.assert_not_called()
+    prompt_admit.assert_not_called()
+    prepare.assert_not_called()
+    release.assert_not_called()
+    assert holder.is_dir() and manifest.is_file()
+    assert delegate._branch_worktree_paths(branch) == [holder]
+    assert delegate._read_state(delegate._state_path("review-9388")) is None
+
+
+@pytest.mark.parametrize("dry_run", [False, True])
+def test_stale_branch_holder_release_protects_review_dependency_at_cleanup(
+    tmp_tasks_dir, tmp_path, monkeypatch, dry_run,
+):
+    """The release helper itself refuses before removing any holder, even after preflight."""
+    main, holder = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    with patch.object(delegate, "_remove_dispatch_worktree") as remove:
+        with pytest.raises(ValueError, match="review_attempt_branch_holder_conflict"):
+            delegate._release_stale_branch_holders(
+                branch="codex/task-1", holders=[tmp_path / "other-holder", holder], dry_run=dry_run,
+                review_dependencies=(("manifest", holder / "local_state" / "manifest.yaml"),),
+            )
+    remove.assert_not_called()
+    assert holder.is_dir()
+
+
+def test_stale_branch_holder_ordinary_dispatch_still_releases_real_clean_holder(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """#9388 non-goal: no attempt dependencies means the existing real removal remains enabled."""
+    main, holder = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_branch_holder_activity_reason", lambda *_args, **_kwargs: None)
+    branch = "codex/task-1"
+    subprocess.run(
+        ["git", "update-ref", f"refs/remotes/origin/{branch}", "HEAD"],
+        cwd=holder, check=True, capture_output=True, timeout=30,
+    )
+
+    assert delegate._release_stale_branch_holders(branch=branch, holders=[holder], dry_run=False) == [holder]
+    assert not holder.exists()
+    assert delegate._branch_worktree_paths(branch) == []
+
+
+@pytest.mark.parametrize("link_inside", [False, True])
+def test_review_attempt_stale_branch_holder_protects_symlink_location_and_target(tmp_path, link_inside):
+    holder = tmp_path / "holder"
+    holder.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    target = (outside if link_inside else holder) / "manifest.yaml"
+    target.write_text("review_id: symlink\n")
+    link = (holder if link_inside else outside) / "alias.yaml"
+    link.symlink_to(target)
+    dependencies = delegate._review_attempt_worktree_dependencies(_write_args(review_attempt=str(link)))
+
+    with pytest.raises(ValueError, match="review_attempt_branch_holder_conflict"):
+        delegate._refuse_review_attempt_branch_holders("branch-B", [holder], dependencies)
+
+
+@pytest.mark.parametrize("sidecar", [None, "not-json", "[]", '{"render_contract": null}'])
+def test_review_attempt_dependencies_preserve_manifest_without_usable_render_record(tmp_path, sidecar):
+    from scripts.review.render_contract import render_record_path
+
+    prompt = tmp_path / "prompt.md"
+    if sidecar is not None:
+        render_record_path(prompt).write_text(sidecar)
+    manifest = tmp_path / "manifest.yaml"
+    dependencies = delegate._review_attempt_worktree_dependencies(
+        _write_args(review_attempt=str(manifest), prompt_file=str(prompt)),
+    )
+    assert dependencies == (("manifest", manifest),)
+    # A neighboring directory sharing the prefix is not a holder of these inputs.
+    delegate._refuse_review_attempt_branch_holders("branch-B", [tmp_path / "manifest"], dependencies)
+
+
+def test_review_attempt_stale_branch_holder_refuses_before_superseded_cleanup(tmp_path, monkeypatch):
+    holder = tmp_path / "holder"
+    monkeypatch.setattr(delegate, "_branch_worktree_paths", lambda _branch: [holder])
+    with patch.object(delegate, "_release_superseded_review_worktrees") as cleanup:
+        with pytest.raises(ValueError, match="review_attempt_branch_holder_conflict"):
+            delegate._ensure_worktree(
+                agent="codex", task_id="review-9388-r2", raw_path=str(tmp_path / "new"), branch="codex/task-1",
+                review_dependencies=(("input_root", holder),),
+            )
+    cleanup.assert_not_called()
+
+
 def test_danger_failed_clean_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
     """Danger still reaps only a clean successful done, not a failed run."""
     primary, worktree, branch, state = _run_settle_reap_worker(
