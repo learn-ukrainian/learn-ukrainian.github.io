@@ -99,6 +99,7 @@ def build_ulif_forms(
 
         mismatches: list[dict[str, Any]] = []
         unavailable_relation_blobs: list[dict[str, Any]] = []
+        secondary_blocking_failures: list[dict[str, Any]] = []
         has_extraction_defect = False
         has_infrastructure_failure = False
 
@@ -423,18 +424,24 @@ def build_ulif_forms(
                 )
 
             if batch_failure_rows:
+                primary_failure_rows: dict[int, tuple] = {}
+                for entry_id, reason, locator in batch_failure_rows:
+                    # Relation failures precede the terminal row and are all
+                    # blocking; entries without them have one terminal row.
+                    if entry_id not in primary_failure_rows:
+                        primary_failure_rows[entry_id] = (entry_id, reason, locator)
+                    elif reason in {"raw_cache_error", "missing_cache_file"} or reason.startswith(
+                        ("extraction_failed:", "extraction_defect:")
+                    ):
+                        secondary_blocking_failures.append(
+                            {"entry_id": entry_id, "reason": reason, "locator": locator}
+                        )
                 conn.executemany(
                     """
                     INSERT INTO ulif_forms_failures (entry_id, reason, locator)
                     VALUES (?, ?, ?)
-                    ON CONFLICT(entry_id) DO UPDATE SET
-                        reason = excluded.reason,
-                        locator = excluded.locator
-                    WHERE ulif_forms_failures.reason NOT IN ('raw_cache_error', 'missing_cache_file')
-                      AND ulif_forms_failures.reason NOT LIKE 'extraction_failed:%'
-                      AND ulif_forms_failures.reason NOT LIKE 'extraction_defect:%'
                     """,
-                    batch_failure_rows,
+                    list(primary_failure_rows.values()),
                 )
 
             conn.commit()
@@ -446,8 +453,7 @@ def build_ulif_forms(
             """
         ).fetchone()[0]
         failed_count = conn.execute("SELECT count(*) FROM ulif_forms_failures").fetchone()[0]
-        # UNIQUE(entry_id) selects one primary reason and its own locator. Count
-        # persisted entries, while relation-tab details remain in the report.
+        # Count persisted failed entries, not report-only secondary failures.
         failures_by_reason = dict(
             conn.execute("SELECT reason, count(*) FROM ulif_forms_failures GROUP BY reason").fetchall()
         )
@@ -480,6 +486,7 @@ def build_ulif_forms(
             "entries_failed": failed_count,
             "total_forms": total_forms,
             "failures_by_reason": dict(failures_by_reason),
+            "secondary_blocking_failures": secondary_blocking_failures,
             "mismatches_count": len(mismatches),
             "mismatches": mismatches,
             "mismatches_sample": mismatches[:100],
