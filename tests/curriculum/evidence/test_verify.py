@@ -909,6 +909,7 @@ def _checked_ulif_store(tmp_path, synthetic_vesum, synthetic_sources):
     import json
 
     with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE ulif_dictua_entries SET canonical_headword='synthetic-checked' WHERE id=2")
         conn.execute(
             "INSERT INTO ulif_dictua_sections VALUES (10, 2, 'paradigm', 0, '', ?)",
             (json.dumps({"synthetic-a": "synthetic-a-ulif-stressed"}),),

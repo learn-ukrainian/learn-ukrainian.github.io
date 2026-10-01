@@ -29,6 +29,7 @@ from .words import (
     needs_no_stress,
     packed_stress_reason,
     store_scheme,
+    strip_combining_stress,
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
@@ -388,6 +389,11 @@ def verify_words_store(
             # ULIF spelling group was fetched above during entry resolution
             matching_entry = None
             if ulif_checked:
+                # Preserve the full-group check, but re-derive citations only
+                # from headwords matching this lemma exactly, including case.
+                ulif_group = [
+                    e for e in ulif_group if strip_combining_stress(e.get("canonical_headword") or "") == lemma
+                ]
                 if isinstance(entry, dict) and entry.get("source") == "ulif":
                     matching_entry = next((e for e in ulif_group if e.get("homonym_index") == entry["key"][1]), None)
                 elif isinstance(word.get("ulif"), dict) and word["ulif"].get("source") == "ulif":
