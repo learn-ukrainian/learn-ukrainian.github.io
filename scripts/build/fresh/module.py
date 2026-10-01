@@ -23,9 +23,9 @@ from scripts.build.fresh.prompt import (
     render_lesson_prompt,
     render_recap_prompt,
 )
-from scripts.build.fresh.regeneration import load_ledger
+from scripts.build.fresh.regeneration import load_ledger, record_failure, record_writer_call
 from scripts.build.fresh.runner import run_lesson
-from scripts.build.fresh.writer import dispatch_writer
+from scripts.build.fresh.writer import WriterCallError, dispatch_writer
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import planned_state
 
@@ -119,7 +119,8 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                        "prompt_sha256": prompt_sha}
             fresh = draft_is_current(ledger, draft_path, current)
             if ledger["terminal_layer"] is not None:
-                result = _stop(n, "regeneration_terminal", check=ledger["attempts"][-1]["failed_check"],
+                last = ledger["attempts"][-1] if ledger["attempts"] else {}
+                result = _stop(n, last.get("reason", "regeneration_terminal"), check=last.get("failed_check", 0),
                                layer=ledger["terminal_layer"])
                 result["regenerations"] = ledger["regenerations"]
                 result["terminal_layer"] = ledger["terminal_layer"]
@@ -142,11 +143,25 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                     if not preflight.passed:
                         results.append(_stop(n, "preflight_failed"))
                         break
-                    writer_dispatch(writer=agent, model=model, level=level, slug=slug, lesson_n=n,
+                    ledger = record_writer_call(ledger_path, slug, n)
+                    if ledger["terminal_layer"] is not None:
+                        stopped = _stop(n, "regeneration_limit")
+                        stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
+                        results.append(stopped)
+                        break
+                    try:
+                        writer_dispatch(writer=agent, model=model, level=level, slug=slug, lesson_n=n,
                                     prompt_file=prompt_path, prompt_sha256=prompt_sha, output_dir=state_dir,
-                                    preflight_result=preflight, attempt=len(ledger["attempts"]) + 1,
+                                    preflight_result=preflight, attempt=ledger["regenerations"] + 1,
                                     plan_activity_types={a["id"]: a["type"] for a in entry.get("activities") or []},
                                     repo_root=repo_root)
+                    except (OSError, ValueError, KeyError, TypeError, WriterCallError) as err:
+                        ledger = record_failure(ledger_path, slug, n,
+                                                {"check": 1, "layer": "writer", "reason": str(err)}, current)
+                        stopped = _stop(n, str(err), check=1, layer="writer")
+                        stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
+                        results.append(stopped)
+                        break
                 draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
                 report = runner(level, slug, n, draft=draft, plan=plan, pack=pack, words=words,
                                 state_dir=state_dir, repo_root=repo_root, plans_dir=paths["plan"].parent,
@@ -176,8 +191,15 @@ def build_module(level: str, slug: str, *, repo_root: Path, lesson_n: int | None
                 break
         except (OSError, ValueError, KeyError, TypeError) as err:
             reason = str(err)
-            results.append(_stop(n, "recap_inputs_not_built" if "recap_inputs_not_built" in reason else reason))
+            stopped = _stop(n, "recap_inputs_not_built" if "recap_inputs_not_built" in reason else reason)
+            ledger = load_ledger(state_dir / f"lesson-{n}.regeneration.yaml", slug, n)
+            stopped.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
+            results.append(stopped)
             break
+    # Every exit (including preflight/seat failures on resume) reports the persisted call count.
+    for result in results:
+        ledger = load_ledger(state_dir / f"lesson-{result['n']}.regeneration.yaml", slug, result["n"])
+        result.update(regenerations=ledger["regenerations"], terminal_layer=ledger["terminal_layer"])
     report = {"level": level, "slug": slug, "complete": len(results) == len(lessons) and all(
         row["passed"] and row["manifest_sha256"] for row in results),
               "lessons": [{key: row[key] for key in ("n", "passed", "passed_through", "manifest_sha256",

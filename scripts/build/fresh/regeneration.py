@@ -33,6 +33,22 @@ def load_ledger(path: Path, slug: str, n: int) -> dict[str, Any]:
     return doc
 
 
+def record_writer_call(path: Path, slug: str, n: int) -> dict[str, Any]:
+    """Count a call before parsing its reply, including a call that raises during validation."""
+    existed = path.exists()
+    doc = load_ledger(path, slug, n)
+    if doc["terminal_layer"] is not None:
+        return doc
+    if existed:
+        if doc["regenerations"] >= 2:
+            doc["terminal_layer"] = "driver"
+        else:
+            doc["regenerations"] += 1
+    _validate(doc)
+    lock.write(path, lock.yaml_bytes(doc))
+    return doc
+
+
 def record_failure(path: Path, slug: str, n: int, failure: dict[str, Any], inputs: dict[str, str], *,
                    at: str | None = None) -> dict[str, Any]:
     """Record a failed attempt; repeated checks and the third failure are terminal."""
@@ -45,9 +61,8 @@ def record_failure(path: Path, slug: str, n: int, failure: dict[str, Any], input
     if layer not in {"writer", "plan", "pack", "word_store", "engine", "driver"}:
         raise ValueError(f"unknown failure layer {layer!r}")
     previous_same = any(row["failed_check"] == failure["check"] for row in previous)
-    prior_count = doc["regenerations"]
-    if previous:
-        doc["regenerations"] = min(2, prior_count + 1)
+    # The module records calls before parsing; direct runner users count completed attempts here.
+    doc["regenerations"] = max(doc["regenerations"], min(2, len(previous)))
     previous.append({
         "attempt": len(previous) + 1,
         "failed_check": failure["check"],

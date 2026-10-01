@@ -154,6 +154,25 @@ def _lesson(plan: dict[str, Any], n: int) -> dict[str, Any]:
     return next(item for item in plan["lessons"] if item["n"] == n)
 
 
+def _gap_layer(gaps: list[dict[str, Any]], lesson: dict[str, Any]) -> str:
+    """A missing record belongs to the pack; a quote host outside the plan requires replanning.
+
+    A planned dialogue or cited T-record is a possible host. Availability/rights gaps in
+    that record stay with the pack; this mapping never decides semantic host adequacy.
+    """
+    steps = lesson.get("steps") or []
+    for gap in gaps:
+        if gap["need"] not in {"quote", "publication_right"}:
+            continue
+        preceding = steps[:next(index for index, step in enumerate(steps) if step["id"] == gap["step"]) + 1]
+        dialogue_step = (lesson.get("dialogue") or {}).get("step")
+        if dialogue_step in {step["id"] for step in preceding}:
+            continue
+        if not any(ref.startswith("T-") for step in preceding for ref in step.get("evidence") or []):
+            return "plan"
+    return "pack"
+
+
 def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str, Any]:
     steps = lesson.get("steps") or []
     dsteps = draft.get("steps") or []
@@ -1372,13 +1391,18 @@ def run_lesson(
         return finish(failure(1, f"{err.check}: {err.reason}", "writer", token=err.path))
     if draft["lesson"] != {"module": f"{level}/{slug}", "n": n}:
         return finish(failure(1, "lesson_identity_mismatch", "writer"))
+    if draft["status"] == "evidence_gap" and any(
+        gap["step"] not in {step["id"] for step in lesson["steps"]} for gap in draft["gaps"]
+    ):
+        return finish(failure(1, "gap_step_not_in_plan", "writer"))
     for key, value in inputs.items():
         if key in draft["inputs"] and draft["inputs"][key] != value:
             return finish(failure(1, f"input_hash_mismatch: {key}", "writer"))
     rows.append(_pass(1))
     if draft["status"] == "evidence_gap":
         gap = draft["gaps"][0]
-        return finish(failure(2, gap.get("detail") or "evidence_gap", "pack", step=gap.get("step")))
+        return finish(failure(2, "evidence_gap: " + json.dumps(draft["gaps"], ensure_ascii=False),
+                              _gap_layer(draft["gaps"], lesson), step=gap.get("step")))
     rows.append(_pass(2))
     row = check_3_structure(draft, lesson)
     if row["status"] == "failed":
