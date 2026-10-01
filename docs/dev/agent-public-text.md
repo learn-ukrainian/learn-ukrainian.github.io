@@ -157,43 +157,80 @@ scanned text and are not affected.
 
 The git shim sends every `push` (after global options such as `-C` and `-c`)
 to `scripts/opsec/git_push.py` before the real git runs. A dry run
-(`--dry-run --porcelain --no-verify --verbose`) reports exactly which refs the
-push creates or updates and where. For each destination that `is_private`
-does not exempt, these are scanned through `check_texts`:
+(`--dry-run --porcelain --no-verify --verbose`) reports which refs the push
+names and the push URL git resolved (after `insteadOf` and `pushInsteadOf`),
+printed without userinfo. For each destination that `is_private` does not
+exempt, these are scanned through `check_texts`:
 
-- the published branch, tag or other ref name;
-- the message of every commit the destination does not already have;
-- annotated tag messages.
+- every named branch, tag or other ref name, except deletions;
+- annotated tag messages;
+- the message of every commit reachable from the named tips, except commits
+  this machine already scanned clean (below).
 
-What the destination already has is taken only from the destination itself:
-the old tip the preview reports and the refs one `git ls-remote` returns for
-the resolved push URL, through the same git options and environment. Local
-tracking refs are never evidence, because a changed URL or a forged ref would
-otherwise hide unpublished commits. When the destination cannot be queried or
-shares no local history, the whole history reachable from the pushed tips is
-scanned and a one-line note says so. Every enumeration and scan call runs with
-replacement objects disabled (`--no-replace-objects`,
-`GIT_NO_REPLACE_OBJECTS=1`), so the scan reads the objects the pack sends.
+Nothing the destination reports counts as evidence of what it already has:
+no `ls-remote`, no tracking refs, and no old tips or up-to-date or rejected
+verdicts from the preview. A forged or stale advertisement therefore cannot
+shrink the scan.
 
-The preview prints a push URL without userinfo (`host:path` for scp-like
-`user@host:path`), so the full URL is recovered from `git remote get-url
---push --all` or the push arguments before classification. Scp-like, `ssh://`,
-`git://` and `https://` forms name a hosted destination; local paths, file
-URLs, remote helpers and unparseable text are scanned (never private by
-default). Deletions publish no text. A hit, a missing or incompatible matcher,
-or an unreadable or failed preview refuses the push before anything is sent.
-Diagnostics name the rule, class, field and line, or only the failing phase
-and exit code; git's own output from these steps is never replayed. The same
-single-use, logged `LU_OPSEC_OVERRIDE` applies; the real git does not receive
-it. File contents and history already on the remote are not scanned.
+**Clean-commit cache.** `<git-common-dir>/lu-push-scan-clean` lists the
+commits whose messages a push scan on this machine found clean. Its first line
+binds it to a SHA-256 fingerprint of the matcher, rules and blocking policy;
+each further line is one commit id. Commit ids are content-addressed, so an id
+always names the same message. An id is written only after `check_texts`
+accepts the push, and only for commits whose own message had no blocking
+finding. A hit that an override let through is never cached and is scanned
+again on the next push. An unreadable, malformed or partly written file, or
+one written under another fingerprint (for example after a rules update),
+holds nothing: every reachable commit is scanned, a one-line note says so,
+and a scan that skipped nothing replaces the file. Writers take an exclusive
+`flock` on `lu-push-scan-clean.lock` and readers a shared one, so concurrent
+pushes neither interleave lines nor read half of one. Every push prints how
+many commit messages it scanned and how many it skipped as cached. The cache is
+as trusted as the git directory itself; a hand-edited entry skips that
+commit, as an edited hook could.
+
+**What the scan reads.** Every enumeration runs with replacement objects
+(`--no-replace-objects`, `GIT_NO_REPLACE_OBJECTS=1`,
+`-c core.useReplaceRefs=false`) and grafts (`GIT_GRAFT_FILE` set to the null
+device) disabled, so reachability follows the parents recorded in the commits
+the destination receives. A push is refused while a non-empty grafts file
+exists (`info/grafts`, or the caller's `GIT_GRAFT_FILE`) or the repository is
+shallow. Refusal is simpler than proving that a grafted pack and the scanned
+history agree, and grafts are deprecated in favour of `git replace`.
+
+**What the scan writes.** The scan's own git calls drop `GIT_TRACE*` and
+`GIT_CURL_VERBOSE`, set `GIT_TRACE2`, `GIT_TRACE2_EVENT` and `GIT_TRACE2_PERF`
+to `0` (which outranks `trace2.*` targets in configuration) and set
+`GIT_TERMINAL_PROMPT=0`. The scan never passes a URL to git and never reads
+one with userinfo. Caller tracing still applies to the real push the caller
+asked for.
+
+Classification uses the URL the preview prints. Scp-like, `ssh://`, `git://`
+and `https://` forms name a hosted destination; local paths, file URLs, remote
+helpers and unparseable text are scanned (never private by default). A hit, a
+missing or incompatible matcher, or an unreadable or failed preview refuses
+the push before anything is sent. Diagnostics name the rule, class, field and
+line, or only the failing phase and exit code; git's own output from these
+steps is never replayed. The same single-use, logged `LU_OPSEC_OVERRIDE`
+applies; the real git does not receive it. File contents are not scanned.
+
+Cost on this repository (9,482 commits reachable from a branch tip): the first
+push in a clone scans every message in 11 to 17 seconds; a later push with a
+warm cache takes about 0.2 to 0.3 seconds plus the time to scan new commits.
 
 Known gaps: git aliases that expand to push, absolute git paths, `git-push`
 called from the exec path, submodule pushes from `--recurse-submodules`,
 note blobs under `refs/notes/` and commit author identities are not scanned.
 An ssh host alias that does not name the hosted domain is scanned as public.
 A local ref moved by another process between the scan and the push is not
-rescanned. The shim's behaviour without its guard interpreter for non-push
-commands is tracked in #9448.
+rescanned. For matching refspecs (`:` or `push.default=matching`) the set of
+refs comes from the preview's negotiation with the destination, so a
+destination that gains a matching branch between the preview and the push can
+receive that branch unscanned; explicit refspecs, `--all`, `--tags` and
+`--mirror` name their refs locally. Published history that already contains
+blocking findings refuses every push until it is resolved, because those
+commits are never cached. The shim's behaviour without its guard interpreter
+for non-push commands is tracked in #9448.
 
 Historical dispatch briefs, session records and autopsies retain their original
 commands as evidence. For current execution, replace their raw writes with the

@@ -171,6 +171,19 @@ def _matches(text: str, tooling: Path) -> list[dict]:
     return _scan(text, _load_matcher(tooling))
 
 
+def matcher_fingerprint(tooling: Path | None = None) -> str:
+    """SHA-256 over the inputs that decide a scan verdict: matcher, rules and blocking policy."""
+    tooling = tooling or private_tooling()
+    digest = hashlib.sha256()
+    try:
+        for source in (tooling / "matcher.py", tooling / "rules.json", POLICY):
+            data = source.read_bytes()
+            digest.update(len(data).to_bytes(8, "big") + data)
+    except OSError:
+        raise PublishBlocked("OPSEC: private matcher or rules unavailable/incompatible; write refused.") from None
+    return digest.hexdigest()
+
+
 def check_texts(
     destination: str,
     texts: list[str],
@@ -179,26 +192,32 @@ def check_texts(
     tooling: Path | None = None,
     log_path: Path | None = None,
     field_names: list[str] | None = None,
-) -> None:
-    """Scan final fields; an override permits policy hits only after a durable log."""
+) -> set[int]:
+    """Scan final fields; an override permits policy hits only after a durable log.
+
+    Returns the indices of texts with a blocking finding, which is non-empty
+    only when an override let them through.
+    """
     environment = os.environ if environment is None else environment
     reason = environment.pop("LU_OPSEC_OVERRIDE", "")
     if not texts:
         if reason.strip():
             _record_override(destination, [], reason, log_path)
-        return
+        return set()
     if is_private(destination):
         if reason.strip():
             _record_override(destination, [], reason, log_path)
-        return
+        return set()
     loaded = _load_matcher(tooling or private_tooling())
     blocks = []
     locations = []
+    blocked_texts: set[int] = set()
     for index, text in enumerate(texts):
         for finding in _scan(text, loaded):
             rule, level = finding["rule_id"], finding["class"]
             if level <= 5 or rule in loaded[2]:
                 blocks.append((rule, level))
+                blocked_texts.add(index)
                 # Names come from option/JSON keys, never from field values.
                 name = field_names[index] if field_names and index < len(field_names) else f"text[{index + 1}]"
                 if not re.fullmatch(r"[A-Za-z0-9_.\[\]-]{1,80}", name):
@@ -209,9 +228,9 @@ def check_texts(
                     locations.append(location)
     if reason.strip():
         _record_override(destination, blocks, reason, log_path)
-        return
+        return blocked_texts
     if not blocks:
-        return
+        return blocked_texts
     raise PublishBlocked(
         f"OPSEC blocked: {'; '.join(locations)}. Remove the flagged detail; for a false positive, "
         "set LU_OPSEC_OVERRIDE to a reason for this command only."

@@ -14,7 +14,7 @@ import pytest
 
 from scripts.opsec import git_push
 from scripts.opsec import prepublish as gate
-from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, make_tooling
+from tests.opsec_fixtures import CATALOG, ROOT, TOKEN, make_tooling, synthetic_rules
 
 REAL_GIT = shutil.which("git", path=os.defpath)
 pytestmark = pytest.mark.skipif(REAL_GIT is None, reason="git unavailable")
@@ -167,13 +167,14 @@ def test_clean_push_delivers_unchanged(push_sandbox):
     print(f"clean shim push: {elapsed:.3f}s")
 
 
-def test_history_already_on_the_remote_is_not_rescanned(push_sandbox):
-    push_sandbox.commit("old " + TOKEN)
-    _git(push_sandbox.work, "push", "-q", "origin", "trunk")  # Already public before this change.
-    sha = push_sandbox.commit("clean follow-up")
+def test_history_the_destination_already_has_is_still_scanned(push_sandbox):
+    """What the destination advertises is no evidence; only this machine's clean scans skip commits."""
+    old = push_sandbox.commit("old " + TOKEN)
+    _git(push_sandbox.work, "push", "-q", "origin", "trunk")  # Pushed without the scan.
+    before = push_sandbox.remote_refs()
+    push_sandbox.commit("clean follow-up")
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
-    assert result.returncode == 0, result.stderr
-    assert push_sandbox.remote_refs()["refs/heads/feature"] == sha
+    assert_blocked(result, push_sandbox, before, f"commit[{old[:12]}].message")
 
 
 def test_deletion_publishes_no_text_and_needs_no_matcher(push_sandbox):
@@ -217,7 +218,6 @@ def test_new_destination_url_is_scanned_despite_old_tracking_refs(push_sandbox, 
     _git(push_sandbox.work, "remote", "set-url", "origin", str(fresh))
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert result.returncode == 2 and f"field=commit[{sha[:12]}].message" in result.stderr, result.stderr
-    assert "full reachable history scanned" in result.stderr
     assert _git(fresh, "for-each-ref") == ""
 
 
@@ -229,13 +229,16 @@ def test_forged_tracking_ref_does_not_suppress_the_scan(push_sandbox):
     assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
 
 
-def test_incremental_push_enumerates_only_commits_the_destination_lacks(push_sandbox, monkeypatch):
+def test_incremental_push_enumerates_only_commits_not_yet_scanned_clean(push_sandbox, monkeypatch):
     for number in range(4):
         push_sandbox.commit(f"published {number}")
-    _git(push_sandbox.work, "push", "-q", "origin", "trunk")
+    first = push_sandbox.push("push", "origin", "trunk")
+    assert first.returncode == 0 and "5 commit message(s) scanned, 0 skipped" in first.stderr, first.stderr
     new = [push_sandbox.commit(f"new {number}") for number in range(2)]
     captured = []
-    monkeypatch.setattr(gate, "check_texts", lambda label, texts, **kw: captured.append(kw["field_names"]))
+    monkeypatch.setattr(gate, "check_texts", lambda label, texts, **kw: captured.append(kw["field_names"]) or set())
+    fingerprint = gate.matcher_fingerprint(push_sandbox.tooling)  # The key the shim push cached under.
+    monkeypatch.setattr(gate, "matcher_fingerprint", lambda: fingerprint)
     monkeypatch.chdir(push_sandbox.work)
     git_push.scan_push(REAL_GIT, ["push", "origin", "HEAD:refs/heads/feature"], _env())
     commits = [name for name in captured[0] if name.startswith("commit[")]
@@ -299,9 +302,9 @@ def test_public_ssh_remote_is_scanned(ssh_sandbox, url):
     assert _git(ssh_sandbox.served / "unit/public.git", "for-each-ref") == ""
 
 
-def test_public_ssh_incremental_push_uses_the_destination_advertisement(ssh_sandbox):
+def test_public_ssh_destination_advertisement_is_not_evidence(ssh_sandbox):
     url = "git@github.com:unit/public.git"
-    ssh_sandbox.commit("old " + TOKEN)
+    old = ssh_sandbox.commit("old " + TOKEN)
     subprocess.run(
         [REAL_GIT, "push", "-q", url, "trunk"],
         cwd=ssh_sandbox.work,
@@ -309,10 +312,10 @@ def test_public_ssh_incremental_push_uses_the_destination_advertisement(ssh_sand
         check=True,
         timeout=30,
     )
-    sha = ssh_sandbox.commit("clean follow-up")
+    ssh_sandbox.commit("clean follow-up")
     result = ssh_sandbox.push("push", url, "HEAD:refs/heads/feature", **ssh_sandbox.ssh_env)
-    assert result.returncode == 0, result.stderr
-    assert _git(ssh_sandbox.served / "unit/public.git", "rev-parse", "refs/heads/feature") == sha
+    assert result.returncode == 2 and f"field=commit[{old[:12]}].message" in result.stderr, result.stderr
+    assert _git(ssh_sandbox.served / "unit/public.git", "for-each-ref", "refs/heads/feature") == ""
 
 
 def test_override_is_logged_and_single_use(push_sandbox):
@@ -374,21 +377,6 @@ def test_push_url_destinations(url, expected):
 
 
 @pytest.mark.parametrize(
-    "url,expected",
-    [
-        ("git@github.com:unit/private.git", "github.com:unit/private.git"),
-        ("ssh://git@github.com:22/unit/private.git", "ssh://github.com:22/unit/private.git"),
-        ("https://user:secret@github.com/unit/private", "https://github.com/unit/private"),
-        ("https://github.com/unit/a@b", "https://github.com/unit/a@b"),
-        ("/srv/unit@x:remote.git", "/srv/unit@x:remote.git"),
-        ("unit@hostonly", "unit@hostonly"),
-    ],
-)
-def test_anonymized_url_matches_the_preview_form(url, expected):
-    assert git_push.anonymize_url(url) == expected
-
-
-@pytest.mark.parametrize(
     "argv,expected",
     [
         (["push", "origin"], ([], "push", ["origin"])),
@@ -418,3 +406,167 @@ def test_preview_overrides_quiet_before_the_refspec_separator(rest, expected_tai
 def test_unparseable_preview_refuses(output):
     with pytest.raises(gate.PublishBlocked, match="unparseable"):
         git_push.parse_porcelain(output)
+
+
+# --- Round 3: no destination evidence; local clean-commit cache; grafts and tracing disabled ---
+
+CACHE = Path(".git/lu-push-scan-clean")
+
+
+def test_forged_advertisement_does_not_suppress_the_scan(push_sandbox, tmp_path):
+    """An upload-pack advertising a locally known hit commit is never consulted."""
+    before = push_sandbox.remote_refs()
+    sha = push_sandbox.commit("subject " + TOKEN)
+    decoy = tmp_path / "decoy.git"
+    _git(tmp_path, "init", "-q", "--bare", str(decoy))
+    _git(push_sandbox.work, "push", "-q", str(decoy), "HEAD:refs/heads/trunk")  # The decoy advertises the hit.
+    alias = str(tmp_path / "alias.git")
+    _git(push_sandbox.work, "remote", "set-url", "origin", alias)
+    _git(push_sandbox.work, "config", f"url.{push_sandbox.remote}.pushInsteadOf", alias)
+    _git(push_sandbox.work, "config", f"url.{decoy}.insteadOf", str(push_sandbox.remote))  # Fetch-side only.
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
+
+
+@pytest.mark.parametrize("via_environment", [False, True])
+def test_grafted_history_is_refused(push_sandbox, tmp_path, via_environment):
+    """A graft hides a hit ancestor that the destination already holds as an unreferenced object."""
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    hit = push_sandbox.commit("subject " + TOKEN)
+    clean = push_sandbox.commit("clean follow-up")
+    _git(push_sandbox.work, "push", "-q", "origin", f"{hit}:refs/heads/seed")
+    _git(push_sandbox.work, "push", "-q", "origin", ":refs/heads/seed")  # Object stays, ref goes.
+    before = push_sandbox.remote_refs()
+    graft = tmp_path / "grafts" if via_environment else push_sandbox.work / ".git/info/grafts"
+    graft.parent.mkdir(exist_ok=True)
+    graft.write_text(f"{clean} {base}\n")
+    extra = {"GIT_GRAFT_FILE": str(graft)} if via_environment else {}
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", **extra)
+    assert result.returncode == 2 and "OPSEC: grafted history present; push refused." in result.stderr, result.stderr
+    assert TOKEN not in result.stderr and push_sandbox.remote_refs() == before
+
+
+def test_git_tracing_never_records_the_scan(ssh_sandbox, tmp_path, monkeypatch):
+    """Caller tracing (environment or config) must not log the scan's git calls or URL userinfo."""
+    url = "ssh://unit:synthetic-secret@github.com/unit/public.git"
+    _git(ssh_sandbox.work, "remote", "add", "hosted", url)
+    ssh_sandbox.commit("clean subject")
+    logs = {
+        name: tmp_path / f"{name}.log" for name in ("GIT_TRACE", "GIT_TRACE_PACKET", "GIT_TRACE2", "GIT_TRACE2_EVENT")
+    }
+    config = tmp_path / "trace.gitconfig"
+    config.write_text(f"[trace2]\n\tperfTarget = {tmp_path / 'config-perf.log'}\n")
+    environment = _env(
+        **ssh_sandbox.ssh_env,
+        **{name: str(path) for name, path in logs.items()},
+        GIT_CONFIG_GLOBAL=str(config),
+        GIT_CURL_VERBOSE="1",
+    )
+    monkeypatch.setattr(gate, "check_texts", lambda *args, **kwargs: set())
+    monkeypatch.setattr(gate, "matcher_fingerprint", lambda *args: "0" * 64, raising=False)
+    monkeypatch.chdir(ssh_sandbox.work)
+    git_push.scan_push(REAL_GIT, ["push", "hosted", "HEAD:refs/heads/feature"], environment)
+    written = {path.name: path.read_text() for path in [*logs.values(), tmp_path / "config-perf.log"] if path.exists()}
+    assert not any("synthetic-secret" in text for text in written.values())
+    assert all(text == "" for text in written.values()), sorted(written)
+
+
+def test_cached_clean_commits_are_skipped_and_a_new_hit_is_refused(push_sandbox):
+    push_sandbox.commit("clean one")
+    first = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert first.returncode == 0, first.stderr
+    assert "OPSEC: push scan: 2 commit message(s) scanned, 0 skipped as already scanned clean here." in first.stderr
+    before = push_sandbox.remote_refs()
+    sha = push_sandbox.commit("subject " + TOKEN)
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
+    assert "1 commit message(s) scanned, 2 skipped as already scanned clean here." in result.stderr
+
+
+def test_shallow_repository_is_refused(push_sandbox, tmp_path):
+    push_sandbox.commit("subject " + TOKEN)
+    push_sandbox.commit("clean follow-up")
+    _git(push_sandbox.work, "push", "-q", "origin", "trunk")
+    shallow = tmp_path / "shallow"
+    _git(tmp_path, "clone", "-q", "--depth", "1", f"file://{push_sandbox.remote}", str(shallow), "-b", "trunk")
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature", cwd=shallow)
+    assert result.returncode == 2 and "OPSEC: shallow history cannot be scanned in full" in result.stderr
+    assert push_sandbox.remote_refs() == before
+
+
+def test_hit_commit_is_never_cached(push_sandbox):
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    sha = push_sandbox.commit("subject " + TOKEN)
+    refused = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert refused.returncode == 2 and not (push_sandbox.work / CACHE).exists()
+    overridden = push_sandbox.push(
+        "push", "origin", "HEAD:refs/heads/feature", LU_OPSEC_OVERRIDE="synthetic false positive"
+    )
+    assert overridden.returncode == 0, overridden.stderr
+    cached = (push_sandbox.work / CACHE).read_text().splitlines()[1:]
+    assert cached == [base]
+    again = push_sandbox.push("push", "origin", "HEAD:refs/heads/other")
+    assert again.returncode == 2 and f"field=commit[{sha[:12]}].message" in again.stderr, again.stderr
+
+
+@pytest.mark.parametrize("damage", ["valid", "garbage", "partial", "foreign", "header-only-text", "unreadable"])
+def test_unusable_cache_scans_everything(push_sandbox, damage):
+    """Only a well-formed cache for the current matcher skips anything; every defect scans in full."""
+    if damage == "unreadable" and os.geteuid() == 0:
+        pytest.skip("root reads mode-000 files")
+    sha = push_sandbox.commit("subject " + TOKEN)
+    header = f"lu-push-scan-clean 1 {gate.matcher_fingerprint(push_sandbox.tooling)}\n"
+    content = {
+        "valid": f"{header}{sha}\n",
+        "garbage": f"{header}{sha}\nnot-a-commit\n",
+        "partial": f"{header}{sha}\n{sha[:20]}",
+        "foreign": f"lu-push-scan-clean 1 {'f' * 64}\n{sha}\n",
+        "header-only-text": f"{sha}\n",
+        "unreadable": f"{header}{sha}\n",
+    }[damage]
+    path = push_sandbox.work / CACHE
+    path.write_text(content)
+    if damage == "unreadable":
+        path.chmod(0)
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    if damage == "valid":  # Positive control: the trusted cache entry is what skips the hit.
+        assert result.returncode == 0, result.stderr
+        return
+    assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
+    assert "OPSEC: push scan cache unusable; every reachable commit scanned." in result.stderr
+
+
+def test_rules_update_rescans_cached_commits(push_sandbox):
+    """A cache entry is only as good as the matcher that produced it."""
+    sha = push_sandbox.commit("subject LATER-SENSITIVE")
+    assert push_sandbox.push("push", "origin", "HEAD:refs/heads/feature").returncode == 0
+    (push_sandbox.tooling / "rules.json").write_text(json.dumps(synthetic_rules(pattern="LATER-SENSITIVE")))
+    before = push_sandbox.remote_refs()
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/other")
+    assert result.returncode == 2 and f"field=commit[{sha[:12]}].message" in result.stderr, result.stderr
+    assert "push scan cache unusable" in result.stderr and push_sandbox.remote_refs() == before
+
+
+CONCURRENT_WRITER = """
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from scripts.opsec.git_push import CleanCache
+cache = CleanCache(Path(sys.argv[2]), "f" * 64)
+writer = int(sys.argv[3])
+for batch in range(25):
+    if not cache.record([f"{writer:08x}{batch:04x}{item:028x}" for item in range(8)], full=True):
+        raise SystemExit(1)
+"""
+
+
+def test_concurrent_records_append_without_corruption(tmp_path):
+    writers = [
+        subprocess.Popen([sys.executable, "-c", CONCURRENT_WRITER, str(ROOT), str(tmp_path), str(number)])
+        for number in range(6)
+    ]
+    assert [writer.wait(timeout=60) for writer in writers] == [0] * 6
+    ids, unusable = git_push.CleanCache(tmp_path, "f" * 64).read()
+    assert not unusable and len(ids) == 6 * 25 * 8

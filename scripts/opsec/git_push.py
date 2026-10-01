@@ -1,19 +1,26 @@
 """Scan the text a git push would publish before it reaches a public remote.
 
 The agent git shim executes this file for push commands. A dry run asks git
-which refs the push creates or updates and where it sends them. For every
-public destination the published ref names, the messages of commits the
-destination does not advertise as already reachable, and annotated tag
-messages are scanned through check_texts. Local tracking refs are never
-evidence. File contents are not scanned. Private remotes are exempt exactly as
-is_private decides. The real push runs only after a clean scan, without the
-command-scoped override. Git text from these steps is never replayed.
+which refs the push names and where it sends them. For every public
+destination the ref names, annotated tag messages and the messages of every
+commit reachable from the pushed tips are scanned through check_texts, except
+commits that this machine's earlier push scans found clean (CleanCache, kept
+in the repository's common git directory). Nothing the destination reports is
+evidence of what it already has. Enumeration ignores replacement objects and
+grafts, a grafted or shallow repository is refused, and the scan's own git
+calls run without tracing or prompts. File contents are not scanned. Private
+remotes are exempt exactly as is_private decides. The real push runs only
+after a clean scan, without the command-scoped override. Git text from these
+steps is never replayed.
 """
 
 from __future__ import annotations
 
+import contextlib
+import fcntl
 import os
 import re
+import stat
 import subprocess
 import sys
 from pathlib import Path
@@ -26,9 +33,13 @@ from scripts.opsec import prepublish as gate
 GLOBAL_WITH_VALUE = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env", "--attr-source"}
 # Push options whose value may be the next argument.
 PUSH_WITH_VALUE = {"-o", "--push-option", "--repo", "--receive-pack", "--exec", "--recurse-submodules"}
-PUBLISHING_FLAGS = {" ", "+", "*"}  # fast-forward, forced update, new ref
-KNOWN_FLAGS = PUBLISHING_FLAGS | {"-", "!", "="}  # deleted, rejected, up to date
-SUMMARY_RANGE = re.compile(r"([0-9a-f]{4,64})\.\.\.?([0-9a-f]{4,64})")
+# Fast-forward, forced update, new ref, up to date, rejected, deleted. Only a
+# deletion publishes nothing: the others are the destination's verdict, which
+# is not evidence of what the real push will send.
+KNOWN_FLAGS = {" ", "+", "*", "=", "!", "-"}
+CACHE_NAME = "lu-push-scan-clean"
+CACHE_VERSION = "lu-push-scan-clean 1"
+COMMIT_ID = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
 
 
 def split_command(argv: list[str]) -> tuple[list[str], str | None, list[str]]:
@@ -73,11 +84,11 @@ def parse_porcelain(output: str) -> list[dict]:
         elif line == "Done" or not line or line.startswith("Would set upstream of "):
             continue  # --set-upstream reports local configuration, not published text.
         elif sections and line.count("\t") >= 1 and line[:1] in KNOWN_FLAGS and line[1:2] == "\t":
-            flag, refs, *summary = line.split("\t", 2)
+            flag, refs, *_ = line.split("\t", 2)
             source, separator, target = refs.rpartition(":")
             if not separator or not target:
                 raise gate.PublishBlocked("OPSEC: push preview unparseable; push refused.")
-            sections[-1]["updates"].append((flag, source, target, summary[0] if summary else ""))
+            sections[-1]["updates"].append((flag, source, target))
         else:
             raise gate.PublishBlocked("OPSEC: push preview unparseable; push refused.")
     return sections
@@ -87,21 +98,6 @@ def _is_local(url: str) -> bool:
     """git's url_is_local_not_ssh: no colon, or a slash before the first colon."""
     colon, slash = url.find(":"), url.find("/")
     return colon < 0 or 0 <= slash < colon
-
-
-def anonymize_url(url: str) -> str:
-    """git's transport_anonymize_url: the form a push preview prints (userinfo removed)."""
-    at = url.find("@")
-    if at < 0 or _is_local(url):
-        return url
-    rest = url[at + 1 :]
-    scheme = url.find("://")
-    if scheme < 0:
-        return rest if ":" in rest else url
-    slash = url.find("/", scheme + 3)
-    if not re.fullmatch(r"[A-Za-z0-9+.-]*", url[:scheme]) or 0 <= slash < at:
-        return url
-    return url[: scheme + 3] + rest
 
 
 HOSTED_URL = re.compile(r"(?:https?|ssh|git|git\+ssh|ssh\+git)://(?:[^@/]+@)?([^/:@]+)(?::\d*)?/(.+)", re.I)
@@ -125,28 +121,76 @@ def destination(url: str) -> str:
     return gate.normalize_repository(f"{host}/{path.strip('/')}")
 
 
+def scan_environment(environment: dict[str, str]) -> dict[str, str]:
+    """The caller's environment for the scan's own git calls.
+
+    No override, tracing or credential prompts; replacement objects and grafts
+    disabled. A trace2 target of "0" in the environment outranks one set in
+    system or global configuration.
+    """
+    scrubbed = {
+        key: value
+        for key, value in environment.items()
+        if key != "LU_OPSEC_OVERRIDE" and not key.startswith("GIT_TRACE") and key != "GIT_CURL_VERBOSE"
+    }
+    scrubbed.update(
+        GIT_TRACE2="0",
+        GIT_TRACE2_EVENT="0",
+        GIT_TRACE2_PERF="0",
+        GIT_TERMINAL_PROMPT="0",
+        GIT_NO_REPLACE_OBJECTS="1",
+        GIT_GRAFT_FILE=os.devnull,
+    )
+    return scrubbed
+
+
+def _grafts_present(path: str) -> bool:
+    """Whether git would read graft lines from path; anything unreadable counts as present."""
+    try:
+        info = os.stat(path)
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return True
+    if stat.S_ISCHR(info.st_mode) and os.path.samefile(path, os.devnull):
+        return False
+    return not stat.S_ISREG(info.st_mode) or info.st_size > 0
+
+
 class Repository:
     """Read-only object queries through the real git with the caller's global options."""
 
     def __init__(self, real_git: str, global_options: list[str], environment: dict[str, str]):
         # Replacement objects change what readers see but not what a pack sends,
-        # so every query reads the original objects (the flag outranks config).
-        self.base = [real_git, "--no-replace-objects", *global_options]
-        self.environment = {**environment, "GIT_NO_REPLACE_OBJECTS": "1"}
+        # so every query reads the original objects (the flag and the trailing
+        # -c outrank caller configuration).
+        self.base = [
+            real_git,
+            "--no-replace-objects",
+            *global_options,
+            "-c",
+            "core.useReplaceRefs=false",
+            "-c",
+            "advice.graftFileDeprecated=false",
+        ]
+        self.caller = environment
+        self.environment = scan_environment(environment)
 
-    def run(self, *args: str, stdin: str | None = None, timeout: int = 60) -> subprocess.CompletedProcess[bytes]:
+    def run(
+        self, *args: str, stdin: str | None = None, timeout: int = 60, environment: dict[str, str] | None = None
+    ) -> subprocess.CompletedProcess[bytes]:
         return subprocess.run(
             [*self.base, *args],
             input=stdin.encode() if stdin is not None else None,
             stdin=subprocess.DEVNULL if stdin is None else None,
             capture_output=True,
-            env=self.environment,
+            env=self.environment if environment is None else environment,
             check=False,
             timeout=timeout,
         )
 
-    def text(self, *args: str, stdin: str | None = None) -> str:
-        result = self.run(*args, stdin=stdin)
+    def text(self, *args: str, stdin: str | None = None, environment: dict[str, str] | None = None) -> str:
+        result = self.run(*args, stdin=stdin, environment=environment)
         if result.returncode:
             # Fixed text only: git output can quote ref names and messages.
             raise gate.PublishBlocked(
@@ -160,30 +204,106 @@ class Repository:
             return None
         return result.stdout.decode().strip() or None
 
-    def push_urls(self, rest: list[str]) -> list[str]:
-        """Resolved push URLs of every remote, plus the push's own arguments."""
-        urls = [arg.removeprefix("--repo=") for arg in rest if not arg.startswith("-") or arg.startswith("--repo=")]
-        for name in self.text("remote").splitlines():
-            result = self.run("remote", "get-url", "--push", "--all", name)
-            if not result.returncode:
-                urls += result.stdout.decode("utf-8", "replace").splitlines()
-        return urls
+    def layout(self) -> tuple[Path, bool, bool]:
+        """Common git directory, whether grafts alter commit parents, whether history is shallow."""
+        # Resolve the grafts path with the caller's GIT_GRAFT_FILE: the file the real push reads.
+        environment = {key: value for key, value in self.environment.items() if key != "GIT_GRAFT_FILE"}
+        if "GIT_GRAFT_FILE" in self.caller:
+            environment["GIT_GRAFT_FILE"] = self.caller["GIT_GRAFT_FILE"]
+        output = self.text(
+            "rev-parse",
+            "--path-format=absolute",
+            "--git-common-dir",
+            "--git-path",
+            "info/grafts",
+            "--is-shallow-repository",
+            environment=environment,
+        )
+        common, grafts, shallow = output.splitlines()
+        return Path(common), _grafts_present(grafts), shallow == "true"
 
-    def advertised(self, url: str) -> list[str] | None:
-        """Commits and tags the destination advertises that exist here; None if it cannot be queried."""
+
+class CleanCache:
+    """Commit ids whose messages this machine's push scans found clean.
+
+    A header line binds the file to the matcher fingerprint, then one commit id
+    per line. Commits are content-addressed, so an id always names the same
+    message. An unreadable, malformed or foreign-matcher file holds nothing:
+    every reachable commit is scanned, and a scan that skipped nothing replaces
+    the file. Writers hold an exclusive lock on a sidecar file and readers a
+    shared one, so concurrent pushes never interleave or read half a line.
+    """
+
+    def __init__(self, directory: Path, fingerprint: str):
+        self.path = directory / CACHE_NAME
+        self.lock_path = directory / f"{CACHE_NAME}.lock"
+        self.header = f"{CACHE_VERSION} {fingerprint}"
+
+    @contextlib.contextmanager
+    def _locked(self, mode: int):
+        descriptor = os.open(self.lock_path, os.O_RDWR | os.O_CREAT | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600)
         try:
-            result = self.run("ls-remote", "--", url, timeout=120)
-        except subprocess.TimeoutExpired:
+            fcntl.flock(descriptor, mode)
+            yield
+        finally:
+            os.close(descriptor)
+
+    def _load(self) -> set[str] | None:
+        """Ids of a well-formed file for this matcher, else None; FileNotFoundError when absent."""
+        descriptor = os.open(self.path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)
+        with os.fdopen(descriptor, "rb") as stream:
+            data = stream.read()
+        try:
+            lines = data.decode("ascii").split("\n")
+        except UnicodeError:
             return None
-        if result.returncode:
+        if lines.pop() != "" or not lines or lines[0] != self.header:
             return None
-        listed = {line.split("\t", 1)[0] for line in result.stdout.decode("ascii", "replace").splitlines()}
-        if not listed:
-            return []
-        types = self.text("cat-file", "--batch-check=%(objectname) %(objecttype)", stdin="\n".join(listed) + "\n")
-        return [
-            sha for sha, _, kind in (line.partition(" ") for line in types.splitlines()) if kind in {"commit", "tag"}
-        ]
+        ids = lines[1:]
+        return set(ids) if all(COMMIT_ID.fullmatch(line) for line in ids) else None
+
+    def read(self) -> tuple[set[str], bool]:
+        """(cached ids, unusable). An absent file is empty and usable; any defect is unusable."""
+        try:
+            with self._locked(fcntl.LOCK_SH):
+                ids = self._load()
+        except FileNotFoundError:
+            return set(), False
+        except OSError:
+            return set(), True
+        return (set(), True) if ids is None else (ids, False)
+
+    def record(self, ids: list[str], *, full: bool) -> bool:
+        """Append clean ids; an absent or unusable file is replaced only by a scan that skipped nothing."""
+        with self._locked(fcntl.LOCK_EX):
+            try:
+                current = self._load()
+            except OSError:
+                current = None
+            if current is not None:
+                fresh = [sha for sha in dict.fromkeys(ids) if sha not in current]
+                if fresh:
+                    descriptor = os.open(self.path, os.O_WRONLY | os.O_APPEND | os.O_NOFOLLOW | os.O_CLOEXEC)
+                    with os.fdopen(descriptor, "ab") as stream:
+                        stream.write("".join(f"{sha}\n" for sha in fresh).encode("ascii"))
+                        stream.flush()
+                        os.fsync(stream.fileno())
+                return True
+            if not full:
+                return False
+            temporary = self.path.with_name(f"{CACHE_NAME}.{os.getpid()}.tmp")
+            try:
+                descriptor = os.open(
+                    temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600
+                )
+                with os.fdopen(descriptor, "wb") as stream:
+                    stream.write("".join(f"{line}\n" for line in [self.header, *dict.fromkeys(ids)]).encode("ascii"))
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                os.replace(temporary, self.path)
+            finally:
+                temporary.unlink(missing_ok=True)
+            return True
 
 
 def _short_ref(target: str) -> tuple[str, str]:
@@ -193,31 +313,21 @@ def _short_ref(target: str) -> tuple[str, str]:
     return "ref", target
 
 
-def published_texts(repository: Repository, url: str, updates: list[tuple]) -> tuple[list[str], list[str]]:
-    """Ref names, new commit messages and annotated tag messages one destination receives.
-
-    Commits are excluded only on the destination's own evidence: the old tip the
-    preview reports and the refs it advertises to ls-remote at the push URL.
-    Without that evidence the whole reachable history is scanned.
-    """
+def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[str], list[str], list[str]]:
+    """Ref names and annotated tag messages one destination receives, and the commits its refs name."""
     texts: list[str] = []
     names: list[str] = []
-    positives: list[str] = []
-    negatives: list[str] = []
+    tips: list[str] = []
     seen_tags: set[str] = set()
-    for number, (flag, source, target, summary) in enumerate(updates, start=1):
-        if flag not in PUBLISHING_FLAGS:
-            continue
+    for number, (flag, source, target) in enumerate(updates, start=1):
+        if flag == "-" or not source:
+            continue  # A deletion publishes no text.
         kind, short = _short_ref(target)
         texts.append(short)
         names.append(f"{kind}[{number}].name")
-        new = repository.object(source)
-        if new is None:
+        current = repository.object(source)
+        if current is None:
             raise gate.PublishBlocked("OPSEC: pushed object unresolved; push refused.")
-        old = SUMMARY_RANGE.fullmatch(summary.split(" ", 1)[0]) if flag in {" ", "+"} else None
-        if old and (resolved := repository.object(old[1] + "^{commit}")):
-            negatives.append(resolved)
-        current = new
         while repository.text("cat-file", "-t", current).strip() == "tag":
             raw = repository.text("cat-file", "tag", current)
             header, _, message = raw.partition("\n\n")
@@ -227,20 +337,8 @@ def published_texts(repository: Repository, url: str, updates: list[tuple]) -> t
                 names.append(f"tag[{current[:12]}].message")
             current = re.search(r"^object ([0-9a-f]+)$", header, re.M)[1]
         if repository.text("cat-file", "-t", current).strip() == "commit":
-            positives.append(current)
-    if positives:
-        advertised = repository.advertised(url)
-        if not advertised:
-            reason = "unavailable" if advertised is None else "shares no local history"
-            print(f"OPSEC: destination refs {reason}; full reachable history scanned.", file=sys.stderr)
-        negatives += advertised or []
-        revisions = "\n".join([*positives, *("^" + sha for sha in negatives)]) + "\n"
-        output = repository.text("rev-list", "--no-commit-header", "--format=%x00%H%x00%B", "--stdin", stdin=revisions)
-        fields = output.split("\x00")[1:]
-        for sha, message in zip(fields[0::2], fields[1::2], strict=True):
-            texts.append(message)
-            names.append(f"commit[{sha[:12]}].message")
-    return texts, names
+            tips.append(current)
+    return texts, names, tips
 
 
 def scan_push(real_git: str, argv: list[str], environment: dict[str, str]) -> None:
@@ -248,31 +346,70 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str]) -> No
     global_options, command, rest = split_command(argv)
     if command != "push":
         return
-    internal = {k: v for k, v in environment.items() if k != "LU_OPSEC_OVERRIDE"}
-    repository = Repository(real_git, global_options, internal)
+    repository = Repository(real_git, global_options, environment)
     preview = repository.run("push", *preview_arguments(rest), timeout=300)
     sections = parse_porcelain(preview.stdout.decode("utf-8", "replace"))
     if not sections:
         # git's own error text can quote the refspec; name only the phase.
         raise gate.PublishBlocked(f"OPSEC: push preview failed (exit {preview.returncode}); push refused.")
-    candidates = repository.push_urls(rest)
     public: list[str] = []
     private: list[str] = []
     texts: list[str] = []
     names: list[str] = []
+    tips: list[str] = []
     for section in sections:
-        # The preview prints the push URL without userinfo; recover the full URL.
-        url = next((c for c in candidates if anonymize_url(c) == section["url"]), section["url"])
-        dest = destination(url)
+        # git prints its own push URL (after insteadOf and pushInsteadOf) without userinfo.
+        dest = destination(section["url"])
         if gate.is_private(dest):
             private.append(dest)
             continue
         public.append(dest)
-        found, labels = published_texts(repository, url, section["updates"])
+        found, labels, pushed = published_refs(repository, section["updates"])
         texts += found
         names += labels
+        tips += pushed
+    commits: list[str] = []
+    if tips:
+        common_dir, grafted, shallow = repository.layout()
+        if grafted:
+            raise gate.PublishBlocked("OPSEC: grafted history present; push refused.")
+        if shallow:
+            raise gate.PublishBlocked("OPSEC: shallow history cannot be scanned in full; push refused.")
+        cache = CleanCache(common_dir, gate.matcher_fingerprint())
+        cached, unusable = cache.read()
+        if unusable:
+            print("OPSEC: push scan cache unusable; every reachable commit scanned.", file=sys.stderr)
+        reachable = repository.text("rev-list", "--stdin", stdin="".join(f"{sha}\n" for sha in tips)).split()
+        pending = [sha for sha in reachable if sha not in cached]
+        print(
+            f"OPSEC: push scan: {len(pending)} commit message(s) scanned, "
+            f"{len(reachable) - len(pending)} skipped as already scanned clean here.",
+            file=sys.stderr,
+        )
+        if pending:
+            output = repository.text(
+                "rev-list",
+                "--no-walk=unsorted",
+                "--no-commit-header",
+                "--format=%x00%H%x00%B",
+                "--stdin",
+                stdin="".join(f"{sha}\n" for sha in pending),
+            )
+            fields = output.split("\x00")[1:]
+            for sha, message in zip(fields[0::2], fields[1::2], strict=True):
+                commits.append(sha)
+                texts.append(message)
+                names.append(f"commit[{sha[:12]}].message")
     label = ",".join(dict.fromkeys(public)) if public else private[0]
-    gate.check_texts(label, texts, environment=environment, field_names=names)
+    blocked = gate.check_texts(label, texts, environment=environment, field_names=names)
+    if commits:
+        # Only commits whose own message had no blocking finding; an overridden hit is never cached.
+        first = len(texts) - len(commits)
+        clean = [sha for index, sha in enumerate(commits, start=first) if index not in blocked]
+        try:
+            cache.record(clean, full=len(pending) == len(reachable))
+        except OSError:
+            print("OPSEC: push scan cache not updated.", file=sys.stderr)
 
 
 def main(argv: list[str] | None = None, *, execute=os.execve) -> int:
