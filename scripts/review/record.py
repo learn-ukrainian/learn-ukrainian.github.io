@@ -1,13 +1,13 @@
 """Record a review attempt (#8430 r4, R2b-A): validate a return, then write everything that follows from it.
 
-``python -m scripts.review.record <review.yaml> --manifest ... --lesson ... --ledger ...
---task-id ...`` runs the active validator in-process (``validate_review``; nothing of its
-rejections is re-implemented), then:
-
 The raw return must match the bound task's whole saved result (#9025). A bare
 YAML mapping is kept unchanged; otherwise one yaml/yml fenced mapping is
 extracted, and only that mapping (with any prompt-hash attestation) is saved.
 Missing, multiple or unusable YAML fences refuse before anything is recorded.
+
+``python -m scripts.review.record <review.yaml> --manifest ... --lesson ... --ledger ...
+--task-id ...`` runs the active validator in-process (``validate_review``; nothing of its
+rejections is re-implemented), then:
 
 1. reserves ``lesson-<n>.review.<attempt_id>.yaml`` (a plan review: ``plan-review.<attempt_id>.yaml``) in the
    module's ``_state`` directory with create-exclusive semantics and writes the return's bytes to it (fsynced
