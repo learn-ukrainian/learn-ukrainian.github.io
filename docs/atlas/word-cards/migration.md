@@ -34,21 +34,41 @@
 
 ### Foundation preparation (#9293)
 
-The module `scripts.atlas.word_card_foundation` exposes `freeze`, `allocate`, and `verify`; use the shared project interpreter. All paths are explicit;
-`freeze` requires exactly one sibling `*source-admission-receipt.json` binding
-the selection bytes and independent report digest. Selection serialization is
-UTF-8 JSON, sorted keys, two-space indentation, with a trailing newline.
-The freeze retains immutable literal selected-row captures, their selected-row
-digests, source-local partitions, separate counts, and DB file fingerprints.
-Reuse checks the captures and the current canonical source register; it does
-not re-query live databases. Registry and manifest use one logical record per line for review. `allocate` mints only enumerated legacy article and selected
-source-record IDs. It preserves aliases without inferring lexical equivalence;
-source-only MWE card mappings remain unresolved. Replay leaves registry bytes
-unchanged. No source DB is writable through these operations.
-Optional held-out membership is `{"heldout":["source:key"],"replay":[]}`;
-without it isolation is unverified. `verify --for-evaluation` refuses pending
-an established authenticated operator authority and acceptance thresholds.
-Exit 0 proves only the requested preparation operation, never either pilot gate.
+Use the shared project interpreter with `-m scripts.atlas.word_card_foundation`.
+The public operations remain `freeze`, `allocate`, and `verify`; all paths and versions are explicit. `freeze` requires one sibling
+`*source-admission-receipt.json` binding selection bytes and the independent
+source report. Selection JSON is UTF-8, two-space indented, newline ended; retain its field order.
+`verify --manifest registry/atlas/pilot/pilot-v1.json --registry
+registry/atlas/identity/registry.json` reads committed inputs without writes.
+The initial inventory keeps 150 source-local units, 272 verbatim selected rows,
+114 legacy allocation metadata projections and 140 legacy aliases separately.
+Legacy full literal-row hashes label omitted-row integrity; metadata hashes protect the projection. Unused legacy glosses are excluded. Source-backed POS
+metadata preserves reviewed anchor/VESUM provenance without promoting identity.
+The 22 source-only card mappings and supplementary correspondence stay unresolved.
+Main-file and WAL digests are separate file provenance; selected-row digests identify literal captures, not logical whole-DB snapshots. DBs open read-only.
+The whole permissions-register pin remains binding: a register change requires re-admission and re-freeze; reuse then refuses pending approved correspondence.
+Locators contain local row IDs only. ULIF aliases use `ulif:register:`, actual
+`ulif:content:` digests, and `ulif:record:<query>#<headword>#<label>`; PULS uses
+`puls:record:<word>/<pos>/<level>`; phraseology uses `frazeolohichnyi:record:<word>`.
+The approved bounded tuple clarification adds `table_row` evidence keys:
+`ukrainian_word_stress:record:stress:v1:sha256:<digest>` hashes exactly parsed
+`{form,source}`; source must agree with the outer stress row.
+`ulif:record:paradigm:v1:sha256:<digest>` hashes `{parent,kind,payload}`. The parent
+contains its literal content digest, query, headword, grammatical label and
+homonym index, joined through an admitted parent locator. Paradigm payload keeps
+exactly rows, raw HTML, response reference, group discriminator and source order.
+Tuple JSON is UTF-8, sorted, compact, without newline or string normalization.
+Local IDs/timestamps are excluded; accents, case, spaces and raw HTML remain.
+Duplicate tuples/digest collisions refuse; null source content stays null.
+Weak alias collisions are evidence, never lexical equivalence. Replay conserves
+IDs, aliases and history byte-for-byte; changed/new inputs require correspondence.
+Immutable output conflicts and source/WAL mutation refuse before writing.
+Optional membership is `{"heldout":["source:key"],"replay":[]}`. Keys must resolve;
+conservative unit/locator/card/alias closure must remain disjoint from replay.
+Expected/adjudicated answers are excluded from all inputs even without membership.
+Absent real membership, isolation remains unverified. `--for-evaluation` refuses
+until authenticated operator authority and thresholds have an approved contract.
+Exit 0 proves foundation preparation only, never full pilot or 220-case certification.
 
 - **Denominator, first pilot:** the frozen pilot manifest (~150 lexemes with their MWEs and aspect pairs, including ordinary controls and cards that must stay ineligible). **Later coverage obligation, not a first-pilot gate:** all 4,512 PULS A1–B1 rows (962 + 1,386 + 2,164 in `puls_cefr`; 3,274 of today's articles carry a PULS A1–B1 level). VESUM accounting (Q-I5): every VESUM entry in scope is reported as *covered by a card*, *merged variant*, or *unresolved mapping*; source entries and cards are many-to-many and are counted separately.
 - **Pass criteria:** every pilot card renders; **every applicable mode works and every ineligible combination stays excluded** (not "every card produces practice in every live mode"): an ineligible field never yields an item, an ambiguous spelling-level assertion never satisfies a level rule (`mapping_evidenced`), a `medium`-identity card never feeds meaning practice; each exercise records `card_version` and generator version; withdrawal, changed-snapshot reimport and rollback (M8) behave as specified with current suppressions enforced; redirect/split checks (M9) pass; rebuild is byte-identical; language-lane sample review of generated items passes; zero model-written Ukrainian.
