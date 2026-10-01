@@ -37,6 +37,7 @@ import re
 import shutil
 import signal
 import subprocess
+import sys
 import tempfile
 import time
 from collections.abc import Callable, Mapping, Sequence
@@ -838,6 +839,8 @@ def _apply_merge_guard(*, mode: str, env: dict[str, str]) -> dict[str, str]:
         guarded_env["AGENT_REAL_GIT"] = real_git
     else:
         guarded_env.pop("AGENT_REAL_GIT", None)
+
+    guarded_env["AGENT_GIT_SHIM_PYTHON"] = sys.executable
 
     shim_path = str(_SHIMS_DIR)
     guarded_env["PATH"] = f"{shim_path}{os.pathsep}{original_path}" if original_path else shim_path
