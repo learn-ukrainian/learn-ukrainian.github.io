@@ -343,6 +343,33 @@ def test_review_admits_sole_cross_family_seat_in_pace_deficit(monkeypatch, capsy
     assert "NOTE: REVIEW_BUDGET_RETAINED" in capsys.readouterr().err
 
 
+@pytest.mark.parametrize("inputs", [
+    (),
+    ("--review-author-model", "gpt-6.1-sol"),
+    ("--review-risk", "critical"),
+    ("--review-author-model", "gpt-6.1-sol", "--review-risk", "critical"),
+])
+def test_retained_reviewer_only_hints_about_missing_trusted_inputs(monkeypatch, capsys, inputs):
+    budget = _budget()
+    budget["agents"]["claude"]["codexbar"] = {
+        "will_last_to_reset": False,
+        "weekly_pace_delta_pct": 12.0,
+        "weekly_expected_pct": 40.0,
+    }
+    args = _args("--agent", "claude", "--model", "claude-opus-5-5", "--check-budget", *inputs)
+    (refusal, target), routing = _admit(args, monkeypatch, budget)
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert routing.substitution is None
+    output = capsys.readouterr().err
+    assert "NOTE: REVIEW_BUDGET_RETAINED" in output
+    missing_inputs = not (args.review_author_model and args.review_risk)
+    assert ("Legacy calls without trusted author/risk inputs" in output) == missing_inputs
+    assert ("budget substitution requires --review-author-model and --review-risk (code profile only)" in output) == (
+        missing_inputs
+    )
+
+
 def test_explicit_reviewer_context_window_keeps_its_model(monkeypatch):
     args = _args("--agent", "claude", "--model", "claude-opus-5-5[1m]")
     (refusal, target), routing = _admit(args, monkeypatch)

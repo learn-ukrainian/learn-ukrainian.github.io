@@ -71,6 +71,11 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
     assert all(item["family"] in {"openai", "anthropic", "google"}
                or item["status"] == "excluded" for item in payload["trace"])
     assert not any(item["family"] == "xai" for item in payload["trace"])
+    composer = next(item for item in payload["trace"] if item["name"] == "composer-2.5")
+    assert composer["status"] == "excluded"
+    assert composer["reason"] == (
+        "Ukrainian-content language-lanes exclusion: reviewer model family must be Claude, GPT or Gemini"
+    )
 
 
 @pytest.mark.parametrize(

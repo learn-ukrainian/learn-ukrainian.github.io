@@ -447,13 +447,13 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   <!-- fleet-roster-projection:end formal_review_eligible -->
 
 * **Advisor = `gpt-6.1-sol` @ `high` (on-demand, NOT a standing worker).** The
-  `execution_routing.sol_advised_bounded` catalog route makes Astra produce a bounded
+  `execution_routing.sol_advised_bounded` catalog route makes the Sol advisor (`gpt-6.1-sol` @ high) produce a bounded
   envelope containing the task contract, exact owned paths, maximum changed-file
   and non-test-LOC ceilings, constraints, risk boundaries, acceptance evidence,
   and escalation triggers. The advisory pin is `high`. The advisor runs read-only with
   `delegate.py dispatch --advisory-role bounded_advisory_envelope --advisory-binding <digest>`,
   where the digest is the worker dispatch's `--print-advisory-binding` output.
-* **Astra-advised bounded execution:** with that envelope complete, dispatch
+* **Bounded execution advised by the Sol advisor (`gpt-6.1-sol` @ high):** with that envelope complete, dispatch
   `gpt-6-luna` @ `high` for bounded implementation or investigation with
   `--advisory-task <advisor task id>`. The worker must
   follow the envelope rather than re-decide its contract, and must escalate
@@ -472,8 +472,8 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   (`advisory_ceiling_exceeded`) when it exceeds the envelope ceilings; the ceilings are
   a completion gate checked after the worker exits, not a runtime limit. Missing or
   conflicting classification counts as bounded. Work that has no envelope, or is too
-  broad for a ceiling, routes to Sol @ `high` instead, with Astra @ `high`
-  advisory judgment when needed.
+  broad for a ceiling, routes to Sol @ `high` instead, with judgment from
+  the Sol advisor (`gpt-6.1-sol` @ high) when needed.
 * **Routine lockfile, pointer and smoke tasks** take no advisory seat (core `p2-retired`),
   so they take a non-bounded route — `claude-sonnet-5-5`, or Sol @ `high` — never a
   bounded worker without an envelope.
@@ -481,7 +481,7 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   `gpt-6-luna` @ `high`) are spawned in-session by a `gpt-6.1-sol` parent and run under
   that parent's own contract: the parent is their advisor and sets their owned paths and
   ceilings. They are not `delegate.py` dispatches and carry no separate envelope.
-* **Review boundary:** Codex advisor and worker seats are both OpenAI-family. Astra's advisory
+* **Review boundary:** Codex advisor and worker seats are both OpenAI-family. The Sol advisor's
   output never satisfies the independent cross-family review gate.
 * **Workers = every other lane** — `gpt-6-luna` @ `high` (Codex bounded work / scout),
   `gpt-6.1-sol` @ `high` (Codex broader coding / red-team),
@@ -527,7 +527,7 @@ Typical live driver count (names rotate; count is the constraint):
 | --- | --- | --- |
 | **Grok** | **~2** concurrent | Daily epic/topology drivers; dispatch-heavy, not solo multi-file |
 | **Claude** | **~1** | Judgment / hard epic / Opus first, Fable last resort |
-| **Codex** | **1–4** concurrent | Novel/hard impl + bounded Astra; **not** the dump for every mechanical job |
+| **Codex** | **1–4** concurrent | Novel/hard impl + Sol-advised bounded work; **not** the dump for every mechanical job |
 
 **Multi-driver rules:**
 1. Drivers share the **same free worker pools** — before dispatch, read `/api/delegate/active`
@@ -611,7 +611,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | **Code review** (cross-family = outside author's family) | **critical cross-family:** Opus ↔ Sol; Fable/Astra last resort | **high/medium/low formal CF defaults:** `gpt-6.1-sol` @ `high` · `claude-opus-5-5` for hard Claude-lane review · `claude-sonnet-5-5` · GLM-5.3 · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 | For security-sensitive diffs (hooks/guards, launchers, credential or secret handling, dispatch admission, sandbox/permission logic), resolve the reviewer with `--risk critical`, which excludes Sonnet 5.5; resolver enforcement at lower risk levels is tracked in #9125. **Operator rule (2026-09-25): Gemini-family seats review Ukrainian language/content only; never code, infra, tooling, CI, tests, hooks, or skills, whether reviewer of record, second dissent, or panel CF.** DeepSeek is excluded from formal review; Flash remains an active catalog identity, while Pro is retired |
 | **UK content authoring** (author immersion-first, never translate) | **fresh-build lesson writer: codex Sol @ high** (operator default 2026-09-27, pending the pilot's measured writer selection, #8425) · **agy** (A1–A2 voice) ≈ **codex Sol @ high** | **claude** (B1–C2, sparingly — save the window) | — | **LANGUAGE-LANES RULE below binds**: only claude, codex (GPT), agy (Gemini); every other model family excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex Sol @ high** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; Grok is excluded from every Ukrainian review and judge seat; FOLK stays cross-family GPT↔Claude per the folk rubric |
-| **Research / recon / triage** | **Luna @ `high`** under a complete Sol (Astra-seat) advisory envelope — always required, never only when the boundaries need judgment (operator decision 2026-09-30) | Sol @ `high` for broader work and ordinary advice; Astra last resort | agy (bounded fallback: envelope required) | Workers never sole authority on consequential calls |
+| **Research / recon / triage** | **Luna @ `high`** under a complete Sol advisory envelope — always required, never only when the boundaries need judgment (operator decision 2026-09-30) | Sol @ `high` for broader work and ordinary advice; Astra last resort | agy (bounded fallback: envelope required) | Workers never sole authority on consequential calls |
 | **Live web fact-check** (pricing/URL/citation currency) | eligible opencode models — pool (FREE) · glm (LOCAL); DeepSeek is excluded from dispatch and review (`ask-deepseek` is consult-only for non-language work) | — | — | browsing = harness property, not a model trait |
 
 **Gemini code-review gate — accepted residuals (operator 2026-09-25).** Two calls stay outside the path check. `--review-profile ukrainian` without `--pr` or `--branch` is a self-assertion: nothing inspects the changed paths. `delegate --agent agy` without `--require-review-verdict` is an implementation dispatch and is not gated. A copy of code into a content path is out of scope: the gate exists so Gemini never reviews code, and a file under a content path is content by definition and is not executed.
@@ -697,11 +697,11 @@ Epic drivers **must** follow `fleet-driver-routing.md` (served immediately after
 in `/api/rules`):
 
 - **ROUTING_CARD_V1** before every implement dispatch (tier · model×harness · advisor packet · alternatives).
-- **Default bounded work:** advisory envelope from the catalog advisor route (GPT-6.1 Sol @ high,
-  the Astra seat) → bounded worker (Luna @ high, or the Flash fallback) dispatched with
+- **Default bounded work:** advisory envelope from the catalog advisor route,
+  the Sol advisor (`gpt-6.1-sol` @ high) → bounded worker (Luna @ high, or the Flash fallback) dispatched with
   `--advisory-task`. A Fable brief is design advice, not an envelope, and does not admit a
   bounded worker (operator decision 2026-09-30, #9275). A complete envelope defines the work;
-  it does not turn Astra into an implementer.
+  it does not turn the Sol advisor (`gpt-6.1-sol` @ high) into an implementer.
 - **Fable reachability** under a small Claude subscription: native pin `claude-fable-5-1`, or
   **Cursor → Fable** (multi-model pin; use composite identity for CF bookkeeping when required).
 - **Session breadth:** after ≥3 implement dispatches, ≥2 agents and ≥2 tiers, or a tool-backed
@@ -804,11 +804,11 @@ capacity, and transport capabilities. A model name or historical context window 
 no filesystem, tool, or driver authority.
 
 The compatibility key `execution_routing.sol_advised_bounded` retains its name.
-Its current advisor is GPT-6.1 Sol high (the Astra seat) and its bounded worker is Luna high, with Sol
+Its current advisor is the Sol advisor (`gpt-6.1-sol` @ high) and its bounded worker is Luna high, with Sol
 high for broader autonomous integration; it has no direct-worker route, and its
 `bounded_fallback_worker` (`gemini-3.8-flash-high`) needs the same envelope. Current designated advice uses **Opus / Sol first**,
-**Fable / Astra last resort**. The mandatory #9275 bounded envelope above is unchanged
-and its Astra-seat wording remains a driver/operator collision to resolve. Kimi: web, UI and backend coding only — no
+**Fable / Astra last resort**. The mandatory #9275 envelope advisor is Sol 6.1, not the last-resort Astra approval seat.
+Kimi: web, UI and backend coding only — no
 Ukrainian-language content, no reviews, consults, design or rules. All GPT-6 models are OpenAI-family and
 cannot satisfy independent CF for an OpenAI-authored PR.
 
