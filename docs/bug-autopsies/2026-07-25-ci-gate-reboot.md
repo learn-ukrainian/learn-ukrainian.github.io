@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # CI Gate reboot day — a GitHub transient misdiagnosed as a file defect, and a hang the timeout could not see
 
 **Date:** 2026-07-25 · **Epic:** #4707 · **Issues:** #5762 #5768 #5771 #5772 #5773 #5776
@@ -319,14 +325,14 @@ Rather than burning 40-minute CI runs, use this 4-step local isolation sequence:
 #### Step A: Reproduce exact test order without xdist IPC overhead
 Run the two target test files sequentially in a single process (`-n 0`) with stdout unbuffered (`-s`) and explicit timeout:
 ```bash
-.venv/bin/python -m pytest tests/wiki/test_t1_t2_pipeline.py tests/wiki/test_ukrainian_wiki_corpus.py -n 0 -s --timeout=15
+"$PROJECT_PYTHON" -m pytest tests/wiki/test_t1_t2_pipeline.py tests/wiki/test_ukrainian_wiki_corpus.py -n 0 -s --timeout=15
 ```
 *If this hangs, you have a 2-second local repro.*
 
 #### Step B: Binary search collection order
 If Step A doesn't hang, the leak originates earlier in the suite. Export the exact collection sequence from a full run:
 ```bash
-.venv/bin/python -m pytest --collect-only -q > collection_order.txt
+"$PROJECT_PYTHON" -m pytest --collect-only -q > collection_order.txt
 ```
 Run `pytest` feeding chunks of `collection_order.txt` into `-n 2` to narrow down the contaminating predecessor test.
 
@@ -464,16 +470,16 @@ Do **not** start with full 40‑min binary search. Force a **stack** first.
 ### Phase 0 — Prove the timeout harness (15 min, local)
 
 ```bash
-.venv/bin/python -m pytest --timeout=5 --timeout-method=thread \
+"$PROJECT_PYTHON" -m pytest --timeout=5 --timeout-method=thread \
   -p no:xdist -c /dev/null -q \
-  -c <(echo $'import time\ndef test_hang():\n    time.sleep(60)\n') 
+  -c <(echo $'import time\ndef test_hang():\n    time.sleep(60)\n')
 # or a one-off test file that only sleeps
 ```
 
 Confirm you see a timeout failure and a stack. Then:
 
 ```bash
-.venv/bin/python -m pytest --trace-config 2>&1 | rg -i 'timeout|xdist'
+"$PROJECT_PYTHON" -m pytest --trace-config 2>&1 | rg -i 'timeout|xdist'
 ```
 
 If CI never loaded `pytest-timeout`, the mystery is boring and fixed by pinning `addopts` / install. Don’t skip this.
@@ -604,4 +610,3 @@ That is **not** recreating the old ignore list. The old list was “required CI 
 - **Effort not worth it:** multi-day full-suite order bisect on a laptop. **Effort worth it:** job bounds (done), one deselect (done), faulthandler/py-spy once, harden MLX read + CI `NO_MLX`, soak lane for never-run tests.
 
 If the operator is close to abandoning: **abandon the open-ended hang hunt, not the CI reboot.** Ship quarantine + bounds + soak; treat a stack-backed fix as opportunistic follow-up, not a merge blocker.
-

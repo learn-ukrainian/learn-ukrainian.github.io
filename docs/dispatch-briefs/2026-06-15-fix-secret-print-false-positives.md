@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — fix #M-5 guard-secret-print false-positives (DEACTIVATED, #1908)
 
 `agents_extensions/shared/hooks/guard-secret-print.py` (merged #3233) was DEPLOYED then
@@ -37,7 +43,7 @@ orchestrator re-registers after verification).
    `cat agents_extensions/shared/hooks/guard-secret-print.py`, `... | tail -3`,
    `head -20 file.py`, `git commit -m "ref guard-secret-print.py"`; KEEP BLOCKING
    `cat ~/.aws/credentials`, `cat .env`, `tail .envrc`, bare `env`, `echo $GH_TOKEN`.
-4. `.venv/bin/python -m pytest tests/test_guard_secret_print.py -q` green; `ruff check` clean.
+4. `"$PROJECT_PYTHON" -m pytest tests/test_guard_secret_print.py -q` green; `ruff check` clean.
 5. Do NOT edit settings.json (orchestrator re-registers). Commit
    `fix(harness): tighten #M-5 secret-guard file-matching to kill false-positives (#1908)`
    + `X-Agent: codex/fix-secret-print`. Push + `gh pr create`. NO merge.

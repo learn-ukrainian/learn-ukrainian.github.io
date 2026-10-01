@@ -199,7 +199,7 @@ language + review lanes free and puts the loop on the most replaceable capacity:
 3. Driver reads live routing from `/api/rules` + `model_catalog.yaml` (never hard-codes the
    roster), then runs the loop: topology → route → dispatch → Monitor settle → cross-family
    exact-head CF → CI Gate green on that head → merge queue (`drive-epic` §6/§7; never
-   `gh pr merge --auto` first) → dual-write handoff.
+   `.venv/bin/python -m scripts.publish pr-merge --auto` first) → dual-write handoff.
 4. Driver ends on its seat's handoff signal (canary **FAIL-HANDOFF** < 8/10 for
    grok/gemini/kimi; the thread-handoff for Claude/Sonnet), not on a compact count.
 

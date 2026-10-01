@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — #1965 JSX uk= attribute extraction (V7 DialogueBox shape)
 
 **Issue:** [#1965](https://github.com/krisztiankoos/learn-ukrainian/issues/1965) — `_jsx_text_values` only extracts `text=` attribute; misses `uk=`/`en=` V7 DialogueBox shape.
@@ -15,7 +21,7 @@
 | "Build #4 module had 10 DialogueBox elements with `uk=`/`en=` props" | `grep -c '<DialogueBox' .worktrees/builds/a1-my-morning-20260513-193448/curriculum/l2-uk-en/a1/my-morning/module.md` | Quote raw count (`10`) + 3 sample lines |
 | "Gate counter blind: `uk_dialogue_lines: 5` observed vs 14 required" | `python3 -c 'import json; print(json.load(open("...python_qg.json"))["gates"]["l2_exposure_floor"]["observed"])'` | Quote raw dict |
 | "Component density measured at 36-55% per box (~50% = bilingual prop pair)" | same python_qg.json `gates.component_density.observed` | Quote raw list |
-| "Tests pass after fix" | `.venv/bin/python -m pytest tests/test_immersion_gates.py tests/build/test_linear_pipeline.py -v` | Quote final `N passed in M.MMs` line raw |
+| "Tests pass after fix" | `"$PROJECT_PYTHON" -m pytest tests/test_immersion_gates.py tests/build/test_linear_pipeline.py -v` | Quote final `N passed in M.MMs` line raw |
 | "Ruff clean" | `.venv/bin/ruff check scripts/build/linear_pipeline.py tests/test_immersion_gates.py tests/build/test_linear_pipeline.py` | Quote final `All checks passed!` or zero-error line |
 | "PR opened" | `gh pr view --json url` | Quote raw URL line |
 | "Commit landed" | `git log -1 --oneline` | Quote raw line |
@@ -99,7 +105,7 @@ After implementing, run the gates against build #4's actual module.md to confirm
 
 ```bash
 cd .worktrees/builds/a1-my-morning-20260513-193448
-.venv/bin/python -c "
+"$PROJECT_PYTHON" -c "
 import sys
 sys.path.insert(0, '.')
 # Re-import from your worktree's modified linear_pipeline:
@@ -116,7 +122,7 @@ This is a sanity check, NOT a test commit — do not commit the worktree path or
 
 1. `git worktree add -b fix/1965-jsx-uk-attribute ../jsx-uk-attribute origin/main` — set up isolated worktree from clean `main`.
 2. **File-level work:** edit `scripts/build/linear_pipeline.py:5631-5634` per fix block above. Add 4 + 4 tests per the test-required section.
-3. **Test suite:** `.venv/bin/python -m pytest tests/test_immersion_gates.py tests/build/test_linear_pipeline.py -v` — must show all new tests PASS and existing tests still PASS. **Forbid `-x` per #1942** — capture full failure count if any.
+3. **Test suite:** `"$PROJECT_PYTHON" -m pytest tests/test_immersion_gates.py tests/build/test_linear_pipeline.py -v` — must show all new tests PASS and existing tests still PASS. **Forbid `-x` per #1942** — capture full failure count if any.
 4. **Ruff:** `.venv/bin/ruff check scripts/build/linear_pipeline.py tests/test_immersion_gates.py tests/build/test_linear_pipeline.py` — must show "All checks passed!"
 5. **Commit:** conventional message `fix(immersion_gates): extract uk= attribute for V7 DialogueBox shape (#1965)` — body cites the issue and quotes the before/after `uk_dialogue_lines` count from the build #4 sanity check.
 6. **Push:** `git push -u origin fix/1965-jsx-uk-attribute`.

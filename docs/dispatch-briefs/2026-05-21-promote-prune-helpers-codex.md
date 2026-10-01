@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — paired promote-module + prune-forensics helpers
 
 **Agent:** codex
@@ -20,10 +26,10 @@ Per `docs/best-practices/deterministic-over-hallucination.md` and #M-4: every cl
 |---|---|
 | "promote_module.py exists at scripts/sync/" | `ls -la scripts/sync/promote_module.py` |
 | "prune_module_forensics.py exists at scripts/sync/" | `ls -la scripts/sync/prune_module_forensics.py` |
-| "promote --help renders" | `.venv/bin/python scripts/sync/promote_module.py --help` |
-| "prune --help renders" | `.venv/bin/python scripts/sync/prune_module_forensics.py --help` |
-| "all new tests pass" | `.venv/bin/python -m pytest tests/sync/test_promote_module.py tests/sync/test_prune_module_forensics.py -v` (final summary line) |
-| "full suite green" | `.venv/bin/python -m pytest` (final summary line) |
+| "promote --help renders" | `"$PROJECT_PYTHON" scripts/sync/promote_module.py --help` |
+| "prune --help renders" | `"$PROJECT_PYTHON" scripts/sync/prune_module_forensics.py --help` |
+| "all new tests pass" | `"$PROJECT_PYTHON" -m pytest tests/sync/test_promote_module.py tests/sync/test_prune_module_forensics.py -v` (final summary line) |
+| "full suite green" | `"$PROJECT_PYTHON" -m pytest` (final summary line) |
 | "ruff clean" | `.venv/bin/ruff check scripts/sync/promote_module.py scripts/sync/prune_module_forensics.py tests/sync/` |
 | "PR opened" | `gh pr view <N> --json url` raw URL |
 
@@ -165,8 +171,8 @@ Use `pytest tmp_path` + a helper that initializes a tiny git repo with one `buil
 1. `git worktree add .worktrees/codex/promote-prune-helpers -b feat/promote-prune-helpers` (from main project dir). The new branch-switch guard hook (PR #2167) will refuse `git checkout -b` in the main worktree — `git worktree add -b` is explicitly allowed.
 2. `cd .worktrees/codex/promote-prune-helpers`
 3. Write `scripts/sync/promote_module.py`, `scripts/sync/prune_module_forensics.py`, `tests/sync/__init__.py` (if needed), `tests/sync/test_promote_module.py`, `tests/sync/test_prune_module_forensics.py`.
-4. `.venv/bin/python -m pytest tests/sync/ -v` → all new tests pass.
-5. `.venv/bin/python -m pytest` → full suite green.
+4. `"$PROJECT_PYTHON" -m pytest tests/sync/ -v` → all new tests pass.
+5. `"$PROJECT_PYTHON" -m pytest` → full suite green.
 6. `.venv/bin/ruff check scripts/sync/promote_module.py scripts/sync/prune_module_forensics.py tests/sync/` → clean.
 7. `git add scripts/sync/promote_module.py scripts/sync/prune_module_forensics.py tests/sync/` + targeted commit. Conventional message: `feat(sync): paired promote-module + prune-forensics helpers`.
 8. `git push -u origin feat/promote-prune-helpers`.

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — adapt `esum_ingest.py` to handle IA text.pdf format (vols 4, 5)
 
 **Agent**: gemini (default model)
@@ -53,7 +59,7 @@ Parser entry-boundary heuristics assume djvutxt's specific line-break convention
 
 - **Entry count parity**: parser run on `vol4-text.txt` produces ≥4,800 entries (80% of 6,088); same for vol5 (≥80% of current deployed).
 - **Spot-check 5 random pages**: lemmas + etymology bodies match the actual scan content (cross-check `data/raw/esum/vol4.txt` djvutxt as ground truth for the same pages).
-- **Pytest green** for both branches: `.venv/bin/python -m pytest tests/ -k esum -v`.
+- **Pytest green** for both branches: `"$PROJECT_PYTHON" -m pytest tests/ -k esum -v`.
 - **Ruff green**: `.venv/bin/ruff check scripts/ingest/`.
 
 ## Don't
@@ -67,12 +73,12 @@ Parser entry-boundary heuristics assume djvutxt's specific line-break convention
 
 ```bash
 cd . && .venv/bin/ruff check scripts/ingest/ tests/
-cd . && .venv/bin/python -m pytest tests/ -k esum -v --tb=short
+cd . && "$PROJECT_PYTHON" -m pytest tests/ -k esum -v --tb=short
 # Smoke-run on real data:
-cd . && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol4-text.txt --output /tmp/esum_vol4_textpdf.jsonl --vol 4 --source-format text-pdf
+cd . && "$PROJECT_PYTHON" scripts/ingest/esum_ingest.py --input data/raw/esum/ia-text-pdf/vol4-text.txt --output /tmp/esum_vol4_textpdf.jsonl --vol 4 --source-format text-pdf
 wc -l /tmp/esum_vol4_textpdf.jsonl   # ≥ 4800
 # Regression — djvutxt path unchanged:
-cd . && .venv/bin/python scripts/ingest/esum_ingest.py --input data/raw/esum/vol1.txt --output /tmp/esum_vol1_djvu.jsonl --vol 1
+cd . && "$PROJECT_PYTHON" scripts/ingest/esum_ingest.py --input data/raw/esum/vol1.txt --output /tmp/esum_vol1_djvu.jsonl --vol 1
 wc -l /tmp/esum_vol1_djvu.jsonl     # ≥ 5140
 ```
 

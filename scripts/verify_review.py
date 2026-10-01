@@ -36,7 +36,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import subprocess
 import sys
 from pathlib import Path
 
@@ -45,6 +44,8 @@ _REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
+from scripts.opsec.prepublish import publication_cli
+from scripts.publish.github import Request, request_run
 from scripts.review.evidence import build_target_manifest
 from scripts.review.review_contract import (
     BEHAVIOR_PROOF_SCHEMA_VERSION,
@@ -75,7 +76,7 @@ DEFAULT_GH_TIMEOUT_SECONDS: float = 60.0
 
 
 def _run(cmd: list[str], input_text: str | None = None) -> str:
-    return subprocess.run(
+    return request_run(
         cmd,
         check=True,
         capture_output=True,
@@ -209,7 +210,7 @@ def _post_summary(issue: int, receipt: dict) -> None:
         "out_of_scope",
     ):
         lines.append(f"- {name}: {counts.get(name, 0)}")
-    _run(["gh", "issue", "comment", str(issue), "--body", "\n".join(lines)])
+    _run(Request("issue-comment", number=int(str(issue)), body="\n".join(lines)))
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -349,6 +350,7 @@ def _resolve_target(args: argparse.Namespace):
     return repo_root, target
 
 
+@publication_cli()
 def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)

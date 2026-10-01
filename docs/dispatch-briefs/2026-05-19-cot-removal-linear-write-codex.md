@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Remove vestigial CoT scaffolding from V7 writer prompt (linear-write.md)
 
 **Agent:** codex
@@ -23,11 +29,11 @@ This dispatch must obey `memory/MEMORY.md` #M-4 (deterministic-over-hallucinatio
 
 | Claim in PR body | Required deterministic tool | Output format |
 |---|---|---|
-| "Tests pass" | `.venv/bin/python -m pytest tests/build/ tests/test_writer_prompt_structured_cot.py -v` from repo root | quote final `N passed in M.MMs` line raw |
+| "Tests pass" | `"$PROJECT_PYTHON" -m pytest tests/build/ tests/test_writer_prompt_structured_cot.py -v` from repo root | quote final `N passed in M.MMs` line raw |
 | "Lint clean" | `.venv/bin/ruff check scripts/build/ tests/build/` from repo root | quote `All checks passed!` or zero-error final line raw |
 | "Removed plan_reasoning section count" | `git diff scripts/build/phases/linear-write.md | grep -c "^-<plan_reasoning\|^-<verification_trace\|^-<implementation_map_audit\|^-<bad_form_audit"` from worktree | quote the integer raw |
 | "No remaining references to removed fields in scripts/" | `grep -rn "implementation_map_audit\|bad_form_audit\|verification_trace" scripts/ --include="*.py" --include="*.md" | grep -v __pycache__ | wc -l` from worktree | quote the integer raw (must be 0) |
-| "m20 rebuild passes audit-gate under tightened prompt" (claude-tools baseline) | `.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer claude-tools --worktree 2>&1 \| tail -30` | quote the final audit summary lines raw |
+| "m20 rebuild passes audit-gate under tightened prompt" (claude-tools baseline) | `"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer claude-tools --worktree 2>&1 \| tail -30` | quote the final audit summary lines raw |
 | "Commit landed" | `git log -1 --oneline` from worktree | quote line raw |
 | "PR opened" | `gh pr view --json url -q .url` | quote URL raw |
 
@@ -119,7 +125,7 @@ If any test fixture asserts the presence of these blocks, update the assertions 
 Run the existing test that covers the writer prompt structure (worktree has no `.venv/`; `cd` to the main repo first):
 ```bash
 cd .
-.venv/bin/python -m pytest tests/test_writer_prompt_structured_cot.py -v
+"$PROJECT_PYTHON" -m pytest tests/test_writer_prompt_structured_cot.py -v
 ```
 
 If it asserts the presence of `<plan_reasoning>` and now fails, **update the test** to reflect the new contract (no visible CoT required). DO NOT skip the test — adjust assertions.
@@ -129,18 +135,18 @@ If it asserts the presence of `<plan_reasoning>` and now fails, **update the tes
 ```bash
 cd .
 .venv/bin/ruff check scripts/build/ tests/build/
-.venv/bin/python -m pytest tests/build/ tests/test_writer_prompt_structured_cot.py -v
+"$PROJECT_PYTHON" -m pytest tests/build/ tests/test_writer_prompt_structured_cot.py -v
 ```
 
 Both must pass green. Quote final lines in the PR body. After the test sweep, `cd` back to your worktree for the next step.
 
 ### Step 5 — m20 rebuild under tightened prompt (validation gate)
 
-This is the load-bearing empirical test. Run a single-module rebuild via V7 with the claude-tools default writer (from the main repo so `.venv/bin/python` resolves):
+This is the load-bearing empirical test. Run a single-module rebuild via V7 with the claude-tools default writer (from the main repo so `"$PROJECT_PYTHON"` resolves):
 
 ```bash
 cd .
-.venv/bin/python scripts/build/v7_build.py a1 my-morning --writer claude-tools --worktree
+"$PROJECT_PYTHON" scripts/build/v7_build.py a1 my-morning --writer claude-tools --worktree
 ```
 
 (Note: `my-morning` is the canonical A1 m20 module per the v1 bakeoff. Use this slug.)

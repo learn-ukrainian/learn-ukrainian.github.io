@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: Atlas §6 decolonization moat PR1 — active-participle calque correction layer (#3098)
 
 The §5/§6 calque/Russianism warning layer is thin — most Atlas pages show no stylistic note. This is the
@@ -34,7 +40,7 @@ post-merge.
 ## Numbered steps
 1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Read `enrich_manifest.py` §5/§6 path; build the cited participle-calque rule set; wire the §6 note; tests.
-3. `cd . && .venv/bin/python -m pytest -k "calque or lexicon or enrich" -q` → paste summary. Test must prove `працюючий` yields a §6 note `→ працівник` with an Antonenko citation.
+3. `cd . && "$PROJECT_PYTHON" -m pytest -k "calque or lexicon or enrich" -q` → paste summary. Test must prove `працюючий` yields a §6 note `→ працівник` with an Antonenko citation.
 4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no manifest staged: `git status --short` shows NO `site/src/data/lexicon-manifest.json`.
 6. Commit `feat(lexicon): §6 active-participle calque correction layer (PR1 of #3098)`.

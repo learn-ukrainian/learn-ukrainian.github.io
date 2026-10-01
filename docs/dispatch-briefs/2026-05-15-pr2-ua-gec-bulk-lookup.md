@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex Dispatch — PR-2: bulk UA-GEC calque lookup table
 
 **Dispatched:** 2026-05-15 by orchestrator (Claude)
@@ -75,7 +81,7 @@ Source data:
 4. Filter to F/Calque ≥2× frequency, dedupe, dedupe-vs-existing-patterns, write `data/russianism-patterns-ua-gec.csv` (in the worktree's `data/` dir — this CSV WILL be committed; only `data/ua-gec/` clone stays untracked).
 5. Add `check_ua_gec_calques` to `scripts/audit/checks/russicism_detection.py`. Hook into `check_russicisms` call sites (find via `grep -rn check_russicisms scripts/`).
 6. Write `scripts/audit/measure_russicism_recall.py`. Run it; record before/after numbers.
-7. Add tests under `TestUaGecBulkLookup`. Run `.venv/bin/python -m pytest tests/test_russicism_detection.py -v`.
+7. Add tests under `TestUaGecBulkLookup`. Run `"$PROJECT_PYTHON" -m pytest tests/test_russicism_detection.py -v`.
 8. `.venv/bin/ruff check scripts/audit/ tests/test_russicism_detection.py` — fix any lint.
 9. Commit with conventional message:
    ```

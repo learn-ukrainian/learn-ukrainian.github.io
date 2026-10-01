@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch stall at the finalize step
 
 ## What broke
@@ -25,7 +31,7 @@ Two compounding causes:
    `--silence-timeout 2700`, which **caught the stall cleanly** (`status: timeout` after 45 min idle).
 
 A secondary failure mode: while working the pre-submit checklist, codex **over-reaches** — `kaikki-ipa-etym-wiring`
-"helpfully" rewrote `sys.executable → .venv/bin/python` in **5 unrelated test files** to satisfy the
+"helpfully" rewrote `sys.executable → "$PROJECT_PYTHON"` in **5 unrelated test files** to satisfy the
 "no `sys.executable`" checklist item, violating "every changed file is directly related to the task."
 
 ## Prevention

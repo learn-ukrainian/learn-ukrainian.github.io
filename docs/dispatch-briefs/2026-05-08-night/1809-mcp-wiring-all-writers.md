@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — wire MCP for ALL writer dispatches (claude-tools, gemini-tools, codex-tools)
 
 **Why this matters now:** PR #1802 instrumented MCP wiring for `codex-tools` and verified it end-to-end. The other two writers (`claude-tools`, `gemini-tools`) have NO MCP wiring path in `_runtime_tool_config`. Result: any bakeoff comparing them produces garbage signal — claude-tools sees zero tools (Claude Code requires explicit `--mcp-config`); gemini-tools falls back to a stale `.gemini/settings.json` with the OLD server name `rag` (renamed to `sources` per `.claude/rules/mcp-sources-and-dictionaries.md`) and an SSE endpoint that may or may not work.
@@ -191,7 +197,7 @@ If this file has writer-dispatch happy-path tests for codex-tools, add parallel 
 
 8. **Smoke test all three writers** — verify the resolver fires `mcp_config_resolved` for each writer label:
    ```
-   .venv/bin/python -c "
+   "$PROJECT_PYTHON" -c "
    from scripts.agent_runtime.tool_config import _load_mcp_config
    from scripts.build.linear_pipeline import _runtime_tool_config
    _load_mcp_config.cache_clear()

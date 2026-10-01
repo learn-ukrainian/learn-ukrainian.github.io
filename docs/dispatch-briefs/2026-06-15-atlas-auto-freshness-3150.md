@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: Atlas auto-freshness — `make atlas` target + DB-free CI staleness gate (#3150)
 
 The Word Atlas manifest (`site/src/data/lexicon-manifest.json`) is a deterministic two-step generated
@@ -38,7 +44,7 @@ not by regenerating.
 1. `cd . && git fetch origin` (`--worktree` from origin/main).
 2. Implement the Makefile target + fingerprint writer (in `enrich_manifest` or a shared helper) + the
    DB-free check script + the CI wiring + tests.
-3. `cd . && .venv/bin/python -m pytest -k "freshness or fingerprint or manifest" -q` → paste summary.
+3. `cd . && "$PROJECT_PYTHON" -m pytest -k "freshness or fingerprint or manifest" -q` → paste summary.
 4. `cd . && .venv/bin/ruff check scripts/ tests/` → paste final line.
 5. Confirm no `.db` and no regenerated `lexicon-manifest.json` staged (you can't regen — no DBs): `git status --short`.
 6. Commit `feat(lexicon): make atlas target + DB-free manifest staleness gate (#3150)`.

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch: auto-telemetry PR1 — central emitter + correlation IDs + dispatch event (#3153)
 
 Implements the **MVP central hook** of #3153 only. Defer module-build events, API/data-model
@@ -84,7 +90,7 @@ Two distinct causes, confirmed 2026-06-14 (commands run, raw output in handoff):
 2. Implement scope 1–4. Read `usage.py` first and mirror its atomic-write + path conventions. For scope 3
    read `scripts/agent_runtime/result.py` (the `tokens` contract) before seeding prices, and leave the
    `# TODO(#3153 PR2)` markers at each `runner.py` `tokens=None` site (do NOT change those sites here).
-3. `.venv/bin/python -m pytest tests/ -k "telemetry or usage or delegate or pricing" -q` → paste summary.
+3. `"$PROJECT_PYTHON" -m pytest tests/ -k "telemetry or usage or delegate or pricing" -q` → paste summary.
 4. `.venv/bin/ruff check scripts/ tests/` → paste `All checks passed!`.
 5. Confirm NO runtime artifacts staged: `git status --short` must show no `batch_state/` or
    `data/telemetry/` files (they are gitignored local state).

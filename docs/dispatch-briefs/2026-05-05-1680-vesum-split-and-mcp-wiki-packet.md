@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch — #1680 Split VESUM out of `scripts/rag/query.py` + wire MCP into wiki packet
 
 ## Context
@@ -15,7 +21,7 @@ Spawned from #1631 (closed via PR #1635). Three residuals not covered:
 ```bash
 cd .
 git fetch origin main
-.venv/bin/python scripts/delegate.py dispatch ...  # invoked by parent — do not re-invoke
+"$PROJECT_PYTHON" scripts/delegate.py dispatch ...  # invoked by parent — do not re-invoke
 ```
 
 Worktree will be created at `.worktrees/dispatch/codex/1680-vesum-split-mcp-packet/` automatically by delegate.py when this brief is dispatched with `--worktree` (bare). Inside the worktree:
@@ -40,9 +46,9 @@ Worktree will be created at `.worktrees/dispatch/codex/1680-vesum-split-mcp-pack
 
 5. **Inspect Qdrant path.** Is `scripts/rag/query.py`'s Qdrant logic genuinely dead? `git grep -n 'search_text\|search_literary\|qdrant_client'` across active code. If dead → delete `query.py` entirely. If still consumed → leave Qdrant logic in `query.py` and just remove the VESUM functions; document the residual in the commit body.
 
-6. **Run pytest.** `.venv/bin/python -m pytest tests/test_rag.py tests/test_verification* -x -q`. All must pass.
+6. **Run pytest.** `"$PROJECT_PYTHON" -m pytest tests/test_rag.py tests/test_verification* -x -q`. All must pass.
 
-7. **Run full pytest.** `.venv/bin/python -m pytest tests/ -x -q -k "not slow"` (skip slow tests).
+7. **Run full pytest.** `"$PROJECT_PYTHON" -m pytest tests/ -x -q -k "not slow"` (skip slow tests).
 
 ### Part 2 — MCP into wiki packet
 
@@ -73,7 +79,7 @@ Worktree will be created at `.worktrees/dispatch/codex/1680-vesum-split-mcp-pack
     - Asserts the `Dictionary context` section appears with all 5 lemmas
     - Asserts truncation applies to overly-long definitions
 
-14. **Run new test.** `.venv/bin/python -m pytest tests/test_wiki_packet_dictionary_context.py -x -v`
+14. **Run new test.** `"$PROJECT_PYTHON" -m pytest tests/test_wiki_packet_dictionary_context.py -x -v`
 
 ### Part 3 — Doc update
 

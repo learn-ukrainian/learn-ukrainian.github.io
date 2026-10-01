@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — Word Atlas morphology paradigm table (design §4 #4)
 
 **Owner lane:** Word Atlas (Claude). **Issue:** #2882. **Agent:** codex (gpt-5.5, xhigh).
@@ -56,7 +62,7 @@ alpha-label order with confusing duplicates (e.g. `вікну/давальний
      adverbs/numerals/anything the parser can't slot).
    - Style with existing `--lu-*` tokens + a `.atlas-paradigm-table` class (reuse the page's
      border/surface system; AA-contrast both themes — mirror the existing atlas CSS patterns).
-3. Regenerate `starlight/src/data/lexicon-manifest.json` (`.venv/bin/python scripts/lexicon/enrich_manifest.py …` — find the exact invocation in the script's `__main__`/CLI; do NOT hand-edit the JSON).
+3. Regenerate `starlight/src/data/lexicon-manifest.json` (`"$PROJECT_PYTHON" scripts/lexicon/enrich_manifest.py …` — find the exact invocation in the script's `__main__`/CLI; do NOT hand-edit the JSON).
 
 ## Tests
 - `tests/` (python): paradigm builder unit tests — feed the exact label samples above; assert

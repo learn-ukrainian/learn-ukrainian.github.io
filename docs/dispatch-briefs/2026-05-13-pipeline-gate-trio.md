@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — pipeline gate trio (vesum sentence-exclusion + textbook_grounding parser + immersion display)
 
 > **Issues:** none yet — file 3 issues during/after fix (one per gate).
@@ -14,7 +20,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist across blocks. Every command that uses `.venv/`, `scripts/`, or files in MAIN checkout MUST be prefixed with `cd .worktrees/dispatch/codex/pipeline-gate-trio-2026-05-13 && ...` or absolute path.
 
-Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `.venv/bin/python`.
+Inside the worktree, `.venv/` is gitignored. Use MAIN checkout's `.venv` via `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -34,7 +40,7 @@ After this fix, re-running `python_qg` on `audit/bakeoff-2026-05-13-midday/claud
 | Claim | Deterministic tool | Output format |
 |---|---|---|
 | "vesum sentence-level exclusion now applied" | `grep -n 'sentence' scripts/build/linear_pipeline.py` shows new exclusion clause near existing `errorWord` / `error_word` handling | quote the grep output |
-| "textbook_grounding parser reads MCP markdown" | run `.venv/bin/python -c "<reproduce gate on claude bakeoff>"` shows `textbook_result_hits ≥ 1` | quote `python_qg.json` diff before/after |
+| "textbook_grounding parser reads MCP markdown" | run `"$PROJECT_PYTHON" -c "<reproduce gate on claude bakeoff>"` shows `textbook_result_hits ≥ 1` | quote `python_qg.json` diff before/after |
 | "immersion display fixed" | re-run python_qg on claude bakeoff; `immersion.max_pct` now equals the policy cap (24 for `a1-m15-24`), not the prior hardcoded 35 | quote the `immersion` block |
 | "Tests pass" | `.venv/bin/pytest tests/test_linear_pipeline*.py tests/test_*_gate*.py` | quote final summary line |
 | "Lint clean" | `.venv/bin/ruff check scripts/build/linear_pipeline.py` | quote final line |
@@ -169,7 +175,7 @@ The gate parser is presumably looking for structured fields (`source_type='textb
 - [ ] `.python-version` unchanged
 - [ ] `.yamllint` and `.markdownlint.json` unchanged
 - [ ] No `status/*.json` or `audit/*-review.md` files in diff
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] Every changed file directly related to the three gate fixes
 - [ ] Total files changed < 20

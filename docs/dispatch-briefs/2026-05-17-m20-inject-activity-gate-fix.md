@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — m20 inject_activity_ids gate: fail on unused activities (#2096)
 
 ## Root cause (verified in m20 build #17 python_qg.json)
@@ -71,7 +77,7 @@ git diff --stat main
 git diff --name-only main
 # Expected: scripts/build/linear_pipeline.py + tests/build/test_linear_pipeline.py
 # venv symlinked into worktree by delegate.py
-.venv/bin/python -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
+"$PROJECT_PYTHON" -m pre_commit run --files scripts/build/linear_pipeline.py tests/build/test_linear_pipeline.py
 ```
 
 ## Commit + PR

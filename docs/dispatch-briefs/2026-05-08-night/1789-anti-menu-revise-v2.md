@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief v2: revise #1789 anti-menu linter (fixes Claude review's 2 IMPORTANT)
 
 > **PR to revise:** #1789 on branch `codex-1787-1.4-anti-menu-linter` (the live remote branch, NOT a new branch)
@@ -9,7 +15,7 @@
 ## Worktree instructions (mandatory — note the --base)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent codex --mode danger --worktree --base origin/codex-1787-1.4-anti-menu-linter \
     --task-id codex-1789-anti-menu-fix \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/1789-anti-menu-revise-v2.md

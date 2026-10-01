@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch — #1687 CodeQL suppressions still firing (rework)
 
 ## Context
@@ -51,7 +57,7 @@ git fetch origin main
 
    **Option C (last resort):** If the alerts are genuinely false positives that the config-file approach can't easily target, document why in a `docs/decisions/2026-05-05-codeql-batch-b-suppression.md` ADR and dismiss via the GH UI as `false positive`. Do NOT do this without explicit reason.
 
-5. **Run pytest locally.** `.venv/bin/python -m pytest tests/ -x -q` (already passing per last commit; just verify nothing regresses).
+5. **Run pytest locally.** `"$PROJECT_PYTHON" -m pytest tests/ -x -q` (already passing per last commit; just verify nothing regresses).
 
 6. **Run ruff.** `.venv/bin/ruff check scripts/`
 

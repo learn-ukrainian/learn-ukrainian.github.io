@@ -8,6 +8,7 @@ import subprocess
 import textwrap
 import threading
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -279,7 +280,7 @@ def test_subissue_batch_uses_one_query_for_multiple_parents(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_gh_json", fake_gh_json)
     pages = issue_stream_audit._fetch_subissue_batch({100: None, 200: "cursor"}, body_roots={100})
     assert len(calls) == 1
-    query = calls[0][0][-1]
+    query = _query_arg(calls[0][0])
     assert "i100:issue(number:100){body subIssues(first:100)" in query
     assert 'i200:issue(number:200){subIssues(first:100,after:"cursor")' in query
     assert "nodes{number repository{nameWithOwner} subIssuesSummary{total}}" in query
@@ -884,7 +885,8 @@ def _fake_gh_run(calls, *, owner: str, name: str, open_issues: list[dict]):
     answering the exact three ``gh`` calls ``run_audit`` makes for a registry
     with a single epic and no native/body children."""
 
-    def _run(args, capture_output, text, timeout, cwd):
+    def _run(args, capture_output, text, timeout, cwd, **_kwargs):
+        args = _inspect_frozen_query(args)
         calls.append((tuple(args), cwd))
         assert args[0] == "gh"
         if args[1:3] == ["issue", "list"]:
@@ -983,7 +985,8 @@ def test_repo_owner_name_cache_keyed_by_root_does_not_leak(tmp_path, monkeypatch
 
     answers = {str(root_a): ("owner-a", "repo-a"), str(root_b): ("owner-b", "repo-b")}
 
-    def _run(args, capture_output, text, timeout, cwd):
+    def _run(args, capture_output, text, timeout, cwd, **_kwargs):
+        args = _inspect_frozen_query(args)
         assert args[1:3] == ["repo", "view"]
         owner, name = answers[str(cwd)]
         return _FakeCompletedProcess(json.dumps({"owner": {"login": owner}, "name": name}))
@@ -1378,7 +1381,7 @@ def test_subissue_batch_returns_none_for_null_node_and_scopes_repo(monkeypatch):
     assert pages[100] is None
     assert pages[200]["subIssues"]["nodes"][0]["number"] == 20
     # Node lookups carry their repository so cross-repo children are detectable.
-    assert "repository{nameWithOwner}" in calls[0][-1]
+    assert "repository{nameWithOwner}" in _query_arg(calls[0])
 
 
 def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
@@ -1390,7 +1393,7 @@ def test_subissue_batch_degrades_per_node_when_batch_query_fails(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
     def fake_gh_json(args, *, cwd):
-        query = args[-1]
+        query = _query_arg(args)
         if "i200:issue" in query:
             raise RuntimeError("gh api graphql… failed: errors present")
         return {"data": {"repository": {"i100": _page([10], False)}}}
@@ -1408,7 +1411,7 @@ def test_subissue_batch_graphql_errors_are_incomplete_not_absent(monkeypatch):
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
     def fake_gh_json(args, *, cwd):
-        query = args[-1]
+        query = _query_arg(args)
         if "i200:issue" in query:
             return {"data": {"repository": {"i200": None}}, "errors": [{"message": "boom"}]}
         return {"data": {"repository": {"i100": _page([10], False)}}}
@@ -1445,7 +1448,8 @@ def _run_audit_fake_gh(calls, *, owner: str, name: str, open_issues: list[dict],
     ``None`` when that issue no longer resolves (null GraphQL node).
     """
 
-    def _run(args, capture_output, text, timeout, cwd):
+    def _run(args, capture_output, text, timeout, cwd, **_kwargs):
+        args = _inspect_frozen_query(args)
         calls.append((tuple(args), cwd))
         assert args[0] == "gh"
         if args[1:3] == ["issue", "list"]:
@@ -1548,7 +1552,8 @@ def _run_audit_fake_gh_failing_nodes(
     """Like ``_run_audit_fake_gh``, but any GraphQL query whose aliases include
     a number in ``failing`` exits non-zero (transport/GitHub failure)."""
 
-    def _run(args, capture_output, text, timeout, cwd):
+    def _run(args, capture_output, text, timeout, cwd, **_kwargs):
+        args = _inspect_frozen_query(args)
         calls.append((tuple(args), cwd))
         assert args[0] == "gh"
         if args[1:3] == ["issue", "list"]:
@@ -1755,10 +1760,11 @@ def test_subissue_batch_real_github_not_found_error_is_absent_not_incomplete(mon
     this as genuinely absent (None), not INCOMPLETE_NODE, while preserving intact nodes."""
     monkeypatch.setattr(issue_stream_audit, "_repo_owner_name", lambda _root: ("acme", "repo"))
 
-    def fake_subprocess_run(args, capture_output, text, timeout, cwd):
+    def fake_subprocess_run(args, capture_output, text, timeout, cwd, **_kwargs):
+        args = _inspect_frozen_query(args)
         assert args[0] == "gh"
         if args[1:3] == ["api", "graphql"]:
-            query = args[-1]
+            query = _query_arg(args)
             if "i999:issue" in query and "i100:issue" in query:
                 # Batch with one present and one deleted issue
                 stdout = json.dumps(
@@ -1925,7 +1931,8 @@ def test_run_audit_incomplete_node_refuses_membership_and_entire_context(tmp_pat
     _make_repo(root, epics=[10, 20])
     bodies = {10: "Tracked in #500", 20: "Also #500"}
 
-    def _run(args, capture_output, text, timeout, cwd):
+    def _run(args, capture_output, text, timeout, cwd, **_kwargs):
+        args = _inspect_frozen_query(args)
         assert args[0] == "gh"
         if args[1:3] == ["issue", "list"]:
             return _FakeCompletedProcess(json.dumps(_issues(10, 20, 500)))
@@ -2001,3 +2008,35 @@ def test_run_audit_incomplete_report_has_completeness_flag_and_fails_closed(tmp_
     assert cache_file.exists()
     assert read_membership_index(3600, cache_path=cache_file) is None
     assert validate_membership_report(report, 3600) is None
+
+
+@pytest.fixture(autouse=True)
+def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
+    """Use synthetic private tooling and an explicit destination for send spies."""
+    monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def _query_arg(args):
+    """Inspect the real fixed-query helper's frozen payload in transport spies."""
+    import json
+
+    from scripts.publish.github import Request, request_run
+
+    if isinstance(args, Request):
+        queries = []
+
+        def inspect(command, **kwargs):
+            queries.append(json.loads(Path(command[command.index("--input") + 1]).read_bytes())["query"])
+            return _FakeCompletedProcess("{}")
+
+        request_run(args, runner=inspect)
+        return queries[0]
+    if "--input" in args:
+        return json.loads(Path(args[args.index("--input") + 1]).read_bytes())["query"]
+    return args[-1]
+
+
+def _inspect_frozen_query(args):
+    if "graphql" in args and "--input" in args:
+        return ["gh", "api", "graphql", "query=" + _query_arg(args)]
+    return args

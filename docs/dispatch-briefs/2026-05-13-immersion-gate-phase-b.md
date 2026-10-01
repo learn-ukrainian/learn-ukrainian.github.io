@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Codex dispatch brief — Card 1 Phase B — empirical threshold calibration (replay-only, no LLM cost)
 
 > **Decision card:** `docs/decisions/2026-05-13-immersion-gate-tab-aware-structural.md` (ACCEPTED)
@@ -18,7 +24,7 @@
 
 Each bash block runs in a FRESH SHELL. CWD does NOT persist. Prefix every command with `cd .worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && ...` or use absolute paths.
 
-Inside worktree, `.venv/` is gitignored. Use `.venv/bin/python`.
+Inside worktree, `.venv/` is gitignored. Use `"$PROJECT_PYTHON"`.
 
 ---
 
@@ -69,7 +75,7 @@ Else verify import works:
 
 ```bash
 cd .worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
-.venv/bin/python -c "
+"$PROJECT_PYTHON" -c "
 from scripts.build.linear_pipeline import _l2_exposure_floor_gate, _long_uk_ceiling_gate, _component_density_gate, _advisory_immersion_pct
 from scripts.config import IMMERSION_POLICIES
 print('OK: imports work; a1 band count =', len(IMMERSION_POLICIES['a1']))
@@ -96,7 +102,7 @@ Create `scripts/audit/immersion_gate_calibration.py` (new file). It:
 
 ```bash
 cd .worktrees/dispatch/codex/immersion-gate-phase-b-2026-05-13 && \
-.venv/bin/python scripts/audit/immersion_gate_calibration.py
+"$PROJECT_PYTHON" scripts/audit/immersion_gate_calibration.py
 ```
 
 Quote the script's final stdout summary.
@@ -179,7 +185,7 @@ PR body must include:
 - [ ] `.python-version` unchanged
 - [ ] `.yamllint` and `.markdownlint.json` unchanged
 - [ ] No `status/*.json` or `audit/*-review.md` files in diff (calibration report goes under `audit/immersion-gate-calibration-2026-05-13/` which IS the expected artifact location)
-- [ ] No `sys.executable` — use `.venv/bin/python`
+- [ ] No `sys.executable` — use `"$PROJECT_PYTHON"`
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] Threshold changes are all in `scripts/config.py:IMMERSION_POLICIES` (SSOT)
 - [ ] Total files changed < 20

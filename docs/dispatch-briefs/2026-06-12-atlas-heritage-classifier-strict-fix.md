@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — fix Atlas §4 heritage classifier (STRICT Grinchenko/ESUM) + §1 non-lemma entries
 
 **Agent:** Codex (gpt-5.5, xhigh) · worktree · commit + push + PR (NOT draft) · no auto-merge.
@@ -49,14 +55,14 @@ attests the headword**, and that Grinchenko/ESUM attestation MUST be attached to
 
 ## Regenerate, DO NOT HANG
 1. Regenerate the manifest by running the builder/enricher **as FOREGROUND blocking commands with an explicit
-   `timeout`** — e.g. `timeout 3600 .venv/bin/python scripts/lexicon/build_data_manifest.py` then
-   `timeout 3600 .venv/bin/python scripts/lexicon/enrich_manifest.py` (use the real entrypoints).
+   `timeout`** — e.g. `timeout 3600 "$PROJECT_PYTHON" scripts/lexicon/build_data_manifest.py` then
+   `timeout 3600 "$PROJECT_PYTHON" scripts/lexicon/enrich_manifest.py` (use the real entrypoints).
    **DO NOT** launch the build in a backgrounded/interactive shell and poll it with empty stdin — that is the
    exact hang that killed the prior run. Run foreground; if a command exceeds its timeout, STOP and report.
    The slovnyk cache at `data/lexicon/slovnyk_cache/` (~2,143 files) is populated → enrichment is fast.
 2. `cd starlight && npm run build` (skip `npm ci` if `node_modules/` is present) — verify it builds.
 3. **Gates GREEN (real vesum is present locally at `data/vesum.db`):**
-   - `.venv/bin/python -m pytest tests/test_atlas_conformance.py tests/test_heritage_classifier.py tests/test_lexicon_build_manifest.py tests/test_lexicon_enrich_manifest.py -q` → ALL pass, **0** conformance violations.
+   - `"$PROJECT_PYTHON" -m pytest tests/test_atlas_conformance.py tests/test_heritage_classifier.py tests/test_lexicon_build_manifest.py tests/test_lexicon_enrich_manifest.py -q` → ALL pass, **0** conformance violations.
    - `.venv/bin/ruff check scripts/ tests/` → clean.
 
 ## §M-4 quality sample (REQUIRED in your final report — quote raw evidence, no "I verified X")

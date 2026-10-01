@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch Brief — #1969 multimedia search pre-emit checklist
 
 **Agent:** gemini (default for routine docs-near-code / prompt edits, unmetered)
@@ -133,7 +139,7 @@ Per `docs/best-practices/deterministic-over-hallucination.md` and MEMORY
 |---|---|
 | Test file added | `git diff --stat origin/main..HEAD` showing `tests/test_writer_prompt_preemit_checklist.py | +N` |
 | Prompt edited | `git diff --stat` showing `scripts/build/phases/linear-write.md | +N` |
-| Tests pass | `.venv/bin/python -m pytest tests/test_writer_prompt_preemit_checklist.py tests/test_writer_prompt_structured_cot.py` final line raw (e.g. `4 passed in N.NNs`) |
+| Tests pass | `"$PROJECT_PYTHON" -m pytest tests/test_writer_prompt_preemit_checklist.py tests/test_writer_prompt_structured_cot.py` final line raw (e.g. `4 passed in N.NNs`) |
 | Lint clean | `.venv/bin/ruff check tests/test_writer_prompt_preemit_checklist.py scripts/build/phases/linear-write.md` final line raw |
 | HARD STOP still last | `grep -n '^## ' scripts/build/phases/linear-write.md \| tail -3` raw output showing the final headers in order (Pre-emit verification → HARD STOP RULE) |
 
@@ -143,7 +149,7 @@ Per `docs/best-practices/deterministic-over-hallucination.md` and MEMORY
 2. **Read context.** Read `scripts/build/phases/linear-write.md` (full file), `tests/test_writer_prompt_structured_cot.py` (pattern), and the body of issue #1969 (`gh issue view 1969`).
 3. **Insert the checklist** into `scripts/build/phases/linear-write.md` immediately before `## HARD STOP RULE`. Preserve exactly one blank line between the new section and the `## HARD STOP RULE` header.
 4. **Add the new test file** `tests/test_writer_prompt_preemit_checklist.py` with the three tests above.
-5. **Run the targeted tests** locally: `.venv/bin/python -m pytest tests/test_writer_prompt_preemit_checklist.py tests/test_writer_prompt_structured_cot.py tests/test_lint_prompts.py -v`. Quote the final summary line.
+5. **Run the targeted tests** locally: `"$PROJECT_PYTHON" -m pytest tests/test_writer_prompt_preemit_checklist.py tests/test_writer_prompt_structured_cot.py tests/test_lint_prompts.py -v`. Quote the final summary line.
 6. **Run ruff** on the changed files: `.venv/bin/ruff check tests/test_writer_prompt_preemit_checklist.py`.
 7. **Commit** with conventional message:
    ```

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch — Task #5: wire `deepseek-tools` + `qwen-tools` as V7 writer families
 
 **Agent:** codex
@@ -34,11 +40,11 @@ Per `memory/MEMORY.md` #M-4 (deterministic-over-hallucination) and `docs/best-pr
 |---|---|---|
 | "`deepseek-tools` registered in `WRITER_CHOICES`" | `grep -n "WRITER_CHOICES\\|WRITER_DEFAULTS" scripts/build/linear_pipeline.py` | quote matched lines raw |
 | "`qwen-tools` registered in `WRITER_CHOICES`" | same | same |
-| "Adapter classes importable" | `.venv/bin/python -c "from scripts.agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter; from scripts.agent_runtime.adapters.hermes_qwen import HermesQwenAdapter; print(HermesDeepSeekAdapter, HermesQwenAdapter)"` | quote raw output |
-| "All adapter tests pass" | `.venv/bin/python -m pytest tests/agent_runtime/adapters/ -v` | quote final `N passed in M.MMs` line raw |
-| "V7 routing tests pass" | `.venv/bin/python -m pytest tests/test_v7_writer_dispatch.py -v` | same |
+| "Adapter classes importable" | `"$PROJECT_PYTHON" -c "from scripts.agent_runtime.adapters.hermes_deepseek import HermesDeepSeekAdapter; from scripts.agent_runtime.adapters.hermes_qwen import HermesQwenAdapter; print(HermesDeepSeekAdapter, HermesQwenAdapter)"` | quote raw output |
+| "All adapter tests pass" | `"$PROJECT_PYTHON" -m pytest tests/agent_runtime/adapters/ -v` | quote final `N passed in M.MMs` line raw |
+| "V7 routing tests pass" | `"$PROJECT_PYTHON" -m pytest tests/test_v7_writer_dispatch.py -v` | same |
 | "Lint clean" | `.venv/bin/ruff check scripts/agent_runtime/ scripts/build/linear_pipeline.py scripts/build/v7_build.py tests/agent_runtime/` | quote `All checks passed!` raw |
-| "Help string includes both new writers" | `.venv/bin/python scripts/build/v7_build.py --help 2>&1 \| grep -E "deepseek\\|qwen"` | quote matched lines raw |
+| "Help string includes both new writers" | `"$PROJECT_PYTHON" scripts/build/v7_build.py --help 2>&1 \| grep -E "deepseek\\|qwen"` | quote matched lines raw |
 | "Smoke build succeeded" | see Step 9 below; quote relevant `phase_done` JSONL events | (raw events) |
 
 Do NOT write "I confirmed X" without a quoted command+output triple. The dispatch brief lint hook will run; quoted outputs are the reviewer's first stop.
@@ -226,11 +232,11 @@ Verify (in test or in code) that the SELF_REVIEW_DETECTED audit gate trips when 
 
 ### Step 8 — Lint + test sweep
 
-Run the full sweep from the worktree (`.venv/bin/python` needs the main repo's `.venv`; either symlink or cd to main):
+Run the full sweep from the worktree (`"$PROJECT_PYTHON"` needs the main repo's `.venv`; either symlink or cd to main):
 ```
 cd .
 .venv/bin/ruff check scripts/agent_runtime/ scripts/build/linear_pipeline.py scripts/build/v7_build.py tests/agent_runtime/
-.venv/bin/python -m pytest tests/agent_runtime/adapters/ tests/test_v7_writer_dispatch.py tests/test_agent_runtime.py -v
+"$PROJECT_PYTHON" -m pytest tests/agent_runtime/adapters/ tests/test_v7_writer_dispatch.py tests/test_agent_runtime.py -v
 cd -
 ```
 All must be green. Quote the final `N passed in M.MMs` and `All checks passed!` lines verbatim in the PR body.
@@ -241,8 +247,8 @@ Verify each new writer reaches the writer phase (not a wiring error) on a single
 
 ```
 cd .
-.venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --worktree 2>&1 | grep --line-buffered '^{"event"' | head -50
-.venv/bin/python -u scripts/build/v7_build.py a1 my-morning --writer qwen-tools --worktree 2>&1 | grep --line-buffered '^{"event"' | head -50
+"$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 my-morning --writer deepseek-tools --worktree 2>&1 | grep --line-buffered '^{"event"' | head -50
+"$PROJECT_PYTHON" -u scripts/build/v7_build.py a1 my-morning --writer qwen-tools --worktree 2>&1 | grep --line-buffered '^{"event"' | head -50
 ```
 
 Acceptance: each smoke run emits at least `mcp_config_resolved`, `writer_tool_call` (≥1), and either `phase_done` or a non-wiring-error `module_failed`. The smoke purpose is to verify the writer is *invoked correctly*, not that it produces an A1-compliant module — that's the bakeoff's job.

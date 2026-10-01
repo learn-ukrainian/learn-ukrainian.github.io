@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch Brief — Plan review for first 7 A1 modules
 
 > **Status:** PENDING DISPATCH. Target agent: claude-headless (xhigh, Opus 4.7).
@@ -97,7 +103,7 @@ EOF
 - [ ] `.python-version` unchanged (`3.12.8`)
 - [ ] `.yamllint` / `.markdownlint.json` unchanged
 - [ ] No `status/*.json` or `review/*-review.md` files in diff
-- [ ] No `sys.executable` (use `.venv/bin/python` for any Python tool invocation)
+- [ ] No `sys.executable` (use `"$PROJECT_PYTHON"` for any Python tool invocation)
 - [ ] No `@pytest.mark.skip` with empty `pass`
 - [ ] Total files in diff < 20 (~9 expected: 7 per-module + 1 summary + maybe `.agent/state/...` if skill writes there)
 - [ ] All changed files directly related (audit reports only)

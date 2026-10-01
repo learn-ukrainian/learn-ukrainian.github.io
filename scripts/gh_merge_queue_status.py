@@ -30,72 +30,7 @@ from scripts.ci.ci_timings import (
     extract_pr_number,
     resolve_repository,
 )
-
-GRAPHQL_PR_MQ_QUERY = """
-query($owner: String!, $name: String!, $number: Int!, $branch: String!) {
-  repository(owner: $owner, name: $name) {
-    pullRequest(number: $number) {
-      number
-      title
-      state
-      merged
-      mergeable
-      mergeStateStatus
-      isInMergeQueue
-      isMergeQueueEnabled
-      headRefName
-      headRefOid
-      baseRefName
-      mergeQueueEntry {
-        id
-        position
-        state
-        enqueuedAt
-        estimatedTimeToMerge
-        jump
-        solo
-        headCommit {
-          oid
-          checkSuites(first: 20) {
-            nodes {
-              status
-              conclusion
-              createdAt
-              updatedAt
-              workflowRun {
-                id
-                url
-                event
-                createdAt
-                updatedAt
-                workflow {
-                  name
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    mergeQueue(branch: $branch) {
-      url
-      nextEntryEstimatedTimeToMerge
-      entries(first: 50) {
-        totalCount
-        nodes {
-          position
-          state
-          enqueuedAt
-          estimatedTimeToMerge
-          pullRequest {
-            number
-          }
-        }
-      }
-    }
-  }
-}
-"""
+from scripts.publish.github import read
 
 
 def parse_pr_identifier(value: str | int) -> int:
@@ -424,26 +359,10 @@ def fetch_live_status(
     if "/" not in repo:
         raise ValueError(f"Invalid repository '{repo}'. Expected 'owner/name'.")
     owner, name = repo.split("/", 1)
-
-    cmd = [
-        "gh",
-        "api",
-        "graphql",
-        "-f",
-        f"query={GRAPHQL_PR_MQ_QUERY}",
-        "-f",
-        f"owner={owner}",
-        "-f",
-        f"name={name}",
-        "-F",
-        f"number={pr_number}",
-        "-f",
-        f"branch={branch}",
-    ]
     env = _gh_env(token)
     try:
-        proc = subprocess.run(
-            cmd,
+        proc = read(
+            "queue-status", repo=repo, number=pr_number, branch=branch,
             capture_output=True,
             text=True,
             env=env,

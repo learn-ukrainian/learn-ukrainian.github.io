@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief: add Streamable HTTP transport to sources MCP server (#1790 root cause fix)
 
 > **Issue:** #1790 — codex-tools writer 0 tool calls
@@ -22,7 +28,7 @@ Confirm both fail before starting the fix.
 ## Worktree instructions (mandatory)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch \
+"$PROJECT_PYTHON" scripts/delegate.py dispatch \
     --agent codex --mode danger --worktree --base origin/main \
     --task-id codex-1790-mcp-streamable-http \
     --prompt-file docs/dispatch-briefs/2026-05-08-night/1790-mcp-streamable-http.md
@@ -88,7 +94,7 @@ Look at `.venv/lib/python3.12/site-packages/mcp/server/streamable_http.py` direc
 11. **Live integration test** — KILL the running MCP server (PID 93362) and RESTART with the new code:
     ```bash
     kill 93362  # whatever PID is on 8766 — verify with: lsof -nP -iTCP:8766 -sTCP:LISTEN
-    nohup .venv/bin/python .mcp/servers/sources/server.py --standalone > /tmp/mcp-sources.log 2>&1 &
+    nohup "$PROJECT_PYTHON" .mcp/servers/sources/server.py --standalone > /tmp/mcp-sources.log 2>&1 &
     sleep 2
     # Run the curl tests from AC#5 + capture output for PR body
     ```

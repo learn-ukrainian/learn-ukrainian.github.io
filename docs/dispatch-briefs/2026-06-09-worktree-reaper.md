@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — worktree reaper (port kubedojo's reap-on-merge)
 
 ## Why
@@ -21,7 +27,7 @@ die), plus wiring so build/dispatch reap on success.
 ### #M-4 verifiable-claims preamble
 Every claim in your final report MUST be tool-backed. Quote raw output, never "I
 checked X":
-- "tests pass" → `.venv/bin/python -m pytest tests/orchestration/test_reap_worktrees.py -q` final line raw.
+- "tests pass" → `"$PROJECT_PYTHON" -m pytest tests/orchestration/test_reap_worktrees.py -q` final line raw.
 - "ruff clean" → `.venv/bin/ruff check <files>` final line raw.
 - "dry-run correct" → paste the actual `reap_worktrees.py --dry-run` output block.
 - "commit landed" → `git log -1 --oneline` raw. "PR opened" → `gh pr view --json url` raw URL.
@@ -73,7 +79,7 @@ checked X":
      UNTOUCHED; `--dry-run` → zero filesystem change. Assert the main checkout is
      never mutated.
 5. `.venv/bin/ruff check scripts/orchestration/reap_worktrees.py tests/orchestration/test_reap_worktrees.py`
-   and `.venv/bin/python -m pytest tests/orchestration/test_reap_worktrees.py -q`.
+   and `"$PROJECT_PYTHON" -m pytest tests/orchestration/test_reap_worktrees.py -q`.
 6. Commit (conventional + `X-Agent` trailer):
    `feat(orchestration): worktree reaper — reap-on-merge + build/dispatch reap-on-success [#2842-adjacent]`.
 7. `git push -u origin <branch>`.

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — kaikki.org Ukrainian (Wiktionary) fillability assessment vs Atlas lemmas
 
 **Agent:** agy (unmetered) · worktree · commit + push + PR (NOT draft) · no auto-merge.
@@ -58,7 +64,7 @@ Tables with raw numbers (NOT prose estimates):
 ## Run + finalize (numbered)
 1. `git worktree add` (dispatcher handles via --worktree).
 2. Write the script. 3. Run it FOREGROUND:
-   `.venv/bin/python scripts/lexicon/assess_kaikki_fillability.py --kaikki ~/.cache/learn-ukrainian-kaikki/kaikki-uk.jsonl --vocab-glob 'curriculum/l2-uk-en/*/*/vocabulary.yaml' --manifest starlight/src/data/lexicon-manifest.json --out docs/research/lexicon/kaikki-fillability-2026-06-12.md`
+   `"$PROJECT_PYTHON" scripts/lexicon/assess_kaikki_fillability.py --kaikki ~/.cache/learn-ukrainian-kaikki/kaikki-uk.jsonl --vocab-glob 'curriculum/l2-uk-en/*/*/vocabulary.yaml' --manifest starlight/src/data/lexicon-manifest.json --out docs/research/lexicon/kaikki-fillability-2026-06-12.md`
    (single streaming pass; if it runs >10 min something is wrong — stop + report).
 4. `.venv/bin/ruff check scripts/lexicon/assess_kaikki_fillability.py` → clean.
 5. Add a minimal test `tests/test_assess_kaikki_fillability.py` (tiny in-memory JSONL fixture → asserts the

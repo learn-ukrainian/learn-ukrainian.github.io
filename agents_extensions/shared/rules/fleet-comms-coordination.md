@@ -104,7 +104,7 @@ cold-prompts; silent plane flips; “for now” cutovers.
 
 # Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
 # ONE round. Ask a cross-family lane for verdict + findings at the current head,
-# then post on the PR (gh pr comment / gh pr review). Merge when CI is green.
+# then post on the PR (.venv/bin/python -m scripts.publish pr-comment / .venv/bin/python -m scripts.publish pr-review). Merge when CI is green.
 # Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
 # `--type review` routes to a headless native CLI WITH tools (delegate.py
 # dispatch --agent <lane> --worktree; gh/pytest available), never tool-less

@@ -1,3 +1,9 @@
+> Historical command examples are evidence, not current execution instructions.
+> `PROJECT_PYTHON` denotes the interpreter prescribed by the active task.
+> Use `"$PROJECT_PYTHON" -m scripts.publish <verb>` for writes and
+> `"$PROJECT_PYTHON" -m scripts.publish read <name>` for named API reads;
+> see [the current command fields](/docs/dev/agent-public-text.md).
+
 # Dispatch brief — #2018 activity_schema gate (m20 GREEN unblocker)
 
 > **Owner:** Codex
@@ -223,7 +229,7 @@ This test is the empirical link between the issue and the fix.
 
 ```bash
 .venv/bin/ruff check scripts/build/linear_pipeline.py tests/test_activity_schema_gate.py
-.venv/bin/python -m pytest tests/ -x -q
+"$PROJECT_PYTHON" -m pytest tests/ -x -q
 ```
 
 Quote raw output. If anything went red that was previously green,
