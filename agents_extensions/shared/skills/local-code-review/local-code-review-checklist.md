@@ -97,7 +97,9 @@ must never mutate the source tree:
 - TypeScript/JS: `npx tsc --noEmit`, `npx eslint {files}` (no `--fix`).
 - Credential, identity, transport or hook changes: confirm the author ran
   `scripts/audit/secret_scan_local.py tree` (offline) or run it yourself; quote
-  only counts and detector/file/line rows, never raw values. Runbook:
+  only its totals and per-detector counts, read the report only through its
+  `show-keys` and `count` subcommands (never `jq`, `cat` or `grep`), and never
+  quote a value, path, commit or line. Runbook:
   `docs/runbooks/secret-scanning.md`.
 - Do not run formatters, code generators, migrations, package installs, or
   any other command that changes files on disk as part of preparing this

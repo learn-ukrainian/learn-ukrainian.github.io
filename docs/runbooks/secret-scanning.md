@@ -23,6 +23,7 @@ changes.
 .venv/bin/python scripts/audit/secret_scan_local.py tree
 .venv/bin/python scripts/audit/secret_scan_local.py history
 .venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"
+.venv/bin/python scripts/audit/secret_scan_local.py count "$REPORT" --path uv.lock --path tests/fixtures/
 .venv/bin/python scripts/audit/secret_scan_local.py --help
 ```
 
@@ -32,8 +33,9 @@ From a dispatch worktree, use the primary checkout's interpreter (see
 | Mode | Scans | How |
 | --- | --- | --- |
 | `tree` | Tracked and untracked-not-ignored files of the work tree | `trufflehog filesystem` over that file list (batched). Never `.git`, `.venv`, `node_modules`, `.worktrees` or database files under `data/`; symlinks and files beneath a symlinked directory are skipped. |
-| `history` | Every commit on every ref of the configured public remote (default `origin`) | Clones a full bare mirror into a new temporary directory under the system temp directory, scans it with `trufflehog git file://<mirror> --bare`, then removes the directory. A failed removal is exit 2. |
+| `history` | Every commit on every ref of the configured public remote (default `origin`) | Clones a full bare mirror into a new temporary directory under the temp directory, scans it with `trufflehog git file://<mirror> --bare`, then removes the directory, also on SIGINT, SIGTERM or SIGHUP. A failed removal is exit 2. |
 | `show-keys REPORT` | An existing report | Prints only the report's top-level key names and the count of findings per detector. Runs nothing. |
+| `count REPORT [--path P]... [--detector NAME]` | An existing report | Prints only how many findings (of one detector, if given) lie in the given paths, outside them, and without a file location. A path ending in `/` is a directory. The paths and the name are never printed. Runs nothing. |
 
 Why a mirror: agent checkouts are blobless partial clones. `trufflehog git`
 cannot fetch the missing objects from a partial clone, and a `file://` URL to a
@@ -80,10 +82,12 @@ operator decision first.
 - The full JSON Lines report contains the **raw secret values** (`Raw`,
   `RawV2`, `Redacted`, `ExtraData` and others). The wrapper writes it, and
   TruffleHog's own log beside it as `<report>.log`, as new owner-only (0600)
-  files in a new owner-only (0700) `secret-scan-*` directory under the system
-  temp directory (`TMPDIR`, else `/tmp`). There is no option to choose another
-  location. The run is refused before anything is written when the system temp
-  directory is inside the repository or its primary checkout.
+  files in a new owner-only (0700) `secret-scan-*` directory under the temp
+  directory: the first set of `TMPDIR`, `TEMP` and `TMP`, else `/tmp`, with
+  symlinks resolved. The modes are set explicitly, whatever the umask. There is
+  no option to choose another location. The temp directory is decided from the
+  path alone, so the run is refused before anything at all is written when it is
+  inside the repository or its primary checkout.
 - The console never shows anything taken from a finding: no path, commit, line
   or value. It shows the report's generated file name, the number of files
   scanned (`tree`), the total, and a count per detector. Detector names come
@@ -94,37 +98,42 @@ operator decision first.
   quotes only counts and outcomes.
 - Delete the report directory when triage is finished.
 
-Exit codes: `0` no findings (`show-keys`: report summarized), `1` findings,
-`2` refusal, missing binary, git or TruffleHog error, timeout, unexpected report
-structure, or mirror removal failure. A missing binary prints a typed message
-pointing here.
+Exit codes: `0` no findings (`show-keys`, `count`: report summarized), `1`
+findings, `2` refusal, missing binary, git or TruffleHog error, timeout,
+unexpected report structure, or mirror removal failure, `129`/`143` terminated
+by SIGHUP/SIGTERM (any temporary mirror is removed first). A missing binary
+prints a typed message pointing here.
 
 ## Triage
 
-Triage reads the report with your own tools, and only commands that print key
-names or counts. Never print `Raw`, `RawV2`, `Redacted`, `ExtraData`,
-`SecretParts` or a location field: an agent's console is a transcript.
+Agents read a report **only** through the wrapper's `show-keys` and `count`
+subcommands, which print fixed text, closed-set names and integers. Never run
+`jq`, `cat`, `grep`, `head`, `less`, a Python one-liner or any other ad-hoc
+command over a report or its log: a finding can carry a secret in any field,
+including a key name or a field of an unexpected type, and an agent's console is
+a transcript. If a triage question needs a view these subcommands lack, add a
+closed-output subcommand to the wrapper, with tests, in a reviewed PR.
 
 1. Locate the report without printing its directory, and see its shape:
 
    ```bash
    REPORT=$(find "${TMPDIR:-/tmp}" -maxdepth 2 -name 'secret-scan-tree-0123456789abcdef.jsonl')
    .venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"
-   jq -c '.SourceMetadata.Data | map_values(keys)' "$REPORT" | sort -u   # location key names
    ```
 
-2. Test false-positive hypotheses by counting. Each command prints one number
-   (use `.SourceMetadata.Data.Git.file` for `history`):
+2. Test false-positive hypotheses by counting. Paths are repository-relative, as
+   scanned (`tree`) or as committed (`history`); a path ending in `/` covers a
+   directory:
 
    ```bash
-   # Findings in one file you suspect (a lockfile, a test fixture):
-   jq -n --arg f uv.lock '[inputs | select(.SourceMetadata.Data.Filesystem.file == $f)] | length' "$REPORT"
-   # Findings outside the paths you believe are noise; 0 settles the hypothesis:
-   jq -n '[inputs | select(.SourceMetadata.Data.Filesystem.file
-       | test("^(tests/fixtures/|uv\\.lock$)") | not)] | length' "$REPORT"
-   # Findings of one detector:
-   jq -n '[inputs | select(.DetectorName == "PrivateKey")] | length' "$REPORT"
+   .venv/bin/python scripts/audit/secret_scan_local.py count "$REPORT" --path uv.lock
+   .venv/bin/python scripts/audit/secret_scan_local.py count "$REPORT" --path tests/fixtures/ --path uv.lock
+   .venv/bin/python scripts/audit/secret_scan_local.py count "$REPORT" --path tests/fixtures/ --detector PrivateKey
    ```
+
+   "outside the given paths: 0" and "without a file location: 0" settle the
+   hypothesis that every finding (of that detector) is in paths you believe are
+   noise.
 
 3. False positive in a file that should never be scanned (lockfiles, generated
    hashes): propose a `.trufflehogignore` entry in a reviewed PR. For a single

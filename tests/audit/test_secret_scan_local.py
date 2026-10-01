@@ -9,14 +9,18 @@ installed TruffleHog when it is on PATH and are skipped otherwise.
 from __future__ import annotations
 
 import base64
+import builtins
+import io
 import json
 import os
 import re
 import shutil
+import signal
 import stat
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import pytest
@@ -43,6 +47,11 @@ with open(os.environ["STUB_RECORD"], "a", encoding="utf-8") as fh:
 if mirror and os.environ.get("STUB_LOCK"):
     os.chmod(os.path.dirname(mirror["path"]), 0o500)
 sys.stderr.write("stub log {sentinel}\\n")
+if mirror and os.environ.get("STUB_SLEEP"):
+    with open(os.environ["STUB_SLEEP"], "w", encoding="utf-8") as fh:
+        fh.write(str(os.getpid()))
+    import time
+    time.sleep(120)
 findings = os.environ.get("STUB_FINDINGS")
 if findings:
     with open(findings, "rb") as fh:
@@ -113,9 +122,72 @@ def stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]:
     return {"record": record, "findings": findings, "tmp": scratch}
 
 
-def _use_temp_root(monkeypatch: pytest.MonkeyPatch, directory: Path) -> None:
+def _use_temp_root(monkeypatch: pytest.MonkeyPatch, directory: Path | str) -> None:
     monkeypatch.setenv("TMPDIR", str(directory))
+    # A cached tempfile choice would hide a regression to tempfile's probing.
     monkeypatch.setattr(tempfile, "tempdir", None)
+
+
+WRITE_OPEN_FLAGS = os.O_WRONLY | os.O_RDWR | os.O_CREAT | os.O_TRUNC | os.O_APPEND
+
+
+class WriteLog:
+    """Resolved targets of the writes attempted while ``main`` runs (``with log:``)."""
+
+    def __init__(self) -> None:
+        self.on = False
+        self.targets: list[str] = []
+
+    def __enter__(self) -> WriteLog:
+        self.on = True
+        return self
+
+    def __exit__(self, *_exc: object) -> None:
+        self.on = False
+
+
+@pytest.fixture
+def writes(monkeypatch: pytest.MonkeyPatch) -> WriteLog:
+    """Records the resolved target of every write the wrapper's own process attempts.
+
+    Wraps the creation and write entry points (``os.open`` with a write flag, ``open`` in a
+    write mode, ``mkdir``, links and renames), so a transient file created and deleted again,
+    such as ``tempfile``'s directory probe, is recorded too. Armed only inside ``with``, so
+    pytest's own capture files are not counted.
+    """
+    log = WriteLog()
+
+    def note(path: object) -> None:
+        if log.on and isinstance(path, (str, bytes, os.PathLike)):
+            log.targets.append(os.path.realpath(os.fsdecode(path)))
+
+    def wrap(module: object, name: str, is_write) -> None:
+        original = getattr(module, name)
+
+        def recording(*args: object, **kwargs: object):
+            if is_write(*args, **kwargs):
+                note(args[0])
+            return original(*args, **kwargs)
+
+        monkeypatch.setattr(module, name, recording)
+
+    def open_writes(_path: object, mode: str = "r", *_args: object, **kwargs: object) -> bool:
+        return any(char in kwargs.get("mode", mode) for char in "wax+")
+
+    wrap(os, "open", lambda _path, flags, *_a, **_k: bool(flags & WRITE_OPEN_FLAGS))
+    wrap(builtins, "open", open_writes)
+    wrap(io, "open", open_writes)
+    for name in ("mkdir", "rename", "replace"):
+        wrap(os, name, lambda *_a, **_k: True)
+    for name in ("link", "symlink"):
+        original = getattr(os, name)
+
+        def linking(src: object, dst: object, *args: object, _original=original, **kwargs: object):
+            note(dst)
+            return _original(src, dst, *args, **kwargs)
+
+        monkeypatch.setattr(os, name, linking)
+    return log
 
 
 def _calls(stub: dict[str, Path]) -> list[dict]:
@@ -280,6 +352,84 @@ def test_show_keys_prints_only_closed_set_keys_and_counts(
     assert _calls(stub) == []  # show-keys never runs TruffleHog
 
 
+def test_count_prints_only_integers_for_the_given_paths(
+    stub: dict[str, Path], tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    report, needles = _adversarial_report()
+    path = tmp_path / "report.jsonl"
+    path.write_text(report, encoding="utf-8")
+    # The hypotheses themselves may name a secret-bearing path; they are never echoed.
+    hypotheses = ["--path", f"conf/{SECRET_A}.txt", "--path", "a.txt", "--path", "b/"]
+    assert ssl.main(["count", str(path), *hypotheses]) == ssl.EXIT_CLEAN
+    captured = capfd.readouterr()
+    # Locations: ok.txt, conf/<A>.txt, b/<b64>, <fragment>, a/x..., a.txt, a.txt, a.txt.
+    assert captured.out.splitlines() == [
+        "findings: 8",
+        "  in the given paths: 5",
+        "  outside the given paths: 3",
+        "  without a file location: 0",
+    ]
+    assert captured.err == ""
+    _assert_absent(captured, *needles, *hypotheses[1::2], str(tmp_path))
+    assert _calls(stub) == []  # count never runs TruffleHog
+
+
+def test_count_by_detector_and_unlocated_findings(tmp_path: Path, capfd: pytest.CaptureFixture[str]) -> None:
+    path = tmp_path / "report.jsonl"
+    path.write_text(
+        _finding("Filesystem", {"file": "tests/fixtures/k.pem", "line": 1})
+        + _finding("Filesystem", {"file": "tests/fixtures.py", "line": 1})
+        + _finding("Git", {"commit": SENTINEL, "line": 1})  # no file key
+        + _finding("Github", {"link": SENTINEL})  # source without a file location
+        + _finding("Filesystem", {"file": "tests/fixtures/k.pem", "line": 2}, detector="AWS"),
+        encoding="utf-8",
+    )
+    assert ssl.main(["count", str(path), "--path", "tests/fixtures/", "--detector", "PrivateKey"]) == 0
+    assert ssl.main(["count", str(path)]) == 0
+    captured = capfd.readouterr()
+    assert captured.out.splitlines() == [
+        "findings of the given detector: 4",
+        "  in the given paths: 1",
+        "  outside the given paths: 1",
+        "  without a file location: 2",
+        "findings: 5",
+        "  in the given paths: 0",
+        "  outside the given paths: 3",
+        "  without a file location: 2",
+    ]
+    _assert_absent(captured, "tests/", "PrivateKey")
+
+
+@pytest.mark.parametrize("value", [{"x": SENTINEL}, [SENTINEL], 7, None, True])
+@pytest.mark.parametrize("source", sorted(ssl.LOCATION_SOURCES))
+def test_count_rejects_a_non_string_file_with_a_fixed_diagnostic(
+    tmp_path: Path, value: object, source: str, capfd: pytest.CaptureFixture[str]
+) -> None:
+    path = tmp_path / "report.jsonl"
+    path.write_text(
+        _finding("Filesystem", {"file": "ok.txt"}) + _finding(source, {"file": value, "line": SENTINEL}),
+        encoding="utf-8",
+    )
+    # Also when the malformed finding is outside the selected detector.
+    for extra in ([], ["--detector", "AWS"]):
+        assert ssl.main(["count", str(path), "--path", "ok.txt", *extra]) == ssl.EXIT_ERROR
+        captured = capfd.readouterr()
+        assert captured.out == ""
+        assert captured.err.strip() == "secret_scan_local: unexpected report structure at line 2"
+        _assert_absent(captured, "ok.txt")
+
+
+def test_runbook_reads_reports_only_through_the_wrapper() -> None:
+    """The runbook's commands never read a report with a general-purpose tool."""
+    runbook = (ssl.PROJECT_ROOT / "docs" / "runbooks" / "secret-scanning.md").read_text(encoding="utf-8")
+    blocks = re.findall(r"```bash\n(.*?)```", runbook, flags=re.DOTALL)
+    commands = [line.strip() for block in blocks for line in block.splitlines() if line.strip()]
+    assert commands
+    for command in commands:
+        assert command.startswith(("REPORT=$(find ", ".venv/bin/python scripts/audit/secret_scan_local.py ")), command
+    assert not re.search(r"\b(jq|cat|grep|head|tail|less)\b[^\n]*\$REPORT", runbook)
+
+
 def test_detector_closed_set_is_well_formed() -> None:
     assert len(ssl.KNOWN_DETECTORS) > 1000
     assert all(re.fullmatch(r"[A-Za-z0-9]{1,64}", name) for name in ssl.KNOWN_DETECTORS)
@@ -350,18 +500,48 @@ def test_output_location_is_only_the_generated_temp_directory(
     assert report.parent.name.startswith(ssl.OUTPUT_PREFIX)
 
 
+UMASKS = [0o777, 0o000, 0o022, 0o077]
+
+
+@pytest.mark.parametrize("umask", UMASKS, ids=oct)
 def test_report_directory_and_files_are_owner_only(
-    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+    stub: dict[str, Path], repo: Path, umask: int, capfd: pytest.CaptureFixture[str]
 ) -> None:
-    previous = os.umask(0o022)
+    previous = os.umask(umask)
     try:
-        ssl.main(["--repo", str(repo), "tree"])
+        assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
     finally:
         os.umask(previous)
     report = _report_path(capfd.readouterr().out, stub["tmp"])
     assert stat.S_IMODE(report.parent.stat().st_mode) == 0o700
     for path in (report, report.with_name(report.name + ".log")):
         assert stat.S_IMODE(path.stat().st_mode) == 0o600
+
+
+@pytest.mark.parametrize("umask", UMASKS, ids=oct)
+@pytest.mark.parametrize("prefix", [ssl.OUTPUT_PREFIX, ssl.MIRROR_PREFIX])
+def test_private_directories_are_0700_whatever_the_umask(tmp_path: Path, umask: int, prefix: str) -> None:
+    previous = os.umask(umask)
+    try:
+        first = ssl._private_dir(tmp_path, prefix)
+        second = ssl._private_dir(tmp_path, prefix)
+    finally:
+        os.umask(previous)
+    assert first != second
+    for directory in (first, second):
+        assert directory.parent == tmp_path
+        assert re.fullmatch(re.escape(prefix) + "[0-9a-f]{16}", directory.name)
+        assert stat.S_IMODE(directory.lstat().st_mode) == 0o700
+        assert stat.S_ISDIR(directory.lstat().st_mode)
+
+
+def test_private_directory_never_reuses_an_existing_name(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    names = iter(["0" * 16, "0" * 16, "1" * 16])
+    monkeypatch.setattr(ssl.secrets, "token_hex", lambda _n: next(names))
+    (tmp_path / f"{ssl.OUTPUT_PREFIX}{'0' * 16}").mkdir(mode=0o755)
+    created = ssl._private_dir(tmp_path, ssl.OUTPUT_PREFIX)
+    assert created.name == f"{ssl.OUTPUT_PREFIX}{'1' * 16}"
+    assert stat.S_IMODE((tmp_path / f"{ssl.OUTPUT_PREFIX}{'0' * 16}").stat().st_mode) == 0o755
 
 
 def test_report_creation_is_exclusive_and_never_follows_a_symlink(tmp_path: Path) -> None:
@@ -386,7 +566,21 @@ def test_tool_stderr_goes_to_owner_only_log_not_console(
     assert SENTINEL in log.read_text(encoding="utf-8")
 
 
-@pytest.mark.parametrize("where", ["repo", "repo-subdir", "symlink-alias-of-repo", "primary-of-worktree"])
+INSIDE_REPO = [
+    "repo",
+    "repo-subdir",
+    "missing-dir-in-repo",
+    "symlink-alias-of-repo",
+    "symlink-alias-of-subdir",
+    "relative-from-cwd-in-repo",
+    "dot-from-cwd-in-repo",
+    "TEMP-fallback",
+    "TMP-fallback-after-empty-TMPDIR",
+    "primary-of-worktree",
+]
+
+
+@pytest.mark.parametrize("where", INSIDE_REPO)
 @pytest.mark.parametrize("mode", ["tree", "history"])
 def test_temp_root_inside_the_repository_is_refused_before_any_write(
     stub: dict[str, Path],
@@ -396,26 +590,77 @@ def test_temp_root_inside_the_repository_is_refused_before_any_write(
     where: str,
     mode: str,
     capfd: pytest.CaptureFixture[str],
+    writes: WriteLog,
 ) -> None:
     _git("remote", "add", "origin", "https://example.invalid/remote.git", cwd=repo)
     scanned = repo
-    temp_root = {"repo": repo, "repo-subdir": repo / "pkg", "primary-of-worktree": repo / "pkg"}.get(where)
-    if where == "symlink-alias-of-repo":
+    temp_root: Path | str = repo / "pkg"
+    if where == "repo":
+        temp_root = repo
+    elif where == "missing-dir-in-repo":
+        temp_root = repo / "not-yet"
+    elif where.startswith("symlink-alias"):
         temp_root = tmp_path / "alias"
-        temp_root.symlink_to(repo, target_is_directory=True)
-    if where == "primary-of-worktree":
+        temp_root.symlink_to(repo if where.endswith("repo") else repo / "pkg", target_is_directory=True)
+    elif where in {"relative-from-cwd-in-repo", "dot-from-cwd-in-repo"}:
+        monkeypatch.chdir(repo / "pkg")
+        temp_root = "node_modules" if where.startswith("relative") else "."
+    elif where == "primary-of-worktree":
         scanned = tmp_path / "wt"
         _git("worktree", "add", "-q", "-b", "t", str(scanned), cwd=repo)
-    assert temp_root is not None
     before = _all_paths(repo)
     _use_temp_root(monkeypatch, temp_root)
-    assert ssl.main(["--repo", str(scanned), mode]) == ssl.EXIT_ERROR
+    if where == "TEMP-fallback":
+        monkeypatch.delenv("TMPDIR")
+        monkeypatch.setenv("TEMP", str(temp_root))
+    elif where == "TMP-fallback-after-empty-TMPDIR":
+        monkeypatch.setenv("TMPDIR", "")
+        monkeypatch.delenv("TEMP", raising=False)
+        monkeypatch.setenv("TMP", str(temp_root))
+    with writes:
+        assert ssl.main(["--repo", str(scanned), mode]) == ssl.EXIT_ERROR
     captured = capfd.readouterr()
     assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_TEMP_INSIDE}"
     assert captured.out == ""
     _assert_absent(captured, str(tmp_path))
+    # Not one attempted write anywhere, transient ones included, before the refusal.
+    assert writes.targets == []
     assert _all_paths(repo) == before
+    assert not (repo / "not-yet").exists()
     assert _calls(stub) == []
+
+
+def test_a_successful_run_writes_only_under_the_temp_root(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str], writes: WriteLog
+) -> None:
+    before = _all_paths(repo)
+    with writes:
+        assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
+    report = _report_path(capfd.readouterr().out, stub["tmp"])
+    assert writes.targets == [str(report.parent), str(report), str(report) + ".log"]
+    assert _all_paths(repo) == before
+
+
+@pytest.mark.parametrize(
+    ("env", "expected"),
+    [
+        ({"TMPDIR": "a", "TEMP": "b", "TMP": "c"}, "a"),
+        ({"TMPDIR": "", "TEMP": "b", "TMP": "c"}, "b"),
+        ({"TMP": "c"}, "c"),
+        ({}, "/tmp"),
+    ],
+)
+def test_temp_root_is_chosen_by_path_logic_in_tempfile_order(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, env: dict[str, str], expected: str, writes: WriteLog
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    for name in ssl.TEMP_ENV_VARS:
+        monkeypatch.delenv(name, raising=False)
+    for name, value in env.items():
+        monkeypatch.setenv(name, value)
+    with writes:
+        assert ssl.temp_root([tmp_path / "repo"]) == Path(os.path.realpath(expected))
+    assert writes.targets == []
 
 
 # --- Exit codes and fixed diagnostics ------------------------------------------------------
@@ -526,6 +771,10 @@ def test_help_meets_cli_standard() -> None:
         ["history", "--mirror-parent", SENTINEL],
         ["show-keys"],
         ["show-keys", "a", SENTINEL],
+        ["count"],
+        ["count", "a", "--path"],
+        ["count", "a", SENTINEL],
+        ["count", "a", f"--paths={SENTINEL}"],
     ],
 )
 def test_usage_errors_never_echo_the_supplied_value(
@@ -627,13 +876,24 @@ MALFORMED_LINES = [
 ]
 
 
+REPORT_ENTRIES = ["tree", "show-keys", "count"]
+
+
+def _entry_argv(entry: str, repo: Path, report: Path) -> list[str]:
+    return {
+        "tree": ["--repo", str(repo), "tree"],
+        "show-keys": ["show-keys", str(report)],
+        "count": ["count", str(report), "--path", "a/"],
+    }[entry]
+
+
 @pytest.mark.parametrize("line", MALFORMED_LINES, ids=lambda line: line[:40])
-@pytest.mark.parametrize("entry", ["tree", "show-keys"])
+@pytest.mark.parametrize("entry", REPORT_ENTRIES)
 def test_unexpected_report_structure_is_a_typed_error(
     stub: dict[str, Path], repo: Path, line: str, entry: str, capfd: pytest.CaptureFixture[str]
 ) -> None:
     stub["findings"].write_text(line + "\n", encoding="utf-8")
-    argv = ["--repo", str(repo), "tree"] if entry == "tree" else ["show-keys", str(stub["findings"])]
+    argv = _entry_argv(entry, repo, stub["findings"])
     assert ssl.main(argv) == ssl.EXIT_ERROR
     captured = capfd.readouterr()
     _assert_absent(captured)
@@ -643,12 +903,12 @@ def test_unexpected_report_structure_is_a_typed_error(
     }
 
 
-@pytest.mark.parametrize("entry", ["tree", "show-keys"])
+@pytest.mark.parametrize("entry", REPORT_ENTRIES)
 def test_non_utf8_report_is_a_typed_error(
     stub: dict[str, Path], repo: Path, entry: str, capfd: pytest.CaptureFixture[str]
 ) -> None:
     stub["findings"].write_bytes(b'{"Raw": "\xff' + SENTINEL.encode() + b'"}\n')
-    argv = ["--repo", str(repo), "tree"] if entry == "tree" else ["show-keys", str(stub["findings"])]
+    argv = _entry_argv(entry, repo, stub["findings"])
     assert ssl.main(argv) == ssl.EXIT_ERROR
     captured = capfd.readouterr()
     _assert_absent(captured)
@@ -815,6 +1075,68 @@ def test_history_removes_mirror_when_interrupted(
     with pytest.raises(KeyboardInterrupt):
         ssl.main(["--repo", str(cloned), "history"])
     _assert_mirror_was_temporary(clone_dests, stub["tmp"])
+
+
+DRIVER = (
+    "import sys\n"
+    "from scripts.audit import secret_scan_local as ssl\n"
+    "ssl.CLONE_PROTOCOLS = 'https:file'\n"
+    "raise SystemExit(ssl.main(sys.argv[1:]))\n"
+)
+
+
+@pytest.mark.parametrize("signum", [signal.SIGTERM, signal.SIGHUP], ids=lambda s: signal.Signals(s).name)
+def test_history_removes_mirror_on_termination_signal(
+    stub: dict[str, Path], cloned: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, signum: int
+) -> None:
+    started = tmp_path / "stub-started"
+    monkeypatch.setenv("STUB_SLEEP", str(started))
+    proc = subprocess.Popen(
+        [sys.executable, "-c", DRIVER, "--repo", str(cloned), "history"],
+        cwd=ssl.PROJECT_ROOT,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + 60
+        while not (started.exists() and started.read_text(encoding="utf-8")):
+            assert proc.poll() is None, proc.communicate()
+            assert time.monotonic() < deadline
+            time.sleep(0.05)
+        assert list(stub["tmp"].glob(f"{ssl.MIRROR_PREFIX}*"))  # the mirror exists mid-scan
+        proc.send_signal(signum)
+        out, err = proc.communicate(timeout=60)
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.communicate()
+        orphaned = _kill_if_alive(started)
+    assert proc.returncode == 128 + signum
+    assert err.strip() == f"secret_scan_local: terminated by signal {signum}"
+    assert SENTINEL not in out + err
+    assert not list(stub["tmp"].glob(f"{ssl.MIRROR_PREFIX}*"))
+    assert not orphaned  # the scan child was stopped and reaped by the wrapper
+
+
+def _kill_if_alive(pid_file: Path) -> bool:
+    """Stop the stub scan child if it outlived the wrapper; True when it had."""
+    text = pid_file.read_text(encoding="utf-8") if pid_file.exists() else ""
+    if not text:
+        return False
+    try:
+        os.kill(int(text), signal.SIGKILL)
+    except ProcessLookupError:
+        return False
+    return True
+
+
+def test_termination_handlers_are_restored_after_a_run(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    before = {signum: signal.getsignal(signum) for signum in ssl.TERMINATION_SIGNALS}
+    ssl.main(["--repo", str(repo), "tree"])
+    assert {signum: signal.getsignal(signum) for signum in ssl.TERMINATION_SIGNALS} == before
 
 
 def test_tool_failure_messages_are_fixed(

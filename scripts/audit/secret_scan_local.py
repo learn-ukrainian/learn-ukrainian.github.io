@@ -18,34 +18,40 @@ Safety properties, each covered by tests/audit/test_secret_scan_local.py:
   ``other``), exit codes and fixed messages. No path, commit, line, key value or
   placeholder is printed. ``show-keys`` prints a report's top-level keys from the
   closed set ``REPORT_KEYS`` and the same per-detector counts, nothing else;
+  ``count`` prints only fixed labels and integers for the user's own path and
+  detector hypotheses, never echoing them; a field of an unexpected type is a
+  fixed diagnostic;
 * the full report (raw secret values) and TruffleHog's log are created
-  exclusively, 0600, in a new 0700 ``mkdtemp`` directory under the system temp
-  root; only the generated file name is printed. The run is refused up front
-  when the resolved temp root lies inside the repository or its primary checkout;
+  exclusively, 0600, in a new 0700 directory under the temp root; only the
+  generated file name is printed. The temp root is decided by path logic alone
+  (``TMPDIR``, ``TEMP`` or ``TMP``, else ``/tmp``, resolved): nothing is created
+  or probed before the run is refused when it lies inside the repository or its
+  primary checkout. Modes are set explicitly, whatever the umask;
 * every diagnostic is a fixed message that never repeats an option value, a
   path, a remote URL or tool output;
 * ``history`` mirror-clones only a plain ``https://`` remote (validated, passed
   after ``--``, transport restricted to https) into a second ``mkdtemp``
-  directory by its absolute path and removes it afterwards; a failed removal is
-  an error.
+  directory by its absolute path and removes it afterwards, also on SIGINT,
+  SIGTERM or SIGHUP; a failed removal is an error.
 """
 
 from __future__ import annotations
 
 import argparse
+import contextlib
 import errno
 import json
 import os
 import re
 import secrets
 import shutil
+import signal
 import stat
 import subprocess
 import sys
-import tempfile
 import urllib.parse
 from collections import Counter
-from collections.abc import Iterable, Sequence
+from collections.abc import Iterable, Iterator, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import NoReturn, TextIO
@@ -89,6 +95,12 @@ CLONE_PROTOCOLS = "https"
 FILE_FLAGS = os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | getattr(os, "O_NOFOLLOW", 0)
 OUTPUT_PREFIX = "secret-scan-"
 MIRROR_PREFIX = "secret-scan-mirror-"
+# The temp root, in the order Python's tempfile reads it, but decided without probing.
+TEMP_ENV_VARS = ("TMPDIR", "TEMP", "TMP")
+DEFAULT_TEMP_ROOT = "/tmp"
+PRIVATE_DIR_ATTEMPTS = 16
+# Raised as Terminated so the mirror is removed on the same path as any other failure.
+TERMINATION_SIGNALS = (signal.SIGTERM, signal.SIGHUP)
 
 # Top-level keys of a TruffleHog JSON result (pkg/output/json.go, v3.97.9).
 REPORT_KEYS = frozenset(
@@ -231,6 +243,8 @@ KNOWN_DETECTORS = frozenset(
     """.split()  # noqa: SIM905 - 1,068 names; see above
 )
 OTHER_DETECTOR = "other"
+# Sources whose location carries a repository-relative ``file`` (filesystem and git scans).
+LOCATION_SOURCES = frozenset({"Filesystem", "Git"})
 
 MSG_VERIFICATION = (
     "refused a verification-style option: verified mode sends candidate secrets "
@@ -238,8 +252,8 @@ MSG_VERIFICATION = (
 )
 MSG_USAGE = "usage error: unknown option, missing argument or invalid value; see --help"
 MSG_TEMP_INSIDE = (
-    "refused: the system temp directory is inside the repository or its primary checkout; "
-    "set TMPDIR to a directory outside it"
+    "refused: the temp directory (TMPDIR, TEMP or TMP, else /tmp) is inside the repository or its "
+    "primary checkout; set TMPDIR to a directory outside it"
 )
 MSG_REMOTE_NAME = "refused --remote: not a plain remote name"
 MSG_REMOTE_URL = "refused the configured remote URL: only a plain https:// URL without credentials is allowed"
@@ -249,6 +263,14 @@ MSG_REPORT_LABEL = "full report (owner-only, contains raw values, never paste)"
 
 class ScanError(Exception):
     """A refusal or tool failure; the message is built only from fixed text and integers."""
+
+
+class Terminated(BaseException):
+    """SIGTERM or SIGHUP, raised so cleanup runs as for any other failure."""
+
+    def __init__(self, signum: int) -> None:
+        super().__init__(signum)
+        self.signum = signum
 
 
 @dataclass(frozen=True)
@@ -267,6 +289,16 @@ class Summary:
     detectors: Counter[str] = field(default_factory=Counter)
     keys: set[str] = field(default_factory=set)
     unknown_keys: int = 0
+
+
+@dataclass
+class PathCounts:
+    """Findings split by the user's own path hypotheses: integers only."""
+
+    findings: int = 0
+    inside: int = 0
+    outside: int = 0
+    unlocated: int = 0
 
 
 def _errno_name(exc: OSError) -> str:
@@ -314,18 +346,33 @@ def protected_roots(top: Path) -> list[Path]:
 
 
 def temp_root(roots: Iterable[Path]) -> Path:
-    """The resolved system temp directory, refused when it lies inside a protected root."""
-    root = Path(tempfile.gettempdir()).resolve()
+    """The resolved temp root, refused when it lies inside a protected root.
+
+    Decided by path logic only. ``tempfile.gettempdir()`` is never used: it probes each
+    candidate by creating a file in it, which would write into the repository before
+    this check could refuse it.
+    """
+    configured = next((value for name in TEMP_ENV_VARS if (value := os.environ.get(name))), DEFAULT_TEMP_ROOT)
+    root = Path(os.path.realpath(configured))  # absolute; symlinks and a relative value resolved
     if any(root.is_relative_to(protected) for protected in roots):
         raise ScanError(MSG_TEMP_INSIDE)
     return root
 
 
-def _mkdtemp(root: Path, prefix: str) -> Path:
-    try:
-        return Path(tempfile.mkdtemp(prefix=prefix, dir=root))  # 0700, absolute
-    except OSError as exc:
-        raise ScanError(f"cannot create a private temporary directory ({_errno_name(exc)})") from exc
+def _private_dir(root: Path, prefix: str) -> Path:
+    """Create a new owner-only (0700) directory with a random name under the absolute ``root``."""
+    for _ in range(PRIVATE_DIR_ATTEMPTS):
+        path = root / f"{prefix}{secrets.token_hex(8)}"
+        try:
+            os.mkdir(path, 0o700)
+            # mkdir applies the umask (0777 would leave 0000); set the mode explicitly.
+            os.chmod(path, stat.S_IRWXU)
+        except FileExistsError:
+            continue
+        except OSError as exc:
+            raise ScanError(f"cannot create a private temporary directory ({_errno_name(exc)})") from exc
+        return path
+    raise ScanError("cannot create a private temporary directory (EEXIST)")
 
 
 def _create_private(path: Path) -> int:
@@ -340,7 +387,7 @@ def _create_private(path: Path) -> int:
 
 def open_outputs(root: Path, mode: str) -> Outputs:
     """Create the report and the TruffleHog log in a fresh private directory under ``root``."""
-    directory = _mkdtemp(root, OUTPUT_PREFIX)
+    directory = _private_dir(root, OUTPUT_PREFIX)
     name = f"{OUTPUT_PREFIX}{mode}-{secrets.token_hex(8)}.jsonl"
     report_fd = _create_private(directory / name)
     try:
@@ -484,7 +531,7 @@ def _clone_and_scan(
 
 
 def scan_history(binary: str, repo: Path, url: str, root: Path, out_fd: int, log_fd: int, timeout: int) -> None:
-    mirror_dir = _mkdtemp(root, MIRROR_PREFIX)
+    mirror_dir = _private_dir(root, MIRROR_PREFIX)
     try:
         _clone_and_scan(binary, url, mirror_dir, repo, out_fd, log_fd, timeout)
     except BaseException as exc:
@@ -505,10 +552,8 @@ def _detector_name(record: object, number: int) -> str:
     return record["DetectorName"]
 
 
-def summarize(fh: TextIO) -> Summary:
-    """Reduce a JSON Lines report to closed-set names and counts; never keep a field value."""
-    summary = Summary()
-    unknown: set[str] = set()
+def _records(fh: TextIO) -> Iterator[tuple[int, dict, str]]:
+    """Line number, record and detector name of each well-formed finding; errors are typed."""
     try:
         for number, raw_line in enumerate(fh, start=1):
             if not raw_line.strip():
@@ -518,15 +563,55 @@ def summarize(fh: TextIO) -> Summary:
             except (ValueError, RecursionError) as exc:
                 # Never echo the line: it may hold a secret.
                 raise ScanError(f"unparseable JSON at report line {number}") from exc
-            name = _detector_name(record, number)
-            summary.findings += 1
-            summary.detectors[name if name in KNOWN_DETECTORS else OTHER_DETECTOR] += 1
-            summary.keys.update(key for key in record if key in REPORT_KEYS)
-            unknown.update(key for key in record if key not in REPORT_KEYS)
+            yield number, record, _detector_name(record, number)
     except UnicodeDecodeError as exc:
         raise ScanError("the report is not valid UTF-8") from exc
+
+
+def summarize(fh: TextIO) -> Summary:
+    """Reduce a JSON Lines report to closed-set names and counts; never keep a field value."""
+    summary = Summary()
+    unknown: set[str] = set()
+    for _number, record, name in _records(fh):
+        summary.findings += 1
+        summary.detectors[name if name in KNOWN_DETECTORS else OTHER_DETECTOR] += 1
+        summary.keys.update(key for key in record if key in REPORT_KEYS)
+        unknown.update(key for key in record if key not in REPORT_KEYS)
     summary.unknown_keys = len(unknown)
     return summary
+
+
+def _file_location(record: dict, number: int) -> str | None:
+    """The finding's repository-relative file, or None when its source has no file location."""
+    ((source, location),) = record["SourceMetadata"]["Data"].items()  # shape checked by _detector_name
+    if source not in LOCATION_SOURCES or "file" not in location:
+        return None
+    file = location["file"]
+    if not isinstance(file, str):
+        raise ScanError(f"unexpected report structure at line {number}")
+    return file
+
+
+def _in_paths(file: str, paths: Sequence[str]) -> bool:
+    """Exact file match, or prefix match for a path ending in ``/`` (a directory)."""
+    return any(file == path or (path.endswith("/") and file.startswith(path)) for path in paths)
+
+
+def count_paths(fh: TextIO, paths: Sequence[str], detector: str | None) -> PathCounts:
+    """Count findings (of ``detector``, if given) inside and outside ``paths``; keep no field value."""
+    counts = PathCounts()
+    for number, record, name in _records(fh):
+        file = _file_location(record, number)
+        if detector is not None and name != detector:
+            continue
+        counts.findings += 1
+        if file is None:
+            counts.unlocated += 1
+        elif _in_paths(file, paths):
+            counts.inside += 1
+        else:
+            counts.outside += 1
+    return counts
 
 
 def detector_lines(summary: Summary) -> list[str]:
@@ -541,6 +626,16 @@ def key_lines(summary: Summary) -> list[str]:
     if summary.unknown_keys:
         lines.append(f"keys outside the TruffleHog result format: {summary.unknown_keys}")
     return lines
+
+
+def count_lines(counts: PathCounts, detector_given: bool) -> list[str]:
+    label = "findings of the given detector" if detector_given else "findings"
+    return [
+        f"{label}: {counts.findings}",
+        f"  in the given paths: {counts.inside}",
+        f"  outside the given paths: {counts.outside}",
+        f"  without a file location: {counts.unlocated}",
+    ]
 
 
 class _FixedErrorParser(argparse.ArgumentParser):
@@ -577,6 +672,7 @@ def build_parser() -> argparse.ArgumentParser:
             "  .venv/bin/python scripts/audit/secret_scan_local.py tree\n"
             "  .venv/bin/python scripts/audit/secret_scan_local.py history\n"
             '  .venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"\n'
+            '  .venv/bin/python scripts/audit/secret_scan_local.py count "$REPORT" --path uv.lock --path tests/fixtures/\n'
             "\n"
             "Fixed TruffleHog flags: " + " ".join(SAFE_FLAGS) + "\n"
             "  plus --exclude-paths=.trufflehogignore when the file exists.\n"
@@ -584,19 +680,24 @@ def build_parser() -> argparse.ArgumentParser:
             "Outputs:\n"
             "  Full JSON Lines report (contains RAW secret values) and TruffleHog's log\n"
             "  (<report>.log), both new 0600 files in a new 0700 secret-scan-* directory under the\n"
-            "  system temp directory (TMPDIR). Only the generated report file name is printed; find\n"
-            '  it with: find "${TMPDIR:-/tmp}" -maxdepth 2 -name <name>. Never paste either file.\n'
+            "  temp directory (TMPDIR, TEMP or TMP, else /tmp). Only the generated report file name is\n"
+            '  printed; find it with: find "${TMPDIR:-/tmp}" -maxdepth 2 -name <name>.\n'
+            "  Never paste either file, and never read it with jq, cat, grep or similar: use\n"
+            "  show-keys and count.\n"
             "  stdout: totals and per-detector counts; detector names outside TruffleHog's known set\n"
             "  are counted as 'other'. show-keys prints only a report's top-level key names and\n"
-            "  per-detector counts. history: a temporary bare mirror under the system temp\n"
-            "  directory, removed afterwards; only a plain https:// remote without credentials.\n"
-            "  The run is refused when the system temp directory is inside the repository.\n"
+            "  per-detector counts. count prints only integers for the given paths and detector.\n"
+            "  history: a temporary bare mirror under the temp directory, removed afterwards (also\n"
+            "  on SIGINT, SIGTERM, SIGHUP); only a plain https:// remote without credentials.\n"
+            "  The run is refused, before anything is written, when the temp directory is inside\n"
+            "  the repository.\n"
             "\n"
             "Exit codes:\n"
-            "  0  no findings (tree, history); report summarized (show-keys)\n"
+            "  0  no findings (tree, history); report summarized (show-keys, count)\n"
             "  1  findings (triage per the runbook)\n"
             "  2  refusal, missing trufflehog, git or TruffleHog error, timeout, usage error,\n"
             "     unexpected report structure, mirror removal failure\n"
+            "  129, 143  terminated by SIGHUP or SIGTERM (any temporary mirror removed)\n"
             "\n"
             "Related: docs/runbooks/secret-scanning.md, .github/workflows/ci.yml (Secret scan),\n"
             "  .trufflehogignore, issue #9416."
@@ -615,7 +716,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_TIMEOUT_SECONDS,
         help=f"Limit per clone or TruffleHog call, in seconds (default: {DEFAULT_TIMEOUT_SECONDS}).",
     )
-    sub = parser.add_subparsers(dest="mode", required=True, metavar="{tree,history,show-keys}")
+    sub = parser.add_subparsers(dest="mode", required=True, metavar="{tree,history,show-keys,count}")
     sub.add_parser(
         "tree",
         help="Scan tracked and untracked-not-ignored files of the work tree "
@@ -635,10 +736,23 @@ def build_parser() -> argparse.ArgumentParser:
         help="Print only the top-level key names of an existing report and its per-detector counts.",
     )
     show_keys.add_argument("report", type=Path, help="A JSON Lines report written by tree or history.")
+    count = sub.add_parser(
+        "count",
+        help="Print only how many findings lie in and outside the given paths (never the paths).",
+    )
+    count.add_argument("report", type=Path, help="A JSON Lines report written by tree or history.")
+    count.add_argument(
+        "--path",
+        action="append",
+        default=[],
+        help="Repository-relative file, or directory ending in '/', to test as noise (repeatable).",
+    )
+    count.add_argument("--detector", help="Count only findings of this exact detector name.")
     return parser
 
 
-def _show_keys(report: Path) -> int:
+@contextlib.contextmanager
+def _open_report(report: Path) -> Iterator[TextIO]:
     try:
         fh = open(report, encoding="utf-8", errors="strict")  # noqa: SIM115 - closed below
     except OSError as exc:
@@ -646,10 +760,38 @@ def _show_keys(report: Path) -> int:
     with fh:
         if not stat.S_ISREG(os.fstat(fh.fileno()).st_mode):
             raise ScanError("the report is not a regular file")
+        yield fh
+
+
+def _show_keys(report: Path) -> int:
+    with _open_report(report) as fh:
         summary = summarize(fh)
     for line in (*key_lines(summary), *detector_lines(summary)):
         print(line)
     return EXIT_CLEAN
+
+
+def _count(report: Path, paths: Sequence[str], detector: str | None) -> int:
+    with _open_report(report) as fh:
+        counts = count_paths(fh, paths, detector)
+    for line in count_lines(counts, detector is not None):
+        print(line)
+    return EXIT_CLEAN
+
+
+@contextlib.contextmanager
+def _termination_raises() -> Iterator[None]:
+    """Turn SIGTERM and SIGHUP into Terminated for the duration, then restore the handlers."""
+
+    def handler(signum: int, _frame: object) -> None:
+        raise Terminated(signum)
+
+    previous = {signum: signal.signal(signum, handler) for signum in TERMINATION_SIGNALS}
+    try:
+        yield
+    finally:
+        for signum, old in previous.items():
+            signal.signal(signum, old)
 
 
 def _scan(args: argparse.Namespace, binary: str) -> int:
@@ -696,6 +838,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.mode == "show-keys":
             return _show_keys(args.report)
+        if args.mode == "count":
+            return _count(args.report, args.path, args.detector)
         binary = shutil.which(TRUFFLEHOG)
         if binary is None:
             print(
@@ -703,7 +847,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 file=sys.stderr,
             )
             return EXIT_ERROR
-        return _scan(args, binary)
+        with _termination_raises():
+            return _scan(args, binary)
+    except Terminated as exc:
+        print(f"secret_scan_local: terminated by signal {exc.signum}", file=sys.stderr)
+        return 128 + exc.signum
     except ScanError as exc:
         print(f"secret_scan_local: {exc}", file=sys.stderr)
         return EXIT_ERROR
