@@ -43,7 +43,18 @@ missing proxy refuses with `attempt_egress_unavailable`. There is no weaker
 fallback. CLI compatibility and effective-MCP probes run inside the same
 boundary. Codex defers its nested sandbox to the OS boundary so sources stdio
 remains usable. AGY's native sandbox is supplementary; its permission bypass
-remains forbidden. Detached children of the seat are killed with the PID
+remains forbidden. Full AGY attempts project `permissions.allow` into the private
+`$AGY_APP_DATA_DIR/settings.json`, enumerating the exact targets
+`mcp(sources/<tool>)` from `scripts.review.receipts.ledger.review_tools("full")`.
+For example, the word verifier is granted by `mcp(sources/verify_words)`.
+There are no wildcards or grants to other servers or built-in tools.
+AGY 1.2.14 does not accept the server-only `mcp(sources)` rule for this call;
+the authenticated fixture must verify the exact target syntax.
+The sources-only MCP catalog does not itself
+grant permission: without this rule, headless sandboxed AGY auto-denies MCP
+calls. The launch gate refuses missing or widened settings, including wildcard
+and additional grants. Legacy isolated-mode settings and flags are unchanged.
+Detached children of the seat are killed with the PID
 namespace. This statement does not certify authenticated provider completion:
 use the captured runtime probes below for each actual seat.
 
@@ -448,6 +459,20 @@ modes. A separate reviewer should run these probes on the target host at the
 merged SHA and retain the output. These tests establish Linux capability only; other platforms remain refused.
 
 The curriculum driver owns the post-landing full-access proof (AC-04 of #9464).
+For the AGY permission regression, first run the opt-in fixture probe, which
+uses a harness-only review id and never records a curriculum verdict:
+
+```bash
+LU_FULL_REVIEW_REAL_PROBES=1 "$PROJECT_PYTHON" -m pytest \
+  tests/review/test_full_review_access.py::test_real_agy_full_review_sources_permission -q -s
+```
+
+Require a completed final reply with `AGY_FULL_SOURCES_COMPLETE`, a receipt id
+present in that reply, and at least one successful `verify_words` ledger row.
+`LU_FULL_REVIEW_PROBE_ARTIFACT_DIR` optionally retains the proof JSON and ledger
+in ignored local storage. This proves full-mode permission and receipt transport;
+it does not certify a plan's semantic review or replace the post-landing proof.
+
 Set `MANIFEST` to the current engine-produced plan manifest, `INPUT_ROOT` to
 an expendable full review checkout containing those exact pinned inputs and git
 history, and `PROMPT` to an ignored prompt file. Use fresh IDs and a short timeout:

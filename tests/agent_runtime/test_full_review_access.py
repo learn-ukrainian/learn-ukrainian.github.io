@@ -221,6 +221,75 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
         AgyAdapter().build_invocation(**{**kw, "mode": "workspace-write"}, tool_config={"review_access": "full"})
 
 
+@pytest.mark.parametrize("access", ["full", "isolated"])
+def test_agy_sources_permission_is_only_projected_for_full_attempts(world, tmp_path, monkeypatch, access):
+    from scripts.agent_runtime.adapters import agy
+
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
+    tc.update(review_access=access, review_cwd=str(root))
+    boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    try:
+        plan = AgyAdapter().build_invocation(
+            prompt="probe",
+            mode="read-only",
+            cwd=boundary.workspace,
+            model=None,
+            task_id="probe",
+            session_id=None,
+            tool_config=boundary.tool_config,
+        )
+        settings = Path(plan.env_overrides["AGY_APP_DATA_DIR"]) / "settings.json"
+        if access == "full":
+            from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS
+
+            assert json.loads(settings.read_bytes()) == {
+                "permissions": {"allow": [f"mcp(sources/{name})" for name in sorted(FULL_REVIEW_TOOLS)]}
+            }
+            assert "--sandbox" in plan.cmd
+            assert "--dangerously-skip-permissions" not in plan.cmd
+        else:
+            assert not settings.exists()
+            assert "--sandbox" not in plan.cmd
+            assert "--dangerously-skip-permissions" in plan.cmd
+    finally:
+        boundary.cleanup()
+
+
+@pytest.mark.parametrize(
+    "settings",
+    [
+        {"permissions": {"allow": ["mcp(*)"]}},
+        {"permissions": {"allow": ["mcp(sources/*)"]}},
+        {"permissions": {"allow": ["mcp(other/verify_words)"]}},
+        {"permissions": {"allow": ["mcp(sources)", "command(*)"]}},
+        {"permissions": {"allow": ["mcp(sources)"]}, "dangerouslySkipPermissions": True},
+        {},
+    ],
+)
+def test_full_agy_permission_widening_is_refused_before_cli(world, tmp_path, monkeypatch, settings):
+    from scripts.agent_runtime.review_mcp import verify_agy_review_effective_mcp
+
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
+    tc.update(review_access="full", review_cwd=str(root))
+    boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
+    try:
+        (Path(boundary.env["AGY_APP_DATA_DIR"]) / "settings.json").write_text(json.dumps(settings))
+        monkeypatch.setattr(subprocess, "run", lambda *a, **kw: pytest.fail("unsafe CLI launch"))
+        with pytest.raises(ValueError, match="requires exactly the sources review tool"):
+            verify_agy_review_effective_mcp(
+                config_path=boundary.config_path,
+                cwd=root,
+                env=boundary.env,
+                agy_bin="agy",
+                boundary=boundary,
+            )
+    finally:
+        boundary.cleanup()
+
+
 @pytest.mark.parametrize("formal", [True, False])
 def test_runner_preserves_actual_checkout_and_disables_formal_failover(tmp_path, monkeypatch, formal):
     from scripts.agent_runtime import attempt_boundary, runner

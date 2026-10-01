@@ -341,7 +341,7 @@ class AttemptBoundary:
                 self.tool_config["codex_home_override"] = str(codex_home)
                 self.tool_config["attempt_os_sandbox"] = True
             elif agent == "agy":
-                from .review_mcp import _real_agy_token, agy_review_mcp_config_path
+                from .review_mcp import _real_agy_token, agy_full_review_settings, agy_review_mcp_config_path
 
                 target = home / ".gemini" / "antigravity-cli" / "antigravity-oauth-token"
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -350,6 +350,10 @@ class AttemptBoundary:
                 mcp = agy_review_mcp_config_path(home)
                 mcp.parent.mkdir(parents=True, exist_ok=True)
                 mcp.write_bytes(proxy_config.read_bytes())
+                if self.full:
+                    # AGY's native sandbox prompts for MCP separately from its
+                    # catalog. Headless full reviews grant only this server.
+                    (target.parent / "settings.json").write_text(json.dumps(agy_full_review_settings()))
                 self.tool_config["agy_home_override"] = str(home)
                 self.env["AGY_APP_DATA_DIR"] = str(target.parent)
             else:

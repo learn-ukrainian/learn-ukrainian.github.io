@@ -546,6 +546,11 @@ def agy_review_app_data_dir(agy_home: Path | str) -> Path:
     return Path(agy_home) / ".gemini" / "antigravity-cli"
 
 
+def agy_full_review_settings() -> dict[str, Any]:
+    """Grant exact sources review tool targets, with no wildcard or bypass."""
+    return {"permissions": {"allow": [f"mcp(sources/{name})" for name in sorted(review_tools("full"))]}}
+
+
 def agy_review_mcp_config_path(agy_home: Path | str) -> Path:
     """Return the one MCP config file ``agy -p`` loads from a home (#8617 spike)."""
     return Path(agy_home) / ".gemini" / "config" / "mcp_config.json"
@@ -1115,6 +1120,16 @@ def verify_agy_review_effective_mcp(
     if env.get("HOME") != str(agy_home) or env.get("AGY_APP_DATA_DIR") != str(app_data):
         # Name the variables, never their values: the launch environment is not log-safe.
         raise refuse("the launch environment does not carry the scoped HOME/AGY_APP_DATA_DIR")
+    if boundary and boundary.full:
+        settings = app_data / "settings.json"
+        try:
+            permissions = _strict_json_object(
+                _read_attempt_file(agy_home.parent, *settings.relative_to(agy_home.parent).parts)
+            )
+        except (OSError, ValueError):
+            raise refuse("full AGY review requires the sources-only permission rule") from None
+        if permissions != agy_full_review_settings():
+            raise refuse("full AGY review requires exactly the sources review tool permission rules")
     if (app_data / "mcp_config.json").exists() or (app_data / "mcp_config.json").is_symlink():
         raise refuse("the scoped AGY_APP_DATA_DIR holds an unexpected mcp_config.json")
 
