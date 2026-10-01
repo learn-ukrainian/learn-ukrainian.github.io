@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import scripts.verify_review as verify_review_cli
 from scripts.common.git_context import sanitized_git_env
+from scripts.orchestration import task_lifecycle
 from scripts.review.evidence import (
     CANONICAL_DIFF_ARGS,
     OUTCOME_LINE_MISMATCH,
@@ -1316,6 +1317,77 @@ def test_dispositions_attached_on_receipt(tmp_path):
     assert result.exit_code == EXIT_ACTIONABLE
 
 
+@pytest.mark.parametrize("disposition", ["follow_up", "in_scope_blocker"])
+def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle(
+    tmp_path, disposition,
+):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    _git(repo, "add", "app.py")
+    _git(repo, "commit", "-q", "-m", "change")
+    target = resolve_commit_target(repo, _git(repo, "rev-parse", "HEAD").stdout.strip())
+    payload = _clean_payload()
+    payload["overall"]["explanation"] = "No blocking finding under section 8.4."
+    payload["findings"] = [_finding(start=2, priority="P3", category="style")]
+    raw = json.dumps(payload)
+    result = verify_review(
+        raw,
+        _ctx(repo, target, raw, dispositions={
+            "F001": {"disposition": disposition, "rationale": "Non-blocking at this head."},
+        }),
+    )
+
+    assert result.exit_code == EXIT_ACTIONABLE
+    assert result.final_disposition == "actionable"
+    assert result.error is None
+    assert result.receipt["error"] is None
+    assert result.receipt["reviewer_payload"]["overall"]["correctness"] == "correct"
+    assert result.receipt["reviewer_payload"]["finding_ids"] == ["F001"]
+    assert result.receipt["findings"][0]["outcome"] == OUTCOME_VERIFIED
+    assert result.receipt["findings"][0]["disposition"] == disposition
+    receipt_bytes = (json.dumps(result.receipt) + "\n").encode()
+    receipt_path = tmp_path / "receipt.json"
+    receipt_path.write_bytes(receipt_bytes)
+    reference = {"details": {"behavior_proof_receipt": {
+        "receipt_path": str(receipt_path.resolve()),
+        "receipt_sha256": "sha256:" + sha256_text(receipt_bytes.decode()),
+        "input_sha256": result.receipt["target"]["input_sha256"],
+        "target_sha": target.head_sha,
+    }}}
+
+    assert task_lifecycle._behavior_proof_reference_error(reference, head_sha=target.head_sha) is None
+    assert receipt_path.read_bytes() == receipt_bytes
+
+
+@pytest.mark.parametrize(
+    ("dispositions", "verbatim", "expected_exit"),
+    [
+        ({}, "value = 2", EXIT_INCOMPLETE),
+        ({"F001": {"disposition": "follow_up"}}, "value = 2", EXIT_INCOMPLETE),
+        ({"F001": {"disposition": "follow_up", "rationale": " "}}, "value = 2", EXIT_INCOMPLETE),
+        ({"F001": {"disposition": "invalid", "rationale": "Present."}}, "value = 2", EXIT_INVALID),
+        ({"F001": {"disposition": "follow_up", "rationale": "Present."}}, "forged = 99", EXIT_UNVERIFIABLE),
+    ],
+    ids=["missing-disposition", "missing-rationale", "blank-rationale", "invalid-disposition", "forged-correct"],
+)
+def test_correct_verdict_does_not_override_invalid_finding_evidence(
+    tmp_path, dispositions, verbatim, expected_exit,
+):
+    repo = _init_repo(tmp_path)
+    (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
+    target = resolve_local_target(repo)
+    payload = _clean_payload()
+    payload["findings"] = [_finding(start=2, verbatim=verbatim, priority="P3")]
+    raw = json.dumps(payload)
+
+    result = verify_review(raw, _ctx(repo, target, raw, dispositions=dispositions))
+
+    assert result.exit_code == expected_exit
+    assert result.final_disposition not in {"clean", "actionable"}
+    assert result.receipt["reviewer_payload"]["overall"]["correctness"] == "correct"
+    assert len(result.receipt["findings"]) == 1
+
+
 def test_build_target_manifest_matches_fingerprint_helper(tmp_path):
     repo = _init_repo(tmp_path)
     (repo / "app.py").write_text("print('v1')\nvalue = 2\n", encoding="utf-8")
@@ -1931,4 +2003,3 @@ def test_verify_review_read_review_timeout_exits_invalid(monkeypatch: pytest.Mon
     err = capsys.readouterr().err
     assert "read_review_failed" in err
     assert "timed out after 60.0" in err
-
