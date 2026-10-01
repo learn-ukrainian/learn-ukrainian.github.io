@@ -1030,7 +1030,8 @@ def test_every_pack_record_kind_renders_from_its_schema_fields(sample_plan_entry
         "- Text:\n```text\nВибачте — ввічливе прохання.\n```\n\n",
         "### Record `V-004`\n- Kind: video\n- Channel: Ukrainian Lessons\n"
         "- URL: https://www.youtube.com/watch?v=W-1rCu0indE\n"
-        "- Use: Listening model for the informal greeting in lesson 1.\n- Link check: HTTP 200 on 2026-09-29\n",
+        "- Use: Listening model for the informal greeting in lesson 1.\n"
+        "- Models: undeclared (listening_model_undeclared)\n- Link check: HTTP 200 on 2026-09-29\n",
         "### Record `S-001`\n- Kind: standard\n- Source: State Standard, lines 351-353\n- Text (verbatim):\n"
         "```text\n      1.3.1.1. Особа вміє:\n      написати власне прізвище та ім’я;\n```",
         "### Record `U-001`\n- Kind: unsupported\n- Claim: A1 learners confuse И and І by ear.\n- Status: open\n"
@@ -1121,6 +1122,20 @@ def test_record_kinds_cover_every_record_kind_of_the_pack_schema():
         if name.endswith("_record")
     }
     assert schema_kinds == {prefix: kind for prefix, kind in RECORD_KINDS.items() if prefix != "W"}
+
+
+def test_video_models_are_rendered_as_structured_data(sample_plan_entry, sample_learner_state):
+    models = {"letters": ["А"], "words": ["W-001"], "segment": "00:05–00:12"}
+    record = {**VIDEO_RECORD, "models": models}
+    prompt = _render(_citing(sample_plan_entry, ["V-004"]), sample_learner_state, {"V-004": record})
+    line = next(line for line in _cited_block(prompt).splitlines() if line.startswith("- Models (structured): "))
+    assert json.loads(line.removeprefix("- Models (structured): ")) == models
+    assert "Never infer a model from `use` or a primer quotation" in prompt
+
+
+def test_video_without_models_is_an_explicit_prompt_gap(sample_plan_entry, sample_learner_state):
+    prompt = _render(_citing(sample_plan_entry, ["V-004"]), sample_learner_state, {"V-004": VIDEO_RECORD})
+    assert "- Models: undeclared (listening_model_undeclared)" in _cited_block(prompt)
 
 
 def test_lesson_numbers_in_cited_source_prose_are_not_curriculum_references(sample_plan_entry, sample_learner_state):

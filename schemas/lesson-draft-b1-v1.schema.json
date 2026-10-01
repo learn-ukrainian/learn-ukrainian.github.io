@@ -549,6 +549,11 @@
         },
         "lead_in": {
           "$ref": "#/$defs/text"
+        },
+        "target_record": {
+          "type": "string",
+          "pattern": "^(?:W-[0-9]*[1-9][0-9]*|(?:[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]|[Дд][ЖЗжз]))$",
+          "description": "Optional explicit letter/sound or word ID declared in the pack video models."
         }
       }
     },

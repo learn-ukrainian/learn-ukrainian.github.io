@@ -321,6 +321,112 @@
         "use": {
           "type": "string",
           "minLength": 1
+        },
+        "models": {
+          "type": "object",
+          "description": "Explicit listening models; letters are Ukrainian letters or the atomic digraphs дж/дз, words are level-store IDs. Descriptions never establish models.",
+          "properties": {
+            "letters": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "Є",
+                  "І",
+                  "Ї",
+                  "А",
+                  "Б",
+                  "В",
+                  "Г",
+                  "Д",
+                  "ДЖ",
+                  "ДЗ",
+                  "Е",
+                  "Ж",
+                  "З",
+                  "И",
+                  "Й",
+                  "К",
+                  "Л",
+                  "М",
+                  "Н",
+                  "О",
+                  "П",
+                  "Р",
+                  "С",
+                  "Т",
+                  "У",
+                  "Ф",
+                  "Х",
+                  "Ц",
+                  "Ч",
+                  "Ш",
+                  "Щ",
+                  "Ь",
+                  "Ю",
+                  "Я",
+                  "а",
+                  "б",
+                  "в",
+                  "г",
+                  "д",
+                  "дж",
+                  "дз",
+                  "е",
+                  "ж",
+                  "з",
+                  "и",
+                  "й",
+                  "к",
+                  "л",
+                  "м",
+                  "н",
+                  "о",
+                  "п",
+                  "р",
+                  "с",
+                  "т",
+                  "у",
+                  "ф",
+                  "х",
+                  "ц",
+                  "ч",
+                  "ш",
+                  "щ",
+                  "ь",
+                  "ю",
+                  "я",
+                  "є",
+                  "і",
+                  "ї",
+                  "Ґ",
+                  "ґ"
+                ]
+              },
+              "uniqueItems": true
+            },
+            "words": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^W-[0-9]+$"
+              },
+              "uniqueItems": true
+            },
+            "segment": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[^\\s–]+–[^\\s–]+$"
+            }
+          },
+          "required": [
+            "letters",
+            "words",
+            "segment"
+          ],
+          "additionalProperties": false
         }
       },
       "required": [
