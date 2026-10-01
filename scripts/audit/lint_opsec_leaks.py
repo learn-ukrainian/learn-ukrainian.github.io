@@ -42,6 +42,7 @@ _SECTION_LINE_RE = re.compile(r"^\s*(?:[§#\*|-]|\d+\.)\s*(?:\d+\.){3}\d+|\|\s*(
 # Safe allowlist of four-octet IPs (loopback, public DNS, standard testing)
 _SAFE_IP_ALLOWLIST = {
     "127.0.0.1",
+    "127.0.1.1",
     "0.0.0.0",
     "1.1.1.1",
     "1.0.0.1",
