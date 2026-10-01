@@ -91,7 +91,7 @@ _PUBLIC_PERSONAL_IDENTIFIER_ROOTS = (
 )
 
 # Category D: Private tracker citations in public documentation and agent rules
-_PRIVATE_TRACKER_PATTERN = re.compile(r"\b(?:private|infra-private)\s*#[0-9]+\b", re.IGNORECASE)
+_PRIVATE_TRACKER_PATTERN = re.compile(r"\b(?:private|infra-private)\s*(?:issue|tracker|repo|ticket)?\s*#[0-9]+\b", re.IGNORECASE)
 
 _PUBLIC_AGENT_DOC_ROOTS = (
     Path("agents_extensions"),

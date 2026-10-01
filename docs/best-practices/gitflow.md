@@ -220,7 +220,8 @@ To enforce invariants deterministically across all environments, local client ho
 and CLI merge wrappers validate that:
 1. PR is not in draft status.
 2. No non-advisory status check is red or failing.
-3. Automated merge is refused against a base branch that lacks verified required status checks.
+3. Status checks are not still running (unless `--auto` is armed).
+4. Automated merge is refused against a base branch that lacks verified required status checks.
 
 | Hook | Owns | Blocks |
 | --- | --- | --- |

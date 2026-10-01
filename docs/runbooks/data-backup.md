@@ -88,22 +88,20 @@ SQLite documents why its [online backup API produces a consistent snapshot][sqli
 [restic-check]: https://restic.readthedocs.io/en/stable/045_working_with_repos.html#checking-integrity-and-consistency
 [sqlite-backup]: https://www.sqlite.org/backup.html
 
-## Open dependency: Google Drive OAuth client ID (2026)
+## Open dependency: Cloud backup provider OAuth configuration
 
 **Tracked:** [#6093](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6093) — *do not close until proven fixed.*
 
-The scheduled job (`com.learn-ukrainian.backup` → `~/.local/bin/learn-ukrainian-backup`) still
-succeeds, but rclone logs a **NOTICE** that the **shared** Google Drive `client_id` is being
-**retired during 2026**. When Google cuts it off, **new restic snapshots stop** until the
-`lu-gdrive` remote uses an **operator-owned** OAuth client and is re-authorized.
+The scheduled backup job (`learn-ukrainian-backup` → `~/.local/bin/learn-ukrainian-backup`) requires
+an operator-configured OAuth client and periodic authorization refresh:
 
-- Config lives outside git (`~/.secrets/learn-ukrainian-backup.env`, dedicated rclone config).
+- Config lives outside git (`<secrets-path>/backup.env`, dedicated rclone config).
 - Do **not** put client secrets, tokens, or password files in the repo, issues, or receipts.
-- Procedure: [rclone — making your own client_id](https://rclone.org/drive/#making-your-own-client-id),
+- Procedure: configure dedicated OAuth credentials,
   then re-auth the remote and prove `backup-data.sh doctor`, one `backup --execute`,
   `snapshots`, `verify`, and a green scheduled run (acceptance on #6093).
 
-Until #6093 is closed, treat this as a **time-bounded production risk**, not noise.
+Until #6093 is closed, treat this as a **time-bounded operational prerequisite**, not noise.
 
 ---
 
@@ -117,12 +115,12 @@ restic version
 rclone version
 ```
 
-Configure a dedicated rclone remote. The examples use `lu-gdrive`; another
+Configure a dedicated rclone remote. The examples use `<backup-remote>`; another
 name is fine as long as the environment below matches it.
 
 ```bash
 rclone config
-rclone lsd lu-gdrive:
+rclone lsd <backup-remote>:
 ```
 
 Create a unique restic password file:
@@ -322,7 +320,7 @@ checkout (preview by default; writes only with `--apply`):
 .venv/bin/python scripts/orchestration/install_backup_timer.py --repo-root "$PWD" --apply --enable
 ```
 
-The units read `~/.secrets/learn-ukrainian-backup.env` via `EnvironmentFile=`.
+The units read the configured environment file (`<secrets-path>/backup.env`) via `EnvironmentFile=`.
 Validation errors name the variable and condition without its value. The
 scheduled wrapper replaces either configured repository value, its remote
 path, and the password-file path in backup and retention output

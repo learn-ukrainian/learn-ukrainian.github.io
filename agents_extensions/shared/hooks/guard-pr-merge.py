@@ -9,13 +9,10 @@ Division of labor with guard-admin-merge.py: that hook checks whether `--admin`
 would bypass a blocking failure (#M-0.5). This hook applies the ordinary PR
 readiness checks to every merge, including `--admin`.
 
-Why a hook: branch protection is a paid feature for private repos, so on the free-plan
-private repo the protection API answers 403 and NOTHING is a "required" check. Two
-consequences bit us in one day: a draft PR was squash-merged before review (#189 class),
-and two merges landed with the boundary-and-tests job RED because `--auto` only ever
-waits for *required* checks — of which that repo has none. The fleet works across repos
-with and without protection (this public repo's `main` does have it), so the guard
-decides per-repo rather than assuming either.
+Why a hook: GitHub branch protection stops only what is configured as required.
+Without local enforcement, an uncoordinated or draft PR could be merged before
+review or while checks are red. The fleet works across repositories with varied
+protection settings, so the guard enforces invariants deterministically.
 
 FAIL-CLOSED: if the PR, its draft flag, its check states, or the base branch's
 protection can't be determined (gh error/timeout, no PR number), BLOCK. A merge gate
@@ -1017,8 +1014,7 @@ def _pr_snapshot(
 
 _FOOTER = (
     "GitHub will merge a draft or a red PR without complaint — branch protection stops only\n"
-    "what it was configured to require, and on a free-plan private repo it cannot be configured\n"
-    "at all. That is the gap this hook covers. If the merge is genuinely intended, a human can\n"
+    "what it was configured to require. That is the gap this hook covers. If the merge is genuinely intended, a human can\n"
     "run it directly, outside the agent harness.\n\n"
     "Hook source: .claude/hooks/guard-pr-merge.py\n"
 )
