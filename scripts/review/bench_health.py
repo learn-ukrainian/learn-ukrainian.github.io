@@ -3,17 +3,17 @@
 Evaluates reviewer seat eligibility for each author family:
 anthropic, google, openai, moonshot, zhipu, xai, deepseek.
 
-Inventories the catalog, including explicit-pin reserves; it does not dispatch
-or change automatic routing. Prints a table of eligible seats per family and
+Counts only seats eligible for automatic routing; it does not dispatch
+or change routing policy. Prints a table of eligible seats per family and
 exits 1 if any family has fewer than 2 eligible reviewers.
 """
 
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from collections.abc import Mapping
-from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
@@ -21,7 +21,7 @@ _REPO_ROOT = str(Path(__file__).resolve().parents[2])
 if _REPO_ROOT not in sys.path:
     sys.path.insert(0, _REPO_ROOT)
 
-from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, ResolverInputs, evaluate_candidate
+from scripts.review.reviewer_resolver import REVIEW_CANDIDATES, REVIEW_LADDERS, ResolverInputs, evaluate_candidate
 
 AUTHOR_FAMILIES = (
     "anthropic",
@@ -43,14 +43,28 @@ def check_bench_health(
     review_profile: str = "code",
     risk: str = "medium",
 ) -> dict[str, list[str]]:
-    """Inventory formal seats, including explicit-pin reserves, by author family.
+    """Return automatic eligible candidate names by author family."""
+    eligible, _ = _bench_inventory(
+        routing_snapshot,
+        data_egress_policy=data_egress_policy,
+        review_profile=review_profile,
+        risk=risk,
+    )
+    return eligible
 
-    Automatic ladders intentionally omit pin-only reserves. Probe each catalog
-    candidate with its concrete pin while retaining formal identity, family,
-    egress, role and health gates. Near-cap routes are unavailable to this health
-    inventory even though an actual explicit pressure override may admit them.
-    Returns a mapping of author_family -> list of eligible candidate names;
-    inclusion is not authorization to dispatch an explicit-pin reserve.
+
+def _bench_inventory(
+    routing_snapshot: Mapping[str, Any] | None,
+    *,
+    data_egress_policy: str | None,
+    review_profile: str,
+    risk: str,
+) -> tuple[dict[str, list[str]], dict[str, dict[str, str]]]:
+    """Evaluate automatic eligibility and retain catalog exclusion reasons.
+
+    No candidate is pinned: retired routes, quota pressure and all other
+    resolver gates remain binding. Eligible catalog reserves outside the
+    active risk ladder are displayed as excluded from the automatic count.
     """
     if routing_snapshot is None:
         try:
@@ -61,6 +75,8 @@ def check_bench_health(
             routing_snapshot = {}
 
     family_eligible: dict[str, list[str]] = {}
+    family_excluded: dict[str, dict[str, str]] = {}
+    automatic_names = {candidate.name for rung in REVIEW_LADDERS[risk] for candidate in rung}
     for family in AUTHOR_FAMILIES:
         inputs = ResolverInputs(
             author_model=family,
@@ -71,26 +87,33 @@ def check_bench_health(
             routing_snapshot=routing_snapshot,
         )
         eligible = []
+        excluded = {}
         for candidate in REVIEW_CANDIDATES.values():
-            result = evaluate_candidate(candidate, replace(inputs, pinned_candidate=candidate.name))
-            if result.status == "eligible" and result.health != "near_cap":
+            result = evaluate_candidate(candidate, inputs)
+            if result.status != "eligible":
+                excluded[result.name] = result.reason or result.status
+            elif result.name not in automatic_names:
+                excluded[result.name] = f"not on automatic {risk} ladder (catalog reserve)"
+            else:
                 eligible.append(result.name)
         family_eligible[family] = eligible
+        family_excluded[family] = excluded
 
-    return family_eligible
+    return family_eligible, family_excluded
 
 
 def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description=(
-            "Inventory eligible formal reviewers across author families, including explicit-pin reserves.\n"
+            "Count formal reviewers eligible for automatic routing across author families.\n"
             "Use for bench health diagnostics; use closeout_cli resolve-reviewer for automatic routing."
         ),
         epilog=(
             "Examples:\n"
             "  .venv/bin/python -m scripts.review.bench_health\n"
             "  .venv/bin/python -m scripts.review.bench_health --profile infra --risk critical\n"
-            "Outputs: stdout seat counts; read-only, no files written or reviewers dispatched.\n"
+            "Outputs: stdout automatic seat counts; stderr JSON shortfall findings with exclusion reasons.\n"
+            "Read-only, no files written or reviewers dispatched.\n"
             "Exit codes: 0 = every family has >= 2 eligible seats; 1 = insufficient bench capacity.\n"
             "Related: scripts/config/model_catalog.yaml; scripts.review.closeout_cli resolve-reviewer; #9394."
         ),
@@ -115,14 +138,14 @@ def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] |
     )
     args = parser.parse_args(argv)
 
-    results = check_bench_health(
+    results, excluded = _bench_inventory(
         routing_snapshot=routing_snapshot,
         data_egress_policy=args.data_egress_policy,
         review_profile=args.profile,
         risk=args.risk,
     )
 
-    print("Catalog bench inventory includes explicit-pin reserves; automatic routing is unchanged.")
+    print("Automatic bench inventory; explicit-pin reserves never count toward the minimum.")
     print(f"{'Author Family':<15} | {'Count':<5} | {'Eligible Seats'}")
     print("-" * 60)
 
@@ -134,6 +157,18 @@ def main(argv: list[str] | None = None, *, routing_snapshot: Mapping[str, Any] |
         status_flag = "" if count >= MIN_ELIGIBLE_SEATS else " [FAIL < 2]"
         if count < MIN_ELIGIBLE_SEATS:
             failing = True
+            print(
+                json.dumps(
+                    {
+                        "type": "insufficient_bench_capacity",
+                        "author_family": family,
+                        "minimum": MIN_ELIGIBLE_SEATS,
+                        "counted_seats": seats,
+                        "excluded_seats": excluded[family],
+                    }
+                ),
+                file=sys.stderr,
+            )
         print(f"{family:<15} | {count:<5} | {seats_str}{status_flag}")
 
     print("-" * 60)
