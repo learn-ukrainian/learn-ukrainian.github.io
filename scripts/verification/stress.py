@@ -94,7 +94,36 @@ def _load_override_data() -> dict[str, Any]:
 
 @lru_cache(maxsize=1)
 def _load_overrides() -> dict[str, str]:
-    return {key: value for key, value in _load_override_data().items() if key != "stress_pending"}
+    return {key: value for key, value in _load_override_data().items() if isinstance(value, str)}
+
+
+def _scoped_override_readings(form: str, analyses: list[dict]) -> list[dict[str, Any]]:
+    """Override only positively attested lemma/POS/case analyses, retaining other readings."""
+    from scripts.verification.ulif_stress import analysis_features
+
+    normalized = form.casefold().translate(str.maketrans("’ʼ", "''"))
+    grouped: dict[tuple[int, ...], dict[str, Any]] = {}
+    for entry in _load_override_data().get("scoped_overrides", []):
+        if entry["form"] != normalized:
+            continue
+        required = set(entry["required_tags"])
+        witnesses = [v for v in analyses if v.get("lemma") == entry["lemma"] and required <= analysis_features(v)]
+        if not witnesses:
+            continue
+        _, indices = _stress_positions_in_marked_string(entry["stressed_form"])
+        key = tuple(indices)
+        if key not in grouped:
+            match = _build_match(form, [i + 1 for i in indices], [], override_applied=True)
+            match.update(source="override", evidence=[], vesum_analyses=[])
+            grouped[key] = match
+        match = grouped[key]
+        match["required_tags"] = sorted(set(match["required_tags"]) | required)
+        for source in entry["sources"]:
+            if source not in match["evidence"]:
+                match["evidence"].append(source)
+        match["vesum_analyses"] += [v for v in witnesses if v not in match["vesum_analyses"]]
+        _attach_vesum(match, match["vesum_analyses"])
+    return list(grouped.values())
 
 
 def pending_stress_reason(word: str) -> str | None:
@@ -159,13 +188,17 @@ def source_info() -> dict[str, Any]:
     teaching = teaching_source_info()
     ulif_digest = hashlib.sha256(json.dumps(build, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
     trie_digest = _trie_digest()
-    digest = hashlib.sha256(f"{ulif_digest}:{trie_digest}:{teaching['digest']}".encode()).hexdigest()
+    overrides_digest = hashlib.sha256(
+        json.dumps(_load_override_data(), ensure_ascii=False, sort_keys=True).encode()
+    ).hexdigest()
+    digest = hashlib.sha256(f"{ulif_digest}:{trie_digest}:{teaching['digest']}:{overrides_digest}".encode()).hexdigest()
     return {
         "dictionary": "ukrainian-word-stress (ULIF-derived)",
         "package_version": _package_version(),
         "trie_entries": len(_load_trie()),
         "trie_digest": trie_digest,
         "teaching": teaching,
+        "overrides_digest": overrides_digest,
         "ulif": {"dictionary": "ULIF ulif_forms (homonym_checked=1)", "build": build, "digest": ulif_digest},
         "digest": digest,
     }
@@ -415,7 +448,22 @@ def verify_stress(
         if vesum and not selected:
             result["reason"] = "no VESUM analysis matches supplied context"
             return result
-        matches = ulif_readings(lookup_key, supplied=supplied, lemma=lemma, vesum=selected)
+        matches = _scoped_override_readings(lookup_key, selected)
+        remaining = [v for v in selected if not any(v in m["vesum_analyses"] for m in matches)]
+        for match in ulif_readings(lookup_key, supplied=supplied, lemma=lemma, vesum=remaining):
+            agreeing = next((m for m in matches if m["vowel_indices"] == match["vowel_indices"]), None)
+            if agreeing is not None:
+                # One stress choice can cover separate dictionary and scoped
+                # override identities. Keep the original witnesses separate.
+                match["supporting_readings"] = [agreeing, dict(match)]
+                match["vesum_analyses"] = list(agreeing["vesum_analyses"])
+                match["vesum_analyses"] += [
+                    v for v in match["supporting_readings"][1]["vesum_analyses"] if v not in match["vesum_analyses"]
+                ]
+                match["required_tags"] = sorted(set(agreeing["required_tags"]) | set(match["required_tags"]))
+                _attach_vesum(match, match["vesum_analyses"])
+                matches.remove(agreeing)
+            matches.append(match)
         uncovered = [v for v in selected if not any(v in m["vesum_analyses"] for m in matches)]
         if uncovered or not selected:
             value = _trie_value(_load_trie(), lookup_key)

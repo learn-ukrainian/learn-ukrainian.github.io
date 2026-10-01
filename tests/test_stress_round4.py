@@ -288,3 +288,148 @@ def test_teaching_dictionary_conflicts_and_identity_invalidate_choice(monkeypatc
     assert teaching_stress.sourced_teaching_choice("мами", [1, 3]) is None
     monkeypatch.setattr(teaching_stress, "dictionary_rows", lambda: [{**row, "word": "інші"}])
     assert teaching_stress.sourced_teaching_choice("мами", [1, 3]) is None
+
+
+@pytest.mark.parametrize(
+    "form,context,status,expected",
+    [
+        ("кому", {}, "ambiguous", {"ко́му", "кому́"}),
+        ("кому", {"pos": "PRON"}, "ambiguous", {"ко́му", "кому́"}),
+        ("кому", {"lemma": "хто"}, "ambiguous", {"ко́му", "кому́"}),
+        ("кому", {"pos": "PRON", "tags": "Case=Dat"}, "ok", {"кому́"}),
+        ("кому", {"lemma": "хто", "tags": "v_mis"}, "ok", {"ко́му"}),
+        ("Кому", {"pos": "PRON", "tags": "Case=Dat"}, "ok", {"Кому́"}),
+        ("кому", {"pos": "NOUN"}, "ok", {"ко́му"}),
+        ("кого", {}, "ok", {"кого́"}),
+        ("кого", {"pos": "PRON"}, "ok", {"кого́"}),
+        ("кого", {"lemma": "хто", "tags": "Case=Gen"}, "ok", {"кого́"}),
+        ("кого", {"lemma": "хто", "tags": "Case=Acc"}, "ok", {"кого́"}),
+        ("кого", {"pos": "NOUN"}, "pending", set()),
+        ("кому", {"lemma": "хто", "tags": "Case=Gen"}, "pending", set()),
+        ("кому", {"lemma": "що"}, "pending", set()),
+    ],
+)
+def test_khto_override_is_lemma_pos_and_case_scoped(real_rows, form, context, status, expected):
+    result = stress.verify_stress(form, **context)
+    assert result["status"] == status
+    assert {m["stressed_form"] for m in result["matches"]} == expected
+    for match in result["matches"]:
+        if match["source"] == "override":
+            assert match["override_applied"] is True
+            assert len(match["evidence"]) == 3
+            assert all(v["lemma"] == "хто" for v in match["vesum_analyses"])
+            assert any(t.startswith("Case=") for t in match["required_tags"])
+
+
+def test_khto_override_needs_positive_vesum_identity(monkeypatch):
+    monkeypatch.setattr(stress, "_vesum_lookup", lambda form: [])
+    result = stress.verify_stress("кого", pos="PRON")
+    assert all(m["source"] != "override" for m in result["matches"])
+    assert "scoped_overrides" not in stress._load_overrides()
+
+
+def test_override_identity_invalidates_source_digest(monkeypatch):
+    before = stress.source_info()
+    monkeypatch.setattr(stress, "_load_override_data", lambda: {})
+    after = stress.source_info()
+    assert before["overrides_digest"] != after["overrides_digest"]
+    assert before["digest"] != after["digest"]
+
+
+def test_scoped_override_preserves_independent_noun_lemma(real_rows, monkeypatch):
+    # Transport-only noun fixture: pronoun data cannot replace a different
+    # lemma's proven reading, including ком.
+    monkeypatch.setattr(stress, "_vesum_lookup", lambda form: [{"lemma": "ком", "pos": "noun", "tags": "noun:m:v_dav"}])
+    monkeypatch.setattr(stress, "_trie_value", lambda *args: bytes([2]))
+    result = stress.verify_stress("кому", lemma="ком", pos="NOUN", tags="Case=Dat")
+    assert result["status"] == "ok"
+    assert [m["stressed_form"] for m in result["matches"]] == ["ко́му"]
+    assert result["matches"][0]["source"] == "trie"
+
+
+@pytest.mark.parametrize("word,context", [("ко́му", {"tags": "Case=Dat"}), ("кому́", {"tags": "Case=Loc"}), ("ко́го", {})])
+def test_khto_wrong_case_stress_is_rejected(real_rows, word, context):
+    result = stress.verify_stress(word, pos="PRON", **context)
+    assert result["status"] == "ok"
+    assert all(m["input_mismatch"] for m in result["matches"])
+
+
+def test_gate_supplies_declared_proper_name_context(monkeypatch):
+    from scripts.build.lesson_gates import wrong_stress
+
+    calls = []
+
+    def oracle(word, pos=None):
+        calls.append((word, pos))
+        return {"status": "ok", "matches": [{"stressed_form": "Ки́їв" if pos == "PROPN" else "Киї́в"}]}
+
+    monkeypatch.setattr(stress, "verify_stress", oracle)
+    assert wrong_stress("Киї́в", set(), {"Київ"}) == ["Киї́в→Ки́їв"]
+    assert wrong_stress("Ки́їв", set(), {"Київ"}) == []
+    assert calls == [("Київ", "PROPN"), ("Київ", "PROPN")]
+
+
+def test_gate_accepts_exact_sourced_dual_display():
+    from scripts.build.lesson_gates import wrong_stress
+
+    result = stress.verify_stress("Апостроф", lemma="апостроф")
+    match = next(m for m in result["matches"] if m.get("dual_stress"))
+    assert stress.spoken_stressed_form(match) is None
+    assert wrong_stress(match["stressed_form"], set()) == []
+    assert wrong_stress("Апо́строф Апостро́ф", set()) == []
+    assert wrong_stress("Апо́́стро́ф", set())
+
+
+def test_gate_dual_indices_use_same_normalization(monkeypatch):
+    from scripts.build.lesson_gates import wrong_stress
+
+    # Synthetic transport check: NFD ї adds a codepoint before later accents.
+    monkeypatch.setattr(
+        stress,
+        "verify_stress",
+        lambda *a, **k: {
+            "status": "ok",
+            "matches": [{"dual_stress": True, "stressed_form": "ї́жа́", "vowel_indices": [0, 2]}],
+        },
+    )
+    assert wrong_stress("ї́жа́", set()) == []
+    assert wrong_stress("ї́́жа́", set())
+
+
+def test_khto_same_accent_cases_are_one_reading(real_rows):
+    result = stress.verify_stress("кого", pos="PRON")
+    assert result["status"] == "ok"
+    assert len(result["matches"]) == 1
+    match = result["matches"][0]
+    assert set(match["required_tags"]) == {"upos=PRON", "Case=Gen", "Case=Acc"}
+    assert len(match["vesum_analyses"]) == 2
+    assert len(match["evidence"]) == 3
+    assert stress.spoken_stressed_form(match) == "кого́"
+
+
+def test_scoped_and_ulif_agreement_is_one_choice_with_both_identities(real_rows):
+    # The captured noun accusative and pronoun locative agree on stress.
+    # Multi-valued case context excludes the differently stressed dative.
+    result = stress.verify_stress("кому", tags=["Case=Loc", "Case=Acc"])
+    assert result["status"] == "ok"
+    assert len(result["matches"]) == 1
+    match = result["matches"][0]
+    assert match["stressed_form"] == "ко́му"
+    assert stress.spoken_stressed_form(match) == "ко́му"
+    assert {v["lemma"] for v in match["vesum_analyses"]} == {"хто", "кома"}
+    supporting = {m["source"]: m for m in match["supporting_readings"]}
+    assert set(supporting) == {"override", "ulif"}
+    assert len(supporting["override"]["evidence"]) == 3
+    assert all(v["lemma"] == "хто" for v in supporting["override"]["vesum_analyses"])
+    assert all(v["lemma"] == "кома" for v in supporting["ulif"]["vesum_analyses"])
+    assert {"Case=Loc", "Case=Acc"} <= set(match["required_tags"])
+
+
+def test_scoped_and_ulif_agreement_keeps_distinct_dative_choice(real_rows):
+    result = stress.verify_stress("кому")
+    assert result["status"] == "ambiguous"
+    assert len(result["matches"]) == 2
+    by_form = {m["stressed_form"]: m for m in result["matches"]}
+    assert set(by_form) == {"кому́", "ко́му"}
+    assert {v["lemma"] for v in by_form["ко́му"]["vesum_analyses"]} == {"хто", "кома"}
+    assert all(v["lemma"] == "хто" for v in by_form["кому́"]["vesum_analyses"])

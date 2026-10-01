@@ -7,6 +7,17 @@ Sources DB connection and accepts only rows joined to an entry with
 `homonym_checked = 1`, from a complete current-parser build with a source
 fingerprint. It neither creates tables nor migrates the database.
 
+`scoped_overrides` in `scripts/data/stress_overrides.yaml` require a positive
+VESUM lemma, POS and case match before replacing a dictionary reading. The
+`хто` entries record СУМ-20, the orthoepic dictionary and Holoskevych citations:
+dative `кому́`, locative `ко́му`, genitive/accusative `кого́`. Bare pronoun `кому`
+keeps both case readings; other noun lemmas retain their dictionary readings.
+Every scoped match carries its source citations and matched VESUM analyses.
+An agreeing scoped/ULIF choice is returned once, labelled `ulif` because
+dictionary evidence is needed for the other analysis. `supporting_readings`
+retains both original source envelopes and their separate lemma/case witnesses;
+the scoped override is never extended to the noun analysis.
+
 Each ULIF row must also join a VESUM analysis of the form by its entry-key
 lemma (without the homonym suffix), POS and compatible morphology. Pronouns
 retain their pronoun POS; NOUN and PROPN are distinct. Capitalized input also
@@ -63,14 +74,15 @@ context selects a POS or lemma. Declared proper names require proper-name contex
 
 The single-word response retains its legacy `source` provenance object.
 `stress_source` names the selected authority (`ulif`, `trie`, `override` or
-`pending`, or `mixed` when both ULIF and trie readings are needed), and every
+`pending`, or `mixed` when multiple authorities supply the readings), and every
 reading has a `source` label. Batch rows use `source` for
 that label and share one provenance envelope per batch. Both MCP tools accept
 optional contextual selectors.
 
 `source_info()` contains the trie digest, the full `ulif_forms_build` receipt
-and its canonical JSON digest, the teaching dictionary identity, and a combined `digest`. Existing consumers of
-`source["digest"]` therefore invalidate when either source changes. The trie
+and its canonical JSON digest, the teaching dictionary identity, the override
+data digest, and a combined `digest`. Existing consumers of
+`source["digest"]` therefore invalidate when dictionary evidence or override data changes. The trie
 loader and digest cache are keyed by the file snapshot so a running MCP process
 also observes a replacement. ULIF readings cite row and entry fingerprints;
 the dictionaries are never modified by lookups.
