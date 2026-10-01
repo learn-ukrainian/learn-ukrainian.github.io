@@ -232,10 +232,10 @@ def test_commit_range_mode_keeps_union_of_touched_public_paths(monkeypatch, tmp_
 
 def test_private_tracker_citation_detected_in_public_docs():
     findings = check_content(
-        "Reference issue: private #622\nOr infra-private #710.\nOr private issue #800.\nAnd Private tracker #5.",
+        "Reference issue: private #622\nOr infra-private #710.\nOr private issue #800.\nAnd Private tracker #5.\nprivate_operational_board = #622\nprivate operational board #622",
         "docs/runbooks/agent-seat-onboarding.md",
     )
-    assert len(findings) == 4
+    assert len(findings) == 6
     assert findings[0][1] == "private #622"
     assert "Private tracker citation" in findings[0][2]
     assert findings[1][1] == "infra-private #710"
@@ -244,6 +244,10 @@ def test_private_tracker_citation_detected_in_public_docs():
     assert "Private tracker citation" in findings[2][2]
     assert findings[3][1] == "Private tracker #5"
     assert "Private tracker citation" in findings[3][2]
+    assert findings[4][1] == "private_operational_board = #622"
+    assert "Private tracker citation" in findings[4][2]
+    assert findings[5][1] == "private operational board #622"
+    assert "Private tracker citation" in findings[5][2]
 
 
 def test_private_tracker_citation_not_flagged_in_private_code_or_tests():

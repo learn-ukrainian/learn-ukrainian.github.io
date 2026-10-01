@@ -45,7 +45,7 @@ def test_archived_v4_scope_and_safety_contract_remains_machine_visible() -> None
     text = archive[archive.index("---\nname: drive-ukrainian-dataset-epic\n"):]
     # This pins the entire former entrypoint, including every historical gate.
     assert hashlib.sha256(text.encode("utf-8")).hexdigest() == (
-        "84f6697f274a154e30cd06bb25086af1684181ae9528a23a5e04c8c268163f57"
+        "7bcbd42c4121ceeaed9f742de5e95b26faad55cf46a25c142cc3ad023f2565c0"
     )
     frontmatter = yaml.safe_load(text.split("---", 2)[1])
     assert frontmatter["name"] == "drive-ukrainian-dataset-epic"
@@ -60,7 +60,7 @@ def test_archived_v4_scope_and_safety_contract_remains_machine_visible() -> None
     for marker in (
         "outcome_sha256 = 78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20",
         "public_control_issue = #7423",
-        "private_operational_board = #622",
+        "private_operational_board = [paired private tracking surface]",
         "MODEL_AGREEMENT_QUARANTINED_NOT_GOLD",
         "The diagonal is forbidden",
         "leave-one-out views",

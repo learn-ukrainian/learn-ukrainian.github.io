@@ -52,7 +52,8 @@ Findings identified across the denominator were grouped into four distinct opera
 | `agents_extensions/shared/rules/critical-rules.md` | Cat A, Cat B | Neutralized `automerge-ok` pipeline wording (§8.5), ruleset non-existence disclosure (§8.1), and forge protection/org status disclosure (§8.6). Restored concrete cancellation instruction (item 2). | Preserved non-negotiable invariant that auto-merge and `--auto` cannot substitute for review/CI gates; preserved supply-chain controls and serialization requirements without forge posture disclosures. |
 | `agents_extensions/shared/rules/storage-topology.md` | Cat C | Removed explicit Windows NTFS share name `UkrainianData`, Google Drive path, `/Volumes/UkrainianData` mount path, and platform-specific cache/maintenance wording. | Retained all storage topology invariants: active DBs must remain strictly local; bulk roots require marker validation; network paths for SQLite remain strictly refused. |
 | `agents_extensions/shared/rules/workflow.md` | Cat A | Retired `auto-arm-merge.yml` and `automerge-ok` references. | Retained invariant that dispatched agents never self-enable auto-merge or bypass blocking CI checks. |
-| `agents_extensions/shared/skills/drive-ukrainian-dataset-epic/references/legacy-v4-contract.md` | Cat D | Removed internal tracker citation. | Retained prohibition on restarting legacy V4 row generation. |
+| `agents_extensions/shared/skills/drive-ukrainian-dataset-epic/SKILL.md` | Cat D | Neutralized private operational board citation to paired private tracking surface. | Retained requirement that stopped V4 dataset production remains stopped. |
+| `agents_extensions/shared/skills/drive-ukrainian-dataset-epic/references/legacy-v4-contract.md` | Cat D | Neutralized private operational board and tracker citations in identity block and launch prompt. | Retained prohibition on restarting legacy V4 row generation. |
 | `docs/best-practices/gitflow.md` | Cat B, Cat A | Neutralized GitHub UI settings list, signed commit status ("off today"), private repo 403 API response disclosures, and corrected pre-tool merge guard checks. | Preserved all 8 required branch invariants for `main` and accurately documented local pre-tool merge guards (draft, check states, running checks, branch protection inspection). |
 | `docs/runbooks/agent-seat-onboarding.md` | Cat D | Replaced internal tracker citation with public authorization under `#6943`. | Retained full agent seat onboarding authorization scope. |
 | `docs/runbooks/atlas-job-protocol.md` | Cat C | Neutralized explicit hosting provider references. | Retained atlas job execution protocol and failure isolation. |
@@ -124,6 +125,18 @@ Per the issue residual policy, items outside the documentation sweep or belongin
    - **Category:** Category B / D (Hook Repo References)
    - **Description:** Python hook contains an exception handling path naming the private repository.
    - **Owner:** Infra Driver.
+
+7. **Open-Model Data Delivery Plan Private Tracker Citation:**
+   - **Path:** `docs/projects/open-model-data/cyrillic-slavic-dataset-delivery-plan.md:17`
+   - **Category:** Category D (Private Tracker Citations)
+   - **Description:** Document outside denominator roots contains cross-reference to internal operational board.
+   - **Owner:** Open-Model-Data Driver / Infra Driver.
+
+8. **V4 Runtime Python Package Private Tracker Citations:**
+   - **Path:** `packages/v4-runtime/src/learn_ukrainian_v4_runtime/v4_a3_heldout_family_assignment.py:61` (and related provenance blobs)
+   - **Category:** Category D (Private Tracker Citations)
+   - **Description:** Python package files outside denominator roots reference private issue tracker citation.
+   - **Owner:** Open-Model-Data Driver / Infra Driver.
 
 ---
 
@@ -347,8 +360,8 @@ The following table records the verification disposition of every tracked file i
 | 194 | `agents_extensions/shared/skills/drive-epic/references/queue-and-capacity.md` | `agents_extensions/shared` | **CLEAN** | Verified clean across Categories A–D |
 | 195 | `agents_extensions/shared/skills/drive-epic/references/review-merge-cleanup.md` | `agents_extensions/shared` | **CLEAN** | Verified clean across Categories A–D |
 | 196 | `agents_extensions/shared/skills/drive-epic/references/routing-and-dispatch.md` | `agents_extensions/shared` | **CLEAN** | Verified clean across Categories A–D |
-| 197 | `agents_extensions/shared/skills/drive-ukrainian-dataset-epic/SKILL.md` | `agents_extensions/shared` | **CLEAN** | Verified clean across Categories A–D |
-| 198 | `agents_extensions/shared/skills/drive-ukrainian-dataset-epic/references/legacy-v4-contract.md` | `agents_extensions/shared` | **NEUTRALIZED** | Cat D: Removed private tracker citation #622 |
+| 197 | `agents_extensions/shared/skills/drive-ukrainian-dataset-epic/SKILL.md` | `agents_extensions/shared` | **NEUTRALIZED** | Cat D: Neutralized private operational board citation to paired private tracking surface |
+| 198 | `agents_extensions/shared/skills/drive-ukrainian-dataset-epic/references/legacy-v4-contract.md` | `agents_extensions/shared` | **NEUTRALIZED** | Cat D: Neutralized private operational board and tracker citations in identity block and launch prompt |
 | 199 | `agents_extensions/shared/skills/entire-context/SKILL.md` | `agents_extensions/shared` | **CLEAN** | Verified clean across Categories A–D |
 | 200 | `agents_extensions/shared/skills/entire-context/references/private-native.md` | `agents_extensions/shared` | **CLEAN** | Verified clean across Categories A–D |
 | 201 | `agents_extensions/shared/skills/local-code-review/SKILL.md` | `agents_extensions/shared` | **CLEAN** | Verified clean across Categories A–D |
