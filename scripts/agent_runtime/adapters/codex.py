@@ -1085,9 +1085,9 @@ class CodexAdapter:
                     break
                 try:
                     event = _json.loads(line)
-                except (TypeError, ValueError):
+                except (TypeError, ValueError, RecursionError):
                     continue
-                if event.get("type") != "session_meta":
+                if not isinstance(event, dict) or event.get("type") != "session_meta":
                     continue
                 payload = event.get("payload")
                 if not isinstance(payload, dict):
