@@ -51,6 +51,19 @@ def _load_hook():
 
 guard = _load_hook()
 
+_ISSUE_9461_MERGES = [
+    "gh pr merge 5",
+    "python -m scripts.publish pr-merge --number 5 --match-head " + "a" * 40,
+]
+_ISSUE_9461_SUFFIXES = [
+    "",
+    " 2>&1",
+    " > file",
+    " 2>/dev/null",
+    " | tail -5",
+    " 2>&1 | tail -5",
+]
+
 
 @pytest.mark.parametrize("dependency", ["scripts.publish.merge_guard", "shell_shlex"])
 @pytest.mark.parametrize(
@@ -281,6 +294,167 @@ def _run(
 
 
 # --- detection (pure, no network) ------------------------------------------
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("suffix", _ISSUE_9461_SUFFIXES)
+@pytest.mark.parametrize("checks,expected", [(([], []), 0), ((["CI Gate"], []), 2)])
+def test_issue_9461_redirect_matrix_uses_pr_state(monkeypatch, capsys, command, suffix, checks, expected):
+    original_ref = guard._pr_ref
+    # Set up the existing fake state seam without replacing the real selector.
+    _run(monkeypatch, "true", checks=checks)
+    fake_meta = guard._pr_meta
+    seen = []
+
+    def meta(pr, repo=None, cwd=None):
+        seen.append(pr)
+        return fake_meta(pr, repo, cwd)
+
+    monkeypatch.setattr(guard, "_pr_meta", meta)
+    monkeypatch.setattr(guard, "_pr_ref", original_ref)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command + suffix}})))
+    assert guard.main() == expected
+    assert seen == ["5"]
+    assert "cannot be read" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("redirect", [">file", ">>file", "2>file", "&>file", "<file", "2>&1"])
+def test_issue_9461_redirects_removed_from_argv(command, redirect):
+    assert guard._segments(command + " " + redirect) == guard._segments(command)
+    assert guard._segments(redirect + " " + command) == guard._segments(command)
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("target", ["'$FILE'", "'$(cmd)'", r"file\$name", '"file >name"', "'`cmd`'"])
+def test_issue_9461_literal_redirect_target_is_not_dynamic(monkeypatch, command, target):
+    assert guard._segments(command + " > " + target) == guard._segments(command)
+    assert _run(monkeypatch, command + " > " + target) == 0
+
+
+@pytest.mark.parametrize("suffix", _ISSUE_9461_SUFFIXES)
+@pytest.mark.parametrize(
+    "command",
+    [
+        "printf 5 | xargs gh pr merge",
+        "gh pr merge -F -",
+        "gh pr merge $(cat f)",
+        "python -m scripts.publish pr-merge --number $(cat f)",
+    ],
+)
+def test_issue_9461_redirect_cannot_launder_unreadable_target(monkeypatch, command, suffix):
+    original_ref = guard._pr_ref
+    _run(monkeypatch, "true")
+    monkeypatch.setattr(guard, "_pr_ref", original_ref)
+
+    # A dynamic selector must never reach a green fake PR snapshot.
+    def snapshot(pr, repo=None, cwd=None):
+        pytest.fail(f"unreadable target reached PR lookup: {pr}")
+
+    monkeypatch.setattr(guard, "_pr_snapshot", snapshot)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command + suffix}})))
+    assert guard.main() == 2
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("redirect", ["> $(cmd)", '> "$FILE"', "> `cmd`", ">", "> 'unterminated"])
+def test_issue_9461_dynamic_or_malformed_redirect_blocks(monkeypatch, command, redirect):
+    assert _run(monkeypatch, command + " " + redirect) == 2
+    if redirect != ">":  # A bare prefix `> gh` consumes the executable as a filename.
+        assert _run(monkeypatch, redirect + " " + command) == 2
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "cat <(cat .env)",
+        "echo ok >(cat .env)",
+        'source <(cat .env); printf %s "$FOO"',
+        "diff <(a) <(b)",
+        "cat <(cat file)",
+        "echo ok >(cat file)",
+        "source <(cmd); echo x",
+        "cat <<< 'fixture text'",
+        "cat <<'EOF'\nfixture text\nEOF",
+        "cat > $(cmd)",
+        'cat > "$FILE"',
+        "cat >",
+        "cat > > file",
+        "bash -c 'cat <(cmd)'",
+    ],
+)
+def test_issue_9461_no_merge_text_redirects_do_not_create_merges(monkeypatch, command):
+    assert not _any_judged_merge(command)
+    assert not _any_merge(command)
+    assert _run(monkeypatch, command, checks=(["CI Gate"], [])) == 0
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "gh pr merge 5 <(cmd)",
+        "gh pr merge <(echo 5)",
+        "gh pr merge $(cat f) 2>&1",
+        "gh pr merge 5 > $(cmd)",
+        "gh pr merge 5 <<< $(cmd)",
+        "python -m scripts.publish pr-merge --number 5 <(cmd)",
+        "python -m scripts.publish pr-merge --number <(echo 5)",
+        "python -m scripts.publish pr-merge --number $(cat f) 2>&1",
+        "python -m scripts.publish pr-merge --number 5 > $(cmd)",
+        "python -m scripts.publish pr-merge --number 5 <<< $(cmd)",
+        # The raw command mentions merge: round 1's conservative refusal applies
+        # to the whole command, including the preceding non-merge substitution.
+        "diff <(a) <(b); gh pr merge 5",
+    ],
+)
+def test_issue_9461_merge_text_redirects_stay_unreadable(monkeypatch, capsys, command):
+    original_ref = guard._pr_ref
+    _run(monkeypatch, "true")
+    monkeypatch.setattr(guard, "_pr_ref", original_ref)
+
+    def snapshot(pr, repo=None, cwd=None):
+        pytest.fail(f"unreadable redirect reached PR lookup: {pr}")
+
+    monkeypatch.setattr(guard, "_pr_snapshot", snapshot)
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert "cannot be read" in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("mention", ["merge", "MERGE", "MeRgE"])
+@pytest.mark.parametrize("separator", ["; ", "\n"])
+def test_issue_9461_redirect_marker_uses_entire_raw_command(mention, separator):
+    command = f"cat <(cmd){separator}echo {mention}"
+    assert _any_judged_merge(command)
+    assert any(guard._UNREADABLE_MARKER in segment for segment in guard._segments(command))
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("checks,expected", [(([], []), 0), ((["CI Gate"], []), 2)])
+def test_issue_9461_literal_here_string_still_judges_pr(monkeypatch, capsys, command, checks, expected):
+    # A literal here-string is readable in round 1; it still judges PR 5.
+    test_issue_9461_redirect_matrix_uses_pr_state(monkeypatch, capsys, command, " <<< 'fixture text'", checks, expected)
+
+
+@pytest.mark.parametrize("command", _ISSUE_9461_MERGES)
+@pytest.mark.parametrize("quote", ["'", '"'])
+def test_issue_9461_quoted_redirect_is_argument(monkeypatch, command, quote):
+    command += f" --subject {quote}>{quote} 2>&1"
+    argv = guard._segments(command)[0]
+    assert argv[-2:] == ["--subject", ">"]
+    assert _run(monkeypatch, command) == 0
+
+
+@pytest.mark.parametrize("suffix", _ISSUE_9461_SUFFIXES)
+def test_issue_9461_cd_scope_unchanged(monkeypatch, suffix):
+    assert _judged_cwds(monkeypatch, "cd /repo 2>&1 && gh pr merge 5" + suffix) == [("5", "/repo")]
+    assert _run(monkeypatch, 'cd "$DIR" 2>&1 && gh pr merge 5' + suffix) == 2
+    assert _run(monkeypatch, "cd /repo > $(cmd) && gh pr merge 5" + suffix) == 2
+
+
+def test_issue_9461_piped_into_merge_is_judged(monkeypatch):
+    assert _run(monkeypatch, "true | gh pr merge 5 2>&1", checks=(["CI Gate"], [])) == 2
+    assert _judged_cwds(monkeypatch, "gh pr merge 5 2>&1 | gh pr merge 6") == [("5", None), ("6", None)]
 
 
 @pytest.mark.parametrize(
