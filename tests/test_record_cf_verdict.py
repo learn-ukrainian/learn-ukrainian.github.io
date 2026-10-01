@@ -390,3 +390,40 @@ def test_comment_truncation_retains_marker():
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+def cursor_receipt(tasks, **updates):
+    write_task(tasks, agent="cursor", model="auto", resolved_model_source="cursor-stream-json", **updates)
+
+
+def test_cursor_display_name_receipt_records_the_concrete_slug_and_family(monkeypatch, tmp_path):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    cursor_receipt(tasks, resolved_model="Composer 2.5", resolved_model_known=True)
+    result = recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert result["comment"] == "posted"
+    assert "Reviewer family: moonshot" in comments[0]["body"]
+    assert "Reviewer model: composer-2.5" in comments[0]["body"]
+    assert "model=composer-2.5 family=moonshot" in comments[0]["body"]
+
+
+@pytest.mark.parametrize(
+    "updates,reason",
+    [
+        ({"resolved_model": "Composer 2.5", "resolved_model_known": False}, "Cursor reviewer model unknown"),
+        ({"resolved_model": "Composer 2.5"}, "Cursor reviewer model unknown"),
+        ({"resolved_model": "auto", "resolved_model_known": True}, "reviewer family unknown"),
+        ({"resolved_model": "unknown", "resolved_model_known": True}, "reviewer family unknown"),
+        ({"resolved_model": "unattested-harness", "resolved_model_known": True}, "reviewer family unknown"),
+        ({"resolved_model": "", "resolved_model_known": True}, "reviewer model unknown"),
+        ({"resolved_model": None, "resolved_model_known": True}, "reviewer model unknown"),
+        ({"resolved_model": "Composer 2", "resolved_model_known": True}, "reviewer model unknown"),
+        ({"resolved_model": "Composer 2.5 Fast", "resolved_model_known": True}, "reviewer model unknown"),
+        ({"resolved_model": "Composer 3", "resolved_model_known": True}, "reviewer model unknown"),
+    ],
+)
+def test_cursor_receipts_without_an_attested_concrete_model_are_still_refused(monkeypatch, tmp_path, updates, reason):
+    tasks, comments, _ = setup_record(monkeypatch, tmp_path)
+    cursor_receipt(tasks, **updates)
+    with pytest.raises(recorder.RecordError, match=reason):
+        recorder.record("review-one", pr_number=42, task_root=tasks, lock_root=tmp_path / "locks")
+    assert comments == []

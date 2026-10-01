@@ -112,6 +112,27 @@ _FAMILY_PATTERNS = _compile_family_patterns()
 _CURSOR_PATTERN = re.compile(r"(?:^|[^a-z0-9])(?:cursor|composer|auto)(?:$|[^a-z0-9])")
 _CONCRETE_CURSOR_MODEL_PATTERN = re.compile(r"(?:^|[^a-z0-9])composer-2\.5(?:$|[^a-z0-9])")
 
+# Cursor's runtime reports the display name of a model, not its slug (a real
+# dispatch records ``resolved_model: "Composer 2.5"``). Only the exact display
+# spelling of a concrete model Cursor is known to report maps to its slug;
+# every other display name keeps resolving exactly as before.
+_CURSOR_DISPLAY_NAME_SLUGS: dict[str, str] = {"composer 2.5": "composer-2.5"}
+
+
+def canonical_cursor_model(value: Any) -> str:
+    """Return the concrete slug for a Cursor display name, else ``value`` as text.
+
+    ``"Composer 2.5"`` (any case, any whitespace run between the words) becomes
+    ``"composer-2.5"``. Nothing else is rewritten: ``"Composer 2"``,
+    ``"Composer 2.5 Fast"``, ``"auto"``, other display names and empty values
+    are returned unchanged (``None`` becomes ``""``).
+    """
+
+    if value is None:
+        return ""
+    text = str(value)
+    return _CURSOR_DISPLAY_NAME_SLUGS.get(" ".join(text.casefold().split()), text)
+
 
 def normalize_family(value: Any) -> Family:
     """Normalize a single token (string or stringifiable) to a ``Family``.
@@ -125,7 +146,7 @@ def normalize_family(value: Any) -> Family:
 
     if value is None:
         return Family.UNKNOWN
-    text = str(value).strip().casefold()
+    text = canonical_cursor_model(value).strip().casefold()
     if not text:
         return Family.UNKNOWN
     if text in _FIXTURE_MARKERS:

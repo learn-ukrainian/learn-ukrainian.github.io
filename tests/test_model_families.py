@@ -166,3 +166,53 @@ def test_self_review_still_blocks_when_families_match() -> None:
     lineage = llm_reviewer_dispatch.AuthorLineage(family="google", source="test")
     with pytest.raises(llm_reviewer_dispatch.ReviewerSelfReviewError):
         llm_reviewer_dispatch.validate_cross_family(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE, lineage)
+
+
+# Cursor's runtime reports display names, not slugs (a recorded dispatch carries
+# ``resolved_model: "Composer 2.5"``); only that exact display name maps to its slug.
+@pytest.mark.parametrize("display", ["Composer 2.5", "composer 2.5", "COMPOSER 2.5", "  Composer   2.5  "])
+def test_cursor_display_name_resolves_to_the_concrete_composer_slug(display: str) -> None:
+    assert model_families.canonical_cursor_model(display) == "composer-2.5"
+    assert model_families.normalize_family(display) is model_families.Family.MOONSHOT
+    assert model_families.normalize_lineage_family({"family": "cursor", "resolved_model": display}) is (
+        model_families.Family.MOONSHOT
+    )
+
+
+@pytest.mark.parametrize(
+    "value",
+    [
+        "auto",
+        "unknown",
+        "",
+        "   ",
+        "Composer",
+        "Composer 2",
+        "Composer 2.4",
+        "Composer 2.50",
+        "Composer 2.5 Fast",
+        "Composer 3",
+    ],
+)
+def test_cursor_display_name_normaliser_rejects_everything_else(value: str) -> None:
+    assert model_families.canonical_cursor_model(value) == value
+    assert model_families.normalize_family(value) is model_families.Family.UNKNOWN
+
+
+def test_cursor_display_name_normaliser_handles_none() -> None:
+    assert model_families.canonical_cursor_model(None) == ""
+    assert model_families.normalize_family(None) is model_families.Family.UNKNOWN
+
+
+@pytest.mark.parametrize(
+    "display,expected",
+    [
+        ("Grok 4.7 256K High", model_families.Family.XAI),
+        ("Claude Fable 5 300K High", model_families.Family.ANTHROPIC),
+        ("composer-2.5", model_families.Family.MOONSHOT),
+        ("composer-2.5-fast", model_families.Family.MOONSHOT),
+    ],
+)
+def test_other_cursor_display_names_resolve_as_before(display: str, expected: model_families.Family) -> None:
+    assert model_families.canonical_cursor_model(display) == display
+    assert model_families.normalize_family(display) is expected
