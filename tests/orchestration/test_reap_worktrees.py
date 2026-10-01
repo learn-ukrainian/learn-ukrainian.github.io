@@ -289,7 +289,9 @@ def test_superseded_archived_record_no_longer_claims_the_finished_tasks_worktree
     (tasks / "impl-ci-r4.20260930T022833947211Z.7.archived.json").write_text(
         json.dumps({**old_run, "status": "failed"}), encoding="utf-8"
     )
-    _write_task_record(repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid())
+    _write_task_record(
+        repo, "impl-ci-r4", status="done", run_nonce="n1", worktree_path=str(worktree), pid=_dead_pid()
+    )
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
@@ -418,9 +420,7 @@ def test_needs_finalize_claim_proof_keeps_the_claim_without_a_valid_positive_dea
     bad_pid: object,
 ) -> None:
     """A merged PR alone never releases the claim: the worker must be proven absent by its recorded PID."""
-    monkeypatch.setattr(
-        rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None)
-    )
+    monkeypatch.setattr(rw, "_query_pr_states", lambda _repo, _branch: ([rw.PullRequestState(1, "MERGED", "abc")], None))
     record: dict[str, Any] = {"task_id": "t1", "worktree_branch": "claude/x", "final_branch_head_commit": "abc"}
     if bad_pid != "missing":
         record["pid"] = bad_pid
@@ -2660,16 +2660,12 @@ def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -
         monkeypatch,
         rest=_gh_stdout(
             json.dumps(
-                [
-                    [
-                        {
-                            "number": 8536,
-                            "state": "closed",
-                            "merged_at": "2026-09-22T10:00:00Z",
-                            "head": {"sha": "rest-sha"},
-                        }
-                    ]
-                ]
+                [[{
+                    "number": 8536,
+                    "state": "closed",
+                    "merged_at": "2026-09-22T10:00:00Z",
+                    "head": {"sha": "rest-sha"},
+                }]]
             )
         ),
         graphql=_gh_stdout("GraphQL: API rate limit exceeded", returncode=1),
@@ -2689,9 +2685,7 @@ def test_query_pr_states_rest_pages_preserve_later_closed_head(monkeypatch) -> N
     ]
     later = [{"number": 101, "state": "closed", "merged_at": None, "head": {"sha": "held-head"}}]
     calls = _patch_gh_transports(
-        monkeypatch,
-        rest=_gh_stdout(json.dumps([first, later])),
-        graphql=_gh_stdout("down", returncode=1),
+        monkeypatch, rest=_gh_stdout(json.dumps([first, later])), graphql=_gh_stdout("down", returncode=1),
     )
 
     states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
@@ -6545,3 +6539,30 @@ def test_sha_search_success_returns_states_without_error(
     assert error is None
     assert [(pr.number, pr.state, pr.head_sha) for pr in states] == [(7, "OPEN", "abc123")]
     assert rw._query_prs_by_head_sha(tmp_path, None) == ([], None)
+
+
+@pytest.mark.parametrize("reference", ["root", "./", "ignored", ".pytest_cache/cache.txt", "ignored/report.txt"])
+def test_canonical_reaper_result_named_file_scope(tmp_path, monkeypatch, reference):
+    repo = init_repo(tmp_path)
+    monkeypatch.setenv("LU_TASKS_DIR", str(repo / "batch_state/tasks"))
+    task_id = "named-file-scope"
+    worktree = add_worktree(repo, f"codex/{task_id}", path=repo / ".worktrees/dispatch/codex" / task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.pytest_cache/\n")
+    for name in ["ignored/report.txt", ".pytest_cache/cache.txt"]:
+        source = worktree / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(b"named evidence")
+    named = str(worktree) if reference == "root" else reference
+    _write_task_record(repo, task_id, status="done", worktree_path=str(worktree), response=f"Result: `{named}`.")
+    patch_gh(monkeypatch, {f"codex/{task_id}": [{"number": 9449, "state": "MERGED"}]})
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    assert result.action == "removed", result
+    assert not worktree.exists()
+    location = repo / "batch_state/preserved" / task_id
+    if reference == "ignored/report.txt":
+        assert (location / reference).read_bytes() == b"named evidence"
+        saved = json.loads((repo / "batch_state/tasks" / f"{task_id}.json").read_text())
+        assert saved["preserved_artifacts"]["count"] == 1
+    else:
+        assert not location.exists()

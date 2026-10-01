@@ -809,3 +809,60 @@ def test_initializing_lock_without_a_reservation_stays_retained(hermetic_reap):
     assert report["main_worktree"]["action"] == "retained"
     assert report["main_worktree"]["reason"] == "registered worktree is locked"
     assert worktree.exists()
+
+
+@pytest.mark.parametrize("runtime", [False, True])
+@pytest.mark.parametrize("reference", ["root", "./", "ignored", ".pytest_cache/cache.txt", "ignored/report.txt"])
+def test_post_task_reap_result_named_file_scope(hermetic_reap, runtime, reference):
+    repo, tasks = hermetic_reap
+    task_id = "named-file-scope"
+    worktree = _add_acp_runtime_worktree(repo, task_id) if runtime else _add_dispatch_worktree(repo, "kimi", task_id)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.pytest_cache/\n")
+    for name in ["ignored/report.txt", ".pytest_cache/cache.txt"]:
+        source = worktree / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(b"named evidence")
+    _write_task_state(
+        tasks, task_id, "done", None if runtime else worktree, acp_runtime_paths=[worktree] if runtime else None
+    )
+    path = tasks / f"{task_id}.json"
+    record = json.loads(path.read_text())
+    named = str(worktree) if reference == "root" else reference
+    record["response"] = f"Result: `{named}`."
+    path.write_text(json.dumps(record))
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["acp_runtimes"][0] if runtime else report["main_worktree"]
+    assert row["action"] == "removed", row
+    assert not worktree.exists()
+    location = repo / "batch_state/preserved" / task_id
+    if reference == "ignored/report.txt":
+        assert (location / reference).read_bytes() == b"named evidence"
+        assert json.loads(path.read_text())["preserved_artifacts"]["count"] == 1
+    else:
+        assert not location.exists()
+
+
+def test_acp_artifact_copy_failure_retains_runtime(hermetic_reap, monkeypatch):
+    from scripts.orchestration import worktree_artifacts
+
+    repo, tasks = hermetic_reap
+    task_id = "acp-copy-failure"
+    runtime = _add_acp_runtime_worktree(repo, task_id, locked=True)
+    with (repo / ".git/info/exclude").open("a") as exclude:
+        exclude.write("batch_state/\n")
+    source = runtime / "batch_state/report.txt"
+    source.parent.mkdir()
+    source.write_bytes(b"must survive failed copy")
+    _write_task_state(tasks, task_id, "done", None, acp_runtime_paths=[runtime])
+
+    def fail_copy(*_args):
+        raise OSError("injected ACP copy failure")
+
+    monkeypatch.setattr(worktree_artifacts.shutil, "copyfile", fail_copy)
+    report = post_task_reap.post_task_reap(task_id, tasks_dir=tasks, repo_root=repo, apply=True)
+    row = report["acp_runtimes"][0]
+    assert row["action"] == "retained", row
+    assert "injected ACP copy failure" in row["reason"]
+    assert source.read_bytes() == b"must survive failed copy"
+    assert not (repo / "batch_state/preserved" / task_id / "batch_state/report.txt").exists()

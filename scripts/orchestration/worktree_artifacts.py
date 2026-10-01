@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
 import os
@@ -15,7 +16,12 @@ from pathlib import Path
 from typing import Any
 
 from scripts.orchestration import reaper_lifecycle
+from scripts.orchestration.dead_worker_state import task_state_lock
 from scripts.orchestration.task_record_store import task_record_path
+
+_DISPOSABLE_DIRECTORIES = frozenset(
+    {".pytest_cache", ".ruff_cache", ".mypy_cache", "__pycache__", "node_modules", ".venv", ".git"}
+)
 
 
 def _git_paths(worktree: Path, *args: str) -> list[str]:
@@ -63,12 +69,15 @@ def _copy_verified(source: Path, destination: Path) -> None:
         temporary.unlink(missing_ok=True)
 
 
-def _named_artifact_refusal(worktree: Path, record: Mapping[str, Any], preserved: set[str]) -> str | None:
-    """Retain named local evidence outside the supported ignored batch_state inventory.
+def _named_artifact_files(worktree: Path, record: Mapping[str, Any]) -> set[str]:
+    """Inventory only explicitly named, non-empty ignored files outside caches.
 
-    Tracked paths survive in Git and primary-checkout result sidecars are outside
-    the removal target. Backticks/quotes and Markdown links support spaced paths.
+    Tracked files survive in Git; directories are not evidence inventories;
+    removal never destroys a symlink's target. Backticks/quotes and Markdown
+    links support spaced paths.
     """
+    root = worktree.resolve()
+    files: set[str] = set()
     text = str(record.get("response") or "")
     result_file = record.get("result_file")
     if result_file:
@@ -91,16 +100,34 @@ def _named_artifact_refusal(worktree: Path, record: Mapping[str, Any], preserved
             relative = path.relative_to(worktree)
         except ValueError:
             continue
-        if ".." in relative.parts or not path.exists():
+        if ".." in relative.parts or _DISPOSABLE_DIRECTORIES.intersection(relative.parts):
             continue
-        # Inventory only the named path; never sweep unrelated ignored caches.
-        names = set(_git_paths(worktree, "--others", "--exclude-standard", "--", relative.as_posix()))
-        names.update(_git_paths(worktree, "--others", "--ignored", "--exclude-standard", "--", relative.as_posix()))
-        for name in sorted(names - preserved):
-            artifact = worktree / name
-            if "__pycache__" not in Path(name).parts and artifact.stat().st_size:
-                return f"result names unpreserved artifact {name}; refusing worktree removal"
-    return None
+        if path.resolve() != root / relative or not path.is_file() or not path.stat().st_size:
+            continue
+        name = relative.as_posix()
+        ignored = _git_paths(worktree, "--others", "--ignored", "--exclude-standard", "--", name)
+        if name in ignored:
+            files.add(name)
+    return files
+
+
+def _update_existing_task_record(path: Path, updates: Mapping[str, Any], *, clear: tuple[str, ...] = ()) -> bool:
+    """Merge only the guard's fields into fresh state under the shared writer lock.
+
+    Returns ``False``, without creating a record, when none exists.
+    """
+    with task_state_lock(path):
+        try:
+            record = json.loads(path.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            return False
+        if not isinstance(record, dict):
+            raise ValueError("task record is not an object")
+        record.update(updates)
+        for key in clear:
+            record.pop(key, None)
+        reaper_lifecycle._atomic_write(path, record)
+        return True
 
 
 def preserve_worktree_artifacts(
@@ -115,21 +142,21 @@ def preserve_worktree_artifacts(
 
     Copies (never moves) non-empty ignored batch_state files, retaining their
     worktree-relative paths under primary/batch_state/preserved/<task-id>.
-    Records the location before allowing removal. Missing identity, unreadable
+    Records the location in existing task records before allowing removal.
+    Reports a missing record without creating one. Missing identity, unreadable
     inventory, unsafe paths, copy/verification/record failures all fail closed.
     Empty directories and __pycache__ require no preservation.
     """
     record_path = task_record_path(tasks_dir, task_id) if task_id else None
     record: dict[str, Any] = dict(task_record or {})
-    record_readable = False
     metadata = None
+    detail = ""
     try:
         if record_path is not None and record_path.exists():
             stored = json.loads(record_path.read_text(encoding="utf-8"))
             if not isinstance(stored, dict):
                 raise ValueError("task record is not an object")
             record.update(stored)
-        record_readable = True
         if task_id:
             record.setdefault("task_id", task_id)
         primary = primary.resolve()
@@ -155,9 +182,11 @@ def preserve_worktree_artifacts(
                 raise ValueError(f"artifact is not a local regular file: {name}")
             if source.stat().st_size:
                 files.append(name)
-        refusal = _named_artifact_refusal(worktree, record, set(files))
-        if refusal:
-            raise ValueError(refusal)
+        for name in sorted(_named_artifact_files(worktree, record) - set(files)):
+            source = worktree / name
+            if source.resolve() != source.absolute() or not stat.S_ISREG(source.lstat().st_mode):
+                raise ValueError(f"artifact is not a local regular file: {name}")
+            files.append(name)
         if files:
             if not task_id or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]*", task_id):
                 raise ValueError("artifact preservation requires a safe task identity")
@@ -168,21 +197,21 @@ def preserve_worktree_artifacts(
                     raise ValueError("preserved artifact destination contains a symlink")
                 _copy_verified(worktree / name, destination)
             metadata = {"count": len(files), "location": str(location)}
-            record["preserved_artifacts"] = metadata
-            record.pop("artifact_preservation_error", None)
-            reaper_lifecycle._atomic_write(record_path, record)
+            if not _update_existing_task_record(
+                record_path, {"preserved_artifacts": metadata}, clear=("artifact_preservation_error",)
+            ):
+                metadata["record_update"] = "skipped_missing_record"
+                detail = "task record missing; preserved files without record update"
             if isinstance(task_record, dict):
-                task_record.update({"preserved_artifacts": metadata})
+                task_record["preserved_artifacts"] = metadata
                 task_record.pop("artifact_preservation_error", None)
-        return True, "", metadata
+        return True, detail, metadata
     except (OSError, ValueError, subprocess.SubprocessError) as exc:
         reason = f"artifact preservation failed: {exc}; refusing worktree removal"
         if isinstance(task_record, dict):
             task_record["artifact_preservation_error"] = reason
-        if record_path is not None and record_readable:
-            try:
-                record["artifact_preservation_error"] = reason
-                reaper_lifecycle._atomic_write(record_path, record)
-            except (OSError, ValueError):
-                pass  # The caller also records the refusal in its removal receipt.
+        if record_path is not None:
+            # The caller also records the refusal in its removal receipt.
+            with contextlib.suppress(OSError, ValueError):
+                _update_existing_task_record(record_path, {"artifact_preservation_error": reason})
         return False, reason, metadata

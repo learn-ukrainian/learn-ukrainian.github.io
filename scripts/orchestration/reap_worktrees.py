@@ -41,6 +41,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common import task_store_paths
 from scripts.common.acp_runtime_lock import (
     holds_only_git_pointer,
 )
@@ -247,7 +248,7 @@ def primary_checkout_root(repo_root: Path) -> Path:
     if not first_line.startswith(prefix):
         return repo_root
 
-    git_dir = Path(first_line[len(prefix) :].strip())
+    git_dir = Path(first_line[len(prefix):].strip())
     if not git_dir.is_absolute():
         git_dir = repo_root / git_dir
     git_dir = git_dir.resolve()
@@ -285,7 +286,7 @@ def _format_failure(proc: subprocess.CompletedProcess[str]) -> str:
 def _branch_name(raw: str) -> str:
     for prefix in ("refs/heads/", "refs/remotes/origin/"):
         if raw.startswith(prefix):
-            return raw[len(prefix) :]
+            return raw[len(prefix):]
     return raw
 
 
@@ -445,8 +446,7 @@ def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullReques
                 "--slurp",
                 "-X",
                 "GET",
-                f"repos/{owner}/{repo}/pulls?"
-                + urlencode({"head": f"{owner}:{branch}", "state": "all", "per_page": 100}),
+                f"repos/{owner}/{repo}/pulls?" + urlencode({"head": f"{owner}:{branch}", "state": "all", "per_page": 100}),
             ],
             cwd=repo_root,
             timeout=30,
@@ -700,7 +700,11 @@ def select_orphaned_sandboxes(
             proc.cwd.resolve().relative_to(worktrees)
         except (OSError, ValueError):
             continue
-        if proc.age_s < max_age_s and proc.workspace_mtime is not None and (now - proc.workspace_mtime) < idle_grace_s:
+        if (
+            proc.age_s < max_age_s
+            and proc.workspace_mtime is not None
+            and (now - proc.workspace_mtime) < idle_grace_s
+        ):
             continue
         selected.append(proc.pid)
     return selected
@@ -726,7 +730,9 @@ def _proc_start_age_s(stat_text: str, *, uptime_s: float, ticks_per_sec: int) ->
     return ppid, uptime_s - (start_ticks / ticks_per_sec)
 
 
-def _read_sandbox_processes(proc_root: Path = Path("/proc"), *, repo_root: Path) -> list[SandboxProcess]:
+def _read_sandbox_processes(
+    proc_root: Path = Path("/proc"), *, repo_root: Path
+) -> list[SandboxProcess]:
     try:
         uptime_s = float((proc_root / "uptime").read_text(encoding="utf-8").split()[0])
     except (OSError, ValueError, IndexError):
@@ -1260,15 +1266,12 @@ def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | N
     live_cwds = _live_cwd_paths(repo_root)
     if live_cwds is None:
         return "process-CWD activity probe unavailable during cleanup"
-    if (
-        _acp_dead_owner_reason(
-            repo_root=repo_root,
-            info=fresh,
-            now=None,
-            live_cwds=live_cwds,
-        )
-        is None
-    ):
+    if _acp_dead_owner_reason(
+        repo_root=repo_root,
+        info=fresh,
+        now=None,
+        live_cwds=live_cwds,
+    ) is None:
         return "acp runtime lock owner changed during cleanup"
     if not holds_only_git_pointer(info.path):
         return "acp runtime worktree gained files during cleanup"
@@ -1902,7 +1905,10 @@ def _activity_reason(
 
     # Stale "running" rows with a dead worker PID must not block reaping forever
     # (observed: multi-hour dispatch workers left status=running after exit).
-    if task_status in {"queued", "starting", "running", "needs_finalize"} and _task_pid_alive(task_payload):
+    if (
+        task_status in {"queued", "starting", "running", "needs_finalize"}
+        and _task_pid_alive(task_payload)
+    ):
         return f"non-terminal dispatch task-id={task_id} status={task_status}"
     if live_cwds is not None:
         worktree = info.path.resolve()
@@ -2080,7 +2086,6 @@ def _worktree_age_hours(path: Path, now: float | None = None) -> float | None:
 def _active_task_ids() -> set[str] | None:
     try:
         import urllib.request
-
         with urllib.request.urlopen("http://127.0.0.1:8765/api/delegate/active", timeout=3) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             tasks = data.get("tasks", [])
@@ -2254,7 +2259,9 @@ def _detached_clean_contained_reason(
         return None
     if active_ids is None:
         if attention is not None:
-            attention.append("active-task probe unavailable; detached clean contained checkout preserved")
+            attention.append(
+                "active-task probe unavailable; detached clean contained checkout preserved"
+            )
         return None
     if task_id in active_ids:
         return None
@@ -2299,15 +2306,12 @@ def _detached_clean_contained_recheck(repo_root: Path, info: WorktreeInfo) -> st
     )
     if activity is not None:
         return activity
-    if (
-        _detached_clean_contained_reason(
-            repo_root=repo_root,
-            info=fresh,
-            active_ids=current_active_ids,
-            timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
-        )
-        is None
-    ):
+    if _detached_clean_contained_reason(
+        repo_root=repo_root,
+        info=fresh,
+        active_ids=current_active_ids,
+        timeout=_LOCKED_GIT_STATUS_TIMEOUT_S,
+    ) is None:
         return "detached clean contained proof changed during cleanup"
     return None
 
@@ -2507,7 +2511,10 @@ def _review_checkout_reason(
     superseded = sorted(related & heads.keys())
     if superseded:
         number = superseded[0]
-        return f"{_SUPERSEDED_PR_REASON_PREFIX}{number} head {info.head[:12]} (current {heads[number][:12]})"
+        return (
+            f"{_SUPERSEDED_PR_REASON_PREFIX}{number} head {info.head[:12]} "
+            f"(current {heads[number][:12]})"
+        )
 
     task_id = _dispatch_task_id(repo_root, info)
     if _task_record_status(repo_root, task_id) is None:
@@ -2675,7 +2682,11 @@ def _qualifying_reason(
         # therefore respect PR state exactly like the origin-tip return below
         # -- it deleted an aged build/* worktree both under an UNKNOWN PR
         # response and, before that, under a plainly KNOWN OPEN PR.
-        if info.branch.startswith("build/") and not pr_unknown and (pr_state is None or pr_state.state != "OPEN"):
+        if (
+            info.branch.startswith("build/")
+            and not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+        ):
             age_hours = _worktree_age_hours(info.path, now=now)
             if age_hours is not None and age_hours > build_age_hours:
                 return f"build branch age {age_hours:.1f}h > {build_age_hours:g}h"
@@ -2698,7 +2709,13 @@ def _qualifying_reason(
     task_id = _dispatch_task_id(repo_root, info)
     is_dispatch_candidate = task_id is not None
 
-    if not merged_pr_only and not include_terminal_dispatches and is_under_wt and info.detached and clean is True:
+    if (
+        not merged_pr_only
+        and not include_terminal_dispatches
+        and is_under_wt
+        and info.detached
+        and clean is True
+    ):
         has_matching_task = False
         task_settled = False
         if is_dispatch_candidate:
@@ -2732,13 +2749,21 @@ def _qualifying_reason(
     # Optional Class A: settled dispatch worktree.  This class is intentionally
     # narrower than the legacy classes: an explicit terminal task record, no
     # live PID, a known-empty active-task probe, and no open PR are all required.
-    if is_dispatch_candidate and clean is True and (include_terminal_dispatches or not merged_pr_only):
+    if (
+        is_dispatch_candidate
+        and clean is True
+        and (include_terminal_dispatches or not merged_pr_only)
+    ):
         terminal_reason = _terminal_dispatch_reason(
             repo_root=repo_root,
             info=info,
             active_ids=active_ids,
         )
-        if terminal_reason is not None and not pr_unknown and (pr_state is None or pr_state.state != "OPEN"):
+        if (
+            terminal_reason is not None
+            and not pr_unknown
+            and (pr_state is None or pr_state.state != "OPEN")
+        ):
             return terminal_reason
 
         # Also PR-dependent: it reads pr_state to decide abandonment.
@@ -2841,7 +2866,7 @@ def _worktree_git_dir(path: Path) -> Path | None:
             prefix = "gitdir:"
             if not line.startswith(prefix):
                 return None
-            git_dir = Path(line[len(prefix) :].strip())
+            git_dir = Path(line[len(prefix):].strip())
             if not git_dir.is_absolute():
                 git_dir = path / git_dir
             return git_dir
@@ -2951,7 +2976,10 @@ def _prune_branch(
         cwd=repo_root,
         timeout=timeout,
     )
-    if current.returncode != 0 or (current.stdout or "").strip() != expected_head:
+    if (
+        current.returncode != 0
+        or (current.stdout or "").strip() != expected_head
+    ):
         return "branch HEAD changed during cleanup"
 
     flag = "-D" if force else "-d"
@@ -3166,7 +3194,8 @@ def _reap_qualified_worktree(
         if reason.startswith("dispatch HEAD ancestor of origin/main"):
             live_origin = _live_origin_heads_present(info.path, info.branch)
         if info.branch is not None and (
-            require_terminal_dispatch_guards or reason.startswith("dispatch HEAD ancestor of origin/main")
+            require_terminal_dispatch_guards
+            or reason.startswith("dispatch HEAD ancestor of origin/main")
         ):
             pr_snapshot = _query_pr_states(repo_root, info.branch)
 
@@ -3514,7 +3543,9 @@ def _reap_qualified_worktree(
                 and pr_state is not None
                 and pr_state.state == "MERGED"
             ):
-                prune_contained = _pr_matches_worktree_head(info, pr_state) or _tip_is_ancestor_of_origin_main(info)
+                prune_contained = _pr_matches_worktree_head(
+                    info, pr_state
+                ) or _tip_is_ancestor_of_origin_main(info)
         finally:
             bounded_git.__exit__(None, None, None)
 
@@ -3530,9 +3561,7 @@ def _reap_qualified_worktree(
             info.path,
             primary=control_root,
             task_id=_dispatch_task_id(repo_root, info),
-            tasks_dir=Path(os.environ["LU_TASKS_DIR"])
-            if os.environ.get("LU_TASKS_DIR")
-            else control_root / "batch_state" / "tasks",
+            tasks_dir=task_store_paths.tasks_dir(),
         )
         if not artifacts_ok:
             return ReapResult(
@@ -3544,7 +3573,9 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
                 recovery_ref=recovery_ref,
             )
-        foreign_root = None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
+        foreign_root = (
+            None if is_under_worktrees(repo_root, info.path) else _foreign_scratch_root(repo_root, info.path)
+        )
         approval = {} if foreign_root is None else {"approved_temp_roots": (foreign_root,)}
         remove_error = worktree_claims.git_worktree_remove(
             repo_root,
@@ -3614,7 +3645,10 @@ def _reap_qualified_worktree(
             path=str(info.path),
             branch=info.branch,
             action="skipped",
-            reason=(f"git call timed out after {exc.timeout:g}s during cleanup; originally qualified because {reason}"),
+            reason=(
+                f"git call timed out after {exc.timeout:g}s during cleanup; "
+                f"originally qualified because {reason}"
+            ),
             dirty=dirty,
             pr=_pr_dict(pr_state),
             recovery_ref=recovery_ref,
@@ -3623,7 +3657,6 @@ def _reap_qualified_worktree(
         dispatch_guard.close()
         if pending_marked:
             reaper_lifecycle.clear_reap_pending(repo_root, info.path)
-
 
 def _target_filter(target_paths: list[Path] | None) -> set[Path] | None:
     if target_paths is None:
@@ -3705,7 +3738,10 @@ def reap_worktrees(
                         path=str(info.path),
                         branch=info.branch,
                         action="skipped",
-                        reason=("registered worktree path is missing; run git worktree prune"),
+                        reason=(
+                            "registered worktree path is missing; "
+                            "run git worktree prune"
+                        ),
                         dirty=None,
                         owner=_dispatch_owner(repo_root, info),
                     )
@@ -3748,7 +3784,10 @@ def reap_worktrees(
                             path=str(info.path),
                             branch=info.branch,
                             action="skipped",
-                            reason=(f"acp runtime worktree holds unexpected files; {acp_reason}"),
+                            reason=(
+                                "acp runtime worktree holds unexpected files; "
+                                f"{acp_reason}"
+                            ),
                             dirty=None,
                             owner=_dispatch_owner(repo_root, info),
                         )
@@ -3902,7 +3941,11 @@ def reap_worktrees(
                     elif info.detached or info.branch is None:
                         reason = "detached HEAD unknown"
                     else:
-                        reason = f"no reap condition matched; {pr_error}" if pr_error else "no reap condition matched"
+                        reason = (
+                            f"no reap condition matched; {pr_error}"
+                            if pr_error
+                            else "no reap condition matched"
+                        )
                 if not pr_unknown and reason.startswith("no reap condition matched"):
                     hint = _same_tree_hint(info, pr_state)
                     if hint:
@@ -3936,7 +3979,9 @@ def reap_worktrees(
         # this run.  Count conservatively — only clean candidates (a dirty
         # one fails the "clean" proof until preserve-then-reap re-verifies
         # it); any doubt means no expansion.
-        eligible_backlog = sum(1 for _, _, dirty, _ in qualified if dirty is False) if apply else None
+        eligible_backlog = (
+            sum(1 for _, _, dirty, _ in qualified if dirty is False) if apply else None
+        )
         for info, reason, dirty, pr_state in qualified:
             res = _reap_qualified_worktree(
                 repo_root=repo_root,
@@ -3948,7 +3993,8 @@ def reap_worktrees(
                 preserve_then_reap=preserve_then_reap,
                 prune_merged_branches=prune_merged_branches,
                 require_terminal_dispatch_guards=(
-                    include_terminal_dispatches and reason.startswith("settled dispatch task-id=")
+                    include_terminal_dispatches
+                    and reason.startswith("settled dispatch task-id=")
                 ),
                 eligible_backlog=eligible_backlog,
                 now=now,
@@ -4017,7 +4063,11 @@ def reap_success_worktree(
     """Remove one clean success worktree while keeping its branch."""
     repo_root = repo_root.resolve()
     target = worktree_path.resolve()
-    matching = [info for info in list_git_worktrees(repo_root) if info.path.resolve() == target]
+    matching = [
+        info
+        for info in list_git_worktrees(repo_root)
+        if info.path.resolve() == target
+    ]
     if not matching:
         return ReapResult(
             path=str(target),
@@ -4259,7 +4309,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--prune-merged-branches",
         action="store_true",
-        help=("Delete a local branch only after its MERGED PR head SHA exactly matches the removed worktree HEAD."),
+        help=(
+            "Delete a local branch only after its MERGED PR head SHA exactly "
+            "matches the removed worktree HEAD."
+        ),
     )
     parser.add_argument(
         "--safe-only",
@@ -4324,7 +4377,9 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     apply = bool(args.apply) or args.command == "apply"
-    merged_mode = bool(args.merged) or (not bool(args.legacy_classes) and not bool(args.terminal_dispatches))
+    merged_mode = bool(args.merged) or (
+        not bool(args.legacy_classes) and not bool(args.terminal_dispatches)
+    )
     preserve = bool(args.preserve_then_reap)
     prune = bool(args.prune_merged_branches) or bool(args.merged)
     safe_only = bool(args.safe_only) or merged_mode

@@ -68,12 +68,7 @@ def _worktree_add_via_run(monkeypatch):
 
     def via_run(add_command, *, cwd, worktree_path, env=None, **_callbacks):
         return delegate.subprocess.run(
-            add_command,
-            cwd=cwd,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=env,
+            add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env,
             timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
         )
 
@@ -305,14 +300,7 @@ def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
     )
 
     assert env["VIRTUAL_ENV"] == str(project_venv)
-    assert env["PATH"] == os.pathsep.join(
-        (
-            str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"),
-            str(project_venv / "bin"),
-            "/usr/local/bin",
-            "/usr/bin",
-        )
-    )
+    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(project_venv / "bin"), "/usr/local/bin", "/usr/bin"))
     assert "PYTHONHOME" not in env
 
 
@@ -322,9 +310,7 @@ def test_pinned_worker_venv_env_uses_canonical_path_even_before_venv_exists(tmp_
     env = delegate._pinned_worker_venv_env({"PATH": "/usr/bin"})
 
     assert env["VIRTUAL_ENV"] == str(tmp_path / ".venv")
-    assert env["PATH"] == os.pathsep.join(
-        (str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(tmp_path / ".venv" / "bin"), "/usr/bin")
-    )
+    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(tmp_path / ".venv" / "bin"), "/usr/bin"))
 
 
 # ---------------------------------------------------------------------------
@@ -7574,13 +7560,7 @@ def test_dispatch_worker_env_pins_project_venv(tmp_tasks_dir, monkeypatch):
 
     env = recorded["env"]
     assert env["VIRTUAL_ENV"] == str(delegate._REPO_ROOT / ".venv")
-    assert env["PATH"] == os.pathsep.join(
-        (
-            str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"),
-            str(delegate._REPO_ROOT / ".venv" / "bin"),
-            "/usr/bin",
-        )
-    )
+    assert env["PATH"] == os.pathsep.join((str(delegate._REPO_ROOT / "scripts/agent_runtime/shims"), str(delegate._REPO_ROOT / ".venv" / "bin"), "/usr/bin"))
 
 
 def test_dispatch_records_runtime_tmp_lease_and_injects_worker_env(
@@ -9832,13 +9812,8 @@ def _add_local_bare_origin(main: Path) -> Path:
     remote = main.parent / "origin.git"
     for args in (["clone", "--bare", str(main), str(remote)], ["remote", "add", "origin", str(remote)]):
         subprocess.run(
-            ["git", *args],
-            cwd=main,
-            check=True,
-            capture_output=True,
-            text=True,
-            env=delegate._sanitized_git_env(),
-            timeout=30,
+            ["git", *args], cwd=main, check=True, capture_output=True, text=True,
+            env=delegate._sanitized_git_env(), timeout=30,
         )
     return remote
 
@@ -15153,11 +15128,7 @@ def test_review_attempt_auto_target_is_reused_after_admission(
     remote = _add_local_bare_origin(main)
     assert subprocess.run(
         ["git", "--git-dir", str(remote), "rev-parse", "codex/task-1"],
-        cwd=target,
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=30,
+        cwd=target, check=True, capture_output=True, text=True, timeout=30,
     ).stdout.strip() == delegate._resolve_sha(target)
     head = delegate._resolve_sha(target)
     render_checkout = target if dependency == "render_checkout" else main
@@ -17552,3 +17523,29 @@ def test_dispatch_refuses_an_owned_path_that_could_never_own_a_file(tmp_tasks_di
 def _synthetic_publishing_rules(synthetic_opsec, publisher_transport, monkeypatch):
     """Use synthetic private tooling and an explicit destination for send spies."""
     monkeypatch.setenv("GH_REPO", "unit/public")
+
+
+@pytest.mark.parametrize("reference", ["root", "./", "ignored", ".pytest_cache/cache.txt", "ignored/report.txt"])
+def test_settle_result_named_file_scope(tmp_tasks_dir, tmp_path, monkeypatch, reference):
+    task_id = "named-file-scope"
+    primary, worktree, _branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    with (primary / ".git/info/exclude").open("a") as exclude:
+        exclude.write("ignored/\n.pytest_cache/\n")
+    for name in ["ignored/report.txt", ".pytest_cache/cache.txt"]:
+        source = worktree / name
+        source.parent.mkdir(parents=True, exist_ok=True)
+        source.write_bytes(b"named evidence")
+    named = str(worktree) if reference == "root" else reference
+    record = {"task_id": task_id, "status": "done", "response": f"Result: `{named}`."}
+    delegate._write_state_atomic(delegate._state_path(task_id), record)
+    result = delegate._settle_worktree_reap(
+        worktree, created_by_this_dispatch=True, settling_task_id=task_id, task_record=record
+    )
+    assert result["action"] == "removed", result
+    assert not worktree.exists()
+    location = primary / "batch_state/preserved" / task_id
+    if reference == "ignored/report.txt":
+        assert (location / reference).read_bytes() == b"named evidence"
+        assert delegate._read_state(delegate._state_path(task_id))["preserved_artifacts"]["count"] == 1
+    else:
+        assert not location.exists()
