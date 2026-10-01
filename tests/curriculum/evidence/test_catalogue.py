@@ -54,11 +54,17 @@ def curation(tmp_path, synthetic_sources, synthetic_vesum, synthetic_standard):
         for resource_id, access, text in [(1, "free", "synthetic reused X"), (2, "premium", "Y unmatched")]:
             conn.execute(
                 """INSERT INTO resource_catalogue
-                (id,url,kind,title,channel,access,levels,modules,topics,source_files,
+                (id,url,kind,title,channel,access,letters,levels,modules,topics,source_files,
                  source_entries,discovery_evidence,search_text,link_check)
                 VALUES (?,?, 'podcast', 'Synthetic resource', 'Synthetic channel', ?,
-                        '[]','[]','[]','[]','[]','[]',?, 'not_checked')""",
-                (resource_id, f"https://example.org/{resource_id}", access, text),
+                        ?, '[]','[]','[]','[]','[]','[]',?, 'not_checked')""",
+                (
+                    resource_id,
+                    f"https://example.org/{resource_id}",
+                    access,
+                    json.dumps(["X"] if resource_id == 1 else ["Y"]),
+                    text,
+                ),
             )
     with sources.Sources(
         sources_db=synthetic_sources, vesum_db=synthetic_vesum, standard_path=synthetic_standard
@@ -95,6 +101,38 @@ def test_queries_cover_each_lesson_word_and_letter(curation):
     for index in (1, 4):
         assert entries[index]["status"] == "ok"
         assert entries[index]["candidates"] == []
+
+
+@pytest.mark.parametrize("query", ["я", "і", "у", "в", "з", "о", "а", "й"])
+def test_one_letter_word_requirement_uses_text_and_letter_requirement_uses_index(curation, query):
+    plan, words, src = curation
+    plan.write_text(
+        yaml.safe_dump(
+            {
+                "lessons": [
+                    {
+                        "n": 1,
+                        "slug": "same-token",
+                        "inventory": {
+                            "vocabulary": {"core": [{"lemma": query}]},
+                            "phonetics": {"letters": [query]},
+                        },
+                    }
+                ]
+            }
+        )
+    )
+    with sqlite3.connect(src.sources_db) as conn:
+        conn.execute("UPDATE resource_catalogue SET search_text=?,letters='[]' WHERE id=1", (query,))
+        conn.execute(
+            "UPDATE resource_catalogue SET search_text='Letter lesson',letters=?,access='free' WHERE id=2",
+            (json.dumps([query.upper()]),),
+        )
+    word, letter = catalogue.request_report(plan, words, src)["queries"]
+    assert word["query_mode"] == "text"
+    assert [hit["url"] for hit in word["candidates"]] == ["https://example.org/1"]
+    assert letter["query_mode"] == "letter_index"
+    assert [hit["url"] for hit in letter["candidates"]] == ["https://example.org/2"]
 
 
 @pytest.mark.parametrize("missing_db", [False, True])
@@ -233,3 +271,18 @@ def test_cli_exposes_catalogue_report(curation, tmp_path, capsys, json_output):
         assert "Catalogue suggestions (curator evidence required)" in output
         assert '"query": "synthetic"' in output
         assert '"url": "https://example.org/1"' in output
+
+
+def test_letter_requirements_never_accept_unindexed_hits(curation, monkeypatch):
+    plan, words, src = curation
+    monkeypatch.setattr(
+        src,
+        "search_resources",
+        lambda *args, **kwargs: [
+            {"id": 999, "title": "Unrelated", "url": "https://example.org/999", "access": "free", "kind": "podcast"}
+        ],
+    )
+    report = catalogue.request_report(plan, words, src)
+    letters = [q for q in report["queries"] if q["requirement_kind"] == "letter"]
+    assert letters and all(q["candidates"] == [] and q["query_mode"] == "letter_index" for q in letters)
+    assert report["queries"][0]["candidates"]

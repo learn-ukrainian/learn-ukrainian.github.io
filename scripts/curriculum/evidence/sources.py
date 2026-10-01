@@ -951,11 +951,13 @@ class Sources:
             markers = [row[0] for row in conn.execute("SELECT DISTINCT marker FROM form_markers ORDER BY marker")]
         return SourceResult({"atoms": atoms, "markers": markers}, digest, metadata)
 
-    def search_resources(self, query: str, *, free_only: bool = True, limit: int = 20) -> list[dict]:
+    def search_resources(
+        self, query: str, *, mode: str = "text", free_only: bool = True, limit: int = 20
+    ) -> list[dict]:
         """Search catalogue suggestions within this read-only sources snapshot."""
         from scripts.ingest.resource_catalogue_ingest import search_resources
 
-        return search_resources(self._db(), query, free_only=free_only, limit=limit)
+        return search_resources(self._db(), query, mode=mode, free_only=free_only, limit=limit)
 
     def get_textbook_chunk(self, chunk_id: str | int) -> dict | None:
         conn = self._db()

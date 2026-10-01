@@ -1,0 +1,964 @@
+version: 1
+evidence_rules:
+  publisher_public_embed: 'Video: publisher pairs a letter heading with a public YouTube iframe, without purchase
+    or login. Cookie consent is not a payment gate. Free access is not a copying licence. Each paired video also
+    has a successful public oEmbed check recorded on this snapshot.'
+  public_article_body: 'Article: fetched unauthenticated HTTP 200 page contains the article body; status alone is
+    insufficient.'
+  podcast_split: Existing ULP episode audio remains free and lesson notes premium; mixed does not mean free notes.
+    Other podcasts without an evidenced split remain unknown.
+  unknown: No URL, title, domain or HTTP success alone establishes free access. Unverified resources remain unknown.
+  public_video_oembed: 'Video: unauthenticated YouTube oEmbed response is HTTP 200 and exposes the specific public
+    video; unavailable responses remain unknown. Playback availability may change.'
+resources:
+- title: ULP alphabet — А а
+  url: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - А
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:А а -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:А а -> iframe
+    letters:
+    - А
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-004
+    letters:
+    - А
+- title: ULP alphabet — Б б
+  url: https://www.youtube.com/watch?v=V1hxBE_JbGg
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Б
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Б б -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Б б -> iframe
+    letters:
+    - Б
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-008
+    letters:
+    - Б
+- title: ULP alphabet — В в
+  url: https://www.youtube.com/watch?v=aFcvYfvQ2X4
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - В
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:В в -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:В в -> iframe
+    letters:
+    - В
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-011
+    letters:
+    - В
+- title: ULP alphabet — Г г
+  url: https://www.youtube.com/watch?v=gVnclpSI0DU
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Г
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Г г -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Г г -> iframe
+    letters:
+    - Г
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-009
+    letters:
+    - Г
+- title: ULP alphabet — Ґ ґ
+  url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ґ
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ґ ґ -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ґ ґ -> iframe
+    letters:
+    - Ґ
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-002
+    letters:
+    - Ґ
+- title: ULP alphabet — Д д
+  url: https://www.youtube.com/watch?v=g4Bh-lqzd48
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Д
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Д д -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Д д -> iframe
+    letters:
+    - Д
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-006
+    letters:
+    - Д
+- title: ULP alphabet — Е е
+  url: https://www.youtube.com/watch?v=KFlsroBW0dk
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Е
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Е е -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Е е -> iframe
+    letters:
+    - Е
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-005
+    letters:
+    - Е
+- title: ULP alphabet — Є є
+  url: https://www.youtube.com/watch?v=O0bwRyyBQSc
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Є
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Є є -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Є є -> iframe
+    letters:
+    - Є
+- title: ULP alphabet — Ж ж
+  url: https://www.youtube.com/watch?v=dIrGVcqPwqM
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ж
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ж ж -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ж ж -> iframe
+    letters:
+    - Ж
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-012
+    letters:
+    - Ж
+- title: ULP alphabet — З з
+  url: https://www.youtube.com/watch?v=BhASNxitC1A
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - З
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:З з -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:З з -> iframe
+    letters:
+    - З
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-007
+    letters:
+    - З
+- title: ULP alphabet — И и
+  url: https://www.youtube.com/watch?v=W-1rCu0indE
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - И
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:И и -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:И и -> iframe
+    letters:
+    - И
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-007
+    letters:
+    - И
+- title: ULP alphabet — І і
+  url: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - І
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:І і -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:І і -> iframe
+    letters:
+    - І
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-009
+    letters:
+    - І
+- title: ULP alphabet — Ї ї
+  url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ї
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ї ї -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ї ї -> iframe
+    letters:
+    - Ї
+- title: ULP alphabet — Й й
+  url: https://www.youtube.com/watch?v=aq0cjB90s3w
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Й
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Й й -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Й й -> iframe
+    letters:
+    - Й
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-003
+    letters:
+    - Й
+- title: ULP alphabet — К к
+  url: https://www.youtube.com/watch?v=J7sGEI4-xJo
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - К
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:К к -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:К к -> iframe
+    letters:
+    - К
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-014
+    letters:
+    - К
+- title: ULP alphabet — Л л
+  url: https://www.youtube.com/watch?v=v6-3Xg52Buk
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Л
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Л л -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Л л -> iframe
+    letters:
+    - Л
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-012
+    letters:
+    - Л
+- title: ULP alphabet — М м
+  url: https://www.youtube.com/watch?v=Ez95H4ibuJo
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - М
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:М м -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:М м -> iframe
+    letters:
+    - М
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-008
+    letters:
+    - М
+- title: ULP alphabet — Н н
+  url: https://www.youtube.com/watch?v=vNUfiKHPYaU
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Н
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Н н -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Н н -> iframe
+    letters:
+    - Н
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-010
+    letters:
+    - Н
+- title: ULP alphabet — О о
+  url: https://www.youtube.com/watch?v=gJFxRIPRZbI
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - О
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:О о -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:О о -> iframe
+    letters:
+    - О
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-005
+    letters:
+    - О
+- title: ULP alphabet — П п
+  url: https://www.youtube.com/watch?v=JksSjjxyW5Y
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - П
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:П п -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:П п -> iframe
+    letters:
+    - П
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-015
+    letters:
+    - П
+- title: ULP alphabet — Р р
+  url: https://www.youtube.com/watch?v=fMGsQ5KPQgg
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Р
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Р р -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Р р -> iframe
+    letters:
+    - Р
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-016
+    letters:
+    - Р
+- title: ULP alphabet — С с
+  url: https://www.youtube.com/watch?v=7UsFBgSL91E
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - С
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:С с -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:С с -> iframe
+    letters:
+    - С
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-013
+    letters:
+    - С
+- title: ULP alphabet — Т т
+  url: https://www.youtube.com/watch?v=m-jcLR_gK0k
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Т
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Т т -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Т т -> iframe
+    letters:
+    - Т
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-001
+    letters:
+    - Т
+- title: ULP alphabet — У у
+  url: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - У
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:У у -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:У у -> iframe
+    letters:
+    - У
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/sounds-letters-and-hello.pack.yaml
+    source_sha256: 1f893ebd5a6de4d331eb4d3c3ccde3b3cdac9352282db924dae20fc9ec9353a8
+    locator: V-006
+    letters:
+    - У
+- title: ULP alphabet — Ф ф
+  url: https://www.youtube.com/watch?v=haHRsFFZRQI
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ф
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ф ф -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ф ф -> iframe
+    letters:
+    - Ф
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/special-signs.pack.yaml
+    source_sha256: 1829de3ce1dd152cc3066aa1117c378014c85bfbc1387398cf1fd7d101aef7e4
+    locator: V-005
+    letters:
+    - Ф
+- title: ULP alphabet — Х х
+  url: https://www.youtube.com/watch?v=vpr58zJSJKc
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Х
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Х х -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Х х -> iframe
+    letters:
+    - Х
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-011
+    letters:
+    - Х
+- title: ULP alphabet — Ц ц
+  url: https://www.youtube.com/watch?v=u44eCjR2Oz8
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ц
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ц ц -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ц ц -> iframe
+    letters:
+    - Ц
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/special-signs.pack.yaml
+    source_sha256: 1829de3ce1dd152cc3066aa1117c378014c85bfbc1387398cf1fd7d101aef7e4
+    locator: V-004
+    letters:
+    - Ц
+- title: ULP alphabet — Ч ч
+  url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ч
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ч ч -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ч ч -> iframe
+    letters:
+    - Ч
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-010
+    letters:
+    - Ч
+- title: ULP alphabet — Ш ш
+  url: https://www.youtube.com/watch?v=1D-6MIw3OXY
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ш
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ш ш -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ш ш -> iframe
+    letters:
+    - Ш
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/reading-ukrainian.pack.yaml
+    source_sha256: 8e2b996590ecf217a66f66e148aef76fad646beed8642aac88b65a1051d42804
+    locator: V-013
+    letters:
+    - Ш
+- title: ULP alphabet — Щ щ
+  url: https://www.youtube.com/watch?v=QmBLieIuf6Q
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Щ
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Щ щ -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Щ щ -> iframe
+    letters:
+    - Щ
+- title: ULP alphabet — Ь
+  url: https://www.youtube.com/watch?v=cJlal8XKBxo
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ь
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ь -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ь -> iframe
+    letters:
+    - Ь
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/special-signs.pack.yaml
+    source_sha256: 1829de3ce1dd152cc3066aa1117c378014c85bfbc1387398cf1fd7d101aef7e4
+    locator: V-001
+    letters:
+    - Ь
+- title: ULP alphabet — Ю ю
+  url: https://www.youtube.com/watch?v=9JdIBYCTWGw
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Ю
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ю ю -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Ю ю -> iframe
+    letters:
+    - Ю
+  - source_file: curriculum/l2-uk-en/evidence/a1/_requests/special-signs.pack.yaml
+    source_sha256: 1829de3ce1dd152cc3066aa1117c378014c85bfbc1387398cf1fd7d101aef7e4
+    locator: V-003
+    letters:
+    - Ю
+- title: ULP alphabet — Я я
+  url: https://www.youtube.com/watch?v=yhSAf41LX8I
+  type: video
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  letters:
+  - Я
+  access_evidence:
+  - rule: publisher_public_embed
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Я я -> iframe
+    observed_at: '2026-10-01T18:05:50Z'
+    public_oembed_status: 200
+    public_oembed_author: Ukrainian Lessons
+  letter_evidence:
+  - source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: h2:Я я -> iframe
+    letters:
+    - Я
+- title: 'Ukrainian Alphabet: Full Guide with Examples and Pronunciation'
+  url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+  type: article
+  channel: Ukrainian Lessons
+  suggested_level: A1
+  access: free
+  access_evidence:
+  - rule: public_article_body
+    source_url: https://www.ukrainianlessons.com/ukrainian-alphabet/
+    source_sha256: 3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795
+    locator: 33 letter headings and embedded lessons without login
+    observed_at: '2026-10-01T18:05:50Z'
+- title: 'Talk Ukrainian: Ukrainian alphabet with pronunciation'
+  url: https://talkukrainian.com/ukrainian-alphabet/
+  type: article
+  access: free
+  access_evidence:
+  - rule: public_article_body
+    source_url: https://talkukrainian.com/ukrainian-alphabet/
+    source_sha256: 9a016f4d7ba390ea1ef832633de841602d244fa910787a99e436271d926ee590
+    locator: article
+    observed_at: '2026-10-01T18:05:50Z'
+- title: How to Pronounce х, г, ґ in Ukrainian (with Many Examples and Audio)
+  url: https://www.ukrainianlessons.com/h-g/
+  type: article
+  access: free
+  access_evidence:
+  - rule: public_article_body
+    source_url: https://www.ukrainianlessons.com/h-g/
+    source_sha256: d1e84d940870fee10c51947d27a3b7b8ef30c5bc4cb8a1442228916c6020d843
+    locator: .elementor-widget-theme-post-content
+    observed_at: '2026-10-01T18:05:50Z'
+- title: Alphabet — Ukrainian Phrasebook for Helping Refugees
+  url: https://www.ukrainianlessons.com/ph-alphabet/
+  type: article
+  access: free
+  access_evidence:
+  - rule: public_article_body
+    source_url: https://www.ukrainianlessons.com/ph-alphabet/
+    source_sha256: bb2c6c2a78abe4f671b4e20038d13d650f94aee44baf3f144cf82b98df3098c5
+    locator: .elementor-widget-theme-post-content
+    observed_at: '2026-10-01T18:05:50Z'
+- title: Understanding Ukrainian Cyrillic Alphabet
+  url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+  type: article
+  access: free
+  access_evidence:
+  - rule: public_article_body
+    source_url: https://www.ukrainianlessons.com/ukrainian-cyrillic-alphabet/
+    source_sha256: cdb2bc397eee938006d611b58e8a0e4b95419746a1a5ec8d277165cd42dc74ff
+    locator: .elementor-widget-theme-post-content
+    observed_at: '2026-10-01T18:05:50Z'
+- title: How to read the Ukrainian Alphabet. Cyrillic Letters. Part I
+  url: https://www.youtube.com/watch?v=Gt7O4FLGxjI
+  type: video
+  access: free
+  channel: Speak Ukrainian
+  access_evidence:
+  - rule: public_video_oembed
+    source_url: https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=Gt7O4FLGxjI&format=json
+    source_sha256: ca8f01983845a51099d3cfefbf7300f0eb92f82722ab64c2109a89547882b1f9
+    locator: public HTTP 200 oEmbed video response
+    observed_at: '2026-10-01T18:05:50Z'
+- title: Ukrainian Alphabet - Lesson about the letter Г
+  url: https://www.youtube.com/watch?v=X6dkJPEnPmY
+  type: video
+  access: free
+  channel: Bright Kids Ukrainian Online School
+  access_evidence:
+  - rule: public_video_oembed
+    source_url: https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=X6dkJPEnPmY&format=json
+    source_sha256: 25128a775697ffe74cdc4fb7084ebc8e73727ff52eff498fa413049c58f92b8c
+    locator: public HTTP 200 oEmbed video response
+    observed_at: '2026-10-01T18:05:50Z'
+schema:
+  letters: List of uppercase letters explicitly paired to this resource; never inferred from title or description.
+  letter_evidence: List of source_url or source_file, SHA-256 of retrieved source bytes, exact locator, and covered
+    letters.
+  access_evidence: List of per-kind rule, source_url or source_file, SHA-256, locator and observed_at. Unknown aliases
+    do not override evidenced access; explicit conflicts stay excluded from free-only.
