@@ -67,7 +67,10 @@ def _worktree_add_via_run(monkeypatch):
     """
 
     def via_run(add_command, *, cwd, worktree_path, env=None, **_callbacks):
-        return delegate.subprocess.run(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env)
+        return delegate.subprocess.run(
+            add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env,
+            timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+        )
 
     monkeypatch.setattr(delegate, "_run_worktree_add", via_run)
 
@@ -248,6 +251,8 @@ def _sanitize_git_env_for_test(monkeypatch) -> None:
         if key.startswith(("GIT_", "PRE_COMMIT")):
             monkeypatch.delenv(key, raising=False)
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
+    monkeypatch.setenv("GIT_TERMINAL_PROMPT", "0")
+    monkeypatch.setenv("GIT_ALLOW_PROTOCOL", "file")
 
 
 def test_sanitized_git_env_keeps_benign_git_transport_env(monkeypatch):
@@ -266,6 +271,19 @@ def test_sanitized_git_env_keeps_benign_git_transport_env(monkeypatch):
     assert "GIT_DIR" not in env
     assert "GIT_WORK_TREE" not in env
     assert "PRE_COMMIT_HOME" not in env
+
+
+@pytest.mark.parametrize("inherited", [None, "1"])
+def test_fetch_refuses_credential_prompts_and_has_a_timeout(monkeypatch, inherited):
+    if inherited is None:
+        monkeypatch.delenv("GIT_TERMINAL_PROMPT", raising=False)
+    else:
+        monkeypatch.setenv("GIT_TERMINAL_PROMPT", inherited)
+    with patch.object(delegate.subprocess, "run") as run:
+        run.side_effect = subprocess.TimeoutExpired("git fetch", delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S)
+        assert delegate._fetch_remote_branch("origin", "main") is None
+    assert run.call_args.kwargs["env"]["GIT_TERMINAL_PROMPT"] == "0"
+    assert run.call_args.kwargs["timeout"] == delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S
 
 
 def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
@@ -9786,6 +9804,17 @@ def _init_sibling_pair(tmp_path: Path) -> tuple[Path, Path, Path]:
     return primary, sibling, sibling_wt
 
 
+def _add_local_bare_origin(main: Path) -> Path:
+    """Snapshot fixture branches into an on-disk remote, never the project origin."""
+    remote = main.parent / "origin.git"
+    for args in (["clone", "--bare", str(main), str(remote)], ["remote", "add", "origin", str(remote)]):
+        subprocess.run(
+            ["git", *args], cwd=main, check=True, capture_output=True, text=True,
+            env=delegate._sanitized_git_env(), timeout=30,
+        )
+    return remote
+
+
 def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     """Build a real primary checkout + one registered dispatch worktree.
 
@@ -14918,7 +14947,8 @@ def test_review_attempt_reuse_never_rebases_admitted_input(
     else:
         git(main, "rm", "curriculum/input.md")
     git(main, "commit", "-m", "upstream input change")
-    git(main, "remote", "add", "origin", str(main))
+    remote = _add_local_bare_origin(main)
+    assert git(main, "--git-dir", str(remote), "rev-parse", "--is-bare-repository").stdout.strip() == "true"
     git(main, "fetch", "origin", "main")
     upstream_sha = delegate._resolve_sha(main)
     dependencies = (("input_root", target),) if review_attempt else ()
@@ -15019,9 +15049,13 @@ def test_review_attempt_auto_target_is_reused_after_admission(
             "curriculum/input.md",
         ],
         ["commit", "-m", "admitted review files"],
-        ["remote", "add", "origin", str(main)],
     ):
         subprocess.run(["git", *args], cwd=target, check=True, capture_output=True, timeout=30)
+    remote = _add_local_bare_origin(main)
+    assert subprocess.run(
+        ["git", "--git-dir", str(remote), "rev-parse", "codex/task-1"],
+        cwd=target, check=True, capture_output=True, text=True, timeout=30,
+    ).stdout.strip() == delegate._resolve_sha(target)
     head = delegate._resolve_sha(target)
     render_checkout = target if dependency == "render_checkout" else main
     input_root = target if dependency == "input_root" else tmp_path

@@ -4876,12 +4876,14 @@ _GIT_ENV_DENYLIST = {
 
 
 def _sanitized_git_env() -> dict[str, str]:
-    """Drop repo-redirecting Git env so ``cwd=worktree`` resolves that repo."""
-    return {
+    """Select the explicit repository and refuse interactive credential prompts."""
+    env = {
         key: value
         for key, value in os.environ.items()
         if key not in _GIT_ENV_DENYLIST and not key.startswith("PRE_COMMIT")
     }
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return env
 
 
 def _is_virtualenv_bin_path(entry: str) -> bool:
