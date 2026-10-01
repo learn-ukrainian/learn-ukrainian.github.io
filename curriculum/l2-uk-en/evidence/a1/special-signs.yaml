@@ -1,8 +1,8 @@
 built_with:
-  mcp_commit: af6d6c680ac84c7eb72524ea39571bd341a940f4
+  mcp_commit: 72dabe24945bd8a220d58a6d8518ca01b68cc5cb
   overrides_sha256: 2fe211b3f9eba3fefbf8ee09b7ac1483dfe5264257fd4d9bf80479544438634e
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 4abc3c4028b0d28069a418e6e0ed544b00b3836724b0c021fb15f3504d3b2401
+  sources_db: 887f7e2aca645337f8ef935334827cd57980f69340c8d77dac775cc321f2b48d
   sources_db_scheme: rows-v2
   standard_sha256: 29d24350576a94ae702ddfa291c96c2406e2b29a081216b590b65a772f973fac
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
@@ -1240,6 +1240,145 @@ texts:
     section_id: 26309
   supports: 'Avramenko printed p. 131: source model of apostrophe before Ї; use only the attested feather word, not the full
     spelling-rule table.'
+- id: T-027
+  quote: Ю ю
+  sha256: 275d0d96605b8dfa6745241bc3b64aa5e01ec1285d3fecf3371d4709e68ae033
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0043
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 46
+    row_sha256: 58a9310d34eb6ff7dc21574268f0d665f27cd0d3fd1ebb09cea478c83f01484b
+    section_id: 13105
+  supports: Exact capital/small heading for taught letter Ю; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-028
+  quote: Ц ц
+  sha256: feb81fa63ac2ae5262680c03df9f4a9f704dc6f6779063f5d616729e80ea2f6f
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0051
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 54
+    row_sha256: f87409fa04c6eb3fc06024d9080701203a1899055ecd738e3fa46b3876f8a840
+    section_id: 13113
+  supports: Exact capital/small heading for taught letter Ц; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-029
+  quote: Ф ф
+  sha256: ef87291ca1ed2bdc1ecf9f2e129e383dbafab481dfb44ab01b39ca791322161c
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0059
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 62
+    row_sha256: d17f89a65e38d363a13449cfbef5991166f48af8210432f368535c5f3823420f
+    section_id: 13121
+  supports: Exact capital/small heading for taught letter Ф; listening target and visible-glyph discrimination only, not a
+    whole-word recording.
+- id: T-030
+  quote: Ї ї
+  sha256: d63cf50c09921a7a852bb9f4f40ba4fb1705d9be14b1daaaa499c0eeb998fd4b
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact taught capital/small heading for the Ї sound choice; no whole-word audio claim.
+- id: T-031
+  quote: Я я
+  sha256: 286f6ab78572684dfc8f9d2b21c3e4f217094c7398a6db40c02c2ac8b4ea4a80
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact taught capital/small heading for the Я sound choice; no whole-word audio claim.
+- id: T-032
+  quote: Є є
+  sha256: b2e757a832d4e0c4dc16799d7246b567dec18a2e78332f4fced63b74cc80f116
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact taught capital/small heading for the Є sound choice; no whole-word audio claim.
+- id: T-033
+  quote: Щ щ
+  sha256: cf724fba6aed2caf835d751bd02301b16587171c62202eba766583726e815bd1
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact taught capital/small heading for the Щ sound choice; no whole-word audio claim.
+- id: T-034
+  quote: Ш ш
+  sha256: 2a760541ae55f84e48a45fd2486ddeb7b59b5ab89242ac74e5c0ffaa8a80b5e5
+  source:
+    author: zabolotnyi
+    chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0001
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    grade: '5'
+    kind: textbook
+    page: 2
+    row_sha256: 1f968eaa755767cdd8b44a907158951360c5ec9d98de7c787cafa6c015b12916
+    section_id: 38931
+  supports: Exact taught capital/small heading for the Ш sound choice; no whole-word audio claim.
+- id: T-035
+  quote: 'Весною равлики люблять дощ. Один
+
+    старенький равлик любив мандрувати
+
+    під час дощу.'
+  sha256: c60d3e5bc01c079c242be1330fdf3c1637c5b2038dd6a051107883e9e13c69e1
+  source:
+    author: zaharijchuk
+    chunk_id: 1-klas-bukvar-zaharijchuk-2025-2_s0072
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: '1'
+    kind: textbook
+    page: 75
+    row_sha256: bf9b5b79bb6b18594420d56ec7341db38e7db9725ba334cc6013a2c0043e21c8
+    section_id: 13134
+  supports: 'Primer printed p.73 (chunk title p.75): two complete connected sentences about snails; all forms learner-eligible
+    with sourced stress. The following OCR-broken sentence is not included.'
+- id: T-036
+  quote: пюре — п’ю
+  sha256: 4d1d3c8760bfa3041ba4308042f43c8b9565bc7bf53622aef2ec11bc805fb069
+  source:
+    author: avramenko
+    chunk_id: 5-klas-ukrmova-avramenko-2022_s0133
+    file: 5-klas-ukrmova-avramenko-2022
+    grade: '5'
+    kind: textbook
+    page: 131
+    row_sha256: d241a7f71b8484e12c267c59bfb37923824eb28cd4cbd18a08514b1bc2d1ea70
+    section_id: 26309
+  supports: Exact printed apostrophe/no-apostrophe contrast; distinguish visible spelling then read aloud with teacher modeling,
+    not recorded pair discrimination.
 unsupported:
 - claim: The required named English-speaker teaching point classifying Ф as a visual look-alike has no identified supporting
     T- or X- source. T-008 establishes the native glyph and sound, T-012 establishes the alphabet table, and T-018 establishes
@@ -1290,56 +1429,178 @@ unsupported:
     1 s1/a1/a3/a5. V-001 has other example words and V-007 is generic hard/soft support; the corpus occurrence resembling
     W-119 is a broken ASR boundary, not the intended noun.
   id: U-003
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [1]
+
+    records: [''T-001'', ''X-001'']
+
+    words: [''W-119'', ''W-120'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
   searches:
   - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
       and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
       partial matches.
     tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
-  status: open
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
 - claim: No confirmed free recording covers all exact Ї/Я and Ю/Є primer word values and whole-word choices in lessons 2 a4/a6
     and 3 a2/a4/a5/a6, or all Ц/Щ/Ф word choices in lesson 4 a9. V-002/V-003/V-004/V-005 establish the named sounds, not the
     complete required word sets or positional contrasts.
   id: U-004
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [2, 3, 4]
+
+    records: [''T-002'', ''T-003'', ''T-004'', ''T-005'', ''T-006'', ''T-007'', ''T-008'', ''T-013'', ''T-022'', ''T-023'',
+    ''T-025'']
+
+    words: [''W-121'', ''W-122'', ''W-123'', ''W-124'', ''W-125'', ''W-126'', ''W-127'', ''W-128'', ''W-129'', ''W-130'',
+    ''W-131'', ''W-010'', ''W-140'', ''W-141'', ''W-142'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
   searches:
   - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
       and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
       partial matches.
     tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
-  status: open
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
 - claim: No confirmed free recording models the T-009/T-010 joined дж/дз words and hard/soft дз contrast required by lesson
     5 s1/s2/a1/a2/a3/a4/a6. V-002 recalls letter sounds only; it cannot establish the joined digraph words or rule.
   id: U-005
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [5]
+
+    records: [''T-009'', ''T-010'', ''T-013'', ''T-016'', ''T-017'']
+
+    words: [''W-132'', ''W-133'', ''W-134'', ''W-135'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
   searches:
   - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
       and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
       partial matches.
     tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
-  status: open
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
 - claim: No confirmed free recording covers the exact T-015 W-143/W-137 apostrophe contrast, T-011/T-026 word forms and EX-001
     whole sentence required by lesson 6 s1/a2/a6. Printed source forms are not audio; V-002 supplies vowel sounds only.
   id: U-006
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [6]
+
+    records: [''T-011'', ''T-015'', ''T-017'', ''T-026'', ''EX-001'', ''T-036'']
+
+    words: [''W-125'', ''W-136'', ''W-137'', ''W-139'', ''W-143'', ''W-144'']
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
   searches:
   - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
       and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
       partial matches.
     tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
-  status: open
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
 - claim: No confirmed free recording models all T-012 letter names required by lesson 7 a2. V-002 models letter sounds and
     example words, not the complete letter-name inventory; sounds cannot substitute for names.
   id: U-007
+  resolved_by: 'authorization: Issue 8425 frozen round-1 revision brief plus round-2 recap-host decision; explicitly permitted
+    print conversion, not evidence that an audio recording exists.
+
+    mode: audio-to-print
+
+    lessons: [7]
+
+    records: [''T-012'']
+
+    words: []
+
+    replacement: Exact plan steps and scored activity ids are in the coverage/conversion ledger in _requests/revise-a1-p1-p3.md;
+    print discrimination plus offline read-aloud/copying, retaining the native letter video in the same teaching step.
+
+    teacher_dependency: Teacher models the exact syllable/word/contrast or letter name and listens to learner production offline;
+    no machine speaking or acoustic equivalence claim.
+
+    remaining_audio_evidence: Original missing-recording claim remains historical; no existence or independent playback proof
+    inferred from resolved status.
+
+    '
   searches:
   - query: All podcast JSON/YAML and raw lists, all 672 external resource modules, ulp-resources, ulp-articles-index, ulp-article-mappings
       and trusted_sources; 480 ULP public corpus rows. See _requests/listening-sources.md for exact requirements and rejected
       partial matches.
     tool: Full tracked resource catalogue read and sources.search_external; complete ULP public-transcript corpus scan
-  status: open
+  - query: Exact tin/tin-soft-sign, hand/river, digraph, apostrophe and primer-word targets; see revise-a1-p1-p3.md for queries,
+      returned locators, rejected partial matches and search_resources unavailability.
+    tool: sources.search_external + tracked docs/resources catalogs (round 2)
+  status: resolved
 videos:
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=cJlal8XKBxo
-    http_status: 200
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DcJlal8XKBxo&q=EhAqAQT4HBvflAAAAAAAAAABGOiE-dUGIjAE5M76B33QZQWsbmO3GWxrLLypzCQFshicQnPXxzujw47OqtZrPcS1bfg3srYfdfkyAnJSWgFD
+    http_status: 429
   id: V-001
   url: https://www.youtube.com/watch?v=cJlal8XKBxo
   use: Soft-sign sound model; restrict practice to the taught-letter word pair, not the video vocabulary.
@@ -1347,8 +1608,8 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=ksXIXj7CXwc
-    http_status: 200
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjB9X_Gs8JaTwbsVev5TBtP5kT0uTl6lgTnXVpaM7t4CtzBdtUZq6meJWHTzNtzb0kwyAnJSWgFD
+    http_status: 429
   id: V-002
   url: https://www.youtube.com/watch?v=ksXIXj7CXwc
   use: Native pronunciation models for the taught letters, then the full alphabet after all letters; no ASR transcription
@@ -1357,29 +1618,32 @@ videos:
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=9JdIBYCTWGw
-    http_status: 200
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3D9JdIBYCTWGw&q=EhAqAQT4HBvflAAAAAAAAAABGOmE-dUGIjB3PS4u9u4xEfTy45Bjqpeh7RNCu7_hA5NFng177xuKl9ReVLN33DPyTvf9xJgfkQMyAnJSWgFD
+    http_status: 429
   id: V-003
   url: https://www.youtube.com/watch?v=9JdIBYCTWGw
-  use: Native Ю sound model before its two primer word values.
+  use: Pronunciation model for Ю. Native Ю sound model before its two primer word values. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=u44eCjR2Oz8
-    http_status: 200
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3Du44eCjR2Oz8&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjBbC3jH5wzFrKkwO3hZgGQdkLA3V-fkxAoblhew53bF5JyOSpPbdIvNQwbKxbY2CXQyAnJSWgFD
+    http_status: 429
   id: V-004
   url: https://www.youtube.com/watch?v=u44eCjR2Oz8
-  use: Native Ц sound model before primer reading rows.
+  use: Pronunciation model for Ц. Native Ц sound model before primer reading rows. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
     date: '2026-10-01'
-    final_url: https://www.youtube.com/watch?v=haHRsFFZRQI
-    http_status: 200
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DhaHRsFFZRQI&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjAhlZ8ezU6oAl3BPAFiRuID5vzAmaTHlQuQk3swNkZF4vKsAs_9OKoNSGRahqjt0JEyAnJSWgFD
+    http_status: 429
   id: V-005
   url: https://www.youtube.com/watch?v=haHRsFFZRQI
-  use: Native Ф sound model; no visual look-alike claim.
+  use: Pronunciation model for Ф. Native Ф sound model; no visual look-alike claim. Scored segment is the publisher-labelled
+    native letter-sound demonstration; exact playback/timecode confirmation remains driver-owned.
 - channel: Ukrainian Lessons Podcast
   checked:
     content_type: text/html
@@ -1402,3 +1666,53 @@ videos:
   use: 'ULP 1-15 public pronunciation trainer: native hard/soft consonant support, including the W-076 day word; public transcript
     ext-ulp_youtube-289. Support only: it does not say the exact T-001 W-119/W-120 pair and does not close those word-choice
     requirements.'
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOqE-dUGIjCC21rsoFCRmSS_2OKU5V194xWRph26kUoWh8lbs5n22IXuDEMW90WlUSvWjRD1FDoyAnJSWgFD
+    http_status: 429
+  id: V-008
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: Pronunciation model for Ї. Full-alphabet video, publisher-labelled Ї sound demonstration only; not its letter name
+    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOuE-dUGIjCtkhhhyieUEplTOnD4WPwgMvSZ2PPcd1wPirKEWxkt35EGJl2RtnSqYbVlBM3n1f4yAnJSWgFD
+    http_status: 429
+  id: V-009
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: Pronunciation model for Я. Full-alphabet video, publisher-labelled Я sound demonstration only; not its letter name
+    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOyE-dUGIjCDcGv_U5nD1LtlDK_rdADJL7Bu3jEo5xHj8RSViweUcP1aptskzq-jk0Ng4KhIluMyAnJSWgFD
+    http_status: 429
+  id: V-010
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: Pronunciation model for Є. Full-alphabet video, publisher-labelled Є sound demonstration only; not its letter name
+    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOyE-dUGIjCDcGv_U5nD1LtlDK_rdADJL7Bu3jEo5xHj8RSViweUcP1aptskzq-jk0Ng4KhIluMyAnJSWgFD
+    http_status: 429
+  id: V-011
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: Pronunciation model for Щ. Full-alphabet video, publisher-labelled Щ sound demonstration only; not its letter name
+    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
+- channel: Ukrainian Lessons Podcast
+  checked:
+    content_type: text/html
+    date: '2026-10-01'
+    final_url: https://www.google.com/sorry/index?continue=https://www.youtube.com/watch%3Fv%3DksXIXj7CXwc&q=EhAqAQT4HBvflAAAAAAAAAABGOyE-dUGIjCDcGv_U5nD1LtlDK_rdADJL7Bu3jEo5xHj8RSViweUcP1aptskzq-jk0Ng4KhIluMyAnJSWgFD
+    http_status: 429
+  id: V-012
+  url: https://www.youtube.com/watch?v=ksXIXj7CXwc
+  use: Pronunciation model for Ш. Full-alphabet video, publisher-labelled Ш sound demonstration only; not its letter name
+    or a complete primer word. Driver must confirm segment playback and exact timecode independently.
