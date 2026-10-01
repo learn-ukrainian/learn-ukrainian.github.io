@@ -39,7 +39,12 @@ FAKE_TOOL = r"""#!/usr/bin/env bash
 # Fake npm/npx: log the call, exit early on version/help, emulate `npm ci` emptying its target.
 tool="$(basename "$0")"
 printf '%s\t%s\t%s\n' "$tool" "$PWD" "$*" >> "$FAKE_NPM_LOG"
+# Like npm, the default prefix is the nearest directory holding package.json or node_modules.
 target="$PWD"
+while [[ "$target" != / && ! -e "$target/package.json" && ! -e "$target/node_modules" ]]; do
+  target="$(dirname "$target")"
+done
+[[ "$target" == / ]] && target="$PWD"
 command=""
 args=("$@")
 for ((i = 0; i < ${#args[@]}; i++)); do
@@ -281,8 +286,8 @@ def _git(cwd: Path, *args: str) -> None:
     subprocess.run(["git", *args], cwd=cwd, env=env, check=True, capture_output=True, timeout=60)
 
 
-def _scratch_checkouts(tmp_path: Path) -> tuple[Path, Path]:
-    """A real primary checkout with real node_modules and a dispatch git worktree."""
+def _scratch_checkouts(tmp_path: Path, name: str = "task") -> tuple[Path, Path]:
+    """A real primary checkout with real node_modules and a dispatch git worktree named ``name``."""
     primary = tmp_path / "primary"
     primary.mkdir()
     _git(primary, "init", "-q", "-b", "main")
@@ -293,7 +298,7 @@ def _scratch_checkouts(tmp_path: Path) -> tuple[Path, Path]:
         (folder / SENTINEL).write_text("keep\n", encoding="utf-8")
         (folder / "dep").mkdir()
 
-    worktree = primary / ".worktrees" / "dispatch" / "agent" / "task"
+    worktree = primary / ".worktrees" / "dispatch" / "agent" / name
     _git(primary, "worktree", "add", "-q", "--detach", str(worktree))
     _write_json(worktree / "package.json", {"name": "worktree", "workspaces": ["packages/*"]})
     _write_json(worktree / "packages" / "kit" / "package.json", {"name": "@lu/kit"})
@@ -302,8 +307,7 @@ def _scratch_checkouts(tmp_path: Path) -> tuple[Path, Path]:
     return primary, worktree
 
 
-@pytest.fixture()
-def layout(tmp_path: Path) -> dict[str, Path]:
+def _build_layout(tmp_path: Path, worktree_name: str = "task") -> dict[str, Path]:
     """Scratch primary + dispatch worktree with symlinked node_modules folders."""
     tooling = tmp_path / "tooling"
     shim_dir = tooling / "scripts" / "agent_runtime" / "shims"
@@ -321,7 +325,7 @@ def layout(tmp_path: Path) -> dict[str, Path]:
         fake.write_text(FAKE_TOOL, encoding="utf-8")
         fake.chmod(0o755)
 
-    primary, worktree = _scratch_checkouts(tmp_path)
+    primary, worktree = _scratch_checkouts(tmp_path, worktree_name)
     (worktree / "node_modules").symlink_to(primary / "node_modules")
     (worktree / "site" / "node_modules").symlink_to(primary / "site" / "node_modules")
 
@@ -333,6 +337,11 @@ def layout(tmp_path: Path) -> dict[str, Path]:
         "worktree": worktree,
         "log": tmp_path / "fake-npm.log",
     }
+
+
+@pytest.fixture()
+def layout(tmp_path: Path) -> dict[str, Path]:
+    return _build_layout(tmp_path)
 
 
 def _make_real(layout: dict[str, Path]) -> None:
@@ -435,6 +444,19 @@ def test_unclassifiable_read_only_calls_are_refused_with_the_reason(layout, case
     proc = _run(layout, "npm", args, layout["worktree"])
     _assert_refused(layout, proc)
     assert reason in proc.stderr
+
+
+def test_link_beside_its_own_directory_is_refused(layout):
+    """Inward to the worktree but outside ``site``: from the ``site`` ancestor it points outward."""
+    worktree = layout["worktree"]
+    (worktree / "node_modules").unlink()
+    (worktree / "node_modules").mkdir()
+    (worktree / "site" / "node_modules").unlink()
+    (worktree / "vendor" / "node_modules").mkdir(parents=True)
+    (worktree / "site" / "node_modules").symlink_to(worktree / "vendor" / "node_modules")
+    proc = _run(layout, "npm", ["ci"], worktree / "site")
+    assert proc.returncode == 1 and _fake_calls(layout) == []
+    assert f"outside {worktree / 'site'}." in proc.stderr
 
 
 def test_refusal_names_every_link_to_remove(layout):
@@ -571,18 +593,25 @@ def test_npx_passes_through_with_real_node_modules(layout, tool, args):
 
 
 def test_symlinks_inside_the_same_worktree_pass(layout):
+    """Each link stays inside the directory holding it (``site/node_modules`` inside ``site``).
+
+    Changed with the filesystem walk: without a git root there is no worktree
+    boundary, so a link is inward only relative to every ancestor that holds it;
+    ``site/node_modules`` pointing to ``vendor/`` beside ``site`` is now refused.
+    """
     worktree = layout["worktree"]
     for relative in ("node_modules", "site/node_modules"):
-        (worktree / relative).unlink()
-        (worktree / "vendor" / relative).mkdir(parents=True)
-        (worktree / relative).symlink_to(worktree / "vendor" / relative)
+        link = worktree / relative
+        link.unlink()
+        (link.parent / "vendor" / "node_modules").mkdir(parents=True)
+        link.symlink_to(link.parent / "vendor" / "node_modules")
     proc = _run(layout, "npm", ["ci"], worktree / "site", {"FAKE_NPM_EXIT": "4"})
     _assert_passed_through(layout, proc, "npm", ["ci"], worktree / "site", 4)
     assert _sentinels_intact(layout)
 
 
 def test_outside_any_worktree_passes_through(layout):
-    """Residual: with no git worktree there is nothing to inspect, so the call runs."""
+    """No ancestor has an outward link, so there is nothing to protect and the call runs."""
     elsewhere = layout["tmp"] / "elsewhere"
     elsewhere.mkdir()
     proc = _run(layout, "npm", ["ci"], elsewhere, {"FAKE_NPM_EXIT": "6"})
@@ -782,11 +811,17 @@ def test_outward_link_through_a_symlinked_parent_names_the_parent(layout):
     assert npm_guard.outward_links(worktree) == [(worktree / "site", primary / "site" / "node_modules")]
 
 
-def test_worktree_root_ignores_git_environment(layout, monkeypatch):
-    monkeypatch.setenv("GIT_DIR", str(layout["primary"] / ".git"))
+def test_walk_ignores_git_environment(layout, monkeypatch):
+    """Adapted from the git-root test: the walk reads only the filesystem, so GIT_* cannot steer it."""
+    worktree, primary = layout["worktree"], layout["primary"]
+    monkeypatch.setenv("GIT_DIR", str(primary / ".git"))
     monkeypatch.setenv("GIT_WORK_TREE", str(layout["tmp"]))
-    assert npm_guard.worktree_root(layout["worktree"] / "site" / "src") == layout["worktree"]
-    assert npm_guard.worktree_root(layout["tmp"]) is None
+    assert [link for _, link, _ in npm_guard.protected_links([worktree / "site" / "src"])] == [
+        worktree / "node_modules",
+        worktree / "site" / "node_modules",
+    ]
+    assert npm_guard.protected_links([layout["tmp"]]) == []
+    assert npm_guard.protected_links([primary / "site"]) == []
 
 
 def test_main_rejects_unknown_tool(capsys):
@@ -815,6 +850,249 @@ def test_delegate_provisioned_worktree_is_protected(tmp_path):
         worktree / relative for relative in npm_guard.PROTECTED_PATHS
     ]
     assert npm_guard.main(["npm", "ci"], cwd=worktree) == 1
+
+
+# --- the protected worktree is found by walking the filesystem ----------------
+# Each shape below made the a36195414c guard (git's reported root) let `npm ci`
+# through to the fake, which then emptied the shared folder.
+
+
+def test_nested_repository_does_not_hide_the_worktree_link(layout):
+    """A repository at site/src made git report it as the root, hiding site/node_modules."""
+    nested = layout["worktree"] / "site" / "src"
+    _git(nested, "init", "-q", "-b", "main")
+    proc = _run(layout, "npm", ["ci", "--ignore-scripts", "--no-audit", "--no-fund"], nested)
+    _assert_refused(layout, proc)
+    assert f"unlink {layout['worktree'] / 'site' / 'node_modules'}" in proc.stderr
+
+
+def test_core_worktree_redirect_does_not_hide_the_worktree_link(layout):
+    worktree = layout["worktree"]
+    elsewhere = layout["tmp"] / "elsewhere"
+    elsewhere.mkdir()
+    _git(worktree, "config", "extensions.worktreeConfig", "true")
+    _git(worktree, "config", "--worktree", "core.worktree", str(elsewhere))
+    _assert_refused(layout, _run(layout, "npm", ["ci"], worktree / "site"))
+
+
+@pytest.mark.parametrize("relative_cwd", [".", "site"])
+def test_worktree_root_ending_in_a_space_is_protected(tmp_path, relative_cwd):
+    space_layout = _build_layout(tmp_path, "task ")
+    worktree = space_layout["worktree"]
+    assert str(worktree).endswith(" ")
+    proc = _run(space_layout, "npm", ["ci"], worktree / relative_cwd)
+    _assert_refused(space_layout, proc)
+    assert f"outside {worktree}." in proc.stderr
+    assert npm_guard.main(["npm", "ci"], cwd=worktree / relative_cwd) == 1
+
+
+def test_logical_working_directory_through_the_link_is_protected(layout):
+    """Physically inside the primary's node_modules, logically inside the worktree: $PWD reveals the link."""
+    logical = layout["worktree"] / "node_modules" / "dep"
+    _assert_refused(layout, _run(layout, "npm", ["ci"], logical, {"PWD": str(logical)}))
+
+
+@pytest.mark.parametrize("spelling", ["{}/", "{}/.", "{}//"])
+def test_working_directory_spellings_are_protected(layout, spelling):
+    site = layout["worktree"] / "site"
+    _assert_refused(layout, _run(layout, "npm", ["ci"], site, {"PWD": spelling.format(site)}))
+    assert npm_guard.main(["npm", "ci"], cwd=Path(spelling.format(site))) == 1
+
+
+def test_symlinked_working_directory_is_protected(layout):
+    alias = layout["tmp"] / "alias"
+    alias.symlink_to(layout["worktree"])
+    _assert_refused(layout, _run(layout, "npm", ["ci"], alias / "site", {"PWD": str(alias / "site")}))
+
+
+def test_unreadable_working_directory_allows_only_read_only_calls(layout):
+    """A deleted cwd might lie in a protected worktree; npm cannot run there either, so refuse writes."""
+    gone = layout["worktree"] / "site" / "gone"
+    script = 'cd "$1" && rmdir "$1" && "$2" "${@:3}"'
+    base = [str(layout["shim_dir"] / "npm")]
+    env = {
+        "PATH": f"{layout['shim_dir']}:{layout['fake_bin']}:/usr/bin:/bin",
+        "HOME": str(layout["tmp"]),
+        "FAKE_NPM_LOG": str(layout["log"]),
+    }
+    for args, refused in ((["ci"], True), (["--version"], False)):
+        gone.mkdir()
+        proc = subprocess.run(
+            ["bash", "-c", script, "bash", str(gone), *base, *args],
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=60,
+        )
+        if refused:
+            assert proc.returncode == 1, proc.stderr
+            assert "working directory cannot be read" in proc.stderr
+            assert _fake_calls(layout) == []
+        else:
+            assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+    assert _sentinels_intact(layout)
+
+
+def test_main_treats_an_unreadable_working_directory_as_protected(monkeypatch, capsys):
+    def deleted() -> str:
+        raise FileNotFoundError("cwd deleted")
+
+    monkeypatch.setattr(npm_guard.os, "getcwd", deleted)
+    assert npm_guard.main(["npm", "ci"]) == 1
+    assert "working directory cannot be read" in capsys.readouterr().err
+    assert npm_guard.main(["npm", "--version"]) == 0
+
+
+def test_outward_symlink_loop_is_refused(layout):
+    worktree, tmp = layout["worktree"], layout["tmp"]
+    (tmp / "loop-a").symlink_to(tmp / "loop-b")
+    (tmp / "loop-b").symlink_to(tmp / "loop-a")
+    (worktree / "node_modules").unlink()
+    (worktree / "node_modules").symlink_to(tmp / "loop-a")
+    (worktree / "site" / "node_modules").unlink()
+    (worktree / "site" / "node_modules").symlink_to(worktree / "site" / "node_modules")
+    proc = _run(layout, "npm", ["ci"], worktree / "site")
+    _assert_refused(layout, proc)
+    assert f"unlink {worktree / 'node_modules'}`" in proc.stderr
+
+
+def test_walk_survives_deep_paths_and_unreadable_ancestors(layout):
+    worktree = layout["worktree"]
+    expected = [worktree / "node_modules", worktree / "site" / "node_modules"]
+    deep = worktree / "site" / Path(*["d"] * 3000)
+    assert len(str(deep)) > 4096
+    assert [link for _, link, _ in npm_guard.protected_links([deep])] == expected
+    if os.geteuid() == 0:
+        pytest.skip("root ignores directory permissions")
+    locked = worktree / "site" / "locked"
+    locked.mkdir()
+    locked.chmod(0)
+    try:
+        assert npm_guard.outward_links(locked / "inner") == []
+        assert [link for _, link, _ in npm_guard.protected_links([locked / "inner"])] == expected
+    finally:
+        locked.chmod(0o755)
+
+
+# --- the shim's interpreter and real-tool lookup --------------------------------
+
+
+def _linked_shim_checkout(tmp_path: Path) -> tuple[Path, Path]:
+    """A primary checkout holding the shim and a .venv, plus a linked worktree without a .venv."""
+    main_root = tmp_path / "shim-primary"
+    shim_dir = main_root / "scripts" / "agent_runtime" / "shims"
+    shim_dir.mkdir(parents=True)
+    shutil.copy2(SHIM_SOURCE, shim_dir / "npm")
+    (shim_dir / "npx").symlink_to("npm")
+    shutil.copy2(GUARD_SOURCE, main_root / "scripts" / "agent_runtime" / "npm_guard.py")
+    (main_root / ".gitignore").write_text(".venv/\n", encoding="utf-8")
+    _git(main_root, "init", "-q", "-b", "main")
+    _git(main_root, "add", ".")
+    _git(main_root, "commit", "-q", "-m", "shim")
+    (main_root / ".venv" / "bin").mkdir(parents=True)
+    (main_root / ".venv" / "bin" / "python").symlink_to(sys.executable)
+    linked = main_root / ".worktrees" / "dispatch" / "agent" / "task"
+    _git(main_root, "worktree", "add", "-q", "--detach", str(linked))
+    assert not (linked / ".venv").exists()
+    return main_root, linked / "scripts" / "agent_runtime" / "shims"
+
+
+@pytest.mark.parametrize("git_env", [{}, {"GIT_DIR": "/nonexistent", "GIT_WORK_TREE": "/nonexistent"}], ids=str)
+def test_linked_worktree_shim_uses_the_main_checkout_interpreter(layout, git_env):
+    _, linked_shims = _linked_shim_checkout(layout["tmp"])
+    env = {
+        "PATH": f"{linked_shims}:{layout['fake_bin']}:/usr/bin:/bin",
+        "HOME": str(layout["tmp"]),
+        "FAKE_NPM_LOG": str(layout["log"]),
+        **git_env,
+    }
+    proc = subprocess.run(
+        [str(linked_shims / "npm"), "--version"],
+        cwd=layout["tmp"],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=60,
+    )
+    assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+
+
+@pytest.mark.parametrize("stamped", [True, False], ids=["stamped-interpreter", "common-dir-lookup"])
+def test_runner_merge_guard_npm_version_runs_from_a_linked_worktree(layout, stamped):
+    from scripts.agent_runtime import runner
+
+    _, linked_shims = _linked_shim_checkout(layout["tmp"])
+    env = runner._apply_merge_guard(
+        mode="danger",
+        env={
+            "PATH": f"{layout['fake_bin']}:/usr/bin:/bin",
+            "HOME": str(layout["tmp"]),
+            "FAKE_NPM_LOG": str(layout["log"]),
+        },
+    )
+    assert env["AGENT_GIT_SHIM_PYTHON"] == sys.executable
+    if not stamped:
+        env.pop("AGENT_GIT_SHIM_PYTHON")
+    env["PATH"] = env["PATH"].replace(str(runner._SHIMS_DIR), str(linked_shims), 1)
+    npm = shutil.which("npm", path=env["PATH"])
+    assert npm == str(linked_shims / "npm")
+    proc = subprocess.run(
+        [npm, "--version"], cwd=layout["tmp"], env=env, capture_output=True, text=True, check=False, timeout=60
+    )
+    assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+
+
+def test_runner_merge_guard_npm_version_runs_through_this_checkout(layout):
+    """The review's probe as written: the runner's own shim directory, whatever checkout this is."""
+    from scripts.agent_runtime import runner
+
+    env = runner._apply_merge_guard(
+        mode="danger",
+        env={
+            "PATH": f"{layout['fake_bin']}:/usr/bin:/bin",
+            "HOME": str(layout["tmp"]),
+            "FAKE_NPM_LOG": str(layout["log"]),
+        },
+    )
+    npm = shutil.which("npm", path=env["PATH"])
+    assert npm == str(runner._SHIMS_DIR / "npm")
+    proc = subprocess.run(
+        [npm, "--version"], cwd=layout["tmp"], env=env, capture_output=True, text=True, check=False, timeout=60
+    )
+    assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+
+
+def _shim_spellings(layout: dict[str, Path]) -> dict[str, str]:
+    alias = layout["tmp"] / "shim-alias"
+    alias.symlink_to(layout["shim_dir"])
+    return {"dot": f"{layout['shim_dir']}/.", "slash": f"{layout['shim_dir']}//", "symlink": str(alias)}
+
+
+@pytest.mark.parametrize("spelling", ["dot", "slash", "symlink"])
+def test_shim_directory_spelled_differently_on_path_does_not_recurse(layout, spelling):
+    entry = _shim_spellings(layout)[spelling]
+    env = {
+        "PATH": f"{entry}:{layout['fake_bin']}:/usr/bin:/bin",
+        "AGENT_ORIGINAL_PATH": f"{entry}:{layout['fake_bin']}",
+    }
+    proc = _run(layout, "npm", ["--version"], layout["tmp"], env)
+    assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+    assert len(_fake_calls(layout)) == 1
+
+
+@pytest.mark.parametrize("spelling", ["dot", "slash", "symlink"])
+def test_pinned_shim_spelled_differently_is_not_used(layout, spelling):
+    pinned = _shim_spellings(layout)[spelling] + ("npm" if spelling == "slash" else "/npm")
+    proc = _run(layout, "npm", ["--version"], layout["tmp"], {"AGENT_REAL_NPM": pinned})
+    assert (proc.returncode, proc.stdout) == (0, "fake-npm-stdout --version\n"), proc.stderr
+    assert len(_fake_calls(layout)) == 1
+
+
+def test_pinned_real_tool_does_not_bypass_the_guard(layout):
+    proc = _run(layout, "npm", ["ci"], layout["worktree"], {"AGENT_REAL_NPM": str(layout["fake_bin"] / "npm")})
+    _assert_refused(layout, proc)
 
 
 # --- wiring: dispatched shells resolve npm/npx to the shim ---------------------

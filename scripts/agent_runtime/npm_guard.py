@@ -15,9 +15,13 @@ The decision is a fact about the worktree, not a prediction of where npm will
 write. npm's options, config files, environment, prefix and workspace
 resolution are deliberately not modelled, so none of them can steer the guard:
 
-* No protected path of the current git worktree resolves outside it: every call
-  passes through untouched, without looking at the arguments.
-* At least one does: only clearly read-only calls pass, namely a version/help
+* No protected path of the working directory or of any of its ancestors, up to
+  the filesystem root, resolves outside that ancestor: every call passes
+  through untouched, without looking at the arguments. The walk reads only the
+  filesystem; git is not asked where the worktree is, so nested repositories,
+  ``core.worktree`` or ``GIT_*`` variables cannot hide a link.
+* At least one does, or the working directory cannot be read: only clearly
+  read-only calls pass, namely a version/help
   early exit, an allowlisted read-only subcommand with no destructive command
   word anywhere in the arguments, or ``npx``/``npm exec`` whose arguments name
   no package manager and no install word. Everything else is refused, including
@@ -38,7 +42,6 @@ from __future__ import annotations
 
 import os
 import re
-import subprocess
 import sys
 from collections.abc import Sequence
 from pathlib import Path
@@ -101,44 +104,84 @@ SCRIPT_EXTENSIONS = frozenset({"js", "cjs", "mjs", "cmd", "exe", "ps1"})
 SHELL_OPTIONS = frozenset({"-c", "--call"})
 
 
-def worktree_root(cwd: Path) -> Path | None:
-    """The git worktree containing ``cwd``, or None outside any (or without git)."""
-    env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
-    try:
-        proc = subprocess.run(
-            ["git", "rev-parse", "--show-toplevel"],
-            cwd=cwd,
-            env=env,
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=30,
-        )
-    except (OSError, subprocess.SubprocessError):
-        return None
-    top = proc.stdout.strip()
-    return Path(top) if proc.returncode == 0 and top else None
+def start_paths(cwd: Path | None = None) -> list[Path] | None:
+    """The directories the walk starts from, or None when the working directory cannot be read.
+
+    The physical working directory as the OS reports it, plus the logical one
+    (``$PWD``, or ``cwd`` as given) when it is spelled differently but names the
+    same directory: a link reached through a symlinked path is only visible from
+    the logical spelling. Nothing is stripped or normalised beyond what
+    :class:`~pathlib.Path` does, so names ending in whitespace stay intact.
+    """
+    if cwd is None:
+        try:
+            physical = os.getcwd()
+        except OSError:
+            return None
+        logical = os.environ.get("PWD", "")
+    else:
+        physical, logical = os.path.realpath(cwd), os.fspath(cwd)
+    paths = [Path(physical)]
+    if logical and os.path.isabs(logical) and Path(logical) != paths[0]:
+        try:
+            if os.path.samefile(logical, physical):
+                paths.append(Path(logical))
+        except OSError:
+            pass
+    return paths
 
 
 def outward_links(root: Path) -> list[tuple[Path, Path]]:
-    """``(link, target)`` for each protected path resolving outside ``root``."""
-    real_root = Path(os.path.realpath(root))
+    """``(link, target)`` for each protected path of ``root`` resolving outside it.
+
+    An inward link or a real directory is not reported; a path that cannot be
+    inspected (permission denied, name too long) is skipped.
+    """
     found = []
+    try:
+        real_root = Path(os.path.realpath(root))
+    except (OSError, ValueError):
+        return found
     for relative in PROTECTED_PATHS:
         path = root / relative
-        if not os.path.lexists(path):
+        try:
+            if not os.path.lexists(path):
+                continue
+            resolved = Path(os.path.realpath(path))
+            if resolved != real_root and real_root not in resolved.parents:
+                found.append((_first_symlink(root, path), resolved))
+        except (OSError, ValueError):
             continue
-        resolved = Path(os.path.realpath(path))
-        if resolved != real_root and real_root not in resolved.parents:
-            found.append((_first_symlink(root, path), resolved))
     return found
+
+
+def protected_links(starts: Sequence[Path]) -> list[tuple[Path, Path, Path]]:
+    """``(ancestor, link, target)`` for every outward link of every ancestor of ``starts``, by link path.
+
+    Every ancestor up to the filesystem root is inspected, so a nested
+    repository, ``core.worktree``, ``GIT_DIR`` or any other way of moving the
+    git root cannot hide the enclosing dispatch worktree's links.
+    """
+    found: list[tuple[Path, Path, Path]] = []
+    seen_ancestors: set[Path] = set()
+    seen_links: set[Path] = set()
+    for start in starts:
+        for ancestor in (start, *start.parents):
+            if ancestor in seen_ancestors:
+                continue
+            seen_ancestors.add(ancestor)
+            for link, target in outward_links(ancestor):
+                if link not in seen_links:
+                    seen_links.add(link)
+                    found.append((ancestor, link, target))
+    return sorted(found, key=lambda entry: entry[1])
 
 
 def _first_symlink(root: Path, path: Path) -> Path:
     current = root
     for part in path.relative_to(root).parts:
         current = current / part
-        if current.is_symlink():
+        if os.path.islink(current):
             return current
     return path
 
@@ -287,20 +330,27 @@ def refusal_reason(tool: str, args: Sequence[str]) -> str | None:
     return None
 
 
-def refusal_message(tool: str, args: Sequence[str], root: Path, links: Sequence[tuple[Path, Path]], reason: str) -> str:
+def refusal_message(tool: str, args: Sequence[str], links: Sequence[tuple[Path, Path, Path]], reason: str) -> str:
     shown = " ".join([tool, *args])
     lines = [f"error: agent {tool} shim refused `{shown}` (#9460).", f"       Reason: {reason}"]
-    for link, target in links:
-        lines.append(f"       {link} resolves to {target}, outside this worktree ({root}).")
-    unlinks = " && ".join(f"unlink {link}" for link, _ in links)
-    lines += [
-        "       While such a link exists only clearly read-only npm commands run here; installs,",
-        "       global installs (-g), and npx or npm exec naming a package manager or an install",
-        "       word are refused because they could empty the shared folder through the link.",
-        f"       Safe alternative: remove the link inside this worktree first (`{unlinks}`",
-        "       deletes only the link, never its target), then install here so npm creates a",
-        "       worktree-local node_modules; or run the command outside this worktree.",
-    ]
+    for ancestor, link, target in links:
+        lines.append(f"       {link} resolves to {target}, outside {ancestor}.")
+    if links:
+        unlinks = " && ".join(f"unlink {link}" for _, link, _ in links)
+        lines += [
+            "       While such a link exists only clearly read-only npm commands run here; installs,",
+            "       global installs (-g), and npx or npm exec naming a package manager or an install",
+            "       word are refused because they could empty the shared folder through the link.",
+            f"       Safe alternative: remove the link inside this worktree first (`{unlinks}`",
+            "       deletes only the link, never its target), then install here so npm creates a",
+            "       worktree-local node_modules; or run the command outside this worktree.",
+        ]
+    else:
+        lines += [
+            "       The working directory cannot be read, so the guard cannot rule out a shared",
+            "       node_modules link above it and allows only clearly read-only calls.",
+            "       Safe alternative: cd into an existing directory and run the command again.",
+        ]
     return "\n".join(lines)
 
 
@@ -310,16 +360,17 @@ def main(argv: Sequence[str] | None = None, *, cwd: Path | None = None) -> int:
         print("usage: npm_guard.py {npm|npx} ARGS...", file=sys.stderr)
         return 2
     tool, rest = args[0], args[1:]
-    root = worktree_root(Path(os.getcwd()) if cwd is None else cwd)
-    if root is None:
-        return 0
-    links = outward_links(root)
-    if not links:
+    starts = start_paths(cwd)
+    # A working directory that cannot be read (deleted, say) could lie inside a
+    # protected worktree. npm cannot run there either, so treating it as
+    # protected costs no legitimate call and never guesses in the unsafe direction.
+    links = [] if starts is None else protected_links(starts)
+    if starts is not None and not links:
         return 0
     reason = refusal_reason(tool, rest)
     if reason is None:
         return 0
-    print(refusal_message(tool, rest, root, links, reason), file=sys.stderr)
+    print(refusal_message(tool, rest, links, reason), file=sys.stderr)
     return 1
 
 

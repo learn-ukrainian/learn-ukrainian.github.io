@@ -356,10 +356,12 @@ then applies explicit `InvocationPlan.env_unsets`. The merge guard runs
 after sanitization so its `gh`/`git` shims still receive the final `PATH`
 and can stamp `AGENT_NO_MERGE`, `AGENT_REAL_GH`, and `AGENT_REAL_GIT`.
 The same directory holds the `npm`/`npx` shim (#9460), active in every shell
-that has it on `PATH`. It decides from the worktree, not from npm's
-arguments: when `node_modules` or `site/node_modules` of the current git
-worktree resolves outside it (the symlinks into the primary checkout that
-dispatch worktrees receive), only clearly read-only calls run — `--version`
+that has it on `PATH`. It decides from the filesystem, not from npm's
+arguments or from git: it walks every ancestor of the working directory (the
+physical path, and `$PWD` when it names the same directory through a symlink)
+up to the filesystem root, and when `node_modules` or `site/node_modules` of
+any ancestor resolves outside that ancestor (the symlinks into the primary
+checkout that dispatch worktrees receive), only clearly read-only calls run — `--version`
 or `--help`, and an allowlisted subcommand such as `run`, `test`, `ls`,
 `view` or `config get` with no install-like word (`ci`, `install`, `update`,
 `prune`, …) anywhere in the arguments. `npx`, `npm exec` and `npm x` also run
@@ -376,17 +378,39 @@ such as `npm view ci` or options with a separate value before the subcommand
 (write `--key=value`; `--prefix` and `--workspace` are understood). To
 install, `unlink` the link inside the worktree first so npm creates a
 worktree-local folder, or run the command outside the worktree. Without such
-a link every call passes through untouched. The decision lives in
-`scripts/agent_runtime/npm_guard.py`; `AGENT_REAL_NPM`/`AGENT_REAL_NPX`
-optionally pin the real tool. Not covered: calling npm by absolute path or
-through `node`, a `node_modules/.bin/npm`, a stripped `PATH`, pnpm/yarn
-directly, a working directory outside any git worktree, a tool launched by
-`npx`/`npm exec` that starts a package manager itself (an inner `npm` on
-`PATH` still reaches the shim; pnpm, yarn or an npm by path do not), npm
-config such as `npm_config_call` or an `.npmrc` `call=` supplying the
-command, and running from a checkout with a real `node_modules`, such as the
-primary, with `--prefix`/`-C` pointing into a dispatch worktree (that call
-passes through; workers do not run from there).
+a link every call passes through untouched. Because git is never asked
+where the worktree is, a nested repository, `core.worktree`, `GIT_DIR` or
+`GIT_WORK_TREE` cannot hide a link. A working directory that cannot be read
+(deleted, for example) is treated as protected: npm cannot run there either,
+so only clearly read-only calls are let through. The decision lives in
+`scripts/agent_runtime/npm_guard.py`. The shim runs it with the interpreter
+the `git` shim uses, looked up in the same order: `AGENT_GIT_SHIM_PYTHON`
+(the runner stamps it), else the main checkout's `.venv` found through the git
+common dir (so a linked worktree needs no `.venv` of its own), else the shim
+checkout's; with none of them it refuses to run npm. `AGENT_REAL_NPM`/
+`AGENT_REAL_NPX` optionally pin the real tool; the guard runs before the pin
+is read, so a pin chooses the binary but never skips the guard. Shim
+directories on `PATH` are recognised by physical path, so a spelling such as
+`shims/.`, `shims//` or a symlink to the directory cannot make the shim find
+itself.
+
+Not covered (owner `claude-infra`, each tracked under the #9460 follow-up):
+
+- calling npm by absolute path or through `node`, or a `node_modules/.bin/npm`;
+- a stripped `PATH` without the shim directory, and pnpm, yarn or bun called
+  directly;
+- a tool launched by `npx`/`npm exec` that starts a package manager itself (an
+  inner `npm` on `PATH` still reaches the shim; pnpm, yarn or an npm by path
+  do not);
+- npm config such as `npm_config_call` or an `.npmrc` `call=` supplying the
+  command;
+- running from a checkout with a real `node_modules`, such as the primary,
+  with `--prefix`/`-C` pointing into a dispatch worktree (that call passes
+  through; workers do not run from there);
+- a working directory physically inside the shared folder (reached through the
+  link) in a process without `$PWD`, where only the physical path is visible;
+- `AGENT_GIT_SHIM_PYTHON` naming a program that is not a Python interpreter
+  (for example one that always exits 0), which replaces the guard's verdict.
 
 ## Context file conventions
 
