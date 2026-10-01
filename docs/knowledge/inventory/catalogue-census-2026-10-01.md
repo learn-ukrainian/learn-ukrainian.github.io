@@ -18,7 +18,7 @@ Base commit `2476814b25` plus the three files this change adds under `docs/knowl
 | Tracked denominator | **3,270** |
 | `.venv/bin/python -m scripts.docs.catalogue check --json` → `covered` | 3,270 |
 | … `uncovered` / `errors` / ambiguous matches | 0 / 0 / 0 |
-| … families / data-store entries / residual paths | 117 / 25 / 25 |
+| … families / data-store entries / residual paths | 118 / 26 / 31 |
 | `check --data-root <primary checkout>/data` → names checked / unmatched | 59 / 0 |
 
 The 2,120 `docs/` files are 2,116 counted by the inventories at `f0c144c5b1`
@@ -32,14 +32,16 @@ of `data/lexicon/` and `data/projects/`, which are claimed one by one.
 
 | Root | active | archive | superseded | draft | residual | Total |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| `docs` | 1,143 | 877 | 61 | 14 | 25 | 2,120 |
-| `registry` | 1,056 | 39 | 0 | 0 | 0 | 1,095 |
+| `docs` | 1,132 | 877 | 61 | 19 | 31 | 2,120 |
+| `registry` | 1,044 | 39 | 0 | 12 | 0 | 1,095 |
 | `curriculum/l2-uk-en/evidence` | 55 | 0 | 0 | 0 | 0 | 55 |
-| **Total** | **2,254** | **916** | **61** | **14** | **25** | **3,270** |
+| **Total** | **2,231** | **916** | **61** | **31** | **31** | **3,270** |
 
 Effective lifecycle is the family default unless a per-path override or a residual entry
-applies. 7 paths (`docs/session-state/**`) are catalogued with `content_searchable: false`,
-matching the docs inventory's privacy exclusion.
+applies. 7 paths (`docs/session-state/**`) are catalogued with `content_searchable: false`.
+The validator enforces this by ownership: a family that owns any path under a component the
+docs inventory excludes (`EXCLUDED_PARTS` in `scripts/docs/docs_inventory.py`) must not be
+content-searchable, whatever its glob text says.
 
 ## Status vocabulary
 
@@ -70,7 +72,7 @@ Files per family sum to the denominator (3,270). Owners are stream keys from
 | `core-lesson-contracts` | doc_family | active | curriculum-upgrade | 5 | 2 |
 | `top-level-point-in-time-audits` | evidence | archive | infra-harness | 9 | 0 |
 | `top-level-historical-notes` | doc_family | archive | infra-harness | 10 | 1 |
-| `architecture-adr` | doc_family | active | infra-harness | 17 | 0 |
+| `architecture-adr` | doc_family | active | infra-harness | 17 | 1 |
 | `architecture-research` | evidence | archive | infra-harness | 2 | 0 |
 | `architecture-specs` | doc_family | active | infra-harness | 42 | 11 |
 | `decisions-journal` | registry | active | infra-harness | 60 | 5 |
@@ -79,7 +81,7 @@ Files per family sum to the denominator (3,270). Owners are stream keys from
 | `proposals` | doc_family | archive | curriculum-upgrade | 11 | 1 |
 | `strategy` | doc_family | active | open-model-data | 2 | 1 |
 | `gemma-finetuning-guides` | doc_family | archive | open-model-data | 3 | 1 |
-| `best-practices` | doc_family | active | infra-harness | 63 | 0 |
+| `best-practices` | doc_family | active | infra-harness | 63 | 3 |
 | `runbooks` | doc_family | active | infra-harness | 41 | 0 |
 | `runbooks-atlas` | doc_family | active | atlas-practice | 14 | 0 |
 | `runbooks-data-foundry` | doc_family | active | open-model-data | 8 | 1 |
@@ -148,7 +150,7 @@ Files per family sum to the denominator (3,270). Owners are stream keys from
 | `content-review-reports` | evidence | archive | core-quality | 2 | 0 |
 | `folk-epic-specs` | doc_family | active | seminars-folk | 12 | 0 |
 | `bio-epic-queues` | doc_family | active | seminars-bio | 3 | 0 |
-| `resources-external-links` | resource_catalogue | active | curriculum-upgrade | 4 | 2 |
+| `resources-external-links` | resource_catalogue | active | curriculum-upgrade | 4 | 3 |
 | `resources-curated-link-maps` | resource_catalogue | active | curriculum-upgrade | 6 | 0 |
 | `resources-scraped-catalogs` | resource_catalogue | active | curriculum-upgrade | 14 | 0 |
 | `resources-mapping-reports` | evidence | archive | curriculum-upgrade | 13 | 0 |
@@ -157,7 +159,7 @@ Files per family sum to the denominator (3,270). Owners are stream keys from
 | `practice-specs` | doc_family | active | atlas-practice | 11 | 0 |
 | `practice-residual-evidence` | evidence | active | atlas-practice | 6 | 0 |
 | `lexicon-sum11-audit` | evidence | active | atlas-practice | 4 | 0 |
-| `poc-designs` | doc_family | active | atlas-practice | 14 | 0 |
+| `poc-designs` | doc_family | active | atlas-practice | 14 | 1 |
 | `sources-permissions-register` | registry | active | atlas-practice | 2 | 0 |
 | `projects-open-model-data` | doc_family | active | open-model-data | 25 | 9 |
 | `projects-foundry-evidence` | evidence | active | open-model-data | 23 | 0 |
@@ -168,7 +170,8 @@ Files per family sum to the denominator (3,270). Owners are stream keys from
 | `registry-reference-inputs` | registry | active | corpus-channels | 13 | 0 |
 | `registry-artifacts` | registry | active | infra-harness | 31 | 0 |
 | `registry-storage-migration-notes` | evidence | archive | infra-harness | 6 | 0 |
-| `registry-corpus-audit` | evidence | active | corpus-channels | 15 | 0 |
+| `registry-corpus-audit` | evidence | active | corpus-channels | 3 | 0 |
+| `registry-corpus-audit-draft-tickets` | doc_family | draft | corpus-channels | 12 | 0 |
 | `registry-corpus-channels` | registry | active | corpus-channels | 2 | 0 |
 | `registry-lexicon-curation` | registry | active | atlas-practice | 24 | 0 |
 | `registry-lexicon-source-inventory` | registry | active | atlas-practice | 259 | 0 |
@@ -191,29 +194,30 @@ flag against the index; all other stores exist only in the local `data/` directo
 | Store entry | Logical store | Default lifecycle | Owner | Producer |
 | --- | --- | --- | --- | --- |
 | `data-sources-db` | `data/sources.db` | active | corpus-channels | `scripts/wiki/build_sources_db.py`, `scripts/lexicon/runner/fetch_ulif_homonyms.py` |
-| `data-vesum-db` | `data/vesum.db`, `data/vesum.db.bak`, `data/vesum.db.bak.*`, `data/vesum_shadow_v680.db` | active | corpus-channels | `scripts/rag/activate_vesum_db.py` |
+| `data-vesum-db` | `data/vesum.db`, `data/vesum.db.bak`, `data/vesum.db.bak.*`, `data/vesum_shadow_v680.db` | active | corpus-channels | `scripts/rag/activate_vesum_db.py`, `scripts/rag/build_vesum_shadow.py` |
 | `data-atlas-db` | `data/atlas.db` | active | atlas-practice | `scripts/atlas/atlas_db.py` |
-| `data-ulif-dumps` | `data/ulif_dump_all.db`, `data/ulif_dump.db`, `data/ulif_scrape.log` | active | atlas-practice | `scripts/lexicon/tools/dump_ulif.py` |
-| `data-wiki-cache` | `data/wiki_cache.db`, `data/wiki_sources.db` | active | corpus-channels | `scripts/rag/wiki_cache.py` |
+| `data-ulif-dumps` | `data/ulif_dump_all.db`, `data/ulif_dump.db`, `data/ulif_scrape.log` | active | atlas-practice | `scripts/lexicon/tools/dump_ulif.py` (`ulif_dump.db` only; the other two have no writer in `scripts/`) |
+| `data-wiki-cache` | `data/wiki_cache.db`, `data/wiki_sources.db` | active | corpus-channels | `scripts/rag/wiki_cache.py` (`wiki_cache.db` only; nothing in `scripts/` names `wiki_sources.db`) |
 | `data-empty-comms-placeholders` | `data/comms_plane.db`, `data/fleet_comms.db` | archive | infra-harness | Zero-byte files with no writer in scripts/; the Fleet Comms plane keeps its durable store elsewhere. |
-| `data-lexicon-ulif-cache` | `data/lexicon/cache/` | active | atlas-practice | `scripts/lexicon/runner/fetch_ulif_homonyms.py`, `scripts/lexicon/runner/ulif_dictua_store.py` |
-| `data-lexicon-slovnyk-cache` | `data/lexicon/slovnyk_cache/` | active | atlas-practice | `scripts/lexicon/enrich_manifest.py`, `scripts/lexicon/heritage_classifier.py` |
-| `data-lexicon-source-inventory` | `data/lexicon/source-inventory/`, `data/lexicon/textbook-end-dictionaries/` | active | atlas-practice | `scripts/audit/apply_source_inventory_promotion.py` |
-| `data-lexicon-working` | `data/lexicon/intake/`, `data/lexicon/parked/`, `data/lexicon/recovery-audit/`, `data/lexicon/runner_work/`, `data/lexicon/side/`, `data/lexicon/*.json` | active | atlas-practice | `scripts/lexicon/reconcile_calque_clusters.py`, `scripts/lexicon/enrich_manifest.py` |
-| `data-open-model-data-payloads` | `data/projects/open_model_data/` | active | open-model-data | `scripts/projects/open_model_data/model_view_exporter.py`, `scripts/projects/open_model_data/build_decolonization_cases.py` |
+| `data-lexicon-ulif-cache` | `data/lexicon/cache/` | active | atlas-practice | `scripts/lexicon/runner/fetch_ulif_homonyms.py`, `scripts/lexicon/ulif_raw_cache.py`, `scripts/lexicon/enrich_manifest.py` |
+| `data-lexicon-slovnyk-cache` | `data/lexicon/slovnyk_cache/` | active | atlas-practice | `scripts/lexicon/enrich_manifest.py`, `scripts/lexicon/migrate_slovnyk_cache_v3.py`, `scripts/lexicon/migrate_slovnyk_cache_v4.py` |
+| `data-lexicon-source-inventory` | `data/lexicon/source-inventory/`, `data/lexicon/textbook-end-dictionaries/` | active | atlas-practice | `scripts/practice_deck/end_dictionaries.py` (`textbook-end-dictionaries/` only; no writer of `source-inventory/` in `scripts/`) |
+| `data-lexicon-working` | `data/lexicon/intake/`, `data/lexicon/parked/`, `data/lexicon/recovery-audit/`, `data/lexicon/runner_work/`, `data/lexicon/side/`, `data/lexicon/*.json` | active | atlas-practice | `scripts/lexicon/reconcile_calque_clusters.py`, `scripts/lexicon/enrich_manifest.py`, `scripts/lexicon/park_thin_entries.py`, `scripts/lexicon/promote_teacher_lesson_intake.py`, `scripts/lexicon/ohoiko_paired_headword_split.py` |
+| `data-open-model-data-payloads` | `data/projects/open_model_data/` | active | open-model-data | `scripts/projects/open_model_data/build_decolonization_cases.py` |
 | `data-eval-payloads` | `data/projects/ua_eval_harness/`, `data/projects/ua_open_weight_eval/` | active | open-model-data | `scripts/projects/ua_eval_harness/build_heldout_manifest.py`, `scripts/projects/ua_open_weight_eval/suite_cli.py` |
-| `data-textbook-chunks` | `data/textbook_chunks/` | active | corpus-channels | `scripts/ingest/incremental_textbook_ingest.py` |
+| `data-textbook-chunks` | `data/textbook_chunks/` | active | corpus-channels | `scripts/rag/extract_text.py` |
 | `data-ua-gec` | `data/ua-gec/` | active | corpus-channels | Clone of the upstream UA-GEC project; scripts/audit/ingest_ua_gec_gold.py reads it. |
 | `data-artifact-store` | `data/.artifact-store/` | active | infra-harness | `scripts/storage/artifacts.py` |
-| `data-backups-staging` | `data/backups/`, `data/.backup-staging/` | archive | infra-harness | Orphaned migration-rehearsal sidecars and an empty staging directory; no current writer. |
+| `data-backups` | `data/backups/` | active | infra-harness | No writer in `scripts/`: hand-made pre-migration copies and leftover rehearsal sidecars; the Monitor admin router lists and deletes them. |
+| `data-backups-staging` | `data/.backup-staging/` | active | infra-harness | `scripts/backup-data.sh` |
 | `data-corpus-audit` | `data/corpus_audit/` | active | corpus-channels | `scripts/navsi200_asr_bakeoff.py`, `scripts/navsi200_captions.py` |
 | `data-datasets` | `data/datasets/` | active | open-model-data | `scripts/dataset/export_ukrainian_pedagogy_dataset.py`, `scripts/dataset/audit_literary_poltava_candidate.py` |
 | `data-processed-esum` | `data/processed/` | active | corpus-channels | `scripts/ingest/esum_abbyy_parser.py` |
-| `data-raw-sources` | `data/raw/` | active | corpus-channels | Raw Pravopys 2019 HTML published as an artifact group (raw_source manifest); scripts/build/module_memory.py reads it. |
+| `data-raw-sources` | `data/raw/` | active | corpus-channels | `scripts/etymology/bulk_ocr_gemini.py` (ESUM OCR under `raw/esum/`); the Pravopys 2019 HTML is an artifact group read by `scripts/build/module_memory.py`. |
 | `data-references` | `data/references/` | active | corpus-channels | Classified as A-class data by scripts/storage/build_classification_table.py; no writer or reader found in scripts/. |
 | `data-ubertext-freq` | `data/ubertext-freq/` | active | corpus-channels | `scripts/rag/convert_phase2.py` |
 | `data-youtube-discovery` | `data/youtube_discovery/` | active | corpus-channels | `scripts/crawl/discover_yt_by_pattern.py` |
-| `data-native-reviewer-lessons` | `data/native-reviewer-lessons/` | active | atlas-practice | Human-supplied private lesson documents. |
+| `data-native-reviewer-lessons` | `data/native-reviewer-lessons/` | active | atlas-practice | `scripts/navsi200_captions.py` (raw captions); the lesson documents are human-supplied. |
 | `data-telemetry` | `data/telemetry/` | active | infra-harness | `scripts/api/telemetry_router.py`, `scripts/audit/check_primary_integrity.py` |
 
 ## Residual (lifecycle not yet classified)
@@ -245,6 +249,12 @@ flag against the index; all other stores exist only in the local `data/` directo
 | `docs/reference/folk-micro-genres.md` | seminars-folk | Harvested proverbs and riddles are unverified against sources (a sibling audit found fabricated proverbs). |
 | `docs/folk-epic/folk-wiki-compile-grounding-register-gap.md` | seminars-folk | Own status 'OPEN finding' (2026-06-12); closure unverified. |
 | `docs/folk-epic/phase-folk-queue.md` | seminars-folk | Stage-0 queue (2026-06-06); whether still driven is unverified. |
+| `docs/plans/HRAMATKA_APP_PRODUCT_ROADMAP.md` | hramatka | Header calls it the master roadmap (2026-07-24, #5699) but states no draft or accepted status, and no tracked file links to it. |
+| `docs/decisions/2026-05-17-clawpatch-adoption.md` | infra-harness | Own status PROPOSED, but commit `25b69074ec` moved it out of `pending/` as signed off. |
+| `docs/decisions/2026-05-17-path3-per-obligation-review-loop.md` | infra-harness | Own status PROPOSED, but commit `25b69074ec` records its sign-off. |
+| `docs/decisions/2026-05-17-unified-evidence-layer-for-judges-ORIGINAL.md` | infra-harness | Own status PROPOSED; moved out of `pending/` as signed off in `25b69074ec`. |
+| `docs/decisions/2026-05-17-unified-evidence-layer-for-judges-DECISION.md` | infra-harness | Own status DRAFT awaiting sign-off; added as the signed-off synthesis in `25b69074ec`. |
+| `docs/decisions/2026-04-26-llm-qg-per-dim-thresholds.md` | core-quality | Own status DRAFT pending review, yet PR #1593 shipped the thresholds in code. |
 
 ## Inventory judgements corrected on re-check
 
@@ -268,7 +278,63 @@ At least ten status judgements per inventory were re-read against the files. The
 | `docs/pedagogy/**` unknown | active; 1 archive, 3 residual | The commercial-source policy is live; the M1–M7 audit is a dated audit. |
 | `docs/agents/AGENT-CAPABILITY-MATRIX.md` and `docs/architecture/ARCHITECTURE.md` historical | superseded | Banners name `agent-activity-matrix.md` and `v7-pipeline.md` as current. |
 | `data/raw/pravopys.html` consumer not found | consumer found | `scripts/build/module_memory.py` reads it (artifact group `raw_source`). |
-| Slovnyk cache producer "slovnyk fetchers" | named producers | `scripts/lexicon/enrich_manifest.py`, `scripts/lexicon/heritage_classifier.py`. |
+| Slovnyk cache producer "slovnyk fetchers" | named producers | `scripts/lexicon/enrich_manifest.py` and the v3/v4 cache migrations write it; `heritage_classifier.py` only reads it. |
+
+## Draft-marker scan
+
+`.venv/bin/python -m scripts.docs.catalogue draft-scan` reads the first 30 lines of every
+catalogued path from Git's index and looks for draft markers: a heading that starts with
+"Draft", an upper-case `DRAFT`, `Status: draft`, `Status: proposed`, `lifecycle: draft`,
+"work in progress"/`WIP` and "proposal". `Original status:` lines do not count.
+
+| Measure | Before fixes | After fixes |
+| --- | ---: | ---: |
+| Paths scanned (one binary file skipped) | 3,269 | 3,269 |
+| Paths with a marker | 103 | 103 |
+| … resolving to `active` | 52 | 29 |
+| … resolving to `draft` / `residual` / `archive` / `superseded` | 12 / 0 / 35 / 4 | 30 / 5 / 35 / 4 |
+| `draft` paths with no marker | 2 | 1 |
+
+Dispositions of the 23 `active` paths whose marker held:
+
+- **New draft family** `registry-corpus-audit-draft-tickets`: all 12 files under
+  `registry/corpus_audit/draft_tickets/` open with `# Draft — Ingest …`.
+- **Draft overrides** (own status line): `heritage-attestation-engine.md` and
+  `word-atlas-design.md` (front-matter `DRAFT`), `api-ui-improvements-proposal.md`
+  (`v1 proposal`), ADR-012 (`Proposed`, also in the ADR index), `SLOVNYK-HUB-LAYERS.md`
+  (`proposed implementation standard`), `EXTERNAL_RESOURCES_SCHEMA.md` (`Draft`).
+- **Residual**: five decision records whose own status says PROPOSED or DRAFT while their
+  history says signed off or shipped (table above).
+
+The remaining 29 `active` hits were each read and are false positives: "proposal" as a data
+field or in prose (19, including ten open-model-data contracts, prompts and receipts), "WIP" caps and a
+WIP commit (2), an `Original status: DRAFT` line (1), lesson-contract history (1), an ADR
+template listing every status (1), and approved, accepted or deferred records that
+quote the original proposal (5). The one `draft` path without a marker,
+`docs/rules-core-draft-notes.md`, says "draft" in its title and is kept draft. The Hramatka
+roadmap, previously draft by family default, has no draft evidence and is now residual; its
+family stays draft on the strength of `lesson-document-v1.md` ("Status: DRAFT").
+
+## Store producers re-verified
+
+Each producer script was read for a write to the store it is listed under. Corrections:
+
+| Store entry | Removed (does not write the store) | Added (writes it) |
+| --- | --- | --- |
+| `data-vesum-db` | — | `scripts/rag/build_vesum_shadow.py` (the shadow database) |
+| `data-lexicon-ulif-cache` | `ulif_dictua_store.py` (writes a runner work database through a passed connection) | `scripts/lexicon/ulif_raw_cache.py`, `scripts/lexicon/enrich_manifest.py` |
+| `data-lexicon-slovnyk-cache` | `heritage_classifier.py` (reader) | the v3/v4 cache migrations |
+| `data-lexicon-source-inventory` | `apply_source_inventory_promotion.py` (reads it, writes the site lexicon manifest) | `scripts/practice_deck/end_dictionaries.py` |
+| `data-lexicon-working` | — | `park_thin_entries.py`, `promote_teacher_lesson_intake.py`, `ohoiko_paired_headword_split.py` |
+| `data-open-model-data-payloads` | `model_view_exporter.py` (writes only an explicit `--output`) | — |
+| `data-textbook-chunks` | `incremental_textbook_ingest.py` (reads the chunks into `sources.db`) | `scripts/rag/extract_text.py` |
+| `data-backups-staging` (was one entry with `data/backups/`) | "no current writer" | `scripts/backup-data.sh` stages here; `data/backups/` is now its own active entry, since it holds a pre-migration copy made on 2026-10-01 |
+| `data-raw-sources` | — | `scripts/etymology/bulk_ocr_gemini.py` |
+| `data-native-reviewer-lessons` | — | `scripts/navsi200_captions.py` |
+
+Partial coverage is stated in `producer_note`: no script writes `ulif_dump_all.db`,
+`ulif_scrape.log`, `wiki_sources.db`, `data/lexicon/source-inventory/` or `data/backups/`.
+The other 13 store entries were confirmed unchanged.
 
 ## Duplicates found
 
@@ -323,3 +389,8 @@ At least ten status judgements per inventory were re-read against the files. The
   inventory d and were not re-measured; this census opened no database.
 - Lifecycle defaults are family-level judgements; per-file overrides exist only where a file
   states its own status or a successor is named. Paths without evidence are residual.
+- Globs use one dialect, shared by the schema (`$defs/glob`, `$defs/storeName`) and the
+  validator: literals, `*` and `?` within a segment, and `**` as a whole segment. Character
+  classes, braces, empty, `.` and `..` segments are schema errors. A glob whose first segment
+  below its tracked root is not literal is a catch-all error. Every brace glob was rewritten as
+  an explicit list; path resolution is unchanged (all 3,270 paths resolve to the same family).

@@ -61,6 +61,17 @@
       "minLength": 1,
       "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\u0000-\\u001f\\u007f]+$"
     },
+    "glob": {
+      "description": "Catalogue glob dialect (also used by scripts/docs/catalogue.py): literal characters; '*' matches within one path segment, never '/'; '?' matches one character within a segment; '**' is a whole segment spanning one or more segments (zero or more when a segment follows). Character classes ('[...]'), braces ('{a,b}'), empty, '.' and '..' segments, a leading or trailing '/' and control characters are rejected: list each path instead. Catch-all rule (validator): the first segment below the tracked root must be literal, so 'docs/**', 'docs/*/**', 'docs/a*/**' and '**' are errors.",
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f]*[\\u0000-\\u001f\\u007f])(?!/)(?!.*//)(?!.*/$)(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f]+$"
+    },
+    "storeName": {
+      "description": "A logical store under data/ in the catalogue glob dialect (see $defs/glob); a trailing '/' claims the subtree.",
+      "type": "string",
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f]*[\\u0000-\\u001f\\u007f])(?!.*//)data/(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f]+$"
+    },
     "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"},
     "owner": {
       "description": "A stream key from scripts/config/issue_streams.yaml or an area key from scripts/config/area_assignments.yaml (checked by the validator).",
@@ -139,49 +150,50 @@
       "else": {"not": {"required": ["superseded_by"]}}
     },
     "entry": {
+      "description": "The kind selects the shape: data_store entries name logical stores, every other kind names tracked globs.",
+      "if": {"type": "object", "properties": {"kind": {"const": "data_store"}}, "required": ["kind"]},
+      "then": {"$ref": "#/$defs/storeEntry"},
+      "else": {"$ref": "#/$defs/familyEntry"}
+    },
+    "familyEntry": {
+      "description": "Tracked family: globs under the tracked roots.",
+      "type": "object",
+      "unevaluatedProperties": false,
       "allOf": [{"$ref": "#/$defs/common"}],
-      "oneOf": [
-        {
-          "description": "Tracked family: globs under the tracked roots.",
-          "type": "object",
-          "unevaluatedProperties": false,
-          "allOf": [{"$ref": "#/$defs/common"}],
-          "required": ["paths"],
-          "properties": {
-            "kind": {"enum": ["doc_family", "registry", "evidence", "resource_catalogue", "generated"]},
-            "paths": {
-              "type": "array",
-              "minItems": 1,
-              "uniqueItems": true,
-              "items": {"$ref": "#/$defs/repoPath"}
-            },
-            "overrides": {"type": "array", "items": {"$ref": "#/$defs/override"}}
-          }
+      "required": ["paths"],
+      "properties": {
+        "kind": {"enum": ["doc_family", "registry", "evidence", "resource_catalogue", "generated"]},
+        "paths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/glob"}
         },
-        {
-          "description": "Logical local store under data/: identity and producers only, never a host path.",
-          "type": "object",
-          "unevaluatedProperties": false,
-          "allOf": [{"$ref": "#/$defs/common"}],
-          "required": ["store", "producer", "local_only"],
-          "properties": {
-            "kind": {"const": "data_store"},
-            "store": {
-              "type": "array",
-              "minItems": 1,
-              "uniqueItems": true,
-              "items": {"type": "string", "pattern": "^data/[^\\u0000-\\u001f\\u007f]*$"}
-            },
-            "producer": {
-              "type": "array",
-              "uniqueItems": true,
-              "items": {"$ref": "#/$defs/repoPath"}
-            },
-            "producer_note": {"$ref": "#/$defs/text"},
-            "local_only": {"type": "boolean"}
-          }
-        }
-      ]
+        "overrides": {"type": "array", "items": {"$ref": "#/$defs/override"}}
+      }
+    },
+    "storeEntry": {
+      "description": "Logical local store under data/: identity and producers only, never a host path.",
+      "type": "object",
+      "unevaluatedProperties": false,
+      "allOf": [{"$ref": "#/$defs/common"}],
+      "required": ["store", "producer", "local_only"],
+      "properties": {
+        "kind": {"const": "data_store"},
+        "store": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/storeName"}
+        },
+        "producer": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/repoPath"}
+        },
+        "producer_note": {"$ref": "#/$defs/text"},
+        "local_only": {"type": "boolean"}
+      }
     }
   }
 }

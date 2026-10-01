@@ -11,7 +11,6 @@ roots, so the check is sparse-checkout safe and never reads ``data/``.
 from __future__ import annotations
 
 import argparse
-import fnmatch
 import json
 import re
 import subprocess
@@ -33,9 +32,9 @@ OWNER_SOURCES = (('scripts/config/issue_streams.yaml', 'streams'),
 TERMINAL_LIFECYCLES = frozenset({'active', 'archive'})
 SQLITE_SIDECARS = ('-shm', '-wal', '-journal')
 PLACEHOLDER_NAMES = frozenset({'.gitkeep', '.gitignore'})
-WILDCARD = re.compile(r'[*?\[]')
-# A segment that is only wildcards, optionally with a file extension.
-BARE_SEGMENT = re.compile(r'^[*?]+(\.[A-Za-z0-9]+)?$')
+WILDCARD = re.compile(r'[*?]')
+# Characters outside the glob dialect: class/brace syntax and control characters.
+FORBIDDEN_GLOB_CHARS = re.compile(r'[\[\]{}\x00-\x1f\x7f]')
 
 
 def git(repo: Path, *args: str) -> bytes:
@@ -51,6 +50,11 @@ def under_roots(path: str, roots=TRACKED_ROOTS) -> bool:
     return any(path == root or path.startswith(root + '/') for root in roots)
 
 
+def is_excluded(path: str) -> bool:
+    """True when the docs inventory's privacy exclusion covers ``path`` (one shared list)."""
+    return bool(EXCLUDED_PARTS.intersection(PurePosixPath(path).parts))
+
+
 def root_of(pattern: str, roots=TRACKED_ROOTS) -> str | None:
     """The longest denominator root that is a literal prefix of ``pattern``."""
     matches = [r for r in roots if pattern.startswith(r + '/')]
@@ -59,58 +63,39 @@ def root_of(pattern: str, roots=TRACKED_ROOTS) -> str | None:
 
 # ---------------------------------------------------------------- globs
 
-def expand_braces(pattern: str) -> list[str]:
-    """Expand ``{a,b}`` alternatives (nesting allowed) into plain globs."""
-    start = pattern.find('{')
-    if start < 0:
-        return [pattern]
-    depth = 0
-    for end in range(start, len(pattern)):
-        if pattern[end] == '{':
-            depth += 1
-        elif pattern[end] == '}':
-            depth -= 1
-            if depth == 0:
-                break
-    else:
-        raise ValueError(f'unbalanced brace in glob {pattern!r}')
-    options, depth, current = [], 0, ''
-    for char in pattern[start + 1:end]:
-        if char == ',' and depth == 0:
-            options.append(current)
-            current = ''
-            continue
-        depth += char == '{'
-        depth -= char == '}'
-        current += char
-    options.append(current)
-    head, tail = pattern[:start], pattern[end + 1:]
-    return [result for option in options for result in expand_braces(head + option + tail)]
+# The catalogue glob dialect (one dialect for family paths and store names):
+#   * literal characters match themselves;
+#   * ``*`` matches any run of characters inside one path segment (never ``/``);
+#   * ``?`` matches exactly one character inside one path segment;
+#   * ``**`` is a whole segment and matches one or more segments (zero or more
+#     when another segment follows it).
+# Character classes (``[...]``), braces (``{a,b}``), empty, ``.`` and ``..``
+# segments, a leading ``/`` and control characters are not part of it. A trailing
+# ``/`` is allowed only on a store name, where it claims the subtree.
+# docs/knowledge/catalogue.schema.json states the same rules as ``$defs/glob``.
 
-
-def _segment_regex(segment: str) -> str:
-    out, i = '', 0
-    while i < len(segment):
-        char = segment[i]
-        if char == '*':
-            out += '[^/]*'
-        elif char == '?':
-            out += '[^/]'
-        elif char == '[':
-            close = segment.find(']', i + 2)
-            if close < 0:
-                raise ValueError(f'unterminated character class in {segment!r}')
-            body = segment[i + 1:close]
-            out += '[' + ('^' + body[1:] if body.startswith('!') else body).replace('\\', '\\\\') + ']'
-            i = close
-        else:
-            out += re.escape(char)
-        i += 1
-    return out
+def glob_error(pattern: object, *, subtree: bool = False) -> str | None:
+    """Why ``pattern`` is outside the glob dialect, or None when it is inside it."""
+    if not isinstance(pattern, str) or not pattern:
+        return 'a glob must be a non-empty string'
+    if FORBIDDEN_GLOB_CHARS.search(pattern):
+        return ('character classes ([...]), braces ({...}) and control characters are not '
+                'in the catalogue glob dialect; list each path or use * and ?')
+    body = pattern[:-1] if subtree and pattern.endswith('/') else pattern
+    if body.startswith('/'):
+        return 'a glob is repository-relative and must not start with "/"'
+    for segment in body.split('/'):
+        if segment in ('', '.', '..'):
+            return 'empty, "." and ".." path segments are not allowed'
+        if '**' in segment and segment != '**':
+            return '"**" must be a whole path segment'
+    return None
 
 
 def glob_regex(pattern: str) -> re.Pattern:
-    """Translate one brace-free glob: ``*``/``?`` stay in a segment, ``**`` spans segments."""
+    """Compile one dialect glob; raises ValueError (with the reason) outside the dialect."""
+    if (error := glob_error(pattern)) is not None:
+        raise ValueError(f'glob {pattern!r} is not in the catalogue glob dialect: {error}')
     segments = pattern.split('/')
     out = ''
     for index, segment in enumerate(segments):
@@ -118,9 +103,8 @@ def glob_regex(pattern: str) -> re.Pattern:
         if segment == '**':
             out += '.+' if last else '(?:[^/]+/)*'
             continue
-        if '**' in segment:
-            raise ValueError(f'"**" must be a whole path segment in {pattern!r}')
-        out += _segment_regex(segment) + ('' if last else '/')
+        out += ''.join('[^/]*' if c == '*' else '[^/]' if c == '?' else re.escape(c) for c in segment)
+        out += '' if last else '/'
     return re.compile(out + r'\Z')
 
 
@@ -128,32 +112,34 @@ def specificity(pattern: str) -> tuple[int, int, int]:
     """Exact paths beat globs, then more literal segments, then more literal characters."""
     segments = pattern.split('/')
     literal_segments = sum(not WILDCARD.search(s) for s in segments)
-    literal_chars = len(re.sub(r'\[[^\]]*\]|[*?]', '', pattern))
+    literal_chars = len(WILDCARD.sub('', pattern))
     return (0 if WILDCARD.search(pattern) else 1, literal_segments, literal_chars)
 
 
 def is_catch_all(pattern: str, roots=TRACKED_ROOTS) -> bool:
-    """A glob whose first segment below its root is wildcard-only swallows whole roots."""
+    """A glob is a catch-all unless the first segment below its root is fully literal.
+
+    Without a literal first segment one glob spans many top-level families of a
+    root (``docs/*/**``, ``docs/a*/**``, ``docs/*.md``); with no root prefix at
+    all, the first segment of the whole glob must be literal (``**`` is a catch-all).
+    """
     if WILDCARD.search(pattern) is None:
         return False
     root = root_of(pattern, roots)
     rest = pattern[len(root) + 1:] if root else pattern
-    first = rest.split('/', 1)[0]
-    return first == '**' or bool(BARE_SEGMENT.match(first))
+    return bool(WILDCARD.search(rest.split('/', 1)[0]))
 
 
 @dataclass(frozen=True)
 class Glob:
     entry: str
-    source: str
     pattern: str
     regex: re.Pattern
     rank: tuple[int, int, int]
 
 
-def compile_globs(entry_id: str, sources: list[str]) -> list[Glob]:
-    return [Glob(entry_id, source, expanded, glob_regex(expanded), specificity(expanded))
-            for source in sources for expanded in expand_braces(source)]
+def compile_globs(entry_id: str, patterns: list[str]) -> list[Glob]:
+    return [Glob(entry_id, p, glob_regex(p), specificity(p)) for p in patterns]
 
 
 # ---------------------------------------------------------------- loading
@@ -174,11 +160,14 @@ def owner_keys(repo: Path) -> set[str]:
     return keys
 
 
-def _store_claims(store: str, path: str) -> bool:
-    """A store name ending in '/' claims its subtree; otherwise it is a name or glob."""
-    if store.endswith('/'):
-        return path.startswith(store)
-    return fnmatch.fnmatchcase(path, store)
+def store_regex(store: str) -> re.Pattern | None:
+    """A store name ending in '/' claims its subtree; otherwise it is a dialect name or glob.
+
+    Returns None for a name outside the dialect (``validate`` reports it).
+    """
+    if glob_error(store, subtree=True) is not None:
+        return None
+    return glob_regex(store + '**' if store.endswith('/') else store)
 
 
 def strip_fragment(target: str) -> str:
@@ -215,13 +204,22 @@ class Report:
 
 
 def schema_errors(catalogue: dict, schema: dict) -> list[str]:
-    """Schema violations; for oneOf/anyOf failures report the most relevant branch error."""
+    """Schema violations; for oneOf/anyOf failures report the most relevant branch error.
+
+    A glob or store name that fails its pattern is reported with the dialect rule it breaks.
+    """
     validator = Draft202012Validator(schema)
+    defs = schema.get('$defs', {})
     found = []
     for error in sorted(validator.iter_errors(catalogue), key=lambda e: list(map(str, e.absolute_path))):
         detail = best_match(error.context) if error.context else error
         where = '/'.join(map(str, detail.absolute_path)) or '<root>'
-        found.append(f'schema: {where}: {detail.message}')
+        message = detail.message
+        is_store = detail.schema is defs.get('storeName')
+        if detail.validator == 'pattern' and (is_store or detail.schema is defs.get('glob')):
+            reason = glob_error(detail.instance, subtree=is_store) or 'a store name must be a path below "data/"'
+            message = f'{detail.instance!r} is not in the catalogue glob dialect: {reason}'
+        found.append(f'schema: {where}: {message}')
     return found
 
 
@@ -259,8 +257,14 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
                     report.errors.append(f'{eid}: producer {producer!r} is not a tracked path')
             if not entry['producer'] and not entry.get('producer_note'):
                 report.errors.append(f'{eid}: data store without producer needs producer_note')
+            claims = []
+            for store in entry['store']:
+                if (error := glob_error(store, subtree=True)) is not None:
+                    report.errors.append(f'{eid}: store {store!r} is not in the catalogue glob dialect: {error}')
+                else:
+                    claims.append(store_regex(store))
             in_git = [p for p in files if PurePosixPath(p).name not in PLACEHOLDER_NAMES
-                      and any(_store_claims(store, p) for store in entry['store'])]
+                      and any(claim.match(p) for claim in claims)]
             if entry['local_only'] and in_git:
                 report.errors.append(f'{eid}: local_only is true but {len(in_git)} store files are tracked')
             elif not entry['local_only'] and not in_git:
@@ -272,16 +276,14 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
             report.errors.append(f'{eid}: {exc}')
             continue
         for glob in compiled:
-            if root_of(glob.pattern, roots) is None and glob.pattern not in roots:
+            if is_catch_all(glob.pattern, roots):
+                report.errors.append(f'{eid}: glob {glob.pattern!r} is a catch-all (the first segment '
+                                     'below its tracked root must be literal)')
+            elif root_of(glob.pattern, roots) is None and glob.pattern not in roots:
                 report.errors.append(f'{eid}: glob {glob.pattern!r} is outside the tracked roots')
-            elif is_catch_all(glob.pattern, roots):
-                report.errors.append(f'{eid}: glob {glob.pattern!r} is a catch-all')
             elif not any(glob.regex.match(p) for p in denominator):
                 report.errors.append(f'{eid}: glob {glob.pattern!r} matches no tracked file')
         globs.extend(compiled)
-        excluded = any(EXCLUDED_PARTS.intersection(PurePosixPath(g.pattern).parts) for g in compiled)
-        if excluded and entry['content_searchable']:
-            report.errors.append(f'{eid}: covers an inventory-excluded path, so content_searchable must be false')
 
     # Resolve each tracked path to exactly one family: most specific glob wins.
     owner_of: dict[str, str] = {}
@@ -300,11 +302,20 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
             continue
         owner_of[path] = winners[0]
 
+    # Privacy follows ownership: a family that owns any inventory-excluded path
+    # (docs_inventory.EXCLUDED_PARTS) must not be content-searchable.
+    excluded_owned: dict[str, list[str]] = defaultdict(list)
+    for path, eid in owner_of.items():
+        if is_excluded(path):
+            excluded_owned[eid].append(path)
+    for eid, paths in sorted(excluded_owned.items()):
+        if by_id[eid]['content_searchable']:
+            report.errors.append(f'{eid}: owns {len(paths)} inventory-excluded path(s) such as {paths[0]!r}, '
+                                 'so content_searchable must be false')
+
     lifecycle: dict[str, str] = {p: by_id[e]['lifecycle'] for p, e in owner_of.items()}
     supersession: dict[str, str] = {}
     for entry in entries:
-        if entry['kind'] == 'data_store':
-            continue
         if entry.get('superseded_by'):
             supersession[f"id:{entry['id']}"] = entry['superseded_by']
         seen = set()
@@ -408,11 +419,12 @@ def local_store_gaps(data_root: Path, catalogue: dict) -> tuple[int, list[str]]:
     Returns (entries checked, unmatched logical paths).
     """
     patterns = [s.rstrip('/') for e in catalogue.get('entries', []) if e.get('kind') == 'data_store'
-                for s in e.get('store', [])]
+                for s in e.get('store', []) if glob_error(s, subtree=True) is None]
+    regexes = [glob_regex(p) for p in patterns]
 
     def claimed(logical: str) -> bool:
         base = next((logical[:-len(x)] for x in SQLITE_SIDECARS if logical.endswith(x)), logical)
-        return any(fnmatch.fnmatchcase(base, p) for p in patterns)
+        return any(regex.match(base) for regex in regexes)
 
     checked, unmatched = 0, []
 
@@ -430,6 +442,65 @@ def local_store_gaps(data_root: Path, catalogue: dict) -> tuple[int, list[str]]:
 
     walk(data_root, 'data')
     return checked, unmatched
+
+
+# ---------------------------------------------------------------- draft markers
+
+DRAFT_SCAN_LINES = 30
+DRAFT_MARKERS = (
+    ('draft-heading', re.compile(r'^\s*#+\s*\W*draft\b', re.IGNORECASE | re.MULTILINE)),
+    ('DRAFT', re.compile(r'\bDRAFT\b')),
+    ('status-draft', re.compile(r'(?<!original )\bstatus\b[*_\s]*[:=][*_\s"\'`]*draft\b', re.IGNORECASE)),
+    ('status-proposed', re.compile(r'(?<!original )\bstatus\b[*_\s]*[:=][*_\s"\'`]*proposed\b', re.IGNORECASE)),
+    ('lifecycle-draft', re.compile(r'\blifecycle\b[*_\s]*[:=][*_\s"\'`]*draft\b', re.IGNORECASE)),
+    ('work-in-progress', re.compile(r'\bwork[ -]in[ -]progress\b|\bWIP\b', re.IGNORECASE)),
+    ('proposal', re.compile(r'\bproposal\b', re.IGNORECASE)),
+)
+
+
+def index_heads(repo: Path, paths: list[str], lines: int = DRAFT_SCAN_LINES) -> dict[str, str]:
+    """The first ``lines`` lines of each path's index blob (sparse-safe); binary blobs are skipped."""
+    request = ''.join(f':{p}\n' for p in paths).encode('utf-8')
+    out = subprocess.run(['git', '-C', str(repo), 'cat-file', '--batch'], input=request,
+                         capture_output=True, check=True, timeout=300).stdout
+    heads, offset = {}, 0
+    for path in paths:
+        header_end = out.index(b'\n', offset)
+        header = out[offset:header_end].split()
+        if header[-1] == b'missing':
+            offset = header_end + 1
+            continue
+        size = int(header[2])
+        blob = out[header_end + 1:header_end + 1 + size]
+        offset = header_end + 1 + size + 1
+        if b'\0' not in blob[:8192]:
+            heads[path] = '\n'.join(blob.decode('utf-8', 'replace').splitlines()[:lines])
+    return heads
+
+
+def draft_scan(repo: Path, report: Report) -> dict:
+    """Draft markers in the first lines of every resolved path, set against its lifecycle.
+
+    ``active_with_marker`` lists paths that state a draft-like marker yet resolve to
+    ``active``; ``draft_without_marker`` lists paths that resolve to ``draft`` with no
+    marker. Both need a reviewed disposition; ``proposal`` alone is a weak marker.
+    """
+    heads = index_heads(repo, sorted(report.resolved))
+    hits: dict[str, list[str]] = {}
+    for path, text in heads.items():
+        found = [name for name, pattern in DRAFT_MARKERS if pattern.search(text)]
+        if found:
+            hits[path] = found
+    by_lifecycle = Counter(report.resolved[p][1] for p in hits)
+    by_marker = Counter(name for found in hits.values() for name in found)
+    return {
+        'scanned': len(heads), 'binary_or_missing': len(report.resolved) - len(heads),
+        'with_marker': len(hits), 'by_marker': dict(sorted(by_marker.items())),
+        'with_marker_by_lifecycle': dict(sorted(by_lifecycle.items())),
+        'active_with_marker': {p: hits[p] for p in sorted(hits) if report.resolved[p][1] == 'active'},
+        'draft_without_marker': sorted(p for p, (_, life) in report.resolved.items()
+                                       if life == 'draft' and p not in hits),
+    }
 
 
 # ---------------------------------------------------------------- suggestions
@@ -464,7 +535,8 @@ def suggest(report: Report, catalogue: dict, roots: tuple[str, ...] = TRACKED_RO
                 'lifecycle': 'active', 'owner': nearest.get('owner', 'docs-knowledge'),
                 'query': [{'surface': 'git_grep',
                            'how': f"git grep -n -i -F '<term>' -- {key}"}],
-                'content_searchable': True}
+                # The stub owns every path in its group, so one excluded path makes it private.
+                'content_searchable': not any(is_excluded(p) for p in paths)}
         body = yaml.safe_dump([stub], sort_keys=False, allow_unicode=True, width=1000)
         note = f"  # {len(paths)} uncovered file(s); nearest family: {nearest.get('id', 'none')}\n"
         stubs.append(note + ''.join(f'  {line}' for line in body.splitlines(keepends=True)))
@@ -502,10 +574,11 @@ def main(argv: list[str] | None = None) -> int:
                '  .venv/bin/python -m scripts.docs.catalogue check --report-only --suggest\n'
                '  .venv/bin/python -m scripts.docs.catalogue check --json\n'
                '  .venv/bin/python -m scripts.docs.catalogue check --data-root ../primary-checkout/data\n'
+               '  .venv/bin/python -m scripts.docs.catalogue draft-scan --json\n'
                'Outputs: a report on stdout only; never writes files and reads data/ names, not contents.\n'
-               'Exit codes: 0 no errors, full coverage and no unmatched local store (or --report-only); '
-               '1 errors, uncovered paths or unmatched stores; 2 invalid arguments; 3 unreadable '
-               'repository or catalogue.\n'
+               'Exit codes: 0 no errors, full coverage and no unmatched local store (or --report-only; '
+               'draft-scan always reports with 0); 1 errors, uncovered paths or unmatched stores; '
+               '2 invalid arguments; 3 unreadable repository or catalogue.\n'
                'Related: #9412; docs/knowledge/catalogue.yaml; docs/knowledge/catalogue.schema.json; '
                'scripts/docs/docs_inventory.py; docs/architecture/docs-authority-lifecycle.md.')
     sub = parser.add_subparsers(dest='command', required=True)
@@ -524,7 +597,16 @@ def main(argv: list[str] | None = None) -> int:
                             'exists; skipped otherwise, as in CI); e.g. ../primary-checkout/data.')
     check.add_argument('--json', action='store_true',
                        help='Print the full report as JSON, including per-entry counts (default: text).')
+    drafts = sub.add_parser('draft-scan', help='List draft markers in the first 30 lines of every catalogued '
+                            'path against the lifecycle it resolves to (review aid, not a gate).',
+                            description='Read each catalogued path from the Git index of --repo and report '
+                                        'draft-like markers that disagree with the resolved lifecycle.')
+    drafts.add_argument('--repo', type=Path, default=Path('.'),
+                        help='Repository or worktree root (default: current directory); e.g. ../my-worktree.')
+    drafts.add_argument('--json', action='store_true', help='Print the scan as JSON (default: text).')
     args = parser.parse_args(argv)
+    if args.command == 'draft-scan':
+        return _draft_scan_command(args)
     try:
         repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
         catalogue_path = args.catalogue or repo / CATALOGUE_PATH
@@ -562,6 +644,27 @@ def main(argv: list[str] | None = None) -> int:
         print(suggest(report, catalogue))
     store_gaps = bool(stores and stores[1])
     return 0 if args.report_only or (report.ok and not store_gaps) else 1
+
+
+def _draft_scan_command(args: argparse.Namespace) -> int:
+    try:
+        repo = Path(git(args.repo, 'rev-parse', '--show-toplevel').decode().strip())
+        scan = draft_scan(repo, coverage(repo))
+    except (OSError, ValueError, yaml.YAMLError, subprocess.SubprocessError) as exc:
+        print(f'Draft scan could not run: {type(exc).__name__}: {exc}')
+        return 3
+    if args.json:
+        print(json.dumps(scan, indent=2, sort_keys=True, ensure_ascii=False))
+        return 0
+    print(f"scanned {scan['scanned']}; binary or missing {scan['binary_or_missing']}; "
+          f"with a marker {scan['with_marker']}")
+    print('by marker: ' + ', '.join(f'{k} {v}' for k, v in scan['by_marker'].items()))
+    print('by lifecycle: ' + ', '.join(f'{k} {v}' for k, v in scan['with_marker_by_lifecycle'].items()))
+    for path, found in scan['active_with_marker'].items():
+        print(f"ACTIVE WITH MARKER {path} ({', '.join(found)})")
+    for path in scan['draft_without_marker']:
+        print(f'DRAFT WITHOUT MARKER {path}')
+    return 0
 
 
 if __name__ == '__main__':

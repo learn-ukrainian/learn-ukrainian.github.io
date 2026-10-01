@@ -6,10 +6,13 @@ from pathlib import Path
 
 import pytest
 import yaml
+from jsonschema import Draft202012Validator
 
 from scripts.docs.catalogue import (
+    DRAFT_MARKERS,
     coverage,
-    expand_braces,
+    draft_scan,
+    glob_error,
     glob_regex,
     is_catch_all,
     main,
@@ -34,6 +37,15 @@ def family(eid, paths, **extra):
              'keywords': [eid], 'lifecycle': 'active', 'owner': 'infra-harness',
              'query': [{'surface': 'git_grep', 'how': f'git grep -n -F x -- {paths[0]}'}],
              'content_searchable': True}
+    entry.update(extra)
+    return entry
+
+
+def store_entry(eid, **extra):
+    entry = {'id': eid, 'kind': 'data_store', 'store': ['data/main.db'], 'producer': ['scripts/build.py'],
+             'local_only': True, 'purpose': f'{eid} store', 'keywords': [eid], 'lifecycle': 'active',
+             'owner': 'infra-harness', 'query': [{'surface': 'sqlite', 'how': 'read-only SQL'}],
+             'content_searchable': False}
     entry.update(extra)
     return entry
 
@@ -82,13 +94,6 @@ def test_equal_specificity_match_is_ambiguous():
     data['entries'].append(family('guide-twin', ['docs/guide/**']))
     report = check(data)
     assert len(errors_with(report, 'ambiguous match between guide, guide-twin')) == 3
-
-
-@pytest.mark.parametrize('pattern', ['docs/**', 'docs/*', 'docs/*.md', 'registry/**/*'])
-def test_catch_all_glob_is_rejected(pattern):
-    data = base()
-    data['entries'].append(family('everything', [pattern]))
-    assert errors_with(check(data), f"glob {pattern!r} is a catch-all")
 
 
 def test_glob_that_matches_nothing_is_rejected():
@@ -143,6 +148,42 @@ def test_chain_through_superseded_family_and_outside_target_is_valid():
     assert report.resolved['docs/guide/old/c.md'] == ('guide-old', 'superseded')
 
 
+ENTRY_KINDS = ['doc_family', 'registry', 'evidence', 'resource_catalogue', 'generated', 'data_store']
+
+
+def superseded_entry(kind, eid, target):
+    if kind == 'data_store':
+        return store_entry(eid, store=[f'data/{eid}.db'], lifecycle='superseded', superseded_by=target)
+    return family(eid, ['docs/guide/old/**'], kind=kind, lifecycle='superseded', superseded_by=target)
+
+
+@pytest.mark.parametrize('kind', ENTRY_KINDS)
+def test_supersession_is_validated_for_every_entry_kind(kind):
+    data = base()
+    data['entries'].append(superseded_entry(kind, 'old-thing', 'id:guide'))
+    assert check(data).ok, check(data).errors
+    data['entries'][-1]['superseded_by'] = 'id:no-such-entry'
+    assert errors_with(check(data), "id:old-thing: supersession target 'id:no-such-entry' does not exist")
+    data['entries'][-1]['superseded_by'] = 'docs/guide/gone.md'
+    assert errors_with(check(data), "supersession target 'docs/guide/gone.md' does not exist")
+    data['entries'][-1]['superseded_by'] = 'id:old-thing'
+    assert errors_with(check(data), 'supersession cycle or self-link: id:old-thing -> id:old-thing')
+    data['entries'][-1]['superseded_by'] = 'id:entry-map'
+    data['entries'][0]['lifecycle'] = 'draft'
+    assert errors_with(check(data), "id:old-thing: supersession chain ends at 'id:entry-map' with lifecycle 'draft'")
+
+
+@pytest.mark.parametrize('kind', ENTRY_KINDS)
+def test_two_entry_supersession_cycle_is_rejected_for_every_kind(kind):
+    data = base()
+    first = superseded_entry(kind, 'first', 'id:second')
+    second = superseded_entry(kind, 'second', 'id:first')
+    if kind != 'data_store':
+        second['paths'] = ['docs/guide/a.md']
+    data['entries'] += [first, second]
+    assert errors_with(check(data), 'supersession cycle or self-link: id:first -> id:second -> id:first')
+
+
 @pytest.mark.parametrize('mutate, message', [
     (lambda d: d['entries'][1].update(lifecycle='current'), "'current' is not one of"),
     (lambda d: d['entries'][1].update(lifecycle='historical'), "'historical' is not one of"),
@@ -185,6 +226,30 @@ def test_privacy_excluded_family_cannot_be_content_searchable():
     assert errors_with(check(data, files), 'content_searchable must be false')
     data['entries'][-1]['content_searchable'] = False
     assert check(data, files).ok
+
+
+def test_privacy_follows_the_paths_a_family_owns_not_its_glob_text():
+    # An innocuous glob that owns a private subdirectory.
+    files = [*FILES, 'docs/guide/private/report.md']
+    report = check(base(), files)
+    assert errors_with(report, "guide: owns 1 inventory-excluded path(s) such as 'docs/guide/private/report.md'")
+    # A more specific private family takes the path, so the parent family is clean again.
+    data = base()
+    data['entries'].append(family('guide-private', ['docs/guide/private/**'], content_searchable=False))
+    assert check(data, files).ok
+    # Every excluded component counts, not only session-state and private.
+    data = base()
+    assert errors_with(check(data, [*FILES, 'docs/guide/cache/blob.json']), 'content_searchable must be false')
+
+
+def test_privacy_wildcard_glob_over_session_state_is_caught():
+    files = [*FILES, 'docs/session-state/current.md']
+    data = base()
+    data['entries'].append(family('sessions', ['docs/session-*/**']))
+    errors = check(data, files).errors
+    assert any('sessions: owns 1 inventory-excluded path(s)' in e for e in errors)
+    data['entries'][-1]['paths'] = ['docs/sess?on-state/*.md']
+    assert errors_with(check(data, files), 'sessions: owns 1 inventory-excluded path(s)')
 
 
 def test_data_store_producers_must_be_tracked():
@@ -242,18 +307,105 @@ def test_stub_inherits_owner_of_the_nearest_family():
     assert stub['owner'] == 'docs-knowledge' and stub['paths'] == ['docs/guide/new/**']
 
 
+def test_stub_for_an_excluded_directory_is_not_content_searchable():
+    files = [*FILES, 'docs/vault/x.md', 'docs/vault/private/y.md', 'docs/session-state/z.md', 'docs/open/w.md']
+    data = base()
+    report = check(data, files)
+    stubs = {s['paths'][0]: s for s in yaml.safe_load(suggest(report, data, ROOTS))}
+    assert {k: s['content_searchable'] for k, s in stubs.items()} == {
+        'docs/vault/**': False, 'docs/session-state/**': False, 'docs/open/**': True}
+    for stub in stubs.values():
+        stub['purpose'] = f"Documents under {stub['paths'][0]}"
+    filled = check(catalogue(*data['entries'], *stubs.values()), files)
+    assert filled.ok, filled.errors
+
+
 def test_glob_translation():
-    assert expand_braces('docs/{a,b{1,2}}/*.md') == ['docs/a/*.md', 'docs/b1/*.md', 'docs/b2/*.md']
     assert glob_regex('docs/**/x.md').match('docs/x.md')
     assert glob_regex('docs/**/x.md').match('docs/a/b/x.md')
     assert not glob_regex('docs/*.md').match('docs/a/x.md')
     assert glob_regex('docs/a/**').match('docs/a/b/c')
     assert not glob_regex('docs/a/**').match('docs/a')
     assert glob_regex('docs/v?.md').match('docs/v2.md')
-    assert glob_regex('docs/[!x]*.md').match('docs/a.md')
+    assert not glob_regex('docs/v?.md').match('docs/v/.md')
+    # Regex metacharacters are literals in the dialect.
+    assert glob_regex('docs/a+(b).md').match('docs/a+(b).md')
+    assert not glob_regex('docs/a+(b).md').match('docs/aa(b).md')
     assert not is_catch_all('docs/guide/*')
     assert not is_catch_all('curriculum/l2-uk-en/evidence/a1/**')
     assert is_catch_all('curriculum/l2-uk-en/evidence/**')
+
+
+@pytest.mark.parametrize('pattern', ['docs/guide/[!]].md', 'docs/guide/[a-z].md', 'docs/[a-z]*/**',
+                                     'docs/{guide,other}/*.md', 'docs/guide/{a}.md'])
+def test_character_classes_and_braces_are_schema_errors(pattern):
+    data = base()
+    data['entries'][1]['paths'] = [pattern]
+    errors = check(data).errors
+    assert errors == [f'schema: entries/1/paths/0: {pattern!r} is not in the catalogue glob dialect: '
+                      'character classes ([...]), braces ({...}) and control characters are not in the '
+                      'catalogue glob dialect; list each path or use * and ?']
+
+
+@pytest.mark.parametrize('pattern', ['docs/**', 'docs/*', 'docs/*/**', 'docs/a*/**', 'docs/*.md', 'docs/?uide/**',
+                                     'registry/**/*', '**', '*/guide/*.md'])
+def test_glob_without_a_literal_first_segment_below_its_root_is_a_catch_all(pattern):
+    data = base()
+    data['entries'].append(family('everything', [pattern]))
+    assert errors_with(check(data), f"glob {pattern!r} is a catch-all")
+
+
+def test_store_names_use_the_same_dialect():
+    data = base()
+    data['entries'].append(store_entry('data-main', store=['data/[ab].db']))
+    assert errors_with(check(data), "'data/[ab].db' is not in the catalogue glob dialect")
+    # Without the schema the validator still rejects it as a typed error.
+    assert errors_with(validate(data, {}, FILES, OWNERS, ROOTS), "store 'data/[ab].db' is not in the catalogue")
+    # '*' stays inside one segment for store names too.
+    files = [*FILES, 'data/lexicon/a.json', 'data/lexicon/sub/b.json']
+    data['entries'][-1].update(store=['data/lexicon/*.json'], local_only=True)
+    assert errors_with(check(data, files), 'local_only is true but 1 store files are tracked')
+
+
+# Odd globs: none may raise, and the schema and the code must agree on the dialect.
+ODD_GLOBS = [
+    '', '/', '//', 'docs', 'docs/', 'docs//a.md', '/docs/a.md', 'docs/./a.md', 'docs/../a.md',
+    'docs/guide/..', 'docs/guide/[!]].md', 'docs/guide/[a-z].md', 'docs/guide/[', 'docs/guide/]',
+    'docs/{a,b}.md', 'docs/{a', 'docs/a}', 'docs/guide/***', 'docs/guide/**x', 'docs/guide/x**',
+    'docs/guide/**/**', 'docs/guide/a.md\n', 'docs/guide/\x00', 'docs/guide/\x7f', 'docs/guide/\\',
+    'docs/guide/(a|b).md', 'docs/guide/a+.md', 'docs/guide/^a$.md', 'docs/guide/.*', 'docs/guide/?',
+    'docs/guide/??*?', 'docs/guide/a.md#x', 'docs/guide/ü.md', 'docs/guide/ a.md', 'docs/guide/ ',
+    'docs/guide/%2e%2e', 'docs/guide/~', 'docs/guide/$HOME', '**', '*', '?', 'docs/**', 'docs/*/**',
+    'registry/**/*', 'curriculum/l2-uk-en/evidence/**', 'docs/guide/*.md', 'docs/guide/old/**',
+    'scripts/*.py', 'docs/guide/a.md/', 'docs/guide/.hidden/**', 'docs/guide/...',
+]
+
+
+@pytest.mark.parametrize('pattern', ODD_GLOBS)
+def test_validator_is_total_and_schema_agrees_with_code(pattern):
+    assert len(ODD_GLOBS) >= 30
+    for schema in (SCHEMA, {}):  # {} bypasses the schema to reach the code-level checks
+        data = base()
+        data['entries'][1]['paths'] = [pattern, 'docs/guide/*.md']
+        report = validate(data, schema, FILES, OWNERS, ROOTS)  # must not raise
+        assert isinstance(report.errors, list)
+    in_schema = Draft202012Validator(SCHEMA['$defs']['glob']).is_valid(pattern)
+    assert in_schema == (glob_error(pattern) is None), glob_error(pattern)
+    if in_schema:
+        glob_regex(pattern)
+    else:
+        with pytest.raises(ValueError, match='not in the catalogue glob dialect'):
+            glob_regex(pattern)
+        bypassed = base()
+        bypassed['entries'][1]['paths'] = [pattern]
+        assert errors_with(validate(bypassed, {}, FILES, OWNERS, ROOTS), 'not in the catalogue glob dialect')
+
+
+@pytest.mark.parametrize('name', ['data/a.db', 'data/a/', 'data/a/*.json', 'data/a.db.bak.*', 'data/[a].db',
+                                  'data/{a,b}.db', 'data//a.db', 'data/../x', 'data/a/**x', 'data/a.db\n'])
+def test_store_name_schema_agrees_with_code(name):
+    in_schema = Draft202012Validator(SCHEMA['$defs']['storeName']).is_valid(name)
+    assert in_schema == (glob_error(name, subtree=True) is None)
 
 
 # ------------------------------------------------------------------ CLI on a real Git fixture
@@ -310,6 +462,47 @@ def test_cli_reports_unreadable_catalogue(repo, capsys):
     (repo / 'docs/knowledge/catalogue.yaml').write_text('a: 1\na: 2\n')
     assert main(['check', '--repo', str(repo)]) == 3
     assert 'could not run' in capsys.readouterr().out
+
+
+@pytest.mark.parametrize('line, marker', [
+    ('# Draft — Ingest a source', 'draft-heading'),
+    ('## [DRAFT] notes', 'draft-heading'),
+    ('> **Status:** Draft (issue #1)', 'status-draft'),
+    ('status: "draft"', 'status-draft'),
+    ('**Status**: Proposed', 'status-proposed'),
+    ('lifecycle: draft', 'lifecycle-draft'),
+    ('This page is a work in progress.', 'work-in-progress'),
+    ('A proposal for the API.', 'proposal'),
+])
+def test_draft_markers_match_their_forms(line, marker):
+    assert [name for name, pattern in DRAFT_MARKERS if pattern.search(line) and name == marker] == [marker]
+
+
+@pytest.mark.parametrize('line', ['**Original status:** PROPOSED (awaiting sign-off)',
+                                  '**Original status:** draft', 'The draft was merged.', 'Status: active'])
+def test_superseded_status_lines_are_not_draft_status_markers(line):
+    status_markers = {'status-draft', 'status-proposed', 'draft-heading', 'lifecycle-draft'}
+    assert not [name for name, pattern in DRAFT_MARKERS if name in status_markers and pattern.search(line)]
+
+
+def test_draft_scan_reports_both_kinds_of_mismatch(repo, capsys):
+    (repo / 'docs/guide/wip.md').write_text('# Draft — not yet approved\n')
+    (repo / 'docs/guide/late.md').write_text('\n' * 30 + 'Status: draft\n')  # beyond the scanned head
+    (repo / 'docs/guide/logo.png').write_bytes(b'\x89PNG\x00draft')
+    data = yaml.safe_load((repo / 'docs/knowledge/catalogue.yaml').read_text())
+    data['entries'].append(family('guide-drafts', ['docs/guide/late.md'], lifecycle='draft'))
+    (repo / 'docs/knowledge/catalogue.yaml').write_text(yaml.safe_dump(data))
+    git(repo, 'add', '.')
+    scan = draft_scan(repo, coverage(repo))
+    assert scan['active_with_marker'] == {'docs/guide/wip.md': ['draft-heading']}
+    assert scan['draft_without_marker'] == ['docs/guide/late.md']
+    assert scan['binary_or_missing'] == 1
+    assert main(['draft-scan', '--repo', str(repo)]) == 0
+    out = capsys.readouterr().out
+    assert 'ACTIVE WITH MARKER docs/guide/wip.md (draft-heading)' in out
+    assert 'DRAFT WITHOUT MARKER docs/guide/late.md' in out
+    assert main(['draft-scan', '--repo', str(repo), '--json']) == 0
+    assert json.loads(capsys.readouterr().out)['with_marker'] == 1
 
 
 # ------------------------------------------------------------------ the repository's own tree
