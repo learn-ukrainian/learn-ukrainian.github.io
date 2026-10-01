@@ -24,10 +24,14 @@ proof and treats every expression it cannot prove as an offender.
   that is a write verb or runs with locks off. A program word may also be a
   literal path built by ``str()``, ``Path()`` and ``/``.
 * A program other than git is proven only when no argument carries ``git``
-  as a word (``make --eval 'x:; git status'``), it writes no ``gh`` alias,
-  and, for ``make``/``just``/``task``, every argument is a literal. A
-  ``git config alias.*`` write and a ``git`` word in shell text outside a
-  readable git command (``/usr/bin/git status``, ``xargs git``) are unproven.
+  as a word (``make --eval 'x:; git status'``), no word names a task runner
+  (``make``, ``just``, ``npm``, ``tox``, ... in ``_TASK_RUNNERS``: they run a
+  recipe or script the lint never reads), and every ``gh`` word starts one of
+  gh's built-in commands (``_GH_COMMANDS``; ``gh st`` may be an alias, and
+  ``gh alias`` and ``gh extension exec`` run user-defined commands). A git
+  subcommand must be on the read or write list, so a git alias is unproven
+  too. A ``git config alias.*`` write and a ``git`` word in shell text outside
+  a readable git command (``/usr/bin/git status``, ``xargs git``) are unproven.
 * A name proves a command only when it is local to the function, assigned
   exactly once by a plain assignment that runs before the call, read exactly
   once (as this command) and never declared ``global``/``nonlocal``: then
@@ -53,9 +57,16 @@ proof and treats every expression it cannot prove as an offender.
 
 A literal read subcommand without locks off is never exempt. Any other
 offender (a dynamic subcommand or command, an unresolved shell command, a
-process function used as a value) may take a ``# lock-lint: ok <reason>``
+task runner or non-built-in ``gh`` call, a process function used as a value) may take a ``# lock-lint: ok <reason>``
 comment on its reported line; the reason must be non-empty and the scanned
 files may hold at most ``_MAX_MARKERS`` markers.
+
+Boundary: the lint proves what the scanned source states, namely git calls,
+wrapper programs, shell text, runner functions and the closed lists above. It
+cannot see configuration that changes what ``git`` itself means at run time
+(shell rc files, a ``git`` function or alias in the environment, a global git
+config), nor an arbitrary executable that spawns git internally; those are out
+of scope.
 """
 
 from __future__ import annotations
@@ -63,6 +74,8 @@ from __future__ import annotations
 import ast
 import io
 import re
+import shutil
+import subprocess
 import tokenize
 from collections.abc import Iterator
 from pathlib import Path
@@ -189,9 +202,73 @@ _SINK_MODULES = frozenset({"subprocess", "os", "asyncio", "asyncio.subprocess"})
 # carries one (``make --eval 'x:; git status'``, ``gh alias set st 'git status'``)
 # may run it, so the call is not proven as a non-git call.
 _GIT_WORD = re.compile(r"(?<![\w.-])git(?![\w-])")
-# Programs that run commands defined elsewhere (a recipe, a task): proven only
-# when every argument is a literal.
-_TASK_RUNNERS = frozenset({"make", "just", "task"})
+# Closed list: programs that run command text defined outside the argv (a
+# Makefile recipe, a package or task script, a hook config). No call to one is
+# proven, whatever its arguments.
+_TASK_RUNNERS = frozenset(
+    {
+        "bun",
+        "bunx",
+        "gmake",
+        "inv",
+        "invoke",
+        "just",
+        "make",
+        "ninja",
+        "nox",
+        "npm",
+        "npx",
+        "pnpm",
+        "pnpx",
+        "pre-commit",
+        "rake",
+        "task",
+        "tox",
+        "yarn",
+    }
+)
+_RUNNER_WORD = re.compile(r"(?<![\w.-])(?:" + "|".join(map(re.escape, sorted(_TASK_RUNNERS))) + r")(?![\w.-])")
+# Closed list: gh's built-in top-level commands (``gh --help`` of gh 2.98.0 without
+# ``alias``, plus the hidden ``help`` and ``version``). Any other first word may be a
+# user alias (``gh st`` → ``!git status``) or an extension, which run unseen commands.
+_GH_COMMANDS = frozenset(
+    {
+        "agent-task",
+        "api",
+        "attestation",
+        "auth",
+        "browse",
+        "cache",
+        "codespace",
+        "completion",
+        "config",
+        "copilot",
+        "discussion",
+        "extension",
+        "gist",
+        "gpg-key",
+        "help",
+        "issue",
+        "label",
+        "licenses",
+        "org",
+        "pr",
+        "preview",
+        "project",
+        "release",
+        "repo",
+        "ruleset",
+        "run",
+        "search",
+        "secret",
+        "skill",
+        "ssh-key",
+        "status",
+        "variable",
+        "version",
+        "workflow",
+    }
+)
 
 # Verdicts for a call the lint cannot prove: the only ones a
 # ``# lock-lint: ok <reason>`` marker may exempt.
@@ -348,13 +425,25 @@ def _carries_git(items: list[_Item]) -> bool:
     return any(_GIT_WORD.search(text) for text in map(_literal_text, items) if text)
 
 
+def _gh_proven(tokens: list[str | None]) -> bool:
+    """``tokens[0]`` is ``gh``: its command is built in, and runs no extension (``gh extension exec``)."""
+    if len(tokens) == 1:
+        return True  # prints help
+    if tokens[1] not in _GH_COMMANDS:
+        return False
+    return tokens[1] != "extension" or (len(tokens) > 2 and tokens[2] not in {None, "exec"})
+
+
 def _indirect_verdicts(program: str, items: list[_Item]) -> list[str]:
-    """A ``gh`` alias write, or a task runner with a non-literal argument, runs a command the lint never sees."""
+    """A task runner, or a ``gh`` word outside gh's built-in commands, in any argv position
+    (``timeout 5 make status``) runs command text the lint never sees."""
     tokens = [_item_token(item) for item in items]
-    if program == "gh" and "alias" in tokens and tokens[1:3] != ["alias", "list"]:
-        return [_UNPROVEN]
-    if program in _TASK_RUNNERS and any(text is None or "\0" in text for text in map(_literal_text, items[1:])):
-        return [_UNPROVEN]
+    names = [program, *(_basename(token) if token else None for token in tokens[1:])]
+    for index, name in enumerate(names):
+        if name in _TASK_RUNNERS or (name == "gh" and not _gh_proven(["gh", *tokens[index + 1 :]])):
+            return [_UNPROVEN]
+        if name == "gh":
+            return []  # its arguments are gh's own
     return []
 
 
@@ -822,6 +911,8 @@ class _Lint:
                 arguments = _argv_items(call.args[index + 1]) if len(call.args) > index + 1 else None
             if arguments:
                 verdicts = self.argv_verdicts([command, *arguments[1:]], env, 0)
+            else:
+                verdicts = _indirect_verdicts(self.program(command, 0) or "", [command, None])
         self.offenders.extend((command.lineno, v) for v in verdicts)
 
     def sinks(self) -> Iterator[tuple[ast.Call, str]]:
@@ -900,13 +991,8 @@ _COMMAND_PLACEHOLDER = re.compile(
     r"(?:(?:command|env|exec|nohup|sudo|time|xargs|then|do|else)\s+)*"
     r"[\"']?\0"
 )
-# A ``gh`` alias write, or a task runner with a non-literal argument, at command position.
-_SHELL_INDIRECT = re.compile(
-    r"(?:^|[;&|(`\n]|\$\()\s*"
-    r"(?:[A-Za-z_][A-Za-z0-9_]*=[^\s;&|]*\s+)*"
-    r"(?:(?:command|env|exec|nohup|sudo|time|xargs|then|do|else)\s+)*"
-    r"(?:gh\s+alias\s+(?!list\b)|(?:make|just|task)\b[^;&|\n]*\0)"
-)
+# A ``gh`` word with the next two words (its command and a subcommand).
+_SHELL_GH = re.compile(r"(?<![\w.-])gh(?![\w.-])[\"']?(?:\s+(?P<command>[^\s;&|)`]+)(?:\s+(?P<action>[^\s;&|)`]+))?)?")
 # Where the words of the git command a match starts end.
 _SHELL_COMMAND_END = re.compile(r"[;&|)`\n]")
 # Text that ends where a simple command starts (a separator, a group or a reserved word).
@@ -918,6 +1004,18 @@ def _shell_word(word: str | None) -> str | None:
         return None
     word = word.strip("\"'")
     return word if _SHELL_WORD.fullmatch(word) else None
+
+
+def _shell_runs_indirectly(code: str) -> bool:
+    """A task runner word, or a ``gh`` word outside gh's built-in commands, anywhere in the text."""
+    if _RUNNER_WORD.search(code):
+        return True
+    for match in _SHELL_GH.finditer(code):
+        words = [match.group("command"), match.group("action")]
+        tokens = ["gh", *(word.strip("\"'") if word and "\0" not in word else None for word in words if word)]
+        if not _gh_proven(tokens):
+            return True
+    return False
 
 
 def _prefix_state(env: str) -> str:
@@ -959,7 +1057,7 @@ def _shell_line_offenders(source: str, *, env_state: str = _ABSENT, wrapped: boo
     # Every character is read: no comment is stripped, since telling a comment from a quoted
     # or expanded ``#`` needs a shell parser. A git word in a real comment counts as a command.
     for lineno, code in enumerate(source.splitlines(), start=1):
-        if _COMMAND_PLACEHOLDER.search(code) or _SHELL_INDIRECT.search(code):
+        if _COMMAND_PLACEHOLDER.search(code) or _shell_runs_indirectly(code):
             offenders.append((lineno, _UNRESOLVED_SHELL))
         # Each git command read below, from its ``git`` to the end of its words.
         spans = [
@@ -1273,7 +1371,6 @@ def test_reporter_disables_optional_locks_for_every_child() -> None:
         'os.execlp("gh", "gh", "alias", "set", "st", "git status")',
         'subprocess.run("/usr/bin/git status", shell=True)',
         'subprocess.run("echo status | xargs git", shell=True)',
-        "subprocess.run(\"make --eval 'x:; git status' x\", shell=True)",
         'subprocess.run(f"make {target}", shell=True)',
         "subprocess.run(\"gh alias set st 'pr status'\", shell=True)",
         "subprocess.run(\"git --no-optional-locks config alias.st '!git status'\", shell=True)",
@@ -1334,14 +1431,11 @@ def test_lint_flags_read_only_calls_without_flag(snippet: str) -> None:
         "subprocess.CompletedProcess(args=args, returncode=0)",
         'os.environ.get("HOME")',
         "asyncio.subprocess.PIPE",
-        # Literal task-runner targets, read-only gh calls and git-free arguments.
-        'subprocess.run(["make", "-C", "docs", "html"])',
-        'subprocess.run(["gh", "alias", "list"])',
+        # Built-in gh commands and git-free arguments.
         'subprocess.run(["gh", "api", "repos/o/r/pulls", "--jq", ".[].title"])',
         'subprocess.run(["python", "-m", "scripts.git_tool", "--help"])',
         'subprocess.run(["rg", "-l", "github", ".gitignore"])',
         'os.execvp("python", ["python", "-m", "http.server"])',
-        'subprocess.run("make html", shell=True)',
         'subprocess.run("git", shell=True)',
         'subprocess.run("git --no-optional-locks config --get alias.st", shell=True)',
     ],
@@ -1776,3 +1870,118 @@ def test_shell_lint_reads_text_after_a_hash(text: str, expected: list[tuple[int,
 def test_lint_reads_shell_text_after_a_quoted_hash() -> None:
     source = "import subprocess\n\nsubprocess.run('echo \"# Working tree\"; git status --porcelain', shell=True)\n"
     assert git_calls_without_flag(source) == [(3, "status")]
+
+
+def test_review_r7_reproductions_are_flagged() -> None:
+    # A Makefile recipe ``status:; git status --porcelain`` and a gh alias ``st`` → ``!git status --porcelain``.
+    assert git_calls_without_flag('cmd = subprocess.run(["make", "status"])\n') == [(1, _UNPROVEN)]
+    assert git_calls_without_flag('cmd = subprocess.run("make status", shell=True)\n') == [(1, _UNRESOLVED_SHELL)]
+    assert git_calls_without_flag('cmd = subprocess.run(["gh", "st"])\n') == [(1, _UNPROVEN)]
+
+
+@pytest.mark.parametrize("runner", sorted(_TASK_RUNNERS))
+def test_every_task_runner_call_is_unproven(runner: str) -> None:
+    for call in (
+        f'subprocess.run(["{runner}", "status"])',
+        f'subprocess.run(["/usr/bin/{runner}", "status"])',
+        f'subprocess.run(["timeout", "5", "{runner}", "status"])',
+        f'os.execvp("{runner}", argv)',
+        f'os.execlp("{runner}", "{runner}", "status")',
+        f'asyncio.create_subprocess_exec("{runner}", "status")',
+    ):
+        assert git_calls_without_flag(f"cmd = {call}\n") == [(1, _UNPROVEN)], call
+    for text in (f"{runner} status", f"cd x && {runner} status", f"timeout 5 {runner} status", f"/usr/bin/{runner}"):
+        assert git_calls_without_flag(f'cmd = subprocess.run("{text}", shell=True)\n') == [(1, _UNRESOLVED_SHELL)], text
+        assert shell_git_calls_without_flag(f"{text}\n") == [(1, _UNRESOLVED_SHELL)], text
+    # Only a marker with a reason exempts one.
+    marked = f'subprocess.run(["{runner}", "html"])  # lock-lint: ok recipe runs no git\n'
+    assert git_calls_without_flag(marked) == []
+    assert shell_git_calls_without_flag(f"{runner} html  # lock-lint: ok recipe runs no git\n") == []
+
+
+def test_task_runner_text_in_a_git_call_still_needs_the_flag() -> None:
+    text = "cmd = subprocess.run(\"make --eval 'x:; git status' x\", shell=True)\n"
+    assert git_calls_without_flag(text) == [(1, _UNRESOLVED_SHELL), (1, "status")]
+
+
+@pytest.mark.parametrize("command", sorted(_GH_COMMANDS - {"extension"}))
+def test_built_in_gh_commands_are_proven(command: str) -> None:
+    assert git_calls_without_flag(f'cmd = subprocess.run(["gh", "{command}", "list"])\n') == []
+    assert git_calls_without_flag(f'cmd = subprocess.run("gh {command} list", shell=True)\n') == []
+    assert git_calls_without_flag(f'cmd = os.execlp("gh", "gh", "{command}", "list")\n') == []
+
+
+@pytest.mark.parametrize(
+    "words",
+    [
+        ["st"],
+        ["co", "321"],
+        ["alias", "list"],
+        ["alias", "set", "st", "pr status"],
+        ["extension", "exec", "probe"],
+        ["ext", "list"],
+        ["my-extension"],
+        ["--version"],
+        ["PR", "list"],
+    ],
+)
+def test_unknown_gh_words_are_flagged(words: list[str]) -> None:
+    argv = ", ".join(f'"{word}"' for word in ["gh", *words])
+    assert git_calls_without_flag(f"cmd = subprocess.run([{argv}])\n") == [(1, _UNPROVEN)]
+    assert git_calls_without_flag(f'cmd = subprocess.run(["timeout", "5", {argv}])\n') == [(1, _UNPROVEN)]
+    text = " ".join(["gh", *(f"'{word}'" if " " in word else word for word in words)])
+    assert git_calls_without_flag(f'cmd = subprocess.run("{text}", shell=True)\n') == [(1, _UNRESOLVED_SHELL)]
+    assert shell_git_calls_without_flag(f"x=$({text})\n") == [(1, _UNRESOLVED_SHELL)]
+
+
+@pytest.mark.parametrize(
+    "call",
+    [
+        'subprocess.run(["gh", command, "list"])',
+        'subprocess.run(["gh", *args])',
+        'subprocess.run(["gh", "extension", action])',
+        'os.execvp("gh", argv)',
+        'subprocess.run(f"gh {command} list", shell=True)',
+    ],
+)
+def test_gh_with_a_dynamic_command_is_flagged(call: str) -> None:
+    assert len(git_calls_without_flag(f"cmd = {call}\n")) == 1
+
+
+def test_gh_extension_management_is_proven() -> None:
+    assert git_calls_without_flag('cmd = subprocess.run(["gh", "extension", "list"])\n') == []
+    assert shell_git_calls_without_flag("gh extension list\ngh\n") == []
+
+
+def test_git_alias_is_an_unknown_subcommand_no_marker_exempts() -> None:
+    for argv in ('["git", "st"]', '["git", "--no-optional-locks", "st"]'):
+        source = f"cmd = subprocess.run({argv})  # lock-lint: ok st is an alias\n"
+        assert git_calls_without_flag(source) == [(1, "st (unknown subcommand)")]
+    assert shell_git_calls_without_flag("git st  # lock-lint: ok st is an alias\n") == [(1, "st (unknown subcommand)")]
+
+
+def _gh_help_sections(text: str) -> dict[str, set[str]]:
+    """The command names listed under each ``... COMMANDS`` heading of ``gh --help``."""
+    sections: dict[str, set[str]] = {}
+    current: set[str] | None = None
+    for line in text.splitlines():
+        if line and not line[0].isspace():
+            current = sections.setdefault(line.strip(), set()) if line.strip().endswith("COMMANDS") else None
+        elif current is not None and (match := re.match(r"\s+([a-z][\w-]*):", line)):
+            current.add(match.group(1))
+    return sections
+
+
+@pytest.mark.live_github  # runs the real ``gh --help`` only; no network
+def test_gh_command_list_is_pinned_to_the_installed_built_ins() -> None:
+    gh = shutil.which("gh")
+    if gh is None:
+        pytest.skip("gh is not installed")
+    result = subprocess.run([gh, "--help"], capture_output=True, text=True, check=True, timeout=30)
+    sections = _gh_help_sections(result.stdout)
+    built_ins = set().union(*(names for heading, names in sections.items() if heading != "ALIAS COMMANDS"))
+    aliases = sections.get("ALIAS COMMANDS", set())
+    assert "pr" in built_ins and "alias" in built_ins, sections
+    # Every pinned word is a built-in of the installed gh, so none can name an alias there.
+    assert _GH_COMMANDS - {"help", "version"} <= built_ins - {"alias"}
+    assert not _GH_COMMANDS & aliases
