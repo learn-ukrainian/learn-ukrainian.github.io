@@ -62,6 +62,7 @@ KNOWN_REPO_WIDE_MODULES = frozenset(
         "tests/test_ask_opencode.py",
         "tests/test_curriculum_upgrade_no_host_run_root.py",
         "tests/test_cyrillic_roundtrip_invariant.py",
+        "tests/test_docs_catalogue.py",
         "tests/test_fleet_routing_open_model_data_import_guard.py",
         "tests/test_frontend_denominator_invariant.py",
         "tests/test_hooks_executable.py",
