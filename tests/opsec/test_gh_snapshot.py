@@ -22,6 +22,9 @@ def read_api(*args):
         "Accept : application/json",
         "Accept: application/json\rX-Extra: fixture",
         "Accept: application/json\nX-Extra: fixture",
+        "Accept: application/json\x00",
+        "Accept: application/json\x1b[31m",
+        "Accept: application/json\x7f",
     ],
 )
 def test_unapproved_or_malformed_headers_are_refused(flag, header):
@@ -72,3 +75,86 @@ def test_encoded_dot_or_slash_in_suffix_is_refused(path):
 )
 def test_valid_segments_and_query_encoding_remain_allowed(path):
     assert not read_api(path).write
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["api", "repos/unit/public/issues/1"],
+        ["issue", "list"],
+        ["pr", "view", "1"],
+        ["pr", "checks", "1"],
+        ["repo", "view"],
+    ],
+)
+def test_gh_host_is_refused_for_reads(cmd):
+    with pytest.raises(PublishBlocked, match="GH_HOST refused for reads"):
+        admit(cmd, cwd=".", environment={"GH_HOST": "ghe.example.com"})
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["issue", "list", "--repo", "ghe.example.com/unit/public"],
+        ["issue", "list", "-R", "ghe.example.com/unit/public"],
+        ["pr", "view", "1", "--repo", "https://gitlab.com/unit/public"],
+        ["pr", "checks", "1", "-R", "other.invalid/unit/public"],
+        ["repo", "view", "ghe.example.com/unit/public"],
+        ["repo", "list", "ghe.example.com/unit"],
+    ],
+)
+def test_non_github_repo_host_is_refused_for_reads(cmd):
+    with pytest.raises(PublishBlocked, match=r"non-github\.com repository host refused"):
+        admit(cmd, cwd=".", environment={})
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["issue", "list", "--repo", "github.com/unit/public"],
+        ["issue", "list", "--repo", "unit/public"],
+        ["pr", "view", "1", "-R", "github.com/unit/public"],
+        ["pr", "view", "1", "-R", "unit/public"],
+        ["repo", "view", "github.com/unit/public"],
+        ["repo", "view", "unit/public"],
+    ],
+)
+def test_github_repo_host_remains_allowed_for_reads(cmd):
+    cmd_admitted = admit(cmd, cwd=".", environment={})
+    assert not cmd_admitted.write
+
+
+@pytest.mark.parametrize(
+    "path",
+    [
+        "repos/unit/public/releases/tags/..",
+        "repos/unit/public/releases/tags/.",
+        "repos/unit/public/branches/..",
+        "repos/unit/public/branches/.",
+        "repos/unit/public/commits/..",
+        "repos/unit/public/actions/workflows/..",
+        "repos/unit/public/compare/..",
+    ],
+)
+def test_dot_only_segments_in_read_api_paths_are_refused(path):
+    with pytest.raises(PublishBlocked):
+        read_api(path)
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        ["release", "view", ".."],
+        ["release", "download", ".."],
+        ["issue", "list", "--repo", "unit/.."],
+        ["issue", "list", "--repo", "../public"],
+        ["issue", "list", "--repo", ".."],
+        ["pr", "view", ".."],
+        ["pr", "diff", ".."],
+        ["pr", "checks", ".."],
+        ["workflow", "view", ".."],
+    ],
+)
+def test_dot_only_segments_in_read_commands_are_refused(cmd):
+    with pytest.raises(PublishBlocked, match="dot-only segments refused"):
+        admit(cmd, cwd=".", environment={})

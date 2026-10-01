@@ -204,8 +204,8 @@ REST_GET = (
     },
 )
 READ_HEADERS = {"accept", "if-none-match", "x-github-api-version"}
-_SEGMENT = r"(?:[A-Za-z0-9_.{}-]|%(?!2[eEfF])[0-9A-Fa-f]{2})+"
-_REPOSITORY_SEGMENT = r"(?!\.+(?:/|\?|$))" + _SEGMENT
+_SEGMENT = r"(?!\.+(?:/|\?|$))(?:[A-Za-z0-9_.{}-]|%(?!2[eEfF])[0-9A-Fa-f]{2})+"
+_REPOSITORY_SEGMENT = _SEGMENT
 _READ_SUFFIX = (
     r"(?:issues(?:/\d+(?:/(?:comments|labels|timeline|sub_issues))?|/comments/\d+)?"
     r"|pulls(?:/\d+(?:/(?:reviews|commits|files))?)?"
@@ -224,6 +224,26 @@ REST_READ_PATH = re.compile(
     + _READ_SUFFIX
     + r")?)(?:\?[^\s#\x00-\x1f]*)?"
 )
+
+
+def _has_dot_only_segment(value: str) -> bool:
+    cleaned = re.sub(r"%(?:2e|2E)", ".", value)
+    return any(re.fullmatch(r"\.+", seg) for seg in re.split(r"[/?#\\]", cleaned))
+
+
+def _validate_read_repo(repo_str: str) -> None:
+    if _has_dot_only_segment(repo_str):
+        raise PublishBlocked("OPSEC: dot-only segments refused in repository selector.")
+    val = repo_str.strip().removesuffix(".git")
+    val = re.sub(r"^git@([^:]+):", r"\1/", val)
+    val = re.sub(r"^https?://", "", val)
+    parts = [p for p in val.split("/") if p]
+    if len(parts) >= 3:
+        host = parts[0]
+        if host.lower() != "github.com":
+            raise PublishBlocked("OPSEC: non-github.com repository host refused for reads.")
+    elif len(parts) == 2 and ("." in parts[0] or ":" in parts[0]) and parts[0].lower() != "github.com":
+        raise PublishBlocked("OPSEC: non-github.com repository host refused for reads.")
 
 READ_VERBS = {g: {v for group, v in READ_GRAMMARS if group == g} for g, _ in READ_GRAMMARS}
 
@@ -462,10 +482,16 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         except PublishBlocked:
             pass
         else:
+            if environment.get("GH_HOST"):
+                raise PublishBlocked("OPSEC: GH_HOST refused for reads; reads must target github.com.")
             for flag, value in found:
                 if flag in {"--header", "-H"}:
                     name, separator, _ = value.partition(":")
-                    if not separator or name.lower() not in READ_HEADERS or "\r" in value or "\n" in value:
+                    if (
+                        not separator
+                        or name.lower() not in READ_HEADERS
+                        or any(ord(c) < 32 or ord(c) == 127 for c in value)
+                    ):
                         raise PublishBlocked("OPSEC: API read header refused; use an approved header name and value.")
             if all(value == "GET" for flag, value in found if flag in {"--method", "-X"}) and REST_READ_PATH.fullmatch(
                 positional[0].removeprefix("https://api.github.com/").lstrip("/")
@@ -497,10 +523,17 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         start += 2
     key = tuple(argv[start : start + 2])
     if key == ("pr", "checkout"):
-        parse(
+        if environment.get("GH_HOST"):
+            raise PublishBlocked("OPSEC: GH_HOST refused for reads; reads must target github.com.")
+        found, positional = parse(
             globals_ + argv[start + 2 :],
             (1, 1, {**REPO, "--branch": True, "-b": True, "--detach": False, "--force": False}),
         )
+        for flag, value in found:
+            if flag in REPO:
+                _validate_read_repo(value)
+        if any(_has_dot_only_segment(arg) for arg in positional):
+            raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
         import unicodedata
         from pathlib import Path
 
@@ -533,7 +566,16 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
             raise PublishBlocked("OPSEC: pr checkout requires a verified dispatch repository.") from None
         return FrozenCommand(list(argv), "unknown", False)
     if key in READ_GRAMMARS:
-        parse(globals_ + argv[start + 2 :], READ_GRAMMARS[key])
+        if environment.get("GH_HOST"):
+            raise PublishBlocked("OPSEC: GH_HOST refused for reads; reads must target github.com.")
+        found, positional = parse(globals_ + argv[start + 2 :], READ_GRAMMARS[key])
+        for flag, value in found:
+            if flag in REPO:
+                _validate_read_repo(value)
+        if any(_has_dot_only_segment(arg) for arg in positional):
+            raise PublishBlocked("OPSEC: dot-only segments refused in read command.")
+        if key in {("repo", "view"), ("repo", "list")} and positional:
+            _validate_read_repo(positional[0])
         return FrozenCommand(list(argv), "unknown", False)
     if key not in WRITE_GRAMMARS:
         raise PublishBlocked(

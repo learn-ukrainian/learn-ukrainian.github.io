@@ -225,7 +225,9 @@ def ensure_merge_ready(repo, number, *, runner, cwd, environment, match_head=Non
                 states = parse_checks(json.loads(checks.stdout))
             except (json.JSONDecodeError, TypeError):
                 states = None
-            if checks.returncode not in {0, 1, 8}:
+            if checks.returncode not in {0, 1, 8} or (
+                checks.returncode == 1 and states == ([], [])
+            ):
                 states = None
         if states is None:
             raise PublishBlocked("OPSEC: merge refused: cannot establish check state.")
