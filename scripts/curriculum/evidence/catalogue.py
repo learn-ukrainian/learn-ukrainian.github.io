@@ -59,6 +59,7 @@ def request_report(plan_path: Path, words_path: Path, source: Sources) -> dict[s
                 "query": query,
                 "status": "ok",
                 "candidates": [],
+                "query_mode": "letter_index" if kind == "letter" else "text",
             }
             if query is None:
                 entry.update(status="not_checked", note={"code": "catalogue_word_unresolved"})
@@ -72,7 +73,9 @@ def request_report(plan_path: Path, words_path: Path, source: Sources) -> dict[s
                         result["notes"].append(unavailable)
                     else:
                         entry["candidates"] = [
-                            {field: hit[field] for field in ("id", "title", "url", "access", "kind")} for hit in hits
+                            {field: hit[field] for field in ("id", "title", "url", "access", "kind")}
+                            for hit in hits
+                            if kind != "letter" or query.strip().upper() in hit.get("letters", [])
                         ]
                 if unavailable is not None:
                     entry.update(status="not_checked", note=unavailable)

@@ -25,6 +25,7 @@ COUNTS = {
     "podcasts/ulp_mapping.yaml": 602,
     "external_resources.yaml": 1739,
     "ulp-resources.yaml": 7,
+    "ulp-alphabet.yaml": 40,
     "ulp-articles-index.yaml": 77,
     "ulp-article-mappings.yaml": 152,
     "trusted_sources.yaml": 11,
@@ -158,7 +159,7 @@ def test_atomic_idempotent_reingest_and_mutation_fts(database):
     before = catalogue.search_resources(database, "formal greetings")
     report = catalogue.ingest(database, ROOT / "docs/resources", no_network=True)
     assert report["entries_in"] == sum(COUNTS.values())
-    assert report["rows_out"] == 1053
+    assert report["rows_out"] == 1086
     assert catalogue.search_resources(database, "formal greetings") == before
     with database:
         database.execute(
@@ -248,7 +249,7 @@ def test_cli_help_and_storage_guards(tmp_path, monkeypatch, capsys):
     sqlite3.connect(database).close()
     args = ["--ingest", "--db", str(database), "--no-network", "--catalogue-root", str(ROOT / "docs/resources")]
     assert catalogue.main(args) == 0
-    assert json.loads(capsys.readouterr().out)["rows_out"] == 1053
+    assert json.loads(capsys.readouterr().out)["rows_out"] == 1086
     with pytest.raises(SystemExit):
         catalogue.main([*args, "--workers", "0"])
     from scripts.storage import topology
@@ -316,7 +317,16 @@ def test_invalid_catalogues_fail_closed(tmp_path, monkeypatch):
 )
 def test_explicit_access_metadata(access_fields, expected):
     entry = catalogue._resource_entry(
-        {"title": "An article", "url": "https://example.org/article", **access_fields},
+        {
+            "title": "An article",
+            "url": "https://example.org/article",
+            **access_fields,
+            "access_evidence": [
+                {"source_url": "https://example.org/article", "source_sha256": "0" * 64, "locator": "body"}
+            ]
+            if expected == "free"
+            else [],
+        },
         "docs/resources/test.json",
         "/0",
         {},
@@ -325,14 +335,15 @@ def test_explicit_access_metadata(access_fields, expected):
 
 
 def test_missing_access_is_unknown_and_not_free(database):
-    rows = catalogue.search_resources(database, kind="article", limit=20)
-    assert rows and all(row["access"] == "unknown" for row in rows)
-    assert catalogue.search_resources(database, kind="article", free_only=True) == []
-    assert catalogue.search_resources(database, kind="video", free_only=True) == []
     entry = catalogue._resource_entry({"title": "Unknown", "url": "https://example.org/unknown"}, "test.json", "/0", {})
     assert entry["access"] == "unknown"
-    database.execute("UPDATE resource_catalogue SET access='free' WHERE url=?", (rows[0]["url"],))
-    assert [r["url"] for r in catalogue.search_resources(database, kind="article", free_only=True)] == [rows[0]["url"]]
+    all_rows = catalogue.search_resources(database, kind="article", limit=20)
+    assert all_rows
+    free_rows = catalogue.search_resources(database, kind="article", free_only=True)
+    assert len(free_rows) == 5
+    assert "https://www.ukrainianlessons.com/ukrainian-alphabet/" in {r["url"] for r in free_rows}
+    assert all(r["access_evidence"] for r in free_rows)
+    assert all(r["access_evidence"] for r in catalogue.search_resources(database, kind="video", free_only=True))
 
 
 @pytest.mark.parametrize("query", ["добрий день", "привіт", "дякую"])
@@ -445,3 +456,131 @@ def test_database_failure_rolls_back_catalogue(database, monkeypatch):
         catalogue.ingest(database, ROOT / "docs/resources", no_network=True)
     assert database.execute("SELECT count(*) FROM resource_catalogue").fetchone()[0] == before
     assert catalogue.reconcile(database, entries)["entries_in"] == sum(COUNTS.values())
+
+
+def test_letter_index_excludes_stray_transcript_words(database):
+    with database:
+        database.execute("UPDATE resource_catalogue SET search_text=search_text || ' Т т Ь ь'")
+    for query, letter in [
+        ("Т", "Т"),
+        ("т", "Т"),
+        (" Т ", "Т"),
+        ('"Т"', "Т"),
+        ("т.", "Т"),
+        ("т́", "Т"),
+        ("Ь", "Ь"),
+        ("ь", "Ь"),
+    ]:
+        hits = catalogue.search_resources(database, query, free_only=True)
+        assert len(hits) == 1
+        assert hits[0]["letters"] == [letter]
+        assert hits[0]["letter_evidence"]
+    assert catalogue.search_resources(database, "Q", free_only=True) == []
+    assert catalogue.search_resources(database, "Т", kind="podcast") == []
+    assert catalogue.search_resources(database, "Т", level="C2") == []
+
+
+def test_old_schema_migrates_without_fts_fallback():
+    conn = sqlite3.connect(":memory:")
+    old_schema = "\n".join(
+        line
+        for line in catalogue.SCHEMA.splitlines()
+        if not any(f"{field} TEXT" in line for field in ("letters", "letter_evidence", "access_evidence"))
+    )
+    conn.executescript(old_schema)
+    with pytest.raises(catalogue.ResourceCatalogueMissingError, match="Letter index"):
+        catalogue.search_resources(conn, "Т")
+    with conn:
+        catalogue.ensure_schema(conn)
+    catalogue.ensure_schema(conn)
+    assert catalogue.search_resources(conn, "Т") == []
+    conn.close()
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"letters": ["AB"]},
+        {"letters": ["Т"]},
+        {"letters": ["Т"], "letter_evidence": [{"letters": ["А"]}]},
+        {"letters": ["Т"], "letter_evidence": [{"letters": ["Т"], "locator": "h2", "source_sha256": "bad"}]},
+        {"access_evidence": [{"locator": "h2", "source_sha256": "0" * 64}]},
+    ],
+)
+def test_unevidenced_letter_metadata_fails_closed(fields):
+    with pytest.raises(ValueError):
+        catalogue._resource_entry({"title": "Fixture", "url": "https://example.org", **fields}, "test.yaml", "/0", {})
+
+
+def test_unknown_alias_preserves_evidenced_free_access_and_conflict_is_order_independent():
+    import itertools
+
+    base = catalogue._resource_entry({"title": "Fixture", "url": "https://example.org"}, "test.yaml", "/0", {})
+    free = {**base, "access": "free", "access_evidence": [{"source_url": "https://example.org"}]}
+    for entries in ([base, free], [free, base]):
+        row = catalogue.deduplicate(entries)[0]
+        assert row["access"] == "free"
+        assert row["access_evidence"] == free["access_evidence"]
+    paid = {**base, "access": "paid"}
+    for entries in itertools.permutations([base, free, paid]):
+        row = catalogue.deduplicate(list(entries))[0]
+        assert row["access"] == "mixed"
+        assert row["audio_access"] is None
+
+
+def test_all_33_publisher_pairings_are_free_and_preserve_source_hash(database):
+    expected = dict(
+        zip(
+            "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ",
+            [
+                "hvB3VpcR3ZE",
+                "V1hxBE_JbGg",
+                "aFcvYfvQ2X4",
+                "gVnclpSI0DU",
+                "gNjHqjTW9WQ",
+                "g4Bh-lqzd48",
+                "KFlsroBW0dk",
+                "O0bwRyyBQSc",
+                "dIrGVcqPwqM",
+                "BhASNxitC1A",
+                "W-1rCu0indE",
+                "Z9TH0H4ShGo",
+                "UcjdjQXhAY8",
+                "aq0cjB90s3w",
+                "J7sGEI4-xJo",
+                "v6-3Xg52Buk",
+                "Ez95H4ibuJo",
+                "vNUfiKHPYaU",
+                "gJFxRIPRZbI",
+                "JksSjjxyW5Y",
+                "fMGsQ5KPQgg",
+                "7UsFBgSL91E",
+                "m-jcLR_gK0k",
+                "VB1O6PmtYRU",
+                "haHRsFFZRQI",
+                "vpr58zJSJKc",
+                "u44eCjR2Oz8",
+                "UsJkbdsY2RA",
+                "1D-6MIw3OXY",
+                "QmBLieIuf6Q",
+                "cJlal8XKBxo",
+                "9JdIBYCTWGw",
+                "yhSAf41LX8I",
+            ],
+            strict=True,
+        )
+    )
+    for letter, video in expected.items():
+        hits = catalogue.search_resources(database, letter, free_only=True)
+        assert hits[0]["url"] == f"https://www.youtube.com/watch?v={video}"
+        assert hits[0]["letters"] == [letter]
+        assert (
+            hits[0]["access_evidence"][0]["source_sha256"]
+            == "3d3e3a4cdb28fada42422fb70fd7ef9a1556b51dc4060c90c0165ae9fd79d795"
+        )
+
+
+@pytest.mark.parametrize("fields", [{"access": "free"}, {"free": True}])
+def test_free_access_requires_evidence(fields):
+    with pytest.raises(ValueError, match="Free catalogue access"):
+        catalogue._resource_entry({"title": "Unknown", "url": "https://example.org", **fields}, "test.yaml", "/0", {})
