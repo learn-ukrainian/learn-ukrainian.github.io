@@ -14,7 +14,7 @@ from scripts.audio.generate_pronunciation import generate, select_slice, validat
 FIXTURE = Path(__file__).parent / "fixtures/audio/pronunciation.wav"
 
 
-def oracle(lemma, pos=None):
+def oracle(lemma, /, pos=None, **selectors):
     return {"status": "ok", "matches": [{"stressed_form": lemma}]}
 
 
@@ -38,7 +38,7 @@ def test_hard_cap(limit):
 
 
 def test_ambiguous_stress_excluded_not_guessed(tmp_path):
-    def stress(lemma, pos=None):
+    def stress(lemma, /, pos=None, **selectors):
         return {"status": "ambiguous"} if lemma == "а" else oracle(lemma)
 
     selected, excluded = select_slice(json.loads(deck_file(tmp_path, ("а", "б")).read_text()), 1, stress)
@@ -56,7 +56,7 @@ def test_stress_cannot_change_lemma(tmp_path):
         select_slice(
             json.loads(deck_file(tmp_path).read_text()),
             1,
-            lambda _, pos=None: {"status": "ok", "matches": [{"stressed_form": "different"}]},
+            lambda _, pos=None, **selectors: {"status": "ok", "matches": [{"stressed_form": "different"}]},
         )
 
 
@@ -116,7 +116,9 @@ def test_help_runs_without_engine():
 
 def test_monosyllable_has_no_invented_stress(tmp_path):
     result, excluded = select_slice(
-        json.loads(deck_file(tmp_path, ("так",)).read_text()), 1, lambda _, pos=None: {"status": "invalid_input"}
+        json.loads(deck_file(tmp_path, ("так",)).read_text()),
+        1,
+        lambda _, pos=None, **selectors: {"status": "invalid_input"},
     )
     assert result == [{"lemma": "так", "text": "так"}]
     assert excluded == []
@@ -132,12 +134,12 @@ def test_normalizes_atlas_display_keys():
 def test_passes_pos_to_stress_oracle(tmp_path):
     calls = []
 
-    def stress(lemma, pos=None):
-        calls.append(pos)
+    def stress(lemma, /, pos=None, **selectors):
+        calls.append((pos, selectors))
         return oracle(lemma)
 
     select_slice({"deckVersion": "v", "lexemes": [{"lemmaPlain": "слово", "pos": "noun"}]}, 1, stress)
-    assert calls == ["noun"]
+    assert calls == [("noun", {"lemma": "слово"})]
 
 
 def test_corrupt_cached_model_fails_before_synthesis(tmp_path):

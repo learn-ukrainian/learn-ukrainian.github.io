@@ -52,8 +52,7 @@ def packed_stress_reason(match: dict[str, Any]) -> str | None:
     """Reject packed accents unless checked ULIF attests the teaching choice."""
     if match.get("pedagogical_conflict"):
         return "conflicting_pedagogical_choices"
-    if (match.get("source") == "ulif" and match.get("dual_stress")
-            and match.get("pedagogical_stressed_form")):
+    if match.get("source") == "ulif" and match.get("dual_stress") and match.get("pedagogical_stressed_form"):
         return None
     if not match.get("override_applied") and len(match.get("vowel_indices") or []) > 1:
         return "multiple_stressed_vowels"
@@ -98,45 +97,6 @@ def store_scheme(store_doc: dict[str, Any]) -> str:
     if not isinstance(built_with, dict):
         return sources.LEGACY_SOURCES_DB_SCHEME
     return str(built_with.get("sources_db_scheme") or sources.LEGACY_SOURCES_DB_SCHEME)
-
-
-def extract_ulif_paradigm_forms(entry: dict[str, Any] | None) -> dict[str, str]:
-    """Extract form -> stressed_form mapping from ULIF entry's paradigm sections."""
-    if not entry:
-        return {}
-    mapping: dict[str, str] = {}
-    sections = entry.get("sections", [])
-    for sec in sections:
-        if sec.get("kind") == "paradigm":
-            raw_payload = sec.get("payload_json")
-            if not raw_payload:
-                continue
-            try:
-                payload = json.loads(raw_payload) if isinstance(raw_payload, str) else raw_payload
-            except Exception:
-                continue
-            if isinstance(payload, dict):
-                if "rows" in payload and isinstance(payload["rows"], list):
-                    for row in payload["rows"]:
-                        if isinstance(row, list):
-                            for cell in row:
-                                if isinstance(cell, str):
-                                    for token in cell.split():
-                                        tok = token.strip(" ,;:.!?()[]\"'")
-                                        if tok:
-                                            unstressed = sources.normalize_spelling(strip_combining_stress(tok))
-                                            if (
-                                                "\u0301" in tok
-                                                or "\u0300" in tok
-                                                or unicodedata.normalize("NFD", tok)
-                                                != unicodedata.normalize("NFD", unstressed)
-                                            ):
-                                                mapping.setdefault(unstressed, tok)
-                else:
-                    for k, v in payload.items():
-                        if isinstance(k, str) and isinstance(v, str):
-                            mapping[sources.normalize_spelling(k)] = v
-    return mapping
 
 
 def get_mcp_commit(repo_root: Path = REPO_ROOT) -> str:
@@ -217,6 +177,7 @@ def build_words(
 
     request_raw = yaml.safe_load(request_path.read_text(encoding="utf-8"))
     validate_request_data(request_raw)
+    reading_fields = load_schema("evidence-words-v1.schema.json")["$defs"]["reading"]["properties"]
 
     if request_raw.get("level") != level:
         raise ValueError(
@@ -476,10 +437,7 @@ def build_words(
                         }
                     else:
                         # One oracle for overrides, checked per-form ULIF and trie fallback.
-                        with using_connection(sources_instance._db()):
-                            raw_stress = stress.verify_stress(
-                                form_str, tags=sources_instance.mapper(tags_str), lemma=lemma,
-                            )
+                        raw_stress = sources_instance.stress_for_form(form_str, tags_str, lemma=lemma).raw
                         status = raw_stress.get("status")
                         matches = raw_stress.get("matches", [])
 
@@ -508,7 +466,12 @@ def build_words(
                                 "learner": is_learner,
                             }
                             if matches:
-                                f_entry["stress_candidates"] = matches
+                                # v1 pending diagnostics keep every reading and
+                                # its tags; the ULIF receipt identifies their source.
+                                f_entry["stress_candidates"] = [
+                                    {key: value for key, value in match.items() if key in reading_fields}
+                                    for match in matches
+                                ]
                             if raw_stress.get("unresolvable_by_tags"):
                                 f_entry["unresolvable_by_tags"] = True
                             if len(matches) == 1 and (reason := packed_stress_reason(matches[0])):

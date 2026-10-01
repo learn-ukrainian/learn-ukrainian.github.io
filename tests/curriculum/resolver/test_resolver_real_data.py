@@ -180,13 +180,32 @@ def test_ulp_lesson_10_replay(real, store):
     assert by_class[codes.LEMMA_OUTSIDE_STATE] == ["Огойко"]
     outside = next(t for t in cyrillic if t["class"] == codes.LEMMA_OUTSIDE_STATE)
     assert outside["surface"] == codes.PROPER_NOUN
-    # The two Його tokens cannot print stress without an approved source.
-    assert by_class[codes.PENDING_STRESS] == ["Його", "Його"]
+    # ULIF-first requires compatible per-form evidence, rather than borrowing
+    # another lemma or a trie reading when checked ULIF has no contextual match.
+    assert by_class[codes.PENDING_STRESS] == [
+        "Моя",
+        "Вона",
+        "Його",
+        "Мої",
+        "Хмельницькій",
+        "Його",
+        "бабусі",
+        "Галина",
+        "Вони",
+        "пенсіонерки",
+        "ваші",
+        "родичі",
+    ]
     for token in (t for t in cyrillic if t["class"] == codes.PENDING_STRESS):
         assert token["selected"] is None
-        assert token["readings"] and all(
+        assert token["readings"] and any(
             r["stressed"] is None and r["stress_source"] == "pending" for r in token["readings"]
         )
+        assert all((r["stressed"] is None) == (r["stress_source"] == "pending") for r in token["readings"])
+        # Preserve the original complete-withholding check for the two Його
+        # tokens; newly pending tokens can also have an attested syncretic form.
+        if token["token"] == "Його":
+            assert all(r["stressed"] is None and r["stress_source"] == "pending" for r in token["readings"])
         assert "pending" in token["message"]
     # Zero-vowel prepositions remain resolved as stress-free by the word builder.
     assert sorted(t["token"] for t in cyrillic if t["token"] in {"в", "з"} and t["class"] == codes.RESOLVED) == [
@@ -210,7 +229,8 @@ def test_ulp_lesson_10_replay(real, store):
     assert isinstance(noun_record["ulif"], dict) == noun_checked
     _assert_zaraz_contract(zaraz, allowed, noun_checked=noun_checked)
     vona = next(t for t in cyrillic if t["token"] == "Вона")
-    assert vona["class"] == codes.RESOLVED and vona["surface"] == codes.SENTENCE_TOKEN
+    assert vona["class"] == codes.PENDING_STRESS and vona["surface"] == codes.SENTENCE_TOKEN
+    assert vona["selected"] is None
     assert stream.reports == []
 
     assert stream.to_bytes() == resolve(story, allowed, src).to_bytes()
@@ -292,8 +312,12 @@ def test_named_real_cases(real, store):
 
     vona = _records(store, real, "вона")
     token = resolve(_doc("Вона працює."), Allowlist.from_records(vona), src).tokens[0]
-    assert token["class"] == codes.RESOLVED and token["surface"] == codes.SENTENCE_TOKEN
-    assert not store_lemma(store, token["selected"]["record"])[:1].isupper()
+    assert token["class"] == codes.PENDING_STRESS and token["surface"] == codes.SENTENCE_TOKEN
+    assert token["selected"] is None
+    assert all(not store_lemma(store, r["record"])[:1].isupper() for r in token["readings"])
+    oracle = src.stress_for_form("вона", "noun:unanim:f:v_naz:pron:pers:3", lemma="вона").raw
+    assert oracle["status"] == "pending"
+    assert oracle["reason"] == "no ULIF reading matches supplied context"
 
     adj = resolve(_doc("Це український."), Allowlist.from_records(_records(store, real, "український", pos="adj")), src)
     assert _classes(adj, "український") == [codes.RESOLVED]

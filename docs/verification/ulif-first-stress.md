@@ -14,6 +14,8 @@ the source readings; `tags` accepts UD features or VESUM atoms. A source-stresse
 lemma can distinguish lexical homographs. A bare lemma or POS cannot choose
 between indistinguishable meanings. Unmatched supplied context returns pending;
 it does not silently borrow another reading or switch dictionaries.
+Source capitalization is normalized onto the requested form before comparing
+teaching choices; the same accent in different capitalization is agreement.
 
 Dual readings retain `vowel_indices`, both `variants`, and the source's
 `pedagogical_stressed_form`. A valid existing single mark on either allowed
@@ -54,6 +56,10 @@ and record separate `built_with.trie` and `built_with.ulif_forms` digests. The
 existing v1 override flag remains the representation for exact-form patches.
 An attested ULIF dual teaching choice can be stored as one learner accent;
 unsupported packed choices stay pending.
+Pending candidates retain the v1 reading fields and every distinct stress
+choice with its tags. The source identities remain in `built_with`; extended
+per-form evidence is available through the oracle. This keeps existing v1
+consumers usable without a schema migration or a selected ambiguous reading.
 
 A rebuild can change its content hash because a form gains checked ULIF
 provenance, becomes unresolved for the requested lemma, receives a source-backed
@@ -63,6 +69,22 @@ carried word records and previously promoted packs are not rewritten by this
 change. Rebuilding and promoting a pack requires matching verifier identity and
 fresh exact-head review. A changed dictionary or oracle must invalidate its
 prior stress proof; it is not an unexplained rewrite of a promoted artifact.
+
+The word-store verifier uses the same per-form oracle, lemma and VESUM tags
+as the builder, within the Sources instance's pinned read-only snapshot. It
+compares the trie digest with `built_with.trie` and the ULIF digest with
+`built_with.ulif_forms`, and checks override identity and flags separately.
+Changed source identities require fresh proof even when learner text agrees;
+unchanged identities do not turn corrupted values into drift warnings. Raw
+paradigm sections never bypass this oracle during verification.
+
+Both audio callers provide the deck lemma and POS to the oracle and accept
+one resolved reading. For packed dual stress, `spoken_stressed_form()` uses
+the attested ULIF teaching choice only if it marks one allowed position of
+the same word. Missing or conflicting choices, homographs and pending
+readings are excluded. Trie packed duals stay excluded without an override;
+compound source marks and explicit overrides are preserved. Audio selection
+tests certify the synthesis input, not the pronunciation of generated audio.
 
 ## Measurement
 
@@ -90,3 +112,7 @@ Outputs stay in ignored `batch_state/stress-ulif-vs-trie/`: `comparison.jsonl`,
 `disagreements.jsonl`, `sample-60.jsonl`, and `summary.json`. They require separate
 language adjudication; counts and transport success do not establish linguistic
 acceptance.
+
+In a linked worktree, pass `--out` pointing to the durable ignored report
+directory provided by the dispatch. Worktree-local ignored reports disappear
+when the worktree is reaped. Keep the comparison and sample outside that tree.

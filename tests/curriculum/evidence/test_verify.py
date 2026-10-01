@@ -1,11 +1,48 @@
 """Tests for scripts.curriculum.evidence.verify (words-verify)."""
 
+import json
 import sqlite3
+from pathlib import Path
 
 import pytest
 import yaml
 
 from scripts.curriculum.evidence import codes, lock, registry, sources, verify, words
+
+
+@pytest.fixture
+def synthetic_checked_ulif_oracle(synthetic_sources, monkeypatch):
+    """Adapt legacy Latin-only provenance fixtures to the per-form oracle boundary.
+
+    These synthetic section strings are not Ukrainian stress evidence. The
+    captured-row integration tests exercise actual ULIF selection separately.
+    """
+
+    def oracle(form, *, lemma, tags):
+        import json
+
+        with sqlite3.connect(f"file:{synthetic_sources}?mode=ro", uri=True) as conn:
+            (payload,) = conn.execute(
+                "SELECT s.payload_json FROM ulif_dictua_sections s "
+                "JOIN ulif_dictua_entries e ON s.entry_id = e.id "
+                "WHERE e.normalized_query = ? AND e.homonym_checked = 1 AND s.kind = 'paradigm'",
+                (lemma,),
+            ).fetchone()
+        return {
+            "status": "ok",
+            "matches": [
+                {
+                    "source": "ulif",
+                    "stressed_form": json.loads(payload)[form],
+                    "unstressed_form": form,
+                    "vowel_indices": [0],
+                    "override_applied": False,
+                }
+            ],
+            "source": sources.stress.source_info(),
+        }
+
+    monkeypatch.setattr(sources.stress, "verify_stress", oracle)
 
 
 @pytest.fixture
@@ -90,6 +127,169 @@ def test_verify_clean_store_passes(clean_store, synthetic_vesum, synthetic_sourc
     assert res["warnings"] == []
 
 
+@pytest.fixture
+def captured_ulif_sources(synthetic_sources):
+    """Copy captured ULIF values into the synthetic evidence schema."""
+    capture = json.loads((Path(__file__).parents[2] / "fixtures/stress-ulif-forms.json").read_text())
+    with sqlite3.connect(synthetic_sources) as conn:
+        for table, rows in (("ulif_forms_build", [capture["build"]]), ("ulif_forms", capture["forms"])):
+            keys = list(rows[0])
+            conn.execute(f"CREATE TABLE {table} ({','.join(keys)})")
+            conn.executemany(
+                f"INSERT INTO {table} VALUES ({','.join('?' for _ in keys)})", [list(row.values()) for row in rows]
+            )
+        keys = [row[1] for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")]
+        conn.executemany(
+            f"INSERT INTO ulif_dictua_entries VALUES ({','.join('?' for _ in keys)})",
+            [[row[key] for key in keys] for row in capture["entries"]],
+        )
+    return capture
+
+
+def test_verify_builder_ulif_dual_receipts_and_tampering(
+    tmp_path,
+    synthetic_vesum,
+    synthetic_sources,
+    captured_ulif_sources,
+):
+    """Captured ULIF rows and VESUM analysis cross the real oracle boundary."""
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("DELETE FROM forms_all")
+        # VESUM verify_words('розбір'): noun:inanim:m:v_naz / noun:inanim:m:v_zna.
+        conn.execute("INSERT INTO forms_all VALUES (1, 10, 'розбір', 'розбір', 'noun', 'noun:inanim:m:v_naz', '', '')")
+    request = tmp_path / "captured-request.yaml"
+    request.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "розбір",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "vesum", "entry_id": 10},
+                    }
+                ],
+            }
+        )
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", request, evidence_dir=tmp_path, sources_instance=api, mcp_commit="a" * 40)
+        (form,) = result["store"]["words"][0]["forms"]
+        assert form["stress_source"] == "ulif"
+        assert form["stressed"] == "розбі́р"
+        assert (
+            verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api, strict=True)["status"] == "ok"
+        )
+
+    store_path = tmp_path / "_words.yaml"
+    doc = yaml.safe_load(store_path.read_text())
+    doc["words"][0]["forms"][0]["stressed"] = "ро́збір"
+    lock.write(store_path, lock.yaml_bytes(doc))
+    tampered = _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=False)
+    assert tampered["source_version_changed"] is False
+    assert tampered["status"] == "failed"
+    assert any(codes.STRESS_MISMATCH in error for error in tampered["errors"])
+
+    # Restore stored bytes, then simulate a changed build that teaches the
+    # other captured variant. The trie is unchanged; ULIF's receipt must move.
+    lock.write(store_path, lock.yaml_bytes(result["store"]))
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE ulif_forms SET pedagogical_stressed_form='ро́збір' WHERE form_unstressed='розбір'")
+        conn.execute("UPDATE ulif_forms_build SET source_fingerprint='synthetic-new-build'")
+    drift = _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=True)
+    assert drift["source_version_changed"] is True
+    assert drift["status"] == "failed"
+    assert any(codes.SOURCE_CHANGED in error for error in drift["errors"])
+    assert all(codes.STRESS_MISMATCH not in error for error in drift["errors"])
+
+
+def test_builder_pending_ulif_candidates_preserve_v1_readings(
+    tmp_path,
+    synthetic_vesum,
+    synthetic_sources,
+    captured_ulif_sources,
+):
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("DELETE FROM forms_all")
+        # Captured from VESUM verify_words('замок'), lexical reading 1.
+        conn.execute(
+            "INSERT INTO forms_all VALUES (1, 10, 'замок', 'замок', 'noun', 'noun:inanim:m:v_naz:xp1', '', '')"
+        )
+    request = tmp_path / "captured-ambiguous.yaml"
+    request.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "замок",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "vesum", "entry_id": 10},
+                    }
+                ],
+            }
+        )
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        result = words.build_words("a1", request, evidence_dir=tmp_path, sources_instance=api, mcp_commit="a" * 40)
+        (form,) = result["store"]["words"][0]["forms"]
+        assert form["stress_source"] == "pending"
+        assert "stressed" not in form
+        assert {r["stressed_form"] for r in form["stress_candidates"]} == {"за́мок", "замо́к"}
+        assert all(r["required_tags"] and r["vowel_indices"] for r in form["stress_candidates"])
+        words.validate_store_data(result["store"])
+        assert (
+            verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api, strict=True)["status"] == "ok"
+        )
+
+
+def test_verify_override_flag_and_digest(clean_store, synthetic_sources, synthetic_vesum, monkeypatch):
+    overrides = clean_store / "synthetic-overrides.yaml"
+    overrides.write_text("synthetic: source-bytes")
+    monkeypatch.setattr(sources.stress, "STRESS_OVERRIDES_PATH", overrides)
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda form, **selectors: {
+            "status": "ok",
+            "source": sources.stress.source_info(),
+            "matches": [
+                {
+                    "source": "override",
+                    "stressed_form": f"{form}-stressed",
+                    "unstressed_form": form,
+                    "vowel_indices": [0],
+                    "override_applied": True,
+                }
+            ],
+        },
+    )
+    evidence = clean_store / "overridden"
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        built = words.build_words(
+            "a1", clean_store / "req.yaml", evidence_dir=evidence, sources_instance=api, mcp_commit="a" * 40
+        )
+        assert all(form["override"] for form in built["store"]["words"][0]["forms"])
+        assert (
+            verify.verify_words_store("a1", evidence_dir=evidence, sources_instance=api, strict=True)["status"] == "ok"
+        )
+    path = evidence / "_words.yaml"
+    doc = yaml.safe_load(path.read_text())
+    doc["words"][0]["forms"][0].pop("override")
+    lock.write(path, lock.yaml_bytes(doc))
+    assert _verify(synthetic_sources, synthetic_vesum, evidence, strict=False)["status"] == "failed"
+    lock.write(path, lock.yaml_bytes(built["store"]))
+    overrides.write_text("synthetic: different-source-bytes")
+    drift = _verify(synthetic_sources, synthetic_vesum, evidence, strict=True)
+    assert drift["source_version_changed"] is True
+    assert drift["status"] == "failed"
+    assert any(codes.SOURCE_CHANGED in error for error in drift["errors"])
+
+
 def test_verify_rejects_pending_vowel_free_form(clean_store, synthetic_vesum, synthetic_sources, tmp_path):
     # Build from a VESUM fixture containing a vowel-free Cyrillic function form.
     with sqlite3.connect(synthetic_vesum) as conn:
@@ -98,8 +298,11 @@ def test_verify_rejects_pending_vowel_free_form(clean_store, synthetic_vesum, sy
     evidence_dir = tmp_path / "vowel-free"
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         built = words.build_words(
-            "a1", clean_store / "req.yaml", evidence_dir=evidence_dir,
-            sources_instance=api, mcp_commit="a" * 40,
+            "a1",
+            clean_store / "req.yaml",
+            evidence_dir=evidence_dir,
+            sources_instance=api,
+            mcp_commit="a" * 40,
         )
         form = next(f for f in built["store"]["words"][0]["forms"] if f["form"] == "в")
         assert form["stress_source"] == "none"
@@ -120,7 +323,10 @@ def test_verify_rejects_pending_vowel_free_form(clean_store, synthetic_vesum, sy
 
 
 def test_verify_built_pending_stress_form_and_rejects_tampering(
-    clean_store, synthetic_vesum, synthetic_sources, tmp_path,
+    clean_store,
+    synthetic_vesum,
+    synthetic_sources,
+    tmp_path,
 ):
     pending_forms = ("його", "Його", "йому", "Йому", "нього", "переді", "піді")
     with sqlite3.connect(synthetic_vesum) as conn:
@@ -133,8 +339,11 @@ def test_verify_built_pending_stress_form_and_rejects_tampering(
     evidence_dir = tmp_path / "pending-form"
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         built = words.build_words(
-            "a1", clean_store / "req.yaml", evidence_dir=evidence_dir,
-            sources_instance=api, mcp_commit="a" * 40,
+            "a1",
+            clean_store / "req.yaml",
+            evidence_dir=evidence_dir,
+            sources_instance=api,
+            mcp_commit="a" * 40,
         )
         forms = {f["form"]: f for f in built["store"]["words"][0]["forms"]}
         for form_str in pending_forms:
@@ -162,11 +371,13 @@ def test_verify_rejects_packed_two_accent_form(clean_store, synthetic_vesum, syn
         "verify_stress",
         lambda word, **kw: {
             "status": "ok",
-            "matches": [{
-                "stressed_form": packed,
-                "vowel_indices": [1, 3],
-                "override_applied": False,
-            }],
+            "matches": [
+                {
+                    "stressed_form": packed,
+                    "vowel_indices": [1, 3],
+                    "override_applied": False,
+                }
+            ],
             "source": {"digest": "t" * 64},
         },
     )
@@ -189,7 +400,11 @@ def test_verify_rejects_packed_two_accent_form(clean_store, synthetic_vesum, syn
     [("synthetic-pos", "particle"), ("свій", "pronoun")],
 )
 def test_verify_uses_builder_pronominal_gloss_choice(
-    synthetic_vesum, synthetic_sources, tmp_path, lemma, preferred_pos,
+    synthetic_vesum,
+    synthetic_sources,
+    tmp_path,
+    lemma,
+    preferred_pos,
 ):
     with sqlite3.connect(synthetic_vesum) as conn:
         conn.execute(
@@ -206,21 +421,26 @@ def test_verify_uses_builder_pronominal_gloss_choice(
         )
     request = tmp_path / "req.yaml"
     request.write_text(
-        yaml.safe_dump({
-            "request_schema": 1, "level": "a1",
-            "words": [{"lemma": lemma, "pos": "adj", "want": "new"}],
-        }),
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": lemma, "pos": "adj", "want": "new"}],
+            }
+        ),
         encoding="utf-8",
     )
     with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
         built = words.build_words(
-            "a1", request, evidence_dir=tmp_path, sources_instance=api, mcp_commit="a" * 40,
+            "a1",
+            request,
+            evidence_dir=tmp_path,
+            sources_instance=api,
+            mcp_commit="a" * 40,
         )
         verified = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api)
 
-    assert built["store"]["words"][0]["gloss_ref"]["id"] == (
-        10 if preferred_pos == "pronoun" else 11
-    )
+    assert built["store"]["words"][0]["gloss_ref"]["id"] == (10 if preferred_pos == "pronoun" else 11)
     assert verified["status"] == "ok"
     assert verified["errors"] == []
 
@@ -598,7 +818,12 @@ def test_verify_fails_on_missing_ulif_homonym(tmp_path, synthetic_vesum, synthet
     assert any(codes.FORM_MISMATCH in err for err in res["errors"])
 
 
-def test_verify_checked_ulif_stress_passes_and_mismatch_fails(tmp_path, synthetic_vesum, synthetic_sources):
+def test_verify_checked_ulif_stress_passes_and_mismatch_fails(
+    tmp_path,
+    synthetic_vesum,
+    synthetic_sources,
+    synthetic_checked_ulif_oracle,
+):
     import json
 
     # Setup checked ULIF entry with paradigm section
@@ -715,7 +940,12 @@ def _checked_ulif_store(tmp_path, synthetic_vesum, synthetic_sources):
     return res["store"]
 
 
-def test_verify_ulif_row_drift_is_source_changed_not_stress_mismatch(tmp_path, synthetic_vesum, synthetic_sources):
+def test_verify_ulif_row_drift_is_source_changed_not_stress_mismatch(
+    tmp_path,
+    synthetic_vesum,
+    synthetic_sources,
+    synthetic_checked_ulif_oracle,
+):
     """ULIF stress provenance: the paradigm payload the stress was copied from is part of ulif.row_sha256."""
     import json
 

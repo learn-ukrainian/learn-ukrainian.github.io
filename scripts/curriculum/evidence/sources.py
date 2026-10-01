@@ -31,6 +31,7 @@ from typing import Any
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.rag.word_identity import APOSTROPHES, normalize_evidence_form
 from scripts.verification import stress, vesum
+from scripts.wiki.sources_db import using_connection
 
 from . import codes, config, db_identity, tags
 
@@ -583,7 +584,8 @@ class Sources:
                                 # Derived lookup keys are not source evidence.
                                 # Preserve cited-row digests across store versions.
                                 source_row = {
-                                    key: value for key, value in dict(row).items()
+                                    key: value
+                                    for key, value in dict(row).items()
                                     if key not in {"word_form_folded", "lemma_folded"}
                                 }
                                 for eid in matches:
@@ -608,7 +610,8 @@ class Sources:
                     raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: {eid}")
                 self._receipt_evidence[eid] = [section] if section else []
                 self._receipt_identities["pravopys"] = {
-                    "scheme": "pravopys-live-section-v1", "origin": PRAVOPYS_BASE,
+                    "scheme": "pravopys-live-section-v1",
+                    "origin": PRAVOPYS_BASE,
                 }
                 continue
             if kind != "textbook" and (not re.fullmatch(r"[1-9][0-9]*", key) or len(key) > 19):
@@ -627,7 +630,8 @@ class Sources:
             self._receipt_identities["sources_db"] = {"scheme": SOURCES_DB_SCHEME}
         raw = {eid: self._receipt_evidence[eid] for eid in requested}
         identities = {
-            kind: value for kind, value in self._receipt_identities.items()
+            kind: value
+            for kind, value in self._receipt_identities.items()
             if (kind == "vesum" and any(eid.startswith("vesum:") for eid in requested))
             or (kind == "pravopys" and any(eid.startswith("pravopys:") for eid in requested))
             or (kind == "sources_db" and any(eid.partition(":")[0] not in {"vesum", "pravopys"} for eid in requested))
@@ -635,7 +639,10 @@ class Sources:
         return SourceResult(raw, batch_digest(raw), identities)
 
     def _receipt_vesum_rows(
-        self, values: Iterable[str], *, paradigm: bool = False,
+        self,
+        values: Iterable[str],
+        *,
+        paradigm: bool = False,
     ) -> SourceResult[dict[str, list[dict]]]:
         """Read attested analyses or paradigms using Unicode word identity.
 
@@ -656,22 +663,35 @@ class Sources:
                 has_folded = folded_column in {row[1] for row in conn.execute("PRAGMA table_info(forms_all)")}
                 for start in range(0, len(pending), BATCH_SIZE):
                     batch = pending[start : start + BATCH_SIZE]
-                    candidates = batch if has_folded else sorted({
-                        candidate for value in batch
-                        for candidate in (
-                            value, value.casefold(), value.upper(), value.title(), value.capitalize(),
-                            "-".join(part.capitalize() for part in value.split("-")),
+                    candidates = (
+                        batch
+                        if has_folded
+                        else sorted(
+                            {
+                                candidate
+                                for value in batch
+                                for candidate in (
+                                    value,
+                                    value.casefold(),
+                                    value.upper(),
+                                    value.title(),
+                                    value.capitalize(),
+                                    "-".join(part.capitalize() for part in value.split("-")),
+                                )
+                            }
                         )
-                    })
-                    slots = ','.join('?' for _ in candidates)
+                    )
+                    slots = ",".join("?" for _ in candidates)
                     condition = (
                         f"{column} IN (SELECT {column} FROM forms_all WHERE {folded_column} IN ({slots}))"
-                        if has_folded else f"{column} IN ({slots})"
+                        if has_folded
+                        else f"{column} IN ({slots})"
                     )
                     rows = conn.execute(
                         f"SELECT word_form, lemma, pos, tags FROM forms "
                         f"WHERE {condition} "
-                        "ORDER BY word_form, lemma, pos, tags", candidates,
+                        "ORDER BY word_form, lemma, pos, tags",
+                        candidates,
                     )
                     found = {value: [] for value in batch}
                     for row in rows:
@@ -683,7 +703,9 @@ class Sources:
         return SourceResult({value: cache[value] for value in requested}, digest, metadata)
 
     def bind_evidence_forms(
-        self, resolved: SourceResult[dict[str, list[dict]]], citations: Iterable[tuple[str, str]],
+        self,
+        resolved: SourceResult[dict[str, list[dict]]],
+        citations: Iterable[tuple[str, str]],
     ) -> SourceResult[dict[tuple[str, str], bool]]:
         """Bind citations to the option's word, for valid and invalid judgements.
 
@@ -724,8 +746,7 @@ class Sources:
                 if isinstance(row.get(field), str)
             ]
             supported = any(
-                _contains_evidence_form(value, form) if is_text else bool(form and value == form)
-                for value in witnesses
+                _contains_evidence_form(value, form) if is_text else bool(form and value == form) for value in witnesses
             )
             raw[eid, text] = supported
             if not supported and (
@@ -735,16 +756,19 @@ class Sources:
         analyses = self._receipt_vesum_rows(form for form, _, _ in pending.values()) if pending else None
         text_lemmas = {
             normalize_evidence_form(row["lemma"])
-            for form, _, is_text in pending.values() if is_text for row in analyses.raw[form]
+            for form, _, is_text in pending.values()
+            if is_text
+            for row in analyses.raw[form]
         }
         paradigms = self._receipt_vesum_rows(text_lemmas, paradigm=True) if text_lemmas else None
         for citation, (form, witnesses, is_text) in pending.items():
             lemmas = {normalize_evidence_form(row["lemma"]) for row in analyses.raw[form]}
             if is_text:
-                forms = {
-                    normalize_evidence_form(row["word_form"])
-                    for lemma in lemmas for row in paradigms.raw[lemma]
-                } if paradigms is not None else set()
+                forms = (
+                    {normalize_evidence_form(row["word_form"]) for lemma in lemmas for row in paradigms.raw[lemma]}
+                    if paradigms is not None
+                    else set()
+                )
                 raw[citation] = any(_contains_evidence_form(value, variant) for value in witnesses for variant in forms)
             else:
                 raw[citation] = any(value in lemmas for value in witnesses)
@@ -756,10 +780,14 @@ class Sources:
             metadata["paradigms_sha256"] = batch_digest(paradigms.raw)
         return SourceResult(raw, batch_digest(raw), metadata)
 
-    def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
+    def stress_for_form(self, form: str, vesum_tags: str, *, lemma: str | None = None) -> SourceResult[dict]:
         """Return the oracle envelope unchanged. Builder handles monosyllables first."""
         mapped_tags = self.mapper(vesum_tags)
-        raw = stress.verify_stress(normalize_spelling(form), tags=mapped_tags)
+        selectors = {"tags": mapped_tags}
+        if lemma is not None:
+            selectors["lemma"] = lemma
+        with using_connection(self._db()):
+            raw = stress.verify_stress(normalize_spelling(form), **selectors)
         # The trie alone does not identify exact-form override changes.
         override_digest = _file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
         return SourceResult(raw, raw["source"]["digest"], {"overrides_sha256": override_digest})

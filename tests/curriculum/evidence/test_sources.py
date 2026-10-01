@@ -57,7 +57,27 @@ def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch):
             ]
         )
     assert len(result) == len(calls) == 3
-    assert progress == ["stress: 3/3"]
+    assert len(progress) == 3
+    assert progress[0].startswith("snapshot: pinned;")
+    assert progress[1] == "stress: 3/3"
+    assert progress[2].startswith("snapshot: released after")
+
+
+def test_stress_pins_instance_connection_and_passes_lemma(monkeypatch, synthetic_sources):
+    from scripts.wiki import sources_db
+
+    calls = []
+
+    def oracle(word, *, tags, lemma):
+        calls.append((word, tags, lemma, sources_db._get_conn()))
+        return {"status": "pending", "matches": [], "source": {"digest": "a" * 64}}
+
+    monkeypatch.setattr(sources.stress, "verify_stress", oracle)
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        api.stress_for_form("село", "noun:inanim:n:v_naz", lemma="село")
+        assert calls == [
+            ("село", ["Animacy=Inan", "Case=Nom", "Gender=Neut", "Number=Sing", "upos=NOUN"], "село", api._db())
+        ]
 
 
 def test_readonly_uri_and_ulif_group_gate(monkeypatch, synthetic_sources):
@@ -184,9 +204,21 @@ def test_kaikki_exact_readonly_and_alignment(synthetic_kaikki_side_db):
 @pytest.mark.parametrize(
     "gloss",
     [
-        "(bad", "bad)", "[bad", "bad]", "(bad]", "[bad)",
-        "“bad", "bad”", '"bad',
-        ")bad", "]bad", "”bad", ",bad", ";bad", ".bad",
+        "(bad",
+        "bad)",
+        "[bad",
+        "bad]",
+        "(bad]",
+        "[bad)",
+        "“bad",
+        "bad”",
+        '"bad',
+        ")bad",
+        "]bad",
+        "”bad",
+        ",bad",
+        ";bad",
+        ".bad",
         "мною",
         # Copied from Kaikki side-db-v1 content_sha256
         # 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5.
@@ -205,7 +237,8 @@ def test_kaikki_refuses_entire_entry_if_one_gloss_is_malformed():
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (None, "kaikki_malformed")
     payload["glosses"] = ["under (a roof)", 'beneath "something" [figurative]']
     assert sources.aligned_kaikki_gloss(payload, "prep", False) == (
-        'under (a roof); beneath "something" [figurative]', None
+        'under (a roof); beneath "something" [figurative]',
+        None,
     )
 
 

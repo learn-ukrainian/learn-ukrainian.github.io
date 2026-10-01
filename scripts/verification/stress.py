@@ -285,7 +285,9 @@ def _apply_input_mismatch(matches: list[dict[str, Any]], word: str) -> None:
         )
 
 
-def _build_match(unstressed_form: str, positions: list[int], required_tags: list[str], *, override_applied: bool) -> dict[str, Any]:
+def _build_match(
+    unstressed_form: str, positions: list[int], required_tags: list[str], *, override_applied: bool
+) -> dict[str, Any]:
     vowel_indices = sorted(p - 1 for p in positions)
     return {
         "stressed_form": _apply_accents(unstressed_form, positions),
@@ -345,6 +347,24 @@ def pedagogical_stressed_form(match: dict[str, Any]) -> str:
     return unstressed[: keep + 1] + "\u0301" + unstressed[keep + 1 :]
 
 
+def spoken_stressed_form(match: dict[str, Any]) -> str | None:
+    """One attested audio choice; unresolved dual accents are never spoken together."""
+    if match.get("pedagogical_conflict"):
+        return None
+    form = match["stressed_form"]
+    bare = match.get("unstressed_form", _strip_stress(form))
+    packed = len(match.get("vowel_indices") or []) > 1 or form.count("\u0301") > 1
+    if packed and "-" not in bare and not match.get("override_applied"):
+        if match.get("source") != "ulif" or not match.get("pedagogical_stressed_form"):
+            return None
+        choice_bare, indices = _stress_positions_in_marked_string(match["pedagogical_stressed_form"])
+        _, allowed = _stress_positions_in_marked_string(form)
+        if choice_bare.casefold() != bare.casefold() or len(indices) != 1 or indices[0] not in allowed:
+            return None
+        form = transfer_stress_marks(match["pedagogical_stressed_form"], bare)
+    return form
+
+
 def _readings_unresolvable_by_tags(candidates: list[dict[str, Any]]) -> bool:
     """True if >=2 candidates share byte-identical required_tags with
     different stress positions — a true meaning-dependent homograph the
@@ -356,8 +376,9 @@ def _readings_unresolvable_by_tags(candidates: list[dict[str, Any]]) -> bool:
     return any(len(positions) > 1 for positions in seen.values())
 
 
-def verify_stress(word: str, pos: str | None = None, tags: str | list[str] | None = None,
-                  lemma: str | None = None) -> dict[str, Any]:
+def verify_stress(
+    word: str, pos: str | None = None, tags: str | list[str] | None = None, lemma: str | None = None
+) -> dict[str, Any]:
     """Return source-attested stress; optional lemma, POS and UD/VESUM tags narrow readings.
 
     A stressed lemma can distinguish same-spelling lexical homographs. Bare
@@ -371,8 +392,15 @@ def verify_stress(word: str, pos: str | None = None, tags: str | list[str] | Non
 
     lookup_key = _strip_stress(word).strip()
     source = source_info()
-    result = {"input": word, "lookup_key": lookup_key, "status": "pending", "matches": [],
-              "unresolvable_by_tags": False, "source": source, "stress_source": "pending"}
+    result = {
+        "input": word,
+        "lookup_key": lookup_key,
+        "status": "pending",
+        "matches": [],
+        "unresolvable_by_tags": False,
+        "source": source,
+        "stress_source": "pending",
+    }
     invalid = _classify_invalid(lookup_key)
     if invalid is not None:
         result.update(status="invalid_input", error=invalid, stress_source=None)
@@ -401,8 +429,11 @@ def verify_stress(word: str, pos: str | None = None, tags: str | list[str] | Non
             if value is None:
                 result["reason"] = "no trusted dictionary reading"
                 return result
-            all_matches = [_build_match(lookup_key, positions, required, override_applied=False)
-                           for required, positions in _parse_dictionary_value(value) if positions]
+            all_matches = [
+                _build_match(lookup_key, positions, required, override_applied=False)
+                for required, positions in _parse_dictionary_value(value)
+                if positions
+            ]
             matches = [m for m in all_matches if compatible(set(m["required_tags"]), supplied)]
             if not matches:
                 result["reason"] = "no trie reading matches supplied context"
@@ -417,8 +448,10 @@ def verify_stress(word: str, pos: str | None = None, tags: str | list[str] | Non
     if override:
         for match in matches:
             _attach_vesum(match, _vesum_lookup(match["unstressed_form"]))
-    result.update(matches=matches,
-                  unresolvable_by_tags=result["status"] == "ambiguous" and _readings_unresolvable_by_tags(matches))
+    result.update(
+        matches=matches,
+        unresolvable_by_tags=result["status"] == "ambiguous" and _readings_unresolvable_by_tags(matches),
+    )
     return result
 
 
@@ -466,8 +499,16 @@ def _compact_stress_reading(match: dict[str, Any]) -> dict[str, Any]:
         "required_tags": list(match.get("required_tags") or []),
         "override_applied": bool(match.get("override_applied")),
     }
-    for key in ("source", "evidence", "grammatical_tags", "vesum_analyses", "dual_stress", "variants",
-                "pedagogical_stressed_form", "pedagogical_conflict"):
+    for key in (
+        "source",
+        "evidence",
+        "grammatical_tags",
+        "vesum_analyses",
+        "dual_stress",
+        "variants",
+        "pedagogical_stressed_form",
+        "pedagogical_conflict",
+    ):
         if key in match:
             reading[key] = match[key]
     vesum = match.get("vesum")
@@ -476,8 +517,9 @@ def _compact_stress_reading(match: dict[str, Any]) -> dict[str, Any]:
     return reading
 
 
-def verify_stresses(words: list[str], pos: str | None = None, tags: str | list[str] | None = None,
-                    lemma: str | None = None) -> dict[str, Any]:
+def verify_stresses(
+    words: list[str], pos: str | None = None, tags: str | list[str] | None = None, lemma: str | None = None
+) -> dict[str, Any]:
     """Batch stress lookup. One compact record per word; source envelope once.
 
     Processes at most ``STRESS_BATCH_CAP`` words. A longer list is truncated
@@ -501,16 +543,12 @@ def verify_stresses(words: list[str], pos: str | None = None, tags: str | list[s
                 "input": result.get("input", word),
                 "status": result.get("status"),
                 "source": result.get("stress_source"),
-                "readings": [
-                    _compact_stress_reading(match) for match in matches if isinstance(match, dict)
-                ],
+                "readings": [_compact_stress_reading(match) for match in matches if isinstance(match, dict)],
             }
         )
     if source is None:
         source = source_info()
     payload: dict[str, Any] = {"words": records, "source": source}
     if submitted > STRESS_BATCH_CAP:
-        payload["note"] = (
-            f"Note: received {submitted} words; processed the first {STRESS_BATCH_CAP} (hard cap)."
-        )
+        payload["note"] = f"Note: received {submitted} words; processed the first {STRESS_BATCH_CAP} (hard cap)."
     return payload
