@@ -54,36 +54,42 @@
     }
   },
   "$defs": {
-    "text": {"type": "string", "minLength": 3, "pattern": "\\S"},
+    "text": {
+      "description": "Free text with a non-space character and no C0, DEL or C1 control. Every pattern in this schema ends with (?![\\s\\S]), never $, which in Python also matches before a final newline.",
+      "type": "string",
+      "minLength": 3,
+      "pattern": "\\S",
+      "not": {"pattern": "[\\u0000-\\u001f\\u007f-\\u009f]"}
+    },
     "repoPath": {
       "description": "Repository-relative POSIX path; never absolute, never parent-relative.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\u0000-\\u001f\\u007f-\\u009f]+$"
+      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|(?![\\s\\S])))[^\\u0000-\\u001f\\u007f-\\u009f]+(?![\\s\\S])"
     },
     "glob": {
       "description": "Catalogue glob dialect (also used by scripts/docs/catalogue.py): literal characters; '*' matches within one path segment, never '/'; '?' matches one character within a segment; '**' is a whole segment spanning one or more segments (zero or more when a segment follows). Character classes ('[...]'), braces ('{a,b}'), empty, '.' and '..' segments, a leading or trailing '/' and control characters are rejected: list each path instead. Catch-all rule (validator): the first segment below the tracked root must be literal, so 'docs/**', 'docs/*/**', 'docs/a*/**' and '**' are errors.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!/)(?!.*//)(?!.*/$)(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+$"
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!/)(?!.*//)(?!.*/(?![\\s\\S]))(?!(.*/)?\\.\\.?(/|(?![\\s\\S])))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![\\s\\S])"
     },
     "storeName": {
       "description": "A logical store under data/ in the catalogue glob dialect (see $defs/glob); a trailing '/' claims the subtree.",
       "type": "string",
-      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!.*//)data/(?!(.*/)?\\.\\.?(/|$))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+$"
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!.*//)data/(?!(.*/)?\\.\\.?(/|(?![\\s\\S])))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![\\s\\S])"
     },
-    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9]$"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9](?![\\s\\S])"},
     "owner": {
       "description": "A stream key from scripts/config/issue_streams.yaml or an area key from scripts/config/area_assignments.yaml (checked by the validator).",
       "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9-]*$"
+      "pattern": "^[a-z0-9][a-z0-9-]*(?![\\s\\S])"
     },
     "lifecycle": {"enum": ["draft", "active", "superseded", "archive"]},
     "supersessionTarget": {
       "description": "A tracked repository path (optionally with #section) or id:<catalogue entry id>.",
       "type": "string",
       "minLength": 3,
-      "pattern": "^(id:[a-z0-9][a-z0-9-]*[a-z0-9]|(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\u0000-\\u001f\\u007f-\\u009f]+)$"
+      "pattern": "^(id:[a-z0-9][a-z0-9-]*[a-z0-9]|(?!/)(?!.*(^|/)\\.\\.(/|(?![\\s\\S])))[^\\u0000-\\u001f\\u007f-\\u009f]+)(?![\\s\\S])"
     },
     "query": {
       "type": "array",
@@ -135,7 +141,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "minLength": 2, "pattern": "\\S"}
+          "items": {"type": "string", "minLength": 2, "pattern": "\\S", "not": {"pattern": "[\\u0000-\\u001f\\u007f-\\u009f]"}}
         },
         "lifecycle": {"$ref": "#/$defs/lifecycle"},
         "superseded_by": {"$ref": "#/$defs/supersessionTarget"},

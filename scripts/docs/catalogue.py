@@ -378,21 +378,55 @@ def schema_errors(catalogue: dict, schema: dict) -> list[str]:
     return found
 
 
+def control_string_errors(catalogue: object) -> list[str]:
+    """One error per string in the loaded catalogue (mapping keys included) holding a control character.
+
+    Independent of the schema, so no schema pattern (for example a ``$`` that also matches
+    before a final newline) can admit a control. The value is reported escaped and bounded.
+    """
+    errors = []
+    stack: list[tuple[tuple, object]] = [((), catalogue)]
+    while stack:
+        where, node = stack.pop()
+        if isinstance(node, dict):
+            items = list(node.items())
+            for key, _ in items:
+                if isinstance(key, str) and (hit := CONTROL_CHARS.search(key)):
+                    errors.append(_control_error(where, key, hit.group(), 'key '))
+            stack.extend(((*where, key), value) for key, value in reversed(items))
+        elif isinstance(node, list):
+            stack.extend(((*where, index), value) for index, value in reversed(list(enumerate(node))))
+        elif isinstance(node, str) and (hit := CONTROL_CHARS.search(node)):
+            errors.append(_control_error(where, node, hit.group()))
+    return errors
+
+
+def _control_error(where: tuple, value: str, char: str, what: str = '') -> str:
+    location = '/'.join(shown(part) if isinstance(part, str) else str(part) for part in where) or '<root>'
+    shown_value = repr(value[:200]) + ('...' if len(value) > 200 else '')
+    return (f'control: {location}: {what}{shown_value} contains control character U+{ord(char):04X}; '
+            'C0, DEL and C1 controls are not allowed in any catalogue string')
+
+
 def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
              roots: tuple[str, ...] = TRACKED_ROOTS) -> Report:
     """Check structure, coverage, supersession and references; never raises on bad data.
 
     A tracked path with a control character is an error and is dropped before anything
-    else sees it, so it is never resolved, counted, matched or read.
+    else sees it, so it is never resolved, counted, matched or read. A catalogue string
+    with a control character is an error whatever the schema says, and the catalogue is
+    then not schema_ok, so no local store is reconciled against it.
     """
     report = Report()
     report.errors.extend(control_path_error(p) for p in files if CONTROL_CHARS.search(p))
     files = [p for p in files if not CONTROL_CHARS.search(p)]
+    controls = control_string_errors(catalogue)
+    report.errors.extend(controls)
     found = schema_errors(catalogue, schema)
     if found:
         report.errors.extend(found)
         return report
-    report.schema_ok = True
+    report.schema_ok = not controls
     tracked = set(files)
     denominator = [p for p in files if under_roots(p, roots)]
     report.denominator = len(denominator)

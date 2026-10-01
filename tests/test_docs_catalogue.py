@@ -859,6 +859,154 @@ def test_body_gate_refuses_a_resolved_control_path():
     assert body_readable(report, 'docs/guide/a.md')
 
 
+# ------------------------------------------------------------------ control characters in catalogue strings
+
+# Python's regular-expression '$' also matches before a final newline, so each layer
+# is tested alone: the schema (its patterns end with (?![\s\S])) and the code walk.
+CONTROL_SUFFIXES = ['\n', '\r', '\t', '\x00', '\x7f', '\x85', '\x9f']
+CLI_FILES = ['docs/guide/a.md', 'docs/knowledge/catalogue.schema.json', 'docs/knowledge/catalogue.yaml',
+             'scripts/config/area_assignments.yaml', 'scripts/config/issue_streams.yaml']
+PRODUCER = 'scripts/config/issue_streams.yaml'
+
+
+def cli_catalogue():
+    """The CLI fixture repository's own catalogue plus a data store: clean against CLI_FILES."""
+    return catalogue(family('knowledge', ['docs/knowledge/**'], owner='docs-knowledge'),
+                     family('guide', ['docs/guide/**']), store_entry('store', producer=[PRODUCER]))
+
+
+def guide(data):
+    return data['entries'][1]
+
+
+# field kind -> (reported location, mutation appending the suffix to one string)
+FIELD_KINDS = {
+    'id': ('entries/1/id', lambda d, c: guide(d).update(id='guide' + c)),
+    'paths item': ('entries/1/paths/0', lambda d, c: guide(d).update(paths=['docs/guide/**' + c])),
+    'purpose': ('entries/1/purpose', lambda d, c: guide(d).update(purpose='guide documents' + c)),
+    'keyword': ('entries/1/keywords/0', lambda d, c: guide(d).update(keywords=['guide' + c])),
+    'owner': ('entries/1/owner', lambda d, c: guide(d).update(owner='infra-harness' + c)),
+    'entrypoint path': ('entries/1/entrypoints/0/path', lambda d, c: guide(d).update(
+        entrypoints=[{'topic': 'guide start', 'path': 'docs/guide/a.md' + c}])),
+    'entrypoint fragment': ('entries/1/entrypoints/0/path', lambda d, c: guide(d).update(
+        entrypoints=[{'topic': 'guide start', 'path': 'docs/guide/a.md#heading' + c}])),
+    'entrypoint topic': ('entries/1/entrypoints/0/topic', lambda d, c: guide(d).update(
+        entrypoints=[{'topic': 'guide start' + c, 'path': 'docs/guide/a.md'}])),
+    'superseded_by path fragment': ('entries/1/superseded_by', lambda d, c: guide(d).update(
+        lifecycle='superseded', superseded_by=f'{PRODUCER}#heading{c}')),
+    'superseded_by id': ('entries/1/superseded_by', lambda d, c: guide(d).update(
+        lifecycle='superseded', superseded_by='id:knowledge' + c)),
+    'overrides path': ('entries/1/overrides/0/path', lambda d, c: guide(d).update(
+        overrides=[{'path': 'docs/guide/a.md' + c, 'lifecycle': 'archive', 'evidence': 'kept for history'}])),
+    'override superseded_by': ('entries/1/overrides/0/superseded_by', lambda d, c: guide(d).update(
+        overrides=[{'path': 'docs/guide/a.md', 'lifecycle': 'superseded', 'superseded_by': PRODUCER + c,
+                    'evidence': 'replaced by config'}])),
+    'query how': ('entries/1/query/0/how', lambda d, c: guide(d).update(
+        query=[{'surface': 'git_grep', 'how': 'git grep -n -F x -- docs/guide' + c}])),
+    'store name': ('entries/2/store/0', lambda d, c: d['entries'][2].update(store=['data/main.db' + c])),
+    'producer': ('entries/2/producer/0', lambda d, c: d['entries'][2].update(producer=[PRODUCER + c])),
+}
+
+
+def mutated(kind, suffix):
+    data = cli_catalogue()
+    FIELD_KINDS[kind][1](data, suffix)
+    return data
+
+
+def control_errors_at(report, where, char):
+    return [e for e in report.errors if e.startswith(f'control: {where}: ') and f'U+{ord(char):04X}' in e]
+
+
+@pytest.mark.parametrize('kind', FIELD_KINDS)
+def test_every_field_kind_is_clean_without_a_control(kind):
+    assert check(mutated(kind, ''), CLI_FILES).ok, check(mutated(kind, ''), CLI_FILES).errors
+
+
+@pytest.mark.parametrize('suffix', CONTROL_SUFFIXES)
+@pytest.mark.parametrize('kind', FIELD_KINDS)
+def test_control_in_any_field_kind_fails_the_schema_and_the_code_walk_alone(kind, suffix):
+    data = mutated(kind, suffix)
+    where = FIELD_KINDS[kind][0]
+    assert not Draft202012Validator(SCHEMA).is_valid(data)  # the schema alone rejects it
+    for schema in (SCHEMA, {}):  # {} leaves the code walk alone
+        report = validate(data, schema, CLI_FILES, OWNERS, ROOTS)
+        assert control_errors_at(report, where, suffix), report.errors
+        assert not report.ok and not report.schema_ok
+        assert not any(CONTROL_CHARS.search(e) for e in report.errors)  # values are printed escaped
+
+
+@pytest.fixture(scope='module')
+def shared_repo(tmp_path_factory):
+    root = make_repo(tmp_path_factory.mktemp('controls'))
+    (root / 'data').mkdir()  # store reconciliation must not run on a catalogue with a control
+    assert sorted(catalogue_module.tracked_files(root)) == CLI_FILES
+    return root
+
+
+@pytest.mark.parametrize('suffix', ['', *CONTROL_SUFFIXES])
+@pytest.mark.parametrize('kind', FIELD_KINDS)
+def test_check_json_rejects_a_control_in_every_field_kind(shared_repo, tmp_path, capsys, kind, suffix):
+    # Includes both reported cases: an entrypoint and a supersession target ending in '#heading\n'.
+    status, out = run_check(shared_repo, tmp_path, json.dumps(mutated(kind, suffix)), capsys)
+    if not suffix:
+        assert (status, out['errors'], out['uncovered']) == (0, [], [])
+        return
+    assert status == 1
+    assert [e for e in out['errors'] if e.startswith(f'control: {FIELD_KINDS[kind][0]}: ')], out['errors']
+    assert out['local_stores'] is None
+
+
+def test_control_in_a_key_or_a_nested_path_is_reported_escaped():
+    data = cli_catalogue()
+    guide(data)['note\n'] = 'kept\x85'
+    report = validate(data, {}, CLI_FILES, OWNERS, ROOTS)
+    controls = [e for e in report.errors if e.startswith('control: ')]
+    assert controls == [
+        "control: entries/1: key 'note\\n' contains control character U+000A; "
+        'C0, DEL and C1 controls are not allowed in any catalogue string',
+        "control: entries/1/'note\\n': 'kept\\x85' contains control character U+0085; "
+        'C0, DEL and C1 controls are not allowed in any catalogue string']
+    assert not report.schema_ok
+
+
+def test_control_error_bounds_a_long_value():
+    data = cli_catalogue()
+    guide(data)['purpose'] = 'x' * 100_000 + '\n'
+    [error] = [e for e in check(data, CLI_FILES).errors if e.startswith('control: ')]
+    assert len(error) < 400 and "xxx'... contains control character U+000A" in error
+
+
+def test_no_schema_pattern_uses_a_dollar_anchor():
+    patterns = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            patterns.extend(v for k, v in node.items() if k == 'pattern')
+            for value in node.values():
+                walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+    walk(SCHEMA)
+    assert len(patterns) >= 8
+    assert [p for p in patterns if '$' in p] == []
+
+
+@pytest.mark.parametrize('suffix', CONTROL_SUFFIXES)
+@pytest.mark.parametrize('name, sample', [
+    ('text', 'abc'), ('repoPath', 'docs/a.md'), ('repoPath', 'docs/a.md#heading'), ('glob', 'docs/a/**'),
+    ('storeName', 'data/a.db'), ('storeName', 'data/a/'), ('id', 'ab'), ('owner', 'ab'),
+    ('supersessionTarget', 'docs/a.md#heading'), ('supersessionTarget', 'id:ab'),
+])
+def test_every_string_definition_rejects_a_trailing_control(name, sample, suffix):
+    validator = Draft202012Validator(SCHEMA['$defs'][name])
+    assert validator.is_valid(sample)
+    assert not validator.is_valid(sample + suffix)
+    keyword = Draft202012Validator(SCHEMA['$defs']['common']['properties']['keywords'])
+    assert keyword.is_valid([sample]) and not keyword.is_valid([sample + suffix])
+
+
 OID = 'a' * 40
 OTHER = 'b' * 40
 
