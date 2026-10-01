@@ -292,8 +292,10 @@ destination that gains a matching branch between the preview and the push can
 receive that branch unscanned; explicit refspecs, `--all`, `--tags` and
 `--mirror` name their refs locally. A hit can be excused only while GitHub is
 reachable or after it was cached. The answer is as trustworthy as the `gh`
-executable and its configuration, which every publisher already relies on. The shim's behaviour without its guard interpreter
-for non-push commands is tracked in #9448.
+executable and its configuration, which every publisher already relies on. For the guarded non-push commands (`checkout` and `switch`
+under `AGENT_NO_MERGE=1`) the shim fails closed when its guard interpreter
+(`AGENT_GIT_SHIM_PYTHON`, else the main checkout's `.venv`, else the shim
+checkout's) is missing or fails to run (#9448).
 
 **Scope boundary: identities and signatures.** Author, committer and tagger
 identity lines (including the tagger line of a mergetag), `gpgsig` headers and
