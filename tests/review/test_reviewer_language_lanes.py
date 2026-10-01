@@ -68,10 +68,9 @@ def test_owned_path_classifies_ukrainian_content_without_changed_paths(tmp_path,
         == 0
     )
     payload = json.loads(capsys.readouterr().out)
-    assert any(
-        item["name"] == GROK_4_7.name and "Ukrainian-content language-lanes exclusion" in item["reason"]
-        for item in payload["trace"]
-    )
+    assert all(item["family"] in {"openai", "anthropic", "google"}
+               or item["status"] == "excluded" for item in payload["trace"])
+    assert not any(item["family"] == "xai" for item in payload["trace"])
 
 
 @pytest.mark.parametrize(
@@ -130,7 +129,7 @@ def test_non_language_candidates_and_explicit_pin_are_excluded():
     assert "unknown explicit reviewer pin" in deepseek_pin.fail_closed_reason
 
 
-def test_pure_infra_change_can_still_select_grok():
+def test_pure_infra_change_never_selects_grok_when_primary_lanes_are_unhealthy():
     resolution = resolve_reviewer(
         ResolverInputs(
             author_model="codex",
@@ -140,8 +139,8 @@ def test_pure_infra_change_can_still_select_grok():
             routing_snapshot={"claude": "unhealthy", "codex": "unhealthy"},
         ),
     )
-    assert resolution.selected is not None
-    assert resolution.selected.name == "grok-4.7"
+    assert resolution.selected is None
+    assert all(item.family != "xai" for item in resolution.trace)
 
 
 def test_closeout_uses_target_changed_paths_and_language_flag(tmp_path, capsys):
@@ -180,3 +179,11 @@ def test_ukrainian_semantic_profile_still_fails_closed():
     assert resolution.selected is None
     assert resolution.trace == ()
     assert "unsupported local-code-review profile" in resolution.fail_closed_reason
+
+
+@pytest.mark.parametrize("author,expected", [("gpt-6.1-sol", "claude-opus-5-5"),
+                                            ("claude-opus-5-5", "gpt-6.1-sol")])
+def test_critical_ukrainian_code_review_prefers_opus_and_sol(author, expected):
+    resolution = resolve_reviewer(ResolverInputs(author_model=author, risk="critical", language_lane=True))
+    assert resolution.selected.concrete_model == expected
+    assert resolution.selected.family in {"anthropic", "openai"}

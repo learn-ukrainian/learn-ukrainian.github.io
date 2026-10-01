@@ -499,7 +499,7 @@ def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
     # Codex reviewer escalation uses the same Astra high advisor pin.
     fc = load_model_catalog()["formal_cf_defaults"]
     assert fc["codex"]["escalate_model_id"] == "gpt-6.1-sol"
-    assert fc["claude"]["escalate_model_id"] == "claude-fable-5-1"
+    assert fc["claude"]["escalate_model_id"] == "claude-opus-5-5"
 
 
 def test_practical_ladders_exclude_advisory_roles():
@@ -512,7 +512,8 @@ def test_practical_ladders_exclude_advisory_roles():
         assert "gpt-5.6-terra" not in names
         assert "claude-sonnet-5-5" in names
         assert "pool" in names
-        assert "grok-4.7-cursor-fallback" in names
+        assert "grok-4.7-cursor-fallback" not in names
+        assert "grok-4.7" not in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
     assert "claude-fable-5-1" in critical
@@ -818,19 +819,15 @@ def test_catalog_rejects_future_review_date():
         catalog_age_days(validated, as_of=date(2026, 7, 17))
 
 
-def test_critical_ladder_anthropic_authority_is_fable_not_opus():
-    """Advisory consultation must not silently become approval authority.
-
-    The critical authority ladder routes Anthropic approval reviews to Fable.
-    Opus remains the separate, non-binding advisory-consultation seat.
-    """
-    ladder = load_model_catalog()["review_ladders"]["critical"]
-    flat = [model for rung in ladder for model in rung]
-    assert "claude-fable-5-1" in flat
+def test_critical_ladder_anthropic_authority_is_opus_with_fable_last_resort():
+    catalog = load_model_catalog()
+    flat = [name for rung in catalog["review_ladders"]["critical"] for name in rung]
+    assert flat[:3] == ["openai_frontier", "claude-opus-5-5", "claude-opus-5-5-cursor-fallback"]
+    assert flat[-2:] == ["claude-fable-5-1", "claude-fable-5-1-cursor-fallback"]
     assert "claude-opus-5" not in flat
-    # The Opus 5.5 orchestrator seat must not inherit approval authority either.
-    assert "claude-opus-5-5" not in flat
     assert "claude-sonnet-5-5" not in flat
+    for name in flat:
+        assert catalog["review_candidates"][name].get("last_resort", False) == name.startswith("claude-fable-")
 
 
 def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
@@ -1401,3 +1398,34 @@ def test_live_claude_caller_defaults_are_active_catalog_models():
     for model in (CLAUDE_DEFAULT_ASK_MODEL, CLAUDE_ADVISORY_MODEL, *CLAUDE_MODEL_LADDER):
         assert catalog["models"][model]["lifecycle"] == "active"
     assert CLAUDE_ADVISORY_MODEL == "claude-opus-5-5"
+
+
+@pytest.mark.parametrize("value", ["true", 1, None])
+def test_last_resort_marker_must_be_boolean(value):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_candidates"]["claude-fable-5-1"]["last_resort"] = value
+    with pytest.raises(ModelCatalogError, match="last_resort must be a boolean"):
+        validate_catalog(catalog)
+
+
+def test_primary_cannot_follow_last_resort_even_if_quality_is_equal():
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_ladders"]["critical"] = [["claude-fable-5-1"], ["claude-opus-5-5"]]
+    with pytest.raises(ModelCatalogError, match="improves quality in a later rung"):
+        validate_catalog(catalog)
+
+
+@pytest.mark.parametrize("risk", ["critical", "high", "medium", "low"])
+def test_grok_cannot_reenter_any_code_review_ladder(risk):
+    catalog = deepcopy(load_model_catalog())
+    catalog["review_ladders"][risk].append(["grok-4.7"])
+    with pytest.raises(ModelCatalogError, match="Grok never judges"):
+        validate_catalog(catalog)
+
+
+def test_catalog_selection_order_matches_last_resort_and_suitability_policy():
+    assert load_model_catalog()["policy"]["selection_order"] == [
+        "independence_and_hard_gates", "primary_before_last_resort",
+        "profile_risk_suitability", "review_quality_tier",
+        "health_and_quota_within_tier", "cost_within_equivalent_fit",
+    ]

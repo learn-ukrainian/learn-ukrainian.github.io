@@ -439,6 +439,27 @@ def _resolve_review_target(
     if resolution.fail_closed_reason:
         raise ReviewAdmissionRefused(f"REVIEW_ROUTE_REFUSED: {resolution.fail_closed_reason}")
     selected = resolution.selected
+    # #9394: weekly pace is a forecast, not exhaustion. If excluding this
+    # bucket leaves no eligible substitute, retain the already cross-family,
+    # snapshot-validated reviewer only when its lane still has capacity.
+    # Health, circuit, subject, suitability and near-cap gates remain binding.
+    lane_info = (snapshot.get("agents") or {}).get(budget_seat, {}) if snapshot else {}
+    lane_status = (
+        (lane_info.get("interactive") or {}).get("status") or lane_info.get("status")
+        if budget_seat == "claude" else lane_info.get("status")
+    )
+    if (
+        selected is None and snapshot is not None
+        and lane_status in {"cool", "warm"}
+        and not (lane_info.get("runtime") or {}).get("headroom_blocked")
+    ):
+        if eligible and seat == budget_seat:
+            return seat, model
+        # The initial admission may already have replaced a same-family request.
+        # Recover that reviewer with the same snapshot and all hard gates intact.
+        retained = resolve_reviewer(inputs, ladder=ladder).selected
+        if retained is not None and retained.route == budget_seat:
+            return retained.route, retained.concrete_model
     if selected is None or selected.family in forbidden:
         raise ReviewAdmissionRefused(
             f"REVIEW_ROUTE_REFUSED: no resolver-selected eligible substitute for --review-profile {profile}"
