@@ -17835,7 +17835,9 @@ def test_full_claude_worker_keeps_normal_reviewer_profile(tmp_tasks_dir, tmp_pat
 
     manifest = tmp_path / "manifest.yaml"
     manifest.write_text("kind: plan\n")
-    plan = prepare_review_attempt("full-worker", "a", manifest, "claude", receipts_root=tmp_path / "receipts")
+    plan = prepare_review_attempt(
+        "full-worker", "a", manifest, "claude", receipts_root=tmp_path / "receipts", review_access="full"
+    )
     task_id = "full-claude-tools"
     delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id, "cli_version": "fixture"})
     result = _finalize_mock_result()

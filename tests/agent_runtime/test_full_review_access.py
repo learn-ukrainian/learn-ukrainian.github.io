@@ -7,6 +7,7 @@ import os
 import subprocess
 import sys
 import textwrap
+from functools import partial
 from pathlib import Path
 
 import pytest
@@ -15,8 +16,47 @@ import yaml
 from scripts.agent_runtime.adapters.agy import AgyAdapter
 from scripts.agent_runtime.attempt_boundary import prepare_attempt_boundary, verify_full_review_tree
 from scripts.review.isolation import ReviewIsolationError
-from tests.agent_runtime.test_attempt_boundary import attempt_config, manifest_world
+from tests.agent_runtime.test_attempt_boundary import attempt_config as _attempt_config
+from tests.agent_runtime.test_attempt_boundary import manifest_world
 from tests.agent_runtime.test_attempt_boundary import world as boundary_world  # noqa: F401
+
+attempt_config = partial(_attempt_config, review_access="full")
+
+
+@pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
+@pytest.mark.parametrize("access", ["isolated", "full"])
+def test_review_mcp_provisions_attempt_access_and_exact_claude_tools(world, tmp_path, agent, access):
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt, review_tools_allowed_csv
+    from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS, REVIEW_TOOLS
+
+    root, _ = world
+    manifest = root / "manifest.yaml"
+    manifest.write_text(yaml.safe_dump(manifest_world(root, "plan")))
+    plan = prepare_review_attempt(
+        "tool-contract", agent, manifest, agent, receipts_root=tmp_path / "receipts", review_access=access
+    )
+    server = json.loads(plan.config_path.read_bytes())["mcpServers"]["sources"]
+    assert server["env"]["LU_REVIEW_ACCESS"] == access
+    tools = FULL_REVIEW_TOOLS if access == "full" else REVIEW_TOOLS
+    if agent == "claude":
+        assert set(review_tools_allowed_csv(agent, access).split(",")) == {f"mcp__sources__{t}" for t in tools}
+        if access == "full":
+            assert plan.adapter_options["reviewer_tools"] is True
+            assert "allowed_tools" not in plan.adapter_options
+        else:
+            assert plan.adapter_options["allowed_tools"] == review_tools_allowed_csv(agent)
+    elif agent == "codex":
+        import tomllib
+
+        config = tomllib.loads((plan.codex_home / "config.toml").read_text())
+        assert config["mcp_servers"]["sources"]["env"] == server["env"]
+    else:
+        from scripts.agent_runtime.review_mcp import agy_full_review_settings, agy_review_mcp_config_path
+
+        assert json.loads(agy_review_mcp_config_path(plan.agy_home).read_bytes())["mcpServers"]["sources"] == server
+        assert agy_full_review_settings()["permissions"]["allow"] == [
+            f"mcp(sources/{t})" for t in sorted(FULL_REVIEW_TOOLS)
+        ]
 
 
 def full_probe_code(targets, host_home, pinned, corpus, child_marker, abstract):
@@ -206,6 +246,23 @@ def test_full_review_still_checks_manifest_digest(world, tmp_path):
         prepare_attempt_boundary("codex", "read-only", None, tc)
 
 
+@pytest.mark.parametrize("agent", ["claude", "codex", "agy"])
+@pytest.mark.parametrize("server_access", [None, "isolated", "invalid"])
+def test_full_review_refuses_mismatched_sources_access(world, tmp_path, agent, server_access):
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), agent)
+    tc.update(review_access="full", review_cwd=str(root), reviewer_tools=True)
+    config = Path(tc["mcp_config_path"])
+    data = json.loads(config.read_bytes())
+    if server_access is None:
+        data["mcpServers"]["sources"]["env"].pop("LU_REVIEW_ACCESS")
+    else:
+        data["mcpServers"]["sources"]["env"]["LU_REVIEW_ACCESS"] = server_access
+    config.write_text(json.dumps(data))
+    with pytest.raises(ReviewIsolationError, match="attempt_review_access_mismatch"):
+        prepare_attempt_boundary(agent, "read-only", None, tc)
+
+
 def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path, monkeypatch):
     from scripts.agent_runtime.adapters import agy
 
@@ -219,6 +276,75 @@ def test_agy_full_review_uses_native_sandbox_without_permission_bypass(tmp_path,
         AgyAdapter().build_invocation(**kw, tool_config={"review_access": "full", "agy_skip_permissions": True})
     with pytest.raises(ValueError, match="full_review_requires_read_only"):
         AgyAdapter().build_invocation(**{**kw, "mode": "workspace-write"}, tool_config={"review_access": "full"})
+
+
+@pytest.mark.parametrize("access", ["full", "isolated"])
+def test_agy_sources_permission_is_only_projected_for_full_attempts(world, tmp_path, monkeypatch, access):
+    from scripts.agent_runtime.adapters import agy
+
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy", review_access=access)
+    tc.update(review_access=access, review_cwd=str(root))
+    boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
+    monkeypatch.setattr(agy, "_require_background_wait_support", lambda *a: None)
+    try:
+        plan = AgyAdapter().build_invocation(
+            prompt="probe",
+            mode="read-only",
+            cwd=boundary.workspace,
+            model=None,
+            task_id="probe",
+            session_id=None,
+            tool_config=boundary.tool_config,
+        )
+        settings = Path(plan.env_overrides["AGY_APP_DATA_DIR"]) / "settings.json"
+        if access == "full":
+            from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS
+
+            assert json.loads(settings.read_bytes()) == {
+                "permissions": {"allow": [f"mcp(sources/{name})" for name in sorted(FULL_REVIEW_TOOLS)]}
+            }
+            assert "--sandbox" in plan.cmd
+            assert "--dangerously-skip-permissions" not in plan.cmd
+        else:
+            assert not settings.exists()
+            assert "--sandbox" not in plan.cmd
+            assert "--dangerously-skip-permissions" in plan.cmd
+    finally:
+        boundary.cleanup()
+
+
+@pytest.mark.parametrize(
+    "settings",
+    [
+        {"permissions": {"allow": ["mcp(*)"]}},
+        {"permissions": {"allow": ["mcp(sources/*)"]}},
+        {"permissions": {"allow": ["mcp(other/verify_words)"]}},
+        {"permissions": {"allow": ["mcp(sources)", "command(*)"]}},
+        {"permissions": {"allow": ["mcp(sources)"]}, "dangerouslySkipPermissions": True},
+        {},
+    ],
+)
+def test_full_agy_permission_widening_is_refused_before_cli(world, tmp_path, monkeypatch, settings):
+    from scripts.agent_runtime.review_mcp import verify_agy_review_effective_mcp
+
+    root, _ = world
+    tc = attempt_config(root, tmp_path, manifest_world(root, "plan"), "agy")
+    tc.update(review_access="full", review_cwd=str(root))
+    boundary = prepare_attempt_boundary("agy", "read-only", None, tc)
+    try:
+        (Path(boundary.env["AGY_APP_DATA_DIR"]) / "settings.json").write_text(json.dumps(settings))
+        monkeypatch.setattr(subprocess, "run", lambda *a, **kw: pytest.fail("unsafe CLI launch"))
+        with pytest.raises(ValueError, match="requires exactly the sources review tool"):
+            verify_agy_review_effective_mcp(
+                config_path=boundary.config_path,
+                cwd=root,
+                env=boundary.env,
+                agy_bin="agy",
+                boundary=boundary,
+            )
+    finally:
+        boundary.cleanup()
 
 
 @pytest.mark.parametrize("formal", [True, False])
@@ -269,7 +395,12 @@ def test_native_claude_full_review_keeps_shell_sources_deny_list_and_hooks(tmp_p
         },
     )
     assert "Bash" in plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
-    assert "mcp__sources__*" in plan.cmd[plan.cmd.index("--allowedTools") + 1].split(",")
+    from scripts.review.receipts.ledger import FULL_REVIEW_TOOLS
+
+    granted = set(plan.cmd[plan.cmd.index("--allowedTools") + 1].split(","))
+    assert {tool for tool in granted if tool.startswith("mcp__")} == {
+        f"mcp__sources__{tool}" for tool in FULL_REVIEW_TOOLS
+    }
     assert {"Edit", "Write"} <= set(plan.cmd[plan.cmd.index("--disallowedTools") + 1].split(","))
     assert "--settings" in plan.cmd and "--bare" not in plan.cmd and "--safe-mode" not in plan.cmd
 

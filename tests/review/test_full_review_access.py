@@ -25,6 +25,152 @@ from tests.conftest import _set_live_network_allowed
 
 @pytest.mark.skipif(os.environ.get("LU_FULL_REVIEW_REAL_PROBES") != "1", reason="authenticated host probes are opt-in")
 @pytest.mark.live_network
+def test_real_claude_full_review_search_resources_receipt(tmp_path, monkeypatch):
+    """A scratch harness identity must return a successful catalogue receipt."""
+    from scripts.agent_runtime import review_mcp
+
+    original_proxy_run = attempt_network.AttemptEgress._run
+
+    def live_proxy_run(proxy):
+        _set_live_network_allowed(True)
+        try:
+            return original_proxy_run(proxy)
+        finally:
+            _set_live_network_allowed(False)
+
+    monkeypatch.setattr(attempt_network.AttemptEgress, "_run", live_proxy_run)
+    # Exercise this exact worktree's server and ledger code; do not deploy
+    # unreviewed code into the canonical checkout for a fixture probe.
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: Path(__file__).resolve().parents[2])
+    root = tmp_path / "checkout"
+    root.mkdir()
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=10)
+    manifest = root / "attempt.yaml"
+    manifest.write_text(yaml.safe_dump(manifest_world(root, "plan")))
+    review_id, attempt_id = "harness-claude-full-probe", "catalogue-permission"
+    plan = prepare_review_attempt(
+        review_id, attempt_id, manifest, "claude", receipts_root=tmp_path / "receipts", review_access="full"
+    )
+    tc = {
+        **plan.adapter_options,
+        "review_id": review_id,
+        "attempt_id": attempt_id,
+        "review_manifest": str(manifest),
+        "review_input_root": str(root),
+        "review_access": "full",
+    }
+    monkeypatch.setattr(runner, "write_record", lambda record: None)
+    result = runner.invoke(
+        "claude",
+        "This is a harness fixture, not a curriculum review. Call mcp__sources__search_resources once "
+        'with query="", kind="podcast", level="A1", limit=1. '
+        "Then return CLAUDE_FULL_CATALOGUE_COMPLETE, the catalogue hit count and the receipt id. Use no other tools.",
+        cwd=root,
+        model="claude-opus-5-5",
+        effort="high",
+        mode="read-only",
+        tool_config=tc,
+        hard_timeout=90,
+        stall_timeout=40,
+    )
+    rows = records(plan.ledger_path)
+    evidence = {
+        "task_status": "done" if result.ok else "failed",
+        "model": result.model,
+        "review_id": review_id,
+        "attempt_id": attempt_id,
+        "final_reply": result.response,
+        "sources_receipts": len(rows),
+        "ledger_line_count": len(plan.ledger_path.read_text().splitlines()),
+        "stderr_tail": (result.stderr_excerpt or "")[-2000:],
+    }
+    if directory := os.environ.get("LU_FULL_REVIEW_PROBE_ARTIFACT_DIR"):
+        artifacts = Path(directory)
+        artifacts.mkdir(parents=True, exist_ok=True)
+        (artifacts / "claude-full-real-proof.json").write_text(json.dumps(evidence, indent=2))
+        (artifacts / "claude-full-real-ledger.jsonl").write_bytes(plan.ledger_path.read_bytes())
+    print(json.dumps(evidence))
+    assert result.ok, result.stderr_excerpt
+    assert "CLAUDE_FULL_CATALOGUE_COMPLETE" in result.response
+    assert len(rows) == 1 and rows[0]["tool"] == "search_resources" and rows[0]["status"] == "ok"
+    facts = rows[0]["outcome_facts"]
+    assert facts["status"] == "hits_found" and facts["hits"] > 0
+    assert rows[0]["receipt_id"] in result.response
+
+
+@pytest.mark.skipif(os.environ.get("LU_FULL_REVIEW_REAL_PROBES") != "1", reason="authenticated host probes are opt-in")
+@pytest.mark.live_network
+def test_real_agy_full_review_sources_permission(tmp_path, monkeypatch):
+    """A fixture attempt must finish with a real sources receipt and final reply."""
+    from scripts.agent_runtime import review_mcp
+
+    monkeypatch.setattr(review_mcp, "review_server_checkout", lambda: Path(__file__).resolve().parents[2])
+    original_proxy_run = attempt_network.AttemptEgress._run
+
+    def live_proxy_run(proxy):
+        _set_live_network_allowed(True)
+        try:
+            return original_proxy_run(proxy)
+        finally:
+            _set_live_network_allowed(False)
+
+    monkeypatch.setattr(attempt_network.AttemptEgress, "_run", live_proxy_run)
+    root = tmp_path / "checkout"
+    root.mkdir()
+    subprocess.run(["git", "init", "-q", str(root)], check=True, timeout=10)
+    manifest = root / "attempt.yaml"
+    manifest.write_text(yaml.safe_dump(manifest_world(root, "plan")))
+    review_id, attempt_id = "harness-agy-full-probe", "sources-permission"
+    plan = prepare_review_attempt(
+        review_id, attempt_id, manifest, "agy", receipts_root=tmp_path / "receipts", review_access="full"
+    )
+    ledger = tmp_path / "receipts" / review_id / f"{attempt_id}.jsonl"
+    tc = {
+        **plan.adapter_options,
+        "review_id": review_id,
+        "attempt_id": attempt_id,
+        "review_manifest": str(manifest),
+        "review_input_root": str(root),
+        "review_access": "full",
+        "reviewer_tools": True,
+    }
+    monkeypatch.setattr(runner, "write_record", lambda record: None)
+    result = runner.invoke(
+        "agy",
+        'This is a harness fixture probe. Call mcp__sources__verify_words with words=["місто"] once. '
+        "Then return AGY_FULL_SOURCES_COMPLETE and the receipt id from the tool result. Use no other tools.",
+        cwd=root,
+        model="gemini-3.8-flash-high",
+        effort="high",
+        mode="read-only",
+        tool_config=tc,
+        hard_timeout=75,
+        stall_timeout=30,
+    )
+    ledger_rows = records(ledger)
+    evidence = {
+        "task_status": "done" if result.ok else "failed",
+        "provider_completed": result.ok,
+        "final_reply": result.response,
+        "sources_receipts": len(ledger_rows),
+        "ledger_line_count": len(ledger.read_text().splitlines()),
+        "permission_rule": "mcp(sources/<tool>)",
+        "stderr_tail": (result.stderr_excerpt or "")[-2000:],
+    }
+    if directory := os.environ.get("LU_FULL_REVIEW_PROBE_ARTIFACT_DIR"):
+        artifacts = Path(directory)
+        artifacts.mkdir(parents=True, exist_ok=True)
+        (artifacts / "agy-full-real-proof.json").write_text(json.dumps(evidence, indent=2))
+        (artifacts / "agy-full-real-ledger.jsonl").write_bytes(ledger.read_bytes())
+    print(json.dumps(evidence))
+    assert result.ok, result.stderr_excerpt
+    assert "AGY_FULL_SOURCES_COMPLETE" in result.response
+    assert ledger_rows and all(row["tool"] == "verify_words" and row["status"] == "ok" for row in ledger_rows)
+    assert any(row["receipt_id"] in result.response for row in ledger_rows)
+
+
+@pytest.mark.skipif(os.environ.get("LU_FULL_REVIEW_REAL_PROBES") != "1", reason="authenticated host probes are opt-in")
+@pytest.mark.live_network
 @pytest.mark.parametrize("agent,model", [("claude", "claude-opus-5-5"), ("codex", "gpt-6.1-sol")])
 def test_real_full_review_cannot_write_host(tmp_path, monkeypatch, agent, model):
     """A real seat must execute the probe; absence of mutation alone is insufficient."""
@@ -65,7 +211,9 @@ def test_real_full_review_cannot_write_host(tmp_path, monkeypatch, agent, model)
         check=True,
         timeout=10,
     )
-    plan = prepare_review_attempt("host-probe", agent, manifest, agent, receipts_root=tmp_path / "receipts")
+    plan = prepare_review_attempt(
+        "host-probe", agent, manifest, agent, receipts_root=tmp_path / "receipts", review_access="full"
+    )
     ledger = tmp_path / "receipts/host-probe" / f"{agent}.jsonl"
     targets = [
         ledger,
