@@ -223,8 +223,8 @@
   },
   "failures": [],
   "inputs": {
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "7a383ea319f0d3e418372224bc0adc0d8898c32b1ebaf83ee27574eb4ae19973",
-    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "b7aa142f59f3b84faaa4459fdb2e038f5d0de5694c621828c4960ed83280e533",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml": "6b9b2da5302a7322d42b6ed103e171bf3ac6365daae1d69499eb2541dbcf6b74",
+    "curriculum/l2-uk-en/evidence/a1/_words.yaml.lock": "2ad317deeb586e88cf478bd20da8a71a70adf91b067819f8d7bd7c207c70b57e",
     "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml": "746ca097d693fc38dd6a84198959f2aeac65a5086ded4496b23a6c400c21e845",
     "curriculum/l2-uk-en/evidence/a1/reading-ukrainian.yaml.lock": "3b4b1e69dce8c370aab43b7e3e22f4a7d7c1e7984733555293ff31f5d79dcf14",
     "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml": "add9f849cceddfecdc99014c5e7b97f3919bd7b3c0ecba783dc89f65865781e2",

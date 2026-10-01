@@ -1,10 +1,10 @@
 built_with:
   kaikki_attribution: Wiktionary via Kaikki.org, CC BY-SA 3.0
   kaikki_content_sha256: 251974b612a9bb54902920f8427ff357f648f60c18277a1635f501c02cab43c5
-  mcp_commit: 40467ed0e3ee4dde5892fd9c9e2abfbd92044d12
+  mcp_commit: 9bf1ffb052c6d3d8849657b446b321b6c15ed345
   overrides_sha256: 86d9433e3302e088fd1142fdb27e13c772feab28f41ee0d1968d9d37c7ba6fb9
   russian_patterns: db79abfb8136f9372714f24f39f95094c639f4e975ab1f09800c58c811d7cb4a
-  sources_db: 000682001a678a0d1560883213fa43c584554bddbff92543f6e206c6db607f3e
+  sources_db: 8055267ed9cb174bede2f071ae992274c418ad358e392f421f8f7a5a2d869646
   sources_db_scheme: rows-v2
   trie: c84b7add428b9fc1698b3abdac5a13f53361114d687eaa9b5e6116f1ca4fbbec
   ulif_forms: 7487d5ea22eb68949087667f5a84edd7c9f897ddf78be61a8cef5fe1e0a28493
@@ -2151,7 +2151,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - ваш
+    - 2
+    row_sha256: f2ef9ec1633df2eb6b76c55414e4def171cab9a3681a9c5ed3d756cce048894c
+    source: ulif
 - cefr:
     level: A1
     row_id: 3941
@@ -3210,7 +3215,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - од
+    - 2
+    row_sha256: 4aaf8a350d11749de74a6ab87ee5ab4a698979032ee8e632fcfeac9f20232e7c
+    source: ulif
 - cefr:
     level: A1
     row_id: 4695
@@ -3782,7 +3792,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - об
+    - 2
+    row_sha256: 4c8baac032378684be8d5c06610e6882f798ab6f6b77e353eeecfba6aef48899
+    source: ulif
 - entry:
     entry_id: 151491
     source: vesum
@@ -5590,7 +5605,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - ма́ма
+    - 2
+    row_sha256: 0f1a4994c2ac233c90a4d7631ef85cbe9a4e24741a9e5bdab02a9914313a051a
+    source: ulif
 - cefr:
     level: A2
     row_id: 3341
@@ -6947,7 +6967,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - Ні́на
+    - 1
+    row_sha256: 70a7cd630aab83eba54aa1e58508f889f58af8925adad21a2a9703f348eb0cae
+    source: ulif
 - entry:
     entry_id: 241021
     source: vesum
@@ -7044,7 +7069,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - Но́нна
+    - 1
+    row_sha256: 743e93db0e10e1d82e7beb50fd9a18f929e6bea19b0f00c0fd5b7a5a6486a0db
+    source: ulif
 - entry:
     entry_id: 151545
     source: vesum
@@ -7159,7 +7189,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - Іва́н
+    - 1
+    row_sha256: c48e63c0b0a22ba582f16533d6e38c4b9257681490fc51258517edb49bfc1055
+    source: ulif
 - entry:
     entry_id: 63779
     source: vesum
@@ -7275,7 +7310,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - А́ва
+    - 1
+    row_sha256: 097ea092c6f07adabce833c2b33c76e97a16a2a0fbb8875d358e51df225e199a
+    source: ulif
 - cefr:
     level: A1
     row_id: 771
@@ -7635,7 +7675,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - Полі́на
+    - 1
+    row_sha256: a596f48be8f660d7ff887a3dc9dffbcbce495f2941865198c489224f83f60c25
+    source: ulif
 - entry:
     entry_id: 260777
     source: vesum
@@ -7989,7 +8034,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - Евелі́на
+    - 1
+    row_sha256: 06cb4d62ae2fb96a3bc406dfabb84201cb361fa8786ceeac9a38cfdb35950eaf
+    source: ulif
 - cefr:
     level: A2
     row_id: 4838
@@ -8215,7 +8265,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - зима́
+    - 2
+    row_sha256: fdba918e97a1b2ee553a88d29807d098b1aac42db3758943aac4a791f9d05171
+    source: ulif
 - entry:
     entry_id: 23913
     source: vesum
@@ -8319,7 +8374,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - бі́лка
+    - 2
+    row_sha256: 25488f4ea852b81b18dc2d42d8ed59797befa5f0703ace1c5932ef572c525411
+    source: ulif
 - cefr:
     level: A2
     row_id: 5035
@@ -8446,7 +8506,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - гарбу́з
+    - 2
+    row_sha256: 489f5ce562c2f59a3a778ae21c7ddb105f35268412ae0d77cbf5e55a31ab02d6
+    source: ulif
 - cefr:
     level: C1
     row_id: 5053
@@ -9160,7 +9225,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - коми́ш
+    - 2
+    row_sha256: 83919753a9ec6f15bc31a29788b7e471fcc20447eba28c3b2607f48d0265b492
+    source: ulif
 - cefr:
     level: B1
     row_id: 1736
@@ -9426,7 +9496,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - жа́бка
+    - 2
+    row_sha256: 1dce705f8e0207d8bea1814cbe2d8e76220f1eb70cee11bc0807dc0571e705a8
+    source: ulif
 - entry:
     entry_id: 105713
     source: vesum
@@ -9619,7 +9694,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - клен
+    - 2
+    row_sha256: b9605a4793171021aec2a3dd723db574da65a4b10c3553ed0a6775d24cd1952e
+    source: ulif
 - cefr:
     level: A1
     row_id: 4037
@@ -10182,7 +10262,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - я́ма
+    - 3
+    row_sha256: 2ebc93657a5aa5e7f1cfdd1405cbed19b75a9ec6c38fef06dadac7bf11e0bc2c
+    source: ulif
 - cefr:
     level: B2
     row_id: 3334
@@ -12633,7 +12718,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - Марі́я
+    - 1
+    row_sha256: e3a8d95a104f8b7ea83e01d06fdd9266cf92521ca32c9a72d7736f5ecb45bf26
+    source: ulif
 - cefr:
     level: A1
     row_id: 3218
@@ -13497,7 +13587,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - бук
+    - 2
+    row_sha256: 64631a71de5138cbc98e819073168673197ca93fc27e1328f5b7633d08df3b4e
+    source: ulif
 - cefr:
     level: A1
     row_id: 4902
@@ -14247,7 +14342,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - сли́вка
+    - 2
+    row_sha256: affb3b3d049be7efa51a11d958e9a6715b1eb1b7948c364e7771d520b1513162
+    source: ulif
 - cefr:
     level: A2
     row_id: 3814
@@ -14459,7 +14559,12 @@ words:
   shadow:
     russian_shadow: false
     score: 0.0
-  ulif: pending
+  ulif:
+    key:
+    - ки́слий
+    - 3
+    row_sha256: 0ad16f32b87aa1bb36147caade6a81681b263e9726687acbfc1d8c3a0c8d7230
+    source: ulif
 - cefr:
     level: A1
     row_id: 1208
