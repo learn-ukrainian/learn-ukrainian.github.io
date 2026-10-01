@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import base64
+import dataclasses
 import ipaddress
 import json
 import os
@@ -16,6 +17,7 @@ from threading import Thread
 from urllib.parse import urlsplit
 
 import pytest
+import yaml
 from cryptography import x509
 from cryptography.hazmat.primitives import hashes, serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
@@ -23,13 +25,14 @@ from cryptography.x509.oid import NameOID
 
 from scripts.agent_runtime import agent_github_identity as identity
 from scripts.fleet import sibling_git as sg
-from scripts.orchestration.fleet_repos import FleetRepo
+from scripts.orchestration.fleet_repos import FleetRepo, load_fleet_repos
 from tests.test_sibling_git import advance, git, snapshot
 from tests.test_sibling_git import world as world_fixture
 
 world = world_fixture
 
 _REAL_INIT = sg.Git.__init__
+_REAL_REGISTRY = sg._REGISTRY_PATH
 TOKEN = "synthetic-credential"
 HEADER = "Basic " + base64.b64encode(f"x-access-token:{TOKEN}".encode()).decode()
 
@@ -464,6 +467,31 @@ def test_transport_default_and_invalid_value(tmp_path, monkeypatch):
     registry.write_text("repos:\n  test:\n    transport: other\n")
     with pytest.raises(sg.Refusal, match="unsupported registered transport"):
         sg._registry_transport("test")
+
+
+def test_registry_opts_in_exactly_the_private_sibling(https_world, tmp_path, monkeypatch):
+    """Pin the shipped registry: one https entry, and its derived canonical URL."""
+    real_registry = yaml.safe_load(_REAL_REGISTRY.read_text(encoding="utf-8"))["repos"]
+    assert {key for key, body in real_registry.items() if body.get("transport") == "https"} == {"infra-private"}
+    assert {key: body.get("transport") for key, body in real_registry.items()} == {
+        "public": "ssh",
+        "infra-private": "https",
+        "hramatka": "ssh",
+    }
+    shipped = load_fleet_repos()["infra-private"]
+    monkeypatch.setattr(sg, "_REGISTRY_PATH", _REAL_REGISTRY)
+    monkeypatch.setattr(
+        sg,
+        "load_fleet_repos",
+        lambda: {
+            "public": FleetRepo("public", "org/public", https_world[0].name, "public", True),
+            "infra-private": dataclasses.replace(shipped, local_name=https_world[1].name),
+        },
+    )
+    canonical = f"https://github.com/{shipped.github}.git"
+    git(https_world[1], "remote", "set-url", "origin", canonical)
+    repo = sg.resolve_repository("infra-private", https_world[0], runner(tmp_path, "https://unused.invalid", None))
+    assert (repo.transport, repo.remote, repo.github) == ("https", canonical, shipped.github)
 
 
 @pytest.mark.parametrize("credential_state", ["valid", "wrong-repository", "expired"])
