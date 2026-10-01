@@ -612,6 +612,26 @@
       "source_page_sha256": "2cf1087e44968f7f37b2e4bf1a2333f8acfe378a63d4d1e682fbcd13be7a5ecc",
       "parser_version": "ulif-forms-v4",
       "source_entry_fingerprint": "5603d187023a4562018a06d57f10913d76e462dfa5b3e08a9418397064439895"
+    },
+    {
+      "id": 2134,
+      "entry_id": 266,
+      "entry_key": "єжов#1",
+      "form_unstressed": "Єжові",
+      "form_stressed": "Єжо́ві",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[\"v_mis\", \"m\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "при",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "Єжо́ві",
+      "source_page_sha256": "9b2ea4bfd468f87406954c6da44dbc30389cc29d77e73e2f4bfaba543d3ec8f4",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "64824e06835cdec3940112f09b822cd0507d136111474cf9f3a7b0fefd390c2d"
     }
   ],
   "entries": [
@@ -838,6 +858,22 @@
       "response_sha256": "e668d3ce5f86b0c8c95b2f08cc28a1b3839117a9e6e159e0894e2491a2039ee9",
       "parser_version": "ulif-dictua-v2",
       "status": "ok"
+    },
+    {
+      "id": 266,
+      "normalized_query": "єжов",
+      "homonym_index": 1,
+      "canonical_headword": "Єжо́в",
+      "grammatical_label": "прізвище",
+      "sense_gloss": "",
+      "content_sha256": "3ffe818ab7dcef6bddb853f29148223719a0706b03136fa2e05c5a57c6b44741",
+      "register_position": "2506:12",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:c12aa03e61adfad55a718e4972dc4387bea3c22525b7b56b94e95cc67003c748",
+      "retrieved_at": "2026-09-23T09:22:48.314992+00:00",
+      "response_sha256": "c12aa03e61adfad55a718e4972dc4387bea3c22525b7b56b94e95cc67003c748",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
     }
   ],
   "unchecked_entry": {
@@ -856,6 +892,6 @@
     "parser_version": "ulif-dictua-v1",
     "status": "not_found"
   },
-  "ulif_only_form": "Євдокименках",
+  "ulif_only_form": "Єжові",
   "trie_only_form": "воно"
 }

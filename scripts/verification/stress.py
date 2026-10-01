@@ -249,12 +249,14 @@ def _normalize_supplied_tags(pos: str | None, tags: str | list[str] | None) -> s
 
         atoms = [tag for tag in tags if "=" not in tag]
         supplied.update(TagMapper()(":".join(atoms)) if atoms else [])
+        if "noun" in atoms and "numr" in atoms:
+            supplied.discard("upos=NUM")
         supplied.update(tag.strip() for tag in tags if tag and "=" in tag and tag.strip())
     return supplied
 
 
 def _vesum_lookup(word_form: str) -> list[dict]:
-    """Best-effort VESUM lookup; never raises (VESUM join is supplementary)."""
+    """Read VESUM analyses; unavailable identity proof never admits ULIF rows."""
     try:
         from scripts.verification.vesum import verify_word
 
@@ -386,9 +388,8 @@ def verify_stress(
     The source envelope is retained for existing receipts; selected authority
     is in ``stress_source`` and each match's ``source``.
     """
-    from scripts.verification.ulif_stress import compatible
+    from scripts.verification.ulif_stress import analysis_features, compatible, select_analyses
     from scripts.verification.ulif_stress import readings as ulif_readings
-    from scripts.wiki.sources_db import ulif_stress_rows
 
     lookup_key = _strip_stress(word).strip()
     source = source_info()
@@ -417,31 +418,51 @@ def verify_stress(
     else:
         supplied = _normalize_supplied_tags(pos, tags)
         vesum = _vesum_lookup(lookup_key)
-        trusted = ulif_stress_rows(lookup_key)
-        matches = ulif_readings(lookup_key, supplied=supplied, lemma=lemma, vesum=vesum) if trusted else []
-        if trusted:
-            result["stress_source"] = "ulif"
-            if not matches:
-                result["reason"] = "no ULIF reading matches supplied context"
-                return result
-        else:
+        if lemma:
+            # Explicit lemma context may identify a cased proper-name analysis.
+            for spelling in (lookup_key.lower(), lookup_key.title()):
+                for analysis in _vesum_lookup(spelling):
+                    if analysis not in vesum:
+                        vesum.append(analysis)
+        selected = select_analyses(vesum, supplied, lemma)
+        if vesum and not selected:
+            result["reason"] = "no VESUM analysis matches supplied context"
+            return result
+        matches = ulif_readings(lookup_key, supplied=supplied, lemma=lemma, vesum=selected)
+        uncovered = [v for v in selected if not any(v in m["vesum_analyses"] for m in matches)]
+        if uncovered or not selected:
             value = _trie_value(_load_trie(), lookup_key)
-            if value is None:
-                result["reason"] = "no trusted dictionary reading"
+            for required, positions in _parse_dictionary_value(value) if value is not None else []:
+                if not positions or not compatible(set(required), supplied):
+                    continue
+                witnesses = [v for v in uncovered if compatible(set(required), analysis_features(v))]
+                if selected and not witnesses:
+                    continue
+                match = _build_match(lookup_key, positions, required, override_applied=False)
+                match.update(source="trie", vesum_analyses=witnesses)
+                # Agreement is one choice even when ULIF covers only one lemma.
+                # Trie remains the label because its fallback evidence is needed.
+                agreeing = next((m for m in matches if m["vowel_indices"] == match["vowel_indices"]), None)
+                if agreeing is not None:
+                    match["supporting_readings"] = [agreeing, dict(match)]
+                    match["vesum_analyses"] = list(agreeing["vesum_analyses"])
+                    match["vesum_analyses"] += [v for v in witnesses if v not in match["vesum_analyses"]]
+                    # A teaching choice for a covered lemma cannot settle an
+                    # uncovered lemma's unlabelled packed trie positions.
+                    if len(match["vowel_indices"]) > 1 and "-" not in lookup_key:
+                        match["pedagogical_conflict"] = True
+                    matches.remove(agreeing)
+                _attach_vesum(match, witnesses)
+                matches.append(match)
+            # A covered reading cannot stand in for an analysis lacking both sources.
+            if any(not any(v in m["vesum_analyses"] for m in matches) for v in uncovered):
+                result["reason"] = "uncovered VESUM analysis has no compatible trie reading"
                 return result
-            all_matches = [
-                _build_match(lookup_key, positions, required, override_applied=False)
-                for required, positions in _parse_dictionary_value(value)
-                if positions
-            ]
-            matches = [m for m in all_matches if compatible(set(m["required_tags"]), supplied)]
-            if not matches:
-                result["reason"] = "no trie reading matches supplied context"
-                return result
-            for match in matches:
-                match["source"] = "trie"
-                _attach_vesum(match, vesum)
-            result["stress_source"] = "trie"
+        if not matches:
+            result["reason"] = "no trusted dictionary reading matches supplied context"
+            return result
+        sources = {m["source"] for m in matches}
+        result["stress_source"] = next(iter(sources)) if len(sources) == 1 else "mixed"
         choices = {tuple(m["vowel_indices"]) for m in matches}
         result["status"] = "ok" if len(choices) == 1 else "ambiguous"
     _apply_input_mismatch(matches, word)
@@ -508,6 +529,7 @@ def _compact_stress_reading(match: dict[str, Any]) -> dict[str, Any]:
         "variants",
         "pedagogical_stressed_form",
         "pedagogical_conflict",
+        "supporting_readings",
     ):
         if key in match:
             reading[key] = match[key]

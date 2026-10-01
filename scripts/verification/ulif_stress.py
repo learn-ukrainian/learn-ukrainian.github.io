@@ -13,20 +13,82 @@ from scripts.wiki.sources_db import normalize_ulif_dictua_query, ulif_stress_row
 def _features(row: dict) -> set[str]:
     """Map the existing parser's VESUM atoms and entry label to UD features."""
     atoms = set(json.loads(row["grammatical_tags"]))
-    grammar = lookup_ulif_label(row["grammatical_label"])
+    label = row["grammatical_label"].split(",", 1)[0].strip()
+    grammar = lookup_ulif_label(label)
     if grammar:
         atoms.update(grammar.tags)
-    # These two source labels are not mapped by the forms parser yet.
-    if row["grammatical_label"] == "сполучник":
-        atoms.add("conj")
-    if row["grammatical_label"] == "займенник":
-        atoms.update(("noun", "pron"))
-    return set(TagMapper()(":".join(sorted(atoms))))
+    # Additional entry POS labels not mapped by the forms parser.
+    labels = {
+        "сполучник": ("conj",),
+        "займенник": ("noun", "pron"),
+        "прізвище": ("noun", "prop"),
+        "власна назва": ("noun", "prop"),
+        "множинний іменник": ("noun", "p"),
+        "вигук": ("intj",),
+        "прийменник": ("prep",),
+        "частка": ("part",),
+        "числівник": ("numr",),
+        "числівник кількісний": ("numr",),
+        "числівник порядковий": ("adj", "numr"),
+        "дієприкметник": ("adj", "adjp"),
+    }
+    atoms.update(labels.get(label, ()))
+    features = set(TagMapper()(":".join(sorted(atoms))))
+    if label == "присудкове слово":
+        features.add("upos=X")
+    return features
+
+
+def analysis_features(analysis: dict) -> set[str]:
+    """Preserve pronoun/proper-name POS rather than the coarse VESUM column."""
+    features = set(TagMapper()(analysis.get("tags", "")))
+    # VESUM's noun:numr is a nominal numeral, with POS noun in its analysis.
+    if analysis.get("pos") == "noun" and "upos=NOUN" in features:
+        features.discard("upos=NUM")
+    if analysis.get("pos") == "noninfl" and "predic" in analysis.get("tags", "").split(":"):
+        features.add("upos=X")
+    return features
+
+
+def select_analyses(vesum: list[dict], supplied: set[str], lemma: str | None) -> list[dict]:
+    """Caller context selects VESUM analyses before either stress source."""
+    from scripts.verification.stress import _strip_stress
+
+    bare = normalize_ulif_dictua_query(_strip_stress(lemma)) if lemma else None
+    return [
+        v
+        for v in vesum
+        if (bare is None or normalize_ulif_dictua_query(_strip_stress(v.get("lemma", ""))) == bare)
+        and compatible(analysis_features(v), supplied)
+    ]
+
+
+def joined_analyses(row: dict, vesum: list[dict]) -> list[dict]:
+    """A row must positively join the entry lemma and a known, matching POS."""
+    from scripts.verification.stress import _strip_stress
+
+    lemma = normalize_ulif_dictua_query(_strip_stress(row["entry_key"].rsplit("#", 1)[0]))
+    features = _features(row)
+    pos = {t for t in features if t.startswith("upos=")}
+    return [
+        v
+        for v in vesum
+        if lemma == normalize_ulif_dictua_query(_strip_stress(v.get("lemma", "")))
+        and len(pos) == 1
+        and any(t.startswith("upos=") for t in analysis_features(v))
+        and compatible(features, analysis_features(v))
+    ]
 
 
 def compatible(required: set[str], supplied: set[str]) -> bool:
     """No shared feature may conflict; unknown features cannot select a reading."""
-    wanted = dict(tag.split("=", 1) for tag in supplied if "=" in tag)
+    wanted: dict[str, str] = {}
+    for tag in supplied:
+        if "=" in tag:
+            key, value = tag.split("=", 1)
+            if key in wanted and wanted[key] != value:
+                return False
+            wanted[key] = value
     return all(
         wanted.get(k, v) == v or (k == "upos" and {wanted.get(k), v} <= {"NOUN", "PROPN"})
         for k, v in (tag.split("=", 1) for tag in required if "=" in tag)
@@ -63,14 +125,9 @@ def readings(form: str, *, supplied: set[str], lemma: str | None, vesum: list[di
         features = _features(row)
         if supplied and not compatible(features, supplied):
             continue
-        # Join on lemma and compatible morphology. Absence is not a reason
-        # to discard a source-attested ULIF reading.
-        witnesses = [
-            v
-            for v in vesum
-            if normalize_ulif_dictua_query(_strip_stress(v.get("lemma", ""))) == row["normalized_query"]
-            and compatible(features, set(TagMapper()(v.get("tags", ""))))
-        ]
+        witnesses = joined_analyses(row, select_analyses(vesum, supplied, lemma))
+        if not witnesses:
+            continue
         selected.append((row, features, witnesses))
 
     # If a supplied case/number is represented, omit lemma-only rows, which

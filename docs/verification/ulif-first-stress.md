@@ -7,13 +7,19 @@ Sources DB connection and accepts only rows joined to an entry with
 `homonym_checked = 1`, from a complete current-parser build with a source
 fingerprint. It neither creates tables nor migrates the database.
 
-All agreeing stress choices collapse into one reading while retaining every
+Each ULIF row must also join a VESUM analysis of the form by its entry-key
+lemma (without the homonym suffix), POS and compatible morphology. Pronouns
+retain their pronoun POS; proper-name analyses participate in the join too.
+Unknown POS or absent VESUM evidence cannot admit a ULIF row. Thus the noun
+`вон#1` never supplies stress for the personal pronouns `вона` or `вони`.
+
+All agreeing joined stress choices collapse into one reading while retaining every
 supporting form-row id, entry id, source fingerprint and grammatical tag set.
 Different choices remain ambiguous. Optional `lemma`, `pos` and `tags` narrow
 the source readings; `tags` accepts UD features or VESUM atoms. A source-stressed
 lemma can distinguish lexical homographs. A bare lemma or POS cannot choose
-between indistinguishable meanings. Unmatched supplied context returns pending;
-it does not silently borrow another reading or switch dictionaries.
+between indistinguishable meanings. Context selects VESUM analyses first.
+Unmatched supplied context returns pending; it never borrows another lemma.
 Source capitalization is normalized onto the requested form before comparing
 teaching choices; the same accent in different capitalization is agreement.
 
@@ -22,16 +28,25 @@ Dual readings retain `vowel_indices`, both `variants`, and the source's
 position is preserved. Without an attested teaching choice, the annotator does
 not invent one. Compound forms retain their source marks.
 
-When the form has no trusted ULIF rows, the packed `ukrainian-word-stress` trie
-is the labelled fallback. If neither dictionary has a reading, the result is
-`pending`. Exact case is checked before spelling variants, since proper-name
+ULIF settles a form only when joined readings cover every selected VESUM
+analysis. Uncovered analyses use compatible readings from the packed
+`ukrainian-word-stress` trie, labelled `source: trie`; trie readings incompatible
+with those analyses are excluded. Distinct stress choices across both sources
+remain ambiguous. If an analysis has neither source, the result is `pending`.
+With VESUM unavailable, only the labelled trie fallback is eligible.
+An agreeing ULIF/trie choice is returned once with `source: trie`, since trie
+evidence is needed to cover the missing analysis. Its `supporting_readings`
+retain each authority's original evidence. An unlabelled packed trie reading
+cannot inherit a covered lemma's teaching choice; annotation stays withheld.
+Exact case is checked before spelling variants, since proper-name
 and lowercase forms can have different readings.
 
 ## API and provenance
 
 The single-word response retains its legacy `source` provenance object.
 `stress_source` names the selected authority (`ulif`, `trie`, `override` or
-`pending`), and every reading has a `source` label. Batch rows use `source` for
+`pending`, or `mixed` when both ULIF and trie readings are needed), and every
+reading has a `source` label. Batch rows use `source` for
 that label and share one provenance envelope per batch. Both MCP tools accept
 optional contextual selectors.
 
@@ -101,7 +116,10 @@ token in public `site/src/content/docs/a1/**/*.mdx` and
 The receipt records every input path and SHA-256, both dictionary identities,
 the denominator, categories, sample seed and actual sample size.
 
-The comparator decodes the trie directly and queries checked ULIF rows directly.
+The comparator decodes the trie directly and joins checked ULIF rows to VESUM
+identity without calling the stress oracle. Unjoined rows remain under
+`unjoined_ulif`, with missing coverage listed in `uncovered_vesum`. This compares
+eligible ULIF evidence with raw trie readings, excluding overrides and selection.
 Comparing against the ULIF-first oracle would be circular. `agree`, `disagree`,
 `ulif_only`, `trie_only` and `neither` partition the denominator. `ambiguous` and
 `dual` overlap those categories. Reports preserve raw readings and VESUM analyses

@@ -11,6 +11,7 @@ from scripts.verification import stress, stress_comparison
 from scripts.wiki import sources_db
 
 CAPTURE = json.loads((Path(__file__).parent / "fixtures/stress-ulif-forms.json").read_text())
+IDENTITY = json.loads((Path(__file__).parent / "fixtures/stress-identity-join.json").read_text())
 
 
 @pytest.fixture
@@ -30,6 +31,8 @@ def captured_db(tmp_path, monkeypatch):
             f"INSERT INTO {table} VALUES ({','.join('?' for _ in keys)})", [list(row.values()) for row in rows]
         )
     conn.commit()
+    # Captured analyses pin the identity join without a mutable live VESUM DB.
+    monkeypatch.setattr(stress, "_vesum_lookup", lambda form: [dict(v) for v in IDENTITY["vesum"].get(form, [])])
     monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
     yield conn
     conn.close()
@@ -70,7 +73,8 @@ def test_rule_3_homographs_never_first(captured_db):
     assert stress.verify_stress("замок", lemma="замо́к")["matches"][0]["stressed_form"] == "замо́к"
     verb = stress.verify_stress("замок", pos="VERB")
     assert verb["status"] == "ok"
-    assert {e["entry_id"] for e in verb["matches"][0]["evidence"]} == {76798, 76803}
+    # VESUM attests замокти, not the ULIF synonym замокнути.
+    assert {e["entry_id"] for e in verb["matches"][0]["evidence"]} == {76803}
 
 
 def test_rule_3_case_and_vesum_join(captured_db):
@@ -366,6 +370,137 @@ def test_annotator_does_not_borrow_sole_reading_from_another_lexeme(captured_db,
     analyses = [{"lemma": "вона", "pos": "noun", "tags": "noun:unanim:f:v_naz:pron:pers:3"}]
     monkeypatch.setattr(stress, "_vesum_lookup", lambda _: analyses)
     monkeypatch.setattr(annotator, "_get_stressifier", lambda: object())
-    assert stress.verify_stress("вона")["matches"][0]["stressed_form"] == "во́на"
-    assert annotator.annotate_stress("вона") == ("вона", 0)
-    assert annotator._oracle_choice("вона", pos="PRON") is None
+    assert stress.verify_stress("вона")["matches"][0]["stressed_form"] == "вона́"
+    assert annotator.annotate_stress("вона") == ("вона́", 1)
+    assert annotator._oracle_choice("вона", pos="PRON") == "вона́"
+
+
+@pytest.fixture
+def identity_db(captured_db):
+    for table in ("ulif_forms", "ulif_dictua_entries"):
+        rows = IDENTITY["forms" if table == "ulif_forms" else "entries"]
+        captured_db.executemany(
+            f"INSERT INTO {table} VALUES ({','.join('?' for _ in rows[0])})",
+            [list(row.values()) for row in rows],
+        )
+    return captured_db
+
+
+@pytest.mark.parametrize("word,expected", [("вона", "вона́"), ("вони", "вони́")])
+def test_rule_2_pronoun_never_uses_other_lemma(identity_db, word, expected):
+    from scripts.verification.ulif_stress import readings
+
+    # Real entry 9434 is the noun вон; it cannot attest these pronouns.
+    assert readings(word, supplied=set(), lemma=None, vesum=IDENTITY["vesum"][word]) == []
+    for context in ({}, {"lemma": word}, {"pos": "PRON"}, {"tags": IDENTITY["vesum"][word][0]["tags"]}):
+        result = stress.verify_stress(word, **context)
+        assert result["status"] == "ok" and result["stress_source"] == "trie"
+        assert {m["stressed_form"] for m in result["matches"]} == {expected}
+        assert all(not m.get("evidence") and m["source"] == "trie" for m in result["matches"])
+
+
+def test_rule_2_same_lemma_wrong_pos_is_not_a_join(identity_db):
+    from scripts.verification.ulif_stress import joined_analyses
+
+    pronoun = IDENTITY["vesum"]["себе"]
+    row = sources_db.ulif_stress_rows("себе")[0]
+    # Synthetic POS conflict with identical lemma; pronouns must not join nouns.
+    assert joined_analyses({**row, "grammatical_label": "іменник чоловічого роду"}, pronoun) == []
+    assert joined_analyses({**row, "grammatical_label": "synthetic-unknown-pos"}, pronoun) == []
+    assert joined_analyses(row, pronoun) == pronoun
+
+
+def test_rule_2_reflexive_and_age_join_all_source_alternatives(identity_db):
+    reflexive = stress.verify_stress("себе")
+    assert reflexive["status"] == "ambiguous" and reflexive["stress_source"] == "ulif"
+    assert {m["stressed_form"] for m in reflexive["matches"]} == {"се́бе", "себе́"}
+    assert all({e["entry_id"] for e in m["evidence"]} == {212855} for m in reflexive["matches"])
+    genitive = stress.verify_stress("себе", tags="Case=Gen")
+    assert genitive["status"] == "ok" and genitive["matches"][0]["stressed_form"] == "себе́"
+    age = stress.verify_stress("віку")
+    assert age["status"] == "ambiguous" and age["stress_source"] == "ulif"
+    assert {m["stressed_form"] for m in age["matches"]} == {"ві́ку", "віку́"}
+    assert stress.verify_stress("віку", lemma="віко")["matches"][0]["stressed_form"] == "ві́ку"
+    assert stress.verify_stress("віку", tags="Case=Gen")["status"] == "ok"
+
+
+def test_rule_2_partial_coverage_uses_trie_only_for_uncovered_analyses(identity_db):
+    # Retain the real masculine вік rows; the real neuter віко analysis lacks ULIF.
+    identity_db.execute("DELETE FROM ulif_forms WHERE entry_id=43407")
+    result = stress.verify_stress("віку")
+    assert result["status"] == "ambiguous" and result["stress_source"] == "mixed"
+    assert {m["source"] for m in result["matches"]} == {"ulif", "trie"}
+    (fallback,) = [m for m in result["matches"] if m["source"] == "trie"]
+    assert fallback["stressed_form"] == "ві́ку"
+    assert {r["source"] for r in fallback["supporting_readings"]} == {"ulif", "trie"}
+    assert all(v["lemma"] == "віко" for v in fallback["supporting_readings"][1]["vesum_analyses"])
+    covered = stress.verify_stress("віку", lemma="вік", tags="Case=Gen")
+    assert covered["status"] == "ok" and covered["stress_source"] == "ulif"
+    uncovered = stress.verify_stress("віку", lemma="віко")
+    assert uncovered["status"] == "ok" and uncovered["stress_source"] == "trie"
+    assert uncovered["matches"][0]["stressed_form"] == "ві́ку"
+
+
+def test_rule_2_missing_fallback_cannot_promote_covered_reading(identity_db, monkeypatch):
+    identity_db.execute("DELETE FROM ulif_forms WHERE entry_id=43407")
+    monkeypatch.setattr(stress, "_trie_value", lambda *args: None)
+    assert stress.verify_stress("віку")["status"] == "pending"
+    assert stress.verify_stress("віку", lemma="вік")["status"] == "ambiguous"
+
+
+def test_rule_2_missing_vesum_never_admits_unjoined_rows(identity_db, monkeypatch):
+    assert stress.verify_stress(IDENTITY["unjoined_ulif_only_form"])["status"] == "pending"
+    monkeypatch.setattr(stress, "_vesum_lookup", lambda _: [])
+    result = stress.verify_stress("село")
+    assert result["stress_source"] == "trie"
+    assert all(not m.get("evidence") for m in result["matches"])
+
+
+def test_comparison_excludes_foreign_lemma_and_preserves_raw_evidence(identity_db):
+    record = stress_comparison.compare_form("вона")
+    assert record["category"] == "trie_only" and record["ulif"] == []
+    assert {r["entry_id"] for r in record["unjoined_ulif"]} == {9434}
+    assert record["uncovered_vesum"] == IDENTITY["vesum"]["вона"]
+
+
+def test_rule_2_partial_agreement_is_one_choice_with_fallback_provenance(identity_db):
+    identity_db.execute("DELETE FROM ulif_forms WHERE entry_id=43407 OR id=646599")
+    result = stress.verify_stress("віку")
+    assert result["status"] == "ok" and result["stress_source"] == "trie"
+    (match,) = result["matches"]
+    assert match["stressed_form"] == "ві́ку"
+    assert {v["lemma"] for v in match["vesum_analyses"]} == {"вік", "віко"}
+    assert stress._compact_stress_reading(match)["supporting_readings"] == match["supporting_readings"]
+
+
+def test_rule_2_partial_packed_agreement_never_borrows_teaching_choice(captured_db, monkeypatch):
+    from scripts.pipeline import stress_annotator as annotator
+
+    # Synthetic additional analysis; real розбір rows and trie pack dual positions.
+    analyses = IDENTITY["vesum"]["розбір"] + [{"lemma": "synthetic-uncovered", "pos": "noun", "tags": "noun:m:v_naz"}]
+    monkeypatch.setattr(stress, "_vesum_lookup", lambda _: analyses)
+    result = stress.verify_stress("розбір")
+    assert result["status"] == "ok" and result["stress_source"] == "trie"
+    (match,) = result["matches"]
+    assert match["pedagogical_conflict"] is True
+    assert stress.spoken_stressed_form(match) is None
+    assert annotator._oracle_choice("розбір") is None
+
+
+@pytest.mark.parametrize("word", ["тисяча", "тисячу"])
+def test_rule_2_nominal_numeral_uses_vesum_noun_pos(identity_db, word):
+    from scripts.verification.ulif_stress import analysis_features
+
+    (analysis,) = IDENTITY["vesum"][word]
+    assert {t for t in analysis_features(analysis) if t.startswith("upos=")} == {"upos=NOUN"}
+    result = stress.verify_stress(word, tags=analysis["tags"])
+    assert result["status"] == "ok" and result["stress_source"] == "ulif"
+    record = stress_comparison.compare_form(word)
+    assert record["category"] == "agree" and record["uncovered_vesum"] == []
+
+
+def test_conflicting_features_never_depend_on_set_iteration_order():
+    from scripts.verification.ulif_stress import compatible
+
+    assert not compatible({"upos=NOUN"}, {"upos=NOUN", "upos=NUM"})
+    assert not compatible({"Case=Gen"}, {"Case=Gen", "Case=Acc"})

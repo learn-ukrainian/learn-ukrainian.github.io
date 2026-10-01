@@ -72,9 +72,7 @@ def _stanza_download_lock_path() -> Path:
     directory contends on the same lock. Falls back to the system temp dir if
     the resources directory cannot be created.
     """
-    base = os.environ.get("STANZA_RESOURCES_DIR") or os.path.join(
-        os.path.expanduser("~"), "stanza_resources"
-    )
+    base = os.environ.get("STANZA_RESOURCES_DIR") or os.path.join(os.path.expanduser("~"), "stanza_resources")
     if not base.startswith("~"):
         try:
             Path(base).mkdir(parents=True, exist_ok=True)
@@ -125,8 +123,7 @@ def _get_stressifier():
         from ukrainian_word_stress import Stressifier, StressSymbol
 
         with _model_download_lock():
-            _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent,
-                                       disambiguation="dictionary")
+            _stressifier = Stressifier(stress_symbol=StressSymbol.CombiningAcuteAccent, disambiguation="dictionary")
             _stressifier.nlp = _load_context_parser()
     return _stressifier
 
@@ -166,12 +163,12 @@ def _restore_apostrophes(stressed: str, original: str) -> str:
     return re.sub("'", lambda _: next(surface, "'"), stressed)
 
 
-def _oracle_choice(word: str, *, lemma: str | None = None, pos: str | None = None,
-                   tags: str | None = None) -> str | None:
+def _oracle_choice(
+    word: str, *, lemma: str | None = None, pos: str | None = None, tags: str | None = None
+) -> str | None:
     """Use only a resolved oracle reading; dual stress keeps a valid existing mark."""
     from scripts.verification.stress import (
         _stress_positions_in_marked_string,
-        _vesum_lookup,
         pedagogical_stressed_form,
         transfer_stress_marks,
         verify_stress,
@@ -191,20 +188,18 @@ def _oracle_choice(word: str, *, lemma: str | None = None, pos: str | None = Non
     matches = result.get("matches") or []
     if result["status"] != "ok" or not matches:
         return None
-    if (not (lemma or pos or tags) and matches[0].get("source") == "ulif"
-            and not matches[0].get("vesum_analyses") and _vesum_lookup(clean.lower())):
-        # A sole ULIF noun reading may share a spelling with a pronoun absent
-        # from the forms table (e.g. вона). Require learner context rather
-        # than borrowing the noun's accent for that other lexeme.
-        return None
     allowed: set[int] = set()
     for match in matches:
         allowed.update(match.get("vowel_indices") or [])
     _, current = _stress_positions_in_marked_string(word)
     if len(current) == 1 and current[0] in allowed:
         return word
-    if (matches[0].get("source") == "ulif" and matches[0].get("dual_stress")
-            and "-" not in clean and not matches[0].get("pedagogical_stressed_form")):
+    if (
+        matches[0].get("source") == "ulif"
+        and matches[0].get("dual_stress")
+        and "-" not in clean
+        and not matches[0].get("pedagogical_stressed_form")
+    ):
         return None
     if matches[0].get("pedagogical_conflict"):
         return None
@@ -212,7 +207,8 @@ def _oracle_choice(word: str, *, lemma: str | None = None, pos: str | None = Non
 
 
 def _build_skip_mask(
-    text: str, extra_ranges: list[tuple[int, int]] | None = None,
+    text: str,
+    extra_ranges: list[tuple[int, int]] | None = None,
 ) -> list[tuple[int, int]]:
     """Build list of (start, end) ranges to skip (comments, code, URLs)."""
     ranges = list(extra_ranges or [])
@@ -246,7 +242,8 @@ def _in_skip_range(pos: int, skip_ranges: list[tuple[int, int]]) -> bool:
 
 
 def _build_sentence_stress_map(
-    text: str, orig_words: list[re.Match],
+    text: str,
+    orig_words: list[re.Match],
 ) -> dict[int, str]:
     """Use Stanza's lemma/POS/features as context, then query the same oracle.
 
@@ -278,8 +275,9 @@ def _build_sentence_stress_map(
                 continue
             analysis = token.to_dict()[0]
             word = _APOSTROPHE_RE.sub("'", match.group(1))
-            chosen = _oracle_choice(word, lemma=analysis.get("lemma"), pos=analysis.get("upos"),
-                                    tags=analysis.get("feats"))
+            chosen = _oracle_choice(
+                word, lemma=analysis.get("lemma"), pos=analysis.get("upos"), tags=analysis.get("feats")
+            )
             if chosen is not None:
                 stress_map[match.start(1)] = chosen
     except Exception:
@@ -308,7 +306,9 @@ def _annotate_dialoguebox_uk_attrs(text: str) -> tuple[str, int]:
 
 
 def annotate_stress(
-    text: str, *, protected_ranges: list[tuple[int, int]] | None = None,
+    text: str,
+    *,
+    protected_ranges: list[tuple[int, int]] | None = None,
 ) -> tuple[str, int]:
     """Add and repair stress marks on Ukrainian words in text.
 
@@ -423,7 +423,7 @@ def activity_error_ranges(text: str) -> list[tuple[int, int]]:
                         rf"(?<![{_CYRILLIC_LETTER_CLASS}ʼ']){re.escape(form)}(?![{_CYRILLIC_LETTER_CLASS}ʼ'])"
                     )
                     start = node.start_mark.index
-                    for m in copy_re.finditer(text[start:node.end_mark.index]):
+                    for m in copy_re.finditer(text[start : node.end_mark.index]):
                         ranges.append((start + m.start(), start + m.end()))
             else:
                 walk(value)
