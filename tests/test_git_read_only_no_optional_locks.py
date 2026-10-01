@@ -23,6 +23,11 @@ proof and treats every expression it cannot prove as an offender.
   ``timeout 5 git`` included), or a ``git`` call with a literal subcommand
   that is a write verb or runs with locks off. A program word may also be a
   literal path built by ``str()``, ``Path()`` and ``/``.
+* A program other than git is proven only when no argument carries ``git``
+  as a word (``make --eval 'x:; git status'``), it writes no ``gh`` alias,
+  and, for ``make``/``just``/``task``, every argument is a literal. A
+  ``git config alias.*`` write and a ``git`` word in shell text outside a
+  readable git command (``/usr/bin/git status``, ``xargs git``) are unproven.
 * A name proves a command only when it is local to the function, assigned
   exactly once by a plain assignment that runs before the call, read exactly
   once (as this command) and never declared ``global``/``nonlocal``: then
@@ -33,7 +38,9 @@ proof and treats every expression it cannot prove as an offender.
   when the function only reads the parameter (subscripts, tests, ``len``,
   a returned call, another read-only module function): every call of the
   runner must then pass a proven command, and any other use of its name (an
-  argument, an import from another scanned module) is an offender.
+  argument, an import from another scanned module, an attribute chain such
+  as ``pkg.mod._run`` or ``self._run``) is an offender. Another module's
+  attribute chain counts unless it resolves to a scanned module without it.
 * Locks are off when ``--no-optional-locks`` is among the global options
   before the subcommand, or when ``env=`` is a dict display, ``dict(...)``
   or ``| {...}`` written in the call (or a once-assigned, once-read local
@@ -139,6 +146,8 @@ _READ_VERBS = frozenset(
         "worktree",
     }
 )
+# ``git config`` forms that only read a key.
+_CONFIG_READS = frozenset({"--get", "--get-all", "--get-regexp", "--list", "-l", "get", "list"})
 _WORKTREE_WRITE_ACTIONS = frozenset({"add", "lock", "move", "prune", "remove", "repair", "unlock"})
 # Global options whose value is the next argv element.
 _GLOBAL_OPTIONS_WITH_VALUE = frozenset({"-C", "-c", "--git-dir", "--work-tree", "--namespace"})
@@ -172,6 +181,13 @@ _SINKS = {
 }
 _PROGRAM_SINK = re.compile(r"os\.(?:exec[lv]p?e?|spawn[lv]p?e?|posix_spawnp?)")
 _SINK_MODULES = frozenset({"subprocess", "os", "asyncio", "asyncio.subprocess"})
+# ``git`` as a word anywhere in a literal. A program other than git that
+# carries one (``make --eval 'x:; git status'``, ``gh alias set st 'git status'``)
+# may run it, so the call is not proven as a non-git call.
+_GIT_WORD = re.compile(r"(?<![\w.-])git(?![\w-])")
+# Programs that run commands defined elsewhere (a recipe, a task): proven only
+# when every argument is a literal.
+_TASK_RUNNERS = frozenset({"make", "just", "task"})
 
 # Verdicts for a call the lint cannot prove: the only ones a
 # ``# lock-lint: ok <reason>`` marker may exempt.
@@ -206,6 +222,9 @@ def _git_verdict(tokens: list[str | None], *, env_disables_locks: bool = False) 
         return None if covered else _DYNAMIC
     if verb in _WRITE_VERBS:
         return None
+    rest = tokens[index + 1 :]
+    if verb == "config" and any(t and t.startswith("alias.") for t in rest) and not _CONFIG_READS & set(rest):
+        return _UNPROVEN  # an alias written here runs a command the lint never sees
     if verb == "worktree":
         action = tokens[index + 1] if index + 1 < len(tokens) else None
         if action in _WORKTREE_WRITE_ACTIONS or covered:
@@ -308,6 +327,31 @@ def _program(item: _Item) -> str | None:
 
 def _basename(path: str) -> str | None:
     return path.rstrip("/").rpartition("/")[2] or None
+
+
+def _literal_text(item: _Item) -> str | None:
+    """The literal text of an argv item, each non-literal part a NUL byte; None when it has none."""
+    if item is None or isinstance(item, str):
+        return item
+    if isinstance(item, (ast.Constant, ast.JoinedStr)) or (
+        isinstance(item, ast.BinOp) and isinstance(item.op, ast.Add)
+    ):
+        return _shell_text(item)
+    return None
+
+
+def _carries_git(items: list[_Item]) -> bool:
+    return any(_GIT_WORD.search(text) for text in map(_literal_text, items) if text)
+
+
+def _indirect_verdicts(program: str, items: list[_Item]) -> list[str]:
+    """A ``gh`` alias write, or a task runner with a non-literal argument, runs a command the lint never sees."""
+    tokens = [_item_token(item) for item in items]
+    if program == "gh" and "alias" in tokens and tokens[1:3] != ["alias", "list"]:
+        return [_UNPROVEN]
+    if program in _TASK_RUNNERS and any(text is None or "\0" in text for text in map(_literal_text, items[1:])):
+        return [_UNPROVEN]
+    return []
 
 
 def _is_command_argv(items: list[_Item] | None) -> bool:
@@ -600,6 +644,10 @@ class _Lint:
             if default is not None
         )
         for node in ast.walk(self.tree):
+            if isinstance(node, ast.Attribute) and node.attr == function.name:
+                # ``pkg.mod._run(...)`` or ``self._run(...)``: unresolved, so fail closed by name.
+                self.offenders.append((node.lineno, _UNPROVEN))
+                continue
             if not (isinstance(node, ast.Name) and node.id == function.name and isinstance(node.ctx, ast.Load)):
                 continue
             call = self.parents.get(node)
@@ -676,11 +724,16 @@ class _Lint:
         if program in _SHELLS:
             return _shell_argv_verdicts(items, tokens, env)
         # A wrapper (``timeout 5 git status``, ``env X=1 git log``) runs the git it names.
+        # The program word is proven by its basename above; any argument may be a command.
         for index, token in enumerate(tokens[1:], start=1):
             if token is not None and _basename(token) == "git":
+                if _carries_git(items[1:index]):
+                    return [_UNPROVEN]
                 verdict = _git_verdict(["git", *tokens[index + 1 :]], env_disables_locks=env == _ZERO)
                 return [verdict] if verdict is not None else []
-        return []
+        if _carries_git(items[1:]):
+            return [_UNPROVEN]
+        return _indirect_verdicts(program, items)
 
     def prove(self, node: ast.expr, mode: str, env: str, depth: int) -> list[str]:
         """Verdicts for a command expression read in ``mode``; empty when proven."""
@@ -753,7 +806,18 @@ class _Lint:
             elif shell is not None or any(k.arg is None for k in call.keywords):
                 mode = "both"
         self.claim(command)
-        self.offenders.extend((command.lineno, v) for v in self.prove(command, mode, env, 0))
+        verdicts = self.prove(command, mode, env, 0)
+        if mode == "program" and not verdicts:
+            # ``os.execlp(file, arg0, *args)`` passes its argv positionally, ``os.execvp(file, argv)`` as one list.
+            if re.fullmatch(r"os\.(?:exec|spawn)l.*", name):
+                arguments: list[_Item] | None = [
+                    None if isinstance(arg, ast.Starred) else arg for arg in call.args[index + 1 :]
+                ]
+            else:
+                arguments = _argv_items(call.args[index + 1]) if len(call.args) > index + 1 else None
+            if arguments:
+                verdicts = self.argv_verdicts([command, *arguments[1:]], env, 0)
+        self.offenders.extend((command.lineno, v) for v in verdicts)
 
     def sinks(self) -> Iterator[tuple[ast.Call, str]]:
         """Each process-spawning call; a process function or module used as a value is an offender."""
@@ -818,12 +882,12 @@ class _Lint:
 _SHELL_GIT = re.compile(
     r"(?:^|[\s;&|(`$'\"])"
     r"(?P<env>(?:[A-Za-z_][A-Za-z0-9_]*=[^\s;&|]*\s+)*)"
-    r"git[\"']?"
+    r"(?P<git>git)[\"']?"
     r"(?P<options>(?:\s+(?:-[Cc]|--git-dir|--work-tree|--namespace)\s+\S+|\s+-\S+)*)"
     r"\s+(?P<verb>[^\s;&|)`]+)"
     r"(?:\s+(?P<action>[^\s;&|)`]+))?"
 )
-_SHELL_WORD = re.compile(r"[a-z][a-z-]*")
+_SHELL_WORD = re.compile(r"[a-z][\w.-]*")
 # A non-literal part (rendered NUL) at command position: the command run is unknown.
 _COMMAND_PLACEHOLDER = re.compile(
     r"(?:^|[;&|(`\n]|\$\()\s*"
@@ -831,6 +895,15 @@ _COMMAND_PLACEHOLDER = re.compile(
     r"(?:(?:command|env|exec|nohup|sudo|time|xargs|then|do|else)\s+)*"
     r"[\"']?\0"
 )
+# A ``gh`` alias write, or a task runner with a non-literal argument, at command position.
+_SHELL_INDIRECT = re.compile(
+    r"(?:^|[;&|(`\n]|\$\()\s*"
+    r"(?:[A-Za-z_][A-Za-z0-9_]*=[^\s;&|]*\s+)*"
+    r"(?:(?:command|env|exec|nohup|sudo|time|xargs|then|do|else)\s+)*"
+    r"(?:gh\s+alias\s+(?!list\b)|(?:make|just|task)\b[^;&|\n]*\0)"
+)
+# Where the words of the git command a match starts end.
+_SHELL_COMMAND_END = re.compile(r"[;&|)`\n]")
 
 
 def _shell_word(word: str | None) -> str | None:
@@ -850,13 +923,34 @@ def _prefix_state(env: str) -> str:
     return state
 
 
+def _lone_command(code: str, word: re.Match[str]) -> bool:
+    """``word`` is the only word of its command."""
+    before = code[: word.start()]
+    begin = max((m.end() for m in re.finditer(r"[;&|(`\n]", before)), default=0)
+    end = _SHELL_COMMAND_END.search(code, word.end())
+    after = code[word.end() : end.start() if end else len(code)]
+    return not before[begin:].strip(" \t\"'") and not after.strip(" \t\"'")
+
+
 def _shell_line_offenders(source: str, *, env_state: str = _ABSENT) -> list[tuple[int, str]]:
     offenders: list[tuple[int, str]] = []
     # The call's env= counts only when the text never touches the variable itself.
     inherited = env_state if _LOCKS_ENV not in source else _UNKNOWN
     for lineno, line in enumerate(source.splitlines(), start=1):
         code = line.split("#", 1)[0]
-        if _COMMAND_PLACEHOLDER.search(code):
+        if _COMMAND_PLACEHOLDER.search(code) or _SHELL_INDIRECT.search(code):
+            offenders.append((lineno, _UNRESOLVED_SHELL))
+        # Each git command read below, from its ``git`` to the end of its words.
+        spans = [
+            (match.start("git"), (end.start() if (end := _SHELL_COMMAND_END.search(code, match.end())) else len(code)))
+            for match in _SHELL_GIT.finditer(code)
+        ]
+        # A ``git`` word outside them (``/usr/bin/git status``, ``X=git``, ``xargs git``) runs a
+        # git the lint cannot read; ``git`` alone as a whole command runs no subcommand.
+        if any(
+            not any(start <= word.start() < end for start, end in spans) and not _lone_command(code, word)
+            for word in _GIT_WORD.finditer(code)
+        ):
             offenders.append((lineno, _UNRESOLVED_SHELL))
         for match in _SHELL_GIT.finditer(code):
             prefix = _prefix_state(match.group("env"))
@@ -880,14 +974,24 @@ def shell_git_calls_without_flag(source: str) -> list[tuple[int, str]]:
 
 # --- Python source ---------------------------------------------------------
 def _shell_argv_verdicts(items: list[_Item], tokens: list[str | None], env_state: str) -> list[str]:
-    """Verdicts for ``sh [options] -c <text>``; a script file runs no inline git."""
+    """Verdicts for ``sh [options] -c <text>``; a script file runs no inline git.
+
+    Any other element that carries a ``git`` word (``sh -c '"$@"' _ git status``) is unproven.
+    """
+    verdicts: list[str] = []
+    text_index = None
     for index, token in enumerate(tokens[1:], start=1):
         if token is None or not token.startswith("-"):
-            return [_UNRESOLVED_SHELL] if token is None else []  # a script file, or unknown options
+            verdicts = [_UNRESOLVED_SHELL] if token is None else []  # a script file, or unknown options
+            break
         if "c" in token.lstrip("-") and not token.startswith("--"):
-            text = _shell_text(items[index + 1]) if index + 1 < len(items) else "\0"
-            return [verdict for _line, verdict in _shell_line_offenders(text, env_state=env_state)]
-    return []
+            text_index = index + 1
+            text = _shell_text(items[text_index]) if text_index < len(items) else "\0"
+            verdicts = [verdict for _line, verdict in _shell_line_offenders(text, env_state=env_state)]
+            break
+    if _carries_git([item for index, item in enumerate(items[1:], start=1) if index != text_index]):
+        verdicts.append(_UNPROVEN)
+    return verdicts
 
 
 def _literal_argv_verdicts(items: list[_Item], env_state: str) -> list[str]:
@@ -932,27 +1036,47 @@ def runner_names(source: str) -> set[str]:
     return set(lint.runners)
 
 
+def _attribute_path(node: ast.expr, modules: dict[str, str]) -> str | None:
+    """The dotted module path an attribute chain's object names (``a.b.c`` for ``a.b.c.f``), via imports."""
+    parts: list[str] = []
+    while isinstance(node, ast.Attribute):
+        parts.append(node.attr)
+        node = node.value
+    if not isinstance(node, ast.Name) or node.id not in modules:
+        return None
+    return ".".join([modules[node.id], *reversed(parts)])
+
+
 def foreign_runner_uses(source: str, runners: dict[str, set[str]]) -> list[tuple[int, str]]:
-    """Uses of another scanned module's runner, whose callers here the lint cannot check."""
+    """Uses of another scanned module's runner, whose callers here the lint cannot check.
+
+    ``runners`` maps every other scanned module's stem to its runner names. An
+    attribute chain ending in a runner name that does not resolve to a scanned
+    module (``self._run``, ``load()._run``, an unscanned module) counts as a use.
+    """
     tree = ast.parse(source)
+    # Each imported name and the dotted module path it binds (``import a.b.c`` binds ``a``).
     modules: dict[str, str] = {}
     offenders: list[tuple[int, str]] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             for alias in node.names:
-                modules[alias.asname or alias.name.split(".")[0]] = alias.name.rpartition(".")[2]
+                bound = alias.name if alias.asname else alias.name.split(".")[0]
+                modules[alias.asname or bound] = bound
         elif isinstance(node, ast.ImportFrom):
+            prefix = "." * node.level + (f"{node.module}." if node.module else "")
             stem = (node.module or "").rpartition(".")[2]
             for alias in node.names:
                 if alias.name in runners.get(stem, set()) or (alias.name == "*" and stem in runners):
                     offenders.append((node.lineno, _REFERENCE))
-                modules[alias.asname or alias.name] = alias.name
+                modules[alias.asname or alias.name] = prefix + alias.name
+    names = set().union(*runners.values()) if runners else set()
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.Attribute)
-            and isinstance(node.value, ast.Name)
-            and node.attr in runners.get(modules.get(node.value.id, ""), set())
-        ):
+        if not (isinstance(node, ast.Attribute) and node.attr in names):
+            continue
+        path = _attribute_path(node.value, modules)
+        stem = path.rpartition(".")[2] if path else None
+        if stem not in runners or node.attr in runners[stem]:
             offenders.append((node.lineno, _REFERENCE))
     return _exempt(offenders, source)
 
@@ -986,7 +1110,7 @@ def test_read_only_git_calls_pass_no_optional_locks() -> None:
     sources = {path: path.read_text(encoding="utf-8") for path in _scanned_python_files()}
     runners = {path.stem: runner_names(source) for path, source in sources.items()}
     for path, source in sources.items():
-        foreign = {stem: names for stem, names in runners.items() if stem != path.stem and names}
+        foreign = {stem: names for stem, names in runners.items() if stem != path.stem}
         found = git_calls_without_flag(source) + foreign_runner_uses(source, foreign)
         offenders.extend(f"{path.relative_to(_REPO_ROOT)}:{lineno} git {verb}" for lineno, verb in found)
     for path in _SHELL_FILES:
@@ -1106,6 +1230,28 @@ def test_reporter_disables_optional_locks_for_every_child() -> None:
         'getattr(subprocess, "run")',
         "subprocess.run",
         "loop.run_in_executor(None, subprocess.check_output, argv)",
+        # Review r4, case 2: a program other than git that carries a git word, a gh
+        # alias write, a task runner with a non-literal target, a git alias write.
+        'subprocess.run(["make", "--eval", "probe:; git status --porcelain", "probe"])',
+        'subprocess.run(["gh", "alias", "set", "--shell", "st", "git status --porcelain"])',
+        'subprocess.run(["gh", "alias", "set", "st", "pr status"])',
+        'subprocess.run(["gh", "alias", "import", path])',
+        'subprocess.run(["timeout", "5", "make", "--eval", "x:; git status", "x"])',
+        'subprocess.run(["python", "-c", "import subprocess; subprocess.run([\'git\', \'status\'])"])',
+        'subprocess.run(["sh", "-c", \'"$@"\', "_", "git", "status"])',
+        'subprocess.run(["env", "X=git", "git", "--no-optional-locks", "status"])',
+        'subprocess.run(["make", target])',
+        'subprocess.run(["just", f"probe-{name}"])',
+        'subprocess.run(["task", "--dir", str(path), "probe"])',
+        'subprocess.run(["git", "--no-optional-locks", "config", "alias.st", "!git status"])',
+        'os.execvp("make", ["make", "--eval", "x:; git status", "x"])',
+        'os.execlp("gh", "gh", "alias", "set", "st", "git status")',
+        'subprocess.run("/usr/bin/git status", shell=True)',
+        'subprocess.run("echo status | xargs git", shell=True)',
+        "subprocess.run(\"make --eval 'x:; git status' x\", shell=True)",
+        'subprocess.run(f"make {target}", shell=True)',
+        "subprocess.run(\"gh alias set st 'pr status'\", shell=True)",
+        "subprocess.run(\"git --no-optional-locks config alias.st '!git status'\", shell=True)",
     ],
 )
 def test_lint_flags_read_only_calls_without_flag(snippet: str) -> None:
@@ -1163,6 +1309,16 @@ def test_lint_flags_read_only_calls_without_flag(snippet: str) -> None:
         "subprocess.CompletedProcess(args=args, returncode=0)",
         'os.environ.get("HOME")',
         "asyncio.subprocess.PIPE",
+        # Literal task-runner targets, read-only gh calls and git-free arguments.
+        'subprocess.run(["make", "-C", "docs", "html"])',
+        'subprocess.run(["gh", "alias", "list"])',
+        'subprocess.run(["gh", "api", "repos/o/r/pulls", "--jq", ".[].title"])',
+        'subprocess.run(["python", "-m", "scripts.git_tool", "--help"])',
+        'subprocess.run(["rg", "-l", "github", ".gitignore"])',
+        'os.execvp("python", ["python", "-m", "http.server"])',
+        'subprocess.run("make html", shell=True)',
+        'subprocess.run("git", shell=True)',
+        'subprocess.run("git --no-optional-locks config --get alias.st", shell=True)',
     ],
 )
 def test_lint_accepts_flagged_and_write_calls(snippet: str) -> None:
@@ -1411,7 +1567,52 @@ def test_foreign_runner_uses_are_flagged() -> None:
     assert foreign_runner_uses("from . import site_router as sr\nsr._run(cmd)\n", runners) == [(2, _REFERENCE)]
     assert foreign_runner_uses("import scripts.api.site_router as sr\nsr._run(cmd)\n", runners) == [(2, _REFERENCE)]
     assert foreign_runner_uses("from .site_router import *\n", runners) == [(1, _REFERENCE)]
-    assert foreign_runner_uses("from .other import _run\nself._run(cmd)\n", runners) == []
+    assert foreign_runner_uses("from .other import _run\nself.run(cmd)\n", runners) == []
+
+
+def test_review_r4_dotted_import_runner_call_is_flagged() -> None:
+    runners = {"site_router": {"_run"}}
+    reproduction = (
+        "import scripts.api.site_router\nimport shlex\n"
+        'text = "git status --porcelain"\n'
+        "scripts.api.site_router._run(shlex.split(text))\n"
+    )
+    assert foreign_runner_uses(reproduction, runners) == [(4, _REFERENCE)]
+
+
+@pytest.mark.parametrize(
+    "source",
+    [
+        "import scripts.api\nscripts.api.site_router._run(cmd)\n",
+        "from scripts import api\napi.site_router._run(cmd)\n",
+        "import scripts.api.site_router as sr\nrun = sr._run\n",
+        # An attribute chain that resolves to no scanned module fails closed by name.
+        'import importlib\nimportlib.import_module("scripts.api.site_router")._run(cmd)\n',
+        "from .other import _run\nself._run(cmd)\n",
+        "import scripts.api.unscanned\nscripts.api.unscanned._run(cmd)\n",
+    ],
+)
+def test_dotted_and_unresolved_runner_chains_are_flagged(source: str) -> None:
+    runners = {"site_router": {"_run"}, "other": set()}
+    assert foreign_runner_uses(source, runners) == [(2, _REFERENCE)]
+
+
+def test_runner_chain_resolved_to_a_module_without_it_is_not_flagged() -> None:
+    runners = {"site_router": {"_run"}, "other": set()}
+    assert foreign_runner_uses("import scripts.api.other\nscripts.api.other._run(cmd)\n", runners) == []
+    assert foreign_runner_uses("from scripts.api import other\nother._run(cmd)\n", runners) == []
+
+
+@pytest.mark.parametrize(
+    "caller",
+    [
+        'self._run(["git", "--no-optional-locks", "status"])',
+        'scripts.api.site_router._run(["git", "--no-optional-locks", "status"])',
+    ],
+)
+def test_lint_flags_runner_calls_through_attribute_chains_in_its_own_module(caller: str) -> None:
+    source = _RUNNER + f"def caller(self):\n    {caller}\n"
+    assert git_calls_without_flag(source) == [(_CALLER_LINE, _UNPROVEN)]
 
 
 def test_marker_exempts_only_unresolved_subcommands_with_a_reason() -> None:
