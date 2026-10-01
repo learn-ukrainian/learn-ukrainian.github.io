@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+# scripts/agent_runtime/shims/npm — agent shim for npm and npx (#9460).
+#
+# Dispatch worktrees get `node_modules` and `site/node_modules` as symlinks into
+# the primary checkout. `npm ci` deletes its target folder first, so running it
+# in a worktree empties the primary's real folder through the link. This shim
+# (and `npx`, a symlink to it) asks scripts/agent_runtime/npm_guard.py whether
+# the call rewrites a node_modules that resolves outside its worktree; if so it
+# refuses with the safe alternative, otherwise it execs the real tool unchanged.
+# Read-only commands, installs into a real node_modules and global installs pass
+# through with their arguments, stdin, stdout, stderr and exit code intact.
+
+set -euo pipefail
+
+tool="${0##*/}"
+case "$tool" in
+  npm | npx) ;;
+  *) tool="npm" ;;
+esac
+
+_real_tool() {
+  local shim_dir pinned
+  shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+  if [[ "$tool" == "npx" ]]; then pinned="${AGENT_REAL_NPX:-}"; else pinned="${AGENT_REAL_NPM:-}"; fi
+  if [[ -n "$pinned" && "$pinned" != "$shim_dir/$tool" && "$pinned" != */scripts/agent_runtime/shims/"$tool" ]]; then
+    printf '%s\n' "$pinned"
+    return 0
+  fi
+
+  local path_entry
+  IFS=':' read -r -a _path_entries <<< "${AGENT_ORIGINAL_PATH:-${PATH:-}}"
+  for path_entry in "${_path_entries[@]}"; do
+    [[ -z "$path_entry" || "$path_entry" == "$shim_dir" || "$path_entry" == */scripts/agent_runtime/shims ]] && continue
+    if [[ -x "$path_entry/$tool" && ! -d "$path_entry/$tool" ]]; then
+      printf '%s\n' "$path_entry/$tool"
+      return 0
+    fi
+  done
+
+  return 1
+}
+
+shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd "$shim_dir/../../.." && pwd)"
+guard_python="$repo_root/.venv/bin/python"
+if [[ ! -x "$guard_python" ]]; then
+  echo "error: agent $tool shim cannot find the project interpreter ($guard_python); refusing to run $tool unguarded." >&2
+  exit 127
+fi
+
+guard_status=0
+"$guard_python" -I -S "$shim_dir/../npm_guard.py" "$tool" "$@" < /dev/null || guard_status=$?
+if ((guard_status != 0)); then
+  exit "$guard_status"
+fi
+
+real_tool="$(_real_tool)" || {
+  echo "error: could not locate the real $tool binary behind the agent shim." >&2
+  exit 127
+}
+
+exec "$real_tool" "$@"

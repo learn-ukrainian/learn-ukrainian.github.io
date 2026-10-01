@@ -355,6 +355,14 @@ Adapters should put per-call environment values in
 then applies explicit `InvocationPlan.env_unsets`. The merge guard runs
 after sanitization so its `gh`/`git` shims still receive the final `PATH`
 and can stamp `AGENT_NO_MERGE`, `AGENT_REAL_GH`, and `AGENT_REAL_GIT`.
+The same directory holds the `npm`/`npx` shim (#9460), active in every shell
+that has it on `PATH`: it refuses tree-writing commands (`ci`, `install`,
+`update`, `prune`, `dedupe`, `uninstall`, …, and package managers launched
+through `npx`) when the target `node_modules` resolves outside its worktree,
+such as the symlink into the primary checkout that dispatch worktrees receive.
+The decision lives in `scripts/agent_runtime/npm_guard.py`; everything else
+passes through to the real tool unchanged (`AGENT_REAL_NPM`/`AGENT_REAL_NPX`
+optionally pin it).
 
 ## Context file conventions
 
