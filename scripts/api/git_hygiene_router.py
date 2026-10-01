@@ -84,17 +84,17 @@ class CleanupReport(BaseModel):
     performance_ms: float
 
 
-def _git_invocation(args: list[str], cwd: Path) -> list[str]:
+def _git_dir_options(cwd: Path) -> list[str]:
     git_path = cwd / ".git"
     if git_path.is_file():
         line = git_path.read_text(encoding="utf-8").strip()
         if line.startswith("gitdir:"):
             raw_git_dir = Path(line.removeprefix("gitdir:").strip())
             git_dir = raw_git_dir if raw_git_dir.is_absolute() else cwd / raw_git_dir
-            return ["git", "--no-optional-locks", f"--git-dir={git_dir}", f"--work-tree={cwd}", *args]
+            return [f"--git-dir={git_dir}", f"--work-tree={cwd}"]
     if git_path.is_dir():
-        return ["git", "--no-optional-locks", f"--git-dir={git_path}", f"--work-tree={cwd}", *args]
-    return ["git", "--no-optional-locks", *args]
+        return [f"--git-dir={git_path}", f"--work-tree={cwd}"]
+    return []
 
 
 @dataclass(frozen=True)
@@ -125,7 +125,7 @@ def _run_git(
     try:
         env = sanitized_git_env()
         proc = subprocess.run(
-            _git_invocation(args, cwd),
+            ["git", "--no-optional-locks", *_git_dir_options(cwd), *args],
             cwd=cwd,
             env=env,
             input=input_text,

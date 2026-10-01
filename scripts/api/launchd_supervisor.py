@@ -528,7 +528,7 @@ def run_managed_api(
                 if stopped_by_launchd.is_set():
                     return 0
                 child = subprocess.Popen(
-                    command,
+                    command,  # lock-lint: ok the launch factory builds the API server command
                     cwd=launch_dir,
                     env=environment,
                     stdout=subprocess.PIPE,

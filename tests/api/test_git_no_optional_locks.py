@@ -108,21 +108,32 @@ def test_worktrees_router_status_leaves_index_untouched(stale_index_repo: Path) 
 
 
 @pytest.mark.parametrize(
-    "invocation",
+    "checkout,options",
     [
-        lambda cwd: git_hygiene_router._git_invocation(["status"], cwd),
-        lambda cwd: git_hygiene_router._git_invocation(["status"], cwd / "worktree"),
-        lambda cwd: git_hygiene_router._git_invocation(["status"], cwd / "plain"),
+        (".", lambda root: [f"--git-dir={root / '.git'}", f"--work-tree={root}"]),
+        (
+            "worktree",
+            lambda root: [f"--git-dir={root / 'worktree' / '..' / '.git'}", f"--work-tree={root / 'worktree'}"],
+        ),
+        ("plain", lambda _root: []),
     ],
 )
-def test_git_hygiene_invocation_puts_flag_before_subcommand(tmp_path: Path, invocation) -> None:
+def test_git_hygiene_invocation_puts_flag_before_subcommand(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, checkout: str, options
+) -> None:
     (tmp_path / ".git").mkdir()
     (tmp_path / "worktree").mkdir()
     (tmp_path / "worktree" / ".git").write_text("gitdir: ../.git\n", encoding="utf-8")
     (tmp_path / "plain").mkdir()
-    argv = invocation(tmp_path)
-    assert argv[:2] == ["git", _FLAG]
-    assert argv[-1] == "status"
+    seen: list[list[str]] = []
+
+    def _fake_run(argv: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        seen.append(list(argv))
+        return subprocess.CompletedProcess(argv, 0, stdout="", stderr="")
+
+    monkeypatch.setattr(git_hygiene_router.subprocess, "run", _fake_run)
+    git_hygiene_router._run_git(["status"], cwd=tmp_path / checkout)
+    assert seen == [["git", _FLAG, *options(tmp_path), "status"]]
 
 
 def test_repository_authority_git_passes_flag(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:

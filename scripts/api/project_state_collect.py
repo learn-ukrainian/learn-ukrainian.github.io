@@ -165,7 +165,7 @@ def _default_listener_pid(port: int) -> int | None:
     lsof = os.environ.get("SVC_LSOF_BIN", "lsof")
     try:
         result = subprocess.run(
-            [lsof, "-tiTCP:" + str(port), "-sTCP:LISTEN"],
+            [lsof, "-tiTCP:" + str(port), "-sTCP:LISTEN"],  # lock-lint: ok SVC_LSOF_BIN overrides lsof
             capture_output=True,
             text=True,
             timeout=2.0,
@@ -192,7 +192,7 @@ def _default_process_cwd(pid: int) -> Path | None:
     lsof = os.environ.get("SVC_LSOF_BIN", "lsof")
     try:
         result = subprocess.run(
-            [lsof, "-p", str(pid), "-d", "cwd", "-Fn"],
+            [lsof, "-p", str(pid), "-d", "cwd", "-Fn"],  # lock-lint: ok SVC_LSOF_BIN overrides lsof
             capture_output=True,
             text=True,
             timeout=2.0,
