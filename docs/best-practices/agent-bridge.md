@@ -356,13 +356,24 @@ then applies explicit `InvocationPlan.env_unsets`. The merge guard runs
 after sanitization so its `gh`/`git` shims still receive the final `PATH`
 and can stamp `AGENT_NO_MERGE`, `AGENT_REAL_GH`, and `AGENT_REAL_GIT`.
 The same directory holds the `npm`/`npx` shim (#9460), active in every shell
-that has it on `PATH`: it refuses tree-writing commands (`ci`, `install`,
-`update`, `prune`, `dedupe`, `uninstall`, …, and package managers launched
-through `npx`) when the target `node_modules` resolves outside its worktree,
-such as the symlink into the primary checkout that dispatch worktrees receive.
-The decision lives in `scripts/agent_runtime/npm_guard.py`; everything else
-passes through to the real tool unchanged (`AGENT_REAL_NPM`/`AGENT_REAL_NPX`
-optionally pin it).
+that has it on `PATH`. It decides from the worktree, not from npm's
+arguments: when `node_modules` or `site/node_modules` of the current git
+worktree resolves outside it (the symlinks into the primary checkout that
+dispatch worktrees receive), only clearly read-only calls run — `--version`
+or `--help`, and an allowlisted subcommand such as `run`, `test`, `ls`,
+`view` or `config get` with no install-like word (`ci`, `install`, `update`,
+`prune`, …) anywhere in the arguments. Everything else is refused, including
+`npx`, `npm exec` and global installs (`npm i -g`), and so are read-only
+calls the guard cannot classify, such as `npm view ci` or options with a
+separate value before the subcommand (write `--key=value`; `--prefix` and
+`--workspace` are understood). To install, `unlink` the link inside the
+worktree first so npm creates a worktree-local folder, or run the command
+outside the worktree. Without such a link every call passes through
+untouched. The decision lives in `scripts/agent_runtime/npm_guard.py`;
+`AGENT_REAL_NPM`/`AGENT_REAL_NPX` optionally pin the real tool. Not covered:
+calling npm by absolute path or through `node`, a `node_modules/.bin/npm`,
+a stripped `PATH`, pnpm/yarn directly, and a working directory outside any
+git worktree.
 
 ## Context file conventions
 

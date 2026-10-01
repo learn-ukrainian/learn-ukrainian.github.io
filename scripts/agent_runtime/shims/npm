@@ -4,11 +4,11 @@
 # Dispatch worktrees get `node_modules` and `site/node_modules` as symlinks into
 # the primary checkout. `npm ci` deletes its target folder first, so running it
 # in a worktree empties the primary's real folder through the link. This shim
-# (and `npx`, a symlink to it) asks scripts/agent_runtime/npm_guard.py whether
-# the call rewrites a node_modules that resolves outside its worktree; if so it
-# refuses with the safe alternative, otherwise it execs the real tool unchanged.
-# Read-only commands, installs into a real node_modules and global installs pass
-# through with their arguments, stdin, stdout, stderr and exit code intact.
+# (and `npx`, a symlink to it) asks scripts/agent_runtime/npm_guard.py first:
+# in a worktree where such a link resolves outside the worktree, only clearly
+# read-only calls run and everything else is refused with the safe alternative;
+# anywhere else every call passes through. Calls that run exec the real tool
+# with their arguments, stdin, stdout, stderr and exit code intact.
 
 set -euo pipefail
 
