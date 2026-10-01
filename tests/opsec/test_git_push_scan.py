@@ -1016,11 +1016,12 @@ def test_contains_accepts_only_a_consistent_reply_about_the_queried_head(head, b
     [
         pytest.param(b"tag v1\n\nclean\x00" + TOKEN.encode(), [(b"tag", b"v1")], ["clean\x00" + TOKEN], id="nul"),
         pytest.param(
-            b"tag v1\nmergetag object x\n tag continuation-is-not-a-field\n\nbody " + TOKEN.encode(),
-            [(b"tag", b"v1"), (b"mergetag", b"object x")],
+            b"tag v1\nmergetag object x\n tag continuation-is-not-a-field\n \n\nbody " + TOKEN.encode(),
+            [(b"tag", b"v1"), (b"mergetag", b"object x\ntag continuation-is-not-a-field\n")],
             ["body " + TOKEN],
             id="continuation",
         ),
+        pytest.param(b"\nheader-like line\n\n" + TOKEN.encode(), [], ["header-like line", "", TOKEN], id="opens-empty"),
         pytest.param(
             b"encoding ISO-8859-1\n\ncaf\xe9 " + TOKEN.encode(),
             [(b"encoding", b"ISO-8859-1")],
@@ -1036,7 +1037,138 @@ def test_contains_accepts_only_a_consistent_reply_about_the_queried_head(head, b
     ],
 )
 def test_split_object_keeps_every_reading_of_the_whole_message(raw, fields, expected):
-    found_fields, message = git_push.split_object(raw)
+    found_fields, message = git_push.split_object(raw, "commit[unit]")
     assert found_fields == fields
     assert message.split("\n")[: len(expected)] == expected
     assert TOKEN in message
+
+
+# --- Round 6: text embedded in mergetag headers, objects without a header/body separator ---
+
+
+def _signed_tag(cwd, target, name, message="clean release\n"):
+    """A tag git treats as signed: merging it embeds the whole tag object in a mergetag header."""
+    armor = "-----BEGIN PGP SIGNATURE-----\n\nAAAA\n-----END PGP SIGNATURE-----\n"
+    tag = _tag(cwd, target, "commit", name, (message + armor).encode())
+    _git(cwd, "update-ref", f"refs/tags/{name}", tag)
+    return name
+
+
+def _side(sandbox, branch, message="side work"):
+    """A commit on a new branch off the base, leaving the work tree on trunk."""
+    work = sandbox.work
+    _git(work, "checkout", "-q", "-b", branch, "trunk")
+    (work / f"{branch}.txt").write_text("side\n")
+    _git(work, "add", f"{branch}.txt")
+    _git(work, "commit", "-q", "-m", message)
+    sha = _git(work, "rev-parse", "HEAD")
+    _git(work, "checkout", "-q", "trunk")
+    return sha
+
+
+def _merge(sandbox, *tags):
+    _git(sandbox.work, "merge", "-q", "--no-ff", "-m", "clean merge", *tags)
+    merge = _git(sandbox.work, "rev-parse", "HEAD")
+    assert _git(sandbox.work, "cat-file", "commit", merge).count("\nmergetag ") == len(tags)
+    return merge
+
+
+def _cached(sandbox):
+    cache = sandbox.work / CACHE
+    return set(cache.read_text().split()) if cache.exists() else set()
+
+
+@pytest.mark.parametrize(
+    ("name", "message", "field"),
+    [
+        pytest.param("v1", f"clean release\n\nbody {TOKEN}\n", "message", id="embedded-message"),
+        pytest.param(f"v1-{TOKEN}", "clean release\n", "tagname", id="embedded-name"),
+    ],
+)
+def test_mergetag_hit_under_a_clean_merge_message_is_refused_and_never_cached(push_sandbox, name, message, field):
+    before = push_sandbox.remote_refs()
+    tag = _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), name, message)
+    merge = _merge(push_sandbox, tag)
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{merge[:12]}].mergetag[1].{field}")
+    assert f"commit[{merge[:12]}].message" not in result.stderr
+    assert merge not in _cached(push_sandbox)
+
+
+def test_clean_signed_tag_merge_still_delivers_and_is_cached(push_sandbox):
+    merge = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), "v1"))
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert result.returncode == 0, result.stderr
+    assert push_sandbox.remote_refs()["refs/heads/feature"] == merge
+    assert merge in _cached(push_sandbox)
+
+
+def test_octopus_merge_hit_in_the_second_mergetag_only_is_refused(push_sandbox):
+    before = push_sandbox.remote_refs()
+    first = _signed_tag(push_sandbox.work, _side(push_sandbox, "one"), "v1")
+    second = _signed_tag(push_sandbox.work, _side(push_sandbox, "two"), "v2", f"clean release\n\nbody {TOKEN}\n")
+    merge = _merge(push_sandbox, first, second)
+    result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
+    assert_blocked(result, push_sandbox, before, f"commit[{merge[:12]}].mergetag[2].message")
+    assert "mergetag[1]" not in result.stderr
+    assert merge not in _cached(push_sandbox)
+
+
+def test_mergetag_hit_in_an_already_public_merge_is_excused(push_sandbox, monkeypatch, capfd):
+    """The merge commit carries the embedded tag, so a public merge has already published it."""
+    merge = _merge(push_sandbox, _signed_tag(push_sandbox.work, _side(push_sandbox, "side"), f"v1-{TOKEN}"))
+    push_sandbox.commit("new clean work")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(merge))
+    err = capfd.readouterr().err
+    assert status == 0 and executed, err
+    assert "1 hit(s) excused as already public" in err and TOKEN not in err
+    assert merge not in _cached(push_sandbox)
+
+
+def test_commit_without_a_header_body_separator_is_refused_and_never_cached(push_sandbox):
+    before = push_sandbox.remote_refs()
+    tree, parent = _git(push_sandbox.work, "rev-parse", "HEAD^{tree}"), _git(push_sandbox.work, "rev-parse", "HEAD")
+    identity = "unit <unit@example.invalid> 0 +0000"
+    raw = f"tree {tree}\nparent {parent}\nauthor {identity}\ncommitter {identity}\nclean subject {TOKEN}\n"
+    sha = _object(push_sandbox.work, "commit", raw.encode())
+    result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
+    assert result.returncode == 2, result.stderr
+    assert f"OPSEC: commit[{sha[:12]}] has no header/body separator; push refused." in result.stderr
+    assert TOKEN not in result.stderr and TOKEN not in result.stdout
+    assert push_sandbox.remote_refs() == before
+    assert sha not in _cached(push_sandbox)
+
+
+def test_tag_without_a_header_body_separator_is_refused(push_sandbox):
+    before = push_sandbox.remote_refs()
+    head = _git(push_sandbox.work, "rev-parse", "HEAD")
+    raw = f"object {head}\ntype commit\ntag v1\ntagger unit <unit@example.invalid> 0 +0000\nrelease {TOKEN}\n"
+    tag = _object(push_sandbox.work, "tag", raw.encode())
+    result = push_sandbox.push("push", "origin", f"{tag}:refs/tags/v1")
+    assert result.returncode == 2, result.stderr
+    assert f"OPSEC: tag[{tag[:12]}] has no header/body separator; push refused." in result.stderr
+    assert TOKEN not in result.stderr and TOKEN not in result.stdout
+    assert push_sandbox.remote_refs() == before
+
+
+def test_mergetag_without_a_header_body_separator_is_refused(push_sandbox):
+    before = push_sandbox.remote_refs()
+    tree, parent = _git(push_sandbox.work, "rev-parse", "HEAD^{tree}"), _git(push_sandbox.work, "rev-parse", "HEAD")
+    identity = "unit <unit@example.invalid> 0 +0000"
+    raw = (
+        f"tree {tree}\nparent {parent}\nauthor {identity}\ncommitter {identity}\n"
+        f"mergetag object {parent}\n type commit\n tag v1\n release {TOKEN}\n\nclean merge\n"
+    )
+    sha = _object(push_sandbox.work, "commit", raw.encode())
+    result = push_sandbox.push("push", "origin", f"{sha}:refs/heads/feature")
+    assert result.returncode == 2, result.stderr
+    assert f"OPSEC: commit[{sha[:12]}].mergetag[1] has no header/body separator; push refused." in result.stderr
+    assert TOKEN not in result.stderr and push_sandbox.remote_refs() == before
+    assert sha not in _cached(push_sandbox)
+
+
+@pytest.mark.parametrize("raw", [b"tag v1\nno separator " + TOKEN.encode(), b" opening continuation\n\nbody"])
+def test_split_object_refuses_text_outside_any_message(raw):
+    with pytest.raises(gate.PublishBlocked) as raised:
+        git_push.split_object(raw, "commit[unit]")
+    assert str(raised.value).startswith("OPSEC: commit[unit] ") and TOKEN not in str(raised.value)

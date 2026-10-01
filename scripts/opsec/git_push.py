@@ -3,7 +3,8 @@
 The agent git shim executes this file for push commands. A dry run asks git
 which refs the push names and where it sends them. For every public
 destination the ref names, annotated tag names and messages and the whole raw
-messages of every commit reachable from the pushed tips are scanned through check_texts, except
+messages of every commit reachable from the pushed tips, with the tag names
+and messages embedded in their mergetag headers, are scanned through check_texts, except
 commits that this machine's earlier push scans found clean (CleanCache, kept
 in the repository's common git directory). A commit whose message has a
 blocking finding is excused only when the catalogue's canonical public
@@ -444,17 +445,32 @@ def _short_ref(target: str) -> tuple[str, str]:
     return "ref", target
 
 
-def split_object(raw: bytes) -> tuple[list[tuple[bytes, bytes]], str]:
+def split_object(raw: bytes, position: str) -> tuple[list[tuple[bytes, bytes]], str]:
     """Header fields and the whole message of a raw commit or tag object.
 
-    The message is everything after the first blank line, as git reads it,
+    The message is everything after the first empty line, as git reads it,
     NUL bytes included. It is decoded as UTF-8 and, when an encoding header
     names another codec that decodes it differently, that reading follows, so
-    the scan covers what either kind of reader shows.
+    the scan covers what either kind of reader shows. A continuation line (one
+    leading space) is unfolded into the value of the field it continues, as
+    git reads a mergetag header. An object without that empty line, or whose
+    headers open with a continuation, would deliver text no reader calls a
+    message, so it is refused naming only position.
     """
-    header, _, body = raw.partition(b"\n\n")
-    # A continuation line starts with a space, so its key is empty and it is skipped.
-    fields = [(key, value) for key, _, value in (line.partition(b" ") for line in header.split(b"\n")) if key]
+    # A leading newline lets an object that opens with the empty line split like any other.
+    header, separator, body = (b"\n" + raw).partition(b"\n\n")
+    if not separator:
+        raise gate.PublishBlocked(f"OPSEC: {position} has no header/body separator; push refused.")
+    fields: list[tuple[bytes, bytes]] = []
+    for line in header[1:].split(b"\n"):
+        if line.startswith(b" "):
+            if not fields:
+                raise gate.PublishBlocked(f"OPSEC: {position} headers malformed; push refused.")
+            key, value = fields[-1]
+            fields[-1] = (key, value + b"\n" + line[1:])
+        elif line:
+            key, _, value = line.partition(b" ")
+            fields.append((key, value))
     message = body.decode("utf-8", "replace")
     declared = next((value for key, value in fields if key == b"encoding"), None)
     if declared is not None:
@@ -467,16 +483,24 @@ def split_object(raw: bytes) -> tuple[list[tuple[bytes, bytes]], str]:
     return fields, message
 
 
-def commit_messages(repository: Repository, shas: list[str]) -> list[tuple[str, str]]:
-    """(id, whole message) of each commit, read from the raw objects.
+def tag_name(fields: list[tuple[bytes, bytes]]) -> str:
+    """Every tag header value of a split tag object."""
+    return "\n".join(value.decode("utf-8", "replace") for key, value in fields if key == b"tag")
+
+
+def commit_texts(repository: Repository, shas: list[str]) -> list[tuple[str, list[tuple[str, str]]]]:
+    """(id, [(field, text)]) of each commit, read from the raw objects.
 
     %B in a --format stops at the first NUL, so a message with a NUL would be
     scanned only up to it and then cached clean. Reading the raw object scans
     every byte of the message at no more cost than refusing such messages,
-    which would also need the raw object to see the NUL.
+    which would also need the raw object to see the NUL. A merge of a signed
+    tag carries the whole tag object in a mergetag header, so its name and
+    message are published with the commit and scanned as its fields.
+    Identity lines and signatures are not.
     """
     output = repository.raw("cat-file", "--batch", stdin="".join(f"{sha}\n" for sha in shas))
-    found: list[tuple[str, str]] = []
+    found: list[tuple[str, list[tuple[str, str]]]] = []
     position = 0
     try:
         for sha in shas:
@@ -486,7 +510,14 @@ def commit_messages(repository: Repository, shas: list[str]) -> list[tuple[str, 
             stop = start + int(size)
             if name != sha or kind != "commit" or output[stop : stop + 1] != b"\n":
                 raise ValueError
-            found.append((sha, split_object(output[start:stop])[1]))
+            fields, message = split_object(output[start:stop], f"commit[{sha[:12]}]")
+            parts = [("message", message)]
+            embedded = [value for key, value in fields if key == b"mergetag"]
+            for number, value in enumerate(embedded, start=1):
+                field = f"mergetag[{number}]"
+                tag_fields, tag_message = split_object(value, f"commit[{sha[:12]}].{field}")
+                parts += [(f"{field}.tagname", tag_name(tag_fields)), (f"{field}.message", tag_message)]
+            found.append((sha, parts))
             position = stop + 1
     except (ValueError, UnicodeError):
         raise gate.PublishBlocked("OPSEC: push scan commit read malformed; push refused.") from None
@@ -517,10 +548,10 @@ def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[s
         if current is None:
             raise gate.PublishBlocked("OPSEC: pushed object unresolved; push refused.")
         while repository.text("cat-file", "-t", current).strip() == "tag":
-            fields, message = split_object(repository.raw("cat-file", "tag", current))
+            fields, message = split_object(repository.raw("cat-file", "tag", current), f"tag[{current[:12]}]")
             if current not in seen_tags:
                 seen_tags.add(current)
-                texts.append("\n".join(value.decode("utf-8", "replace") for key, value in fields if key == b"tag"))
+                texts.append(tag_name(fields))
                 names.append(f"tag[{current[:12]}].tagname")
                 texts.append(message)
                 names.append(f"tag[{current[:12]}].message")
@@ -565,7 +596,9 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
         names += labels
         tips += pushed
     commits: list[str] = []
+    owners: list[str] = []  # The commit each commit text belongs to, from texts[first] on.
     excused: set[int] = set()
+    excused_commits: set[str] = set()
     if tips:
         common_dir, grafted, shallow = repository.layout()
         if grafted:
@@ -585,27 +618,32 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
         # Messages already public need no scan; the two caches never share an id by construction.
         skipped_public = sum(sha in known_public for sha in reachable)
         pending = [sha for sha in reachable if sha not in cached and sha not in known_public]
-        for sha, message in commit_messages(repository, pending):
+        for sha, parts in commit_texts(repository, pending):
             commits.append(sha)
-            texts.append(message)
-            names.append(f"commit[{sha[:12]}].message")
-    first = len(texts) - len(commits)
+            for field, text in parts:
+                texts.append(text)
+                names.append(f"commit[{sha[:12]}].{field}")
+                owners.append(sha)
+    first = len(texts) - len(owners)
 
     def excuse(indices: set[int]) -> set[int]:
-        """Indices of hit commit messages the canonical public repository already has."""
-        hits = {commits[index - first]: index for index in sorted(indices) if index >= first}
+        """Indices of hit commit texts whose commit the canonical public repository already has."""
+        owning = {owners[index - first] for index in indices if index >= first}
+        # Newest first, as rev-list listed them.
+        hits = [sha for sha in commits if sha in owning]
         if not hits:
             return set()
         nonlocal public_repository
         if public_repository is None:
             public_repository = CanonicalPublicRepository.from_catalog(environment)
-        found = already_public(repository, list(hits), public_repository)
+        found = already_public(repository, hits, public_repository)
         if found:
             try:
                 public_cache.record(sorted(found), full=True)
             except OSError:
                 print("OPSEC: push scan public cache not updated.", file=sys.stderr)
-        excused.update(hits[sha] for sha in found)
+        excused_commits.update(found)
+        excused.update(index for index in indices if index >= first and owners[index - first] in found)
         return set(excused)
 
     label = ",".join(dict.fromkeys(public)) if public else private[0]
@@ -617,13 +655,14 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, pu
             print(
                 f"OPSEC: push scan: {len(pending)} commit message(s) scanned, "
                 f"{len(reachable) - len(pending) - skipped_public} skipped as already scanned clean here, "
-                f"{skipped_public + len(excused)} hit(s) excused as already public "
+                f"{skipped_public + len(excused_commits)} hit(s) excused as already public "
                 f"({calls} public repository call(s)).",
                 file=sys.stderr,
             )
     if commits:
-        # Only commits whose own message had no blocking finding; excused and overridden hits are never cached.
-        clean = [sha for index, sha in enumerate(commits, start=first) if index not in blocked and index not in excused]
+        # Only commits none of whose texts had a blocking finding; excused and overridden hits are never cached.
+        dirty = {owners[index - first] for index in blocked | excused if index >= first}
+        clean = [sha for sha in commits if sha not in dirty]
         try:
             # Commits skipped as public never belong in the clean cache, so they do not make the scan partial.
             cache.record(clean, full=len(pending) == len(reachable) - skipped_public)
