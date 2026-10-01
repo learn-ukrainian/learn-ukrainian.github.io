@@ -6,8 +6,8 @@ from unittest.mock import patch
 
 from scripts.audit.curriculum_manifest_canary import (
     collect_curriculum_files,
-    compute_root_tree_hash,
     main,
+    update_manifest_entries,
     verify_manifest,
     write_manifest,
 )
@@ -86,19 +86,37 @@ def test_collect_curriculum_files(tmp_path: Path):
     assert not any("/review/" in p for p in paths)
 
 
-def test_compute_root_tree_hash():
-    entries1 = [
-        {"path": "a.md", "sha256": "1" * 64},
-        {"path": "b.md", "sha256": "2" * 64},
-    ]
-    entries2 = [
-        {"path": "a.md", "sha256": "1" * 64},
-        {"path": "b.md", "sha256": "3" * 64},
-    ]
-    h1 = compute_root_tree_hash(entries1)
-    h2 = compute_root_tree_hash(entries2)
-    assert h1 != h2
-    assert len(h1) == 64
+def test_update_manifest_entries_scoped(tmp_path: Path):
+    repo, manifest_path = _setup_mock_repo(tmp_path)
+    write_manifest(manifest_path, repo)
+
+    # 1. Update single modified file
+    target_file = repo / "site" / "src" / "content" / "docs" / "a1" / "lesson-1.mdx"
+    target_file.write_text("# Updated Lesson 1\nNew text", encoding="utf-8")
+
+    # Before update, verify detects modification
+    res_before = verify_manifest(manifest_path, repo)
+    assert res_before["valid"] is False
+    assert len(res_before["modified"]) == 1
+
+    # Scope update to only this file
+    updated_payload = update_manifest_entries([target_file], manifest_path, repo)
+    assert len(updated_payload["files"]) == 10
+
+    # After scoped update, verify passes
+    res_after = verify_manifest(manifest_path, repo)
+    assert res_after["valid"] is True
+
+    # 2. Scope update for deleted file
+    target_file.unlink()
+    res_del_before = verify_manifest(manifest_path, repo)
+    assert res_del_before["valid"] is False
+    assert len(res_del_before["deleted"]) == 1
+
+    update_manifest_entries([target_file], manifest_path, repo)
+    res_del_after = verify_manifest(manifest_path, repo)
+    assert res_del_after["valid"] is True
+    assert res_del_after["total_files"] == 9
 
 
 def test_write_and_verify_manifest_success(tmp_path: Path):
@@ -241,3 +259,11 @@ def test_main_cli_flow(tmp_path: Path):
 
     exit_tampered = main(["--check", "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
     assert exit_tampered == 1
+
+    # Update via CLI for the tampered file
+    exit_update = main(["--update", str(tampered_file), "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
+    assert exit_update == 0
+
+    # Check passes after CLI update
+    exit_check_after = main(["--check", "--manifest-path", str(manifest_path), "--repo-root", str(repo)])
+    assert exit_check_after == 0

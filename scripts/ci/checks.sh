@@ -24,6 +24,9 @@ check() {
 # Lint only; `ruff format --check` is not a gate (~2,050 files differ).
 check "Ruff" .venv/bin/python -m ruff check scripts/ tests/ agents_extensions/ dashboards/
 
+# Cryptographic curriculum manifest canary: runs before any generator to inspect untouched tree
+check "Curriculum manifest canary" .venv/bin/python scripts/audit/curriculum_manifest_canary.py --check
+
 plan_validate() {
   # pull_request: only when the v2 plan inputs changed; other events always.
   if [ "${EVENT_NAME:-}" = pull_request ] && [ -z "$(git diff --name-only origin/main...HEAD -- \
@@ -69,7 +72,6 @@ check "Locked module not published" .venv/bin/python scripts/audit/check_locked_
 check "MDX generation drift" .venv/bin/python scripts/audit/check_mdx_generation_drift.py --changed-vs-base origin/main
 check "Atlas manifest freshness" .venv/bin/python scripts/lexicon/check_manifest_freshness.py
 check "Atlas manifest enrichment" .venv/bin/python scripts/audit/check_atlas_manifest_enrichment.py
-check "Curriculum manifest canary" .venv/bin/python scripts/audit/curriculum_manifest_canary.py --check
 check "Static practice assets" .venv/bin/python scripts/audit/check_static_practice_assets.py
 check "Dossier word counts" .venv/bin/python scripts/audit/check_dossier_wordcount.py --changed
 check "Validate BIO preparation capsules and active holds" .venv/bin/python -m scripts.ci.bio_preparation_gate

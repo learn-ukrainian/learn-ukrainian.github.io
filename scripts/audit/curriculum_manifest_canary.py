@@ -106,14 +106,6 @@ def collect_curriculum_files(repo_root: Path = ROOT) -> list[dict[str, str]]:
     return sorted_entries
 
 
-def compute_root_tree_hash(entries: list[dict[str, str]]) -> str:
-    """Compute a single aggregate cryptographic hash over all sorted path:hash pairs."""
-    hasher = hashlib.sha256()
-    for entry in entries:
-        hasher.update(f"{entry['path']}:{entry['sha256']}\n".encode())
-    return hasher.hexdigest()
-
-
 def build_manifest_payload(repo_root: Path = ROOT) -> dict[str, Any]:
     """Build the complete deterministic manifest dictionary."""
     files = collect_curriculum_files(repo_root)
@@ -132,6 +124,52 @@ def write_manifest(manifest_path: Path = DEFAULT_MANIFEST_PATH, repo_root: Path 
     content = json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
     manifest_path.write_text(content, encoding="utf-8")
     return payload
+
+
+def update_manifest_entries(
+    paths: list[str | Path],
+    manifest_path: Path = DEFAULT_MANIFEST_PATH,
+    repo_root: Path = ROOT,
+) -> dict[str, Any]:
+    """Update only the specified paths in the manifest, leaving all other entries untouched."""
+    manifest_path = manifest_path.resolve()
+    repo_root = repo_root.resolve()
+    if not manifest_path.exists():
+        return write_manifest(manifest_path, repo_root)
+
+    try:
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise ValueError(f"Failed to parse existing manifest: {exc}") from exc
+
+    file_dict = {
+        entry["path"]: entry["sha256"]
+        for entry in data.get("files", [])
+        if isinstance(entry, dict) and "path" in entry and "sha256" in entry
+    }
+
+    for p in paths:
+        target = Path(p)
+        if not target.is_absolute():
+            target = (repo_root / target).resolve()
+        try:
+            rel_posix = target.relative_to(repo_root).as_posix()
+        except ValueError:
+            continue
+        if not _is_path_included(rel_posix):
+            continue
+        if target.is_file():
+            file_dict[rel_posix] = _sha256_bytes(target.read_bytes())
+        elif not target.exists() and rel_posix in file_dict:
+            del file_dict[rel_posix]
+
+    data["schema_version"] = SCHEMA_VERSION
+    data["scope"] = SCOPE
+    data["files"] = [{"path": path, "sha256": file_dict[path]} for path in sorted(file_dict.keys())]
+
+    content = json.dumps(data, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    manifest_path.write_text(content, encoding="utf-8")
+    return data
 
 
 def verify_manifest(
@@ -240,6 +278,12 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Compute hashes and write updated manifest to disk.",
     )
+    group.add_argument(
+        "--update",
+        nargs="+",
+        metavar="PATH",
+        help="Update SHA-256 hashes for only the specified changed files in the manifest.",
+    )
     parser.add_argument(
         "--manifest-path",
         type=Path,
@@ -269,6 +313,13 @@ def main(argv: list[str] | None = None) -> int:
         payload = write_manifest(args.manifest_path, args.repo_root)
         print(
             f"[curriculum_manifest_canary] Manifest written successfully: {len(payload['files'])} files"
+        )
+        return 0
+
+    if args.update:
+        payload = update_manifest_entries(args.update, args.manifest_path, args.repo_root)
+        print(
+            f"[curriculum_manifest_canary] Manifest updated for {len(args.update)} path(s) successfully"
         )
         return 0
 
