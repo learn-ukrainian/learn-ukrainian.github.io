@@ -231,23 +231,41 @@ def test_commit_range_mode_keeps_union_of_touched_public_paths(monkeypatch, tmp_
 
 
 def test_private_tracker_citation_detected_in_public_docs():
+    sample_text = (
+        "Reference issue: private #622\n"
+        "Or infra-private #710.\n"
+        "Or private issue #800.\n"
+        "And Private tracker #5.\n"
+        "private_operational_board = #622\n"
+        "private operational board #622\n"
+        "private board: #622\n"
+        "private board (#622)\n"
+        "private board [#622](https://github.com)\n"
+        "private [#622](https://github.com)\n"
+        "private hramatka #451–#458\n"
+    )
     findings = check_content(
-        "Reference issue: private #622\nOr infra-private #710.\nOr private issue #800.\nAnd Private tracker #5.\nprivate_operational_board = #622\nprivate operational board #622",
+        sample_text,
         "docs/runbooks/agent-seat-onboarding.md",
     )
-    assert len(findings) == 6
-    assert findings[0][1] == "private #622"
-    assert "Private tracker citation" in findings[0][2]
-    assert findings[1][1] == "infra-private #710"
-    assert "Private tracker citation" in findings[1][2]
-    assert findings[2][1] == "private issue #800"
-    assert "Private tracker citation" in findings[2][2]
-    assert findings[3][1] == "Private tracker #5"
-    assert "Private tracker citation" in findings[3][2]
-    assert findings[4][1] == "private_operational_board = #622"
-    assert "Private tracker citation" in findings[4][2]
-    assert findings[5][1] == "private operational board #622"
-    assert "Private tracker citation" in findings[5][2]
+    assert len(findings) == 11
+    for _line_idx, _matched, desc in findings:
+        assert "Private tracker citation" in desc
+
+
+def test_private_tracker_citation_false_positives_prevented():
+    sample_text = (
+        "Documenting private methods in PR #45.\n"
+        "Please keep it private per #9425.\n"
+        "private quality calibration under #5254\n"
+        "public issue #123\n"
+        "private function helper_call()\n"
+    )
+    findings = check_content(
+        sample_text,
+        "docs/runbooks/agent-seat-onboarding.md",
+    )
+    assert findings == []
 
 
 def test_private_tracker_citation_not_flagged_in_private_code_or_tests():

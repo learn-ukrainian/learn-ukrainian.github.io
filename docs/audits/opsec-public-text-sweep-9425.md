@@ -59,11 +59,12 @@ Findings identified across the denominator were grouped into four distinct opera
 | `docs/runbooks/atlas-job-protocol.md` | Cat C | Neutralized explicit hosting provider references. | Retained atlas job execution protocol and failure isolation. |
 | `docs/runbooks/clear-stale-git-lock.md` | Cat C | Removed absolute local host path `/home/ops/learn-ukrainian/.venv/bin/python`. | Retained exact command invocation using standard `.venv/bin/python`. |
 | `docs/runbooks/data-backup.md` | Cat C | Neutralized cloud provider desktop sync mount name, lu-gdrive remote, OAuth renewal details, and scheduled job label. | Retained backup initialization and execution procedures using generic remote placeholder and documented LU_BACKUP_ENV_FILE path. |
+| `docs/runbooks/grok-bot-qa-observer.md` | Cat D | Neutralized internal tracking issue citation from line 79 to paired private tracking issues. | Retained operational QA review evidence notes without exposing private tracker names or issue numbers. |
 | `docs/runbooks/storage-topology.md` | Cat C | Neutralized NTFS share name (`Get-SmbShare -Name UkrainianData` -> `Get-SmbShare`), Drive path, listener counts, systemd dropin numbers, and Mac/Finder cache reclaim phrasing. | Retained full storage topology layout, migration window steps, and exit status 78 guard behavior. |
 | `docs/runbooks/teacher-curated-seed-rebuild.md` | Cat C | Neutralized concrete cloud drive recovery and curriculum paths (`/absolute/path/to/My Drive/Projects/...`). | Retained teacher-curated seed rebuild workflow using generic path placeholders. |
 | `agents_extensions/shared/hooks/guard-pr-merge.py` | Cat B | Neutralized historical private repo 403 API response disclosures in docstring and _FOOTER. | Retained fail-closed merge guard enforcement logic and exact command checking. |
-| `scripts/audit/lint_opsec_leaks.py` | Tooling | Added Category D private tracker pattern detection (`\b(?:private|infra-private)\s*(?:issue|tracker|repo|ticket)?\s*#[0-9]+\b`) for public documentation and agent rule paths. | Automates enforcement so private tracker citations in public text are blocked in local pre-commit and pre-push hooks. |
-| `tests/test_opsec_linter.py` | Tooling | Added unit tests verifying Category D private tracker citation detection in public agent docs and rules. | Verified via pytest (19/19 passing). |
+| `scripts/audit/lint_opsec_leaks.py` | Tooling | Added Category D private tracker pattern detection with targeted qualifiers, colons, parens, and markdown links for public documentation and agent rule paths. | Automates enforcement so private tracker citations in public text are blocked in local pre-commit and pre-push hooks while preventing false positives. |
+| `tests/test_opsec_linter.py` | Tooling | Added unit tests verifying Category D private tracker citation detection in public agent docs/rules and false positive prevention. | Verified via pytest (20/20 passing). |
 | `tests/test_agent_seat_onboarding_docs.py` | Hygiene | Updated test assertion to match neutralized public citation `#6943`. | Fully passing (41/41 tests pass). |
 
 ---
@@ -126,17 +127,23 @@ Per the issue residual policy, items outside the documentation sweep or belongin
    - **Description:** Python hook contains an exception handling path naming the private repository.
    - **Owner:** Infra Driver.
 
-7. **Open-Model Data Delivery Plan Private Tracker Citation:**
-   - **Path:** `docs/projects/open-model-data/cyrillic-slavic-dataset-delivery-plan.md:17`
+7. **Open-Model Data Delivery Plan Private Tracker Citations:**
+   - **Path:** `docs/projects/open-model-data/cyrillic-slavic-dataset-delivery-plan.md:17,181`
    - **Category:** Category D (Private Tracker Citations)
-   - **Description:** Document outside denominator roots contains cross-reference to internal operational board.
-   - **Owner:** Open-Model-Data Driver / Infra Driver.
+   - **Description:** Delivery plan document outside denominator roots contains cross-references to internal operational board tracker issues at lines 17 and 181.
+   - **Owner:** Open-Model-Data Driver.
 
 8. **V4 Runtime Python Package Private Tracker Citations:**
-   - **Path:** `packages/v4-runtime/src/learn_ukrainian_v4_runtime/v4_a3_heldout_family_assignment.py:61` (and related provenance blobs)
+   - **Path:** `packages/v4-runtime/src/learn_ukrainian_v4_runtime/` (~15 Python modules including `v4_a3_builder_packet.py`, `v4_a4`–`v4_a13`, `v4_per_slot_private_factory.py`, `v4_public_slot_commitment_assignment.py`, `v4_source_byte_ingestion_admission.py`, `v4_a3_heldout_family_assignment.py`, and 13 provenance JSON blobs)
    - **Category:** Category D (Private Tracker Citations)
-   - **Description:** Python package files outside denominator roots reference private issue tracker citation.
-   - **Owner:** Open-Model-Data Driver / Infra Driver.
+   - **Description:** Python package runtime modules and provenance JSON blobs outside denominator roots carry `"private_operational_board": 622`.
+   - **Owner:** Open-Model-Data Driver.
+
+9. **Historical Design Document Private Tracker Citations:**
+   - **Path:** `docs/design/2026-09-06-cloud-agent-pytest-advisory.md:27` and `docs/design/control-plane-storage-seam.md:1,88`
+   - **Category:** Category D (Private Tracker Citations)
+   - **Description:** Historical architectural design documents outside denominator roots cite internal issue tracker numbers at line 27 and lines 1 and 88.
+   - **Owner:** Infra Driver.
 
 ---
 
@@ -440,7 +447,7 @@ The following table records the verification disposition of every tracked file i
 | 274 | `docs/runbooks/fleet-comms-open-gaps.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 275 | `docs/runbooks/formal-review-attempt-isolation.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 276 | `docs/runbooks/gemini-orchestrator.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
-| 277 | `docs/runbooks/grok-bot-qa-observer.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
+| 277 | `docs/runbooks/grok-bot-qa-observer.md` | `docs` | **NEUTRALIZED** | Cat D: Neutralized internal tracking issue citation from line 79 to paired private tracking issues |
 | 278 | `docs/runbooks/grok-formal-cf-isolation.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 279 | `docs/runbooks/grok-hook-profile.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |
 | 280 | `docs/runbooks/grok-session-canary.md` | `docs` | **CLEAN** | Verified clean across Categories A–D |

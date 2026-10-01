@@ -92,7 +92,7 @@ _PUBLIC_PERSONAL_IDENTIFIER_ROOTS = (
 
 # Category D: Private tracker citations in public documentation and agent rules
 _PRIVATE_TRACKER_PATTERN = re.compile(
-    r"\b(?:private|infra[-_]private)(?:[_\s]+[a-z0-9_-]+){0,3}?[_\s]*(?:issue|tracker|repo|ticket|board)?[_\s]*=?\s*#[0-9]+\b",
+    r"\b(?:private|infra[-_]private)(?:[_\s]+(?:operational|infrastructure|infra|dataset|task|qa|tracking))*(?:[_\s]+(?:issue|issues|tracker|repo|repository|ticket|tickets|board|hramatka))?[_\s:=(\[]*#[0-9]+\b",
     re.IGNORECASE,
 )
 
