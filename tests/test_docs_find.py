@@ -7,6 +7,8 @@ real-tree checks, including the dev-set lookups, live in
 import ast
 import json
 import subprocess
+import sys
+import time
 import unicodedata
 from pathlib import Path
 
@@ -166,7 +168,10 @@ def test_phrase_ranks_current_then_historical_then_backup_and_never_the_private_
     assert backup['status'] == 'superseded' and backup['superseded_by'] == 'docs/resources/list.txt'
     assert backup['backup_like'] is True
     assert PRIVATE not in paths_of(result)
-    assert result['outcome'] == 'found' and not result['coverage']['incomplete']
+    assert result['outcome'] == 'found'
+    # the one-character word '1' is reported as not searched alone; nothing else cut the search
+    assert result['coverage']['incomplete_reasons'] == [
+        "content_search_skipped: one-character word(s) '1' not searched alone in text"]
 
 
 def test_lifecycle_rank_is_what_orders_equal_matches(repo, monkeypatch):
@@ -241,8 +246,11 @@ def test_nfc_and_nfd_text_and_queries_meet(repo):
                                    'a\nb', f'{ESC}[31m', "'; rm -rf /", '(?i)', '--output=pwned x'])
 def test_hostile_queries_are_literal_text(repo, query):
     result = find(query, repo=repo)
-    assert result['outcome'] in ('found', 'no_match')
-    assert not result['coverage']['incomplete'], result['coverage']
+    assert result['outcome'] in ('found', 'no_match', 'incomplete')
+    # no Git error or option injection: the only allowed reason is a reported one-character word
+    reasons = result['coverage']['incomplete_reasons']
+    assert all(r.startswith('content_search_skipped: ') for r in reasons), reasons
+    assert result['outcome'] != 'incomplete' or reasons
     assert not (repo / 'pwned').exists()
 
 
@@ -277,6 +285,124 @@ def test_limit_bounds(repo, limit):
     with pytest.raises(FindError) as caught:
         find('guide', limit, repo=repo)
     assert caught.value.code == 'limit'
+
+
+BAD_LIMITS = [True, False, 1.5, 5.0, '5', None, float('nan'), float('inf'), 10 ** 30]
+
+
+@pytest.mark.parametrize('limit', BAD_LIMITS, ids=repr)
+def test_limit_must_be_a_whole_number_not_a_bool_float_or_text(repo, limit):
+    with pytest.raises(FindError) as caught:
+        find('guide', limit, repo=repo)
+    assert caught.value.code == 'limit' and caught.value.message == find_module.LIMIT_MESSAGE
+
+
+BAD_BUDGETS = [float('inf'), float('-inf'), float('nan'), 1e100, 10 ** 400, 10 ** 30, -1, -0.5, 0, 0.0, -0.0,
+               True, False, '5', None, find_module.MAX_BUDGET_SECONDS + 0.001, 2 ** 63]
+
+
+@pytest.fixture
+def no_search_starts(monkeypatch):
+    """Fail the test if any search process or timer starts."""
+    def refuse(*_args, **_kwargs):
+        raise AssertionError('a search started for a rejected request')
+    monkeypatch.setattr(find_module.subprocess, 'Popen', refuse)
+    monkeypatch.setattr(find_module.threading, 'Timer', refuse)
+
+
+@pytest.mark.parametrize('budget', BAD_BUDGETS, ids=repr)
+def test_bad_budgets_are_a_typed_error_before_any_search(repo, no_search_starts, budget):
+    with pytest.raises(FindError) as caught:
+        find('guide', repo=repo, budget_seconds=budget)
+    assert caught.value.code == 'budget' and caught.value.message == find_module.BUDGET_MESSAGE
+    assert isinstance(caught.value, ValueError)
+
+
+@pytest.mark.parametrize('budget', [1, 0.5, find_module.MAX_BUDGET_SECONDS, int(find_module.MAX_BUDGET_SECONDS)])
+def test_good_budgets_are_accepted(repo, budget):
+    assert find('handbook', repo=repo, budget_seconds=budget)['outcome'] == 'found'
+
+
+def test_a_failing_search_worker_is_incomplete_never_a_traceback(fresh_repo, monkeypatch, capsys):
+    # The defect class: an exception inside a worker (here the timer, as OverflowError did
+    # for an infinite budget) escaped as a traceback while the result said complete.
+    class Exploding:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def start(self):
+            raise OverflowError('timeout value is too large')
+
+        def cancel(self):
+            pass
+    started = []
+    real_popen = find_module.subprocess.Popen
+
+    def popen(*args, **kwargs):
+        started.append(proc := real_popen(*args, **kwargs))
+        return proc
+    monkeypatch.setattr(find_module.threading, 'Timer', Exploding)
+    monkeypatch.setattr(find_module.subprocess, 'Popen', popen)
+    result = find('zzqq', repo=fresh_repo)
+    assert result['outcome'] == 'incomplete' and result['coverage']['incomplete']
+    assert result['coverage']['incomplete_reasons'] == ["error: the search for 'zzqq' did not finish (OverflowError)"]
+    assert started and all(proc.poll() is not None for proc in started)  # no search left running
+    assert main(['zzqq', '--repo', str(fresh_repo)]) == 5
+    captured = capsys.readouterr()
+    assert 'INCOMPLETE' in captured.out and 'Traceback' not in captured.out + captured.err
+
+
+def test_a_failed_search_never_leaves_its_process_running(monkeypatch):
+    # A stand-in for a long search: without the kill, the runner would wait on it and leave it alive.
+    class Exploding:
+        def __init__(self, *_args, **_kwargs):
+            pass
+
+        def start(self):
+            raise OverflowError('timeout value is too large')
+
+        def cancel(self):
+            pass
+    started = []
+    real_popen = find_module.subprocess.Popen
+
+    def slow(_argv, **kwargs):
+        started.append(proc := real_popen([sys.executable, '-c', 'import time; time.sleep(60)'], **kwargs))
+        return proc
+    monkeypatch.setattr(find_module.threading, 'Timer', Exploding)
+    monkeypatch.setattr(find_module.subprocess, 'Popen', slow)
+    tick = time.monotonic()
+    run = find_module._total_grep(Path('.'), [], time.monotonic() + 30, 1)
+    assert (run.outcome, run.detail) == ('error', 'OverflowError')
+    assert started[0].poll() is not None and time.monotonic() - tick < 5
+
+
+def test_any_worker_exception_becomes_an_error_run(monkeypatch):
+    def boom(*_args, **_kwargs):
+        raise RuntimeError('unexpected')
+    monkeypatch.setattr(find_module, '_git_grep', boom)
+    run = find_module._total_grep(Path('.'), [], 0.0, 1)
+    assert (run.outcome, run.detail, run.stdout) == ('error', 'RuntimeError', b'')
+
+
+def test_a_one_character_word_is_searched_not_skipped(fresh_repo):
+    (fresh_repo / 'docs/guide/omega.md').write_text('Ω\n', encoding='utf-8')
+    git(fresh_repo, 'add', 'docs/guide/omega.md')
+    result = find('Ω', repo=fresh_repo)
+    assert result['outcome'] == 'found' and not result['coverage']['incomplete']
+    assert hit_for(result, 'docs/guide/omega.md')['match'] == 'content'
+    assert hit_for(result, 'docs/guide/omega.md')['excerpt'] == 'Ω'
+    missing = find('ж', repo=fresh_repo)
+    assert (missing['outcome'], missing['coverage']['incomplete']) == ('no_match', False)
+
+
+def test_a_one_character_word_beside_longer_words_is_reported_not_silent(fresh_repo):
+    result = find('zzqq Ω', repo=fresh_repo)  # Ω is in no file here; 'zzqq' and the phrase are searched
+    assert result['outcome'] == 'incomplete' and result['coverage']['incomplete']  # never no_match
+    assert result['coverage']['incomplete_reasons'] == [
+        "content_search_skipped: one-character word(s) 'ω' not searched alone in text"]
+    found = find('ULP 1-02', repo=fresh_repo)
+    assert found['outcome'] == 'found' and found['coverage']['incomplete']
 
 
 def test_unknown_family_is_rejected(repo):
@@ -330,8 +456,13 @@ def test_only_the_bounded_runner_starts_git_grep():
 
 # ------------------------------------------------------------------ cut-offs are never "no source"
 
+# The smallest budgets: the catalogue load alone (Git subprocesses) outlasts them, so the
+# text search always starts past its deadline. Zero is not a budget (it is rejected).
+SPENT_BUDGET = 1e-9
+
+
 def test_an_exhausted_budget_is_incomplete_not_no_match(repo):
-    result = find('zzqq-qqzz-xxyy', repo=repo, budget_seconds=0)
+    result = find('zzqq-qqzz-xxyy', repo=repo, budget_seconds=SPENT_BUDGET)
     assert result['outcome'] == 'incomplete'
     assert result['coverage']['incomplete'] and result['coverage']['incomplete_reasons']
     assert all(reason.startswith('timeout') for reason in result['coverage']['incomplete_reasons'])
@@ -356,7 +487,8 @@ def test_a_cut_excerpt_read_keeps_the_hits_and_says_so(repo, monkeypatch):
     monkeypatch.setattr(find_module, 'EXCERPT_OUTPUT_CAP', 1)
     result = find('ULP 1-02', repo=repo)
     assert result['outcome'] == 'found' and not result['coverage']['excerpts_complete']
-    assert not result['coverage']['incomplete']
+    # a cut excerpt read adds no incompleteness; only the reported one-character word does
+    assert [r.split(':')[0] for r in result['coverage']['incomplete_reasons']] == ['content_search_skipped']
 
 
 def test_an_invalid_catalogue_reads_no_text_and_says_why(fresh_repo, monkeypatch):
@@ -408,8 +540,26 @@ def test_cli_text_output_and_exit_codes(repo, capsys):
     assert 'superseded -> docs/resources/list.txt, backup copy' in out
     assert main(['zzqq-qqzz-xxyy', '--repo', str(repo)]) == 1
     assert 'no_match' in capsys.readouterr().out
-    assert main(['zzqq-qqzz-xxyy', '--repo', str(repo), '--budget', '0']) == 5
+    assert main(['zzqq-qqzz-xxyy', '--repo', str(repo), '--budget', str(SPENT_BUDGET)]) == 5
     assert 'INCOMPLETE' in capsys.readouterr().out
+
+
+@pytest.mark.parametrize('value', ['inf', '-inf', 'nan', 'NaN', '1e100', '1e400', '9' * 400, '-1', '0', '0.0', '-0',
+                                   'abc', 'true', '', '121', '0x10'])
+def test_cli_rejects_bad_budgets_with_a_fixed_message(repo, no_search_starts, capsys, value):
+    assert main(['guide', '--repo', str(repo), '--json', f'--budget={value}']) == 2
+    captured = capsys.readouterr()
+    assert json.loads(captured.out) == {'error': {'kind': 'invalid_request', 'code': 'budget',
+                                                  'message': find_module.BUDGET_MESSAGE}}
+    assert captured.err == ''
+
+
+@pytest.mark.parametrize('value', ['0', '-1', '201', '1.5', 'true', 'abc', '', '9' * 30, '1e2', '0x10'])
+def test_cli_rejects_bad_limits_with_a_fixed_message(repo, no_search_starts, capsys, value):
+    assert main(['guide', '--repo', str(repo), f'--limit={value}']) == 2
+    captured = capsys.readouterr()
+    assert captured.out == f'Find could not run (invalid_request): limit: {find_module.LIMIT_MESSAGE}\n'
+    assert captured.err == ''
 
 
 @pytest.mark.parametrize('argv, code', [(['', ], 'empty_query'), (['x', '--limit', '0'], 'limit'),
@@ -478,6 +628,20 @@ def test_route_is_not_behind_the_research_registry_kill_switch(client, monkeypat
                                     {'q': 'x', 'family': 'Bad Family'}, {'q': 'x', 'family': 'a' * 65}])
 def test_route_validates_its_parameters(client, params):
     assert client.get('/api/knowledge/find', params=params).status_code == 422
+
+
+@pytest.mark.parametrize('limit', ['nan', 'inf', '-inf', '1e100', str(10 ** 30), '-1', '0', '1.5', 'true', 'abc', ''])
+def test_route_rejects_bad_limits_before_any_search(client, no_search_starts, limit):
+    response = client.get('/api/knowledge/find', params={'q': 'guide', 'limit': limit})
+    assert response.status_code == 422
+
+
+def test_route_maps_a_library_limit_error_to_a_typed_422(client, monkeypatch):
+    def rejecting(*_args, **_kwargs):
+        raise FindError('budget', find_module.BUDGET_MESSAGE)
+    monkeypatch.setattr(find_module, 'find', rejecting)
+    response = client.get('/api/knowledge/find', params={'q': 'x'})
+    assert response.status_code == 422 and response.json()['detail']['code'] == 'budget'
 
 
 @pytest.mark.parametrize('params, code', [({'q': ' \t '}, 'empty_query'), ({'q': 'x', 'family': 'nope'},

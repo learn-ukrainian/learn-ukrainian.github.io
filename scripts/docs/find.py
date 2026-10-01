@@ -20,8 +20,10 @@ whole phrase in text, every word, then the share of the query's rarity-weighted
 words), lifecycle (current, then draft or unclassified, historical, superseded;
 backup-like copies last), and path order. Every hit carries its family, status,
 replacement and the family's query hint. The result states its coverage and
-says ``incomplete`` with a reason when a budget cut the search short, so a
-cutoff is never reported as "no source".
+says ``incomplete`` with a reason when a budget, a failed search worker or a
+one-character word not searched alone cut the search short, so a cutoff is never
+reported as "no source". ``limit`` and ``budget_seconds`` are validated before any
+search starts (``FindError``, a ValueError).
 
 The CLI is ``python -m scripts.docs.find``; the Monitor API mirrors it at
 ``GET /api/knowledge/find``.
@@ -57,6 +59,7 @@ EXCERPT_LINES_PER_FILE = 10
 RERANK_POOL = 60  # content candidates whose matching lines are read to rank and quote them
 LONG_LINE = 1000  # a matching line longer than this (a one-line data dump) is no evidence of proximity
 DEFAULT_BUDGET_SECONDS = 10.0
+MAX_BUDGET_SECONDS = 120.0
 GREP_OUTPUT_CAP = 16 * 1024 * 1024
 EXCERPT_OUTPUT_CAP = 32 * 1024 * 1024
 LIFECYCLE_RANK = {'active': 0, None: 0, 'draft': 1, 'residual': 1, 'archive': 2, 'superseded': 3}
@@ -81,11 +84,34 @@ FAMILY_ID_PATTERN = r'^[a-z0-9][a-z0-9-]{0,62}[a-z0-9]$'
 
 
 class FindError(ValueError):
-    """A request ``find`` cannot answer (bad query, limit or family); ``code`` names the rule."""
+    """A request ``find`` cannot answer (bad query, limit, budget or family); ``code`` names the rule."""
 
     def __init__(self, code: str, message: str):
         super().__init__(f'{code}: {message}')
         self.code = code
+        self.message = message
+
+
+LIMIT_MESSAGE = f'limit must be a whole number between 1 and {MAX_LIMIT}'
+BUDGET_MESSAGE = f'budget must be a finite number of seconds greater than 0 and at most {MAX_BUDGET_SECONDS:g}'
+
+
+def checked_limit(limit: object) -> int:
+    """``limit`` when it is an int (not a bool) in 1..MAX_LIMIT; FindError('limit') otherwise."""
+    if type(limit) is not int or not 1 <= limit <= MAX_LIMIT:
+        raise FindError('limit', LIMIT_MESSAGE)
+    return limit
+
+
+def checked_budget(budget: object) -> float:
+    """``budget`` in seconds as a float when it is an int or float (not a bool) in (0, MAX_BUDGET_SECONDS].
+
+    The range test runs before any conversion, so NaN, infinities, huge ints and huge
+    floats are rejected here and never reach a timer. FindError('budget') otherwise.
+    """
+    if type(budget) not in (int, float) or not 0 < budget <= MAX_BUDGET_SECONDS:
+        raise FindError('budget', BUDGET_MESSAGE)
+    return float(budget)
 
 
 # ---------------------------------------------------------------- text normalisation
@@ -232,6 +258,7 @@ def _build_state(repo: Path, files: dict[str, cat.IndexEntry], raw: dict[str, by
 class GitRun:
     stdout: bytes
     outcome: str  # ok | no_match | timeout | output_budget | error
+    detail: str = ''  # for error: the exception type when the runner itself failed
 
 
 def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
@@ -252,9 +279,9 @@ def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
         killed.set()
         proc.kill()
     timer = threading.Timer(remaining, kill)
-    timer.start()
     chunks, size, over = [], 0, False
     try:
+        timer.start()
         while chunk := proc.stdout.read1(1 << 16):
             size += len(chunk)
             if size > cap:
@@ -262,6 +289,9 @@ def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
                 proc.kill()
                 break
             chunks.append(chunk)
+    except BaseException:
+        proc.kill()  # never leave a search running behind a failure
+        raise
     finally:
         timer.cancel()
         proc.stdout.close()
@@ -273,6 +303,17 @@ def _git_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
     if status == 1:
         return GitRun(b'', 'no_match')
     return GitRun(b''.join(chunks), 'ok' if status == 0 else 'error')
+
+
+def _total_grep(repo: Path, args: list[str], deadline: float, cap: int) -> GitRun:
+    """``_git_grep`` for a worker thread: any exception becomes an ``error`` run, never a traceback.
+
+    The caller reports an ``error`` run as an incomplete search with its reason.
+    """
+    try:
+        return _git_grep(repo, args, deadline, cap)
+    except Exception as exc:  # deliberate: a worker failure is a typed incomplete result
+        return GitRun(b'', 'error', type(exc).__name__)
 
 
 def _variants(pattern: str) -> list[str]:
@@ -352,18 +393,22 @@ def find(query: str, limit: int = DEFAULT_LIMIT, *, family: str | None = None, r
          budget_seconds: float = DEFAULT_BUDGET_SECONDS) -> dict:
     """Search the catalogue, tracked names and readable tracked text for ``query``.
 
-    Raises FindError for an empty query, a limit outside 1..MAX_LIMIT or an unknown
-    ``family``; every other condition (an invalid catalogue, a Git failure, a budget
-    cut) is reported inside the result's ``coverage``.
+    Raises FindError (a ValueError) before any search starts for a limit that is not an
+    int in 1..MAX_LIMIT, a budget that is not a finite number in (0, MAX_BUDGET_SECONDS],
+    an empty query or an unknown ``family``; every other condition (an invalid catalogue,
+    a Git failure, a failed search worker, a budget cut) is reported inside the result's
+    ``coverage`` as incomplete.
     """
+    limit = checked_limit(limit)
+    budget_seconds = checked_budget(budget_seconds)
+    if not isinstance(query, str):
+        raise FindError('query', 'the query must be text')
     started = time.monotonic()
     deadline = started + budget_seconds
     text = clean_query(query)
     terms = query_terms(text)
     if not terms:
         raise FindError('empty_query', 'the query has no searchable word')
-    if not 1 <= limit <= MAX_LIMIT:
-        raise FindError('limit', f'limit must be between 1 and {MAX_LIMIT}')
     repo = cat.toplevel(repo or Path('.'))
     state = load_state(repo)
     if family is not None and (state.catalogue is None or family not in state.by_id):
@@ -601,12 +646,20 @@ def _content_candidates(state: State, terms: list[str], text: str, phrase: list[
     pathspecs, readable = _pathspecs(state, family)
     if not readable:
         return {}, readable, True
-    patterns = [(t, t) for t in terms if len(t) > 1]
+    # A one-character word matches almost every file, so beside longer words it is not searched
+    # alone (names, the catalogue and the whole phrase still are). That is reported, never
+    # silent: the result is incomplete. A query of one-character words only is searched.
+    searched = [t for t in terms if len(t) > 1] or terms
+    skipped = [t for t in terms if t not in searched]
+    if skipped:
+        reasons.append(f"content_search_skipped: one-character word(s) {', '.join(map(repr, skipped))} not "
+                       'searched alone in text')
+    patterns = [(t, t) for t in searched]
     if len(phrase) > 1:
         patterns.append(('\0phrase', text))  # the cleaned query as typed: separators and all
     jobs = {key: _files_args(pattern, pathspecs) for key, pattern in patterns}
     with ThreadPoolExecutor(max_workers=min(4, len(jobs)) or 1) as pool:
-        futures = {key: pool.submit(_git_grep, state.repo, args, deadline, GREP_OUTPUT_CAP)
+        futures = {key: pool.submit(_total_grep, state.repo, args, deadline, GREP_OUTPUT_CAP)
                    for key, args in jobs.items()}
         runs = {key: future.result() for key, future in futures.items()}
     complete = True
@@ -614,7 +667,8 @@ def _content_candidates(state: State, terms: list[str], text: str, phrase: list[
     for key, run in runs.items():
         if run.outcome in ('timeout', 'output_budget', 'error'):
             complete = False
-            reasons.append(f'{run.outcome}: the search for {key.lstrip(chr(0))!r} did not finish')
+            detail = f' ({run.detail})' if run.detail else ''
+            reasons.append(f'{run.outcome}: the search for {key.lstrip(chr(0))!r} did not finish{detail}')
             continue
         paths = [p.decode('utf-8', 'replace') for p in run.stdout.split(b'\0') if p]
         paths = [p for p in paths if p in readable]  # the gate again, whatever git returned
@@ -640,7 +694,8 @@ def _read_lines(state: State, pool: list[Candidate], terms: list[str], text: str
     by_path = {c.path: c for c in pool if cat.body_readable(state.report, c.path)}
     if not by_path:
         return True
-    words_only = [t for t in terms if len(t) > 1]
+    # One-character words match almost every line, so they pick lines only when nothing longer exists.
+    words_only = [t for t in terms if len(t) > 1] or terms
     jobs = []
     for phrase_files, patterns in ((True, [text]), (False, words_only)):
         paths = sorted(p for p, c in by_path.items() if c.phrase_in_content == phrase_files)
@@ -649,7 +704,7 @@ def _read_lines(state: State, pool: list[Candidate], terms: list[str], text: str
     found: dict[str, list[tuple[int, str]]] = {}
     complete = True
     with ThreadPoolExecutor(max_workers=min(4, len(jobs)) or 1) as pool_runner:
-        runs = list(pool_runner.map(lambda args: _git_grep(state.repo, args, deadline, EXCERPT_OUTPUT_CAP), jobs))
+        runs = list(pool_runner.map(lambda args: _total_grep(state.repo, args, deadline, EXCERPT_OUTPUT_CAP), jobs))
     for run in runs:
         if run.outcome not in ('ok', 'no_match'):
             complete = False
@@ -734,7 +789,8 @@ def main(argv: list[str] | None = None) -> int:
                '  .venv/bin/python -m scripts.docs.find "teacher deck" --family practice-specs --limit 5\n'
                'Outputs: ranked hits on stdout (path, line, excerpt, family, status, replacement, query hint) and '
                'the search coverage; writes nothing and keeps no index.\n'
-               'Exit codes: 0 at least one hit; 1 no hit in a complete search; 2 invalid arguments, an empty query '
+               'Exit codes: 0 at least one hit; 1 no hit in a complete search; 2 invalid arguments (a limit or budget '
+               'out of range or not a number), an empty query '
                'or an unknown family; 3 unreadable repository; 4 internal error; 5 no hit and the search was '
                'incomplete (a budget or catalogue problem cut it short, so absence is not proven). Failures print a '
                'typed error (JSON with --json), never a traceback.\n'
@@ -742,28 +798,51 @@ def main(argv: list[str] | None = None) -> int:
                'docs/knowledge/catalogue.yaml; scripts/docs/catalogue.py.')
     parser.add_argument('query', help='Words or a phrase to look for, e.g. "ULP 1-02" or "teacher deck rebuild"; '
                                       f'non-printable characters become spaces, at most {MAX_QUERY_CHARS} characters.')
-    parser.add_argument('--limit', type=int, default=DEFAULT_LIMIT,
-                        help=f'Maximum hits to return, 1..{MAX_LIMIT} (default: {DEFAULT_LIMIT}).')
+    parser.add_argument('--limit', default=str(DEFAULT_LIMIT),
+                        help=f'Maximum hits to return, a whole number 1..{MAX_LIMIT} (default: {DEFAULT_LIMIT}).')
     parser.add_argument('--family', default=None,
                         help='Restrict the search to one catalogue family or store id, e.g. runbooks '
                              '(default: all).')
     parser.add_argument('--repo', type=Path, default=Path('.'),
                         help='Repository or worktree root (default: current directory).')
-    parser.add_argument('--budget', type=float, default=DEFAULT_BUDGET_SECONDS,
-                        help=f'Wall-clock budget in seconds for the text search (default: {DEFAULT_BUDGET_SECONDS:g}); '
-                             'a cut-off search is reported as incomplete.')
+    parser.add_argument('--budget', default=str(DEFAULT_BUDGET_SECONDS),
+                        help='Wall-clock budget in seconds for the text search, greater than 0 and at most '
+                             f'{MAX_BUDGET_SECONDS:g} (default: {DEFAULT_BUDGET_SECONDS:g}); a cut-off search is '
+                             'reported as incomplete.')
     parser.add_argument('--json', action='store_true', help='Print the full result as JSON (default: text).')
     args = parser.parse_args(argv)
     try:
-        result = find(args.query, args.limit, family=args.family, repo=args.repo, budget_seconds=args.budget)
+        result = find(args.query, _cli_limit(args.limit), family=args.family, repo=args.repo,
+                      budget_seconds=_cli_budget(args.budget))
     except FindError as exc:
-        return _fail(args.json, 'invalid_request', exc.code, str(exc), 2)
+        return _fail(args.json, 'invalid_request', exc.code, exc.message, 2)
     except UNREADABLE as exc:
         return _fail(args.json, 'unreadable', getattr(exc, 'code', type(exc).__name__), str(exc), 3)
     except Exception as exc:  # deliberate catch-all at the process boundary
         return _fail(args.json, 'internal_error', type(exc).__name__, str(exc), 4)
     print(json.dumps(result, indent=2, ensure_ascii=False) if args.json else format_text(result))
     return {'found': 0, 'no_match': 1, 'incomplete': 5}[result['outcome']]
+
+
+INTEGER_TEXT = re.compile(r'[+-]?[0-9]{1,6}\Z')
+
+
+def _cli_limit(text: str) -> int:
+    """The --limit text as an int; FindError('limit') with the fixed message for anything else."""
+    if not INTEGER_TEXT.match(text.strip()):
+        raise FindError('limit', LIMIT_MESSAGE)
+    return int(text)
+
+
+def _cli_budget(text: str) -> float:
+    """The --budget text as a float; FindError('budget') with the fixed message when it is not a number.
+
+    ``find`` then rejects NaN, infinities and out-of-range values with the same message.
+    """
+    try:
+        return float(text)
+    except (ValueError, OverflowError):
+        raise FindError('budget', BUDGET_MESSAGE) from None
 
 
 def _fail(as_json: bool, kind: str, code: str, message: str, status: int) -> int:

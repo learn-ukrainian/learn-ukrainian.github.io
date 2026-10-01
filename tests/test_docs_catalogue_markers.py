@@ -109,6 +109,48 @@ def test_store_names_in_source(source, expected):
     assert store_literals_in_source(source) == expected
 
 
+# Every form below names a store; each line is one file's text (the language does not matter).
+@pytest.mark.parametrize('text, expected', [
+    # the reviewer's mutations
+    ('sqlite3 data/unclaimed9412.db "select 1"\n', {'data/unclaimed9412.db'}),  # .sh, unquoted
+    ("const db = new Database('data/unclaimed9412.db');\n", {'data/unclaimed9412.db'}),  # .js
+    ("DB = 'data/словник9412.db'\n", {'data/словник9412.db'}),
+    ("DB = 'data/new store9412.db'\n", {'data/new store9412.db'}),
+    # shell words: unquoted, single-quoted, double-quoted, escaped space, assignment, redirect
+    ("cp 'data/single9412.db' /tmp\n", {'data/single9412.db'}),
+    ('DB="data/double9412.sqlite3"; sqlite3 "$DB"\n', {'data/double9412.sqlite3'}),
+    ('cp data/new\\ store9412.db x\n', {'data/new store9412.db'}),
+    ('sqlite3 data/a9412.db<q.sql>out.txt\n', {'data/a9412.db'}),
+    ('"data/двоє слів/каталог.duckdb"\n', {'data/двоє слів/каталог.duckdb'}),
+    # config and markup
+    ('store: data/yaml9412.db\nother: [data/b9412.sqlite, data/c9412.db]\n',
+     {'data/yaml9412.db', 'data/b9412.sqlite', 'data/c9412.db'}),
+    ('{"db": "data/json9412.db"}\n', {'data/json9412.db'}),
+    ('ExecStart=/usr/bin/tool --db=../data/unit9412.db\n', {'data/unit9412.db'}),
+    # comments count (one exemption at worst; a missed store would pass the gate)
+    ('# reads data/comment9412.db at start\n', {'data/comment9412.db'}),
+    ('// data/jscomment9412.db\n', {'data/jscomment9412.db'}),
+    # a sidecar or copy names its store
+    ('data/main.db-wal data/main.db.bak\n', {'data/main.db'}),
+])
+def test_store_names_in_any_text(text, expected):
+    assert cat.store_names_in_text(text) == expected
+    assert store_literals_in_source(text, python=False) == expected
+
+
+@pytest.mark.parametrize('text', [
+    'metadata/m.db test_data/t.db my-data/x.db .data/y.db\n',  # not the data/ root
+    'data/x.dbx data/x.json data/x.db_old data/xdb\n',  # not a store extension
+    "f'data/{name}.db' data/$NAME.db data/*.db data/x?.db data/[ab].db\n",  # built at run time or a glob
+    "'data/../escape.db' 'data/./here.db' data//double.db\n",  # dot and empty segments
+    '# see data/ and the backups/x.db\n',  # prose: a space after data/ ends the word
+    "msg = 'see data/ and backups/x.db'\n",  # a quoted segment never starts with a space
+    "msg = 'data/dir /x.db'\n",  # nor ends with one
+])
+def test_text_that_names_no_store(text):
+    assert cat.store_names_in_text(text) == set()
+
+
 def test_store_literal_errors_name_the_file_and_the_fix():
     data = catalogue(store('main', ['data/main.db']), store('tele', ['data/telemetry/']))
     literals = {'data/main.db': ['scripts/a.py'], 'data/telemetry/x.db': ['scripts/b.py'],
@@ -158,9 +200,79 @@ def test_store_scan_reads_tracked_regular_code_only(tmp_path):
     (repo / 'scripts/untracked.py').write_text("DB = 'data/untracked.db'\n")
     os.symlink(repo / 'scripts/tool.py', repo / 'scripts/link.py')
     git(repo, 'add', 'scripts/link.py')
-    literals, unread = cat.store_literals(repo)
-    assert literals == {'data/a.db': ['scripts/tool.py']}
-    assert unread == ['scripts/link.py']
+    scan = cat.store_literals(repo)
+    assert scan.stores == {'data/a.db': ['scripts/tool.py']}
+    assert scan.unread == ['scripts/link.py'] and scan.withheld == []
+
+
+SCRIPT_SURFACE = {
+    'scripts/run.sh': 'sqlite3 data/unquoted9412.db ".tables"\ncp \'data/single9412.db\' x\nDB="data/double9412.db"\n',
+    'scripts/web/app.js': "const db = new Database('data/js9412.db');\n",
+    'scripts/web/app.mjs': "export const DB = 'data/mjs9412.sqlite';\n",
+    'scripts/web/app.ts': 'const DB: string = "data/ts9412.duckdb";\n',
+    'scripts/config/stores.yaml': 'store: data/yaml9412.db\n',
+    'scripts/config/stores.toml': 'db = "data/toml9412.db"\n',
+    'scripts/config/stores.json': '{"db": "data/json9412.db"}\n',
+    'scripts/README.md': 'Run against `data/markdown9412.db`.\n',
+    'scripts/templates/x.j2': '{{ root }}/data/jinja9412.db\n',
+    'scripts/units/x.service': 'ExecStart=/bin/tool --db data/unit9412.db\n',
+    'scripts/units/x.timer': '# keeps data/timer9412.db fresh\n',
+    'scripts/bin/tool': '#!/usr/bin/env bash\nexec sqlite3 data/shebang9412.db\n',
+    'scripts/notes': 'no shebang, still text: data/plain9412.db\n',
+    'scripts/unicode.py': "DB = 'data/словник9412.db'\nOTHER = 'data/new store9412.db'\n",
+    'scripts/x.ps1': '$db = "data/ps9412.db"\n',
+}
+
+
+def test_store_scan_covers_every_tracked_text_file_under_scripts(tmp_path, capsys):
+    """The surface is the index under scripts/, not a list of extensions."""
+    repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
+                     SCRIPT_SURFACE)
+    scan = cat.store_literals(repo)
+    expected = {name for text in SCRIPT_SURFACE.values() for name in cat.store_names_in_text(text)}
+    assert set(scan.stores) == expected and len(expected) == 18
+    assert scan.stores['data/new store9412.db'] == ['scripts/unicode.py']
+    assert scan.scanned == len(SCRIPT_SURFACE) + 3 and scan.unread == [] and scan.withheld == []
+    assert main(['check', '--repo', str(repo)]) == 1
+    out = capsys.readouterr().out
+    for name in expected:
+        assert f'ERROR store literal {name!r}' in out
+
+
+def test_paths_outside_scripts_and_lookalike_names_are_not_required(tmp_path, capsys):
+    repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
+                     {'tests/test_fixture.py': "DB = 'data/fixture9412.db'\n",
+                      'tests/fixtures/run.sh': 'sqlite3 data/fixture9412.db\n',
+                      'docs/knowledge/note.md': 'data/doc9412.db\n',
+                      'scripts/lookalike.py': "M = 'metadata/m9412.db'; T = 'test_data/t9412.db'\n"
+                                              "J = 'data/j9412.json'; F = f'data/{name}.db'\n"})
+    assert cat.store_literals(repo).stores == {}
+    assert main(['check', '--repo', str(repo)]) == 0, capsys.readouterr().out
+
+
+def test_store_scan_reads_the_index_blob_not_the_worktree(tmp_path):
+    repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
+                     {'scripts/tool.sh': 'sqlite3 data/staged9412.db\n'})
+    (repo / 'scripts/tool.sh').write_text('sqlite3 data/unstaged9412.db\n')  # edited, not staged
+    assert list(cat.store_literals(repo).stores) == ['data/staged9412.db']
+    (repo / 'scripts/tool.sh').unlink()  # a sparse or deleted worktree file is still read from the index
+    assert list(cat.store_literals(repo).stores) == ['data/staged9412.db']
+
+
+def test_store_scan_skips_binary_and_fails_closed_on_unreadable_or_withheld(tmp_path, capsys):
+    repo = make_repo(tmp_path / 'r', catalogue(entry('knowledge', ['docs/knowledge/**'], owner='docs-knowledge')),
+                     {'scripts/cache/helper.py': "DB = 'data/hidden9412.db'\n"})
+    (repo / 'scripts/blob.bin').write_bytes(b'\0\1data/binary9412.db')
+    (repo / 'scripts/latin1.txt').write_bytes('café data/latin9412.db\n'.encode('latin-1'))
+    git(repo, 'add', '.')
+    scan = cat.store_literals(repo)
+    assert scan.stores == {} and scan.binary == 1
+    assert scan.unread == ['scripts/latin1.txt'] and scan.withheld == ['scripts/cache/helper.py']
+    assert main(['check', '--repo', str(repo)]) == 1
+    out = capsys.readouterr().out
+    assert "cannot read tracked file scripts/latin1.txt (not a regular UTF-8 blob)" in out
+    assert 'tracked file scripts/cache/helper.py is withheld by the privacy gate' in out
+    assert 'hidden9412' not in out and 'latin9412' not in out  # bodies are never echoed
 
 
 # ------------------------------------------------------------------ in-place status markers

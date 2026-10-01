@@ -2463,9 +2463,12 @@ named in `docs/README.md`); both call `scripts/docs/find.py`. It shares only the
 - `coverage`: `families_searched`, `families_skipped` (not content-searchable),
   `files_searched`, `uncovered_unsearched`, `catalogue_errors`, `incomplete`,
   `incomplete_reasons`, `excerpts_complete`. `outcome` is `found`, `no_match` (a complete
-  search found nothing) or `incomplete` (nothing found and a budget or an invalid
-  catalogue cut the search short; absence is then not proven).
-- Errors: an empty query, a bad `limit` or `family`, or an unknown family is a 422 with
+  search found nothing) or `incomplete` (nothing found and a budget, a failed search
+  worker or an invalid catalogue cut the search short; absence is then not proven). A
+  one-character word beside longer words is not searched alone in text and is reported
+  as the reason `content_search_skipped`; a query of one-character words only is searched.
+- Errors: an empty query, a `limit` that is not a whole number in 1..200, a bad `family`,
+  or an unknown family is a 422 with
   `{"code", "message"}`; an unreadable repository is a 503. Read-only; nothing persisted
   (an in-process memo of the validated catalogue is keyed by the exact index and
   catalogue inputs).

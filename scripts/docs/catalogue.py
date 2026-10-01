@@ -9,10 +9,24 @@ The coverage denominator is every path Git's index lists under the tracked
 roots, so the check is sparse-checkout safe and never reads ``data/``.
 
 ``repository_check`` is what CI enforces (``tests/test_docs_catalogue_coverage.py``):
-coverage and validation, a data_store entry for every ``data/<name>.db|.sqlite``
-store that ``scripts/`` code names, front matter and banners that agree with the
+coverage and validation, a data_store entry for every ``data/`` store that a tracked
+file under ``scripts/`` names, front matter and banners that agree with the
 catalogue's superseded overrides, and a current generated family table in
 ``docs/README.md``. The search over all of it is ``scripts/docs/find.py``.
+
+Store-name scan dialect (``store_literals``). Surface: every path Git's index lists
+under ``scripts/``, any extension or none, read as its index blob through the privacy
+gate; binary blobs are skipped, unreadable or withheld files fail the check. A store
+name is ``data/<segments>.db|.sqlite|.sqlite3|.duckdb`` where ``data/`` is not preceded
+by a word character, ``.`` or ``-``. Segment characters are anything except whitespace,
+controls, quotes, ``<>|``, the shell terminators ``;&()``, ``{}$*?[]`` and ``\\``; a
+backslash-escaped space is admitted in a shell word, and plain inner spaces inside a
+single-line quoted span. ``.`` and ``..`` segments never name a store. Comments count.
+Python path joins (``ROOT / "data" / "x.db"``) are read from the AST. Known limits: a
+name assembled at run time (f-string fields, concatenation, variables, shell
+expansions, globs) is not a literal and is covered only by the producers a data_store
+entry declares; a quoted name with spaces that spans lines or sits inside mismatched
+quotes (an apostrophe in prose) can be missed or over-read.
 """
 from __future__ import annotations
 
@@ -372,6 +386,7 @@ class Report:
     schema_ok: bool = False
     searchable_entries: set[str] = field(default_factory=set)  # families whose bodies may be read
     store_literals: dict[str, list[str]] | None = None  # set by repository_check
+    store_files_scanned: int = 0  # text files under scripts/ the store scan read
     markers_unverifiable: int = 0  # superseded Markdown overrides the privacy gate kept unread
 
     @property
@@ -383,7 +398,8 @@ class Report:
 
     def to_json(self) -> dict:
         return {'denominator': self.denominator, 'covered': len(self.resolved),
-                'store_literals': self.store_literals, 'markers_unverifiable': self.markers_unverifiable,
+                'store_literals': self.store_literals, 'store_files_scanned': self.store_files_scanned,
+                'markers_unverifiable': self.markers_unverifiable,
                 'uncovered': self.uncovered, 'errors': self.errors,
                 'lifecycle_counts': self.lifecycle_counts(),
                 'residual_paths': len(self.residual_paths), 'data_stores': self.data_stores,
@@ -720,7 +736,10 @@ def body_readable(report: Report, path: str) -> bool:
 
 
 def _index_blobs(repo: Path, objects: dict[str, str]) -> dict[str, bytes]:
-    """Blob contents keyed by path, requested by index object ID. Call only via read_heads.
+    """Blob contents keyed by path, requested by index object ID.
+
+    Call only via ``read_heads`` (the privacy-gated document reader) or ``store_literals``
+    (which applies the same gate to ``scripts/`` paths before requesting any blob).
 
     ``objects`` maps each path to its index object ID. The ``cat-file --batch`` request
     holds validated object IDs only, never pathnames, and each response header must name
@@ -806,11 +825,23 @@ def draft_scan(repo: Path, report: Report) -> dict:
 # ---------------------------------------------------------------- data-store literals in code
 
 CODE_ROOT = 'scripts/'
-STORE_SUFFIXES = ('.db', '.sqlite', '.sqlite3')
-# 'data/<name>.db|.sqlite|.sqlite3' inside a string; 'metadata/x.db' and 'test_data/x.db' are not data/.
-STORE_LITERAL = re.compile(r'(?<![A-Za-z0-9_.-])data/((?:[A-Za-z0-9_.@+-]+/)*[A-Za-z0-9_@+-][A-Za-z0-9_.@+-]*'
-                           r'\.(?:db|sqlite3?))(?![A-Za-z0-9_])')
-STORE_SEGMENT = re.compile(r'[A-Za-z0-9_@+-][A-Za-z0-9_.@+-]*\Z')
+STORE_SUFFIXES = ('.db', '.sqlite', '.sqlite3', '.duckdb')
+# One character of a store name. Excluded: whitespace (the quoted dialect re-admits the
+# plain space), controls, quotes, '<>|', the shell terminators ';&()', the expansion and
+# glob syntax '{}$*?[]' (a name built at run time is not a literal), '\' and the separator.
+_NAME_CHAR = r'[^\s\x00-\x1f\x7f-\x9f\'"`<>|;&(){}$*?\[\]\\/]'
+_STORE_EXTENSION = r'\.(?:db|sqlite3?|duckdb)(?!\w)'
+# 'data/' not preceded by a word character, '.' or '-', so 'metadata/x.db' and 'test_data/x.db'
+# are not data/ (the literal comes first so the engine can search for it). The name is the
+# shortest run that ends in a store extension.
+_STORE_START = r'data/(?<![\w.-]data/)'
+STORE_WORD = re.compile(_STORE_START + rf'((?:{_NAME_CHAR}|\\ |/)+?{_STORE_EXTENSION})')
+STORE_SPACED = re.compile(_STORE_START + rf'((?:{_NAME_CHAR}| |/)+?{_STORE_EXTENSION})')
+# A single-line quoted span; inside one a store name may contain spaces.
+QUOTED_SPAN = re.compile(r"'[^'\n]*'|\"[^\"\n]*\"|`[^`\n]*`")
+STORE_SEGMENT = re.compile(rf'{_NAME_CHAR}(?:(?:{_NAME_CHAR}| )*{_NAME_CHAR})?\Z')
+# Blobs with a NUL in their first bytes are binary and carry no store names.
+BINARY_PROBE = 8192
 
 
 def _chain(node: ast.AST) -> list[ast.AST]:
@@ -858,20 +889,51 @@ def _data_bases(tree: ast.Module) -> dict[str, str]:
 
 
 QUOTED_DATA = re.compile(r"""['"]data/?['"]""")
-QUOTED_STORE = re.compile(r"""\.(?:db|sqlite3?)['"]""")
+QUOTED_STORE = re.compile(r"""\.(?:db|sqlite3?|duckdb)['"]""")
 
 
-def store_literals_in_source(source: str) -> set[str]:
-    """Logical 'data/...' store paths a Python module names.
+def _store_name(name: str) -> str | None:
+    """'data/<name>' when every segment of ``name`` is a valid store-name segment, else None."""
+    parts = name.split('/')
+    if all(STORE_SEGMENT.match(part) and part not in ('.', '..') for part in parts):
+        return 'data/' + name
+    return None
 
-    A ``data/<...>.db`` text anywhere in the source counts (string literals, and also
-    comments, which only makes the check stricter). Path joins (``ROOT / "data" / "x.db"``,
-    ``DATA_DIR / "x.db"`` with a module-level ``DATA_DIR = ROOT / "data"``) are read from
-    the AST, which is parsed only when the source has both a quoted "data" segment and a
-    quoted store name.
+
+def store_names_in_text(text: str) -> set[str]:
+    """Logical 'data/...' store names in any text: code, shell, config or prose.
+
+    Two passes. The word pass reads ``data/<name>.<ext>`` with no whitespace except a
+    backslash-escaped space (a shell word; also a bare or quoted literal in any language).
+    The quoted pass reads each single-line '...', "..." or `...` span and also admits plain
+    spaces inside a segment (never at its ends). Comments count too: stripping them needs a
+    parser per language, and a store a comment names is a dependency worth recording, so an
+    over-match costs one exemption while an under-match would let an unregistered store pass.
     """
-    found = {'data/' + match for match in STORE_LITERAL.findall(source)}
-    if not (QUOTED_DATA.search(source) and QUOTED_STORE.search(source)):
+    found: set[str] = set()
+    if 'data/' not in text:
+        return found
+    for match in STORE_WORD.finditer(text):
+        if (store := _store_name(match.group(1).replace('\\ ', ' '))) is not None:
+            found.add(store)
+    for span in QUOTED_SPAN.finditer(text):
+        if 'data/' not in span.group():
+            continue
+        for match in STORE_SPACED.finditer(span.group()[1:-1]):
+            if (store := _store_name(match.group(1))) is not None:
+                found.add(store)
+    return found
+
+
+def store_literals_in_source(source: str, python: bool = True) -> set[str]:
+    """Logical 'data/...' store paths a file names: its text, plus Python path joins.
+
+    For Python source, path joins (``ROOT / "data" / "x.db"``, ``DATA_DIR / "x.db"`` with a
+    module-level ``DATA_DIR = ROOT / "data"``) are read from the AST, which is parsed only
+    when the source has both a quoted "data" segment and a quoted store name.
+    """
+    found = store_names_in_text(source)
+    if not (python and QUOTED_DATA.search(source) and QUOTED_STORE.search(source)):
         return found
     try:
         tree = ast.parse(source)
@@ -885,31 +947,59 @@ def store_literals_in_source(source: str) -> set[str]:
     return found
 
 
-def store_literals(repo: Path, files: dict[str, IndexEntry] | None = None) -> tuple[dict[str, list[str]], list[str]]:
-    """Every logical data store named by tracked ``scripts/**.py`` code, with the files naming it.
+@dataclass
+class StoreScan:
+    """What the store-name scan over ``scripts/`` read and found."""
+    stores: dict[str, list[str]]  # store -> sorted files naming it
+    scanned: int = 0  # text files read
+    binary: int = 0  # files skipped as binary (a NUL byte in the first BINARY_PROBE bytes)
+    unread: list[str] = field(default_factory=list)  # not a regular blob, missing, or not UTF-8
+    withheld: list[str] = field(default_factory=list)  # refused by the privacy gate
 
-    Code is read from the worktree (``scripts/`` is never sparse), only for regular tracked
-    files without control characters, never through a symlink. Returns
-    (store -> sorted files, tracked code files that could not be read).
+
+def store_literals(repo: Path, files: dict[str, IndexEntry] | None = None) -> StoreScan:
+    """Every logical data store named by any tracked text file under ``scripts/``.
+
+    The surface is the repository's own: every path Git's index lists under ``scripts/``,
+    whatever its extension, read as the index blob by object ID (never the worktree, so a
+    sparse or CI checkout reads the same bytes). The privacy gate applies first: a path with
+    a control character or an inventory-excluded component is never read and is reported
+    as withheld. Binary blobs are skipped and counted. A symlink, submodule, missing blob or
+    non-UTF-8 text is reported as unread; withheld and unread files fail the check.
     """
     files = index_entries(repo) if files is None else files
-    found: dict[str, set[str]] = defaultdict(set)
-    unread = []
+    scan = StoreScan({})
+    objects = {}
     for path, entry in files.items():
-        if not (path.startswith(CODE_ROOT) and path.endswith('.py')) or CONTROL_CHARS.search(path):
+        if not path.startswith(CODE_ROOT):
             continue
-        target = repo / path
-        if entry.mode not in REGULAR_MODES or target.is_symlink() or not target.is_file():
-            unread.append(path)
+        if CONTROL_CHARS.search(path) or is_excluded(path):
+            scan.withheld.append(path)
+        elif entry.mode not in REGULAR_MODES:
+            scan.unread.append(path)
+        else:
+            objects[path] = entry.oid
+    blobs = _index_blobs(repo, objects)
+    found: dict[str, set[str]] = defaultdict(set)
+    for path in objects:
+        blob = blobs.get(path)
+        if blob is None:
+            scan.unread.append(path)
+            continue
+        if b'\0' in blob[:BINARY_PROBE]:
+            scan.binary += 1
             continue
         try:
-            source = target.read_text(encoding='utf-8')
-        except (OSError, UnicodeDecodeError):
-            unread.append(path)
+            source = blob.decode('utf-8')
+        except UnicodeDecodeError:
+            scan.unread.append(path)
             continue
-        for store in store_literals_in_source(source):
+        scan.scanned += 1
+        for store in store_literals_in_source(source, python=path.endswith('.py')):
             found[store].add(path)
-    return {store: sorted(paths) for store, paths in sorted(found.items())}, unread
+    scan.stores = {store: sorted(paths) for store, paths in sorted(found.items())}
+    scan.unread.sort()
+    return scan
 
 
 def store_literal_errors(catalogue: dict, literals: dict[str, list[str]]) -> list[str]:
@@ -1148,10 +1238,14 @@ def repository_check(repo: Path, catalogue_path: Path | None = None) -> tuple[Re
     if not report.schema_ok:
         return report, catalogue
     files = index_entries(repo)
-    literals, unread = store_literals(repo, files)
-    report.store_literals = literals
-    report.errors.extend(f'{CODE_ROOT}: cannot read tracked code file {shown(p)}' for p in unread)
-    report.errors.extend(store_literal_errors(catalogue, literals))
+    scan = store_literals(repo, files)
+    report.store_literals, report.store_files_scanned = scan.stores, scan.scanned
+    report.errors.extend(f'{CODE_ROOT}: cannot read tracked file {shown(p)} (not a regular UTF-8 blob), '
+                         'so its store names are unchecked' for p in scan.unread)
+    report.errors.extend(f'{CODE_ROOT}: tracked file {shown(p)} is withheld by the privacy gate (an '
+                         'inventory-excluded component), so its store names are unchecked; move it'
+                         for p in scan.withheld)
+    report.errors.extend(store_literal_errors(catalogue, scan.stores))
     errors, report.markers_unverifiable = marker_errors(repo, report, catalogue)
     report.errors.extend(errors)
     report.errors.extend(readme_errors(repo, report, catalogue, files))
@@ -1344,7 +1438,8 @@ def _check_command(args: argparse.Namespace) -> int:
         for error in report.errors:
             print(f'ERROR {error}')
         if report.store_literals is not None:
-            print(f'data/ store names in {CODE_ROOT}: {len(report.store_literals)}')
+            print(f'data/ store names in {CODE_ROOT}: {len(report.store_literals)} '
+                  f'(from {report.store_files_scanned} tracked text files)')
         for path in report.uncovered:
             print(f'UNCOVERED {shown(path)}')
         if stores is None:
