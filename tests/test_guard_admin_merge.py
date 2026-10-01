@@ -606,3 +606,28 @@ def test_gh_timeouts_stay_within_hook_budget(monkeypatch):
     timeouts = [kwargs["timeout"] for _cmd, kwargs in calls]
     assert all(t > 0 for t in timeouts)
     assert sum(timeouts) < 20
+
+
+@pytest.mark.parametrize("shape", ["cd {cwd} &&>file gh pr merge 5 --admin", "{fd}>file gh pr merge 5 --admin"])
+def test_issue_9479_r2_redirect_bash_argv(tmp_path, monkeypatch, shape):
+    command = shape.replace("{cwd}", str(tmp_path))
+    recorder = tmp_path / "gh"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=tmp_path,
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert record.read_text().splitlines() == ["pr", "merge", "5", "--admin"]
+    assert ["5", "--admin"] in [guard._admin_merge_args(seg) for seg in guard._segments(command)]
+    seen = []
+    monkeypatch.setattr(guard, "_failing_blocking_checks", lambda pr: seen.append(pr) or ["CI Gate"])
+    monkeypatch.setattr(sys, "stdin", io.StringIO(json.dumps({"tool_input": {"command": command}})))
+    assert guard.main() == 2
+    assert seen == ["5"]

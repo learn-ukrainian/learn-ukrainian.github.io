@@ -681,3 +681,115 @@ def test_known_boundary_verb_inside_string_or_backticks(cmd):
     tokens into a segment; only string-args and backticks are blind.)
     """
     assert _dangerous(cmd) is None
+
+
+@pytest.mark.parametrize(
+    "tail",
+    [
+        "(git switch -c fixture)",
+        "( git checkout -b fixture )",
+        "(git switch -c fixture) && echo ok",
+        ">file git switch -c fixture",
+        "git switch -c fixture {fd}>file",
+    ],
+)
+def test_issue_9479_r2_bash_cwd(repos, tmp_path, tail):
+    recorder = tmp_path / "git"
+    recorder.write_text('#!/bin/bash\nprintf "%s\\n" "$PWD" "$@" > "$GUARD_RECORD"\n')
+    recorder.chmod(0o755)
+    record = tmp_path / "record"
+    command = f"cd {repos['public']} &&{tail}"
+    result = subprocess.run(
+        ["bash", "-c", command],
+        cwd=tmp_path,
+        env={**os.environ, "PATH": str(tmp_path) + os.pathsep + os.environ["PATH"], "GUARD_RECORD": str(record)},
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+    assert result.returncode == 0, result.stderr
+    assert record.read_text().splitlines() == [
+        str(repos["public"]),
+        *(["checkout", "-b", "fixture"] if "checkout" in tail else ["switch", "-c", "fixture"]),
+    ]
+    assert guard._command_danger_reason(command, repos["other"]) is not None
+    safe = command.replace(str(repos["public"]), str(repos["public_worktree"]))
+    assert guard._command_danger_reason(safe, repos["other"]) is None
+
+
+def test_issue_9479_r2_subshell_cd_stays_local(repos):
+    command = f"(cd {repos['public']}) && git switch -c fixture"
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is None
+    command = f"(cd {repos['public_worktree']}) && git switch -c fixture"
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        "git checkout -b feat && echo $(git rev-parse HEAD)",
+        "git switch -c feat-$(date +%s)",
+        "cd $(git rev-parse --show-toplevel) && git checkout -b x",
+        'git checkout -b feat >"$LOG" 2>&1',
+        "git checkout -b feat && echo `git rev-parse HEAD`",
+        "git checkout -b feat && cat <(echo fixture)",
+        'echo fixture >"$LOG" && git checkout -b feat',
+    ],
+)
+@pytest.mark.parametrize("location", ["public_worktree", "non_repo", "public"])
+def test_issue_9479_r2_unreadable_respects_repository(repos, tmp_path, command, location):
+    cwd = tmp_path / "non-repo" if location == "non_repo" else repos[location]
+    cwd.mkdir(exist_ok=True)
+    # An unreadable cd can change the repository even from an unprotected cwd.
+    expected_block = location == "public" or command.startswith("cd $(")
+    assert (guard._command_danger_reason(command, cwd) is not None) == expected_block
+
+
+@pytest.mark.parametrize(
+    "tail",
+    [
+        "git checkout -b feat && echo $(git rev-parse HEAD)",
+        "git switch -c feat-$(date +%s)",
+        "cd $(git rev-parse --show-toplevel) && git checkout -b x",
+        'git checkout -b feat >"$LOG" 2>&1',
+    ],
+)
+@pytest.mark.parametrize("cd_target", ["primary", "unreadable"])
+def test_issue_9479_r2_unreadable_cd_blocks(repos, tail, cd_target):
+    target = str(repos["public"]) if cd_target == "primary" else '"$ROOT"'
+    assert guard._command_danger_reason(f"cd {target} && {tail}", repos["public_worktree"]) is not None
+
+
+@pytest.mark.parametrize("target", ["public", "public_worktree"])
+def test_issue_9479_r2_named_fd_cd(repos, target):
+    command = f"cd {repos[target]} {{fd}}>file && git switch -c fixture"
+    assert (guard._command_danger_reason(command, repos["other"]) is not None) == (target == "public")
+
+
+@pytest.mark.parametrize("redirect", ['>"$LOG"', ">$(echo file)", ">`echo file`"])
+@pytest.mark.parametrize("target", ["public", "public_worktree"])
+def test_issue_9479_r2_literal_cd_dynamic_redirect(repos, redirect, target):
+    command = f"cd {repos[target]} {redirect} && git switch -c fixture"
+    assert (guard._command_danger_reason(command, repos["public_worktree"]) is not None) == (target == "public")
+
+
+def test_issue_9479_r2_redirect_substitution_runs_before_cd(repos):
+    command = f"cd {repos['public']} >$(git switch -c fixture) && echo ok"
+    assert guard._command_danger_reason(command, repos["public_worktree"]) is None
+    command = f"cd {repos['public_worktree']} >$(git switch -c fixture) && echo ok"
+    assert guard._command_danger_reason(command, repos["public"]) is not None
+
+
+def test_issue_9479_r2_operator_boundaries(repos):
+    command = f"cd {repos['public']} &&(git switch -c fixture) && echo ok"
+    rows = guard._segments_with_following_operator(command)
+    assert rows[0][1] == "&&open"
+    assert rows[1][1] == "close&&"
+
+
+@pytest.mark.parametrize("option", ["-C ", "-C"])
+@pytest.mark.parametrize("target", ["public", "public_worktree", "relative"])
+def test_issue_9479_r2_absolute_git_cwd_resolves_unreadable_cd(repos, option, target):
+    directory = "relative" if target == "relative" else str(repos[target])
+    command = f'cd "$ROOT" && git {option}{directory} switch -c fixture'
+    assert (guard._command_danger_reason(command, repos["other"]) is not None) == (target != "public_worktree")

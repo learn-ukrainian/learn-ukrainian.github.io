@@ -53,13 +53,13 @@ try:
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
     )
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
 try:
     from shell_redirects import segments_with_following_operator
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
@@ -339,7 +339,7 @@ def _skip_command_prefix(seg: list[str], i: int) -> int:
     return i
 
 
-def _git_invocation(seg: list[str], effective_cwd: Path) -> tuple[str, list[str], Path] | None:
+def _git_invocation(seg: list[str], effective_cwd: Path | None) -> tuple[str, list[str], Path | None] | None:
     """Return ``(verb, args, git_cwd)`` for a direct git invocation.
 
     Git applies repeated ``-C`` options from left to right, including relative
@@ -355,11 +355,23 @@ def _git_invocation(seg: list[str], effective_cwd: Path) -> tuple[str, list[str]
         option = seg[i]
         if option == "-C" and i + 1 < len(seg):
             directory = Path(seg[i + 1]).expanduser()
-            git_cwd = (directory if directory.is_absolute() else git_cwd / directory).resolve()
+            git_cwd = (
+                directory.resolve()
+                if directory.is_absolute()
+                else (git_cwd / directory).resolve()
+                if git_cwd is not None
+                else None
+            )
             i += 2
         elif option.startswith("-C") and len(option) > 2:
             directory = Path(option[2:]).expanduser()
-            git_cwd = (directory if directory.is_absolute() else git_cwd / directory).resolve()
+            git_cwd = (
+                directory.resolve()
+                if directory.is_absolute()
+                else (git_cwd / directory).resolve()
+                if git_cwd is not None
+                else None
+            )
             i += 1
         elif option in {"-c", "--git-dir", "--work-tree"} and i + 1 < len(seg):
             # These do not change the cwd. ``--git-dir``/``--work-tree``
@@ -413,10 +425,10 @@ def _cd_target(seg: list[str], effective_cwd: Path) -> Path | None:
     i = _skip_command_prefix(seg, 0)
     if i >= len(seg) or seg[i] != "cd":
         return None
-    args = seg[i + 1 :]
+    args = [arg for arg in seg[i + 1 :] if arg != _UNREADABLE_MARKER]
     if args[:1] == ["--"]:
         args = args[1:]
-    if len(args) != 1 or args[0] == "-":
+    if len(args) != 1 or args[0] == "-" or any(char in args[0] for char in "$`"):
         return None
     directory = Path(args[0]).expanduser()
     return (directory if directory.is_absolute() else effective_cwd / directory).resolve()
@@ -553,29 +565,48 @@ def _command_danger_reason(command: str, session_cwd: Path | None = None) -> str
     effective_cwd = (session_cwd or Path.cwd()).resolve()
     protected_roots = {root.resolve() for root in PROTECTED_ROOTS}
     segments = _segments_with_following_operator(command)
-    redirect_unreadable = any(_UNREADABLE_MARKER in segment for segment, _ in segments)
+    cwd_unreadable = False
+    pending_cd: tuple[Path, int] | None = None
+    scope_depth = 0
+    previous_operator = ""
     for segment, following_operator in segments:
+        scope_depth += previous_operator.count("open") - previous_operator.count("close")
+        if pending_cd is not None and scope_depth < pending_cd[1]:
+            # A redirect's substitution runs before cd. Apply the literal
+            # target only once that substitution closes and cd succeeds.
+            if previous_operator.endswith("&&"):
+                effective_cwd, cwd_unreadable = pending_cd[0], False
+            pending_cd = None
+        previous_operator = following_operator or ""
         i = _skip_command_prefix(segment, 0)
-        if segment[i : i + 1] == ["cd"] and _UNREADABLE_MARKER in segment:
-            continue
         cd_target = _cd_target(segment, effective_cwd)
-        if cd_target is not None and following_operator == "&&":
-            effective_cwd = cd_target
+        if segment[i : i + 1] == ["cd"]:
+            if cd_target is not None and (following_operator or "").startswith("&&"):
+                effective_cwd = cd_target
+                cwd_unreadable = False
+            elif cd_target is not None and previous_operator.startswith("open") and _UNREADABLE_MARKER in segment:
+                pending_cd = (cd_target, scope_depth + 1)
+            elif cd_target is None:
+                cwd_unreadable = True
             continue
 
-        # A dynamic redirect can execute substitutions; no readable target
-        # may be inferred from the remaining argv of a branch operation.
-        if redirect_unreadable and (_segment_is_dangerous(segment) or segment[i : i + 3] == ["gh", "pr", "checkout"]):
+        # Expansion alone does not make a known dispatch cwd protected. Only
+        # an unreadable cd makes the repository of a later operation unknown.
+        if cwd_unreadable and segment[i : i + 3] == ["gh", "pr", "checkout"]:
             return "branch-switch target could not be parsed safely"
 
         gh_reason = _gh_pr_checkout_reason(segment, effective_cwd)
         if gh_reason:
             return gh_reason
 
-        invocation = _git_invocation(segment, effective_cwd)
+        invocation = _git_invocation(segment, None if cwd_unreadable else effective_cwd)
         if invocation is None:
             continue
         _, _, git_cwd = invocation
+        if git_cwd is None:
+            if _segment_is_dangerous(segment):
+                return "branch-switch target could not be parsed safely"
+            continue
         repo_root = _git_repo_root(git_cwd)
         if repo_root is None or repo_root not in protected_roots:
             continue

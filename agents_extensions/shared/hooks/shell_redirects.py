@@ -9,8 +9,11 @@ from __future__ import annotations
 
 import re
 import shlex
+import sys
 from collections.abc import Callable
 
+# The sibling module is also imported from deployed, read-only hook trees.
+sys.dont_write_bytecode = True
 from shell_shlex import preprocess_shell_command
 
 # Longest redirect spellings come first; `>&` is one operator, not `>` then `&`.
@@ -71,11 +74,19 @@ def _split_scopes(line: str) -> list[tuple[str, str]]:
             # Comment punctuation has no scope or redirect meaning.
             buf.extend(line[i:])
             break
+        elif line.startswith("&&", i):
+            # Bash reads &&>file as the AND-list operator followed by >file,
+            # not a background operator followed by &>file.
+            pieces.append(("text", "".join(buf)))
+            pieces.append(("separator", "&&"))
+            buf = []
+            i += 2
+            continue
         elif redirect := _REDIRECT_OPERATOR.match(line, i):
             # An unquoted numeric word glued to a redirect is a descriptor,
             # whereas `5 >file` retains 5 as a command argument.
             raw = "".join(buf)
-            descriptor = re.search(r"(?<!\S)[0-9]+$", raw)
+            descriptor = re.search(r"(?<!\S)(?:[0-9]+|\{[A-Za-z_][A-Za-z0-9_]*\})$", raw)
             if descriptor and not redirect.group().startswith("&"):
                 raw = raw[: descriptor.start()]
             pieces.append(("text", raw))
@@ -220,6 +231,6 @@ def segments_with_following_operator(command: str, **kwargs) -> list[tuple[list[
             segment, operator = rows[-1]
             rows[-1] = (segment, (operator or "") + argv[0])
         elif kind in {"open", "close", "unreadable"} and rows:
-            segment, _ = rows[-1]
-            rows[-1] = (segment, kind)
+            segment, operator = rows[-1]
+            rows[-1] = (segment, (operator or "") + kind)
     return rows

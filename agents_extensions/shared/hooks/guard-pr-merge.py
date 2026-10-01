@@ -91,13 +91,13 @@ try:
         skippable_heredoc_delimiters,
         strip_skippable_heredoc_bodies,
     )
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: shell_shlex ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
 try:
     from shell_redirects import scope_events
-except ImportError as exc:
+except Exception as exc:
     print(f"guard dependency unavailable: shell_redirects ({exc})", file=sys.stderr)
     raise SystemExit(2) from exc
 
