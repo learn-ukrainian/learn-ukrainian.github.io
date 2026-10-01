@@ -67,7 +67,10 @@ def _worktree_add_via_run(monkeypatch):
     """
 
     def via_run(add_command, *, cwd, worktree_path, env=None, **_callbacks):
-        return delegate.subprocess.run(add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env)
+        return delegate.subprocess.run(
+            add_command, cwd=cwd, capture_output=True, text=True, check=False, env=env,
+            timeout=delegate.DEFAULT_GIT_TIMEOUT_S,
+        )
 
     monkeypatch.setattr(delegate, "_run_worktree_add", via_run)
 
@@ -248,6 +251,8 @@ def _sanitize_git_env_for_test(monkeypatch) -> None:
         if key.startswith(("GIT_", "PRE_COMMIT")):
             monkeypatch.delenv(key, raising=False)
     monkeypatch.delenv("AGENT_NO_MERGE", raising=False)
+    monkeypatch.setenv("GIT_TERMINAL_PROMPT", "0")
+    monkeypatch.setenv("GIT_ALLOW_PROTOCOL", "file")
 
 
 def test_sanitized_git_env_keeps_benign_git_transport_env(monkeypatch):
@@ -266,6 +271,19 @@ def test_sanitized_git_env_keeps_benign_git_transport_env(monkeypatch):
     assert "GIT_DIR" not in env
     assert "GIT_WORK_TREE" not in env
     assert "PRE_COMMIT_HOME" not in env
+
+
+@pytest.mark.parametrize("inherited", [None, "1"])
+def test_fetch_refuses_credential_prompts_and_has_a_timeout(monkeypatch, inherited):
+    if inherited is None:
+        monkeypatch.delenv("GIT_TERMINAL_PROMPT", raising=False)
+    else:
+        monkeypatch.setenv("GIT_TERMINAL_PROMPT", inherited)
+    with patch.object(delegate.subprocess, "run") as run:
+        run.side_effect = subprocess.TimeoutExpired("git fetch", delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S)
+        assert delegate._fetch_remote_branch("origin", "main") is None
+    assert run.call_args.kwargs["env"]["GIT_TERMINAL_PROMPT"] == "0"
+    assert run.call_args.kwargs["timeout"] == delegate.DEFAULT_NETWORK_GIT_TIMEOUT_S
 
 
 def test_pinned_worker_venv_env_replaces_foreign_virtualenv(monkeypatch):
@@ -9786,6 +9804,17 @@ def _init_sibling_pair(tmp_path: Path) -> tuple[Path, Path, Path]:
     return primary, sibling, sibling_wt
 
 
+def _add_local_bare_origin(main: Path) -> Path:
+    """Snapshot fixture branches into an on-disk remote, never the project origin."""
+    remote = main.parent / "origin.git"
+    for args in (["clone", "--bare", str(main), str(remote)], ["remote", "add", "origin", str(remote)]):
+        subprocess.run(
+            ["git", *args], cwd=main, check=True, capture_output=True, text=True,
+            env=delegate._sanitized_git_env(), timeout=30,
+        )
+    return remote
+
+
 def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     """Build a real primary checkout + one registered dispatch worktree.
 
@@ -13249,7 +13278,8 @@ def test_review_attempt_stale_branch_holder_survives_before_admission(
     dependency,
     dry_run,
 ):
-    """#9388: a real clean, synced driver checkout is retained before route/prompt admission."""
+    """#9388: a real protected holder is retained before prompt admission or cleanup."""
+    from scripts.agent_runtime.target_admission import resolve_and_admit
     from scripts.review.render_contract import RENDER_RECORD_KEY, render_record_path
 
     main, holder = _init_repo_with_worktree(tmp_path)
@@ -13276,12 +13306,11 @@ def test_review_attempt_stale_branch_holder_survives_before_admission(
     assert delegate._worktree_matches_origin_branch(holder, branch)
 
     with (
-        patch("scripts.agent_runtime.target_admission.resolve_and_admit") as admit,
+        patch("scripts.agent_runtime.target_admission.resolve_and_admit", wraps=resolve_and_admit) as admit,
         patch.object(delegate, "_review_attempt_prompt_admission") as prompt_admit,
         patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as prepare,
         patch.object(delegate, "_release_stale_branch_holders") as release,
     ):
-        admit.side_effect = AssertionError("route admission reached despite protected review branch holder")
         rc = delegate.cmd_dispatch(
             _write_args(
                 task_id="review-9388",
@@ -13302,7 +13331,7 @@ def test_review_attempt_stale_branch_holder_survives_before_admission(
     assert "review_attempt_branch_holder_conflict" in err
     assert dependency in err and branch in err and str(holder) in err
     assert "separate retained worktree at the exact commit" in err
-    admit.assert_not_called()
+    admit.assert_called_once()
     prompt_admit.assert_not_called()
     prepare.assert_not_called()
     release.assert_not_called()
@@ -13596,13 +13625,50 @@ def test_review_attempt_stale_branch_holder_reuses_own_resolved_target(
     assert holder.is_dir() and manifest.is_file()
 
 
+def _patch_admitted_codex_review_substitution(monkeypatch):
+    """Supply an admitted route at the consumer boundary, without changing #8517 policy."""
+    from scripts.agent_runtime.target_admission import resolve_and_admit
+
+    def gate(args, **kwargs):
+        routing = kwargs["route"].routing_for_test
+        routing.requested_agent = "codex"
+        resolution = {}
+        delegate._remember_agent_substitution(
+            resolution,
+            source="budget-guard",
+            requested_agent=args.agent,
+            requested_model=getattr(args, "model", None),
+            actual_agent="codex",
+            actual_model="gpt-6.1-sol",
+            how="catalog-default",
+        )
+        routing.substitution = resolution["record"]
+        (target,) = resolve_and_admit(
+            ("codex",), model="gpt-6.1-sol", mode=args.mode, review_dispatch=True, review_attempt=True
+        )
+        return None, None, target
+
+    real_route = delegate._dispatch_route
+
+    def route(args, routing, **kwargs):
+        result = real_route(args, routing, **kwargs)
+        result.routing_for_test = routing
+        return result
+
+    monkeypatch.setattr(delegate, "_dispatch_route", route)
+    monkeypatch.setattr(delegate, "_kimi_dispatch_gate", gate)
+
+
+@pytest.mark.parametrize("worktree_arg", ["explicit", "auto", "auto-substituted"])
 def test_review_attempt_stale_branch_holder_reuse_still_refuses_other_holder(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
     capsys,
+    worktree_arg,
 ):
     """#9417 AC-02: excluding the reused target never excludes another protected holder."""
+    from scripts.agent_runtime.target_admission import resolve_and_admit
     from scripts.review.render_contract import RENDER_RECORD_KEY, render_record_path
 
     main, target = _init_repo_with_worktree(tmp_path)
@@ -13625,28 +13691,34 @@ def test_review_attempt_stale_branch_holder_reuse_still_refuses_other_holder(
     prompt.write_text("review_id: review-9417\nattempt_id: attempt-9417\n")
     render_record_path(prompt).write_text(json.dumps({RENDER_RECORD_KEY: {"input_root": str(other)}}))
     assert set(delegate._branch_worktree_paths(branch)) == {target, other}
+    if worktree_arg == "auto-substituted":
+        _patch_admitted_codex_review_substitution(monkeypatch)
 
     with (
-        patch("scripts.agent_runtime.target_admission.resolve_and_admit") as admit,
+        patch("scripts.agent_runtime.target_admission.resolve_and_admit", wraps=resolve_and_admit) as admit,
+        patch.object(delegate, "_ensure_worktree") as ensure,
         patch.object(delegate, "_release_stale_branch_holders") as release,
     ):
         rc = delegate.cmd_dispatch(
             _write_args(
-                task_id="review-9417",
+                agent="claude" if worktree_arg == "auto-substituted" else "codex",
+                task_id="task-1",
                 mode="read-only",
-                worktree=str(target),
+                worktree=str(target) if worktree_arg == "explicit" else "auto",
                 branch=branch,
                 review_attempt=str(manifest),
                 prompt=None,
                 prompt_file=str(prompt),
                 review_id="review-9417",
                 attempt_id="attempt-9417",
+                dry_run=False,
             )
         )
     assert rc == 2
     err = capsys.readouterr().err
     assert "review_attempt_branch_holder_conflict" in err and str(other) in err and "input_root" in err
-    admit.assert_not_called()
+    assert admit.call_count == int(worktree_arg == "auto")
+    ensure.assert_not_called()
     release.assert_not_called()
     assert target.is_dir() and other.is_dir() and manifest.is_file()
 
@@ -14842,6 +14914,196 @@ def _rendered_attempt_prompt(checkout: Path, prompt_file: Path, *, input_root: P
     )
     render_record_path(prompt_file).write_text(json.dumps({RENDER_RECORD_KEY: record}), encoding="utf-8")
     return prompt_file
+
+
+@pytest.mark.parametrize("upstream_change", ["changed", "removed"])
+@pytest.mark.parametrize("entrypoint", ["dispatch", "base", "ensure"])
+@pytest.mark.parametrize("review_attempt", [True, False], ids=["review", "ordinary"])
+def test_review_attempt_reuse_never_rebases_admitted_input(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, upstream_change, entrypoint, review_attempt
+):
+    """#9426 AC-01: real reuse refuses stale reviews, while ordinary reuse still rebases."""
+    main, target = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", target)
+    monkeypatch.chdir(target)
+
+    def git(cwd, *args):
+        return subprocess.run(["git", *args], cwd=cwd, check=True, capture_output=True, text=True, timeout=30)
+
+    input_file = main / "curriculum" / "input.md"
+    input_file.parent.mkdir()
+    input_file.write_text("admitted\n", encoding="utf-8")
+    git(main, "add", "curriculum/input.md")
+    git(main, "commit", "-m", "admitted input")
+    git(target, "merge", "--ff-only", "main")
+    admitted_sha = delegate._resolve_sha(target)
+    admitted_input = target / "curriculum" / "input.md"
+    assert admitted_input.read_bytes() == b"admitted\n"
+    if upstream_change == "changed":
+        input_file.write_text("changed upstream\n", encoding="utf-8")
+        git(main, "add", "curriculum/input.md")
+    else:
+        git(main, "rm", "curriculum/input.md")
+    git(main, "commit", "-m", "upstream input change")
+    remote = _add_local_bare_origin(main)
+    assert git(main, "--git-dir", str(remote), "rev-parse", "--is-bare-repository").stdout.strip() == "true"
+    git(main, "fetch", "origin", "main")
+    upstream_sha = delegate._resolve_sha(main)
+    dependencies = (("input_root", target),) if review_attempt else ()
+
+    if entrypoint == "dispatch":
+        _review_code(main)
+        monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+        prompt = _rendered_attempt_prompt(main, tmp_path / "prompt.md", input_root=target)
+        manifest = tmp_path / "manifest.yaml"
+        manifest.write_text("review: test\n", encoding="utf-8")
+        _patch_worker_popen(monkeypatch)
+        plan = argparse.Namespace(
+            config_path=tmp_path / "attempt.json",
+            manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),
+        )
+        with (
+            patch.object(
+                delegate, "_review_attempt_prompt_admission", wraps=delegate._review_attempt_prompt_admission
+            ) as admit,
+            patch("scripts.agent_runtime.review_mcp.prepare_review_attempt", return_value=plan),
+        ):
+            rc = delegate.cmd_dispatch(
+                _write_args(
+                    task_id="task-1",
+                    mode="read-only",
+                    worktree=str(target),
+                    prompt=None,
+                    prompt_file=str(prompt),
+                    review_attempt=str(manifest) if review_attempt else None,
+                    review_id="rev-test" if review_attempt else None,
+                    attempt_id="att-test" if review_attempt else None,
+                    full_checkout=True,
+                    dry_run=False,
+                )
+            )
+        assert admit.call_count == int(review_attempt)
+    else:
+        kwargs = dict(agent="codex", task_id="task-1", raw_path=str(target), review_dependencies=dependencies)
+        if entrypoint == "base":
+            call = delegate._resolve_worktree_base_sha
+            kwargs.update(base="main", branch=None, allow_rebase=True)
+        else:
+            call = delegate._ensure_worktree
+            kwargs.update(dry_run=False, full_checkout=True)
+        if review_attempt:
+            with pytest.raises(delegate.WorktreeStaleBase, match="automatic rebasing is disabled"):
+                call(**kwargs)
+        else:
+            call(**kwargs)
+
+    if review_attempt:
+        assert admitted_input.is_file()
+        assert admitted_input.read_bytes() == b"admitted\n"
+        assert delegate._resolve_sha(target) == admitted_sha
+    else:
+        assert delegate._resolve_sha(target) == upstream_sha
+        if upstream_change == "changed":
+            assert admitted_input.read_bytes() == b"changed upstream\n"
+        else:
+            assert not admitted_input.exists()
+    assert git(target, "status", "--porcelain").stdout == ""
+    if entrypoint == "dispatch":
+        assert rc == (1 if review_attempt else 0)
+        if review_attempt:
+            assert "automatic rebasing is disabled" in capsys.readouterr().err
+            state = delegate._read_state(delegate._state_path("task-1"))
+            assert state["status"] == "failed"
+            assert "automatic rebasing is disabled" in state["last_error"]
+
+
+@pytest.mark.parametrize("dependency", ["manifest", "input_root", "render_checkout"])
+@pytest.mark.parametrize("substituted_route", [False, True], ids=["requested", "substituted"])
+def test_review_attempt_auto_target_is_reused_after_admission(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, dependency, substituted_route
+):
+    """#9426 AC-02: auto reuse reaches a real, non-dry-run provision and keeps admitted inputs."""
+    main, target = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate, "_local_repo_root", target)
+    monkeypatch.chdir(target)
+    _patch_worker_popen(monkeypatch)
+    _review_code(main)
+    _review_code(target)
+    input_file = target / "curriculum" / "input.md"
+    input_file.parent.mkdir()
+    input_file.write_text("admitted\n", encoding="utf-8")
+    state_dir = target / "local_state"
+    state_dir.mkdir()
+    manifest = (state_dir if dependency == "manifest" else tmp_path) / "manifest.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    for args in (
+        [
+            "add",
+            ".mcp/servers/sources/server.py",
+            "requirements-lock.txt",
+            "scripts/review/prompts/lesson-review.md.j2",
+            "curriculum/input.md",
+        ],
+        ["commit", "-m", "admitted review files"],
+    ):
+        subprocess.run(["git", *args], cwd=target, check=True, capture_output=True, timeout=30)
+    remote = _add_local_bare_origin(main)
+    assert subprocess.run(
+        ["git", "--git-dir", str(remote), "rev-parse", "codex/task-1"],
+        cwd=target, check=True, capture_output=True, text=True, timeout=30,
+    ).stdout.strip() == delegate._resolve_sha(target)
+    head = delegate._resolve_sha(target)
+    render_checkout = target if dependency == "render_checkout" else main
+    input_root = target if dependency == "input_root" else tmp_path
+    prompt = _rendered_attempt_prompt(render_checkout, tmp_path / "prompt.md", input_root=input_root)
+    monkeypatch.setattr("scripts.agent_runtime.review_mcp.review_server_checkout", lambda: main)
+    plan = argparse.Namespace(
+        config_path=tmp_path / "attempt.json",
+        manifest_sha256=hashlib.sha256(manifest.read_bytes()).hexdigest(),
+    )
+    assert delegate._auto_worktree_path("codex", "task-1") == target
+    if substituted_route:
+        assert delegate._auto_worktree_path("claude", "task-1") != target
+        _patch_admitted_codex_review_substitution(monkeypatch)
+    with (
+        patch("scripts.agent_runtime.review_mcp.prepare_review_attempt", return_value=plan),
+        patch.object(delegate, "_ensure_worktree", wraps=delegate._ensure_worktree) as ensure,
+        patch.object(delegate, "_release_stale_branch_holders") as release,
+    ):
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude" if substituted_route else "codex",
+                task_id="task-1",
+                mode="read-only",
+                worktree="auto",
+                branch="codex/task-1",
+                prompt=None,
+                prompt_file=str(prompt),
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
+                dry_run=False,
+            )
+        )
+    assert rc == 0, capsys.readouterr().err
+    ensure.assert_called_once()
+    assert ensure.call_args.kwargs.get("dry_run", False) is False
+    release.assert_not_called()
+    state = delegate._read_state(delegate._state_path("task-1"))
+    assert state["worktree_reused"] is True
+    assert state["worktree_path"] == str(target)
+    assert state["worktree_base_sha"] == head
+    assert state["agent"] == "codex"
+    if substituted_route:
+        assert state["substitution"]["requested_agent"] == "claude"
+        assert state["substitution"]["actual_agent"] == "codex"
+    assert delegate._resolve_sha(target) == head
+    assert input_file.read_bytes() == b"admitted\n"
+    assert manifest.is_file()
 
 
 def test_review_attempt_branch_dry_run_keeps_protected_superseded_round(tmp_tasks_dir, tmp_path, monkeypatch, capsys):

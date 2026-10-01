@@ -4876,12 +4876,14 @@ _GIT_ENV_DENYLIST = {
 
 
 def _sanitized_git_env() -> dict[str, str]:
-    """Drop repo-redirecting Git env so ``cwd=worktree`` resolves that repo."""
-    return {
+    """Select the explicit repository and refuse interactive credential prompts."""
+    env = {
         key: value
         for key, value in os.environ.items()
         if key not in _GIT_ENV_DENYLIST and not key.startswith("PRE_COMMIT")
     }
+    env["GIT_TERMINAL_PROMPT"] = "0"
+    return env
 
 
 def _is_virtualenv_bin_path(entry: str) -> bool:
@@ -7493,6 +7495,7 @@ def _resolve_worktree_base_sha(
     pinned_head_sha: str | None = None,
     detached: bool = False,
     validated_path: Path | None = None,
+    review_dependencies: Sequence[tuple[str, Path]] = (),
 ) -> str:
     """Resolve one immutable base SHA before worktree creation.
 
@@ -7521,7 +7524,9 @@ def _resolve_worktree_base_sha(
             # rewrite the PR's history. In particular, rebasing an attached
             # branch can flatten or replay merge commits. A stale attachment
             # must be synchronized deliberately by its owner.
-            allow_rebase=allow_rebase and requested_branch is None,
+            # Review admission already read these dependencies. A stale target
+            # must refuse rather than advance to different admitted bytes.
+            allow_rebase=allow_rebase and requested_branch is None and not review_dependencies,
         )
         if requested_branch:
             # Existing paths used to return before this check, allowing local
@@ -7712,7 +7717,7 @@ def _ensure_worktree(
                 # `--branch` is an explicit attach request. Never rewrite its
                 # history during provisioning; a stale worktree must be
                 # synchronized deliberately by its owner.
-                allow_rebase=not dry_run and requested_branch is None,
+                allow_rebase=not dry_run and requested_branch is None and not review_dependencies,
             )
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -10165,11 +10170,12 @@ def _dispatch(
             return 2
         args.cwd = str(validated_cwd)
 
-    # Retention check precedes route/prompt admission and all worktree cleanup.
+    # Explicit-target retention precedes route/prompt admission and all cleanup.
+    # Auto targets depend on the admitted route and are checked just after routing.
     # The sidecar's paths grant no authority; they only prevent destructive release.
     try:
         review_dependencies = _review_attempt_worktree_dependencies(args)
-        if review_dependencies and getattr(args, "branch", None):
+        if review_dependencies and getattr(args, "branch", None) and worktree_arg != "auto":
             # A validated target already registered on this branch is reused,
             # never released. Later worktree validation still checks reuse safety.
             _refuse_review_attempt_branch_holders(
@@ -10210,6 +10216,21 @@ def _dispatch(
     requested_agent = routing.requested_agent or original_agent
     agent_alias_note = routing.alias_note
     agent_substitution = routing.substitution
+
+    if review_dependencies and getattr(args, "branch", None) and worktree_arg == "auto":
+        try:
+            reuse_target = _normalize_worktree_path(
+                str(_auto_worktree_path(dispatch_agent, args.task_id, repo_root=target_repo_root)),
+                repo_root=target_repo_root,
+            )
+            _refuse_review_attempt_branch_holders(
+                args.branch,
+                [path for path in _branch_worktree_paths(args.branch) if path != reuse_target],
+                review_dependencies,
+            )
+        except (OSError, ValueError, RuntimeError) as exc:
+            print(f"❌ review attempt refused: {exc}", file=sys.stderr)
+            return 2
 
     # #9275 (operator decision 2026-09-30): a bounded worker is admitted only with a
     # complete advisory envelope bound to this dispatch. Checked on the admitted
@@ -10864,6 +10885,7 @@ def _dispatch(
                     detached=detached_read_only,
                     # A Kimi worktree is never rebased: it must stay at the commit the gate read.
                     allow_rebase=not bool(getattr(args, "dry_run", False)) and kimi_start_commit is None,
+                    review_dependencies=review_dependencies,
                     pinned_head_sha=(
                         getattr(args, "pinned_head", None)
                         or (gemini_checked_heads[-1] if gemini_checked_heads else None)

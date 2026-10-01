@@ -71,6 +71,7 @@ def _git(cwd: Path, *args: str) -> str:
         for key, value in os.environ.items()
         if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
     }
+    env.update(GIT_TERMINAL_PROMPT="0", GIT_ALLOW_PROTOCOL="file")
     proc = subprocess.run(
         ["git", *args],
         cwd=cwd,
