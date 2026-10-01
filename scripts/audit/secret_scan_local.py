@@ -1,26 +1,33 @@
 #!/usr/bin/env python3
-"""Offline local TruffleHog scan with safe fixed flags and redacted console output.
+"""Offline local TruffleHog scan whose console output carries no finding-derived text.
 
 Runbook: docs/runbooks/secret-scanning.md (#9416).
+
+Threat model: the operator's agents run this wrapper as the operator's own user.
+Hostile data comes from the scanned content, the fields of each finding, the
+configured remote and the command-line options. Other processes of the same user
+racing to move directories, hardlink files or bind-mount are out of scope: they
+could write the files directly.
 
 Safety properties, each covered by tests/audit/test_secret_scan_local.py:
 
 * verification is never enabled: ``--no-verification`` is always passed and any
   verification-style option on the wrapper's command line is refused;
-* the full TruffleHog JSON (which carries raw secret values) goes only to a new
-  owner-only (0600) file outside the repository; TruffleHog's own stderr goes to
-  a sibling owner-only log, never to the console. Both are created relative to
-  one opened directory whose identity (device and inode of it and every
-  ancestor) was checked against the repository roots, so swapping a path
-  component for a symlink after the check cannot redirect the write;
-* console output is allowlist-only: counts, plus detector, file, short commit
-  and line when each matches a conservative pattern and holds none of the
-  finding's secret values, else a fixed placeholder. Every diagnostic is a
-  fixed message that never repeats an option value, a path, a remote URL or
-  tool output;
+* the console carries no finding-derived text: totals, a count per detector name
+  from the closed set ``KNOWN_DETECTORS`` (any other name is counted as
+  ``other``), exit codes and fixed messages. No path, commit, line, key value or
+  placeholder is printed. ``show-keys`` prints a report's top-level keys from the
+  closed set ``REPORT_KEYS`` and the same per-detector counts, nothing else;
+* the full report (raw secret values) and TruffleHog's log are created
+  exclusively, 0600, in a new 0700 ``mkdtemp`` directory under the system temp
+  root; only the generated file name is printed. The run is refused up front
+  when the resolved temp root lies inside the repository or its primary checkout;
+* every diagnostic is a fixed message that never repeats an option value, a
+  path, a remote URL or tool output;
 * ``history`` mirror-clones only a plain ``https://`` remote (validated, passed
-  after ``--``, transport restricted to https) into a temporary directory
-  outside the repository and removes it afterwards; a failed removal is an error.
+  after ``--``, transport restricted to https) into a second ``mkdtemp``
+  directory by its absolute path and removes it afterwards; a failed removal is
+  an error.
 """
 
 from __future__ import annotations
@@ -39,9 +46,9 @@ import tempfile
 import urllib.parse
 from collections import Counter
 from collections.abc import Iterable, Sequence
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import NoReturn
+from typing import NoReturn, TextIO
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -52,7 +59,6 @@ EXIT_ERROR = 2
 TRUFFLEHOG = "trufflehog"
 IGNORE_FILE = ".trufflehogignore"
 DEFAULT_TIMEOUT_SECONDS = 3600
-DEFAULT_MAX_ROWS = 200
 GIT_TIMEOUT_SECONDS = 60
 # Bytes of path arguments per ``trufflehog filesystem`` call; well under ARG_MAX.
 TREE_BATCH_BYTES = 100_000
@@ -74,42 +80,171 @@ FORBIDDEN_FLAG_MARKERS: tuple[str, ...] = ("verif", "--results")
 DENIED_DIR_PARTS = frozenset({".git", ".venv", "node_modules", ".worktrees"})
 DATABASE_SUFFIXES = (".db", ".sqlite", ".sqlite3", ".duckdb", ".db-wal", ".db-shm", ".db-journal")
 
-# Console allowlist. A field that does not fully match, or that contains one of
-# the finding's secret values, is replaced by its placeholder.
-SAFE_DETECTOR = re.compile(r"[A-Za-z0-9_-]{1,64}")
-SAFE_PATH = re.compile(r"[A-Za-z0-9._/+@=-]{1,240}")
-SAFE_COMMIT = re.compile(r"[0-9a-f]{7,64}")
-SAFE_LINE = re.compile(r"[0-9]{1,9}")
-DETECTOR_WITHHELD = "<detector withheld>"
-PATH_WITHHELD = "<path withheld>"
-COMMIT_WITHHELD = "<commit withheld>"
-LINE_WITHHELD = "<line withheld>"
-# Finding fields that carry secret material; shorter strings are too generic to match on.
-SECRET_FIELDS = ("Raw", "RawV2", "Redacted", "ExtraData", "StructuredData", "SecretParts")
-MIN_SECRET_MATCH = 6
-
 # history: the remote must be a plain https URL, and git may use no other transport
 # (also after url.<base>.insteadOf rewrites or redirects).
 SAFE_REMOTE_NAME = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,63}")
 MAX_REMOTE_URL = 2048
 CLONE_PROTOCOLS = "https"
 
-NOFOLLOW = getattr(os, "O_NOFOLLOW", 0)
-DIR_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_CLOEXEC | NOFOLLOW
-FILE_FLAGS = os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | NOFOLLOW
-MAX_ANCESTORS = 4096
+FILE_FLAGS = os.O_RDWR | os.O_CREAT | os.O_EXCL | os.O_CLOEXEC | getattr(os, "O_NOFOLLOW", 0)
+OUTPUT_PREFIX = "secret-scan-"
+MIRROR_PREFIX = "secret-scan-mirror-"
+
+# Top-level keys of a TruffleHog JSON result (pkg/output/json.go, v3.97.9).
+REPORT_KEYS = frozenset(
+    {
+        "SourceMetadata",
+        "SourceID",
+        "SourceType",
+        "SourceName",
+        "DetectorType",
+        "DetectorName",
+        "DetectorDescription",
+        "DecoderName",
+        "Verified",
+        "VerificationError",
+        "VerificationFromCache",
+        "Raw",
+        "RawV2",
+        "Redacted",
+        "ExtraData",
+        "StructuredData",
+        "SecretParts",
+    }
+)
+
+# The only detector names the console may print: TruffleHog's DetectorType enum
+# (proto/detector_type.proto, v3.97.9), whose value names are a finding's
+# DetectorName, sorted. Any other name is counted under OTHER_DETECTOR. When upgrading
+# TruffleHog, regenerate this list from that file; a test checks every name against
+# the installed binary. Kept as one whitespace-separated block: a list literal would be
+# formatted one name per line.
+KNOWN_DETECTORS = frozenset(
+    """
+    Abstract AbuseIPDB Abyssale Accuweather AdafruitIO AdobeIO Adzuna Aerisweather Aeroworkflow Aftership Agora Aha
+    AirbrakeProjectKey AirbrakeUserKey Airship AirtableApiKey AirtableMetadataApiKey AirtableOAuth
+    AirtablePersonalAccessToken AirVisual Aiven AkamaiToken Alchemy Alconost Alegra AletheiaApi AlgoliaAdminKey
+    Alibaba AlienVault Allsports Alphavantage Amadeus AmazonMWS Ambee AmplitudeApiKey AMQP Anthropic Anypoint
+    AnypointOAuth2 Apacta Api2Cart Api2Convert ApiDeck Apiflash ApiFonica Apify Apilayer APIMatic ApiMetrics
+    ApiScience APITemplate Apollo Appcues Appfollow Appointedd AppOptics AppSynergy Apptivo ArtifactoryAccessToken
+    ArtifactoryReferenceToken Artsy AsanaOauth AsanaPersonalAccessToken AssemblyAI Atera Atlassian Audd
+    Auth0ManagementApiToken Auth0oauth Authorize Autodesk Autoklose AutoPilot Avalara AvazaPersonalAccessToken
+    AviationStack AWS AWSAppSync AWSSessionKey Axonaut Aylien Ayrshare Azure AzureActiveDirectoryApplicationSecret
+    AzureApiManagementRepositoryKey AzureAPIManagementSubscriptionKey AzureAppConfigConnectionString AzureBatch
+    AzureCacheForRedisAccessKey AzureContainerRegistry AzureCosmosDBKeyIdentifiable AzureDevopsPersonalAccessToken
+    AzureDirectManagementKey AzureFunctionKey AzureManagementCertificate AzureMLWebServiceClassicIdentifiableKey
+    AzureOpenAI AzureRefreshToken AzureSasToken AzureSearchAdminKey AzureSearchQueryKey AzureSQL AzureStorage
+    Bannerbear Baremetrics BaseApiIO BasisTheory Beamer Beebole Besnappy Besttime BetterStack Billomat
+    BingSubscriptionKey Bitbar BitbucketAppPassword BitbucketDataCenter BitcoinAverage Bitfinex BitGo
+    BitLyAccessToken Bitmex Blablabus Blazemeter BlitApp BlockNative Blogger BombBomb BoostNote Bored Borgbase Box
+    BoxOauth BraintreePayments BrainTrustApiKey Brandfetch Brightlocal BrowserStack Browshot BscScan Bubble BuddyNS
+    Budibase Bugherd Bugsnag Buildkite BuiltWith Bulbul Bulksms ButterCMS Caflou Calendarific CalendlyApiKey
+    CalorieNinja Campayn CannyIo CapsuleCRM CaptainData CarbonInterface Cashboard Caspio Censys CentralStationCRM
+    CexIO Chartmogul Chatbot Chatfule ChecIO ChecklyHQ Checkmarket Checkout Checkvist Cicero Circle CircleCI
+    Clarifai Clearbit ClickHelp ClickSendsms ClickupPersonalToken Cliengo Clientary Clinchpad Clockify ClockworkSMS
+    Close Cloudant CloudConvert CloudElements CloudflareApiToken CloudflareCaKey CloudflareGlobalApiKey CloudImage
+    Cloudinary Cloudmersive Cloudplan CloudsightKey Cloudsmith Cloudways Cloverly Cloze ClustDoc Coda Codacy
+    Codeclimate Codemagic Codequiry CoinApi Coinbase CoinbaseWaaS CoinGecko Coinlayer Coinlib CoinMarketCap Collect2
+    Column Cometchat CommerceJS Commodities CompanyHub ConfluenceDataCenter Confluent ContentfulDelivery
+    ContentfulPersonalAccessToken ContentStack ConversionTools Convert ConvertApi Convertkit Convier Copper
+    Copyscape Couchbase CountryLayer Courier Coveralls CraftMyPDF Createsend Cricket CrossBrowserTesting Crowdin
+    CryptoCompare CurrencyCloud Currencyfreaks Currencylayer CurrencyScoop CurrentsAPI CustomerGuru CustomerIO
+    CustomRegex D7Network DailyCO Dandelion Dareboost Databox DatabricksToken DatadogApikey DatadogToken DataFire
+    DataGov Debounce DeepAI Deepgram DeepSeek Delighted Demio DenoDeploy Deputy Detectify DetectLanguage Dfuse
+    Diffbot Diggernaut DigitalOceanSpaces DigitalOceanToken DigitalOceanV2 DiscordBotToken DiscordWebhook Disqus
+    Distribusion Ditto Dnscheck Docker Dockerhub Docparser Documo Docusign Doppler Dotdigital Dovico DronaHQ DroneCI
+    Dropbox Duda Duffel DuffelToken Duo Duply Dwolla Dynadot Dynalist Dynatrace Dyspatch EagleEyeNetworks
+    EasyInsight EcoStruxureIT Edamam EdenAI Edusign EightxEight ElasticEmail ElasticPath ElevenLabs Emailoctopus
+    Enablex EndorLabs Enigma EnvoyApiKey EquinixOauth Eraser Etherscan Ethplorer EtsyApiKey Eventbrite Everhour
+    Eversign ExchangeRateAPI ExchangeRatesAPI ExportSDK ExtractorAPI FacebookOAuth FacePlusPlus FakeJSON FastForex
+    FastlyPersonalToken Fastspring Feedier Feedly Fetchrss Fibery FigmaPersonalAccessToken FileIO Filestack Finage
+    FinancialModelingPrep Findl Finnhub Firebase FirebaseCloudMessaging FixerIO FlagsmithEnvironmentKey
+    FlagsmithToken FlatIO Fleetbase Flexport Flickr FlightApi FlightLabs Flightstats Float Flowdash Flowdock FlowFlu
+    Flutterwave FlyIO Fmfw FormBucket Formcraft FormIO Formsite Formstack Fountain FourSquare FrameIO Freshbooks
+    Freshdesk Front FTP Fulcrum FullContact Fullstory Fusebill FXMarket GCP GCPApplicationDefaultCredentials
+    Geckoboard Gemini Generic Gengo Geoapify Geocode Geocodify Geocodio GeoIpifi GetEmail GetEmails GetGeoAPI
+    Getgist Getresponse GetSandbox Github GitHubApp GitHubOauth2 GitHubOld Gitlab GitLabOauth2 Gitter Glassnode
+    GlitterlyAPI GoCanvas GoCardless GoDaddy GoodDay GoogleApiKey GoogleGeminiAPIKey GoogleOauth2 Goshippo Gosquared
+    Grafana GrafanaServiceAccount GraphCMS Graphhopper Groovehq Groq GTMetrix Guardianapi Gumroad Guru Gyazo Happi
+    Happyscribe Harness Harvest HashiCorpVaultAuth HashiCorpVaultBatchToken HashiCorpVaultToken Hasura Heatmapapi
+    HelloSign HelpCrunch Helpscout HereAPI Heroku Hive Hiveage HolidayAPI Holistic Honey Honeycomb Host Hotwire
+    Html2Pdf HubSpot HubSpotApiKey HubSpotOauth HuggingFace Humanity HumioAPIToken Hunter Hybiscus HypeAuditor
+    Hypertrack IbmCloudUserKey IconFinder Iexapis Iexcloud Image4 Imagekit ImageToText Imagga Imgix Imgur Impala
+    Infobip Infura Insightly Instabot Instamojo Integromat Intercom Interseller Intra42 Intrinio InvoiceOcean
+    Ip2location Ipapi IPGeolocation Ipify IPInfo IPinfoDB IPQuality IpStack JDBC JiraDataCenterPAT JiraToken Jotform
+    JSONbin Jumpcloud Jumpseller JupiterOne Juro JWT Kairos KakaoTalk Kaleyra KalturaAppToken KalturaSession Kanban
+    Kanbantool KarmaCRM KeenIO Keygen Kickbox KiteConnect Klaviyo Klipfolio KnapsackPro Kontent Kraken KubeConfig
+    KuCoin Kylas Langfuse LangSmith LanguageLayer LarkSuite LarkSuiteApiKey Lastfm LaunchDarkly LDAP Leadfeeder
+    Lemlist LemonSqueezy Lendflow LessAnnoyingCRM Lexigram LinearAPI LineMessaging LineNotify LinkedIn LinkPreview
+    Linode LiveAgent Livestorm Loadmill Lob LocationIQ Loggly Loginradius LogzIO LokaliseToken Loyverse LunchMoney
+    Luno M3o Macaddress MadKudu MagicBell Magnetic Mailboxlayer Mailchimp Mailerlite Mailgun MailJetBasicAuth
+    MailJetSMS Mailmodo Mailsac Mandrill Manifest MapBox Mapquest Marketstack MattermostPersonalToken Mavenlink
+    MaxMindLicense MeaningCloud MediaStack Meistertask Meraki Mesibo MessageBird Messari MetaAPI Metabase Metrilo
+    MicrosoftTeamsWebhook Midise Mindmeister Miro Mite Mixcloud Mixmax Mixpanel Mockaroo Moderation Mojohelpdesk
+    MollieAccessToken MollieAPIKey Monday MongoDB MonkeyLearn Moonclerk Moosend Moralis Mrticktock Mux Myexperiment
+    Myfreshworks MyIntervals NasdaqDataLink NetCore Nethunt Netlify Netsuite NeutrinoApi NewRelicBrowserKey
+    NewRelicInsightsInsertKey NewRelicInsightsQueryKey NewRelicLicenseKey NewRelicMobileAppToken
+    NewRelicPersonalApiKey NewRelicUserKey Newsapi Newscatcher NexmoApiKey Nftport NGC Ngrok NiceHash Nicereply
+    Nightfall Nimble Nitro Nordigen Noticeable Notion NozbeTeams NpmToken Nubela NuGetApiKey Numverify Nutritionix
+    NVAPI Nylas Nytimes Oanda OcrSpace OctopusDeploy Okta Omnisend Onbuka Onedesk OneLogin OnepageCRM Onesignal
+    Onfleet OnWaterIO OOPSpam OpenAI OpenAIAdmin OpenCageData Opendatasoft Opengraphr OpenRouter Openuv OpenVpn
+    OpenWeather Opsgenie Optidash Optimizely Overloop Owlbot PackageCloud Paddle Pagarme Page2Images PagerDutyApiKey
+    Pandadoc PandaScore Paperform Papyrs ParallelDots Parsehub Parsers Parseur Partnerstack Passbase Pastebin
+    Paydirtapp Paymo Paymoapp Paymongo PaypalOauth Paystack PdfLayer PDFmyURL PdfShift PendoIntegrationKey
+    PeopleDataLabs Pepipost Percy PgAnalyzeReadKey Photoroom PhraseAccessToken Pinata Pinecone Pipedream Pipedrive
+    PivotalTracker Pixabay PlaidKey PlaidToken PlanetScale PlanetScaleDb PlanviewLeanKit Planyo Plivo Podio PollsAPI
+    Poloniex Polygon Portainer PortainerToken PositionStack PostageApp Postbacks Postgres PosthogApp Postman
+    Postmark Powrbot Prefect Printfection Privacy PrivateKey Processst Prodpad ProspectCRM ProspectIO ProtocolsIO
+    ProxyCrawl PubNubPublishKey PubNubSubscriptionKey Pulumi PureStake PushBulletApiKey PusherChannelKey PyPI Qase
+    Qualaroo Qubole Quickbase QuickMetrics RabbitMQ RailwayApp Ramp RapidApi Raven Rawg RazorPay Reachmail ReadMe
+    ReallySimpleSystems Rebrandly ReCAPTCHA RechargePayments Redbooth RedHatPyxis Redis Refiner Rentman Repairshopr
+    Replicate ReplyIO RequestFinance Resend Restpack RestpackHtmlToPdfAPI RestpackScreenshotAPI Rev RevampCRM
+    RingCentral Riotgames RiteKit Roaring RobinhoodCrypto RocketReach Rockset Rootly Rosette Route4me Rownd RubyGems
+    RunRunIt SaladCloudApiKey Salesblink Salescookie Salesflare Salesforce SalesforceOauth2 SalesforceRefreshToken
+    Salesmate Samsara Sanity SatismeterProjectkey SatismeterWritekey SauceLabs ScalewayKey Scalr Scrapeowl
+    ScraperAPI ScraperBox ScraperSite ScrapeStack Scrapfly ScrapingAnt ScrapingBee ScrapingDog ScreenshotAPI
+    ScreenshotLayer ScrutinizerCi SecurityTrails SegmentApiKey SelectPDF Sellfy Semaphore Sendbird
+    SendbirdOrganizationAPI SendGrid SendinBlueV2 Sendoso Sentiment SentryOrgToken SentryToken Serphouse SerpStack
+    Sheety Sherpadesk Shipday Shippo ShodanKey ShopeeOpenPlatform Shopify ShopifyOAuth Shortcut Shotstack
+    Shutterstock ShutterstockOAuth Signable Signalwire Signaturit Signupgenius Sigopt SimFin Simplesat Simplybook
+    SimplyNoted Simvoly SinchMessage Sirv Siteleaf Skrappio SkyBiometry Slack SlackWebhook Smartsheets SmartyStreets
+    Smooch SMSApi Snipcart Snowflake SnykKey SolarWindsObservability SonarCloud Sourcegraph SourcegraphCody
+    Sparkpost SpectralOps SpeechTextAI SplunkOberservabilityToken Spoonacular SportRadar Sportsmonk SpotifyKey
+    SQLServer Square SquareApp Squarespace Squareup SslMate Statuscake Statuspage Statuspal Stitchdata Stockdata
+    Storecove Stormboard Stormglass StoryblokAccessToken StoryblokPersonalAccessToken Storychief Strava Streak
+    StreamChatMessaging Stripe StripePaymentIntent Stripo Stytch Sugester SumoLogicKey SupabaseToken SuperNotesAPI
+    Supportbee Surge SurveyAnyplace SurveyBot SurveySparrow Survicate Swell Swiftype TableauPersonalAccessToken
+    Tailscale Tallyfy TatumIO Taxjar Teamgate Teamup TeamViewer TeamworkCRM TeamworkDesk TeamworkSpaces
+    TechnicalAnalysisApi Tefter TelegramBotToken Telesign Teletype Telnyx TencentCloudKey
+    TerraformCloudPersonalToken Test TestingBot Text2Data Textmagic TheOddsApi Thinkific ThousandEyes TicketMaster
+    Tickettailor Tiingo TimeCamp Timekit Timezoneapi TinesWebhook TLy Tmetric Todoist TogglTrack Tokeet TomorrowIO
+    Tomtom Tradier Transferwise TravelPayouts TravisCI TrelloApiKey Trimble Tru TrufflehogEnterprise TwelveData
+    Twilio TwilioApiKey Twist Twitch TwitchAccessToken Twitter TwitterApiSecret TwitterConsumerkey Tyntec Typeform
+    Typetalk UberServerToken Ubidots Uclassify UnifyID Unplugg Unsplash UPCDatabase Uplead UploadCare Uproc
+    UptimeRobot Upwave URI Urlscan User Userflow UserStack VagrantCloudPersonalToken VatLayer Vbout Veevavault
+    Vercel Verifier Verimail Veriphone VersionEye Viewneo VirusTotal VisualCrossing Voiceflow Voicegain Vonage
+    VoodooSMS Vouchery Vpnapi VultrApiKey Vyte Wakatime WalkScore WeatherBit WeatherStack Web3Storage Webengage
+    Webex WebexBot Webflow WebScraper Webscraping Websitepulse WeChatAppKey WeightsAndBiases WePay Whoxy Wistia Wit
+    Wiz Woopra WordsApi Workday Worksnaps Workstack WorldCoinIndex WorldWeather WpEngine Wrike XAI Yandex Yelp Yext
+    YouNeedABudget YouSign YoutubeApiKey ZapierWebhook ZendeskApi ZenkitAPI ZenRows Zenscrape Zenserp Zeplin
+    Zerobounce ZeroTier ZipAPI ZipBooks ZipCodeAPI Zipcodebase ZohoCRM ZonkaFeedback ZulipChat
+    """.split()  # noqa: SIM905 - 1,068 names; see above
+)
+OTHER_DETECTOR = "other"
 
 MSG_VERIFICATION = (
     "refused a verification-style option: verified mode sends candidate secrets "
     "to provider APIs and needs an operator decision; this wrapper is offline only"
 )
 MSG_USAGE = "usage error: unknown option, missing argument or invalid value; see --help"
-MSG_OUTPUT_INSIDE = "refused --output inside the repository: raw secrets must stay outside it"
-MSG_TEMP_INSIDE = "the system temp directory is inside the repository; pass --output"
-MSG_MIRROR_INSIDE = "refused mirror directory inside the repository"
+MSG_TEMP_INSIDE = (
+    "refused: the system temp directory is inside the repository or its primary checkout; "
+    "set TMPDIR to a directory outside it"
+)
 MSG_REMOTE_NAME = "refused --remote: not a plain remote name"
 MSG_REMOTE_URL = "refused the configured remote URL: only a plain https:// URL without credentials is allowed"
 MSG_MIRROR_REMOVAL = "could not remove the temporary mirror (secret-scan-mirror-*); remove it by hand"
+MSG_REPORT_LABEL = "full report (owner-only, contains raw values, never paste)"
 
 
 class ScanError(Exception):
@@ -117,28 +252,21 @@ class ScanError(Exception):
 
 
 @dataclass(frozen=True)
-class Finding:
-    """Console-safe display values of one finding."""
-
-    detector: str
-    file: str
-    commit: str
-    line: str
-
-    @property
-    def withheld(self) -> bool:
-        return any(
-            value in {DETECTOR_WITHHELD, PATH_WITHHELD, COMMIT_WITHHELD, LINE_WITHHELD}
-            for value in (self.detector, self.file, self.commit, self.line)
-        )
-
-
-@dataclass(frozen=True)
 class Outputs:
     report_fd: int
     log_fd: int
-    # Wrapper-generated file name of a default report, or None for --output.
-    default_name: str | None
+    # Wrapper-generated file name; the only part of the location ever printed.
+    name: str
+
+
+@dataclass
+class Summary:
+    """Console-safe totals of a report: closed-set names and integers only."""
+
+    findings: int = 0
+    detectors: Counter[str] = field(default_factory=Counter)
+    keys: set[str] = field(default_factory=set)
+    unknown_keys: int = 0
 
 
 def _errno_name(exc: OSError) -> str:
@@ -185,84 +313,42 @@ def protected_roots(top: Path) -> list[Path]:
     return sorted({top, common.resolve().parent, PROJECT_ROOT})
 
 
-def _identity(info: os.stat_result) -> tuple[int, int]:
-    return (info.st_dev, info.st_ino)
+def temp_root(roots: Iterable[Path]) -> Path:
+    """The resolved system temp directory, refused when it lies inside a protected root."""
+    root = Path(tempfile.gettempdir()).resolve()
+    if any(root.is_relative_to(protected) for protected in roots):
+        raise ScanError(MSG_TEMP_INSIDE)
+    return root
 
 
-def root_identities(roots: Iterable[Path]) -> frozenset[tuple[int, int]]:
-    return frozenset(_identity(os.stat(root)) for root in roots)
-
-
-def dir_is_inside(dir_fd: int, root_ids: frozenset[tuple[int, int]]) -> bool:
-    """Whether an open directory is a protected root or below one.
-
-    Walks ``..`` handles from the open directory itself, so the answer is about
-    the directory that will be written to, not about a path that may change.
-    """
-    current = os.dup(dir_fd)
+def _mkdtemp(root: Path, prefix: str) -> Path:
     try:
-        for _ in range(MAX_ANCESTORS):
-            info = os.fstat(current)
-            if _identity(info) in root_ids:
-                return True
-            parent = os.open("..", DIR_FLAGS, dir_fd=current)
-            if _identity(os.fstat(parent)) == _identity(info):
-                os.close(parent)
-                return False  # reached the filesystem root
-            os.close(current)
-            current = parent
-        return True  # fail closed on an absurd depth
-    finally:
-        os.close(current)
+        return Path(tempfile.mkdtemp(prefix=prefix, dir=root))  # 0700, absolute
+    except OSError as exc:
+        raise ScanError(f"cannot create a private temporary directory ({_errno_name(exc)})") from exc
 
 
-def open_checked_dir(path: Path, root_ids: frozenset[tuple[int, int]], refusal: str) -> int:
-    """Open a directory once, refusing it when it is inside a protected root."""
+def _create_private(path: Path) -> int:
+    """Create a new owner-only file; never follow a symlink or reuse an existing file."""
     try:
-        fd = os.open(path.resolve(strict=True), DIR_FLAGS)
-    except (OSError, RuntimeError) as exc:
-        reason = _errno_name(exc) if isinstance(exc, OSError) else "symlink loop"
-        raise ScanError(f"cannot open the target directory ({reason})") from exc
-    if dir_is_inside(fd, root_ids):
-        os.close(fd)
-        raise ScanError(refusal)
-    return fd
-
-
-def _create_private(dir_fd: int, name: str) -> int:
-    """Create a new owner-only file in an open directory; never follow a symlink or reuse a file."""
-    try:
-        fd = os.open(name, FILE_FLAGS, 0o600, dir_fd=dir_fd)
-    except FileExistsError as exc:
-        raise ScanError("output path already exists; choose a new file") from exc
+        fd = os.open(path, FILE_FLAGS, 0o600)
     except OSError as exc:
         raise ScanError(f"cannot create output file ({_errno_name(exc)})") from exc
     os.fchmod(fd, stat.S_IRUSR | stat.S_IWUSR)
     return fd
 
 
-def open_outputs(output: Path | None, mode: str, root_ids: frozenset[tuple[int, int]]) -> Outputs:
-    """Open the JSON report and TruffleHog log, both 0600 and outside the repository."""
-    if output is None:
-        directory, name = Path(tempfile.gettempdir()), f"secret-scan-{mode}-{secrets.token_hex(8)}.jsonl"
-        refusal = MSG_TEMP_INSIDE
-    else:
-        directory, name = output.parent, output.name
-        refusal = MSG_OUTPUT_INSIDE
-        if name in {"", ".", ".."}:
-            raise ScanError("--output must name a new file")
-    dir_fd = open_checked_dir(directory, root_ids, refusal)
+def open_outputs(root: Path, mode: str) -> Outputs:
+    """Create the report and the TruffleHog log in a fresh private directory under ``root``."""
+    directory = _mkdtemp(root, OUTPUT_PREFIX)
+    name = f"{OUTPUT_PREFIX}{mode}-{secrets.token_hex(8)}.jsonl"
+    report_fd = _create_private(directory / name)
     try:
-        report_fd = _create_private(dir_fd, name)
-        try:
-            log_fd = _create_private(dir_fd, name + ".log")
-        except ScanError:
-            os.close(report_fd)
-            os.unlink(name, dir_fd=dir_fd)
-            raise
-    finally:
-        os.close(dir_fd)
-    return Outputs(report_fd, log_fd, name if output is None else None)
+        log_fd = _create_private(directory / f"{name}.log")
+    except ScanError:
+        os.close(report_fd)
+        raise
+    return Outputs(report_fd, log_fd, name)
 
 
 def _denied(rel: str) -> bool:
@@ -310,7 +396,7 @@ def batches(paths: Sequence[str], budget: int = TREE_BATCH_BYTES) -> list[list[s
     return out
 
 
-def _run_trufflehog(cmd: list[str], cwd: str | Path, out_fd: int, log_fd: int, timeout: int) -> None:
+def _run_trufflehog(cmd: list[str], cwd: Path, out_fd: int, log_fd: int, timeout: int) -> None:
     assert_safe_command(cmd)
     try:
         result = subprocess.run(cmd, cwd=cwd, stdout=out_fd, stderr=log_fd, timeout=timeout, check=False)
@@ -366,32 +452,23 @@ def clone_command(url: str, dest: str) -> list[str]:
     return ["git", "-c", "credential.helper=", "clone", "--quiet", "--mirror", "--", url, dest]
 
 
-def _dir_cwd(fd: int, fallback: Path) -> tuple[str, tuple[int, ...]]:
-    """A cwd naming exactly the open directory where /proc allows it, else its path."""
-    proc = f"/proc/self/fd/{fd}"
-    if os.path.isdir(proc):
-        return proc, (fd,)
-    return str(fallback), ()
-
-
-def _remove_mirror(parent_fd: int, name: str, prior: ScanError | None) -> None:
+def _remove_mirror(mirror_dir: Path, prior: ScanError | None) -> None:
     try:
-        shutil.rmtree(name, dir_fd=parent_fd)
+        shutil.rmtree(mirror_dir)
     except OSError as exc:
         message = f"{prior}; {MSG_MIRROR_REMOVAL}" if prior is not None else MSG_MIRROR_REMOVAL
         raise ScanError(message) from exc
 
 
 def _clone_and_scan(
-    binary: str, url: str, work_fd: int, work_path: Path, repo: Path, out_fd: int, log_fd: int, timeout: int
+    binary: str, url: str, mirror_dir: Path, repo: Path, out_fd: int, log_fd: int, timeout: int
 ) -> None:
-    cwd, pass_fds = _dir_cwd(work_fd, work_path)
+    mirror = mirror_dir / "mirror.git"
     env = {**os.environ, "GIT_TERMINAL_PROMPT": "0", "GIT_ALLOW_PROTOCOL": CLONE_PROTOCOLS}
     try:
         clone = subprocess.run(
-            clone_command(url, "mirror.git"),
-            cwd=cwd,
-            pass_fds=pass_fds,
+            clone_command(url, str(mirror)),
+            cwd=mirror_dir,
             stdout=subprocess.DEVNULL,
             stderr=log_fd,
             env=env,
@@ -402,133 +479,67 @@ def _clone_and_scan(
         raise ScanError("mirror clone timed out (see --timeout-seconds)") from exc
     if clone.returncode != 0:
         raise ScanError(f"mirror clone of the configured remote failed (exit {clone.returncode})")
-    real = Path(os.readlink(cwd)) if pass_fds else work_path
-    cmd = [binary, "git", f"file://{real / 'mirror.git'}", "--bare", *SAFE_FLAGS, *_exclude_args(repo)]
-    _run_trufflehog(cmd, real, out_fd, log_fd, timeout)
+    cmd = [binary, "git", f"file://{mirror}", "--bare", *SAFE_FLAGS, *_exclude_args(repo)]
+    _run_trufflehog(cmd, mirror_dir, out_fd, log_fd, timeout)
 
 
-def scan_history(
-    binary: str,
-    repo: Path,
-    url: str,
-    mirror_parent: Path | None,
-    root_ids: frozenset[tuple[int, int]],
-    out_fd: int,
-    log_fd: int,
-    timeout: int,
-) -> None:
-    parent = mirror_parent if mirror_parent is not None else Path(tempfile.gettempdir())
-    parent_fd = open_checked_dir(parent, root_ids, MSG_MIRROR_INSIDE)
+def scan_history(binary: str, repo: Path, url: str, root: Path, out_fd: int, log_fd: int, timeout: int) -> None:
+    mirror_dir = _mkdtemp(root, MIRROR_PREFIX)
     try:
-        name = f"secret-scan-mirror-{secrets.token_hex(8)}"
-        try:
-            os.mkdir(name, 0o700, dir_fd=parent_fd)
-        except OSError as exc:
-            raise ScanError(f"cannot create the mirror directory ({_errno_name(exc)})") from exc
-        try:
-            work_fd = os.open(name, DIR_FLAGS, dir_fd=parent_fd)
-            try:
-                _clone_and_scan(binary, url, work_fd, parent / name, repo, out_fd, log_fd, timeout)
-            finally:
-                os.close(work_fd)
-        except BaseException as exc:
-            _remove_mirror(parent_fd, name, exc if isinstance(exc, ScanError) else None)
-            raise
-        _remove_mirror(parent_fd, name, None)
-    finally:
-        os.close(parent_fd)
+        _clone_and_scan(binary, url, mirror_dir, repo, out_fd, log_fd, timeout)
+    except BaseException as exc:
+        _remove_mirror(mirror_dir, exc if isinstance(exc, ScanError) else None)
+        raise
+    _remove_mirror(mirror_dir, None)
 
 
-def _secret_values(record: dict) -> set[str]:
-    values: set[str] = set()
-    stack: list[object] = [record.get(field) for field in SECRET_FIELDS]
-    while stack:
-        item = stack.pop()
-        if isinstance(item, str) and len(item) >= MIN_SECRET_MATCH:
-            values.add(item)
-        elif isinstance(item, dict):
-            stack.extend(item.values())
-        elif isinstance(item, list):
-            stack.extend(item)
-    return values
-
-
-def _shown(value: str, pattern: re.Pattern[str], hidden: set[str], placeholder: str) -> str:
-    if pattern.fullmatch(value) and not any(secret in value for secret in hidden):
-        return value
-    return placeholder
-
-
-def _location(record: object, number: int) -> dict:
-    """The single source-location object of a finding; any other shape is a typed error."""
+def _detector_name(record: object, number: int) -> str:
+    """The DetectorName of a well-formed finding; any other shape is a typed error."""
     error = ScanError(f"unexpected report structure at line {number}")
     if not isinstance(record, dict) or not isinstance(record.get("DetectorName"), str):
         raise error
     metadata = record.get("SourceMetadata")
     data = metadata.get("Data") if isinstance(metadata, dict) else None
-    if not isinstance(data, dict) or len(data) != 1:
+    if not isinstance(data, dict) or len(data) != 1 or not isinstance(next(iter(data.values())), dict):
         raise error
-    (location,) = data.values()
-    if not isinstance(location, dict):
-        raise error
-    return location
+    return record["DetectorName"]
 
 
-def _field(value: object, pattern: re.Pattern[str], hidden: set[str], placeholder: str) -> str:
-    if value is None:
-        return "-"
-    if isinstance(value, int) and not isinstance(value, bool):
-        value = str(value)
-    if not isinstance(value, str):
-        return placeholder
-    return _shown(value, pattern, hidden, placeholder)
+def summarize(fh: TextIO) -> Summary:
+    """Reduce a JSON Lines report to closed-set names and counts; never keep a field value."""
+    summary = Summary()
+    unknown: set[str] = set()
+    try:
+        for number, raw_line in enumerate(fh, start=1):
+            if not raw_line.strip():
+                continue
+            try:
+                record = json.loads(raw_line)
+            except (ValueError, RecursionError) as exc:
+                # Never echo the line: it may hold a secret.
+                raise ScanError(f"unparseable JSON at report line {number}") from exc
+            name = _detector_name(record, number)
+            summary.findings += 1
+            summary.detectors[name if name in KNOWN_DETECTORS else OTHER_DETECTOR] += 1
+            summary.keys.update(key for key in record if key in REPORT_KEYS)
+            unknown.update(key for key in record if key not in REPORT_KEYS)
+    except UnicodeDecodeError as exc:
+        raise ScanError("the report is not valid UTF-8") from exc
+    summary.unknown_keys = len(unknown)
+    return summary
 
 
-def to_finding(record: dict, location: dict) -> Finding:
-    """Console-safe display values; anything outside the allowlist becomes a placeholder."""
-    hidden = _secret_values(record)
-    commit = _field(location.get("commit"), SAFE_COMMIT, hidden, COMMIT_WITHHELD)
-    return Finding(
-        detector=_shown(record["DetectorName"], SAFE_DETECTOR, hidden, DETECTOR_WITHHELD),
-        file=_field(location.get("file"), SAFE_PATH, hidden, PATH_WITHHELD),
-        commit=commit[:10] if SAFE_COMMIT.fullmatch(commit) else commit,
-        line=_field(location.get("line"), SAFE_LINE, hidden, LINE_WITHHELD),
-    )
+def detector_lines(summary: Summary) -> list[str]:
+    lines = [f"findings: {summary.findings}"]
+    for name, count in sorted(summary.detectors.items(), key=lambda item: (item[0] == OTHER_DETECTOR, item[0])):
+        lines.append(f"  {name}: {count}")
+    return lines
 
 
-def read_findings(report_fd: int) -> list[Finding]:
-    """Parse the report through its open descriptor, keeping only console-safe location fields."""
-    findings: list[Finding] = []
-    os.lseek(report_fd, 0, os.SEEK_SET)
-    with os.fdopen(os.dup(report_fd), encoding="utf-8", errors="strict") as fh:
-        try:
-            for number, raw_line in enumerate(fh, start=1):
-                if not raw_line.strip():
-                    continue
-                try:
-                    record = json.loads(raw_line)
-                except (ValueError, RecursionError) as exc:
-                    # Never echo the line: it may hold a secret.
-                    raise ScanError(f"unparseable JSON at report line {number}") from exc
-                findings.append(to_finding(record, _location(record, number)))
-        except UnicodeDecodeError as exc:
-            raise ScanError("the report is not valid UTF-8") from exc
-    return findings
-
-
-def render(findings: Sequence[Finding], max_rows: int) -> list[str]:
-    lines = [f"findings: {len(findings)}"]
-    for detector, count in sorted(Counter(f.detector for f in findings).items()):
-        lines.append(f"  {detector}: {count}")
-    withheld = sum(1 for f in findings if f.withheld)
-    if withheld:
-        lines.append(f"findings with withheld fields: {withheld} (see the JSON report)")
-    rows = sorted(set(findings), key=lambda f: (f.detector, f.file, f.commit, f.line))
-    if rows:
-        lines.append("detector\tfile\tcommit\tline")
-        lines.extend(f"{f.detector}\t{f.file}\t{f.commit}\t{f.line}" for f in rows[:max_rows])
-        if len(rows) > max_rows:
-            lines.append(f"... {len(rows) - max_rows} more rows in the JSON report")
+def key_lines(summary: Summary) -> list[str]:
+    lines = [f"keys: {', '.join(sorted(summary.keys))}"]
+    if summary.unknown_keys:
+        lines.append(f"keys outside the TruffleHog result format: {summary.unknown_keys}")
     return lines
 
 
@@ -556,7 +567,8 @@ def build_parser() -> argparse.ArgumentParser:
         prog="secret_scan_local.py",
         description=(
             "Run the locally installed TruffleHog offline (no verification) over the working tree or\n"
-            "the full public history, printing only counts and detector/file/commit/line rows.\n"
+            "the full public history. The console shows only totals and a count per detector name;\n"
+            "nothing taken from a finding (no path, commit or line) is ever printed.\n"
             "Use before a PR that changes credential, identity, transport or hook code and after a\n"
             "suspected leak. Not a CI replacement (CI scans every pushed range) and never verified mode."
         ),
@@ -564,22 +576,24 @@ def build_parser() -> argparse.ArgumentParser:
             "Examples:\n"
             "  .venv/bin/python scripts/audit/secret_scan_local.py tree\n"
             "  .venv/bin/python scripts/audit/secret_scan_local.py history\n"
-            "  .venv/bin/python scripts/audit/secret_scan_local.py --output /tmp/scan.jsonl tree\n"
+            '  .venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"\n'
             "\n"
             "Fixed TruffleHog flags: " + " ".join(SAFE_FLAGS) + "\n"
             "  plus --exclude-paths=.trufflehogignore when the file exists.\n"
             "\n"
             "Outputs:\n"
-            "  Full JSON Lines report (contains RAW secret values) in a new 0600 file outside the\n"
-            "  repository, default under the system temp directory; TruffleHog's log beside it\n"
-            "  as <report>.log (0600). Never paste either anywhere. stdout: counts and rows only;\n"
-            "  a field outside the safe pattern is shown as a placeholder. The report location is\n"
-            "  printed only as the generated default file name, never as a path.\n"
-            "  history: a temporary bare mirror outside the repository, removed afterwards; only a\n"
-            "  plain https:// remote without credentials is mirrored.\n"
+            "  Full JSON Lines report (contains RAW secret values) and TruffleHog's log\n"
+            "  (<report>.log), both new 0600 files in a new 0700 secret-scan-* directory under the\n"
+            "  system temp directory (TMPDIR). Only the generated report file name is printed; find\n"
+            '  it with: find "${TMPDIR:-/tmp}" -maxdepth 2 -name <name>. Never paste either file.\n'
+            "  stdout: totals and per-detector counts; detector names outside TruffleHog's known set\n"
+            "  are counted as 'other'. show-keys prints only a report's top-level key names and\n"
+            "  per-detector counts. history: a temporary bare mirror under the system temp\n"
+            "  directory, removed afterwards; only a plain https:// remote without credentials.\n"
+            "  The run is refused when the system temp directory is inside the repository.\n"
             "\n"
             "Exit codes:\n"
-            "  0  no findings\n"
+            "  0  no findings (tree, history); report summarized (show-keys)\n"
             "  1  findings (triage per the runbook)\n"
             "  2  refusal, missing trufflehog, git or TruffleHog error, timeout, usage error,\n"
             "     unexpected report structure, mirror removal failure\n"
@@ -588,15 +602,6 @@ def build_parser() -> argparse.ArgumentParser:
             "  .trufflehogignore, issue #9416."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
-    )
-    parser.add_argument(
-        "--output",
-        type=Path,
-        default=None,
-        help=(
-            "New file for the full JSON report; must not exist and must be outside the repository "
-            "(default: a fresh secret-scan-<mode>-*.jsonl in the system temp directory)."
-        ),
     )
     parser.add_argument(
         "--repo",
@@ -610,13 +615,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_TIMEOUT_SECONDS,
         help=f"Limit per clone or TruffleHog call, in seconds (default: {DEFAULT_TIMEOUT_SECONDS}).",
     )
-    parser.add_argument(
-        "--max-rows",
-        type=_int_at_least(0),
-        default=DEFAULT_MAX_ROWS,
-        help=f"Maximum finding rows printed; counts always cover all (default: {DEFAULT_MAX_ROWS}).",
-    )
-    sub = parser.add_subparsers(dest="mode", required=True, metavar="{tree,history}")
+    sub = parser.add_subparsers(dest="mode", required=True, metavar="{tree,history,show-keys}")
     sub.add_parser(
         "tree",
         help="Scan tracked and untracked-not-ignored files of the work tree "
@@ -631,56 +630,57 @@ def build_parser() -> argparse.ArgumentParser:
         default="origin",
         help="Name of the configured public https remote to mirror (default: origin).",
     )
-    history.add_argument(
-        "--mirror-parent",
-        type=Path,
-        default=None,
-        help="Directory to hold the temporary mirror; must be outside the repository "
-        "(default: the system temp directory). Needs room for a full clone.",
+    show_keys = sub.add_parser(
+        "show-keys",
+        help="Print only the top-level key names of an existing report and its per-detector counts.",
     )
+    show_keys.add_argument("report", type=Path, help="A JSON Lines report written by tree or history.")
     return parser
 
 
-def _report_line(outputs: Outputs) -> str:
-    label = "full report (owner-only, contains raw values, never paste)"
-    if outputs.default_name is not None and SAFE_PATH.fullmatch(outputs.default_name):
-        return f"{label}: {outputs.default_name} in the system temp directory, log beside it with .log appended"
-    return f"{label}: written to the --output path, log beside it with .log appended"
+def _show_keys(report: Path) -> int:
+    try:
+        fh = open(report, encoding="utf-8", errors="strict")  # noqa: SIM115 - closed below
+    except OSError as exc:
+        raise ScanError(f"cannot open the report ({_errno_name(exc)})") from exc
+    with fh:
+        if not stat.S_ISREG(os.fstat(fh.fileno()).st_mode):
+            raise ScanError("the report is not a regular file")
+        summary = summarize(fh)
+    for line in (*key_lines(summary), *detector_lines(summary)):
+        print(line)
+    return EXIT_CLEAN
 
 
 def _scan(args: argparse.Namespace, binary: str) -> int:
     repo = work_tree_top(args.repo)
-    root_ids = root_identities(protected_roots(repo))
     # Refusals come before any output file exists.
+    root = temp_root(protected_roots(repo))
     url = configured_remote_url(repo, args.remote) if args.mode == "history" else ""
-    outputs = open_outputs(args.output, args.mode, root_ids)
+    outputs = open_outputs(root, args.mode)
+    print(
+        f"{MSG_REPORT_LABEL}: {outputs.name} in a new secret-scan-* directory under the system temp "
+        "directory, log beside it with .log appended"
+    )
     try:
         try:
             if args.mode == "tree":
                 scanned = scan_tree(binary, repo, outputs.report_fd, outputs.log_fd, args.timeout_seconds)
                 print(f"mode: tree, files scanned: {scanned}")
             else:
-                scan_history(
-                    binary,
-                    repo,
-                    url,
-                    args.mirror_parent,
-                    root_ids,
-                    outputs.report_fd,
-                    outputs.log_fd,
-                    args.timeout_seconds,
-                )
+                scan_history(binary, repo, url, root, outputs.report_fd, outputs.log_fd, args.timeout_seconds)
                 print("mode: history")
         except ScanError as exc:
             raise ScanError(f"{exc}; details in the owner-only log beside the report") from exc
-        findings = read_findings(outputs.report_fd)
+        os.lseek(outputs.report_fd, 0, os.SEEK_SET)
+        with os.fdopen(os.dup(outputs.report_fd), encoding="utf-8", errors="strict") as fh:
+            summary = summarize(fh)
     finally:
         os.close(outputs.report_fd)
         os.close(outputs.log_fd)
-    for line in render(findings, args.max_rows):
+    for line in detector_lines(summary):
         print(line)
-    print(_report_line(outputs))
-    return EXIT_FINDINGS if findings else EXIT_CLEAN
+    return EXIT_FINDINGS if summary.findings else EXIT_CLEAN
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -693,14 +693,16 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_ERROR
     except SystemExit as exc:
         return exc.code if isinstance(exc.code, int) else EXIT_ERROR
-    binary = shutil.which(TRUFFLEHOG)
-    if binary is None:
-        print(
-            "secret_scan_local: trufflehog not found on PATH; see docs/runbooks/secret-scanning.md",
-            file=sys.stderr,
-        )
-        return EXIT_ERROR
     try:
+        if args.mode == "show-keys":
+            return _show_keys(args.report)
+        binary = shutil.which(TRUFFLEHOG)
+        if binary is None:
+            print(
+                "secret_scan_local: trufflehog not found on PATH; see docs/runbooks/secret-scanning.md",
+                file=sys.stderr,
+            )
+            return EXIT_ERROR
         return _scan(args, binary)
     except ScanError as exc:
         print(f"secret_scan_local: {exc}", file=sys.stderr)

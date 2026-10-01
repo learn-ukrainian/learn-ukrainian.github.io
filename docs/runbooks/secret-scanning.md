@@ -3,8 +3,8 @@
 TruffleHog is installed locally and is on every agent's `PATH` as
 `trufflehog`. CI already scans every pushed range (see
 [`ci-gate.md`](ci-gate.md)); this runbook covers the local scan an agent runs
-itself, through one wrapper that keeps it offline and keeps secret values off the
-console. Issue #9416.
+itself, through one wrapper that keeps it offline and prints nothing taken from a
+finding. Issue #9416.
 
 ## When to run it
 
@@ -22,6 +22,7 @@ changes.
 ```bash
 .venv/bin/python scripts/audit/secret_scan_local.py tree
 .venv/bin/python scripts/audit/secret_scan_local.py history
+.venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"
 .venv/bin/python scripts/audit/secret_scan_local.py --help
 ```
 
@@ -30,15 +31,25 @@ From a dispatch worktree, use the primary checkout's interpreter (see
 
 | Mode | Scans | How |
 | --- | --- | --- |
-| `tree` | Tracked and untracked-not-ignored files of the work tree | `trufflehog filesystem` over that file list (batched). Never `.git`, `.venv`, `node_modules`, `.worktrees` or database files under `data/`; symlinks are skipped. |
-| `history` | Every commit on every ref of the configured public remote (default `origin`) | Clones a full bare mirror into a new temporary directory outside the repository, scans it with `trufflehog git file://<mirror> --bare`, then removes the directory. |
+| `tree` | Tracked and untracked-not-ignored files of the work tree | `trufflehog filesystem` over that file list (batched). Never `.git`, `.venv`, `node_modules`, `.worktrees` or database files under `data/`; symlinks and files beneath a symlinked directory are skipped. |
+| `history` | Every commit on every ref of the configured public remote (default `origin`) | Clones a full bare mirror into a new temporary directory under the system temp directory, scans it with `trufflehog git file://<mirror> --bare`, then removes the directory. A failed removal is exit 2. |
+| `show-keys REPORT` | An existing report | Prints only the report's top-level key names and the count of findings per detector. Runs nothing. |
 
 Why a mirror: agent checkouts are blobless partial clones. `trufflehog git`
 cannot fetch the missing objects from a partial clone, and a `file://` URL to a
 bare repository only works with `--bare`. The mirror clone is the full public
-history, so it needs disk room for a complete clone; use `--mirror-parent` to put
-it on a larger disk (it is refused inside the repository). The clone runs with no
-credential helper and no terminal prompt: the remote is public.
+history, so it needs disk room for a complete clone; point `TMPDIR` at a
+directory on a larger disk (outside the repository) if needed. Only a plain
+`https://` remote without credentials is mirrored; git may use no other
+transport, and the clone runs with no credential helper and no terminal prompt.
+
+## Threat model
+
+The operator's agents run the wrapper as the operator's own user. Hostile data
+comes from the scanned content, the fields of each finding, the configured
+remote and the command-line options. Other processes of the same user racing to
+move directories, hardlink files or bind-mount are out of scope: they could
+write the files directly.
 
 ## Fixed flags and parity with CI
 
@@ -67,39 +78,67 @@ operator decision first.
 ## Output handling
 
 - The full JSON Lines report contains the **raw secret values** (`Raw`,
-  `RawV2`, `Redacted`, `ExtraData` and others). It is written to a new file with
-  owner-only permissions (0600) outside the repository: by default a fresh
-  `secret-scan-<mode>-*.jsonl` in the system temp directory, or `--output PATH`,
-  which must not exist and is refused inside the repository or its primary
-  checkout. TruffleHog's own log goes beside it as `<report>.log`, also 0600.
-- The console shows only the count per detector and one row per finding:
-  detector, file, short commit (history) and line. Author emails are not shown.
-- Never paste the report, the log, a `Raw`/`Redacted` value or a screenshot of
-  them into a PR, issue, comment, commit, chat or transcript. Public text quotes
-  detector, file, short commit and line, or just the count.
-- Delete the report and log when triage is finished.
+  `RawV2`, `Redacted`, `ExtraData` and others). The wrapper writes it, and
+  TruffleHog's own log beside it as `<report>.log`, as new owner-only (0600)
+  files in a new owner-only (0700) `secret-scan-*` directory under the system
+  temp directory (`TMPDIR`, else `/tmp`). There is no option to choose another
+  location. The run is refused before anything is written when the system temp
+  directory is inside the repository or its primary checkout.
+- The console never shows anything taken from a finding: no path, commit, line
+  or value. It shows the report's generated file name, the number of files
+  scanned (`tree`), the total, and a count per detector. Detector names come
+  from TruffleHog's own detector list compiled into the wrapper; any other name
+  is counted as `other`. Every error is a fixed message.
+- Never paste the report, the log, any field of a finding or a screenshot of
+  them into a PR, issue, comment, commit, chat or transcript. Public text
+  quotes only counts and outcomes.
+- Delete the report directory when triage is finished.
 
-Exit codes: `0` no findings, `1` findings, `2` refusal, missing binary, git or
-TruffleHog error, or timeout. A missing binary prints a typed message pointing
-here.
+Exit codes: `0` no findings (`show-keys`: report summarized), `1` findings,
+`2` refusal, missing binary, git or TruffleHog error, timeout, unexpected report
+structure, or mirror removal failure. A missing binary prints a typed message
+pointing here.
 
 ## Triage
 
-1. Read the rows. For each, open the file at that line (or `git show
-   <commit>:<file>` for history) locally and decide: test fixture, public
-   identifier, hash or other false positive; or a possible real credential.
-2. False positive in a file that should never be scanned (lockfiles, generated
+Triage reads the report with your own tools, and only commands that print key
+names or counts. Never print `Raw`, `RawV2`, `Redacted`, `ExtraData`,
+`SecretParts` or a location field: an agent's console is a transcript.
+
+1. Locate the report without printing its directory, and see its shape:
+
+   ```bash
+   REPORT=$(find "${TMPDIR:-/tmp}" -maxdepth 2 -name 'secret-scan-tree-0123456789abcdef.jsonl')
+   .venv/bin/python scripts/audit/secret_scan_local.py show-keys "$REPORT"
+   jq -c '.SourceMetadata.Data | map_values(keys)' "$REPORT" | sort -u   # location key names
+   ```
+
+2. Test false-positive hypotheses by counting. Each command prints one number
+   (use `.SourceMetadata.Data.Git.file` for `history`):
+
+   ```bash
+   # Findings in one file you suspect (a lockfile, a test fixture):
+   jq -n --arg f uv.lock '[inputs | select(.SourceMetadata.Data.Filesystem.file == $f)] | length' "$REPORT"
+   # Findings outside the paths you believe are noise; 0 settles the hypothesis:
+   jq -n '[inputs | select(.SourceMetadata.Data.Filesystem.file
+       | test("^(tests/fixtures/|uv\\.lock$)") | not)] | length' "$REPORT"
+   # Findings of one detector:
+   jq -n '[inputs | select(.DetectorName == "PrivateKey")] | length' "$REPORT"
+   ```
+
+3. False positive in a file that should never be scanned (lockfiles, generated
    hashes): propose a `.trufflehogignore` entry in a reviewed PR. For a single
    line, an inline `trufflehog:ignore` comment is the narrower fix. Never widen
    the exclusions to silence a real credential.
-3. Possible real credential: stop. Do not try it, do not verify it, do not
-   remove it in a quick commit (history keeps it). Report to the operator
-   through the private channel with detector, file, short commit and line only.
-   The operator decides on rotation or revocation; agents never rotate, revoke
-   or rewrite history.
-4. Public issue text records only the count and the outcome ("N candidates, all
-   false positives" or "handed to the operator"), never the value or where a
-   credential is used.
+4. Anything the counts do not settle is a possible real credential: stop. Do
+   not try it, do not verify it, do not remove it in a quick commit (history
+   keeps it). Tell the operator through the private channel that a report needs
+   inspection and where it is on the host; the operator opens it with their own
+   tools and decides on rotation or revocation. Agents never rotate, revoke or
+   rewrite history.
+5. Public issue text records only the count and the outcome ("N candidates, all
+   false positives" or "handed to the operator"), never the value, its location
+   or where a credential is used.
 
 ## Relation to the other secret gates
 

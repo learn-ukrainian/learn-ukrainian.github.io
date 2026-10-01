@@ -2,18 +2,21 @@
 
 A stub ``trufflehog`` placed first on PATH records its argv and emits canned
 findings whose secret fields hold a sentinel. No test touches the network or a
-real remote: ``history`` mirrors a local bare repository.
+real remote: ``history`` mirrors a local bare repository. Two tests use the
+installed TruffleHog when it is on PATH and are skipped otherwise.
 """
 
 from __future__ import annotations
 
+import base64
 import json
 import os
+import re
+import shutil
 import stat
 import subprocess
 import sys
 import tempfile
-import threading
 from pathlib import Path
 
 import pytest
@@ -22,6 +25,7 @@ from scripts.audit import secret_scan_local as ssl
 
 SCRIPT = Path(ssl.__file__)
 SENTINEL = "s3ntinel-RAW-value-9416-do-not-print"
+REAL_TRUFFLEHOG = shutil.which("trufflehog")
 
 STUB = """#!{python}
 import json, os, sys
@@ -47,23 +51,28 @@ sys.exit(int(os.environ.get("STUB_EXIT", "0")))
 """
 
 
-def _finding(source: str, location: dict) -> str:
-    secret = {
-        "DetectorName": "PrivateKey",
-        "Raw": SENTINEL,
-        "RawV2": SENTINEL + "v2",
-        "Redacted": SENTINEL[:12],
-        "ExtraData": {"hint": SENTINEL},
-        "StructuredData": {"key": SENTINEL},
-        "SecretParts": {"key": SENTINEL},
+def _finding(source: str, location: dict, detector: object = "PrivateKey", raw: str = SENTINEL, **extra: object) -> str:
+    record = {
+        "DetectorName": detector,
+        "Raw": raw,
+        "RawV2": raw + "v2",
+        "Redacted": raw[:12],
+        "ExtraData": {"hint": raw},
+        "StructuredData": {"key": raw},
+        "SecretParts": {"key": raw},
         "SourceMetadata": {"Data": {source: location}},
+        **extra,
     }
-    return json.dumps(secret) + "\n"
+    return json.dumps(record) + "\n"
 
 
 TREE_FINDINGS = _finding("Filesystem", {"file": "app.py", "line": 3}) * 2
 GIT_FINDINGS = _finding(
     "Git", {"file": "conf/k.txt", "line": 1, "commit": "0123456789abcdef0123", "email": "t@example.invalid"}
+)
+REPORT_LINE = re.compile(
+    re.escape(ssl.MSG_REPORT_LABEL) + r": (secret-scan-(tree|history)-[0-9a-f]{16}\.jsonl) in a new secret-scan-\* "
+    r"directory under the system temp directory, log beside it with \.log appended"
 )
 
 
@@ -100,9 +109,13 @@ def stub(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Path]:
     monkeypatch.setenv("STUB_RECORD", str(record))
     monkeypatch.setenv("STUB_FINDINGS", str(findings))
     monkeypatch.setenv("STUB_EXIT", "0")
-    monkeypatch.setenv("TMPDIR", str(scratch))
-    monkeypatch.setattr(tempfile, "tempdir", None)
+    _use_temp_root(monkeypatch, scratch)
     return {"record": record, "findings": findings, "tmp": scratch}
+
+
+def _use_temp_root(monkeypatch: pytest.MonkeyPatch, directory: Path) -> None:
+    monkeypatch.setenv("TMPDIR", str(directory))
+    monkeypatch.setattr(tempfile, "tempdir", None)
 
 
 def _calls(stub: dict[str, Path]) -> list[dict]:
@@ -135,34 +148,233 @@ def repo(tmp_path: Path) -> Path:
     return root
 
 
-def _assert_no_secret(captured: pytest.CaptureResult[str]) -> None:
-    assert SENTINEL not in captured.out
-    assert SENTINEL[:12] not in captured.out
-    assert SENTINEL not in captured.err
-    assert SENTINEL[:12] not in captured.err
+def _assert_absent(captured: pytest.CaptureResult[str], *needles: str) -> None:
+    for needle in (SENTINEL, SENTINEL[:12], *needles):
+        assert needle not in captured.out
+        assert needle not in captured.err
 
 
-def _report_path(out: str, directory: Path) -> Path:
-    """The default report: the console names only the generated file, never a directory."""
-    line = next(line for line in out.splitlines() if line.startswith("full report"))
-    name = line.split(": ", 1)[1].split(" ", 1)[0]
-    assert name.startswith("secret-scan-") and "/" not in name
-    return directory / name
+def _report_path(out: str, temp_root: Path) -> Path:
+    """The report: the console names only the generated file, never its directory."""
+    (name,) = [match.group(1) for line in out.splitlines() if (match := REPORT_LINE.fullmatch(line))]
+    (path,) = temp_root.glob(f"{ssl.OUTPUT_PREFIX}*/{name}")
+    return path
 
 
-def test_tree_findings_print_counts_and_rows_but_never_raw_values(
+def _console_body(out: str) -> list[str]:
+    """stdout without the report-location line, which must be the first line."""
+    first, *rest = out.splitlines()
+    assert REPORT_LINE.fullmatch(first)
+    return rest
+
+
+def _all_paths(root: Path) -> set[Path]:
+    return {path for path in root.rglob("*") if ".git" not in path.relative_to(root).parts}
+
+
+# --- Console carries totals, closed-set detector counts and fixed text only ----------------
+
+
+def test_tree_findings_print_only_totals_and_detector_counts(
     stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
 ) -> None:
     assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
     captured = capfd.readouterr()
-    _assert_no_secret(captured)
-    assert "findings: 2" in captured.out
-    assert "  PrivateKey: 2" in captured.out
-    assert "PrivateKey\tapp.py\t-\t3" in captured.out
+    _assert_absent(captured, "app.py\t", "\t3")
+    assert _console_body(captured.out) == ["mode: tree, files scanned: 3", "findings: 2", "  PrivateKey: 2"]
+    assert captured.err == ""
     # The raw values are kept, but only in the owner-only report outside the repository.
     report = _report_path(captured.out, stub["tmp"])
     assert SENTINEL in report.read_text(encoding="utf-8")
     assert not report.is_relative_to(repo)
+
+
+SECRET_A = "AKIA" + "Q7X2" * 6 + "-first-secret"
+SECRET_B = "ghp_" + "Zb9" * 10 + "-second-secret"
+SECRET_C = "xoxb-" + "1234567890" * 4 + "-third-secret"
+MILLION = 1_000_000
+
+
+def _adversarial_report() -> tuple[str, list[str]]:
+    """Findings whose non-secret fields carry other findings' secrets, encodings and fragments."""
+    b64 = base64.b64encode(SECRET_B.encode()).decode()
+    fragments = [SECRET_C[:12], SECRET_C[12:24], SECRET_C[24:36], SECRET_C[36:]]
+    lines = [
+        _finding("Filesystem", {"file": "ok.txt", "line": 1}, detector="AWS", raw=SECRET_A),
+        # Another finding's raw secret inside a path, and as a commit id.
+        _finding("Git", {"file": f"conf/{SECRET_A}.txt", "line": 2, "commit": SECRET_A}, raw=SECRET_B),
+        # Base64 of a secret: matches any path-like character class.
+        _finding("Filesystem", {"file": f"b/{b64}", "line": 3}, detector="Github", raw=SECRET_B),
+        # One secret split across detector, file, commit and line.
+        _finding(
+            "Git",
+            {"file": fragments[1], "commit": fragments[2], "line": fragments[3]},
+            detector=fragments[0],
+            raw=SECRET_C,
+        ),
+        # Million-character fields, including the detector name.
+        _finding(
+            "Filesystem",
+            {"file": "a/" + "x" * MILLION + SECRET_A, "line": "9" * MILLION},
+            detector="Z" * MILLION,
+            raw="r" * MILLION,
+        ),
+        # Detector name that is a secret with control characters; extra fields with secrets.
+        _finding(
+            "Git",
+            {"file": "a.txt", "line": 1, "email": SECRET_B, "message": SECRET_C},
+            detector=f"Key\n{SECRET_A}\t",
+            raw=SECRET_C,
+        ),
+        # Unknown top-level key named after a secret; case-variant of a known detector.
+        _finding("Filesystem", {"file": "a.txt", "line": 1}, detector="privatekey", **{SECRET_B: SECRET_C}),
+        _finding("Filesystem", {"file": "a.txt", "line": 1}, detector="PrivateKey"),
+    ]
+    needles = [SECRET_A, SECRET_B, SECRET_C, b64, b64[:16], *fragments, "x" * 64, "Z" * 64, "9" * 64, "r" * 64]
+    return "".join(lines), needles
+
+
+def test_console_never_contains_any_finding_field(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    report, needles = _adversarial_report()
+    stub["findings"].write_text(report, encoding="utf-8")
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
+    captured = capfd.readouterr()
+    # Exact match: nothing but the allowlisted totals, detector counts and fixed text.
+    assert _console_body(captured.out) == [
+        "mode: tree, files scanned: 3",
+        "findings: 8",
+        "  AWS: 1",
+        "  Github: 1",
+        "  PrivateKey: 2",
+        "  other: 4",
+    ]
+    assert captured.err == ""
+    _assert_absent(captured, *needles, "ok.txt", "conf/", "a.txt")
+    assert len(captured.out) < 500
+
+
+def test_show_keys_prints_only_closed_set_keys_and_counts(
+    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    report, needles = _adversarial_report()
+    path = tmp_path / "report.jsonl"
+    path.write_text(report, encoding="utf-8")
+    assert ssl.main(["show-keys", str(path)]) == ssl.EXIT_CLEAN
+    captured = capfd.readouterr()
+    shown = sorted(
+        {"DetectorName", "ExtraData", "Raw", "RawV2", "Redacted", "SecretParts", "SourceMetadata", "StructuredData"}
+    )
+    assert captured.out.splitlines() == [
+        f"keys: {', '.join(shown)}",
+        "keys outside the TruffleHog result format: 1",
+        "findings: 8",
+        "  AWS: 1",
+        "  Github: 1",
+        "  PrivateKey: 2",
+        "  other: 4",
+    ]
+    assert captured.err == ""
+    _assert_absent(captured, *needles, str(tmp_path))
+    assert _calls(stub) == []  # show-keys never runs TruffleHog
+
+
+def test_detector_closed_set_is_well_formed() -> None:
+    assert len(ssl.KNOWN_DETECTORS) > 1000
+    assert all(re.fullmatch(r"[A-Za-z0-9]{1,64}", name) for name in ssl.KNOWN_DETECTORS)
+    assert ssl.OTHER_DETECTOR.lower() not in {name.lower() for name in ssl.KNOWN_DETECTORS}
+    assert {"AWS", "Github", "PrivateKey", "Lob"} <= ssl.KNOWN_DETECTORS
+
+
+@pytest.mark.skipif(REAL_TRUFFLEHOG is None, reason="TruffleHog is not installed")
+def test_detector_closed_set_matches_the_installed_trufflehog(tmp_path: Path) -> None:
+    """Every compiled-in name is a detector type the installed TruffleHog recognizes."""
+    empty = tmp_path / "empty.txt"
+    empty.write_text("", encoding="utf-8")
+
+    def accepted(names: list[str]) -> bool:
+        result = subprocess.run(
+            [
+                str(REAL_TRUFFLEHOG),
+                *("filesystem", "--no-update", "--no-verification", "--json"),
+                f"--include-detectors={','.join(names)}",
+                str(empty),
+            ],
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+        )
+        return "unrecognized detector type" not in result.stderr
+
+    assert not accepted(["NotARealDetector9416"])  # the probe can fail
+    assert accepted(sorted(ssl.KNOWN_DETECTORS))
+
+
+@pytest.mark.skipif(REAL_TRUFFLEHOG is None, reason="TruffleHog is not installed")
+def test_real_trufflehog_finding_is_counted_without_printing_it(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capfd: pytest.CaptureFixture[str]
+) -> None:
+    crypto = pytest.importorskip("cryptography.hazmat.primitives.asymmetric.rsa")
+    serialization = pytest.importorskip("cryptography.hazmat.primitives.serialization")
+    key = crypto.generate_private_key(public_exponent=65537, key_size=2048)
+    pem = key.private_bytes(
+        serialization.Encoding.PEM, serialization.PrivateFormat.TraditionalOpenSSL, serialization.NoEncryption()
+    ).decode()
+    (repo / "fixture.pem").write_text(pem, encoding="utf-8")
+    temp_root = tmp_path / "real-tmp"
+    temp_root.mkdir()
+    _use_temp_root(monkeypatch, temp_root)
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
+    captured = capfd.readouterr()
+    assert _console_body(captured.out) == ["mode: tree, files scanned: 4", "findings: 1", "  PrivateKey: 1"]
+    body = pem.splitlines()[1]
+    assert body not in captured.out + captured.err
+    assert "fixture.pem" not in captured.out + captured.err
+    assert body in _report_path(captured.out, temp_root).read_text(encoding="utf-8")
+
+
+# --- Output location: a fresh private directory under the system temp root -----------------
+
+
+def test_output_location_is_only_the_generated_temp_directory(
+    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    before = _all_paths(tmp_path)
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
+    report = _report_path(capfd.readouterr().out, stub["tmp"])
+    created = _all_paths(tmp_path) - before - {stub["record"]}
+    assert created == {report.parent, report, report.with_name(report.name + ".log")}
+    assert report.parent.parent == stub["tmp"].resolve()
+    assert report.parent.name.startswith(ssl.OUTPUT_PREFIX)
+
+
+def test_report_directory_and_files_are_owner_only(
+    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    previous = os.umask(0o022)
+    try:
+        ssl.main(["--repo", str(repo), "tree"])
+    finally:
+        os.umask(previous)
+    report = _report_path(capfd.readouterr().out, stub["tmp"])
+    assert stat.S_IMODE(report.parent.stat().st_mode) == 0o700
+    for path in (report, report.with_name(report.name + ".log")):
+        assert stat.S_IMODE(path.stat().st_mode) == 0o600
+
+
+def test_report_creation_is_exclusive_and_never_follows_a_symlink(tmp_path: Path) -> None:
+    existing = tmp_path / "exists.jsonl"
+    existing.write_text("keep\n", encoding="utf-8")
+    target = tmp_path / "target"
+    link = tmp_path / "link.jsonl"
+    link.symlink_to(target)
+    for path in (existing, link):
+        with pytest.raises(ssl.ScanError, match=r"cannot create output file \(EEXIST\)"):
+            ssl._create_private(path)
+    assert existing.read_text(encoding="utf-8") == "keep\n"
+    assert not target.exists()
 
 
 def test_tool_stderr_goes_to_owner_only_log_not_console(
@@ -174,10 +386,45 @@ def test_tool_stderr_goes_to_owner_only_log_not_console(
     assert SENTINEL in log.read_text(encoding="utf-8")
 
 
+@pytest.mark.parametrize("where", ["repo", "repo-subdir", "symlink-alias-of-repo", "primary-of-worktree"])
+@pytest.mark.parametrize("mode", ["tree", "history"])
+def test_temp_root_inside_the_repository_is_refused_before_any_write(
+    stub: dict[str, Path],
+    repo: Path,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    where: str,
+    mode: str,
+    capfd: pytest.CaptureFixture[str],
+) -> None:
+    _git("remote", "add", "origin", "https://example.invalid/remote.git", cwd=repo)
+    scanned = repo
+    temp_root = {"repo": repo, "repo-subdir": repo / "pkg", "primary-of-worktree": repo / "pkg"}.get(where)
+    if where == "symlink-alias-of-repo":
+        temp_root = tmp_path / "alias"
+        temp_root.symlink_to(repo, target_is_directory=True)
+    if where == "primary-of-worktree":
+        scanned = tmp_path / "wt"
+        _git("worktree", "add", "-q", "-b", "t", str(scanned), cwd=repo)
+    assert temp_root is not None
+    before = _all_paths(repo)
+    _use_temp_root(monkeypatch, temp_root)
+    assert ssl.main(["--repo", str(scanned), mode]) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_TEMP_INSIDE}"
+    assert captured.out == ""
+    _assert_absent(captured, str(tmp_path))
+    assert _all_paths(repo) == before
+    assert _calls(stub) == []
+
+
+# --- Exit codes and fixed diagnostics ------------------------------------------------------
+
+
 def test_no_findings_exit_zero(stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]) -> None:
     stub["findings"].write_text("", encoding="utf-8")
     assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_CLEAN
-    assert "findings: 0" in capfd.readouterr().out
+    assert _console_body(capfd.readouterr().out) == ["mode: tree, files scanned: 3", "findings: 0"]
 
 
 def test_tool_error_exit_two_without_leaking(
@@ -186,8 +433,11 @@ def test_tool_error_exit_two_without_leaking(
     monkeypatch.setenv("STUB_EXIT", "1")
     assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
     captured = capfd.readouterr()
-    _assert_no_secret(captured)
-    assert "trufflehog exited 1" in captured.err
+    _assert_absent(captured)
+    assert captured.err.strip() == (
+        "secret_scan_local: trufflehog exited 1 (scan error); details in the owner-only log beside the report"
+    )
+    assert len(_console_body(captured.out)) == 0
 
 
 def test_unparseable_report_line_is_not_echoed(
@@ -196,8 +446,8 @@ def test_unparseable_report_line_is_not_echoed(
     stub["findings"].write_text(f"not json {SENTINEL}\n", encoding="utf-8")
     assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
     captured = capfd.readouterr()
-    _assert_no_secret(captured)
-    assert "unparseable JSON at report line 1" in captured.err
+    _assert_absent(captured)
+    assert captured.err.strip() == "secret_scan_local: unparseable JSON at report line 1"
 
 
 def test_missing_binary_gives_typed_message(
@@ -229,7 +479,8 @@ def test_every_call_carries_the_fixed_offline_flags(
     (call,) = _calls(stub)
     argv = call["argv"]
     assert argv[0] == "filesystem"
-    for flag in ("--no-verification", "--no-update", "--results=unverified", "--exclude-detectors=Lob"):
+    offline = ("--json", "--no-verification", "--no-update", "--results=unverified", "--exclude-detectors=Lob")
+    for flag in (*offline, "--fail-on-scan-errors"):
         assert flag in argv
     assert f"--exclude-paths={repo / '.trufflehogignore'}" in argv
     assert not any("verifier" in arg for arg in argv)
@@ -251,6 +502,162 @@ def test_assert_safe_command_ignores_file_names_after_separator() -> None:
     ssl.assert_safe_command(["trufflehog", "filesystem", *ssl.SAFE_FLAGS, "--", "-verify-notes.txt"])
 
 
+def test_help_meets_cli_standard() -> None:
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--help"], capture_output=True, text=True, timeout=60, check=False
+    )
+    assert result.returncode == 0
+    for section in ("Examples:", "Outputs:", "Exit codes:", "Related:", "--no-verification", "show-keys"):
+        assert section in result.stdout
+
+
+@pytest.mark.parametrize(
+    "argv",
+    [
+        ["--timeout-seconds", SENTINEL, "tree"],
+        ["--timeout-seconds", "0", "tree"],
+        [f"--{SENTINEL}", "tree"],
+        [f"--{SENTINEL}={SENTINEL}", "tree"],
+        [SENTINEL],
+        ["tree", SENTINEL],
+        ["tree", "--remote", SENTINEL],
+        ["--output", SENTINEL, "tree"],
+        ["--max-rows", "5", "tree"],
+        ["history", "--mirror-parent", SENTINEL],
+        ["show-keys"],
+        ["show-keys", "a", SENTINEL],
+    ],
+)
+def test_usage_errors_never_echo_the_supplied_value(
+    stub: dict[str, Path], repo: Path, argv: list[str], capfd: pytest.CaptureFixture[str]
+) -> None:
+    assert ssl.main(["--repo", str(repo), *argv]) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    _assert_absent(captured)
+    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_USAGE}"
+    assert captured.out == ""
+    assert _calls(stub) == []
+
+
+def test_usage_error_from_the_command_line_has_the_fixed_message() -> None:
+    result = subprocess.run(
+        [sys.executable, str(SCRIPT), "--timeout-seconds", SENTINEL, "tree"],
+        capture_output=True,
+        text=True,
+        timeout=60,
+        check=False,
+    )
+    assert result.returncode == ssl.EXIT_ERROR
+    assert SENTINEL not in result.stdout + result.stderr
+    assert ssl.MSG_USAGE in result.stderr
+
+
+@pytest.mark.parametrize(
+    "option", [f"--verify={SENTINEL}", f"--results={SENTINEL}", f"--{SENTINEL}-verifier", "--VERIFY"]
+)
+def test_refusal_message_never_echoes_the_option(
+    stub: dict[str, Path], repo: Path, option: str, capfd: pytest.CaptureFixture[str]
+) -> None:
+    assert ssl.main(["--repo", str(repo), "tree", option]) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    _assert_absent(captured, option)
+    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_VERIFICATION}"
+
+
+def test_path_values_are_never_echoed(
+    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
+) -> None:
+    (tmp_path / "loop").symlink_to(tmp_path / "loop")
+    attempts = {
+        ("--repo", str(tmp_path / SENTINEL), "tree"): "git rev-parse failed (exit 128)",
+        ("show-keys", str(tmp_path / SENTINEL)): "cannot open the report (ENOENT)",
+        ("show-keys", str(tmp_path / "loop")): "cannot open the report (ELOOP)",
+        ("show-keys", str(tmp_path)): "cannot open the report (EISDIR)",
+    }
+    for argv, message in attempts.items():
+        assert ssl.main(list(argv)) == ssl.EXIT_ERROR
+        captured = capfd.readouterr()
+        _assert_absent(captured, str(tmp_path))
+        assert captured.err.strip() == f"secret_scan_local: {message}"
+    assert _calls(stub) == []
+
+
+def test_show_keys_refuses_a_non_regular_file(tmp_path: Path, capfd: pytest.CaptureFixture[str]) -> None:
+    fifo = tmp_path / f"{SENTINEL}.fifo"
+    os.mkfifo(fifo)
+    fd = os.open(fifo, os.O_RDWR)  # keeps the open from blocking
+    try:
+        assert ssl.main(["show-keys", str(fifo)]) == ssl.EXIT_ERROR
+    finally:
+        os.close(fd)
+    captured = capfd.readouterr()
+    _assert_absent(captured, str(tmp_path))
+    assert captured.err.strip() == "secret_scan_local: the report is not a regular file"
+
+
+def test_unexpected_exception_prints_only_its_type(
+    stub: dict[str, Path], repo: Path, monkeypatch: pytest.MonkeyPatch, capfd: pytest.CaptureFixture[str]
+) -> None:
+    def boom(_fh: object) -> ssl.Summary:
+        raise RuntimeError(SENTINEL)
+
+    monkeypatch.setattr(ssl, "summarize", boom)
+    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    _assert_absent(captured)
+    assert captured.err.strip() == "secret_scan_local: internal error (RuntimeError)"
+
+
+# --- Report structure ----------------------------------------------------------------------
+
+MALFORMED_LINES = [
+    "[]",
+    "3",
+    json.dumps(SENTINEL),
+    "null",
+    "{}",
+    json.dumps({"Raw": SENTINEL}),
+    json.dumps({"DetectorName": ["x"], "Raw": SENTINEL}),
+    json.dumps({"DetectorName": "X", "Raw": SENTINEL}),
+    json.dumps({"DetectorName": "X", "SourceMetadata": [SENTINEL]}),
+    json.dumps({"DetectorName": "X", "SourceMetadata": {"Data": {}}}),
+    json.dumps({"DetectorName": "X", "SourceMetadata": {"Data": {"Git": SENTINEL}}}),
+    json.dumps({"DetectorName": "X", "SourceMetadata": {"Data": {"Git": {}, "Filesystem": {}}}}),
+    "[" * 100_000 + "]" * 100_000,
+]
+
+
+@pytest.mark.parametrize("line", MALFORMED_LINES, ids=lambda line: line[:40])
+@pytest.mark.parametrize("entry", ["tree", "show-keys"])
+def test_unexpected_report_structure_is_a_typed_error(
+    stub: dict[str, Path], repo: Path, line: str, entry: str, capfd: pytest.CaptureFixture[str]
+) -> None:
+    stub["findings"].write_text(line + "\n", encoding="utf-8")
+    argv = ["--repo", str(repo), "tree"] if entry == "tree" else ["show-keys", str(stub["findings"])]
+    assert ssl.main(argv) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    _assert_absent(captured)
+    assert captured.err.strip() in {
+        "secret_scan_local: unparseable JSON at report line 1",
+        "secret_scan_local: unexpected report structure at line 1",
+    }
+
+
+@pytest.mark.parametrize("entry", ["tree", "show-keys"])
+def test_non_utf8_report_is_a_typed_error(
+    stub: dict[str, Path], repo: Path, entry: str, capfd: pytest.CaptureFixture[str]
+) -> None:
+    stub["findings"].write_bytes(b'{"Raw": "\xff' + SENTINEL.encode() + b'"}\n')
+    argv = ["--repo", str(repo), "tree"] if entry == "tree" else ["show-keys", str(stub["findings"])]
+    assert ssl.main(argv) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    _assert_absent(captured)
+    assert captured.err.strip() == "secret_scan_local: the report is not valid UTF-8"
+
+
+# --- Tree candidates -----------------------------------------------------------------------
+
+
 def test_tree_never_scans_denied_areas_or_symlinks(
     stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
 ) -> None:
@@ -269,54 +676,30 @@ def test_tree_splits_long_file_lists_into_batches() -> None:
     assert len(chunks) > 1
 
 
-@pytest.mark.parametrize("inside", ["out.jsonl", "sub/out.jsonl"])
-def test_output_inside_repository_is_refused(
-    stub: dict[str, Path], repo: Path, inside: str, capfd: pytest.CaptureFixture[str]
-) -> None:
-    (repo / "sub").mkdir(exist_ok=True)
-    target = repo / inside
-    assert ssl.main(["--output", str(target), "--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
-    assert "refused --output inside the repository" in capfd.readouterr().err
-    assert not target.exists()
-    assert _calls(stub) == []
-
-
-def test_output_inside_primary_checkout_of_a_worktree_is_refused(
-    stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]
-) -> None:
-    worktree = repo / ".worktrees" / "dispatch" / "t"
-    _git("worktree", "add", "-q", "-b", "t", str(worktree), cwd=repo)
-    target = repo / "outside-worktree-but-in-primary.jsonl"
-    assert ssl.main(["--output", str(target), "--repo", str(worktree), "tree"]) == ssl.EXIT_ERROR
-    assert not target.exists()
-
-
-def test_existing_output_file_is_never_reused(
+def test_tracked_file_beneath_a_symlinked_parent_is_not_scanned(
     stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
 ) -> None:
-    target = tmp_path / "exists.jsonl"
-    target.write_text("keep\n", encoding="utf-8")
-    assert ssl.main(["--output", str(target), "--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
-    assert target.read_text(encoding="utf-8") == "keep\n"
+    (repo / "lnk").mkdir()
+    (repo / "lnk" / "inner.txt").write_text("in\n", encoding="utf-8")
+    _git("add", "lnk/inner.txt", cwd=repo)
+    _git("commit", "-qm", "lnk", cwd=repo)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (outside / "inner.txt").write_text(f"{SENTINEL}\n", encoding="utf-8")
+    (repo / "lnk" / "inner.txt").unlink()
+    (repo / "lnk").rmdir()
+    (repo / "lnk").symlink_to(outside, target_is_directory=True)
+    (repo / "inside").symlink_to(repo / "pkg", target_is_directory=True)
+    assert (
+        "lnk/inner.txt"
+        in subprocess.run(["git", "ls-files"], cwd=repo, capture_output=True, text=True, check=True, timeout=60).stdout
+    )
+    files = ssl.tree_candidates(repo.resolve())
+    assert "lnk/inner.txt" not in files
+    assert set(files) == {".trufflehogignore", "app.py", "data/notes.txt"}
 
 
-def test_report_and_log_are_owner_only(
-    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
-) -> None:
-    previous = os.umask(0o022)
-    try:
-        explicit = tmp_path / "explicit.jsonl"
-        ssl.main(["--output", str(explicit), "--repo", str(repo), "tree"])
-        assert "written to the --output path" in capfd.readouterr().out
-        ssl.main(["--repo", str(repo), "tree"])
-        default = _report_path(capfd.readouterr().out, stub["tmp"])
-    finally:
-        os.umask(previous)
-    assert default.exists()
-    for report in (explicit, default):
-        for path in (report, report.with_name(report.name + ".log")):
-            assert stat.S_IMODE(path.stat().st_mode) == 0o600
-
+# --- history: validated https remote, absolute-path mirror, always removed -----------------
 
 REMOTE_BASE = "https://example.invalid/"
 
@@ -350,273 +733,92 @@ def local_transport(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(ssl, "CLONE_PROTOCOLS", "https:file")
 
 
+@pytest.fixture
+def clone_dests(monkeypatch: pytest.MonkeyPatch) -> list[str]:
+    """Records the destination of every mirror clone."""
+    dests: list[str] = []
+    original = ssl.clone_command
+
+    def record(url: str, dest: str) -> list[str]:
+        dests.append(dest)
+        return original(url, dest)
+
+    monkeypatch.setattr(ssl, "clone_command", record)
+    return dests
+
+
+def _assert_mirror_was_temporary(dests: list[str], temp_root: Path) -> None:
+    (dest,) = dests
+    assert os.path.isabs(dest)
+    mirror_dir = Path(dest).parent
+    assert mirror_dir.parent == temp_root.resolve()
+    assert mirror_dir.name.startswith(ssl.MIRROR_PREFIX)
+    assert not mirror_dir.exists()
+    assert not list(temp_root.glob(f"{ssl.MIRROR_PREFIX}*"))
+
+
 def test_history_scans_a_bare_mirror_and_removes_it(
-    stub: dict[str, Path], cloned: Path, local_transport: None, capfd: pytest.CaptureFixture[str]
+    stub: dict[str, Path],
+    cloned: Path,
+    local_transport: None,
+    clone_dests: list[str],
+    capfd: pytest.CaptureFixture[str],
 ) -> None:
     stub["findings"].write_text(GIT_FINDINGS, encoding="utf-8")
     assert ssl.main(["--repo", str(cloned), "history"]) == ssl.EXIT_FINDINGS
     captured = capfd.readouterr()
-    _assert_no_secret(captured)
-    assert "t@example.invalid" not in captured.out
-    assert "PrivateKey\tconf/k.txt\t0123456789\t1" in captured.out
+    _assert_absent(captured, "t@example.invalid", "conf/k.txt", "0123456789")
+    assert _console_body(captured.out) == ["mode: history", "findings: 1", "  PrivateKey: 1"]
     (call,) = _calls(stub)
     assert call["argv"][0] == "git"
     assert "--bare" in call["argv"]
     assert "--no-verification" in call["argv"]
-    mirror = Path(call["mirror"]["path"])
-    assert call["mirror"]["bare"] is True
-    assert mirror.is_relative_to(stub["tmp"].resolve())
-    assert cloned.resolve() not in mirror.resolve().parents
-    assert not mirror.exists()
-    assert not list(stub["tmp"].glob("secret-scan-mirror-*"))
+    assert call["mirror"] == {"path": clone_dests[0], "bare": True}
+    assert call["cwd"] == str(Path(clone_dests[0]).parent)
+    _assert_mirror_was_temporary(clone_dests, stub["tmp"])
 
 
-def test_history_removes_mirror_when_the_scan_fails(
+@pytest.mark.parametrize("failure", ["scan", "clone"])
+def test_history_removes_mirror_when_a_step_fails(
     stub: dict[str, Path],
     cloned: Path,
     local_transport: None,
+    clone_dests: list[str],
     monkeypatch: pytest.MonkeyPatch,
+    failure: str,
     capfd: pytest.CaptureFixture[str],
 ) -> None:
-    monkeypatch.setenv("STUB_EXIT", "1")
+    if failure == "scan":
+        monkeypatch.setenv("STUB_EXIT", "1")
+        expected = "trufflehog exited 1 (scan error)"
+    else:
+        _git("remote", "set-url", "origin", REMOTE_BASE + "missing.git", cwd=cloned)
+        expected = "mirror clone of the configured remote failed (exit 128)"
     assert ssl.main(["--repo", str(cloned), "history"]) == ssl.EXIT_ERROR
-    assert not list(stub["tmp"].glob("secret-scan-mirror-*"))
-
-
-def test_history_clone_failure_is_a_tool_error(
-    stub: dict[str, Path], cloned: Path, local_transport: None, capfd: pytest.CaptureFixture[str]
-) -> None:
-    _git("remote", "set-url", "origin", REMOTE_BASE + "missing.git", cwd=cloned)
-    assert ssl.main(["--repo", str(cloned), "history"]) == ssl.EXIT_ERROR
-    assert "mirror clone of the configured remote failed" in capfd.readouterr().err
-    assert _calls(stub) == []
-    assert not list(stub["tmp"].glob("secret-scan-mirror-*"))
-
-
-def test_history_mirror_parent_inside_repository_is_refused(
-    stub: dict[str, Path], cloned: Path, capfd: pytest.CaptureFixture[str]
-) -> None:
-    assert ssl.main(["--repo", str(cloned), "history", "--mirror-parent", str(cloned)]) == ssl.EXIT_ERROR
-    assert "refused mirror directory inside the repository" in capfd.readouterr().err
-    assert not list(cloned.glob("secret-scan-mirror-*"))
-
-
-def test_help_meets_cli_standard() -> None:
-    result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--help"], capture_output=True, text=True, timeout=60, check=False
+    assert capfd.readouterr().err.strip() == (
+        f"secret_scan_local: {expected}; details in the owner-only log beside the report"
     )
-    assert result.returncode == 0
-    for section in ("Examples:", "Outputs:", "Exit codes:", "Related:", "--no-verification"):
-        assert section in result.stdout
+    _assert_mirror_was_temporary(clone_dests, stub["tmp"])
 
 
-# --- Console output is allowlist-only (no channel may carry a raw value) -------------------
-
-
-def _assert_absent(captured: pytest.CaptureResult[str], *needles: str) -> None:
-    _assert_no_secret(captured)
-    for needle in needles:
-        assert needle not in captured.out
-        assert needle not in captured.err
-
-
-def _custom_finding(detector: object = "PrivateKey", source: str = "Git", **location: object) -> str:
-    record = json.loads(_finding(source, location))
-    record["DetectorName"] = detector
-    return json.dumps(record) + "\n"
-
-
-LEAKY_FINDINGS = {
-    "million-char-path": (_custom_finding(file="a/" + SENTINEL + "x" * 1_000_000, line=1), "path"),
-    "path-holding-the-raw-value": (_custom_finding(file=f"conf/{SENTINEL}.txt", line=1), "path"),
-    "path-with-control-chars": (_custom_finding(file="a\tb\n" + SENTINEL[:12], line=1), "path"),
-    "detector-is-the-raw-value": (_custom_finding(detector=SENTINEL, file="a.txt", line=1), "detector"),
-    "detector-with-newline": (_custom_finding(detector="Key\n" + SENTINEL[:12], file="a.txt"), "detector"),
-    "detector-not-a-string": (_custom_finding(detector=["x"], file="a.txt"), None),
-    "commit-is-the-raw-value": (_custom_finding(file="a.txt", commit=SENTINEL, line=1), "commit"),
-    "commit-message-and-email": (
-        _custom_finding(file="a.txt", commit="0123456789abcdef", message=SENTINEL, email=SENTINEL, line=1),
-        None,
-    ),
-    "line-is-the-raw-value": (_custom_finding(file="a.txt", line=SENTINEL), "line"),
-    "line-is-a-mapping": (_custom_finding(file="a.txt", line={"x": SENTINEL}), "line"),
-}
-
-
-@pytest.mark.parametrize("case", sorted(LEAKY_FINDINGS))
-def test_no_finding_field_carries_a_raw_value_to_the_console(
-    stub: dict[str, Path], repo: Path, case: str, capfd: pytest.CaptureFixture[str]
-) -> None:
-    leaky, withheld_field = LEAKY_FINDINGS[case]
-    clean = _custom_finding(file="ok.txt", line=7)
-    stub["findings"].write_text(leaky + clean + leaky, encoding="utf-8")
-    code = ssl.main(["--repo", str(repo), "tree"])
-    captured = capfd.readouterr()
-    _assert_absent(captured)
-    if case == "detector-not-a-string":
-        # A finding without a string detector name is an unexpected structure, not a row.
-        assert code == ssl.EXIT_ERROR
-        assert "unexpected report structure at line 1" in captured.err
-        return
-    assert code == ssl.EXIT_FINDINGS
-    assert "findings: 3" in captured.out  # every row still counts
-    assert "\tok.txt\t-\t7" in captured.out
-    assert len(captured.out) < 2000
-    if withheld_field is not None:
-        placeholder = f"<{withheld_field} withheld>"
-        assert placeholder in captured.out
-        assert "findings with withheld fields: 2" in captured.out
-        if withheld_field == "detector":
-            assert f"  {placeholder}: 2" in captured.out
-        else:
-            assert "  PrivateKey: 3" in captured.out
-
-
-def test_safe_fields_are_shown_and_short_commit_is_ten_chars() -> None:
-    record = json.loads(GIT_FINDINGS)
-    finding = ssl.to_finding(record, record["SourceMetadata"]["Data"]["Git"])
-    assert finding == ssl.Finding("PrivateKey", "conf/k.txt", "0123456789", "1")
-    assert not finding.withheld
-
-
-@pytest.mark.parametrize(
-    ("field", "value", "placeholder"),
-    [
-        ("file", "x" * 241, "<path withheld>"),
-        ("file", "dir/naïve.txt", "<path withheld>"),
-        ("commit", "0123456789ABCDEF", "<commit withheld>"),
-        ("commit", "012345", "<commit withheld>"),
-        ("line", "1" * 10, "<line withheld>"),
-        ("line", True, "<line withheld>"),
-        ("line", -1, "<line withheld>"),
-    ],
-)
-def test_allowlist_patterns_are_conservative(field: str, value: object, placeholder: str) -> None:
-    location = {"file": "a.txt", "commit": "0123456789abcdef", "line": 1, field: value}
-    record = json.loads(_custom_finding(**location))
-    finding = ssl.to_finding(record, location)
-    shown = {"file": finding.file, "commit": finding.commit, "line": finding.line}[field]
-    assert shown == placeholder
-    assert finding.withheld
-
-
-def test_output_filename_is_never_printed(
-    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
-) -> None:
-    target = tmp_path / f"{SENTINEL}.jsonl"
-    assert ssl.main(["--output", str(target), "--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
-    captured = capfd.readouterr()
-    _assert_absent(captured, str(tmp_path))
-    assert "written to the --output path" in captured.out
-    assert target.exists()
-
-
-def test_default_report_prints_only_the_generated_name(
+def test_history_removes_mirror_when_interrupted(
     stub: dict[str, Path],
-    repo: Path,
-    tmp_path: Path,
+    cloned: Path,
+    local_transport: None,
+    clone_dests: list[str],
     monkeypatch: pytest.MonkeyPatch,
-    capfd: pytest.CaptureFixture[str],
 ) -> None:
-    secret_tmp = tmp_path / f"tmp-{SENTINEL}"
-    secret_tmp.mkdir()
-    monkeypatch.setenv("TMPDIR", str(secret_tmp))
-    monkeypatch.setattr(tempfile, "tempdir", None)
-    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
-    captured = capfd.readouterr()
-    _assert_absent(captured, str(tmp_path))
-    assert _report_path(captured.out, secret_tmp).exists()
+    def interrupt(*_args: object, **_kwargs: object) -> None:
+        raise KeyboardInterrupt
 
-
-@pytest.mark.parametrize(
-    "argv",
-    [
-        ["--timeout-seconds", SENTINEL, "tree"],
-        ["--timeout-seconds", "0", "tree"],
-        ["--max-rows", SENTINEL, "tree"],
-        ["--max-rows", "-1", "tree"],
-        [f"--{SENTINEL}", "tree"],
-        [f"--{SENTINEL}={SENTINEL}", "tree"],
-        [SENTINEL],
-        ["tree", SENTINEL],
-        ["tree", "--remote", SENTINEL],
-        ["--output"],
-    ],
-)
-def test_usage_errors_never_echo_the_supplied_value(
-    stub: dict[str, Path], repo: Path, argv: list[str], capfd: pytest.CaptureFixture[str]
-) -> None:
-    assert ssl.main(["--repo", str(repo), *argv]) == ssl.EXIT_ERROR
-    captured = capfd.readouterr()
-    _assert_absent(captured)
-    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_USAGE}"
-    assert _calls(stub) == []
-
-
-def test_usage_error_from_the_command_line_has_the_fixed_message() -> None:
-    result = subprocess.run(
-        [sys.executable, str(SCRIPT), "--max-rows", SENTINEL, "tree"],
-        capture_output=True,
-        text=True,
-        timeout=60,
-        check=False,
-    )
-    assert result.returncode == ssl.EXIT_ERROR
-    assert SENTINEL not in result.stdout + result.stderr
-    assert ssl.MSG_USAGE in result.stderr
-
-
-@pytest.mark.parametrize(
-    "option", [f"--verify={SENTINEL}", f"--results={SENTINEL}", f"--{SENTINEL}-verifier", "--VERIFY"]
-)
-def test_refusal_message_never_echoes_the_option(
-    stub: dict[str, Path], repo: Path, option: str, capfd: pytest.CaptureFixture[str]
-) -> None:
-    assert ssl.main(["--repo", str(repo), "tree", option]) == ssl.EXIT_ERROR
-    captured = capfd.readouterr()
-    _assert_absent(captured, option)
-    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_VERIFICATION}"
-
-
-def test_path_option_values_are_never_echoed(
-    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
-) -> None:
-    attempts = [
-        ["--repo", str(tmp_path / SENTINEL), "tree"],
-        ["--output", str(tmp_path / SENTINEL / "missing-dir" / "x.jsonl"), "tree"],
-        ["--output", str(repo / f"{SENTINEL}.jsonl"), "tree"],
-        ["--output", str(tmp_path / "loop" / "x.jsonl"), "tree"],
-    ]
-    (tmp_path / "loop").symlink_to(tmp_path / "loop")
-    for argv in attempts:
-        if argv[0] != "--repo":
-            argv = ["--repo", str(repo), *argv]
-        assert ssl.main(argv) == ssl.EXIT_ERROR
-        captured = capfd.readouterr()
-        _assert_absent(captured, str(tmp_path))
-    assert _calls(stub) == []
-
-
-def test_history_option_values_are_never_echoed(
-    stub: dict[str, Path], cloned: Path, local_transport: None, tmp_path: Path, capfd: pytest.CaptureFixture[str]
-) -> None:
-    for extra in (
-        ["--remote", SENTINEL],
-        ["--remote", f"{SENTINEL}/../x"],
-        ["--remote", f"--upload-pack={SENTINEL}"],
-        ["--mirror-parent", str(tmp_path / SENTINEL)],
-    ):
-        assert ssl.main(["--repo", str(cloned), "history", *extra]) == ssl.EXIT_ERROR
-        _assert_absent(capfd.readouterr(), str(tmp_path))
-    assert _calls(stub) == []
+    monkeypatch.setattr(ssl, "_run_trufflehog", interrupt)
+    with pytest.raises(KeyboardInterrupt):
+        ssl.main(["--repo", str(cloned), "history"])
+    _assert_mirror_was_temporary(clone_dests, stub["tmp"])
 
 
 def test_tool_failure_messages_are_fixed(
-    stub: dict[str, Path],
-    cloned: Path,
-    local_transport: None,
-    monkeypatch: pytest.MonkeyPatch,
-    capfd: pytest.CaptureFixture[str],
+    stub: dict[str, Path], cloned: Path, local_transport: None, capfd: pytest.CaptureFixture[str]
 ) -> None:
     # git clone writes the URL and its own diagnostics to the owner-only log only.
     _git("remote", "set-url", "origin", f"{REMOTE_BASE}{SENTINEL}.git", cwd=cloned)
@@ -629,177 +831,13 @@ def test_tool_failure_messages_are_fixed(
     )
 
 
-def test_unexpected_exception_prints_only_its_type(
-    stub: dict[str, Path], repo: Path, monkeypatch: pytest.MonkeyPatch, capfd: pytest.CaptureFixture[str]
+def test_history_option_values_are_never_echoed(
+    stub: dict[str, Path], cloned: Path, local_transport: None, tmp_path: Path, capfd: pytest.CaptureFixture[str]
 ) -> None:
-    def boom(_fd: int) -> list[ssl.Finding]:
-        raise RuntimeError(SENTINEL)
-
-    monkeypatch.setattr(ssl, "read_findings", boom)
-    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
-    captured = capfd.readouterr()
-    _assert_absent(captured)
-    assert captured.err.strip() == "secret_scan_local: internal error (RuntimeError)"
-
-
-# --- Report structure ----------------------------------------------------------------------
-
-
-@pytest.mark.parametrize(
-    "line",
-    [
-        "[]",
-        "3",
-        json.dumps(SENTINEL),
-        "null",
-        "{}",
-        json.dumps({"Raw": SENTINEL}),
-        json.dumps({"DetectorName": "X", "Raw": SENTINEL}),
-        json.dumps({"DetectorName": "X", "SourceMetadata": [SENTINEL]}),
-        json.dumps({"DetectorName": "X", "SourceMetadata": {"Data": {}}}),
-        json.dumps({"DetectorName": "X", "SourceMetadata": {"Data": {"Git": SENTINEL}}}),
-        json.dumps({"DetectorName": "X", "SourceMetadata": {"Data": {"Git": {}, "Filesystem": {}}}}),
-        "[" * 100_000 + "]" * 100_000,
-    ],
-    ids=lambda line: line[:40],
-)
-def test_unexpected_report_structure_is_a_typed_error(
-    stub: dict[str, Path], repo: Path, line: str, capfd: pytest.CaptureFixture[str]
-) -> None:
-    stub["findings"].write_text(line + "\n", encoding="utf-8")
-    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
-    captured = capfd.readouterr()
-    _assert_absent(captured)
-    assert "Traceback" not in captured.err
-    assert "report line 1" in captured.err or "unexpected report structure at line 1" in captured.err
-
-
-def test_non_utf8_report_is_a_typed_error(stub: dict[str, Path], repo: Path, capfd: pytest.CaptureFixture[str]) -> None:
-    stub["findings"].write_bytes(b'{"Raw": "\xff' + SENTINEL.encode() + b'"}\n')
-    assert ssl.main(["--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
-    captured = capfd.readouterr()
-    _assert_absent(captured)
-    assert "the report is not valid UTF-8" in captured.err
-
-
-# --- Report creation is pinned to the checked directory (no TOCTOU write) -----------------
-
-
-def _repo_files(repo: Path) -> set[Path]:
-    return {path for path in repo.rglob("*") if ".git" not in path.relative_to(repo).parts}
-
-
-def _swap_after_check(monkeypatch: pytest.MonkeyPatch, directory: Path, target: Path) -> Path:
-    """After the containment check passes, replace ``directory`` with a symlink to ``target``."""
-    moved = directory.with_name(directory.name + "-moved")
-    original = ssl.dir_is_inside
-
-    def check_then_swap(dir_fd: int, root_ids: frozenset[tuple[int, int]]) -> bool:
-        inside = original(dir_fd, root_ids)
-        checked = os.fstat(dir_fd)
-        if not directory.is_symlink() and (checked.st_dev, checked.st_ino) == (
-            directory.stat().st_dev,
-            directory.stat().st_ino,
-        ):
-            directory.rename(moved)
-            directory.symlink_to(target, target_is_directory=True)
-        return inside
-
-    monkeypatch.setattr(ssl, "dir_is_inside", check_then_swap)
-    return moved
-
-
-def test_output_parent_swapped_for_a_symlink_after_the_check_cannot_write_into_the_repository(
-    stub: dict[str, Path],
-    repo: Path,
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capfd: pytest.CaptureFixture[str],
-) -> None:
-    out_dir = tmp_path / "out"
-    out_dir.mkdir()
-    before = _repo_files(repo)
-    moved = _swap_after_check(monkeypatch, out_dir, repo)
-    assert ssl.main(["--output", str(out_dir / "report.jsonl"), "--repo", str(repo), "tree"]) == ssl.EXIT_FINDINGS
-    assert _repo_files(repo) == before
-    assert out_dir.is_symlink()
-    assert SENTINEL in (moved / "report.jsonl").read_text(encoding="utf-8")
-    assert (moved / "report.jsonl.log").exists()
-
-
-def test_mirror_parent_swapped_for_a_symlink_after_the_check_cannot_write_into_the_repository(
-    stub: dict[str, Path],
-    cloned: Path,
-    local_transport: None,
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capfd: pytest.CaptureFixture[str],
-) -> None:
-    parent = tmp_path / "mirrors"
-    parent.mkdir()
-    stub["findings"].write_text(GIT_FINDINGS, encoding="utf-8")
-    before = _repo_files(cloned)
-    moved = _swap_after_check(monkeypatch, parent, cloned)
-    argv = ["--repo", str(cloned), "history", "--mirror-parent", str(parent)]
-    assert ssl.main(argv) == ssl.EXIT_FINDINGS
-    assert _repo_files(cloned) == before
-    (call,) = _calls(stub)
-    assert Path(call["mirror"]["path"]).is_relative_to(moved.resolve())
-    assert call["mirror"]["bare"] is True
-    assert not list(moved.iterdir())
-
-
-def test_output_reached_through_a_symlinked_ancestor_into_the_repository_is_refused(
-    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
-) -> None:
-    (repo / "sub").mkdir()
-    alias = tmp_path / "alias"
-    alias.symlink_to(repo)
-    before = _repo_files(repo)
-    assert ssl.main(["--output", str(alias / "sub" / "x.jsonl"), "--repo", str(repo), "tree"]) == ssl.EXIT_ERROR
-    assert ssl.MSG_OUTPUT_INSIDE in capfd.readouterr().err
-    assert _repo_files(repo) == before
-
-
-def test_racing_parent_swaps_never_put_a_report_in_the_repository(repo: Path, tmp_path: Path) -> None:
-    root_ids = ssl.root_identities([repo])
-    out_dir = tmp_path / "race"
-    real = tmp_path / "race-real"
-    real.mkdir()
-    stop = threading.Event()
-
-    def flip() -> None:
-        while not stop.is_set():
-            for target in (real, repo):
-                try:
-                    tmp_link = tmp_path / "race-next"
-                    tmp_link.symlink_to(target, target_is_directory=True)
-                    os.replace(tmp_link, out_dir)
-                except OSError:
-                    pass
-
-    swapper = threading.Thread(target=flip)
-    swapper.start()
-    created = refused = 0
-    try:
-        for attempt in range(300):
-            try:
-                outputs = ssl.open_outputs(out_dir / f"r{attempt}.jsonl", "tree", root_ids)
-            except ssl.ScanError:
-                refused += 1
-                continue
-            os.close(outputs.report_fd)
-            os.close(outputs.log_fd)
-            created += 1
-    finally:
-        stop.set()
-        swapper.join()
-    assert not list(repo.glob("r*.jsonl*"))
-    assert created + refused == 300
-    assert len(list(real.glob("r*.jsonl"))) == created
-
-
-# --- The configured remote cannot inject options or transports -----------------------------
+    for remote in (SENTINEL, f"{SENTINEL}/../x", f"--upload-pack={SENTINEL}"):
+        assert ssl.main(["--repo", str(cloned), "history", "--remote", remote]) == ssl.EXIT_ERROR
+        _assert_absent(capfd.readouterr(), str(tmp_path))
+    assert _calls(stub) == []
 
 
 @pytest.mark.parametrize(
@@ -815,7 +853,7 @@ def test_racing_parent_swaps_never_put_a_report_in_the_repository(repo: Path, tm
         f"https://{SENTINEL}@example.invalid/remote.git",
         "https://example.invalid/remote.git --upload-pack=touch {mark}",
         "https://example.invalid/remote.git\n",
-        "https://exa‮mple.invalid/remote.git",
+        "https://exa\u202emple.invalid/remote.git",
         "https://example.invalid:port/remote.git",
         "https:///remote.git",
         "http://example.invalid/remote.git",
@@ -840,19 +878,20 @@ def test_unsafe_remote_urls_are_refused_before_any_clone(
     assert ssl.main(["--repo", str(cloned), "history"]) == ssl.EXIT_ERROR
     captured = capfd.readouterr()
     _assert_absent(captured, value.strip(), "example.invalid", str(tmp_path))
-    assert captured.err.strip().startswith(f"secret_scan_local: {ssl.MSG_REMOTE_URL}")
+    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_REMOTE_URL}"
     assert not mark.exists()
     assert _calls(stub) == []
     assert not list(stub["tmp"].glob("secret-scan-*"))  # refused before any report or mirror exists
 
 
-def test_clone_command_ends_option_parsing_before_the_remote() -> None:
-    cmd = ssl.clone_command("--upload-pack=x", "mirror.git")
-    assert cmd[cmd.index("clone") :] == ["clone", "--quiet", "--mirror", "--", "--upload-pack=x", "mirror.git"]
+def test_clone_command_ends_option_parsing_and_drops_credential_helpers() -> None:
+    cmd = ssl.clone_command("--upload-pack=x", "/abs/mirror.git")
+    assert cmd[: cmd.index("clone")] == ["git", "-c", "credential.helper="]
+    assert cmd[cmd.index("clone") :] == ["clone", "--quiet", "--mirror", "--", "--upload-pack=x", "/abs/mirror.git"]
 
 
 def test_mirror_clone_transport_is_https_only(
-    stub: dict[str, Path], cloned: Path, capfd: pytest.CaptureFixture[str]
+    stub: dict[str, Path], cloned: Path, clone_dests: list[str], capfd: pytest.CaptureFixture[str]
 ) -> None:
     # The validated https URL is rewritten to a local path by the user's git config;
     # with the production transport allowlist git must refuse it.
@@ -860,33 +899,20 @@ def test_mirror_clone_transport_is_https_only(
     assert ssl.main(["--repo", str(cloned), "history"]) == ssl.EXIT_ERROR
     assert "mirror clone of the configured remote failed" in capfd.readouterr().err
     assert _calls(stub) == []
-    assert not list(stub["tmp"].glob("secret-scan-mirror-*"))
+    _assert_mirror_was_temporary(clone_dests, stub["tmp"])
 
 
-# --- Tree candidates and mirror cleanup ----------------------------------------------------
-
-
-def test_tracked_file_beneath_a_symlinked_parent_is_not_scanned(
-    stub: dict[str, Path], repo: Path, tmp_path: Path, capfd: pytest.CaptureFixture[str]
+@pytest.mark.parametrize("name", ["x y", "a/../b", "-x", ".hidden", "x" * 65])
+def test_remote_name_must_be_plain(
+    stub: dict[str, Path], cloned: Path, local_transport: None, name: str, capfd: pytest.CaptureFixture[str]
 ) -> None:
-    (repo / "lnk").mkdir()
-    (repo / "lnk" / "inner.txt").write_text("in\n", encoding="utf-8")
-    _git("add", "lnk/inner.txt", cwd=repo)
-    _git("commit", "-qm", "lnk", cwd=repo)
-    outside = tmp_path / "outside"
-    outside.mkdir()
-    (outside / "inner.txt").write_text(f"{SENTINEL}\n", encoding="utf-8")
-    (repo / "lnk" / "inner.txt").unlink()
-    (repo / "lnk").rmdir()
-    (repo / "lnk").symlink_to(outside, target_is_directory=True)
-    (repo / "inside").symlink_to(repo / "pkg", target_is_directory=True)
-    assert (
-        "lnk/inner.txt"
-        in subprocess.run(["git", "ls-files"], cwd=repo, capture_output=True, text=True, check=True, timeout=60).stdout
-    )
-    files = ssl.tree_candidates(repo.resolve())
-    assert "lnk/inner.txt" not in files
-    assert set(files) == {".trufflehogignore", "app.py", "data/notes.txt"}
+    # git accepts these as configured remote subsections; the wrapper refuses them anyway.
+    _git("config", "--", f"remote.{name}.url", REMOTE_BASE + "remote.git", cwd=cloned)
+    assert ssl.main(["--repo", str(cloned), "history", f"--remote={name}"]) == ssl.EXIT_ERROR
+    captured = capfd.readouterr()
+    _assert_absent(captured, name)
+    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_REMOTE_NAME}"
+    assert _calls(stub) == []
 
 
 @pytest.fixture
@@ -896,7 +922,7 @@ def locked_mirror(stub: dict[str, Path], monkeypatch: pytest.MonkeyPatch):
         pytest.skip("root ignores directory permissions")
     monkeypatch.setenv("STUB_LOCK", "1")
     yield
-    for left in stub["tmp"].glob("secret-scan-mirror-*"):
+    for left in stub["tmp"].glob(f"{ssl.MIRROR_PREFIX}*"):
         left.chmod(0o700)
 
 
@@ -912,7 +938,7 @@ def test_failed_mirror_removal_is_a_typed_error(
     _assert_absent(captured, str(stub["tmp"]))
     assert ssl.MSG_MIRROR_REMOVAL in captured.err
     assert "findings" not in captured.out
-    assert list(stub["tmp"].glob("secret-scan-mirror-*"))  # the failure is real, and reported
+    assert list(stub["tmp"].glob(f"{ssl.MIRROR_PREFIX}*"))  # the failure is real, and reported
 
 
 def test_failed_mirror_removal_after_a_scan_error_reports_both(
@@ -929,16 +955,3 @@ def test_failed_mirror_removal_after_a_scan_error_reports_both(
     assert "trufflehog exited 1" in err
     assert ssl.MSG_MIRROR_REMOVAL in err
     assert SENTINEL not in err
-
-
-@pytest.mark.parametrize("name", ["x y", "a/../b", "-x", ".hidden", "x" * 65])
-def test_remote_name_must_be_plain(
-    stub: dict[str, Path], cloned: Path, local_transport: None, name: str, capfd: pytest.CaptureFixture[str]
-) -> None:
-    # git accepts these as configured remote subsections; the wrapper refuses them anyway.
-    _git("config", "--", f"remote.{name}.url", REMOTE_BASE + "remote.git", cwd=cloned)
-    assert ssl.main(["--repo", str(cloned), "history", f"--remote={name}"]) == ssl.EXIT_ERROR
-    captured = capfd.readouterr()
-    _assert_absent(captured, name)
-    assert captured.err.strip() == f"secret_scan_local: {ssl.MSG_REMOTE_NAME}"
-    assert _calls(stub) == []
