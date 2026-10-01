@@ -201,6 +201,14 @@ def test_data_store_producers_must_be_tracked():
     assert errors_with(check(broken), "producer 'scripts/missing.py' is not a tracked path")
     broken['entries'][-1]['producer'] = []
     assert errors_with(check(broken), 'needs producer_note')
+    files = [*FILES, 'data/main/part.jsonl', 'data/empty/.gitkeep']
+    tracked = copy.deepcopy(data)
+    tracked['entries'][-1]['store'] = ['data/main/']
+    assert errors_with(check(tracked, files), 'local_only is true but 1 store files are tracked')
+    tracked['entries'][-1]['local_only'] = False
+    assert check(tracked, files).ok
+    tracked['entries'][-1]['store'] = ['data/empty/']
+    assert errors_with(check(tracked, files), 'local_only is false but no store file is tracked')
     broken['entries'][-1]['store'] = ['/abs/main.db']
     assert errors_with(check(broken), 'schema: entries/3')
 

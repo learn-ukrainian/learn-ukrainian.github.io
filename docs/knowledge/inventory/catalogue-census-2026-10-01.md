@@ -183,7 +183,10 @@ Files per family sum to the denominator (3,270). Owners are stream keys from
 ## Local data stores
 
 Logical identities and tracked producers only; no host path is recorded. Producer paths are
-checked against Git's index.
+checked against Git's index. `git ls-files -- data | wc -l` returns 64: the two Hramatka
+datasets, the six ESUM volumes, the UA eval payloads and two placeholder files. Those three
+stores are marked `local_only: false`, and the validator checks every store's `local_only`
+flag against the index; all other stores exist only in the local `data/` directory.
 
 | Store entry | Logical store | Default lifecycle | Owner | Producer |
 | --- | --- | --- | --- | --- |

@@ -32,6 +32,7 @@ OWNER_SOURCES = (('scripts/config/issue_streams.yaml', 'streams'),
                  ('scripts/config/area_assignments.yaml', 'assignments'))
 TERMINAL_LIFECYCLES = frozenset({'active', 'archive'})
 SQLITE_SIDECARS = ('-shm', '-wal', '-journal')
+PLACEHOLDER_NAMES = frozenset({'.gitkeep', '.gitignore'})
 WILDCARD = re.compile(r'[*?\[]')
 # A segment that is only wildcards, optionally with a file extension.
 BARE_SEGMENT = re.compile(r'^[*?]+(\.[A-Za-z0-9]+)?$')
@@ -173,6 +174,13 @@ def owner_keys(repo: Path) -> set[str]:
     return keys
 
 
+def _store_claims(store: str, path: str) -> bool:
+    """A store name ending in '/' claims its subtree; otherwise it is a name or glob."""
+    if store.endswith('/'):
+        return path.startswith(store)
+    return fnmatch.fnmatchcase(path, store)
+
+
 def strip_fragment(target: str) -> str:
     return target.split('#', 1)[0]
 
@@ -251,6 +259,12 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
                     report.errors.append(f'{eid}: producer {producer!r} is not a tracked path')
             if not entry['producer'] and not entry.get('producer_note'):
                 report.errors.append(f'{eid}: data store without producer needs producer_note')
+            in_git = [p for p in files if PurePosixPath(p).name not in PLACEHOLDER_NAMES
+                      and any(_store_claims(store, p) for store in entry['store'])]
+            if entry['local_only'] and in_git:
+                report.errors.append(f'{eid}: local_only is true but {len(in_git)} store files are tracked')
+            elif not entry['local_only'] and not in_git:
+                report.errors.append(f'{eid}: local_only is false but no store file is tracked')
             continue
         try:
             compiled = compile_globs(eid, entry['paths'])

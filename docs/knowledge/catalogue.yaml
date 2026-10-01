@@ -1693,7 +1693,7 @@ entries:
     kind: data_store
     store: [data/projects/ua_eval_harness/, data/projects/ua_open_weight_eval/]
     producer: [scripts/projects/ua_eval_harness/build_heldout_manifest.py, scripts/projects/ua_open_weight_eval/suite_cli.py]
-    local_only: true
+    local_only: false
     purpose: Evaluation sets, held-out manifests, baselines and runs for the UA eval harness and the open-weight evaluation.
     keywords: [UA eval set, held-out manifest, baselines]
     lifecycle: active
@@ -1773,7 +1773,7 @@ entries:
     kind: data_store
     store: [data/datasets/]
     producer: [scripts/dataset/export_ukrainian_pedagogy_dataset.py, scripts/dataset/audit_literary_poltava_candidate.py]
-    local_only: true
+    local_only: false
     purpose: Exported Hramatka datasets - the Ukrainian pedagogy set and the Literary Poltava candidate with evidence.
     keywords: [Hramatka dataset, pedagogy dataset, Literary Poltava]
     lifecycle: active
@@ -1786,7 +1786,7 @@ entries:
     kind: data_store
     store: [data/processed/]
     producer: [scripts/ingest/esum_abbyy_parser.py]
-    local_only: true
+    local_only: false
     purpose: Parsed etymological dictionary (ESUM) volumes 1 to 6 as JSONL, feeding the sources.db etymology table.
     keywords: [ESUM, etymology, ЕСУМ volumes]
     lifecycle: active
