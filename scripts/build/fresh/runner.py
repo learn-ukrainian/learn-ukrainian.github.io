@@ -901,7 +901,12 @@ def _structural_activity_error(activity: dict[str, Any], typ: str, records: dict
     if typ == "order":
         order = activity.get("correct_order")
         items = activity.get("items")
-        if not isinstance(items, list) or not isinstance(order, list) or sorted(order) != list(range(len(items))):
+        if (
+            not isinstance(items, list)
+            or not isinstance(order, list)
+            or any(type(index) is not int for index in order)
+            or sorted(order) != list(range(len(items)))
+        ):
             return "order_index_coverage"
     if typ == "pick-syllables" and not activity.get("explanation"):
         return "pick_syllables_explanation_missing"
@@ -1250,7 +1255,7 @@ def check_4_activities(
                 min_req = item.get("min_correct", min_allowed)
                 if correct_count < max(min_allowed, min_req):
                     return failure(4, "select_correct_set_invalid", "writer", activity=aid, token=str(idx)), {}
-        if mod_level == "a1":
+        if mod_level == "a1" or typ == "order":
             structural_reason = _structural_activity_error(activity, typ, records)
             if structural_reason is not None:
                 return failure(4, structural_reason, "writer", code=structural_reason, activity=aid), {}
