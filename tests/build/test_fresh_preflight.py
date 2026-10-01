@@ -9,7 +9,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.preflight import preflight_lesson
-from scripts.curriculum.evidence import lock
+from scripts.curriculum.evidence import lock, publication
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -195,6 +195,7 @@ def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word
         ("ulp-1-00-lesson-notes", "Synthetic excerpt", 39, "publication_right"),
         ("not-registered", "Synthetic excerpt", 39, "publication_right"),
         ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", None, "publication_attribution"),
+        ("1-klas-bukvar-zaharijchuk-2025-1", "Synthetic excerpt", 0, "publication_attribution"),
     ],
 )
 def test_preflight_registry_quote_policy(clean_word_store, clean_pack, file, quote, page, code):
@@ -215,6 +216,14 @@ def test_preflight_explicit_empty_registry_refuses(clean_word_store, clean_pack)
     result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store, source_registry={})
     assert not result.passed
     assert result.gaps[0].detail.startswith("publication_right:")
+
+
+def test_preflight_preserves_registry_unreadable_reason(clean_word_store, clean_pack, tmp_path, monkeypatch):
+    monkeypatch.setattr(publication, "REGISTRY_PATH", tmp_path / "missing.yaml")
+    lesson = {"steps": [{"id": "s1", "needs": ["quote"], "ref": "T-002"}]}
+    result = preflight_lesson(lesson, pack=clean_pack, word_store=clean_word_store)
+    assert not result.passed
+    assert result.gaps[0].detail.startswith("publication_registry_unreadable:")
 
 
 def test_preflight_record_kind_mismatch_fails(clean_word_store, clean_pack):

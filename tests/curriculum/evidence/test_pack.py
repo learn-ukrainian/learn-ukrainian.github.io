@@ -8,7 +8,16 @@ from unittest.mock import patch
 import pytest
 import yaml
 
-from scripts.curriculum.evidence import codes, lock, pack, sources, verify
+from scripts.curriculum.evidence import codes, lock, pack, publication, sources, verify
+
+
+@pytest.fixture(autouse=True)
+def resolved_plan(tmp_path, monkeypatch):
+    """Pack verification always has a real plan, even for grounding-only fixtures."""
+    monkeypatch.setattr(verify, "REPO_ROOT", tmp_path)
+    plan_dir = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1"
+    plan_dir.mkdir(parents=True)
+    (plan_dir / "test-mod.yaml").write_text("steps: []\n")
 
 
 @pytest.fixture
@@ -302,7 +311,9 @@ def test_pack_verify_publication_cannot_borrow_allowed_source_identity(
     [
         ("page", "publication_attribution"),
         ("missing_ref", "publication_right"),
-        ("malformed_plan", "publication_right"),
+        ("malformed_plan", "publication_plan_unresolved"),
+        ("missing_plan", "publication_plan_unresolved"),
+        ("empty_plan", "publication_plan_unresolved"),
     ],
 )
 def test_pack_verify_publication_refuses_incomplete_proof(
@@ -318,7 +329,10 @@ def test_pack_verify_publication_refuses_incomplete_proof(
     plan_dir.mkdir()
     plan_path = plan_dir / "test-mod.yaml"
     plan = {"steps": [{"needs": ["quote"], "ref": "T-999" if mutation == "missing_ref" else "T-001"}]}
-    plan_path.write_text("steps: [" if mutation == "malformed_plan" else yaml.safe_dump(plan))
+    if mutation != "missing_plan":
+        plan_path.write_text(
+            "steps: [" if mutation == "malformed_plan" else "" if mutation == "empty_plan" else yaml.safe_dump(plan)
+        )
     with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
         result = verify.verify_pack(
             "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plan_dir, sources_instance=src, offline=True
@@ -1063,3 +1077,17 @@ def test_build_with_vesum_records_its_content_hash(
     expected = sources.Sources(vesum_db=synthetic_vesum)._vesum_identity()[0]
     assert built_with["vesum"] == expected
     assert len(built_with["russian_patterns"]) == 64
+
+
+@pytest.mark.parametrize("content", [None, "sources: [", "sources: []"])
+def test_pack_verify_reports_registry_unreadable(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, monkeypatch, content
+):
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    registry_path = tmp_path / "registry.yaml"
+    if content is not None:
+        registry_path.write_text(content)
+    monkeypatch.setattr(publication, "REGISTRY_PATH", registry_path)
+    result = _verify(synthetic_sources, synthetic_standard, synthetic_word_store, strict=False)
+    assert result["status"] == "failed"
+    assert any(error.startswith("publication_registry_unreadable:") for error in result["errors"])

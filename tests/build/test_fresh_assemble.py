@@ -649,6 +649,9 @@ def test_step_ids_on_units_in_expanded_document():
     for u in slovnyk_units:
         assert u.get("step") is None
 
+    text_resources = [u for u in units if u.get("tab") == "resursy" and u.get("block") == "res_T-1"]
+    assert [u["text"] for u in text_resources] == ["Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 10"]
+
     # Activity unit associated with step s1
     act_units = [u for u in units if u.get("activity") == "a1"]
     assert len(act_units) >= 1
@@ -731,6 +734,7 @@ def test_build_slovnyk_and_resursy_tabs(monkeypatch):
     assert "books" in resursy
     assert len(resursy["books"]) == 1
     assert resursy["books"][0]["source"] == "T-1"
+    assert resursy["books"][0]["title"] == "Захарійчук, «Українська мова. Буквар», 1 клас, ч. 1, 2025, с. 10"
 
     assert "youtube" in resursy
     assert len(resursy["youtube"]) == 1

@@ -1528,9 +1528,13 @@ def assemble_expanded_document(
         t_rec = texts_by_id.get(cid)
         if t_rec is None:
             raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
-        src = t_rec.get("source", {})
-        title = str(src.get("work") or src.get("file") or src.get("author") or cid)
-        add_unit("resursy", None, None, None, f"res_{cid}", "record_print", title, source="record", ref=cid)
+        try:
+            title = publication.source_attribution(t_rec)
+        except ValueError as exc:
+            raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
+        # Registry-validated bibliography is metadata, not the lesson's vocabulary.
+        # Keep its record provenance and byte mapping; quote prose retains record_print.
+        add_unit("resursy", None, None, None, f"res_{cid}", "vesum_exempt", title, source="record", ref=cid)
 
     for vid in cited_video_ids:
         v_rec = videos_by_id.get(vid)
@@ -1939,18 +1943,18 @@ def build_resursy_entries(
     for cid in cited_text_ids:
         t_rec = texts_by_id.get(cid)
         if t_rec:
-            src = t_rec.get("source", {})
-            title = str(src.get("work") or src.get("file") or src.get("author") or cid)
-            author = str(src.get("author") or "")
-            page = str(src.get("page") or "")
+            try:
+                title = publication.source_attribution(t_rec)
+            except ValueError as exc:
+                raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
             entries.append(
                 (
                     cid,
                     "books",
                     {
                         "title": title,
-                        "author": author,
-                        "pages": page,
+                        "author": "",
+                        "pages": "",
                         "url": "",
                         "source": cid,
                         "description": str(t_rec.get("supports") or ""),

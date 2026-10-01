@@ -785,12 +785,20 @@ def verify_pack(
         )
         plan_path = plans_base / f"{slug}.yaml"
         quote_refs = {}
-        if plan_path.is_file():
-            try:
-                quote_refs = publication.quoted_records(yaml.safe_load(plan_path.read_text(encoding="utf-8")))
-            except (OSError, ValueError, yaml.YAMLError, AttributeError, TypeError) as exc:
-                errors.append(f"{codes.PUBLICATION_RIGHT}: cannot resolve planned quote use: {type(exc).__name__}")
-        publication_registry = publication.load_registry()
+        try:
+            plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+            if not isinstance(plan_doc, dict):
+                raise ValueError("plan must be a mapping")
+            quote_refs = publication.quoted_records(plan_doc)
+        except (OSError, ValueError, yaml.YAMLError, AttributeError, TypeError) as exc:
+            errors.append(
+                f"{codes.PUBLICATION_PLAN_UNRESOLVED}: cannot resolve planned quote use: {type(exc).__name__}"
+            )
+        try:
+            publication_registry = publication.load_registry()
+        except ValueError as exc:
+            errors.append(str(exc))
+            publication_registry = {}
         for t in pack_doc.get("texts", []):
             verify_quote(t["id"], t["quote"], t["sha256"], t["source"], table="textbooks")
             if t["id"] in quote_refs:
