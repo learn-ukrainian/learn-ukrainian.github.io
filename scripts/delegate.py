@@ -4761,7 +4761,93 @@ def _commit_count_refs(worktree: Path, base_ref: str) -> tuple[str, ...]:
     return tuple(dict.fromkeys(candidate for candidate in candidates if candidate))
 
 
-def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
+def _recorded_base_sha(record: Mapping[str, Any]) -> str | None:
+    """The commit the task's worktree was branched from, as its record stored it, or None."""
+    sha = record.get("worktree_base_sha")
+    return sha.strip() if isinstance(sha, str) and sha.strip() else None
+
+
+def _run_count_ahead(worktree: Path, base: str) -> tuple[int | None, bool]:
+    """``(count, base_missing)`` for ``git rev-list --count <base>..HEAD``.
+
+    ``base_missing`` is True only when git ran and rejected ``base`` (the ref
+    does not resolve): the one case where trying another base is sound. A git
+    that cannot run, or output that is not a number, is unknown outright.
+    """
+    try:
+        proc = subprocess.run(
+            ["git", "rev-list", "--count", f"{base}..HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None, False
+    if proc.returncode != 0:
+        return None, True
+    try:
+        return int((proc.stdout or "").strip()), False
+    except ValueError:
+        return None, False
+
+
+def _is_ancestor_of_head(worktree: Path, sha: str) -> bool:
+    """Whether ``sha`` names a commit in the repository that is an ancestor of ``HEAD``."""
+    try:
+        proc = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", f"{sha}^{{commit}}", "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def _count_commits_ahead_without_named_base(worktree: Path, base_ref: str, base_sha: str | None) -> int | None:
+    """Count the branch's commits when the named base ref is gone everywhere (#9451).
+
+    A base branch deleted after it merged leaves nothing to count against, which
+    recorded a pushed fix as ``commit_count_unknown``. Fall back, in order, to:
+
+    1. the commit the worktree was branched from (``base_sha``, as the dispatch
+       recorded it), when it is an ancestor of ``HEAD``;
+    2. the merge base of ``HEAD`` with the default branch (``origin/main``, then
+       the upstream remote's ``main``), which is what ``<default>..HEAD`` counts.
+
+    A SHA that does not resolve, or is not an ancestor of ``HEAD`` (the branch
+    was rebased off it), is skipped rather than trusted. None when no base
+    resolves, so the caller still fails closed.
+    """
+    candidates: list[str] = []
+    if base_sha and _is_ancestor_of_head(worktree, base_sha):
+        candidates.append(base_sha)
+    default_refs = ["origin/main"]
+    tracking_remote = _tracking_remote_for_current_branch(worktree)
+    if tracking_remote:
+        default_refs.append(f"{tracking_remote}/main")
+    candidates.extend(dict.fromkeys(default_refs))
+    for candidate in candidates:
+        count, base_missing = _run_count_ahead(worktree, candidate)
+        if count is not None:
+            print(
+                f"⚠️  base {base_ref!r} is gone; counted commits ahead against {candidate!r} instead",
+                file=sys.stderr,
+            )
+            return count
+        if not base_missing:
+            return None
+    return None
+
+
+def _count_commits_ahead(worktree: Path, base_ref: str, base_sha: str | None = None) -> int | None:
     """Return commits on HEAD not reachable from an eligible base ref, or None.
 
     ``None`` means "cannot count", and a vanished worktree is exactly that: on
@@ -4771,27 +4857,19 @@ def _count_commits_ahead(worktree: Path, base_ref: str) -> int | None:
     dead pid — invisible to every settle-loop watching it. The sibling
     ``_worktree_is_dirty`` already treated OSError as unknown; this is the same
     contract, and callers already fail closed on ``None``.
+
+    When every named candidate is gone (the base branch was deleted after it
+    merged, #9451), the count falls back to the recorded ``base_sha`` and then
+    the default-branch merge base; a present base is always measured first,
+    unchanged.
     """
     for candidate in _commit_count_refs(worktree, base_ref):
-        try:
-            proc = subprocess.run(
-                ["git", "rev-list", "--count", f"{candidate}..HEAD"],
-                cwd=worktree,
-                capture_output=True,
-                text=True,
-                check=False,
-                env=_sanitized_git_env(),
-                timeout=DEFAULT_GIT_TIMEOUT_S,
-            )
-        except (OSError, subprocess.TimeoutExpired):
+        count, base_missing = _run_count_ahead(worktree, candidate)
+        if count is not None:
+            return count
+        if not base_missing:
             return None
-        if proc.returncode != 0:
-            continue
-        try:
-            return int((proc.stdout or "").strip())
-        except ValueError:
-            return None
-    return None
+    return _count_commits_ahead_without_named_base(worktree, base_ref, base_sha)
 
 
 def _unpushed_commit_refs(worktree: Path, branch: str) -> tuple[str, ...]:
@@ -6476,7 +6554,9 @@ def _rescue_task(state_path: Path, *, apply: bool) -> dict[str, Any]:
                 return row
             if not dirty:
                 ahead = _count_commits_ahead(
-                    worktree, _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main"))
+                    worktree,
+                    _commit_count_base_ref(worktree, str(state.get("worktree_base") or "main")),
+                    base_sha=_recorded_base_sha(state),
                 )
                 if ahead is None:
                     row["reason"] = "ahead count unavailable"
@@ -9017,6 +9097,7 @@ def _run_worker(
                 commits_ahead = _count_commits_ahead(
                     Path(worktree_path),
                     base_ref,
+                    base_sha=_recorded_base_sha(final_state),
                 )
                 # Kimi takes only plain text without Ukrainian content: a diff that breaks
                 # that is refused before auto-finalize can stage or commit anything.
@@ -9095,7 +9176,9 @@ def _run_worker(
                         owned_paths=final_state.get("owned_paths"),
                     )
                     dirty_on_exit = _worktree_is_dirty(Path(worktree_path))
-                    commits_ahead = _count_commits_ahead(Path(worktree_path), base_ref)
+                    commits_ahead = _count_commits_ahead(
+                        Path(worktree_path), base_ref, base_sha=_recorded_base_sha(final_state)
+                    )
                     if auto_finalize.ok and not auto_finalize.skipped_paths:
                         needs_finalize = False
                         ok_outcome = True
