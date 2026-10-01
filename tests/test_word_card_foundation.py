@@ -3,6 +3,7 @@
 import copy
 import hashlib
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -36,7 +37,8 @@ def capture(source, table, raw, key=None, **extra):
 
 
 @pytest.fixture
-def pilot(tmp_path):
+def pilot(tmp_path, monkeypatch):
+    monkeypatch.setattr(foundation, "main_checkout_root", lambda root: tmp_path)  # Test locks stay in tmp_path.
     paths = {name: tmp_path / (name + ".db") for name in ("sources", "atlas", "vesum")}
     records, units = [], []
     with sqlite3.connect(paths["sources"]) as db:
@@ -108,6 +110,15 @@ def pilot(tmp_path):
                 admit=admit, receipt=receipt, report=report, root=tmp_path, freeze=freeze, selection=selection)
 
 
+def rehash(manifest, selection=True):
+    """Recompute admitted fingerprints so that only the gate under test sees the change."""
+    if selection:
+        literal = (json.dumps(manifest["selection"], ensure_ascii=False, indent=2) + "\n").encode()
+        manifest["selection_file_sha256"] = manifest["admission"]["candidate_sha256"] = hashlib.sha256(literal).hexdigest()
+        manifest["selection_content_sha256"] = sha(manifest["selection"])
+    manifest["manifest_sha256"] = sha({k: v for k, v in manifest.items() if k != "manifest_sha256"})
+
+
 def prepared(pilot):
     assert pilot["operation"]("freeze") == 0
     assert pilot["operation"]("allocate") == 0
@@ -115,9 +126,11 @@ def prepared(pilot):
     return json.loads(pilot["manifest"].read_bytes()), json.loads(pilot["registry"].read_bytes())
 
 
-def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot):
+def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot, capsys):
     before = {k: p.read_bytes() for k, p in pilot["paths"].items()}
     manifest, registry = prepared(pilot)
+    reports = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    assert [r["foreign_build_events"] for r in reports] == [None, 0, 0]  # freeze, allocate, verify
     assert manifest["counts"] == dict(units=150, source_records=152, atlas_articles=2, legacy_alias_rows=2)
     assert len(registry["events"]) == 154 and len(registry["source_records"]) == 152
     assert registry["entries"][0]["key_at_creation"] == {
@@ -161,7 +174,10 @@ def test_freeze_allocation_alias_oracles_replay_and_conservation(pilot):
     ("registration", "Unregistered source"), ("reference", "Missing source reference"),
     ("counts", "Pilot denominator drift"), ("live_row", "Selected literal row mismatch"),
     ("report", "Admission report fingerprint mismatch"), ("authority", "Require independent source admission"),
-    ("output_collision", "Output must be separate"), ("tuple_duplicate", "Duplicate intrinsic tuple")])
+    ("output_collision", "Output must be separate"), ("tuple_duplicate", "Duplicate intrinsic tuple"),
+    ("metadata", "Invalid row snapshot"), ("version", "Unsupported selection schema"),
+    ("admission", "Missing source admission"), ("admission_counts", "Require independent source admission"),
+    ("relative", "Source DB must be an existing absolute file"), ("pos", "Unresolved source-backed coarse POS")])
 def test_admitted_freeze_faults_discriminate(pilot, fault, reason, capsys):
     assert pilot["operation"]("freeze") == 0  # Same valid admission and all unrelated gates pass.
     pilot["manifest"].unlink()
@@ -176,6 +192,10 @@ def test_admitted_freeze_faults_discriminate(pilot, fault, reason, capsys):
         c["units"][0]["anchor_locator"] = "missing"
     if fault == "counts":
         c["denominator"]["units"] = 149
+    if fault == "metadata":
+        del c["source_records"][0]["snapshot_id"]
+    if fault == "version":
+        c["schema_version"] = "atlas-pilot-selection-candidate.v1"
     if fault == "tuple_duplicate":
         record = copy.deepcopy(c["source_records"][-1])
         record["raw_row"]["slug"] = "second"
@@ -191,20 +211,39 @@ def test_admitted_freeze_faults_discriminate(pilot, fault, reason, capsys):
             db.execute("UPDATE ulif_dictua_entries SET status='changed' WHERE id=0")
     if fault == "report":
         pilot["report"].write_text("changed")
-    if fault == "authority":
+    if fault in {"authority", "admission", "admission_counts"}:
         receipt = json.loads(pilot["receipt"].read_bytes())
-        receipt["author_seat_distinct"] = "claimed"
+        receipt.update({"authority": {"author_seat_distinct": "claimed"}, "admission": {"admission": "REJECT"},
+                        "admission_counts": {"denominator": dict(c["denominator"], units=149)}}[fault])
         save(pilot["receipt"], receipt)
     if fault == "output_collision":
         pilot["freeze"][pilot["freeze"].index("--output") + 1] = str(pilot["paths"]["atlas"])
+    if fault == "relative":
+        pilot["freeze"][pilot["freeze"].index("--sources-db") + 1] = os.path.relpath(pilot["paths"]["sources"])
+    if fault == "pos":  # A legacy noun lemma without VESUM backing is never given a default POS.
+        with sqlite3.connect(pilot["paths"]["vesum"]) as db:
+            db.execute("DELETE FROM forms_all")
     assert pilot["operation"]("freeze") == 1
     assert reason in capsys.readouterr().err and not pilot["manifest"].exists()
 
 
-@pytest.mark.parametrize("fault", ["card_swap", "source_swap", "kind", "build", "evidence", "aliases",
-                                  "partial", "history", "cycle", "key_shape"])
-def test_mint_binding_refusals(pilot, fault, capsys):
+@pytest.mark.parametrize("fault,reason", [
+    ("card_swap", "Identity differs from original mint"), ("source_swap", "Identity differs from original mint"),
+    ("kind", "Changed card mint provenance"), ("build", "Changed card mint provenance"),
+    ("evidence", "Identity differs from original mint"), ("aliases", "Inconsistent source alias history"),
+    ("partial", "Partial allocation"), ("history", "History references missing identity"),
+    ("cycle", "Missing or cyclic identity reference"), ("key_shape", "Invalid card key_at_creation"),
+    ("reused", "Reused identity"), ("duplicate_event", "Duplicate history event"),
+    ("schema", "Invalid word-card-identity-registry-v1.schema.json"),
+    ("creation_key", "Legacy creation evidence mismatch"), ("double_allocation", "Source row allocated twice"),
+    ("excess", "Allocation history exceeds frozen pilot inventory"),
+    ("correspondence", "Frozen-snapshot alias differs from its bound row"),
+    ("alias_extra", "Frozen-snapshot alias differs from its bound row"),
+    ("alias_altered", "Frozen-snapshot alias differs from its bound row"),
+    ("alias_misplaced", "Frozen-snapshot alias differs from its bound row")])
+def test_mint_binding_refusals(pilot, fault, reason, capsys):
     _manifest, registry = prepared(pilot)
+    first, second = registry["source_records"][:2]
     if fault in {"card_swap", "source_swap"}:
         inventory, field = (registry["entries"], "card_id") if fault == "card_swap" else (
             registry["source_records"], "source_record_id")
@@ -216,7 +255,7 @@ def test_mint_binding_refusals(pilot, fault, capsys):
     if fault == "evidence":
         registry["events"][0]["evidence"] = "unrelated"
     if fault == "aliases":
-        registry["source_records"][0]["aliases"].pop()
+        first["aliases"].pop()
     if fault == "partial":
         registry["source_records"].pop()
         registry["events"].pop()
@@ -226,16 +265,33 @@ def test_mint_binding_refusals(pilot, fault, capsys):
         registry["entries"][0].update(state="redirected", merged_into=registry["entries"][0]["card_id"])
     if fault == "key_shape":
         registry["entries"][0]["key_at_creation"]["source_keys"] = ["atlas0:slug:first"]
+    if fault == "reused":
+        registry["entries"][1]["card_id"] = registry["entries"][0]["card_id"]
+    if fault == "duplicate_event":
+        registry["events"].append(registry["events"][0])
+    if fault == "schema":
+        del registry["registry_version"]
+    if fault == "creation_key":
+        registry["entries"][0]["key_at_creation"]["spelling"] = "Changed"
+    if fault == "double_allocation":  # A second identity claims the same row under the same snapshot.
+        second.update(aliases=first["aliases"], correspondence=first["correspondence"])
+    if fault == "excess":  # A sense minted under this build is outside the frozen pilot inventory.
+        registry["entries"][0]["senses"].append(dict(sense_id="ws_000000000000", order=1))
+        registry["events"].append(dict(event_id="ie_9999", kind="sense_mint", build_id=registry["events"][0]["build_id"],
+                                       to=["ws_000000000000"], evidence="fixture sense"))
+    if fault == "correspondence":  # The record is no longer bound, yet keeps aliases under a frozen snapshot.
+        first["correspondence"][0]["locator"] = "missing"
+    if fault == "alias_extra":  # Another row's register alias under this record's own initial snapshot.
+        first["aliases"].append(dict(second["aliases"][2], snapshot_id=first["aliases"][0]["snapshot_id"]))
+    if fault == "alias_altered":
+        first["aliases"].append(dict(first["aliases"][0], key=first["aliases"][0]["key"] + " "))
+    if fault == "alias_misplaced":  # A genuine alias, but on a record bound to a different row.
+        second["aliases"].append(first["aliases"][0])
     save(pilot["registry"], registry)
     original = pilot["registry"].read_bytes()
     assert pilot["operation"]("verify") == pilot["operation"]("allocate") == 1
     assert pilot["registry"].read_bytes() == original
-    reasons = {"card_swap": "Identity differs from original mint", "source_swap": "Identity differs from original mint",
-               "kind": "Changed card mint provenance", "build": "Changed card mint provenance",
-               "evidence": "Identity differs from original mint", "aliases": "Inconsistent source alias history",
-               "partial": "Partial allocation", "history": "History references missing identity",
-               "cycle": "Missing or cyclic identity reference", "key_shape": "Invalid card key_at_creation"}
-    assert reasons[fault] in capsys.readouterr().err
+    assert capsys.readouterr().err.count("REFUSED: " + reason) == 2
 
 
 def test_changed_snapshot_and_history_retention(pilot, capsys):
@@ -263,24 +319,58 @@ def test_changed_snapshot_and_history_retention(pilot, capsys):
     assert pilot["registry"].read_bytes() == before
 
 
-@pytest.mark.parametrize("reference", ["locator", "unit", "card", "source", "alias", "prose", "encoded"])
-def test_schema_valid_isolation_events(pilot, reference, capsys):
+ADJUDICATIONS = ("split", "merge", "retire", "sense_split", "sense_merge")
+
+
+@pytest.mark.parametrize("kind,reference", [(kind, ref) for kind in ADJUDICATIONS for ref in (None, "unit")] +
+                         [("sense_split", ref) for ref in ("card", "locator", "source", "alias", "prose", "encoded")])
+def test_schema_valid_isolation_events(pilot, kind, reference, capsys):
     _manifest, registry = prepared(pilot)
-    member = pilot["root"] / "membership.json"
-    locator = pilot["candidate"]["source_records"][0]["locator"]
-    unit = pilot["candidate"]["units"][0]
-    card = registry["entries"][1]["card_id"]
-    target = dict(locator=locator, unit=unit["unit_key"], card=card,
-                  source=registry["source_records"][0]["source_record_id"], alias="atlas0:slug:second",
-                  prose="A reviewed reference to (" + locator + ") in prose.",
-                  encoded=json.dumps({"reference": locator}))[reference]
-    registry["events"].append(dict(event_id="ie_9999", kind="retire", build_id="fixture-review", cards=[card],
-                                   evidence=target, overlay_id="adjudication"))
+    member, locator = pilot["root"] / "membership.json", pilot["candidate"]["source_records"][0]["locator"]
+    # Each variant reaches the held-out boundary through one gate only: no overlay_id, and cards stay
+    # empty except in the card variant. The escaped colon hides the locator from the prose scan.
+    evidence = dict(locator=locator, unit=pilot["candidate"]["units"][0]["unit_key"], alias="atlas0:slug:second",
+                    source=registry["source_records"][0]["source_record_id"], prose=f"A reviewed note on ({locator}).",
+                    encoded='{"reference":"' + locator.replace(":", "\\u003a") + '"}').get(reference, "Unrelated note.")
+    registry["events"].append(dict(event_id="ie_9999", kind=kind, build_id="fixture-review", evidence=evidence,
+                                   cards=[registry["entries"][1]["card_id"]] if reference == "card" else []))
     save(pilot["registry"], registry)
     assert pilot["operation"]("verify") == 0  # Schema, history and mint binding all pass.
+    assert '"foreign_build_events": 1' in capsys.readouterr().out
     save(member, dict(heldout=[locator], replay=[]))
-    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == 1
-    assert "Held-out adjudicated mapping touches" in capsys.readouterr().err
+    before, refused = pilot["registry"].read_bytes(), int(reference is not None)
+    assert pilot["operation"]("verify", "--heldout-manifest", str(member)) == refused
+    assert pilot["operation"]("allocate", "--heldout-manifest", str(member)) == refused
+    assert pilot["registry"].read_bytes() == before
+    assert capsys.readouterr().err.count("REFUSED: Held-out adjudicated mapping touches") == 2 * refused
+
+
+@pytest.mark.parametrize("fault,reason", [(None, None), ("self_hash", "Changed manifest bytes/content"),
+    ("rules", "Unapproved rules or normaliser version"), ("normaliser", "Unapproved rules or normaliser version"),
+    ("register", "Register fingerprint mismatch"), ("content", "Selection content fingerprint mismatch"),
+    ("file", "Admitted selection bytes changed"), ("version", "Unsupported selection schema"),
+    ("capture", "Changed selected bytes"), ("metadata", "Changed legacy metadata projection")])
+def test_frozen_manifest_faults_discriminate(pilot, fault, reason, capsys):
+    manifest, _registry = prepared(pilot)
+    capsys.readouterr()
+    selection, before = manifest["selection"], pilot["registry"].read_bytes()
+    changes = {"rules": (manifest, "rules_version", "rules-v2"), "normaliser": (manifest, "normaliser_version", "norm-v2"),
+               "register": (selection, "source_register_sha256", "0" * 64),
+               "version": (selection, "schema_version", "atlas-pilot-selection-candidate.v1"),
+               "capture": (selection["source_records"][0]["raw_row"], "status", "changed"),
+               "metadata": (manifest["legacy_articles"][0]["metadata"], "lemma", "Changed"),
+               "content": (manifest, "selection_content_sha256", "0" * 64),
+               "file": (manifest, "selection_file_sha256", "0" * 64), "self_hash": (manifest, "manifest_sha256", "0" * 64)}
+    if fault in changes:
+        target, key, value = changes[fault]
+        target[key] = value
+    if fault != "self_hash":  # Every other gate is reached with a consistent self-hash.
+        rehash(manifest, selection=fault not in {"content", "file"})
+    save(pilot["manifest"], manifest)
+    assert pilot["operation"]("verify") == pilot["operation"]("allocate") == (0 if fault is None else 1)
+    assert pilot["registry"].read_bytes() == before
+    output = capsys.readouterr()
+    assert output.err.count("REFUSED: " + reason) == 2 if fault else output.err == ""
 
 
 @pytest.mark.parametrize("fault,reason", [(None, None), ("unknown", "Unresolved membership"),
@@ -335,11 +425,7 @@ def test_malformed_privacy_safe_refusal(pilot, fault, capsys, monkeypatch):
     if fault == "selector":
         manifest["selection"]["source_records"][0]["row_key"] = []
     if isinstance(manifest, dict):
-        selection_bytes = (json.dumps(manifest["selection"], ensure_ascii=False, sort_keys=True, indent=2) + "\n").encode()
-        manifest["selection_file_sha256"] = hashlib.sha256(selection_bytes).hexdigest()
-        manifest["admission"]["candidate_sha256"] = manifest["selection_file_sha256"]
-        manifest["selection_content_sha256"] = sha(manifest["selection"])
-        manifest["manifest_sha256"] = sha({k: v for k, v in manifest.items() if k != "manifest_sha256"})
+        rehash(manifest)
     save(pilot["manifest"], manifest)
     raw = {"duplicate_json": '{"x":1,"x":2}', "invalid_json": "{", "deep": "[" * 2000 + "]" * 2000,
            "surrogate": '{"x":"\\ud800"}', "nan": '{"x":NaN}'}
@@ -365,6 +451,7 @@ def test_atomic_failure_identifier_reuse_and_lock_location(pilot, monkeypatch):
         assert pilot["operation"]("allocate") == 1
     assert pilot["registry"].read_bytes() == before
     assert not list(pilot["root"].glob(".registry.json.*")) and not pilot["registry"].with_suffix(".lock").exists()
+    assert len(list((pilot["root"] / "batch_state/locks/word-card-foundation").glob("*.lock"))) == 2
     monkeypatch.setattr(foundation.secrets, "choice", lambda alphabet: "0")
     assert pilot["operation"]("allocate") == 1 and pilot["registry"].read_bytes() == before
 
@@ -410,6 +497,7 @@ def test_committed_inputs_readonly_cli_guard():
     registry = json.loads(paths[1].read_bytes())
     assert [len(registry[k]) for k in ("entries", "source_records", "events")] == [114, 272, 386]
     assert len(output["unresolved_card_mappings"]) == 22 and output["heldout_isolation"] == "unverified"
+    assert output["foreign_build_events"] == 0
     assert before == [p.read_bytes() for p in paths]
 
 
@@ -524,3 +612,30 @@ def test_paradigm_parent_join_and_literal_changes(pilot, change):
     assert foundation.main(["allocate", "--manifest", str(pilot["manifest"]), "--registry", str(fresh)]) == 0
     key = json.loads(fresh.read_bytes())["source_records"][-2]["aliases"][0]["key"]
     assert key == original_key if change == "rename" else key != original_key
+
+
+@pytest.mark.parametrize("word,valid", [("<ID>1</ID>|English  phrase {{</fras>}} ", True), ("   ", False), (7, False)])
+def test_phrase_dictionary_literal_word_key(pilot, word, valid, capsys):
+    rows = [dict(id=n, word=word, definition="English gloss", text="<p>literal</p>", source="fixture") for n in (7, 8)]
+    with sqlite3.connect(pilot["paths"]["sources"]) as db:
+        db.execute("CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word, definition TEXT, text TEXT, source TEXT)")
+        db.executemany("INSERT INTO frazeolohichnyi VALUES (?,?,?,?,?)", [tuple(r.values()) for r in rows])
+    records = [capture("frazeolohichnyi", "frazeolohichnyi", raw) for raw in rows]
+    pilot["candidate"]["source_records"] += records
+    pilot["candidate"]["units"][0]["source_record_keys"] += [r["locator"] for r in records]
+    pilot["candidate"]["denominator"]["source_records"] += 2
+    pilot["admit"]()
+    if not valid:
+        assert pilot["operation"]("freeze") == 1
+        assert "REFUSED: Invalid phrase-dictionary word" in capsys.readouterr().err
+        assert not pilot["manifest"].exists() and not pilot["registry"].exists()
+        return
+    _manifest, registry = prepared(pilot)
+    replay = pilot["registry"].read_bytes()
+    assert pilot["operation"]("allocate") == 0 and pilot["registry"].read_bytes() == replay
+    phrases = registry["source_records"][-2:]
+    assert len({r["source_record_id"] for r in phrases}) == 2  # The repeated weak key is conserved, not merged.
+    # Hand-written key: the untrimmed literal column, markup residue and doubled space included.
+    key = "frazeolohichnyi:record:<ID>1</ID>|English  phrase {{</fras>}} "
+    assert [r["aliases"] for r in phrases] == [[dict(kind="table_row", key=key, snapshot_id=r["snapshot_id"])]
+                                               for r in records]

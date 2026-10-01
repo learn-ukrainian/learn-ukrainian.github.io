@@ -50,6 +50,8 @@ The whole permissions-register pin remains binding: a register change requires r
 Locators contain local row IDs only. ULIF aliases use `ulif:register:`, actual
 `ulif:content:` digests, and `ulif:record:<query>#<headword>#<label>`; PULS uses
 `puls:record:<word>/<pos>/<level>`; phraseology uses `frazeolohichnyi:record:<word>`.
+Its `<word>` is the literal `word` column byte for byte, import residue such as markup
+included; this weak key may repeat, and each row keeps its own record and alias.
 The approved bounded tuple clarification adds `table_row` evidence keys:
 `ukrainian_word_stress:record:stress:v1:sha256:<digest>` hashes exactly parsed
 `{form,source}`; source must agree with the outer stress row.
@@ -62,9 +64,15 @@ Local IDs/timestamps are excluded; accents, case, spaces and raw HTML remain.
 Duplicate tuples/digest collisions refuse; null source content stays null.
 Weak alias collisions are evidence, never lexical equivalence. Replay conserves
 IDs, aliases and history byte-for-byte; changed/new inputs require correspondence.
+Aliases under this freeze's snapshot ids must equal the bound row's exactly; other snapshots stay history.
+`verify` binds only this build's identities; other builds' events are retained, unverified history
+counted in `foreign_build_events`. Admission pins the reviewing family used for this immutable freeze
+(`google`) and fails closed; another family needs an author-family field and a re-freeze.
+Per-output lock files stay in the ignored lock directory and are never unlinked.
 Immutable output conflicts and source/WAL mutation refuse before writing.
 Optional membership is `{"heldout":["source:key"],"replay":[]}`. Keys must resolve;
 conservative unit/locator/card/alias closure must remain disjoint from replay.
+Every non-mint registry event counts as adjudication, with or without `overlay_id`.
 Expected/adjudicated answers are excluded from all inputs even without membership.
 Absent real membership, isolation remains unverified. `--for-evaluation` refuses
 until authenticated operator authority and thresholds have an approved contract.

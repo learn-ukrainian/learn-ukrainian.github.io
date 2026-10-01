@@ -215,6 +215,7 @@ def isolation(inputs, heldout):
             continue
         adjudication = value.get("kind") in {"identity", "split", "merge", "resolve", "variant", "sense_map"}
         adjudication |= any(k in value for k in ("overlay_id", "settled_by", "mapping", "merged_into", "split_into"))
+        adjudication |= "event_id" in value and value.get("kind") not in {"mint", "sense_mint", "source_record_mint"}
         if adjudication:
             require(not any(pattern.search(s) for s in walk(value) if isinstance(s, str)),
                     "Held-out adjudicated mapping touches a membership key or indirect alias")
@@ -229,6 +230,7 @@ def intrinsic(record, records):
     if (source, table) == ("puls", "puls_cefr"):
         return "table_row", "puls:record:" + "/".join(raw[k] for k in ("word", "pos", "level"))
     if (source, table) == ("frazeolohichnyi", "frazeolohichnyi"):
+        require(nonempty(raw["word"]), "Invalid phrase-dictionary word")
         return "table_row", "frazeolohichnyi:record:" + raw["word"]
     if (source, table) == ("ukrainian_word_stress", "enrichment"):
         payload = parse(raw["payload_json"])
@@ -300,7 +302,7 @@ def selection_check(selection, registered):
         require(record["locator"] == locator, "Literal locator disagrees with source row selector")
         require(record["content_fingerprint_basis"] == ROW_BASIS, "Label digest as literal-row, not full DB")
         require(digest(raw) == record["content_sha256"], "Changed selected bytes; re-admit the input")
-        require(record["snapshot_id"] == "selected-row@sha256:" + record["content_sha256"], "Invalid row snapshot")
+        require(record.get("snapshot_id") == "selected-row@sha256:" + record["content_sha256"], "Invalid row snapshot")
         require(record["source_content_sha256"] == raw.get("content_sha256"), "Source content hash mismatch")
         require(record.get("database", "sources") in {"sources", "atlas", "vesum"}, "Unknown source database")
         if record["table"] == "ulif_dictua_entries":
@@ -550,16 +552,21 @@ def allocation_check(manifest, registry, complete=True):
             bound(entry["card_id"], "mint", key)
             cards.append(entry["card_id"])
     records = manifest["selection"]["source_records"]
+    snapshots, expected = {r["snapshot_id"] for r in records}, {}
     for record in records:
         matches = [r for r in registry["source_records"] if r["source_id"] == record["source_id"] and
                    any(c.get("locator") == record["locator"] and c["snapshot_id"] == record["snapshot_id"] and
                        c["status"] == "unique" for c in r["correspondence"])]
         require(len(matches) <= 1, "Source row has multiple allocations")
         if matches:
-            require(all(a in matches[0]["aliases"] for a in aliases(record, records)),
+            expected[matches[0]["source_record_id"]] = aliases(record, records)
+            require(all(a in matches[0]["aliases"] for a in expected[matches[0]["source_record_id"]]),
                     "Inconsistent source alias history")
             bound(matches[0]["source_record_id"], "source_record_mint", record["locator"])
             sources.append(matches[0]["source_record_id"])
+    # Aliases under this freeze's snapshots must be exactly the bound row's; other snapshots are retained history.
+    require(all(a in expected.get(r["source_record_id"], []) for r in registry["source_records"]
+                for a in r["aliases"] if a["snapshot_id"] in snapshots), "Frozen-snapshot alias differs from its bound row")
     minted = {i for e in registry["events"] if e["build_id"] == build and e["kind"] in {"mint", "sense_mint", "source_record_mint"}
               for i in e.get("cards", []) + e.get("to", [])}
     require(minted <= set(cards + sources), "Allocation history exceeds frozen pilot inventory")
@@ -659,7 +666,10 @@ def main(argv=None):
                     "acceptance thresholds are not established; Gate 2 remains open")
         checked = isolation([manifest, registry], args.heldout_manifest)
         unresolved = [u["unit_key"] for u in manifest["selection"]["units"] if not u["atlas_slug"]]
-        print(json.dumps({"operation": args.operation, "counts": manifest["counts"],
+        # Only this build's identities are verified; other builds' events are retained, unverified history.
+        foreign = None if registry is None else sum(
+            e["build_id"] != "pilot@sha256:" + manifest["manifest_sha256"] for e in registry["events"])
+        print(json.dumps({"operation": args.operation, "counts": manifest["counts"], "foreign_build_events": foreign,
                           "unresolved_card_mappings": unresolved, "supplementary_correspondence": "unresolved",
                           "heldout_isolation": checked, "evaluation_readiness": "unknown"}, ensure_ascii=False, sort_keys=True))
         return 0
