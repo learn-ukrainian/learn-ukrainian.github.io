@@ -134,12 +134,22 @@ SCOPE_SIDECAR_STALE = "scope_sidecar_stale"
 # --- module title check ------------------------------------------------------
 TITLE_LETTER_ENUMERATION_MISMATCH = "title_letter_enumeration_mismatch"
 
+# --- review-checkable plan defects (issue #9487, review_gates.py) -----------
+NAMED_BEFORE_INTRODUCTION = "named_before_introduction"
+DUPLICATE_ACTIVITY_FOCUS = "duplicate_activity_focus"
+LISTENING_QUIZ_SINGLE_KEY = "listening_quiz_single_key"
+INCIDENTAL_NOT_DECODABLE = "incidental_not_decodable"
+
 # --- notes (never fail the run) ---------------------------------------------
 # mechanical plan gates M1, M3, M5 (issue #9138) report here or as not_checked, never as failures
 STEP_LETTER_NOT_PRACTISED = "step_letter_not_practised"
 TOKEN_NOT_ALLOWED = "token_not_allowed"
 CORE_CEFR_ABOVE_MODULE = "core_cefr_above_module"
 CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
+# review-checkable gates C4–C6 (issue #9487) that read a proxy or a pedagogical choice
+INCIDENTAL_LEMMA_NOT_DECODABLE = "incidental_lemma_not_decodable"
+HEARD_WORD_WITHOUT_VIDEO = "heard_word_without_video"
+EARLIER_CORE_NOT_RECYCLED = "earlier_core_not_recycled"
 
 # --- not_checked (never fail the run, always reported) ----------------------
 MINUTES_CONSTANTS_UNDEFINED = "minutes_constants_undefined"
@@ -219,6 +229,13 @@ DESCRIPTIONS = {
     PLACEMENT_TABLE_UNAVAILABLE: "failure (issue #8889 r5 §B2): scripts/curriculum/validate/placement_table.yaml is missing or malformed",
     ACTIVITY_PLACEMENT_FORBIDDEN: "failure (issue #8889 r5 §B2): an activity's type is forbidden at this level by the generated placement table",
     ACTIVITY_PLACEMENT_NOT_ALLOWED: "failure (issue #8889 r5 §B2): an activity's placement (inline/workbook) is not the one the placement table allows for its type at this level",
+    NAMED_BEFORE_INTRODUCTION: "failure (gate C1, #9487): a word id named in a dialogue's target_grammar, or in the focus of an activity in a step's practice, is introduced by a later step of the lesson, or by no step up to that one and is outside the lesson's allowed set",
+    DUPLICATE_ACTIVITY_FOCUS: "failure (gate C2, #9487): two or more activities of one lesson carry the same focus text (whitespace collapsed)",
+    LISTENING_QUIZ_SINGLE_KEY: "failure (gate C3, #9487): an activity declaring kind: listening cites videos whose models (letters and words) hold exactly one target, so every item has the same key",
+    INCIDENTAL_NOT_DECODABLE: "failure (gate C4, #9487): in a letter-stage module, an incidental word none of whose word-store spellings can be read with the letters taught through its lesson",
+    INCIDENTAL_LEMMA_NOT_DECODABLE: "note (gate C4, #9487): an incidental lemma needs a letter not taught through its lesson while another form of its record is readable; the plan does not bind the form, so the plan review confirms it",
+    HEARD_WORD_WITHOUT_VIDEO: "note (gate C5, #9487): a teach-text clause says a word id is heard, and no video the step cites lists it in models.words; 'heard' is read from prose, so the plan review confirms it",
+    EARLIER_CORE_NOT_RECYCLED: "note (gate C6, #9487): core records of earlier positions that no recycled list of the module names, listed with their lemma and position",
     STEP_LETTER_NOT_PRACTISED: "note (gate M1, #9138): a step introduces a letter that no activity in its practice names in its focus; a focus can describe the practice without the glyph, so the plan review confirms it",
     TOKEN_NOT_ALLOWED: "note (gate M3, #9138): a quoted Ukrainian token in a step's teach text or an activity's focus resolves only to word records outside the lesson's allowed set; the plan review confirms it is intended",
     CORE_CEFR_ABOVE_MODULE: "note (gate M5, #9138): a core lemma's word-store CEFR level is above the module's level; the plan sets no CEFR ceiling, so the plan review confirms it is intended (for example the module's own metalanguage)",
@@ -258,7 +275,7 @@ DESCRIPTIONS = {
     INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
     PENDING_PROMOTION: "not_checked (--provisional-pack only): evidence_ref.sha256 differs from the provisional pack's sha256; both hashes are recorded and plan-promote sets it after the plan review approves",
     TOKEN_UNRESOLVED: "not_checked (gate M3, #9138): a Ukrainian token in a step's teach text or an activity's focus resolves to no word-store record, or is spelled like a taught syllable and matches only out-of-allowlist words (a syllable or sound is not a word); a person confirms it",
-    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); the message names the gate and the reason",
+    MECHANICAL_RULE_NOT_CHECKED: "not_checked (gates M1, M3, M5, #9138; C1, C3–C6, #9487): a gate applied to the plan but its input was unavailable (arc, base layer, earlier plans, CEFR level); the message names the gate and the reason",
     PLACEMENT_LEVEL_NOT_COVERED: "not_checked (issue #8889 r5 §B2): this level is not covered by the generated placement table (CORE fresh-build levels only); the placement rule is not checked",
 }
 
@@ -268,6 +285,9 @@ NOTE_CODES = frozenset(
         STEP_LETTER_NOT_PRACTISED,
         TOKEN_NOT_ALLOWED,
         CORE_CEFR_ABOVE_MODULE,
+        INCIDENTAL_LEMMA_NOT_DECODABLE,
+        HEARD_WORD_WITHOUT_VIDEO,
+        EARLIER_CORE_NOT_RECYCLED,
     }
 )
 NOT_CHECKED_CODES = frozenset(

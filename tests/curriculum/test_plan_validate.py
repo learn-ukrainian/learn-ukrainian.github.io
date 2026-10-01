@@ -490,7 +490,7 @@ def _post_write_plan(new_plan_path: Path) -> Post:
 
 def _define_true_false(plan: dict, activity_id: str) -> None:
     plan["lessons"][0]["activities"].append(
-        {"id": activity_id, "type": "true-false", "placement": "inline", "focus": "Check the text."}
+        {"id": activity_id, "type": "true-false", "placement": "inline", "focus": f"Check the text ({activity_id})."}
     )
 
 
@@ -1154,6 +1154,9 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     from tests.curriculum.test_plan_validate_mechanical import produced_mechanical_codes
 
     produced |= produced_mechanical_codes(tmp_path / "mechanical")
+    from tests.curriculum.test_plan_validate_review_gates import produced_review_gate_codes
+
+    produced |= produced_review_gate_codes(tmp_path / "review-gates")
     assert produced == set(codes.DESCRIPTIONS)
 
 

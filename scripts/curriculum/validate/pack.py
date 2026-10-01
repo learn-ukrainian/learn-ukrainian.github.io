@@ -3,7 +3,9 @@
 Isolated on purpose: #8413 replaces this module with the real pack tooling.
 A module pack (evidence/<level>/<slug>.yaml) holds top-level lists `texts`,
 `exercises`, `examples`, `errors`, `videos`, `standard` of records carrying
-`id`, and no `words:` list — its presence fails. The word store
+`id`, and no `words:` list — its presence fails. A video record's explicit
+listening models (`models: {letters, words}`) are kept; descriptions never
+establish models (evidence-pack-v1 schema). The word store
 (evidence/<level>/_words.yaml) holds `words[] {id, lemma, forms[] {tags}}`.
 A `<file>.lock` sidecar sits beside each file; its first whitespace-delimited
 token is the lowercase hex sha256 of the file's bytes. Duplicate ids fail.
@@ -47,12 +49,22 @@ def lock_digest(path: Path, failure_code: str) -> str:
 
 
 @dataclass(frozen=True)
+class VideoModels:
+    """A video record's explicit listening models: Ukrainian letters and word-store ids."""
+
+    letters: tuple[str, ...] = ()
+    words: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
 class Pack:
-    """The module evidence pack: every record id it defines, and its error records."""
+    """The module evidence pack: every record id it defines, its error records and its video models."""
 
     path: Path
     ids: frozenset[str] = field(default_factory=frozenset)
     error_ids: frozenset[str] = field(default_factory=frozenset)
+    #: V- id -> its explicit models; a video record without a models mapping is absent here.
+    video_models: dict[str, VideoModels] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -85,6 +97,7 @@ def load_pack(pack_path: Path) -> Pack:
         )
     ids: set[str] = set()
     error_ids: set[str] = set()
+    video_models: dict[str, VideoModels] = {}
     for list_name in PACK_LISTS:
         records = data.get(list_name, [])
         if records is None:
@@ -101,7 +114,13 @@ def load_pack(pack_path: Path) -> Pack:
             ids.add(record["id"])
             if list_name == "errors":
                 error_ids.add(record["id"])
-    return Pack(path=pack_path, ids=frozenset(ids), error_ids=frozenset(error_ids))
+            if list_name == "videos" and isinstance(record.get("models"), dict):
+                models = record["models"]
+                video_models[record["id"]] = VideoModels(
+                    letters=tuple(item for item in models.get("letters") or [] if isinstance(item, str)),
+                    words=tuple(item for item in models.get("words") or [] if isinstance(item, str)),
+                )
+    return Pack(path=pack_path, ids=frozenset(ids), error_ids=frozenset(error_ids), video_models=video_models)
 
 
 def load_words(words_path: Path) -> WordStore:

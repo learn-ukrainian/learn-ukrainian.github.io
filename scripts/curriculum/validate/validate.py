@@ -14,6 +14,8 @@ waiver can never be built or merged as buildable.
 The mechanical gates M1, M3 and M5 (mechanical.py, issue #9138) are structural checks over the
 plan, the arc and the word store that plan reviewers had to make by hand;
 what reads a proxy is reported as a note or not_checked, never as a failure.
+The review gates C1–C6 (review_gates.py, issue #9487) decide the plan defects plan
+reviewers marked checkable: C1–C4 fail, C5 and C6 (and C4's form-dependent case) are notes.
 
 --provisional-pack is the plan-review mode (docs/epics/fresh-build-review-contracts.md
 "Contract 1"): the plan still points at a pack whose sha256 it does not carry yet,
@@ -57,6 +59,7 @@ from .pack import load_pack, load_words, lock_digest
 from .placement_table import PLACEMENT_TABLE_REL, PlacementTableError, load_placement_table
 from .registry import check_append_only, check_plan_against_registry, load_registry, registry_path_for
 from .report import Outcome, Report
+from .review_gates import check_review_gates
 from .scope import check_scope_sidecar, check_title, scope_sidecar_path, title_quantities_outcome
 
 _CYRILLIC = re.compile(r"[А-Яа-яЇїІіЄєҐґЬь]")
@@ -1158,6 +1161,17 @@ def _validate_plan_run(
     if store is not None:
         check_mechanical(
             report, plan, level=level, store=store, arc=arc, level_plans=level_plans, words_path=words_path
+        )
+    if store is not None and pack is not None:
+        check_review_gates(
+            report,
+            plan,
+            level=level,
+            store=store,
+            pack=pack,
+            arc=arc,
+            level_plans=level_plans,
+            words_path=words_path,
         )
     registry_path = registry_path_for(plan_path)
     registry_failures: list[Outcome] = []

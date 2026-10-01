@@ -732,6 +732,16 @@ def _cross_case_id(case: object) -> str:
     return name if isinstance(name, str) else "curriculum-absent"
 
 
+#: Cases whose target plan has an earlier arc position without a plan file.
+MISSING_PRIOR_CASES = frozenset(
+    {
+        "rule4_earlier_position_missing_fails",
+        "rule4_missing_prior_waived",
+        "rule4_waived_id_unverifiable_is_not_checked",
+    }
+)
+
+
 def run_cross(root: Path, case: CrossCase) -> Report:
     plans = copy.deepcopy(case.plans)
     paths = write_level(
@@ -754,6 +764,9 @@ def test_cross_case(tmp_path: Path, case: CrossCase) -> None:
     expected_not_checked = set(ALWAYS_NOT_CHECKED)
     if case.name == "rule4_waived_id_unverifiable_is_not_checked":
         expected_not_checked.add(codes.INTRODUCED_EARLIER_UNVERIFIED)
+    if case.name in MISSING_PRIOR_CASES:
+        # gate C6 (#9487) lists earlier positions' core records, so a missing position leaves it unchecked
+        expected_not_checked.add(codes.MECHANICAL_RULE_NOT_CHECKED)
     assert {o.code for o in report.not_checked} == expected_not_checked, report.render_text()
     assert report.ok == (not case.expected)
     assert report.status == ("fail" if case.expected else ("waived" if case.waived else "pass"))
