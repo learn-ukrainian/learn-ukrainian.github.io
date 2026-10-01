@@ -1690,6 +1690,47 @@ def _get_conn() -> sqlite3.Connection:
     return _conn
 
 
+def ulif_stress_build() -> dict[str, Any]:
+    """Read the forms build receipt; never initialize or migrate the source DB."""
+    try:
+        conn = _get_conn()
+    except FileNotFoundError:
+        return {"state": "unavailable"}
+    if not _ulif_table_exists(conn, "ulif_forms_build") or not _ulif_table_exists(conn, "ulif_forms"):
+        return {"state": "missing_table"}
+    row = conn.execute("SELECT * FROM ulif_forms_build WHERE id = 1").fetchone()
+    return dict(row) if row is not None else {"state": "unbuilt"}
+
+
+def ulif_stress_rows(form: str) -> list[dict[str, Any]]:
+    """Indexed per-form lookup of checked entries only (#8400 rule 3).
+
+    The complete build receipt is required so a partial rebuild cannot
+    silently become stress evidence. Each returned row retains its source ids.
+    """
+    build = ulif_stress_build()
+    if (build.get("state") != "complete"
+            or build.get("parser_version") != ULIF_FORMS_PARSER_VERSION
+            or not build.get("source_fingerprint")):
+        return []
+    # Preserve proper-name case; only try spelling variants after an exact miss.
+    normalized = form.translate(str.maketrans("’ʼ`", "'''"))
+    candidates = list(dict.fromkeys((normalized, normalized.lower(), normalized.title())))
+    for candidate in candidates:
+        rows = _get_conn().execute(
+            """SELECT f.*, e.normalized_query, e.canonical_headword,
+                      e.grammatical_label, e.homonym_index
+               FROM ulif_forms AS f JOIN ulif_dictua_entries AS e ON e.id = f.entry_id
+               WHERE f.form_unstressed = ? AND e.homonym_checked = 1
+               ORDER BY f.entry_id, f.id""",
+            (candidate,),
+        )
+        found = [dict(row) for row in rows]
+        if found:
+            return found
+    return []
+
+
 def _get_conn_for(db_path: str | Path | None = None) -> sqlite3.Connection:
     if db_path is None:
         return _get_conn()

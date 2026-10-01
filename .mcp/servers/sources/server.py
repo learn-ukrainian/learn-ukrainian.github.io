@@ -16,7 +16,7 @@ with imports; rename there is a follow-up.
 Tools:
     - search_sources, search_text, search_literary, search_external, get_chunk_context
     - verify_word, verify_words, verify_lemma, vet_vocabulary (VESUM)
-    - verify_stress, verify_stresses (stress oracle: ukrainian-word-stress trie + override layer + VESUM join)
+    - verify_stress, verify_stresses (stress oracle: checked ULIF forms + labelled trie fallback + overrides)
     - check_text (single-call verification of text or exercise items)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_grinchenko_1907, search_esum, search_idioms, search_synonyms
@@ -597,12 +597,12 @@ async def list_tools() -> list[Tool]:
             name="verify_stress",
             description=(
                 "Stress oracle: look up the stressed form + stressed-vowel index for a Ukrainian word "
-                "from the offline ukrainian-word-stress dictionary (ULIF-derived, 2.9M word forms), with "
-                "the project's manual override layer applied and a best-effort VESUM identity join. "
+                "from homonym-checked ULIF per-form rows first, then a labelled offline trie fallback, with "
+                "exact-form overrides applied and a VESUM identity join. Duals retain both variants and the teaching choice. "
                 "vowel_index is the 0-based codepoint index of the stressed vowel in the NFC-normalized "
                 "unstressed form (same convention as generate_practice_deck.py / PracticeStress.tsx). "
-                "status is 'ok' (single reading), 'ambiguous' (heteronym — pass pos/tags to disambiguate; "
-                "see each match's required_tags), 'not_found' (valid word, not in the dictionary), or "
+                "status is 'ok' (agreeing readings), 'ambiguous' (pass lemma/pos/tags to disambiguate; "
+                "see each match's tags and evidence), 'pending' (no trusted reading), or "
                 "'invalid_input' (empty/multi-word/non-Cyrillic/single-syllable). The text channel is a "
                 "one-line summary; the structured result keeps the full oracle payload."
             ),
@@ -612,6 +612,10 @@ async def list_tools() -> list[Tool]:
                     "word": {
                         "type": "string",
                         "description": "Ukrainian word to check: bare lemma, inflected form, or U+0301/U+0300-marked form (e.g., 'замок', 'любов'ю', 'за́мок')"
+                    },
+                    "lemma": {
+                        "type": "string",
+                        "description": "Optional lemma; a source-stressed lemma distinguishes lexical homographs.",
                     },
                     "pos": {
                         "type": "string",
@@ -632,7 +636,8 @@ async def list_tools() -> list[Tool]:
                 "stressed_form, vowel_indices, required_tags, vesum when joined, override_applied) "
                 "and a single source envelope for the whole response. Hard cap: 500 words; a longer "
                 "list is truncated to the first 500 and the response includes a note saying so. "
-                "Optional pos is applied to every word in the call."
+                "Optional lemma, pos and tags apply to every word. Each row and reading labels its source; "
+                "the source envelope names both dictionary digests."
             ),
             inputSchema={
                 "type": "object",
@@ -645,6 +650,8 @@ async def list_tools() -> list[Tool]:
                             "At most 500 are processed; extra words are dropped with a response note."
                         ),
                     },
+                    "lemma": {"type": "string", "description": "Optional lemma applied to every form."},
+                    "tags": {"type": "string", "description": "Optional UD or VESUM tags applied to every form."},
                     "pos": {
                         "type": "string",
                         "description": "Optional POS applied to every word (e.g. 'NOUN' or 'upos=NOUN').",
@@ -2645,7 +2652,22 @@ async def handle_inspect_lemma(args: dict):
 async def handle_verify_stress(args: dict):
     from scripts.verification.stress import stress_call_summary
 
-    content_outcome = await v4_handlers.handle_verify_stress(args)
+    if args.get("lemma") is None:
+        content_outcome = await v4_handlers.handle_verify_stress(args)
+    else:
+        from scripts.verification.stress import verify_stress
+
+        if not isinstance(args.get("word"), str) or not isinstance(args["lemma"], str):
+            return await v4_handlers.handle_verify_stress({"word": None})
+        payload = await asyncio.to_thread(verify_stress, args["word"], args.get("pos"),
+                                          args.get("tags"), args["lemma"])
+        success = payload["status"] == "ok"
+        outcome = {"tool": "verify_stress", "disposition": "supported" if success else payload["status"],
+                   "success": success, "result": payload,
+                   "evidence_identifiers": [v4_handlers._typed_identifier("sources", payload)] if success else []}
+        v4_handlers.enrich_typed_outcome(outcome, query=args, match_count=len(payload["matches"]),
+                                        hits=payload["matches"], summary_prose=stress_call_summary(payload))
+        content_outcome = ([TextContent(type="text", text=stress_call_summary(payload))], outcome)
     if not (isinstance(content_outcome, tuple) and len(content_outcome) == 2):
         return content_outcome
     _content, outcome = content_outcome
@@ -2682,7 +2704,13 @@ async def handle_verify_stresses(args: dict) -> list[TextContent]:
             "expected_arguments": ["words", "pos"],
         }
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
-    result = await asyncio.to_thread(verify_stresses, words, pos if pos else None)
+    # Validate contextual selectors before invoking the oracle.
+    for key in ("lemma", "tags"):
+        if args.get(key) is not None and not isinstance(args[key], str):
+            return [TextContent(type="text", text=json.dumps({"status": "error", "error_code": "invalid_input",
+                    "error": f"invalid_input: {key} must be a string."}))]
+    result = await asyncio.to_thread(verify_stresses, words, pos if pos else None,
+                                     args.get("tags"), args.get("lemma"))
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
 
 

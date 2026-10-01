@@ -153,7 +153,7 @@ class TestNotFound:
         # Valid Ukrainian-alphabet nonsense word, ≥2 vowels, not in the
         # dictionary.
         result = verify_stress("квазюрап")
-        assert result["status"] == "not_found"
+        assert result["status"] == "pending"
         assert result["matches"] == []
 
 
@@ -312,6 +312,6 @@ class TestVerifyStresses:
 
     def test_source_envelope_is_not_repeated_per_word(self):
         batch = verify_stresses(["село", "замок"])
-        assert "source" not in batch["words"][0]
-        assert "source" not in batch["words"][1]
+        assert batch["words"][0]["source"] == "ulif"
+        assert batch["words"][1]["source"] == "ulif"
         assert str(batch).count(batch["source"]["digest"]) == 1

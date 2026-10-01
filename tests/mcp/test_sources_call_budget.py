@@ -293,3 +293,20 @@ def test_verify_stresses_tool_documents_the_cap(server_module):
     assert tool.input_schema["required"] == ["words"]
     assert "pos" in tool.input_schema["properties"]
     assert "500" in tool.description
+
+
+def test_stress_context_schema_and_handler_keep_source(server_module):
+    tools = _run(server_module.list_tools())
+    single = next(tool for tool in tools if tool.name == "verify_stress")
+    batch = next(tool for tool in tools if tool.name == "verify_stresses")
+    assert "lemma" in single.input_schema["properties"]
+    assert {"lemma", "tags"} <= set(batch.input_schema["properties"])
+    payload = {"status": "ok", "input": "замок", "stress_source": "ulif",
+               "matches": [{"stressed_form": "за́мок", "source": "ulif", "vowel_indices": [1]}],
+               "source": {"digest": "a" * 64}}
+    with patch("scripts.verification.stress.verify_stress", return_value=payload) as lookup:
+        content, outcome = _run(server_module.handle_verify_stress({"word": "замок", "lemma": "за́мок"}))
+    assert outcome["result"] == payload and outcome["success"]
+    assert outcome["evidence_identifiers"]
+    assert lookup.call_args.args == ("замок", None, None, "за́мок")
+    assert len(content) == 1

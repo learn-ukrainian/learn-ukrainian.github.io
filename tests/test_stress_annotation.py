@@ -27,7 +27,6 @@ from scripts.pipeline.stress_annotator import (
     annotate_file,
     annotate_stress,
 )
-from tests.helpers.python import project_python
 
 
 class TestOraclePedagogy:
@@ -64,11 +63,13 @@ class TestOraclePedagogy:
         assert f"Ме{STRESS_MARK}не" not in result
         assert f"Мене{STRESS_MARK}" in result
 
-    def test_ambiguous_metalanguage_gets_first_reading(self):
+    def test_ambiguous_metalanguage_stays_bare_without_context(self, monkeypatch):
+        from scripts.pipeline import stress_annotator as sa
+
+        monkeypatch.setattr(sa, "_get_stressifier", lambda: object())
         result, count = annotate_stress("Правила. Підсумок.")
-        assert f"Пра{STRESS_MARK}вила" in result
-        assert f"Пі{STRESS_MARK}дсумок" in result
-        assert count >= 2
+        assert result == "Правила. Підсумок."
+        assert count == 0
 
     def test_zavzhdy_override_not_last_vowel(self):
         result, _count = annotate_stress("Я завжди тут.")
@@ -558,7 +559,7 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 
 def _venv_python() -> str:
     """The interpreter running pytest, for subprocess tests."""
-    return project_python()
+    return sys.executable
 
 
 # Each worker increments a shared counter via a non-atomic read-modify-write
@@ -610,6 +611,7 @@ class TestModelDownloadLock:
         )
         monkeypatch.setitem(sys.modules, "ukrainian_word_stress", fake_module)
         monkeypatch.setattr(sa, "_model_download_lock", fake_lock)
+        monkeypatch.setattr(sa, "_load_context_parser", lambda: None)
         monkeypatch.setattr(sa, "_stressifier", None)
 
         sa._get_stressifier()

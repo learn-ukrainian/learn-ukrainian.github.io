@@ -21,6 +21,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.verification import stress
+from scripts.wiki.sources_db import using_connection
 
 from . import codes, lock, registry, sources
 
@@ -48,7 +49,12 @@ def is_learner_form(tags: str, markers: list[Any]) -> bool:
 
 
 def packed_stress_reason(match: dict[str, Any]) -> str | None:
-    """A packed trie reading is not a single pedagogical stress choice."""
+    """Reject packed accents unless checked ULIF attests the teaching choice."""
+    if match.get("pedagogical_conflict"):
+        return "conflicting_pedagogical_choices"
+    if (match.get("source") == "ulif" and match.get("dual_stress")
+            and match.get("pedagogical_stressed_form")):
+        return None
     if not match.get("override_applied") and len(match.get("vowel_indices") or []) > 1:
         return "multiple_stressed_vowels"
     return None
@@ -253,7 +259,9 @@ def build_words(
     try:
         commit_sha = mcp_commit if mcp_commit is not None else get_mcp_commit()
         vesum_hash = sources_instance._vesum_identity()[0]
-        trie_hash = stress.source_info()["digest"]
+        with using_connection(sources_instance._db()):
+            stress_identity = stress.source_info()
+        trie_hash = stress_identity["trie_digest"]
 
         overrides_hash = (
             sources._file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
@@ -285,7 +293,7 @@ def build_words(
         # append-only, so existing allocations are never rewritten by that.
         built_fingerprint = hashlib.sha256(
             f"{ulif_result.content_hash}:{cefr_result.content_hash}:{gloss_result.content_hash}:"
-            f"{kaikki_result.content_hash}:{vesum_hash}:{trie_hash}:{commit_sha}".encode()
+            f"{kaikki_result.content_hash}:{vesum_hash}:{trie_hash}:{stress_identity['ulif']['digest']}:{commit_sha}".encode()
         ).hexdigest()
 
         words_out: dict[str, dict[str, Any]] = dict(existing_words)
@@ -434,7 +442,6 @@ def build_words(
                 forms_source = forms_by_entry[selected_entry_id]
                 pronoun_entry = any("pron" in f["tags"].split(":") for f in forms_source)
                 forms_list: list[dict[str, Any]] = []
-                ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
 
                 for f in forms_source:
                     form_str = f["word_form"]
@@ -467,27 +474,20 @@ def build_words(
                             "markers": markers,
                             "learner": is_learner,
                         }
-                    elif ulif_checked and matching_entry and form_str in ulif_forms:
-                        stress_source = "ulif"
-                        stressed = ulif_forms[form_str]
-                        f_entry = {
-                            "form": form_str,
-                            "tags": tags_str,
-                            "stressed": stressed,
-                            "stress_source": stress_source,
-                            "markers": markers,
-                            "learner": is_learner,
-                        }
                     else:
-                        # b. trie oracle
-                        stress_res = sources_instance.stress_for_form(form_str, tags_str)
-                        raw_stress = stress_res.raw
+                        # One oracle for overrides, checked per-form ULIF and trie fallback.
+                        with using_connection(sources_instance._db()):
+                            raw_stress = stress.verify_stress(
+                                form_str, tags=sources_instance.mapper(tags_str), lemma=lemma,
+                            )
                         status = raw_stress.get("status")
                         matches = raw_stress.get("matches", [])
 
                         if status == "ok" and len(matches) == 1 and not packed_stress_reason(matches[0]):
-                            stress_source = "trie"
-                            stressed = matches[0]["stressed_form"]
+                            # v1 stores express overrides with the existing override flag.
+                            selected_source = matches[0].get("source", "trie")
+                            stress_source = "trie" if selected_source == "override" else selected_source
+                            stressed = stress.pedagogical_stressed_form(matches[0])
                             f_entry = {
                                 "form": form_str,
                                 "tags": tags_str,
@@ -612,7 +612,7 @@ def build_words(
             "sources_db_scheme": sources.SOURCES_DB_SCHEME,
             "vesum": vesum_hash,
             "trie": trie_hash,
-            "ulif_forms": "pending",
+            "ulif_forms": stress_identity["ulif"]["digest"],
         }
         if overrides_hash is not None:
             built_with["overrides_sha256"] = overrides_hash
