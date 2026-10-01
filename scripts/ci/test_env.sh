@@ -4,7 +4,9 @@
 #   test_env.sh start TASK...   run each task in the background; they keep
 #                               running across workflow steps
 #   test_env.sh wait            block until every started task finished, print
-#                               its log, and fail if any failed
+#                               its log, and fail if any failed or did not
+#                               finish within TEST_ENV_WAIT_TIMEOUT_S seconds
+#                               (default 600, one deadline for the whole call)
 #
 # Tasks:
 #   postgres  scripts/ci/start_postgres.sh (bubblewrap, PostgreSQL 16, DSN check)
@@ -38,9 +40,27 @@ case "${1:-}" in
     done
     ;;
   wait)
+    limit="${TEST_ENV_WAIT_TIMEOUT_S:-600}"
+    case "$limit" in
+      '' | *[!0-9]* | 0*)
+        echo "TEST_ENV_WAIT_TIMEOUT_S must be a positive integer, got: '$limit'" >&2
+        exit 2
+        ;;
+    esac
+    # One deadline for the whole call, so a stalled task cannot stretch the
+    # step past it (#9450). SECONDS is bash's own elapsed-time counter.
+    deadline=$((SECONDS + limit))
     status=0
     while read -r task; do
-      while [ ! -f "$dir/$task.rc" ]; do sleep 1; done
+      while [ ! -f "$dir/$task.rc" ] && [ "$SECONDS" -lt "$deadline" ]; do sleep 1; done
+      if [ ! -f "$dir/$task.rc" ]; then
+        echo "::group::${task} setup (no exit code yet)"
+        cat "$dir/$task.log"
+        echo "::endgroup::"
+        echo "::error::${task} setup did not finish within ${limit}s"
+        status=1
+        continue
+      fi
       rc="$(cat "$dir/$task.rc")"
       echo "::group::${task} setup (exit ${rc})"
       cat "$dir/$task.log"
