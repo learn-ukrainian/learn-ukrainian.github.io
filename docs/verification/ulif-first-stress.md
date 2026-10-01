@@ -180,3 +180,19 @@ The imperative deck retains bare VESUM-attested forms when stress is pending,
 continues withholding ambiguous stresses, and compares normalized distractors
 against every accepted answer. IPA generation uses this same oracle and spoken
 selector; it never invokes a separate trie's first reading.
+
+Stress unit tests isolate the ambient Sources store. Tests asserting ULIF
+authority opt into `ulif_stress_db`, which builds a read-only temporary SQLite
+snapshot from `tests/fixtures/stress-ci.json`; the capture retains source row
+and entry identities, build fingerprint and VESUM analyses. Trie tests retain
+an explicitly unavailable ULIF store and assert fallback labelling. Evidence
+wrapper tests pin their existing synthetic Sources snapshots, while MCP
+transport tests provide fixture bytes for the backend version hash.
+
+The offline imperative coverage gate retains 3,138 cards across 1,050 lemmas.
+Without the ULIF identity join, `перейняти:1pl` lacks its third distractor:
+the future form `переймемо` has competing trie stress readings, so the
+`WRONG_MOOD` option is withheld. The two other-person options are insufficient
+for a four-option card, reducing B1 from 1,090 to 1,089 and the total to 3,137.
+The test capture supplies the attested lemma-specific future reading and
+preserves the original count and collision checks; it does not lower the gate.

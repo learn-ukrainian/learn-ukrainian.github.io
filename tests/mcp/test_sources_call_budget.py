@@ -297,7 +297,12 @@ def test_verify_stresses_tool_documents_the_cap(server_module):
     assert "500" in tool.description
 
 
-def test_stress_context_schema_and_handler_keep_source(server_module):
+def test_stress_context_schema_and_handler_keep_source(server_module, tmp_path, monkeypatch):
+    # The oracle is mocked below, but evidence identifiers still require a
+    # proved backend version. Hash fixture bytes instead of the host VESUM DB.
+    version_db = tmp_path / "vesum.db"
+    version_db.write_bytes(b"stress-context-version-fixture")
+    monkeypatch.setattr("scripts.rag.config.VESUM_DB_PATH", version_db)
     tools = _run(server_module.list_tools())
     single = next(tool for tool in tools if tool.name == "verify_stress")
     batch = next(tool for tool in tools if tool.name == "verify_stresses")
@@ -314,5 +319,14 @@ def test_stress_context_schema_and_handler_keep_source(server_module):
         content, outcome = _run(server_module.handle_verify_stress({"word": "замок", "lemma": "за́мок"}))
     assert outcome["result"] == payload and outcome["success"]
     assert outcome["evidence_identifiers"]
+    from learn_ukrainian_v4_runtime.v4_canonical_authority_store import immutable_evidence_identifier
+
+    assert outcome["evidence_identifiers"] == [
+        immutable_evidence_identifier(
+            namespace="sources",
+            source_version=hashlib.sha256(version_db.read_bytes()).hexdigest(),
+            typed_result=payload,
+        )
+    ]
     assert lookup.call_args.args == ("замок", None, None, "за́мок")
     assert len(content) == 1

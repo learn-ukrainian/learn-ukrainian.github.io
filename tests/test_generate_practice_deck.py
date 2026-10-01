@@ -4908,14 +4908,15 @@ def test_imperative_scaffolding_immersion_by_level(imperative_conn, imperative_p
             assert "accepted" not in it["notes"].lower()
 
 
-def test_imperative_coverage_threshold_and_zero_collision():
+def test_imperative_coverage_threshold_and_zero_collision(ulif_stress_db):
     """Verify >= 1,000 unique lemmas threshold and zero distractor collisions across deck.
 
     Genuinely offline gate: executes in CI using 1000_verb_imperatives.json with frozen forms.
-    Note: Target stress and exact string matching deterministically rely on the pinned
-    ukrainian_word_stress==2.1.0 trie package.
+    Target stress uses captured ULIF rows for перейняти plus the pinned
+    ukrainian_word_stress==2.1.0 trie fallback; no live Sources DB is required.
     """
     verbs, mem_conn = _load_imperative_verbs_fixture()
+    generate_practice_deck._imperative_display.cache_clear()
 
     lemmas_with_imperative = set()
     total_items = 0
@@ -4949,12 +4950,24 @@ def test_imperative_coverage_threshold_and_zero_collision():
                             f"Normalized distractor collision in {it['id']}: {opt['text']}"
                         )
 
-    # The identity-joined oracle restores перейняти:1pl, withheld by the raw trie.
+    # Without the captured ULIF identity join, перейняти:1pl is withheld:
+    # Its WRONG_MOOD distractor переймемо has competing trie stresses;
+    # only two other-person distractors remain, reducing B1 1090→1089 and
+    # total 3138→3137. This is a missing test source, not a lost verb or a
+    # reason to lower the gate. Freeze the source and retain the card.
+    restored = generate_practice_deck._build_imperative_items(
+        {"lemmaId": "verb_899_перейняти", "lemma": "перейняти", "lemmaPlain": "перейняти", "cefr": "B1", "pos": "verb"},
+        mem_conn,
+        "B1",
+    )
+    assert next(item for item in restored if item["slot"] == "1pl")["target"] == "переймі́мо"
     assert len(lemmas_with_imperative) == 1050, f"Expected 1,050 unique lemmas, got {len(lemmas_with_imperative)}"
     assert total_items == 3138, f"Expected 3,138 items, got {total_items}"
     assert by_level == {"A1": 279, "A2": 655, "B1": 1090, "B2": 721, "C1": 393}, (
         f"Level distribution mismatch: {by_level}"
     )
+    generate_practice_deck._imperative_display.cache_clear()
+    mem_conn.close()
 
 
 def test_imperative_held_out_stratified_audit_200_items():

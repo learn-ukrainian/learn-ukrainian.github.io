@@ -310,7 +310,7 @@ class TestVerifyStresses:
         assert all(row["status"] == "invalid_input" for row in batch["words"])
         assert all(row["readings"] == [] for row in batch["words"])
 
-    def test_source_envelope_is_not_repeated_per_word(self):
+    def test_source_envelope_is_not_repeated_per_word(self, ulif_stress_db):
         batch = verify_stresses(["село", "замок"])
         assert batch["words"][0]["source"] == "ulif"
         assert batch["words"][1]["source"] == "ulif"

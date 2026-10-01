@@ -141,7 +141,11 @@ def generate_ipa(word: str) -> str | None:
     # 2. The same oracle and sourced audio selector as other pronunciation callers.
     from scripts.verification.stress import spoken_stressed_form, verify_stress
 
-    result = verify_stress(clean)
+    try:
+        result = verify_stress(clean)
+    except Exception:
+        logger.warning("stress oracle failed for %r", clean, exc_info=True)
+        return None
     if result["status"] == "invalid_input" and sum(c in "аеєиіїоуюяАЕЄИІЇОУЮЯ" for c in clean) == 1:
         stressed = clean
     elif result["status"] == "ok" and len(result["matches"]) == 1:
@@ -340,7 +344,12 @@ def _stressify_word(word: str) -> str:
     from scripts.pipeline.stress_annotator import _oracle_choice
     from scripts.verification.stress import _strip_stress
 
-    return _oracle_choice(word) or _strip_stress(word)
+    try:
+        stressed = _oracle_choice(word)
+    except Exception:
+        logger.warning("stress oracle failed for %r", word, exc_info=True)
+        stressed = None
+    return stressed or _strip_stress(word)
 
 
 def _stressify_phrase(phrase: str) -> str:

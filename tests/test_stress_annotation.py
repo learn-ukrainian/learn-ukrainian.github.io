@@ -57,7 +57,23 @@ class TestOraclePedagogy:
         assert f"Ро{STRESS_MARK}збі{STRESS_MARK}р" not in result
         assert count == 0
 
-    def test_title_case_mene_uses_lowercase_oracle(self):
+    def test_title_case_mene_uses_lowercase_oracle(self, ulif_stress_db, monkeypatch):
+        from scripts.pipeline import stress_annotator as sa
+        from scripts.verification.stress import verify_stress
+
+        assert verify_stress("мене")["stress_source"] == "ulif"
+        # Freeze the parser's pronoun analysis: the captured store also has a
+        # distinct proper-name Мене reading. No host Stanza model is required.
+        token = types.SimpleNamespace(
+            start_char=0,
+            end_char=4,
+            to_dict=lambda: [{"lemma": "я", "upos": "PRON", "feats": "Case=Acc|Number=Sing|Person=1"}],
+        )
+
+        def parser(text):
+            return types.SimpleNamespace(iter_tokens=lambda: iter([token]))
+
+        monkeypatch.setattr(sa, "_get_stressifier", lambda: types.SimpleNamespace(nlp=parser))
         result, _count = annotate_stress("Мене звати Олег.")
         assert f"Ме{STRESS_MARK}не" not in result
         assert f"Мене{STRESS_MARK}" in result

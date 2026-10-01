@@ -18,7 +18,7 @@ def test_paradigm_grouping_keeps_entry_identity_and_order(synthetic_vesum):
 
 
 @pytest.mark.parametrize("status", ["ok", "ambiguous", "not_found", "invalid_input"])
-def test_stress_preserves_oracle_and_maps_tags(monkeypatch, status):
+def test_stress_preserves_oracle_and_maps_tags(monkeypatch, status, synthetic_sources):
     raw = {
         "status": status,
         "matches": [{"synthetic": "source bytes"}],
@@ -32,13 +32,14 @@ def test_stress_preserves_oracle_and_maps_tags(monkeypatch, status):
         return raw
 
     monkeypatch.setattr(sources.stress, "verify_stress", oracle)
-    result = sources.stress_for_form("synthetic’form", "noun:f:v_rod")
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        result = api.stress_for_form("synthetic’form", "noun:f:v_rod")
     assert result.raw is raw
     assert result.content_hash == "a" * 64
     assert calls == [("synthetic'form", ["Case=Gen", "Gender=Fem", "Number=Sing", "upos=NOUN"])]
 
 
-def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch):
+def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch, synthetic_sources):
     calls = []
 
     def oracle(word, *, tags):
@@ -47,7 +48,7 @@ def test_stress_batch_deduplicates_only_same_form_and_tags(monkeypatch):
 
     monkeypatch.setattr(sources.stress, "verify_stress", oracle)
     progress = []
-    with sources.Sources(report=progress.append) as api:
+    with sources.Sources(sources_db=synthetic_sources, report=progress.append) as api:
         result = api.stress_many(
             [
                 ("synthetic", "noun:f:v_naz"),
@@ -254,7 +255,7 @@ def test_kaikki_env_path_override(monkeypatch, tmp_path):
     assert sources.Sources().kaikki_db == side
 
 
-def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch):
+def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch, synthetic_sources):
     calls = []
 
     def oracle(word, *, tags):
@@ -262,8 +263,9 @@ def test_pronoun_tags_reach_conditioned_stress_oracle(monkeypatch):
         return {"status": "not_found", "matches": [], "source": {"digest": "a" * 64}}
 
     monkeypatch.setattr(sources.stress, "verify_stress", oracle)
-    sources.stress_for_form("цьому", "adj:m:v_dav:pron:dem")
-    sources.stress_for_form("цьому", "adj:m:v_mis:pron:dem")
+    with sources.Sources(sources_db=synthetic_sources) as api:
+        api.stress_for_form("цьому", "adj:m:v_dav:pron:dem")
+        api.stress_for_form("цьому", "adj:m:v_mis:pron:dem")
     assert calls[0][1] == ["Case=Dat", "Gender=Masc", "Number=Sing", "PronType=Dem", "upos=PRON"]
     assert calls[1][1] == ["Case=Loc", "Gender=Masc", "Number=Sing", "PronType=Dem", "upos=PRON"]
 

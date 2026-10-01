@@ -47,6 +47,19 @@ status_mapping:
   superseded: superseded
 
 entries:
+  - id: ulif-first-stress-contract
+    kind: doc_family
+    paths: [docs/verification/ulif-first-stress.md]
+    purpose: ULIF-first stress oracle contract, source identity joins, labelled trie fallback and consumer verification.
+    keywords: [ULIF, stress, oracle, pronunciation, source identity, trie fallback]
+    lifecycle: active
+    owner: atlas-practice
+    entrypoints:
+      - {topic: ULIF-first stress oracle, path: docs/verification/ulif-first-stress.md}
+    query:
+      - {surface: git_grep, how: "git grep -n -i -F '<term>' -- docs/verification/ulif-first-stress.md"}
+    content_searchable: true
+
   # ================================================================ entry points
   - id: docs-entry-map
     kind: doc_family

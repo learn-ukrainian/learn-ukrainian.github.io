@@ -369,7 +369,7 @@ def test_gate_supplies_declared_proper_name_context(monkeypatch):
     assert calls == [("Київ", "PROPN"), ("Київ", "PROPN")]
 
 
-def test_gate_accepts_exact_sourced_dual_display():
+def test_gate_accepts_exact_sourced_dual_display(ulif_stress_db):
     from scripts.build.lesson_gates import wrong_stress
 
     result = stress.verify_stress("Апостроф", lemma="апостроф")
