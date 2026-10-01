@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/research/hramatka_literary_poltava_candidate_audit.md
+---
+
 # ADR 013: Literary Ukrainian Alignment (Poltava Standard) & Open Model Training Strategy
+
+> **Superseded by:** [docs/research/hramatka_literary_poltava_candidate_audit.md](../research/hramatka_literary_poltava_candidate_audit.md)
 
 > **Current authority — superseded and non-operational:**
 > [Issue #6058](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6058)
