@@ -90,9 +90,7 @@ def test_inspect_word_known_invalid_bad(inspection_db: Path) -> None:
     assert len(res.clean_analyses) == 0
     assert len(res.marked_analyses) == 1
     assert res.effective_markers == ["bad"]
-    assert res.marked_analyses[0]["markers"] == [
-        {"marker": "bad", "origin": "tag", "marker_class": "invalid"}
-    ]
+    assert res.marked_analyses[0]["markers"] == [{"marker": "bad", "origin": "tag", "marker_class": "invalid"}]
 
 
 def test_inspect_word_known_invalid_obsc(inspection_db: Path) -> None:
@@ -133,9 +131,7 @@ def test_inspect_word_pure_dialect(inspection_db: Path) -> None:
     assert len(res.clean_analyses) == 0
     assert len(res.marked_analyses) == 1
     assert res.effective_markers == ["dialect"]
-    assert res.marked_analyses[0]["markers"] == [
-        {"marker": "dialect", "origin": "comment", "marker_class": "dialect"}
-    ]
+    assert res.marked_analyses[0]["markers"] == [{"marker": "dialect", "origin": "comment", "marker_class": "dialect"}]
 
 
 def test_inspect_word_orthographic_variant_alt(inspection_db: Path) -> None:
@@ -160,9 +156,7 @@ def test_inspect_word_mixed_clean_and_dialect_homograph(inspection_db: Path) -> 
     assert len(res.clean_analyses) == 1
     assert len(res.marked_analyses) == 1
     assert res.clean_analyses[0]["pos"] == "noun"
-    assert res.marked_analyses[0]["markers"] == [
-        {"marker": "dialect", "origin": "comment", "marker_class": "dialect"}
-    ]
+    assert res.marked_analyses[0]["markers"] == [{"marker": "dialect", "origin": "comment", "marker_class": "dialect"}]
     assert res.effective_markers == ["dialect"]
 
 
@@ -307,13 +301,9 @@ def test_inspection_fail_closed_on_incomplete_schema(tmp_path: Path) -> None:
     db_path = tmp_path / "incomplete.db"
     conn = sqlite3.connect(db_path)
     # forms_all missing entry_id, source_comment, source_location
-    conn.execute(
-        "CREATE TABLE forms_all (id INTEGER PRIMARY KEY, word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)"
-    )
+    conn.execute("CREATE TABLE forms_all (id INTEGER PRIMARY KEY, word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
     # form_markers missing marker_class
-    conn.execute(
-        "CREATE TABLE form_markers (form_id INT, marker TEXT, origin TEXT)"
-    )
+    conn.execute("CREATE TABLE form_markers (form_id INT, marker TEXT, origin TEXT)")
     conn.execute("INSERT INTO forms_all VALUES (1, 'тест', 'тест', 'noun', 'tag')")
     conn.commit()
     conn.close()
@@ -328,7 +318,9 @@ def test_inspection_fail_closed_on_incomplete_schema(tmp_path: Path) -> None:
     assert lemma_res.status == InspectionStatus.UNAVAILABLE
 
 
-def test_vesum_cli_global_db_flag(monkeypatch: pytest.MonkeyPatch, tmp_path: Path, inspection_db: Path, capsys: pytest.CaptureFixture) -> None:
+def test_vesum_cli_global_db_flag(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path, inspection_db: Path, capsys: pytest.CaptureFixture
+) -> None:
     """Ensure --db is honored whether placed before or after the subcommand."""
     from scripts.verification.vesum import main as vesum_main
 
@@ -485,9 +477,7 @@ def test_get_vesum_conn_close_lifecycle_does_not_leak_connections(tmp_path: Path
     assert len(_ACTIVE_CONNS) == 0
 
 
-def test_failed_replacement_does_not_poison_cache(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_failed_replacement_does_not_poison_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     """If opening a replacement connection fails, the old connection is not closed prematurely."""
     close_vesum_conn()
     db_path = tmp_path / "healthy.db"
@@ -523,3 +513,37 @@ def test_failed_replacement_does_not_poison_cache(
     c_recovered = get_vesum_conn(db_path)
     assert c_recovered.execute("SELECT word_form FROM forms").fetchone()["word_form"] == "test"
     close_vesum_conn()
+
+
+@pytest.mark.parametrize("apostrophe", ["'", "’", "ʼ"])
+def test_apostrophe_spellings_agree_across_all_vesum_apis(inspection_db, apostrophe):
+    from scripts.verification.vesum import (
+        inspect_lemma,
+        inspect_word,
+        inspect_words,
+        verify_lemma,
+        verify_word,
+        verify_words,
+    )
+
+    # Lexical values captured from the live VESUM rows in stress-round4.json.
+    capture = json.loads((Path(__file__).parent / "fixtures/stress-round4.json").read_text())
+    analysis = capture["vesum"]["м'ясо"][0]
+    with sqlite3.connect(inspection_db) as conn:
+        conn.execute(
+            "INSERT OR IGNORE INTO forms_all (id,entry_id,word_form,word_form_folded,lemma,lemma_folded,pos,tags,source_comment,source_location) "
+            "VALUES (9001,9001,?,?,?,?,?,?,?,?)",
+            ("м'ясо", "м'ясо", analysis["lemma"], analysis["lemma"], analysis["pos"], analysis["tags"], "", "fixture"),
+        )
+    word = f"м{apostrophe}ясо"
+    assert verify_word(word, db_path=inspection_db) == [analysis]
+    batch = verify_words(["м'ясо", word], db_path=inspection_db)
+    assert batch[word] == batch["м'ясо"] == [analysis]
+    assert verify_lemma(word, db_path=inspection_db)[0]["word_form"] == "м'ясо"
+    single = inspect_word(word, db_path=inspection_db)
+    assert single.word == word and len(single.clean_analyses) == 1
+    inspected = inspect_words(["м'ясо", word], db_path=inspection_db)
+    assert inspected[word].word == word
+    assert inspected[word].clean_analyses == inspected["м'ясо"].clean_analyses
+    lemma = inspect_lemma(word, db_path=inspection_db)
+    assert lemma.lemma == word and len(lemma.clean_analyses) == 1

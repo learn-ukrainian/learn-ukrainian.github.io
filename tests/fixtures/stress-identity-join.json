@@ -1,0 +1,1343 @@
+{
+  "forms": [
+    {
+      "id": 66177,
+      "entry_id": 9434,
+      "entry_key": "вон#1",
+      "form_unstressed": "вона",
+      "form_stressed": "во́на",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_rod\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "во́на",
+      "source_page_sha256": "14548475f53c0d1c19e32b6c9c86682d76579e331b5505bf10d5da1fe33f0e49",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "d5220c5130566122994923ebd9ebf98e2f6d9a4c044efb9e7b406df56ac80750"
+    },
+    {
+      "id": 66176,
+      "entry_id": 9434,
+      "entry_key": "вон#1",
+      "form_unstressed": "вони",
+      "form_stressed": "во́ни",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_naz\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "во́ни",
+      "source_page_sha256": "14548475f53c0d1c19e32b6c9c86682d76579e331b5505bf10d5da1fe33f0e49",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "d5220c5130566122994923ebd9ebf98e2f6d9a4c044efb9e7b406df56ac80750"
+    },
+    {
+      "id": 66183,
+      "entry_id": 9434,
+      "entry_key": "вон#1",
+      "form_unstressed": "вони",
+      "form_stressed": "во́ни",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_zna\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "во́ни",
+      "source_page_sha256": "14548475f53c0d1c19e32b6c9c86682d76579e331b5505bf10d5da1fe33f0e49",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "d5220c5130566122994923ebd9ebf98e2f6d9a4c044efb9e7b406df56ac80750"
+    },
+    {
+      "id": 66189,
+      "entry_id": 9434,
+      "entry_key": "вон#1",
+      "form_unstressed": "вони",
+      "form_stressed": "во́ни",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_kly\", \"p\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 1,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "во́ни",
+      "source_page_sha256": "14548475f53c0d1c19e32b6c9c86682d76579e331b5505bf10d5da1fe33f0e49",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "d5220c5130566122994923ebd9ebf98e2f6d9a4c044efb9e7b406df56ac80750"
+    },
+    {
+      "id": 3734167,
+      "entry_id": 212855,
+      "entry_key": "себе#1",
+      "form_unstressed": "себе",
+      "form_stressed": "себе́",
+      "stress_vowel_indices": "[3]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"займенник\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "себе́",
+      "source_page_sha256": "f97f0ac98ac3d37b1c7ceb70675568c02899f6042a5e7597caea7d75dc245d88",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "8c5f19ebd62cf7a7166437ef8bee9baf2afab94b252698ace8802eaaa22c3557"
+    },
+    {
+      "id": 3734168,
+      "entry_id": 212855,
+      "entry_key": "себе#1",
+      "form_unstressed": "себе",
+      "form_stressed": "себе́",
+      "stress_vowel_indices": "[3]",
+      "grammatical_tags": "[\"v_rod\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "себе́",
+      "source_page_sha256": "f97f0ac98ac3d37b1c7ceb70675568c02899f6042a5e7597caea7d75dc245d88",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "8c5f19ebd62cf7a7166437ef8bee9baf2afab94b252698ace8802eaaa22c3557"
+    },
+    {
+      "id": 3734171,
+      "entry_id": 212855,
+      "entry_key": "себе#1",
+      "form_unstressed": "себе",
+      "form_stressed": "себе́",
+      "stress_vowel_indices": "[3]",
+      "grammatical_tags": "[\"v_zna\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "себе́",
+      "source_page_sha256": "f97f0ac98ac3d37b1c7ceb70675568c02899f6042a5e7597caea7d75dc245d88",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "8c5f19ebd62cf7a7166437ef8bee9baf2afab94b252698ace8802eaaa22c3557"
+    },
+    {
+      "id": 3734172,
+      "entry_id": 212855,
+      "entry_key": "себе#1",
+      "form_unstressed": "себе",
+      "form_stressed": "се́бе",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_zna\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 2,
+      "preposition": "на",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "се́бе",
+      "source_page_sha256": "f97f0ac98ac3d37b1c7ceb70675568c02899f6042a5e7597caea7d75dc245d88",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "8c5f19ebd62cf7a7166437ef8bee9baf2afab94b252698ace8802eaaa22c3557"
+    },
+    {
+      "id": 646593,
+      "entry_id": 43373,
+      "entry_key": "вік#1",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_rod\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "fd3a27373a8c36f24a4a4ba0b4944609dd2fc3f6e747101e2e852b7674eba922",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "28b87aa60b72aa1870a792bcd06ae3cf885f7838eea839858da108f85c9b2deb"
+    },
+    {
+      "id": 646594,
+      "entry_id": 43373,
+      "entry_key": "вік#1",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_dav\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "fd3a27373a8c36f24a4a4ba0b4944609dd2fc3f6e747101e2e852b7674eba922",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "28b87aa60b72aa1870a792bcd06ae3cf885f7838eea839858da108f85c9b2deb"
+    },
+    {
+      "id": 646599,
+      "entry_id": 43373,
+      "entry_key": "вік#1",
+      "form_unstressed": "віку",
+      "form_stressed": "віку́",
+      "stress_vowel_indices": "[3]",
+      "grammatical_tags": "[\"v_mis\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 2,
+      "preposition": "на",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "віку́",
+      "source_page_sha256": "fd3a27373a8c36f24a4a4ba0b4944609dd2fc3f6e747101e2e852b7674eba922",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "28b87aa60b72aa1870a792bcd06ae3cf885f7838eea839858da108f85c9b2deb"
+    },
+    {
+      "id": 646600,
+      "entry_id": 43373,
+      "entry_key": "вік#1",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_kly\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 1,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "fd3a27373a8c36f24a4a4ba0b4944609dd2fc3f6e747101e2e852b7674eba922",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "28b87aa60b72aa1870a792bcd06ae3cf885f7838eea839858da108f85c9b2deb"
+    },
+    {
+      "id": 646604,
+      "entry_id": 43374,
+      "entry_key": "вік#2",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_rod\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "ac5ff23d25f47efa8e62fd95b60aca245af8f63644907af86debd80c0536049b",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "9920d828bcfa7888be8cd7fed6df2e09ed68fe5b6e72f4c73913fd9e47da69b7"
+    },
+    {
+      "id": 646606,
+      "entry_id": 43374,
+      "entry_key": "вік#2",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_dav\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "ac5ff23d25f47efa8e62fd95b60aca245af8f63644907af86debd80c0536049b",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "9920d828bcfa7888be8cd7fed6df2e09ed68fe5b6e72f4c73913fd9e47da69b7"
+    },
+    {
+      "id": 646615,
+      "entry_id": 43374,
+      "entry_key": "вік#2",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_kly\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 1,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "ac5ff23d25f47efa8e62fd95b60aca245af8f63644907af86debd80c0536049b",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "9920d828bcfa7888be8cd7fed6df2e09ed68fe5b6e72f4c73913fd9e47da69b7"
+    },
+    {
+      "id": 647185,
+      "entry_id": 43407,
+      "entry_key": "віко#1",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_dav\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "ac32ffd9a76074baddd7e1ab42693734b3850618ab0849fedc56da2ce4d46535",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "504740337d62a71dc5f59304a5bfc4b254dd8707b953947b5d2b4044bc6e57a6"
+    },
+    {
+      "id": 647192,
+      "entry_id": 43407,
+      "entry_key": "віко#1",
+      "form_unstressed": "віку",
+      "form_stressed": "ві́ку",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_mis\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "на/у",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ві́ку",
+      "source_page_sha256": "ac32ffd9a76074baddd7e1ab42693734b3850618ab0849fedc56da2ce4d46535",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "504740337d62a71dc5f59304a5bfc4b254dd8707b953947b5d2b4044bc6e57a6"
+    },
+    {
+      "id": 4622183,
+      "entry_id": 262969,
+      "entry_key": "шкода#1",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[\"noun\", \"f\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "f35aadf6ef8e7257cfa89af9fb2de100799faf7594b0e61a377b7b9545e2830a",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "2d66b70a1cdac049f8ba767d644c6762d0045fdd37432ef149cf324106d4219f"
+    },
+    {
+      "id": 4622184,
+      "entry_id": 262969,
+      "entry_key": "шкода#1",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[\"v_naz\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "f35aadf6ef8e7257cfa89af9fb2de100799faf7594b0e61a377b7b9545e2830a",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "2d66b70a1cdac049f8ba767d644c6762d0045fdd37432ef149cf324106d4219f"
+    },
+    {
+      "id": 4622198,
+      "entry_id": 262970,
+      "entry_key": "шкода#2",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"іменник чоловічого або жіночого роду, істота\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "41bff5ff4c2ddc264d318ecb5d77adefdcaa5250aebf1c783489f826488e96c5",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "6624667c26f998fade78a273561c38ca43595f561b93897dfa4307565e37a6e0"
+    },
+    {
+      "id": 4622199,
+      "entry_id": 262970,
+      "entry_key": "шкода#2",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[\"v_naz\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "41bff5ff4c2ddc264d318ecb5d77adefdcaa5250aebf1c783489f826488e96c5",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "6624667c26f998fade78a273561c38ca43595f561b93897dfa4307565e37a6e0"
+    },
+    {
+      "id": 4622213,
+      "entry_id": 262971,
+      "entry_key": "шкода#3",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да́",
+      "stress_vowel_indices": "[2, 4]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"присудкове слово\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 1,
+      "dual_stress_flag": 1,
+      "pedagogical_stressed_form": "шкода́",
+      "source_page_sha256": "912e3e94e270cb31f0af815b723f9cd51946deaab31ba0d6eb23ed73fedae416",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "d040d1981d5b5515367f58b3876e62e80875c6645346ca8d712785f7c161627e"
+    },
+    {
+      "id": 4622214,
+      "entry_id": 262972,
+      "entry_key": "шкода#4",
+      "form_unstressed": "шкода",
+      "form_stressed": "шкода́",
+      "stress_vowel_indices": "[4]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"присудкове слово\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 1,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шкода́",
+      "source_page_sha256": "c95a18c1ef05f1e6395731bbb494c788091607f96c9d1b8971c4b4541247b052",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "2d083b1b994adec34c6f08abb598f2a593d6a283b328b828073f5ac642433ebf"
+    },
+    {
+      "id": 4622183,
+      "entry_id": 262969,
+      "entry_key": "шкода#1",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[\"noun\", \"f\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "f35aadf6ef8e7257cfa89af9fb2de100799faf7594b0e61a377b7b9545e2830a",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "2d66b70a1cdac049f8ba767d644c6762d0045fdd37432ef149cf324106d4219f"
+    },
+    {
+      "id": 4622184,
+      "entry_id": 262969,
+      "entry_key": "шкода#1",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[\"v_naz\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "f35aadf6ef8e7257cfa89af9fb2de100799faf7594b0e61a377b7b9545e2830a",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "2d66b70a1cdac049f8ba767d644c6762d0045fdd37432ef149cf324106d4219f"
+    },
+    {
+      "id": 4622198,
+      "entry_id": 262970,
+      "entry_key": "шкода#2",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"іменник чоловічого або жіночого роду, істота\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "41bff5ff4c2ddc264d318ecb5d77adefdcaa5250aebf1c783489f826488e96c5",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "6624667c26f998fade78a273561c38ca43595f561b93897dfa4307565e37a6e0"
+    },
+    {
+      "id": 4622199,
+      "entry_id": 262970,
+      "entry_key": "шкода#2",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да",
+      "stress_vowel_indices": "[2]",
+      "grammatical_tags": "[\"v_naz\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шко́да",
+      "source_page_sha256": "41bff5ff4c2ddc264d318ecb5d77adefdcaa5250aebf1c783489f826488e96c5",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "6624667c26f998fade78a273561c38ca43595f561b93897dfa4307565e37a6e0"
+    },
+    {
+      "id": 4622213,
+      "entry_id": 262971,
+      "entry_key": "шкода#3",
+      "form_unstressed": "шкода",
+      "form_stressed": "шко́да́",
+      "stress_vowel_indices": "[2, 4]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"присудкове слово\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 1,
+      "dual_stress_flag": 1,
+      "pedagogical_stressed_form": "шкода́",
+      "source_page_sha256": "912e3e94e270cb31f0af815b723f9cd51946deaab31ba0d6eb23ed73fedae416",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "d040d1981d5b5515367f58b3876e62e80875c6645346ca8d712785f7c161627e"
+    },
+    {
+      "id": 4622214,
+      "entry_id": 262972,
+      "entry_key": "шкода#4",
+      "form_unstressed": "шкода",
+      "form_stressed": "шкода́",
+      "stress_vowel_indices": "[4]",
+      "grammatical_tags": "[]",
+      "unmapped_labels": "[\"присудкове слово\"]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 1,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "шкода́",
+      "source_page_sha256": "c95a18c1ef05f1e6395731bbb494c788091607f96c9d1b8971c4b4541247b052",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "2d083b1b994adec34c6f08abb598f2a593d6a283b328b828073f5ac642433ebf"
+    },
+    {
+      "id": 4122699,
+      "entry_id": 234732,
+      "entry_key": "тисяча#1",
+      "form_unstressed": "тисяча",
+      "form_stressed": "ти́сяча",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"noun\", \"f\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 1,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ти́сяча",
+      "source_page_sha256": "1fb8f2c1ac264b399878e9fe311feb25d9e62c60f545e521edb7588a9c7b9b71",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "8bc27e6c7a914833545f206973fddfba9e643e74b571c37f5d48befd110943c0"
+    },
+    {
+      "id": 4122700,
+      "entry_id": 234732,
+      "entry_key": "тисяча#1",
+      "form_unstressed": "тисяча",
+      "form_stressed": "ти́сяча",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_naz\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ти́сяча",
+      "source_page_sha256": "1fb8f2c1ac264b399878e9fe311feb25d9e62c60f545e521edb7588a9c7b9b71",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "8bc27e6c7a914833545f206973fddfba9e643e74b571c37f5d48befd110943c0"
+    },
+    {
+      "id": 4122706,
+      "entry_id": 234732,
+      "entry_key": "тисяча#1",
+      "form_unstressed": "тисячу",
+      "form_stressed": "ти́сячу",
+      "stress_vowel_indices": "[1]",
+      "grammatical_tags": "[\"v_zna\", \"s\"]",
+      "unmapped_labels": "[]",
+      "variant_order": 1,
+      "preposition": "",
+      "marked_asterisk": 0,
+      "is_lemma": 0,
+      "is_invariable": 0,
+      "dual_stress_flag": 0,
+      "pedagogical_stressed_form": "ти́сячу",
+      "source_page_sha256": "1fb8f2c1ac264b399878e9fe311feb25d9e62c60f545e521edb7588a9c7b9b71",
+      "parser_version": "ulif-forms-v4",
+      "source_entry_fingerprint": "8bc27e6c7a914833545f206973fddfba9e643e74b571c37f5d48befd110943c0"
+    }
+  ],
+  "entries": [
+    {
+      "id": 9434,
+      "normalized_query": "вон",
+      "homonym_index": 1,
+      "canonical_headword": "вон",
+      "grammatical_label": "іменник чоловічого роду",
+      "sense_gloss": "(грошова одиниця Кореї)",
+      "content_sha256": "68965e8a8059c5ba7a49ceba0353f25fad65516c19c0ed38cb0f7fbb90bcebc0",
+      "register_position": "1496:8",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:d3779e3d8d205855c562caaddb3cd2a9ab75ba8e32d4ec9942e13abb27d4241a",
+      "retrieved_at": "2026-09-22T23:57:37.737681+00:00",
+      "response_sha256": "d3779e3d8d205855c562caaddb3cd2a9ab75ba8e32d4ec9942e13abb27d4241a",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 43373,
+      "normalized_query": "вік",
+      "homonym_index": 1,
+      "canonical_headword": "вік",
+      "grammatical_label": "іменник чоловічого роду",
+      "sense_gloss": "(тривалість життя; період, ступінь у рості, розвитку людини; надзвичайно довгий період)",
+      "content_sha256": "055298ae987a77dc2ce9962e97e9a633cab5a983dd814c14d0b3146778566db9",
+      "register_position": "1350:7",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:d7581371b6a9dbc6f2162c5864b93f5e10759752abd456ac91d2a7863177a91b",
+      "retrieved_at": "2026-09-22T22:29:23.375380+00:00",
+      "response_sha256": "d7581371b6a9dbc6f2162c5864b93f5e10759752abd456ac91d2a7863177a91b",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 43374,
+      "normalized_query": "вік",
+      "homonym_index": 2,
+      "canonical_headword": "вік",
+      "grammatical_label": "іменник чоловічого роду",
+      "sense_gloss": "(сторіччя; епоха)",
+      "content_sha256": "282f842861aae02b58fb68b0ce5d89854fa6912a97a0dd43cf275e0446380781",
+      "register_position": "1350:8",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:8d3278505a30bb541698051932948321d5072affa1a9bda37b1dc36e92de0790",
+      "retrieved_at": "2026-09-22T22:29:23.377305+00:00",
+      "response_sha256": "8d3278505a30bb541698051932948321d5072affa1a9bda37b1dc36e92de0790",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 43407,
+      "normalized_query": "віко",
+      "homonym_index": 1,
+      "canonical_headword": "ві́ко",
+      "grammatical_label": "іменник середнього роду",
+      "sense_gloss": "",
+      "content_sha256": "562fb5afb26b450b1b430f284915e97bd57b47665e850d583bd0fb55f23b67c6",
+      "register_position": "1352:8",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:7d797776225713281e903cc75dea4ef72c43881740a461ab6444a01f85cb73cf",
+      "retrieved_at": "2026-09-22T22:30:21.375657+00:00",
+      "response_sha256": "7d797776225713281e903cc75dea4ef72c43881740a461ab6444a01f85cb73cf",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 212855,
+      "normalized_query": "себе",
+      "homonym_index": 1,
+      "canonical_headword": "себе́",
+      "grammatical_label": "займенник",
+      "sense_gloss": "",
+      "content_sha256": "6d7345bd6aeac8935264cbe7ca9265099ae7a483c97d1a6ca7f93138373e0371",
+      "register_position": "8257:1",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:cb69de752a8eaa00c0d5a3a5d9d166d0a845ce130e718b603249968b79b7ee4c",
+      "retrieved_at": "2026-09-27T02:39:22.687742+00:00",
+      "response_sha256": "cb69de752a8eaa00c0d5a3a5d9d166d0a845ce130e718b603249968b79b7ee4c",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 262969,
+      "normalized_query": "шкода",
+      "homonym_index": 1,
+      "canonical_headword": "шко́да",
+      "grammatical_label": "іменник жіночого роду",
+      "sense_gloss": "(втрата, збиток, псування)",
+      "content_sha256": "789a4bd0c12187c0c4df254ea7ec6009dbf0e2c5e404b669f266b463be732b24",
+      "register_position": "10262:2",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:889816f1f936415fbc7848373c6bef289a3ccc6b8df40c11a3e5026cee94a1cf",
+      "retrieved_at": "2026-09-27T21:22:07.339410+00:00",
+      "response_sha256": "889816f1f936415fbc7848373c6bef289a3ccc6b8df40c11a3e5026cee94a1cf",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 262970,
+      "normalized_query": "шкода",
+      "homonym_index": 2,
+      "canonical_headword": "шко́да",
+      "grammatical_label": "іменник чоловічого або жіночого роду, істота",
+      "sense_gloss": "(пустун; бешкетник)",
+      "content_sha256": "d088b91413f58391a31c4d96ab11539b655abbd1b18c32be9d92cbdb770692fa",
+      "register_position": "10262:3",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:6af149191b075c6d9e16df43d4357c67ee45f3e76180cf693c9bc432e03f17f4",
+      "retrieved_at": "2026-09-27T21:22:07.346963+00:00",
+      "response_sha256": "6af149191b075c6d9e16df43d4357c67ee45f3e76180cf693c9bc432e03f17f4",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 262971,
+      "normalized_query": "шкода",
+      "homonym_index": 3,
+      "canonical_headword": "шко́да́",
+      "grammatical_label": "присудкове слово",
+      "sense_gloss": "",
+      "content_sha256": "fb542e41e1be61bedcc236096afc713941ea8cdc83a6de658863a7c402f02c70",
+      "register_position": "10262:4",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:a16663ce5ec424ca983824a9eceb619f76d863b27a489021f3e1c23f5eecf654",
+      "retrieved_at": "2026-09-27T21:22:07.351170+00:00",
+      "response_sha256": "a16663ce5ec424ca983824a9eceb619f76d863b27a489021f3e1c23f5eecf654",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 262972,
+      "normalized_query": "шкода",
+      "homonym_index": 4,
+      "canonical_headword": "шкода́",
+      "grammatical_label": "присудкове слово",
+      "sense_gloss": "",
+      "content_sha256": "9bf800582aa5371422f490ba84b86c3e300a00451c58b95342b0abca27f6b40e",
+      "register_position": "10262:5",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:63b0866f829758436ed47102eb7b3cbed80f950c5f6e36ce07df096213db9f7e",
+      "retrieved_at": "2026-09-27T21:22:07.356445+00:00",
+      "response_sha256": "63b0866f829758436ed47102eb7b3cbed80f950c5f6e36ce07df096213db9f7e",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    },
+    {
+      "id": 234732,
+      "normalized_query": "тисяча",
+      "homonym_index": 1,
+      "canonical_headword": "ти́сяча",
+      "grammatical_label": "іменник жіночого роду",
+      "sense_gloss": "",
+      "content_sha256": "24664f4179d14e1e43a4299b49160a68994245050e7b5f10dcf1f0542cde63ab",
+      "register_position": "9132:14",
+      "homonym_checked": 1,
+      "raw_response_ref": "sha256:5d9322264fea5ff9fabd1dd4a824db4bb0c4c82439b3f0d1831d477ce3d27a46",
+      "retrieved_at": "2026-09-27T10:43:12.963414+00:00",
+      "response_sha256": "5d9322264fea5ff9fabd1dd4a824db4bb0c4c82439b3f0d1831d477ce3d27a46",
+      "parser_version": "ulif-dictua-v2",
+      "status": "ok"
+    }
+  ],
+  "vesum": {
+    "Євдокименках": [],
+    "Київ": [
+      {
+        "lemma": "Київ",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_naz:prop:geo"
+      },
+      {
+        "lemma": "Київ",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_zna:prop:geo"
+      }
+    ],
+    "Шкода": [
+      {
+        "lemma": "Шкода",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_naz:prop:lname"
+      },
+      {
+        "lemma": "Шкода",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz:prop:lname"
+      }
+    ],
+    "бачу": [
+      {
+        "lemma": "бачити",
+        "pos": "verb",
+        "tags": "verb:imperf:pres:s:1:insert"
+      }
+    ],
+    "вона": [
+      {
+        "lemma": "вона",
+        "pos": "noun",
+        "tags": "noun:unanim:f:v_naz:pron:pers:3"
+      }
+    ],
+    "вони": [
+      {
+        "lemma": "вони",
+        "pos": "noun",
+        "tags": "noun:unanim:p:v_naz:pron:pers:3"
+      }
+    ],
+    "воно": [
+      {
+        "lemma": "воно",
+        "pos": "noun",
+        "tags": "noun:unanim:n:v_naz:pron:pers:3"
+      }
+    ],
+    "вікна": [
+      {
+        "lemma": "вікно",
+        "pos": "noun",
+        "tags": "noun:inanim:n:v_rod"
+      },
+      {
+        "lemma": "вікно",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_naz"
+      },
+      {
+        "lemma": "вікно",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_zna"
+      },
+      {
+        "lemma": "вікно",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_kly"
+      }
+    ],
+    "віку": [
+      {
+        "lemma": "вік",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_rod"
+      },
+      {
+        "lemma": "вік",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_dav"
+      },
+      {
+        "lemma": "вік",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_mis"
+      },
+      {
+        "lemma": "вік",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_kly"
+      },
+      {
+        "lemma": "віко",
+        "pos": "noun",
+        "tags": "noun:inanim:n:v_dav"
+      },
+      {
+        "lemma": "віко",
+        "pos": "noun",
+        "tags": "noun:inanim:n:v_mis"
+      }
+    ],
+    "замок": [
+      {
+        "lemma": "замок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_naz:xp1"
+      },
+      {
+        "lemma": "замок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_zna:xp1"
+      },
+      {
+        "lemma": "замок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_naz:xp2"
+      },
+      {
+        "lemma": "замок",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_zna:xp2"
+      },
+      {
+        "lemma": "замокти",
+        "pos": "verb",
+        "tags": "verb:perf:past:m"
+      }
+    ],
+    "київ": [
+      {
+        "lemma": "кий",
+        "pos": "noun",
+        "tags": "noun:inanim:p:v_rod"
+      }
+    ],
+    "мене": [
+      {
+        "lemma": "я",
+        "pos": "noun",
+        "tags": "noun:anim:s:v_rod:pron:pers:1"
+      },
+      {
+        "lemma": "я",
+        "pos": "noun",
+        "tags": "noun:anim:s:v_zna:pron:pers:1"
+      }
+    ],
+    "розбір": [
+      {
+        "lemma": "розбір",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_naz"
+      },
+      {
+        "lemma": "розбір",
+        "pos": "noun",
+        "tags": "noun:inanim:m:v_zna"
+      }
+    ],
+    "себе": [
+      {
+        "lemma": "себе",
+        "pos": "noun",
+        "tags": "noun:unanim:s:v_rod:pron:refl"
+      },
+      {
+        "lemma": "себе",
+        "pos": "noun",
+        "tags": "noun:unanim:s:v_zna:pron:refl"
+      }
+    ],
+    "село": [
+      {
+        "lemma": "село",
+        "pos": "noun",
+        "tags": "noun:inanim:n:v_naz"
+      },
+      {
+        "lemma": "село",
+        "pos": "noun",
+        "tags": "noun:inanim:n:v_zna"
+      },
+      {
+        "lemma": "село",
+        "pos": "noun",
+        "tags": "noun:inanim:n:v_kly"
+      }
+    ],
+    "шкода": [
+      {
+        "lemma": "шкода",
+        "pos": "noninfl",
+        "tags": "noninfl:predic"
+      },
+      {
+        "lemma": "шкода",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_naz"
+      },
+      {
+        "lemma": "шкода",
+        "pos": "noun",
+        "tags": "noun:anim:f:v_naz"
+      },
+      {
+        "lemma": "шкода",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_naz"
+      }
+    ],
+    "Єжові": [
+      {
+        "lemma": "Єжов",
+        "pos": "noun",
+        "tags": "noun:anim:m:v_mis:prop:lname"
+      }
+    ],
+    "тисяча": [
+      {
+        "lemma": "тисяча",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_naz:numr"
+      }
+    ],
+    "тисячу": [
+      {
+        "lemma": "тисяча",
+        "pos": "noun",
+        "tags": "noun:inanim:f:v_zna:numr"
+      }
+    ]
+  },
+  "trie": {
+    "Євдокименках": [],
+    "Київ": [
+      {
+        "tags": [],
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "Шкода": [
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Nom",
+          "upos=NOUN",
+          "Gender=Fem"
+        ],
+        "positions": [
+          3
+        ]
+      },
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Nom",
+          "upos=NOUN"
+        ],
+        "positions": [
+          3
+        ]
+      },
+      {
+        "tags": [],
+        "positions": [
+          3,
+          5
+        ]
+      }
+    ],
+    "бачу": [
+      {
+        "tags": [],
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "вона": [
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Gen",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [],
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "вони": [
+      {
+        "tags": [
+          "Number=Plur",
+          "Case=Nom",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [
+          "Number=Plur",
+          "Case=Acc",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [
+          "Number=Plur",
+          "Case=Voc",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [],
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "воно": [
+      {
+        "tags": [],
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "вікна": [
+      {
+        "tags": [
+          "Number=Plur",
+          "Case=Nom",
+          "upos=NOUN",
+          "Gender=Neut"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Gen",
+          "upos=NOUN",
+          "Gender=Neut"
+        ],
+        "positions": [
+          5
+        ]
+      },
+      {
+        "tags": [
+          "Number=Plur",
+          "Case=Acc",
+          "upos=NOUN",
+          "Gender=Neut"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [
+          "Number=Plur",
+          "Case=Voc",
+          "upos=NOUN",
+          "Gender=Neut"
+        ],
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "віку": [
+      {
+        "tags": [],
+        "positions": [
+          2
+        ]
+      }
+    ],
+    "замок": [
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Nom",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Acc",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          2
+        ]
+      },
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Nom",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          4
+        ]
+      },
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Acc",
+          "upos=NOUN",
+          "Gender=Masc"
+        ],
+        "positions": [
+          4
+        ]
+      },
+      {
+        "tags": [
+          "Number=Sing",
+          "upos=VERB"
+        ],
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "київ": [
+      {
+        "tags": [],
+        "positions": [
+          3
+        ]
+      }
+    ],
+    "мене": [
+      {
+        "tags": [],
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "розбір": [
+      {
+        "tags": [],
+        "positions": [
+          2,
+          5
+        ]
+      }
+    ],
+    "себе": [
+      {
+        "tags": [],
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "село": [
+      {
+        "tags": [],
+        "positions": [
+          4
+        ]
+      }
+    ],
+    "шкода": [
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Nom",
+          "upos=NOUN",
+          "Gender=Fem"
+        ],
+        "positions": [
+          3
+        ]
+      },
+      {
+        "tags": [
+          "Number=Sing",
+          "Case=Nom",
+          "upos=NOUN"
+        ],
+        "positions": [
+          3
+        ]
+      },
+      {
+        "tags": [],
+        "positions": [
+          3,
+          5
+        ]
+      }
+    ]
+  },
+  "unjoined_ulif_only_form": "Євдокименках"
+}

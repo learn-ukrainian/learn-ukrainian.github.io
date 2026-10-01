@@ -90,7 +90,7 @@ def test_builder_keeps_unresolved_packed_reading_pending(synthetic_vesum, synthe
     with sqlite3.connect(synthetic_vesum) as conn:
         conn.execute("INSERT INTO forms_all VALUES (5, 50, 'розбір', 'розбір', 'prep', 'prep', '', '')")
 
-    def oracle(word, *, tags):
+    def oracle(word, *, tags, **context):
         return {
             "status": "ok",
             "matches": [
@@ -240,7 +240,7 @@ def test_monosyllable_never_calls_oracle(synthetic_vesum, synthetic_sources, tmp
 
 def test_unchecked_ulif_yields_no_ulif_stress(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
     # Oracle returns ambiguous for synthetic-b
-    def mock_stress(word, *, tags):
+    def mock_stress(word, *, tags, **context):
         if word == "synthetic-b":
             return {
                 "status": "ambiguous",
@@ -327,7 +327,7 @@ def test_unchecked_ulif_yields_no_ulif_stress(synthetic_vesum, synthetic_sources
     assert pending_form["unresolvable_by_tags"] is True
 
 
-def test_checked_ulif_entry_yields_ulif_stress(synthetic_vesum, synthetic_sources, tmp_path):
+def test_checked_entry_without_per_form_rows_keeps_stress_pending(synthetic_vesum, synthetic_sources, tmp_path):
     # Setup checked ULIF entry with paradigm section
     with sqlite3.connect(synthetic_sources) as conn:
         conn.execute(
@@ -375,8 +375,8 @@ def test_checked_ulif_entry_yields_ulif_stress(synthetic_vesum, synthetic_source
     assert len(word["ulif"]["row_sha256"]) == 64  # the entry row with its ordered sections
     assert len(word["forms"]) == 1
     assert word["forms"][0]["form"] == "synthetic-a"
-    assert word["forms"][0]["stress_source"] == "ulif"
-    assert word["forms"][0]["stressed"] == "synthetic-a-ulif-stressed"
+    assert word["forms"][0]["stress_source"] == "pending"
+    assert "stressed" not in word["forms"][0]
 
 
 def test_homograph_with_ulif_entry_id_resolves_and_records_key(
@@ -599,7 +599,7 @@ def test_homograph_with_entry_id_resolves_one_entry(synthetic_vesum, synthetic_s
 
 
 def test_trie_knows_lemma_not_oblique_form(synthetic_vesum, synthetic_sources, tmp_path, monkeypatch):
-    def mock_stress(word, *, tags):
+    def mock_stress(word, *, tags, **context):
         if "Case=Gen" in str(tags):
             return {"status": "not_found", "matches": [], "source": {"digest": "t" * 64}}
         return {

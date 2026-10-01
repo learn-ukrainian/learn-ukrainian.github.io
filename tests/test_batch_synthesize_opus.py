@@ -40,7 +40,7 @@ def test_audio_relpath():
 
 
 def test_resolve_stress_monosyllables():
-    def oracle(lemma, pos=None):
+    def oracle(lemma, /, pos=None, **selectors):
         return {"status": "invalid_input"}
 
     text, reason = resolve_stress("ліс", None, oracle)
@@ -53,7 +53,7 @@ def test_resolve_stress_monosyllables():
 
 
 def test_resolve_stress_oracle():
-    def mock_oracle(lemma, pos=None):
+    def mock_oracle(lemma, /, pos=None, **selectors):
         if lemma == "книга":
             return {"status": "ok", "matches": [{"stressed_form": "кни́га"}]}
         if lemma == "замок":
@@ -110,7 +110,7 @@ def test_scan_batch_incremental_diff(tmp_path: Path):
     existing_file = out_dir / f"{h[:2]}/{h}.opus"
     make_dummy_opus(existing_file)
 
-    def mock_oracle(lemma, pos=None):
+    def mock_oracle(lemma, /, pos=None, **selectors):
         return {"status": "ok", "matches": [{"stressed_form": f"{lemma}́"}]}
 
     items = [

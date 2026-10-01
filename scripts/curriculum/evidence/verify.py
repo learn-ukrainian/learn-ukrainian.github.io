@@ -17,12 +17,12 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.verification import stress
+from scripts.wiki.sources_db import using_connection
 
 from . import codes, lock, pack, publication, registry, sources
 from .words import (
     cefr_field,
     cited_rows,
-    extract_ulif_paradigm_forms,
     find_plans_citing,
     is_learner_form,
     load_schema,
@@ -135,8 +135,20 @@ def verify_words_store(
         # 4. Compare source versions
         built_with = store_doc.get("built_with", {})
         current_vesum = sources_instance._vesum_identity()[0]
-        current_trie = stress.source_info()["digest"]
-        source_version_changed = built_with.get("vesum") != current_vesum or built_with.get("trie") != current_trie
+        with using_connection(sources_instance._db()):
+            current_stress = stress.source_info()
+        current_trie = current_stress.get("trie_digest", current_stress["digest"])
+        current_overrides = (
+            sources._file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
+        )
+        source_version_changed = (
+            built_with.get("vesum") != current_vesum
+            or built_with.get("trie") != current_trie
+            or ("ulif" in current_stress and built_with.get("ulif_forms") != current_stress["ulif"]["digest"])
+            or ("overrides_sha256" in built_with and built_with["overrides_sha256"] != current_overrides)
+        )
+        if source_version_changed:
+            _drift(strict, errors, warnings, "word-store stress source identity changed; rebuild its proof")
 
         # 4b. sources.db identity scheme (rows-v2: cited rows; file-v1: retired file digest)
         scheme = store_scheme(store_doc)
@@ -385,8 +397,6 @@ def verify_words_store(
                 elif len(ulif_group) == 1:
                     matching_entry = ulif_group[0]
 
-            ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
-
             # The stored ulif object cites one entry row (with its ordered sections).
             stored_ulif = word.get("ulif")
             if isinstance(stored_ulif, dict):
@@ -434,6 +444,7 @@ def verify_words_store(
                     )
 
                 # Re-derive rule 4 stress
+                expected_override = False
                 pending_reason = stress.pending_stress_reason(form_str)
                 if pending_reason:
                     expected_source = "pending"
@@ -441,17 +452,16 @@ def verify_words_store(
                 elif needs_no_stress(form_str):
                     expected_source = "none"
                     expected_stressed = form_str
-                elif ulif_checked and matching_entry and form_str in ulif_forms:
-                    expected_source = "ulif"
-                    expected_stressed = ulif_forms[form_str]
                 else:
-                    stress_res = sources_instance.stress_for_form(form_str, tags_str)
+                    stress_res = sources_instance.stress_for_form(form_str, tags_str, lemma=lemma)
                     raw_st = stress_res.raw
                     st_status = raw_st.get("status")
                     matches = raw_st.get("matches", [])
                     if st_status == "ok" and len(matches) == 1 and not packed_stress_reason(matches[0]):
-                        expected_source = "trie"
-                        expected_stressed = matches[0]["stressed_form"]
+                        selected_source = matches[0].get("source", "trie")
+                        expected_source = "trie" if selected_source == "override" else selected_source
+                        expected_stressed = stress.pedagogical_stressed_form(matches[0])
+                        expected_override = bool(matches[0].get("override_applied"))
                     else:
                         expected_source = "pending"
                         expected_stressed = None
@@ -463,11 +473,14 @@ def verify_words_store(
                     stress_mismatch = True
                 if stored_stress_source == "pending" and "stressed" in sf:
                     stress_mismatch = True
+                if bool(sf.get("override")) != expected_override:
+                    stress_mismatch = True
 
                 if stress_mismatch:
                     msg = (
                         f"form {form_str!r} ({word_id}): stored ({stored_stress_source}, {stored_stressed}) "
-                        f"!= current ({expected_source}, {expected_stressed})"
+                        f"!= current ({expected_source}, {expected_stressed}); "
+                        f"override {bool(sf.get('override'))} != {expected_override}"
                     )
                     if word_source_changed and not pending_reason:
                         _drift(strict, errors, warnings, msg)
