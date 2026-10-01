@@ -525,3 +525,85 @@ def test_pace_deficit_prefers_available_cross_family_alternative(monkeypatch):
     assert refusal is None
     assert (target.recipient, target.model) == ("codex", "gpt-6.1-sol")
     assert routing.substitution["actual_agent"] == "codex"
+
+
+@pytest.mark.parametrize(
+    "status,review_trusted_inputs,expected_exact,expected_prefix,expected_suffix",
+    [
+        (
+            "cool",
+            False,
+            None,
+            "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer on pace-only deficit.",
+            "budget substitution requires --review-author-model and --review-risk (code profile only)",
+        ),
+        (
+            "cool",
+            True,
+            "NOTE: REVIEW_BUDGET_RETAINED: no eligible substitute; retaining admitted reviewer on pace-only deficit.",
+            None,
+            None,
+        ),
+        (
+            "near_cap",
+            False,
+            None,
+            "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer;",
+            "budget substitution requires --review-author-model and --review-risk (code profile only)",
+        ),
+        (
+            "near_cap",
+            True,
+            "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer.",
+            None,
+            None,
+        ),
+    ],
+)
+def test_review_substitution_disabled_notice_no_dangling_separator(
+    monkeypatch, capsys, status, review_trusted_inputs, expected_exact, expected_prefix, expected_suffix
+):
+    budget = _budget(claude=status)
+    if status == "cool":
+        budget["agents"]["claude"]["codexbar"] = {
+            "will_last_to_reset": False,
+            "weekly_pace_delta_pct": 12.0,
+            "weekly_expected_pct": 40.0,
+        }
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    res = delegate._resolve_agent_with_budget_guard(
+        "claude",
+        requested_model="claude-opus-5-5",
+        fallbacks={},
+        review_select=lambda _p, _r: ("claude", "claude-opus-5-5"),
+        review_trusted_inputs=review_trusted_inputs,
+    )
+    assert res == "claude"
+    err = capsys.readouterr().err.strip()
+    if expected_exact:
+        assert err == expected_exact
+    else:
+        assert err.startswith(expected_prefix)
+        assert err.endswith(expected_suffix)
+    assert not err.endswith(";")
+    assert not err.endswith(":")
+
+
+def test_review_substitution_disabled_with_trusted_inputs_via_admit(monkeypatch, capsys):
+    from scripts.agent_runtime import target_admission
+
+    monkeypatch.setattr(
+        target_admission,
+        "_resolve_review_target",
+        lambda *args, **kwargs: ("claude", "claude-opus-5-5"),
+    )
+    args = _args(
+        "--agent", "claude", "--model", "claude-opus-5-5", "--check-budget",
+        "--review-author-model", "gpt-6.1-sol", "--review-risk", "critical",
+    )
+    (refusal, target), routing = _admit(args, monkeypatch, _budget(claude="near_cap"))
+    assert refusal is None
+    assert (target.recipient, target.model) == ("claude", "claude-opus-5-5")
+    assert routing.substitution is None
+    err = capsys.readouterr().err.strip()
+    assert err == "REVIEW_SUBSTITUTION_DISABLED: retaining eligible requested reviewer."
