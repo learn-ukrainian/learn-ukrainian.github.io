@@ -7,11 +7,19 @@ inventory (``scripts/docs/docs_inventory.py``) and the lifecycle contract in
 
 The coverage denominator is every path Git's index lists under the tracked
 roots, so the check is sparse-checkout safe and never reads ``data/``.
+
+``repository_check`` is what CI enforces (``tests/test_docs_catalogue_coverage.py``):
+coverage and validation, a data_store entry for every ``data/<name>.db|.sqlite``
+store that ``scripts/`` code names, front matter and banners that agree with the
+catalogue's superseded overrides, and a current generated family table in
+``docs/README.md``. The search over all of it is ``scripts/docs/find.py``.
 """
 from __future__ import annotations
 
 import argparse
+import ast
 import json
+import posixpath
 import re
 import shlex
 import subprocess
@@ -24,6 +32,7 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import best_match
 
 from scripts.docs.docs_inventory import EXCLUDED_PARTS
+from scripts.docs.docs_inventory import metadata as inventory_metadata
 
 CATALOGUE_PATH = 'docs/knowledge/catalogue.yaml'
 SCHEMA_PATH = 'docs/knowledge/catalogue.schema.json'
@@ -93,9 +102,14 @@ def tracked_files(repo: Path) -> list[str]:
     return list(index_entries(repo))
 
 
-def shown(path: str) -> str:
-    """A path for one line of text output: escaped (repr) when it holds control characters."""
-    return repr(path) if CONTROL_CHARS.search(path) else path
+def shown(text: str) -> str:
+    """A path or id for one line of text output: escaped (repr) unless every character is printable.
+
+    Controls, line and paragraph separators, format characters (bidi overrides, U+FEFF)
+    and other non-printing characters are escaped, so a value can never forge or hide
+    output. Ordinary text, including Cyrillic and spaces, is printed as is.
+    """
+    return text if text.isprintable() else repr(text)
 
 
 def control_path_error(path: str) -> str:
@@ -194,9 +208,26 @@ class Glob:
     regex: re.Pattern
     rank: tuple[int, int, int]
 
+    @property
+    def literal_dir(self) -> str:
+        """The leading literal directory segments; every path the glob matches lies below it."""
+        segments = self.pattern.split('/')[:-1]
+        literal = []
+        for segment in segments:
+            if WILDCARD.search(segment):
+                break
+            literal.append(segment)
+        return '/'.join(literal)
+
 
 def compile_globs(entry_id: str, patterns: list[str]) -> list[Glob]:
     return [Glob(entry_id, p, glob_regex(p), specificity(p)) for p in patterns]
+
+
+def ancestor_dirs(path: str) -> list[str]:
+    """'' and every proper ancestor directory of ``path`` ('a/b/c.md' -> ['', 'a', 'a/b'])."""
+    parts = path.split('/')[:-1]
+    return [''] + ['/'.join(parts[:i]) for i in range(1, len(parts) + 1)]
 
 
 # ---------------------------------------------------------------- loading
@@ -340,6 +371,8 @@ class Report:
     data_stores: int = 0
     schema_ok: bool = False
     searchable_entries: set[str] = field(default_factory=set)  # families whose bodies may be read
+    store_literals: dict[str, list[str]] | None = None  # set by repository_check
+    markers_unverifiable: int = 0  # superseded Markdown overrides the privacy gate kept unread
 
     @property
     def ok(self) -> bool:
@@ -350,6 +383,7 @@ class Report:
 
     def to_json(self) -> dict:
         return {'denominator': self.denominator, 'covered': len(self.resolved),
+                'store_literals': self.store_literals, 'markers_unverifiable': self.markers_unverifiable,
                 'uncovered': self.uncovered, 'errors': self.errors,
                 'lifecycle_counts': self.lifecycle_counts(),
                 'residual_paths': len(self.residual_paths), 'data_stores': self.data_stores,
@@ -439,10 +473,13 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
     # Fail closed: an id stays private if any entry using it is not content-searchable.
     report.searchable_entries = ({e['id'] for e in entries if e['content_searchable']}
                                  - {e['id'] for e in entries if not e['content_searchable']})
+    # Store claims only ever match below data/; placeholders never count as a tracked store.
+    data_files = [p for p in files if p.startswith('data/') and p.rsplit('/', 1)[-1] not in PLACEHOLDER_NAMES]
 
     globs: list[Glob] = []
+    must_match: list[Glob] = []  # globs inside the rules, which must each match a tracked file
     for entry in entries:
-        eid = entry['id']
+        eid = shown(entry['id'])
         if entry['owner'] not in owners:
             report.errors.append(f"{eid}: owner {entry['owner']!r} is not a stream or area key")
         if entry['purpose'].strip().upper().startswith('TODO'):
@@ -463,15 +500,14 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
                     report.errors.append(f'{eid}: store {store!r} is not in the catalogue glob dialect: {error}')
                 else:
                     claims.append(store_regex(store))
-            in_git = [p for p in files if PurePosixPath(p).name not in PLACEHOLDER_NAMES
-                      and any(claim.match(p) for claim in claims)]
+            in_git = [p for p in data_files if any(claim.match(p) for claim in claims)]
             if entry['local_only'] and in_git:
                 report.errors.append(f'{eid}: local_only is true but {len(in_git)} store files are tracked')
             elif not entry['local_only'] and not in_git:
                 report.errors.append(f'{eid}: local_only is false but no store file is tracked')
             continue
         try:
-            compiled = compile_globs(eid, entry['paths'])
+            compiled = compile_globs(entry['id'], entry['paths'])
         except ValueError as exc:
             report.errors.append(f'{eid}: {exc}')
             continue
@@ -481,26 +517,37 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
                                      'below its tracked root must be literal)')
             elif root_of(glob.pattern, roots) is None and glob.pattern not in roots:
                 report.errors.append(f'{eid}: glob {glob.pattern!r} is outside the tracked roots')
-            elif not any(glob.regex.match(p) for p in denominator):
-                report.errors.append(f'{eid}: glob {glob.pattern!r} matches no tracked file')
+            else:
+                must_match.append(glob)
         globs.extend(compiled)
 
-    # Resolve each tracked path to exactly one family: most specific glob wins.
+    # Resolve each tracked path to exactly one family: most specific glob wins. A glob can
+    # only match paths below its literal directory, so each path tests only those globs.
+    by_dir: dict[str, list[Glob]] = defaultdict(list)
+    for glob in globs:
+        by_dir[glob.literal_dir].append(glob)
+    used: set[tuple[str, str]] = set()
     owner_of: dict[str, str] = {}
     for path in denominator:
         best: dict[str, tuple[int, int, int]] = {}
-        for glob in globs:
-            if glob.regex.match(path) and glob.rank > best.get(glob.entry, (-1, -1, -1)):
-                best[glob.entry] = glob.rank
+        for directory in ancestor_dirs(path):
+            for glob in by_dir.get(directory, ()):
+                if glob.regex.match(path):
+                    used.add((glob.entry, glob.pattern))
+                    if glob.rank > best.get(glob.entry, (-1, -1, -1)):
+                        best[glob.entry] = glob.rank
         if not best:
             report.uncovered.append(path)
             continue
         top = max(best.values())
         winners = sorted(e for e, rank in best.items() if rank == top)
         if len(winners) > 1:
-            report.errors.append(f'{path}: ambiguous match between {", ".join(winners)}')
+            report.errors.append(f'{shown(path)}: ambiguous match between {", ".join(map(shown, winners))}')
             continue
         owner_of[path] = winners[0]
+    for glob in must_match:
+        if (glob.entry, glob.pattern) not in used:
+            report.errors.append(f'{shown(glob.entry)}: glob {glob.pattern!r} matches no tracked file')
 
     # Privacy follows ownership: a family that owns any inventory-excluded path
     # (docs_inventory.EXCLUDED_PARTS) must not be content-searchable.
@@ -510,7 +557,7 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
             excluded_owned[eid].append(path)
     for eid, paths in sorted(excluded_owned.items()):
         if by_id[eid]['content_searchable']:
-            report.errors.append(f'{eid}: owns {len(paths)} inventory-excluded path(s) such as {paths[0]!r}, '
+            report.errors.append(f'{shown(eid)}: owns {len(paths)} inventory-excluded path(s) such as {paths[0]!r}, '
                                  'so content_searchable must be false')
 
     lifecycle: dict[str, str] = {p: by_id[e]['lifecycle'] for p, e in owner_of.items()}
@@ -522,12 +569,12 @@ def validate(catalogue: dict, schema: dict, files: list[str], owners: set[str],
         for override in entry.get('overrides', []):
             path = override['path']
             if path in seen:
-                report.errors.append(f"{entry['id']}: duplicate override for {path!r}")
+                report.errors.append(f"{shown(entry['id'])}: duplicate override for {path!r}")
             seen.add(path)
             if path not in tracked:
-                report.errors.append(f"{entry['id']}: override {path!r} is not a tracked path")
+                report.errors.append(f"{shown(entry['id'])}: override {path!r} is not a tracked path")
             elif owner_of.get(path) != entry['id']:
-                report.errors.append(f"{entry['id']}: override {path!r} resolves to "
+                report.errors.append(f"{shown(entry['id'])}: override {path!r} resolves to "
                                      f"{owner_of.get(path)!r}, not this entry")
             else:
                 lifecycle[path] = override['lifecycle']
@@ -586,17 +633,17 @@ def _supersession_errors(links: dict[str, str], follow: dict[str, str], by_id: d
         while True:
             target = node(link)
             if target == current or target in chain:
-                errors.append(f'supersession cycle or self-link: {" -> ".join([*chain, target])}')
+                errors.append(f'supersession cycle or self-link: {" -> ".join(map(shown, [*chain, target]))}')
                 break
             status = state(target)
             if status is None:
-                errors.append(f'{current}: supersession target {link!r} does not exist')
+                errors.append(f'{shown(current)}: supersession target {link!r} does not exist')
                 break
             chain.append(target)
             if status in TERMINAL_LIFECYCLES:
                 break
             if status != 'superseded' or target not in follow:
-                errors.append(f'{start}: supersession chain ends at {target!r} with lifecycle {status!r}')
+                errors.append(f'{shown(start)}: supersession chain ends at {target!r} with lifecycle {status!r}')
                 break
             current, link = target, follow[target]
     return errors
@@ -756,6 +803,361 @@ def draft_scan(repo: Path, report: Report) -> dict:
     }
 
 
+# ---------------------------------------------------------------- data-store literals in code
+
+CODE_ROOT = 'scripts/'
+STORE_SUFFIXES = ('.db', '.sqlite', '.sqlite3')
+# 'data/<name>.db|.sqlite|.sqlite3' inside a string; 'metadata/x.db' and 'test_data/x.db' are not data/.
+STORE_LITERAL = re.compile(r'(?<![A-Za-z0-9_.-])data/((?:[A-Za-z0-9_.@+-]+/)*[A-Za-z0-9_@+-][A-Za-z0-9_.@+-]*'
+                           r'\.(?:db|sqlite3?))(?![A-Za-z0-9_])')
+STORE_SEGMENT = re.compile(r'[A-Za-z0-9_@+-][A-Za-z0-9_.@+-]*\Z')
+
+
+def _chain(node: ast.AST) -> list[ast.AST]:
+    """The operands of a left-associated ``a / b / c`` path join, in order."""
+    operands = []
+    while isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        operands.append(node.right)
+        node = node.left
+    operands.append(node)
+    return operands[::-1]
+
+
+def _joined_store(operands: list[ast.AST], bases: dict[str, str]) -> str | None:
+    """'data/<...>.db' for a join that starts at a "data" segment or a data-directory name."""
+    path: list[str] | None = None
+    for operand in operands:
+        text = operand.value if isinstance(operand, ast.Constant) and isinstance(operand.value, str) else None
+        if path is None:
+            if text is not None and text.strip('/') == 'data':
+                path = ['data']
+            elif isinstance(operand, ast.Name) and operand.id in bases:
+                path = [bases[operand.id]]
+            continue
+        if text is None or not all(STORE_SEGMENT.match(part) for part in text.strip('/').split('/')):
+            return None
+        path.append(text.strip('/'))
+    joined = '/'.join(path) if path else ''
+    return joined if joined.endswith(STORE_SUFFIXES) else None
+
+
+def _data_bases(tree: ast.Module) -> dict[str, str]:
+    """Module-level names bound to a data directory ('DATA_DIR = ROOT / "data"' -> 'data')."""
+    bases: dict[str, str] = {}
+    for statement in tree.body:
+        if not (isinstance(statement, ast.Assign) and len(statement.targets) == 1
+                and isinstance(statement.targets[0], ast.Name)):
+            continue
+        operands = _chain(statement.value)
+        texts = [o.value if isinstance(o, ast.Constant) and isinstance(o.value, str) else None for o in operands]
+        if 'data' in texts:
+            rest = texts[texts.index('data'):]
+            if all(t is not None and STORE_SEGMENT.match(t) for t in rest[1:]):
+                bases[statement.targets[0].id] = '/'.join(rest)
+    return bases
+
+
+QUOTED_DATA = re.compile(r"""['"]data/?['"]""")
+QUOTED_STORE = re.compile(r"""\.(?:db|sqlite3?)['"]""")
+
+
+def store_literals_in_source(source: str) -> set[str]:
+    """Logical 'data/...' store paths a Python module names.
+
+    A ``data/<...>.db`` text anywhere in the source counts (string literals, and also
+    comments, which only makes the check stricter). Path joins (``ROOT / "data" / "x.db"``,
+    ``DATA_DIR / "x.db"`` with a module-level ``DATA_DIR = ROOT / "data"``) are read from
+    the AST, which is parsed only when the source has both a quoted "data" segment and a
+    quoted store name.
+    """
+    found = {'data/' + match for match in STORE_LITERAL.findall(source)}
+    if not (QUOTED_DATA.search(source) and QUOTED_STORE.search(source)):
+        return found
+    try:
+        tree = ast.parse(source)
+    except (SyntaxError, ValueError):
+        return found
+    bases = _data_bases(tree)
+    for node in ast.walk(tree):
+        if (isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div)
+                and (store := _joined_store(_chain(node), bases)) is not None):
+            found.add(store)
+    return found
+
+
+def store_literals(repo: Path, files: dict[str, IndexEntry] | None = None) -> tuple[dict[str, list[str]], list[str]]:
+    """Every logical data store named by tracked ``scripts/**.py`` code, with the files naming it.
+
+    Code is read from the worktree (``scripts/`` is never sparse), only for regular tracked
+    files without control characters, never through a symlink. Returns
+    (store -> sorted files, tracked code files that could not be read).
+    """
+    files = index_entries(repo) if files is None else files
+    found: dict[str, set[str]] = defaultdict(set)
+    unread = []
+    for path, entry in files.items():
+        if not (path.startswith(CODE_ROOT) and path.endswith('.py')) or CONTROL_CHARS.search(path):
+            continue
+        target = repo / path
+        if entry.mode not in REGULAR_MODES or target.is_symlink() or not target.is_file():
+            unread.append(path)
+            continue
+        try:
+            source = target.read_text(encoding='utf-8')
+        except (OSError, UnicodeDecodeError):
+            unread.append(path)
+            continue
+        for store in store_literals_in_source(source):
+            found[store].add(path)
+    return {store: sorted(paths) for store, paths in sorted(found.items())}, unread
+
+
+def store_literal_errors(catalogue: dict, literals: dict[str, list[str]]) -> list[str]:
+    """A named store needs a data_store entry claiming it or a reasoned exemption; exemptions stay live."""
+    claims = [store_regex(s) for e in catalogue.get('entries', []) if e.get('kind') == 'data_store'
+              for s in e.get('store', [])]
+    claims = [c for c in claims if c is not None]
+    exempt = {item['literal']: item for item in catalogue.get('store_literal_exemptions', [])}
+    errors = []
+    for store, paths in literals.items():
+        claimed = any(claim.match(store) for claim in claims)
+        if claimed and store in exempt:
+            errors.append(f'store literal {store!r} is claimed by a data_store entry and also exempted; '
+                          'remove the exemption')
+        elif not claimed and store not in exempt:
+            errors.append(f'store literal {store!r} (named in {", ".join(map(shown, paths[:3]))}'
+                          f'{" and more" if len(paths) > 3 else ""}) has no data_store entry; add its name to a '
+                          'data_store entry\'s store list, or a reasoned store_literal_exemptions item')
+    for literal in sorted(set(exempt) - set(literals)):
+        errors.append(f'store_literal_exemptions: {literal!r} is no longer named in {CODE_ROOT}; remove it')
+    return errors
+
+
+def unclaimed_stores(catalogue: dict, literals: dict[str, list[str]]) -> list[str]:
+    """Store names in code that no data_store entry claims and no exemption covers."""
+    claims = [c for c in (store_regex(s) for e in catalogue.get('entries', []) if e.get('kind') == 'data_store'
+                          for s in e.get('store', [])) if c is not None]
+    exempt = {item['literal'] for item in catalogue.get('store_literal_exemptions', [])}
+    return [s for s in literals if s not in exempt and not any(c.match(s) for c in claims)]
+
+
+def store_stub(store: str) -> str:
+    """A paste-ready data_store entry for a store literal that no entry claims."""
+    stub = {'id': 'data-' + _slug(store.removeprefix('data/')), 'kind': 'data_store', 'store': [store],
+            'producer': [], 'producer_note': 'TODO: the tracked script that writes it, or why none does',
+            'local_only': True, 'purpose': 'TODO: one line saying what this store holds and who reads it',
+            'keywords': sorted(set(re.findall(r'[a-z0-9]{3,}', store.lower())) - {'data'}) or ['todo'],
+            'lifecycle': 'active', 'owner': 'infra-harness',
+            'query': [{'surface': 'sqlite', 'how': f'read-only SQL on {store}'}], 'content_searchable': False}
+    body = yaml.safe_dump([stub], sort_keys=False, allow_unicode=True, width=1000)
+    return ''.join(f'  {line}' for line in body.splitlines(keepends=True))
+
+
+# ---------------------------------------------------------------- in-place status markers
+
+MARKDOWN_SUFFIX = '.md'
+BANNER_PREFIX = '> **Superseded by:** '
+MARKER_SCAN_LINES = 200
+
+
+def superseded_markdown(catalogue: dict) -> dict[str, str]:
+    """Markdown path -> replacement for every catalogue override that marks a .md file superseded."""
+    return {o['path']: o['superseded_by'] for e in catalogue.get('entries', [])
+            for o in e.get('overrides', []) if o.get('lifecycle') == 'superseded'
+            and o['path'].endswith(MARKDOWN_SUFFIX)}
+
+
+def banner_line(path: str, target: str) -> str:
+    """The visible line ``> **Superseded by:** [target](relative link)`` for a superseded file."""
+    linked = CATALOGUE_PATH if target.startswith('id:') else strip_fragment(target)
+    fragment = '' if target.startswith('id:') or '#' not in target else '#' + target.split('#', 1)[1]
+    href = posixpath.relpath(linked, posixpath.dirname(path) or '.') + fragment
+    if any(c in href for c in ' ()<>'):
+        href = f'<{href}>'
+    return f'{BANNER_PREFIX}[{target}]({href})'
+
+
+def _yaml_scalar(value: str) -> str:
+    return yaml.safe_dump([value], default_flow_style=True, allow_unicode=True, width=10_000).strip()[1:-1]
+
+
+def apply_marker(text: str, path: str, target: str) -> str:
+    """``text`` with front-matter ``lifecycle: superseded`` / ``superseded_by`` and the banner line.
+
+    Existing front matter keeps its other keys; an existing banner is replaced; a new
+    banner goes after the first-line H1 (or at the top of the body). Idempotent.
+    """
+    lines = text.splitlines(keepends=True)
+    wanted = {'lifecycle': 'superseded', 'superseded_by': _yaml_scalar(target)}
+    if lines and lines[0].rstrip('\r\n') == '---':
+        end = next((i for i, line in enumerate(lines[1:], 1) if line.rstrip('\r\n') in ('---', '...')), None)
+        if end is None:
+            raise ValueError(f'{path}: unterminated front matter')
+        head = lines[1:end]
+        for key, value in wanted.items():
+            at = next((i for i, line in enumerate(head) if line.startswith(f'{key}:')), None)
+            if at is None:
+                head.append(f'{key}: {value}\n')
+            else:
+                head[at] = f'{key}: {value}\n'
+        front, body = ['---\n', *head, lines[end]], lines[end + 1:]
+    else:
+        front = ['---\n', *(f'{k}: {v}\n' for k, v in wanted.items()), '---\n']
+        body = ['\n', *lines] if lines and lines[0].strip() else lines
+    banner = banner_line(path, target) + '\n'
+    at = next((i for i, line in enumerate(body) if line.startswith(BANNER_PREFIX)), None)
+    if at is not None:
+        body[at] = banner
+    else:
+        first = next((i for i, line in enumerate(body) if line.strip()), None)
+        if first is not None and body[first].startswith('# '):
+            body[first + 1:first + 1] = ['\n', banner]
+        else:
+            body[first or 0:first or 0] = [banner, '\n']
+    return ''.join(front + body)
+
+
+def marker_errors(repo: Path, report: Report, catalogue: dict) -> tuple[list[str], int]:
+    """Front matter, banners and catalogue overrides agree on every readable Markdown file.
+
+    * A Markdown override marked superseded needs front-matter ``lifecycle: superseded``,
+      ``superseded_by`` equal to the override target, and the banner line.
+    * Front-matter ``lifecycle`` or ``superseded_by`` anywhere in the denominator must equal
+      what the catalogue resolves for that path (override, residual or family default).
+    Only body-readable paths are read; returns (errors, superseded overrides left unread).
+    """
+    expected = superseded_markdown(catalogue)
+    by_id = {e['id']: e for e in catalogue.get('entries', [])}
+    paths = sorted(p for p in report.resolved if p.endswith(MARKDOWN_SUFFIX))
+    heads, _ = read_heads(repo, report, paths, lines=MARKER_SCAN_LINES)
+    errors = []
+    unverifiable = sum(1 for p in expected if p in report.resolved and p not in heads)
+    for path in paths:
+        if path not in heads:
+            continue
+        facts, problems = inventory_metadata(heads[path])
+        family, resolved = report.resolved[path]
+        target = expected.get(path) or (by_id[family].get('superseded_by') if resolved == 'superseded' else None)
+        where = shown(path)
+        for problem in problems:
+            if problem.startswith(('lifecycle_', 'superseded_by_')):
+                errors.append(f'{where}: front matter {problem.replace("_", " ")}')
+        if 'lifecycle' in facts and facts['lifecycle'] != resolved:
+            errors.append(f"{where}: front-matter lifecycle {facts['lifecycle']!r} disagrees with the catalogue "
+                          f'({resolved!r} from {shown(family)}); add a catalogue override or fix the front matter')
+        if 'superseded_by' in facts and facts['superseded_by'] != ([target] if target else []):
+            errors.append(f"{where}: front-matter superseded_by {facts['superseded_by']!r} disagrees with the "
+                          f'catalogue ({target!r})')
+        if path in expected:
+            if facts.get('lifecycle') != 'superseded' or facts.get('superseded_by') != [target]:
+                errors.append(f'{where}: catalogue marks it superseded by {target!r}; its front matter must say '
+                              f'lifecycle: superseded and superseded_by: {target} '
+                              f'(python -m scripts.docs.catalogue mark --apply)')
+            if banner_line(path, target) not in heads[path].splitlines():
+                errors.append(f'{where}: missing the banner line {banner_line(path, target)!r} '
+                              '(python -m scripts.docs.catalogue mark --apply)')
+    return errors, unverifiable
+
+
+# ---------------------------------------------------------------- generated entry map
+
+README_PATH = 'docs/README.md'
+README_BEGIN = ('<!-- BEGIN GENERATED: catalogue families. Edit docs/knowledge/catalogue.yaml, then run '
+                'python -m scripts.docs.catalogue readme -->')
+README_END = '<!-- END GENERATED: catalogue families -->'
+STATUS_WORDS = {'active': 'current', 'archive': 'historical', 'superseded': 'superseded', 'draft': 'draft'}
+
+
+def _cell(text: str) -> str:
+    return ' '.join(text.split()).replace('|', '\\|')
+
+
+def _code(text: str) -> str:
+    fence = '``' if '`' in text else '`'
+    pad = ' ' if fence == '``' else ''
+    return f'{fence}{pad}{_cell(text)}{pad}{fence}'
+
+
+def _status(entry: dict) -> str:
+    word = STATUS_WORDS[entry['lifecycle']]
+    return f"{word} → {_code(entry['superseded_by'])}" if entry.get('superseded_by') else word
+
+
+def readme_block(catalogue: dict) -> str:
+    """The generated family and store tables for docs/README.md, markers included."""
+    families = [e for e in catalogue['entries'] if e['kind'] != 'data_store']
+    stores = [e for e in catalogue['entries'] if e['kind'] == 'data_store']
+    lines = [README_BEGIN, '',
+             f'{len(families)} document families and {len(stores)} local data stores, generated from '
+             '`docs/knowledge/catalogue.yaml`. Status words: current = `active`, historical = `archive`.',
+             '', '### Document families', '',
+             '| Family | Kind | Status | Paths | Purpose |', '| --- | --- | --- | --- | --- |']
+    for entry in families:
+        paths = ', '.join(_code(p) for p in entry['paths'])
+        lines.append(f"| `{entry['id']}` | {entry['kind']} | {_status(entry)} | {paths} | "
+                     f"{_cell(entry['purpose'])} |")
+    lines += ['', '### Local data stores (untracked, under `data/`)', '',
+              '| Store | Names | Status | How to query |', '| --- | --- | --- | --- |']
+    for entry in stores:
+        names = ', '.join(_code(s) for s in entry['store'])
+        how = '; '.join(f"{q['surface']}: {_cell(q['how'])}" for q in entry['query'])
+        lines.append(f"| `{entry['id']}` | {names} | {_status(entry)} | {how} |")
+    return '\n'.join([*lines, '', README_END])
+
+
+def render_readme(text: str, catalogue: dict) -> str:
+    """``text`` with the generated block between its markers replaced; ValueError without one pair."""
+    if text.count(README_BEGIN) != 1 or text.count(README_END) != 1 or text.index(README_BEGIN) > text.index(README_END):
+        raise ValueError(f'{README_PATH} needs exactly one {README_BEGIN!r} ... {README_END!r} pair')
+    start = text.index(README_BEGIN)
+    end = text.index(README_END) + len(README_END)
+    return text[:start] + readme_block(catalogue) + text[end:]
+
+
+def readme_errors(repo: Path, report: Report, catalogue: dict, files: dict[str, IndexEntry]) -> list[str]:
+    """The README's generated block in Git's index must equal what the catalogue generates now.
+
+    Read through the gated reader like every other body, so it follows the index (stage
+    the regenerated file) and a README that is not tracked is not checked.
+    """
+    if README_PATH not in files:
+        return []
+    heads, withheld = read_heads(repo, report, [README_PATH], lines=1_000_000)
+    if README_PATH not in heads:
+        return [f'{README_PATH}: not content-readable ({withheld} withheld), so its generated block cannot be checked']
+    text = heads[README_PATH]
+    try:
+        current = render_readme(text, catalogue) == text
+    except ValueError as exc:
+        return [f'{README_PATH}: {str(exc)[:300]}']
+    return [] if current else [f'{README_PATH}: the generated family table is stale; run '
+                               'python -m scripts.docs.catalogue readme and stage the file']
+
+
+# ---------------------------------------------------------------- whole-repository check
+
+def repository_check(repo: Path, catalogue_path: Path | None = None) -> tuple[Report, dict]:
+    """Everything CI enforces: coverage and validation, store literals, status markers, README block.
+
+    Returns the report (with every error appended) and its catalogue. The extra checks
+    run only on a schema-valid catalogue; their failures are typed by message prefix.
+    """
+    catalogue_path = catalogue_path or repo / CATALOGUE_PATH
+    report = coverage(repo, catalogue_path)
+    catalogue = load(catalogue_path)
+    if not report.schema_ok:
+        return report, catalogue
+    files = index_entries(repo)
+    literals, unread = store_literals(repo, files)
+    report.store_literals = literals
+    report.errors.extend(f'{CODE_ROOT}: cannot read tracked code file {shown(p)}' for p in unread)
+    report.errors.extend(store_literal_errors(catalogue, literals))
+    errors, report.markers_unverifiable = marker_errors(repo, report, catalogue)
+    report.errors.extend(errors)
+    report.errors.extend(readme_errors(repo, report, catalogue, files))
+    return report, catalogue
+
+
 # ---------------------------------------------------------------- suggestions
 
 def _slug(text: str) -> str:
@@ -820,7 +1222,7 @@ def main(argv: list[str] | None = None) -> int:
         prog='python -m scripts.docs.catalogue',
         description='Validate the document and data catalogue and its coverage of tracked files.\n'
                     'Use before adding a docs/registry/evidence family or a data/ store; '
-                    'not a content search tool.',
+                    'to find a document or store, use python -m scripts.docs.find instead.',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog='Examples:\n'
                '  .venv/bin/python -m scripts.docs.catalogue check\n'
@@ -828,10 +1230,17 @@ def main(argv: list[str] | None = None) -> int:
                '  .venv/bin/python -m scripts.docs.catalogue check --json\n'
                '  .venv/bin/python -m scripts.docs.catalogue check --data-root ../primary-checkout/data\n'
                '  .venv/bin/python -m scripts.docs.catalogue draft-scan --json\n'
-               'Outputs: a report on stdout only; never writes files and reads data/ names, not contents.\n'
+               '  .venv/bin/python -m scripts.docs.catalogue readme --check\n'
+               '  .venv/bin/python -m scripts.docs.catalogue mark --apply\n'
+               'Outputs: check and draft-scan print a report on stdout and never write files (data/ is read by '
+               'name only); readme rewrites the generated block of docs/README.md; mark --apply writes '
+               'front matter and banners into superseded Markdown files.\n'
                'Exit codes: 0 no errors, full coverage and no unmatched local store (or --report-only; '
-               'draft-scan always reports with 0); 1 errors (including a tracked path with control '
-               'characters), uncovered paths or unmatched stores; 2 invalid arguments; 3 unreadable '
+               'draft-scan always reports with 0; readme/mark: done or nothing to change); 1 errors (including '
+               'a tracked path with control characters, a data/ store named in scripts/ without an entry, '
+               'a status marker that disagrees with the catalogue or a stale README block), uncovered paths '
+               'or unmatched stores (readme --check: stale block; mark: files need markers); 2 invalid '
+               'arguments; 3 unreadable '
                'repository or catalogue, an unmerged index or unexpected Git output, or a catalogue outside '
                'the accepted YAML subset (anchors, aliases, merge keys, tags, duplicate or non-string keys, '
                'unconstructible scalars, over 2 MiB, 100,000 nodes or 16 nesting levels); 4 internal error. Failures print a typed '
@@ -839,7 +1248,8 @@ def main(argv: list[str] | None = None) -> int:
                'Related: #9412; docs/knowledge/catalogue.yaml; docs/knowledge/catalogue.schema.json; '
                'scripts/docs/docs_inventory.py; docs/architecture/docs-authority-lifecycle.md.')
     sub = parser.add_subparsers(dest='command', required=True)
-    check = sub.add_parser('check', help='Validate schema, coverage, globs, supersession, owners and producers.',
+    check = sub.add_parser('check', help='Validate schema, coverage, globs, supersession, owners, producers, '
+                           'data/ store names in scripts/, status markers and the README block (what CI enforces).',
                            description='Validate the catalogue against the Git index of --repo.')
     check.add_argument('--repo', type=Path, default=Path('.'),
                        help='Repository or worktree root (default: current directory); e.g. ../my-worktree.')
@@ -848,7 +1258,8 @@ def main(argv: list[str] | None = None) -> int:
     check.add_argument('--report-only', action='store_true',
                        help='Print the report but exit 0 even when errors or gaps exist (default: off).')
     check.add_argument('--suggest', action='store_true',
-                       help='Also print a paste-ready YAML stub for each uncovered path group (default: off).')
+                       help='Also print a paste-ready YAML stub for each uncovered path group and each '
+                            'unclaimed data/ store name (default: off).')
     check.add_argument('--data-root', type=Path, default=None,
                        help='Local store directory to reconcile by name only (default: <repo>/data when it '
                             'exists; skipped otherwise, as in CI); e.g. ../primary-checkout/data.')
@@ -863,9 +1274,27 @@ def main(argv: list[str] | None = None) -> int:
     drafts.add_argument('--repo', type=Path, default=Path('.'),
                         help='Repository or worktree root (default: current directory); e.g. ../my-worktree.')
     drafts.add_argument('--json', action='store_true', help='Print the scan as JSON (default: text).')
+    readme = sub.add_parser('readme', help=f'Regenerate the family table block of {README_PATH} from the catalogue.',
+                            description=f'Rewrite only the text between the generated-block markers of {README_PATH}.')
+    readme.add_argument('--repo', type=Path, default=Path('.'),
+                        help='Repository or worktree root (default: current directory); e.g. ../my-worktree.')
+    readme.add_argument('--check', action='store_true',
+                        help='Write nothing; exit 1 when the block differs from the catalogue (default: off).')
+    readme.add_argument('--json', action='store_true', help='Print the result as JSON (default: text).')
+    mark = sub.add_parser('mark', help='Add front-matter lifecycle/superseded_by and the visible banner to every '
+                          'Markdown file a catalogue override marks superseded.',
+                          description='Without --apply, list the files that need markers and exit 1 if any do.')
+    mark.add_argument('--repo', type=Path, default=Path('.'),
+                      help='Repository or worktree root (default: current directory); e.g. ../my-worktree.')
+    mark.add_argument('--apply', action='store_true', help='Write the markers (default: list only).')
+    mark.add_argument('--json', action='store_true', help='Print the result as JSON (default: text).')
     args = parser.parse_args(argv)
     if args.command == 'draft-scan':
         return _run('Draft scan', _draft_scan_command, args)
+    if args.command == 'readme':
+        return _run('README block', _readme_command, args)
+    if args.command == 'mark':
+        return _run('Status markers', _mark_command, args)
     return _run('Catalogue check', _check_command, args)
 
 
@@ -896,8 +1325,7 @@ def _run(label: str, command, args: argparse.Namespace) -> int:
 def _check_command(args: argparse.Namespace) -> int:
     repo = toplevel(args.repo)
     catalogue_path = args.catalogue or repo / CATALOGUE_PATH
-    report = coverage(repo, catalogue_path)
-    catalogue = load(catalogue_path)
+    report, catalogue = repository_check(repo, catalogue_path)
     data_root = args.data_root or repo / 'data'
     # Store names are reconciled only against a schema-valid catalogue.
     stores = local_store_gaps(data_root, catalogue) if data_root.is_dir() and report.schema_ok else None
@@ -915,8 +1343,10 @@ def _check_command(args: argparse.Namespace) -> int:
         print('lifecycle: ' + ', '.join(f'{k} {v}' for k, v in data['lifecycle_counts'].items()))
         for error in report.errors:
             print(f'ERROR {error}')
+        if report.store_literals is not None:
+            print(f'data/ store names in {CODE_ROOT}: {len(report.store_literals)}')
         for path in report.uncovered:
-            print(f'UNCOVERED {path}')
+            print(f'UNCOVERED {shown(path)}')
         if stores is None:
             reason = 'catalogue failed schema validation' if data_root.is_dir() else 'no data directory'
             print(f'local stores: skipped ({reason})')
@@ -926,8 +1356,60 @@ def _check_command(args: argparse.Namespace) -> int:
                 print(f'UNMATCHED STORE {shown(logical)}')
     if args.suggest and report.uncovered:
         print(suggest(report, catalogue))
+    if args.suggest and report.store_literals:
+        for store in unclaimed_stores(catalogue, report.store_literals):
+            print(f'  # data/ store named in {CODE_ROOT} without an entry: {shown(store)}')
+            print(store_stub(store), end='')
     store_gaps = bool(stores and stores[1])
     return 0 if args.report_only or (report.ok and not store_gaps) else 1
+
+
+def _readme_command(args: argparse.Namespace) -> int:
+    repo = toplevel(args.repo)
+    catalogue = load(repo / CATALOGUE_PATH)
+    path = repo / README_PATH
+    text = path.read_text(encoding='utf-8')
+    rendered = render_readme(text, catalogue)
+    stale = rendered != text
+    if stale and not args.check:
+        path.write_text(rendered, encoding='utf-8')
+    state = ('stale' if args.check else 'rewritten') if stale else 'current'
+    if args.json:
+        print(json.dumps({'path': README_PATH, 'state': state}, sort_keys=True))
+    else:
+        print(f'{README_PATH}: generated block {state}')
+    return 1 if stale and args.check else 0
+
+
+def _mark_command(args: argparse.Namespace) -> int:
+    repo = toplevel(args.repo)
+    report = coverage(repo)
+    catalogue = load(repo / CATALOGUE_PATH)
+    if not report.schema_ok:
+        raise CatalogueLoadError('schema', 'the catalogue fails validation; run check first')
+    changed, withheld = [], []
+    for path, target in sorted(superseded_markdown(catalogue).items()):
+        if not body_readable(report, path):
+            withheld.append(path)  # a private family's file is never read or rewritten
+            continue
+        file = repo / path
+        if file.is_symlink() or not file.is_file():
+            withheld.append(path)
+            continue
+        text = file.read_text(encoding='utf-8')
+        marked = apply_marker(text, path, target)
+        if marked != text:
+            changed.append(path)
+            if args.apply:
+                file.write_text(marked, encoding='utf-8')
+    if args.json:
+        print(json.dumps({'changed': changed, 'withheld': len(withheld), 'applied': args.apply}, sort_keys=True))
+    else:
+        verb = 'marked' if args.apply else 'needs markers'
+        for path in changed:
+            print(f'{verb}: {shown(path)}')
+        print(f'{len(changed)} file(s) {verb}; {len(withheld)} withheld (not content-readable or not a file)')
+    return 1 if changed and not args.apply else 0
 
 
 def _draft_scan_command(args: argparse.Namespace) -> int:

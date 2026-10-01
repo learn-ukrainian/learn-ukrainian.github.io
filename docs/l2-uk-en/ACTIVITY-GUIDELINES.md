@@ -1,4 +1,11 @@
+---
+lifecycle: superseded
+superseded_by: docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md
+---
+
 # Activity Guidelines
+
+> **Superseded by:** [docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md](MODULE-RICHNESS-GUIDELINES-v2.md)
 
 > ⚠️ **DEPRECATED**: This document has been consolidated into `MODULE-RICHNESS-GUIDELINES-v2.md`.
 > Please use that file instead. This file is kept for historical reference only.

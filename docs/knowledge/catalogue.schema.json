@@ -38,6 +38,19 @@
       "minItems": 1,
       "items": {"$ref": "#/$defs/entry"}
     },
+    "store_literal_exemptions": {
+      "description": "data/<name>.db|.sqlite|.sqlite3 names that scripts/ code mentions but that are not stores of this repository; every other such name must be claimed by a data_store entry.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["literal", "reason"],
+        "properties": {
+          "literal": {"$ref": "#/$defs/storeName"},
+          "reason": {"$ref": "#/$defs/text"}
+        }
+      }
+    },
     "residual": {
       "description": "Tracked paths whose lifecycle cannot be classified yet. Each path still belongs to a family; the family default does not apply to it.",
       "type": "array",
@@ -55,41 +68,41 @@
   },
   "$defs": {
     "text": {
-      "description": "Free text with a non-space character and no C0, DEL or C1 control. Every pattern in this schema ends with (?![\\s\\S]), never $, which in Python also matches before a final newline.",
+      "description": "Free text with at least one non-space character and no C0, DEL or C1 control. Whitespace is the explicit set U+0020, U+00A0, U+1680, U+2000-U+200A, U+2028, U+2029, U+202F, U+205F, U+3000 and U+FEFF plus every control. Every pattern in this schema uses explicit escaped classes only (never the shorthand classes s, S, w, W, d, D, b or the dot) and ends with (?![^\\n]|\\n), never $ (which in Python also matches before a final newline), so Python re and ECMA-262 engines give the same verdict for every string, including U+0085, U+2028, U+2029 and U+FEFF.",
       "type": "string",
       "minLength": 3,
-      "pattern": "\\S",
+      "pattern": "[^ \\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000\\ufeff\\u0000-\\u001f\\u007f-\\u009f]",
       "not": {"pattern": "[\\u0000-\\u001f\\u007f-\\u009f]"}
     },
     "repoPath": {
       "description": "Repository-relative POSIX path; never absolute, never parent-relative.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|(?![\\s\\S])))[^\\u0000-\\u001f\\u007f-\\u009f]+(?![\\s\\S])"
+      "pattern": "^(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*(?:^|/)\\.\\.(?:/|#|(?![^\\n]|\\n)))[^\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
     },
     "glob": {
       "description": "Catalogue glob dialect (also used by scripts/docs/catalogue.py): literal characters; '*' matches within one path segment, never '/'; '?' matches one character within a segment; '**' is a whole segment spanning one or more segments (zero or more when a segment follows). Character classes ('[...]'), braces ('{a,b}'), empty, '.' and '..' segments, a leading or trailing '/' and control characters are rejected: list each path instead. Catch-all rule (validator): the first segment below the tracked root must be literal, so 'docs/**', 'docs/*/**', 'docs/a*/**' and '**' are errors.",
       "type": "string",
       "minLength": 1,
-      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!/)(?!.*//)(?!.*/(?![\\s\\S]))(?!(.*/)?\\.\\.?(/|(?![\\s\\S])))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![\\s\\S])"
+      "pattern": "^(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*//)(?![^\\u0000-\\u001f\\u007f-\\u009f]*/(?![^\\n]|\\n))(?!(?:[^\\u0000-\\u001f\\u007f-\\u009f]*/)?\\.\\.?(?:/|(?![^\\n]|\\n)))(?![^\\u0000-\\u001f\\u007f-\\u009f]*[^/]\\*\\*)(?![^\\u0000-\\u001f\\u007f-\\u009f]*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
     },
     "storeName": {
       "description": "A logical store under data/ in the catalogue glob dialect (see $defs/glob); a trailing '/' claims the subtree.",
       "type": "string",
-      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*[\\u0000-\\u001f\\u007f-\\u009f])(?!.*//)data/(?!(.*/)?\\.\\.?(/|(?![\\s\\S])))(?!.*[^/]\\*\\*)(?!.*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![\\s\\S])"
+      "pattern": "^(?![^\\u0000-\\u001f\\u007f-\\u009f]*//)data/(?!(?:[^\\u0000-\\u001f\\u007f-\\u009f]*/)?\\.\\.?(?:/|(?![^\\n]|\\n)))(?![^\\u0000-\\u001f\\u007f-\\u009f]*[^/]\\*\\*)(?![^\\u0000-\\u001f\\u007f-\\u009f]*\\*\\*[^/])[^\\[\\]{}\\u0000-\\u001f\\u007f-\\u009f]+(?![^\\n]|\\n)"
     },
-    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9](?![\\s\\S])"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9-]*[a-z0-9](?![^\\n]|\\n)"},
     "owner": {
       "description": "A stream key from scripts/config/issue_streams.yaml or an area key from scripts/config/area_assignments.yaml (checked by the validator).",
       "type": "string",
-      "pattern": "^[a-z0-9][a-z0-9-]*(?![\\s\\S])"
+      "pattern": "^[a-z0-9][a-z0-9-]*(?![^\\n]|\\n)"
     },
     "lifecycle": {"enum": ["draft", "active", "superseded", "archive"]},
     "supersessionTarget": {
       "description": "A tracked repository path (optionally with #section) or id:<catalogue entry id>.",
       "type": "string",
       "minLength": 3,
-      "pattern": "^(id:[a-z0-9][a-z0-9-]*[a-z0-9]|(?!/)(?!.*(^|/)\\.\\.(/|(?![\\s\\S])))[^\\u0000-\\u001f\\u007f-\\u009f]+)(?![\\s\\S])"
+      "pattern": "^(?:id:[a-z0-9][a-z0-9-]*[a-z0-9]|(?!/)(?![^\\u0000-\\u001f\\u007f-\\u009f]*(?:^|/)\\.\\.(?:/|#|(?![^\\n]|\\n)))[^\\u0000-\\u001f\\u007f-\\u009f]+)(?![^\\n]|\\n)"
     },
     "query": {
       "type": "array",
@@ -141,7 +154,7 @@
           "type": "array",
           "minItems": 1,
           "uniqueItems": true,
-          "items": {"type": "string", "minLength": 2, "pattern": "\\S", "not": {"pattern": "[\\u0000-\\u001f\\u007f-\\u009f]"}}
+          "items": {"type": "string", "minLength": 2, "pattern": "[^ \\u00a0\\u1680\\u2000-\\u200a\\u2028\\u2029\\u202f\\u205f\\u3000\\ufeff\\u0000-\\u001f\\u007f-\\u009f]", "not": {"pattern": "[\\u0000-\\u001f\\u007f-\\u009f]"}}
         },
         "lifecycle": {"$ref": "#/$defs/lifecycle"},
         "superseded_by": {"$ref": "#/$defs/supersessionTarget"},

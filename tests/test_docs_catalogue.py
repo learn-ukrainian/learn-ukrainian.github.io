@@ -950,7 +950,14 @@ def test_check_json_rejects_a_control_in_every_field_kind(shared_repo, tmp_path,
     # Includes both reported cases: an entrypoint and a supersession target ending in '#heading\n'.
     status, out = run_check(shared_repo, tmp_path, json.dumps(mutated(kind, suffix)), capsys)
     if not suffix:
-        assert (status, out['errors'], out['uncovered']) == (0, [], [])
+        # Since #9412 PR 2 a superseded Markdown override also needs its in-place markers
+        # (front matter and banner), which this fixture's docs/guide/a.md does not carry:
+        # exactly those two errors, and nothing else, are reported for that kind.
+        marker_only = kind == 'override superseded_by'
+        markers = [e for e in out['errors'] if marker_only and e.startswith('docs/guide/a.md: ')
+                   and ('lifecycle: superseded' in e or 'missing the banner line' in e)]
+        assert (status, len(markers), out['uncovered']) == ((1, 2, []) if marker_only else (0, 0, []))
+        assert [e for e in out['errors'] if e not in markers] == []
         return
     assert status == 1
     assert [e for e in out['errors'] if e.startswith(f'control: {FIELD_KINDS[kind][0]}: ')], out['errors']

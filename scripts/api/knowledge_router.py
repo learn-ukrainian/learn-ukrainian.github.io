@@ -17,9 +17,17 @@ serving disable:
                                             consumers. Deterministic, no ETag. [ungated]
     GET /api/knowledge/record/{record_id}   One compact digest body as text/markdown
                                             with an honest per-record ETag. [gated]
+    GET /api/knowledge/find?q=&limit=&family=
+                                            Document and data catalogue locator
+                                            (#9412): one query over the catalogue,
+                                            tracked names and readable tracked text.
+                                            [ungated; never behind the kill switch]
 
-Everything is deterministic and fail-open: disabled or a failed registry load
-yields an empty/disabled projection (or a degraded monitor section), never a 500.
+The registry endpoints are deterministic and fail-open: disabled or a failed registry
+load yields an empty/disabled projection (or a degraded monitor section), never a 500.
+``/find`` shares only the URL prefix with the registry, not its schema or kill switch:
+it reports an invalid catalogue or a cut-off search inside its result, a bad request as
+a typed 422 and an unreadable repository as a typed 503.
 The runtime/observability layers do all the loading, matching, projection, and
 budgeting; this module only maps them to HTTP, including the shared ``_matches_etag``
 304 semantics.
@@ -29,6 +37,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, Response
 
+from scripts.docs import find as docs_find
 from scripts.research import consumption, observability
 from scripts.research import registry as reg
 
@@ -181,3 +190,34 @@ def knowledge_record(
         return Response(status_code=304, headers={"ETag": etag})
     consumption.record_consumption(task, record_id, status=200, etag=etag_hex)
     return Response(content=body, media_type=_MARKDOWN_MEDIA, headers={"ETag": etag})
+
+
+@router.get("/find")
+def knowledge_find(
+    q: str = Query(min_length=1, max_length=docs_find.MAX_QUERY_CHARS),
+    limit: int = Query(default=docs_find.DEFAULT_LIMIT, ge=1, le=docs_find.MAX_LIMIT),
+    family: str | None = Query(default=None, max_length=64, pattern=docs_find.FAMILY_ID_PATTERN),
+    monitor_ctx: MonitorContext = Depends(get_ctx),
+):
+    """Locate a document, data store or resource in one query (#9412).
+
+    The same search as ``python -m scripts.docs.find``: catalogue entries
+    (``docs/knowledge/catalogue.yaml``), tracked path names and the text of
+    content-searchable families in Git's index of the live repository root. Each
+    hit carries its path, line, excerpt, family, status, replacement and the
+    family's query hint; ``coverage`` lists the families searched and skipped and
+    says ``incomplete`` (with reasons) when a budget cut the search short, so a
+    cut-off search is never reported as "no source".
+
+    **Ungated**: a locator that a kill switch can turn off fails its purpose, so this
+    route never consults ``research_registry``. Read-only; nothing is persisted.
+    An empty query, a bad limit or an unknown family is a typed 422; an unreadable
+    repository is a typed 503; neither is a 500.
+    """
+    try:
+        return docs_find.find(q, limit, family=family, repo=monitor_ctx.roots.live_repo_root)
+    except docs_find.FindError as exc:
+        raise HTTPException(status_code=422, detail={"code": exc.code, "message": str(exc)}) from None
+    except docs_find.UNREADABLE as exc:
+        detail = {"code": getattr(exc, "code", type(exc).__name__), "message": docs_find.escape_excerpt(str(exc)[:300])}
+        raise HTTPException(status_code=503, detail=detail) from None
