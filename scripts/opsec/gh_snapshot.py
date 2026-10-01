@@ -170,7 +170,11 @@ READ_GRAMMARS = {
             "--skip-existing": False,
         },
     ),
-    ("auth", "status"): (0, 0, {"--json": True, "--jq": True, "-q": True, "--hostname": True, "-h": True, "--active": False}),
+    ("auth", "status"): (
+        0,
+        0,
+        {"--json": True, "--jq": True, "-q": True, "--hostname": True, "-h": True, "--active": False},
+    ),
     ("gist", "view"): (
         1,
         1,
@@ -182,10 +186,26 @@ READ_GRAMMARS = {
 READ_GRAMMARS[("search", "prs")] = (1, 1, {**LIST, **REPO, "--state": True, "--owner": True, "--merged": False})
 
 # No fields/input: gh cannot infer POST. All method occurrences must be GET.
-REST_GET = (1, 1, {"--method": True, "-X": True, "--paginate": False,
-    "--slurp": False, "--include": False, "-i": False, "--jq": True, "-q": True,
-    "--header": True, "-H": True, "--hostname": True, "--cache": True})
-_SEGMENT = r"(?:[A-Za-z0-9_.{}-]|%[0-9A-Fa-f]{2})+"
+REST_GET = (
+    1,
+    1,
+    {
+        "--method": True,
+        "-X": True,
+        "--paginate": False,
+        "--slurp": False,
+        "--include": False,
+        "-i": False,
+        "--jq": True,
+        "-q": True,
+        "--header": True,
+        "-H": True,
+        "--cache": True,
+    },
+)
+READ_HEADERS = {"accept", "if-none-match", "x-github-api-version"}
+_SEGMENT = r"(?:[A-Za-z0-9_.{}-]|%(?!2[eEfF])[0-9A-Fa-f]{2})+"
+_REPOSITORY_SEGMENT = r"(?!\.+(?:/|\?|$))" + _SEGMENT
 _READ_SUFFIX = (
     r"(?:issues(?:/\d+(?:/(?:comments|labels|timeline|sub_issues))?|/comments/\d+)?"
     r"|pulls(?:/\d+(?:/(?:reviews|commits|files))?)?"
@@ -195,7 +215,15 @@ _READ_SUFFIX = (
     r"|releases(?:/(?:latest|\d+|assets/\d+|tags/" + _SEGMENT + r"))?"
     r"|compare/" + _SEGMENT + r"|deployments(?:/\d+/statuses)?|labels|milestones(?:/\d+)?)"
 )
-REST_READ_PATH = re.compile(r"(?:user|rate_limit|repos/" + _SEGMENT + r"/" + _SEGMENT + r"(?:/" + _READ_SUFFIX + r")?)(?:\?[^\s#\x00-\x1f]*)?")
+REST_READ_PATH = re.compile(
+    r"(?:user|rate_limit|repos/"
+    + _REPOSITORY_SEGMENT
+    + r"/"
+    + _REPOSITORY_SEGMENT
+    + r"(?:/"
+    + _READ_SUFFIX
+    + r")?)(?:\?[^\s#\x00-\x1f]*)?"
+)
 
 READ_VERBS = {g: {v for group, v in READ_GRAMMARS if group == g} for g, _ in READ_GRAMMARS}
 
@@ -434,8 +462,14 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         except PublishBlocked:
             pass
         else:
-            if (all(value == "GET" for flag, value in found if flag in {"--method", "-X"})
-                    and REST_READ_PATH.fullmatch(positional[0].removeprefix("https://api.github.com/").lstrip("/"))):
+            for flag, value in found:
+                if flag in {"--header", "-H"}:
+                    name, separator, _ = value.partition(":")
+                    if not separator or name.lower() not in READ_HEADERS or "\r" in value or "\n" in value:
+                        raise PublishBlocked("OPSEC: API read header refused; use an approved header name and value.")
+            if all(value == "GET" for flag, value in found if flag in {"--method", "-X"}) and REST_READ_PATH.fullmatch(
+                positional[0].removeprefix("https://api.github.com/").lstrip("/")
+            ):
                 return FrozenCommand(list(argv), "unknown", False)
             raise PublishBlocked("OPSEC: API read refused; use python -m scripts.publish read <name>.")
         found, positional = parse(argv[1:], PRIVATE_API)
@@ -463,19 +497,37 @@ def admit(argv, *, cwd, environment, reader=subprocess.run):
         start += 2
     key = tuple(argv[start : start + 2])
     if key == ("pr", "checkout"):
-        parse(globals_ + argv[start + 2:], (1, 1, {**REPO, "--branch": True, "-b": True, "--detach": False, "--force": False}))
+        parse(
+            globals_ + argv[start + 2 :],
+            (1, 1, {**REPO, "--branch": True, "-b": True, "--detach": False, "--force": False}),
+        )
         import unicodedata
         from pathlib import Path
+
         supplied = Path(cwd).absolute()
         resolved = supplied.resolve()
-        if (supplied != resolved or any(unicodedata.category(c).startswith("C") for c in str(supplied))
-                or not re.search(r"/\.worktrees/dispatch/[^/]+/[^/]+(?:/|$)", str(resolved))):
+        if (
+            supplied != resolved
+            or any(unicodedata.category(c).startswith("C") for c in str(supplied))
+            or not re.search(r"/\.worktrees/dispatch/[^/]+/[^/]+(?:/|$)", str(resolved))
+        ):
             raise PublishBlocked("OPSEC: pr checkout requires a dispatch worktree.")
         try:
-            root = reader(["git", "rev-parse", "--show-toplevel"], cwd=cwd, env=environment,
-                          text=True, capture_output=True, check=False, timeout=5)
+            root = reader(
+                ["git", "rev-parse", "--show-toplevel"],
+                cwd=cwd,
+                env=environment,
+                text=True,
+                capture_output=True,
+                check=False,
+                timeout=5,
+            )
             top = Path(root.stdout.strip()).resolve()
-            if root.returncode or not re.search(r"/\.worktrees/dispatch/[^/]+/[^/]+$", str(top)) or not resolved.is_relative_to(top):
+            if (
+                root.returncode
+                or not re.search(r"/\.worktrees/dispatch/[^/]+/[^/]+$", str(top))
+                or not resolved.is_relative_to(top)
+            ):
                 raise ValueError
         except Exception:
             raise PublishBlocked("OPSEC: pr checkout requires a verified dispatch repository.") from None
