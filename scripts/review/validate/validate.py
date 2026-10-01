@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 import unicodedata
 from dataclasses import dataclass, field
@@ -77,6 +78,61 @@ def fold_quote(text: str) -> str:
 
 def _load_yaml(path: Path) -> Any:
     return yaml.safe_load(path.read_bytes())
+
+
+class ReviewReturnError(ValueError):
+    """A saved return has no unambiguous YAML mapping to validate or record."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
+
+
+def extract_review_yaml(data: bytes) -> bytes:
+    """Keep a bare YAML mapping's bytes, or select one complete yaml/yml fence.
+
+    Scan top-level fences with matching markers and lengths; fence-like text
+    inside another code block is literal. Never concatenate blocks or include
+    surrounding prose. The caller must bind the *original* bytes to the task.
+    """
+    try:
+        if isinstance(yaml.safe_load(data), dict):
+            return data
+    except (yaml.YAMLError, UnicodeError):
+        pass
+
+    blocks: list[bytes] = []
+    marker = b""
+    selected = False
+    body: list[bytes] = []
+    count = 0
+    for line in data.splitlines(keepends=True):
+        match = re.fullmatch(rb" {0,3}(`{3,}|~{3,})([^\r\n]*)", line.rstrip(b"\r\n"))
+        if marker:
+            if match and match[1][:1] == marker[:1] and len(match[1]) >= len(marker) and not match[2].strip(b" \t"):
+                if selected:
+                    blocks.append(b"".join(body))
+                marker, selected, body = b"", False, []
+            elif selected:
+                body.append(line)
+        elif match and not (match[1].startswith(b"`") and b"`" in match[2]):
+            marker = match[1]
+            selected = match[2].strip(b" \t") in (b"yaml", b"yml")
+            count += int(selected)
+
+    if count == 0:
+        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_MISSING, "return is not a bare mapping and has no yaml/yml fence")
+    if count > 1:
+        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_MULTIPLE, "return contains more than one yaml/yml fence")
+    if len(blocks) != 1:
+        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not closed")
+    try:
+        loaded = yaml.safe_load(blocks[0])
+    except (yaml.YAMLError, UnicodeError) as exc:
+        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not one YAML mapping") from exc
+    if not isinstance(loaded, dict):
+        raise ReviewReturnError(codes.REVIEW_YAML_FENCE_NOT_MAPPING, "the yaml/yml fence is not one YAML mapping")
+    return blocks[0]
 
 
 def _taxonomy() -> dict[str, Any]:
@@ -198,8 +254,8 @@ def _matching_units(units: list[dict[str, Any]], location: dict[str, Any]) -> li
 def _peek_kind(review_path: Path) -> str | None:
     """The review's kind, read early because it decides which document the review is checked against."""
     try:
-        review = _load_yaml(Path(review_path))
-    except (OSError, yaml.YAMLError):
+        review = yaml.safe_load(extract_review_yaml(Path(review_path).read_bytes()))
+    except (OSError, yaml.YAMLError, ReviewReturnError):
         return None
     return review.get("kind") if isinstance(review, dict) and isinstance(review.get("kind"), str) else None
 
@@ -725,7 +781,10 @@ def validate_review(
             check.add(codes.LESSON_UNREADABLE, f"{document}: {exc}")
 
     try:
-        review = _load_yaml(review_path)
+        review = yaml.safe_load(extract_review_yaml(review_path.read_bytes()))
+    except ReviewReturnError as exc:
+        check.add(exc.code, str(exc))
+        return ValidationResult(False, None, check.rejections)
     except (OSError, yaml.YAMLError) as exc:
         check.add(codes.REVIEW_UNREADABLE, f"{review_path}: {type(exc).__name__}")
         return ValidationResult(False, None, check.rejections)
