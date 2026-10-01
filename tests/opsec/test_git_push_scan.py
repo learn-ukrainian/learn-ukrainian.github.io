@@ -25,6 +25,8 @@ def _env(**extra):
     env.update(
         PATH=os.pathsep.join([str(Path(REAL_GIT).parent), os.defpath]),
         AGENT_REAL_GIT=REAL_GIT,
+        # Shim pushes build the real public-repository client; it must fail closed, never reach GitHub.
+        AGENT_REAL_GH=os.devnull,
         AGENT_NO_MERGE="1",
         GIT_CONFIG_GLOBAL=os.devnull,
         GIT_CONFIG_NOSYSTEM="1",
@@ -345,7 +347,9 @@ def test_private_remote_is_not_scanned(push_sandbox, monkeypatch):
     monkeypatch.setattr(os, "environ", _env())
     executed = []
     status = git_push.main(
-        [REAL_GIT, "push", "origin", "HEAD:refs/heads/feature"], execute=lambda path, argv, env: executed.append(argv)
+        [REAL_GIT, "push", "origin", "HEAD:refs/heads/feature"],
+        execute=lambda path, argv, env: executed.append(argv),
+        public_repository=FakePublic(None, fail=True),
     )
     assert status == 0 and executed == [[REAL_GIT, "push", "origin", "HEAD:refs/heads/feature"]]
     assert "refs/heads/feature" not in push_sandbox.remote_refs() and sha
@@ -475,12 +479,15 @@ def test_cached_clean_commits_are_skipped_and_a_new_hit_is_refused(push_sandbox)
     push_sandbox.commit("clean one")
     first = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert first.returncode == 0, first.stderr
-    assert "OPSEC: push scan: 2 commit message(s) scanned, 0 skipped as already scanned clean here." in first.stderr
+    assert (
+        "OPSEC: push scan: 2 commit message(s) scanned, 0 skipped as already scanned clean here, 0 hit(s)"
+        in first.stderr
+    )
     before = push_sandbox.remote_refs()
     sha = push_sandbox.commit("subject " + TOKEN)
     result = push_sandbox.push("push", "origin", "HEAD:refs/heads/feature")
     assert_blocked(result, push_sandbox, before, f"commit[{sha[:12]}].message")
-    assert "1 commit message(s) scanned, 2 skipped as already scanned clean here." in result.stderr
+    assert "1 commit message(s) scanned, 2 skipped as already scanned clean here, 0 hit(s)" in result.stderr
 
 
 def test_shallow_repository_is_refused(push_sandbox, tmp_path):
@@ -570,3 +577,281 @@ def test_concurrent_records_append_without_corruption(tmp_path):
     assert [writer.wait(timeout=60) for writer in writers] == [0] * 6
     ids, unusable = git_push.CleanCache(tmp_path, "f" * 64).read()
     assert not unusable and len(ids) == 6 * 25 * 8
+
+
+# --- Round 4: hits already public in the canonical repository are excused ---
+
+PUBLIC_CACHE = Path(".git/lu-push-scan-public")
+
+
+class FakePublic:
+    """The canonical public repository client: a default-branch head and the commits it contains."""
+
+    def __init__(self, head, public=(), *, fail=False):
+        self.head, self.public, self.fail = head, set(public), fail
+        self.calls = 0
+        self.asked: list[str] = []
+
+    def default_head(self):
+        if self.fail:
+            pytest.fail("the public repository must not be asked")
+        self.calls += 1
+        return self.head
+
+    def contains(self, head, sha):
+        self.calls += 1
+        self.asked.append(sha)
+        return sha in self.public
+
+
+def run_main(sandbox, monkeypatch, client, *args, **extra):
+    """git_push.main in process with the synthetic matcher and the given public-repository client."""
+    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    monkeypatch.setattr(gate, "private_tooling", lambda: sandbox.tooling)
+    monkeypatch.setattr(gate, "primary_root", lambda cwd=None: sandbox.root)
+    monkeypatch.chdir(sandbox.work)
+    monkeypatch.setattr(os, "environ", _env(**extra))
+    executed = []
+    status = git_push.main(
+        [REAL_GIT, *(args or ("push", "origin", "HEAD:refs/heads/feature"))],
+        execute=lambda path, argv, env: executed.append(argv),
+        public_repository=client,
+    )
+    return status, executed
+
+
+def test_hit_already_in_public_main_is_excused_and_the_push_proceeds(push_sandbox, monkeypatch, capfd):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    public_head = push_sandbox.commit("published clean")
+    push_sandbox.commit("new clean work")
+    client = FakePublic(public_head)
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    err = capfd.readouterr().err
+    assert status == 0 and executed, err
+    assert "1 hit(s) excused as already public (1 public repository call(s))" in err
+    assert "OPSEC blocked" not in err and TOKEN not in err and hit[:12] not in err
+
+
+def test_hit_excused_by_compare_when_the_public_head_is_not_local(push_sandbox, monkeypatch, capfd):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    push_sandbox.commit("new clean work")
+    client = FakePublic("e" * 40, public={hit})
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    assert status == 0 and executed, capfd.readouterr().err
+    assert client.asked == [hit] and client.calls == 2
+
+
+@pytest.mark.parametrize("head_is_local", [True, False])
+def test_hit_not_in_public_main_is_refused(push_sandbox, monkeypatch, capfd, head_is_local):
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    hit = push_sandbox.commit("subject " + TOKEN)
+    client = FakePublic(base if head_is_local else "e" * 40)
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    err = capfd.readouterr().err
+    assert status == 2 and not executed
+    assert f"OPSEC blocked: rule=synthetic-rule class=1 field=commit[{hit[:12]}].message line=1" in err
+    assert "0 hit(s) excused" in err and TOKEN not in err
+
+
+def test_excused_hits_are_cached_as_public_and_never_as_clean(push_sandbox, monkeypatch, capfd):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(hit))
+    assert status == 0, capfd.readouterr().err
+    clean = (push_sandbox.work / CACHE).read_text().splitlines()
+    public = (push_sandbox.work / PUBLIC_CACHE).read_text().splitlines()
+    fingerprint = gate.matcher_fingerprint(push_sandbox.tooling)
+    assert public == [f"lu-push-scan-public 1 {fingerprint}", hit]
+    assert hit not in clean and len(clean) == 2  # Header and the clean base commit.
+    second = FakePublic(None, fail=True)
+    status, executed = run_main(push_sandbox, monkeypatch, second, "push", "origin", "HEAD:refs/heads/other")
+    err = capfd.readouterr().err
+    assert status == 0 and executed and second.calls == 0, err
+    assert "0 commit message(s) scanned, 1 skipped as already scanned clean here, 1 hit(s) excused" in err
+    assert "(0 public repository call(s))" in err
+
+
+def test_a_lost_clean_cache_is_rebuilt_beside_the_public_cache(push_sandbox, monkeypatch, capfd):
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    assert run_main(push_sandbox, monkeypatch, FakePublic(hit))[0] == 0, capfd.readouterr().err
+    (push_sandbox.work / CACHE).unlink()
+    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(None, fail=True))
+    assert status == 0, capfd.readouterr().err
+    assert (push_sandbox.work / CACHE).read_text().splitlines()[1:] == [base]
+
+
+@pytest.mark.parametrize("head_is_local", [True, False])
+def test_a_no_answer_is_never_cached(push_sandbox, monkeypatch, capfd, head_is_local):
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    push_sandbox.commit("subject " + TOKEN)
+    status, _ = run_main(push_sandbox, monkeypatch, FakePublic(base if head_is_local else "e" * 40))
+    assert status == 2 and not (push_sandbox.work / PUBLIC_CACHE).exists()
+    again = FakePublic(base if head_is_local else "e" * 40)
+    status, _ = run_main(push_sandbox, monkeypatch, again)
+    assert status == 2 and again.calls >= 1, capfd.readouterr().err
+
+
+@pytest.mark.parametrize("damage", ["garbage", "foreign", "unreadable"])
+def test_unusable_public_cache_excuses_nothing_by_itself(push_sandbox, monkeypatch, capfd, damage):
+    if damage == "unreadable" and os.geteuid() == 0:
+        pytest.skip("root reads mode-000 files")
+    hit = push_sandbox.commit("subject " + TOKEN)
+    header = f"lu-push-scan-public 1 {gate.matcher_fingerprint(push_sandbox.tooling)}\n"
+    path = push_sandbox.work / PUBLIC_CACHE
+    path.write_text(
+        {"garbage": f"{header}{hit}\nnot-a-commit\n", "foreign": f"lu-push-scan-public 1 {'f' * 64}\n{hit}\n"}.get(
+            damage, f"{header}{hit}\n"
+        )
+    )
+    if damage == "unreadable":
+        path.chmod(0)
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic("e" * 40))
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err
+    assert "OPSEC: push scan public cache unusable; hit commits rechecked." in err
+
+
+def test_forged_tracking_ref_and_insteadof_cannot_excuse_a_hit(push_sandbox, monkeypatch, capfd):
+    """Only the canonical repository client answers; local refs and URL rewriting are not consulted."""
+    base = _git(push_sandbox.work, "rev-parse", "HEAD")
+    hit = push_sandbox.commit("subject " + TOKEN)
+    for ref in ("refs/remotes/origin/main", "refs/remotes/origin/HEAD", "refs/heads/main"):
+        _git(push_sandbox.work, "update-ref", ref, hit)
+    # origin names the canonical repository; insteadOf serves it from the local remote.
+    _git(push_sandbox.work, "remote", "set-url", "origin", "https://github.com/unit/public.git")
+    _git(push_sandbox.work, "config", f"url.{push_sandbox.remote}.insteadOf", "https://github.com/unit/public.git")
+    status, executed = run_main(push_sandbox, monkeypatch, FakePublic(base))
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in capfd.readouterr().err
+
+
+@pytest.mark.parametrize("head_is_local", [True, False])
+def test_many_published_hits_and_one_new_hit_refuse_only_the_new_one(push_sandbox, monkeypatch, capfd, head_is_local):
+    published = [push_sandbox.commit(f"published {number} " + TOKEN) for number in range(30)]
+    new = push_sandbox.commit("new subject " + TOKEN)
+    client = FakePublic(published[-1] if head_is_local else "e" * 40, public=published)
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    err = capfd.readouterr().err
+    assert status == 2 and not executed
+    assert err.count("rule=synthetic-rule") == 1 and f"field=commit[{new[:12]}].message" in err
+    assert "30 hit(s) excused as already public" in err
+    # A remote head costs one default-head read, a no for the new hit and one yes covering all 30.
+    assert client.calls == (1 if head_is_local else 3), err
+    assert (push_sandbox.work / PUBLIC_CACHE).read_text().splitlines()[1:] == sorted(published)
+
+
+def test_compare_calls_are_bounded(push_sandbox, monkeypatch, capfd):
+    hits = [push_sandbox.commit(f"unpublished {number} " + TOKEN) for number in range(git_push.COMPARE_LIMIT + 5)]
+    client = FakePublic("e" * 40)
+    status, _ = run_main(push_sandbox, monkeypatch, client)
+    assert status == 2 and client.calls == 1 + git_push.COMPARE_LIMIT
+    assert capfd.readouterr().err.count("rule=synthetic-rule") == len(hits)
+
+
+def compare_runner(compare, *, head="e" * 40, calls=None):
+    """A gh transport answering the typed default-head and compare reads."""
+
+    def run(argv, **kwargs):
+        if calls is not None:
+            calls.append((argv, kwargs))
+        if argv[:5] == ["gh", "api", "--method", "POST", "graphql"]:
+            body = {"data": {"repository": {"defaultBranchRef": {"target": {"oid": head}}}}}
+            return subprocess.CompletedProcess(argv, 0, json.dumps(body), "")
+        return compare(argv)
+
+    return run
+
+
+def _reply(status, body):
+    return lambda argv: subprocess.CompletedProcess(
+        argv, status, body if isinstance(body, str) else json.dumps(body), ""
+    )
+
+
+def _timeout(argv):
+    raise subprocess.TimeoutExpired(argv, git_push.API_TIMEOUT)
+
+
+@pytest.mark.parametrize(
+    "compare",
+    [
+        pytest.param(_reply(1, ""), id="api-failure"),
+        pytest.param(_timeout, id="timeout"),
+        pytest.param(_reply(1, {"message": "Not Found", "status": "404"}), id="unknown-commit"),
+        pytest.param(_reply(1, {"message": "API rate limit exceeded", "status": "403"}), id="rate-limit"),
+        pytest.param(_reply(0, '{"status": "behind", "merge_base_co'), id="truncated"),
+        pytest.param(_reply(0, {"status": "behind"}), id="no-merge-base"),
+        pytest.param(_reply(0, {"status": "behind", "merge_base_commit": {"sha": "d" * 40}}), id="other-merge-base"),
+        pytest.param(_reply(0, {"status": "maybe", "merge_base_commit": {"sha": "d" * 40}}), id="unknown-status"),
+        pytest.param(_reply(0, ["behind"]), id="malformed"),
+    ],
+)
+def test_every_failed_or_unclear_answer_refuses(push_sandbox, monkeypatch, capfd, compare):
+    hit = push_sandbox.commit("subject " + TOKEN)
+    calls = []
+    client = git_push.CanonicalPublicRepository(
+        "github.com/unit/public", _env(), runner=compare_runner(compare, calls=calls)
+    )
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    err = capfd.readouterr().err
+    assert status == 2 and not executed and f"field=commit[{hit[:12]}].message" in err
+    assert not (push_sandbox.work / PUBLIC_CACHE).exists()
+    assert [argv[4] for argv, _ in calls[1:]] == [f"repos/unit/public/compare/{'e' * 40}...{hit}?per_page=100"]
+    assert all(kwargs["timeout"] == git_push.API_TIMEOUT for _, kwargs in calls)
+
+
+@pytest.mark.parametrize(
+    "head_reply",
+    [
+        _reply(1, ""),
+        _timeout,
+        _reply(0, {"data": {"repository": {"defaultBranchRef": None}}}),
+        _reply(0, {"data": {"repository": {"defaultBranchRef": {"target": {"oid": "main"}}}}}),
+    ],
+)
+def test_unreadable_public_head_refuses(push_sandbox, monkeypatch, capfd, head_reply):
+    hit = push_sandbox.commit("subject " + TOKEN)
+    calls = []
+
+    def run(argv, **kwargs):
+        calls.append(argv)
+        return head_reply(argv)
+
+    client = git_push.CanonicalPublicRepository("github.com/unit/public", _env(), runner=run)
+    status, _ = run_main(push_sandbox, monkeypatch, client)
+    assert status == 2 and f"field=commit[{hit[:12]}].message" in capfd.readouterr().err
+    assert len(calls) == 1 and calls[0][:5] == [
+        "gh",
+        "api",
+        "--method",
+        "POST",
+        "graphql",
+    ]  # No compare without a head.
+
+
+def test_real_client_excuses_on_a_well_formed_behind_answer(push_sandbox, monkeypatch, capfd):
+    hit = push_sandbox.commit("published subject " + TOKEN)
+    calls = []
+    reply = _reply(0, {"status": "behind", "merge_base_commit": {"sha": hit}})
+    client = git_push.CanonicalPublicRepository(
+        "github.com/unit/public", _env(GH_REPO="unit/forged"), runner=compare_runner(reply, calls=calls)
+    )
+    status, executed = run_main(push_sandbox, monkeypatch, client)
+    assert status == 0 and executed, capfd.readouterr().err
+    assert calls[1][0][4] == f"repos/unit/public/compare/{'e' * 40}...{hit}?per_page=100"
+    assert "LU_OPSEC_OVERRIDE" not in calls[1][1]["env"]
+
+
+def test_the_default_client_names_the_catalogue_public_repository(monkeypatch):
+    """Never the push URL, GH_REPO or local git configuration."""
+    monkeypatch.setattr(gate, "catalog", lambda: CATALOG)
+    client = git_push.CanonicalPublicRepository.from_catalog({"GH_REPO": "unit/forged", "LU_OPSEC_OVERRIDE": "x"})
+    assert client.repo == "github.com/unit/public" and "LU_OPSEC_OVERRIDE" not in client.environment
+    monkeypatch.setattr(gate, "catalog", lambda: {"private": CATALOG["infra-private"]})
+    assert git_push.CanonicalPublicRepository.from_catalog({}) is None
+
+
+def test_ref_name_hits_are_never_excused(push_sandbox, monkeypatch, capfd):
+    status, _ = run_main(
+        push_sandbox, monkeypatch, FakePublic(None, fail=True), "push", "origin", f"HEAD:refs/heads/x-{TOKEN}"
+    )
+    assert status == 2 and "field=branch[1].name" in capfd.readouterr().err

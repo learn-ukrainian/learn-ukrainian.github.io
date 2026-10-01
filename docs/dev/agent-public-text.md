@@ -90,10 +90,10 @@ Specific API reads also have a shell interface,
 `gh pr checkout <N>` is permitted only inside a real dispatch worktree.
 Named `read()` operations include: identity, issue, comments,
 labels, timeline, reviews, commits, comment, checks, jobs, issues, runs,
-deployments and deployment-statuses. GraphQL helpers build their own read-only
+deployments, deployment-statuses and compare (two full commit ids). GraphQL helpers build their own read-only
 documents for issue-parent, membership, subissues, subissues-next,
 subissue-batch, membership-head, queue-snapshot, queue-status, budget,
-issue-scope, issue-states, merge-facts and pr-bases. Caller values are variables or JSON-escaped
+issue-scope, issue-states, merge-facts, pr-bases and default-head. Caller values are variables or JSON-escaped
 selectors, never documents or endpoints.
 
 A raw write is admitted only under a known write grammar to an allowlisted
@@ -125,7 +125,7 @@ posting searches at the exact head.
 | `scripts/lexicon/publish_manifest.py`, `scripts/lexicon/admit_fmu_boosters.py` | Artifact upload |
 | `agents_extensions/shared/hooks/guard-public-github-text.py` | Routing only |
 | `scripts/agent_runtime/shims/gh` | Closed raw admission; public writes refused |
-| `scripts/agent_runtime/shims/git` push, via `scripts/opsec/git_push.py` | New commit messages, branch and tag names, annotated tag messages |
+| `scripts/agent_runtime/shims/git` push, via `scripts/opsec/git_push.py` | New commit messages (hits already on the public default branch excused), branch and tag names, annotated tag messages |
 | `scripts/ci/data_tier.py`, `scripts/ci/flake_ledger.py`, `scripts/ci/comment_issue_task_quality.py` | Separate bot/CI workflows, outside the cooperative-agent inventory |
 | Printed templates and `scripts/wt.sh` | No outbound publication; executed public writes require publisher verbs |
 
@@ -165,7 +165,7 @@ exempt, these are scanned through `check_texts`:
 - every named branch, tag or other ref name, except deletions;
 - annotated tag messages;
 - the message of every commit reachable from the named tips, except commits
-  this machine already scanned clean (below).
+  this machine already scanned clean or already found public (below).
 
 Nothing the destination reports counts as evidence of what it already has:
 no `ls-remote`, no tracking refs, and no old tips or up-to-date or rejected
@@ -189,6 +189,36 @@ many commit messages it scanned and how many it skipped as cached. The cache is
 as trusted as the git directory itself; a hand-edited entry skips that
 commit, as an edited hook could.
 
+**Hits that are already public.** A commit message with a blocking finding
+is excused only when the catalogue's canonical public repository (the
+`public-monorepo` row of `scripts/config/fleet_repos.yaml`) already holds that
+commit on its default branch. The question goes to that repository through
+the typed publisher reads, never to the push URL, a tracking ref or local git
+configuration. One `default-head` read returns the commit the default branch
+names now. If that commit is present locally, local ancestry decides every hit
+at once: commit ids name their parents, and replacement objects and grafts are
+off. Otherwise each hit, newest first, is checked with GitHub's "Compare two
+commits" (`compare` read, `{public head}...{hit}`): only status `behind` or
+`identical` with `merge_base_commit` equal to the hit counts, and that hit's
+ancestors are excused with it. A 404, `ahead` or `diverged` is a no for that
+hit. Any other failure, rate limit, timeout (10 seconds per call), or truncated
+or malformed body stops the questions, and every unanswered hit is refused.
+One push asks at most 20 compare questions. Ref names and tag messages are
+never excused. Refusals are unchanged: rule, class, field and line of each
+unexcused hit, with the same single-use logged override. Excused messages are
+never printed. With nothing cached, this repository's 385 published hits took
+one call when the public head was present locally and two when it was not.
+
+**Public-commit cache.** `<git-common-dir>/lu-push-scan-public` records the
+excused commit ids. It uses the clean cache's format, matcher fingerprint
+header, lock and fail-closed reading: an unusable file holds nothing, a
+one-line note says so, and every hit is asked again. Only yes answers are
+recorded. A refused, unanswered or overridden hit is never recorded, and an
+excused commit is never recorded as clean. Commits in this cache are skipped
+without scanning, as their text is already public, so a later push asks
+nothing. The summary line counts the scanned, cached-clean and excused
+commits and the public-repository calls.
+
 **What the scan reads.** Every enumeration runs with replacement objects
 (`--no-replace-objects`, `GIT_NO_REPLACE_OBJECTS=1`,
 `-c core.useReplaceRefs=false`) and grafts (`GIT_GRAFT_FILE` set to the null
@@ -201,7 +231,8 @@ history agree, and grafts are deprecated in favour of `git replace`.
 **What the scan writes.** The scan's own git calls drop `GIT_TRACE*` and
 `GIT_CURL_VERBOSE`, set `GIT_TRACE2`, `GIT_TRACE2_EVENT` and `GIT_TRACE2_PERF`
 to `0` (which outranks `trace2.*` targets in configuration) and set
-`GIT_TERMINAL_PROMPT=0`. The scan never passes a URL to git and never reads
+`GIT_TERMINAL_PROMPT=0` and `GIT_NO_LAZY_FETCH=1` (no partial-clone object
+fetches). The scan never passes a URL to git and never reads
 one with userinfo. Caller tracing still applies to the real push the caller
 asked for.
 
@@ -214,9 +245,11 @@ line, or only the failing phase and exit code; git's own output from these
 steps is never replayed. The same single-use, logged `LU_OPSEC_OVERRIDE`
 applies; the real git does not receive it. File contents are not scanned.
 
-Cost on this repository (9,482 commits reachable from a branch tip): the first
-push in a clone scans every message in 11 to 17 seconds; a later push with a
-warm cache takes about 0.2 to 0.3 seconds plus the time to scan new commits.
+Cost on this repository (9,485 commits reachable from a branch tip, 385 of
+them published hits): the first push in a clone scans every message and asks
+the public repository once or twice, in 12 to 17 seconds; a later push with
+warm caches takes about 0.2 to 0.3 seconds and no calls, plus the time to scan
+new commits.
 
 Known gaps: git aliases that expand to push, absolute git paths, `git-push`
 called from the exec path, submodule pushes from `--recurse-submodules`,
@@ -227,9 +260,9 @@ rescanned. For matching refspecs (`:` or `push.default=matching`) the set of
 refs comes from the preview's negotiation with the destination, so a
 destination that gains a matching branch between the preview and the push can
 receive that branch unscanned; explicit refspecs, `--all`, `--tags` and
-`--mirror` name their refs locally. Published history that already contains
-blocking findings refuses every push until it is resolved, because those
-commits are never cached. The shim's behaviour without its guard interpreter
+`--mirror` name their refs locally. A hit can be excused only while GitHub is
+reachable or after it was cached. The answer is as trustworthy as the `gh`
+executable and its configuration, which every publisher already relies on. The shim's behaviour without its guard interpreter
 for non-push commands is tracked in #9448.
 
 Historical dispatch briefs, session records and autopsies retain their original

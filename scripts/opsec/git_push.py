@@ -5,8 +5,11 @@ which refs the push names and where it sends them. For every public
 destination the ref names, annotated tag messages and the messages of every
 commit reachable from the pushed tips are scanned through check_texts, except
 commits that this machine's earlier push scans found clean (CleanCache, kept
-in the repository's common git directory). Nothing the destination reports is
-evidence of what it already has. Enumeration ignores replacement objects and
+in the repository's common git directory). A commit whose message has a
+blocking finding is excused only when the catalogue's canonical public
+repository reports it reachable from its default branch (already public);
+those answers are cached as well, failures and unknown commits are not.
+Nothing the destination reports is evidence of what it already has. Enumeration ignores replacement objects and
 grafts, a grafted or shallow repository is refused, and the scan's own git
 calls run without tracing or prompts. File contents are not scanned. Private
 remotes are exempt exactly as is_private decides. The real push runs only
@@ -18,6 +21,7 @@ from __future__ import annotations
 
 import contextlib
 import fcntl
+import json
 import os
 import re
 import stat
@@ -38,8 +42,11 @@ PUSH_WITH_VALUE = {"-o", "--push-option", "--repo", "--receive-pack", "--exec", 
 # is not evidence of what the real push will send.
 KNOWN_FLAGS = {" ", "+", "*", "=", "!", "-"}
 CACHE_NAME = "lu-push-scan-clean"
-CACHE_VERSION = "lu-push-scan-clean 1"
+PUBLIC_CACHE_NAME = "lu-push-scan-public"
 COMMIT_ID = re.compile(r"[0-9a-f]{40}|[0-9a-f]{64}")
+# Bounds on asking the canonical public repository during one push.
+API_TIMEOUT = 10
+COMPARE_LIMIT = 20
 
 
 def split_command(argv: list[str]) -> tuple[list[str], str | None, list[str]]:
@@ -124,8 +131,8 @@ def destination(url: str) -> str:
 def scan_environment(environment: dict[str, str]) -> dict[str, str]:
     """The caller's environment for the scan's own git calls.
 
-    No override, tracing or credential prompts; replacement objects and grafts
-    disabled. A trace2 target of "0" in the environment outranks one set in
+    No override, tracing, credential prompts or partial-clone object fetches;
+    replacement objects and grafts disabled. A trace2 target of "0" in the environment outranks one set in
     system or global configuration.
     """
     scrubbed = {
@@ -138,6 +145,7 @@ def scan_environment(environment: dict[str, str]) -> dict[str, str]:
         GIT_TRACE2_EVENT="0",
         GIT_TRACE2_PERF="0",
         GIT_TERMINAL_PROMPT="0",
+        GIT_NO_LAZY_FETCH="1",
         GIT_NO_REPLACE_OBJECTS="1",
         GIT_GRAFT_FILE=os.devnull,
     )
@@ -232,12 +240,15 @@ class CleanCache:
     every reachable commit is scanned, and a scan that skipped nothing replaces
     the file. Writers hold an exclusive lock on a sidecar file and readers a
     shared one, so concurrent pushes never interleave or read half a line.
+    The same format under PUBLIC_CACHE_NAME holds hit commits the canonical
+    public repository reported already public.
     """
 
-    def __init__(self, directory: Path, fingerprint: str):
-        self.path = directory / CACHE_NAME
-        self.lock_path = directory / f"{CACHE_NAME}.lock"
-        self.header = f"{CACHE_VERSION} {fingerprint}"
+    def __init__(self, directory: Path, fingerprint: str, name: str = CACHE_NAME):
+        self.name = name
+        self.path = directory / name
+        self.lock_path = directory / f"{name}.lock"
+        self.header = f"{name} 1 {fingerprint}"
 
     @contextlib.contextmanager
     def _locked(self, mode: int):
@@ -291,7 +302,7 @@ class CleanCache:
                 return True
             if not full:
                 return False
-            temporary = self.path.with_name(f"{CACHE_NAME}.{os.getpid()}.tmp")
+            temporary = self.path.with_name(f"{self.name}.{os.getpid()}.tmp")
             try:
                 descriptor = os.open(
                     temporary, os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW | os.O_CLOEXEC, 0o600
@@ -304,6 +315,105 @@ class CleanCache:
             finally:
                 temporary.unlink(missing_ok=True)
             return True
+
+
+class CanonicalPublicRepository:
+    """What the catalogue's public repository holds, read through the typed publisher reads.
+
+    The repository comes from the catalogue, never from the push URL or local
+    git configuration, and every answer comes from the GitHub API. Only a
+    well-formed positive answer counts; a failure, timeout, rate limit,
+    unknown commit or malformed body never does.
+    """
+
+    def __init__(self, repo: str, environment: dict[str, str], *, runner=None, timeout: int = API_TIMEOUT):
+        self.repo = repo
+        self.environment = {key: value for key, value in environment.items() if key != "LU_OPSEC_OVERRIDE"}
+        self.runner = runner
+        self.timeout = timeout
+        self.calls = 0
+
+    @classmethod
+    def from_catalog(cls, environment: dict[str, str]) -> CanonicalPublicRepository | None:
+        rows = [row for row in gate.catalog().values() if row.get("role") == "public-monorepo"]
+        repo = gate.normalize_repository(rows[0]["github"]) if len(rows) == 1 else "unknown"
+        return None if repo == "unknown" else cls(repo, environment)
+
+    def _read(self, operation: str, **fields) -> tuple[int, object]:
+        from scripts.publish.github import read
+
+        self.calls += 1
+        result = read(
+            operation,
+            repo=self.repo,
+            runner=self.runner,
+            env=dict(self.environment),
+            capture_output=True,
+            text=True,
+            timeout=self.timeout,
+            **fields,
+        )
+        return result.returncode, json.loads(result.stdout)
+
+    def default_head(self) -> str | None:
+        """The commit the default branch names now, or None."""
+        try:
+            status, body = self._read("default-head")
+            oid = body["data"]["repository"]["defaultBranchRef"]["target"]["oid"]
+        except Exception:
+            return None
+        return oid if status == 0 and isinstance(oid, str) and COMMIT_ID.fullmatch(oid) else None
+
+    def contains(self, head: str, sha: str) -> bool | None:
+        """True if sha is head or its ancestor, False if not, None without an answer.
+
+        GET /repos/{owner}/{repo}/compare/{base}...{head} (REST "Compare two
+        commits") reports head relative to base: "behind" or "identical" with
+        merge_base_commit equal to head means head is an ancestor of base. The
+        commits and files lists are paginated and capped, so they are never read.
+        An unknown commit is a 404 and a definite no.
+        """
+        try:
+            status, body = self._read("compare", base=head, head=sha)
+        except Exception:
+            return None
+        if not isinstance(body, dict):
+            return None
+        if status:
+            return False if body.get("status") == "404" and body.get("message") == "Not Found" else None
+        merge_base = body.get("merge_base_commit")
+        if body.get("status") in {"behind", "identical"}:
+            return True if isinstance(merge_base, dict) and merge_base.get("sha") == sha else None
+        return False if body.get("status") in {"ahead", "diverged"} else None
+
+
+def already_public(repository: Repository, hits: list[str], client) -> set[str]:
+    """Hit commits reachable from the canonical public default branch; anything uncertain is excluded.
+
+    hits are newest first. Commit ids name their parents, so once the public
+    head or one public hit is known, plain local ancestry decides the rest.
+    """
+    found: set[str] = set()
+    head = client.default_head() if hits and client is not None else None
+    if head is not None and repository.object(f"{head}^{{commit}}") == head:
+        stdin = "".join(f"{sha}\n" for sha in hits) + f"^{head}\n"
+        outside = set(repository.text("rev-list", "--stdin", stdin=stdin).split())
+        found = {sha for sha in hits if sha not in outside}
+    elif head is not None:
+        compares = 0
+        for sha in hits:
+            if sha in found:
+                continue
+            if compares == COMPARE_LIMIT:
+                break
+            compares += 1
+            answer = client.contains(head, sha)
+            if answer is None:
+                break  # No answer (outage, rate limit, timeout): stop asking; the rest stay refused.
+            if answer:
+                ancestors = set(repository.text("rev-list", sha).split())
+                found |= {other for other in hits if other in ancestors}
+    return found
 
 
 def _short_ref(target: str) -> tuple[str, str]:
@@ -341,8 +451,12 @@ def published_refs(repository: Repository, updates: list[tuple]) -> tuple[list[s
     return texts, names, tips
 
 
-def scan_push(real_git: str, argv: list[str], environment: dict[str, str]) -> None:
-    """Raise PublishBlocked unless every public text of this push is clean or overridden."""
+def scan_push(real_git: str, argv: list[str], environment: dict[str, str], *, public_repository=None) -> None:
+    """Raise PublishBlocked unless every public text of this push is clean, already public or overridden.
+
+    public_repository answers which hit commits the canonical public repository
+    already has; by default it is built from the catalogue when first needed.
+    """
     global_options, command, rest = split_command(argv)
     if command != "push":
         return
@@ -369,23 +483,26 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str]) -> No
         names += labels
         tips += pushed
     commits: list[str] = []
+    excused: set[int] = set()
     if tips:
         common_dir, grafted, shallow = repository.layout()
         if grafted:
             raise gate.PublishBlocked("OPSEC: grafted history present; push refused.")
         if shallow:
             raise gate.PublishBlocked("OPSEC: shallow history cannot be scanned in full; push refused.")
-        cache = CleanCache(common_dir, gate.matcher_fingerprint())
+        fingerprint = gate.matcher_fingerprint()
+        cache = CleanCache(common_dir, fingerprint)
         cached, unusable = cache.read()
         if unusable:
             print("OPSEC: push scan cache unusable; every reachable commit scanned.", file=sys.stderr)
+        public_cache = CleanCache(common_dir, fingerprint, PUBLIC_CACHE_NAME)
+        known_public, unusable = public_cache.read()
+        if unusable:
+            print("OPSEC: push scan public cache unusable; hit commits rechecked.", file=sys.stderr)
         reachable = repository.text("rev-list", "--stdin", stdin="".join(f"{sha}\n" for sha in tips)).split()
-        pending = [sha for sha in reachable if sha not in cached]
-        print(
-            f"OPSEC: push scan: {len(pending)} commit message(s) scanned, "
-            f"{len(reachable) - len(pending)} skipped as already scanned clean here.",
-            file=sys.stderr,
-        )
+        # Messages already public need no scan; the two caches never share an id by construction.
+        skipped_public = sum(sha in known_public for sha in reachable)
+        pending = [sha for sha in reachable if sha not in cached and sha not in known_public]
         if pending:
             output = repository.text(
                 "rev-list",
@@ -400,23 +517,53 @@ def scan_push(real_git: str, argv: list[str], environment: dict[str, str]) -> No
                 commits.append(sha)
                 texts.append(message)
                 names.append(f"commit[{sha[:12]}].message")
+    first = len(texts) - len(commits)
+
+    def excuse(indices: set[int]) -> set[int]:
+        """Indices of hit commit messages the canonical public repository already has."""
+        hits = {commits[index - first]: index for index in sorted(indices) if index >= first}
+        if not hits:
+            return set()
+        nonlocal public_repository
+        if public_repository is None:
+            public_repository = CanonicalPublicRepository.from_catalog(environment)
+        found = already_public(repository, list(hits), public_repository)
+        if found:
+            try:
+                public_cache.record(sorted(found), full=True)
+            except OSError:
+                print("OPSEC: push scan public cache not updated.", file=sys.stderr)
+        excused.update(hits[sha] for sha in found)
+        return set(excused)
+
     label = ",".join(dict.fromkeys(public)) if public else private[0]
-    blocked = gate.check_texts(label, texts, environment=environment, field_names=names)
+    try:
+        blocked = gate.check_texts(label, texts, environment=environment, field_names=names, excuse=excuse)
+    finally:
+        if tips:
+            calls = getattr(public_repository, "calls", 0)
+            print(
+                f"OPSEC: push scan: {len(pending)} commit message(s) scanned, "
+                f"{len(reachable) - len(pending) - skipped_public} skipped as already scanned clean here, "
+                f"{skipped_public + len(excused)} hit(s) excused as already public "
+                f"({calls} public repository call(s)).",
+                file=sys.stderr,
+            )
     if commits:
-        # Only commits whose own message had no blocking finding; an overridden hit is never cached.
-        first = len(texts) - len(commits)
-        clean = [sha for index, sha in enumerate(commits, start=first) if index not in blocked]
+        # Only commits whose own message had no blocking finding; excused and overridden hits are never cached.
+        clean = [sha for index, sha in enumerate(commits, start=first) if index not in blocked and index not in excused]
         try:
-            cache.record(clean, full=len(pending) == len(reachable))
+            # Commits skipped as public never belong in the clean cache, so they do not make the scan partial.
+            cache.record(clean, full=len(pending) == len(reachable) - skipped_public)
         except OSError:
             print("OPSEC: push scan cache not updated.", file=sys.stderr)
 
 
-def main(argv: list[str] | None = None, *, execute=os.execve) -> int:
+def main(argv: list[str] | None = None, *, execute=os.execve, public_repository=None) -> int:
     real_git, *args = sys.argv[1:] if argv is None else argv
     environment = dict(os.environ)
     try:
-        scan_push(real_git, args, environment)
+        scan_push(real_git, args, environment, public_repository=public_repository)
     except gate.PublishBlocked as exc:
         print(str(exc), file=sys.stderr)
         return 2

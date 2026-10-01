@@ -602,9 +602,11 @@ REST_READS = {
     "runs": ("repos/{repo}/actions/runs?event=merge_group&created={start}..{end}", {"start": "date", "end": "date"}),
     "deployments": ("repos/{repo}/deployments?sha={sha}", {"sha": "sha"}),
     "deployment-statuses": ("repos/{repo}/deployments/{number}/statuses", {"number": "number"}),
+    "compare": ("repos/{repo}/compare/{base}...{head}", {"base": "sha", "head": "sha"}),
 }
 GQL_READS = {
     "budget": "query { rateLimit { limit remaining used resetAt } }",
+    "default-head": "query($owner:String!,$name:String!){repository(owner:$owner,name:$name){defaultBranchRef{target{oid}}}}",
     "queue-status": '\nquery($owner: String!, $name: String!, $number: Int!, $branch: String!) {\n  repository(owner: $owner, name: $name) {\n    pullRequest(number: $number) {\n      number\n      title\n      state\n      merged\n      mergeable\n      mergeStateStatus\n      isInMergeQueue\n      isMergeQueueEnabled\n      headRefName\n      headRefOid\n      baseRefName\n      mergeQueueEntry {\n        id\n        position\n        state\n        enqueuedAt\n        estimatedTimeToMerge\n        jump\n        solo\n        headCommit {\n          oid\n          checkSuites(first: 20) {\n            nodes {\n              status\n              conclusion\n              createdAt\n              updatedAt\n              workflowRun {\n                id\n                url\n                event\n                createdAt\n                updatedAt\n                workflow {\n                  name\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n    mergeQueue(branch: $branch) {\n      url\n      nextEntryEstimatedTimeToMerge\n      entries(first: 50) {\n        totalCount\n        nodes {\n          position\n          state\n          enqueuedAt\n          estimatedTimeToMerge\n          pullRequest {\n            number\n          }\n        }\n      }\n    }\n  }\n}\n',
     "pr-bases": '\nquery($owner: String!, $name: String!, $cursor: String) {\n  repository(owner: $owner, name: $name) {\n    pullRequests(states: OPEN, first: 100, after: $cursor) {\n      totalCount\n      pageInfo { hasNextPage endCursor }\n      nodes { number baseRefOid }\n    }\n  }\n}\n',
     "issue-scope": "query($owner:String!,$name:String!,$number:Int!){repository(owner:$owner,name:$name){issue(number:$number){number body labels(first:100){nodes{name}} parent{number}}}}",
@@ -665,7 +667,7 @@ def read(
     else:
         variables = dict(zip(("owner", "name"), gh_repo.split("/", 1), strict=True)) if "/" in gh_repo else {}
         if operation in GQL_READS:
-            expected = (set() if operation == "budget" else {"cursor"} if operation == "pr-bases" else {"number", "branch"} if operation == "queue-status" else
+            expected = (set() if operation in {"budget", "default-head"} else {"cursor"} if operation == "pr-bases" else {"number", "branch"} if operation == "queue-status" else
                 {"number", "cursor"}
                 if operation == "subissues-next"
                 else {"number", "branch"}
