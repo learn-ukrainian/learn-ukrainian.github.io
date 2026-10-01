@@ -239,6 +239,94 @@ def _verify(synthetic_sources, synthetic_standard, evidence_dir, *, strict):
         )
 
 
+@pytest.mark.parametrize(
+    "file,quote_need,over_limit,code",
+    [
+        ("1-klas-bukvar-zaharijchuk-2025-1", True, False, None),
+        ("1-klas-bukvar-zaharijchuk-2025-1", True, True, "publication_limit"),
+        ("ulp-1-00-lesson-notes", True, False, "publication_right"),
+        ("unregistered", True, False, "publication_right"),
+        ("ulp-1-00-lesson-notes", False, False, None),
+    ],
+)
+def test_pack_verify_publication_policy(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, file, quote_need, over_limit, code
+):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file=? WHERE chunk_id='chunk-1'", (file,))
+        if over_limit:
+            conn.execute(
+                "UPDATE textbooks SET text=? WHERE chunk_id='chunk-1'",
+                ("synthetic-first " + "x" * 800 + " synthetic-last",),
+            )
+    _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    plan = {
+        "lessons": [{"steps": [{"id": "s1", "needs": ["quote"] if quote_need else ["culture"], "explains": ["T-001"]}]}]
+    }
+    (plan_dir / "test-mod.yaml").write_text(yaml.safe_dump(plan))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plan_dir, sources_instance=src, offline=True
+        )
+    assert result["status"] == ("failed" if code else "ok"), result
+    if code:
+        assert any(error.startswith(code + ":") for error in result["errors"])
+
+
+def test_pack_verify_publication_cannot_borrow_allowed_source_identity(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file='ulp-1-00-lesson-notes' WHERE chunk_id='chunk-1'")
+    result = _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    document = result["pack"]
+    document["texts"][0]["source"]["file"] = "1-klas-bukvar-zaharijchuk-2025-1"
+    lock.write(synthetic_word_store / "test-mod.yaml", lock.yaml_bytes(document))
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    (plan_dir / "test-mod.yaml").write_text(yaml.safe_dump({"steps": [{"needs": ["quote"], "ref": "T-001"}]}))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plan_dir, sources_instance=src, offline=True
+        )
+    assert result["status"] == "failed"
+    assert any(
+        error.startswith("publication_right:") and "differs from its cited row" in error for error in result["errors"]
+    )
+
+
+@pytest.mark.parametrize(
+    "mutation,code",
+    [
+        ("page", "publication_attribution"),
+        ("missing_ref", "publication_right"),
+        ("malformed_plan", "publication_right"),
+    ],
+)
+def test_pack_verify_publication_refuses_incomplete_proof(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path, mutation, code
+):
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE textbooks SET source_file='1-klas-bukvar-zaharijchuk-2025-1' WHERE chunk_id='chunk-1'")
+    built = _build(synthetic_sources, synthetic_standard, synthetic_word_store, _text_request(tmp_path))
+    if mutation == "page":
+        built["pack"]["texts"][0]["source"]["page"] = 43
+        lock.write(synthetic_word_store / "test-mod.yaml", lock.yaml_bytes(built["pack"]))
+    plan_dir = tmp_path / "plans"
+    plan_dir.mkdir()
+    plan_path = plan_dir / "test-mod.yaml"
+    plan = {"steps": [{"needs": ["quote"], "ref": "T-999" if mutation == "missing_ref" else "T-001"}]}
+    plan_path.write_text("steps: [" if mutation == "malformed_plan" else yaml.safe_dump(plan))
+    with sources.Sources(sources_db=synthetic_sources, standard_path=synthetic_standard) as src:
+        result = verify.verify_pack(
+            "a1", "test-mod", evidence_dir=synthetic_word_store, plans_dir=plan_dir, sources_instance=src, offline=True
+        )
+    assert result["status"] == "failed"
+    assert any(error.startswith(code + ":") for error in result["errors"])
+
+
 def test_moved_chunk_id_with_same_text_is_drift_and_still_reports_chunk_id_moved(
     synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
 ):

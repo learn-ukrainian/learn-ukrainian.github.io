@@ -1405,3 +1405,1842 @@ blocked_candidates:
     license_or_access_status: public_download_all_rights_reserved
     admission_state: blocked_for_retention_and_model_corpus
     note: "Official 2026 Grade 9 competition candidate; excluded from books because the publisher explicitly forbids reproduction without permission."
+
+# Per-source publication rights for evidence packs (WP 21, #8425).
+# Exact ingested source_file identities; absence grants no publication right.
+# Titles use the corpus bibliographic filename, not a chunk/section heading.
+# Private references remain available for grounding only.
+sources:
+  1-klas-angliiska-mova-pukhta-2024:
+    kind: textbook
+    file: 1-klas-angliiska-mova-pukhta-2024
+    author: Пухта
+    title: 1-klas-angliiska-mova-pukhta-2024
+    grade: 1
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  1-klas-bukvar-zaharijchuk-2025-1:
+    kind: textbook
+    file: 1-klas-bukvar-zaharijchuk-2025-1
+    author: Захарійчук
+    title: 1-klas-bukvar-zaharijchuk-2025-1
+    grade: 1
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  1-klas-bukvar-zaharijchuk-2025-2:
+    kind: textbook
+    file: 1-klas-bukvar-zaharijchuk-2025-2
+    author: Захарійчук
+    title: 1-klas-bukvar-zaharijchuk-2025-2
+    grade: 1
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  1-klas-matematyka-lystopad-2025:
+    kind: textbook
+    file: 1-klas-matematyka-lystopad-2025
+    author: Листопад
+    title: 1-klas-matematyka-lystopad-2025
+    grade: 1
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  1-klas-mystetstvo-rublia-2024:
+    kind: textbook
+    file: 1-klas-mystetstvo-rublia-2024
+    author: Рубля
+    title: 1-klas-mystetstvo-rublia-2024
+    grade: 1
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  1-klas-ya-doslidzhuiu-svit-zharkova-2024-1:
+    kind: textbook
+    file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1
+    author: Жаркова
+    title: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-1
+    grade: 1
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  1-klas-ya-doslidzhuiu-svit-zharkova-2024-2:
+    kind: textbook
+    file: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2
+    author: Жаркова
+    title: 1-klas-ya-doslidzhuiu-svit-zharkova-2024-2
+    grade: 1
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-11-klas-mystectvo-nazarenko-2018:
+    kind: textbook
+    file: 10-11-klas-mystectvo-nazarenko-2018
+    author: Назаренко
+    title: 10-11-klas-mystectvo-nazarenko-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-11-klas-tekhnolohiyi-khodzycka-2019:
+    kind: textbook
+    file: 10-11-klas-tekhnolohiyi-khodzycka-2019
+    author: Ходзицька
+    title: 10-11-klas-tekhnolohiyi-khodzycka-2019
+    grade: 10
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-algebra-ister-2018:
+    kind: textbook
+    file: 10-klas-algebra-ister-2018
+    author: Істер
+    title: 10-klas-algebra-ister-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-angliiska-mova-burenko-2018:
+    kind: textbook
+    file: 10-klas-angliiska-mova-burenko-2018
+    author: Буренко
+    title: 10-klas-angliiska-mova-burenko-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-biologija-i-ekologija-zadorozhnij-2018-stand:
+    kind: textbook
+    file: 10-klas-biologija-i-ekologija-zadorozhnij-2018-stand
+    author: Задорожний
+    title: 10-klas-biologija-i-ekologija-zadorozhnij-2018-stand
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-ekonomika-krupska-2018:
+    kind: textbook
+    file: 10-klas-ekonomika-krupska-2018
+    author: Крупська
+    title: 10-klas-ekonomika-krupska-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-fizyka-barjakhtar-2018:
+    kind: textbook
+    file: 10-klas-fizyka-barjakhtar-2018
+    author: Бар'яхтар
+    title: 10-klas-fizyka-barjakhtar-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-geografija-bojko-2018:
+    kind: textbook
+    file: 10-klas-geografija-bojko-2018
+    author: Бойко
+    title: 10-klas-geografija-bojko-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-geometrija-ister-2018:
+    kind: textbook
+    file: 10-klas-geometrija-ister-2018
+    author: Істер
+    title: 10-klas-geometrija-ister-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-himija-grygorovych-2018:
+    kind: textbook
+    file: 10-klas-himija-grygorovych-2018
+    author: Григорович
+    title: 10-klas-himija-grygorovych-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-hromadianska-gisem-2018:
+    kind: textbook
+    file: 10-klas-hromadianska-gisem-2018
+    author: Гісем
+    title: 10-klas-hromadianska-gisem-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-informatika-rudenko-2018-stand:
+    kind: textbook
+    file: 10-klas-informatika-rudenko-2018-stand
+    author: Руденко
+    title: 10-klas-informatika-rudenko-2018-stand
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-istorija-ukrajiny-gisem-2018:
+    kind: textbook
+    file: 10-klas-istorija-ukrajiny-gisem-2018
+    author: Гісем
+    title: 10-klas-istorija-ukrajiny-gisem-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-matematika-merzljak-2018:
+    kind: textbook
+    file: 10-klas-matematika-merzljak-2018
+    author: Мерзляк
+    title: 10-klas-matematika-merzljak-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-ukrajinska-literatura-avramenko-2018:
+    kind: textbook
+    file: 10-klas-ukrajinska-literatura-avramenko-2018
+    author: Авраменко
+    title: 10-klas-ukrajinska-literatura-avramenko-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-ukrajinska-mova-avramenko-2018:
+    kind: textbook
+    file: 10-klas-ukrajinska-mova-avramenko-2018
+    author: Авраменко
+    title: 10-klas-ukrajinska-mova-avramenko-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-ukrmova-glazova-2018:
+    kind: textbook
+    file: 10-klas-ukrmova-glazova-2018
+    author: Глазова
+    title: 10-klas-ukrmova-glazova-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-ukrmova-karaman-2018:
+    kind: textbook
+    file: 10-klas-ukrmova-karaman-2018
+    author: Караман
+    title: 10-klas-ukrmova-karaman-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-vsesvitnia-istoriia-gisem-2018-stand:
+    kind: textbook
+    file: 10-klas-vsesvitnia-istoriia-gisem-2018-stand
+    author: Гісем
+    title: 10-klas-vsesvitnia-istoriia-gisem-2018-stand
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-zakhyst-fuka-2023:
+    kind: textbook
+    file: 10-klas-zakhyst-fuka-2023
+    author: Фука
+    title: 10-klas-zakhyst-fuka-2023
+    grade: 10
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  10-klas-zarubizhna-literatura-voloshhuk-2018:
+    kind: textbook
+    file: 10-klas-zarubizhna-literatura-voloshhuk-2018
+    author: Волощук
+    title: 10-klas-zarubizhna-literatura-voloshhuk-2018
+    grade: 10
+    year: 2018
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-algebra-ister-2019-prof:
+    kind: textbook
+    file: 11-klas-algebra-ister-2019-prof
+    author: Істер
+    title: 11-klas-algebra-ister-2019-prof
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-angliiska-mova-kuchma-2019:
+    kind: textbook
+    file: 11-klas-angliiska-mova-kuchma-2019
+    author: Кучма
+    title: 11-klas-angliiska-mova-kuchma-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-astronomiya-pryshliak-2019:
+    kind: textbook
+    file: 11-klas-astronomiya-pryshliak-2019
+    author: Пришляк
+    title: 11-klas-astronomiya-pryshliak-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-biologiia-i-ekologia-shalamov-2019:
+    kind: textbook
+    file: 11-klas-biologiia-i-ekologia-shalamov-2019
+    author: Шаламов
+    title: 11-klas-biologiia-i-ekologia-shalamov-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-ekonomika-homiak-2019:
+    kind: textbook
+    file: 11-klas-ekonomika-homiak-2019
+    author: Криховець-Хом'як
+    title: 11-klas-ekonomika-homiak-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-fizika-astronomiia-zasekina-2019-standart:
+    kind: textbook
+    file: 11-klas-fizika-astronomiia-zasekina-2019-standart
+    author: Засєкіна
+    title: 11-klas-fizika-astronomiia-zasekina-2019-standart
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-himia-grygorovych-2019:
+    kind: textbook
+    file: 11-klas-himia-grygorovych-2019
+    author: Григорович
+    title: 11-klas-himia-grygorovych-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-informatyka-rudenko-2019:
+    kind: textbook
+    file: 11-klas-informatyka-rudenko-2019
+    author: Руденко
+    title: 11-klas-informatyka-rudenko-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-istoriya-ukr-gisem-2024:
+    kind: textbook
+    file: 11-klas-istoriya-ukr-gisem-2024
+    author: Гісем
+    title: 11-klas-istoriya-ukr-gisem-2024
+    grade: 11
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-istoriya-ukr-hlibovska-2024:
+    kind: textbook
+    file: 11-klas-istoriya-ukr-hlibovska-2024
+    author: Хлібовська
+    title: 11-klas-istoriya-ukr-hlibovska-2024
+    grade: 11
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-istoriya-vsesvit-schupak-2024:
+    kind: textbook
+    file: 11-klas-istoriya-vsesvit-schupak-2024
+    author: Щупак
+    title: 11-klas-istoriya-vsesvit-schupak-2024
+    grade: 11
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-matematyka-nelin-2019:
+    kind: textbook
+    file: 11-klas-matematyka-nelin-2019
+    author: Нелін
+    title: 11-klas-matematyka-nelin-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-pravoznavstvo-narovlianskyi-2019:
+    kind: textbook
+    file: 11-klas-pravoznavstvo-narovlianskyi-2019
+    author: Наровлянський
+    title: 11-klas-pravoznavstvo-narovlianskyi-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-ukrajinska-literatura-avramenko-2019:
+    kind: textbook
+    file: 11-klas-ukrajinska-literatura-avramenko-2019
+    author: Авраменко
+    title: 11-klas-ukrajinska-literatura-avramenko-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-ukrajinska-mova-avramenko-2019:
+    kind: textbook
+    file: 11-klas-ukrajinska-mova-avramenko-2019
+    author: Авраменко
+    title: 11-klas-ukrajinska-mova-avramenko-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-ukrajinska-mova-glazova-2019:
+    kind: textbook
+    file: 11-klas-ukrajinska-mova-glazova-2019
+    author: Глазова
+    title: 11-klas-ukrajinska-mova-glazova-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-zakhist-vitchizni-gudima-2019-med:
+    kind: textbook
+    file: 11-klas-zakhist-vitchizni-gudima-2019-med
+    author: Гудима
+    title: 11-klas-zakhist-vitchizni-gudima-2019-med
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  11-klas-zarubizhna-literatura-voloshhuk-2019:
+    kind: textbook
+    file: 11-klas-zarubizhna-literatura-voloshhuk-2019
+    author: Волощук
+    title: 11-klas-zarubizhna-literatura-voloshhuk-2019
+    grade: 11
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-angliiska-mova-hubarieva-2024:
+    kind: textbook
+    file: 2-klas-angliiska-mova-hubarieva-2024
+    author: Губарєва
+    title: 2-klas-angliiska-mova-hubarieva-2024
+    grade: 2
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-matematyka-ister-2025:
+    kind: textbook
+    file: 2-klas-matematyka-ister-2025
+    author: Істер
+    title: 2-klas-matematyka-ister-2025
+    grade: 2
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-mystetstvo-rublia-2024:
+    kind: textbook
+    file: 2-klas-mystetstvo-rublia-2024
+    author: Рубля
+    title: 2-klas-mystetstvo-rublia-2024
+    grade: 2
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-ukrmova-bolshakova-2019-1:
+    kind: textbook
+    file: 2-klas-ukrmova-bolshakova-2019-1
+    author: Большакова
+    title: 2-klas-ukrmova-bolshakova-2019-1
+    grade: 2
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-ukrmova-bolshakova-2019-2:
+    kind: textbook
+    file: 2-klas-ukrmova-bolshakova-2019-2
+    author: Большакова
+    title: 2-klas-ukrmova-bolshakova-2019-2
+    grade: 2
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-ukrmova-vashulenko-2019-1:
+    kind: textbook
+    file: 2-klas-ukrmova-vashulenko-2019-1
+    author: Вашуленко
+    title: 2-klas-ukrmova-vashulenko-2019-1
+    grade: 2
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-ukrmova-vashulenko-2019-2:
+    kind: textbook
+    file: 2-klas-ukrmova-vashulenko-2019-2
+    author: Вашуленко
+    title: 2-klas-ukrmova-vashulenko-2019-2
+    grade: 2
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-ya-doslidzhuiu-svit-hrushchynska-2019:
+    kind: textbook
+    file: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019
+    author: Грущинська
+    title: 2-klas-ya-doslidzhuiu-svit-hrushchynska-2019
+    grade: 2
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  2-klas-ya-doslidzhuiu-svit-morze-2019:
+    kind: textbook
+    file: 2-klas-ya-doslidzhuiu-svit-morze-2019
+    author: Морзе
+    title: 2-klas-ya-doslidzhuiu-svit-morze-2019
+    grade: 2
+    year: 2019
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-angliiska-mova-karpiuk-2020:
+    kind: textbook
+    file: 3-klas-angliiska-mova-karpiuk-2020
+    author: Карпюк
+    title: 3-klas-angliiska-mova-karpiuk-2020
+    grade: 3
+    year: 2020
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-informatyka-morze-2025:
+    kind: textbook
+    file: 3-klas-informatyka-morze-2025
+    author: Морзе
+    title: 3-klas-informatyka-morze-2025
+    grade: 3
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-matematyka-lystopad-2020-1:
+    kind: textbook
+    file: 3-klas-matematyka-lystopad-2020-1
+    author: Листопад
+    title: 3-klas-matematyka-lystopad-2020-1
+    grade: 3
+    year: 2020
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-matematyka-lystopad-2020-2:
+    kind: textbook
+    file: 3-klas-matematyka-lystopad-2020-2
+    author: Листопад
+    title: 3-klas-matematyka-lystopad-2020-2
+    grade: 3
+    year: 2020
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-mystetstvo-arystova-2025:
+    kind: textbook
+    file: 3-klas-mystetstvo-arystova-2025
+    author: Аристова
+    title: 3-klas-mystetstvo-arystova-2025
+    grade: 3
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-ukrainska-mova-savchenko-2020-2:
+    kind: textbook
+    file: 3-klas-ukrainska-mova-savchenko-2020-2
+    author: Савченко
+    title: 3-klas-ukrainska-mova-savchenko-2020-2
+    grade: 3
+    year: 2020
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-ya-doslidzhuiu-svit-zharkova-2020-1:
+    kind: textbook
+    file: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-1
+    author: Жаркова
+    title: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-1
+    grade: 3
+    year: 2020
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  3-klas-ya-doslidzhuiu-svit-zharkova-2020-2:
+    kind: textbook
+    file: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-2
+    author: Жаркова
+    title: 3-klas-ya-doslidzhuiu-svit-zharkova-2020-2
+    grade: 3
+    year: 2020
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-angliiska-mova-hubarieva-2021:
+    kind: textbook
+    file: 4-klas-angliiska-mova-hubarieva-2021
+    author: Губарєва
+    title: 4-klas-angliiska-mova-hubarieva-2021
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-informatyka-vorontsova-2021:
+    kind: textbook
+    file: 4-klas-informatyka-vorontsova-2021
+    author: Воронцова
+    title: 4-klas-informatyka-vorontsova-2021
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-matematyka-ister-2021-1:
+    kind: textbook
+    file: 4-klas-matematyka-ister-2021-1
+    author: Істер
+    title: 4-klas-matematyka-ister-2021-1
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-matematyka-ister-2021-2:
+    kind: textbook
+    file: 4-klas-matematyka-ister-2021-2
+    author: Істер
+    title: 4-klas-matematyka-ister-2021-2
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-mystetstvo-rublia-2021:
+    kind: textbook
+    file: 4-klas-mystetstvo-rublia-2021
+    author: Рубля
+    title: 4-klas-mystetstvo-rublia-2021
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-ukrayinska-mova-kravtsova-2021-1:
+    kind: textbook
+    file: 4-klas-ukrayinska-mova-kravtsova-2021-1
+    author: Кравцова
+    title: 4-klas-ukrayinska-mova-kravtsova-2021-1
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-ukrayinska-mova-ponomarova-2021-1:
+    kind: textbook
+    file: 4-klas-ukrayinska-mova-ponomarova-2021-1
+    author: Пономарова
+    title: 4-klas-ukrayinska-mova-ponomarova-2021-1
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-ukrayinska-mova-savchenko-2021-2:
+    kind: textbook
+    file: 4-klas-ukrayinska-mova-savchenko-2021-2
+    author: Савченко
+    title: 4-klas-ukrayinska-mova-savchenko-2021-2
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-ukrayinska-mova-zaharijchuk-2021-1:
+    kind: textbook
+    file: 4-klas-ukrayinska-mova-zaharijchuk-2021-1
+    author: Захарійчук
+    title: 4-klas-ukrayinska-mova-zaharijchuk-2021-1
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-ya-doslidzhuiu-svit-zharkova-2021-1:
+    kind: textbook
+    file: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-1
+    author: Жаркова
+    title: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-1
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  4-klas-ya-doslidzhuiu-svit-zharkova-2021-2:
+    kind: textbook
+    file: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-2
+    author: Жаркова
+    title: 4-klas-ya-doslidzhuiu-svit-zharkova-2021-2
+    grade: 4
+    year: 2021
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-angliiska-mova-pakhomova-2022:
+    kind: textbook
+    file: 5-klas-angliiska-mova-pakhomova-2022
+    author: Пахомова
+    title: 5-klas-angliiska-mova-pakhomova-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-etyka-meleshchenko-2022:
+    kind: textbook
+    file: 5-klas-etyka-meleshchenko-2022
+    author: Мелещенко
+    title: 5-klas-etyka-meleshchenko-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-informatyka-morze-2022:
+    kind: textbook
+    file: 5-klas-informatyka-morze-2022
+    author: Морзе
+    title: 5-klas-informatyka-morze-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-istoriya-schupak-2022:
+    kind: textbook
+    file: 5-klas-istoriya-schupak-2022
+    author: Щупак
+    title: 5-klas-istoriya-schupak-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-matematyka-ister-2022:
+    kind: textbook
+    file: 5-klas-matematyka-ister-2022
+    author: Істер
+    title: 5-klas-matematyka-ister-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-mystetstvo-rublia-2022:
+    kind: textbook
+    file: 5-klas-mystetstvo-rublia-2022
+    author: Рубля
+    title: 5-klas-mystetstvo-rublia-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-piznaiemo-pryrodu-korshevniuk-2022:
+    kind: textbook
+    file: 5-klas-piznaiemo-pryrodu-korshevniuk-2022
+    author: Коршевнюк
+    title: 5-klas-piznaiemo-pryrodu-korshevniuk-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-tekhnolohiyi-bilenko-2023:
+    kind: textbook
+    file: 5-klas-tekhnolohiyi-bilenko-2023
+    author: Біленко
+    title: 5-klas-tekhnolohiyi-bilenko-2023
+    grade: 5
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-ukrlit-avramenko-2022:
+    kind: textbook
+    file: 5-klas-ukrlit-avramenko-2022
+    author: Авраменко
+    title: 5-klas-ukrlit-avramenko-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-ukrmova-avramenko-2022:
+    kind: textbook
+    file: 5-klas-ukrmova-avramenko-2022
+    author: Авраменко
+    title: 5-klas-ukrmova-avramenko-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-ukrmova-golub-2022:
+    kind: textbook
+    file: 5-klas-ukrmova-golub-2022
+    author: Голуб
+    title: 5-klas-ukrmova-golub-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-ukrmova-zabolotnyi-2023:
+    kind: textbook
+    file: 5-klas-ukrmova-zabolotnyi-2023
+    author: Заболотний
+    title: 5-klas-ukrmova-zabolotnyi-2023
+    grade: 5
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-zarubizhna-literatura-voloshchuk-2022:
+    kind: textbook
+    file: 5-klas-zarubizhna-literatura-voloshchuk-2022
+    author: Волощук
+    title: 5-klas-zarubizhna-literatura-voloshchuk-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  5-klas-zdorovia-vorontsova-2022:
+    kind: textbook
+    file: 5-klas-zdorovia-vorontsova-2022
+    author: Воронцова
+    title: 5-klas-zdorovia-vorontsova-2022
+    grade: 5
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-angliiska-mova-pakhomova-2023:
+    kind: textbook
+    file: 6-klas-angliiska-mova-pakhomova-2023
+    author: Пахомова
+    title: 6-klas-angliiska-mova-pakhomova-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-etyka-martyniuk-2023:
+    kind: textbook
+    file: 6-klas-etyka-martyniuk-2023
+    author: Мартинюк
+    title: 6-klas-etyka-martyniuk-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-heohrafiya-zapotockyi-2023:
+    kind: textbook
+    file: 6-klas-heohrafiya-zapotockyi-2023
+    author: Запотоцький
+    title: 6-klas-heohrafiya-zapotockyi-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-informatyka-bondarenko-2023:
+    kind: textbook
+    file: 6-klas-informatyka-bondarenko-2023
+    author: Бондаренко
+    title: 6-klas-informatyka-bondarenko-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-istoriia-shchupak-2023:
+    kind: textbook
+    file: 6-klas-istoriia-shchupak-2023
+    author: Щупак
+    title: 6-klas-istoriia-shchupak-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-istoriya-gisem-2023:
+    kind: textbook
+    file: 6-klas-istoriya-gisem-2023
+    author: Гісем
+    title: 6-klas-istoriya-gisem-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-matematyka-tarasenkova-2023-1:
+    kind: textbook
+    file: 6-klas-matematyka-tarasenkova-2023-1
+    author: Тарасенкова
+    title: 6-klas-matematyka-tarasenkova-2023-1
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-matematyka-tarasenkova-2023-2:
+    kind: textbook
+    file: 6-klas-matematyka-tarasenkova-2023-2
+    author: Тарасенкова
+    title: 6-klas-matematyka-tarasenkova-2023-2
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-mystetstvo-rublia-2023:
+    kind: textbook
+    file: 6-klas-mystetstvo-rublia-2023
+    author: Рубля
+    title: 6-klas-mystetstvo-rublia-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-piznaemo-pryrodu-korshevniuk-2023:
+    kind: textbook
+    file: 6-klas-piznaemo-pryrodu-korshevniuk-2023
+    author: Коршевнюк
+    title: 6-klas-piznaemo-pryrodu-korshevniuk-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-tekhnolohiyi-bilenko-2023:
+    kind: textbook
+    file: 6-klas-tekhnolohiyi-bilenko-2023
+    author: Біленко
+    title: 6-klas-tekhnolohiyi-bilenko-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-ukrlit-avramenko-2023:
+    kind: textbook
+    file: 6-klas-ukrlit-avramenko-2023
+    author: Авраменко
+    title: 6-klas-ukrlit-avramenko-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-ukrmova-avramenko-2023:
+    kind: textbook
+    file: 6-klas-ukrmova-avramenko-2023
+    author: Авраменко
+    title: 6-klas-ukrmova-avramenko-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-ukrmova-golub-2023:
+    kind: textbook
+    file: 6-klas-ukrmova-golub-2023
+    author: Голуб
+    title: 6-klas-ukrmova-golub-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-ukrmova-litvinova-2023:
+    kind: textbook
+    file: 6-klas-ukrmova-litvinova-2023
+    author: Літвінова
+    title: 6-klas-ukrmova-litvinova-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  6-klas-zdorovia-vorontsova-2023:
+    kind: textbook
+    file: 6-klas-zdorovia-vorontsova-2023
+    author: Воронцова
+    title: 6-klas-zdorovia-vorontsova-2023
+    grade: 6
+    year: 2023
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-algebra-merzliak-2024:
+    kind: textbook
+    file: 7-klas-algebra-merzliak-2024
+    author: Мерзляк
+    title: 7-klas-algebra-merzliak-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-angliiska-mova-kosta-2024:
+    kind: textbook
+    file: 7-klas-angliiska-mova-kosta-2024
+    author: Коста
+    title: 7-klas-angliiska-mova-kosta-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-biolohiya-sobol-2024:
+    kind: textbook
+    file: 7-klas-biolohiya-sobol-2024
+    author: Соболь
+    title: 7-klas-biolohiya-sobol-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-fizyka-bariakhtar-2024:
+    kind: textbook
+    file: 7-klas-fizyka-bariakhtar-2024
+    author: Бар'яхтар
+    title: 7-klas-fizyka-bariakhtar-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-heometriya-merzliak-2024:
+    kind: textbook
+    file: 7-klas-heometriya-merzliak-2024
+    author: Мерзляк
+    title: 7-klas-heometriya-merzliak-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-informatyka-bondarenko-2024:
+    kind: textbook
+    file: 7-klas-informatyka-bondarenko-2024
+    author: Бондаренко
+    title: 7-klas-informatyka-bondarenko-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-istoria-ukr-hlibovska-2024:
+    kind: textbook
+    file: 7-klas-istoria-ukr-hlibovska-2024
+    author: Хлібовська
+    title: 7-klas-istoria-ukr-hlibovska-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-istoriya-shchupak-2024-full:
+    kind: textbook
+    file: 7-klas-istoriya-shchupak-2024-full
+    author: Щупак
+    title: 7-klas-istoriya-shchupak-2024-full
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-khimiya-hryhorovych-2024:
+    kind: textbook
+    file: 7-klas-khimiya-hryhorovych-2024
+    author: Григорович
+    title: 7-klas-khimiya-hryhorovych-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-mystetstvo-masol-2024:
+    kind: textbook
+    file: 7-klas-mystetstvo-masol-2024
+    author: Масол
+    title: 7-klas-mystetstvo-masol-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-tekhnolohiyi-bilenko-2024:
+    kind: textbook
+    file: 7-klas-tekhnolohiyi-bilenko-2024
+    author: Біленко
+    title: 7-klas-tekhnolohiyi-bilenko-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-ukrlit-avramenko-2024:
+    kind: textbook
+    file: 7-klas-ukrlit-avramenko-2024
+    author: Авраменко
+    title: 7-klas-ukrlit-avramenko-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-ukrlit-zabolotnyi-2024:
+    kind: textbook
+    file: 7-klas-ukrlit-zabolotnyi-2024
+    author: Заболотний
+    title: 7-klas-ukrlit-zabolotnyi-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-ukrmova-avramenko-2024:
+    kind: textbook
+    file: 7-klas-ukrmova-avramenko-2024
+    author: Авраменко
+    title: 7-klas-ukrmova-avramenko-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  7-klas-zdorovia-guschyna-2024:
+    kind: textbook
+    file: 7-klas-zdorovia-guschyna-2024
+    author: Гущина
+    title: 7-klas-zdorovia-guschyna-2024
+    grade: 7
+    year: 2024
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-algebra-tarasenkova-2025:
+    kind: textbook
+    file: 8-klas-algebra-tarasenkova-2025
+    author: Тарасенкова
+    title: 8-klas-algebra-tarasenkova-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-biolohiya-anderson-2025:
+    kind: textbook
+    file: 8-klas-biolohiya-anderson-2025
+    author: Андерсон
+    title: 8-klas-biolohiya-anderson-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-finans-plastun-2025:
+    kind: textbook
+    file: 8-klas-finans-plastun-2025
+    author: Пластун
+    title: 8-klas-finans-plastun-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-fizyka-bariakhtar-2025:
+    kind: textbook
+    file: 8-klas-fizyka-bariakhtar-2025
+    author: Бар'яхтар
+    title: 8-klas-fizyka-bariakhtar-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-heohrafiya-hilberh-2025:
+    kind: textbook
+    file: 8-klas-heohrafiya-hilberh-2025
+    author: Гільберг
+    title: 8-klas-heohrafiya-hilberh-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-hromadianska-osvita-vasylkiv-2025:
+    kind: textbook
+    file: 8-klas-hromadianska-osvita-vasylkiv-2025
+    author: Васильків
+    title: 8-klas-hromadianska-osvita-vasylkiv-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-informatyka-ryvkind-2025:
+    kind: textbook
+    file: 8-klas-informatyka-ryvkind-2025
+    author: Ривкінд
+    title: 8-klas-informatyka-ryvkind-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-istoria-ukr-hlibovska-2025:
+    kind: textbook
+    file: 8-klas-istoria-ukr-hlibovska-2025
+    author: Хлібовська
+    title: 8-klas-istoria-ukr-hlibovska-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-istoria-ukr-schupak-2025:
+    kind: textbook
+    file: 8-klas-istoria-ukr-schupak-2025
+    author: Щупак
+    title: 8-klas-istoria-ukr-schupak-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-istoria-vsesvitnia-ladychenko-2025:
+    kind: textbook
+    file: 8-klas-istoria-vsesvitnia-ladychenko-2025
+    author: Ладиченко
+    title: 8-klas-istoria-vsesvitnia-ladychenko-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-khimiya-hryhorovych-2025:
+    kind: textbook
+    file: 8-klas-khimiya-hryhorovych-2025
+    author: Григорович
+    title: 8-klas-khimiya-hryhorovych-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-mystetstvo-komarovska-2025:
+    kind: textbook
+    file: 8-klas-mystetstvo-komarovska-2025
+    author: Комаровська
+    title: 8-klas-mystetstvo-komarovska-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-pryrodnychi-nauky-mandrenko-2025:
+    kind: textbook
+    file: 8-klas-pryrodnychi-nauky-mandrenko-2025
+    author: Мандренко
+    title: 8-klas-pryrodnychi-nauky-mandrenko-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-tekhnolohiyi-bilenko-2025:
+    kind: textbook
+    file: 8-klas-tekhnolohiyi-bilenko-2025
+    author: Біленко
+    title: 8-klas-tekhnolohiyi-bilenko-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-ukrlit-avramenko-2025:
+    kind: textbook
+    file: 8-klas-ukrlit-avramenko-2025
+    author: Авраменко
+    title: 8-klas-ukrlit-avramenko-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-ukrlit-zabolotnyi-2025:
+    kind: textbook
+    file: 8-klas-ukrlit-zabolotnyi-2025
+    author: Заболотний
+    title: 8-klas-ukrlit-zabolotnyi-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-ukrmova-avramenko-2025:
+    kind: textbook
+    file: 8-klas-ukrmova-avramenko-2025
+    author: Авраменко
+    title: 8-klas-ukrmova-avramenko-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-ukrmova-zabolotnyi-2025:
+    kind: textbook
+    file: 8-klas-ukrmova-zabolotnyi-2025
+    author: Заболотний
+    title: 8-klas-ukrmova-zabolotnyi-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-zarlit-voloschuk-2025:
+    kind: textbook
+    file: 8-klas-zarlit-voloschuk-2025
+    author: Волощук
+    title: 8-klas-zarlit-voloschuk-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  8-klas-zdorovia-vasylenko-2025:
+    kind: textbook
+    file: 8-klas-zdorovia-vasylenko-2025
+    author: Василенко
+    title: 8-klas-zdorovia-vasylenko-2025
+    grade: 8
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-algebra-merzliak-2017:
+    kind: textbook
+    file: 9-klas-algebra-merzliak-2017
+    author: Мерзляк
+    title: 9-klas-algebra-merzliak-2017
+    grade: 9
+    year: 2017
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-algebra-tarasenkova-2026:
+    kind: textbook
+    file: 9-klas-algebra-tarasenkova-2026
+    author: Тарасенкова
+    title: 9-klas-algebra-tarasenkova-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-biolohiya-zadorozhnyi-2026:
+    kind: textbook
+    file: 9-klas-biolohiya-zadorozhnyi-2026
+    author: Задорожний
+    title: 9-klas-biolohiya-zadorozhnyi-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-finansova-rolik-2026:
+    kind: textbook
+    file: 9-klas-finansova-rolik-2026
+    author: Ролік
+    title: 9-klas-finansova-rolik-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-fizyka-bariakhtar-2022:
+    kind: textbook
+    file: 9-klas-fizyka-bariakhtar-2022
+    author: Бар'яхтар
+    title: 9-klas-fizyka-bariakhtar-2022
+    grade: 9
+    year: 2022
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-fizyka-zasiekina-2026:
+    kind: textbook
+    file: 9-klas-fizyka-zasiekina-2026
+    author: Засєкіна
+    title: 9-klas-fizyka-zasiekina-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-geografiia-boiko-2026:
+    kind: textbook
+    file: 9-klas-geografiia-boiko-2026
+    author: Бойко
+    title: 9-klas-geografiia-boiko-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-heometriya-bevz-2026:
+    kind: textbook
+    file: 9-klas-heometriya-bevz-2026
+    author: Бевз
+    title: 9-klas-heometriya-bevz-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-heometriya-merzliak-2017:
+    kind: textbook
+    file: 9-klas-heometriya-merzliak-2017
+    author: Мерзляк
+    title: 9-klas-heometriya-merzliak-2017
+    grade: 9
+    year: 2017
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-hromadianska-osvita-pometun-2026:
+    kind: textbook
+    file: 9-klas-hromadianska-osvita-pometun-2026
+    author: Пометун
+    title: 9-klas-hromadianska-osvita-pometun-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-informatyka-morze-2026:
+    kind: textbook
+    file: 9-klas-informatyka-morze-2026
+    author: Морзе
+    title: 9-klas-informatyka-morze-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-istorija-ukrajini-gisem-2017:
+    kind: textbook
+    file: 9-klas-istorija-ukrajini-gisem-2017
+    author: Гісем
+    title: 9-klas-istorija-ukrajini-gisem-2017
+    grade: 9
+    year: 2017
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-khimiya-popel-2017:
+    kind: textbook
+    file: 9-klas-khimiya-popel-2017
+    author: Попель
+    title: 9-klas-khimiya-popel-2017
+    grade: 9
+    year: 2017
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-khimiya-yaroshenko-2026:
+    kind: textbook
+    file: 9-klas-khimiya-yaroshenko-2026
+    author: Ярошенко
+    title: 9-klas-khimiya-yaroshenko-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-mystetstvo-kondratova-2025:
+    kind: textbook
+    file: 9-klas-mystetstvo-kondratova-2025
+    author: Кондратова
+    title: 9-klas-mystetstvo-kondratova-2025
+    grade: 9
+    year: 2025
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-mystetstvo-masol-2017:
+    kind: textbook
+    file: 9-klas-mystetstvo-masol-2017
+    author: Масол
+    title: 9-klas-mystetstvo-masol-2017
+    grade: 9
+    year: 2017
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-pravoznavstvo-berendieiev-2026:
+    kind: textbook
+    file: 9-klas-pravoznavstvo-berendieiev-2026
+    author: Берендєєв
+    title: 9-klas-pravoznavstvo-berendieiev-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-tekhnolohiyi-bilenko-2026:
+    kind: textbook
+    file: 9-klas-tekhnolohiyi-bilenko-2026
+    author: Біленко
+    title: 9-klas-tekhnolohiyi-bilenko-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-ukrajinska-literatura-avramenko-2017:
+    kind: textbook
+    file: 9-klas-ukrajinska-literatura-avramenko-2017
+    author: Авраменко
+    title: 9-klas-ukrajinska-literatura-avramenko-2017
+    grade: 9
+    year: 2017
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-ukrajinska-mova-avramenko-2017:
+    kind: textbook
+    file: 9-klas-ukrajinska-mova-avramenko-2017
+    author: Авраменко
+    title: 9-klas-ukrajinska-mova-avramenko-2017
+    grade: 9
+    year: 2017
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-ukrlit-zabolotnyi-2026:
+    kind: textbook
+    file: 9-klas-ukrlit-zabolotnyi-2026
+    author: Заболотний
+    title: 9-klas-ukrlit-zabolotnyi-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-vsesvitnia-istoriia-pometun-2026:
+    kind: textbook
+    file: 9-klas-vsesvitnia-istoriia-pometun-2026
+    author: Пометун
+    title: 9-klas-vsesvitnia-istoriia-pometun-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-zarubizhna-literatura-kovbasenko-2026:
+    kind: textbook
+    file: 9-klas-zarubizhna-literatura-kovbasenko-2026
+    author: Ковбасенко
+    title: 9-klas-zarubizhna-literatura-kovbasenko-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  9-klas-zdorovia-gushchyna-2026:
+    kind: textbook
+    file: 9-klas-zdorovia-gushchyna-2026
+    author: Гущина
+    title: 9-klas-zdorovia-gushchyna-2026
+    grade: 9
+    year: 2026
+    publish:
+      allowed: true
+      limit_chars: 800
+      attribution: '{author}, {title}, grade {grade}, {year}, page {page}'
+  ulp-1-00-lesson-notes:
+    kind: textbook
+    file: ulp-1-00-lesson-notes
+    publish:
+      allowed: false
+  ulp-2-00-lesson-notes:
+    kind: textbook
+    file: ulp-2-00-lesson-notes
+    publish:
+      allowed: false
+  ulp-3-00-lesson-notes:
+    kind: textbook
+    file: ulp-3-00-lesson-notes
+    publish:
+      allowed: false
+  ulp-4-00-lesson-notes:
+    kind: textbook
+    file: ulp-4-00-lesson-notes
+    publish:
+      allowed: false
+  ulp-5-00-lesson-notes:
+    kind: textbook
+    file: ulp-5-00-lesson-notes
+    publish:
+      allowed: false
+  ulp-6-00-lesson-notes:
+    kind: textbook
+    file: ulp-6-00-lesson-notes
+    publish:
+      allowed: false
+  anna-ohoiko-1000-words-2nd-ed:
+    kind: textbook
+    file: anna-ohoiko-1000-words-2nd-ed
+    publish:
+      allowed: false
+  anna-ohoiko-500-verbs:
+    kind: textbook
+    file: anna-ohoiko-500-verbs
+    publish:
+      allowed: false

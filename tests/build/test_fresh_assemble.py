@@ -108,7 +108,7 @@ def make_text_record(
         "id": f"T-{number}",
         "source": {
             "kind": "textbook",
-            "file": "tb.txt",
+            "file": "1-klas-bukvar-zaharijchuk-2025-1",
             "grade": 1,
             "author": author,
             "section_id": 1,

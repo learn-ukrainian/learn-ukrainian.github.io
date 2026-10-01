@@ -177,7 +177,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.path_guard import checked_existing_path
-from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.evidence import lesson_lock, lock, publication
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
@@ -2140,13 +2140,10 @@ def _render_urok_markdown(
                 ref_id = block.get("ref", "")
                 t_rec = texts_by_id.get(ref_id)
                 if t_rec:
-                    src = t_rec.get("source", {})
-                    author = str(src.get("author") or "")
-                    work = str(src.get("work") or "")
-                    year = src.get("year")
-                    page = src.get("page")
-                    attr_parts = [p for p in [author, work, str(year) if year else "", str(page) if page else ""] if p]
-                    attr = ", ".join(attr_parts) if attr_parts else str(src.get("file", ""))
+                    try:
+                        attr = publication.quote_attribution(t_rec)
+                    except ValueError as exc:
+                        raise AssemblerError(str(exc).split(":", 1)[0], str(exc)) from exc
                     w.line("> ", *block_fragments(step_id, block_idx, str(t_rec.get("quote", ""))))
                     if attr:
                         w.line(">")
