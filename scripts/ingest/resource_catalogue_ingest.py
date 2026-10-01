@@ -1,4 +1,4 @@
-"""Index curated resource metadata, never media or premium source bodies (#9409)."""
+"""Index curated metadata and existing external article/transcript text (#9409)."""
 
 from __future__ import annotations
 
@@ -32,13 +32,15 @@ CATALOGUES = (
     "verba/verba_db.json",
 )
 KINDS = ("podcast", "video", "article", "reference")
-# Discovery alias, not a transcript or proof of the recording's contents.
-# The public greetings article contains this phrase and links to episode 2.
-GREETING_DISCOVERY = {
-    "terms": "добрий день",
-    "source_url": "https://www.ukrainianlessons.com/greetings/",
-    "relation": "public greeting article links to ULP 1-02",
-}
+MAX_HITS = 20
+MAX_HIT_BYTES = 24576
+PROVENANCE_BUDGETS = {"source_files": 512, "source_entries": 2048, "discovery_evidence": 1024}
+
+
+class ResourceCatalogueMissingError(RuntimeError):
+    """The incremental resource catalogue has not been ingested."""
+
+
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS resource_catalogue (
     id INTEGER PRIMARY KEY,
@@ -228,11 +230,13 @@ def _resource_entry(item: dict, source_file: str, locator: str, context: dict) -
         str(item[k]) for k in ("category", "summary", "match_reason", "description", "coverage") if item.get(k)
     )
     podcast = kind == "podcast" and urlsplit(url).hostname == "www.ukrainianlessons.com"
-    access = item.get("access", "unknown" if kind == "reference" else "free")
+    access = item.get("access") or "unknown"
     if item.get("paid") is True or item.get("free") is False:
         access = "paid"
-    if item.get("free") is True:
+    elif item.get("free") is True:
         access = "free"
+    if podcast:
+        access = "mixed"  # Free audio does not make premium notes free.
     return {
         "url": url,
         "kind": kind,
@@ -288,8 +292,6 @@ def deduplicate(entries: list[dict]) -> list[dict]:
         if row["access"] != entry["access"]:
             row["access"] = "mixed"
     for row in groups.values():
-        if row["url"] == "https://www.ukrainianlessons.com/episode2/":
-            row["discovery_evidence"] = [GREETING_DISCOVERY]
         row["search_text"] = " ".join(
             [
                 *row["titles"],
@@ -297,10 +299,64 @@ def deduplicate(entries: list[dict]) -> list[dict]:
                 *row["modules"],
                 row["channel"],
                 row["url"],
-                *(d["terms"] for d in row["discovery_evidence"]),
             ]
         )
     return [groups[url] for url in sorted(groups)]
+
+
+def _episode_identity(url: str, title: str) -> tuple[str, int] | None:
+    """Keep ULP and FMU episode numbers distinct; accept only publisher/video URLs."""
+    parts = urlsplit(url)
+    if parts.hostname not in {"www.ukrainianlessons.com", "www.youtube.com"}:
+        return None
+    if parts.hostname == "www.ukrainianlessons.com":
+        match = re.fullmatch(r"/(episode|fmu)(\d+)/", parts.path)
+        if match:
+            return ("ULP" if match[1] == "episode" else "FMU", int(match[2]))
+    match = re.search(r"\b(ULP|FMU)\s+\d+-(\d+)\b", title)
+    return (match[1], int(match[2])) if match else None
+
+
+def link_existing_text(conn: sqlite3.Connection, rows: list[dict]) -> int:
+    """Join existing external texts by URL or series/episode, retaining chunk witnesses."""
+    if not conn.execute("SELECT 1 FROM sqlite_master WHERE name='external_articles'").fetchone():
+        return 0
+    by_url: dict[str, list[dict]] = {}
+    by_episode: dict[tuple[str, int], list[dict]] = {}
+    for row in rows:
+        urls = {row["url"]}
+        for entry in row["source_entries"]:
+            for url in [entry["original_url"], *entry["related_urls"]]:
+                urls.add(normalise_url(url))
+        for url in urls:
+            by_url.setdefault(url, []).append(row)
+        identity = _episode_identity(row["url"], row["title"])
+        if identity:
+            by_episode.setdefault(identity, []).append(row)
+    linked = set()
+    for chunk_id, url, title, text, source_file in conn.execute(
+        "SELECT chunk_id,url,title,text,source_file FROM external_articles WHERE text != '' ORDER BY id"
+    ):
+        try:
+            url = normalise_url(url)
+        except ValueError:
+            continue
+        targets = {r["url"]: r for r in by_url.get(url, [])}
+        identity = _episode_identity(url, title)
+        if identity:
+            targets.update({r["url"]: r for r in by_episode.get(identity, [])})
+        for row in targets.values():
+            row["search_text"] += " " + text
+            row["discovery_evidence"].append(
+                {
+                    "chunk_id": chunk_id,
+                    "source_file": source_file,
+                    "source_url": url,
+                    "relation": "url" if row in by_url.get(url, []) else "episode_identity",
+                }
+            )
+            linked.add(row["url"])
+    return len(linked)
 
 
 def check_link(url: str, timeout: float = 10) -> dict:
@@ -340,6 +396,7 @@ def ingest(
     """Validate all inputs before atomically replacing only this catalogue."""
     entries = load_catalogues(root)
     rows = deduplicate(entries)
+    linked_resources = link_existing_text(conn, rows)
     if no_network:
         checks = [{"http_status": None, "checked_at": None, "link_check": "not_checked"} for _ in rows]
     else:
@@ -388,6 +445,7 @@ def ingest(
         conn.execute("INSERT INTO resource_catalogue_fts(resource_catalogue_fts,rank) VALUES('integrity-check',1)")
         report = reconcile(conn, entries)
     report["link_checks"] = dict(Counter(row["link_check"] for row in rows))
+    report["linked_resources"] = linked_resources
     return report
 
 
@@ -412,6 +470,36 @@ def reconcile(conn: sqlite3.Connection, entries: list[dict]) -> dict:
     }
 
 
+def _bounded_list(items: list, budget: int) -> list:
+    """Return a complete-record prefix within a UTF-8 JSON byte budget."""
+    result = []
+    size = 2  # JSON brackets
+    for item in items:
+        item_size = len(json.dumps(item, ensure_ascii=False).encode("utf-8")) + (2 if result else 0)
+        if size + item_size > budget:
+            break
+        result.append(item)
+        size += item_size
+    return result
+
+
+def _compact_hit(row: sqlite3.Row) -> dict:
+    """Bound every field, including provenance; leave the stored catalogue intact."""
+    hit = dict(row)
+    hit.pop("search_text")
+    for field in ("levels", "modules", "topics", *PROVENANCE_BUDGETS):
+        items = json.loads(hit[field])
+        hit[field] = _bounded_list(items, PROVENANCE_BUDGETS.get(field, 512))
+        hit[f"{field}_count"] = len(items)
+        if len(hit[field]) < len(items):
+            hit[f"{field}_truncated"] = True
+    for field, value in list(hit.items()):
+        if isinstance(value, str) and len(value.encode("utf-8")) > 256:
+            hit[field] = value.encode("utf-8")[:256].decode("utf-8", errors="ignore")
+            hit[f"{field}_truncated"] = True
+    return hit
+
+
 def search_resources(
     conn: sqlite3.Connection,
     query: str = "",
@@ -424,6 +512,8 @@ def search_resources(
     limit: int = 10,
 ) -> list[dict]:
     """Search literal words with exact structured filters and stable relevance order."""
+    if not conn.execute("SELECT 1 FROM sqlite_master WHERE name='resource_catalogue'").fetchone():
+        raise ResourceCatalogueMissingError("Resource catalogue ingestion is required")
     if kind is not None and kind not in KINDS:
         raise ValueError("Unknown resource kind")
     tokens = re.findall(r"[^\W_]+", query, re.UNICODE)
@@ -445,29 +535,22 @@ def search_resources(
             clauses.append(f"EXISTS (SELECT 1 FROM json_each(r.{column}) WHERE value=?)")
             parameters.append(value)
     if free_only:
-        clauses.append("r.access='free'")
+        clauses.append("(r.access='free' OR (r.access='mixed' AND r.audio_access='free' AND r.notes_access='premium'))")
     if live_only:
         clauses.append("r.link_check='live'")
-    parameters.append(max(1, min(int(limit), 20)))
+    parameters.append(max(1, min(int(limit), MAX_HITS)))
     where = " AND ".join(clauses) or "1"
     conn.row_factory = sqlite3.Row
     rows = conn.execute(
         f"SELECT r.* FROM resource_catalogue r {join} WHERE {where} ORDER BY {order} LIMIT ?", parameters
     )
-    hits = []
-    for result in rows:
-        hit = dict(result)
-        for field in ("levels", "modules", "topics", "source_files", "source_entries", "discovery_evidence"):
-            hit[field] = json.loads(hit[field])
-        hit.pop("search_text")
-        hits.append(hit)
-    return hits
+    return [_compact_hit(result) for result in rows]
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Index every curated catalogue into sources.db with provenance and FTS.\n"
-        "Use for metadata discovery; never downloads media or premium content.",
+        "Use for discovery with existing external text; never downloads media or premium content.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""Examples:
   <shared-project-python> -m scripts.ingest.resource_catalogue_ingest --ingest --db data/sources-copy.db

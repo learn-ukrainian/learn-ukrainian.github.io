@@ -364,7 +364,11 @@ class TestUlifHandlers:
             "sections": {},
         }
         with patch("rag.source_query.query_ulif", return_value=transient):
-            result = _run(server_module.handle_query_ulif({"word": "великий", "sections": ["paradigm"]}))
+            result = _run(
+                server_module.handle_query_ulif(
+                    {"word": "великий", "sections": ["paradigm"]}
+                )
+            )
 
         text = result[0].text
         assert "unavailable" in text
@@ -379,7 +383,9 @@ class TestUlifHandlers:
             ("handle_query_ulif_phraseology", "query_ulif_phraseology"),
         ],
     )
-    def test_ulif_relation_tools_transient_error_is_unavailable(self, server_module, handler_name, query_fn_name):
+    def test_ulif_relation_tools_transient_error_is_unavailable(
+        self, server_module, handler_name, query_fn_name
+    ):
         """ULIF relation tools render unavailable prose instead of transient_error JSON (#9016)."""
         transient = {
             "status": "transient_error",
@@ -631,12 +637,7 @@ class TestLiveSourceUnavailable:
         assert "Cloudflare challenge detected" in text
 
     def test_slovnyk_me_not_found_still_renders_no_entry(self, server_module):
-        not_found = {
-            "status": "not_found",
-            "word": "жжжнемає",
-            "dict": "vts",
-            "url": "https://slovnyk.me/dict/vts/жжжнемає",
-        }
+        not_found = {"status": "not_found", "word": "жжжнемає", "dict": "vts", "url": "https://slovnyk.me/dict/vts/жжжнемає"}
         with patch("rag.source_query.slovnyk_me_lookup", return_value=not_found):
             result = _run(server_module.handle_query_slovnyk_me({"word": "жжжнемає", "dict": "vts"}))
         assert "No entry found" in result[0].text
@@ -685,24 +686,32 @@ class TestLiveSourceUnavailable:
 
     def test_grac_concordance_unavailable_is_not_rendered_as_no_results(self, server_module):
         with patch("rag.source_query.grac_concordance", return_value=None):
-            result = _run(server_module.handle_query_grac({"query": "книга", "mode": "concordance"}))
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "concordance"})
+            )
         assert "unavailable" in result[0].text
         assert "No concordance results" not in result[0].text
 
     def test_grac_concordance_not_found_still_renders_no_results(self, server_module):
         with patch("rag.source_query.grac_concordance", return_value=[]):
-            result = _run(server_module.handle_query_grac({"query": "zzznotaword", "mode": "concordance"}))
+            result = _run(
+                server_module.handle_query_grac({"query": "zzznotaword", "mode": "concordance"})
+            )
         assert "No concordance results" in result[0].text
 
     def test_grac_collocations_unavailable_is_not_rendered_as_no_results(self, server_module):
         with patch("rag.source_query.grac_collocations", return_value=None):
-            result = _run(server_module.handle_query_grac({"query": "книга", "mode": "collocations"}))
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "collocations"})
+            )
         assert "unavailable" in result[0].text
         assert "No collocations found" not in result[0].text
 
     def test_grac_frequency_unavailable_is_not_rendered_as_zero_freq(self, server_module):
         with patch("rag.source_query.grac_frequency", return_value=None):
-            result = _run(server_module.handle_query_grac({"query": "книга", "mode": "frequency"}))
+            result = _run(
+                server_module.handle_query_grac({"query": "книга", "mode": "frequency"})
+            )
         assert "unavailable" in result[0].text
 
 
@@ -1102,10 +1111,7 @@ class TestVetVocabularyHandler:
         )
         assert "**вигадане** | VESUM: not found" in text
         assert "Russian-shadow: suspected (suspicion only, not a verdict; russian_lemma=выдуманный" in text
-        assert (
-            "СУМ-11 contrast excerpt (verification_authority: false): КІТ, кота, ч. Свійська тварина родини котячих."
-            in text
-        )
+        assert "СУМ-11 contrast excerpt (verification_authority: false): КІТ, кота, ч. Свійська тварина родини котячих." in text
         assert "СУМ-11 contrast excerpt (verification_authority: false): not found" in text
         verify_words.assert_called_once_with(["кіт", "вигадане"])
         query_cefr.assert_called_once_with(["кіт", "вигадане"])
@@ -1365,11 +1371,8 @@ class TestSearchSourcesHandler:
         bodies = [f"UNIQUE_SOURCE_BODY_{i}:" + "x" * 4000 for i in range(5)]
         hits = [
             {
-                "chunk_id": f"source:{i}",
-                "title": f"Title {i}",
-                "text": body,
-                "full_text": body,
-                "final_score": 0.9 - i / 10,
+                "chunk_id": f"source:{i}", "title": f"Title {i}",
+                "text": body, "full_text": body, "final_score": 0.9 - i / 10,
                 "ranking": "keyword_rrf",
             }
             for i, body in enumerate(bodies)
@@ -1377,11 +1380,9 @@ class TestSearchSourcesHandler:
         original = copy.deepcopy(hits)
         monkeypatch.setattr(server_module, "_review_recorder", lambda: None)
         with patch("wiki.sources_db.search_sources", return_value=hits):
-            result = _run(
-                server_module._on_call_tool(
-                    None, CallToolRequestParams(name="search_sources", arguments={"query": "fixture", "limit": 5})
-                )
-            )
+            result = _run(server_module._on_call_tool(
+                None, CallToolRequestParams(name="search_sources", arguments={"query": "fixture", "limit": 5})
+            ))
 
         assert result.is_error is False
         envelope = result.structured_content
@@ -1395,18 +1396,15 @@ class TestSearchSourcesHandler:
         assert len(wire) < sum(map(len, bodies)) + 3000
         assert hits == original  # Presentation must not mutate the database result.
 
-    @pytest.mark.parametrize(
-        ("hit", "expected"),
-        [
-            (
-                {"text": "snippet", "full_text": "distinct complete body"},
-                {"text": "snippet", "full_text": "distinct complete body"},
-            ),
-            ({"full_text": "body without a snippet"}, {"full_text": "body without a snippet"}),
-            ({"text": "body without an alias"}, {"text": "body without an alias"}),
-            ({"text": "", "full_text": ""}, {"text": ""}),
-        ],
-    )
+    @pytest.mark.parametrize(("hit", "expected"), [
+        (
+            {"text": "snippet", "full_text": "distinct complete body"},
+            {"text": "snippet", "full_text": "distinct complete body"},
+        ),
+        ({"full_text": "body without a snippet"}, {"full_text": "body without a snippet"}),
+        ({"text": "body without an alias"}, {"text": "body without an alias"}),
+        ({"text": "", "full_text": ""}, {"text": ""}),
+    ])
     def test_preserves_distinct_or_unpaired_text(self, server_module, hit, expected):
         original = copy.deepcopy(hit)
         with patch("wiki.sources_db.search_sources", return_value=[hit]):
@@ -1415,7 +1413,10 @@ class TestSearchSourcesHandler:
         assert hit == original
 
     def test_summary_is_bounded_and_keeps_returned_order(self, server_module):
-        hits = [{"chunk_id": f"source:{i}", "title": "Long title " * 500, "text": f"body:{i}"} for i in range(20)]
+        hits = [
+            {"chunk_id": f"source:{i}", "title": "Long title " * 500, "text": f"body:{i}"}
+            for i in range(20)
+        ]
         with patch("wiki.sources_db.search_sources", return_value=hits):
             content, envelope = _run(server_module.handle_search_sources({"query": "fixture", "limit": 20}))
         summary = content[0].text
@@ -1650,7 +1651,7 @@ def _wikipedia_header_value(text: str, label: str) -> str:
     prefix = f"**{label}**: "
     for line in text.splitlines():
         if line.startswith(prefix):
-            return line[len(prefix) :]
+            return line[len(prefix):]
     raise AssertionError(f"missing {label} in {text!r}")
 
 
@@ -1669,7 +1670,7 @@ def _multi_page_cyrillic_article() -> tuple[str, int, int]:
     assert len(prefix) == word_at and prefix.endswith(" ")
     head = prefix + word
     assert head[page - 1].isalpha() and head[page].isalpha()
-    assert head[word_at : word_at + len(word)] == word
+    assert head[word_at:word_at + len(word)] == word
 
     # Page 2 starts at word_at. Its nominal end is word_at + page, so the last
     # 20% begins 200 characters earlier. The paragraph cut sits inside that tail.
@@ -1725,7 +1726,8 @@ class TestWikipediaExtractPaging:
         tools = _run(server_module.list_tools())
         tool = next(item for item in tools if item.name == "query_wikipedia")
         assert (
-            "long articles are returned in pages; request the next page with offset=<Next offset>" in tool.description
+            "long articles are returned in pages; request the next page with offset=<Next offset>"
+            in tool.description
         )
         assert "offset" in tool.input_schema["properties"]
         assert "max_chars" in tool.input_schema["properties"]
@@ -1818,7 +1820,8 @@ class TestWikipediaExtractPaging:
         extract.assert_not_called()
         assert _wikipedia_header_value(empty, "Next offset") == "end"
         assert (
-            f"This page is empty: offset {past} is past the end of the article ({len(article)} characters)."
+            f"This page is empty: offset {past} is past the end of the article "
+            f"({len(article)} characters)."
         ) in empty
         assert "Київщина" not in _wikipedia_page_body(empty)
 
@@ -1828,7 +1831,7 @@ class TestWikipediaExtractPaging:
         article = prefix + ending + ("б" * 400)
         cut = server_module._wikipedia_extract_page_end(article, 0, 1000)
         assert cut == len(prefix) + len(ending)
-        assert article[cut - 2 : cut] == ". "
+        assert article[cut - 2:cut] == ". "
 
     def test_max_chars_is_clamped(self, server_module):
         body = "слово " * 5000
@@ -1878,7 +1881,9 @@ class TestWikipediaExtractPaging:
 
     def test_legacy_full_article_cache_is_paged_without_a_network_call(self, server_module):
         article, word_at, _paragraph_cut = _multi_page_cyrillic_article()
-        legacy = "\n".join(["# Стаття", "**URL**: https://uk.wikipedia.org/wiki/Стаття", "", article])
+        legacy = "\n".join(
+            ["# Стаття", "**URL**: https://uk.wikipedia.org/wiki/Стаття", "", article]
+        )
         with (
             patch("rag.wiki_cache.WikiCache") as cache_cls,
             patch("rag.source_query.wikipedia_extract") as extract,

@@ -37,6 +37,31 @@ COUNTS = {
 @pytest.fixture
 def database():
     conn = sqlite3.connect(":memory:", check_same_thread=False)
+    conn.execute(
+        "CREATE TABLE external_articles(id INTEGER PRIMARY KEY,chunk_id TEXT,url TEXT,title TEXT,text TEXT,source_file TEXT)"
+    )
+    conn.executemany(
+        "INSERT INTO external_articles VALUES(?,?,?,?,?,?)",
+        [
+            (
+                1,
+                "ext-ulp_youtube-302",
+                "https://www.youtube.com/watch?v=fixture2",
+                "ULP 1-02 | Formal Greetings",
+                "добрий день привіт дякую",
+                "ulp_youtube",
+            ),
+            (
+                2,
+                "article-fixture",
+                "https://www.ukrainianlessons.com/greetings/",
+                "Greetings",
+                "статтятест",
+                "ulp_blogs",
+            ),
+        ],
+    )
+    conn.commit()
     catalogue.ingest(conn, ROOT / "docs/resources", no_network=True)
     yield conn
     conn.close()
@@ -88,7 +113,9 @@ def test_greeting_episode_found(database, query):
     assert hit["audio_access"] == "free"
     assert hit["notes_access"] == "premium"
     assert len(hit["source_files"]) == 6
-    assert hit["discovery_evidence"][0]["source_url"] == "https://www.ukrainianlessons.com/greetings/"
+    assert hit["access"] == "mixed"
+    assert hit["discovery_evidence"][0]["chunk_id"] == "ext-ulp_youtube-302"
+    assert hit["discovery_evidence"][0]["relation"] == "episode_identity"
 
 
 def test_dedup_exact_filters_and_preserved_mappings(database):
@@ -241,6 +268,7 @@ def test_mcp_search_wire_shape(database, monkeypatch):
     tools = asyncio.run(server.list_tools())
     tool = next(t for t in tools if t.name == "search_resources")
     assert tool.annotations.read_only_hint
+    assert "recorded free" in tool.input_schema["properties"]["free_only"]["description"]
     assert {"query", "kind", "level", "module", "free_only", "live_only"} <= tool.input_schema["properties"].keys()
     content, is_error, outcome = asyncio.run(
         server._dispatch_tool_call("search_resources", {"query": "добрий день", "free_only": True})
@@ -257,7 +285,8 @@ def test_mcp_search_wire_shape(database, monkeypatch):
     assert outcome["schema"] == "sources.tool-result.v1"
     assert outcome["status"] == "ok"
     assert outcome["match_count"] == len(outcome["hits"]) == 1
-    assert json.loads(content[0].text)[0]["episode"] == 2
+    assert "Found 1 catalogue resources" in content[0].text
+    assert outcome["hits"][0]["episode"] == 2
     _, empty = asyncio.run(server.handle_search_resources({"query": "NonexistentResourceTerm"}))
     assert empty["status"] == "empty" and empty["match_count"] == 0
 
@@ -274,7 +303,16 @@ def test_invalid_catalogues_fail_closed(tmp_path, monkeypatch):
 
 
 @pytest.mark.parametrize(
-    "access_fields,expected", [({"paid": True}, "paid"), ({"free": False}, "paid"), ({"free": True}, "free")]
+    "access_fields,expected",
+    [
+        ({}, "unknown"),
+        ({"access": None}, "unknown"),
+        ({"access": "premium"}, "premium"),
+        ({"paid": True}, "paid"),
+        ({"free": False}, "paid"),
+        ({"free": True}, "free"),
+        ({"paid": True, "free": True}, "paid"),
+    ],
 )
 def test_explicit_access_metadata(access_fields, expected):
     entry = catalogue._resource_entry(
@@ -284,6 +322,112 @@ def test_explicit_access_metadata(access_fields, expected):
         {},
     )
     assert entry["access"] == expected
+
+
+def test_missing_access_is_unknown_and_not_free(database):
+    rows = catalogue.search_resources(database, kind="article", limit=20)
+    assert rows and all(row["access"] == "unknown" for row in rows)
+    assert catalogue.search_resources(database, kind="article", free_only=True) == []
+    assert catalogue.search_resources(database, kind="video", free_only=True) == []
+    entry = catalogue._resource_entry({"title": "Unknown", "url": "https://example.org/unknown"}, "test.json", "/0", {})
+    assert entry["access"] == "unknown"
+    database.execute("UPDATE resource_catalogue SET access='free' WHERE url=?", (rows[0]["url"],))
+    assert [r["url"] for r in catalogue.search_resources(database, kind="article", free_only=True)] == [rows[0]["url"]]
+
+
+@pytest.mark.parametrize("query", ["добрий день", "привіт", "дякую"])
+def test_linked_transcript_words_not_aliases(database, query):
+    hits = catalogue.search_resources(database, query, kind="podcast")
+    assert {hit["episode"] for hit in hits} == {2}
+    database.execute("UPDATE external_articles SET text='replacement' WHERE chunk_id='ext-ulp_youtube-302'")
+    catalogue.ingest(database, ROOT / "docs/resources", no_network=True)
+    assert catalogue.search_resources(database, query, kind="podcast") == []
+
+
+def test_url_link_and_linked_count(database):
+    hit = catalogue.search_resources(database, "статтятест")[0]
+    assert hit["url"] == "https://www.ukrainianlessons.com/greetings/"
+    assert hit["discovery_evidence"][0]["relation"] == "url"
+    report = catalogue.ingest(database, ROOT / "docs/resources", no_network=True)
+    assert report["linked_resources"] == 2
+
+
+def test_linking_missing_table_bad_urls_and_series_separation():
+    conn = sqlite3.connect(":memory:")
+    rows = catalogue.deduplicate(catalogue.load_catalogues(ROOT / "docs/resources"))
+    assert catalogue.link_existing_text(conn, rows) == 0
+    assert catalogue._episode_identity("https://example.org/a", "ULP 1-02") is None
+    assert catalogue._episode_identity("https://www.youtube.com/watch?v=a", "FMU 1-02") == ("FMU", 2)
+    conn.execute(
+        "CREATE TABLE external_articles(id INTEGER,chunk_id TEXT,url TEXT,title TEXT,text TEXT,source_file TEXT)"
+    )
+    conn.executemany(
+        "INSERT INTO external_articles VALUES(?,?,?,?,?,?)",
+        [
+            (1, "bad", "invalid", "ULP 1-02", "unsupported", "fixture"),
+            (2, "fmu", "https://youtu.be/fmu", "FMU 1-02", "fmuwitness", "fixture"),
+        ],
+    )
+    catalogue.link_existing_text(conn, rows)
+    ulp = next(r for r in rows if r["url"] == "https://www.ukrainianlessons.com/episode2/")
+    assert "fmuwitness" not in ulp["search_text"]
+    assert "unsupported" not in ulp["search_text"]
+    assert any("fmuwitness" in r["search_text"] for r in rows)
+    conn.close()
+
+
+def test_search_before_ingest_is_typed(monkeypatch):
+    conn = sqlite3.connect(":memory:", check_same_thread=False)
+    with pytest.raises(catalogue.ResourceCatalogueMissingError):
+        catalogue.search_resources(conn, "привіт")
+    spec = importlib.util.spec_from_file_location("missing_catalogue_server", ROOT / ".mcp/servers/sources/server.py")
+    server = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(server)
+    from wiki import sources_db
+
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: conn)
+    wire = asyncio.run(
+        server._on_call_tool(None, server.CallToolRequestParams(name="search_resources", arguments={"query": "привіт"}))
+    )
+    assert wire.structured_content["status"] == "error"
+    assert wire.structured_content["error_code"] == "resource_catalogue_missing"
+    assert wire.structured_content["hits"] == []
+    assert "no such table" not in wire.content[0].text
+    conn.close()
+
+
+def test_browse_and_large_provenance_have_byte_caps(database, monkeypatch):
+    url = catalogue.search_resources(database, limit=1)[0]["url"]
+    huge = {"locator": "x" * 100000, "original_url": url}
+    database.execute("UPDATE resource_catalogue SET source_entries=? WHERE url=?", (json.dumps([huge] * 20), url))
+    spec = importlib.util.spec_from_file_location("bounded_catalogue_server", ROOT / ".mcp/servers/sources/server.py")
+    server = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(server)
+    from wiki import sources_db
+
+    monkeypatch.setattr(sources_db, "_get_conn", lambda: database)
+    content, envelope = asyncio.run(server.handle_search_resources({"limit": 100}))
+    assert len(envelope["hits"]) == envelope["match_count"] == 20
+    assert len(content[0].text.encode("utf-8")) < 1500
+    for hit in envelope["hits"]:
+        assert len(json.dumps(hit, ensure_ascii=False).encode("utf-8")) <= catalogue.MAX_HIT_BYTES
+        for field, budget in catalogue.PROVENANCE_BUDGETS.items():
+            assert len(json.dumps(hit[field], ensure_ascii=False).encode("utf-8")) <= budget
+    hit = next(h for h in envelope["hits"] if h["url"] == url)
+    assert hit["source_entries_count"] == 20 and hit["source_entries_truncated"]
+    assert (
+        database.execute("SELECT length(source_entries) FROM resource_catalogue WHERE url=?", (url,)).fetchone()[0]
+        > 100000
+    )
+    assert len(json.dumps(envelope, ensure_ascii=False).encode("utf-8")) < 20 * catalogue.MAX_HIT_BYTES + 4096
+    assert "original_url" not in content[0].text
+
+
+def test_compact_metadata_is_bounded_without_mutating_store(database):
+    database.execute("UPDATE resource_catalogue SET title=?,topics=?", ("я" * 1000, json.dumps(["x" * 10000])))
+    hit = catalogue.search_resources(database, limit=1)[0]
+    assert len(hit["title"].encode("utf-8")) <= 256 and hit["title_truncated"]
+    assert hit["topics"] == [] and hit["topics_count"] == 1 and hit["topics_truncated"]
 
 
 def test_database_failure_rolls_back_catalogue(database, monkeypatch):

@@ -199,17 +199,27 @@ Use **`mcp__sources__search_resources`** with `query`, `kind`, `level`, `module`
 Levels reflect explicit catalogue levels and module prefixes; absence stays
 unknown. Module IDs preserve existing catalogue mappings rather than claiming
 they match a current lesson plan. Results use `sources.tool-result.v1` and carry
-source-entry provenance, HTTP status and UTC check date. `free_only` selects
-catalogued free resources; it does not prove present availability. `live_only`
+source-entry provenance, HTTP status and UTC check date. `free_only` requires
+an explicit free resource or free audio fact; missing access stays `unknown`.
+It does not prove present availability or include premium notes. `live_only`
 requires a recorded successful HTTP check, whose date remains visible.
 
-ULP/FMU episode audio is free; lesson notes are marked premium separately.
+ULP/FMU rows have `access: mixed`, `audio_access: free` and `notes_access: premium`.
 Podcast page aliases (`/lesson/2/`, `/episode2/`) share a canonical URL.
-The `добрий день` discovery alias for ULP 1-02 is attributed to the public
-[ULP greetings article](https://www.ukrainianlessons.com/greetings/), which links
-to that episode. Catalogue discovery establishes a candidate resource, not a
-transcript, word-level timestamp, or independent verification of audio content.
-No media, article bodies or premium material are downloaded into the catalogue.
+Existing `external_articles` text is linked by normalized URL (including
+catalogue-related URLs) or ULP/FMU series and episode identity. Its text joins the
+FTS index; `discovery_evidence` records the chunk, source file, URL and relation.
+Ukrainian queries therefore match stored source text rather than keyword aliases.
+The ingest reports `linked_resources`; it downloads no media, article bodies or
+premium material. Linked text is discovery evidence, not independent audio or
+word-level timestamp verification.
+
+Responses return at most 20 hits with a short prose summary and structured hits.
+Each row is bounded to 24 KiB; provenance list budgets total 3,584 UTF-8 JSON bytes.
+Other metadata lists have 512-byte budgets and scalar strings have 256-byte
+budgets. Lists retain complete-record prefixes with total counts and truncation
+flags; full provenance remains in the database. Before catalogue ingestion the
+tool returns `status: error`, `error_code: resource_catalogue_missing`.
 
 ### Dictionaries & lexical resources
 
