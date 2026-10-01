@@ -25,6 +25,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.orchestration import issue_stream_audit, task_identity
+from scripts.review.review_contract import ALLOWED_DISPOSITIONS
 
 SCHEMA_VERSION = "task-lifecycle.v1"
 AC_SCHEMA_VERSION = "acceptance-criteria.v1"
@@ -876,19 +877,19 @@ def _behavior_proof_reference_error(record: Mapping[str, Any], *, head_sha: str 
             and isinstance(payload.get("overall"), dict)
             and payload["overall"].get("correctness") == "correct"
             and isinstance(findings, list)
+            and bool(findings)
             and all(isinstance(finding, dict) and "id" in finding for finding in findings)
             and [finding["id"] for finding in findings] == payload.get("finding_ids")
             and all(
                 finding.get("outcome") == "verified"
                 and isinstance(finding.get("disposition"), str)
-                and bool(finding["disposition"].strip())
-                and finding["disposition"] != "stop_and_escalate"
+                and finding.get("disposition") in (ALLOWED_DISPOSITIONS - {"stop_and_escalate"})
                 and isinstance(finding.get("disposition_rationale"), str)
                 and bool(finding["disposition_rationale"].strip())
                 for finding in findings
             )
         )
-    if receipt.get("error") is not None or not (clean or approved_nonblocking):
+    if "error" not in receipt or receipt["error"] is not None or not (clean or approved_nonblocking):
         return "behavior-proof receipt is not a clean or approved non-blocking canonical closeout"
     author = receipt.get("author") or {}
     reviewer = receipt.get("reviewer") or {}

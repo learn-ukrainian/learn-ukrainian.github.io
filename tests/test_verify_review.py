@@ -1340,6 +1340,7 @@ def test_correct_with_nonblocking_findings_stays_actionable_and_passes_lifecycle
     assert result.exit_code == EXIT_ACTIONABLE
     assert result.final_disposition == "actionable"
     assert result.error is None
+    assert result.receipt["error"] is None
     assert result.receipt["reviewer_payload"]["overall"]["correctness"] == "correct"
     assert result.receipt["reviewer_payload"]["finding_ids"] == ["F001"]
     assert result.receipt["findings"][0]["outcome"] == OUTCOME_VERIFIED
