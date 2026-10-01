@@ -1,9 +1,10 @@
-"""Formal attempts: copied manifest evidence, fresh homes, external receipt runtime.
+"""Review access: full matching checkout or isolated copied manifest evidence.
 
-The runner owns this boundary before adapter planning and until response parsing
-finishes. Sources runs outside the seat sandbox; only a byte-stream socket is
-exposed inside. The original repository, Git objects, receipt store and home
-are never mounted. This is separate from code-review isolation (#9251).
+Full attempts retain native write denial and the attempt-scoped sources ledger.
+For explicit isolated mode, the runner owns the boundary until response parsing
+finishes: sources runs outside the sandbox, connected by a byte-stream socket,
+and the original repository, Git objects, receipt store and home are unmounted.
+This is separate from code-review isolation (#9251).
 """
 
 from __future__ import annotations
@@ -52,9 +53,15 @@ def linux_claude_auth() -> dict[str, str]:
     """
     from scripts.review.isolation import ReviewIsolationError
 
-    if platform.system() != "Linux" or any(os.environ.get(k) for k in (
-        "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "CLAUDE_API_KEY", "CLAUDE_CODE_OAUTH_TOKEN",
-    )):
+    if platform.system() != "Linux" or any(
+        os.environ.get(k)
+        for k in (
+            "ANTHROPIC_API_KEY",
+            "ANTHROPIC_AUTH_TOKEN",
+            "CLAUDE_API_KEY",
+            "CLAUDE_CODE_OAUTH_TOKEN",
+        )
+    ):
         return {}
     path = Path.home() / ".claude" / ".credentials.json"
     try:
@@ -105,9 +112,7 @@ def authorized_closure(manifest: dict[str, Any], root: Path) -> dict[str, bytes]
         if hashlib.sha256(data).hexdigest() != entry["sha256"]:
             raise ReviewIsolationError("attempt_input_hash_mismatch")
         # Previous receipts are projected, never exposed as a browsable store.
-        destination = (
-            "authorized/previous-ledger.jsonl" if location == "previous_attempt.ledger" else entry["path"]
-        )
+        destination = "authorized/previous-ledger.jsonl" if location == "previous_attempt.ledger" else entry["path"]
         if destination.startswith("batch_state/"):
             raise ReviewIsolationError("attempt_shared_state_input")
         copied[destination] = data
@@ -317,8 +322,9 @@ class AttemptBoundary:
 
                 codex_home = home / ".codex"
                 (codex_home / "config.toml").write_text(
-                    _render_codex_review_config(Path(proxy_server["command"]), proxy, {})
-                    .replace(f'args = ["{proxy}"]', f'args = ["{proxy}", "{endpoint}"]')
+                    _render_codex_review_config(Path(proxy_server["command"]), proxy, {}).replace(
+                        f'args = ["{proxy}"]', f'args = ["{proxy}", "{endpoint}"]'
+                    )
                 )
                 self.tool_config["codex_home_override"] = str(codex_home)
                 self.tool_config["attempt_os_sandbox"] = True
@@ -358,8 +364,13 @@ class AttemptBoundary:
         )
         if self.egress is None or not self.egress.thread.is_alive():
             raise ReviewIsolationError("attempt_egress_unavailable")
-        argv = [str(project_interpreter().resolve(strict=True)), str(self.forwarder), str(self.egress_endpoint),
-                str(binary), *cmd[1:]]
+        argv = [
+            str(project_interpreter().resolve(strict=True)),
+            str(self.forwarder),
+            str(self.egress_endpoint),
+            str(binary),
+            *cmd[1:],
+        ]
         env = {**self.env, **env_overrides}
         env["HOME"] = self.env["HOME"]
         env["TMPDIR"] = self.env["TMPDIR"]
@@ -371,7 +382,7 @@ class AttemptBoundary:
         if self.sandbox.mechanism == "linux-bwrap":
             # A private procfs supports native executable discovery without
             # exposing host processes, descriptors, cwd or environment.
-            wrapped[-len(argv):-len(argv)] = ["--proc", "/proc", "--chdir", str(self.workspace)]
+            wrapped[-len(argv) : -len(argv)] = ["--proc", "/proc", "--chdir", str(self.workspace)]
         return wrapped, env
 
     def cleanup(self) -> None:
@@ -386,8 +397,45 @@ class AttemptBoundary:
                 self.temp.cleanup()
 
 
+def verify_full_review_tree(manifest_path: Path, cwd: Path) -> None:
+    """Verify the actual full checkout against every manifest pin before launch.
+
+    A separate review tree is allowed only when its pinned bytes match. Other
+    repository files are context, never evidence without a sources receipt.
+    """
+    from scripts.build.fresh.manifest import pinned_entries
+    from scripts.review.isolation import ReviewIsolationError
+    from scripts.review.prompts.eligibility import pin_refusals
+
+    try:
+        manifest = yaml.safe_load(manifest_path.read_bytes())
+        for _, entry in pinned_entries(manifest):
+            data = safe_read_attempt_file(cwd / entry["path"], trusted_root=cwd)
+            if hashlib.sha256(data).hexdigest() != entry["sha256"]:
+                raise ReviewIsolationError("full_review_tree_mismatch")
+        if pin_refusals(manifest, cwd):
+            raise ReviewIsolationError("full_review_manifest_ineligible")
+        checkout = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"], cwd=cwd, capture_output=True, text=True, timeout=30, check=False
+        )
+        if checkout.returncode or Path(checkout.stdout.strip()).resolve() != cwd.resolve():
+            raise ReviewIsolationError("full_review_checkout_missing")
+        sparse = subprocess.run(
+            ["git", "config", "--bool", "core.sparseCheckout"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
+        )
+        if sparse.returncode not in (0, 1) or sparse.stdout.strip() == "true":
+            raise ReviewIsolationError("full_review_requires_full_checkout")
+    except (OSError, ValueError, AttemptReadError, subprocess.SubprocessError) as exc:
+        raise ReviewIsolationError("full_review_tree_mismatch") from exc
+
+
 def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool_config: dict | None):
-    """Every formal-attempt identity requires the parent-owned launch boundary."""
+    """Keep isolated boundaries; validate full attempts without projecting a filesystem."""
     tc = tool_config or {}
     if not (tc.get("review_id") or tc.get("attempt_id")):
         return None
@@ -398,4 +446,30 @@ def prepare_attempt_boundary(agent: str, mode: str, session_id: str | None, tool
         raise ReviewIsolationError("attempt_requires_fresh_read_only_sources")
     if any(not tc.get(key) for key in required):
         raise ReviewIsolationError("attempt_boundary_inputs_missing")
-    return AttemptBoundary(agent=agent, tool_config=tc)
+    access = tc.get("review_access", "isolated")  # legacy runtime callers remain isolated
+    if access == "isolated":
+        return AttemptBoundary(agent=agent, tool_config=tc)
+    if access != "full":
+        raise ReviewIsolationError("review_access_invalid")
+    from .review_mcp import SUPPORTED_HARNESSES, verify_review_attempt_paths
+
+    if agent not in SUPPORTED_HARNESSES:
+        raise ReviewIsolationError("full_review_harness_unsupported")
+    if any(tc.get(key) for key in ("review_isolation", "attempt_os_sandbox", "review_attempt_boundary")):
+        raise ReviewIsolationError("full_review_write_denial_conflict")
+    config = Path(tc["mcp_config_path"])
+    verify_review_attempt_paths(config)
+    server = json.loads(config.read_bytes())["mcpServers"]["sources"]
+    if (
+        hashlib.sha256(Path(tc["review_manifest"]).read_bytes()).hexdigest()
+        != server["env"]["LU_REVIEW_MANIFEST_SHA256"]
+    ):
+        raise ReviewIsolationError("attempt_manifest_hash_mismatch")
+    if server["env"]["LU_REVIEW_ATTEMPT_ID"] != tc["attempt_id"]:
+        raise ReviewIsolationError("attempt_identity_mismatch")
+    if not tc.get("review_cwd"):
+        raise ReviewIsolationError("full_review_cwd_missing")
+    if agent == "claude" and (not tc.get("reviewer_tools") or tc.get("allowed_tools")):
+        raise ReviewIsolationError("full_review_write_denial_missing")
+    verify_full_review_tree(Path(tc["review_manifest"]), Path(tc["review_cwd"]))
+    return None

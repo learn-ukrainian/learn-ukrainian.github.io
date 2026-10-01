@@ -52,6 +52,7 @@ REVIEW_TOOLS = frozenset(
         "query_pravopys",
         "search_style_guide",
         "search_text",
+        "search_resources",
         "query_r2u",
         "search_heritage",
         "check_russian_shadow",

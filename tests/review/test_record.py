@@ -1871,3 +1871,105 @@ def test_the_cli_exits_2_naming_the_cause_and_records_nothing_for_an_unattestabl
     assert captured.out == ""
     assert not list(world.state_dir.glob(f"*{made['attempt_id']}*"))
     assert not world.db.exists() or world.db_rows("attempts") == []
+
+
+@pytest.mark.parametrize("access", ["full", "isolated"])
+@pytest.mark.parametrize(
+    "agent,model,family,writer",
+    [
+        ("claude", "claude-opus-5-5", "anthropic", "gpt-6.1-sol"),
+        ("codex", "gpt-6.1-sol", "openai", "claude-opus-5-5"),
+        ("agy", "gemini-3.8-flash-high", "google", "gpt-6.1-sol"),
+    ],
+)
+def test_bound_access_is_recorded_from_task_not_return(world, access, agent, model, family, writer):
+    world.writer(2, writer)
+    made = world.make_return(2, [finding("F-01", severity="MINOR")])
+    world.task("review-access", agent, model, review_access=access, review_attempt=_bound(world, made))
+    outcome = world.record(made, task_id="review-access")
+    assert outcome.accepted, outcome.rejection_codes
+    [row] = world.db_rows("attempts")
+    assert (row["access"], row["reviewer_model"], row["reviewer_family"], row["harness"]) == (
+        access,
+        model,
+        family,
+        agent,
+    )
+    projection = yaml.safe_load(world.verdict_file(2).read_bytes())
+    if access == "full":
+        assert projection["access"] == "full" and projection["reviewer_model"] == model
+    else:
+        assert set(projection) == set(fixloop.PROJECTION_FIELDS)
+
+
+def test_full_same_family_lesson_is_rejected(world):
+    made = world.make_return(2)
+    world.task("review-self", "codex", "gpt-6.1-sol", review_access="full", review_attempt=_bound(world, made))
+    outcome = world.record(made, task_id="review-self")
+    assert not outcome.accepted and record.SAME_FAMILY_REVIEW in outcome.rejection_codes
+    assert world.db_rows("attempts")[0]["access"] == "full"
+    assert not world.verdict_file(2).exists()
+
+
+def test_full_return_must_equal_saved_terminal_result(world):
+    made = world.make_return(2)
+    world.task("review-bound", "claude", "claude-opus-5-5", review_access="full", review_attempt=_bound(world, made))
+    world.capture_result(made, "review-bound")
+    made["review"].write_bytes(made["review"].read_bytes() + b"# substituted return\n")
+    with pytest.raises(record.RecordError, match=record.REVIEW_RETURN_TASK_MISMATCH):
+        world.record(made, task_id="review-bound")
+    assert world.db_rows("attempts") == []
+
+
+def test_full_failure_preserves_access_and_counts_once(world):
+    world.task(
+        "review-timeout",
+        "claude",
+        "claude-opus-5-5",
+        review_access="full",
+        review_attempt={
+            "review_id": "full-failure",
+            "attempt_id": "timeout",
+            "manifest_sha256": world.digest(2),
+        },
+    )
+    kwargs = dict(
+        manifest_path=world.manifest(2),
+        task_id="review-timeout",
+        repo_root=world.root,
+        db_path=world.db,
+        tasks_dir=world.tasks_dir,
+        review_id="full-failure",
+        attempt_id="timeout",
+        failure="timeout",
+    )
+    assert record.record_return(None, **kwargs).verdict == "FAILED"
+    assert record.record_return(None, **kwargs).replay
+    assert world.db_rows("attempts")[0]["access"] == "full"
+    assert world.db_rows("budgets")[0]["review_failures"] == 1
+
+
+def test_full_access_cannot_be_asserted_by_an_unbound_task(world):
+    made = world.make_return(2)
+    world.task("unbound", "claude", "claude-opus-5-5", review_access="full")
+    with pytest.raises(record.RecordError, match=record.REVIEW_RETURN_TASK_MISMATCH):
+        world.record(made, task_id="unbound")
+    assert world.db_rows("attempts") == []
+
+
+def test_full_reviewer_identity_uses_resolved_model(world):
+    made = world.make_return(2)
+    task = {
+        "agent": "claude",
+        "model": "unresolved-alias",
+        "review_access": "full",
+        "review_attempt": _bound(world, made),
+        "resolved_model_known": True,
+        "resolved_model": "claude-opus-5-5",
+    }
+    identity = record.identity_from_record(task, "resolved")
+    assert identity == {"model": "claude-opus-5-5", "family": "anthropic", "harness": "claude"}
+    with pytest.raises(record.RecordError, match="review_access_invalid"):
+        record.identity_from_record({**task, "model": "claude-opus-5-5", "review_access": "other"}, "invalid")
+    with pytest.raises(record.RecordError, match="full_review_harness_unsupported"):
+        record.identity_from_record({**task, "agent": "cursor", "resolved_model": "claude-opus-5-5"}, "unsupported")

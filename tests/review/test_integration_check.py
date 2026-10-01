@@ -226,6 +226,7 @@ def test_prepare_writes_three_cards_with_exact_hashes_and_commands(prepared: tup
         manifest = yaml.safe_load(Path(one["manifest"]).read_bytes())
         assert manifest["kind"] == kind
         argv = one["dispatch"]
+        assert argv[argv.index("--review-access") + 1] == "isolated"
         assert argv[argv.index("--review-attempt") + 1] == one["manifest"]
         assert argv[argv.index("--review-id") + 1] == one["review_id"]
         assert argv[argv.index("--attempt-id") + 1] == one["attempt_id"]

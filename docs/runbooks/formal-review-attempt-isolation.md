@@ -1,12 +1,69 @@
 # Formal review attempt isolation
 
-Issue: #9251. This boundary applies to `delegate.py dispatch --review-attempt`
-for plan, lesson and lesson re-review attempts, using AGY or Codex.
-Claude formal attempts refuse before boundary provisioning or adapter launch
-with `attempt_boundary_claude_adapter_pending` until its adapter change lands
-separately. Ordinary Claude dispatches remain supported.
-Cursor is explicitly refused at admission and provisioning until it has a
-proven boundary. Other unsupported harnesses remain refused.
+## Curriculum reviews use full access
+
+Operator direction adopted on 2026-10-01 (#9464) requires curriculum plan,
+lesson and lesson re-review seats to check Ukrainian against sources and project
+material. These reviews use `--review-access full` (the dispatch default) with
+`--full-checkout --mode read-only`. Claude Code, Codex and AGY retain their
+ordinary read/search tools, repository and git context. The actual working tree
+must match every manifest input hash; a mismatch refuses as
+`full_review_tree_mismatch`. The same check runs again before adapter launch.
+
+Full access drops only `AttemptBoundary`. `prepare_review_attempt` still creates
+the exclusive per-attempt sources server configuration, receipt ledger and
+scoped Codex/AGY homes, and effective-MCP launch gates still bind. Claude uses its
+ordinary reviewer permission profile (write deny list and hooks); Codex retains
+its native read-only sandbox and sources approval; AGY requires `--sandbox` and
+never uses permission bypass in full mode. These are native seat controls, not
+the isolated filesystem boundary described below.
+
+`review_access` lives beside, never inside, the task's exact `review_attempt`
+binding. The recorder reads it from that task, verifies the saved result bytes,
+result hash, fresh rendered prompt and attempt identity as before, and stores
+`access`, resolved model, family and harness. Full plan projections carry these
+fields; promotion receipts carry `review_access` and reviewer provenance. Old
+task records and historical database rows retain `isolated`. Findings schema,
+verdict thresholds, stale checks, attempt budgets and failure counting stay the
+same. Version 5 adds only `attempts.access` to the findings database.
+
+The rendered prompts require ledgered sources checks for every Ukrainian claim
+relied on, including approval-critical clean checks, and allow `search_resources`
+for catalogue evidence. Repository/corpus/git reads are context: only sources
+receipts are citable. Other attempts' returns, verdict projections,
+`plan-review*.yaml` and the findings database for this artifact are forbidden
+inputs, except supplied manifest/context pins and a re-review's explicitly
+pinned previous attempt and ledger. Clean-check citations fit YAML comments;
+the return schema and verdict dimensions are unchanged.
+
+### Residuals and owners
+
+- **Plan-author family — plan driver:** no model-bearing plan writer record is
+  produced by the existing pipeline. `X-Agent` trailers identify a harness/task,
+  not a concrete model family reliably. The recorder enforces same-family
+  refusal for lessons through their writer record; the plan driver must retain
+  author provenance and select an independent family until reliable plan writer
+  records are available. A trailer alone is not that proof.
+- **Ledger reachability — review-harness driver:** full seats can read the receipt
+  store and implementation. Claude's shell remains available; deny lists/hooks
+  are not an OS boundary against arbitrary shell writes. Native Codex and AGY
+  sandbox behavior with the per-attempt sources writer needs a real-seat proof.
+  The ledger sidecar is consistency evidence, not protection against a hostile
+  same-user writer. A full review is a cooperative evidence-duty boundary.
+- **AC-04 — accountable driver:** after landing, run a real bound full review
+  with a short timeout. Require task binding plus `review_access: full`, a cited
+  nonempty ledger, a trace of an outside-pin repo read or git command, recorder
+  content disposition, status naming the same manifest, and one-input-change
+  stale detection. A captured-return fixture proves the mechanism only.
+
+## Explicit isolated mode
+
+Issue #9251's filesystem boundary remains available with
+`--review-access isolated` for non-curriculum uses that require isolation.
+Curriculum review of record must use full mode. The existing isolated AGY/Codex
+route and its refusals are unchanged. Claude isolated attempts still refuse with
+`attempt_boundary_claude_adapter_pending`; full Claude attempts do not. Cursor
+and other unsupported harnesses remain refused.
 
 Formal attempts on Linux have a private network namespace (`--unshare-net`),
 private PID namespace and private procfs. The host network and its loopback,
@@ -332,31 +389,33 @@ filesystem probes and sources calls use the real production boundary in both
 modes. A separate reviewer should run these probes on the target host at the
 merged SHA and retain the output. These tests establish Linux capability only; other platforms remain refused.
 
-The curriculum consumer owns the clean #8425 A1 position-2 plan-review rerun.
-Set `MANIFEST` to its current engine-produced plan manifest, `INPUT_ROOT` to
-the checkout containing those pinned inputs, and `PROMPT` to an ignored local
-prompt file. Use fresh review/attempt IDs; do not reuse any earlier attempt:
+The curriculum driver owns the post-landing full-access proof (AC-04 of #9464).
+Set `MANIFEST` to the current engine-produced plan manifest, `INPUT_ROOT` to
+an expendable full review checkout containing those exact pinned inputs and git
+history, and `PROMPT` to an ignored prompt file. Use fresh IDs and a short timeout:
 
 ```bash
-REVIEW_ID=plan-a1-position2-isolation-proof
-ATTEMPT_ID=agy-clean-9251
+REVIEW_ID=plan-a1-position2-full-proof
+ATTEMPT_ID=agy-full-9464
 "$PROJECT_PYTHON" -m scripts.review.prompts.render "$MANIFEST" \
   --repo-root "$INPUT_ROOT" --output "$PROMPT" \
   --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID"
 "$PROJECT_PYTHON" scripts/delegate.py dispatch \
   --agent agy --model gemini-3.8-flash-high --mode read-only \
-  --task-id review-9251-plan-proof --worktree \
+  --review-profile ukrainian --effort high \
+  --task-id review-9464-plan-proof --cwd "$INPUT_ROOT" \
+  --full-checkout --review-access full --hard-timeout 180 \
   --prompt-file "$PROMPT" --review-attempt "$MANIFEST" \
   --review-id "$REVIEW_ID" --attempt-id "$ATTEMPT_ID"
-"$PROJECT_PYTHON" scripts/delegate.py wait review-9251-plan-proof
+"$PROJECT_PYTHON" scripts/delegate.py wait review-9464-plan-proof
 ```
 
-After the current routing/capacity preflight, the consumer runs this once and
-records the return through the existing review recorder. Infra independently
-checks the transcript and receipt ledger: no forbidden read succeeds, the
-sources calls have current-attempt receipts, and the return is attributable to
-the same manifest and dispatched head. A provider completion or an APPROVE
-string alone is insufficient. Material exposure blocks shipment; two review
-rounds then escalate under the issue's stop policy. Infra owns boundary/host
-proof failures; the curriculum consumer owns the semantic review rerun. Issue
-closeout waits for both proofs, exact-head cross-family approval and landing.
+After live routing/capacity preflight, record the captured task result through
+`scripts.review.record`. The proof is independent of the verdict: require the
+exact task binding and `review_access: full`; a nonempty ledger cited by the
+return; a trace showing a repo read outside the pins or a git command; a recorder
+content disposition; `plan_review_status` naming that manifest; and changing
+one input making the review stale. A completion string or APPROVE alone is
+insufficient. The captured-return fixture establishes the chain but not real
+seat access or source use; AC-04 remains open until this run. The driver also
+owns independent exact-head review and landing of this implementation.

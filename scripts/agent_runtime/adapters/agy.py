@@ -506,7 +506,10 @@ class AgyAdapter:
         # Review (#5285): never skip permissions; require OS sandbox (runner)
         # plus AGY `--sandbox` when available. Fail closed if review asks for
         # skip-permissions explicitly.
-        if review_isolation and tc.get("agy_skip_permissions"):
+        full_review = tc.get("review_access") == "full"
+        if full_review and mode != "read-only":
+            raise ValueError("full_review_requires_read_only")
+        if (review_isolation or full_review) and tc.get("agy_skip_permissions"):
             raise ValueError(
                 "AgyAdapter: review_isolation forbids agy_skip_permissions / --dangerously-skip-permissions"
             )
@@ -514,12 +517,15 @@ class AgyAdapter:
         # The prompt must never occupy one argv element: Linux rejects an
         # argument above MAX_ARG_STRLEN before agy can start (#8992).
         cmd: list[str] = [agy_bin, "--input-format", "stream-json", "--output-format", "stream-json"]
-        stdin_payload = json.dumps(
-            {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}},
-        ) + "\n"
-        if review_isolation:
-            # Isolation path: no --dangerously-skip-permissions.
-            if tc.get("agy_review_sandbox", True):
+        stdin_payload = (
+            json.dumps(
+                {"event": "user", "message": {"role": "user", "content": [{"type": "text", "text": prompt}]}},
+            )
+            + "\n"
+        )
+        if review_isolation or full_review:
+            # Full content reviews retain native write denial without AttemptBoundary.
+            if full_review or tc.get("agy_review_sandbox", True):
                 cmd.append("--sandbox")
         else:
             cmd.append("--dangerously-skip-permissions")
@@ -614,9 +620,7 @@ class AgyAdapter:
         resolved = self.resolve_model_slug(model)
         if resolved:
             return resolved
-        raise ValueError(
-            f"Unsupported AGY model {model!r}. {unknown_model_suggestion(model)}"
-        )
+        raise ValueError(f"Unsupported AGY model {model!r}. {unknown_model_suggestion(model)}")
 
     def parse_response(
         self,
@@ -676,9 +680,15 @@ class AgyAdapter:
             envelope = stream_result if stream_mode else json_value(stdout_response)
             envelope = envelope if isinstance(envelope, dict) else {}
             structured = structured_result(
-                envelope.get("structured_output"), output_schema, returncode=returncode,
-                terminal_ok=("structured_output" in envelope and envelope.get("status") == "SUCCESS"
-                             and not envelope.get("error") and stream_problem is None),
+                envelope.get("structured_output"),
+                output_schema,
+                returncode=returncode,
+                terminal_ok=(
+                    "structured_output" in envelope
+                    and envelope.get("status") == "SUCCESS"
+                    and not envelope.get("error")
+                    and stream_problem is None
+                ),
                 session_id=envelope.get("conversation_id"),
                 tool_calls=_parse_transcript_tool_calls(plan),
             )
@@ -767,7 +777,9 @@ def _stream_result(stdout: str) -> tuple[dict[str, Any] | None, str | None]:
         return result, "agy_stream_output_invalid: terminal response is not text"
     if result.get("status") != "SUCCESS" or result.get("error"):
         error = result.get("error")
-        return result, f"agy_stream_result_error: {error}" if isinstance(error, str) and error else "agy_stream_result_error"
+        return result, f"agy_stream_result_error: {error}" if isinstance(
+            error, str
+        ) and error else "agy_stream_result_error"
     if not result.get("response", "").strip() and "structured_output" not in result:
         return result, "agy_stream_output_invalid: empty terminal response"
     return result, None
@@ -1198,7 +1210,10 @@ def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any
 
 
 def _mcp_result_text(
-    event: Mapping[str, Any], *, transcript_path: Path, trusted_root: Path = Path("/"),
+    event: Mapping[str, Any],
+    *,
+    transcript_path: Path,
+    trusted_root: Path = Path("/"),
     app_data_alias: Path | None = None,
 ) -> str:
     result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
@@ -1229,7 +1244,10 @@ def _pair_transcript_fifo(
             _attach_tool_result(
                 call,
                 _mcp_result_text(
-                    event, transcript_path=transcript_path, trusted_root=trusted_root, app_data_alias=app_data_alias,
+                    event,
+                    transcript_path=transcript_path,
+                    trusted_root=trusted_root,
+                    app_data_alias=app_data_alias,
                 ),
             )
         )
@@ -1290,7 +1308,10 @@ def _pair_transcript_by_step_index(
         if event.get("type") != "MCP_TOOL":
             continue
         result_text = _mcp_result_text(
-            event, transcript_path=transcript_path, trusted_root=trusted_root, app_data_alias=app_data_alias,
+            event,
+            transcript_path=transcript_path,
+            trusted_root=trusted_root,
+            app_data_alias=app_data_alias,
         )
         if pending:
             call = pending.pop(0)
@@ -1355,7 +1376,10 @@ def _pair_transcript_generic_results(
                 _attach_tool_result(
                     call,
                     _mcp_result_text(
-                        event, transcript_path=transcript_path, trusted_root=trusted_root, app_data_alias=app_data_alias,
+                        event,
+                        transcript_path=transcript_path,
+                        trusted_root=trusted_root,
+                        app_data_alias=app_data_alias,
                     ),
                 )
             )
@@ -1532,7 +1556,11 @@ def _build_tool_call(tool_name: str, args: dict[str, Any], result_text: str) -> 
 
 
 def _inline_saved_tool_result_pointer(
-    text: str, *, transcript_path: Path, trusted_root: Path = Path("/"), app_data_alias: Path | None = None,
+    text: str,
+    *,
+    transcript_path: Path,
+    trusted_root: Path = Path("/"),
+    app_data_alias: Path | None = None,
 ) -> str:
     """Inline agy's safe ``file://.../steps/.../output.txt`` tool-result pointer."""
     match = _SAVED_OUTPUT_POINTER_RE.search(text)

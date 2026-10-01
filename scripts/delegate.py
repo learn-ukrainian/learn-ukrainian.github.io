@@ -8394,6 +8394,7 @@ def _run_worker(
     strict_mcp_config: bool = False,
     review_manifest: str | None = None,
     review_input_root: str | None = None,
+    review_access: str = "isolated",
     finalize_open_pr: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
@@ -8612,7 +8613,16 @@ def _run_worker(
             if review_manifest is not None:
                 tool_config["review_manifest"] = review_manifest
                 tool_config["review_input_root"] = review_input_root
-            if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
+            if review_manifest is not None:
+                tool_config["review_access"] = review_access
+                tool_config["review_cwd"] = str(cwd)
+            if (
+                strict_mcp_config
+                and review_id is not None
+                and attempt_id is not None
+                and agent == "claude"
+                and review_access == "isolated"
+            ):
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
@@ -10350,6 +10360,7 @@ def _dispatch(
     review_id = getattr(args, "review_id", None)
     attempt_id = getattr(args, "attempt_id", None)
     review_plan = None
+    review_access = getattr(args, "review_access", "full")
     review_contract: dict[str, Any] | None = None
     if review_attempt or review_id or attempt_id:
         if not (review_attempt and review_id and attempt_id):
@@ -10357,6 +10368,12 @@ def _dispatch(
                 "❌ --review-attempt, --review-id, and --attempt-id must be used together",
                 file=sys.stderr,
             )
+            return 2
+        if review_access == "full" and not getattr(args, "full_checkout", False):
+            print("❌ full_review_requires_full_checkout: use --full-checkout", file=sys.stderr)
+            return 2
+        if review_access == "full" and args.mode != "read-only":
+            print("❌ attempt_requires_fresh_read_only_sources: use --mode read-only", file=sys.stderr)
             return 2
         manifest_path = Path(review_attempt)
         if not manifest_path.is_file():
@@ -11361,6 +11378,18 @@ def _dispatch(
             print(f"❌ {format_refusal(dispatch_agent, [f'the worker worktree {where}'])}", file=sys.stderr)
             return 2
 
+    if review_plan is not None and review_access == "full":
+        from scripts.agent_runtime.attempt_boundary import verify_full_review_tree
+        from scripts.review.isolation import ReviewIsolationError
+
+        try:
+            verify_full_review_tree(Path(review_attempt), worktree_path or Path(args.cwd or _REPO_ROOT))
+        except ReviewIsolationError as exc:
+            stdout_fd.close()
+            stderr_fd.close()
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+
     if review_plan is not None and worktree_path is not None:
         try:
             _mark_review_attempt_worktree(worktree_path, task_id)
@@ -11528,6 +11557,7 @@ def _dispatch(
             }
             # The render-time and dispatch-time digests compared (#9163): what the review of record ran against.
             initial_state["review_contract"] = review_contract
+            initial_state["review_access"] = review_access
         initial_state = _with_optional_research_state(initial_state, research_state)
         # Auto-finalize's commit scope (#8991): the explicit --owned-path values,
         # verbatim. Never derived from --research-owned-path, which classifies
@@ -11673,6 +11703,8 @@ def _dispatch(
         if review_plan is not None:
             cmd.extend(
                 [
+                    "--review-access",
+                    review_access,
                     "--review-id",
                     str(review_id),
                     "--attempt-id",
@@ -13921,6 +13953,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
         review_manifest=getattr(args, "review_manifest", None),
         review_input_root=getattr(args, "review_input_root", None),
+        review_access=getattr(args, "review_access", "isolated"),
         finalize_open_pr=bool(getattr(args, "finalize_open_pr", False)),
     )
 
@@ -14304,6 +14337,12 @@ def build_parser() -> argparse.ArgumentParser:
             "stdio sources MCP server with ledger receipts. Default: None. "
             "Example: --review-attempt batch_state/manifests/rev-1.yaml"
         ),
+    )
+    d.add_argument(
+        "--review-access",
+        choices=("full", "isolated"),
+        default="full",
+        help="Review access mode: full checkout (requires --full-checkout), or manifest isolation. Default: full.",
     )
     d.add_argument(
         "--review-id",
@@ -14726,6 +14765,7 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.add_argument("--run-nonce", default=None)
+    wk.add_argument("--review-access", choices=("full", "isolated"), default="isolated")
     wk.add_argument("--review-id", default=None)
     wk.add_argument("--attempt-id", default=None)
     wk.add_argument("--mcp-config-path", default=None)

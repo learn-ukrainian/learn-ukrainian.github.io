@@ -103,7 +103,9 @@ def _matched_review_contract(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
         review_mcp_module,
         "check_review_contract",
-        lambda _prompt_file, prompt_text, **_ids: {"prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()},
+        lambda _prompt_file, prompt_text, **_ids: {
+            "prompt_sha256": hashlib.sha256(prompt_text.encode("utf-8")).hexdigest()
+        },
     )
     monkeypatch.setattr(review_mcp_module, "check_launch_contract", lambda *_args: None)
 
@@ -262,6 +264,8 @@ def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.
             "review-task-grok",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -288,6 +292,8 @@ def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytes
             "review-task-kimicc",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -315,6 +321,8 @@ def test_delegate_dispatch_incomplete_review_attempt_flags(
             "review-task-partial",
             "--prompt",
             "perform review",
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             # Missing --review-id and --attempt-id
@@ -426,6 +434,8 @@ def test_delegate_dispatch_review_refuses_primary_checkout(
             str(delegate_cli._REPO_ROOT),
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -481,6 +491,8 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
             "review-task-budget-sub",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -510,6 +522,8 @@ def test_delegate_dispatch_refuses_retired_alias_substitution(
             "review-task-retired-alias",
             "--prompt",
             _attempt_prompt("rev-001", "att-001"),
+            "--review-access",
+            "isolated",
             "--review-attempt",
             str(manifest_file),
             "--review-id",
@@ -546,6 +560,8 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
                 task_id,
                 "--prompt",
                 _attempt_prompt("rev-dry-001", "att-dry-001"),
+                "--review-access",
+                "isolated",
                 "--review-attempt",
                 str(manifest_file),
                 "--review-id",
@@ -584,6 +600,8 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
                 task_id,
                 "--prompt",
                 _attempt_prompt("rev-dup-001", "att-dup-001"),
+                "--review-access",
+                "isolated",
                 "--review-attempt",
                 str(manifest_file),
                 "--review-id",

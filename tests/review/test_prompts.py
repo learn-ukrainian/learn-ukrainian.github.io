@@ -360,9 +360,7 @@ _LESSON_TEMPLATE: dict[int, tuple[Path, Path, dict, str]] = {}
 _PLAN_TEMPLATE: dict[bool, tuple[Path, Path, dict, str]] = {}
 
 
-def _copy_template(
-    root: Path, template: tuple[Path, Path, dict, str]
-) -> tuple[Path, dict, str]:
+def _copy_template(root: Path, template: tuple[Path, Path, dict, str]) -> tuple[Path, dict, str]:
     source, relative, doc, digest = template
     shutil.copytree(source, root, dirs_exist_ok=True, symlinks=True)
     return root / relative, copy.deepcopy(doc), digest
@@ -2227,3 +2225,25 @@ def test_review_prompts_check_one_sentence_one_language(template: str) -> None:
     text = (Path(__file__).resolve().parents[2] / "scripts/review/prompts" / template).read_text(encoding="utf-8")
     assert "one language, Ukrainian or English, never a mix" in text
     assert "about that item" in text
+
+
+@pytest.mark.parametrize("template", ["plan-review.md.j2", "lesson-review.md.j2", "lesson-rereview.md.j2"])
+def test_review_prompt_requires_full_context_and_ledgered_claims_without_new_schema(template):
+    text = (Path(__file__).resolve().parents[2] / "scripts/review/prompts" / template).read_text()
+    for requirement in (
+        "git history",
+        "textbook",
+        "search_resources",
+        "verify_words",
+        "verify_stress",
+        "query_sum20",
+        "source_file='antonenko-davydovych-yak-my-hovorymo'",
+        "approval-critical",
+        "YAML comments",
+        "Only ledgered sources receipts",
+        "other attempts' returns",
+        "findings database",
+        "previous",
+    ):
+        assert requirement in text
+    assert "do not add a field or verdict dimension" in text
