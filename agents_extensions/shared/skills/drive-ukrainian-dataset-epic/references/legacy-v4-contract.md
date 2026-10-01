@@ -45,12 +45,12 @@ The controlling V4 identity is:
 ```text
 outcome_sha256 = 78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20
 public_control_issue = #7423
-private_operational_board = #622
+private_operational_board = [paired private tracking surface]
 ```
 
 Read the latest hash-bound contract, comments, linked receipts, and native issue
 dependencies from both control surfaces. The public issue is the user-facing
-charter; the private board carries operational detail. Stale predecessor text is
+charter; the paired private surface carries operational detail. Stale predecessor text is
 historical evidence and never silently overrides this identity. If the two
 surfaces disagree or one cannot be read, record the discrepancy as unknown and
 resolve it before dispatching work that depends on the disputed field.
@@ -451,7 +451,7 @@ At the start of a driver session, apply this short binding prompt after loading
 
 > Drive the V4 Ukrainian dataset epic under outcome SHA
 > `78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20`.
-> Treat public #7423 and private #622 as the paired control surfaces. Preserve
+> Treat public #7423 and the paired private tracking surface as the control surfaces. Preserve
 > the frozen 100-row denominator and all Ukrainian literary, dialectal,
 > archaic/historical, contact-mixing, quotation/interference, and abstention
 > distinctions. Assign functional roles, enforce leave-one-out/no-self-vote,
